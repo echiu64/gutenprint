@@ -101,6 +101,8 @@ typedef struct dither_matrix
   int last_y_mod;
   int index;
   int i_own;
+  int x_offset;
+  int y_offset;
   unsigned *matrix;
 } dither_matrix_t;
 
@@ -157,12 +159,14 @@ typedef struct dither
 
   /* Hardwiring these matrices in here is an abomination.  This */
   /* eventually needs to be cleaned up. */
+#if 0
   dither_matrix_t mat0;
   dither_matrix_t mat1;
   dither_matrix_t mat2;
   dither_matrix_t mat3;
   dither_matrix_t mat4;
   dither_matrix_t mat5;
+#endif
   dither_matrix_t mat6;
 
   dither_matrix_t c_pick;
@@ -175,6 +179,7 @@ typedef struct dither
   dither_matrix_t k_dithermat;
 } dither_t;
 
+#if 0
 /*
  * Bayer's dither matrix using Judice, Jarvis, and Ninke recurrence relation
  * http://www.cs.rit.edu/~sxc7922/Project/CRT.htm
@@ -229,6 +234,7 @@ static unsigned short quic0[] = {
 static unsigned short quic1[] = {
 #include "quickmatrix199-2.h"
 };
+#endif
 
 static unsigned int quic2[] = {
 #include "quickmatrix257.h"
@@ -319,15 +325,20 @@ destroy_matrix(dither_matrix_t *mat)
 }
 
 void
-clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
+clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
+	     int x_offset, int y_offset)
 {
   dest->base = src->base;
   dest->exp = src->exp;
   dest->size = src->size;
   dest->matrix = src->matrix;
-  dest->last_x = dest->last_x_mod = 0;
-  dest->last_y = dest->last_y_mod = 0;
-  dest->index = 0;
+  dest->x_offset = x_offset;
+  dest->y_offset = y_offset;
+  dest->last_x = 0;
+  dest->last_x_mod = dest->x_offset % dest->size;
+  dest->last_y = 0;
+  dest->last_y_mod = dest->y_offset % dest->size;
+  dest->index = dest->last_x_mod + dest->size * dest->last_y_mod;
   dest->i_own = 0;
 }
 
@@ -335,6 +346,11 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
 static inline unsigned
 ditherpoint(dither_matrix_t *mat, int x, int y)
 {
+  /*
+   * This rather bizarre code is an attempt to avoid having to compute a lot
+   * of modulus and multiplication operations, which are typically slow.
+   */
+
   int recompute = 0;
   if (x == mat->last_x)
     {
@@ -364,7 +380,7 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
   else
     {
       mat->last_x = x;
-      mat->last_x_mod = x % mat->size;
+      mat->last_x_mod = (x + mat->x_offset) % mat->size;
       recompute = 1;
     }
   if (y == mat->last_y)
@@ -395,7 +411,7 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
   else
     {
       mat->last_y = y;
-      mat->last_y_mod = y % mat->size;
+      mat->last_y_mod = (y + mat->y_offset) % mat->size;
       recompute = 1;
     }
   if (recompute)
@@ -421,23 +437,25 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->offset0_table = NULL;
   d->offset1_table = NULL;
 
+#if 0
   init_matrix(&(d->mat0), 2, 5, sq2);
   init_matrix(&(d->mat1), 3, 4, sq3);
   init_matrix(&(d->mat2), 5, 3, msq0);
   init_matrix(&(d->mat3), 5, 3, msq1);
   init_matrix_short(&(d->mat4), 199, quic0);
   init_matrix_short(&(d->mat5), 199, quic1);
+#endif
   init_matrix(&(d->mat6), 257, 1, quic2);
 
-  clone_matrix(&(d->mat6), &(d->c_dithermat));
-  clone_matrix(&(d->mat6), &(d->m_dithermat));
-  clone_matrix(&(d->mat6), &(d->y_dithermat));
-  clone_matrix(&(d->mat6), &(d->k_dithermat));
+  clone_matrix(&(d->mat6), &(d->c_dithermat), 171, 85);
+  clone_matrix(&(d->mat6), &(d->m_dithermat), 85, 171);
+  clone_matrix(&(d->mat6), &(d->y_dithermat), 0, 85);
+  clone_matrix(&(d->mat6), &(d->k_dithermat), 0, 0);
 
-  clone_matrix(&(d->mat5), &(d->c_pick));
-  clone_matrix(&(d->mat5), &(d->m_pick));
-  clone_matrix(&(d->mat5), &(d->y_pick));
-  clone_matrix(&(d->mat5), &(d->k_pick));
+  clone_matrix(&(d->mat6), &(d->c_pick), 85, 0);
+  clone_matrix(&(d->mat6), &(d->m_pick), 0, 171);
+  clone_matrix(&(d->mat6), &(d->y_pick), 171, 0);
+  clone_matrix(&(d->mat6), &(d->k_pick), 85, 171);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -720,7 +738,8 @@ dither_set_ranges(dither_color_t *s, int nlevels,
 
 static void
 dither_set_ranges_full(dither_color_t *s, int nlevels,
-		  const full_dither_range_t *ranges, double density, int max_ink)
+		       const full_dither_range_t *ranges, double density,
+		       int max_ink)
 {
   int i, j;
   unsigned lbit;
@@ -979,12 +998,14 @@ free_dither(void *vd)
   destroy_matrix(&(d->y_dithermat));
   destroy_matrix(&(d->k_pick));
   destroy_matrix(&(d->k_dithermat));
+#if 0
   destroy_matrix(&(d->mat0));
   destroy_matrix(&(d->mat1));
   destroy_matrix(&(d->mat2));
   destroy_matrix(&(d->mat3));
   destroy_matrix(&(d->mat4));
   destroy_matrix(&(d->mat5));
+#endif
   destroy_matrix(&(d->mat6));
   free(d);
 }
@@ -1111,10 +1132,9 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
 static inline int
 print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    int adjusted, int x, int y, unsigned char *c, unsigned char *lc,
-	    unsigned char bit, int length, int invert_x, int invert_y,
-	    unsigned randomizer, int dontprint, unsigned *ink_budget,
-	    dither_matrix_t *pick_matrix, dither_matrix_t *dither_matrix,
-	    int dither_type)
+	    unsigned char bit, int length, unsigned randomizer, int dontprint,
+	    unsigned *ink_budget, dither_matrix_t *pick_matrix,
+	    dither_matrix_t *dither_matrix, int dither_type)
 {
   int i;
   int levels = rv->nlevels - 1;
@@ -1220,17 +1240,6 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	randomizer = 65536;	/* With ordered dither, we need this */
 
       /*
-       * A hack to get a bit more choice out of a single matrix.
-       * Fiddle the x and y coordinates.
-       */
-      if (invert_y)
-	y += 127;
-	
-      if (invert_x)
-	x += 127;
-	
-
-      /*
        * Compute the comparison value to decide whether to print at
        * all.  If there is no randomness, simply divide the virtual
        * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
@@ -1256,8 +1265,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      break;
 	    case D_FLOYD_HYBRID:
 	      /*
-	       * Hybrid Floyd-Steinberg: use a matrix (or a really ugly
-	       * combination of matrices) to generate the offset.
+	       * Hybrid Floyd-Steinberg: use a matrix to generate the offset.
 	       */
 	    case D_ORDERED:
 	    default:
@@ -1483,13 +1491,13 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
       ok = k;
       if (d->dither_type & D_ORDERED_BASE)
 	print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
-		    length, 0, 0, d->k_randomizer, 0, &ink_budget,
+		    length, d->k_randomizer, 0, &ink_budget,
 		    &(d->k_pick), &(d->k_dithermat), d->dither_type);
       else
 	{
 	  k = update_color(k, ditherk);
 	  k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL,
-			  bit, length, 0, 0, d->k_randomizer, 0, &ink_budget,
+			  bit, length, d->k_randomizer, 0, &ink_budget,
 			  &(d->k_pick), &(d->k_dithermat), d->dither_type);
 	  if (!(d->dither_type & D_ORDERED_BASE))
 	    ditherk = update_dither(k, ok, d->src_width, odb, odb_mask,
@@ -1750,9 +1758,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		odb_mask = (1 << odb) - 1;
   int		first_color = row % 3;
 
-  if (d->dither_type & D_ORDERED_BASE)
-    direction = 1;
-
   /*
    * First, generate the CMYK separation.  If there's nothing in
    * this row, and we're using an ordered dither, there's no reason
@@ -1761,6 +1766,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   generate_cmyk(d, rgb, &nonzero, row);
   if (!nonzero && (d->dither_type & D_ORDERED_BASE))
     return;
+
+  /*
+   * Boilerplate
+   */
+
+  if (d->dither_type & D_ORDERED_BASE)
+    direction = 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1839,6 +1851,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       dithery = yerror0[0];
       ditherk = kerror0[0];
     }
+
   /*
    * Main loop starts here!
    */
@@ -1918,7 +1931,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (black)
 	{
 	  int tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
-			       NULL, bit, length, 0, 0, 0, 0, &ink_budget,
+			       NULL, bit, length, 0, 0, &ink_budget,
 			       &(d->k_pick), &(d->k_dithermat), D_ORDERED);
 	  if (tk != k)
 	    printed_black = 1;
@@ -1941,21 +1954,21 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	goto ecy;
     ecc:
       c = print_color(d, &(d->c_dither), oc, oc /* + ((omd + oyd) >> 7) */,
-		      c, x, row, cptr, lcptr, bit, length, 0, 1,
+		      c, x, row, cptr, lcptr, bit, length,
 		      d->c_randomizer, printed_black, &ink_budget,
 		      &(d->c_pick), &(d->c_dithermat), d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
       m = print_color(d, &(d->m_dither), om, om /* + ((ocd + oyd) >> 7) */,
-		      m, x, row, mptr, lmptr, bit, length, 1, 0,
+		      m, x, row, mptr, lmptr, bit, length,
 		      d->m_randomizer, printed_black, &ink_budget,
 		      &(d->m_pick), &(d->m_dithermat), d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
       y = print_color(d, &(d->y_dither), oy, oy /* + ((ocd + omd) >> 7) */,
-		      y, x, row, yptr, lyptr, bit, length, 1, 1,
+		      y, x, row, yptr, lyptr, bit, length,
 		      d->y_randomizer, printed_black, &ink_budget,
 		      &(d->y_pick), &(d->y_dithermat), d->dither_type);
       if (first_color != ECOLOR_C)
