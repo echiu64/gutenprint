@@ -367,9 +367,10 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const int *dot_sizes;		/* Vector of dot sizes for resolutions */
   const double *densities;	/* List of densities for each printer */
-  const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
 /*****************************************************************************/
+  const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
   const paperlist_t *paperlist;
+/*****************************************************************************/
   const res_t *reslist;
   const inklist_t *inklist;
 /*****************************************************************************/
@@ -384,6 +385,37 @@ typedef struct escp2_printer
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
+extern const escp2_variable_inklist_t stpi_escp2_simple_inks;
+extern const escp2_variable_inklist_t stpi_escp2_spro10000_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_3pl_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_3pl_pigment_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_680_4pl_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_pigment_inks;
+extern const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks;
+
+extern const inklist_t stpi_escp2_c80_inklist;
+extern const inklist_t stpi_escp2_cmy_inklist;
+extern const inklist_t stpi_escp2_photo7_inklist;
+extern const inklist_t stpi_escp2_photo7_japan_inklist;
+extern const inklist_t stpi_escp2_photo_inklist;
+extern const inklist_t stpi_escp2_standard_inklist;
+extern const inklist_t stpi_escp2_x80_inklist;
+
+extern const paperlist_t stpi_escp2_c80_paper_list;
+extern const paperlist_t stpi_escp2_sp780_paper_list;
+extern const paperlist_t stpi_escp2_sp950_paper_list;
+extern const paperlist_t stpi_escp2_standard_paper_list;
+
+extern const res_t stpi_escp2_escp2200_reslist[];
+extern const res_t stpi_escp2_escp950_reslist[];
+extern const res_t stpi_escp2_no_microweave_reslist[];
+extern const res_t stpi_escp2_pro_reslist[];
+extern const res_t stpi_escp2_sp5000_reslist[];
+extern const res_t stpi_escp2_standard_reslist[];
 
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
 /*

@@ -20,6 +20,10 @@ dither-inks.lo
 dither-main.lo
 dither-ordered.lo
 dither-very-fast.lo
+escp2-channels.lo
+escp2-inks.lo
+escp2-papers.lo
+escp2-resolutions.lo
 image.lo
 module.lo
 path.lo
