@@ -18,6 +18,10 @@ Gimp-Print 4.0.2 contains the following fixes over Gimp-Print 4.0.1:
    and the Epson Stylus Photo 870 and 1270 printed with a slight
    magenta cast.
 
+3) The Canon driver failed (in GhostScript and CUPS) if no InkType was
+   specified.  It now defaults to a reasonable choice based on the
+   printer model.
+
 
 Gimp-Print 4.0.1 contains the following fixes over Gimp-Print 4.0.0:
 
