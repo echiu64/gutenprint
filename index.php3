@@ -42,7 +42,7 @@ OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
 <H2><font color="#ff0000">Gimp-Print 4.2.5 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of January 25,
-2002!</strong></em></font> Gimp-Print 4.2.5 is released.  This is a
+2003!</strong></em></font> Gimp-Print 4.2.5 is released.  This is a
 stable release on the Gimp-Print 4.2 line.  This release offers major
 improvements particularly for users of the Epson Stylus Photo 925,
 950, 960, 2100, and 2200, and the Stylus Pro 5000.  In addition to the
