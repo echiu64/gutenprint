@@ -47,6 +47,7 @@
 #undef HAVE_ASPRINTF
 #undef HAVE_GETOPT_LONG
 #undef HAVE_RANDOM
+#undef HAVE_POLL
 #undef HAVE_STPCPY
 /* Define for use of ioctl(2) system call */
 #undef USE_IOCTL

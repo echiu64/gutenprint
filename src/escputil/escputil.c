@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/poll.h>
 #ifdef __GNU_LIBRARY__
 #include <getopt.h>
 #endif
@@ -155,6 +156,7 @@ stp_printer_t printer_list[] =
   { "850",	"Stylus Color 850",	1,	7 },
   { "860",	"Stylus Color 860",	3,	15 },
   { "880",	"Stylus Color 880",	3,	15 },
+  { "83",	"Stylus Color 83",	3,	15 },
   { "900",	"Stylus Color 900",	3,	15 },
   { "980",	"Stylus Color 980",	3,	15 },
   { "1160",	"Stylus Color 1160",	3,	15 },
@@ -453,6 +455,9 @@ do_ink_level(void)
   char *ind;
   int i;
   int retry;
+#ifdef HAVE_POLL
+  struct pollfd ufds;
+#endif
   if (!raw_device)
     {
       fprintf(stderr, "Obtaining ink levels requires using a raw device.\n");
@@ -472,13 +477,21 @@ do_ink_level(void)
       fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
       exit(1);
     }
-  sleep(1);
   memset(buf, 0, 1024);
   retry = 5;
   do
     {
-      sleep(1);
+#ifdef HAVE_POLL
+      ufds.fd = fd;
+      ufds.events = POLLIN;
+      ufds.revents = 0;
+      (void) poll(&ufds, 1, 1000);
+#endif
       status = read(fd, buf, 1023);
+#ifndef HAVE_POLL
+      if (status <= 0)
+	sleep(1);
+#endif
     }
   while ((status == 0) && (--retry != 0));
   if (status < 0)
@@ -525,6 +538,9 @@ do_identify(void)
   int status;
   char buf[1024];
   int retry;
+#ifdef HAVE_POLL
+  struct pollfd ufds;
+#endif
   if (!raw_device)
     {
       fprintf(stderr, "Printer identification requires using a raw device.\n");
@@ -544,13 +560,21 @@ do_identify(void)
       fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
       exit(1);
     }
-  sleep(1);
   memset(buf, 0, 1024);
   retry = 5;
   do
     {
-      sleep(1);
+#ifdef HAVE_POLL
+      ufds.fd = fd;
+      ufds.events = POLLIN;
+      ufds.revents = 0;
+      (void) poll(&ufds, 1, 1000);
+#endif
       status = read(fd, buf, 1023);
+#ifndef HAVE_POLL
+      if (status <= 0)
+	sleep(1);
+#endif
     }
   while ((status == 0) && (--retry != 0));
   status = read(fd, buf, 1023);
@@ -681,6 +705,9 @@ do_align(void)
   stp_printer_t *printer = &printer_list[0];
   char *printer_name = NULL;
   int retry;
+#ifdef HAVE_POLL
+  struct pollfd ufds;
+#endif
   if (!printer_model)
     {
       char buf[1024];
@@ -711,13 +738,21 @@ do_align(void)
 		  strerror(errno));
 	  exit(1);
 	}
-      sleep(1);
       memset(buf, 0, 1024);
       retry = 5;
       do
 	{
-	  sleep(1);
+#ifdef HAVE_POLL
+	  ufds.fd = fd;
+	  ufds.events = POLLIN;
+	  ufds.revents = 0;
+	  (void) poll(&ufds, 1, 1000);
+#endif
 	  status = read(fd, buf, 1023);
+#ifndef HAVE_POLL
+	  if (status <= 0)
+	    sleep(1);
+#endif
 	}
       while ((status == 0) && (--retry != 0));
       if (status < 0)
