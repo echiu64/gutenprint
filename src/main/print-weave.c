@@ -2173,7 +2173,7 @@ add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 	   int color, int setactive, stp_lineoff_t *lineoffs,
 	   stp_lineactive_t *lineactive, stp_linecount_t *linecount, const stp_linebufs_t *bufs)
 {
-  off_t place = lineoffs[0].v[color];
+  size_t place = lineoffs[0].v[color];
   size_t count = linecount[0].v[color];
   if (place + nbytes > sw->jets * sw->bitwidth * sw->horizontal_width)
     {
