@@ -691,7 +691,7 @@ static const paper_adjustment_t durabrite_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.875, .5, 1, .10, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Coated", 1.0, .5, .5, .05, .999, 1, 1, 1, 1, 1, 1.1,
+  { "Coated", 1.2, .5, .5, .05, .999, 1, 1, 1, 1, 1, 1.1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Photo", 1.0, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
