@@ -63,7 +63,7 @@ AS = @AS@
 CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
 CATOBJEXT = .gmo
 CC = gcc
-CFLAGS = -O2 -g -Wall
+CFLAGS = -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
 CPP = gcc -E
 CPPFLAGS = 
 DATADIRNAME = share
@@ -75,12 +75,12 @@ GIMP =
 GIMPDOCS = 
 GIMPINSTALL = 
 GIMPTOOL = ../../gimptool
-GIMP_CFLAGS = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -g -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -g -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib  -lgimpui
-GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib 
+GIMP_CFLAGS = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib  -lgimpui
+GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib 
 GIMP_MAJOR_VERSION = 1
-GIMP_MICRO_VERSION = 9
+GIMP_MICRO_VERSION = 10
 GIMP_MINOR_VERSION = 1
 GIMP_MODULES = modules
 GIMP_MP_FLAGS = 
@@ -89,16 +89,20 @@ GIMP_PERL = perl
 GIMP_PLUGINS = plug-ins
 GIMP_THREAD_FLAGS = 
 GIMP_THREAD_LIBS = 
-GIMP_VERSION = 1.1.9
-GLIB_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
-GLIB_LIBS = -L/usr/lib -lglib
+GIMP_VERSION = 1.1.10
+GLIB_CFLAGS = -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
+GLIB_LIBS = -L/mnt1/gnome.new/lib -lglib
 GMOFILES =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
 GMSGFMT = /usr/bin/msgfmt
-GTK_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
-GTK_CONFIG = /usr/bin/gtk-config
-GTK_LIBS = -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
+GNOME_CONFIG = /mnt1/gnome.new/bin/gnome-config
+GTKXMHTML_CFLAGS = -I/mnt1/gnome.new/include -DNEED_GNOMESUPPORT_H -I/mnt1/gnome.new/lib/gnome-libs/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include
+GTKXMHTML_LIBS = -rdynamic -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXext -lX11 -lm
+GTK_CFLAGS = -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
+GTK_CONFIG = /mnt1/gnome.new/bin/gtk-config
+GTK_LIBS = -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
 GT_NO = 
 GT_YES = #YES#
+HELPBROWSER = helpbrowser
 INCLUDE_LOCALE_H = #include <locale.h>
 INSTOBJEXT = .mo
 INTLDEPS = 
@@ -106,7 +110,7 @@ INTLLIBS =
 INTLOBJS = 
 IN_GIMP = 1
 JPEG = jpeg
-LD = /usr/i486-linux/bin/ld
+LD = /usr/bin/ld
 LDFLAGS = 
 LIBAA = 
 LIBJPEG = -ljpeg
@@ -128,7 +132,7 @@ LPSTAT_DEF = -DLPSTAT_COMMAND=\"/usr/bin/lpstat\"
 LP_COMMAND = /usr/bin/lp
 LP_DEF = -DLP_COMMAND=\"/usr/bin/lp\"
 LT_AGE = 0
-LT_CURRENT = 9
+LT_CURRENT = 10
 LT_RELEASE = 1.1
 LT_REVISION = 0
 MAILER = -DMAILER=\"/usr/sbin/sendmail\"
@@ -157,7 +161,7 @@ SO =
 TIFF = tiff
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 1.1.9
+VERSION = 1.1.10
 WEBBROWSER = webbrowser
 XJT = xjt
 XPM = xpm
@@ -187,7 +191,7 @@ INCLUDES =  	-I$(top_srcdir)				$(GTK_CFLAGS)				-I$(includedir)
 AM_CPPFLAGS =          -DLOCALEDIR=\""$(localedir)"\"		-DLP_COMMAND=\"/usr/bin/lp\"				-DLPSTAT_COMMAND=\"/usr/bin/lpstat\"				-DLPR_COMMAND=\"/usr/bin/lpr\"				-DLPC_COMMAND=\"/usr/sbin/lpc\"
 
 
-LDADD =  	$(top_builddir)/libgimp/libgimp.la		$(GTK_LIBS)					$(INTLLIBS)
+LDADD =  	$(top_builddir)/libgimp/libgimp.la		$(top_builddir)/libgimp/libgimpui.la		$(GTK_LIBS)					$(INTLLIBS)
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
@@ -200,7 +204,8 @@ LIBS =
 print_OBJECTS =  print-escp2.o print-pcl.o print-ps.o print-util.o \
 print.o
 print_LDADD = $(LDADD)
-print_DEPENDENCIES =  $(top_builddir)/libgimp/libgimp.la
+print_DEPENDENCIES =  $(top_builddir)/libgimp/libgimp.la \
+$(top_builddir)/libgimp/libgimpui.la
 print_LDFLAGS = 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -366,7 +371,9 @@ print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpui.h ../../libgimp/gimpmenu.h \
+	../../libgimp/gimpexport.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 
 info-am:
 info: info-am
