@@ -1461,12 +1461,13 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
   }
 
   /* workaround for the bjc8200 in 6color mode - not really understood */
-  if ((init->caps->model==8200) && 
-      (init->colormode==COLOR_CCMMYK)) {
+  if (init->caps->model==8200) {
     arg_74_1= 0xff;
     arg_74_2= 0x90;
     arg_74_3= 0x04;
-    init->bits=2; init->use_dmt=1;
+    if (init->colormode==COLOR_CCMMYK) {
+      init->bits=2; init->use_dmt=1;
+    }
   }
 
   canon_cmd(v,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
