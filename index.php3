@@ -14,9 +14,10 @@ require('standard_html_header.php3');
 
 <P>A project to enhance the Print plugin for the GIMP.</P>
 
-<P><strong>We have fixed the download page!  Our apologies for not
-including a working download link.</strong>.  We've also added a
-GhostScript driver for Epson Stylus inkjet printers.</p>
+<P>For a quick download, please visit <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
+
+</p>
 
 <P><strong><em><font color="#ff0000">New as of August 15,
 2000!</font></em></strong> Version 4.0a2 is now released.  This is the
@@ -25,7 +26,7 @@ development cycle.  This version contains a GhostScript driver equal
 to the Print plugin in all respects, including supported printers.
 <strong>Please read the Ghost/README file very carefully if you use
 the Ghostscript driver, as the usage is completely different from
-3.1.9 and earlier</strong></p>
+3.1.9 and earlier.</strong></p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
@@ -51,3 +52,4 @@ will form the basis for version 4.0, which will be the next stable
 release.<p>
 
 <?require('standard_html_footer.php3');?>
+https://sourceforge.net/project/showfiles.php?group_id=1537&release_id=9909
