@@ -121,6 +121,8 @@ typedef union yylv {
   char *sval;
 } YYSTYPE;
 
+#define YYSTYPE_IS_DECLARED 1
+
 #include "testpatterny.h"
 
 
