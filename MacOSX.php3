@@ -156,7 +156,7 @@ require('standard_html_header.php3');
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5.tar.gz?download"
+ "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-source.tar.gz?download"
  >source</a>)
  </td>
  </tr>
