@@ -3,10 +3,10 @@
 # Printer/driver settings. Please see src/ghost/README for appropriate
 # values for each of these settings
 # Printer model
-printer escp2-870
-extended 6
+printer escp2-2200
+extended 7
 # Resolution, or print quality
-parameter Resolution 1440x720sw
+parameter Resolution 720sw
 # Media source (if appropriate for your printer)
 #parameter InputSlot Standard
 # Media type (what kind of paper)
@@ -23,13 +23,13 @@ parameter DitherAlgorithm Adaptive
 
 # Placement settings
 # Horizontal size, as fraction of paper width (defaults to 1.0)
-hsize 0.45
+hsize 0.08
 # Vertical size, as fraction of paper width (defaults to 1.0)
-vsize 0.45
+vsize 0.08
 # Left margin, as fraction of paper width (defaults to 0)
-left 0.05
+left 0.0
 # Top margin, as fraction of paper width (defaults to 0)
-top 0.05
+top 0.0
 
 # Output settings
 # These settings are used as the base values for all ramps.  These settings
