@@ -2288,8 +2288,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
                                            "InputSlot", &num_media_sources);
   if (vars.media_source[0] == '\0' && media_sources != NULL)
     strcpy(vars.media_source, media_sources[0]);
-  plist_build_menu(media_source, &media_source_menu, num_media_sources, media_sources,
-                   p->media_source, media_source_callback);
+  plist_build_menu(media_source, &media_source_menu, num_media_sources,
+		   media_sources, p->media_source, media_source_callback);
 
   if (num_resolutions > 0)
   {
@@ -2905,6 +2905,7 @@ printrc_load(void)
       else
 	{
 	  strncpy(key.media_source, lineptr, commaptr - lineptr);
+	  key.media_source[commaptr - lineptr] = '\0';
 	  lineptr = commaptr + 1;
 	}
 
