@@ -1515,7 +1515,7 @@ static const escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_ENHANCED_MICROWEAVE_NO
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_ENHANCED_MICROWEAVE_NO
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO),
     32, 4, 32, 4, 720, 360, INCH(17 / 2), INCH(44), 8, 9, 0, 30, 0, 1, 0,
@@ -1528,7 +1528,7 @@ static const escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_ENHANCED_MICROWEAVE_NO
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_ENHANCED_MICROWEAVE_NO
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO),
     64, 2, 64, 2, 720, 360, INCH(17 / 2), INCH(44), 8, 9, 9, 40, 0, 1, 4,
@@ -1541,7 +1541,7 @@ static const escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_ENHANCED_MICROWEAVE_NO
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_ENHANCED_MICROWEAVE_NO
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO),
     64, 2, 128, 1, 720, 360, INCH(17 / 2), INCH(44), 9, 9, 9, 40, 0, 1, 4,
@@ -1554,7 +1554,7 @@ static const escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_ENHANCED_MICROWEAVE_NO
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_ENHANCED_MICROWEAVE_NO
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO),
     64, 2, 64, 2, 720, 360, INCH(17), INCH(44), 8, 9, 9, 40, 0, 1, 4,
@@ -2988,9 +2988,8 @@ static void
 escp2_reset_printer(const stp_vars_t v, escp2_init_t *init)
 {
   /*
-   * Hack that seems to be necessary for these silly things to recognize
-   * the input.  It only needs to be done once per printer evidently, but
-   * it needs to be done.
+   * Magic initialization string that's needed to take printer out of
+   * packet mode.
    */
   if (escp2_has_cap(init->model, MODEL_INIT, MODEL_INIT_NEW, init->v))
     stp_zprintf(v, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
@@ -3184,7 +3183,7 @@ escp2_set_form_factor(const stp_vars_t v, escp2_init_t *init)
 
   if (escp2_has_cap(init->model, MODEL_YZEROMARGIN, MODEL_YZEROMARGIN_YES,
 		    init->v))
-    /* Make the page 2/10" higher (probably ignored by the printer anyway) */
+    /* Make the page higher (probably ignored by the printer anyway) */
     page_height += 144 * 720 / init->ydpi;
 
   if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_1999,
@@ -3527,6 +3526,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	max_head_offset = head_offset[i];
     }
 
+  top += max_head_offset * nozzle_separation * 72 / ydpi;
+
  /*
   * Let the user know what we're doing...
   */
@@ -3597,7 +3598,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       * paper's top edge.  The value 18 was reported to be correct by
       * Mogens Jaeger.
       */
-      top += 18 * physical_ydpi / max_vres;
+      top += 28 * physical_ydpi / max_vres;
     }
 
  /*
