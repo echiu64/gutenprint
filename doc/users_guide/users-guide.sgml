@@ -1180,7 +1180,44 @@ Click on the drop down menu next to the word
 <guilabel>Device</guilabel> and a list of possible printer devices
 appears.  Select the device appropriate for your printer.  Note that
 there are a range of serial, parallel, USB, and other devices from
-which to choose.  Once the selection is made, click the
+which to choose.
+   </para>
+
+   <caution>
+   <title>If you use a USB printer</title>
+
+   <para>
+If you are using CUPS versions 1.1.11 or above,
+you must have a printer connected to at least one USB port, and the
+printer must be turned ON, when you start CUPS (typically, when you
+boot your machine).  If the printer is not connected and turned on at
+the time CUPS was started, you will not find a USB connection in the
+list of devices.  You may then enter 'usb:/dev/usblp0' (or whatever
+the correct name for your printer port is) in the next screen, but
+later on in the configuration process you will get an error
+"client_error_not_possible" with no explanation.  Note that entering
+'file:/dev/usblp0' will not work; CUPS will allow this, but printing
+(at least in some situations) will not actually work.
+   </para>
+
+   <para>
+Again, this requires that the printer be connected and powered on
+<emphasis>at the time CUPS is started</emphasis>.  You cannot simply plug
+in the printer and turn it on before configuring it; CUPS must see the
+USB port when it starts up.  This only applies to USB devices;
+parallel ports are always visible to CUPS whether a printer is
+connected or not.
+   </para>
+
+   <para>
+While CUPS 1.1.10 and earlier will also not display the USB connection
+in the list of devices, those versions of CUPS will allow you to enter
+the name of the USB connection.
+   </para>
+   </caution>
+
+   <para>
+Once the selection is made, click the
 <guibutton>Continue</guibutton> button.  Now, this screen appears.
    </para>
 
@@ -1215,14 +1252,14 @@ asks you to select the specific model number for your printer.
    <para>
 Scroll through the long list and find the model number for your
 printer.  Notice carefully that there are many different languages
-supported for each printer, as denoted by the initials in
-parenthesis.  (en) would be for English, (de) for German, (it) for
-Italian, (fr) for French, and (es) for Spanish.  Also take note of the
-Gimp-Print revision for the driver, and ensure that it is indeed the
-version of Gimp-Print which you have most recently installed.  It
-would appear that the author has some old drivers still installed!
-Once you have made the proper selection, click on the
-<guibutton>Continue</guibutton> button.
+supported for each printer, as denoted by the initials in parenthesis.
+(en) would be for English, (da) for Danish, (sv) for Swedish, (fr) for
+French, (no) for Norwegian, (pl) for Polish, and (en_GB) for British
+English.  Also take note of the Gimp-Print revision for the driver,
+and ensure that it is indeed the version of Gimp-Print which you have
+most recently installed.  It would appear that the author has some old
+drivers still installed!  Once you have made the proper selection,
+click on the <guibutton>Continue</guibutton> button.
    </para>
 
    <figure><title>The CUPS Admin Success Window</title>
