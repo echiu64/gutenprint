@@ -58,6 +58,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "vacuum",			8, 1 },
   { "fast_360",			9, 1 },
   { "send_zero_advance",       10, 1 },
+  { "supports_ink_change",     11, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -237,7 +238,6 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(bottom_margin),
   PARAMETER_INT(alignment_passes),
   PARAMETER_INT(alignment_choices),
-  PARAMETER_INT(supports_ink_change),
   PARAMETER_INT(alternate_alignment_passes),
   PARAMETER_INT(alternate_alignment_choices),
   PARAMETER_RAW(preinit_sequence),
@@ -474,7 +474,6 @@ DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
-DEF_SIMPLE_ACCESSOR(supports_ink_change, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
 
@@ -911,8 +910,9 @@ set_gray_transition_parameter(stp_const_vars_t v,
 {
   const escp2_inkname_t *ink_name = get_inktype(v);
   description->is_active = 0;
-  if (ink_name && ink_name->channels[ECOLOR_K] &&
-      ink_name->channels[ECOLOR_K]->n_subchannels == expected_channels &&
+  if (ink_name && ink_name->channel_set->channels[ECOLOR_K] &&
+      (ink_name->channel_set->channels[ECOLOR_K]->n_subchannels ==
+       expected_channels) &&
       using_automatic_settings(v, AUTO_MODE_MANUAL))
     fill_transition_parameters(description);
 }
@@ -928,9 +928,9 @@ set_color_transition_parameter(stp_const_vars_t v,
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
       if (ink_name &&
-	  ink_name->channel_limit == 4 &&
-	  ink_name->channels[color] &&
-	  ink_name->channels[color]->n_subchannels == 2)
+	  ink_name->channel_set->channel_count == 4 &&
+	  ink_name->channel_set->channels[color] &&
+	  ink_name->channel_set->channels[color]->n_subchannels == 2)
 	fill_transition_parameters(description);
     }
 }
@@ -1251,7 +1251,9 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "SupportsInkChange") == 0)
     {
-      description->deflt.integer = escp2_supports_ink_change(v);
+      description->deflt.integer =
+	escp2_has_cap(v, MODEL_SUPPORTS_INK_CHANGE,
+		      MODEL_SUPPORTS_INK_CHANGE_YES);
       description->bounds.integer.lower = -1;
       description->bounds.integer.upper = -2;
     }
@@ -1440,7 +1442,7 @@ set_raw_ink_type(stp_vars_t v, stp_image_t *image)
    */
   for (i = 0; i < ninktypes; i++)
     if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
-	inks->inknames[i]->channel_limit * 2 == stpi_image_bpp(image))
+	inks->inknames[i]->channel_set->channel_count * 2 == stpi_image_bpp(image))
       {
 	stpi_dprintf(STPI_DBG_INK, v, "Changing ink type from %s to %s\n",
 		     stp_get_string_parameter(v, "InkType") ?
@@ -1608,29 +1610,11 @@ count_channels(const escp2_inkname_t *inks)
 {
   int answer = 0;
   int i;
-  for (i = 0; i < inks->channel_limit; i++)
-    if (inks->channels[i])
-      answer += inks->channels[i]->n_subchannels;
+  for (i = 0; i < inks->channel_set->channel_count; i++)
+    if (inks->channel_set->channels[i])
+      answer += inks->channel_set->channels[i]->n_subchannels;
   return answer;
 }
-
-static const physical_subchannel_t default_black_subchannels[] =
-{
-  { 0, 0, 0, "BlackDensity", NULL }
-};
-
-static const ink_channel_t default_black_channels =
-{
-  "Empty", default_black_subchannels, 1
-};
-
-static const escp2_inkname_t default_black_ink =
-{
-  NULL, NULL, 0, 1, 0, NULL, NULL, NULL, NULL,
-  {
-    &default_black_channels
-  }
-};
 
 static int
 compute_channel_count(const escp2_inkname_t *ink_type, int channel_limit)
@@ -1639,7 +1623,7 @@ compute_channel_count(const escp2_inkname_t *ink_type, int channel_limit)
   int physical_channels = 0;
   for (i = 0; i < channel_limit; i++)
     {
-      const ink_channel_t *channel = ink_type->channels[i];
+      const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel)
 	physical_channels += channel->n_subchannels;
     }
@@ -1667,7 +1651,7 @@ setup_inks(stp_vars_t v)
   stpi_init_debug_messages(v);
   for (i = 0; i < pd->logical_channels; i++)
     {
-      const ink_channel_t *channel = ink_type->channels[i];
+      const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel && channel->n_subchannels > 0)
 	{
 	  const char *param = channel->subchannels[0].channel_density;
@@ -1703,7 +1687,7 @@ setup_head_offset(stp_vars_t v)
   pd->head_offset = stpi_zalloc(sizeof(int) * pd->channels_in_use);
   for (i = 0; i < pd->logical_channels; i++)
     {
-      const ink_channel_t *channel = ink_type->channels[i];
+      const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel)
 	{
 	  int j;
@@ -1763,7 +1747,7 @@ allocate_channels(stp_vars_t v, int line_length)
 
   for (i = 0; i < pd->logical_channels; i++)
     {
-      const ink_channel_t *channel = ink_type->channels[i];
+      const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel)
 	{
 	  int j;
@@ -1928,7 +1912,7 @@ setup_head_parameters(stp_vars_t v)
     compute_channel_count(pd->inkname, pd->logical_channels);
   if (pd->physical_channels == 0)
     {
-      pd->inkname = &default_black_ink;
+      pd->inkname = &stpi_escp2_default_black_inkset;
       pd->physical_channels =
 	compute_channel_count(pd->inkname, pd->logical_channels);
     }
@@ -2144,10 +2128,11 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
 
   pd->inkname = get_inktype(v);
   pd->channels_in_use = count_channels(pd->inkname);
-  if (stp_get_output_type(v) != OUTPUT_RAW_PRINTER && !(pd->inkname->is_color))
+  if (stp_get_output_type(v) != OUTPUT_RAW_PRINTER &&
+      pd->inkname->channel_set->channel_count == 1)
     stp_set_output_type(v, OUTPUT_GRAY);
   if (stp_get_output_type(v) == OUTPUT_COLOR &&
-      pd->inkname->channels[0] != NULL)
+      pd->inkname->channel_set->channels[ECOLOR_K] != NULL)
     stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
   setup_resolution(v);

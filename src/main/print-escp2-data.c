@@ -434,12 +434,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     15, 1, 4, 15, 1, 4, 15, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g1_dotsizes, g1_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -449,12 +450,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g2_dotsizes, g1_densities, &stpi_escp2_simple_drops,
     stpi_escp2_sc500_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -464,12 +466,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g1_dotsizes, sc1500_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_reslist, &stpi_escp2_cmy_inkgroup,
     standard_bits, standard_base_res, &standard_roll_feed_input_slot_list,
@@ -479,12 +482,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     sc600_dotsizes, g3_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -494,12 +498,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 4, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g3_dotsizes, g3_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -509,12 +514,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     64, 1, 2, 128, 1, 1, 128, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 4, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g3_dotsizes, g3_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -524,12 +530,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 4, 0, 0, 0, 0,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g3_dotsizes, g3_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, g3_base_res, &standard_roll_feed_input_slot_list,
@@ -541,12 +548,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -556,12 +564,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_NO),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_NO |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(118 / 10), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -571,12 +580,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
@@ -588,12 +598,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     21, 1, 4, 21, 1, 4, 21, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 15, 0, 0, 0,
+    1, 15, 0, 0,
     sc440_dotsizes, sc440_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -603,12 +614,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 15, 0, 0, 0,
+    1, 15, 0, 0,
     sc640_dotsizes, sc440_densities, &stpi_escp2_simple_drops,
     stpi_escp2_sc640_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -618,12 +630,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -633,12 +646,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c3pl_dotsizes, c3pl_densities, &stpi_escp2_variable_3pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, stc900_base_res, &default_input_slot_list,
@@ -648,12 +662,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -663,12 +678,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
@@ -678,12 +694,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -693,12 +710,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -708,12 +726,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 8, 0, 0, 0, 8,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
-    1, 15, 0, 0, 0,
+    1, 15, 0, 0,
     sc660_dotsizes, sc660_densities, &stpi_escp2_simple_drops,
     stpi_escp2_sc660_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -723,12 +742,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -738,12 +758,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -753,12 +774,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, 360, 720, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 1, 0, 0,
+    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, &stpi_escp2_variable_x80_6pl_drops,
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -768,12 +790,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 97, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
@@ -783,12 +806,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 97, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
@@ -798,12 +822,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     64, 1, 2, 128, 1, 1, 128, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 4, 0, 0, 0, 0,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g3_dotsizes, g3_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, g3_base_res, &standard_roll_feed_input_slot_list,
@@ -813,12 +838,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     sc670_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -828,12 +854,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    2, 15, 0, 0, 0,
+    2, 15, 0, 0,
     sp2000_dotsizes, sp2000_densities, &stpi_escp2_variable_2000p_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_pigment_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -843,12 +870,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 4,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     sp5000_dotsizes, photo_densities, &stpi_escp2_simple_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &sp5000_input_slot_list,
@@ -858,12 +886,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -873,12 +902,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_pigment_inkgroup,
     standard_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -888,12 +918,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -903,12 +934,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_pigment_inkgroup,
     standard_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -918,12 +950,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, sc680_densities, &stpi_escp2_variable_680_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -933,12 +966,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -948,12 +982,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
     360, 14400, -1, 2880, 720, 90, 90, 38, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c3pl_dotsizes, sc980_densities, &stpi_escp2_variable_3pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -963,12 +998,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -978,12 +1014,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
@@ -993,12 +1030,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &standard_roll_feed_input_slot_list,
@@ -1008,12 +1046,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, 360, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 1, 0, 0,
+    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, &stpi_escp2_variable_x80_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1023,12 +1062,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g1_dotsizes, g1_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -1038,12 +1078,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_pigment_inkgroup,
     standard_bits, pro_base_res, &sp5000_input_slot_list,
@@ -1053,12 +1094,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     spro10000_dotsizes, spro10000_densities, &stpi_escp2_spro10000_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -1068,12 +1110,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 1, 0, 0,
+    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, &stpi_escp2_variable_x80_6pl_drops,
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1083,12 +1126,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 1, 0, 0,
+    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, &stpi_escp2_variable_x80_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1098,12 +1142,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     60, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1113,12 +1158,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 4,
     360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
-    1, 7, 0, 0, 0,
+    1, 7, 0, 0,
     g1_dotsizes, g1_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_reslist, &stpi_escp2_standard_inkgroup,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -1128,12 +1174,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, &stpi_escp2_variable_2pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo_inkgroup,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
@@ -1143,12 +1190,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     96, 96, 2, 96, 96, 2, 192, 192, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &stpi_escp2_variable_ultrachrome_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_ultrachrome_inkgroup,
     ultrachrome_bits, ultrachrome_base_res, &cutter_roll_feed_input_slot_list,
@@ -1158,12 +1206,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, 0, 0, 0,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, &stpi_escp2_variable_ultrachrome_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_ultrachrome_inkgroup,
     ultrachrome_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -1173,12 +1222,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, 0, 0, 0,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, &stpi_escp2_variable_ultrachrome_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_ultrachrome_inkgroup,
     ultrachrome_bits, pro_base_res, &pro_roll_feed_input_slot_list,
@@ -1188,12 +1238,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 55, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1203,12 +1254,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 55, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_photo_gen2_inkgroup,
     variable_bits, variable_base_res, &cutter_roll_feed_input_slot_list,
@@ -1218,12 +1270,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_standard_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1233,12 +1286,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, &stpi_escp2_variable_2pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inkgroup,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
@@ -1248,12 +1302,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, &stpi_escp2_variable_6pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1263,12 +1318,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
     stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1278,12 +1334,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -1293,12 +1350,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_YES | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     180, 180, 2, 360, 360, 1, 360, 360, 1, 6,
     360, 14400, -1, 2880, 2880, 720, 360, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, &stpi_escp2_variable_2pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inkgroup,
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
@@ -1308,12 +1366,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
     90, 90, 2, 90, 90, 2, 90, 90, 2, 6,
     360, 14400, -1, 2880, 2880, 720, 360, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
-    4, 15, 0, 0, 0,
+    4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, &stpi_escp2_variable_2pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
@@ -1323,12 +1382,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
-     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES),
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    3, 15, 0, 0, 0,
+    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, &stpi_escp2_variable_4pl_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_x80_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
