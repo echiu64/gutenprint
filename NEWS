@@ -28,13 +28,15 @@ will work with any printing system, and offers a comprehensive user
 interface to control all aspects of the printing process.
 
 The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
-install a package named "cups-devel" or similar on many systems.  CUPS
-is the printing system used on Macintosh OS X 10.2 and above, and many
-other systems use it.  The combination of CUPS and Gimp-Print provides
-a flexible, general purpose printing system capable of producing the
-highest quality output with any of the printers supported by this
-package.  We strongly recommend using CUPS with Gimp-Print as a
-general-purpose printing solution.
+install a package named "cups-devel" or similar on many systems.
+Please the rest of the release notes for full details on installation,
+as there is an important caveat.  CUPS is the printing system used on
+Macintosh OS X 10.2 and above, and many other systems use it.  The
+combination of CUPS and Gimp-Print provides a flexible, general
+purpose printing system capable of producing the highest quality
+output with any of the printers supported by this package.  We
+strongly recommend using CUPS with Gimp-Print as a general-purpose
+printing solution.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -336,6 +338,88 @@ and changes from 4.2, as follows:
      files based on Gimp-Print 4.2, or Gimp-Print 4.3 releases prior
      to 4.3.21.
 
+  5) Due to the implementation of CUPS, it is necessary on some
+     systems to link the programs associated with the CUPS driver (in
+     particular, cups-genppd and rastertogimpprint) statically against
+     the Gimp-Print library.  Please see bugs 865253 and 865265 for
+     full details.
+
+     This fix works correctly unless --disable-static (to disable
+     building static libraries) is passed on the command line.
+     Normally, only people packaging up Gimp-Print for distribution
+     use this option.  If you wish to use this option, please read the
+     Exceptions and Workarounds *carefully* for a full description of
+     the problem along with suggested methods of procedure.
+
+  6) With certain versions of CUPS and in certain non-default
+     configurations, if a new version of Gimp-Print is installed over
+     an existing version genppd will create PPD files based on the
+     older version of Gimp-Print rather than the newer version.  This
+     will happen if all of the following are true:
+
+     1) The cups-config provided by the CUPS driver adds
+        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+        reportedly because in some cases the runtime linker does not
+        pick up libraries out of /usr/lib.  This can be checked by
+        running
+
+        cups-config --libs --ldflags
+
+        and inspecting the output for any mention of "rpath", "RPATH",
+        "RUN_PATH", or the like.  This is controlled by the CUPS
+        installation on your system.
+
+     2) There is presently a version of Gimp-Print installed in /usr
+        (--prefix=/usr) rather than /usr/local or the like.  The
+        default location of Gimp-Print installation is in /usr/local,
+        but system vendors typically install Gimp-Print in /usr.
+
+     3) Gimp-Print is built dynamically only (--disable-static).  This
+        is not a default, and requires the explicit --disable-static
+        on the Gimp-Print "configure" command line.  Therefore, if you
+        build Gimp-Print normally you should not be vulnerable to this
+        problem.
+
+     Note that in general if you install CUPS into a non-standard
+     location, and install Gimp-Print into the same location, this
+     problem can surface.  For example, if you choose to install CUPS
+     in /usr/local and Gimp-Print in /usr/local you are vulnerable to
+     this.  However, it is not standard practice to install CUPS
+     anywhere but /usr.
+
+     In this case, the run path embedded in the genppd executable
+     points to the version of Gimp-Print installed in /usr/lib. This
+     run path overrides any attempt by libtool to look in the build
+     directory. The result is that cups-genppd and rastertogimpprint
+     are run against the older version of Gimp-Print. If the new
+     version contains additional features (more printers, etc.) they
+     will not be available.
+
+     This bug is difficult to detect in a normal build.  It does not
+     cause an error to happen during build; the only failure is that
+     some PPD files may not be built or may be built with missing
+     options.  Due to the PPD version checking introduced in this
+     release, the behavior might manifest itself as a runtime error.
+     It is also possible that there will be no error at all other than
+     the older version of Gimp-Print being used, with the result that
+     new features and bug fixes are not available.
+
+     If you wish to use only shared libraries, do not wish to build
+     static libraries at all, and are vulnerable to this issue
+     (because cups-config --ldflags sets the run path), there are
+     three workarounds available:
+
+     1) Build and install Gimp-Print into /usr (rather than
+        /usr/local) and then rebuild Gimp-Print from scratch.  This
+        will install the correct libgimpprint.so in /usr/lib, and in
+        the rebuild genppd will be run against the correct library.
+
+     2) Remove the old version of Gimp-Print prior to building the new
+        version of Gimp-Print.  The important files to remove are
+        anything named /usr/lib/libgimpprint*.
+
+     3) Edit cups-config to remove the reference to the run path.
+
 
 * Changes to the Ghostscript driver:
 
@@ -364,7 +448,7 @@ and changes from 4.2, as follows:
      with AFPL Ghostscript with no license conflict.
 
 
-* Errata and Exceptions:
+* Exceptions and Workarounds:
 
   1) Full bleed mode does not work completely correctly on most Epson
      printers at present.  Typically there is a small margin at the
