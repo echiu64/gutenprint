@@ -92,7 +92,7 @@ THE GIMP
 CUPS
 
     Gimp-print 4.2 requires CUPS 1.1.9 or higher.  We recommend use of
-    1.1.11; that release of CUPS features better internationalization
+    1.1.12; that release of CUPS features better internationalization
     and fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
