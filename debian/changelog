@@ -1,3 +1,10 @@
+gimp-print (4.2.4-1) unstable; urgency=low
+
+  * New stable release
+  * Update for Standards-Version 3.5.7 
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat,  9 Nov 2002 22:55:35 +0000
+
 gimp-print (4.2.3-1) unstable; urgency=low
 
   * New stable release.
