@@ -767,6 +767,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertoprinter\"\n");
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
+  gzputs(fp, "\n");
 
  /*
   * Get the page sizes from the driver...
@@ -817,37 +818,31 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     cur_opt++;
   }
 
-  gzprintf(fp, "*VariableSizes: %s\n", variable_sizes ? "true" : "false");
+  gzprintf(fp, "*VariableSizes: %s\n\n", variable_sizes ? "true" : "false");
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
-  gzputs(fp, "*DefaultPageSize: ");
-  gzputs(fp, defopt);
-  gzputs(fp, "\n");
+  gzprintf(fp, "*DefaultPageSize: %s\n", defopt);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageSize %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
              the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
-  gzputs(fp, "*CloseUI: *PageSize\n");
+  gzputs(fp, "*CloseUI: *PageSize\n\n");
 
   gzputs(fp, "*OpenUI *PageRegion: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
-  gzputs(fp, "*DefaultPageRegion: ");
-  gzputs(fp, defopt);
-  gzputs(fp, "\n");
+  gzprintf(fp, "*DefaultPageRegion: %s\n", defopt);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageRegion %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"<</PageRegion[%d %d]/ImagingBBox null>>setpagedevice\"\n",
 	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
-  gzputs(fp, "*CloseUI: *PageRegion\n");
+  gzputs(fp, "*CloseUI: *PageRegion\n\n");
 
-  gzputs(fp, "*DefaultImageableArea: ");
-  gzputs(fp, defopt);
-  gzputs(fp, "\n");
+  gzprintf(fp, "*DefaultImageableArea: %s\n", defopt);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*ImageableArea %s", the_papers[i].name);
@@ -855,47 +850,30 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
              the_papers[i].left, the_papers[i].bottom,
 	     the_papers[i].right, the_papers[i].top);
   }
-
-  gzputs(fp, "*DefaultPaperDimension: ");
-  gzputs(fp, defopt);
   gzputs(fp, "\n");
 
-  min_width  = 999999;
-  min_height = 999999;
-  max_width  = 0;
-  max_height = 0;
+  gzprintf(fp, "*DefaultPaperDimension: %s\n", defopt);
 
   for (i = 0; i < cur_opt; i ++)
   {
-    if (min_width > the_papers[i].width)
-      min_width = the_papers[i].width;
-    if (min_height > the_papers[i].height)
-      min_height = the_papers[i].height;
-    if (max_width < the_papers[i].width)
-      max_width = the_papers[i].width;
-    if (max_height < the_papers[i].height)
-      max_height = the_papers[i].height;
-
     gzprintf(fp, "*PaperDimension %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"%d %d\"\n",
 	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
+  gzputs(fp, "\n");
 
   if (variable_sizes)
   {
-   /*
-    * Currently we can only determine the maximum width and height from
-    * the supported standard media sizes, and use the margins for the
-    * first standard size; eventually we need a driver interface that
-    * returns the values!  -- M Sweet
-    */
+    (*(printfuncs->limit))(p, v, &max_width, &max_height,
+			   &min_width, &min_height);
+    stp_set_media_size(v, "Custom");
+    (*(printfuncs->media_size))(p, v, &width, &height);
+    (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
 
     gzprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
     gzprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
     gzprintf(fp, "*HWMargins:      %d %d %d %d\n",
-	     the_papers[0].left, the_papers[0].bottom,
-	     the_papers[0].width - the_papers[0].right,
-	     the_papers[0].height - the_papers[0].top);
+	     left, bottom, width - right, height - top);
     gzputs(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
     gzprintf(fp, "*ParamCustomPageSize Width:        1 points %d %d\n",
              min_width, max_width);
@@ -903,7 +881,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
              min_height, max_height);
     gzputs(fp, "*ParamCustomPageSize WidthOffset:  3 points 0 0\n");
     gzputs(fp, "*ParamCustomPageSize HeightOffset: 4 points 0 0\n");
-    gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n");
+    gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n\n");
   }
 
   if (opts)
@@ -957,7 +935,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
              CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED);
   }
 
-  gzputs(fp, "*CloseUI: *ColorModel\n");
+  gzputs(fp, "*CloseUI: *ColorModel\n\n");
 
  /*
   * Media types...
@@ -982,7 +960,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     free(opts);
 
-    gzputs(fp, "*CloseUI: *MediaType\n");
+    gzputs(fp, "*CloseUI: *MediaType\n\n");
   }
 
  /*
@@ -1008,7 +986,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     free(opts);
 
-    gzputs(fp, "*CloseUI: *InputSlot\n");
+    gzputs(fp, "*CloseUI: *InputSlot\n\n");
   }
 
  /*
@@ -1046,7 +1024,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   free(opts);
 
-  gzputs(fp, "*CloseUI: *Resolution\n");
+  gzputs(fp, "*CloseUI: *Resolution\n\n");
 
  /*
   * STP option group...
@@ -1069,7 +1047,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     gzprintf(fp, "*stpImageType Continuous/%s:\t\"<</cupsRowCount 2>>setpagedevice\"\n",
             _("Photograph"));
 
-    gzputs(fp, "*CloseUI: *stpImageType\n");
+    gzputs(fp, "*CloseUI: *stpImageType\n\n");
 
    /*
     * Dithering algorithms...
@@ -1083,7 +1061,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
       gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
                stp_dither_algorithm_name(i), stp_dither_algorithm_text(i), i);
 
-    gzputs(fp, "*CloseUI: *stpDither\n");
+    gzputs(fp, "*CloseUI: *stpDither\n\n");
 
    /*
     * InkTypes...
@@ -1112,7 +1090,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
       free(opts);
 
-      gzputs(fp, "*CloseUI: *stpInkType\n");
+      gzputs(fp, "*CloseUI: *stpInkType\n\n");
     }
 
    /*
@@ -1133,14 +1111,14 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
            j <= stp_options[i].high;
 	   j += stp_options[i].step)
 	gzprintf(fp, "*%s %d/%.3f: \"\"\n", stp_options[i].name, j, j * 0.001);
-      gzprintf(fp, "*CloseUI: *%s\n", stp_options[i].name);
+      gzprintf(fp, "*CloseUI: *%s\n\n", stp_options[i].name);
     }
 
  /*
   * End of STP option group...
   */
 
-  gzputs(fp, "*CloseGroup: STP\n");
+  gzputs(fp, "*CloseGroup: STP\n\n");
 
  /*
   * Fonts...
@@ -1183,7 +1161,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*Font ZapfChancery-MediumItalic: Standard \"(001.007S)\" Standard ROM\n");
   gzputs(fp, "*Font ZapfDingbats: Special \"(001.004S)\" Standard ROM\n");
 
-  gzprintf(fp, "*%%End of %s.ppd\n", driver);
+  gzprintf(fp, "\n*%%End of %s.ppd\n", driver);
 
   gzclose(fp);
 
