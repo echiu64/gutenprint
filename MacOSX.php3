@@ -32,12 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <b>October 14, 2002 -</b> Gimp-Print 4.2.3-pre3, the newest prerelease in the
- stable 4.2 series, is now available for download.
- </p>
- <p>
- <b>September 17, 2002 -</b> Gimp-Print 4.2.2, the newest release in the
- stable 4.2 series, is now available for Mac OS X Jaguar!
+ <b>October 21, 2002 -</b> Gimp-Print 4.2.3, the newest stable release, is now available for download.
  </p>
  <br>
  </td>
@@ -97,53 +92,30 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <br>
- <b>Gimp-Print 4.2.2</b>
+ <b>Gimp-Print 4.2.3</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/Gimp-Print-4.2.2-0.ppc.dmg?download"
- >gimp-print-4.2.2-0.ppc.dmg</a>&nbsp;(5.1 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/Gimp-Print-4.2.3-0.ppc.dmg?download"
+ >gimp-print-4.2.3-0.ppc.dmg</a>&nbsp;(5.1 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.2 is the newest final release for Mac OS X; it includes 186
+ Gimp-Print 4.2.3 is the newest final release for Mac OS X; it includes 186
  drivers supporting over 300 printers. The disk image file includes an OS X
  installer package plus illustrated documentation to easily guide you through
  the printer set up process. This package requires (but does not include) ESP
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
- </p>
- <b>Gimp-Print 4.2.3-prerelease 3</b>
- </td>
- </tr>
- <tr>
- <td bgcolor="#d0ffff" >
- <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre3.ppc.dmg?download"
- >gimp-print-4.2.3-pre3.ppc.dmg</a>&nbsp;(5.2 MB)
- </td>
- <td align="right" >
- (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre3.tar.gz?download"
- >source</a>)
- </td>
- </tr>
- <tr>
- <td colspan="2" >
- <p>
- Gimp-Print 4.2.3-pre3 is a pre-release of version 4.2.3. It contains bug
- fixes over 4.2.2, but may also contain new bugs. This package requires (but
- does not include) ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and
- install, if necessary</b>).
  </p>
  <b>ESP Ghostscript 7.05.5</b>
  </td>
@@ -198,7 +170,7 @@ require('standard_html_header.php3');
  Installing GIMP is NOT required.
  </p>
  <p>
- Gimp-Print 4.2.2 is a stable release on the Gimp-Print 4.2 release line. We
+ Gimp-Print 4.2.3 is a stable release on the Gimp-Print 4.2 release line. We
  anticipate further releases in the 4.2 line, primarily to support new
  printers and improve functionality in existing printers. Concurrently, we
  will be working on the 4.3 development line, which will eventually become the
@@ -221,6 +193,55 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.3"></a>
+ <B>Gimp-Print 4.2.3</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-10-21</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.3 for Mac OS X Jaguar/Darwin 6.0 is the newest release
+ in the stable 4.2 series; it contains the following improvements over
+ Gimp-Print 4.2.2:
+ </p>
+ <ul>
+ <li>The native CUPS driver now accepts custom paper sizes with printers 
+ that permit this (all Epson printers, and most others).</li>
+ </ul>
+ <dl>
+ <dt>Bugs fixed since 4.2.2:
+ <dd>604854 QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI
+ <dd>611804 rastertoprinter.c fails to compile on Solaris
+ <dd>613384 Epson 7600 no printing
+ <dd>615561 Epson C40UX cannot print in B&W and Gray
+ <dd>615759 360x240 bad horizontal position
+ <dd>619992 IJS driver prints spurious first line
+ <dd>620016 IJS driver does not print properly in monochrome
+ <dd>621667 Very large prints on Epson 9500 fail
+ <dd>622612 CUPS driver forbids custom page sizes
+ <dd>625602 QUALITY Pale output on Stylus Pro 7500
+ <dt>The following bugs are open against Gimp-Print 4.2.3:
+ <dd>409612 Minor positioning prob on 4x6 glossy
+ <dd>538097 QUALITY-Poor quality printing on Canon s400
+ <dd>549677 Incorrect scaling on Canon BJC-1000
+ <dd>557868 QUALITY-Washed out color under Gimp on HP560c
+ <dd>581168 BJC 250 just spits out pages
+ <dd>601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+ <dd>602933 QUALITY-Poor quality on Canon S800
+ <dd>603702 QUALITY-HP LaserJet 5L print is too light
+ <dd>613054 Printing from InDesign 2.0 on OS 10.2.1
+ <dd>614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+ <dd>619299 QUALITY - brightness adjustment problem
+ <dd>619537 QUALITY - Poor quality w/ Lexmark OprtaE+ & pcl-4
+ <dd>621668 Full bleed prints have slight margin
+ </dl>
+ &nbsp;
+ </td>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="pre3"></a>
