@@ -69,6 +69,10 @@ typedef struct
   unsigned short blue[256];
 } lut_t;
 
+/*
+ * Abstract data type for interfacing with the image creation program
+ * (in this case, the Gimp).
+ */
 typedef void *Image;
 
 extern void Image_init(Image image);

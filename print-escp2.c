@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.26  1999/11/14 18:59:22  rlk
+ *   Final preparations for release to Olof
+ *
  *   Revision 1.25  1999/11/14 03:13:36  rlk
  *   Pseudo-hi-res microweave options
  *
@@ -269,8 +272,8 @@
  * Local functions...
  */
 
-static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int,
-			    int, int);
+static void escp2_write(FILE *, unsigned char *, int, int, int, int, int,
+			int, int);
 static void initialize_weave(int jets, int separation, int horizontal);
 static void escp2_flush(int model, int width, int hoffset, int ydpi,
 			int xdpi, FILE *prn);
@@ -282,6 +285,17 @@ escp2_write_weave(FILE *, int, int, int, int, int, int,
 		  unsigned char *k,
 		  unsigned char *C,
 		  unsigned char *M);
+
+
+/*
+ * Printer capabilities.
+ *
+ * Various classes of printer capabilities are represented by bitmasks.
+ */
+
+typedef unsigned int model_cap_t;
+typedef model_cap_t model_featureset_t;
+typedef model_cap_t model_class_t;
 
 #define MODEL_PAPER_SIZE_MASK	0x3
 #define MODEL_PAPER_SMALL 	0x0
@@ -322,9 +336,17 @@ escp2_write_weave(FILE *, int, int, int, int, int, int,
  * Brightness 127
  * Blue 92
  * Saturation 1.2
+ *
+ * Another group of settings that has worked well for me is
+ * Brightness 110
+ * Gamma 1.2
+ * Contrast 97
+ * Blue 88
+ * Saturation 1.1
+ * Density 1.5
  */
 
-int model_capabilities[] =
+model_cap_t model_capabilities[] =
 {
   /* Stylus Color */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
@@ -365,13 +387,13 @@ int model_capabilities[] =
 };
 
 static int
-escp2_has_cap(int model, int featureset, int class)
+escp2_has_cap(int model, model_featureset_t featureset, model_class_t class)
 {
   return ((model_capabilities[model] & featureset) == class);
 }
 
-static int
-escp2_cap(int model, int featureset)
+static model_class_t
+escp2_cap(int model, model_featureset_t featureset)
 {
   return (model_capabilities[model] & featureset);
 }
@@ -1732,6 +1754,8 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
 	    {
 	      fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	      /* FIXME need a more general way of specifying column */
+	      /* separation */
 	      fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		      ((hoffset * 1440 / ydpi) +
 		       (k & (horizontal_weave >> 1))) & 255,
@@ -1776,10 +1800,6 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	  putc('\r', prn);
 	}
       fwrite("\033\006", 2, 1, prn);
-#if 0
-      if (k < horizontal_weave - 1)
-	fprintf(prn, "\033(v\002%c%c%c", 0, 0, 0);
-#endif
     }
   last_pass = pass->pass;
   pass->pass = -1;

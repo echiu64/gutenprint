@@ -1,0 +1,72 @@
+Print plugin for the Gimp.  Version 3.0 by Robert Krawitz
+<rlk@alum.mit.edu> based on version 2.0 by Michael Sweet
+<mike@easysw.com>.
+
+This version has numerous enhancements:
+
+1) Full support for the Epson Stylus Photo, Photo 700, and Photo EX
+   printers, including 6-color printing, 1440x720 dpi resolution, and
+   "soft" weave for much faster high quality printing.
+
+2) Many new controls, including:
+
+   * Output gamma adjustment
+   * Contrast
+   * Red/green/blue levels
+   * Saturation
+   * Density
+   * Additional scaling options
+
+3) Improved tonal resolution.  Calculations are now done in 16 bit
+   rather than 8 bit resolution, which eliminates stair stepping.
+   Input levels do not map one to one onto output levels, so in 8 bit
+   output resolution multiple input levels will map to a single output
+   level.  Usually the density range is compressed in the light end of
+   the tonal range, so many different input levels will map to one
+   output level.  Use of 16 bit output resolution avoids this
+   undesirable behavior and results in smooth tonal gradations in
+   highlights.
+
+4) Saving of all settings between print jobs.
+
+
+This plugin has been optimized for the Epson Stylus Photo EX, since
+that's the printer I own.  I am interested in comments on performance
+both with Epson Stylus printers and with others.
+
+Some tips on tuning the output:
+
+* Start with the default settings
+
+* Brightness and density are not the same thing.  Density is a purely
+  linear adjustment; more density means more ink.  Brightness affects
+  perceived brightness.
+
+* Higher gamma values result in brighter images with compressed
+  highlights.  Lower gamma values are darker, but with better tonal
+  range in the highlights.
+
+* Be very careful with the contrast control.  Adjusting it more than a
+  few points will likely result in very strange behavior, particularly
+  in the highlights.  It's currently implemented as a linear control,
+  which is not really the right thing.  It should define an s-shaped
+  curve.
+
+* Different brands of ink yield different results.  I've found that
+  third party inks on Epson printers are generally too cyan.  The
+  correction for excessive cyan is to add red (or reduce blue and
+  green).
+
+* I've found that what creates good test patterns does not necessarily
+  create good photographs.  In particular, test patterns often print
+  well with gamma of .6 or thereabouts, but that gives washed out
+  photographs.  Perhaps when I implement a better contrast control
+  this can be improved.
+
+* There are many combinations of brightness, gamma, and density that
+  will create acceptable images.  You may find that you want different
+  settings for different images.
+
+Enjoy!
+
+-Robert Krawitz, November 14, 1999

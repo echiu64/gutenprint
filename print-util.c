@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.28  1999/11/14 18:59:22  rlk
+ *   Final preparations for release to Olof
+ *
  *   Revision 1.27  1999/11/14 00:57:11  rlk
  *   Mix black in sooner gives better density.
  *
@@ -320,13 +323,13 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  *
  * Added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999.
  *
- * Let's be really kinky and use a single routine for ALL cmyk dithering,
+ * Let's be really aggressive and use a single routine for ALL cmyk dithering,
  * including 6 and 7 color.
+ *
+ * Note that this is heavily tuned for Epson Stylus Photo printers.
+ * This should be generalized for other CMYK and CcMmYK printers.  All
+ * of these constants were empirically determined, and are subject to review.
  */
-
-#define TURNOVER_K_L 24
-#define TURNOVER_K_H 80
-#define KDARKNESS_LIMIT 60
 
 /*
  * Ratios of dark to light inks.  The darker ink should be DE / NU darker
@@ -334,6 +337,9 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  *
  * It is essential to be very careful about use of parentheses with these
  * macros!
+ *
+ * Increasing the denominators results in use of more dark ink.  This creates
+ * more saturated colors.
  */
 
 #define NU_C 1
@@ -358,9 +364,24 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_Y DE_Y / NU_Y
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
+/*
+ * Lower and upper bounds for mixing CMY with K to produce gray scale.
+ * Reducing KDARKNESS_LOWER results in more black being used with relatively
+ * light grays, which causes speckling.  Increasing KDARKNESS_UPPER results
+ * in more CMY being used in dark tones, which results in less pure black.
+ * Decreasing the gap too much results in sharp crossover and stairstepping.
+ */
 #define KDARKNESS_LOWER (32 * 256)
 #define KDARKNESS_UPPER (224 * 256)
 
+/*
+ * Randomizing values for deciding when to output a bit.  Normally with the
+ * error diffusion algorithm a bit is not output until the accumulated value
+ * of the pixel crosses a threshold.  This randomizes the threshold, which
+ * results in fewer obnoxious diagonal jaggies in pale regions.  Smaller values
+ * result in greater randomizing.  We use less randomness for black output
+ * to avoid production of black speckles in light regions.
+ */
 #define C_RANDOMIZER 1
 #define M_RANDOMIZER 1
 #define Y_RANDOMIZER 1
@@ -415,6 +436,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int bk;
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
+
+  /*
+   * If horizontal_overdensity is > 1, we want to output a bit only so many
+   * times that a bit would be generated.  These serve as counters for making
+   * that decision.  We make these variable static rather than reinitializing
+   * at zero each line to avoid having a line of bits near the edge of the
+   * image.
+   */
   static int cbits = 0;
   static int mbits = 0;
   static int ybits = 0;
@@ -484,10 +513,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     * First compute the standard CMYK separation color values...
     */
 		   
-#if 0
-    int cdarkness;
-    int mdarkness;
-#endif
     int maxlevel;
     int ak;
     int kdarkness;
@@ -509,28 +534,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     yy = y;
 #endif
     maxlevel = MAX(c, MAX(m, y));
-    /*
-     * In situations with low black value, it's probably better to use CMY
-     * to handle the black value.  Maybe 0 < k < 63 use CMY, 63 < k < 127
-     * or whatever to split the difference, and above that use black?
-     *
-     * Next idea: compare min level to max level.  If the difference is large
-     * enough, we'll do the color thing, otherwise just go straight
-     * black.
-     *
-     * The idea is to avoid nasty black dots in an otherwise light
-     * region.
-     *
-     * -- rlk 19990829
-     */
-#if 0
-    if (kdarkness < 32) {
-      if (k < 32 - kdarkness)
-	k = 0;
-      else if (k < 16384 - kdarkness)
-	k = (2 * k - (16384 - kdarkness));
-    }
-#endif
 
     if (black != NULL)
     {
@@ -566,7 +569,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       ym = m;
       yy = y;
 #endif
-      /* Need to do the diffuse-the-black-into-cmyk thing here, too */
+
+      /*
+       * kdarkness is an artificially computed darkness value for deciding
+       * how much black vs. CMY to use for the k component.  This is
+       * empirically determined.
+       */
       ok = k;
       nk = k + (ditherk) / 8;
       kdarkness = MAX((c + c / 3 + m + 2 * y / 3) / 4, ak);
@@ -600,6 +608,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	bk = nk;
       ck = nk - bk;
     
+      /*
+       * These constants are empirically determined to produce a CMY value
+       * that looks reasonably gray and is reasonably well balanced tonally
+       * with black.  As usual, this is very ad hoc and needs to be
+       * generalized.
+       */
       if (lmagenta)
 	{
 	  c += ck * 9 / 8;
@@ -612,6 +626,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  m += ck;
 	  y += ck;
 	}
+      /*
+       * Don't allow cmy to grow without bound.
+       */
       if (c > 65535)
 	c = 65535;
       if (m > 65535)
@@ -1021,11 +1038,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       }
     else
       {
-	/*
-	 * Shuffle the dither information around a bit
-	 * This should be faster than regenerating the random number from
-	 * scratch
-	 */
 	ditherbit = rand();
 	ditherbit0 = ditherbit & 0xffff;
 	ditherbit1 = ((ditherbit >> 8) & 0xffff);
@@ -1913,8 +1925,9 @@ compute_lut(lut_t *lut,
 	  lut->red[i] = adjusted_pixel;
 	  lut->green[i] = adjusted_pixel;
 	  lut->blue[i] = adjusted_pixel;
-	} else {
-	  
+	}
+      else
+	{
 	  /*
 	   * First, perform screen gamma correction
 	   */
@@ -2085,7 +2098,12 @@ default_media_size(int  model,		/* I - Printer model */
   }
 }
 
+
+
 #ifdef LEFTOVER_8_BIT
+/*
+ * Everything here and below goes away when this is tested on all printers.
+ */
 
 #define LEVEL_3	255
 #define LEVEL_2	213

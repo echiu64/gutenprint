@@ -44,6 +44,9 @@
 
 #include "print.h"
 
+/*
+ * All Gimp-specific code is in this file.
+ */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
 #define PLUG_IN_VERSION		"3.0 - 25 Oct 1999"
