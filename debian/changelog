@@ -1,8 +1,15 @@
 gimp-print (4.3.1-1) unstable; urgency=low
 
   * Move escputil to section utils
+  * Upgrade to debhelper version 4
+  * Automate library versioning to work for stable and unstable series.
+    LIBRARY_VERSION is the library major version or -UPSTREAM_VERSION
+  * Update configure regeneration to work with configure.ac
+  * libgimpprint$(VERSION)-dev provides and conflicts with a virtual
+    package `libgimpprint-dev'
+  * Remove libgimpprint.postinst as ldconfig is called by debhelper
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu,  2 May 2002 18:35:19 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri, 17 May 2002 20:12:34 +0100
 
 gimp-print (4.3.0-1) unstable; urgency=low
 

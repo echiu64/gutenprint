@@ -6,27 +6,47 @@
 #export DH_VERBOSE=1
 
 # This is the debhelper compatability version to use.
-export DH_COMPAT=2
+export DH_COMPAT=3
 
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE       ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE      ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -g
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
 # Get upstream version, and define libgimpprint suffix
 UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*$$//")
-LIBRARY_VERSION = $(UPSTREAM_VERSION)
+LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
 #LIBRARY_VERSION = 1
 
-build: build-stamp debian/control
-build-stamp: configure
+autoconfigure: autoconfigure-stamp debian/control
+autoconfigure-stamp:
 	dh_testdir
-	
 	cd debian ; \
-	ln -sf libgimpprint.files libgimpprint$(LIBRARY_VERSION).files ; \
-	ln -sf libgimpprint.postinst libgimpprint$(LIBRARY_VERSION).postinst ; \
-	cd .. ; \
+	for file in libgimpprint*; do \
+	  ln -sf $$file `echo $$file | sed -e 's/libgimpprint/libgimpprint$(LIBRARY_VERSION)/'` ; \
+	done
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
-	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --disable-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode ; \
+	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --disable-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
+	touch autoconfigure-stamp
+
+
+build: build-stamp debian/control
+build-stamp: autoconfigure-stamp
+	dh_testdir
+	
+	cd debian/gimp-print-build ; \
 	$(MAKE) ; \
 	cd src/gimp ; \
 	$(MAKE) print
@@ -35,14 +55,20 @@ build-stamp: configure
 
 clean: debian/control
 	dh_testdir
-	rm -f build-stamp 
+	rm -f build-stamp autoconfigure-stamp
 
-	# Add here commands to clean up after the build process.
+	-$(MAKE) distclean
+	-test -r /usr/share/misc/config.sub && \
+	  cp -f /usr/share/misc/config.sub config.sub
+	-test -r /usr/share/misc/config.guess && \
+	  cp -f /usr/share/misc/config.guess config.guess
+
 	rm -rf debian/gimp-print-build debian/gimp-print-install
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).files
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).postinst
 	-$(MAKE) distclean
 
+	rm -rf $(CURDIR)/debian/libgimpprint$(LIBRARY_VERSION)*
 	dh_clean
 
 install: DH_OPTIONS=
@@ -68,9 +94,9 @@ binary-indep: build install ChangeLog
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
-	  cp debian/gimp-print-install/usr/share/gimp-print/doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
-	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/developer-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
-	  cd debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html ; \
+	  cp debian/gimp-print-install/usr/share/gimp-print/doc/gimpprint.ps debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc
+	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/developer-html debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc/html
+	  cd debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc/html ; \
 	  if test ! -f gimpprint.html ; then \
 	    ln -s gimpprint_toc.html gimpprint.html ; \
 	  fi
@@ -143,31 +169,19 @@ changelog-stamp: build
 	
 # Make sure an/that  is up-to-date.
 debian/control: debian/changelog debian/control.in
-	sed -e "s/#UPSTREAM_VERSION#/$(UPSTREAM_VERSION)/g" <debian/control.in >debian/control
+	sed -e "s/#UPSTREAM_VERSION#/$(UPSTREAM_VERSION)/g" -e "s/#LIBRARY_VERSION#/$(LIBRARY_VERSION)/g" <debian/control.in >debian/control
 
 # Make sure that configure is up-to-date.
-configure: configure.in scripts/install-sh
-	if test -f configure.in ; then \
+configure: configure.ac scripts/install-sh
+	if test -f configure.ac ; then \
 	  if test -f autogen.sh ; then \
-	    export NOCONFIGURE=TRUE ; \
-	    /bin/sh autogen.sh ; \
+	    NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
 	  fi \
 	fi
 	
-configure.in: configure.in.in
-	if test -f configure.in.in ; then \
-	  if test -f autogen.sh ; then \
-	    export NOCONFIGURE=TRUE ; \
-	    /bin/sh autogen.sh ; \
-	  fi \
-	fi
-
 scripts/install-sh:
 	if test -f autogen.sh ; then \
-	  export NOCONFIGURE=TRUE ; \
-	  /bin/sh autogen.sh ; \
+	  NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
 	fi
 
-configure.in.in:
-
-.PHONY: build clean binary-indep binary-arch binary install NEWS
+.PHONY: build clean binary-indep binary-arch binary install autoconfigure NEWS

@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Eric Sharkey <sharkey@debian.org>
 Standards-Version: 3.5.6.0
-Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 2.2.18), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.10.36-1), texi2html, docbook-utils, imagemagick, autoconf, automake, libtool, bison, foomatic-bin (>= 0.20020131-1)
+Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.10.36-1), texi2html, docbook-utils, imagemagick, autoconf, automake, libtool, bison, foomatic-bin (>= 0.20020131-1)
 
 Package: gimp1.2-print
 Architecture: any
@@ -42,10 +42,12 @@ Description: gimp-print printer driver for CUPS
  .
  http://www.cups.org
 
-Package: libgimpprint-dev
+Package: libgimpprint#LIBRARY_VERSION#-dev
 Architecture: any
 Section: devel
-Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
+Provides: libgimpprint-dev
+Conflicts: libgimpprint-dev
 Description: header files for compiling programs with libgimpprint
  This package contains the header files for the gimp-print package, along with
  a static version of libgimpprint.
@@ -54,10 +56,10 @@ Description: header files for compiling programs with libgimpprint
  .
  This is the 4.3 unstable development branch of gimp-print.
 
-Package: libgimpprint-doc
+Package: libgimpprint#LIBRARY_VERSION#-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Suggests: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Description: Documentation and example code for the gimpprint library
  This package contains lots of info-files, DVI docs and other
  documentation about the gimpprint library for photo-quality
@@ -66,7 +68,7 @@ Description: Documentation and example code for the gimpprint library
  Install this package if you want to have lots of info about the
  gimpprint library when you're programming.
 
-Package: libgimpprint#UPSTREAM_VERSION#
+Package: libgimpprint#LIBRARY_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
@@ -93,7 +95,7 @@ Description: Locales files for gimp-print
 Package: gimpprint-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
+Suggests: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Description: User Guide for GIMP-Print and CUPS
  This package contains a user guide for programs using the
  libgimpprint library for photographic quality printing.  Currently
@@ -115,7 +117,7 @@ Description: a utility for Epson Stylus printers
 Package: foomatic-db-gimp-print
 Architecture: all
 Section: text
-Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version}), foomatic-db
+Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version}), foomatic-db
 Description: Printer/Driver database and print system - gimp-print database
  Foomatic is a printer and driver database with PPD generator and filter
  backends for various Printing systems from cups over lp* to pdq.
