@@ -195,15 +195,18 @@ ESC i COLOR1 COMPRESS1 BITS1 BYTES2 LINES2 data...
 
 ESC (D BC=4 BASE2 VERTICAL1 HORIZONTAL1
 	Set printer horizontal and vertical spacing.  This command is
-	not documented.  It only applies to variable dot size printers
-	in softweave mode.  BASE is the base unit for this command; it
-	must be 14400.  VERTICAL is the distance in these units
-	between printed rows; it should be (separation_in_nozzles *
-	BASE / 720).  HORIZONTAL is the horizontal separation between
-	dots in a row.  Depending upon the printer, this should be
-	either (14400 / 720) or (14400 / 360).  It is not entirely
-	clear why this command exists.  Perhaps in future printers it
-	will be of real use.
+	not documented except in the Stylus Pro 9000 manual.  It only
+	applies to variable dot size printers in softweave mode (and
+	possibly other high end printers).  BASE is the base unit for
+	this command; it must be 14400.  VERTICAL is the distance in
+	these units between printed rows; it should be
+	(separation_in_nozzles * BASE / 720).  HORIZONTAL is the
+	horizontal separation between dots in a row.  Depending upon
+	the printer, this should be either (14400 / 720) or (14400 /
+	360).  It is not entirely clear why this command exists.  The
+	Stylus Pro 9000 manual suggests that the settings should match
+	the chosen resolution, but that is apparently not the case (or
+	not always the case) on other printers.
 
 ESC (R BC=8 00 R E M O T E 1
 	Enters "remote mode".  This is a special, undocumented command set
@@ -268,12 +271,15 @@ sequence:
 
      ESC (R BC=8 00 R E M O T E 1
 
+All remote mode commands must be sent before the initial ESC (G
+command is sent. 
+
 This introductory sequence is then followed by a sequence of commands.
 Each command is constructed as follows:
 
-   * Two bytes indicating the function.  The sequence is terminated
-     by a command with function ESC 00; all other commands are two capital
-     letters in ASCII.
+   * Two bytes indicating the function.  The sequence is terminated by
+     a command with function ESC 00 00 00; all other commands are two
+     capital letters in ASCII.
 
    * a byte count for the parameters
 
@@ -297,9 +303,11 @@ This is a list of all remote commands we have seen:
                                           W01286 I02382\n
                                      probably "version information"
 
-   * LD BC=0                         doesn't seem to do anything, but is
-                                     used after a nozzle check / version
-                                     information on the ESC740
+   * LD BC=0                         Load printer defaults from NVRAM,
+				     DIP switches, and/or ROM.  This
+				     apparently does not load factory
+				     defaults per se, but any settings
+				     that are saved.
 
    * CH BC=2 00 00                   perform a head cleaning cycle
 
@@ -319,7 +327,7 @@ This is a list of all remote commands we have seen:
                                      you are satisfied.  I bet it means
                                      "SaVe" the alignment in NVRAM.
 
-   * RS BC=1 01			     Reset the printer
+   * RS BC=1 01			     Reset the printer.
 
    * IQ BC=1 01			     Get ink quantity.  This requires
 				     direct access to the printer
@@ -328,6 +336,85 @@ This is a list of all remote commands we have seen:
 				     of digits are hexadecimal
 				     representations of percent.
 
+The commands below are partially documented in the Stylus Pro 9000
+manual.  Much of this information is interpreted; none is tested.
+
+   * SN BC=3 00 xx yy		     Select Mechanism Sequence.  xx
+				     controls which sub-operation is
+				     performed.  xx=00 selects the
+				     "Feed paper sequence setting"; yy
+				     can take on values of either 00
+				     or 01.  01 appears to be the one
+				     most commonly set by Epson
+				     drivers.  xx=01 controls the
+				     platen gap setting; yy=0 is the
+				     default, yy=01 is "high".
+
+   * PP BC=3 00 xx yy                Set Paper Path.  xx=2 indicates
+				     manual feed, xx=3 is for roll
+				     paper.  yy selects "paper path
+				     number".
+
+   * AC BC=2 00 xx		     Set Auto Cutting State.  xx=0
+				     selects auto cutting off, xx=1
+				     selects auto cutting on, and xx=2
+				     indicates horizontal print page
+				     line on.  It appears that with
+				     auto cutting on, roll paper is
+				     cut automatically at the point
+				     a formfeed character is sent.
+				     The formfeed character is
+				     normally used to eject a page;
+				     with this turned on, it also cuts
+				     the roll paper.  Horizontal print
+				     page line on prints a narrow line
+				     of black dots at the position the
+				     paper should be cut manually.
+
+   * DR BC=4 00 xx DT2		     Set Drying Time.  xx=00 sets the
+				     drying time "per scan" (per
+				     pass?); xx=01 sets the drying
+				     time per page. DT indicates the
+				     drying time, which is in seconds
+				     if page mode is used and in
+				     milliseconds if scan mode is
+				     used.  DT must not exceed 3600
+				     seconds in per-page mode and
+				     10000 milliseconds in per-scan
+				     mode.
+
+   * IK BC=2 00 xx		     Select Ink Type.  xx=00 selects
+				     dye ink.  Pigment ink is
+				     apparently selected by xx=01.
+				     This probably does not apply to
+				     the consumer-grade printers.
+
+   * PZ BC=2 00 xx		     Set Pause After Printing.  xx=00
+				     selects no pause after printing;
+				     xx=01 selects pause after
+				     printing.  If turned on, the
+				     printer is paused after the page
+				     is ejected (by the FF byte).  If
+				     cutting is turned on, the printer
+				     is paused AFTER the cutting or
+				     printing of the horizontal cut
+				     line.
+
+   * EX BC=6 00 00 00 00 0x14 xx     Set Vertical Print Page Line
+				     Mode.  xx=00 is off, xx=01 is
+				     on.  If turned on, this prints
+				     vertical trim lines at the left
+				     and right margins.
+
+   * PH BC=2 00 xx		     Select Paper Thickness.  Set the
+				     paper thickness in .1 mm units.
+				     This must not exceed 0x10 (1.6
+				     mm).  If the thickness is set
+				     "more than" .6 mm (which probably
+				     means "at least" .6 mm, since the
+				     other case reads "less than 0.5
+				     mm"), the platen gap is set high
+				     irrespective of the SN command.
 
 Appropriate Remote Command Sequences
 ====================================
