@@ -128,7 +128,7 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 ChangeLog:
 	cd $(top_srcdir) ; \
 	cvs log | perl ./mkchlog > ChangeLog.tmp ; \
-	mv ChangeLog.tmp /ChangeLog
+	mv ChangeLog.tmp ChangeLog
 
 files:
 	@cd $(top_srcdir) ; \
