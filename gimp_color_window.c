@@ -26,15 +26,12 @@
 
 #ifndef GIMP_1_0
 
-#include <libgimp/gimpui.h>
-
 #include "print-intl.h"
 
 extern vars_t   vars;
 extern gint     plist_count;       /* Number of system printers */
 extern gint     plist_current;     /* Current system printer */
 extern plist_t  plist[MAX_PLIST];  /* System printers */
-
 
 GtkWidget *gimp_color_adjust_dialog;
 

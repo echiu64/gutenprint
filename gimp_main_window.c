@@ -26,8 +26,6 @@
 
 #ifndef GIMP_1_0
 
-#include <libgimp/gimpui.h>
-
 #include "print-intl.h"
 
 /*

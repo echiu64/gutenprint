@@ -29,7 +29,6 @@
  *   See ChangeLog
  */
 
-#include "print.h"
 #include "print_gimp.h"
 
 #include "print-intl.h"

@@ -44,21 +44,16 @@
 
 #include "print_gimp.h"
 
-/*
- * All Gimp-specific code is in this file.
- */
-#include <gtk/gtk.h>
-#include <libgimp/gimp.h>
-
+#ifdef GIMP_1_0
 #include <math.h>
+#endif
+
 #include <signal.h>
 #ifdef __EMX__
 #define INCL_DOSDEVICES
 #define INCL_DOSERRORS
 #include <os2.h>
 #endif
-
-#include <libgimp/gimpui.h>
 
 #include "print-intl.h"
 
@@ -70,7 +65,7 @@
 typedef struct
 {
   GDrawable *drawable;
-  GPixelRgn rgn;
+  GPixelRgn  rgn;
 } Gimp_Image_t;
 
 
@@ -79,19 +74,19 @@ typedef struct
  */
 
 static void	printrc_load(void);
-void	printrc_save(void);
+void	        printrc_save(void);
 static int	compare_printers(plist_t *p1, plist_t *p2);
 static void	get_system_printers(void);
 
-static void	query(void);
-static void	run(char *, int, GParam *, int *, GParam **);
+static void	query (void);
+static void	run (char *, int, GParam *, int *, GParam **);
 static void     init_gtk (void);
-static int	do_print_dialog(char *proc_name);
+static int	do_print_dialog (char *proc_name);
 
 #ifndef GIMP_1_0
-extern void     gimp_create_main_window(void);
+extern void     gimp_create_main_window (void);
 #endif
-extern void     gtk_create_main_window(void);
+extern void     gtk_create_main_window (void);
 
 #if 0
 static void	cleanupfunc(void);
@@ -99,12 +94,12 @@ static void	cleanupfunc(void);
 
 GtkObject* brightness_adjustment; /* Adjustment object for brightness */
 GtkObject* saturation_adjustment; /* Adjustment object for saturation */
-GtkObject* density_adjustment;	 /* Adjustment object for density */
-GtkObject* contrast_adjustment;	 /* Adjustment object for contrast */
-GtkObject* red_adjustment;	 /* Adjustment object for red */
-GtkObject* green_adjustment;	 /* Adjustment object for green */
-GtkObject* blue_adjustment;	 /* Adjustment object for blue */
-GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
+GtkObject* density_adjustment;    /* Adjustment object for density */
+GtkObject* contrast_adjustment;   /* Adjustment object for contrast */
+GtkObject* red_adjustment;        /* Adjustment object for red */
+GtkObject* green_adjustment;      /* Adjustment object for green */
+GtkObject* blue_adjustment;       /* Adjustment object for blue */
+GtkObject* gamma_adjustment;      /* Adjustment object for gamma */
 
 /*
  * Globals...
@@ -112,10 +107,10 @@ GtkObject* gamma_adjustment;	 /* Adjustment object for gamma */
 
 GPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
 {
-  NULL,    /* init_proc */
-  NULL,    /* quit_proc */
-  query,   /* query_proc */
-  run,     /* run_proc */
+  NULL,  /* init_proc  */
+  NULL,  /* quit_proc  */
+  query, /* query_proc */
+  run,   /* run_proc   */
 };
 
 vars_t vars =
@@ -187,7 +182,7 @@ cleanupfunc(void)
  */
 
 static void
-query(void)
+query (void)
 {
   static GParamDef	args[] =
   {
