@@ -2597,7 +2597,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   errlast = -1;
   errline  = 0;
 
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
+      pt->hue_adjustment)
     {
       hue_adjustment = stpi_read_and_compose_curves
 	(canon_hue_adjustment(model),
@@ -2605,7 +2606,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_free(hue_adjustment);
     }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
+      pt->lum_adjustment)
     {
       lum_adjustment = stpi_read_and_compose_curves
 	(canon_lum_adjustment(model),
@@ -2613,7 +2615,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
       stp_set_curve_parameter(v, "LumMap", lum_adjustment);
       stp_curve_free(lum_adjustment);
     }
-  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
+      pt->sat_adjustment)
     {
       sat_adjustment = stpi_read_and_compose_curves
 	(canon_sat_adjustment(model),
