@@ -7,7 +7,7 @@ better than proprietary vendor-supplied drivers, and can be used for
 many of the most demanding printing tasks.
 
 Please read this README, and the NEWS file carefully!  Many things
-have changed from Gimp-Print 4.0.
+have changed from previous releases.
 
 
 BASIC INSTALLATION
@@ -42,8 +42,7 @@ If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
 
-Gimp-print 4.1 requires the Gimp 1.2.  As of Gimp-print 4.1.6, the
-plugin will no longer compile against the Gimp 1.0 or 1.1.
+Gimp-print 4.2 alpha requires the Gimp 1.2.
 
 
 GHOSTSCRIPT
@@ -154,8 +153,9 @@ somewhat faster, but it does not work very well with text and very
 fine details (certain kinds of line art).  Fast dithering is also
 quite usable in many cases.
 
-On most inkjet printers, 720 dpi will produce very high quality;
-1440x720 dpi will produce extremely high quality.
+On most inkjet printers, 600 or 720 dpi will produce very high
+quality; 1200x1200 or 1440x720 dpi will produce extremely high
+quality.
 
 
 SUPPORT

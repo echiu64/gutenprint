@@ -25,7 +25,7 @@ MAINT_CHARSET = latin1
 
 SAMPLE_IMAGES = colorbars4.png colorsweep.png profile.jpg
 
-pkgdatadir = $(datadir)/$(PACKAGE)
+pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
 pkgdata_DATA = @SAMPLE_IMAGES@
 

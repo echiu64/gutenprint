@@ -197,7 +197,7 @@
 <language value=lexmark>
 </printer>
 
-<printer name="EPSON Stylus C20SX" driver="escp2-c20">
+<printer name="EPSON Stylus C20/C20UX/C20SX" driver="escp2-c20">
 <color>
 <model value=21>
 <gamma value=0.585>
@@ -207,27 +207,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus C20UX" driver="escp2-c20">
-<color>
-<model value=21>
-<gamma value=0.585>
-<density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus C40SX" driver="escp2-c40">
-<color>
-<model value=21>
-<gamma value=0.585>
-<density value=1.0>
-<magenta value=0.95>
-<yellow value=0.9>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus C40UX" driver="escp2-c40">
+<printer name="EPSON Stylus C40/C40UX/C40SX" driver="escp2-c40">
 <color>
 <model value=21>
 <gamma value=0.585>

@@ -90,10 +90,15 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    damage your printer!  If you wish to experiment with these, be
    careful!  These will be fixed before final release.
 
+   In particular, the ink cartridge change for the Stylus Color 480
+   and 580 will probably not work once the cartridge has actually run
+   out of ink.  It may or may not work when the cartridge is low on
+   ink.
+
 20) A new 'status' sub-command has been added to the escputil
    utility.  This enables you to retrieve status from the printer.
 
-22) A new directory, samples, has been added.  This contains various
+21) A new directory, samples, has been added.  This contains various
    sample images that will be installed in
    /usr/local/share/gimp-print/samples (or as appropriate for your
    system).  You can run "configure --without-samples" if you would
