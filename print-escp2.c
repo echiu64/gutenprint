@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.78  2000/02/15 12:49:10  rlk
+ *   Back out clearly nonfunctional change for 740 family
+ *
  *   Revision 1.77  2000/02/15 03:51:40  rlk
  *
  *   1) It wasn't possible to print to the edge of the page (as defined by
@@ -1758,8 +1761,7 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   * Send a line of raster graphics...
   */
 
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-      bits > 1)
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
     {
       int ncolor = (density << 4) | plane;
       int nwidth = bits * ((width + 7) / 8);
@@ -2354,7 +2356,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
     {
       if (lineoffs[0].v[j] == 0)
 	continue;
-      if (ydpi >= 720 && sw->bitwidth > 1 &&
+      if (ydpi >= 720 &&
 	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	;
       else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
@@ -2381,8 +2383,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	{
 	  fprintf(prn, "\033\\%c%c", hoffset & 255, hoffset >> 8);
 	}
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-	  sw->bitwidth > 1)
+      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	{
 	  int ncolor = (densities[j] << 4) | colors[j];
 	  int nlines = *linecount + pass->missingstartrows;
