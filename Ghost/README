@@ -66,9 +66,12 @@ Installation and Compilation:
 
 Debian users can try the following (contributed by Stuart Miles):
 
-Download the debianised sources for gs-aladdin and libjpeg
+Download the debianised sources for gs-aladdin and libjpeg:
 
-# apt-get gs-aladdin libjpeg
+# apt-get source gs-aladdin libjpeg
+
+(Make sure you have a deb-src entry in /etc/apt/sources.list first!
+See the sources.list(5) man page for more info on setting up apt.)
 
 This will download the .dsc, orig.tar.gz and diff.gz files, unpack and
 patch the files for you.
