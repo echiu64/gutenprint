@@ -32,22 +32,21 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.6-rc2"><b>December 12, 2003 -</b></a> Gimp-Print 4.2.6-rc2 (release candidate 2) is now available for download.
+ <a href="MacOSX.php3#4.2.6"><b>January 11, 2004 -</b></a> Gimp-Print 4.2.6 is now available for download. This is the most recent stable release of Gimp-Print, and most likely the last version to be released in the 4.2.x series.
  </p>
  <p>
- <a href="MacOSX.php3#4.3.25"><b>December 12, 2003 -</b></a> Gimp-Print 4.3.25 (unstable development version) is now available for download. This is a packaged version of the development build and is not recommended for typical users.
+ <a href="MacOSX.php3#5.0.0-alpha1"><b>January 11, 2004 -</b></a> Gimp-Print 
+ 5.0.0-alpha1 is now available for download. Gimp-Print 5.0.0-alpha1 is the
+ first alpha release (technology preview) in the Gimp-Print 5.0 line.  It is
+ based on the 4.3 series that has been in development for two years, and
+includes many improvements over the very popular 4.2 series.  This
+release is not considered to be a fully stable release, but we've been
+using it and we believe that it will be useful for many purposes.
  </p>
 <p>
- <a href="MacOSX.php3#uninstall-1.1"><b>November 5, 2003 -</b></a> A Gimp-Print uninstaller is now available for download.
  </p>
  <p>
- <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
- </p>
- <p>
- <p>
- <a href="MacOSX.php3#4.2.5"><b>January 26, 2003 -</b></a> Gimp-Print 4.2.5, the current stable release of Gimp-Print, is now available for download.
- </p>
- <p>
+ <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users running Mac OS X Jaguar (10.2.x) should update to this version of ESPGS. This software is not necessary for users running Mac OS X Panther (10.3.x).
  </p>
  <br>
  </td>
@@ -110,31 +109,32 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <br>
- <b>Gimp-Print 4.2.5</b>
+ <b>Gimp-Print 4.2.6</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.5-0.ppc.dmg?download"
- >gimp-print-4.2.5-0.ppc.dmg</a>&nbsp;(3.8 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-0.ppc.dmg?download"
+ >gimp-print-4.2.6-0.ppc.dmg</a>&nbsp;(5.9 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.5.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.5 is the newest stable release for Mac OS X; it includes 197
- drivers supporting over 511 printers. The disk-image file includes an OS X
- installer package plus illustrated documentation to easily guide you through
- the printer set-up process. This package requires (but does not include) ESP
+ Gimp-Print 4.2.6 is the newest stable release for Mac OS X; it includes 197
+ drivers supporting over 500 printers. The disk-image file includes an OS X
+ installer package, an uninstaller package, plus illustrated documentation to easily guide you through
+ the printer set-up process. For users running Mac OS X Jaguar This package requires (but does not include) ESP
  Ghostscript 7.05.6 for Mac OS X (<b>download below and install, if
  necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
+<!--
  <b>Gimp-Print 4.2.6-rc2</b>
  </td>
  </tr>
@@ -158,26 +158,27 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  package requires (but does not include) ESP Ghostscript (<b>download below and 
  install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
- <b>Gimp-Print 4.3.25</b>
+--!>
+ <b>Gimp-Print 5.0.0-alpha1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.25.ppc.dmg?download"
- >gimp-print-4.3.25.ppc.dmg</a>&nbsp;(4.8 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-alpha1.ppc.dmg?download"
+ >gimp-print-5.0.0-alpha1.ppc.dmg</a>&nbsp;(6.7 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.25.tar.bz2?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-alpha1.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.3.25 is the latest Mac OS X release in the 4.3.x developmental line.
- This release represents the state-of-the-art in current Gimp-Print development. As such, while it contains many new and exciting features over the mainline branch (4.2.x), it may also provide unexpected behavior, or it simply may not work at all.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
+ Gimp-Print 5.0.0-alpha1 is the first Mac OS X release in the new 5.0 series. 
+ This release represents the state-of-the-art in current Gimp-Print development, but it is currently only alpha quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>). ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
  <b>Gimp-Print Uninstaller</b>
@@ -195,7 +196,7 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  <tr>
  <td colspan="2" >
  <p>
-The Gimp-Print uninstaller will completely remove any version of Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0). This uninstaller is included with Gimp-Print 4.2.6-pre3 and does not need to be downloaded separately.
+The Gimp-Print uninstaller will completely remove any version of Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0). This uninstaller is included with all current Gimp-Print installer packages and does not need to be downloaded separately. It it being made available here as a convenience.
  </p>
  <a name="downloadESPGS"></a>
  <b>ESP Ghostscript 7.05.6</b>
@@ -242,7 +243,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  License). You are entitled to download the source code.
  Gimp-print on Mac OS X would not be possible without <a href=
  "http://www.cups.org/" >CUPS</a>, the open-source print spooler built-in to
- Mac OS X Jaguar.
+ Mac OS X starting with version 10.2 (Jaguar).
  </p>
  <p>
  Gimp-Print should not be confused with GIMP, the open-source GNU Image
@@ -251,11 +252,9 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  Installing GIMP is NOT required.
  </p>
  <p>
- Gimp-Print 4.2.5 is a stable release on the Gimp-Print 4.2 release line. We
- anticipate further releases in the 4.2 line, primarily to support new
- printers and improve functionality in existing printers. Concurrently, we
- will be working on the 4.3 development line, which will eventually become the
- successor to 4.2.
+ Gimp-Print 4.2.6 is expected to be the final stable release on the Gimp-Print
+ 4.2 release line. We anticipate further no releases in the 4.2 line with all
+ new development focused on the 5.0 series.
  </p>
  <P>
  Please visit <a href= "http://sourceforge.net/project/?group_id=1537" >our
@@ -276,7 +275,609 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
  <TR bgcolor="#D0D0D0" >
  <TD>
- <a name ="4.2.6-rc2"></a>
+  <a name ="4.2.6"></a>
+ <B>Gimp-Print 4.2.6</B>
+ </TD>
+ <TD align="right" >
+ <B>2004-01-11</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.6 contains the following improvements over
+ <a href= "MacOSX.php3#4.2.5">Gimp-Print 4.2.5</a>:
+ </p>
+<b> New Functionality:</b>
+ <ol>
+   <li>A number of newer Epson Stylus printers and multi-function devices
+     are supported.  Please see the supported printers list at the
+     bottom of this file for full information on supported printers.</li>
+
+   <li>The Canon S200 is now supported.</li>
+
+   <li>The European 10x15 cm and US Engineering C paper sizes have been
+     added.</li>
+
+   <li>The CUPS driver now offers normal and reversed paper order,
+     permitting printing documents in the correct page order on inkjet
+     and some laser printers.</li>
+   <li>A Czech language translation has been added.</li>
+
+ </ol>
+<b>Quality Improvements:</b>
+ <ol>
+
+   <li>Under OS X, the options are grouped more appropriately, making for
+     easier use.</li>
+
+   <li>Some Epson printer resolution names have been changed for clarity.
+     This change does not introduce an incompatibility.</li>
+
+   <li>The escputil command no longer hangs if the printer does not respond (this utility is currently non-functional on OS X).</li>
+
+   <li>Minor speed improvement for the HP LaserJet IIP.</li>
+
+   <li>Minor adjustment to the HP DeskJet 340 margins.</li>
+
+   <li>The PPD files have been audited for conformance to the PPD
+     specification.</li>
+ </ol>
+<b>Exceptions and Workarounds:</b>
+ <ol>
+
+   <li>There are longstanding reports of problems printing with certain
+     USB-parallel adapters on Macintosh OS X.  In particular, many
+     users have reported problems with the Keyspan adapter; we
+     recommend that users having problems try different brands of
+     adapters, and avoid using USB hubs.  Please check our
+     web site (http://gimp-print.sourceforge.net/MacOSX.php3) for a
+     link to a user feedback forum regarding these cables.</li>
+
+   <li>Mac OS X users who use the Epson Printer Utility (provided by
+     Epson with their standard driver set) to check ink levels and
+     perform maintenance tasks, such as head cleaning or head
+     alignment, may encounter print job failures when attempting to
+     print with the Gimp-Print driver after using the Epson
+     utility. The cause for this failure is currently unknown, but the
+     workaround is to completely power-cycle the printer, after which
+     the Gimp-Print driver should again print normally.  Another
+     option is to disable the Epson Printer Utility.</li>
+
+   <li>The Mac OS X print dialog may offer an "Autoselect" option as the
+     default media source (input slot) on some printers.  This option
+     may not be valid and can result in nothing being printed.  The
+     workaround is to choose a different setting (explicitly select
+     the input slot you wish to use).</li>
+
+   <li>The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).</li>
+
+   <li>The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information.
+     If a particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check
+     the Feature Requests at
+     http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse,
+     and if the printer is not listed please file a feature request
+     (via the Submit New button).</li>
+
+   <li>Borderless (full-bleed) printing is not quite correct on the
+     Epson Stylus Photo printers that support it (see bug 621668).
+     Typically, the left or right margin is off by 1 mm or less,
+     resulting in a very fine white strip on that edge.</li>
+
+   <li>Many Canon printers do not print correctly at 720x360 DPI.  The
+     workaround is to use 360 or 720 DPI.</li>
+
+   <li>Many new Epson Stylus printers do not return status to the
+     escputil command (for ink level check, etc).  We recommend use of
+     the mtink tool (please see http://xwtools.automatix.de) for this
+     purpose.</li>
+
+   <li>With certain versions of CUPS and in certain configurations, if a
+     new version of Gimp-Print is installed over an existing version
+     genppd will create PPD files based on the older version of
+     Gimp-Print rather than the newer version. </li>
+ </ol>
+
+ <dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.6</b>:</dt>
+
+<dd>627266 Mac OS X: Autoselect option incorrectly offered
+<dd>668342 Canon S-450 prints only one page of a job
+<dd>729918 Postscript family driver fails in non-US locale
+<dd>735493 CUPS PPD files lacking *OutputOrder
+<dd>842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
+<dd>865253 genppd may not generate new PPD files (4.2)
+</dl>
+ <dl>
+<dt><b>The following bugs have been tested and cannot be reproduced</b>:</dt>
+
+<dd>764041 CNR: Epson 3000 720x360DPI problem
+<dd>828993 CNR: Epson SC 850 using Microweave prints tall characters
+</dl>
+ <dl>
+<dt><b>The following bugs are currently open</b>:</dt>
+
+<dd>470049 CUPS PPD files not translated on all systems
+<dd>538097 QUALITY-Canon S400 dark and yellow cast
+<dd>549677 Canon BJC-1000 functions incorrectly at 720x360 DPI
+<dd>557868 QUALITY-HP DeskJet 560 is washed out
+<dd>581168 Canon BJC 250 just spits out pages
+<dd>601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+<dd>602933 QUALITY-Canon S800 dark and grainy
+<dd>613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+<dd>614882 QUALITY - Canon BJC-55 is too pale and desaturated
+<dd>621668 Epson Stylus full bleed prints have slight margin
+<dd>627978 QUALITY: Canon BJC-6500 has magenta cast.
+<dd>631937 HP DesignJet Sheet Cutter Problem
+<dd>641981 QUALITY: HP DesignJets print too light
+<dd>645116 QUALITY: HP DeskJet regression from 4.1.7
+<dd>647035 QUALITY: Colors don't match OEM drivers
+<dd>662988 HP DeskJet 970Cxi page horizontally squeezed
+<dd>672692 Epson photo 700 single page of multi page job
+<dd>687656 Paper Positioning Problems Epson 7600
+<dd>704334 QUALITY: Epson SP 2100: Green Cast/Dark Colours/Poor Greys
+<dd>811062 Reverse printing
+</dl>
+
+ &nbsp;
+ </td>
+ </tr>
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="5.0.0-alpha1"></a>
+ <B>Gimp-Print 5.0.0-alpha1</B>
+ </TD>
+ <TD align="right" >
+ <B>2004-01-11</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+While Gimp-Print 5.0 is not finalized, it contains many improvements
+and changes from <a href= "MacOSX.php3#4.2.6">Gimp-Print 4.2</a>, as follows:
+ </p>
+<b>Major User-Visible Changes:</b>
+ <ol>
+   <li>In general, Gimp-Print 5.0 is not compatible with Gimp-Print 4.2.
+     Gimp-Print 5.0 offers many new options (which are described
+     separately below), and many options that are present in both 4.2
+     and 5.0 function differently in the two releases.  In addition,
+     the API is different.  Finally, the color correction is quite
+     different, and profiles created against the 4.2 driver will not
+     function well against the 5.0 driver.</li>
+
+   <li>In addition to all of the printers supported in 4.2, a variety of
+     Olympus and Sony photo printers are supported in this release.</li>
+
+   <li>Options in the CUPS driver and GIMP plugin are now grouped
+     according to function.  This work is still in progress, and
+     further usability improvements are expected.</li>
+
+   <li>Simplified bundles of settings are now offered for users who do
+     not need to customize the settings.  The Print Quality and Image
+     Type controls offer a variety of settings optimized for common
+     printing tasks.  Both controls offer Manual Control settings for
+     users who wish greater control over the output.</li>
+
+   <li>Many of the color settings have changed effect.  We recommend
+     starting with no color correction and making appropriate changes
+     only as required.  Specific changes that you should be aware of
+     include:
+<br><br>
+
+     * The default operation of the contrast setting has changed to be
+       more in accord with standard practice.  In 4.2, reducing the
+       contrast resulted in changing the black and white setting.  In
+       5.0, reducing the contrast does not change the black and white
+       settings.  As a result, it is possible to use the contrast
+       setting to improve highlight and shadow detail by reducing the
+       contrast.
+
+       The old behavior is available by turning on the "Linear
+       Contrast Adjustment".
+<br><br>
+
+     * The Cyan, Magenta, and Yellow settings have been replaced with
+       separate settings for gamma and density for Cyan, Magenta,
+       Yellow, and Black.  The Cyan, Magenta, and Yellow settings in
+       Gimp-Print 4.2 most closely correspond to the gamma settings in
+       5.0.
+
+       The per-channel density settings do not affect the color
+       correction.  They are applied after the color correction to
+       scale the individual channels.</li>
+
+ </ol>
+<b> New Functionality:</b>
+ <ol>
+   <li>This release offers a new curve data type.</li>
+
+   <li>This release offers many new output controls:</li>
+   <ul>
+     <li>Balance (density) controls for each channel, in addition to the
+       gamma controls present in 4.2.</li>
+     <li>Black (GCR) transition, including the transition gamma and the
+       upper and lower limits.</li>
+     <li>Transitions for photo (light cyan and light magenta) inks.</li>
+     <li>Transfer curves for each channel (cyan, magenta, yellow, black,
+       and composite), allowing very precise control over the output.</li>
+     <li>Hue, saturation, and luminosity transfer curves.</li>
+     <li>Ink limit control.</li>
+     <li>The density control now permits setting density as high as 8.0,
+       vs. 2.0 in 4.2.</li>
+
+   </ul>
+
+   <li>The Epson driver offers (almost) true full bleed for printers
+     that support it (but see the limitations below).</li>
+
+   <li>The resolution list for Epson printers has been simplified; many
+     redundant resolutions have been removed.</li>
+
+   <li>Print head directional for Epson printers (unidirectional
+     vs. bidirectional) is now a separate control.  In addition to
+     contributing to the simplification of the Epson printer
+     resolutions, this permits the choice of unidirectional
+     vs. bidirectional at all resolutions.</li>
+
+   <li>The Epson driver now offers a choice of print head weave
+     patterns.  In addition to simplifying the resolution choices for
+     Epson Stylus Pro printers, this offers an additional control for
+     fine tuning output quality.</li>
+
+   <li>The Epson driver offers an Ink Set control for printers taking
+     different choices of inks (such as the Epson Stylus Photo 2200,
+     which offers a choice of Matte Black and Photo Black inks).</li>
+
+   <li>The Epson driver permits adjusting the dot size if required to
+     increase the amount of ink printed.  For example, if 1440x720 DPI
+     is selected, but the density requested is very high, the printer
+     will switch to using drop sizes appropriate for 720 DPI.  This
+     option is disabled by default.</li>
+
+   <li>Where practical, all controls offer a default setting for
+     simplicity of operation.  This default value is intended to offer
+     the optimal choice given the printer and its other settings.  For
+     example, if "Automatic" is selected for print head direction, the
+     print head motion will be unidirectional at high resolutions
+     (since unidirectional usually produces better output), but
+     bidirectional at low resolutions (for faster printing).
+
+     The default is only offered for options that are not directly
+     controlled by the user's action.  For example, there is no
+     default choice offered for paper type, since the correct value is
+     based on the paper type loaded by the user.  Similarly, there is
+     no default for the input slot or ink set.</li>
+
+   <li>A new Threshold color correction mode has been added, that
+     produces either all-on or all-off of each color.  This is similar
+     to the Monochrome mode in 4.2, except that it works for color as
+     well as black.</li>
+
+ </ol>
+<b>Quality Improvements:</b>
+ <ol>
+   <li>Color and tonal accuracy is greatly improved compared to 4.2
+     while the gamut (range of printable colors) has been increased.
+     This particularly improves the hue accuracy of red, magenta, and
+     blue, and the tonal accuracy of cyan and green.  Most Epson
+     printers have been fully tuned for the new color correction
+     algorithms introduced for this release.</li>
+
+   <li>The handling of variable drop sizes and photo inks (6 and 7 color
+     printers) has been completely rewritten, with the result being
+     that variable drop size printers with photo inks (such as most
+     Epson Stylus Photo and Stylus Pro printers) give much more
+     consistent results with fewer artifacts.  In particular, colors
+     match correctly across all resolutions, which was not the case in
+     4.2.
+<br><br>
+
+     In 4.2, variable size drops and light inks were treated the same
+     way; an "effective drop size" based on the relative size of the
+     drops and the darkness of the inks was used to decide what kind
+     of drop to print.  While this method has some advantages (it
+     ensures that dark and light inks are never printed at the same
+     place, and also that dark dots are optimally dispersed among
+     light dots), it has some serious disadvantages as well: the
+     properties of a small dark dot and a large light dot are not
+     really the same, particularly when inks are mixed.  The
+     combination of different drop sizes being used at different
+     resolutions meant that the transition between light and dark inks
+     differed depending upon the resolution chosen, and if more than
+     one drop size was required at a given resolution, the transition
+     tended to be quite marked.
+<br><br>
+
+     The new method of handling variable size drops and light inks is
+     to first separate each of the four channels (cyan, magenta,
+     yellow, and black) into the appropriate light and dark inks, if
+     needed.  This separation is performed based on the relative
+     darkness of the different ink sub-colors (such as light and dark
+     cyan) and specific characteristics of the printer, ink type, and
+     paper chosen.  Following this, each sub-color is screened
+     separately, and the appropriate combination of drop sizes is
+     chosen.
+<br><br>
+
+     The drop size selection in this release has also been changed to
+     fill the page with as many small drops as possible before
+     switching to larger drops.  This ensures that the largest number
+     of the smallest possible drops is printed, which yields a
+     smoother texture in the midtones.
+<br><br>
+
+     Finally, new dither algorithms described below allow drops of ink
+     of different colors to be dispersed, avoiding clumping or
+     overprinting of drops.</li>
+
+   <li>The EvenTone dither algorithm has been extensively reworked in
+     this release, offering many improvements.
+<br><br>
+
+     First, it has been rewritten to work correctly with variable drop
+     size and photo printers.  This algorithm, which offers
+     significant improvements over the standard Adaptive Hybrid
+     algorithm, does not work optimally with variable drop sizes or
+     photo printers in 4.2.
+<br><br>
+
+     Secondly, several variations on this algorithm have been
+     introduced, yielding a family of high quality screening
+     algorithms for different applications.  The first variation is
+     called Hybrid EvenTone.  This dither algorithm perturbs the dot
+     positions slightly to break up some patterning seen in standard
+     EvenTone dithering in solid regions of pale tones, particularly
+     when printing with black ink only.  This very slightly reduces
+     the smoothness of texture in exchange for largely eliminating
+     this undesirable patterning.  This algorithm is also expected to
+     be more resistant to microbanding effects.
+<br><br>
+
+     The second variation is called UniTone.  This dither algorithm
+     calculates the placement of all dots (except for yellow) using a
+     single EvenTone pass, not just all of the dots of one color.
+     This technique improves the quality when multiple inks must be
+     mixed, such as when color inks are used to produce gray.  It does
+     so by ensuring that all dots are equally spaced.  Typically when
+     printing neutral tones with EvenTone dithering the cyan, magenta,
+     and yellow dots are positioned very close to each other, even
+     though the individual cyan dots are well-positioned.  This causes
+     the groups of dots to appear to be single, large dots.  UniTone
+     dithering evens out the spacing between all dots, producing a
+     smoother texture.  UniTone dithering only functions when printing
+     in color (or grayscale with multi-tone gray ink); when printing
+     with black ink only, it is exactly equivalent to EvenTone
+     dithering.  UniTone dithering is generally slower than EvenTone.
+<br><br>
+
+     UniTone dithering works best at improving output when the drops
+     are already very small, which is usually at high resolutions.
+     With these small drops, the eye has difficulty distinguishing the
+     color of the individual drops, so their color tends to be
+     distinguished primarily by their darkness.  While cyan ink is
+     lighter than black ink and magenta ink is lighter than cyan ink,
+     these differences are not overwhelming and hence the eye does not
+     perceive a difference between them.  With large drops, the eye
+     perceives the color of the individual drops, and small spots
+     dominated by one ink become apparent.
+<br><br>
+
+     As noted above, UniTone dithers yellow separately.  This is
+     because the yellow ink is much lighter than any other ink, and
+     the positions occupied by yellow drops appear as holes, reducing
+     the quality of the print.  Even light cyan and light magenta inks
+     appear to be significantly darker than yellow.
+<br><br>
+
+     Experiments conducted to date suggest that UniTone works very
+     well on the printers such as the Epson Stylus C80 at high
+     resolutions, when the printer is using 3 picolitre drops.  On the
+     Stylus Photo EX, at 1440x720 DPI, using 8 picolitre drops,
+     quality is improved significantly when printing in normal 6-color
+     mode but quality is slightly worse in 4-color mode, as the colors
+     of the drops are apparent.  At 720 DPI (using 12 picolitre
+     drops), quality is improved in 6-color mode but degraded
+     significantly in 4-color mode.
+<br><br>
+
+     Finally, a Hybrid UniTone dither algorithm is provided, combining
+     the principles of both of the above.
+<br><br>
+
+     As noted above, UniTone dithering does not always work better
+     than EvenTone, although in most cases all of these algorithms
+     work much better than Adaptive Hybrid in 4.2.  We suggest that
+     users requiring the highest quality experiment, using Hybrid
+     EvenTone as a baseline.</li>
+
+   <li>The conversion between black and composite (CMY) gray has been
+     improved in this release, yielding more neutral grays on most
+     printers.</li>
+
+   <li>Epson printers have been completely retuned, in most cases
+     yielding much better density, more accurate gray scale, and
+     higher Dmax on all paper types.</li>
+
+ </ol>
+<b> Architectural Changes:</b>
+ <ol>
+
+   <li>A modular architecture for family drivers.  A "family driver" is
+     a collection of printer drivers for one group of printers sharing
+     a common programming architecture, e. g. ESC/P2, PCL, Lexmark,
+     Canon.</li>
+   <li>A modular architecture for color processing.  This architecture
+     will enable us, or others, to provide color management without
+     having to change the internal interfaces within Gimp-Print.</li>
+   <li>New composite data types.  Gimp-Print 5.0 defines additional data
+     types.  These types include:</li>
+   <ul>
+   <li>Sequences, curves, and arrays.  A sequence is a primitive
+       vector of numbers data type; curves and arrays provide
+       additional capabilities such as interpolation (for curves) and
+       multiple dimensions (for arrays).</li>
+   <li>Lists are a general ordered container of named objects of
+       arbitrary type.  They are used throughout the core library, but
+       are not presently exported as such, although derived types
+       are.  The creator of a list can specify constructor,
+       destructor, name comparison, copy, and sort operations on list
+       members.</li>
+   <li>Parameters, which are part of the options system described
+       below.  In addition to storing values and descriptions of the
+       parameter, parameters can be queried to determine defaults and
+       constraints.  Parameter lists (which use the list container
+       internally) are also defined as part of this.</li>
+   <li>String lists are used in various ways; in particular, they are
+       used by the parameter system to inform programs of the
+       available choices of values for string-valued parameters.</li>
+   </ul>
+   <li>Complete overhaul of the options system.  Rather than offering a
+     fixed set of operations, family drivers, color modules, etc. can
+     now offer a wide variety of options using a predefined set of
+     data types.  The data types currently supported are strings
+     picked from a list, floating point numbers, integers, curves,
+     arrays, Boolean values, and filenames.
+<br><br>
+     The new options system provides a flexible way for drivers to
+     inform applications of default values and UI hints, the ability
+     to selectively enable and disable options, and a generalized way
+     of verifying legality of option choices.</li>
+   <li>The coordinate system has been changed from bottom left to top
+     left of the page, and the printable area can now extend beyond
+     the edge of the page.  The result is a more intuitive coordinate
+     system for driver writers that matches the coordinate system of
+     printers, and the ability to do true full bleed.</li>
+   <li>Complete overhaul of the black generation in CMYK output.  Black
+     generation is now performed in the color code rather than the
+     dither code.  This simplifies the dither code, puts the CMYK
+     generation where it should be, and improves overall flexibility.</li>
+   <li>Complete overhaul of the multi-tone (photo or quadtone) ink
+     processing architecture (channels).  Instead of being processed
+     as part of the dithering code as in 4.2, where ink drops of
+     lighter inks were assigned virtual values proportional to their
+     darkness as well as their size, this is now processed after the
+     initial color conversion.  This has a number of major advantages:</li>
+   <ul>
+   <li>As the actual amount of ink to be printed is visible to the
+       color code, the color code can do ink limiting without fear
+       that the dither code will change the amount of ink to be
+       printed.</li>
+   <li>It ensures that the same proportions of inks will be printed at
+       any density and resolution.  In 4.2, the ramp from light to
+       dark ink varied depending upon the dot sizes available and
+       hence the resolution.  This has already been demonstrated to
+       yield much better linearity and much more neutral gray scale
+       with even very modest tuning effort.</li>
+   <li>It enables use of all drop sizes of all ink tones.  In 4.2, we
+       could not use the smallest drop size of dark ink, because the
+       virtual dot size of a small dot of dark ink is typically close
+       to the virtual dot size of a large dot of small ink.  This
+       would yield very sharp transition, and perhaps even result in
+       more light ink printed in darker regions than in lighter
+       regions.  With channel processing separate from dithering, this
+       concern no longer exists; we can safely use small drops of dark
+       ink, improving smoothness.</li>
+   <li>It enables the color code to do ink limiting intelligently
+       without concern that the dither code will rearrange things
+       behind its back.</li>
+   <li>It greatly simplifies the specification of inks.  With drop
+       size and darkness orthogonal, family drivers can greatly
+       simplify their tables of inks.</li>
+   <li>Dither algorithms can choose to ignore smaller drop sizes if
+       they wish to offer fast operation.</li>
+   <li>Applications with special requirements can now access the raw
+       ink channels directly.  This facility was used to create a
+       mechanism to more accurately tune printer inks.</li>
+   </ul>
+   <li>Use of true XML to store data about printers and paper sizes, and
+     to represent new data types (sequences, curves, and arrays).
+     This uses the "mxml" XML library, a fast, lightweight XML parser
+     written by Mike Sweet for this project.  Currently, the use of
+     XML (as opposed to compiled-in data) is limited, but we expect
+     that this will change beyond the initial 5.0 release.</li>
+   <li>In addition to parameters, internal components such as family
+     drivers, color drivers, etc. can store arbitrary data in the
+     basic stp_vars_t object.  This facility is used to simplify the
+     internal driver API; the family driver no longer needs to keep
+     track of dither, color, etc. information itself.</li>
+   <li>The Epson Stylus family driver has been decomposed into more
+     functionally distinct units.  The data schema has been
+     considerably improved, and the code itself broken into more
+     easily maintained units.</li>
+   <li>The build system has been updated with a more contemporary
+     toolchain based on autoconf 2.5 and gettext 0.11.</li>
+   <li>The Print plugin for the GIMP has been decomposed into a UI
+     library and the core plugin.  The user interface library is a
+     pure GTK1-based library; the tiny GIMP plugin is a client of this
+     library.</li>
+   <li>Printer characteristics are exposed to the application level as
+     read-only parameters.  This permits the escputil utility to not
+     duplicate information stored in the printer driver.</li>
+   <li>The CUPS PPD files now offer both fine and coarse adjustments for
+     all color controls, permitting much finer control over output (in
+     steps of .005 rather than .05).</li>
+   <li>The CUPS driver refuses to function with PPD files created for a
+     different version of Gimp-Print, providing an error message
+     indicating the problem.  This avoids problems caused by
+     mismatches between the PPD files and the driver.  While
+     mismatches are potentially not harmful in all cases, they could
+     cause problems ranging from failures to print with poor
+     diagnostic messages to incorrect results.</li>
+   <li>The Gimp-Print 5.0 CUPS driver can be installed concurrently with
+     the 4.2 driver.  Both the PPD files and the driver carry
+     different names from their 4.2 counterparts, permitting a gradual
+     switchover between 4.2 and 5.0-based releases.</li>
+ </ol>
+<b> Exceptions and Workarounds:</b>
+ <ol>
+   <li>Full bleed mode does not work completely correctly on most Epson
+     printers at present.  Typically there is a small margin at the
+     bottom of the page (1-2 mm) and possibly a very small margin at
+     the top.  However, it works correctly along the left and right
+     margins.  We do not have an estimated time for a fix.</li>
+   <li>Printing to CD probably does not work correctly on the Epson
+     Stylus Photo 900 and the Stylus Photo R300, although for
+     different reasons.  On the Stylus Photo 900, the positioning is
+     most likely incorrect, while there have been reports that the
+     manual feed tray is not selected correctly on the Stylus Photo
+     R300.  We do not have an estimated time for a fix.</li>
+   <li>The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
+     of the additional options and improvements that the Epson driver
+     does.  We do not have an estimated time for fix.  Please contact
+     us if you would like to assist with this.</li>
+   <li>Translation to other languages other than US-English is not
+     supported in this release.  This will be fixed prior to 5.0.</li>
+   <li>The Foomatic printer data management system is not completely
+     supported in this release, as noted above.  This will be fixed
+     prior to 5.0.</li>
+   <li>Support for the Canon S200 has not yet been ported forward from
+     4.2.</li>
+   <li>This release is probably slower than 4.2 in many cases,
+     particularly when using High Accuracy (which is the default color
+     correction in most cases) or Bright color correction.  It is
+     possible that this release will not be able to drive some
+     printers at full speed, particularly if your computer has a slow
+     processor.  Performance has not been analyzed or tuned at
+     present.  We expect to improve the performance prior to final
+     release.</li>
+   <li>The user's manual and developer's guide have not been updated for
+     this release.</li>
+   <li>The CUPS PPD update script (cups-genppdupdate.5.0) will not
+     update PPD files from 4.2 or from 4.3 prior to 4.3.21.</li>
+ </ol>
+
+ &nbsp;
+ </td>
+ </tr>
+ <TR bgcolor="#D0D0D0" >
+ <TD><a name ="4.2.6-rc2"></a>
  <B>Gimp-Print 4.2.6-rc2</B>
  </TD>
  <TD align="right" >
