@@ -272,7 +272,11 @@ const res_t *const stpi_escp2_g3_reslist[] =
 
 const res_t *const stpi_escp2_superfine_reslist[] =
 {
+  &r_360x120sw,
+
   &r_360x180sw,
+
+  &r_360x240sw,
 
   &r_360sw,
 

@@ -231,7 +231,7 @@ static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
 
 static const escp2_densities_t p3pl_densities =
-{ 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.262, 0.131 };
+{ 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.523, 0.262 };
 
 static const escp2_densities_t p1_5pl_densities =
 { 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.262, 0.131 };
@@ -1627,7 +1627,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
-    variable_bits, ultrachrome_base_res, &cd_cutter_roll_feed_input_slot_list,
+    variable_bits, variable_base_res, &cd_cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
   },
