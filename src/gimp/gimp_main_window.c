@@ -132,7 +132,6 @@ static gint frame_valid = 0;
 static gint need_exposure = 0;
 
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
-static GdkPixmap *dummy_preview = NULL;	/* Dummy preview widget */
 static gint            mouse_x;		/* Last mouse X */
 static gint            mouse_y;		/* Last mouse Y */
 static gint	       old_top;		/* Previous position */
@@ -1858,8 +1857,6 @@ position_callback (GtkWidget *widget)
       gint new_value = SCALE(new_printed_value, unit_scaler);
       gboolean was_percent = 0;
 
-      new_value *= unit_scaler;
-
       if (widget == top_entry)
 	stp_set_top(pv->v, new_value);
       else if (widget == bottom_entry)
@@ -1872,7 +1869,7 @@ position_callback (GtkWidget *widget)
 	stp_set_left(pv->v, new_value - print_width);
       else if (widget == right_border_entry)
 	stp_set_left (pv->v, paper_width - print_width - new_value);
-      else if (widget == width_entry)
+      else if (widget == width_entry || widget == height_entry)
 	{
 	  if (pv->scaling >= 0)
 	    {
@@ -1881,28 +1878,12 @@ position_callback (GtkWidget *widget)
 	      scaling_callback (scaling_ppi);
 	      was_percent = 1;
 	    }
-	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    ((gdouble) image_width) / (new_value * unit_scaler / FINCH);
-	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
-	  if (was_percent)
-	    {
-	      gtk_toggle_button_set_active
-		(GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-	      gtk_adjustment_value_changed
-		(GTK_ADJUSTMENT (scaling_adjustment));
-	    }
-	}
-      else if (widget == height_entry)
-	{
-	  if (pv->scaling >= 0)
-	    {
-	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi),
-					    TRUE);
-	      scaling_callback (scaling_ppi);
-	      was_percent = 1;
-	    }
-	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    ((gdouble) image_height) / (new_value * unit_scaler / FINCH);
+	  if  (widget == width_entry)
+	    GTK_ADJUSTMENT (scaling_adjustment)->value =
+	      ((gdouble) image_width) / (new_value / FINCH);
+	  else
+	    GTK_ADJUSTMENT (scaling_adjustment)->value =
+	      ((gdouble) image_height) / (new_value / FINCH);
 	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
 	  if (was_percent)
 	    {
@@ -2774,9 +2755,6 @@ do_preview_thumbnail (void)
   static GdkGC	*gc    = NULL;
   static GdkGC  *gcinv = NULL;
   static GdkGC  *gcset = NULL;
-  static GdkGC  *gccopy = NULL;
-  static GdkGC  *gcclear = NULL;
-  static GdkGC  *gcsetbackground = NULL;
   static guchar *preview_data = NULL;
   static gint    opx = 0;
   static gint    opy = 0;
@@ -2858,21 +2836,11 @@ do_preview_thumbnail (void)
 
   if (gc == NULL)
     {
-      GdkGCValues vals;
       gc = gdk_gc_new (preview->widget.window);
       gcinv = gdk_gc_new (preview->widget.window);
       gdk_gc_set_function (gcinv, GDK_INVERT);
       gcset = gdk_gc_new (preview->widget.window);
       gdk_gc_set_function (gcset, GDK_SET);
-      gccopy = gdk_gc_new(preview->widget.window);
-      gdk_gc_set_function (gccopy, GDK_COPY);
-      gcclear = gdk_gc_new(preview->widget.window);
-      gdk_gc_set_function (gcclear, GDK_CLEAR);
-      gdk_gc_get_values(gc, &vals);
-      gcsetbackground =
-	gdk_gc_new_with_values (preview->widget.window, &vals,
-				GDK_GC_FILL);
-      gdk_gc_set_function (gcsetbackground, GDK_SET);
     }
 
   if (!preview_valid)
@@ -2951,71 +2919,74 @@ do_preview_thumbnail (void)
       preview_valid = 1;
     }
 
-  if (need_exposure || !frame_valid)
+  if (need_exposure)
     {
-      if (!dummy_preview)
-	dummy_preview = gdk_pixmap_new(preview->widget.window,
-				       PREVIEW_SIZE_HORIZ + 1,
-				       PREVIEW_SIZE_VERT + 1, -1);
-      gdk_draw_rectangle(dummy_preview, gcsetbackground, 1, 0, 0,
-			 PREVIEW_SIZE_HORIZ + 1, PREVIEW_SIZE_VERT + 1);
       /* draw paper frame */
-      gdk_draw_rectangle (dummy_preview, gcclear, 0,
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
 			  paper_display_left, paper_display_top,
 			  paper_display_width, paper_display_height);
 
       /* draw printable frame */
-      gdk_draw_rectangle (dummy_preview, gcclear, 0,
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
 			  printable_display_left, printable_display_top,
 			  printable_display_width, printable_display_height);
-      if (need_exposure)
-	need_exposure = 0;
-      else
-	frame_valid = 1;
+      need_exposure = 0;
+    }
+  else if (!frame_valid)
+    {
+      gdk_window_clear (preview->widget.window);
+      /* draw paper frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  paper_display_left, paper_display_top,
+			  paper_display_width, paper_display_height);
+
+      /* draw printable frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  printable_display_left, printable_display_top,
+			  printable_display_width, printable_display_height);
+      frame_valid = 1;
     }
   else
     {
       if (opx + opw <= preview_x || opy + oph <= preview_y ||
 	  preview_x + preview_w <= opx || preview_y + preview_h <= opy)
         {
-	  gdk_draw_rectangle(dummy_preview, gcsetbackground, 1, opx, opy, opw, oph);
+          gdk_window_clear_area (preview->widget.window, opx, opy, opw, oph);
         }
       else
 	{
 	  if (opx < preview_x)
-	    gdk_draw_rectangle (dummy_preview, gcsetbackground, 1,
-				opx, opy, preview_x - opx, oph);
+	    gdk_window_clear_area (preview->widget.window,
+                                   opx, opy, preview_x - opx, oph);
 	  if (opy < preview_y)
-	    gdk_draw_rectangle (dummy_preview, gcsetbackground, 1,
-				opx, opy, opw, preview_y - opy);
+	    gdk_window_clear_area (preview->widget.window,
+                                   opx, opy, opw, preview_y - opy);
 	  if (opx + opw > preview_x + preview_w)
-	    gdk_draw_rectangle (dummy_preview, gcsetbackground, 1,
-				preview_x + preview_w, opy,
-				(opx + opw) - (preview_x + preview_w), oph);
+	    gdk_window_clear_area (preview->widget.window,
+                                   preview_x + preview_w, opy,
+                                   (opx + opw) - (preview_x + preview_w), oph);
 	  if (opy + oph > preview_y + preview_h)
-	    gdk_draw_rectangle (dummy_preview, gcsetbackground, 1,
+	    gdk_window_clear_area (preview->widget.window,
                                    opx, preview_y + preview_h,
                                    opw, (opy + oph) - (preview_y + preview_h));
 	}
     }
 
-  draw_arrow (dummy_preview, gcset, paper_display_left, paper_display_top);
+  draw_arrow (preview->widget.window, gcset, paper_display_left,
+	      paper_display_top);
 
   if (adjusted_thumbnail_bpp == 1)
-    gdk_draw_gray_image (dummy_preview, gc,
+    gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);
   else
-    gdk_draw_rgb_image (dummy_preview, gc,
+    gdk_draw_rgb_image (preview->widget.window, gc,
 			preview_x, preview_y, preview_w, preview_h,
 			GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
 
   /* draw orientation arrow pointing to top-of-paper */
-  draw_arrow (dummy_preview, gcinv, paper_display_left, paper_display_top);
-  gdk_window_copy_area(preview->widget.window, gccopy, 0, 0,
-		       dummy_preview, 0, 0,
-		       PREVIEW_SIZE_HORIZ + 1, PREVIEW_SIZE_VERT + 1);
-  gdk_flush();
+  draw_arrow (preview->widget.window, gcinv, paper_display_left,
+	      paper_display_top);
 
   opx = preview_x;
   opy = preview_y;
