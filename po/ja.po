@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print Version 4.2.3\n"
-"POT-Creation-Date: 2004-05-09 12:40-0400\n"
+"POT-Creation-Date: 2004-06-26 09:42-0400\n"
 "PO-Revision-Date: 2002-10-07 19:10+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -70,8 +70,8 @@ msgstr "濃度:"
 #: src/main/print-escp2.c:385 src/main/print-escp2.c:393
 #: src/main/print-lexmark.c:324 src/main/print-lexmark.c:332
 #: src/main/print-lexmark.c:340 src/main/print-lexmark.c:348
-#: src/main/print-pcl.c:1172 src/main/print-pcl.c:1180
-#: src/main/print-pcl.c:1188 src/main/print-pcl.c:1196
+#: src/main/print-pcl.c:1211 src/main/print-pcl.c:1219
+#: src/main/print-pcl.c:1227 src/main/print-pcl.c:1235
 msgid "Output Level Adjustment"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr "2880 x 720 DPI"
 msgid "2880x2880 DPI DMT"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1148 src/main/print-pcl.c:250
+#: src/main/print-canon.c:1148 src/main/print-pcl.c:253
 msgid "150x150 DPI"
 msgstr "150x150 DPI"
 
@@ -219,7 +219,7 @@ msgstr "150x150 DPI"
 msgid "150x150 DPI DMT"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1149 src/main/print-pcl.c:251
+#: src/main/print-canon.c:1149 src/main/print-pcl.c:254
 msgid "300x300 DPI"
 msgstr "300x300 DPI"
 
@@ -228,7 +228,7 @@ msgstr "300x300 DPI"
 msgid "300x300 DPI DMT"
 msgstr "300x300 DPI"
 
-#: src/main/print-canon.c:1150 src/main/print-pcl.c:252
+#: src/main/print-canon.c:1150 src/main/print-pcl.c:255
 msgid "600x300 DPI"
 msgstr "600x300 DPI"
 
@@ -237,7 +237,7 @@ msgstr "600x300 DPI"
 msgid "600x300 DPI DMT"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1151 src/main/print-pcl.c:254
+#: src/main/print-canon.c:1151 src/main/print-pcl.c:257
 msgid "600x600 DPI"
 msgstr "600x600 DPI"
 
@@ -246,7 +246,7 @@ msgstr "600x600 DPI"
 msgid "600x600 DPI DMT"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1152 src/main/print-pcl.c:255
+#: src/main/print-canon.c:1152 src/main/print-pcl.c:258
 msgid "1200x600 DPI"
 msgstr "1200x600 DPI"
 
@@ -324,7 +324,7 @@ msgid "Other"
 msgstr "その他"
 
 #: src/main/print-canon.c:1221 src/main/print-escp2.c:176
-#: src/main/print-lexmark.c:265 src/main/print-pcl.c:1113
+#: src/main/print-lexmark.c:265 src/main/print-pcl.c:1146
 #: src/main/print-ps.c:66
 #, fuzzy
 msgid "Page Size"
@@ -337,80 +337,80 @@ msgstr "画像のサイズ"
 #: src/main/print-escp2.c:223 src/main/print-escp2.c:241
 #: src/main/print-lexmark.c:265 src/main/print-lexmark.c:271
 #: src/main/print-lexmark.c:277 src/main/print-lexmark.c:283
-#: src/main/print-pcl.c:1113 src/main/print-pcl.c:1119
-#: src/main/print-pcl.c:1125 src/main/print-pcl.c:1131 src/main/print-ps.c:66
-#: src/main/print-ps.c:72 src/main/print-ps.c:78 src/main/print-ps.c:84
-#: src/main/print-ps.c:96
+#: src/main/print-pcl.c:1146 src/main/print-pcl.c:1152
+#: src/main/print-pcl.c:1158 src/main/print-pcl.c:1164
+#: src/main/print-pcl.c:1188 src/main/print-ps.c:66 src/main/print-ps.c:72
+#: src/main/print-ps.c:78 src/main/print-ps.c:84 src/main/print-ps.c:96
 #, fuzzy
 msgid "Basic Printer Setup"
 msgstr "プリンタの設定"
 
 #: src/main/print-canon.c:1222 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:266 src/main/print-pcl.c:1114
+#: src/main/print-lexmark.c:266 src/main/print-pcl.c:1147
 #: src/main/print-ps.c:67
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "印刷する用紙のサイズです。"
 
 #: src/main/print-canon.c:1227 src/main/print-escp2.c:182
-#: src/main/print-lexmark.c:271 src/main/print-pcl.c:1119
-#: src/main/print-ps.c:72 src/cups/genppd.c:1028
+#: src/main/print-lexmark.c:271 src/main/print-pcl.c:1152
+#: src/main/print-ps.c:72 src/cups/genppd.c:1042
 msgid "Media Type"
 msgstr "用紙の種類"
 
 #: src/main/print-canon.c:1228 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:272 src/main/print-pcl.c:1120
+#: src/main/print-lexmark.c:272 src/main/print-pcl.c:1153
 #: src/main/print-ps.c:73
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
 #: src/main/print-canon.c:1233 src/main/print-escp2.c:188
-#: src/main/print-lexmark.c:277 src/main/print-pcl.c:1125
-#: src/main/print-ps.c:78 src/cups/genppd.c:1052
+#: src/main/print-lexmark.c:277 src/main/print-pcl.c:1158
+#: src/main/print-ps.c:78 src/cups/genppd.c:1066
 msgid "Media Source"
 msgstr "給紙方法"
 
 #: src/main/print-canon.c:1234 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:278 src/main/print-pcl.c:1126
+#: src/main/print-lexmark.c:278 src/main/print-pcl.c:1159
 #: src/main/print-ps.c:79
 #, fuzzy
 msgid "Source (input slot) of the media"
 msgstr "印刷時の給紙方式です。"
 
 #: src/main/print-canon.c:1239 src/main/print-escp2.c:194
-#: src/main/print-lexmark.c:283 src/main/print-pcl.c:1131
-#: src/main/print-ps.c:84 src/cups/genppd.c:1124
+#: src/main/print-lexmark.c:283 src/main/print-pcl.c:1164
+#: src/main/print-ps.c:84 src/cups/genppd.c:1138
 msgid "Resolution"
 msgstr "解像度"
 
 #: src/main/print-canon.c:1240 src/main/print-lexmark.c:284
-#: src/main/print-pcl.c:1132 src/main/print-ps.c:85
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:85
 msgid "Resolution and quality of the print"
 msgstr "印刷時の解像度と品質です。"
 
 #: src/main/print-canon.c:1245 src/main/print-escp2.c:205
-#: src/main/print-lexmark.c:289 src/main/print-pcl.c:1137
+#: src/main/print-lexmark.c:289 src/main/print-pcl.c:1170
 #: src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "インクの種類"
 
 #: src/main/print-canon.c:1245 src/main/print-escp2.c:205
 #: src/main/print-escp2.c:211 src/main/print-escp2.c:235
-#: src/main/print-lexmark.c:289 src/main/print-pcl.c:1137
+#: src/main/print-lexmark.c:289 src/main/print-pcl.c:1170
 #: src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr ""
 
 #: src/main/print-canon.c:1246 src/main/print-escp2.c:206
 #: src/main/print-escp2.c:212 src/main/print-lexmark.c:290
-#: src/main/print-pcl.c:1138 src/main/print-ps.c:91 src/main/print-raw.c:81
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:91 src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "印刷時のインクの種類です。"
 
 #: src/main/print-canon.c:1251 src/main/print-canon.c:1252
 #: src/main/print-escp2.c:277 src/main/print-escp2.c:278
 #: src/main/print-lexmark.c:295 src/main/print-lexmark.c:296
-#: src/main/print-pcl.c:1143 src/main/print-pcl.c:1144
+#: src/main/print-pcl.c:1176 src/main/print-pcl.c:1177
 msgid "Ink Channels"
 msgstr ""
 
@@ -419,12 +419,12 @@ msgstr ""
 #: src/main/print-escp2.c:247 src/main/print-escp2.c:253
 #: src/main/print-escp2.c:259 src/main/print-escp2.c:265
 #: src/main/print-escp2.c:271 src/main/print-escp2.c:277
-#: src/main/print-lexmark.c:295 src/main/print-pcl.c:1143
+#: src/main/print-lexmark.c:295 src/main/print-pcl.c:1176
 msgid "Advanced Printer Functionality"
 msgstr ""
 
 #: src/main/print-canon.c:1257 src/main/print-escp2.c:283
-#: src/main/print-lexmark.c:301 src/main/print-pcl.c:1149
+#: src/main/print-lexmark.c:301 src/main/print-pcl.c:1182
 #: src/main/print-ps.c:102 src/main/print-raw.c:86
 #, fuzzy
 msgid "Printing Mode"
@@ -434,60 +434,60 @@ msgstr "プリンタの型式:"
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:283
 #: src/main/print-escp2.c:289 src/main/print-lexmark.c:301
-#: src/main/print-pcl.c:1149 src/main/print-ps.c:102 src/main/print-raw.c:86
+#: src/main/print-pcl.c:1182 src/main/print-ps.c:102 src/main/print-raw.c:86
 #, fuzzy
 msgid "Core Parameter"
 msgstr "ColorLife Paper"
 
 #: src/main/print-canon.c:1258 src/main/print-escp2.c:284
-#: src/main/print-lexmark.c:302 src/main/print-pcl.c:1150
+#: src/main/print-lexmark.c:302 src/main/print-pcl.c:1183
 #: src/main/print-ps.c:103 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr ""
 
 #: src/main/print-canon.c:1280 src/main/print-escp2.c:345
-#: src/main/print-lexmark.c:324 src/main/print-pcl.c:1172
+#: src/main/print-lexmark.c:324 src/main/print-pcl.c:1211
 msgid "Cyan Balance"
 msgstr ""
 
 #: src/main/print-canon.c:1281 src/main/print-escp2.c:346
-#: src/main/print-lexmark.c:325 src/main/print-pcl.c:1173
+#: src/main/print-lexmark.c:325 src/main/print-pcl.c:1212
 #, fuzzy
 msgid "Adjust the cyan balance"
 msgstr "印刷時のシアン色のバランスを調整します。"
 
 #: src/main/print-canon.c:1288 src/main/print-escp2.c:353
-#: src/main/print-lexmark.c:332 src/main/print-pcl.c:1180
+#: src/main/print-lexmark.c:332 src/main/print-pcl.c:1219
 #, fuzzy
 msgid "Magenta Balance"
 msgstr "マゼンタ (M)"
 
 #: src/main/print-canon.c:1289 src/main/print-escp2.c:354
-#: src/main/print-lexmark.c:333 src/main/print-pcl.c:1181
+#: src/main/print-lexmark.c:333 src/main/print-pcl.c:1220
 #, fuzzy
 msgid "Adjust the magenta balance"
 msgstr "印刷時のマゼンタ色のバランスを調整します。"
 
 #: src/main/print-canon.c:1296 src/main/print-escp2.c:361
-#: src/main/print-lexmark.c:340 src/main/print-pcl.c:1188
+#: src/main/print-lexmark.c:340 src/main/print-pcl.c:1227
 #, fuzzy
 msgid "Yellow Balance"
 msgstr "印刷時の黄色のバランスを調整します。"
 
 #: src/main/print-canon.c:1297 src/main/print-escp2.c:362
-#: src/main/print-lexmark.c:341 src/main/print-pcl.c:1189
+#: src/main/print-lexmark.c:341 src/main/print-pcl.c:1228
 #, fuzzy
 msgid "Adjust the yellow balance"
 msgstr "印刷時の黄色のバランスを調整します。"
 
 #: src/main/print-canon.c:1304 src/main/print-escp2.c:369
-#: src/main/print-lexmark.c:348 src/main/print-pcl.c:1196
+#: src/main/print-lexmark.c:348 src/main/print-pcl.c:1235
 #, fuzzy
 msgid "Black Balance"
 msgstr "黒と白"
 
 #: src/main/print-canon.c:1305 src/main/print-escp2.c:370
-#: src/main/print-lexmark.c:349 src/main/print-pcl.c:1197
+#: src/main/print-lexmark.c:349 src/main/print-pcl.c:1236
 #, fuzzy
 msgid "Adjust the black balance"
 msgstr "印刷時のシアン色のバランスを調整します。"
@@ -495,7 +495,7 @@ msgstr "印刷時のシアン色のバランスを調整します。"
 #: src/main/print-canon.c:1312 src/main/print-canon.c:1313
 #: src/main/print-escp2.c:401 src/main/print-escp2.c:402
 #: src/main/print-lexmark.c:356 src/main/print-lexmark.c:357
-#: src/main/print-pcl.c:1204 src/main/print-pcl.c:1205
+#: src/main/print-pcl.c:1243 src/main/print-pcl.c:1244
 #, fuzzy
 msgid "Light Cyan Transition"
 msgstr "明るいシアン"
@@ -506,14 +506,14 @@ msgstr "明るいシアン"
 #: src/main/print-escp2.c:425 src/main/print-escp2.c:433
 #: src/main/print-escp2.c:441 src/main/print-escp2.c:449
 #: src/main/print-lexmark.c:356 src/main/print-lexmark.c:364
-#: src/main/print-pcl.c:1204 src/main/print-pcl.c:1212
+#: src/main/print-pcl.c:1243 src/main/print-pcl.c:1251
 msgid "Advanced Ink Adjustment"
 msgstr ""
 
 #: src/main/print-canon.c:1320 src/main/print-canon.c:1321
 #: src/main/print-escp2.c:409 src/main/print-escp2.c:410
 #: src/main/print-lexmark.c:364 src/main/print-lexmark.c:365
-#: src/main/print-pcl.c:1212 src/main/print-pcl.c:1213
+#: src/main/print-pcl.c:1251 src/main/print-pcl.c:1252
 #, fuzzy
 msgid "Light Magenta Transition"
 msgstr "明るいマゼンタ"
@@ -536,7 +536,7 @@ msgid "Manual without Pause"
 msgstr "ポーズなし手動給紙"
 
 #: src/main/print-canon.c:1756 src/main/print-lexmark.c:612
-#: src/libgimpprintui/panel.c:1942 src/escputil/escputil.c:525
+#: src/libgimpprintui/panel.c:2018 src/escputil/escputil.c:525
 msgid "Black"
 msgstr "黒色"
 
@@ -557,14 +557,14 @@ msgid "Photo CcMmYK Color"
 msgstr "フォト CcMmYK 色"
 
 #: src/main/print-canon.c:1812 src/main/print-escp2.c:1535
-#: src/main/print-lexmark.c:1282 src/main/print-pcl.c:1639
+#: src/main/print-lexmark.c:1282 src/main/print-pcl.c:1726
 #: src/main/print-ps.c:167 src/main/print-raw.c:135
-#: src/libgimpprintui/panel.c:266
+#: src/libgimpprintui/panel.c:276
 msgid "Color"
 msgstr "カラー"
 
 #: src/main/print-canon.c:1814 src/main/print-escp2.c:1537
-#: src/main/print-lexmark.c:1284 src/main/print-pcl.c:1641
+#: src/main/print-lexmark.c:1284 src/main/print-pcl.c:1728
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 #, fuzzy
 msgid "Black and White"
@@ -595,7 +595,7 @@ msgstr ""
 msgid "Raw"
 msgstr ""
 
-#: src/main/print-color.c:165 src/main/print-color.c:407
+#: src/main/print-color.c:165 src/main/print-color.c:405
 #, fuzzy
 msgid "Channel "
 msgstr "取り消し"
@@ -606,10 +606,10 @@ msgid " Gamma"
 msgstr "ガンマ:"
 
 #: src/main/print-color.c:165 src/main/print-color.c:240
-#: src/main/print-color.c:252 src/main/print-color.c:260
-#: src/main/print-color.c:268 src/main/print-color.c:276
-#: src/main/print-color.c:284 src/main/print-color.c:292
-#: src/main/print-color.c:300
+#: src/main/print-color.c:250 src/main/print-color.c:258
+#: src/main/print-color.c:266 src/main/print-color.c:274
+#: src/main/print-color.c:282 src/main/print-color.c:290
+#: src/main/print-color.c:298
 #, fuzzy
 msgid "Gamma"
 msgstr "ガンマ:"
@@ -623,7 +623,7 @@ msgid "Color Correction"
 msgstr ""
 
 #: src/main/print-color.c:176 src/main/print-color.c:216
-#: src/main/print-color.c:224 src/main/print-color.c:308
+#: src/main/print-color.c:224 src/main/print-color.c:306
 msgid "Basic Image Adjustment"
 msgstr ""
 
@@ -671,10 +671,8 @@ msgstr "明るさ:"
 
 #: src/main/print-color.c:217
 #, fuzzy
-msgid "Brightness of the print (0 is solid black, 2 is solid white)"
-msgstr ""
-"印刷する明るさをセットします。\n"
-"(0.0方向: 暗く 2.0方向: 明るく)"
+msgid "Brightness of the print"
+msgstr "印刷時の高さをセットします。"
 
 #: src/main/print-color.c:224
 #, fuzzy
@@ -698,88 +696,92 @@ msgstr "出力の種類:"
 msgid "Use linear vs. fixed end point contrast adjustment"
 msgstr ""
 
+#: src/main/print-color.c:240
+msgid "Composite Gamma"
+msgstr ""
+
 #: src/main/print-color.c:241
+#, fuzzy
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
-"Black and white will remain the same, unlike with the brightness adjustment."
 msgstr ""
 "印刷時のガンマ値を調整します。\n"
 "値を大きくすると一般的に明るい印刷になり、小さくすると暗い印刷になります。\n"
 "明るさの調整とは異なり、黒色と白色は同じままです。"
 
-#: src/main/print-color.c:252
+#: src/main/print-color.c:250
 #, fuzzy
 msgid "AppGamma"
 msgstr "ガンマ:"
 
-#: src/main/print-color.c:253
+#: src/main/print-color.c:251
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/main/print-color.c:260 src/libgimpprintui/panel.c:1921
+#: src/main/print-color.c:258 src/libgimpprintui/panel.c:1997
 #: src/escputil/escputil.c:526
 msgid "Cyan"
 msgstr "シアン (C)"
 
-#: src/main/print-color.c:261
+#: src/main/print-color.c:259
 #, fuzzy
 msgid "Adjust the cyan gamma"
 msgstr "印刷時のシアン色のバランスを調整します。"
 
-#: src/main/print-color.c:268 src/libgimpprintui/panel.c:1928
+#: src/main/print-color.c:266 src/libgimpprintui/panel.c:2004
 #: src/escputil/escputil.c:527
 msgid "Magenta"
 msgstr "マゼンタ (M)"
 
-#: src/main/print-color.c:269
+#: src/main/print-color.c:267
 #, fuzzy
 msgid "Adjust the magenta gamma"
 msgstr "印刷時のマゼンタ色のバランスを調整します。"
 
-#: src/main/print-color.c:276 src/libgimpprintui/panel.c:1935
+#: src/main/print-color.c:274 src/libgimpprintui/panel.c:2011
 #: src/escputil/escputil.c:528
 msgid "Yellow"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:277
+#: src/main/print-color.c:275
 #, fuzzy
 msgid "Adjust the yellow gamma"
 msgstr "印刷時の黄色のバランスを調整します。"
 
-#: src/main/print-color.c:284
+#: src/main/print-color.c:282
 msgid "Red"
 msgstr ""
 
-#: src/main/print-color.c:285
+#: src/main/print-color.c:283
 #, fuzzy
 msgid "Adjust the red gamma"
 msgstr "印刷時の黄色のバランスを調整します。"
 
-#: src/main/print-color.c:292
+#: src/main/print-color.c:290
 msgid "Green"
 msgstr ""
 
-#: src/main/print-color.c:293
+#: src/main/print-color.c:291
 #, fuzzy
 msgid "Adjust the green gamma"
 msgstr "印刷時のマゼンタ色のバランスを調整します。"
 
-#: src/main/print-color.c:300
+#: src/main/print-color.c:298
 msgid "Blue"
 msgstr ""
 
-#: src/main/print-color.c:301
+#: src/main/print-color.c:299
 #, fuzzy
 msgid "Adjust the blue gamma"
 msgstr "印刷時のシアン色のバランスを調整します。"
 
-#: src/main/print-color.c:308
+#: src/main/print-color.c:306
 #, fuzzy
 msgid "Saturation"
 msgstr "彩度:"
 
-#: src/main/print-color.c:309
+#: src/main/print-color.c:307
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
@@ -787,182 +789,182 @@ msgstr ""
 "印刷時の彩度 (カラー・バランス) を調整します。\n"
 "カラーと黒の両方のインクを使ってグレースケール出力する場合は 0 にして下さい。"
 
-#: src/main/print-color.c:319
+#: src/main/print-color.c:317
 #, fuzzy
 msgid "Ink Limit"
 msgstr "インクの種類"
 
-#: src/main/print-color.c:319 src/main/print-color.c:327
-#: src/main/print-color.c:335 src/main/print-color.c:343
-#: src/main/print-color.c:506
+#: src/main/print-color.c:317 src/main/print-color.c:325
+#: src/main/print-color.c:333 src/main/print-color.c:341
+#: src/main/print-color.c:504
 #, fuzzy
 msgid "Advanced Output Control"
 msgstr "出力の種類:"
 
-#: src/main/print-color.c:320
+#: src/main/print-color.c:318
 msgid "Limit the total ink printed to the page"
 msgstr ""
 
-#: src/main/print-color.c:327
+#: src/main/print-color.c:325
 msgid "GCR Transition"
 msgstr ""
 
-#: src/main/print-color.c:328
+#: src/main/print-color.c:326
 msgid "Adjust the gray component transition rate"
 msgstr ""
 
-#: src/main/print-color.c:335
+#: src/main/print-color.c:333
 msgid "GCR Lower Bound"
 msgstr ""
 
-#: src/main/print-color.c:336
+#: src/main/print-color.c:334
 msgid "Lower bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:343
+#: src/main/print-color.c:341
 msgid "GCR Upper Bound"
 msgstr ""
 
-#: src/main/print-color.c:344
+#: src/main/print-color.c:342
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:407
+#: src/main/print-color.c:405
 #, fuzzy
 msgid " Curve"
 msgstr "黒色"
 
-#: src/main/print-color.c:408 src/main/print-color.c:418
-#: src/main/print-color.c:426 src/main/print-color.c:434
-#: src/main/print-color.c:442 src/main/print-color.c:450
-#: src/main/print-color.c:458 src/main/print-color.c:466
-#: src/main/print-color.c:474
+#: src/main/print-color.c:406 src/main/print-color.c:416
+#: src/main/print-color.c:424 src/main/print-color.c:432
+#: src/main/print-color.c:440 src/main/print-color.c:448
+#: src/main/print-color.c:456 src/main/print-color.c:464
+#: src/main/print-color.c:472
 #, fuzzy
 msgid "Output Curves"
 msgstr "出力の種類:"
 
-#: src/main/print-color.c:408
+#: src/main/print-color.c:406
 msgid "Curve for raw channel "
 msgstr ""
 
-#: src/main/print-color.c:418
+#: src/main/print-color.c:416
 msgid "Cyan Curve"
 msgstr ""
 
-#: src/main/print-color.c:419
+#: src/main/print-color.c:417
 #, fuzzy
 msgid "Cyan curve"
 msgstr "取り消し"
 
-#: src/main/print-color.c:426
+#: src/main/print-color.c:424
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "マゼンタ (M)"
 
-#: src/main/print-color.c:427
+#: src/main/print-color.c:425
 #, fuzzy
 msgid "Magenta curve"
 msgstr "マゼンタ (M)"
 
-#: src/main/print-color.c:434
+#: src/main/print-color.c:432
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:435
+#: src/main/print-color.c:433
 #, fuzzy
 msgid "Yellow curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:442
+#: src/main/print-color.c:440
 #, fuzzy
 msgid "Black Curve"
 msgstr "黒色"
 
-#: src/main/print-color.c:443
+#: src/main/print-color.c:441
 #, fuzzy
 msgid "Black curve"
 msgstr "黒色"
 
-#: src/main/print-color.c:450
+#: src/main/print-color.c:448
 #, fuzzy
 msgid "Red Curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:451
+#: src/main/print-color.c:449
 #, fuzzy
 msgid "Red curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:458
+#: src/main/print-color.c:456
 #, fuzzy
 msgid "Green Curve"
 msgstr "マゼンタ (M)"
 
-#: src/main/print-color.c:459
+#: src/main/print-color.c:457
 #, fuzzy
 msgid "Green curve"
 msgstr "マゼンタ (M)"
 
-#: src/main/print-color.c:466
+#: src/main/print-color.c:464
 #, fuzzy
 msgid "Blue Curve"
 msgstr "黒色"
 
-#: src/main/print-color.c:467
+#: src/main/print-color.c:465
 #, fuzzy
 msgid "Blue curve"
 msgstr "黒色"
 
-#: src/main/print-color.c:474
+#: src/main/print-color.c:472
 #, fuzzy
 msgid "White Curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:475
+#: src/main/print-color.c:473
 #, fuzzy
 msgid "White curve"
 msgstr "黄色 (Y)"
 
-#: src/main/print-color.c:482
+#: src/main/print-color.c:480
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:482 src/main/print-color.c:490
-#: src/main/print-color.c:498
+#: src/main/print-color.c:480 src/main/print-color.c:488
+#: src/main/print-color.c:496
 msgid "Advanced HSL Curves"
 msgstr ""
 
-#: src/main/print-color.c:483
+#: src/main/print-color.c:481
 msgid "Hue adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:490
+#: src/main/print-color.c:488
 #, fuzzy
 msgid "Saturation Map"
 msgstr "彩度:"
 
-#: src/main/print-color.c:491
+#: src/main/print-color.c:489
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:498
+#: src/main/print-color.c:496
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:499
+#: src/main/print-color.c:497
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:506
+#: src/main/print-color.c:504
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:507
+#: src/main/print-color.c:505
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/main/print-color.c:1499
+#: src/main/print-color.c:1585
 msgid "Traditional Gimp-Print color conversion"
 msgstr ""
 
@@ -1057,8 +1059,8 @@ msgstr ""
 #: src/main/print-escp2-data.c:348 src/main/print-escp2-data.c:394
 #: src/main/print-escp2-data.c:431 src/main/print-escp2-data.c:524
 #: src/main/print-escp2.c:1334 src/main/print-escp2.c:1431
-#: src/main/print-escp2.c:1443 src/main/print-pcl.c:224
-#: src/libgimpprintui/panel.c:2353
+#: src/main/print-escp2.c:1443 src/main/print-pcl.c:227
+#: src/libgimpprintui/panel.c:2429
 msgid "Standard"
 msgstr "標準"
 
@@ -1299,7 +1301,7 @@ msgstr ""
 msgid "Manual Control"
 msgstr "出力の種類:"
 
-#: src/main/print-escp2.c:1408 src/cups/genppd.c:1133
+#: src/main/print-escp2.c:1408 src/cups/genppd.c:1147
 #, fuzzy
 msgid "Automatic"
 msgstr "画像のサイズ"
@@ -1447,96 +1449,116 @@ msgstr "光沢付き用紙 (フォト用高品質)"
 msgid "Ilford Heavy Paper"
 msgstr "Ilford Heavy Paper"
 
-#: src/main/print-pcl.c:179
+#: src/main/print-pcl.c:182
 msgid "Plain"
 msgstr "通常"
 
-#: src/main/print-pcl.c:180
+#: src/main/print-pcl.c:183
 msgid "Bond"
 msgstr "Bond"
 
-#: src/main/print-pcl.c:181
+#: src/main/print-pcl.c:184
 msgid "Premium"
 msgstr "高級"
 
-#: src/main/print-pcl.c:182
+#: src/main/print-pcl.c:185
 msgid "Glossy Photo"
 msgstr "光沢付きフォト"
 
-#: src/main/print-pcl.c:183
+#: src/main/print-pcl.c:186
 msgid "Transparency"
 msgstr "スライド"
 
-#: src/main/print-pcl.c:184
+#: src/main/print-pcl.c:187
 msgid "Quick-dry Photo"
 msgstr "即乾フォト"
 
-#: src/main/print-pcl.c:185
+#: src/main/print-pcl.c:188
 msgid "Quick-dry Transparency"
 msgstr "即乾スライド"
 
-#: src/main/print-pcl.c:225 src/main/xmli18n-tmp.h:16
+#: src/main/print-pcl.c:228 src/main/xmli18n-tmp.h:16
 msgid "Manual"
 msgstr "手動"
 
-#: src/main/print-pcl.c:227
+#: src/main/print-pcl.c:230
 msgid "Tray 1"
 msgstr "トレイ１"
 
-#: src/main/print-pcl.c:228 src/main/print-pcl.c:234
+#: src/main/print-pcl.c:231 src/main/print-pcl.c:237
 msgid "Tray 2"
 msgstr "トレイ２"
 
-#: src/main/print-pcl.c:229
+#: src/main/print-pcl.c:232
 msgid "Tray 3"
 msgstr "トレイ３"
 
-#: src/main/print-pcl.c:230
+#: src/main/print-pcl.c:233
 msgid "Tray 4"
 msgstr "トレイ４"
 
-#: src/main/print-pcl.c:231
+#: src/main/print-pcl.c:234
 msgid "Portable Sheet Feeder"
 msgstr "携帯式給紙"
 
-#: src/main/print-pcl.c:232
+#: src/main/print-pcl.c:235
 msgid "Desktop Sheet Feeder"
 msgstr "デスクトップ給紙"
 
-#: src/main/print-pcl.c:233
+#: src/main/print-pcl.c:236
 msgid "Tray"
 msgstr "トレイ"
 
-#: src/main/print-pcl.c:235
+#: src/main/print-pcl.c:238
 msgid "Optional Source"
 msgstr "オプション"
 
-#: src/main/print-pcl.c:236
+#: src/main/print-pcl.c:239
 msgid "Autoselect"
 msgstr "自動選択"
 
-#: src/main/print-pcl.c:253
+#: src/main/print-pcl.c:256
 msgid "600x600 DPI monochrome"
 msgstr "600x600 DPI モノクロ"
 
-#: src/main/print-pcl.c:256
+#: src/main/print-pcl.c:259
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1381
+#: src/main/print-pcl.c:1188
+msgid "Double-Sided Printing"
+msgstr ""
+
+#: src/main/print-pcl.c:1189
+msgid "Duplex/Tumble Setting"
+msgstr ""
+
+#: src/main/print-pcl.c:1420
 msgid "Color + Black Cartridges"
 msgstr "カラー + 黒カートリッジ"
 
-#: src/main/print-pcl.c:1382
+#: src/main/print-pcl.c:1421
 msgid "Color + Photo Cartridges"
 msgstr "カラー + フォト・カートリッジ"
+
+#: src/main/print-pcl.c:1432
+msgid "Off"
+msgstr ""
+
+#: src/main/print-pcl.c:1433
+msgid "Long Edge (Standard)"
+msgstr ""
+
+#: src/main/print-pcl.c:1434
+msgid "Short Edge (Flip)"
+msgstr ""
 
 #: src/main/print-ps.c:96
 #, fuzzy
 msgid "PPDFile"
 msgstr "PPD ファイル:"
 
-#: src/main/print-ps.c:97
+#: src/main/print-ps.c:97 src/libgimpprintui/panel.c:1630
 #, fuzzy
 msgid "PPD File"
 msgstr "PPD ファイルですか？"
@@ -2111,99 +2133,99 @@ msgid "PostScript Level 2"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:143
-msgid "CANON BJC 30"
+msgid "Canon BJC 30"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:144
-msgid "CANON BJC 50"
+msgid "Canon BJC 50"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:145
-msgid "CANON BJC 55"
+msgid "Canon BJC 55"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:146
-msgid "CANON BJC 80"
+msgid "Canon BJC 80"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:147
-msgid "CANON BJC 85"
+msgid "Canon BJC 85"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:148
-msgid "CANON BJC 210"
+msgid "Canon BJC 210"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:149
-msgid "CANON BJC 240"
+msgid "Canon BJC 240"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:150
-msgid "CANON BJC 250"
+msgid "Canon BJC 250"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:151
-msgid "CANON BJC 1000"
+msgid "Canon BJC 1000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:152
-msgid "CANON BJC 2000"
+msgid "Canon BJC 2000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:153
-msgid "CANON BJC 3000"
+msgid "Canon BJC 3000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:154
-msgid "CANON BJC 4300"
+msgid "Canon BJC 4300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:155
-msgid "CANON BJC 4400 photo"
+msgid "Canon BJC 4400 photo"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:156
-msgid "CANON BJC 6000"
+msgid "Canon BJC 6000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:157
-msgid "CANON BJC 6100"
+msgid "Canon BJC 6100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:158
-msgid "CANON BJC 6200"
+msgid "Canon BJC 6200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:159
-msgid "CANON BJC 6500"
+msgid "Canon BJC 6500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:160
-msgid "CANON BJC 7000"
+msgid "Canon BJC 7000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:161
-msgid "CANON BJC 7100"
+msgid "Canon BJC 7100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:162
-msgid "CANON BJC 8200"
+msgid "Canon BJC 8200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:163
-msgid "CANON S400"
+msgid "Canon S400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:164
-msgid "CANON S450"
+msgid "Canon S450"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:165
-msgid "CANON S800"
+msgid "Canon S800"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:166
-msgid "CANON S4500"
+msgid "Canon S4500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:167
@@ -2938,15 +2960,15 @@ msgid "EPSON PX-9000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:322
-msgid "APPLE Color StyleWriter 4100"
+msgid "Apple Color StyleWriter 4100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:323
-msgid "APPLE Color StyleWriter 4500"
+msgid "Apple Color StyleWriter 4500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:324
-msgid "APPLE Color StyleWriter 6500"
+msgid "Apple Color StyleWriter 6500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:325
@@ -3134,158 +3156,194 @@ msgid "HP LaserJet 4L"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:371
-msgid "HP LaserJet 4V, 4Si"
+msgid "HP LaserJet 4V"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:372
-msgid "HP LaserJet 5 series"
+msgid "HP LaserJet 4Si"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:373
-msgid "HP LaserJet 5Si"
+msgid "HP LaserJet 5 series"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:374
-msgid "HP LaserJet 6 series"
+msgid "HP LaserJet 5Si"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:375
-msgid "LEXMARK 4076"
+msgid "HP LaserJet 6 series"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:376
-msgid "LEXMARK Z42"
+msgid "Lexmark 4076"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:377
-msgid "LEXMARK Z43"
+msgid "Lexmark Z42"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:378
-msgid "LEXMARK Z52"
+msgid "Lexmark Z43"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:379
-msgid "LEXMARK Z53"
+msgid "Lexmark Z52"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:380
-msgid "OLYMPUS P300"
+msgid "Lexmark Z53"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:381
-msgid "OLYMPUS P400"
+msgid "Olympus P300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:382
-msgid "CANON CP100"
+msgid "Olympus P400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:383
-msgid "SONY UP-DP10"
+msgid "Canon CP100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:384
-msgid "FUJIFILM CX-400"
+msgid "Sony UP-DP10"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:385
-msgid "RAW DATA 16 bit"
+msgid "Fujifilm Printpix CX-400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:386
+msgid "Fujifilm Printpix CX-550"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:387
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:388
 msgid "RAW DATA 8 bit"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:251
+#: src/libgimpprintui/panel.c:261
 msgid "Inch"
 msgstr "インチ"
 
-#: src/libgimpprintui/panel.c:251
+#: src/libgimpprintui/panel.c:261
 msgid "Set the base unit of measurement to inches"
 msgstr "基本単位をインチにします。"
 
-#: src/libgimpprintui/panel.c:253
+#: src/libgimpprintui/panel.c:263
 msgid "cm"
 msgstr "センチメートル"
 
-#: src/libgimpprintui/panel.c:253
+#: src/libgimpprintui/panel.c:263
 msgid "Set the base unit of measurement to centimetres"
 msgstr "基本単位をセンチメートルにします。"
 
-#: src/libgimpprintui/panel.c:255
+#: src/libgimpprintui/panel.c:265
 #, fuzzy
 msgid "Points"
 msgstr "印刷"
 
-#: src/libgimpprintui/panel.c:255
+#: src/libgimpprintui/panel.c:265
 #, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
 msgstr "基本単位をインチにします。"
 
-#: src/libgimpprintui/panel.c:257
+#: src/libgimpprintui/panel.c:267
 msgid "mm"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:257
+#: src/libgimpprintui/panel.c:267
 #, fuzzy
 msgid "Set the base unit of measurement to millimetres"
 msgstr "基本単位をセンチメートルにします。"
 
-#: src/libgimpprintui/panel.c:259
+#: src/libgimpprintui/panel.c:269
 msgid "Pica"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:259
+#: src/libgimpprintui/panel.c:269
 #, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
 msgstr "基本単位をインチにします。"
 
-#: src/libgimpprintui/panel.c:266
+#: src/libgimpprintui/panel.c:276
 msgid "Color output"
 msgstr "カラーで印刷します。"
 
-#: src/libgimpprintui/panel.c:267
+#: src/libgimpprintui/panel.c:277
 msgid "Grayscale"
 msgstr "グレースケール"
 
-#: src/libgimpprintui/panel.c:268
+#: src/libgimpprintui/panel.c:278
 msgid "Print in shades of gray using black ink"
 msgstr "黒インクを使ってグレーの影を付けて印刷します。"
 
-#: src/libgimpprintui/panel.c:483
+#: src/libgimpprintui/panel.c:290
+#, fuzzy
+msgid "Standard Command"
+msgstr "標準"
+
+#: src/libgimpprintui/panel.c:290
+msgid "Use standard print command"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:291
+#, fuzzy
+msgid "Custom Command"
+msgstr "コマンド:"
+
+#: src/libgimpprintui/panel.c:291
+msgid "Use custom print command"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:292 src/libgimpprintui/plist.c:623
+#: src/libgimpprintui/plist.c:706
+msgid "File"
+msgstr "ファイル"
+
+#: src/libgimpprintui/panel.c:292
+#, fuzzy
+msgid "Print to a file"
+msgstr "ファイルに印刷しますか？"
+
+#: src/libgimpprintui/panel.c:507
 msgid "Edit Curve..."
 msgstr ""
 
-#: src/libgimpprintui/panel.c:494
+#: src/libgimpprintui/panel.c:518
 #, fuzzy
 msgid "Set Default"
 msgstr "初期値に戻す"
 
-#: src/libgimpprintui/panel.c:496
+#: src/libgimpprintui/panel.c:520
 msgid "Restore Previous"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:498 src/libgimpprintui/panel.c:1378
-#: src/libgimpprintui/panel.c:1573 src/libgimpprintui/panel.c:1606
+#: src/libgimpprintui/panel.c:522 src/libgimpprintui/panel.c:1408
+#: src/libgimpprintui/panel.c:1649 src/libgimpprintui/panel.c:1682
 msgid "OK"
 msgstr "OK"
 
-#: src/libgimpprintui/panel.c:500 src/libgimpprintui/panel.c:1087
-#: src/libgimpprintui/panel.c:1380 src/libgimpprintui/panel.c:1575
+#: src/libgimpprintui/panel.c:524 src/libgimpprintui/panel.c:1116
+#: src/libgimpprintui/panel.c:1410 src/libgimpprintui/panel.c:1651
 msgid "Cancel"
 msgstr "取り消し"
 
-#: src/libgimpprintui/panel.c:1070
+#: src/libgimpprintui/panel.c:1099
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- 印刷 v%s"
 
-#: src/libgimpprintui/panel.c:1079
+#: src/libgimpprintui/panel.c:1108
 msgid "About"
 msgstr "情報"
 
-#: src/libgimpprintui/panel.c:1081
+#: src/libgimpprintui/panel.c:1110
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -3293,7 +3351,7 @@ msgstr ""
 "印刷と\n"
 "設定の保存"
 
-#: src/libgimpprintui/panel.c:1083
+#: src/libgimpprintui/panel.c:1112
 msgid ""
 "Save\n"
 "Settings"
@@ -3301,15 +3359,15 @@ msgstr ""
 "設定の\n"
 "保存"
 
-#: src/libgimpprintui/panel.c:1085
+#: src/libgimpprintui/panel.c:1114
 msgid "Print"
 msgstr "印刷"
 
-#: src/libgimpprintui/panel.c:1138
+#: src/libgimpprintui/panel.c:1167
 msgid "Preview"
 msgstr "プレビュー"
 
-#: src/libgimpprintui/panel.c:1163
+#: src/libgimpprintui/panel.c:1192
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -3332,227 +3390,237 @@ msgstr ""
 "を移動することが可能です。\n"
 "ドラッグ中に別のボタンをクリックすると、画像は元の場所に戻ります。"
 
-#: src/libgimpprintui/panel.c:1210
+#: src/libgimpprintui/panel.c:1239
 #, fuzzy
 msgid "Paper Size"
 msgstr "画像のサイズ"
 
-#: src/libgimpprintui/panel.c:1233
+#: src/libgimpprintui/panel.c:1262
 msgid "Show All Paper Sizes"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1249
+#: src/libgimpprintui/panel.c:1278
 msgid "Dimensions:"
 msgstr "寸法:"
 
-#: src/libgimpprintui/panel.c:1254 src/libgimpprintui/panel.c:1831
+#: src/libgimpprintui/panel.c:1283 src/libgimpprintui/panel.c:1907
 msgid "Width:"
 msgstr "幅:"
 
-#: src/libgimpprintui/panel.c:1255
+#: src/libgimpprintui/panel.c:1284
 msgid "Width of the paper that you wish to print to"
 msgstr "印刷する用紙の幅です。"
 
-#: src/libgimpprintui/panel.c:1259 src/libgimpprintui/panel.c:1833
+#: src/libgimpprintui/panel.c:1288 src/libgimpprintui/panel.c:1909
 msgid "Height:"
 msgstr "高さ:"
 
-#: src/libgimpprintui/panel.c:1260
+#: src/libgimpprintui/panel.c:1289
 msgid "Height of the paper that you wish to print to"
 msgstr "印刷する用紙の高さです。"
 
-#: src/libgimpprintui/panel.c:1265
+#: src/libgimpprintui/panel.c:1294
 #, fuzzy
 msgid "Automatic Paper Size"
 msgstr "画像のサイズ"
 
-#: src/libgimpprintui/panel.c:1282
+#: src/libgimpprintui/panel.c:1311
 #, fuzzy
 msgid "Image Position"
 msgstr "位置"
 
-#: src/libgimpprintui/panel.c:1299
+#: src/libgimpprintui/panel.c:1328
 msgid "Auto"
 msgstr "自動"
 
-#: src/libgimpprintui/panel.c:1301
+#: src/libgimpprintui/panel.c:1330
 msgid "Portrait"
 msgstr "縦置き"
 
-#: src/libgimpprintui/panel.c:1303
+#: src/libgimpprintui/panel.c:1332
 msgid "Landscape"
 msgstr "横置き"
 
-#: src/libgimpprintui/panel.c:1305
+#: src/libgimpprintui/panel.c:1334
 msgid "Upside down"
 msgstr "上下"
 
-#: src/libgimpprintui/panel.c:1307
+#: src/libgimpprintui/panel.c:1336
 msgid "Seascape"
 msgstr "横長"
 
-#: src/libgimpprintui/panel.c:1311
+#: src/libgimpprintui/panel.c:1340
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
 "用紙の方向を選択します: 縦置き、横置き、上下、または横長 (上下つきの横置き)"
 
-#: src/libgimpprintui/panel.c:1313
+#: src/libgimpprintui/panel.c:1342
 msgid "Orientation:"
 msgstr "用紙の向き:"
 
-#: src/libgimpprintui/panel.c:1324
+#: src/libgimpprintui/panel.c:1353
 msgid "Left:"
 msgstr "左側:"
 
-#: src/libgimpprintui/panel.c:1325
+#: src/libgimpprintui/panel.c:1354
 msgid "Distance from the left of the paper to the image"
 msgstr "用紙の左端から画像までの距離です。"
 
-#: src/libgimpprintui/panel.c:1328 src/libgimpprintui/panel.c:1332
+#: src/libgimpprintui/panel.c:1357 src/libgimpprintui/panel.c:1361
 msgid "Right:"
 msgstr "右側:"
 
-#: src/libgimpprintui/panel.c:1329
+#: src/libgimpprintui/panel.c:1358
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "用紙の左端から画像の右端までの距離です。"
 
-#: src/libgimpprintui/panel.c:1333
+#: src/libgimpprintui/panel.c:1362
 msgid "Distance from the right of the paper to the image"
 msgstr "用紙の右端から画像までの距離です。"
 
-#: src/libgimpprintui/panel.c:1335
+#: src/libgimpprintui/panel.c:1364
 msgid "Top:"
 msgstr "上側:"
 
-#: src/libgimpprintui/panel.c:1336
+#: src/libgimpprintui/panel.c:1365
 msgid "Distance from the top of the paper to the image"
 msgstr "用紙の上端から画像までの距離です。"
 
-#: src/libgimpprintui/panel.c:1339 src/libgimpprintui/panel.c:1343
+#: src/libgimpprintui/panel.c:1368 src/libgimpprintui/panel.c:1372
 msgid "Bottom:"
 msgstr "下側:"
 
-#: src/libgimpprintui/panel.c:1340
+#: src/libgimpprintui/panel.c:1369
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr "用紙の上端から画像の下端までの距離です。"
 
-#: src/libgimpprintui/panel.c:1344
+#: src/libgimpprintui/panel.c:1373
 msgid "Distance from the bottom of the paper to the image"
 msgstr "用紙の下端から画像までの距離です。"
 
-#: src/libgimpprintui/panel.c:1354
+#: src/libgimpprintui/panel.c:1383
 msgid "Center:"
 msgstr "中心:"
 
-#: src/libgimpprintui/panel.c:1357
+#: src/libgimpprintui/panel.c:1386
 #, fuzzy
 msgid "Horizontal"
 msgstr "水平"
 
-#: src/libgimpprintui/panel.c:1358
+#: src/libgimpprintui/panel.c:1387
 msgid "Center the image horizontally on the paper"
 msgstr "用紙の水平方向の中心にします。"
 
-#: src/libgimpprintui/panel.c:1360
+#: src/libgimpprintui/panel.c:1389
 msgid "Both"
 msgstr "両端"
 
-#: src/libgimpprintui/panel.c:1361
+#: src/libgimpprintui/panel.c:1390
 msgid "Center the image on the paper"
 msgstr "用紙の中心にします。"
 
-#: src/libgimpprintui/panel.c:1363
+#: src/libgimpprintui/panel.c:1392
 #, fuzzy
 msgid "Vertical"
 msgstr "垂直"
 
-#: src/libgimpprintui/panel.c:1364
+#: src/libgimpprintui/panel.c:1393
 msgid "Center the image vertically on the paper"
 msgstr "用紙の垂直方向の中心にします。"
 
-#: src/libgimpprintui/panel.c:1376
+#: src/libgimpprintui/panel.c:1406
 msgid "Setup Printer"
 msgstr "プリンタの選択"
 
-#: src/libgimpprintui/panel.c:1402
+#: src/libgimpprintui/panel.c:1432
 #, fuzzy
 msgid "Printer Make:"
 msgstr "プリンタ名:"
 
-#: src/libgimpprintui/panel.c:1413
+#: src/libgimpprintui/panel.c:1443
 #, fuzzy
 msgid "Select the make of your printer"
 msgstr "お使いのプリンタを選択します。"
 
-#: src/libgimpprintui/panel.c:1431 src/libgimpprintui/panel.c:1677
+#: src/libgimpprintui/panel.c:1461 src/libgimpprintui/panel.c:1753
 msgid "Printer Model:"
 msgstr "プリンタの型式:"
 
-#: src/libgimpprintui/panel.c:1442
+#: src/libgimpprintui/panel.c:1472
 msgid "Select your printer model"
 msgstr "お使いのプリンタを選択します。"
 
-#: src/libgimpprintui/panel.c:1490
+#: src/libgimpprintui/panel.c:1520
 msgid "PPD File:"
 msgstr "PPD ファイル:"
 
-#: src/libgimpprintui/panel.c:1504
+#: src/libgimpprintui/panel.c:1534
 msgid "Enter the correct PPD filename for your printer"
 msgstr "お使いのプリンタ用の PPD ファイル名を入力します。"
 
-#: src/libgimpprintui/panel.c:1506
+#: src/libgimpprintui/panel.c:1536 src/libgimpprintui/panel.c:1603
 msgid "Browse"
 msgstr "参照"
 
-#: src/libgimpprintui/panel.c:1513
+#: src/libgimpprintui/panel.c:1543
 msgid "Choose the correct PPD filename for your printer"
 msgstr "お使いのプリンタ用の PPD ファイルを選択します。"
 
-#: src/libgimpprintui/panel.c:1521
-msgid "Command:"
-msgstr "コマンド:"
-
-#: src/libgimpprintui/panel.c:1533
+#: src/libgimpprintui/panel.c:1572
+#, fuzzy
 msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-"お使いのプリンタ向けの印刷コマンドを入力します。【注記】: '-l' または '-"
-"oraw' オプションを削除しないで下さい。印刷に失敗します！"
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr "お使いのプリンタ (プリンタの型式ではありません) 名を選択します。"
 
-#: src/libgimpprintui/panel.c:1541
-msgid "Print To File?"
+#: src/libgimpprintui/panel.c:1574
+#, fuzzy
+msgid "Printer Queue:"
+msgstr "プリンタ名:"
+
+#: src/libgimpprintui/panel.c:1590
+#, fuzzy
+msgid "Enter the correct command to print to your printer. "
+msgstr "お使いのプリンタ用の PPD ファイル名を入力します。"
+
+#: src/libgimpprintui/panel.c:1601
+msgid "Enter the file to print to. "
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1609
+#, fuzzy
+msgid "File to print to"
+msgstr "テスト印刷"
+
+#: src/libgimpprintui/panel.c:1617
+#, fuzzy
+msgid "Print To File"
 msgstr "ファイルに印刷しますか？"
 
-#: src/libgimpprintui/panel.c:1554
-msgid "PPD File?"
-msgstr "PPD ファイルですか？"
-
-#: src/libgimpprintui/panel.c:1571
+#: src/libgimpprintui/panel.c:1647
 msgid "Define New Printer"
 msgstr "新しいプリンタの定義"
 
-#: src/libgimpprintui/panel.c:1590 src/libgimpprintui/panel.c:1674
+#: src/libgimpprintui/panel.c:1666 src/libgimpprintui/panel.c:1750
 msgid "Printer Name:"
 msgstr "プリンタ名:"
 
-#: src/libgimpprintui/panel.c:1594
+#: src/libgimpprintui/panel.c:1670
 msgid "Enter the name you wish to give this logical printer"
 msgstr "利用する論理プリンタ名を指定します。"
 
-#: src/libgimpprintui/panel.c:1604
+#: src/libgimpprintui/panel.c:1680
 msgid "About Gimp-Print "
 msgstr "Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1612
+#: src/libgimpprintui/panel.c:1688
 msgid "Gimp-Print Version "
 msgstr "Gimp-Print バージョン "
 
-#: src/libgimpprintui/panel.c:1612
+#: src/libgimpprintui/panel.c:1688
 #, fuzzy
 msgid ""
 "\n"
@@ -3596,31 +3664,31 @@ msgstr ""
 "Free Software Foundation, Inc., 56 Temple Place - \n"
 "Suite 330, Boston, MA 02111-1307, USA まで連絡して下さい。\n"
 
-#: src/libgimpprintui/panel.c:1659
+#: src/libgimpprintui/panel.c:1735
 msgid "Printer Settings"
 msgstr "プリンタの設定"
 
-#: src/libgimpprintui/panel.c:1672
+#: src/libgimpprintui/panel.c:1748
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
 msgstr "お使いのプリンタ (プリンタの型式ではありません) 名を選択します。"
 
-#: src/libgimpprintui/panel.c:1689
+#: src/libgimpprintui/panel.c:1765
 msgid "Setup Printer..."
 msgstr "プリンタの選択..."
 
-#: src/libgimpprintui/panel.c:1691
+#: src/libgimpprintui/panel.c:1767
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
 msgstr "プリンタの型式と PPD ファイル、印刷コマンドを選択します。"
 
-#: src/libgimpprintui/panel.c:1704
+#: src/libgimpprintui/panel.c:1780
 msgid "New Printer..."
 msgstr "新しいプリンタ..."
 
-#: src/libgimpprintui/panel.c:1705
+#: src/libgimpprintui/panel.c:1781
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
@@ -3628,20 +3696,20 @@ msgstr ""
 "新規に論理プリンタを定義します。これは次回使用するために覚えておきたい設定名"
 "に使用されます。"
 
-#: src/libgimpprintui/panel.c:1740
+#: src/libgimpprintui/panel.c:1816
 #, fuzzy
 msgid "Image Size"
 msgstr "画像のサイズ"
 
-#: src/libgimpprintui/panel.c:1765
+#: src/libgimpprintui/panel.c:1841
 msgid "Scaling:"
 msgstr "拡大縮小:"
 
-#: src/libgimpprintui/panel.c:1769
+#: src/libgimpprintui/panel.c:1845
 msgid "Set the scale (size) of the image"
 msgstr "画像サイズの拡大縮小を行います。"
 
-#: src/libgimpprintui/panel.c:1796
+#: src/libgimpprintui/panel.c:1872
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
@@ -3649,31 +3717,31 @@ msgstr ""
 "拡大縮小の単位として、用紙サイズに対する百分率 (比率) か、ドット数/インチを選"
 "択します。"
 
-#: src/libgimpprintui/panel.c:1799
+#: src/libgimpprintui/panel.c:1875
 msgid "Percent"
 msgstr "比率"
 
-#: src/libgimpprintui/panel.c:1804
+#: src/libgimpprintui/panel.c:1880
 msgid "Scale the print to the size of the page"
 msgstr "用紙サイズを 100 とした場合の比率です。"
 
-#: src/libgimpprintui/panel.c:1808
+#: src/libgimpprintui/panel.c:1884
 msgid "PPI"
 msgstr "PPI"
 
-#: src/libgimpprintui/panel.c:1813
+#: src/libgimpprintui/panel.c:1889
 msgid "Scale the print to the number of dots per inch"
 msgstr "画像のドット数/インチです。"
 
-#: src/libgimpprintui/panel.c:1831
+#: src/libgimpprintui/panel.c:1907
 msgid "Set the width of the print"
 msgstr "印刷時の幅をセットします。"
 
-#: src/libgimpprintui/panel.c:1833
+#: src/libgimpprintui/panel.c:1909
 msgid "Set the height of the print"
 msgstr "印刷時の高さをセットします。"
 
-#: src/libgimpprintui/panel.c:1839
+#: src/libgimpprintui/panel.c:1915
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -3681,143 +3749,175 @@ msgstr ""
 "オリジナルの\n"
 "サイズの利用"
 
-#: src/libgimpprintui/panel.c:1845
+#: src/libgimpprintui/panel.c:1921
 msgid "Set the print size to the size of the image"
 msgstr "画像のオリジナル・サイズを印刷サイズにします。"
 
-#: src/libgimpprintui/panel.c:1867
+#: src/libgimpprintui/panel.c:1943
 msgid "Print Color Adjust"
 msgstr "印刷カラー調整"
 
-#: src/libgimpprintui/panel.c:1870
+#: src/libgimpprintui/panel.c:1946
 msgid "Set Defaults"
 msgstr "初期値に戻す"
 
-#: src/libgimpprintui/panel.c:1872
+#: src/libgimpprintui/panel.c:1948
 msgid "Close"
 msgstr "閉じる"
 
-#: src/libgimpprintui/panel.c:1903
+#: src/libgimpprintui/panel.c:1979
 msgid "Image preview"
 msgstr "画像のプレビュー"
 
-#: src/libgimpprintui/panel.c:1917
+#: src/libgimpprintui/panel.c:1993
 msgid "View Output Channels:"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:1975
+#: src/libgimpprintui/panel.c:2051
 #, fuzzy
 msgid "Output"
 msgstr "出力の種類:"
 
-#: src/libgimpprintui/panel.c:2003
+#: src/libgimpprintui/panel.c:2079
 msgid "Output Type:"
 msgstr "出力の種類:"
 
-#: src/libgimpprintui/panel.c:2007
+#: src/libgimpprintui/panel.c:2083
 msgid "Select the desired output type"
 msgstr "出力する形態を選択します。"
 
-#: src/libgimpprintui/panel.c:2028
+#: src/libgimpprintui/panel.c:2104
 msgid "Adjust Output..."
 msgstr "出力の調整..."
 
-#: src/libgimpprintui/panel.c:2037
+#: src/libgimpprintui/panel.c:2113
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
 "カラーバランス、明るさ、コントラスト、彩度とディザリング方式を調整します。"
 
-#: src/libgimpprintui/panel.c:2055
+#: src/libgimpprintui/panel.c:2131
 #, fuzzy
 msgid "Size Units:"
 msgstr "単位:"
 
-#: src/libgimpprintui/panel.c:2058
+#: src/libgimpprintui/panel.c:2134
 #, fuzzy
 msgid " "
 msgstr "> "
 
-#: src/libgimpprintui/panel.c:2082
+#: src/libgimpprintui/panel.c:2158
 msgid "Units:"
 msgstr "単位:"
 
-#: src/libgimpprintui/panel.c:2087
+#: src/libgimpprintui/panel.c:2163
 msgid "Select the base unit of measurement for printing"
 msgstr "印刷時の基本単位を選択します。"
 
-#: src/libgimpprintui/plist.c:412 src/libgimpprintui/plist.c:435
-#: src/libgimpprintui/plist.c:436 src/libgimpprintui/plist.c:491
-#: src/libgimpprintui/plist.c:576 src/libgimpprintui/plist.c:1010
-msgid "File"
-msgstr "ファイル"
+#: src/libgimpprintui/plist.c:88 src/libgimpprintui/plist.c:95
+msgid "System V lp"
+msgstr ""
 
-#: src/cups/genppd.c:139
+#: src/libgimpprintui/plist.c:93
+msgid "CUPS"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:97
+msgid "Berkeley lpd (/etc/lpc)"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:99
+msgid "Berkeley lpd (/usr/bsd/lpc)"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:101
+msgid "Berkeley lpd (/usr/etc/lpc"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:103
+msgid "Berkeley lpd (/usr/libexec/lpc)"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:105
+msgid "Berkeley lpd (/usr/sbin/lpc)"
+msgstr ""
+
+#: src/libgimpprintui/plist.c:958
+#, fuzzy
+msgid "Printer"
+msgstr "印刷"
+
+#: src/libgimpprintui/plist.c:1134
+#, fuzzy
+msgid "(Default Printer)"
+msgstr "プリンタの選択"
+
+#: src/cups/genppd.c:140
 #, fuzzy
 msgid "Printer Features"
 msgstr "プリンタの設定"
 
-#: src/cups/genppd.c:140
+#: src/cups/genppd.c:141
 #, fuzzy
 msgid "Output Control"
 msgstr "出力の種類:"
 
-#: src/cups/genppd.c:145
+#: src/cups/genppd.c:146
 #, fuzzy
 msgid "Common"
 msgstr "コマンド:"
 
-#: src/cups/genppd.c:146
+#: src/cups/genppd.c:147
 #, fuzzy
 msgid "Extra 1"
 msgstr "トレイ１"
 
-#: src/cups/genppd.c:147
+#: src/cups/genppd.c:148
 #, fuzzy
 msgid "Extra 2"
 msgstr "トレイ２"
 
-#: src/cups/genppd.c:148
+#: src/cups/genppd.c:149
 #, fuzzy
 msgid "Extra 3"
 msgstr "トレイ３"
 
-#: src/cups/genppd.c:149
+#: src/cups/genppd.c:150
 #, fuzzy
 msgid "Extra 4"
 msgstr "トレイ４"
 
-#: src/cups/genppd.c:150
+#: src/cups/genppd.c:151
 msgid "Extra 5"
 msgstr ""
 
 #. TRANSLATORS: "Gimp-Print" is a proper name, not a description
-#: src/cups/genppd.c:191 src/cups/genppd.c:200
+#: src/cups/genppd.c:192 src/cups/genppd.c:201
 #, fuzzy
 msgid "Gimp-Print"
 msgstr "Gimp-Print"
 
-#: src/cups/genppd.c:746
+#: src/cups/genppd.c:757
 msgid "English"
 msgstr "Japanese"
 
-#: src/cups/genppd.c:748
+#: src/cups/genppd.c:759
 msgid "ISOLatin1"
 msgstr "ISO ラテン１"
 
-#: src/cups/genppd.c:1217 src/cups/genppd.c:1232
+#: src/cups/genppd.c:1262 src/cups/genppd.c:1277
 msgid "None"
 msgstr ""
 
-#: src/cups/genppd.c:1234
+#: src/cups/genppd.c:1279
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1236
+#: src/cups/genppd.c:1281
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1264
+#: src/cups/genppd.c:1309
 msgid "Fine Adjustment"
 msgstr ""
 
@@ -4512,48 +4612,65 @@ msgstr "低レベルバッファがありません\n"
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "パラメータ %s=%s (おそらく数値) を解析できません\n"
 
-#: src/ghost/ijsgimpprint.c:447
+#: src/ghost/ijsgimpprint.c:449
 msgid "Printer must be specified with -sModel\n"
 msgstr "プリンタを -s型式 を使って指定して下さい\n"
 
-#: src/ghost/ijsgimpprint.c:449
+#: src/ghost/ijsgimpprint.c:451
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "プリンタ %s は不明な型式です\n"
 
-#: src/ghost/ijsgimpprint.c:961
+#: src/ghost/ijsgimpprint.c:974
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header に失敗 %d\n"
 
-#: src/ghost/ijsgimpprint.c:972
+#: src/ghost/ijsgimpprint.c:985
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init に失敗 %d\n"
 
-#: src/ghost/ijsgimpprint.c:983
+#: src/ghost/ijsgimpprint.c:996
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "ファイル・ディスクリプタを開けません: %s\n"
 
-#: src/ghost/ijsgimpprint.c:995
+#: src/ghost/ijsgimpprint.c:1008
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "%s を開けません: %s\n"
 
-#: src/ghost/ijsgimpprint.c:1007
+#: src/ghost/ijsgimpprint.c:1020
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "プリンタ %s が不明です\n"
 
-#: src/ghost/ijsgimpprint.c:1045
+#: src/ghost/ijsgimpprint.c:1090
 msgid "Bad parameters; cannot continue!\n"
 msgstr "おかしなパラメータ; 続行できません！\n"
 
-#: src/ghost/ijsgimpprint.c:1055
+#: src/ghost/ijsgimpprint.c:1100
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "%.0f で次の低レベルフィールドを取得します\n"
+
+#, fuzzy
+#~ msgid "Brightness of the print (0 is solid black, 2 is solid white)"
+#~ msgstr ""
+#~ "印刷する明るさをセットします。\n"
+#~ "(0.0方向: 暗く 2.0方向: 明るく)"
+
+#~ msgid ""
+#~ "Enter the correct command to print to your printer. Note: Please do not "
+#~ "remove the `-l' or `-oraw' from the command string, or printing will "
+#~ "probably fail!"
+#~ msgstr ""
+#~ "お使いのプリンタ向けの印刷コマンドを入力します。【注記】: '-l' または '-"
+#~ "oraw' オプションを削除しないで下さい。印刷に失敗します！"
+
+#~ msgid "PPD File?"
+#~ msgstr "PPD ファイルですか？"
 
 #~ msgid "%s: option `%s' is ambiguous\n"
 #~ msgstr "%s: オプション '%s' 単体では使用できません\n"
