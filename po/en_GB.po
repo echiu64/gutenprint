@@ -179,9 +179,8 @@ msgstr "Hybrid Floyd-Steinberg"
 #. Note to translators: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
 #: src/main/print-dither.c:71
-#, fuzzy
 msgid "EvenTone"
-msgstr "Envelope"
+msgstr "EvenTone"
 
 #: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
 #: src/main/print-pcl.c:202
@@ -970,9 +969,8 @@ msgstr "A2 Invitation"
 
 #. US A2 invitation
 #: src/main/print-util.c:796
-#, fuzzy
 msgid "Monarch Envelope"
-msgstr "Envelope"
+msgstr "Monarch Envelope"
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:798
@@ -2879,7 +2877,7 @@ msgstr "%.0f of %.0f\n"
 #: src/ghost/ijsgimpprint.c:838
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr ""
+msgstr "ijs_server_get_page_header failed %d\n"
 
 #: src/ghost/ijsgimpprint.c:849
 #, c-format
@@ -2906,9 +2904,9 @@ msgid "Bad parameters; cannot continue!\n"
 msgstr "Bad parameters; cannot continue!\n"
 
 #: src/ghost/ijsgimpprint.c:925
-#, fuzzy, c-format
+#, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Get next row failed at %d\n"
+msgstr "Get next row failed at %.0f\n"
 
 #~ msgid "Plain Paper Fast Load"
 #~ msgstr "Plain Paper Fast Load"
