@@ -88,26 +88,26 @@ main(int argc, char **argv)
 		   * Create a dummy option that enables or disables
 		   * the option as appropriate
 		   */
-		  printf("$longnames{'Enable%s'} = 'Enable %s';\n",
-			 p->name, p->text);
-		  printf("$param_classes{'Enable%s'} = %d;\n",
-			 p->name, p->p_class);
-		  printf("$param_levels{'Enable%s'} = %d;\n",
-			 p->name, p->p_level);
-		  printf("$defaults{'%s'}{'Enable%s'} = 'Disabled';\n",
-			 driver, p->name);
-		  printf("$stpdata{'%s'}{'Enable%s'}{'0'} = 'Disabled';\n",
+		  printf("$longnames{'STP_Enable%s'} = 'Enable %s';\n",
+			 desc.name, desc.text);
+		  printf("$param_classes{'STP_Enable%s'} = %d;\n",
+			 desc.name, desc.p_class);
+		  printf("$param_levels{'STP_Enable%s'} = %d;\n",
+			 desc.name, desc.p_level);
+		  printf("$defaults{'%s'}{'STP_Enable%s'} = 'Disabled';\n",
 			 driver, desc.name);
-		  printf("$stpdata{'%s'}{'Enable%s'}{'1'} = 'Enabled';\n",
+		  printf("$stpdata{'%s'}{'STP_Enable%s'}{'Disabled'} = 'Disabled';\n",
+			 driver, desc.name);
+		  printf("$stpdata{'%s'}{'STP_Enable%s'}{'Enabled'} = 'Enabled';\n",
 			 driver, desc.name);
 		}
 		  
-	      printf("$longnames{'%s'} = '%s';\n",
-		     p->name, p->text);
-	      printf("$param_classes{'%s'} = %d;\n",
-		     p->name, p->p_class);
-	      printf("$param_levels{'%s'} = %d;\n",
-		     p->name, p->p_level);
+	      printf("$longnames{'STP_%s'} = '%s';\n",
+		     desc.name, desc.text);
+	      printf("$param_classes{'STP_%s'} = %d;\n",
+		     desc.name, desc.p_class);
+	      printf("$param_levels{'STP_%s'} = %d;\n",
+		     desc.name, desc.p_level);
 	      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 		{
 		  count = stp_string_list_count(desc.bounds.str);
@@ -115,23 +115,23 @@ main(int argc, char **argv)
 		    {
 		      if (desc.is_mandatory)
 			{
-			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-				 driver, p->name, desc.deflt.str);
+			  printf("$defaults{'%s'}{'STP_%s'} = '%s';\n",
+				 driver, desc.name, desc.deflt.str);
 			}
 		      else
 			{
-			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-				 driver, p->name, "None");
-			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-				 driver, p->name, "None", "None");
+			  printf("$defaults{'%s'}{'STP_%s'} = '%s';\n",
+				 driver, desc.name, "None");
+			  printf("$stpdata{'%s'}{'STP_%s'}{'%s'} = '%s';\n",
+				 driver, desc.name, "None", "None");
 			}
 		      for (j = 0; j < count; j++)
 			{
 			  const stp_param_string_t *param =
 			    stp_string_list_param(desc.bounds.str, j);
-			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-				 driver, p->name, param->name, param->text);
-			  if (strcmp(p->name, "Resolution") == 0)
+			  printf("$stpdata{'%s'}{'STP_%s'}{'%s'} = '%s';\n",
+				 driver, desc.name, param->name, param->text);
+			  if (strcmp(desc.name, "Resolution") == 0)
 			    {
 			      int x, y;
 			      stp_set_string_parameter(pv, "Resolution",
@@ -152,20 +152,20 @@ main(int argc, char **argv)
 		{
 		  if (desc.is_mandatory)
 		    {
-		      printf("$defaults{'%s'}{'%s'} = '%d';\n",
-			     driver, p->name, desc.deflt.boolean);
+		      printf("$defaults{'%s'}{'STP_%s'} = '%d';\n",
+			     driver, desc.name, desc.deflt.boolean);
 		    }
 		  else
 		    {
-		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			     driver, p->name, "None");
-		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-			     driver, p->name, "None", "None");
+		      printf("$defaults{'%s'}{'STP_%s'} = '%s';\n",
+			     driver, desc.name, "None");
+		      printf("$stpdata{'%s'}{'STP_%s'}{'%s'} = '%s';\n",
+			     driver, desc.name, "None", "None");
 		    }
 		    
-		  printf("$stpdata{'%s'}{'%s'}{'0'} = 'False';\n",
+		  printf("$stpdata{'%s'}{'STP_%s'}{'0'} = 'False';\n",
 			 driver, desc.name);
-		  printf("$stpdata{'%s'}{'%s'}{'1'} = 'True';\n",
+		  printf("$stpdata{'%s'}{'STP_%s'}{'1'} = 'True';\n",
 			 driver, desc.name);
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
@@ -173,19 +173,19 @@ main(int argc, char **argv)
 		  if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
 		      desc.bounds.dbl.upper >= desc.deflt.dbl)
 		    {
-		      printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f;\n",
+		      printf("$stp_float_values{'%s'}{'MINVAL'}{'STP_%s'} = %.3f;\n",
 			     driver, desc.name, desc.bounds.dbl.lower);
-		      printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f;\n",
+		      printf("$stp_float_values{'%s'}{'MAXVAL'}{'STP_%s'} = %.3f;\n",
 			     driver, desc.name, desc.bounds.dbl.upper);
-		      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
+		      printf("$stp_float_values{'%s'}{'DEFVAL'}{'STP_%s'} = %.3f;\n",
 			     driver, desc.name, desc.deflt.dbl);
-		      /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+		      /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'STP_%s'} = '%s';\n",
 			 driver, desc.name, _(desc.text)); */
-		      printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+		      printf("$stp_float_values{'%s'}{'CATEGORY'}{'STP_%s'} = '%s';\n",
 			     driver, desc.name, _(desc.category));
-		      printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+		      printf("$stp_float_values{'%s'}{'HELP'}{'STP_%s'} = q(%s);\n",
 			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
-		      printf("$stp_float_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+		      printf("$stp_float_values{'%s'}{'MANDATORY'}{'STP_%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
@@ -194,19 +194,19 @@ main(int argc, char **argv)
 		  if (desc.bounds.integer.lower <= desc.deflt.integer &&
 		      desc.bounds.integer.upper >= desc.deflt.integer)
 		    {
-		      printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+		      printf("$stp_int_values{'%s'}{'MINVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.bounds.integer.lower);
-		      printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+		      printf("$stp_int_values{'%s'}{'MAXVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.bounds.integer.upper);
-		      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+		      printf("$stp_int_values{'%s'}{'DEFVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.deflt.integer);
-		      /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+		      /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'STP_%s'} = '%s';\n",
 			 driver, desc.name, _(desc.text)); */
-		      printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+		      printf("$stp_int_values{'%s'}{'CATEGORY'}{'STP_%s'} = '%s';\n",
 			     driver, desc.name, _(desc.category));
-		      printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+		      printf("$stp_int_values{'%s'}{'HELP'}{'STP_%s'} = q(%s);\n",
 			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
-		      printf("$stp_int_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+		      printf("$stp_int_values{'%s'}{'MANDATORY'}{'STP_%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
@@ -216,19 +216,19 @@ main(int argc, char **argv)
 		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
 		      desc.bounds.dimension.upper >= desc.deflt.dimension)
 		    {
-		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.bounds.dimension.lower);
-		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.bounds.dimension.upper);
-		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'STP_%s'} = %d;\n",
 			     driver, desc.name, desc.deflt.dimension);
-		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'STP_%s'} = '%s';\n",
 			 driver, desc.name, _(desc.text)); */
-		      printf("$stp_dimension_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+		      printf("$stp_dimension_values{'%s'}{'CATEGORY'}{'STP_%s'} = '%s';\n",
 			     driver, desc.name, _(desc.category));
-		      printf("$stp_dimension_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+		      printf("$stp_dimension_values{'%s'}{'HELP'}{'STP_%s'} = q(%s);\n",
 			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
-		      printf("$stp_dimension_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+		      printf("$stp_dimension_values{'%s'}{'MANDATORY'}{'STP_%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}

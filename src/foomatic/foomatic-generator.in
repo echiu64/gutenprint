@@ -347,13 +347,13 @@ my $generalsubs = { 'STPVER' => $stpvers,
 		    'STPRINTERS' => join('', @printerlist) };
 
 my $optiongroups = { 'PageSize' => 'General',
-		     'InputSlot' => 'General',
-		     'MediaType' => 'General',
+		     'STP_InputSlot' => 'General',
+		     'STP_MediaType' => 'General',
 		     'PrintoutMode' => 'General',
-		     'RenderResolution' => 'General',
-		     'Quality' => 'General',
+		     'STP_RenderResolution' => 'General',
+		     'STP_Quality' => 'General',
 		     'Color' => 'General',
-		     'ImageType' => 'General'};
+		     'STP_ImageType' => 'General'};
 
 my @numericsubs = ('MINVAL', 'MAXVAL');
 
@@ -520,7 +520,10 @@ for $drivertype (@drivertypes) {
 				build_cons($stpopt));
 	    # Skip this option if there are no constraints (no printers
 	    # using this option)
-	    next if $substitution !~ m!</constraint>!s;
+	    if ($substitution !~ m!</constraint>!s) {
+		print STDERR "No printers using $fooopt\n";
+		next;
+	    }
 	    if (defined($substitution)) {
 		$template =~ s!\@\@OPTCONSTRAINTS\@\@!$substitution!g;
 	    }
@@ -529,7 +532,10 @@ for $drivertype (@drivertypes) {
 	    my $substitution = build_ev($stpopt);
 	    # Skip this option if there are no choices (an enum option
 	    # without choices does not make sense)
-	    next if $substitution !~ m!</ev_shortname>!s;
+	    if ($substitution !~ m!</ev_shortname>!s) {
+		print STDERR "No choices for $fooopt\n";
+		next;
+	    }
 	    if (defined($substitution)) {
 		$template =~ s!\@\@ENUMVALS\@\@!$substitution!g;
 	    }
@@ -618,7 +624,7 @@ sub build_ev {
 	    $ev_driverval = $ev_shortname;
 	}
 	# Remove "Roll" paper sizes, user has to use "Custom" instead.
-	next if (($stpopt eq "PageSize") && ($ev_driverval eq ""));
+	next if (($stpopt eq "STP_PageSize") && ($ev_driverval eq ""));
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",
 	      "      <ev_longname><en>$ev_longname</en></ev_longname>\n",
@@ -731,9 +737,9 @@ sub build_num_cons {
 
     # Do we have a float or an int option?
     my $type;
-    if (member($foooptfile, @floatnumoptslist)) {
+    if (member($foooptfile, @floatnumopts_list)) {
        $type = "float";
-    } elsif (member($foooptfile, @dimensionnumoptslist)) {
+    } elsif (member($foooptfile, @dimensionnumopts_list)) {
        $type = "dimension";
     } else {
        $type = "int";
@@ -961,7 +967,7 @@ sub compute_resolutions {
 	my $defval;
 
 	my $qual;
-	for $qual (keys(%{$stpdata{$stpname}{'Resolution'}})) {
+	for $qual (keys(%{$stpdata{$stpname}{'STP_Resolution'}})) {
 	    my ($x) = $stpdata{$stpname}{'x_resolution'}{$qual};
 	    my ($y) = $stpdata{$stpname}{'y_resolution'}{$qual};
 
@@ -1303,7 +1309,7 @@ sub getprintoutmode {
 	# Go through all choices of the "Quality" option and find the
 	# best values for the "PrintoutMode" option
 	my $quality;
-	for $quality (keys(%{$stpdata{$stpprn}{'Resolution'}})) {
+	for $quality (keys(%{$stpdata{$stpprn}{'STP_Resolution'}})) {
 
 	    my ($xres, $yres, $qualstr);
 	    if ($quality =~ /^(\d+)x(\d+)(\D.*)$/) {
@@ -1337,31 +1343,31 @@ sub getprintoutmode {
 	    # ImageType Text
 
 	    my $qualitysetting =
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 (defined($stpdata{$stpprn}{'STP_Quality'}{'Draft'}) ?
 		  'Draft' :
-		  (defined($stpdata{$stpprn}{'Quality'}{'Economy'}) ?
+		  (defined($stpdata{$stpprn}{'STP_Quality'}{'Economy'}) ?
 		   'Economy' :
-		   (defined($stpdata{$stpprn}{'Quality'}{'FastEconomy'}) ?
+		   (defined($stpdata{$stpprn}{'STP_Quality'}{'FastEconomy'}) ?
 		    'FastEconomy' :
-		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		    (defined($stpdata{$stpprn}{'STP_Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
-	    die ("\n\n'Quality' option without 'Draft', 'Economy', " .
+	    die ("\n\n'STP_Quality' option without 'Draft', 'Economy', " .
 		 "'FastEconomy', and 'Standard' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
 	    my $imagesetting =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 (defined($stpdata{$stpprn}{'ImageType'}{'Text'}) ?
-		  'Text' :
-		  (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
+		  'TextGraphics' :
+		  (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
 		   'TextGraphics' :
-		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		   (defined($stpdata{$stpprn}{'STP_ImageType'}{'LineArt'}) ?
 		    'LineArt' :
-		    (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		    (defined($stpdata{$stpprn}{'STP_ImageType'}{'Graphics'}) ?
 		     'Graphics' : 'ERROR' )))) : '');
-	    die ("\n\n'ImageType' option without 'Text', 'TextGraphics', " .
+	    die ("\n\n'STP_ImageType' option without 'TextGraphics', " .
 		 "'LineArt', and 'Graphics' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $imagesetting eq 'ERROR';
@@ -1395,28 +1401,28 @@ sub getprintoutmode {
 	    # ImageType TextGraphics
 
 	    $qualitysetting =
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 (defined($stpdata{$stpprn}{'STP_Quality'}{'Standard'}) ?
 		  'Standard' :
-		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		  (defined($stpdata{$stpprn}{'STP_Quality'}{'High'}) ?
 		   'High' :
-		   (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
+		   (defined($stpdata{$stpprn}{'STP_Quality'}{'Draft'}) ?
 		    'Draft' : 'ERROR' ))) : '');
-	    die ("\n\n'Quality' option without 'Draft', 'Standard', and " .
+	    die ("\n\n'STP_Quality' option without 'Draft', 'Standard', and " .
 		 "'High' choices for the '$stpprn' device class!\n")
 		if $qualitysetting eq 'ERROR';
 
 	    $imagesetting =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
 		  'TextGraphics' :
-		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		  (defined($stpdata{$stpprn}{'STP_ImageType'}{'Graphics'}) ?
 		   'Graphics' :
-		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		   (defined($stpdata{$stpprn}{'STP_ImageType'}{'LineArt'}) ?
 		    'LineArt' :
-		    (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		    (defined($stpdata{$stpprn}{'STP_ImageType'}{'Photo'}) ?
 		     'Photo' : 'ERROR' )))) : '');
-	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+	    die ("\n\n'STP_ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $imagesetting eq 'ERROR';
@@ -1459,31 +1465,31 @@ sub getprintoutmode {
 	    # ImageType TextGraphics
 
 	    $qualitysetting =
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 (defined($stpdata{$stpprn}{'STP_Quality'}{'High'}) ?
 		  'High' :
-		  (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		  (defined($stpdata{$stpprn}{'STP_Quality'}{'Best'}) ?
 		   'Best' :
-		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		   (defined($stpdata{$stpprn}{'STP_Quality'}{'Photo'}) ?
 		    'Photo' :
-		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		    (defined($stpdata{$stpprn}{'STP_Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
-	    die ("\n\n'Quality' option without 'High', 'Best', " .
+	    die ("\n\n'STP_Quality' option without 'High', 'Best', " .
 		 "'Photo', and 'Standard' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
 	    $imagesetting =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
 		  'TextGraphics' :
-		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		  (defined($stpdata{$stpprn}{'STP_ImageType'}{'Graphics'}) ?
 		   'Graphics' :
-		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		   (defined($stpdata{$stpprn}{'STP_ImageType'}{'Photo'}) ?
 		    'Photo' :
-		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		    (defined($stpdata{$stpprn}{'STP_ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
-	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+	    die ("\n\n'STP_ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $imagesetting eq 'ERROR';
@@ -1523,31 +1529,31 @@ sub getprintoutmode {
 	    # ImageType TextGraphics
 
 	    $qualitysetting =
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 (defined($stpdata{$stpprn}{'STP_Quality'}{'Best'}) ?
 		  'Best' :
-		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		  (defined($stpdata{$stpprn}{'STP_Quality'}{'High'}) ?
 		   'High' :
-		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		   (defined($stpdata{$stpprn}{'STP_Quality'}{'Photo'}) ?
 		    'Photo' :
-		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		    (defined($stpdata{$stpprn}{'STP_Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
-	    die ("\n\n'Quality' option without 'High', 'Best', " .
+	    die ("\n\n'STP_Quality' option without 'High', 'Best', " .
 		 "'Photo', and 'Standard' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
 	    $imagesetting =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
 		  'TextGraphics' :
-		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		  (defined($stpdata{$stpprn}{'STP_ImageType'}{'Graphics'}) ?
 		   'Graphics' :
-		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		   (defined($stpdata{$stpprn}{'STP_ImageType'}{'Photo'}) ?
 		    'Photo' :
-		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		    (defined($stpdata{$stpprn}{'STP_ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
-	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+	    die ("\n\n'STP_ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $imagesetting eq 'ERROR';
@@ -1583,35 +1589,35 @@ sub getprintoutmode {
 	    # ImageType Photographs
 
 	    $qualitysetting =
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 (defined($stpdata{$stpprn}{'Quality'}{'HighPhoto'}) ?
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 (defined($stpdata{$stpprn}{'STP_Quality'}{'HighPhoto'}) ?
 		  'HighPhoto' :
-		  (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		  (defined($stpdata{$stpprn}{'STP_Quality'}{'Photo'}) ?
 		   'Photo' :
-		   (defined($stpdata{$stpprn}{'Quality'}{'UltraPhoto'}) ?
+		   (defined($stpdata{$stpprn}{'STP_Quality'}{'UltraPhoto'}) ?
 		    'UltraPhoto' :
-		    (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		    (defined($stpdata{$stpprn}{'STP_Quality'}{'Best'}) ?
 		     'Best' :
-		     (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		     (defined($stpdata{$stpprn}{'STP_Quality'}{'High'}) ?
 		      'High' :
-		      (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		      (defined($stpdata{$stpprn}{'STP_Quality'}{'Standard'}) ?
 		       'Standard' : 'ERROR' )))))) : '');
-	    die ("\n\n'Quality' option without 'HighPhoto', 'Photo', " .
+	    die ("\n\n'STP_Quality' option without 'HighPhoto', 'Photo', " .
 		 "'UltraPhoto', 'Best', 'High', and 'Standard' choices " .
 		 "for the '$stpprn' device class!\n")
 		if $qualitysetting eq 'ERROR';
 
 	    $imagesetting =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'STP_ImageType'}{'Photo'}) ?
 		  'Photo' :
-		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		  (defined($stpdata{$stpprn}{'STP_ImageType'}{'Graphics'}) ?
 		   'Graphics' :
-		   (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		   (defined($stpdata{$stpprn}{'STP_ImageType'}{'TextGraphics'}) ?
 		    'TextGraphics' :
-		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		    (defined($stpdata{$stpprn}{'STP_ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
-	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+	    die ("\n\n'STP_ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
 		 "device class!\n")
 		if $imagesetting eq 'ERROR';
@@ -1653,15 +1659,15 @@ sub getprintoutmode {
 	    # mode
 	    next if (!defined($modeinfo->{$m}{'quality'}));
 	    my $modestr =
-		(defined($stpdata{$stpprn}{'ImageType'}) ?
-		 "ImageType=$modeinfo->{$m}{'image'} " : "") .
-		(defined($stpdata{$stpprn}{'Quality'}) ?
-		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
+		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
+		 "STP_ImageType=$modeinfo->{$m}{'image'} " : "") .
+		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
+		 "STP_Quality=$modeinfo->{$m}{'quality'} " : "") .
 		"Resolution=$modeinfo->{$m}{'xres'}x" .
 		"$modeinfo->{$m}{'yres'}dpi";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) {
 		# Color printer
-		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
+		$modes->{$stpprn}{$m} = $modestr . " STP_OutputType=Color";
 		if (defined($stpdata{$stpprn}{'Color'}{'Grayscale'})) {
 		    $modes->{$stpprn}{"$m.Gray"} =
 			$modestr . " OutputType=Grayscale";
@@ -1673,7 +1679,7 @@ sub getprintoutmode {
 		# is only available in Grayscale, replace this mode by
 		# "300dpi" in the settings for color printing
 		if ($modes->{$stpprn}{$m} =~ /600mono/) {
-		    if(!defined($stpdata{$stpprn}{'Resolution'}{'300dpi'})){
+		    if(!defined($stpdata{$stpprn}{'STP_Resolution'}{'300dpi'})){
 			die "No '300dpi' mode for $stpprn!";
 		    }
 		    $modes->{$stpprn}{$m} =~ s/600x600dpi/300x300dpi/;
