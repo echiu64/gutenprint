@@ -2616,9 +2616,13 @@ setup_auto_paper_size(void)
     stp_get_papersize_by_name(stp_get_string_parameter(pv->v, "PageSize"));
   if (ps->height == 0 && ps->width != 0)		/* Implies roll feed */
     {
+      gtk_signal_handler_block_by_data(GTK_OBJECT(auto_paper_size_button),
+				       NULL);
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(auto_paper_size_button),
 				   pv->auto_size_roll_feed_paper);
       gtk_widget_show(auto_paper_size_button);
+      gtk_signal_handler_unblock_by_data(GTK_OBJECT(auto_paper_size_button),
+					 NULL);
     }
   else
     {
