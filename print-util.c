@@ -829,6 +829,7 @@ compute_page_parameters(int page_right,	/* I */
 			int scaling, /* I */
 			int image_width, /* I */
 			int image_height, /* I */
+			Image image, /* IO */
 			int *orientation, /* IO */
 			int *page_width, /* O */
 			int *page_height, /* O */
@@ -837,12 +838,30 @@ compute_page_parameters(int page_right,	/* I */
 			int *left, /* O */
 			int *top) /* O */
 {
-  int temp_height, temp_width;
   *page_width  = page_right - page_left;
   *page_height = page_top - page_bottom;
 
+  /* In AUTO orientation, just orient the paper the same way as the image. */
+
+  if (*orientation == ORIENT_AUTO)
+    {
+      if ((*page_width >= *page_height && image_width >= image_height)
+         || (*page_height >= *page_width && image_height >= image_width))
+        *orientation = ORIENT_PORTRAIT;
+      else
+        *orientation = ORIENT_LANDSCAPE;
+    }
+
+  if (*orientation == ORIENT_LANDSCAPE)
+    {
+      Image_rotate_ccw(image);
+
+      image_width  = Image_width(image);
+      image_height = Image_height(image);
+    }
+
   /*
-   * Portrait width/height...
+   * Calculate width/height...
    */
 
   if (scaling < 0.0)
@@ -874,69 +893,15 @@ compute_page_parameters(int page_right,	/* I */
   if (*out_height == 0)
     *out_height = 1;
 
-  /*
-   * Landscape width/height...
-   */
-
-  if (scaling < 0.0)
-    {
-      /*
-       * Scale to pixels per inch...
-       */
-
-      temp_width  = image_height * -72.0 / scaling;
-      temp_height = image_width * -72.0 / scaling;
-    }
-  else
-    {
-      /*
-       * Scale by percent...
-       */
-
-      temp_width  = *page_width * scaling / 100.0;
-      temp_height = temp_width * image_width / image_height;
-      if (temp_height > *page_height)
-	{
-	  temp_height = *page_height;
-	  temp_width  = temp_height * image_height / image_width;
-	}
-    }
-
-  /*
-   * See which orientation has the greatest area (or if we need to rotate the
-   * image to fit it on the page...)
-   */
-
-  if (*orientation == ORIENT_AUTO)
-    {
-      if (scaling < 0.0)
-	{
-	  if ((*out_width > *page_width && *out_height < *page_width) ||
-	      (*out_height > *page_height && *out_width < *page_height))
-	    *orientation = ORIENT_LANDSCAPE;
-	  else
-	    *orientation = ORIENT_PORTRAIT;
-	}
-      else
-	{
-	  if ((temp_width * temp_height) > (*out_width * *out_height))
-	    *orientation = ORIENT_LANDSCAPE;
-	  else
-	    *orientation = ORIENT_PORTRAIT;
-	}
-    }
-
   if (*orientation == ORIENT_LANDSCAPE)
     {
       int x;
-      *out_width  = temp_width;
-      *out_height = temp_height;
 
       /*
        * Swap left/top offsets...
        */
 
-      x    = *left;
+      x     = *left;
       *left = *top;
       *top  = *page_height - x - *out_height;
     }

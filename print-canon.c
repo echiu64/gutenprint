@@ -711,7 +711,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   float 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
-  int		x, y;		/* Looping vars */
+  int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
@@ -741,7 +741,6 @@ canon_print(const printer_t *printer,		/* I - Model */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
-		landscape,	/* True if we rotate the output 90 degrees */
 		length,		/* Length of raster data */
                 buf_length,     /* Length of raster data buffer (dmt) */
 		errdiv,		/* Error dividend */
@@ -817,14 +816,13 @@ canon_print(const printer_t *printer,		/* I - Model */
   canon_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
                        &page_top, &page_bottom);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, &orientation,
-			  &page_width, &page_height, &out_width, &out_height,
-			  &left, &top);
+			  scaling, image_width, image_height, image,
+			  &orientation, &page_width, &page_height,
+			  &out_width, &out_height, &left, &top);
 
-  if (orientation == ORIENT_LANDSCAPE)
-    landscape = 1;
-  else
-    landscape = 0;
+  image_height = Image_height(image);
+  image_width = Image_width(image);
+
   default_media_size(model, ppd_file, media_size, &n, &page_length);
 
   /*
@@ -941,10 +939,7 @@ canon_print(const printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   nv.saturation *= printer->printvars.saturation;
 
-  if (landscape)
-    dither = init_dither(image_height, out_width, &nv);
-  else
-    dither = init_dither(image_width, out_width, &nv);
+  dither = init_dither(image_width, out_width, &nv);
 
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));
@@ -991,137 +986,73 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_k_ranges_simple(dither, 3, the_levels, nv.density);
     }
  /*
-  * Output the page, rotating as necessary...
+  * Output the page...
   */
 
-  if (landscape) {
-    in  = malloc(image_height * image_bpp);
-    out = malloc(image_height * out_bpp * 2);
+  in  = malloc(image_width * image_bpp);
+  out = malloc(image_width * out_bpp * 2);
 
-    errdiv  = image_width / out_height;
-    errmod  = image_width % out_height;
-    errval  = 0;
-    errlast = -1;
-    errline  = image_width - 1;
-    
-    for (x = 0; x < out_height; x ++) {
-      if ((x & 255) == 0)
- 	Image_note_progress(image, x, out_height);
+  errdiv  = image_height / out_height;
+  errmod  = image_height % out_height;
+  errval  = 0;
+  errlast = -1;
+  errline  = 0;
 
-      if (errline != errlast) {
-        errlast = errline;
-	Image_get_col(image, in, errline);
-      }
-
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
-      
-      if (output_type == OUTPUT_GRAY)
-	{
-	  if (nv.image_type == IMAGE_MONOCHROME)
-	    dither_fastblack(out, x, dither, black);
-	  else
-	    dither_black(out, x, dither, black);
-	} else {
-	  dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, lyellow, black);
-	}
-
-      /* fprintf(stderr,"."); */
-
-      canon_write_line(prn, caps, ydpi,
-		       black,    delay_k,
-		       cyan,     delay_c, 
-		       magenta,  delay_m, 
-		       yellow,   delay_y, 
-		       lcyan,    delay_lc, 
-		       lmagenta, delay_lm,
-		       lyellow,  delay_ly, 
-		       length, out_width, left, use_dmt);
-
-      /* fprintf(stderr,"!"); */
- 
-      canon_advance_buffer(black,   buf_length,delay_k);
-      canon_advance_buffer(cyan,    buf_length,delay_c);
-      canon_advance_buffer(magenta, buf_length,delay_m);
-      canon_advance_buffer(yellow,  buf_length,delay_y);
-      canon_advance_buffer(lcyan,   buf_length,delay_lc);
-      canon_advance_buffer(lmagenta,buf_length,delay_lm);
-      canon_advance_buffer(lyellow, buf_length,delay_ly);
-
-      errval += errmod;
-      errline -= errdiv;
-      if (errval >= out_height) {
-        errval -= out_height;
-        errline --;
-      }
-    }
-  } 
-  else /* portrait */
+  for (y = 0; y < out_height; y ++)
   {
-    in  = malloc(image_width * image_bpp);
-    out = malloc(image_width * out_bpp * 2);
+    if ((y & 255) == 0)
+      Image_note_progress(image, y, out_height);
 
-    errdiv  = image_height / out_height;
-    errmod  = image_height % out_height;
-    errval  = 0;
-    errlast = -1;
-    errline  = 0;
-    
-    for (y = 0; y < out_height; y ++)
+    if (errline != errlast)
     {
-      if ((y & 255) == 0)
-	Image_note_progress(image, y, out_height);
+      errlast = errline;
+      Image_get_row(image, in, errline);
+    }
 
-      if (errline != errlast)
+    (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+
+    if (output_type == OUTPUT_GRAY)
       {
-        errlast = errline;
-	Image_get_row(image, in, errline);
+	if (nv.image_type == IMAGE_MONOCHROME)
+	  dither_fastblack(out, y, dither, black);
+	else
+	  dither_black(out, y, dither, black);
+      } else {
+	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		    yellow, lyellow, black);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+    /* fprintf(stderr,","); */
 
-      if (output_type == OUTPUT_GRAY)
-	{
-	  if (nv.image_type == IMAGE_MONOCHROME)
-	    dither_fastblack(out, y, dither, black);
-	  else
-	    dither_black(out, y, dither, black);
-	} else {
-	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, lyellow, black);
-	}
+    canon_write_line(prn, caps, ydpi,
+		     black,    delay_k,
+		     cyan,     delay_c, 
+		     magenta,  delay_m, 
+		     yellow,   delay_y, 
+		     lcyan,    delay_lc, 
+		     lmagenta, delay_lm,
+		     lyellow,  delay_ly, 
+		     length, out_width, left, use_dmt);
 
-      /* fprintf(stderr,","); */
+    /* fprintf(stderr,"!"); */
 
-      canon_write_line(prn, caps, ydpi,
-		       black,    delay_k,
-		       cyan,     delay_c, 
-		       magenta,  delay_m, 
-		       yellow,   delay_y, 
-		       lcyan,    delay_lc, 
-		       lmagenta, delay_lm,
-		       lyellow,  delay_ly, 
-		       length, out_width, left, use_dmt);
+    canon_advance_buffer(black,   buf_length,delay_k);
+    canon_advance_buffer(cyan,    buf_length,delay_c);
+    canon_advance_buffer(magenta, buf_length,delay_m);
+    canon_advance_buffer(yellow,  buf_length,delay_y);
+    canon_advance_buffer(lcyan,   buf_length,delay_lc);
+    canon_advance_buffer(lmagenta,buf_length,delay_lm);
+    canon_advance_buffer(lyellow, buf_length,delay_ly);
 
-      /* fprintf(stderr,"!"); */
-
-      canon_advance_buffer(black,   buf_length,delay_k);
-      canon_advance_buffer(cyan,    buf_length,delay_c);
-      canon_advance_buffer(magenta, buf_length,delay_m);
-      canon_advance_buffer(yellow,  buf_length,delay_y);
-      canon_advance_buffer(lcyan,   buf_length,delay_lc);
-      canon_advance_buffer(lmagenta,buf_length,delay_lm);
-      canon_advance_buffer(lyellow, buf_length,delay_ly);
-
-      errval += errmod;
-      errline += errdiv;
-      if (errval >= out_height)
-      {
-        errval -= out_height;
-        errline ++;
-      }
+    errval += errmod;
+    errline += errdiv;
+    if (errval >= out_height)
+    {
+      errval -= out_height;
+      errline ++;
     }
   }
+
   free_dither(dither);
 
   /*

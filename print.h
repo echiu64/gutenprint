@@ -388,9 +388,9 @@ convert_t choose_colorfunc(int, int, const unsigned char *, int *);
 void
 compute_page_parameters(int page_right, int page_left, int page_top,
 			int page_bottom, int scaling, int image_width,
-			int image_height, int *orientation, int *page_width,
-			int *page_height, int *out_width, int *out_height,
-			int *left, int *top);
+			int image_height, Image image, int *orientation,
+			int *page_width, int *page_height, int *out_width,
+			int *out_height, int *left, int *top);
 
 #endif /* PRINT_HEADER */
 /*

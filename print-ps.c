@@ -258,8 +258,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
 		out_length,	/* Output length (Level 2 output) */
-		out_offset,	/* Output offset (Level 2 output) */
-		landscape;	/* True if we rotate the output 90 degrees */
+		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
   convert_t	colorfunc;	/* Color conversion function... */
   char		*command;	/* PostScript command */
@@ -301,14 +300,12 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   ps_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
                     &page_bottom, &page_top);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, &orientation,
-			  &page_width, &page_height, &out_width, &out_height,
-			  &left, &top);
+			  scaling, image_width, image_height, image,
+			  &orientation, &page_width, &page_height,
+			  &out_width, &out_height, &left, &top);
 
-  if (orientation == ORIENT_LANDSCAPE)
-    landscape = 1;
-  else
-    landscape = 0;
+  image_height = Image_height(image);
+  image_width = Image_width(image);
 
  /*
   * Let the user know what we're doing...
@@ -427,26 +424,16 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   }
 
  /*
-  * Output the page, rotating as necessary...
+  * Output the page...
   */
 
   fputs("%%Page: 1\n", prn);
   fputs("gsave\n", prn);
 
-  if (landscape)
-  {
-    fprintf(prn, "%d %d translate\n", left, top - out_height);
-    fprintf(prn, "%.3f %.3f scale\n",
-            (float)out_width / ((float)image_height),
-            (float)out_height / ((float)image_width));
-  }
-  else
-  {
-    fprintf(prn, "%d %d translate\n", left, top);
-    fprintf(prn, "%.3f %.3f scale\n",
-            (float)out_width / ((float)image_width),
-            (float)out_height / ((float)image_height));
-  }
+  fprintf(prn, "%d %d translate\n", left, top);
+  fprintf(prn, "%.3f %.3f scale\n",
+          (float)out_width / ((float)image_width),
+          (float)out_height / ((float)image_height));
 
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);
@@ -460,10 +447,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 
     fprintf(prn, "%d %d 8\n", image_width, image_height);
 
-    if (landscape)
-      fputs("[ 0 1 1 0 0 0 ]\n", prn);
-    else
-      fputs("[ 1 0 0 -1 0 1 ]\n", prn);
+    fputs("[ 1 0 0 -1 0 1 ]\n", prn);
 
     if (output_type == OUTPUT_GRAY)
       fputs("{currentfile picture readhexstring pop} image\n", prn);
@@ -505,10 +489,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
     if ((image_width * 72 / out_width) < 100)
       fputs("\t/Interpolate true\n", prn);
 
-    if (landscape)
-      fputs("\t/ImageMatrix [ 0 1 1 0 0 0 ]\n", prn);
-    else
-      fputs("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", prn);
+    fputs("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", prn);
 
     fputs(">>\n", prn);
     fputs("image\n", prn);

@@ -1126,7 +1126,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   float 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
-  int		x, y;		/* Looping vars */
+  int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   unsigned short *out;
   unsigned char	*in,		/* Input pixels */
@@ -1145,7 +1145,6 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
-		landscape,	/* True if we rotate the output 90 degrees */
 		length,		/* Length of raster data */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
@@ -1233,14 +1232,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
   pcl_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
                      &page_bottom, &page_top);
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
-			  scaling, image_width, image_height, &orientation,
-			  &page_width, &page_height, &out_width, &out_height,
-			  &left, &top);
+			  scaling, image_width, image_height, image,
+			  &orientation, &page_width, &page_height,
+			  &out_width, &out_height, &left, &top);
 
-  if (orientation == ORIENT_LANDSCAPE)
-    landscape = 1;
-  else
-    landscape = 0;
+  image_height = Image_height(image);
+  image_width = Image_width(image);
 
 #ifdef DEBUG
   printf("page_width = %d, page_height = %d\n", page_width, page_height);
@@ -1532,10 +1529,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   nv.saturation *= printer->printvars.saturation;
 
-  if (landscape)
-    dither = init_dither(image_height, out_width, &nv);
-  else
-    dither = init_dither(image_width, out_width, &nv);
+  dither = init_dither(image_width, out_width, &nv);
 
 /* Set up dithering for special printers. */
 
@@ -1590,222 +1584,112 @@ pcl_print(const printer_t *printer,		/* I - Model */
     }	    
   dither_set_density(dither, nv.density);
 
-  if (landscape)
-  {
-    in  = malloc(image_height * image_bpp);
-    out = malloc(image_height * out_bpp * 2);
+  in  = malloc(image_width * image_bpp);
+  out = malloc(image_width * out_bpp * 2);
 
-    errdiv  = image_width / out_height;
-    errmod  = image_width % out_height;
-    errval  = 0;
-    errlast = -1;
-    errline  = image_width - 1;
-    
-    for (x = 0; x < out_height; x ++)
-    {
+  errdiv  = image_height / out_height;
+  errmod  = image_height % out_height;
+  errval  = 0;
+  errlast = -1;
+  errline  = 0;
+
+  for (y = 0; y < out_height; y ++)
+  {
 #ifdef DEBUG
-      printf("pcl_print: x = %d, line = %d, val = %d, mod = %d, height = %d\n",
-             x, errline, errval, errmod, out_height);
+    printf("pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+           y, errline, errval, errmod, out_height);
 #endif /* DEBUG */
 
-      if ((x & 255) == 0)
-	Image_note_progress(image, x, out_height);
+    if ((y & 255) == 0)
+      Image_note_progress(image, y, out_height);
 
-      if (errline != errlast)
+    if (errline != errlast)
+    {
+      errlast = errline;
+      Image_get_row(image, in, errline);
+    }
+
+    (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+
+    if (do_cret)
+    {
+     /*
+      * 4-level (CRet) dithers...
+      */
+
+      if (output_type == OUTPUT_GRAY)
       {
-        errlast = errline;
-	Image_get_col(image, in, errline);
+        dither_black(out, y, dither, black);
+        (*writefunc)(prn, black + length / 2, length / 2, 0);
+        (*writefunc)(prn, black, length / 2, 1);
       }
-
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
-
-      if (do_cret)
+      else 
       {
-       /*
-        * 4-level (CRet) dithers...
-	*/
+        dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		    yellow, NULL, black);
 
-	if (output_type == OUTPUT_GRAY)
-	{
-          dither_black(out, x, dither, black);
-          (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, black, length / 2, 1);
-	}
-	else 
-	{
-          dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, NULL, black);
+        (*writefunc)(prn, black + length / 2, length / 2, 0);
+        (*writefunc)(prn, black, length / 2, 0);
+        (*writefunc)(prn, cyan + length / 2, length / 2, 0);
+        (*writefunc)(prn, cyan, length / 2, 0);
+        (*writefunc)(prn, magenta + length / 2, length / 2, 0);
+        (*writefunc)(prn, magenta, length / 2, 0);
+        (*writefunc)(prn, yellow + length / 2, length / 2, 0);
+        if (do_6color)
+        {
+          (*writefunc)(prn, yellow, length / 2, 0);
+          (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
+          (*writefunc)(prn, lcyan, length / 2, 0);
+          (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
+          (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
+        }
+        else
+          (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
+      }
+    }
+    else
+    {
+     /*
+      * Standard 2-level dithers...
+      */
 
-          (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, black, length / 2, 0);
-          (*writefunc)(prn, cyan + length / 2, length / 2, 0);
-          (*writefunc)(prn, cyan, length / 2, 0);
-          (*writefunc)(prn, magenta + length / 2, length / 2, 0);
-          (*writefunc)(prn, magenta, length / 2, 0);
-          (*writefunc)(prn, yellow + length / 2, length / 2, 0);
-          if (do_6color)
-          {
-            (*writefunc)(prn, yellow, length / 2, 0);
-            (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
-            (*writefunc)(prn, lcyan, length / 2, 0);
-            (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
-            (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
-	}
+      if (output_type == OUTPUT_GRAY)
+      {
+	if (nv.image_type == IMAGE_MONOCHROME)
+	  dither_fastblack(out, y, dither, black);
+	else
+	  dither_black(out, y, dither, black);
+        (*writefunc)(prn, black, length, 1);
       }
       else
       {
-       /*
-        * Standard 2-level dithers...
-	*/
+        dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		    yellow, NULL, black);
 
-	if (output_type == OUTPUT_GRAY)
-	{
-	  if (nv.image_type == IMAGE_MONOCHROME)
-	    dither_fastblack(out, x, dither, black);
-	  else
-	    dither_black(out, x, dither, black);
-          (*writefunc)(prn, black, length, 1);
-	}
-	else
-	{
-          dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, NULL, black);
-
-          if (black != NULL)
-            (*writefunc)(prn, black, length, 0);
-          (*writefunc)(prn, cyan, length, 0);
-          (*writefunc)(prn, magenta, length, 0);
-          if (do_6color)
-          {
-            (*writefunc)(prn, yellow, length, 0);
-            (*writefunc)(prn, lcyan, length, 0);
-            (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
-	}
-      }
-
-      errval += errmod;
-      errline -= errdiv;
-      if (errval >= out_height)
-      {
-        errval -= out_height;
-        errline --;
+        if (black != NULL)
+          (*writefunc)(prn, black, length, 0);
+        (*writefunc)(prn, cyan, length, 0);
+        (*writefunc)(prn, magenta, length, 0);
+        if (do_6color)
+        {
+          (*writefunc)(prn, yellow, length, 0);
+          (*writefunc)(prn, lcyan, length, 0);
+          (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
+        }
+        else
+          (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
       }
     }
-  }
-  else
-  {
-    in  = malloc(image_width * image_bpp);
-    out = malloc(image_width * out_bpp * 2);
 
-    errdiv  = image_height / out_height;
-    errmod  = image_height % out_height;
-    errval  = 0;
-    errlast = -1;
-    errline  = 0;
-    
-    for (y = 0; y < out_height; y ++)
+    errval += errmod;
+    errline += errdiv;
+    if (errval >= out_height)
     {
-#ifdef DEBUG
-      printf("pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-             y, errline, errval, errmod, out_height);
-#endif /* DEBUG */
-
-      if ((y & 255) == 0)
-	Image_note_progress(image, y, out_height);
-
-      if (errline != errlast)
-      {
-        errlast = errline;
-	Image_get_row(image, in, errline);
-      }
-
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
-
-      if (do_cret)
-      {
-       /*
-        * 4-level (CRet) dithers...
-	*/
-
-	if (output_type == OUTPUT_GRAY)
-	{
-          dither_black(out, y, dither, black);
-          (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, black, length / 2, 1);
-	}
-	else 
-	{
-          dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, NULL, black);
-
-          (*writefunc)(prn, black + length / 2, length / 2, 0);
-          (*writefunc)(prn, black, length / 2, 0);
-          (*writefunc)(prn, cyan + length / 2, length / 2, 0);
-          (*writefunc)(prn, cyan, length / 2, 0);
-          (*writefunc)(prn, magenta + length / 2, length / 2, 0);
-          (*writefunc)(prn, magenta, length / 2, 0);
-          (*writefunc)(prn, yellow + length / 2, length / 2, 0);
-          if (do_6color)
-          {
-            (*writefunc)(prn, yellow, length / 2, 0);
-            (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
-            (*writefunc)(prn, lcyan, length / 2, 0);
-            (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
-            (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
-	}
-      }
-      else
-      {
-       /*
-        * Standard 2-level dithers...
-	*/
-
-	if (output_type == OUTPUT_GRAY)
-	{
-	  if (nv.image_type == IMAGE_MONOCHROME)
-	    dither_fastblack(out, y, dither, black);
-	  else
-	    dither_black(out, y, dither, black);
-          (*writefunc)(prn, black, length, 1);
-	}
-	else
-	{
-          dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, NULL, black);
-
-          if (black != NULL)
-            (*writefunc)(prn, black, length, 0);
-          (*writefunc)(prn, cyan, length, 0);
-          (*writefunc)(prn, magenta, length, 0);
-          if (do_6color)
-          {
-            (*writefunc)(prn, yellow, length, 0);
-            (*writefunc)(prn, lcyan, length, 0);
-            (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
-          }
-          else
-            (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
-	}
-      }
-
-      errval += errmod;
-      errline += errdiv;
-      if (errval >= out_height)
-      {
-        errval -= out_height;
-        errline ++;
-      }
+      errval -= out_height;
+      errline ++;
     }
   }
+
   free_dither(dither);
 
 
