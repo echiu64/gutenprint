@@ -69,10 +69,9 @@ Some tips on tuning the output:
 
 * One group of settings you might want to start with is:
 
-  Gamma 1.2
-  Green 94
-  Blue 89
-  Saturation 1.6
+  Gamma 1.5
+  Brightness 40
+  Saturation 0.8
 
 
 Makefile.standalone enables you to build this plugin as a standalone
@@ -81,4 +80,4 @@ plugin, without reference to a Gimp source tree.
 
 Enjoy!
 
--Robert Krawitz, December 18, 1999
+-Robert Krawitz, January 8, 2000

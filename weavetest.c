@@ -3,7 +3,7 @@
  *
  *   Print plug-in EPSON ESC/P2 driver for the GIMP.
  *
- *   Copyright 1999 Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 1999 Robert-2000 Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -145,6 +145,7 @@ static int weavespan;		/* How many rows total are bracketed by */
 static int horizontal_weave;	/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
+static int realjets;
 static int vertical_subpasses;
 static int vmod;
 static int pass_adjustment;
@@ -171,6 +172,14 @@ get_color_by_params(int plane, int density)
   return color_indices[density * 8 + plane];
 }
 
+void *
+ymalloc(size_t bytes)
+{
+  if (bytes < 0)
+    kill(getpid(), SIGFPE);
+  return malloc(bytes);
+}
+
 /*
  * Initialize the weave parameters
  */
@@ -187,6 +196,7 @@ initialize_weave(int jets, int sep, int v_subpasses)
   else
     separation = sep;
   njets = jets;
+  realjets = jets;
   if (v_subpasses <= 0)
     v_subpasses = 1;
   vertical_subpasses = v_subpasses;
@@ -198,17 +208,19 @@ initialize_weave(int jets, int sep, int v_subpasses)
   weavefactor = (njets + separation - 1) / separation;
   jetsused = MIN(((weavefactor) * separation), njets);
   initialoffset = (jetsused - weavefactor - 1) * separation;
+  if (initialoffset < 0)
+    initialoffset = 0;
   jetsleftover = njets - jetsused;
   weavespan = (jetsused - 1) * separation;
 
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 3072 * vmod * jetsused * horizontal_weave);
-  lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
-  linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
-  passes = malloc(vmod * sizeof(pass_t));
-  linecounts = malloc(vmod * sizeof(int));
+  linebufs = ymalloc(6 * 3072 * vmod * jetsused * horizontal_weave);
+  lineoffsets = ymalloc(vmod * sizeof(lineoff_t) * horizontal_weave);
+  linebases = ymalloc(vmod * sizeof(linebufs_t) * horizontal_weave);
+  passes = ymalloc(vmod * sizeof(pass_t));
+  linecounts = ymalloc(vmod * sizeof(int));
 
   bufbase = linebufs;
   
@@ -277,12 +289,12 @@ get_pass_by_pass(int pass)
   return &(passes[pass % vmod]);
 }
 
-/* #define DEBUG */
+#define DEBUG
 #ifdef DEBUG
 static int 
 divv(int x, int y)
 {
-  if (y < 0)
+  if (x < 0 || y < 0)
     kill(getpid(), SIGFPE);
   else
     return x / y;
@@ -328,7 +340,8 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
   w->logicalpassstart = (w->pass * jetsused) - initialoffset - (weavefactor * separation) +
     modd((w->pass + separation - 2), separation);
   printf("%d ", w->logicalpassstart);
-  w->jet = divv((row - w->logicalpassstart), separation);
+  w->jet = divv((row + (realjets * separation) - w->logicalpassstart),
+		separation) - realjets;
   printf("%d ", w->jet);
   w->jet += jetsused * (vertical_subpasses - 1);
   printf("%d ", w->jet);
@@ -363,9 +376,9 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 }
 
 int nrows = 1000;
-int physjets = 32;
-int physsep = 8;
-int physpasses = 8;
+int physjets = 1;
+int physsep = 1;
+int physpasses = 1;
 
 int
 main(int argc, char **argv)

@@ -3,7 +3,7 @@
  *
  *   Print plug-in Adobe PostScript driver for the GIMP.
  *
- *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -33,6 +33,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.12  2000/01/08 23:30:56  rlk
+ *   Y2K copyright
+ *
  *   Revision 1.11  2000/01/03 13:25:13  rlk
  *   Fix from Salvador Pinto Abreu <spa@khromeleque.dmat.uevora.pt>
  *

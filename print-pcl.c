@@ -3,7 +3,7 @@
  *
  *   Print plug-in HP PCL driver for the GIMP.
  *
- *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.14  2000/01/08 23:30:56  rlk
+ *   Y2K copyright
+ *
  *   Revision 1.13  1999/11/23 02:11:37  rlk
  *   Rationalize variables, pass 3
  *

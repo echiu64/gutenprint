@@ -63,6 +63,8 @@ AS = @AS@
 CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sk.gmo sv.gmo
 CATOBJEXT = .gmo
 CC = /opt/pgcc-2.95.1/bin/gcc
+#CC = gcc
+#CFLAGS = -pg -O6 -funroll-all-loops -Wall
 CFLAGS = -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
 #CFLAGS=-g
 CPP = gcc -E
@@ -183,7 +185,7 @@ libexecdir = $(gimpplugindir)/plug-ins
 
 libexec_PROGRAMS = print
 
-print_SOURCES =  	print-escp2.c		print-pcl.c		print-ps.c		print-util.c		print.c			print.h   
+print_SOURCES =  	print-escp2.c		print-pcl.c		print-ps.c		print-util.c		print.c			print.h
 
 
 INCLUDES =  	-I$(top_srcdir)				$(GTK_CFLAGS)				-I$(includedir)
