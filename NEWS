@@ -794,7 +794,7 @@ and changes from 4.2, as follows:
      now offer a wide variety of options using a predefined set of
      data types.  The data types currently supported are strings
      picked from a list, floating point numbers, integers, curves,
-     arrays, Boolean values, and filenames.
+     arrays, Boolean values, dimensions, and filenames.
 
      The new options system provides a flexible way for drivers to
      inform applications of default values and UI hints, the ability
