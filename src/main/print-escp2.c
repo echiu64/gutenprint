@@ -1309,19 +1309,19 @@ static const int ph2_dotsizes[] =
 { 3, 3, -1, -1, 2, -1, 1, -1, 4, -1, -1, -1, -1 };
 
 static const int sc440_dotsizes[] =
-{ 3, 3, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1 };
+{ 3, 3, -1, -1, 2, -1, 1, -1, -1, -1, -1, -1, -1 };
 
 static const int sc640_dotsizes[] =
-{ 3, 3, -1, -1, -1, 1, 1, -1, 1, -1, 1, -1, -1 };
+{ 3, 3, -1, -1, 2, 1, 1, -1, 1, -1, 1, -1, -1 };
 
 static const int c6pl_dotsizes[] =
-{ 4, 4, 0x10, 3, 0x10, 3, 0x10, -1, 0x10, -1, -1, -1, -1 };
+{ 4, -1, 0x10, -1, 0x10, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int c3pl_dotsizes[] =
-{ -1, 1, 0x11, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 };
+{ 0x11, -1, 0x11, -1, 0x11, -1, 0x10, -1, 0x10, -1, -1, -1, 0x10 };
 
 static const int c4pl_dotsizes[] =
-{ 0x12, 0, 0x12, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 };
+{ 0x12, -1, 0x12, -1, 0x12, -1, 0x11, -1, 0x10, -1, -1, -1, -1 };
 
 static const int sc660_dotsizes[] =
 { 3, 3, -1, 3, 0, 3, 0, -1, 0, -1, -1, -1, -1 };
@@ -1330,25 +1330,25 @@ static const int sc480_dotsizes[] =
 { 0x13, -1, 0x13, -1, 0x13, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int p4pl_dotsizes[] =
-{ 0x12, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 };
+{ 0x12, -1, 0x12, -1, 0x12, -1, 0x11, -1, 0x10, -1, -1, -1, -1 };
 
 static const int sc670_dotsizes[] =
-{ 3, 3, 0x12, 3, 0x12, 3, 0x11, -1, 0x11, -1, -1, -1, -1 };
+{ 0x12, -1, 0x12, -1, 0x12, -1, 0x11, -1, 0x11, -1, -1, -1, -1 };
 
 static const int sp2000_dotsizes[] =
-{ 2, 2, 0x11, 4, 0x11, 4, 0x10, -1, 0x10, -1, -1, -1, -1 };
+{ 0x11, -1, 0x11, -1, 0x11, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int spro_dotsizes[] =
-{ 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1 };
+{ 0, 0, -1, 0, -1, 0, -1, 0, -1, -1, -1, -1, -1 };
 
 static const int c4pl_2880_dotsizes[] =
-{ 0, 0, 0x12, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, 0x10 };
+{ 0x12, -1, 0x12, -1, 0x12, -1, 0x11, -1, 0x10, -1, -1, -1, 0x10 };
 
 static const int p4pl_2880_dotsizes[] =
-{ 4, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, 0x10 };
+{ 0x12, -1, 0x12, -1, 0x12, -1, 0x11, -1, 0x10, -1, -1, -1, 0x10 };
 
 static const int spro10000_dotsizes[] =
-{ 4, 0x11, 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, -1, -1, -1, -1 };
+{ 4, 0x11, -1, 0x11, -1, 0x10, -1, 0x10, -1, -1, -1, -1, -1 };
 
 
 /*
@@ -2197,29 +2197,24 @@ typedef struct
 
 static const res_t escp2_reslist[] =
 {
-  { "360x120dpi", N_("360 x 120 DPI"),
+  { "360x120dpi", N_("360 x 120 DPI Economy Draft"),
     360,  120,  1,0,1,1,0,3,1,0 },
-  { "360x120uni", N_("360 x 120 DPI Unidirectional"),
-    360,  120,  1,0,1,1,1,3,1,0 },
 
-  { "360x240dpi", N_("360 x 240 DPI"),
+  { "360x240dpi", N_("360 x 240 DPI Draft"),
     360,  240,  1,0,1,1,0,3,2,0 },
-  { "360x240uni", N_("360 x 240 DPI Unidirectional"),
-    360,  240,  1,0,1,1,1,3,2,0 },
 
-  { "180dpi", N_("180 DPI"),
+  { "360x90dpi", N_("360 x 90 DPI Fast Economy Draft"),
+    360,  90,  0,0,1,1,0,1,1,0 },
+
+  { "180dpi", N_("180 DPI Economy Draft"),
     180,  180,  0,0,1,1,0,1,1,2 },
-  { "180uni", N_("180 DPI Unidirectional"),
-    180,  180,  0,0,1,1,1,1,1,2 },
 
-  { "360x180dpi", N_("360 x 180 DPI"),
+  { "360x180dpi", N_("360 x 180 DPI Draft"),
     360,  180,  0,0,1,1,0,1,1,2 },
-  { "360x180uni", N_("360 x 180 DPI Unidirectional"),
-    360,  180,  0,0,1,1,1,1,1,2 },
 
-  { "360sw", N_("360 DPI Softweave"),
+  { "360sw", N_("360 DPI"),
     360,  360,  1,0,1,1,0,1,1,5 },
-  { "360swuni", N_("360 DPI Softweave Unidirectional"),
+  { "360swuni", N_("360 DPI Unidirectional"),
     360,  360,  1,0,1,1,1,1,1,5 },
   { "360mw", N_("360 DPI Microweave"),
     360,  360,  0,1,1,1,0,1,1,4 },
@@ -2242,9 +2237,9 @@ static const res_t escp2_reslist[] =
   { "360mw2uni", N_("360 DPI MW2 Unidirectional"),
     360,  360,  0,5,1,1,1,1,1,4 },
 
-  { "720x360sw", N_("720 x 360 DPI Softweave"),
+  { "720x360sw", N_("720 x 360 DPI"),
     720,  360,  1,0,1,1,0,2,1,7 },
-  { "720x360swuni", N_("720 x 360 DPI Softweave Unidirectional"),
+  { "720x360swuni", N_("720 x 360 DPI Unidirectional"),
     720,  360,  1,0,1,1,1,2,1,7 },
   { "720x360dpi", N_("720 x 360 DPI Default"),
     720,  360,  0,48,1,1,0,2,1,7},
@@ -2283,9 +2278,9 @@ static const res_t escp2_reslist[] =
     720,  720,  0,3,1,1,0,1,1,8 },
   { "720fourpuni", N_("720 DPI Four Pass Unidirectional"),
     720,  720,  0,3,1,1,1,1,1,8 },
-  { "720sw", N_("720 DPI Softweave"),
+  { "720sw", N_("720 DPI"),
     720,  720,  1,0,1,1,0,1,1,9 },
-  { "720swuni", N_("720 DPI Softweave Unidirectional"),
+  { "720swuni", N_("720 DPI Unidirectional"),
     720,  720,  1,0,1,1,1,1,1,9 },
   { "720hq", N_("720 DPI High Quality"),
     720,  720,  1,0,2,1,0,1,1,9 },
@@ -2310,27 +2305,27 @@ static const res_t escp2_reslist[] =
     1440, 720,  0,3,1,1,0,1,1,10},
   { "1440x720fourpuni", N_("1440 x 720 DPI Four Pass Unidirectional"),
     1440, 720,  0,3,1,1,1,1,1,10},
-  { "1440x720sw", N_("1440 x 720 DPI Softweave"),
+  { "1440x720sw", N_("1440 x 720 DPI"),
     1440, 720,  1,0,1,1,0,1,1,11},
-  { "1440x720swuni", N_("1440 x 720 DPI Softweave Unidirectional"),
+  { "1440x720swuni", N_("1440 x 720 DPI Unidirectional"),
     1440, 720,  1,0,1,1,1,1,1,11},
   { "1440x720hq2", N_("1440 x 720 DPI Highest Quality"),
     1440, 720,  1,0,2,1,1,1,1,11},
 
-  { "2880x720sw", N_("2880 x 720 DPI Softweave"),
+  { "2880x720sw", N_("2880 x 720 DPI"),
     2880, 720,  1,0,1,1,0,1,1,15},
-  { "2880x720swuni", N_("2880 x 720 DPI Softweave Unidirectional"),
+  { "2880x720swuni", N_("2880 x 720 DPI Unidirectional"),
     2880, 720,  1,0,1,1,1,1,1,15},
 
   /*
    * Nothing thus far supports 1440 DPI vertical resolution
    */
-  { "1440x1440sw", N_("1440 x 1440 DPI Softweave"),
+  { "1440x1440sw", N_("1440 x 1440 DPI"),
     1440, 1440, 1,0,1,1,1,1,1,13},
   { "1440x1440hq2", N_("1440 x 1440 DPI Highest Quality"),
     1440, 1440, 1,0,2,1,1,1,1,13},
 
-  { "2880x1440sw", N_("2880 x 1440 DPI Softweave"),
+  { "2880x1440sw", N_("2880 x 1440 DPI"),
     2880, 1440, 1,0,1,1,1,1,1,15},
 #ifdef HAVE_MAINTAINER_MODE
   /*
@@ -2338,9 +2333,9 @@ static const res_t escp2_reslist[] =
    * nor any faster than 720x720 DPI.  They exist to permit testing
    * 2880x720 (4:1 aspect) on 1440x720 printers.
    */
-  { "1440x360sw", N_("1440 x 360 DPI Softweave"),
+  { "1440x360sw", N_("1440 x 360 DPI"),
     1440, 360,  1,0,1,1,0,1,1,9 },
-  { "1440x360swuni", N_("1440 x 360 DPI Softweave Unidirectional"),
+  { "1440x360swuni", N_("1440 x 360 DPI Unidirectional"),
     1440, 360,  1,0,1,1,1,1,1,9 },
   { "1440x360hq", N_("1440 x 360 DPI High Quality"),
     1440, 360,  1,0,2,1,0,1,1,9 },

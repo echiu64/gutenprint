@@ -16,9 +16,31 @@ Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
 
 1) The Postscript driver now prints correctly (broken in 4.1.99b1).
 
-2) Most Epson printers now have available additional draft resolutions
-   of 360x180 or 360x240 DPI.  These offer better print quality than
-   180 and 360x120 DPI.
+2) The resolutions have been reorganized for Epson printers.  Some
+   little-used resolutions (such as unidirectional draft-quality) have
+   been dropped, and many others have been renamed.  Additionally,
+   certain settings that are very poor choices for certain printers
+   (such as microweave on variable dot size printers) have been
+   dropped.  There are additional draft resolutions of 360x180 and
+   360x240 in addition to the economy draft resolutions of 180x180 and
+   360x120.  Finally, there is an additional 360x90 fast economy draft
+   resolution on some older printers.
+
+3) The organization of the CUPS PPD files has changed.  After you run
+   make install to install the PPD files, but before you restart the
+   CUPS daemon, you should do the following:
+
+   cd src/cups
+   make refresh-data-local
+
+   This is not done automatically, as it removes a large number of
+   files from your filesystem!
+
+4) "make uninstall" removes the PPD files that are installed as part
+   of the CUPS installation.
+
+5) The internationalization code has been reworked in this release.
+   Please see the ChangeLog for more details.
 
 
 Gimp-Print 4.1.99b1 contains the following changes over 4.1.99a3:

@@ -236,14 +236,22 @@ If you know how to fix this, please update this README.
 OPTIONS:
 --------
 
- Options for the stp driver are given in normal Ghostscript
- manner. The resolution of the image calculated by Ghostscript is not
- bound to the resolution of the printer output. It is for example
- possible to specify "-r360" to gs and print the output in 1440x720
- dpi (see below for driver parameter). The result is a somewhat faster
- operation of the driver.
+Overview:
+---------
 
- The driver will not permit use of invalid settings.
+Options for the stp driver are given in normal Ghostscript
+manner. The resolution of the image calculated by Ghostscript is not
+bound to the resolution of the printer output. It is for example
+possible to specify "-r360" to gs and print the output in 1440x720
+dpi (see below for driver parameter). The result is a somewhat faster
+operation of the driver.
+
+The driver will not permit use of invalid settings.
+
+The options for this driver are very complex.  We strongly recommend
+use of a printer management system such as Foomatic rather than
+configuring a spooler manually with this driver.
+
 
 Printer Model Selection:
 ------- ----- ----------
@@ -400,22 +408,13 @@ the orderings to some degree; on many printers, with certain papers,
 unidirectional printing will improve quality substantially more than
 using an otherwise better quality printing mode.
 
-"Softweave", "High Quality", and "Highest Quality" use algorithms
-within the driver to generate the sequence of rows printed.  On
-printers capable of supporting variable dot sizes, only these printing
-modes can generate the smallest dots (3, 4, or 6 picolitres, or pl)
-that the printer is capable of.  In addition, the algorithms we use
-produce very high quality results, with very little banding.  We
-strongly suggest use of these modes where available.
+The difference between different quality settings lies in the number
+of passes made over each line.  "High" and "Highest" quality settings
+perform more passes, printing fewer dots with each pass over the same
+line and using different nozzles for each pass.  This reduces banding
+effects, but requires more time.
 
-The difference between "Softweave", "High Quality", and "Highest
-Quality" lies in the number of passes made over each line.  The
-"Softweave" modes always perform the fewest passes required for any
-given resolution; High and Highest quality perform more.  This trades
-off printing speed against quality.
-
-"Microweave" modes, and modes with no specified quality other than
-unidirectional, use algorithms within the printer to generate the
+"Microweave" modes use algorithms within the printer to generate the
 sequence of rows printed.  These algorithms generally only work well
 at low printing resolutions.  Many printers do not support this kind
 of printing at resolutions of 720 DPI and above, and some printers
@@ -429,9 +428,9 @@ Generally, we recommend use of 360 DPI printing modes for most
 purposes on plain paper.  For higher quality, 720x360 DPI works well.
 Use of 720 DPI and above simply takes more time to compute and print
 the page, with little quality gain.  For economy draft printing, use
-of 180 or 360x120 DPI will not produce very dark output, but will save
-ink and time.  360x180 and 360x240 DPI are alternative draft modes
-that use more ink (and in the case of 360x240, more time), but
+of 180, 360x90, or 360x120 DPI will not produce very dark output, but
+will save ink and time.  360x180 and 360x240 DPI are alternative draft
+modes that use more ink (and in the case of 360x240, more time), but
 approach the quality of 360 DPI.  For printing text on higher quality
 inkjet paper, we recommend 360x180 or 360x240 for economy draft, 360
 or 720x360 for draft, and 720 for final output.
@@ -464,14 +463,17 @@ Resolutions for those printers are listed in a later section.
      180 DPI and 360x180 DPI work for draft mode on printers with dot
      spacing of 1/90 or 1/180 inch.  This includes the Stylus Color,
      Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
-     980, 1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720
-     and EX.
+     1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
+     The 360x90 DPI fast economy resolution will work on all of these
+     printers except for the 800, 850, 900, 1520, and 3000.  It will
+     print substantially faster than 180x180 DPI, at even lower
+     quality.
 
-180dpi          '180 DPI'
-180uni          '180 DPI Unidirectional'
+360x90dpi       '360 x 90 DPI Fast Economy Draft'
 
-360x180dpi      '360 x 180 DPI'
-360x180uni      '360 x 180 DPI Unidirectional'
+180dpi          '180 DPI Economy Draft'
+
+360x180dpi      '360 x 180 DPI Draft'
 
      360x120 DPI and 360x240 DPI work for draft mode on printers with
      dot spacing of 1/120 inch.  This includes the Stylus C20 and C40,
@@ -479,38 +481,26 @@ Resolutions for those printers are listed in a later section.
      860, 880, 83, and 1160, and the Stylus Photo 750, 780, 790, 870,
      890, 1270, 1280, 1290, and 2000P.
 
-360x120dpi      '360 x 120 DPI'
-360x120uni      '360 x 120 DPI Unidirectional'
+360x120dpi      '360 x 120 DPI Economy Draft'
 
-360x240dpi      '360 x 240 DPI'
-360x240uni      '360 x 240 DPI Unidirectional'
+360x240dpi      '360 x 240 DPI Draft'
 
 The following resolutions work on all printers except as noted.
 
-360dpi          '360 DPI'                  (works on all printers
-                                            except for Stylus C20 and
-                                            C40, and Stylus Color 480
-                                            and 580)
-360uni          '360 DPI Unidirectional'   (works on all printers
-                                            except for Stylus C20 and
-                                            C40, and Stylus Color 480
-                                            and 580)
-360mw           '360 DPI Microweave'       (works on all printers
-                                            except for Stylus C20, C40,
-                                            Stylus Color, Stylus Color Pro,
-                                            Stylus Color 480, and 580;
-                                            the is the default on
-                                            printers that do not
-                                            support variable dot sizes)
+360dpi          '360 DPI'                  (works on all printers that
+					    do not support multiple
+					    drop sizes)
+360uni          '360 DPI Unidirectional'   (see previous)
+360mw           '360 DPI Microweave'       (works on all printers that
+					    do not support multiple
+					    drop sizes; this is the
+					    default on such printers)
 360mwuni        '360 DPI Microweave Unidirectional'
                                            (see previous)
-360sw           '360 DPI Softweave'        (works on printers that support
-                                            variable dot sizes, such as
-                                            the Epson Stylus Color 740
-                                            and newer; this is the
+360sw           '360 DPI'                  (works on printers that support
+                                            variable dot sizes; this is the
                                             default on such printers)
-360swuni        '360 DPI Softweave Unidirectional'
-                                           (see previous)
+360swuni        '360 DPI Unidirectional'   (see previous)
 360hq           '360 DPI High Quality'     (see previous; recommended
                                             only on processors slower
                                             than 100 MHz or if
@@ -519,25 +509,24 @@ The following resolutions work on all printers except as noted.
 360hquni        '360 DPI High Quality Unidirectional'
                                            (see previous)
 
-720x360sw       '720 x 360 DPI Softweave'  (works on all printers except
+720x360sw       '720 x 360 DPI'            (works on all printers except
                                             for Stylus Color, Stylus
                                             Color 1500, Stylus Color
                                             1520, and Stylus Color 3000)
-720x360swuni    '720 x 360 DPI Softweave Unidirectional'
+720x360swuni    '720 x 360 DPI Unidirectional'
                                            (see previous)
 
-720mw           '720 DPI Microweave'       (works on most printers;
-                                            recommended only on
-                                            printers that do not
+720mw           '720 DPI Microweave'       (works on some, mostly old
+                                            printers; recommended only
+                                            on printers that do not
                                             support other 720 DPI modes)
 720mwuni        '720 DPI Microweave Unidirectional'
                                            (see previous)
-720sw           '720 DPI Softweave'        (works on all printers except
+720sw           '720 DPI'                  (works on all printers except
                                             for Stylus Color, Stylus
                                             Color 1500, Stylus Color
                                             1520, and Stylus Color 3000)
-720swuni        '720 DPI Softweave Unidirectional'
-                                           (see previous)
+720swuni        '720 DPI Unidirectional'   (see previous)
 720hq           '720 DPI High Quality'     (see previous)
 720hquni        '720 DPI High Quality Unidirectional'
                                            (see previous)
@@ -551,10 +540,10 @@ The following resolutions work on all printers except as noted.
                                             modes)
 1440x720mwuni   '1440 x 720 DPI Microweave Unidirectional'
                                            (see previous)
-1440x720sw      '1440 x 720 DPI Softweave' (works on all 1440x720 dpi
+1440x720sw      '1440 x 720 DPI'           (works on all 1440x720 dpi
                                             printers except for Stylus
                                             Color 1520 and 3000)
-1440x720mwuni   '1440 x 720 DPI Softweave Unidirectional'
+1440x720mwuni   '1440 x 720 DPI Unidirectional'
                                            (works on all 1440x720 dpi
                                             printers except for Stylus
                                             Color 1520 and 3000; on
@@ -566,11 +555,11 @@ The following resolutions work on all printers except as noted.
                                             printers except for Stylus
                                             Color 900, 1520, and 3000)
 
-2880x720sw      '2880 x 720 DPI Softweave' (works on Stylus Color 680,
+2880x720sw      '2880 x 720 DPI'           (works on Stylus Color 680,
                                             777, 880, 83, and 980,
                                             Stylus Photo 780/790, 890,
                                             and 1280/1290)
-2880x720swuni   '2880 x 720 DPI Softweave Unidirectional'
+2880x720swuni   '2880 x 720 DPI Unidirectional'
                                            (works on Stylus Color 680,
                                             777, 880, 83, and 980,
                                             Stylus Photo 780/790, 890,
@@ -1196,14 +1185,3 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
 Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
    -sQuality=720sw -dOutputType=2 -sOutputFile=- foo.ps
-
-
-SPOOLER CONFIGURATION
-------- -------------
-
-The options to this driver are very complex.  The Foomatic package
-makes configuration simpler.
-
-CUPS users may also use the CUPS driver.  This is a more
-traditional CUPS driver written by Mike Sweet that may be more
-familiar to CUPS users.
