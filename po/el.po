@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2003-01-22 20:11-0500\n"
+"POT-Creation-Date: 2003-01-23 21:57-0500\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -160,7 +160,7 @@ msgstr "Σελίδα εγχειριδίου"
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/escputil/escputil.c:615 src/main/print-canon.c:1688
+#: src/escputil/escputil.c:600 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Μαύρο"
@@ -1580,23 +1580,23 @@ msgstr ""
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/main/print-util.c:1414
+#: src/main/print-util.c:1386
 msgid "Printer does not support color output\n"
 msgstr ""
 
-#: src/main/print-util.c:1432
+#: src/main/print-util.c:1404
 msgid "Image size is not valid\n"
 msgstr ""
 
-#: src/main/print-util.c:1439
+#: src/main/print-util.c:1411
 msgid "Top margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1445
+#: src/main/print-util.c:1417
 msgid "Left margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1504
+#: src/main/print-util.c:1474
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr ""
@@ -1664,12 +1664,12 @@ msgstr ""
 msgid "Ink Type"
 msgstr "Τύπος MIME"
 
-#: src/escputil/escputil.c:66
+#: src/escputil/escputil.c:64
 #, fuzzy
 msgid "Escputil version "
 msgstr "%s έκδοση %s"
 
-#: src/escputil/escputil.c:67
+#: src/escputil/escputil.c:65
 #, fuzzy
 msgid ""
 ", Copyright (C) 2000-2001 Robert Krawitz\n"
@@ -1682,7 +1682,7 @@ msgstr ""
 "λογισμικο, και μπορείτε να το αναδιανείμετε βάσει των συνθηκών της Γενικής "
 "Δημόσιας ¶δειας GNU (GNU General Public Licence)."
 
-#: src/escputil/escputil.c:72
+#: src/escputil/escputil.c:70
 msgid ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
@@ -1701,7 +1701,7 @@ msgid ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:112
+#: src/escputil/escputil.c:110
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model]\n"
@@ -1744,7 +1744,7 @@ msgid ""
 "alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:150
+#: src/escputil/escputil.c:148
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
@@ -1783,454 +1783,451 @@ msgid ""
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:201
+#: src/escputil/escputil.c:199
 msgid "Stylus C20sx"
 msgstr "Stylus C20sx"
 
-#: src/escputil/escputil.c:202
+#: src/escputil/escputil.c:200
 msgid "Stylus C20ux"
 msgstr "Stylus C20ux"
 
-#: src/escputil/escputil.c:203
+#: src/escputil/escputil.c:201
 msgid "Stylus C40sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:204
+#: src/escputil/escputil.c:202
 msgid "Stylus C40ux"
 msgstr "Stylus C40ux"
 
-#: src/escputil/escputil.c:205
+#: src/escputil/escputil.c:203
 #, fuzzy
 msgid "Stylus C41sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:206
+#: src/escputil/escputil.c:204
 #, fuzzy
 msgid "Stylus C41ux"
 msgstr "Stylus C40ux"
 
-#: src/escputil/escputil.c:207
+#: src/escputil/escputil.c:205
 #, fuzzy
 msgid "Stylus C42sx"
 msgstr "Stylus C40sx"
 
-#: src/escputil/escputil.c:208
+#: src/escputil/escputil.c:206
 #, fuzzy
 msgid "Stylus C42ux"
 msgstr "Stylus C40ux"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:207
 msgid "Stylus C60"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:208
 #, fuzzy
 msgid "Stylus C61"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:209
 #, fuzzy
 msgid "Stylus C62"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:210
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:211
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:212
 #, fuzzy
 msgid "Stylus C82"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:213
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:214
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:215
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:216
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:217
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:241
 #, fuzzy
 msgid "Stylus Photo"
 msgstr "Slashdot"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:242
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:243
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:251
 #, fuzzy
 msgid "Stylus Photo 830"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:255
+#: src/escputil/escputil.c:253
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:256
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:257
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:258
+#: src/escputil/escputil.c:256
 #, fuzzy
 msgid "Stylus Photo 915"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:257
 #, fuzzy
 msgid "Stylus Photo 925"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:258
 #, fuzzy
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:259
 #, fuzzy
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:262
+#: src/escputil/escputil.c:260
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:263
+#: src/escputil/escputil.c:261
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:264
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:265
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:266
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:267
+#: src/escputil/escputil.c:265
 #, fuzzy
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:268
+#: src/escputil/escputil.c:266
 #, fuzzy
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:269
+#: src/escputil/escputil.c:267
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:268
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:271
 #, fuzzy
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:273
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:274
 #, fuzzy
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:278
+#: src/escputil/escputil.c:276
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:279
+#: src/escputil/escputil.c:277
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:366 src/escputil/escputil.c:375
+#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
 #, fuzzy
 msgid "You may only specify one printer or raw device."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:384
+#: src/escputil/escputil.c:382
 #, fuzzy
 msgid "You may only specify one printer model."
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:404
+#: src/escputil/escputil.c:402
 #, fuzzy, c-format
 msgid "Unknown option %c\n"
 msgstr "¶γνωστος κωδικός op %u"
 
-#: src/escputil/escputil.c:464
+#: src/escputil/escputil.c:462
 #, fuzzy, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:487
+#: src/escputil/escputil.c:485
 #, fuzzy, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Δεν είναι δυνατό να γίνει καταχώρηση αποθήκευσης με κέλυφος"
 
-#: src/escputil/escputil.c:500 src/escputil/escputil.c:510
+#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 #, fuzzy
 msgid "Unable to send command to printer\n"
 msgstr "Ανεπιτυχής σύνδεση στο πιλότο"
 
-#: src/escputil/escputil.c:561
-msgid "Read from printer timed out\n"
-msgstr ""
-
-#: src/escputil/escputil.c:563
-#, fuzzy, c-format
-msgid "Cannot read from %s: %s\n"
-msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
-
-#: src/escputil/escputil.c:616
+#: src/escputil/escputil.c:601
 msgid "Cyan"
 msgstr "Κυανό"
 
-#: src/escputil/escputil.c:617
+#: src/escputil/escputil.c:602
 #, fuzzy
 msgid "Magenta"
 msgstr "μώβ"
 
-#: src/escputil/escputil.c:618
+#: src/escputil/escputil.c:603
 msgid "Yellow"
 msgstr "Κίτρινο"
 
-#: src/escputil/escputil.c:619
+#: src/escputil/escputil.c:604
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Ψιλή Βροχή"
 
-#: src/escputil/escputil.c:620
+#: src/escputil/escputil.c:605
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Ψιλή Βροχή"
 
-#: src/escputil/escputil.c:621
+#: src/escputil/escputil.c:606
 msgid "Black/Dark Yellow"
 msgstr ""
 
-#: src/escputil/escputil.c:635
+#: src/escputil/escputil.c:620
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:641 src/escputil/escputil.c:712
-#: src/escputil/escputil.c:751
+#: src/escputil/escputil.c:626 src/escputil/escputil.c:701
+#: src/escputil/escputil.c:744
 #, fuzzy, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:650 src/escputil/escputil.c:723
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:635 src/escputil/escputil.c:712
+#: src/escputil/escputil.c:753
 #, fuzzy, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
 
-#: src/escputil/escputil.c:663
+#: src/escputil/escputil.c:642 src/escputil/escputil.c:719
+#: src/escputil/escputil.c:760
+#, fuzzy, c-format
+msgid "Cannot read from %s: %s\n"
+msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
+
+#: src/escputil/escputil.c:652
 #, fuzzy
 msgid "Cannot parse output from printer\n"
 msgstr "Αδυναμία ανοίγματος αρχείου εξόδου: %s\n"
 
-#: src/escputil/escputil.c:667
+#: src/escputil/escputil.c:656
 #, fuzzy
 msgid "Ink color"
 msgstr " χρώμα"
 
-#: src/escputil/escputil.c:667
+#: src/escputil/escputil.c:656
 #, fuzzy
 msgid "Percent remaining"
 msgstr "Επί τοις εκατό ελεύθερο"
 
-#: src/escputil/escputil.c:706
+#: src/escputil/escputil.c:695
 msgid "Printer identification requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:745
+#: src/escputil/escputil.c:738
 msgid "Printer status requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:784
+#: src/escputil/escputil.c:781
 #, fuzzy
 msgid "Cleaning heads...\n"
 msgstr "Ανάγνωση επικεφαλίδων..."
 
-#: src/escputil/escputil.c:793
+#: src/escputil/escputil.c:790
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:797
+#: src/escputil/escputil.c:794
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2269,7 +2266,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:832
+#: src/escputil/escputil.c:829
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2305,33 +2302,40 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:876
+#: src/escputil/escputil.c:873
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:894
+#: src/escputil/escputil.c:891
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:898
+#: src/escputil/escputil.c:895
 msgid "Attempting to detect printer model..."
 msgstr ""
 
-#: src/escputil/escputil.c:903
+#: src/escputil/escputil.c:900
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:911
+#: src/escputil/escputil.c:908
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
+
+#: src/escputil/escputil.c:914
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Cannot read from %s: %s\n"
+msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
 #: src/escputil/escputil.c:927
 msgid ""
@@ -3268,14 +3272,14 @@ msgstr ""
 msgid "Printing..."
 msgstr "Εκτυπώνεται .."
 
-#: src/gimp/print.c:167
+#: src/gimp/print.c:166
 #, fuzzy
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Φίλτρα/Κείμενο/FreeType..."
 
 #
-#: src/gimp/print.c:784 src/gimp/print.c:785 src/gimp/print.c:882
-#: src/gimp/print.c:1231
+#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:832
+#: src/gimp/print.c:1181
 msgid "File"
 msgstr "Αρχείο"
 
@@ -3355,12 +3359,6 @@ msgstr ""
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr ""
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "Cannot read from %s: %s\n"
-#~ msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
 #~ msgid "1440 x 360 DPI"
 #~ msgstr "1440 x 360 DPI"
