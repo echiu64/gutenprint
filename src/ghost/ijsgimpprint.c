@@ -39,7 +39,7 @@
 #include <ijs.h>
 #include <ijs_server.h>
 #include <errno.h>
-
+#include <gimp-print/gimp-print-intl-internal.h>
 
 /* WARNING:
  * gimp-print wants to pull the raster data.  
@@ -132,15 +132,15 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     }
   else
     {
-      STP_DEBUG(fprintf(stderr, "Bad cs, bps %d chan %d space %s\n",
-			img->bps, img->n_chan, ph->cs));
+      fprintf(stderr, _("Bad color space: bps %d channels %d space %s\n"),
+		img->bps, img->n_chan, ph->cs);
       /* unsupported */
       return -1;
     }
 
   if (img->row_buf == NULL)
     {
-      STP_DEBUG(fprintf(stderr, "No row buffer\n"));
+      STP_DEBUG(fprintf(stderr, _("No row buffer\n")));
       return -1;
     }
 
@@ -168,11 +168,12 @@ get_float(const char *str, const char *name, float *pval,
 	  return 0;
 	}
       else
-	fprintf(stderr, "Parameter %s out of range (value %f, min %f, max %f)\n",
+	fprintf(stderr,
+		_("Parameter %s out of range (value %f, min %f, max %f)\n"),
 		name, new_value, min_value, max_value);
     }
   else
-    fprintf(stderr, "Unable to parse parameter %s=%s (expect a number)\n",
+    fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
 	    name, str);
   return -1;
 }
@@ -189,11 +190,12 @@ get_int(const char *str, const char *name, int *pval,
 	  *pval = new_value;
 	  return 0;
 	}
-	fprintf(stderr, "Parameter %s out of range (value %d, min %d, max %d)\n",
+	fprintf(stderr,
+		_("Parameter %s out of range (value %d, min %d, max %d)\n"),
 		name, new_value, min_value, max_value);
     }
   else
-    fprintf(stderr, "Unable to parse parameter %s=%s (expect a number)\n",
+    fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
 	    name, str);
   return -1;
 }
@@ -273,8 +275,6 @@ gimp_list_cb (void *list_cb_data,
   const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
   int size = strlen (param_list);
 
-  fprintf (stderr, "gimp_list_cb\n");
-
   if (size > val_size)
     return IJS_EBUF;
 
@@ -333,9 +333,9 @@ gimp_get_cb (void *get_cb_data,
   if (!printer)
     {
       if (strlen(stp_get_driver(v)) == 0)
-	fprintf(stderr, "Printer must be specified with -sModel\n");
+	fprintf(stderr, _("Printer must be specified with -sModel\n"));
       else
-	fprintf(stderr, "Printer %s is not a known model\n",
+	fprintf(stderr, _("Printer %s is not a known model\n"),
 		stp_get_driver(v));
       return IJS_EUNKPARAM;
     }
@@ -554,7 +554,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else
     {
-      fprintf(stderr, "Unknown key %s\n", key);
+      fprintf(stderr, _("Unknown option %s\n"), key);
       code = -1;
     }
 
@@ -701,7 +701,7 @@ static void
 gimp_image_note_progress(stp_image_t *image, double current, double total)
 {
   char buf[256];
-  sprintf(buf, "%.0f of %.0f\n", current, total);
+  sprintf(buf, _("%.0f of %.0f\n"), current, total);
   STP_DEBUG(gimp_outfunc(stderr, buf, strlen(buf)));
 }
 
@@ -813,7 +813,7 @@ main (int argc, char **argv)
       status = image_init(&img, &ph);
       if (status)
 	{
-	  fprintf(stderr, "image_init failed %d\n", status);
+	  fprintf(stderr, _("image_init failed %d\n"), status);
 	  break;
 	}
 
@@ -824,7 +824,7 @@ main (int argc, char **argv)
 	      f = fdopen(img.fd - 1, "wb");
 	      if (!f)
 		{
-		  fprintf(stderr, "Unable to open file descriptor: %s\n",
+		  fprintf(stderr, _("Unable to open file descriptor: %s\n"),
 			  strerror(errno));
 		  status = -1;
 		  break;
@@ -836,7 +836,7 @@ main (int argc, char **argv)
 	      if (!f)
 		{
 		  status = -1;
-		  fprintf(stderr, "fopen %s failed: %s\n", img.filename,
+		  fprintf(stderr, _("Unable to open %s: %s\n"), img.filename,
 			  strerror(errno));
 		  break;
 		}
@@ -848,7 +848,8 @@ main (int argc, char **argv)
 	  printer = stp_get_printer_by_driver(stp_get_driver(img.v));
 	  if (printer == NULL)
 	    {
-	      fprintf(stderr, "Unknown gimp-print driver\n");
+	      fprintf(stderr, _("Unknown printer %s\n"),
+		      stp_get_driver(img.v));
 	      status = -1;
 	      break;
 	    }
@@ -878,7 +879,7 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  fprintf(stderr, "Couldn't verify gimp-print printer\n");
+	  fprintf(stderr, _("Bad parameters; cannot continue!\n"));
 	  status = -1;
 	  break;
 	}
@@ -888,7 +889,8 @@ main (int argc, char **argv)
 	  status = image_next_row(&img);
 	  if (status)
 	    {
-	      fprintf(stderr, "next row failed at %d\n", img.bytes_left);
+	      fprintf(stderr, _("Get next row failed at %d\n"),
+		      img.bytes_left);
 	      break;
 	    }
 	}
@@ -906,8 +908,6 @@ main (int argc, char **argv)
 
   ijs_server_done(img.ctx);
 
-#ifdef VERBOSE
-  fprintf (stderr, "server exiting with status %d\n", status);
-#endif
+  STP_DEBUG(fprintf (stderr, "server exiting with status %d\n", status));
   return status;
 }
