@@ -160,7 +160,7 @@ extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
 		       int color);
 extern void expand_line (unsigned char *src, unsigned char *dst, int height,
 			 int skip, int left_ignore);
-extern void write_output (FILE *fp_w, int dontwrite);
+extern void write_output (FILE *fp_w, int dontwrite, int allblack);
 extern void find_white (unsigned char *buff,int npix, int *left, int *right);
 extern int update_page (unsigned char *buff, int buffsize, int m, int n,
 			int color, int density);
@@ -394,7 +394,7 @@ expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
 int donothing;
 
 void
-write_output(FILE *fp_w, int dontwrite)
+write_output(FILE *fp_w, int dontwrite, int allblack)
 {
   int c, l, p, left, right, first, last, width, height, i;
   unsigned int amount;
@@ -435,7 +435,8 @@ write_output(FILE *fp_w, int dontwrite)
 	{
 	  for (c = 0; c < MAX_INKS; c++)
 	    {
-	      float *ink = ink_colors[c];
+	      int inknum = allblack ? 0 : c;
+	      float *ink = ink_colors[inknum];
 	      if (lt->line[c])
 		{
 		  if (dontwrite)
@@ -1534,6 +1535,7 @@ main(int argc,char *argv[])
   FILE *fp_r, *fp_w;
   int force_extraskip = -1;
   int no_output = 0;
+  int all_black = 0;
 
   unweave = 0;
   pstate.nozzle_separation = 6;
@@ -1619,6 +1621,9 @@ main(int argc,char *argv[])
 		  exit(-1);
 		}
 	      break;
+	    case 'b':
+	      all_black = 1;
+	      break;
 	    case 'q':
 	      no_output = 1;
 	      break;
@@ -1680,7 +1685,7 @@ main(int argc,char *argv[])
       parse_escp2(fp_r);
     }
   fprintf(stderr,"Done reading.\n");
-  write_output(fp_w, no_output);
+  write_output(fp_w, no_output, all_black);
   fclose(fp_w);
   fprintf(stderr,"Image dump complete.\n");
 
