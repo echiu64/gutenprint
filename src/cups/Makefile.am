@@ -105,32 +105,24 @@ endif
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
-	  cd ppd ; \
-	  for language in * ; do \
-	    cd ..; \
-	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
-	    cd ppd/$$language; \
-	    for ppdfile in * ; do \
+	  for language in C $(ALL_LINGUAS) ; do \
+	    echo "Installing $$language locale PPD files..." ; \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language ; \
+	    for ppdfile in ppd/$$language/* ; do \
 	      $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir)/$$language ; \
 	    done; \
-	    cd ..; \
 	  done \
 	fi
 
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
-	  cd ppd ; \
 	  for language in C $(ALL_LINGUAS) ; do \
-	    cd ..; \
-	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
-	    cd ppd/C ; \
-	    for ppdfile in * ; do \
-	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile" ; then \
-	        $(RM) $(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile ; \
+	    echo "Removing $$language locale PPD files..." ; \
+	    for ppdfile in ppd/$$language/* ; do \
+	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile`" ; then \
+	        $(RM) -f $(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile` ; \
 	      fi ; \
 	    done; \
-	    cd ..; \
 	  done \
 	fi
 
