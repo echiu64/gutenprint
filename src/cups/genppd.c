@@ -52,7 +52,7 @@
 #include <cups/cups.h>
 #include <cups/raster.h>
 
-#include "cups-print.h"
+#include "print.h"
 
 /*
  * File handling stuff...
