@@ -69,17 +69,13 @@
 #define ORIENT_PORTRAIT		0	/* Portrait orientation */
 #define ORIENT_LANDSCAPE	1	/* Landscape orientation */
 
-#define MAX_CARRIAGE_WIDTH	17
+#define MAX_CARRIAGE_WIDTH	80 /* This really needs to go away */
+				/* For now, this is wide enough for 4B ISO */
 
 #define IMAGE_LINE_ART		0
 #define IMAGE_SOLID_TONE	1
 #define IMAGE_CONTINUOUS	2
 #define IMAGE_MONOCHROME	3
-
-#ifndef MIN
-#  define MIN(a,b)		((a) < (b) ? (a) : (b))
-#  define MAX(a,b)		((a) > (b) ? (a) : (b))
-#endif /* !MIN */
 
 
 /*
@@ -194,9 +190,6 @@ typedef struct printer
   vars_t printvars;
 } printer_t;
 
-extern const printer_t printers[];
-extern const int printer_count;
-
 typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
 			  int bpp, unsigned char *cmap, const vars_t *vars);
 
@@ -238,11 +231,9 @@ extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);
 extern void	dither_set_black_levels(void *vd, double, double, double);
-extern void 	dither_set_randomizers(void *vd, double, double, double,
-				       double);
+extern void 	dither_set_randomizers(void *vd, double, double, double, double);
 extern void 	dither_set_ink_darkness(void *vd, double, double, double);
-extern void 	dither_set_light_inks(void *vd, double, double, double,
-				      double);
+extern void 	dither_set_light_inks(void *vd, double, double, double, double);
 extern void	dither_set_c_ranges(void *vd, int nlevels,
 				    const simple_dither_range_t *ranges,
 				    double density);
@@ -268,17 +259,13 @@ extern void	dither_set_y_ranges_full(void *vd, int nlevels,
 					 const full_dither_range_t *ranges,
 					 double density);
 extern void	dither_set_c_ranges_simple(void *vd, int nlevels,
-					   const double *levels,
-					   double density);
+					   const double *levels, double density);
 extern void	dither_set_m_ranges_simple(void *vd, int nlevels,
-					   const double *levels,
-					   double density);
+					   const double *levels, double density);
 extern void	dither_set_y_ranges_simple(void *vd, int nlevels,
-					   const double *levels,
-					   double density);
+					   const double *levels, double density);
 extern void	dither_set_k_ranges_simple(void *vd, int nlevels,
-					   const double *levels,
-					   double density);
+					   const double *levels, double density);
 extern void	dither_set_c_ranges_complete(void *vd, int nlevels,
 					     const dither_range_t *ranges);
 extern void	dither_set_m_ranges_complete(void *vd, int nlevels,
@@ -296,8 +283,7 @@ extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 extern void	free_dither(void *);
 
-extern void	dither_fastblack(unsigned short *, int, void *,
-				 unsigned char *);
+extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
 
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
 
@@ -329,7 +315,7 @@ extern void	default_media_size(int model, char *ppd_file, char *media_size,
 
 
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
-		                   int *count);
+				   int *count);
 extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);

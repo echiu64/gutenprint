@@ -1576,7 +1576,7 @@ escp2_unpack_2_1(int length,
   memset(outhi, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned short inint = ((unsigned short *) in)[0];
+      unsigned short inint = ((const unsigned short *) in)[0];
       if (inint > 0)
 	{
 	  unsigned char ob0 = 0;
@@ -1621,7 +1621,7 @@ escp2_unpack_2_2(int length,
   memset(outhi, 0, length);
   for (i = 0; i < length; i++)
     {
-      unsigned short inint = ((unsigned short *) in)[0];
+      unsigned short inint = ((const unsigned short *) in)[0];
       if (inint > 0)
 	{
 	  unsigned char inbyte = (inint >> SH20) & 0xff;
@@ -1688,7 +1688,7 @@ escp2_unpack_4_1(int length,
   memset(out3, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned inint = ((int *) in)[0];
+      unsigned inint = ((const int *) in)[0];
       if (inint > 0)
 	{
 	  unsigned char ob0 = 0;
@@ -1772,7 +1772,7 @@ escp2_unpack_4_2(int length,
   memset(out3, 0, limit);
   for (i = 0; i < limit; i++)
     {
-      unsigned inint = ((int *) in)[0];
+      unsigned inint = ((const int *) in)[0];
       if (inint != 0)
 	{
 	  unsigned char ob0 = 0;
@@ -2458,6 +2458,12 @@ get_color_by_params(int plane, int density)
 }
 #endif
 
+static int
+imin(int a, int b)
+{
+  return ((a < b) ? a : b);
+}
+
 /*
  * Initialize the weave parameters
  *
@@ -2535,7 +2541,7 @@ initialize_weave(int jets,	/* Width of print head */
     sw->footer = lastline;
 
   sw->weavefactor = (sw->njets + sw->separation - 1) / sw->separation;
-  sw->jetsused = MIN(((sw->weavefactor) * sw->separation), sw->njets);
+  sw->jetsused = imin(((sw->weavefactor) * sw->separation), sw->njets);
   sw->initialoffset = (sw->jetsused - sw->weavefactor - 1) * sw->separation;
   if (sw->initialoffset < 0)
     sw->initialoffset = 0;
