@@ -25,12 +25,14 @@
  *                            parameter.
  *   escp2_imageable_area() - Return the imageable area of the page.
  *   escp2_print()          - Print an image to an EPSON printer.
- *   escp2_write()          - Send ESC/P2 graphics using TIFF packbits compression.
- *   escp2_write6()         - Send 6-color ESC/P2 graphics using TIFF packbits compression.
+ *   escp2_write()          - Send 6-color ESC/P2 graphics using TIFF packbits compression.
  *
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  1999/10/18 01:37:19  rlk
+ *   Add Stylus Photo 700 and switch to printer capabilities
+ *
  *   Revision 1.6  1999/10/17 23:44:07  rlk
  *   16-bit everything (untested)
  *
@@ -208,9 +210,77 @@
  * Local functions...
  */
 
-static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int);
-static void	escp2_write6(FILE *, unsigned char *, int, int, int, int, int, int, int);
+static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int, int);
 
+#define MODEL_PAPER_SIZE_MASK	0x3
+#define MODEL_PAPER_SMALL 	0x0
+#define MODEL_PAPER_LARGE 	0x1
+#define MODEL_PAPER_1200	0x2
+
+#define MODEL_IMAGEABLE_MASK	0xc
+#define MODEL_IMAGEABLE_DEFAULT	0x0
+#define MODEL_IMAGEABLE_PHOTO	0x4
+#define MODEL_IMAGEABLE_600	0x8
+
+#define MODEL_INIT_MASK		0xf0
+#define MODEL_INIT_COLOR	0x00
+#define MODEL_INIT_PRO		0x10
+#define MODEL_INIT_1500		0x20
+#define MODEL_INIT_600		0x30
+#define MODEL_INIT_PHOTO	0x40
+
+#define MODEL_HASBLACK_MASK	0x100
+#define MODEL_HASBLACK_YES	0x000
+#define MODEL_HASBLACK_NO	0x100
+
+#define MODEL_6COLOR_MASK	0x200
+#define MODEL_6COLOR_NO		0x000
+#define MODEL_6COLOR_YES	0x200
+
+#define MODEL_720DPI_MODE_MASK	0xc00
+#define MODEL_720DPI_DEFAULT	0x000
+#define MODEL_720DPI_600	0x400
+#define MODEL_720DPI_PHOTO	0x400 /* 0x800 for experimental stuff */
+
+int model_capabilities[] =
+{
+  /* Stylus Color */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT),
+  /* Stylus Color Pro/Pro XL/400/500 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_PRO
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT),
+  /* Stylus Color 1500 */
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_1500
+   | MODEL_HASBLACK_NO | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT),
+  /* Stylus Color 600 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_600),
+  /* Stylus Color 800 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT),
+  /* Stylus Color 1520/3000 */
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_600
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT),
+  /* Stylus Photo 700 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO),
+  /* Stylus Photo EX */
+  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO),
+};
+
+static int
+escp2_has_cap(int model, int featureset, int class)
+{
+  return ((model_capabilities[model] & featureset) == class);
+}
+
+static int
+escp2_cap(int model, int featureset)
+{
+  return (model_capabilities[model] & featureset);
+}
 
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
@@ -251,7 +321,7 @@ escp2_parameters(int  model,		/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
   {
-    if (model == 5 || model == 2)
+    if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK, MODEL_PAPER_LARGE))
       *count = 6;
     else
       *count = 3;
@@ -292,28 +362,27 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
-  switch (model)
+  switch (escp2_cap(model, MODEL_IMAGEABLE_MASK))
   {
-    default :
-        *left   = 14;
-        *right  = width - 14;
-        *top    = length - 14;
-        *bottom = 40;
-        break;
-
-    case 7 :
+  case MODEL_IMAGEABLE_PHOTO:
         *left   = 9;
         *right  = width - 9;
         *top    = length;
         *bottom = 49;
         break;
 
-    case 3 :
-    case 4 :
-    case 5 :
+  case MODEL_IMAGEABLE_600:
         *left   = 8;
         *right  = width - 9;
         *top    = length - 32;
+        *bottom = 40;
+        break;
+
+  case MODEL_IMAGEABLE_DEFAULT:
+  default:
+        *left   = 14;
+        *right  = width - 14;
+        *top    = length - 14;
         *bottom = 40;
         break;
   };
@@ -549,7 +618,7 @@ escp2_print(int       model,		/* I - Model */
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
 #if 0
-  if (model == 7)
+  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_PHOTO))
     {
       fwrite("\033@", 2, 1, prn);
       fwrite("\033(R\010\000\000REMOTE1PM\002\000\000\000SN\003\000\000\000\003MS\010\000\000\000\010\000\364\013x\017\033\000\000\000", 42, 1, prn);
@@ -571,30 +640,28 @@ escp2_print(int       model,		/* I - Model */
         break;
   };
 
-  switch (model)				/* Printer specific initialization */
+  switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
-    case 0 : /* ESC */
+    case MODEL_INIT_COLOR : /* ESC */
         if (output_type == OUTPUT_COLOR && ydpi > 360)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
-    case 1 : /* ESC Pro, Pro XL, 400, 500 */
+    case MODEL_INIT_PRO : /* ESC Pro, Pro XL, 400, 500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
         if (ydpi > 360)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
-    case 2 : /* ESC 1500 */
+    case MODEL_INIT_1500 : /* ESC 1500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
         if (ydpi > 360)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
-    case 3 : /* ESC 600 */
-    case 4 : /* ESC 800 */
-    case 5 : /* 1520, 3000 */
+    case MODEL_INIT_600 : /* ESC 600, 800, 1520, 3000 */
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
 	else
@@ -605,7 +672,8 @@ escp2_print(int       model,		/* I - Model */
         if (ydpi > 360)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
-    case 7 : /* ESP EX */
+
+    case MODEL_INIT_PHOTO:
         if (ydpi > 360)
 	  {
 #if 1
@@ -678,11 +746,11 @@ escp2_print(int       model,		/* I - Model */
     magenta = g_malloc(length);
     yellow  = g_malloc(length);
   
-    if (model != 2)
+    if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES))
       black = g_malloc(length);
     else
       black = NULL;
-    if (model == 7) {
+    if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
       lcyan = g_malloc(length);
       lmagenta = g_malloc(length);
     } else {
@@ -728,30 +796,30 @@ escp2_print(int       model,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
         dither_black16(out, x, drawable->height, out_width, black);
-        escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
-      else if (model == 7)
+      else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
         dither_cmyk6_16(out, x, drawable->height, out_width, cyan, magenta,
 			lcyan, lmagenta, yellow, black);
 
-	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
-        escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
+        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
       }
       else
       {
         dither_cmyk16(out, x, drawable->height, out_width, cyan, magenta,
                     yellow, black);
 
-        escp2_write(prn, cyan, length, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 4, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 4, 0, ydpi, model, out_width, left);
         if (black != NULL)
-          escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       };
 
       fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
@@ -798,31 +866,30 @@ escp2_print(int       model,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
         dither_black16(out, y, drawable->width, out_width, black);
-        escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
-      else if (model == 7)
+      else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
       {
         dither_cmyk6_16(out, y, drawable->width, out_width, cyan, magenta,
 			lcyan, lmagenta, yellow, black);
 
-        escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width,
-		     left);
-        escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
+        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
+        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
       else
       {
         dither_cmyk16(out, y, drawable->width, out_width, cyan, magenta,
 		      yellow, black);
 
-        escp2_write(prn, cyan, length, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 4, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 4, 0, ydpi, model, out_width, left);
         if (black != NULL)
-          escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
+          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       };
 
       fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
@@ -863,154 +930,7 @@ escp2_print(int       model,		/* I - Model */
  */
 
 void
-escp2_write(FILE          *prn,		/* I - Print file or command */
-            unsigned char *line,	/* I - Output bitmap data */
-            int           length,	/* I - Length of bitmap data */
-            int           plane,	/* I - True if this is the last plane */
-            int           ydpi,		/* I - Vertical resolution */
-            int           model,	/* I - Printer model */
-            int           width,	/* I - Printed width */
-            int           offset)	/* I - Offset from left side */
-{
-  unsigned char	comp_buf[1536],		/* Compression buffer */
-		*comp_ptr,		/* Current slot in buffer */
-		*start,			/* Start of compressed data */
-		repeat;			/* Repeating char */
-  int		count,			/* Count of compressed bytes */
-		tcount;			/* Temporary count < 128 */
-  static int	last_plane = 0;		/* Last color plane printed */
-
-
- /*
-  * Don't send blank lines...
-  */
-
-  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
-    return;
-
- /*
-  * Compress using TIFF "packbits" run-length encoding...
-  */
-
-  comp_ptr = comp_buf;
-
-  while (length > 0)
-  {
-   /*
-    * Get a run of non-repeated chars...
-    */
-
-    start  = line;
-    line   += 2;
-    length -= 2;
-
-    while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
-    {
-      line ++;
-      length --;
-    };
-
-    line   -= 2;
-    length += 2;
-
-   /*
-    * Output the non-repeated sequences (max 128 at a time).
-    */
-
-    count = line - start;
-    while (count > 0)
-    {
-      tcount = count > 128 ? 128 : count;
-
-      comp_ptr[0] = tcount - 1;
-      memcpy(comp_ptr + 1, start, tcount);
-
-      comp_ptr += tcount + 1;
-      start    += tcount;
-      count    -= tcount;
-    };
-
-    if (length <= 0)
-      break;
-
-   /*
-    * Find the repeated sequences...
-    */
-
-    start  = line;
-    repeat = line[0];
-
-    line ++;
-    length --;
-
-    while (length > 0 && *line == repeat)
-    {
-      line ++;
-      length --;
-    };
-
-   /*
-    * Output the repeated sequences (max 128 at a time).
-    */
-
-    count = line - start;
-    while (count > 0)
-    {
-      tcount = count > 128 ? 128 : count;
-
-      comp_ptr[0] = 1 - tcount;
-      comp_ptr[1] = repeat;
-
-      comp_ptr += 2;
-      count    -= tcount;
-    };
-  };
-
- /*
-  * Set the print head position.
-  */
-
-  putc('\r', prn);
-  fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-
- /*
-  * Set the color if necessary...
-  */
-
-  if (last_plane != plane)
-  {
-    last_plane = plane;
-    fprintf(prn, "\033r%c", plane);
-  };
-
- /*
-  * Send a line of raster graphics...
-  */
-
-  switch (ydpi)				/* Raster graphics header */
-  {
-    case 180 :
-        fwrite("\033.\001\024\024\001", 6, 1, prn);
-        break;
-    case 360 :
-        fwrite("\033.\001\012\012\001", 6, 1, prn);
-        break;
-    case 720 :
-        if (model == 3)
-          fwrite("\033.\001\050\005\001", 6, 1, prn);
-        else
-          fwrite("\033.\001\005\005\001", 6, 1, prn);
-        break;
-  };
-
-  putc(width & 255, prn);		/* Width of raster line in pixels */
-  putc(width >> 8, prn);
-
-  fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
-}
-
-void
-escp2_write6(FILE          *prn,	/* I - Print file or command */
+escp2_write(FILE          *prn,	/* I - Print file or command */
 	     unsigned char *line,	/* I - Output bitmap data */
 	     int           length,	/* I - Length of bitmap data */
 	     int	   density,     /* I - 0 for dark, 1 for light */
@@ -1128,10 +1048,13 @@ escp2_write6(FILE          *prn,	/* I - Print file or command */
   {
     last_plane = plane;
     last_density = density;
-    fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
+    if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
+    else
+      fprintf(prn, "\033r%c", plane);
   };
 
-  if (model == 7)
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 	    (offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8);
   else
@@ -1150,7 +1073,7 @@ escp2_write6(FILE          *prn,	/* I - Print file or command */
         fwrite("\033.\001\012\012\001", 6, 1, prn);
         break;
     case 720 :
-        if (model == 3)
+        if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
           fwrite("\033.\001\050\005\001", 6, 1, prn);
 #if 0
         else if (model == 7)
