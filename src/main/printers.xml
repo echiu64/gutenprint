@@ -236,6 +236,38 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus C43SX" driver="escp2-c43sx">
+        <color value="true"/>
+        <model value="59"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus C43UX" driver="escp2-c43ux">
+        <color value="true"/>
+        <model value="59"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus C44SX" driver="escp2-c44sx">
+        <color value="true"/>
+        <model value="59"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus C44UX" driver="escp2-c44ux">
+        <color value="true"/>
+        <model value="59"/>
+        <magenta value="0.95"/>
+        <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus C50" driver="escp2-c50">
         <color value="true"/>
         <model value="56"/>
@@ -587,7 +619,7 @@
       </printer>
       <printer name="EPSON Stylus Photo 935" driver="escp2-935">
         <color value="true"/>
-        <model value="51"/>
+        <model value="36"/>
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>

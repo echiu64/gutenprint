@@ -778,6 +778,10 @@ EPSON Stylus C41SX
 EPSON Stylus C41UX
 EPSON Stylus C42SX
 EPSON Stylus C42UX
+EPSON Stylus C43SX (Experimental)
+EPSON Stylus C43UX (Experimental)
+EPSON Stylus C44SX (Experimental)
+EPSON Stylus C44UX (Experimental)
 EPSON Stylus C50
 EPSON Stylus C60
 EPSON Stylus C61
@@ -826,7 +830,7 @@ EPSON Stylus Photo 890/895
 EPSON Stylus Photo 900
 EPSON Stylus Photo 915
 EPSON Stylus Photo 925
-EPSON Stylus Photo 935 (Experimental)
+EPSON Stylus Photo 935
 EPSON Stylus Photo 950
 EPSON Stylus Photo 960
 EPSON Stylus Photo 1200
@@ -1061,6 +1065,10 @@ Epson Stylus C41SX             escp2-c41sx     EPSON Stylus C41SX
 Epson Stylus C41UX             escp2-c41ux     EPSON Stylus C41UX
 Epson Stylus C42SX             escp2-c42sx     EPSON Stylus C42SX
 Epson Stylus C42UX             escp2-c42ux     EPSON Stylus C42UX
+Epson Stylus C43SX             escp2-c43sx     EPSON Stylus C43SX
+Epson Stylus C43UX             escp2-c43ux     EPSON Stylus C43UX
+Epson Stylus C44SX             escp2-c44sx     EPSON Stylus C44SX
+Epson Stylus C44UX             escp2-c44ux     EPSON Stylus C44UX
 Epson Stylus C50               escp2-c50       EPSON Stylus C50
 Epson Stylus C60               escp2-c60       EPSON Stylus C60
 Epson Stylus C61               escp2-c61       EPSON Stylus C61
@@ -1116,6 +1124,7 @@ Epson Stylus Photo 895         escp2-895       EPSON Stylus Photo 895
 Epson Stylus Photo 900         escp2-ph900     EPSON Stylus Photo 900
 Epson Stylus Photo 915         escp2-915       EPSON Stylus Photo 915
 Epson Stylus Photo 925         escp2-925       EPSON Stylus Photo 925
+Epson Stylus Photo 935         escp2-935       EPSON Stylus Photo 935
 Epson Stylus Photo 950         escp2-950       EPSON Stylus Photo 950
 Epson Stylus Photo 960         escp2-960       EPSON Stylus Photo 960
 Epson Stylus Photo 1200        escp2-1200      EPSON Stylus Photo 1200
