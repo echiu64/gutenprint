@@ -86,6 +86,7 @@ if ($foomatic3) {
 open PIPE, "./printers|" or die "Cannot run printers: $!\n";
 print STDERR "Loading options from ./printers...";
 while(<PIPE>) {
+    #print $_;
     next if m!^#!;
     eval $_;
 }
@@ -355,7 +356,7 @@ for $drivertype (@drivertypes) {
 	# newer (preliminary skipped always, do not remove the 
 	# infrastructure for "PrintoutMode", it will be re-activated later
 	# on)
-	next if ((1 || !$foomatic3) && ($fooopt eq "PrintoutMode"));
+	next if ((!$foomatic3) && ($fooopt eq "PrintoutMode"));
 
 	# "x_resolution" and "y_resolution" appear in %ev_choices but are
 	# not option names, so skip them
@@ -1247,7 +1248,37 @@ sub getprintoutmode {
 	    # Do not use resolutions with less than 150 dpi in both
 	    # demensions.
 
-	    # VeryFast dithering, ImageOptimization LineArt
+	    # ImageOptimization Text
+
+	    my $qualitysetting = 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
+		 (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
+		  'Draft' : 
+		  (defined($stpdata{$stpprn}{'Quality'}{'Economy'}) ?
+		   'Economy' : 
+		   (defined($stpdata{$stpprn}{'Quality'}{'FastEconomy'}) ?
+		    'FastEconomy' : 
+		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		     'Standard' : 'ERROR' )))) : '');
+	    die ("\n\n'Quality' option without 'Draft', 'Economy', " .
+		 "'FastEconomy', and 'Standard' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $qualitysetting eq 'ERROR';
+
+	    my $imagesetting = 
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'ImageType'}{'Text'}) ?
+		  'Text' : 
+		  (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		   'TextGraphics' : 
+		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		    'LineArt' : 
+		    (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		     'Graphics' : 'ERROR' )))) : '');
+	    die ("\n\n'ImageType' option without 'Text', 'TextGraphics', " .
+		 "'LineArt', and 'Graphics' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch < $draftminres) ||
 		(($respersquareinch == $draftminres) && 
@@ -1261,11 +1292,10 @@ sub getprintoutmode {
 		    $draftminres = $respersquareinch;
 		    $draftlowestqualstr = $qualstr;
 		    $modeinfo->{'Draft'} = {
-			'quality' => $quality,
+			'quality' => $qualitysetting,
+			'image' => $imagesetting,
 			'xres' => $xres,
-			'yres' => $yres,
-			'dither' => 'VeryFast',
-			'image' => 'LineArt'
+			'yres' => $yres
 		    }
 		}
 	    }
@@ -1276,7 +1306,34 @@ sub getprintoutmode {
 	    # for Lexmark Z..), low quality level, unidirectional if
 	    # possible, 
 
-	    # Adaptive Hybrid dithering, ImageOptimization Photographs
+	    # ImageOptimization TextGraphics
+
+	    $qualitysetting = 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
+		 (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		  'Standard' : 
+		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		   'High' : 
+		   (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
+		    'Draft' : 'ERROR' ))) : '');
+	    die ("\n\n'Quality' option without 'Draft', 'Standard', and " .
+		 "'High' choices for the '$stpprn' device class!\n") 
+		if $qualitysetting eq 'ERROR';
+
+	    $imagesetting = 
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		  'TextGraphics' : 
+		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		   'Graphics' : 
+		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		    'LineArt' : 
+		    (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		     'Photo' : 'ERROR' )))) : '');
+	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch < $normalminres) ||
 		(($respersquareinch == $normalminres) && 
@@ -1298,11 +1355,10 @@ sub getprintoutmode {
 		    $normaluni = ($qualstr =~ /uni/);
 		    $normallowestqualstr = $qualstr;
 		    $modeinfo->{'Normal'} = {
-			'quality' => $quality,
+			'quality' => $qualitysetting,
+			'image' => $imagesetting,
 			'xres' => $xres,
-			'yres' => $yres,
-			'dither' => 'Adaptive',
-			'image' => 'Photographs'
+			'yres' => $yres
 		    }
 		}
 	    }
@@ -1314,7 +1370,37 @@ sub getprintoutmode {
 	    # unidirectional if possible, 
 	    # not "fol", "fourp", "hq", "hq2"
 
-	    # Adaptive Hybrid dithering, ImageOptimization Photographs
+	    # ImageOptimization TextGraphics
+
+	    $qualitysetting = 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
+		 (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		  'High' : 
+		  (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		   'Best' : 
+		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		    'Photo' : 
+		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		     'Standard' : 'ERROR' )))) : '');
+	    die ("\n\n'Quality' option without 'High', 'Best', " .
+		 "'Photo', and 'Standard' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $qualitysetting eq 'ERROR';
+
+	    $imagesetting = 
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		  'TextGraphics' : 
+		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		   'Graphics' : 
+		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		    'Photo' : 
+		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		     'LineArt' : 'ERROR' )))) : '');
+	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $highmaxres) ||
 		(($respersquareinch == $highmaxres) && 
@@ -1333,11 +1419,10 @@ sub getprintoutmode {
 		    $highmaxres = $respersquareinch;
 		    $highbestqualstr = $qualstr;
 		    $modeinfo->{'High'} = {
-			'quality' => $quality,
+			'quality' => $qualitysetting,
+			'image' => $imagesetting,
 			'xres' => $xres,
-			'yres' => $yres,
-			'dither' => 'Adaptive',
-			'image' => 'Photographs'
+			'yres' => $yres
 		    }
 		}
 	    }
@@ -1349,7 +1434,37 @@ sub getprintoutmode {
 
 	    # On Epsons: Maximum 1440x720, not "hq2".
 
-	    # Adaptive Hybrid dithering, ImageOptimization Photographs
+	    # ImageOptimization TextGraphics
+
+	    $qualitysetting = 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
+		 (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		  'Best' : 
+		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		   'High' : 
+		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		    'Photo' : 
+		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		     'Standard' : 'ERROR' )))) : '');
+	    die ("\n\n'Quality' option without 'High', 'Best', " .
+		 "'Photo', and 'Standard' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $qualitysetting eq 'ERROR';
+
+	    $imagesetting = 
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		  'TextGraphics' : 
+		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		   'Graphics' : 
+		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		    'Photo' : 
+		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		     'LineArt' : 'ERROR' )))) : '');
+	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $veryhighmaxres) ||
 		(($respersquareinch == $veryhighmaxres) && 
@@ -1365,23 +1480,55 @@ sub getprintoutmode {
 		    $veryhighmaxres = $respersquareinch;
 		    $veryhighbestqualstr = $qualstr;
 		    $modeinfo->{'VeryHigh'} = {
-			'quality' => $quality,
+			'quality' => $qualitysetting,
+			'image' => $imagesetting,
 			'xres' => $xres,
-			'yres' => $yres,
-			'dither' => 'Adaptive',
-			'image' => 'Photographs'
+			'yres' => $yres
 		    }
 		}
 	    }
 
 	    ### Mode: PHOTO
 
-	    # Use always the highest available resolution/quality, 
-	    # preferrably symmetric resolutions,
+	    # High: The highest resolution which is not higher than
+	    # 720x720 dpi (Lexmark Z..: 1200x1200 dpi),
+	    # unidirectional if possible, 
 
-	    # On Epsons: Maximum 2880x720
+	    # ImageOptimization Photographs
 
-	    # EvenTone dithering, ImageOptimization Photographs
+	    $qualitysetting = 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
+		 (defined($stpdata{$stpprn}{'Quality'}{'HighPhoto'}) ?
+		  'HighPhoto' : 
+		  (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
+		   'Photo' : 
+		   (defined($stpdata{$stpprn}{'Quality'}{'UltraPhoto'}) ?
+		    'UltraPhoto' : 
+		    (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
+		     'Best' : 
+		     (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
+		      'High' : 
+		      (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
+		       'Standard' : 'ERROR' )))))) : '');
+	    die ("\n\n'Quality' option without 'HighPhoto', 'Photo', " .
+		 "'UltraPhoto', 'Best', 'High', and 'Standard' choices " .
+		 "for the '$stpprn' device class!\n") 
+		if $qualitysetting eq 'ERROR';
+
+	    $imagesetting = 
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
+		  'Photo' : 
+		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
+		   'Graphics' : 
+		   (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
+		    'TextGraphics' : 
+		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
+		     'LineArt' : 'ERROR' )))) : '');
+	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
+		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
+		 "device class!\n") 
+		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $photomaxres) ||
 		(($respersquareinch == $photomaxres) && 
@@ -1389,18 +1536,20 @@ sub getprintoutmode {
 		(($respersquareinch == $photomaxres) &&
 		 ($symmetry == $photobestsymmetry) &&
 		 (qualityorder($qualstr, $photobestqualstr) > 0))) {
-		unless (($stpprn =~ /^escp2/) && # Epson
-			(($xres > 2880) || # Resolution not higher than
-			 ($yres > 720))) {  # 2880x720
+		unless ((($stpprn !~ /^lexmark\-z/) && 
+			 (($xres > 720) || # Resolution not higher than
+			  ($yres > 720))) || # 720x720 for non Lexmark
+			($xres > 1200) || # not bigger than 1200x1200
+			($yres > 1200) || # in general
+			($qualstr =~ /^(hq2)$/)) { # Not "hq2"
 		    $photobestsymmetry = $symmetry;
 		    $photomaxres = $respersquareinch;
 		    $photobestqualstr = $qualstr;
 		    $modeinfo->{'Photo'} = {
-			'quality' => $quality,
+			'quality' => $qualitysetting,
+			'image' => $imagesetting,
 			'xres' => $xres,
-			'yres' => $yres,
-			'dither' => 'EvenTone',
-			'image' => 'Photographs'
+			'yres' => $yres
 		    }
 		}
 	    }
@@ -1418,16 +1567,22 @@ sub getprintoutmode {
 	    # mode
 	    next if (!defined($modeinfo->{$m}{'quality'}));
 	    my $modestr =
+		(defined($stpdata{$stpprn}{'ImageType'}) ?
+		 "ImageOptimization=$modeinfo->{$m}{'image'} " : "") .
+		(defined($stpdata{$stpprn}{'Quality'}) ? 
+		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
 		"GSResolution=$modeinfo->{$m}{'xres'}x" .
-		"$modeinfo->{$m}{'yres'}DPI " .
-		"Quality=$modeinfo->{$m}{'quality'} " .
-		"DitherAlgorithm=$modeinfo->{$m}{'dither'} " .
-		"ImageOptimization=$modeinfo->{$m}{'image'}";
+		"$modeinfo->{$m}{'yres'}DPI";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
 		# Color printer
 		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
-		$modes->{$stpprn}{"$m.Gray"} = 
-		    $modestr . " OutputType=Grayscale";
+		if (defined($stpdata{$stpprn}{'Color'}{'Grayscale'})) {
+		    $modes->{$stpprn}{"$m.Gray"} = 
+			$modestr . " OutputType=Grayscale";
+		} elsif (defined($stpdata{$stpprn}{'Color'}{'BlackAndWhite'})) {
+		    $modes->{$stpprn}{"$m.Gray"} = 
+			$modestr . " OutputType=BlackAndWhite";
+		}
 		# Some HP inkjets have a "600mono" quality mode which
 		# is only available in Grayscale, replace this mode by
 		# "300dpi" in the settings for color printing
