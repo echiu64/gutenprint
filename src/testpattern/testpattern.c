@@ -359,56 +359,6 @@ main(int argc, char **argv)
   return 0;
 }
 
-/*
-  Patterns printed:
-
-  0) White band
-  1) C sweep
-  2) M sweep
-  3) Y sweep
-  4) Pure CMY sweep
-  5) K sweep
-  6) Adjusted CMY sweep
-  7) CMYK, transition band 10-30%
-  8) Adjusted CMYK, transition band 10-30%
-  9) CMYK, transition band 30-70%
- 10) Adjusted CMYK, transition band 30-70%
- 11) CMYK, transition band 10-99.9%
- 12) Adjusted CMYK, transition band 10-99.9%
- 13) CMYK, transition band 30-99.9%
- 14) Adjusted CMYK, transition band 30-99.9%
- 15) CMYK, transition band 50-99.9%
- 16) Adjusted CMYK, transition band 50-99.9%
- 17) Y+M      (R) sweep
- 18) Y+M+.25C     sweep
- 19) Y+M+.25C     sweep (using K)
- 20) Y+M+.5C      sweep
- 21) Y+M+.5C      sweep (using K)
- 22) Y+M+.75C     sweep
- 23) Y+M+.75C     sweep (using K)
- 24) Y+M+.9C      sweep
- 25) Y+M+.9C      sweep (using K)
- 26) C+Y      (G) sweep
- 27) C+Y+.25M     sweep
- 28) C+Y+.25M     sweep (using K)
- 29) C+Y+.5M      sweep
- 30) C+Y+.5M      sweep (using K)
- 31) C+Y+.75M     sweep
- 32) C+Y+.75M     sweep (using K)
- 33) C+Y+.9M      sweep
- 34) C+Y+.9M      sweep (using K)
- 35) C+M      (B) sweep
- 36) C+M+.25Y     sweep
- 37) C+M+.25Y     sweep (using K)
- 38) C+M+.5Y      sweep
- 39) C+M+.5Y      sweep (using K)
- 40) C+M+.75Y     sweep
- 41) C+M+.75Y     sweep (using K)
- 42) C+M+.9Y      sweep
- 43) C+M+.9Y      sweep (using K)
- 44) White band
-*/
-
 static void
 fill_black(unsigned short *data, size_t len, size_t scount)
 {
