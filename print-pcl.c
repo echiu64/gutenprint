@@ -2045,22 +2045,24 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
   if (do_cret)				/* 4-level printing for 800/1120 */
     {
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
+      dither_set_ranges_simple(dither, ECOLOR_Y, 3, dot_sizes, nv.density);
       if (!do_cretb)
-        dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
+        dither_set_ranges_simple(dither, ECOLOR_K, 3, dot_sizes, nv.density);
 
 /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
    what the heck. variable_dither_ranges copied from print-escp2.c */
 
       if (do_6color)			/* Photo for 69x */
 	{
-	  dither_set_c_ranges(dither, 6, variable_dither_ranges, nv.density);
-	  dither_set_m_ranges(dither, 6, variable_dither_ranges, nv.density);
+	  dither_set_ranges(dither, ECOLOR_C, 6, variable_dither_ranges,
+			    nv.density);
+	  dither_set_ranges(dither, ECOLOR_M, 6, variable_dither_ranges,
+			    nv.density);
 	}
       else
 	{
-	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
-	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
+	  dither_set_ranges_simple(dither, ECOLOR_C, 3, dot_sizes, nv.density);
+	  dither_set_ranges_simple(dither, ECOLOR_M, 3, dot_sizes, nv.density);
 	}
     }
   else

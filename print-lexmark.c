@@ -1183,10 +1183,10 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 
   if (use_dmt)
     {
-      dither_set_c_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_m_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_y_ranges_simple(dither, 3, the_levels, nv.density);
-      dither_set_k_ranges_simple(dither, 3, the_levels, nv.density);
+      dither_set_ranges_simple(dither, ECOLOR_C, 3, the_levels, nv.density);
+      dither_set_ranges_simple(dither, ECOLOR_M, 3, the_levels, nv.density);
+      dither_set_ranges_simple(dither, ECOLOR_Y, 3, the_levels, nv.density);
+      dither_set_ranges_simple(dither, ECOLOR_K, 3, the_levels, nv.density);
     }
  /*
   * Output the page...

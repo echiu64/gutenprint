@@ -2624,17 +2624,17 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   inks = escp2_inks(model, xdpi, ydpi, use_6color ? 6 : 4, bits);
   if (inks->c)
-    dither_set_c_ranges(dither, inks->c->count, inks->c->range,
-			inks->c->density * nv.density);
+    dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
+		      inks->c->density * nv.density);
   if (inks->m)
-    dither_set_m_ranges(dither, inks->m->count, inks->m->range,
-			inks->m->density * nv.density);
+    dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
+		      inks->m->density * nv.density);
   if (inks->y)
-    dither_set_y_ranges(dither, inks->y->count, inks->y->range,
-			inks->y->density * nv.density);
+    dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
+		      inks->y->density * nv.density);
   if (inks->k)
-    dither_set_k_ranges(dither, inks->k->count, inks->k->range,
-			inks->k->density * nv.density);
+    dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
+		      inks->k->density * nv.density);
 
   if (bits == 2)
     {

@@ -65,6 +65,12 @@
 #define IMAGE_MONOCHROME	3
 #define NIMAGE_TYPES		4
 
+#define ECOLOR_C 0
+#define ECOLOR_M 1
+#define ECOLOR_Y 2
+#define ECOLOR_K 3
+#define NCOLORS (4)
+
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print
  * run, it will print out how long and how many time did 
@@ -192,8 +198,8 @@ typedef struct printer
 } printer_t;
 
 /*
- * hue_map is an array of 25 doubles representing the mapping of hue
- * from (0..6) to (0..6) in increments of .25.  The hue_map is in CMY space,
+ * hue_map is an array of 49 doubles representing the mapping of hue
+ * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
  * so hue=0 is cyan.
  */
 typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
@@ -243,46 +249,16 @@ extern void	dither_set_black_levels(void *vd, double, double, double);
 extern void 	dither_set_randomizers(void *vd, double, double, double, double);
 extern void 	dither_set_ink_darkness(void *vd, double, double, double);
 extern void 	dither_set_light_inks(void *vd, double, double, double, double);
-extern void	dither_set_c_ranges(void *vd, int nlevels,
-				    const simple_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_m_ranges(void *vd, int nlevels,
-				    const simple_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_y_ranges(void *vd, int nlevels,
-				    const simple_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_k_ranges(void *vd, int nlevels,
-				    const simple_dither_range_t *ranges,
-				    double density);
-extern void	dither_set_k_ranges_full(void *vd, int nlevels,
-					 const full_dither_range_t *ranges,
-					 double density);
-extern void	dither_set_c_ranges_full(void *vd, int nlevels,
-					 const full_dither_range_t *ranges,
-					 double density);
-extern void	dither_set_m_ranges_full(void *vd, int nlevels,
-					 const full_dither_range_t *ranges,
-					 double density);
-extern void	dither_set_y_ranges_full(void *vd, int nlevels,
-					 const full_dither_range_t *ranges,
-					 double density);
-extern void	dither_set_c_ranges_simple(void *vd, int nlevels,
-					   const double *levels, double density);
-extern void	dither_set_m_ranges_simple(void *vd, int nlevels,
-					   const double *levels, double density);
-extern void	dither_set_y_ranges_simple(void *vd, int nlevels,
-					   const double *levels, double density);
-extern void	dither_set_k_ranges_simple(void *vd, int nlevels,
-					   const double *levels, double density);
-extern void	dither_set_c_ranges_complete(void *vd, int nlevels,
-					     const dither_range_t *ranges);
-extern void	dither_set_m_ranges_complete(void *vd, int nlevels,
-					     const dither_range_t *ranges);
-extern void	dither_set_y_ranges_complete(void *vd, int nlevels,
-					     const dither_range_t *ranges);
-extern void	dither_set_k_ranges_complete(void *vd, int nlevels,
-					     const dither_range_t *ranges);
+extern void	dither_set_ranges(void *vd, int color, int nlevels,
+				  const simple_dither_range_t *ranges,
+				  double density);
+extern void	dither_set_ranges_full(void *vd, int color, int nlevels,
+				       const full_dither_range_t *ranges,
+				       double density);
+extern void	dither_set_ranges_simple(void *vd, int color, int nlevels,
+					 const double *levels, double density);
+extern void	dither_set_ranges_complete(void *vd, int color, int nlevels,
+					   const dither_range_t *ranges);
 extern void	dither_set_ink_spread(void *vd, int spread);
 extern void	dither_set_max_ink(void *vd, int, double);
 extern void	dither_set_x_oversample(void *vd, int os);
