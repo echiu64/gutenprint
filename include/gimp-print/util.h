@@ -135,7 +135,7 @@ extern void *stp_zalloc (size_t);
 extern void *stp_realloc (void *ptr, size_t);
 extern void stp_free(void *ptr);
 
-#define SAFE_FREE(x)				\
+#define STP_SAFE_FREE(x)			\
 do						\
 {						\
   if ((x))					\

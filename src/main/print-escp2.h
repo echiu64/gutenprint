@@ -31,9 +31,9 @@
 #define PHYSICAL_CHANNEL_LIMIT 8
 #define MAX_DROP_SIZES 3
 
-#define XCOLOR_R     (NCOLORS + 0)
-#define XCOLOR_B     (NCOLORS + 1)
-#define XCOLOR_GLOSS (NCOLORS + 2)
+#define XCOLOR_R     (STP_NCOLORS + 0)
+#define XCOLOR_B     (STP_NCOLORS + 1)
+#define XCOLOR_GLOSS (STP_NCOLORS + 2)
 
 /*
  * Printer capabilities.

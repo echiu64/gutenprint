@@ -1114,8 +1114,8 @@ set_gray_transition_parameter(stp_const_vars_t v,
 {
   const escp2_inkname_t *ink_name = get_inktype(v);
   description->is_active = 0;
-  if (ink_name && ink_name->channel_set->channels[ECOLOR_K] &&
-      (ink_name->channel_set->channels[ECOLOR_K]->n_subchannels ==
+  if (ink_name && ink_name->channel_set->channels[STP_ECOLOR_K] &&
+      (ink_name->channel_set->channels[STP_ECOLOR_K]->n_subchannels ==
        expected_channels) &&
       using_automatic_settings(v, AUTO_MODE_MANUAL))
     fill_transition_parameters(description);
@@ -1477,13 +1477,13 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	description->is_active = 0;
     }
   else if (strcmp(name, "CyanDensity") == 0)
-    set_density_parameter(v, description, ECOLOR_C);
+    set_density_parameter(v, description, STP_ECOLOR_C);
   else if (strcmp(name, "MagentaDensity") == 0)
-    set_density_parameter(v, description, ECOLOR_M);
+    set_density_parameter(v, description, STP_ECOLOR_M);
   else if (strcmp(name, "YellowDensity") == 0)
-    set_density_parameter(v, description, ECOLOR_Y);
+    set_density_parameter(v, description, STP_ECOLOR_Y);
   else if (strcmp(name, "BlackDensity") == 0)
-    set_density_parameter(v, description, ECOLOR_K);
+    set_density_parameter(v, description, STP_ECOLOR_K);
   else if (strcmp(name, "RedDensity") == 0)
     set_density_parameter(v, description, XCOLOR_R);
   else if (strcmp(name, "BlueDensity") == 0)
@@ -1497,11 +1497,11 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	   strcmp(name, "Gray3Transition") == 0)
     set_gray_transition_parameter(v, description, 4);
   else if (strcmp(name, "LightCyanTransition") == 0)
-    set_color_transition_parameter(v, description, ECOLOR_C);
+    set_color_transition_parameter(v, description, STP_ECOLOR_C);
   else if (strcmp(name, "LightMagentaTransition") == 0)
-    set_color_transition_parameter(v, description, ECOLOR_M);
+    set_color_transition_parameter(v, description, STP_ECOLOR_M);
   else if (strcmp(name, "DarkYellowTransition") == 0)
-    set_color_transition_parameter(v, description, ECOLOR_Y);
+    set_color_transition_parameter(v, description, STP_ECOLOR_Y);
   else if (strcmp(name, "AlignmentPasses") == 0)
     {
       description->deflt.integer = escp2_alignment_passes(v);

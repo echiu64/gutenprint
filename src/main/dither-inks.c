@@ -91,14 +91,14 @@ void
 stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
 {
   int i;
-  SAFE_FREE(channel->ink_list);
+  STP_SAFE_FREE(channel->ink_list);
   if (channel->errs)
     {
       for (i = 0; i < channel->error_rows; i++)
-	SAFE_FREE(channel->errs[i]);
-      SAFE_FREE(channel->errs);
+	STP_SAFE_FREE(channel->errs[i]);
+      STP_SAFE_FREE(channel->errs);
     }
-  SAFE_FREE(channel->ranges);
+  STP_SAFE_FREE(channel->ranges);
   stp_dither_matrix_destroy(&(channel->pick));
   stp_dither_matrix_destroy(&(channel->dithermat));
 }  
@@ -267,8 +267,8 @@ stpi_dither_set_ranges(stp_vars_t v, int color, const stp_shade_t *shade,
   int nlevels = shade->numsizes;
   int i;
 
-  SAFE_FREE(dc->ranges);
-  SAFE_FREE(dc->ink_list);
+  STP_SAFE_FREE(dc->ranges);
+  STP_SAFE_FREE(dc->ink_list);
 
   dc->nlevels = nlevels > 1 ? nlevels + 1 : nlevels;
   dc->ranges = (stpi_dither_segment_t *)

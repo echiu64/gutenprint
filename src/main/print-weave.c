@@ -110,7 +110,7 @@ typedef struct stpi_softweave
   int current_vertical_subpass;
   int horizontal_width;		/* Horizontal width, in bits */
   int *head_offset;		/* offset of printheads */
-  unsigned char *s[MAX_WEAVE];
+  unsigned char *s[STP_MAX_WEAVE];
   unsigned char *fold_buf;
   unsigned char *comp_buf;
   stp_weave_t wcache;
@@ -978,7 +978,7 @@ stpi_destroy_weave(void *vsw)
     stp_free(sw->fold_buf);
   if (sw->comp_buf)
     stp_free(sw->comp_buf);
-  for (i = 0; i < MAX_WEAVE; i++)
+  for (i = 0; i < STP_MAX_WEAVE; i++)
     if (sw->s[i])
       stp_free(sw->s[i]);
   for (i = 0; i < sw->vmod; i++)
@@ -1547,11 +1547,11 @@ stp_write_weave(stp_vars_t v, unsigned char *const cols[])
   stpi_softweave_t *sw =
     (stpi_softweave_t *) stp_get_component_data(v, "Weave");
   int length = (sw->linewidth + 7) / 8;
-  stp_lineoff_t *lineoffs[MAX_WEAVE];
-  stp_lineactive_t *lineactives[MAX_WEAVE];
-  stp_linecount_t *linecounts[MAX_WEAVE];
-  stp_linebounds_t *linebounds[MAX_WEAVE];
-  const stp_linebufs_t *bufs[MAX_WEAVE];
+  stp_lineoff_t *lineoffs[STP_MAX_WEAVE];
+  stp_lineactive_t *lineactives[STP_MAX_WEAVE];
+  stp_linecount_t *linecounts[STP_MAX_WEAVE];
+  stp_linebounds_t *linebounds[STP_MAX_WEAVE];
+  const stp_linebufs_t *bufs[STP_MAX_WEAVE];
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
   int ylength = xlength * sw->horizontal_weave;
   unsigned char *comp_ptr;

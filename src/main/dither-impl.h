@@ -120,8 +120,8 @@ typedef struct dither_channel
   int error_rows;
   int **errs;
 
-  dither_matrix_t pick;
-  dither_matrix_t dithermat;
+  stp_dither_matrix_impl_t pick;
+  stp_dither_matrix_impl_t dithermat;
   int row_ends[2];
   unsigned char *ptr;
   void *aux_data;		/* aux_freefunc for dither should free this */
@@ -158,8 +158,8 @@ typedef struct dither
   int finalized;		/* When dither is first called, calculate
 				 * some things */
 
-  dither_matrix_t dither_matrix;
-  dither_matrix_t transition_matrix;
+  stp_dither_matrix_impl_t dither_matrix;
+  stp_dither_matrix_impl_t transition_matrix;
   stpi_dither_channel_t *channel;
   unsigned channel_count;
   unsigned total_channel_count;

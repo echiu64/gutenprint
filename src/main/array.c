@@ -201,17 +201,17 @@ stp_array_get_sequence(stp_const_array_t array)
 }
 
 stp_array_t
-stp_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
+stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
 {
   const char *stmp;                          /* Temporary string */
-  mxml_node_t *child;                       /* Child sequence node */
+  stp_mxml_node_t *child;                       /* Child sequence node */
   int x_size, y_size;
   size_t count;
   stp_sequence_t seq = NULL;
   stp_array_t ret = NULL;
   stpi_internal_array_t *iret;
 
-  stmp = stpi_mxmlElementGetAttr(array, "x-size");
+  stmp = stp_mxmlElementGetAttr(array, "x-size");
   if (stmp)
     {
       x_size = (int) strtoul(stmp, NULL, 0);
@@ -222,7 +222,7 @@ stp_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
       goto error;
     }
   /* Get y-size */
-  stmp = stpi_mxmlElementGetAttr(array, "y-size");
+  stmp = stp_mxmlElementGetAttr(array, "y-size");
   if (stmp)
     {
       y_size = (int) strtoul(stmp, NULL, 0);
@@ -235,7 +235,7 @@ stp_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
 
   /* Get the sequence data */
 
-  child = stpi_mxmlFindElement(array, array, "sequence", NULL, NULL, MXML_DESCEND);
+  child = stp_mxmlFindElement(array, array, "sequence", NULL, NULL, STP_MXML_DESCEND);
   if (child)
     seq = stp_sequence_create_from_xmltree(child);
 

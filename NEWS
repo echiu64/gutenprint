@@ -1,10 +1,10 @@
-Welcome to Gimp-Print 5.0 Alpha 2!  Please read these release notes
+Welcome to Gimp-Print 5.0 Alpha 3!  Please read these release notes
 carefully.
 
-Gimp-Print 5.0.0-alpha2 is the second alpha release (technology preview)
-in the line that will eventually lead to Gimp-Print 5.0.  It is based
-on the 4.3 series that has been in development for two years, and
-includes many improvements over the very popular 4.2 series.  This
+Gimp-Print 5.0.0-alpha3 is the third alpha release (technology
+preview) in the line that will eventually lead to Gimp-Print 5.0.  It
+is based on the 4.3 series that has been in development for two years,
+and includes many improvements over the very popular 4.2 series.  This
 release is not considered to be a fully stable release (there are
 still various things in flux, and it has not undergone the extensive
 testing that is required to declare a release stable), but we've been
@@ -69,10 +69,50 @@ on building and installing Gimp-Print.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
-2) Overall changes from 4.2 to 5.0.
-3) List of supported printers
-4) Printer-specific notes
+1) Changes from 5.0.0-alpha2 to 5.0.0-alpha3
+2) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
+3) Overall changes from 4.2 to 5.0.
+4) List of supported printers
+5) Printer-specific notes
+
+================================================================
+
+* Major changes between Gimp-Print 5.0.0 alpha 2 and 5.0.0 alpha 3:
+
+  1) Borderless printing now works correctly in the native CUPS
+     driver.  In previous releases it printed garbage.  Note that
+     while borderless printing works correctly in CUPS, the actual
+     prints don't come out perfectly borderless in all cases.
+
+  2) A minor compliance issue in the CUPS PPD files is fixed.
+
+  3) Boolean options are handled correctly in the Foomatic data.
+
+  4) The header files have been reorganized; all header files intended
+     for use by either client programs or modules (such as family
+     drivers) have been moved to include/gimp-print.  Client programs
+     should continue to #include <gimp-print/gimp-print.h> as before.
+     Modules should #include <gimp-print/gimp-print-module.h>.
+
+  5) Numerous functions and procedures have been renamed for internal
+     consistency.  Specifically:
+
+     * All functions ending in _free have been renamed to _destroy:
+
+       stp_curve_free => stp_curve_destroy
+       stp_string_list_free => stp_string_list_destroy
+       stp_vars_free => stp_vars_destroy
+       stp_parameter_list_free => stp_parameter_list_destroy
+       stp_parameter_description_free => stp_parameter_description_destroy
+
+     * All functions intended for use by modules have had their prefix
+       renamed from stpi_ to stp_.
+
+     This is planned to be the last incompatible API change in the 5.0
+     development line.  Therefore, we would like all authors of client
+     programs to inspect and test this thoroughly and report issues.
+
+  6) More header files have been documented with Doxygen.
 
 ================================================================
 

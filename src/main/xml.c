@@ -124,7 +124,7 @@ stp_unregister_xml_preload(const char *name)
 }
 
 
-static void stpi_xml_process_gimpprint(mxml_node_t *gimpprint, const char *file);
+static void stpi_xml_process_gimpprint(stp_mxml_node_t *gimpprint, const char *file);
 
 static char *saved_lc_collate;                 /* Saved LC_COLLATE */
 static char *saved_lc_ctype;                   /* Saved LC_CTYPE */
@@ -251,8 +251,8 @@ stp_xml_init_defaults(void)
 int
 stp_xml_parse_file(const char *file) /* File to parse */
 {
-  mxml_node_t *doc;
-  mxml_node_t *cur;
+  stp_mxml_node_t *doc;
+  stp_mxml_node_t *cur;
   FILE *fp;
 
   stp_deprintf(STP_DBG_XML, "stp_xml_parse_file: reading  `%s'...\n", file);
@@ -267,19 +267,19 @@ stp_xml_parse_file(const char *file) /* File to parse */
 
   stp_xml_init();
 
-  doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
   fclose(fp);
 
   cur = doc->child;
   while (cur &&
-	 (cur->type != MXML_ELEMENT ||
+	 (cur->type != STP_MXML_ELEMENT ||
 	  strcmp(cur->value.element.name, "gimp-print") != 0))
     cur = cur->next;
 
-  if (cur == NULL || cur->type != MXML_ELEMENT)
+  if (cur == NULL || cur->type != STP_MXML_ELEMENT)
     {
       stp_erprintf("stp_xml_parse_file: %s: parse error\n", file);
-      stpi_mxmlDelete(doc);
+      stp_mxmlDelete(doc);
       return 1;
     }
 
@@ -288,14 +288,14 @@ stp_xml_parse_file(const char *file) /* File to parse */
       stp_erprintf
 	("XML file of the wrong type, root node is %s != gimp-print",
 	 cur->value.element.name);
-      stpi_mxmlDelete(doc);
+      stp_mxmlDelete(doc);
       return 1;
     }
 
   /* The XML file was read and is the right format */
 
   stpi_xml_process_gimpprint(cur, file);
-  stpi_mxmlDelete(doc);
+  stp_mxmlDelete(doc);
 
   stp_xml_exit();
 
@@ -346,10 +346,10 @@ stp_xmlstrtod(const char *textval)
  * return the first dither node in the tree.  Additional dither nodes
  * cannot be accessed with this function.
  */
-mxml_node_t *
-stp_xml_get_node(mxml_node_t *xmlroot, ...)
+stp_mxml_node_t *
+stp_xml_get_node(stp_mxml_node_t *xmlroot, ...)
 {
-  mxml_node_t *child;
+  stp_mxml_node_t *child;
   va_list ap;
   const char *target = NULL;
 
@@ -360,7 +360,7 @@ stp_xml_get_node(mxml_node_t *xmlroot, ...)
 
   while (target && child)
     {
-      child = stpi_mxmlFindElement(child, child, target, NULL, NULL, MXML_DESCEND);
+      child = stp_mxmlFindElement(child, child, target, NULL, NULL, STP_MXML_DESCEND);
       target = va_arg(ap, const char *);
     }
   va_end(ap);
@@ -368,7 +368,7 @@ stp_xml_get_node(mxml_node_t *xmlroot, ...)
 }
 
 static void
-stpi_xml_process_node(mxml_node_t *node, const char *file)
+stpi_xml_process_node(stp_mxml_node_t *node, const char *file)
 {
   stp_list_item_t *item =
     stp_list_get_item_by_name(stpi_xml_registry, node->value.element.name);
@@ -384,15 +384,15 @@ stpi_xml_process_node(mxml_node_t *node, const char *file)
  * Parse the <gimp-print> root node.
  */
 static void
-stpi_xml_process_gimpprint(mxml_node_t *cur, const char *file) /* The node to parse */
+stpi_xml_process_gimpprint(stp_mxml_node_t *cur, const char *file) /* The node to parse */
 {
-  mxml_node_t *child;                       /* Child node pointer */
+  stp_mxml_node_t *child;                       /* Child node pointer */
 
   child = cur->child;
   while (child)
     {
       /* process nodes with corresponding parser */
-      if (child->type == MXML_ELEMENT)
+      if (child->type == STP_MXML_ELEMENT)
 	stpi_xml_process_node(child, file);
       child = child->next;
     }
@@ -401,22 +401,22 @@ stpi_xml_process_gimpprint(mxml_node_t *cur, const char *file) /* The node to pa
 /*
  * Create a basic gimp-print XML document tree root
  */
-mxml_node_t *
+stp_mxml_node_t *
 stp_xmldoc_create_generic(void)
 {
-  mxml_node_t *doc;
-  mxml_node_t *rootnode;
+  stp_mxml_node_t *doc;
+  stp_mxml_node_t *rootnode;
 
   /* Create the XML tree */
-  doc = stpi_mxmlNewElement(NULL, "?xml");
-  stpi_mxmlElementSetAttr(doc, "version", "1.0");
+  doc = stp_mxmlNewElement(NULL, "?xml");
+  stp_mxmlElementSetAttr(doc, "version", "1.0");
 
-  rootnode = stpi_mxmlNewElement(doc, "gimp-print");
-  stpi_mxmlElementSetAttr
+  rootnode = stp_mxmlNewElement(doc, "gimp-print");
+  stp_mxmlElementSetAttr
     (rootnode, "xmlns", "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0");
-  stpi_mxmlElementSetAttr
+  stp_mxmlElementSetAttr
     (rootnode, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-  stpi_mxmlElementSetAttr
+  stp_mxmlElementSetAttr
     (rootnode, "xsi:schemaLocation",
      "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd");
 

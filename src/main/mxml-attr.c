@@ -17,8 +17,8 @@
  *
  * Contents:
  *
- *   stpi_mxmlElementGetAttr() - Get an attribute.
- *   stpi_mxmlElementSetAttr() - Set an attribute.
+ *   stp_mxmlElementGetAttr() - Get an attribute.
+ *   stp_mxmlElementSetAttr() - Set an attribute.
  */
 
 /*
@@ -30,25 +30,25 @@
 
 
 /*
- * 'stpi_mxmlElementGetAttr()' - Get an attribute.
+ * 'stp_mxmlElementGetAttr()' - Get an attribute.
  *
  * This function returns NULL if the node is not an element or the
  * named attribute does not exist.
  */
 
 const char *				/* O - Attribute value or NULL */
-stpi_mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
+stp_mxmlElementGetAttr(stp_mxml_node_t *node,	/* I - Element node */
                    const char  *name)	/* I - Name of attribute */
 {
   int	i;				/* Looping var */
-  mxml_attr_t	*attr;			/* Cirrent attribute */
+  stp_mxml_attr_t	*attr;			/* Cirrent attribute */
 
 
  /*
   * Range check input...
   */
 
-  if (!node || node->type != MXML_ELEMENT || !name)
+  if (!node || node->type != STP_MXML_ELEMENT || !name)
     return (NULL);
 
  /*
@@ -70,7 +70,7 @@ stpi_mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
 
 
 /*
- * 'stpi_mxmlElementSetAttr()' - Set an attribute.
+ * 'stp_mxmlElementSetAttr()' - Set an attribute.
  *
  * If the named attribute already exists, the value of the attribute
  * is replaced by the new string value. The string value is copied
@@ -79,19 +79,19 @@ stpi_mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
  */
 
 void
-stpi_mxmlElementSetAttr(mxml_node_t *node,	/* I - Element node */
+stp_mxmlElementSetAttr(stp_mxml_node_t *node,	/* I - Element node */
                    const char  *name,	/* I - Name of attribute */
                    const char  *value)	/* I - Attribute value */
 {
   int		i;			/* Looping var */
-  mxml_attr_t	*attr;			/* New attribute */
+  stp_mxml_attr_t	*attr;			/* New attribute */
 
 
  /*
   * Range check input...
   */
 
-  if (!node || node->type != MXML_ELEMENT || !name || !value)
+  if (!node || node->type != STP_MXML_ELEMENT || !name || !value)
     return;
 
  /*
@@ -119,10 +119,10 @@ stpi_mxmlElementSetAttr(mxml_node_t *node,	/* I - Element node */
   */
 
   if (node->value.element.num_attrs == 0)
-    attr = malloc(sizeof(mxml_attr_t));
+    attr = malloc(sizeof(stp_mxml_attr_t));
   else
     attr = realloc(node->value.element.attrs,
-                   (node->value.element.num_attrs + 1) * sizeof(mxml_attr_t));
+                   (node->value.element.num_attrs + 1) * sizeof(stp_mxml_attr_t));
 
   if (!attr)
   {

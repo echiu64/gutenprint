@@ -65,9 +65,9 @@
 #include <stdio.h>
 #endif
 
-#define ECOLOR_LC 4
-#define ECOLOR_LM 5
-#define ECOLOR_LY 6
+#define STP_ECOLOR_LC 4
+#define STP_ECOLOR_LM 5
+#define STP_ECOLOR_LY 6
 
 #define false 0
 #define true  1
@@ -93,7 +93,7 @@ typedef enum Lex_model { m_lex7500,   m_z52=10052, m_z42=10042, m_3200=3200 } Le
 
 typedef union {			/* Offsets from the start of each line */
   unsigned long v[NCHANNELS];		/* (really pass) */
-  struct {     /* IMPORTANT: order corresponds to ECOLOR_* */
+  struct {     /* IMPORTANT: order corresponds to STP_ECOLOR_* */
     unsigned long k;
     unsigned long c;
     unsigned long m;
@@ -106,7 +106,7 @@ typedef union {			/* Offsets from the start of each line */
 
 typedef union {			/* Base pointers for each pass */
   unsigned char *v[NCHANNELS];
-  struct {     /* IMPORTANT: order corresponds to ECOLOR_* */
+  struct {     /* IMPORTANT: order corresponds to STP_ECOLOR_* */
     unsigned char *k;
     unsigned char *c;
     unsigned char *m;
@@ -2006,52 +2006,52 @@ densityDivisor /= 1.2;
   if (!use_dmt) {
     if (cols.p.C)
       {
-	stp_dither_set_inks_full(v, ECOLOR_C, 2, photo_dither_shades, 1.0,
+	stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_dither_shades, 1.0,
 				  0.31 / .5);
       }
     if (cols.p.M)
       {
-	stp_dither_set_inks_full(v, ECOLOR_M, 2, photo_dither_shades, 1.0,
+	stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_dither_shades, 1.0,
 				  0.61 / .97);
       }
     if (cols.p.Y)
       {
-	stp_dither_set_inks_full(v, ECOLOR_Y, 2, photo_dither_shades, 1.0,
+	stp_dither_set_inks_full(v, STP_ECOLOR_Y, 2, photo_dither_shades, 1.0,
 				  0.08);
       }
   }
 
-  stp_channel_set_density_adjustment(v, ECOLOR_K, 0,
+  stp_channel_set_density_adjustment(v, STP_ECOLOR_K, 0,
 				     get_double_param(v, "BlackDensity") *
 				     get_double_param(v, "Density"));
-  stp_channel_set_density_adjustment(v, ECOLOR_C, 0,
+  stp_channel_set_density_adjustment(v, STP_ECOLOR_C, 0,
 				     get_double_param(v, "CyanDensity") *
 				     get_double_param(v, "Density"));
-  stp_channel_set_density_adjustment(v, ECOLOR_M, 0,
+  stp_channel_set_density_adjustment(v, STP_ECOLOR_M, 0,
 				     get_double_param(v, "MagentaDensity") *
 				     get_double_param(v, "Density"));
-  stp_channel_set_density_adjustment(v, ECOLOR_Y, 0,
+  stp_channel_set_density_adjustment(v, STP_ECOLOR_Y, 0,
 				     get_double_param(v, "YellowDensity") *
 				     get_double_param(v, "Density"));
   if (!use_dmt) {
     if (cols.p.C)
       {
 	stp_channel_set_density_adjustment
-	  (v, ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
+	  (v, STP_ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
 			    get_double_param(v, "LightCyanTransition") *
 			    get_double_param(v, "Density")));
       }
     if (cols.p.M)
       {
 	stp_channel_set_density_adjustment
-	  (v, ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
+	  (v, STP_ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
 			    get_double_param(v, "LightMagentaTransition") *
 			    get_double_param(v, "Density")));
       }
     if (cols.p.Y)
       {
 	stp_channel_set_density_adjustment
-	  (v, ECOLOR_Y, 1, (get_double_param(v, "YellowDensity") *
+	  (v, STP_ECOLOR_Y, 1, (get_double_param(v, "YellowDensity") *
 			    get_double_param(v, "LightYellowTransition") *
 			    get_double_param(v, "Density")));
       }
@@ -2103,19 +2103,19 @@ densityDivisor /= 1.2;
   errline  = 0;
 
   if (cols.p.k)
-    stp_dither_add_channel(v, cols.p.k, ECOLOR_K, 0);
+    stp_dither_add_channel(v, cols.p.k, STP_ECOLOR_K, 0);
   if (cols.p.c)
-    stp_dither_add_channel(v, cols.p.c, ECOLOR_C, 0);
+    stp_dither_add_channel(v, cols.p.c, STP_ECOLOR_C, 0);
   if (cols.p.C)
-    stp_dither_add_channel(v, cols.p.C, ECOLOR_C, 1);
+    stp_dither_add_channel(v, cols.p.C, STP_ECOLOR_C, 1);
   if (cols.p.m)
-    stp_dither_add_channel(v, cols.p.m, ECOLOR_M, 0);
+    stp_dither_add_channel(v, cols.p.m, STP_ECOLOR_M, 0);
   if (cols.p.M)
-    stp_dither_add_channel(v, cols.p.M, ECOLOR_M, 1);
+    stp_dither_add_channel(v, cols.p.M, STP_ECOLOR_M, 1);
   if (cols.p.y)
-    stp_dither_add_channel(v, cols.p.y, ECOLOR_Y, 0);
+    stp_dither_add_channel(v, cols.p.y, STP_ECOLOR_Y, 0);
   if (cols.p.Y)
-    stp_dither_add_channel(v, cols.p.Y, ECOLOR_Y, 1);
+    stp_dither_add_channel(v, cols.p.Y, STP_ECOLOR_Y, 1);
   privdata.hoffset = left;
   privdata.ydpi = ydpi;
   privdata.model = model;
@@ -2786,10 +2786,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 
 
       /*** do we have to print something with the color cartridge ? ***/
-      if ((ECOLOR_C < pd->ncolors) && (lineactive[0].v[ECOLOR_C] > 0))
+      if ((STP_ECOLOR_C < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_C] > 0))
 	{
-	  head_colors[0].line = bufs[0].v[ECOLOR_C];
-	  head_colors[0].used_jets = linecount[0].v[ECOLOR_C];
+	  head_colors[0].line = bufs[0].v[STP_ECOLOR_C];
+	  head_colors[0].used_jets = linecount[0].v[STP_ECOLOR_C];
 	}
       else
 	{
@@ -2797,10 +2797,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 	  head_colors[0].used_jets = 0;
 	}
 
-      if ((ECOLOR_M < pd->ncolors) && (lineactive[0].v[ECOLOR_M] > 0))
+      if ((STP_ECOLOR_M < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_M] > 0))
 	{
-	  head_colors[1].line = bufs[0].v[ECOLOR_M];
-	  head_colors[1].used_jets = linecount[0].v[ECOLOR_M];
+	  head_colors[1].line = bufs[0].v[STP_ECOLOR_M];
+	  head_colors[1].used_jets = linecount[0].v[STP_ECOLOR_M];
 	}
       else
 	{
@@ -2808,10 +2808,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 	  head_colors[1].used_jets = 0;
 	}
 
-      if ((ECOLOR_Y < pd->ncolors) && (lineactive[0].v[ECOLOR_Y] > 0))
+      if ((STP_ECOLOR_Y < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_Y] > 0))
 	{
-	  head_colors[2].line = bufs[0].v[ECOLOR_Y];
-	  head_colors[2].used_jets = linecount[0].v[ECOLOR_Y];
+	  head_colors[2].line = bufs[0].v[STP_ECOLOR_Y];
+	  head_colors[2].used_jets = linecount[0].v[STP_ECOLOR_Y];
 	}
       else
 	{
@@ -2853,10 +2853,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
     if (pd->jets != 208)
       {
 	/* we have photo or black cartridge */
-	if ((ECOLOR_LC < pd->ncolors) && (lineactive[0].v[ECOLOR_LC] > 0))
+	if ((STP_ECOLOR_LC < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_LC] > 0))
 	  {
-	    head_colors[0].line = bufs[0].v[ECOLOR_LC];
-	    head_colors[0].used_jets = linecount[0].v[ECOLOR_LC];
+	    head_colors[0].line = bufs[0].v[STP_ECOLOR_LC];
+	    head_colors[0].used_jets = linecount[0].v[STP_ECOLOR_LC];
 	  }
 	else
 	  {
@@ -2864,10 +2864,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 	    head_colors[0].used_jets = 0;
 	  }
 
-	    if ((ECOLOR_LM < pd->ncolors) && (lineactive[0].v[ECOLOR_LM] > 0))
+	    if ((STP_ECOLOR_LM < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_LM] > 0))
 	  {
-	    head_colors[1].line = bufs[0].v[ECOLOR_LM];
-	    head_colors[1].used_jets = linecount[0].v[ECOLOR_LM];
+	    head_colors[1].line = bufs[0].v[STP_ECOLOR_LM];
+	    head_colors[1].used_jets = linecount[0].v[STP_ECOLOR_LM];
 	  }
 	else
 	  {
@@ -2875,10 +2875,10 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 	    head_colors[1].used_jets = 0;
 	  }
 
-	    if ((ECOLOR_K < pd->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
+	    if ((STP_ECOLOR_K < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_K] > 0))
 	  {
-	    head_colors[2].line = bufs[0].v[ECOLOR_K];
-	    head_colors[2].used_jets = linecount[0].v[ECOLOR_K];
+	    head_colors[2].line = bufs[0].v[STP_ECOLOR_K];
+	    head_colors[2].used_jets = linecount[0].v[STP_ECOLOR_K];
 	  }
 	else
 	  {
@@ -2888,11 +2888,11 @@ flush_pass(stp_vars_t v, int passno, int vertical_subpass)
       }
     else
       {
-	if ((ECOLOR_K < pd->ncolors) && (lineactive[0].v[ECOLOR_K] > 0))
+	if ((STP_ECOLOR_K < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_K] > 0))
 	  {
 	    /* we have black cartridge; we have to print with all 208 jets at once */
-	    head_colors[0].line = bufs[0].v[ECOLOR_K];
-	    head_colors[0].used_jets = linecount[0].v[ECOLOR_K];
+	    head_colors[0].line = bufs[0].v[STP_ECOLOR_K];
+	    head_colors[0].used_jets = linecount[0].v[STP_ECOLOR_K];
 	    head_colors[0].head_nozzle_start = 0;
 	    head_colors[0].head_nozzle_end = pd->jets/2;
 	    head_colors[2].line = NULL;

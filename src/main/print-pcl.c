@@ -1775,18 +1775,18 @@ pcl_printfunc(stp_vars_t v)
 {
   pcl_privdata_t *pd = (pcl_privdata_t *) stp_get_component_data(v, "Driver");
   int do_blank = pd->do_blank;
-  unsigned char *black = stp_dither_get_channel(v, ECOLOR_K, 0);
-  unsigned char *cyan = stp_dither_get_channel(v, ECOLOR_C, 0);
-  unsigned char *lcyan = stp_dither_get_channel(v, ECOLOR_C, 1);
-  unsigned char *magenta = stp_dither_get_channel(v, ECOLOR_M, 0);
-  unsigned char *lmagenta = stp_dither_get_channel(v, ECOLOR_M, 1);
-  unsigned char *yellow = stp_dither_get_channel(v, ECOLOR_Y, 0);
-  int len_c = stp_dither_get_last_position(v, ECOLOR_C, 0);
-  int len_lc = stp_dither_get_last_position(v, ECOLOR_C, 1);
-  int len_m = stp_dither_get_last_position(v, ECOLOR_M, 0);
-  int len_lm = stp_dither_get_last_position(v, ECOLOR_M, 1);
-  int len_y = stp_dither_get_last_position(v, ECOLOR_Y, 0);
-  int len_k = stp_dither_get_last_position(v, ECOLOR_K, 0);
+  unsigned char *black = stp_dither_get_channel(v, STP_ECOLOR_K, 0);
+  unsigned char *cyan = stp_dither_get_channel(v, STP_ECOLOR_C, 0);
+  unsigned char *lcyan = stp_dither_get_channel(v, STP_ECOLOR_C, 1);
+  unsigned char *magenta = stp_dither_get_channel(v, STP_ECOLOR_M, 0);
+  unsigned char *lmagenta = stp_dither_get_channel(v, STP_ECOLOR_M, 1);
+  unsigned char *yellow = stp_dither_get_channel(v, STP_ECOLOR_Y, 0);
+  int len_c = stp_dither_get_last_position(v, STP_ECOLOR_C, 0);
+  int len_lc = stp_dither_get_last_position(v, STP_ECOLOR_C, 1);
+  int len_m = stp_dither_get_last_position(v, STP_ECOLOR_M, 0);
+  int len_lm = stp_dither_get_last_position(v, STP_ECOLOR_M, 1);
+  int len_y = stp_dither_get_last_position(v, STP_ECOLOR_Y, 0);
+  int len_k = stp_dither_get_last_position(v, STP_ECOLOR_K, 0);
   int is_blank = (do_blank && (len_c == -1) && (len_lc == -1) &&
 		  (len_m == -1) && (len_lm == -1) && (len_y == -1) &&
 		  (len_k == -1));
@@ -2343,17 +2343,17 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
   stp_dither_init(v, image, out_width, xdpi, ydpi);
 
   if (black)
-    stp_dither_add_channel(v, black, ECOLOR_K, 0);
+    stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
   if (cyan)
-    stp_dither_add_channel(v, cyan, ECOLOR_C, 0);
+    stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
   if (lcyan)
-    stp_dither_add_channel(v, lcyan, ECOLOR_C, 1);
+    stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
   if (magenta)
-    stp_dither_add_channel(v, magenta, ECOLOR_M, 0);
+    stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
   if (lmagenta)
-    stp_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
+    stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
   if (yellow)
-    stp_dither_add_channel(v, yellow, ECOLOR_Y, 0);
+    stp_dither_add_channel(v, yellow, STP_ECOLOR_Y, 0);
 
 /* Ensure that density does not exceed 1.0 */
 
@@ -2370,25 +2370,25 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 
   if (privdata.do_cret)			/* 4-level printing for 800/1120 */
     {
-      stp_dither_set_inks_simple(v, ECOLOR_Y, 3, dot_sizes_use, 1.0, 0.08);
+      stp_dither_set_inks_simple(v, STP_ECOLOR_Y, 3, dot_sizes_use, 1.0, 0.08);
       if (!privdata.do_cretb)
-        stp_dither_set_inks_simple(v, ECOLOR_K, 3, dot_sizes_use, 1.0, 1.0);
+        stp_dither_set_inks_simple(v, STP_ECOLOR_K, 3, dot_sizes_use, 1.0, 1.0);
 
       /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
 	 what the heck. variable_dither_ranges copied from print-escp2.c */
 
       if (privdata.do_6color)			/* Photo for 69x */
 	{
-	  stp_dither_set_inks_full(v, ECOLOR_C, 6, variable_shades, 1.0,
+	  stp_dither_set_inks_full(v, STP_ECOLOR_C, 6, variable_shades, 1.0,
 				    0.31 / .5);
-	  stp_dither_set_inks_full(v, ECOLOR_M, 6, variable_shades, 1.0,
+	  stp_dither_set_inks_full(v, STP_ECOLOR_M, 6, variable_shades, 1.0,
 				    0.61 / .97);
 	}
       else
 	{
-	  stp_dither_set_inks_simple(v, ECOLOR_C, 3, dot_sizes_use, 1.0,
+	  stp_dither_set_inks_simple(v, STP_ECOLOR_C, 3, dot_sizes_use, 1.0,
 				      0.31 / .5);
-	  stp_dither_set_inks_simple(v, ECOLOR_M, 3, dot_sizes_use, 1.0,
+	  stp_dither_set_inks_simple(v, STP_ECOLOR_M, 3, dot_sizes_use, 1.0,
 				      0.61 / .7);
 	}
     }
@@ -2396,35 +2396,35 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
     {
       /* Set light inks for 6 colour printers.
 	 Numbers copied from print-escp2.c */
-      stp_dither_set_inks_full(v, ECOLOR_C, 2, photo_dither_shades, 1.0,
+      stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_dither_shades, 1.0,
 				0.31 / .5);
-      stp_dither_set_inks_full(v, ECOLOR_M, 2, photo_dither_shades, 1.0,
+      stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_dither_shades, 1.0,
 				0.61 / .7);
     }
   if (black)
-    stp_channel_set_density_adjustment(v, ECOLOR_K, 0,
+    stp_channel_set_density_adjustment(v, STP_ECOLOR_K, 0,
 				       get_double_param(v, "BlackDensity") *
 				       get_double_param(v, "Density"));
   if (cyan)
-    stp_channel_set_density_adjustment(v, ECOLOR_C, 0,
+    stp_channel_set_density_adjustment(v, STP_ECOLOR_C, 0,
 				       get_double_param(v, "CyanDensity") *
 				       get_double_param(v, "Density"));
   if (magenta)
-    stp_channel_set_density_adjustment(v, ECOLOR_M, 0,
+    stp_channel_set_density_adjustment(v, STP_ECOLOR_M, 0,
 				       get_double_param(v, "MagentaDensity") *
 				       get_double_param(v, "Density"));
   if (yellow)
-    stp_channel_set_density_adjustment(v, ECOLOR_Y, 0,
+    stp_channel_set_density_adjustment(v, STP_ECOLOR_Y, 0,
 					get_double_param(v, "YellowDensity") *
 					get_double_param(v, "Density"));
   if (lcyan)
     stp_channel_set_density_adjustment
-      (v, ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
+      (v, STP_ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
 			get_double_param(v, "LightCyanTransition") *
 			get_double_param(v, "Density")));
   if (lmagenta)
     stp_channel_set_density_adjustment
-      (v, ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
+      (v, STP_ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
 			get_double_param(v, "LightMagentaTransition") *
 			get_double_param(v, "Density")));
 

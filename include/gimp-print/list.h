@@ -39,10 +39,10 @@ typedef void *stp_list_item_t;
 typedef const void *stp_const_list_item_t;
 typedef void *stp_list_t;
 typedef const void *stp_const_list_t;
-typedef void (*node_freefunc)(void *);
-typedef void *(*node_copyfunc)(const void *);
-typedef const char *(*node_namefunc)(const void *);
-typedef int (*node_sortfunc)(const void *, const void *);
+typedef void (*stp_node_freefunc)(void *);
+typedef void *(*stp_node_copyfunc)(const void *);
+typedef const char *(*stp_node_namefunc)(const void *);
+typedef int (*stp_node_sortfunc)(const void *, const void *);
 
 extern void stp_list_node_free_data(void *item);
 extern stp_list_t *stp_list_create(void);
@@ -58,20 +58,20 @@ extern stp_list_item_t *stp_list_get_item_by_long_name(const stp_list_t *list,
 							 const char *long_name);
 extern int stp_list_get_length(const stp_list_t *list);
 
-extern void stp_list_set_freefunc(stp_list_t *list, node_freefunc);
-extern node_freefunc stp_list_get_freefunc(const stp_list_t *list);
+extern void stp_list_set_freefunc(stp_list_t *list, stp_node_freefunc);
+extern stp_node_freefunc stp_list_get_freefunc(const stp_list_t *list);
 
-extern void stp_list_set_copyfunc(stp_list_t *list, node_copyfunc);
-extern node_copyfunc stp_list_get_copyfunc(const stp_list_t *list);
+extern void stp_list_set_copyfunc(stp_list_t *list, stp_node_copyfunc);
+extern stp_node_copyfunc stp_list_get_copyfunc(const stp_list_t *list);
 
-extern void stp_list_set_namefunc(stp_list_t *list, node_namefunc);
-extern node_namefunc stp_list_get_namefunc(const stp_list_t *list);
+extern void stp_list_set_namefunc(stp_list_t *list, stp_node_namefunc);
+extern stp_node_namefunc stp_list_get_namefunc(const stp_list_t *list);
 
-extern void stp_list_set_long_namefunc(stp_list_t *list, node_namefunc);
-extern node_namefunc stp_list_get_long_namefunc(const stp_list_t *list);
+extern void stp_list_set_long_namefunc(stp_list_t *list, stp_node_namefunc);
+extern stp_node_namefunc stp_list_get_long_namefunc(const stp_list_t *list);
 
-extern void stp_list_set_sortfunc(stp_list_t *list, node_sortfunc);
-extern node_sortfunc stp_list_get_sortfunc(const stp_list_t *list);
+extern void stp_list_set_sortfunc(stp_list_t *list, stp_node_sortfunc);
+extern stp_node_sortfunc stp_list_get_sortfunc(const stp_list_t *list);
 
 extern int stp_list_item_create(stp_list_t *list,
 				 const stp_list_item_t *next,

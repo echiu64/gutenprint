@@ -308,17 +308,17 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
     case DITHER_PHOTO:
     case DITHER_PHOTO_CMYK :
-      stp_dither_add_channel(v, lcyan, ECOLOR_C, 1);
-      stp_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
+      stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
+      stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
       /* FALLTHROUGH */
     case DITHER_COLOR:
     case DITHER_CMYK :
-      stp_dither_add_channel(v, cyan, ECOLOR_C, 0);
-      stp_dither_add_channel(v, magenta, ECOLOR_M, 0);
-      stp_dither_add_channel(v, yellow, ECOLOR_Y, 0);
+      stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
+      stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
+      stp_dither_add_channel(v, yellow, STP_ECOLOR_Y, 0);
       /* FALLTHROUGH */
     case DITHER_GRAY:
-      stp_dither_add_channel(v, black, ECOLOR_K, 0);
+      stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
     }
 
   if (stpi_dither_type == DITHER_PHOTO)
@@ -334,11 +334,11 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(v, 0.5);
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;
@@ -347,17 +347,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_inks_full(v, ECOLOR_C, 1, normal_1bit_shades, 1.0, 0.65);
-              stp_dither_set_inks_full(v, ECOLOR_M, 1, normal_1bit_shades, 1.0, 0.6);
-              stp_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 1, normal_1bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 1, normal_1bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(v, 0.5);
-              stp_dither_set_inks_full(v, ECOLOR_C, 1, normal_2bit_shades, 1.0, 0.65);
-              stp_dither_set_inks_full(v, ECOLOR_M, 1, normal_2bit_shades, 1.0, 0.6);
-              stp_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 1, normal_2bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 1, normal_2bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;
@@ -366,17 +366,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_inks_full(v, ECOLOR_C, 2, photo_1bit_shades, 1.0, 0.65);
-              stp_dither_set_inks_full(v, ECOLOR_M, 2, photo_1bit_shades, 1.0, 0.6);
-              stp_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_1bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_1bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(v, 0.7);
-              stp_dither_set_inks_full(v, ECOLOR_C, 2, photo_2bit_shades, 1.0, 0.65);
-              stp_dither_set_inks_full(v, ECOLOR_M, 2, photo_2bit_shades, 1.0, 0.6);
-              stp_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
-              stp_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_2bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_2bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+              stp_dither_set_inks_full(v, STP_ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;

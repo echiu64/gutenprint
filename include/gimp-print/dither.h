@@ -42,13 +42,13 @@ extern "C" {
 #endif
 
 /*
- * ECOLOR_K must be 0
+ * STP_ECOLOR_K must be 0
  */
-#define ECOLOR_K  0
-#define ECOLOR_C  1
-#define ECOLOR_M  2
-#define ECOLOR_Y  3
-#define NCOLORS (4)
+#define STP_ECOLOR_K  0
+#define STP_ECOLOR_C  1
+#define STP_ECOLOR_M  2
+#define STP_ECOLOR_Y  3
+#define STP_NCOLORS (4)
 
 typedef struct stp_dither_matrix_short
 {
@@ -68,16 +68,16 @@ typedef struct stp_dither_matrix_normal
   const unsigned *data;
 } stp_dither_matrix_normal_t;
 
-typedef struct stp_dither_matrix
+typedef struct stp_dither_matrix_generic
 {
   int x;
   int y;
   int bytes;
   int prescaled;
   const void *data;
-} stp_dither_matrix_t;
+} stp_dither_matrix_generic_t;
 
-typedef struct dither_matrix
+typedef struct dither_matrix_impl
 {
   int base;
   int exp;
@@ -94,32 +94,32 @@ typedef struct dither_matrix
   int y_offset;
   unsigned fast_mask;
   unsigned *matrix;
-} dither_matrix_t;
+} stp_dither_matrix_impl_t;
 
-extern void stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
+extern void stp_dither_matrix_iterated_init(stp_dither_matrix_impl_t *mat, size_t size,
 					    size_t exponent, const unsigned *array);
-extern void stp_dither_matrix_shear(dither_matrix_t *mat,
+extern void stp_dither_matrix_shear(stp_dither_matrix_impl_t *mat,
 				    int x_shear, int y_shear);
-extern void stp_dither_matrix_init(dither_matrix_t *mat, int x_size,
+extern void stp_dither_matrix_init(stp_dither_matrix_impl_t *mat, int x_size,
 				   int y_size, const unsigned int *array,
 				   int transpose, int prescaled);
-extern void stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
+extern void stp_dither_matrix_init_short(stp_dither_matrix_impl_t *mat, int x_size,
 					 int y_size,
 					 const unsigned short *array,
 					 int transpose, int prescaled);
 extern int stp_dither_matrix_validate_array(stp_const_array_t array);
-extern void stp_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
+extern void stp_dither_matrix_init_from_dither_array(stp_dither_matrix_impl_t *mat,
 						     stp_const_array_t array,
 						     int transpose);
-extern void stp_dither_matrix_destroy(dither_matrix_t *mat);
-extern void stp_dither_matrix_clone(const dither_matrix_t *src,
-				    dither_matrix_t *dest,
+extern void stp_dither_matrix_destroy(stp_dither_matrix_impl_t *mat);
+extern void stp_dither_matrix_clone(const stp_dither_matrix_impl_t *src,
+				    stp_dither_matrix_impl_t *dest,
 				    int x_offset, int y_offset);
-extern void stp_dither_matrix_copy(const dither_matrix_t *src,
-				   dither_matrix_t *dest);
-extern void stp_dither_matrix_scale_exponentially(dither_matrix_t *mat,
+extern void stp_dither_matrix_copy(const stp_dither_matrix_impl_t *src,
+				   stp_dither_matrix_impl_t *dest);
+extern void stp_dither_matrix_scale_exponentially(stp_dither_matrix_impl_t *mat,
 						  double exponent);
-extern void stp_dither_matrix_set_row(dither_matrix_t *mat, int y);
+extern void stp_dither_matrix_set_row(stp_dither_matrix_impl_t *mat, int y);
 extern stp_array_t stp_find_standard_dither_array(int x_aspect, int y_aspect);
 
 
@@ -149,7 +149,7 @@ extern void stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge,
 					   const unsigned *data,
 					   int prescaled,
 					   int x_shear, int y_shear);
-extern void stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *mat,
+extern void stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_generic_t *mat,
 				  int transpose, int x_shear, int y_shear);
 extern void stp_dither_set_matrix_from_dither_array(stp_vars_t v,
 						    stp_const_array_t array,

@@ -93,7 +93,7 @@ is_po2(size_t i)
 }
 
 void
-stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
+stp_dither_matrix_iterated_init(stp_dither_matrix_impl_t *mat, size_t size,
 				size_t expt, const unsigned *array)
 {
   int i;
@@ -129,7 +129,7 @@ stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
   ((m)[(((x) + (x_size)) % (x_size)) + ((x_size) * (((y) + (y_size)) % (y_size)))])
 
 void
-stp_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
+stp_dither_matrix_shear(stp_dither_matrix_impl_t *mat, int x_shear, int y_shear)
 {
   int i;
   int j;
@@ -159,7 +159,7 @@ stp_dither_matrix_validate_array(stp_const_array_t array)
 
 
 void
-stp_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
+stp_dither_matrix_init_from_dither_array(stp_dither_matrix_impl_t *mat,
 					 stp_const_array_t array,
 					 int transpose)
 {
@@ -197,7 +197,7 @@ stp_dither_matrix_init_from_dither_array(dither_matrix_t *mat,
 
 
 void
-stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
+stp_dither_matrix_init(stp_dither_matrix_impl_t *mat, int x_size, int y_size,
 		       const unsigned int *array, int transpose, int prescaled)
 {
   int x, y;
@@ -230,7 +230,7 @@ stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
+stp_dither_matrix_init_short(stp_dither_matrix_impl_t *mat, int x_size, int y_size,
 			     const unsigned short *array, int transpose,
 			     int prescaled)
 {
@@ -264,7 +264,7 @@ stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_dither_matrix_destroy(dither_matrix_t *mat)
+stp_dither_matrix_destroy(stp_dither_matrix_impl_t *mat)
 {
   if (mat->i_own && mat->matrix)
     stp_free(mat->matrix);
@@ -278,7 +278,7 @@ stp_dither_matrix_destroy(dither_matrix_t *mat)
 }
 
 void
-stp_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
+stp_dither_matrix_clone(const stp_dither_matrix_impl_t *src, stp_dither_matrix_impl_t *dest,
 			int x_offset, int y_offset)
 {
   dest->base = src->base;
@@ -299,7 +299,7 @@ stp_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
 }
 
 void
-stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
+stp_dither_matrix_copy(const stp_dither_matrix_impl_t *src, stp_dither_matrix_impl_t *dest)
 {
   int x;
   dest->base = src->base;
@@ -322,7 +322,7 @@ stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
 }
 
 void
-stp_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
+stp_dither_matrix_scale_exponentially(stp_dither_matrix_impl_t *mat, double exponent)
 {
   int i;
   int mat_size = mat->x_size * mat->y_size;
@@ -335,7 +335,7 @@ stp_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
 }
 
 void
-stp_dither_matrix_set_row(dither_matrix_t *mat, int y)
+stp_dither_matrix_set_row(stp_dither_matrix_impl_t *mat, int y)
 {
   mat->last_y = y;
   mat->last_y_mod = mat->x_size * ((y + mat->y_offset) % mat->y_size);
@@ -387,7 +387,7 @@ stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
 }
 
 void
-stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *matrix,
+stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_generic_t *matrix,
 		      int transposed, int x_shear, int y_shear)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -520,7 +520,7 @@ stp_xml_dither_cache_set(int x, int y, const char *filename)
  * Parse the <dither-matrix> node.
  */
 static int
-stp_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
+stp_xml_process_dither_matrix(stp_mxml_node_t *dm,     /* The dither matrix node */
 			       const char *file)  /* Source file */
 			       
 {
@@ -528,10 +528,10 @@ stp_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
   int x = -1;
   int y = -1;
 
-  value = stpi_mxmlElementGetAttr(dm, "x-aspect");
+  value = stp_mxmlElementGetAttr(dm, "x-aspect");
   x = stp_xmlstrtol(value);
 
-  value = stpi_mxmlElementGetAttr(dm, "y-aspect");
+  value = stp_mxmlElementGetAttr(dm, "y-aspect");
   y = stp_xmlstrtol(value);
 
   stp_deprintf(STP_DBG_XML,
@@ -542,14 +542,14 @@ stp_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
 }
 
 static stp_array_t
-stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
+stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node */
 {
   const char *stmp;
-  mxml_node_t *child;
+  stp_mxml_node_t *child;
   int x_aspect, y_aspect; /* Dither matrix size */
 
   /* Get x-size */
-  stmp = stpi_mxmlElementGetAttr(dm, "x-aspect");
+  stmp = stp_mxmlElementGetAttr(dm, "x-aspect");
   if (stmp)
     {
       x_aspect = (int) stp_xmlstrtoul(stmp);
@@ -560,7 +560,7 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
       goto error;
     }
   /* Get y-size */
-  stmp = stpi_mxmlElementGetAttr(dm, "y-aspect");
+  stmp = stp_mxmlElementGetAttr(dm, "y-aspect");
   if (stmp)
     {
       y_aspect = (int) stp_xmlstrtoul(stmp);
@@ -572,7 +572,7 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
     }
 
   /* Now read in the array */
-  child = stpi_mxmlFindElement(dm, dm, "array", NULL, NULL, MXML_DESCEND);
+  child = stp_mxmlFindElement(dm, dm, "array", NULL, NULL, STP_MXML_DESCEND);
   if (child)
     return stp_array_create_from_xmltree(child);
   else
@@ -582,10 +582,10 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
 }
 
 static stp_array_t
-xml_doc_get_dither_array(mxml_node_t *doc)
+xml_doc_get_dither_array(stp_mxml_node_t *doc)
 {
-  mxml_node_t *cur;
-  mxml_node_t *xmlseq;
+  stp_mxml_node_t *cur;
+  stp_mxml_node_t *xmlseq;
 
   if (doc == NULL )
     {
@@ -614,7 +614,7 @@ xml_doc_get_dither_array(mxml_node_t *doc)
 static stp_array_t
 stpi_dither_array_create_from_file(const char* file)
 {
-  mxml_node_t *doc;
+  stp_mxml_node_t *doc;
   stp_array_t ret = NULL;
 
   FILE *fp = fopen(file, "r");
@@ -630,13 +630,13 @@ stpi_dither_array_create_from_file(const char* file)
   stp_deprintf(STP_DBG_XML,
 	       "stpi_dither_array_create_from_file: reading `%s'...\n", file);
 
-  doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
   (void) fclose(fp);
 
   if (doc)
     {
       ret = xml_doc_get_dither_array(doc);
-      stpi_mxmlDelete(doc);
+      stp_mxmlDelete(doc);
     }
 
   stp_xml_exit();

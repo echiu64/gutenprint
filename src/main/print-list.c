@@ -58,11 +58,11 @@ typedef struct stpi_internal_list_head
   struct stpi_internal_list_node *start;     /* start node */
   struct stpi_internal_list_node *end;       /* end node */
   struct stpi_internal_list_node *cache;     /* cached node */
-  node_freefunc freefunc;	/* callback: free node data */
-  node_copyfunc copyfunc;	/* callback: copy node */
-  node_namefunc namefunc;	/* callback: get node name */
-  node_namefunc long_namefunc;	/* callback: get node long name */
-  node_sortfunc sortfunc;	/* callback: compare (sort) nodes */
+  stp_node_freefunc freefunc;	/* callback: free node data */
+  stp_node_copyfunc copyfunc;	/* callback: copy node */
+  stp_node_namefunc namefunc;	/* callback: get node name */
+  stp_node_namefunc long_namefunc;	/* callback: get node long name */
+  stp_node_sortfunc sortfunc;	/* callback: compare (sort) nodes */
   char *name_cache;
   struct stpi_internal_list_node *name_cache_node;
   char *long_name_cache;
@@ -199,7 +199,7 @@ stp_list_t *
 stp_list_copy(const stp_list_t *list)
 {
   stp_list_t *ret;
-  node_copyfunc copyfunc = stp_list_get_copyfunc(list);
+  stp_node_copyfunc copyfunc = stp_list_get_copyfunc(list);
   stp_list_item_t *item = get_start_internal(list);
 
   check_list(get_list_head(list));
@@ -488,14 +488,14 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 
 /* callback for freeing data */
 void
-stp_list_set_freefunc(stp_list_t *list, node_freefunc freefunc)
+stp_list_set_freefunc(stp_list_t *list, stp_node_freefunc freefunc)
 {
   stpi_internal_list_head_t *lh = get_list_head(list);
   check_list(lh);
   lh->freefunc = freefunc;
 }
 
-node_freefunc
+stp_node_freefunc
 stp_list_get_freefunc(const stp_list_t *list)
 {
   const stpi_internal_list_head_t *lh = get_list_head(list);
@@ -505,14 +505,14 @@ stp_list_get_freefunc(const stp_list_t *list)
 
 /* callback for copying data */
 void
-stp_list_set_copyfunc(stp_list_t *list, node_copyfunc copyfunc)
+stp_list_set_copyfunc(stp_list_t *list, stp_node_copyfunc copyfunc)
 {
   stpi_internal_list_head_t *lh = get_list_head(list);
   check_list(lh);
   lh->copyfunc = copyfunc;
 }
 
-node_copyfunc
+stp_node_copyfunc
 stp_list_get_copyfunc(const stp_list_t *list)
 {
   const stpi_internal_list_head_t *lh = get_list_head(list);
@@ -522,14 +522,14 @@ stp_list_get_copyfunc(const stp_list_t *list)
 
 /* callback for getting data name */
 void
-stp_list_set_namefunc(stp_list_t *list, node_namefunc namefunc)
+stp_list_set_namefunc(stp_list_t *list, stp_node_namefunc namefunc)
 {
   stpi_internal_list_head_t *lh = get_list_head(list);
   check_list(lh);
   lh->namefunc = namefunc;
 }
 
-node_namefunc
+stp_node_namefunc
 stp_list_get_namefunc(const stp_list_t *list)
 {
   const stpi_internal_list_head_t *lh = get_list_head(list);
@@ -539,14 +539,14 @@ stp_list_get_namefunc(const stp_list_t *list)
 
 /* callback for getting data long_name */
 void
-stp_list_set_long_namefunc(stp_list_t *list, node_namefunc long_namefunc)
+stp_list_set_long_namefunc(stp_list_t *list, stp_node_namefunc long_namefunc)
 {
   stpi_internal_list_head_t *lh = get_list_head(list);
   check_list(lh);
   lh->long_namefunc = long_namefunc;
 }
 
-node_namefunc
+stp_node_namefunc
 stp_list_get_long_namefunc(const stp_list_t *list)
 {
   const stpi_internal_list_head_t *lh = get_list_head(list);
@@ -556,14 +556,14 @@ stp_list_get_long_namefunc(const stp_list_t *list)
 
 /* callback for sorting nodes */
 void
-stp_list_set_sortfunc(stp_list_t *list, node_sortfunc sortfunc)
+stp_list_set_sortfunc(stp_list_t *list, stp_node_sortfunc sortfunc)
 {
   stpi_internal_list_head_t *lh = get_list_head(list);
   check_list(lh);
   lh->sortfunc = sortfunc;
 }
 
-node_sortfunc
+stp_node_sortfunc
 stp_list_get_sortfunc(const stp_list_t *list)
 {
   const stpi_internal_list_head_t *lh = get_list_head(list);

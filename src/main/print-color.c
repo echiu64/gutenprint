@@ -711,10 +711,10 @@ free_lut(void *vlut)
   stp_curve_free_curve_cache(&(lut->lum_map));
   stp_curve_free_curve_cache(&(lut->sat_map));
   stp_curve_free_curve_cache(&(lut->gcr_curve));
-  SAFE_FREE(lut->gray_tmp);
-  SAFE_FREE(lut->cmy_tmp);
-  SAFE_FREE(lut->cmyk_tmp);
-  SAFE_FREE(lut->in_data);
+  STP_SAFE_FREE(lut->gray_tmp);
+  STP_SAFE_FREE(lut->cmy_tmp);
+  STP_SAFE_FREE(lut->cmyk_tmp);
+  STP_SAFE_FREE(lut->in_data);
   memset(lut, 0, sizeof(lut_t));
   stp_free(lut);
 }
@@ -1495,7 +1495,6 @@ static const stp_colorfuncs_t stpi_color_traditional_colorfuncs =
 
 static const stp_color_t stpi_color_traditional_module_data =
   {
-    COOKIE_COLOR,
     "traditional",
     N_("Traditional Gimp-Print color conversion"),
     &stpi_color_traditional_colorfuncs

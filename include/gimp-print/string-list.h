@@ -36,6 +36,8 @@ extern "C" {
 *                                                               *
 ****************************************************************/
 
+/* The string_list opaque data type is defined in vars.h */
+
 extern stp_string_list_t stp_string_list_create(void);
 extern void stp_string_list_destroy(stp_string_list_t list);
 

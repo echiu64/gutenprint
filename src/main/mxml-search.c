@@ -18,9 +18,9 @@
  *
  * Contents:
  *
- *   stpi_mxmlFindElement() - Find the named element.
- *   stpi_mxmlWalkNext()    - Walk to the next logical node in the tree.
- *   stpi_mxmlWalkPrev()    - Walk to the previous logical node in the tree.
+ *   stp_mxmlFindElement() - Find the named element.
+ *   stp_mxmlWalkNext()    - Walk to the next logical node in the tree.
+ *   stp_mxmlWalkPrev()    - Walk to the previous logical node in the tree.
  */
 
 /*
@@ -32,25 +32,25 @@
 
 
 /*
- * 'stpi_mxmlFindElement()' - Find the named element.
+ * 'stp_mxmlFindElement()' - Find the named element.
  *
  * The search is constrained by the name, attribute name, and value; any
  * NULL names or values are treated as wildcards, so different kinds of
  * searches can be implemented by looking for all elements of a given name
  * or all elements with a specific attribute. The descend argument determines
  * whether the search descends into child nodes; normally you will use
- * MXML_DESCEND_FIRST for the initial search and MXML_NO_DESCEND to find
+ * STP_MXML_DESCEND_FIRST for the initial search and STP_MXML_NO_DESCEND to find
  * additional direct descendents of the node. The top node argument
  * constrains the search to a particular node's children.
  */
 
-mxml_node_t *				/* O - Element node or NULL */
-stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
-                mxml_node_t *top,	/* I - Top node */
+stp_mxml_node_t *				/* O - Element node or NULL */
+stp_mxmlFindElement(stp_mxml_node_t *node,	/* I - Current node */
+                stp_mxml_node_t *top,	/* I - Top node */
                 const char  *name,	/* I - Element name or NULL for any */
 		const char  *attr,	/* I - Attribute name, or NULL for none */
 		const char  *value,	/* I - Attribute value, or NULL for any */
-		int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+		int         descend)	/* I - Descend into tree - STP_MXML_DESCEND, STP_MXML_NO_DESCEND, or STP_MXML_DESCEND_FIRST */
 {
   const char	*temp;			/* Current attribute value */
 
@@ -66,7 +66,7 @@ stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
   * Start with the next node...
   */
 
-  node = stpi_mxmlWalkNext(node, top, descend);
+  node = stp_mxmlWalkNext(node, top, descend);
 
  /*
   * Loop until we find a matching element...
@@ -78,7 +78,7 @@ stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
     * See if this node matches...
     */
 
-    if (node->type == MXML_ELEMENT &&
+    if (node->type == STP_MXML_ELEMENT &&
         node->value.element.name &&
 	(!name || !strcmp(node->value.element.name, name)))
     {
@@ -93,7 +93,7 @@ stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
       * Check for the attribute...
       */
 
-      if ((temp = stpi_mxmlElementGetAttr(node, attr)) != NULL)
+      if ((temp = stp_mxmlElementGetAttr(node, attr)) != NULL)
       {
        /*
         * OK, we have the attribute, does it match?
@@ -108,8 +108,8 @@ stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
     * No match, move on to the next node...
     */
 
-    if (descend == MXML_DESCEND)
-      node = stpi_mxmlWalkNext(node, top, MXML_DESCEND);
+    if (descend == STP_MXML_DESCEND)
+      node = stp_mxmlWalkNext(node, top, STP_MXML_DESCEND);
     else
       node = node->next;
   }
@@ -119,17 +119,17 @@ stpi_mxmlFindElement(mxml_node_t *node,	/* I - Current node */
 
 
 /*
- * 'stpi_mxmlWalkNext()' - Walk to the next logical node in the tree.
+ * 'stp_mxmlWalkNext()' - Walk to the next logical node in the tree.
  *
  * The descend argument controls whether the first child is considered
  * to be the next node. The top node argument constrains the walk to
  * the node's children.
  */
 
-mxml_node_t *				/* O - Next node or NULL */
-stpi_mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
-             mxml_node_t *top,		/* I - Top node */
-             int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+stp_mxml_node_t *				/* O - Next node or NULL */
+stp_mxmlWalkNext(stp_mxml_node_t *node,		/* I - Current node */
+             stp_mxml_node_t *top,		/* I - Top node */
+             int         descend)	/* I - Descend into tree - STP_MXML_DESCEND, STP_MXML_NO_DESCEND, or STP_MXML_DESCEND_FIRST */
 {
   if (!node)
     return (NULL);
@@ -155,17 +155,17 @@ stpi_mxmlWalkNext(mxml_node_t *node,		/* I - Current node */
 
 
 /*
- * 'stpi_mxmlWalkPrev()' - Walk to the previous logical node in the tree.
+ * 'stp_mxmlWalkPrev()' - Walk to the previous logical node in the tree.
  *
  * The descend argument controls whether the previous node's last child
  * is considered to be the previous node. The top node argument constrains
  * the walk to the node's children.
  */
 
-mxml_node_t *				/* O - Previous node or NULL */
-stpi_mxmlWalkPrev(mxml_node_t *node,		/* I - Current node */
-             mxml_node_t *top,		/* I - Top node */
-             int         descend)	/* I - Descend into tree - MXML_DESCEND, MXML_NO_DESCEND, or MXML_DESCEND_FIRST */
+stp_mxml_node_t *				/* O - Previous node or NULL */
+stp_mxmlWalkPrev(stp_mxml_node_t *node,		/* I - Current node */
+             stp_mxml_node_t *top,		/* I - Top node */
+             int         descend)	/* I - Descend into tree - STP_MXML_DESCEND, STP_MXML_NO_DESCEND, or STP_MXML_DESCEND_FIRST */
 {
   if (!node)
     return (NULL);

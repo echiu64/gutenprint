@@ -128,8 +128,8 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
   int density = dc->o;
   int adjusted = dc->v;
   unsigned randomizer = dc->randomizer;
-  dither_matrix_t *pick_matrix = &(dc->pick);
-  dither_matrix_t *dither_matrix = &(dc->dithermat);
+  stp_dither_matrix_impl_t *pick_matrix = &(dc->pick);
+  stp_dither_matrix_impl_t *dither_matrix = &(dc->dithermat);
   unsigned rangepoint = 32768;
   unsigned vmatrix;
   int i;
@@ -392,10 +392,10 @@ shared_ed_deinitializer(stpi_dither_t *d,
   int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      SAFE_FREE(error[i]);
+      STP_SAFE_FREE(error[i]);
     }
-  SAFE_FREE(error);
-  SAFE_FREE(ndither);
+  STP_SAFE_FREE(error);
+  STP_SAFE_FREE(ndither);
 }
 
 void

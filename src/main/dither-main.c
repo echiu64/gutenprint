@@ -276,8 +276,8 @@ void
 stp_dither_set_ink_spread(stp_vars_t v, int spread)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
-  SAFE_FREE(d->offset0_table);
-  SAFE_FREE(d->offset1_table);
+  STP_SAFE_FREE(d->offset0_table);
+  STP_SAFE_FREE(d->offset1_table);
   if (spread >= 16)
     {
       d->spread = 16;
@@ -317,8 +317,8 @@ stpi_dither_free(void *vd)
     (d->aux_freefunc)(d);
   for (j = 0; j < CHANNEL_COUNT(d); j++)
     stpi_dither_channel_destroy(&(CHANNEL(d, j)));
-  SAFE_FREE(d->offset0_table);
-  SAFE_FREE(d->offset1_table);
+  STP_SAFE_FREE(d->offset0_table);
+  STP_SAFE_FREE(d->offset1_table);
   stp_dither_matrix_destroy(&(d->dither_matrix));
   stp_dither_matrix_destroy(&(d->transition_matrix));
   stp_free(d->channel);

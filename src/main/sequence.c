@@ -98,13 +98,13 @@ stp_sequence_create(void)
 static void
 invalidate_auxilliary_data(stpi_internal_sequence_t *iseq)
 {
-  SAFE_FREE(iseq->float_data);
-  SAFE_FREE(iseq->long_data);
-  SAFE_FREE(iseq->ulong_data);
-  SAFE_FREE(iseq->int_data);
-  SAFE_FREE(iseq->uint_data);
-  SAFE_FREE(iseq->short_data);
-  SAFE_FREE(iseq->ushort_data);
+  STP_SAFE_FREE(iseq->float_data);
+  STP_SAFE_FREE(iseq->long_data);
+  STP_SAFE_FREE(iseq->ulong_data);
+  STP_SAFE_FREE(iseq->int_data);
+  STP_SAFE_FREE(iseq->uint_data);
+  STP_SAFE_FREE(iseq->short_data);
+  STP_SAFE_FREE(iseq->ushort_data);
 }
 
 static void
@@ -333,7 +333,7 @@ stp_sequence_get_point(stp_const_sequence_t sequence, size_t where,
 }
 
 stp_sequence_t
-stp_sequence_create_from_xmltree(mxml_node_t *da)
+stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 {
   const char *stmp;
   stp_sequence_t ret = NULL;
@@ -344,7 +344,7 @@ stp_sequence_create_from_xmltree(mxml_node_t *da)
   ret = stp_sequence_create();
 
   /* Get curve point count */
-  stmp = stpi_mxmlElementGetAttr(da, "count");
+  stmp = stp_mxmlElementGetAttr(da, "count");
   if (stmp)
     {
       point_count = (size_t) stp_xmlstrtoul(stmp);
@@ -360,7 +360,7 @@ stp_sequence_create_from_xmltree(mxml_node_t *da)
       goto error;
     }
   /* Get lower bound */
-  stmp = stpi_mxmlElementGetAttr(da, "lower-bound");
+  stmp = stp_mxmlElementGetAttr(da, "lower-bound");
   if (stmp)
     {
       low = stp_xmlstrtod(stmp);
@@ -371,7 +371,7 @@ stp_sequence_create_from_xmltree(mxml_node_t *da)
       goto error;
     }
   /* Get upper bound */
-  stmp = stpi_mxmlElementGetAttr(da, "upper-bound");
+  stmp = stp_mxmlElementGetAttr(da, "upper-bound");
   if (stmp)
     {
       high = stp_xmlstrtod(stmp);
@@ -391,11 +391,11 @@ stp_sequence_create_from_xmltree(mxml_node_t *da)
   /* Now read in the data points */
   if (point_count)
     {
-      mxml_node_t *child = da->child;
+      stp_mxml_node_t *child = da->child;
       i = 0;
       while (child && i < point_count)
 	{
-	  if (child->type == MXML_TEXT)
+	  if (child->type == STP_MXML_TEXT)
 	    {
 	      char *endptr;
 	      double tmpval = strtod(child->value.text.string, &endptr);
@@ -441,7 +441,7 @@ stp_sequence_create_from_xmltree(mxml_node_t *da)
   return NULL;
 }
 
-mxml_node_t *
+stp_mxml_node_t *
 stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 {
   size_t pointcount;
@@ -452,7 +452,7 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
   char *lower_bound;
   char *upper_bound;
 
-  mxml_node_t *seqnode;
+  stp_mxml_node_t *seqnode;
 
   int i;                 /* loop counter */
 
@@ -464,10 +464,10 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
   stp_asprintf(&lower_bound, "%g", low);
   stp_asprintf(&upper_bound, "%g", high);
 
-  seqnode = stpi_mxmlNewElement(NULL, "sequence");
-  (void) stpi_mxmlElementSetAttr(seqnode, "count", count);
-  (void) stpi_mxmlElementSetAttr(seqnode, "lower-bound", lower_bound);
-  (void) stpi_mxmlElementSetAttr(seqnode, "upper-bound", upper_bound);
+  seqnode = stp_mxmlNewElement(NULL, "sequence");
+  (void) stp_mxmlElementSetAttr(seqnode, "count", count);
+  (void) stp_mxmlElementSetAttr(seqnode, "lower-bound", lower_bound);
+  (void) stp_mxmlElementSetAttr(seqnode, "upper-bound", upper_bound);
 
   stp_free(count);
   stp_free(lower_bound);
@@ -485,7 +485,7 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 	    goto error;
 
 	  stp_asprintf(&sval, "%g", dval);
-	  stpi_mxmlNewText(seqnode, 1, sval);
+	  stp_mxmlNewText(seqnode, 1, sval);
 	  stp_free(sval);
       }
     }
@@ -493,7 +493,7 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 
  error:
   if (seqnode)
-    stpi_mxmlDelete(seqnode);
+    stp_mxmlDelete(seqnode);
   return NULL;
 }
 

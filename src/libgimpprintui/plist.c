@@ -52,7 +52,7 @@ static char *image_type;
 static gint image_raw_channels = 0;
 static gint image_channel_depth = 8;
 
-#define SAFE_FREE(x)				\
+#define STP_SAFE_FREE(x)			\
 do						\
 {						\
   if ((x))					\
@@ -65,7 +65,7 @@ stpui_set_printrc_file(const char *name)
 {
   if (name && name == printrc_name)
     return;
-  SAFE_FREE(printrc_name);
+  STP_SAFE_FREE(printrc_name);
   if (name)
     printrc_name = g_strdup(name);
   else
@@ -89,7 +89,7 @@ stpui_plist_set_output_to(stpui_plist_t *p, const char *val)
 {
   if (p->output_to == val)
     return;
-  SAFE_FREE(p->output_to);
+  STP_SAFE_FREE(p->output_to);
   p->output_to = g_strdup(val);
 }
 
@@ -98,7 +98,7 @@ stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->output_to == val)
     return;
-  SAFE_FREE(p->output_to);
+  STP_SAFE_FREE(p->output_to);
   p->output_to = g_strndup(val, n);
 }
 
@@ -113,7 +113,7 @@ stpui_plist_set_name(stpui_plist_t *p, const char *val)
 {
   if (p->name == val)
     return;
-  SAFE_FREE(p->name);
+  STP_SAFE_FREE(p->name);
   p->name = g_strdup(val);
 }
 
@@ -122,7 +122,7 @@ stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->name == val)
     return;
-  SAFE_FREE(p->name);
+  STP_SAFE_FREE(p->name);
   p->name = g_strndup(val, n);
 }
 
@@ -179,8 +179,8 @@ stpui_printer_initialize(stpui_plist_t *printer)
 static void
 stpui_plist_destroy(stpui_plist_t *printer)
 {
-  SAFE_FREE(printer->name);
-  SAFE_FREE(printer->output_to);
+  STP_SAFE_FREE(printer->name);
+  STP_SAFE_FREE(printer->output_to);
   stp_vars_destroy(printer->v);
 }
 
@@ -770,7 +770,7 @@ stpui_printrc_load_v2(FILE *fp)
 					   STP_PARAMETER_ACTIVE))
 	    stp_set_boolean_parameter(stpui_plist[i].v, "PageSizeExtended", 0);
 	}
-      SAFE_FREE(stpui_printrc_current_printer);
+      STP_SAFE_FREE(stpui_printrc_current_printer);
     }
 }
 

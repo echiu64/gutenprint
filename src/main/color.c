@@ -88,11 +88,6 @@ check_color(const stp_color_t *c)
       stp_erprintf("Null stp_color_t! Please report this bug.\n");
       stp_abort();
     }
-  if (c->cookie != COOKIE_COLOR)
-    {
-      stp_erprintf("Bad stp_color_t! Please report this bug.\n");
-      stp_abort();
-    }
 }
 
 

@@ -82,7 +82,7 @@
 
 static const int channel_color_map[] =
 {
-  ECOLOR_K, ECOLOR_C, ECOLOR_M, ECOLOR_Y, ECOLOR_C, ECOLOR_M, ECOLOR_Y
+  STP_ECOLOR_K, STP_ECOLOR_C, STP_ECOLOR_M, STP_ECOLOR_Y, STP_ECOLOR_C, STP_ECOLOR_M, STP_ECOLOR_Y
 };
 
 static const int subchannel_color_map[] =
@@ -2622,25 +2622,25 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
-      set_ink_ranges(v, inks->c, ECOLOR_C, "MagentaDensity",
+      set_ink_ranges(v, inks->c, STP_ECOLOR_C, "MagentaDensity",
 		     "LightCyanTransition");
-      set_ink_ranges(v, inks->m, ECOLOR_M, "MagentaDensity",
+      set_ink_ranges(v, inks->m, STP_ECOLOR_M, "MagentaDensity",
 		     "LightMagentaTransition");
-      set_ink_ranges(v, inks->y, ECOLOR_Y, "YellowDensity",
+      set_ink_ranges(v, inks->y, STP_ECOLOR_Y, "YellowDensity",
 		     "LightYellowTransition");
-      set_ink_ranges(v, inks->k, ECOLOR_K, "BlackDensity", NULL);
+      set_ink_ranges(v, inks->k, STP_ECOLOR_K, "BlackDensity", NULL);
     }
   stp_channel_set_density_adjustment
-    (v, ECOLOR_C, 0,
+    (v, STP_ECOLOR_C, 0,
      get_double_param(v, "CyanDensity") * get_double_param(v, "Density"));
   stp_channel_set_density_adjustment
-    (v, ECOLOR_M, 0,
+    (v, STP_ECOLOR_M, 0,
      get_double_param(v, "MagentaDensity") * get_double_param(v, "Density"));
   stp_channel_set_density_adjustment
-    (v, ECOLOR_Y, 0,
+    (v, STP_ECOLOR_Y, 0,
      get_double_param(v, "YellowDensity") * get_double_param(v, "Density"));
   stp_channel_set_density_adjustment
-    (v, ECOLOR_K, 0,
+    (v, STP_ECOLOR_K, 0,
      get_double_param(v, "BlackDensity") * get_double_param(v, "Density"));
 
   errdiv  = image_height / out_height;

@@ -55,11 +55,8 @@ typedef struct
 } stp_colorfuncs_t;
 
 
-#define COOKIE_COLOR   0x05d892e2
-
 typedef struct stp_color
 {
-  int        cookie;            /* Magic number */
   const char *short_name;       /* Color module name */
   const char *long_name;        /* Long name for UI */
   const stp_colorfuncs_t *colorfuncs;

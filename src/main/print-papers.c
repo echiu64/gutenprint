@@ -45,10 +45,10 @@ static void
 stpi_paper_freefunc(void *item)
 {
   stp_papersize_t *paper = (stp_papersize_t *) (item);
-  SAFE_FREE(paper->name);
-  SAFE_FREE(paper->text);
-  SAFE_FREE(paper->comment);
-  SAFE_FREE(paper);
+  STP_SAFE_FREE(paper->name);
+  STP_SAFE_FREE(paper->text);
+  STP_SAFE_FREE(paper->comment);
+  STP_SAFE_FREE(paper);
 }
 
 static const char *
@@ -254,9 +254,9 @@ stp_default_media_size(stp_const_vars_t v,	/* I */
  * Process the <paper> node.
  */
 static stp_papersize_t *
-stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
+stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 {
-  mxml_node_t *prop;                              /* Temporary node pointer */
+  stp_mxml_node_t *prop;                              /* Temporary node pointer */
   const char *stmp;                                /* Temporary string */
   /* props[] (unused) is the correct tag sequence */
   /*  const char *props[] =
@@ -286,7 +286,7 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
 
   if (stp_get_debug_level() & STP_DBG_XML)
     {
-      stmp = stpi_mxmlElementGetAttr(paper, (const char*) "name");
+      stmp = stp_mxmlElementGetAttr(paper, (const char*) "name");
       stp_erprintf("stp_xml_process_paper: name: %s\n", stmp);
     }
 
@@ -294,7 +294,7 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
   if (!outpaper)
     return NULL;
 
-  outpaper->name = stp_strdup(stpi_mxmlElementGetAttr(paper, "name"));
+  outpaper->name = stp_strdup(stp_mxmlElementGetAttr(paper, "name"));
 
   outpaper->top = 0;
   outpaper->left = 0;
@@ -306,20 +306,20 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
   prop = paper->child;
   while(prop)
     {
-      if (prop->type == MXML_ELEMENT)
+      if (prop->type == STP_MXML_ELEMENT)
 	{
 	  const char *prop_name = prop->value.element.name;
       
 	  if (!strcmp(prop_name, "description"))
 	    {
-	      outpaper->text = stp_strdup(stpi_mxmlElementGetAttr(prop, "value"));
+	      outpaper->text = stp_strdup(stp_mxmlElementGetAttr(prop, "value"));
 	      name = 1;
 	    }
 	  if (!strcmp(prop_name, "comment"))
-	    outpaper->comment = stp_strdup(stpi_mxmlElementGetAttr(prop, "value"));
+	    outpaper->comment = stp_strdup(stp_mxmlElementGetAttr(prop, "value"));
 	  if (!strcmp(prop_name, "width"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  outpaper->width = stp_xmlstrtoul(stmp);
@@ -328,7 +328,7 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
 	    }
 	  if (!strcmp(prop_name, "height"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  outpaper->height = stp_xmlstrtoul(stmp);
@@ -337,31 +337,31 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
 	    }
 	  if (!strcmp(prop_name, "left"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      outpaper->left = stp_xmlstrtoul(stmp);
 	      left = 1;
 	    }
 	  if (!strcmp(prop_name, "right"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      outpaper->right = stp_xmlstrtoul(stmp);
 	      right = 1;
 	    }
 	  if (!strcmp(prop_name, "bottom"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      outpaper->bottom = stp_xmlstrtoul(stmp);
 	      bottom = 1;
 	    }
 	  if (!strcmp(prop_name, "top"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      outpaper->top = stp_xmlstrtoul(stmp);
 	      top = 1;
 	    }
 	  if (!strcmp(prop_name, "unit"))
 	    {
-	      stmp = stpi_mxmlElementGetAttr(prop, "value");
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  if (!strcmp(stmp, "english"))
@@ -392,15 +392,15 @@ stp_xml_process_paper(mxml_node_t *paper) /* The paper node */
  * Parse the <paperdef> node.
  */
 static int
-stp_xml_process_paperdef(mxml_node_t *paperdef, const char *file) /* The paperdef node */
+stp_xml_process_paperdef(stp_mxml_node_t *paperdef, const char *file) /* The paperdef node */
 {
-  mxml_node_t *paper;                           /* paper node pointer */
+  stp_mxml_node_t *paper;                           /* paper node pointer */
   stp_papersize_t *outpaper;         /* Generated paper */
 
   paper = paperdef->child;
   while (paper)
     {
-      if (paper->type == MXML_ELEMENT)
+      if (paper->type == STP_MXML_ELEMENT)
 	{
 	  const char *paper_name = paper->value.element.name;
 	  if (!strcmp(paper_name, "paper"))

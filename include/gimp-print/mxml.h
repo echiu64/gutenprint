@@ -38,78 +38,78 @@
  * Constants...
  */
 
-#  define MXML_WRAP		70	/* Wrap XML output at this column position */
-#  define MXML_TAB		8	/* Tabs every N columns */
+#  define STP_MXML_WRAP		70	/* Wrap XML output at this column position */
+#  define STP_MXML_TAB		8	/* Tabs every N columns */
 
-#  define MXML_NO_CALLBACK	0	/* Don't use a type callback */
-#  define MXML_NO_PARENT	0	/* No parent for the node */
+#  define STP_MXML_NO_CALLBACK	0	/* Don't use a type callback */
+#  define STP_MXML_NO_PARENT	0	/* No parent for the node */
 
-#  define MXML_DESCEND		1	/* Descend when finding/walking */
-#  define MXML_NO_DESCEND	0	/* Don't descend when finding/walking */
-#  define MXML_DESCEND_FIRST	-1	/* Descend for first find */
+#  define STP_MXML_DESCEND		1	/* Descend when finding/walking */
+#  define STP_MXML_NO_DESCEND	0	/* Don't descend when finding/walking */
+#  define STP_MXML_DESCEND_FIRST	-1	/* Descend for first find */
 
-#  define MXML_WS_BEFORE_OPEN	0	/* Callback for before open tag */
-#  define MXML_WS_AFTER_OPEN	1	/* Callback for after open tag */
-#  define MXML_WS_BEFORE_CLOSE	2	/* Callback for before close tag */
-#  define MXML_WS_AFTER_CLOSE	3	/* Callback for after close tag */
+#  define STP_MXML_WS_BEFORE_OPEN	0	/* Callback for before open tag */
+#  define STP_MXML_WS_AFTER_OPEN	1	/* Callback for after open tag */
+#  define STP_MXML_WS_BEFORE_CLOSE	2	/* Callback for before close tag */
+#  define STP_MXML_WS_AFTER_CLOSE	3	/* Callback for after close tag */
 
-#  define MXML_ADD_BEFORE	0	/* Add node before specified node */
-#  define MXML_ADD_AFTER	1	/* Add node after specified node */
-#  define MXML_ADD_TO_PARENT	NULL	/* Add node relative to parent */
+#  define STP_MXML_ADD_BEFORE	0	/* Add node before specified node */
+#  define STP_MXML_ADD_AFTER	1	/* Add node after specified node */
+#  define STP_MXML_ADD_TO_PARENT	NULL	/* Add node relative to parent */
 
 
 /*
  * Data types...
  */
 
-typedef enum mxml_type_e		/**** The XML node type. ****/
+typedef enum stp_mxml_type_e		/**** The XML node type. ****/
 {
-  MXML_ELEMENT,				/* XML element with attributes */
-  MXML_INTEGER,				/* Integer value */
-  MXML_OPAQUE,				/* Opaque string */
-  MXML_REAL,				/* Real value */
-  MXML_TEXT				/* Text fragment */
-} mxml_type_t;
+  STP_MXML_ELEMENT,				/* XML element with attributes */
+  STP_MXML_INTEGER,				/* Integer value */
+  STP_MXML_OPAQUE,				/* Opaque string */
+  STP_MXML_REAL,				/* Real value */
+  STP_MXML_TEXT				/* Text fragment */
+} stp_mxml_type_t;
 
-typedef struct mxml_attr_s		/**** An XML element attribute value. ****/
+typedef struct stp_mxml_attr_s		/**** An XML element attribute value. ****/
 {
   char	*name;				/* Attribute name */
   char	*value;				/* Attribute value */
-} mxml_attr_t;
+} stp_mxml_attr_t;
 
-typedef struct mxml_value_s		/**** An XML element value. ****/
+typedef struct stp_mxml_value_s		/**** An XML element value. ****/
 {
   char		*name;			/* Name of element */
   int		num_attrs;		/* Number of attributes */
-  mxml_attr_t	*attrs;			/* Attributes */
-} mxml_element_t;
+  stp_mxml_attr_t	*attrs;			/* Attributes */
+} stp_mxml_element_t;
 
-typedef struct mxml_text_s		/**** An XML text value. ****/
+typedef struct stp_mxml_text_s		/**** An XML text value. ****/
 {
   int		whitespace;		/* Leading whitespace? */
   char		*string;		/* Fragment string */
-} mxml_text_t;
+} stp_mxml_text_t;
 
-typedef union mxml_value_u		/**** An XML node value. ****/
+typedef union stp_mxml_value_u		/**** An XML node value. ****/
 {
-  mxml_element_t	element;	/* Element */
+  stp_mxml_element_t	element;	/* Element */
   int			integer;	/* Integer number */
   char			*opaque;	/* Opaque string */
   double		real;		/* Real number */
-  mxml_text_t		text;		/* Text fragment */
-} mxml_value_t;
+  stp_mxml_text_t		text;		/* Text fragment */
+} stp_mxml_value_t;
 
-typedef struct mxml_node_s mxml_node_t;	/**** An XML node. ****/
+typedef struct stp_mxml_node_s stp_mxml_node_t;	/**** An XML node. ****/
 
-struct mxml_node_s			/**** An XML node. ****/
+struct stp_mxml_node_s			/**** An XML node. ****/
 {
-  mxml_type_t	type;			/* Node type */
-  mxml_node_t	*next;			/* Next node under same parent */
-  mxml_node_t	*prev;			/* Previous node under same parent */
-  mxml_node_t	*parent;		/* Parent node */
-  mxml_node_t	*child;			/* First child node */
-  mxml_node_t	*last_child;		/* Last child node */
-  mxml_value_t	value;			/* Node value */
+  stp_mxml_type_t	type;			/* Node type */
+  stp_mxml_node_t	*next;			/* Next node under same parent */
+  stp_mxml_node_t	*prev;			/* Previous node under same parent */
+  stp_mxml_node_t	*parent;		/* Parent node */
+  stp_mxml_node_t	*child;			/* First child node */
+  stp_mxml_node_t	*last_child;		/* Last child node */
+  stp_mxml_value_t	value;			/* Node value */
 };
 
 
@@ -125,36 +125,36 @@ extern "C" {
  * Prototypes...
  */
 
-extern void		stpi_mxmlAdd(mxml_node_t *parent, int where,
-			        mxml_node_t *child, mxml_node_t *node);
-extern void		stpi_mxmlDelete(mxml_node_t *node);
-extern const char	*stpi_mxmlElementGetAttr(mxml_node_t *node, const char *name);
-extern void		stpi_mxmlElementSetAttr(mxml_node_t *node, const char *name,
+extern void		stp_mxmlAdd(stp_mxml_node_t *parent, int where,
+			        stp_mxml_node_t *child, stp_mxml_node_t *node);
+extern void		stp_mxmlDelete(stp_mxml_node_t *node);
+extern const char	*stp_mxmlElementGetAttr(stp_mxml_node_t *node, const char *name);
+extern void		stp_mxmlElementSetAttr(stp_mxml_node_t *node, const char *name,
 			                   const char *value);
-extern mxml_node_t	*stpi_mxmlFindElement(mxml_node_t *node, mxml_node_t *top,
+extern stp_mxml_node_t	*stp_mxmlFindElement(stp_mxml_node_t *node, stp_mxml_node_t *top,
 			                 const char *name, const char *attr,
 					 const char *value, int descend);
-extern mxml_node_t	*stpi_mxmlLoadFile(mxml_node_t *top, FILE *fp,
-			              mxml_type_t (*cb)(mxml_node_t *));
-extern mxml_node_t	*stpi_mxmlLoadString(mxml_node_t *top, const char *s,
-			                mxml_type_t (*cb)(mxml_node_t *));
-extern mxml_node_t	*stpi_mxmlNewElement(mxml_node_t *parent, const char *name);
-extern mxml_node_t	*stpi_mxmlNewInteger(mxml_node_t *parent, int integer);
-extern mxml_node_t	*stpi_mxmlNewOpaque(mxml_node_t *parent, const char *opaque);
-extern mxml_node_t	*stpi_mxmlNewReal(mxml_node_t *parent, double real);
-extern mxml_node_t	*stpi_mxmlNewText(mxml_node_t *parent, int whitespace,
+extern stp_mxml_node_t	*stp_mxmlLoadFile(stp_mxml_node_t *top, FILE *fp,
+			              stp_mxml_type_t (*cb)(stp_mxml_node_t *));
+extern stp_mxml_node_t	*stp_mxmlLoadString(stp_mxml_node_t *top, const char *s,
+			                stp_mxml_type_t (*cb)(stp_mxml_node_t *));
+extern stp_mxml_node_t	*stp_mxmlNewElement(stp_mxml_node_t *parent, const char *name);
+extern stp_mxml_node_t	*stp_mxmlNewInteger(stp_mxml_node_t *parent, int integer);
+extern stp_mxml_node_t	*stp_mxmlNewOpaque(stp_mxml_node_t *parent, const char *opaque);
+extern stp_mxml_node_t	*stp_mxmlNewReal(stp_mxml_node_t *parent, double real);
+extern stp_mxml_node_t	*stp_mxmlNewText(stp_mxml_node_t *parent, int whitespace,
 			             const char *string);
-extern void		stpi_mxmlRemove(mxml_node_t *node);
-extern char		*stpi_mxmlSaveAllocString(mxml_node_t *node,
-			        	     int (*cb)(mxml_node_t *, int));
-extern int		stpi_mxmlSaveFile(mxml_node_t *node, FILE *fp,
-			             int (*cb)(mxml_node_t *, int));
-extern int		stpi_mxmlSaveString(mxml_node_t *node, char *buffer,
+extern void		stp_mxmlRemove(stp_mxml_node_t *node);
+extern char		*stp_mxmlSaveAllocString(stp_mxml_node_t *node,
+			        	     int (*cb)(stp_mxml_node_t *, int));
+extern int		stp_mxmlSaveFile(stp_mxml_node_t *node, FILE *fp,
+			             int (*cb)(stp_mxml_node_t *, int));
+extern int		stp_mxmlSaveString(stp_mxml_node_t *node, char *buffer,
 			               int bufsize,
-			               int (*cb)(mxml_node_t *, int));
-extern mxml_node_t	*stpi_mxmlWalkNext(mxml_node_t *node, mxml_node_t *top,
+			               int (*cb)(stp_mxml_node_t *, int));
+extern stp_mxml_node_t	*stp_mxmlWalkNext(stp_mxml_node_t *node, stp_mxml_node_t *top,
 			              int descend);
-extern mxml_node_t	*stpi_mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top,
+extern stp_mxml_node_t	*stp_mxmlWalkPrev(stp_mxml_node_t *node, stp_mxml_node_t *top,
 			              int descend);
 
 

@@ -17,11 +17,11 @@
  *
  * Contents:
  *
- *   stpi_mxmlLoadFile()        - Load a file into an XML node tree.
- *   stpi_mxmlLoadString()      - Load a string into an XML node tree.
- *   stpi_mxmlSaveAllocString() - Save an XML node tree to an allocated string.
- *   stpi_mxmlSaveFile()        - Save an XML tree to a file.
- *   stpi_mxmlSaveString()      - Save an XML node tree to a string.
+ *   stp_mxmlLoadFile()        - Load a file into an XML node tree.
+ *   stp_mxmlLoadString()      - Load a string into an XML node tree.
+ *   stp_mxmlSaveAllocString() - Save an XML node tree to an allocated string.
+ *   stp_mxmlSaveFile()        - Save an XML tree to a file.
+ *   stp_mxmlSaveString()      - Save an XML node tree to a string.
  *   mxml_add_char()       - Add a character to a buffer, expanding as needed.
  *   mxml_file_getc()      - Get a character from a file.
  *   mxml_load_data()      - Load data into an XML node tree.
@@ -36,7 +36,7 @@
  * Include necessary headers...
  */
 
-#include <gimp-print/mxml.h>x
+#include <gimp-print/mxml.h>
 #include "config.h"
 
 
@@ -48,68 +48,68 @@ static int		mxml_add_char(int ch, char **ptr, char **buffer,
 			              int *bufsize);
 static int		mxml_file_getc(void *p);
 static int		mxml_file_putc(int ch, void *p);
-static mxml_node_t	*mxml_load_data(mxml_node_t *top, void *p,
-			                mxml_type_t (*cb)(mxml_node_t *),
+static stp_mxml_node_t	*mxml_load_data(stp_mxml_node_t *top, void *p,
+			                stp_mxml_type_t (*cb)(stp_mxml_node_t *),
 			                int (*getc_cb)(void *));
-static int		mxml_parse_element(mxml_node_t *node, void *p,
+static int		mxml_parse_element(stp_mxml_node_t *node, void *p,
 			                   int (*getc_cb)(void *));
 static int		mxml_string_getc(void *p);
 static int		mxml_string_putc(int ch, void *p);
-static int		mxml_write_node(mxml_node_t *node, void *p,
-			                int (*cb)(mxml_node_t *, int),
+static int		mxml_write_node(stp_mxml_node_t *node, void *p,
+			                int (*cb)(stp_mxml_node_t *, int),
 					int col,
 					int (*putc_cb)(int, void *));
 static int		mxml_write_string(const char *s, void *p,
 					  int (*putc_cb)(int, void *));
-static int		mxml_write_ws(mxml_node_t *node, void *p, 
-			              int (*cb)(mxml_node_t *, int), int ws,
+static int		mxml_write_ws(stp_mxml_node_t *node, void *p, 
+			              int (*cb)(stp_mxml_node_t *, int), int ws,
 				      int col, int (*putc_cb)(int, void *));
 
 
 /*
- * 'stpi_mxmlLoadFile()' - Load a file into an XML node tree.
+ * 'stp_mxmlLoadFile()' - Load a file into an XML node tree.
  *
  * The nodes in the specified file are added to the specified top node.
  * If no top node is provided, the XML file MUST be well-formed with a
  * single parent node like <?xml> for the entire file. The callback
  * function returns the value type that should be used for child nodes.
- * If MXML_NO_CALLBACK is specified then all child nodes will be either
- * MXML_ELEMENT or MXML_TEXT nodes.
+ * If STP_MXML_NO_CALLBACK is specified then all child nodes will be either
+ * STP_MXML_ELEMENT or STP_MXML_TEXT nodes.
  */
 
-mxml_node_t *				/* O - First node or NULL if the file could not be read. */
-stpi_mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
+stp_mxml_node_t *				/* O - First node or NULL if the file could not be read. */
+stp_mxmlLoadFile(stp_mxml_node_t *top,		/* I - Top node */
              FILE        *fp,		/* I - File to read from */
-             mxml_type_t (*cb)(mxml_node_t *))
-					/* I - Callback function or MXML_NO_CALLBACK */
+             stp_mxml_type_t (*cb)(stp_mxml_node_t *))
+					/* I - Callback function or STP_MXML_NO_CALLBACK */
 {
   return (mxml_load_data(top, fp, cb, mxml_file_getc));
 }
 
 
 /*
- * 'stpi_mxmlLoadString()' - Load a string into an XML node tree.
+ * 'stp_mxmlLoadString()' - Load a string into an XML node tree.
  *
  * The nodes in the specified string are added to the specified top node.
  * If no top node is provided, the XML string MUST be well-formed with a
  * single parent node like <?xml> for the entire string. The callback
  * function returns the value type that should be used for child nodes.
- * If MXML_NO_CALLBACK is specified then all child nodes will be either
- * MXML_ELEMENT or MXML_TEXT nodes.
+ * If STP_MXML_NO_CALLBACK is specified then all child nodes will be either
+ * STP_MXML_ELEMENT or STP_MXML_TEXT nodes.
  */
 
-mxml_node_t *				/* O - First node or NULL if the string has errors. */
-stpi_mxmlLoadString(mxml_node_t *top,	/* I - Top node */
+stp_mxml_node_t *				/* O - First node or NULL if the string has errors. */
+stp_mxmlLoadString(stp_mxml_node_t *top,	/* I - Top node */
                const char  *s,		/* I - String to load */
-               mxml_type_t (*cb)(mxml_node_t *))
-					/* I - Callback function or MXML_NO_CALLBACK */
+               stp_mxml_type_t (*cb)(stp_mxml_node_t *))
+					/* I - Callback function or STP_MXML_NO_CALLBACK */
 {
   return (mxml_load_data(top, &s, cb, mxml_string_getc));
 }
 
 
 /*
- * 'stpi_mxmlSaveAllocString()' - Save an XML node tree to an allocated string.
+ * 'stp_mxmlSaveAllocString()' - Save an XML node tree to an allocated string.
  *
  * This function returns a pointer to a string containing the textual
  * representation of the XML node tree.  The string should be freed
@@ -119,9 +119,9 @@ stpi_mxmlLoadString(mxml_node_t *top,	/* I - Top node */
  */
 
 char *					/* O - Allocated string or NULL */
-stpi_mxmlSaveAllocString(mxml_node_t *node,	/* I - Node to write */
-                    int         (*cb)(mxml_node_t *, int))
-					/* I - Whitespace callback or MXML_NO_CALLBACK */
+stp_mxmlSaveAllocString(stp_mxml_node_t *node,	/* I - Node to write */
+                    int         (*cb)(stp_mxml_node_t *, int))
+					/* I - Whitespace callback or STP_MXML_NO_CALLBACK */
 {
   int	bytes;				/* Required bytes */
   char	buffer[8192];			/* Temporary buffer */
@@ -132,7 +132,7 @@ stpi_mxmlSaveAllocString(mxml_node_t *node,	/* I - Node to write */
   * Write the node to the temporary buffer...
   */
 
-  bytes = stpi_mxmlSaveString(node, buffer, sizeof(buffer), cb);
+  bytes = stp_mxmlSaveString(node, buffer, sizeof(buffer), cb);
 
   if (bytes <= 0)
     return (NULL);
@@ -155,7 +155,7 @@ stpi_mxmlSaveAllocString(mxml_node_t *node,	/* I - Node to write */
   if ((s = malloc(bytes + 1)) == NULL)
     return (NULL);
 
-  stpi_mxmlSaveString(node, s, bytes + 1, cb);
+  stp_mxmlSaveString(node, s, bytes + 1, cb);
 
  /*
   * Return the allocated string...
@@ -166,20 +166,20 @@ stpi_mxmlSaveAllocString(mxml_node_t *node,	/* I - Node to write */
 
 
 /*
- * 'stpi_mxmlSaveFile()' - Save an XML tree to a file.
+ * 'stp_mxmlSaveFile()' - Save an XML tree to a file.
  *
  * The callback argument specifies a function that returns a whitespace
- * character or nul (0) before and after each element. If MXML_NO_CALLBACK
- * is specified, whitespace will only be added before MXML_TEXT nodes
+ * character or nul (0) before and after each element. If STP_MXML_NO_CALLBACK
+ * is specified, whitespace will only be added before STP_MXML_TEXT nodes
  * with leading whitespace and before attribute names inside opening
  * element tags.
  */
 
 int					/* O - 0 on success, -1 on error. */
-stpi_mxmlSaveFile(mxml_node_t *node,		/* I - Node to write */
+stp_mxmlSaveFile(stp_mxml_node_t *node,		/* I - Node to write */
              FILE        *fp,		/* I - File to write to */
-	     int         (*cb)(mxml_node_t *, int))
-					/* I - Whitespace callback or MXML_NO_CALLBACK */
+	     int         (*cb)(stp_mxml_node_t *, int))
+					/* I - Whitespace callback or STP_MXML_NO_CALLBACK */
 {
   int	col;				/* Final column */
 
@@ -204,7 +204,7 @@ stpi_mxmlSaveFile(mxml_node_t *node,		/* I - Node to write */
 
 
 /*
- * 'stpi_mxmlSaveString()' - Save an XML node tree to a string.
+ * 'stp_mxmlSaveString()' - Save an XML node tree to a string.
  *
  * This function returns the total number of bytes that would be
  * required for the string but only copies (bufsize - 1) characters
@@ -212,11 +212,11 @@ stpi_mxmlSaveFile(mxml_node_t *node,		/* I - Node to write */
  */
 
 int					/* O - Size of string */
-stpi_mxmlSaveString(mxml_node_t *node,	/* I - Node to write */
+stp_mxmlSaveString(stp_mxml_node_t *node,	/* I - Node to write */
                char        *buffer,	/* I - String buffer */
                int         bufsize,	/* I - Size of string buffer */
-               int         (*cb)(mxml_node_t *, int))
-					/* I - Whitespace callback or MXML_NO_CALLBACK */
+               int         (*cb)(stp_mxml_node_t *, int))
+					/* I - Whitespace callback or STP_MXML_NO_CALLBACK */
 {
   int	col;				/* Final column */
   char	*ptr[2];			/* Pointers for putc_cb */
@@ -323,22 +323,22 @@ mxml_file_putc(int  ch,			/* I - Character to write */
  * 'mxml_load_data()' - Load data into an XML node tree.
  */
 
-static mxml_node_t *			/* O - First node or NULL if the file could not be read. */
-mxml_load_data(mxml_node_t *top,	/* I - Top node */
+static stp_mxml_node_t *			/* O - First node or NULL if the file could not be read. */
+mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
                void        *p,		/* I - Pointer to data */
-               mxml_type_t (*cb)(mxml_node_t *),
-					/* I - Callback function or MXML_NO_CALLBACK */
+               stp_mxml_type_t (*cb)(stp_mxml_node_t *),
+					/* I - Callback function or STP_MXML_NO_CALLBACK */
                int         (*getc_cb)(void *))
 					/* I - Read function */
 {
-  mxml_node_t	*node,			/* Current node */
+  stp_mxml_node_t	*node,			/* Current node */
 		*parent;		/* Current parent node */
   int		ch,			/* Character from file */
 		whitespace;		/* Non-zero if whitespace seen */
   char		*buffer,		/* String buffer */
 		*bufptr;		/* Pointer into buffer */
   int		bufsize;		/* Size of buffer */
-  mxml_type_t	type;			/* Current node type */
+  stp_mxml_type_t	type;			/* Current node type */
 
 
  /*
@@ -359,11 +359,11 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
   if (cb && parent)
     type = (*cb)(parent);
   else
-    type = MXML_TEXT;
+    type = STP_MXML_TEXT;
 
   while ((ch = (*getc_cb)(p)) != EOF)
   {
-    if ((ch == '<' || (isspace(ch) && type != MXML_OPAQUE)) && bufptr > buffer)
+    if ((ch == '<' || (isspace(ch) && type != STP_MXML_OPAQUE)) && bufptr > buffer)
     {
      /*
       * Add a new value node...
@@ -373,20 +373,20 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 
       switch (type)
       {
-	case MXML_INTEGER :
-            node = stpi_mxmlNewInteger(parent, strtol(buffer, &bufptr, 0));
+	case STP_MXML_INTEGER :
+            node = stp_mxmlNewInteger(parent, strtol(buffer, &bufptr, 0));
 	    break;
 
-	case MXML_OPAQUE :
-            node = stpi_mxmlNewOpaque(parent, buffer);
+	case STP_MXML_OPAQUE :
+            node = stp_mxmlNewOpaque(parent, buffer);
 	    break;
 
-	case MXML_REAL :
-            node = stpi_mxmlNewReal(parent, strtod(buffer, &bufptr));
+	case STP_MXML_REAL :
+            node = stp_mxmlNewReal(parent, strtod(buffer, &bufptr));
 	    break;
 
-	case MXML_TEXT :
-            node = stpi_mxmlNewText(parent, whitespace, buffer);
+	case STP_MXML_TEXT :
+            node = stp_mxmlNewText(parent, whitespace, buffer);
 	    break;
 
         default : /* Should never happen... */
@@ -401,13 +401,13 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 	*/
 
         fprintf(stderr, "Bad %s value '%s' in parent <%s>!\n",
-	        type == MXML_INTEGER ? "integer" : "real", buffer,
+	        type == STP_MXML_INTEGER ? "integer" : "real", buffer,
 		parent ? parent->value.element.name : "null");
 	break;
       }
 
       bufptr     = buffer;
-      whitespace = isspace(ch) && type == MXML_TEXT;
+      whitespace = isspace(ch) && type == STP_MXML_TEXT;
 
       if (!node)
       {
@@ -420,7 +420,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 	break;
       }
     }
-    else if (isspace(ch) && type == MXML_TEXT)
+    else if (isspace(ch) && type == STP_MXML_TEXT)
       whitespace = 1;
 
    /*
@@ -428,9 +428,9 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
     * whitespace...
     */
 
-    if (ch == '<' && whitespace && type == MXML_TEXT)
+    if (ch == '<' && whitespace && type == STP_MXML_TEXT)
     {
-      stpi_mxmlNewText(parent, whitespace, "");
+      stp_mxmlNewText(parent, whitespace, "");
       whitespace = 0;
     }
 
@@ -486,7 +486,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 
 	*bufptr = '\0';
 
-	if (!stpi_mxmlNewElement(parent, buffer))
+	if (!stp_mxmlNewElement(parent, buffer))
 	{
 	 /*
 	  * Just print error for now...
@@ -528,7 +528,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 
 	*bufptr = '\0';
 
-	node = stpi_mxmlNewElement(parent, buffer);
+	node = stp_mxmlNewElement(parent, buffer);
 	if (!node)
 	{
 	 /*
@@ -588,7 +588,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
         * Handle open tag...
 	*/
 
-        node = stpi_mxmlNewElement(parent, buffer);
+        node = stp_mxmlNewElement(parent, buffer);
 
 	if (!node)
 	{
@@ -766,7 +766,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
 	}
       }
     }
-    else if (type == MXML_OPAQUE || !isspace(ch))
+    else if (type == STP_MXML_OPAQUE || !isspace(ch))
     {
      /*
       * Add character to current buffer...
@@ -805,7 +805,7 @@ mxml_load_data(mxml_node_t *top,	/* I - Top node */
  */
 
 static int				/* O - Terminating character */
-mxml_parse_element(mxml_node_t *node,	/* I - Element node */
+mxml_parse_element(stp_mxml_node_t *node,	/* I - Element node */
                    void        *p,	/* I - Data to read from */
                    int         (*getc_cb)(void *))
 					/* I - Data callback */
@@ -987,7 +987,7 @@ mxml_parse_element(mxml_node_t *node,	/* I - Element node */
     * Set the attribute...
     */
 
-    stpi_mxmlElementSetAttr(node, name, value);
+    stp_mxmlElementSetAttr(node, name, value);
   }
 
  /*
@@ -1051,15 +1051,15 @@ mxml_string_putc(int  ch,		/* I - Character to write */
  */
 
 static int				/* O - Column or -1 on error */
-mxml_write_node(mxml_node_t *node,	/* I - Node to write */
+mxml_write_node(stp_mxml_node_t *node,	/* I - Node to write */
                 void        *p,		/* I - File to write to */
-	        int         (*cb)(mxml_node_t *, int),
+	        int         (*cb)(stp_mxml_node_t *, int),
 					/* I - Whitespace callback */
 		int         col,	/* I - Current column */
 		int         (*putc_cb)(int, void *))
 {
   int		i;			/* Looping var */
-  mxml_attr_t	*attr;			/* Current attribute */
+  stp_mxml_attr_t	*attr;			/* Current attribute */
   char		s[255];			/* Temporary string */
 
 
@@ -1071,8 +1071,8 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 
     switch (node->type)
     {
-      case MXML_ELEMENT :
-          col = mxml_write_ws(node, p, cb, MXML_WS_BEFORE_OPEN, col, putc_cb);
+      case STP_MXML_ELEMENT :
+          col = mxml_write_ws(node, p, cb, STP_MXML_WS_BEFORE_OPEN, col, putc_cb);
 
           if ((*putc_cb)('<', p) < 0)
 	    return (-1);
@@ -1085,7 +1085,7 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 	       i > 0;
 	       i --, attr ++)
 	  {
-	    if ((col + strlen(attr->name) + strlen(attr->value) + 3) > MXML_WRAP)
+	    if ((col + strlen(attr->name) + strlen(attr->value) + 3) > STP_MXML_WRAP)
 	    {
 	      if ((*putc_cb)('\n', p) < 0)
 	        return (-1);
@@ -1136,7 +1136,7 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 	    else
 	      col ++;
 
-            col = mxml_write_ws(node, p, cb, MXML_WS_AFTER_OPEN, col, putc_cb);
+            col = mxml_write_ws(node, p, cb, STP_MXML_WS_AFTER_OPEN, col, putc_cb);
 
 	    if ((col = mxml_write_node(node->child, p, cb, col, putc_cb)) < 0)
 	      return (-1);
@@ -1144,7 +1144,7 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
             if (node->value.element.name[0] != '?' &&
 	        node->value.element.name[0] != '!')
 	    {
-              col = mxml_write_ws(node, p, cb, MXML_WS_BEFORE_CLOSE, col, putc_cb);
+              col = mxml_write_ws(node, p, cb, STP_MXML_WS_BEFORE_CLOSE, col, putc_cb);
 
               if ((*putc_cb)('<', p) < 0)
 		return (-1);
@@ -1157,7 +1157,7 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 
               col += strlen(node->value.element.name) + 3;
 
-              col = mxml_write_ws(node, p, cb, MXML_WS_AFTER_CLOSE, col, putc_cb);
+              col = mxml_write_ws(node, p, cb, STP_MXML_WS_AFTER_CLOSE, col, putc_cb);
 	    }
 	  }
 	  else if (node->value.element.name[0] == '!')
@@ -1167,7 +1167,7 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 	    else
 	      col ++;
 
-            col = mxml_write_ws(node, p, cb, MXML_WS_AFTER_OPEN, col, putc_cb);
+            col = mxml_write_ws(node, p, cb, STP_MXML_WS_AFTER_OPEN, col, putc_cb);
           }
 	  else
 	  {
@@ -1178,14 +1178,14 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 
 	    col += 2;
 
-            col = mxml_write_ws(node, p, cb, MXML_WS_AFTER_OPEN, col, putc_cb);
+            col = mxml_write_ws(node, p, cb, STP_MXML_WS_AFTER_OPEN, col, putc_cb);
 	  }
           break;
 
-      case MXML_INTEGER :
+      case STP_MXML_INTEGER :
 	  if (node->prev)
 	  {
-	    if (col > MXML_WRAP)
+	    if (col > STP_MXML_WRAP)
 	    {
 	      if ((*putc_cb)('\n', p) < 0)
 	        return (-1);
@@ -1205,17 +1205,17 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 	  col += strlen(s);
           break;
 
-      case MXML_OPAQUE :
+      case STP_MXML_OPAQUE :
           if (mxml_write_string(node->value.opaque, p, putc_cb) < 0)
 	    return (-1);
 
           col += strlen(node->value.opaque);
           break;
 
-      case MXML_REAL :
+      case STP_MXML_REAL :
 	  if (node->prev)
 	  {
-	    if (col > MXML_WRAP)
+	    if (col > STP_MXML_WRAP)
 	    {
 	      if ((*putc_cb)('\n', p) < 0)
 	        return (-1);
@@ -1235,10 +1235,10 @@ mxml_write_node(mxml_node_t *node,	/* I - Node to write */
 	  col += strlen(s);
           break;
 
-      case MXML_TEXT :
+      case STP_MXML_TEXT :
 	  if (node->value.text.whitespace && col > 0)
 	  {
-	    if (col > MXML_WRAP)
+	    if (col > STP_MXML_WRAP)
 	    {
 	      if ((*putc_cb)('\n', p) < 0)
 	        return (-1);
@@ -1400,9 +1400,9 @@ mxml_write_string(const char *s,	/* I - String to write */
  */
 
 static int				/* O - New column */
-mxml_write_ws(mxml_node_t *node,	/* I - Current node */
+mxml_write_ws(stp_mxml_node_t *node,	/* I - Current node */
               void        *p,		/* I - Write pointer */
-              int         (*cb)(mxml_node_t *, int),
+              int         (*cb)(stp_mxml_node_t *, int),
 					/* I - Callback function */
 	      int         ws,		/* I - Where value */
 	      int         col,		/* I - Current column */
@@ -1420,8 +1420,8 @@ mxml_write_ws(mxml_node_t *node,	/* I - Current node */
       col = 0;
     else if (ch == '\t')
     {
-      col += MXML_TAB;
-      col = col - (col % MXML_TAB);
+      col += STP_MXML_TAB;
+      col = col - (col % STP_MXML_TAB);
     }
     else
       col ++;
