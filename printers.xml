@@ -457,3 +457,11 @@
 <language value=canon>
 </printer>
 
+<printer name="CANON BJC 8200" driver="bjc-8200">
+<color>
+<model value=8200>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
