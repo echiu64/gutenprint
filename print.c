@@ -2597,10 +2597,10 @@ print_callback(void)
 static void
 printandsave_callback(void)
 {
+  runme = TRUE;
+  saveme = TRUE;
   if (plist_current > 0)
   {
-    runme = TRUE;
-    saveme = TRUE;
     gtk_widget_destroy(print_dialog);
   }
   else
@@ -3391,7 +3391,6 @@ printrc_save(void)
 	      p->v.scaling, p->v.orientation, p->v.left, p->v.top,
 	      p->v.gamma, p->v.contrast, p->v.red, p->v.green, p->v.blue,
 	      p->v.linear, p->v.saturation, p->v.density, p->v.ink_type);
-
     fclose(fp);
   }
   g_free (filename);
