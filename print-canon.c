@@ -26,11 +26,14 @@
  *                            parameter.
  *   canon_imageable_area() - Return the imageable area of the page.
  *   canon_print()          - Print an image to a CANON printer.
- *   canon_write()          - Send 6-color graphics using tiff compression.
+ *   canon_write()          - Send 6-color graphics using compression.
  *
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.27  2000/02/22 08:08:39  gandy
+ *   Some minor cosmethics
+ *
  *   Revision 1.26  2000/02/21 15:12:57  rlk
  *   Minor release prep
  *
@@ -223,7 +226,7 @@ static canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
 
-  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_ASF1, 0 },
+  {   -1, 8*72, 11*72,  180, 180, CANON_INK_K, CANON_SLOT_ASF1, 0 },
 
   /* tested models */
 
@@ -765,7 +768,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 /*
  * 'canon_print()' - Print an image to an CANON printer.
  */
-void
+static void
 canon_print(int       model,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
@@ -830,7 +833,9 @@ canon_print(int       model,		/* I - Model */
                 image_bpp;
   int           use_dmt = 0;
   void *	dither;
+  /*
   double        the_levels[] = { 0.0, 0.5, 0.75, 1.0 };
+  */
 
   canon_cap_t caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
@@ -1119,6 +1124,7 @@ canon_print(int       model,		/* I - Model */
   else
     dither = init_dither(image_width, out_width, 1);
 
+  /*
   if (use_dmt) {
     if (cyan)     dither_set_c_levels(dither,4,the_levels);
     if (lcyan)    dither_set_lc_levels(dither,4,the_levels);
@@ -1128,7 +1134,8 @@ canon_print(int       model,		/* I - Model */
     if (lyellow)  dither_set_ly_levels(dither,4,the_levels);
     if (black)    dither_set_k_levels(dither,4,the_levels);
   }
-    
+  */    
+
  /*
   * Output the page, rotating as necessary...
   */
@@ -1154,19 +1161,20 @@ canon_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
       
-      if (output_type == OUTPUT_GRAY && use_dmt)
+      if (output_type == OUTPUT_GRAY && use_dmt) {
 	dither_black4(out, x, dither, black);
 
-      else if (output_type == OUTPUT_GRAY)
+      } else if (output_type == OUTPUT_GRAY) {
 	dither_black(out, x, dither, black);
-
-      else if (use_dmt)
+	
+      } else if (use_dmt) {
 	dither_cmyk4(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		     yellow, lyellow, black);
 
-      else
+      } else {
 	dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, lyellow, black);
+      }
 
       /* fprintf(stderr,"."); */
 
@@ -1222,17 +1230,17 @@ canon_print(int       model,		/* I - Model */
 
       (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
-      if (output_type == OUTPUT_GRAY && use_dmt)
+      if (output_type == OUTPUT_GRAY && use_dmt) {
 	dither_black4(out, y, dither, black);
 
-      else if (output_type == OUTPUT_GRAY)
+      } else if (output_type == OUTPUT_GRAY) {
 	dither_black(out, y, dither, black);
 
-      else if (use_dmt)
+      } else if (use_dmt) {
 	dither_cmyk4(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		     yellow, lyellow, black);
 
-      else 
+      } else {
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, lyellow, black);
 
