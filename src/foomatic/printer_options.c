@@ -81,7 +81,8 @@ main(int argc, char **argv)
 	  stp_describe_parameter(pv, p->name, &desc);
 	  if (desc.is_active)
 	    {
-	      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	      if ((desc.p_type == STP_PARAMETER_TYPE_DOUBLE ||
+		   desc.p_type == STP_PARAMETER_TYPE_INT) &&
 		  !desc.is_mandatory)
 		{
 		  /*
