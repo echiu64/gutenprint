@@ -827,7 +827,7 @@ do_print_dialog(void)
   * Top-level table for dialog...
   */
 
-  table = gtk_table_new(9, 4, FALSE);
+  table = gtk_table_new(17, 4, FALSE);
   gtk_container_border_width(GTK_CONTAINER(table), 6);
   gtk_table_set_col_spacings(GTK_TABLE(table), 4);
   gtk_table_set_row_spacings(GTK_TABLE(table), 8);
@@ -986,6 +986,16 @@ do_print_dialog(void)
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
+
+  label = gtk_label_new(_("Density:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
   linear_off = button = gtk_radio_button_new_with_label(NULL, _("Normal scale"));
   linear_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
   if (vars.linear == 0)
@@ -996,7 +1006,7 @@ do_print_dialog(void)
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
   gtk_widget_show(button);
 
-  linear_on = button = gtk_radio_button_new_with_label(linear_group, _("Linear scale"));
+  linear_on = button = gtk_radio_button_new_with_label(linear_group, _("Experimental linear scale"));
   if (vars.linear == 1)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
   gtk_signal_connect(GTK_OBJECT(button), "toggled",
@@ -1011,11 +1021,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Scaling:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   if (vars.scaling < 0.0)
@@ -1067,11 +1077,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Brightness:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   brightness_adjustment = scale_data =
@@ -1102,11 +1112,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Gamma:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   gamma_adjustment = scale_data =
@@ -1145,10 +1155,10 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Contrast:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   contrast_adjustment = scale_data =
@@ -1179,11 +1189,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Red:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   red_adjustment = scale_data =
@@ -1214,11 +1224,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Green:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 12, 13, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   green_adjustment = scale_data =
@@ -1249,11 +1259,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Blue:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 13, 14, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   blue_adjustment = scale_data =
@@ -1284,11 +1294,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Saturation:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   saturation_adjustment = scale_data =
@@ -1319,11 +1329,11 @@ do_print_dialog(void)
 
   label = gtk_label_new(_("Density:"));
   gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(label);
 
   box = gtk_hbox_new(FALSE, 8);
-  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 15, 16, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 16, 17, GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(box);
 
   density_adjustment = scale_data =
