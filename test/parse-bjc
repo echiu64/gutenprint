@@ -37,7 +37,7 @@ $curpos = 0;
 $verbose = 1;
 
 while ($stuff ne "") {
-      if ($stuff=~ s/^(BJLSTART.+BJLEND)//sm) {
+      if ($stuff=~ s/^(BJLSTART.+BJLEND?)//sm) {
 
 	printf "\n$1"; 
 	$curpos+= length($1);

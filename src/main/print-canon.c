@@ -716,6 +716,7 @@ typedef struct {
   int output_type;
   const paper_t *pt;
   int print_head;
+  int colormode;
   const char *source_str;
   int xdpi;
   int ydpi;
@@ -1459,8 +1460,8 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
     arg_74_3= 0x09;
   }
 
-  /* workaround for the bjc8200 - not really understood */
-  if (init->caps->model==8200) {
+  /* workaround for the bjc8200 in 6color mode - not really understood */
+  if ((init->caps->model==8200) && (init->colormode==COLOR_CCMMYK)) {
     arg_74_1= 0xff;
     arg_74_2= 0x90;
     arg_74_3= 0x04;
@@ -1714,6 +1715,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   init.output_type = output_type;
   init.pt = pt;
   init.print_head = printhead;
+  init.colormode = colormode;
   init.source_str = media_source;
   init.xdpi = xdpi;
   init.ydpi = ydpi;
