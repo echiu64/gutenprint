@@ -488,7 +488,7 @@
 
 <printer name="HP DeskJet 840C" driver="pcl-840">
 <color>
-<model value=601>	# Uses 6XX driver
+<model value=840>	# Uses 840 driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>

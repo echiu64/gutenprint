@@ -517,12 +517,12 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 6xx series, plus 810/812/840/842/895 */
+  /* Deskjet 6xx series, plus 810/812/842/895 */
   { 601,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 /*| PCL_RES_600_600_MONO */| PCL_RES_600_600 | PCL_RES_1200_600,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
-    PCL_COLOR_CMYK | PCL_COLOR_CMYK4b,
+    PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
@@ -595,6 +595,42 @@ static pcl_cap_t pcl_model_capabilities[] =
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+      PCL_PRINTER_CUSTOM_SIZE,
+    {
+      PCL_PAPERSIZE_EXECUTIVE,
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_HAGAKI_CARD,
+      PCL_PAPERSIZE_A6_CARD,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      PCL_PAPERSIZE_COMMERCIAL10_ENV,
+      PCL_PAPERSIZE_DL_ENV,
+      PCL_PAPERSIZE_C6_ENV,
+      PCL_PAPERSIZE_INVITATION_ENV,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      -1,
+    },
+  },
+  /* Deskjet 840 (C-RET) */
+  { 840,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600,
+    0, 33, 18, 18,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYK4b,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE,
     {
@@ -1476,11 +1512,14 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
   do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
 	     nv.image_type != IMAGE_MONOCHROME);
-  do_cret = do_cretb = (xdpi >= 600 && ydpi >= 600 && ((caps.color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
+  do_cretb = (xdpi >= 600 && ydpi >= 600 && ((caps.color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
 			nv.image_type != IMAGE_MONOCHROME);
+  if (do_cretb)
+    do_cret = 1;
 
 #ifdef DEBUG
   fprintf(stderr, "do_cret = %d\n", do_cret);
+  fprintf(stderr, "do_cretb = %d\n", do_cretb);
 #endif
 
   do_6color = (strcmp(ink_type, "Color + Photo Cartridges") == 0);
@@ -1926,7 +1965,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		    yellow, NULL, black, duplicate_line);
 	
 	if(do_cretb){
-	  //	  (*writefunc)(prn, black + length / 2, 0, 0);
+/*	  (*writefunc)(prn, black + length / 2, 0, 0); */
 	  (*writefunc)(prn, black, length, 0);
 	}else{
 	  (*writefunc)(prn, black + length / 2, length / 2, 0);
