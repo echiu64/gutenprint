@@ -1270,5 +1270,11 @@
         <density value="2.0"/>
       </printer>
     </family>
+    <family name="raw">
+      <printer name="RAW DATA" driver="raw-data">
+        <color value="true"/>
+        <model value="1"/>
+      </printer>
+    </family>
   </printdef>
 </gimp-print>

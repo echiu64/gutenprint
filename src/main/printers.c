@@ -45,6 +45,7 @@ typedef struct stp_internal_printer
 {
   int        cookie;		/* Magic number */
   const char *long_name;	/* Long name for UI */
+  const char *family;		/* Printer family */
   int        model;		/* Model number */
   int	     color;
   const stp_printfuncs_t *printfuncs;
@@ -88,6 +89,7 @@ stp_init_printer_list(void)
       printer->long_name = stp_strdup(src->long_name);
       printer->model = src->model;
       printer->printfuncs = src->printfuncs;
+      printer->family = stp_strdup(src->family);
       printer->printvars = v;
       stp_set_driver(v, src->short_name);
       stp_set_output_type(v, src->color);
@@ -160,6 +162,13 @@ const char *
 stp_printer_get_driver(const stp_printer_t p)
 {
   return stp_get_driver(stp_printer_get_printvars(p));
+}
+
+const char *
+stp_printer_get_family(const stp_printer_t p)
+{
+  const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  return val->family;
 }
 
 int

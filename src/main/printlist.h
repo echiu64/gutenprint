@@ -29,6 +29,7 @@ typedef struct stp_old_printer
 {
   const char *long_name;	/* Long name for UI */
   const char *short_name;
+  const char *family;
   int        model;		/* Model number */
   int	     color;
   const stp_printfuncs_t *printfuncs;

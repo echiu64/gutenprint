@@ -471,8 +471,8 @@ void printmodels(int verbose)
     {
       p = stp_get_printer_by_index(i);
       if (p &&
-	  !(strcmp(stp_printer_get_driver(p), "ps") == 0 ||
-	    strcmp(stp_printer_get_driver(p), "ps2") == 0))
+	  strcmp(stp_printer_get_family(p), "ps") != 0 &&
+	  strcmp(stp_printer_get_family(p), "raw") != 0)
 	{
 	  if(verbose)
 	    printf("%-20s%s\n", stp_printer_get_driver(p),

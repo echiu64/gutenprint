@@ -373,9 +373,9 @@ escp2_parameters(const stp_vars_t v, const char *name,
 	    stp_string_list_add_param(description->bounds.str,
 				      stp_papersize_get_name(pt),
 				      stp_papersize_get_text(pt));
-	  description->deflt.str =
-	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
     }
   else if (strcmp(name, "Resolution") == 0)
     {

@@ -356,6 +356,7 @@ extern int stp_get_printer_index_by_driver(const char *driver);
 
 extern const char * stp_printer_get_long_name(const stp_printer_t p);
 extern const char * stp_printer_get_driver(const stp_printer_t p);
+extern const char * stp_printer_get_family(const stp_printer_t p);
 extern int stp_printer_get_model(const stp_printer_t p);
 extern const stp_vars_t stp_printer_get_printvars(const stp_printer_t p);
 extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);

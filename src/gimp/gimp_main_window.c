@@ -714,7 +714,8 @@ create_printer_dialog (void)
     {
       stp_printer_t the_printer = stp_get_printer_by_index (i);
 
-      if (strcmp (stp_printer_get_long_name (the_printer), "") != 0)
+      if (strcmp(stp_printer_get_long_name (the_printer), "") != 0 &&
+	  strcmp(stp_printer_get_family(the_printer), "raw") != 0)
 	{
 	  gchar *tmp=g_strdup(gettext(stp_printer_get_long_name(the_printer)));
 

@@ -59,6 +59,7 @@ const char *family_names[] =
   "pcl",
   "ps",
   "lexmark",
+  "raw",
   NULL
 };
 
@@ -366,6 +367,7 @@ stp_xml_process_printer(xmlNodePtr printer, xmlChar *family)
 	 (const char *) xmlGetProp(printer, (const xmlChar *) "name"));
   printf("    \"%s\",\n",
 	 (const char *) xmlGetProp(printer, (const xmlChar *) "driver"));
+  printf("    \"%s\",\n", (const char *) family);
   prop = stp_xml_get_node(printer->children, (const xmlChar *) "model");
   printf("    %d,\n",
 	 xmlstrtol(xmlGetProp(prop, (const xmlChar *) "value")));

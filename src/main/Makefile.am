@@ -63,6 +63,7 @@ libgimpprint_la_SOURCES = \
 	print-color.c \
 	print-weave.c \
 	print-version.c \
+	print-raw.c \
 	printers.c \
 	printers.h \
 	string-list.c \

@@ -43,10 +43,11 @@ main(int argc, char **argv)
       int nparams;
       const stp_printer_t p = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(p);
+      const char *family = stp_printer_get_family(p);
       stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
       int tcount = 0;
       size_t count;
-      if (strcmp(driver, "ps") == 0 || strcmp(driver, "ps2") == 0)
+      if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
 	continue;
       printf("# Printer model %s, long name `%s'\n", driver,
 	     stp_printer_get_long_name(p));

@@ -456,7 +456,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
       stp_printer_t printer = stp_get_printer_by_driver(vbuf);
       stp_set_driver(img->v, vbuf);
-      if (printer)
+      if (printer &&
+	  strcmp(stp_printer_get_family(printer), "ps") != 0 &&
+	  strcmp(stp_printer_get_family(printer), "raw") != 0)
 	stp_set_printer_defaults(img->v, printer);
       else
 	code = IJS_ERANGE;
