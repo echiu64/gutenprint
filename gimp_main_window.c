@@ -100,7 +100,8 @@ static GtkWidget *printandsave_button;
 static GtkWidget *adjust_color_button;
 
 static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
-static gboolean   suppress_scaling_adjustment = FALSE;
+static gboolean  suppress_scaling_adjustment = FALSE;
+static gboolean  suppress_scaling_callback = FALSE;
 
 static gint    num_media_types = 0;	/* Number of media types */
 static gchar **media_types;		/* Media type strings */
@@ -963,6 +964,8 @@ gimp_scaling_callback (GtkWidget *widget)
   gdouble max_ppi_scaling;
   gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   gdouble current_scale;
+  if (suppress_scaling_callback)
+    return;
   min_ppi_scaling1 = 72.0 * (gdouble) image_width /
     (gdouble) printable_width;
   min_ppi_scaling2 = 72.0 * (gdouble) image_height /
@@ -1919,6 +1922,9 @@ gimp_preview_update (void)
     if (!suppress_scaling_adjustment)
       {
 	gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
+	suppress_scaling_callback = TRUE;
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
+	suppress_scaling_callback = FALSE;
 	gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
       }
   }
@@ -1956,27 +1962,6 @@ gimp_preview_update (void)
 
   if (preview->widget.window == NULL)
     return;
-
-  gdk_window_clear (preview->widget.window);
-
-  if (gc == NULL)
-  {
-    gc = gdk_gc_new (preview->widget.window);
-    gcinv = gdk_gc_new(preview->widget.window);
-    gdk_gc_set_function (gcinv, GDK_INVERT);
-  }
-
-  /* draw paper frame */
-  gdk_draw_rectangle(preview->widget.window, gc, 0,
- 		     paper_left, paper_top,
-		     preview_ppi * paper_width / 72,
-		     preview_ppi * paper_height / 72);
-
-  /* draw printable frame */
-  gdk_draw_rectangle(preview->widget.window, gc, 0,
-                     printable_left, printable_top,
-                     preview_ppi * printable_width / 72,
-                     preview_ppi * printable_height / 72);
 
   if (vars.left < 0)
     {
@@ -2051,6 +2036,7 @@ gimp_preview_update (void)
 
   /* draw image */
   {
+    int ox, oy, u;
     int preview_x = 1 + printable_left + preview_ppi * vars.left / 72;
     int preview_y = 1 + printable_top + preview_ppi * vars.top / 72;
     int preview_w = FMAX(1, (preview_ppi * print_width) / 72);
@@ -2074,7 +2060,7 @@ gimp_preview_update (void)
 	       bpp * preview_w);
       } else {
 	unsigned char *inbuf = thumbnail_data - thumbnail_bpp
-	                        + thumbnail_bpp * thumbnail_w * v_cur;
+	  + thumbnail_bpp * thumbnail_w * v_cur;
 	unsigned char *outbuf = preview_data + bpp * preview_w * y;
 
         int h_denominator = preview_w > 1 ? preview_w - 1 : 1;
@@ -2126,6 +2112,27 @@ gimp_preview_update (void)
       }
     }
 
+    gdk_window_clear (preview->widget.window);
+
+    if (gc == NULL)
+      {
+	gc = gdk_gc_new (preview->widget.window);
+	gcinv = gdk_gc_new(preview->widget.window);
+	gdk_gc_set_function (gcinv, GDK_INVERT);
+      }
+
+    /* draw paper frame */
+    gdk_draw_rectangle(preview->widget.window, gc, 0,
+		       paper_left, paper_top,
+		       preview_ppi * paper_width / 72,
+		       preview_ppi * paper_height / 72);
+
+    /* draw printable frame */
+    gdk_draw_rectangle(preview->widget.window, gc, 0,
+		       printable_left, printable_top,
+		       preview_ppi * printable_width / 72,
+		       preview_ppi * printable_height / 72);
+
     if (bpp == 1)
       gdk_draw_gray_image(preview->widget.window, gc,
                           preview_x, preview_y, preview_w, preview_h,
@@ -2134,11 +2141,8 @@ gimp_preview_update (void)
       gdk_draw_rgb_image(preview->widget.window, gc,
                          preview_x, preview_y, preview_w, preview_h,
                          GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
-  }
 
   /* draw orientation arrow pointing to top-of-paper */
-  {
-    int ox, oy, u;
     u = preview_ppi/2;
     ox = paper_left + preview_ppi * paper_width / 72 / 2;
     oy = paper_top + preview_ppi * paper_height / 72 / 2;

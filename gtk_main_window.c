@@ -102,6 +102,7 @@ static GtkWidget* adjust_color_button;
 
 static GtkObject* scaling_adjustment;	   /* Adjustment object for scaling */
 static int suppress_scaling_adjustment = 0;
+static int suppress_scaling_callback = 0;
 
 static int		num_media_types=0;	/* Number of media types */
 static char		**media_types;		/* Media type strings */
@@ -1177,6 +1178,8 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
   gdouble max_ppi_scaling;
   gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   gdouble current_scale;
+  if (suppress_scaling_callback)
+    return;
   min_ppi_scaling1 = 72.0 * (gdouble) image_width /
     (gdouble) printable_width;
   min_ppi_scaling2 = 72.0 * (gdouble) image_height /
@@ -2215,6 +2218,9 @@ static void gtk_preview_update(void)
     if (!suppress_scaling_adjustment)
       {
 	gtk_adjustment_changed (GTK_ADJUSTMENT (scaling_adjustment));
+	suppress_scaling_callback = TRUE;
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
+	suppress_scaling_callback = FALSE;
 	gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
       }
   }
