@@ -293,6 +293,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  for anyone wishing to remove an earlier version of Gimp-Print. The uninstaller will remove every version of 
  Gimp-Print that has ever been released as a Mac OS X installer package by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (10.3.0).
  It will <em>not</em> remove any version of Gimp-Print that was installed by any means <em>other</em> than an official installer package (this includes command line installs).
+</p>
  &nbsp;
  </td>
  </tr>
