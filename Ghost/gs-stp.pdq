@@ -176,7 +176,7 @@ most Epson Stylus inkjet printers."
     desc = "Dithering Algorithm"
     default_choice ""
     choice "0" {
-      desc = "Hybrid Floyd-Steinberg"
+      desc = "Adaptive Hybrid Floyd-Steinberg"
       value = "0"
     }
     choice "1" {
@@ -184,15 +184,15 @@ most Epson Stylus inkjet printers."
       value = "1"
     }
     choice "2" {
-      desc = "Random Floyd-Steinberg"
+      desc = "Adaptive Random Floyd-Steinberg"
       value = "2"
     }
     choice "3" {
-      desc = "Adaptive Hybrid Floyd-Steinberg"
+      desc = "Hybrid Floyd-Steinberg"
       value = "3"
     }
     choice "4" {
-      desc = "Adaptive Random Floyd-Steinberg"
+      desc = "Random Floyd-Steinberg"
       value = "4"
     }
   }

@@ -47,11 +47,11 @@
 
 char *dither_algo_names[] =
 {
-  "Hybrid Floyd-Steinberg",
-  "Ordered",
-  "Random Floyd-Steinberg",
   "Adaptive Hybrid",
+  "Ordered",
   "Adaptive Random",
+  "Hybrid Floyd-Steinberg",
+  "Random Floyd-Steinberg",
 };
 
 int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);

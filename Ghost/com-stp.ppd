@@ -86,11 +86,11 @@
 
 *OpenUI *Dither/Dithering Algorithm: PickOne
 *DefaultDither: 
-*Dither 0/Hybrid Floyd-Steinberg: ""
+*Dither 0/Adaptive Hybrid Floyd-Steinberg: ""
 *Dither 1/Ordered: ""
-*Dither 2/Random Floyd-Steinberg: ""
-*Dither 3/Adaptive Hybrid Floyd-Steinberg: ""
-*Dither 4/Adaptive Random Floyd-Steinberg: ""
+*Dither 2/Adaptive Random Floyd-Steinberg: ""
+*Dither 3/Hybrid Floyd-Steinberg: ""
+*Dither 4/Random Floyd-Steinberg: ""
 *CloseUI: *Dither
 
 *OpenUI *Color/Color: PickOne
