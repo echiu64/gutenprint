@@ -113,6 +113,9 @@ diff -u /usr/local/share/aclocal/gimp.m4~ /usr/local/share/aclocal/gimp.m4
 If you wish to build the Ghostscript driver, you must run 'make ghost'
 from top level.
 
+If you wish to build the CUPS driver, you must run 'make cups'
+from top level.
+
 If you are building this from a release, you should not have any
 trouble because the configure script will already exist.
 
