@@ -539,7 +539,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageRegion %s", the_papers[i].name);
-    gzprintf(fp, "/%s:\t\"<</PageRegion[%d %d]/ImagingBBox null>>setpagedevice\"\n",
+    gzprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
 	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
   gzputs(fp, "*CloseUI: *PageRegion\n\n");
