@@ -22,24 +22,44 @@
 
 typedef struct
 {
-  double c_min;
-  double c;
-  double c_gamma;
-  double m_min;
-  double m;
-  double m_gamma;
-  double y_min;
-  double y;
-  double y_gamma;
-  double k_min;
-  double k;
-  double k_gamma;
-  double c_level;
-  double m_level;
-  double y_level;
-  double lower;
-  double upper;
+  enum {
+    E_PATTERN,
+    E_IMAGE
+  } t;
+  union {
+    struct {
+      double c_min;
+      double c;
+      double c_gamma;
+      double m_min;
+      double m;
+      double m_gamma;
+      double y_min;
+      double y;
+      double y_gamma;
+      double k_min;
+      double k;
+      double k_gamma;
+      double c_level;
+      double m_level;
+      double y_level;
+      double lower;
+      double upper;
+    } p;
+    struct {
+      int x;
+      int y;
+      int bits;
+      const char *data;
+    } i;
+  } d;
 } testpattern_t;
+
+/*
+ * At least with flex, this forbids the scanner from reading ahead.
+ * This is necessary for parsing images.
+ */
+#define YY_ALWAYS_INTERACTIVE 1
 
 extern double global_c_level;
 extern double global_c_gamma;

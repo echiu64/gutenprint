@@ -78,6 +78,7 @@ hsize			DBG(HSIZE) return HSIZE;
 vsize			DBG(VSIZE) return VSIZE;
 blackline		DBG(BLACKLINE) return BLACKLINE;
 pattern			DBG(PATTERN) return PATTERN;
+image			DBG(IMAGE) return IMAGE;
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;
