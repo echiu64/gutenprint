@@ -1647,6 +1647,8 @@ static inline void
 print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
 		 unsigned char bit, int length)
 {
+  int density = dc->o;
+  int adjusted = dc->v;
   dither_color_t *rv = &(dc->dither);
   dither_matrix_t *dither_matrix = &(dc->dithermat);
   int i;
@@ -1655,68 +1657,76 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
   unsigned char *tptr;
   unsigned bits;
 
-  if (dc->o <= 0 || dc->v <= 0)
+  if (density <= 0 || adjusted <= 0)
     return;
   if (dc->very_fast)
     {
-      if (dc->v >= ditherpoint(d, dither_matrix, x))
+      if (adjusted >= ditherpoint(d, dither_matrix, x))
 	{
 	  if (rv->row_ends[0][0] == -1)
 	    rv->row_ends[0][0] = x;
 	  rv->row_ends[1][0] = x;
 	  dc->ptrs[0][d->ptr_offset] |= bit;
 	}
-      return;
     }
-  /*
-   * Look for the appropriate range into which the input value falls.
-   * Notice that we use the input, not the error, to decide what dot type
-   * to print (if any).  We actually use the "density" input to permit
-   * the caller to use something other that simply the input value, if it's
-   * desired to use some function of overall density, rather than just
-   * this color's input, for this purpose.
-   */
-  for (i = levels; i >= 0; i--)
+  else
     {
-      dither_segment_t *dd = &(rv->ranges[i]);
-      unsigned vmatrix;
-      if (dc->v <= dd->range[0])
-	continue;
-
-      vmatrix = (dd->value[1] * ditherpoint(d, dither_matrix, x)) >> 16;
-
-      /*
-       * After all that, printing is almost an afterthought.
-       * Pick the actual dot size (using a matrix here) and print it.
-       */
-      if (dc->v >= vmatrix)
+      for (i = levels; i >= 0; i--)
 	{
-	  int isdark = dd->isdark[1];
-	  bits = dd->bits[1];
-	  tptr = dc->ptrs[1 - isdark] + d->ptr_offset;
-	  if (rv->row_ends[0][1 - isdark] == -1)
-	    rv->row_ends[0][1 - isdark] = x;
-	  rv->row_ends[1][1 - isdark] = x;
+	  dither_segment_t *dd = &(rv->ranges[i]);
+	  unsigned vmatrix;
+	  unsigned rangepoint;
+	  unsigned dpoint;
+	  unsigned subchannel;
+	  if (density <= dd->range[0])
+	    continue;
+	  dpoint = ditherpoint(d, dither_matrix, x);
 
-	  /*
-	   * Lay down all of the bits in the pixel.
-	   */
-	  if (bits == 1)
-	    {
-	      tptr[0] |= bit;
-	    }
+	  if (dd->isdark[1] == dd->isdark[0] && dd->bits[1] == dd->bits[0])
+	    subchannel = 1;
 	  else
 	    {
-	      for (j = 1; j <= bits; j += j, tptr += length)
+	      rangepoint = ((density - dd->range[0]) << 16) / dd->range_span;
+	      rangepoint = (rangepoint * rv->density) >> 16;
+	      if (rangepoint >= dpoint)
+		subchannel = 1;
+	      else
+		subchannel = 0;
+	    }
+	  vmatrix = (dd->value[subchannel] * dpoint) >> 16;
+
+	  /*
+	   * After all that, printing is almost an afterthought.
+	   * Pick the actual dot size (using a matrix here) and print it.
+	   */
+	  if (adjusted >= vmatrix)
+	    {
+	      int isdark = dd->isdark[subchannel];
+	      bits = dd->bits[subchannel];
+	      tptr = dc->ptrs[1 - isdark] + d->ptr_offset;
+	      if (rv->row_ends[0][1 - isdark] == -1)
+		rv->row_ends[0][1 - isdark] = x;
+	      rv->row_ends[1][1 - isdark] = x;
+
+	      /*
+	       * Lay down all of the bits in the pixel.
+	       */
+	      if (bits == 1)
 		{
-		  if (j & bits)
-		    tptr[0] |= bit;
+		  tptr[0] |= bit;
+		}
+	      else
+		{
+		  for (j = 1; j <= bits; j += j, tptr += length)
+		    {
+		      if (j & bits)
+			tptr[0] |= bit;
+		    }
 		}
 	    }
+	  return;
 	}
-      return;
     }
-  return;
 }
 
 static inline void
