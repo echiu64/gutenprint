@@ -100,7 +100,7 @@
 #gptofoo pcl-690 printer/HP-DeskJet_695C
 #gptofoo pcl-690 printer/68672
 #gptofoo pcl-810 printer/156105
-#gptofoo pcl-810 printer/61568
+#gptofoo pcl-810 printer/HP-DeskJet_830C
 #gptofoo pcl-810 printer/250601
 #gptofoo pcl-812 printer/161705
 #gptofoo pcl-812 printer/293641
@@ -134,7 +134,6 @@
 #gptofoo pcl-2 printer/316361
 #gptofoo pcl-2 printer/547378
 #gptofoo pcl-2 printer/207945
-#gptofoo pcl-2 printer/609714
 #gptofoo pcl-2 printer/110624
 #gptofoo pcl-2 printer/63200
 #gptofoo pcl-2 printer/487986
@@ -262,6 +261,7 @@
 #gptofoo pcl-6 printer/32832
 #gptofoo pcl-6 printer/64096
 #gptofoo pcl-6 printer/474610
+#gptofoo pcl-6 printer/609714
 #gptofoo pcl-6 printer/100576
 #gptofoo pcl-6 printer/62304
 #gptofoo pcl-6 printer/247625
@@ -269,6 +269,13 @@
 #gptofoo pcl-6 printer/287337
 #gptofoo pcl-6 printer/62816
 #gptofoo pcl-6 printer/71680
+#gptofoo pcl-6 printer/HP-LaserJet_1200
+#gptofoo pcl-6 printer/HP-LaserJet_1220
+#gptofoo pcl-6 printer/HP-LaserJet_2200
+#gptofoo pcl-6 printer/HP-LaserJet_3200m
+#gptofoo pcl-6 printer/HP-LaserJet_4100
+#gptofoo pcl-6 printer/HP-LaserJet_8150
+#gptofoo pcl-6 printer/HP-LaserJet_9000
 #gptofoo lexmark-3200 printer/70912
 #gptofoo lexmark-4076 printer/Lexmark-4076
 #gptofoo lexmark-z31 printer/618706
