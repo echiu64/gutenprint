@@ -5,30 +5,14 @@ while (<>) {
 }
 
 %seqtable = ( "@", 0,
-	      "(G", "VARIABLE",
-	      "(U", "VARIABLE",
+	      "(R", "REMOTE",
+	      "(", "VARIABLE",
 	      "U", 1,
-	      "(K", 4,
-	      "(i", "VARIABLE",
-	      "(e", "VARIABLE",
-	      "(c", "VARIABLE",
-	      "(V", "VARIABLE",
-	      "(v", "VARIABLE",
-	      "(S", "VARIABLE",
-	      "(r", "VARIABLE",
-	      "(/", "VARIABLE",
-	      "(\$", "VARIABLE",
-	      "(D", "VARIABLE",
-	      "(R", "VARIABLE",
-	      "(s", "VARIABLE",
 	      "\\", 2,
 	      "\$", 2,
-	      "(\\", "VARIABLE",
-	      "(C", "VARIABLE",
 	      "r", 1,
 	      ".", "SPECIAL",
 	      "i", "SPECIAL1",
-	      "(R", "REMOTE",
 	      "\000", 2,
 	      "\001", 22
 	  );
@@ -234,7 +218,7 @@ sub do_special1_command {
 while ($stuff ne "") {
     if (substr($stuff, 0, 1) eq "$esc") {
 	$found = 0;
-	foreach $key (keys %seqtable) {
+	foreach $key (sort { length $b <=> length $a } keys %seqtable) {
 	    if (substr($stuff, 1, length $key) eq $key) {
 		$skipchars = $seqtable{$key};
 		if ($skipchars eq "SPECIAL") {
@@ -252,19 +236,21 @@ while ($stuff ne "") {
 		    print "1b ";
 		    $startoff = 0;
 		    if ($skipchars eq "VARIABLE") {
-			$lchar = substr($stuff, (length $key) + 1, 1);
+			$kchar = substr($stuff, (length $key) + 1, 1);
+			$nkchar = unpack("C", $kchar);
+			$lchar = substr($stuff, (length $key) + 2, 1);
 			$nlchar = unpack("C", $lchar);
-			$hchar = substr($stuff, (length $key) + 2, 1);
+			$hchar = substr($stuff, (length $key) + 3, 1);
 			$nhchar = unpack("C", $hchar);
 			$skipchars = ($nhchar * 256) + $nlchar;
-			$startoff = 2;
+			$startoff = 3;
 		    }
 		    for ($i = 0;
 			 $i < $skipchars + (length $key) + $startoff;
 			 $i++) {
 			$char = substr($stuff, $i + 1, 1);
 			$nchar = unpack("C", $char);
-			if ($i < 2 && $nchar >= 32 && $nchar < 127) {
+			if ($i < 3 && $nchar >= 32 && $nchar < 127) {
 			    print " $char ";
 			} else {
 			    printf "%02x ", unpack("C", $char);
