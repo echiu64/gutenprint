@@ -320,6 +320,26 @@ init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
   mat->i_own = 1;
 }
 
+#define DITHERPOINT(m, x, y, x_size, y_size) \
+  ((m)[(((x) + (x_size)) % (x_size)) + ((x_size) * (((y) + (y_size)) % (y_size)))])
+
+static void
+shear_matrix(dither_matrix_t *mat)
+{
+  int i;
+  int j;
+  int *tmp = malloc(mat->x_size * mat->y_size * sizeof(int));
+  for (i = 0; i < mat->x_size; i++)
+    for (j = 0; j < mat->y_size; j++)
+      DITHERPOINT(tmp, i, j, mat->x_size, mat->y_size) =
+	DITHERPOINT(mat->matrix, i, j * 3, mat->x_size, mat->y_size);
+  for (i = 0; i < mat->x_size; i++)
+    for (j = 0; j < mat->y_size; j++)
+      DITHERPOINT(mat->matrix, i, j, mat->x_size, mat->y_size) =
+	DITHERPOINT(tmp, i * 5, j, mat->x_size, mat->y_size);
+  free(tmp);
+}
+
 static void
 init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 	    unsigned int *array, int transpose)
@@ -542,12 +562,15 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
     d->dither_type = D_FLOYD_HYBRID;
 
   if (d->dither_type == D_VERY_FAST)
-    init_iterated_matrix(&(d->mat6), 2, DITHER_FAST_STEPS, sq2);
+    {
+      init_iterated_matrix(&(d->mat6), 2, DITHER_FAST_STEPS, sq2);
+      shear_matrix(&(d->mat6));
+    }
   else
     {
       if (d->y_aspect / d->x_aspect == 2)
 	init_matrix_short(&(d->mat6), 367, 179, rect2x1, 0);
-      else if (d->y_aspect / d->x_aspect == 2)
+      else if (d->y_aspect / d->x_aspect == 4)
 	init_matrix_short(&(d->mat6), 509, 131, rect4x1, 0);
       else if (d->x_aspect / d->y_aspect == 2)
 	init_matrix_short(&(d->mat6), 179, 367, rect2x1, 1);
