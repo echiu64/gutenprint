@@ -2482,6 +2482,12 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
+
+  if (!stp_check_float_parameter(v, "Density", STP_PARAMETER_DEFAULTED))
+    {
+      stp_set_float_parameter_active(v, "Density", STP_PARAMETER_ACTIVE);
+      stp_set_float_parameter(v, "Density", 1.0);
+    }
   if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
     {
       if (pt)
