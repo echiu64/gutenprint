@@ -52,6 +52,10 @@
 #define PACKFUNC stp_pack_tiff
 #endif
 
+#define OP_JOB_START 1
+#define OP_JOB_PRINT 2
+#define OP_JOB_END   4
+
 static void flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		       int hoffset, int ydpi, int xdpi, int physical_xdpi,
 		       int vertical_subpass);
@@ -119,6 +123,7 @@ typedef struct escp2_init
   int total_channels;
   int use_black_parameters;
   int use_fast_360;
+  int print_op;
   const char *paper_type;
   const char *media_source;
   const escp2_inkname_t *inkname;
@@ -746,9 +751,36 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 			    MODEL_XZEROMARGIN_YES, init->v))
 	    stp_zprintf(init->v, "FP%c%c%c%c%c", 3, 0, 0, 0260, 0xff);
 	}
-      if (init->input_slot && init->input_slot->init_sequence.length)
-	stp_zfwrite(init->input_slot->init_sequence.data,
-		    init->input_slot->init_sequence.length, 1, init->v);
+      if (init->input_slot)
+	{
+	  int divisor = escp2_base_separation(init->model, init->v) / 360;
+	  int height = init->page_true_height * 5 / divisor;
+	  if (init->input_slot->init_sequence.length)
+	    stp_zfwrite(init->input_slot->init_sequence.data,
+			init->input_slot->init_sequence.length, 1, init->v);
+	  switch (init->input_slot->roll_feed_cut_flags)
+	    {
+	    case ROLL_FEED_CUT_ALL:
+	      stp_zprintf(init->v, "JS%c%c%c%c", 2, 0, 0, 0);
+	      stp_zprintf(init->v, "CO%c%c%c%c%c%c%c%c%c%c",
+			  8, 0, 0, 0, 1, 0, 0, 0, 0, 0);
+	      stp_zprintf(init->v, "CO%c%c%c%c%c%c%c%c%c%c",
+			  8, 0, 0, 0, 0, 0,
+			  height & 0xff, (height >> 8) & 0xff,
+			  (height >> 16) & 0xff, (height >> 24) & 0xff);
+	      break;
+	    case ROLL_FEED_CUT_LAST:
+	      stp_zprintf(init->v, "CO%c%c%c%c%c%c%c%c%c%c",
+			  8, 0, 0, 0, 1, 0, 0, 0, 0, 0);
+	      stp_zprintf(init->v, "CO%c%c%c%c%c%c%c%c%c%c",
+			  8, 0, 0, 0, 2, 0,
+			  height & 0xff, (height >> 8) & 0xff,
+			  (height >> 16) & 0xff, (height >> 24) & 0xff);
+	      break;
+	    default:
+	      break;
+	    }
+	}
 
       /* Exit remote mode */
       stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
@@ -913,14 +945,9 @@ escp2_init_printer(const escp2_init_t *init)
 }
 
 static void
-escp2_deinit_printer(const escp2_init_t *init, int printed_something)
+escp2_deinit_printer(const escp2_init_t *init)
 {
-  if (!printed_something)
-    stp_putc('\n', init->v);
-  stp_puts(/* Eject page */
-	   "\014"
-	   /* ESC/P2 reset */
-	   "\033@", init->v);
+  stp_puts("\033@", init->v);	/* ESC/P2 reset */
   if (escp2_has_advanced_command_set(init->model, init->v) || init->input_slot)
     {
       const init_sequence_t *deinit =
@@ -1145,9 +1172,10 @@ setup_ink_types(const escp2_inkname_t *ink_type,
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
 static void
-escp2_print(const stp_printer_t printer,		/* I - Model */
-	    stp_image_t     *image,		/* I - Image to print */
-	    const stp_vars_t    v)
+escp2_do_print(const stp_printer_t printer,		/* I - Model */
+	       stp_image_t     *image,		/* I - Image to print */
+	       const stp_vars_t    v,
+	       int print_op)
 {
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
@@ -1403,16 +1431,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  max_head_offset = head_offset[i];
       }
 
-  weave = stp_initialize_weave(nozzles, nozzle_separation,
-			       horizontal_passes, res->vertical_passes,
-			       res->vertical_oversample, total_channels, bits,
-			       out_width, out_height, top * physical_ydpi / 72,
-			       (page_height * physical_ydpi / 72 +
-				escp2_extra_feed(model, nv) * physical_ydpi /
-				escp2_base_resolution(model, nv)),
-			       1, head_offset, nv, flush_pass,
-			       FILLFUNC, PACKFUNC, COMPUTEFUNC);
-
  /*
   * Send ESC/P2 initialization commands...
   */
@@ -1480,108 +1498,174 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	    }
 	}
     }
-
-  escp2_init_printer(&init);
-
- /*
-  * Allocate memory for the raster data...
-  */
-
-  stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-  image_bpp = image->bpp(image);
-  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
-
-  in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc(image_width * out_bpp * 2);
-
-  errdiv  = image_height / out_height;
-  errmod  = image_height % out_height;
-  errval  = 0;
-  errlast = -1;
-  errline  = 0;
-
-  if (xdpi > ydpi)
-    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
-  else
-    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
-
-  adjust_print_quality(&init, dither,
-		       &lum_adjustment, &sat_adjustment, &hue_adjustment);
-
- /*
-  * Let the user know what we're doing...
-  */
-
-  image->progress_init(image);
-
-  QUANT(0);
-  for (y = 0; y < out_height; y ++)
+  if (init.input_slot && init.input_slot->roll_feed_cut_flags)
     {
-      int duplicate_line = 1;
-      int zero_mask;
-      if ((y & 63) == 0)
-	image->note_progress(image, y, out_height);
-
-      if (errline != errlast)
-	{
-	  errlast = errline;
-	  duplicate_line = 0;
-	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	    break;
-	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
-		       hue_adjustment, lum_adjustment, sat_adjustment);
-	}
-      QUANT(1);
-
-      stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
-      QUANT(2);
-
-      stp_write_weave(weave, length, ydpi, model, out_width, left,
-		      xdpi, physical_xdpi, cols);
-      QUANT(3);
-      errval += errmod;
-      errline += errdiv;
-      if (errval >= out_height)
-	{
-	  errval -= out_height;
-	  errline ++;
-	}
-      QUANT(4);
+      init.page_true_height += 4;
+      init.page_top += 2;
+      init.page_bottom += 2;
+      top += 2;
+      page_height += 2;
     }
-  image->progress_conclude(image);
-  stp_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi);
-  QUANT(5);
 
+  if (print_op & OP_JOB_START)
+    escp2_init_printer(&init);
+  if (print_op & OP_JOB_PRINT)
+    {
+
+      /*
+       * Allocate memory for the raster data...
+       */
+
+      weave = stp_initialize_weave(nozzles, nozzle_separation,
+				   horizontal_passes, res->vertical_passes,
+				   res->vertical_oversample, total_channels,
+				   bits,
+				   out_width, out_height,
+				   top * physical_ydpi / 72,
+				   (page_height * physical_ydpi / 72 +
+				    escp2_extra_feed(model, nv) *
+				    physical_ydpi /
+				    escp2_base_resolution(model, nv)),
+				   1, head_offset, nv, flush_pass,
+				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
+
+      stp_set_output_color_model(nv, COLOR_MODEL_CMY);
+      image_bpp = image->bpp(image);
+      colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap,
+				       &out_bpp, nv);
+
+      in  = stp_malloc(image_width * image_bpp);
+      out = stp_malloc(image_width * out_bpp * 2);
+
+      errdiv  = image_height / out_height;
+      errmod  = image_height % out_height;
+      errval  = 0;
+      errlast = -1;
+      errline  = 0;
+
+      if (xdpi > ydpi)
+	dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, nv);
+      else
+	dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, nv);
+
+      adjust_print_quality(&init, dither,
+			   &lum_adjustment, &sat_adjustment, &hue_adjustment);
+
+      /*
+       * Let the user know what we're doing...
+       */
+
+      image->progress_init(image);
+
+      QUANT(0);
+      for (y = 0; y < out_height; y ++)
+	{
+	  int duplicate_line = 1;
+	  int zero_mask;
+	  if ((y & 63) == 0)
+	    image->note_progress(image, y, out_height);
+
+	  if (errline != errlast)
+	    {
+	      errlast = errline;
+	      duplicate_line = 0;
+	      if (image->get_row(image, in, errline) != STP_IMAGE_OK)
+		break;
+	      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp,
+			   cmap, hue_adjustment, lum_adjustment,
+			   sat_adjustment);
+	    }
+	  QUANT(1);
+
+	  stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
+	  QUANT(2);
+
+	  stp_write_weave(weave, length, ydpi, model, out_width, left,
+			  xdpi, physical_xdpi, cols);
+	  QUANT(3);
+	  errval += errmod;
+	  errline += errdiv;
+	  if (errval >= out_height)
+	    {
+	      errval -= out_height;
+	      errline ++;
+	    }
+	  QUANT(4);
+	}
+      image->progress_conclude(image);
+      stp_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi);
+      QUANT(5);
+
+      /*
+       * Cleanup...
+       */
+      stp_destroy_weave(weave);
+      stp_free_dither(dither);
+      stp_free_lut(nv);
+      stp_free(in);
+      stp_free(out);
+      if (hue_adjustment)
+	stp_free(hue_adjustment);
+      if (sat_adjustment)
+	stp_free(sat_adjustment);
+      if (lum_adjustment)
+	stp_free(lum_adjustment);
+      if (!privdata.printed_something)
+	stp_putc('\n', nv);
+      stp_puts("\014", nv);	/* Eject page */
+    }
+  if (print_op & OP_JOB_END)
+    escp2_deinit_printer(&init);
+  
   stp_free_dither_data(dt);
-  stp_free_dither(dither);
-
- /*
-  * Cleanup...
-  */
-  escp2_deinit_printer(&init, privdata.printed_something);
-
-  stp_free_lut(nv);
-  stp_free(in);
-  stp_free(out);
-  stp_destroy_weave(weave);
-
   for (i = 0; i < total_channels; i++)
     if (cols[i])
       stp_free((unsigned char *) cols[i]);
   stp_free(cols);
   stp_free(head_offset);
   stp_free(privdata.channels);
-  if (hue_adjustment)
-    stp_free(hue_adjustment);
-  if (sat_adjustment)
-    stp_free(sat_adjustment);
-  if (lum_adjustment)
-    stp_free(lum_adjustment);
 
 #ifdef QUANTIFY
   print_timers(nv);
 #endif
   stp_free_vars(nv);
+}
+
+static void
+escp2_print(const stp_printer_t printer,		/* I - Model */
+	    stp_image_t     *image,		/* I - Image to print */
+	    const stp_vars_t    v)
+{
+  int op = OP_JOB_PRINT;
+  if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
+    op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
+  escp2_do_print(printer, image, v, op);
+}
+
+static int
+escp2_job_start(const stp_printer_t printer,		/* I - Model */
+		stp_image_t     *image,		/* I - Image to print */
+		const stp_vars_t    v)
+{
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) != STP_JOB_MODE_JOB)
+    return 0;
+  escp2_do_print(printer, image, v, OP_JOB_START);
+  return 1;
+}
+
+static int
+escp2_job_end(const stp_printer_t printer,		/* I - Model */
+	      stp_image_t     *image,		/* I - Image to print */
+	      const stp_vars_t    v)
+{
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) != STP_JOB_MODE_JOB)
+    return 0;
+  escp2_do_print(printer, image, v, OP_JOB_END);
+  return 1;
 }
 
 const stp_printfuncs_t stp_escp2_printfuncs =
@@ -1593,7 +1677,9 @@ const stp_printfuncs_t stp_escp2_printfuncs =
   escp2_print,
   escp2_default_parameters,
   escp2_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  escp2_job_start,
+  escp2_job_end
 };
 
 static void

@@ -2241,9 +2241,10 @@ const stp_printfuncs_t stp_lexmark_printfuncs =
   lexmark_print,
   lexmark_default_parameters,
   lexmark_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  stp_start_job,
+  stp_end_job
 };
-
 
 
 /* lexmark_init_line

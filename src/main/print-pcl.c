@@ -2899,7 +2899,9 @@ const stp_printfuncs_t stp_pcl_printfuncs =
   pcl_print,
   pcl_default_parameters,
   pcl_describe_resolution,
-  stp_verify_printer_params
+  stp_verify_printer_params,
+  stp_start_job,
+  stp_end_job
 };
 
 

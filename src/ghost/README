@@ -1123,11 +1123,39 @@ This is printer type specific.  The option names are case sensitive.
 STP: -sInputSlot=mediasource
 IJS: -sIjsParams=MediaSource=mediasource
 
-For Epson printers:
+Epson printers without a roll feed mechanism should not have this
+option set.
+
+For Epson printers with a roll feed mechanism without a paper cutter
+(Stylus Photo 785, 825, 870, 875, 890, 895, 915, 1200, 1270, 1280,
+1290):
 
 Standard        Standard
-Roll            Roll Feed     (for certain Stylus Photo and Stylus
-                                Pro models only)
+Roll            Roll Feed
+
+For Epson printers with a roll feed mechanism with a paper cutter
+(Stylus Photo 925, 950, 960, 2100, 2200):
+
+Standard        Standard
+RollCutPage     Roll feed, cut each page
+RollCutNone     Roll feed, do not cut
+
+NOTE: The -sInputSlot=RollCutPage does not work with the STP driver,
+only with the IJS driver.
+
+For Epson Stylus Pro printers without a roll feed mechanism (Stylus
+Pro 5000, 5500):
+
+CutSheet1       Cut sheet bin 1
+CutSheet2       Cut sheet bin 2
+CutSheetAuto    Cut sheet autoselect
+ManualSelect    Manual selection
+
+For Epson Stylus Pro printers with a roll feed mechanism (Stylus Pro
+7000, 7500, 7600, 9000, 9500, 9600, 10000, 10600):
+
+Standard        Standard
+Roll            Roll Feed
 
 
 For Canon printers:

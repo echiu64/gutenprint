@@ -321,7 +321,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Update the current page...
     */
 
-    cups.page ++;
     cups.row = 0;
 
     fprintf(stderr, "PAGE: %d 1\n", cups.page);
@@ -381,108 +380,108 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Setup printer driver variables...
     */
 
-    v = stp_allocate_copy(stp_printer_get_printvars(printer));
+    if (cups.page == 0)
+      {
+	v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
-    stp_set_app_gamma(v, 1.0);
-    stp_set_brightness(v, stp_brightness);
-    stp_set_contrast(v, stp_contrast);
-    stp_set_cyan(v, stp_cyan);
-    stp_set_magenta(v, stp_magenta);
-    stp_set_yellow(v, stp_yellow);
-    stp_set_saturation(v, stp_saturation);
-    stp_set_density(v, stp_density);
-    stp_set_scaling(v, 0); /* No scaling */
-    stp_set_cmap(v, NULL);
-    stp_set_page_width(v, cups.header.PageSize[0]);
-    stp_set_page_height(v, cups.header.PageSize[1]);
-    stp_set_left(v, 0);
-    stp_set_top(v, 0);
-    stp_set_orientation(v, ORIENT_PORTRAIT);
-    stp_set_gamma(v, stp_gamma);
-    stp_set_image_type(v, cups.header.cupsRowCount);
-    stp_set_outfunc(v, cups_writefunc);
-    stp_set_errfunc(v, cups_writefunc);
-    stp_set_outdata(v, stdout);
-    stp_set_errdata(v, stderr);
+	stp_set_app_gamma(v, 1.0);
+	stp_set_brightness(v, stp_brightness);
+	stp_set_contrast(v, stp_contrast);
+	stp_set_cyan(v, stp_cyan);
+	stp_set_magenta(v, stp_magenta);
+	stp_set_yellow(v, stp_yellow);
+	stp_set_saturation(v, stp_saturation);
+	stp_set_density(v, stp_density);
+	stp_set_scaling(v, 0); /* No scaling */
+	stp_set_cmap(v, NULL);
+	stp_set_page_width(v, cups.header.PageSize[0]);
+	stp_set_page_height(v, cups.header.PageSize[1]);
+	stp_set_left(v, 0);
+	stp_set_top(v, 0);
+	stp_set_orientation(v, ORIENT_PORTRAIT);
+	stp_set_gamma(v, stp_gamma);
+	stp_set_image_type(v, cups.header.cupsRowCount);
+	stp_set_outfunc(v, cups_writefunc);
+	stp_set_errfunc(v, cups_writefunc);
+	stp_set_outdata(v, stdout);
+	stp_set_errdata(v, stderr);
 
-    switch (cups.header.cupsColorSpace)
-    {
-      case CUPS_CSPACE_W :
-          stp_set_output_type(v, OUTPUT_GRAY);
-	  break;
-      case CUPS_CSPACE_K :
-          stp_set_output_type(v, OUTPUT_MONOCHROME);
-	  break;
-      case CUPS_CSPACE_RGB :
-          stp_set_output_type(v, OUTPUT_COLOR);
-	  break;
-      case CUPS_CSPACE_CMYK :
-          stp_set_output_type(v, OUTPUT_RAW_CMYK);
-	  break;
-      default :
-          fprintf(stderr, "ERROR: Bad colorspace %d!",
-	          cups.header.cupsColorSpace);
-	  break;
-    }
+	switch (cups.header.cupsColorSpace)
+	  {
+	  case CUPS_CSPACE_W :
+	    stp_set_output_type(v, OUTPUT_GRAY);
+	    break;
+	  case CUPS_CSPACE_K :
+	    stp_set_output_type(v, OUTPUT_MONOCHROME);
+	    break;
+	  case CUPS_CSPACE_RGB :
+	    stp_set_output_type(v, OUTPUT_COLOR);
+	    break;
+	  case CUPS_CSPACE_CMYK :
+	    stp_set_output_type(v, OUTPUT_RAW_CMYK);
+	    break;
+	  default :
+	    fprintf(stderr, "ERROR: Bad colorspace %d!",
+		    cups.header.cupsColorSpace);
+	    break;
+	  }
 
-    if (cups.header.cupsRowStep >= stp_dither_algorithm_count())
-      fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
-    else
-      stp_set_dither_algorithm(v,
-                               stp_dither_algorithm_name(cups.header.cupsRowStep));
+	if (cups.header.cupsRowStep >= stp_dither_algorithm_count())
+	  fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
+	else
+	  stp_set_dither_algorithm(v,
+				   stp_dither_algorithm_name(cups.header.cupsRowStep));
 
-    stp_set_media_source(v, cups.header.MediaClass);
-    stp_set_media_type(v, cups.header.MediaType);
-    stp_set_ink_type(v, cups.header.OutputType);
+	stp_set_media_source(v, cups.header.MediaClass);
+	stp_set_media_type(v, cups.header.MediaType);
+	stp_set_ink_type(v, cups.header.OutputType);
 
-    fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
-            cups.header.PageSize[1]);
+	fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
+		cups.header.PageSize[1]);
 
-    if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
-					  cups.header.PageSize[0])) != NULL)
-      stp_set_media_size(v, stp_papersize_get_name(size));
-    else
-      fprintf(stderr, "ERROR: Unable to get media size!\n");
+	if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
+					      cups.header.PageSize[0])) != NULL)
+	  stp_set_media_size(v, stp_papersize_get_name(size));
+	else
+	  fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-    if (cups.header.cupsCompression >= num_res)
-      fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
-    else
-      stp_set_resolution(v, res[cups.header.cupsCompression].name);
-
-   /*
-    * Print the page...
-    */
-
-    stp_merge_printvars(v, stp_printer_get_printvars(printer));
-    fprintf(stderr, "DEBUG: stp_get_output_to(v) |%s|\n", stp_get_output_to(v));
-    fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
-    fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
-    fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_resolution(v));
-    fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_media_size(v));
-    fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_media_type(v));
-    fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_media_source(v));
-    fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_ink_type(v));
-    fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_dither_algorithm(v));
-    fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
-    fprintf(stderr, "DEBUG: stp_get_orientation(v) |%d|\n", stp_get_orientation(v));
-    fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
-    fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
-    fprintf(stderr, "DEBUG: stp_get_image_type(v) |%d|\n", stp_get_image_type(v));
-    fprintf(stderr, "DEBUG: stp_get_unit(v) |%d|\n", stp_get_unit(v));
-    fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
-    fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
-    fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
-    fprintf(stderr, "DEBUG: stp_get_output_color_model(v) |%d|\n", stp_get_output_color_model(v));
-    fprintf(stderr, "DEBUG: stp_get_brightness(v) |%.3f|\n", stp_get_brightness(v));
-    fprintf(stderr, "DEBUG: stp_get_scaling(v) |%.3f|\n", stp_get_scaling(v));
-    fprintf(stderr, "DEBUG: stp_get_gamma(v) |%.3f|\n", stp_get_gamma(v));
-    fprintf(stderr, "DEBUG: stp_get_contrast(v) |%.3f|\n", stp_get_contrast(v));
-    fprintf(stderr, "DEBUG: stp_get_cyan(v) |%.3f|\n", stp_get_cyan(v));
-    fprintf(stderr, "DEBUG: stp_get_magenta(v) |%.3f|\n", stp_get_magenta(v));
-    fprintf(stderr, "DEBUG: stp_get_yellow(v) |%.3f|\n", stp_get_yellow(v));
-    fprintf(stderr, "DEBUG: stp_get_saturation(v) |%.3f|\n", stp_get_saturation(v));
-    fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
-    fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
+	if (cups.header.cupsCompression >= num_res)
+	  fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
+	else
+	  stp_set_resolution(v, res[cups.header.cupsCompression].name);
+	stp_set_job_mode(v, STP_JOB_MODE_JOB);
+	stp_merge_printvars(v, stp_printer_get_printvars(printer));
+	fprintf(stderr, "DEBUG: stp_get_output_to(v) |%s|\n", stp_get_output_to(v));
+	fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
+	fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
+	fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_resolution(v));
+	fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_media_size(v));
+	fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_media_type(v));
+	fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_media_source(v));
+	fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_ink_type(v));
+	fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_dither_algorithm(v));
+	fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
+	fprintf(stderr, "DEBUG: stp_get_orientation(v) |%d|\n", stp_get_orientation(v));
+	fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
+	fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
+	fprintf(stderr, "DEBUG: stp_get_image_type(v) |%d|\n", stp_get_image_type(v));
+	fprintf(stderr, "DEBUG: stp_get_unit(v) |%d|\n", stp_get_unit(v));
+	fprintf(stderr, "DEBUG: stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
+	fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
+	fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
+	fprintf(stderr, "DEBUG: stp_get_output_color_model(v) |%d|\n", stp_get_output_color_model(v));
+	fprintf(stderr, "DEBUG: stp_get_brightness(v) |%.3f|\n", stp_get_brightness(v));
+	fprintf(stderr, "DEBUG: stp_get_scaling(v) |%.3f|\n", stp_get_scaling(v));
+	fprintf(stderr, "DEBUG: stp_get_gamma(v) |%.3f|\n", stp_get_gamma(v));
+	fprintf(stderr, "DEBUG: stp_get_contrast(v) |%.3f|\n", stp_get_contrast(v));
+	fprintf(stderr, "DEBUG: stp_get_cyan(v) |%.3f|\n", stp_get_cyan(v));
+	fprintf(stderr, "DEBUG: stp_get_magenta(v) |%.3f|\n", stp_get_magenta(v));
+	fprintf(stderr, "DEBUG: stp_get_yellow(v) |%.3f|\n", stp_get_yellow(v));
+	fprintf(stderr, "DEBUG: stp_get_saturation(v) |%.3f|\n", stp_get_saturation(v));
+	fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
+	fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
+      }
+    stp_set_page_number(v, cups.page);
 
     (*stp_printer_get_printfuncs(printer)->media_size)
       (printer, v, &(cups.width), &(cups.height));
@@ -504,9 +503,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
 
+   /*
+    * Print the page...
+    */
+
     if (stp_printer_get_printfuncs(printer)->verify(printer, v))
     {
       signal(SIGTERM, cancel_job);
+      if (cups.page == 0)
+	stp_printer_get_printfuncs(printer)->start_job(printer, &theImage, v);
       stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
       fflush(stdout);
     }
@@ -529,10 +534,12 @@ main(int  argc,				/* I - Number of command-line arguments */
 	cups.row ++;
       }
     }
-
-    stp_free_vars(v);
+    cups.page ++;
   }
 
+  if (cups.page > 0)
+    stp_printer_get_printfuncs(printer)->end_job(printer, &theImage, v);
+  stp_free_vars(v);
  /*
   * Close the raster stream...
   */

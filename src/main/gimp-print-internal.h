@@ -349,7 +349,10 @@ extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n);
 extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n);
 
-
+extern int stp_start_job(const stp_printer_t printer,
+			 stp_image_t *image, const stp_vars_t v);
+extern int stp_end_job(const stp_printer_t printer,
+		       stp_image_t *image, const stp_vars_t v);
 
 extern void stp_flush_all(void *, int model, int width, int hoffset,
 			  int ydpi, int xdpi, int physical_xdpi);

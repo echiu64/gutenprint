@@ -86,6 +86,8 @@ typedef struct					/* Plug-in variables */
   int	page_height;		/* Height of page in points */
   int	input_color_model;	/* Color model for this device */
   int	output_color_model;	/* Color model for this device */
+  int	page_number;
+  stp_job_mode_t job_mode;
   void  *lut;			/* Look-up table */
   void  *driver_data;		/* Private data of the driver */
   unsigned char *cmap;		/* Color map */
@@ -150,7 +152,9 @@ static const stp_internal_vars_t default_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	COLOR_MODEL_RGB,	/* Input color model */
-	COLOR_MODEL_RGB		/* Output color model */
+	COLOR_MODEL_RGB,	/* Output color model */
+	0,			/* Page number */
+	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
 static const stp_internal_vars_t min_vars =
@@ -184,7 +188,9 @@ static const stp_internal_vars_t min_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	0,			/* Input color model */
-	0			/* Output color model */
+	0,			/* Output color model */
+	0,			/* Page number */
+	STP_JOB_MODE_PAGE	/* Job mode */
 };
 
 static const stp_internal_vars_t max_vars =
@@ -218,7 +224,9 @@ static const stp_internal_vars_t max_vars =
 	0,			/* Page width */
 	0,			/* Page height */
 	NCOLOR_MODELS - 1,	/* Input color model */
-	NCOLOR_MODELS - 1	/* Output color model */
+	NCOLOR_MODELS - 1,	/* Output color model */
+	INT_MAX,		/* Page number */
+	STP_JOB_MODE_JOB	/* Job mode */
 };
 
 stp_vars_t
@@ -364,6 +372,8 @@ DEF_FUNCS(yellow, float)
 DEF_FUNCS(saturation, float)
 DEF_FUNCS(density, float)
 DEF_FUNCS(app_gamma, float)
+DEF_FUNCS(page_number, int)
+DEF_FUNCS(job_mode, stp_job_mode_t)
 DEF_FUNCS(lut, void *)
 DEF_FUNCS(outdata, void *)
 DEF_FUNCS(errdata, void *)
@@ -1126,6 +1136,30 @@ const char *
 stp_default_dither_algorithm(void)
 {
   return stp_dither_algorithm_name(0);
+}
+
+int
+stp_start_job(const stp_printer_t printer,
+	      stp_image_t *image, const stp_vars_t v)
+{
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
+    return 1;
+  else
+    return 0;
+}
+
+int
+stp_end_job(const stp_printer_t printer,
+	      stp_image_t *image, const stp_vars_t v)
+{
+  if (!stp_get_verified(v))
+    return 0;
+  if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
+    return 1;
+  else
+    return 0;
 }
 
 void

@@ -972,8 +972,6 @@ main (int argc, char **argv)
 	    stp_set_dither_algorithm(img.v, stp_default_dither_algorithm());
 	}
 
-      page++;
-
       img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3) 
 	* (double) ph.height;
       img.bytes_left = img.total_bytes;
@@ -982,9 +980,13 @@ main (int argc, char **argv)
       stp_set_cmap(img.v, NULL);
       stp_set_scaling(img.v, (float)-img.xres); /* resolution of image */
       stp_set_output_type(img.v, img.output_type); 
+      stp_set_page_number(img.v, page);
+      stp_set_job_mode(img.v, STP_JOB_MODE_JOB);
       STP_DEBUG(stp_dbg("about to print", img.v));
       if (stp_printer_get_printfuncs(printer)->verify(printer, img.v))
 	{
+	  if (page == 0)
+	    stp_printer_get_printfuncs(printer)->start_job(printer, &si, img.v);
 	  stp_printer_get_printfuncs(printer)->print(printer, &si, img.v);
 	}
       else
@@ -1006,8 +1008,11 @@ main (int argc, char **argv)
 	}
 
       image_finish(&img);
+      page++;
     }
   while (status == 0);
+  stp_printer_get_printfuncs(printer)->end_job(printer, &si, img.v);
+
   if (f)
     {
       fclose(f);
