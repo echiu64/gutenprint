@@ -52,7 +52,7 @@ If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
 
-Gimp-print 4.2 alpha requires the Gimp 1.2.
+Gimp-print 4.2 beta requires the Gimp 1.2.
 
 
 CUPS
@@ -74,9 +74,9 @@ Gimp-Print PPD's with.  Such printers may be identified in any CUPS
 front end (e. g. KUPS, or via the web interface) because they look
 something like this:
 
-                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-b1(en)
+                EPSON Stylus Photo EX, CUPS+GIMP-print v4.1.99-b3(en)
 
-If the version number (in this case, 4.1.8) does not match the version
+If the version number (in this case, 4.1.99-b3) does not match the version
 of Gimp-Print that you are installing, you must use Modify Printer to
 force the new PPD file to get installed.  Failure to do so may lead to
 incorrect output and/or other errors.
@@ -167,9 +167,9 @@ supported.  In particular, versions of Ghostscript that are not
 licensed under the GNU General Public License (GPL) are not supported,
 and this driver may not be distributed with such a version.
 
-Note that as of 4.1.99-a3, many of the options to the Ghostscript
-driver have changed incompatibly.  Please read the README for more
-information!
+Note that many of the options to the Ghostscript driver are
+incompatible with the options used prior to release 4.1.99-a3.  Please
+read src/ghost/README for information on the current options.
 
 
 RECOMMENDED SETTINGS
