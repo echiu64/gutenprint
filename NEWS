@@ -44,33 +44,36 @@ Gimp-Print 4.3.14 contains the following major changes over Gimp-Print
    to be printed.  This permits users to solve problems of not enough
    ink being printed.
 
-3) A Czech translation has been added.
+3) A glitch in Even Tone dithering in certain very pale regions has
+   been fixed.  This problem was introduced in 4.3.12.
 
-4) Engineering C paper size has been added.
+4) A Czech translation has been added.
 
-5) Additional printers have been added to the compatibility list.
+5) Engineering C paper size has been added.
 
-6) "Set defaults" in the output adjustment window now sets default
+6) Additional printers have been added to the compatibility list.
+
+7) "Set defaults" in the output adjustment window now sets default
    values of all options (boolean and choice in addition to floating
    point).
 
-7) A problem with ordered and adaptive hybrid dithering at low
+8) A problem with ordered and adaptive hybrid dithering at low
    densities has been fixed.  The typical symptom is sharp transitions
    at high resolutions.
 
-8) 1440x1440 Highest Quality has been removed from the resolution
+9) 1440x1440 Highest Quality has been removed from the resolution
    choice for Epson printers capable of printing at 2880x1440.
 
-9) The Epson family driver has been significantly restructured.
+10) The Epson family driver has been significantly restructured.
 
-10) Additional "const" corrections have been made in the code.
+11) Additional "const" corrections have been made in the code.
     Additional (probably too many) warnings have been enabled in
     maintainer mode.
 
-11) The printdef program, which has long been obsolete, has been
+12) The printdef program, which has long been obsolete, has been
    removed.  This has caused some spurious build problems.
 
-12) The tests have been improved in coverage and capability.
+13) The tests have been improved in coverage and capability.
 
 
 Gimp-Print 4.3.13 contains the following major changes over Gimp-Print
