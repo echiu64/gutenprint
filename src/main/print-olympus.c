@@ -81,6 +81,17 @@ typedef struct {
 #define OLYMPUS_RES_COUNT	5
 typedef olympus_res_t olympus_res_t_array[OLYMPUS_RES_COUNT];
 
+typedef struct {
+	const char *name;
+	const char *text;
+	const stp_raw_t seq;
+} laminate_t;
+
+typedef struct {
+	const laminate_t *item;
+	size_t n_items;
+} laminate_list_t;
+
 typedef struct /* printer specific parameters */
 {
   int model;		/* printer model number from printers.xml*/
@@ -107,8 +118,10 @@ typedef struct /* printer specific parameters */
   const char *adj_cyan;		/* default color adjustment */
   const char *adj_magenta;
   const char *adj_yellow;
+  const laminate_list_t *laminate;
 } olympus_cap_t;
 
+static const olympus_cap_t* olympus_get_model_capabilities(int model);
 
 static const olympus_res_t_array p300_resolution = 
 {
@@ -338,9 +351,22 @@ static void updp10_printer_init_func(stp_vars_t v)
 
 static void updp10_printer_end_func(stp_vars_t v)
 {
+  const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+		  				stpi_get_model_id(v));
+  const laminate_list_t *llist = caps->laminate;
+  const laminate_t *l = NULL;
+  int i;
+
+  for (i = 0; i < llist->n_items; i++)
+    {
+      l = &(llist->item[i]);
+      if (strcmp(l->name, lpar) == 0)
+	 break;
+    }
 	stpi_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
 			"\x00\xb0\x00\x00\04", 1, 13, v);
-	stpi_putc('\x00', v); /* <- glossy lamination */
+	stpi_zfwrite((l->seq).data, 1, (l->seq).bytes, v); /*laminate pattern*/
 	stpi_zfwrite("\x00\x00\x00\x00\x07\x08\x04\xb0"
 			"\xff\xff\xff\xff\x09\x00\x00\x00"
 			"\x1b\xee\x00\x00\x00\x02\x00\x00"
@@ -349,6 +375,19 @@ static void updp10_printer_end_func(stp_vars_t v)
 			"\xff\xff\xff\xff\xf8\xff\xff\xff"
 			, 1, 48, v);
 }
+
+static const laminate_t updp10_laminate[] =
+{
+	{"Glossy",  N_("Glossy"),  {1, "\x00"}},
+	{"Texture", N_("Texture"), {1, "\x08"}},
+	{"Matte",   N_("Matte"),   {1, "\x0c"}},
+};
+
+static const laminate_list_t updp10_laminate_list =
+{
+	updp10_laminate, sizeof(updp10_laminate) / sizeof(laminate_t)
+};
+
 
 
 static const olympus_cap_t olympus_model_capabilities[] =
@@ -365,6 +404,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		NULL, &p300_plane_end_func,
 		&p300_block_init_func, NULL,
 		p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
+		NULL,
 	},
 	{ 1, 		/* model P400 */
 		595, 842,	/* A4 */
@@ -378,6 +418,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		&p400_plane_init_func, &p400_plane_end_func,
 		&p400_block_init_func, NULL,
 		p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
+		NULL,
 	},
 	{ 1000, 	/* canon CP100 */
 		283, 416, 	/* Postcard */
@@ -391,6 +432,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		&cpx00_plane_init_func, NULL,
 		NULL, NULL,
 		cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+		NULL,
 	},
 	{ 2000, 	/* sony UP-DP10  */
 		283, 416, 	/* Postcard */
@@ -404,6 +446,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		NULL, NULL,
 		NULL, NULL,
 		NULL, NULL, NULL,
+		&updp10_laminate_list,
 	},
 };
 
@@ -443,6 +486,12 @@ static const stp_parameter_t the_parameters[] =
   {
     "Resolution", N_("Resolution"),
     N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
+    "Laminate", N_("Laminate Pattern"),
+    N_("Laminate Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
@@ -646,6 +695,27 @@ olympus_parameters(stp_const_vars_t v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  else if (strcmp(name, "Laminate") == 0)
+  {
+    if (caps->laminate)
+      {
+      const laminate_list_t *llist = caps->laminate;
+      description->bounds.str = stp_string_list_create();
+
+      for (i = 0; i < llist->n_items; i++)
+        {
+          const laminate_t *l = &(llist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+			  	l->name, l->text);
+	}
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+      }
+    else
+      {
+      description->is_active = 0;
+      }
+  }
   else
     description->is_active = 0;
 }
@@ -744,8 +814,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int out_px_left, out_px_right, out_px_top, out_px_bottom;
 
   /* page in 1/72" */
+#if 0
   int page_pt_width  = stp_get_page_width(v);
   int page_pt_height = stp_get_page_height(v);
+#endif
   int page_pt_left, page_pt_right, page_pt_top, page_pt_bottom;
 
   /* page w/out borders in pixels (according to selected dpi) */
