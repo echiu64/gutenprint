@@ -161,6 +161,8 @@ typedef struct dither
   dither_color_t k_dither;
 
   int *errs[ERROR_ROWS][NCOLORS];
+  int *offset0_table;
+  int *offset1_table;
 
   /* Hardwiring these matrices in here is an abomination.  This */
   /* eventually needs to be cleaned up. */
@@ -269,6 +271,8 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_m_ranges(d, 1, &r, 1.0);
   dither_set_y_ranges(d, 1, &r, 1.0);
   dither_set_k_ranges(d, 1, &r, 1.0);
+  d->offset0_table = NULL;
+  d->offset1_table = NULL;
 
   CALC_MATRIX(0, sq2);
   CALC_MATRIX(1, sq3);
@@ -337,9 +341,35 @@ void
 dither_set_ink_spread(void *vd, int spread)
 {
   dither_t *d = (dither_t *) vd;
-  if (spread > 16)
-    spread = 16;
-  d->spread = spread;
+  if (d->offset0_table)
+    {
+      free(d->offset0_table);
+      d->offset0_table = NULL;
+    }
+  if (d->offset1_table)
+    {
+      free(d->offset1_table);
+      d->offset1_table = NULL;
+    }
+  if (spread >= 16)
+    {
+      d->spread = 16;
+    }
+  else
+    {
+      int max_offset;
+      int i;
+      d->spread = spread;
+      max_offset = (1 << (16 - spread)) + 1;
+      d->offset0_table = malloc(sizeof(int) * max_offset);
+      d->offset1_table = malloc(sizeof(int) * max_offset);
+      for (i = 0; i < max_offset; i++)
+	{
+	  d->offset0_table[i] = (i + 1) * (i + 1);
+	  d->offset1_table[i] = ((i + 1) * i) / 2;
+	}
+    }
+
   d->adaptive_divisor = 128 << ((16 - d->spread) >> 1);
   d->adaptive_limit = d->density / d->adaptive_divisor;
 }
@@ -620,6 +650,16 @@ free_dither(void *vd)
   d->y_dither.ranges = NULL;
   free(d->k_dither.ranges);
   d->k_dither.ranges = NULL;
+  if (d->offset0_table)
+    {
+      free(d->offset0_table);
+      d->offset0_table = NULL;
+    }
+  if (d->offset1_table)
+    {
+      free(d->offset1_table);
+      d->offset1_table = NULL;
+    }
   free(d);
 }
 
@@ -742,75 +782,6 @@ do {									  \
 } while (0)
 
 /*
- * For Floyd-Steinberg, distribute the error residual.  We spread the
- * error to nearby points, spreading more broadly in lighter regions to
- * achieve more uniform distribution of color.  The actual distribution
- * is a triangular function.
- */
-
-#define UPDATE_DITHER(r, x, width)					     \
-do {									     \
-  if (!(d->dither_type & D_ORDERED_BASE))				     \
-    {									     \
-      int tmp##r = r;							     \
-      if (tmp##r != 0)							     \
-	{								     \
-	  int i, dist;							     \
-	  int dist1;							     \
-	  int offset;							     \
-	  int delta, delta1;						     \
-	  int myspread;							     \
-	  if (odb >= 16 || o##r >= 2048)				     \
-	    offset = 0;							     \
-	  else								     \
-	    {								     \
-	      int tmpo##r = o##r * 32;					     \
-	      offset = (65535 - (tmpo##r & 0xffff)) >> odb;		     \
-	      if ((rand() & odb_mask) > (tmpo##r & odb_mask))		     \
-		offset++;						     \
-	    }								     \
-	  if (offset > x)						     \
-	    offset = x;							     \
-	  else if (offset > xdw1)					     \
-	    offset = xdw1;						     \
-	  if (tmp##r > 65535)						     \
-	    tmp##r = 65535;						     \
-	  myspread = 4;							     \
-	  if (offset == 0)						     \
-	    {								     \
-	      dist = myspread * tmp##r;					     \
-	      if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))   \
-		r##error0[direction] += (8 - myspread) * tmp##r;	     \
-	      delta1 = 0;						     \
-	      dist1 = 0;						     \
-	    }								     \
-	  else								     \
-	    {								     \
-	      dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	     \
-	      dist1 = (8 - myspread) * tmp##r * 2 / ((offset + 1) * offset); \
-	      delta1 = dist1 * offset;					     \
-	    }								     \
-	  delta = dist;							     \
-	  for (i = -offset; i <= offset; i++)				     \
-	    {								     \
-	      r##error1[i] += delta;					     \
-	      if ((i > 0 && direction > 0) || (i < 0 && direction < 0))	     \
-		{							     \
-		  r##error0[i] += delta1;				     \
-		  delta1 -= dist1;					     \
-		}							     \
-	      if (i < 0)						     \
-		delta += dist;						     \
-	      else							     \
-		delta -= dist;						     \
-	    }								     \
-	}								     \
-      if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))	     \
-	dither##r = r##error0[direction];				     \
-    }									     \
-} while (0)
-
-/*
  * Add the error to the input value.  Notice that we micro-optimize this
  * to save a division when appropriate.
  */
@@ -825,6 +796,77 @@ do {						\
 	r += dither##r / 8;			\
     }						\
 } while (0)
+
+/*
+ * For Floyd-Steinberg, distribute the error residual.  We spread the
+ * error to nearby points, spreading more broadly in lighter regions to
+ * achieve more uniform distribution of color.  The actual distribution
+ * is a triangular function.
+ */
+
+static int
+update_dither(int r, int o, int x, int width, int odb, int odb_mask,
+	      int xdw1, int direction, int *error0, int *error1,
+	      dither_t *d)
+{
+  int tmp = r;
+  if (tmp != 0)
+    {
+      int i, dist;
+      int dist1;
+      int offset;
+      int delta, delta1;
+      int myspread;
+      if (odb >= 16 || o >= 2048)
+	offset = 0;
+      else
+	{
+	  int tmpo = o * 32;
+	  offset = (65535 - (tmpo & 0xffff)) >> odb;
+	  if ((rand() & odb_mask) > (tmpo & odb_mask))
+	    offset++;
+	  if (offset > x)
+	    offset = x;
+	  else if (offset > xdw1)
+	    offset = xdw1;
+	}
+      if (tmp > 65535)
+	tmp = 65535;
+      myspread = 4;
+      if (offset == 0)
+	{
+	  dist = myspread * tmp;
+	  if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))
+	    error0[direction] += (8 - myspread) * tmp;
+	  delta1 = 0;
+	  dist1 = 0;
+	}
+      else
+	{
+	  dist = myspread * tmp / d->offset0_table[offset];
+	  dist1 = (8 - myspread) * tmp / d->offset1_table[offset];
+	  delta1 = dist1 * offset;
+	}
+      delta = dist;
+      for (i = -offset; i <= offset; i++)
+	{
+	  error1[i] += delta;
+	  if ((i > 0 && direction > 0) || (i < 0 && direction < 0))
+	    {
+	      error0[i] += delta1;
+	      delta1 -= dist1;
+	    }
+	  if (i < 0)
+	    delta += dist;
+	  else
+	    delta -= dist;
+	}
+    }
+  if ((x > 0 && direction < 0) || (xdw1 > 0 && direction > 0))
+    return error0[direction];
+  else
+    return 0;
+}
 
 /*
  * Print a single dot.  This routine has become awfully complicated
@@ -972,6 +1014,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	       * combination of matrices) to generate the offset.
 	       */
 	      vmatrix = DITHERPOINT(d, x, y, 1) ^ DITHERPOINT(d, x, y, 2);
+	      break;
 	    case D_ORDERED:
 	    case D_ORDERED_PERTURBED:
 	    default:
@@ -1255,7 +1298,9 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 	UPDATE_COLOR(k);
 	k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL, bit,
 			length, 0, 0, d->k_randomizer, 0);
-	UPDATE_DITHER(k, x, d->src_width);
+	if (!(d->dither_type & D_ORDERED_BASE))
+	  ditherk = update_dither(k, ok, x, d->src_width, odb, odb_mask, xdw1,
+				  direction, kerror0, kerror1, d);
       }
 
     INCREMENT_BLACK();
@@ -1410,6 +1455,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       int kdarkness;
       int tk;
       int printed_black = 0;
+      int omd, oyd, ocd;
 
       /*
        * First compute the standard CMYK separation color values...
@@ -1521,7 +1567,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	  if (tk != k)
 	    printed_black = 1;
 	  k = tk;
-	  UPDATE_DITHER(k, x, d->src_width);
+	  if (!(d->dither_type & D_ORDERED_BASE))
+	    ditherk = update_dither(k, ok, x, d->src_width, odb, odb_mask,
+				    xdw1, direction, kerror0, kerror1, d);
 	}
       else
 	{
@@ -1550,22 +1598,28 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       UPDATE_COLOR(m);
       UPDATE_COLOR(y);
 
-      c = print_color(d, &(d->c_dither), oc,
-		      oc + (om * d->m_darkness + oy * d->y_darkness) / 128,
+      ocd = oc * d->c_darkness;
+      omd = om * d->m_darkness;
+      oyd = oy * d->y_darkness;
+      c = print_color(d, &(d->c_dither), oc, oc + ((omd + oyd) >> 7),
 		      c, x, row, cptr, lcptr, bit, length, 0, 1,
 		      d->c_randomizer, printed_black);
-      m = print_color(d, &(d->m_dither), om,
-		      om + (oc * d->c_darkness + oy * d->y_darkness) / 128,
+      m = print_color(d, &(d->m_dither), om, om + ((ocd + oyd) >> 7),
 		      m, x, row, mptr, lmptr, bit, length, 1, 0,
 		      d->m_randomizer, printed_black);
-      y = print_color(d, &(d->y_dither), oy,
-		      oy + (om * d->m_darkness + oc * d->c_darkness) / 128,
+      y = print_color(d, &(d->y_dither), oy, oy + ((ocd + omd) >> 7),
 		      y, x, row, yptr, lyptr, bit, length, 1, 1,
 		      d->y_randomizer, printed_black);
 
-      UPDATE_DITHER(c, x, d->dst_width);
-      UPDATE_DITHER(m, x, d->dst_width);
-      UPDATE_DITHER(y, x, d->dst_width);
+      if (!(d->dither_type & D_ORDERED_BASE))
+	{
+	  ditherc = update_dither(c, oc, x, d->src_width, odb, odb_mask, xdw1,
+				  direction, cerror0, cerror1, d);
+	  ditherm = update_dither(m, om, x, d->src_width, odb, odb_mask, xdw1,
+				  direction, merror0, merror1, d);
+	  dithery = update_dither(y, oy, x, d->src_width, odb, odb_mask, xdw1,
+				  direction, yerror0, yerror1, d);
+	}
 
       /*****************************************************************
        * Advance the loop
@@ -1580,6 +1634,16 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.38  2000/05/06 02:12:35  rlk
+ *   Convert UPDATE_DITHER from a macro to a function.  This should make it
+ *   easier to profile this code (it needs it, badly!).  We can always make
+ *   this inline if need be.
+ *
+ *   Point optimizations in dither_cmyk.
+ *
+ *   Silly bug in hybrid Floyd-Steinberg.  It actually looks quite nice
+ *   now!
+ *
  *   Revision 1.37  2000/05/05 02:41:41  rlk
  *   Minor cleanup
  *
