@@ -251,11 +251,9 @@ static const escp2_variable_ink_t photo_magenta_ink =
 
 static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
-  { 0.135,  0x1, 0, 1 },
-  { 0.200, 0x2, 0, 2 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
+  { 0.0845,  0x1, 0, 1 },
+  { 0.13, 0x2, 0, 2 },
+  { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -359,8 +357,8 @@ static const escp2_variable_ink_t photo_4pl_1440_ink =
 
 static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
+  { 0.325, 0x1, 1, 1 },
+  { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -528,12 +526,9 @@ static const escp2_variable_ink_t standard_3pl_2880_ink =
 
 static const stp_simple_dither_range_t photo_multishot_dither_ranges[] =
 {
-  { 0.1097, 0x1, 0, 1 },
-  { 0.227,  0x2, 0, 2 },
-/*  { 0.333, 0x3, 0, 3 }, */
-  { 0.28,   0x1, 1, 1 },
-  { 0.58,   0x2, 1, 2 },
-  { 0.85,   0x3, 1, 3 },
+  { 0.0728, 0x1, 0, 1 },
+  { 0.151,  0x2, 0, 2 },
+  { 0.26,   0x3, 0, 3 },
   { 1.0,    0x3, 1, 3 }
 };
 
@@ -549,7 +544,6 @@ static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
 {
   { 0.28,  0x1, 1, 1 },
   { 0.58,  0x2, 1, 2 },
-  { 0.85,  0x3, 1, 3 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -1327,7 +1321,7 @@ static const int c3pl_dotsizes[] =
 { -1, 1, 0x11, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 };
 
 static const int c4pl_dotsizes[] =
-{ 2, 0, 0x12, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 };
+{ 0x12, 0, 0x12, 0, 0x12, 0, 0x11, -1, 0x10, -1, -1, -1, -1 };
 
 static const int sc660_dotsizes[] =
 { 3, 3, -1, 3, 0, 3, 0, -1, 0, -1, -1, -1, -1 };
@@ -1336,7 +1330,7 @@ static const int sc480_dotsizes[] =
 { 0x13, -1, 0x13, -1, 0x13, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int p4pl_dotsizes[] =
-{ 4, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 };
+{ 0x12, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 };
 
 static const int sc670_dotsizes[] =
 { 3, 3, 0x12, 3, 0x12, 3, 0x11, -1, 0x11, -1, -1, -1, -1 };
