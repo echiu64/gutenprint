@@ -478,8 +478,10 @@ static void updp10_printer_init_func(stp_vars_t v)
 		"\x00\x00\x00\x00", 1, 28, v);
   stpi_put16_be(privdata.xsize, v);
   stpi_put16_be(privdata.ysize, v);
-  stpi_zfwrite("\x8b\xe0\x62\x00\x1b\xea\x00\x00"
-		"\x00\x00\x00\x62\xe0\x80\x00", 1, 15, v);
+  stpi_put32_le(privdata.xsize*privdata.ysize*3+11, v);
+  stpi_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
+  stpi_put32_be(privdata.xsize*privdata.ysize*3, v);
+  stpi_zfwrite("\x00", 1, 1, v);
 }
 
 static void updp10_printer_end_func(stp_vars_t v)
