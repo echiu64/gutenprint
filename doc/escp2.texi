@@ -1,4 +1,4 @@
-@node ESC/P2, ESC/P2 Introduction, Oversampling, Appendices
+@node ESC/P2, New Printer, Weaving, Appendices
 @appendix ESC/P2
 @cindex ESC/P2
 
@@ -9,7 +9,7 @@
 * ESC/P2 Appropriate Remote Commands:: Useful remote command sequences
 @end menu
 
-@node ESC/P2 Introduction, ESC/P2 Standard Commands, ESC/P2, ESC/P2  
+@node ESC/P2 Introduction, ESC/P2 Standard Commands, , ESC/P2  
 @appendixsection Introduction to ESC/P2
 @cindex ESC/P2 introduction
 
@@ -820,7 +820,7 @@ roll feed.
 @end deffn
 
 
-@node ESC/P2 Appropriate Remote Commands, New Printer, ESC/P2 Remote Mode Commands, ESC/P2
+@node ESC/P2 Appropriate Remote Commands, , ESC/P2 Remote Mode Commands, ESC/P2
 @appendixsection Appropriate Remote Commands
 
 All of the remote commands described above are wrapped up with the usual

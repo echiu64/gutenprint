@@ -1,4 +1,4 @@
-@node Data Type and Variable Index, Function and Macro Index, Canon inkjet printers, Top
+@node Data Type and Variable Index, Function and Macro Index, Appendices, Top
 @unnumbered Data Type and Variable Index
 
 @printindex vr
@@ -8,7 +8,7 @@
 
 @printindex fn
 
-@node Concept Index,  , Function and Macro Index, Top
+@node Concept Index, , Function and Macro Index, Top
 @unnumbered Concept Index
 
 @printindex cp

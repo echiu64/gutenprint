@@ -1,4 +1,4 @@
-@node Appendices, Dithering, Problems, Top
+@node Appendices, Data Type and Variable Index, Problems, Top
 @menu
 * Dithering::                   Dither algorithms.
 * Weaving::                     Weaving algorithms.

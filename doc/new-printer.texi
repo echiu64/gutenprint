@@ -1,4 +1,4 @@
-@node New Printer, printers.xml, ESC/P2 Appropriate Remote Commands, Appendices
+@node New Printer, ,ESC/P2, Appendices
 @appendix Adding a new printer
 @cindex adding a printer
 @cindex printer, adding
@@ -29,7 +29,7 @@ upper-level application), and in the appropriate driver file
 * Canon inkjet printers::       Adding a Canon printer.
 @end menu
 
-@node printers.xml, Driver file, New Printer, New Printer
+@node printers.xml, Driver file, , New Printer
 @appendixsection @file{printers.xml}
 
 @file{printers.xml} is an XML-like file (there's no formal DTD) that
@@ -453,7 +453,7 @@ There are other ways of tuning printers, but this one works pretty
 well for me.
 
 
-@node Canon inkjet printers, Data Type and Variable Index, Tuning Epson printers, New Printer
+@node Canon inkjet printers, , Tuning Epson printers, New Printer
 @appendixsection Canon inkjet printers
 
 Basically, a new canon printer can be added to @file{print-canon.c} in a

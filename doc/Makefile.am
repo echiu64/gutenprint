@@ -50,7 +50,7 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 all-local: html
 
 html: html-stamp
-html-stamp: $(gimpprint_TEXINFOS)
+html-stamp: gimpprint.texi $(gimpprint_TEXINFOS)
 	if test x$(TEXI2HTML_PROG) != x ; then \
 	  rm -rf manual-html ; \
 	  mkdir manual-html ; \

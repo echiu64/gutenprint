@@ -21,8 +21,8 @@ The manual is split into several parts for the programmer.  It starts
 with a simple usage example of how to link a program with libgimpprint,
 then how to integrate this into package build scripts, using
 @command{make}, @command{autoconf} and @command{automake}.  This is
-followed by a section detailing all the data types provided by
-libgimpprint, and a detailed function reference.
+followed by a detailed function reference, including descriptions of all
+the data types used.
 
 For the end-user, there is a section on all of the programs that come
 with GIMP-Print, including the GIMP @command{print} plugin, and the CUPS

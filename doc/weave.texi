@@ -1,4 +1,4 @@
-@node Weaving, Weaving introduction, Dithering, Appendices
+@node Weaving, ESC/P2, Dithering, Appendices
 @appendix Weaving for inkjet printers
 @cindex weaving
 
@@ -11,7 +11,7 @@ by Charles Briscoe-Smith and Robert Krawitz.
 @end menu
 
 
-@node Weaving introduction, Weaving algorithms, Weaving, Weaving
+@node Weaving introduction, Weaving algorithms, , Weaving
 @appendixsection Introduction
 
 The Epson Stylus Color/Photo printers don't have memory to print using
@@ -1092,7 +1092,7 @@ We have now solved the basic weaving problem.  There are two further
 refinements we need to consider: oversampling, and filling in the
 missing rows at the start of the weave.
 
-@node Oversampling, ESC/P2, What is perfect weaving?, Weaving algorithms
+@node Oversampling, , What is perfect weaving?, Weaving algorithms
 @appendixsubsec Oversampling
 @cindex oversampling
 

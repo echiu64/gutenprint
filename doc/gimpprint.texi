@@ -107,7 +107,6 @@ GIMP-Print.
 * Overview::                    Preliminary information.
 * Using libgimpprint::          Examples of how to use libgimpprint.
 * Integrating libgimpprint::    Using libgimpprint in your own packages.
-* Types::                       Types overview.
 * Functions::                   libgimpprint function reference.
 * Programs::                    Using GIMP-Print programs.
 * Problems::                    Reporting bugs.
@@ -121,7 +120,7 @@ GIMP-Print.
 @include copying.texi
 @include overview.texi
 @include using.texi
-@include types.texi
+@include integrating.texi
 @include functions.texi
 @include programs.texi
 @include problems.texi
