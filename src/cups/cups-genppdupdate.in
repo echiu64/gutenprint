@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#! @PERL@ -w
 # $Id$
 # Update CUPS PPDs for Gimp-Print queues.
 # Copyright (C) 2002-2003 Roger Leigh (roger@whinlatter.uklinux.net)
@@ -22,7 +22,6 @@ use Getopt::Std;
 use Fcntl qw(:mode);
 use File::Temp qw(:POSIX);
 use File::Copy qw(mv);
-use Locale::gettext;
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
@@ -87,13 +86,24 @@ umask 0177;
 
 # Find all in-use Gimp-Print PPD files...
 
-open PPDFILES, "grep -i -l GIMP-print $ppd_dir/*|" or die "can't grep $ppd_dir/*: $!";
-while (<PPDFILES>) {
-    chomp;
-    push @ppd_files,  $_;
+my @ppdglob = glob("$ppd_dir/*");
+my $ppdlist = join ' ', @ppdglob;
+if (@ppdglob) {
+    open PPDFILES, "grep -i -l GIMP-print $ppdlist|" or die "can't grep $ppd_dir/*: $!";
+    while (<PPDFILES>) {
+	chomp;
+	push @ppd_files,  $_;
+    }
+    close PPDFILES or ($! == 0) or die "can't close grep pipe: $!";
 }
-close PPDFILES or ($! == 0) or die "can't close grep pipe: $!";
 
+
+# Exit if there are not files to update...
+
+if (!@ppd_files) {
+    print STDOUT "No Gimp-Print PPD files to update.\n";
+    exit (0);
+}
 
 # Update each of the Gimp-Print PPDs, where possible...
 
