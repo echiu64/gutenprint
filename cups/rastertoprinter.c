@@ -230,10 +230,11 @@ main(int  argc,				/* I - Number of command-line arguments */
     memcpy(&v, &(printer->printvars), sizeof(v));
 
     v.app_gamma   = 1.0;
-    v.scaling     = -cups.header.HWResolution[0]; /* No scaling */
+    v.scaling     = 0; /* No scaling */
     v.cmap        = NULL;
     v.page_width  = cups.header.PageSize[0];
     v.page_height = cups.header.PageSize[1];
+    v.orientation = ORIENT_PORTRAIT;
 
     if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
       v.output_type = OUTPUT_GRAY;
@@ -244,9 +245,14 @@ main(int  argc,				/* I - Number of command-line arguments */
     strcpy(v.media_source, cups.header.MediaClass);
     strcpy(v.media_type, cups.header.MediaType);
 
-    if ((size = get_papersize_by_size(cups.header.PageSize[0],
-                                      cups.header.PageSize[1])) != NULL)
+    fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
+            cups.header.PageSize[1]);
+
+    if ((size = get_papersize_by_size(cups.header.PageSize[1],
+                                      cups.header.PageSize[0])) != NULL)
       strcpy(v.media_size, size->name);
+    else
+      fprintf(stderr, "ERROR: Unable to get media size!\n");
 
    /*
     * The resolution variable needs a big overhaul...

@@ -56,7 +56,7 @@ RANLIB	=	:
 #
 
 TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
-		rastertoprinter
+		ppd rastertoprinter
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
 		cups-ps.o cups-util.o cups-weave.o
 OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
@@ -139,12 +139,19 @@ epson:	epson.o
 genppd:	genppd.o libdrv.a
 	echo Linking $@...
 	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
+
+genppd.o:	cups-print.h cups-printers.c
+
+
+#
+# ppd
+#
+
+ppd:	genppd
 	echo Cleaning old PPD files...
 	$(RM) ppd/*
 	echo Running $@...
 	./genppd
-
-genppd.o:	cups-print.h cups-printers.c
 
 
 #

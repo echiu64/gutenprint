@@ -392,7 +392,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
              left, bottom, right, top);
   }
 
-  gzputs(fp, "*DefaultPageDimension: " DEFAULT_SIZE "\n");
+  gzputs(fp, "*DefaultPaperDimension: " DEFAULT_SIZE "\n");
 
   for (i = 0; i < num_opts; i ++)
   {
@@ -409,9 +409,9 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
         break;
 
     if (j)
-      gzprintf(fp, "*PageDimension %s", size->name);
+      gzprintf(fp, "*PaperDimension %s", size->name);
     else
-      gzprintf(fp, "*PageDimension w%dh%d", width, length);
+      gzprintf(fp, "*PaperDimension w%dh%d", width, length);
 
     gzprintf(fp, "/%s:\t\"%d %d\"\n", opts[i], width, length);
   }
@@ -542,7 +542,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     if (i == 0)
     {
-      gzprintf(fp, "*DefaultResolution %d", xdpi);
+      gzprintf(fp, "*DefaultResolution: %d", xdpi);
       if (xdpi != ydpi)
 	gzprintf(fp, "x%d", ydpi);
       gzprintf(fp, "%s\n", qnames[j]);

@@ -1745,7 +1745,12 @@ compute_page_parameters(int page_right,	/* I */
    * Calculate width/height...
    */
 
-  if (scaling < 0.0)
+  if (scaling == 0.0)
+    {
+      *out_width  = *page_width;
+      *out_height = *page_height;
+    }
+  else if (scaling < 0.0)
     {
       /*
        * Scale to pixels per inch...
