@@ -414,8 +414,8 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     valptrs = stp_malloc(sizeof(stp_param_t) * ninktypes);
     for (i = 0; i < ninktypes; i++)
     {
-      valptrs[*count].name = c_strdup(inks->inknames[i]->name);
-      valptrs[*count].text = c_strdup(_(inks->inknames[i]->text));
+      valptrs[i].name = c_strdup(inks->inknames[i]->name);
+      valptrs[i].text = c_strdup(_(inks->inknames[i]->text));
     }
     *count = ninktypes;
     return valptrs;
