@@ -366,11 +366,11 @@ msgid "360 DPI Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3450 src/main/print-escp2-data.c:3770
-msgid "360 DPI Microweave"
+msgid "360 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3452 src/main/print-escp2-data.c:3772
-msgid "360 DPI Microweave Unidirectional"
+msgid "360 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3459 src/main/print-escp2-data.c:3519
@@ -389,11 +389,11 @@ msgid "720 x 360 DPI Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3464 src/main/print-escp2-data.c:3812
-msgid "720 DPI Microweave"
+msgid "720 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3466 src/main/print-escp2-data.c:3814
-msgid "720 DPI Microweave Unidirectional"
+msgid "720 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3468 src/main/print-escp2-data.c:3524
@@ -428,11 +428,11 @@ msgid "720 DPI Highest Quality"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3479 src/main/print-escp2-data.c:3825
-msgid "1440 x 720 DPI Microweave"
+msgid "1440 x 720 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3481 src/main/print-escp2-data.c:3827
-msgid "1440 x 720 DPI Microweave Unidirectional"
+msgid "1440 x 720 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3483 src/main/print-escp2-data.c:3535
@@ -510,11 +510,11 @@ msgid "360 DPI MW2 Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3795
-msgid "720 x 360 DPI Microweave"
+msgid "720 x 360 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3797
-msgid "720 x 360 DPI Microweave Unidirectional"
+msgid "720 x 360 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3799
@@ -577,11 +577,11 @@ msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3838
-msgid "2880 x 720 DPI Microweave"
+msgid "2880 x 720 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3840
-msgid "2880 x 720 DPI Microweave Unidirectional"
+msgid "2880 x 720 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3842
@@ -601,11 +601,11 @@ msgid "2880 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3851
-msgid "1440 x 1440 DPI Microweave"
+msgid "1440 x 1440 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3853
-msgid "1440 x 1440 DPI Microweave Unidirectional"
+msgid "1440 x 1440 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3855
@@ -626,11 +626,11 @@ msgid "1440 x 1440 DPI Four Pass Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3864
-msgid "2880 x 1440 DPI Microweave"
+msgid "2880 x 1440 DPI Interleave"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3866
-msgid "2880 x 1440 DPI Microweave Unidirectional"
+msgid "2880 x 1440 DPI Interleave Unidirectional"
 msgstr ""
 
 #: src/main/print-escp2-data.c:3868

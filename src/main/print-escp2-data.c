@@ -3447,9 +3447,9 @@ static const res_t standard_reslist[] =
     360,  360,  360,  360,  1,  0, 1, 1, 0, 1, 1, RES_360 },
   { "360swuni",         N_("360 DPI Unidirectional"),
     360,  360,  360,  360,  1,  0, 1, 1, 1, 1, 1, RES_360 },
-  { "360mw",            N_("360 DPI Microweave"),
+  { "360mw",            N_("360 DPI Interleave"),
     360,  360,  360,  360,  0,  1, 1, 1, 0, 1, 1, RES_360_M },
-  { "360mwuni",         N_("360 DPI Microweave Unidirectional"),
+  { "360mwuni",         N_("360 DPI Interleave Unidirectional"),
     360,  360,  360,  360,  0,  1, 1, 1, 1, 1, 1, RES_360_M },
   { "360dpi",           N_("360 DPI"),
     360,  360,  360,  360,  0,  0, 1, 1, 0, 1, 1, RES_360_M },
@@ -3461,9 +3461,9 @@ static const res_t standard_reslist[] =
   { "720x360swuni",     N_("720 x 360 DPI Unidirectional"),
     720,  360,  720,  360,  1,  0, 1, 1, 1, 2, 1, RES_720_360 },
 
-  { "720mw",            N_("720 DPI Microweave"),
+  { "720mw",            N_("720 DPI Interleave"),
     720,  720,  720,  720,  0,  1, 1, 1, 0, 1, 1, RES_720_M },
-  { "720mwuni",         N_("720 DPI Microweave Unidirectional"),
+  { "720mwuni",         N_("720 DPI Interleave Unidirectional"),
     720,  720,  720,  720,  0,  1, 1, 1, 1, 1, 1, RES_720_M },
   { "720sw",            N_("720 DPI"),
     720,  720,  720,  720,  1,  0, 1, 1, 0, 1, 1, RES_720 },
@@ -3476,9 +3476,9 @@ static const res_t standard_reslist[] =
   { "720hq2",           N_("720 DPI Highest Quality"),
     720,  720,  720,  720,  1,  0, 4, 1, 1, 1, 1, RES_720 },
 
-  { "1440x720mw",       N_("1440 x 720 DPI Microweave"),
+  { "1440x720mw",       N_("1440 x 720 DPI Interleave"),
     1440, 720,  1440, 720,  0,  1, 1, 1, 0, 1, 1, RES_1440_720_M },
-  { "1440x720mwuni",    N_("1440 x 720 DPI Microweave Unidirectional"),
+  { "1440x720mwuni",    N_("1440 x 720 DPI Interleave Unidirectional"),
     1440, 720,  1440, 720,  0,  1, 1, 1, 1, 1, 1, RES_1440_720_M },
   { "1440x720sw",       N_("1440 x 720 DPI"),
     1440, 720,  1440, 720,  1,  0, 1, 1, 0, 1, 1, RES_1440_720 },
@@ -3675,7 +3675,7 @@ static const res_t escp2200_reslist[] =
   { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 }
 };
 
-static const res_t no_microweave_reslist[] =
+static const res_t no_interleave_reslist[] =
 {
   { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
     360,  90,   360,  90,   0,  0, 1, 1, 0, 1, 1, RES_120_M },
@@ -3767,9 +3767,9 @@ static const res_t pro_reslist[] =
   { "360x180dpi",       N_("360 x 180 DPI Draft"),
     360,  180,  360,  180,  0,  0, 1, 1, 0, 1, 1, RES_180_M },
 
-  { "360mw",            N_("360 DPI Microweave"),
+  { "360mw",            N_("360 DPI Interleave"),
     360,  360,  360,  360,  0,  1, 1, 1, 0, 1, 1, RES_360_M },
-  { "360mwuni",         N_("360 DPI Microweave Unidirectional"),
+  { "360mwuni",         N_("360 DPI Interleave Unidirectional"),
     360,  360,  360,  360,  0,  1, 1, 1, 1, 1, 1, RES_360_M },
   { "360dpi",           N_("360 DPI"),
     360,  360,  360,  360,  0,  0, 1, 1, 0, 1, 1, RES_360_M },
@@ -3792,9 +3792,9 @@ static const res_t pro_reslist[] =
     720,  360,  720,  360,  0,  0, 1, 1, 0, 2, 1, RES_720_360_M },
   { "720x360uni",       N_("720 x 360 DPI Unidirectional"),
     720,  360,  720,  360,  0,  0, 1, 1, 1, 2, 1, RES_720_360_M },
-  { "720x360mw",        N_("720 x 360 DPI Microweave"),
+  { "720x360mw",        N_("720 x 360 DPI Interleave"),
     720,  360,  720,  360,  0,  1, 1, 1, 0, 2, 1, RES_720_360_M },
-  { "720x360mwuni",     N_("720 x 360 DPI Microweave Unidirectional"),
+  { "720x360mwuni",     N_("720 x 360 DPI Interleave Unidirectional"),
     720,  360,  720,  360,  0,  1, 1, 1, 1, 2, 1, RES_720_360_M },
   { "720x360fol",       N_("720 x 360 DPI FOL"),
     720,  360,  720,  360,  0,  2, 1, 1, 0, 2, 1, RES_720_360_M },
@@ -3809,9 +3809,9 @@ static const res_t pro_reslist[] =
   { "720x360mw2uni",    N_("720 x 360 DPI MW2 Unidirectional"),
     720,  360,  720,  360,  0,  5, 1, 1, 1, 2, 1, RES_720_360_M },
 
-  { "720mw",            N_("720 DPI Microweave"),
+  { "720mw",            N_("720 DPI Interleave"),
     720,  720,  720,  720,  0,  1, 1, 1, 0, 1, 1, RES_720_M },
-  { "720mwuni",         N_("720 DPI Microweave Unidirectional"),
+  { "720mwuni",         N_("720 DPI Interleave Unidirectional"),
     720,  720,  720,  720,  0,  1, 1, 1, 1, 1, 1, RES_720_M },
   { "720fol",           N_("720 DPI Full Overlap"),
     720,  720,  720,  720,  0,  2, 1, 1, 0, 1, 1, RES_720_M },
@@ -3822,9 +3822,9 @@ static const res_t pro_reslist[] =
   { "720fourpuni",      N_("720 DPI Four Pass Unidirectional"),
     720,  720,  720,  720,  0,  3, 1, 1, 1, 1, 1, RES_720_M },
 
-  { "1440x720mw",       N_("1440 x 720 DPI Microweave"),
+  { "1440x720mw",       N_("1440 x 720 DPI Interleave"),
     1440, 720,  1440, 720,  0,  1, 1, 1, 0, 1, 1, RES_1440_720_M },
-  { "1440x720mwuni",    N_("1440 x 720 DPI Microweave Unidirectional"),
+  { "1440x720mwuni",    N_("1440 x 720 DPI Interleave Unidirectional"),
     1440, 720,  1440, 720,  0,  1, 1, 1, 1, 1, 1, RES_1440_720_M },
   { "1440x720fol",      N_("1440 x 720 DPI FOL"),
     1440, 720,  1440, 720,  0,  2, 1, 1, 0, 1, 1, RES_1440_720_M },
@@ -3835,9 +3835,9 @@ static const res_t pro_reslist[] =
   { "1440x720fourpuni", N_("1440 x 720 DPI Four Pass Unidirectional"),
     1440, 720,  1440, 720,  0,  3, 1, 1, 1, 1, 1, RES_1440_720_M },
 
-  { "2880x720mw",       N_("2880 x 720 DPI Microweave"),
+  { "2880x720mw",       N_("2880 x 720 DPI Interleave"),
     2880, 720,  2880, 720,  0,  1, 1, 1, 0, 1, 1, RES_2880_720_M },
-  { "2880x720mwuni",    N_("2880 x 720 DPI Microweave Unidirectional"),
+  { "2880x720mwuni",    N_("2880 x 720 DPI Interleave Unidirectional"),
     2880, 720,  2880, 720,  0,  1, 1, 1, 1, 1, 1, RES_2880_720_M },
   { "2880x720fol",      N_("2880 x 720 DPI FOL"),
     2880, 720,  2880, 720,  0,  2, 1, 1, 0, 1, 1, RES_2880_720_M },
@@ -3848,9 +3848,9 @@ static const res_t pro_reslist[] =
   { "2880x720fourpuni", N_("2880 x 720 DPI Four Pass Unidirectional"),
     2880, 720,  2880, 720,  0,  3, 1, 1, 1, 1, 1, RES_2880_720_M },
 
-  { "1440x1440mw",       N_("1440 x 1440 DPI Microweave"),
+  { "1440x1440mw",       N_("1440 x 1440 DPI Interleave"),
     1440, 1440,  1440, 1440,  0,  1, 1, 1, 0, 1, 1, RES_1440_1440_M },
-  { "1440x1440mwuni",    N_("1440 x 1440 DPI Microweave Unidirectional"),
+  { "1440x1440mwuni",    N_("1440 x 1440 DPI Interleave Unidirectional"),
     1440, 1440,  1440, 1440,  0,  1, 1, 1, 1, 1, 1, RES_1440_1440_M },
   { "1440x1440fol",      N_("1440 x 1440 DPI FOL"),
     1440, 1440,  1440, 1440,  0,  2, 1, 1, 0, 1, 1, RES_1440_1440_M },
@@ -3861,9 +3861,9 @@ static const res_t pro_reslist[] =
   { "1440x1440fourpuni", N_("1440 x 1440 DPI Four Pass Unidirectional"),
     1440, 1440,  1440, 1440,  0,  3, 1, 1, 1, 1, 1, RES_1440_1440_M },
 
-  { "2880x1440mw",       N_("2880 x 1440 DPI Microweave"),
+  { "2880x1440mw",       N_("2880 x 1440 DPI Interleave"),
     2880, 1440,  2880, 1440,  0,  1, 1, 1, 0, 1, 1, RES_2880_1440_M },
-  { "2880x1440mwuni",    N_("2880 x 1440 DPI Microweave Unidirectional"),
+  { "2880x1440mwuni",    N_("2880 x 1440 DPI Interleave Unidirectional"),
     2880, 1440,  2880, 1440,  0,  1, 1, 1, 1, 1, 1, RES_2880_1440_M },
   { "2880x1440fol",      N_("2880 x 1440 DPI FOL"),
     2880, 1440,  2880, 1440,  0,  2, 1, 1, 0, 1, 1, RES_2880_1440_M },
@@ -4191,7 +4191,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 8,
     sc440_dotsizes, sc440_densities, &simple_inks,
-    &standard_paper_list, no_microweave_reslist, &standard_inklist,
+    &standard_paper_list, no_interleave_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
     NULL, NULL
   },

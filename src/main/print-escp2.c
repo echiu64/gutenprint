@@ -106,7 +106,7 @@ typedef struct escp2_init
   int xdpi;
   int physical_xdpi;
   int use_softweave;
-  int use_microweave;
+  int use_interleave;
   int page_true_height;
   int page_width;
   int page_top;
@@ -154,7 +154,7 @@ escp2_##f(int model, const stp_vars_t v)		\
   return (stp_escp2_model_capabilities[model].f);	\
 }
 
-#define DEF_MICROWEAVE_ACCESSOR(f, t)					     \
+#define DEF_INTERLEAVE_ACCESSOR(f, t)					     \
 static t								     \
 escp2_##f(int model, const stp_vars_t v)				     \
 {									     \
@@ -201,14 +201,14 @@ DEF_SIMPLE_ACCESSOR(input_slots, const input_slot_list_t *)
 DEF_SIMPLE_ACCESSOR(preinit_sequence, const init_sequence_t *)
 DEF_SIMPLE_ACCESSOR(postinit_remote_sequence, const init_sequence_t *)
 
-DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(top_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(bottom_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(roll_left_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(roll_right_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(roll_top_margin, unsigned)
-DEF_MICROWEAVE_ACCESSOR(roll_bottom_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(left_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(right_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(top_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(bottom_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(roll_left_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(roll_right_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(roll_top_margin, unsigned)
+DEF_INTERLEAVE_ACCESSOR(roll_bottom_margin, unsigned)
 
 static int
 reslist_count(const res_t *rt)
@@ -710,7 +710,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
       print_remote_int_param(init->v, "Xdpi", init->xdpi);
       print_remote_int_param(init->v, "Physical_xdpi", init->physical_xdpi);
       print_remote_int_param(init->v, "Use_softweave", init->use_softweave);
-      print_remote_int_param(init->v, "Use_microweave", init->use_microweave);
+      print_remote_int_param(init->v, "Use_interleave", init->use_interleave);
       print_remote_int_param(init->v, "Page_true_height", init->page_true_height);
       print_remote_int_param(init->v, "Page_width", init->page_width);
       print_remote_int_param(init->v, "Page_top", init->page_top);
@@ -833,9 +833,9 @@ escp2_set_color(const escp2_init_t *init)
 }
 
 static void
-escp2_set_microweave(const escp2_init_t *init)
+escp2_set_interleave(const escp2_init_t *init)
 {
-  stp_zprintf(init->v, "\033(i\001%c%c", 0, init->use_microweave);
+  stp_zprintf(init->v, "\033(i\001%c%c", 0, init->use_interleave);
 }
 
 static void
@@ -949,7 +949,7 @@ escp2_init_printer(const escp2_init_t *init)
   escp2_set_graphics_mode(init);
   escp2_set_resolution(init);
   escp2_set_color(init);
-  escp2_set_microweave(init);
+  escp2_set_interleave(init);
   escp2_set_printhead_speed(init);
   escp2_set_dot_size(init);
   escp2_set_printhead_resolution(init);
@@ -1458,7 +1458,7 @@ escp2_do_print(const stp_printer_t printer,		/* I - Model */
   init.xdpi = xdpi;
   init.physical_xdpi = physical_xdpi;
   init.use_softweave = res->softweave;
-  init.use_microweave = res->microweave;
+  init.use_interleave = res->interleave;
   init.page_true_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;

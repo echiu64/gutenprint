@@ -384,15 +384,15 @@ space and prints more slowly, but does not require significantly more
 processing time.
        </para>
      </sect4>
-     <sect4><title>Microweave</title>
+     <sect4><title>Interleave</title>
        <para>
        Certain Epson printers (older models mostly) support a printing
-       mode called <emphasis>Microweave</emphasis>.  This mode uses
+       mode called <emphasis>Interleave</emphasis>.  This mode uses
        special software within the printer to improve the print quality.
-       Microweave print modes will usually produce better quality
-       output than non-Microweave modes, with only a small performance
-       penalty.  If Microweave is not listed at your chosen
-       resolution, fear not.  In those cases, the non-Microweave print
+       Interleave print modes will usually produce better quality
+       output than non-Interleave modes, with only a small performance
+       penalty.  If Interleave is not listed at your chosen
+       resolution, fear not.  In those cases, the non-Interleave print
        modes offer similar printing quality improvements.
        </para>
      </sect4>

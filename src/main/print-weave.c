@@ -103,8 +103,7 @@ typedef struct raw {
 /*
  * Strategy types currently defined:
  *
- *  0: microweave (intercepted at the escp2 driver level so we never
- *     see it here)
+ *  0: printer firmware weave
  *  1: zig-zag type pass block filling
  *  2: ascending pass block filling
  *  3: descending pass block filling
