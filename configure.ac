@@ -365,39 +365,39 @@ STP_ARG_ENABLE([libgimpprintui],
                [BUILD_LIBGIMPPRINTUI],
                [(automatic)])
 
-AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
-if test -z "${GIMPTOOL2_CHECK}" ; then
-  BUILD_GIMP2="no"
-else
-  # Check we have version 2.0
-  gimptool_check_version=`${GIMPTOOL2_CHECK} --version`
-dnl Quote to protect sed regexes
-  [gimptool_check_major=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
-  [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
-  if test "$gimptool_check_major" -eq 2 -a "$gimptool_check_minor" -eq 0; then
-    BUILD_GIMP2="yes"
-  else
-    BUILD_GIMP2="no"
-  fi
-fi
-
-PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
-                  [HAVE_GTK2=yes
-                   BUILD_LIBGIMPPRINTUI2=yes
-                   GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
-                  [HAVE_GTK2=no
-	           BUILD_LIBGIMPPRINTUI2=no])
-PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
-
-STP_ARG_WITH([gimp2],
-             [build GIMP 2.0 Print plugin],
-             [BUILD_GIMP2],
-             [(automatic)])
-
-STP_ARG_ENABLE([libgimpprintui2],
-               [build Gimp-Print GTK+-2.0 user interface library],
-               [BUILD_LIBGIMPPRINTUI2],
-               [(automatic)])
+dnl AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
+dnl if test -z "${GIMPTOOL2_CHECK}" ; then
+dnl   BUILD_GIMP2="no"
+dnl else
+dnl   # Check we have version 2.0
+dnl   gimptool_check_version=`${GIMPTOOL2_CHECK} --version`
+dnl dnl Quote to protect sed regexes
+dnl   [gimptool_check_major=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
+dnl   [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
+dnl   if test "$gimptool_check_major" -eq 2 -a "$gimptool_check_minor" -eq 0; then
+dnl     BUILD_GIMP2="yes"
+dnl   else
+dnl     BUILD_GIMP2="no"
+dnl   fi
+dnl fi
+dnl 
+dnl PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
+dnl                   [HAVE_GTK2=yes
+dnl                    BUILD_LIBGIMPPRINTUI2=yes
+dnl                    GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
+dnl                   [HAVE_GTK2=no
+dnl 	           BUILD_LIBGIMPPRINTUI2=no])
+dnl PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
+dnl 
+dnl STP_ARG_WITH([gimp2],
+dnl              [build GIMP 2.0 Print plugin],
+dnl              [BUILD_GIMP2],
+dnl              [(automatic)])
+dnl 
+dnl STP_ARG_ENABLE([libgimpprintui2],
+dnl                [build Gimp-Print GTK+-2.0 user interface library],
+dnl                [BUILD_LIBGIMPPRINTUI2],
+dnl                [(automatic)])
 
 STP_ARG_ENABLE([samples],
                [install sample images],
@@ -742,11 +742,11 @@ AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 
 AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI, test x${BUILD_LIBGIMPPRINTUI} = xyes)
 
-AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI2, test x${BUILD_LIBGIMPPRINTUI2} = xyes)
+dnl AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI2, test x${BUILD_LIBGIMPPRINTUI2} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
-AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
+dnl AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
 
 AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
@@ -860,8 +860,8 @@ AC_SUBST(IJS_LIBS)
 AC_SUBST(RM)
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
-AC_SUBST(GIMP2_CFLAGS)
-AC_SUBST(GIMP2_LIBS)
+dnl AC_SUBST(GIMP2_CFLAGS)
+dnl AC_SUBST(GIMP2_LIBS)
 AC_SUBST(gimp_plug_indir)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
@@ -871,19 +871,19 @@ AC_SUBST(GIMPPRINT_UI_CFLAGS)
 AC_SUBST(GIMPPRINT_UI_LIBS)
 AC_SUBST(GIMPPRINT_UI_LIBDEPS)
 AC_SUBST(GIMPPRINT_UI_VERSION)
-AC_SUBST(GIMPPRINTUI2_CFLAGS)
-AC_SUBST(GIMPPRINTUI2_LIBS)
-AC_SUBST(GIMPPRINTUI2_LIBDEPS)
-AC_SUBST(GIMPPRINTUI2_VERSION)
+dnl AC_SUBST(GIMPPRINTUI2_CFLAGS)
+dnl AC_SUBST(GIMPPRINTUI2_LIBS)
+dnl AC_SUBST(GIMPPRINTUI2_LIBDEPS)
+dnl AC_SUBST(GIMPPRINTUI2_VERSION)
 AC_SUBST(gimpprint_cflags)
 gimpprint_libs="${GIMPPRINT_LIBS} ${gimpprint_libdeps}"
 AC_SUBST(gimpprint_libs)
 AC_SUBST(gimpprint_ui_cflags)
 gimpprint_ui_libs="${GIMPPRINT_UI_LIBS} ${gimpprint_ui_libdeps}"
 AC_SUBST(gimpprint_ui_libs)
-AC_SUBST(gimpprintui2_cflags)
-gimpprintui2_libs="${GIMPPRINTUI2_LIBS} ${gimpprintui2_libdeps}"
-AC_SUBST(gimpprintui2_libs)
+dnl AC_SUBST(gimpprintui2_cflags)
+dnl gimpprintui2_libs="${GIMPPRINTUI2_LIBS} ${gimpprintui2_libdeps}"
+dnl AC_SUBST(gimpprintui2_libs)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
