@@ -441,10 +441,10 @@ static const stp_dither_range_simple_t piezo_6pl_quadtone_dither_ranges[] =
 
 static const stp_shade_t piezo_6pl_quadtone_shades[] =
 {
-  { PIEZO_0, 0, standard_6pl_dotsizes },
-  { PIEZO_1, 1, standard_6pl_dotsizes },
-  { PIEZO_2, 2, standard_6pl_dotsizes },
-  { PIEZO_3, 3, standard_6pl_dotsizes }
+  SHADE(PIEZO_0, 0, standard_6pl_dotsizes),
+  SHADE(PIEZO_1, 1, standard_6pl_dotsizes),
+  SHADE(PIEZO_2, 2, standard_6pl_dotsizes),
+  SHADE(PIEZO_3, 3, standard_6pl_dotsizes)
 };
 
 DECLARE_INK2(piezo_6pl_quadtone, PIEZO_DENSITY);
@@ -460,10 +460,10 @@ static const stp_dither_range_simple_t piezo_6pl_1440_quadtone_dither_ranges[] =
 
 static const stp_shade_t piezo_6pl_1440_quadtone_shades[] =
 {
-  { PIEZO_0, 0, standard_6pl_1440_dotsizes },
-  { PIEZO_0, 1, standard_6pl_1440_dotsizes },
-  { PIEZO_0, 2, standard_6pl_1440_dotsizes },
-  { PIEZO_0, 3, standard_6pl_1440_dotsizes }
+  SHADE(PIEZO_0, 0, standard_6pl_1440_dotsizes),
+  SHADE(PIEZO_1, 1, standard_6pl_1440_dotsizes),
+  SHADE(PIEZO_2, 2, standard_6pl_1440_dotsizes),
+  SHADE(PIEZO_3, 3, standard_6pl_1440_dotsizes)
 };
 
 DECLARE_INK2(piezo_6pl_1440_quadtone, PIEZO_DENSITY);
@@ -478,10 +478,10 @@ static const stp_dither_range_simple_t piezo_6pl_2880_quadtone_dither_ranges[] =
 
 static const stp_shade_t piezo_6pl_2880_quadtone_shades[] =
 {
-  { PIEZO_0, 0, standard_6pl_2880_dotsizes },
-  { PIEZO_0, 1, standard_6pl_2880_dotsizes },
-  { PIEZO_0, 2, standard_6pl_2880_dotsizes },
-  { PIEZO_0, 3, standard_6pl_2880_dotsizes }
+  SHADE(PIEZO_0, 0, standard_6pl_2880_dotsizes),
+  SHADE(PIEZO_1, 1, standard_6pl_2880_dotsizes),
+  SHADE(PIEZO_2, 2, standard_6pl_2880_dotsizes),
+  SHADE(PIEZO_3, 3, standard_6pl_2880_dotsizes)
 };
 
 DECLARE_INK2(piezo_6pl_2880_quadtone, PIEZO_DENSITY);
