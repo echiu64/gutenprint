@@ -96,6 +96,7 @@
 #gptofoo escp2-875 printer/Epson-Stylus_Photo_875
 #gptofoo escp2-890 printer/Epson-Stylus_Photo_890
 #gptofoo escp2-895 printer/Epson-Stylus_Photo_895
+#gptofoo escp2-ph900 printer/Epson-Stylus_Photo_900
 #gptofoo escp2-915 printer/Epson-Stylus_Photo_915
 #gptofoo escp2-925 printer/Epson-Stylus_Photo_925
 #gptofoo escp2-950 printer/Epson-Stylus_Photo_950
@@ -152,6 +153,7 @@
 #gptofoo escp2-pm880c printer/Epson-PM_880C
 #gptofoo escp2-pm9000c printer/Epson-PM_9000C
 #gptofoo escp2-pm950c printer/Epson-PM_950C
+#gptofoo escp2-pm970c printer/Epson-PM_970C
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
 #gptofoo pcl-apple-4100 printer/Apple-Color_StyleWriter_4100

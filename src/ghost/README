@@ -513,6 +513,7 @@ escp2-870               EPSON Stylus Photo 870
 escp2-875               EPSON Stylus Photo 875
 escp2-890               EPSON Stylus Photo 890
 escp2-895               EPSON Stylus Photo 895
+escp2-ph900             EPSON Stylus Photo 900
 escp2-915               EPSON Stylus Photo 915
 escp2-925               EPSON Stylus Photo 925
 escp2-950               EPSON Stylus Photo 950
@@ -571,6 +572,7 @@ escp2-pm850pt           EPSON PM-850PT
 escp2-pm880c            EPSON PM-880C
 escp2-pm9000c           EPSON PM-9000C
 escp2-pm950c            EPSON PM-950C
+escp2-pm970c            EPSON PM-970C
 escp2-px7000            EPSON PX-7000
 escp2-px9000            EPSON PX-9000
 pcl-desnj-230           HP DesignJet 230

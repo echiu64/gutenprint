@@ -724,6 +724,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 900" driver="escp2-ph900">
+<color>
+<model value=36>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 915" driver="escp2-915">
 <color>
 <model value=36>
@@ -1116,6 +1124,14 @@
 <printer name="EPSON PM-950C" driver="escp2-pm950c">
 <color>
 <model value=53>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON PM-970C" driver="escp2-pm970c">
+<color>
+<model value=57>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
