@@ -107,8 +107,8 @@ make, make}, for more information.
 @cindex m4 macros
 
 The @command{autoconf} program produces a Bourne shell script called
-@file{configure} from a template file called @file{configure.in}.
-@file{configure.in} contains both Bourne shell script, and @command{m4} macros.
+@file{configure} from a template file called @file{configure.ac}.
+@file{configure.ac} contains both Bourne shell script, and @command{m4} macros.
 @command{autoconf} expands the @command{m4} macros into `real' shell script.
 The resulting @file{configure} script performs various checks for installed
 programs, compiler characteristics and other system information such as
@@ -116,7 +116,7 @@ available headers and libraries. @inforef{Top, GNU autoconf, autoconf}, for
 more information.
 
 GIMP-Print provides an @command{m4} macro, @code{AM_PATH_GIMPPRINT}, suitable for
-use in a @file{configure.in}. It defines the environment variables
+use in a @file{configure.ac}. It defines the environment variables
 @env{GIMPPRINT_CFLAGS}, @env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG}. You can
 optionally specify a minimum version of the library to use, and shell script to
 run if the test suceeds or fails.
@@ -187,6 +187,6 @@ MAINTAINERCLEANFILES = Makefile.in
 @end example
 
 That's all there is to it! Please note that this example also requires the
-macro @code{AC_PROG_MAKE_SET} to be used in @file{configure.in} and the use of
+macro @code{AC_PROG_MAKE_SET} to be used in @file{configure.ac} and the use of
 @code{AC_SUBST} to substitute @env{CFLAGS} and @env{INCLUDES} where
 @code{@@CFLAGS@@} and @code{@@INCLUDES@@} are found in the file, respectively.

@@ -1,0 +1,9 @@
+# Configure paths for gimp-print
+# Roger Leigh -- Thu, 24 Jan 2002
+# (based on gimpprint.m4 by Owen Taylor     97-11-3)
+
+dnl AM_PATH_GIMPPRINT([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
+dnl Test for GIMP-PRINT, and define GIMPPRINT_CFLAGS and GIMPPRINT_LIBS
+dnl
+
+

@@ -17,4 +17,4 @@ print-color.lo
 print-weave.lo
 print-version.lo
 gimpprint-config
-gimp-print.pc
+gimpprint.pc
