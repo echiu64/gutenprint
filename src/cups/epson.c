@@ -686,7 +686,14 @@ list_devices(void)
     if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d (interrupt-driven)\"\n", device, i + 1);
+    }
+
+    sprintf(device, "/dev/lpa%d", i);
+    if ((fd = open(device, O_RDWR)) >= 0)
+    {
+      close(fd);
+      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d (polled)\"\n", device, i + 1);
     }
   }
 
