@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.48  1999/12/30 23:58:07  rlk
+ *   Silly little bug...
+ *
  *   Revision 1.47  1999/12/26 19:02:46  rlk
  *   Performance stuff
  *
@@ -509,6 +512,15 @@ do {						\
   UPDATE_COLOR_DBG(r);				\
 } while (0)
 
+#define DO_PRINT_COLOR(color)			\
+do {						\
+  if (color##bits++ == horizontal_overdensity)	\
+    {						\
+      *color##ptr |= bit;			\
+      color##bits = 1;				\
+    }						\
+} while(0)
+
 #define PRINT_COLOR(color, r, R, d1, d2)				    \
 do {									    \
   int comp0 = (32767 + ((ditherbit##d2 >> R##_RANDOMIZER) -		    \
@@ -518,11 +530,7 @@ do {									    \
       if (r > comp0)							    \
 	{								    \
 	  PRINT_D1(r, R, d1, d2);					    \
-	  if (r##bits++ == horizontal_overdensity)			    \
-	    {								    \
-	      *r##ptr |= bit;						    \
-	      r##bits = 0;						    \
-	    }								    \
+	  DO_PRINT_COLOR(r);						    \
 	  r -= 65535;							    \
 	}								    \
     }									    \
@@ -534,11 +542,7 @@ do {									    \
 	  if (r > compare)						    \
 	    {								    \
 	      PRINT_D2(r, R, d1, d2);					    \
-	      if (l##r##bits++ == horizontal_overdensity)		    \
-		{							    \
-		  *l##r##ptr |= bit;					    \
-		  l##r##bits = 0;					    \
-		}							    \
+	      DO_PRINT_COLOR(l##r);					    \
 	      r -= R##_CONST_0;						    \
 	    }								    \
 	}								    \
@@ -548,26 +552,18 @@ do {									    \
 			(65536 - R##_CONST_1));				    \
 	  long long sub;						    \
 	  if (cutoff >= 0)						    \
-	    sub = R##_CONST_0 + ((65535ll - R##_CONST_0) * cutoff >> 16);   \
+	    sub = R##_CONST_0 + (((65535ll - R##_CONST_0) * cutoff) >> 16); \
 	  else								    \
 	    sub = R##_CONST_0 + ((65535ll - R##_CONST_0) * cutoff / 65536); \
 	  if (ditherbit##d1 > cutoff)					    \
 	    {								    \
 	      PRINT_D3(3, r, R, d1, d2);				    \
-	      if (l##r##bits++ == horizontal_overdensity)		    \
-		{							    \
-		  *l##r##ptr |= bit;					    \
-		  l##r##bits = 0;					    \
-		}							    \
+	      DO_PRINT_COLOR(l##r);					    \
 	    }								    \
 	  else								    \
 	    {								    \
 	      PRINT_D3(4, r, R, d1, d2);				    \
-	      if (r##bits++ == horizontal_overdensity)			    \
-		{							    \
-		  *r##ptr |= bit;					    \
-		  r##bits = 0;						    \
-		}							    \
+	      DO_PRINT_COLOR(r);					    \
 	    }								    \
 	  if (sub < R##_CONST_0)					    \
 	    r -= R##_CONST_0;						    \
@@ -582,7 +578,8 @@ do {									    \
 #if 1
 #define UPDATE_DITHER(r, d2, x, width)					 \
 do {									 \
-  int offset = (15 - ((o##r & 0xf000) >> 12)) >> (overdensity_bits + 1); \
+  int offset = (15 - (((o##r & 0xf000) >> 12)) * horizontal_overdensity) \
+				       >> 1;				 \
   if (x < offset)							 \
     offset = x;								 \
   else if (x > dst_width - offset - 1)					 \
@@ -676,13 +673,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
    * at zero each line to avoid having a line of bits near the edge of the
    * image.
    */
-  static int cbits = 0;
-  static int mbits = 0;
-  static int ybits = 0;
-  static int kbits = 0;
-  static int lcbits = 0;
-  static int lmbits = 0;
-  static int lybits = 0;
+  static int cbits = 1;
+  static int mbits = 1;
+  static int ybits = 1;
+  static int kbits = 1;
+  static int lcbits = 1;
+  static int lmbits = 1;
+  static int lybits = 1;
   int overdensity_bits = 0;
 
 #ifdef PRINT_DEBUG
@@ -953,11 +950,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (k > (32767 + ((ditherbit0 >> K_RANDOMIZER) -
 			(32768 >> K_RANDOMIZER))))
 	{
-	  if (kbits++ == horizontal_overdensity)
-	    {
-	      *kptr |= bit;
-	      kbits = 0;
-	    }
+	  DO_PRINT_COLOR(k);
 	  k -= 65535;
 	}
 
