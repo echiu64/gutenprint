@@ -117,7 +117,7 @@ html-stamp: $(MANUAL_SRC_FILES)
 	    if test -L $$file ; then \
 	      $(RM) -f $$file ; \
 	    fi ; \
-	    $(LN_S) $(srcdir)/$$file $file ; \
+	    $(LN_S) $(srcdir)/$$file $$file ; \
 	  done ; \
 	fi
 	$(DB2HTML) gimpprint.xml
