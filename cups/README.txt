@@ -1,23 +1,21 @@
-README.txt - 07/30/2000 - CUPS Driver Development Kit
------------------------------------------------------
+README.txt - 09/10/2000 - CUPS Drivers based on GIMP-print
+----------------------------------------------------------
 
-This file describes the CUPS driver development kit, which is
-currently being provided as part of the GIMP Print plug-in
-development tree.  At some point this code may be separated or
-replace the driver code in GIMP Print.
+This file describes the CUPS drivers based on the GIMP Print
+plug-in.
 
 All code is Copyright 1997-2000 by Easy Software Products and is
 provided under the terms of the GNU General Public License.  The
-licensing details are provided in the CUPS license file
-"LICENSE.txt".
+licensing details are provided in the file "LICENSE.txt".
 
 
 INTRODUCTION
 
-The CUPS driver development kit contains all of the files needed
-to support the development of printer drivers for the Common
-UNIX Printing System ("CUPS"), an IPP-based printing system for
-UNIX/Linux.  For more information about CUPS see:
+The CUPS drivers contain all of the files needed to support
+photo-quality printing on any printer supported by the GIMP
+Print plug-in. You can find out more about the Common UNIX
+Printing System ("CUPS"), an IPP-based printing system for
+UNIX/Linux, at:
 
     http://www.cups.org
 
@@ -53,7 +51,7 @@ through your driver until a final profile is produced.
 The second is called "genppd" which generates PPD files.
 Currently these are only provided in English since the
 GIMP-print drivers only report options in that language.  The
-program reads printer driver information from the GIMP-print
+program reads printer driver information from the GIMP Print
 driver database and produces a PPD file for each driver.
 
 
@@ -126,6 +124,22 @@ developer for CUPS.  Please don't expect an instant response (or
 even a response within a week) as I often accumulate a backlog
 of 100 or more messages each day...
 
-The EPSON driver code is mirrored as much as possible from the
-main GIMP Print tree, so the driver developers for the print
-plug-in may be able to offer assistance as well.
+The driver code is mirrored as much as possible from the main
+GIMP Print tree, so the driver developers for the print plug-in
+may be able to offer assistance as well.
+
+
+COMMERCIAL SUPPORT
+
+Easy Software Products provides commercial support for all of
+its printing products.  Please see our web site for more
+information:
+
+    http://www.easysw.com
+
+
+LEGAL STUFF
+
+CUPS, the Common UNIX Printing System, and the CUPS logo are the
+trademark property of Easy Software Products.  Please see the
+CUPS software license for the terms of its use.

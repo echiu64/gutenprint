@@ -14,59 +14,6 @@ AC_PATH_PROG(YACC_PROG, yacc)
 
 RELDATE_DEF="-DRELEASE_DATE=\"\\\"`date '+%d %b %Y'`\\\"\""
 
-AC_MSG_CHECKING([whether to use the System V lp commands])
-AC_ARG_ENABLE(lp,
-  [  --disable-lp             Do not check for the System V lp and lpstat commands],
-  ENABLE_LP=$enableval, ENABLE_LP=yes)
-AC_MSG_RESULT($ENABLE_LP)
-
-AC_MSG_CHECKING([whether to use the Berkeley lpr commands])
-AC_ARG_ENABLE(lpr,
-  [  --disable-lpr            Do not check for the Berkeley lpr and lpc commands],
-  ENABLE_LPR=$enableval, ENABLE_LPR=yes)
-AC_MSG_RESULT($ENABLE_LPR)
-
-if test "$ENABLE_LP" = "yes" ; then
-  AC_PATH_PROG(LP_PROG, lp)
-  AC_PATH_PROG(LPSTAT_PROG, lpstat, , $PATH:/usr/libexec:/usr/sbin:/usr/etc:/etc)
-  if test -n "$LP_PROG" ; then
-    LP_DEF="-DLP_COMMAND=\\\"$LP_PROG\\\""
-  else
-    LP_DEF=""
-  fi
-
-  if test -n "$LPSTAT_PROG" ; then
-    LPSTAT_DEF="-DLPSTAT_COMMAND=\\\"$LPSTAT_PROG\\\""
-  else
-    LPSTAT_DEF=""
-  fi
-fi
-
-if test "$ENABLE_LPR" = "yes" ; then
-  AC_PATH_PROG(LPR_PROG, lpr)
-  AC_PATH_PROG(LPC_PROG, lpc, , $PATH:/usr/libexec:/usr/sbin:/usr/etc:/etc)
-  if test -n "$LPR_PROG" ; then
-    LPR_DEF="-DLPR_COMMAND=\\\"$LPR_PROG\\\""
-    dnl Check for LPRng, which has slightly weird syntax
-    AC_MSG_CHECKING([for LPRng spooler emulating lpr])
-    if test -n "`$LPR_PROG --help 2>&1 | grep LPRng`" ; then
-      AC_MSG_RESULT(yes)
-      LPR_LPRNG_FLAG=-DLPR_LPRNG
-    else
-      AC_MSG_RESULT(no)
-      LPR_LPRNG_FLAG=
-    fi
-  else
-    LPR_DEF=""
-  fi
-
-  if test -n "$LPC_PROG" ; then
-    LPC_DEF="-DLPC_COMMAND=\\\"$LPC_PROG\\\""
-  else
-    LPC_DEF=""
-  fi
-fi
-
 AM_MAINTAINER_MODE
 
 if test "$USE_MAINTAINER_MODE" = "yes" ; then
@@ -112,15 +59,9 @@ dnl Checks for library functions.
 AC_FUNC_MEMCMP
 AC_TYPE_SIGNAL
 
-AC_SUBST(LP_DEF)
-AC_SUBST(LPSTAT_DEF)
-AC_SUBST(LPR_DEF)
-AC_SUBST(LPC_DEF)
 AC_SUBST(GIMP_LIBS)
 AC_SUBST(RELDATE_DEF)
 AC_SUBST(MAINTAINER_PROGRAMS)
 AC_SUBST(MAINTAINER_CFLAGS)
-AC_SUBST(LP_LPRNG_FLAG)
-AC_SUBST(LPR_LPRNG_FLAG)
 
 AC_OUTPUT(Makefile)

@@ -1071,22 +1071,37 @@ compare_printers(plist_t *p1,	/* I - First printer to compare */
  * 'get_system_printers()' - Get a complete list of printers from the spooler.
  */
 
+#define PRINTERS_NONE	0
+#define PRINTERS_LPC	1
+#define PRINTERS_LPSTAT	2
+
 static void
 get_system_printers(void)
 {
-  int   i;
-  char  defname[17];
-#if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
-  FILE *pfile;
-  char  line[129];
-#endif
-#if defined(LPSTAT_COMMAND)
-  char  name[17];
-#endif
+  int   i;			/* Looping var */
+  int	type;			/* 0 = none, 1 = lpc, 2 = lpstat */
+  char	command[255];		/* Command to run */
+  char  defname[255];		/* Default printer name */
+  FILE *pfile;			/* Pipe to status command */
+  char  line[255];		/* Line from status command */
+  char	*ptr;			/* Pointer into line */
+  char  name[255];		/* Printer name from status command */
 #ifdef __EMX__
   BYTE  pnum;
 #endif
+  static char	*lpcs[] =	/* Possible locations of LPC... */
+		{
+		  "/etc"
+		  "/usr/bsd",
+		  "/usr/etc",
+		  "/usr/libexec",
+		  "/usr/sbin"
+		};
 
+
+ /*
+  * Setup defaults...
+  */
 
   defname[0] = '\0';
 
@@ -1098,61 +1113,89 @@ get_system_printers(void)
   strcpy(plist[0].v.driver, "ps2");
   plist[0].v.output_type = OUTPUT_COLOR;
 
-#ifdef LPC_COMMAND
-  if ((pfile = popen(LPC_COMMAND " status < /dev/null", "r")) != NULL)
-  {
-    while (fgets(line, sizeof(line), pfile) != NULL) {
-      if (!strncmp(line,"Press RETURN to continue",24)) {
-	char *ptr= strchr(line,':')+2;
-	if (ptr && strlen(ptr)<(ptr-line))
-	  strcpy(line,ptr);
-      }
-      if (strchr(line, ':') != NULL && line[0] != ' ' && line[0] != '\t')
-	{
-	  check_plist(plist_count + 1);
-	  *strchr(line, ':') = '\0';
-	  initialize_printer(&plist[plist_count]);
-	  strcpy(plist[plist_count].name, line);
-	  sprintf(plist[plist_count].v.output_to,LPR_COMMAND" -P%s -l",line);
-	  strcpy(plist[plist_count].v.driver, "ps2");
-	  plist_count ++;
-	}
-    }
-    pclose(pfile);
-  }
-#endif /* LPC_COMMAND */
+ /*
+  * Figure out what command to run...  We use lpstat if it is available over
+  * lpc since Solaris, CUPS, etc. provide both commands.  No need to list
+  * each printer twice...
+  */
 
-#ifdef LPSTAT_COMMAND
-  if ((pfile = popen(LPSTAT_COMMAND " -d -p", "r")) != NULL)
+  if (!access("/usr/bin/lpstat", X_OK))
   {
-    while (fgets(line, sizeof(line), pfile) != NULL)
+    strcpy(command, "/usr/bin/lpstat -d -p");
+    type = PRINTERS_LPSTAT;
+  }
+  else
+  {
+    for (i = 0; i < (sizeof(lpcs) / sizeof(lpcs[0])); i ++)
     {
-#ifdef LP_LPRNG
-      char *s = strchr(line, ' ');
-      if (s && s != line)
-	strncpy(name, line, s - line);
-      else
-	continue;
-      if (name)
-#else
-      if ((sscanf(line, "printer %s", name) == 1) ||
-	  (sscanf(line, "Printer: %s", name) == 1))
-#endif
-      {
-	check_plist(plist_count + 1);
-	initialize_printer(&plist[plist_count]);
-	strcpy(plist[plist_count].name, name);
-	sprintf(plist[plist_count].v.output_to, LP_COMMAND " -s -d%s", name);
-        strcpy(plist[plist_count].v.driver, "ps2");
-        plist_count ++;
-      }
-      else
-        sscanf(line, "system default destination: %s", defname);
+      sprintf(command, "%s/lpc", lpcs[i]);
+
+      if (!access(command, X_OK))
+        break;
     }
 
-    pclose(pfile);
+    if (i < (sizeof(lpcs) / sizeof(lpcs[0])))
+    {
+      strcat(command, " status < /dev/null");
+      type = PRINTERS_LPC;
+    }
+    else
+      type = PRINTERS_NONE;
   }
-#endif /* LPSTAT_COMMAND */
+
+ /*
+  * Run the command, if any, to get the available printers...
+  */
+
+  if (type > PRINTERS_NONE)
+  {
+    if ((pfile = popen(command, "r")) != NULL)
+    {
+     /*
+      * Read input as needed...
+      */
+
+      while (fgets(line, sizeof(line), pfile) != NULL)
+        switch (type)
+	{
+	  case PRINTERS_LPC :
+	      if (!strncmp(line, "Press RETURN to continue", 24) &&
+		  (ptr = strchr(line, ':')) != NULL &&
+		  (strlen(ptr) - 2) < (ptr - line))
+		strcpy(line, ptr + 2);
+
+	      if ((ptr = strchr(line, ':')) != NULL &&
+	          line[0] != ' ' && line[0] != '\t')
+              {
+		check_plist(plist_count + 1);
+		*ptr = '\0';
+		initialize_printer(&plist[plist_count]);
+		strcpy(plist[plist_count].name, line);
+		sprintf(plist[plist_count].v.output_to, "lpr -P%s -l", line);
+		strcpy(plist[plist_count].v.driver, "ps2");
+		plist_count ++;
+	      }
+	      break;
+
+	  case PRINTERS_LPSTAT :
+	      if ((sscanf(line, "printer %s", name) == 1) ||
+		  (sscanf(line, "Printer: %s", name) == 1))
+	      {
+		check_plist(plist_count + 1);
+		initialize_printer(&plist[plist_count]);
+		strcpy(plist[plist_count].name, name);
+		sprintf(plist[plist_count].v.output_to, "lp -s -d%s -oraw", name);
+        	strcpy(plist[plist_count].v.driver, "ps2");
+        	plist_count ++;
+	      }
+	      else
+        	sscanf(line, "system default destination: %s", defname);
+	      break;
+	}
+
+      pclose(pfile);
+    }
+  }
 
 #ifdef __EMX__
   if (DosDevConfig(&pnum, DEVINFO_PRINTER) == NO_ERROR)

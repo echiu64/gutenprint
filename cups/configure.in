@@ -3,14 +3,20 @@ dnl "$Id$"
 dnl
 dnl   Configuration script for the CUPS drivers.
 dnl
-dnl   Copyright 1997-2000 by Easy Software Products, all rights reserved.
+dnl   Copyright 1993-2000 by Easy Software Products.
 dnl
-dnl   These coded instructions, statements, and computer programs are the
-dnl   property of Easy Software Products and are protected by Federal
-dnl   copyright law.  Distribution and use rights are outlined in the file
-dnl   "LICENSE.txt" which should have been included with this file.  If this
-dnl   file is missing or damaged please contact Easy Software Products
-dnl   at:
+dnl   This program is free software; you can redistribute it and/or
+dnl   modify it under the terms of the GNU General Public License,
+dnl   version 2, as published by the Free Software Foundation.
+dnl
+dnl   This program is distributed in the hope that it will be useful,
+dnl   but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl   GNU General Public License for more details.
+dnl
+dnl   You should have received a copy of the GNU General Public License
+dnl   along with this program; if not, please contact Easy Software
+dnl   Products at:
 dnl
 dnl       Attn: CUPS Licensing Information
 dnl       Easy Software Products

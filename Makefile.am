@@ -74,11 +74,6 @@ INCLUDES = \
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\
  @MAINTAINER_CFLAGS@\
- @LP_DEF@\
- @LPSTAT_DEF@\
- @LPR_DEF@\
- @LPC_DEF@\
- @LP_LPRNG_FLAG@\
  @RELDATE_DEF@
 
 print_LDADD = $(GIMP_LIBS)
