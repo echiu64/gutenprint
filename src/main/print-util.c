@@ -721,7 +721,7 @@ stp_default_media_size(const stp_printer_t printer,
         	   int  *width,		/* O - Width in points */
         	   int  *height)	/* O - Height in points */
 {
-  if (stp_get_page_width(v) > stp_get_page_height(v) > 0)
+  if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
     {
       *width = stp_get_page_width(v);
       *height = stp_get_page_height(v);
