@@ -92,6 +92,54 @@ require('standard_html_header.php3');
  Ok, I found all the settings, but what do they do?
  </a>
  </ol>
+<H2>Gimp-Print General FAQ</H2>
+ <ol>
+ <li><a href="p_FAQ_OS_X.php3#onlyForGimp">
+ Is it only for Gimp? 
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#missingFiles">
+  I cannot install it, it complains about missing Gimp files
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#imageType">
+ What is the difference between B/W, Line art, solid color and Photo mode (or ImageType in Ghostscript)? 
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#noWorky">
+  I selected my printer and it doesn't work at all!
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#feedsPaper">
+ I selected my printer and it simply feeds paper without printing 
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#distortedImage">
+ I selected my printer, and it prints the image badly distorted, or at completely the wrong place on the page
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#printsGarbage">
+ I selected the right printer, but garbage, or only part of the page, gets printed
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#dj1200">
+  What's up with the HP Deskjet 1200?
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#lowRes">
+  I selected the right printer and the quality is lousy
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#GSopts">
+  How do I start setting options for Ghostscript?
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#noEscputil">
+  <tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#noASCII">
+  I tried to test my Epson printer by 'cat .cshrc > /dev/lp0' and nothing prints!!!???
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#BSD">
+  My USB-connected Epson Stylus printer won't work with {Free,Net,Open}BSD!
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#starOffice">
+  I try to print with StarOffice and it doesn't print correctly!
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#sambaGarbage">
+  I'm printing through Samba, and my printer prints garbage!
+ </a>
+ </ol>
  <ol>
  <br>
  <br>
@@ -542,6 +590,7 @@ require('standard_html_header.php3');
  </p>
  <ol>
  <p>
+ <a name="onlyForGimp"></a>
  <li>
  <h3>
  Is it only for Gimp?
@@ -553,6 +602,7 @@ require('standard_html_header.php3');
  emphasis is still on quality color printing, though performance gets a
  lot of attention these days.
  </p>
+ <a name="missingFiles"></a>
  <li>
  <h3>
  I cannot install it, it complains about missing Gimp files
@@ -581,6 +631,7 @@ require('standard_html_header.php3');
  to look for the Gimp and fail.
  </ul>
  </p>
+ <a name="imageType"></a>
  <li>
  <h3>
  What is the difference between B/W, Line art, solid color and Photo mode
@@ -592,6 +643,7 @@ require('standard_html_header.php3');
  colors may be off. Solid Colors is somewhere in between. B/W mode does
  not use color ink when printing, and is much faster.
  </p>
+ <a name="noWorky"></a>
  <li>
  <h3>
  I selected my printer and it doesn't work at all!
@@ -602,6 +654,7 @@ require('standard_html_header.php3');
  USB connection, so take a look at <tt>/var/log/messages</tt> (or
  wherever your system logs are kept).
  </p>
+ <a name="feedsPaper"></a>
  <li>
  <h3>
  I selected my printer and it simply feeds paper without printing
@@ -617,6 +670,7 @@ require('standard_html_header.php3');
  have and all of the settings that you used. But first, triple check that
  you're using the right printer model!
  </p>
+ <a name="distortedImage"></a>
  <li>
  <h3>
  I selected my printer, and it prints the image badly distorted, or at
@@ -627,6 +681,7 @@ require('standard_html_header.php3');
  described above. Also as described above, make sure you've set the right
  printer.
  </p>
+ <a name="printsGarbage"></a>
  <li>
  <h3>
  I selected the right printer, but garbage, or only part of the page,
@@ -668,6 +723,7 @@ require('standard_html_header.php3');
  you're certain you've tried everything else, try a better cable or a
  direct USB connection.
  </p>
+ <a name="dj1200"></a>
  <li>
  <h3>
  What's up with the HP Deskjet 1200?
@@ -678,6 +734,7 @@ require('standard_html_header.php3');
  manufactured around 1990. The new version is of 2000 vintage and has
  higher resolution. The one supported by this package is the new one???
  </p>
+ <a name="lowRes"></a>
  <li>
  <h3>
  I selected the right printer and the quality is lousy
@@ -713,6 +770,7 @@ require('standard_html_header.php3');
  throw away part of the pixels, leading to uneven strokes in text and
  slanted lines with interruptions.
  </p>
+ <a name="GSopts"></a>
  <li>
  <h3>
  How do I start setting options for Ghostscript?
@@ -720,6 +778,7 @@ require('standard_html_header.php3');
  <p>
  Please see src/ghost/README for more information.
  </p>
+ <a name="noEscputil"></a>
  <li>
  <h3>
  <tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:
@@ -736,6 +795,7 @@ require('standard_html_header.php3');
  <p>
  You need to rebuild your kernel with CONFIG_PRINTER_READBACK enabled.
  </p>
+ <a name="noASCII"></a>
  <li>
  <h3>
  I tried to test my Epson printer by 'cat .cshrc > /dev/lp0' and nothing
@@ -774,6 +834,7 @@ require('standard_html_header.php3');
  packet mode. You can read status from them, but you must leave off the
  '-u' option.
  </p>
+ <a name="BSD"></a>
  <li>
  <h3>
  My USB-connected Epson Stylus printer won't work with {Free,Net,Open}BSD!
@@ -798,6 +859,7 @@ require('standard_html_header.php3');
  <p>
  in the /dev directory.
  </p>
+ <a name="starOffice"></a>
  <li>
  <h3>
  I try to print with StarOffice and it doesn't print correctly!
@@ -859,6 +921,7 @@ require('standard_html_header.php3');
  can create multiple queues with different settings, for example one for
  draft mode and one for high quality.
  </p>
+ <a name="sambaGarbage"></a>
  <li>
  <h3>
  I'm printing through Samba, and my printer prints garbage!
