@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.21  1999/11/10 01:13:06  rlk
+ *   Support up to 2880 dpi
+ *
  *   Revision 1.20  1999/11/07 22:16:42  rlk
  *   Bug fixes; try to improve dithering slightly
  *
@@ -198,7 +201,7 @@
  * Want to dynamically allocate this so we can 
  */
 
-int	error[2][4][14*1440+1];
+int	error[2][4][14*2880+1];
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
@@ -340,7 +343,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
 	    unsigned char *yellow,	/* O - Yellow bitmap pixels */
 	    unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
-	    unsigned char *black)	/* O - Black bitmap pixels */
+	    unsigned char *black,	/* O - Black bitmap pixels */
+	    int horizontal_overdensity)
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -377,6 +381,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int bk;
   int ub, lb;
   int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
+  static int cbits = 0;
+  static int mbits = 0;
+  static int ybits = 0;
+  static int kbits = 0;
+  static int lcbits = 0;
+  static int lmbits = 0;
+  static int lybits = 0;
+  int black_fill = (horizontal_overdensity + 1) / 2;
+
 #ifdef PRINT_DEBUG
   long long odk, odc, odm, ody, dk, dc, dm, dy, xk, xc, xm, xy, yc, ym, yy;
   FILE *dbg;
@@ -578,7 +591,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 #endif
       if (k > (32767 + ((ditherbit0 / K_RANDOMIZER) - (32768 / K_RANDOMIZER))))
 	{
-	  *kptr |= bit;
+	  if (kbits++ % horizontal_overdensity == 0)
+	    *kptr |= bit;
 	  k -= 65535;
 	}
 
@@ -633,8 +647,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		    ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_C1 * 2 / 3))));
 #endif
-	    if (! (*kptr & bit))
-	      *cptr |= bit;
+	    if (cbits++ % horizontal_overdensity == 0)
+	      if (! (*kptr & bit))
+		*cptr |= bit;
 	    c -= 65535;
 	  }
       }
@@ -650,8 +665,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			(32767 + (((long long) ditherbit2 / 1) - 32768)) *
 			I_RATIO_C1);
 #endif
-		if (! (*kptr & bit))
-		  *lcptr |= bit;
+		if (lcbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lcptr |= bit;
 		c -= 65535 * I_RATIO_C1;
 	      }
 	  }
@@ -672,8 +688,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *lcptr |= bit;
+		if (lcbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lcptr |= bit;
 	      }
 	    else
 	      {
@@ -685,8 +702,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit2 / 1) - 32768)) * oc /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *cptr |= bit;
+		if (cbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *cptr |= bit;
 	      }
 	    if (sub < 0)
 	      c -= (65535 * I_RATIO_C1);
@@ -734,8 +752,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
 #endif
-	    if (! (*kptr & bit))
-	      *mptr |= bit;
+	    if (mbits++ % horizontal_overdensity == 0)
+	      if (! (*kptr & bit))
+		*mptr |= bit;
 	    m -= 65535;
 	  }
       }
@@ -751,8 +770,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			(32767 + (((long long) ditherbit1 / 1) - 32768)) *
 			I_RATIO_M1);
 #endif
-		if (! (*kptr & bit))
-		  *lmptr |= bit;
+		if (lmbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lmptr |= bit;
 		m -= 65535 * I_RATIO_M1;
 	      }
 	  }
@@ -773,8 +793,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *lmptr |= bit;
+		if (lmbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lmptr |= bit;
 	      }
 	    else
 	      {
@@ -786,8 +807,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *mptr |= bit;
+		if (mbits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *mptr |= bit;
 	      }
 	    if (sub < 0)
 	      m -= (65535 * I_RATIO_C1);
@@ -837,8 +859,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		    ((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
 		     (65536 - (65536 * I_RATIO_Y1 * 2 / 3))));
 #endif
-	    if (! (*kptr & bit))
-	      *yptr |= bit;
+	    if (lybits++ % horizontal_overdensity == 0)
+	      if (! (*kptr & bit))
+		*yptr |= bit;
 	    y -= 65535;
 	  }
       }
@@ -854,8 +877,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			(32767 + (((long long) ditherbit3 / 1) - 32768)) *
 			I_RATIO_Y1);
 #endif
-		if (! (*kptr & bit))
-		  *lyptr |= bit;
+		if (lybits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lyptr |= bit;
 		y -= 65535 * I_RATIO_Y1;
 	      }
 	  }
@@ -876,8 +900,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *lyptr |= bit;
+		if (lybits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *lyptr |= bit;
 	      }
 	    else
 	      {
@@ -889,8 +914,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
 			 65536), cutoff);
 #endif
-		if (! (*kptr & bit))
-		  *yptr |= bit;
+		if (ybits++ % horizontal_overdensity == 0)
+		  if (! (*kptr & bit))
+		    *yptr |= bit;
 	      }
 	    if (sub < 0)
 	      y -= (65535 * I_RATIO_C1);
