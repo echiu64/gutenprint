@@ -22,12 +22,6 @@
  *
  * Contents:
  *
- *   dither_black()       - Dither grayscale pixels to black.
- *   dither_cmyk()        - Dither RGB pixels to cyan, magenta, yellow, and
- *                          black.
- *   dither_black4()      - Dither grayscale pixels to 4 levels of black.
- *   dither_cmyk4()       - Dither RGB pixels to 4 levels of cyan, magenta,
- *                          yellow, and black.
  *   gray_to_gray()       - Convert grayscale image data to grayscale.
  *   indexed_to_gray()    - Convert indexed image data to grayscale.
  *   indexed_to_rgb()     - Convert indexed image data to RGB.
@@ -38,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.78  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
  *   Revision 1.77  2000/02/25 02:22:37  rlk
  *   1) Stylus Color 460 (really a variant 440, at least until I learn otherwise).
  *

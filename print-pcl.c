@@ -36,6 +36,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.33  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
  *   Revision 1.32  2000/02/25 22:13:08  davehill
  *   Added Paper size database to handle more of the new paper sizes
  *   added a while ago, anything else is handled as "custom".
@@ -1419,14 +1422,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, x, dither, black);
+          dither_black_n(out, x, dither, black, 1);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4(out, x, dither, cyan, NULL, magenta, NULL,
-		       yellow, NULL, black);
+          dither_cmyk_n(out, x, dither, cyan, NULL, magenta, NULL,
+		       yellow, NULL, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1509,14 +1512,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, y, dither, black);
+          dither_black_n(out, y, dither, black, 1);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4(out, y, dither, cyan, NULL, magenta, NULL,
-		       yellow, NULL, black);
+          dither_cmyk_n(out, y, dither, cyan, NULL, magenta, NULL,
+		       yellow, NULL, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);

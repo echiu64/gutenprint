@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.31  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
  *   Revision 1.30  2000/02/23 19:09:56  gandy
  *   small fix for delayed lines
  *
@@ -101,7 +104,7 @@
  *   Small fix that makes variable drop sizes work (in B/W)
  *
  *   Revision 1.17  2000/02/08 17:55:25  gandy
- *   Added call to dither_cmyk4()
+ *   Added call to dither_cmyk_n()
  *
  *   Revision 1.16  2000/02/08 17:39:48  gandy
  *   Got support for variable drop sizes ready for testing
@@ -1171,14 +1174,14 @@ canon_print(int       model,		/* I - Model */
       (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
       
       if (output_type == OUTPUT_GRAY && use_dmt) {
-	dither_black4(out, x, dither, black);
+	dither_black_n(out, x, dither, black, 1);
 
       } else if (output_type == OUTPUT_GRAY) {
 	dither_black(out, x, dither, black);
 	
       } else if (use_dmt) {
-	dither_cmyk4(out, x, dither, cyan, lcyan, magenta, lmagenta,
-		     yellow, lyellow, black);
+	dither_cmyk_n(out, x, dither, cyan, lcyan, magenta, lmagenta,
+		     yellow, lyellow, black, 1);
 
       } else {
 	dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
@@ -1240,14 +1243,14 @@ canon_print(int       model,		/* I - Model */
       (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
 
       if (output_type == OUTPUT_GRAY && use_dmt) {
-	dither_black4(out, y, dither, black);
+	dither_black_n(out, y, dither, black, 1);
 
       } else if (output_type == OUTPUT_GRAY) {
 	dither_black(out, y, dither, black);
 
       } else if (use_dmt) {
-	dither_cmyk4(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		     yellow, lyellow, black);
+	dither_cmyk_n(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		     yellow, lyellow, black, 1);
 
       } else {
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,

@@ -23,6 +23,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
  *   Revision 1.5  2000/02/21 20:32:37  rlk
  *   Important dithering bug fixes:
  *
@@ -609,13 +612,12 @@ get_errline(dither_t *d, int row, int color)
  *    deal with any combination of dark and light colored inks, but not a
  *    "light black" ink, although that would be nice :-) ).
  *
- * 3) dither_black4 produces four levels of black (corresponding to three
- *    dot sizes and no ink).  This was originally written by Mike Sweet
- *    for various HP printers, but it's useful for some of the newer Epson
- *    Stylus printers, too.  THIS HAS NOT BEEN TESTED IN 3.1.
+ * 3) dither_black_n produces n levels of black.  This was originally
+ *    written by Mike Sweet for various HP printers, but it's useful for
+ *    some of the newer Epson Stylus printers, too.  Used for variable dot
+ *    size or multi-level inks such as the MIS archival inks.
  *
- * 4) dither_cmyk4 does likewise for color output.  THIS HAS NOT BEEN TESTED
- *    IN 3.1.
+ * 4) dither_cmyk_n does likewise for color output.
  *
  * Many of these routines (in particular dither_cmyk and the 4-level functions)
  * have constants hard coded that are tuned for particular printers.  Needless
@@ -1475,14 +1477,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
  */
 
 /*
- * 'dither_black4()' - Dither grayscale pixels to 4 levels of black.
+ * 'dither_black_n()' - Dither grayscale pixels to n levels of black.
  */
 
 void
-dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
-	      int           	row,		/* I - Current Y coordinate */
-	      void *vd,
-	      unsigned char 	*black)		/* O - Black bitmap pixels */
+dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
+	       int           	row,		/* I - Current Y coordinate */
+	       void 		*vd,
+	       unsigned char 	*black,		/* O - Black bitmap pixels */
+	       int		use_log_encoding)
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
@@ -1545,23 +1548,44 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
     else if (x > d->dst_width - offset - 1)
       offset = d->dst_width - x - 1;
 
-    for (i = d->nk_l - 1; i > 0; i--)
+    if (use_log_encoding)
       {
-	if (k > d->k_transitions[i])
+	for (i = d->nk_l - 1; i > 0; i--)
 	  {
-	    if (d->kbits++ == d->horizontal_overdensity)
+	    if (k > d->k_transitions[i])
 	      {
-		int j;
-		unsigned char *tptr = kptr;
-		for (j = 1; j <= i; j += j, tptr += length)
+		if (d->kbits++ == d->horizontal_overdensity)
 		  {
-		    if (j & i)
-		      *tptr |= bit;
+		    int j;
+		    unsigned char *tptr = kptr;
+		    for (j = 1; j <= i; j += j, tptr += length)
+		      {
+			if (j & i)
+			  *tptr |= bit;
+		      }
+		    d->kbits = 1;
 		  }
-		d->kbits = 1;
+		k -= d->k_levels[i];
+		break;
 	      }
-	    k -= d->k_levels[i];
-	    break;
+	  }
+      }
+    else
+      {
+	unsigned char *tptr = kptr;
+	for (i = d->nk_l - 1; i > 0; i--)
+	  {
+	    if (k > d->k_transitions[i])
+	      {
+		if (d->kbits++ == d->horizontal_overdensity)
+		  {
+		    *tptr |= bit;
+		    d->kbits = 1;
+		  }
+		k -= d->k_levels[i];
+		break;
+	      }
+	    tptr += length;
 	  }
       }
 
@@ -1625,30 +1649,51 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 }
 
 /*
- * 'dither_cmyk4()' - Dither RGB pixels to 4 levels of cyan, magenta, yellow,
- *                    and black.
+ * 'dither_cmyk_n()' - Dither RGB pixels to n levels of cyan, magenta, yellow,
+ *                     and black.
  */
 
 #define DO_PRINT_COLOR_4(base, r, ratio)			\
 do {								\
   int i;							\
-  for (i = d->n##r##_l - 1; i > 0; i--)				\
+  if (use_log_encoding)						\
     {								\
-      if (base > d->r##_transitions[i])				\
+      for (i = d->n##r##_l - 1; i > 0; i--)			\
 	{							\
-	  if (d->r##bits++ == d->horizontal_overdensity)	\
+	  if (base > d->r##_transitions[i])			\
 	    {							\
-	      int j;						\
-	      unsigned char *tptr = r##ptr;			\
-	      for (j = 1; j <= i; j += j, tptr += length)	\
+	      if (d->r##bits++ == d->horizontal_overdensity)	\
 		{						\
-		  if (j & i)					\
-		    *t##ptr |= bit;				\
+		  int j;					\
+		  unsigned char *tptr = r##ptr;			\
+		  for (j = 1; j <= i; j += j, tptr += length)	\
+		    {						\
+		      if (j & i)				\
+			*t##ptr |= bit;				\
+		    }						\
+		  d->r##bits = 1;				\
 		}						\
-	      d->r##bits = 1;					\
+	      base -= d->r##_levels[i];				\
+	      break;						\
 	    }							\
-	  base -= d->r##_levels[i];				\
-	  break;						\
+	}							\
+    }								\
+  else								\
+    {								\
+      unsigned char *tptr = r##ptr;				\
+      for (i = d->n##r##_l - 1; i > 0; i--)			\
+	{							\
+	  if (base > d->r##_transitions[i])			\
+	    {							\
+	      if (d->r##bits++ == d->horizontal_overdensity)	\
+		{						\
+		  *t##ptr |= bit;				\
+		  d->r##bits = 1;				\
+		}						\
+	      base -= d->r##_levels[i];				\
+	      break;						\
+	    }							\
+	  tptr += length;					\
 	}							\
     }								\
 } while (0)
@@ -1695,16 +1740,17 @@ do {									\
 } while (0)
 
 void
-dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
-	     int           row,		/* I - Current Y coordinate */
-	     void *vd,
-	     unsigned char *cyan,	/* O - Cyan bitmap pixels */
-	     unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
-	     unsigned char *magenta,	/* O - Magenta bitmap pixels */
-	     unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
-	     unsigned char *yellow,	/* O - Yellow bitmap pixels */
-	     unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
-	     unsigned char *black)	/* O - Black bitmap pixels */
+dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
+	      int           row,	/* I - Current Y coordinate */
+	      void 	    *vd,
+	      unsigned char *cyan,	/* O - Cyan bitmap pixels */
+	      unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
+	      unsigned char *magenta,	/* O - Magenta bitmap pixels */
+	      unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
+	      unsigned char *yellow,	/* O - Yellow bitmap pixels */
+	      unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
+	      unsigned char *black,	/* O - Black bitmap pixels */
+	      int	    use_log_encoding)
 {
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */

@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.97  2000/02/26 00:14:44  rlk
+ *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
+ *
  *   Revision 1.96  2000/02/25 02:22:37  rlk
  *   1) Stylus Color 460 (really a variant 440, at least until I learn otherwise).
  *
@@ -1512,10 +1515,10 @@ escp2_print(int       model,		/* I - Model */
       else
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black4(out, x, dither, black);
+	    dither_black_n(out, x, dither, black, 1);
 	  else
-	    dither_cmyk4(out, x, dither, cyan, lcyan, magenta, lmagenta,
-			 yellow, 0, black);
+	    dither_cmyk_n(out, x, dither, cyan, lcyan, magenta, lmagenta,
+			 yellow, 0, black, 1);
 	}
 
       if (use_softweave)
@@ -1575,10 +1578,10 @@ escp2_print(int       model,		/* I - Model */
       else
 	{
 	  if (output_type == OUTPUT_GRAY)
-	    dither_black4(out, y, dither, black);
+	    dither_black_n(out, y, dither, black, 1);
 	  else
-	    dither_cmyk4(out, y, dither, cyan, lcyan, magenta, lmagenta,
-			 yellow, 0, black);
+	    dither_cmyk_n(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			 yellow, 0, black, 1);
 	}
 
       if (use_softweave)

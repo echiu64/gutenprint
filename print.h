@@ -196,12 +196,13 @@ extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *);
 
-extern void	dither_black4(unsigned short *, int, void *, unsigned char *);
+extern void	dither_black_n(unsigned short *, int, void *, unsigned char *,
+			       int);
 
-extern void	dither_cmyk4(unsigned short *, int, void *, unsigned char *,
-			     unsigned char *, unsigned char *,
-			     unsigned char *, unsigned char *,
-			     unsigned char *, unsigned char *);
+extern void	dither_cmyk_n(unsigned short *, int, void *, unsigned char *,
+			      unsigned char *, unsigned char *,
+			      unsigned char *, unsigned char *,
+			      unsigned char *, unsigned char *, int);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
 			     unsigned char *, vars_t *);
