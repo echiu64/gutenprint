@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.23  2000/02/08 12:09:22  davehill
+ *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
+ *
  *   Revision 1.22  2000/02/06 22:31:04  rlk
  *   1) Use old methods only for microweave printing.
  *
@@ -281,7 +284,7 @@ pcl_parameters(int  model,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    if (model == 4 || model == 5 || model == 800 || model == 600)
+    if (model == 4 || model == 5 || model == 800 || model == 600 || model == 601)
       *count = 3;
     else
       *count = 2;
@@ -354,6 +357,7 @@ pcl_imageable_area(int  model,		/* I - Printer model */
         break;
 
     case 600 :
+    case 601 :
         *left   = 18;
         *right  = width - 18;
         *top    = length - 0;
@@ -468,7 +472,7 @@ pcl_print(int       model,		/* I - Model */
       output_type == OUTPUT_COLOR && xdpi == 600)
     xdpi = 300;
 
-  if (model == 600 && xdpi == 600)
+  if ((model == 600 || model == 601) && xdpi == 600)
     ydpi = 300;
   else
     ydpi = xdpi;
@@ -748,7 +752,7 @@ pcl_print(int       model,		/* I - Model */
     fprintf(prn, "\033*t%dR", xdpi);		/* Simple resolution */
     if (output_type == OUTPUT_COLOR)
     {
-      if (model == 501 || model == 1200)
+      if (model == 501 || model == 600 || model == 1200)
         fputs("\033*r-3U", prn);		/* Simple CMY color */
       else
         fputs("\033*r-4U", prn);		/* Simple KCMY color */
@@ -795,7 +799,7 @@ pcl_print(int       model,		/* I - Model */
     magenta = malloc(length);
     yellow  = malloc(length);
   
-    if (model != 501 && model != 1200)
+    if (model != 501 && model != 600 && model != 1200)
       black = malloc(length);
     else
       black = NULL;

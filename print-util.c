@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.69  2000/02/08 12:09:23  davehill
+ *   Deskjet 600C is CMY, the rest of the 6xxC series are CMYK.
+ *
  *   Revision 1.68  2000/02/06 18:40:53  rlk
  *   Split out dither stuff from print-util
  *
@@ -1083,7 +1086,9 @@ const static printer_t	printers[] =	/* List of supported printer types */
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
   { "HP DeskJet 550C, 560C",	"pcl-550",	1,	550,	0.818,	0.786,
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 600 series",	"pcl-600",	1,	600,	0.818,	0.786,
+  { "HP DeskJet 600/600C",	"pcl-600",	1,	600,	0.818,	0.786,
+    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
+  { "HP DeskJet 600 series",	"pcl-601",	1,	601,	0.818,	0.786,
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
   { "HP DeskJet 800 series",	"pcl-800",	1,	800,	0.818,	0.786,
     pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
