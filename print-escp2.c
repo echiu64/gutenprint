@@ -2755,24 +2755,22 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
   int *linecount = get_linecount_by_pass(sw, passno);
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
-  int initial_extra = 0;
   if (ydpi > 720)
     ydpi = 720;
   if (passno == 0)
     {
-      if (sw->firstline >= sw->realjets * sw->separation)
-	initial_extra = sw->firstline - sw->realjets * sw->separation;
       sw->last_pass_offset = pass->logicalpassstart;
+      if (sw->firstline >= sw->realjets * sw->separation)
+	sw->last_pass_offset -= sw->firstline - sw->realjets * sw->separation;
     }
   for (j = 0; j < sw->ncolors; j++)
     {
       if (lineactive[0].v[j] == 0)
 	continue;
-      if (pass->logicalpassstart > sw->last_pass_offset ||
-	  initial_extra > 0)
+      if (pass->logicalpassstart > sw->last_pass_offset)
 	{
 	  int advance = pass->logicalpassstart - sw->last_pass_offset -
-	    (sw->separation_rows - 1) + initial_extra;
+	    (sw->separation_rows - 1);
 	  int alo = advance % 256;
 	  int ahi = advance / 256;
 	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
@@ -2785,7 +2783,6 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  else
 	    fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
 	  sw->last_pass_offset = pass->logicalpassstart;
-	  initial_extra = 0;
 	}
       if (last_color != j)
 	{
