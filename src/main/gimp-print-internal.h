@@ -286,10 +286,6 @@ extern void	stp_dither(const unsigned short *, int, void *,
 extern void *	stp_initialize_weave_params(int S, int J, int O,
 					    int firstrow, int lastrow,
 					    int pageheight, int strategy);
-extern void	stp_calculate_row_parameters(void *w, int row, int subpass,
-					     int *pass, int *jet,
-					     int *startrow, int *phantomrows,
-					     int *jetsused);
 extern void	stp_destroy_weave_params(void *vw);
 
 extern void	stp_fold(const unsigned char *line, int single_height,
