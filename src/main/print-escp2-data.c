@@ -2546,10 +2546,10 @@ static const escp2_dot_size_t sp2000_dotsizes =
 { -1,   0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_dye_dotsizes =
-{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,    3,   -1,    1,   -1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_pigment_dotsizes =
-{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,    2,   -1,    1,   -1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro10000_dotsizes =
 {    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
@@ -2699,7 +2699,7 @@ static const escp2_densities_t sp2000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.775, 0.852, 0.388, 0.438, 0.219, 0.219, 0.110 };
 
 static const escp2_densities_t spro_dye_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
+{ 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.388, 0.388, 0.275, 0.275, 0.138 };
 
 static const escp2_densities_t spro_pigment_densities =
 { 2.0, 2.0, 1.5, 1.5, 0.78, 0.78, 0.775, 0.775, 0.388, 0.388, 0.194, 0.194, 0.097 };
