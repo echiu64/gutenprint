@@ -48,14 +48,14 @@ my $debug = 0;
 
 use Data::Dumper;
 
-open PIPE, "./printer_options|" or die;
+open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
 print STDERR "Loading options from ./printer_options...";
 while(<PIPE>) { 
     next if m!^#!;
 #    next if m!\{\'lexmark\-!;
     eval $_;
 }
-close PIPE or die "Cannot run printer_options";
+close PIPE or die "Cannot run printer_options: $!\n";
 print STDERR "done.\n";
 
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
@@ -77,7 +77,7 @@ for $a (keys(%stpdata)) {
 #
 # Foomatic is supposed to be a superset, so
 
-open PRINTERS, $mapfile or die;
+open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
 for (<PRINTERS>) {
     if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
 	push (@{$mapstp{$1}}, $2);
@@ -85,10 +85,18 @@ for (<PRINTERS>) {
     }
 }
 
+$missing_drivers = 0;
+
 # Are we missing any stp printers?
 for (keys(%stpdata)) {
-    warn "No foomatic printer IDs for gimp-print printer $_.\n"
-	if (!defined($mapstp{$_}));
+    if (!defined($mapstp{$_})) {
+	$missing_drivers = 1;
+	warn "No foomatic printer IDs for gimp-print printer $_.\n";
+    }
+}
+
+if ($missing_drivers) {
+    die "Cannot continue\n";
 }
 
 # Figure out version etc
@@ -114,14 +122,14 @@ my $generalsubs = { 'STPVER' => $stpvers,
 		    'DRVNAME' => "gimp-print",
 		    'STPRINTERS' => join('', @printerlist) };
 
-opendir TDIR, "foomatic-templates" or die;
+opendir TDIR, "foomatic-templates" or die "Cannot open templates directory: $!\n";
 
 # OK, make the db heirarchy alongside the templates one...
-mkdir 'foomatic-db', 0755 or die
+mkdir 'foomatic-db', 0755 or die "Cannot create directory foomatic-db: $!\n"
     unless -d 'foomatic-db';
-mkdir 'foomatic-db/opt', 0755 or die
+mkdir 'foomatic-db/opt', 0755 or die "Cannot create directory foomatic-db/opt: $!\n"
     unless -d 'foomatic-db/opt';
-mkdir 'foomatic-db/driver', 0755 or die
+mkdir 'foomatic-db/driver', 0755 or die "Cannot create directory foomatic-db/driver: $!\n"
     unless -d 'foomatic-db/driver';
 
 # Now do stuff, already.  Do the substitution into each file...
@@ -175,7 +183,7 @@ while ($tmpl=readdir(TDIR)) {
     $dbfilename = "foomatic-db/driver/gimp-print.xml"
 	if ($tmpl eq 'gimp-print.xml');
 
-    open NEWF, "> $dbfilename" or die;
+    open NEWF, "> $dbfilename" or die "Cannot create $dbfilename: $!";
     print STDERR "writing $dbfilename...";
     print NEWF $template;
     print STDERR "done.\n";
@@ -217,7 +225,7 @@ sub build_ev {
 	# just use the string choice name.
 	if (defined($drivervals->{$stpopt})) {
 	    $ev_driverval = &{$drivervals->{$stpopt}}($ev);
-	    die "Undefined driverval for option $stpopt value $ev!"
+	    die "Undefined driverval for option $stpopt value $ev!\n"
 		if (! defined($ev));
 	} else {
 	    $ev_driverval = $ev;
@@ -329,7 +337,7 @@ sub optmap_pagesize {
 
     # Root around in print-util.c for lines in the pagesize struct
     if (!defined $pagemap) {
-	open PUTIL, "../main/print-util.c" or die;
+	open PUTIL, "../main/print-util.c" or die "Cannot open ../main/print-util.c: $!\n";
 	while (<PUTIL>) {
 	    if (m!\{\s*N_\s*\(\"([^\"]+)\"\)\s*\,\s*(\d+)\s*\,\s*(\d+)\s*\,\s*PAPERSIZE\_!) {
 		if ($2 > 0 and $3 > 0) {
