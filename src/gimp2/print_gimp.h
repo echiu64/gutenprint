@@ -38,7 +38,7 @@
 #include <libgimp/gimpui.h>
 
 #include <gutenprint/gutenprint.h>
-#include <gutenprintui/gutenprintui.h>
+#include <gutenprintui2/gutenprintui.h>
 
 /* How to create an Image wrapping a Gimp drawable */
 extern stpui_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, gint32);

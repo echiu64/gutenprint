@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 
-#include <gutenprintui/gutenprintui.h>
+#include <gutenprintui2/gutenprintui.h>
 #include "print_gimp.h"
 
 #include <sys/types.h>
