@@ -27,7 +27,7 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#define MAX_PREVIEW_PPI        (40)
+#define MAX_PREVIEW_PPI        (400)
 #define INCH 72
 #define FINCH ((gdouble) INCH)
 #define ROUNDUP(x, y) (((x) + ((y) - 1)) / (y))
@@ -43,8 +43,8 @@
 /*
  * Constants for GUI.
  */
-static const int preview_size_vert = 360;
-static const int preview_size_horiz = 260;
+static int preview_size_vert = 360;
+static int preview_size_horiz = 300;
 static const int minimum_image_percent = 5.0;
 static const int thumbnail_hintw = 128;
 static const int thumbnail_hinth = 128;
@@ -106,6 +106,9 @@ static GtkWidget *file_browser;        /* FSD for print files */
 
 static GtkWidget *adjust_color_button;
 static GtkWidget *about_dialog;
+
+static GtkWidget *printer_features_table;
+static GtkWidget *color_adjustment_table;
 
 static gboolean preview_valid = FALSE;
 static gboolean frame_valid = FALSE;
@@ -206,32 +209,15 @@ static stp_printer_t tmp_printer = NULL;
 
 static list_option_t the_list_options[] =
   {
-    { "MediaType", N_("Media Type:"),
-      N_("Type of media you're printing to"),
-      NULL, NULL, -1 },
     { "PageSize", N_("Media Size:"),
       N_("Size of paper that you wish to print to"),
       NULL, set_media_size, -1 },
-    { "InputSlot", N_("Media Source:"),
-      N_("Source (input slot) of media you're printing to"),
-      NULL, NULL, -1 },
-    { "InkType", N_("Ink Type:"),
-      N_("Type of ink in the printer"),
-      NULL, NULL, -1 },
-    { "Resolution", N_("Resolution:"),
-      N_("Resolution and quality of the print"),
-      NULL, NULL, -1 },
-    { "DitherAlgorithm", N_("Dither Algorithm:"),
-      N_("Choose the dither algorithm to be used.\n"
-	 "Adaptive Hybrid usually produces the best all-around quality.\n"
-	 "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
-	 "Ordered is faster and produces almost as good quality on photographs.\n"
-	 "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
-	 "Hybrid Floyd-Steinberg generally produces inferior output."),
-      NULL, NULL, -1 },
-    { "ImageOptimization", N_("Image Type:"),
-      N_("Optimize the output for the type of image being printed"),
-      NULL, NULL, -1 },
+    { "MediaType", NULL, NULL, NULL, NULL, -1 },
+    { "InputSlot", NULL, NULL, NULL, NULL, -1 },
+    { "InkType", NULL, NULL, NULL, NULL, -1 },
+    { "Resolution", NULL, NULL, NULL, NULL, -1 },
+    { "DitherAlgorithm", NULL, NULL, NULL, NULL, -1 },
+    { "ImageOptimization", NULL, NULL, NULL, NULL, -1 },
   };
 
 static const gint list_option_count = (sizeof(the_list_options) /
@@ -329,6 +315,29 @@ build_printer_combo(void)
 }
 
 static void
+populate_option_table(GtkWidget *table, int p_type, int p_class)
+{
+  stp_parameter_list_t params = stp_list_parameters(stp_default_settings());
+  int i;
+  int vpos = 0;
+  for (i = 0; i < list_option_count; i++)
+    {
+      list_option_t *option = &(the_list_options[i]);
+      const stp_parameter_t *desc =
+	stp_parameter_find(params, option->name);
+      if (desc)
+	{
+	  option->p_class = desc->p_class;
+	  option->text = desc->text;
+	  option->help = desc->help;
+	  if (desc->p_type == p_type && desc->p_class == p_class)
+	    stpui_create_new_combo(option, table, 0, vpos++);
+	}
+    }
+}
+
+
+static void
 create_top_level_structure(void)
 {
   gchar *plug_in_name;
@@ -371,20 +380,29 @@ create_top_level_structure(void)
   main_vbox = gtk_vbox_new (FALSE, 2);
   gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 6);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (print_dialog)->vbox), main_vbox,
-                      FALSE, FALSE, 0);
+		      TRUE, TRUE, 0);
   gtk_widget_show (main_vbox);
 
   main_hbox = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (main_vbox), main_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_vbox), main_hbox, TRUE, TRUE, 0);
   gtk_widget_show (main_hbox);
 
   right_vbox = gtk_vbox_new (FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (main_hbox), right_vbox, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (main_hbox), right_vbox, FALSE, FALSE, 0);
   gtk_widget_show (right_vbox);
 
   notebook = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (right_vbox), notebook, FALSE, FALSE, 0);
   gtk_widget_show (notebook);
+}
+
+static gint
+drawing_area_resize_callback(GtkWidget *widget, GdkEventConfigure *event)
+{
+  preview_size_vert = event->height - 1;
+  preview_size_horiz = event->width - 1;
+  preview_update();
+  return 1;
 }
 
 static void
@@ -394,11 +412,13 @@ create_preview (void)
   GtkWidget *event_box;
 
   frame = gtk_frame_new (_("Preview"));
-  gtk_box_pack_start (GTK_BOX (main_hbox), frame, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_hbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
   preview = (GtkDrawingArea *) gtk_drawing_area_new ();
   gtk_drawing_area_size(preview, preview_size_horiz + 1, preview_size_vert +1);
+  gtk_signal_connect(GTK_OBJECT(preview), "configure_event",
+		     GTK_SIGNAL_FUNC(drawing_area_resize_callback), NULL);
   event_box = gtk_event_box_new ();
   gtk_container_add (GTK_CONTAINER (event_box), GTK_WIDGET (preview));
   gtk_container_add (GTK_CONTAINER (frame), event_box);
@@ -463,11 +483,10 @@ create_positioning_frame (void)
   GtkWidget *sep;
 
   frame = gtk_frame_new (_("Position"));
-  gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (right_vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -570,7 +589,6 @@ create_printer_dialog (void)
    */
 
   table = gtk_table_new (4, 2, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacing (GTK_TABLE (table), 0, 150);
@@ -719,7 +737,6 @@ create_new_printer_dialog (void)
   gtk_window_set_policy(GTK_WINDOW(new_printer_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
@@ -789,14 +806,12 @@ create_printer_settings_frame (void)
   GtkWidget *button;
   GtkWidget *event_box;
   gint vpos = 0;
-  gint i;
 
   create_printer_dialog ();
   create_about_dialog ();
   create_new_printer_dialog ();
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -873,8 +888,6 @@ create_printer_settings_frame (void)
    */
 
   media_size_table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(media_size_table),
-				GTK_RESIZE_IMMEDIATE);
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
 			     1.0, 0.5, media_size_table, 2, TRUE);
 
@@ -888,16 +901,15 @@ create_printer_settings_frame (void)
      _("Height of the paper that you wish to print to"),
      custom_media_size_callback);
 
-  for (i = 0; i < list_option_count; i++)
-    {
-      stp_parameter_t desc;
-      list_option_t *option = &(the_list_options[i]);
-      stp_describe_parameter(stp_default_settings(), option->name, &desc);
-      option->p_class = desc.p_class;
-      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
-	  desc.p_class == STP_PARAMETER_CLASS_FEATURE)
-	stpui_create_new_combo(option, table, 0, vpos++);
-    }
+  printer_features_table = gtk_table_new (1, 1, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (printer_features_table), 2);
+  gtk_table_set_row_spacings (GTK_TABLE (printer_features_table), 2);
+  gtk_container_set_border_width (GTK_CONTAINER (printer_features_table), 4);
+  gtk_widget_show (printer_features_table);
+  populate_option_table(printer_features_table, STP_PARAMETER_TYPE_STRING_LIST,
+			STP_PARAMETER_CLASS_FEATURE);
+  gtk_table_attach_defaults(GTK_TABLE(table), printer_features_table,
+			    0, 2, vpos, vpos + 1);
 }
 
 static void
@@ -923,7 +935,6 @@ create_scaling_frame (void)
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -955,7 +966,6 @@ create_scaling_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1000,7 +1010,6 @@ create_scaling_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1033,9 +1042,8 @@ create_scaling_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_box_pack_end (GTK_BOX (box), table, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
   event_box = gtk_event_box_new ();
@@ -1062,7 +1070,6 @@ create_scaling_frame (void)
       gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
 			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
     }
-
 }
 
 /*
@@ -1097,7 +1104,6 @@ create_color_adjust_window (void)
   gtk_window_set_policy(GTK_WINDOW(color_adjust_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 0);
@@ -1150,15 +1156,16 @@ create_color_adjust_window (void)
 	}
     }
 
-  for (i = 0; i < list_option_count; i++)
-    {
-      stp_parameter_t desc;
-      list_option_t *option = &(the_list_options[i]);
-      stp_describe_parameter(stp_default_settings(), option->name, &desc);
-      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
-	  desc.p_class == STP_PARAMETER_CLASS_OUTPUT)
-	stpui_create_new_combo(option, table, 0, color_option_count + i + 1);
-    }
+  color_adjustment_table = gtk_table_new (1, 1, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (color_adjustment_table), 2);
+  gtk_table_set_row_spacings (GTK_TABLE (color_adjustment_table), 2);
+  gtk_container_set_border_width (GTK_CONTAINER (color_adjustment_table), 4);
+  gtk_widget_show (color_adjustment_table);
+  populate_option_table(color_adjustment_table, STP_PARAMETER_TYPE_STRING_LIST,
+			STP_PARAMETER_CLASS_OUTPUT);
+  gtk_table_attach_defaults(GTK_TABLE(table), color_adjustment_table,
+			    0, 2, i + 1, i + 2);
+
 #if 0
   curve = gtk_gamma_curve_new();
   stpui_table_attach_aligned(GTK_TABLE (table), 0, color_option_count + 2,
@@ -1189,7 +1196,6 @@ create_image_settings_frame (void)
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1204,7 +1210,6 @@ create_image_settings_frame (void)
    */
 
   table = gtk_table_new (1, 1, FALSE);
-  gtk_container_set_resize_mode(GTK_CONTAINER(table), GTK_RESIZE_IMMEDIATE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
 /*  gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4); */
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -1481,11 +1486,9 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
       *callback_id = -1;
       gtk_widget_set_sensitive (combo, FALSE);
-/*
       gtk_widget_hide (combo);
       if (label)
 	gtk_widget_hide(label);
-*/
       return;
     }
 
@@ -1720,7 +1723,7 @@ do_all_updates(void)
 	  else if (!val || strlen(val) == 0)
 	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
 	}
-      plist_build_combo(option->combo, NULL, option->params,
+      plist_build_combo(option->combo, option->label, option->params,
 			stp_get_string_parameter(pv->v, option->name),
 			desc.deflt.str, combo_callback,
 			&(option->callback_id), option);
@@ -2387,92 +2390,98 @@ initialize_thumbnail(void)
     }
 }
 
+static int
+compute_thumbnail(stp_vars_t v)
+{
+  priv_t priv;
+  int answer = 1;
+  stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
+					      thumbnail_h, thumbnail_bpp);
+  stp_vars_t nv = stp_allocate_copy(v);
+  stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
+  stp_set_top(nv, 0);
+  stp_set_left(nv, 0);
+  stp_set_width(nv, thumbnail_w);
+  stp_set_height(nv, thumbnail_h);
+  stp_set_outfunc(nv, fill_buffer_writefunc);
+  stp_set_outdata(nv, &priv);
+  stp_set_errfunc(nv, stpui_get_errfunc());
+  stp_set_errdata(nv, stpui_get_errdata());
+  if (thumbnail_bpp == 1)
+    stp_set_string_parameter(nv, "InkType", "RGBGray");
+  else
+    stp_set_string_parameter(nv, "InkType", "RGB");
+  stp_set_page_height(nv, thumbnail_h);
+  stp_set_page_width(nv, thumbnail_w);
+  stp_set_float_parameter (nv, "Density", 1.0);
+  stp_set_output_color_model(nv, COLOR_MODEL_RGB);
+
+  priv.base_addr = adjusted_thumbnail_data;
+  priv.offset = 0;
+  priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
+
+  if (stp_verify(nv) != 1 || stp_print(nv, im) != 1)
+    {
+      answer = 0;
+      fprintf(stderr, "Could not print thumbnail!\n");
+    }
+  stp_vars_free(nv);
+  return answer;
+}  
+
+static void
+set_thumbnail_orientation(void)
+{
+  gint           x, y;
+  gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
+  switch (physical_orientation)
+    {
+    case ORIENT_PORTRAIT:
+      memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
+	     thumbnail_bpp * thumbnail_h * thumbnail_w);
+      break;
+    case ORIENT_SEASCAPE:
+      for (x = 0; x < thumbnail_w; x++)
+	for (y = 0; y < thumbnail_h; y++)
+	  memcpy((preview_thumbnail_data +
+		  thumbnail_bpp * (x * thumbnail_h + y)),
+		 (adjusted_thumbnail_data +
+		  thumbnail_bpp * (y * thumbnail_w + x)),
+		 thumbnail_bpp);
+      break;
+
+    case ORIENT_UPSIDEDOWN:
+      for (x = 0; x < thumbnail_h * thumbnail_w; x++)
+	memcpy((preview_thumbnail_data +
+		thumbnail_bpp * (preview_limit - x)),
+	       adjusted_thumbnail_data + thumbnail_bpp * x,
+	       thumbnail_bpp);
+      break;
+    case ORIENT_LANDSCAPE:
+      for (x = 0; x < thumbnail_w; x++)
+	for (y = 0; y < thumbnail_h; y++)
+	  memcpy((preview_thumbnail_data +
+		  thumbnail_bpp * (preview_limit -
+				   (x * thumbnail_h + y))),
+		 (adjusted_thumbnail_data +
+		  thumbnail_bpp * (y * thumbnail_w + x)),
+		 thumbnail_bpp);
+      break;
+    }
+}  
+
 static void
 update_adjusted_thumbnail (void)
 {
   if (thumbnail_data && adjusted_thumbnail_data && do_update_thumbnail &&
       suppress_preview_update == 0)
     {
-      gint           x, y;
-      guchar        *adjusted_data = adjusted_thumbnail_data;
-      gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
-      priv_t priv;
-      stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
-						  thumbnail_h, thumbnail_bpp);
-      stp_vars_t nv = stp_allocate_copy(pv->v);
-      stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
-      stp_set_top(nv, 0);
-      stp_set_left(nv, 0);
-      stp_set_width(nv, thumbnail_w);
-      stp_set_height(nv, thumbnail_h);
-      stp_set_outfunc(nv, fill_buffer_writefunc);
-      stp_set_outdata(nv, &priv);
-      stp_set_errfunc(nv, stpui_get_errfunc());
-      stp_set_errdata(nv, stpui_get_errdata());
-      if (thumbnail_bpp == 1)
-	stp_set_string_parameter(nv, "InkType", "RGBGray");
-      else
-	stp_set_string_parameter(nv, "InkType", "RGB");
-      stp_set_page_height(nv, thumbnail_h);
-      stp_set_page_width(nv, thumbnail_w);
-      stp_set_float_parameter (nv, "Density", 1.0);
-      stp_set_output_color_model(nv, COLOR_MODEL_RGB);
-
-      priv.base_addr = adjusted_data;
-      priv.offset = 0;
-      priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
-
-      if (stp_verify(nv) != 1)
+      if (compute_thumbnail(pv->v))
 	{
-	  fprintf(stderr, "did not verify!\n");
-	  stp_vars_free(nv);
-	  return;
+	  set_thumbnail_orientation();
+	  redraw_color_swatch ();
+	  preview_update ();
 	}
-      if (stp_print(nv, im) != 1)
-	{
-	  fprintf(stderr, "did not print thumbnail!\n");
-	  stp_vars_free(nv);
-	  return;
-	}
-      stp_vars_free(nv);
-
-      switch (physical_orientation)
-	{
-	case ORIENT_PORTRAIT:
-	  memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
-		 thumbnail_bpp * thumbnail_h * thumbnail_w);
-	  break;
-	case ORIENT_SEASCAPE:
-	  for (x = 0; x < thumbnail_w; x++)
-	    for (y = 0; y < thumbnail_h; y++)
-	      memcpy((preview_thumbnail_data +
-		      thumbnail_bpp * (x * thumbnail_h + y)),
-		     (adjusted_thumbnail_data +
-		      thumbnail_bpp * (y * thumbnail_w + x)),
-		     thumbnail_bpp);
-	  break;
-
-	case ORIENT_UPSIDEDOWN:
-	  for (x = 0; x < thumbnail_h * thumbnail_w; x++)
-	    memcpy((preview_thumbnail_data +
-		    thumbnail_bpp * (preview_limit - x)),
-		   adjusted_thumbnail_data + thumbnail_bpp * x,
-		   thumbnail_bpp);
-	  break;
-	case ORIENT_LANDSCAPE:
-	  for (x = 0; x < thumbnail_w; x++)
-	    for (y = 0; y < thumbnail_h; y++)
-	      memcpy((preview_thumbnail_data +
-		      thumbnail_bpp * (preview_limit -
-				       (x * thumbnail_h + y))),
-		     (adjusted_thumbnail_data +
-		      thumbnail_bpp * (y * thumbnail_w + x)),
-		     thumbnail_bpp);
-	  break;
-	}
-
-      redraw_color_swatch ();
-      preview_update ();
     }
 }
 
