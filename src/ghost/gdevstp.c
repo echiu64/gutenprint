@@ -191,6 +191,7 @@ stp_init_vars(void)
 {
   if (! stp_data.v)
     {
+      stp_init();
       stp_data.v = stp_allocate_vars();
       stp_set_driver(stp_data.v, "");
       stp_set_media_size(stp_data.v, "Letter");
