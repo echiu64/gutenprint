@@ -84,14 +84,14 @@ print_raw_la_LDFLAGS = -module -avoid-version
 
 lib_LTLIBRARIES = libgimpprint.la
 
-module_SOURCES = \
-	$(color_traditional_la_SOURCES)
-	$(print_canon_la_SOURCES) \
-	$(print_escp2_la_SOURCES) \
-	$(print_lexmark_la_SOURCES) \
-	$(print_pcl_la_SOURCES) \
-	$(print_ps_la_SOURCES) \
-	$(print_olympus_la_SOURCES) \
+module_SOURCES =				\
+	$(color_traditional_la_SOURCES)		\
+	$(print_canon_la_SOURCES)		\
+	$(print_escp2_la_SOURCES)		\
+	$(print_lexmark_la_SOURCES)		\
+	$(print_pcl_la_SOURCES)			\
+	$(print_ps_la_SOURCES)			\
+	$(print_olympus_la_SOURCES)		\
 	$(print_raw_la_SOURCES)
 
 if !BUILD_MODULES

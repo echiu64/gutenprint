@@ -59,26 +59,28 @@ static stpi_internal_module_class_t module_classes[] =
   };
 
 #if !defined(USE_LTDL) && !defined(USE_DLOPEN)
-extern stpi_module_t canon_LTX_stpi_module_data;
-extern stpi_module_t escp2_LTX_stpi_module_data;
-extern stpi_module_t lexmark_LTX_stpi_module_data;
-extern stpi_module_t pcl_LTX_stpi_module_data;
-extern stpi_module_t ps_LTX_stpi_module_data;
-extern stpi_module_t olympus_LTX_stpi_module_data;
-extern stpi_module_t raw_LTX_stpi_module_data;
+extern stpi_module_t print_canon_LTX_stpi_module_data;
+extern stpi_module_t print_escp2_LTX_stpi_module_data;
+extern stpi_module_t print_lexmark_LTX_stpi_module_data;
+extern stpi_module_t print_pcl_LTX_stpi_module_data;
+extern stpi_module_t print_ps_LTX_stpi_module_data;
+extern stpi_module_t print_olympus_LTX_stpi_module_data;
+extern stpi_module_t print_raw_LTX_stpi_module_data;
+extern stpi_module_t color_traditional_LTX_stpi_module_data;
 
 /*
  * A list of modules, for use when the modules are linked statically.
  */
 static stpi_module_t *static_modules[] =
   {
-    &ps_LTX_stpi_module_data,
-    &canon_LTX_stpi_module_data,
-    &escp2_LTX_stpi_module_data,
-    &pcl_LTX_stpi_module_data,
-    &lexmark_LTX_stpi_module_data,
-    &olympus_LTX_stpi_module_data,
-    &raw_LTX_stpi_module_data,
+    &print_ps_LTX_stpi_module_data,
+    &print_canon_LTX_stpi_module_data,
+    &print_escp2_LTX_stpi_module_data,
+    &print_pcl_LTX_stpi_module_data,
+    &print_lexmark_LTX_stpi_module_data,
+    &print_olympus_LTX_stpi_module_data,
+    &print_raw_LTX_stpi_module_data,
+    &color_traditional_LTX_stpi_module_data,
     NULL
   };
 #endif

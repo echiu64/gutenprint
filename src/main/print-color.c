@@ -977,8 +977,9 @@ compute_gcr_curve(stp_const_vars_t vars)
     for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	tmp_data[i] = 65535.0 * k_upper * pow(where, k_gamma) /
+	tmp_data[i] = 65535.0 * lut->steps * pow(where, k_gamma) /
 	  (double) (lut->steps - 1);
+	tmp_data[i] = floor(tmp_data[i] + .5);
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(curve, 0, 65535);
@@ -1879,6 +1880,7 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 	tmp[i] = 65535;
       else
 	tmp[i] = (pixel);
+      tmp[i] = floor(tmp[i] + 0.5);
     }
   stp_curve_set_data(curve, isteps, tmp);
   if (isteps != steps)
@@ -2459,7 +2461,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 }
 
 
-static const stpi_printfuncs_t stpi_color_traditional_colorfuncs =
+static const stpi_colorfuncs_t stpi_color_traditional_colorfuncs =
 {
   &stpi_color_traditional_init,
   &stpi_color_traditional_get_row,
