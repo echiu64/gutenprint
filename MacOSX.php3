@@ -187,14 +187,15 @@ require('standard_html_header.php3');
  <p>
  Gimp-Print is available in source code form under the GPL (GNU General Public
  License). You are entitled to download the source code.
- </p>
- <p>
  Gimp-print on Mac OS X would not be possible without <a href=
  "http://www.cups.org/" >CUPS</a>, the open-source print spooler built-in to
  Mac OS X Jaguar.
  </p>
  <p>
- Note: Gimp-Print should not be confused with GIMP, the open-source GNU Image
+ <h2>
+ Project Notes
+ </h2>
+ Gimp-Print should not be confused with GIMP, the open-source GNU Image
  Manipulation Program. Gimp-Print originated as the print facility for GIMP,
  hence the name, but has since matured into an independent printing package.
  Installing GIMP is NOT required.
