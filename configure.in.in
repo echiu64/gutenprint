@@ -113,7 +113,7 @@ fi
 
 dnl Compiler options and definitions
 CFLAGS="${CFLAGS:=}"
-INCLUDES="${INCLUDES} -I\$(top_srcdir)/src/include -I\$(top_builddir)/src/include"
+INCLUDES="${INCLUDES} -I\$(top_srcdir)/src/include -I\$(top_builddir)/src/include -I\$(top_srcdir)/intl"
 OPTIM=""
 
 dnl Defaults

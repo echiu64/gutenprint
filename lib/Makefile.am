@@ -22,9 +22,6 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 @SET_MAKE@
 
 
-INCLUDES = -I../intl
-
-
 noinst_LTLIBRARIES = libprintut.la
 
 libprintut_la_SOURCES =
