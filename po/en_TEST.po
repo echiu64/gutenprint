@@ -5,7 +5,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-03-04 22:09+0000\n"
+"POT-Creation-Date: 2001-03-07 21:12+0000\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,59 +73,59 @@ msgstr "TEST: %s: option `-W %s' is ambiguous\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "TEST: %s: option `-W %s' doesn't allow an argument\n"
 
-#: src/main/print-canon.c:731 src/main/print-canon.c:1022
-#: src/main/print-escp2.c:1951 src/main/print-lexmark.c:529
+#: src/main/print-canon.c:763 src/main/print-canon.c:1043
+#: src/main/print-escp2.c:1905 src/main/print-lexmark.c:529
 #: src/main/print-lexmark.c:739
 msgid "Plain Paper"
 msgstr "TEST: Plain Paper"
 
-#: src/main/print-canon.c:732 src/main/print-canon.c:1023
-#: src/main/print-escp2.c:1959 src/main/print-lexmark.c:530
+#: src/main/print-canon.c:764 src/main/print-canon.c:1044
+#: src/main/print-escp2.c:1910 src/main/print-lexmark.c:530
 #: src/main/print-lexmark.c:740
 msgid "Transparencies"
 msgstr "TEST: Transparencies"
 
-#: src/main/print-canon.c:733 src/main/print-canon.c:1024
+#: src/main/print-canon.c:765 src/main/print-canon.c:1045
 #: src/main/print-lexmark.c:531 src/main/print-lexmark.c:741
 msgid "Back Print Film"
 msgstr "TEST: Back Print Film"
 
-#: src/main/print-canon.c:734 src/main/print-canon.c:1025
+#: src/main/print-canon.c:766 src/main/print-canon.c:1046
 #: src/main/print-lexmark.c:532 src/main/print-lexmark.c:742
 msgid "Fabric Sheets"
 msgstr "TEST: Fabric Sheets"
 
-#: src/main/print-canon.c:735 src/main/print-canon.c:1026
+#: src/main/print-canon.c:767 src/main/print-canon.c:1047
 #: src/main/print-lexmark.c:533 src/main/print-lexmark.c:743
 msgid "Envelope"
 msgstr "TEST: Envelope"
 
-#: src/main/print-canon.c:736 src/main/print-canon.c:1027
+#: src/main/print-canon.c:768 src/main/print-canon.c:1048
 #: src/main/print-lexmark.c:534 src/main/print-lexmark.c:744
 msgid "High Resolution Paper"
 msgstr "TEST: High Resolution Paper"
 
-#: src/main/print-canon.c:737 src/main/print-canon.c:1028
+#: src/main/print-canon.c:769 src/main/print-canon.c:1049
 #: src/main/print-lexmark.c:535 src/main/print-lexmark.c:745
 msgid "T-Shirt Transfers"
 msgstr "TEST: T-Shirt Transfers"
 
-#: src/main/print-canon.c:738 src/main/print-canon.c:1029
+#: src/main/print-canon.c:770 src/main/print-canon.c:1050
 #: src/main/print-lexmark.c:536 src/main/print-lexmark.c:746
 msgid "High Gloss Film"
 msgstr "TEST: High Gloss Film"
 
-#: src/main/print-canon.c:739 src/main/print-canon.c:1030
+#: src/main/print-canon.c:771 src/main/print-canon.c:1051
 #: src/main/print-lexmark.c:537 src/main/print-lexmark.c:747
 msgid "Glossy Photo Paper"
 msgstr "TEST: Glossy Photo Paper"
 
-#: src/main/print-canon.c:740 src/main/print-canon.c:1031
+#: src/main/print-canon.c:772 src/main/print-canon.c:1052
 #: src/main/print-lexmark.c:538 src/main/print-lexmark.c:748
 msgid "Glossy Photo Cards"
 msgstr "TEST: Glossy Photo Cards"
 
-#: src/main/print-canon.c:741 src/main/print-canon.c:1032
+#: src/main/print-canon.c:773 src/main/print-canon.c:1053
 #: src/main/print-lexmark.c:539 src/main/print-lexmark.c:749
 msgid "Photo Paper Pro"
 msgstr "TEST: Photo Paper Pro"
@@ -145,129 +145,129 @@ msgstr "TEST: Photo Paper Pro"
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:757 src/main/print-escp2.c:1979
+#: src/main/print-canon.c:789 src/main/print-escp2.c:1920
 msgid "Other"
 msgstr "TEST: Other"
 
 #. used internally: do not translate
-#: src/main/print-canon.c:795 src/main/print-canon.c:1036
+#: src/main/print-canon.c:827 src/main/print-canon.c:1057
 #: src/main/print-lexmark.c:550 src/main/print-lexmark.c:753
 msgid "Auto Sheet Feeder"
 msgstr "TEST: Auto Sheet Feeder"
 
-#: src/main/print-canon.c:796 src/main/print-canon.c:1037
+#: src/main/print-canon.c:828 src/main/print-canon.c:1058
 #: src/main/print-lexmark.c:551 src/main/print-lexmark.c:754
 msgid "Manual with Pause"
 msgstr "TEST: Manual with Pause"
 
-#: src/main/print-canon.c:797 src/main/print-canon.c:1038
+#: src/main/print-canon.c:829 src/main/print-canon.c:1059
 #: src/main/print-lexmark.c:552 src/main/print-lexmark.c:755
 msgid "Manual without Pause"
 msgstr "TEST: Manual without Pause"
 
 #. used internally: do not translate
-#: src/main/print-canon.c:809 src/main/print-canon.c:832
-#: src/main/print-canon.c:1111 src/main/print-lexmark.c:565
+#: src/main/print-canon.c:841 src/main/print-canon.c:864
+#: src/main/print-canon.c:1133 src/main/print-lexmark.c:565
 #: src/main/print-lexmark.c:816
 msgid "Black"
 msgstr "TEST: Black"
 
 #: src/gimp/gimp_main_window.c:798 src/gimp/gtk_main_window.c:632
-#: src/main/print-canon.c:810 src/main/print-canon.c:833
-#: src/main/print-canon.c:1113 src/main/print-lexmark.c:566
+#: src/main/print-canon.c:842 src/main/print-canon.c:865
+#: src/main/print-canon.c:1135 src/main/print-lexmark.c:566
 #: src/main/print-lexmark.c:818
 msgid "Color"
 msgstr "TEST: Color"
 
-#: src/main/print-canon.c:811 src/main/print-canon.c:834
-#: src/main/print-canon.c:1115 src/main/print-lexmark.c:567
+#: src/main/print-canon.c:843 src/main/print-canon.c:866
+#: src/main/print-canon.c:1137 src/main/print-lexmark.c:567
 #: src/main/print-lexmark.c:820
 #, fuzzy
 msgid "Black/Color"
 msgstr "TEST: Color"
 
-#: src/main/print-canon.c:812 src/main/print-canon.c:835
-#: src/main/print-canon.c:1117 src/main/print-lexmark.c:568
+#: src/main/print-canon.c:844 src/main/print-canon.c:867
+#: src/main/print-canon.c:1139 src/main/print-lexmark.c:568
 #: src/main/print-lexmark.c:822 src/main/print-lexmark.c:824
 #, fuzzy
 msgid "Photo/Color"
 msgstr "TEST: Color"
 
-#: src/main/print-canon.c:813 src/main/print-lexmark.c:569
+#: src/main/print-canon.c:845 src/main/print-lexmark.c:569
 #, fuzzy
 msgid "Photo"
 msgstr "TEST: Photograph"
 
-#: src/main/print-canon.c:814 src/main/print-canon.c:836
-#: src/main/print-canon.c:1119
+#: src/main/print-canon.c:846 src/main/print-canon.c:868
+#: src/main/print-canon.c:1141
 msgid "Black/Photo Color"
 msgstr "TEST: Black/Photo Color"
 
 #. used internally: do not translate
 #. built ins:
-#: src/main/print-canon.c:860 src/main/print-lexmark.c:594
+#: src/main/print-canon.c:892 src/main/print-lexmark.c:594
 #: src/main/print-pcl.c:108 src/main/print-util.c:505
 msgid "A5"
 msgstr "TEST: A5"
 
 #. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-canon.c:861 src/main/print-lexmark.c:595
+#: src/main/print-canon.c:893 src/main/print-lexmark.c:595
 #: src/main/print-pcl.c:109 src/main/print-util.c:504
 msgid "A4"
 msgstr "TEST: A4"
 
-#: src/main/print-canon.c:862 src/main/print-lexmark.c:596
+#: src/main/print-canon.c:894 src/main/print-lexmark.c:596
 msgid "B5"
 msgstr ""
 
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-canon.c:863 src/main/print-lexmark.c:597
+#: src/main/print-canon.c:895 src/main/print-lexmark.c:597
 #: src/main/print-pcl.c:103 src/main/print-util.c:459
 msgid "Letter"
 msgstr "TEST: Letter"
 
 #. US Letter (8.5 x 11 in)
-#: src/main/print-canon.c:864 src/main/print-lexmark.c:598
+#: src/main/print-canon.c:896 src/main/print-lexmark.c:598
 #: src/main/print-pcl.c:104 src/main/print-util.c:460
 msgid "Legal"
 msgstr "TEST: Legal"
 
-#: src/main/print-canon.c:865 src/main/print-lexmark.c:599
+#: src/main/print-canon.c:897 src/main/print-lexmark.c:599
 #, fuzzy
 msgid "Envelope 10"
 msgstr "TEST: Envelope"
 
-#: src/main/print-canon.c:866 src/main/print-lexmark.c:600
+#: src/main/print-canon.c:898 src/main/print-lexmark.c:600
 #, fuzzy
 msgid "Envelope DL"
 msgstr "TEST: Envelope"
 
-#: src/main/print-canon.c:867 src/main/print-lexmark.c:601
+#: src/main/print-canon.c:899 src/main/print-lexmark.c:601
 #, fuzzy
 msgid "Letter+"
 msgstr "TEST: Letter"
 
-#: src/main/print-canon.c:868 src/main/print-lexmark.c:602
+#: src/main/print-canon.c:900 src/main/print-lexmark.c:602
 #, fuzzy
 msgid "A4+"
 msgstr "TEST: A4"
 
-#: src/main/print-canon.c:869
+#: src/main/print-canon.c:901
 msgid "Canon 4x2"
 msgstr "TEST: Canon 4x2"
 
-#: src/main/print-canon.c:991 src/main/print-pcl.c:217
+#: src/main/print-canon.c:1012 src/main/print-pcl.c:217
 msgid "150x150 DPI"
 msgstr "TEST: 150x150 DPI"
 
-#: src/main/print-canon.c:993 src/main/print-lexmark.c:649
+#: src/main/print-canon.c:1014 src/main/print-lexmark.c:649
 #, fuzzy
 msgid "180x180 DPI"
 msgstr "TEST: 150x150 DPI"
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1906 src/main/print-dither.c:86
-#: src/main/print-escp2.c:3104
+#: src/main/print-canon.c:1944 src/main/print-dither.c:86
+#: src/main/print-escp2.c:3070
 msgid "Ordered"
 msgstr "TEST: Ordered"
 
@@ -295,226 +295,226 @@ msgstr "TEST: Hybrid Floyd-Steinberg"
 msgid "Random Floyd-Steinberg"
 msgstr "TEST: Random Floyd-Steinberg"
 
-#: src/main/print-escp2.c:1836
+#: src/main/print-escp2.c:1790
 #, fuzzy
 msgid "180 x 120 DPI"
 msgstr "TEST: 150x150 DPI"
 
-#: src/main/print-escp2.c:1837
+#: src/main/print-escp2.c:1791
 #, fuzzy
 msgid "180 x 120 DPI Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:1838
+#: src/main/print-escp2.c:1792
 #, fuzzy
 msgid "360 x 120 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:1839
+#: src/main/print-escp2.c:1793
 #, fuzzy
 msgid "360 x 120 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:1840
+#: src/main/print-escp2.c:1794
 msgid "180 DPI"
 msgstr "TEST: 180 DPI"
 
-#: src/main/print-escp2.c:1841
+#: src/main/print-escp2.c:1795
 msgid "180 DPI Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:1842
+#: src/main/print-escp2.c:1796
 msgid "360 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:1843
+#: src/main/print-escp2.c:1797
 msgid "360 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:1844
+#: src/main/print-escp2.c:1798
 msgid "360 DPI Microweave"
 msgstr "TEST: 360 DPI Microweave"
 
-#: src/main/print-escp2.c:1845
+#: src/main/print-escp2.c:1799
 msgid "360 DPI Microweave Unidirectional"
 msgstr "TEST: 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:1846
+#: src/main/print-escp2.c:1800
 msgid "360 DPI Softweave"
 msgstr "TEST: 360 DPI Softweave"
 
-#: src/main/print-escp2.c:1847
+#: src/main/print-escp2.c:1801
 msgid "360 DPI High Quality"
 msgstr "TEST: 360 DPI High Quality"
 
-#: src/main/print-escp2.c:1848
+#: src/main/print-escp2.c:1802
 msgid "360 DPI High Quality Unidirectional"
 msgstr "TEST: 360 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2.c:1849
+#: src/main/print-escp2.c:1803
 msgid "720 DPI Microweave"
 msgstr "TEST: 720 DPI Microweave"
 
-#: src/main/print-escp2.c:1850
+#: src/main/print-escp2.c:1804
 msgid "720 DPI Microweave Unidirectional"
 msgstr "TEST: 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:1851
+#: src/main/print-escp2.c:1805
 msgid "720 DPI Softweave"
 msgstr "TEST: 720 DPI Softweave"
 
-#: src/main/print-escp2.c:1852
+#: src/main/print-escp2.c:1806
 msgid "720 DPI Softweave Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:1853
+#: src/main/print-escp2.c:1807
 msgid "720 DPI High Quality"
 msgstr "TEST: 720 DPI High Quality"
 
-#: src/main/print-escp2.c:1854
+#: src/main/print-escp2.c:1808
 msgid "720 DPI High Quality Unidirectional"
 msgstr "TEST: 720 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2.c:1855
+#: src/main/print-escp2.c:1809
 msgid "720 DPI Highest Quality"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1856
+#: src/main/print-escp2.c:1810
 msgid "1440 x 720 DPI Microweave"
 msgstr "TEST: 1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2.c:1857
+#: src/main/print-escp2.c:1811
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:1858
+#: src/main/print-escp2.c:1812
 msgid "1440 x 720 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:1859
+#: src/main/print-escp2.c:1813
 msgid "1440 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:1860
+#: src/main/print-escp2.c:1814
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1861
+#: src/main/print-escp2.c:1815
 msgid "1440 x 1440 DPI Softweave"
 msgstr "TEST: 1440 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:1862
+#: src/main/print-escp2.c:1816
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "TEST: 1440 x 1440 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1863
+#: src/main/print-escp2.c:1817
 msgid "2880 x 720 DPI Softweave"
 msgstr "TEST: 2880 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:1864
+#: src/main/print-escp2.c:1818
 msgid "2880 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 2880 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:1865
+#: src/main/print-escp2.c:1819
 msgid "2880 x 1440 DPI Softweave"
 msgstr "TEST: 2880 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:1867
+#: src/main/print-escp2.c:1821
 #, fuzzy
 msgid "1440 x 360 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:1868
+#: src/main/print-escp2.c:1822
 #, fuzzy
 msgid "1440 x 360 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:1869
+#: src/main/print-escp2.c:1823
 #, fuzzy
 msgid "1440 x 360 DPI High Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1870
+#: src/main/print-escp2.c:1824
 #, fuzzy
 msgid "1440 x 360 DPI High Quality Uni"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1871
+#: src/main/print-escp2.c:1825
 #, fuzzy
 msgid "1440 x 360 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:1953
+#: src/main/print-escp2.c:1906
 msgid "Plain Paper Fast Load"
 msgstr "TEST: Plain Paper Fast Load"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:1955 src/main/print-util.c:463
+#: src/main/print-escp2.c:1908 src/main/print-util.c:463
 msgid "Postcard"
 msgstr "TEST: Postcard"
 
-#: src/main/print-escp2.c:1957
+#: src/main/print-escp2.c:1909
 msgid "Glossy Film"
 msgstr "TEST: Glossy Film"
 
-#: src/main/print-escp2.c:1961
+#: src/main/print-escp2.c:1911
 msgid "Envelopes"
 msgstr "TEST: Envelopes"
 
-#: src/main/print-escp2.c:1963
+#: src/main/print-escp2.c:1912
 msgid "Back Light Film"
 msgstr "TEST: Back Light Film"
 
-#: src/main/print-escp2.c:1965
+#: src/main/print-escp2.c:1913
 msgid "Matte Paper"
 msgstr "TEST: Matte Paper"
 
-#: src/main/print-escp2.c:1967
+#: src/main/print-escp2.c:1914
 msgid "Inkjet Paper"
 msgstr "TEST: Inkjet Paper"
 
-#: src/main/print-escp2.c:1969
+#: src/main/print-escp2.c:1915
 msgid "Photo Quality Inkjet Paper"
 msgstr "TEST: Photo Quality Inkjet Paper"
 
-#: src/main/print-escp2.c:1971
+#: src/main/print-escp2.c:1916
 msgid "Photo Paper"
 msgstr "TEST: Photo Paper"
 
-#: src/main/print-escp2.c:1973
+#: src/main/print-escp2.c:1917
 msgid "Premium Glossy Photo Paper"
 msgstr "TEST: Premium Glossy Photo Paper"
 
-#: src/main/print-escp2.c:1975
+#: src/main/print-escp2.c:1918
 msgid "Premium Luster Photo Paper"
 msgstr "TEST: Premium Luster Photo Paper"
 
-#: src/main/print-escp2.c:1977
+#: src/main/print-escp2.c:1919
 msgid "Photo Quality Glossy Paper"
 msgstr "TEST: Photo Quality Glossy Paper"
 
-#: src/main/print-escp2.c:2183 src/main/print-escp2.c:2755
+#: src/main/print-escp2.c:1927 src/main/print-escp2.c:2721
 msgid "Six Color Photo"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2184 src/main/print-escp2.c:2748
+#: src/main/print-escp2.c:1928 src/main/print-escp2.c:2714
 msgid "Four Color Standard"
 msgstr "TEST: Four Color Standard"
 
 #: src/gimp/gimp_main_window.c:1133 src/gimp/gtk_color_window.c:1096
 #: src/gimp/gtk_main_window.c:1251 src/gimp/gtk_main_window.c:1320
-#: src/main/print-escp2.c:2294 src/main/print-pcl.c:191
+#: src/main/print-escp2.c:2260 src/main/print-pcl.c:191
 msgid "Standard"
 msgstr "TEST: Standard"
 
 #. Size of page
 #. Roll feed selected
-#: src/main/print-escp2.c:2295 src/main/print-escp2.c:2320
-#: src/main/print-escp2.c:2450 src/main/print-escp2.c:2645
+#: src/main/print-escp2.c:2261 src/main/print-escp2.c:2286
+#: src/main/print-escp2.c:2416 src/main/print-escp2.c:2611
 msgid "Roll Feed"
 msgstr "TEST: Roll Feed"
 
-#: src/main/print-escp2.c:2757
+#: src/main/print-escp2.c:2723
 msgid "Seven Color Enhanced"
 msgstr "TEST: Seven Color Enhanced"
 

@@ -36,13 +36,26 @@ libtool: $(LIBTOOL_DEPS)
 
 ChangeLog:
 	@cd $(top_srcdir) ; \
-	if test -d CVS -a ! -f .noupdate ; then \
-	  echo "Updating ChangeLog from CVS" ; \
+	echo `pwd`
+	if test -f .noupdate ; then \
+	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
+	elif test -d CVS ; then \
+	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
 	  cvs log -N | perl scripts/mkchlog > ChangeLog.tmp ; \
-	  mv ChangeLog.tmp ChangeLog ; \
+	  if test -s ChangeLog.tmp ; then \
+	    mv ChangeLog.tmp ChangeLog ; \
+	  else \
+	    echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
+	    rm ChangeLog.tmp ; \
+	    exit 1 ; \
+	  fi \
+	elif test -s ChangeLog ; then \
+	  echo "ChangeLog: This is not a CVS version of GIMP-Print" ; \
+	  echo "ChangeLog: Not updating ChangeLog from CVS!" ; \
 	else \
-	  echo "This is not a CVS version of gimp-print, or .noupdate found!" ; \
-	  echo "NOT updating ChangeLog from CVS!" ; \
+	  echo "ChangeLog: No ChangeLog or ChangeLog of zero size found!" ; \
+	  echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
+	  exit 1 ; \
 	fi
 
 dist-hook:
@@ -65,7 +78,7 @@ dist-hook:
 	  rm -f .gimp-dist ; \
 	fi
 
-.PHONY: gimp-dist install-gimp install-cups install-ghost snapshot
+.PHONY: gimp-dist install-gimp install-cups install-ghost snapshot ChangeLog
 
 gimp-dist:
 	touch .gimp-dist
@@ -92,7 +105,7 @@ CLEANSCRIPTS = \
 	missing \
 	mkinstalldirs
 
-CLEANFILES = .gimp-dist
-MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS)) .noupdate
+CLEANFILES = .gimp-dist .noupdate
+MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
 
-.PHONY: ChangeLog
+.PHONY: gimp-dist install-gimp install-cups install-ghost snapshot ChangeLog

@@ -14,7 +14,7 @@ export DH_OPTIONS
 UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*//")
 
 build: build-stamp debian/control
-build-stamp: configure 
+build-stamp: configure
 	dh_testdir
 	
 	cd debian ; \
@@ -61,7 +61,7 @@ install: build debian/control
 # one at a time. So keep in mind: any options passed to commands here will
 # affect _all_ packages. Anything you want to only affect one package
 # should be put in another target, such as the install target.
-binary-common:
+binary-common: ChangeLog
 # Need this version of debhelper for DH_OPTIONS to work.
 	dh_testversion 1.1.17
 	dh_testdir
@@ -80,7 +80,7 @@ binary-common:
 #	dh_installcron
 #	dh_installinfo
 	dh_undocumented
-	dh_installchangelogs
+	dh_installchangelogs ChangeLog
 	dh_link
 	dh_strip
 	dh_compress
@@ -125,5 +125,8 @@ configure.in: configure.in.in
 
 configure.in.in:
 
+ChangeLog:
+	$(MAKE) -f debian/gimp-print-build/Makefile top_srcdir=`/bin/pwd` ChangeLog
+
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: build clean binary-indep binary-arch binary install ChangeLog
