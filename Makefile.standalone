@@ -43,13 +43,8 @@ LPCOMMAND =	-DLP_COMMAND=\"/usr/bin/lp\"
 LPRCOMMAND =	-DLPR_COMMAND=\"/usr/bin/lpr\"
 CFLAGS = $(OPTLEVEL) $(INCLUDES) $(LPSTATCOMMAND) $(LPCCOMMAND) $(LPCOMMAND) $(LPRCOMMAND) -DLOCALEDIR=\"$(LOCALEDIR)\"
 
-SRC = 	print-canon.c \
-	print-escp2.c \
-	print-pcl.c \
-	print-ps.c \
-	print-util.c \
-	print-dither.c \
-	print.c
+LFLAGS = -i
+YFLAGS = -d
 
 OBJ = 	print-canon.o \
 	print-escp2.o \
@@ -59,12 +54,25 @@ OBJ = 	print-canon.o \
 	print-dither.o \
 	print.o
 
-all:	print
+# Generated files to be deleted...
+PGSRC =	printdefy.c \
+	printdefl.c \
+	printdefy.h
+
+POBJ = 	printdefl.o \
+	printdefy.o
+
+all:	printdef print
 
 print: $(OBJ)
 	$(CC) -o print $(OBJ) $(LIBS)
+
+printdef: $(POBJ)
+	$(CC) -o printdef $(POBJ)
+
 clean:
-	-rm -f $(OBJ) print *~ #* core
+	-rm -f $(OBJ) $(POBJ) $(PGSRC) print *~ \#* core printdef \
+	print-printers.c
 
 install:	all
 	-mkdir $(BINDIR)
@@ -74,5 +82,20 @@ print-canon.o:  print-canon.c print.h
 print-escp2.o:	print-escp2.c print.h
 print-pcl.o: 	print-pcl.c print.h
 print-ps.o: 	print-ps.c print.h
-print-util.o: 	print-util.c print.h
+print-util.o: 	print-util.c print.h print-printers.c
+print-dither.o: print-dither.c print.h
 print.o: 	print.c print.h
+
+print-printers.c: printdef printers.xml
+	./printdef < printers.xml > print-printers.c
+
+.l.c:
+	$(LEX) $(LFLAGS) $< && mv lex.yy.c $@
+.y.c:
+	$(YACC) $(YFLAGS) $< && mv y.tab.c $*.c
+	if test -f y.tab.h; then \
+	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
+	else :; fi
+
+printdefl.o: printdefl.l printdef.h printdefy.h
+printdefy.h: printdefy.c
