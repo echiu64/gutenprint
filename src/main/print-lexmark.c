@@ -3,7 +3,8 @@
  *
  *   Print plug-in Lexmark driver for the GIMP.
  *
- *   Copyright 2000 Richard Wisenoecker (richard.wisenoecker@gmx.at)
+ *   Copyright 2000 Richard Wisenoecker (richard.wisenoecker@gmx.at) and
+ *      Alwin Stolk (p.a.stolk@tmx.nl)
  *
  *   The plug-in is based on the code of the CANON BJL plugin for the GIMP
  *   of Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu).
@@ -73,7 +74,7 @@
 
 
 
-typedef enum Lex_model { m_lex7500,   m_z52=10052, m_3200=3200 } Lex_model;
+typedef enum Lex_model { m_lex7500,   m_z52=10052, m_z42=10042, m_3200=3200 } Lex_model;
 
 
 
@@ -425,7 +426,7 @@ static int get_lr_shift(int mode)
 
 
 /*
- * head offsets:
+ * head offsets for z52:
  *
  *      black       black          color         photo
  *    cartridge   cartridge      cartridge     cartridge
@@ -436,13 +437,13 @@ static int get_lr_shift(int mode)
  *  ^  |     | --- +-----+ --- -- |  C  | 64    | LC  |  |
  *  |  |     |  ^  |     |  ^  40 |     | v  v  |     |  |
  *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |
- *  |  |     |     |     |  |  ^             24          |
+ *  |  |     |     |     |  |  ^             28          |
  *  |  |     |     |     |  |     +-----+ -- -- +-----+  |
  *     |     |     |     |  |     |     | ^  ^  |     |  |
  * 208 |  K  |     |  K  | 192    |  M  | 64    | LM  | 240
  *     |     |     |     |  |     |     | v  v  |     |  |
  *  |  |     |     |     |  |     +-----+ -- -- +-----+  |
- *  |  |     |     |     |  |  v             24          |
+ *  |  |     |     |     |  |  v             28          |
  *  |  |     |     |     |  |  -- +-----+ -- -- +-----+  |
  *  |  |     |     |     |  v  40 |     | ^  ^  |     |  |
  *  v  |     |     +-----+ --- -- |  Y  | 64    |  K  |  |
@@ -579,6 +580,16 @@ static const unsigned char outbufHeader_z52[LXM_Z52_HEADERSIZE]=
   0x0,0x0,                                    /* 0x13-0x14  VO between packges*/
   0x0,0x80,                                   /* 0x15-0x16 */
   0x0,0x0,0x0,0x0,0x1,0x2,0x0,0x0,0x0,0x0,0x0 /* 0x17-0x21 */
+};
+
+#define LXM_Z42_HEADERSIZE 34
+static const unsigned char outbufHeader_z42[LXM_Z42_HEADERSIZE]=
+{
+  0x1B,0x2A,0x24,0x00,0x00,0x00,0x00,
+  0x01,0x01,0x01,0x18,0x00,0x01,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00
 };
 
 
@@ -737,7 +748,25 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     /*** printer internal parameters ***/
     20,        /* real left paper border */
     123,       /* real top paper border */
-    2400,      /* horizontal resolutio of 2400 dpi for positioning */
+    2400,      /* horizontal resolution of 2400 dpi for positioning */
+    1200,      /* use a vertical resolution of 1200 dpi for positioning */
+    &lexmark_reslist_z52,  /* resolution specific parameters of z52 */
+    ink_types_z52,  /* supported inks */
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
+  },
+  { /* Lexmark z42 */
+    m_z42,
+    618, 936,         /* max paper size *//* 8.58" x 13 " */
+    INCH(2), INCH(4), /* min paper size */
+    2400, 1200, 2, /* max resolution */
+    0, 0, 5, 15, /* 15 36 border l,r,t,b    unit is 1/72 DPI */
+    LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
+    LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
+    LEXMARK_CAP_DMT,
+    /*** printer internal parameters ***/
+    20,        /* real left paper border */
+    123,       /* real top paper border */
+    2400,      /* horizontal resolution of 2400 dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_z52,  /* resolution specific parameters of z52 */
     ink_types_z52,  /* supported inks */
@@ -755,7 +784,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     /*** printer internal parameters ***/
     0,         /* real left paper border */
     300,       /* real top paper border */
-    1200,      /* horizontal resolutio of ?? dpi for positioning */
+    1200,      /* horizontal resolution of ?? dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_3200,  /* resolution specific parameters of 3200 */
     ink_types_3200,  /* supported inks */
@@ -1348,22 +1377,6 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 {
 
   /* because the details of the header sequence are not known, we simply write it as one image. */
-  /* #define LXM_Z52_STARTSIZE 0x30
-  / * 600 dpi * /
-  unsigned char startHeader_z52[LXM_Z52_STARTSIZE]={0x1B,0x2a,0x81,0x00,0x1c,0x56,0x49,0x00,
-					   0x01,0x00,0x58,0x02,0x00,0x00,0xc0,0x12,
-					   0xc8,0x19,0x02,0x00,0x68,0x00,0x09,0x00,
-					   0x08,0x00,0x08,0x00,0x1b,0x2a,0x07,0x73,
-					   0x30,0x1b,0x2a,0x6d,0x00,0x14,0x01,0xf4,
-					   0x02,0x00,0x01,0xf0,0x1b,0x2a,0x07,0x63 };
-
-  / * 1200 dpi * /
-  unsigned char startHeader_z52[LXM_Z52_STARTSIZE]={0x1b,0x2a,0x81,0x00,0x1c,0x56,0x49,0x00,
-					   0x01,0x00,0xb0,0x04,0x00,0x00,0x80,0x25,
-					   0x90,0x33,0x01,0x00,0xd0,0x00,0x00,0x00,
-					   0x08,0x00,0x08,0x00,0x1b,0x2a,0x07,0x73,
-					   0x30,0x1b,0x2a,0x6d,0x00,0x14,0x01,0xf4,
-					   0x02,0x00,0x01,0xf0,0x1b,0x2a,0x07,0x63 };*/
 
 #define LXM_Z52_STARTSIZE 0x35
   /* 300 dpi */
@@ -1374,6 +1387,16 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 					   0x01,0x1b,0x2a,0x07,0x73,0x30,0x1b,0x2a,
 					   0x6d,0x00,0x14,0x01,0xf4,0x02,0x00,0x01,
 					   0xf0,0x1b,0x2a,0x07,0x63};
+
+#define LXM_Z42_STARTSIZE 0x30 
+  /* 600 dpi */
+  unsigned char startHeader_z42[LXM_Z42_STARTSIZE]={0x1B,0x2A,0x81,0x00,0x1C,0x50,0x41,0x00,
+					   0x01,0x00,0x58,0x02,0x04,0x00,0xC0,0x12,
+					   0xC8,0x19,0x02,0x00,0x50,0x00,0x14,0x00,
+					   0x07,0x00,0x08,0x00,0x1B,0x2A,0x07,0x73,
+					   0x30,0x1B,0x2A,0x6D,0x00,0x14,0x01,0xC0,
+					   0x02,0x00,0x01,0xBE,0x1B,0x2A,0x07,0x63};
+
   #define ESC2a "\033\052"
 
 
@@ -1396,6 +1419,12 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 				    LXM_Z52_STARTSIZE,1,v);
 #ifdef DEBUG
 			lex_write_tmp_file(dbgfileprn, (void *)startHeader_z52, LXM_Z52_STARTSIZE);
+#endif
+		case m_z42:
+			stp_zfwrite((const char *) startHeader_z42,
+				    LXM_Z42_STARTSIZE,1,v);
+#ifdef DEBUG
+			lex_write_tmp_file(dbgfileprn, (void *)startHeader_z42, LXM_Z42_STARTSIZE);
 #endif
 			break;
 
@@ -1442,6 +1471,18 @@ static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * cap
 		}
 		break;
 
+		case m_z42:
+		{
+			unsigned char buffer[12] = {0x1B,0x2A,0x07,0x65,0x1B,0x2A,0x82,0x00,0x00,0x00,0x00,0xAC};
+#ifdef DEBUG
+			stp_erprintf("lexmark: <<eject page.>>\n");
+			lex_write_tmp_file(dbgfileprn, (void *)&(buffer[0]), 12);
+#endif
+			/* eject page */
+			stp_zfwrite((char *)buffer, 1, 12, v);
+		}
+		break;
+
 		case m_3200:
 		{
 		  unsigned char buffer[24] =
@@ -1480,6 +1521,7 @@ static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * ca
 {
 	switch(caps->model)	{
 		case m_z52:
+		case m_z42:
 		{
 			unsigned char buf[5] = {0x1b, 0x2a, 0x3, 0x0, 0x0};
 			if(offset == 0)return;
@@ -2210,13 +2252,25 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
   int pos1 = 0;
   int pos2 = 0;
   int abspos, disp;
+  int hend = 0;
+  int header_size = 0;
 
 
   /*  stp_erprintf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/
   /* first, we wirte the line header */
   switch(caps->model)  {
   case m_z52:
-    memcpy(prnBuf, outbufHeader_z52, LXM_Z52_HEADERSIZE);
+  case m_z42:
+    if (caps->model == m_z52)  
+      {
+	header_size = LXM_Z52_HEADERSIZE;
+	memcpy(prnBuf, outbufHeader_z52, header_size);
+      }
+    if (caps->model == m_z42)
+      {
+	header_size = LXM_Z42_HEADERSIZE;
+	memcpy(prnBuf, outbufHeader_z42, LXM_Z42_HEADERSIZE);
+      }
 
     /* K could only be present if black is printed only. */
     if ((mode & COLOR_MODE_K) || (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) {
@@ -2231,7 +2285,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
       }
     } else {
 #ifdef DEBUG
-      stp_erprintf("set color catridge \n");
+      stp_erprintf("set color cartridge \n");
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_COLOR_PRINT;
 
@@ -2264,17 +2318,33 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
       prnBuf[LX_Z52_PRINT_DIRECTION_POS] = 2;
     }
 
-
     /* set package count */
-    prnBuf[13] =(unsigned char)((width) >> 8);
-    prnBuf[14] =(unsigned char)((width) & 0xFF);
-    /* set horizotal offset */
+    prnBuf[13] = (unsigned char)((width) >> 8);
+    prnBuf[14] = (unsigned char)((width) & 0xFF);
+    /* set horizontal offset */
     prnBuf[15] =(unsigned char)(offset >> 8);
     prnBuf[16] =(unsigned char)(offset & 0xFF);
 
+    if (caps->model == m_z42) {
+	switch(mode & PRINT_MODE_MASK) {
+	case PRINT_MODE_300:
+		hend = (width-1)*(2400/300);
+		break;
+	case PRINT_MODE_600:
+		hend = (width-1)*(2400/600);
+		break;
+	case PRINT_MODE_1200:
+		hend = (width-1)*(2400/1200);
+		break;
+	case PRINT_MODE_2400:
+		hend = (width-1)*(2400/2400);
+		break;
+	}
+	prnBuf[17] = (unsigned char)(hend >> 8);
+        prnBuf[18] = (unsigned char)(hend & 0xFF);
+    }
 
-
-    return prnBuf+LXM_Z52_HEADERSIZE;  /* return the position where the pixels have to be written */
+    return prnBuf + header_size;  /* return the position where the pixels have to be written */
     break;
     case m_3200:
       memcpy(prnBuf, outbufHeader_3200, LXM_3200_HEADERSIZE);
@@ -2478,6 +2548,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	  break;
 
 	case m_3200:
+	case m_z42:
 	  tbits = p;
 	  p += 4;
 	  break;
@@ -2530,6 +2601,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	  break;
 
 	case m_3200:
+	case m_z42:
 	  if((dy % 4) == 3)
 	    {
 	      anyDots |= pixelline;
@@ -2560,6 +2632,9 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
       tbits[1] = (unsigned char)(valid_bytes & 0xff);
       break;
 
+    case m_z42:
+      if ((p-tbits) & 1) *(p++)=0; // z42 packets always have even length
+      /* fall through */
     case m_3200:
       tbits[0] = 0x80 | ((unsigned char)((valid_bytes >> 24) & 0x1f));
       tbits[1] = (unsigned char)((valid_bytes >> 16) & 0xff);
@@ -2590,6 +2665,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
   switch(caps->model)    {
     case m_z52:
+    case m_z42:
   prnBuf[IDX_SEQLEN]  =(unsigned char)(clen >> 24);
   prnBuf[IDX_SEQLEN+1]  =(unsigned char)(clen >> 16);
   prnBuf[IDX_SEQLEN+2]  =(unsigned char)(clen >> 8);
