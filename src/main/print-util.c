@@ -1065,7 +1065,7 @@ stp_get_printer_index_by_driver(const char *driver)
   int idx = 0;
   const stp_internal_printer_t *val = &(printers[0]);
   if (!driver)
-    return NULL;
+    return -1;
   for (idx = 0; idx < stp_known_printers(); idx++)
     {
       if (!strcmp(val->driver, driver))
