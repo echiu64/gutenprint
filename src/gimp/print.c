@@ -57,10 +57,6 @@ static void	query (void);
 static void	run (char *, int, GimpParam *, int *, GimpParam **);
 static int	do_print_dialog (char *proc_name);
 
-#if 0
-static void	cleanupfunc(void);
-#endif
-
 /*
  * Globals...
  */
@@ -112,25 +108,9 @@ check_plist(int count)
  * 'main()' - Main entry - just call gimp_main()...
  */
 
-#if 0
-int
-main(int  argc,		/* I - Number of command-line args */
-     char *argv[])	/* I - Command-line args */
-{
-  return (gimp_main(argc, argv));
-}
-#else
 MAIN()
-#endif
 
 static int print_finished = 0;
-
-#if 0
-void
-cleanupfunc(void)
-{
-}
-#endif
 
 /*
  * 'query()' - Respond to a plug-in query...
@@ -814,9 +794,6 @@ printrc_load(void)
 		*lineptr,	/* Pointer in line */
 		*commaptr;	/* Pointer to next comma */
   gp_plist_t	key;		/* Search key */
-#if (GIMP_MINOR_VERSION == 0)
-  char		*home;		/* Home dir */
-#endif
   int		format = 0;	/* rc file format version */
   int		system_printers; /* printer count before reading printrc */
   char *	current_printer = 0; /* printer to select */
@@ -835,16 +812,7 @@ printrc_load(void)
   * Generate the filename for the current user...
   */
 
-#if (GIMP_MINOR_VERSION == 0)
-  home = getenv("HOME");
-  if (home == NULL)
-    filename=g_strdup("/.gimp/printrc");
-  else
-    filename = xmalloc(strlen(home) + 15);
-    sprintf(filename, "%s/.gimp/printrc", home);
-#else
   filename = gimp_personal_rc_file ("printrc");
-#endif
 
 #ifdef __EMX__
   _fnslashify(filename);
@@ -1035,9 +1003,7 @@ printrc_load(void)
 	  stp_set_page_height(key.v, atoi(value));
 	} else {
 	  /* Unrecognised keyword; ignore it... */
-#if 1
-          printf("Unrecognised keyword `%s' in printrc; value `%s'\n", keyword, value);
-#endif
+          printf("Unrecognized keyword `%s' in printrc; value `%s'\n", keyword, value);
 	}
       }
       else
@@ -1094,25 +1060,12 @@ printrc_save(void)
   char	       *filename;	/* Printrc filename */
   int		i;		/* Looping var */
   gp_plist_t	*p;		/* Current printer */
-#if (GIMP_MINOR_VERSION == 0)
-  char		*home;		/* Home dir */
-#endif
-
 
  /*
   * Generate the filename for the current user...
   */
 
-#if (GIMP_MINOR_VERSION == 0)
-  home = getenv("HOME");
-  if (home == NULL)
-    filename=g_strdup("/.gimp/printrc");
-  else
-    filename = xmalloc(strlen(home) + 15);
-    sprintf(filename, "%s/.gimp/printrc", home);
-#else
   filename = gimp_personal_rc_file ("printrc");
-#endif
 
 #ifdef __EMX__
   _fnslashify(filename);
