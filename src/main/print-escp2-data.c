@@ -37,7 +37,7 @@
  *  2: 720x360
  *  3: 720
  *  4: 1440x720
- *  5: 2880x720
+ *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
  */
@@ -60,7 +60,7 @@ static const escp2_dot_size_t c4pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c4pl_pigment_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x11,   -1, 0x10, 0x10 };
+{ 0x12, 0x12, 0x12, 0x11, 0x11, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c3pl_dotsizes =
 { 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10 };
@@ -69,7 +69,7 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
 
 static const escp2_dot_size_t c2pl_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x13, 0x13, 0x10, 0x10 };
+{ 0x12, 0x12, 0x12, 0x11, 0x13, -1, 0x10, 0x10 };
 
 static const escp2_dot_size_t c1_8pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13 };
@@ -124,7 +124,7 @@ static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
  *  2: 720x360
  *  3: 720
  *  4: 1440x720
- *  5: 2880x720
+ *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
  */
@@ -154,7 +154,7 @@ static const escp2_bits_t c1_8_bits =
  *  2: 720x360
  *  3: 720
  *  4: 1440x720
- *  5: 2880x720
+ *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
  */
@@ -193,7 +193,7 @@ static const escp2_base_resolutions_t pro_base_res =
  *  2: 720x360
  *  3: 720
  *  4: 1440x720
- *  5: 2880x720
+ *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
  */
@@ -213,7 +213,7 @@ static const escp2_densities_t c4pl_densities =
 { 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.0   };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 2.3, 1.15, 0.58, 0.766, 0.388, 0.0,   0.479, 0.0   };
+{ 2.3, 1.15, 0.58, 0.766, 0.388, 0.958, 0.479, 0.0   };
 
 static const escp2_densities_t c3pl_pigment_densities =
 { 2.4, 1.2,  0.60, 0.600, 0.512, 0.512, 0.512, 0.0   };

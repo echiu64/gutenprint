@@ -31,106 +31,109 @@
 
 static const res_t r_360x90dpi =
 { "360x90dpi",     N_("360 x 90 DPI Fast Economy"),
-  360,  90,   0, 0, 1 };
+  360,  90,  360,  90,   0, 0, 1 };
 static const res_t r_360x90sw =
 { "360x90sw",      N_("360 x 90 DPI Fast Economy"),
-  360,  90,   1, 0, 1 };
+  360,  90,  360,  90,   1, 0, 1 };
 
 static const res_t r_360x120dpi =
 { "360x120dpi",    N_("360 x 120 DPI Economy"),
-  360,  120,  0, 0, 1 };
+  360,  120,  360,  120,  0, 0, 1 };
 static const res_t r_360x120sw =
 { "360x120sw",     N_("360 x 120 DPI Economy"),
-  360,  120,  1, 0, 1 };
+  360,  120,  360,  120,  1, 0, 1 };
 
 static const res_t r_180dpi =
 { "180dpi",        N_("180 DPI Economy"),
-  180,  180,  0, 0, 1 };
+  180,  180,  180,  180,  0, 0, 1 };
 static const res_t r_180sw =
 { "180sw",         N_("180 DPI Economy"),
-  180,  180,  1, 0, 1 };
+  180,  180,  180,  180,  1, 0, 1 };
 
 static const res_t r_360x180dpi =
 { "360x180dpi",    N_("360 x 180 DPI Draft"),
-  360,  180,  0, 0, 1 };
+  360,  180,  360,  180,  0, 0, 1 };
 static const res_t r_360x180sw =
 { "360x180sw",     N_("360 x 180 DPI Draft"),
-  360,  180,  1, 0, 1 };
+  360,  180,  360,  180,  1, 0, 1 };
 
 static const res_t r_360x240dpi =
 { "360x240dpi",    N_("360 x 240 DPI Draft"),
-  360,  240,  0, 0, 1 };
+  360,  240,  360,  240,  0, 0, 1 };
 static const res_t r_360x240sw =
 { "360x240sw",     N_("360 x 240 DPI Draft"),
-  360,  240,  1, 0, 1 };
+  360,  240,  360,  240,  1, 0, 1 };
 
 static const res_t r_360mw =
 { "360mw",         N_("360 DPI"),
-  360,  360,  0, 1, 1 };
+  360,  360,  360,  360,  0, 1, 1 };
 static const res_t r_360sw =
 { "360sw",         N_("360 DPI"),
-  360,  360,  1, 0, 1 };
+  360,  360,  360,  360,  1, 0, 1 };
 
 static const res_t r_720x360mw =
 { "720x360mw",     N_("720 x 360 DPI"),
-  720,  360,  0, 1, 1 };
+  720,  360,  720,  360,  0, 1, 1 };
 static const res_t r_720x360sw =
 { "720x360sw",     N_("720 x 360 DPI"),
-  720,  360,  1, 0, 1 };
+  720,  360,  720,  360,  1, 0, 1 };
 
 static const res_t r_720mw =
 { "720mw",         N_("720 DPI"),
-  720,  720,  0, 1, 1 };
+  720,  720,  720,  720,  0, 1, 1 };
 static const res_t r_720sw =
 { "720sw",         N_("720 DPI"),
-  720,  720,  1, 0, 1 };
+  720,  720,  720,  720,  1, 0, 1 };
 static const res_t r_720hq =
 { "720hq",         N_("720 DPI High Quality"),
-  720,  720,  1, 0, 2 };
+  720,  720,  720,  720,  1, 0, 2 };
 static const res_t r_720hq2 =
 { "720hq2",        N_("720 DPI Highest Quality"),
-  720,  720,  1, 0, 4 };
+  720,  720,  720,  720,  1, 0, 4 };
 
 static const res_t r_1440x720mw =
 { "1440x720mw",     N_("1440 x 720 DPI"),
-  1440, 720,  0, 1, 1 };
+  1440, 720,  1440, 720,  0, 1, 1 };
 static const res_t r_1440x720sw =
 { "1440x720sw",    N_("1440 x 720 DPI"),
-  1440, 720,  1, 0, 1 };
+  1440, 720,  1440, 720,  1, 0, 1 };
 static const res_t r_1440x720hq2 =
 { "1440x720hq2",   N_("1440 x 720 DPI Highest Quality"),
-  1440, 720,  1, 0, 2 };
+  1440, 720,  1440, 720,  1, 0, 2 };
 
 static const res_t r_2880x720mw =
 { "2880x720mw",    N_("2880 x 720 DPI"),
-  2880, 720,  0, 1, 1};
+  2880, 720,  2880, 720,  0, 1, 1};
 static const res_t r_2880x720sw =
 { "2880x720sw",    N_("2880 x 720 DPI"),
-  2880, 720,  1, 0, 1};
+  2880, 720,  2880, 720,  1, 0, 1};
 static const res_t r_2880x720hq2 =
 { "2880x720hq2",   N_("2880 x 720 DPI Highest Quality"),
-  2880, 720,  1, 0, 2 };
+  2880, 720,  2880, 720,  1, 0, 2 };
 
 static const res_t r_1440x1440mw =
 { "1440x1440mw",   N_("1440 x 1440 DPI"),
-  1440, 1440, 0, 1, 1};
+  1440, 1440,  1440, 1440, 0, 1, 1};
 static const res_t r_1440x1440sw =
 { "1440x1440sw",   N_("1440 x 1440 DPI"),
-  1440, 1440, 1, 0, 1};
+  1440, 1440,  1440, 1440, 1, 0, 1};
+static const res_t r_1440x1440ov =
+{ "1440x1440ov",   N_("1440 x 1440 DPI"),
+  2880, 1440,  1440, 1440, 1, 0, 1};
 
 static const res_t r_2880x1440mw =
 { "2880x1440mw",   N_("2880 x 1440 DPI"),
-  2880, 1440, 0, 1, 1};
+  2880, 1440,  2880, 1440, 0, 1, 1};
 static const res_t r_2880x1440sw =
 { "2880x1440sw",   N_("2880 x 1440 DPI"),
-  2880, 1440, 1, 0, 1};
+  2880, 1440,  2880, 1440, 1, 0, 1};
 
 static const res_t r_2880x2880mw =
 { "2880x2880mw",   N_("2880 x 2880 DPI"),
-  2880, 2880, 0, 1, 1};
+  2880, 2880,  2880, 2880, 0, 1, 1};
 static const res_t r_2880x2880sw =
 { "2880x2880sw",   N_("2880 x 2880 DPI"),
-  2880, 2880, 1, 0, 1};
+  2880, 2880,  2880, 2880, 1, 0, 1};
 
 
 
@@ -270,6 +273,8 @@ const res_t *const stpi_escp2_superfine_reslist[] =
   &r_720sw,
 
   &r_1440x720sw,
+
+  &r_1440x1440ov,
 
   &r_2880x1440sw,
 

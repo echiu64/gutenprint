@@ -447,7 +447,8 @@ static void
 set_horizontal_position(stp_vars_t v, stpi_pass_t *pass, int vertical_subpass)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int microoffset = vertical_subpass & (pd->horizontal_passes - 1);
+  int microoffset = (vertical_subpass & (pd->horizontal_passes - 1)) *
+    pd->image_scaled_width / pd->image_printed_width;
   int pos = pd->image_left_position + microoffset;
 
   if (pos != 0)

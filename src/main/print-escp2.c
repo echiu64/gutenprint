@@ -682,6 +682,12 @@ compute_resid(const res_t *res)
   return compute_internal_resid(res->hres, res->vres);
 }
 
+static int
+compute_printed_resid(const res_t *res)
+{
+  return compute_internal_resid(res->printed_hres, res->printed_vres);
+}
+
 
 static const input_slot_t *
 get_input_slot(stp_const_vars_t v)
@@ -887,7 +893,7 @@ get_default_inktype(stp_const_vars_t v)
       const res_t *res = escp2_find_resolution(v);
       if (res)
 	{
-	  int resid = compute_resid(res);
+	  int resid = compute_printed_resid(res);
 	  if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
 	    {
 	      int i;
@@ -1606,7 +1612,7 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const paper_adjustment_t *pt = pd->paper_adjustment;
   double paper_density = .8;
-  int o_resid = compute_resid(pd->res);
+  int o_resid = compute_printed_resid(pd->res);
 
   if (pt)
     paper_density = pt->base_density;
@@ -2011,7 +2017,7 @@ static void
 setup_softweave_parameters(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  pd->horizontal_passes = pd->res->hres / pd->physical_xdpi;
+  pd->horizontal_passes = pd->res->printed_hres / pd->physical_xdpi;
   if (pd->physical_channels == 1 &&
       (pd->res->vres >=
        (escp2_base_separation(v) / escp2_black_nozzle_separation(v))) &&
@@ -2124,7 +2130,7 @@ setup_head_parameters(stp_vars_t v)
       escp2_base_separation(v);
 
   pd->printing_initial_vertical_offset = 0;
-  pd->bitwidth = escp2_bits(v, compute_resid(pd->res));
+  pd->bitwidth = escp2_bits(v, compute_printed_resid(pd->res));
 }
 
 static void
@@ -2159,6 +2165,7 @@ setup_page(stp_vars_t v)
   pd->image_left = stp_get_left(v) - pd->page_left + extra_left;
   pd->image_width = stp_get_width(v);
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
+  pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
 
 
@@ -2168,6 +2175,7 @@ setup_page(stp_vars_t v)
   pd->image_top = stp_get_top(v) - pd->page_top + extra_top;
   pd->image_height = stp_get_height(v);
   pd->image_scaled_height = pd->image_height * pd->res->vres / 72;
+  pd->image_printed_height = pd->image_height * pd->res->printed_vres / 72;
 
   if (input_slot && input_slot->roll_feed_cut_flags)
     {
@@ -2181,10 +2189,12 @@ setup_page(stp_vars_t v)
 
 static void
 set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
-	 int limit, int invert)
+	 int limit, int expansion, int invert)
 {
   int clear_val = invert ? 255 : 0;
   int set_val = invert ? 0 : 255;
+  int bytesize = 8 / expansion;
+  int byteextra = bytesize - 1;
   int first_x_on = x_center - scaled_x_where;
   int first_x_off = x_center + scaled_x_where;
   if (first_x_on < 0)
@@ -2195,14 +2205,14 @@ set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
     first_x_off = 0;
   if (first_x_off > limit)
     first_x_off = limit;
-  first_x_on += 7;
-  if (first_x_off > (first_x_on - 7))
+  first_x_on += byteextra;
+  if (first_x_off > (first_x_on - byteextra))
     {
-      int first_x_on_byte = first_x_on / 8;
-      int first_x_on_mod = 7 - (first_x_on % 8);
+      int first_x_on_byte = first_x_on / bytesize;
+      int first_x_on_mod = expansion * (byteextra - (first_x_on % bytesize));
       int first_x_on_extra = ((1 << first_x_on_mod) - 1) ^ clear_val;
-      int first_x_off_byte = first_x_off / 8;
-      int first_x_off_mod = 7 - (first_x_off % 8);
+      int first_x_off_byte = first_x_off / bytesize;
+      int first_x_off_mod = expansion * (byteextra - (first_x_off % bytesize));
       int first_x_off_extra = ((1 << 8) - (1 << first_x_off_mod)) ^ clear_val;
       if (first_x_off_byte < first_x_on_byte)
 	{
@@ -2275,13 +2285,15 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	      int x_where = sqrt(outer_r_sq - y_sq) + .5;
 	      int scaled_x_where = x_where * pd->res->hres / pd->micro_units;
 	      set_mask(cd_mask, x_center, scaled_x_where,
-		       pd->image_scaled_width, 0);
+		       pd->image_scaled_width,
+		       pd->image_scaled_width / pd->image_printed_width, 0);
 	      if (y_distance_from_center < pd->cd_inner_radius)
 		{
 		  x_where = sqrt(inner_r_sq - y_sq) + .5;
 		  scaled_x_where = x_where * pd->res->hres / pd->micro_units;
 		  set_mask(cd_mask, x_center, scaled_x_where,
-			   pd->image_scaled_width, 1);
+			   pd->image_scaled_width,
+			   pd->image_scaled_width /pd->image_printed_width, 1);
 		}
 	    }
 	}
@@ -2350,8 +2362,9 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
   adjust_print_quality(v, image);
   out_channels = stpi_color_init(v, image, 65536);
 
-  stpi_dither_init(v, image, pd->image_scaled_width, pd->res->hres,
-		   pd->res->vres);
+  stpi_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
+		   pd->res->printed_vres);
+/*  stpi_dither_set_expansion(v, pd->res->hres / pd->res->printed_hres); */
 
   allocate_channels(v, line_width);
   setup_inks(v);

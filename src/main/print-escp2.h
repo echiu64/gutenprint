@@ -147,6 +147,8 @@ typedef struct
   const char *text;
   short hres;
   short vres;
+  short printed_hres;
+  short printed_vres;
   short softweave;
   short microweave;
   short vertical_passes;
@@ -628,8 +630,10 @@ typedef struct
   int image_width;		/* Width of printed region (points) */
   int image_top;		/* First printed row (points) */
   int image_left;		/* Left edge of image (points) */
-  int image_scaled_width;	/* Width of printed region (dots) */
-  int image_scaled_height;	/* Height of printed region (dots) */
+  int image_scaled_width;	/* Width of physical printed region (dots) */
+  int image_printed_width;	/* Width of printed region (dots) */
+  int image_scaled_height;	/* Height of physical printed region (dots) */
+  int image_printed_height;	/* Height of printed region (dots) */
   int image_left_position;	/* Left dot position of image */
 
   /* Transitory state */
