@@ -37,14 +37,6 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-
-#include "util.h"
-#include "vars.h"
-
 typedef struct
 {
   stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);

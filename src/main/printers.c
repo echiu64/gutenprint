@@ -38,7 +38,6 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "printers.h"
 #include "xml.h"
 #include "module.h"
 

@@ -37,10 +37,6 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 /*
  * Initialize the color machinery.  Return value is the number
  * of columns of output

@@ -37,7 +37,12 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "util.h"
+#include "vars.h"
 #include "color.h"
 #include "dither.h"
 #include "printers.h"

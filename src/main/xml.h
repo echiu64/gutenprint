@@ -41,7 +41,6 @@ extern "C" {
 #else
 #include <stdarg.h>
 #endif
-#include "util.h"
 
 typedef int (*stpi_xml_parse_func)(xmlNodePtr node, const char *file);
 

@@ -37,10 +37,6 @@
 extern "C" {
 #endif
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #ifndef __GNUC__
 #ifndef __attribute__
 #define __attribute__(ignore)
