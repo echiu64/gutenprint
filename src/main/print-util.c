@@ -42,6 +42,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "module.h"
 #include "xml.h"
 
@@ -55,12 +58,32 @@ typedef struct
   size_t bytes;
 } debug_msgbuf_t;
 
+typedef struct
+{
+  enum
+    {
+      TYPE_INVALID,
+      TYPE_STRING,
+      TYPE_FILE
+    } xtype;
+  union
+  {
+    FILE *f;
+    struct
+    {
+      char *data;
+      off_t offset;
+    } s;
+  } d;
+} xio_t;
+
+
 /*
  * We cannot avoid use of the (non-ANSI) vsnprintf here; ANSI does
  * not provide a safe, length-limited sprintf function.
  */
 
-#define STP_VASPRINTF(result, bytes, format)				\
+#define STPI_VASPRINTF(result, bytes, format)				\
 {									\
   int current_allocation = 64;						\
   result = stpi_malloc(current_allocation);				\
@@ -89,10 +112,32 @@ stpi_zprintf(const stp_vars_t v, const char *format, ...)
 {
   char *result;
   int bytes;
-  STP_VASPRINTF(result, bytes, format);
+  STPI_VASPRINTF(result, bytes, format);
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), result, bytes);
-  free(result);
+  stpi_free(result);
 }
+
+void
+stpi_asprintf(char **strp, const char *format, ...)
+{
+  char *result;
+  int bytes;
+  STPI_VASPRINTF(result, bytes, format);
+  *strp = result;
+}
+
+void
+stpi_catprintf(char **strp, const char *format, ...)
+{
+  char *result1;
+  char *result2;
+  int bytes;
+  STPI_VASPRINTF(result1, bytes, format);
+  stpi_asprintf(&result2, "%s%s", *strp, result1);
+  stpi_free(result1);
+  *strp = result2;
+}
+  
 
 void
 stpi_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t v)
@@ -238,7 +283,7 @@ stpi_eprintf(const stp_vars_t v, const char *format, ...)
   if (stp_get_errfunc(v))
     {
       char *result;
-      STP_VASPRINTF(result, bytes, format);
+      STPI_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
     }
@@ -292,7 +337,7 @@ stpi_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
   if ((level & stpi_debug_level) && stp_get_errfunc(v))
     {
       char *result;
-      STP_VASPRINTF(result, bytes, format);
+      STPI_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
     }
@@ -396,6 +441,145 @@ void
 stpi_free(void *ptr)
 {
   stpi_free_func(ptr);
+}
+
+FILE *
+stpi_xio_init_string_input(const char *s)
+{
+  char template[64];
+  int fd;
+  mode_t fmode = umask(077);
+
+  strcpy(template, "/tmp/gpxioXXXXXX");
+  fd = mkstemp(template);
+  umask(fmode);
+  if (fd == -1)
+    {
+      return NULL;
+    }
+  else
+    {
+      (void) unlink(template);
+      if (write(fd, s, strlen(s)) != strlen(s))
+	{
+	  (void) close(fd);
+	  return NULL;
+	}
+      (void) lseek(fd, 0, SEEK_SET);
+      return fdopen(fd, "r");
+    }
+}
+
+void *
+stpi_xio_init_string_output(void)
+{
+  xio_t *xio = stpi_zalloc(sizeof(xio_t));
+  xio->xtype = TYPE_STRING;
+  xio->d.s.data = NULL;
+  xio->d.s.offset = 0;
+  return xio;
+}
+
+static void
+check_xio(xio_t *xio)
+{
+  if (xio->xtype != TYPE_FILE && xio->xtype != TYPE_STRING)
+    {
+      stpi_erprintf("Bad xio!\n");
+      stpi_abort();
+    }
+}
+
+char *
+stpi_xio_get_string_output(void *ixio, size_t *size)
+{
+  xio_t *xio = (xio_t *) ixio;
+  check_xio(xio);
+  if (xio->xtype != TYPE_STRING)
+    return NULL;
+  if (size)
+    *size = xio->d.s.offset;
+  return xio->d.s.data;
+}
+
+void *
+stpi_xio_init_file_output(FILE *f)
+{
+  xio_t *xio = stpi_zalloc(sizeof(xio_t));
+  xio->xtype = TYPE_FILE;
+  xio->d.f = f;
+  return xio;
+}
+
+void
+stpi_xio_free(void *ixio)
+{
+  xio_t *xio = (xio_t *) ixio;
+  check_xio(xio);
+  /* Note that we do not free the string; someone else should be using it! */
+  stpi_free(xio);
+}
+
+static void
+append_xio_output(xio_t *xio, const char *data, int bytes)
+{
+  char *result2 = stpi_malloc(xio->d.s.offset + bytes + 1);
+  switch (xio->xtype)
+    {
+    case TYPE_FILE:
+      fwrite(data, bytes, 1, xio->d.f);
+      break;
+    case TYPE_STRING:
+      if (xio->d.s.data)
+	{
+	  memcpy(result2, xio->d.s.data, xio->d.s.offset);
+	  stpi_free(xio->d.s.data);
+	}
+      memcpy(result2 + xio->d.s.offset, data, bytes);
+      result2[bytes + xio->d.s.offset] = '\0';
+      xio->d.s.offset += bytes;
+      xio->d.s.data = result2;
+      break;
+    default:
+      break;
+    }
+}
+
+void
+stpi_xio_printf(void *ixio, const char *format, ...)
+{
+  xio_t *xio = (xio_t *) ixio;
+  char *result;
+  int bytes;
+  check_xio(xio);
+  STPI_VASPRINTF(result, bytes, format);
+  append_xio_output(xio, result, bytes);
+  stpi_free(result);
+}
+
+void
+stpi_xio_puts(const char *s, void *ixio)
+{
+  xio_t *xio = (xio_t *) ixio;
+  check_xio(xio);
+  append_xio_output(xio, s, strlen(s));
+}
+
+void
+stpi_xio_putc(int c, void *ixio)
+{
+  xio_t *xio = (xio_t *) ixio;
+  char cc = (char) c;
+  check_xio(xio);
+  append_xio_output(xio, &cc, 1);
+}
+
+void
+stpi_xio_fwrite(const void *ptr, size_t size, size_t count, void *ixio)
+{
+  xio_t *xio = (xio_t *) ixio;
+  check_xio(xio);
+  append_xio_output(xio, ptr, size * count);
 }
 
 int

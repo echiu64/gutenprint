@@ -693,77 +693,44 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   return 1;
 }
 
-void
-stp_curve_print(FILE *f, const stp_curve_t curve)
+static void
+print_curve_generic(void *xio, const stp_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   int i;
   check_curve(icurve);
   setlocale(LC_ALL, "C");
-  fprintf(f, "%s;%s ;%s ;%d;%g;%g;%g:",
-	  "STP_CURVE",
-	  wrap_mode_names[icurve->wrap_mode],
-	  curve_type_names[icurve->curve_type],
-	  icurve->point_count,
-	  icurve->gamma,
-	  icurve->blo,
-	  icurve->bhi);
+  stpi_xio_printf(xio, "%s;%s ;%s ;%d;%g;%g;%g:",
+		  "STP_CURVE",
+		  wrap_mode_names[icurve->wrap_mode],
+		  curve_type_names[icurve->curve_type],
+		  icurve->point_count,
+		  icurve->gamma,
+		  icurve->blo,
+		  icurve->bhi);
   if (icurve->gamma == 0 && icurve->point_count)
     for (i = 0; i < icurve->point_count; i++)
-      fprintf(f, "%g;", icurve->data[i]);
+      stpi_xio_printf(xio, "%g;", icurve->data[i]);
   setlocale(LC_ALL, "");
+}
+
+void
+stp_curve_print(FILE *f, const stp_curve_t curve)
+{
+  void *xio = stpi_xio_init_file_output(f);
+  print_curve_generic(xio, curve);
+  stpi_xio_free(xio);
 }
 
 char *
 stp_curve_print_string(const stp_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
-  int i;
-  char *retval;
-  int ret_size = 128;
-  int cur_size = 0;
-  check_curve(icurve);
-  retval = stpi_zalloc(ret_size);
-  setlocale(LC_ALL, "C");
-  while (1)
-    {
-      cur_size = snprintf(retval, ret_size - 1, "%s;%s ;%s ;%d;%g;%g;%g:",
-			  "STP_CURVE",
-			  wrap_mode_names[icurve->wrap_mode],
-			  curve_type_names[icurve->curve_type],
-			  icurve->point_count,
-			  icurve->gamma,
-			  icurve->blo,
-			  icurve->bhi);
-      if (cur_size < 0 || cur_size >= ret_size - 1)
-	{
-	  ret_size *= 2;
-	  retval = stpi_realloc(retval, ret_size);
-	}
-      else
-	break;
-    }
-  cur_size = strlen(retval);
-  if (icurve->gamma == 0 && icurve->point_count)
-    for (i = 0; i < icurve->point_count; i++)
-      while (1)
-	{
-	  int new_size = snprintf(retval + cur_size,
-				  ret_size - cur_size- 1, "%g;",
-				  icurve->data[i]);
-	  if (new_size < 0 || new_size + cur_size >= ret_size - 1)
-	    {
-	      ret_size *= 2;
-	      retval = stpi_realloc(retval, ret_size);
-	    }
-	  else
-	    {
-	      cur_size += new_size;
-	      break;
-	    }
-	}
-  setlocale(LC_ALL, "");
-  return retval;
+  void *xio = stpi_xio_init_string_output();
+  char *s;
+  print_curve_generic(xio, curve);
+  s = stpi_xio_get_string_output(xio, NULL);
+  stpi_xio_free(xio);
+  return s;
 }
 
 static stp_curve_type_t
@@ -818,8 +785,8 @@ stp_curve_read(FILE *f, stp_curve_t curve)
 
   check_curve(icurve);
   fscanf(f, "STP_CURVE ; %31s ; %31s ; %n",
-	 curve_type_name,
 	 wrap_mode_name,
+	 curve_type_name,
 	 &noffset);
   if (noffset == 0)
     return 0;
@@ -896,95 +863,19 @@ stp_curve_create_read(FILE *f)
 int
 stp_curve_read_string(const char *text, stp_curve_t curve)
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
-  stp_curve_t ret;
-  stpi_internal_curve_t *iret;
-  char curve_type_name[32];
-  char wrap_mode_name[32];
-  stp_curve_wrap_mode_t wrap_mode = (stp_curve_wrap_mode_t) -1;
-  stp_curve_type_t curve_type = (stp_curve_type_t) -1;
-  int offset = 0;
-  int noffset = 0;
-  int i;
-  int points;
-
-  check_curve(icurve);
-  sscanf(text, "STP_CURVE ; %31s ; %31s ; %n",
-	 wrap_mode_name,
-	 curve_type_name,
-	 &noffset);
-  if (noffset == 0)
-    return 0;
-  offset = noffset;
-  noffset = 0;
-  wrap_mode = get_wrap_mode(wrap_mode_name);
-  if (wrap_mode == (stp_curve_wrap_mode_t) -1)
-    return 0;
-
-  curve_type = get_curve_type(curve_type_name);
-  if (curve_type == (stp_curve_type_t) -1)
-    return 0;
-
-  setlocale(LC_ALL, "C");
-  ret = stp_curve_create(wrap_mode);
-  iret = (stpi_internal_curve_t *) ret;
-  iret->curve_type = curve_type;
-
-  sscanf(text + offset, " %d ; %lg ; %lg ; %lg : %n",
-	 &points,
-	 &(iret->gamma),
-	 &(iret->blo),
-	 &(iret->bhi),
-	 &noffset);
-  if (noffset == 0)
-    goto bad;
-  if (!check_curve_parameters(iret, points))
-    goto bad;
-  offset += noffset;
-  noffset = 0;
-  if (iret->gamma)
-    {
-      set_curve_points(iret, 2);
-      stp_curve_resample(ret, points);
-    }
-  else
-    {
-      iret->data = stpi_malloc(sizeof(double) * (iret->real_point_count));
-      for (i = 0; i < iret->point_count; i++)
-	{
-	  noffset = 0;
-	  sscanf(text + offset, " %lg ; %n", &(iret->data[i]), &noffset);
-	  if (noffset == 0 || ! finite(iret->data[i]) ||
-	      iret->data[i] < iret->blo || iret->data[i] > iret->bhi)
-	    goto bad;
-	  offset += noffset;
-	}
-      if (wrap_mode == STP_CURVE_WRAP_AROUND)
-	iret->data[iret->point_count] = iret->data[0];
-    }
-  iret->recompute_interval = 1;
-  iret->recompute_range = 1;
-  stp_curve_copy(curve, ret);
-  stp_curve_free(ret);
-  setlocale(LC_ALL, "");
-  return offset;
-
- bad:
-  stp_curve_free(ret);
-  setlocale(LC_ALL, "");
-  return 0;
+  FILE *f = stpi_xio_init_string_input(text);
+  int status = stp_curve_read(f, curve);
+  (void) fclose(f);
+  return status;
 }
 
 stp_curve_t
 stp_curve_create_read_string(const char *text)
 {
-  stp_curve_t ret = stp_curve_create(STP_CURVE_WRAP_NONE);
-  if (! stp_curve_read_string(text, ret))
-    {
-      stp_curve_free(ret);
-      ret = NULL;
-    }
-  return ret;
+  FILE *f = stpi_xio_init_string_input(text);
+  stp_curve_t curve = stp_curve_create_read(f);
+  (void) fclose(f);
+  return curve;
 }
 
 static inline double

@@ -68,6 +68,24 @@ extern void stpi_eprintf(const stp_vars_t v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 extern void stpi_erprintf(const char *format, ...)
        __attribute__((format(__printf__, 1, 2)));
+extern void stpi_asprintf(char **strp, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+extern void stpi_catprintf(char **strp, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+
+/*
+ * vfscanf isn't universal, so we have to do this kind of ugly hack
+ */
+extern FILE *stpi_xio_init_string_input(const char *s);
+extern void *stpi_xio_init_string_output(void);
+extern void *stpi_xio_init_file_output(FILE *f);
+extern char *stpi_xio_get_string_output(void *ixio, size_t *size);
+extern void stpi_xio_printf(void *ixio, const char *format, ...);
+extern void stpi_xio_puts(const char *s, void *ixio);
+extern void stpi_xio_putc(int c, void *ixio);
+extern void stpi_xio_fwrite(const void *ptr, size_t size, size_t count, void *ixio);
+extern char *stpi_xio_fgets(char *s, int size, void *ixio);
+extern void stpi_xio_free(void *ixio);
 
 #define STPI_DBG_LUT 		0x1
 #define STPI_DBG_COLORFUNC	0x2
