@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  2000/02/03 17:40:34  gandy
+ *   Dirty left-border-treatment leaving an uncertainty of -4..+4 dots
+ *
  *   Revision 1.7  2000/02/03 08:53:07  gandy
  *   Honours the new ink-type setting
  *
@@ -648,58 +651,36 @@ canon_print(int       model,		/* I - Model */
   * Portrait width/height...
   */
 
-  if (scaling < 0.0)
-  {
-   /*
-    * Scale to pixels per inch...
-    */
-
+  if (scaling < 0.0) {
+    /* Scale to pixels per inch... */
     out_width  = image_width * -72.0 / scaling;
     out_height = image_height * -72.0 / scaling;
-  }
-  else
-  {
-   /*
-    * Scale by percent...
-    */
-
+  } else {
+    /* Scale by percent... */
     out_width  = page_width * scaling / 100.0;
     out_height = out_width * image_height / image_width;
-    if (out_height > page_height)
-    {
+    if (out_height > page_height) {
       out_height = page_height * scaling / 100.0;
       out_width  = out_height * image_width / image_height;
     }
   }
 
-  if (out_width == 0)
-    out_width = 1;
-  if (out_height == 0)
-    out_height = 1;
+  if (out_width == 0)  out_width = 1;
+  if (out_height == 0) out_height = 1;
 
  /*
   * Landscape width/height...
   */
 
-  if (scaling < 0.0)
-  {
-   /*
-    * Scale to pixels per inch...
-    */
-
+  if (scaling < 0.0) {
+    /* Scale to pixels per inch... */
     temp_width  = image_height * -72.0 / scaling;
     temp_height = image_width * -72.0 / scaling;
-  }
-  else
-  {
-   /*
-    * Scale by percent...
-    */
-
+  } else {
+    /* Scale by percent... */
     temp_width  = page_width * scaling / 100.0;
     temp_height = temp_width * image_width / image_height;
-    if (temp_height > page_height)
-    {
+    if (temp_height > page_height) {
       temp_height = page_height;
       temp_width  = temp_height * image_height / image_width;
     }
@@ -710,18 +691,14 @@ canon_print(int       model,		/* I - Model */
   * image to fit it on the page...)
   */
 
-  if (orientation == ORIENT_AUTO)
-  {
-    if (scaling < 0.0)
-    {
+  if (orientation == ORIENT_AUTO) {
+    if (scaling < 0.0) {
       if ((out_width > page_width && out_height < page_width) ||
           (out_height > page_height && out_width < page_height))
 	orientation = ORIENT_LANDSCAPE;
       else
 	orientation = ORIENT_PORTRAIT;
-    }
-    else
-    {
+    } else {
       if ((temp_width * temp_height) > (out_width * out_height))
 	orientation = ORIENT_LANDSCAPE;
       else
@@ -729,16 +706,12 @@ canon_print(int       model,		/* I - Model */
     }
   }
 
-  if (orientation == ORIENT_LANDSCAPE)
-  {
+  if (orientation == ORIENT_LANDSCAPE) {
     out_width  = temp_width;
     out_height = temp_height;
     landscape  = 1;
 
-   /*
-    * Swap left/top offsets...
-    */
-
+    /* Swap left/top offsets... */
     x    = top;
     top  = left;
     left = x;
@@ -752,17 +725,8 @@ canon_print(int       model,		/* I - Model */
   else
     top = page_height - top + page_bottom;
 
- /*
-  * Let the user know what we're doing...
-  */
 
   Image_progress_init(image);
-
-
- /*
-  * Send CANON initialization commands...
-  */
-
 
   canon_init_printer(prn, caps, output_type, media_type, 
 		     media_size, printhead, media_source, 
@@ -806,8 +770,7 @@ canon_print(int       model,		/* I - Model */
   length = (out_width + 7) / 8;
 
 
-  if (output_type == OUTPUT_GRAY)
-  {
+  if (output_type == OUTPUT_GRAY) {
     black   = canon_alloc_buffer(length*(delay_k+1));
     cyan    = NULL;
     magenta = NULL;
@@ -815,9 +778,7 @@ canon_print(int       model,		/* I - Model */
     lmagenta= NULL;
     yellow  = NULL;
     lyellow = NULL;
-  }
-  else
-  {
+  } else {
     cyan    = canon_alloc_buffer(length*(delay_c+1));
     magenta = canon_alloc_buffer(length*(delay_m+1));
     yellow  = canon_alloc_buffer(length*(delay_y+1));
@@ -856,8 +817,7 @@ canon_print(int       model,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  if (landscape)
-  {
+  if (landscape) {
     in  = malloc(image_height * image_bpp);
     out = malloc(image_height * out_bpp * 2);
 
@@ -867,13 +827,11 @@ canon_print(int       model,		/* I - Model */
     errlast = -1;
     errline  = image_width - 1;
     
-    for (x = 0; x < out_height; x ++)
-    {
+    for (x = 0; x < out_height; x ++) {
       if ((x & 255) == 0)
  	Image_note_progress(image, x, out_height);
 
-      if (errline != errlast)
-      {
+      if (errline != errlast) {
         errlast = errline;
 	Image_get_col(image, in, errline);
       }
@@ -896,8 +854,8 @@ canon_print(int       model,		/* I - Model */
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
 		       length, ydpi, model, out_width, left);
-      fprintf(stderr,"!");
-
+      /* fprintf(stderr,"!"); */
+ 
       canon_advance_buffer(black,   length,delay_k);
       canon_advance_buffer(cyan,    length,delay_c);
       canon_advance_buffer(magenta, length,delay_m);
@@ -908,13 +866,12 @@ canon_print(int       model,		/* I - Model */
 
       errval += errmod;
       errline -= errdiv;
-      if (errval >= out_height)
-      {
+      if (errval >= out_height) {
         errval -= out_height;
         errline --;
       }
     }
-  }
+  } 
   else /* ! landscape */
   {
     in  = malloc(image_width * image_bpp);
@@ -956,7 +913,7 @@ canon_print(int       model,		/* I - Model */
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
 		       length, ydpi, model, out_width, left);
-      fprintf(stderr,"!");
+      /* fprintf(stderr,"!"); */
 
       canon_advance_buffer(black,   length,delay_k);
       canon_advance_buffer(cyan,    length,delay_c);
@@ -994,7 +951,7 @@ canon_print(int       model,		/* I - Model */
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly, 
 		       length, ydpi, model, out_width, left);
-      fprintf(stderr,"-");
+      /* fprintf(stderr,"-"); */
 
       canon_advance_buffer(black,   length,delay_k);
       canon_advance_buffer(cyan,    length,delay_c);
@@ -1162,7 +1119,6 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
     canon_write(prn,lm+ dlm*l, l, 1, 5, ydpi, model, &empty, width, offset);
   if (ly) written+= 
     canon_write(prn,ly+ dly*l, l, 1, 6, ydpi, model, &empty, width, offset);
-  
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
@@ -1187,32 +1143,42 @@ canon_write(FILE          *prn,		/* I - Print file or command */
 	    int           offset) 	/* I - Offset from left side */
 {
   unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
-    *comp_ptr;
+    *comp_ptr, *comp_data;
   int newlength;
 
- /*
-  * Don't send blank lines...
-  */
+ /* Don't send blank lines... */
 
   if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
     return 0;
 
-  canon_pack(line, length, comp_buf, &comp_ptr);
+  /* pack left border rounded to multiples of 8 dots */
+
+  comp_data= comp_buf;
+  if (offset) {
+    int offset2= (offset+4)/8;
+    while (offset2>0) {
+      unsigned char toffset = offset2 > 128 ? 128 : offset2;
+      comp_data[0] = 1 - toffset;
+      comp_data[1] = 0;
+      comp_data += 2;
+      offset2-= toffset;
+    }
+  }
+
+  canon_pack(line, length, comp_data, &comp_ptr);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */
+
   if (*empty) {
-    fprintf(stderr,"<%d%c>",
-	    *empty,("CMYKcmy"[coloridx]));
+    /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
     fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
     fputc((*empty) >> 8 , prn);
     fputc((*empty) & 255, prn);
     *empty= 0;
   }
 
- /*
-  * Send a line of raster graphics...
-  */
+ /* Send a line of raster graphics... */
 
   fwrite("\x1b\x28\x41", 3, 1, prn);
   putc((newlength+1) & 255, prn);
