@@ -28,6 +28,8 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
+EPSLEVEL = 2
+
 UTIL_MANUAL = util-edition
 UTIL_MANUAL_SRC_FILES = $(srcdir)/$(UTIL_MANUAL).sgml \
 	$(srcdir)/title.sgml \
@@ -310,7 +312,7 @@ $(MANUAL).ps:  $(MANUAL_SRC_FILES) $(EPS_IMAGES)
 
 %.eps:
 	if test ! -d figures ; then mkdir figures ; fi
-	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
+	$(CONVERT) $(srcdir)/$(basename $@).png EPS$(EPSLEVEL):$@
 
 util_html: util-html-stamp
 gimp_html: gimp-html-stamp

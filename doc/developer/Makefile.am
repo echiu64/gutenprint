@@ -31,6 +31,7 @@ include $(top_srcdir)/scripts/global.mk
 MANUAL = gimpprint
 HTMLDIR = developer-html
 DOCS = $(MANUAL).dvi $(MANUAL).ps html-stamp
+EPSLEVEL = 2
 
 IMAGES =
 
@@ -78,7 +79,7 @@ gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info
 	$(TEXI2DVI) $(TEXI2DVIFLAGS) $(srcdir)/gimpprint.texi
 
 %.eps: %.png
-	  $(CONVERT) $< EPS2:$@
+	  $(CONVERT) $< EPS$(EPSLEVEL):$@
 
 html: html-stamp
 
