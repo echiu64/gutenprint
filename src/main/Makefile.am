@@ -93,6 +93,7 @@ libgimpprint_la_SOURCES = \
 	printers.c \
 	printlist.h \
 	image.c \
+	image.h \
 	printers.h \
 	string-list.c \
 	quickmatrix257.h \
