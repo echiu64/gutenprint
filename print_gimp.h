@@ -38,6 +38,14 @@
  * All Gimp-specific code is in this file.
  */
 
-#define MAX_PLIST		100
+#define PLUG_IN_VERSION		"3.1.2 - 21 Mar 2000"
+#define PLUG_IN_NAME		"Print"
+
+/***
+ * Constants for GUI...
+ ***/
+#define PREVIEW_SIZE_VERT  240 /* Assuming max media size of 24" A2 */
+#define PREVIEW_SIZE_HORIZ 240 /* Assuming max media size of 24" A2 */
+#define MAX_PLIST	   100
 
 #endif

@@ -56,8 +56,15 @@ extern GtkWidget* gtk_color_adjust_dialog;
 
 void  printrc_save(void);
 
-
+/***
+ * Main window widgets
+ ***/
 GtkWidget* print_dialog;           /* Print dialog window */
+GtkWidget* recenter_button;
+GtkWidget* left_entry;
+GtkWidget* right_entry;
+GtkWidget* top_entry;
+GtkWidget* bottom_entry;
 GtkWidget* media_size;             /* Media size option button */
 GtkWidget* media_size_menu=NULL;   /* Media size menu */
 GtkWidget* media_type;             /* Media type option button */
@@ -79,6 +86,10 @@ GtkWidget* output_gray;            /* Output type toggle, black */
 GtkWidget* output_color;           /* Output type toggle, color */
 GtkWidget* linear_on;              /* Linear toggle, on */
 GtkWidget* linear_off;             /* Linear toggle, off */
+GtkWidget* image_line_art;
+GtkWidget* image_solid_tone;
+GtkWidget* image_continuous_tone;
+GtkWidget* image_monochrome;
 GtkWidget* setup_dialog;           /* Setup dialog window */
 GtkWidget* printer_driver;         /* Printer driver widget */
 GtkWidget* ppd_file;               /* PPD file entry */
@@ -86,11 +97,6 @@ GtkWidget* ppd_button;             /* PPD file browse button */
 GtkWidget* output_cmd;             /* Output command text entry */
 GtkWidget* ppd_browser;            /* File selection dialog for PPD files */
 GtkWidget* file_browser;           /* FSD for print files */
-GtkWidget* recenter_button;
-GtkWidget* left_entry;
-GtkWidget* right_entry;
-GtkWidget* top_entry;
-GtkWidget* bottom_entry;
 GtkWidget* printandsave_button;
 GtkWidget* print_button;
 GtkWidget* save_settings_button;
@@ -98,7 +104,6 @@ GtkWidget* cancel_button;
 GtkWidget* adjust_color_button;
 
 GtkObject* scaling_adjustment;	   /* Adjustment object for scaling */
-
 
 int		num_media_sizes=0;	/* Number of media sizes */
 char		**media_sizes;		/* Media size strings */
@@ -111,6 +116,7 @@ char		**ink_types;		/* Ink type strings */
 int		num_resolutions=0;	/* Number of resolutions */
 char		**resolutions;		/* Resolution strings */
 
+
 GtkDrawingArea	*preview;		/* Preview drawing area widget */
 int		mouse_x,		/* Last mouse X */
 		mouse_y;		/* Last mouse Y */
@@ -121,7 +127,6 @@ int		page_width;		/* Width of page on screen */
 int		page_height;		/* Height of page on screen */
 int		print_width;		/* Printed width of image */
 int		print_height;		/* Printed height of image */
-
 
 extern GtkObject* brightness_adjustment; /* Adjustment object for brightness */
 extern GtkObject* saturation_adjustment; /* Adjustment object for saturation */
@@ -164,10 +169,14 @@ static void gtk_preview_update(void);
 static void gtk_preview_button_callback(GtkWidget *, GdkEventButton *);
 static void gtk_preview_motion_callback(GtkWidget *, GdkEventMotion *);
 static void gtk_position_callback(GtkWidget *);
-
+static void gtk_image_type_callback(GtkWidget *widget,
+				    gint      data);
 static void gtk_show_adjust_button_callback(GtkWidget *);
 
 extern void gtk_create_color_adjust_window(void);
+
+GtkWidget* table;      /* Table "container" for controls */
+GtkWidget* dialog;     /* Dialog window */
 
 /*****************************************************************************
  *
@@ -178,36 +187,37 @@ extern void gtk_create_color_adjust_window(void);
  *****************************************************************************/
 void gtk_create_main_window(void)
 {
-    GtkWidget*  dialog; /* Dialog window */
-    GtkWidget*  table;  /* Table "container" for controls */
-    GtkWidget*  label;  /* Label string */
-    GtkWidget*  hbbox;  /* button_box for OK/Cancel buttons */
-    GtkWidget*  button; /* OK/Cancel buttons */
-    GtkWidget*  scale;  /* Scale widget */
-    GtkWidget*  entry;  /* Text entry widget */
-    GtkWidget*  menu;   /* Menu of drivers/sizes */
-    GtkWidget*  item;   /* Menu item */
-    GtkWidget*  option; /* Option menu button */
-    GtkWidget*  box;            /* Box container */
+    int        i;          /* Looping var */
+    char       s[100];     /* Text string */
+    GtkWidget* label;      /* Label string */
+    GtkWidget* hbbox;      /* button_box for OK/Cancel buttons */
+    GtkWidget* button;     /* OK/Cancel buttons */
+    GtkWidget* scale;      /* Scale widget */
+    GtkWidget* entry;      /* Text entry widget */
+    GtkWidget* menu;       /* Menu of drivers/sizes */
+    GtkWidget* item;       /* Menu item */
+    GtkWidget* option;     /* Option menu button */
+    GtkWidget* box;        /* Box container */
+    GtkObject* scale_data; /* Scale data (limits) */
+    GSList*    group;      /* Grouping for output type */
+#ifdef DO_LINEAR
+    GSList* linear_group;  /* Grouping for linear scale */
+#endif
+    GSList*    image_type_group;  /* Grouping for image type */
 
-    GtkObject*  scale_data;  /* Scale data (limits) */
+    const printer_t *the_printer = get_printer_by_index(0);
 
-    GSList      *group;         /* Grouping for output type */
-    GSList      *linear_group;  /* Grouping for linear scale */
-    const       printer_t *the_printer = get_printer_by_index(0);
-
-    static char *orients[] =    /* Orientation strings */
+    static char   *orients[] =    /* Orientation strings */
     {
-        N_("Auto"),
-        N_("Portrait"),
-        N_("Landscape")
+	N_("Auto"),
+	N_("Portrait"),
+	N_("Landscape")
     };
-
     gchar *plug_in_name;
-    int	 i;	 /* Looping var */
-    char s[100]; /* Text string */
 
-
+    /***
+     * Create the main dialog
+     ***/
     print_dialog = dialog = gtk_dialog_new();
 
     plug_in_name = g_strdup_printf (_("Print v%s"), PLUG_IN_VERSION);
@@ -217,14 +227,13 @@ void gtk_create_main_window(void)
     gtk_window_set_wmclass(GTK_WINDOW(dialog), "print", "Gimp");
     gtk_window_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
     gtk_container_border_width(GTK_CONTAINER(dialog), 0);
-    gtk_signal_connect(GTK_OBJECT(dialog),
-		       "destroy",
+    gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
 		       (GtkSignalFunc)gtk_close_callback, NULL);
 
     /*
      * Top-level table for dialog...
      */
-    table = gtk_table_new(20, 4, FALSE);
+    table = gtk_table_new(14, 4, FALSE);
     gtk_container_border_width(GTK_CONTAINER(table), 6);
     gtk_table_set_col_spacings(GTK_TABLE(table), 4);
     gtk_table_set_row_spacings(GTK_TABLE(table), 8);
@@ -239,15 +248,12 @@ void gtk_create_main_window(void)
      * Drawing area for page preview...
      */
     preview = (GtkDrawingArea *)gtk_drawing_area_new();
-    gtk_drawing_area_size(preview, PREVIEW_SIZE, PREVIEW_SIZE);
+    gtk_drawing_area_size(preview, PREVIEW_SIZE_VERT, PREVIEW_SIZE_HORIZ);
     gtk_table_attach(GTK_TABLE(table),
 		     (GtkWidget *)preview,
-		     0,
-		     2,
-		     0,
-		     7,
-		     GTK_FILL,
-		     GTK_FILL,
+		     0, 2,
+		     0, 7,
+		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_signal_connect(GTK_OBJECT((GtkWidget *)preview),
 		       "expose_event",
@@ -274,79 +280,46 @@ void gtk_create_main_window(void)
     recenter_button = button = gtk_button_new_with_label(_("Center Image"));
     gtk_table_attach(GTK_TABLE(table),
 		     button,
-		     1,
-		     2,
-		     7,
-		     8,
-		     GTK_FILL,
-		     GTK_FILL,
+		     1, 2,
+		     7, 8,
+		     GTK_FILL, GTK_FILL,
 		     0, 0);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "clicked",
-		       (GtkSignalFunc)gtk_position_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(button), "clicked",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
     gtk_widget_show(button);
-    
+
     label = gtk_label_new(_("Left:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     0,
-		     1,
-		     8,
-		     9,
-		     GTK_FILL,
-		     GTK_FILL,
-		     0, 0);
+		     label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(label);
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     1,
-		     2,
-		     8,
-		     9,
-		     GTK_FILL,
-		     GTK_FILL,
-		     0, 0);
+		     box, 1, 2, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
     left_entry = entry = gtk_entry_new();
     sprintf(s, "%.3f", fabs(vars.left));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
-    gtk_signal_connect(GTK_OBJECT(entry),
-		       "activate",
-		       (GtkSignalFunc)gtk_position_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
     gtk_widget_show(entry);
-    
 
     label = gtk_label_new(_("Top:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     2, 3,
-		     8, 9,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
+		     label, 2, 3, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(label);
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     3, 4,
-		     8, 9,
-		     GTK_FILL,
-		     GTK_FILL,
-		     0, 0);
+		     box, 3, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
     top_entry = entry = gtk_entry_new();
     sprintf(s, "%.3f", fabs(vars.top));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
-    gtk_signal_connect(GTK_OBJECT(entry),
-		       "activate",
-		       (GtkSignalFunc)gtk_position_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
     gtk_widget_show(entry);
@@ -354,24 +327,17 @@ void gtk_create_main_window(void)
     label = gtk_label_new(_("Right:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     0, 1, 9, 10,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
+		     label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(label);
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     1, 2, 9, 10,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
+		     box, 1, 2, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
     right_entry = entry = gtk_entry_new();
     sprintf(s, "%.3f", fabs(vars.left));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
     gtk_signal_connect(GTK_OBJECT(entry), "activate",
-		       (GtkSignalFunc)gtk_position_callback,
-		       NULL);
+		       (GtkSignalFunc)gtk_position_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
     gtk_widget_show(entry);
@@ -379,51 +345,45 @@ void gtk_create_main_window(void)
     label = gtk_label_new(_("Bottom:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     2, 3, 9, 10,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
+		     label, 2, 3, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(label);
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     3, 4, 9, 10,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
+		     box, 3, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
     bottom_entry = entry = gtk_entry_new();
     sprintf(s, "%.3f", fabs(vars.left));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
-    gtk_signal_connect(GTK_OBJECT(entry),
-		       "activate",
-		       (GtkSignalFunc)gtk_position_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		       (GtkSignalFunc)gtk_position_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
     gtk_widget_show(entry);
 
-
-    /*
+    /***
      * Media size option menu...
-     */
+     ***/
     label = gtk_label_new(_("Media Size:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 1, 2,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     2, 3,
+		     1, 2,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 1, 2,
+		     3, 4,
+		     1, 2,
 		     GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
-    
+
     media_size = option = gtk_option_menu_new();
     gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
-    
+
     /*
      * Media type option menu...
      */
@@ -431,20 +391,24 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 2, 3,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     2, 3,
+		     2, 3,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 2, 3,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     3, 4,
+		     2, 3,
+		     GTK_FILL,
+		     GTK_FILL, 0, 0);
     gtk_widget_show(box);
-    
+
     media_type = option = gtk_option_menu_new();
     gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
-    
+
     /*
      * Media source option menu...
      */
@@ -452,16 +416,19 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 3, 4,
+		     2, 3,
+		     3, 4,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 3, 4,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     3, 4,
+		     3, 4,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(box);
 
     media_source = option = gtk_option_menu_new();
@@ -474,51 +441,53 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 4, 5,
-		     GTK_FILL, GTK_FILL,
+		     2, 3,
+		     4, 5,
+		     GTK_FILL, GTK_FILL, 
 		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 4, 5,
+		     3, 4,
+		     4, 5,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
-    
+
     ink_type = option = gtk_option_menu_new();
     gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
 
     /*
      * Orientation option menu...
      */
-
     label = gtk_label_new(_("Orientation:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 5, 6,
+		     2, 3,
+		     5, 6,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
-    
+
     menu = gtk_menu_new();
     for (i = 0; i < (int)(sizeof(orients) / sizeof(orients[0])); i ++)
     {
-      item = gtk_menu_item_new_with_label(gettext(orients[i]));
-      gtk_menu_append(GTK_MENU(menu), item);
-      gtk_signal_connect(GTK_OBJECT(item),
-			 "activate",
-			 (GtkSignalFunc)gtk_orientation_callback,
-			 (gpointer)(i - 1));
-      gtk_widget_show(item);
+	item = gtk_menu_item_new_with_label(gettext(orients[i]));
+	gtk_menu_append(GTK_MENU(menu), item);
+	gtk_signal_connect(GTK_OBJECT(item), "activate",
+			   (GtkSignalFunc)gtk_orientation_callback,
+			   (gpointer)(i - 1));
+	gtk_widget_show(item);
     }
 
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 5, 6,
+		     3, 4,
+		     5, 6,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -536,14 +505,17 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 6, 7,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     2, 3,
+		     6, 7,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(label);
 
     box = gtk_hbox_new(FALSE, 0);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 6, 7,
+		     3, 4,
+		     6, 7,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -558,25 +530,26 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 7, 8,
+		     2, 3,
+		     7, 8,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 7, 8,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     3, 4,
+		     7, 8,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(box);
 
     output_gray = button = gtk_radio_button_new_with_label(NULL, _("B&W"));
     group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
     if (vars.output_type == 0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		       (GtkSignalFunc)gtk_output_type_callback,
 		       (gpointer)OUTPUT_GRAY);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
@@ -585,36 +558,38 @@ void gtk_create_main_window(void)
     output_color = button = gtk_radio_button_new_with_label(group, _("Color"));
     if (vars.output_type == 1)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		       (GtkSignalFunc)gtk_output_type_callback,
 		       (gpointer)OUTPUT_COLOR);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
-    
+
+#ifdef DO_LINEAR
     label = gtk_label_new(_("Output Level:"));
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     2, 3, 10, 11,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     3, 4,
+		     10, 11,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(label);
-    
+
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     3, 4, 10, 11,
+		     4, 5,
+		     10, 11,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
 
-    linear_off = button = gtk_radio_button_new_with_label(NULL,
-							  _("Normal scale"));
+    linear_off = button =
+	              gtk_radio_button_new_with_label(NULL, _("Normal scale"));
     linear_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
     if (vars.linear == 0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		       (GtkSignalFunc)gtk_linear_callback,
 		       (gpointer)0);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
@@ -624,10 +599,75 @@ void gtk_create_main_window(void)
 					       _("Experimental linear scale"));
     if (vars.linear == 1)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
 		       (GtkSignalFunc)gtk_linear_callback,
 		       (gpointer)1);
+    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+    gtk_widget_show(button);
+#endif
+
+    /*
+     * Image type
+     */
+    label = gtk_label_new(_("Image Type:"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),
+		     label,
+		     0, 1,
+		     10, 11,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(label);
+
+    box = gtk_hbox_new(FALSE, 8);
+    gtk_table_attach(GTK_TABLE(table),
+		     box,
+		     1, 4,
+		     10, 11,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(box);
+
+    image_line_art= button =
+	gtk_radio_button_new_with_label(NULL, _("Line Art"));
+    image_type_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
+    if (vars.image_type == IMAGE_LINE_ART)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		       (GtkSignalFunc)gtk_image_type_callback,
+		       (gpointer)IMAGE_LINE_ART);
+    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+    gtk_widget_show(button);
+
+    image_solid_tone= button =
+	gtk_radio_button_new_with_label(image_type_group, _("Solid Colors"));
+    if (vars.image_type == IMAGE_SOLID_TONE)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		       (GtkSignalFunc)gtk_image_type_callback,
+		       (gpointer)IMAGE_SOLID_TONE);
+    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+    gtk_widget_show(button);
+
+    image_continuous_tone= button =
+	gtk_radio_button_new_with_label(gtk_radio_button_group(GTK_RADIO_BUTTON(button)),
+					_("Photograph"));
+    if (vars.image_type == IMAGE_CONTINUOUS)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		       (GtkSignalFunc)gtk_image_type_callback,
+		       (gpointer)IMAGE_CONTINUOUS);
+    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+    gtk_widget_show(button);
+
+    image_monochrome= button =
+	gtk_radio_button_new_with_label(gtk_radio_button_group(GTK_RADIO_BUTTON(button)),
+					_("Monochrome"));
+    if (vars.image_type == IMAGE_MONOCHROME)
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
+    gtk_signal_connect(GTK_OBJECT(button), "toggled",
+		       (GtkSignalFunc)gtk_image_type_callback,
+		       (gpointer)IMAGE_MONOCHROME);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 
@@ -638,7 +678,8 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     0, 1, 11, 12,
+		     0, 1,
+		     11, 12,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -646,26 +687,21 @@ void gtk_create_main_window(void)
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     1, 4, 11, 12, 
+		     1, 4,
+		     11, 12,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
-
+    
     if (vars.scaling < 0.0)
-    {
 	scaling_adjustment = scale_data =
 	    gtk_adjustment_new(-vars.scaling, 36.0, 1201.0, 1.0, 1.0, 1.0);
-    }
     else
-    {
 	scaling_adjustment = scale_data =
 	    gtk_adjustment_new(vars.scaling, 5.0, 101.0, 1.0, 1.0, 1.0);
-    }
 
-    gtk_signal_connect(GTK_OBJECT(scale_data),
-		       "value_changed",
-		       (GtkSignalFunc)gtk_scaling_update,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		       (GtkSignalFunc)gtk_scaling_update, NULL);
 
     scaling_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
     gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
@@ -677,8 +713,7 @@ void gtk_create_main_window(void)
     scaling_entry = entry = gtk_entry_new();
     sprintf(s, "%.1f", fabs(vars.scaling));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
-    gtk_signal_connect(GTK_OBJECT(entry),
-		       "changed",
+    gtk_signal_connect(GTK_OBJECT(entry), "changed",
 		       (GtkSignalFunc)gtk_scaling_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
@@ -689,89 +724,30 @@ void gtk_create_main_window(void)
     group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
     if (vars.scaling > 0.0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
-		       (GtkSignalFunc)gtk_scaling_callback,
-		       NULL);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 
     scaling_ppi = button = gtk_radio_button_new_with_label(group, _("PPI"));
     if (vars.scaling < 0.0)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "toggled",
-		       (GtkSignalFunc)gtk_scaling_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 
+    gtk_signal_connect(GTK_OBJECT(scaling_percent), "toggled",
+		       (GtkSignalFunc)gtk_scaling_callback, NULL);
+    gtk_signal_connect(GTK_OBJECT(scaling_ppi), "toggled",
+		       (GtkSignalFunc)gtk_scaling_callback, NULL);
+
 #ifndef GIMP_1_0
     scaling_image = button = gtk_button_new_with_label(_("Set Image Scale"));
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "clicked",
+    gtk_signal_connect(GTK_OBJECT(button), "clicked",
 		       (GtkSignalFunc)gtk_scaling_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 #endif
 
-    /*
-     * Printer option menu...
-     */
-    label = gtk_label_new(_("Printer:"));
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     2, 3, 0, 1,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
-    gtk_widget_show(label);
-
-    menu = gtk_menu_new();
-
-
-    for (i = 0; i < plist_count; i ++)
-    {
-	if (plist[i].active)
-	{
-	    item = gtk_menu_item_new_with_label(gettext(plist[i].name));
-	}
-	else
-        {
-	    char buf[18];
-	    buf[0] = '*';
-	    memcpy(buf + 1, plist[i].name, 17);
-	    item = gtk_menu_item_new_with_label(gettext(buf));
-	}
-	gtk_menu_append(GTK_MENU(menu), item);
-	gtk_signal_connect(GTK_OBJECT(item), "activate",
-			   (GtkSignalFunc)gtk_plist_callback,
-			   (gpointer)i);
-	gtk_widget_show(item);
-    }
-
-    box = gtk_hbox_new(FALSE, 8);
-    gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     3, 4, 0, 1,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
-    gtk_widget_show(box);
-
-    option = gtk_option_menu_new();
-    gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
-    gtk_option_menu_set_menu(GTK_OPTION_MENU(option), menu);
-    gtk_option_menu_set_history(GTK_OPTION_MENU(option), plist_current);
-    gtk_widget_show(option);
-
-    button = gtk_button_new_with_label(_("Setup"));
-    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "clicked",
-		       (GtkSignalFunc)gtk_setup_open_callback, NULL);
-    gtk_widget_show(button);
-
     /***
-     * Show color adjust button
+     *  Color adjust button
      ***/
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
@@ -787,8 +763,60 @@ void gtk_create_main_window(void)
 			NULL);
     gtk_box_pack_start (GTK_BOX (box), adjust_color_button, FALSE, FALSE, 0);
     gtk_widget_show (adjust_color_button);
-    
-    
+
+    gtk_create_color_adjust_window();
+
+    /*
+     * Printer option menu...
+     */
+    label = gtk_label_new(_("Printer:"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),
+		     label,
+		     2, 3,
+		     0, 1,
+		     GTK_FILL, GTK_FILL, 0, 0);
+    gtk_widget_show(label);
+
+    menu = gtk_menu_new();
+    for (i = 0; i < plist_count; i ++)
+    {
+	if (plist[i].active)
+	    item = gtk_menu_item_new_with_label(gettext(plist[i].name));
+	else
+	{
+	    char buf[18];
+	    buf[0] = '*';
+	    memcpy(buf + 1, plist[i].name, 17);
+	    item = gtk_menu_item_new_with_label(gettext(buf));
+	}
+	gtk_menu_append(GTK_MENU(menu), item);
+	gtk_signal_connect(GTK_OBJECT(item), "activate",
+			   (GtkSignalFunc)gtk_plist_callback,
+			   (gpointer)i);
+	gtk_widget_show(item);
+    }
+
+    box = gtk_hbox_new(FALSE, 8);
+    gtk_table_attach(GTK_TABLE(table),
+		     box,
+		     3, 4,
+		     0, 1,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
+    gtk_widget_show(box);
+
+    option = gtk_option_menu_new();
+    gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
+    gtk_option_menu_set_menu(GTK_OPTION_MENU(option), menu);
+    gtk_option_menu_set_history(GTK_OPTION_MENU(option), plist_current);
+    gtk_widget_show(option);
+
+    button = gtk_button_new_with_label(_("Setup"));
+    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
+    gtk_signal_connect(GTK_OBJECT(button), "clicked",
+		       (GtkSignalFunc)gtk_setup_open_callback, NULL);
+    gtk_widget_show(button);
 
     /*
      * Print, cancel buttons...
@@ -819,7 +847,7 @@ void gtk_create_main_window(void)
     gtk_widget_grab_default (button);
     gtk_widget_show (button);
 
-    button = print_button = gtk_button_new_with_label (_("Print"));
+    button = gtk_button_new_with_label (_("Print"));
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     gtk_signal_connect (GTK_OBJECT (button),
 			"clicked",
@@ -829,7 +857,6 @@ void gtk_create_main_window(void)
     gtk_widget_show (button);
 
     button = gtk_button_new_with_label (_("Save Current Settings"));
-    save_settings_button = button;
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     gtk_signal_connect (GTK_OBJECT (button),
 			"clicked",
@@ -838,7 +865,7 @@ void gtk_create_main_window(void)
     gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
     gtk_widget_show (button);
 
-    button = cancel_button = gtk_button_new_with_label (_("Cancel"));
+    button = gtk_button_new_with_label (_("Cancel"));
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
     gtk_signal_connect (GTK_OBJECT(button),
 			"clicked",
@@ -854,10 +881,8 @@ void gtk_create_main_window(void)
     gtk_window_set_wmclass(GTK_WINDOW(dialog), "print", "Gimp");
     gtk_window_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
     gtk_container_border_width(GTK_CONTAINER(dialog), 0);
-    gtk_signal_connect(GTK_OBJECT(dialog),
-		       "destroy",
-		       (GtkSignalFunc)gtk_setup_cancel_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
+		       (GtkSignalFunc)gtk_setup_cancel_callback, NULL);
 
     /*
      * Top-level table for dialog...
@@ -880,7 +905,8 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     0, 1, 0, 1,
+		     0, 1,
+		     0, 1,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -892,8 +918,7 @@ void gtk_create_main_window(void)
 	    continue;
 	item = gtk_menu_item_new_with_label(gettext(the_printer->long_name));
 	gtk_menu_append(GTK_MENU(menu), item);
-	gtk_signal_connect(GTK_OBJECT(item),
-			   "activate",
+	gtk_signal_connect(GTK_OBJECT(item), "activate",
 			   (GtkSignalFunc)gtk_print_driver_callback,
 			   (gpointer)i);
 	gtk_widget_show(item);
@@ -903,7 +928,8 @@ void gtk_create_main_window(void)
     printer_driver = option = gtk_option_menu_new();
     gtk_table_attach(GTK_TABLE(table),
 		     option,
-		     1, 2, 0, 1,
+		     1, 2,
+		     0, 1,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_option_menu_set_menu(GTK_OPTION_MENU(option), menu);
@@ -916,7 +942,8 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     0, 1, 1, 2,
+		     0, 1,
+		     1, 2,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -924,8 +951,10 @@ void gtk_create_main_window(void)
     box = gtk_hbox_new(FALSE, 8);
     gtk_table_attach(GTK_TABLE(table),
 		     box,
-		     1, 2, 1, 2,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     1, 2,
+		     1, 2,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(box);
 
     ppd_file = entry = gtk_entry_new();
@@ -934,8 +963,7 @@ void gtk_create_main_window(void)
 
     ppd_button = button = gtk_button_new_with_label(_("Browse"));
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "clicked",
+    gtk_signal_connect(GTK_OBJECT(button), "clicked",
 		       (GtkSignalFunc)gtk_ppd_browse_callback, NULL);
     gtk_widget_show(button);
 
@@ -946,60 +974,59 @@ void gtk_create_main_window(void)
     gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
     gtk_table_attach(GTK_TABLE(table),
 		     label,
-		     0, 1, 2, 3,
+		     0, 1,
+		     2, 3,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
-
+    
     output_cmd = entry = gtk_entry_new();
     gtk_table_attach(GTK_TABLE(table),
 		     entry,
-		     1, 2, 2, 3,
-		     GTK_FILL, GTK_FILL, 0, 0);
+		     1, 2,
+		     2, 3,
+		     GTK_FILL, GTK_FILL,
+		     0, 0);
     gtk_widget_show(entry);
 
     /*
      * OK, cancel buttons...
      */
-    gtk_container_set_border_width(GTK_CONTAINER(GTK_DIALOG(dialog)->
-						 action_area), 2);
+    gtk_container_set_border_width(GTK_CONTAINER(GTK_DIALOG (dialog)->
+						 action_area),
+				   2);
     gtk_box_set_homogeneous (GTK_BOX (GTK_DIALOG (dialog)->action_area),
 			     FALSE);
     hbbox = gtk_hbutton_box_new ();
     gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbox), 4);
     gtk_box_pack_end (GTK_BOX (GTK_DIALOG (dialog)->action_area),
 		      hbbox,
-		      FALSE, FALSE, 0);
+		      FALSE,
+		      FALSE,
+		      0);
     gtk_widget_show (hbbox);
  
     button = gtk_button_new_with_label (_("OK"));
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-    gtk_signal_connect (GTK_OBJECT (button),
-			"clicked",
-			(GtkSignalFunc) gtk_setup_ok_callback,
-			NULL);
+    gtk_signal_connect (GTK_OBJECT (button), "clicked",
+			(GtkSignalFunc) gtk_setup_ok_callback, NULL);
     gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
     gtk_widget_grab_default (button);
     gtk_widget_show (button);
 
     button = gtk_button_new_with_label (_("Cancel"));
     GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
-    gtk_signal_connect(GTK_OBJECT(button),
-		       "clicked",
-		       (GtkSignalFunc)gtk_setup_cancel_callback,
-		       NULL);
+    gtk_signal_connect(GTK_OBJECT(button), "clicked",
+		       (GtkSignalFunc)gtk_setup_cancel_callback, NULL);
     gtk_box_pack_start (GTK_BOX (hbbox), button, FALSE, FALSE, 0);
     gtk_widget_show (button);
-
 
     /*
      * Output file selection dialog...
      */
     file_browser = gtk_file_selection_new(_("Print To File?"));
     gtk_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(file_browser)->ok_button),
-		       "clicked",
-		       (GtkSignalFunc)gtk_file_ok_callback,
-		       NULL);
+		       "clicked", (GtkSignalFunc)gtk_file_ok_callback, NULL);
     gtk_signal_connect(GTK_OBJECT(GTK_FILE_SELECTION(file_browser)->
 				  cancel_button),
 		       "clicked",
@@ -1021,11 +1048,6 @@ void gtk_create_main_window(void)
 		       (GtkSignalFunc)gtk_ppd_cancel_callback,
 		       NULL);
 
-    /***
-     * Create the color adjustment window
-     ***/
-    gtk_create_color_adjust_window();
-
     /*
      * Show the main dialog and wait for the user to do something...
      */
@@ -1036,71 +1058,13 @@ void gtk_create_main_window(void)
 
 /****************************************************************************
  *
- * GTK_scaling_callback() - Update the scaling scale using the text entry.
- *
- ****************************************************************************/
-static void gtk_scaling_callback(GtkWidget *widget)	/* I - Entry widget */
-{
-    gfloat new_value;  /* New scaling value */
-
-    if (widget == scaling_entry)
-    {
-	new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-
-	if (vars.scaling != new_value)
-	{
-	    if ((new_value >= GTK_ADJUSTMENT(scaling_adjustment)->lower) &&
-		(new_value < GTK_ADJUSTMENT(scaling_adjustment)->upper))
-	    {
-		GTK_ADJUSTMENT(scaling_adjustment)->value = new_value;
-
-		gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-	    }
-	}
-    }
-    else if (widget == scaling_ppi)
-    {
-	GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->value = 72.0;
-	vars.scaling = 0.0;
-	plist[plist_current].v.scaling = vars.scaling;
-	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-    }
-    else if (widget == scaling_percent)
-    {
-	GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
-	vars.scaling = 0.0;
-	plist[plist_current].v.scaling = vars.scaling;
-	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-    }
-#ifndef GIMP_1_0
-    else if (widget == scaling_image)
-    {
-	double xres, yres;
-	gimp_image_get_resolution(image_ID, &xres, &yres);
-	GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->value = yres;
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-	vars.scaling = 0.0;
-	plist[plist_current].v.scaling = vars.scaling;
-	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-    }
-#endif
-}
-
-
-/****************************************************************************
- *
- * gtk_scaling_update() - Update the scaling field using the scale.
+ * GTK_scaling_update() - Update the scaling scale using the slider.
  *
  ****************************************************************************/
 static void gtk_scaling_update(GtkAdjustment *adjustment) /* I - New value */
 {
-  char s[255];  /* Text buffer */
+  char	s[255];					/* Text buffer */
+
 
   if (vars.scaling != adjustment->value)
   {
@@ -1120,85 +1084,241 @@ static void gtk_scaling_update(GtkAdjustment *adjustment) /* I - New value */
   }
 }
 
+
 /****************************************************************************
  *
- * gtk_plist_build_menu() - Build an option menu for the given parameters...
+ * gtk_scaling_callback() - Update the scaling field using the text entry
+ *
+ ****************************************************************************/
+static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
+{
+  gfloat	new_value;		/* New scaling value */
+
+
+  if (widget == scaling_entry)
+  {
+    new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+    if (vars.scaling != new_value)
+    {
+      if ((new_value >= GTK_ADJUSTMENT(scaling_adjustment)->lower) &&
+	  (new_value < GTK_ADJUSTMENT(scaling_adjustment)->upper))
+      {
+	GTK_ADJUSTMENT(scaling_adjustment)->value = new_value;
+
+	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+      }
+    }
+  }
+  else if (widget == scaling_ppi)
+  {
+    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->value = 72.0;
+    vars.scaling = 0.0;
+    plist[plist_current].v.scaling = vars.scaling;
+    gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+  }
+  else if (widget == scaling_percent)
+  {
+    GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
+    vars.scaling = 0.0;
+    plist[plist_current].v.scaling = vars.scaling;
+    gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+  }
+#ifndef GIMP_1_0
+  else if (widget == scaling_image)
+  {
+    double xres, yres;
+    gimp_image_get_resolution(image_ID, &xres, &yres);
+    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+    GTK_ADJUSTMENT(scaling_adjustment)->value = yres;
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+    vars.scaling = 0.0;
+    plist[plist_current].v.scaling = vars.scaling;
+    gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+  }
+#endif
+}
+
+/****************************************************************************
+ *
+ * gtk_plist_build_menu
+ *
+ ****************************************************************************/
+static void gtk_plist_build_menu(GtkWidget*  option,  /* I - Option button */
+				 GtkWidget** menu,    /* IO - Current menu */
+				 int       num_items, /* I - Number of items */
+				 char**    items,     /* I - Menu items */
+				 char*     cur_item,  /* I - Current item */
+		        void (*callback)(GtkWidget *, gint)) /* I - Callback */
+{
+  int		i;	/* Looping var */
+  GtkWidget	*item,	/* Menu item */
+    *item0 = 0;	/* First menu item */
+
+  if (*menu != NULL)
+    {
+      gtk_widget_destroy(*menu);
+      *menu = NULL;
+    }
+
+  *menu = gtk_menu_new ();
+
+  if (num_items == 0)
+    {
+      item = gtk_menu_item_new_with_label (_("Standard"));
+      gtk_menu_append (GTK_MENU (*menu), item);
+      gtk_widget_show (item);
+      gtk_option_menu_set_menu (GTK_OPTION_MENU (option), *menu);
+      gtk_widget_set_sensitive (option, FALSE);
+      gtk_widget_show(option);
+      return;
+    }
+  else
+    {
+      gtk_widget_set_sensitive (option, TRUE);
+    }
+
+  for (i = 0; i < num_items; i ++)
+    {
+      item = gtk_menu_item_new_with_label(gettext(items[i]));
+      if (i == 0)
+	item0 = item;
+      gtk_menu_append(GTK_MENU(*menu), item);
+      gtk_signal_connect(GTK_OBJECT(item), "activate",
+			 (GtkSignalFunc)callback, (gpointer)i);
+      gtk_widget_show(item);
+    }
+
+  gtk_option_menu_set_menu(GTK_OPTION_MENU(option), *menu);
+
+#ifdef DEBUG
+  printf("cur_item = \'%s\'\n", cur_item);
+#endif /* DEBUG */
+
+  for (i = 0; i < num_items; i ++)
+    {
+#ifdef DEBUG
+      printf("item[%d] = \'%s\'\n", i, items[i]);
+#endif /* DEBUG */
+
+      if (strcmp(items[i], cur_item) == 0)
+	{
+	  gtk_option_menu_set_history(GTK_OPTION_MENU(option), i);
+	  break;
+	}
+    }
+
+  if (i == num_items)
+    {
+      gtk_option_menu_set_history(GTK_OPTION_MENU(option), 0);
+      gtk_signal_emit_by_name(GTK_OBJECT(item0), "activate");
+    }
+  gtk_widget_show(option);
+}
+
+/****************************************************************************
+ *
+ * gtk_do_misc_updates() - Build an option menu for the given parameters...
  *
  ****************************************************************************/
 static void gtk_do_misc_updates()
 {
-    char s[255];
-    vars.scaling = plist[plist_current].v.scaling;
-    vars.orientation = plist[plist_current].v.orientation;
-    vars.left = plist[plist_current].v.left;
-    vars.top = plist[plist_current].v.top;
+  char s[255];
+  vars.scaling = plist[plist_current].v.scaling;
+  vars.orientation = plist[plist_current].v.orientation;
+  vars.left = plist[plist_current].v.left;
+  vars.top = plist[plist_current].v.top;
 
-    if (plist[plist_current].v.scaling < 0)
+  if (plist[plist_current].v.scaling < 0)
     {
-	float tmp = -plist[plist_current].v.scaling;
-	plist[plist_current].v.scaling = -plist[plist_current].v.scaling;
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-	GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
-	sprintf(s, "%.1f", tmp);
-	GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
-	gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
-	gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
-	gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
-	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+      float tmp = -plist[plist_current].v.scaling;
+      plist[plist_current].v.scaling = -plist[plist_current].v.scaling;
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+      sprintf(s, "%.1f", tmp);
+      GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
+      gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
+      gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
     }
-    else
+  else
     {
-	float tmp = plist[plist_current].v.scaling;
-	GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
-	GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
-	sprintf(s, "%.1f", tmp);
-	GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_percent), TRUE);
-	gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
-	gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
-	gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
-	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+      float tmp = plist[plist_current].v.scaling;
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_percent), TRUE);
+      GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
+      sprintf(s, "%.1f", tmp);
+      GTK_ADJUSTMENT(scaling_adjustment)->value = tmp;
+      gtk_signal_handler_block_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
+      gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
+      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
     }    
 
-    GTK_ADJUSTMENT(brightness_adjustment)->value =
-	                                    plist[plist_current].v.brightness;
-    gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
+  GTK_ADJUSTMENT(brightness_adjustment)->value = plist[plist_current].v.brightness;
+  gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].v.gamma;
-    gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
+  GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].v.gamma;
+  gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(contrast_adjustment)->value =
-                                               plist[plist_current].v.contrast;
-    gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
+  GTK_ADJUSTMENT(contrast_adjustment)->value = plist[plist_current].v.contrast;
+  gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(red_adjustment)->value = plist[plist_current].v.red;
-    gtk_signal_emit_by_name(red_adjustment, "value_changed");
+  GTK_ADJUSTMENT(red_adjustment)->value = plist[plist_current].v.red;
+  gtk_signal_emit_by_name(red_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(green_adjustment)->value = plist[plist_current].v.green;
-    gtk_signal_emit_by_name(green_adjustment, "value_changed");
+  GTK_ADJUSTMENT(green_adjustment)->value = plist[plist_current].v.green;
+  gtk_signal_emit_by_name(green_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(blue_adjustment)->value = plist[plist_current].v.blue;
-    gtk_signal_emit_by_name(blue_adjustment, "value_changed");
+  GTK_ADJUSTMENT(blue_adjustment)->value = plist[plist_current].v.blue;
+  gtk_signal_emit_by_name(blue_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(saturation_adjustment)->value =
-                                             plist[plist_current].v.saturation;
-    gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
+  GTK_ADJUSTMENT(saturation_adjustment)->value = plist[plist_current].v.saturation;
+  gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
 
-    GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].v.density;
-    gtk_signal_emit_by_name(density_adjustment, "value_changed");
+  GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].v.density;
+  gtk_signal_emit_by_name(density_adjustment, "value_changed");
 
-    if (plist[plist_current].v.output_type == OUTPUT_GRAY)
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);
-    else
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
+  if (plist[plist_current].v.output_type == OUTPUT_GRAY)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
 
-    if (plist[plist_current].v.linear == 0)
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
-    else
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
+#ifdef DO_LINEAR
+  if (plist[plist_current].v.linear == 0)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_on), TRUE);
+#endif
 
-    gtk_preview_update();
+  switch (plist[plist_current].v.image_type)
+    {
+    case IMAGE_LINE_ART:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_line_art), TRUE);
+      break;
+    case IMAGE_SOLID_TONE:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_solid_tone), TRUE);
+      break;
+    case IMAGE_CONTINUOUS:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
+      break;
+    case IMAGE_MONOCHROME:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_monochrome), TRUE);
+      break;
+    default:
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_continuous_tone), TRUE);
+      plist[plist_current].v.image_type = IMAGE_CONTINUOUS;
+      break;
+    }
+
+  gtk_preview_update();
 }
 
 /****************************************************************************
@@ -1258,84 +1378,15 @@ static void gtk_position_callback(GtkWidget *widget)
 
 /****************************************************************************
  *
- * gtk_plist_build_menu
- *
- ****************************************************************************/
-static void gtk_plist_build_menu(GtkWidget*  option,  /* I - Option button */
-				 GtkWidget** menu,    /* IO - Current menu */
-				 int       num_items, /* I - Number of items */
-				 char**    items,     /* I - Menu items */
-				 char*     cur_item,  /* I - Current item */
-		        void (*callback)(GtkWidget *, gint)) /* I - Callback */
-{
-  int		i;	/* Looping var */
-  GtkWidget	*item,	/* Menu item */
-		*item0 = 0;	/* First menu item */
-
-  if (*menu != NULL)
-  {
-    gtk_widget_destroy(*menu);
-    *menu = NULL;
-  }
-
-  if (num_items == 0)
-  {
-    gtk_widget_hide(option);
-    return;
-  }
-
-  *menu = gtk_menu_new();
-
-  for (i = 0; i < num_items; i ++)
-  {
-    item = gtk_menu_item_new_with_label(gettext(items[i]));
-    if (i == 0)
-      item0 = item;
-    gtk_menu_append(GTK_MENU(*menu), item);
-    gtk_signal_connect(GTK_OBJECT(item),
-		       "activate",
-		       (GtkSignalFunc)callback, (gpointer)i);
-    gtk_widget_show(item);
-  }
-
-  gtk_option_menu_set_menu(GTK_OPTION_MENU(option), *menu);
-
-#ifdef DEBUG
-  printf("cur_item = \'%s\'\n", cur_item);
-#endif /* DEBUG */
-
-  for (i = 0; i < num_items; i ++)
-  {
-#ifdef DEBUG
-    printf("item[%d] = \'%s\'\n", i, items[i]);
-#endif /* DEBUG */
-
-    if (strcmp(items[i], cur_item) == 0)
-    {
-      gtk_option_menu_set_history(GTK_OPTION_MENU(option), i);
-      break;
-    }
-  }
-
-  if (i == num_items)
-  {
-    gtk_option_menu_set_history(GTK_OPTION_MENU(option), 0);
-    gtk_signal_emit_by_name(GTK_OBJECT(item0), "activate");
-  }
-
-  gtk_widget_show(option);
-}
-
-/****************************************************************************
- *
  * gtk_plist_callback() - Update the current system printer...
  *
  ****************************************************************************/
 static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
 			       gint      data)    /* I - Data */
 {
-  int      i;  /* Looping var */
-  plist_t* p;
+  int		i;			/* Looping var */
+  plist_t	*p;
+
 
   plist_current = data;
   p             = plist + plist_current;
@@ -1354,12 +1405,12 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   strcpy(vars.ink_type, p->v.ink_type);
   strcpy(vars.resolution, p->v.resolution);
   strcpy(vars.output_to, p->v.output_to);
-
   gtk_do_misc_updates();
 
-  /*
-   * Now get option parameters...
-   */
+ /*
+  * Now get option parameters...
+  */
+
   if (num_media_sizes > 0)
   {
     for (i = 0; i < num_media_sizes; i ++)
@@ -1369,10 +1420,9 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
 
   media_sizes = (*(current_printer->parameters))(current_printer->model,
 						 p->v.ppd_file,
-						 "PageSize",
-						 &num_media_sizes);
+						 "PageSize", &num_media_sizes);
   if (vars.media_size[0] == '\0')
-      strcpy(vars.media_size, media_sizes[0]);
+    strcpy(vars.media_size, media_sizes[0]);
   gtk_plist_build_menu(media_size,
 		       &media_size_menu,
 		       num_media_sizes,
@@ -1434,11 +1484,11 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   if (vars.ink_type[0] == '\0' && ink_types != NULL)
     strcpy(vars.ink_type, ink_types[0]);
   gtk_plist_build_menu(ink_type,
-		   &ink_type_menu,
-		   num_ink_types,
-		   ink_types,
-		   p->v.ink_type,
-		   gtk_ink_type_callback);
+		       &ink_type_menu,
+		       num_ink_types,
+		       ink_types,
+		       p->v.ink_type,
+		       gtk_ink_type_callback);
 
   if (num_resolutions > 0)
   {
@@ -1569,6 +1619,7 @@ static void gtk_output_type_callback(GtkWidget *widget,
  * gtk_linear_callback() - Update the current linear gradient mode...
  *
  ****************************************************************************/
+#ifdef DO_LINEAR
 static void gtk_linear_callback(GtkWidget *widget, /* I - Output type button */
 				gint      data)    /* I - Data */
 {
@@ -1578,7 +1629,22 @@ static void gtk_linear_callback(GtkWidget *widget, /* I - Output type button */
     plist[plist_current].v.linear = data;
   }
 }
+#endif
 
+/****************************************************************************
+ *
+ * image_type_callback() - Update the current linear gradient mode...
+ *
+ ****************************************************************************/
+static void gtk_image_type_callback(GtkWidget *widget,
+				    gint      data)
+{
+  if (GTK_TOGGLE_BUTTON(widget)->active)
+  {
+    vars.image_type = data;
+    plist[plist_current].v.image_type = data;
+  }
+}
 
 /****************************************************************************
  *
@@ -1750,7 +1816,7 @@ static void gtk_ppd_ok_callback(void)
 {
   gtk_widget_hide(ppd_browser);
   gtk_entry_set_text(GTK_ENTRY(ppd_file),
-	    gtk_file_selection_get_filename(GTK_FILE_SELECTION(ppd_browser)));
+      gtk_file_selection_get_filename(GTK_FILE_SELECTION(ppd_browser)));
 }
 
 /****************************************************************************
@@ -1818,22 +1884,15 @@ static void gtk_preview_update(void)
   if (gc == NULL)
     gc = gdk_gc_new(preview->widget.window);
 
-  (*current_printer->imageable_area)(current_printer->model,
-				     vars.ppd_file,
-				     vars.media_size,
-				     &left,
-				     &right,
-				     &bottom,
-				     &top);
+  (*current_printer->imageable_area)(current_printer->model, vars.ppd_file,
+				     vars.media_size, &left, &right,
+				     &bottom, &top);
 
   page_width  = right - left;
   page_height = top - bottom;
 
-  (*current_printer->media_size)(current_printer->model,
-				 vars.ppd_file,
-				 vars.media_size,
-				 &width,
-				 &length);
+  (*current_printer->media_size)(current_printer->model, vars.ppd_file,
+				 vars.media_size, &width, &length);
 
   if (vars.scaling < 0)
   {
@@ -1927,14 +1986,12 @@ static void gtk_preview_update(void)
     print_height = th0;
   }
 
-  page_left = (PREVIEW_SIZE - 10 * page_width / 72) / 2;
-  page_top  = (PREVIEW_SIZE - 10 * page_height / 72) / 2;
+  page_left = (PREVIEW_SIZE_HORIZ - 10 * page_width / 72) / 2;
+  page_top  = (PREVIEW_SIZE_VERT - 10 * page_height / 72) / 2;
 
-  gdk_draw_rectangle(preview->widget.window,
-		     gc,
-		     0,
-                     (PREVIEW_SIZE - (10 * width / 72)) / 2,
-                     (PREVIEW_SIZE - (10 * length / 72)) / 2,
+  gdk_draw_rectangle(preview->widget.window, gc, 0,
+                     (PREVIEW_SIZE_HORIZ - (10 * width / 72)) / 2,
+                     (PREVIEW_SIZE_VERT - (10 * length / 72)) / 2,
                      10 * width / 72, 10 * length / 72);
 
 
@@ -1989,13 +2046,9 @@ static void gtk_preview_update(void)
   gtk_entry_set_text(GTK_ENTRY(right_entry), s);
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(right_entry), NULL);
 
-  gdk_draw_rectangle(preview->widget.window,
-		     gc,
-		     1,
-		     page_left + 10 * left / 72,
-		     page_top + 10 * top / 72,
-                     10 * print_width / 72,
-		     10 * print_height / 72);
+  gdk_draw_rectangle(preview->widget.window, gc, 1,
+		     page_left + 10 * left / 72, page_top + 10 * top / 72,
+                     10 * print_width / 72, 10 * print_height / 72);
 
   gdk_flush();
 }
