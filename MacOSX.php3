@@ -262,7 +262,7 @@ require('standard_html_header.php3');
    <li> (bug 630365) The Epson Stylus Photo 950 now prints correctly in
      1440x1440 and 2880x720 DPI modes.  This is not significant new
      functionality; these modes are actually printed at 2880x1440,
-     which did not have htis problem.</li>
+     which did not have this problem.</li>
    <li> (no bug number, but related to 628698) 6-color HP printers should
      now print correctly using all 6 colors.</li>
    <li> (no bug number) The dimensions for 22x30 watercolor paper were
@@ -284,8 +284,7 @@ require('standard_html_header.php3');
      for more information.</li>
  <li> Transverse versions of the US CAD standard paper sizes (ArchA,
      ArchB, ArchC, ArchD, and ArchE) have been added.  This permits
-     printing e. g. ArchD size (24x36) plots on ArchE (36 inch wide)
-     paper.</li>
+     printing e. g. ArchD size (24x36) plots on 36 inch wide paper.</li>
  </ul>
 <b>Exceptions and Workarounds</b>:
  <ul>
@@ -342,9 +341,9 @@ require('standard_html_header.php3');
 <dd>614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
 <dd>619299 QUALITY - brightness adjustment problem
 <dd>621668 Epson Stylus full bleed prints have slight margin
-<dd>625780 Epson Stylus Pro <dd>5000 does not print
+<dd>625780 Epson Stylus Pro 5000 does not print
 <dd>627266 Epson Stylus Pro Autoselect paper feed broken
-<dd>627978 QUALITY: Canon BJC-<dd>6500 has magenta cast.
+<dd>627978 QUALITY: Canon BJC-6500 has magenta cast.
 <dd>631937 HP DesignJet Sheet Cutter Problem
 <dd>639356 Build system: The version of libtool is too old
 <dd>641992 HP DesignJet 455CA printing rotated 90
