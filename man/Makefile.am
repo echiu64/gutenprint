@@ -26,14 +26,28 @@ MAINT_CHARSET = latin1
 
 ## Data
 
-# Conditional installation of manpages is currently broken in automake...
+# Conditional installation of manpages is currently broken in automake 1.4
 
-man_MANS = cups-calibrate.8 escputil.1 gimpprint.3 gimpprint-config.1 ijsgimpprint.1
+man_MANS = \
+	cups-calibrate.8 \
+	escputil.1 \
+	gimpprint.3 \
+	gimpprint-config.1 \
+	gimpprint-color.7 \
+	gimpprint-dithers.7 \
+	gimpprint-imagetypes.7 \
+	gimpprint-inktypes.7 \
+	gimpprint-mediasizes.7 \
+	gimpprint-mediasources.7 \
+	gimpprint-mediatypes.7 \
+	gimpprint-models.7 \
+	gimpprint-resolutions.7 \
+	ijsgimpprint.1
 
 
 ## Clean
 
-DISTCLEANFILES = cups-calibrate.8 escputil.1 gimpprint.3 gimpprint-config.1 ijsgimpprint.1
+DISTCLEANFILES = $(man_MANS)
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = $(man_MANS)
+# EXTRA_DIST = $(man_MANS)

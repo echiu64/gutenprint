@@ -898,6 +898,10 @@ Makefile doc/Makefile doc/users_guide/Makefile
 include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h
 intl/Makefile lib/Makefile man/Makefile man/escputil.1
 man/gimpprint.3 man/gimpprint-config.1
+man/gimpprint-color.7 man/gimpprint-dithers.7
+man/gimpprint-imagetypes.7 man/gimpprint-inktypes.7
+man/gimpprint-mediasizes.7 man/gimpprint-mediasources.7
+man/gimpprint-mediatypes.7 man/gimpprint-models.7 man/gimpprint-resolutions.7
 man/ijsgimpprint.1 po/Makefile.in samples/Makefile
 src/Makefile src/escputil/Makefile src/gimp/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
