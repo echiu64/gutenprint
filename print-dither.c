@@ -1504,6 +1504,9 @@ dither_fastblack(const unsigned short  *gray,	/* I - Grayscale pixels */
   unsigned char	bit,		/* Current bit */
 		*kptr;		/* Current black pixel */
   dither_t *d = (dither_t *) vd;
+  unsigned bits = d->k_dither.signif_bits;
+  int j;
+  unsigned char *tptr;
 
   bit = 128;
   x = 0;
@@ -1512,7 +1515,7 @@ dither_fastblack(const unsigned short  *gray,	/* I - Grayscale pixels */
   xmod   = d->src_width % d->dst_width;
   length = (d->dst_width + 7) / 8;
 
-  memset(black, 0, length * d->k_dither.signif_bits);
+  memset(black, 0, length * bits);
   kptr = black;
   xerror = 0;
   for (x = 0; x < d->dst_width; x++)
@@ -1520,7 +1523,11 @@ dither_fastblack(const unsigned short  *gray,	/* I - Grayscale pixels */
       if (gray[0] < 32768)
 	{
 	  if (d->density >= ditherpoint(d, &(d->k_dithermat), x, row))
-	    kptr[0] |= bit;
+	    {
+	      tptr = kptr;
+	      for (j = 0; j < bits; j++, tptr += length)
+		tptr[0] |= bit;
+	    }
 	}
 
       gray   += xstep;
