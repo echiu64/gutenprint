@@ -168,7 +168,6 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
 
 extern void gimp_create_color_adjust_window  (void);
-extern void gimp_build_dither_menu           (void);
 extern void gimp_update_adjusted_thumbnail   (void);
 
 static gint preview_ppi = 10;
@@ -1040,7 +1039,7 @@ gimp_scaling_callback (GtkWidget *widget)
  * gimp_plist_build_combo
  *
  ****************************************************************************/
-static void 
+void 
 gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
 		       int         num_items, /* I - Number of items */
 		       char**      items,     /* I - Menu items */
@@ -1301,8 +1300,6 @@ gimp_plist_callback (GtkWidget *widget,
   /*
    * Now get option parameters...
    */
-
-  gimp_build_dither_menu();
 
   media_sizes = (*(current_printer->parameters))(current_printer,
 						 p->v.ppd_file,

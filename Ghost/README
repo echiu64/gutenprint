@@ -353,6 +353,7 @@ Dithering Algorithms:
 'Adaptive Hybrid'
 'Ordered'
 'Fast'
+'Very Fast'
 'Adaptive Random'
 'Hybrid Floyd-Steinberg'
 'Random Floyd-Steinberg'
@@ -375,6 +376,8 @@ gray rendition is not as good.  It generally gives poor results in six
 color mode.  In black and white, it is an efficient way to render
 grayscale, but it may not give best results when used with variable
 dot size printers.
+
+Very Fast is even faster than Fast, with even more loss of quality.
 
 
 Ink Types

@@ -1,3 +1,83 @@
+2000-09-15	<rlk@sourceforge.net>
+
+	Files:	print.c (1.119) (+3 -2)
+		print.h (1.89) (+2 -8)
+	
+	print.h should not need unistd.h; only print.c needs that.
+	
+2000-09-15	<rlk@sourceforge.net>
+
+	Files:	AUTHORS (1.6) (+2 -0)
+		print-escp2.c (1.256) (+3 -3)
+		print-dither.c (1.91) (+28 -24)
+		configure.in (1.32) (+1 -1)
+		RELNOTES (1.22) (+37 -6)
+		ChangeLog (1.39) (+255 -0)
+	
+	Fix up dot sizes for 3 pl dots on ESC 900
+	
+	Slight speedup in dithering.
+	
+	Bump the version number.
+	
+2000-09-15	<easysw@sourceforge.net>
+
+	Files:	print-util.c (1.140) (+13 -13)
+		cups/genppd.c (1.8) (+13 -13)
+	
+	Re-fixed media sizes so they match up exactly with the PPD spec and not
+	the original (broken) tables I was using in Print Pro...
+	
+2000-09-15	<easysw@sourceforge.net>
+
+	Files:	Makefile.am (1.62) (+5 -0)
+		testdither.c (1.1) ( )
+	
+	Added simple dither testing program so I/we can fiddle with the
+	dithering code and get some more immediate feedback.
+	
+2000-09-15	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.57) (+31 -27)
+		print.c (1.118) (+9 -2)
+		gtk_main_window.c (1.56) (+7 -1)
+	
+	Reset to defaults any value that is wildly out of range (to catch old
+	printrc files).
+	
+	Do the percent/ppi thing correctly at startup (try yet again!)
+	
+2000-09-15	<anikin@sourceforge.net>
+
+	Files:	print-dither.c (1.90) (+25 -25)
+		print.h (1.88) (+4 -4)
+		print-util.c (1.139) (+3 -2)
+	
+	Fix for a bug in profiling math; converted update_color into a macro
+	
+2000-09-13	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.255) (+3 -3)
+	
+	Disable 1440x720 micro on 640/660
+	
+2000-09-13	<rlk@sourceforge.net>
+
+	Files:	Makefile.standalone (1.11) (+0 -0)
+	
+	Obsolete
+	
+2000-09-13	<easysw@sourceforge.net>
+
+	Files:	print-escp2.c (1.254) (+446 -394)
+	
+	ESC 600, 800, 1520 updates from Robert seem to work well, commited.
+	
+	Added ink definitions for 2000P - only 2 levels per ink.
+	
+	Rewrote the unpack routines - simpler, faster (I think), and the new
+	ones seem to work on all processors.
+	
 2000-09-13	<rlk@sourceforge.net>
 
 	Files:	print-util.c (1.138) (+4 -4)
