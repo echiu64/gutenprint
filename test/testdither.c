@@ -152,14 +152,14 @@ main(int  argc,				/* I - Number of command-line arguments */
 		  "photo",
 		  "monochrome",
 		  "cmyk",
-		  "photo-cmyk"
+		  "photocmyk"
 		};
   static const char	*image_types[] =	/* Different image types */
 		{
 		  "mixed",
 		  "white",
 		  "black",
-		  "color-image",
+		  "colorimage",
 		  "random"
 		};
   struct timeval tv1, tv2;

@@ -7,11 +7,11 @@ if [ -z "$bits" ] ; then
 fi
 
 if [ -z "$dither_types" ] ; then
-    dither_types='monochrome gray color photo cmyk photo-cmyk'
+    dither_types='monochrome gray color photo cmyk photocmyk'
 fi
 
 if [ -z "$image_types" ] ; then
-    image_types='mixed white black color-image random'
+    image_types='mixed white black colorimage random'
 fi
 
 if [ -z "$algos" ] ; then
@@ -28,7 +28,10 @@ for bits in $bits ; do
 	    for algo in $algos ; do
 		./testdither $image $bits $dither_type $image_type $algo
 		status=$?
-		out_status=`expr $out_status + $status`
+		if [ "$status" -ne 0 ] ; then
+		    echo ./testdither $image $bits $dither_type $image_type $algo failed
+		    out_status=`expr $out_status + 1`
+		fi
 	    done
 	done
     done
