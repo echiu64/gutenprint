@@ -305,19 +305,6 @@ extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *);
 
-extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
-			     unsigned char *, const vars_t *);
-extern void	indexed_to_gray(unsigned char *, unsigned short *, int, int,
-				unsigned char *, const vars_t *);
-extern void	indexed_to_rgb(unsigned char *, unsigned short *, int, int,
-			       unsigned char *, const vars_t *);
-extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
-			    unsigned char *, const vars_t *);
-extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
-			   unsigned char *, const vars_t *);
-extern void	gray_to_rgb(unsigned char *, unsigned short *, int, int,
-			    unsigned char *, const vars_t *);
-
 extern void	merge_printvars(vars_t *user, const vars_t *print);
 extern void	free_lut(vars_t *v);
 extern void	compute_lut(size_t steps, vars_t *v);
@@ -391,7 +378,8 @@ extern int			get_printer_index_by_driver(const char *);
 
 extern int			num_dither_algos;
 extern char			*dither_algo_names[];
-extern convert_t choose_colorfunc(int, int, const unsigned char *, int *);
+extern convert_t choose_colorfunc(int, int, const unsigned char *, int *,
+				  const vars_t *);
 extern void
 compute_page_parameters(int page_right, int page_left, int page_top,
 			int page_bottom, int scaling, int image_width,

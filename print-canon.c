@@ -831,7 +831,7 @@ canon_print(const printer_t *printer,		/* I - Model */
    * Choose the correct color conversion function...
    */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Figure out the output resolution...

@@ -291,7 +291,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
     output_type = OUTPUT_GRAY_COLOR;		/* Force grayscale output */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Compute the output size...

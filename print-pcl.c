@@ -278,7 +278,7 @@ typedef struct {
  * PCL reference guide 2.0, Nov 1999". 
  */
 
-pcl_cap_t pcl_model_capabilities[] =
+static pcl_cap_t pcl_model_capabilities[] =
 {
   /* Default/unknown printer - assume laserjet */
   { 0,
@@ -939,7 +939,7 @@ pcl_cap_t pcl_model_capabilities[] =
  * Convert a name into it's option value
  */
 
-int pcl_string_to_val(const char *string,		/* I: String */
+static int pcl_string_to_val(const char *string,		/* I: String */
                            const pcl_t *options,	/* I: Options */
 			   int num_options)		/* I: Num options */
 {
@@ -969,7 +969,7 @@ int pcl_string_to_val(const char *string,		/* I: String */
  * Convert a value into it's option name
  */
 
-char * pcl_val_to_string(int code,			/* I: Code */
+static char * pcl_val_to_string(int code,			/* I: Code */
                            const pcl_t *options,	/* I: Options */
 			   int num_options)		/* I: Num options */
 {
@@ -1010,7 +1010,7 @@ static simple_dither_range_t variable_dither_ranges[] =
  * pcl_get_model_capabilities() - Return struct of model capabilities
  */
 
-pcl_cap_t				/* O: Capabilities */
+static pcl_cap_t				/* O: Capabilities */
 pcl_get_model_capabilities(int model)	/* I: Model */
 {
   int i;
@@ -1036,8 +1036,8 @@ c_strdup(const char *s)
  * Convert Media size name into PCL media code for printer
  */
 
-int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
-                           int  model)			/* I: model number */
+static int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
+				  int  model)		/* I: model number */
 {
 
   int i;
@@ -1338,7 +1338,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   else if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
     output_type = OUTPUT_GRAY_COLOR;		/* Force grayscale output */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Figure out the output resolution...
@@ -1869,7 +1869,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
  * 'pcl_mode0()' - Send PCL graphics using mode 0 (no) compression.
  */
 
-void
+static void
 pcl_mode0(FILE          *prn,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           length,		/* I - Length of bitmap data */
@@ -1884,7 +1884,7 @@ pcl_mode0(FILE          *prn,		/* I - Print file or command */
  * 'pcl_mode2()' - Send PCL graphics using mode 2 (TIFF) compression.
  */
 
-void
+static void
 pcl_mode2(FILE          *prn,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           length,		/* I - Length of bitmap data */

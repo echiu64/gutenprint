@@ -45,9 +45,9 @@
 #include <signal.h>
 #endif
 
-#ifndef __GCC__
+#ifndef __GNUC__
 #  define inline
-#endif /* !__GCC__ */
+#endif /* !__GNUC__ */
 
 /*#include <endian.h>*/
 
@@ -1091,7 +1091,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
     output_type = OUTPUT_GRAY_COLOR;	/* Force grayscale output */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Compute the output size...

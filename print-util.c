@@ -40,9 +40,9 @@
 #include "print.h"
 #include <math.h>
 
-#ifndef __GCC__
+#ifndef __GNUC__
 #  define inline
-#endif /* !__GCC__ */
+#endif /* !__GNUC__ */
 
 /*
  * RGB to grayscale luminance constants...
@@ -281,7 +281,7 @@ lookup_value(unsigned short value, int lut_size, unsigned short *lut)
  *                    adjusted).
  */
 
-void
+static void
 gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     unsigned short *grayout,	/* O - RGB pixels */
 	     int    	width,		/* I - Width of row */
@@ -318,7 +318,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
  * 'indexed_to_gray()' - Convert indexed image data to grayscale.
  */
 
-void
+static void
 indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		unsigned short *gray,		/* O - Grayscale pixels */
 		int    width,			/* I - Width of row */
@@ -365,7 +365,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
  * 'rgb_to_gray()' - Convert RGB image data to grayscale.
  */
 
-void
+static void
 rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    unsigned short *gray,	/* O - Grayscale pixels */
 	    int    width,		/* I - Width of row */
@@ -402,23 +402,11 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
     }
 }
 
-void
-indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
-	       unsigned short *rgb,	/* O - RGB pixels */
-	       int    width,		/* I - Width of row */
-	       int    bpp,		/* I - Bytes-per-pixel in indexed */
-	       unsigned char *cmap,	/* I - Colormap */
-	       const vars_t   *vars
-	       )
-{
-  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars);
-}
-
 /*
  * 'rgb_to_rgb()' - Convert rgb image data to RGB.
  */
 
-void
+static void
 rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   unsigned short 	*rgbout,	/* O - RGB pixels */
 	   int    		width,		/* I - Width of row */
@@ -522,11 +510,23 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     }
 }
 
+static void
+indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
+	       unsigned short *rgb,	/* O - RGB pixels */
+	       int    width,		/* I - Width of row */
+	       int    bpp,		/* I - Bytes-per-pixel in indexed */
+	       unsigned char *cmap,	/* I - Colormap */
+	       const vars_t   *vars
+	       )
+{
+  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars);
+}
+
 /*
  * 'gray_to_rgb()' - Convert gray image data to RGB.
  */
 
-void
+static void
 gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    unsigned short 	*rgbout,	/* O - RGB pixels */
 	    int    		width,		/* I - Width of row */
@@ -558,6 +558,187 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
       rgbout[0] = lookup_value(trgb[0], vars->lut->steps, vars->lut->red);
       rgbout[1] = lookup_value(trgb[1], vars->lut->steps, vars->lut->green);
       rgbout[2] = lookup_value(trgb[2], vars->lut->steps, vars->lut->blue);
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgbout[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgbout[i] = (unsigned short) (t * 65536.0);
+	    }
+	}
+      grayin += bpp;
+      rgbout += 3;
+      width --;
+    }
+}
+
+static void
+fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
+		    unsigned short *rgb,	/* O - RGB pixels */
+		    int    width,		/* I - Width of row */
+		    int    bpp,		/* I - Bytes-per-pixel in indexed */
+		    unsigned char *cmap,	/* I - Colormap */
+		    const vars_t   *vars
+		    )
+{
+  double isat = 1.0;
+  if (vars->saturation > 1)
+    isat = 1.0 / vars->saturation;
+  while (width > 0)
+    {
+      double h, s, v;
+      if (bpp == 1)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+
+	  rgb[0] = vars->lut->red[cmap[*indexed * 3 + 0]];
+	  rgb[1] = vars->lut->green[cmap[*indexed * 3 + 1]];
+	  rgb[2] = vars->lut->blue[cmap[*indexed * 3 + 2]];
+	}
+      else
+	{
+	  rgb[0] = vars->lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255
+				+ 255 - indexed[1]];
+	  rgb[1] = vars->lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255
+				  + 255 - indexed[1]];
+	  rgb[2] = vars->lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255
+				 + 255 - indexed[1]];
+	}
+      if (vars->saturation != 1.0)
+	{
+	  calc_rgb_to_hsl(rgb, &h, &s, &v);
+	  if (vars->saturation < 1)
+	    s *= vars->saturation;
+	  else
+	    s = pow(s, isat);
+	  if (s > 1)
+	    s = 1.0;
+	  calc_hsl_to_rgb(rgb, h, s, v);
+	}
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgb[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgb[i] = (unsigned short) (t * 65536.0);
+	    }
+	}
+      indexed += bpp;
+      rgb += 3;
+      width --;
+    }
+}
+
+/*
+ * 'rgb_to_rgb()' - Convert rgb image data to RGB.
+ */
+
+static void
+fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
+		unsigned short 	*rgbout,	/* O - RGB pixels */
+		int    		width,		/* I - Width of row */
+		int    		bpp,		/* I - Bytes/pix in indexed */
+		unsigned char 	*cmap,		/* I - Colormap */
+		const vars_t  	*vars
+		)
+{
+  unsigned ld = vars->density * 65536;
+  double isat = 1.0;
+  if (vars->saturation > 1)
+    isat = 1.0 / vars->saturation;
+  while (width > 0)
+    {
+      double h, s, v;
+      if (bpp == 3)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+	  rgbout[0] = vars->lut->red[rgbin[0]];
+	  rgbout[1] = vars->lut->green[rgbin[1]];
+	  rgbout[2] = vars->lut->blue[rgbin[2]];
+	}
+      else
+	{
+	  rgbout[0] = vars->lut->red[rgbin[0] * rgbin[3] / 255 +
+				   255 - rgbin[3]];
+	  rgbout[1] = vars->lut->green[rgbin[1] * rgbin[3] / 255 +
+				     255 - rgbin[3]];
+	  rgbout[2] = vars->lut->blue[rgbin[2] * rgbin[3] / 255 +
+				    255 - rgbin[3]];
+	}
+      if (vars->saturation != 1.0)
+	{
+	  calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	  if (vars->saturation < 1)
+	    s *= vars->saturation;
+	  else
+	    s = pow(s, isat);
+	  if (s > 1)
+	    s = 1.0;
+	  calc_hsl_to_rgb(rgbout, h, s, v);
+	}
+      if (ld < 65536)
+	{
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      unsigned t = rgbout[i];
+	      t = 65535 - (65535 - t) * ld / 65536;
+	      rgbout[i] = (unsigned short) t;
+	    }
+	}
+      rgbin += bpp;
+      rgbout += 3;
+      width --;
+    }
+}
+
+/*
+ * 'gray_to_rgb()' - Convert gray image data to RGB.
+ */
+
+static void
+fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
+		 unsigned short *rgbout,	/* O - RGB pixels */
+		 int    	width,		/* I - Width of row */
+		 int    	bpp,		/* I - Bytes/pix in indexed */
+		 unsigned char 	*cmap,		/* I - Colormap */
+		 const vars_t  	*vars
+		 )
+{
+  while (width > 0)
+    {
+      if (bpp == 1)
+	{
+	  /*
+	   * No alpha in image...
+	   */
+
+	  rgbout[0] = vars->lut->red[grayin[0]];
+	  rgbout[1] = vars->lut->green[grayin[0]];
+	  rgbout[2] = vars->lut->blue[grayin[0]];
+	}
+      else
+	{
+	  int lookup = (grayin[0] * grayin[1] / 255 +
+			255 - grayin[1]);
+	  rgbout[0] = vars->lut->red[lookup];
+	  rgbout[1] = vars->lut->green[lookup];
+	  rgbout[2] = vars->lut->blue[lookup];
+	}
       if (vars->density != 1.0)
 	{
 	  float t;
@@ -1022,21 +1203,35 @@ convert_t
 choose_colorfunc(int output_type,
 		 int image_bpp,
 		 const unsigned char *cmap,
-		 int *out_bpp)
+		 int *out_bpp,
+		 const vars_t *v)
 {
   if (output_type == OUTPUT_COLOR)
     {
       *out_bpp = 3;
 
       if (image_bpp >= 3)
-	return rgb_to_rgb;
+	{
+	  if (v->image_type == IMAGE_CONTINUOUS)
+	    return rgb_to_rgb;
+	  else
+	    return fast_rgb_to_rgb;
+	}
       else
-	return indexed_to_rgb;
+	{
+	  if (v->image_type == IMAGE_CONTINUOUS)
+	    return indexed_to_rgb;
+	  else
+	    return fast_indexed_to_rgb;
+	}
     }
   else if (output_type == OUTPUT_GRAY_COLOR)
     {
       *out_bpp = 3;
-      return gray_to_rgb;
+      if (v->image_type == IMAGE_CONTINUOUS)
+	return gray_to_rgb;
+      else
+	return fast_gray_to_rgb;
     }
   else
     {

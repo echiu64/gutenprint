@@ -39,7 +39,6 @@ extern int plist_current;    /* Current system printer */
 extern plist_t  *plist;       /* System printers */
 
 GtkWidget* gtk_color_adjust_dialog;
-extern void gimp_do_color_updates(void);
 
 static GtkWidget* brightness_scale;	/* Scale for brightness */
 static GtkWidget* brightness_entry;	/* Text entry widget for brightness */
