@@ -3,7 +3,7 @@
  *
  *   Print plug-in driver utility functions for the GIMP.
  *
- *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.49  2000/01/08 23:30:37  rlk
+ *   Some tweaking
+ *
  *   Revision 1.48  1999/12/30 23:58:07  rlk
  *   Silly little bug...
  *
@@ -407,7 +410,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define NU_C 1
 #define DE_C 1
 #define NU_M 1
-#define DE_M 2
+#define DE_M 1
 #define NU_Y 1
 #define DE_Y 1
 
@@ -417,7 +420,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_C1 (DE_C + NU_C) / NU_C
 
 const static int C_CONST_0 = 65536 * I_RATIO_C1;
-const static int C_CONST_1 = 65536 * I_RATIO_C1 * 2 / 3;
+const static int C_CONST_1 = 65536 * I_RATIO_C1;
 
 #define I_RATIO_M NU_M / DE_M
 #define I_RATIO_M1 NU_M / (DE_M + NU_M)
@@ -425,7 +428,7 @@ const static int C_CONST_1 = 65536 * I_RATIO_C1 * 2 / 3;
 #define RATIO_M1 (DE_M + NU_M) / NU_M
 
 const static int M_CONST_0 = 65536 * I_RATIO_M1;
-const static int M_CONST_1 = 65536 * I_RATIO_M1 * 2 / 3;
+const static int M_CONST_1 = 65536 * I_RATIO_M1;
 
 #define I_RATIO_Y NU_Y / DE_Y
 #define I_RATIO_Y1 NU_Y / (DE_Y + NU_Y)
@@ -433,7 +436,7 @@ const static int M_CONST_1 = 65536 * I_RATIO_M1 * 2 / 3;
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
 const static int Y_CONST_0 = 65536 * I_RATIO_Y1;
-const static int Y_CONST_1 = 65536 * I_RATIO_Y1 * 2 / 3;
+const static int Y_CONST_1 = 65536 * I_RATIO_Y1;
 
 /*
  * Lower and upper bounds for mixing CMY with K to produce gray scale.
@@ -443,7 +446,7 @@ const static int Y_CONST_1 = 65536 * I_RATIO_Y1 * 2 / 3;
  * Decreasing the gap too much results in sharp crossover and stairstepping.
  */
 #define KDARKNESS_LOWER (12 * 256)
-#define KDARKNESS_UPPER (72 * 256)
+#define KDARKNESS_UPPER (128 * 256)
 
 /*
  * Randomizing values for deciding when to output a bit.  Normally with the
@@ -453,10 +456,10 @@ const static int Y_CONST_1 = 65536 * I_RATIO_Y1 * 2 / 3;
  * result in greater randomizing.  We use less randomness for black output
  * to avoid production of black speckles in light regions.
  */
-#define C_RANDOMIZER 5
-#define M_RANDOMIZER 5
-#define Y_RANDOMIZER 5
-#define K_RANDOMIZER 5
+#define C_RANDOMIZER 0
+#define M_RANDOMIZER 0
+#define Y_RANDOMIZER 0
+#define K_RANDOMIZER 4
 
 #ifdef PRINT_DEBUG
 #define UPDATE_COLOR_DBG(r)			\
@@ -489,7 +492,7 @@ do {									\
 do {									\
   fprintf(dbg, "Case %d: o" #r " %lld " #r				\
 	  " %lld ditherbit" #d1 " %d ditherbit" #d2 " %d "		\
-	  "num %lld den %lld test1 %lld test2 %lld\n", n		\
+	  "num %lld den %lld test1 %lld test2 %lld\n", n,		\
 	  o##r, r, ditherbit##d1, ditherbit##d2,			\
 	  o##r, 65536ll,						\
 	  ((32767 + (((long long) ditherbit##d2 / 1) - 32768)) * o##r /	\
@@ -922,7 +925,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (lmagenta)
 	{
-	  int addon = (ck + ck + ck) >> 1;
+	  int addon = 2 * ck;
 	  c += addon;
 	  m += addon;
 	  y += addon;
@@ -974,7 +977,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
     density += (c + m + y) >> overdensity_bits;
-    density >>= 1;
+/*     density >>= 1; */
 
     if (! (*kptr & bit))
       {
@@ -2035,28 +2038,28 @@ compute_lut(lut_t *lut,
 	  else if (pixel >= 65535.0)
 	    lut->composite[i] = 65535;
 	  else
-	    lut->composite[i] = (unsigned)(pixel + 0.5);
+	    lut->composite[i] = (unsigned)(pixel);
 
 	  if (red_pixel <= 0.0)
 	    lut->red[i] = 0;
 	  else if (red_pixel >= 65535.0)
 	    lut->red[i] = 65535;
 	  else
-	    lut->red[i] = (unsigned)(red_pixel + 0.5);
+	    lut->red[i] = (unsigned)(red_pixel);
 
 	  if (green_pixel <= 0.0)
 	    lut->green[i] = 0;
 	  else if (green_pixel >= 65535.0)
 	    lut->green[i] = 65535;
 	  else
-	    lut->green[i] = (unsigned)(green_pixel + 0.5);
+	    lut->green[i] = (unsigned)(green_pixel);
 
 	  if (blue_pixel <= 0.0)
 	    lut->blue[i] = 0;
 	  else if (blue_pixel >= 65535.0)
 	    lut->blue[i] = 65535;
 	  else
-	    lut->blue[i] = (unsigned)(blue_pixel + 0.5);
+	    lut->blue[i] = (unsigned)(blue_pixel);
 	}
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
