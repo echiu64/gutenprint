@@ -858,7 +858,7 @@ Media Sources
 This is printer type specific.  The option names are case sensitive.
 
 STP: -sInputSlot=mediasource
-IJS: -sIjsParams=InputSlot=mediasource
+IJS: -sIjsParams=MediaSource=mediasource
 
 For Epson printers:
 

@@ -96,6 +96,9 @@ main(int argc, char **argv)
 		     stp_printer_get_driver(p), "Color", "Color",
 		     "Color");
 	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), "Color", "RawCMYK",
+		     "Raw CMYK");
+	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 		     stp_printer_get_driver(p), "Color", "Grayscale",
 		     "Gray Scale");
 	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",

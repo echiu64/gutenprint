@@ -2,18 +2,24 @@
  <name>@@DRVNAME@@</name>
  <url>http://gimp-print.sourceforge.net/</url>
  <execution>
-  <ghostscript />
-  <prototype>gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=stp %A%Z -sOutputFile=- -</prototype>
+  <filter />
+  <prototype>gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=ijs -sIjsServer=ijsgimpprint -dIjsUseOutputFD%A -sIjsParams=&quot;%B&quot;%Z -sOutputFile=- -</prototype>
  </execution>
  <comments>
   <en>
-    &lt;b&gt;This page provides data for the GIMP-Print 4.3.x series,
-    if you are using GIMP-Print 4.0.x, go to the &quot;&lt;a
+
+    &lt;b&gt;This page provides data for the IJS driver of the
+    GIMP-Print 4.3.x series, if you are using the GhostScript
+    (&quot;stp&quot;) driver of the GIMP-Print 4.3.x series, go to the
+    &quot;&lt;a
+    href=&quot;show_driver.cgi?driver=gimp-print-unstable&quot;&gt;gimp-print-unstable&lt;/a&gt;&quot;
+    page, if you are using the IJS
+    driver of the GIMP-Print 4.2.x series, go to the
+    &quot;&lt;a
+    href=&quot;show_driver.cgi?driver=gimp-print-ijs&quot;&gt;gimp-print-ijs&lt;/a&gt;&quot;
+    page, and if you are using GIMP-Print 4.0.x, go to the &quot;&lt;a
     href=&quot;show_driver.cgi?driver=stp&quot;&gt;stp&lt;/a&gt;&quot;
-    page and if you are using GIMP-Print 4.2.x, go to the &quot;&lt;a
-    href=&quot;show_driver.cgi?driver=gimp-print&quot;&gt;gimp-print&lt;/a&gt;&quot;
-    page or use the Foomatic data delivered with the GIMP-Print
-    package.&lt;/b&gt;&lt;p&gt;
+    page.&lt;/b&gt;&lt;p&gt;
 
     GIMP-Print supports a wide variety of Epson Stylus, HP DeskJet,
     LaserJet, Canon BubbleJet, Lexmark inkjet printers, with the
@@ -29,12 +35,13 @@
     data which comes with the GIMP-Print package.&lt;p&gt;
 
     Note that the Foomatic datafiles provided here are only for the
-    GhostScript driver of GIMP-Print. For the native CUPS driver there
+    IJS driver of GIMP-Print. For the native CUPS driver there
     are special PPD files provided by the GIMP-Print package.&lt;p&gt;
 
-    To get a pre-patched/pre-compiled GNU-GhostScript 6.51 with this driver
-    (version 4.2.0) download
-    &lt;a href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm"&gt;Daniele Berti's source and binary RPMS&lt;/a&gt;.
+    This driver does not require patching and rebuilding GhostScript.
+    It is enough when you have an IJS enabled GhostScript (GNU
+    GhostScript 6.53 or newer, APFL GhostScript 7.04 or newer.&lt;p&gt;
+
   </en>
  </comments>
  @@STPRINTERS@@
