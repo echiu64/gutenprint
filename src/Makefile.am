@@ -28,8 +28,10 @@ include $(top_srcdir)/scripts/global.mk
 SUBDIRS = 					\
 	main					\
 	libgimpprintui				\
+	libgimpprintui2				\
 	escputil				\
 	gimp					\
+	gimp2					\
 	cups					\
 	foomatic				\
 	ghost					\

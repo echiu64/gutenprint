@@ -23,9 +23,16 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = gimp-print gimp-print-ui gimp-print-ui2
-
 include $(top_srcdir)/scripts/global.mk
+
+
+pkgincludedir = $(includedir)/gimp-print-ui2
+
+
+## Data
+
+pkginclude_HEADERS = \
+	gimp-print-ui.h
 
 
 ## Clean

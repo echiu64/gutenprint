@@ -14,6 +14,7 @@ LIBS = $(INTLLIBS) @LIBS@
 
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
 GIMPPRINTUI_LIBS = $(top_builddir)/src/libgimpprintui/libgimpprintui.la
+GIMPPRINTUI2_LIBS = $(top_builddir)/src/libgimpprintui2/libgimpprintui2.la
 
 # Rules
 
@@ -23,4 +24,8 @@ $(top_builddir)/src/main/libgimpprint.la:
 
 $(top_builddir)/src/libgimpprintui/libgimpprintui.la:
 	cd $(top_builddir)/src/libgimpprintui; \
+	$(MAKE)
+
+$(top_builddir)/src/libgimpprintui2/libgimpprintui2.la:
+	cd $(top_builddir)/src/libgimpprintui2; \
 	$(MAKE)

@@ -23,9 +23,28 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = gimp-print gimp-print-ui gimp-print-ui2
-
 include $(top_srcdir)/scripts/global.mk
+
+
+## Variables
+
+LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) $(GIMP2_CFLAGS)
+
+
+## Programs
+
+if BUILD_GIMP2
+gimp_plug_in_PROGRAMS = print
+endif
+
+print_SOURCES = \
+	print-image-gimp.c \
+	print-intl.h \
+	print.c \
+	print_gimp.h
+
+print_LDADD = $(LIBPRINTUT) $(GIMP2_LIBS) $(GIMPPRINTUI2_LIBS)
+print_DEPENDENCIES = $(GIMPPRINTUI2_LIBS) $(GIMPPRINT_LIBS)
 
 
 ## Clean
