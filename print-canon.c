@@ -322,7 +322,7 @@ canon_printhead_type(const char *name, canon_cap_t caps)
   }
 
 #ifdef DEBUG
-  fprintf(stderr,"canon: Unknown head combo '%s' - reverting to ",name);
+  fprintf(stderr,"canon: Unknown head combo '%s' - reverting to black\n",name);
 #endif
   return 0;
 }
