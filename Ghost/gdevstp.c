@@ -497,8 +497,8 @@ stp_open(gx_device *pdev)
   st[0] = (float)left / 72;          /* left margin   */
   st[2] = (float)(width-right) / 72; /* right margin  */
 
-  stp_data.v.top    = length-top;
-  stp_data.bottom = bottom;
+  stp_data.v.top    = 0;
+  stp_data.bottom = bottom + length-top;
 
   STP_DEBUG(fprintf(gs_stderr, "margins:  l %f  b %f  r %f  t %f\n",
 		    st[0], st[1], st[2], st[3]));
