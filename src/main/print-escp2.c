@@ -4329,9 +4329,9 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	      int k = 0;
 	      for (k = 0; k < extralines; k++)
 		{
-		  int bytes_to_fill = sw->bitwidth * lwidth;
-		  int full_blocks = bytes_to_fill / (128 * 8);
-		  int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
+		  int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
+		  int full_blocks = bytes_to_fill / 128;
+		  int leftover = bytes_to_fill % 128;
 		  int l = 0;
 		  while (l < full_blocks)
 		    {
