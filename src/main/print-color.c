@@ -191,7 +191,7 @@ static float_param_t float_parameters[] =
       "Black", N_("GCR Transition"),
       N_("Adjust the black gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -199,7 +199,7 @@ static float_param_t float_parameters[] =
       "GCRLower", N_("GCR Lower Bound"),
       N_("Lower bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
     }, 0.0, 1.0, 0.2, 1
   },
   {
@@ -207,7 +207,7 @@ static float_param_t float_parameters[] =
       "GCRUpper", N_("GCR Upper Bound"),
       N_("Upper bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
     }, 0.0, 5.0, 0.5, 1
   },
 };
@@ -217,7 +217,7 @@ sizeof(float_parameters) / sizeof(float_param_t);
 
 typedef struct
 {
-  const stp_parameter_t param;
+  stp_parameter_t param;
   stp_curve_t *defval;
   int color_only;
 } curve_param_t;
@@ -299,7 +299,7 @@ static curve_param_t curve_parameters[] =
 };
 
 static const int curve_parameter_count =
-sizeof(curve_parameters) / sizeof(float_param_t);
+sizeof(curve_parameters) / sizeof(curve_param_t);
 
 /*
  * RGB to grayscale luminance constants...
@@ -1642,15 +1642,47 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 }
 
 static void
+invert_curve(stp_curve_t curve, int in_model, int out_model)
+{
+  double lo, hi;
+  int i;
+  size_t count;
+  const double *data = stp_curve_get_data(curve, &count);
+  double gamma = stp_curve_get_gamma(curve);
+  double *tmp_data;
+
+  stp_curve_get_bounds(curve, &lo, &hi);
+
+  if (gamma)
+    stp_curve_set_gamma(curve, -gamma);
+  else
+    {
+      tmp_data = stpi_malloc(sizeof(double) * count);
+      for (i = 0; i < count; i++)
+	tmp_data[i] = data[count - i - 1];
+      stp_curve_set_data(curve, count, tmp_data);
+      stpi_free(tmp_data);
+    }
+  if (in_model == out_model)
+    {
+      stp_curve_rescale(curve, -1, STP_CURVE_COMPOSE_MULTIPLY,
+			STP_CURVE_BOUNDS_RESCALE);
+      stp_curve_rescale(curve, lo + hi, STP_CURVE_COMPOSE_ADD,
+			STP_CURVE_BOUNDS_RESCALE);
+    }
+}
+		    
+
+static void
 stpi_compute_lut(stp_vars_t v, size_t steps)
 {
-  stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
-  stp_curve_t lum = stp_get_curve_parameter(v, "LumMap");
-  stp_curve_t sat = stp_get_curve_parameter(v, "SatMap");
-  stp_curve_t composite_curve = stp_get_curve_parameter(v, "CompositeCurve");
-  stp_curve_t cyan_curve = stp_get_curve_parameter(v, "CyanCurve");
-  stp_curve_t magenta_curve = stp_get_curve_parameter(v, "MagentaCurve");
-  stp_curve_t yellow_curve = stp_get_curve_parameter(v, "YellowCurve");
+  stp_curve_t hue = NULL;
+  stp_curve_t lum = NULL;
+  stp_curve_t sat = NULL;
+  stp_curve_t composite_curve = NULL;
+  stp_curve_t cyan_curve = NULL;
+  stp_curve_t magenta_curve = NULL;
+  stp_curve_t yellow_curve = NULL;
   /*
    * Got an output file/command, now compute a brightness lookup table...
    */
@@ -1664,8 +1696,25 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   double brightness = stp_get_float_parameter(v, "Brightness");
   double screen_gamma = app_gamma / 4.0; /* "Empirical" */
   lut_t *lut;
+  int input_color_model = stp_get_input_color_model(v);
+  int output_color_model = stpi_get_output_color_model(v);
 
   lut = allocate_lut();
+
+  if (stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
+    hue = stp_get_curve_parameter(v, "HueMap");
+  if (stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
+    lum = stp_get_curve_parameter(v, "LumMap");
+  if (stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE))
+    sat = stp_get_curve_parameter(v, "SatMap");
+  if (stp_check_curve_parameter(v, "CompositeCurve", STP_PARAMETER_ACTIVE))
+    composite_curve = stp_get_curve_parameter(v, "CompositeCurve");
+  if (stp_check_curve_parameter(v, "CyanCurve", STP_PARAMETER_ACTIVE))
+    cyan_curve = stp_get_curve_parameter(v, "CyanCurve");
+  if (stp_check_curve_parameter(v, "MagentaCurve", STP_PARAMETER_ACTIVE))
+    magenta_curve = stp_get_curve_parameter(v, "MagentaCurve");
+  if (stp_check_curve_parameter(v, "YellowCurve", STP_PARAMETER_ACTIVE))
+    yellow_curve = stp_get_curve_parameter(v, "YellowCurve");
 
   /*
    * TODO check that these are wraparound curves and all that
@@ -1693,6 +1742,7 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   if (composite_curve)
     {
       stp_curve_copy(lut->composite, composite_curve);
+      invert_curve(lut->composite, input_color_model, output_color_model);
       stp_curve_rescale(lut->composite, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->composite, steps);
@@ -1700,11 +1750,11 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    stp_get_input_color_model(v),
-		    stpi_get_output_color_model(v));
+		    input_color_model, output_color_model);
   if (cyan_curve)
     {
       stp_curve_copy(lut->cyan, cyan_curve);
+      invert_curve(lut->cyan, input_color_model, output_color_model);
       stp_curve_rescale(lut->cyan, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->cyan, steps);
@@ -1712,11 +1762,11 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->cyan, steps, cyan, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    stp_get_input_color_model(v),
-		    stpi_get_output_color_model(v));
+		    input_color_model, output_color_model);
   if (magenta_curve)
     {
       stp_curve_copy(lut->magenta, magenta_curve);
+      invert_curve(lut->magenta, input_color_model, output_color_model);
       stp_curve_rescale(lut->magenta, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->magenta, steps);
@@ -1724,11 +1774,11 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->magenta, steps, magenta, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    stp_get_input_color_model(v),
-		    stpi_get_output_color_model(v));
+		    input_color_model, output_color_model);
   if (yellow_curve)
     {
       stp_curve_copy(lut->yellow, yellow_curve);
+      invert_curve(lut->yellow, input_color_model, output_color_model);
       stp_curve_rescale(lut->yellow, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->yellow, steps);
@@ -1736,8 +1786,7 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   else
     compute_a_curve(lut->yellow, steps, yellow, print_gamma, contrast,
 		    app_gamma, brightness, screen_gamma,
-		    stp_get_input_color_model(v),
-		    stpi_get_output_color_model(v));
+		    input_color_model, output_color_model);
 }
 
 static void
@@ -1890,11 +1939,35 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
   return out_channels;
 }
 
+static void
+initialize_standard_curves(void)
+{
+  if (!standard_curves_initialized)
+    {
+      int i;
+      hue_map_bounds = stp_curve_create_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;-6.0;6.0:0;0;");
+      lum_map_bounds = stp_curve_create_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:1;1;");
+      sat_map_bounds = stp_curve_create_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:1;1;");
+      color_curve_bounds = stp_curve_create_read_string
+	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
+      gcr_curve_bounds = stp_curve_create_read_string
+	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
+      for (i = 0; i < curve_parameter_count; i++)
+	curve_parameters[i].param.deflt.curve =
+	 *(curve_parameters[i].defval);
+      standard_curves_initialized = 1;
+    }
+}
+
 stp_parameter_list_t
 stpi_color_list_parameters(const stp_vars_t v)
 {
   stpi_list_t *ret = stp_parameter_list_create();
   int i;
+  initialize_standard_curves();
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   for (i = 0; i < curve_parameter_count; i++)
@@ -1908,22 +1981,9 @@ stpi_color_describe_parameter(const stp_vars_t v, const char *name,
 {
   int i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
+  initialize_standard_curves();
   if (name == NULL)
     return;
-  if (!standard_curves_initialized)
-    {
-      hue_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;-6.0;6.0:0;0;");
-      lum_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
-      sat_map_bounds = stp_curve_create_read_string
-	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
-      color_curve_bounds = stp_curve_create_read_string
-	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
-      gcr_curve_bounds = stp_curve_create_read_string
-	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
-      standard_curves_initialized = 1;
-    }
   for (i = 0; i < float_parameter_count; i++)
     {
       float_param_t *param = &(float_parameters[i]);

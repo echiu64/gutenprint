@@ -756,6 +756,20 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t curve
  */
 extern int stp_curve_set_data(stp_curve_t curve, size_t count,
 			      const double *data);
+extern int stp_curve_set_float_data(stp_curve_t curve, size_t count,
+				    const float *data);
+extern int stp_curve_set_long_data(stp_curve_t curve, size_t count,
+				   const long *data);
+extern int stp_curve_set_ulong_data(stp_curve_t curve, size_t count,
+				    const unsigned long *data);
+extern int stp_curve_set_int_data(stp_curve_t curve, size_t count,
+				    const int *data);
+extern int stp_curve_set_uint_data(stp_curve_t curve, size_t count,
+				   const unsigned int *data);
+extern int stp_curve_set_short_data(stp_curve_t curve, size_t count,
+				    const short *data);
+extern int stp_curve_set_ushort_data(stp_curve_t curve, size_t count,
+				     const unsigned short *data);
 
 /*
  * Return a curve containing a subrange of data from the source curve.
@@ -795,6 +809,8 @@ extern const double *stp_curve_get_data(const stp_curve_t curve, size_t *count);
  * If the bounds of the curve exceed the limits of the data type,
  * NULL is returned.
  */
+extern const float *stp_curve_get_float_data(const stp_curve_t curve,
+					     size_t *count);
 extern const long *stp_curve_get_long_data(const stp_curve_t curve,
 					   size_t *count);
 extern const unsigned long *stp_curve_get_ulong_data(const stp_curve_t curve,

@@ -61,13 +61,26 @@ typedef struct
 
 typedef struct
 {
+  GtkWidget *label;
+  GtkWidget *button;
+  GtkWidget *dialog;
+  GtkWidget *gamma_curve;
+  const char *help_text;
+  stp_curve_t current;
+  stp_curve_t deflt;
+  gboolean is_visible;
+} curve_option_t;
+
+typedef struct
+{
   const stp_parameter_t *fast_desc;
   int is_active;
   int is_enabled;
   GtkWidget *checkbox;
-  union {
+  struct {
     list_option_t list;
     float_option_t flt;
+    curve_option_t curve;
   } info;
 } option_t;
 

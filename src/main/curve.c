@@ -55,7 +55,8 @@ typedef struct
 				   wrap-around value. */
   double *interval;		/* We allocate an extra slot for the
 				   wrap-around value. */
-  long *long_data;		/* Data converted to integer form */
+  float *float_data;		/* Data converted to other form */
+  long *long_data;
   unsigned long *ulong_data;
   int *int_data;
   unsigned *uint_data;
@@ -129,6 +130,7 @@ static void
 invalidate_auxiliary_data(stpi_internal_curve_t *curve)
 {
   SAFE_FREE(curve->interval);
+  SAFE_FREE(curve->float_data);
   SAFE_FREE(curve->long_data);
   SAFE_FREE(curve->ulong_data);
   SAFE_FREE(curve->int_data);
@@ -339,6 +341,8 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
   idest->real_point_count = isource->real_point_count;
   idest->wrap_mode = isource->wrap_mode;
   idest->gamma = isource->gamma;
+  idest->blo = isource->blo;
+  idest->bhi = isource->bhi;
   if (isource->data)
     {
       idest->data = stpi_malloc(sizeof(double) * (isource->real_point_count));
@@ -480,6 +484,45 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
   return 1;
 }
 
+#define DEFINE_DATA_SETTER(t, name)					     \
+int									     \
+stp_curve_set_##name##_data(stp_curve_t curve, size_t count, const t *data)  \
+{									     \
+  int i;								     \
+  int real_count = count;						     \
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;	     \
+  check_curve(icurve);							     \
+  if (count < 2)							     \
+    return 0;								     \
+  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)			     \
+    real_count++;							     \
+  if (real_count > curve_point_limit)					     \
+    return 0;								     \
+									     \
+  /* Validate the data before we commit to it. */			     \
+  for (i = 0; i < count; i++)						     \
+    if (! finite(data[i]) || data[i] < icurve->blo || data[i] > icurve->bhi) \
+      return 0;								     \
+  set_curve_points(icurve, count);					     \
+  icurve->data = stpi_zalloc(icurve->real_point_count * sizeof(double));     \
+  icurve->gamma = 0.0;							     \
+  for (i = 0; i < count; i++)						     \
+    icurve->data[i] = data[i];						     \
+  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)			     \
+    icurve->data[count] = icurve->data[0];				     \
+  icurve->recompute_interval = 1;					     \
+  icurve->recompute_range = 1;						     \
+  return 1;								     \
+}
+
+DEFINE_DATA_SETTER(float, float)
+DEFINE_DATA_SETTER(long, long)
+DEFINE_DATA_SETTER(unsigned long, ulong)
+DEFINE_DATA_SETTER(int, int)
+DEFINE_DATA_SETTER(unsigned int, uint)
+DEFINE_DATA_SETTER(short, short)
+DEFINE_DATA_SETTER(unsigned short, ushort)
+
 /*
  * Note that we return a pointer to the raw data here.
  * A lot of operations change the data vector, that's why we don't
@@ -492,6 +535,26 @@ stp_curve_get_data(const stp_curve_t curve, size_t *count)
   check_curve(icurve);
   *count = icurve->point_count;
   return icurve->data;
+}
+
+/* No portable declaration for min/max float??? */
+const float *				
+stp_curve_get_float_data(const stp_curve_t curve, size_t *count)
+{
+  int i;
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
+  check_curve(icurve);
+  if (icurve->blo < (double) -3.402823466E+38F ||
+      icurve->bhi > (double) 3.402823466E+38F)
+    return NULL;
+  if (!icurve->float_data)
+    {
+      icurve->float_data = stpi_malloc(sizeof(float) * icurve->point_count);
+      for (i = 0; i < icurve->point_count; i++)
+	icurve->float_data[i] = (float) icurve->data[i];
+    }
+  *count = icurve->point_count;
+  return icurve->float_data;
 }
 
 #define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				 \
@@ -837,6 +900,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
     }
   iret->recompute_interval = 1;
   iret->recompute_range = 1;
+
   stp_curve_copy(curve, ret);
   stp_curve_free(ret);
   setlocale(LC_ALL, "");
@@ -960,7 +1024,7 @@ stp_curve_resample(stp_curve_t curve, size_t points)
 
   check_curve(icurve);
 
-  if (points == icurve->point_count)
+  if (points == icurve->point_count && icurve->data)
     return 1;
 
   if (points < 2)

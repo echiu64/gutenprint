@@ -857,7 +857,7 @@ stpui_printrc_save(void)
 			{
 			  fprintf(fp, "Parameter %s Curve %s \"",
 				  param->name,
-				  ((stp_get_string_parameter_active
+				  ((stp_get_curve_parameter_active
 				    (p->v, param->name) ==
 				    STP_PARAMETER_ACTIVE) ?
 				   "True" : "False"));

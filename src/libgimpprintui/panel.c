@@ -254,6 +254,245 @@ static guchar *adjusted_thumbnail_data;
 static guchar *preview_thumbnail_data;
 
 static void
+set_curve_values(GtkWidget *gcurve, stp_curve_t seed)
+{
+  if (stp_curve_get_gamma(seed))
+    {
+      gtk_curve_set_gamma(GTK_CURVE(gcurve), stp_curve_get_gamma(seed));
+    }
+  else
+    {
+      stp_curve_t copy = stp_curve_create_copy(seed);
+      const float *fdata;
+      size_t count;
+      stp_curve_resample(copy, 256);
+      fdata = stp_curve_get_float_data(copy, &count);
+      gtk_curve_set_vector(GTK_CURVE(gcurve), count, (float *) fdata);
+      if (stp_curve_get_interpolation_type(copy) == STP_CURVE_TYPE_LINEAR)
+	gtk_curve_set_curve_type(GTK_CURVE(gcurve), GTK_CURVE_TYPE_LINEAR);
+      else
+	gtk_curve_set_curve_type(GTK_CURVE(gcurve), GTK_CURVE_TYPE_SPLINE);
+      stp_curve_free(copy);
+    }
+}
+
+static int
+open_curve_editor(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  if (opt->info.curve.is_visible == FALSE)
+    {
+      GtkWidget *gcurve =
+	GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+      stp_curve_t seed = stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+      if (!seed)
+	seed = opt->info.curve.deflt;
+      if (seed)
+	seed = stp_curve_create_copy(seed);
+      gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), FALSE);
+      gtk_widget_show(GTK_WIDGET(opt->info.curve.dialog));
+      set_curve_values(gcurve, seed);
+      opt->info.curve.is_visible = TRUE;
+      opt->info.curve.current = seed;
+    }
+/*  gtk_window_activate_focus(GTK_WINDOW(opt->info.curve.dialog)); */
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}
+
+static int
+set_default_curve_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  GtkWidget *gcurve =
+    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+  stp_curve_t seed = opt->info.curve.deflt;
+  if (!seed)
+    seed = opt->info.curve.deflt;
+  set_curve_values(gcurve, seed);
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}  
+
+static int
+set_previous_curve_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  GtkWidget *gcurve =
+    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+  stp_curve_t seed = opt->info.curve.current;
+  if (!seed)
+    seed = opt->info.curve.deflt;
+  set_curve_values(gcurve, seed);
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}
+
+static int
+set_curve_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  gfloat vector[256];
+  stp_curve_t curve;
+  GtkWidget *gcurve =
+    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+  gtk_widget_hide(opt->info.curve.dialog);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
+  opt->info.curve.is_visible = FALSE;
+  curve = stp_curve_create_copy(opt->info.curve.deflt);
+  gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+  stp_curve_set_float_data(curve, 256, vector);
+  switch (GTK_CURVE(gcurve)->curve_type)
+    {
+    case GTK_CURVE_TYPE_SPLINE:
+      stp_curve_set_interpolation_type(curve, STP_CURVE_TYPE_SPLINE);
+      break;
+    default:
+      stp_curve_set_interpolation_type(curve, STP_CURVE_TYPE_LINEAR);
+      break;
+    }
+  stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
+  stp_curve_free(opt->info.curve.current);
+  stp_curve_free(curve);
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}
+
+static gint
+curve_draw_callback(GtkWidget *widget, GdkEvent *event, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  gfloat vector[256];
+  stp_curve_t curve;
+  GtkWidget *gcurve = GTK_WIDGET(widget);
+  switch (event->type)
+    {
+    case GDK_BUTTON_RELEASE:
+      curve = stp_curve_create_copy(opt->info.curve.deflt);
+      gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+      stp_curve_set_float_data(curve, 256, vector);
+      stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
+      stp_curve_free(curve);
+      break;
+    default:
+      break;
+    }
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}
+
+static gint
+curve_type_changed(GtkWidget *widget, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  gfloat vector[256];
+  stp_curve_t curve;
+  GtkWidget *gcurve = GTK_WIDGET(widget);
+  curve = stp_curve_create_copy(opt->info.curve.deflt);
+  gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+  stp_curve_set_float_data(curve, 256, vector);
+  stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
+  stp_curve_free(curve);
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}
+
+static int
+cancel_curve_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  if (opt->info.curve.is_visible)
+    {
+      stp_set_curve_parameter(pv->v, opt->fast_desc->name,
+			      opt->info.curve.current);
+      stp_curve_free(opt->info.curve.current);
+      gtk_widget_hide(opt->info.curve.dialog);
+      gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
+      opt->info.curve.is_visible = FALSE;
+      invalidate_preview_thumbnail();
+      update_adjusted_thumbnail();
+    }
+  return 1;
+}
+
+static void
+stpui_create_curve(option_t *opt,
+		   GtkTable *table,
+		   gint column,
+		   gint row,
+		   const gchar *text,
+		   stp_curve_t deflt,
+		   gboolean is_optional)
+{
+  double lower, upper;
+  opt->checkbox = gtk_check_button_new();
+  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
+			    column, column + 1, row, row + 1);
+  if (is_optional)
+    gtk_widget_show(opt->checkbox);
+  else
+    gtk_widget_hide(opt->checkbox);
+
+  opt->info.curve.label = gtk_label_new(text);
+  gtk_misc_set_alignment (GTK_MISC (opt->info.curve.label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), opt->info.curve.label,
+                    column + 1, column + 2, row, row + 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show (opt->info.curve.label);
+
+  opt->info.curve.button = gtk_button_new_with_label(_("Edit"));
+  gtk_signal_connect(GTK_OBJECT(opt->info.curve.button), "clicked",
+		     GTK_SIGNAL_FUNC(open_curve_editor), opt);
+  gtk_table_attach (GTK_TABLE (table), opt->info.curve.button,
+                    column + 2, column + 3, row, row + 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(opt->info.curve.button);
+
+  opt->info.curve.dialog =
+    stpui_dialog_new(_(opt->fast_desc->text), _(opt->fast_desc->text),
+		     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+		     _("Set Default"), set_default_curve_callback,
+		     opt, NULL, NULL, FALSE, FALSE,
+		     _("Restore Previous"), set_previous_curve_callback,
+		     opt, NULL, NULL, FALSE, FALSE,
+		     _("OK"), set_curve_callback,
+		     opt, NULL, NULL, FALSE, FALSE,
+		     _("Cancel"), cancel_curve_callback,
+		     opt, NULL, NULL, FALSE, FALSE,
+		     NULL);
+  gtk_window_set_policy(GTK_WINDOW(opt->info.curve.dialog), 1, 1, 1);
+  opt->info.curve.gamma_curve = gtk_gamma_curve_new();
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(opt->info.curve.dialog)->vbox),
+		     opt->info.curve.gamma_curve, TRUE, TRUE, 0);
+  stp_curve_get_bounds(opt->info.curve.deflt, &lower, &upper);
+  gtk_curve_set_range(GTK_CURVE(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+		      0.0, 1.0, lower, upper);
+  gtk_widget_set_usize
+    (GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve), 256, 256);
+  gtk_widget_show(opt->info.curve.gamma_curve);
+
+  gtk_signal_connect
+    (GTK_OBJECT(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+     "curve-type-changed", GTK_SIGNAL_FUNC(curve_type_changed), opt);
+  gtk_signal_connect
+    (GTK_OBJECT(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+     "event", GTK_SIGNAL_FUNC(curve_draw_callback), opt);
+
+  if (opt->fast_desc->help)
+    {
+      stpui_set_help_data (opt->info.curve.label, opt->fast_desc->help);
+      stpui_set_help_data (opt->info.curve.button, opt->fast_desc->help);
+      stpui_set_help_data (opt->info.curve.gamma_curve, opt->fast_desc->help);
+    }
+}
+
+static void
 build_printer_combo(void)
 {
   int i;
@@ -358,6 +597,12 @@ populate_options(const stp_vars_t v)
 			 (SCALE_ENTRY_SPINBUTTON(opt->info.flt.adjustment)));
 		    }
 		  break;
+		case STP_PARAMETER_TYPE_CURVE:
+		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.label));
+		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
+		  gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
+		  gtk_widget_destroy(GTK_WIDGET(opt->checkbox));
+		  break;
 		default:
 		  break;
 		}
@@ -375,10 +620,10 @@ populate_options(const stp_vars_t v)
       opt->fast_desc = stp_parameter_list_param(params, i);
       if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
 	{
+	  stp_describe_parameter(v, opt->fast_desc->name, &desc);
 	  switch (opt->fast_desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      stp_describe_parameter(v, opt->fast_desc->name, &desc);
 	      opt->info.list.callback_id = -1;
 	      opt->info.list.default_val = g_strdup(desc.deflt.str);
 	      if (desc.bounds.str)
@@ -389,21 +634,29 @@ populate_options(const stp_vars_t v)
 	      opt->info.list.combo = NULL;
 	      opt->info.list.label = NULL;
 	      opt->is_active = desc.is_active;
-	      stp_parameter_description_free(&desc);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      stp_describe_parameter(v, opt->fast_desc->name, &desc);
 	      opt->info.flt.adjustment = NULL;
 	      opt->info.flt.upper = desc.bounds.dbl.upper;
 	      opt->info.flt.lower = desc.bounds.dbl.lower;
 	      opt->info.flt.deflt = desc.deflt.dbl;
 	      opt->info.flt.scale = 1.0;
 	      opt->is_active = desc.is_active;
-	      stp_parameter_description_free(&desc);
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      opt->info.curve.label = NULL;
+	      opt->info.curve.button = NULL;
+	      opt->info.curve.dialog = NULL;
+	      opt->info.curve.gamma_curve = NULL;
+	      opt->info.curve.current = NULL;
+	      opt->info.curve.deflt = desc.deflt.curve;
+	      opt->info.curve.is_visible = FALSE;
+	      opt->is_active = desc.is_active;
 	      break;
 	    default:
 	      break;
 	    }
+	  stp_parameter_description_free(&desc);
 	}
     }
   stp_parameter_list_free(params);
@@ -434,6 +687,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	    case STP_PARAMETER_TYPE_DOUBLE:
+	    case STP_PARAMETER_TYPE_CURVE:
 	      counts[desc->p_level][desc->p_type]++;
 	      break;
 	    default:
@@ -489,10 +743,21 @@ populate_option_table(GtkWidget *table, int p_class)
 					   _(desc->help));
 	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
 				 "value_changed",
-				 GTK_SIGNAL_FUNC(color_update), (gpointer) i);
+				 GTK_SIGNAL_FUNC(color_update), opt);
 	      gtk_signal_connect
 		(GTK_OBJECT(SCALE_ENTRY_CHECKBUTTON(opt->info.flt.adjustment)),
-		 "toggled", GTK_SIGNAL_FUNC(set_controls_active), (gpointer) i);
+		 "toggled", GTK_SIGNAL_FUNC(set_controls_active), opt);
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      opt->info.curve.current =
+		stp_get_curve_parameter(pv->v, opt->fast_desc->name);
+	      stpui_create_curve(opt, GTK_TABLE(table), 0,
+				 vpos[desc->p_level][desc->p_type]++,
+				 _(desc->text), opt->info.curve.deflt,
+				 !(desc->is_mandatory));
+	      gtk_signal_connect
+		(GTK_OBJECT(opt->checkbox), "toggled",
+		 GTK_SIGNAL_FUNC(set_controls_active), opt);
 	      break;
 	    default:
 	      break;
@@ -539,6 +804,21 @@ set_options_active(void)
 		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
 		      gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_CHECKBUTTON(adj)));
 		    }
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      if (opt->is_active)
+		{
+		  gtk_widget_show(GTK_WIDGET(opt->info.curve.label));
+		  gtk_widget_show(GTK_WIDGET(opt->info.curve.button));
+		  if (!(desc->is_mandatory))
+		    gtk_widget_show(GTK_WIDGET(opt->checkbox));
+		}
+	      else
+		{
+		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.label));
+		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.button));
+		  gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
 		}
 	      break;
 	    default:
@@ -1297,9 +1577,6 @@ create_color_adjust_window (void)
 {
   GtkWidget *table;
   GtkWidget *event_box;
-#if 0
-  GtkWidget *curve;
-#endif
 
   initialize_thumbnail();
 
@@ -1352,14 +1629,6 @@ create_color_adjust_window (void)
   gtk_widget_show (color_adjustment_table);
   gtk_table_attach_defaults(GTK_TABLE(table), color_adjustment_table,
 			    0, 2, 1, 2);
-
-#if 0
-  curve = gtk_gamma_curve_new();
-  stpui_table_attach_aligned(GTK_TABLE (table), 0, color_option_count + 2,
-			     _("Curve:"), 1.0, 0.5, curve, 1, TRUE, FALSE);
-  gtk_curve_set_range(GTK_CURVE(GTK_GAMMA_CURVE(curve)->curve), 0.0, 200.0, 0.0, 200.0);
-  gtk_widget_show(curve);
-#endif
 }
 
 static void
@@ -1835,24 +2104,52 @@ set_adjustment_active(GtkObject *adj, gboolean active, gboolean do_toggle)
 }
 
 static void
+set_curve_active(option_t *opt, gboolean active, gboolean do_toggle)
+{
+  if (do_toggle)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.curve.button), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.curve.label), active);
+  if (active)
+    {
+      if (opt->info.curve.is_visible)
+	gtk_widget_show(GTK_WIDGET(opt->info.curve.dialog));
+    }
+  else
+    gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
+}
+
+static void
 do_color_updates (void)
 {
   int i;
   for (i = 0; i < current_option_count; i++)
     {
       option_t *opt = &(current_options[i]);
-      if (opt->fast_desc->p_type == STP_PARAMETER_TYPE_DOUBLE &&
-	  opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
-	  opt->info.flt.adjustment)
+      if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
 	{
-	  gtk_adjustment_set_value(GTK_ADJUSTMENT(opt->info.flt.adjustment),
-				   stp_get_float_parameter
-				   (pv->v, opt->fast_desc->name));
-	  if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
-					 STP_PARAMETER_ACTIVE))
-	    set_adjustment_active(opt->info.flt.adjustment, TRUE, TRUE);
-	  else
-	    set_adjustment_active(opt->info.flt.adjustment, FALSE, TRUE);
+	  switch (opt->fast_desc->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      gtk_adjustment_set_value
+		(GTK_ADJUSTMENT(opt->info.flt.adjustment),
+		 stp_get_float_parameter(pv->v, opt->fast_desc->name));
+	      if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
+					    STP_PARAMETER_ACTIVE))
+		set_adjustment_active(opt->info.flt.adjustment, TRUE, TRUE);
+	      else
+		set_adjustment_active(opt->info.flt.adjustment, FALSE, TRUE);
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      if (stp_check_curve_parameter(pv->v, opt->fast_desc->name,
+					    STP_PARAMETER_ACTIVE))
+		set_curve_active(opt, TRUE, TRUE);
+	      else
+		set_curve_active(opt, FALSE, TRUE);
+	      break;
+	    default:
+	      break;
+	    }
 	}
     }
   update_adjusted_thumbnail ();
@@ -3174,30 +3471,49 @@ color_update (GtkAdjustment *adjustment)
 }
 
 static void
-set_controls_active (GtkObject *checkbutton, gpointer optno)
+set_controls_active (GtkObject *checkbutton, gpointer xopt)
 {
-  int i = (int) optno;
-  option_t *opt = &(current_options[i]);
-  if (opt->fast_desc->p_type == STP_PARAMETER_TYPE_DOUBLE &&
-      opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
-      opt->info.flt.adjustment &&
-      checkbutton == GTK_OBJECT(SCALE_ENTRY_CHECKBUTTON(opt->info.flt.adjustment)))
+  option_t *opt = (option_t *) xopt;
+  if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
     {
       gboolean setting =
 	gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkbutton));
-      if (setting)
+      switch (opt->fast_desc->p_type)
 	{
-	  set_adjustment_active(opt->info.flt.adjustment, TRUE, FALSE);
-	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					 STP_PARAMETER_ACTIVE);
-	}
-      else
-	{
-	  set_adjustment_active(opt->info.flt.adjustment, FALSE, FALSE);
-	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					 STP_PARAMETER_INACTIVE);
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  if (setting)
+	    {
+	      set_adjustment_active(opt->info.flt.adjustment, TRUE, FALSE);
+	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_ACTIVE);
+	    }
+	  else
+	    {
+	      set_adjustment_active(opt->info.flt.adjustment, FALSE, FALSE);
+	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_INACTIVE);
+	    }
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  if (setting)
+	    {
+	      set_curve_active(opt, TRUE, FALSE);
+	      stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_ACTIVE);
+	    }
+	  else
+	    {
+	      set_curve_active(opt, FALSE, FALSE);
+	      stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
+					     STP_PARAMETER_INACTIVE);
+	    }
+	  break;
+	default:
+	  break;
 	}
     }
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
 }
 
 static void

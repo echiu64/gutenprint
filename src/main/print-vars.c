@@ -151,7 +151,7 @@ value_copy(const stpi_list_item_t *item)
   switch (v->typ)
     {
     case STP_PARAMETER_TYPE_CURVE:
-      ret->value.cval = stp_curve_create_copy(ret->value.cval);
+      ret->value.cval = stp_curve_create_copy(v->value.cval);
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
