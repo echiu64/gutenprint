@@ -38,6 +38,9 @@ EXTRA_DIST = \
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @IJS_CFLAGS@ @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
+GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
+GIMPPRINT_DEPLIBS = -lm
+LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = @IJS_LIBS@ $(INTLLIBS) @LIBS@
 
@@ -49,6 +52,6 @@ endif
 
 ijsgimpprint_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 
-$(LIBGIMPPRINT_LIBS):
+$(GIMPPRINT_LIBS):
 	cd ../main ; \
 	$(MAKE)

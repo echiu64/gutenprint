@@ -52,7 +52,7 @@ AC_CONFIG_AUX_DIR(scripts)
 STP_INIT
 AC_COPYRIGHT(
 [
-Parts of this configure script come from the `configure.ac.in' file, and
+Parts of this configure script come from the `configure.ac' file, and
 are not based on freely-redistributable m4 macros; you can redistribute
 them and/or modify them under the terms of the GNU General Public
 as published by the Free Software Foundation; either version 2, or (at
@@ -77,10 +77,10 @@ dnl                    to generate ${gimpprint_libs}
 dnl GIMPPRINT_DEPLIBS: libraries for linking libraries against
 dnl gimpprint_cflags:  cflags to store in gimpprint-config
 dnl gimpprint_libs:    libs to store in gimpprint-config
-dnl LIBGIMPPRINT_LIBS  libs to link programs IN THIS PACKAGE ONLY against
 
 dnl initial default values
 GIMPPRINT_LIBS="-lgimpprint"
+INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""
 
 [GIMPPRINT_MAJOR_VERSION]=GIMPPRINT_MAJOR_VERSION
 [GIMPPRINT_MINOR_VERSION]=GIMPPRINT_MINOR_VERSION
@@ -277,11 +277,6 @@ STP_ARG_ENABLE([escputil],
                [BUILD_ESCPUTIL],
                [yes])
 
-STP_ARG_ENABLE([libgimpprint],
-               [build libgimpprint],
-               [BUILD_LIBGIMPPRINT],
-               [yes])
-
 STP_ARG_ENABLE([testpattern],
                [build testpattern generator],
                [BUILD_TESTPATTERN],
@@ -355,8 +350,7 @@ fi
 dnl ijs checks
 if test x${BUILD_IJS} = xyes ; then
   if test -z "$IJS_CONFIG" ; then
-    AC_MSG_ERROR(Cannot find ijs-config; please ensure ijs 0.30 is
-installed);
+    AC_MSG_ERROR(Cannot find ijs-config; please ensure ijs 0.30 is installed);
   fi
   IJS_CFLAGS=`$IJS_CONFIG --cflags`
   IJS_LIBS=`$IJS_CONFIG --libs`
@@ -544,25 +538,6 @@ AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
-if test x${BUILD_LIBGIMPPRINT} = xyes ; then
-  LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
-  GIMP_PRINT_H="gimp-print.h"
-  INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""
-else
-  STP_PATH_LIB_REGISTER([_STP_PATH_LIB_HEADER], [gimp-print/gimp-print.h])
-  STP_PATH_LIB(
-    gimpprint, $GIMPPRINT_VERSION, , ,
-    [LIBGIMPPRINT_CFLAGS="${GIMPPRINT_CFLAGS}"
-      LIBGIMPPRINT_LIBS="${GIMPPRINT_LIBS}"
-      INCLUDE_GIMP_PRINT_H="<gimp-print/gimp-print.h>"],
-    [AC_MSG_WARN([Cannot find current GIMP-PRINT library: building included libgimpprint])
-      LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
-      GIMP_PRINT_H="gimp-print/gimp-print.h"
-      INCLUDE_GIMP_PRINT_H="\"gimp-print/gimp-print.h\""]
-  )
-fi
-AM_CONDITIONAL(BUILD_LIBGIMPPRINT, test x${BUILD_LIBGIMPPRINT} = xyes)
-
 AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
@@ -621,7 +596,6 @@ AC_SUBST(ESCPUTIL_MAN)
 AC_SUBST(GIMP_BIN)
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
-AC_SUBST(GIMP_PRINT_H)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
 AC_SUBST(GIMPPRINT_DEPLIBS)
@@ -630,8 +604,6 @@ AC_SUBST(gimpprint_cflags)
 gimpprint_libs="${GIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
 AC_SUBST(gimpprint_libs)
 AC_SUBST(INCLUDES)
-LIBGIMPPRINT_LIBS="${LIBGIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
-AC_SUBST(LIBGIMPPRINT_LIBS)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAIN_BIN)
 AC_SUBST(MAIN_DAT)

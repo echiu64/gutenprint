@@ -28,6 +28,9 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
+GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
+GIMPPRINT_DEPLIBS = -lm
+LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
@@ -55,7 +58,7 @@ bjc_unprint_LDADD = $(LIBPRINTUT)
 testdither_SOURCES = testdither.c
 testdither_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 
-$(LIBGIMPPRINT_LIBS):
+$(GIMPPRINT_LIBS):
 	cd ../src/main ; \
 	$(MAKE)
 
