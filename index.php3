@@ -12,8 +12,8 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
-<H4>High quality drivers for Canon, Epson, Lexmark, and PCL printers
-for use with <a
+<H4>High quality drivers for Canon, Epson, Lexmark, Sony, Olympus, and
+PCL printers for use with <a
 href="http://ghostscript.sourceforge.net">Ghostscript</a>, <A
 HREF="http://www.cups.org">CUPS</A>, <a
 href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and <a
@@ -34,33 +34,33 @@ UNIX Printing System) for the easiest setup.</p>
 Users!</font></em></strong></h2>
 
 <p>There is now a <a
-href="http://gimp-print.sourceforge.net/MacOSX.php3">Gimp-Print web page for
-OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
-"Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.4 for Mac OS X Jaguar is available now!</p>
+href="http://gimp-print.sourceforge.net/MacOSX.php3">Gimp-Print web
+page for OS X</a> that answers most questions on how to use Gimp-Print
+with OS X 10.2 "Jaguar" and 10.3 "Panther" and provides direct
+download links. The final release of Gimp-Print 4.2.6 for Mac OS X
+Jaguar is available now!</p>
 
+<H2><font color="#ff0000">Gimp-Print 5.0.0-alpha1 is released!</font></h2>
 
-<H2><font color="#ff0000">Gimp-Print 4.3.21 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of September 24,
-2003!</strong></em></font> Gimp-Print 4.3.21 is released.  This is an
-unstable development release on the Gimp-Print 4.3 line.  This release
-offers major print quality improvements, but as with all development
-releases, it is not as stable as the 4.2 releases and is not
-recommended for production use.<a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=186791">You
+<P><strong><em><font color="#ff0000">New as of January 11,
+2004!</strong></em></font> Gimp-Print 5.0.0-alpha1 is released.  This
+is the initial alpha release on the Gimp-Print 5.0 line.  This offers
+major improvements over 4.2, and may be installed concurrently with
+Gimp-Print 4.2 when CUPS is used.  In addition to the
+source, an installation kit for Macintosh OS X 10.2 and 10.3 is
+available! <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209204">You
 can read the release notes and download it here</a>.  </p>
 
 
-<H2><font color="#ff0000">Gimp-Print 4.2.6-pre2 is released!</font></h2>
+<H2><font color="#ff0000">Gimp-Print 4.2.6 is released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of September 15,
-2003!</strong></em></font> Gimp-Print 4.2.5 is released.  This is a
-beta prerelease on the Gimp-Print 4.2 line.  This release offers
-preliminary support for a number of Epson printers that have been
-released this year, and fixes some problems with the PPD files in the
-CUPS driver.  In addition to the source, an installation kit for
-Macintosh OS X 10.2 is available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=184896">You
+<P><strong><em><font color="#ff0000">New as of January 11,
+2004!</strong></em></font> Gimp-Print 4.2.6 is released.  This is the
+last stable release on the Gimp-Print 4.2 line.  In addition to the
+source, an installation kit for Macintosh OS X 10.2 and 10.3 is
+available! <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209203">You
 can read the release notes and download it here</a>.  </p>
 
 
