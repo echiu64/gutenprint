@@ -68,5 +68,7 @@ foreach $_ (@chlog) {
     print "$date\t<$author\@sourceforge.net>\n\n";
     $msg =~ s/^/\t/g;
     $msg =~ s/\n/\n\t/g;
+    $msg =~ s/[ \t]+\n/\n/g;
+    $msg =~ s/[ \t]+$//g;
     print "$msg\n";
 }
