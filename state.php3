@@ -20,6 +20,8 @@ $supported_printers = array(
 		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 810' => 'Fully Operational (4.1 only;
 		use the 870 driver in 4.0)',
+		'EPSON Stylus Photo 820' => 'Fully Operational (4.1 only;
+		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
 		'EPSON Stylus Photo 890' => 'Fully Operational (4.1 only;
 		use the 870 driver in 4.0)',
@@ -37,8 +39,8 @@ $supported_printers = array(
 		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C60' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C70' => 'Operational but Untuned (4.1 only)',
-		'EPSON Stylus C80' => 'Operational but Untuned (4.1 only)',
+		'EPSON Stylus C70' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C80' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
