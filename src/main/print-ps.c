@@ -262,7 +262,6 @@ static int
 ps_print(const stp_vars_t v, stp_image_t *image)
 {
   int		status = 1;
-  unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_get_model(v);
   const char	*ppd_file = stp_get_ppd_file(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
@@ -322,7 +321,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   * Choose the correct color conversion function...
   */
 
-  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
 
  /*
   * Compute the output size...
@@ -519,7 +518,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap);
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
 
       ps_hex(v, out, image_width * out_bpp);
     }
@@ -564,7 +563,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 	  break;
 	}
       (*colorfunc)(nv, in, out + out_offset, &zero_mask, image_width,
-		   image_bpp, cmap);
+		   image_bpp);
 
       out_ps_height = out_offset + image_width * out_bpp;
 

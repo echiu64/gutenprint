@@ -899,6 +899,12 @@ extern int stp_start_job(const stp_vars_t, stp_image_t *image);
 
 extern int stp_end_job(const stp_vars_t, stp_image_t *image);
 
+/*
+ * Set the encoding that all translated strings are output in.
+ */
+extern const char * stp_set_output_codeset(const char *codeset);
+
+
 /****************************************************************
 *                                                               *
 * MISCELLANY                                                    *
@@ -907,32 +913,16 @@ extern int stp_end_job(const stp_vars_t, stp_image_t *image);
 *                                                               *
 ****************************************************************/
 
-/*
- * Set the encoding that all translated strings are output in.
- */
-extern const char * stp_set_output_codeset(const char *codeset);
-
-/*
- * hue_map is an array of 49 doubles representing the mapping of hue
- * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
- * so hue=0 is cyan.  Interpolation between values is linear.
- *
- * lum_map and sat_map are correction factors for luminosity and saturation
- * respectively.  Both of these are inverse exponential.  The degree of
- * luminosity correction is scaled by the saturation of the particular
- * pixel.  This is likely to change drastically in the future.
- */
 typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                unsigned short *out, int *zero_mask,
-                               int width, int bpp, const unsigned char *cmap);
+                               int width, int bpp);
 
 /*
  * Choose the appropriate color function depending upon choice of input
  * and output.
  */
-extern stp_convert_t stp_choose_colorfunc(int output_type, int image_bpp,
-					  const unsigned char *cmap,
-					  int *out_bpp, const stp_vars_t v);
+extern stp_convert_t stp_choose_colorfunc(const stp_vars_t v, int image_bpp,
+					  int *out_bpp);
 
 /*
  * Please see the source in print-color.c for an explanation of this.
@@ -941,15 +931,20 @@ extern void stp_set_lut(stp_vars_t v, void * val);
 extern void * stp_get_lut(const stp_vars_t v);
 extern void stp_allocate_lut(stp_vars_t v, size_t steps);
 extern void stp_free_lut(stp_vars_t v);
+
+/*
+ * hue_map, lum_map, and sat_map adjust the hue, luminosity, and saturation
+ * of the print.
+ */
 extern void stp_compute_lut(stp_vars_t v, size_t steps, stp_curve_t hue,
 			    stp_curve_t lum, stp_curve_t sat);
 
 /*
- * For use with indexed color: the LUT should be an array of 256
+ * For use with indexed color: the colormap should be an array of 256
  * RGB values.
  */
-extern void stp_set_cmap(stp_vars_t v, unsigned char * val);
-extern unsigned char * stp_get_cmap(const stp_vars_t v);
+extern void stp_set_cmap(stp_vars_t v, const unsigned char * cmap);
+extern const unsigned char * stp_get_cmap(const stp_vars_t v);
 
 /*
  * Default global settings.  The main use of this is to provide a usable

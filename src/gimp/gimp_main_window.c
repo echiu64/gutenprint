@@ -2256,14 +2256,14 @@ update_adjusted_thumbnail (void)
 
   stp_set_float_parameter (pv->v, "Density", 1.0);
   stp_compute_lut (pv->v, 256, NULL, NULL, NULL);
-  colorfunc = stp_choose_colorfunc (stp_get_output_type(pv->v), thumbnail_bpp,
-				    NULL, &adjusted_thumbnail_bpp, pv->v);
+  colorfunc = stp_choose_colorfunc (pv->v, thumbnail_bpp,
+				    &adjusted_thumbnail_bpp);
   out = g_malloc(adjusted_thumbnail_bpp * thumbnail_h * thumbnail_w *
 		 sizeof(gushort));
   for (y = 0; y < thumbnail_h; y++)
     {
       (*colorfunc) (pv->v, thumbnail_data + thumbnail_bpp * thumbnail_w * y,
-		    out, NULL, thumbnail_w, thumbnail_bpp, NULL);
+		    out, NULL, thumbnail_w, thumbnail_bpp);
       for (x = 0; x < adjusted_thumbnail_bpp * thumbnail_w; x++)
 	{
 	  *adjusted_data++ = out[x] / 0x0101U;

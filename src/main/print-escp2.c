@@ -1096,7 +1096,6 @@ setup_ink_types(const escp2_inkname_t *ink_type,
 static int
 escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 {
-  unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_get_model(v);
   int		output_type = stp_get_output_type(v);
   int		top = stp_get_top(v);
@@ -1464,8 +1463,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      colorfunc = stp_choose_colorfunc(output_type, image->bpp(image), cmap,
-				       &out_bpp, nv);
+      colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_bpp);
 
       in  = stp_malloc(image->width(image) * image->bpp(image));
       out = stp_malloc(image->width(image) * out_bpp * 2);
@@ -1505,7 +1503,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 		  break;
 		}
 	      (*colorfunc)(nv, in, out, &zero_mask, image->width(image),
-			   image->bpp(image), cmap);
+			   image->bpp(image));
 	    }
 	  QUANT(1);
 

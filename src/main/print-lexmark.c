@@ -1401,7 +1401,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
 #endif
 
 
-  const unsigned char *cmap   = stp_get_cmap(v);
   int		model         = stp_get_model(v);
   const char	*resolution   = stp_get_string_parameter(v, "Resolution");
   const char	*media_type   = stp_get_string_parameter(v, "MediaType");
@@ -1463,7 +1462,7 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
    * Choose the correct color conversion function...
    */
 
-  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
 
 
   ncolors = ink_parameter->ncolors;
@@ -1862,9 +1861,9 @@ densityDivisor /= 1.2;
 	    }
 	  /*	  stp_erprintf("errline %d ,   image height %d\n", errline, image_height);*/
 #if 1
-	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap);
+	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
 #else
-	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap);
+	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
 #endif
 	}
       /*      stp_erprintf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/

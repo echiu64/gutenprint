@@ -1829,7 +1829,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 {
   int i;
   int		status = 1;
-  unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_get_model(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_size;
@@ -1955,7 +1954,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     }
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
-  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, nv);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
 
   do_cret = (xdpi >= 300 &&
 	     ((caps->color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
@@ -2438,7 +2437,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap);
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
     }
 
     stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
