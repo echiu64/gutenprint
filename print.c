@@ -1031,7 +1031,8 @@ get_system_printers(void)
   {
     while (fgets(line, sizeof(line), pfile) != NULL)
     {
-      if (sscanf(line, "printer %s", name) == 1)
+      if ((sscanf(line, "printer %s", name) == 1) ||
+	  (sscanf(line, "Printer: %s", name) == 1))
       {
 	check_plist(plist_count + 1);
 	strcpy(plist[plist_count].name, name);
