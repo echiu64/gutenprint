@@ -272,6 +272,51 @@ static const char sp960_pgpp_hue_adj[] =
 "</curve>\n"
 "</gimp-print>\n";
 
+static const char ultra_photo_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.20 1.10 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.10 1.20 1.30 "  /* G */
+/* G */  "1.35 1.35 1.35 1.30 1.30 1.25 1.20 1.20 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char ultra_photo_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.27 0.35 0.44 0.52 0.58 0.63 0.65 0.65 "  /* B */
+/* B */  "0.60 0.60 0.63 0.67 0.74 0.82 0.88 0.93 "  /* M */
+/* M */  "0.97 0.97 0.97 0.97 0.96 0.95 0.95 0.95 "  /* R */
+/* R */  "0.95 0.96 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.90 0.80 0.70 0.60 0.51 0.45 0.41 "  /* G */
+/* G */  "0.39 0.36 0.33 0.30 0.28 0.27 0.27 0.27 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char ultra_photo_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.08 0.15 0.18 0.15 0.05 -.05 -.15 "  /* B */
+/* B */  "-.25 -.33 -.38 -.38 -.36 -.34 -.34 -.34 "  /* M */
+/* M */  "-.34 -.34 -.34 -.34 -.34 -.32 -.30 -.20 "  /* R */
+/* R */  "-.12 -.10 -.08 -.06 -.04 -.02 0.00 0.00 "  /* Y */
+/* Y */  "0.00 0.00 -.01 -.07 0.13 -.19 -.22 -.24 "  /* G */
+/* G */  "-.26 -.27 -.26 -.23 -.20 -.15 -.10 -.05 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
 #define DECLARE_PAPERS(name)				\
 const paperlist_t stpi_escp2_##name##_paper_list =	\
 {							\
@@ -467,47 +512,47 @@ DECLARE_PAPER_ADJUSTMENTS(sp960);
 static const paper_adjustment_t ultrachrome_photo_adjustments[] =
 {
   { "Plain", 0.615, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "PlainFast", 0.615, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Postcard", 0.83, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyFilm", 1.00, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Transparency", 1.00, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Envelope", 0.615, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "BackFilm", 1.00, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Matte", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "MatteHeavy", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Inkjet", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Coated", 1.10, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Photo", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyPhoto", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Semigloss", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Luster", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "ArchivalMatte", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "WaterColorRadiant", 0.765, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyPaper", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Ilford", .85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj  },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj  },
   { "ColorLife", 0.85, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Other", 0.615, 1, .01, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
 };
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_photo);
@@ -515,47 +560,47 @@ DECLARE_PAPER_ADJUSTMENTS(ultrachrome_photo);
 static const paper_adjustment_t ultrachrome_matte_adjustments[] =
 {
   { "Plain", 0.615, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "PlainFast", 0.615, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Postcard", 0.83, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyFilm", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Transparency", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Envelope", 0.615, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "BackFilm", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Matte", 0.85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "MatteHeavy", 0.85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Inkjet", 0.85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Coated", 1.10, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Photo", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyPhoto", 0.85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Semigloss", 0.85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "ArchivalMatte", 0.94, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "WaterColorRadiant", 0.85, 1, .02, 1.5, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Luster", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "GlossyPaper", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Ilford", .85, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj  },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj  },
   { "ColorLife", 1.00, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
   { "Other", 0.615, 1, 0, 1.25, 1, 1, 1, 1, 1, 1,
-    standard_hue_adj, standard_lum_adj, sp960_matte_sat_adj },
+    ultra_photo_hue_adj, ultra_photo_lum_adj, ultra_photo_sat_adj },
 };
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
