@@ -118,13 +118,17 @@ CUPS
     to restart the CUPS server (daemon) so that it sees the newly
     installed driver.  It is typically /etc/init.d/cups,
     /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.  Your system may
-    have a different way to restart the CUPS server.
+    have a different way to restart the CUPS server.  OS X uses the
+    following command:
 
-    NOTE: If you are using CUPS 1.1.11 or higher, and you have a
-    USB-connected printer, you must have a printer connected to each
-    USB port that you plan to use and powered on when you restart
-    CUPS.  If you do not do so, you will not be able to perform the
-    following step (reinstalling the printer), as described below.
+    sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
+  
+    NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
+    higher, and you have a USB-connected printer, you must have a
+    printer connected to each USB port that you plan to use and
+    powered on when you restart CUPS.  If you do not do so, you will
+    not be able to perform the following step (reinstalling the
+    printer), as described below.
 
     Following this, you must reinstall any printers that you are using
     Gimp-Print PPD's with.  Such printers may be identified in any
