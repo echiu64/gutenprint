@@ -67,8 +67,14 @@ separate driver, and we do not plan to write that driver.
 The README file included with this package provides full instructions
 on building and installing Gimp-Print.
 
-While Gimp-Print 5.0 is not finalized, it contains many improvements
-and changes from 4.2, as follows:
+These release notes contain the following sections:
+
+1) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
+2) Overall changes from 4.2 to 5.0.
+3) List of supported printers
+4) Printer-specific notes
+
+================================================================
 
 * Major changes between Gimp-Print 5.0.0 alpha 1 and 5.0.0 alpha 2:
 
@@ -133,10 +139,17 @@ and changes from 4.2, as follows:
      issues have been fixed.
 
   10) The Print plugin in this package does not currently work with
-     the GIMP 2.0 (only 1.2).
+     the GIMP 2.0 (only 1.2).  Please read item (10) in Exceptions and
+     Workarounds below.
+
+  11) Some minor performance improvements (as identified by Valgrind)
+     have been incorporated.
 
   Please see the change log for full information.
+================================================================
 
+While Gimp-Print 5.0 is not finalized, it contains many improvements
+and changes from 4.2, as follows:
 
 * General User-Visible Changes:
 
@@ -419,6 +432,14 @@ and changes from 4.2, as follows:
      writes out the printrc file in a format that earlier versions of
      Gimp-Print cannot read.
 
+  4) If you are using an older version of the GIMP 1.2, and the GIMP
+     is installed in a non-standard location on your system such that
+     you cannot run configure in Gimp-Print without using
+     --with-gimp-prefix or --with-gimp-exec-prefix, please read item
+     (10) in Exceptions and Workarounds below.  In addition, if you
+     have both the GIMP 1.3/2.0 and the GIMP 1.2 installed on your
+     system, you should read the same material.
+
 
 * Changes to the CUPS driver:
 
@@ -454,78 +475,10 @@ and changes from 4.2, as follows:
      This fix works correctly unless --disable-static (to disable
      building static libraries) is passed on the command line.
      Normally, only people packaging up Gimp-Print for distribution
-     use this option.  If you wish to use this option, please read the
-     Exceptions and Workarounds *carefully* for a full description of
-     the problem along with suggested methods of procedure.
-
-  6) With certain versions of CUPS and in certain non-default
-     configurations, if a new version of Gimp-Print is installed over
-     an existing version genppd will create PPD files based on the
-     older version of Gimp-Print rather than the newer version.  This
-     will happen if all of the following are true:
-
-     1) The cups-config provided by the CUPS driver adds
-        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
-        reportedly because in some cases the runtime linker does not
-        pick up libraries out of /usr/lib.  This can be checked by
-        running
-
-        cups-config --libs --ldflags
-
-        and inspecting the output for any mention of "rpath", "RPATH",
-        "RUN_PATH", or the like.  This is controlled by the CUPS
-        installation on your system.
-
-     2) There is presently a version of Gimp-Print installed in /usr
-        (--prefix=/usr) rather than /usr/local or the like.  The
-        default location of Gimp-Print installation is in /usr/local,
-        but system vendors typically install Gimp-Print in /usr.
-
-     3) Gimp-Print is built dynamically only (--disable-static).  This
-        is not a default, and requires the explicit --disable-static
-        on the Gimp-Print "configure" command line.  Therefore, if you
-        build Gimp-Print normally you should not be vulnerable to this
-        problem.
-
-     Note that in general if you install CUPS into a non-standard
-     location, and install Gimp-Print into the same location, this
-     problem can surface.  For example, if you choose to install CUPS
-     in /usr/local and Gimp-Print in /usr/local you are vulnerable to
-     this.  However, it is not standard practice to install CUPS
-     anywhere but /usr.
-
-     In this case, the run path embedded in the genppd executable
-     points to the version of Gimp-Print installed in /usr/lib. This
-     run path overrides any attempt by libtool to look in the build
-     directory. The result is that cups-genppd and rastertogimpprint
-     are run against the older version of Gimp-Print. If the new
-     version contains additional features (more printers, etc.) they
-     will not be available.
-
-     This bug is difficult to detect in a normal build.  It does not
-     cause an error to happen during build; the only failure is that
-     some PPD files may not be built or may be built with missing
-     options.  Due to the PPD version checking introduced in this
-     release, the behavior might manifest itself as a runtime error.
-     It is also possible that there will be no error at all other than
-     the older version of Gimp-Print being used, with the result that
-     new features and bug fixes are not available.
-
-     If you wish to use only shared libraries, do not wish to build
-     static libraries at all, and are vulnerable to this issue
-     (because cups-config --ldflags sets the run path), there are
-     three workarounds available:
-
-     1) Build and install Gimp-Print into /usr (rather than
-        /usr/local) and then rebuild Gimp-Print from scratch.  This
-        will install the correct libgimpprint.so in /usr/lib, and in
-        the rebuild genppd will be run against the correct library.
-
-     2) Remove the old version of Gimp-Print prior to building the new
-        version of Gimp-Print.  The important files to remove are
-        anything named /usr/lib/libgimpprint*.
-
-     3) Edit cups-config to remove the reference to the run path.
+     use this option.  If you wish to use this option, please read
+     item (9) Exceptions and Workarounds *carefully* for a full
+     description of the problem along with suggested methods of
+     procedure.
 
 
 * Changes to the Ghostscript driver:
@@ -595,6 +548,122 @@ and changes from 4.2, as follows:
 
   8) The CUPS PPD update script (cups-genppdupdate.5.0) will not
      update PPD files from 4.2 or from 4.3 prior to 4.3.21.
+
+  9) With certain versions of CUPS and in certain non-default
+     configurations, if a new version of Gimp-Print is installed over
+     an existing version genppd will create PPD files based on the
+     older version of Gimp-Print rather than the newer version.  This
+     will happen if all of the following are true:
+
+     1) The cups-config provided by the CUPS driver adds
+        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+        reportedly because in some cases the runtime linker does not
+        pick up libraries out of /usr/lib.  This can be checked by
+        running
+
+        cups-config --libs --ldflags
+
+        and inspecting the output for any mention of "rpath", "RPATH",
+        "RUN_PATH", or the like.  This is controlled by the CUPS
+        installation on your system.
+
+     2) There is presently a version of Gimp-Print installed in /usr
+        (--prefix=/usr) rather than /usr/local or the like.  The
+        default location of Gimp-Print installation is in /usr/local,
+        but system vendors typically install Gimp-Print in /usr.
+
+     3) Gimp-Print is built dynamically only (--disable-static).  This
+        is not a default, and requires the explicit --disable-static
+        on the Gimp-Print "configure" command line.  Therefore, if you
+        build Gimp-Print normally you should not be vulnerable to this
+        problem.
+
+     Note that in general if you install CUPS into a non-standard
+     location, and install Gimp-Print into the same location, this
+     problem can surface.  For example, if you choose to install CUPS
+     in /usr/local and Gimp-Print in /usr/local you are vulnerable to
+     this.  However, it is not standard practice to install CUPS
+     anywhere but /usr.
+
+     In this case, the run path embedded in the genppd executable
+     points to the version of Gimp-Print installed in /usr/lib. This
+     run path overrides any attempt by libtool to look in the build
+     directory. The result is that cups-genppd and rastertogimpprint
+     are run against the older version of Gimp-Print. If the new
+     version contains additional features (more printers, etc.) they
+     will not be available.
+
+     This bug is difficult to detect in a normal build.  It does not
+     cause an error to happen during build; the only failure is that
+     some PPD files may not be built or may be built with missing
+     options.  Due to the PPD version checking introduced in this
+     release, the behavior might manifest itself as a runtime error.
+     It is also possible that there will be no error at all other than
+     the older version of Gimp-Print being used, with the result that
+     new features and bug fixes are not available.
+
+     If you wish to use only shared libraries, do not wish to build
+     static libraries at all, and are vulnerable to this issue
+     (because cups-config --ldflags sets the run path), there are
+     three workarounds available:
+
+     1) Build and install Gimp-Print into /usr (rather than
+        /usr/local) and then rebuild Gimp-Print from scratch.  This
+        will install the correct libgimpprint.so in /usr/lib, and in
+        the rebuild genppd will be run against the correct library.
+
+     2) Remove the old version of Gimp-Print prior to building the new
+        version of Gimp-Print.  The important files to remove are
+        anything named /usr/lib/libgimpprint*.
+
+     3) Edit cups-config to remove the reference to the run path.
+
+  10) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
+     against GIMP 2.0) requires special build instructions if you are
+     using a very old version of the GIMP 1.2 (versions affected are
+     believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
+     must set GIMPTOOL in the environment to point to the proper
+     version of gimptool when running Gimp-Print's configure script.
+     For example:
+
+     GIMPTOOL=/usr/bin/gimptool ./configure
+
+     The bug fix involves checking for the presence of the GIMP
+     slightly differently from how it was previously done.
+     Previously, Gimp-Print checked for the presence of a program
+     named "gimptool", which provides information about how to build
+     plugins against the GIMP.  This worked correctly when only the
+     GIMP 1.2 was installed, but not when the GIMP 2.0 was installed.
+
+     The GIMP 2.0 actually installs a program named "gimptool-2.0",
+     and creates a symbolic link named "gimptool" pointing to it.
+     Later versions of the GIMP 1.2 (1.2.3, 1.2.4, 1.2.5, and any
+     later versions that may be released) similarly create a program
+     named "gimptool-1.2" and a symbolic link named "gimptool".
+     As the configure script prior to this bug fix simply checked for
+     gimptool, it incorrectly detected a gimptool from the GIMP 2.0,
+     which this version of Gimp-Print cannot build against.
+
+     The current configure script checks first for gimptool-1.2 and
+     then for gimptool, and only accepts the use of a GIMP 1.2 version
+     of one of these programs.  However, if you have one of the older
+     versions of the GIMP 1.2 installed in a non-standard location,
+     and you use --with-gimp-prefix or --with-gimp-exec-prefix to
+     specify its location, the configure script will not automatically
+     detect the correct location of gimptool, and you must specify it
+     as described above.  Note that you must specify a copy of
+     gimptool from the GIMP 1.2, not from the GIMP 2.0.  If your copy
+     of the GIMP is installed in a standard location (typically
+     /usr/bin or /usr/local/bin), you do not need to use
+     --with-gimp-prefix or --with-gimp-exec-prefix, and therefore do
+     not need to use this workaround.
+
+     The Gimp-Print and GIMP projects recommend upgrading to a newer
+     revision of the GIMP 1.2 (at the time these release notes are
+     written, the latest version is 1.2.5), which will not require
+     this workaround.  This workaround is available in the event that
+     you cannot or do not wish to upgrade your installation of the
+     GIMP.
 
 
 * Architectural Changes:
@@ -736,7 +805,7 @@ and changes from 4.2, as follows:
   14) Printer characteristics are exposed to the application level as
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
-
+================================================================
 
 
 Supported Printers:
@@ -1645,7 +1714,7 @@ Generic PCL 5 Printer          pcl-4           HP LaserJet 4 series
 Generic PCL 5c Printer         pcl-4           HP LaserJet 4 series
 Generic PCL 5e Printer         pcl-4           HP LaserJet 4 series
 Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
-
+================================================================
 
 Printer-Specific Notes:
 
