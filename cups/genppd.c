@@ -91,7 +91,7 @@ typedef struct
 {
   char		name[32];		/* Name of size */
   int		width,			/* Width in points */
-		length;			/* Length in points */
+		height;			/* Height in points */
 } msize_t;
 
 msize_t	sizes[] =
@@ -228,7 +228,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   char		*opt;			/* Pointer into option string */
   int		xdpi, ydpi;		/* Resolution info */
   vars_t	v;			/* Variable info */
-  int		width, length,		/* Page information */
+  int		width, height,		/* Page information */
 		bottom, left,
 		top, right;
   int		printed_default_resolution = 0;
@@ -320,19 +320,19 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &length);
+    (*(p->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->length == length)
+      if (size->width == width && size->height == height)
         break;
 
     if (j)
       gzprintf(fp, "*PageSize %s", size->name);
     else
-      gzprintf(fp, "*PageSize w%dh%d", width, length);
+      gzprintf(fp, "*PageSize w%dh%d", width, height);
 
     gzprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-             opts[i], width, length);
+             opts[i], width, height);
   }
   gzputs(fp, "*CloseUI: *PageSize\n");
 
@@ -348,19 +348,19 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &length);
+    (*(p->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->length == length)
+      if (size->width == width && size->height == height)
         break;
 
     if (j)
       gzprintf(fp, "*PageRegion %s", size->name);
     else
-      gzprintf(fp, "*PageRegion w%dh%d", width, length);
+      gzprintf(fp, "*PageRegion w%dh%d", width, height);
 
     gzprintf(fp, "/%s:\t\"<</PageRegion[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-             opts[i], width, length);
+             opts[i], width, height);
   }
   gzputs(fp, "*CloseUI: *PageRegion\n");
 
@@ -373,17 +373,17 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &length);
+    (*(p->media_size))(p, &v, &width, &height);
     (*(p->imageable_area))(p, &v, &left, &right, &bottom, &top);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->length == length)
+      if (size->width == width && size->height == height)
         break;
 
     if (j)
       gzprintf(fp, "*ImageableArea %s", size->name);
     else
-      gzprintf(fp, "*ImageableArea w%dh%d", width, length);
+      gzprintf(fp, "*ImageableArea w%dh%d", width, height);
 
     gzprintf(fp, "/%s:\t\"%d %d %d %d\"\n", opts[i],
              left, bottom, right, top);
@@ -399,18 +399,18 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &length);
+    (*(p->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->length == length)
+      if (size->width == width && size->height == height)
         break;
 
     if (j)
       gzprintf(fp, "*PaperDimension %s", size->name);
     else
-      gzprintf(fp, "*PaperDimension w%dh%d", width, length);
+      gzprintf(fp, "*PaperDimension w%dh%d", width, height);
 
-    gzprintf(fp, "/%s:\t\"%d %d\"\n", opts[i], width, length);
+    gzprintf(fp, "/%s:\t\"%d %d\"\n", opts[i], width, height);
     free(opts[i]);
   }
   if (opts)

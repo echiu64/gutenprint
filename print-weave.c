@@ -412,7 +412,7 @@ make_passmap(raw_t *w, int **map, int **starts, int first_pass_number,
 
 static void
 calculate_pass_map(cooked_t *w,		/* I - weave parameters */
-                   int pagelength,	/* I - number of rows on page */
+                   int pageheight,	/* I - number of rows on page */
                    int firstrow,	/* I - first printed row */
                    int lastrow)		/* I - last printed row */
 {
@@ -422,8 +422,8 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 	w->first_row_printed = firstrow;
 	w->last_row_printed = lastrow;
 
-	if (pagelength <= lastrow)
-		pagelength = lastrow + 1;
+	if (pageheight <= lastrow)
+		pageheight = lastrow + 1;
 
 	do {
 		calculate_raw_pass_parameters(&w->rw, ++pass,
@@ -433,7 +433,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 	w->first_premapped_pass = pass;
 
 	while (startrow < w->rw.separation * w->rw.jets
-	       && startrow - w->rw.separation < pagelength
+	       && startrow - w->rw.separation < pageheight
 	       && startrow <= lastrow + w->rw.separation * w->rw.jets)
 	{
 		calculate_raw_pass_parameters(&w->rw, ++pass,
@@ -441,7 +441,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 	}
 	w->first_normal_pass = pass;
 
-	while (startrow - w->rw.separation < pagelength
+	while (startrow - w->rw.separation < pageheight
 	       && startrow <= lastrow + w->rw.separation * w->rw.jets)
 	{
 		calculate_raw_pass_parameters(&w->rw, ++pass,
@@ -481,7 +481,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 
 	if (w->first_unused_pass > w->first_postmapped_pass) {
 		int spread, separations_to_distribute, normal_passes_mapped;
-		separations_to_distribute = (pagelength - lastrow - 1)
+		separations_to_distribute = (pageheight - lastrow - 1)
 		                                     / w->rw.separation;
 		spread = (separations_to_distribute + 1) * w->rw.separation;
 		normal_passes_mapped = (spread + w->rw.advancebasis)
@@ -492,7 +492,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 		             w->first_postmapped_pass, w->first_unused_pass,
 			     w->first_postmapped_pass + normal_passes_mapped,
 			     w->first_unused_pass,
-		             pagelength - 1
+		             pageheight - 1
 		                 - w->rw.separation * (w->rw.jets - 1),
 			     separations_to_distribute);
 	} else {
@@ -507,7 +507,7 @@ initialize_weave_params(int S,		/* I - jet separation */
                         int H,		/* I - oversampling factor */
                         int firstrow,	/* I - first row number to print */
                         int lastrow,	/* I - last row number to print */
-                        int pagelength,	/* I - number of rows on the whole
+                        int pageheight,	/* I - number of rows on the whole
                         		       page, without using any
                         		       expanded margin facilities */
                         int strategy)	/* I - weave pattern variant to use */
@@ -515,7 +515,7 @@ initialize_weave_params(int S,		/* I - jet separation */
 	cooked_t *w = malloc(sizeof(cooked_t));
 	if (w) {
 		initialize_raw_weave(&w->rw, S, J, H, strategy);
-		calculate_pass_map(w, pagelength, firstrow, lastrow);
+		calculate_pass_map(w, pageheight, firstrow, lastrow);
 	}
 	return w;
 }
@@ -597,15 +597,15 @@ calculate_row_parameters(void *vw,		/* I - weave parameters */
 
 void
 stp_fold(const unsigned char *line,
-	   int single_length,
+	   int single_height,
 	   unsigned char *outbuf)
 {
   int i;
-  memset(outbuf, 0, single_length * 2);
-  for (i = 0; i < single_length; i++)
+  memset(outbuf, 0, single_height * 2);
+  for (i = 0; i < single_height; i++)
     {
       unsigned char l0 = line[0];
-      unsigned char l1 = line[single_length];
+      unsigned char l1 = line[single_height];
       if (l0 || l1)
 	{
 	  outbuf[0] =
@@ -633,7 +633,7 @@ stp_fold(const unsigned char *line,
 }
 
 static void
-stp_split_2_1(int length,
+stp_split_2_1(int height,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -641,7 +641,7 @@ stp_split_2_1(int length,
   unsigned char *outs[2];
   int i;
   int row = 0;
-  int limit = length * 2;
+  int limit = height * 2;
   outs[0] = outhi;
   outs[1] = outlo;
   memset(outs[1], 0, limit);
@@ -696,7 +696,7 @@ stp_split_2_1(int length,
 }
 
 static void
-stp_split_2_2(int length,
+stp_split_2_2(int height,
 		const unsigned char *in,
 		unsigned char *outhi,
 		unsigned char *outlo)
@@ -704,7 +704,7 @@ stp_split_2_2(int length,
   unsigned char *outs[2];
   int i;
   unsigned row = 0;
-  int limit = length * 2;
+  int limit = height * 2;
   outs[0] = outhi;
   outs[1] = outlo;
   memset(outs[1], 0, limit);
@@ -739,20 +739,20 @@ stp_split_2_2(int length,
 }
 
 void
-stp_split_2(int length,
+stp_split_2(int height,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *outhi,
 	      unsigned char *outlo)
 {
   if (bits == 2)
-    stp_split_2_2(length, in, outhi, outlo);
+    stp_split_2_2(height, in, outhi, outlo);
   else
-    stp_split_2_1(length, in, outhi, outlo);
+    stp_split_2_1(height, in, outhi, outlo);
 }
 
 static void
-stp_split_4_1(int length,
+stp_split_4_1(int height,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -762,7 +762,7 @@ stp_split_4_1(int length,
   unsigned char *outs[4];
   int i;
   int row = 0;
-  int limit = length * 2;
+  int limit = height * 2;
   outs[0] = out0;
   outs[1] = out1;
   outs[2] = out2;
@@ -821,7 +821,7 @@ stp_split_4_1(int length,
 }
 
 static void
-stp_split_4_2(int length,
+stp_split_4_2(int height,
 		const unsigned char *in,
 		unsigned char *out0,
 		unsigned char *out1,
@@ -831,7 +831,7 @@ stp_split_4_2(int length,
   unsigned char *outs[4];
   int i;
   int row = 0;
-  int limit = length * 2;
+  int limit = height * 2;
   outs[0] = out0;
   outs[1] = out1;
   outs[2] = out2;
@@ -870,7 +870,7 @@ stp_split_4_2(int length,
 }
 
 void
-stp_split_4(int length,
+stp_split_4(int height,
 	      int bits,
 	      const unsigned char *in,
 	      unsigned char *out0,
@@ -879,9 +879,9 @@ stp_split_4(int length,
 	      unsigned char *out3)
 {
   if (bits == 2)
-    stp_split_4_2(length, in, out0, out1, out2, out3);
+    stp_split_4_2(height, in, out0, out1, out2, out3);
   else
-    stp_split_4_1(length, in, out0, out1, out2, out3);
+    stp_split_4_1(height, in, out0, out1, out2, out3);
 }
 
 
@@ -894,7 +894,7 @@ stp_split_4(int length,
 #endif
 
 static void
-stp_unpack_2_1(int length,
+stp_unpack_2_1(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1)
@@ -906,8 +906,8 @@ stp_unpack_2_1(int length,
 
 
   for (bit = 128, temp0 = 0, temp1 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
       tempin = *in++;
 
@@ -958,7 +958,7 @@ stp_unpack_2_1(int length,
 }
 
 static void
-stp_unpack_2_2(int length,
+stp_unpack_2_2(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1)
@@ -969,11 +969,11 @@ stp_unpack_2_2(int length,
 		temp1;
 
 
-  length *= 2;
+  height *= 2;
 
   for (shift = 0, temp0 = 0, temp1 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
      /*
       * Note - we can't use (tempin & N) >> (shift - M) since negative
@@ -1015,16 +1015,16 @@ stp_unpack_2_2(int length,
 }
 
 void
-stp_unpack_2(int length,
+stp_unpack_2(int height,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *outlo,
 	       unsigned char *outhi)
 {
   if (bits == 1)
-    stp_unpack_2_1(length, in, outlo, outhi);
+    stp_unpack_2_1(height, in, outlo, outhi);
   else
-    stp_unpack_2_2(length, in, outlo, outhi);
+    stp_unpack_2_2(height, in, outlo, outhi);
 }
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -1040,7 +1040,7 @@ stp_unpack_2(int length,
 #endif
 
 static void
-stp_unpack_4_1(int length,
+stp_unpack_4_1(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1056,8 +1056,8 @@ stp_unpack_4_1(int length,
 
 
   for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
       tempin = *in++;
 
@@ -1108,7 +1108,7 @@ stp_unpack_4_1(int length,
 }
 
 static void
-stp_unpack_4_2(int length,
+stp_unpack_4_2(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1123,11 +1123,11 @@ stp_unpack_4_2(int length,
 		temp3;
 
 
-  length *= 2;
+  height *= 2;
 
   for (shift = 0, temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
      /*
       * Note - we can't use (tempin & N) >> (shift - M) since negative
@@ -1172,7 +1172,7 @@ stp_unpack_4_2(int length,
 }
 
 void
-stp_unpack_4(int length,
+stp_unpack_4(int height,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -1181,13 +1181,13 @@ stp_unpack_4(int length,
 	       unsigned char *out3)
 {
   if (bits == 1)
-    stp_unpack_4_1(length, in, out0, out1, out2, out3);
+    stp_unpack_4_1(height, in, out0, out1, out2, out3);
   else
-    stp_unpack_4_2(length, in, out0, out1, out2, out3);
+    stp_unpack_4_2(height, in, out0, out1, out2, out3);
 }
 
 static void
-stp_unpack_8_1(int length,
+stp_unpack_8_1(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1204,8 +1204,8 @@ stp_unpack_8_1(int length,
 
   for (bit = 128, temp0 = 0, temp1 = 0, temp2 = 0,
        temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
       tempin = *in++;
 
@@ -1265,7 +1265,7 @@ stp_unpack_8_1(int length,
 }
 
 static void
-stp_unpack_8_2(int length,
+stp_unpack_8_2(int height,
 		 const unsigned char *in,
 		 unsigned char *out0,
 		 unsigned char *out1,
@@ -1290,8 +1290,8 @@ stp_unpack_8_2(int length,
 
   for (shift = 0, temp0 = 0, temp1 = 0,
        temp2 = 0, temp3 = 0, temp4 = 0, temp5 = 0, temp6 = 0, temp7 = 0;
-       length > 0;
-       length --)
+       height > 0;
+       height --)
     {
      /*
       * Note - we can't use (tempin & N) >> (shift - M) since negative
@@ -1359,7 +1359,7 @@ stp_unpack_8_2(int length,
 }
 
 void
-stp_unpack_8(int length,
+stp_unpack_8(int height,
 	       int bits,
 	       const unsigned char *in,
 	       unsigned char *out0,
@@ -1372,16 +1372,16 @@ stp_unpack_8(int length,
 	       unsigned char *out7)
 {
   if (bits == 1)
-    stp_unpack_8_1(length, in, out0, out1, out2, out3,
+    stp_unpack_8_1(height, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
   else
-    stp_unpack_8_2(length, in, out0, out1, out2, out3,
+    stp_unpack_8_2(height, in, out0, out1, out2, out3,
 		     out4, out5, out6, out7);
 }
 
 int
 stp_pack(const unsigned char *line,
-	 int length,
+	 int height,
 	 unsigned char *comp_buf,
 	 unsigned char **comp_ptr)
 {
@@ -1392,12 +1392,12 @@ stp_pack(const unsigned char *line,
   int active = 0;		/* Have we found data? */
 
   /*
-   * Compress using TIFF "packbits" run-length encoding...
+   * Compress using TIFF "packbits" run-height encoding...
    */
 
   (*comp_ptr) = comp_buf;
 
-  while (length > 0)
+  while (height > 0)
     {
       /*
        * Get a run of non-repeated chars...
@@ -1405,18 +1405,18 @@ stp_pack(const unsigned char *line,
 
       start  = line;
       line   += 2;
-      length -= 2;
+      height -= 2;
 
-      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+      while (height > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
 	{
 	  if (! active && (line[-2] || line[-1] || line[0]))
 	    active = 1;
 	  line ++;
-	  length --;
+	  height --;
 	}
 
       line   -= 2;
-      length += 2;
+      height += 2;
 
       /*
        * Output the non-repeated sequences (max 128 at a time).
@@ -1435,7 +1435,7 @@ stp_pack(const unsigned char *line,
 	  count    -= tcount;
 	}
 
-      if (length <= 0)
+      if (height <= 0)
 	break;
 
       /*
@@ -1448,12 +1448,12 @@ stp_pack(const unsigned char *line,
 	active = 1;
 
       line ++;
-      length --;
+      height --;
 
-      while (length > 0 && *line == repeat)
+      while (height > 0 && *line == repeat)
 	{
 	  line ++;
-	  length --;
+	  height --;
 	}
 
       /*
@@ -1619,7 +1619,7 @@ main(int ac, char *av[])
 	int H         =ac>3 ? atoi(av[3]) : 1;
 	int firstrow  =ac>4 ? atoi(av[4]) : 1;
 	int lastrow   =ac>5 ? atoi(av[5]) : 100;
-	int pagelength=ac>6 ? atoi(av[6]) : 1000;
+	int pageheight=ac>6 ? atoi(av[6]) : 1000;
 	int strategy  =ac>7 ? atoi(av[7]) : 1;
 	cooked_t *weave;
 	int passes;
@@ -1631,11 +1631,11 @@ main(int ac, char *av[])
 	memset(collect, 0, MAXCOLLECT*sizeof(int));
 	memset(prints, 0, MAXCOLLECT*sizeof(int));
 	printf("S=%d  J=%d  H=%d  firstrow=%d  lastrow=%d  "
-	       "pagelength=%d  strategy=%d\n",
-	       S, J, H, firstrow, lastrow, pagelength, strategy);
+	       "pageheight=%d  strategy=%d\n",
+	       S, J, H, firstrow, lastrow, pageheight, strategy);
 
 	weave = initialize_weave_params(S, J, H, firstrow, lastrow,
-	                                pagelength, strategy);
+	                                pageheight, strategy);
 	passes = weave->first_unused_pass - weave->first_premapped_pass;
 
 	for (pass = 0; pass < passes; pass++) {

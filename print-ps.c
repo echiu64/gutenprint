@@ -149,22 +149,22 @@ void
 ps_media_size(const printer_t *printer,	/* I - Printer model */
 	      const vars_t *v,		/* I */
               int  *width,		/* O - Width in points */
-              int  *length)		/* O - Length in points */
+              int  *height)		/* O - Height in points */
 {
   char	*dimensions;			/* Dimensions of media size */
 
 
 #ifdef DEBUG
   printf("ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n", model, ppd_file,
-         media_size, width, length);
+         media_size, width, height);
 #endif /* DEBUG */
 
   if ((dimensions = ppd_find(v->ppd_file, "PaperDimension", v->media_size,
 			     NULL))
       != NULL)
-    sscanf(dimensions, "%d%d", width, length);
+    sscanf(dimensions, "%d%d", width, height);
   else
-    default_media_size(printer, v, width, length);
+    default_media_size(printer, v, width, height);
 }
 
 
@@ -217,10 +217,10 @@ void
 ps_limit(const printer_t *printer,	/* I - Printer model */
 	    const vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
-	    int  *length)		/* O - Top position in points */
+	    int  *height)		/* O - Top position in points */
 {
   *width =	INT_MAX;
-    *length =	INT_MAX;
+    *height =	INT_MAX;
 }
 
 const char *
@@ -277,7 +277,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
-		out_length,	/* Output length (Level 2 output) */
+		out_ps_height,	/* Output height (Level 2 output) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
   convert_t	colorfunc;	/* Color conversion function... */
@@ -523,21 +523,21 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
       (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, &nv,
 		   NULL, NULL, NULL);
 
-      out_length = out_offset + image_width * out_bpp;
+      out_ps_height = out_offset + image_width * out_bpp;
 
       if (y < (image_height - 1))
       {
-        ps_ascii85(prn, out, out_length & ~3, 0);
-        out_offset = out_length & 3;
+        ps_ascii85(prn, out, out_ps_height & ~3, 0);
+        out_offset = out_ps_height & 3;
       }
       else
       {
-        ps_ascii85(prn, out, out_length, 1);
+        ps_ascii85(prn, out, out_ps_height, 1);
         out_offset = 0;
       }
 
       if (out_offset > 0)
-        memcpy(out, out + out_length - out_offset, out_offset);
+        memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
   Image_progress_conclude(image);

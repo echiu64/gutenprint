@@ -1136,6 +1136,10 @@ printrc_load(void)
 	  strncpy(key.v.dither_algorithm, value, 63);
 	} else if (strcasecmp("unit", keyword) == 0) {
 	  key.v.unit = atoi(value);
+	} else if (strcasecmp("custom-page-width", keyword) == 0) {
+	  key.v.page_width = atoi(value);
+	} else if (strcasecmp("custom-page-height", keyword) == 0) {
+	  key.v.page_height = atoi(value);
 	} else {
 	  /* Unrecognised keyword; ignore it... */
 #if 1
@@ -1321,6 +1325,8 @@ printrc_save(void)
 	fprintf(fp, "Ink-Type: %s\n", p->v.ink_type);
 	fprintf(fp, "Dither-Algorithm: %s\n", p->v.dither_algorithm);
 	fprintf(fp, "Unit: %d\n", p->v.unit);
+	fprintf(fp, "Custom-Page-Width: %d\n", p->v.page_width);
+	fprintf(fp, "Custom-Page-Height: %d\n", p->v.page_height);
 
 #ifdef DEBUG
         fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);

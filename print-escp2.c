@@ -1629,7 +1629,7 @@ typedef struct escp_init
   int xdpi;
   int use_softweave;
   int use_microweave;
-  int page_length;
+  int page_height;
   int page_width;
   int page_top;
   int page_bottom;
@@ -1913,17 +1913,17 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
     {
-      unsigned int length_limit, width_limit;
+      unsigned int height_limit, width_limit;
       const papersize_t *papersizes = get_papersizes();
       valptrs = malloc(sizeof(char *) * known_papersizes());
       *count = 0;
       width_limit = escp2_max_paper_width(model);
-      length_limit = escp2_max_paper_height(model);
+      height_limit = escp2_max_paper_height(model);
       for (i = 0; i < known_papersizes(); i++)
 	{
 	  if (strlen(papersizes[i].name) > 0 &&
 	      papersizes[i].width <= width_limit &&
-	      papersizes[i].length <= length_limit)
+	      papersizes[i].height <= height_limit)
 	    {
 	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
 	      strcpy(valptrs[*count], papersizes[i].name);
@@ -2026,12 +2026,12 @@ escp2_imageable_area(const printer_t *printer,	/* I - Printer model */
                      int  *bottom,	/* O - Bottom position in points */
                      int  *top)		/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
+  int	width, height;			/* Size of page */
 
-  default_media_size(printer, v, &width, &length);
+  default_media_size(printer, v, &width, &height);
   *left =	escp2_left_margin(printer->model);
   *right =	width - escp2_right_margin(printer->model);
-  *top =	length - escp2_top_margin(printer->model);
+  *top =	height - escp2_top_margin(printer->model);
   *bottom =	escp2_bottom_margin(printer->model);
 }
 
@@ -2039,10 +2039,10 @@ void
 escp2_limit(const printer_t *printer,	/* I - Printer model */
 	    const vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
-	    int  *length)		/* O - Top position in points */
+	    int  *height)		/* O - Top position in points */
 {
   *width =	escp2_max_paper_width(printer->model);
-  *length =	escp2_max_paper_height(printer->model);
+  *height =	escp2_max_paper_height(printer->model);
 }
 
 const char *
@@ -2217,9 +2217,9 @@ escp2_set_dot_size(FILE *prn, escp_init_t *init)
 }
 
 static void
-escp2_set_page_length(FILE *prn, escp_init_t *init)
+escp2_set_page_height(FILE *prn, escp_init_t *init)
 {
-  int l = init->ydpi * init->page_length / 72;
+  int l = init->ydpi * init->page_height / 72;
   if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
 		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
@@ -2232,8 +2232,8 @@ escp2_set_page_length(FILE *prn, escp_init_t *init)
 static void
 escp2_set_margins(FILE *prn, escp_init_t *init)
 {
-  int l = init->ydpi * (init->page_length - init->page_bottom) / 72;
-  int t = init->ydpi * (init->page_length - init->page_top) / 72;
+  int l = init->ydpi * (init->page_height - init->page_bottom) / 72;
+  int t = init->ydpi * (init->page_height - init->page_top) / 72;
   if (!(escp2_has_cap(init->model, MODEL_VARIABLE_DOT_MASK,
 		      MODEL_VARIABLE_NORMAL)) &&
       init->use_softweave)
@@ -2255,7 +2255,7 @@ static void
 escp2_set_form_factor(FILE *prn, escp_init_t *init)
 {
   int page_width = init->page_width * init->ydpi / 72;
-  int page_length = init->page_length * init->ydpi / 72;
+  int page_height = init->page_height * init->ydpi / 72;
 
   if (escp2_has_cap(init->model, MODEL_ZEROMARGIN_MASK, MODEL_ZEROMARGIN_YES))
       /* Make the page 2/10" wider (probably ignored by the printer anyway) */
@@ -2265,8 +2265,8 @@ escp2_set_form_factor(FILE *prn, escp_init_t *init)
     fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
 	    ((page_width >> 0) & 0xff), ((page_width >> 8) & 0xff),
 	    ((page_width >> 16) & 0xff), ((page_width >> 24) & 0xff),
-	    ((page_length >> 0) & 0xff), ((page_length >> 8) & 0xff),
-	    ((page_length >> 16) & 0xff), ((page_length >> 24) & 0xff));
+	    ((page_height >> 0) & 0xff), ((page_height >> 8) & 0xff),
+	    ((page_height >> 16) & 0xff), ((page_height >> 24) & 0xff));
 }
 
 static void
@@ -2308,7 +2308,7 @@ escp2_init_printer(FILE *prn, escp_init_t *init)
   escp2_set_microweave(prn, init);
   escp2_set_printhead_speed(prn, init);
   escp2_set_dot_size(prn, init);
-  escp2_set_page_length(prn, init);
+  escp2_set_page_height(prn, init);
   escp2_set_margins(prn, init);
   escp2_set_form_factor(prn, init);
   escp2_set_printhead_resolution(prn, init);
@@ -2388,7 +2388,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 		page_bottom,	/* Bottom of page */
 		page_width,	/* Width of page */
 		page_height,	/* Height of page */
-		page_length,	/* True length of page */
+		page_true_height,	/* True height of page */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
@@ -2558,14 +2558,14 @@ escp2_print(const printer_t *printer,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  default_media_size(printer, &nv, &n, &page_length);
+  default_media_size(printer, &nv, &n, &page_true_height);
   init.model = model;
   init.output_type = output_type;
   init.ydpi = ydpi;
   init.xdpi = xdpi;
   init.use_softweave = use_softweave;
   init.use_microweave = use_microweave;
-  init.page_length = page_length;
+  init.page_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;
   init.page_bottom = page_bottom;
@@ -3945,7 +3945,7 @@ escp2_write_weave(void *        vsw,
   int i, j;
   int setactive;
   int h_passes = sw->horizontal_weave * sw->vertical_subpasses;
-  const unsigned char *cols[6];
+  const unsigned char *cols[7];
   cols[0] = k;
   cols[1] = m;
   cols[2] = c;
@@ -4050,6 +4050,7 @@ escp2_write_weave(void *        vsw,
 	    {
 	      setactive = stp_pack(in, length * sw->bitwidth,
 				     comp_buf, &comp_ptr);
+	      fprintf(stderr, "add_to_row length %d\n", comp_ptr - comp_buf);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
 			 colors[j], densities[j], setactive,
 			 lineoffs[0], lineactives[0], bufs[0]);

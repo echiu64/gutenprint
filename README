@@ -1,4 +1,4 @@
-This is Gimp-Print version 4.1.1, a development release in the 4.1
+This is Gimp-Print version 4.1.2, a development release in the 4.1
 line.  Gimp-print is the print facility for the Gimp, and in addition
 a suite of drivers that may be used with common UNIX spooling systems
 using GhostScript or CUPS.  These drivers provide printing quality for
@@ -37,6 +37,8 @@ contains additional files required to actually build new plugins.
 If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
+
+Gimp-print 4.1 requires the Gimp 1.2.
 
 
 GHOSTSCRIPT

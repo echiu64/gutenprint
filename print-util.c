@@ -343,6 +343,7 @@ const static papersize_t paper_sizes[] =
   { "Kaku", 680, 941, PAPERSIZE_METRIC }, /* Japanese Kaku envelope #4 */
   { "Commercial 10", 297, 684, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
   { "A2 Invitation", 315, 414, PAPERSIZE_ENGLISH }, /* US A2 invitation */
+  { "Custom", 0, 0, PAPERSIZE_ENGLISH },
 
   { "",           0,    0, PAPERSIZE_METRIC }
 };
@@ -377,7 +378,7 @@ get_papersize_by_name(const char *name)
 static int
 paper_size_mismatch(int l, int w, const papersize_t *val)
 {
-  int hdiff = IABS(l - (int) val->length);
+  int hdiff = IABS(l - (int) val->height);
   int vdiff = fabs(w - (int) val->width);
   return hdiff + vdiff;
 }
@@ -390,7 +391,7 @@ get_papersize_by_size(int l, int w)
   const papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
     {
-      if (val->width == w && val->length == l)
+      if (val->width == w && val->height == l)
 	return val;
       else
 	{
@@ -411,12 +412,12 @@ default_media_size(const printer_t *printer,
 					/* I - Printer model (not used) */
 		   const vars_t *v,	/* I */
         	   int  *width,		/* O - Width in points */
-        	   int  *length)	/* O - Length in points */
+        	   int  *height)	/* O - Height in points */
 {
   if (v->page_width > 0 && v->page_height > 0)
     {
       *width = v->page_width;
-      *length = v->page_height;
+      *height = v->page_height;
     }
   else
     {
@@ -424,13 +425,17 @@ default_media_size(const printer_t *printer,
       if (!papersize)
 	{
 	  *width = 1;
-	  *length = 1;
+	  *height = 1;
 	}
       else
 	{
 	  *width = papersize->width;
-	  *length = papersize->length;
+	  *height = papersize->height;
 	}
+      if (*width == 0)
+	*width = 612;
+      if (*height == 0)
+	*height = 792;
     }
 }
 

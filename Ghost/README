@@ -641,6 +641,11 @@ This is printer type specific.  The option names are case sensitive.
 No media sources are currently defined for Epson printers.  At
 present, only the single sheet feeder can be used.
 
+For Epson printers:
+
+'Standard'
+'Roll Feed'
+
 
 For Canon printers:
 

@@ -1413,18 +1413,18 @@ canon_parameters(const printer_t *printer,	/* I - Printer model */
     return (NULL);
 
   if (strcmp(name, "PageSize") == 0) {
-    int length_limit, width_limit;
+    int height_limit, width_limit;
     const papersize_t *papersizes = get_papersizes();
     valptrs = malloc(sizeof(char *) * known_papersizes());
     *count = 0;
 
     width_limit = caps.max_width;
-    length_limit = caps.max_height;
+    height_limit = caps.max_height;
 
     for (i = 0; i < known_papersizes(); i++) {
       if (strlen(papersizes[i].name) > 0 &&
 	  papersizes[i].width <= width_limit &&
-	  papersizes[i].length <= length_limit) {
+	  papersizes[i].height <= height_limit) {
 	valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
 	strcpy(valptrs[*count], papersizes[i].name);
 	(*count)++;
@@ -1626,7 +1626,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   int source= canon_source_type(source_str,caps);
 
   int printable_width=  page_width*10/12;
-  int printable_height= page_height*10/12;
+  int printable_length= page_height*10/12;
 
   arg_6d_a= canon_size_type(v,caps);
   if (!arg_6d_a) arg_6d_b= 1;
@@ -1646,8 +1646,8 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   if (caps.model==8200) arg_6d_3= 0x01;
 
-  arg_70_1= (printable_height >> 8) & 0xff;
-  arg_70_2= (printable_height) & 0xff;
+  arg_70_1= (printable_length >> 8) & 0xff;
+  arg_70_2= (printable_length) & 0xff;
   arg_70_3= (printable_width >> 8) & 0xff;
   arg_70_4= (printable_width) & 0xff;
 
@@ -1672,7 +1672,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   /*
 #ifdef DEBUG
   fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
-	  page_width,page_height,printable_width,printable_height,
+	  page_width,page_height,printable_width,printable_length,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
 #endif
   */
@@ -1798,10 +1798,10 @@ canon_print(const printer_t *printer,		/* I - Model */
 		page_top,	/* Top of page */
 		page_bottom,	/* Bottom of page */
 		page_width,	/* Width of page */
-		page_height,	/* Height of page */
-		page_length,	/* True length of page */
+		page_height,	/* Length of page */
+		page_true_height,	/* True length of page */
 		out_width,	/* Width of image on page */
-		out_height,	/* Height of image on page */
+		out_length,	/* Length of image on page */
 		out_bpp,	/* Output bytes per pixel */
 		length,		/* Length of raster data */
                 buf_length,     /* Length of raster data buffer (dmt) */
@@ -1895,16 +1895,16 @@ canon_print(const printer_t *printer,		/* I - Model */
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
-			  &out_width, &out_height, &left, &top);
+			  &out_width, &out_length, &left, &top);
 
   /*
-   * Recompute the image height and width.  If the image has been
+   * Recompute the image length and width.  If the image has been
    * rotated, these will change from previously.
    */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
-  default_media_size(printer, &nv, &n, &page_length);
+  default_media_size(printer, &nv, &n, &page_true_height);
 
   /*
   PUT("top        ",top,72);
@@ -1915,9 +1915,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   PUT("page_right ",page_right,72);
   PUT("page_width ",page_width,72);
   PUT("page_height",page_height,72);
-  PUT("page_length",page_length,72);
+  PUT("page_true_height",page_true_height,72);
   PUT("out_width ", out_width,xdpi);
-  PUT("out_height", out_height,ydpi);
+  PUT("out_length", out_length,ydpi);
   */
 
   Image_progress_init(image);
@@ -1937,11 +1937,11 @@ canon_print(const printer_t *printer,		/* I - Model */
   */
 
   out_width  = xdpi * out_width / 72;
-  out_height = ydpi * out_height / 72;
+  out_length = ydpi * out_length / 72;
 
   /*
   PUT("out_width ", out_width,xdpi);
-  PUT("out_height", out_height,ydpi);
+  PUT("out_length", out_length,ydpi);
   */
 
   left = xdpi * left / 72;
@@ -2135,17 +2135,17 @@ canon_print(const printer_t *printer,		/* I - Model */
   in  = malloc(image_width * image_bpp);
   out = malloc(image_width * out_bpp * 2);
 
-  errdiv  = image_height / out_height;
-  errmod  = image_height % out_height;
+  errdiv  = image_height / out_length;
+  errmod  = image_height % out_length;
   errval  = 0;
   errlast = -1;
   errline  = 0;
 
-  for (y = 0; y < out_height; y ++)
+  for (y = 0; y < out_length; y ++)
   {
     int duplicate_line = 1;
     if ((y & 63) == 0)
-      Image_note_progress(image, y, out_height);
+      Image_note_progress(image, y, out_length);
 
     if (errline != errlast)
     {
@@ -2192,9 +2192,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 
     errval += errmod;
     errline += errdiv;
-    if (errval >= out_height)
+    if (errval >= out_length)
     {
-      errval -= out_height;
+      errval -= out_length;
       errline ++;
     }
   }

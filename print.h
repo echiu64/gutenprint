@@ -143,7 +143,7 @@ typedef struct
 {
   char name[32];
   unsigned width;
-  unsigned length;
+  unsigned height;
   papersize_unit_t paper_unit;
 } papersize_t;
 
@@ -270,7 +270,7 @@ extern void Image_progress_conclude(Image image);
  * void (*limit)(const struct printer *printer,
  *               const vars_t *v,
  *               int *width,
- *               int *length)
+ *               int *height)
  *
  *   returns the maximum page size the printer can handle, in units of
  *   1/72".
@@ -310,11 +310,11 @@ typedef struct printer
   char	**(*parameters)(const struct printer *printer, char *ppd_file,
                         char *name, int *count);
   void	(*media_size)(const struct printer *printer, const vars_t *v,
-		      int *width, int *length);
+		      int *width, int *height);
   void	(*imageable_area)(const struct printer *printer, const vars_t *v,
                           int *left, int *right, int *bottom, int *top);
   void	(*limit)(const struct printer *printer, const vars_t *v,
-		 int *width, int *length);
+		 int *width, int *height);
   void	(*print)(const struct printer *printer, FILE *prn,
 		 Image image, const vars_t *v);
   const char *(*default_resolution)(const struct printer *printer);
@@ -412,36 +412,36 @@ extern void	dither_cmyk(const unsigned short *, int, void *,
 
 extern void *	initialize_weave_params(int S, int J, int O,
 		                        int firstrow, int lastrow,
-		                        int pagelength, int strategy);
+		                        int pageheight, int strategy);
 extern void	calculate_row_parameters(void *w, int row, int subpass,
 		                         int *pass, int *jet, int *startrow,
 					 int *phantomrows, int *jetsused);
 extern void	destroy_weave_params(void *vw);
 
-extern void	stp_fold(const unsigned char *line, int single_length,
+extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
 
-extern void	stp_split_2(int length, int bits, const unsigned char *in,
+extern void	stp_split_2(int height, int bits, const unsigned char *in,
 			    unsigned char *outhi, unsigned char *outlo);
 
-extern void	stp_split_4(int length, int bits, const unsigned char *in,
+extern void	stp_split_4(int height, int bits, const unsigned char *in,
 			    unsigned char *out0, unsigned char *out1,
 			    unsigned char *out2, unsigned char *out3);
 
-extern void	stp_unpack_2(int length, int bits, const unsigned char *in,
+extern void	stp_unpack_2(int height, int bits, const unsigned char *in,
 			     unsigned char *outlo, unsigned char *outhi);
 
-extern void	stp_unpack_4(int length, int bits, const unsigned char *in,
+extern void	stp_unpack_4(int height, int bits, const unsigned char *in,
 			     unsigned char *out0, unsigned char *out1,
 			     unsigned char *out2, unsigned char *out3);
 
-extern void	stp_unpack_8(int length, int bits, const unsigned char *in,
+extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
 			     unsigned char *out0, unsigned char *out1,
 			     unsigned char *out2, unsigned char *out3,
 			     unsigned char *out4, unsigned char *out5,
 			     unsigned char *out6, unsigned char *out7);
 
-extern int	stp_pack(const unsigned char *line, int length,
+extern int	stp_pack(const unsigned char *line, int height,
 			 unsigned char *comp_buf, unsigned char **comp_ptr);
 
 extern void	merge_printvars(vars_t *user, const vars_t *print);
@@ -450,7 +450,7 @@ extern void	compute_lut(size_t steps, vars_t *v);
 
 
 extern void	default_media_size(const printer_t *printer, const vars_t *v,
-				   int *width, int *length);
+				   int *width, int *height);
 
 
 extern char	**lexmark_parameters(const printer_t *printer, char *ppd_file,
@@ -459,7 +459,7 @@ extern void	lexmark_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *left, int *right,
 				     int *bottom, int *top);
 extern void	lexmark_limit(const printer_t *printer, const vars_t *v,
-			    int *width, int *length);
+			    int *width, int *height);
 extern void	lexmark_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *lexmark_default_resolution(const printer_t *printer);
@@ -474,7 +474,7 @@ extern void	escp2_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_limit(const printer_t *printer, const vars_t *v,
-			    int *width, int *length);
+			    int *width, int *height);
 extern void	escp2_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *escp2_default_resolution(const printer_t *printer);
@@ -489,7 +489,7 @@ extern void	canon_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *left, int *right,
 				     int *bottom, int *top);
 extern void	canon_limit(const printer_t *printer, const vars_t *v,
-			    int *width, int *length);
+			    int *width, int *height);
 extern void	canon_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *canon_default_resolution(const printer_t *printer);
@@ -504,7 +504,7 @@ extern void	pcl_imageable_area(const printer_t *printer, const vars_t *v,
 		                   int *left, int *right,
 				   int *bottom, int *top);
 extern void	pcl_limit(const printer_t *printer, const vars_t *v,
-			  int *width, int *length);
+			  int *width, int *height);
 extern void	pcl_print(const printer_t *printer, FILE *prn,
 			  Image image, const vars_t *v);
 extern const char *pcl_default_resolution(const printer_t *printer);
@@ -516,12 +516,12 @@ extern void     pcl_describe_resolution(const struct printer *printer,
 extern char	**ps_parameters(const printer_t *printer, char *ppd_file,
 		                char *name, int *count);
 extern void	ps_media_size(const printer_t *printer, const vars_t *v,
-			      int *width, int *length);
+			      int *width, int *height);
 extern void	ps_imageable_area(const printer_t *printer, const vars_t *v,
 				  int *left, int *right,
 		                  int *bottom, int *top);
 extern void	ps_limit(const printer_t *printer, const vars_t *v,
-			 int *width, int *length);
+			 int *width, int *height);
 extern void	ps_print(const printer_t *printer, FILE *prn,
 			 Image image, const vars_t *v);
 extern const char *ps_default_resolution(const printer_t *printer);

@@ -79,7 +79,9 @@ static GtkWidget *height_entry;
 static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
 static GtkWidget *media_size_combo         = NULL;  /* Media size combo box */
-static gint       media_size_callback_id   = -1;    /* Media size calback ID */
+static GtkWidget *custom_size_width        = NULL;
+static GtkWidget *custom_size_height       = NULL;
+static gint       media_size_callback_id   = -1;
 static GtkWidget *media_type_combo         = NULL;  /* Media type combo box */
 static gint       media_type_callback_id   = -1;    /* Media type calback ID */
 static GtkWidget *media_source_combo       = NULL;  /* Media source combo box */
@@ -205,6 +207,7 @@ gimp_create_main_window (void)
   GtkWidget *hbox;
   GtkWidget *frame;
   GtkWidget *vbox;
+  GtkWidget *media_size_hbox;
   GtkWidget *ppvbox;
   GtkWidget *table;
   GtkWidget *printer_table;
@@ -266,7 +269,7 @@ gimp_create_main_window (void)
                      _("Save\nSettings"), gimp_save_callback,
                      NULL, NULL, NULL, FALSE, FALSE,
                      _("Print"), gimp_print_callback,
-                     NULL, NULL, NULL, TRUE, FALSE,
+                     NULL, NULL, NULL, FALSE, FALSE,
                      _("Cancel"), gtk_widget_destroy,
                      NULL, 1, NULL, FALSE, TRUE,
 
@@ -310,7 +313,8 @@ gimp_create_main_window (void)
    */
 
   preview = (GtkDrawingArea *) gtk_drawing_area_new ();
-  gtk_drawing_area_size (preview, PREVIEW_SIZE_HORIZ, PREVIEW_SIZE_VERT);
+  gtk_drawing_area_size (preview, PREVIEW_SIZE_HORIZ + 1,
+			 PREVIEW_SIZE_VERT + 1);
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (preview), FALSE, FALSE, 0);
   gtk_signal_connect (GTK_OBJECT (preview), "expose_event",
                       GTK_SIGNAL_FUNC (gimp_preview_update),
@@ -482,7 +486,7 @@ gimp_create_main_window (void)
   gtk_container_add (GTK_CONTAINER (frame), vbox);
   gtk_widget_show (vbox);
 
-  table = printer_table = gtk_table_new (8, 2, FALSE);
+  table = printer_table = gtk_table_new (9, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -498,12 +502,43 @@ gimp_create_main_window (void)
                              _("Media Size:"), 1.0, 0.5,
                              combo, 1, TRUE);
 
+  media_size_hbox = gtk_hbox_new(FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (media_size_hbox), 0);
+  gtk_widget_show (media_size_hbox);
+
+  label = gtk_label_new (_("Width:"));
+  gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  custom_size_width = entry = gtk_entry_new();
+  gtk_widget_set_usize (entry, 60, 0);
+  g_snprintf(s, sizeof(s), "%d", vars.page_width);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		     GTK_SIGNAL_FUNC(gimp_media_size_callback), NULL);
+  gtk_box_pack_start(GTK_BOX(media_size_hbox), entry, FALSE, FALSE, 0);
+  gtk_widget_show(entry);
+
+  label = gtk_label_new (_("Height:"));
+  gtk_box_pack_start (GTK_BOX (media_size_hbox), label, FALSE, FALSE, 0);
+  gtk_widget_show (label);
+
+  custom_size_height = entry = gtk_entry_new();
+  gtk_widget_set_usize (entry, 60, 0);
+  g_snprintf(s, sizeof(s), "%d", vars.page_height);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		     GTK_SIGNAL_FUNC(gimp_media_size_callback), NULL);
+  gtk_box_pack_start(GTK_BOX(media_size_hbox), entry, FALSE, FALSE, 0);
+  gtk_widget_show(entry);
+  gtk_table_attach_defaults(GTK_TABLE(table), media_size_hbox, 0, 2, 2, 3);
+
   /*
    * Media type combo box...
    */
 
   media_type_combo = combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 2,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
                              _("Media Type:"), 1.0, 0.5,
                              combo, 1, TRUE);
 
@@ -512,7 +547,7 @@ gimp_create_main_window (void)
    */
 
   media_source_combo = combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 4,
                              _("Media Source:"), 1.0, 0.5,
                              combo, 1, TRUE);
 
@@ -521,7 +556,7 @@ gimp_create_main_window (void)
    */
 
   ink_type_combo = combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 4,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
                              _("Ink Type:"), 1.0, 0.5,
                              combo, 1, TRUE);
 
@@ -530,7 +565,7 @@ gimp_create_main_window (void)
    */
 
   resolution_combo = combo = gtk_combo_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 6,
                              _("Resolution:"), 1.0, 0.5,
                              combo, 1, TRUE);
 
@@ -1135,6 +1170,8 @@ gimp_do_misc_updates (void)
   vars.left        = plist[plist_current].v.left;
   vars.top         = plist[plist_current].v.top;
   vars.unit        = plist[plist_current].v.unit;
+  vars.page_width  = plist[plist_current].v.page_width;
+  vars.page_height = plist[plist_current].v.page_height;
 
   gimp_preview_update ();
 
@@ -1468,16 +1505,126 @@ static void
 gimp_media_size_callback (GtkWidget *widget,
 			  gpointer   data)
 {
-  const gchar *new_media_size = Combo_get_text (media_size_combo);
-  if (strcmp (vars.media_size, new_media_size) != 0)
+  gchar s[32];
+  if (widget == custom_size_width)
     {
-      strcpy (vars.media_size, new_media_size);
-      strcpy (plist[plist_current].v.media_size, new_media_size);
+      gint width_limit, height_limit;
+      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      gdouble unit_scaler = 1.0;
+      new_value *= 72;
+      if (vars.unit)
+	unit_scaler *= 2.54;
+      (current_printer->limit)(current_printer, &vars, &width_limit,
+			       &height_limit);
+      if (new_value < 72)
+	new_value = 72;
+      else if (new_value > width_limit)
+	new_value = width_limit;
+      plist[plist_current].v.page_width = new_value;
+      vars.page_width = new_value;
       vars.left = -1;
-      vars.top  = -1;
       plist[plist_current].v.left = vars.left;
+      gimp_preview_update ();
+      new_value = new_value / 72.0;
+      if (vars.unit)
+	new_value /= 2.54;
+      g_snprintf(s, sizeof(s), "%.2f", new_value);
+      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+    }
+  else if (widget == custom_size_height)
+    {
+      gint width_limit, height_limit;
+      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      gdouble unit_scaler = 1.0;
+      new_value *= 72;
+      if (vars.unit)
+	unit_scaler *= 2.54;
+      new_value *= unit_scaler;
+      (current_printer->limit)(current_printer, &vars, &width_limit,
+			       &height_limit);
+      if (new_value < 144)
+	new_value = 144;
+      else if (new_value > height_limit)
+	new_value = height_limit;
+      plist[plist_current].v.page_height = new_value;
+      vars.page_height = new_value;
+      vars.top  = -1;
       plist[plist_current].v.top = vars.top;
       gimp_preview_update ();
+      new_value = new_value / 72.0;
+      if (vars.unit)
+	new_value /= 2.54;
+      g_snprintf(s, sizeof(s), "%.2f", new_value);
+      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+    }
+  else
+    {
+      const papersize_t *pap;
+      const gchar *new_media_size = Combo_get_text (media_size_combo);
+      pap = get_papersize_by_name(new_media_size);
+      if (pap)
+	{
+	  gint default_width, default_height;
+	  gdouble size;
+	  if (pap->width == 0)
+	    {
+	      default_media_size(current_printer, &vars,
+				 &default_width, &default_height);
+	      size = default_width / 72.0;
+	      if (vars.unit)
+		size *= 2.54;
+	      g_snprintf(s, sizeof(s), "%.2f", size);
+	      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+	      gtk_entry_set_editable(GTK_ENTRY(custom_size_width), TRUE);
+	      plist[plist_current].v.page_width = default_width;
+	      vars.page_width = default_width;
+	    }
+	  else
+	    {
+	      size = pap->width / 72.0;
+	      if (vars.unit)
+		size *= 2.54;
+	      g_snprintf(s, sizeof(s), "%.2f", size);
+	      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+	      gtk_entry_set_editable(GTK_ENTRY(custom_size_width), FALSE);
+	      plist[plist_current].v.page_width = 0;
+	      vars.page_width = 0;
+	    }
+	  if (pap->height == 0)
+	    {
+	      default_media_size(current_printer, &vars,
+				 &default_width, &default_height);
+	      size = default_height / 72.0;
+	      if (vars.unit)
+		size *= 2.54;
+	      g_snprintf(s, sizeof(s), "%.2f", size);
+	      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), TRUE);
+	      plist[plist_current].v.page_height = default_height;
+	      vars.page_height = default_height;
+	    }
+	  else
+	    {
+	      size = pap->height / 72.0;
+	      if (vars.unit)
+		size *= 2.54;
+	      g_snprintf(s, sizeof(s), "%.2f", size);
+	      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), FALSE);
+	      plist[plist_current].v.page_height = 0;
+	      vars.page_height = 0;
+	    }
+	}
+      if (strcmp (vars.media_size, new_media_size) != 0)
+	{
+	  strcpy (vars.media_size, new_media_size);
+	  strcpy (plist[plist_current].v.media_size, new_media_size);
+	  vars.left = -1;
+	  vars.top  = -1;
+	  plist[plist_current].v.left = vars.left;
+	  plist[plist_current].v.top = vars.top;
+	  gimp_preview_update ();
+	}
     }
 }
 

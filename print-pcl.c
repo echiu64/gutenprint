@@ -1415,7 +1415,7 @@ pcl_parameters(const printer_t *printer,/* I - Printer model */
 
 #ifdef DEBUG
   fprintf(stderr, "Printer model = %d\n", printer->model);
-  fprintf(stderr, "PageWidth = %d, PageLength = %d\n", caps.max_width, caps.max_height);
+  fprintf(stderr, "PageWidth = %d, PageHeight = %d\n", caps.max_width, caps.max_height);
   fprintf(stderr, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
     caps.top_margin, caps.bottom_margin, caps.left_margin, caps.right_margin);
   fprintf(stderr, "Resolutions: %d\n", caps.resolutions);
@@ -1437,7 +1437,7 @@ pcl_parameters(const printer_t *printer,/* I - Printer model */
 	{
 	  if (strlen(papersizes[i].name) > 0 &&
 	      papersizes[i].width <= caps.max_width &&
-	      papersizes[i].length <= caps.max_height &&
+	      papersizes[i].height <= caps.max_height &&
               ((use_custom == 1) || ((use_custom == 0) &&
               (pcl_convert_media_size(papersizes[i].name, printer->model) != -1)))
              )
@@ -1532,12 +1532,12 @@ pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
                    int  *bottom,	/* O - Bottom position in points */
                    int  *top)		/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
+  int	width, height;			/* Size of page */
   pcl_cap_t caps;			/* Printer caps */
 
   caps = pcl_get_model_capabilities(printer->model);
 
-  default_media_size(printer, v, &width, &length);
+  default_media_size(printer, v, &width, &height);
 
 /*
  * Note: The margins actually vary with paper size, but since you can
@@ -1546,7 +1546,7 @@ pcl_imageable_area(const printer_t *printer,	/* I - Printer model */
 
   *left   = caps.left_margin;
   *right  = width - caps.right_margin;
-  *top    = length - caps.top_margin;
+  *top    = height - caps.top_margin;
   *bottom = caps.bottom_margin;
 }
 
@@ -1554,11 +1554,11 @@ void
 pcl_limit(const printer_t *printer,	/* I - Printer model */
 	  const vars_t *v,  		/* I */
 	  int  *width,			/* O - Left position in points */
-	  int  *length)			/* O - Top position in points */
+	  int  *height)			/* O - Top position in points */
 {
   pcl_cap_t caps= pcl_get_model_capabilities(printer->model);
   *width =	caps.max_width;
-  *length =	caps.max_height;
+  *height =	caps.max_height;
 }
 
 /*
@@ -1602,7 +1602,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		out_bpp,	/* Output bytes per pixel */
-		length,		/* Length of raster data */
+		height,		/* Height of raster data */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
@@ -1984,13 +1984,13 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Allocate memory for the raster data...
   */
 
-  length = (out_width + 7) / 8;
+  height = (out_width + 7) / 8;
   if (do_cret)
-    length *= 2;
+    height *= 2;
 
   if (output_type == OUTPUT_GRAY)
   {
-    black   = malloc(length);
+    black   = malloc(height);
     cyan    = NULL;
     magenta = NULL;
     yellow  = NULL;
@@ -1999,18 +1999,18 @@ pcl_print(const printer_t *printer,		/* I - Model */
   }
   else
   {
-    cyan    = malloc(length);
-    magenta = malloc(length);
-    yellow  = malloc(length);
+    cyan    = malloc(height);
+    magenta = malloc(height);
+    yellow  = malloc(height);
 
     if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
       black = NULL;
     else
-      black = malloc(length);
+      black = malloc(height);
     if (do_6color)
     {
-      lcyan    = malloc(length);
-      lmagenta = malloc(length);
+      lcyan    = malloc(height);
+      lmagenta = malloc(height);
     }
     else
     {
@@ -2123,8 +2123,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
       if (output_type == OUTPUT_GRAY)
       {
 	dither_black(out, y, dither, black, duplicate_line);
-        (*writefunc)(prn, black + length / 2, length / 2, 0);
-        (*writefunc)(prn, black, length / 2, 1);
+        (*writefunc)(prn, black + height / 2, height / 2, 0);
+        (*writefunc)(prn, black, height / 2, 1);
       }
       else
       {
@@ -2132,27 +2132,27 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		    yellow, NULL, black, duplicate_line);
 	
 	if(do_cretb){
-/*	  (*writefunc)(prn, black + length / 2, 0, 0); */
-	  (*writefunc)(prn, black, length/2, 0);
+/*	  (*writefunc)(prn, black + height / 2, 0, 0); */
+	  (*writefunc)(prn, black, height/2, 0);
 	}else{
-	  (*writefunc)(prn, black + length / 2, length / 2, 0);
-	  (*writefunc)(prn, black, length / 2, 0);
+	  (*writefunc)(prn, black + height / 2, height / 2, 0);
+	  (*writefunc)(prn, black, height / 2, 0);
 	}
-        (*writefunc)(prn, cyan + length / 2, length / 2, 0);
-        (*writefunc)(prn, cyan, length / 2, 0);
-        (*writefunc)(prn, magenta + length / 2, length / 2, 0);
-        (*writefunc)(prn, magenta, length / 2, 0);
-        (*writefunc)(prn, yellow + length / 2, length / 2, 0);
+        (*writefunc)(prn, cyan + height / 2, height / 2, 0);
+        (*writefunc)(prn, cyan, height / 2, 0);
+        (*writefunc)(prn, magenta + height / 2, height / 2, 0);
+        (*writefunc)(prn, magenta, height / 2, 0);
+        (*writefunc)(prn, yellow + height / 2, height / 2, 0);
         if (do_6color)
         {
-          (*writefunc)(prn, yellow, length / 2, 0);
-          (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
-          (*writefunc)(prn, lcyan, length / 2, 0);
-          (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
-          (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
+          (*writefunc)(prn, yellow, height / 2, 0);
+          (*writefunc)(prn, lcyan + height / 2, height / 2, 0);
+          (*writefunc)(prn, lcyan, height / 2, 0);
+          (*writefunc)(prn, lmagenta + height / 2, height / 2, 0);
+          (*writefunc)(prn, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
         }
         else
-          (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
+          (*writefunc)(prn, yellow, height / 2, 1);		/* Last plane set on yellow */
       }
     }
     else
@@ -2167,7 +2167,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	  dither_monochrome(out, y, dither, black, duplicate_line);
 	else
 	  dither_black(out, y, dither, black, duplicate_line);
-        (*writefunc)(prn, black, length, 1);
+        (*writefunc)(prn, black, height, 1);
       }
       else
       {
@@ -2175,17 +2175,17 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		    yellow, NULL, black, duplicate_line);
 
         if (black != NULL)
-          (*writefunc)(prn, black, length, 0);
-        (*writefunc)(prn, cyan, length, 0);
-        (*writefunc)(prn, magenta, length, 0);
+          (*writefunc)(prn, black, height, 0);
+        (*writefunc)(prn, cyan, height, 0);
+        (*writefunc)(prn, magenta, height, 0);
         if (do_6color)
         {
-          (*writefunc)(prn, yellow, length, 0);
-          (*writefunc)(prn, lcyan, length, 0);
-          (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
+          (*writefunc)(prn, yellow, height, 0);
+          (*writefunc)(prn, lcyan, height, 0);
+          (*writefunc)(prn, lmagenta, height, 1);		/* Last plane set on light magenta */
         }
         else
-          (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
+          (*writefunc)(prn, yellow, height, 1);		/* Last plane set on yellow */
       }
     }
 
@@ -2246,11 +2246,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
 static void
 pcl_mode0(FILE          *prn,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
-          int           length,		/* I - Length of bitmap data */
+          int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
-  fprintf(prn, "\033*b%d%c", length, last_plane ? 'W' : 'V');
-  fwrite(line, length, 1, prn);
+  fprintf(prn, "\033*b%d%c", height, last_plane ? 'W' : 'V');
+  fwrite(line, height, 1, prn);
 }
 
 
@@ -2261,13 +2261,13 @@ pcl_mode0(FILE          *prn,		/* I - Print file or command */
 static void
 pcl_mode2(FILE          *prn,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
-          int           length,		/* I - Length of bitmap data */
+          int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
   unsigned char	comp_buf[1536],		/* Compression buffer */
 		*comp_ptr;		/* Current slot in buffer */
 
-  stp_pack(line, length, comp_buf, &comp_ptr);
+  stp_pack(line, height, comp_buf, &comp_ptr);
 
  /*
   * Send a line of raster graphics...

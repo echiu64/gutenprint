@@ -84,7 +84,7 @@ typedef struct {
     int lcyan_data_rows_per_row;
     char **lmagenta_bufs;
     int lmagenta_data_rows_per_row;
-    int active_length;			/* Length of output data */
+    int active_height;			/* Height of output data */
     int output_depth;
 } output_t;
 
@@ -94,7 +94,7 @@ typedef struct {
 #define PCL_CMYKcm 6
 
 #define PCL_COMPRESSION_NONE 0
-#define PCL_COMPRESSION_RUNLENGTH 1
+#define PCL_COMPRESSION_RUNHEIGHT 1
 #define PCL_COMPRESSION_TIFF 2
 #define PCL_COMPRESSION_DELTA 3
 #define PCL_COMPRESSION_CRDR 9		/* Compressed row delta replacement */
@@ -499,8 +499,8 @@ void write_grey(output_t *output,	/* I: data */
     char tb[8];
 
 #ifdef DEBUG
-    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d\n",
-	output->active_length, wholebytes, crumbs);
+    fprintf(stderr, "Data Height: %d, wholebytes: %d, crumbs: %d\n",
+	output->active_height, wholebytes, crumbs);
 #endif
 
     for (i=0; i < wholebytes; i++) {
@@ -546,27 +546,27 @@ void write_colour(output_t *output,		/* I: Data buffers */
 	black_buf = NULL;
 
 #ifdef DEBUG
-    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d, planes: %d\n",
-	output->active_length, wholebytes, crumbs, image->colour_type);
+    fprintf(stderr, "Data Height: %d, wholebytes: %d, crumbs: %d, planes: %d\n",
+	output->active_height, wholebytes, crumbs, image->colour_type);
 
     fprintf(stderr, "Cyan: ");
-    for (i=0; i < output->active_length; i++) {
+    for (i=0; i < output->active_height; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) cyan_buf[i]);
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "Magenta: ");
-    for (i=0; i < output->active_length; i++) {
+    for (i=0; i < output->active_height; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) magenta_buf[i]);
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "Yellow: ");
-    for (i=0; i < output->active_length; i++) {
+    for (i=0; i < output->active_height; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) yellow_buf[i]);
     }
     fprintf(stderr, "\n");
     if (image->colour_type == PCL_CMYK) {
 	fprintf(stderr, "Black: ");
-	for (i=0; i < output->active_length; i++) {
+	for (i=0; i < output->active_height; i++) {
 	    fprintf(stderr, "%02x ", (unsigned char) black_buf[i]);
 	}
 	fprintf(stderr, "\n");
@@ -648,9 +648,9 @@ void write_colour(output_t *output,		/* I: Data buffers */
  */
 
 int decode_tiff(char *in_buffer,		/* I: Data buffer */
-		int data_length,		/* I: Length of data */
+		int data_height,		/* I: Height of data */
 		char *decode_buf,		/* O: decoded data */
-		int maxlen)			/* I: Max length of decode_buf */
+		int maxlen)			/* I: Max height of decode_buf */
 {
 /* The TIFF coding consists of either:-
  *
@@ -666,7 +666,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
     int i;
 #endif
 
-    while(pos < data_length ) {
+    while(pos < data_height ) {
 
 	count = in_buffer[pos];
 
@@ -798,7 +798,7 @@ int main(int argc, char *argv[])
     output_data.lcyan_data_rows_per_row = 0;
     output_data.lmagenta_bufs = NULL;
     output_data.lmagenta_data_rows_per_row = 0;
-    output_data.active_length = 0;
+    output_data.active_height = 0;
 
     id = id;				/* Remove compiler warning */
     received_rows = NULL;
@@ -1351,8 +1351,8 @@ int main(int argc, char *argv[])
 		    case PCL_COMPRESSION_NONE :
 			fprintf(stderr, "NONE\n");
 			break;
-		    case PCL_COMPRESSION_RUNLENGTH :
-			fprintf(stderr, "Runlength\n");
+		    case PCL_COMPRESSION_RUNHEIGHT :
+			fprintf(stderr, "Runheight\n");
 			break;
 		    case PCL_COMPRESSION_TIFF :
 			fprintf(stderr, "TIFF\n");
@@ -1488,7 +1488,7 @@ int main(int argc, char *argv[])
 	    case PCL_DATA_LAST :
 #ifdef DEBUG
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
-		fprintf(stderr, "Data Length: %d\n", numeric_arg);
+		fprintf(stderr, "Data Height: %d\n", numeric_arg);
 #endif
 
 /*
@@ -1520,10 +1520,10 @@ int main(int argc, char *argv[])
 
 		if (image_data.compression_type == PCL_COMPRESSION_NONE) {
 		    memcpy(received_rows[current_data_row], &data_buffer, (size_t) numeric_arg);
-		    output_data.active_length = numeric_arg;
+		    output_data.active_height = numeric_arg;
 		}
 		else
-		    output_data.active_length = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], MAX_DATA);
+		    output_data.active_height = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], MAX_DATA);
 
 		if (command == PCL_DATA_LAST) {
 		    if (image_data.colour_type == PCL_MONO)

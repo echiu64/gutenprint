@@ -38,7 +38,7 @@ typedef struct {
   int absolute_vertical_units; /* dpi, assumed to be >= relative */
   int top_margin; /* dots */
   int bottom_margin; /* dots */
-  int page_length; /* dots */
+  int page_height; /* dots */
   int dotsize;
   int bpp; /* bits per pixel */
   int current_color;
@@ -53,7 +53,7 @@ typedef struct {
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
  * 1440 x 720 dpi page.  That's more than I have in my laptop, so, let's
  * play some games to reduce memory.  Allocate each scan line separately,
- * and don't require that the allocated length be full page width.  This
+ * and don't require that the allocated height be full page width.  This
  * way, if we only want to print a 2x2 image, we only need to allocate the
  * ram that we need.  We'll build up the printed image in ram at low
  * color depth, KCMYcm color basis, and then write out the RGB ppm file
@@ -203,7 +203,7 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
 
   int i;
-  int temp,shift,length,lvalue,pvalue,oldstop;
+  int temp,shift,height,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
   if (startl<p->startx[color]) { /* l should be to the right of p */
@@ -218,7 +218,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
     l=tempp;
   }
   shift=startl-p->startx[color];
-  length=stopl-startl+1;
+  height=stopl-startl+1;
 
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
@@ -226,7 +226,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   memset(p->line[color]+((oldstop-p->startx[color]+1)*pstate.bpp+7)/8,0,
           ((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8-
           ((oldstop-p->startx[color]+1)*pstate.bpp+7)/8);
-  for (i=0;i<length;i++) {
+  for (i=0;i<height;i++) {
     lvalue=get_bits(l,i);
     pvalue=get_bits(p->line[color],i+shift);
     if (0&&pvalue&&lvalue) {
@@ -242,10 +242,10 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int length, int skip,
+void expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
                   int left_ignore) {
 
-  /* src is a pointer to a bit stream which is composed of fields of length
+  /* src is a pointer to a bit stream which is composed of fields of height
    * bpp starting with the most significant bit of the first byte and
    * proceding from there with no regard to byte boundaries.  For the
    * existing Epson printers, bpp is 1 or 2, which means fields will never
@@ -263,11 +263,11 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int skip,
 
   if ((skip==1)&&!(left_ignore*pstate.bpp%8)) {
     /* the trivial case, this should be faster */
-    memcpy(dst,src+left_ignore*pstate.bpp/8,(length*pstate.bpp+7)/8);
+    memcpy(dst,src+left_ignore*pstate.bpp/8,(height*pstate.bpp+7)/8);
     return;
   }
 
-  for (i=0;i<length;i++) {
+  for (i=0;i<height;i++) {
     set_bits(dst,i*skip,get_bits(src,i+left_ignore));
   }
 
@@ -562,7 +562,7 @@ void parse_escp2(FILE *fp_r){
               pstate.absolute_vertical_units=360;
               pstate.top_margin=120;
               pstate.bottom_margin=
-                pstate.page_length=22*360; /* 22 inches is default ??? */
+                pstate.page_height=22*360; /* 22 inches is default ??? */
               pstate.monomode=0;
             }
             break;
@@ -618,7 +618,7 @@ void parse_escp2(FILE *fp_r){
                 getn(bufsize,"Error reading raster data!\n");
                 update_page(buf,bufsize,m,n,currentcolor,density);
                 break;
-              case 1:  /* run length encoding */
+              case 1:  /* run height encoding */
                 for (i=0;(!eject)&&(i<(m*((n*pstate.bpp+7)/8)));) {
                   get1("Error reading counter!\n");
                   if (ch<128) {
@@ -817,8 +817,8 @@ void parse_escp2(FILE *fp_r){
                 if ((bufsize==4)||(bufsize==8)) {
                   pstate.yposition=0;
                   if (pstate.top_margin+pstate.bottom_margin>
-                       pstate.page_length) {
-                    pstate.page_length=pstate.top_margin+pstate.bottom_margin;
+                       pstate.page_height) {
+                    pstate.page_height=pstate.top_margin+pstate.bottom_margin;
                   }
                   page=(line_type **)mycalloc(pstate.bottom_margin,
                                   sizeof(line_type *));
@@ -905,7 +905,7 @@ void parse_escp2(FILE *fp_r){
                 pstate.xposition=i*(pstate.relative_horizontal_units/
                                      pstate.absolute_horizontal_units);
                 break;
-              case 'C': /* set page length */
+              case 'C': /* set page height */
                 break;
               default:
                 fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,counter-5-bufsize);
@@ -944,7 +944,7 @@ void reverse_bit_order(unsigned char *buf, int n)
 
 /* 'rle_decode'
  *
- * run-length-decodes a given buffer of length "n"
+ * run-height-decodes a given buffer of height "n"
  * and stores the result in the same buffer
  * not exceeding a size of "max" bytes.
  */
@@ -1071,7 +1071,7 @@ void parse_canon(FILE *fp_r){
 	 pstate.absolute_vertical_units=360;
 	 pstate.top_margin=120;
 	 pstate.bottom_margin=
-	   pstate.page_length=22*360; /* 22 inches is default ??? */
+	   pstate.page_height=22*360; /* 22 inches is default ??? */
 	 pstate.monomode=0;
 	 pstate.xposition= 0;
 	 pstate.yposition= 0;
@@ -1148,7 +1148,7 @@ void parse_canon(FILE *fp_r){
 	 pstate.absolute_horizontal_units=
 	 buf[3]+256*buf[2];
        pstate.bottom_margin= pstate.relative_vertical_units* 22;
-       /* FIXME: replace with real page length */
+       /* FIXME: replace with real page height */
        fprintf(stderr,"canon: res is %d x %d dpi\n",
 	       pstate.relative_horizontal_units,
 	       pstate.relative_vertical_units);

@@ -490,7 +490,7 @@ stp_open(gx_device *pdev)
 {
   /* Change the margins if necessary. */
   float st[4];
-  int left,right,bottom,top,width,length;
+  int left,right,bottom,top,width,height;
   const printer_t *printer = get_printer_by_driver(stp_data.v.driver);
   if (!printer)
     {
@@ -508,7 +508,7 @@ stp_open(gx_device *pdev)
   (*printer->media_size)(printer,
 			 &(stp_data.v),
 			 &width,
-			 &length);
+			 &height);
 
   (*printer->imageable_area)(printer,	/* I - Printer model */
 			     &(stp_data.v),
@@ -518,12 +518,12 @@ stp_open(gx_device *pdev)
 			     &top);	/* O - Top position in points */
 
   st[1] = (float)bottom / 72;        /* bottom margin */
-  st[3] = (float)(length-top) / 72;  /* top margin    */
+  st[3] = (float)(height-top) / 72;  /* top margin    */
   st[0] = (float)left / 72;          /* left margin   */
   st[2] = (float)(width-right) / 72; /* right margin  */
 
   stp_data.v.top    = 0;
-  stp_data.bottom = bottom + length-top;
+  stp_data.bottom = bottom + height-top;
 
   stp_print_debug("stp_open", pdev, &stp_data);
   STP_DEBUG(fprintf(gs_stderr, "margins:  l %f  b %f  r %f  t %f\n",
@@ -607,7 +607,7 @@ Image_height(Image image)
   /* calculate new image height */
   tmp2 *= (float)(im->dev->x_pixels_per_inch) / 72.;
 
-  STP_DEBUG(fprintf(gs_stderr,"corrected page length %f\n",tmp2));
+  STP_DEBUG(fprintf(gs_stderr,"corrected page height %f\n",tmp2));
 
   return (int)tmp2;
 }

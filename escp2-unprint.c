@@ -35,7 +35,7 @@ typedef struct {
   int absolute_vertical_units; /* dpi, assumed to be >= relative */
   int top_margin; /* dots */
   int bottom_margin; /* dots */
-  int page_length; /* dots */
+  int page_height; /* dots */
   int dotsize;
   int current_color;
   int xposition; /* dots */
@@ -48,7 +48,7 @@ typedef struct {
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
  * 1440 x 720 dpi page.  That's more than I have in my laptop, so, let's
  * play some games to reduce memory.  Allocate each scan line separately,
- * and don't require that the allocated length be full page width.  This
+ * and don't require that the allocated height be full page width.  This
  * way, if we only want to print a 2x2 image, we only need to allocate the
  * ram that we need.  We'll build up the printed image in ram at low
  * color depth, KCMYcm color basis, and then write out the RGB ppm file
@@ -194,7 +194,7 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
 void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color, int bpp){
 
-  int temp,shift,length,lvalue,pvalue,oldstop;
+  int temp,shift,height,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
   if (startl<p->startx[color]) { /* l should be to the right of p */
@@ -209,7 +209,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
     l=tempp;
   }
   shift=startl-p->startx[color];
-  length=stopl-startl+1;
+  height=stopl-startl+1;
 
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
@@ -217,7 +217,7 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
           ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
           ((oldstop-p->startx[color]+1)*bpp+7)/8);
-  for (i=0;i<length;i++) {
+  for (i=0;i<height;i++) {
     lvalue=get_bits(l,i,bpp);
     pvalue=get_bits(p->line[color],i+shift,bpp);
     if (0&&pvalue&&lvalue) {
@@ -233,9 +233,9 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, int skip) {
+void expand_line (unsigned char *src, unsigned char *dst, int height, int bpp, int skip) {
 
-  /* src is a pointer to a bit stream which is composed of fields of length
+  /* src is a pointer to a bit stream which is composed of fields of height
    * bpp starting with the most significant bit of the first byte and
    * proceding from there with no regard to byte boundaries.  For the
    * existing Epson printers, bpp is 1 or 2, which means fields will never
@@ -248,11 +248,11 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
    * out every skip fields.
    */
   if (skip==1) { /* the trivial case, this should be faster */
-    memcpy(dst,src,(length*bpp+7)/8);
+    memcpy(dst,src,(height*bpp+7)/8);
     return;
   }
 
-  for (i=0;i<length;i++) {
+  for (i=0;i<height;i++) {
     set_bits(dst,i*skip,bpp,get_bits(src,i,bpp));
   }
 
@@ -444,7 +444,7 @@ counter=0;
               pstate.absolute_vertical_units=360;
               pstate.top_margin=120;
               pstate.bottom_margin=
-                pstate.page_length=22*360; /* 22 inches is default ??? */
+                pstate.page_height=22*360; /* 22 inches is default ??? */
               pstate.monomode=0;
             }
             break;
@@ -501,7 +501,7 @@ counter=0;
                 getn(bufsize,"Error reading raster data!\n");
                 update_page(buf,bufsize,m,n,currentcolor,currentbpp,density);
                 break;
-              case 1:  /* run length encoding */
+              case 1:  /* run height encoding */
                 for (i=0;(!eject)&&(i<(m*((n*currentbpp+7)/8)));) {
                   get1("Error reading counter!\n");
                   if (ch<128) {
@@ -649,8 +649,8 @@ counter=0;
                 if ((bufsize==4)||(bufsize==8)) {
                   pstate.yposition=0;
                   if (pstate.top_margin+pstate.bottom_margin>
-                       pstate.page_length) {
-                    pstate.page_length=pstate.top_margin+pstate.bottom_margin;
+                       pstate.page_height) {
+                    pstate.page_height=pstate.top_margin+pstate.bottom_margin;
                   }
                   page=(line_type **)mycalloc(pstate.bottom_margin,
                                   sizeof(line_type *));
@@ -738,7 +738,7 @@ counter=0;
                                      pstate.absolute_horizontal_units);
             break;
                 break;
-              case 'C': /* set page length */
+              case 'C': /* set page height */
                 break;
               default:
                 fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,counter-5-bufsize);
