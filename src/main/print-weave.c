@@ -1418,10 +1418,25 @@ stp_unpack_8(int height,
 }
 
 int
-stp_pack(const unsigned char *line,
-	 int height,
-	 unsigned char *comp_buf,
-	 unsigned char **comp_ptr)
+stp_pack_uncompressed(const unsigned char *line,
+		      int height,
+		      unsigned char *comp_buf,
+		      unsigned char **comp_ptr)
+{
+  int i;
+  memcpy(comp_buf, line, height);
+  *comp_ptr = comp_buf + height;
+  for (i = 0; i < height; i++)
+    if (line[i])
+      return 1;
+  return 0;
+}
+
+int
+stp_pack_tiff(const unsigned char *line,
+	      int height,
+	      unsigned char *comp_buf,
+	      unsigned char **comp_ptr)
 {
   const unsigned char *start;		/* Start of compressed data */
   unsigned char repeat;			/* Repeating char */
@@ -1759,6 +1774,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
 					int subpass, int width,
 					int missingstartrows,
 					int vertical_subpass),
+		     int (*pack)(const unsigned char *in, int bytes,
+				 unsigned char *out, unsigned char **optr),
 		     int (*compute_linewidth)(const stp_softweave_t *sw))
 {
   int i;
@@ -1872,6 +1889,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->rcache = -2;
   sw->vcache = -2;
   sw->fill_start = fill_start;
+  sw->pack = pack;
   horizontal_width = (compute_linewidth)(sw);
 
   for (i = 0; i < sw->vmod; i++)
@@ -2119,7 +2137,7 @@ stp_compute_uncompressed_linewidth(const stp_softweave_t *sw)
 }
 
 static void
-initialize_row(const stp_softweave_t *sw, int row, int width)
+initialize_row(stp_softweave_t *sw, int row, int width)
 {
   stp_weave_t w;
   int i, j, jj;
@@ -2356,7 +2374,7 @@ stp_write_weave(void *        vsw,
 		}
 	      for (i = 0; i < h_passes; i++)
 		{
-		  setactive = stp_pack(sw->s[i], sw->bitwidth * xlength,
+		  setactive = (sw->pack)(sw->s[i], sw->bitwidth * xlength,
 				       sw->comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, sw->comp_buf,
 			     comp_ptr - sw->comp_buf, j, setactive,
@@ -2365,7 +2383,7 @@ stp_write_weave(void *        vsw,
 	    }
 	  else
 	    {
-	      setactive = stp_pack(in, length * sw->bitwidth,
+	      setactive = (sw->pack)(in, length * sw->bitwidth,
 				   sw->comp_buf, &comp_ptr);
 	      add_to_row(sw, sw->lineno, sw->comp_buf, comp_ptr - sw->comp_buf,
 			 j, setactive, lineoffs[0], lineactives[0], bufs[0]);

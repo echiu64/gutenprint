@@ -3010,7 +3010,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 				 + escp2_extra_feed(model, nv)
 				     * physical_ydpi / 360,
 			       1, head_offset, nv, flush_pass,
-			       stp_fill_tiff, stp_compute_tiff_linewidth);
+			       stp_fill_tiff, stp_pack_tiff,
+			       stp_compute_tiff_linewidth);
 
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
