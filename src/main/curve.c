@@ -174,9 +174,11 @@ compute_spline_deltas(stp_internal_curve_t *curve)
     }
   else
     {
-      y2[0] = 0.0;
-      u[0] = 0.0;
-      for (i = 1; i < curve->real_point_count - 1; i++)
+      int count = curve->real_point_count - 1;
+
+      y2[0] = 0;
+      u[0] = 2 * (y[1] - y[0]);
+      for (i = 1; i < count; i++)
 	{
 	  int im1 = (i - 1);
 	  int ip1 = (i + 1);
@@ -188,16 +190,15 @@ compute_spline_deltas(stp_internal_curve_t *curve)
 	  u[i] = y[ip1] - 2 * y[i] + y[im1];
 	  u[i] = 3.0 * u[i] - sig * u[im1] / p;
 	}
-      y2[curve->real_point_count - 1] = 0.0;
-      u[curve->real_point_count - 1] = 0.0;
-      for (i = 0; i < curve->real_point_count; i++)
-	stp_erprintf("i %d y %.6f y2 %.6f u %.6f\n", i, y[i], y2[i], u[i]);
-      for (k = curve->real_point_count - 2; k > 0; k--)
+
+      u[count] = 2 * (y[count] - y[count - 1]);
+      y2[count] = 0.0;
+
+      u[count] = 0.0;
+      for (k = curve->real_point_count - 2; k >= 0; k--)
 	y2[k] = y2[k] * y2[k + 1] + u[k];
     }
 
-  for (i = 0; i < curve->real_point_count; i++)
-    stp_erprintf("i %d y %.6f y2 %.6f u %.6f\n", i, y[i], y2[i], u[i]);
   curve->interval = y2;
   stp_free(u);
 }
@@ -895,9 +896,11 @@ interpolate_point_internal(const stp_curve_t curve, double where)
 
       if (ip1 >= icurve->point_count)
 	ip1 -= icurve->point_count;
-      retval = a * icurve->data[i] + b * icurve->data[ip1] +
-	((a * a * a - a) * icurve->interval[i] +
-	 (b * b * b - b) * icurve->interval[ip1]) / 6.0;
+      retval = ((a * a * a - a) * icurve->interval[i] +
+		(b * b * b - b) * icurve->interval[ip1]);
+
+      retval = a * icurve->data[i] + b * icurve->data[ip1] + retval / 6;
+
       if (retval > icurve->bhi)
 	retval = icurve->bhi;
       if (retval < icurve->blo)
