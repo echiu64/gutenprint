@@ -60,6 +60,7 @@ struct option optlist[] =
   { "help",		0,	NULL,	(int) 'h' },
   { "identify",		0,	NULL,	(int) 'd' },
   { "model",		1,	NULL,	(int) 'm' },
+  { "quiet",		0,	NULL,	(int) 'q' },
   { NULL,		0,	NULL,	0 	  }
 };
 
@@ -80,11 +81,13 @@ Usage: escputil [-P printer | -r device] [-m model] [-u]\n\
                        damage to the printer.\n\
     -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
                        read/write access to the raw printer device.\n\
+    -d|--identify      Query the printer for make and model information.\n\
+                       This requires read/write access to the raw printer\n\
+                       device.\n\
     -u|--usb           The printer is connected via USB.\n\
     -h|--help          Print this help message.\n\
     -q|--quiet         Suppress the banner.\n\
-    -m|--model         Specify a printer model for alignment.\n\
-                       This is currently required for head alignment.\n";
+    -m|--model         Specify the precise printer model for head alignment.\n";
 #else
 char *help_msg = "\
 Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
@@ -102,6 +105,8 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
           damage to the printer.\n\
     -i Obtain the ink level from the printer.  This requires\n\
           read/write access to the raw printer device.\n\
+    -d Query the printer for make and model information.  This\n\
+          requires read/write access to the raw printer device.\n\
     -u The printer is connected via USB.\n\
     -h Print this help message.\n\
     -q Suppress the banner.\n\
@@ -552,20 +557,22 @@ and possibly damage your printer.  This utility has not been reviewed by\n\
 Seiko Epson for correctness, and is offered with no warranty at all.  The\n\
 entire risk of using this utility lies with you.\n\
 \n\
-This utility prints multiple test patterns.  Each pattern looks very similar.\n\
+This utility prints %d test patterns.  Each pattern looks very similar.\n\
 The patterns consist of a series of pairs of vertical lines that overlap.\n\
 Below each pair of lines is a number between %d and %d.\n\
 \n\
 When you inspect the pairs of lines, you should find the pair of lines that\n\
-is best in alignment, that is, that best forms a single vertical align.\n\
+is best in alignment, that is, that best forms a single vertical line.\n\
 Inspect the pairs very carefully to find the best match.  Using a loupe\n\
 or magnifying glass is recommended for the most critical inspection.\n\
+It is also suggested that you use a good quality paper for the test,\n\
+so that the lines are well-formed and do not spread through the paper.\n\
 After picking the number matching the best pair, place the paper back in\n\
 the paper input tray before typing it in.\n\
 \n\
-The other patterns are similar, but use finer dots for more\n\
-critical alignment.  You must run all three passes to correctly align your\n\
-printer.  After running all three alignment passes, all three alignment\n\
+Each pattern is similar, but later patterns use finer dots for more\n\
+critical alignment.  You must run all of the passes to correctly align your\n\
+printer.  After running all the alignment passes, the alignment\n\
 patterns will be printed once more.  You should find that the middle-most\n\
 pair (#%d out of the %d) is the best for all patterns.\n\
 \n\
@@ -593,6 +600,8 @@ When you inspect the pairs of lines, you should find the pair of lines that\n\
 is best in alignment, that is, that best forms a single vertical align.\n\
 Inspect the pairs very carefully to find the best match.  Using a loupe\n\
 or magnifying glass is recommended for the most critical inspection.\n\
+It is also suggested that you use a good quality paper for the test,\n\
+so that the lines are well-formed and do not spread through the paper.\n\
 After picking the number matching the best pair, place the paper back in\n\
 the paper input tray before typing it in.\n\
 \n\
@@ -609,7 +618,7 @@ void
 do_align_help(int passes, int choices)
 {
   if (passes > 1)
-    printf(new_align_help, 1, choices, (choices + 1) / 2, choices);
+    printf(new_align_help, passes, 1, choices, (choices + 1) / 2, choices);
   else
     printf(old_align_help, 1, choices, (choices + 1) / 2, choices);
   fflush(stdout);
@@ -737,8 +746,12 @@ do_align(void)
 	align_error();
     reread:
       printf("Please inspect the print, and choose the best pair of lines\n");
-      printf("in pattern #%d, and then reinsert the page in the input tray.\n",
-	     curpass);
+      if (curpass == passes)
+	printf("in pattern #%d, and then insert a fresh page in the input tray.\n",
+	       curpass);
+      else
+	printf("in pattern #%d, and then reinsert the page in the input tray.\n",
+	       curpass);
       printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
       fflush(stdout);
       memset(inbuf, 0, 64);
