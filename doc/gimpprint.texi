@@ -1,0 +1,1406 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename gimpprint.info
+@settitle GIMP-Print
+@finalout
+@c For double-sided printing, uncomment:
+@c @setchapternewpage odd
+@c %**end of header
+
+@syncodeindex pg cp
+@syncodeindex tp vr
+
+
+@include version.texi
+@set BUGADDR @email{gimp-print-devel@@lists.sourceforge.net} 
+@set MAILLIST @email{gimp-print-devel@@lists.sourceforge.net}
+
+@dircategory Libraries
+@direntry
+* GIMP-Print (gimpprint).  print plugin for the GIMP, and printing
+library
+@end direntry
+
+@ifinfo
+This file documents the gimpprint library and associated programs
+used for high quality printing.
+
+Copyright (C) 2001 Michael Sweet (@email{mike@@easysw.com}) and Robert
+Krawitz (@email{rlk@@alum.mit.edu})
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end ifinfo
+
+@titlepage
+@title GIMP-Print
+@subtitle The print plugin for the GIMP
+@subtitle Version @value{VERSION}, @value{UPDATED}
+@author The GIMP-Print Project
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2001  Michael Sweet
+(@email{mike@@easysw.com}) and Robert Krawitz (@email{rlk@@alum.mit.edu})
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Free Software Foundation.
+@end titlepage
+
+@shortcontents
+
+@contents
+
+@ifinfo
+@c All the nodes can be updated using the EMACS command
+@c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
+@node Top, Instructions, (dir), (dir)
+@comment  node-name,  next,  previous,  up
+@top The print plugin for the GIMP and printing library
+
+This file documents the libgimpprint library and associated programs used
+for high quality printing. This edition documents version @value{VERSION}.
+
+@xref{Problems}, for information on how to report problems with
+GIMP-Print.
+@end ifinfo
+
+@c All the menus can be updated with the EMACS command
+@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
+@menu
+* Instructions::                How to read this manual. 
+* Copying::                     Your rights.
+* Overview::                    Preliminary information.
+* Using libgimpprint::          Examples of how to use libgimpprint.
+* Integrating libgimpprint::    Using libgimpprint in your own packages.
+* Types::                       Types overview.
+* Functions::                   libgimpprint function reference.
+* Programs::                    Using GIMP-Print programs.
+* Problems::                    Reporting bugs.
+* Data Type and Variable Index::Index of data types and variables
+* Function and Macro Index::    Index of functions and macros.
+* Concept Index::               Index of concepts.
+@end menu
+
+@node Instructions, Copying, Top, Top
+@unnumbered Preface
+
+@cindex reading
+@cindex manual, how to read
+@cindex how to read
+This manual documents the use of the GIMP-Print package, focusing mainly on the
+libgimpprint library that is the core of GIMP-Print. Parts of the manual which
+describe the use of libgimpprint are aimed primarily at programmers, and do
+assume that the reader is familiar with C programming, and using standard
+programming tools on GNU or UNIX systems. Other parts of the manual document
+the use of the programs that make up the GIMP-Print package, and assuse no
+knowledge other than the basics of using a shell and editor.
+
+The best way to learn how to use libgimpprint in your own programs is to read
+the manual from start to finish, using the examples given in the text to learn
+how it works. The bulk of the manual can be used as a reference once one
+understands the basics.
+
+## Insert guide to what the different Chapters offer here
+@itemize @bullet
+@item Programming
+@enumerate
+@item Copying
+@item Using
+@item Integrating
+@item Main Guide
+@item Data Types
+@item Modules
+@item Function Reference
+@end enumerate
+
+@item Using
+@enumerate
+@item Programs
+@item Customising
+@end enumerate
+
+@end itemize
+
+
+@node Copying, Overview, Instructions, Top
+@include gpl.texi
+
+@unnumbered Copying summary
+GIMP-Print is @dfn{free}; this means that everyone is free to use it and
+free to redistribute it on a free basis. GIMP-Print is not in the public
+domain; it is copyrighted and there are restrictions on its
+distribution, but these restrictions are designed to permit everything
+that a good cooperating citizen would want to do. What is not allowed is
+to try to prevent others from further sharing any version of GIMP-Print
+that they might get from you.
+
+Specifically, we want to make sure that you have the right to give away
+copies of GIMP-Print, that you receive source code or else can get it if
+you want it, that you can change GIMP-Print or use pieces of it in new
+free programs, and that you know you can do these things.
+
+To make sure that everyone has such rights, we have to forbid you to
+deprive anyone else of these rights. For example, if you distribute
+copies of GIMP-Print, you must give the recipients all the rights that
+you have. You must make sure that they, too, receive or can get the
+source code. And you must tell them their rights.
+
+Also, for our own protection, we must make certain that everyone finds
+out that there is no warranty for GIMP-Print. If GIMP-Print is modified
+by someone else and passed on, we want their recipients to know that
+what they have is not what we distributed, so that any problems
+introduced by others will no reflect on our reputation.
+
+@node Overview, Using libgimpprint, Copying, Top
+@chapter Overview
+@cindex overview
+
+The GIMP-Print package is a collection of programs and a library for
+high quality printing on modern inkjets, including `photographic
+quality' models which offer very high resolutions and several inks.
+
+
+META: Short history of the project
+
+GIMP-Print is the print facility of the @dfn{GNU Image Manipulation Program}
+(GIMP). It is in addition
+a suite of drivers that may be used with common UNIX spooling systems
+using GhostScript or CUPS.  These drivers provide printing quality for
+UNIX/Linux on a par with proprietary vendor-supplied drivers in many
+cases, and can be used for many of the most demanding printing tasks.
+The core of GIMP-Print is a shared library (libgimpprint) which may be
+used by any program that wishes to produce high-qulaity printed output.
+
+@node Using libgimpprint, Integrating libgimpprint, Overview, Top
+@chapter Using libgimpprint
+@cindex using
+
+This chapter describes how to write programs that use libgimpprint.
+
+
+@section Code prerequisites
+To use libgimpprint with a program, several steps must be taken:
+
+@enumerate
+@item Include the master libgimpprint header @code{<gimp-print/gimp-print.h>.}
+@item Call @code{stp_init()}.
+@item Link with libgimpprint.
+@end enumerate
+
+The following is a short example program. It does not do anything useful,
+but it does everything required to link with libgimpprint and call other
+functions from libgimpprint.
+
+@example
+#include <gimp-print/gimp-print.h>
+
+int
+main (int argc, char *argv[])
+@{
+  stp_init ();
+  return (0);
+@}
+@end example
+
+@section Linking with libgimpprint
+
+To link a program with libgimpprint, then @samp{-lgimpprint} needs to be passed
+to the compiler when linking. For example, to compile and link @file{prog.c}
+the following commands would be used:
+
+@example
+gcc -c prog.c
+gcc -o prog -lgimpprint prog.o
+@end example
+
+The compiler and linker flags needed may vary depending on the options
+GIMP-Print was configured with when it was built. The
+@command{gimpprint-config} script will give the correct parameters for
+the local installation (@pxref{gimpprint-config}).
+
+@node Integrating libgimpprint, gimpprint-config, Using libgimpprint, Top
+@chapter Integrating libgimpprint
+@cindex integrating
+
+This chapter describes how to integrate the compiling and linking of
+programs using libgimpprint with build scripts. Commonly used systems include
+@command{make}, but more commonly @file{Makefile} files are generated by using
+tools such as @command{autoconf} and @command{automake}.
+
+@menu
+* gimpprint-config::            Getting the correct compiler and linker flags
+* make::                        Normal makefiles
+* autoconf::                    Macro to automatically check for libgimpprint
+* automake::                    Automatically defined variables to use
+@end menu
+
+
+@node gimpprint-config, make, Integrating libgimpprint, Integrating libgimpprint
+@section @command{gimpprint-config}
+@pindex gimpprint-config
+
+Depending on the setup of the computer system GIMP-Print was installed on, as
+well as the options passed to @command{configure} when configuring the
+package when it was built, the @env{CFLAGS} and @env{LIBS} parameters
+needed to compile and link programs with libgimpprint may vary. To make it
+simple to determine what these are on any given system, the script
+@command{gimpprint-config} was created. It's job is to output the
+correct parameters for the setup on your system. The following options
+are available:
+
+@example
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --help
+Usage: gimpprint-config [OPTIONS] [LIBRARIES]
+Options:
+        [--prefix[=DIR]]
+        [--exec-prefix[=DIR]]
+        [--version]
+        [--libs]
+        [--cflags]
+Libraries:
+        gimpprint
+@end example
+
+The @option{--prefix} and @option{--exec-prefix} options are only needed if the
+installed locations of parts of GIMP-Print are different from the configured
+locations. These should never be needed if GIMP-Print was properly configured
+and installed.
+
+The installed version of GIMP-Print can be obtained with the
+@option{--version} option:
+
+@example
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --version
+@value{VERSION}
+@end example
+
+The correct @env{CFLAGS} to use can be obtained with the @option{--cflags}
+option:
+
+@example
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --cflags 
+
+@end example
+
+In this case, there are no special @env{CFLAGS} required to compile programs.
+
+The correct @env{LIBS} to use can the obtained with the @option{--libs} option:
+
+@example
+roger@@whinlatter:~/gimpprint/devel$ gimpprint-config --libs  
+-L/usr/lib -lgimpprint -lm
+@end example
+
+The command can be used from the shell by enclosing it in backquotes @samp{`}:
+
+@example
+gcc `gimpprint-config --cflags` -c prog.c
+gcc `gimpprint-config --libs` -o prog prog.o
+@end example
+
+However, this is not the way it it typically used. Normally it is used in a
+@file{Makefile} (@pxref{make}) or by an @command{m4} macro in a @command{configure}
+script (@pxref{autoconf}).
+
+
+@node make, autoconf, gimpprint-config, Integrating libgimpprint
+@section @command{make}
+@pindex make
+
+If you use @command{make} with your own @file{Makefile} files, then you are on
+your own. This manual offers no assistance with doing this. Only the following
+suggestion is offered:
+
+@example
+GIMPPRINT_VERSION = $(shell gimpprint-config --version)
+GIMPPRINT_CFLAGS = $(shell gimpprint-config --cflags)
+GIMPPRINT_LIBS = $(shell gimpprint-config --libs)
+@end example
+
+How you choose to use these variables is entirely up to you. @inforef{Top, GNU
+make, make}, for more information.
+
+
+@node autoconf, automake, make, Integrating libgimpprint
+@section @command{autoconf}
+@pindex autoconf
+@cindex m4 macros
+
+The @command{autoconf} program produces a Bourne shell script called
+@file{configure} from a template file called @file{configure.in}.
+@file{configure.in} contains both Bourne shell script, and @command{m4} macros.
+@command{autoconf} expands the @command{m4} macros into `real' shell script.
+The resulting @file{configure} script performs various checks for installed
+programs, compiler characteristics and other system information such as
+available headers and libraries. @inforef{Top, GNU autoconf, autoconf}, for
+more information.
+
+GIMP-Print provides an @command{m4} macro, @code{AM_PATH_GIMPPRINT}, suitable for
+use in a @file{configure.in}. It defines the environment variables
+@env{GIMPPRINT_CFLAGS}, @env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG}. You can
+optionally specify a minimum version of the library to use, and shell script to
+run if the test suceeds or fails.
+
+@defmac AM_PATH_GIMPPRINT (@r{[}@var{minimum-version} @r{[}, @var{action-if-found} @r{[}, @var{action-if-not-found}@r{]]})
+Check for an installed version of GIMP-Print greater than or equal to
+@var{minimum-version}.
+
+@var{action-if-found} is a list of shell commands to run if the check
+for the library succeeds; @var{action-if-not-found} is a list of
+shell commands to run if the check fails.
+
+The macro sets the following environment variables: @env{GIMPPRINT_CFLAGS},
+@env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG}. It also will substitute them
+into any @file{Makefile.in} you specify in @code{AC_OUTPUT} because it calls
+@code{AC_SUBST} for each of them. However, you will probably be using
+@command{automake} to generate your @file{Makefile.in} files
+(@pxref{automake}).
+
+@end defmac
+
+@node automake, Types, autoconf, Integrating libgimpprint
+@section @command{automake}
+@pindex automake
+
+The @command{automake} program can be used to generate @file{Makefile.in} files
+suitable for use with a @file{configure} script generated by
+@command{autoconf}.  As @command{automake} @emph{requires} @command{autoconf},
+this section will assume the use of a @file{configure} script which uses the
+@code{AM_PATH_GIMPPRINT} macro (there is little point in @emph{not} using it!).
+
+It is highly recommeded that you use GNU @command{autoconf} and
+@command{automake}. They will allow you to make your software build on most
+platforms with most compilers. @command{automake} makes writing complex
+@file{Makefile} files very easy, by expressing how to build your packages
+in terms of what files are required to build a project and the installation
+locations of the files. It imposes a few limitations over using plain
+@file{Makefile} files, such as in the use of conditionals, but these problems
+are vastly outweighed by the benefits it brings. It also creates many extra
+targets in the generated @file{Makefile.in} files such as @command{dist},
+@command{distcheck}, @command{clean}, @command{distclean},
+@command{maintainer-clean} and @command{tags}, and there are many more more
+available. @inforef{Top, GNU automake, automake}, for more information.
+
+Because @code{AM_PATH_GIMPPRINT} calls @code{AC_SUBST} to substitute
+@env{GIMPPRINT_CFLAGS}, @env{GIMPPRINT_LIBS} and @env{GIMPPRINT_CONFIG},
+@command{automake} will automatically set these variables in the
+@file{Makefile.in} files it generates, requiring no additional effort on
+your part!
+
+As in previous examples, we will make a program @command{prog} from a file @file{prog.c}. This is how one might build write a @file{Makefile.am} to do this:
+
+@example
+AUTOMAKE_OPTIONS = 1.4 gnu
+MAINT_CHARSET = latin1
+
+@@SET_MAKE@@
+
+CFLAGS = @@CFLAGS@@
+
+INCLUDES = @@INCLUDES@@ $(GIMPPRINT_CFLAGS)
+
+bin_PROGRAMS = prog
+prog_SOURCES = prog.c
+prog_LDADD = $(GIMPPRINT_LIBS)
+
+MAINTAINERCLEANFILES = Makefile.in
+@end example
+
+That's all there is to it! Please note that this example also requires the
+macro @code{AC_PROG_MAKE_SET} to be used in @file{configure.in} and the use of
+@code{AC_SUBST} to substitute @env{CFLAGS} and @env{INCLUDES} where
+@code{@@CFLAGS@@} and @code{@@INCLUDES@@} are found in the file, respectively.
+
+
+@node Types, Functions, automake, Top
+@chapter Types
+@cindex types
+
+@deftypevr {Data type} {} stp_papersize_unit_t
+@example
+typedef enum papersize_unit
+@{
+  PAPERSIZE_ENGLISH,
+  PAPERSIZE_METRIC
+@} stp_papersize_unit_t;
+@end example
+
+@end deftypevr
+
+@deftypevr {Data type} {} stp_image_t
+@example
+typedef struct stp_image
+@{
+  void (*init)(struct stp_image *image);
+  void (*reset)(struct stp_image *image);
+  void (*transpose)(struct stp_image *image);
+  void (*hflip)(struct stp_image *image);
+  void (*vflip)(struct stp_image *image);
+  void (*crop)(struct stp_image *image,
+               int left, int top, int right,
+               int bottom);
+  void (*rotate_ccw)(struct stp_image *image);
+  void (*rotate_cw)(struct stp_image *image);
+  void (*rotate_180)(struct stp_image *image);
+  int  (*bpp)(struct stp_image *image);
+  int  (*width)(struct stp_image *image);
+  int  (*height)(struct stp_image *image);
+  void (*get_row)(struct stp_image *image,
+        unsigned char *data, int row);
+  const char *(*get_appname)(struct stp_image *image);
+  void (*progress_init)(struct stp_image *image);
+  void (*note_progress)(struct stp_image *image,
+        double current, double total);
+  void (*progress_conclude)(struct stp_image *image);
+  void *rep;
+@} stp_image_t;
+@end example
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_printer_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_vars_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_option_t
+@end deftypevr
+
+@deftypevr {Data type} {void *} stp_papersize_t
+@end deftypevr
+
+@deftypevr {Data type} {} stp_outfunc_t
+@example
+typedef void (*stp_outfunc_t) (void *data,
+              const char *buffer, size_t bytes);
+@end example
+@end deftypevr
+
+@deftypevr {Data type} {} stp_printfuncs_t
+@example
+typedef struct
+@{
+  char  **(*parameters)(const stp_printer_t printer,
+                        const char *ppd_file,
+                        const char *name, int *count);
+  void  (*media_size)(const stp_printer_t printer,
+                      const stp_vars_t v, int *width,
+                      int *height);
+  void  (*imageable_area)(const stp_printer_t printer,
+                          const stp_vars_t v,
+                          int *left, int *right,
+                          int *bottom, int *top);
+  void  (*limit)(const stp_printer_t printer,
+                 const stp_vars_t v,
+                 int *width, int *height);
+  void  (*print)(const stp_printer_t printer,
+                 stp_image_t *image, const stp_vars_t v);
+  const char *(*default_parameters)(const stp_printer_t printer,
+                                    const char *ppd_file,
+                                    const char *name);
+  void  (*describe_resolution)(const stp_printer_t printer,
+                               const char *resolution,
+                               int *x, int *y);
+  int   (*verify)(const stp_printer_t p, const stp_vars_t v);
+@} stp_printfuncs_t;
+@end example
+@end deftypevr
+
+@node Functions, Main functions, Types, Top
+@chapter Functions
+@cindex functions
+
+This section of the manual is a complete reference to all of the functions
+comprising libgimpprint, with examples.
+
+All of the libgimpprint functions can be declared by including the master
+libgimpprint header, @file{<gimp-print/gimp-print.h>}. This should be done in
+every source file that uses gimpprint functions by putting
+
+@example
+#include <gimp-print/gimp-print.h>
+@end example
+
+@noindent at the top of each file.
+
+@menu
+* Main functions::              Essential functions every program must call.
+* Misc functions::              Unclassified functions.
+* Dither functions::            Dither algorithms.
+* Paper functions::             Paper size and orientation.
+* Printer functions::           Printer selection.
+* Settings functions::          Getting and changing settings.
+* Version functions::           Getting libgimpprint version information.
+@end menu
+
+@node Main functions, Misc functions, Functions, Functions
+@section Main functions
+@cindex main functions
+
+These functions comprise the heart of libgimpprint. All or most other
+functions in the library depend absolutely upon them. In the case of
+@code{stp_init}, this function @emph{must} be called before any of the
+other functions in the library.
+
+
+@cindex initialising libgimpprint
+@deftypefun int stp_init (void)
+
+This function initialises the libgimpprint library. It must be called before
+any of the other libgimpprint functions are called. It is responsible for
+setting up message catalogues (for internationalisation). This function
+may be called more than once, at any stage during the execution of a
+program.
+
+It returns zero on success, nonzero on failure.
+@end deftypefun
+
+@code{stp_init} might be used as follows:
+
+@example
+int
+main (int argc, char **argv)
+@{
+  stp_init();
+  
+  @dots{}
+
+@}
+@end example
+
+
+
+@cindex memory allocation
+@deftypefun {void *} stp_malloc (size_t @var{size})
+
+Where @var{size} is the amount of memory to allocate (in bytes).
+
+This function allocates memory. It will always return a pointer to the
+allocated memory. It will not return on failure.
+
+It returns a pointer to the allocated memory.
+@end deftypefun
+
+@node Misc functions, Dither functions, Main functions, Functions
+@section Misc functions
+@cindex misc functions
+
+@deftypefun {const char *} stp_printer_get_long_name (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_printer_get_driver (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun int stp_printer_get_model (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printfuncs_t *} stp_printer_get_printfuncs (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_printer_get_printvars (const stp_printer_t @var{p})
+
+@end deftypefun
+
+
+@deftypefun stp_vars_t stp_allocate_vars (void)
+
+@end deftypefun
+
+
+@deftypefun void stp_copy_vars (stp_vars_t @var{vd}, const stp_vars_t @var{vs})
+
+@end deftypefun
+
+
+@deftypefun stp_vars_t stp_allocate_copy (const stp_vars_t @var{vs})
+
+@end deftypefun
+
+
+@deftypefun void stp_free_vars (stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_to (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_driver (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ppd_file (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_resolution (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_size (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_type (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_source (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ink_type (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_dither_algorithm (stp_vars_t @var{vv}, const char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_to_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_driver_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ppd_file_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_resolution_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_size_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_type_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_media_source_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_ink_type_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_dither_algorithm_n (stp_vars_t @var{vv}, const char *@var{val}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_type (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_orientation (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_left (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_top (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_image_type (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_unit (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_page_width (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_page_height (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_input_color_model (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_output_color_model (stp_vars_t @var{vv}, int @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_brightness (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_scaling (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_gamma (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_contrast (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_cyan (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_magenta (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_yellow (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_saturation (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_density (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_app_gamma (stp_vars_t @var{vv}, float @var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_lut (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_outdata (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_errdata (stp_vars_t @var{vv}, void *@var{val})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_cmap (stp_vars_t @var{vv}, unsigned char *@var{val})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_output_to (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_driver (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_ppd_file (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_resolution (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_size (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_media_source (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_ink_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_get_dither_algorithm (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_output_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_orientation (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_left (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_top (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_image_type (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_unit (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_page_width (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_page_height (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_input_color_model (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_output_color_model (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_brightness (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_scaling (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_gamma (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_contrast (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_cyan (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_magenta (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_yellow (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_saturation (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_density (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun float stp_get_app_gamma (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_lut (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_outdata (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {void *} stp_get_errdata (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun {unsigned char *} stp_get_cmap (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+@deftypefun void stp_set_outfunc (const stp_vars_t @var{vv}, stp_outfunc_t @var{val})
+
+@end deftypefun
+
+
+@deftypefun stp_outfunc_t stp_get_outfunc (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_errfunc (const stp_vars_t @var{vv}, stp_outfunc_t @var{val})
+
+@end deftypefun
+
+
+@deftypefun stp_outfunc_t stp_get_errfunc (const stp_vars_t @var{vv})
+
+@end deftypefun
+
+
+@deftypefun void stp_set_option(stp_vars_t @var{v}, const char *@var{name}, const char *@var{data}, int @var{bytes})
+
+@end deftypefun
+
+
+@deftypefun void stp_clear_option (stp_vars_t @var{v}, const char *@var{name})
+
+@end deftypefun
+
+
+@deftypefun void stp_clear_all_options (stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun size_t stp_option_count (const stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun {const stp_option_t} stp_get_option_by_index (const stp_vars_t @var{v}, size_t @var{idx})
+
+@end deftypefun
+
+
+@deftypefun {const stp_option_t} stp_get_option_by_name (const stp_vars_t @var{v}, const char *@var{name})
+
+@end deftypefun
+
+
+/* NOTE: not null delimited! */
+@deftypefun {const char *} stp_option_data (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_option_name (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+@deftypefun size_t stp_option_length (const stp_option_t @var{option})
+
+@end deftypefun
+
+
+/*
+ * hue_map is an array of 49 doubles representing the mapping of hue
+ * from (0..6) to (0..6) in increments of .125.  The hue_map is in CMY space,
+ * so hue=0 is cyan.
+ */
+typedef void (*stp_convert_t)(const stp_vars_t vars, const unsigned char *in,
+                              unsigned short *out, int *zero_mask,
+                              int width, int bpp, const unsigned char *cmap,
+                              const double *hue_map, const double *lum_map,
+                              const double *sat_map);
+
+@deftypefun void stp_merge_printvars (stp_vars_t @var{user}, const stp_vars_t @var{print})
+
+@end deftypefun
+
+
+@deftypefun void stp_allocate_lut (stp_vars_t @var{v}, size_t @var{steps})
+
+@end deftypefun
+
+
+@deftypefun void stp_free_lut (stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun void stp_compute_lut (stp_vars_t @var{v}, size_t @var{steps})
+
+@end deftypefun
+
+
+@node Dither functions, Paper functions, Misc functions, Functions
+@section Dither functions
+@cindex dither functions
+
+@deftypefun size_t stp_dither_algorithm_count (void)
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_dither_algorithm_name (int @var{id})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_default_dither_algorithm (void)
+
+@end deftypefun
+
+
+@node Paper functions, Printer functions, Dither functions, Functions
+@section Paper functions
+@cindex paper functions
+
+@deftypefun int stp_known_papersizes (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_name (const char *@var{name})
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_size (int @var{l}, int @var{w})
+
+@end deftypefun
+
+
+@deftypefun {const stp_papersize_t} stp_get_papersize_by_index (int @var{index})
+
+@end deftypefun
+
+
+@deftypefun {const char *} stp_papersize_get_name (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_width (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_height (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_top (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_left (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_bottom (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun unsigned stp_papersize_get_right (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@deftypefun stp_papersize_unit_t stp_papersize_get_unit (const stp_papersize_t @var{pt})
+
+@end deftypefun
+
+
+@node Printer functions, Settings functions, Paper functions, Functions
+@section Printer functions
+@cindex printer functions
+
+@deftypefun int stp_known_printers (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_index (int @var{idx})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_long_name (const char *@var{long_name})
+
+@end deftypefun
+
+
+@deftypefun {const stp_printer_t} stp_get_printer_by_driver (const char *@var{driver})
+
+@end deftypefun
+
+
+@deftypefun int stp_get_printer_index_by_driver (const char *@var{driver})
+
+@end deftypefun
+
+
+@node Settings functions, Version functions, Printer functions, Functions
+@section Settings functions
+@cindex settings functions
+
+@deftypefun stp_convert_t stp_choose_colorfunc (int @var{output_type}, int @var{image_bpp}, const unsigned char *@var{cmap}, int *@var{out_bpp}, const stp_vars_t @var{v})
+
+@end deftypefun
+
+
+@deftypefun void stp_compute_page_parameters (int @var{page_right}, int @var{page_left}, int @var{page_top}, int @var{page_bottom}, double @var{scaling}, int @var{image_width}, int @var{image_height}, stp_image_t *@var{image}, int *@var{orientation}, int *{page_width}, int *@var{page_height}, int *@var{out_width}, int *@var{out_height}, int *@var{left}, int *@var{top})
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_default_settings (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_maximum_settings (void)
+
+@end deftypefun
+
+
+@deftypefun {const stp_vars_t} stp_minimum_settings (void)
+
+@end deftypefun
+
+
+
+
+@node Version functions, Programs, Settings functions, Functions
+@section Version functions
+@cindex version functions
+
+@deftypefun {const char *} stp_check_version (unsigned int @var{required_major},
+unsigned int @var{required_minor}, unsigned int @var{required_micro})
+
+This function checks whether the version of libgimpprint that the program
+is linked with is equal to the version number passed to it. If the version
+is the same, the function returns @code{NULL}. If any of the version
+numbers do not match (i.e. the library version is too old or too new), a string containing a desription of the difference is
+returned. The first error found is returned. The function checks in the order
+major, minor, micro.
+@end deftypefun
+
+@subsection Version macros
+
+@defmac GIMPPRINT_CHECK_VERSION (major,minor,micro)
+
+This macro returns zero if the version of the libgimpprint headers are
+greater or equal to the version given as an argument. It returns nonzero
+if the version of the libgimpprint headers are less than the argument.
+@end defmac
+
+@defmac GIMPPRINT_MAJOR_VERSION
+@end defmac
+
+@defmac GIMPPRINT_MINOR_VERSION
+@end defmac
+
+@defmac GIMPPRINT_MICRO_VERSION
+@end defmac
+
+@defmac GIMPPRINT_CURRENT_INTERFACE
+@end defmac
+
+@defmac GIMPPRINT_BINARY_AGE
+@end defmac
+
+@defmac GIMPPRINT_INTERFACE_AGE
+@end defmac
+
+These macros are integers holding the version numbers. They should be
+used for compile-time checking only. To check version numbers at
+run-time, use the equivalent variables. Note that at present (4.1.x
+development branch) the library interface version numbers are not used.
+
+@subsection Version variables
+
+@deftypevar {const unsigned int} gimpprint_major_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_minor_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_micro_version
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_current_interface
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_binary_age
+@end deftypevar
+
+@deftypevar {const unsigned int} gimpprint_interface_age
+@end deftypevar
+
+These variables hold the library version numbers. Because the version of
+the library may change on a system using shared libraries, these should
+be used instead of the equivalent macros when checking the library
+version at run-time. Note that at present (4.1.x development branch) the
+library interface version numbers are not used.
+
+@node Programs, The GIMP plugin, Version functions, Top
+@chapter Programs
+@cindex programs
+
+@menu
+* The GIMP plugin::             The print plugin for the GIMP
+* Ghostscript::                 Printer driver
+* CUPS::                        Printer driver
+@end menu
+
+@node The GIMP plugin, Ghostscript, Programs, Programs
+@section The GIMP print plugin
+@cindex GIMP print plugin
+@cindex print plugin
+
+@node Ghostscript, CUPS, The GIMP plugin, Programs
+@section Ghostscript driver
+@cindex ghostscript driver
+
+@node CUPS, Problems, Ghostscript, Programs
+@section CUPS driver
+@cindex CUPS driver
+
+@node Problems, Data Type and Variable Index, CUPS, Top
+@chapter Reporting Bugs
+@cindex bugs
+@cindex problems
+
+If you find a bug in GIMP-Print or have any suggestions for modification
+or improvement, please send electronic mail to the GIMP-Print bug
+reporting address @footnote{@value{BUGADDR}}.  Include the version
+number, which you can find by running @w{@samp{gimpprint-config
+--version}}.  Also include in your message the output that the program
+produced and the output you expected, if applicable, otherwise the best
+description of the problem that you can provide.
+
+If you have other questions, comments or suggestions about GIMP-Print,
+contact the developers via electronic mail to the GIMP-Print mailing
+list @footnote{@value{MAILLIST}}.  They will try to help you out,
+although they may not have time to fix your problems.
+
+@node Data Type and Variable Index, Function and Macro Index, Problems, Top
+@unnumbered Data Type and Variable Index
+
+@printindex vr
+
+@node Function and Macro Index, Concept Index, Data Type and Variable Index, Top
+@unnumbered Function and Macro Index
+
+@printindex fn
+
+@node Concept Index,  , Function and Macro Index, Top
+@unnumbered Concept Index
+
+@printindex cp
+
+@bye

@@ -10,7 +10,7 @@ exec_prefix_set=no
 usage()
 {
 	cat <<EOF
-Usage: gimp-print-config [OPTIONS] [LIBRARIES]
+Usage: gimpprint-config [OPTIONS] [LIBRARIES]
 Options:
 	[--prefix[=DIR]]
 	[--exec-prefix[=DIR]]

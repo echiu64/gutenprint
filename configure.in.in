@@ -582,12 +582,13 @@ dnl po/Makefile.in *MUST* be surrounded by spaces to work with buggy
 dnl gettext 0.10.36.  Do not move this file to the beginning or end
 dnl of a line.
 AC_OUTPUT([
-Makefile intl/Makefile lib/Makefile man/Makefile man/cups-calibrate.8
-man/escputil.1 man/gimpprint-config.1 po/Makefile.in src/Makefile
-src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile
-src/foomatic/foomatic-generator src/ghost/Makefile src/gimp/Makefile
-src/include/Makefile src/include/gimp-print.h src/main/Makefile
-src/main/gimpprint-config src/printdef/Makefile test/Makefile
+Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile
+man/cups-calibrate.8 man/escputil.1 man/gimpprint-config.1
+po/Makefile.in src/Makefile src/cups/Makefile src/escputil/Makefile
+src/foomatic/Makefile src/foomatic/foomatic-generator
+src/ghost/Makefile src/gimp/Makefile src/include/Makefile
+src/include/gimp-print.h src/main/Makefile src/main/gimpprint-config
+src/printdef/Makefile test/Makefile
 ],[
 chmod +x src/main/gimpprint-config
 chmod +x src/foomatic/foomatic-generator
