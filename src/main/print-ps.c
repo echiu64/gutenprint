@@ -713,7 +713,7 @@ ps_ascii85(const stp_vars_t v,		/* I - File to print to */
 
     if (column > 72)
     {
-      stp_putc('\n');
+      stp_putc('\n', v);
       column = 0;
     }
 
