@@ -154,17 +154,21 @@ stp_send_command(const stp_vars_t v, const char *command,
 	{
 	  switch (format[i])
 	    {
+	    case 'a':
 	    case 'b':
+	    case 'B':
 	      break;
 	    case 'c':
 	      (void) va_arg(args, unsigned int);
 	      byte_count += 1;
 	      break;
 	    case 'h':
+	    case 'H':
 	      (void) va_arg(args, unsigned int);
 	      byte_count += 2;
 	      break;
 	    case 'l':
+	    case 'L':
 	      (void) va_arg(args, unsigned int);
 	      byte_count += 4;
 	      break;
@@ -184,8 +188,14 @@ stp_send_command(const stp_vars_t v, const char *command,
     {
       switch (fchar)
 	{
+	case 'a':
+	  stp_put16_le(byte_count, v);
+	  break;
 	case 'b':
 	  stp_put16_le(byte_count, v);
+	  break;
+	case 'B':
+	  stp_put16_be(byte_count, v);
 	  break;
 	case 'c':
 	  stp_putc(va_arg(args, unsigned int), v);
@@ -193,8 +203,14 @@ stp_send_command(const stp_vars_t v, const char *command,
 	case 'h':
 	  stp_put16_le(va_arg(args, unsigned int), v);
 	  break;
+	case 'H':
+	  stp_put16_be(va_arg(args, unsigned int), v);
+	  break;
 	case 'l':
 	  stp_put32_le(va_arg(args, unsigned int), v);
+	  break;
+	case 'L':
+	  stp_put32_be(va_arg(args, unsigned int), v);
 	  break;
 	case 's':
 	  stp_puts(va_arg(args, const char *), v);
