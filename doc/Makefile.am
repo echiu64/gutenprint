@@ -135,6 +135,12 @@ veryclean:
 maintainer-clean-local:
 	$(CLEAN_MANUALS)
 
+# We duplicate mostlyclean-aminfo here because we do not want to remove
+# the .dvi and .ps files that mostlyclean-aminfo wants to remove.  The
+# reason why is that we do not want make clean to force a rebuild of the
+# doc, since users may not have the texinfo tools required to do so.
+# Unfortunately, this generates a warning about overriding commands for
+# mostlyclean-aminfo.
 mostlyclean-aminfo:
 	-rm -f gimpprint.aux gimpprint.cp gimpprint.cps \
 	  gimpprint.fn gimpprint.fns gimpprint.ky gimpprint.kys \
