@@ -74,28 +74,64 @@ const char *good_curves[] =
     /* Space separated, in same layout as output for comparison */
     "<?xml version=\"1.0\"?>\n"
     "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
-    "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-    "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "  <curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+    "    <sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87\n"
     "0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15 1.12 1.09 1.06 1.03\n"
     "1 1 1 1 1 1 1 1 1 0.9 0.8 0.7\n"
     "0.65 0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
     "</sequence>\n"
-    "</curve>\n"
+    "  </curve>\n"
+    "</gimp-print>\n",
+    /* Space separated, in same layout as output for comparison */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "  <curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\">\n"
+    "    <sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87\n"
+    "0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15 1.12 1.09 1.06 1.03\n"
+    "1 1 1 1 1 1 1 1 1 0.9 0.8 0.7\n"
+    "0.65 0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence>\n"
+    "  </curve>\n"
+    "</gimp-print>\n",
+    /* Space separated, in same layout as output for comparison */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "  <curve wrap=\"wrap\" type=\"spline\" gamma=\"0\">\n"
+    "    <sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87\n"
+    "0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15 1.12 1.09 1.06 1.03\n"
+    "1 1 1 1 1 1 1 1 1 0.9 0.8 0.7\n"
+    "0.65 0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence>\n"
+    "  </curve>\n"
+    "</gimp-print>\n",
+    /* Space separated, in same layout as output for comparison */
+    "<?xml version=\"1.0\"?>\n"
+    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "  <curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+    "    <sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+    "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87\n"
+    "0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15 1.12 1.09 1.06 1.03\n"
+    "1 1 1 1 1 1 1 1 1 0.9 0.8 0.7\n"
+    "0.65 0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
+    "</sequence>\n"
+    "  </curve>\n"
     "</gimp-print>\n",
     /* Gamma curve 1 */
     "<?xml version=\"1.0\"?>\n"
     "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
-    "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
-    "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
-    "</curve>\n"
+    "  <curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
+    "    <sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
+    "  </curve>\n"
     "</gimp-print>\n",
     /* Gamma curve 2 */
     "<?xml version=\"1.0\"?>\n"
     "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
-    "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
-    "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
-    "</curve>\n"
+    "  <curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
+    "    <sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
+    "  </curve>\n"
     "</gimp-print>\n"
   };
 
@@ -260,6 +296,7 @@ main(int argc, char **argv)
 	    {
 	      TEST_FAIL();
 	      printf("%s", tmp);
+	      printf("%s", good_curves[i]);
 	    }
 	  else
 	    {
@@ -297,7 +334,8 @@ main(int argc, char **argv)
     TEST_PASS();
   if (verbose)
     stp_curve_write(stdout, curve2);
-  TEST("compose add");
+
+  TEST("compose add from gamma curves");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
     TEST_FAIL();
   else
@@ -306,6 +344,7 @@ main(int argc, char **argv)
       if (verbose)
 	stp_curve_write(stdout, curve3);
     }
+
   TEST("resample curve 1");
   if (!stp_curve_resample(curve1, 64))
     TEST_FAIL();
@@ -320,8 +359,24 @@ main(int argc, char **argv)
       stp_curve_free(curve3);
       curve3 = NULL;
       }*/
-  TEST("compose multiply");
+  TEST("compose multiply from gamma curves");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
+    TEST_FAIL();
+  else
+    {
+      TEST_PASS();
+      if (verbose)
+	{
+	  stp_curve_write(stdout, curve1);
+	  stp_curve_write(stdout, curve2);
+	  stp_curve_write(stdout, curve3);
+	}
+    }
+
+  TEST("compose add from non-gamma curves");
+  curve1 = stp_curve_create_from_string(good_curves[0]);
+  curve2 = stp_curve_create_from_string(linear_curve_2);
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
     TEST_FAIL();
   else
     {
@@ -329,9 +384,35 @@ main(int argc, char **argv)
       if (verbose)
 	stp_curve_write(stdout, curve3);
     }
+
+  TEST("resample curve 1");
+  if (!stp_curve_resample(curve1, 64))
+    TEST_FAIL();
+  else
+    {
+      TEST_PASS();
+      if (verbose)
+	stp_curve_write(stdout, curve1);
+    }
   /*  if (curve3)
+    {
       stp_curve_free(curve3);
-      curve3 = NULL; */
+      curve3 = NULL;
+      }*/
+  TEST("compose multiply from non-gamma curves");
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
+    TEST_FAIL();
+  else
+    {
+      TEST_PASS();
+      if (verbose)
+	{
+	  stp_curve_write(stdout, curve1);
+	  stp_curve_write(stdout, curve2);
+	  stp_curve_write(stdout, curve3);
+	}
+    }
+
 
   TEST("multiply rescale");
   if (!stp_curve_rescale(curve2, -1, STP_CURVE_COMPOSE_MULTIPLY,
