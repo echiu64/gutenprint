@@ -1330,7 +1330,6 @@ stpui_create_main_window (void)
    * actually initializing the values at this point; that will be done after
    * the UI is fully created.
    */
-  gimp_help_init ();
 
   create_top_level_structure ();
 
@@ -1565,14 +1564,14 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 }
 
 void
-set_image_dimensions(gint width, gint height)
+stpui_set_image_dimensions(gint width, gint height)
 {
   image_true_width = width;
   image_true_height = height;
 }
 
 void
-set_image_resolution(gdouble xres, gdouble yres)
+stpui_set_image_resolution(gdouble xres, gdouble yres)
 {
   image_xres = xres;
   image_yres = yres;
@@ -2323,7 +2322,7 @@ update_adjusted_thumbnail (void)
       stp_image_t *im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
 					    thumbnail_h, thumbnail_bpp);
       stp_vars_t nv = stp_allocate_copy(pv->v);
-      stp_set_driver(nv, "raw-data-8");
+      stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
       stp_set_top(nv, 0);
       stp_set_left(nv, 0);
       stp_set_width(nv, thumbnail_w);
@@ -2332,22 +2331,18 @@ update_adjusted_thumbnail (void)
       stp_set_outdata(nv, &priv);
       stp_set_errfunc(nv, stpui_get_errfunc());
       stp_set_errdata(nv, stpui_get_errdata());
-      stp_set_string_parameter(nv, "PageSize", "Custom");
       if (thumbnail_bpp == 1)
 	stp_set_string_parameter(nv, "InkType", "RGBGray");
       else
 	stp_set_string_parameter(nv, "InkType", "RGB");
-      stp_set_string_parameter(nv, "Resolution", "Standard");
-      stp_set_string_parameter(nv, "MediaType", "Standard");
-      stp_set_string_parameter(nv, "InputSlot", "Standard");
       stp_set_page_height(nv, thumbnail_h);
       stp_set_page_width(nv, thumbnail_w);
+      stp_set_float_parameter (nv, "Density", 1.0);
 
       priv.base_addr = adjusted_data;
       priv.offset = 0;
       priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
 
-      stp_set_float_parameter (nv, "Density", 1.0);
       if (stp_verify(nv) != 1)
 	{
 	  stp_erprintf("did not verify!\n");

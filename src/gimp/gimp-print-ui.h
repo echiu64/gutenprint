@@ -103,8 +103,8 @@ extern void *stpui_get_errdata(void);
 extern void stpui_create_main_window (void);
 
 extern gint stpui_compute_orientation(void);
-extern void set_image_dimensions(gint width, gint height);
-extern void set_image_resolution(gdouble xres, gdouble yres);
+extern void stpui_set_image_dimensions(gint width, gint height);
+extern void stpui_set_image_resolution(gdouble xres, gdouble yres);
 
 typedef guchar *(*get_thumbnail_func_t)(void *data, gint *width, gint *height,
 					gint *bpp, gint page);
