@@ -896,6 +896,8 @@ gimp_scaling_callback (GtkWidget *widget)
 {
   if (widget == scaling_ppi)
     {
+      if (!(GTK_TOGGLE_BUTTON(scaling_ppi)->active))
+	return;
       GTK_ADJUSTMENT (scaling_adjustment)->lower = 36.0;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 1200.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = 72.0;
@@ -904,6 +906,8 @@ gimp_scaling_callback (GtkWidget *widget)
     }
   else if (widget == scaling_percent)
     {
+      if (!(GTK_TOGGLE_BUTTON(scaling_percent)->active))
+	return;
       GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = 100.0;
