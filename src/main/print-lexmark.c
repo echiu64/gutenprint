@@ -1138,9 +1138,10 @@ lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t v)
 
 
 static void
-lexmark_describe_resolution(const stp_printer_t printer,
-			    const char *resolution, int *x, int *y)
+lexmark_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
+			    int *x, int *y)
 {
+  const char *resolution = stp_get_resolution(v);
   const lexmark_res_t *res = lexmark_get_resolution_para(printer, resolution);
 
   if (res)
@@ -1167,11 +1168,11 @@ static stp_param_t media_sources[] =
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *				/* O - Parameter values */
-lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
-		   const char *ppd_file,	/* I - PPD file (not used) */
-		   const char *name,		/* I - Name of parameter */
-		   int  *count)		/* O - Number of values */
+static stp_param_t *
+lexmark_parameters(const stp_printer_t printer,
+		   const stp_vars_t v,
+		   const char *name,
+		   int  *count)
 {
   int		i;
   stp_param_t	*p= 0;
@@ -1282,7 +1283,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 
 static const char *
 lexmark_default_parameters(const stp_printer_t printer,
-			   const char *ppd_file,
+			   const stp_vars_t v,
 			   const char *name)
 {
   int		i;
@@ -1616,12 +1617,13 @@ clean_color(unsigned char *line, int len)
    The method lexmark_write() is responsible to handle the received lines
    in a correct way.
 */
-static void
-lexmark_print(const stp_printer_t printer,		/* I - Model */
-	      stp_image_t *image,		/* I - Image to print */
-	      const stp_vars_t    v)
+static int
+lexmark_print(const stp_printer_t printer,
+	      const stp_vars_t v,
+	      stp_image_t *image)
 {
   int i;
+  int		status = 1;
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
@@ -1700,16 +1702,16 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   dbgfileprn = lex_open_tmp_file(); /* open file with xx */
 #endif
 
+  if (!stp_printer_verify(printer, nv))
+    {
+      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      return 0;
+    }
+
   if (ink_parameter == NULL)
     {
       stp_eprintf(nv, "Illegal Ink Type specified; cannot print.\n");
-      return;
-    }
-
-  if (!stp_get_verified(nv))
-    {
-      stp_eprintf(nv, "Print options not verified; cannot print.\n");
-      return;
+      return 0;
     }
 
 
@@ -1753,8 +1755,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
    * Figure out the output resolution...
    */
 
-  lexmark_describe_resolution(printer,
-			      resolution, &xdpi,&ydpi);
+  stp_printer_describe_resolution(printer, nv, &xdpi, &ydpi);
 #ifdef DEBUG
   stp_erprintf("lexmark: resolution=%dx%d\n",xdpi,ydpi);
 #endif
@@ -1774,7 +1775,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
     physical_ydpi = lexmark_get_phys_resolution_vertical(printer);
     break;
   default:
-    return;
+    return 0;
     break;
   }
   /* adapt the density */
@@ -1844,7 +1845,7 @@ densityDivisor /= 1.2;
 			    media_source,
 			    xdpi, ydpi, page_width, page_height,
 			    top,left,use_dmt))
-    return;
+    return 0;
 
   /*
   * Convert image size to printer resolution...
@@ -2142,7 +2143,10 @@ densityDivisor /= 1.2;
 	  errlast = errline;
 	  duplicate_line = 0;
 	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	    break;
+	    {
+	      status = 2;
+	      break;
+	    }
 	  /*	  stp_erprintf("errline %d ,   image height %d\n", errline, image_height);*/
 #if 1
 	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
@@ -2225,6 +2229,7 @@ densityDivisor /= 1.2;
 #endif
 
   stp_free_vars(nv);
+  return status;
 }
 
 const stp_printfuncs_t stp_lexmark_printfuncs =

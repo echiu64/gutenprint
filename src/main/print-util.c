@@ -46,20 +46,13 @@
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
 void
-stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p,
-			 const char *ppd_file)
+stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 {
-  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
-  stp_set_resolution(v, ((printfuncs->default_parameters)
-			 (p, ppd_file, "Resolution")));
-  stp_set_ink_type(v, ((printfuncs->default_parameters)
-		       (p, ppd_file, "InkType")));
-  stp_set_media_type(v, ((printfuncs->default_parameters)
-			 (p, ppd_file, "MediaType")));
-  stp_set_media_source(v, ((printfuncs->default_parameters)
-			   (p, ppd_file, "InputSlot")));
-  stp_set_media_size(v, ((printfuncs->default_parameters)
-			 (p, ppd_file, "PageSize")));
+  stp_set_resolution(v, stp_printer_get_default_parameter(p, v, "Resolution"));
+  stp_set_ink_type(v, stp_printer_get_default_parameter(p, v, "InkType"));
+  stp_set_media_type(v, stp_printer_get_default_parameter(p, v, "MediaType"));
+  stp_set_media_source(v, stp_printer_get_default_parameter(p, v,"InputSlot"));
+  stp_set_media_size(v, stp_printer_get_default_parameter(p, v, "PageSize"));
   stp_set_dither_algorithm(v, stp_default_dither_algorithm());
   stp_set_driver(v, stp_printer_get_driver(p));
 }
@@ -79,8 +72,7 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	    break;
 	  }
       if (!answer)
-	stp_eprintf(v, _("%s is not a valid parameter of type %s\n"),
-		    checkval, what);
+	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
       for (i = 0; i < count; i++)
 	{
 	  stp_free((void *)vptr[i].name);
@@ -88,8 +80,7 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	}
     }
   else
-    stp_eprintf(v, _("%s is not a valid parameter of type %s\n"),
-		checkval, what);
+    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
   if (vptr)
     free(vptr);
   return answer;
@@ -133,9 +124,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   int i;
   int answer = 1;
   int left, top, bottom, right, width, height;
-  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
   const stp_vars_t printvars = stp_printer_get_printvars(p);
-  const char *ppd_file = stp_get_ppd_file(v);
 
   /*
    * Note that in raw CMYK mode the user is responsible for not sending
@@ -151,13 +140,14 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   if (strlen(stp_get_media_size(v)) > 0)
     {
       const char *checkval = stp_get_media_size(v);
-      vptr = (*printfuncs->parameters)(p, ppd_file, "PageSize", &count);
+      vptr = stp_printer_get_parameters(p, v, "PageSize", &count);
       answer &= verify_param(checkval, vptr, count, "page size", v);
     }
   else
     {
       int min_height, min_width;
-      (*printfuncs->limit)(p, v, &width, &height, &min_width, &min_height);
+      stp_printer_get_size_limit(p, v, &width, &height,
+				 &min_width, &min_height);
       if (stp_get_page_height(v) <= min_height ||
 	  stp_get_page_height(v) > height ||
 	  stp_get_page_width(v) <= min_width || stp_get_page_width(v) > width)
@@ -167,7 +157,7 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 	}
     }
 
-  (*printfuncs->imageable_area)(p, v, &left, &right, &bottom, &top);
+  stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
 
   if (stp_get_top(v) < top)
     {
@@ -221,28 +211,28 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   if (strlen(stp_get_media_type(v)) > 0)
     {
       const char *checkval = stp_get_media_type(v);
-      vptr = (*printfuncs->parameters)(p, ppd_file, "MediaType", &count);
+      vptr = stp_printer_get_parameters(p, v, "MediaType", &count);
       answer &= verify_param(checkval, vptr, count, "media type", v);
     }
 
   if (strlen(stp_get_media_source(v)) > 0)
     {
       const char *checkval = stp_get_media_source(v);
-      vptr = (*printfuncs->parameters)(p, ppd_file, "InputSlot", &count);
+      vptr = stp_printer_get_parameters(p, v, "InputSlot", &count);
       answer &= verify_param(checkval, vptr, count, "media source", v);
     }
 
   if (strlen(stp_get_resolution(v)) > 0)
     {
       const char *checkval = stp_get_resolution(v);
-      vptr = (*printfuncs->parameters)(p, ppd_file, "Resolution", &count);
+      vptr = stp_printer_get_parameters(p, v, "Resolution", &count);
       answer &= verify_param(checkval, vptr, count, "resolution", v);
     }
 
   if (strlen(stp_get_ink_type(v)) > 0)
     {
       const char *checkval = stp_get_ink_type(v);
-      vptr = (*printfuncs->parameters)(p, ppd_file, "InkType", &count);
+      vptr = stp_printer_get_parameters(p, v, "InkType", &count);
       answer &= verify_param(checkval, vptr, count, "ink type", v);
     }
 

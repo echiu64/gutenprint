@@ -657,7 +657,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   const char	*long_name;		/* Driver long name */
   stp_vars_t	printvars;		/* Printer option names */
   int		model;			/* Driver model number */
-  const stp_printfuncs_t *printfuncs;	/* Driver functions */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
   struct stat   dir;                    /* prefix dir status */
@@ -676,7 +675,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   long_name  = stp_printer_get_long_name(p);
   printvars  = stp_printer_get_printvars(p);
   model      = stp_printer_get_model(p);
-  printfuncs = stp_printer_get_printfuncs(p);
   the_papers = NULL;
   cur_opt    = 0;
 
@@ -775,8 +773,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   v = stp_allocate_copy(printvars);
   variable_sizes = 0;
-  opts = (*(printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
-  defopt = (*(printfuncs->default_parameters))(p, NULL, "PageSize");
+  opts = stp_printer_get_parameters(p, v, "PageSize", &num_opts);
+  defopt = stp_printer_get_default_parameter(p, v, "PageSize");
   the_papers = xmalloc(sizeof(paper_t) * num_opts);
 
   for (i = 0; i < num_opts; i++)
@@ -803,8 +801,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     stp_set_media_size(v, opts[i].name);
 
-    (*(printfuncs->media_size))(p, v, &width, &height);
-    (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
+    stp_printer_get_media_size(p, v, &width, &height);
+    stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
 
     the_papers[cur_opt].name   = opts[i].name;
     the_papers[cur_opt].text   = opts[i].text;
@@ -864,11 +862,11 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   if (variable_sizes)
   {
-    (*(printfuncs->limit))(p, v, &max_width, &max_height,
-			   &min_width, &min_height);
+    stp_printer_get_size_limit(p, v, &max_width, &max_height,
+			       &min_width, &min_height);
     stp_set_media_size(v, "Custom");
-    (*(printfuncs->media_size))(p, v, &width, &height);
-    (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
+    stp_printer_get_media_size(p, v, &width, &height);
+    stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
 
     gzprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
     gzprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
@@ -941,8 +939,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Media types...
   */
 
-  opts   = (*(printfuncs->parameters))(p, NULL, "MediaType", &num_opts);
-  defopt = (*(printfuncs->default_parameters))(p, NULL, "MediaType");
+  opts   = stp_printer_get_parameters(p, v, "MediaType", &num_opts);
+  defopt = stp_printer_get_default_parameter(p, v, "MediaType");
 
   if (num_opts > 0)
   {
@@ -967,8 +965,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Input slots...
   */
 
-  opts   = (*(printfuncs->parameters))(p, NULL, "InputSlot", &num_opts);
-  defopt = (*(printfuncs->default_parameters))(p, NULL, "InputSlot");
+  opts   = stp_printer_get_parameters(p, v, "InputSlot", &num_opts);
+  defopt = stp_printer_get_default_parameter(p, v, "InputSlot");
 
   if (num_opts > 0)
   {
@@ -993,8 +991,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Resolutions...
   */
 
-  opts   = (*(printfuncs->parameters))(p, NULL, "Resolution", &num_opts);
-  defopt = (*(printfuncs->default_parameters))(p, NULL, "Resolution");
+  opts   = stp_printer_get_parameters(p, v, "Resolution", &num_opts);
+  defopt = stp_printer_get_default_parameter(p, v, "Resolution");
 
   gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
@@ -1006,7 +1004,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Strip resolution name to its essentials...
     */
 
-    (printfuncs->describe_resolution)(p, opts[i].name, &xdpi, &ydpi);
+    stp_set_resolution(v, opts[i].name);
+    stp_printer_describe_resolution(p, v, &xdpi, &ydpi);
 
     /* This should not happen! */
     if (xdpi == -1 || ydpi == -1)
@@ -1067,8 +1066,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * InkTypes...
     */
 
-    opts   = (*(printfuncs->parameters))(p, NULL, "InkType", &num_opts);
-    defopt = (*(printfuncs->default_parameters))(p, NULL, "InkType");
+    opts   = stp_printer_get_parameters(p, v, "InkType", &num_opts);
+    defopt = stp_printer_get_default_parameter(p, v, "InkType");
 
     if (num_opts > 0)
     {

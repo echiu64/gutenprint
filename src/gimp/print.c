@@ -719,11 +719,7 @@ run (char   *name,		/* I - Name of print program. */
 	  stp_set_errfunc(gimp_vars.v, gimp_writefunc);
 	  stp_set_outdata(gimp_vars.v, prn);
 	  stp_set_errdata(gimp_vars.v, stderr);
-	  if (stp_printer_get_printfuncs(current_printer)->verify
-	      (current_printer, gimp_vars.v))
-	    stp_printer_get_printfuncs(current_printer)->print
-	      (current_printer, image, gimp_vars.v);
-	  else
+	  if (stp_print(current_printer, gimp_vars.v, image) != 1)
 	    values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
 
 	  if (plist_current > 0)

@@ -363,16 +363,15 @@ add_param(stp_param_t *valptrs, const char *name, const char *text, int *count)
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *				/* O - Parameter values */
-escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
-		 const char *ppd_file,	/* I - PPD file (not used) */
-		 const char *name,	/* I - Name of parameter */
-		 int  *count)		/* O - Number of values */
+static stp_param_t *
+escp2_parameters(const stp_printer_t printer,
+		 const stp_vars_t v,
+		 const char *name,
+		 int  *count)
 {
   int		i;
   stp_param_t	*valptrs = NULL;
   int		model = stp_printer_get_model(printer);
-  const stp_vars_t v = stp_printer_get_printvars(printer);
   if (model < 0 || model >= stp_escp2_model_limit)
     {
       stp_eprintf(v, _("Model %d out of range.\n"), model);
@@ -533,12 +532,11 @@ escp2_limit(const stp_printer_t printer,	/* I - Printer model */
 
 static const char *
 escp2_default_parameters(const stp_printer_t printer,
-			 const char *ppd_file,
+			 const stp_vars_t v,
 			 const char *name)
 {
   int i;
   int model = stp_printer_get_model(printer);
-  const stp_vars_t v = stp_printer_get_printvars(printer);
   if (name == NULL)
     return NULL;
   if (model < 0 || model >= stp_escp2_model_limit)
@@ -594,11 +592,11 @@ escp2_default_parameters(const stp_printer_t printer,
 }
 
 static void
-escp2_describe_resolution(const stp_printer_t printer,
-			  const char *resolution, int *x, int *y)
+escp2_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
+			  int *x, int *y)
 {
   int model = stp_printer_get_model(printer);
-  stp_vars_t v = stp_printer_get_printvars(printer);
+  const char *resolution = stp_get_resolution(v);
   const res_t *res;
   if (model < 0 || model >= stp_escp2_model_limit)
     {
@@ -609,8 +607,7 @@ escp2_describe_resolution(const stp_printer_t printer,
 
   while (res->hres)
     {
-      if (!strcmp(resolution, res->name) &&
-	  verify_resolution(res, model, v))
+      if (!strcmp(resolution, res->name) && verify_resolution(res, model, v))
 	{
 	  *x = res->external_hres;
 	  *y = res->external_vres;
@@ -1184,16 +1181,17 @@ setup_ink_types(const escp2_inkname_t *ink_type,
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
-static void
-escp2_print(const stp_printer_t printer,		/* I - Model */
-	    stp_image_t     *image,		/* I - Image to print */
-	    const stp_vars_t    v)
+static int
+escp2_print(const stp_printer_t printer,
+	    const stp_vars_t v,
+	    stp_image_t *image)
 {
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   int		output_type = stp_get_output_type(v);
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
+  int		status = 1;
 
   int		i;
   int		y;		/* Looping vars */
@@ -1249,15 +1247,15 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int 		channels_in_use;
   int 		channel_limit;
 
-  if (!stp_get_verified(nv))
+  if (!stp_printer_verify(printer, nv))
     {
       stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
-      return;
+      return 0;
     }
   if (model < 0 || model >= stp_escp2_model_limit)
     {
       stp_eprintf(nv, _("Model %d out of range.\n"), model);
-      return;
+      return 0;
     }
     
 
@@ -1283,7 +1281,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       if (!found)
 	{
 	  stp_eprintf(nv, _("This printer does not support raw printer output\n"));
-	  return;
+	  return 0;
 	}
     }
 
@@ -1566,7 +1564,10 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  errlast = errline;
 	  duplicate_line = 0;
 	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	    break;
+	    {
+	      status = 2;
+	      break;
+	    }
 	  (*colorfunc)(nv, in, out, &zero_mask, image->width(image),
 		       image->bpp(image), cmap,
 		       hue_adjustment, lum_adjustment, sat_adjustment);
@@ -1621,6 +1622,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   print_timers(nv);
 #endif
   stp_free_vars(nv);
+  return status;
 }
 
 const stp_printfuncs_t stp_escp2_printfuncs =

@@ -73,11 +73,11 @@ c_strdup(const char *s)
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *				/* O - Parameter values */
-ps_parameters(const stp_printer_t printer,	/* I - Printer model */
-              const char *ppd_file,		/* I - PPD file (not used) */
-              const char *name,		/* I - Name of parameter */
-              int  *count)		/* O - Number of values */
+static stp_param_t *
+ps_parameters(const stp_printer_t printer,
+	      const stp_vars_t v,
+              const char *name,
+              int  *count)
 {
   int		i;
   char		line[1024],
@@ -85,14 +85,14 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 		loption[255],
 		*ltext;
   stp_param_t	*valptrs;
-
+  const char *ppd_file = stp_get_ppd_file(v);
 
   if (count == NULL)
     return (NULL);
 
   *count = 0;
 
-  if (ppd_file == NULL || name == NULL)
+  if (ppd_file == NULL || strlen(ppd_file) == 0 || name == NULL)
     return (NULL);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
@@ -169,7 +169,7 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
 
 static const char *
 ps_default_parameters(const stp_printer_t printer,
-		      const char *ppd_file,
+		      const stp_vars_t v,
 		      const char *name)
 {
   int		i;
@@ -177,8 +177,9 @@ ps_default_parameters(const stp_printer_t printer,
 		lname[255],
 		loption[255],
 		defname[255];
+  const char *ppd_file = stp_get_ppd_file(v);
 
-  if (ppd_file == NULL || name == NULL)
+  if (ppd_file == NULL || strlen(ppd_file) == 0 || name == NULL)
     return (NULL);
 
   sprintf(defname, "Default%s", name);
@@ -329,9 +330,10 @@ ps_limit(const stp_printer_t printer,	/* I - Printer model */
  * This is really bogus...
  */
 static void
-ps_describe_resolution(const stp_printer_t printer,
-			const char *resolution, int *x, int *y)
+ps_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
+		       int *x, int *y)
 {
+  const char *resolution = stp_get_resolution(v);
   *x = -1;
   *y = -1;
   sscanf(resolution, "%dx%d", x, y);
@@ -342,11 +344,12 @@ ps_describe_resolution(const stp_printer_t printer,
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 
-static void
-ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
-         stp_image_t *image,		/* I - Image to print */
-	 const stp_vars_t v)
+static int
+ps_print(const stp_printer_t printer,
+	 const stp_vars_t v,
+         stp_image_t *image)
 {
+  int		status = 1;
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*ppd_file = stp_get_ppd_file(v);
@@ -390,10 +393,10 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
                 image_bpp;
   stp_vars_t	nv = stp_allocate_copy(v);
 
-  if (!stp_get_verified(nv))
+  if (!stp_printer_verify(printer, nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
-      return;
+      return 0;
     }
 
  /*
@@ -601,7 +604,10 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 	image->note_progress(image, y, image_height);
 
       if (image->get_row(image, in, y) != STP_IMAGE_OK)
-	break;
+	{
+	  status = 2;
+	  break;
+	}
       (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   NULL, NULL, NULL);
 
@@ -643,7 +649,10 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 	image->note_progress(image, y, image_height);
 
       if (image->get_row(image, in, y) != STP_IMAGE_OK)
-	break;
+	{
+	  status = 2;
+	  break;
+	}
       (*colorfunc)(nv, in, out + out_offset, &zero_mask, image_width,
 		   image_bpp, cmap, NULL, NULL, NULL);
 
@@ -675,6 +684,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_puts("%%Trailer\n", v);
   stp_puts("%%EOF\n", v);
   stp_free_vars(nv);
+  return status;
 }
 
 

@@ -273,13 +273,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   ppdClose(ppd);
 
  /*
-  * Get the resolution options...
-  */
-
-  res = stp_printer_get_printfuncs(printer)->parameters(printer, NULL,
-                                                        "Resolution", &num_res);
-
- /*
   * Open the page stream...
   */
 
@@ -430,6 +423,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
+    res = stp_printer_get_parameters(printer, v, "Resolution", &num_res);
     if (cups.header.cupsCompression >= num_res)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
@@ -466,10 +460,9 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
     fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
 
-    (*stp_printer_get_printfuncs(printer)->media_size)
-      (printer, v, &(cups.width), &(cups.height));
-    (*stp_printer_get_printfuncs(printer)->imageable_area)
-      (printer, v, &(cups.left), &(cups.right), &(cups.bottom), &(cups.top));
+    stp_printer_get_media_size(printer, v, &(cups.width), &(cups.height));
+    stp_printer_get_imageable_area(printer, v, &(cups.left), &(cups.right),
+				   &(cups.bottom), &(cups.top));
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
     stp_set_width(v, cups.right - cups.left);
@@ -488,10 +481,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
 
-    if (stp_printer_get_printfuncs(printer)->verify(printer, v))
+    if (stp_printer_verify(printer, v))
     {
       signal(SIGTERM, cancel_job);
-      stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
+      stp_print(printer, v, &theImage);
       fflush(stdout);
     }
     else

@@ -49,7 +49,7 @@ main(int argc, char **argv)
   for (i = 0; i < stp_known_printers(); i++)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
-      const stp_vars_t pv = stp_printer_get_printvars(p);
+      stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
       stp_param_t *retval;
       const char *retval1;
       int count;
@@ -58,12 +58,11 @@ main(int argc, char **argv)
 	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
       for (k = 0; k < nparams; k++)
 	{
-	  retval1 = (*stp_printer_get_printfuncs(p)->default_parameters)
-	    (p, NULL, params[k]);
+	  retval1 = stp_printer_get_default_parameter(p, pv, params[k]);
 	  if (retval1)
 	    printf("$defaults{'%s'}{'%s'} = '%s';\n",
 		   stp_printer_get_driver(p), params[k], retval1);
-	  retval = (*stp_printer_get_printfuncs(p)->parameters)(p, NULL, params[k], &count);
+	  retval = stp_printer_get_parameters(p, pv, params[k], &count);
 	  if (count > 0)
 	    {
 	      for (j = 0; j < count; j++)
@@ -71,6 +70,19 @@ main(int argc, char **argv)
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 			 stp_printer_get_driver(p), params[k], retval[j].name,
 			 retval[j].text);
+		  if (strcmp(params[k], "Resolution") == 0)
+		    {
+		      int x, y;
+		      stp_set_resolution(pv, retval[j].name);
+		      stp_printer_describe_resolution(p, pv, &x, &y);
+		      if (x > 0 && y > 0)
+			printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+			       stp_printer_get_driver(p), "x_resolution",
+			       retval[j].name, x);
+			printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+			       stp_printer_get_driver(p), "y_resolution",
+			       retval[j].name, y);
+		    }
 		  free((void *)retval[j].name);
 		  free((void *)retval[j].text);
 		}
@@ -117,6 +129,7 @@ main(int argc, char **argv)
 		     "Black and White");
 	    }
 	}
+      stp_free_vars(pv);
     }
   return 0;
 }

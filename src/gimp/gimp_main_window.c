@@ -1960,11 +1960,10 @@ plist_callback (GtkWidget *widget,
       num_media_sizes = 0;
     }
 
-  media_sizes = (*(stp_printer_get_printfuncs(current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "PageSize", &num_media_sizes);
+  media_sizes = stp_printer_get_parameters(current_printer, pv->v,
+					   "PageSize", &num_media_sizes);
   default_parameter =
-    ((stp_printer_get_printfuncs(current_printer)->default_parameters)
-     (current_printer, stp_get_ppd_file (pv->v), "PageSize"));
+    stp_printer_get_default_parameter(current_printer, pv->v, "PageSize");
 
   if (stp_get_media_size(pv->v)[0] == '\0')
     stp_set_media_size (pv->v, default_parameter);
@@ -1988,11 +1987,10 @@ plist_callback (GtkWidget *widget,
       num_media_types = 0;
     }
 
-  media_types = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "MediaType", &num_media_types);
+  media_types = stp_printer_get_parameters(current_printer, pv->v,
+					   "MediaType", &num_media_types);
   default_parameter =
-    ((stp_printer_get_printfuncs (current_printer)->default_parameters)
-     (current_printer, stp_get_ppd_file (pv->v), "MediaType"));
+    stp_printer_get_default_parameter(current_printer, pv->v, "MediaType");
 
   if (stp_get_media_type (pv->v)[0] == '\0' && media_types != NULL)
     stp_set_media_type (pv->v, default_parameter);
@@ -2018,12 +2016,10 @@ plist_callback (GtkWidget *widget,
       num_media_sources = 0;
     }
 
-  media_sources = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "InputSlot",
-     &num_media_sources);
+  media_sources = stp_printer_get_parameters(current_printer, pv->v,
+					     "InputSlot", &num_media_sources);
   default_parameter =
-    ((stp_printer_get_printfuncs (current_printer)->default_parameters)
-     (current_printer, stp_get_ppd_file (pv->v), "InputSlot"));
+    stp_printer_get_default_parameter(current_printer, pv->v, "InputSlot");
 
   if (stp_get_media_source (pv->v)[0] == '\0' && media_sources != NULL)
     stp_set_media_source (pv->v, default_parameter);
@@ -2049,11 +2045,10 @@ plist_callback (GtkWidget *widget,
       num_ink_types = 0;
     }
 
-  ink_types = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "InkType", &num_ink_types);
+  ink_types = stp_printer_get_parameters(current_printer, pv->v,
+					 "InkType", &num_ink_types);
   default_parameter =
-    ((stp_printer_get_printfuncs (current_printer)->default_parameters)
-     (current_printer, stp_get_ppd_file (pv->v), "InkType"));
+    stp_printer_get_default_parameter(current_printer, pv->v, "InkType");
 
   if (stp_get_ink_type (pv->v)[0] == '\0' && ink_types != NULL)
     stp_set_ink_type (pv->v, default_parameter);
@@ -2079,12 +2074,10 @@ plist_callback (GtkWidget *widget,
       num_resolutions = 0;
     }
 
-  resolutions = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "Resolution",
-     &num_resolutions);
+  resolutions = stp_printer_get_parameters(current_printer, pv->v,
+					   "Resolution", &num_resolutions);
   default_parameter =
-    ((stp_printer_get_printfuncs (current_printer)->default_parameters)
-     (current_printer, stp_get_ppd_file (pv->v), "Resolution"));
+    stp_printer_get_default_parameter(current_printer, pv->v, "Resolution");
 
   if (stp_get_resolution (pv->v)[0] == '\0' && resolutions != NULL)
     stp_set_resolution (pv->v, default_parameter);
@@ -2125,9 +2118,9 @@ media_size_callback (GtkWidget *widget,
       gdouble unit_scaler = unit_scale[pv->unit];
       gint new_value = SCALE(new_printed_value, unit_scaler);
 
-      (stp_printer_get_printfuncs (current_printer)->limit)
-	(current_printer, pv->v, &width_limit, &height_limit,
-	 &min_width_limit, &min_height_limit);
+      stp_printer_get_size_limit(current_printer, pv->v,
+				 &width_limit, &height_limit,
+				 &min_width_limit, &min_height_limit);
       if (widget == custom_size_width)
 	{
 	  if (new_value < min_width_limit)
@@ -2161,7 +2154,7 @@ media_size_callback (GtkWidget *widget,
 
 	  if (stp_papersize_get_width (pap) == 0)
 	    {
-	      (stp_printer_get_printfuncs (current_printer)->media_size)
+	      stp_printer_get_media_size
 		(current_printer, pv->v, &default_width, &default_height);
 	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
@@ -2179,7 +2172,7 @@ media_size_callback (GtkWidget *widget,
 
 	  if (stp_papersize_get_height (pap) == 0)
 	    {
-	      (stp_printer_get_printfuncs (current_printer)->media_size)
+	      stp_printer_get_media_size
 		(current_printer, pv->v, &default_height, &default_height);
 	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
@@ -3011,11 +3004,11 @@ preview_update (void)
   gdouble min_ppi_scaling2;  /* Minimum PPI for current page size */
   gdouble unit_scaler = unit_scale[pv->unit];
 
-  (stp_printer_get_printfuncs (current_printer)->media_size)
-    (current_printer, pv->v, &paper_width, &paper_height);
+  stp_printer_get_media_size(current_printer, pv->v,
+			     &paper_width, &paper_height);
 
-  (stp_printer_get_printfuncs (current_printer)->imageable_area)
-    (current_printer, pv->v, &left, &right, &bottom, &top);
+  stp_printer_get_imageable_area(current_printer, pv->v,
+				 &left, &right, &bottom, &top);
 
   printable_width  = right - left;
   printable_height = bottom - top;

@@ -379,8 +379,7 @@ gimp_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      (*stp_printer_get_printfuncs(printer)->imageable_area)
-	(printer, v, &l, &r, &b, &t);
+      stp_printer_get_imageable_area(printer, v, &l, &r, &b, &t);
       h = b - t;
       w = r - l;
       /* Force locale to "C", because decimal numbers sent to the IJS
@@ -394,8 +393,7 @@ gimp_get_cb (void *get_cb_data,
   else if (!strcmp(key, "Dpi"))
     {
       int x, y;
-      (*stp_printer_get_printfuncs(printer)->describe_resolution)
-	(printer, stp_get_resolution(v), &x, &y);
+      stp_printer_describe_resolution(printer, v, &x, &y);
       /* Force locale to "C", because decimal numbers sent to the IJS
 	 client must have a decimal point, nver a decimal comma */
       setlocale(LC_ALL, "C");
@@ -408,10 +406,8 @@ gimp_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      (*stp_printer_get_printfuncs(printer)->media_size)
-	(printer, v, &w, &h);
-      (*stp_printer_get_printfuncs(printer)->imageable_area)
-	(printer, v, &l, &r, &b, &t);
+      stp_printer_get_media_size(printer, v, &w, &h);
+      stp_printer_get_imageable_area(printer, v, &l, &r, &b, &t);
       /* Force locale to "C", because decimal numbers sent to the IJS
 	 client must have a decimal point, nver a decimal comma */
       setlocale(LC_ALL, "C");
@@ -479,11 +475,11 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       stp_set_driver(img->v, vbuf);
       if (printer)
 	{
-	  stp_set_printer_defaults(img->v, printer, NULL);
+	  stp_set_printer_defaults(img->v, printer);
 	  if (strlen(stp_get_resolution(img->v)) == 0)
 	    stp_set_resolution(img->v,
-			       ((*stp_printer_get_printfuncs(printer)->default_parameters)
-				(printer, NULL, "Resolution")));
+			       (stp_printer_get_default_parameter
+				(printer, img->v, "Resolution")));
 	  if (strlen(stp_get_dither_algorithm(img->v)) == 0)
 	    stp_set_dither_algorithm(img->v, stp_default_dither_algorithm());
 	}
@@ -503,11 +499,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       int l, r, b, t, pw, ph;
       double w, h;
       stp_printer_t printer =
-	(stp_get_printer_by_driver(stp_get_driver(img->v)));
-      ((*stp_printer_get_printfuncs(printer)->imageable_area))
-	(printer, img->v, &l, &r, &b, &t);
-      (*stp_printer_get_printfuncs(printer)->media_size)
-	(printer, img->v, &pw, &ph);
+	stp_get_printer_by_driver(stp_get_driver(img->v));
+      stp_printer_get_imageable_area(printer, img->v, &l, &r, &b, &t);
+      stp_printer_get_media_size(printer, img->v, &pw, &ph);
       STP_DEBUG(fprintf(stderr, "l %d r %d t %d b %d pw %d ph %d\n",
 			l, r, t, b, pw, ph));
       code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
@@ -957,8 +951,8 @@ main (int argc, char **argv)
 	  stp_merge_printvars(img.v, stp_printer_get_printvars(printer));
 	  if (strlen(stp_get_resolution(img.v)) == 0)
 	    stp_set_resolution(img.v, 
-			       stp_printer_get_printfuncs(printer)->
-			       default_parameters(printer, NULL, "Resolution"));
+			       (stp_printer_get_default_parameter
+				(printer, img.v, "Resolution")));
 	  if (strlen(stp_get_dither_algorithm(img.v)) == 0)
 	    stp_set_dither_algorithm(img.v, stp_default_dither_algorithm());
 	}
@@ -972,17 +966,16 @@ main (int argc, char **argv)
       stp_set_app_gamma(img.v, (float)1.7);
       stp_set_cmap(img.v, NULL);
       stp_set_output_type(img.v, img.output_type); 
-      stp_printer_get_printfuncs(printer)->media_size(printer, img.v, &w, &h);
-      stp_printer_get_printfuncs(printer)->imageable_area(printer, img.v,
-							  &l, &r, &b, &t);
+      stp_printer_get_media_size(printer, img.v, &w, &h);
+      stp_printer_get_imageable_area(printer, img.v, &l, &r, &b, &t);
       width = r - l;
       stp_set_width(img.v, width);
       height = b - t;
       stp_set_height(img.v, height);
       STP_DEBUG(stp_dbg("about to print", img.v));
-      if (stp_printer_get_printfuncs(printer)->verify(printer, img.v))
+      if (stp_printer_verify(printer, img.v))
 	{
-	  stp_printer_get_printfuncs(printer)->print(printer, &si, img.v);
+	  stp_print(printer, img.v, &si);
 	}
       else
 	{

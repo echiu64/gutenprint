@@ -236,10 +236,11 @@ static const pcl_t pcl_resolutions[] =
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
 static void
-pcl_describe_resolution(const stp_printer_t printer,
-			const char *resolution, int *x, int *y)
+pcl_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
+			int *x, int *y)
 {
   int i;
+  const char *resolution = stp_get_resolution(v);
   for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
       if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
@@ -1638,11 +1639,11 @@ pcl_papersize_valid(const stp_papersize_t pt,
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *				/* O - Parameter values */
-pcl_parameters(const stp_printer_t printer,/* I - Printer model */
-               const char *ppd_file,		/* I - PPD file (not used) */
-               const char *name,		/* I - Name of parameter */
-               int  *count)		/* O - Number of values */
+static stp_param_t *
+pcl_parameters(const stp_printer_t printer,
+	       const stp_vars_t v,
+               const char *name,
+               int  *count)
 {
   int		model = stp_printer_get_model(printer);
   int		i;
@@ -1775,7 +1776,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 
 static const char *
 pcl_default_parameters(const stp_printer_t printer,
-		       const char *ppd_file,
+		       const stp_vars_t v,
 		       const char *name)
 {
   int		model = stp_printer_get_model(printer);
@@ -1921,12 +1922,13 @@ pcl_limit(const stp_printer_t printer,	/* I - Printer model */
  * 'pcl_print()' - Print an image to an HP printer.
  */
 
-static void
-pcl_print(const stp_printer_t printer,		/* I - Model */
-          stp_image_t *image,		/* I - Image to print */
-	  const stp_vars_t v)
+static int
+pcl_print(const stp_printer_t printer,
+	  const stp_vars_t v,
+          stp_image_t *image)
 {
   int i;
+  int		status = 1;
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*resolution = stp_get_resolution(v);
@@ -1993,10 +1995,10 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   stp_dither_data_t *dt;
   unsigned char *comp_buf;	/* Scratch buffer for pcl_mode2 */
 
-  if (!stp_get_verified(nv))
+  if (!stp_printer_verify(printer, nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
-      return;
+      return 0;
     }
 
   caps = pcl_get_model_capabilities(model);
@@ -2028,7 +2030,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",xdpi,ydpi);
   if (xdpi == 0 || ydpi == 0)
-    return;
+    return 0;
 
  /*
   * Choose the correct color conversion function...
@@ -2505,7 +2507,10 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	break;
+	{
+	  status = 2;
+	  break;
+	}
       (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   hue_adjustment, lum_adjustment, NULL);
     }
@@ -2681,6 +2686,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_puts("\033E", v); 				/* PCL reset */
   stp_free_vars(nv);
+  return status;
 }
 
 const stp_printfuncs_t stp_pcl_printfuncs =

@@ -84,3 +84,84 @@ stp_get_printer_index_by_driver(const char *driver)
     }
   return -1;
 }
+
+stp_param_t *
+stp_printer_get_parameters(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   const char *name,
+			   int *count)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  return (printfuncs->parameters)(printer, v, name, count);
+}
+
+const char *
+stp_printer_get_default_parameter(const stp_printer_t printer,
+				  const stp_vars_t v,
+				  const char *name)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  return (printfuncs->default_parameters)(printer, v, name);
+}
+
+void
+stp_printer_get_media_size(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   int *width,
+			   int *height)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  (printfuncs->media_size)(printer, v, width, height);
+}
+
+void
+stp_printer_get_imageable_area(const stp_printer_t printer,
+			       const stp_vars_t v,
+			       int *left,
+			       int *right,
+			       int *bottom,
+			       int *top)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  (printfuncs->imageable_area)(printer, v, left, right, bottom, top);
+}
+
+void
+stp_printer_get_size_limit(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   int *max_width,
+			   int *max_height,
+			   int *min_width,
+			   int *min_height)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  (printfuncs->limit)(printer, v, max_width, max_height, min_width,min_height);
+}
+
+void
+stp_printer_describe_resolution(const stp_printer_t printer,
+				const stp_vars_t v,
+				int *x,
+				int *y)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  (printfuncs->describe_resolution)(printer, v, x, y);
+}
+
+int
+stp_printer_verify(const stp_printer_t printer,
+		   const stp_vars_t v)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  return (printfuncs->verify)(printer, v);
+}
+
+int
+stp_print(const stp_printer_t printer,
+	  const stp_vars_t v,
+	  stp_image_t *image)
+{
+  const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
+  return (printfuncs->print)(printer, v, image);
+}
+

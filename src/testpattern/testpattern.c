@@ -202,7 +202,6 @@ main(int argc, char **argv)
   stp_printer_t the_printer;
   stp_papersize_t pt;
   int left, right, top, bottom;
-  const stp_printfuncs_t *printfuncs;
   int x, y;
   int width, height;
 
@@ -324,12 +323,11 @@ main(int argc, char **argv)
 	  return 1;
 	}
     }
-  stp_set_printer_defaults(v, the_printer, NULL);
+  stp_set_printer_defaults(v, the_printer);
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
-  printfuncs = stp_printer_get_printfuncs(the_printer);
   stp_set_density(v, density);
   if (resolution)
     stp_set_resolution(v, resolution);
@@ -360,8 +358,8 @@ main(int argc, char **argv)
       return 1;
     }
 
-  (printfuncs->imageable_area)(the_printer, v, &left, &right, &bottom, &top);
-  (printfuncs->describe_resolution)(the_printer, stp_get_resolution(v),&x, &y);
+  stp_printer_get_imageable_area(the_printer, v, &left, &right, &bottom, &top);
+  stp_printer_describe_resolution(the_printer, v, &x, &y);
   if (x < 0)
     x = 300;
   if (y < 0)
@@ -389,9 +387,7 @@ main(int argc, char **argv)
   stp_set_top(v, top);
 
   stp_merge_printvars(v, stp_printer_get_printvars(the_printer));
-  if (stp_printer_get_printfuncs(the_printer)->verify(the_printer, v))
-    (stp_printer_get_printfuncs(the_printer)->print)(the_printer, &theImage, v);
-  else
+  if (stp_print(the_printer, v, &theImage) != 1)
     return 1;
   stp_free_vars(v);
   return 0;

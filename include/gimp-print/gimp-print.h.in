@@ -141,6 +141,13 @@ typedef enum stp_image_status
  *     4            8 bits/plane CMYK           N/A
  *     8            16 bits/plane CMYK          N/A
  *
+ * Output type is OUTPUT_RAW_PRINTER:
+ *
+ *    If the printer supports OUTPUT_RAW_PRINTER, the bpp value should be
+ *    2 x the number of channels desired to print (the precise modes
+ *    available are printer-dependent).  Each plane is therefore 2 bytes
+ *    (16 bits) deep.
+ *
  * init() is used to perform any initialization required by the image
  * layer for the image.  It will be called once per image.  reset() is
  * called to reset the image to the beginning.  It may (in principle)
@@ -176,46 +183,28 @@ typedef struct stp_image
   void *rep;
 } stp_image_t;
 
+typedef void *stp_printer_t;
+typedef void *stp_vars_t;
+typedef void *stp_papersize_t;
+typedef struct
+{
+  const char	*name,	/* Option name */
+		*text;	/* Human-readable (translated) text */
+} stp_param_t;
+
+typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
+
 /*
- * Definition of a printer.  A printer definition contains some data
- * about the printer and a set of member functions that operate on it.
+ *   Return a list of option values of the specified parameter NAME
+ *   for the specified PRINTER.  The number of options returned is
+ *   placed in COUNT.  Both the array and the options themselves are
+ *   allocated on the heap; it is the caller's responsibility to free
+ *   them upon completion of use.  The driver must therefore return a
+ *   copy of data.
  *
- * The data members are:
- *
- * long_name is a human-readable name.  It is intended to be used by
- *   a user interface to print the name of the printer.
- *
- * driver is the short name of the printer.  This is an alternate name
- *   that is used internally.  A user interface may use this for input
- *   purposes, or a client program may use this to generate a filename.
- *   The driver name should consist of lowercase alphanumerics and hyphens
- *   only.
- *
- * model is a model number used only by the underlying driver.  It is
- *   treated as an opaque, but static, identifier.  It should not be a
- *   pointer value, but the exact interpretation of the model number
- *   is up to the driver implementation (it may be an index into an
- *   array, for example).
- *
- * printvars is the default settings for this printer.
- *
- * The member functions are:
- *
- * char **(*parameters)(const stp_printer_t printer,
- *                      char *ppd_file,
- *                      char *name,
- *                      int *count)
- *
- *   returns a list of option values of the specified parameter NAME
- *   for the specified PRINTER.  If a PPD filename is specified, the driver
- *   may use that to help generate the valid parameter list.  The number
- *   of options returned is placed in COUNT.  Both the array and the
- *   options themselves are allocated on the heap; it is the caller's
- *   responsibility to free them upon completion of use.  The driver
- *   must therefore return a copy of data.
- *
- *   In all cases, the returned option names should be appropriate for a
- *   user interface to display.
+ *   The data stored in V may be used to influence the values
+ *   returned.  For example, a PPD file stored in V may be used by the
+ *   driver.
  *
  *   The list of parameters is subject to change.  The currently supported
  *   parameters are:
@@ -242,99 +231,99 @@ typedef struct stp_image
  *     InputSlot returns a list of legal input sources for the printer.
  *       This is typically things like different input trays, manual feed,
  *       roll feed, and the like.
- *
- * void (*media_size)(const stp_printer_t printer,
- *                    const stp_vars_t v,
- *                    int *width,
- *                    int *height)
- *
- *   returns the physical WIDTH and HEIGHT of the media using the settings
- *   in V.  The driver will almost always look at the media_size variable
- *   in V; it may look at other data in V to determine the physical page
- *   size.  WIDTH and HEIGHT are expressed in units of 1/72".
- *
- * void (*imageable_area)(const stp_printer_t printer,
- *                        const stp_vars_t v,
- *                        int *left,
- *                        int *right,
- *                        int *bottom,
- *                        int *top)
- *
- *   returns the width of the LEFT, RIGHT, BOTTOM, and TOP border of the
- *   page for the given printer and variable settings.  The caller can
- *   use this, in combination with the media_size member, to determine
- *   the printable region of the page, and if needed, exactly where to
- *   place the image to achieve a given physical placement (e. g.
- *   centering) on the page.  All returned values are in units of
- *   1/72".  All values are relative to the top left of the media.
- *
- * void (*limit)(const stp_printer_t printer,
- *               const stp_vars_t v,
- *               int *width,
- *               int *height)
- *
- *   returns the maximum page size the printer can handle, in units of
- *   1/72".
- *
- * void (*print)(const stp_printer_t printer,
- *               stp_image_t *image,
- *               const stp_vars_t v)
- *
- *   prints a page.  The variable settings provided in V are used to control
- *   the printing; PRN is a file pointer that the raw printer output
- *   is to be written to, and IMAGE is an object that sources the input
- *   data to the driver (the contents of which are opaque to the low level
- *   driver and are interpreted by the high level program).
- *
- * const char *(*default_resolution)(const stp_printer_t printer)
- *
- *   returns the name of the default resolution for the printer.  The
- *   caller must not attempt to free the returned value.
- *
- * void (*describe_resolution)(const stp_printer_t printer,
- *                             const char *resolution,
- *                             int *x,
- *                             int *y)
- *
- *   returns the horizontal (X) and vertical (Y) resolution of the chosen
- *   RESOLUTION name.  The high level program may choose to use this to
- *   rasterize at an appropriate resolution.
- *
  */
 
-typedef void *stp_printer_t;
-typedef void *stp_vars_t;
-typedef void *stp_papersize_t;
-typedef struct
-{
-  const char	*name,	/* Option name */
-		*text;	/* Human-readable (translated) text */
-} stp_param_t;
+extern stp_param_t *
+stp_printer_get_parameters(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   const char *name,
+			   int *count);
 
-typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
+/*
+ * Return the default value for the specified parameter.
+ */
+extern const char *
+stp_printer_get_default_parameter(const stp_printer_t printer,
+				  const stp_vars_t v,
+				  const char *name);
 
-typedef struct
-{
-  stp_param_t *(*parameters)(const stp_printer_t printer,
-                             const char *ppd_file,
-                             const char *name, int *count);
-  void  (*media_size)(const stp_printer_t printer, const stp_vars_t v,
-                      int *width, int *height);
-  void  (*imageable_area)(const stp_printer_t printer,
-                          const stp_vars_t v,
-                          int *left, int *right, int *bottom, int *top);
-  void  (*limit)(const stp_printer_t printer, const stp_vars_t v,
-                 int *max_width, int *max_height,
-                 int *min_width, int *min_height);
-  void  (*print)(const stp_printer_t printer,
-                 stp_image_t *image, const stp_vars_t v);
-  const char *(*default_parameters)(const stp_printer_t printer,
-                                    const char *ppd_file,
-                                    const char *name);
-  void  (*describe_resolution)(const stp_printer_t printer,
-                               const char *resolution, int *x, int *y);
-  int   (*verify)(const stp_printer_t p, const stp_vars_t v);
-} stp_printfuncs_t;
+/*
+ * Retrieve the media size of the media type set in V, expressed in units
+ * of 1/72".  If the media size is invalid, width and height will be set
+ * to -1.  Values of 0 for width or height indicate that the dimension
+ * is variable, so that custom page sizes or roll paper can be used.
+ * In this case, the size limit should be used to determine maximum and
+ * minimum values permitted.
+ */
+extern void
+stp_printer_get_media_size(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   int *width,
+			   int *height);
+
+/*
+ * Retrieve the boundaries of the printable area of the page.  In combination
+ * with the media size, this can be used to determine the actual printable
+ * region, which callers can use to place the image precisely.  The
+ * dimensions are relative to the top left of the physical page.
+ *
+ * If a customizable page size is used (see stp_printer_get_media_size),
+ * the actual desired width and/or height must be filled in using
+ * stp_set_page_width and/or stp_set_page_height.  If these are not filled
+ * in, the margins will be returned.
+ *
+ * Returned values may be negative if a printer is capable of full bleed
+ * by printing beyond the physical boundaries of the page.
+ *
+ * If the media size stored in V is invalid, the return value
+ * will be indeterminate.  It is up to the user to specify legal values.
+ */
+extern void
+stp_printer_get_imageable_area(const stp_printer_t printer,
+			       const stp_vars_t v,
+			       int *left,
+			       int *right,
+			       int *bottom,
+			       int *top);
+
+/*
+ * Retrieve the minimum and maximum size limits for custom media sizes.
+ */
+extern void
+stp_printer_get_size_limit(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   int *max_width,
+			   int *max_height,
+			   int *min_width,
+			   int *min_height);
+
+/*
+ * Retrieve the printing resolution of the resolution stored in V.
+ */
+extern void
+stp_printer_describe_resolution(const stp_printer_t printer,
+				const stp_vars_t v,
+				int *x,
+				int *y);
+
+/*
+ * Verify that the parameters stored in V are consistent with those allowed
+ * by the driver.  This must be called prior to printing; failure to do
+ * so will result in printing failing.  Status of 0 represents failure;
+ * status of 1 represents success; other status values are reserved.
+ */
+extern int
+stp_printer_verify(const stp_printer_t printer,
+		   const stp_vars_t v);
+
+/*
+ * Print the image.  Return value of 0 represents failure; status of 1
+ * represents success; status of 2 represents abort requested by the driver.
+ */
+extern int
+stp_print(const stp_printer_t printer,
+	  const stp_vars_t v,
+	  stp_image_t *image);
 
 /*
  * stp_init() must be called prior to any other use of the library.
@@ -349,10 +338,8 @@ extern const char * stp_set_output_codeset(const char *codeset);
 extern const char * stp_printer_get_long_name (const stp_printer_t p);
 extern const char * stp_printer_get_driver (const stp_printer_t p);
 extern int stp_printer_get_model (const stp_printer_t p);
-extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t);
 extern const stp_vars_t stp_printer_get_printvars (const stp_printer_t p);
-extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t,
-                                     const char *ppd_file);
+extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
 
 extern stp_vars_t stp_allocate_vars (void);
 extern void stp_copy_vars (stp_vars_t vd, const stp_vars_t vs);

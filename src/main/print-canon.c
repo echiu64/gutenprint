@@ -802,9 +802,9 @@ static const canon_variable_printmode_t canon_modes_6x00[] = {
 
 static const canon_cap_t canon_model_capabilities[] =
 {
-  /* default settings for unkown models */
+  /* default settings for unknown models */
 
-  {   -1, 8*72,11*72,180,180,20,20,20,20, CANON_INK_K, CANON_SLOT_ASF1, 0 },
+  {   -1, 17*72/2,842,180,180,20,20,20,20, CANON_INK_K, CANON_SLOT_ASF1, 0 },
 
   /* ******************************** */
   /*                                  */
@@ -938,7 +938,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6500, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -957,7 +957,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 8200 *//* heads: BC-50 */
     8200, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200,1200, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK, /*  | CANON_INK_CcMmYK */
@@ -984,7 +984,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
     210, 1,
-    11*72, 17*72,
+    842, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1002,7 +1002,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
     240, 1,
-    11*72, 17*72,
+    842, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1020,7 +1020,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
     250, 1,
-    11*72, 17*72,
+    842, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1038,7 +1038,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
     1000, 1,
-    11*72, 17*72,
+    842, 17*72,
     90, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY,
@@ -1056,7 +1056,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     2000, 1,
-    11*72, 17*72,
+    842, 17*72,
     180, 720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK,
@@ -1074,7 +1074,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
     3000, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -1092,7 +1092,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6100, 3,
-    11*72, 17*72,
+    842, 17*72,
     180, 1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -1110,7 +1110,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7000, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
@@ -1128,7 +1128,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100, 3,
-    11*72, 17*72,
+    842, 17*72,
     150, 1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
@@ -1582,9 +1582,10 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 }
 
 static void
-canon_describe_resolution(const stp_printer_t printer,
-			const char *resolution, int *x, int *y)
+canon_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
+			  int *x, int *y)
 {
+  const char *resolution = stp_get_resolution(v);
   *x = -1;
   *y = -1;
   sscanf(resolution, "%dx%d", x, y);
@@ -1603,11 +1604,11 @@ static stp_param_t media_sources[] =
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *				/* O - Parameter values */
-canon_parameters(const stp_printer_t printer,	/* I - Printer model */
-                 const char *ppd_file,		/* I - PPD file (not used) */
-                 const char *name,		/* I - Name of parameter */
-                 int  *count)			/* O - Number of values */
+static stp_param_t *
+canon_parameters(const stp_printer_t printer,
+                 const stp_vars_t v,
+                 const char *name,
+                 int  *count)
 {
   int		i;
   stp_param_t *p= 0;
@@ -1746,7 +1747,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
 
 static const char *
 canon_default_parameters(const stp_printer_t printer,
-			 const char *ppd_file,
+			 const stp_vars_t v,
 			 const char *name)
 {
   int		i;
@@ -2246,12 +2247,13 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 /*
  * 'canon_print()' - Print an image to a CANON printer.
  */
-static void
-canon_print(const stp_printer_t printer,		/* I - Model */
-	    stp_image_t *image,		/* I - Image to print */
-	    const stp_vars_t v)
+static int
+canon_print(const stp_printer_t printer,	
+	    const stp_vars_t v,
+	    stp_image_t *image)
 {
   int i;
+  int		status = 1;
   const unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*resolution = stp_get_resolution(v);
@@ -2322,10 +2324,10 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   const canon_variable_inkset_t *inks;
   stp_dither_data_t *dt;
 
-  if (!stp_get_verified(nv))
+  if (!stp_printer_verify(printer, nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
-      return;
+      return 0;
     }
 
   PUT("top        ",top,72);
@@ -2655,7 +2657,10 @@ canon_print(const stp_printer_t printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       if (image->get_row(image, in, errline) != STP_IMAGE_OK)
-	break;
+	{
+	  status = 2;
+	  break;
+	}
       (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		   have_hue_adjustment ? hue_adjustment : NULL,
 		   have_lum_adjustment ? lum_adjustment : NULL,
@@ -2742,6 +2747,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   canon_deinit_printer(nv, &init);
   stp_free_vars(nv);
+  return status;
 }
 
 const stp_printfuncs_t stp_canon_printfuncs =

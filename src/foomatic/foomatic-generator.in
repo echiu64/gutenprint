@@ -565,12 +565,7 @@ sub build_model_ev {
 # Stuff for Resolution.
 #
 # printer_options gives us Quality information.  We examine this to
-# determine what to do for the gs resolution argument:
-#
-#  - Is this a 180/360/720 printer or a 150/300/600 printer?
-#
-#  - What are the legal resolutions?  Sort of parse and compute these
-#    from the Resolution values.
+# determine what to do for the gs resolution argument.
 
 sub compute_resolutions {
     my ($stpname) = @_;
@@ -585,9 +580,8 @@ sub compute_resolutions {
 
 	my $qual;
 	for $qual (keys(%{$stpdata{$stpname}{'Resolution'}})) {
-	    $qual =~ m!(\d+)\s*(x\s*(\d+))?!;
-	    my ($x, $y) = ($1, $3);
-	    $y = $x if !defined($y);
+	    my ($x) = $stpdata{$stpname}{'x_resolution'}{$qual};
+	    my ($y) = $stpdata{$stpname}{'y_resolution'}{$qual};
 
 	    my $r = {'x' => $x,
 		     'y' => $y,
