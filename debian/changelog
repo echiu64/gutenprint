@@ -1,3 +1,11 @@
+gimp-print (4.3.0-1) unstable; urgency=low
+
+  * New upstream development release (4.3.0)
+  * Fix libgimpprint.postinst to use 'if' instead of 'case', removing a
+    lintian warning.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 25 Nov 2001 11:33:38 +0000
+
 gimp-print (4.2.0-1) unstable; urgency=low
 
   * New upstream stable release (4.2.0)
