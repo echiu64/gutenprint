@@ -1589,7 +1589,7 @@ canon_describe_resolution(const stp_printer_t printer,
   return;
 }
 
-static stp_param_t media_sources[] =
+static const stp_param_t media_sources[] =
               {
                 { "Auto",	N_ ("Auto Sheet Feeder") },
                 { "Manual",	N_ ("Manual with Pause") },
