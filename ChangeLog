@@ -1,3 +1,265 @@
+2000-11-22	<rlk@sourceforge.net>
+
+	Files:	README (1.35.2.4) (+1 -1)
+		configure.in (1.36.2.5) (+1 -1)
+		RELNOTES (1.33.2.9) (+12 -1)
+	
+	Prep for 4.0.3
+	
+2000-11-22	<rlk@sourceforge.net>
+
+	Files:	printers.xml (1.28.2.1) (+1 -1)
+	
+	Fix DeskJet 1200C, from mainline.
+	
+2000-11-22	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.52.2.1) (+119 -30)
+	
+	Improve documentation
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	FAQ.html (1.2) (+58 -36)
+	
+	Updates
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.55) (+119 -30)
+	
+	Improved documentation
+	
+2000-11-21	<ttonino@sourceforge.net>
+
+	Files:	FAQ.html (1.1) ( )
+	
+	First attempt at a FAQ.
+	
+2000-11-21	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.97) (+14 -5)
+	
+	Make dither_set_black_levels do something useful.
+	
+2000-11-20	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.96) (+32 -2)
+	
+	Try to address purple problem here, too.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.270) (+34 -36)
+	
+	Minor code cleanup
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.58) (+93 -0)
+		print-lexmark.c (1.5) (+31 -4)
+	
+	Color correction
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-lexmark.c (1.4) (+19 -15)
+	
+	Cleanup
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.96) (+2 -93)
+		print.h (1.93) (+37 -11)
+		print-weave.c (1.8) (+881 -1)
+		print-pcl.c (1.95) (+3 -84)
+		print-escp2.c (1.269) (+33 -915)
+	
+	Split out all the bit twiddling functions into print-weave.c.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.76) (+6 -4)
+		cups/Makefile.in (1.20) (+8 -5)
+		cups/.cvsignore (1.5) (+3 -1)
+		Ghost/devs.mak.addon-5.10 (1.6) (+4 -0)
+		Ghost/contrib.mak.addon (1.11) (+4 -0)
+		Ghost/.cvsignore (1.5) (+5 -0)
+		print-util.c (1.153) (+2 -1537)
+		print-color.c (1.1) ( )
+	
+	Split print-util into print-util.c and print-color.c.
+	
+2000-11-19	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.69) (+2 -2)
+		print.h (1.92) (+9 -3)
+		print-util.c (1.152) (+84 -30)
+		print-ps.c (1.45) (+4 -3)
+		print-pcl.c (1.94) (+2 -2)
+		print-lexmark.c (1.3) (+2 -2)
+		print-escp2.c (1.268) (+32 -2)
+		print-canon.c (1.95) (+2 -2)
+	
+	Hue mapping to improve color
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	print-pcl.c (1.87.2.2) (+37 -2)
+	
+	Per Dave Hill, the 1200C cannot print CMYK, only CMY or K.
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.43.2.2) (+7 -2)
+	
+	122776 Ghostscript driver still ignores the printer variables
+	
+2000-11-18	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.93) (+5 -0)
+	
+	Divided density by 2 for 840 CRET mode. This is Robert's version of
+	Tommy's latest patch.
+	
+2000-11-18	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.92) (+37 -2)
+		printers.xml (1.36) (+1 -1)
+	
+	Although the 1200C has CMYK ink, it cannot use K at the same time as
+	CMY! Split it off from the 1600 (which *may* be able to do this). Thanks
+	to Dieter Schollmeyer for noting this.
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.45) (+7 -2)
+	
+	122776 Ghostscript still ignores printer variables
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Ghost/contrib.mak.addon (1.10) (+4 -0)
+		Ghost/devs.mak.addon-5.10 (1.5) (+4 -0)
+	
+	Lexmark driver
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	cups/.cvsignore (1.4) (+10 -8)
+	
+	Add new stuff
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.57) (+200 -0)
+		Ghost/README (1.54) (+4 -0)
+		printers.xml (1.35) (+18 -1)
+		print-util.c (1.151) (+3 -1)
+		print-escp2.c (1.267) (+14 -3)
+		escputil.c (1.18) (+4 -2)
+	
+	1) Support for the Stylus Photo 790 (new printer on the Epson HK web site,
+	   not currently on the US site).  Also list the 680, which appears to
+	   be the 777.
+	
+	2) In update_cmyk in print-util.c, don't bail out if it's all black.
+	   However, there may be another error which I need to look at.
+	
+2000-11-18	<rwisi@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.19) (+3 -3)
+	
+	Inserted missing cups-lexmark.o
+	
+2000-11-18	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.75) (+4 -3)
+		ran.509.131.h (1.2) (+22 -0)
+		printers.xml (1.34) (+11 -3)
+		print-escp2.c (1.266) (+326 -210)
+		print-dither.c (1.96) (+9 -1)
+	
+	Support 2880x720
+	
+2000-11-18	<mitsch@sourceforge.net>
+
+	Files:	print.c (1.129) (+6 -2)
+	
+	To make copying files to gimpcvs easier, check for INIT_I18N_UI
+	and use that macro instead of INIT_LOCALE if it exists.
+	
+	Fixes #122731
+	
+2000-11-17	<mitsch@sourceforge.net>
+
+	Files:	print.c (1.128.2.1) (+6 -2)
+	
+	To make copying files to gimpcvs easier, check for INIT_I18N_UI
+	and use that macro instead of INIT_LOCALE if it exists.
+	
+	Fixes #122731
+	
+2000-11-12	<rwisi@sourceforge.net>
+
+	Files:	print-lexmark.c (1.2) (+37 -42)
+	
+	Corrected error in print-lexmark.c at photo prints.
+	
+2000-11-12	<rwisi@sourceforge.net>
+
+	Files:	Makefile.am (1.74) (+1 -0)
+		Ghost/README (1.53) (+1 -0)
+		printers.xml (1.33) (+8 -0)
+		printdefy.y (1.12) (+12 -1)
+		print.h (1.91) (+14 -2)
+		print-lexmark.c (1.1) ( )
+	
+	Added support for Lexmark Z52.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	make-deb.sh (1.3) (+1 -1)
+	
+	Adjust for the fact that the format of /etc/debian_version has changed.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	debian/changelog (1.2) (+6 -0)
+	
+	Bump the revision number up to 4.0.2.
+	
+2000-11-12	<sharkey@sourceforge.net>
+
+	Files:	Ghost/debian-patch (1.2) (+15 -21)
+	
+	Slightly change the way Ghostscript is packaged for Debian.
+	
+	Originally, this patch would allow you to compile a package named
+	"gs-stp", which would both conflict with and provide the original gs package.
+	
+	Unfortunately, gs-pdfencrypt has a versioned depends on gs, and dpkg does
+	not support a versioned provides, so you can't install gs-pdfencrypt with
+	gs-stp.  At least, not as far as I can figure.
+	
+	So the solution is to not make a "gs-stp" package, but a new gs package,
+	with "stp" appended to the version number (5.10stp).  This allows
+	everything to work.
+	
+2000-11-11	<ttonino@sourceforge.net>
+
+	Files:	ran.509.131.h (1.1) ( )
+	
+	Generated new matrix for printers with 4:1 resolution, for example 2880x720
+	DPI.
+	
+2000-11-06	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.7) (+66 -0)
+		RELNOTES (1.33.2.8) (+3 -4)
+	
+	print 4.0.2 stuff
+	
 2000-11-06	<gandy@sourceforge.net>
 
 	Files:	print-canon.c (1.89.2.3) (+2 -2)
