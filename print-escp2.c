@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.104  2000/03/01 01:38:08  rlk
+ *   Some ditsy little things
+ *
  *   Revision 1.103  2000/03/01 01:12:46  rlk
  *   Handle variable dot size correctly
  *
@@ -576,26 +579,26 @@ typedef model_cap_t model_class_t;
 #define MODEL_GRAYMODE_YES	0x100000
 
 #define MODEL_NOZZLES_MASK	0xff000000
-#define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
+#define MODEL_MAKE_NOZZLES(x) 	((model_cap_t) ((x)) << 24)
 #define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
 #define MODEL_KNOZZLES_MASK	0xff00000000ll
-#define MODEL_MAKE_KNOZZLES(x) 	((long long) ((x)) << 32)
-#define MODEL_GET_KNOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 32)
+#define MODEL_MAKE_KNOZZLES(x) 	((model_cap_t) ((x)) << 32)
+#define MODEL_GET_KNOZZLES(x) 	((((model_cap_t) x) & MODEL_NOZZLES_MASK) >> 32)
 #define MODEL_SEPARATION_MASK	0xf0000000000ll
-#define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 40)
-#define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 40)
+#define MODEL_MAKE_SEPARATION(x) 	(((model_cap_t) (x)) << 40)
+#define MODEL_GET_SEPARATION(x)	((((model_cap_t) x) & MODEL_SEPARATION_MASK)>>40)
 
 #define MODEL_XRES_MASK		0xfff00000000000ll
-#define MODEL_MAKE_XRES(x) 	(((long long) (x)) << 44)
-#define MODEL_GET_XRES(x)	((((long long) x) & MODEL_XRES_MASK) >> 44)
+#define MODEL_MAKE_XRES(x) 	(((model_cap_t) (x)) << 44)
+#define MODEL_GET_XRES(x)	((((model_cap_t) x) & MODEL_XRES_MASK) >> 44)
 
 #define MODEL_SOFT_INK_MASK	0xf00000000000000ll
-#define MODEL_MAKE_SOFT_INK(x)	(((long long) (x)) << 48)
-#define MODEL_GET_SOFT_INK(x)	((((long long) x) & MODEL_SOFT_INK_MASK) >> 48)
+#define MODEL_MAKE_SOFT_INK(x)	(((model_cap_t) (x)) << 56)
+#define MODEL_GET_SOFT_INK(x)	((((model_cap_t) x) & MODEL_SOFT_INK_MASK) >> 56)
 
 #define MODEL_MICRO_INK_MASK	0xf000000000000000ll
-#define MODEL_MAKE_MICRO_INK(x)	(((long long) (x)) << 52)
-#define MODEL_GET_MICRO_INK(x)	((((long long) x) & MODEL_MICRO_INK_MASK) >>52)
+#define MODEL_MAKE_MICRO_INK(x)	(((model_cap_t) (x)) << 60)
+#define MODEL_GET_MICRO_INK(x)	((((model_cap_t) x) & MODEL_MICRO_INK_MASK) >>60)
 
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
@@ -1078,9 +1081,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
     }
 
   if (use_softweave)
-    fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave on */
   else
-    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+    fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave off */
 
   if (horizontal_passes * vertical_passes > 2)
     fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
@@ -2973,7 +2976,6 @@ escp2_write_weave(void *        vsw,
   static unsigned char fold_buf[COMPBUFWIDTH];
   static unsigned char comp_buf[COMPBUFWIDTH];
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
-  int xwidth = (width + sw->horizontal_weave - 1) / sw->horizontal_weave;
   unsigned char *comp_ptr;
   int i, j;
   int setactive;
