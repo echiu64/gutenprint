@@ -40,9 +40,9 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    improved.
 
 7) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
-   newer) Epson Stylus Photo printers.  This paper was specifically
-   designed for these printers, and may not give optimal results with
-   older printers.
+   successors) Epson Stylus Photo printers.  This paper was
+   specifically designed for these printers, and may not give optimal
+   results with older printers.
 
 8) Very dark tones and very saturated colors should be improved
    somewhat.  The result may be a bit darker and more contrasty; this
@@ -52,11 +52,42 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
 
 10) The Gimp plugin now permits the user to define a new printer name.
    This allows the user to define multiple "printers" with different
-   settings.
+   settings.  A newly-defined printer will clone the settings in
+   effect at the time the new printer is defined.
 
-11) The Gimp plugin will no longer compile against any version of 1.1.
+11) The Gimp plugin now grays out settings that have no effect.
+   Specifically, the custom page size boxes are grayed out unless a
+   paper size allowing custom sizing is in use, and the color control
+   sliders (cyan, magenta, yellow, and saturation) are grayed out when
+   grayscale or black and white output is selected.
+
+12) The Gimp plugin now offers an extra option for positioning the
+   image in the preview window.  The middle button moves the image in
+   increments of the image size.  This can be useful in some cases
+   when printing the same image multiple times on one page.
+
+   Furthermore, if you move the image with any mouse button, and while
+   the mouse button is held down you press another button, the entire
+   move operation is aborted; the image is returned to its previous
+   position, and does not respond to the mouse until you release all
+   buttons.
+
+13) The Gimp plugin will no longer compile against any version of 1.1.
    It no longer uses the transitional "compatibility" API; rather, it
    uses the 1.2 API.
+
+14) There has been a significant reorganization of the dither code.
+   While this has been tested, it is quite possible that there are
+   cases where the code has regressed.  Typical symptoms would be no
+   output, grossly wrong output (likely with vertical bands or
+   streaks), or crashes.  Please report any problems you may find.
+
+Gimp-Print 4.1.8 has the following known issues:
+
+1) The Canon driver currently produces incorrect or no output on many
+   printers at many resolutions.  This has been the case since roughly
+   4.1.5.  We are aware of this issue, and will fix it as soon as
+   possible.
 
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:
