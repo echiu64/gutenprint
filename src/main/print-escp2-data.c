@@ -258,7 +258,7 @@ static const escp2_densities_t c1_8pl_densities =
 { 2.3, 1.15, 0.57, 0.650, 0.650,     0, 0.650, 0.360 };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 2.7, 1.35, 0.68, 0.518, 0.518, 0.518, 0.259, 0.130 };
+{ 2.7, 1.35, 0.68, 0.518, 0.518, 0.518, 0.363, 0.182 };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -1115,7 +1115,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
     c2pl_dotsizes, c2pl_densities,
     &stpi_escp2_variable_2pl_inks, &stpi_escp2_sp950_paper_list,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo_inklist,
+    stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo_inklist,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -1130,7 +1130,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities,
     &stpi_escp2_variable_4pl_pigment_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo7_inklist,
+    stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_inklist,
     ultrachrome_bits, ultrachrome_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -1220,7 +1220,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
     c2pl_dotsizes, c2pl_densities,
     &stpi_escp2_variable_2pl_inks, &stpi_escp2_sp950_paper_list,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo7_japan_inklist,
+    stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inklist,
     stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -1280,7 +1280,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities,
     &stpi_escp2_variable_2pl_inks, &stpi_escp2_sp950_paper_list,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo7_japan_inklist,
+    stpi_escp2_superfine_reslist, &stpi_escp2_f360_photo7_japan_inklist,
     c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
