@@ -117,6 +117,9 @@ Gimp-Print 4.2.7 contains the following major changes over Gimp-Print
   4) Translations for Hungarian, Ukrainian, and Norwegian/Bokmaal have
      been added.  In addition, other translations have been updated.
 
+  5) The HP DesignJet 2500 and 3500 now support correct maximum page
+     widths of 36" and 54" respectively, rather than 44" for both.
+
 
 * Exceptions and Workarounds:
 
