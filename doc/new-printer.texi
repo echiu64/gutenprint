@@ -316,8 +316,17 @@ enabled printers).  These will be described in detail below.
 
 
 The last section specifies luminosity, hue, and saturation adjustment
-vectors for the printer, and the paper definitions.  These are
-presently not covered here.
+vectors for the printer, and the paper definitions.  These are used to
+adjust the color in Photograph and Solid Colors output modes.  These are
+each vectors of 48 (actually 49, as the first value must be duplicated)
+doubles that remap the luminosity, hue, and saturation respectively.
+The hue is calculated, and the value used to interpolate between the two
+closest points in each vector.
+
+The paper definitions is a set of paper definitions.  The paper
+definition contains the name of the paper type, special settings that
+are required for printers to process the paper correctly, and a set of
+adjustment values.  These are not currently discussed here.
 
 
 The lists of dot sizes and densities contain values for 13 printing
