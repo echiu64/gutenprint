@@ -1,4 +1,4 @@
-Gimp-Print 4.2.3-pre2, released October 12, 2002, is a prerelease in
+Gimp-Print 4.2.3-pre3, released October 14, 2002, is a prerelease in
 the Gimp-Print 4.2 series (it is not actually 4.2.3).
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -39,6 +39,18 @@ available at http://gimp-print.sourceforge.net.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.2.3-pre3 contains the following changes and fixes over
+Gimp-Print 4.2.3-pre2:
+
+1) The CUPS driver now permits printing variable page sizes, using -o
+   CustomPageSize.widthxheight, where width and height are in 1/72 of
+   an inch (e. g. 200x400).
+
+Bugs fixed in this release:
+
+622612 CUPS driver forbids custom page sizes
+
 
 
 Gimp-Print 4.2.3-pre2 contains the following changes and fixes over
