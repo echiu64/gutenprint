@@ -91,8 +91,26 @@ main(int argc, char **argv)
 			}
 		    }
 		}
-	      stp_parameter_description_free(&desc);
 	    }
+	  else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+	    {
+	      printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f\n",
+		     driver, desc.name, desc.bounds.dbl.lower);
+	      printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f\n",
+		     driver, desc.name, desc.bounds.dbl.upper);
+	      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f\n",
+		     driver, desc.name, desc.deflt.dbl);
+	    }
+	  else if (desc.p_type == STP_PARAMETER_TYPE_INT)
+	    {
+	      printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d\n",
+		     driver, desc.name, desc.bounds.integer.lower);
+	      printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d\n",
+		     driver, desc.name, desc.bounds.integer.upper);
+	      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d\n",
+		     driver, desc.name, desc.deflt.integer);
+	    }
+	  stp_parameter_description_free(&desc);
 	  tcount += count;
 	}
       stp_parameter_list_free(params);
