@@ -142,7 +142,7 @@ void rle_info(const unsigned char *inbuf, int n, int *first, int *last, int *wid
       }
       o+= num;
       i+= 2;
-    } else { 
+    } else {
       num= cnt+1;
       for (j=0; j<num; j++) {
 	if (inbuf[i+j+1]) {
@@ -171,19 +171,19 @@ int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
   if (n<=0) return 0;
   while (i<n) {
     cnt= ib[i];
-    if (cnt<0) { 
+    if (cnt<0) {
       num= 1-cnt;
       for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+1];
       o+= num;
       i+= 2;
-    } else { 
+    } else {
       num= cnt+1;
       for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+j+1];
       o+= num;
       i+= num+1;
     }
   }
-  
+
   return o;
 }
 
@@ -233,9 +233,9 @@ bitimage_t *scanlines2bitimage(scanline_t *slimg)
   }
   h= y-y0+1;
 
-  if ((!w) || (!h)) 
+  if ((!w) || (!h))
     return 0;
-    
+
   img= bitimage_new();
 
   img->buf= (unsigned char*) xmalloc(h*w);
@@ -243,7 +243,7 @@ bitimage_t *scanlines2bitimage(scanline_t *slimg)
   img->width= w;
   img->height= h;
   img->y0= y0;
-  
+
   for (sl=slimg; sl!=0; sl=sl->next) {
     y= sl->y- y0;
     if ((y>=0) && (y<h)) {
@@ -268,8 +268,8 @@ char conv(char i) {
 }
 
 
-void save2xbm(const char *filename,char col, bitimage_t *img, 
-	      int xmin, int ymin, int xmax, int ymax) 
+void save2xbm(const char *filename,char col, bitimage_t *img,
+	      int xmin, int ymin, int xmax, int ymax)
 {
   char *outfilename= (char*) xmalloc(strlen(filename)+16);
   FILE *o;
@@ -277,7 +277,7 @@ void save2xbm(const char *filename,char col, bitimage_t *img,
 
   if (!img) return;
 
-  if (col) 
+  if (col)
     sprintf(outfilename,"%s_%c.xbm",filename,col);
   else
     sprintf(outfilename,"%s.xbm",filename);
@@ -300,23 +300,23 @@ void save2xbm(const char *filename,char col, bitimage_t *img,
 	    outfilename,col,w*8,
 	    outfilename,col,h,
 	    outfilename,col);
-  else 
+  else
     fprintf(o,"#define %s_width %d\n#define %s_height %d\nstatic char %s_bits[] = {",
 	    outfilename,w*8,
 	    outfilename,h,
 	    outfilename);
-    
-  fprintf(stderr,"%d %d %d %d\n",i0,h,j0,w); 
+
+  fprintf(stderr,"%d %d %d %d\n",i0,h,j0,w);
   for (i=i0,k=0; i<i1; i++) {
     for (j=j0; j<=j1; j++) {
       if (k%16 == 0) fprintf(o,"\n");
-      fprintf(o,"0x%02x, ",(i>=0 && i<img->height)? conv(img->buf[i*img->width+j])&0xff : 0); 
+      fprintf(o,"0x%02x, ",(i>=0 && i<img->height)? conv(img->buf[i*img->width+j])&0xff : 0);
       k++;
     }
   }
-  
+
   fprintf(o," 0x00 };\n");
-  
+
   fclose(o);
 }
 
@@ -326,11 +326,11 @@ int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
   int c;
   int cmd;
 
-  while (!feof(infile) && c1!=0x1b && (c2!=0x28 && c2!=0x5b)) { 
-    c1=c2; c2=fgetc(infile); 
+  while (!feof(infile) && c1!=0x1b && (c2!=0x28 && c2!=0x5b)) {
+    c1=c2; c2=fgetc(infile);
   }
   if (feof(infile)) return 0;
- 
+
   cmd=fgetc(infile);
   if (feof(infile)) return 0;
 
@@ -338,7 +338,7 @@ int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
   if (feof(infile)) return 0;
   c2= fgetc(infile);
   if (feof(infile)) return 0;
-  
+
   *cnt= c1+256*c2;
 
   if ((c=fread(inbuff,1,*cnt,infile) != *cnt)) {
@@ -362,7 +362,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
   int i;
   int cnt;
   int cmd;
-  
+
   for (i=0; i<7; i++) sf[i]= sl[i]= 0;
 
   if (!infile) return 0;
@@ -370,7 +370,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
 
   while ((cmd= nextcmd(infile,inbuff,&cnt))) {
     switch(cmd) {
-    case 0x64: 
+    case 0x64:
       yres=inbuff[0]*256+inbuff[1];
       xres=inbuff[2]*256+inbuff[3];
       fprintf(stderr,"res=%dx%ddpi\n",xres,yres);
@@ -391,9 +391,9 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
 	fprintf(stderr,"unkown color component 0x%02x\n",inbuff[0]);
 	exit(-1);
       }
-      
+
       nsl= scanline_store(0,line,inbuff+1,cnt-1);
-            
+
       if (nsl) {
 	if (nsl->width) {
 	  if (ymin<0) ymin=line;
@@ -401,7 +401,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
 	  if (nsl->xmin<xmin) xmin=nsl->xmin;
 	  if (nsl->xmax>xmax) xmax=nsl->xmax;
 	  if (nsl->width>width) width=nsl->width;
-	  if (!sf[col]) 
+	  if (!sf[col])
 	    sf[col]=nsl;
 	  else
 	    sl[col]->next= nsl;
@@ -410,7 +410,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
 	  free (nsl);
 	  nsl= 0;
 	}
-	
+
 	if (fgetc(infile)!=0x0d) {
 	  fprintf(stderr,"COLOR LINE NOT TERMINATED BY 0x0d @ %lx!!\n",
 		  ftell(infile));
@@ -451,7 +451,7 @@ const char *fbin(char b) {
 }
 */
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
   char *infilename= 0, *outfilename=0;
   FILE *infile= 0;
@@ -463,10 +463,10 @@ int main(int argc, char **argv)
   if (argc>1) {
     if (argc>2)
       outfilename= argv[2];
-    else 
+    else
       outfilename= argv[1];
 
-    infilename= argv[1];  
+    infilename= argv[1];
     infile= fopen(infilename,"r");
 
     xsize=ysize=0;

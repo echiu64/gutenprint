@@ -2406,7 +2406,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     len_k = stp_dither_get_last_position(dither, ECOLOR_K, 1);
 
 /*
- * Blank line removal. If multiple lines are blank then they can be replaced 
+ * Blank line removal. If multiple lines are blank then they can be replaced
  * by "Relative Vertical Pixel Movement" command. However, since there are
  * apparently some faulty implementations, we always output the first line,
  * then suppress the rest. This ensures that the printers's buffers are really

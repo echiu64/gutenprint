@@ -666,13 +666,13 @@ lexmark_head_offset(int model,                      /* i */
 {
   int im = model_to_index(model);
   int i;
-  
+
   if (im != -1) {
 #ifdef DEBUG
     stp_erprintf("lexmark_head_offset (%i) (%x)\n",model,lexmark_model_capabilities[im].head_offset);
     stp_erprintf("  sizie %d,  size_v %d, size_v[0] %d\n", sizeof(*lineoff_buffer), sizeof(lineoff_buffer->v), sizeof(lineoff_buffer->v[0]));
 #endif
-    
+
     memcpy(lineoff_buffer, lexmark_model_capabilities[im].head_offset, sizeof(*lineoff_buffer));
     for (i=0; i < (sizeof(lineoff_buffer->v) / sizeof(lineoff_buffer->v[0])); i++) {
       lineoff_buffer->v[i] /= (lexmark_model_capabilities[im].y_raster_res / ydpi);
@@ -1328,7 +1328,7 @@ clean_color(unsigned char *line, int len)
    It will define the colors to be used and the resolution.
    Additionally the pass_length will be defined.
    The method lexmark_write() is responsible to handle the received lines
-   in a correct way. 
+   in a correct way.
 */
 static void
 lexmark_print(const stp_printer_t printer,		/* I - Model */
@@ -1504,7 +1504,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
     break;
   }
   /* adapt the density */
-  densityDivisor = ((xdpi / 300)*(ydpi/ 600)); 
+  densityDivisor = ((xdpi / 300)*(ydpi/ 600));
 
 #ifdef DEBUG
   if (res_para_ptr->resid == DPItest) {
@@ -1602,7 +1602,7 @@ densityDivisor /= 1.2;
     testprint(&td);
     out_width = td.x;
     out_height = td.y;
-    if (td.cols != 7) { 
+    if (td.cols != 7) {
     printMode = COLOR_MODE_K | COLOR_MODE_M | COLOR_MODE_C | COLOR_MODE_Y;
     } else {
     printMode = COLOR_MODE_K | COLOR_MODE_M | COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_LM | COLOR_MODE_LC;
@@ -1700,7 +1700,7 @@ densityDivisor /= 1.2;
 			       stp_fill_uncompressed,  /* fill_start */
 			       stp_pack_uncompressed,  /* pack */
 			       stp_compute_uncompressed_linewidth);  /* compute_linewidth */
-  
+
 
 
 
@@ -1813,18 +1813,18 @@ densityDivisor /= 1.2;
 
 
 
-  
+
   for (y = 0; y < out_height; y ++)   /* go through every pixle line of image */
     {
       int duplicate_line = 1;
-      
+
 #ifdef DEBUGyy
       stp_erprintf("print y %i\n", y);
 #endif
-      
+
       if ((y & 63) == 0)
 	image->note_progress(image, y, out_height);
-      
+
       if (errline != errlast)
 	{
 	  errlast = errline;
@@ -1849,16 +1849,16 @@ densityDivisor /= 1.2;
 	readtestprintline(&td, &cols);
 #endif
       }
-      
+
       clean_color(cols.p.c, length);
       clean_color(cols.p.m, length);
       clean_color(cols.p.y, length);
-      
+
 #ifdef DEBUGxx
       printf("Let's go lex_show_dither\n");
       lex_show_dither(dbgfile, cols.p.y, cols.p.c, cols.p.m, cols.p.Y, cols.p.C, cols.p.M, , out_width);
 #endif
-      
+
 #ifdef DEBUGyy
             stp_erprintf("Let's go stp_write_weave\n");
 	      stp_erprintf("length %d\n", length);
@@ -1866,7 +1866,7 @@ densityDivisor /= 1.2;
 
       stp_write_weave(weave, length, ydpi, model, out_width, left,
 		      xdpi, physical_xdpi, (const unsigned char **)cols.v);
-      
+
       errval += errmod;
       errline += errdiv;
       if (errval >= out_height)
@@ -1874,7 +1874,7 @@ densityDivisor /= 1.2;
 	  errval -= out_height;
 	  errline ++;
 	}
-      
+
     }
   image->progress_conclude(image);
 
@@ -1884,7 +1884,7 @@ densityDivisor /= 1.2;
   if (doTestPrint == 0) {
     stp_free_dither(dither);
   }
-  
+
 
 
   /*
@@ -1911,7 +1911,7 @@ densityDivisor /= 1.2;
 #endif
 
   lexmark_deinit_printer(v, caps);
-  stp_free_vars(nv); 
+  stp_free_vars(nv);
 }
 
 const stp_printfuncs_t stp_lexmark_printfuncs =
@@ -1936,7 +1936,7 @@ const stp_printfuncs_t stp_lexmark_printfuncs =
    the pixels of the image could be printed.
 */
 static unsigned char *
-lexmark_init_line(int mode, unsigned char *prnBuf, 
+lexmark_init_line(int mode, unsigned char *prnBuf,
 		  int offset,    /* offset from left in 1/"x_raster_res" DIP (printer resolution)*/
 		  int width, int direction,
 		  const lexmark_cap_t *   caps	        /* I - Printer model */
@@ -2232,14 +2232,14 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	   y+=yCount, dy++) { /* we start counting with 1 !!!! */
 	if (head_colors[colIndex].line != NULL) {
 	  pixelline = pixelline << 1;
-	  if ((x >= 0) && 
+	  if ((x >= 0) &&
 	      ((dy - head_colors[colIndex].head_nozzle_start) < (head_colors[colIndex].used_jets/2)))
 	    pixelline = pixelline | ((head_colors[colIndex].line[(y*length)+(x/8)] >> (7-(x%8))) & 0x1);
 	  pixelline = pixelline << 1;
 	  if ((x1 < width) &&
 	      (((dy - head_colors[colIndex].head_nozzle_start)+1) < (head_colors[colIndex].used_jets/2)))
 	    pixelline = pixelline | ((head_colors[colIndex].line[(((yCount>>1)+y)*length)+ (x1/8)] >> (7-(x1%8))) & 0x1);
-	  
+
 	} else {
 	  pixelline = pixelline << 2;
 	}
@@ -2506,7 +2506,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 
 
- 
+
 #ifdef DEBUG
   stp_erprintf("Lexmark: flush_pass, here we are !\n");
   stp_erprintf("  passno %i, sw->ncolors %i, width %d, lwidth %d, linecount k %d, linecount m %d, bitwidth %d, separation_rows  %d\n", passno, sw->ncolors, width, lwidth, linecount[0].p.k, linecount[0].p.m, sw->bitwidth, sw->separation_rows);
@@ -2546,17 +2546,17 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     break;
   }
   /* calculate paper shift and adapt actual resoution to physical positioning resolution */
-  paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi); 
+  paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi);
 
 
   if ((bufs[0].p.c != NULL) || (bufs[0].p.m != NULL) || (bufs[0].p.y != NULL)) {
 
     head_colors[0].line = bufs[0].p.c;
     head_colors[0].used_jets = linecount[0].p.c;
-  
+
     head_colors[1].line = bufs[0].p.m;
     head_colors[1].used_jets = linecount[0].p.m;
-  
+
     head_colors[2].line = bufs[0].p.y;
     head_colors[2].used_jets = linecount[0].p.y;
 
@@ -2569,7 +2569,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       printf("Let's go lex_show_dither (sw->jets %d,  paperShift %d)\n", sw->jets, paperShift);
       for (i=0; i < sw->jets; i++) {
 	int mywidth=lwidth;
-	lex_show_dither(dbgfile, 
+	lex_show_dither(dbgfile,
 			bufs[0].p.y+lineoffcalc(1), /* yellow, */
 			bufs[0].p.c+lineoffcalc(2), /* cyan,  */
 			bufs[0].p.m+lineoffcalc(3), /* magenta,  */
@@ -2607,12 +2607,12 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
   if ((bufs[0].p.C != NULL) || (bufs[0].p.M != NULL) || (bufs[0].p.k != NULL)) {
     /* we print with the photo or black cartidge */
-    
+
     if (sw->jets != 208) {
-      /* we have photo or black cartridge */      
+      /* we have photo or black cartridge */
       head_colors[0].line = bufs[0].p.C;
       head_colors[0].used_jets = linecount[0].p.C;
-      
+
       head_colors[1].line = bufs[0].p.M;
       head_colors[1].used_jets = linecount[0].p.M;
 
@@ -2624,7 +2624,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       head_colors[0].used_jets = linecount[0].p.k;
       head_colors[0].head_nozzle_start = 0;
       head_colors[0].head_nozzle_end = sw->jets/2;
-      
+
       head_colors[2].line = NULL;
       head_colors[2].used_jets = 0;
       head_colors[2].head_nozzle_start = 0;
@@ -2655,7 +2655,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     if (privdata_weave->bidirectional) {
       direction = (direction +1) & 1;
     }
-  } 
+  }
   /* store paper position in respect if there was a paper shift */
   sw->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
 }
@@ -2674,10 +2674,10 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   linecount[0].v[5] = 0;
   lineoffs[0].v[6]  = 0;
   linecount[0].v[6] = 0;
- 
+
 #ifdef DEBUG
   stp_erprintf("lexmark_write finished\n");
-#endif 
+#endif
 
   sw->last_pass = pass->pass;
   pass->pass = -1;
@@ -2697,10 +2697,10 @@ static void testprint(testdata *td)
   for (i=0; i < (sizeof(linebufs.v)/sizeof(linebufs.v[0])); i++) {
     linebufs.v[i] = NULL;
   }
-  
+
   /*let's go */
   td->ifile = fopen("/t1.ppm", "rb");
-  if (td->ifile != NULL) { 
+  if (td->ifile != NULL) {
     /* find "{" */
     fscanf(td->ifile, "%[^{]{%[^\"]\"%d %d %d %d\",", dummy1, dummy2, &(td->x), &(td->y), &(td->cols), &(td->deep));
     td->cols -= 1; /* we reduce it by one because fist color will be ignored */
@@ -2733,7 +2733,7 @@ static void testprint(testdata *td)
     } else {
       td->cols = 1;
       linebufs.v[0] = (char *)malloc((td->x+7)/8); /* allocate the color */
-    } 
+    }
   } else {
     printf("can't open file !\n");
   }

@@ -149,7 +149,7 @@ asprintf
   va_end (args);
 
   return done;
-} 
+}
 
 #ifdef TEST
 void

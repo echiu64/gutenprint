@@ -452,7 +452,7 @@ safe_gets(const char *prompt,
 
   if (s[0])
     s[strlen(s) - 1] = '\0';
- 
+
   return (s);
 }
 

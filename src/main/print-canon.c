@@ -164,7 +164,7 @@ typedef struct canon_variable_inkset
  *
  */
 
-typedef struct canon_variable_inklist 
+typedef struct canon_variable_inklist
 {
   const int bits;
   const int colors;
@@ -178,9 +178,9 @@ typedef struct canon_variable_inklist
 
 
 #ifdef EXPERIMENTAL_STUFF
-/* 
- * A printmode is defined by its resolution (xdpi x ydpi), the bits per pixel 
- * and the installed printhead. 
+/*
+ * A printmode is defined by its resolution (xdpi x ydpi), the bits per pixel
+ * and the installed printhead.
  *
  * For a hereby defined printmode we specify the density and gamma multipliers
  * and the ink definition with optional adjustments for lum, hue and sat
@@ -287,7 +287,7 @@ static const canon_variable_ink_t canon_ink_Xx_2bit =
 /*
  * Dither ranges specifically for any Color and 3bit/pixel
  * (see NOTE above)
- * 
+ *
  * BIG NOTE: The bjc8200 has this kind of ink. One Byte seems to hold
  *           drop sizes for 3 pixels in a 3/2/2 bit fashion.
  *           Size values for 3bit-sized pixels range from 1 to 7,
@@ -399,7 +399,7 @@ typedef canon_variable_inklist_t* canon_variable_inklist_p;
 static const canon_variable_inklist_t canon_ink_standard[] =
 {
   {
-    1,4, 
+    1,4,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
   },
@@ -415,13 +415,13 @@ static const canon_variable_inklist_t canon_ink_standardphoto[] =
   },
   {
     2,4,
-    &ci_CMYK_2, &ci_CMYK_2, 
+    &ci_CMYK_2, &ci_CMYK_2,
     &ci_CMYK_2, &ci_CMYK_2,
     &ci_CMYK_2, &ci_CMYK_2,
   },
   {
     1,6,
-    &ci_CcMmYK_1, &ci_CcMmYK_1, &ci_CcMmYK_1, 
+    &ci_CcMmYK_1, &ci_CcMmYK_1, &ci_CcMmYK_1,
     &ci_CcMmYK_1, &ci_CcMmYK_1, &ci_CcMmYK_1,
   },
   {
@@ -435,12 +435,12 @@ static const canon_variable_inklist_t canon_ink_standardphoto[] =
 static const canon_variable_inklist_t canon_ink_superphoto[] =
 {
   {
-    1,4, 
+    1,4,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
   },
   {
-    3,4, 
+    3,4,
     &ci_CMYK_3, &ci_CMYK_3, &ci_CMYK_3,
     &ci_CMYK_3, &ci_CMYK_3, &ci_CMYK_3,
   },
@@ -706,7 +706,7 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 
 #ifdef EXPERIMENTAL_STUFF
 #define CANON_MODES(A) A,sizeof(A)/sizeof(canon_variable_printmode_t*)
-#else 
+#else
 #define CANON_MODES(A) 0
 #endif
 
@@ -726,7 +726,7 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define BC_3231 CANON_INK_CcMmYK  /* photo */
 
 
-static const canon_variable_printmode_t canon_nomodes[] = 
+static const canon_variable_printmode_t canon_nomodes[] =
 {
   {0,0,0,0,0,0,0,0,0,0}
 };
@@ -795,8 +795,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     CANON_MODES(canon_modes_30),
 #ifndef EXPERIMENTAL_STUFF
-    {-1,0,0,0,-1,-1}, /*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
-    {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/ 
+    {-1,0,0,0,-1,-1}, /*090x090 180x180 360x360 720x360 720x720 1440x1440*/
+    {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
     standard_lum_adjustment,
@@ -814,8 +814,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
     CANON_MODES(canon_modes_85),
 #ifndef EXPERIMENTAL_STUFF
-    {-1,-1,1,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
-    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
+    {-1,-1,1,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/
+    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
     standard_lum_adjustment,
@@ -852,8 +852,8 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
     CANON_MODES(canon_nomodes),
 #ifndef EXPERIMENTAL_STUFF
-    {-1,-1,0,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
-    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
+    {-1,-1,0,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/
+    {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
     standard_lum_adjustment,
@@ -1187,7 +1187,7 @@ static const double plain_paper_lum_adjustment[49] =
   1.4,
   1.3,
   1.2				/* C */
-};  
+};
 
 typedef struct {
   const char *name;
@@ -1364,7 +1364,7 @@ static int canon_res_code(const canon_cap_t * caps, int xdpi, int ydpi)
 }
 #else
 static const canon_variable_printmode_t *canon_printmode(const canon_cap_t * caps,
-							 int xdpi, int ydpi, 
+							 int xdpi, int ydpi,
 							 int bpp, int head)
 {
   const canon_variable_printmode_t *modes;
@@ -1376,12 +1376,12 @@ static const canon_variable_printmode_t *canon_printmode(const canon_cap_t * cap
   /* search for the right printmode: */
   for (i=0; i<modes_cnt; i++) {
     if ((modes[i].xdpi== xdpi) && (modes[i].ydpi== ydpi) &&
-	(modes[i].bits== bpp) && (modes[i].printhead== head)) 
+	(modes[i].bits== bpp) && (modes[i].printhead== head))
       {
 	return &(modes[i]);
       }
   }
-  /* nothing found -> either return 0 or apply some policy to 
+  /* nothing found -> either return 0 or apply some policy to
    * get a fallback printmode
    */
   if (modes[0].xdpi) return modes;
@@ -1411,15 +1411,15 @@ canon_ink_type(const canon_cap_t * caps, int res_code)
 static const double *
 canon_lum_adjustment(const stp_printer_t printer)
 {
-  const canon_cap_t * caps= 
-    canon_get_model_capabilities(stp_printer_get_model(printer));  
+  const canon_cap_t * caps=
+    canon_get_model_capabilities(stp_printer_get_model(printer));
   return (caps->lum_adjustment);
 }
 
 static const double *
 canon_hue_adjustment(const stp_printer_t printer)
 {
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
   return (caps->hue_adjustment);
 }
@@ -1427,7 +1427,7 @@ canon_hue_adjustment(const stp_printer_t printer)
 static const double *
 canon_sat_adjustment(const stp_printer_t printer)
 {
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
   return (caps->sat_adjustment);
 }
@@ -1461,7 +1461,7 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
   const canon_variable_inklist_t *inks = caps->inxs;
   int i;
 
-  if (!inks) 
+  if (!inks)
     return NULL;
 
   for (i=0; i<caps->inxs_cnt; i++) {
@@ -1522,7 +1522,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
   stp_param_t *p= 0;
   stp_param_t *valptrs= 0;
 
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
 
   if (count == NULL)
@@ -1659,7 +1659,7 @@ canon_default_parameters(const stp_printer_t printer,
 			 const char *name)
 {
   int		i;
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
 
   if (name == NULL)
@@ -1751,7 +1751,7 @@ canon_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
 
   stp_default_media_size(printer, v, &width, &length);
@@ -1768,7 +1768,7 @@ canon_limit(const stp_printer_t printer,	/* I - Printer model */
 	    int  *width,		/* O - Left position in points */
 	    int  *length)		/* O - Top position in points */
 {
-  const canon_cap_t * caps= 
+  const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
   *width =	caps->max_width;
   *length =	caps->max_height;
@@ -1825,7 +1825,7 @@ static void
 canon_init_resetPrinter(const stp_vars_t v, canon_init_t *init)
 {
   unsigned long f=init->caps->features;
-  if (f & (CANON_CAP_ACKSHORT)) 
+  if (f & (CANON_CAP_ACKSHORT))
     {
       canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x1f);
       stp_puts("BJLSTART\nControlMode=Common\n",v);
@@ -1842,7 +1842,7 @@ canon_init_setPageMode(const stp_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_a))
     return;
-  
+
   if (init->caps->features & CANON_CAP_a)
     canon_cmd(v,ESC28,0x61, 1, 0x01);
 }
@@ -1854,7 +1854,7 @@ canon_init_setDataCompression(const stp_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_b))
     return;
-  
+
   canon_cmd(v,ESC28,0x62, 1, 0x01);
 }
 
@@ -1870,7 +1870,7 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
 
   if (!(init->caps->features & CANON_CAP_c))
     return;
-  
+
   if (init->caps->model<3000)
     arg_63_1= 0x10;
   else
@@ -1891,18 +1891,18 @@ canon_init_setResolution(const stp_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_d))
     return;
-  
-  canon_cmd(v,ESC28,0x64, 4, 
+
+  canon_cmd(v,ESC28,0x64, 4,
 	    (init->ydpi >> 8 ), (init->ydpi & 255),
 	    (init->xdpi >> 8 ), (init->xdpi & 255));
 }
 
 /* ESC (g -- 0x67 -- cmdSetPageMargins --:
  */
-static void 
+static void
 canon_init_setPageMargins(const stp_vars_t v, canon_init_t *init)
 {
-  /* TOFIX: what exactly is to be sent? 
+  /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
    * Is is the printable width or the right border?
    */
@@ -1911,17 +1911,17 @@ canon_init_setPageMargins(const stp_vars_t v, canon_init_t *init)
   int minwidth= 0;
   int length= init->page_height*5/36;
   int width= init->page_width*5/36;
-    
+
   if (!(init->caps->features & CANON_CAP_g))
     return;
-  
+
   if (minlength>length) length= minlength;
   if (minwidth>width) width= minwidth;
 
   canon_cmd(v,ESC28,0x67, 4, 0,
 	    (unsigned char)(length),1,
-	    (unsigned char)(width)); 
-  
+	    (unsigned char)(width));
+
 }
 
 /* ESC (l -- 0x6c -- cmdSetTray --:
@@ -1965,7 +1965,7 @@ canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
 
   if (!(init->caps->features & CANON_CAP_m))
     return;
-  
+
   arg_6d_a= canon_size_type(v,init->caps);
   if (!arg_6d_a)
     arg_6d_b= 1;
@@ -1992,7 +1992,7 @@ canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
 static void
 canon_init_setPageMargins2(const stp_vars_t v, canon_init_t *init)
 {
-  /* TOFIX: what exactly is to be sent? 
+  /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
    * Is is the printable width or the right border?
    */
@@ -2020,7 +2020,7 @@ canon_init_setPageID(const stp_vars_t v, canon_init_t *init)
 {
   if (!(init->caps->features & CANON_CAP_q))
     return;
-  
+
   canon_cmd(v,ESC28,0x71, 1, 0x01);
 }
 
@@ -2047,7 +2047,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
 
   if (!(init->caps->features & CANON_CAP_t))
     return;
-  
+
   if (init->xdpi==1440) arg_74_2= 0x04;
   if (init->ydpi>=720)  arg_74_3= 0x09;
 
@@ -2063,7 +2063,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
       arg_74_1= 0xff;
       arg_74_2= 0x90;
       arg_74_3= 0x04;
-      init->bits=3; 
+      init->bits=3;
       if (init->ydpi>600)  arg_74_3= 0x09;
     } else {
       arg_74_1= 0x01;
@@ -2101,7 +2101,7 @@ canon_init_printer(const stp_vars_t v, canon_init_t *init)
   canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
 }
 
-static void 
+static void
 canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
 {
   /* eject page */
@@ -2334,7 +2334,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   canon_init_printer(nv, &init);
 
-  /* possibly changed during initialitation 
+  /* possibly changed during initialitation
    * to enforce valid modes of operation:
    */
   bits= init.bits;
@@ -2542,7 +2542,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 	  hue_adjustment[k] += pt->hue_adjustment[k];
     }
   }
-  
+
 
   for (y = 0; y < out_length; y ++)
   {
@@ -2748,7 +2748,7 @@ canon_fold_3bit(const unsigned char *line,
   for (; line < last; line+=3, outbuf+=8) {
 
     A0= line[0]; B0= line[single_length]; C0= line[2*single_length];
-    
+
     if (line<last-2) {
       A1= line[1]; B1= line[single_length+1]; C1= line[2*single_length+1];
     } else {
@@ -2759,7 +2759,7 @@ canon_fold_3bit(const unsigned char *line,
     } else {
       A2= 0; B2= 0; C2= 0;
     }
-      
+
     outbuf[0] =
       ((C0 & 0x80) >> 0) |
       ((B0 & 0x80) >> 1) |
@@ -2894,7 +2894,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
   /* fold lsb/msb pairs if drop modulation is active */
 
-  
+
 
   if (bits==2) {
     memset(in_fold,0,length*2);

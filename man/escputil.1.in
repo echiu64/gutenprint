@@ -31,7 +31,7 @@ include head alignment, head cleaning, nozzle check, printer
 identification, and retrieval of ink level from the printer.
 
 .SH OPTIONS
-.l 
+.l
 \fIescputil\fP accepts the following options:
 .TP 8
 .B \-P, \-\-printer-name \fI<printer>\fP
@@ -60,7 +60,7 @@ poor print quality and/or damage to the printer.  You must either
 specify the printer model with the \-m option, or use the raw printer
 device to allow escputil to detect the printer model.
 .TP 8
-.B \-i, \-\-ink-level     
+.B \-i, \-\-ink-level
 Obtain the ink level from the printer.  This requires
 read/write access to the raw printer device.
 .TP 8
@@ -69,13 +69,13 @@ Query the printer for make and model information.
 This requires read/write access to the raw printer
 device.
 .TP 8
-.B \-u 
+.B \-u
 The printer is connected via USB.
 .TP 8
 .B  \-h, \-\-help
 Display a list of all commandline options.
 .TP 8
-.B \-q, \-\-quiet         
+.B \-q, \-\-quiet
 Suppress the banner.
 .TP 8
 .B \-m <model>
@@ -93,7 +93,7 @@ any later version.
 
 The canonical place to find GIMP info is at http://www.gimp.org/.
 The homepage of the gimp-print project from which this utility was
-contributed is located at http://gimp-print.sourceforge.net/. 
+contributed is located at http://gimp-print.sourceforge.net/.
 
 .SH AUTHORS
 Robert Krawitz.

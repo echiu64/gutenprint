@@ -33,7 +33,6 @@ src/gimp/print-image-gimp.c
 src/gimp/print.c
 
 # Test sources
-test/escp2-unprint.c
 test/escp2-weavetest.c
 test/pcl-unprint.c
 test/testdither.c

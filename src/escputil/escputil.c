@@ -520,7 +520,7 @@ add_resets(int count)
     }
 }
 
-const char *colors[] = 
+const char *colors[] =
 {
   "Black", "Cyan", "Magenta", "Yellow", "Light Cyan", "Light Magenta", 0
 };

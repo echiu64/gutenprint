@@ -302,7 +302,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
       strcmp(driver, "ps2") == 0)
     return (0);
 
- /* 
+ /*
   * Make sure the destination directory exists...
   */
 
@@ -347,7 +347,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*LanguageLevel:	\"3\"\n");
   gzprintf(fp, "*ColorDevice:	%s\n",
            stp_get_output_type(printvars) == OUTPUT_COLOR ? "True" : "False");
-  gzprintf(fp, "*DefaultColorSpace: %s\n", 
+  gzprintf(fp, "*DefaultColorSpace: %s\n",
            stp_get_output_type(printvars) == OUTPUT_COLOR ? "RGB" : "Gray");
   gzputs(fp, "*FileSystem:	False\n");
   gzputs(fp, "*LandscapeOrientation: Plus90\n");
@@ -568,7 +568,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   for (i = 0; i < num_opts; i ++)
   {
-   /* 
+   /*
     * Strip resolution name to its essentials...
     */
 

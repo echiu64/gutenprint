@@ -110,7 +110,7 @@ line_type **page=NULL;
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
 
-void merge_line (line_type *p, unsigned char *l, int startl, int stopl, 
+void merge_line (line_type *p, unsigned char *l, int startl, int stopl,
                  int color);
 void expand_line (unsigned char *src, unsigned char *dst, int height,
                   int skip, int left_ignore);
@@ -122,10 +122,10 @@ void parse_escp2 (FILE *fp_r);
 void reverse_bit_order (unsigned char *buf, int n);
 int rle_decode (unsigned char *inbuf, int n, int max);
 void parse_canon (FILE *fp_r);
-     
 
-static inline int 
-get_bits(unsigned char *p,int index) 
+
+static inline int
+get_bits(unsigned char *p,int index)
 {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Extract the
@@ -156,8 +156,8 @@ get_bits(unsigned char *p,int index)
     }
 }
 
-static inline void 
-set_bits(unsigned char *p,int index,int value) 
+static inline void
+set_bits(unsigned char *p,int index,int value)
 {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Set the
@@ -196,8 +196,8 @@ set_bits(unsigned char *p,int index,int value)
     }
 }
 
-static inline void 
-mix_ink(ppmpixel p, int c, unsigned int a) 
+static inline void
+mix_ink(ppmpixel p, int c, unsigned int a)
 {
 
   /* this is pretty crude */
@@ -225,7 +225,7 @@ mix_ink(ppmpixel p, int c, unsigned int a)
   }
 }
 
-void 
+void
 merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 {
 
@@ -270,7 +270,7 @@ merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 }
 
 void expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
-                  int left_ignore) 
+                  int left_ignore)
 {
 
   /* src is a pointer to a bit stream which is composed of fields of height
@@ -300,7 +300,7 @@ void expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
   }
 }
 
-void write_output(FILE *fp_w) 
+void write_output(FILE *fp_w)
 {
   int c,l,p,left,right,first,last,width,height,i;
   unsigned int amount;
@@ -364,7 +364,7 @@ void write_output(FILE *fp_w)
 }
 
 #if 0
-int num_bits_zero_lsb(int i,int max) 
+int num_bits_zero_lsb(int i,int max)
 {
 
   int n;
@@ -374,7 +374,7 @@ int num_bits_zero_lsb(int i,int max)
 
 }
 
-int num_bits_zero_msb(int i, int max) 
+int num_bits_zero_msb(int i, int max)
 {
 
   int n;
@@ -385,7 +385,7 @@ int num_bits_zero_msb(int i, int max)
 }
 #endif
 
-void find_white(unsigned char *buf,int npix, int *left, int *right) 
+void find_white(unsigned char *buf,int npix, int *left, int *right)
 {
 
 /* If a line has white borders on either side, count the number of
@@ -463,7 +463,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
 		int n,              /* I - width of area in pixels  */
 		int color,          /* I - color of pixel data      */
 		int density         /* I - horizontal density in dpi  */
-		) 
+		)
 {
 
   int y,skip,oldstart,oldstop,mi;
@@ -1447,7 +1447,7 @@ int main(int argc,char *argv[])
     if (force_extraskip > 0)
       pstate.extraskip = force_extraskip;
     else
-      pstate.extraskip=2; 
+      pstate.extraskip=2;
     parse_escp2(fp_r);
   }
   fprintf(stderr,"Done reading.\n");

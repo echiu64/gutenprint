@@ -147,7 +147,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 			stp_contrast,
 			stp_saturation,
 			stp_density;
-  
+
 
  /*
   * Initialise libgimpprint

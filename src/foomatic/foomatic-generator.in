@@ -23,7 +23,7 @@ $mapfile = "foomatic-printermap";
 
 my $funcs = { 'InputSlot' => { 'OPTCONSTRAINTS' => \&build_cons,
 			       'ENUMVALS' => \&build_ev, },
-	      'InkType' => { 'OPTCONSTRAINTS' => \&build_cons, 
+	      'InkType' => { 'OPTCONSTRAINTS' => \&build_cons,
 			     'ENUMVALS' => \&build_ev },
 	      'MediaType' => { 'OPTCONSTRAINTS' => \&build_cons,
 			       'ENUMVALS' => \&build_ev },
@@ -58,7 +58,7 @@ use Data::Dumper;
 
 open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
 print STDERR "Loading options from ./printer_options...";
-while(<PIPE>) { 
+while(<PIPE>) {
     next if m!^#!;
     eval $_;
 }
@@ -67,7 +67,7 @@ print STDERR "done.\n";
 
 open PIPE, "./stp_limits|" or die "Cannot run stp_limits: $!\n";
 print STDERR "Loading options from ./stp_limits...";
-while(<PIPE>) { 
+while(<PIPE>) {
     next if m!^#!;
     eval $_;
 }
@@ -81,7 +81,7 @@ my ($a, $otmp, $vtmp);
 for $a (keys(%stpdata)) {
     for $otmp (keys %{$stpdata{$a}}) {
 	for $vtmp (keys (%{$stpdata{$a}{$otmp}})) {
-	    push (@{$ev_choices{$otmp}}, $vtmp) 
+	    push (@{$ev_choices{$otmp}}, $vtmp)
 		if (!$seen_evchoice{$otmp}{$vtmp}++);
 	}
     }
@@ -213,10 +213,10 @@ while ($tmpl=readdir(TDIR)) {
     print NEWF $template;
     print STDERR "done.\n";
     close NEWF;
-    
+
 }
 
-    
+
 
 sub get_ev_shortname {
     my ($val) = @_;
@@ -265,7 +265,7 @@ sub build_ev {
 	      "        <constraint sense='false'>\n",
 	      "          <driver>$drvname</driver>\n",
 	      "        </constraint>\n");
-	
+
 	#   Build constraints for this particular ev
 	my $stpprn;
 	for $stpprn (keys(%stpdata)) {
@@ -283,7 +283,7 @@ sub build_ev {
 	    }
 	}
 
-	push (@vals, 
+	push (@vals,
 	      "      </constraints>\n",
 	      "    </enum_val>\n");
     }
@@ -305,10 +305,10 @@ sub build_cons {
     # For each stp printer...
     my $stpname;
     for $stpname (keys(%stpdata)) {
-	
+
 	if (0) {
 	    print STDERR "    Processing gimp-print printer $stpname...\n";
-	    print STDERR 
+	    print STDERR
 		"      There are no foomatic printers mapped to $stpname!?\n"
 		    if !$mapstp{$stpname};
 	    print STDERR "      \%stpdata key is {$stpname}{$stpopt}\n";
@@ -323,22 +323,22 @@ sub build_cons {
 	    # If there's no default, then this option doesn't apply to
 	    # this printer.
 	    if (defined($stpdef)) {
-		
+
 		my $foodefval = get_ev_key($stpdef, $drvname);
-		
+
 		if (0) {
-		    print STDERR 
+		    print STDERR
 			"      Default for $stpname/$stpopt is $stpdef aka $foodefval\n";
 		}
 
 		my $fooname;
 		for $fooname (@{$mapstp{$stpname}}) {
-		    
+
 		    if (0) {
-			print STDERR 
+			print STDERR
 			    "      Printer $fooname takes option $stpopt.\n";
 		    }
-		    
+
 		    push (@PNCONS,
 			  "    <constraint sense='true'>\n",
 			  "      <driver>gimp-print</driver>\n",
@@ -351,7 +351,7 @@ sub build_cons {
 
     }
 
-    return join('', 
+    return join('',
 		"<constraints>\n",
 		@PNCONS,
 		"  </constraints>\n");
@@ -368,7 +368,7 @@ sub optmap_pagesize {
 	    my ($name, $width, $height) = ($1, $2, $3);
 	    if ($width >= 0 and $height >= 0) {
 		$pagemap->{$name} = "$width $height";
-#		print STDERR "PageSize '$name' driverval '$width $height'\n"; 
+#		print STDERR "PageSize '$name' driverval '$width $height'\n";
 	    }
 	}
 	close PUTIL;
@@ -398,7 +398,7 @@ sub build_model_cons {
     # applications do not show choices with only one option; they just
     # select that option.  So we don't bother to make pretty option
     # names or anything.
-    # 
+    #
     # See also build_model_ev()
 
     my @PNCONS = ();
@@ -413,7 +413,7 @@ sub build_model_cons {
 
 	    # What's the default value?
 	    my $foodefval = get_ev_key($stpname, $drvname);
-		
+
 	    push (@PNCONS,
 		  "    <constraint sense='true'>\n",
 		  "      <driver>$drvname</driver>\n",
@@ -423,7 +423,7 @@ sub build_model_cons {
 	}
     }
 
-    return join('', 
+    return join('',
 		"<constraints>\n",
 		@PNCONS,
 		"  </constraints>\n");
@@ -459,11 +459,11 @@ sub build_model_ev {
 	      "        </constraint>\n",
 	      "        <!-- ...except to these: -->\n",
 	      );
-	
+
 	# This stp Model value applies only to mapped foo printers
 	my $fooprn;
 	for $fooprn (@{$mapstp{$ev}}) {
-	    
+
 	    # OK, this choice applies to this enum
 	    push (@vals,
 		  "        <constraint sense='true'>\n",
@@ -473,11 +473,11 @@ sub build_model_ev {
 		  "        </constraint>\n");
 	}
 
-	push (@vals, 
+	push (@vals,
 	      "      </constraints>\n",
 	      "    </enum_val>\n");
     }
-    
+
     return join('',
 		"<enum_vals>\n",
 		@vals,
@@ -511,7 +511,7 @@ sub compute_resolutions {
 	    $qual =~ m!(\d+)\s*(x\s*(\d+))?!;
 	    my ($x, $y) = ($1, $3);
 	    $y = $x if !defined($y);
-	    
+
 	    my $r = {'x' => $x,
 		     'y' => $y,
 		     'driverval' => "$x $y",
@@ -594,7 +594,7 @@ sub build_resolution_ev {
 	    if ($takesit) {
 		my $fooprn;
 		for $fooprn (@{$mapstp{$stpprn}}) {
-		    
+
 #		    print STDERR "Printer $fooprn $stpprn uses ${x}x$y\n";
 
 		    # OK, this choice applies to this enum
@@ -608,11 +608,11 @@ sub build_resolution_ev {
 
 	}
 
-	push (@vals, 
+	push (@vals,
 	      "      </constraints>\n",
 	      "    </enum_val>\n");
     }
-    
+
     return join('',
 		"<enum_vals>\n",
 		@vals,
@@ -638,7 +638,7 @@ sub build_resolution_cons {
 
 	    # What's the default value?
 	    my $foodefval = $r->{'defval'};
-		
+
 	    push (@PNCONS,
 		  "    <constraint sense='true'>\n",
 		  "      <driver>$drvname</driver>\n",
@@ -647,8 +647,8 @@ sub build_resolution_cons {
 		  "    </constraint>\n");
 	}
     }
-    
-    return join('', 
+
+    return join('',
 		"<constraints>\n",
 		@PNCONS,
 		"  </constraints>\n");

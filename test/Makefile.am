@@ -41,7 +41,7 @@ EXTRA_PROGRAMS = escp2-weavetest unprint pcl-unprint bjc-unprint testdither
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
 
-escp2_weavetest.o: escp2_weavetest.c 
+escp2_weavetest.o: escp2_weavetest.c
 escp2_weavetest_LDADD = $(LIBGIMPPRINT_LIBS)
 escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
