@@ -73,6 +73,7 @@ ink_limit 1.0;
 density 1.0;
 blackline 0;
 steps 16;
+mode rgb 8;
 pattern 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0 ;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0;
@@ -141,7 +142,7 @@ if [ -z "$args" ] ; then
     args=`./printers`
 fi
 
-StandardDithers="EvenTone Adaptive Ordered Fast VeryFast Floyd"
+StandardDithers="EvenTone HybridEvenTone UniTone HybridUniTone Adaptive Ordered Fast VeryFast Floyd"
 
 the_message=''
 
