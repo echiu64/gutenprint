@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2002 by Easy Software Products.
+ *   Copyright 1993-2003 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -67,8 +67,15 @@
 #include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 
+/*
+ * Note:
+ *
+ * The current release of ESP Ghostscript is fully Level 3 compliant,
+ * so we can report Level 3 support by default...
+ */
+
 #ifndef CUPS_PPD_PS_LEVEL
-#define CUPS_PPD_PS_LEVEL 2
+#  define CUPS_PPD_PS_LEVEL 3
 #endif
 
 
@@ -222,12 +229,14 @@ main(int  argc,			/* I - Number of command-line arguments */
 
   stp_init();
 
-
  /*
   * Set the language...
   */
 
   setlocale(LC_ALL, "");
+#ifdef LC_NUMERIC
+  setlocale(LC_NUMERIC, "C");
+#endif /* LC_NUMERIC */
 
  /*
   * Set up the catalog
@@ -255,7 +264,6 @@ main(int  argc,			/* I - Number of command-line arguments */
 #endif
   }
 
-
  /*
   * Write PPD files...
   */
@@ -267,6 +275,7 @@ main(int  argc,			/* I - Number of command-line arguments */
     if (printer && write_ppd(printer, prefix, language, verbose))
       return (1);
   }
+
   if (!verbose)
     fprintf(stderr, "\n");
 
@@ -356,6 +365,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
+  char		pcfilename[13],		/* PCFileName attribute */
+		*pcptr;			/* Pointer into PCFileName */
+  const char	*driverptr;		/* Pointer into driver name */
   char		manufacturer[64];	/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
   stp_param_t	*opts;			/* Printer options */
@@ -443,14 +455,63 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
   /* Specify PPD translation encoding e.g. ISOLatin1 */
   gzprintf(fp, "*LanguageEncoding: %s\n", _("ISOLatin1"));
-  gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", driver);
+
+ /*
+  * Strictly speaking, the PCFileName attribute should be a 12 character
+  * max (12345678.ppd) filename, as a requirement of the old PPD spec.
+  * The following code generates a (hopefully unique) 8.3 filename from
+  * the driver name, and makes the filename all UPPERCASE as well...
+  */
+
+  for (driverptr = driver, pcptr = pcfilename;
+       pcptr < (pcfilename + 8) && *driverptr;)
+  {
+    *pcptr++ = toupper(*driverptr);
+
+    if (strchr(driverptr, '-') != NULL)
+      driverptr = strchr(driverptr, '-') + 1;
+    else
+      driverptr ++;
+  }
+
+  strcpy(pcptr, ".PPD");
+    
+  gzprintf(fp, "*PCFileName:	\"%s\"\n", pcfilename);
+
+ /*
+  * The Manufacturer, for now, is the first word of the long driver
+  * name.
+  */
+
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
-  gzputs(fp, "*Product:	\"(Gimp-Print v" VERSION ")\"\n");
-  gzprintf(fp, "*ModelName:     \"%s\"\n", driver);
+
+ /*
+  * The Product attribute specifies the string returned by the PostScript
+  * interpreter.  The last one will appear in the CUPS "product" field,
+  * while all instances are available as attributes.
+  */
+
+  gzputs(fp, "*Product:	\"(AFPL Ghostscript)\"\n");
+  gzputs(fp, "*Product:	\"(GNU Ghostscript)\"\n");
+  gzputs(fp, "*Product:	\"(ESP Ghostscript)\"\n");
+
+ /*
+  * The ModelName attribute now provides the long name rather than the
+  * short driver name...  The rastertoprinter driver looks up both...
+  */
+
+  gzprintf(fp, "*ModelName:     \"%s\"\n", long_name);
   gzprintf(fp, "*ShortNickName: \"%s\"\n", long_name);
-  gzprintf(fp, "*NickName:      \"%s, CUPS+Gimp-Print v" VERSION "\"\n", long_name);
+
+ /*
+  * The Windows driver download stuff has problems with NickName fields
+  * with commas.  Now use a dash instead...
+  */
+
+  gzprintf(fp, "*NickName:      \"%s - CUPS+Gimp-Print v" VERSION "\"\n",
+           long_name);
 #if CUPS_PPD_PS_LEVEL == 2
-  gzputs(fp, "*PSVersion:	\"(2017.000) 705\"\n");
+  gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
 #else
   gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
 #endif /* CUPS_PPD_PS_LEVEL == 2 */
@@ -519,6 +580,11 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     cur_opt++;
   }
+
+ /*
+  * The VariablePaperSize attribute is obsolete, however some popular
+  * applications still look for it to provide custom page size support.
+  */
 
   gzprintf(fp, "*VariablePaperSize: %s\n\n", variable_sizes ? "true" : "false");
 
@@ -732,7 +798,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * STP option group...
   */
 
-  gzputs(fp, "*OpenGroup: STP\n");
+  gzprintf(fp, "*OpenGroup: STP/%s\n", _("GIMP-print"));
 
    /*
     * Image types...
