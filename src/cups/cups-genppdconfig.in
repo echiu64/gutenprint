@@ -57,7 +57,8 @@ my $silent = 0;                                 # no dialog
 
 # Set chosen_location from command-line.
 our $opt_d;
-getopt('d');
+our $opt_u;
+getopts('d:u');
 if ($opt_d) {
     $chosen_location = create_dir($opt_d);
 }
@@ -66,8 +67,8 @@ if ($opt_d) {
 init_data();
 init_defaults();
 
-# If invoked as update-cups-genppd, just regenerate PPDs noninteractively
-if (basename($0) eq "update-cups-genppd") {
+# Run non-interactively if `-u' was specified.
+if ( $opt_u ) {
     $silent = 1;
     create_ppds;
     exit 0;

@@ -70,16 +70,6 @@ EXTRA_man_MANS = \
 	ijsgimpprint.1
 
 
-## Rules
-
-install-data-local:
-	$(mkinstalldirs) $(DESTDIR)$(man8dir)
-	cd $(DESTDIR)$(man8dir); \
-	$(LN_S) -f cups-genppdconfig.8 update-cups-genppd.8
-
-uninstall-local:
-	$(RM) $(DESTDIR)$(man8dir)/update-cups-genppd.8
-
 ## Clean
 
 DISTCLEANFILES = $(MAIN_MAN) $(EXTRA_man_MANS)
