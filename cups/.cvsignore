@@ -13,3 +13,16 @@ epson.dep
 genppd
 ppd
 rastertoepson
+cups-canon.c
+cups-dither.c
+cups-escp2.c
+cups-pcl.c
+cups-ps.c
+cups-util.c
+cups-weave.c
+cups-print.h
+cups-quickmatrix257.h
+cups-ran.367.179.h
+cups-printers.c
+rastertoprinter
+done_genppd
