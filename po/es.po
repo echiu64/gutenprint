@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2003-12-17 21:06-0500\n"
+"POT-Creation-Date: 2004-04-11 15:13-0400\n"
 "PO-Revision-Date: 2002-04-29 00:38GMT\n"
 "Last-Translator: Gustavo D. Vranjes <gvranjes@abaconet.com.ar>\n"
 "Language-Team: Castellano <es@li.org>\n"
@@ -73,15 +73,15 @@ msgstr "%s: la opción `-W %s' es ambigua\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: la opción `-W %s' no permite un argumento\n"
 
-#: src/main/print-canon.c:1172 src/main/print-escp2-data.c:2923
-#: src/main/print-escp2-data.c:2985 src/main/print-escp2-data.c:3047
-#: src/main/print-escp2-data.c:3109 src/main/print-lexmark.c:909
+#: src/main/print-canon.c:1172 src/main/print-escp2-data.c:3237
+#: src/main/print-escp2-data.c:3299 src/main/print-escp2-data.c:3361
+#: src/main/print-escp2-data.c:3423 src/main/print-lexmark.c:909
 msgid "Plain Paper"
 msgstr "Papel Común"
 
-#: src/main/print-canon.c:1173 src/main/print-escp2-data.c:2935
-#: src/main/print-escp2-data.c:2997 src/main/print-escp2-data.c:3059
-#: src/main/print-escp2-data.c:3121 src/main/print-lexmark.c:915
+#: src/main/print-canon.c:1173 src/main/print-escp2-data.c:3249
+#: src/main/print-escp2-data.c:3311 src/main/print-escp2-data.c:3373
+#: src/main/print-escp2-data.c:3435 src/main/print-lexmark.c:915
 msgid "Transparencies"
 msgstr "Transparencias"
 
@@ -121,9 +121,9 @@ msgstr "Tarjetas Brillantes de Fotografía"
 msgid "Photo Paper Pro"
 msgstr "Papel de Fotografía Profesional"
 
-#: src/main/print-canon.c:1183 src/main/print-escp2-data.c:2972
-#: src/main/print-escp2-data.c:3034 src/main/print-escp2-data.c:3096
-#: src/main/print-escp2-data.c:3158 src/main/print-lexmark.c:945
+#: src/main/print-canon.c:1183 src/main/print-escp2-data.c:3286
+#: src/main/print-escp2-data.c:3348 src/main/print-escp2-data.c:3410
+#: src/main/print-escp2-data.c:3472 src/main/print-lexmark.c:945
 msgid "Other"
 msgstr "Otro"
 
@@ -139,7 +139,7 @@ msgstr "Manual con Pausa"
 msgid "Manual without Pause"
 msgstr "Manual sin Pausa"
 
-#: src/escputil/escputil.c:633 src/main/print-canon.c:1558
+#: src/escputil/escputil.c:634 src/main/print-canon.c:1558
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Negro"
@@ -187,8 +187,8 @@ msgstr "Floyd-Steinberg Híbrido"
 msgid "EvenTone"
 msgstr "Sobre"
 
-#: src/main/print-escp2-data.c:2573 src/main/print-escp2-data.c:2583
-#: src/main/print-escp2-data.c:2593 src/main/print-escp2-data.c:2603
+#: src/main/print-escp2-data.c:2887 src/main/print-escp2-data.c:2897
+#: src/main/print-escp2-data.c:2907 src/main/print-escp2-data.c:2917
 #: src/main/print-lexmark.c:651 src/main/print-lexmark.c:731
 msgid "Three Color Composite"
 msgstr "Tres Colores Compuestos"
@@ -197,497 +197,497 @@ msgstr "Tres Colores Compuestos"
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2-data.c:2613 src/main/print-escp2-data.c:2623
-#: src/main/print-escp2-data.c:2633 src/main/print-escp2-data.c:2643
+#: src/main/print-escp2-data.c:2927 src/main/print-escp2-data.c:2937
+#: src/main/print-escp2-data.c:2947 src/main/print-escp2-data.c:2957
 #: src/main/print-lexmark.c:646 src/main/print-lexmark.c:726
 msgid "Four Color Standard"
 msgstr "Cuatro Colores Estándard"
 
-#: src/main/print-escp2-data.c:2653 src/main/print-escp2-data.c:2739
+#: src/main/print-escp2-data.c:2967 src/main/print-escp2-data.c:3053
 #: src/main/print-lexmark.c:656 src/main/print-lexmark.c:736
 msgid "Six Color Photo"
 msgstr "Fotografía de Seis Colores"
 
-#: src/main/print-escp2-data.c:2663 src/main/print-escp2-data.c:2749
+#: src/main/print-escp2-data.c:2977 src/main/print-escp2-data.c:3063
 #: src/main/print-lexmark.c:661 src/main/print-lexmark.c:741
 msgid "Five Color Photo Composite"
 msgstr "Fotografía Compuesta de Cinco Colores"
 
-#: src/main/print-escp2-data.c:2673 src/main/print-escp2-data.c:2759
+#: src/main/print-escp2-data.c:2987 src/main/print-escp2-data.c:3073
 msgid "Seven Color Enhanced"
 msgstr "Siete Colores Mejorados"
 
-#: src/main/print-escp2-data.c:2683 src/main/print-escp2-data.c:2769
+#: src/main/print-escp2-data.c:2997 src/main/print-escp2-data.c:3083
 msgid "Six Color Enhanced Composite"
 msgstr "Seis Colores Compuestos Mejorados"
 
-#: src/main/print-escp2-data.c:2693 src/main/print-escp2-data.c:2779
+#: src/main/print-escp2-data.c:3007 src/main/print-escp2-data.c:3093
 #, fuzzy
 msgid "Seven Color Photo"
 msgstr "Fotografía de Seis Colores"
 
-#: src/main/print-escp2-data.c:2703 src/main/print-escp2-data.c:2789
+#: src/main/print-escp2-data.c:3017 src/main/print-escp2-data.c:3103
 #, fuzzy
 msgid "Two Level Grayscale"
 msgstr "Tonos de gris"
 
-#: src/main/print-escp2-data.c:2712 src/main/print-escp2-data.c:2721
-#: src/main/print-escp2-data.c:2730
+#: src/main/print-escp2-data.c:3026 src/main/print-escp2-data.c:3035
+#: src/main/print-escp2-data.c:3044
 msgid "Quadtone"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2926 src/main/print-escp2-data.c:2988
-#: src/main/print-escp2-data.c:3050 src/main/print-escp2-data.c:3112
+#: src/main/print-escp2-data.c:3240 src/main/print-escp2-data.c:3302
+#: src/main/print-escp2-data.c:3364 src/main/print-escp2-data.c:3426
 msgid "Plain Paper Fast Load"
 msgstr "Papel Común Carga Rápida"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2-data.c:2929 src/main/print-escp2-data.c:2991
-#: src/main/print-escp2-data.c:3053 src/main/print-escp2-data.c:3115
+#: src/main/print-escp2-data.c:3243 src/main/print-escp2-data.c:3305
+#: src/main/print-escp2-data.c:3367 src/main/print-escp2-data.c:3429
 #: src/main/print-util.c:541
 msgid "Postcard"
 msgstr "Postal"
 
-#: src/main/print-escp2-data.c:2932 src/main/print-escp2-data.c:2994
-#: src/main/print-escp2-data.c:3056 src/main/print-escp2-data.c:3118
+#: src/main/print-escp2-data.c:3246 src/main/print-escp2-data.c:3308
+#: src/main/print-escp2-data.c:3370 src/main/print-escp2-data.c:3432
 #: src/main/print-lexmark.c:912
 msgid "Glossy Film"
 msgstr "Película Brillante"
 
-#: src/main/print-escp2-data.c:2938 src/main/print-escp2-data.c:3000
-#: src/main/print-escp2-data.c:3062 src/main/print-escp2-data.c:3124
+#: src/main/print-escp2-data.c:3252 src/main/print-escp2-data.c:3314
+#: src/main/print-escp2-data.c:3376 src/main/print-escp2-data.c:3438
 #: src/main/print-lexmark.c:918
 msgid "Envelopes"
 msgstr "Sobres"
 
-#: src/main/print-escp2-data.c:2941 src/main/print-escp2-data.c:3003
-#: src/main/print-escp2-data.c:3065 src/main/print-escp2-data.c:3127
+#: src/main/print-escp2-data.c:3255 src/main/print-escp2-data.c:3317
+#: src/main/print-escp2-data.c:3379 src/main/print-escp2-data.c:3441
 #, fuzzy
 msgid "Back Light Film"
 msgstr "Back Light Film"
 
-#: src/main/print-escp2-data.c:2944 src/main/print-escp2-data.c:3006
-#: src/main/print-escp2-data.c:3068 src/main/print-escp2-data.c:3130
+#: src/main/print-escp2-data.c:3258 src/main/print-escp2-data.c:3320
+#: src/main/print-escp2-data.c:3382 src/main/print-escp2-data.c:3444
 #: src/main/print-lexmark.c:921
 msgid "Matte Paper"
 msgstr "Papel Opaco"
 
-#: src/main/print-escp2-data.c:2947 src/main/print-escp2-data.c:3009
-#: src/main/print-escp2-data.c:3071 src/main/print-escp2-data.c:3133
+#: src/main/print-escp2-data.c:3261 src/main/print-escp2-data.c:3323
+#: src/main/print-escp2-data.c:3385 src/main/print-escp2-data.c:3447
 #: src/main/print-lexmark.c:924
 msgid "Inkjet Paper"
 msgstr "Papel para Chorro de Tinta"
 
-#: src/main/print-escp2-data.c:2950 src/main/print-escp2-data.c:3012
-#: src/main/print-escp2-data.c:3074 src/main/print-escp2-data.c:3136
+#: src/main/print-escp2-data.c:3264 src/main/print-escp2-data.c:3326
+#: src/main/print-escp2-data.c:3388 src/main/print-escp2-data.c:3450
 #: src/main/print-lexmark.c:927
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papel de Calidad Fotográfica para Chorro de Tinta"
 
-#: src/main/print-escp2-data.c:2953 src/main/print-escp2-data.c:3015
-#: src/main/print-escp2-data.c:3077 src/main/print-escp2-data.c:3139
+#: src/main/print-escp2-data.c:3267 src/main/print-escp2-data.c:3329
+#: src/main/print-escp2-data.c:3391 src/main/print-escp2-data.c:3453
 #: src/main/print-lexmark.c:930
 msgid "Photo Paper"
 msgstr "Papel para Fotografía"
 
-#: src/main/print-escp2-data.c:2956 src/main/print-escp2-data.c:3018
-#: src/main/print-escp2-data.c:3080 src/main/print-escp2-data.c:3142
+#: src/main/print-escp2-data.c:3270 src/main/print-escp2-data.c:3332
+#: src/main/print-escp2-data.c:3394 src/main/print-escp2-data.c:3456
 #: src/main/print-lexmark.c:933
 msgid "Premium Glossy Photo Paper"
 msgstr "Papel Brillante de Altísima Calidad Fotográfica"
 
-#: src/main/print-escp2-data.c:2960 src/main/print-escp2-data.c:3022
-#: src/main/print-escp2-data.c:3084 src/main/print-escp2-data.c:3146
+#: src/main/print-escp2-data.c:3274 src/main/print-escp2-data.c:3336
+#: src/main/print-escp2-data.c:3398 src/main/print-escp2-data.c:3460
 #: src/main/print-lexmark.c:936
 msgid "Premium Luster Photo Paper"
 msgstr "Papel de Fotografía Premium Luster"
 
-#: src/main/print-escp2-data.c:2963 src/main/print-escp2-data.c:3025
-#: src/main/print-escp2-data.c:3087 src/main/print-escp2-data.c:3149
+#: src/main/print-escp2-data.c:3277 src/main/print-escp2-data.c:3339
+#: src/main/print-escp2-data.c:3401 src/main/print-escp2-data.c:3463
 #: src/main/print-lexmark.c:939
 msgid "Photo Quality Glossy Paper"
 msgstr "Papel Brillante de Calidad Fotográfica"
 
-#: src/main/print-escp2-data.c:2966 src/main/print-escp2-data.c:3028
-#: src/main/print-escp2-data.c:3090 src/main/print-escp2-data.c:3152
+#: src/main/print-escp2-data.c:3280 src/main/print-escp2-data.c:3342
+#: src/main/print-escp2-data.c:3404 src/main/print-escp2-data.c:3466
 #: src/main/print-lexmark.c:942
 msgid "Ilford Heavy Paper"
 msgstr "Papel Pesado Ilford"
 
-#: src/main/print-escp2-data.c:2969 src/main/print-escp2-data.c:3031
-#: src/main/print-escp2-data.c:3093 src/main/print-escp2-data.c:3155
+#: src/main/print-escp2-data.c:3283 src/main/print-escp2-data.c:3345
+#: src/main/print-escp2-data.c:3407 src/main/print-escp2-data.c:3469
 #, fuzzy
 msgid "ColorLife Paper"
 msgstr "Papel Común"
 
-#: src/main/print-escp2-data.c:3421 src/main/print-escp2-data.c:3423
-#: src/main/print-escp2-data.c:3680 src/main/print-escp2-data.c:3682
-#: src/main/print-escp2-data.c:3755
+#: src/main/print-escp2-data.c:3741 src/main/print-escp2-data.c:3743
+#: src/main/print-escp2-data.c:4000 src/main/print-escp2-data.c:4002
+#: src/main/print-escp2-data.c:4075
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr "Borrador Rápido y Económico a 360 x 90 PPP"
 
-#: src/main/print-escp2-data.c:3426 src/main/print-escp2-data.c:3428
-#: src/main/print-escp2-data.c:3685 src/main/print-escp2-data.c:3687
-#: src/main/print-escp2-data.c:3758
+#: src/main/print-escp2-data.c:3746 src/main/print-escp2-data.c:3748
+#: src/main/print-escp2-data.c:4005 src/main/print-escp2-data.c:4007
+#: src/main/print-escp2-data.c:4078
 msgid "360 x 120 DPI Economy Draft"
 msgstr "Borrador Económico a 360 x 120 PPP"
 
-#: src/main/print-escp2-data.c:3431 src/main/print-escp2-data.c:3433
-#: src/main/print-escp2-data.c:3508 src/main/print-escp2-data.c:3690
-#: src/main/print-escp2-data.c:3692 src/main/print-escp2-data.c:3761
+#: src/main/print-escp2-data.c:3751 src/main/print-escp2-data.c:3753
+#: src/main/print-escp2-data.c:3828 src/main/print-escp2-data.c:4010
+#: src/main/print-escp2-data.c:4012 src/main/print-escp2-data.c:4081
 msgid "180 DPI Economy Draft"
 msgstr "Borrador Económico a 180 PPP"
 
-#: src/main/print-escp2-data.c:3436 src/main/print-escp2-data.c:3438
-#: src/main/print-escp2-data.c:3695 src/main/print-escp2-data.c:3697
-#: src/main/print-escp2-data.c:3764
+#: src/main/print-escp2-data.c:3756 src/main/print-escp2-data.c:3758
+#: src/main/print-escp2-data.c:4015 src/main/print-escp2-data.c:4017
+#: src/main/print-escp2-data.c:4084
 msgid "360 x 240 DPI Draft"
 msgstr "Borrador a 360 x 240 PPP"
 
-#: src/main/print-escp2-data.c:3441 src/main/print-escp2-data.c:3443
-#: src/main/print-escp2-data.c:3511 src/main/print-escp2-data.c:3547
-#: src/main/print-escp2-data.c:3549 src/main/print-escp2-data.c:3629
-#: src/main/print-escp2-data.c:3631 src/main/print-escp2-data.c:3700
-#: src/main/print-escp2-data.c:3702 src/main/print-escp2-data.c:3767
+#: src/main/print-escp2-data.c:3761 src/main/print-escp2-data.c:3763
+#: src/main/print-escp2-data.c:3831 src/main/print-escp2-data.c:3867
+#: src/main/print-escp2-data.c:3869 src/main/print-escp2-data.c:3949
+#: src/main/print-escp2-data.c:3951 src/main/print-escp2-data.c:4020
+#: src/main/print-escp2-data.c:4022 src/main/print-escp2-data.c:4087
 msgid "360 x 180 DPI Draft"
 msgstr "Borrador 360 x 180 PPP"
 
-#: src/main/print-escp2-data.c:3446 src/main/print-escp2-data.c:3454
-#: src/main/print-escp2-data.c:3514 src/main/print-escp2-data.c:3552
-#: src/main/print-escp2-data.c:3634 src/main/print-escp2-data.c:3705
-#: src/main/print-escp2-data.c:3709 src/main/print-escp2-data.c:3774
+#: src/main/print-escp2-data.c:3766 src/main/print-escp2-data.c:3774
+#: src/main/print-escp2-data.c:3834 src/main/print-escp2-data.c:3872
+#: src/main/print-escp2-data.c:3954 src/main/print-escp2-data.c:4025
+#: src/main/print-escp2-data.c:4029 src/main/print-escp2-data.c:4094
 msgid "360 DPI"
 msgstr "360 PPP"
 
-#: src/main/print-escp2-data.c:3448 src/main/print-escp2-data.c:3456
-#: src/main/print-escp2-data.c:3516 src/main/print-escp2-data.c:3554
-#: src/main/print-escp2-data.c:3636 src/main/print-escp2-data.c:3707
-#: src/main/print-escp2-data.c:3711 src/main/print-escp2-data.c:3776
+#: src/main/print-escp2-data.c:3768 src/main/print-escp2-data.c:3776
+#: src/main/print-escp2-data.c:3836 src/main/print-escp2-data.c:3874
+#: src/main/print-escp2-data.c:3956 src/main/print-escp2-data.c:4027
+#: src/main/print-escp2-data.c:4031 src/main/print-escp2-data.c:4096
 msgid "360 DPI Unidirectional"
 msgstr "360 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3450 src/main/print-escp2-data.c:3770
+#: src/main/print-escp2-data.c:3770 src/main/print-escp2-data.c:4090
 msgid "360 DPI Interleave"
 msgstr "360 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3452 src/main/print-escp2-data.c:3772
+#: src/main/print-escp2-data.c:3772 src/main/print-escp2-data.c:4092
 msgid "360 DPI Interleave Unidirectional"
 msgstr "360 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3459 src/main/print-escp2-data.c:3519
-#: src/main/print-escp2-data.c:3557 src/main/print-escp2-data.c:3598
-#: src/main/print-escp2-data.c:3639 src/main/print-escp2-data.c:3714
-#: src/main/print-escp2-data.c:3791
+#: src/main/print-escp2-data.c:3779 src/main/print-escp2-data.c:3839
+#: src/main/print-escp2-data.c:3877 src/main/print-escp2-data.c:3918
+#: src/main/print-escp2-data.c:3959 src/main/print-escp2-data.c:4034
+#: src/main/print-escp2-data.c:4111
 msgid "720 x 360 DPI"
 msgstr "720 x 360 PPP"
 
-#: src/main/print-escp2-data.c:3461 src/main/print-escp2-data.c:3521
-#: src/main/print-escp2-data.c:3559 src/main/print-escp2-data.c:3600
-#: src/main/print-escp2-data.c:3641 src/main/print-escp2-data.c:3716
-#: src/main/print-escp2-data.c:3793
+#: src/main/print-escp2-data.c:3781 src/main/print-escp2-data.c:3841
+#: src/main/print-escp2-data.c:3879 src/main/print-escp2-data.c:3920
+#: src/main/print-escp2-data.c:3961 src/main/print-escp2-data.c:4036
+#: src/main/print-escp2-data.c:4113
 msgid "720 x 360 DPI Unidirectional"
 msgstr "720 x 360 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3464 src/main/print-escp2-data.c:3812
+#: src/main/print-escp2-data.c:3784 src/main/print-escp2-data.c:4132
 msgid "720 DPI Interleave"
 msgstr "720 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3466 src/main/print-escp2-data.c:3814
+#: src/main/print-escp2-data.c:3786 src/main/print-escp2-data.c:4134
 msgid "720 DPI Interleave Unidirectional"
 msgstr "720 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3468 src/main/print-escp2-data.c:3524
-#: src/main/print-escp2-data.c:3562 src/main/print-escp2-data.c:3603
-#: src/main/print-escp2-data.c:3644 src/main/print-escp2-data.c:3719
+#: src/main/print-escp2-data.c:3788 src/main/print-escp2-data.c:3844
+#: src/main/print-escp2-data.c:3882 src/main/print-escp2-data.c:3923
+#: src/main/print-escp2-data.c:3964 src/main/print-escp2-data.c:4039
 msgid "720 DPI"
 msgstr "720 PPP"
 
-#: src/main/print-escp2-data.c:3470 src/main/print-escp2-data.c:3526
-#: src/main/print-escp2-data.c:3564 src/main/print-escp2-data.c:3605
-#: src/main/print-escp2-data.c:3646 src/main/print-escp2-data.c:3721
+#: src/main/print-escp2-data.c:3790 src/main/print-escp2-data.c:3846
+#: src/main/print-escp2-data.c:3884 src/main/print-escp2-data.c:3925
+#: src/main/print-escp2-data.c:3966 src/main/print-escp2-data.c:4041
 msgid "720 DPI Unidirectional"
 msgstr "720 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3472 src/main/print-escp2-data.c:3528
-#: src/main/print-escp2-data.c:3566 src/main/print-escp2-data.c:3607
-#: src/main/print-escp2-data.c:3648 src/main/print-escp2-data.c:3723
+#: src/main/print-escp2-data.c:3792 src/main/print-escp2-data.c:3848
+#: src/main/print-escp2-data.c:3886 src/main/print-escp2-data.c:3927
+#: src/main/print-escp2-data.c:3968 src/main/print-escp2-data.c:4043
 msgid "720 DPI High Quality"
 msgstr "720 PPP Alta Calidad"
 
-#: src/main/print-escp2-data.c:3474 src/main/print-escp2-data.c:3530
-#: src/main/print-escp2-data.c:3568 src/main/print-escp2-data.c:3609
-#: src/main/print-escp2-data.c:3650 src/main/print-escp2-data.c:3725
+#: src/main/print-escp2-data.c:3794 src/main/print-escp2-data.c:3850
+#: src/main/print-escp2-data.c:3888 src/main/print-escp2-data.c:3929
+#: src/main/print-escp2-data.c:3970 src/main/print-escp2-data.c:4045
 msgid "720 DPI High Quality Unidirectional"
 msgstr "720 PPP Alta Calidad Unidireccional"
 
-#: src/main/print-escp2-data.c:3476 src/main/print-escp2-data.c:3532
-#: src/main/print-escp2-data.c:3570 src/main/print-escp2-data.c:3611
-#: src/main/print-escp2-data.c:3652 src/main/print-escp2-data.c:3727
+#: src/main/print-escp2-data.c:3796 src/main/print-escp2-data.c:3852
+#: src/main/print-escp2-data.c:3890 src/main/print-escp2-data.c:3931
+#: src/main/print-escp2-data.c:3972 src/main/print-escp2-data.c:4047
 msgid "720 DPI Highest Quality"
 msgstr "720 PPP Altísima Calidad"
 
-#: src/main/print-escp2-data.c:3479 src/main/print-escp2-data.c:3825
+#: src/main/print-escp2-data.c:3799 src/main/print-escp2-data.c:4145
 msgid "1440 x 720 DPI Interleave"
 msgstr "1440 x 720 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3481 src/main/print-escp2-data.c:3827
+#: src/main/print-escp2-data.c:3801 src/main/print-escp2-data.c:4147
 msgid "1440 x 720 DPI Interleave Unidirectional"
 msgstr "1440 x 720 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3483 src/main/print-escp2-data.c:3535
-#: src/main/print-escp2-data.c:3573 src/main/print-escp2-data.c:3614
-#: src/main/print-escp2-data.c:3655 src/main/print-escp2-data.c:3730
+#: src/main/print-escp2-data.c:3803 src/main/print-escp2-data.c:3855
+#: src/main/print-escp2-data.c:3893 src/main/print-escp2-data.c:3934
+#: src/main/print-escp2-data.c:3975 src/main/print-escp2-data.c:4050
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 PPP"
 
-#: src/main/print-escp2-data.c:3485 src/main/print-escp2-data.c:3537
-#: src/main/print-escp2-data.c:3575 src/main/print-escp2-data.c:3616
-#: src/main/print-escp2-data.c:3657 src/main/print-escp2-data.c:3732
+#: src/main/print-escp2-data.c:3805 src/main/print-escp2-data.c:3857
+#: src/main/print-escp2-data.c:3895 src/main/print-escp2-data.c:3936
+#: src/main/print-escp2-data.c:3977 src/main/print-escp2-data.c:4052
 msgid "1440 x 720 DPI Unidirectional"
 msgstr "1440 x 720 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3487 src/main/print-escp2-data.c:3539
-#: src/main/print-escp2-data.c:3577 src/main/print-escp2-data.c:3618
-#: src/main/print-escp2-data.c:3659 src/main/print-escp2-data.c:3734
+#: src/main/print-escp2-data.c:3807 src/main/print-escp2-data.c:3859
+#: src/main/print-escp2-data.c:3897 src/main/print-escp2-data.c:3938
+#: src/main/print-escp2-data.c:3979 src/main/print-escp2-data.c:4054
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "1440 x 720 DPI Altísima Calidad"
 
-#: src/main/print-escp2-data.c:3490 src/main/print-escp2-data.c:3580
-#: src/main/print-escp2-data.c:3662 src/main/print-escp2-data.c:3737
+#: src/main/print-escp2-data.c:3810 src/main/print-escp2-data.c:3900
+#: src/main/print-escp2-data.c:3982 src/main/print-escp2-data.c:4057
 msgid "2880 x 720 DPI"
 msgstr "2880 x 720 PPP"
 
-#: src/main/print-escp2-data.c:3492 src/main/print-escp2-data.c:3582
-#: src/main/print-escp2-data.c:3664 src/main/print-escp2-data.c:3739
+#: src/main/print-escp2-data.c:3812 src/main/print-escp2-data.c:3902
+#: src/main/print-escp2-data.c:3984 src/main/print-escp2-data.c:4059
 msgid "2880 x 720 DPI Unidirectional"
 msgstr "2880 x 720 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3495 src/main/print-escp2-data.c:3585
-#: src/main/print-escp2-data.c:3667 src/main/print-escp2-data.c:3742
+#: src/main/print-escp2-data.c:3815 src/main/print-escp2-data.c:3905
+#: src/main/print-escp2-data.c:3987 src/main/print-escp2-data.c:4062
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/print-escp2-data.c:3497 src/main/print-escp2-data.c:3587
-#: src/main/print-escp2-data.c:3669 src/main/print-escp2-data.c:3744
+#: src/main/print-escp2-data.c:3817 src/main/print-escp2-data.c:3907
+#: src/main/print-escp2-data.c:3989 src/main/print-escp2-data.c:4064
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "1440 x 1440 DPI Altísima Calidad"
 
-#: src/main/print-escp2-data.c:3500 src/main/print-escp2-data.c:3590
-#: src/main/print-escp2-data.c:3621 src/main/print-escp2-data.c:3672
-#: src/main/print-escp2-data.c:3747
+#: src/main/print-escp2-data.c:3820 src/main/print-escp2-data.c:3910
+#: src/main/print-escp2-data.c:3941 src/main/print-escp2-data.c:3992
+#: src/main/print-escp2-data.c:4067
 msgid "2880 x 1440 DPI"
 msgstr "2880 x 1440 PPP"
 
-#: src/main/print-escp2-data.c:3778
+#: src/main/print-escp2-data.c:4098
 msgid "360 DPI Full Overlap"
 msgstr "360 PPP Full Overlap"
 
-#: src/main/print-escp2-data.c:3780
+#: src/main/print-escp2-data.c:4100
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr "360 PPP Full Overlap Unidireccional"
 
-#: src/main/print-escp2-data.c:3782
+#: src/main/print-escp2-data.c:4102
 msgid "360 DPI FOL2"
 msgstr "360 PPP FOL2"
 
-#: src/main/print-escp2-data.c:3784
+#: src/main/print-escp2-data.c:4104
 msgid "360 DPI FOL2 Unidirectional"
 msgstr "360 PPP FOL2 Unidireccional"
 
-#: src/main/print-escp2-data.c:3786
+#: src/main/print-escp2-data.c:4106
 msgid "360 DPI MW2"
 msgstr "360 PPP MW2"
 
-#: src/main/print-escp2-data.c:3788
+#: src/main/print-escp2-data.c:4108
 msgid "360 DPI MW2 Unidirectional"
 msgstr "360 PPP MW2 Unidireccional"
 
-#: src/main/print-escp2-data.c:3795
+#: src/main/print-escp2-data.c:4115
 msgid "720 x 360 DPI Interleave"
 msgstr "720 x 360 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3797
+#: src/main/print-escp2-data.c:4117
 msgid "720 x 360 DPI Interleave Unidirectional"
 msgstr "720 x 360 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3799
+#: src/main/print-escp2-data.c:4119
 msgid "720 x 360 DPI FOL"
 msgstr "720 x 360 PPP FOL"
 
-#: src/main/print-escp2-data.c:3801
+#: src/main/print-escp2-data.c:4121
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr "720 x 360 PPP FOL Unidireccional"
 
-#: src/main/print-escp2-data.c:3803
+#: src/main/print-escp2-data.c:4123
 msgid "720 x 360 DPI FOL2"
 msgstr "720 x 360 PPP FOL2"
 
-#: src/main/print-escp2-data.c:3805
+#: src/main/print-escp2-data.c:4125
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr "720 x 360 PPP FOL2 Unidireccional"
 
-#: src/main/print-escp2-data.c:3807
+#: src/main/print-escp2-data.c:4127
 msgid "720 x 360 DPI MW2"
 msgstr "720 x 360 PPP MW2"
 
-#: src/main/print-escp2-data.c:3809
+#: src/main/print-escp2-data.c:4129
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr "720 x 360 PPP MW2 Unidireccional"
 
-#: src/main/print-escp2-data.c:3816
+#: src/main/print-escp2-data.c:4136
 msgid "720 DPI Full Overlap"
 msgstr "720 PPP Full Overlap"
 
-#: src/main/print-escp2-data.c:3818
+#: src/main/print-escp2-data.c:4138
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr "720 PPP Full Overlap Unidireccional"
 
-#: src/main/print-escp2-data.c:3820
+#: src/main/print-escp2-data.c:4140
 msgid "720 DPI Four Pass"
 msgstr "720 PPP Cuatro Pasadas"
 
-#: src/main/print-escp2-data.c:3822
+#: src/main/print-escp2-data.c:4142
 msgid "720 DPI Four Pass Unidirectional"
 msgstr "720 PPP Cuatro Pasadas Unidireccional"
 
-#: src/main/print-escp2-data.c:3829
+#: src/main/print-escp2-data.c:4149
 msgid "1440 x 720 DPI FOL"
 msgstr "1440 x 720 PPP FOL"
 
-#: src/main/print-escp2-data.c:3831
+#: src/main/print-escp2-data.c:4151
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr "1440 x 720 PPP FOL Unidireccional"
 
-#: src/main/print-escp2-data.c:3833
+#: src/main/print-escp2-data.c:4153
 msgid "1440 x 720 DPI Four Pass"
 msgstr "1440 x 720 PPP Cuatro Pasadas"
 
-#: src/main/print-escp2-data.c:3835
+#: src/main/print-escp2-data.c:4155
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 PPP Cuatro Pasadas Unidireccional"
 
-#: src/main/print-escp2-data.c:3838
+#: src/main/print-escp2-data.c:4158
 #, fuzzy
 msgid "2880 x 720 DPI Interleave"
 msgstr "1440 x 720 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3840
+#: src/main/print-escp2-data.c:4160
 #, fuzzy
 msgid "2880 x 720 DPI Interleave Unidirectional"
 msgstr "1440 x 720 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3842
+#: src/main/print-escp2-data.c:4162
 #, fuzzy
 msgid "2880 x 720 DPI FOL"
 msgstr "2880 x 720 PPP"
 
-#: src/main/print-escp2-data.c:3844
+#: src/main/print-escp2-data.c:4164
 #, fuzzy
 msgid "2880 x 720 DPI FOL Unidirectional"
 msgstr "2880 x 720 PPP Unidireccional"
 
-#: src/main/print-escp2-data.c:3846
+#: src/main/print-escp2-data.c:4166
 #, fuzzy
 msgid "2880 x 720 DPI Four Pass"
 msgstr "1440 x 720 PPP Cuatro Pasadas"
 
-#: src/main/print-escp2-data.c:3848
+#: src/main/print-escp2-data.c:4168
 #, fuzzy
 msgid "2880 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 PPP Cuatro Pasadas Unidireccional"
 
-#: src/main/print-escp2-data.c:3851
+#: src/main/print-escp2-data.c:4171
 #, fuzzy
 msgid "1440 x 1440 DPI Interleave"
 msgstr "1440 x 720 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3853
+#: src/main/print-escp2-data.c:4173
 #, fuzzy
 msgid "1440 x 1440 DPI Interleave Unidirectional"
 msgstr "1440 x 720 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3855
+#: src/main/print-escp2-data.c:4175
 #, fuzzy
 msgid "1440 x 1440 DPI FOL"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/print-escp2-data.c:3857
+#: src/main/print-escp2-data.c:4177
 #, fuzzy
 msgid "1440 x 1440 DPI FOL Unidirectional"
 msgstr "1440 x 720 PPP FOL Unidireccional"
 
-#: src/main/print-escp2-data.c:3859
+#: src/main/print-escp2-data.c:4179
 #, fuzzy
 msgid "1440 x 1440 DPI Four Pass"
 msgstr "1440 x 720 PPP Cuatro Pasadas"
 
-#: src/main/print-escp2-data.c:3861
+#: src/main/print-escp2-data.c:4181
 #, fuzzy
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 PPP Cuatro Pasadas Unidireccional"
 
-#: src/main/print-escp2-data.c:3864
+#: src/main/print-escp2-data.c:4184
 #, fuzzy
 msgid "2880 x 1440 DPI Interleave"
 msgstr "720 x 360 PPP Interleave"
 
-#: src/main/print-escp2-data.c:3866
+#: src/main/print-escp2-data.c:4186
 #, fuzzy
 msgid "2880 x 1440 DPI Interleave Unidirectional"
 msgstr "720 x 360 PPP Interleave Unidireccional"
 
-#: src/main/print-escp2-data.c:3868
+#: src/main/print-escp2-data.c:4188
 #, fuzzy
 msgid "2880 x 1440 DPI FOL"
 msgstr "2880 x 1440 PPP"
 
-#: src/main/print-escp2-data.c:3870
+#: src/main/print-escp2-data.c:4190
 #, fuzzy
 msgid "2880 x 1440 DPI FOL Unidirectional"
 msgstr "720 x 360 PPP FOL Unidireccional"
 
-#: src/main/print-escp2-data.c:3872
+#: src/main/print-escp2-data.c:4192
 #, fuzzy
 msgid "2880 x 1440 DPI Four Pass"
 msgstr "1440 x 720 PPP Cuatro Pasadas"
 
-#: src/main/print-escp2-data.c:3874
+#: src/main/print-escp2-data.c:4194
 #, fuzzy
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr "720 PPP Cuatro Pasadas Unidireccional"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3884
-#: src/main/print-escp2-data.c:3910 src/main/print-escp2-data.c:3944
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:4204
+#: src/main/print-escp2-data.c:4230 src/main/print-escp2-data.c:4264
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "Estándar"
 
-#: src/main/print-escp2-data.c:3892 src/main/print-escp2-data.c:3952
+#: src/main/print-escp2-data.c:4212 src/main/print-escp2-data.c:4272
 msgid "Roll Feed"
 msgstr "Alimentación por Rollo"
 
-#: src/main/print-escp2-data.c:3918
+#: src/main/print-escp2-data.c:4238
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3926
+#: src/main/print-escp2-data.c:4246
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3970
+#: src/main/print-escp2-data.c:4290
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3978
+#: src/main/print-escp2-data.c:4298
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3986
+#: src/main/print-escp2-data.c:4306
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "Autoseleccionar"
 
-#: src/main/print-escp2-data.c:3994
+#: src/main/print-escp2-data.c:4314
 msgid "Manual Selection"
 msgstr ""
 
@@ -981,56 +981,61 @@ msgstr "2A"
 
 #. 1189mm x 1682mm
 #: src/main/print-util.c:602
+msgid "Super A0"
+msgstr ""
+
+#. 914mm x 1292mm
+#: src/main/print-util.c:604
 msgid "A0"
 msgstr "A0"
 
 #. 841mm x 1189mm
-#: src/main/print-util.c:604
+#: src/main/print-util.c:606
 msgid "A1"
 msgstr "A1"
 
 #. 594mm x  841mm
-#: src/main/print-util.c:606
+#: src/main/print-util.c:608
 msgid "A2"
 msgstr "A2"
 
 #. 420mm x  594mm
-#: src/main/print-util.c:608
+#: src/main/print-util.c:610
 msgid "A3"
 msgstr "A3"
 
 #. 297mm x  420mm
-#: src/main/print-util.c:610
+#: src/main/print-util.c:612
 msgid "A4"
 msgstr "A4"
 
 #. 210mm x  297mm
-#: src/main/print-util.c:612
+#: src/main/print-util.c:614
 msgid "A5"
 msgstr "A5"
 
 #. 148mm x  210mm
-#: src/main/print-util.c:614
+#: src/main/print-util.c:616
 msgid "A6"
 msgstr "A6"
 
 #. 105mm x  148mm
-#: src/main/print-util.c:616
+#: src/main/print-util.c:618
 msgid "A7"
 msgstr "A7"
 
 #. 74mm x  105mm
-#: src/main/print-util.c:618
+#: src/main/print-util.c:620
 msgid "A8"
 msgstr "A8"
 
 #. 52mm x   74mm
-#: src/main/print-util.c:620
+#: src/main/print-util.c:622
 msgid "A9"
 msgstr "A9"
 
 #. 37mm x   52mm
-#: src/main/print-util.c:622
+#: src/main/print-util.c:624
 msgid "A10"
 msgstr "A10"
 
@@ -1039,27 +1044,27 @@ msgstr "A10"
 #. * Stock sizes for normal trims.
 #. * Allowance for trim is 3 millimetres.
 #.
-#: src/main/print-util.c:629
+#: src/main/print-util.c:631
 msgid "RA0"
 msgstr "RA0"
 
 #. 860mm x 1220mm
-#: src/main/print-util.c:631
+#: src/main/print-util.c:633
 msgid "RA1"
 msgstr "RA1"
 
 #. 610mm x  860mm
-#: src/main/print-util.c:633
+#: src/main/print-util.c:635
 msgid "RA2"
 msgstr "RA2"
 
 #. 430mm x  610mm
-#: src/main/print-util.c:635
+#: src/main/print-util.c:637
 msgid "RA3"
 msgstr "RA3"
 
 #. 305mm x  430mm
-#: src/main/print-util.c:637
+#: src/main/print-util.c:639
 msgid "RA4"
 msgstr "RA4"
 
@@ -1067,27 +1072,27 @@ msgstr "RA4"
 #.
 #. * Stock sizes for bled work or extra trims.
 #.
-#: src/main/print-util.c:643
+#: src/main/print-util.c:645
 msgid "SRA0"
 msgstr "SRA0"
 
 #. 900mm x 1280mm
-#: src/main/print-util.c:645
+#: src/main/print-util.c:647
 msgid "SRA1"
 msgstr "SRA1"
 
 #. 640mm x  900mm
-#: src/main/print-util.c:647
+#: src/main/print-util.c:649
 msgid "SRA2"
 msgstr "SRA2"
 
 #. 450mm x  640mm
-#: src/main/print-util.c:649
+#: src/main/print-util.c:651
 msgid "SRA3"
 msgstr "SRA3"
 
 #. 320mm x  450mm
-#: src/main/print-util.c:651
+#: src/main/print-util.c:653
 msgid "SRA4"
 msgstr "SRA4"
 
@@ -1095,184 +1100,189 @@ msgstr "SRA4"
 #.
 #. * "B" series: Posters, wall charts and similar items.
 #.
-#: src/main/print-util.c:657
+#: src/main/print-util.c:659
 msgid "4B ISO"
 msgstr "4B ISO"
 
 #. 2000mm x 2828mm
-#: src/main/print-util.c:659
+#: src/main/print-util.c:661
 msgid "2B ISO"
 msgstr "2B ISO"
 
 #. 1414mm x 2000mm
-#: src/main/print-util.c:661
+#: src/main/print-util.c:663
 msgid "B0 ISO"
 msgstr "B0 ISO"
 
 #. 1000mm x 1414mm
-#: src/main/print-util.c:663
+#: src/main/print-util.c:665
 msgid "B1 ISO"
 msgstr "B1 ISO"
 
 #. 707mm x 1000mm
-#: src/main/print-util.c:665
+#: src/main/print-util.c:667
 msgid "B2 ISO"
 msgstr "B2 ISO"
 
 #. 500mm x  707mm
-#: src/main/print-util.c:667
+#: src/main/print-util.c:669
 msgid "B3 ISO"
 msgstr "B3 ISO"
 
 #. 353mm x  500mm
-#: src/main/print-util.c:669
+#: src/main/print-util.c:671
 msgid "B4 ISO"
 msgstr "B4 ISO"
 
 #. 250mm x  353mm
-#: src/main/print-util.c:671
+#: src/main/print-util.c:673
 msgid "B5 ISO"
 msgstr "B5 ISO"
 
 #. 176mm x  250mm
-#: src/main/print-util.c:673
+#: src/main/print-util.c:675
 msgid "B6 ISO"
 msgstr "B6 ISO"
 
 #. 125mm x  176mm
-#: src/main/print-util.c:675
+#: src/main/print-util.c:677
 msgid "B7 ISO"
 msgstr "B7 ISO"
 
 #. 88mm x  125mm
-#: src/main/print-util.c:677
+#: src/main/print-util.c:679
 msgid "B8 ISO"
 msgstr "B8 ISO"
 
 #. 62mm x   88mm
-#: src/main/print-util.c:679
+#: src/main/print-util.c:681
 msgid "B9 ISO"
 msgstr "B9 ISO"
 
 #. 44mm x   62mm
-#: src/main/print-util.c:681
+#: src/main/print-util.c:683
 msgid "B10 ISO"
 msgstr "B10 ISO"
 
 #. 31mm x   44mm
-#: src/main/print-util.c:684
+#: src/main/print-util.c:686
+#, fuzzy
+msgid "Super B0 JIS"
+msgstr "B0 JIS"
+
+#: src/main/print-util.c:688
 msgid "B0 JIS"
 msgstr "B0 JIS"
 
-#: src/main/print-util.c:686
+#: src/main/print-util.c:690
 msgid "B1 JIS"
 msgstr "B1 JIS"
 
-#: src/main/print-util.c:688
+#: src/main/print-util.c:692
 msgid "B2 JIS"
 msgstr "B2 JIS"
 
-#: src/main/print-util.c:690
+#: src/main/print-util.c:694
 msgid "B3 JIS"
 msgstr "B3 JIS"
 
-#: src/main/print-util.c:692
+#: src/main/print-util.c:696
 msgid "B4 JIS"
 msgstr "B4 JIS"
 
-#: src/main/print-util.c:694
+#: src/main/print-util.c:698
 msgid "B5 JIS"
 msgstr "B5 JIS"
 
-#: src/main/print-util.c:696
+#: src/main/print-util.c:700
 msgid "B6 JIS"
 msgstr "B6 JIS"
 
-#: src/main/print-util.c:698
+#: src/main/print-util.c:702
 msgid "B7 JIS"
 msgstr "B7 JIS"
 
-#: src/main/print-util.c:700
+#: src/main/print-util.c:704
 msgid "B8 JIS"
 msgstr "B8 JIS"
 
-#: src/main/print-util.c:702
+#: src/main/print-util.c:706
 msgid "B9 JIS"
 msgstr "B9 JIS"
 
-#: src/main/print-util.c:704
+#: src/main/print-util.c:708
 msgid "B10 JIS"
 msgstr "B10 JIS"
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
-#: src/main/print-util.c:710
+#: src/main/print-util.c:714
 msgid "C0"
 msgstr "C0"
 
 #. 917mm x 1297mm
-#: src/main/print-util.c:712
+#: src/main/print-util.c:716
 msgid "C1"
 msgstr "C1"
 
 #. 648mm x  917mm
-#: src/main/print-util.c:714
+#: src/main/print-util.c:718
 msgid "C2"
 msgstr "C2"
 
 #. 458mm x  648mm
-#: src/main/print-util.c:716
+#: src/main/print-util.c:720
 msgid "C3"
 msgstr "C3"
 
 #. 324mm x  458mm
-#: src/main/print-util.c:718
+#: src/main/print-util.c:722
 msgid "C4"
 msgstr "C4"
 
 #. 229mm x  324mm
-#: src/main/print-util.c:720
+#: src/main/print-util.c:724
 msgid "C5"
 msgstr "C5"
 
 #. 162mm x  229mm
-#: src/main/print-util.c:722
+#: src/main/print-util.c:726
 msgid "B6-C4"
 msgstr "B6-C4"
 
 #. 125mm x  324mm
-#: src/main/print-util.c:724
+#: src/main/print-util.c:728
 msgid "C6"
 msgstr "C6"
 
 #. 114mm x  162mm
-#: src/main/print-util.c:726
+#: src/main/print-util.c:730
 msgid "DL"
 msgstr "DL"
 
 #. 110mm x  220mm
-#: src/main/print-util.c:728
+#: src/main/print-util.c:732
 msgid "C7-6"
 msgstr "C7-6"
 
 #. 81mm x  162mm
-#: src/main/print-util.c:730
+#: src/main/print-util.c:734
 msgid "C7"
 msgstr "C7"
 
 #. 81mm x  114mm
-#: src/main/print-util.c:732
+#: src/main/print-util.c:736
 msgid "C8"
 msgstr "C8"
 
 #. 57mm x   81mm
-#: src/main/print-util.c:734
+#: src/main/print-util.c:738
 msgid "C9"
 msgstr "C9"
 
 #. 40mm x   57mm
-#: src/main/print-util.c:736
+#: src/main/print-util.c:740
 msgid "C10"
 msgstr "C10"
 
@@ -1280,52 +1290,52 @@ msgstr "C10"
 #.
 #. * US CAD standard paper sizes
 #.
-#: src/main/print-util.c:742
+#: src/main/print-util.c:746
 #, fuzzy
 msgid "ArchA"
 msgstr "ArchA"
 
-#: src/main/print-util.c:744
+#: src/main/print-util.c:748
 #, fuzzy
 msgid "ArchA Transverse"
 msgstr "Transferencias a Remeras"
 
-#: src/main/print-util.c:746
+#: src/main/print-util.c:750
 #, fuzzy
 msgid "ArchB"
 msgstr "ArchB"
 
-#: src/main/print-util.c:748
+#: src/main/print-util.c:752
 #, fuzzy
 msgid "ArchB Transverse"
 msgstr "Transferencias a Remeras"
 
-#: src/main/print-util.c:750
+#: src/main/print-util.c:754
 #, fuzzy
 msgid "ArchC"
 msgstr "ArchC"
 
-#: src/main/print-util.c:752
+#: src/main/print-util.c:756
 #, fuzzy
 msgid "ArchC Transverse"
 msgstr "Transferencias a Remeras"
 
-#: src/main/print-util.c:754
+#: src/main/print-util.c:758
 #, fuzzy
 msgid "ArchD"
 msgstr "ArchD"
 
-#: src/main/print-util.c:756
+#: src/main/print-util.c:760
 #, fuzzy
 msgid "ArchD Transverse"
 msgstr "Transferencias a Remeras"
 
-#: src/main/print-util.c:758
+#: src/main/print-util.c:762
 #, fuzzy
 msgid "ArchE"
 msgstr "ArchE"
 
-#: src/main/print-util.c:760
+#: src/main/print-util.c:764
 #, fuzzy
 msgid "ArchE Transverse"
 msgstr "Transferencias a Remeras"
@@ -1333,13 +1343,13 @@ msgstr "Transferencias a Remeras"
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:766
+#: src/main/print-util.c:770
 #, fuzzy
 msgid "American foolscap"
 msgstr "Foolscap Americano"
 
 #. American foolscap
-#: src/main/print-util.c:768
+#: src/main/print-util.c:772
 #, fuzzy
 msgid "European foolscap"
 msgstr "Foolscap Europeo"
@@ -1350,25 +1360,25 @@ msgstr "Foolscap Europeo"
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:776
+#: src/main/print-util.c:780
 #, fuzzy
 msgid "Crown Quarto"
 msgstr "Crown Quarto"
 
 #. 189mm x 246mm
-#: src/main/print-util.c:778
+#: src/main/print-util.c:782
 #, fuzzy
 msgid "Large Crown Quarto"
 msgstr "Crown Quarto Grande"
 
 #. 201mm x 258mm
-#: src/main/print-util.c:780
+#: src/main/print-util.c:784
 #, fuzzy
 msgid "Demy Quarto"
 msgstr "Demy Quarto"
 
 #. 219mm x 276mm
-#: src/main/print-util.c:782
+#: src/main/print-util.c:786
 #, fuzzy
 msgid "Royal Quarto"
 msgstr "Royal Quarto"
@@ -1376,25 +1386,25 @@ msgstr "Royal Quarto"
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:786
+#: src/main/print-util.c:790
 #, fuzzy
 msgid "Crown Octavo"
 msgstr "Crown Octavo"
 
 #. 123mm x 186mm
-#: src/main/print-util.c:788
+#: src/main/print-util.c:792
 #, fuzzy
 msgid "Large Crown Octavo"
 msgstr "Crown Octavo Grande"
 
 #. 129mm x 198mm
-#: src/main/print-util.c:790
+#: src/main/print-util.c:794
 #, fuzzy
 msgid "Demy Octavo"
 msgstr "Demy Octavo"
 
 #. 138mm x 216mm
-#: src/main/print-util.c:792
+#: src/main/print-util.c:796
 #, fuzzy
 msgid "Royal Octavo"
 msgstr "Royal Octavo"
@@ -1403,143 +1413,143 @@ msgstr "Royal Octavo"
 #. { N_ ("ISO A5"),             419,
 #. 595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:798
+#: src/main/print-util.c:802
 #, fuzzy
 msgid "Small paperback"
 msgstr "Paperback pequeño"
 
 #. 111mm x 178mm
-#: src/main/print-util.c:800
+#: src/main/print-util.c:804
 #, fuzzy
 msgid "Penguin small paperback"
 msgstr "Penguin paperback pequeño"
 
 #. 111mm x 181mm
-#: src/main/print-util.c:802
+#: src/main/print-util.c:806
 #, fuzzy
 msgid "Penguin large paperback"
 msgstr "Penguin paperback grande"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
-#: src/main/print-util.c:806
+#: src/main/print-util.c:810
 msgid "10cm x 15cm"
 msgstr ""
 
 #. 100 x 150 mm
-#: src/main/print-util.c:808
+#: src/main/print-util.c:812
 msgid "Hagaki Card"
 msgstr "Tarjeta Hagaki"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:810
+#: src/main/print-util.c:814
 msgid "Oufuku Card"
 msgstr "Tarjeta Oufuku"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:812
+#: src/main/print-util.c:816
 msgid "Japanese long envelope #3"
 msgstr "Sobre Japonés grande #3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:814
+#: src/main/print-util.c:818
 msgid "Japanese long envelope #4"
 msgstr "Sobre Japonés grande #4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:816
+#: src/main/print-util.c:820
 msgid "Japanese Kaku envelope #4"
 msgstr "Sobre Japonés Kaku #4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:818
+#: src/main/print-util.c:822
 msgid "Commercial 10"
 msgstr "Comercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:820
+#: src/main/print-util.c:824
 msgid "A2 Invitation"
 msgstr "A2 Invitación"
 
 #. US A2 invitation
-#: src/main/print-util.c:822
+#: src/main/print-util.c:826
 #, fuzzy
 msgid "Monarch Envelope"
 msgstr "Sobre"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:824
+#: src/main/print-util.c:828
 msgid "Custom"
 msgstr "Personalizado"
 
-#: src/main/print-util.c:827
+#: src/main/print-util.c:831
 msgid "89 mm Roll Paper"
 msgstr "Rollo de Papel de 89 mm"
 
-#: src/main/print-util.c:829
+#: src/main/print-util.c:833
 msgid "4 Inch Roll Paper"
 msgstr "Rollo de Papel de 4 Pulgadas"
 
-#: src/main/print-util.c:831
+#: src/main/print-util.c:835
 msgid "5 Inch Roll Paper"
 msgstr "Rollo de Papel de 5 Pulgadas"
 
-#: src/main/print-util.c:833
+#: src/main/print-util.c:837
 msgid "210 mm Roll Paper"
 msgstr "Rollo de Papel de 210 mm"
 
-#: src/main/print-util.c:835
+#: src/main/print-util.c:839
 msgid "13 Inch Roll Paper"
 msgstr "Rollo de Papel de 13 Pulgadas"
 
-#: src/main/print-util.c:837
+#: src/main/print-util.c:841
 msgid "22 Inch Roll Paper"
 msgstr "Rollo de Papel de 22 Pulgadas"
 
-#: src/main/print-util.c:839
+#: src/main/print-util.c:843
 msgid "24 Inch Roll Paper"
 msgstr "Rollo de Papel de 24 Pulgadas"
 
-#: src/main/print-util.c:841
+#: src/main/print-util.c:845
 msgid "36 Inch Roll Paper"
 msgstr "Rollo de Papel de 36 Pulgadas"
 
-#: src/main/print-util.c:843
+#: src/main/print-util.c:847
 msgid "44 Inch Roll Paper"
 msgstr "Rollo de Papel de 44 Pulgadas"
 
-#: src/main/print-util.c:1324 src/main/print-util.c:1333
+#: src/main/print-util.c:1328 src/main/print-util.c:1337
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s no es un parámetreo válido del tipo %s\n"
 
-#: src/main/print-util.c:1349
+#: src/main/print-util.c:1353
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr "%s fuera de rango (valor %f, mín %f, máx %f)\n"
 
-#: src/main/print-util.c:1364
+#: src/main/print-util.c:1368
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s fuera de rango (valor %d, mín %d, máx %d)\n"
 
-#: src/main/print-util.c:1390
+#: src/main/print-util.c:1394
 msgid "Printer does not support color output\n"
 msgstr "La impresora no soporta salida de color\n"
 
-#: src/main/print-util.c:1408
+#: src/main/print-util.c:1412
 msgid "Image size is not valid\n"
 msgstr "La medida de la imagen no es válida\n"
 
-#: src/main/print-util.c:1415
+#: src/main/print-util.c:1419
 msgid "Top margin must not be less than zero\n"
 msgstr "El margen superior no debe ser menos que cero\n"
 
-#: src/main/print-util.c:1421
+#: src/main/print-util.c:1425
 msgid "Left margin must not be less than zero\n"
 msgstr "El margen izquierdo no debe ser menos que cero\n"
 
-#: src/main/print-util.c:1478
+#: src/main/print-util.c:1482
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s no es un algoritmo de entramado válido\n"
@@ -2118,239 +2128,244 @@ msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:269
 #, fuzzy
+msgid "Stylus Photo 935"
+msgstr "Stylus Photo 895"
+
+#: src/escputil/escputil.c:270
+#, fuzzy
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:271
 #, fuzzy
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:272
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:273
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:274
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:275
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:276
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:277
 #, fuzzy
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:278
 #, fuzzy
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:278
+#: src/escputil/escputil.c:279
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:279
+#: src/escputil/escputil.c:280
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:280
+#: src/escputil/escputil.c:281
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:281
+#: src/escputil/escputil.c:282
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:282
+#: src/escputil/escputil.c:283
 #, fuzzy
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:283
+#: src/escputil/escputil.c:284
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:284
+#: src/escputil/escputil.c:285
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:285
+#: src/escputil/escputil.c:286
 #, fuzzy
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:286
+#: src/escputil/escputil.c:287
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:287
+#: src/escputil/escputil.c:288
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:288
+#: src/escputil/escputil.c:289
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:289
+#: src/escputil/escputil.c:290
 #, fuzzy
 msgid "Stylus CX-3100"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:290
+#: src/escputil/escputil.c:291
 #, fuzzy
 msgid "Stylus CX-3200"
 msgstr "Stylus C20sx"
 
-#: src/escputil/escputil.c:291
+#: src/escputil/escputil.c:292
 #, fuzzy
 msgid "Stylus CX-5100"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:292
+#: src/escputil/escputil.c:293
 #, fuzzy
 msgid "Stylus CX-5200"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:293
+#: src/escputil/escputil.c:294
 #, fuzzy
 msgid "Stylus CX-6300"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:294
+#: src/escputil/escputil.c:295
 #, fuzzy
 msgid "Stylus CX-6400"
 msgstr "Stylus C60"
 
-#: src/escputil/escputil.c:295
+#: src/escputil/escputil.c:296
 #, fuzzy
 msgid "Stylus CX-8300"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:296
+#: src/escputil/escputil.c:297
 #, fuzzy
 msgid "Stylus CX-8400"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:383 src/escputil/escputil.c:392
+#: src/escputil/escputil.c:384 src/escputil/escputil.c:393
 msgid "You may only specify one printer or raw device."
 msgstr "Usted sólo puede especificar una impresora ó dispositivo crudo."
 
-#: src/escputil/escputil.c:401
+#: src/escputil/escputil.c:402
 msgid "You may only specify one printer model."
 msgstr "Usted sólo puede especificar un modelo de impresora"
 
-#: src/escputil/escputil.c:421
+#: src/escputil/escputil.c:422
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Opción desconocida %c\n"
 
-#: src/escputil/escputil.c:481
+#: src/escputil/escputil.c:482
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "No puedo abrir dispositivo %s: %s\n"
 
-#: src/escputil/escputil.c:504
+#: src/escputil/escputil.c:505
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "No puedo imprimir a impresora %s con %s\n"
 
-#: src/escputil/escputil.c:517 src/escputil/escputil.c:527
+#: src/escputil/escputil.c:518 src/escputil/escputil.c:528
 msgid "Unable to send command to printer\n"
 msgstr "No puedo enviar comando a impresora\n"
 
-#: src/escputil/escputil.c:579
+#: src/escputil/escputil.c:580
 msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:581
+#: src/escputil/escputil.c:582
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "No puedo leer %s de: %s\n"
 
-#: src/escputil/escputil.c:634
+#: src/escputil/escputil.c:635
 msgid "Cyan"
 msgstr "Cian"
 
-#: src/escputil/escputil.c:635
+#: src/escputil/escputil.c:636
 msgid "Magenta"
 msgstr "Magenta"
 
-#: src/escputil/escputil.c:636
+#: src/escputil/escputil.c:637
 msgid "Yellow"
 msgstr "Amarillo"
 
-#: src/escputil/escputil.c:637
+#: src/escputil/escputil.c:638
 msgid "Light Cyan"
 msgstr "Cian Claro"
 
-#: src/escputil/escputil.c:638
+#: src/escputil/escputil.c:639
 msgid "Light Magenta"
 msgstr "Magenta Claro"
 
-#: src/escputil/escputil.c:639
+#: src/escputil/escputil.c:640
 msgid "Black/Dark Yellow"
 msgstr ""
 
-#: src/escputil/escputil.c:653
+#: src/escputil/escputil.c:654
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr ""
 "La obtención de los niveles de tinta requiere usar un dispositivo crudo.\n"
 
-#: src/escputil/escputil.c:659 src/escputil/escputil.c:730
-#: src/escputil/escputil.c:769
+#: src/escputil/escputil.c:660 src/escputil/escputil.c:731
+#: src/escputil/escputil.c:770
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "No puedo abrir %s  para lectura/escritura: %s\n"
 
-#: src/escputil/escputil.c:668 src/escputil/escputil.c:741
-#: src/escputil/escputil.c:778
+#: src/escputil/escputil.c:669 src/escputil/escputil.c:742
+#: src/escputil/escputil.c:779
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "No puedo escribir a %s: %s\n"
 
-#: src/escputil/escputil.c:681
+#: src/escputil/escputil.c:682
 msgid "Cannot parse output from printer\n"
 msgstr "No puedo analizar salida de la impresora\n"
 
-#: src/escputil/escputil.c:685
+#: src/escputil/escputil.c:686
 msgid "Ink color"
 msgstr "Color de tinta"
 
-#: src/escputil/escputil.c:685
+#: src/escputil/escputil.c:686
 msgid "Percent remaining"
 msgstr "Porcentaje restante"
 
-#: src/escputil/escputil.c:724
+#: src/escputil/escputil.c:725
 msgid "Printer identification requires using a raw device.\n"
 msgstr ""
 "La identificación de la impresora requiere el uso de un dispositivo crudo.\n"
 
-#: src/escputil/escputil.c:763
+#: src/escputil/escputil.c:764
 msgid "Printer status requires using a raw device.\n"
 msgstr "El estado de la impresora requiere el uso de un dispositivo crudo.\n"
 
-#: src/escputil/escputil.c:802
+#: src/escputil/escputil.c:803
 msgid "Cleaning heads...\n"
 msgstr "Limpiando inyectores...\n"
 
-#: src/escputil/escputil.c:811
+#: src/escputil/escputil.c:812
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 "Ejecutando la prueba de los inyectores de tinta, favor de asegurarse que "
 "haya papel en la impresora.\n"
 
-#: src/escputil/escputil.c:815
+#: src/escputil/escputil.c:816
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2429,7 +2444,7 @@ msgstr ""
 "durante éste proceso.\n"
 "\n"
 
-#: src/escputil/escputil.c:850
+#: src/escputil/escputil.c:851
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2501,11 +2516,11 @@ msgstr ""
 "durante éste proceso.\n"
 "\n"
 
-#: src/escputil/escputil.c:894
+#: src/escputil/escputil.c:895
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "No puedo enviar comando a la impresora, saliendo.\n"
 
-#: src/escputil/escputil.c:912
+#: src/escputil/escputil.c:913
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
@@ -2514,11 +2529,11 @@ msgstr ""
 "sino\n"
 "la opción -m debe ser usada para especificar una impresora.\n"
 
-#: src/escputil/escputil.c:916
+#: src/escputil/escputil.c:917
 msgid "Attempting to detect printer model..."
 msgstr "Intentando detectar el modelo de impresora..."
 
-#: src/escputil/escputil.c:921
+#: src/escputil/escputil.c:922
 #, c-format
 msgid ""
 "\n"
@@ -2527,7 +2542,7 @@ msgstr ""
 "\n"
 "No puedo abrir %s como lectura/escritura: %s\n"
 
-#: src/escputil/escputil.c:929
+#: src/escputil/escputil.c:930
 #, c-format
 msgid ""
 "\n"
@@ -2536,7 +2551,7 @@ msgstr ""
 "\n"
 "No puedo escribir a %s: %s\n"
 
-#: src/escputil/escputil.c:945
+#: src/escputil/escputil.c:946
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
@@ -2546,12 +2561,12 @@ msgstr ""
 "No puedo detectar el tipo de impresora.\n"
 "Favor de usar -m para especificar su modelo de impresora.\n"
 
-#: src/escputil/escputil.c:962
+#: src/escputil/escputil.c:963
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr "El modelo de impresora %s es desconocido.\n"
 
-#: src/escputil/escputil.c:973
+#: src/escputil/escputil.c:974
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2569,20 +2584,20 @@ msgstr ""
 "Luego le será requerido confirmar su elección.\n"
 "¿Qué opción elige? (s), (q), (r).\n"
 
-#: src/escputil/escputil.c:981 src/escputil/escputil.c:988
-#: src/escputil/escputil.c:1001 src/escputil/escputil.c:1017
-#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1225
+#: src/escputil/escputil.c:982 src/escputil/escputil.c:989
+#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1018
+#: src/escputil/escputil.c:1085 src/escputil/escputil.c:1226
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:986
+#: src/escputil/escputil.c:987
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Favor de confirmar tipeando 'q' de nuevo que usted quiere salir sin "
 "guardar:\n"
 
-#: src/escputil/escputil.c:991
+#: src/escputil/escputil.c:992
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
@@ -2590,7 +2605,7 @@ msgstr ""
 "Bien, su impresora está alineada, pero la alineación no fue guardada.\n"
 "Si quiere guardar la alineación, deberá repetir éste proceso.\n"
 
-#: src/escputil/escputil.c:998
+#: src/escputil/escputil.c:999
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
@@ -2598,11 +2613,11 @@ msgstr ""
 "Favor de confirmar tipeando 'r' de nuevo que usted quiere repetir el\n"
 "proceso de alineado:\n"
 
-#: src/escputil/escputil.c:1004
+#: src/escputil/escputil.c:1005
 msgid "Repeating the alignment process.\n"
 msgstr "Repitiendo el proceso de alineación.\n"
 
-#: src/escputil/escputil.c:1010
+#: src/escputil/escputil.c:1011
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2616,15 +2631,15 @@ msgstr ""
 "Favor de confirmar que desea guardar la configuración de su impresora\n"
 "tipeando 's' de nuevo.\n"
 
-#: src/escputil/escputil.c:1020
+#: src/escputil/escputil.c:1021
 msgid "About to save settings..."
 msgstr "Acerca de guardar configuración..."
 
-#: src/escputil/escputil.c:1026
+#: src/escputil/escputil.c:1027
 msgid "failed!\n"
 msgstr "¡falló!\n"
 
-#: src/escputil/escputil.c:1027
+#: src/escputil/escputil.c:1028
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
@@ -2632,23 +2647,23 @@ msgstr ""
 "Su configuración no fue guardada exitosamente. Debe repetir el\n"
 "proceso de alineación.\n"
 
-#: src/escputil/escputil.c:1031
+#: src/escputil/escputil.c:1032
 msgid "succeeded!\n"
 msgstr "¡éxito!\n"
 
-#: src/escputil/escputil.c:1032
+#: src/escputil/escputil.c:1033
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "Su configuración de alineación fue guardada a la impresora.\n"
 
-#: src/escputil/escputil.c:1037
+#: src/escputil/escputil.c:1038
 msgid "Unrecognized command.\n"
 msgstr "Comando no reconocido.\n"
 
-#: src/escputil/escputil.c:1040
+#: src/escputil/escputil.c:1041
 msgid "Final command was not confirmed.\n"
 msgstr "El comando final no fue confirmado.\n"
 
-#: src/escputil/escputil.c:1045
+#: src/escputil/escputil.c:1046
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2665,13 +2680,13 @@ msgstr ""
 "Favor de poner una hoja de papel en la impresora para comenzar el\n"
 "procedimiento de alineación del cabezal.\n"
 
-#: src/escputil/escputil.c:1070 src/escputil/escputil.c:1092
-#: src/escputil/escputil.c:1135 src/escputil/escputil.c:1204
-#: src/escputil/escputil.c:1215
+#: src/escputil/escputil.c:1071 src/escputil/escputil.c:1093
+#: src/escputil/escputil.c:1136 src/escputil/escputil.c:1205
+#: src/escputil/escputil.c:1216
 msgid "Press enter to continue > "
 msgstr "Presione enter para continuar > "
 
-#: src/escputil/escputil.c:1077
+#: src/escputil/escputil.c:1078
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
@@ -2681,37 +2696,37 @@ msgstr ""
 "patrón.\n"
 "Tipee un número par, '?' para ayuda, ó 'r' para repetir el procedimiento.\n"
 
-#: src/escputil/escputil.c:1083
+#: src/escputil/escputil.c:1084
 #, c-format
 msgid "Pass #%d"
 msgstr "Pasar #%d"
 
-#: src/escputil/escputil.c:1089 src/escputil/escputil.c:1134
+#: src/escputil/escputil.c:1090 src/escputil/escputil.c:1135
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Favor de insertar una hoja de papel sin imprimir.\n"
 
-#: src/escputil/escputil.c:1108 src/escputil/escputil.c:1244
+#: src/escputil/escputil.c:1109 src/escputil/escputil.c:1245
 msgid "Number out of range!\n"
 msgstr "¡Número fuera de rango!\n"
 
-#: src/escputil/escputil.c:1113 src/escputil/escputil.c:1249
+#: src/escputil/escputil.c:1114 src/escputil/escputil.c:1250
 msgid "I cannot understand what you typed!\n"
 msgstr "¡No puedo entender lo que usted ha tipeado!\n"
 
-#: src/escputil/escputil.c:1119
+#: src/escputil/escputil.c:1120
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "El mejor par de líneas  debe ser numerado entre 1 y %d.\n"
 
-#: src/escputil/escputil.c:1126
+#: src/escputil/escputil.c:1127
 msgid "Attempting to set alignment..."
 msgstr "Intentando definir alineación..."
 
-#: src/escputil/escputil.c:1129
+#: src/escputil/escputil.c:1130
 msgid "succeeded.\n"
 msgstr "éxito.\n"
 
-#: src/escputil/escputil.c:1130
+#: src/escputil/escputil.c:1131
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2724,7 +2739,7 @@ msgstr ""
 "para cada línea es patrón %d. Si no lo es, debe repetir el proceso para\n"
 "obtener la mejor calidad de impresión.\n"
 
-#: src/escputil/escputil.c:1145
+#: src/escputil/escputil.c:1146
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2790,12 +2805,12 @@ msgstr ""
 "ADVERTENCIA: ÉSTA FUNCIÓN AÚN NO HA SIDO PROBADA! Puede no funcionar, y aún\n"
 "dañar su impresora!\n"
 
-#: src/escputil/escputil.c:1195
+#: src/escputil/escputil.c:1196
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "La impresora %s no requiere alineación de los inyectores de color.\n"
 
-#: src/escputil/escputil.c:1213
+#: src/escputil/escputil.c:1214
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
@@ -2803,7 +2818,7 @@ msgstr ""
 "Favor de re-insertar la misma hoja de alineación en la impresora cuando\n"
 "termine de imprimirse.\n"
 
-#: src/escputil/escputil.c:1219
+#: src/escputil/escputil.c:1220
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2817,12 +2832,12 @@ msgstr ""
 "mejor patrón, y repita el procedimiento.\n"
 "Tipee un número de patrón, o '?' para ayuda.\n"
 
-#: src/escputil/escputil.c:1255
+#: src/escputil/escputil.c:1256
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr "El mejor patrón debe ser numerado entre 1 y %d.\n"
 
-#: src/escputil/escputil.c:1299
+#: src/escputil/escputil.c:1300
 msgid "Error in input\n"
 msgstr "Error en entrada\n"
 
