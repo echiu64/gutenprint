@@ -1376,6 +1376,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  if (privdata.min_nozzles == nozzles)
 	    privdata.min_nozzles *= 2;
 	}
+      init.nozzle_separation = nozzle_separation;
       nozzle_separation =
 	nozzle_separation * ydpi / escp2_base_separation(model, nv);
     }
@@ -1385,10 +1386,10 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       nozzles = 1;
       privdata.min_nozzles = 1;
       nozzle_separation = 1;
+      init.nozzle_separation = nozzle_separation;
       init.use_black_parameters = 0;
     }
   init.nozzles = nozzles;
-  init.nozzle_separation = nozzle_separation;
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;
