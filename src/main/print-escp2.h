@@ -419,9 +419,12 @@ extern const res_t stpi_escp2_pro_reslist[];
 extern const res_t stpi_escp2_sp5000_reslist[];
 extern const res_t stpi_escp2_standard_reslist[];
 extern const res_t stpi_escp2_720dpi_reslist[];
+extern const res_t stpi_escp2_720dpi_soft_reslist[];
 extern const res_t stpi_escp2_1440dpi_reslist[];
 extern const res_t stpi_escp2_g3_reslist[];
-extern const res_t stpi_escp2_sc440_reslist[];
+extern const res_t stpi_escp2_sc500_reslist[];
+extern const res_t stpi_escp2_sc640_reslist[];
+extern const res_t stpi_escp2_sc660_reslist[];
 
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
 /*

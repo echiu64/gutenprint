@@ -81,7 +81,7 @@ static const escp2_dot_size_t c3pl_dotsizes =
 static const escp2_dot_size_t c4pl_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11, 0x10, 0x10, 0x10, 0x10 };
 
-static const escp2_dot_size_t sc720_dotsizes =
+static const escp2_dot_size_t sp720_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
@@ -454,7 +454,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 0,
     g2_dotsizes, g1_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_720dpi_reslist, &stpi_escp2_standard_inklist,
+    stpi_escp2_sc500_reslist, &stpi_escp2_standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
     NULL, NULL
   },
@@ -584,7 +584,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 8,
     photo_dotsizes, photo_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_720dpi_reslist, &stpi_escp2_photo_inklist,
+    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list,
     NULL, NULL
   },
@@ -602,7 +602,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 8,
     sc440_dotsizes, sc440_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_sc440_reslist, &stpi_escp2_standard_inklist,
+    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
     NULL, NULL
   },
@@ -618,7 +618,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 8,
     sc640_dotsizes, sc440_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inklist,
+    stpi_escp2_sc640_reslist, &stpi_escp2_standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
     NULL, NULL
   },
@@ -728,9 +728,9 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
     0, 1, 8, 0, 0, 0, 8,
-    sc660_dotsizes,sc660_densities,
+    sc660_dotsizes, sc660_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_1440dpi_reslist, &stpi_escp2_standard_inklist,
+    stpi_escp2_sc660_reslist, &stpi_escp2_standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -760,7 +760,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
-    sc720_dotsizes, c6pl_densities,
+    sp720_dotsizes, c6pl_densities,
     &stpi_escp2_variable_6pl_inks, &stpi_escp2_standard_paper_list,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
@@ -778,7 +778,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, -99, 0, 0,
     sc480_dotsizes, sc480_densities,
     &stpi_escp2_variable_x80_6pl_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_720dpi_reslist, &stpi_escp2_x80_inklist,
+    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -874,7 +874,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 4,
     sp5000_dotsizes, photo_densities,
     &stpi_escp2_simple_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_sp5000_reslist, &stpi_escp2_photo_inklist,
+    stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_inklist,
     standard_bits, g3_base_res, &sp5000_input_slot_list,
     NULL, NULL
   },
@@ -1114,7 +1114,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     0, 1, 0, 0, -99, 0, 0,
     sc480_dotsizes, sc480_densities,
     &stpi_escp2_variable_x80_6pl_inks, &stpi_escp2_standard_paper_list,
-    stpi_escp2_720dpi_reslist, &stpi_escp2_x80_inklist,
+    stpi_escp2_720dpi_soft_reslist, &stpi_escp2_x80_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
@@ -1304,7 +1304,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
-    sc720_dotsizes, c6pl_densities,
+    sp720_dotsizes, c6pl_densities,
     &stpi_escp2_variable_6pl_inks, &stpi_escp2_standard_paper_list,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,

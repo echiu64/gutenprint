@@ -279,20 +279,26 @@ escp2_has_cap(const stp_vars_t v, escp2_model_option_t feature,
 static t								\
 escp2_##f(const stp_vars_t v)						\
 {									\
-  int model = stpi_get_model_id(v);					\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_int_parameter(v, "escp2_" #f);			\
-  return (stpi_escp2_model_capabilities[model].f);			\
+  else									\
+    {									\
+      int model = stpi_get_model_id(v);					\
+      return (stpi_escp2_model_capabilities[model].f);			\
+    }									\
 }
 
 #define DEF_RAW_ACCESSOR(f, t)						\
 static t								\
 escp2_##f(const stp_vars_t v)						\
 {									\
-  int model = stpi_get_model_id(v);					\
   if (stp_check_raw_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_raw_parameter(v, "escp2_" #f);			\
-  return (stpi_escp2_model_capabilities[model].f);			\
+  else									\
+    {									\
+      int model = stpi_get_model_id(v);					\
+      return (stpi_escp2_model_capabilities[model].f);			\
+    }									\
 }
 
 #define DEF_COMPOSITE_ACCESSOR(f, t)			\
@@ -303,29 +309,32 @@ escp2_##f(const stp_vars_t v)				\
   return (stpi_escp2_model_capabilities[model].f);	\
 }
 
-#define DEF_ROLL_ACCESSOR(f, t)						 \
-static t								 \
-escp2_##f(const stp_vars_t v, int rollfeed)				 \
-{									 \
-  int model = stpi_get_model_id(v);					 \
-  const res_t *res =							 \
-    escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution")); \
-  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	 \
-    return stp_get_int_parameter(v, "escp2_" #f);			 \
-  if (res && !(res->softweave))						 \
-    {									 \
-      if (rollfeed)							 \
-	return (stpi_escp2_model_capabilities[model].m_roll_##f);	 \
-      else								 \
-	return (stpi_escp2_model_capabilities[model].m_##f);		 \
-    }									 \
-  else									 \
-    {									 \
-      if (rollfeed)							 \
-	return (stpi_escp2_model_capabilities[model].roll_##f);		 \
-      else								 \
-	return (stpi_escp2_model_capabilities[model].f);		 \
-    }									 \
+#define DEF_ROLL_ACCESSOR(f, t)						     \
+static t								     \
+escp2_##f(const stp_vars_t v, int rollfeed)				     \
+{									     \
+  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	     \
+    return stp_get_int_parameter(v, "escp2_" #f);			     \
+  else									     \
+    {									     \
+      int model = stpi_get_model_id(v);					     \
+      const res_t *res =						     \
+	escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution")); \
+      if (res && !(res->softweave))					     \
+	{								     \
+	  if (rollfeed)							     \
+	    return (stpi_escp2_model_capabilities[model].m_roll_##f);	     \
+	  else								     \
+	    return (stpi_escp2_model_capabilities[model].m_##f);	     \
+	}								     \
+      else								     \
+	{								     \
+	  if (rollfeed)							     \
+	    return (stpi_escp2_model_capabilities[model].roll_##f);	     \
+	  else								     \
+	    return (stpi_escp2_model_capabilities[model].f);		     \
+	}								     \
+    }									     \
 }
 
 DEF_SIMPLE_ACCESSOR(max_hres, int)
@@ -375,41 +384,53 @@ DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 static int
 escp2_ink_type(const stp_vars_t v, int resid)
 {
-  int model = stpi_get_model_id(v);
-  int dotid = resid2dotid(resid);
   if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_ink_type");
-  return stpi_escp2_model_capabilities[model].dot_sizes[dotid];
+  else
+    {
+      int model = stpi_get_model_id(v);
+      int dotid = resid2dotid(resid);
+      return stpi_escp2_model_capabilities[model].dot_sizes[dotid];
+    }
 }
 
 static double
 escp2_density(const stp_vars_t v, int resid)
 {
-  int model = stpi_get_model_id(v);
-  int dotid = resid2dotid(resid);
   if (stp_check_float_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_density");
-  return stpi_escp2_model_capabilities[model].densities[dotid];
+  else
+    {
+      int model = stpi_get_model_id(v);
+      int dotid = resid2dotid(resid);
+      return stpi_escp2_model_capabilities[model].densities[dotid];
+    }
 }
 
 static int
 escp2_bits(const stp_vars_t v, int resid)
 {
-  int model = stpi_get_model_id(v);
-  int dotid = resid2dotid(resid);
   if (stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_bits");
-  return stpi_escp2_model_capabilities[model].bits[dotid];
+  else
+    {
+      int model = stpi_get_model_id(v);
+      int dotid = resid2dotid(resid);
+      return stpi_escp2_model_capabilities[model].bits[dotid];
+    }
 }
 
 static double
 escp2_base_res(const stp_vars_t v, int resid)
 {
-  int model = stpi_get_model_id(v);
-  int dotid = resid2dotid(resid);
   if (stp_check_float_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_base_res");
-  return stpi_escp2_model_capabilities[model].base_resolutions[dotid];
+  else
+    {
+      int model = stpi_get_model_id(v);
+      int dotid = resid2dotid(resid);
+      return stpi_escp2_model_capabilities[model].base_resolutions[dotid];
+    }
 }
 
 static const escp2_variable_inkset_t *
