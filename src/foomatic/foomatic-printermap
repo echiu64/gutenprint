@@ -196,6 +196,10 @@
 #gptofoo escp2-cx3200 printer/Epson-Stylus_CX3200
 #gptofoo escp2-cx5100 printer/Epson-Stylus_CX5100
 #gptofoo escp2-cx5200 printer/Epson-Stylus_CX5200
+#gptofoo escp2-cx6300 printer/Epson-Stylus_CX6300
+#gptofoo escp2-cx6400 printer/Epson-Stylus_CX6400
+#gptofoo escp2-cx8300 printer/Epson-Stylus_CX8300
+#gptofoo escp2-cx8400 printer/Epson-Stylus_CX8400
 #gptofoo escp2-cl700 printer/Epson-CL_700
 #gptofoo escp2-cl750 printer/Epson-CL_750
 #gptofoo escp2-cl760 printer/Epson-CL_760
