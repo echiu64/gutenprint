@@ -403,6 +403,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_option_t		*options;	/* CUPS options */
   stp_vars_t		v = NULL;
   stp_vars_t		default_settings = stp_vars_create();
+  int			initialized_job = 0;
 
  /*
   * Initialise libgimpprint
@@ -532,8 +533,11 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (!stp_verify(v))
         goto cups_abort;
 
-      if (cups.page == 0)
-	stp_start_job(v, &theImage);
+      if (!initialized_job)
+	{
+	  stp_start_job(v, &theImage);
+	  initialized_job = 1;
+	}
 
       if (!stp_print(v, &theImage))
         goto cups_abort;
@@ -678,7 +682,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	    bytes_per_line, cups->row);
     cupsRasterReadPixels(cups->ras, data, bytes_per_line);
     cups->row ++;
-    if (margin)
+    if (margin > 0)
       {
 	fprintf(stderr, "DEBUG2: GIMP-PRINT tossing right %d\n", margin);
 	throwaway_data(margin, cups);

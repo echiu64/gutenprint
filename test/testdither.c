@@ -442,7 +442,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   (void) gettimeofday(&tv2, NULL);
 
-  stpi_dither_free(v);
   stp_vars_free(v);
 
   if (fp != NULL)

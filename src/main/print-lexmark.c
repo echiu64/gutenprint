@@ -1772,7 +1772,7 @@ densityDivisor /= 1.2;
   privdata.bidirectional = lexmark_print_bidirectional(model, resolution);
   privdata.outbuf = stpi_malloc((((((pass_length/8)*11))+40) * out_width)+2000);
   privdata.direction = 0;
-  stpi_set_driver_data(v, &privdata);
+  stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
   /*  lxm_nozzles_used = 1;*/
 
   weave = stpi_initialize_weave(v,
@@ -2557,7 +2557,8 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
   const stpi_linebufs_t *bufs       = stpi_get_linebases_by_pass(sw, passno);
   stpi_pass_t           *pass       = stpi_get_pass_by_pass(sw, passno);
   stpi_linecount_t      *linecount  = stpi_get_linecount_by_pass(sw, passno);
-  lexm_privdata_weave *privdata_weave = stpi_get_driver_data(nv);
+  lexm_privdata_weave *privdata_weave =
+    (lexm_privdata_weave *) stpi_get_component_data(nv, "Driver");
   int width = privdata_weave->width;
   int hoffset = privdata_weave->hoffset;
   int model = privdata_weave->model;

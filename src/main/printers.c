@@ -296,7 +296,12 @@ stp_verify(const stp_vars_t v)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
-  return (printfuncs->verify)(v);
+  stp_vars_t nv = stp_vars_create_copy(v);
+  int status;
+  stpi_prune_inactive_options(nv);
+  status = (printfuncs->verify)(nv);
+  stp_vars_free(nv);
+  return status;
 }
 
 int
@@ -312,8 +317,6 @@ stp_start_job(const stp_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
-  if (!stpi_get_verified(v))
-    return 0;
   if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     return 1;
   if (printfuncs->start_job)
@@ -327,8 +330,6 @@ stp_end_job(const stp_vars_t v, stp_image_t *image)
 {
   const stpi_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
-  if (!stpi_get_verified(v))
-    return 0;
   if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     return 1;
   if (printfuncs->end_job)
@@ -393,9 +394,9 @@ verify_double_param(const stp_vars_t v, const char *parameter,
       if (checkval < desc->bounds.dbl.lower ||
 	  checkval > desc->bounds.dbl.upper)
 	{
-	  stpi_eprintf(v, _("%s must be between %f and %f\n"),
+	  stpi_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
 		      parameter, desc->bounds.dbl.lower,
-		      desc->bounds.dbl.upper);
+		      desc->bounds.dbl.upper, checkval);
 	  return 0;
 	}
     }
@@ -413,9 +414,9 @@ verify_int_param(const stp_vars_t v, const char *parameter,
       if (checkval < desc->bounds.integer.lower ||
 	  checkval > desc->bounds.integer.upper)
 	{
-	  stpi_eprintf(v, _("%s must be between %d and %d\n"),
+	  stpi_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
 		      parameter, desc->bounds.integer.lower,
-		      desc->bounds.integer.upper);
+		      desc->bounds.integer.upper, checkval);
 	  stp_parameter_description_free(desc);
 	  return 0;
 	}

@@ -2010,7 +2010,7 @@ pcl_limit(const stp_vars_t v,  		/* I */
 static void
 pcl_printfunc(const stp_vars_t v)
 {
-  pcl_privdata_t *pd = (pcl_privdata_t *) stpi_get_driver_data(v);
+  pcl_privdata_t *pd = (pcl_privdata_t *) stpi_get_component_data(v, "Driver");
   int do_blank = pd->do_blank;
   unsigned char *black = stpi_dither_get_channel(v, ECOLOR_K, 0);
   unsigned char *cyan = stpi_dither_get_channel(v, ECOLOR_C, 0);
@@ -2660,7 +2660,7 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
   stpi_dither_add_channel(v, magenta, ECOLOR_M, 0);
   stpi_dither_add_channel(v, lmagenta, ECOLOR_M, 1);
   stpi_dither_add_channel(v, yellow, ECOLOR_Y, 0);
-  stpi_set_driver_data(v, &privdata);
+  stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2701,9 +2701,6 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
   }
 
   stpi_image_progress_conclude(image);
-
-  stpi_dither_free(v);
-
 
  /*
   * Cleanup...
@@ -2793,7 +2790,8 @@ pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
-  pcl_privdata_t *privdata = (pcl_privdata_t *) stpi_get_driver_data(v);
+  pcl_privdata_t *privdata =
+    (pcl_privdata_t *) stpi_get_component_data(v, "Driver");
   unsigned char *comp_buf = privdata->comp_buf;
   unsigned char	*comp_ptr;		/* Current slot in buffer */
 

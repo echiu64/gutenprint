@@ -62,16 +62,6 @@
 static void flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass);
 static void escp2_describe_resolution(const stp_vars_t v, int *x, int *y);
 
-static int
-resid2dotid(int resid)
-{
-  static const int dotidmap[] =
-    { 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 9, 9, 9, 10, 10, 11, 11 };
-  if (resid < 0 || resid >= RES_N)
-    return -1;
-  return dotidmap[resid];
-}
-
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
@@ -389,8 +379,7 @@ escp2_ink_type(const stp_vars_t v, int resid)
   else
     {
       int model = stpi_get_model_id(v);
-      int dotid = resid2dotid(resid);
-      return stpi_escp2_model_capabilities[model].dot_sizes[dotid];
+      return stpi_escp2_model_capabilities[model].dot_sizes[resid];
     }
 }
 
@@ -402,8 +391,7 @@ escp2_density(const stp_vars_t v, int resid)
   else
     {
       int model = stpi_get_model_id(v);
-      int dotid = resid2dotid(resid);
-      return stpi_escp2_model_capabilities[model].densities[dotid];
+      return stpi_escp2_model_capabilities[model].densities[resid];
     }
 }
 
@@ -415,8 +403,7 @@ escp2_bits(const stp_vars_t v, int resid)
   else
     {
       int model = stpi_get_model_id(v);
-      int dotid = resid2dotid(resid);
-      return stpi_escp2_model_capabilities[model].bits[dotid];
+      return stpi_escp2_model_capabilities[model].bits[resid];
     }
 }
 
@@ -428,8 +415,7 @@ escp2_base_res(const stp_vars_t v, int resid)
   else
     {
       int model = stpi_get_model_id(v);
-      int dotid = resid2dotid(resid);
-      return stpi_escp2_model_capabilities[model].base_resolutions[dotid];
+      return stpi_escp2_model_capabilities[model].base_resolutions[resid];
     }
 }
 
@@ -1088,9 +1074,10 @@ escp2_set_color(const escp2_init_t *init)
 {
   const stp_vars_t v = init->v;
   if (init->use_fast_360)
-    stpi_send_command(v, "\033(K", "bc", 3);
+    stpi_send_command(v, "\033(K", "bcc", 0, 3);
   else if (escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES))
-    stpi_send_command(v, "\033(K", "bc", (init->use_black_parameters ? 1 : 2));
+    stpi_send_command(v, "\033(K", "bcc", 0,
+		      (init->use_black_parameters ? 1 : 2));
 }
 
 static void
@@ -1680,7 +1667,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   privdata.initial_vertical_offset = 0;
   privdata.printed_something = 0;
   privdata.last_color = -1;
-  stpi_set_driver_data(v, &privdata);
+  stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   ink_type = get_inktype(v);
   total_channels = count_channels(ink_type);
@@ -1877,7 +1864,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     }
   if (init.input_slot && init.input_slot->roll_feed_cut_flags)
     {
-      init.page_true_height += 4;
+      init.page_true_height += 4; /* Empirically-determined constants */
       init.page_top += 2;
       init.page_bottom += 2;
       top += 2;
@@ -1951,7 +1938,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
        * Cleanup...
        */
       stpi_destroy_weave(weave);
-      stpi_dither_free(v);
       stpi_free(out);
       if (!privdata.printed_something)
 	stpi_send_command(v, "\n", "");
@@ -2027,7 +2013,8 @@ static void
 set_vertical_position(stpi_softweave_t *sw, stpi_pass_t *pass,
 		      const stp_vars_t v)
 {
-  escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_driver_data(v);
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   int advance = pass->logicalpassstart - sw->last_pass_offset -
     (escp2_separation_rows(v) - 1);
   advance *= pd->undersample;
@@ -2048,7 +2035,8 @@ static void
 set_color(stpi_softweave_t *sw, stpi_pass_t *pass, const stp_vars_t v,
 	  int color)
 {
-  escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_driver_data(v);
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   if (pd->last_color != color &&
       ! escp2_use_extended_commands(v, sw->jets > 1))
     {
@@ -2068,7 +2056,8 @@ set_horizontal_position(stpi_softweave_t *sw, stpi_pass_t *pass,
 			int xdpi, int vertical_subpass)
 {
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
-  escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_driver_data(v);
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   if (!escp2_has_advanced_command_set(v) &&
       (xdpi <= escp2_base_resolution(v) || escp2_max_hres(v) < 1440))
     {
@@ -2124,7 +2113,7 @@ send_print_command(stpi_softweave_t *sw, stpi_pass_t *pass, int color,
     }
   else
     {
-      escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_driver_data(v);
+      escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
       int ncolor = pd->channels[color]->color;
       int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
       if (pd->channels[color]->density >= 0)
@@ -2177,7 +2166,8 @@ flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass)
 {
   int j;
   const stp_vars_t v = (sw->v);
-  escp2_privdata_t *pd = (escp2_privdata_t *) stpi_get_driver_data(v);
+  escp2_privdata_t *pd =
+    (escp2_privdata_t *) stpi_get_component_data(v, "Driver");
   stpi_lineoff_t *lineoffs = stpi_get_lineoffsets_by_pass(sw, passno);
   stpi_lineactive_t *lineactive = stpi_get_lineactive_by_pass(sw, passno);
   const stpi_linebufs_t *bufs = stpi_get_linebases_by_pass(sw, passno);

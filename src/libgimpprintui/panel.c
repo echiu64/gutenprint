@@ -2646,7 +2646,6 @@ set_media_size(const gchar *new_media_size)
 
   if (pap)
     {
-      gint default_width, default_height;
       gint size;
       int old_width = stp_get_page_width(pv->v);
       int old_height = stp_get_page_height(pv->v);
@@ -2676,10 +2675,15 @@ set_media_size(const gchar *new_media_size)
 	  
       if (pap->width == 0)
 	{
-	  stp_get_media_size(pv->v, &default_width, &default_height);
+	  int max_w, max_h, min_w, min_h;
+	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
+	  size = old_width;
+	  if (size < min_w)
+	    size = min_w;
+	  else if (size > max_w)
+	    size = max_w;
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
-	  size = default_width;
 	}
       else
 	{
@@ -2696,10 +2700,15 @@ set_media_size(const gchar *new_media_size)
 
       if (pap->height == 0)
 	{
-	  stp_get_media_size(pv->v, &default_height, &default_height);
+	  int max_w, max_h, min_w, min_h;
+	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
+	  size = old_height;
+	  if (size < min_h)
+	    size = min_h;
+	  else if (size > max_h)
+	    size = max_h;
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
-	  size = default_height;
 	}
       else
 	{
@@ -3310,7 +3319,7 @@ compute_thumbnail(const stp_vars_t v)
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
   const stp_vars_t nv = stp_vars_create_copy(v);
-  stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
+  stp_set_driver(nv, "raw-data-8");
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);
   stp_set_width(nv, thumbnail_w);

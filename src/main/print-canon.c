@@ -2161,7 +2161,7 @@ static void
 canon_printfunc(const stp_vars_t v)
 {
   int i;
-  canon_privdata_t *pd = (canon_privdata_t *) stpi_get_driver_data(v);
+  canon_privdata_t *pd = (canon_privdata_t *) stpi_get_component_data(v, "Driver");
   canon_write_line(v);
   for (i = 0; i < 7; i++)
     canon_advance_buffer(pd->cols[i], pd->buf_length, pd->delay[i]);
@@ -2528,7 +2528,7 @@ canon_do_print(const stp_vars_t v, stp_image_t *image)
   stpi_dither_add_channel(v, privdata.cols[5], ECOLOR_M, 1);
   stpi_dither_add_channel(v, privdata.cols[3], ECOLOR_Y, 0);
   stpi_dither_add_channel(v, privdata.cols[6], ECOLOR_Y, 1);
-  stpi_set_driver_data(v, &privdata);
+  stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2575,8 +2575,6 @@ canon_do_print(const stp_vars_t v, stp_image_t *image)
   }
 
   stpi_image_progress_conclude(image);
-
-  stpi_dither_free(v);
 
  /*
   * Cleanup...
@@ -2925,7 +2923,8 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 static void
 canon_write_line(const stp_vars_t v)
 {
-  canon_privdata_t *pd = (canon_privdata_t *) stpi_get_driver_data(v);
+  canon_privdata_t *pd =
+    (canon_privdata_t *) stpi_get_component_data(v, "Driver");
   static int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 };
   static int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };
   int i;

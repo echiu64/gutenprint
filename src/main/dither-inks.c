@@ -41,7 +41,7 @@
 static void
 stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *s)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int max_subchannel = 0;
   int i;
   unsigned lbit = s->bit_max;
@@ -279,7 +279,7 @@ void
 stpi_dither_set_ranges(stp_vars_t v, int color, int nlevels,
 		      const stpi_dither_range_simple_t *ranges, double density)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
     return;
   stpi_dither_set_generic_ranges(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
@@ -319,7 +319,7 @@ stpi_dither_set_ranges_full(stp_vars_t v, int color, int nlevels,
 			   const stpi_dither_range_full_t *ranges,
 			   double density)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   stpi_dither_set_generic_ranges_full(v, &(PHYSICAL_CHANNEL(d, color)), nlevels,
 				     ranges, density);
 }
@@ -339,7 +339,7 @@ stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
 
   const double ink_gamma = 0.5;
 
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   stpi_dither_channel_t *dc = &(PHYSICAL_CHANNEL(d, color));
 
   if (dc->shades) {

@@ -39,6 +39,7 @@
 #include "array.h"
 #include "sequence.h"
 #include "dither-impl.h"
+#include "vars.h"
 
 static const stpi_dither_algorithm_t dither_algos[] =
 {
@@ -137,7 +138,7 @@ stpi_dither_describe_parameter(const stp_vars_t v, const char *name,
 unsigned char *
 stpi_dither_get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
 {
-  stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_dither_data(v))->dt);
+  stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_component_data(v, "Dither"))->dt);
   stpi_dither_channel_data_t *chan;
   if (channel >= d->channel_count)
     return NULL;
@@ -151,7 +152,7 @@ void
 stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 			unsigned channel, unsigned subchannel)
 {
-  stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_dither_data(v))->dt);
+  stpi_dither_data_t *d = &(((stpi_dither_t *) stpi_get_component_data(v, "Dither"))->dt);
   stpi_dither_channel_data_t *chan;
   if (channel >= d->channel_count)
     {
@@ -185,7 +186,7 @@ do									\
 static stpi_ditherfunc_t *
 stpi_set_dither_function(stp_vars_t v, int image_bpp)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int i;
   const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
   d->stpi_dither_type = D_ADAPTIVE_HYBRID;
@@ -216,6 +217,94 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 }
 
 void
+stpi_dither_set_adaptive_limit(stp_vars_t v, double limit)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  d->adaptive_limit = limit;
+}
+
+void
+stpi_dither_set_ink_spread(stp_vars_t v, int spread)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  SAFE_FREE(d->offset0_table);
+  SAFE_FREE(d->offset1_table);
+  if (spread >= 16)
+    {
+      d->spread = 16;
+    }
+  else
+    {
+      int max_offset;
+      int i;
+      d->spread = spread;
+      max_offset = (1 << (16 - spread)) + 1;
+      d->offset0_table = stpi_malloc(sizeof(int) * max_offset);
+      d->offset1_table = stpi_malloc(sizeof(int) * max_offset);
+      for (i = 0; i < max_offset; i++)
+	{
+	  d->offset0_table[i] = (i + 1) * (i + 1);
+	  d->offset1_table[i] = ((i + 1) * i) / 2;
+	}
+    }
+  d->spread_mask = (1 << d->spread) - 1;
+}
+
+void
+stpi_dither_set_randomizer(stp_vars_t v, int i, double val)
+{
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  if (i < 0 || i >= PHYSICAL_CHANNEL_COUNT(d))
+    return;
+  PHYSICAL_CHANNEL(d, i).randomizer = val * 65535;
+}
+
+static void
+stpi_dither_free(void *vd)
+{
+  stpi_dither_t *d = (stpi_dither_t *) vd;
+  stpi_dither_data_t *dt = &(d->dt);
+  int i;
+  int j;
+  for (j = 0; j < PHYSICAL_CHANNEL_COUNT(d); j++)
+    {
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).vals);
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).row_ends[0]);
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).row_ends[1]);
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ptrs);
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ink_list);
+      if (PHYSICAL_CHANNEL(d, j).errs)
+	{
+	  for (i = 0; i < d->error_rows; i++)
+	    SAFE_FREE(PHYSICAL_CHANNEL(d, j).errs[i]);
+	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).errs);
+	}
+      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ranges);
+      if (PHYSICAL_CHANNEL(d, j).shades) {
+        for (i = 0; i < PHYSICAL_CHANNEL(d, j).numshades; i++) {
+          SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].dotsizes);
+	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].errs);
+	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].et_dis);
+        }
+        SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades);
+      }
+      stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).pick));
+      stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).dithermat));
+    }
+  SAFE_FREE(d->offset0_table);
+  SAFE_FREE(d->offset1_table);
+  stpi_dither_matrix_destroy(&(d->dither_matrix));
+  stpi_dither_matrix_destroy(&(d->transition_matrix));
+  if (d->aux_freefunc)
+    (d->aux_freefunc)(d);
+  stpi_free(d->channel);
+  for (i = 0; i < dt->channel_count; i++)
+    stpi_free(dt->c[i].c);
+  stpi_free(dt->c);
+  stpi_free(d);
+}
+
+void
 stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 		 int xdpi, int ydpi)
 {
@@ -231,7 +320,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       "BlackDensity", "CyanDensity", "MagentaDensity", "YellowDensity"
     };
 
-  stpi_set_dither_data(v, d);
+  stpi_allocate_component_data(v, "Dither", NULL, stpi_dither_free, d);
 
   d->dither_class = stp_get_output_type(v);
   d->error_rows = ERROR_ROWS;
@@ -354,95 +443,6 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 }
 
 void
-stpi_dither_set_adaptive_limit(stp_vars_t v, double limit)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
-  d->adaptive_limit = limit;
-}
-
-void
-stpi_dither_set_ink_spread(stp_vars_t v, int spread)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
-  SAFE_FREE(d->offset0_table);
-  SAFE_FREE(d->offset1_table);
-  if (spread >= 16)
-    {
-      d->spread = 16;
-    }
-  else
-    {
-      int max_offset;
-      int i;
-      d->spread = spread;
-      max_offset = (1 << (16 - spread)) + 1;
-      d->offset0_table = stpi_malloc(sizeof(int) * max_offset);
-      d->offset1_table = stpi_malloc(sizeof(int) * max_offset);
-      for (i = 0; i < max_offset; i++)
-	{
-	  d->offset0_table[i] = (i + 1) * (i + 1);
-	  d->offset1_table[i] = ((i + 1) * i) / 2;
-	}
-    }
-  d->spread_mask = (1 << d->spread) - 1;
-}
-
-void
-stpi_dither_set_randomizer(stp_vars_t v, int i, double val)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
-  if (i < 0 || i >= PHYSICAL_CHANNEL_COUNT(d))
-    return;
-  PHYSICAL_CHANNEL(d, i).randomizer = val * 65535;
-}
-
-void
-stpi_dither_free(stp_vars_t v)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
-  stpi_dither_data_t *dt = &(d->dt);
-  int i;
-  int j;
-  stpi_set_dither_data(v, NULL);
-  for (j = 0; j < PHYSICAL_CHANNEL_COUNT(d); j++)
-    {
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).vals);
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).row_ends[0]);
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).row_ends[1]);
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ptrs);
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ink_list);
-      if (PHYSICAL_CHANNEL(d, j).errs)
-	{
-	  for (i = 0; i < d->error_rows; i++)
-	    SAFE_FREE(PHYSICAL_CHANNEL(d, j).errs[i]);
-	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).errs);
-	}
-      SAFE_FREE(PHYSICAL_CHANNEL(d, j).ranges);
-      if (PHYSICAL_CHANNEL(d, j).shades) {
-        for (i = 0; i < PHYSICAL_CHANNEL(d, j).numshades; i++) {
-          SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].dotsizes);
-	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].errs);
-	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades[i].et_dis);
-        }
-        SAFE_FREE(PHYSICAL_CHANNEL(d, j).shades);
-      }
-      stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).pick));
-      stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).dithermat));
-    }
-  SAFE_FREE(d->offset0_table);
-  SAFE_FREE(d->offset1_table);
-  stpi_dither_matrix_destroy(&(d->dither_matrix));
-  stpi_dither_matrix_destroy(&(d->transition_matrix));
-  if (d->aux_freefunc)
-    (d->aux_freefunc)(d);
-  stpi_free(d->channel);
-  for (i = 0; i < dt->channel_count; i++)
-    stpi_free(dt->c[i].c);
-  stpi_free(dt->c);
-  stpi_free(d);
-}
-
-void
 stpi_dither_reverse_row_ends(stpi_dither_t *d)
 {
   int i, j;
@@ -459,7 +459,7 @@ stpi_dither_reverse_row_ends(stpi_dither_t *d)
 int
 stpi_dither_get_first_position(stp_vars_t v, int color, int subchannel)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
     return -1;
   if (subchannel < 0 || subchannel >= PHYSICAL_CHANNEL(d, color).subchannels)
@@ -470,7 +470,7 @@ stpi_dither_get_first_position(stp_vars_t v, int color, int subchannel)
 int
 stpi_dither_get_last_position(stp_vars_t v, int color, int subchannel)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
     return -1;
   if (subchannel < 0 || subchannel >= PHYSICAL_CHANNEL(d, color).subchannels)
@@ -483,7 +483,7 @@ stpi_dither(stp_vars_t v, int row, const unsigned short *input,
 	    int duplicate_line, int zero_mask)
 {
   int i, j;
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int ghost_channels = 0;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
     {

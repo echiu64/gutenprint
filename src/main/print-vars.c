@@ -56,12 +56,19 @@ typedef struct
   } value;
 } value_t;
 
+typedef struct
+{
+  char *name;
+  stpi_copy_data_func_t copyfunc;
+  stpi_free_data_func_t freefunc;
+  void *data;
+} compdata_t;
+
 typedef struct					/* Plug-in variables */
 {
   int	cookie;
   const char *driver;		/* Name of printer "driver" */
   int	output_type;		/* Color or grayscale output */
-  float app_gamma;		/* Application gamma */
   int	input_color_model;	/* Color model for this device */
   int	output_color_model;	/* Color model for this device */
   stp_job_mode_t job_mode;
@@ -73,15 +80,7 @@ typedef struct					/* Plug-in variables */
   int	page_height;		/* Height of page in points */
   int	page_number;
   stpi_list_t *params[STP_PARAMETER_TYPE_INVALID];
-  void  *color_data;		/* Private data of the color module */
-  void	*(*copy_color_data_func)(const stp_vars_t);
-  void	(*destroy_color_data_func)(stp_vars_t);
-  void  *driver_data;		/* Private data of the family driver module */
-  void	*(*copy_driver_data_func)(const stp_vars_t);
-  void	(*destroy_driver_data_func)(stp_vars_t);
-  void  *dither_data;		/* Private data of the family dither module */
-  void	*(*copy_dither_data_func)(const stp_vars_t);
-  void	(*destroy_dither_data_func)(stp_vars_t);
+  stpi_list_t *internal_data;
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
@@ -101,6 +100,21 @@ static stpi_internal_vars_t default_vars =
 	COLOR_MODEL_RGB,	/* Output color model */
 	STP_JOB_MODE_PAGE	/* Job mode */
 };
+
+static void
+check_vars(const stpi_internal_vars_t *v)
+{
+  if (v == NULL)
+    {
+      stpi_erprintf("Null stp_vars_t! Please report this bug.\n");
+      stpi_abort();
+    }
+  if (v->cookie != COOKIE_VARS)
+    {
+      stpi_erprintf("Bad stp_vars_t! Please report this bug.\n");
+      stpi_abort();
+    }
+}
 
 static const char *
 value_namefunc(const stpi_list_item_t *item)
@@ -135,7 +149,6 @@ value_freefunc(stpi_list_item_t *item)
 
 static stpi_list_t *
 create_vars_list(void)
-
 {
   stpi_list_t *ret = stpi_list_create();
   stpi_list_set_freefunc(ret, value_freefunc);
@@ -193,6 +206,100 @@ copy_value_list(const stpi_list_t *src)
   return ret;
 }
 
+static const char *
+compdata_namefunc(const stpi_list_item_t *item)
+{
+  const compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  return cd->name;
+}
+
+static void
+compdata_freefunc(stpi_list_item_t *item)
+{
+  compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  if (cd->freefunc)
+    (cd->freefunc)(cd->data);
+  stpi_free(cd->name);
+  stpi_free(cd);
+}
+
+static void *
+compdata_copyfunc(const stpi_list_item_t *item)
+{
+  compdata_t *cd = (compdata_t *)stpi_list_item_get_data(item);
+  if (cd->copyfunc)
+    return (cd->copyfunc)(cd->data);
+  else
+    return cd->data;
+}
+
+void
+stpi_allocate_component_data(stp_vars_t vv,
+			     const char *name,
+			     stpi_copy_data_func_t copyfunc,
+			     stpi_free_data_func_t freefunc,
+			     void *data)
+{
+  compdata_t *cd = stpi_malloc(sizeof(compdata_t));
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  stpi_list_item_t *item;
+  check_vars(v);
+  item = stpi_list_get_item_by_name(v->internal_data, name);
+  if (item)
+    stpi_list_item_destroy(v->internal_data, item);
+  cd->name = stpi_strdup(name);
+  cd->copyfunc = copyfunc;
+  cd->freefunc = freefunc;
+  cd->data = data;
+  stpi_list_item_create(v->internal_data, NULL, cd);
+}
+
+void
+stpi_destroy_component_data(stp_vars_t vv, const char *name)
+{
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  stpi_list_item_t *item;
+  check_vars(v);
+  item = stpi_list_get_item_by_name(v->internal_data, name);
+  if (item)
+    stpi_list_item_destroy(v->internal_data, item);
+}
+
+void *
+stpi_get_component_data(stp_vars_t vv, const char *name)
+{
+  stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
+  stpi_list_item_t *item;
+  check_vars(v);
+  item = stpi_list_get_item_by_name(v->internal_data, name);
+  if (item)
+    return ((compdata_t *) stpi_list_item_get_data(item))->data;
+  else
+    return NULL;
+}
+
+static stpi_list_t *
+create_compdata_list(void)
+{
+  stpi_list_t *ret = stpi_list_create();
+  stpi_list_set_freefunc(ret, compdata_freefunc);
+  stpi_list_set_namefunc(ret, compdata_namefunc);
+  return ret;
+}
+
+static stpi_list_t *
+copy_compdata_list(const stpi_list_t *src)
+{
+  stpi_list_t *ret = create_compdata_list();
+  stpi_list_item_t *item = stpi_list_get_start((stpi_list_t *)src);
+  while (item)
+    {
+      stpi_list_item_create(ret, NULL, compdata_copyfunc(item));
+      item = stpi_list_item_next(item);
+    }
+  return ret;
+}
+
 static void
 initialize_standard_vars(void)
 {
@@ -201,6 +308,7 @@ initialize_standard_vars(void)
       int i;
       for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
 	default_vars.params[i] = create_vars_list();
+      default_vars.internal_data = create_compdata_list();
       standard_vars_initialized = 1;
     }
 }
@@ -221,23 +329,9 @@ stp_vars_create(void)
   retval->cookie = COOKIE_VARS;
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     retval->params[i] = create_vars_list();
+  retval->internal_data = create_compdata_list();
   stp_vars_copy(retval, (stp_vars_t)&default_vars);
   return (retval);
-}
-
-static void
-check_vars(const stpi_internal_vars_t *v)
-{
-  if (v == NULL)
-    {
-      stpi_erprintf("Null stp_vars_t! Please report this bug.\n");
-      stpi_abort();
-    }
-  if (v->cookie != COOKIE_VARS)
-    {
-      stpi_erprintf("Bad stp_vars_t! Please report this bug.\n");
-      stpi_abort();
-    }
 }
 
 void
@@ -246,14 +340,9 @@ stp_vars_free(stp_vars_t vv)
   int i;
   stpi_internal_vars_t *v = (stpi_internal_vars_t *) vv;
   check_vars(v);
-  if (stpi_get_destroy_color_data_func(vv))
-    (*stpi_get_destroy_color_data_func(vv))(vv);
-  if (stpi_get_destroy_driver_data_func(vv))
-    (*stpi_get_destroy_driver_data_func(vv))(vv);
-  if (stpi_get_destroy_dither_data_func(vv))
-    (*stpi_get_destroy_dither_data_func(vv))(vv);
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     stpi_list_destroy(v->params[i]);
+  stpi_list_destroy(v->internal_data);
   SAFE_FREE(v->driver);
   stpi_free(v);
 }
@@ -331,16 +420,6 @@ DEF_EXTERNAL_FUNCS(outfunc, stp_outfunc_t, )
 DEF_EXTERNAL_FUNCS(errfunc, stp_outfunc_t, )
 
 DEF_INTERNAL_FUNCS(output_color_model, int, )
-DEF_INTERNAL_FUNCS(color_data, void *, )
-DEF_INTERNAL_FUNCS(copy_color_data_func, stpi_copy_data_func_t, )
-DEF_INTERNAL_FUNCS(destroy_color_data_func, stpi_destroy_data_func_t, )
-DEF_INTERNAL_FUNCS(driver_data, void *, )
-DEF_INTERNAL_FUNCS(copy_driver_data_func, stpi_copy_data_func_t, )
-DEF_INTERNAL_FUNCS(destroy_driver_data_func, stpi_destroy_data_func_t, )
-DEF_INTERNAL_FUNCS(dither_data, void *, )
-DEF_INTERNAL_FUNCS(copy_dither_data_func, stpi_copy_data_func_t, )
-DEF_INTERNAL_FUNCS(destroy_dither_data_func, stpi_destroy_data_func_t, )
-
 
 void
 stpi_set_verified(stp_vars_t vv, int val)
@@ -1143,27 +1222,14 @@ stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
-  if (stpi_get_copy_driver_data_func(vs))
-    stpi_set_driver_data(vd, (stpi_get_copy_driver_data_func(vs))(vs));
-  else
-    stpi_set_driver_data(vd, stpi_get_driver_data(vs));
-  if (stpi_get_copy_dither_data_func(vs))
-    stpi_set_dither_data(vd, (stpi_get_copy_dither_data_func(vs))(vs));
-  else
-    stpi_set_dither_data(vd, stpi_get_dither_data(vs));
-  if (stpi_get_copy_color_data_func(vs))
-    stpi_set_color_data(vd, (stpi_get_copy_color_data_func(vs))(vs));
-  else
-    stpi_set_color_data(vd, stpi_get_color_data(vs));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
       stpi_list_destroy(vvd->params[i]);
       vvd->params[i] = copy_value_list(vvs->params[i]);
     }
+  stpi_list_destroy(vvd->internal_data);
+  vvd->internal_data = copy_compdata_list(vvs->internal_data);
 
-  stpi_set_copy_driver_data_func(vd, stpi_get_copy_driver_data_func(vs));
-  stpi_set_copy_dither_data_func(vd, stpi_get_copy_dither_data_func(vs));
-  stpi_set_copy_color_data_func(vd, stpi_get_copy_color_data_func(vs));
   stp_set_output_type(vd, stp_get_output_type(vs));
   stp_set_left(vd, stp_get_left(vs));
   stp_set_top(vd, stp_get_top(vs));
@@ -1177,6 +1243,8 @@ stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
   stp_set_errdata(vd, stp_get_errdata(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
+  stp_set_job_mode(vd, stp_get_job_mode(vs));
+  stp_set_page_number(vd, stp_get_page_number(vs));
   stpi_set_verified(vd, stpi_get_verified(vs));
 }
 

@@ -520,7 +520,7 @@ gray_to_gray(const stp_vars_t vars,
   int i0 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -560,7 +560,7 @@ rgb_to_gray(const stp_vars_t vars,
   int i2 = -1;
   int o0 = 0;
   int nz = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   size_t count;
   const unsigned short *composite;
   stp_curve_resample(lut->composite, 256);
@@ -734,7 +734,7 @@ rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;
   int split_saturation = ssat > 1.4;
   const unsigned short *red = stp_curve_get_ushort_data(lut->cyan, &count);
@@ -826,7 +826,7 @@ gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -898,7 +898,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -971,7 +971,7 @@ fast_gray_to_rgb(const stp_vars_t vars,
   int nz0 = 0;
   int nz1 = 0;
   int nz2 = 0;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   size_t count;
   const unsigned short *red;
   const unsigned short *green;
@@ -1021,7 +1021,7 @@ static stp_curve_t
 compute_gcr_curve(const stp_vars_t vars)
 {
   stp_curve_t curve;
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   double k_lower = 0.0;
   double k_upper = 1.0;
   double k_gamma = 1.0;
@@ -1081,7 +1081,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 		    int width,
 		    int bpp)
 {
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
   int step = 65535 / (lut->steps - 1); /* 1 or 257 */
 
   const unsigned short *gcr_lookup;
@@ -1173,7 +1173,7 @@ name##_to_cmyk(const stp_vars_t vars,					\
 	       int width,						\
 	       int bpp)							\
 {									\
-  lut_t *lut = (lut_t *)(stpi_get_color_data(vars));			\
+  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));	\
   if (!lut->cmy_tmp)							\
     lut->cmy_tmp = stpi_malloc(4 * 2 * width);				\
   name##_to_rgb(vars, in, lut->cmy_tmp, zero_mask, width, bpp);		\
@@ -1368,7 +1368,7 @@ int
 stpi_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
 		  unsigned short *out, int *zero_mask)
 {
-  const lut_t *lut = (const lut_t *)(stpi_get_color_data(v));
+  const lut_t *lut = (const lut_t *)(stpi_get_component_data(v, "Color"));
   unsigned char *in = lut->in_data;
   if (stpi_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
       STP_IMAGE_STATUS_OK)
@@ -1405,9 +1405,9 @@ allocate_lut(void)
 }
 
 static void *
-copy_lut(const stp_vars_t v)
+copy_lut(void *vlut)
 {
-  const lut_t *src = (const lut_t *)(stpi_get_color_data(v));
+  const lut_t *src = (const lut_t *)vlut;
   lut_t *dest;
   if (!src)
     return NULL;
@@ -1437,37 +1437,33 @@ copy_lut(const stp_vars_t v)
 }
 
 static void
-stpi_free_lut(stp_vars_t v)
+free_lut(void *vlut)
 {
-  if (stpi_get_color_data(v))
-    {
-      lut_t *lut = (lut_t *)(stpi_get_color_data(v));
-      if (lut->composite)
-	stp_curve_free(lut->composite);
-      if (lut->black)
-	stp_curve_free(lut->black);
-      if (lut->cyan)
-	stp_curve_free(lut->cyan);
-      if (lut->magenta)
-	stp_curve_free(lut->magenta);
-      if (lut->yellow)
-	stp_curve_free(lut->yellow);
-      if (lut->hue_map)
-	stp_curve_free(lut->hue_map);
-      if (lut->lum_map)
-	stp_curve_free(lut->lum_map);
-      if (lut->sat_map)
-	stp_curve_free(lut->sat_map);
-      if (lut->gcr_curve)
-	stp_curve_free(lut->gcr_curve);
-      if (lut->in_data)
-	stpi_free(lut->in_data);
-      if (lut->cmy_tmp)
-	stpi_free(lut->cmy_tmp);
-      memset(lut, 0, sizeof(lut_t));
-      stpi_free(lut);
-      stpi_set_color_data(v, NULL);
-    }
+  lut_t *lut = (lut_t *)vlut;
+  if (lut->composite)
+    stp_curve_free(lut->composite);
+  if (lut->black)
+    stp_curve_free(lut->black);
+  if (lut->cyan)
+    stp_curve_free(lut->cyan);
+  if (lut->magenta)
+    stp_curve_free(lut->magenta);
+  if (lut->yellow)
+    stp_curve_free(lut->yellow);
+  if (lut->hue_map)
+    stp_curve_free(lut->hue_map);
+  if (lut->lum_map)
+    stp_curve_free(lut->lum_map);
+  if (lut->sat_map)
+    stp_curve_free(lut->sat_map);
+  if (lut->gcr_curve)
+    stp_curve_free(lut->gcr_curve);
+  if (lut->in_data)
+    stpi_free(lut->in_data);
+  if (lut->cmy_tmp)
+    stpi_free(lut->cmy_tmp);
+  memset(lut, 0, sizeof(lut_t));
+  stpi_free(lut);
 }
 
 static stp_curve_t
@@ -1679,9 +1675,7 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
 
   lut->steps = steps;
 
-  stpi_set_color_data(v, lut);
-  stpi_set_copy_color_data_func(v, copy_lut);
-  stpi_set_destroy_color_data_func(v, stpi_free_lut);
+  stpi_allocate_component_data(v, "Color", copy_lut, free_lut, lut);
   stpi_dprintf(STPI_DBG_LUT, v, "stpi_compute_lut\n");
   stpi_dprintf(STPI_DBG_LUT, v, " cyan %.3f\n", cyan);
   stpi_dprintf(STPI_DBG_LUT, v, " magenta %.3f\n", magenta);
@@ -1778,7 +1772,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
     return -1;
 
   stpi_compute_lut(v, steps);
-  lut = (lut_t *)(stpi_get_color_data(v));
+  lut = (lut_t *)(stpi_get_component_data(v, "Color"));
   lut->image_bpp = image_bpp;
   lut->image_width = stpi_image_width(image);
   if (image_type)

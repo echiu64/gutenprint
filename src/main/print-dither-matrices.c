@@ -371,7 +371,7 @@ stpi_dither_matrix_set_row(dither_matrix_t *mat, int y)
 static void
 preinit_matrix(stp_vars_t v)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int i;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
     stpi_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
@@ -381,7 +381,7 @@ preinit_matrix(stp_vars_t v)
 static void
 postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;
@@ -406,7 +406,7 @@ stpi_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
 			       const unsigned *data, int prescaled,
 			       int x_shear, int y_shear)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   preinit_matrix(v);
   stpi_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
   postinit_matrix(v, x_shear, y_shear);
@@ -416,7 +416,7 @@ void
 stpi_dither_set_matrix(stp_vars_t v, const stpi_dither_matrix_t *matrix,
 		      int transposed, int x_shear, int y_shear)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int x = transposed ? matrix->y : matrix->x;
   int y = transposed ? matrix->x : matrix->y;
   preinit_matrix(v);
@@ -436,7 +436,7 @@ stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
 					 const stp_array_t array,
 					 int transpose)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   preinit_matrix(v);
   stpi_dither_matrix_init_from_dither_array(&(d->dither_matrix), array, transpose);
   postinit_matrix(v, 0, 0);
@@ -445,7 +445,7 @@ stpi_dither_set_matrix_from_dither_array(stp_vars_t v,
 void
 stpi_dither_set_transition(stp_vars_t v, double exponent)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_dither_data(v);
+  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
   int i, j;
   int color = 0;

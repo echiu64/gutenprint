@@ -76,12 +76,6 @@ static const int ink_count = sizeof(inks) / sizeof(ink_t);
 static const stp_parameter_t the_parameters[] =
 {
   {
-    "PageSize", N_("Page Size"),
-    N_("Size of the paper being printed to"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
-  },
-  {
     "InkType", N_("Ink Type"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -118,24 +112,7 @@ raw_parameters(const stp_vars_t v, const char *name,
 	stpi_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
-  if (strcmp(name, "PageSize") == 0)
-    {
-      int papersizes = stp_known_papersizes();
-      description->bounds.str = stp_string_list_create();
-      for (i = 0; i < papersizes; i++)
-	{
-	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	  if (pt->width == 0 && pt->height == 0)
-	    {
-	      stp_string_list_add_string(description->bounds.str,
-					 pt->name, pt->text);
-	      break;
-	    }
-	}
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
-    }
-  else if (strcmp(name, "InkType") == 0)
+  if (strcmp(name, "InkType") == 0)
     {
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < ink_count; i++)

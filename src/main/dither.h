@@ -194,8 +194,6 @@ extern int stpi_dither_get_last_position(stp_vars_t v, int color, int subchan);
 extern void stpi_dither_set_shades(stp_vars_t v, int color, int nshades,
 				   const stpi_shade_t *shades, double density);
 
-extern void stpi_dither_free(stp_vars_t v);
-
 extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 				    unsigned channel, unsigned subchannel);
 
