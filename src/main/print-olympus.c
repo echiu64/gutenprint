@@ -73,6 +73,7 @@ typedef struct /* printer specific parameters */
   int border_top;
   int border_bottom;
   const olympus_res_t_array *res;	/* list of possible resolutions */
+  int block_size;
   int need_empty_cols;	/* must we print empty columns? */
   int need_empty_rows;	/* must we print empty rows? */
 } olympus_cap_t;
@@ -91,6 +92,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		288, 420,	
 		28, 28, 49, 48,
 		&resolution_p300,
+		16,
 		1, 0,
 	},
 };
@@ -539,7 +541,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   for (i = 0; i < ink_channels; i++)
     stpi_channel_add(v, i, 0, 1.0);
 
-  out_channels = stpi_color_init(v, image, 256);
+  out_channels = stpi_color_init(v, image, 65536);
 
 #if 0
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
@@ -563,29 +565,30 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   stpi_zfwrite("\033\033\033C\033N", 1, 6, v);
   stpi_putc(copies, v);
   stpi_zfwrite("\033F", 1, 2, v);
-  stpi_putc(hi_speed >> 8, v);
-  stpi_putc(hi_speed & 0xff, v);
+  stpi_put16_be(hi_speed, v);
   stpi_zfwrite("\033MS\xff\xff\xff\033Z", 1, 8, v);
-  stpi_putc(xdpi >> 8, v);
-  stpi_putc(xdpi & 0xff, v);
-  stpi_putc(ydpi >> 8, v);
-  stpi_putc(ydpi & 0xff, v);
+  stpi_put16_be(xdpi, v);
+  stpi_put16_be(ydpi, v);
   
   
+  min_y = (caps->need_empty_rows ? 0 : out_px_top 
+       - (out_px_top % caps->block_size)); /* floor to multiple of block_size */
+  max_y = (caps->need_empty_rows ? print_px_height - 1 : (out_px_bottom - 1)
+       + (caps->block_size - 1) - ((out_px_bottom - 1) % caps->block_size));
+                                           /* ceil to multiple of block_size */
+  min_x = (caps->need_empty_cols ? 0 : out_px_left);
+  max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
+
+  max_progress = max_y - min_y;
+
+  r_errdiv  = image_px_height / out_px_height;
+  r_errmod  = image_px_height % out_px_height; 
+  c_errdiv = image_px_width / out_px_width;
+  c_errmod = image_px_width % out_px_width;
+
   l = layers;
   while (*l)
     {
-    if (caps->need_empty_rows) {
-      min_y = 0;
-      max_y = print_px_height - 1;
-    } else {
-      min_y = out_px_top & 0xfff0;
-      max_y = ((out_px_bottom - 1) | 0x000f);
-    }
-    
-    max_progress = max_y - min_y;
-    r_errdiv  = image_px_height / out_px_height;
-    r_errmod  = image_px_height % out_px_height; 
     r_errval  = 0;
     r_errlast = -1;
     r_errline = 0;
@@ -596,24 +599,16 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       int duplicate_line = 1;
       unsigned zero_mask;
 
-      if ((y % 16) == 0)
+      if (((y - min_y) % caps->block_size) == 0)
         {
         /* block init */
 	stpi_zfwrite("\033\033\033W", 1, 4, v);
 	stpi_putc(*l, v);
-	stpi_putc(y >> 8, v);
-	stpi_putc(y & 0xff, v);
-
-	min_x = (caps->need_empty_cols ? 0 : out_px_left);
-	stpi_putc(min_x >> 8, v);
-	stpi_putc(min_x & 0xff, v);
-	
-	stpi_putc((y + 15) >> 8, v);
-	stpi_putc((y + 15) & 0xff, v);
-	
-	max_x = (caps->need_empty_cols ? print_px_width - 1 : out_px_right);
-	stpi_putc(max_x >> 8, v);
-	stpi_putc(max_x & 0xff, v);
+	stpi_put16_be(y, v);
+	stpi_put16_be(min_x, v);
+	stpi_put16_be((y + caps->block_size - 1 < print_px_height ?
+				y + caps->block_size - 1 : print_px_height), v);
+	stpi_put16_be(max_x, v);
 	}
       
 
@@ -649,8 +644,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 	
 	out = stpi_channel_get_output(v);
 
-	c_errdiv = image_px_width / out_px_width;
-	c_errmod = image_px_width % out_px_width;
 	c_errval  = 0;
 	c_errlast = -1;
 	c_errcol  = 0;
