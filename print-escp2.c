@@ -647,7 +647,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
-    { 2, 0, -1, 1, -1, -1, -1 },
+    { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .568, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -658,7 +658,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
-    { 2, 0, -1, 1, -1, -1, -1 },
+    { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -669,7 +669,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
-    { 2, 0, -1, 1, -1, -1, -1 },
+    { -2, -2, -1, -2, -1, -1, -1 },
     { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -680,8 +680,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
-    { 4, 3, -1, 2, 2, 2, 2 },
-    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
+    { 4, 4, -1, 2, 2, 2, 2 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
   },
   /* 4: Stylus Color 800 */
@@ -1399,7 +1399,7 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
       *count = 0;
       while(res->hres)
 	{
-	  if (escp2_ink_type(model, res->hres, !res->softweave) >= 0)
+	  if (escp2_ink_type(model, res->hres, !res->softweave) != -1)
 	    {
 	      int nozzles = escp2_nozzles(model);
 	      int separation = escp2_nozzle_separation(model);
@@ -1492,7 +1492,7 @@ escp2_default_resolution(const printer_t *printer)
   const res_t *res = &(escp2_reslist[0]);
   while (res->hres)
     {
-      if (escp2_ink_type(printer->model, res->hres, !res->softweave) >= 0)
+      if (escp2_ink_type(printer->model, res->hres, !res->softweave) != -1)
 	{
 	  int nozzles = escp2_nozzles(printer->model);
 	  int separation = escp2_nozzle_separation(printer->model);
@@ -1608,7 +1608,7 @@ escp2_set_dot_size(FILE *prn, escp_init_t *init)
   /* Dot size */
   int drop_size = escp2_ink_type(init->model, init->xdpi,
 				 !init->use_softweave);
-  if (drop_size != -1)
+  if (drop_size >= 0)
     fprintf(prn, "\033(e\002%c%c%c", 0, 0, drop_size);
 }
 
