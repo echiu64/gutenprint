@@ -1052,7 +1052,7 @@ stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
 }
 
 void
-stp_prune_inactive_options(stp_vars_t v)
+stpi_prune_inactive_options(stp_vars_t v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;

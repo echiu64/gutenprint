@@ -1500,7 +1500,7 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   const paper_t *media = get_media_type(media_type,caps);
   const lexmark_inkparam_t *ink_parameter = lexmark_get_ink_parameter(ink_type, output_type, caps, nv);
 
-  stp_prune_inactive_options(nv);
+  stpi_prune_inactive_options(nv);
 
 #ifdef DEBUG
   dbgfileprn = lex_open_tmp_file(); /* open file with xx */

@@ -496,6 +496,49 @@ stpui_create_curve(option_t *opt,
     }
 }
 
+static int
+checkbox_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  GtkWidget *checkbox = GTK_WIDGET(opt->info.bool.checkbox);
+  opt->info.bool.current =
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkbox));
+  stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
+			    opt->info.bool.current);
+  invalidate_preview_thumbnail();
+  update_adjusted_thumbnail();
+  return 1;
+}  
+
+static void
+stpui_create_boolean(option_t *opt,
+		     GtkTable *table,
+		     gint column,
+		     gint row,
+		     const gchar *text,
+		     int deflt,
+		     gboolean is_optional)
+{
+  opt->checkbox = gtk_check_button_new();
+  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
+			    column, column + 1, row, row + 1);
+  if (is_optional)
+    gtk_widget_show(opt->checkbox);
+  else
+    gtk_widget_hide(opt->checkbox);
+
+  opt->info.bool.checkbox =
+    gtk_toggle_button_new_with_label(_(opt->fast_desc->text));
+  gtk_table_attach_defaults(GTK_TABLE(table), opt->info.bool.checkbox,
+			    column + 1, column + 3, row, row + 1);
+  gtk_widget_show(opt->info.bool.checkbox);
+  gtk_toggle_button_set_active
+    (GTK_TOGGLE_BUTTON(opt->info.bool.checkbox),
+     stp_get_boolean_parameter(pv->v, opt->fast_desc->name));
+  gtk_signal_connect(GTK_OBJECT(opt->info.bool.checkbox), "toggled",
+		     GTK_SIGNAL_FUNC(checkbox_callback), opt);
+}
+
 static void
 build_printer_combo(void)
 {
@@ -600,6 +643,9 @@ populate_options(const stp_vars_t v)
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
 	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.bool.checkbox));
+	      break;
 	    default:
 	      break;
 	    }
@@ -652,6 +698,11 @@ populate_options(const stp_vars_t v)
 	  opt->info.curve.is_visible = FALSE;
 	  opt->is_active = desc.is_active;
 	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  opt->info.bool.checkbox = NULL;
+	  opt->info.bool.current = 0;
+	  opt->info.bool.deflt = desc.deflt.boolean;
+	  opt->is_active = desc.is_active;
 	default:
 	  break;
 	}
@@ -686,6 +737,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	    case STP_PARAMETER_TYPE_CURVE:
+	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      counts[desc->p_level][desc->p_type]++;
 	      break;
 	    default:
@@ -761,13 +813,22 @@ populate_option_table(GtkWidget *table, int p_class)
 		stp_set_curve_parameter_active(pv->v, desc->name,
 					       STP_PARAMETER_INACTIVE);
 	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      opt->info.bool.current =
+		stp_get_boolean_parameter(pv->v, opt->fast_desc->name);
+	      fprintf(stderr, "boolean %d default %d\n",
+		      opt->info.bool.current, opt->info.bool.deflt);
+	      stpui_create_boolean(opt, GTK_TABLE(table), 0,
+				   vpos[desc->p_level][desc->p_type]++,
+				   _(desc->text), opt->info.bool.deflt,
+				   !(desc->is_mandatory));
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_boolean_parameter_active(pv->v, desc->name,
+						 STP_PARAMETER_INACTIVE);
+	      break;
 	    case STP_PARAMETER_TYPE_INT:
 	      stp_set_int_parameter_active(pv->v, opt->fast_desc->name,
 					   STP_PARAMETER_INACTIVE);
-	      break;
-	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
-					       STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_RAW:
 	      stp_set_raw_parameter_active(pv->v, opt->fast_desc->name,
@@ -797,26 +858,23 @@ set_options_active(void)
     {
       option_t *opt = &(current_options[i]);
       const stp_parameter_t *desc = opt->fast_desc;
+      GtkObject *adj;
       switch (desc->p_type)
 	{
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  build_a_combo(opt);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
-	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+	  adj = opt->info.flt.adjustment;
+	  if (adj)
 	    {
-	      GtkObject *adj = opt->info.flt.adjustment;
-	      if (adj)
+	      if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
 		{
 		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
 		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
 		  gtk_widget_show(GTK_WIDGET(SCALE_ENTRY_SPINBUTTON(adj)));
 		}
-	    }
-	  else
-	    {
-	      GtkObject *adj = opt->info.flt.adjustment;
-	      if (adj)
+	      else
 		{
 		  gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_LABEL(adj)));
 		  gtk_widget_hide(GTK_WIDGET(SCALE_ENTRY_SCALE(adj)));
@@ -835,6 +893,15 @@ set_options_active(void)
 	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.label));
 	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.button));
 	      gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
+	    }
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+	    {
+	      gtk_widget_show(GTK_WIDGET(opt->info.bool.checkbox));
+	    }
+	  else
+	    {
+	      gtk_widget_hide(GTK_WIDGET(opt->info.bool.checkbox));
 	    }
 	  break;
 	default:
@@ -2195,6 +2262,14 @@ set_curve_active(option_t *opt, gboolean active, gboolean do_toggle)
 }
 
 static void
+set_bool_active(option_t *opt, gboolean active, gboolean do_toggle)
+{
+  if (do_toggle)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.bool.checkbox), active);
+}
+
+static void
 do_color_updates (void)
 {
   int i;
@@ -2228,6 +2303,13 @@ do_color_updates (void)
 		set_combo_active(opt, TRUE, TRUE);
 	      else
 		set_combo_active(opt, FALSE, TRUE);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      if (stp_check_boolean_parameter(pv->v, opt->fast_desc->name,
+					      STP_PARAMETER_ACTIVE))
+		set_bool_active(opt, TRUE, TRUE);
+	      else
+		set_bool_active(opt, FALSE, TRUE);
 	      break;
 	    default:
 	      break;
@@ -3685,6 +3767,19 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
 					  STP_PARAMETER_ACTIVE);
 	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  set_bool_active(opt, TRUE, FALSE);
+	  if (! stp_check_boolean_parameter(pv->v, opt->fast_desc->name,
+					    STP_PARAMETER_INACTIVE))
+	    {
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
+					desc.deflt.boolean);
+	      stp_parameter_description_free(&desc);
+	    }
+	  stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_ACTIVE);
+	  break;
 	default:
 	  break;
 	}
@@ -3707,6 +3802,11 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  set_combo_active(opt, FALSE, FALSE);
 	  stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
 					  STP_PARAMETER_INACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN: /* ??? */
+	  set_bool_active(opt, FALSE, FALSE);
+	  stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_INACTIVE);
 	  break;
 	default:
 	  break;

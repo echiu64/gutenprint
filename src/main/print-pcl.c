@@ -2022,7 +2022,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stp_curve_t   lum_adjustment;
   stp_curve_t   hue_adjustment;
 
-  stp_prune_inactive_options(nv);
+  stpi_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stpi_eprintf(nv, "Print options not verified; cannot print.\n");
@@ -2279,56 +2279,19 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     stpi_putc(2, v);				/* Format 2 (Complex Direct Planar) */
     stpi_putc(planes, v);				/* # output planes */
 
-    if (planes != 3) {
-      stpi_putc(xdpi >> 8, v);			/* Black resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      if (do_cretb){
-	stpi_putc(2, v);
-      }else{
-	stpi_putc(do_cret ? 4 : 2, v);
-      }
+    if (planes != 3) {		/* Black resolution */
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, (do_cretb || !do_cret) ? 2 : 4);
     }
 
-    if (planes != 1) {
-      stpi_putc(xdpi >> 8, v);			/* Cyan resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      stpi_putc(do_cret ? 4 : 2, v);
-
-      stpi_putc(xdpi >> 8, v);			/* Magenta resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      stpi_putc(do_cret ? 4 : 2, v);
-
-      stpi_putc(xdpi >> 8, v);			/* Yellow resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      stpi_putc(do_cret ? 4 : 2, v);
+    if (planes != 1) {		/* Cyan, magenta, yellow resolutions */
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
     }
-    if (planes == 6)
+    if (planes == 6)		/* LC, LM resolutions */
     {
-      stpi_putc(xdpi >> 8, v);			/* Light Cyan resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      stpi_putc(do_cret ? 4 : 2, v);
-
-      stpi_putc(xdpi >> 8, v);			/* Light Magenta resolution */
-      stpi_putc(xdpi, v);
-      stpi_putc(ydpi >> 8, v);
-      stpi_putc(ydpi, v);
-      stpi_putc(0, v);
-      stpi_putc(do_cret ? 4 : 2, v);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
+      stpi_send_command(v, "", "HHH", xdpi, ydpi, do_cret ? 4 : 2);
     }
   }
   else

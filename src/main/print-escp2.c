@@ -66,6 +66,7 @@
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
 static void flush_pass(stpi_softweave_t *sw, int passno, int vertical_subpass);
+static void escp2_describe_resolution(const stp_vars_t v, int *x, int *y);
 
 static const int dotidmap[] =
 { 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
@@ -135,6 +136,7 @@ typedef struct escp2_init
   int use_fast_360;
   int print_op;
   int rescale_density;
+  int unidirectional;
   const res_t *res;
   const escp2_inkname_t *inkname;
   const input_slot_t *input_slot;
@@ -184,6 +186,12 @@ static const stp_parameter_t the_parameters[] =
   {
     "Resolution", N_("Resolution"),
     N_("Resolution and quality of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
+  {
+    "PrintingDirection", N_("Printing Direction"),
+    N_("Printing directional (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
@@ -596,6 +604,18 @@ escp2_parameters(const stp_vars_t v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "PrintingDirection") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+	(description->bounds.str, "Auto", _("Auto"));
+      stp_string_list_add_string
+	(description->bounds.str, "Bidirectional", _("Bidirectional"));
+      stp_string_list_add_string
+	(description->bounds.str, "Unidirectional", _("Unidirectional"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
 }
 
 static const res_t *
@@ -825,7 +845,7 @@ print_debug_params(const escp2_init_t *init)
   print_remote_int_param(init->v, "Vertical_passes", init->res->vertical_passes);
   print_remote_int_param(init->v, "Vertical_oversample", init->res->vertical_oversample);
   print_remote_int_param(init->v, "Bits", init->bits);
-  print_remote_int_param(init->v, "Unidirectional", init->res->unidirectional);
+  print_remote_int_param(init->v, "Unidirectional", init->unidirectional);
   print_remote_int_param(init->v, "Resid", init->res->resid);
   print_remote_int_param(init->v, "Drop Size", init->drop_size);
   print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
@@ -950,7 +970,7 @@ escp2_set_microweave(const escp2_init_t *init)
 static void
 escp2_set_printhead_speed(const escp2_init_t *init)
 {
-  if (init->res->unidirectional)
+  if (init->unidirectional)
     {
       stpi_send_command(init->v, "\033U", "c", 1);
       if (init->xdpi > escp2_enhanced_resolution(init->model, init->v))
@@ -1467,6 +1487,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   int 		channels_in_use;
   int 		channel_limit;
   const char *input_slot = stp_get_string_parameter(v, "InputSlot");
+  const char *direction = stp_get_string_parameter(v, "PrintingDirection");
 
   if (!stp_verify(v))
     {
@@ -1559,6 +1580,15 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   physical_ydpi = ydpi;
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
+
+  if (strcmp(direction, "Unidirectional") == 0)
+    init.unidirectional = 1;
+  else if (strcmp(direction, "Bidirectional") == 0)
+    init.unidirectional = 0;
+  else if (xdpi >= 720 && ydpi >= 720)
+    init.unidirectional = 1;
+  else
+    init.unidirectional = 0;
 
   internal_imageable_area(v, 0, &page_left, &page_right,
 			  &page_bottom, &page_top);
@@ -1839,7 +1869,7 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
   int status;
   if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
-  stp_prune_inactive_options(nv);
+  stpi_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
   stp_vars_free(nv);
   return status;
@@ -1849,7 +1879,9 @@ static int
 escp2_job_start(const stp_vars_t v, stp_image_t *image)
 {
   stp_vars_t nv = stp_vars_create_copy(v);
-  int status = escp2_do_print(nv, image, OP_JOB_START);
+  int status;
+  stpi_prune_inactive_options(nv);
+  status = escp2_do_print(nv, image, OP_JOB_START);
   stp_vars_free(nv);
   return status;
 }
@@ -1858,7 +1890,9 @@ static int
 escp2_job_end(const stp_vars_t v, stp_image_t *image)
 {
   stp_vars_t nv = stp_vars_create_copy(v);
-  int status = escp2_do_print(nv, image, OP_JOB_END);
+  int status;
+  stpi_prune_inactive_options(nv);
+  status = escp2_do_print(nv, image, OP_JOB_END);
   stp_vars_free(nv);
   return status;
 }

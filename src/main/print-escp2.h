@@ -217,7 +217,6 @@ typedef struct
   int microweave;
   int vertical_passes;
   int vertical_oversample;
-  int unidirectional;
   int vertical_undersample;
   int vertical_denominator;
   int resid;

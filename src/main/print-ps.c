@@ -364,7 +364,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   if (!media_source)
     media_source = "";
 
-  stp_prune_inactive_options(nv);
+  stpi_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stpi_eprintf(nv, "Print options not verified; cannot print.\n");

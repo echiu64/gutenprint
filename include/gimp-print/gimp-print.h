@@ -556,129 +556,128 @@ stp_parameter_find_in_settings(const stp_vars_t v, const char *name);
 
 extern void stp_set_string_parameter(stp_vars_t v, const char *parameter,
 				     const char *value);
-extern void stp_set_default_string_parameter(stp_vars_t v,
-					     const char *parameter,
-					     const char *value);
 extern void stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 				       const char *value, int bytes);
-extern void stp_set_default_string_parameter_n(stp_vars_t v,
-					       const char *parameter,
-					       const char *value, int bytes);
-extern const char *stp_get_string_parameter(const stp_vars_t v,
-					    const char *param);
-extern void stp_clear_string_parameter(const stp_vars_t v, const char *param);
-extern void stp_set_string_parameter_active(const stp_vars_t v,
-					    const char *param,
-					    stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_string_parameter_active(const stp_vars_t v, const char *param);
-extern int stp_check_string_parameter(const stp_vars_t v, const char *param,
-				      stp_parameter_activity_t active);
-
 extern void stp_set_file_parameter(stp_vars_t v, const char *parameter,
 				   const char *value);
-extern void stp_set_default_file_parameter(stp_vars_t v,
-					   const char *parameter,
-					   const char *value);
 extern void stp_set_file_parameter_n(stp_vars_t v, const char *parameter,
 				     const char *value, int bytes);
-extern void stp_set_default_file_parameter_n(stp_vars_t v,
-					     const char *parameter,
-					     const char *value, int bytes);
-extern const char *stp_get_file_parameter(const stp_vars_t v,
-					  const char *param);
-extern void stp_clear_file_parameter(const stp_vars_t v, const char *param);
-extern void stp_set_file_parameter_active(const stp_vars_t v,
-					  const char *param,
-					  stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_file_parameter_active(const stp_vars_t v, const char *param);
-extern int stp_check_file_parameter(const stp_vars_t v, const char *param,
-				    stp_parameter_activity_t active);
-
 extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
-extern void stp_set_default_float_parameter(stp_vars_t v,
-					    const char *parameter,
-					    double value);
-extern double stp_get_float_parameter(const stp_vars_t v,
-					    const char *param);
-extern void stp_clear_float_parameter(const stp_vars_t v, const char *param);
-extern stp_parameter_activity_t
-stp_get_float_parameter_active(const stp_vars_t v, const char *param);
-extern void stp_set_float_parameter_active(const stp_vars_t v,
-					 const char *param,
-					 stp_parameter_activity_t active);
-extern int stp_check_float_parameter(const stp_vars_t v, const char *param,
-				     stp_parameter_activity_t active);
-extern void stp_scale_float_parameter(const stp_vars_t v, const char *param,
-				      double scale);
-
 extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
 				  int value);
-extern void stp_set_default_int_parameter(stp_vars_t v,
-					  const char *parameter,
-					  int value);
-extern int stp_get_int_parameter(const stp_vars_t v,
-				 const char *param);
-extern void stp_clear_int_parameter(const stp_vars_t v, const char *param);
-extern void stp_set_int_parameter_active(const stp_vars_t v,
-					 const char *param,
-					 stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_int_parameter_active(const stp_vars_t v, const char *param);
-extern int stp_check_int_parameter(const stp_vars_t v, const char *param,
-				   stp_parameter_activity_t active);
-
 extern void stp_set_boolean_parameter(stp_vars_t v, const char *parameter,
 				      int value);
-extern void stp_set_default_boolean_parameter(stp_vars_t v,
-					      const char *parameter,
-					      int value);
-extern int stp_get_boolean_parameter(const stp_vars_t v,
-				     const char *param);
-extern void stp_clear_boolean_parameter(const stp_vars_t v, const char *param);
-extern void stp_set_boolean_parameter_active(const stp_vars_t v,
-					     const char *param,
-					     stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_boolean_parameter_active(const stp_vars_t v, const char *param);
-extern int stp_check_boolean_parameter(const stp_vars_t v, const char *param,
-				       stp_parameter_activity_t active);
-
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 				    const stp_curve_t value);
-extern void stp_set_default_curve_parameter(stp_vars_t v,
-					    const char *parameter,
-					    const stp_curve_t value);
-extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
-						 const char *param);
-extern void stp_clear_curve_parameter(const stp_vars_t v, const char *param);
-extern void stp_set_curve_parameter_active(const stp_vars_t v,
-					   const char *param,
-					   stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_curve_parameter_active(const stp_vars_t v, const char *param);
-extern int stp_check_curve_parameter(const stp_vars_t v, const char *param,
-				     stp_parameter_activity_t active);
-
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
 				  const void *value, int bytes);
 
+extern void stp_scale_float_parameter(const stp_vars_t v, const char *param,
+				      double scale);
+
+extern void stp_set_default_string_parameter(stp_vars_t v,
+					     const char *parameter,
+					     const char *value);
+extern void stp_set_default_string_parameter_n(stp_vars_t v,
+					       const char *parameter,
+					       const char *value, int bytes);
+extern void stp_set_default_file_parameter(stp_vars_t v,
+					   const char *parameter,
+					   const char *value);
+extern void stp_set_default_file_parameter_n(stp_vars_t v,
+					     const char *parameter,
+					     const char *value, int bytes);
+extern void stp_set_default_float_parameter(stp_vars_t v,
+					    const char *parameter,
+					    double value);
+extern void stp_set_default_int_parameter(stp_vars_t v,
+					  const char *parameter,
+					  int value);
+extern void stp_set_default_boolean_parameter(stp_vars_t v,
+					      const char *parameter,
+					      int value);
+extern void stp_set_default_curve_parameter(stp_vars_t v,
+					    const char *parameter,
+					    const stp_curve_t value);
 extern void stp_set_default_raw_parameter(stp_vars_t v,
 					  const char *parameter,
 					  const void *value, int bytes);
+
+extern const char *stp_get_string_parameter(const stp_vars_t v,
+					    const char *param);
+extern const char *stp_get_file_parameter(const stp_vars_t v,
+					  const char *param);
+extern double stp_get_float_parameter(const stp_vars_t v,
+					    const char *param);
+extern int stp_get_int_parameter(const stp_vars_t v,
+				 const char *param);
+extern int stp_get_boolean_parameter(const stp_vars_t v,
+				     const char *param);
+extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
+						 const char *param);
 extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
 					      const char *param);
+
+extern void stp_clear_string_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_file_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_float_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_int_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_boolean_parameter(const stp_vars_t v, const char *param);
+extern void stp_clear_curve_parameter(const stp_vars_t v, const char *param);
 extern void stp_clear_raw_parameter(const stp_vars_t v, const char *param);
+
+extern void stp_set_string_parameter_active(const stp_vars_t v,
+					    const char *param,
+					    stp_parameter_activity_t active);
+extern void stp_set_file_parameter_active(const stp_vars_t v,
+					  const char *param,
+					  stp_parameter_activity_t active);
+extern void stp_set_float_parameter_active(const stp_vars_t v,
+					 const char *param,
+					 stp_parameter_activity_t active);
+extern void stp_set_int_parameter_active(const stp_vars_t v,
+					 const char *param,
+					 stp_parameter_activity_t active);
+extern void stp_set_boolean_parameter_active(const stp_vars_t v,
+					     const char *param,
+					     stp_parameter_activity_t active);
+extern void stp_set_curve_parameter_active(const stp_vars_t v,
+					   const char *param,
+					   stp_parameter_activity_t active);
 extern void stp_set_raw_parameter_active(const stp_vars_t v,
 					 const char *param,
 					 stp_parameter_activity_t active);
-extern stp_parameter_activity_t
-stp_get_raw_parameter_active(const stp_vars_t v, const char *param);
+
+extern int stp_check_string_parameter(const stp_vars_t v, const char *param,
+				      stp_parameter_activity_t active);
+extern int stp_check_file_parameter(const stp_vars_t v, const char *param,
+				    stp_parameter_activity_t active);
+extern int stp_check_float_parameter(const stp_vars_t v, const char *param,
+				     stp_parameter_activity_t active);
+extern int stp_check_int_parameter(const stp_vars_t v, const char *param,
+				   stp_parameter_activity_t active);
+extern int stp_check_boolean_parameter(const stp_vars_t v, const char *param,
+				       stp_parameter_activity_t active);
+extern int stp_check_curve_parameter(const stp_vars_t v, const char *param,
+				     stp_parameter_activity_t active);
 extern int stp_check_raw_parameter(const stp_vars_t v, const char *param,
 				   stp_parameter_activity_t active);
 
+extern stp_parameter_activity_t
+stp_get_string_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_file_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_float_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_int_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_boolean_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_curve_parameter_active(const stp_vars_t v, const char *param);
+extern stp_parameter_activity_t
+stp_get_raw_parameter_active(const stp_vars_t v, const char *param);
 
 
 /****************************************************************
@@ -690,13 +689,12 @@ extern int stp_check_raw_parameter(const stp_vars_t v, const char *param,
 extern stp_string_list_t stp_string_list_create(void);
 extern void stp_string_list_free(stp_string_list_t list);
 
-extern stp_param_string_t *
-stp_string_list_param(const stp_string_list_t list, size_t element);
+extern stp_param_string_t *stp_string_list_param(const stp_string_list_t,
+						 size_t element);
 
 extern size_t stp_string_list_count(const stp_string_list_t list);
 
-extern stp_string_list_t
-stp_string_list_create_copy(const stp_string_list_t list);
+extern stp_string_list_t stp_string_list_create_copy(const stp_string_list_t);
 
 extern void stp_string_list_add_string(stp_string_list_t list,
 				       const char *name, const char *text);
@@ -889,7 +887,7 @@ extern int stp_curve_interpolate_value(const stp_curve_t curve,
  * that would place points outside of the bounds of the curve will be clipped
  * to the bounds.
  *
- * The number of points must not exceed 65536 (65535 for a wrap-mode curve).
+ * The number of points must not exceed 1048576.
  */
 extern int stp_curve_resample(stp_curve_t curve, size_t points);
 
@@ -959,9 +957,9 @@ extern stp_curve_t stp_curve_create_read_string(const char *text);
  *
  * A new curve is created and returned.
  *
- * The number of points must not exceed 65536 (65535 for a wrap-mode curve);
+ * The number of points must not exceed 1048576;
  * if the number of points requested is -1, the number of points will not
- * be allowed to exceed 65535 or 65536.
+ * be allowed to exceed 1048576.
  */
 
 extern int stp_curve_compose(stp_curve_t *retval,
@@ -1077,11 +1075,6 @@ extern int stp_end_job(const stp_vars_t, stp_image_t *image);
  * Set the encoding that all translated strings are output in.
  */
 extern const char *stp_set_output_codeset(const char *codeset);
-
-/*
- * Remove inactive and unclaimed options from the list
- */
-extern void stp_prune_inactive_options(stp_vars_t v);
 
 #ifdef __cplusplus
   }
