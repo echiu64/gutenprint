@@ -111,6 +111,7 @@ BUILD_CUPS=no
 BUILD_TRANSLATED_PPDS=yes
 USE_LEVEL3_PS=no
 BUILD_FOOMATIC=no
+BUILD_IJS=no
 BUILD_TEST=no
 BUILD_TESTPATTERN=no
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
@@ -200,6 +201,17 @@ AC_ARG_WITH(foomatic,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
+dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
+
+AC_MSG_CHECKING([whether to build IJS driver])
+AC_ARG_WITH(ijs,
+[  --with-ijs              build IJS driver [default=${BUILD_IJS}]],
+  [case "${withval}" in
+    yes) BUILD_IJS="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_IJS="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-ijs]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_IJS}])])
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([whether to turn on debugging in build])
@@ -357,6 +369,14 @@ if test x${BUILD_FOOMATIC} = xyes ; then
   AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
+  fi
+fi
+
+dnl ijs checks
+if test x${BUILD_IJS} = xyes ; then
+  AC_CHECK_HEADERS(ijs_server.h, HAVE_IJS_H=true, HAVE_IJS_H=false)
+  if test x${HAVE_IJS_H} = xfalse ; then
+    AC_MSG_WARN(Cannot find ijs_server.h; attempt to build IJS driver will fail)
   fi
 fi
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
@@ -591,6 +611,11 @@ if test x${BUILD_FOOMATIC} = xyes ; then
 fi
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
+if test x${BUILD_IJS} = xyes ; then
+  IJS_BIN='$(IJS_BIN)'
+fi
+AM_CONDITIONAL(BUILD_IJS, test x${BUILD_IJS} = xyes)
+
 if test x${BUILD_CUPS} = xyes ; then
   CUPS_BIN='$(CUPS_BIN)'
   CUPS_BACKEND_BIN='$(CUPS_BACKEND_BIN)'
@@ -761,6 +786,8 @@ AC_SUBST(CUPS_PPD_PS_LEVEL)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
+AC_SUBST(IJS_BIN)
+AC_SUBST(IJS_INSTALL)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
@@ -812,7 +839,7 @@ man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
 src/Makefile src/escputil/Makefile src/gimp/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 cups-gimpprint.list man/cups-calibrate.8 src/testpattern/Makefile
-src/cups/Makefile src/foomatic/Makefile test/Makefile
+src/cups/Makefile src/foomatic/Makefile src/ijs/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 src/main/Makefile src/main/gimpprint-config 

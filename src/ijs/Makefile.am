@@ -23,10 +23,28 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-NONGIMP_SUBDIRS =
-## @-@-@-@-@ NO-GIMP @-@-@-@-@
-NONGIMP_SUBDIRS = ijs cups foomatic ghost testpattern
-## @-@-@-@-@ YES-GIMP @-@-@-@-@
-SUBDIRS = printdef main escputil gimp $(NONGIMP_SUBDIRS)
+
+## Variables
+
+AM_CFLAGS = $(GNUCFLAGS)
+INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
+LIBS = @LIBS@ $(INTLLIBS)
+
+## Programs
+
+IJS_BIN = ijsgimpprint
+
+bin_PROGRAMS = @IJS_BIN@
+
+EXTRA_PROGRAMS = ijsgimpprint
+
+ijsgimpprint_LDADD = $(LIBGIMPPRINT_LIBS) -lijs
+ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+$(LIBGIMPPRINT_LIBS):
+	cd ../main ; \
+	$(MAKE)
+
+## Clean
 
 MAINTAINERCLEANFILES = Makefile.in
