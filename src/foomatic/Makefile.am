@@ -82,7 +82,7 @@ clean-local:
 
 foomatic-data: foomatic-stamp
 
-foomatic-stamp: foomatic-generator $(EXTRA_PROGRAMS)
+foomatic-stamp: foomatic-generator foomatic-printermap $(EXTRA_PROGRAMS)
 	-$(RM) -r foomatic-db
 	./foomatic-generator
 	touch foomatic-stamp
