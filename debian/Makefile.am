@@ -40,7 +40,6 @@ EXTRA_DIST = \
 	escputil.install \
 	foomatic-db-gimp-print.install \
 	gimp1.2-print.docs \
-	gimp1.2-print.files \
 	gimp1.2-print.install \
 	gimp1.2-print.postrm \
 	gimp1.2-print.preinst \
