@@ -76,7 +76,7 @@ AM_CPPFLAGS =\
 print_LDADD = $(GIMP_LIBS)
 
 GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
-	gdevstp.c gs-stp.pdq com-stp.ppd devs.mak.addon-5.10 \
+	gdevstp.c devs.mak.addon-5.10 \
 	debian-patch debian-patch-stp $(GCOPY)
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
