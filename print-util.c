@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.45  1999/12/25 00:41:01  rlk
+ *   some minor improvement
+ *
  *   Revision 1.44  1999/12/24 12:57:38  rlk
  *   Reduce grain; improve red
  *
@@ -963,15 +966,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
     }
 
-
     density = (c + m + y) / horizontal_overdensity;
     UPDATE_COLOR(c);
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
-#if 0
     density += (c + m + y) / horizontal_overdensity;
     density /= 2;
-#endif
 
     /*****************************************************************
      * Cyan
