@@ -833,7 +833,7 @@ do {									\
     }									\
   else									\
     {									\
-      int compare = (comp0 * d->l##r##_level) >> 16;			\
+      long long compare = (comp0 * d->l##r##_level) >> 16;		\
       if (r <= (d->l##r##_level))					\
 	{								\
 	  if (r > compare)						\
@@ -844,7 +844,7 @@ do {									\
 	}								\
       else if (r > compare)						\
 	{								\
-	  int cutoff = ((density - d->l##r##_level) * 65536 /		\
+	  long long cutoff = ((density - d->l##r##_level) * 65536ll /	\
 			d->l##r##_level);				\
 	  int sub;							\
 	  if (cutoff >= 0)						\
@@ -1876,6 +1876,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.19  2000/04/06 00:39:14  rlk
+ *   Fix overlap problem
+ *
  *   Revision 1.18  2000/03/22 00:53:06  rlk
  *   Some more minor dithering fixup
  *
