@@ -82,6 +82,7 @@ CLEANFILES = \
  $(srcdir)/gdevstp-weave.c \
  $(srcdir)/gdevstp-canon.c \
  $(srcdir)/gdevstp-dither.c \
+ $(srcdir)/gdevstp-dither-matrices.c \
  $(srcdir)/gdevstp-escp2.c \
  $(srcdir)/gdevstp-lexmark.c \
  $(srcdir)/gdevstp-pcl.c \
