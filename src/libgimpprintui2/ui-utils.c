@@ -177,12 +177,9 @@ dialog_create_action_areav (GtkDialog *dialog,
 /**
  * dialog_new:
  * @title: The dialog's title which will be set with gtk_window_set_title().
- * @wmclass_name: The dialog's @wmclass_name which will be set with
- *                gtk_window_set_wmclass(). The @wmclass_class will be
- *                automatically set to "Gimp".
  * @position: The dialog's initial position which will be set with
  *            gtk_window_set_position().
- * @allow_shrink: The dialog's @allow_shrink flag, ...
+ * @resizable: Is the dialog resizable?, ...
  * @allow_grow: ... it't @allow_grow flag and ...
  * @auto_shrink: ... it's @auto_shrink flag which will all be set with
  *               gtk_window_set_policy().
@@ -199,11 +196,8 @@ dialog_create_action_areav (GtkDialog *dialog,
  */
 GtkWidget *
 stpui_dialog_new (const gchar       *title,
-		  const gchar       *wmclass_name,
 		  GtkWindowPosition  position,
-		  gint               allow_shrink,
-		  gint               allow_grow,
-		  gint               auto_shrink,
+		  gboolean           resizable,
 
 		  /* specify action area buttons as va_list:
 		   *  const gchar    *label,
@@ -220,17 +214,14 @@ stpui_dialog_new (const gchar       *title,
   GtkWidget *dialog;
   va_list    args;
 
-  va_start (args, auto_shrink);
+  va_start (args, resizable);
 
   g_return_val_if_fail (title != NULL, NULL);
-  g_return_val_if_fail (wmclass_name != NULL, NULL);
 
   dialog = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (dialog), title);
-  gtk_window_set_wmclass (GTK_WINDOW (dialog), wmclass_name, "Gimp");
   gtk_window_set_position (GTK_WINDOW (dialog), position);
-  gtk_window_set_policy (GTK_WINDOW (dialog),
-			 allow_shrink, allow_grow, auto_shrink);
+  gtk_window_set_resizable (GTK_WINDOW (dialog), resizable);
 
   /*  prepare the action_area  */
   dialog_create_action_areav (GTK_DIALOG (dialog), args);
@@ -599,7 +590,7 @@ stpui_table_attach_aligned (GtkTable    *table,
 
   gtk_table_attach (table, widget, column + 1, column + 1 + colspan,
 		    row, row + 1,
-		    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 
   gtk_widget_show (widget);
 }
@@ -813,8 +804,9 @@ stpui_create_new_combo(option_t *option, GtkWidget *table,
   GtkWidget *combo = gtk_combo_new();
 
   option->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), option->checkbox,
-			    hpos, hpos + 1, vpos, vpos + 1);
+  gtk_table_attach(GTK_TABLE(table), option->checkbox,
+		   hpos, hpos + 1, vpos, vpos + 1,
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
 
   option->info.list.combo = combo;
   gtk_container_add(GTK_CONTAINER(event_box), combo);
@@ -871,8 +863,9 @@ stpui_create_scale_entry(option_t    *opt,
 			 gboolean     is_optional)
 {
   opt->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
-			    column, column + 1, row, row + 1);
+  gtk_table_attach(GTK_TABLE(table), opt->checkbox,
+		   column, column + 1, row, row + 1,
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   opt->info.flt.adjustment =
     stpui_scale_entry_new(table, column, row, text, scale_usize,
 			  spinbutton_usize, value, lower, upper,

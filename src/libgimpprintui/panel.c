@@ -491,8 +491,9 @@ stpui_create_curve(option_t *opt,
 {
   double lower, upper;
   opt->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
-			    column, column + 1, row, row + 1);
+  gtk_table_attach(GTK_TABLE(table), opt->checkbox,
+		   column, column + 1, row, row + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   if (is_optional)
     gtk_widget_show(opt->checkbox);
   else
@@ -525,7 +526,6 @@ stpui_create_curve(option_t *opt,
 		     _("Cancel"), cancel_curve_callback,
 		     opt, NULL, NULL, FALSE, FALSE,
 		     NULL);
-  gtk_window_set_policy(GTK_WINDOW(opt->info.curve.dialog), 1, 1, 1);
   opt->info.curve.gamma_curve = gtk_gamma_curve_new();
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(opt->info.curve.dialog)->vbox),
 		     opt->info.curve.gamma_curve, TRUE, TRUE, 0);
@@ -610,8 +610,9 @@ stpui_create_boolean(option_t *opt,
 		     gboolean is_optional)
 {
   opt->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
-			    column, column + 1, row, row + 1);
+  gtk_table_attach(GTK_TABLE(table), opt->checkbox,
+		   column, column + 1, row, row + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   if (is_optional)
     gtk_widget_show(opt->checkbox);
   else
@@ -619,8 +620,9 @@ stpui_create_boolean(option_t *opt,
 
   opt->info.bool.checkbox =
     gtk_toggle_button_new_with_label(_(opt->fast_desc->text));
-  gtk_table_attach_defaults(GTK_TABLE(table), opt->info.bool.checkbox,
-			    column + 1, column + 3, row, row + 1);
+  gtk_table_attach(GTK_TABLE(table), opt->info.bool.checkbox,
+		   column + 1, column + 3, row, row + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_widget_show(opt->info.bool.checkbox);
   gtk_toggle_button_set_active
     (GTK_TOGGLE_BUTTON(opt->info.bool.checkbox),
@@ -924,8 +926,9 @@ populate_option_table(GtkWidget *table, int p_class)
       if (level_count > 0 && current_pos > 0)
 	{
 	  GtkWidget *sep = gtk_hseparator_new();
-	  gtk_table_attach_defaults(GTK_TABLE(table), sep, 0, 4,
-				    current_pos, current_pos + 1);
+	  gtk_table_attach(GTK_TABLE(table), sep, 0, 4,
+			   current_pos, current_pos + 1,
+			   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	  if (i <= MAXIMUM_PARAMETER_LEVEL)
 	    gtk_widget_show(sep);
 	  current_pos++;
@@ -1172,7 +1175,6 @@ create_top_level_structure(void)
 		      NULL, 1, NULL, FALSE, TRUE,
 
 		      NULL);
-  gtk_window_set_policy(GTK_WINDOW(print_dialog), 1, 1, 1);
 
   g_free (plug_in_name);
 
@@ -1292,7 +1294,7 @@ create_paper_size_frame(void)
   int vpos = 0;
 
   frame = gtk_frame_new (_("Paper Size"));
-  gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (right_vbox), frame, FALSE, TRUE, 0);
   gtk_widget_show (frame);
 
   vbox = gtk_vbox_new (FALSE, 2);
@@ -1364,7 +1366,7 @@ create_positioning_frame (void)
   GtkWidget *sep;
 
   frame = gtk_frame_new (_("Image Position"));
-  gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (right_vbox), frame, FALSE, TRUE, 0);
   gtk_widget_show (frame);
 
   table = gtk_table_new (1, 1, FALSE);
@@ -1466,7 +1468,6 @@ create_printer_dialog (void)
 				  NULL, 1, NULL, FALSE, TRUE,
 
 				  NULL);
-  gtk_window_set_policy(GTK_WINDOW(setup_dialog), 1, 1, 1);
 
   /*
    * Top-level table for dialog.
@@ -1700,13 +1701,12 @@ create_new_printer_dialog (void)
 
   new_printer_dialog =
     stpui_dialog_new (_("Define New Printer"), "print",
-                     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+                     GTK_WIN_POS_MOUSE, FALSE, FALSE, FALSE,
                      _("OK"), new_printer_ok_callback,
 		     NULL, NULL, NULL, TRUE, FALSE,
                      _("Cancel"), gtk_widget_hide,
                      NULL, 1, NULL, FALSE, TRUE,
 		     NULL);
-  gtk_window_set_policy(GTK_WINDOW(new_printer_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -1733,11 +1733,10 @@ create_about_dialog (void)
   GtkWidget *label;
   about_dialog =
     stpui_dialog_new (_("About Gimp-Print " PLUG_IN_VERSION), "print",
-		      GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+		      GTK_WIN_POS_MOUSE, FALSE, FALSE, FALSE,
 		      _("OK"), gtk_widget_hide,
 		      NULL, 1, NULL, TRUE, TRUE,
 		      NULL);
-  gtk_window_set_policy(GTK_WINDOW(about_dialog), 1, 1, 1);
 
   label = gtk_label_new
     (_("Gimp-Print Version " PLUG_IN_VERSION "\n"
@@ -1776,6 +1775,7 @@ create_printer_settings_frame (void)
   GtkWidget *printer_hbox;
   GtkWidget *button;
   GtkWidget *event_box;
+  GtkWidget *scrolled_window;
   gint vpos = 0;
 
   create_printer_dialog ();
@@ -1808,8 +1808,9 @@ create_printer_settings_frame (void)
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Printer Model:"),
 			     0.0, 0.0, printer_model_label, 1, TRUE);
   printer_hbox = gtk_hbox_new (TRUE, 4);
-  gtk_table_attach_defaults (GTK_TABLE (table), printer_hbox,
-			     1, 4, vpos, vpos + 1);
+  gtk_table_attach(GTK_TABLE (table), printer_hbox,
+		   1, 4, vpos, vpos + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   vpos += 2;
   gtk_widget_show (printer_hbox);
 
@@ -1843,7 +1844,8 @@ create_printer_settings_frame (void)
                       GTK_SIGNAL_FUNC (new_printer_open_callback), NULL);
 
   sep = gtk_hseparator_new ();
-  gtk_table_attach_defaults (GTK_TABLE (table), sep, 0, 5, vpos, vpos + 1);
+  gtk_table_attach (GTK_TABLE (table), sep, 0, 5, vpos, vpos + 1,
+		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   gtk_widget_show (sep);
   vpos++;
 
@@ -1851,8 +1853,15 @@ create_printer_settings_frame (void)
   gtk_table_set_col_spacings (GTK_TABLE (printer_features_table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (printer_features_table), 0);
   gtk_widget_show (printer_features_table);
-  gtk_table_attach_defaults(GTK_TABLE(table), printer_features_table,
+
+  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
+				 GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+					printer_features_table);
+  gtk_table_attach_defaults(GTK_TABLE(table), scrolled_window,
 			    0, 6, vpos, vpos + 1);
+  gtk_widget_show(scrolled_window);
 }
 
 static void
@@ -1916,7 +1925,7 @@ create_scaling_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   label = gtk_label_new ("Scale by:");
@@ -1991,6 +2000,7 @@ create_color_adjust_window (void)
   GtkWidget *table;
   GtkWidget *label;
   GtkWidget *event_box;
+  GtkWidget *scrolled_window;
 
   initialize_thumbnail();
 
@@ -2004,7 +2014,6 @@ create_color_adjust_window (void)
 		     NULL, 1, NULL, TRUE, TRUE,
 
 		     NULL);
-  gtk_window_set_policy(GTK_WINDOW(color_adjust_dialog), 1, 1, 1);
 
   table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -2013,7 +2022,7 @@ create_color_adjust_window (void)
 /*  gtk_table_set_row_spacing (GTK_TABLE (table), 8, 6); */
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (color_adjust_dialog)->vbox),
-		      table, FALSE, FALSE, 0);
+		      table, TRUE, TRUE, 0);
   gtk_widget_show (table);
 
   /*
@@ -2082,8 +2091,14 @@ create_color_adjust_window (void)
   gtk_table_set_row_spacings (GTK_TABLE (color_adjustment_table), 0);
   gtk_container_set_border_width (GTK_CONTAINER (color_adjustment_table), 4);
   gtk_widget_show (color_adjustment_table);
-  gtk_table_attach_defaults(GTK_TABLE(table), color_adjustment_table,
+  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
+				 GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+					color_adjustment_table);
+  gtk_table_attach_defaults(GTK_TABLE(table), scrolled_window,
 			    0, 2, 1, 2);
+  gtk_widget_show(scrolled_window);
 }
 
 static void
@@ -2113,7 +2128,7 @@ create_image_settings_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   /*
@@ -2128,7 +2143,7 @@ create_image_settings_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   label = gtk_label_new (_("Output Type:"));
@@ -2207,7 +2222,7 @@ create_units_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   label = gtk_label_new (_("Units:"));

@@ -586,7 +586,7 @@ stpui_table_attach_aligned (GtkTable    *table,
 
   gtk_table_attach (table, widget, column + 1, column + 1 + colspan,
 		    row, row + 1,
-		    GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 
   gtk_widget_show (widget);
 }
@@ -800,8 +800,9 @@ stpui_create_new_combo(option_t *option, GtkWidget *table,
   GtkWidget *combo = gtk_combo_new();
 
   option->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), option->checkbox,
-			    hpos, hpos + 1, vpos, vpos + 1);
+  gtk_table_attach(GTK_TABLE(table), option->checkbox,
+		   hpos, hpos + 1, vpos, vpos + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 
   option->info.list.combo = combo;
   gtk_container_add(GTK_CONTAINER(event_box), combo);
@@ -858,8 +859,9 @@ stpui_create_scale_entry(option_t    *opt,
 			 gboolean     is_optional)
 {
   opt->checkbox = gtk_check_button_new();
-  gtk_table_attach_defaults(GTK_TABLE(table), opt->checkbox,
-			    column, column + 1, row, row + 1);
+  gtk_table_attach(GTK_TABLE(table), opt->checkbox,
+		   column, column + 1, row, row + 1,
+		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   opt->info.flt.adjustment =
     stpui_scale_entry_new(table, column, row, text, scale_usize,
 			  spinbutton_usize, value, lower, upper,

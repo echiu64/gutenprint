@@ -175,11 +175,8 @@ extern void stpui_disable_help (void);
 extern void stpui_set_help_data (GtkWidget *widget, const gchar *tooltip);
 
 extern GtkWidget *stpui_dialog_new(const gchar       *title,
-				   const gchar       *wmclass_name,
 				   GtkWindowPosition  position,
-				   gint               allow_shrink,
-				   gint               allow_grow,
-				   gint               auto_shrink,
+				   gboolean           resizable,
 				   /* specify action area buttons as va_list:
 				    *  const gchar    *label,
 				    *  GtkSignalFunc   callback,
