@@ -71,6 +71,8 @@ const char *bad_curves[] =
 
 static const int bad_curve_count = sizeof(bad_curves) / sizeof(const char *);
 
+int global_error_count = 0;
+
 int
 main(int argc, char **argv)
 {
@@ -78,6 +80,7 @@ main(int argc, char **argv)
   int i;
   stp_curve_t curve1 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
   stp_curve_t curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  stp_curve_t curve3;
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
   tmp1 = stp_curve_print_string(curve1);
@@ -85,7 +88,7 @@ main(int argc, char **argv)
   if (! stp_curve_read_string(tmp1, curve2))
     {
       fprintf(stderr, "stp_curve_read_string failed\n");
-      return 1;
+      global_error_count++;
     }
   free(tmp1);
   stp_curve_resample(curve2, 95);
@@ -98,6 +101,7 @@ main(int argc, char **argv)
       if (stp_curve_read_string(bad_curves[i], curve2))
 	{
 	  printf("curve %d should have failed!\n", i);
+	  global_error_count++;
 	}
     }
   stp_curve_print(stdout, curve2);
@@ -108,9 +112,37 @@ main(int argc, char **argv)
       if (!stp_curve_read_string(good_curves[i], curve2))
 	{
 	  printf("curve %d should have passed!\n", i);
+	  global_error_count++;
+	  tmp1 = stp_curve_print_string(curve2);
+	  if (strcmp(tmp1, good_curves[i]))
+	    {
+	      printf("curve read/write miscompare\n");
+	      global_error_count++;
+	    }
+	  free(tmp1);
 	}
     }
   stp_curve_destroy(curve2);
+  curve1 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  if (!stp_curve_set_gamma(curve1, 64, 1.2))
+    {
+      printf("set_gamma failed!\n");
+      global_error_count++;
+    }
+  if (!stp_curve_set_gamma(curve2, 64, -1.2))
+    {
+      printf("set_gamma failed!\n");
+      global_error_count++;
+    }
+  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
+    {
+      printf("compose failed!\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve3);
+			 
+
   fprintf(stdout, "\n");
 
   return 0;
