@@ -153,8 +153,8 @@ main(int argc, char **argv)
 		{
 		  if (desc.is_mandatory)
 		    {
-		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			     driver, p->name, desc.deflt.str);
+		      printf("$defaults{'%s'}{'%s'} = '%d';\n",
+			     driver, p->name, desc.deflt.boolean);
 		    }
 		  else
 		    {
