@@ -1,4 +1,4 @@
-Gimp-Print 4.3.7, released January 4, 2003, is a development release of
+Gimp-Print 4.3.8, released January 6x, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -30,7 +30,7 @@ this package.
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.3.7 is considered to be an unstable release, as more
+Gimp-Print 4.3.8 is considered to be an unstable release, as more
 significant API changes have been introduced with relatively limited
 testing.  While most of the changes improve the clarity of the code,
 the limited testing and extensive nature of the changes suggests that
@@ -38,6 +38,83 @@ this release is likely to be quite unstable.  We recommend that only
 people who want access to these new API features for development use
 this release.  There are very significant user-visible changes over
 earlier 4.3 releases, and few changes over the 4.2 stable line.
+
+Gimp-Print 4.3.8 contains the following major changes over Gimp-Print
+4.3.7:
+
+1) Gimp-print now loads printer family drivers as modules, rather than
+   building them in monolithically.  The net effect is that if you do
+   not wish to run make install (i. e. you want to run programs out of
+   the build tree), you must set the STP_MODULE_PATH environment
+   variable to the directory (or search path) containing the loadable
+   modules.  This is usually .../src/main or ...src/main/.libs.
+
+   Other key components (color and dither algorithms) will be
+   similarly modularized in the future.  This is an intermediate
+   step.
+
+2) Gimp-print now loads printer and paper size definitions, and dither
+   matrices, from XML data files.  The net effect is that if you do
+   not wish to run make install (i. e. you want to run programs out of
+   the build tree), you must set the STP_DATA_PATH environmet variable
+   to the directory (or search path) containing the XML files and
+   dither matrices (.mat files).  This is usually .../src/main.
+
+   Removing the dither matrices from the source code has resulted in a
+   significant reduction in shared object size.
+
+   Other key components and individual modules will define XML schemas
+   in the future.
+
+3) The color module now offers many new parameters for color
+   adjustment, a few of which are reflected in the GUI (Gimp plugin).
+   These parameters include density adjustments in addition to gamma
+   adjustments for each channel, curves for each channel, GCR bounds
+   and curves, and more.  Taking advantage of this currently requires
+   programming skill; we *strongly* urge anyone interested in color
+   management with a modicum of programming skill to take a look at
+   this.
+
+4) Each different processing module (color, dither, and printer) now
+   offers its own parameters.
+
+5) The stp_list_t type is no longer exported in gimp-print.h.  It is
+   used internally in various ways; some of those (such as parameter
+   lists) are exported.  However, the base type is considered an
+   internal utility.
+
+6) All internal symbols (not exported in gimp-print.h) that are
+   exported for use within the core library are now prefixed with
+   "stpi_" rather than "stp_".
+
+7) CMYK generation from CMY (gray component reduction) is now handled
+   within the color code rather than within the dither code.  In the
+   future, we expect to move subchannel generation (photo and quadtone
+   inksets, for example) into the color code, at least as an option.
+   This will enable the dither code to make more intelligent choices
+   about dot size selection, and simplify matters for people who want
+   to experiment with their own inksets and transfer functions.
+
+8) Density is now processed within the dither algorithms, rather than
+   within the color code.  This simplifies color generation somewhat,
+   and more accurately reflects the fact that density is a property of
+   the resolution and paper type.
+
+9) The dither code in general has been significantly reorganized; each
+   algorithm has been split out into a file of its own.  This is a
+   possible first step toward modularization of the dither code.
+
+10) As a result of a number of the internal changes, the print quality
+   has overall regressed slightly and performance has probably
+   regressed significantly.  This is temporary; it is a result of
+   getting things working in the environment of rapid change, and
+   tuning wil occur later.
+
+11) Valgrind has been used to detect some memory leaks and other
+   errors.
+
+12) There have been numerous other API changes.
+
 
 Gimp-Print 4.3.7 contains the following major changes over Gimp-Print
 4.3.6:
