@@ -192,6 +192,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
   {
+    "CDInnerRadius", N_("CD Hub Size"), N_("Basic Printer Setup"),
+    N_("Print only outside of the hub of the CD, or all the way to the hole"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -1262,9 +1268,9 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       if (slot && slot->is_cd)
 	{
 	  stp_string_list_add_string
-	    (description->bounds.str, "CD5Inch", "CD - 5 inch");
+	    (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
 	  stp_string_list_add_string
-	    (description->bounds.str, "CD3Inch", "CD - 3 inch");
+	    (description->bounds.str, "CD3Inch", _("CD - 3 inch"));
 	}	  
       else
 	{
@@ -1278,6 +1284,22 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
+    }
+  else if (strcmp(name, "CDInnerRadius") == 0)
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.str = stp_string_list_create();
+      if (slot && slot->is_cd)
+	{
+	  stp_string_list_add_string
+	    (description->bounds.str, "None", _("Normal"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Small", _("Print To Hub"));
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}	  
+      else
+	description->is_active = 0;
     }
   else if (strcmp(name, "Quality") == 0)
     {
@@ -1472,7 +1494,10 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "FullBleed") == 0)
     {
-      if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES))
+      const input_slot_t *slot = get_input_slot(v);
+      if (slot && slot->is_cd)
+	description->is_active = 0;
+      else if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES))
 	description->deflt.boolean = 0;
       else
 	description->is_active = 0;
@@ -2347,6 +2372,12 @@ setup_page(stp_vars_t *v)
   const input_slot_t *input_slot = get_input_slot(v);
   int extra_left = 0;
   int extra_top = 0;
+  const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+  int hub_size = 43;		/* 43 mm standard CD hub */
+
+  if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+    hub_size = 16;		/* 15 mm prints to the hole - play it
+				   safe and print 16 mm */
 
   stp_default_media_size(v, &n, &(pd->page_true_height));
   internal_imageable_area(v, 0, &pd->page_left, &pd->page_right,
@@ -2358,7 +2389,7 @@ setup_page(stp_vars_t *v)
       int top_center = escp2_cd_y_offset(v);
       extra_top = top_center - (pd->page_bottom / 2);
       extra_left = left_center - (pd->page_right / 2);
-      pd->cd_inner_radius = 43 * pd->micro_units * 10 / 254 / 2;
+      pd->cd_inner_radius = hub_size * pd->micro_units * 10 / 254 / 2;
       pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
       pd->cd_x_offset =
 	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
