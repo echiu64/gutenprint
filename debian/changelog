@@ -3,8 +3,13 @@ gimp-print (4.3.0-1) unstable; urgency=low
   * New upstream development release (4.3.0)
   * Fix libgimpprint.postinst to use 'if' instead of 'case', removing a
     lintian warning.
+  * Split out the message catalogues from the libgimpprint package into
+    a new gimpprint-locales package to avoid filename conflicts when
+    multiple libgimpprint versions are installed concurrently.
+  * Add libgimpprint-doc.doc-base (existed for six months, but was never
+    added to CVS!)
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 25 Nov 2001 11:33:38 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat,  1 Dec 2001 15:30:31 +0000
 
 gimp-print (4.2.0-1) unstable; urgency=low
 

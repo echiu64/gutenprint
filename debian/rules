@@ -68,7 +68,7 @@ binary-indep: build install ChangeLog
 #	dh_installdebconf -i
 	dh_installdocs -i
 	  cp debian/gimp-print-install/usr/share/gimp-print/doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
-	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
+	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/developer-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	  cd debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html ; \
 	  if test ! -f gimpprint.html ; then \
 	    ln -s gimpprint_toc.html gimpprint.html ; \
