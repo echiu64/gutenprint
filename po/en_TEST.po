@@ -9,7 +9,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-08-02 19:21-0400\n"
+"POT-Creation-Date: 2001-08-03 18:19-0400\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
