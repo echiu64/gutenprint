@@ -237,12 +237,12 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "Gamma", N_("Gamma"), N_("Gamma"),
+      "Gamma", N_("Composite Gamma"), N_("Gamma"),
       N_("Adjust the gamma of the print. Larger values will "
 	 "produce a generally brighter print, while smaller "
 	 "values will produce a generally darker print. "),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1, 1, 0
     }, 0.1, 4.0, 1.0, CMASK_EVERY, 0
   },
   {
@@ -258,7 +258,7 @@ static const float_param_t float_parameters[] =
       "CyanGamma", N_("Cyan"), N_("Gamma"),
       N_("Adjust the cyan gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_C, 1
   },
   {
@@ -266,7 +266,7 @@ static const float_param_t float_parameters[] =
       "MagentaGamma", N_("Magenta"), N_("Gamma"),
       N_("Adjust the magenta gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_M, 1
   },
   {
@@ -274,7 +274,7 @@ static const float_param_t float_parameters[] =
       "YellowGamma", N_("Yellow"), N_("Gamma"),
       N_("Adjust the yellow gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_Y, 1
   },
   {
@@ -282,7 +282,7 @@ static const float_param_t float_parameters[] =
       "RedGamma", N_("Red"), N_("Gamma"),
       N_("Adjust the red gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_R, 1
   },
   {
@@ -290,7 +290,7 @@ static const float_param_t float_parameters[] =
       "GreenGamma", N_("Green"), N_("Gamma"),
       N_("Adjust the green gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 2, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_G, 1
   },
   {
@@ -298,7 +298,7 @@ static const float_param_t float_parameters[] =
       "BlueGamma", N_("Blue"), N_("Gamma"),
       N_("Adjust the blue gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, 3, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_B, 1
   },
   {

@@ -732,11 +732,14 @@ color_##bits##_to_color_fast(const stp_vars_t *vars, const unsigned char *in, \
 	  i0 = s_in[0];							      \
 	  i1 = s_in[1];							      \
 	  i2 = s_in[2];							      \
-	  out[0] = red[contrast[s_in[0]]];				      \
-	  out[1] = green[contrast[s_in[1]]];				      \
-	  out[2] = blue[contrast[s_in[2]]];				      \
+	  out[0] = contrast[s_in[0]];					      \
+	  out[1] = contrast[s_in[1]];					      \
+	  out[2] = contrast[s_in[2]];					      \
 	  if ((compute_saturation))					      \
 	    update_saturation_from_rgb(out, brightness, saturation, isat, 1); \
+	  out[0] = red[out[0]];						      \
+	  out[1] = green[out[1]];					      \
+	  out[2] = blue[out[2]];					      \
 	  o0 = out[0];							      \
 	  o1 = out[1];							      \
 	  o2 = out[2];							      \

@@ -585,7 +585,13 @@ stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print)
 	    usrval = desc.bounds.dbl.lower;
 	  else if (usrval > desc.bounds.dbl.upper)
 	    usrval = desc.bounds.dbl.upper;
-	  stp_set_float_parameter(user, p->name, usrval);
+	  if (!stp_check_float_parameter(user, p->name, STP_PARAMETER_ACTIVE))
+	    {
+	      stp_clear_float_parameter(user, p->name);
+	      stp_set_default_float_parameter(user, p->name, usrval);
+	    }
+	  else
+	    stp_set_float_parameter(user, p->name, usrval);
 	  stp_parameter_description_destroy(&desc);
 	}
     }
