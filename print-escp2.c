@@ -691,8 +691,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4,
-    { 3, 2, -1, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
+    { 3, 3, -1, 1, 1, 1, 1 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
   },
   /* 5: Stylus Color 850 */
@@ -702,8 +702,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 128, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
-    { 3, 2, -1, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
+    { 3, 3, -1, 1, 1, 1, 1 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
   },
   /* 6: Stylus Color 1520 */
@@ -713,8 +713,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { 3, 2, -1, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
+    { 3, 3, -1, 1, 1, 1, 1 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
   },
 
@@ -748,8 +748,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { 3, 3, -1, -1, 0, -1, -1 },
-    { 2.0, 1.3, 1.3, .646, .646, 0, 0, 0, 0 },
+    { 3, 3, -1, -1, 1, -1, -1 },
+    { 2.0, 1.3, 1.3, .775, .775, 0, 0, 0, 0 },
     &simple_6color_inks
   },
 
@@ -919,8 +919,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { 3, 2, -1, 1, 1, 1, 1 },
-    { 2.0, 1.3, 1.3, .646, 0, .646, 0, 0, 0 },
+    { 3, 3, -1, 1, 1, 1, 1 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_4color_inks
   },
   /* 25: Stylus Color 670 */
