@@ -1,8 +1,9 @@
-gimp-print (4.1.99-b1-1) unstable; urgency=low
+gimp-print (4.1.99-b2-1) unstable; urgency=low
 
   * New upstream release
   * Changed library version names to reflect upstream library
-    versioning change to ABI versioning.
+    versioning change to ABI versioning
+  * Enable i18n
 
  -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat,  1 Sep 2001 20:27:31 +0100
 
