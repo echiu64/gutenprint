@@ -1,5 +1,5 @@
-Gimp-Print 4.2.3-pre1, released October 1, 2002, is a prerelease in
-the Gimp-Print 4.2 series.
+Gimp-Print 4.2.3-pre2, released October 12, 2002, is a prerelease in
+the Gimp-Print 4.2 series (it is not actually 4.2.3).
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -41,6 +41,28 @@ Please read the README file for full instructions on installing this
 package.
 
 
+Gimp-Print 4.2.3-pre2 contains the following changes and fixes over
+Gimp-Print 4.2.3-pre1:
+
+1) A Japanese translation has been added.
+
+2) Two bugs in the IJS driver have been fixed.
+
+3) The change to the Epson Stylus 660 margins in 4.2.3-pre1 has been
+   backed out; retesting demonstrated that the bug was in fact fixed
+   in 4.2.2.
+
+4) A reported problem with very large prints (A0 or B0 size) failing
+   to print correctly on Stylus Pro printers is likely fixed.
+
+Bugs fixed in this release:
+
+597964 Epson 660 wrong margins
+619992 IJS driver prints spurious first line
+620016 IJS driver does not print properly in monochrome
+621667 Very large prints on Epson 9500 fail
+
+
 Gimp-Print 4.2.3-pre1 contains the following changes and fixes over
 Gimp-Print 4.2.2:
 
@@ -66,7 +88,6 @@ Gimp-Print 4.2.2:
 
 Bugs fixed in this release:
 
-597964 Epson 660 wrong margins
 604854 QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI
 611804 rastertoprinter.c fails to compile on Solaris
 613384 Epson 7600 no printing
