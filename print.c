@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.1 Alpha - 14 Jan 2000"
+#define PLUG_IN_VERSION		"3.1 Alpha - 23 Jan 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>
@@ -180,7 +180,7 @@ static void	file_cancel_callback(void);
 static void	preview_update(void);
 static void	preview_button_callback(GtkWidget *, GdkEventButton *);
 static void	preview_motion_callback(GtkWidget *, GdkEventMotion *);
-
+static void	cleanupfunc(void);
 
 /*
  * Globals...
@@ -390,6 +390,13 @@ main(int  argc,		/* I - Number of command-line args */
 MAIN()
 #endif
 
+static int print_finished = 0;
+
+void
+cleanupfunc(void)
+{
+}
+  
 
 /*
  * 'query()' - Respond to a plug-in query...
@@ -417,10 +424,10 @@ query(void)
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
     { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" },
     { PARAM_FLOAT,	"gamma",	"Output gamma (0.1 - 3.0)" },
-    { PARAM_INT32,	"contrast",	"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"red",		"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"green",	"Top offset (points, -1 = centered)" },
-    { PARAM_INT32,	"blue",		"Top offset (points, -1 = centered)" },
+    { PARAM_INT32,	"contrast",	"Contrast" },
+    { PARAM_INT32,	"red",		"Red level" },
+    { PARAM_INT32,	"green",	"Green level" },
+    { PARAM_INT32,	"blue",		"Blue level" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
     { PARAM_FLOAT,	"density",	"Density (0-200%)" },
@@ -752,6 +759,7 @@ run(char   *name,		/* I - Name of print program. */
 #endif
 	else
 	  fclose(prn);
+	print_finished = 1;
       }
     else
       values[0].data.d_status = STATUS_EXECUTION_ERROR;
@@ -2826,8 +2834,6 @@ printrc_load(void)
   char		*home;		/* Home dir */
 #endif
 
-  initialize_printer(&key);
-
  /*
   * Get the printer list...
   */
@@ -2868,7 +2874,7 @@ printrc_load(void)
       int keepgoing = 1;
       if (line[0] == '#')
         continue;	/* Comment */
-
+      initialize_printer(&key);
      /*
       * Read the command-delimited printer definition data.  Note that
       * we can't use sscanf because %[^,] fails if the string is empty...
@@ -3074,7 +3080,8 @@ printrc_load(void)
 	}
 	  
       if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
-                       (int (*)(const void *, const void *))compare_printers)) != NULL)
+                       (int (*)(const void *, const void *))compare_printers))
+	  != NULL)
 	{
 	  memcpy(p, &key, sizeof(plist_t));
 	  p->active = 1;
@@ -3178,7 +3185,7 @@ static int
 compare_printers(plist_t *p1,	/* I - First printer to compare */
                  plist_t *p2)	/* I - Second printer to compare */
 {
-  return (strcmp(p1->name, p2->name));
+  return (strcmp(p1->v.output_to, p2->v.output_to));
 }
 
 
