@@ -130,25 +130,31 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
-	  $(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/figures ; \
-	  $(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
-	  $(INSTALL_DATA) $(MANUAL).pdf $(datadir)/$(PACKAGE)/doc ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/figures ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
+	  $(INSTALL_DATA) $(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  cd $(HTMLDIR) ; \
 	  for file in *.html *.css ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc ; \
+	    if test -f $$file ; then \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	    fi ; \
 	  done ; \
 	  cd figures ; \
 	  for file in *.png ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc/figures ; \
+	    if test -f $$file ; then \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/figures ; \
+	    fi ; \
 	  done ; \
 	  cd ../stylesheet-images ; \
 	  for file in * ; do \
-	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
+	    if test -f $$file ; then \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
+	    fi ; \
 	  done ; \
 	fi
 
 uninstall-local:
-	$(RM) -r $(datadir)/$(PACKAGE)/doc
+	$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
 clean-local: clean-figures
 	if test $(srcdir) = "." ; then \
