@@ -1,0 +1,47 @@
+diff -u -r /home/sharkey/gstemp/gs-5.10/debian/control ./control
+--- /home/sharkey/gstemp/gs-5.10/debian/control Sat May 13 09:14:33 2000
++++ ./control   Sat May 13 08:48:54 2000
+@@ -6,14 +6,14 @@
+ Build-Depends:  vflib2-dev, libpaperg, libpng2-dev, zlib1g-dev, xlib6g-dev, 
+ 		svgalibg1-dev [i386], sharutils
+ 
+-Package: gs
++Package: gs-stp
+ Architecture: any
+-Replaces: gs-aladdin
++Replaces: gs-aladdin, gs
+ Depends: ${shlibs:Depends}
+ Recommends: gsfonts (>=4.01-3)
+ Suggests: gs-pdfencrypt
+-Conflicts: gs-aladdin, gs_x, gs_svga, gs_both
+-Provides: postscript-viewer
++Conflicts: gs, gs-aladdin, gs_x, gs_svga, gs_both
++Provides: gs, postscript-viewer
+ Description:  Postscript interpreter with X11 and svgalib preview support.
+  Ghostscript is used for postscript preview and printing.  Usually as
+  a back-end to a program such as ghostview, it can display postscript
+@@ -36,3 +36,6 @@
+  .
+  This package also contains the hpdj driver contributed by
+  Martin Lottermoser and the hp8xx driver by Uli Wortmann.
++ .
++ This package is identical to the gs package, except the Epson Stylus
++ Photo driver from the Gimp-Print package has been added.
+--- gs-5.10/debian/rules	Sat May 13 09:57:03 2000
++++ /home/sharkey/gstemp/gs-5.10/debian/rules	Mon May  8 23:05:00 2000
+@@ -22,6 +22,7 @@
+ jpdrivers-support	= $(INCLUDE_GPL)
+ lexmark-support		= $(INCLUDE_GPL)
+ hpdj-support		= $(INCLUDE_LGPL)
++stp-support		= $(INCLUDE_GPL)
+ 
+ # Uncomment following line for conflicted jpdrivers support. 
+ # Be sure to disable hp8xx-support and enable jpdrivers support.
+@@ -68,6 +69,7 @@
+ include debian/patches/jpdrivers
+ include debian/patches/lexmark
+ include debian/patches/hpdj
++include debian/patches/stp
+ 
+ patch-contrib:		$(APPLY_PATCHES)
+ unpatch-contrib:	$(UNAPPLY_PATCHES)
