@@ -1638,7 +1638,7 @@ send_extra_data(stp_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
   int full_blocks = bytes_to_fill / 128;
   int leftover = bytes_to_fill % 128;
   int total_bytes = extralines * (full_blocks + 1) * 2;
-  char *buf = stp_malloc(total_bytes);
+  unsigned char *buf = stp_malloc(total_bytes);
   total_bytes = 0;
   for (k = 0; k < extralines; k++)
     {
@@ -1658,7 +1658,7 @@ send_extra_data(stp_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
 	  buf[total_bytes++] = 0;
 	}
     }
-  stp_zfwrite(buf, total_bytes, 1, v);
+  stp_zfwrite((const char *) buf, total_bytes, 1, v);
   stp_free(buf);
 }
 
