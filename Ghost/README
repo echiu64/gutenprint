@@ -265,14 +265,16 @@ Settings you might try:
 -dQuality=3 -dDensity=0.7 -dRed=105 -dGreen=90 -dBrightness=110
 
 
-PDQ
----
+PDQ and CUPS
+------------
 
 The PDQ driver declaration in file gs-stp.pdq can be used with PDQ
 (http://feynman.tam.uiuc.edu/pdq/) to give a nice control panel for
 this driver.  To use it, put the file somewhere, and add a try_include
 "filename" clause to your ~/.printrc file.  Then run xpdq and select
 Printer->Add Printer.
+
+The PPD file com-stp.ppd can be used with CUPS.
 
 For more information, see the Printing HOWTO
 http://www.picante.com/~gtaylor/pht/
