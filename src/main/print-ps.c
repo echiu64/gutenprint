@@ -277,7 +277,6 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   int		left = stp_get_left(v);
   int		i, j;		/* Looping vars */
   int		y;		/* Looping vars */
-  unsigned char	*in;		/* Input pixels from image */
   unsigned short	*out;		/* Output pixels for printer */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
@@ -291,7 +290,6 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 		out_ps_height,	/* Output height (Level 2 output) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
-  stp_convert_t	colorfunc;	/* Color conversion function... */
   int		zero_mask;
   char		*command;	/* PostScript command */
   const char	*temp;		/* Temporary string pointer */
@@ -328,12 +326,6 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 
   stp_image_init(image);
   image_bpp = stp_image_bpp(image);
-
- /*
-  * Choose the correct color conversion function...
-  */
-
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
  /*
   * Compute the output size...
@@ -502,10 +494,9 @@ ps_print(const stp_vars_t v, stp_image_t *image)
           (double)out_width / ((double)image_width),
           (double)out_height / ((double)image_height));
 
-  in  = stp_zalloc(image_width * image_bpp);
-  out = stp_zalloc((image_width * out_channels + 3) * 2);
+  out_channels = stp_color_init(nv, image, 256);
 
-  stp_compute_lut(nv, 256);
+  out = stp_zalloc((image_width * out_channels + 3) * 2);
 
   if (model == 0)
   {
@@ -525,13 +516,11 @@ ps_print(const stp_vars_t v, stp_image_t *image)
       if ((y & 15) == 0)
 	stp_image_note_progress(image, y, image_height);
 
-      if (stp_image_get_row(image, in, image_width * image_bpp, y) !=
-	  STP_IMAGE_OK)
+      if (stp_color_get_row(nv, image, y, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
 
       ps_hex(v, out, image_width * out_channels);
     }
@@ -570,14 +559,11 @@ ps_print(const stp_vars_t v, stp_image_t *image)
       if ((y & 15) == 0)
 	stp_image_note_progress(image, y, image_height);
 
-      if (stp_image_get_row(image, in, image_width * image_bpp, y) !=
-	  STP_IMAGE_OK)
+      if (stp_color_get_row(nv, image, y, out + out_offset, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out + out_offset, &zero_mask, image_width,
-		   image_bpp);
 
       out_ps_height = out_offset + image_width * out_channels;
 
@@ -598,7 +584,6 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   }
   stp_image_progress_conclude(image);
 
-  stp_free(in);
   stp_free(out);
 
   stp_puts("grestore\n", v);

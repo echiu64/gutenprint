@@ -1356,7 +1356,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
-  unsigned char	*in;		/* Input pixels */
   int page_width,	/* Width of page */
     page_height,	/* Length of page */
     page_left,
@@ -1374,7 +1373,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
     errval,		/* Current error value */
     errline,	/* Current raster line */
     errlast;	/* Last raster line loaded */
-  stp_convert_t	colorfunc = 0;	  /* Color conversion function... */
   int           zero_mask;
   int           image_height,
                 image_width,
@@ -1471,8 +1469,6 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   /*
    * Choose the correct color conversion function...
    */
-
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
 
   ncolors = ink_parameter->ncolors;
@@ -1773,27 +1769,6 @@ densityDivisor /= 1.2;
 				media ? media->sat_adjustment : NULL,
 				STP_CURVE_COMPOSE_MULTIPLY);
 
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  if (stp_get_curve_parameter(nv, "SatMap"))
-    stp_curve_compose(&sat_adjustment, sat_adjustment,
-		      stp_get_curve_parameter(nv, "SatMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-
-  stp_compute_lut(nv, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(sat_adjustment);
-  stp_curve_destroy(hue_adjustment);
-
 #ifdef DEBUG
   stp_erprintf("density is %f\n",stp_get_float_parameter(nv, "Density"));
 #endif
@@ -1841,8 +1816,27 @@ densityDivisor /= 1.2;
    * Output the page...
   */
 
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  if (stp_get_curve_parameter(nv, "SatMap"))
+    stp_curve_compose(&sat_adjustment, sat_adjustment,
+		      stp_get_curve_parameter(nv, "SatMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
 
-  in  = stp_malloc(image_width * image_bpp);
+  out_channels = stp_color_init(nv, image, 65536);
+  stp_curve_destroy(lum_adjustment);
+  stp_curve_destroy(sat_adjustment);
+  stp_curve_destroy(hue_adjustment);
+
   out = stp_malloc(image_width * out_channels * 2);
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
@@ -1880,18 +1874,11 @@ densityDivisor /= 1.2;
 	{
 	  errlast = errline;
 	  duplicate_line = 0;
-	  if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
-	      STP_IMAGE_OK)
+	  if (stp_color_get_row(nv, image, errline, out, &zero_mask))
 	    {
 	      status = 2;
 	      break;
 	    }
-	  /*	  stp_erprintf("errline %d ,   image height %d\n", errline, image_height);*/
-#if 1
-	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
-#else
-	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
-#endif
 	}
       /*      stp_erprintf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/
       if (doTestPrint == 0) {
@@ -1943,7 +1930,6 @@ densityDivisor /= 1.2;
   /*
   * Cleanup...
   */
-  stp_free(in);
   stp_free(out);
   stp_destroy_weave(weave);
   if (privdata.outbuf != NULL) {

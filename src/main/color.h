@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in header file for the GIMP.
+ *   libgimpprint header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -30,34 +30,32 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_INTERNAL_H
-#define GIMP_PRINT_INTERNAL_INTERNAL_H
+#ifndef GIMP_PRINT_INTERNAL_COLOR_H
+#define GIMP_PRINT_INTERNAL_COLOR_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#define COOKIE_OPTION     0x3ab27f93
-#define COOKIE_PARAM_LIST 0x96cf0387
-#define COOKIE_PRINTER    0x0722922c
+/*
+ * Initialize the color machinery.  Return value is the number
+ * of columns of output
+ */
+extern int stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
 
-
-#include "color.h"
-#include "dither.h"
-#include "dither-matrices.h"
-#include "papers.h"
-#include "printers.h"
-#include "util.h"
-#include "vars.h"
-#include "weave.h"
-
+/*
+ * Acquire input and perform color conversion.  Return value
+ * is status; zero is success.
+ */
+extern int stp_color_get_row(const stp_vars_t v, stp_image_t *image,
+			     int row, unsigned short *out, int *zero_mask);
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_INTERNAL_H */
-/*
- * End of "$Id$".
- */
+#endif /* GIMP_PRINT_INTERNAL_COLOR_H */

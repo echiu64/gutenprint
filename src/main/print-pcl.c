@@ -1846,8 +1846,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   int		y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   unsigned short *out;
-  unsigned char	*in,		/* Input pixels */
-		*black,		/* Black bitmap data */
+  unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
 		*yellow,	/* Yellow bitmap data */
@@ -1868,7 +1867,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  stp_convert_t	colorfunc;	/* Color conversion function... */
   int		zero_mask;
   void		(*writefunc)(const stp_vars_t, unsigned char *, unsigned char *,
 		int, int);	/* PCL output function */
@@ -1961,8 +1959,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
       stp_set_output_type(nv, OUTPUT_GRAY);
     }
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
   do_cret = (xdpi >= 300 &&
 	     ((caps->color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
@@ -2329,29 +2325,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     writefunc = pcl_mode0;
   }
 
- /*
-  * Output the page, rotating as necessary...
-  */
-
-  lum_adjustment = stp_read_and_compose_curves(standard_lum_adjustment, NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment = stp_read_and_compose_curves(standard_hue_adjustment, NULL,
-					       STP_CURVE_COMPOSE_ADD);
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-
-  stp_compute_lut(nv, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(hue_adjustment);
-
   dither = stp_dither_init(image_width, out_width, image_bpp, xdpi, ydpi, nv);
 
 /* Set up dithering for special printers. */
@@ -2413,7 +2386,25 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
     stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
-  in  = stp_malloc(image_width * image_bpp);
+  lum_adjustment = stp_read_and_compose_curves(standard_lum_adjustment, NULL,
+					       STP_CURVE_COMPOSE_MULTIPLY);
+  hue_adjustment = stp_read_and_compose_curves(standard_hue_adjustment, NULL,
+					       STP_CURVE_COMPOSE_ADD);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+
+  out_channels = stp_color_init(nv, image, 65536);
+  stp_curve_destroy(lum_adjustment);
+  stp_curve_destroy(hue_adjustment);
+
   out = stp_malloc(image_width * out_channels * 2);
 
   errdiv  = image_height / out_height;
@@ -2441,38 +2432,19 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
-    stp_deprintf(STP_DBG_PCL,"Xpcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
     if ((y & 63) == 0)
       stp_image_note_progress(image, y, out_height);
-    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
-
     if (errline != errlast)
     {
       errlast = errline;
       duplicate_line = 0;
-      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-		   y, errline, errval, errmod, out_height);
-      if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
-	  STP_IMAGE_OK)
+      if (stp_color_get_row(nv, image, errline, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-		   y, errline, errval, errmod, out_height);
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
-      stp_deprintf(STP_DBG_PCL,">pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-		   y, errline, errval, errmod, out_height);
     }
-    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
-
     stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
-    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
-           y, errline, errval, errmod, out_height);
-
     len_c = stp_dither_get_last_position(dither, ECOLOR_C, 0);
     len_lc = stp_dither_get_last_position(dither, ECOLOR_C, 1);
     len_m = stp_dither_get_last_position(dither, ECOLOR_M, 0);
@@ -2613,7 +2585,6 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Cleanup...
   */
 
-  stp_free(in);
   stp_free(out);
 
   if (black != NULL)

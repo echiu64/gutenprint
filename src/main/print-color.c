@@ -42,10 +42,19 @@
 #define inline __inline__
 #endif
 
+/* Color conversion function */
+typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
+                               unsigned short *out, int *zero_mask,
+                               int width, int bpp);
+
 typedef struct
 {
   unsigned steps;
   int density_is_adjusted;
+  unsigned char *in_data;
+  int image_bpp;
+  int image_width;
+  stp_convert_t colorfunc;
   stp_curve_t composite;
   stp_curve_t red;
   stp_curve_t green;
@@ -1249,6 +1258,19 @@ cmyk_to_monochrome(const stp_vars_t vars,
     }
 }
 
+int
+stp_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
+		  unsigned short *out, int *zero_mask)
+{
+  const lut_t *lut = (const lut_t *)(stp_get_color_data(v));
+  unsigned char *in = lut->in_data;
+  if (stp_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
+      STP_IMAGE_OK)
+    return 2;
+  (lut->colorfunc)(v, in, out, zero_mask, lut->image_width, lut->image_bpp);
+  return 0;
+}
+
 static lut_t *
 allocate_lut(void)
 {
@@ -1266,6 +1288,10 @@ allocate_lut(void)
   ret->sat_map = NULL;
   ret->steps = 0;
   ret->density_is_adjusted = 0;
+  ret->image_bpp = 0;
+  ret->image_width = 0;
+  ret->in_data = NULL;
+  ret->colorfunc = NULL;
   return ret;
 }
 
@@ -1289,10 +1315,17 @@ copy_lut(const stp_vars_t v)
     dest->sat_map = stp_curve_allocate_copy(src->sat_map);
   dest->density_is_adjusted = src->density_is_adjusted;
   dest->steps = src->steps;
+  dest->colorfunc = src->colorfunc;
+  dest->image_bpp = src->image_bpp;
+  dest->image_width = src->image_width;
+  if (src->in_data)
+    dest->in_data = stp_malloc(src->image_width * src->image_bpp);
+  else
+    dest->in_data = NULL;
   return dest;
 }
 
-void
+static void
 stp_free_lut(stp_vars_t v)
 {
   if (stp_get_color_data(v))
@@ -1312,13 +1345,15 @@ stp_free_lut(stp_vars_t v)
 	stp_curve_destroy(lut->lum_map);
       if (lut->sat_map)
 	stp_curve_destroy(lut->sat_map);
+      if (lut->in_data)
+	stp_free(lut->in_data);
       memset(lut, 0, sizeof(lut_t));
       stp_free(lut);
       stp_set_color_data(v, NULL);
     }
 }
 
-void
+static void
 stp_compute_lut(stp_vars_t v, size_t steps)
 {
   double	pixel,		/* Pixel value */
@@ -1514,95 +1549,129 @@ stp_compute_lut(stp_vars_t v, size_t steps)
   stp_curve_set_data(lut->blue, steps, blue);
 }
 
-#define RETURN_COLORFUNC(x)						\
-do									\
-{									\
-  stp_dprintf(STP_DBG_COLORFUNC, v,					\
-	      "stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n",	\
-	      stp_get_output_type(v), image_bpp, #x, *out_channels);	\
-  return (x);								\
-} while (0)
-
-stp_convert_t
-stp_choose_colorfunc(const stp_vars_t v,
-		     int image_bpp,
-		     int *out_channels)
+static void
+set_null_colorfunc(void)
 {
+  stp_erprintf("No colorfunc chosen!\n");
+}
+
+#define SET_COLORFUNC(x)						    \
+stp_dprintf(STP_DBG_COLORFUNC, v,					    \
+	    "at line %d stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n", \
+	    __LINE__, stp_get_output_type(v), image_bpp, #x, out_channels); \
+lut->colorfunc = x;							    \
+break
+
+int
+stp_color_init(stp_vars_t v,
+	       stp_image_t *image,
+	       size_t steps)
+{
+  int out_channels = 0;
+  int image_bpp = stp_image_bpp(image);
+  lut_t *lut;
+  stp_compute_lut(v, steps);
+  lut = (lut_t *)(stp_get_color_data(v));
+  lut->image_bpp = image_bpp;
+  lut->image_width = stp_image_width(image);
   switch (stp_get_output_type(v))
     {
     case OUTPUT_MONOCHROME:
-      *out_channels = 1;
+      out_channels = 1;
       switch (image_bpp)
 	{
 	case 1:
-	  RETURN_COLORFUNC(gray_to_monochrome);
+	  SET_COLORFUNC(gray_to_monochrome);
 	case 3:
-	  RETURN_COLORFUNC(rgb_to_monochrome);
+	  SET_COLORFUNC(rgb_to_monochrome);
 	case 4:
-	  RETURN_COLORFUNC(cmyk_8_to_monochrome);
+	  SET_COLORFUNC(cmyk_8_to_monochrome);
 	case 8:
-	  RETURN_COLORFUNC(cmyk_to_monochrome);
+	  SET_COLORFUNC(cmyk_to_monochrome);
 	default:
-	  RETURN_COLORFUNC(NULL);
+	  set_null_colorfunc();
+	  SET_COLORFUNC(NULL);
 	}
       break;
     case OUTPUT_RAW_CMYK:
-      *out_channels = 4;
+      out_channels = 4;
       switch (image_bpp)
 	{
 	case 4:
-	  RETURN_COLORFUNC(cmyk_8_to_cmyk);
+	  SET_COLORFUNC(cmyk_8_to_cmyk);
 	case 8:
-	  RETURN_COLORFUNC(cmyk_to_cmyk);
+	  SET_COLORFUNC(cmyk_to_cmyk);
 	default:
-	  RETURN_COLORFUNC(NULL);
+	  set_null_colorfunc();
+	  SET_COLORFUNC(NULL);
 	}
       break;
     case OUTPUT_COLOR:
-      *out_channels = 3;
-      if (image_bpp != 1 && image_bpp != 3)
-	RETURN_COLORFUNC(NULL);
-      switch (stp_get_image_type(v))
+      out_channels = 3;
+      switch (image_bpp)
 	{
-	case IMAGE_CONTINUOUS:
-	  if (image_bpp == 3)
-	    RETURN_COLORFUNC(rgb_to_rgb);
-	  else
-	    RETURN_COLORFUNC(gray_to_rgb);
-	case IMAGE_SOLID_TONE:
-	  if (image_bpp == 3)
-	    RETURN_COLORFUNC(solid_rgb_to_rgb);
-	  else
-	    RETURN_COLORFUNC(gray_to_rgb);
-	case IMAGE_LINE_ART:
-	  if (image_bpp == 3)
-	    RETURN_COLORFUNC(fast_rgb_to_rgb);
-	  else
-	    RETURN_COLORFUNC(fast_gray_to_rgb);
+	case 3:
+	  switch (stp_get_image_type(v))
+	    {
+	    case IMAGE_CONTINUOUS:
+	      SET_COLORFUNC(rgb_to_rgb);
+	    case IMAGE_SOLID_TONE:
+	      SET_COLORFUNC(solid_rgb_to_rgb);
+	    case IMAGE_LINE_ART:
+	      SET_COLORFUNC(fast_rgb_to_rgb);
+	    default:
+	      set_null_colorfunc();
+	      SET_COLORFUNC(NULL);
+	    }
+	  break;
+	case 1:
+	  switch (stp_get_image_type(v))
+	    {
+	    case IMAGE_CONTINUOUS:
+	    case IMAGE_SOLID_TONE:
+	      SET_COLORFUNC(gray_to_rgb);
+	    case IMAGE_LINE_ART:
+	      SET_COLORFUNC(fast_gray_to_rgb);
+	    default:
+	      set_null_colorfunc();
+	      SET_COLORFUNC(NULL);
+	      break;
+	    }
+	  break;
 	default:
-	  RETURN_COLORFUNC(NULL);
+	  set_null_colorfunc();
+	  SET_COLORFUNC(NULL);
 	}
+      break;
     case OUTPUT_RAW_PRINTER:
-      if ((image_bpp & 1) || image_bpp > 64)
-	RETURN_COLORFUNC(NULL);
-      *out_channels = image_bpp / 2;
-      RETURN_COLORFUNC(raw_to_raw);
+      if ((image_bpp & 1) || image_bpp < 2 || image_bpp > 64)
+	{
+	  set_null_colorfunc();
+	  SET_COLORFUNC(NULL);
+	}
+      out_channels = image_bpp / 2;
+      SET_COLORFUNC(raw_to_raw);
     case OUTPUT_GRAY:
-    default:
-      *out_channels = 1;
+      out_channels = 1;
       switch (image_bpp)
 	{
 	case 1:
-	  RETURN_COLORFUNC(gray_to_gray);
+	  SET_COLORFUNC(gray_to_gray);
 	case 3:
-	  RETURN_COLORFUNC(rgb_to_gray);
+	  SET_COLORFUNC(rgb_to_gray);
 	case 4:
-	  RETURN_COLORFUNC(cmyk_8_to_gray);
+	  SET_COLORFUNC(cmyk_8_to_gray);
 	case 8:
-	  RETURN_COLORFUNC(cmyk_to_gray);
+	  SET_COLORFUNC(cmyk_to_gray);
 	default:
-	  RETURN_COLORFUNC(NULL);
+	  set_null_colorfunc();
+	  SET_COLORFUNC(NULL);
 	}
       break;
+    default:
+      set_null_colorfunc();
+      SET_COLORFUNC(NULL);
     }
+  lut->in_data = stp_malloc(stp_image_width(image) * image_bpp);
+  return out_channels;
 }

@@ -170,12 +170,10 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   int height = stp_get_page_height(v);
   int		i, j;
   int		y;		/* Looping vars */
-  stp_convert_t	colorfunc;	/* Color conversion function... */
   stp_vars_t	nv = stp_allocate_copy(v);
   int out_channels;
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned short *final_out = NULL;
-  unsigned char	*in;		/* Input pixels */
   int		status = 1;
   int bytes_per_channel = raw_model_capabilities[model].output_bits / 8;
   int ink_channels = 1;
@@ -204,7 +202,9 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 	    break;
 	  }
     }
-  colorfunc = stp_choose_colorfunc(nv, stp_image_bpp(image), &out_channels);
+
+  out_channels = stp_color_init(nv, image, 65536);
+
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
       stp_eprintf(nv, _("Internal error!  Output channels or input channels must be 1\n"));
@@ -212,13 +212,11 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       return 0;
     }
 
-  in  = stp_malloc(width * stp_image_bpp(image));
   out = stp_malloc(width * out_channels * 2);
   if (out_channels != ink_channels)
     final_out = stp_malloc(width * ink_channels * 2);
 
   stp_set_float_parameter(nv, "Density", 1.0);
-  stp_compute_lut(nv, 256);
 
   stp_image_progress_init(image);
 
@@ -228,13 +226,11 @@ raw_print(const stp_vars_t v, stp_image_t *image)
       int zero_mask;
       if ((y & 63) == 0)
 	stp_image_note_progress(image, y, height);
-      if (stp_image_get_row(image, in, width * stp_image_bpp(image), y) !=
-	  STP_IMAGE_OK)
+      if (stp_color_get_row(nv, image, y, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, width, stp_image_bpp(image));
       if (out_channels != ink_channels)
 	{
 	  real_out = final_out;
@@ -270,7 +266,6 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   if (final_out)
     stp_free(final_out);
   stp_free(out);
-  stp_free(in);
   stp_vars_free(nv);
   return status;
 }

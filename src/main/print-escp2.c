@@ -926,9 +926,11 @@ escp2_deinit_printer(const escp2_init_t *init)
     }
 }
 
-static void
-adjust_print_quality(const escp2_init_t *init, void *dither)
+static int
+adjust_print_quality(const escp2_init_t *init, void *dither,
+		     stp_image_t *image)
 {
+  int cols;
   stp_curve_t   lum_adjustment = NULL;
   stp_curve_t   sat_adjustment = NULL;
   stp_curve_t   hue_adjustment = NULL;
@@ -997,36 +999,6 @@ adjust_print_quality(const escp2_init_t *init, void *dither)
   if (init->output_type == OUTPUT_GRAY)
     stp_set_float_parameter(nv, "Gamma", stp_get_float_parameter(nv, "Gamma") / .8);
 
-  sat_adjustment = stp_read_and_compose_curves(init->inkname->sat_adjustment,
-					       pt ? pt->sat_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  lum_adjustment = stp_read_and_compose_curves(init->inkname->lum_adjustment,
-					       pt ? pt->lum_adjustment : NULL,
-					       STP_CURVE_COMPOSE_MULTIPLY);
-  hue_adjustment = stp_read_and_compose_curves(init->inkname->hue_adjustment,
-					       pt ? pt->hue_adjustment : NULL,
-					       STP_CURVE_COMPOSE_ADD);
-  if (stp_get_curve_parameter(nv, "HueMap"))
-    stp_curve_compose(&hue_adjustment, hue_adjustment,
-		      stp_get_curve_parameter(nv, "HueMap"),
-		      STP_CURVE_COMPOSE_ADD, -1);
-  if (stp_get_curve_parameter(nv, "LumMap"))
-    stp_curve_compose(&lum_adjustment, lum_adjustment,
-		      stp_get_curve_parameter(nv, "LumMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  if (stp_get_curve_parameter(nv, "SatMap"))
-    stp_curve_compose(&sat_adjustment, sat_adjustment,
-		      stp_get_curve_parameter(nv, "SatMap"),
-		      STP_CURVE_COMPOSE_MULTIPLY, -1);
-  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-
-  stp_compute_lut(nv, 65536);
-  stp_curve_destroy(lum_adjustment);
-  stp_curve_destroy(sat_adjustment);
-  stp_curve_destroy(hue_adjustment);
-
   for (i = 0; i <= NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
   stp_dither_set_black_lower(dither, k_lower);
@@ -1058,6 +1030,37 @@ adjust_print_quality(const escp2_init_t *init, void *dither)
       break;
     }
   stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
+
+  sat_adjustment = stp_read_and_compose_curves(init->inkname->sat_adjustment,
+					       pt ? pt->sat_adjustment : NULL,
+					       STP_CURVE_COMPOSE_MULTIPLY);
+  lum_adjustment = stp_read_and_compose_curves(init->inkname->lum_adjustment,
+					       pt ? pt->lum_adjustment : NULL,
+					       STP_CURVE_COMPOSE_MULTIPLY);
+  hue_adjustment = stp_read_and_compose_curves(init->inkname->hue_adjustment,
+					       pt ? pt->hue_adjustment : NULL,
+					       STP_CURVE_COMPOSE_ADD);
+  if (stp_get_curve_parameter(nv, "HueMap"))
+    stp_curve_compose(&hue_adjustment, hue_adjustment,
+		      stp_get_curve_parameter(nv, "HueMap"),
+		      STP_CURVE_COMPOSE_ADD, -1);
+  if (stp_get_curve_parameter(nv, "LumMap"))
+    stp_curve_compose(&lum_adjustment, lum_adjustment,
+		      stp_get_curve_parameter(nv, "LumMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  if (stp_get_curve_parameter(nv, "SatMap"))
+    stp_curve_compose(&sat_adjustment, sat_adjustment,
+		      stp_get_curve_parameter(nv, "SatMap"),
+		      STP_CURVE_COMPOSE_MULTIPLY, -1);
+  stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+  stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+  stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+
+  cols = stp_color_init(nv, image, 65536);
+  stp_curve_destroy(lum_adjustment);
+  stp_curve_destroy(sat_adjustment);
+  stp_curve_destroy(hue_adjustment);
+  return cols;
 }
 
 static int
@@ -1161,7 +1164,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
-  unsigned char	*in;		/* Input pixels */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -1178,7 +1180,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  stp_convert_t	colorfunc;	/* Color conversion function... */
 
   int		nozzles;
   int		nozzle_separation;
@@ -1322,7 +1323,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       left += escp2_zero_margin_offset(model, nv) * physical_ydpi *
 	undersample / max_vres / res->vertical_denominator;
     }
-
 
   /*
    * Set up the output channels
@@ -1511,15 +1511,12 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      colorfunc = stp_choose_colorfunc(nv, stp_image_bpp(image), &out_channels);
-
-      in  = stp_malloc(stp_image_width(image) * stp_image_bpp(image));
-      out = stp_malloc(stp_image_width(image) * out_channels * 2);
-
       dither = stp_dither_init(stp_image_width(image), out_width,
 			       stp_image_bpp(image), xdpi, ydpi, nv);
 
-      adjust_print_quality(&init, dither);
+      out_channels = adjust_print_quality(&init, dither, image);
+
+      out = stp_malloc(stp_image_width(image) * out_channels * 2);
 
       /*
        * Let the user know what we're doing...
@@ -1545,15 +1542,11 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	    {
 	      errlast = errline;
 	      duplicate_line = 0;
-	      if (stp_image_get_row(image, in,
-				    stp_image_width(image) * stp_image_bpp(image),
-				    errline) != STP_IMAGE_OK)
+	      if (stp_color_get_row(nv, image, errline, out, &zero_mask))
 		{
 		  status = 2;
 		  break;
 		}
-	      (*colorfunc)(nv, in, out, &zero_mask, stp_image_width(image),
-			   stp_image_bpp(image));
 	    }
 	  QUANT(1);
 
@@ -1581,7 +1574,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        */
       stp_destroy_weave(weave);
       stp_dither_free(dither);
-      stp_free(in);
       stp_free(out);
       if (!privdata.printed_something)
 	stp_send_command(nv, "\n", "");

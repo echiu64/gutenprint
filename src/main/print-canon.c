@@ -1972,8 +1972,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
-  unsigned char	*in,		/* Input pixels */
-		*black,		/* Black bitmap data */
+  unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
 		*yellow,	/* Yellow bitmap data */
@@ -2005,7 +2004,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  stp_convert_t	colorfunc = 0;	/* Color conversion function... */
   int		zero_mask;
   int           bits= 1;
   int           image_height,
@@ -2060,12 +2058,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     colormode = COLOR_MONOCHROME;
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-
-  /*
-   * Choose the correct color conversion function...
-   */
-
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
  /*
   * Figure out the output resolution...
@@ -2312,9 +2304,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
     }
   stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
-  in  = stp_zalloc(image_width * image_bpp);
-  out = stp_zalloc(image_width * out_channels * 2);
-
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
   errval  = 0;
@@ -2347,10 +2336,12 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
   stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
 
-  stp_compute_lut(nv, 65536);
+  out_channels = stp_color_init(nv, image, 65536);
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(sat_adjustment);
   stp_curve_destroy(hue_adjustment);
+
+  out = stp_zalloc(image_width * out_channels * 2);
 
   dt = stp_dither_data_allocate();
   stp_dither_add_channel(dt, black, ECOLOR_K, 0);
@@ -2370,13 +2361,11 @@ canon_print(const stp_vars_t v, stp_image_t *image)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (stp_image_get_row(image, in, image_width * image_bpp, errline) !=
-	  STP_IMAGE_OK)
+      if (stp_color_get_row(nv, image, errline, out, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
     }
 
     stp_dither(out, y, dither, dt, duplicate_line, zero_mask);
@@ -2445,7 +2434,6 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Cleanup...
   */
 
-  stp_free(in);
   stp_free(out);
 
   if (black != NULL)    stp_free(black);

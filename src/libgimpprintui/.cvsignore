@@ -7,3 +7,5 @@ panel.lo
 plist.lo
 print-image-thumbnail.lo
 ui-utils.lo
+gimpprint-ui.pc
+gimpprint-ui.pc.in

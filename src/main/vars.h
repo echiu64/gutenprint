@@ -31,6 +31,9 @@ extern "C" {
 
 #include <sys/types.h>
 
+typedef void *(*copy_data_func_t)(const stp_vars_t);
+typedef void (*destroy_data_func_t)(stp_vars_t);
+
 extern void	*stp_get_color_data(const stp_vars_t);
 extern void	stp_set_color_data(stp_vars_t v, void * val);
 
