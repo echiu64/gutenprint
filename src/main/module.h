@@ -50,12 +50,7 @@ extern "C" {
 #define DLERROR()              lt_dlerror()
 #elif defined(USE_DLOPEN)
 #define DLOPEN(Filename)       dlopen(Filename, RTLD_LAZY)
-#if defined(__APPLE__) || defined(__OpenBSD__)
-/* Darwin and OpenBSD prepend underscores to symbols */
-#define DLSYM(Handle, Symbol)  stp_dlsym(Handle, "_" Symbol, modulename)
-#else
 #define DLSYM(Handle, Symbol)  stp_dlsym(Handle, Symbol, modulename)
-#endif
 #define DLCLOSE(Handle)        dlclose(Handle)
 #define DLERROR()              dlerror()
 #endif
