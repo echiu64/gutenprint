@@ -18,6 +18,7 @@ COMMON_SOURCE = \
 	print-pcl.c		\
 	print-ps.c      	\
 	print-util.c		\
+	print-color.c		\
 	print-weave.c		\
 	print.h			\
 	quickmatrix257.h	\
@@ -87,7 +88,7 @@ GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
 	commandtoepson.c epson.c genppd.c rastertoprinter.c calibrate.c \
-	calibrate.ppm command.types \
+	calibrate.ppm command.types commandtocanon.c canon.c \
 	$(CUPSCOPY)
 
 DOC_DIST = print-color.png docbook.css print-main.png print.html \
@@ -155,9 +156,10 @@ cups/cups-%: print-% Makefile
 
 FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 
-# If you are using a version of the Gimp 1.1.25 or newer, you will need
-# to apply the following patch to your /usr/share/aclocal/gimp.m4
-# before you run make gdist, or the result will blow up!
+# If you are using a version of the Gimp from 1.1.25 through 1.1.28,
+# you will need to apply the following patch to your
+# /usr/share/aclocal/gimp.m4 before you run make gdist, or the result
+# will blow up!  This problem is fixed as of the Gimp 1.1.29.
 # 
 # *** /usr/share/aclocal/gimp.m4~ Sat Sep 23 19:36:20 2000
 # --- /usr/share/aclocal/gimp.m4  Tue Oct 10 21:29:52 2000

@@ -1,13 +1,15 @@
 .deps
 Makefile
 calibrate
-commandtoepson
+canon
 commandtocanon
+commandtoepson
 config.cache
 config.log
 config.status
 configure
 cups-canon.c
+cups-color.c
 cups-dither.c
 cups-escp2.c
 cups-lexmark.c

@@ -3,6 +3,7 @@
 stp_=gdevstp.$(OBJ) \
 	gdevstp-dither.$(OBJ) \
 	gdevstp-util.$(OBJ) \
+	gdevstp-color.$(OBJ) \
 	gdevstp-weave.$(OBJ) \
 	gdevstp-escp2.$(OBJ) \
 	gdevstp-lexmark.$(OBJ) \
@@ -21,6 +22,9 @@ gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH)
 
 gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH)
 	$(CCC) gdevstp-weave.c
+
+gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH)
+	$(CCC) gdevstp-color.c
 
 gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH)
 	$(CCC) gdevstp-dither.c

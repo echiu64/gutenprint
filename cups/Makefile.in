@@ -77,9 +77,12 @@ sysconfdir	=	@sysconfdir@
 TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
 		ppd rastertoprinter commandtocanon canon
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
-		cups-ps.o cups-lexmark.o cups-util.o cups-weave.o
+		cups-ps.o cups-lexmark.o cups-util.o cups-weave.o \
+		cups-color.o
 OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
 		rastertoprinter.o commandtocanon.o canon.o
+HEADERS = 	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h \
+		cups-ran.509.131.h
 
 
 #
@@ -230,7 +233,7 @@ libdrv.a:	$(DRVOBJS)
 	$(SILENT) $(AR) $(ARFLAGS) $@ $(DRVOBJS)
 	$(SILENT) $(RANLIB) $@
 
-$(DRVOBJS):	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
+$(DRVOBJS):	$(HEADERS)
 cups-util.c:	cups-printers.c
 
 
@@ -242,7 +245,7 @@ rastertoprinter:	rastertoprinter.o libdrv.a
 	$(ECHO) Linking $@...
 	$(SILENT) $(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
-rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
+rastertoprinter.o:	$(HEADERS)
 
 
 #
