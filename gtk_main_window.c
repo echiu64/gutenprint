@@ -70,8 +70,7 @@ static GtkWidget* bottom_entry;
 static GtkWidget* height_entry;
 static GtkWidget* unit_inch;
 static GtkWidget* unit_cm;
-static GtkWidget* media_size;             /* Media size option button */
-static GtkWidget* media_size_menu=NULL;   /* Media size menu */
+static GtkWidget* media_size_combo=NULL;  /* Media size combo box */
 static GtkWidget* media_type;             /* Media type option button */
 static GtkWidget* media_type_menu=NULL;   /* Media type menu */
 static GtkWidget* media_source;           /* Media source option button */
@@ -109,8 +108,6 @@ static GtkWidget* adjust_color_button;
 
 static GtkObject* scaling_adjustment;	   /* Adjustment object for scaling */
 
-static int		num_media_sizes=0;	/* Number of media sizes */
-static char		**media_sizes;		/* Media size strings */
 static int		num_media_types=0;	/* Number of media types */
 static char		**media_types;		/* Media type strings */
 static int		num_media_sources=0;	/* Number of media sources */
@@ -213,6 +210,7 @@ void gtk_create_main_window(void)
     GtkWidget* printer_crawler;      /* Scrolled Window for menu */
     GtkWidget* item;       /* Menu item */
     GtkWidget* option;     /* Option menu button */
+    GtkWidget* combo;      /* Combo box */
     GtkWidget* box;        /* Box container */
     GtkObject* scale_data; /* Scale data (limits) */
     GSList*    group;      /* Grouping for output type */
@@ -465,8 +463,8 @@ void gtk_create_main_window(void)
 		     GTK_FILL, GTK_FILL, 0, 0);
     gtk_widget_show(box);
 
-    media_size = option = gtk_option_menu_new();
-    gtk_box_pack_start(GTK_BOX(box), option, FALSE, FALSE, 0);
+    media_size_combo = combo = gtk_combo_new();
+    gtk_box_pack_start(GTK_BOX(box), combo, FALSE, FALSE, 0);
 
     /*
      * Media type option menu...
@@ -1312,6 +1310,56 @@ static void gtk_plist_build_menu(GtkWidget*  option,  /* I - Option button */
 
 /****************************************************************************
  *
+ * gtk_plist_build_combo
+ *
+ ****************************************************************************/
+static void gtk_plist_build_combo(GtkWidget*  combo,   /* I - Combo widget */
+				  int       num_items, /* I - Number of items */
+				  char**    items,     /* I - Menu items */
+				  char*     cur_item,  /* I - Current item */
+		        void (*callback)(GtkWidget *, gint)) /* I - Callback */
+{
+  int		i;	/* Looping var */
+  GList		*list = 0;
+  GtkEntry	*entry = GTK_ENTRY(GTK_COMBO(combo)->entry);
+
+
+  if (num_items == 0)
+    {
+      list = g_list_append(list, _("Standard"));
+      gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
+      g_list_free(list);
+      gtk_widget_set_sensitive(combo, FALSE);
+      gtk_entry_set_editable(entry, FALSE);
+      gtk_widget_show(combo);
+      return;
+    }
+
+  for (i = 0; i < num_items; i ++)
+      list = g_list_append(list, gettext(items[i]));
+
+  gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
+
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)callback, 0);
+
+  gtk_entry_set_text(entry, cur_item);
+
+  for (i = 0; i < num_items; i ++)
+      if (strcmp(items[i], cur_item) == 0)
+	  break;
+
+  if (i == num_items)
+      gtk_entry_set_text(entry, gettext(items[0]));
+
+  gtk_combo_set_use_arrows(GTK_COMBO(combo), TRUE);
+  gtk_widget_set_sensitive(combo, TRUE);
+  gtk_entry_set_editable(entry, FALSE);
+  gtk_widget_show(combo);
+}
+
+/****************************************************************************
+ *
  * gtk_do_misc_updates() - Build an option menu for the given parameters...
  *
  ****************************************************************************/
@@ -1500,6 +1548,8 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
 {
   int		i;			/* Looping var */
   plist_t	*p;
+  int		num_media_sizes;
+  char		**media_sizes;
 
 
   plist_current = data;
@@ -1527,27 +1577,22 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   */
   gtk_build_dither_menu();
 
-  if (num_media_sizes > 0)
-  {
-    for (i = 0; i < num_media_sizes; i ++)
-      free(media_sizes[i]);
-    free(media_sizes);
-  }
-
-  media_sizes = (*(current_printer->parameters))
-    (current_printer->model,
-     p->v.ppd_file,
-     "PageSize", &num_media_sizes);
+  media_sizes = (*(current_printer->parameters))(current_printer->model,
+                                                 p->v.ppd_file,
+                                                 "PageSize", &num_media_sizes);
 
   if (vars.media_size[0] == '\0')
     strcpy(vars.media_size, media_sizes[0]);
 
-  gtk_plist_build_menu(media_size,
-		       &media_size_menu,
-		       num_media_sizes,
-		       media_sizes,
-		       p->v.media_size,
-		       gtk_media_size_callback);
+  gtk_plist_build_combo(media_size_combo,
+		        num_media_sizes,
+		        media_sizes,
+		        p->v.media_size,
+		        gtk_media_size_callback);
+
+  for (i = 0; i < num_media_sizes; i ++)
+    free(media_sizes[i]);
+  free(media_sizes);
 
   if (num_media_types > 0)
   {
@@ -1647,9 +1692,12 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
 static void gtk_media_size_callback(GtkWidget *widget, /* I -Media size menu */
 				    gint      data)    /* I - Data */
 {
+  const char *new_media_size;
 
-  strcpy(vars.media_size, media_sizes[data]);
-  strcpy(plist[plist_current].v.media_size, media_sizes[data]);
+  new_media_size
+    = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(media_size_combo)->entry));
+  strcpy(vars.media_size, new_media_size);
+  strcpy(plist[plist_current].v.media_size, new_media_size);
   vars.left       = -1;
   vars.top        = -1;
   plist[plist_current].v.left = vars.left;
