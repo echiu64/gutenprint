@@ -1,9 +1,16 @@
 # Configure paths for gimp-print
 # Roger Leigh -- Thu, 24 Jan 2002
-# (based on gimpprint.m4 by Owen Taylor     97-11-3)
+# (based on stp_path_lib.m4 aka ac_path.lib.m4 from the autoconf-archive)
 
-dnl AM_PATH_GIMPPRINT([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
-dnl Test for GIMP-PRINT, and define GIMPPRINT_CFLAGS and GIMPPRINT_LIBS
-dnl
+# AM_PATH_GIMPPRINT([MINIMUM-VERSION, [ACTION-IF-FOUND [,
+# ACTION-IF-NOT-FOUND [, MODULES]]]])
+# -------------------------------------------------------
+# Test for GIMP-PRINT, and define GIMPPRINT_CFLAGS,
+# GIMPPRINT_LIBS and GIMPPRINT_VERSION
+AC_DEFUN(AM_PATH_GIMPPRINT,
+[
+_AM_PATH_GIMPPRINT_REGISTER([__AM_PATH_GIMPPRINT_HEADER], [gimp-print/gimp-print.h])
+_AM_PATH_GIMPPRINT(gimpprint, $1, , $4, $2, $3)
+])
 
 

@@ -51,6 +51,5 @@ AC_DEFUN(STP_CONFIG_GIMPPRINT_M4,
   AC_MSG_NOTICE([creating src/main/gimpprint.m4])
   cat ${srcdir}/src/main/gimpprint.m4.top > src/main/gimpprint.m4
   m4_pattern_allow([STP_PATH_LIB])
-  sed -e "s/[STP_PATH_LIB]/[STP_PATH_LIB_INTERNAL]/g" < ${srcdir}/m4/stp_path_lib.m4 >> src/main/gimpprint.m4
-  cat ${srcdir}/src/main/gimpprint.m4.bot >> src/main/gimpprint.m4
+  sed -e "s/[STP_PATH_LIB]/[_AM_PATH_GIMPPRINT]/g" < ${srcdir}/m4/stp_path_lib.m4 >> src/main/gimpprint.m4
 ])
