@@ -93,7 +93,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 	{ 0, 		/* model P300 */
 		297, 432,	/* "A6", "4x6" */
 		288, 420,	
-		28, 28, 49, 48,
+		28, 28, 48, 48,
 		&resolution_p300,
 		16,
 		1, 0,
@@ -439,8 +439,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int page_pt_left, page_pt_right, page_pt_top, page_pt_bottom;
 
   /* page w/out borders in pixels (according to selected dpi) */
-  int print_px_width  = res->x_max_res;
-  int print_px_height = res->y_max_res;
+  int print_px_width;
+  int print_px_height;
   
   unsigned char  copies = 1;
   unsigned short hi_speed = 1;
@@ -457,6 +457,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   olympus_imageable_area(v, &page_pt_left, &page_pt_right,
 	&page_pt_bottom, &page_pt_top);
 
+  print_px_width  = MIN(res->x_max_res,
+		  (page_pt_right - page_pt_left) * xdpi / 72);
+  print_px_height = MIN(res->y_max_res,
+		  (page_pt_bottom - page_pt_top) * ydpi / 72);
   out_px_width  = out_pt_width  * xdpi / 72;
   out_px_height = out_pt_height * ydpi / 72;
 
