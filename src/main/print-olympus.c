@@ -541,11 +541,13 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
   out_channels = stpi_color_init(v, image, 256);
 
+#if 0
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
       stpi_eprintf(v, _("Internal error!  Output channels or input channels must be 1\n"));
       return 0;
     }
+#endif
 
   err_out = stpi_malloc(print_px_width * ink_channels * 2);
   if (out_channels != ink_channels)
