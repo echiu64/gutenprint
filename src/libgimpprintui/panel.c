@@ -514,8 +514,11 @@ checkbox_callback(GtkObject *button, gpointer xopt)
     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(checkbox));
   stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
 			    opt->info.bool.current);
+  invalidate_frame();
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  if (opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
+    update_adjusted_thumbnail();
+  preview_update();
   return 1;
 }  
 
@@ -2736,6 +2739,7 @@ combo_callback(GtkWidget *widget, gpointer data)
 	set_media_size(new_value);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
 	update_adjusted_thumbnail();
+      preview_update();
     }
 }
 
@@ -3568,6 +3572,18 @@ do_preview_thumbnail (void)
   if (!preview_valid)
     create_valid_preview(&preview_data);
 
+  if (printable_display_left < paper_display_left)
+    printable_display_left = paper_display_left;
+  if (printable_display_top < paper_display_top)
+    printable_display_top = paper_display_top;
+  if (printable_display_left + printable_display_width >
+      paper_display_left + paper_display_width)
+    printable_display_width =
+      paper_display_width - (paper_display_left - printable_display_left);
+  if (printable_display_top + printable_display_height >
+      paper_display_top + paper_display_height)
+    printable_display_height =
+      paper_display_height - (paper_display_top - printable_display_top);
   if (need_exposure)
     {
       /* draw paper frame */
@@ -3635,6 +3651,18 @@ do_preview_thumbnail (void)
     gdk_draw_rgb_image (preview->widget.window, gc,
 			preview_x, preview_y, preview_w, preview_h,
 			GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
+
+  /* If we're printing full bleed, redisplay the paper frame */
+  if (preview_x <= paper_display_left || opx <= paper_display_left ||
+      preview_y <= paper_display_top || opy <= paper_display_top ||
+      preview_x + preview_w >= paper_display_left + paper_display_width ||
+      opx + opw >= paper_display_left + paper_display_width ||
+      preview_y + preview_h >= paper_display_top + paper_display_height ||
+      opy + oph >= paper_display_top + paper_display_height)
+    gdk_draw_rectangle (preview->widget.window, gc, 0,
+			paper_display_left, paper_display_top,
+			paper_display_width, paper_display_height);
+    
 
   /* draw orientation arrow pointing to top-of-paper */
   draw_arrow (preview->widget.window, gcinv, paper_display_left,

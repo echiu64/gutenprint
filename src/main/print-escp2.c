@@ -195,6 +195,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
+  {
+    "FullBleed", N_("Full Bleed"),
+    N_("Full Bleed"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
   PARAMETER_INT(min_hres),
@@ -616,6 +622,13 @@ escp2_parameters(const stp_vars_t v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  else if (strcmp(name, "FullBleed") == 0)
+    {
+      if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, v))
+	description->deflt.boolean = 0;
+      else
+	description->is_active = 0;
+    }
 }
 
 static const res_t *
@@ -699,6 +712,11 @@ internal_imageable_area(const stp_vars_t v, int use_paper_margins,
   *right =	width - right_margin;
   *top =	top_margin;
   *bottom =	height - bottom_margin;
+  if (stp_get_boolean_parameter(v, "FullBleed"))
+    {
+      *left -= 80 / (360 / 72);	/* 80 per the Epson manual */
+      *right += 80 / (360 / 72);	/* 80 per the Epson manual */
+    }  
 }
 
 /*
@@ -898,8 +916,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	  stpi_send_command(init->v, "PM", "bh", 0);
 	  /* Set mechanism sequence */
 	  stpi_send_command(init->v, "SN", "bccc", 0, 0, feed_sequence);
-	  if (escp2_has_cap(init->model, MODEL_XZEROMARGIN,
-			    MODEL_XZEROMARGIN_YES, init->v))
+	  if (stp_get_boolean_parameter(init->v, "FullBleed"))
 	    stpi_send_command(init->v, "FP", "bch", 0, 0xffb0);
 	}
       if (init->input_slot)
@@ -1021,10 +1038,11 @@ escp2_set_form_factor(const escp2_init_t *init)
       int w = init->page_width * init->ydpi / 72;
       int h = init->page_true_height * init->ydpi / 72;
 
-      if (escp2_has_cap(init->model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES,
-			init->v))
-	/* Make the page 2/10" wider (probably ignored by the printer) */
-	w += 144 * init->xdpi / 720;
+      if (stp_get_boolean_parameter(init->v, "FullBleed"))
+	/* Make the page 160/360" wider for full bleed printing. */
+	/* Per the Epson manual, the margin should be expanded by 80/360" */
+	/* so we need to do this on the left and the right */
+	w += 320 * init->xdpi / 720;
 
       stpi_send_command(init->v, "\033(S", "bll", w, h);
     }
@@ -1600,20 +1618,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   stpi_default_media_size(v, &n, &page_true_height);
 
   left = physical_ydpi * undersample * left / 72 / res->vertical_denominator;
-
- /*
-  * Adjust for zero-margin printing...
-  */
-
-  if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, v))
-    {
-     /*
-      * In zero-margin mode, the origin is about 3/20" to the left of the
-      * paper's left edge.
-      */
-      left += escp2_zero_margin_offset(model, v) * physical_ydpi *
-	undersample / max_vres / res->vertical_denominator;
-    }
 
   /*
    * Set up the output channels

@@ -277,7 +277,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       stpi_dither_set_ranges(v, i, 1, &r, 1.0);
       PHYSICAL_CHANNEL(d, i).shades = NULL;
       PHYSICAL_CHANNEL(d, i).numshades = 0;
-      /* stpi_dither_set_shades(v, i, 1, &shade, 1.0); */
+      stpi_dither_set_shades(v, i, 1, &shade, 1.0);
       PHYSICAL_CHANNEL(d, i).errs = stpi_zalloc(d->error_rows * sizeof(int *));
       PHYSICAL_CHANNEL(d, i).density_adjustment = 1;
       if (i < sizeof(channels) / sizeof(const char *) &&

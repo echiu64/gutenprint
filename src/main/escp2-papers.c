@@ -287,7 +287,7 @@ static const paper_t sp950_papers[] =
     2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "GlossyPhoto", N_("Premium Glossy Photo Paper"),
-    7, 0, 0.85, 1.0, .999, 0.9, 1.04, 0.93, 0.9, 1.04, 0.93,
+    7, 0, 0.85, 1.0, .9, 0.9, 1.04, 0.93, 0.9, 1.04, 0.93,
     0.9, 1.0, 0x80, 0x00, 0x02,
     pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
   { "Luster", N_("Premium Luster Photo Paper"),
