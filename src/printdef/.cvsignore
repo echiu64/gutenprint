@@ -2,8 +2,5 @@
 .libs
 Makefile
 Makefile.in
-printdefl.c
 printdef
-printdefy.c
-printdefy.h
 xmldef
