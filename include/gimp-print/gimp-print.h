@@ -25,6 +25,12 @@
  *   See ChangeLog
  */
 
+/**
+ * @file gimp-print.h
+ * @brief Gimp-Print master header.
+ * This header includes all of the public headers.
+ */
+
 /*
  * This file must include only standard C header files.  The core code must
  * compile on generic platforms that don't support glib, gimp, gtk, etc.

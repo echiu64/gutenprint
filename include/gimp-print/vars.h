@@ -157,7 +157,7 @@ typedef struct
   int upper; /*!< Upper bound. */
 } stp_int_bound_t;
 
-/** Parameter destription. */
+/** Parameter description. */
 typedef struct
 {
   const char *name;		 /*!< Internal name (key). */
