@@ -714,10 +714,25 @@
         <gamma value="0.585"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus CX-3100" driver="escp2-cx3100">
+        <color value="true"/>
+        <model value="52"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus CX-3200" driver="escp2-cx3200">
         <color value="true"/>
         <model value="52"/>
         <gamma value="0.585"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus CX-5100" driver="escp2-cx5100">
+        <color value="true"/>
+        <model value="55"/>
+        <cyan value="0.96"/>
+        <magenta value="1.02"/>
+        <yellow value="1.02"/>
+        <gamma value="0.688"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus CX-5200" driver="escp2-cx5200">
