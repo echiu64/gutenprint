@@ -533,6 +533,18 @@ create_preview (void)
                          GDK_BUTTON_RELEASE_MASK);
 }
 
+static GtkWidget *
+create_positioning_button(GtkWidget *box, const char *text, const char *help)
+{
+  GtkWidget *button = gtk_button_new_with_label(_(text));
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
+  gtk_widget_show(button);
+  gimp_help_set_help_data(button, _(help), NULL);
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+		     GTK_SIGNAL_FUNC(position_callback), NULL);
+  return button;
+}
+
 static void
 create_positioning_frame (void)
 {
@@ -683,39 +695,14 @@ create_positioning_frame (void)
                              box, 3, FALSE);
 
   recenter_vertical_button =
-    gtk_button_new_with_label (_("Vertically"));
-  gtk_box_pack_start (GTK_BOX (box), recenter_vertical_button, FALSE, TRUE, 0);
-  gtk_widget_show (recenter_vertical_button);
-
-  gimp_help_set_help_data (recenter_vertical_button,
-                           _("Center the image vertically on the paper"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (recenter_vertical_button), "clicked",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  recenter_button = gtk_button_new_with_label (_("Both"));
-  gtk_box_pack_start (GTK_BOX (box), recenter_button, FALSE, TRUE, 0);
-  gtk_widget_show (recenter_button);
-
-  gimp_help_set_help_data (recenter_button,
-                           _("Center the image on the paper"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (recenter_button), "clicked",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
+    create_positioning_button(box, N_("Vertically"),
+			      N_("Center the image vertically on the paper"));
+  recenter_button =
+    create_positioning_button(box, N_("Both"),
+			      N_("Center the image on the paper"));
   recenter_horizontal_button =
-    gtk_button_new_with_label (_("Horizontally"));
-  gtk_box_pack_start (GTK_BOX (box), recenter_horizontal_button, FALSE, TRUE, 0);
-  gtk_widget_show (recenter_horizontal_button);
-
-  gimp_help_set_help_data (recenter_horizontal_button,
-                           _("Center the image horizontally on the paper"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (recenter_horizontal_button), "clicked",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
+    create_positioning_button(box, N_("Horizontally"),
+			      N_("Center the image horizontally on the paper"));
 }
 
 static void
