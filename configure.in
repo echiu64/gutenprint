@@ -19,31 +19,31 @@ AC_PATH_PROG(LPC_PROG, lpc)
 if test -n "$LP_PROG" ; then
   LP_DEF="-DLP_COMMAND=\\\"$LP_PROG\\\""
 else
-  LP_DEF""
+  LP_DEF=""
 fi
 
 if test -n "$LPSTAT_PROG" ; then
   LPSTAT_DEF="-DLPSTAT_COMMAND=\\\"$LPSTAT_PROG\\\""
 else
-  LPSTAT_DEF""
+  LPSTAT_DEF=""
 fi
 
 if test -n "$LPR_PROG" ; then
   LPR_DEF="-DLPR_COMMAND=\\\"$LPR_PROG\\\""
 else
-  LPR_DEF""
+  LPR_DEF=""
 fi
 
 if test -n "$LPC_PROG" ; then
   LPC_DEF="-DLPC_COMMAND=\\\"$LPC_PROG\\\""
 else
-  LPC_DEF""
+  LPC_DEF=""
 fi
 
 AM_PATH_GIMP(1.0.0,
         [SAVE_GTK_LIBS="$GIMP_LIBS"
         SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
-        AC_MSG_ERROR(Cannot find GIMP libs: Is gimptool in executable path?))
+        AC_MSG_ERROR(Cannot find GIMP libs: Please run ldconfig, and make sure gimptool is on your PATH.))
 
 dnl Checks for libraries.
 dnl Checking for the Gimp does all this
