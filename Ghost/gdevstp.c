@@ -251,7 +251,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
     return_error(gs_error_VMerror);
 
   if (strlen(stp_data.v.resolution) == 0)
-    strcpy(stp_data.v.resolution, (*printer->default_resolution)(printer));
+    strcpy(stp_data.v.resolution, (*printer->printfuncs->default_resolution)(printer));
   if (strlen(stp_data.v.dither_algorithm) == 0)
     strcpy(stp_data.v.dither_algorithm, stp_default_dither_algorithm());
 
@@ -275,7 +275,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   gsImage.data = &stp_data;
   gsImage.raster = stp_raster;
   if (stp_verify_printer_params(printer, &(stp_data.v)))
-    (*printer->print)(printer,		/* I - Model */
+    (*printer->printfuncs->print)(printer,		/* I - Model */
 		      file,		/* I - File to print to */
 		      &theImage,	/* I - Image to print (dummy) */
 		      &stp_data.v);	/* stp_vars_t * */
@@ -540,12 +540,12 @@ stp_open(gx_device *pdev)
   stp_data.v.page_width = pdev->MediaSize[0];
   stp_data.v.page_height = pdev->MediaSize[1];
 
-  (*printer->media_size)(printer,
+  (*printer->printfuncs->media_size)(printer,
 			 &(stp_data.v),
 			 &width,
 			 &height);
 
-  (*printer->imageable_area)(printer,	/* I - Printer model */
+  (*printer->printfuncs->imageable_area)(printer,	/* I - Printer model */
 			     &(stp_data.v),
 			     &left,	/* O - Left position in points */
 			     &right,	/* O - Right position in points */

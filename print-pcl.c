@@ -47,8 +47,8 @@ static void	pcl_mode2(FILE *, unsigned char *, int, int);
 
 typedef struct
 {
-    char  *pcl_name;
-    int   pcl_code;
+  const char  *pcl_name;
+  int   pcl_code;
 } pcl_t;
 
 /*
@@ -1278,13 +1278,13 @@ static int pcl_string_to_val(const char *string,		/* I: String */
  * Convert a value into it's option name
  */
 
-static char * pcl_val_to_string(int code,			/* I: Code */
+static const char * pcl_val_to_string(int code,			/* I: Code */
                            const pcl_t *options,	/* I: Options */
 			   int num_options)		/* I: Num options */
 {
 
   int i;
-  char *string = NULL;
+  const char *string = NULL;
 
  /*
   * Look up the code in the table and convert to the string.
@@ -1390,17 +1390,17 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **					/* O - Parameter values */
+static char **				/* O - Parameter values */
 pcl_parameters(const stp_printer_t *printer,/* I - Printer model */
-               char *ppd_file,		/* I - PPD file (not used) */
-               char *name,		/* I - Name of parameter */
+               const char *ppd_file,		/* I - PPD file (not used) */
+               const char *name,		/* I - Name of parameter */
                int  *count)		/* O - Number of values */
 {
   int		i;
   char		**valptrs;
   pcl_cap_t caps;
 
-  static char *ink_types[] =
+  static const char *ink_types[] =
   {
     "Color + Black Cartridges",
     "Color + Photo Cartridges"
@@ -1527,7 +1527,7 @@ pcl_parameters(const stp_printer_t *printer,/* I - Printer model */
  * 'pcl_imageable_area()' - Return the imageable area of the page.
  */
 
-void
+static void
 pcl_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 		   const stp_vars_t *v,     /* I */
                    int  *left,		/* O - Left position in points */
@@ -1553,7 +1553,7 @@ pcl_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
   *bottom = caps.bottom_margin;
 }
 
-void
+static void
 pcl_limit(const stp_printer_t *printer,	/* I - Printer model */
 	  const stp_vars_t *v,  		/* I */
 	  int  *width,			/* O - Left position in points */
@@ -1568,7 +1568,7 @@ pcl_limit(const stp_printer_t *printer,	/* I - Printer model */
  * 'pcl_print()' - Print an image to an HP printer.
  */
 
-void
+static void
 pcl_print(const stp_printer_t *printer,		/* I - Model */
           FILE      *prn,		/* I - File to print to */
           stp_image_t *image,		/* I - Image to print */
@@ -2240,6 +2240,16 @@ pcl_print(const stp_printer_t *printer,		/* I - Model */
   fputs("\033E", prn); 				/* PCL reset */
 }
 
+stp_printfuncs_t stp_pcl_printfuncs =
+{
+  pcl_parameters,
+  stp_default_media_size,
+  pcl_imageable_area,
+  pcl_limit,
+  pcl_print,
+  pcl_default_resolution,
+  pcl_describe_resolution,
+};
 
 
 /*

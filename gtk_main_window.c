@@ -180,6 +180,14 @@ extern void gtk_build_dither_menu(void);
 
 static int preview_ppi = 10;
 
+static char *
+c_strdup(const char *s)
+{
+  char *ret = malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
 /*****************************************************************************
  *
  * gtk_create_main_window()
@@ -767,11 +775,12 @@ void gtk_create_main_window(void)
 		     0, 0);
     gtk_widget_show(box);
 
-    (*current_printer->media_size) (current_printer, &vars, &paper_width,
-				    &paper_height);
+    (*current_printer->printfuncs->media_size) (current_printer, &vars,
+						&paper_width, &paper_height);
 
-    (*current_printer->imageable_area) (current_printer, &vars, &left, &right,
-				      &bottom, &top);
+    (*current_printer->printfuncs->imageable_area) (current_printer, &vars,
+						    &left, &right,
+						    &bottom, &top);
 
     /* Rationalise things a bit by measuring everything from the top left */
     top = paper_height - top;
@@ -1020,7 +1029,7 @@ void gtk_create_main_window(void)
         char *tmp;
 	if (!strcmp(the_printer->long_name, ""))
 	    continue;
-	tmp = gettext(the_printer->long_name);
+	tmp = c_strdup(gettext(the_printer->long_name));
 	gtk_clist_insert(GTK_CLIST(list), i, &tmp);
 	gtk_clist_set_row_data(GTK_CLIST(list), i, (gpointer)i);
 	the_printer++;
@@ -1617,7 +1626,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   */
   gtk_build_dither_menu();
 
-  media_sizes = (*(current_printer->parameters))(current_printer,
+  media_sizes = (*(current_printer->printfuncs->parameters))(current_printer,
                                                  p->v.ppd_file,
                                                  "PageSize", &num_media_sizes);
 
@@ -1641,7 +1650,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(media_types);
   }
 
-  media_types = (*(current_printer->parameters))(current_printer,
+  media_types = (*(current_printer->printfuncs->parameters))(current_printer,
 						 p->v.ppd_file,
 						 "MediaType",
 						 &num_media_types);
@@ -1663,7 +1672,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(media_sources);
   }
 
-  media_sources = (*(current_printer->parameters))(current_printer,
+  media_sources = (*(current_printer->printfuncs->parameters))(current_printer,
 						   p->v.ppd_file,
 						   "InputSlot",
 						   &num_media_sources);
@@ -1686,7 +1695,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(ink_types);
   }
 
-  ink_types = (*(current_printer->parameters))(current_printer,
+  ink_types = (*(current_printer->printfuncs->parameters))(current_printer,
 					       p->v.ppd_file,
 					       "InkType", &num_ink_types);
   if (vars.ink_type[0] == '\0' && ink_types != NULL)
@@ -1707,7 +1716,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
     free(resolutions);
   }
 
-  resolutions = (*(current_printer->parameters))(current_printer,
+  resolutions = (*(current_printer->printfuncs->parameters))(current_printer,
 						 p->v.ppd_file,
 						 "Resolution",
 						 &num_resolutions);
@@ -2145,11 +2154,11 @@ static void gtk_preview_update(void)
   gdouble unit_scaler;
 
 
-  (*current_printer->media_size)(current_printer, &vars, &paper_width,
-				 &paper_height);
+  (*current_printer->printfuncs->media_size)(current_printer, &vars,
+					     &paper_width, &paper_height);
 
-  (*current_printer->imageable_area)(current_printer, &vars, &left, &right,
-				     &bottom, &top);
+  (*current_printer->printfuncs->imageable_area)(current_printer, &vars,
+						 &left, &right, &bottom, &top);
 
   /* Rationalise things a bit by measuring everything from the top left */
   top = paper_height - top;

@@ -646,7 +646,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 
   if (strlen(v->media_size) > 0)
     {
-      vptr = (*p->parameters)(p, NULL, "PageSize", &count);
+      vptr = (*p->printfuncs->parameters)(p, NULL, "PageSize", &count);
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
@@ -663,7 +663,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
   else
     {
       int height, width;
-      (*p->limit)(p, v, &width, &height);
+      (*p->printfuncs->limit)(p, v, &width, &height);
 #if 0
       fprintf(stderr, "limit %d %d dims %d %d\n", width, height,
 	      v->page_width, v->page_height);
@@ -678,7 +678,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 
   if (strlen(v->media_type) > 0)
     {
-      vptr = (*p->parameters)(p, NULL, "MediaType", &count);
+      vptr = (*p->printfuncs->parameters)(p, NULL, "MediaType", &count);
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
@@ -695,7 +695,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 
   if (strlen(v->media_source) > 0)
     {
-      vptr = (*p->parameters)(p, NULL, "InputSlot", &count);
+      vptr = (*p->printfuncs->parameters)(p, NULL, "InputSlot", &count);
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
@@ -712,7 +712,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 
   if (strlen(v->resolution) > 0)
     {
-      vptr = (*p->parameters)(p, NULL, "Resolution", &count);
+      vptr = (*p->printfuncs->parameters)(p, NULL, "Resolution", &count);
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
@@ -729,7 +729,7 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 
   if (strlen(v->ink_type) > 0)
     {
-      vptr = (*p->parameters)(p, NULL, "InkType", &count);
+      vptr = (*p->printfuncs->parameters)(p, NULL, "InkType", &count);
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)

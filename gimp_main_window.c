@@ -196,6 +196,14 @@ guchar *thumbnail_data;
 gint    adjusted_thumbnail_bpp;
 guchar *adjusted_thumbnail_data;
 
+static gchar *
+c_strdup(const gchar *s)
+{
+  gchar *ret = malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
 /*
  *  gimp_create_main_window()
  */
@@ -583,11 +591,13 @@ gimp_create_main_window (void)
   gtk_container_add (GTK_CONTAINER (frame), table);
   gtk_widget_show (table);
 
-  (*current_printer->media_size) (current_printer, &vars, &paper_width,
-				  &paper_height);
+  (*current_printer->printfuncs->media_size) (current_printer,
+					      &vars, &paper_width,
+					      &paper_height);
 
-  (*current_printer->imageable_area) (current_printer, &vars, &left, &right,
-				      &bottom, &top);
+  (*current_printer->printfuncs->imageable_area) (current_printer, &vars,
+						  &left, &right,
+						  &bottom, &top);
 
   /* Rationalise things a bit by measuring everything from the top left */
   top = paper_height - top;
@@ -908,7 +918,7 @@ gimp_create_main_window (void)
       char *tmp;
       if (!strcmp(the_printer->long_name, ""))
 	continue;
-      tmp = gettext(the_printer->long_name);
+      tmp = c_strdup(gettext(the_printer->long_name));
       gtk_clist_insert(GTK_CLIST(list), i, &tmp);
       gtk_clist_set_row_data(GTK_CLIST(list), i, (gpointer)i);
       the_printer++;
@@ -1107,8 +1117,8 @@ gimp_scaling_callback (GtkWidget *widget)
 void 
 gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 			gint            num_items,   /* I - Number of items */
-			const gchar    **items,       /* I - Menu items */
-			const gchar     *cur_item,    /* I - Current item */
+			gchar    **items,       /* I - Menu items */
+			gchar     *cur_item,    /* I - Current item */
 			GtkSignalFunc   callback,    /* I - Callback */
 			gint           *callback_id) /* IO - Callback ID (init to -1) */
 {
@@ -1348,16 +1358,16 @@ gimp_plist_callback (GtkWidget *widget,
 {
   gint     i;
   stp_plist_t *p;
-  int		num_media_sizes;
-  char		**media_sizes;
-  int		num_media_types;	/* Number of media types */
-  char		**media_types;		/* Media type strings */
-  int		num_media_sources;	/* Number of media sources */
-  char		**media_sources;        /* Media source strings */
-  int		num_ink_types;		/* Number of ink types */
-  char		**ink_types;		/* Ink type strings */
-  int		num_resolutions;	/* Number of resolutions */
-  char		**resolutions;		/* Resolution strings */
+  gint		num_media_sizes;
+  gchar		**media_sizes;
+  gint		num_media_types;	/* Number of media types */
+  gchar		**media_types;		/* Media type strings */
+  gint		num_media_sources;	/* Number of media sources */
+  gchar		**media_sources;        /* Media source strings */
+  gint		num_ink_types;		/* Number of ink types */
+  gchar		**ink_types;		/* Ink type strings */
+  gint		num_resolutions;	/* Number of resolutions */
+  gchar		**resolutions;		/* Resolution strings */
 
   plist_current = (gint) data;
   p             = plist + plist_current;
@@ -1389,9 +1399,8 @@ gimp_plist_callback (GtkWidget *widget,
    * Now get option parameters...
    */
 
-  media_sizes = (*(current_printer->parameters)) (current_printer,
-						  p->v.ppd_file,
-						  "PageSize", &num_media_sizes);
+  media_sizes = (*(current_printer->printfuncs->parameters))
+    (current_printer, p->v.ppd_file, "PageSize", &num_media_sizes);
   if (vars.media_size[0] == '\0')
     strcpy (vars.media_size, media_sizes[0]);
   gimp_plist_build_combo (media_size_combo,
@@ -1405,7 +1414,7 @@ gimp_plist_callback (GtkWidget *widget,
     free (media_sizes[i]);
   free (media_sizes);
 
-  media_types = (*(current_printer->parameters)) (current_printer,
+  media_types = (*(current_printer->printfuncs->parameters)) (current_printer,
 						  p->v.ppd_file,
 						  "MediaType",
 						  &num_media_types);
@@ -1427,7 +1436,7 @@ gimp_plist_callback (GtkWidget *widget,
       free (media_types);
     }
 
-  media_sources = (*(current_printer->parameters)) (current_printer,
+  media_sources = (*(current_printer->printfuncs->parameters)) (current_printer,
 						    p->v.ppd_file,
 						    "InputSlot",
 						    &num_media_sources);
@@ -1449,7 +1458,7 @@ gimp_plist_callback (GtkWidget *widget,
       free (media_sources);
     }
 
-  ink_types = (*(current_printer->parameters)) (current_printer,
+  ink_types = (*(current_printer->printfuncs->parameters)) (current_printer,
 						p->v.ppd_file,
 						"InkType", &num_ink_types);
   if (vars.ink_type[0] == '\0' && ink_types != NULL)
@@ -1470,7 +1479,7 @@ gimp_plist_callback (GtkWidget *widget,
       free (ink_types);
     }
 
-  resolutions = (*(current_printer->parameters)) (current_printer,
+  resolutions = (*(current_printer->printfuncs->parameters)) (current_printer,
 						  p->v.ppd_file,
 						  "Resolution",
 						  &num_resolutions);
@@ -1515,8 +1524,8 @@ gimp_media_size_callback (GtkWidget *widget,
       if (vars.unit)
 	unit_scaler /= 2.54;
       new_value *= unit_scaler;
-      (current_printer->limit)(current_printer, &vars, &width_limit,
-			       &height_limit);
+      (current_printer->printfuncs->limit)(current_printer, &vars,
+					   &width_limit, &height_limit);
       if (new_value < 72)
 	new_value = 72;
       else if (new_value > width_limit)
@@ -1541,8 +1550,8 @@ gimp_media_size_callback (GtkWidget *widget,
       if (vars.unit)
 	unit_scaler /= 2.54;
       new_value *= unit_scaler;
-      (current_printer->limit)(current_printer, &vars, &width_limit,
-			       &height_limit);
+      (current_printer->printfuncs->limit)(current_printer, &vars,
+					   &width_limit, &height_limit);
       if (new_value < 144)
 	new_value = 144;
       else if (new_value > height_limit)
@@ -2025,10 +2034,10 @@ gimp_preview_update (void)
   gint          paper_left, paper_top;
   gdouble	unit_scaler = 72.0;
 
-  (*current_printer->media_size) (current_printer, &vars, &paper_width,
+  (*current_printer->printfuncs->media_size) (current_printer, &vars, &paper_width,
 				  &paper_height);
 
-  (*current_printer->imageable_area) (current_printer, &vars, &left, &right,
+  (*current_printer->printfuncs->imageable_area) (current_printer, &vars, &left, &right,
 				      &bottom, &top);
 
   /* Rationalise things a bit by measuring everything from the top left */

@@ -58,10 +58,10 @@ static char	*ppd_find(const char *, const char *, const char *, int *);
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **					/* O - Parameter values */
+static char **					/* O - Parameter values */
 ps_parameters(const stp_printer_t *printer,	/* I - Printer model */
-              char *ppd_file,		/* I - PPD file (not used) */
-              char *name,		/* I - Name of parameter */
+              const char *ppd_file,		/* I - PPD file (not used) */
+              const char *name,		/* I - Name of parameter */
               int  *count)		/* O - Number of values */
 {
   int		i;
@@ -148,7 +148,7 @@ ps_parameters(const stp_printer_t *printer,	/* I - Printer model */
  * 'ps_media_size()' - Return the size of the page.
  */
 
-void
+static void
 ps_media_size(const stp_printer_t *printer,	/* I - Printer model */
 	      const stp_vars_t *v,		/* I */
               int  *width,		/* O - Width in points */
@@ -175,7 +175,7 @@ ps_media_size(const stp_printer_t *printer,	/* I - Printer model */
  * 'ps_imageable_area()' - Return the imageable area of the page.
  */
 
-void
+static void
 ps_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 		  const stp_vars_t *v,      /* I */
                   int  *left,		/* O - Left position in points */
@@ -216,7 +216,7 @@ ps_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
   }
 }
 
-void
+static void
 ps_limit(const stp_printer_t *printer,	/* I - Printer model */
 	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
@@ -226,7 +226,7 @@ ps_limit(const stp_printer_t *printer,	/* I - Printer model */
     *height =	INT_MAX;
 }
 
-const char *
+static const char *
 ps_default_resolution(const stp_printer_t *printer)
 {
   return "default";
@@ -235,7 +235,7 @@ ps_default_resolution(const stp_printer_t *printer)
 /*
  * This is really bogus...
  */
-void
+static void
 ps_describe_resolution(const stp_printer_t *printer,
 			const char *resolution, int *x, int *y)
 {
@@ -249,7 +249,7 @@ ps_describe_resolution(const stp_printer_t *printer,
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 
-void
+static void
 ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
          FILE      *prn,		/* I - File to print to */
          stp_image_t *image,		/* I - Image to print */
@@ -748,3 +748,14 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
 
   return (NULL);
 }
+
+stp_printfuncs_t stp_ps_printfuncs =
+{
+  ps_parameters,
+  ps_media_size,
+  ps_imageable_area,
+  ps_limit,
+  ps_print,
+  ps_default_resolution,
+  ps_describe_resolution,
+};

@@ -49,7 +49,7 @@ main(int argc, char **argv)
       printf("# Printer model %s, long name `%s'\n", p->driver, p->long_name);
       for (k = 0; k < nparams; k++)
 	{
-	  retval = (*p->parameters)(p, NULL, params[k], &count);
+	  retval = (*p->printfuncs->parameters)(p, NULL, params[k], &count);
 	  if (count > 0)
 	    {
 	      for (j = 0; j < count; j++)

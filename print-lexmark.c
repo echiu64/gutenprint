@@ -564,7 +564,7 @@ c_strdup(const char *s)
   return ret;
 }
 
-const char *
+static const char *
 lexmark_default_resolution(const stp_printer_t *printer)
 {
   lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
@@ -574,7 +574,7 @@ lexmark_default_resolution(const stp_printer_t *printer)
     return "180x180 DPI";
 }
 
-void
+static void
 lexmark_describe_resolution(const stp_printer_t *printer,
 			    const char *resolution, int *x, int *y)
 {
@@ -588,17 +588,17 @@ lexmark_describe_resolution(const stp_printer_t *printer,
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **					/* O - Parameter values */
+static char **				/* O - Parameter values */
 lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
-		   char *ppd_file,	/* I - PPD file (not used) */
-		   char *name,		/* I - Name of parameter */
+		   const char *ppd_file,	/* I - PPD file (not used) */
+		   const char *name,		/* I - Name of parameter */
 		   int  *count)		/* O - Number of values */
 {
   int		i;
-  char		**p= 0,
-    **valptrs= 0;
+  const char **p= 0;
+  char **valptrs= 0;
 
-  static char   *media_types[] =
+  static const char   *media_types[] =
   {
     ("Plain Paper"),
     ("Transparencies"),
@@ -612,7 +612,7 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
     ("Glossy Photo Cards"),
     ("Photo Paper Pro")
   };
-  static char   *media_sources[] =
+  static const char   *media_sources[] =
   {
     ("Auto Sheet Feeder"),
     ("Manual with Pause"),
@@ -680,7 +680,7 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	return 0;
       }
       *count= c;
-      p= valptrs;
+      return (valptrs);
     }
   else if (strcmp(name, "InkType") == 0)
     {
@@ -698,7 +698,7 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 	valptrs[c++]= c_strdup("Photo/Color");
       valptrs[c++]= c_strdup("Photo Test Mode");
       *count = c;
-      p = valptrs;
+      return (valptrs);
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -717,7 +717,7 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
   for (i = 0; i < *count; i ++)
     valptrs[i] = c_strdup(p[i]);
 
-  return (valptrs);
+  return ((char **) valptrs);
 }
 
 
@@ -725,13 +725,13 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
  * 'lexmark_imageable_area()' - Return the imageable area of the page.
  */
 
-void
+static void
 lexmark_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
-const stp_vars_t *v,   /* I */
-                     int  *left,	/* O - Left position in points */
-                     int  *right,	/* O - Right position in points */
-                     int  *bottom,	/* O - Bottom position in points */
-                     int  *top)		/* O - Top position in points */
+		       const stp_vars_t *v,   /* I */
+		       int  *left,	/* O - Left position in points */
+		       int  *right,	/* O - Right position in points */
+		       int  *bottom,	/* O - Bottom position in points */
+		       int  *top)	/* O - Top position in points */
 {
   int	width, length;			/* Size of page */
 
@@ -747,7 +747,7 @@ const stp_vars_t *v,   /* I */
   lxm3200_linetoeject = (length * 1200) / 72;
 }
 
-void
+static void
 lexmark_limit(const stp_printer_t *printer,	/* I - Printer model */
 	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
@@ -1009,7 +1009,7 @@ static void setcol2(char *a, int al)
    lexmark_getNextMode() & lexmark_write() are doing some other "special" things like 
    printing every second pixel, which is not so simpe to handle in this method).
 */
-void
+static void
 lexmark_print(const stp_printer_t *printer,		/* I - Model */
 	      FILE      *prn,		/* I - File to print to */
 	      stp_image_t *image,		/* I - Image to print */
@@ -1851,6 +1851,17 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   lexmark_deinit_printer(prn, caps);
 }
 
+stp_printfuncs_t stp_lexmark_printfuncs =
+{
+  lexmark_parameters,
+  stp_default_media_size,
+  lexmark_imageable_area,
+  lexmark_limit,
+  lexmark_print,
+  lexmark_default_resolution,
+  lexmark_describe_resolution,
+};
+
 
 
 /* lexmark_init_line 
@@ -1863,9 +1874,12 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 static unsigned char *
 lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int direction,
 		  lexmark_cap_t   caps	        /* I - Printer model */
-		  ) {
+		  )
+{
   int  left_margin_multipl;  /* multiplyer for left margin calculation */
-  int pos1, pos2, abspos, disp;
+  int pos1 = 0;
+  int pos2 = 0;
+  int abspos, disp;
 
 
   /*  printf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/

@@ -295,13 +295,12 @@ typedef struct stp_image
  *   
  */
 
-typedef struct printer
+struct printer;
+
+typedef struct
 {
-  char	*long_name,			/* Long name for UI */
-	*driver;			/* Short name for printrc file */
-  int	model;				/* Model number */
-  char	**(*parameters)(const struct printer *printer, char *ppd_file,
-                        char *name, int *count);
+  char	**(*parameters)(const struct printer *printer, const char *ppd_file,
+                        const char *name, int *count);
   void	(*media_size)(const struct printer *printer, const stp_vars_t *v,
 		      int *width, int *height);
   void	(*imageable_area)(const struct printer *printer, const stp_vars_t *v,
@@ -313,6 +312,14 @@ typedef struct printer
   const char *(*default_resolution)(const struct printer *printer);
   void  (*describe_resolution)(const struct printer *printer,
 			       const char *resolution, int *x, int *y);
+} stp_printfuncs_t;
+
+typedef struct printer
+{
+  const char	*long_name,			/* Long name for UI */
+	*driver;			/* Short name for printrc file */
+  int	model;				/* Model number */
+  const stp_printfuncs_t *printfuncs;
   stp_vars_t printvars;
 } stp_printer_t;
 
@@ -450,89 +457,6 @@ extern void	stp_compute_lut(size_t steps, stp_vars_t *v);
 extern void	stp_default_media_size(const stp_printer_t *printer,
 				       const stp_vars_t *v, int *width,
 				       int *height);
-
-
-extern char	**lexmark_parameters(const stp_printer_t *printer,
-				     char *ppd_file, char *name, int *count);
-extern void	lexmark_imageable_area(const stp_printer_t *printer,
-				       const stp_vars_t *v,
-				       int *left, int *right,
-				       int *bottom, int *top);
-extern void	lexmark_limit(const stp_printer_t *printer,
-			      const stp_vars_t *v,
-			      int *width, int *height);
-extern void	lexmark_print(const stp_printer_t *printer, FILE *prn,
-			      stp_image_t *image, const stp_vars_t *v);
-extern const char *lexmark_default_resolution(const stp_printer_t *printer);
-extern void     lexmark_describe_resolution(const struct printer *printer,
-					    const char *resolution,
-					    int *x, int *y);
-
-
-extern char	**escp2_parameters(const stp_printer_t *printer,
-				   char *ppd_file, char *name, int *count);
-extern void	escp2_imageable_area(const stp_printer_t *printer,
-				     const stp_vars_t *v,
-				     int *left, int *right,
-				     int *bottom, int *top);
-extern void	escp2_limit(const stp_printer_t *printer, const stp_vars_t *v,
-			    int *width, int *height);
-extern void	escp2_print(const stp_printer_t *printer, FILE *prn,
-			    stp_image_t *image, const stp_vars_t *v);
-extern const char *escp2_default_resolution(const stp_printer_t *printer);
-extern void     escp2_describe_resolution(const struct printer *printer,
-					  const char *resolution,
-					  int *x, int *y);
-
-
-extern char	**canon_parameters(const stp_printer_t *printer,
-				   char *ppd_file, char *name, int *count);
-extern void	canon_imageable_area(const stp_printer_t *printer,
-				     const stp_vars_t *v,
-				     int *left, int *right,
-				     int *bottom, int *top);
-extern void	canon_limit(const stp_printer_t *printer, const stp_vars_t *v,
-			    int *width, int *height);
-extern void	canon_print(const stp_printer_t *printer, FILE *prn,
-			    stp_image_t *image, const stp_vars_t *v);
-extern const char *canon_default_resolution(const stp_printer_t *printer);
-extern void     canon_describe_resolution(const struct printer *printer,
-					  const char *resolution,
-					  int *x, int *y);
-
-
-extern char	**pcl_parameters(const stp_printer_t *printer, char *ppd_file,
-		                 char *name, int *count);
-extern void	pcl_imageable_area(const stp_printer_t *printer,
-				   const stp_vars_t *v,
-		                   int *left, int *right,
-				   int *bottom, int *top);
-extern void	pcl_limit(const stp_printer_t *printer, const stp_vars_t *v,
-			  int *width, int *height);
-extern void	pcl_print(const stp_printer_t *printer, FILE *prn,
-			  stp_image_t *image, const stp_vars_t *v);
-extern const char *pcl_default_resolution(const stp_printer_t *printer);
-extern void     pcl_describe_resolution(const struct printer *printer,
-					const char *resolution,
-					int *x, int *y);
-
-
-extern char	**ps_parameters(const stp_printer_t *printer, char *ppd_file,
-		                char *name, int *count);
-extern void	ps_media_size(const stp_printer_t *printer,
-			      const stp_vars_t *v, int *width, int *height);
-extern void	ps_imageable_area(const stp_printer_t *printer,
-				  const stp_vars_t *v,
-				  int *left, int *right,
-		                  int *bottom, int *top);
-extern void	ps_limit(const stp_printer_t *printer, const stp_vars_t *v,
-			 int *width, int *height);
-extern void	ps_print(const stp_printer_t *printer, FILE *prn,
-			 stp_image_t *image, const stp_vars_t *v);
-extern const char *ps_default_resolution(const stp_printer_t *printer);
-extern void     ps_describe_resolution(const struct printer *printer,
-				       const char *resolution,
-				       int *x, int *y);
 
 extern size_t	  stp_dither_algorithm_count(void);
 extern const char *stp_dither_algorithm_name(int);

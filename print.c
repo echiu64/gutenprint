@@ -644,7 +644,8 @@ run (char   *name,		/* I - Name of print program. */
 	   */
 
 	  if (stp_verify_printer_params(current_printer, &vars))
-	    (*current_printer->print) (current_printer, prn, image, &vars);
+	    (*current_printer->printfuncs->print) (current_printer,
+						   prn, image, &vars);
 	  else
 	    values[0].data.d_status = STATUS_EXECUTION_ERROR;
 

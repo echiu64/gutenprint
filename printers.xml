@@ -771,7 +771,7 @@
 <language value=pcl>
 </printer>
 
-<printer name="Lexmark 3200" driver="lexmark-3200">
+<printer name="LEXMARK 3200" driver="lexmark-3200">
 <color>
 <model value=3200>
 <gamma value=0.5>
@@ -781,7 +781,7 @@
 <language value=lexmark>
 </printer>
 
-<printer name="Lexmark 4076" driver="lexmark-4076">
+<printer name="LEXMARK 4076" driver="lexmark-4076">
 <nocolor>
 <model value=500>
 <gamma value=0.818>
@@ -789,7 +789,7 @@
 <language value=pcl>
 </printer>
 
-<printer name="Lexmark Z52" driver="lexmark-z52">
+<printer name="LEXMARK Z52" driver="lexmark-z52">
 <color>
 <model value=10052>
 <gamma value=0.5>

@@ -1350,7 +1350,7 @@ canon_inks(canon_cap_t caps, int res_code, int colors, int bits)
 }
 
 
-const char *
+static const char *
 canon_default_resolution(const stp_printer_t *printer)
 {
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
@@ -1360,7 +1360,7 @@ canon_default_resolution(const stp_printer_t *printer)
     return "180x180 DPI";
 }
 
-void
+static void
 canon_describe_resolution(const stp_printer_t *printer,
 			const char *resolution, int *x, int *y)
 {
@@ -1374,17 +1374,17 @@ canon_describe_resolution(const stp_printer_t *printer,
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **					/* O - Parameter values */
+static char **					/* O - Parameter values */
 canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
-                 char *ppd_file,	/* I - PPD file (not used) */
-                 char *name,		/* I - Name of parameter */
+                 const char *ppd_file,	/* I - PPD file (not used) */
+                 const char *name,		/* I - Name of parameter */
                  int  *count)		/* O - Number of values */
 {
   int		i;
-  char		**p= 0,
-                **valptrs= 0;
+  const char **p= 0;
+  char **valptrs= 0;
 
-  static char   *media_types[] =
+  static const char   *media_types[] =
                 {
                   ("Plain Paper"),
                   ("Transparencies"),
@@ -1398,7 +1398,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
                   ("Glossy Photo Cards"),
                   ("Photo Paper Pro")
                 };
-  static char   *media_sources[] =
+  static const char   *media_sources[] =
                 {
                   ("Auto Sheet Feeder"),
                   ("Manual with Pause"),
@@ -1465,7 +1465,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
       }
     }
     *count= c;
-    p = valptrs;
+    return (valptrs);
   }
   else if (strcmp(name, "InkType") == 0)
   {
@@ -1482,7 +1482,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
     if ((caps.inks & CANON_INK_CcMmYyK))
       valptrs[c++]= c_strdup("Black/Photo Color");
     *count = c;
-    p = valptrs;
+    return (valptrs);
   }
   else if (strcmp(name, "MediaType") == 0)
   {
@@ -1501,7 +1501,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
   for (i = 0; i < *count; i ++)
     valptrs[i] = c_strdup(p[i]);
 
-  return (valptrs);
+  return ((char **) valptrs);
 }
 
 
@@ -1509,7 +1509,7 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
  * 'canon_imageable_area()' - Return the imageable area of the page.
  */
 
-void
+static void
 canon_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 		     const stp_vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
@@ -1529,7 +1529,7 @@ canon_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
   *bottom = caps.border_bottom;
 }
 
-void
+static void
 canon_limit(const stp_printer_t *printer,	/* I - Printer model */
 	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
@@ -1545,8 +1545,8 @@ canon_limit(const stp_printer_t *printer,	/* I - Printer model */
  */
 static void
 canon_cmd(FILE *prn, /* I - the printer         */
-	  char *ini, /* I - 2 bytes start code  */
-	  char cmd,  /* I - command code        */
+	  const char *ini, /* I - 2 bytes start code  */
+	  const char cmd,  /* I - command code        */
 	  int  num,  /* I - number of arguments */
 	  ...        /* I - the args themselves */
 	  )
@@ -1760,7 +1760,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 /*
  * 'canon_print()' - Print an image to a CANON printer.
  */
-void
+static void
 canon_print(const stp_printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    stp_image_t *image,		/* I - Image to print */
@@ -2258,6 +2258,17 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
 
   canon_deinit_printer(prn, caps);
 }
+
+stp_printfuncs_t stp_canon_printfuncs =
+{
+  canon_parameters,
+  stp_default_media_size,
+  canon_imageable_area,
+  canon_limit,
+  canon_print,
+  canon_default_resolution,
+  canon_describe_resolution,
+};
 
 /*
  * 'canon_fold_lsb_msb()' fold 2 lines in order lsb/msb

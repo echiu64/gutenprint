@@ -1,4 +1,4 @@
-### --------------- Epson Stylus Photo Driver ---------------------------- ###
+### --------------- Gimp-Print/stp Driver ---------------------------- ###
 
 stp_=gdevstp.$(OBJ) \
 	gdevstp-dither.$(OBJ) \
@@ -14,32 +14,32 @@ stp_=gdevstp.$(OBJ) \
 $(DD)stp.dev:	$(stp_) $(DD)page.dev
 	$(SETPDEV) $(DD)stp $(stp_)
 
-gdevstp.$(OBJ) : gdevstp.c $(PDEVH)
+gdevstp.$(OBJ) : gdevstp.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp.c
 
-gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH)
+gdevstp-util.$(OBJ) : gdevstp-util.c gdevstp-printers.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-util.c
 
-gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH)
+gdevstp-weave.$(OBJ) : gdevstp-weave.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-weave.c
 
-gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH)
+gdevstp-color.$(OBJ) : gdevstp-color.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-color.c
 
-gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH)
+gdevstp-dither.$(OBJ) : gdevstp-dither.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-dither.c
 
-gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH)
+gdevstp-escp2.$(OBJ) : gdevstp-escp2.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-escp2.c
 
-gdevstp-lexmark.$(OBJ) : gdevstp-lexmark.c $(PDEVH)
+gdevstp-lexmark.$(OBJ) : gdevstp-lexmark.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-lexmark.c
 
-gdevstp-pcl.$(OBJ) : gdevstp-pcl.c $(PDEVH)
+gdevstp-pcl.$(OBJ) : gdevstp-pcl.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-pcl.c
 
-gdevstp-canon.$(OBJ) : gdevstp-canon.c $(PDEVH)
+gdevstp-canon.$(OBJ) : gdevstp-canon.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-canon.c
 
-gdevstp-ps.$(OBJ) : gdevstp-ps.c $(PDEVH)
+gdevstp-ps.$(OBJ) : gdevstp-ps.c $(PDEVH) gdevstp-print.h
 	$(CCC) gdevstp-ps.c

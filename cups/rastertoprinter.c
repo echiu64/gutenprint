@@ -300,7 +300,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-    opts = (*(printer->parameters))(printer, NULL, "Resolution", &num_opts);
+    opts = (*(printer->printfuncs->parameters))(printer, NULL, "Resolution",
+						&num_opts);
     if (cups.header.cupsCompression < 0 ||
 	cups.header.cupsCompression >= num_opts)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
@@ -323,7 +324,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
     fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
     if (stp_verify_printer_params(printer, &v))
-      (*printer->print)(printer, stdout, &theImage, &v);
+      (*printer->printfuncs->print)(printer, stdout, &theImage, &v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 

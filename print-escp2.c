@@ -1918,10 +1918,10 @@ escp2_sat_adjustment(int model, const stp_vars_t *v)
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
 
-char **					/* O - Parameter values */
+static char **					/* O - Parameter values */
 escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
-                 char *ppd_file,	/* I - PPD file (not used) */
-                 char *name,		/* I - Name of parameter */
+                 const char *ppd_file,	/* I - PPD file (not used) */
+                 const char *name,	/* I - Name of parameter */
                  int  *count)		/* O - Number of values */
 {
   int		i;
@@ -2051,7 +2051,7 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
  * 'escp2_imageable_area()' - Return the imageable area of the page.
  */
 
-void
+static void
 escp2_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 		     const stp_vars_t *v,   /* I */
                      int  *left,	/* O - Left position in points */
@@ -2068,7 +2068,7 @@ escp2_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
   *bottom =	escp2_bottom_margin(printer->model, &printer->printvars);
 }
 
-void
+static void
 escp2_limit(const stp_printer_t *printer,	/* I - Printer model */
 	    const stp_vars_t *v,  		/* I */
 	    int  *width,		/* O - Left position in points */
@@ -2078,7 +2078,7 @@ escp2_limit(const stp_printer_t *printer,	/* I - Printer model */
   *height =	escp2_max_paper_height(printer->model, &printer->printvars);
 }
 
-const char *
+static const char *
 escp2_default_resolution(const stp_printer_t *printer)
 {
   const res_t *res = &(escp2_reslist[0]);
@@ -2109,7 +2109,7 @@ escp2_default_resolution(const stp_printer_t *printer)
   return NULL;
 }
 
-void
+static void
 escp2_describe_resolution(const stp_printer_t *printer,
 			  const char *resolution, int *x, int *y)
 {
@@ -2388,7 +2388,7 @@ escp2_deinit_printer(FILE *prn, escp2_init_t *init)
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
-void
+static void
 escp2_print(const stp_printer_t *printer,		/* I - Model */
             FILE      	    *prn,		/* I - File to print to */
 	    stp_image_t     *image,		/* I - Image to print */
@@ -2894,6 +2894,17 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   print_timers();
 #endif
 }
+
+stp_printfuncs_t stp_escp2_printfuncs =
+{
+  escp2_parameters,
+  stp_default_media_size,
+  escp2_imageable_area,
+  escp2_limit,
+  escp2_print,
+  escp2_default_resolution,
+  escp2_describe_resolution,
+};
 
 static unsigned char *microweave_s = 0;
 static unsigned char *microweave_comp_ptr[7][4];

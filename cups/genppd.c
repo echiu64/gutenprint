@@ -293,7 +293,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   * Get the page sizes from the driver...
   */
 
-  opts = (*(p->parameters))(p, NULL, "PageSize", &num_opts);
+  opts = (*(p->printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
@@ -309,7 +309,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &height);
+    (*(p->printfuncs->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
       if (size->width == width && size->height == height)
@@ -337,7 +337,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &height);
+    (*(p->printfuncs->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
       if (size->width == width && size->height == height)
@@ -362,8 +362,8 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &height);
-    (*(p->imageable_area))(p, &v, &left, &right, &bottom, &top);
+    (*(p->printfuncs->media_size))(p, &v, &width, &height);
+    (*(p->printfuncs->imageable_area))(p, &v, &left, &right, &bottom, &top);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
       if (size->width == width && size->height == height)
@@ -388,7 +388,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
     strcpy(v.media_size, opts[i]);
 
-    (*(p->media_size))(p, &v, &width, &height);
+    (*(p->printfuncs->media_size))(p, &v, &width, &height);
 
     for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
       if (size->width == width && size->height == height)
@@ -451,7 +451,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   * Media types...
   */
 
-  opts = (*(p->parameters))(p, NULL, "MediaType", &num_opts);
+  opts = (*(p->printfuncs->parameters))(p, NULL, "MediaType", &num_opts);
 
   if (num_opts > 0)
   {
@@ -484,7 +484,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   * Input slots...
   */
 
-  opts = (*(p->parameters))(p, NULL, "InputSlot", &num_opts);
+  opts = (*(p->printfuncs->parameters))(p, NULL, "InputSlot", &num_opts);
 
   if (num_opts > 0)
   {
@@ -522,7 +522,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
 
   for (i = 0; i < stp_dither_algorithm_count(); i ++)
   {
-    char *s;
+    const char *s;
     char *copy = malloc(strlen(stp_dither_algorithm_name(i)) + 1);
     char *d = copy;
     s = stp_dither_algorithm_name(i);
@@ -545,7 +545,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   * Resolutions...
   */
 
-  opts = (*(p->parameters))(p, NULL, "Resolution", &num_opts);
+  opts = (*(p->printfuncs->parameters))(p, NULL, "Resolution", &num_opts);
 
   gzputs(fp, "*OpenUI *Resolution: PickOne\n");
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
@@ -558,7 +558,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
    /* 
     * Strip resolution name to its essentials...
     */
-    (p->describe_resolution)(p, opts[i], &xdpi, &ydpi);
+    (p->printfuncs->describe_resolution)(p, opts[i], &xdpi, &ydpi);
 
     /* This should not happen! */
     if (xdpi == -1 || ydpi == -1)
