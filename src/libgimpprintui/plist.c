@@ -632,7 +632,7 @@ stpui_printrc_load_v1(FILE *fp)
 			   keyword, value, desc.p_type);
 		}
 	    }
-	  stp_free_parameter_description(&desc);
+	  stp_parameter_description_free(&desc);
 	}
     }
   if (strlen(key.name) > 0)

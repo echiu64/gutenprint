@@ -134,10 +134,10 @@ extern const char *stp_check_version(unsigned int required_major,
  * get_row() transfers the data from the image to the gimp-print
  * library.  It is called from the driver layer.  It should copy WIDTH
  * (as returned by the width() member) pixels of data into the data
- * buffer.  It normally returns STP_IMAGE_OK; if something goes wrong,
+ * buffer.  It normally returns STP_IMAGE_STATUS_OK; if something goes wrong,
  * or the application wishes to stop producing any further output
  * (e. g. because the user cancelled the print job), it should return
- * STP_IMAGE_ABORT.  This will cause the driver to flush any remaining
+ * STP_IMAGE_STATUS_ABORT.  This will cause the driver to flush any remaining
  * data to the output.  It will always request rows in monotonically
  * ascending order, but it may skip rows (if, for example, the
  * resolution of the input is higher than the resolution of the
@@ -152,8 +152,8 @@ typedef enum
 
 typedef enum stp_image_status
 {
-  STP_IMAGE_OK,
-  STP_IMAGE_ABORT
+  STP_IMAGE_STATUS_OK,
+  STP_IMAGE_STATUS_ABORT
 } stp_image_status_t;
 
 typedef struct stp_image
@@ -506,7 +506,7 @@ extern void
 stp_describe_parameter(const stp_vars_t v, const char *name,
 		       stp_parameter_t *description);
 
-extern void stp_free_parameter_description(stp_parameter_t *description);
+extern void stp_parameter_description_free(stp_parameter_t *description);
 
 extern const stp_parameter_t *
 stp_parameter_find_in_settings(const stp_vars_t v, const char *name);

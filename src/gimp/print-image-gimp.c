@@ -403,7 +403,7 @@ Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
 	    }
 	}
     }
-  return STP_IMAGE_OK;
+  return STP_IMAGE_STATUS_OK;
 }
 
 static void

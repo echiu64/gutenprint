@@ -93,7 +93,7 @@ main(int argc, char **argv) {
       printf("  'height' => '%d'\n", height);
       printf("};\n");
     }
-    stp_free_parameter_description(&desc);
+    stp_parameter_description_free(&desc);
     stp_vars_free(pv);
   }
   return 0;

@@ -114,7 +114,7 @@ Thumbnail_get_row(stp_image_t *image, unsigned char *data,
   thumbnail_image_t *im = (thumbnail_image_t *) (image->rep);
   const guchar *where = im->data + (row * im->w * im->bpp);
   memcpy(data, where, im->w * im->bpp);
-  return STP_IMAGE_OK;
+  return STP_IMAGE_STATUS_OK;
 }
 
 static void

@@ -132,7 +132,7 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
 	stp_set_string_parameter
 	  (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
     }
-  stp_free_parameter_description(&desc);
+  stp_parameter_description_free(&desc);
 }
 
 /*
@@ -180,7 +180,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
 
-  Image_status = STP_IMAGE_OK;
+  Image_status = STP_IMAGE_STATUS_OK;
 
  /*
   * Get the PPD file...
@@ -527,7 +527,7 @@ cancel_job(int sig)			/* I - Signal */
 {
   (void)sig;
 
-  Image_status = STP_IMAGE_ABORT;
+  Image_status = STP_IMAGE_STATUS_ABORT;
 }
 
 
@@ -606,7 +606,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
-    return STP_IMAGE_ABORT;
+    return STP_IMAGE_STATUS_ABORT;
   bytes_per_line = cups->width * cups->header.cupsBitsPerPixel / CHAR_BIT;
   margin = cups->header.cupsBytesPerLine - bytes_per_line;
 

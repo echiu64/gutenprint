@@ -370,7 +370,7 @@ verify_string_param(const stp_vars_t v, const char *parameter,
       else
 	stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
     }
-  stp_free_parameter_description(desc);
+  stp_parameter_description_free(desc);
   return answer;
 }
 
@@ -406,11 +406,11 @@ verify_int_param(const stp_vars_t v, const char *parameter,
 	  stpi_eprintf(v, _("%s must be between %d and %d\n"),
 		      parameter, desc->bounds.integer.lower,
 		      desc->bounds.integer.upper);
-	  stp_free_parameter_description(desc);
+	  stp_parameter_description_free(desc);
 	  return 0;
 	}
     }
-  stp_free_parameter_description(desc);
+  stp_parameter_description_free(desc);
   return 1;
 }
 
@@ -447,7 +447,7 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
 	    }
 	}
     }
-  stp_free_parameter_description(desc);
+  stp_parameter_description_free(desc);
   return answer;
 }
 
@@ -468,15 +468,15 @@ verify_param(const stp_vars_t v, const char *parameter)
       return verify_curve_param(v, parameter, &desc);
     case STP_PARAMETER_TYPE_RAW:
     case STP_PARAMETER_TYPE_FILE:
-      stp_free_parameter_description(&desc);
+      stp_parameter_description_free(&desc);
       return 1;			/* No way to verify this here */
     case STP_PARAMETER_TYPE_BOOLEAN:
-      stp_free_parameter_description(&desc);
+      stp_parameter_description_free(&desc);
       return 1;			/* Booleans always OK */
     default:
       stpi_eprintf(v, _("Unknown type parameter %s (%d)\n"),
 		  parameter, desc.p_type);
-      stp_free_parameter_description(&desc);
+      stp_parameter_description_free(&desc);
       return 0;
     }
 }

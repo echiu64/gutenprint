@@ -1033,7 +1033,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 	  else if (usrval > desc.bounds.dbl.upper)
 	    usrval = desc.bounds.dbl.upper;
 	  stp_set_float_parameter(user, p->name, usrval);
-	  stp_free_parameter_description(&desc);
+	  stp_parameter_description_free(&desc);
 	}
     }
   if (stp_get_output_type(print) == OUTPUT_GRAY &&
@@ -1062,7 +1062,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	{
 	  stp_describe_parameter(v, p->name, &desc);
 	  stp_set_string_parameter(v, p->name, desc.deflt.str);
-	  stp_free_parameter_description(&desc);
+	  stp_parameter_description_free(&desc);
 	}
     }
   stp_parameter_list_free(params);
@@ -1137,7 +1137,7 @@ stp_describe_parameter(const stp_vars_t v, const char *name,
 }
 
 void
-stp_free_parameter_description(stp_parameter_t *desc)
+stp_parameter_description_free(stp_parameter_t *desc)
 {
   switch (desc->p_type)
     {

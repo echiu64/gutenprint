@@ -1442,7 +1442,7 @@ stpi_color_get_row(const stp_vars_t v, stp_image_t *image, int row,
   const lut_t *lut = (const lut_t *)(stpi_get_color_data(v));
   unsigned char *in = lut->in_data;
   if (stpi_image_get_row(image, in, lut->image_width * lut->image_bpp, row) !=
-      STP_IMAGE_OK)
+      STP_IMAGE_STATUS_OK)
     return 2;
   (lut->colorfunc)(v, in, out, zero_mask, lut->image_width, lut->image_bpp);
   return 0;

@@ -117,7 +117,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
       stp_describe_parameter(img->v, "Contrast", &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	stp_set_float_parameter(img->v, "Contrast", desc.bounds.dbl.upper);
-      stp_free_parameter_description(&desc);
+      stp_parameter_description_free(&desc);
       img->monochrome_flag = 1;
       /* 8-bit greyscale */
     }
@@ -568,7 +568,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
-      stp_free_parameter_description(&desc);
+      stp_parameter_description_free(&desc);
     }
 
   if (code == 0)
@@ -669,13 +669,13 @@ gimp_image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
   int physical_row = row * img->yres / img->xres;
 
   if ((physical_row < 0) || (physical_row >= img->height))
-    return STP_IMAGE_ABORT;
+    return STP_IMAGE_STATUS_ABORT;
 
   /* Read until we reach the requested row. */
   while (physical_row > img->row)
     {
       if (image_next_row(img))
-	return STP_IMAGE_ABORT;
+	return STP_IMAGE_STATUS_ABORT;
     }
 
   if (physical_row == img->row)
@@ -708,12 +708,12 @@ gimp_image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
 	    }
 	  break;
 	default:
-	  return STP_IMAGE_ABORT;
+	  return STP_IMAGE_STATUS_ABORT;
 	}
     }
   else
-    return STP_IMAGE_ABORT;
-  return STP_IMAGE_OK;
+    return STP_IMAGE_STATUS_ABORT;
+  return STP_IMAGE_STATUS_OK;
 }
 
 
