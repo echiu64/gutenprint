@@ -62,12 +62,18 @@ all-local: html
 	  echo "all-local: $(srcdir)/manual-html not found" ; \
 	fi
 
+docs: html ps pdf
+	cd users_guide ; \
+	$(MAKE) html ps pdf
+
 gimpprint.dvi: $(EPS_IMAGES)
 
 %.eps:
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 html: html-stamp
+	cd users_guide ; \
+	$(MAKE) html
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
@@ -79,9 +85,14 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	  rm -rf manual-html-tmp ; \
 	  mkdir manual-html-tmp ; \
 	  cd manual-html-tmp ; \
-	  cp ../*.png . ; \
+	  if test $(srcdir) = '.' ; then \
+	    SOURCE='..' ; \
+	  else \
+	    SOURCE=$(srcdir) ; \
+	  fi ; \
+	  cp $${SOURCE}/*.png . ; \
 	  $(TEXI2HTML) -menu -split_node -number -expandinfo \
-	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi 2>&1 | grep . ; \
+	    -I $(srcdir) $${SOURCE}/gimpprint.texi 2>&1 | grep . ; \
 	    stat=$$? ; stat=`expr 1 - $$stat` ; \
 	fi ; \
 	exit $$stat
@@ -90,8 +101,18 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	touch html-stamp
 
 ps: gimpprint.ps
+	cd users_guide ; \
+	$(MAKE) ps
+
 gimpprint.ps: gimpprint.dvi
 	$(DVIPS) -o gimpprint.ps gimpprint.dvi
+
+pdf: gimpprint.pdf
+	cd users_guide ; \
+	$(MAKE) pdf
+
+gimpprint.pdf: gimpprint.ps
+	$(PS2PDF) gimpprint.ps gimpprint.pdf
 
 dist-hook: html
 	for dir in manual-html ; do \
@@ -119,10 +140,10 @@ maintainer-clean-local:
 
 ## Clean
 
-CLEANFILES = $(EPS_IMAGES) $(TXT_IMAGES)
+CLEANFILES = $(EPS_IMAGES) $(TXT_IMAGES) gimpprint.pdf
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
 EXTRA_DIST = $(DOCS) $(IMAGES) html-stamp
 
-.PHONY: html
+.PHONY: html ps pdf docs

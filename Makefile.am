@@ -126,6 +126,10 @@ install-gimp: all
 	cd src/gimp ; \
 	$(MAKE) install
 
+docs:
+	cd doc ; \
+	$(MAKE) docs
+
 html:
 	cd doc ; \
 	$(MAKE) html
@@ -133,6 +137,10 @@ html:
 ps:
 	cd doc ; \
 	$(MAKE) ps
+
+pdf:
+	cd doc ; \
+	$(MAKE) pdf
 
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
