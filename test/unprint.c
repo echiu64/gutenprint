@@ -213,9 +213,9 @@ mix_ink(ppmpixel p, int c, unsigned int a)
       case 1: ink[0]=1; ink[1]=0; ink[2]=1;break; /* magenta */
       case 2: ink[0]=0; ink[1]=ink[2]=1;break; /* cyan */
       case 3: ink[0]=ink[1]=1; ink[2]=0;break; /* yellow */
-      case 4: ink[0]=1; ink[1]=0.5; ink[2]=1;break; /* lmagenta */
-      case 5: ink[0]=0.5; ink[1]=ink[2]=1;break; /* lcyan */
-      case 6: ink[0]=ink[1]=1; ink[2]=0.5;break; /* lyellow */
+      case 4: ink[0]=1; ink[1]=0.7; ink[2]=1;break; /* lmagenta */
+      case 5: ink[0]=0.7; ink[1]=ink[2]=1;break; /* lcyan */
+      case 6: ink[0]=ink[1]=1; ink[2]=0.7;break; /* lyellow */
       default:fprintf(stderr,"unknown ink %d\n",c);return;
     }
     for (i=0;i<3;i++) {
@@ -495,7 +495,9 @@ int update_page(unsigned char *buf, /* I - pixel data               */
        y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
        y+=(pstate.microweave?1:pstate.nozzle_separation),mi++) {
     if (y>=pstate.bottom_margin) {
-      fprintf(stderr,"Warning. Unprinter out of unpaper.\n");
+      fprintf(stderr,
+	      "Warning. Unprinter out of unpaper (limit %d, position %d).\n",
+	      pstate.bottom_margin, y);
       return(1);
     }
     find_white(buf+mi*((n*pstate.bpp+7)/8),n,&left_white,&right_white);
@@ -1358,72 +1360,100 @@ int main(int argc,char *argv[])
   char *s;
   char *UNPRINT;
   FILE *fp_r,*fp_w;
+  int force_extraskip = -1;
 
-    unweave=0;
-    pstate.nozzle_separation=6;
-    fp_r = fp_w = NULL;
-    for (arg=1;arg<argc;arg++) {
-      if (argv[arg][0]=='-') {
-        switch (argv[arg][1]) {
-          case 0:if (fp_r)
-                   fp_w=stdout;
-                 else
-                   fp_r=stdin;
-                 break;
-          case 'n':if (argv[arg][2]) {
-                     s=argv[arg]+2;
-                   } else {
-                     if (argc<=arg+1) {
-                       fprintf(stderr,"Missing nozzle separation\n");
-                       exit(-1);
-                     } else {
-                       s=argv[++arg];
-                     }
-                   }
-                   if (!sscanf(s,"%d",&pstate.nozzle_separation)) {
-                     fprintf(stderr,"Error parsing nozzle separation\n");
-                     exit(-1);
-                   }
-                  break;
-          case 'u':unweave=1;
-                 break;
-        }
+  unweave=0;
+  pstate.nozzle_separation=6;
+  fp_r = fp_w = NULL;
+  for (arg=1;arg<argc;arg++) {
+    if (argv[arg][0]=='-')
+      {
+	switch (argv[arg][1])
+	  {
+	  case 0:
+	    if (fp_r)
+	      fp_w=stdout;
+	    else
+	      fp_r=stdin;
+	    break;
+	  case 'n':
+	    if (argv[arg][2]) {
+	      s=argv[arg]+2;
+	    } else {
+	      if (argc<=arg+1) {
+		fprintf(stderr,"Missing nozzle separation\n");
+		exit(-1);
+	      } else {
+		s=argv[++arg];
+	      }
+	    }
+	    if (!sscanf(s,"%d",&pstate.nozzle_separation)) {
+	      fprintf(stderr,"Error parsing nozzle separation\n");
+	      exit(-1);
+	    }
+	    break;
+	  case 's':
+	    if (argv[arg][2]) {
+	      s=argv[arg]+2;
+	    } else {
+	      if (argc<=arg+1) {
+		fprintf(stderr,"Missing extra skip\n");
+		exit(-1);
+	      } else {
+		s=argv[++arg];
+	      }
+	    }
+	    if (!sscanf(s,"%d",&force_extraskip)) {
+	      fprintf(stderr,"Error parsing extra skip\n");
+	      exit(-1);
+	    }
+	    break;
+	  case 'u':
+	    unweave=1;
+	    break;
+	  }
       } else {
-        if (fp_r) {
-          if (!(fp_w = fopen(argv[arg],"w"))) {
-            perror("Error opening ouput file");
-            exit(-1);
-          }
-        } else {
-          if (!(fp_r = fopen(argv[arg],"r"))) {
-            perror("Error opening input file");
-            exit(-1);
-          }
-        }
+      if (fp_r) {
+	if (!(fp_w = fopen(argv[arg],"w"))) {
+	  perror("Error opening ouput file");
+	  exit(-1);
+	}
+      } else {
+	if (!(fp_r = fopen(argv[arg],"r"))) {
+	  perror("Error opening input file");
+	  exit(-1);
+	}
       }
     }
-    if (!fp_r)
-      fp_r=stdin;
-    if (!fp_w)
-      fp_w=stdout;
+  }
+  if (!fp_r)
+    fp_r=stdin;
+  if (!fp_w)
+    fp_w=stdout;
 
-    if (unweave) {
-      pstate.nozzle_separation=1;
-    }
-    pstate.nozzles=96;
+  if (unweave) {
+    pstate.nozzle_separation=1;
+  }
+  pstate.nozzles=96;
 
-    UNPRINT= getenv("UNPRINT");
-    if ((UNPRINT)&&(!strcmp(UNPRINT,"canon"))) {
+  UNPRINT= getenv("UNPRINT");
+  if ((UNPRINT)&&(!strcmp(UNPRINT,"canon"))) {
+    if (force_extraskip > 0)
+      pstate.extraskip = force_extraskip;
+    else
       pstate.extraskip=1;
-      parse_canon(fp_r);
-    } else {
+    parse_canon(fp_r);
+  } else {
+    if (force_extraskip > 0)
+      pstate.extraskip = force_extraskip;
+    else
       pstate.extraskip=2; 
-      parse_escp2(fp_r);
-    }
-    fprintf(stderr,"Done reading.\n");
-    write_output(fp_w);
-    fclose(fp_w);
-    fprintf(stderr,"Image dump complete.\n");
+    parse_escp2(fp_r);
+  }
+  fprintf(stderr,"Done reading.\n");
+  write_output(fp_w);
+  fclose(fp_w);
+  fprintf(stderr,"Image dump complete.\n");
 
-    return(0);
+  return(0);
 }
