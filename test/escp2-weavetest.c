@@ -67,9 +67,8 @@
 
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
-#define WEAVETEST
-#include "print-weave.c"
-#include "print-escp2.c"
+#include <gimp-print.h>
+#include <gimp-print-internal.h>
 
 const char header[] = "Legend:\n"
 "A  Negative pass number.\n"
@@ -103,12 +102,19 @@ print_header(void)
   printf("%s", header);
 }
 
+static void
+flush_pass(stp_softweave_t *sw, int passno, int model, int width,
+	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
+	   FILE *prn, int vertical_subpass)
+{
+}
+
 int
 main(int argc, char **argv)
 {
   int i;
   int j;
-  weave_t w;
+  stp_weave_t w;
   int errors = 0;
   int lastpass = -1;
   int newestpass = -1;
@@ -158,9 +164,9 @@ main(int argc, char **argv)
   memset(physpassstuff, -1, (nrows + physsep));
   memset(current_slot, 0, (sizeof(int) * vmod));
 
-  sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			1, 1, 128, nrows, 1, first_line,
-			phys_lines, strategy, NULL);
+  sw = stp_initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
+			    1, 1, 128, nrows, 1, first_line,
+			    phys_lines, strategy, NULL, flush_pass);
   print_header();
   printf("%15s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
@@ -176,7 +182,7 @@ main(int argc, char **argv)
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
-	  weave_parameters_by_row((escp2_softweave_t *)sw, i + first_line, j, &w);
+	  stp_weave_parameters_by_row((stp_softweave_t *)sw, i+first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
 		 (w.pass < 0 ? (errors++, 'A') : ' '),
@@ -262,7 +268,7 @@ main(int argc, char **argv)
     }
   printf("%d total errors\n", errors);
   fflush(stdout);
-  destroy_weave(sw);
+  stp_destroy_weave(sw);
   if (errors > 0)
     return 1;
   else

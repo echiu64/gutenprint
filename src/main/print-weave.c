@@ -34,6 +34,10 @@
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
 
+#ifndef __GNUC__
+#  define inline
+#endif /* !__GNUC__ */
+
 #if 0
 #define TEST_RAW
 #endif
@@ -506,7 +510,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 }
 
 void *					/* O - weave parameter block */
-stp_initialize_weave_params(int S,		/* I - jet separation */
+initialize_weave_params(int S,		/* I - jet separation */
                         int J,		/* I - number of jets */
                         int H,		/* I - oversampling factor */
                         int firstrow,	/* I - first row number to print */
@@ -1479,6 +1483,773 @@ stp_pack(const unsigned char *line,
   return active;
 }
 
+
+/*
+ * "Soft" weave
+ *
+ * The Epson Stylus Color/Photo printers don't have memory to print
+ * using all of the nozzles in the print head.  For example, the Stylus Photo
+ * 700/EX has 32 nozzles.  At 720 dpi, with an 8" wide image, a single line
+ * requires (8 * 720 * 6 / 8) bytes, or 4320 bytes (because the Stylus Photo
+ * printers have 6 ink colors).  To use 32 nozzles would require 138240 bytes.
+ * It's actually worse than that, though, because the nozzles are spaced 8
+ * rows apart.  Therefore, in order to store enough data to permit sending the
+ * page as a simple raster, the printer would require enough memory to store
+ * 256 rows, or 1105920 bytes.  Considering that the Photo EX can print
+ * 11" wide, we're looking at more like 1.5 MB.  In fact, these printers are
+ * capable of 1440 dpi horizontal resolution.  This would require 3 MB.  The
+ * printers actually have 64K-256K.
+ *
+ * With the newer (740/750 and later) printers it's even worse, since these
+ * printers support multiple dot sizes.  But that's neither here nor there.
+ *
+ * Older Epson printers had a mode called MicroWeave (tm).  In this mode, the
+ * host fed the printer individual rows of dots, and the printer bundled them
+ * up and sent them to the print head in the correct order to achieve high
+ * quality.  This MicroWeave mode still works in new printers, but the
+ * implementation is very minimal: the printer uses exactly one nozzle of
+ * each color (the first one).  This makes printing extremely slow (more than
+ * 30 minutes for one 8.5x11" page), although the quality is extremely high
+ * with no visible banding whatsoever.  It's not good for the print head,
+ * though, since no ink is flowing through the other nozzles.  This leads to
+ * drying of ink and possible permanent damage to the print head.
+ *
+ * By the way, although the Epson manual says that microweave mode should be
+ * used at 720 dpi, 360 dpi continues to work in much the same way.  At 360
+ * dpi, data is fed to the printer one row at a time on all Epson printers.
+ * The pattern that the printer uses to print is very prone to banding.
+ * However, 360 dpi is inherently a low quality mode; if you're using it,
+ * presumably you don't much care about quality.
+ *
+ * Printers from roughly the Stylus Color 600 and later do not have the
+ * capability to do MicroWeave correctly.  Instead, the host must arrange
+ * the output in the order that it will be sent to the print head.  This
+ * is a very complex process; the jets in the print head are spaced more
+ * than one row (1/720") apart, so we can't simply send consecutive rows
+ * of dots to the printer.  Instead, we have to pass e. g. the first, ninth,
+ * 17th, 25th... rows in order for them to print in the correct position on
+ * the paper.  This interleaving process is called "soft" weaving.
+ *
+ * This decision was probably made to save money on memory in the printer.
+ * It certainly makes the driver code far more complicated than it would
+ * be if the printer could arrange the output.  Is that a bad thing?
+ * Usually this takes far less CPU time than the dithering process, and it
+ * does allow us more control over the printing process, e. g. to reduce
+ * banding.  Conceivably, we could even use this ability to map out bad
+ * jets.
+ *
+ * Interestingly, apparently the Windows (and presumably Macintosh) drivers
+ * for most or all Epson printers still list a "microweave" mode.
+ * Experiments have demonstrated that this does not in fact use the
+ * "microweave" mode of the printer.  Possibly it does nothing, or it uses
+ * a different weave pattern from what the non-"microweave" mode does.
+ * This is unnecessarily confusing.
+ *
+ * What makes this interesting is that there are many different ways of
+ * of accomplishing this goal.  The naive way would be to divide the image
+ * up into groups of 256 rows, and print all the mod8=0 rows in the first pass,
+ * mod8=1 rows in the second, and so forth.  The problem with this approach
+ * is that the individual ink jets are not perfectly uniform; some emit
+ * slightly bigger or smaller drops than others.  Since each group of 8
+ * adjacent rows is printed with the same nozzle, that means that there will
+ * be distinct streaks of lighter and darker bands within the image (8 rows
+ * is 1/90", which is visible; 1/720" is not).  Possibly worse is that these
+ * patterns will repeat every 256 rows.  This creates banding patterns that
+ * are about 1/3" wide.
+ *
+ * So we have to do something to break up this patterning.
+ *
+ * Epson does not publish the weaving algorithms that they use in their
+ * bundled drivers.  Indeed, their developer web site
+ * (http://www.ercipd.com/isv/edr_docs.htm) does not even describe how to
+ * do this weaving at all; it says that the only way to achieve 720 dpi
+ * is to use MicroWeave.  It does note (correctly) that 1440 dpi horizontal
+ * can only be achieved by the driver (i. e. in software).  The manual
+ * actually makes it fairly clear how to do this (it requires two passes
+ * with horizontal head movement between passes), and it is presumably
+ * possible to do this with MicroWeave.
+ *
+ * The information about how to do this is apparently available under NDA.
+ * It's actually easy enough to reverse engineer what's inside a print file
+ * with a simple Perl script.  There are presumably other printer commands
+ * that are not documented and may not be as easy to reverse engineer.
+ *
+ * I considered a few algorithms to perform the weave.  The first one I
+ * devised let me use only (jets - distance_between_jets + 1) nozzles, or
+ * 25.  This is OK in principle, but it's slower than using all nozzles.
+ * By playing around with it some more, I came up with an algorithm that
+ * lets me use all of the nozzles, except near the top and bottom of the
+ * page.
+ *
+ * This still produces some banding, though.  Even better quality can be
+ * achieved by using multiple nozzles on the same line.  How do we do this?
+ * In 1440x720 mode, we're printing two output lines at the same vertical
+ * position.  However, if we want four passes, we have to effectively print
+ * each line twice.  Actually doing this would increase the density, so
+ * what we do is print half the dots on each pass.  This produces near-perfect
+ * output, and it's far faster than using (pseudo) "MicroWeave".
+ *
+ * The current algorithm is not completely general.  The number of passes
+ * is limited to (nozzles / gap).  On the Photo EX class printers, that limits
+ * it to 4 -- 32 nozzles, an inter-nozzle gap of 8 lines.  Furthermore, there
+ * are a number of routines that are only coded up to 8 passes.  Fortunately,
+ * this is enough passes to get rid of most banding.  What's left is a very
+ * fine pattern that is sometimes described as "corduroy", since the pattern
+ * looks like that kind of fabric.
+ *
+ * Newer printers (those that support variable dot sizes, such as the 740,
+ * 1200, etc.) have an additional complication: when used in softweave mode,
+ * they operate at 360 dpi horizontal resolution.  This requires FOUR passes
+ * to achieve 1440x720 dpi.  Thus, to enable us to break up each row
+ * into separate sub-rows, we have to actually print each row eight times.
+ * Fortunately, all such printers have 48 nozzles and a gap of 6 rows,
+ * except for the high-speed 900, which uses 96 nozzles and a gap of 2 rows.
+ *
+ * I cannot let this entirely pass without commenting on the Stylus Color 440.
+ * This is a very low-end printer with 21 (!) nozzles and a separation of 8.
+ * The weave routine works correctly with single-pass printing, which is enough
+ * to minimally achieve 720 dpi output (it's physically a 720 dpi printer).
+ * However, the routine does not work correctly at more than one pass per row.
+ * Therefore, this printer bands badly.
+ *
+ * Yet another complication is how to get near the top and bottom of the page.
+ * This algorithm lets us print to within one head width of the top of the
+ * page, and a bit more than one head width from the bottom.  That leaves a
+ * lot of blank space.  Doing the weave properly outside of this region is
+ * increasingly difficult as we get closer to the edge of the paper; in the
+ * interior region, any nozzle can print any line, but near the top and
+ * bottom edges, only some nozzles can print.  We've handled this for now by
+ * using the naive way mentioned above near the borders, and switching over
+ * to the high quality method in the interior.  Unfortunately, this means
+ * that the quality is quite visibly degraded near the top and bottom of the
+ * page.  Algorithms that degrade more gracefully are more complicated.
+ * Epson does not advertise that the printers can print at the very top of the
+ * page, although in practice most or all of them can.  I suspect that the
+ * quality that can be achieved very close to the top is poor enough that
+ * Epson does not want to allow printing there.  That is a valid decision,
+ * although we have taken another approach.
+ *
+ * To compute the weave information, we need to start with the following
+ * information:
+ *
+ * 1) The number of jets the print head has for each color;
+ *
+ * 2) The separation in rows between the jets;
+ *
+ * 3) The horizontal resolution of the printer;
+ *
+ * 4) The desired horizontal resolution of the output;
+ *
+ * 5) The desired extra passes to reduce banding.
+ *
+ * As discussed above, each row is actually printed in one or more passes
+ * of the print head; we refer to these as subpasses.  For example, if we're
+ * printing at 1440(h)x720(v) on a printer with true horizontal resolution of
+ * 360 dpi, and we wish to print each line twice with different nozzles
+ * to reduce banding, we need to use 8 subpasses.  The dither routine
+ * will feed us a complete row of bits for each color; we have to split that
+ * up, first by round robining the bits to ensure that they get printed at
+ * the right micro-position, and then to split up the bits that are actually
+ * turned on into two equal chunks to reduce banding.
+ *
+ * Given the above information, and the desired row index and subpass (which
+ * together form a line number), we can compute:
+ *
+ * 1) Which pass this line belongs to.  Passes are numbered consecutively,
+ *    and each pass must logically (see #3 below) start at no smaller a row
+ *    number than the previous pass, as the printer cannot advance by a
+ *    negative amount.
+ *
+ * 2) Which jet will print this line.
+ *
+ * 3) The "logical" first line of this pass.  That is, what line would be
+ *    printed by jet 0 in this pass.  This number may be less than zero.
+ *    If it is, there are ghost lines that don't actually contain any data.
+ *    The difference between the logical first line of this pass and the
+ *    logical first line of the preceding pass tells us how many lines must
+ *    be advanced.
+ *
+ * 4) The "physical" first line of this pass.  That is, the first line index
+ *    that is actually printed in this pass.  This information lets us know
+ *    when we must prepare this pass.
+ *
+ * 5) The last line of this pass.  This lets us know when we must actually
+ *    send this pass to the printer.
+ *
+ * 6) The number of ghost rows this pass contains.  We must still send the
+ *    ghost data to the printer, so this lets us know how much data we must
+ *    fill in prior to the start of the pass.
+ *
+ * The bookkeeping to keep track of all this stuff is quite hairy, and needs
+ * to be documented separately.
+ *
+ * The routine initialize_weave calculates the basic parameters, given
+ * the number of jets and separation between jets, in rows.
+ *
+ * -- Robert Krawitz <rlk@alum.mit.edu) November 3, 1999
+ */
+
+/*
+ * Initialize the weave parameters
+ *
+ * Rules:
+ *
+ * 1) Currently, osample * v_subpasses * v_subsample <= 8, and no one
+ *    of these variables may exceed 4.
+ *
+ * 2) first_line >= 0
+ *
+ * 3) line_height < physlines
+ *
+ * 4) phys_lines >= 2 * jets * sep
+ */
+void *
+stp_initialize_weave(int jets,	/* Width of print head */
+		     int sep,	/* Separation in rows between jets */
+		     int osample,	/* Horizontal oversample */
+		     int v_subpasses, /* Vertical passes */
+		     int v_subsample, /* Vertical oversampling */
+		     int ncolors,
+		     int width,	/* bits/pixel */
+		     int linewidth,	/* Width of a line, in pixels */
+		     int lineheight, /* Number of lines that will be printed */
+		     int separation_rows, /* Vertical spacing adjustment */
+				/* for weird printers (1520/3000, */
+				/* although they don't seem to do softweave */
+				/* anyway) */
+		     int first_line, /* First line that will be printed on page */
+		     int phys_lines, /* Total height of the page in rows */
+		     int weave_strategy, /* Which weaving pattern to use */
+		     const void *v,
+		     void (*flushfunc)(stp_softweave_t *sw, int passno,
+				       int model, int width, int hoffset,
+				       int ydpi, int xdpi, int physical_xdpi,
+				       FILE *prn, int vertical_subpass))
+{
+  int i;
+  stp_softweave_t *sw = malloc(sizeof (stp_softweave_t));
+  if (sw == 0)
+    return sw;
+
+  if (jets < 1)
+    jets = 1;
+  if (jets == 1 || sep < 1)
+    sep = 1;
+  if (v_subpasses < 1)
+    v_subpasses = 1;
+
+  sw->v = v;
+  sw->separation = sep;
+  sw->jets = jets;
+  sw->horizontal_weave = osample;
+  sw->vertical_oversample = v_subsample;
+  sw->vertical_subpasses = v_subpasses;
+  sw->oversample = osample * v_subpasses * v_subsample;
+  sw->firstline = first_line;
+  sw->lineno = first_line;
+  sw->flushfunc = flushfunc;
+
+  if (sw->oversample > jets) {
+    fprintf(stderr, "Weave error: oversample (%d) > jets (%d)\n",
+                    sw->oversample, jets);
+    free(sw);
+    return 0;
+  }
+  sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
+                                          sw->oversample, first_line,
+                                          first_line + lineheight - 1,
+                                          phys_lines, weave_strategy);
+
+  /*
+   * The value of vmod limits how many passes may be unfinished at a time.
+   * If pass x is not yet printed, pass x+vmod cannot be started.
+   */
+  sw->vmod = 2 * sw->separation * sw->oversample;
+  sw->separation_rows = separation_rows;
+
+  sw->bitwidth = width;
+
+  sw->last_pass_offset = 0;
+  sw->last_pass = -1;
+  sw->current_vertical_subpass = 0;
+  sw->last_color = -1;
+
+  sw->ncolors = ncolors;
+
+  /*
+   * It's possible for the "compression" to actually expand the line by
+   * one part in 128.
+   */
+
+  sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
+  sw->vertical_height = lineheight;
+  sw->lineoffsets = malloc(sw->vmod * sizeof(stp_lineoff_t));
+  memset(sw->lineoffsets, 0, sw->vmod * sizeof(stp_lineoff_t));
+  sw->lineactive = malloc(sw->vmod * sizeof(stp_lineactive_t));
+  sw->linebases = malloc(sw->vmod * sizeof(stp_linebufs_t));
+  sw->passes = malloc(sw->vmod * sizeof(stp_pass_t));
+  sw->linecounts = malloc(sw->vmod * sizeof(int));
+  memset(sw->linecounts, 0, sw->vmod * sizeof(int));
+
+  for (i = 0; i < sw->vmod; i++)
+    {
+      int j;
+      sw->passes[i].pass = -1;
+      for (j = 0; j < sw->ncolors; j++)
+	{
+	  sw->linebases[i].v[j] =
+	    malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
+	}
+    }
+  return (void *) sw;
+}
+
+void
+stp_destroy_weave(void *vsw)
+{
+  int i, j;
+  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  free(sw->linecounts);
+  free(sw->passes);
+  free(sw->lineactive);
+  free(sw->lineoffsets);
+  for (i = 0; i < sw->vmod; i++)
+    {
+      for (j = 0; j < sw->ncolors; j++)
+	{
+	  free(sw->linebases[i].v[j]);
+	}
+    }
+  free(sw->linebases);
+  stp_destroy_weave_params(sw->weaveparm);
+  free(vsw);
+}
+
+static inline void
+weave_parameters_by_row(const stp_softweave_t *sw, int row,
+			int vertical_subpass, stp_weave_t *w)
+{
+  static const stp_softweave_t *scache = 0;
+  static stp_weave_t wcache;
+  static int rcache = -2;
+  static int vcache = -2;
+  int jetsused;
+
+  if (scache == sw && rcache == row && vcache == vertical_subpass)
+    {
+      memcpy(w, &wcache, sizeof(stp_weave_t));
+      return;
+    }
+  scache = sw;
+  rcache = row;
+  vcache = vertical_subpass;
+
+  w->row = row;
+  stp_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
+                           &w->pass, &w->jet, &w->logicalpassstart,
+                           &w->missingstartrows, &jetsused);
+
+  w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
+  w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
+
+  memcpy(&wcache, w, sizeof(stp_weave_t));
+#if 0
+  printf("row %d, jet %d of pass %d "
+         "(pos %d, start %d, end %d, missing rows %d\n",
+         w->row, w->jet, w->pass, w->logicalpassstart, w->physpassstart,
+         w->physpassend, w->missingstartrows);
+#endif
+}
+
+void
+stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
+			int vertical_subpass, stp_weave_t *w)
+{
+  weave_parameters_by_row(sw, row, vertical_subpass, w);
+}
+
+
+stp_lineoff_t *
+stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->lineoffsets[w.pass % sw->vmod]);
+}
+
+stp_lineactive_t *
+stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->lineactive[w.pass % sw->vmod]);
+}
+
+int *
+stp_get_linecount(const stp_softweave_t *sw, int row, int subpass)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->linecounts[w.pass % sw->vmod]);
+}
+
+const stp_linebufs_t *
+stp_get_linebases(const stp_softweave_t *sw, int row, int subpass)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->linebases[w.pass % sw->vmod]);
+}
+
+stp_pass_t *
+stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row, subpass, &w);
+  return &(sw->passes[w.pass % sw->vmod]);
+}
+
+stp_lineoff_t *
+stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass)
+{
+  return &(sw->lineoffsets[pass % sw->vmod]);
+}
+
+stp_lineactive_t *
+stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass)
+{
+  return &(sw->lineactive[pass % sw->vmod]);
+}
+
+int *
+stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass)
+{
+  return &(sw->linecounts[pass % sw->vmod]);
+}
+
+const stp_linebufs_t *
+stp_get_linebases_by_pass(const stp_softweave_t *sw, int pass)
+{
+  return &(sw->linebases[pass % sw->vmod]);
+}
+
+stp_pass_t *
+stp_get_pass_by_pass(const stp_softweave_t *sw, int pass)
+{
+  return &(sw->passes[pass % sw->vmod]);
+}
+
+/*
+ * If there are phantom rows at the beginning of a pass, fill them in so
+ * that the printer knows exactly what it doesn't have to print.  We're
+ * using RLE compression here.  Each line must be specified independently,
+ * so we have to compute how many full blocks (groups of 128 bytes, or 1024
+ * "off" pixels) and how much leftover is needed.  Note that we can only
+ * RLE-encode groups of 2 or more bytes; single bytes must be specified
+ * with a count of 1.
+ */
+
+static void
+fillin_start_rows(const stp_softweave_t *sw, int row, int subpass,
+		  int width, int missingstartrows)
+{
+  stp_lineoff_t *offsets = stp_get_lineoffsets(sw, row, subpass);
+  const stp_linebufs_t *bufs = stp_get_linebases(sw, row, subpass);
+  int i = 0;
+  int k = 0;
+  int j;
+  width = sw->bitwidth * width * 8;
+  for (k = 0; k < missingstartrows; k++)
+    {
+      int bytes_to_fill = width;
+      int full_blocks = bytes_to_fill / (128 * 8);
+      int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
+      int l = 0;
+
+      while (l < full_blocks)
+	{
+	  for (j = 0; j < sw->ncolors; j++)
+	    {
+	      (bufs[0].v[j][2 * i]) = 129;
+	      (bufs[0].v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	  l++;
+	}
+      if (leftover == 1)
+	{
+	  for (j = 0; j < sw->ncolors; j++)
+	    {
+	      (bufs[0].v[j][2 * i]) = 1;
+	      (bufs[0].v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	}
+      else if (leftover > 0)
+	{
+	  for (j = 0; j < sw->ncolors; j++)
+	    {
+	      (bufs[0].v[j][2 * i]) = 257 - leftover;
+	      (bufs[0].v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	}
+    }
+  for (j = 0; j < sw->ncolors; j++)
+    offsets[0].v[j] = 2 * i;
+}
+
+static void
+initialize_row(const stp_softweave_t *sw, int row, int width)
+{
+  stp_weave_t w;
+  int i;
+  for (i = 0; i < sw->oversample; i++)
+    {
+      weave_parameters_by_row(sw, row, i, &w);
+      if (w.physpassstart == row)
+	{
+	  stp_lineoff_t *lineoffs = stp_get_lineoffsets(sw, row, i);
+	  stp_lineactive_t *lineactive = stp_get_lineactive(sw, row, i);
+	  int *linecount = stp_get_linecount(sw, row, i);
+	  int j;
+	  stp_pass_t *pass = stp_get_pass_by_row(sw, row, i);
+	  pass->pass = w.pass;
+	  pass->missingstartrows = w.missingstartrows;
+	  pass->logicalpassstart = w.logicalpassstart;
+	  pass->physpassstart = w.physpassstart;
+	  pass->physpassend = w.physpassend;
+	  pass->subpass = i;
+	  for (j = 0; j < sw->ncolors; j++)
+	    {
+	      if (lineoffs[0].v[j] != 0)
+		fprintf(stderr,
+			"WARNING: pass %d subpass %d row %d: lineoffs %ld\n",
+			w.pass, i, row, lineoffs[0].v[j]);
+	      lineoffs[0].v[j] = 0;
+	      lineactive[0].v[j] = 0;
+	    }
+	  if (*linecount != 0)
+	    fprintf(stderr,
+		    "WARNING: pass %d subpass %d row %d: linecount %d\n",
+		    w.pass, i, row, *linecount);
+	  *linecount = 0;
+	  if (w.missingstartrows > 0)
+	    fillin_start_rows(sw, row, i, width, w.missingstartrows);
+	}
+    }
+}
+
+static void
+add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
+	   int color, int setactive, stp_lineoff_t *lineoffs,
+	   stp_lineactive_t *lineactive, const stp_linebufs_t *bufs)
+{
+  memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
+  lineoffs[0].v[color] += nbytes;
+  if (setactive)
+    lineactive[0].v[color] = 1;
+}
+
+static void
+escp2_flush(void *vsw, int model, int width, int hoffset,
+	    int ydpi, int xdpi, int physical_xdpi, FILE *prn)
+{
+  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  while (1)
+    {
+      stp_pass_t *pass = stp_get_pass_by_pass(sw, sw->last_pass + 1);
+      /*
+       * This ought to be   pass->physpassend >  sw->lineno
+       * but that causes rubbish to be output for some reason.
+       */
+      if (pass->pass < 0 || pass->physpassend >= sw->lineno)
+	return;
+      (sw->flushfunc)(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
+		      physical_xdpi, prn, pass->subpass);
+    }
+}
+
+void
+stp_flush_all(void *vsw, int model, int width, int hoffset,
+	      int ydpi, int xdpi, int physical_xdpi, FILE *prn)
+{
+  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  while (1)
+    {
+      stp_pass_t *pass = stp_get_pass_by_pass(sw, sw->last_pass + 1);
+      /*
+       * This ought to be   pass->physpassend >  sw->lineno
+       * but that causes rubbish to be output for some reason.
+       */
+      if (pass->pass < 0)
+	return;
+      (sw->flushfunc)(sw, pass->pass, model, width, hoffset, ydpi, xdpi,
+		      physical_xdpi, prn, pass->subpass);
+    }
+}
+
+static void
+finalize_row(stp_softweave_t *sw, int row, int model, int width,
+	     int hoffset, int ydpi, int xdpi, int physical_xdpi,
+	     FILE *prn)
+{
+  int i;
+#if 0
+  printf("Finalizing row %d...\n", row);
+#endif
+  for (i = 0; i < sw->oversample; i++)
+    {
+      stp_weave_t w;
+      int *lines = stp_get_linecount(sw, row, i);
+      weave_parameters_by_row(sw, row, i, &w);
+      (*lines)++;
+      if (w.physpassend == row)
+	{
+#if 0
+	  printf("Pass=%d, physpassend=%d, row=%d, lineno=%d, trying to flush...\n", w.pass, w.physpassend, row, sw->lineno);
+#endif
+	  escp2_flush(sw, model, width, hoffset, ydpi, xdpi, physical_xdpi, prn);
+	}
+    }
+}
+
+void
+stp_write_weave(void *        vsw,
+		FILE          *prn,	/* I - Print file or command */
+		int           length,	/* I - Length of bitmap data */
+		int           ydpi,	/* I - Vertical resolution */
+		int           model,	/* I - Printer model */
+		int           width,	/* I - Printed width */
+		int           offset,	/* I - Offset from left side of page */
+		int		xdpi,
+		int		physical_xdpi,
+		const unsigned char *cols[])
+{
+  stp_softweave_t *sw = (stp_softweave_t *) vsw;
+  static unsigned char *s[8];
+  static unsigned char *fold_buf;
+  static unsigned char *comp_buf;
+  stp_lineoff_t *lineoffs[8];
+  stp_lineactive_t *lineactives[8];
+  const stp_linebufs_t *bufs[8];
+  int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
+  unsigned char *comp_ptr;
+  int i, j;
+  int setactive;
+  int h_passes = sw->horizontal_weave * sw->vertical_subpasses;
+  if (!fold_buf)
+    fold_buf = malloc(COMPBUFWIDTH);
+  if (!comp_buf)
+    comp_buf = malloc(COMPBUFWIDTH);
+  if (sw->current_vertical_subpass == 0)
+    initialize_row(sw, sw->lineno, xlength);
+
+  for (i = 0; i < h_passes; i++)
+    {
+      int cpass = sw->current_vertical_subpass * h_passes;
+      if (!s[i])
+	s[i] = malloc(COMPBUFWIDTH);
+      lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i);
+      lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i);
+      bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i);
+    }
+
+  for (j = 0; j < sw->ncolors; j++)
+    {
+      if (cols[j])
+	{
+	  const unsigned char *in;
+	  if (sw->bitwidth == 2)
+	    {
+	      stp_fold(cols[j], length, fold_buf);
+	      in = fold_buf;
+	    }
+	  else
+	    in = cols[j];
+	  if (h_passes > 1)
+	    {
+	      switch (sw->horizontal_weave)
+		{
+		case 2:
+		  stp_unpack_2(length, sw->bitwidth, in, s[0], s[1]);
+		  break;
+		case 4:
+		  stp_unpack_4(length, sw->bitwidth, in,
+			       s[0], s[1], s[2], s[3]);
+		  break;
+		case 8:
+		  stp_unpack_8(length, sw->bitwidth, in,
+			       s[0], s[1], s[2], s[3],
+			       s[4], s[5], s[6], s[7]);
+		  break;
+		}
+	      switch (sw->vertical_subpasses)
+		{
+		case 4:
+		  switch (sw->horizontal_weave)
+		    {
+		    case 1:
+		      stp_split_4(length, sw->bitwidth, in,
+				  s[0], s[1], s[2], s[3]);
+		      break;
+		    case 2:
+		      stp_split_4(length, sw->bitwidth, s[0],
+				  s[0], s[2], s[4], s[6]);
+		      stp_split_4(length, sw->bitwidth, s[1],
+				  s[1], s[3], s[5], s[7]);
+		      break;
+		    }
+		  break;
+		case 2:
+		  switch (sw->horizontal_weave)
+		    {
+		    case 1:
+		      stp_split_2(xlength, sw->bitwidth, in, s[0], s[1]);
+		      break;
+		    case 2:
+		      stp_split_2(xlength, sw->bitwidth, s[0], s[0], s[2]);
+		      stp_split_2(xlength, sw->bitwidth, s[1], s[1], s[3]);
+		      break;
+		    case 4:
+		      stp_split_2(xlength, sw->bitwidth, s[0], s[0], s[4]);
+		      stp_split_2(xlength, sw->bitwidth, s[1], s[1], s[5]);
+		      stp_split_2(xlength, sw->bitwidth, s[2], s[2], s[6]);
+		      stp_split_2(xlength, sw->bitwidth, s[3], s[3], s[7]);
+		      break;
+		    }
+		  break;
+		  /* case 1 is taken care of because the various unpack */
+		  /* functions will do the trick themselves */
+		}
+	      for (i = 0; i < h_passes; i++)
+		{
+		  setactive = stp_pack(s[i], sw->bitwidth * xlength,
+					 comp_buf, &comp_ptr);
+		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf, j,
+			     setactive, lineoffs[i], lineactives[i], bufs[i]);
+		}
+	    }
+	  else
+	    {
+	      setactive = stp_pack(in, length * sw->bitwidth,
+				     comp_buf, &comp_ptr);
+	      fprintf(stderr, "add_to_row length %d\n", comp_ptr - comp_buf);
+	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf, j,
+			 setactive, lineoffs[0], lineactives[0], bufs[0]);
+	    }
+	}
+    }
+  sw->current_vertical_subpass++;
+  if (sw->current_vertical_subpass >= sw->vertical_oversample)
+    {
+      finalize_row(sw, sw->lineno, model, width, offset, ydpi, xdpi,
+		   physical_xdpi, prn);
+      sw->lineno++;
+      sw->current_vertical_subpass = 0;
+    }
+}
+
 #ifdef TEST_COOKED
 static void
 calculate_pass_parameters(cooked_t *w,		/* I - weave parameters */
@@ -1638,7 +2409,7 @@ main(int ac, char *av[])
 	       "pageheight=%d  strategy=%d\n",
 	       S, J, H, firstrow, lastrow, pageheight, strategy);
 
-	weave = stp_initialize_weave_params(S, J, H, firstrow, lastrow,
+	weave = initialize_weave_params(S, J, H, firstrow, lastrow,
 	                                pageheight, strategy);
 	passes = weave->first_unused_pass - weave->first_premapped_pass;
 

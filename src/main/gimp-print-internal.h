@@ -42,6 +42,16 @@
 #define MAX_CARRIAGE_WIDTH	80 /* This really needs to go away */
 				/* For now, this is wide enough for 4B ISO */
 
+/*
+ * We really need to get away from this silly static nonsense...
+ */
+#define MAX_PHYSICAL_BPI 2880
+#define MAX_OVERSAMPLED 8
+#define MAX_BPP 2
+#define BITS_PER_BYTE 8
+#define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
+	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
+
 typedef struct
 {
   double value;
@@ -69,6 +79,124 @@ typedef struct
    int isdark_l;
    int isdark_h;
 } stp_full_dither_range_t;
+
+typedef struct			/* Weave parameters for a specific row */
+{
+  int row;			/* Absolute row # */
+  int pass;			/* Computed pass # */
+  int jet;			/* Which physical nozzle we're using */
+  int missingstartrows;		/* Phantom rows (nonexistent rows that */
+				/* would be printed by nozzles lower than */
+				/* the first nozzle we're using this pass; */
+				/* with the current algorithm, always zero */
+  int logicalpassstart;		/* Offset in rows (from start of image) */
+				/* that the printer must be for this row */
+				/* to print correctly with the specified jet */
+  int physpassstart;		/* Offset in rows to the first row printed */
+				/* in this pass.  Currently always equal to */
+				/* logicalpassstart */
+  int physpassend;		/* Offset in rows (from start of image) to */
+				/* the last row that will be printed this */
+				/* pass (assuming that we're printing a full */
+				/* pass). */
+} stp_weave_t;
+
+typedef struct			/* Weave parameters for a specific pass */
+{
+  int pass;			/* Absolute pass number */
+  int missingstartrows;		/* All other values the same as weave_t */
+  int logicalpassstart;
+  int physpassstart;
+  int physpassend;
+  int subpass;
+} stp_pass_t;
+
+typedef union {			/* Offsets from the start of each line */
+  unsigned long v[7];		/* (really pass) */
+  struct {
+    unsigned long k;
+    unsigned long m;
+    unsigned long c;
+    unsigned long y;
+    unsigned long M;
+    unsigned long C;
+    unsigned long Y;
+  } p;
+} stp_lineoff_t;
+
+typedef union {			/* Is this line active? */
+  char v[7];			/* (really pass) */
+  struct {
+    char k;
+    char m;
+    char c;
+    char y;
+    char M;
+    char C;
+    char Y;
+  } p;
+} stp_lineactive_t;
+
+typedef union {			/* Base pointers for each pass */
+  unsigned char *v[6];
+  struct {
+    unsigned char *k;
+    unsigned char *m;
+    unsigned char *c;
+    unsigned char *y;
+    unsigned char *M;
+    unsigned char *C;
+    unsigned char *Y;
+  } p;
+} stp_linebufs_t;
+
+typedef struct stp_softweave
+{
+  stp_linebufs_t *linebases;	/* Base address of each row buffer */
+  stp_lineoff_t *lineoffsets;	/* Offsets within each row buffer */
+  stp_lineactive_t *lineactive;	/* Does this line have anything printed? */
+  int *linecounts;		/* How many rows we've printed this pass */
+  stp_pass_t *passes;		/* Circular list of pass numbers */
+  int last_pass_offset;		/* Starting row (offset from the start of */
+				/* the page) of the most recently printed */
+				/* pass (so we can determine how far to */
+				/* advance the paper) */
+  int last_pass;		/* Number of the most recently printed pass */
+
+  int jets;			/* Number of jets per color */
+  int separation;		/* Offset from one jet to the next in rows */
+  void *weaveparm;		/* Weave calculation parameter block */
+
+  int horizontal_weave;		/* Number of horizontal passes required */
+				/* This is > 1 for some of the ultra-high */
+				/* resolution modes */
+  int vertical_subpasses;	/* Number of passes per line (for better */
+				/* quality) */
+  int vmod;			/* Number of banks of passes */
+  int oversample;		/* Excess precision per row */
+  int ncolors;			/* How many colors (1, 4, or 6) */
+  int horizontal_width;		/* Line width in output pixels */
+  int vertical_height;		/* Image height in output pixels */
+  int firstline;		/* Actual first line (referenced to paper) */
+
+  int bitwidth;			/* Bits per pixel */
+  int lineno;
+  int vertical_oversample;	/* Vertical oversampling */
+  int current_vertical_subpass;
+  int separation_rows;		/* Vertical spacing between rows. */
+				/* This is used for the 1520/3000, which */
+				/* use a funny value for the "print density */
+				/* in the vertical direction". */
+  int last_color;
+  const void *v;
+  void (*flushfunc)(struct stp_softweave *sw,
+		    int passno, int model,
+		    int width, int hoffset,
+		    int ydpi, int xdpi,
+		    int physical_xdpi,
+		    FILE *prn,
+		    int vertical_subpass);
+} stp_softweave_t;
 
 /*
  * Prototypes...
@@ -157,6 +285,72 @@ extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
 
 extern int	stp_pack(const unsigned char *line, int height,
 			 unsigned char *comp_buf, unsigned char **comp_ptr);
+
+extern void *stp_initialize_weave(int jets, int separation, int oversample,
+				  int horizontal, int vertical,
+				  int ncolors, int width, int linewidth,
+				  int lineheight, int vertical_row_separation,
+				  int first_line, int phys_lines, int strategy,
+				  const void *v,
+				  void (*flushfunc)(stp_softweave_t *sw,
+						    int passno, int model,
+						    int width, int hoffset,
+						    int ydpi, int xdpi,
+						    int physical_xdpi,
+						    FILE *prn,
+						    int vertical_subpass));
+
+extern void stp_flush_all(void *, int model, int width, int hoffset,
+			  int ydpi, int xdpi, int physical_xdpi, FILE *prn);
+
+extern void
+stp_write_weave(void *        vsw,
+		FILE          *prn,	/* I - Print file or command */
+		int           length,	/* I - Length of bitmap data */
+		int           ydpi,	/* I - Vertical resolution */
+		int           model,	/* I - Printer model */
+		int           width,	/* I - Printed width */
+		int           offset,	/* I - Offset from left side of page */
+		int		xdpi,
+		int		physical_xdpi,
+		const unsigned char *cols[]);
+
+stp_lineoff_t *
+stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass);
+
+stp_lineactive_t *
+stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass);
+
+int *
+stp_get_linecount(const stp_softweave_t *sw, int row, int subpass);
+
+const stp_linebufs_t *
+stp_get_linebases(const stp_softweave_t *sw, int row, int subpass);
+
+stp_pass_t *
+stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass);
+
+stp_lineoff_t *
+stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);
+
+stp_lineactive_t *
+stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass);
+
+int *
+stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass);
+
+const stp_linebufs_t *
+stp_get_linebases_by_pass(const stp_softweave_t *sw, int pass);
+
+stp_pass_t *
+stp_get_pass_by_pass(const stp_softweave_t *sw, int pass);
+
+void
+stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
+			    int vertical_subpass, stp_weave_t *w);
+
+extern void stp_destroy_weave(void *);
+
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

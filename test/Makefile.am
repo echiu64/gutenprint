@@ -36,8 +36,7 @@ EXTRA_PROGRAMS = escp2-weavetest printer_options unprint escp2-unprint pcl-unpri
 escp2_weavetest_SOURCES = escp2-weavetest.c
 
 escp2_weavetest.o: escp2_weavetest.c 
-escp2_weavetest_DEPENDENCIES = $(top_srcdir)/src/main/print-escp2.c \
-		   $(top_srcdir)/src/main/print-dither.c
+escp2_weavetest_LDADD = $(GIMPPRINT_LIBS)
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = -lm $(GIMPPRINT_LIBS)

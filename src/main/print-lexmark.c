@@ -344,12 +344,6 @@ static void lexmark_write_line(FILE *,
 			       unsigned char *, int,
 			       int, int, int, int, int);
 
-#define MAX_OVERSAMPLED 4
-#define MAX_BPP 2
-#define BITS_PER_BYTE 8
-#define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
-	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
-
 
 /* Codes for possible ink-tank combinations.
  * Each combo is represented by the colors that can be used with
