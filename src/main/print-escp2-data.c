@@ -71,6 +71,10 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 static const escp2_dot_size_t p3pl_dotsizes =
 { 0x13, 0x10, 0x11, 0x11, 0x12, 0x12, 0x12, 0x12 };
 
+/* Purely a guess 0x14 */
+static const escp2_dot_size_t p1_5pl_dotsizes =
+{ 0x13, 0x10, 0x11, 0x11, 0x12, 0x14, 0x14, 0x14 };
+
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10 };
 
@@ -225,7 +229,10 @@ static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
 
 static const escp2_densities_t p3pl_densities =
-{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.866, 0.433, 0.217 };
+{ 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.262, 0.131 };
+
+static const escp2_densities_t p1_5pl_densities =
+{ 2.0, 1.0,  0.5,  0.627, 0.483, 0.523, 0.262, 0.131 };
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325 };
@@ -1611,14 +1618,31 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
      MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
      MODEL_SUPPORTS_INK_CHANGE_NO),
-    90, 90, 3, 90, 90, 3, 90, 90, 3, 6,
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
+    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191,
+    4, 15, 0, 0,
+    p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
+    variable_bits, ultrachrome_base_res, &cd_cutter_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL
+  },
+  /* 64: PM-G800 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO),
+    180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
     360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191,
     4, 15, 0, 0,
-    p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_2pl_drops,
+    p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen2_inkgroup,
-    c1_8_bits, ultrachrome_base_res, &cd_cutter_roll_feed_input_slot_list,
+    variable_bits, ultrachrome_base_res, &cd_cutter_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
   },

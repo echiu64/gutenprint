@@ -217,6 +217,7 @@
 #gptofoo escp2-mj8000c printer/Epson-MJ_8000C
 #gptofoo escp2-pm700c printer/Epson-PM_700C
 #gptofoo escp2-pmg700 printer/Epson-PM_G700
+#gptofoo escp2-pmg800 printer/Epson-PM_G800
 #gptofoo escp2-pm730c printer/Epson-PM_730C
 #gptofoo escp2-pm740c printer/Epson-PM_740C
 #gptofoo escp2-pm750c printer/Epson-PM_750C

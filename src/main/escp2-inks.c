@@ -87,6 +87,38 @@ static const escp2_dropsize_t escp2_2pl_1440_dropsizes =
 static const escp2_dropsize_t escp2_2pl_2880_dropsizes =
   { "2pl_2880", 1, { 1.0 } };
 
+/* PM-G800 */
+/* Guess */
+static const escp2_dropsize_t escp2_1_5pl_360_dropsizes =
+  { "1_5pl_360", 3, { 0.25, 0.5, 1.0 } };
+/* 7, 14, 20 pl */
+static const escp2_dropsize_t escp2_1_5pl_720_dropsizes =
+  { "1_5pl_720", 3, { 0.35, 0.70, 1.0 } };
+/*
+ * Note that the site
+ * (http://www.i-love-epson.co.jp/products/printer/inkjet/pmg800/pmg8002.htm)
+ * is unclear: it says 3 pl MSDT, but the diagram reads 2 pl
+ */
+/* 3, 6, 13 pl */
+static const escp2_dropsize_t escp2_1_5pl_1440_dropsizes =
+  { "1_5pl_1440", 3, { 0.231, 0.462, 1.0 } };
+/*
+ * See above comment.  3 pl makes more sense than 2 pl
+ */
+/* 1.5, 3, 6 pl */
+static const escp2_dropsize_t escp2_1_5pl_2880_dropsizes =
+  { "1_5pl_2880", 3, { 0.25, 0.50, 1.0 } };
+
+/* Stylus Photo R300 -- guesses based on PM-G800 */
+static const escp2_dropsize_t escp2_r300_360_dropsizes =
+  { "r300_360", 3, { 0.25, 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_r300_720_dropsizes =
+  { "r300_720", 3, { 0.35, 0.70, 1.0 } };
+static const escp2_dropsize_t escp2_r300_1440_dropsizes =
+  { "r300_1440", 3, { 0.231, 0.462, 1.0 } };
+static const escp2_dropsize_t escp2_r300_2880_dropsizes =
+  { "r300_2880", 2, { 0.5, 1.0 } };
+
 /* Stylus C80 */
 static const escp2_dropsize_t escp2_economy_pigment_dropsizes =
   { "economy_pigment", 3, { 0, 0, 1.0 } };
@@ -199,6 +231,30 @@ const escp2_drop_list_t stpi_escp2_variable_2pl_drops =
   &escp2_2pl_2880_dropsizes,
   &escp2_2pl_2880_dropsizes,
   &escp2_2pl_2880_dropsizes,
+};
+
+const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops =
+{
+  &escp2_r300_360_dropsizes,
+  &escp2_r300_360_dropsizes,
+  &escp2_r300_360_dropsizes,
+  &escp2_r300_720_dropsizes,
+  &escp2_r300_1440_dropsizes,
+  &escp2_r300_2880_dropsizes,
+  &escp2_r300_2880_dropsizes,
+  &escp2_r300_2880_dropsizes,
+};
+
+const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
+{
+  &escp2_1_5pl_360_dropsizes,
+  &escp2_1_5pl_360_dropsizes,
+  &escp2_1_5pl_360_dropsizes,
+  &escp2_1_5pl_720_dropsizes,
+  &escp2_1_5pl_1440_dropsizes,
+  &escp2_1_5pl_2880_dropsizes,
+  &escp2_1_5pl_2880_dropsizes,
+  &escp2_1_5pl_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_2000p_drops =

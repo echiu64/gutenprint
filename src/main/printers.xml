@@ -1106,6 +1106,12 @@
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON PM-G800" driver="escp2-pmg800">
+        <color value="true"/>
+        <model value="64"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON PX-V500" driver="escp2-pxv500">
         <color value="true"/>
         <model value="61"/>

@@ -493,9 +493,11 @@ extern const int stpi_escp2_model_limit;
 
 extern const escp2_drop_list_t stpi_escp2_simple_drops;
 extern const escp2_drop_list_t stpi_escp2_spro10000_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_2pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_4pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_680_4pl_drops;

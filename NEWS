@@ -101,8 +101,10 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    Finally, a Hybrid UniTone dither algorithm is provided, combining
    the principles of both of the above.
 
-2) Preliminary support for the Epson Stylus Photo R300.  This printer
-   is not tuned and quality is likely to be poor.
+2) Preliminary support for the Epson Stylus Photo R300 and PM-G700,
+   PM-D750, and PM-G800.  These printers are not tuned and quality is
+   likely to be poor.  The Stylus Photo R300, PM-G700, and PM-D750
+   drivers likely work; the PM-G800 driver may or may not work.
 
 3) Direct printing to CD's is now supported experimentally on the
    Epson Stylus Photo 900, 950, 960, 2100, 2200, R300, and the
@@ -1282,7 +1284,7 @@ EPSON Stylus Photo 1280/1290
 EPSON Stylus Photo 2000P
 EPSON Stylus Photo 2100
 EPSON Stylus Photo 2200
-EPSON Stylus Photo R300
+EPSON Stylus Photo R300   (Experimental)
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
@@ -1317,7 +1319,7 @@ EPSON MJ-5100C
 EPSON MJ-6000C
 EPSON MJ-8000C
 EPSON PM-700C
-EPSON PM-G700
+EPSON PM-G700   (Experimental)
 EPSON PM-730C
 EPSON PM-740C	(Experimental)
 EPSON PM-750C
@@ -1327,6 +1329,7 @@ EPSON PM-770C
 EPSON PM-780C
 EPSON PM-790PT
 EPSON PM-800C
+EPSON PM-G800   (Experimental)
 EPSON PM-850PT
 EPSON PM-870C	(Experimental)
 EPSON PM-880C
@@ -1643,6 +1646,7 @@ Epson PM-770C                  escp2-pm770c    EPSON PM-770C
 Epson PM-780C                  escp2-pm780c    EPSON PM-780C
 Epson PM-790PT                 escp2-pm790pt   EPSON PM-790PT
 Epson PM-800C                  escp2-pm800c    EPSON PM-800C
+Epson PM-G800                  escp2-pmg800    EPSON PM-G800
 Epson PM-850PT                 escp2-pm850pt   EPSON PM-850PT
 Epson PM-870C                  escp2-pm870c    EPSON PM-870C
 Epson PM-880C                  escp2-pm880c    EPSON PM-880C
