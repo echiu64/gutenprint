@@ -18,6 +18,8 @@ $supported_printers = array(
 		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 790' => 'Fully Operational (4.1 only;
 		use the 870 driver in 4.0)',
+		'EPSON Stylus Photo 810' => 'Fully Operational (4.1 only;
+		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
 		'EPSON Stylus Photo 890' => 'Fully Operational (4.1 only;
 		use the 870 driver in 4.0)',
@@ -35,6 +37,8 @@ $supported_printers = array(
 		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C60' => 'Untested (4.1 only)',
+		'EPSON Stylus C70' => 'Untested (4.1 only)',
+		'EPSON Stylus C80' => 'Testing in Progress (4.1 only)',
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
@@ -75,6 +79,10 @@ $supported_printers = array(
 		'EPSON Stylus Pro 9000' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Pro 9500' => 'Needs Testing (4.1 only)'
 		)
+	'Stylus Scan Range' => array(
+		'EPSON Stylus Scan 2000' => 'Fully Operational (4.1
+		only; use the 740 driver in 4.0)'
+		)
 	),
 'HP' => array(
 	'DeskJet Range' => array(
@@ -111,7 +119,9 @@ $supported_printers = array(
 	       'BJC 50' => 'Operational (4.1 only)',
 	       'BJC 55' => 'Operational (4.1 only)',
 	       'BJC 80' => 'Operational (4.1 only)',
-	       'BJC 85' => 'Operational (4.1 only)',
+	       'BJC 210' => 'Needs Testing (4.1 only)',
+	       'BJC 240' => 'Needs Testing (4.1 only)',
+	       'BJC 250' => 'Needs Testing (4.1 only)',
 	       'BJC 1000' => 'Untested',
 	       'BJC 2000' => 'Untested',
 	       'BJC 3000' => 'Untested',
