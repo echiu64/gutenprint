@@ -1,0 +1,4 @@
+/etc/cups
+/usr/bin/cups-calibrate
+/usr/lib/cups
+/usr/share/cups
