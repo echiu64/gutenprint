@@ -332,7 +332,8 @@ section.  Please see the notes at the end of this section.
 2880x2880sw      2880 x 2880 DPI                          (21)
 
 (*) This setting is the default on all printers supporting this
-    setting.
+    setting except for the PM-930C and PM-970C, which support no
+    resolution lower than 720x360 DPI.
 
 (1) Works on printers that have a basic vertical spacing of 1/90".
     This includes the Stylus Color, Stylus Color 440, 460, 600, 640,
