@@ -35,7 +35,6 @@
 
 /* TODO-LIST
  *
- *   * implement the left border
  *   * adjust the colors of all supported models
  *
  */
@@ -48,7 +47,7 @@
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
 
-#if (0)
+#if (1)
 #define DEBUG 1 
 #endif
 
@@ -145,39 +144,17 @@ typedef struct canon_variable_inkset
  *
  */
 
-typedef struct canon_variable_inklist
+typedef struct canon_variable_inklist 
 {
-  const canon_variable_inkset_t *s_r11_4;    /*  180x180  or   150x150  */
-  const canon_variable_inkset_t *s_r22_4;    /*  360x360  or   300x300  */
-  const canon_variable_inkset_t *s_r33_4;    /*  720x720  or   600x600  */
-  const canon_variable_inkset_t *s_r43_4;    /* 1440x720  or  1200x600  */
-  const canon_variable_inkset_t *s_r44_4;    /* 1440x1440 or  1200x1200 */
-  const canon_variable_inkset_t *s_r55_4;    /* 2880x2880 or  2400x2400 */
-
-  const canon_variable_inkset_t *s_r11_6;    /*  180x180  or   150x150  */
-  const canon_variable_inkset_t *s_r22_6;    /*  360x360  or   300x300  */
-  const canon_variable_inkset_t *s_r33_6;    /*  720x720  or   600x600  */
-  const canon_variable_inkset_t *s_r43_6;    /* 1440x720  or  1200x600  */
-  const canon_variable_inkset_t *s_r44_6;    /* 1440x1440 or  1200x1200 */
-  const canon_variable_inkset_t *s_r55_6;    /* 2880x2880 or  2400x2400 */
-
-  const canon_variable_inkset_t *v_r11_4;    /*  180x180  or   150x150  */
-  const canon_variable_inkset_t *v_r22_4;    /*  360x360  or   300x300  */
-  const canon_variable_inkset_t *v_r33_4;    /*  720x720  or   600x600  */
-  const canon_variable_inkset_t *v_r43_4;    /* 1440x720  or  1200x600  */
-  const canon_variable_inkset_t *v_r44_4;    /* 1440x1440 or  1200x1200 */
-  const canon_variable_inkset_t *v_r55_4;    /* 2880x2880 or  2400x2400 */
-
-  const canon_variable_inkset_t *v_r11_6;    /*  180x180  or   150x150  */
-  const canon_variable_inkset_t *v_r22_6;    /*  360x360  or   300x300  */
-  const canon_variable_inkset_t *v_r33_6;    /*  720x720  or   600x600  */
-  const canon_variable_inkset_t *v_r43_6;    /* 1440x720  or  1200x600  */
-  const canon_variable_inkset_t *v_r44_6;    /* 1440x1440 or  1200x1200 */
-  const canon_variable_inkset_t *v_r55_6;    /* 2880x2880 or  2400x2400 */
+  const int bits;
+  const int colors;
+  const canon_variable_inkset_t *r11;    /*  180x180  or   150x150  */
+  const canon_variable_inkset_t *r22;    /*  360x360  or   300x300  */
+  const canon_variable_inkset_t *r33;    /*  720x720  or   600x600  */
+  const canon_variable_inkset_t *r43;    /* 1440x720  or  1200x600  */
+  const canon_variable_inkset_t *r44;    /* 1440x1440 or  1200x1200 */
+  const canon_variable_inkset_t *r55;    /* 2880x2880 or  2400x2400 */
 } canon_variable_inklist_t;
-
-
-
 
 
 static const stp_simple_dither_range_t photo_cyan_dither_ranges[] =
@@ -221,6 +198,26 @@ static const canon_variable_ink_t photo_6pl_ink =
 {
   photo_6pl_dither_ranges,
   sizeof(photo_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+static const stp_simple_dither_range_t megaphoto_6pl_dither_ranges[] =
+{
+  { 0.15,  0x1, 0, 1 },
+  { 0.227, 0x2, 0, 2 },
+/*  { 0.333, 0x3, 0, 3 }, */
+  { 0.45,  0x1, 1, 1 },
+  { 0.55,  0x2, 1, 2 },
+  { 0.66,  0x3, 1, 3 },
+  { 0.77,  0x5, 1, 5 },
+  { 0.88,  0x6, 1, 6 },
+  { 1.0,   0x7, 1, 7 }
+};
+
+static const canon_variable_ink_t megaphoto_6pl_ink =
+{
+  megaphoto_6pl_dither_ranges,
+  sizeof(megaphoto_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -293,6 +290,14 @@ static const canon_variable_inkset_t canon_6pl_standard_inks =
   &standard_6pl_ink
 };
 
+static const canon_variable_inkset_t canon_6pl_mega_inks =
+{
+  &megaphoto_6pl_ink,
+  &megaphoto_6pl_ink,
+  &megaphoto_6pl_ink,
+  &megaphoto_6pl_ink
+};
+
 static const canon_variable_inkset_t canon_6pl_photo_inks =
 {
   &photo_6pl_ink,
@@ -319,58 +324,75 @@ static const canon_variable_inkset_t canon_6pl_1440_photo_inks =
 
 static const canon_variable_inklist_t simple_4color_inks =
 {
+  1,4,
   &standard_inks,
   &standard_inks,
   &standard_inks,
   &standard_inks,
   &standard_inks,
   &standard_inks,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL,
-  NULL
 };
 
 static const canon_variable_inklist_t variable_6pl_6color_inks =
 {
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
-  &standard_inks,
+  1,6,
   &photo_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
+};
+
+static const canon_variable_inklist_t variable_6pl_4color_inks_2bit =
+{
+  2,4,
   &canon_6pl_standard_inks,
   &canon_6pl_standard_inks,
   &canon_6pl_standard_inks,
   &canon_6pl_standard_inks,
   &canon_6pl_1440_standard_inks,
   &canon_6pl_standard_inks,
+};
+
+static const canon_variable_inklist_t variable_6pl_6color_inks_2bit =
+{
+  2,6,
   &canon_6pl_photo_inks,
   &canon_6pl_photo_inks,
   &canon_6pl_photo_inks,
   &canon_6pl_photo_inks,
   &canon_6pl_1440_photo_inks,
   &canon_6pl_photo_inks
+};
+
+static const canon_variable_inklist_t mega_6pl_6color_inks_3bit =
+{
+  3,6,
+  &canon_6pl_mega_inks,
+  &canon_6pl_mega_inks,
+  &canon_6pl_mega_inks,
+  &canon_6pl_mega_inks,
+  &canon_6pl_mega_inks,
+  &canon_6pl_mega_inks,
+};
+
+static const canon_variable_inklist_t *canon_ink_4_1[] =
+{
+  &simple_4color_inks,
+};
+
+static const canon_variable_inklist_t *canon_ink_46_3[] =
+{
+  &mega_6pl_6color_inks_3bit,
+};
+
+static const canon_variable_inklist_t *canon_ink_46_12[] =
+{
+  &simple_4color_inks,
+  &variable_6pl_4color_inks_2bit,
+  &variable_6pl_6color_inks,
+  &variable_6pl_6color_inks_2bit,
 };
 
 typedef enum {
@@ -398,7 +420,8 @@ typedef struct canon_caps {
   int features;       /* special bjl settings */
   const canon_dot_size_t dot_sizes;	/* Vector of dot sizes for resolutions */
   const canon_densities_t densities;	/* List of densities for each printer */
-  const canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
+  const canon_variable_inklist_t **inxs;   /* Choices of inks for this printer */
+  int inxs_cnt;       /* number of ink definitions in inxs */
 } canon_cap_t;
 
 static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
@@ -453,6 +476,8 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
 
+#define CANON_INK(A) A,sizeof(A)/sizeof(canon_variable_inklist_t*)
+
 static const canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
@@ -483,9 +508,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a,
-    {0,0,-1,-1,-1,-1}, /* ??? */
+    { 0,0,-1,-1,-1,-1 }, /* ??? */
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 
   { /* Canon BJC 4300 */
@@ -498,7 +523,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_DMT,
     {0,0,-1,-1,-1,-1}, /* ??? */
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 
   { /* Canon BJC 4400 */
@@ -511,7 +536,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
     {-1,0,-1,-1,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 
   { /* Canon BJC 6000 */
@@ -524,7 +549,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_DMT,
     {-1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 
   { /* Canon BJC 6200 */
@@ -537,7 +562,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_DMT,
     { -1, 1, 0, 0, -1, -1 },
     {  0, 1.8, 1, .5, 0, 0 },
-    &variable_6pl_6color_inks
+    CANON_INK(canon_ink_46_12) /*&variable_6pl_6color_inks*/
   },
 
   { /* Canon BJC 6500 */
@@ -550,7 +575,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_DMT,
     { -1, 1, 0, 0, -1, -1 },
     {  0, 1.8, 1, .5, 0, 0 },
-    &variable_6pl_6color_inks
+    CANON_INK(canon_ink_4_1) /*&variable_6pl_6color_inks*/
   },
 
   { /* Canon BJC 8200 */
@@ -563,7 +588,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     {-1,0,0,-1,0,-1},
     { 1,1,1,1,1,1 },
-    &variable_6pl_6color_inks
+    CANON_INK(canon_ink_46_3) /*&variable_6pl_6color_inks*/
   },
 
 
@@ -584,7 +609,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a,
     { 0,0,-1,-1,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 2000 */
     2000,
@@ -596,7 +621,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a,
     { 0,0,-1,-1,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 3000 */
     3000,
@@ -608,7 +633,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r | CANON_CAP_DMT,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 6100 */
     6100,
@@ -620,7 +645,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 7000 */
     7000,
@@ -632,7 +657,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 7100 */
     7100,
@@ -644,7 +669,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 
   /*****************************/
@@ -664,7 +689,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_DMT,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 5500 */
     5500,
@@ -676,7 +701,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a,
     { 0,0,-1,-1,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 6500 */
     6500,
@@ -688,7 +713,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
     { -1,0,0,0,-1,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
   { /* Canon BJC 8500 */
     8500,
@@ -700,7 +725,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,
     { -1,0,0,-1,0,-1},
     { 1,1,1,1,1,1 },
-    &simple_4color_inks
+    CANON_INK(canon_ink_4_1) /*&simple_4color_inks*/
   },
 };
 
@@ -727,7 +752,6 @@ typedef struct {
   int page_height;
   int top;
   int left;
-  int use_dmt;
   int bits;
 } canon_init_t;
 
@@ -939,50 +963,37 @@ canon_density(const canon_cap_t * caps, int res_code)
 static const canon_variable_inkset_t *
 canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 {
-  const canon_variable_inklist_t *inks = caps->inxs;
+  const canon_variable_inklist_t **inks = caps->inxs;
+  int i;
 
-  switch ((bits<<12)+(colors<<8)+res_code)
-    {
-    case 0x1111:
-    case 0x1411: return inks->s_r11_4;
-    case 0x1122:
-    case 0x1422: return inks->s_r22_4;
-    case 0x1133:
-    case 0x1433: return inks->s_r33_4;
-    case 0x1143:
-    case 0x1443: return inks->s_r43_4;
-    case 0x1144:
-    case 0x1444: return inks->s_r44_4;
-    case 0x1155:
+  if (!inks) 
+    return NULL;
 
-    case 0x1455: return inks->s_r55_4;
-    case 0x1611: return inks->s_r11_6;
-    case 0x1622: return inks->s_r22_6;
-    case 0x1633: return inks->s_r33_6;
-    case 0x1643: return inks->s_r43_6;
-    case 0x1644: return inks->s_r44_6;
-    case 0x1655: return inks->s_r55_6;
-
-    case 0x2111:
-    case 0x2411: return inks->v_r11_4;
-    case 0x2122:
-    case 0x2422: return inks->v_r22_4;
-    case 0x2133:
-    case 0x2433: return inks->v_r33_4;
-    case 0x2143:
-    case 0x2443: return inks->v_r43_4;
-    case 0x2144:
-    case 0x2444: return inks->v_r44_4;
-    case 0x2155:
-
-    case 0x2455: return inks->v_r55_4;
-    case 0x2611: return inks->v_r11_6;
-    case 0x2622: return inks->v_r22_6;
-    case 0x2633: return inks->v_r33_6;
-    case 0x2643: return inks->v_r43_6;
-    case 0x2644: return inks->v_r44_6;
-    case 0x2655: return inks->v_r55_6;
+  for (i=0; i<caps->inxs_cnt; i++) {
+#ifdef DEBUG
+      fprintf(stderr,"hmm, trying ink for resolution code "
+	      "%x, %d bits, %d colors\n",res_code,inks[i]->bits,inks[i]->colors);
+#endif
+    if (inks[i] && inks[i]->bits==bits && inks[i]->colors==colors) {
+#ifdef DEBUG
+      fprintf(stderr,"wow, found ink for resolution code "
+	      "%x, %d bits, %d colors\n",res_code,bits,colors);
+#endif
+      switch (res_code)
+	{
+	case 0x11: return inks[i]->r11;
+	case 0x22: return inks[i]->r22;
+	case 0x33: return inks[i]->r33;
+	case 0x43: return inks[i]->r43;
+	case 0x44: return inks[i]->r44;
+	case 0x55: return inks[i]->r55;
+	}
     }
+  }
+#ifdef DEBUG
+  fprintf(stderr,"ooo, found no ink for resolution code "
+	  "%x, %d bits, %d colors in all %d defs!\n",res_code,bits,colors,caps->inxs_cnt);
+#endif
   return NULL;
 }
 
@@ -1465,7 +1476,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
   if (init->xdpi==1440) arg_74_2= 0x04;
   if (init->ydpi>=720)  arg_74_3= 0x09;
 
-  if (init->use_dmt) {
+  if (init->bits>1) {
     arg_74_1= 0x02;
     arg_74_2= 0x80;
     arg_74_3= 0x09;
@@ -1477,7 +1488,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
     arg_74_2= 0x90;
     arg_74_3= 0x04;
     if (init->colormode==COLOR_CCMMYK) {
-      init->bits=3; init->use_dmt=1;
+      init->bits=3; 
     }
   }
 
@@ -1736,12 +1747,11 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   init.page_height = page_height;
   init.top = top;
   init.left = left;
-  init.use_dmt = (bits==2);
   init.bits = bits;
 
-  bits= init.bits;
-
   canon_init_printer(nv, &init);
+
+  bits= init.bits;
 
  /*
   * Convert image size to printer resolution...
@@ -1886,7 +1896,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     }
   stp_dither_set_black_lower(dither, k_lower);
   stp_dither_set_black_upper(dither, k_upper);
-  if (bits == 2)
+  if (bits > 1)
     {
       if (use_6color)
 	stp_dither_set_adaptive_divisor(dither, 8);
@@ -1912,7 +1922,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 			  inks->k->density * stp_get_density(nv));
     }
 
-  if (bits == 2)
+  if (bits > 1)
     {
       if (use_6color)
 	stp_dither_set_transition(dither, .7);
@@ -1984,7 +1994,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		     lcyan,    delay_lc,
 		     lmagenta, delay_lm,
 		     lyellow,  delay_ly,
-		     length, out_width, left, &emptylines, (bits==2));
+		     length, out_width, left, &emptylines, bits);
 
 #ifdef DEBUG
     /* fprintf(stderr,"!"); */
@@ -2029,7 +2039,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		       lcyan,    delay_lc,
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly,
-		       length, out_width, left, &emptylines, (bits==2));
+		       length, out_width, left, &emptylines, bits);
 
 #ifdef DEBUG
       /* fprintf(stderr,"-"); */
@@ -2082,9 +2092,9 @@ const stp_printfuncs_t stp_canon_printfuncs =
  */
 
 static void
-canon_fold_lsb_msb(const unsigned char *line,
-		   int single_length,
-		   unsigned char *outbuf)
+canon_fold_2bit(const unsigned char *line,
+		int single_length,
+		unsigned char *outbuf)
 {
   int i;
   for (i = 0; i < single_length; i++) {
@@ -2111,39 +2121,58 @@ canon_fold_lsb_msb(const unsigned char *line,
   }
 }
 
-/*
- * 'canon_fold_msb_lsb()' fold 2 lines in order msb/lsb
- */
-
 static void
-canon_fold_msb_lsb(const unsigned char *line,
-		   int single_length,
-		   unsigned char *outbuf)
+canon_fold_3bit(const unsigned char *line,
+		int single_length,
+		unsigned char *outbuf)
 {
   int i;
   for (i = 0; i < single_length; i++) {
     outbuf[0] =
-      ((line[0] & (1 << 7)) >> 0) |
-      ((line[0] & (1 << 6)) >> 1) |
-      ((line[0] & (1 << 5)) >> 2) |
-      ((line[0] & (1 << 4)) >> 3) |
+      ((line[0] & (1 << 7)) >> 2) |
+      ((line[0] & (1 << 6)) >> 4) |
       ((line[single_length] & (1 << 7)) >> 1) |
-      ((line[single_length] & (1 << 6)) >> 2) |
-      ((line[single_length] & (1 << 5)) >> 3) |
-      ((line[single_length] & (1 << 4)) >> 4);
+      ((line[single_length] & (1 << 6)) >> 3) |
+      ((line[single_length] & (1 << 5)) >> 5) |
+      ((line[2*single_length] & (1 << 7)) << 0) |
+      ((line[2*single_length] & (1 << 6)) >> 2) |
+      ((line[2*single_length] & (1 << 5)) >> 4);
     outbuf[1] =
-      ((line[0] & (1 << 3)) << 4) |
-      ((line[0] & (1 << 2)) << 3) |
+      ((line[0] & (1 << 5)) << 2) |
+      ((line[0] & (1 << 4)) << 0) |
+      ((line[0] & (1 << 3)) >> 2) |
+      ((line[single_length] & (1 << 4)) << 1) |
+      ((line[single_length] & (1 << 3)) >> 1) |
+      ((line[2*single_length] & (1 << 4)) << 2) |
+      ((line[2*single_length] & (1 << 3)) << 0) |
+      ((line[2*single_length] & (1 << 2)) >> 2);
+    outbuf[2] =
+      ((line[0] & (1 << 2)) << 4) |
       ((line[0] & (1 << 1)) << 2) |
-      ((line[0] & (1 << 0)) << 1) |
-      ((line[single_length] & (1 << 3)) << 3) |
-      ((line[single_length] & (1 << 2)) << 2) |
-      ((line[single_length] & (1 << 1)) << 1) |
-      ((line[single_length] & (1 << 0)) << 0);
+      ((line[0] & (1 << 0)) << 0) |
+      ((line[single_length] & (1 << 2)) << 5) |
+      ((line[single_length] & (1 << 1)) << 3) |
+      ((line[single_length] & (1 << 0)) << 1) |
+      ((line[2*single_length] & (1 << 1)) << 4) |
+      ((line[2*single_length] & (1 << 0)) << 2);
     line++;
-    outbuf += 2;
+    outbuf += 3;
   }
 }
+
+
+static void
+canon_shift_buffer(unsigned char *line,int length,int bits)
+{
+  int i,j;
+  for (j=0; j<bits; j++) {
+    for (i=length; i>0; i--) {
+      line[length]= (line[length] >> 1) | (line[length-1] << 7);
+    }
+    line[0] = line[0] >> 1;
+  }
+}
+
 
 /*
  * 'canon_write()' - Send graphics using TIFF packbits compression.
@@ -2159,7 +2188,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 	    int           *empty,       /* IO- Preceeding empty lines */
 	    int           width,	/* I - Printed width */
 	    int           offset, 	/* I - Offset from left side */
-	    int           dmt)
+	    int           bits)
 {
   unsigned char
     comp_buf[COMPBUFWIDTH],		/* Compression buffer */
@@ -2167,6 +2196,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
     *in_ptr= line,
     *comp_ptr, *comp_data;
   int newlength;
+  int offset2,bitoffset;
   unsigned char color;
 
  /* Don't send blank lines... */
@@ -2176,33 +2206,41 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
   /* fold lsb/msb pairs if drop modulation is active */
 
-  if (dmt) {
-    if (1) {
-      if (caps->features & CANON_CAP_MSB_FIRST)
-	canon_fold_msb_lsb(line,length,in_fold);
-      else
-	canon_fold_lsb_msb(line,length,in_fold);
-      in_ptr= in_fold;
-    }
+  if (bits==2) {
+    canon_fold_2bit(line,length,in_fold);
+    in_ptr= in_fold;
     length*= 2;
     offset*= 2;
   }
-
+  if (bits==3) {
+    canon_fold_3bit(line,length,in_fold);
+    in_ptr= in_fold;
+    length*= 3;
+    offset*= 3;
+  }
   /* pack left border rounded to multiples of 8 dots */
 
   comp_data= comp_buf;
-  if (offset) {
-    int offset2= (offset+4)/8;
-    while (offset2>0) {
-      unsigned char toffset = offset2 > 128 ? 128 : offset2;
-      comp_data[0] = 1 - toffset;
-      comp_data[1] = 0;
-      comp_data += 2;
-      offset2-= toffset;
-    }
+  offset2= offset/8;
+  bitoffset= offset%8;
+  while (offset2>0) {
+    unsigned char toffset = offset2 > 128 ? 128 : offset2;
+    comp_data[0] = 1 - toffset;
+    comp_data[1] = 0;
+    comp_data += 2;
+    offset2-= toffset;
+  }
+  if (bitoffset) {
+    if (bitoffset<8)
+      canon_shift_buffer(in_ptr,length+1,bitoffset);
+    else
+      fprintf(stderr,"SEVERE BUG IN print-canon.c::canon_write() bitoffset=%d!!\n",bitoffset);
+#ifdef DEBUG
+    fprintf(stderr,"shift%d ",bitoffset); 
+#endif
   }
 
-  stp_pack(in_ptr, length, comp_data, &comp_ptr);
+  stp_pack(in_ptr, length+1, comp_data, &comp_ptr);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */
@@ -2253,27 +2291,27 @@ canon_write_line(const stp_vars_t v,	/* I - Print file or command */
 		 int           width,	/* I - Printed width */
 		 int           offset,  /* I - horizontal offset */
 		 int           *empty,  /* IO- unflushed preceeding empty lines */
-		 int           dmt)
+		 int           bits)
 {
   int written= 0;
 
   if (k) written+=
-    canon_write(v, caps, k+ dk*l,  l, 3, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, k+ dk*l,  l, 3, ydpi, empty, width, offset, bits);
   if (y) written+=
-    canon_write(v, caps, y+ dy*l,  l, 2, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, y+ dy*l,  l, 2, ydpi, empty, width, offset, bits);
   if (m) written+=
-    canon_write(v, caps, m+ dm*l,  l, 1, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, m+ dm*l,  l, 1, ydpi, empty, width, offset, bits);
   if (c) written+=
-    canon_write(v, caps, c+ dc*l,  l, 0, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, c+ dc*l,  l, 0, ydpi, empty, width, offset, bits);
   if (ly) written+=
-    canon_write(v, caps, ly+dly*l, l, 6, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, ly+dly*l, l, 6, ydpi, empty, width, offset, bits);
   if (lm) written+=
-    canon_write(v, caps, lm+dlm*l, l, 5, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, lm+dlm*l, l, 5, ydpi, empty, width, offset, bits);
   if (lc) written+=
-    canon_write(v, caps, lc+dlc*l, l, 4, ydpi, empty, width, offset, dmt);
+    canon_write(v, caps, lc+dlc*l, l, 4, ydpi, empty, width, offset, bits);
 
   if (written||(empty==0))
     stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
   else
-    *empty++;
+    (*empty)+= 1;
 }
