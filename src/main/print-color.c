@@ -2093,7 +2093,7 @@ stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
 	itype = 2;
       else if (strcmp(image_type, "HSLAdjust") == 0)
 	itype = 3;
-      else if (strcmp(image_type, "LineArt") == 0)
+      else if (strcmp(image_type, "Threshold") == 0)
 	itype = 4;
     }
   switch (stp_get_output_type(v))
@@ -2408,7 +2408,7 @@ stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
 		  stp_string_list_add_string
 		    (description->bounds.str, "Solid", _("Solid Colors"));
 		  stp_string_list_add_string
-		    (description->bounds.str, "LineArt", _("Line Art"));
+		    (description->bounds.str, "Threshold", _("Threshold"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
@@ -2435,7 +2435,7 @@ stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
 	      stp_check_string_parameter(v, "ImageOptimization",
 					 STP_PARAMETER_DEFAULTED) &&
 	      strcmp(stp_get_string_parameter(v, "ImageOptimization"),
-		     "LineArt") == 0)
+		     "Uncorrected") == 0)
 	    description->is_active = 0;
 	  switch (param->param.p_type)
 	    {
