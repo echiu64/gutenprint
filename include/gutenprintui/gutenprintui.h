@@ -119,6 +119,9 @@ extern void stpui_plist_set_custom_command(stpui_plist_t *p, const char *val);
 extern void stpui_plist_set_custom_command_n(stpui_plist_t *p, const char *val, int n);
 extern const char *stpui_plist_get_custom_command(const stpui_plist_t *p);
 
+extern void stpui_plist_set_copy_count(stpui_plist_t *p, gint count);
+extern int stpui_plist_get_copy_count(const stpui_plist_t *p);
+
 extern void stpui_plist_set_current_standard_command(stpui_plist_t *p, const char *val);
 extern void stpui_plist_set_current_standard_command_n(stpui_plist_t *p, const char *val, int n);
 extern const char *stpui_plist_get_current_standard_command(const stpui_plist_t *p);

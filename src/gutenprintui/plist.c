@@ -61,6 +61,7 @@ static gint image_raw_channels = 0;
 static gint image_channel_depth = 8;
 static stp_string_list_t *default_parameters = NULL;
 stp_string_list_t *stpui_system_print_queues;
+static const char *copy_count_name = "STPUICopyCount";
 
 #define SAFE_FREE(x)			\
 do						\
@@ -79,6 +80,7 @@ typedef struct
   const char *raw_flag;
   const char *key_file;
   const char *scan_command;
+  const char *copy_count_command;
 } print_system_t;
 
 /*
@@ -86,24 +88,32 @@ typedef struct
  */
 static const print_system_t default_printing_system =
   { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" };
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+  "-n" };
 
 static print_system_t known_printing_systems[] =
 {
   { "CUPS", N_("CUPS"), "lp -s", "-d", "-oraw", "/usr/sbin/cupsd",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" },
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+    "-n" },
   { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'" },
+    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+    "-n" },
   { "lpd", N_("Berkeley lpd (/etc/lpc)"), "lpr", "-P", "-l", "/etc/lpc",
-    "/etc/lpc status | grep '^...*:' | sed 's/:.*//'" },
+    "/etc/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "-#" },
   { "lpd", N_("Berkeley lpd (/usr/bsd/lpc)"), "lpr", "-P", "-l", "/usr/bsd/lpc",
-    "/usr/bsd/lpc status | grep '^...*:' | sed 's/:.*//'" },
+    "/usr/bsd/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "-#" },
   { "lpd", N_("Berkeley lpd (/usr/etc/lpc"), "lpr", "-P", "-l", "/usr/etc/lpc",
-    "/usr/etc/lpc status | grep '^...*:' | sed 's/:.*//'" },
+    "/usr/etc/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "-#" },
   { "lpd", N_("Berkeley lpd (/usr/libexec/lpc)"), "lpr", "-P", "-l", "/usr/libexec/lpc",
-    "/usr/libexec/lpc status | grep '^...*:' | sed 's/:.*//'" },
+    "/usr/libexec/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "-#" },
   { "lpd", N_("Berkeley lpd (/usr/sbin/lpc)"), "lpr", "-P", "-l", "/usr/sbin/lpc",
-    "/usr/sbin/lpc status | grep '^...*:' | sed 's/:.*//'" },
+    "/usr/sbin/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "-#" },
 };
 
 static unsigned print_system_count = sizeof(known_printing_systems) / sizeof(print_system_t);
@@ -166,8 +176,10 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
   const char *queue_name = stpui_plist_get_queue_name(plist);
   const char *extra_options = stpui_plist_get_extra_printer_options(plist);
   const char *family = stp_printer_get_family(printer);
+  int copy_count = stpui_plist_get_copy_count(plist);
   int raw = 0;
   char *print_cmd;
+  char *count_string = NULL;
   if (!queue_name)
     queue_name = "";
   identify_print_system();
@@ -175,13 +187,20 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
     raw = 0;
   else
     raw = 1;
-  stp_asprintf(&print_cmd, "%s %s %s %s%s%s",
+  
+  if (copy_count > 1)
+    stp_asprintf(&count_string, "%s %d ",
+		 global_printing_system->copy_count_command, copy_count);
+
+  stp_asprintf(&print_cmd, "%s %s %s %s %s%s%s",
 	       global_printing_system->print_command,
 	       queue_name[0] ? global_printing_system->queue_select : "",
 	       queue_name[0] ? queue_name : "",
+	       count_string ? count_string : "",
 	       raw ? global_printing_system->raw_flag : "",
 	       extra_options ? " " : "",
 	       extra_options ? extra_options : "");
+  SAFE_FREE(count_string);
   return print_cmd;
 }
 
@@ -263,6 +282,22 @@ stpui_plist_get_command_type(const stpui_plist_t *p)
 }
 
 void
+stpui_plist_set_copy_count(stpui_plist_t *p, gint copy_count)
+{
+  if (copy_count > 0)
+    stp_set_int_parameter(p->v, copy_count_name, copy_count);
+}
+
+gint
+stpui_plist_get_copy_count(const stpui_plist_t *p)
+{
+  if (stp_check_int_parameter(p->v, copy_count_name, STP_PARAMETER_ACTIVE))
+    return stp_get_int_parameter(p->v, copy_count_name);
+  else
+    return 1;
+}
+
+void
 stpui_set_image_type(const char *itype)
 {
   image_type = g_strdup(itype);
@@ -296,6 +331,7 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->auto_size_roll_feed_paper = 0;
   printer->unit = 0;
   printer->v = stp_vars_create();
+  stpui_plist_set_copy_count(printer, 1);
   stp_set_string_parameter(printer->v, "InputImageType", image_type);
   if (image_raw_channels)
     {
@@ -340,6 +376,7 @@ stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
   stpui_plist_set_custom_command(vd, stpui_plist_get_custom_command(vs));
   stpui_plist_set_current_standard_command(vd, stpui_plist_get_current_standard_command(vs));
   stpui_plist_set_output_filename(vd, stpui_plist_get_output_filename(vs));
+  stpui_plist_set_copy_count(vd, stpui_plist_get_copy_count(vs));
 }
 
 static stpui_plist_t *
@@ -1020,6 +1057,8 @@ stpui_printrc_save(void)
 	  fprintf(fp, "  Top: %d\n", stp_get_top(p->v));
 	  fprintf(fp, "  Custom_Page_Width: %d\n", stp_get_page_width(p->v));
 	  fprintf(fp, "  Custom_Page_Height: %d\n", stp_get_page_height(p->v));
+	  fprintf(fp, "  Parameter %s Int True %d\n", copy_count_name,
+		  stpui_plist_get_copy_count(p));
 
 	  for (j = 0; j < count; j++)
 	    {

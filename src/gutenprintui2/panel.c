@@ -134,6 +134,8 @@ static GtkWidget *page_size_table;
 static GtkWidget *printer_features_table;
 static GtkWidget *color_adjustment_table;
 
+static GtkWidget *copy_count_spin_button;
+
 static gboolean preview_valid = FALSE;
 static gboolean frame_valid = FALSE;
 static gboolean need_exposure = FALSE;
@@ -232,6 +234,8 @@ static void preview_motion_callback     (GtkWidget      *widget,
 					 gpointer        data);
 static void position_callback           (GtkWidget      *widget);
 static void position_button_callback    (GtkWidget      *widget,
+					 gpointer        data);
+static void copy_count_callback         (GtkAdjustment  *widget,
 					 gpointer        data);
 static void plist_build_combo(GtkWidget *combo,
 			      GtkWidget *label,
@@ -1359,6 +1363,50 @@ create_paper_size_frame(void)
 }
 
 static void
+create_copy_number_frame(void)
+{
+  GtkWidget *frame;
+  GtkWidget *vbox;
+  GtkWidget *event_box;
+  GtkAdjustment *adj;
+
+  frame = gtk_frame_new (_("Number of Copies"));
+  gtk_box_pack_start (GTK_BOX (right_vbox), frame, FALSE, TRUE, 0);
+  gtk_widget_show (frame);
+
+  vbox = gtk_hbox_new (FALSE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  gtk_widget_show (vbox);
+
+  event_box = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (vbox), event_box);
+  stpui_set_help_data(event_box,
+		      _("Select the number of copies to print; "
+			"a value between 1 and 100"));
+  gtk_widget_show (event_box);
+
+  /*
+   * Number of Copies Spin Button
+   */
+
+  adj = (GtkAdjustment *) gtk_adjustment_new (1.0f, 1.0f, 100.0f,
+					      1.0f, 5.0f, 0.0f);
+  copy_count_spin_button = gtk_spin_button_new (adj, 0, 0);
+  gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (copy_count_spin_button), FALSE);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (copy_count_spin_button), TRUE);
+  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (copy_count_spin_button), 
+				     GTK_UPDATE_IF_VALID);
+
+  g_signal_connect(G_OBJECT (adj), "value_changed",
+		   G_CALLBACK (copy_count_callback),
+		   NULL);
+
+  gtk_container_add (GTK_CONTAINER (event_box), copy_count_spin_button);
+  gtk_widget_show(copy_count_spin_button);
+}
+
+static void
 create_positioning_frame (void)
 {
   GtkWidget *frame;
@@ -2276,6 +2324,7 @@ create_main_window (void)
   create_printer_settings_frame ();
   create_units_frame();
   create_paper_size_frame();
+  create_copy_number_frame();
   create_positioning_frame ();
   create_scaling_frame ();
   create_image_settings_frame ();
@@ -2833,17 +2882,23 @@ update_options(void)
 }
 
 static void
+update_standard_print_command(void)
+{
+  char *label_text =
+    stpui_build_standard_print_command(pv, stp_get_printer(pv->v));
+  gtk_entry_set_text(GTK_ENTRY(standard_cmd_entry), label_text);
+  g_free(label_text);
+}
+
+static void
 do_all_updates(void)
 {
   gint i;
-  char *label_text =
-    stpui_build_standard_print_command(pv, stp_get_printer(pv->v));
   suppress_preview_update++;
   set_orientation(pv->orientation);
   invalidate_preview_thumbnail ();
   preview_update ();
-  gtk_entry_set_text(GTK_ENTRY(standard_cmd_entry), label_text);
-  g_free(label_text);
+  update_standard_print_command();
 
   if (pv->scaling < 0)
     {
@@ -2896,6 +2951,14 @@ do_all_updates(void)
   gtk_label_set_text(GTK_LABEL(units_label), units[pv->unit].name);
   suppress_preview_update--;
   preview_update ();
+}
+
+static void
+copy_count_callback(GtkAdjustment *adjustment, gpointer data)
+{
+  gint copy_count = (gint) adjustment->value;
+  stpui_plist_set_copy_count(pv, copy_count);
+  update_standard_print_command();
 }
 
 static void
@@ -3056,6 +3119,8 @@ plist_callback (GtkWidget *widget,
   stp_free(tmp);
   gtk_entry_set_text(GTK_ENTRY(custom_command_entry),
 		     stpui_plist_get_custom_command(pv));
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(copy_count_spin_button),
+			    (gfloat) stpui_plist_get_copy_count(pv));
   do_all_updates();
 
   setup_update ();
@@ -3321,6 +3386,7 @@ command_type_callback(GtkWidget *widget, gpointer data)
       gtk_entry_set_editable(GTK_ENTRY(custom_command_entry), FALSE);
       gtk_widget_hide(GTK_WIDGET(file_browser));
       gtk_widget_set_sensitive(file_button, FALSE);
+      gtk_widget_set_sensitive(copy_count_spin_button, TRUE);
       stpui_plist_set_command_type(pv, COMMAND_TYPE_DEFAULT);
     }
   else if (strcmp((const char *) data, "Custom") == 0)
@@ -3333,6 +3399,7 @@ command_type_callback(GtkWidget *widget, gpointer data)
       gtk_entry_set_editable(GTK_ENTRY(custom_command_entry), TRUE);
       gtk_widget_hide(GTK_WIDGET(file_browser));
       gtk_widget_set_sensitive(file_button, FALSE);
+      gtk_widget_set_sensitive(copy_count_spin_button, FALSE);
       stpui_plist_set_command_type(pv, COMMAND_TYPE_CUSTOM);
     }
   else if (strcmp((const char *) data, "File") == 0)
@@ -3344,6 +3411,7 @@ command_type_callback(GtkWidget *widget, gpointer data)
       gtk_widget_set_sensitive(custom_command_entry, FALSE);
       gtk_entry_set_editable(GTK_ENTRY(custom_command_entry), FALSE);
       gtk_widget_set_sensitive(file_button, TRUE);
+      gtk_widget_set_sensitive(copy_count_spin_button, FALSE);
       stpui_plist_set_command_type(pv, COMMAND_TYPE_FILE);
     }      
 }
