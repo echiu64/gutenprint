@@ -2,7 +2,16 @@ gimp-print (4.1.5-1) unstable; urgency=low
 
   * New upstream release
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Mon, 19 Feb 2001 23:20:13 +0000
+ -- Eric Sharkey <sharkey@debian.org>  Wed, 28 Feb 2001 11:01:22 -0500
+
+gimp-print (4.1.4-2) unstable; urgency=low
+
+  * Repackage gimp-print after forking the Debian branch from 4.1.4
+  * Add version numbers to the libgimpprint package name
+  * Move documentation files from libgimpprint to libgimpprint-dev
+  * Close ITP bug for wnpp, Closes #85563
+
+ -- Eric Sharkey <sharkey@debian.org>  Tue, 27 Feb 2001 11:22:18 -0500
 
 gimp-print (4.1.4-1) unstable; urgency=low
 

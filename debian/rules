@@ -12,7 +12,7 @@ export DH_COMPAT=2
 export DH_OPTIONS
 
 # Set LD_LIBRARY_PATH for dh_shlibdeps
-LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint/usr/lib
+LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint4.1.5/usr/lib
 export LD_LIBRARY_PATH
 
 build: build-stamp
@@ -67,7 +67,6 @@ binary-common:
 	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
 	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
-	  cp doc/*.sgml debian/gimp1.2-print/usr/share/doc/gimp1.2-print
 	dh_installexamples
 #	dh_installmenu
 #	dh_installemacsen
@@ -78,10 +77,6 @@ binary-common:
 #	dh_installinfo
 	dh_undocumented
 	dh_installchangelogs
-	cd debian/libgimpprint-dev/usr/share/doc ; \
-	  mv libgimpprint-dev libgimpprint ; \
-	  ln -s libgimpprint libgimpprint-dev ; \
-	  rm -r libgimpprint
 	dh_link
 	dh_strip
 	dh_compress
@@ -91,7 +86,7 @@ binary-common:
 	dh_makeshlibs
 	dh_installdeb
 #	dh_perl
-	dh_shlibdeps
+	dh_shlibdeps -l`pwd`/debian/libgimpprint4.1.5/usr/lib
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
