@@ -104,10 +104,10 @@ const static pcl_t pcl_media_sizes[] =
     {N_ ("Legal"), PCL_PAPERSIZE_LEGAL},			/* US Legal (8.5 x 14 in) */
     {N_ ("Tabloid"), PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
     {N_ ("Manual"), PCL_PAPERSIZE_STATEMENT},		/* US Manual/Statement (5.5 x 8.5 in) */
-    {"13x19", PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
-    {"A5", PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
-    {"A4", PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
-    {"A3", PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
+    {N_ ("13x19"), PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
+    {N_ ("A5"), PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
+    {N_ ("A4"), PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
+    {N_ ("A3"), PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
     {N_ ("B5 JIS"), PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
     {N_ ("B4 JIS"), PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
     {N_ ("Hagaki Card"), PCL_PAPERSIZE_HAGAKI_CARD},		/* Japanese Hagaki Card (100 x 148 mm) */
