@@ -47,6 +47,33 @@ Gimp-Print 4.1.99b1 contains the following changes over 4.1.99a3:
    nearly as great a degree) when moving, resizing, or changing the
    color settings of the image.
 
+11) Fix a few more corner cases for the Epson Stylus Color 480/580,
+   C20, and C40 series printers.
+
+Known limitations of this release:
+
+1) The Epson Stylus C40UX (and very likely other printers in the C20
+   and C40 lines) do not identify themselves.  Therefore,
+
+   escputil -u -d
+
+   will not return anything useful.
+
+2) The "align color" (-o) command to escputil does not currently work
+   on the printers that should support it (Epson Stylus Color 480 and
+   580, and C20SX, C20UX, C40SX, and C40UX).
+
+3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+   supported.
+
+4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
+   7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
+   work correctly in all cases, and their outputs are not properly
+   tuned.
+
+5) The Canon BJC-8200 and S800 do not produce optimum quality.
+
+
 
 Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
 
