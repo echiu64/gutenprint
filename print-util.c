@@ -1608,6 +1608,7 @@ const static papersize_t paper_sizes[] =
   { "Tabloid",  792, 1224, PAPERSIZE_ENGLISH },	/*  11in x 17in */
   { "Postcard", 283,  416, PAPERSIZE_ENGLISH },	/* 100mm x 147mm */
   { "4x6",      288,  432, PAPERSIZE_ENGLISH },
+  { "Epson 4x6 Photo Paper", 306, 495, PAPERSIZE_ENGLISH },
   { "5x7",      360,  504, PAPERSIZE_ENGLISH },
   { "5x8",      360,  576, PAPERSIZE_ENGLISH },
   { "HalfLetter", 396, 612, PAPERSIZE_ENGLISH },
