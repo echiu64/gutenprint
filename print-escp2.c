@@ -67,10 +67,6 @@ static const int densities[6] = { 0, 0, 0, 0, 1, 1 };
 
 #ifndef WEAVETEST
 
-/*
- * Local functions...
- */
-
 static void
 escp2_write_microweave(FILE *, const unsigned char *,
 		       const unsigned char *, const unsigned char *,
@@ -94,6 +90,9 @@ static void escp2_free_microweave(void);
 
 static void destroy_weave(void *);
 
+/*
+ * We really need to get away from this silly static nonsense...
+ */
 #define PHYSICAL_BPI 720
 #define MAX_OVERSAMPLED 4
 #define MAX_BPP 2
@@ -160,6 +159,23 @@ typedef struct escp2_densities
   double d_1440_2880;
 } escp2_densities_t;
 
+
+/*
+ * Definition of the multi-level inks available to a given printer.
+ * Each printer may use a different kind of ink droplet for variable
+ * and single drop size for each supported horizontal resolution and
+ * type of ink (4 or 6 color).
+ *
+ * Recall that 6 color ink is treated as simply another kind of
+ * multi-level ink, but the driver offers the user a choice of 4 and
+ * 6 color ink, so we need to define appropriate inksets for both
+ * kinds of ink.
+ *
+ * Stuff like the MIS 4 and 6 "color" monochrome inks doesn't fit into
+ * this model very nicely, so we'll either have to special case it
+ * or find some way of handling it in here.
+ */
+
 typedef struct escp2_variable_ink
 {
   simple_dither_range_t *range;
@@ -177,15 +193,19 @@ typedef struct escp2_variable_inkset
 
 typedef struct escp2_variable_inklist
 {
+  escp2_variable_inkset_t *s_180_4;
   escp2_variable_inkset_t *s_360_4;
   escp2_variable_inkset_t *s_720_4;
   escp2_variable_inkset_t *s_1440_4;
+  escp2_variable_inkset_t *s_180_6;
   escp2_variable_inkset_t *s_360_6;
   escp2_variable_inkset_t *s_720_6;
   escp2_variable_inkset_t *s_1440_6;
+  escp2_variable_inkset_t *v_180_4;
   escp2_variable_inkset_t *v_360_4;
   escp2_variable_inkset_t *v_720_4;
   escp2_variable_inkset_t *v_1440_4;
+  escp2_variable_inkset_t *v_180_6;
   escp2_variable_inkset_t *v_360_6;
   escp2_variable_inkset_t *v_720_6;
   escp2_variable_inkset_t *v_1440_6;
@@ -330,6 +350,7 @@ static simple_dither_range_t mis_sixtone_ranges[] =
   { 1.00, 0x20, 1, 1 }	/* K */
 };
 
+
 static escp2_variable_inkset_t standard_inks =
 {
   NULL,
@@ -402,11 +423,16 @@ static escp2_variable_inkset_t escp2_multishot_photo_inks =
   &standard_multishot_ink
 };
 
+
 static escp2_variable_inklist_t simple_4color_inks =
 {
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  NULL,
+  NULL,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -423,9 +449,13 @@ static escp2_variable_inklist_t simple_6color_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
+  &photo_inks,
+  NULL,
+  NULL,
   NULL,
   NULL,
   NULL,
@@ -439,12 +469,16 @@ static escp2_variable_inklist_t variable_6pl_4color_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL,
   &escp2_multishot_standard_inks,
+  &escp2_multishot_standard_inks,
   &escp2_6pl_standard_inks,
   &escp2_6pl_standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL
@@ -455,12 +489,16 @@ static escp2_variable_inklist_t variable_6pl_6color_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  &photo_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
   &escp2_multishot_standard_inks,
+  &escp2_multishot_standard_inks,
   &escp2_6pl_standard_inks,
   &escp2_6pl_standard_inks,
+  &escp2_multishot_photo_inks,
   &escp2_multishot_photo_inks,
   &escp2_6pl_photo_inks,
   &escp2_6pl_photo_inks
@@ -471,12 +509,16 @@ static escp2_variable_inklist_t variable_3pl_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL,
   &escp2_multishot_standard_inks,
+  &escp2_multishot_standard_inks,
   &escp2_3pl_standard_inks,
   &escp2_3pl_standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL
@@ -487,12 +529,16 @@ static escp2_variable_inklist_t variable_4pl_4color_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL,
   &escp2_multishot_standard_inks,
+  &escp2_multishot_standard_inks,
+  &escp2_6pl_standard_inks,
   &escp2_4pl_standard_inks,
-  &escp2_4pl_standard_inks,
+  NULL,
   NULL,
   NULL,
   NULL
@@ -503,14 +549,18 @@ static escp2_variable_inklist_t variable_4pl_6color_inks =
   &standard_inks,
   &standard_inks,
   &standard_inks,
+  &standard_inks,
+  &photo_inks,
   &photo_inks,
   &photo_inks,
   &photo_inks,
   &escp2_multishot_standard_inks,
-  &escp2_4pl_standard_inks,
+  &escp2_multishot_standard_inks,
+  &escp2_6pl_standard_inks,
   &escp2_4pl_standard_inks,
   &escp2_multishot_photo_inks,
-  &escp2_4pl_photo_inks,
+  &escp2_multishot_photo_inks,
+  &escp2_6pl_photo_inks,
   &escp2_4pl_photo_inks
 };
 
@@ -1019,6 +1069,7 @@ static const paper_t escp2_paper_list[] = {
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
+
 const paper_t *
 get_media_type(const char *name)
 {
@@ -1175,6 +1226,9 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	case 4:
 	  switch (xdpi)
 	    {
+	    case 180:
+	      return inks->s_180_4;
+	      break;
 	    case 360:
 	      return inks->s_360_4;
 	      break;
@@ -1188,6 +1242,9 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	case 6:
 	  switch (xdpi)
 	    {
+	    case 180:
+	      return inks->s_180_6;
+	      break;
 	    case 360:
 	      return inks->s_360_6;
 	      break;
@@ -1206,6 +1263,9 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	case 4:
 	  switch (xdpi)
 	    {
+	    case 180:
+	      return inks->v_180_4;
+	      break;
 	    case 360:
 	      return inks->v_360_4;
 	      break;
@@ -1219,6 +1279,9 @@ escp2_inks(int model, int xdpi, int colors, int bits)
 	case 6:
 	  switch (xdpi)
 	    {
+	    case 180:
+	      return inks->v_180_6;
+	      break;
 	    case 360:
 	      return inks->v_360_6;
 	      break;
