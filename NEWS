@@ -177,19 +177,19 @@ These release notes contain the following sections:
 
   The following bugs have been fixed in this release:
 
-1013565 GIMP plugin may not exit at completion
-1013470 QUALITY - ESP R300 generates poor black
-1013465 QUALITY - highlights and shadows blown out
-1003003 CUPS executables linked incorrectly
-1002380 Printing grayscale image w/old printrc file crashes at start
-1001267 GIMP2 plugin does not handle v3 printrc format
-1001029 Auto orientation not updated in preview (causes jumbling)
-1000661 GIMP plugin does not refresh preview correctly in some cases
-982642  Canon 6200 Photo Ink Problems
-981759  5.0.0-beta1 doesn't compile on sparc sunos 5.7
-981304  gimp2 print plugin installed in wrong directory
-980678  Canon DMT not correct
 951558  gimp-print 5.0.0-alpha3, bugs with --enable-static
+980678  Canon DMT not correct
+981304  gimp2 print plugin installed in wrong directory
+981759  5.0.0-beta1 doesn't compile on sparc sunos 5.7
+982642  Canon 6200 Photo Ink Problems
+1000661 GIMP plugin does not refresh preview correctly in some cases
+1001029 Auto orientation not updated in preview (causes jumbling)
+1001267 GIMP2 plugin does not handle v3 printrc format
+1002380 Printing grayscale image w/old printrc file crashes at start
+1003003 CUPS executables linked incorrectly
+1013465 QUALITY - highlights and shadows blown out
+1013470 QUALITY - ESP R300 generates poor black
+1013565 GIMP plugin may not exit at completion
 
 
 ================================================================
