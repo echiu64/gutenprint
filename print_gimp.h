@@ -60,6 +60,10 @@
 #define GIMP_1_0
 #endif
 
+#if !defined(GIMP_PRINT_MAINT) && !defined(GIMP_1_0)
+#define NEW_UI_ONLY
+#endif
+
 /*
  * Function prototypes
  */

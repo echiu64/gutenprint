@@ -79,12 +79,16 @@ dnl MRS: Only GCC supports -Wall and other GCC options...
 
 if test -n "$GCC"; then
   if test "$USE_MAINTAINER_MODE" = "yes" ; then
-    MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes'
+    MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes -DGIMP_PRINT_MAINT'
   else
     MAINTAINER_CFLAGS='-Wall'
   fi
 else
-  MAINTAINER_CFLAGS=''
+  if test "$USE_MAINTAINER_MODE" = "yes" ; then
+    MAINTAINER_CFLAGS='-DGIMP_PRINT_MAINT'
+  else
+    MAINTAINER_CFLAGS=''
+  fi
 fi
 
 AM_PATH_GIMP(1.0.0,

@@ -23,6 +23,8 @@
 
 #include "print_gimp.h"
 
+#ifndef NEW_UI_ONLY
+
 #include "print-intl.h"
 
 extern vars_t vars;
@@ -1142,3 +1144,5 @@ gtk_dither_algo_callback (GtkWidget *widget,
   strcpy(plist[plist_current].v.dither_algorithm,
 	 dither_algo_names[data]);
 }
+
+#endif  /* ! NEW_UI_ONLY */

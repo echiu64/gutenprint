@@ -53,7 +53,9 @@ static int	do_print_dialog (char *proc_name);
 #ifndef GIMP_1_0
 extern void     gimp_create_main_window (void);
 #endif
+#ifndef NEW_UI_ONLY
 extern void     gtk_create_main_window (void);
+#endif
 
 #if 0
 static void	cleanupfunc(void);
@@ -207,7 +209,25 @@ query (void)
   static gchar *copy  = "Copyright 1997-2000 by Michael Sweet and Robert Krawitz";
   static gchar *types = "RGB*,GRAY*,INDEXED*";
 
-#ifndef GIMP_1_0
+#ifdef NEW_UI_ONLY
+  gimp_install_procedure ("file_print_gimp",
+			  blurb, help, auth, copy,
+			  PLUG_IN_VERSION,
+			  N_("<Image>/File/Print..."),
+			  types,
+			  PROC_PLUG_IN,
+			  nargs, 0,
+			  args, NULL);
+#elif defined(GIMP_1_0)
+  gimp_install_procedure ("file_print",
+			  blurb, help, auth, copy,
+			  PLUG_IN_VERSION,
+			  N_("<Image>/File/Print..."),
+			  types,
+			  PROC_PLUG_IN,
+			  nargs, 0,
+			  args, NULL);
+#else
   gimp_install_procedure ("file_print_gtk",
 			  blurb, help, auth, copy,
 			  PLUG_IN_VERSION,
@@ -220,15 +240,6 @@ query (void)
 			  blurb, help, auth, copy,
 			  PLUG_IN_VERSION,
 			  N_("<Image>/File/Print (Gimp)..."),
-			  types,
-			  PROC_PLUG_IN,
-			  nargs, 0,
-			  args, NULL);
-#else
-  gimp_install_procedure ("file_print",
-			  blurb, help, auth, copy,
-			  PLUG_IN_VERSION,
-			  N_("<Image>/File/Print..."),
 			  types,
 			  PROC_PLUG_IN,
 			  nargs, 0,
@@ -711,13 +722,15 @@ do_print_dialog (gchar *proc_name)
   /*
    * Print dialog window...
    */
-#ifndef GIMP_1_0
+#ifdef NEW_UI_ONLY
+  gimp_create_main_window();
+#elif defined(GIMP_1_0)
+  gtk_create_main_window ();
+#else
   if (!strcmp (proc_name, "file_print_gimp"))
     gimp_create_main_window ();
   else
     gtk_create_main_window ();
-#else
-  gtk_create_main_window ();
 #endif
 
   gtk_main ();
