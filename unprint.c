@@ -206,11 +206,16 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   for (i=0;i<length;i++) {
     lvalue=get_bits(l,i,bpp);
     pvalue=get_bits(p->line[color],i+shift,bpp);
+    if (0&&pvalue&&lvalue) {
+      fprintf(stderr,"Warning!  Double printing detected at x,y=%d!\n",p->startx[color]+i);
+    } else {
     pvalue+=lvalue;
     if (pvalue>(1<<bpp)-1) {
+/*      fprintf(stderr,"Warning!  Clipping at x=%d!\n",p->startx[color]+i); */
       pvalue=(1<<bpp)-1;
     }
     set_bits(p->line[color],i+shift,bpp,pvalue);
+    }
   }
 }
 
@@ -239,7 +244,7 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
 
 }
 
-void write_output(FILE *fp_w) {
+void write_output(FILE *fp_w,int bpp) {
   int l,p,left,right,first,last,width,height;
   unsigned int amount;
   ppmpixel pixel;
@@ -280,13 +285,7 @@ void write_output(FILE *fp_w) {
       memset(pixel,255,3); /* start with white, add inks */
       for (c=0;c<MAX_INKS;c++) {
         if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
-          if (pstate.dotsize==0x10) {
-            amount=(page[l]->line[c][(p-page[l]->startx[c])/4]>>
-                          ((p-page[l]->startx[c])%4))&0x3;
-          } else {
-            amount=(page[l]->line[c][(p-page[l]->startx[c])/8]>>
-                          ((p-page[l]->startx[c])%8))&0x1;
-          }
+          amount=get_bits(page[l]->line[c],p-page[l]->startx[c],bpp);
           mix_ink(pixel,c,amount);
         }
       }
@@ -643,6 +642,7 @@ int main(int argc,char *argv[]){
                 switch (bufsize) {
                     case 4:i=(buf[2]<<16)+(buf[3]<<24);
                     case 2:i+=(buf[0])+(256*buf[1]);
+                      /* i=48; always go down 48 */
                       pstate.yposition+=i;
                     break;
                   default:
@@ -706,7 +706,7 @@ int main(int argc,char *argv[]){
       }
     }
   fprintf(stderr,"Done reading.\n");
-  write_output(fp_w);
+  write_output(fp_w,currentbpp);
   fclose(fp_w);
 
   return(0);
