@@ -1205,6 +1205,21 @@ static const escp2_inkname_t default_black_ink =
 };
 
 static int
+compute_channel_count(const escp2_inkname_t *ink_type,
+		      int channel_limit)
+{
+  int i;
+  int channels_in_use = 0;
+  for (i = 0; i < channel_limit; i++)
+    {
+      const ink_channel_t *channel = ink_type->channels[i];
+      if (channel)
+	channels_in_use += channel->n_subchannels;
+    }
+  return channels_in_use;
+}
+
+static int
 setup_ink_types(const escp2_inkname_t *ink_type,
 		escp2_privdata_t *privdata,
 		unsigned char **cols,
@@ -1265,10 +1280,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 		page_width,	/* Width of page */
 		page_height,	/* Height of page */
 		page_true_height;	/* True height of page */
-  int		out_width,	/* Width of image on page */
-		out_height,	/* Height of image on page */
-		out_channels,	/* Output bytes per pixel */
-		length;		/* Length of raster data */
   int		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
@@ -1285,11 +1296,9 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
   int		max_vres;
-  unsigned char **cols;
   int 		*head_offset;
   int 		max_head_offset;
   escp2_privdata_t privdata;
-  stp_dither_data_t *dt;
   const escp2_inkname_t *ink_type;
   int 		total_channels;
   int 		channels_in_use;
@@ -1299,14 +1308,17 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   if (!stp_verify(nv))
     {
       stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
+      stp_vars_free(nv);
       return 0;
     }
   if (model < 0 || model >= stp_escp2_model_limit)
     {
       stp_eprintf(nv, _("Model %d out of range.\n"), model);
+      stp_vars_free(nv);
       return 0;
     }
 
+  stp_image_init(image);
 
   if (output_type == OUTPUT_RAW_PRINTER)
     {
@@ -1333,6 +1345,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	{
 	  stp_eprintf(nv, _("This printer does not support raw printer output at depth %d\n"),
 		      stp_image_bpp(image) / 2);
+	  stp_vars_free(nv);
 	  return 0;
 	}
     }
@@ -1379,13 +1392,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   bits = escp2_bits(model, res->resid, nv);
 
- /*
-  * Compute the output size...
-  */
-  stp_image_init(image);
-  out_width = stp_get_width(v);
-  out_height = stp_get_height(v);
-
   escp2_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
@@ -1393,14 +1399,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   page_height = page_bottom - page_top;
 
   stp_default_media_size(nv, &n, &page_true_height);
-
- /*
-  * Convert image size to printer resolution...
-  */
-
-  out_width  = xdpi * out_width / 72;
-  out_height = ydpi * out_height / 72;
-  length = (out_width + 7) / 8;
 
   left = physical_ydpi * undersample * left / 72 / res->vertical_denominator;
 
@@ -1421,9 +1419,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   /*
    * Set up the output channels
    */
-  cols = stp_zalloc(sizeof(unsigned char *) * total_channels);
-  privdata.channels =
-    stp_zalloc(sizeof(physical_subchannel_t *) * total_channels);
   head_offset = stp_zalloc(sizeof(int) * total_channels);
 
   memset(head_offset, 0, sizeof(head_offset));
@@ -1434,15 +1429,11 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   else
     channel_limit = NCOLORS;
 
-  dt = stp_dither_data_allocate();
-
-  channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
-				    dt, channel_limit, length * bits);
+  channels_in_use = compute_channel_count(ink_type, channel_limit);
   if (channels_in_use == 0)
     {
       ink_type = &default_black_ink;
-      channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
-					dt, channel_limit, length * bits);
+      channels_in_use = compute_channel_count(ink_type, channel_limit);
     }
   if (channels_in_use == 1)
     head_offset[0] = 0;
@@ -1587,6 +1578,33 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
     escp2_init_printer(&init);
   if (print_op & OP_JOB_PRINT)
     {
+      int out_width;		/* Width of image on page */
+      int out_height;		/* Height of image on page */
+      int out_channels;		/* Output bytes per pixel */
+      int length;		/* Length of raster data */
+      stp_dither_data_t *dt = stp_dither_data_allocate();
+      unsigned char **cols =
+	stp_zalloc(sizeof(unsigned char *) * total_channels);
+
+      privdata.channels =
+	stp_zalloc(sizeof(physical_subchannel_t *) * total_channels);
+      /*
+       * Compute the output size...
+       */
+      out_width = stp_get_width(v);
+      out_height = stp_get_height(v);
+
+      /*
+       * Convert image size to printer resolution...
+       */
+
+      out_width  = xdpi * out_width / 72;
+      out_height = ydpi * out_height / 72;
+      length = (out_width + 7) / 8;
+
+      channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
+					dt, channel_limit, length * bits);
+
       /*
        * Allocate memory for the raster data...
        */
@@ -1671,18 +1689,17 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       if (!privdata.printed_something)
 	stp_send_command(nv, "\n", "");
       stp_send_command(nv, "\f", "");	/* Eject page */
+      for (i = 0; i < total_channels; i++)
+	if (cols[i])
+	  stp_free((unsigned char *) cols[i]);
+      stp_free(cols);
+      stp_dither_data_free(dt);
+      stp_free(privdata.channels);
     }
   if (print_op & OP_JOB_END)
     escp2_deinit_printer(&init);
 
-  stp_dither_data_free(dt);
-
-  for (i = 0; i < total_channels; i++)
-    if (cols[i])
-      stp_free((unsigned char *) cols[i]);
-  stp_free(cols);
   stp_free(head_offset);
-  stp_free(privdata.channels);
 
 #ifdef QUANTIFY
   print_timers(nv);
