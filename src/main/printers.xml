@@ -277,7 +277,7 @@
 
 <printer name="EPSON Stylus Color 500" driver="escp2-500">
 <color>
-<model value=1>
+<model value=42>
 <gamma value=0.597>
 <density value=1.0>
 <language value=escp2>

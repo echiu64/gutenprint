@@ -657,7 +657,7 @@ void parse_escp2(FILE *fp_r)
                 getn(bufsize,"Error reading raster data!\n");
                 update_page(buf,bufsize,m,n,currentcolor,density);
                 break;
-              case 1:  /* run height encoding */
+              case 1:  /* run length encoding */
                 for (i=0;(!eject)&&(i<(m*((n*pstate.bpp+7)/8)));) {
                   get1("Error reading counter!\n");
                   if (ch<128) {

@@ -1388,7 +1388,7 @@ typedef struct escp2_printer_attribute
 
 #define MODEL_HASBLACK_MASK	0x10ul /* Can this printer print black ink */
 #define MODEL_HASBLACK_YES	0x00ul /* when it is also printing color? */
-#define MODEL_HASBLACK_NO	0x10ul /* Only the 1500 can't. */
+#define MODEL_HASBLACK_NO	0x10ul
 
 #define MODEL_COLOR_MASK	0x60ul /* Is this a 6-color printer? */
 #define MODEL_COLOR_4		0x00ul
@@ -1489,7 +1489,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
-  /* 1: Stylus Color 400/500 */
+  /* 1: Stylus Color 400 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -2024,6 +2024,19 @@ static const escp2_stp_printer_t model_capabilities[] =
     360, 1440, 1440, 14400,
     default_head_offset, 1440, 720, spro10000_dotsizes, spro10000_densities,
     &spro10000_inks,
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
+  },
+  /* 42: Stylus Color 500 */
+  {
+    (MODEL_INIT_STANDARD | MODEL_HASBLACK_NO | MODEL_INK_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_ENHANCED_MICROWEAVE_NO
+     | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
+     | MODEL_VACUUM_NO),
+    48, 3, 48, 3, 720, 720, INCH(17 / 2), INCH(44), 14, 14, 0, 30, 0, 1, 0,
+    360, 720, 720, 14400,
+    default_head_offset, 720, 720, g1_dotsizes, g1_densities,
+    &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
 };

@@ -9,7 +9,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2001-07-26 00:22+0100\n"
+"POT-Creation-Date: 2001-07-30 21:30-0400\n"
 "PO-Revision-Date: 2001-02-07 21:33+0\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,14 +78,14 @@ msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "TEST: %s: option `-W %s' doesn't allow an argument\n"
 
 #: src/main/print-canon.c:1221 src/main/print-canon.c:1552
-#: src/main/print-canon.c:1684 src/main/print-escp2.c:2357
+#: src/main/print-canon.c:1684 src/main/print-escp2.c:2358
 #: src/main/print-lexmark.c:609 src/main/print-lexmark.c:862
 #: src/main/print-lexmark.c:982
 msgid "Plain Paper"
 msgstr "TEST: Plain Paper"
 
 #: src/main/print-canon.c:1222 src/main/print-canon.c:1553
-#: src/main/print-canon.c:1685 src/main/print-escp2.c:2369
+#: src/main/print-canon.c:1685 src/main/print-escp2.c:2370
 #: src/main/print-lexmark.c:610 src/main/print-lexmark.c:863
 #: src/main/print-lexmark.c:983
 msgid "Transparencies"
@@ -160,7 +160,7 @@ msgstr "TEST: Photo Paper Pro"
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:1247 src/main/print-escp2.c:2404
+#: src/main/print-canon.c:1247 src/main/print-escp2.c:2405
 msgid "Other"
 msgstr "TEST: Other"
 
@@ -298,381 +298,381 @@ msgstr "TEST: Very Fast"
 msgid "Hybrid Floyd-Steinberg"
 msgstr "TEST: Hybrid Floyd-Steinberg"
 
-#: src/main/print-escp2.c:2051
+#: src/main/print-escp2.c:2052
 #, fuzzy
 msgid "360 x 120 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2052
+#: src/main/print-escp2.c:2053
 #, fuzzy
 msgid "360 x 120 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2053
+#: src/main/print-escp2.c:2054
 msgid "180 DPI"
 msgstr "TEST: 180 DPI"
 
-#: src/main/print-escp2.c:2054
+#: src/main/print-escp2.c:2055
 msgid "180 DPI Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2055
+#: src/main/print-escp2.c:2056
 msgid "360 DPI"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2056
+#: src/main/print-escp2.c:2057
 msgid "360 DPI Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2057
+#: src/main/print-escp2.c:2058
 msgid "360 DPI Microweave"
 msgstr "TEST: 360 DPI Microweave"
 
-#: src/main/print-escp2.c:2058
+#: src/main/print-escp2.c:2059
 msgid "360 DPI Microweave Unidirectional"
 msgstr "TEST: 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2059
+#: src/main/print-escp2.c:2060
 msgid "360 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2060
+#: src/main/print-escp2.c:2061
 #, fuzzy
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2061
+#: src/main/print-escp2.c:2062
 #, fuzzy
 msgid "360 DPI FOL2"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2062
+#: src/main/print-escp2.c:2063
 #, fuzzy
 msgid "360 DPI FOL2 Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2063
+#: src/main/print-escp2.c:2064
 #, fuzzy
 msgid "360 DPI MW2"
 msgstr "TEST: 360 DPI"
 
-#: src/main/print-escp2.c:2064
+#: src/main/print-escp2.c:2065
 #, fuzzy
 msgid "360 DPI MW2 Unidirectional"
 msgstr "TEST: 360 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2065
+#: src/main/print-escp2.c:2066
 msgid "360 DPI Softweave"
 msgstr "TEST: 360 DPI Softweave"
 
-#: src/main/print-escp2.c:2066
+#: src/main/print-escp2.c:2067
 msgid "360 DPI High Quality"
 msgstr "TEST: 360 DPI High Quality"
 
-#: src/main/print-escp2.c:2067
+#: src/main/print-escp2.c:2068
 msgid "360 DPI High Quality Unidirectional"
 msgstr "TEST: 360 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2.c:2068
+#: src/main/print-escp2.c:2069
 #, fuzzy
 msgid "720 x 360 DPI Default"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2069
+#: src/main/print-escp2.c:2070
 #, fuzzy
 msgid "720 x 360 DPI Default Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2070
+#: src/main/print-escp2.c:2071
 #, fuzzy
 msgid "720 x 360 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2071
+#: src/main/print-escp2.c:2072
 #, fuzzy
 msgid "720 x 360 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2072
+#: src/main/print-escp2.c:2073
 #, fuzzy
 msgid "720 x 360 DPI Microweave"
 msgstr "TEST: 360 DPI Microweave"
 
-#: src/main/print-escp2.c:2073
+#: src/main/print-escp2.c:2074
 #, fuzzy
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr "TEST: 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2074
+#: src/main/print-escp2.c:2075
 #, fuzzy
 msgid "720 x 360 DPI FOL"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2075
+#: src/main/print-escp2.c:2076
 #, fuzzy
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2076
+#: src/main/print-escp2.c:2077
 #, fuzzy
 msgid "720 x 360 DPI FOL2"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2077
+#: src/main/print-escp2.c:2078
 #, fuzzy
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2078
+#: src/main/print-escp2.c:2079
 #, fuzzy
 msgid "720 x 360 DPI MW2"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2079
+#: src/main/print-escp2.c:2080
 #, fuzzy
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2080
+#: src/main/print-escp2.c:2081
 #, fuzzy
 msgid "720 DPI Default"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2081
+#: src/main/print-escp2.c:2082
 #, fuzzy
 msgid "720 DPI Default Unidirectional"
 msgstr "TEST: 1200 DPI  Unidirectional"
 
-#: src/main/print-escp2.c:2082
+#: src/main/print-escp2.c:2083
 msgid "720 DPI Microweave"
 msgstr "TEST: 720 DPI Microweave"
 
-#: src/main/print-escp2.c:2083
+#: src/main/print-escp2.c:2084
 msgid "720 DPI Microweave Unidirectional"
 msgstr "TEST: 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2084
+#: src/main/print-escp2.c:2085
 msgid "720 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2085
+#: src/main/print-escp2.c:2086
 #, fuzzy
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2086
+#: src/main/print-escp2.c:2087
 msgid "720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2.c:2087
+#: src/main/print-escp2.c:2088
 #, fuzzy
 msgid "720 DPI Four Pass Unidirectional"
 msgstr "TEST: 1200 DPI  Unidirectional"
 
-#: src/main/print-escp2.c:2088
+#: src/main/print-escp2.c:2089
 msgid "720 DPI Softweave"
 msgstr "TEST: 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2089
+#: src/main/print-escp2.c:2090
 msgid "720 DPI Softweave Unidirectional"
 msgstr "TEST: 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2090
+#: src/main/print-escp2.c:2091
 msgid "720 DPI High Quality"
 msgstr "TEST: 720 DPI High Quality"
 
-#: src/main/print-escp2.c:2091
+#: src/main/print-escp2.c:2092
 msgid "720 DPI High Quality Unidirectional"
 msgstr "TEST: 720 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2.c:2092
+#: src/main/print-escp2.c:2093
 msgid "720 DPI Highest Quality"
 msgstr "TEST: 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2093
+#: src/main/print-escp2.c:2094
 #, fuzzy
 msgid "1440 x 720 DPI Default"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2094
+#: src/main/print-escp2.c:2095
 #, fuzzy
 msgid "1440 x 720 DPI Default Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2095
+#: src/main/print-escp2.c:2096
 msgid "1440 x 720 DPI Microweave"
 msgstr "TEST: 1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2.c:2096
+#: src/main/print-escp2.c:2097
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2.c:2097
+#: src/main/print-escp2.c:2098
 #, fuzzy
 msgid "1440 x 720 DPI FOL"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2098
+#: src/main/print-escp2.c:2099
 #, fuzzy
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr "TEST: 180 DPI Unidirectional"
 
-#: src/main/print-escp2.c:2099
+#: src/main/print-escp2.c:2100
 #, fuzzy
 msgid "1440 x 720 DPI Four Pass"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2100
+#: src/main/print-escp2.c:2101
 #, fuzzy
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2101
+#: src/main/print-escp2.c:2102
 msgid "1440 x 720 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2102
+#: src/main/print-escp2.c:2103
 msgid "1440 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2103
+#: src/main/print-escp2.c:2104
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2104
+#: src/main/print-escp2.c:2105
 msgid "1440 x 1440 DPI Softweave"
 msgstr "TEST: 1440 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:2105
+#: src/main/print-escp2.c:2106
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "TEST: 1440 x 1440 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2106
+#: src/main/print-escp2.c:2107
 msgid "2880 x 720 DPI Softweave"
 msgstr "TEST: 2880 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2107
+#: src/main/print-escp2.c:2108
 msgid "2880 x 720 DPI Softweave Unidirectional"
 msgstr "TEST: 2880 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2108
+#: src/main/print-escp2.c:2109
 msgid "2880 x 1440 DPI Softweave"
 msgstr "TEST: 2880 x 1440 DPI Softweave"
 
-#: src/main/print-escp2.c:2110
+#: src/main/print-escp2.c:2111
 #, fuzzy
 msgid "1440 x 360 DPI Softweave"
 msgstr "TEST: 1440 x 720 DPI Softweave"
 
-#: src/main/print-escp2.c:2111
+#: src/main/print-escp2.c:2112
 #, fuzzy
 msgid "1440 x 360 DPI Softweave Unidirectional"
 msgstr "TEST: 1440 x 720 DPI Softweave Unidirectional"
 
-#: src/main/print-escp2.c:2112
+#: src/main/print-escp2.c:2113
 #, fuzzy
 msgid "1440 x 360 DPI High Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2113
+#: src/main/print-escp2.c:2114
 #, fuzzy
 msgid "1440 x 360 DPI High Quality Uni"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2114
+#: src/main/print-escp2.c:2115
 #, fuzzy
 msgid "1440 x 360 DPI Highest Quality"
 msgstr "TEST: 1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2.c:2360
+#: src/main/print-escp2.c:2361
 msgid "Plain Paper Fast Load"
 msgstr "TEST: Plain Paper Fast Load"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:2363 src/main/print-util.c:544
+#: src/main/print-escp2.c:2364 src/main/print-util.c:544
 msgid "Postcard"
 msgstr "TEST: Postcard"
 
-#: src/main/print-escp2.c:2366
+#: src/main/print-escp2.c:2367
 msgid "Glossy Film"
 msgstr "TEST: Glossy Film"
 
-#: src/main/print-escp2.c:2372
+#: src/main/print-escp2.c:2373
 msgid "Envelopes"
 msgstr "TEST: Envelopes"
 
-#: src/main/print-escp2.c:2375
+#: src/main/print-escp2.c:2376
 msgid "Back Light Film"
 msgstr "TEST: Back Light Film"
 
-#: src/main/print-escp2.c:2378
+#: src/main/print-escp2.c:2379
 msgid "Matte Paper"
 msgstr "TEST: Matte Paper"
 
-#: src/main/print-escp2.c:2381
+#: src/main/print-escp2.c:2382
 msgid "Inkjet Paper"
 msgstr "TEST: Inkjet Paper"
 
-#: src/main/print-escp2.c:2384
+#: src/main/print-escp2.c:2385
 msgid "Photo Quality Inkjet Paper"
 msgstr "TEST: Photo Quality Inkjet Paper"
 
-#: src/main/print-escp2.c:2387
+#: src/main/print-escp2.c:2388
 msgid "Photo Paper"
 msgstr "TEST: Photo Paper"
 
-#: src/main/print-escp2.c:2390
+#: src/main/print-escp2.c:2391
 msgid "Premium Glossy Photo Paper"
 msgstr "TEST: Premium Glossy Photo Paper"
 
-#: src/main/print-escp2.c:2394
+#: src/main/print-escp2.c:2395
 msgid "Premium Luster Photo Paper"
 msgstr "TEST: Premium Luster Photo Paper"
 
-#: src/main/print-escp2.c:2397
+#: src/main/print-escp2.c:2398
 msgid "Photo Quality Glossy Paper"
 msgstr "TEST: Photo Quality Glossy Paper"
 
-#: src/main/print-escp2.c:2400
+#: src/main/print-escp2.c:2401
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2420
+#: src/main/print-escp2.c:2421
 msgid "Seven Color Enhanced"
 msgstr "TEST: Seven Color Enhanced"
 
-#: src/main/print-escp2.c:2421
+#: src/main/print-escp2.c:2422
 #, fuzzy
 msgid "Six Color Enhanced Composite"
 msgstr "TEST: Seven Color Enhanced"
 
-#: src/main/print-escp2.c:2422
+#: src/main/print-escp2.c:2423
 msgid "Six Color Photo"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2423
+#: src/main/print-escp2.c:2424
 #, fuzzy
 msgid "Five Color Photo Composite"
 msgstr "TEST: Six Color Photo"
 
-#: src/main/print-escp2.c:2424
+#: src/main/print-escp2.c:2425
 msgid "Four Color Standard"
 msgstr "TEST: Four Color Standard"
 
-#: src/main/print-escp2.c:2425
+#: src/main/print-escp2.c:2426
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1166 src/main/print-escp2.c:2808
-#: src/main/print-escp2.c:2951 src/main/print-pcl.c:194
+#: src/gimp/gimp_main_window.c:1166 src/main/print-escp2.c:2817
+#: src/main/print-escp2.c:2960 src/main/print-pcl.c:194
 msgid "Standard"
 msgstr "TEST: Standard"
 
 #. Size of page
 #. Roll feed selected
-#: src/main/print-escp2.c:2809 src/main/print-escp2.c:2833
-#: src/main/print-escp2.c:3018 src/main/print-escp2.c:3052
-#: src/main/print-escp2.c:3284
+#: src/main/print-escp2.c:2818 src/main/print-escp2.c:2842
+#: src/main/print-escp2.c:3024 src/main/print-escp2.c:3054
+#: src/main/print-escp2.c:3269
 msgid "Roll Feed"
 msgstr "TEST: Roll Feed"
 
@@ -948,12 +948,12 @@ msgstr "TEST: 1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "TEST: 2400x600 DPI"
 
-#: src/main/print-pcl.c:1460 src/main/print-pcl.c:1595
+#: src/main/print-pcl.c:1504 src/main/print-pcl.c:1639
 msgid "Color + Black Cartridges"
 msgstr "TEST: Color + Black Cartridges"
 
-#: src/main/print-pcl.c:1461 src/main/print-pcl.c:1596
-#: src/main/print-pcl.c:1885
+#: src/main/print-pcl.c:1505 src/main/print-pcl.c:1640
+#: src/main/print-pcl.c:1929
 msgid "Color + Photo Cartridges"
 msgstr "TEST: Color + Photo Cartridges"
 
@@ -1793,7 +1793,7 @@ msgstr ""
 msgid "Black and White"
 msgstr ""
 
-#: src/gimp/print-image-gimp.c:316
+#: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
 msgstr "TEST: Printing..."
 
