@@ -25,7 +25,7 @@ development cycle.  This version contains a GhostScript driver equal
 to the Print plugin in all respects, including supported printers.
 <strong>Please read the Ghost/README file very carefully if you use
 the Ghostscript driver, as the usage is completely different from
-before!</p>
+before!</strong></p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
