@@ -325,7 +325,7 @@ gimp_create_main_window (void)
                       (gpointer) 0);
   gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
-  unit_cm = button = gtk_radio_button_new_with_label (group, _("Cm"));
+  unit_cm = button = gtk_radio_button_new_with_label (group, _("cm"));
   if (vars.unit == 1)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_signal_connect (GTK_OBJECT (button), "toggled",

@@ -428,7 +428,7 @@ void gtk_create_main_window(void)
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
 
-    unit_cm = button = gtk_radio_button_new_with_label(group, _("Cm"));
+    unit_cm = button = gtk_radio_button_new_with_label(group, _("cm"));
     if (vars.unit)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);

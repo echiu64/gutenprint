@@ -124,6 +124,7 @@ typedef struct					/* Plug-in variables */
   int	image_type;		/* Image type (line art etc.) */
   int	unit;			/* Units for preview area 0=Inch 1=Metric */
   lut_t *lut;			/* Look-up table */
+  unsigned char *cmap;		/* Color map */
 } vars_t;
 
 typedef struct		/**** Printer List ****/
@@ -187,7 +188,7 @@ typedef struct printer
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
   void	(*print)(const struct printer *printer, int copies, FILE *prn,
-		 Image image, unsigned char *cmap, const vars_t *v);
+		 Image image, const vars_t *v);
   vars_t printvars;
 } printer_t;
 
@@ -330,8 +331,7 @@ extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
-			    Image image, unsigned char *cmap,
-			    const vars_t *v);
+			    Image image, const vars_t *v);
 
 
 #ifndef ESCP2_GHOST
@@ -341,8 +341,7 @@ extern void	canon_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
-			    Image image, unsigned char *cmap,
-			    const vars_t *v);
+			    Image image, const vars_t *v);
 
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
@@ -351,8 +350,7 @@ extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
 extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
-			  Image image, unsigned char *cmap,
-			  const vars_t *v);
+			  Image image, const vars_t *v);
 
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
@@ -363,8 +361,7 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 		                  int *left, int *right, int *bottom,
 				  int *top);
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
-			 Image image, unsigned char *cmap,
-			 const vars_t *v);
+			 Image image, const vars_t *v);
 #else
 #define canon_parameters NULL
 #define canon_imageable_area NULL

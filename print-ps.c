@@ -230,9 +230,9 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
          int       copies,		/* I - Number of copies */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
-	 unsigned char    *cmap,	/* I - Colormap (for indexed images) */
 	 const vars_t    *v)
 {
+  unsigned char *cmap = v->cmap;
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
   char 		*resolution = v->resolution;
