@@ -435,13 +435,27 @@ manual.  Much of this information is interpreted; none is tested.
 				     yy=1 or 2 are higher settings
 
 				     xx=02 controls paper loading
-				     speed (0 is normal, 1 is fast, 2
-				     is slow).  It appears that 1 is
+				     speed (yy=0 is normal, 1 is fast,
+				     2 is slow).  It appears that 1 is
 				     used when printing on "plain
 				     paper", "360dpi ink jet paper" or
 				     "ink jet transparencies", and
 				     yy=00 for all other paper type
 				     settings.
+
+				     xx=07 controls duplex printing
+				     for printers with that capability
+				     (yy=0 is default, for non-duplex
+				     printing; 1 is front side of the
+				     paper, and 2 is back side).
+
+				     xx=09 controls zero margin
+				     printing on the printers with the
+				     capability of printing
+				     zero-margin on all sides (Stylus
+				     Photo 780/790, 890, and
+				     1280/1290).  yy=0 is the default;
+				     1 enables zero margin printing.
 
    * PP BC=3 00 xx yy                Set Paper Path.  xx=2 indicates
 				     manual feed, xx=3 is for roll
