@@ -2700,6 +2700,7 @@ stp_dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
       QUANT(7);
 
       k = USMIN(c, USMIN(m, y));
+      bk = 0;
 
       /*
        * At this point we've computed the basic CMYK separations.
