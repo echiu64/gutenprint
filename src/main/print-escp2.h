@@ -413,13 +413,15 @@ extern const paperlist_t stpi_escp2_sp780_paper_list;
 extern const paperlist_t stpi_escp2_sp950_paper_list;
 extern const paperlist_t stpi_escp2_standard_paper_list;
 
-extern const res_t stpi_escp2_escp2200_reslist[];
-extern const res_t stpi_escp2_escp950_reslist[];
-extern const res_t stpi_escp2_c1_8_reslist[];
+extern const res_t stpi_escp2_superfine_reslist[];
 extern const res_t stpi_escp2_no_microweave_reslist[];
 extern const res_t stpi_escp2_pro_reslist[];
 extern const res_t stpi_escp2_sp5000_reslist[];
 extern const res_t stpi_escp2_standard_reslist[];
+extern const res_t stpi_escp2_720dpi_reslist[];
+extern const res_t stpi_escp2_1440dpi_reslist[];
+extern const res_t stpi_escp2_g3_reslist[];
+extern const res_t stpi_escp2_sc440_reslist[];
 
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
 /*
