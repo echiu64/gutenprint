@@ -8,38 +8,37 @@ Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, li
 Package: gimp1.2-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp1.2
-Recommends: gimpprint-locales (= ${Source-Version})
+Recommends: gimpprint-locales (>= ${Source-Version})
 Suggests: libgimpprint-doc (= ${Source-Version}), gimpprint-doc (= ${Source-Version})
 Description: print plugin for the GIMP
- This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in the 4.2
- line.  Gimp-print is the print facility for the Gimp, and in addition
- a suite of drivers that may be used with common UNIX spooling systems
- using GhostScript or CUPS.  These drivers provide printing quality for
- UNIX/Linux on a par with proprietary vendor-supplied drivers in many
- cases, and can be used for many of the most demanding printing tasks.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an unstable  development
+ release in the 4.3 line.  Gimp-print is the print facility for the Gimp, and
+ in addition a suite of drivers that may be used with common UNIX spooling
+ systems using GhostScript or CUPS.  These drivers provide printing quality for
+ UNIX/Linux on a par with proprietary vendor-supplied drivers in many cases,
+ and can be used for many of the most demanding printing tasks.
  .
  This package includes the print plugin for the GIMP.
 
 Package: cupsys-driver-gimpprint
 Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
-Recommends: gs (>= 6.51), gimpprint-locales (= ${Source-Version})
+Recommends: gs (>= 6.51), gimpprint-locales (>= ${Source-Version})
 Suggests: gimpprint-doc (= ${Source-Version})
 Description: gimp-print printer driver for CUPS
- This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in the 4.2
- line.  Gimp-print is the print facility for the Gimp, and in addition
- a suite of drivers that may be used with common UNIX spooling systems
- using GhostScript or CUPS.  These drivers provide printing quality for
- UNIX/Linux on a par with proprietary vendor-supplied drivers in many
- cases, and can be used for many of the most demanding printing tasks.
+ This is Gimp-Print version #UPSTREAM_VERSION#, an unstable  development
+ release in the 4.3 line.  Gimp-print is the print facility for the Gimp, and
+ in addition a suite of drivers that may be used with common UNIX spooling
+ systems using GhostScript or CUPS.  These drivers provide printing quality for
+ UNIX/Linux on a par with proprietary vendor-supplied drivers in many cases,
+ and can be used for many of the most demanding printing tasks.
  .
  This package includes a CUPS driver based on gimp-print.
  .
- The CUPS drivers contain all of the files needed to support
- photo-quality printing on any printer supported by the GIMP
- Print plug-in. You can find out more about the Common UNIX
- Printing System ("CUPS"), an IPP-based printing system for
- UNIX/Linux, at:
+ The CUPS drivers contain all of the files needed to support photo-quality
+ printing on any printer supported by the GIMP Print plug-in. You can find out
+ more about the Common UNIX Printing System ("CUPS"), an IPP-based printing
+ system for UNIX/Linux, at:
  .
  http://www.cups.org
 
@@ -53,7 +52,7 @@ Description: header files for compiling programs with libgimpprint
  .
  Install this package if you wish to develop packages that use libgimpprint.
  .
- This is the stable 4.2 branch of gimp-print.
+ This is the 4.3 unstable development branch of gimp-print.
 
 Package: libgimpprint-doc
 Architecture: all
@@ -71,7 +70,7 @@ Package: libgimpprint#UPSTREAM_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
-Recommends: gimpprint-locales (= ${Source-Version})
+Recommends: gimpprint-locales (>= ${Source-Version})
 Description: library necessary to use gimp-print programs
  This package includes the libgimpprint library, necessary to run gimp1.2-print
  and cupsys-driver-gimpprint.
@@ -108,7 +107,7 @@ Package: escputil
 Architecture: any
 Section: misc
 Depends: ${shlibs:Depends}
-Recommends: gimpprint-locales (= ${Source-Version})
+Recommends: gimpprint-locales (>= ${Source-Version})
 Description: a utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus printers.
  It can also check the current ink levels in the printer.
