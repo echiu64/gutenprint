@@ -641,7 +641,7 @@ build_queue_combo(void)
 		    &queue_callback_id,
 		    NULL,
 		    NULL);
-}  
+}
 
 static void
 build_printer_combo(void)
@@ -3127,6 +3127,7 @@ combo_callback(GtkWidget *widget, gpointer data)
   const gchar *value =
     stp_get_string_parameter(pv->v, option->fast_desc->name);
   reset_preview();
+  fprintf(stderr, "value %p %s new_value %p\n", value, value, new_value);
   if (!value || strcmp(value, new_value) != 0)
     {
       invalidate_frame();
@@ -4240,6 +4241,7 @@ do_preview_thumbnail (void)
 static gboolean
 idle_preview_thumbnail(gpointer data)
 {
+  set_orientation(pv->orientation);
   do_preview_thumbnail();
   thumbnail_update_pending = FALSE;
   return FALSE;

@@ -4267,6 +4267,7 @@ do_preview_thumbnail (void)
 static gboolean
 idle_preview_thumbnail(gpointer data)
 {
+  set_orientation(pv->orientation);
   do_preview_thumbnail();
   thumbnail_update_pending = FALSE;
   return FALSE;
