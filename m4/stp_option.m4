@@ -136,15 +136,15 @@ AC_DEFUN([STP_CONDITIONAL],
 ## COMPILER       Compiler name
 ## VARIABLE       Variable to add option to (default CFLAGS).
 AC_DEFUN([STP_ADD_COMPILER_ARG],[
-  AC_MSG_CHECKING(if m4_ifval([$3],[$3 ],${CC} )supports $1)
+  AC_MSG_CHECKING(if m4_ifval([$2], [$2 ], [${CC} ])supports $1)
   stp_acOLDCFLAGS="${CFLAGS}"
-  CFLAGS="${m4_ifval([$2],[$2],CFLAGS)} $1"
+  CFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"
   AC_TRY_COMPILE(,,
       [ AC_MSG_RESULT(yes);
-        stp_newCFLAGS="${m4_ifval([$2],[$2],CFLAGS)} $1"],
-      [ AC_MSG_RESULT(no);])]
+        stp_newCFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"],
+      [ AC_MSG_RESULT(no);])
   CFLAGS="$stp_acOLDCFLAGS"
-  m4_ifval([$2],[$2],CFLAGS)="${stp_newCFLAGS}",
+  m4_ifval([$3], [$3], [CFLAGS])="${stp_newCFLAGS}"
 ])
 
 ## STP_ADD_FIRST_COMPILER_ARG (ARGS, COMPILER, VARIABLE)
@@ -154,15 +154,15 @@ AC_DEFUN([STP_ADD_COMPILER_ARG],[
 ## VARIABLE       Variable to add option to (default CFLAGS).
 AC_DEFUN([STP_ADD_FIRST_COMPILER_ARG],[
   for stp_ac_arg in $1 ; do
-    stp_ac_save_CFLAGS="${m4_ifval([$2],[$2],CFLAGS)}"
+    stp_ac_save_CFLAGS="${m4_ifval([$3], [$3], [CFLAGS])}"
     STP_ADD_COMPILER_ARG([${stp_ac_arg}], [$2], [$3])
-    test "${stp_ac_save_CFLAGS}" != "${m4_ifval([$2],[$2],$CFLAGS)}" && break
+    test "${stp_ac_save_CFLAGS}" != "${m4_ifval([$3], [$3], [CFLAGS])}" && break
   done
 ])
 
 ## STP_ADD_COMPILER_ARGS (ARGS, COMPILER, VARIABLE)
 ## ---------------------------------------------------------------------------
-## ARGS            Compiler options
+## ARGS           Compiler options
 ## COMPILER       Compiler name
 ## VARIABLE       Variable to add option to (default CFLAGS).
 AC_DEFUN([STP_ADD_COMPILER_ARGS],[
