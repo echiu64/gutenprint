@@ -200,7 +200,7 @@ static const stp_simple_dither_range_t piezo_multishot_quadtone_dither_ranges[] 
   { PIEZO_0 * .58, 0x2, 0, 4 },
   { PIEZO_1 * .58, 0x2, 1, 4 },
   { PIEZO_2 * .58, 0x2, 2, 4 },
-  { PIEZO_3 * .58, 0x2, 3, 4 },
+  { PIEZO_2 * 1.0, 0x3, 2, 7 },
   { PIEZO_3 * 1.0, 0x3, 3, 7 },
 };
 
@@ -258,7 +258,7 @@ static const stp_simple_dither_range_t piezo_6pl_quadtone_dither_ranges[] =
   { PIEZO_0 * .50, 0x2, 0, 2 },
   { PIEZO_1 * .50, 0x2, 1, 2 },
   { PIEZO_2 * .50, 0x2, 2, 2 },
-  { PIEZO_3 * .50, 0x2, 3, 2 },
+  { PIEZO_2 * 1.0, 0x3, 2, 4 },
   { PIEZO_3 * 1.0, 0x3, 3, 4 },
 };
 
@@ -266,12 +266,11 @@ DECLARE_INK(piezo_6pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_6pl_1440_quadtone_dither_ranges[] =
 {
-  { PIEZO_0 * .25, 0x1, 0, 1 },
-  { PIEZO_0 * .50, 0x2, 0, 2 },
-  { PIEZO_1 * .50, 0x2, 1, 2 },
-  { PIEZO_2 * .50, 0x2, 2, 2 },
-  { PIEZO_3 * .50, 0x2, 3, 2 },
-  { PIEZO_3 * 1.0, 0x3, 3, 4 },
+  { PIEZO_0 * .50, 0x1, 0, 1 },
+  { PIEZO_1 * .50, 0x1, 1, 1 },
+  { PIEZO_2 * .50, 0x1, 2, 1 },
+  { PIEZO_2 * 1.0, 0x2, 2, 2 },
+  { PIEZO_3 * 1.0, 0x2, 3, 2 },
 };
 
 DECLARE_INK(piezo_6pl_1440_quadtone, PIEZO_DENSITY);
@@ -315,7 +314,7 @@ static const stp_simple_dither_range_t piezo_x80_multishot_quadtone_dither_range
   { PIEZO_0 * .500, 0x2, 0, 3 },
   { PIEZO_1 * .500, 0x2, 1, 3 },
   { PIEZO_2 * .500, 0x2, 2, 3 },
-  { PIEZO_3 * .500, 0x2, 3, 3 },
+  { PIEZO_2 * 1.00, 0x3, 2, 6 },
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
@@ -327,7 +326,7 @@ static const stp_simple_dither_range_t piezo_x80_6pl_quadtone_dither_ranges[] =
   { PIEZO_0 * .500, 0x2, 0, 3 },
   { PIEZO_1 * .500, 0x2, 1, 3 },
   { PIEZO_2 * .500, 0x2, 2, 3 },
-  { PIEZO_3 * .500, 0x2, 3, 3 },
+  { PIEZO_2 * 1.00, 0x3, 2, 6 },
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
@@ -335,11 +334,11 @@ DECLARE_INK(piezo_x80_6pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_x80_1440_6pl_quadtone_dither_ranges[] =
 {
-  { PIEZO_0 * .650, 0x2, 0, 2 },
-  { PIEZO_1 * .650, 0x2, 1, 2 },
-  { PIEZO_2 * .650, 0x2, 2, 2 },
-  { PIEZO_3 * .650, 0x2, 3, 2 },
-  { PIEZO_3 * 1.00, 0x3, 3, 3 },
+  { PIEZO_0 * .650, 0x1, 0, 2 },
+  { PIEZO_1 * .650, 0x1, 1, 2 },
+  { PIEZO_2 * .650, 0x1, 2, 2 },
+  { PIEZO_2 * 1.00, 0x2, 2, 3 },
+  { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
 DECLARE_INK(piezo_x80_1440_6pl_quadtone, PIEZO_DENSITY);
@@ -375,7 +374,7 @@ static const stp_simple_dither_range_t piezo_680_multishot_quadtone_dither_range
   { PIEZO_0 * .750, 0x2, 0, 6 },
   { PIEZO_1 * .750, 0x2, 1, 6 },
   { PIEZO_2 * .750, 0x2, 2, 6 },
-  { PIEZO_3 * .750, 0x2, 3, 6 },
+  { PIEZO_2 * 1.00, 0x3, 2, 8 },
   { PIEZO_3 * 1.00, 0x3, 3, 8 },
 };
 
@@ -384,10 +383,9 @@ DECLARE_INK(piezo_680_multishot_quadtone, PIEZO_DENSITY);
 static const stp_simple_dither_range_t piezo_680_6pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .500, 0x1, 0, 3 },
-  { PIEZO_0 * .660, 0x2, 0, 4 },
   { PIEZO_1 * .660, 0x2, 1, 4 },
   { PIEZO_2 * .660, 0x2, 2, 4 },
-  { PIEZO_3 * .660, 0x2, 3, 4 },
+  { PIEZO_2 * 1.00, 0x2, 3, 6 },
   { PIEZO_3 * 1.00, 0x3, 3, 6 },
 };
 
@@ -435,11 +433,11 @@ DECLARE_INK(photo_4pl_2880, 1.0);
 
 static const stp_simple_dither_range_t piezo_4pl_quadtone_dither_ranges[] =
 {
-  { PIEZO_0 * .661, 0x2, 0, 2 },
-  { PIEZO_1 * .661, 0x2, 1, 2 },
-  { PIEZO_2 * .661, 0x2, 2, 2 },
-  { PIEZO_3 * .661, 0x2, 3, 2 },
-  { PIEZO_3 * 1.00, 0x3, 3, 3 },
+  { PIEZO_0 * .661, 0x1, 0, 2 },
+  { PIEZO_1 * .661, 0x1, 1, 2 },
+  { PIEZO_2 * .661, 0x1, 2, 2 },
+  { PIEZO_2 * 1.00, 0x2, 2, 3 },
+  { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
 DECLARE_INK(piezo_4pl_quadtone, PIEZO_DENSITY);
@@ -502,7 +500,7 @@ static const stp_simple_dither_range_t piezo_3pl_quadtone_dither_ranges[] =
   { PIEZO_0 * .61, 0x2, 0, 5 },
   { PIEZO_1 * .61, 0x2, 1, 5 },
   { PIEZO_2 * .61, 0x2, 2, 5 },
-  { PIEZO_3 * .61, 0x2, 3, 5 },
+  { PIEZO_2 * 1.0, 0x3, 2, 8 },
   { PIEZO_3 * 1.0, 0x3, 3, 8 },
 };
 
@@ -510,11 +508,11 @@ DECLARE_INK(piezo_3pl_quadtone, PIEZO_DENSITY);
 
 static const stp_simple_dither_range_t piezo_3pl_1440_quadtone_dither_ranges[]=
 {
-  { PIEZO_0 * .390, 0x2, 0, 2 },
-  { PIEZO_1 * .390, 0x2, 1, 2 },
-  { PIEZO_2 * .390, 0x2, 2, 2 },
-  { PIEZO_3 * .390, 0x2, 3, 2 },
-  { PIEZO_3 * 1.00, 0x3, 3, 5 },
+  { PIEZO_0 * .390, 0x1, 0, 2 },
+  { PIEZO_1 * .390, 0x1, 1, 2 },
+  { PIEZO_2 * .390, 0x1, 2, 2 },
+  { PIEZO_2 * 1.00, 0x2, 2, 5 },
+  { PIEZO_3 * 1.00, 0x2, 3, 5 },
 };
 
 DECLARE_INK(piezo_3pl_1440_quadtone, PIEZO_DENSITY);
@@ -535,7 +533,6 @@ static const stp_simple_dither_range_t piezo_980_6pl_quadtone_dither_ranges[] =
   { PIEZO_0 * .675, 0x2, 0, 7 },
   { PIEZO_1 * .675, 0x2, 1, 7 },
   { PIEZO_2 * .675, 0x2, 2, 7 },
-  { PIEZO_3 * .675, 0x2, 3, 7 },
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
@@ -633,7 +630,6 @@ static const stp_simple_dither_range_t piezo_multishot_pigment_quadtone_dither_r
   { PIEZO_0 * .410, 0x1, 0, 2 },
   { PIEZO_1 * .410, 0x1, 1, 2 },
   { PIEZO_2 * .410, 0x1, 2, 2 },
-  { PIEZO_3 * .410, 0x1, 3, 2 },
   { PIEZO_3 * 1.00, 0x3, 3, 5 },
 };
 
@@ -642,9 +638,9 @@ DECLARE_INK(piezo_multishot_pigment_quadtone, PIEZO_DENSITY);
 static const stp_simple_dither_range_t piezo_6pl_pigment_quadtone_dither_ranges[]=
 {
   { PIEZO_0 * .300, 0x1, 0, 3 },
-  { PIEZO_1 * .300, 0x1, 1, 3 },
-  { PIEZO_2 * .300, 0x1, 2, 3 },
-  { PIEZO_3 * .300, 0x1, 3, 3 },
+  { PIEZO_0 * .600, 0x2, 0, 6 },
+  { PIEZO_1 * .600, 0x2, 1, 6 },
+  { PIEZO_2 * .600, 0x2, 2, 6 },
   { PIEZO_3 * 1.00, 0x3, 3, 10 },
 };
 
@@ -655,7 +651,6 @@ static const stp_simple_dither_range_t piezo_3pl_pigment_quadtone_dither_ranges[
   { PIEZO_0 * .650, 0x1, 0, 2 },
   { PIEZO_1 * .650, 0x1, 1, 2 },
   { PIEZO_2 * .650, 0x1, 2, 2 },
-  { PIEZO_3 * .650, 0x1, 3, 2 },
   { PIEZO_3 * 1.00, 0x2, 3, 3 },
 };
 
