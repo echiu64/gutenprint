@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE gimp-print SYSTEM "gp.dtd">
+<!DOCTYPE gimp-print SYSTEM "gimpprint.dtd">
 
 <!--
    XML description of printers known to libgimpprint
@@ -10,7 +10,7 @@
 
 <gimp-print xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gp.xsd">
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd">
   <printdef>
     <family name="ps">
       <printer name="PostScript Level 1" driver="ps">
@@ -176,66 +176,66 @@
       <printer name="EPSON Stylus C20SX" driver="escp2-c20sx">
         <color value="true"/>
         <model value="42"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C20UX" driver="escp2-c20ux">
         <color value="true"/>
         <model value="42"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C40SX" driver="escp2-c40sx">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C40UX" driver="escp2-c40ux">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C41SX" driver="escp2-c41sx">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C41UX" driver="escp2-c41ux">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C42SX" driver="escp2-c42sx">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C42UX" driver="escp2-c42ux">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C60" driver="escp2-c60">
         <color value="true"/>
@@ -258,29 +258,29 @@
       <printer name="EPSON Stylus C70" driver="escp2-c70">
         <color value="true"/>
         <model value="44"/>
-        <gamma value="0.688"/>
-        <density value="1.0"/>
         <cyan value="0.96"/>
         <magenta value="1.02"/>
         <yellow value="1.02"/>
+        <gamma value="0.688"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C80" driver="escp2-c80">
         <color value="true"/>
         <model value="44"/>
-        <gamma value="0.688"/>
-        <density value="1.0"/>
         <cyan value="0.96"/>
         <magenta value="1.02"/>
         <yellow value="1.02"/>
+        <gamma value="0.688"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C82" driver="escp2-c82">
         <color value="true"/>
         <model value="44"/>
-        <gamma value="0.688"/>
-        <density value="1.0"/>
         <cyan value="0.96"/>
         <magenta value="1.02"/>
         <yellow value="1.02"/>
+        <gamma value="0.688"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color" driver="escp2">
         <color value="true"/>
@@ -321,10 +321,10 @@
       <printer name="EPSON Stylus Color 480" driver="escp2-480">
         <color value="true"/>
         <model value="21"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 500" driver="escp2-500">
         <color value="true"/>
@@ -335,10 +335,10 @@
       <printer name="EPSON Stylus Color 580" driver="escp2-580">
         <color value="true"/>
         <model value="38"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 600" driver="escp2-600">
         <color value="true"/>
@@ -698,18 +698,18 @@
       <printer name="EPSON CL-700" driver="escp2-cl700">
         <color value="true"/>
         <model value="38"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON CL-750" driver="escp2-cl750">
         <color value="true"/>
         <model value="43"/>
-        <gamma value="0.585"/>
-        <density value="1.0"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
+        <gamma value="0.585"/>
+        <density value="1.0"/>
       </printer>
       <printer name="EPSON EM-900C" driver="escp2-em900c">
         <color value="true"/>
@@ -1219,34 +1219,34 @@
       <printer name="LEXMARK Z42" driver="lexmark-z42">
         <color value="true"/>
         <model value="10042"/>
-        <gamma value="0.5"/>
-        <density value="2.0"/>
         <magenta value="0.95"/>
         <yellow value="1.0"/>
+        <gamma value="0.5"/>
+        <density value="2.0"/>
       </printer>
       <printer name="LEXMARK Z43" driver="lexmark-z43">
         <color value="true"/>
         <model value="10042"/>
-        <gamma value="0.5"/>
-        <density value="2.0"/>
         <magenta value="0.95"/>
         <yellow value="1.0"/>
+        <gamma value="0.5"/>
+        <density value="2.0"/>
       </printer>
       <printer name="LEXMARK Z52" driver="lexmark-z52">
         <color value="true"/>
         <model value="10052"/>
-        <gamma value="0.5"/>
-        <density value="2.0"/>
         <magenta value="0.95"/>
         <yellow value="1.0"/>
+        <gamma value="0.5"/>
+        <density value="2.0"/>
       </printer>
       <printer name="LEXMARK Z53" driver="lexmark-z53">
         <color value="true"/>
         <model value="10052"/>
-        <gamma value="0.5"/>
-        <density value="2.0"/>
         <magenta value="0.95"/>
         <yellow value="1.0"/>
+        <gamma value="0.5"/>
+        <density value="2.0"/>
       </printer>
     </family>
   </printdef>

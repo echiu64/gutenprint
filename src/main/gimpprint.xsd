@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+elementFormDefault="qualified">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Schema for Gimp-Print XML data
+      Requires Gimp-Print 4.3 or later
+      Based on printers.xml and printdef
+      Author: Roger Leigh (roger@whinlatter.uklinux.net)
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="gimp-print">
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="printdef" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="printdef">
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="family" minOccurs="0"
+	maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="family">
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="printer" minOccurs="0"
+	maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="name" type="normalizedString" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="printer">
+    <xsd:complexType>
+      <xsd:sequence>
+	<xsd:element ref="color" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="model" minOccurs="1" maxOccurs="1"/>
+	<xsd:element ref="cyan" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="magenta" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="yellow" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="brightness" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="gamma" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="density" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="saturation" minOccurs="0" maxOccurs="1"/>
+	<xsd:element ref="language" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:attributeGroup>
+      <xsd:attribute name="name" type="normalizedString" use="required"/>
+      <xsd:attribute name="driver" type="token" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="color">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="boolean" default="false"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="model">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="positiveInteger" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+  <xsd:element name="cyan">
+    <xsd:attributeGroup ref="colorattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="magenta">
+    <xsd:attributeGroup ref="colorattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="yellow">
+    <xsd:attributeGroup ref="colorattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="brightness">
+    <xsd:attributeGroup ref="brightnessattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="contrast">
+    <xsd:attributeGroup ref="colorattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="gamma">
+    <xsd:attributeGroup ref="gammaattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="density">
+    <xsd:attributeGroup ref="densityattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="saturation">
+    <xsd:attributeGroup ref="saturationattrs" use="required"/>
+  </xsd:element>
+  <xsd:element name="language">
+    <xsd:attributeGroup>
+      <xsd:attribute name="value" type="token" use="required"/>
+    </xsd:attributeGroup>
+  </xsd:element>
+
+  <xsd:attributeGroup name="colorattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="1.00">
+	  <xsd:minInclusive value="0.00"/>
+	  <xsd:maxInclusive value="4.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="brightnessattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="1.00">
+	  <xsd:minInclusive value="0.00"/>
+	  <xsd:maxInclusive value="2.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="densityattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="1.00">
+	  <xsd:minInclusive value="0.10"/>
+	  <xsd:maxInclusive value="2.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="gammaattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="1.00">
+	  <xsd:minInclusive value="0.10"/>
+	  <xsd:maxInclusive value="4.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="saturationattrs">
+    <xsd:attribute name="value">
+      <xsd:simpleType>
+	<xsd:restriction base="xsd:float" default="1.00">
+	  <xsd:minInclusive value="0.00"/>
+	  <xsd:maxInclusive value="9.00"/>
+	</xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+
+</xsd:schema>
