@@ -355,9 +355,9 @@ main(int argc, char **argv)
       while (fgets(linebuf, 4096, stdin))
 	{
 	  int retval;
-	  (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
+	  (void) sscanf(linebuf, "%d%d%d%d%d%d%d%d%d%d", &physjets, &physsep,
 			&hpasses, &vpasses, &subpasses, &nrows, &first_line,
-			&phys_lines, &color_jet_arrangement);
+			&phys_lines, &color_jet_arrangement, &strategy);
 	  fflush(stdout);
 	  if (vpasses * subpasses > physjets)
 	    continue;
