@@ -198,7 +198,11 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
   int internaljetsused = jetsused * vertical_subpasses;
+  int passoffset;
   int internallogicalpassstart;
+  int old_vertical_subpass = vertical_subpass;
+  passoffset = (1 + (row / (separation * jetsused))) % vertical_subpasses;
+
   w->row = row;
   w->pass = (passblockstart - (separation - 1)) +
     (separation + row - passblockstart - 1) % separation;
@@ -206,6 +210,19 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
   w->logicalpassstart = (w->pass * jetsused) - initialoffset +
     (w->pass % separation);
   w->jet = ((row - w->logicalpassstart) / separation);
+#if 0
+  if ((internaljetsused + w->jet) % jetsused == 0 && passoffset > 0)
+    {
+      vertical_subpass = (vertical_subpass + passoffset) % vertical_subpasses;
+      w->pass = (passblockstart - (separation - 1)) +
+	(separation + row - passblockstart - 1) % separation;
+      w->pass += separation * vertical_subpass;
+      w->logicalpassstart = (w->pass * jetsused) - initialoffset +
+	(w->pass % separation);
+      w->jet = ((row - w->logicalpassstart) / separation);
+    }
+#endif
+  printf("%d%d%d%d", vertical_subpass, old_vertical_subpass, (internaljetsused + w->jet) % jetsused, passoffset);
   w->jet += jetsused * (vertical_subpasses - 1);
   w->logicalpassstart = w->row - (w->jet * separation);
   if (w->logicalpassstart >= 0)
@@ -226,13 +243,10 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
   w->pass++;
 }
 
-int passstarts[1000];
-int passends[1000];
-int passcounts[1000];
-
+int nrows = 200;
 int physjets = 32;
 int physsep = 8;
-int physpasses = 2;
+int physpasses = 4;
 
 int
 main(int argc, char **argv)
@@ -242,22 +256,29 @@ main(int argc, char **argv)
   weave_t w;
   int lastpass = -1;
   int newestpass = -1;
+  int *passstarts = malloc(sizeof(int) * nrows);
+  int *passends = malloc(sizeof(int) * nrows);
+  int *passcounts = malloc(sizeof(int) * nrows);
+  char *physpassstuff = malloc(nrows);
+  char *rowdetail = malloc(nrows * physjets);
+  memset(rowdetail, 0, nrows * physjets);
+  memset(physpassstuff, -1, nrows);
   initialize_weave(physjets, physsep, 1, physpasses);
-  printf("%11s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
+  printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
-  for (i = 0; i < 1000; i++)
+  for (i = 0; i < nrows; i++)
     {
       passstarts[i] = -1;
       passends[i] = -1;
     }
-  for (i = 0; i < 1000; i++)
+  for (i = 0; i < nrows; i++)
     {
       for (j = 0; j < physpasses; j++)
 	{
 	  int physrow;
 	  weave_parameters_by_row(i, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
-	  printf("%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
+	  printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%5d %5d %5d %10d %10d %10d %10d\n",
 		 w.pass < 0 ? 'A' : ' ',
 		 w.jet < 0 || w.jet > physjets - 1 ? 'B' : ' ',
 		 w.physpassstart > w.row ? 'C' : ' ',
@@ -271,9 +292,12 @@ main(int argc, char **argv)
 		 w.missingstartrows < 0 || w.missingstartrows > physjets - 1 ? 'I' : ' ',
 		 w.physpassstart < 0 ? 'J' : ' ',
 		 w.missingstartrows > w.jet ? 'K' : ' ',
+		 physpassstuff[w.pass] >= 0 && physpassstuff[w.pass] != j ? 'L' : ' ',
+		 rowdetail[w.pass * physjets + w.jet] == 1 ? 'M' : ' ',
 		 w.row, w.pass, w.jet,
 		 w.missingstartrows, w.logicalpassstart, w.physpassstart,
-		 w.physpassend);
+		 w.physpassend,
+		 rowdetail[w.pass * physjets + w.jet]);
 	  if (w.physpassend == w.row)
 	    {
 	      lastpass = w.pass;
@@ -282,13 +306,16 @@ main(int argc, char **argv)
 	  else
 	    passends[w.pass] = w.physpassend;
 	  passstarts[w.pass] = w.physpassstart;
+	  rowdetail[w.pass * physjets + w.jet] = 1;
+	  if (physpassstuff[w.pass] == -1)
+	    physpassstuff[w.pass] = j;
 	  if (w.pass > newestpass)
 	    newestpass = w.pass;
 	}
     }
   printf("Unterminated passes:\n");
   for (i = 0; i <= newestpass; i++)
-    if (passends[i] >= -1 && passends[i] < 1000)
+    if (passends[i] >= -1 && passends[i] < nrows)
       printf("%d %d\n", i, passends[i]);
   printf("Last terminated pass: %d\n", lastpass);
   return 0;
