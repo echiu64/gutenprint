@@ -40,6 +40,7 @@ FILE *read_fd,*write_fd;
 char read_buffer[1024];
 char data_buffer[MAX_DATA];
 char initial_command[10];
+int initial_command_index;
 char final_command;
 int numeric_arg;
 
@@ -94,7 +95,7 @@ typedef struct {
 #define PCL_MEDIA_TYPE 5
 #define PCL_MEDIA_SOURCE 6
 #define PCL_SHINGLING 7
-#define PCL_QUALITY 8
+#define PCL_RASTERGRAPHICS_QUALITY 8
 #define PCL_DEPLETION 9
 #define PCL_CONFIGURE 10
 #define PCL_RESOLUTION 11
@@ -109,6 +110,15 @@ typedef struct {
 #define PCL_END_RASTER_NEW 20
 #define PCL_DATA 21
 #define PCL_DATA_LAST 22
+#define PCL_PRINT_QUALITY 23
+#define PCL_PJL_COMMAND 24
+#define PCL_UNK1 25
+#define PCL_UNK2 26
+#define PCL_PAGE_ORIENTATION 27
+#define PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS 28
+#define PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS 29
+#define PCL_UNK3 30
+#define PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT 31
 
 typedef struct{
     char *initial_command;		/* First part of command */
@@ -126,8 +136,8 @@ commands_t pcl_commands[] =
 	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
 	{ "&l", 'M', 0, PCL_MEDIA_TYPE , "Media Type" },
 	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
-	{ "*o", 'Q', 0, PCL_SHINGLING, "Shingling" },
-	{ "*r", 'Q', 0, PCL_QUALITY, "Quality" },
+	{ "*o", 'Q', 0, PCL_SHINGLING, "Raster Graphics Shingling" },
+	{ "*r", 'Q', 0, PCL_RASTERGRAPHICS_QUALITY, "Raster Graphics Quality" },
 	{ "*o", 'D', 0, PCL_DEPLETION, "Depletion" },
 	{ "*g", 'W', 1, PCL_CONFIGURE, "Extended Configure" },
 	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
@@ -139,9 +149,18 @@ commands_t pcl_commands[] =
 	{ "*r", 'T', 0, PCL_RASTER_HEIGHT, "Raster Height" },
 	{ "*r", 'A', 0, PCL_START_RASTER, "Start Raster Graphics" },
 	{ "*rB", '\0', 0, PCL_END_RASTER, "End Raster Graphics"},
-	{ "*rbC", '\0', 0, PCL_END_RASTER_NEW, "End Raster Graphics" },
+	{ "*rC", '\0', 0, PCL_END_RASTER_NEW, "End Raster Graphics" },
 	{ "*b", 'V', 1, PCL_DATA, "Data, intermediate" },
 	{ "*b", 'W', 1, PCL_DATA_LAST, "Data, last" },
+	{ "*o", 'M', 0, PCL_PRINT_QUALITY, "Print Quality" },
+	{ "%", 'X', 0, PCL_PJL_COMMAND, "PJL Command" },	/* Special! */
+	{ "*b", 'B', 0, PCL_UNK1, "Unknown 1" },
+	{ "*o", 'W', 1, PCL_UNK2, "Unknown 2" },
+	{ "&l", 'O', 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
+	{ "*p", 'Y', 0, PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS, "Vertical Cursor Positioning by Dots" },
+	{ "*p", 'X', 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
+	{ "&u", 'D', 0, PCL_UNK3, "Unknown 3" },
+	{ "*b", 'Y', 0, PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT, "Relative Vertical Pixel Movement" },
    };
 
 /*
@@ -193,23 +212,26 @@ void fill_buffer() {
 
 void pcl_read_command() {
 
-    int command_index;
     char c;
     int minus;
+    int skip_prefix;
 
 /* 
    The format of a PCL command is: ESC <x> <y> [n] <z>
    where x, y and z are characters, and [n] is an optional number.
    Some commands are followed by data, in this case, [n] is the
    number of bytes to read.
-   An exception is "ESC E" (reset).
+   An exception is "ESC E" (reset), also "ESC %-12345X<command>\n"
+
+   The fun is that it is possible to abbreviate commands if the
+   command prefix is the same, e.g. ESC & 26 A 0L is the same as
+   ESC & 26 A ESC 0 L
 */
 
-    command_index=0;
-    initial_command[command_index] = '\0';
     numeric_arg=0;
     minus = 0;
     final_command = '\0';
+    skip_prefix = 0;		/* Process normally */
 
     fill_buffer();
     if (eof == 1)
@@ -218,69 +240,116 @@ void pcl_read_command() {
 /* First character must be ESC, otherwise we have gone wrong! */
 
     c = read_buffer[read_pointer];
-    if(c != (char) 0x1b) {
-        fprintf(stderr, "ERROR: No ESC found (out of sync?)\n");
-        exit(EXIT_FAILURE);
-    }
     read_pointer++;
-    fill_buffer();
-    if (eof == 1) {
-
-        fprintf(stderr, "ERROR: EOF after ESC!\n");
-
-        return;
-    }
-
-/* Get first command letter */
-
-    c = read_buffer[read_pointer];
-    initial_command[command_index] = c;
-
 #ifdef DEBUG
     fprintf(stderr, "Got %c\n", c);
 #endif
+    if(c != (char) 0x1b) {
 
-    read_pointer++;
+/*
+ * If this is a digit, or minus, and the last command was valid,
+ * then assume that this command shares the same prefix. Of
+ * course an unknown command followed by data followed by
+ * a repeated command will fool us completely!
+ */
 
-    command_index++;
-
-/* Now keep going until we find a numeric, or another ESC, or EOF */
-
-    while (1) {
-        fill_buffer();
-        if (eof == 1) {
-
+	if ((isdigit(c) || (c == '-')) && (initial_command_index != 0)) {
 #ifdef DEBUG
-            fprintf(stderr, "EOF in middle of command!\n");
+	    fprintf(stderr, "Possible start of repeated command.\n");
 #endif
-	    eof = 0;		/* Ignore it */
-	    initial_command[command_index] = '\0';
-            return;
+	    skip_prefix = 1;
         }
-        c = read_buffer[read_pointer];
-	if (c == (char) 0x1b) {
+	else {
+	    fprintf(stderr, "ERROR: No ESC found (out of sync?) searching...\n");
+/*
+ * all we can do is to chew through the file looking for another ESC.
+ */
 
-#ifdef DEBUG
-	    fprintf(stderr, "Got another ESC!\n");
-#endif
+	    while (c != (char) 0x1b) {
+		fill_buffer();
+		if (eof == 1) {
+		    fprintf(stderr, "ERROR: EOF looking for ESC!\n");
+		    return;
+		}
+		c = read_buffer[read_pointer];
+		read_pointer++;
+	    }
+	}
+    }
 
-	    command_index++;
-	    initial_command[command_index] = '\0';
+    if (skip_prefix == 0) {
+
+/*
+ * We got an ESC, process normally
+ */
+
+	initial_command_index=0;
+	initial_command[initial_command_index] = '\0';
+	fill_buffer();
+	if (eof == 1) {
+	    fprintf(stderr, "ERROR: EOF after ESC!\n");
 	    return;
 	}
 
+/* Get first command letter */
+
+	c = read_buffer[read_pointer];
+	initial_command[initial_command_index] = c;
+
 #ifdef DEBUG
-        fprintf(stderr, "Got %c\n", c);
+	fprintf(stderr, "Got %c\n", c);
 #endif
 
-        read_pointer++;
-        if ((isdigit(c)) || (c == '-'))
-            break;
-        initial_command[command_index] = c;
-        command_index++;
-    }
+	read_pointer++;
 
-    initial_command[command_index] = '\0';
+	initial_command_index++;
+
+/* Now keep going until we find a numeric, or another ESC, or EOF */
+
+	while (1) {
+	    fill_buffer();
+	    if (eof == 1) {
+
+#ifdef DEBUG
+		fprintf(stderr, "EOF in middle of command!\n");
+#endif
+		eof = 0;		/* Ignore it */
+		initial_command[initial_command_index] = '\0';
+		return;
+	    }
+	    c = read_buffer[read_pointer];
+	    if (c == (char) 0x1b) {
+
+#ifdef DEBUG
+		fprintf(stderr, "Got another ESC!\n");
+#endif
+
+		initial_command[initial_command_index] = '\0';
+		return;
+	    }
+	    if (iscntrl(c) != 0) {
+
+#ifdef DEBUG
+		fprintf(stderr, "Got a control char!\n");
+#endif
+
+		initial_command[initial_command_index] = '\0';
+		return;
+	    }
+
+#ifdef DEBUG
+	    fprintf(stderr, "Got %c\n", c);
+#endif
+
+	    read_pointer++;
+	    if ((isdigit(c)) || (c == '-'))
+		break;
+	    initial_command[initial_command_index] = c;
+	    initial_command_index++;
+	}
+
+	initial_command[initial_command_index] = '\0';
+    }
 
     if (c == '-')
 	minus = 1;
@@ -300,9 +369,8 @@ void pcl_read_command() {
 #endif
 
         read_pointer++;
-        command_index++;
         if (! isdigit(c)) {
-            final_command = c;
+            final_command = toupper(c);
 	    if (minus == 1)
 		numeric_arg = -numeric_arg;
             return;
@@ -542,7 +610,7 @@ void pcl_reset(image_t *i) {
     i->yellow_depth = 0;
     i->image_width = -1;
     i->image_height = -1;
-    i->compression_type = -1;	/* should this be NONE? */
+    i->compression_type = 0;	/* should this be NONE? */
 }
 
 /*
@@ -580,6 +648,7 @@ int main(int argc, char *argv[]) {
     int expected_data_rows_per_row = -1;
 					/* Expected no of data rows per output row */
     image_t image_data;			/* Data concerning image */
+    long filepos = -1;
 
 /*
  * Holders for the decoded lines
@@ -638,6 +707,11 @@ int main(int argc, char *argv[]) {
 
     read_pointer=-1;
     eof=0;
+    initial_command_index=0;
+    initial_command[initial_command_index] = '\0';
+    numeric_arg=0;
+    final_command = '\0';
+
 
     pcl_reset(&image_data);
 
@@ -659,7 +733,7 @@ int main(int argc, char *argv[]) {
 
 	command_index = pcl_find_command();
         if (command_index == -1) {
-            fprintf(stderr, "ERROR: Unknown command: %s%d%c\n", initial_command,
+            fprintf(stderr, "ERROR: Unknown (and unhandled) command: %s%d%c\n", initial_command,
                 numeric_arg, final_command);
 /* We may have to skip some data here */
 	}
@@ -718,7 +792,7 @@ int main(int argc, char *argv[]) {
 		}
 		if (image_data.image_height == -1) {
 		    fprintf(stderr, "ERROR: Image height not set!\n");
-		    i++;
+/*		    i++; */
 		}
 
 		if ((image_data.black_depth != 0) &&
@@ -761,7 +835,14 @@ int main(int argc, char *argv[]) {
 
 		(void) fputs("# Written by pclunprint.\n", write_fd);
 
-		fprintf(write_fd, "%d %d\n255\n", image_data.image_width,
+/*
+ * Remember the file position where we wrote the image width and height
+ * (you don't want to know why!)
+ */
+
+		filepos = ftell(write_fd);
+
+		fprintf(write_fd, "%10d %10d\n255\n", image_data.image_width,
 		    image_data.image_height);
 		
 		image_row_counter = 0;
@@ -828,8 +909,18 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
 
 /*
- * Check that we got the correct number of rows of data.
+ * Check that we got the correct number of rows of data. If the expected number is
+ * -1, invoke MAJOR BODGERY!
  */
+
+		if (image_data.image_height == -1) {
+		    image_data.image_height = image_row_counter;
+		    if (fseek(write_fd, filepos, SEEK_SET) != -1) {
+			fprintf(write_fd, "%10d %10d\n255\n", image_data.image_width,
+			    image_data.image_height);
+			fseek(write_fd, 0L, SEEK_END);
+		    }
+		}
 
 		if (image_row_counter != image_data.image_height)
 		    fprintf(stderr, "ERROR: Row count mismatch. Expected %d rows, got %d rows.\n",
@@ -890,6 +981,7 @@ int main(int argc, char *argv[]) {
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
 		}
 		break;
 
@@ -910,6 +1002,7 @@ int main(int argc, char *argv[]) {
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
 		}
 		break;
 
@@ -936,18 +1029,94 @@ int main(int argc, char *argv[]) {
 		    break;
 		default :
 		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
+		}
+		break;
+
+	    case PCL_SHINGLING :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 0 :
+		    fprintf(stderr, "None\n");
+		    break;
+		case 1 :
+		    fprintf(stderr, "2 passes\n");
+		    break;
+		case 2 :
+		    fprintf(stderr, "4 passes\n");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
+		}
+		break;
+
+	    case PCL_RASTERGRAPHICS_QUALITY :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 0 :
+		    fprintf(stderr, "(set by printer controls)\n");
+		case 1 :
+		    fprintf(stderr, "Draft\n");
+		    break;
+		case 2 :
+		    fprintf(stderr, "High\n");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
+		}
+		break;
+
+	    case PCL_DEPLETION :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 1 :
+		    fprintf(stderr, "None\n");
+		    break;
+		case 2 :
+		    fprintf(stderr, "25%%\n");
+		    break;
+		case 3 :
+		    fprintf(stderr, "50%%\n");
+		    break;
+		case 5 :
+		    fprintf(stderr, "50%% with gamma correction\n");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
+		}
+		break;
+
+	    case PCL_PRINT_QUALITY :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case -1 :
+		    fprintf(stderr, "Draft\n");
+		    break;
+		case 0 :
+		    fprintf(stderr, "Normal\n");
+		    break;
+		case 1 :
+		    fprintf(stderr, "Presentation\n");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
 		}
 		break;
 
 	    case PCL_PERF_SKIP :
 	    case PCL_TOP_MARGIN :
-	    case PCL_SHINGLING :
-	    case PCL_QUALITY :
-	    case PCL_DEPLETION :
 	    case PCL_RESOLUTION :
 	    case PCL_LEFTRASTER_POS :
 	    case PCL_TOPRASTER_POS :
-		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
+	    case PCL_PAGE_ORIENTATION :
+	    case PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS :
+	    case PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS :
+	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
+		fprintf(stderr, "%s: %d (ignored)\n", pcl_commands[command_index].description, numeric_arg);
 		break;
 
 	    case PCL_COLOURTYPE :
@@ -1003,7 +1172,8 @@ int main(int argc, char *argv[]) {
 		break;
 
 	    case PCL_CONFIGURE :
-		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
+		fprintf(stderr, "%s (size=%d)\n", pcl_commands[command_index].description,
+		    numeric_arg);
 		fprintf(stderr, "\tFormat: %d, Output Planes: ", data_buffer[0]);
 		switch (data_buffer[1]) {
 		    case PCL_MONO :
@@ -1025,7 +1195,7 @@ int main(int argc, char *argv[]) {
 		    (data_buffer[10]<<8)+data_buffer[11], data_buffer[13]);
 		fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[14]<<8)+data_buffer[15],
 		    (data_buffer[16]<<8)+data_buffer[17], data_buffer[19]);
-		fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
+		fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", (data_buffer[20]<<8)+data_buffer[21],
 		    (data_buffer[22]<<8)+data_buffer[23], data_buffer[25]);
 
 		image_data.colour_type = data_buffer[1]; 	/* # output planes */
@@ -1102,6 +1272,43 @@ int main(int argc, char *argv[]) {
 
 		break;
 
+	    case PCL_PJL_COMMAND : {
+		    int c;
+		    fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+
+/*
+ * This is a special command, actually it is a PJL instruction. Read up
+ * to the next NL and output it.
+ */
+
+		    c = 0;
+		    while (c != '\n') {
+			fill_buffer();
+			if (eof == 1) {
+			    fprintf(stderr, "ERROR: EOF looking for EOL!\n");
+			    break;
+			}
+			c = read_buffer[read_pointer];
+			fprintf(stderr, "%c", c);
+			read_pointer++;
+		    }
+		}
+		break;
+
+	    case PCL_UNK1 :
+	    case PCL_UNK2 :
+	    case PCL_UNK3 :
+		fprintf(stderr, "ERROR: Unknown command: %s%d%c", initial_command,
+		    numeric_arg, final_command);
+		if (pcl_commands[command_index].has_data == 1) {
+		    fprintf(stderr, " Data: ");
+		    for (i=0; i < numeric_arg; i++) {
+			fprintf(stderr, "%02x ", (unsigned char) data_buffer[i]);
+		    }
+		}
+		fprintf(stderr, "\n");
+		break;
+
 	    default :
 		fprintf(stderr, "ERROR: No handler for %s!\n", pcl_commands[command_index].description);
 		break;
@@ -1114,6 +1321,10 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  2000/02/23 20:33:32  davehill
+ *   Added more commands to the commans set.
+ *   Now handles repeated commands that share the same prefix.
+ *
  *   Revision 1.3  2000/02/21 15:12:57  rlk
  *   Minor release prep
  *
