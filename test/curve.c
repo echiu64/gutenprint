@@ -236,6 +236,7 @@ main(int argc, char **argv)
 {
   char *tmp;
   int i;
+  double low, high;
 
   stp_curve_t curve1;
   stp_curve_t curve2;
@@ -408,11 +409,11 @@ main(int argc, char **argv)
       if (verbose)
 	stp_curve_write(stdout, curve1);
     }
-  /*  if (curve3)
+  if (curve3)
     {
       stp_curve_free(curve3);
       curve3 = NULL;
-      }*/
+    }
   TEST("compose multiply from gamma curves");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
     TEST_FAIL();
@@ -428,6 +429,9 @@ main(int argc, char **argv)
     }
 
   TEST("compose add from non-gamma curves");
+  stp_curve_free(curve1);
+  stp_curve_free(curve2);
+  stp_curve_free(curve3);
   curve1 = stp_curve_create_from_string(good_curves[0]);
   curve2 = stp_curve_create_from_string(linear_curve_2);
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
@@ -448,11 +452,11 @@ main(int argc, char **argv)
       if (verbose)
 	stp_curve_write(stdout, curve1);
     }
-  /*  if (curve3)
+  if (curve3)
     {
       stp_curve_free(curve3);
       curve3 = NULL;
-      }*/
+    }
   TEST("compose multiply from non-gamma curves");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
     TEST_FAIL();
@@ -466,7 +470,11 @@ main(int argc, char **argv)
 	  stp_curve_write(stdout, curve3);
 	}
     }
-
+  if (curve3)
+    {
+      stp_curve_free(curve3);
+      curve3 = NULL;
+    }
 
   TEST("multiply rescale");
   if (!stp_curve_rescale(curve2, -1, STP_CURVE_COMPOSE_MULTIPLY,
@@ -488,11 +496,11 @@ main(int argc, char **argv)
 	stp_curve_write(stdout, curve3);
     }
 
-  /*  if (curve3)
+  if (curve3)
     {
       stp_curve_free(curve3);
       curve3 = NULL;
-      }*/
+    }
   if (curve1)
     {
       stp_curve_free(curve1);
@@ -504,8 +512,6 @@ main(int argc, char **argv)
       curve2 = NULL;
     }
 
-  curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
-  curve2 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   TEST("spline curve 1 creation");
   if ((curve1 =stp_curve_create_from_string(spline_curve_1)) == NULL)
     TEST_FAIL();
@@ -563,6 +569,16 @@ main(int argc, char **argv)
     }
   else
     TEST_PASS();
+  if (curve1)
+    {
+      stp_curve_free(curve1);
+      curve1 = NULL;
+    }
+  if (curve2)
+    {
+      stp_curve_free(curve2);
+      curve2 = NULL;
+    }
 
   TEST("linear curve 1 creation");
   if ((curve1 = stp_curve_create_from_string(linear_curve_1)) == NULL)
@@ -627,10 +643,87 @@ main(int argc, char **argv)
       if (verbose)
 	stp_curve_write(stdout, curve1);
     }
-  if (curve1)
+  TEST("very large curve resample");
+  if (stp_curve_resample(curve1, 65535) == 0)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  TEST("offsetting large curve");
+#if 0
+  stp_curve_get_range(curve1, &low, &high);
+  fprintf(stderr, "Result original max %f min %f\n", high, low);
+  stp_curve_get_bounds(curve1, &low, &high);
+  fprintf(stderr, "Bounds original max %f min %f\n", high, low);
+#endif
+  if (stp_curve_rescale(curve1, 2.0, STP_CURVE_COMPOSE_ADD,
+			STP_CURVE_BOUNDS_RESCALE))
+    TEST_PASS();
+  else
+    TEST_FAIL();
+  stp_curve_rescale(curve1, 1.0, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_get_bounds(curve1, &low, &high);
+  stp_curve_rescale(curve1, 0.0, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_get_bounds(curve1, &low, &high);
+  stp_curve_rescale(curve1, 0.0, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_get_bounds(curve1, &low, &high);
+  stp_curve_rescale(curve1, 0.0, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_get_bounds(curve1, &low, &high);
+  TEST("writing very large curve to string");
+  tmp = stp_curve_write_string(curve1);
+  if (tmp == NULL)
+    TEST_FAIL();
+  else
+    TEST_PASS();
+  if (tmp)
     {
-      stp_curve_free(curve1);
-      curve1 = NULL;
+      TEST("reading back very large curve");
+      curve2 = stp_curve_create_from_string(tmp);
+      if (stp_curve_count_points(curve2) == 65535)
+	TEST_PASS();
+      else
+	TEST_FAIL();
+      free(tmp);
+      TEST("Rescaling readback");
+      if (stp_curve_rescale(curve2, -1.0, STP_CURVE_COMPOSE_MULTIPLY,
+			    STP_CURVE_BOUNDS_RESCALE))
+	TEST_PASS();
+      else
+	TEST_FAIL();
+      TEST("Adding curves");
+      if (stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD,
+			    65535))
+	TEST_PASS();
+      else
+	TEST_FAIL();
+
+      stp_curve_get_range(curve3, &low, &high);
+      TEST("Comparing results");
+      if (low < .00001 && low > -.00001 && high < .00001 && high > -.00001)
+	TEST_PASS();
+      else
+	TEST_FAIL();
+
+      if (curve1)
+	{
+	  stp_curve_free(curve1);
+	  curve1 = NULL;
+	}
+
+      if (curve2)
+	{
+	  stp_curve_free(curve2);
+	  curve2 = NULL;
+	}
+
+      if (curve3)
+	{
+	  stp_curve_free(curve3);
+	  curve3 = NULL;
+	}
     }
 
   if (global_error_count)
