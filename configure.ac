@@ -284,6 +284,11 @@ STP_ARG_ENABLE([debug],
                [ENABLE_DEBUG],
                [no])
 
+STP_ARG_ENABLE([profile],
+               [turn on profiling in build],
+               [ENABLE_PROFILE],
+               [no])
+
 STP_ARG_WITH_DETAILED([readline], ,
                       [use readline],
                       [(default tries -lncurses, -lcurses, -ltermcap)],
@@ -478,11 +483,17 @@ else
   else
     CFLAGS="${CFLAGS:=} -O"
   fi
+  if test x$ENABLE_PROFILE = xyes ; then
+    CFLAGS="${CFLAGS:=} -pg"
+  fi
 fi
 if test "$CC" = "gcc" ; then
   GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
   if test x${USE_MAINTAINER_MODE} = xyes ; then
     GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
+  fi
+  if test x$ENABLE_PROFILE = xyes ; then
+    GNUCFLAGS="${GNUCFLAGS:=} -pg"
   fi
 fi
 AC_SUBST(GNUCFLAGS)
