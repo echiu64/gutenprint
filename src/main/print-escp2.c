@@ -1619,9 +1619,9 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
 
-  if (strcmp(direction, "Unidirectional") == 0)
+  if (direction && strcmp(direction, "Unidirectional") == 0)
     init.unidirectional = 1;
-  else if (strcmp(direction, "Bidirectional") == 0)
+  else if (direction && strcmp(direction, "Bidirectional") == 0)
     init.unidirectional = 0;
   else if (xdpi >= 720 && ydpi >= 720)
     init.unidirectional = 1;
@@ -2043,6 +2043,11 @@ send_print_command(stpi_softweave_t *sw, stpi_pass_t *pass, int color,
 static void
 send_extra_data(stpi_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
 {
+#if TEST_UNCOMPRESSED
+  int i;
+  for (i = 0; i < sw->bitwidth * (lwidth + 7) / 8; i++)
+    stpi_putc(0, v);
+#else  /* !TEST_UNCOMPRESSED */
   int k, l;
   int bytes_to_fill = sw->bitwidth * ((lwidth + 7) / 8);
   int full_blocks = bytes_to_fill / 128;
@@ -2070,6 +2075,7 @@ send_extra_data(stpi_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
     }
   stpi_zfwrite((const char *) buf, total_bytes, 1, v);
   stpi_free(buf);
+#endif /* TEST_UNCOMPRESSED */
 }
 
 static void
