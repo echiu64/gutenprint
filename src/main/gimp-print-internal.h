@@ -34,7 +34,11 @@
 #define _GIMP_PRINT_INTERNAL_H_
 
 
+#ifndef DISABLE_NLS
 #include "../../lib/libprintut.h"
+#else
+#define xmalloc malloc
+#endif
 
 
 #define ECOLOR_C 0
