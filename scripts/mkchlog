@@ -143,7 +143,7 @@ while (<>) {
 	if ($skipme == 0) {
 	    if ($logmsgs{$datetimeauthor}) {
 		$stuff = $logmsgs{$datetimeauthor};
-		$stuff =~ s/\n/\n\t$currentfile ($revision) ($plus $minus)\n/;
+		$stuff =~ s/\n\n/\n\t$currentfile ($revision) ($plus $minus)\n\n/;
 		$logmsgs{$datetimeauthor} = $stuff;
 	    } else {
 		$logmsgs{$datetimeauthor} = "Files:\t$currentfile ($revision) ($plus $minus)\n\n$body"
