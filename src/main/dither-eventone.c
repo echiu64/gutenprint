@@ -297,7 +297,9 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 static inline int
 eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int dither_point, unsigned int desired, unsigned int dotsize)
 {
-  if (desired > 0) {
+  if (desired == 0) {
+    dither_point = 0;
+  } else {
     dither_point += sp->dis.r_sq * et->aspect;
     if (desired < dotsize) {
       dither_point -= (EVEN_C1 * dotsize) / desired;
