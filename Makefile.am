@@ -25,8 +25,6 @@ INCLUDES = \
 	$(GTK_CFLAGS)			\
 	-I$(includedir)
 
-#        -I@GLIBINCLUDE@
-
 AM_CPPFLAGS = \
         -DLOCALEDIR=\""$(localedir)"\"	\
 	-Wall				\
@@ -35,11 +33,7 @@ AM_CPPFLAGS = \
 	@LPR_DEF@			\
 	@LPC_DEF@
 
-print_LDADD = $(GTK_LIBS) $(GIMP_LIBS)
-
-#	$(top_builddir)/libgimp/libgimp.la	\
-#	$(top_builddir)/libgimp/libgimpui.la	\
-#	$(INTLLIBS)
+print_LDADD = $(GIMP_LIBS)
 
 .PHONY: files
 
