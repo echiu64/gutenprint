@@ -25,6 +25,11 @@
  *   See ChangeLog
  */
 
+/*
+ * This file must include only standard C header files.  The core code must
+ * compile on generic platforms that don't support glib, gimp, gtk, etc.
+ */
+
 
 /* #define PRINT_DEBUG */
 

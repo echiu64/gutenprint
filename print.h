@@ -26,16 +26,9 @@
  */
 
 /*
- *
- * This file must not include any gimp, glib, gtk, etc. headers.
- *
- * Eventually I intend to port this to GhostScript and/or CUPS.  The only
- * file that should have GIMP-specific code is print.c.  The rest of this
- * program should be completely generic.
- *
- * rlk 20000112
+ * This file must include only standard C header files.  The core code must
+ * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
-
 
 #ifndef PRINT_HEADER
 #define PRINT_HEADER
@@ -48,8 +41,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 /*
  * Constants...
