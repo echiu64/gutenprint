@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2002-11-19 20:35-0500\n"
+"POT-Creation-Date: 2002-11-25 21:16-0500\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -1249,30 +1249,55 @@ msgid "ArchA"
 msgstr "ArchA"
 
 #: src/main/print-util.c:732
+#, fuzzy
+msgid "ArchA Transverse"
+msgstr "Na¾ehµovacia fólia"
+
+#: src/main/print-util.c:734
 msgid "ArchB"
 msgstr "ArchB"
 
-#: src/main/print-util.c:734
+#: src/main/print-util.c:736
+#, fuzzy
+msgid "ArchB Transverse"
+msgstr "Na¾ehµovacia fólia"
+
+#: src/main/print-util.c:738
 msgid "ArchC"
 msgstr "ArchC"
 
-#: src/main/print-util.c:736
+#: src/main/print-util.c:740
+#, fuzzy
+msgid "ArchC Transverse"
+msgstr "Na¾ehµovacia fólia"
+
+#: src/main/print-util.c:742
 msgid "ArchD"
 msgstr "ArchD"
 
-#: src/main/print-util.c:738
+#: src/main/print-util.c:744
+#, fuzzy
+msgid "ArchD Transverse"
+msgstr "Na¾ehµovacia fólia"
+
+#: src/main/print-util.c:746
 msgid "ArchE"
 msgstr "ArchE"
+
+#: src/main/print-util.c:748
+#, fuzzy
+msgid "ArchE Transverse"
+msgstr "Na¾ehµovacia fólia"
 
 #.
 #. * Foolscap
 #.
-#: src/main/print-util.c:744
+#: src/main/print-util.c:754
 msgid "American foolscap"
 msgstr "Americké rozmery"
 
 #. American foolscap
-#: src/main/print-util.c:746
+#: src/main/print-util.c:756
 msgid "European foolscap"
 msgstr "Európske rozmery"
 
@@ -1282,44 +1307,44 @@ msgstr "Európske rozmery"
 #. * The BPIF and the Publishers Association jointly recommend ten
 #. * standard metric sizes for case-bound titles as follows:
 #.
-#: src/main/print-util.c:754
+#: src/main/print-util.c:764
 msgid "Crown Quarto"
 msgstr "Crown Quarto"
 
 #. 189mm x 246mm
-#: src/main/print-util.c:756
+#: src/main/print-util.c:766
 msgid "Large Crown Quarto"
 msgstr "Large Crown Quarto"
 
 #. 201mm x 258mm
-#: src/main/print-util.c:758
+#: src/main/print-util.c:768
 msgid "Demy Quarto"
 msgstr "Demy Quarto"
 
 #. 219mm x 276mm
-#: src/main/print-util.c:760
+#: src/main/print-util.c:770
 msgid "Royal Quarto"
 msgstr "Royal Quarto"
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
-#: src/main/print-util.c:764
+#: src/main/print-util.c:774
 msgid "Crown Octavo"
 msgstr "Crown Octavo"
 
 #. 123mm x 186mm
-#: src/main/print-util.c:766
+#: src/main/print-util.c:776
 msgid "Large Crown Octavo"
 msgstr "Large Crown Octavo"
 
 #. 129mm x 198mm
-#: src/main/print-util.c:768
+#: src/main/print-util.c:778
 msgid "Demy Octavo"
 msgstr "Demy Octavo"
 
 #. 138mm x 216mm
-#: src/main/print-util.c:770
+#: src/main/print-util.c:780
 msgid "Royal Octavo"
 msgstr "Royal Octavo"
 
@@ -1327,135 +1352,135 @@ msgstr "Royal Octavo"
 #. { N_ ("ISO A5"),             419,
 #. 595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm
 #. Paperback sizes in common usage
-#: src/main/print-util.c:776
+#: src/main/print-util.c:786
 msgid "Small paperback"
 msgstr "Small paperback"
 
 #. 111mm x 178mm
-#: src/main/print-util.c:778
+#: src/main/print-util.c:788
 msgid "Penguin small paperback"
 msgstr "Penguin small paperback"
 
 #. 111mm x 181mm
-#: src/main/print-util.c:780
+#: src/main/print-util.c:790
 msgid "Penguin large paperback"
 msgstr "Penguin large paperback"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
-#: src/main/print-util.c:784
+#: src/main/print-util.c:794
 msgid "Hagaki Card"
 msgstr "Hagaki karta"
 
 #. 100 x 148 mm
-#: src/main/print-util.c:786
+#: src/main/print-util.c:796
 msgid "Oufuku Card"
 msgstr "Oufuku karta"
 
 #. 148 x 200 mm
-#: src/main/print-util.c:788
+#: src/main/print-util.c:798
 msgid "Japanese long envelope #3"
 msgstr "Japonská dlhá obálka #3"
 
 #. Japanese long envelope #3
-#: src/main/print-util.c:790
+#: src/main/print-util.c:800
 msgid "Japanese long envelope #4"
 msgstr "Japonská dlhá obálka #4"
 
 #. Japanese long envelope #4
-#: src/main/print-util.c:792
+#: src/main/print-util.c:802
 msgid "Japanese Kaku envelope #4"
 msgstr "Japonská Kaku obálka #4"
 
 #. Japanese Kaku envelope #4
-#: src/main/print-util.c:794
+#: src/main/print-util.c:804
 msgid "Commercial 10"
 msgstr "Commercial 10"
 
 #. US Commercial 10 env
-#: src/main/print-util.c:796
+#: src/main/print-util.c:806
 msgid "A2 Invitation"
 msgstr "A2 pozvánka"
 
 #. US A2 invitation
-#: src/main/print-util.c:798
+#: src/main/print-util.c:808
 #, fuzzy
 msgid "Monarch Envelope"
 msgstr "Obálka"
 
 #. Monarch envelope (3.875 * 7.5)
-#: src/main/print-util.c:800
+#: src/main/print-util.c:810
 msgid "Custom"
 msgstr "Vlastný"
 
-#: src/main/print-util.c:803
+#: src/main/print-util.c:813
 msgid "89 mm Roll Paper"
 msgstr "89 mm rolka papiera"
 
-#: src/main/print-util.c:805
+#: src/main/print-util.c:815
 msgid "4 Inch Roll Paper"
 msgstr "4 palcová rolka papiera"
 
-#: src/main/print-util.c:807
+#: src/main/print-util.c:817
 msgid "5 Inch Roll Paper"
 msgstr "5 palcová rolka papiera"
 
-#: src/main/print-util.c:809
+#: src/main/print-util.c:819
 msgid "210 mm Roll Paper"
 msgstr "210 mm rolka papiera"
 
-#: src/main/print-util.c:811
+#: src/main/print-util.c:821
 msgid "13 Inch Roll Paper"
 msgstr "13 palcová rolka papiera"
 
-#: src/main/print-util.c:813
+#: src/main/print-util.c:823
 msgid "22 Inch Roll Paper"
 msgstr "22 palcová rolka papiera"
 
-#: src/main/print-util.c:815
+#: src/main/print-util.c:825
 msgid "24 Inch Roll Paper"
 msgstr "24 palcová rolka papiera"
 
-#: src/main/print-util.c:817
+#: src/main/print-util.c:827
 msgid "36 Inch Roll Paper"
 msgstr "36 palcová rolka papiera"
 
-#: src/main/print-util.c:819
+#: src/main/print-util.c:829
 msgid "44 Inch Roll Paper"
 msgstr "44 palcová rolka papiera"
 
-#: src/main/print-util.c:1276 src/main/print-util.c:1285
+#: src/main/print-util.c:1286 src/main/print-util.c:1295
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr "%s nie je platný parameter pre typ %s\n"
 
-#: src/main/print-util.c:1301
+#: src/main/print-util.c:1311
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr "%s mimo rozsahu (hodnota %f, min %f, max %f)\n"
 
-#: src/main/print-util.c:1316
+#: src/main/print-util.c:1326
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s mimo rozsahu (hodnota %d, min %d, max %d)\n"
 
-#: src/main/print-util.c:1342
+#: src/main/print-util.c:1352
 msgid "Printer does not support color output\n"
 msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 
-#: src/main/print-util.c:1360
+#: src/main/print-util.c:1370
 msgid "Image size is not valid\n"
 msgstr "Veµkos» obrázka nie je platná\n"
 
-#: src/main/print-util.c:1367
+#: src/main/print-util.c:1377
 msgid "Top margin must not be less than zero\n"
 msgstr "Horný okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/print-util.c:1373
+#: src/main/print-util.c:1383
 msgid "Left margin must not be less than zero\n"
 msgstr "¥avý okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/print-util.c:1430
+#: src/main/print-util.c:1440
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s nie je platný algoritmus rozptylu\n"
