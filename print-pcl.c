@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.26  2000/02/13 03:14:26  rlk
+ *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
+ *
  *   Revision 1.25  2000/02/10 00:28:32  rlk
  *   Fix landscape vs. portrait problem
  *
@@ -443,8 +446,10 @@ pcl_print(int       model,		/* I - Model */
   * Choose the correct color conversion function...
   */
 
-  if ((image_bpp < 3 && cmap == NULL) || model <= 500)
-    output_type = OUTPUT_GRAY;		/* Force grayscale output */
+  if (model <= 500)
+    output_type = OUTPUT_GRAY;
+  else if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
+    output_type = OUTPUT_GRAY_COLOR;		/* Force grayscale output */
 
   if (output_type == OUTPUT_COLOR)
   {
@@ -452,6 +457,15 @@ pcl_print(int       model,		/* I - Model */
 
     if (image_bpp >= 3)
       colorfunc = rgb_to_rgb;
+    else
+      colorfunc = indexed_to_rgb;
+  }
+  else if (output_type == OUTPUT_GRAY_COLOR)
+  {
+    out_bpp = 3;
+
+    if (image_bpp >= 3)
+      colorfunc = gray_to_rgb;
     else
       colorfunc = indexed_to_rgb;
   }

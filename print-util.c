@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.72  2000/02/13 03:14:26  rlk
+ *   Bit of an oops here about printer models; also start on print-gray-using-color mode for better quality
+ *
  *   Revision 1.71  2000/02/13 02:01:38  rlk
  *   Build a Ghostscript driver!  No idea if it works yet...
  *
@@ -840,6 +843,79 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   }
 }
 
+/*
+ * 'rgb_to_rgb()' - Convert rgb image data to RGB.
+ */
+
+void
+gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
+	   unsigned short 	*rgbout,	/* O - RGB pixels */
+	   int    		width,		/* I - Width of row */
+	   int    		bpp,		/* I - Bytes/pix in indexed */
+	   unsigned char 	*cmap,		/* I - Colormap */
+	   vars_t  		*vars		/* I - Saturation */
+	   )
+{
+  if (bpp == 3)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      rgbout[0] = vars->lut.red[grayin[0]];
+      rgbout[1] = vars->lut.green[grayin[1]];
+      rgbout[2] = vars->lut.blue[grayin[2]];
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgbout[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgbout[i] = (unsigned short) (t * 65536.0);
+	    }
+	}
+      grayin++;
+      rgbout += 3;
+      width --;
+    }
+  }
+  else
+  {
+   /*
+    * RGBA image...
+    */
+
+    while (width > 0)
+    {
+      rgbout[0] = vars->lut.red[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
+      rgbout[1] = vars->lut.green[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
+      rgbout[2] = vars->lut.blue[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
+      if (vars->density != 1.0)
+	{
+	  float t;
+	  int i;
+	  for (i = 0; i < 3; i++)
+	    {
+	      t = ((float) rgbout[i]) / 65536.0;
+	      t = (1.0 + ((t - 1.0) * vars->density));
+	      if (t < 0.0)
+		t = 0.0;
+	      rgbout[i] = (unsigned short) (t * 65536.0);
+	    }
+	}
+      grayin += bpp;
+      rgbout += 3;
+      width --;
+    }
+  }
+}
+
 /* #define PRINT_LUT */
 
 void
@@ -1075,7 +1151,11 @@ default_media_size(int  model,		/* I - Printer model */
     }
 }
 
-const static printer_t	printers[] =	/* List of supported printer types */
+#ifndef ESCP2_GHOST
+const
+#endif
+static
+printer_t	printers[] =	/* List of supported printer types */
 {
 #ifndef ESCP2_GHOST
   { "PostScript Level 1",	"ps",		1,	0,	1.000,	1.000,
@@ -1125,41 +1205,41 @@ const static printer_t	printers[] =	/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 400",	"escp2-400",	1,	1,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 440",	"escp2-440",	1,	9,	0.585,	0.646,
+  { "EPSON Stylus Color 440",	"escp2-440",	1,	10,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 500",	"escp2-500",	1,	1,	0.597,	0.631,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 600",	"escp2-600",	1,	3,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 640",	"escp2-640",	1,	10,	0.585,	0.646,
+  { "EPSON Stylus Color 640",	"escp2-640",	1,	11,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 740",	"escp2-740",	1,	11,	0.585,	0.646,
+  { "EPSON Stylus Color 740",	"escp2-740",	1,	12,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 800",	"escp2-800",	1,	4,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 850",	"escp2-850",	1,	15,	0.585,	0.646,
+  { "EPSON Stylus Color 850",	"escp2-850",	1,	5,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 860",	"escp2-860",	1,	16,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 900",	"escp2-900",	1,	12,	0.585,	0.646,
+  { "EPSON Stylus Color 900",	"escp2-900",	1,	13,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 1520",	"escp2-1520",	1,	5,	0.585,	0.646,
+  { "EPSON Stylus Color 1520",	"escp2-1520",	1,	6,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 3000",	"escp2-3000",	1,	5,	0.585,	0.646,
+  { "EPSON Stylus Color 3000",	"escp2-3000",	1,	6,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 700",	"escp2-700",	1,	6,	0.585,	0.646,
+  { "EPSON Stylus Photo 700",	"escp2-700",	1,	7,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo EX",	"escp2-ex",	1,	7,	0.585,	0.646,
+  { "EPSON Stylus Photo EX",	"escp2-ex",	1,	8,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 750",	"escp2-750",	1,	13,	0.585,	0.646,
+  { "EPSON Stylus Photo 750",	"escp2-750",	1,	14,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 870",	"escp2-870",	1,	13,	0.585,	0.646,
+  { "EPSON Stylus Photo 870",	"escp2-870",	1,	14,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 1200",	"escp2-1200",	1,	14,	0.585,	0.646,
+  { "EPSON Stylus Photo 1200",	"escp2-1200",	1,	15,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 1270",	"escp2-1270",	1,	14,	0.585,	0.646,
+  { "EPSON Stylus Photo 1270",	"escp2-1270",	1,	15,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo",	"escp2-photo",	1,	8,	0.585,	0.646,
+  { "EPSON Stylus Photo",	"escp2-photo",	1,	9,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
 
 #ifndef ESCP2_GHOST

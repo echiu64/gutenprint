@@ -59,6 +59,7 @@
 
 #define OUTPUT_GRAY		0	/* Grayscale output */
 #define OUTPUT_COLOR		1	/* Color output */
+#define OUTPUT_GRAY_COLOR	2 	/* Grayscale output using color */
 
 #define ORIENT_AUTO		-1	/* Best orientation */
 #define ORIENT_PORTRAIT		0	/* Portrait orientation */
@@ -212,6 +213,8 @@ extern void	rgb_to_gray(unsigned char *, unsigned short *, int, int,
 			    unsigned char *, vars_t *);
 extern void	rgb_to_rgb(unsigned char *, unsigned short *, int, int,
 			   unsigned char *, vars_t *);
+extern void	gray_to_rgb(unsigned char *, unsigned short *, int, int,
+			    unsigned char *, vars_t *);
 
 extern void	compute_lut(float print_gamma, float app_gamma, vars_t *v);
 
