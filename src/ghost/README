@@ -416,21 +416,18 @@ Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
 Resolutions for those printers are listed in a later section.
 
      180 DPI works for draft mode on printers with dot spacing of 1/90
-     or 1/180".  This includes the Stylus Color, Stylus Color 440,
+     or 1/180 inch.  This includes the Stylus Color, Stylus Color 440,
      460, 600, 640, 660, 670, 800, 850, 900, 980, 980, 1500, 1520,
      3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
 '180 DPI'
 '180 DPI Unidirectional'
 
-     Resolutions based on 120 DPI (180x120 and 360x120) work for draft
-     mode on printers with dot spacing of 1/120".  This includes the
-     Stylus C20 and C40, the Stylus Color Pro, 400, 480, 500, 580,
-     680, 740, 760, 777, 860, 880, 83, and 1160, and the Stylus Photo
-     750, 780, 790, 870, 890, 1270, 1280, 1290, and 2000P.
-
-'180 x 120 DPI'
-'180 x 120 DPI Unidirectional'
+     360x120 DPI works for draft mode on printers with dot spacing of
+     1/120 inch.  This includes the Stylus C20 and C40, the Stylus
+     Color Pro, 400, 480, 500, 580, 680, 740, 760, 777, 860, 880, 83,
+     and 1160, and the Stylus Photo 750, 780, 790, 870, 890, 1270,
+     1280, 1290, and 2000P.
 
 '360 x 120 DPI'
 '360 x 120 DPI Unidirectional'
