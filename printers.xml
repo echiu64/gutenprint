@@ -20,23 +20,39 @@
 <printer name="CANON BJC 30" driver="bjc-30">
 <color>
 <model value=30>
-<gamma value=1.000>
+<gamma value=2.000>
+<density value=0.800>
+<language value=canon>
+</printer>
+
+<printer name="CANON BJC 50" driver="bjc-50">
+<color>
+<model value=4400>
+<gamma value=0.5>
 <density value=0.800>
 <language value=canon>
 </printer>
 
 <printer name="CANON BJC 55" driver="bjc-55">
 <color>
-<model value=2000>
-<gamma value=1.000>
+<model value=4400>
+<gamma value=0.5>
+<density value=0.800>
+<language value=canon>
+</printer>
+
+<printer name="CANON BJC 80" driver="bjc-80">
+<color>
+<model value=4400>
+<gamma value=0.5>
 <density value=0.800>
 <language value=canon>
 </printer>
 
 <printer name="CANON BJC 85" driver="bjc-85">
 <color>
-<model value=2000>
-<gamma value=1.000>
+<model value=4400>
+<gamma value=0.5>
 <density value=0.800>
 <language value=canon>
 </printer>
