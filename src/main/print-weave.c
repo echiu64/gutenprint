@@ -2171,15 +2171,16 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 static void
 add_to_row(stp_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
 	   int color, int setactive, stp_lineoff_t *lineoffs,
-	   stp_lineactive_t *lineactive, stp_linecount_t *linecount, const stp_linebufs_t *bufs)
+	   stp_lineactive_t *lineactive, stp_linecount_t *linecount,
+	   const stp_linebufs_t *bufs)
 {
   size_t place = lineoffs[0].v[color];
   size_t count = linecount[0].v[color];
   if (place + nbytes > sw->jets * sw->bitwidth * sw->horizontal_width)
     {
-      stp_eprintf(sw->v, "Buffer overflow: limit %d, actual %d\n",
+      stp_eprintf(sw->v, "Buffer overflow: limit %d, actual %d, count %d\n",
 		  sw->jets * sw->bitwidth * sw->horizontal_width,
-		  place + nbytes);
+		  place + nbytes, count);
       exit(1);
     }
   memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
