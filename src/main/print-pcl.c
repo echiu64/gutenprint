@@ -82,8 +82,8 @@ static const stpi_dotsize_t single_dotsize[] =
 
 static const stpi_shade_t photo_dither_shades[] =
 {
-  { 0.3333, 1, single_dotsize },
   { 1.0000, 1, single_dotsize },
+  { 0.3333, 1, single_dotsize },
 };
 
 /*

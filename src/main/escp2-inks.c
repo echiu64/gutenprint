@@ -114,23 +114,23 @@ DOTSIZE(spro10000_standard) = { 0.661, 1.0 };
 
 SHADES(standard) = { 1.0 };
 
-SHADES(photo_cyan) = { 0.305, 1.0 };
-SHADES(photo_magenta) = { 0.315, 1.0 };
+SHADES(photo_cyan) = { 1.0, 0.305 };
+SHADES(photo_magenta) = { 1.0, 0.315 };
 
-SHADES(quadtone) = { 0.25, 0.5, 0.75, 1.0 };
+SHADES(quadtone) = { 1.0, 0.75, 0.5, 0.25 };
 
-SHADES(photo_c) = { 0.26, 1.0 };
-SHADES(photo_m) = { 0.31, 1.0 };
+SHADES(photo_c) = { 1.0, 0.26 };
+SHADES(photo_m) = { 1.0, 0.31 };
 
-SHADES(esp960_c) = { 0.32, 1.0 };
-SHADES(esp960_m) = { 0.35, 1.0 };
-SHADES(esp960_y) = { 0.5, 1.0 };
+SHADES(esp960_c) = { 1.0, 0.32 };
+SHADES(esp960_m) = { 1.0, 0.35 };
+SHADES(esp960_y) = { 1.0, 0.5 };
 
-SHADES(ultra_photo_k) = { 0.48, 1.0 };
-SHADES(ultra_photo_c) = { 0.38, 1.0 };
-SHADES(ultra_photo_m) = { 0.31, 1.0 };
+SHADES(ultra_photo_k) = { 1.0, 0.48 };
+SHADES(ultra_photo_c) = { 1.0, 0.38 };
+SHADES(ultra_photo_m) = { 1.0, 0.31 };
 
-SHADES(photo_pigment) = { 0.227, 1.0 };
+SHADES(photo_pigment) = { 1.0, 0.227 };
 
 /* Single dot size */
 

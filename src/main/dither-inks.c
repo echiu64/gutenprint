@@ -401,9 +401,10 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 
   stpi_channel_reset_channel(v, color);
 
-  for (i=0; i < nshades; i++)
+  for (i = nshades - 1; i >= 0; i--)
     {
-      idx = stpi_dither_translate_channel(v, color, i);
+      int subchannel = nshades - i - 1;
+      idx = stpi_dither_translate_channel(v, color, subchannel);
       assert(idx >= 0);
       dc = &(CHANNEL(d, idx));
 
@@ -422,17 +423,17 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 
       sp = &dc->shades[0];
       sp->value = 1.0;
-      stpi_channel_add(v, color, i, shades[i].value);
+      stpi_channel_add(v, color, subchannel, shades[i].value);
       sp->density = 65536.0;
-      if (i == 0 || density == 0)
+      if (subchannel == 0 || density == 0)
 	{
 	  sp->lower = 0;
 	  sp->trans = 0;
 	}
       else
 	{
-	  k = 65536.0 * density * pow(shades[i-1].value, ink_gamma);
-	  sp->lower = k * shades[i-1].value + 0.5;
+	  k = 65536.0 * density * pow(shades[i + 1].value, ink_gamma);
+	  sp->lower = k * shades[i + 1].value + 0.5;
 	  sp->trans = k * shades[i].value + 0.5;
 
 	  /* Precompute some values */
@@ -441,7 +442,7 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 		      (sp->trans - sp->lower)) / sp->lower;
 	}
 
-      sp->numdotsizes = shades[i].numsizes;
+      sp->numdotsizes = shades[subchannel].numsizes;
       sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));
       if (idx >= 0)
 	stpi_dither_set_ranges(v, idx, &shades[i], density);
