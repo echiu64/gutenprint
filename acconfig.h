@@ -30,19 +30,22 @@
 #undef RELEASE_DATE
 
 /* Library versioning */
-#undef GIMPPRINT_MAJOR_VERSION
+/*#undef GIMPPRINT_MAJOR_VERSION
 #undef GIMPPRINT_MINOR_VERSION
 #undef GIMPPRINT_MICRO_VERSION
 #undef GIMPPRINT_CURRENT_INTERFACE
 #undef GIMPPRINT_INTERFACE_AGE
 #undef GIMPPRINT_BINARY_AGE
-#undef GIMPPRINT_VERSION
+#undef GIMPPRINT_VERSION*/
 
 /* CUPS data directory */
 #undef CUPS_DATADIR
 
 /* Define if GNU ld is present */
 #undef HAVE_GNU_LD
+
+/* GIMP-Print header to include */
+#undef INCLUDE_GIMP_PRINT_H
 
 /* Define if libc does no provide */
 #undef HAVE_ASPRINTF
@@ -94,6 +97,7 @@
 /* Define as 1 if you have the stpcpy function.  */
 #undef HAVE_STPCPY
 
+/* Define if maintainer-mode is used */
 #undef HAVE_MAINTAINER_MODE
 
 /* Gnome definitions (from glade acconfig.h) */

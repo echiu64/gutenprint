@@ -100,7 +100,7 @@ main ()
 	   (gimpprint_minor_version != GIMPPRINT_MINOR_VERSION) ||
            (gimpprint_micro_version != GIMPPRINT_MICRO_VERSION))
     {
-      printf("*** GIMP-PRINT header files (version %d.%d.%d) do not match\n",
+      printf("\n*** GIMP-PRINT header files (version %d.%d.%d) do not match\n",
 	     GIMPPRINT_MAJOR_VERSION, GIMPPRINT_MINOR_VERSION, GIMPPRINT_MICRO_VERSION);
       printf("*** library (version %d.%d.%d)\n",
 	     gimpprint_major_version, gimpprint_minor_version, gimpprint_micro_version);

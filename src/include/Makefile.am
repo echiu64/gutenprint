@@ -27,6 +27,7 @@ noinst_HEADERS = gimp-print-intl.h
 
 pkginclude_HEADERS = @GIMP_PRINT_H@
 
-EXTRA_HEADERS = gimp-print.h
+EXTRA_HEADERS = gimp-print.h.in
 
+DISTCLEANFILES = gimp-print.h
 MAINTAINERCLEANFILES = Makefile.in

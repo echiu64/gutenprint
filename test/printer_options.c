@@ -24,7 +24,11 @@
 #include <config.h>
 #endif
 #include <stdio.h>
+#ifdef INCLUDE_GIMP_PRINT_H
+#include INCLUDE_GIMP_PRINT_H
+#else
 #include <gimp-print.h>
+#endif
 #include "../lib/libprintut.h"
 
 char *params[] =

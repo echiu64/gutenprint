@@ -40,7 +40,7 @@ cups_modeldir = $(pkgdatadir)/model
 
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
-INCLUDES = @INCLUDES@
+INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
