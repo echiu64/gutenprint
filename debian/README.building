@@ -12,7 +12,8 @@ the Debianised source.  Other packages may be needed if building
 directly from CVS; it is less likely other tools will be needed if
 building from a distributed tarball.  Other tools that might
 potentially be needed are the latest versions of gettext, texi2html,
-docbook-utils and imagemagick.
+docbook-utils and imagemagick.  build-essential and devscripts should
+also be installed in order to build Debian packages.
 
 
 General

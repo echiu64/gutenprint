@@ -11,5 +11,5 @@ Abstract: The gimpprint library routines give programmers an interface to
 Section: Apps/Programming
 
 Format: HTML
-Index: /usr/share/doc/libgimpprint#LIBRARY_VERSION#-doc/html/gimpprint_toc.html
+Index: /usr/share/doc/libgimpprint#LIBRARY_VERSION#-doc/html/index.html
 Files: /usr/share/doc/libgimpprint#LIBRARY_VERSION#-doc/html/*.html

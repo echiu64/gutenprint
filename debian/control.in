@@ -2,14 +2,13 @@ Source: gimp-print
 Section: graphics
 Priority: optional
 Maintainer: Roger Leigh <rleigh@debian.org>
-Standards-Version: 3.5.7
-Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, libijs-0.34-dev, debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), bison, foomatic-db-engine (>= 3.0.0)
+Standards-Version: 3.6.1
+Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, libijs-dev (>= 0.35-1), debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), foomatic-db-engine (>= 3.0.1-1), chrpath (>= 0.12)
 
 Package: gimp-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp
-Recommends: gimpprint-locales (>= ${Source-Version})
-Suggests: gimpprint-doc (>= ${Source-Version})
+Suggests: gimpprint-doc (>= ${Source-Version}), gimpprint-locales (>= ${Source-Version})
 Description: The Print plugin for the GIMP
  This package includes the Print plugin for the GIMP.
  .
@@ -27,8 +26,8 @@ Package: cupsys-driver-gimpprint
 Architecture: any
 Section: graphics
 Depends: ${shlibs:Depends}, ${perl:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
-Recommends: postscript-viewer | gs (>= 6.51), gimpprint-locales (>= ${Source-Version})
-Suggests: gimpprint-doc (>= ${Source-Version})
+Recommends: postscript-viewer | gs (>= 6.51)
+Suggests: gimpprint-doc (>= ${Source-Version}), gimpprint-locales (>= ${Source-Version})
 Description: Gimp-Print printer drivers for CUPS
  This package includes a CUPS driver based on Gimp-Print.
  .
@@ -101,7 +100,7 @@ Package: libgimpprint#LIBRARY_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
-Recommends: gimpprint-locales (>= ${Source-Version})
+Suggests: gimpprint-locales (>= ${Source-Version})
 Description: The Gimp-Print printer driver library
  This package includes the Gimp-Print shared library, needed to
  run programs using Gimp-Print drivers.
@@ -147,7 +146,7 @@ Package: libgimpprintui#LIBRARY_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
-Recommends: gimpprint-locales (>= ${Source-Version})
+Suggests: gimpprint-locales (>= ${Source-Version})
 Description: Gimp-Print printer drivers - user interface library
  This package includes the libgimpprintui library, necessary to run
  gimp-print.  libgimpprintui contains GTK+ widgets which may be
@@ -213,7 +212,7 @@ Package: escputil
 Architecture: any
 Section: utils
 Depends: ${shlibs:Depends}
-Recommends: gimpprint-locales (>= ${Source-Version})
+Suggests: gimpprint-locales (>= ${Source-Version})
 Description: A maintenance utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus
  printers.  It can also check the current ink levels in the printer.

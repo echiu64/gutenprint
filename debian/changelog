@@ -1,3 +1,17 @@
+gimp-print (5.0.0-alpha1-2) unstable; urgency=low
+
+  * Synchronise packaging changes from Debian 4.2.6-4 packaging:
+    - Change Recommends on gimpprint-locales to Suggests.
+    - Updated debian/copyright to include the GFDL-licensed User's
+      Guide.
+    - Remove bison from Build-Depends, since it is not strictly
+      required.
+  * Update to Standards-Version 3.6.1
+  * libgimpprint-doc: distribute gimpprint.pdf; gimpprint.ps is
+    no longer created.
+
+ -- Roger Leigh <rleigh@debian.org>  Mon, 15 Mar 2004 23:48:25 +0000
+
 gimp-print (5.0.0-alpha1-1) unstable; urgency=low
 
   * New upstream alpha release.
