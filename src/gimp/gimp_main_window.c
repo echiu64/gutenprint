@@ -201,7 +201,7 @@ set_entry_value(GtkWidget *entry, double value, int block)
     gtk_signal_handler_block_by_data (GTK_OBJECT (entry), NULL);
   gtk_entry_set_text (GTK_ENTRY (entry), s);
   if (block)
-    gtk_signal_handler_unblock_by_data (GTK_OBJECT (top_entry), NULL);
+    gtk_signal_handler_unblock_by_data (GTK_OBJECT (entry), NULL);
 }
 
 static void
