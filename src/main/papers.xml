@@ -68,13 +68,6 @@
       <height value="184"/>
       <unit value="english"/>
     </paper>
-    <paper name="Postcard">
-      <description value="Postcard"/>
-      <comment value="100mm x 147mm"/>
-      <width value="283"/>
-      <height value="416"/>
-      <unit value="english"/>
-    </paper>
     <paper name="w216h360">
       <description value="3x5"/>
       <width value="216"/>
