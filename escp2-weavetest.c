@@ -67,31 +67,30 @@
 #define WEAVETEST
 #include "print-escp2.c"
 
-const char header[] = "\
-Legend:\n\
-A  Negative pass number.\n\
-B  Jet number out of range.\n\
-C  Starting row of this pass after the current row.\n\
-D  Ending row of this pass before the current row.\n\
-E  Current row is the ending row of the pass, and the pass number is not\n\
-   one greater than the previous completed pass.\n\
-F  The current pass's starting row is not consistent with the previously\n\
-   observed starting row of this pass.
-G  The current pass's ending row is not consistent with the previously\n\
-   observed ending row of this pass.\n\
-H  The current row does not match the computed current row based on jet and\n\
-   start of pass.\n\
-I  The number of missing start rows is less than zero or greater than or\n\
-   equal to the actual number of jets.\n\
-J  The first printed row of this pass is less than zero.\n\
-K  The number of missing start rows of this pass is greater than the\n\
-   jet used to print the current row.\n\
-L  The subpass printed by the current pass is not consistent with an earlier\n\
-   record of the subpass printed by this pass.\n\
-M  The same physical row is being printed more than once.\n\
-N  Two different active passes are in the same slot.\n\
-O  Number of missing start rows is incorrect.\n\
-P  Physical row number out of bounds.\n";
+const char header[] = "Legend:\n"
+"A  Negative pass number.\n"
+"B  Jet number out of range.\n"
+"C  Starting row of this pass after the current row.\n"
+"D  Ending row of this pass before the current row.\n"
+"E  Current row is the ending row of the pass, and the pass number is not\n"
+"   one greater than the previous completed pass.\n"
+"F  The current pass's starting row is not consistent with the previously\n"
+"   observed starting row of this pass.\n"
+"G  The current pass's ending row is not consistent with the previously\n"
+"   observed ending row of this pass.\n"
+"H  The current row does not match the computed current row based on jet and\n"
+"   start of pass.\n"
+"I  The number of missing start rows is less than zero or greater than or\n"
+"   equal to the actual number of jets.\n"
+"J  The first printed row of this pass is less than zero.\n"
+"K  The number of missing start rows of this pass is greater than the\n"
+"   jet used to print the current row.\n"
+"L  The subpass printed by the current pass is not consistent with an earlier\n"
+"   record of the subpass printed by this pass.\n"
+"M  The same physical row is being printed more than once.\n"
+"N  Two different active passes are in the same slot.\n"
+"O  Number of missing start rows is incorrect.\n"
+"P  Physical row number out of bounds.\n";
 
 
 static void
@@ -113,8 +112,8 @@ main(int argc, char **argv)
   int *logpassstarts;
   int *passends;
   int *passcounts;
-  char *physpassstuff;
-  char *rowdetail;
+  signed char *physpassstuff;
+  signed char *rowdetail;
   int *current_slot;
   int nrows;
   int physjets;

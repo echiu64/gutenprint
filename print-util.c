@@ -40,6 +40,10 @@
 #include "print.h"
 #include <math.h>
 
+#ifndef __GCC__
+#  define inline
+#endif /* !__GCC__ */
+
 /*
  * RGB to grayscale luminance constants...
  */

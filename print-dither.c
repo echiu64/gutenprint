@@ -33,6 +33,10 @@
 #include <limits.h>
 #include <math.h>
 
+#ifndef __GCC__
+#  define inline
+#endif /* __GCC__ */
+
 #define D_FLOYD_HYBRID 0
 #define D_FLOYD 1
 #define D_ADAPTIVE_BASE 2

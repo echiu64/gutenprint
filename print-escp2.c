@@ -45,7 +45,11 @@
 #include <signal.h>
 #endif
 
-#include <endian.h>
+#ifndef __GCC__
+#  define inline
+#endif /* !__GCC__ */
+
+/*#include <endian.h>*/
 
 typedef enum {
   COLOR_MONOCHROME,
