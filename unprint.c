@@ -153,26 +153,28 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
   float ink[3];
 
-  switch (c) {
-    case 0: ink[0]=ink[1]=ink[2]=0; /* black */
-    case 1: ink[0]=1; ink[1]=0; ink[2]=1; /* magenta */
-    case 2: ink[1]=0; ink[1]=ink[2]=1; /* cyan */
-    case 3: ink[0]=ink[1]=1; ink[2]=0; /* yellow */
-    case 4: ink[0]=1; ink[1]=0.5; ink[2]=1; /* lmagenta */
-    case 5: ink[1]=0.5; ink[1]=ink[2]=1; /* lcyan */
-  }
-  for (i=0;i<3;i++) {
-    p[i]*=ink[i];
+  if (a) {
+    switch (c) {
+      case 0: ink[0]=ink[1]=ink[2]=0;break; /* black */
+      case 1: ink[0]=1; ink[1]=0; ink[2]=1;break; /* magenta */
+      case 2: ink[0]=0; ink[1]=ink[2]=1;break; /* cyan */
+      case 3: ink[0]=ink[1]=1; ink[2]=0;break; /* yellow */
+      case 4: ink[0]=1; ink[1]=0.5; ink[2]=1;break; /* lmagenta */
+      case 5: ink[0]=0.5; ink[1]=ink[2]=1;break; /* lcyan */
+      default:fprintf(stderr,"unknown ink %d\n",c);return;
+    }
+    for (i=0;i<3;i++) {
+      p[i]*=ink[i];
+    }
   }
 
 }
 
-void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
+void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color, int bpp){
 
-  int temp,shift,length,bpp,lvalue,pvalue,oldstop;
+  int temp,shift,length,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
-  fprintf(stderr,"alloc p (%d-%d) l (%d-%d)\n",p->startx[color],p->stopx[color],startl,stopl);
   if (startl<p->startx[color]) { /* l should be to the right of p */
     temp=p->startx[color];
     p->startx[color]=startl;
@@ -187,11 +189,8 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   shift=startl-p->startx[color];
   length=stopl-startl+1;
   
-  fprintf(stderr,"alloc p (%d-%d) l (%d-%d)\n",p->startx[color],p->stopx[color],startl,stopl);
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
-  fprintf(stderr,"alloc Start %d stop %d size %d\n",p->startx[color],p->stopx[color],
-             ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
   p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
   memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
           ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
@@ -222,7 +221,6 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, i
    * We want to copy each field from the src to the dst, spacing the fields
    * out every skip fields.
    */
-  fprintf(stderr,"Expanding bpp=%d skip=%d\n",bpp,skip);
   if (skip==1) { /* the trivial case, this should be faster */
     memcpy(dst,src,(length*bpp+7)/8);
     return;
@@ -239,6 +237,8 @@ void write_output(FILE *fp_w) {
   unsigned int amount;
   ppmpixel white,pixel;
 
+  fprintf(stderr,"Margins: top: %d bottom: top+%d\n",pstate.top_margin,
+          pstate.bottom_margin);
   for (first=0;(first<pstate.bottom_margin)&&(!page[first]);
        first++);
   for (last=pstate.bottom_margin-1;(last>first)&&
@@ -254,10 +254,11 @@ void write_output(FILE *fp_w) {
     if (page[l]) {
       for (c=0;c<MAX_INKS;c++) {
         left=(page[l]->startx[c]<left)?page[l]->startx[c]:left;
-        right=(page[l]->stopx[c]>right)?page[l]->startx[c]:right;
+        right=(page[l]->stopx[c]>right)?page[l]->stopx[c]:right;
       }
     }
   }
+  fprintf(stderr,"Image from (%d,%d) to (%d,%d).\n",left,first,right,last);
   width=right-left;
   if (width<0) {
     width=0;
@@ -293,7 +294,6 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
   unsigned char *oldline;
 
   skip=pstate.relative_horizontal_units/density;
-  fprintf(stderr,"Density=%d RHU=%d skip=%d\n",density,pstate.relative_horizontal_units,skip);
 
   if (skip==0) {
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
@@ -319,16 +319,14 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
     } else {
       oldline=NULL;
     }
-    fprintf(stderr,"n=%d Simple=%d Better=%d\n",n,bufsize*skip,(n*skip*bpp+7)/8);
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
                                                     (n*skip*bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
     page[y]->stopx[color]=pstate.xposition+(n?((n-1)*skip+1):0);
-    fprintf(stderr,"alloc new line of %d color %d pix from %d to %d every %d pixels\n",n,color,page[y]->startx[color],page[y]->stopx[color],skip);
     expand_line(buf+(y-pstate.yposition)*((n*skip*bpp+7)/8),
                    page[y]->line[color],n,bpp,skip);
     if (oldline) {
-      merge_line(page[y],oldline,oldstart,oldstop,color);
+      merge_line(page[y],oldline,oldstart,oldstop,color,bpp);
     }
   }
   pstate.xposition+=n?(n-1)*skip+1:0;
@@ -357,16 +355,20 @@ int currentcolor,currentbpp,density,eject,got_graphics;
         }
     }
 
-#define get1(error) if (!fread(&ch,1,1,fp_r)) {fprintf(stderr,error);exit(-1);}
+#define get1(error) if (!fread(&ch,1,1,fp_r)) {fprintf(stderr,error);eject=1;continue;}
 #define get2(error) {if(!fread(minibuf,1,2,fp_r)){\
-                       fprintf(stderr,error);exit(-1);}\
+                       fprintf(stderr,error);eject=1;continue;}\
                        sh=minibuf[0]+minibuf[1]*256;}
-#define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
-#define getnoff(n,offset,error) if (!fread(buf+offset,1,n,fp_r)){fprintf(stderr,error);exit(-1);}
+#define getn(n,error) if (!fread(buf,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
+#define getnoff(n,offset,error) if (!fread(buf+offset,1,n,fp_r)){fprintf(stderr,error);eject=1;continue;}
 
     eject=0;
     got_graphics=0;
     while ((!eject)&&(fread(&ch,1,1,fp_r))){
+      if (ch==0xd) { /* carriage return */
+        pstate.xposition=0;
+        continue;
+      }
       if (ch!=0x1b) {
         fprintf(stderr,"Corrupt file?  No ESC found.  Found: %X\n",ch);
         continue;
@@ -442,7 +444,7 @@ int currentcolor,currentbpp,density,eject,got_graphics;
                 update_page(buf,bufsize,m,n,currentcolor,currentbpp,density);
                 break;
               case 1:  /* run length encoding */
-                for (i=0;i<(m*((n*currentbpp+7)/8));) {
+                for (i=0;(!eject)&&(i<(m*((n*currentbpp+7)/8)));) {
                   get1("Error reading counter!\n");
                   if (ch<128) {
                     bufsize=ch+1;
@@ -458,7 +460,8 @@ int currentcolor,currentbpp,density,eject,got_graphics;
                   fprintf(stderr,"Error decoding RLE data.\n");
                   fprintf(stderr,"Total bufsize %d, expected %d\n",i,
                         (m*((n*currentbpp+7)/8)));
-                  exit(-1);
+                  eject=1;
+                  continue;
                 }
                 update_page(buf,i,m,n,currentcolor,currentbpp,density);
                 break;
@@ -610,7 +613,7 @@ int currentcolor,currentbpp,density,eject,got_graphics;
                 switch (bufsize) {
                     case 4:i=buf[2]<<16+buf[3]<<24;
                     case 2:i+=buf[0]+256*buf[1];
-                      pstate.yposition=i;
+                      pstate.yposition+=i;
                     break;
                   default:
                     fprintf(stderr,"Malformed relative vertical position set.\n");
