@@ -770,17 +770,14 @@ AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
 
 dnl Output files
-dnl po/Makefile.in *MUST* be surrounded by spaces to work with buggy
-dnl gettext 0.10.36.  Do not move this file to the beginning or end
-dnl of a line.
 
 STP_CONFIG_PKGCONFIG_IN([gimpprint],
                         [Gimp-Print],
-                        [GIMP Print Top Quality Printer Drivers],
+                        [Gimp-Print Top Quality Printer Drivers],
                         [src/main])
 STP_CONFIG_PKGCONFIG_IN([gimpprint-ui],
                         [Gimp-Print-UI],
-                        [GIMP Print Top Quality Printer Drivers - User Interface],
+                        [Gimp-Print Top Quality Printer Drivers - User Interface],
 			[src/libgimpprintui])
 
 
@@ -815,9 +812,11 @@ AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
-                [chmod +x src/cups/cups-genppdconfig])
+                [chmod +x src/cups/cups-genppdconfig;
+		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GIMPPRINT_CUPS_VERSION}])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
-                [chmod +x src/cups/cups-genppdupdate])
+                [chmod +x src/cups/cups-genppdupdate;
+		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GIMPPRINT_CUPS_VERSION}])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
@@ -838,6 +837,8 @@ AC_CONFIG_COMMANDS([default], [
 echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."
-])
+],
+[GIMPPRINT_CUPS_VERSION=${GIMPPRINT_MAJOR_VERSION}.${GIMPPRINT_MINOR_VERSION}]
+)
 
 AC_OUTPUT

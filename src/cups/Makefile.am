@@ -28,6 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
+empty=
 PACKAGE = cups
 
 bindir = @cups_bindir@
@@ -39,19 +40,21 @@ pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
-cups_modeldir = $(pkgdatadir)/model/gimp-print
+cups_modeldir = $(pkgdatadir)/model/gimp-print/
+CUPS_VERSION = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
+CUPS_PPD_NICKNAME_STRING=$(empty)\ -\ CUPS+Gimp-Print\ v$(empty)
 
-DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS)
+DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DGIMPPRINT_CUPS_VERSION=\"$(CUPS_VERSION)\" -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\"
 
 
 ## Programs
 
 if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate
-sbin_PROGRAMS = cups-genppd
-sbin_SCRIPTS = cups-genppdconfig cups-genppdupdate
+sbin_PROGRAMS = cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
+sbin_SCRIPTS = cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ cups-genppdupdate.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 cupsexec_backend_PROGRAMS = epson canon
-cupsexec_filter_PROGRAMS = rastertoprinter commandtoepson commandtocanon
+cupsexec_filter_PROGRAMS = rastertogimpprint.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 endif
 
 
@@ -67,12 +70,16 @@ canon_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 epson_SOURCES = epson.c
 epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
-cups_genppd_SOURCES = genppd.c
-cups_genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(GIMPPRINT_LIBS)
+cups_genppd_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_SOURCES = genppd.c
+cups_genppd_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(GIMPPRINT_LIBS)
 
-rastertoprinter_SOURCES = rastertoprinter.c
-rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GIMPPRINT_LIBS)
+rastertogimpprint_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c
+rastertogimpprint_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GIMPPRINT_LIBS)
 
+cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@: $(top_builddir)/config.status cups-genppdconfig.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/cups-genppdconfig
+cups-genppdupdate.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@: $(top_builddir)/config.status cups-genppdupdate.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/cups-genppdupdate
 
 ## Data
 
@@ -104,14 +111,14 @@ endif
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
+	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION); \
 	  cd ppd ; \
 	  for language in * ; do \
 	    cd ..; \
-	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION)/$$language; \
 	    cd ppd/$$language; \
 	    for ppdfile in * ; do \
-	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
+	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION)/$$language) ; \
 	    done; \
 	  cd ..; \
 	  done \
@@ -154,7 +161,7 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
 
-ppd-stamp: cups-genppd
+ppd-stamp: cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 	$(MAKE) ppd-stamp-phony
 	touch ppd-stamp
 
@@ -164,22 +171,22 @@ ppd-stamp-pre:
 	-$(RM) -r ppd
 	-mkdir ppd
 
-ppd-nonls: cups-genppd
+ppd-nonls: cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 	for language in en ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	 ./cups-genppd -p ppd/$$language ; \
+	 ./cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ -p ppd/$$language ; \
 	done
 
-ppd-nls: cups-genppd
+ppd-nls: cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	for language in `./cups-genppd -L -c \`pwd\`/catalog/share/locale` ; do \
+	for language in `./cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ -L -c \`pwd\`/catalog/share/locale` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	  LANGUAGE=$$language ./cups-genppd -p ppd/$$language -c `pwd`/catalog/share/locale ; \
+	  LANGUAGE=$$language ./cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
 	$(RM) -r catalog
 
@@ -202,7 +209,7 @@ clean-local:
 ## Clean
 
 CLEANFILES = ppd-stamp
-DISTCLEANFILES = cups-genppdconfig cups-genppdupdate
+DISTCLEANFILES = cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ cups-genppdupdate.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \

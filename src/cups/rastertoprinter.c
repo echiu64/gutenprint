@@ -468,6 +468,7 @@ main(int  argc,				/* I - Number of command-line arguments */
  /*
   * Check for valid arguments...
   */
+  fprintf(stderr, "DEBUG: Gimp-Print %s Starting\n", VERSION);
 
   if (argc < 6 || argc > 7)
   {
@@ -504,6 +505,44 @@ main(int  argc,				/* I - Number of command-line arguments */
             ppdfile);
     ppdClose(ppd);
     return (1);
+  }
+
+  if (ppd->nickname == NULL)
+  {
+    fprintf(stderr, "ERROR: Gimp-Print Fatal error: No NickName attribute in PPD file \"%s\"!\n",
+            ppdfile);
+    ppdClose(ppd);
+    return (1);
+  }
+  else if (strlen(ppd->nickname) <
+	   strlen(ppd->modelname) + strlen(PPD_NICKNAME_STRING) + 3)
+  {
+    fprintf(stderr, "ERROR: Gimp-Print Fatal error: Corrupted NickName attribute in PPD file \"%s\"!\n",
+            ppdfile);
+    ppdClose(ppd);
+    return (1);
+  }
+  else if (strcmp(ppd->nickname + strlen(ppd->modelname) +
+		  strlen(PPD_NICKNAME_STRING), VERSION) != 0)
+  {
+    fprintf(stderr, "ERROR: Gimp-Print: The version of Gimp-Print software installed (%s) does not match the PPD file (%s).\n",
+	    VERSION,
+	    ppd->nickname+strlen(ppd->modelname)+strlen(PPD_NICKNAME_STRING));
+    fprintf(stderr, "ERROR: Gimp-Print: If you have upgraded your version of Gimp-Print\n");
+    fprintf(stderr, "ERROR: Gimp-Print: recently, you must reinstall all printer queues.\n");
+    fprintf(stderr, "ERROR: Gimp-Print: If the previous installed version of Gimp-Print\n");
+    fprintf(stderr, "ERROR: Gimp-Print: was 4.3.19 or higher, you can use the `cups-genppdupdate.%s'\n", GIMPPRINT_CUPS_VERSION);
+    fprintf(stderr, "ERROR: Gimp-Print: program to do this; if the previous installed version\n");
+    fprintf(stderr, "ERROR: Gimp-Print: was older, you can use the Modify Printer command via\n");
+    fprintf(stderr, "ERROR: Gimp-Print: the CUPS web interface: http://localhost:631/printers.\n");
+    /*
+     * Repeat the first line of the message so that CUPS will display it
+     */
+    fprintf(stderr, "ERROR: Gimp-Print: The version of Gimp-Print software installed (%s) does not match the PPD file (%s).\n",
+	    VERSION,
+	    ppd->nickname+strlen(ppd->modelname)+strlen(PPD_NICKNAME_STRING));
+    ppdClose(ppd);
+    return 1;
   }
 
  /*
@@ -603,16 +642,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (!stp_verify(v))
 	{
 	  fprintf(stderr, "ERROR: Gimp-Print: options failed to verify.\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: Please make sure that the PPD file you are using\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: matches the version of Gimp-Print you have installed.\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: In particular, if you have upgraded your version of\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: Gimp-Print recently, you must reinstall all printer\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: queues.  If the previous installed version of Gimp-Print\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: was 4.3.19 or higher, you can use the `cups-genppdupdate'\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: program to do this; if the previous installed version\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: was older, you can use the Modify Printer command via\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: the CUPS web interface: http://localhost:631/printers.\n");
-	  fprintf(stderr, "ERROR: Gimp-Print: Also, make sure that you are using ESP Ghostscript rather\n");
+	  fprintf(stderr, "ERROR: Gimp-Print: Make sure that you are using ESP Ghostscript rather\n");
 	  fprintf(stderr, "ERROR: Gimp-Print: than GNU or AFPL Ghostscript with CUPS.\n");
 	  fprintf(stderr, "ERROR: Gimp-Print: If this is not the cause, set LogLevel to debug2 to identify the problem.\n");
 	  goto cups_abort;

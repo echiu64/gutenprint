@@ -44,9 +44,10 @@ if ($debug) {
 }
 my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
+my $version = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@;
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
-my $ppd_base_dir = "@cups_conf_datadir@/model/gimp-print"; # Available PPDs
+my $ppd_base_dir = "@cups_conf_datadir@/model/gimp-print/$version"; # Available PPDs
 my $gzext = ".gz";
 
 my @ppd_files; # A list of in-use Gimp-Print PPD files

@@ -43,14 +43,15 @@ sub perl_menu_mult ($$@);
 
 my $DIALOG = "@DIALOG@";                        # version of dialog to call
 my $use_dialog = 0;                             # whether to use dialog
-my $BACKTITLE = "CUPS+GIMP-Print PPD creation"; # dialog screen title
+my $BACKTITLE = "Gimp-Print CUPS PPD creation"; # dialog screen title
 my %printers;                                   # master list of printers
 my %languages;                                  # master list of languages
 my @used_printers;                              # printer PPDs on system
 my @used_languages;                             # languages used on system
 my @chosen_printers = ();                       # chosen printers
 my @chosen_languages = ();                      # chosen languages
-my $chosen_location = "@cups_conf_datadir@/model/gimp-print";
+my $version = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@;
+my $chosen_location = "@cups_conf_datadir@/model/gimp-print/$version";
                                                 # chosen PPD prefix
 my $silent = 0;                                 # no dialog
 
@@ -113,23 +114,23 @@ sub init_data() {
     my $desc;
     my $lang;
 # Get printer drivers and descriptions, then store in a hash.
-    open GENPPD, "cups-genppd -M -v |" or die "can't fork cups-genppd: $!";
+    open GENPPD, "cups-genppd.$version -M -v |" or die "can't fork cups-genppd.$version: $!";
     while (<GENPPD>) {
 	($model, $desc) = /([\w-]+)\W+(.*)/;
 	chomp ($model);
 	chomp ($desc);
 	$printers{$model} = $desc;
     }
-    close GENPPD or die "can't close cups-genppd pipe: $!";
+    close GENPPD or die "can't close cups-genppd.$version pipe: $!";
 # Get available languages, then store in hash.
-    open GENPPD, "cups-genppd -L |" or die "can't fork cups-genppd: $!";
+    open GENPPD, "cups-genppd.$version -L |" or die "can't fork cups-genppd.$version: $!";
     while (<GENPPD>) {
 	$lang = $_;
 	chomp ($lang);
 	$languages{$lang} = "(No description)";
     }
     $languages{"en"} = "US English";
-    close GENPPD or die "can't close cups-genppd pipe: $!";
+    close GENPPD or die "can't close cups-genppd.$version pipe: $!";
 # Set defaults
     @chosen_languages = ("en");
 }
