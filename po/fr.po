@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2003-02-15 19:19-0500\n"
+"POT-Creation-Date: 2003-02-28 22:16-0500\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -152,292 +152,292 @@ msgstr ""
 msgid "Dither algorithm"
 msgstr "Algorithme de tramage"
 
-#: src/main/print-canon.c:1109
+#: src/main/print-canon.c:1112
 #, fuzzy
 msgid "90x90 DPI"
 msgstr "600 ppp"
 
-#: src/main/print-canon.c:1109
+#: src/main/print-canon.c:1112
 #, fuzzy
 msgid "90x90 DPI DMT"
 msgstr "600 ppp"
 
-#: src/main/print-canon.c:1110
+#: src/main/print-canon.c:1113
 #, fuzzy
 msgid "180x180 DPI"
 msgstr "150 x 150 ppp"
 
-#: src/main/print-canon.c:1110
+#: src/main/print-canon.c:1113
 #, fuzzy
 msgid "180x180 DPI DMT"
 msgstr "150 x 150 ppp"
 
-#: src/main/print-canon.c:1111
+#: src/main/print-canon.c:1114
 #, fuzzy
 msgid "360x360 DPI"
 msgstr "300 x 300 ppp"
 
-#: src/main/print-canon.c:1111
+#: src/main/print-canon.c:1114
 #, fuzzy
 msgid "360x360 DPI DMT"
 msgstr "600 x 600 ppp"
 
-#: src/main/print-canon.c:1112
+#: src/main/print-canon.c:1115
 #, fuzzy
 msgid "720x360 DPI"
 msgstr "720 x 360 ppp"
 
-#: src/main/print-canon.c:1112
+#: src/main/print-canon.c:1115
 #, fuzzy
 msgid "720x360 DPI DMT"
 msgstr "720 x 360 ppp MW2"
 
-#: src/main/print-canon.c:1113
+#: src/main/print-canon.c:1116
 #, fuzzy
 msgid "720x720 DPI"
 msgstr "2880 x 720 ppp"
 
-#: src/main/print-canon.c:1113
+#: src/main/print-canon.c:1116
 #, fuzzy
 msgid "720x720 DPI DMT"
 msgstr "2880 x 720 ppp"
 
-#: src/main/print-canon.c:1114
+#: src/main/print-canon.c:1117
 #, fuzzy
 msgid "1440x720 DPI"
 msgstr "1440 x 720 ppp"
 
-#: src/main/print-canon.c:1114
+#: src/main/print-canon.c:1117
 #, fuzzy
 msgid "1440x720 DPI DMT"
 msgstr "1440 x 720 ppp"
 
-#: src/main/print-canon.c:1115
+#: src/main/print-canon.c:1118
 #, fuzzy
 msgid "1440x1440 DPI"
 msgstr "1440 x 1440 ppp"
 
-#: src/main/print-canon.c:1115
+#: src/main/print-canon.c:1118
 #, fuzzy
 msgid "1440x1440 DPI DMT"
 msgstr "1440 x 1440 ppp"
 
-#: src/main/print-canon.c:1116
+#: src/main/print-canon.c:1119
 #, fuzzy
 msgid "2880x2880 DPI"
 msgstr "2880 x 720 ppp"
 
-#: src/main/print-canon.c:1116
+#: src/main/print-canon.c:1119
 #, fuzzy
 msgid "2880x2880 DPI DMT"
 msgstr "2880 x 720 ppp"
 
-#: src/main/print-canon.c:1117 src/main/print-pcl.c:235
+#: src/main/print-canon.c:1120 src/main/print-pcl.c:236
 msgid "150x150 DPI"
 msgstr "150 x 150 ppp"
 
-#: src/main/print-canon.c:1117
+#: src/main/print-canon.c:1120
 #, fuzzy
 msgid "150x150 DPI DMT"
 msgstr "150 x 150 ppp"
 
-#: src/main/print-canon.c:1118 src/main/print-pcl.c:236
+#: src/main/print-canon.c:1121 src/main/print-pcl.c:237
 msgid "300x300 DPI"
 msgstr "300 x 300 ppp"
 
-#: src/main/print-canon.c:1118
+#: src/main/print-canon.c:1121
 #, fuzzy
 msgid "300x300 DPI DMT"
 msgstr "300 x 300 ppp"
 
-#: src/main/print-canon.c:1119 src/main/print-pcl.c:237
+#: src/main/print-canon.c:1122 src/main/print-pcl.c:238
 msgid "600x300 DPI"
 msgstr "600 x 300 ppp"
 
-#: src/main/print-canon.c:1119
+#: src/main/print-canon.c:1122
 #, fuzzy
 msgid "600x300 DPI DMT"
 msgstr "600 x 300 ppp"
 
-#: src/main/print-canon.c:1120 src/main/print-pcl.c:239
+#: src/main/print-canon.c:1123 src/main/print-pcl.c:240
 msgid "600x600 DPI"
 msgstr "600 x 600 ppp"
 
-#: src/main/print-canon.c:1120
+#: src/main/print-canon.c:1123
 #, fuzzy
 msgid "600x600 DPI DMT"
 msgstr "600 x 600 ppp"
 
-#: src/main/print-canon.c:1121 src/main/print-pcl.c:240
+#: src/main/print-canon.c:1124 src/main/print-pcl.c:241
 msgid "1200x600 DPI"
 msgstr "1200 x 600 ppp"
 
-#: src/main/print-canon.c:1121
+#: src/main/print-canon.c:1124
 #, fuzzy
 msgid "1200x600 DPI DMT"
 msgstr "1200 x 600 ppp"
 
-#: src/main/print-canon.c:1122
+#: src/main/print-canon.c:1125
 #, fuzzy
 msgid "1200x1200 DPI"
 msgstr "1200 x 600 ppp"
 
-#: src/main/print-canon.c:1122
+#: src/main/print-canon.c:1125
 #, fuzzy
 msgid "1200x1200 DPI DMT"
 msgstr "1200 x 600 ppp"
 
-#: src/main/print-canon.c:1123
+#: src/main/print-canon.c:1126
 #, fuzzy
 msgid "2400x2400 DPI"
 msgstr "2400 x 600 ppp"
 
-#: src/main/print-canon.c:1123
+#: src/main/print-canon.c:1126
 #, fuzzy
 msgid "2400x2400 DPI DMT"
 msgstr "2400 x 600 ppp"
 
-#: src/main/print-canon.c:1165 src/main/print-lexmark.c:769
+#: src/main/print-canon.c:1168 src/main/print-lexmark.c:769
 msgid "Plain Paper"
 msgstr "Papier normal"
 
-#: src/main/print-canon.c:1166 src/main/print-lexmark.c:775
+#: src/main/print-canon.c:1169 src/main/print-lexmark.c:775
 msgid "Transparencies"
 msgstr "Transparents"
 
-#: src/main/print-canon.c:1167
+#: src/main/print-canon.c:1170
 msgid "Back Print Film"
 msgstr "Film back print"
 
-#: src/main/print-canon.c:1168
+#: src/main/print-canon.c:1171
 msgid "Fabric Sheets"
 msgstr "Feuilles de fabrique"
 
-#: src/main/print-canon.c:1169
+#: src/main/print-canon.c:1172
 msgid "Envelope"
 msgstr "Enveloppe"
 
-#: src/main/print-canon.c:1170
+#: src/main/print-canon.c:1173
 msgid "High Resolution Paper"
 msgstr "Papier haute résolution"
 
-#: src/main/print-canon.c:1171
+#: src/main/print-canon.c:1174
 msgid "T-Shirt Transfers"
 msgstr "Transferts T-Shirt"
 
-#: src/main/print-canon.c:1172
+#: src/main/print-canon.c:1175
 msgid "High Gloss Film"
 msgstr "Film glacé"
 
-#: src/main/print-canon.c:1173
+#: src/main/print-canon.c:1176
 msgid "Glossy Photo Paper"
 msgstr "Papier glacé qualité photo"
 
-#: src/main/print-canon.c:1174
+#: src/main/print-canon.c:1177
 msgid "Glossy Photo Cards"
 msgstr "Cartes glacées qualité photo"
 
-#: src/main/print-canon.c:1175
+#: src/main/print-canon.c:1178
 msgid "Photo Paper Pro"
 msgstr "Papier photo pro"
 
-#: src/main/print-canon.c:1176 src/main/print-lexmark.c:805
+#: src/main/print-canon.c:1179 src/main/print-lexmark.c:805
 msgid "Other"
 msgstr "Autre"
 
-#: src/main/print-canon.c:1184 src/main/print-escp2.c:160
-#: src/main/print-lexmark.c:249 src/main/print-pcl.c:1423
+#: src/main/print-canon.c:1187 src/main/print-escp2.c:163
+#: src/main/print-lexmark.c:249 src/main/print-pcl.c:1458
 #: src/main/print-ps.c:67 src/main/print-raw.c:79
 #, fuzzy
 msgid "Page Size"
 msgstr "Taille"
 
-#: src/main/print-canon.c:1185 src/main/print-escp2.c:161
-#: src/main/print-lexmark.c:250 src/main/print-pcl.c:1424
+#: src/main/print-canon.c:1188 src/main/print-escp2.c:164
+#: src/main/print-lexmark.c:250 src/main/print-pcl.c:1459
 #: src/main/print-ps.c:68 src/main/print-raw.c:80
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "Taille du papier sur lequel vous souhaitez imprimer"
 
-#: src/cups/genppd.c:932 src/main/print-canon.c:1190
-#: src/main/print-escp2.c:166 src/main/print-lexmark.c:255
-#: src/main/print-pcl.c:1429 src/main/print-ps.c:73
+#: src/cups/genppd.c:932 src/main/print-canon.c:1193
+#: src/main/print-escp2.c:169 src/main/print-lexmark.c:255
+#: src/main/print-pcl.c:1464 src/main/print-ps.c:73
 msgid "Media Type"
 msgstr "Type de support"
 
-#: src/main/print-canon.c:1191 src/main/print-escp2.c:167
-#: src/main/print-lexmark.c:256 src/main/print-pcl.c:1430
+#: src/main/print-canon.c:1194 src/main/print-escp2.c:170
+#: src/main/print-lexmark.c:256 src/main/print-pcl.c:1465
 #: src/main/print-ps.c:74
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/cups/genppd.c:956 src/main/print-canon.c:1196
-#: src/main/print-escp2.c:172 src/main/print-lexmark.c:261
-#: src/main/print-pcl.c:1435 src/main/print-ps.c:79
+#: src/cups/genppd.c:956 src/main/print-canon.c:1199
+#: src/main/print-escp2.c:175 src/main/print-lexmark.c:261
+#: src/main/print-pcl.c:1470 src/main/print-ps.c:79
 msgid "Media Source"
 msgstr "Source du support"
 
-#: src/main/print-canon.c:1197 src/main/print-escp2.c:173
-#: src/main/print-lexmark.c:262 src/main/print-pcl.c:1436
+#: src/main/print-canon.c:1200 src/main/print-escp2.c:176
+#: src/main/print-lexmark.c:262 src/main/print-pcl.c:1471
 #: src/main/print-ps.c:80
 #, fuzzy
 msgid "Source (input slot) of the media"
 msgstr "Source (bac) du support vers lequel vous imprimez"
 
-#: src/cups/genppd.c:1060 src/main/print-canon.c:1202
-#: src/main/print-escp2.c:178 src/main/print-lexmark.c:267
-#: src/main/print-pcl.c:1441 src/main/print-ps.c:85 src/main/print-raw.c:85
+#: src/cups/genppd.c:1060 src/main/print-canon.c:1205
+#: src/main/print-escp2.c:181 src/main/print-lexmark.c:267
+#: src/main/print-pcl.c:1476 src/main/print-ps.c:85 src/main/print-raw.c:85
 msgid "Ink Type"
 msgstr "Type d'encre"
 
-#: src/main/print-canon.c:1203 src/main/print-escp2.c:179
-#: src/main/print-lexmark.c:268 src/main/print-pcl.c:1442
+#: src/main/print-canon.c:1206 src/main/print-escp2.c:182
+#: src/main/print-lexmark.c:268 src/main/print-pcl.c:1477
 #: src/main/print-ps.c:86 src/main/print-raw.c:86
 msgid "Type of ink in the printer"
 msgstr "Type d'encre dans l'imprimante"
 
-#: src/cups/genppd.c:978 src/main/print-canon.c:1208
-#: src/main/print-escp2.c:184 src/main/print-lexmark.c:273
-#: src/main/print-pcl.c:1447 src/main/print-ps.c:91
+#: src/cups/genppd.c:978 src/main/print-canon.c:1211
+#: src/main/print-escp2.c:187 src/main/print-lexmark.c:273
+#: src/main/print-pcl.c:1482 src/main/print-ps.c:91
 msgid "Resolution"
 msgstr "Résolution"
 
-#: src/main/print-canon.c:1209 src/main/print-escp2.c:185
-#: src/main/print-lexmark.c:274 src/main/print-pcl.c:1448
+#: src/main/print-canon.c:1212 src/main/print-escp2.c:188
+#: src/main/print-lexmark.c:274 src/main/print-pcl.c:1483
 #: src/main/print-ps.c:92
 msgid "Resolution and quality of the print"
 msgstr "Résolution et qualité de l'impression"
 
-#: src/main/print-canon.c:1494 src/main/print-lexmark.c:1020
+#: src/main/print-canon.c:1497 src/main/print-lexmark.c:1020
 msgid "Auto Sheet Feeder"
 msgstr "Insertion automatique"
 
-#: src/main/print-canon.c:1495 src/main/print-lexmark.c:1021
+#: src/main/print-canon.c:1498 src/main/print-lexmark.c:1021
 msgid "Manual with Pause"
 msgstr "Manuel avec pause"
 
-#: src/main/print-canon.c:1496 src/main/print-lexmark.c:1022
+#: src/main/print-canon.c:1499 src/main/print-lexmark.c:1022
 msgid "Manual without Pause"
 msgstr "Manuel sans pause"
 
-#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1684
-#: src/main/print-canon.c:1597 src/main/print-lexmark.c:525
+#: src/escputil/escputil.c:616 src/libgimpprintui/panel.c:1790
+#: src/main/print-canon.c:1598 src/main/print-lexmark.c:525
 msgid "Black"
 msgstr "Noir"
 
-#: src/main/print-canon.c:1600
+#: src/main/print-canon.c:1601
 msgid "CMY Color"
 msgstr "Couleur CMJ"
 
-#: src/main/print-canon.c:1603
+#: src/main/print-canon.c:1604
 msgid "CMYK Color"
 msgstr "Couleur CMJN"
 
-#: src/main/print-canon.c:1606
+#: src/main/print-canon.c:1607
 msgid "Photo CcMmY Color"
 msgstr "Photo couleur CcMmJ"
 
-#: src/main/print-canon.c:1609
+#: src/main/print-canon.c:1610
 msgid "Photo CcMmYK Color"
 msgstr "Photo couleur CcMmJN"
 
@@ -487,7 +487,7 @@ msgstr "Gamma :"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1663
+#: src/escputil/escputil.c:617 src/libgimpprintui/panel.c:1769
 #: src/main/print-color.c:118
 msgid "Cyan"
 msgstr "Cyan"
@@ -497,7 +497,7 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Ajuste le niveau de cyan de l'impression"
 
-#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1670
+#: src/escputil/escputil.c:618 src/libgimpprintui/panel.c:1776
 #: src/main/print-color.c:126
 msgid "Magenta"
 msgstr "Magenta"
@@ -507,7 +507,7 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Ajuste le niveau de majenta de l'impression"
 
-#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1677
+#: src/escputil/escputil.c:619 src/libgimpprintui/panel.c:1783
 #: src/main/print-color.c:134
 msgid "Yellow"
 msgstr "Jaune"
@@ -704,93 +704,93 @@ msgstr "Tons continus"
 msgid "Photographs"
 msgstr "Photographie"
 
-#: src/main/printers.c:354
+#: src/main/printers.c:361
 #, c-format
 msgid "Value must be set for %s\n"
 msgstr ""
 
-#: src/main/printers.c:367 src/main/printers.c:372
+#: src/main/printers.c:374 src/main/printers.c:379
 #, fuzzy, c-format
 msgid "`%s' is not a valid %s\n"
 msgstr "%s n'est pas un paramètre valide de type %s\n"
 
-#: src/main/printers.c:389
+#: src/main/printers.c:396
 #, c-format
 msgid "%s must be between %f and %f\n"
 msgstr ""
 
-#: src/main/printers.c:409
+#: src/main/printers.c:416
 #, c-format
 msgid "%s must be between %d and %d\n"
 msgstr ""
 
-#: src/main/printers.c:438
+#: src/main/printers.c:445
 #, c-format
 msgid "%s bounds must be between %f and %f\n"
 msgstr ""
 
-#: src/main/printers.c:445
+#: src/main/printers.c:452
 #, c-format
 msgid "%s wrap mode must be %s\n"
 msgstr ""
 
-#: src/main/printers.c:449
+#: src/main/printers.c:456
 msgid "no wrap"
 msgstr ""
 
-#: src/main/printers.c:449
+#: src/main/printers.c:456
 msgid "wrap around"
 msgstr ""
 
-#: src/main/printers.c:481
+#: src/main/printers.c:488
 #, fuzzy, c-format
 msgid "Unknown type parameter %s (%d)\n"
 msgstr "Imprimante inconnue %s\n"
 
-#: src/main/printers.c:494 src/main/printers.c:505
+#: src/main/printers.c:501 src/main/printers.c:512
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s hors-intervalle (valeur %d, mini %d, maxi %d)\n"
 
-#: src/main/printers.c:559
+#: src/main/printers.c:566
 #, fuzzy
 msgid "Printer does not support color output\n"
 msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
 
-#: src/main/printers.c:574
+#: src/main/printers.c:581
 msgid "Image size is not valid\n"
 msgstr "La taille d'image n'est pas valide\n"
 
-#: src/main/printers.c:583
+#: src/main/printers.c:590
 msgid "Top margin must not be less than zero\n"
 msgstr "La marge haute ne doit pas être moins que zéro\n"
 
-#: src/main/printers.c:589
+#: src/main/printers.c:596
 msgid "Left margin must not be less than zero\n"
 msgstr "La marge gauche ne doit pas être moins que zéro\n"
 
-#: src/main/printers.c:595
+#: src/main/printers.c:602
 #, fuzzy
 msgid "Height must be greater than zero\n"
 msgstr "La marge gauche ne doit pas être moins que zéro\n"
 
-#: src/main/printers.c:601
+#: src/main/printers.c:608
 #, fuzzy
 msgid "Width must be greater than zero\n"
 msgstr "La marge haute ne doit pas être moins que zéro\n"
 
-#: src/main/printers.c:607
+#: src/main/printers.c:614
 #, fuzzy
 msgid "Image is too wide for the page\n"
 msgstr "Dimensionne l'impression par rapport à la taille de la page"
 
-#: src/main/printers.c:613
+#: src/main/printers.c:620
 msgid "Image is too long for the page\n"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:2008 src/main/print-escp2-data.c:276
+#: src/libgimpprintui/panel.c:2128 src/main/print-escp2-data.c:276
 #: src/main/print-escp2-data.c:302 src/main/print-escp2-data.c:336
-#: src/main/print-pcl.c:209
+#: src/main/print-pcl.c:210
 msgid "Standard"
 msgstr "Standard"
 
@@ -823,18 +823,40 @@ msgstr "Sélection auto"
 msgid "Manual Selection"
 msgstr ""
 
-#: src/main/print-escp2.c:502 src/main/print-escp2.c:635
-#: src/main/print-escp2.c:680 src/main/print-escp2.c:697
-#: src/main/print-escp2.c:1452
+#: src/main/print-escp2.c:193
+msgid "Printing Direction"
+msgstr ""
+
+#: src/main/print-escp2.c:194
+msgid "Printing directional (unidirectional is higher quality, but slower)"
+msgstr ""
+
+#: src/main/print-escp2.c:509 src/main/print-escp2.c:656
+#: src/main/print-escp2.c:726 src/main/print-escp2.c:743
+#: src/main/print-escp2.c:1499
 #, fuzzy, c-format
 msgid "Model %d out of range.\n"
 msgstr "Nombre hors-intervalle !\n"
 
-#: src/main/print-escp2.c:1447 src/main/print-raw.c:211
+#: src/libgimpprintui/panel.c:1117 src/main/print-escp2.c:611
+msgid "Auto"
+msgstr "Auto"
+
+#: src/main/print-escp2.c:613
+#, fuzzy
+msgid "Bidirectional"
+msgstr "600 ppp Unirectionnel"
+
+#: src/main/print-escp2.c:615
+#, fuzzy
+msgid "Unidirectional"
+msgstr "600 ppp Unirectionnel"
+
+#: src/main/print-escp2.c:1494 src/main/print-raw.c:209
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#: src/main/print-escp2.c:1481
+#: src/main/print-escp2.c:1528
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "L'imprimante ne supporte pas les sorties en couleur\n"
@@ -948,88 +970,88 @@ msgstr "Papier glacé qualité photo"
 msgid "Ilford Heavy Paper"
 msgstr "Papier épais Ilford"
 
-#: src/main/print-pcl.c:164
+#: src/main/print-pcl.c:165
 msgid "Plain"
 msgstr "Normal"
 
-#: src/main/print-pcl.c:165
+#: src/main/print-pcl.c:166
 msgid "Bond"
 msgstr "Bond"
 
-#: src/main/print-pcl.c:166
+#: src/main/print-pcl.c:167
 msgid "Premium"
 msgstr "Premium"
 
-#: src/main/print-pcl.c:167
+#: src/main/print-pcl.c:168
 msgid "Glossy Photo"
 msgstr "Glacé photo"
 
-#: src/main/print-pcl.c:168
+#: src/main/print-pcl.c:169
 msgid "Transparency"
 msgstr "Transparent"
 
-#: src/main/print-pcl.c:169
+#: src/main/print-pcl.c:170
 msgid "Quick-dry Photo"
 msgstr "Photo séchage rapide"
 
-#: src/main/print-pcl.c:170
+#: src/main/print-pcl.c:171
 msgid "Quick-dry Transparency"
 msgstr "Transparent séchage rapide"
 
-#: src/main/print-pcl.c:210
+#: src/main/print-pcl.c:211
 msgid "Manual"
 msgstr "Manuel"
 
 #. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
-#: src/main/print-pcl.c:212
+#: src/main/print-pcl.c:213
 msgid "Tray 1"
 msgstr "Bac 1"
 
-#: src/main/print-pcl.c:213 src/main/print-pcl.c:219
+#: src/main/print-pcl.c:214 src/main/print-pcl.c:220
 msgid "Tray 2"
 msgstr "Bac 2"
 
-#: src/main/print-pcl.c:214
+#: src/main/print-pcl.c:215
 msgid "Tray 3"
 msgstr "Bac 3"
 
-#: src/main/print-pcl.c:215
+#: src/main/print-pcl.c:216
 msgid "Tray 4"
 msgstr "Bac 4"
 
-#: src/main/print-pcl.c:216
+#: src/main/print-pcl.c:217
 msgid "Portable Sheet Feeder"
 msgstr "Chargeur de feuille portable"
 
-#: src/main/print-pcl.c:217
+#: src/main/print-pcl.c:218
 msgid "Desktop Sheet Feeder"
 msgstr "Chargeur de feuille de bureau"
 
-#: src/main/print-pcl.c:218
+#: src/main/print-pcl.c:219
 msgid "Tray"
 msgstr "Bac"
 
-#: src/main/print-pcl.c:220
+#: src/main/print-pcl.c:221
 msgid "Optional Source"
 msgstr "Source optionnelle"
 
-#: src/main/print-pcl.c:221
+#: src/main/print-pcl.c:222
 msgid "Autoselect"
 msgstr "Sélection auto"
 
-#: src/main/print-pcl.c:238
+#: src/main/print-pcl.c:239
 msgid "600x600 DPI monochrome"
 msgstr "600 x 600 ppp Monochrome"
 
-#: src/main/print-pcl.c:241
+#: src/main/print-pcl.c:242
 msgid "2400x600 DPI"
 msgstr "2400 x 600 ppp"
 
-#: src/main/print-pcl.c:1610
+#: src/main/print-pcl.c:1645
 msgid "Color + Black Cartridges"
 msgstr "Cartouches couleur et noir"
 
-#: src/main/print-pcl.c:1611
+#: src/main/print-pcl.c:1646
 msgid "Color + Photo Cartridges"
 msgstr "Cartouches couleur et photo"
 
@@ -1043,11 +1065,11 @@ msgstr "Fichier PPD :"
 msgid "PPD File"
 msgstr "Fichier PPD ?"
 
-#: src/main/print-raw.c:217
+#: src/main/print-raw.c:215
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/print-raw.c:240
+#: src/main/print-raw.c:238
 msgid "Internal error!  Output channels or input channels must be 1\n"
 msgstr ""
 
@@ -1055,102 +1077,102 @@ msgstr ""
 msgid "ps2"
 msgstr "ps2"
 
-#: src/libgimpprintui/panel.c:229
+#: src/libgimpprintui/panel.c:232
 msgid "Inch"
 msgstr "Pouce"
 
-#: src/libgimpprintui/panel.c:229
+#: src/libgimpprintui/panel.c:232
 msgid "Set the base unit of measurement to inches"
 msgstr "Défini l'unité de base de mesure en pouce"
 
-#: src/libgimpprintui/panel.c:231
+#: src/libgimpprintui/panel.c:234
 msgid "cm"
 msgstr "cm"
 
-#: src/libgimpprintui/panel.c:231
+#: src/libgimpprintui/panel.c:234
 msgid "Set the base unit of measurement to centimetres"
 msgstr "Défini l'unité de base de mesure en centimètres"
 
-#: src/libgimpprintui/panel.c:233
+#: src/libgimpprintui/panel.c:236
 #, fuzzy
 msgid "Points"
 msgstr "Imprimer"
 
-#: src/libgimpprintui/panel.c:233
+#: src/libgimpprintui/panel.c:236
 #, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
 msgstr "Défini l'unité de base de mesure en pouce"
 
-#: src/libgimpprintui/panel.c:235
+#: src/libgimpprintui/panel.c:238
 msgid "mm"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:235
+#: src/libgimpprintui/panel.c:238
 #, fuzzy
 msgid "Set the base unit of measurement to millimetres"
 msgstr "Défini l'unité de base de mesure en centimètres"
 
-#: src/libgimpprintui/panel.c:237
+#: src/libgimpprintui/panel.c:240
 msgid "Pica"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:237
+#: src/libgimpprintui/panel.c:240
 #, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
 msgstr "Défini l'unité de base de mesure en pouce"
 
-#: src/libgimpprintui/panel.c:244
+#: src/libgimpprintui/panel.c:247
 msgid "Color"
 msgstr "Couleur"
 
-#: src/libgimpprintui/panel.c:244
+#: src/libgimpprintui/panel.c:247
 msgid "Color output"
 msgstr "Sortie couleur"
 
-#: src/libgimpprintui/panel.c:245
+#: src/libgimpprintui/panel.c:248
 msgid "Grayscale"
 msgstr "Niveaux de gris"
 
-#: src/libgimpprintui/panel.c:246
+#: src/libgimpprintui/panel.c:249
 msgid "Print in shades of gray using black ink"
 msgstr "Imprimer en niveaux de gris en utilisant l'encre noire"
 
-#: src/libgimpprintui/panel.c:453
+#: src/libgimpprintui/panel.c:456
 msgid "Edit"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:464
+#: src/libgimpprintui/panel.c:467
 #, fuzzy
 msgid "Set Default"
 msgstr "Valeurs par défaut"
 
-#: src/libgimpprintui/panel.c:466
+#: src/libgimpprintui/panel.c:469
 msgid "Restore Previous"
 msgstr ""
 
-#: src/libgimpprintui/panel.c:468 src/libgimpprintui/panel.c:1098
-#: src/libgimpprintui/panel.c:1252 src/libgimpprintui/panel.c:1285
+#: src/libgimpprintui/panel.c:471 src/libgimpprintui/panel.c:1191
+#: src/libgimpprintui/panel.c:1345 src/libgimpprintui/panel.c:1378
 msgid "OK"
 msgstr "Valider"
 
-#: src/libgimpprintui/panel.c:470 src/libgimpprintui/panel.c:885
-#: src/libgimpprintui/panel.c:1100 src/libgimpprintui/panel.c:1254
+#: src/libgimpprintui/panel.c:473 src/libgimpprintui/panel.c:978
+#: src/libgimpprintui/panel.c:1193 src/libgimpprintui/panel.c:1347
 msgid "Cancel"
 msgstr "Annuler"
 
 #.
 #. * Create the main dialog
 #.
-#: src/libgimpprintui/panel.c:868
+#: src/libgimpprintui/panel.c:961
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- Print v%s"
 
-#: src/libgimpprintui/panel.c:877
+#: src/libgimpprintui/panel.c:970
 msgid "About"
 msgstr "À propos"
 
-#: src/libgimpprintui/panel.c:879
+#: src/libgimpprintui/panel.c:972
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -1158,7 +1180,7 @@ msgstr ""
 "Imprimer et enregistrer\n"
 "les réglages"
 
-#: src/libgimpprintui/panel.c:881
+#: src/libgimpprintui/panel.c:974
 msgid ""
 "Save\n"
 "Settings"
@@ -1166,15 +1188,15 @@ msgstr ""
 "Enregistrer\n"
 "les réglages"
 
-#: src/libgimpprintui/panel.c:883
+#: src/libgimpprintui/panel.c:976
 msgid "Print"
 msgstr "Imprimer"
 
-#: src/libgimpprintui/panel.c:936
+#: src/libgimpprintui/panel.c:1029
 msgid "Preview"
 msgstr "Aperçu"
 
-#: src/libgimpprintui/panel.c:961
+#: src/libgimpprintui/panel.c:1054
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -1199,31 +1221,27 @@ msgstr ""
 "Si vous cliquez un autre bouton tandis que vous bougez la souris, l'image "
 "retournera à sa position originale."
 
-#: src/libgimpprintui/panel.c:1007
+#: src/libgimpprintui/panel.c:1100
 msgid "Position"
 msgstr "Position"
 
-#: src/libgimpprintui/panel.c:1024
-msgid "Auto"
-msgstr "Auto"
-
-#: src/libgimpprintui/panel.c:1026
+#: src/libgimpprintui/panel.c:1119
 msgid "Portrait"
 msgstr "Portrait"
 
-#: src/libgimpprintui/panel.c:1028
+#: src/libgimpprintui/panel.c:1121
 msgid "Landscape"
 msgstr "Paysage"
 
-#: src/libgimpprintui/panel.c:1030
+#: src/libgimpprintui/panel.c:1123
 msgid "Upside down"
 msgstr "Retourner"
 
-#: src/libgimpprintui/panel.c:1032
+#: src/libgimpprintui/panel.c:1125
 msgid "Seascape"
 msgstr "Panoramique"
 
-#: src/libgimpprintui/panel.c:1036
+#: src/libgimpprintui/panel.c:1129
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
@@ -1231,130 +1249,130 @@ msgstr ""
 "Sélectionnez l'orientation : portrait, paysage, tête-bèche, ou tête-bèche "
 "paysage"
 
-#: src/libgimpprintui/panel.c:1038
+#: src/libgimpprintui/panel.c:1131
 msgid "Orientation:"
 msgstr "Orientation :"
 
-#: src/libgimpprintui/panel.c:1049
+#: src/libgimpprintui/panel.c:1142
 msgid "Left:"
 msgstr "Gauche :"
 
-#: src/libgimpprintui/panel.c:1050
+#: src/libgimpprintui/panel.c:1143
 msgid "Distance from the left of the paper to the image"
 msgstr "Distance entre le bord gauche du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1052
+#: src/libgimpprintui/panel.c:1145
 msgid "Right:"
 msgstr "Droite :"
 
-#: src/libgimpprintui/panel.c:1053
+#: src/libgimpprintui/panel.c:1146
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Distance entre le bord gauche du papier et le bord droit de l'image"
 
-#: src/libgimpprintui/panel.c:1055
+#: src/libgimpprintui/panel.c:1148
 msgid "Right Border:"
 msgstr "Bordure droite :"
 
-#: src/libgimpprintui/panel.c:1056
+#: src/libgimpprintui/panel.c:1149
 msgid "Distance from the right of the paper to the image"
 msgstr "Distance entre le bord droit du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1058
+#: src/libgimpprintui/panel.c:1151
 msgid "Top:"
 msgstr "Dessus :"
 
-#: src/libgimpprintui/panel.c:1059
+#: src/libgimpprintui/panel.c:1152
 msgid "Distance from the top of the paper to the image"
 msgstr "Distance entre le bord supérieur du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1061
+#: src/libgimpprintui/panel.c:1154
 msgid "Bottom:"
 msgstr "Bas :"
 
-#: src/libgimpprintui/panel.c:1062
+#: src/libgimpprintui/panel.c:1155
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr ""
 "Distance entre le bord supérieur du papier et le bord inférieur de l'image"
 
-#: src/libgimpprintui/panel.c:1064
+#: src/libgimpprintui/panel.c:1157
 msgid "Bottom Border:"
 msgstr "Bordure basse :"
 
-#: src/libgimpprintui/panel.c:1065
+#: src/libgimpprintui/panel.c:1158
 msgid "Distance from the bottom of the paper to the image"
 msgstr "Distance entre le bord inférieur du papier et l'image"
 
-#: src/libgimpprintui/panel.c:1075
+#: src/libgimpprintui/panel.c:1168
 msgid "Center:"
 msgstr "Centrer :"
 
-#: src/libgimpprintui/panel.c:1078
+#: src/libgimpprintui/panel.c:1171
 msgid "Vertically"
 msgstr "Verticalement"
 
-#: src/libgimpprintui/panel.c:1079
+#: src/libgimpprintui/panel.c:1172
 msgid "Center the image vertically on the paper"
 msgstr "Centrer l'image verticalement sur le papier"
 
-#: src/libgimpprintui/panel.c:1081
+#: src/libgimpprintui/panel.c:1174
 msgid "Both"
 msgstr "Les deux"
 
-#: src/libgimpprintui/panel.c:1082
+#: src/libgimpprintui/panel.c:1175
 msgid "Center the image on the paper"
 msgstr "Centrer l'image sur le papier"
 
-#: src/libgimpprintui/panel.c:1084
+#: src/libgimpprintui/panel.c:1177
 msgid "Horizontally"
 msgstr "Horizontalement"
 
-#: src/libgimpprintui/panel.c:1085
+#: src/libgimpprintui/panel.c:1178
 msgid "Center the image horizontally on the paper"
 msgstr "Centrer l'image horizontalement sur le papier"
 
-#: src/libgimpprintui/panel.c:1096
+#: src/libgimpprintui/panel.c:1189
 msgid "Setup Printer"
 msgstr "Configuration de l'imprimante"
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/libgimpprintui/panel.c:1122 src/libgimpprintui/panel.c:1357
+#: src/libgimpprintui/panel.c:1215 src/libgimpprintui/panel.c:1450
 msgid "Printer Model:"
 msgstr "Modèle d'imprimante :"
 
-#: src/libgimpprintui/panel.c:1133
+#: src/libgimpprintui/panel.c:1226
 msgid "Select your printer model"
 msgstr "Sélectionnez le modèle de votre imprimante"
 
 #.
 #. * PPD file.
 #.
-#: src/libgimpprintui/panel.c:1169
+#: src/libgimpprintui/panel.c:1262
 msgid "PPD File:"
 msgstr "Fichier PPD :"
 
-#: src/libgimpprintui/panel.c:1183
+#: src/libgimpprintui/panel.c:1276
 msgid "Enter the correct PPD filename for your printer"
 msgstr "Entrez le nom de fichier PPD correct pour votre imprimante"
 
-#: src/libgimpprintui/panel.c:1185
+#: src/libgimpprintui/panel.c:1278
 msgid "Browse"
 msgstr "Parcourir"
 
-#: src/libgimpprintui/panel.c:1192
+#: src/libgimpprintui/panel.c:1285
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Choisissez le fichier PPD correct pour votre imprimante"
 
 #.
 #. * Print command.
 #.
-#: src/libgimpprintui/panel.c:1200
+#: src/libgimpprintui/panel.c:1293
 msgid "Command:"
 msgstr "Commande :"
 
-#: src/libgimpprintui/panel.c:1212
+#: src/libgimpprintui/panel.c:1305
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1367,38 +1385,38 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1220
+#: src/libgimpprintui/panel.c:1313
 msgid "Print To File?"
 msgstr "Imprimer dans un fichier ?"
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/libgimpprintui/panel.c:1233
+#: src/libgimpprintui/panel.c:1326
 msgid "PPD File?"
 msgstr "Fichier PPD ?"
 
-#: src/libgimpprintui/panel.c:1250
+#: src/libgimpprintui/panel.c:1343
 msgid "Define New Printer"
 msgstr "Définir une nouvelle imprimante"
 
-#: src/libgimpprintui/panel.c:1269 src/libgimpprintui/panel.c:1354
+#: src/libgimpprintui/panel.c:1362 src/libgimpprintui/panel.c:1447
 msgid "Printer Name:"
 msgstr "Nom de l'imprimante :"
 
-#: src/libgimpprintui/panel.c:1273
+#: src/libgimpprintui/panel.c:1366
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Saisissez le nom que vous voulez donner à cette imprimante logique"
 
-#: src/libgimpprintui/panel.c:1283
+#: src/libgimpprintui/panel.c:1376
 msgid "About Gimp-Print "
 msgstr "À propos de Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1291
+#: src/libgimpprintui/panel.c:1384
 msgid "Gimp-Print Version "
 msgstr "Version de Gimp-Print"
 
-#: src/libgimpprintui/panel.c:1291
+#: src/libgimpprintui/panel.c:1384
 msgid ""
 "\n"
 "\n"
@@ -1446,11 +1464,11 @@ msgstr ""
 "avec le programme; si ce n'est pas le cas, écrivez à la Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
-#: src/libgimpprintui/panel.c:1339
+#: src/libgimpprintui/panel.c:1432
 msgid "Printer Settings"
 msgstr "Paramètres de l'imprimante"
 
-#: src/libgimpprintui/panel.c:1352
+#: src/libgimpprintui/panel.c:1445
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
@@ -1461,11 +1479,11 @@ msgstr ""
 #.
 #. * Setup printer button
 #.
-#: src/libgimpprintui/panel.c:1369
+#: src/libgimpprintui/panel.c:1462
 msgid "Setup Printer..."
 msgstr "Configurer l'imprimante..."
 
-#: src/libgimpprintui/panel.c:1371
+#: src/libgimpprintui/panel.c:1464
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
@@ -1476,11 +1494,11 @@ msgstr ""
 #.
 #. * New printer button
 #.
-#: src/libgimpprintui/panel.c:1384
+#: src/libgimpprintui/panel.c:1477
 msgid "New Printer..."
 msgstr "Nouvelle imprimante..."
 
-#: src/libgimpprintui/panel.c:1385
+#: src/libgimpprintui/panel.c:1478
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
@@ -1488,39 +1506,43 @@ msgstr ""
 "Crée une nouvelle imprimante logique. Cela peut être utilisé pour nommer un "
 "ensemble de réglage que vous souhaitez réutiliser plus tard."
 
-#: src/libgimpprintui/panel.c:1416
+#: src/libgimpprintui/panel.c:1505
+msgid "Show All Paper Sizes"
+msgstr ""
+
+#: src/libgimpprintui/panel.c:1521
 msgid "Dimensions:"
 msgstr "Dimensions :"
 
-#: src/libgimpprintui/panel.c:1419 src/libgimpprintui/panel.c:1540
+#: src/libgimpprintui/panel.c:1525 src/libgimpprintui/panel.c:1646
 msgid "Width:"
 msgstr "Largeur :"
 
-#: src/libgimpprintui/panel.c:1420
+#: src/libgimpprintui/panel.c:1526
 msgid "Width of the paper that you wish to print to"
 msgstr "Largeur du papier sur lequel vous souhaitez imprimer"
 
-#: src/libgimpprintui/panel.c:1424 src/libgimpprintui/panel.c:1542
+#: src/libgimpprintui/panel.c:1530 src/libgimpprintui/panel.c:1648
 msgid "Height:"
 msgstr "Hauteur :"
 
-#: src/libgimpprintui/panel.c:1425
+#: src/libgimpprintui/panel.c:1531
 msgid "Height of the paper that you wish to print to"
 msgstr "Hauteur du papier sur lequel vous souhaitez imprimer"
 
-#: src/libgimpprintui/panel.c:1450
+#: src/libgimpprintui/panel.c:1556
 msgid "Size"
 msgstr "Taille"
 
-#: src/libgimpprintui/panel.c:1470
+#: src/libgimpprintui/panel.c:1576
 msgid "Scaling:"
 msgstr "Échelle :"
 
-#: src/libgimpprintui/panel.c:1474
+#: src/libgimpprintui/panel.c:1580
 msgid "Set the scale (size) of the image"
 msgstr "Régler l'échelle (taille) de l'image"
 
-#: src/libgimpprintui/panel.c:1505
+#: src/libgimpprintui/panel.c:1611
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
@@ -1528,34 +1550,34 @@ msgstr ""
 "Sélectionnez si l'échelle est mesurée en pourcentage de la taille de la page "
 "ou en nombre de points par pouces"
 
-#: src/libgimpprintui/panel.c:1508
+#: src/libgimpprintui/panel.c:1614
 msgid "Percent"
 msgstr "Pourcentage"
 
-#: src/libgimpprintui/panel.c:1513
+#: src/libgimpprintui/panel.c:1619
 msgid "Scale the print to the size of the page"
 msgstr "Dimensionne l'impression par rapport à la taille de la page"
 
-#: src/libgimpprintui/panel.c:1517
+#: src/libgimpprintui/panel.c:1623
 msgid "PPI"
 msgstr "points par pouce"
 
-#: src/libgimpprintui/panel.c:1522
+#: src/libgimpprintui/panel.c:1628
 msgid "Scale the print to the number of dots per inch"
 msgstr "Dimensionne l'impression en nombre de points par pouce"
 
-#: src/libgimpprintui/panel.c:1540
+#: src/libgimpprintui/panel.c:1646
 msgid "Set the width of the print"
 msgstr "Défini la largeur de l'impression"
 
-#: src/libgimpprintui/panel.c:1542
+#: src/libgimpprintui/panel.c:1648
 msgid "Set the height of the print"
 msgstr "Défini la hauteur de l'impression"
 
 #.
 #. * The "image size" button
 #.
-#: src/libgimpprintui/panel.c:1548
+#: src/libgimpprintui/panel.c:1654
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -1563,60 +1585,60 @@ msgstr ""
 "Utiliser la taille \n"
 "de l'image originale"
 
-#: src/libgimpprintui/panel.c:1554
+#: src/libgimpprintui/panel.c:1660
 msgid "Set the print size to the size of the image"
 msgstr "Utiliser la taille de l'image comme taille d'impression"
 
-#: src/libgimpprintui/panel.c:1576
+#: src/libgimpprintui/panel.c:1682
 msgid "Units:"
 msgstr "Unités :"
 
-#: src/libgimpprintui/panel.c:1581
+#: src/libgimpprintui/panel.c:1687
 msgid "Select the base unit of measurement for printing"
 msgstr "Sélectionne l'unité de base de mesure pour l'impression"
 
-#: src/libgimpprintui/panel.c:1613
+#: src/libgimpprintui/panel.c:1719
 msgid "Print Color Adjust"
 msgstr "Ajustez les couleurs d'impression"
 
-#: src/libgimpprintui/panel.c:1616
+#: src/libgimpprintui/panel.c:1722
 msgid "Set Defaults"
 msgstr "Valeurs par défaut"
 
-#: src/libgimpprintui/panel.c:1618
+#: src/libgimpprintui/panel.c:1724
 msgid "Close"
 msgstr "Fermer"
 
-#: src/libgimpprintui/panel.c:1649
+#: src/libgimpprintui/panel.c:1755
 msgid "Image preview"
 msgstr "Aperçu de l'image"
 
-#: src/libgimpprintui/panel.c:1717
+#: src/libgimpprintui/panel.c:1823
 msgid "Image / Output Settings"
 msgstr "Image / Paramètres de sortie"
 
-#: src/libgimpprintui/panel.c:1745
+#: src/libgimpprintui/panel.c:1851
 msgid "Output Type:"
 msgstr "Type de sortie :"
 
-#: src/libgimpprintui/panel.c:1749
+#: src/libgimpprintui/panel.c:1855
 msgid "Select the desired output type"
 msgstr "Sélectionnez le type de sortie désiré"
 
-#: src/libgimpprintui/panel.c:1770
+#: src/libgimpprintui/panel.c:1876
 msgid "Adjust Output..."
 msgstr "Ajuster la sortie..."
 
-#: src/libgimpprintui/panel.c:1779
+#: src/libgimpprintui/panel.c:1885
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
 "Ajustement de la balance des couleurs, luminosité, contraste, saturation et "
 "algorithme de tramage"
 
-#: src/libgimpprintui/plist.c:368 src/libgimpprintui/plist.c:391
-#: src/libgimpprintui/plist.c:392 src/libgimpprintui/plist.c:447
-#: src/libgimpprintui/plist.c:517 src/libgimpprintui/plist.c:930
+#: src/libgimpprintui/plist.c:369 src/libgimpprintui/plist.c:392
+#: src/libgimpprintui/plist.c:393 src/libgimpprintui/plist.c:448
+#: src/libgimpprintui/plist.c:518 src/libgimpprintui/plist.c:940
 msgid "File"
 msgstr "Fichier"
 
@@ -2787,64 +2809,64 @@ msgstr "Impression en cours..."
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Fichier/Imprimer..."
 
-#: src/ghost/ijsgimpprint.c:150
+#: src/ghost/ijsgimpprint.c:151
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr "Mauvais intervalle des couleurs : bps %d canaux %d intervalle %s\n"
 
-#: src/ghost/ijsgimpprint.c:158
+#: src/ghost/ijsgimpprint.c:159
 msgid "No row buffer\n"
 msgstr "Pas de buffer de ligne\n"
 
-#: src/ghost/ijsgimpprint.c:189 src/ghost/ijsgimpprint.c:211
+#: src/ghost/ijsgimpprint.c:190 src/ghost/ijsgimpprint.c:212
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Impossible d'interpréter le paramètre %s=%s (un nombre est attendu)\n"
 
-#: src/ghost/ijsgimpprint.c:358
+#: src/ghost/ijsgimpprint.c:447
 msgid "Printer must be specified with -sModel\n"
 msgstr "L'imprimante doit être spécifiée avec le -sModel\n"
 
-#: src/ghost/ijsgimpprint.c:360
+#: src/ghost/ijsgimpprint.c:449
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "L'imprimante %s n'est pas un modèle connu\n"
 
-#: src/ghost/ijsgimpprint.c:730
+#: src/ghost/ijsgimpprint.c:817
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f de %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:841
+#: src/ghost/ijsgimpprint.c:928
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header échec %d\n"
 
-#: src/ghost/ijsgimpprint.c:852
+#: src/ghost/ijsgimpprint.c:939
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init échec %d\n"
 
-#: src/ghost/ijsgimpprint.c:863
+#: src/ghost/ijsgimpprint.c:950
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Incapable d'ouvrir le descripteur de fichier : %s\n"
 
-#: src/ghost/ijsgimpprint.c:875
+#: src/ghost/ijsgimpprint.c:962
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Incapable d'ouvrir %s : %s\n"
 
-#: src/ghost/ijsgimpprint.c:887
+#: src/ghost/ijsgimpprint.c:974
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Imprimante inconnue %s\n"
 
-#: src/ghost/ijsgimpprint.c:919
+#: src/ghost/ijsgimpprint.c:1006
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Mauvais paramètres, ne peut pâs continuer !\n"
 
-#: src/ghost/ijsgimpprint.c:929
+#: src/ghost/ijsgimpprint.c:1016
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Obtenir la ligne suivante à échoué à %.0f\n"
