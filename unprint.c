@@ -267,7 +267,7 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) 
 }
 
 void write_output(FILE *fp_w) {
-  int c,l,p,left,right,first,last,width,height;
+  int c,l,p,left,right,first,last,width,height,sp,sl;
   unsigned int amount;
   ppmpixel pixel;
 
@@ -287,8 +287,16 @@ void write_output(FILE *fp_w) {
   for (l=first;l<=last;l++) {
     if (page[l]) {
       for (c=0;c<MAX_INKS;c++) {
-        left=(page[l]->startx[c]<left)?page[l]->startx[c]:left;
-        right=(page[l]->stopx[c]>right)?page[l]->stopx[c]:right;
+	/* try to cut left and right border: */
+	sl= page[l]->stopx[c]-page[l]->startx[c];
+	for (sp= 0; sp<sl && !get_bits(page[l]->line[c],sp); sp++);
+	if (sp<sl && page[l]->startx[c]+sp<left) 
+	  left= page[l]->startx[c]+sp;
+  
+	for (sp= 0; sp<sl && !get_bits(page[l]->line[c],sl-sp); sp++);
+	if (sp<sl && page[l]->stopx[c]-sp>right)
+	  right= page[l]->stopx[c]-sp;
+	
       }
     }
   }
@@ -306,7 +314,9 @@ void write_output(FILE *fp_w) {
     for (p=left;p<=right;p++) {
       memset(pixel,255,3); /* start with white, add inks */
       for (c=0;c<MAX_INKS;c++) {
-        if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
+        if ((page[l])&&(page[l]->line[c])&&
+	    (page[l]->startx[c]<=p)&&
+	    (page[l]->stopx[c]>=p)) {
           amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
           mix_ink(pixel,c,amount);
         }
@@ -316,7 +326,19 @@ void write_output(FILE *fp_w) {
   }
 }
 
-int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density) {
+/* 'update_page' 
+ *
+ * 
+ *
+ *
+ */
+int update_page(unsigned char *buf, /* I - pixel data               */
+		int bufsize,        /* I - size of buf in bytes     */
+		int m,              /* I - height of area in pixels */
+		int n,              /* I - width of area in pixels  */
+		int color,          /* I - color of pixel data      */
+		int density         /* I - vertical density in dpi  */
+		) {
 
   int y,skip,oldstart,oldstop,mi;
   unsigned char *oldline;
@@ -329,7 +351,8 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
   skip*=pstate.extraskip;
 
   if (skip==0) {
-    fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
+    fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set "
+	    "to %d DPI.\n",density,pstate.relative_horizontal_units);
     return(0);
   }
  
@@ -341,7 +364,8 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
      * for a real printer, too!  */
     page=(line_type **)mycalloc(pstate.bottom_margin, sizeof(line_type *));
   }
-  for (mi=0,y=pstate.yposition;y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
+  for (mi=0,y=pstate.yposition;
+       y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
        y+=(pstate.microweave?1:pstate.nozzle_separation),mi++) {
     if (y>=pstate.bottom_margin) {
       fprintf(stderr,"Warning. Unprinter out of unpaper.\n");
@@ -359,8 +383,9 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
       oldstart = -1;
       oldstop = -1;
     }
-    page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                    (((n-1)*skip+1)*pstate.bpp+7)/8);
+    page[y]->line[color]=
+      (unsigned char *) mycalloc(sizeof(unsigned char),
+				 (((n-1)*skip+1)*pstate.bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
     page[y]->stopx[color]=pstate.xposition+((n-1)*skip);
     expand_line(buf+mi*((n*pstate.bpp+7)/8),
