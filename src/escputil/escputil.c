@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <stdarg.h>
 #ifdef HAVE_POLL
 #include <sys/poll.h>
 #endif
@@ -44,6 +45,7 @@
 #endif
 
 void do_align(void);
+void do_change_cartridge(void);
 void do_align_help(int passes, int choices);
 char *do_get_input (const char *prompt);
 void do_head_clean(void);
@@ -82,6 +84,7 @@ struct option optlist[] =
   { "clean-head",	0,	NULL,	(int) 'c' },
   { "nozzle-check",	0,	NULL,	(int) 'n' },
   { "align-head",	0,	NULL,	(int) 'a' },
+  { "change-ink",       0,      NULL,   (int) 'x' },
   { "usb",		0,	NULL,	(int) 'u' },
   { "help",		0,	NULL,	(int) 'h' },
   { "identify",		0,	NULL,	(int) 'd' },
@@ -104,8 +107,11 @@ Usage: escputil [-P printer | -r device] [-m model] [-u]\n\
                        head cleaning pass.\n\
     -a|--align-head    Align the print head.  CAUTION: Misuse of this\n\
                        utility may result in poor print quality and/or\n\
-                       damage to the printer.\n\
-    -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
+                       damage to the printer.\n"
+#if 0
+    -x|--change-ink    Change the ink cartridge on the Stylus Color 480/580.\n
+#endif
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
                        read/write access to the raw printer device.\n\
     -d|--identify      Query the printer for make and model information.\n\
                        This requires read/write access to the raw printer\n\
@@ -128,8 +134,11 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
           head cleaning pass.\n\
     -a Align the print head.  CAUTION: Misuse of this\n\
           utility may result in poor print quality and/or\n\
-          damage to the printer.\n\
-    -i Obtain the ink level from the printer.  This requires\n\
+          damage to the printer.\n"
+#if 0
+    -x Change the ink cartridge on the Stylus Color 480/580.\n
+#endif
+"    -i Obtain the ink level from the printer.  This requires\n\
           read/write access to the raw printer device.\n\
     -d Query the printer for make and model information.  This\n\
           requires read/write access to the raw printer device.\n\
@@ -243,9 +252,9 @@ main(int argc, char **argv)
     {
 #ifdef __GNU_LIBRARY__
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:icnaduqm:", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:icnaxduqm:", optlist, &option_index);
 #else
-      c = getopt(argc, argv, "P:r:icnaduqm:");
+      c = getopt(argc, argv, "P:r:icnaxduqm:");
 #endif
       if (c == -1)
 	break;
@@ -258,6 +267,7 @@ main(int argc, char **argv)
 	case 'i':
 	case 'n':
 	case 'a':
+	case 'x':
 	case 'd':
 	  if (operation)
 	    do_help(1);
@@ -323,6 +333,9 @@ main(int argc, char **argv)
       break;
     case 'd':
       do_identify();
+      break;
+    case 'x':
+      do_change_cartridge();
       break;
     default:
       do_help(1);
@@ -438,10 +451,14 @@ read_from_printer(int fd, char *buf, int bufsize)
 }
 
 static void
-do_remote_cmd(const char *cmd, int nargs, int a0, int a1, int a2, int a3)
+do_remote_cmd(const char *cmd, int nargs, ...)
 {
   static char remote_hdr[] = "\033@\033(R\010\000\000REMOTE1";
   static char remote_trailer[] = "\033\000\000\000\033\000";
+  int i;
+  va_list args;
+  va_start(args, nargs);
+
   memcpy(printer_cmd + bufpos, remote_hdr, sizeof(remote_hdr) - 1);
   bufpos += sizeof(remote_hdr) - 1;
   memcpy(printer_cmd + bufpos, cmd, 2);
@@ -449,13 +466,8 @@ do_remote_cmd(const char *cmd, int nargs, int a0, int a1, int a2, int a3)
   printer_cmd[bufpos] = nargs % 256;
   printer_cmd[bufpos + 1] = (nargs >> 8) % 256;
   if (nargs > 0)
-    printer_cmd[bufpos + 2] = a0;
-  if (nargs > 1)
-    printer_cmd[bufpos + 3] = a1;
-  if (nargs > 2)
-    printer_cmd[bufpos + 4] = a2;
-  if (nargs > 3)
-    printer_cmd[bufpos + 5] = a3;
+    for (i = 0; i < nargs; i++)
+      printer_cmd[bufpos + 2 + i] = va_arg(args, int);
   bufpos += 2 + nargs;
   memcpy(printer_cmd + bufpos, remote_trailer, sizeof(remote_trailer) - 1);
   bufpos += sizeof(remote_trailer) - 1;
@@ -508,7 +520,7 @@ do_ink_level(void)
 	      strerror(errno));
       exit(1);
     }
-  do_remote_cmd("IQ", 1, 1, 0, 0, 0);
+  do_remote_cmd("IQ", 1, 1);
   add_resets(2);
   if (write(fd, printer_cmd, bufpos) < bufpos)
     {
@@ -593,7 +605,7 @@ do_identify(void)
 void
 do_head_clean(void)
 {
-  do_remote_cmd("CH", 2, 0, 0, 0, 0);
+  do_remote_cmd("CH", 2, 0, 0);
   printf("Cleaning heads...\n");
   exit(do_print_cmd());
 }
@@ -601,8 +613,8 @@ do_head_clean(void)
 void
 do_nozzle_check(void)
 {
-  do_remote_cmd("VI", 2, 0, 0, 0, 0);
-  do_remote_cmd("NC", 2, 0, 0, 0, 0);
+  do_remote_cmd("VI", 2, 0, 0);
+  do_remote_cmd("NC", 2, 0, 0);
   printf("Running nozzle check, please ensure paper is in the printer.\n");
   exit(do_print_cmd());
 }
@@ -688,6 +700,11 @@ align_error(void)
 {
   printf("Unable to send command to the printer, exiting.\n");
   exit(1);
+}
+
+void
+do_change_cartridge(void)
+{
 }
 
 /*
@@ -794,7 +811,8 @@ do_align(void)
     {
     top:
       add_newlines(7 * (curpass - 1));
-      do_remote_cmd("DT", 3, 0, curpass - 1, 0, 0);
+      do_remote_cmd("DT", 3, 0, curpass - 1, 0);
+/*      do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1); */
       if (do_print_cmd())
 	align_error();
     reread:
@@ -861,7 +879,7 @@ do_align(void)
       do_remote_cmd("DA", 4, 0, curpass - 1, 0, answer);
     }
   for (curpass = 0; curpass < passes; curpass++)
-    do_remote_cmd("DT", 3, 0, curpass, 0, 0);
+    do_remote_cmd("DT", 3, 0, curpass, 0);
   if (do_print_cmd())
     align_error();
  read_final:
@@ -918,7 +936,7 @@ do_align(void)
 	  fflush(stdout);
 	  initialize_print_cmd();
 	  add_newlines(2);
-	  do_remote_cmd("SV", 0, 0, 0, 0, 0);
+	  do_remote_cmd("SV", 0);
 	  add_newlines(2);
 	  if (do_print_cmd())
 	    align_error();
