@@ -264,6 +264,9 @@ bjc-50                  CANON BJC 50
 bjc-55                  CANON BJC 55
 bjc-80                  CANON BJC 80
 bjc-85                  CANON BJC 85
+bjc-210                 CANON BJC 210
+bjc-240                 CANON BJC 240
+bjc-250                 CANON BJC 250
 bjc-1000                CANON BJC 1000
 bjc-2000                CANON BJC 2000
 bjc-3000                CANON BJC 3000
@@ -457,9 +460,10 @@ purposes:
 2880x720 Highest quality on photo paper.  While this may yield
          slightly improved quality, it will generally not be markedly
          superior to 1440x720 Highest Quality, except on the Stylus
-         Color 980 and Stylus C80, where it may yield a noticeable
-         improvement.  It takes as long to print as 1440x720 highest
-         quality, but twice as long to generate the output.
+         Color 980 and Stylus C70 and C80, where it may yield a
+         noticeable improvement.  It takes as long to print as
+         1440x720 highest quality, but twice as long to generate the
+         output.
 
 The following resolutions are supported on printers other than the
 Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
@@ -522,7 +526,7 @@ see the notes at the end of this section.
     Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
     1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
-(3) Works on Stylus C80.
+(3) Works on Stylus C70 and C80.
 
 (4) Works on older printers with dot spacing of 1/120 inch.  This
     includes the Stylus Color Pro, Pro XL, 400, and 500.

@@ -16,21 +16,74 @@ Gimp-Print 4.1.99b3 contains the following changes over 4.1.99b2:
 
 1) The Ghostscript stp driver printed incorrectly when the -sPAPERSIZE
    option was used to specify paper size, and in certain other cases.
-   It is not known when this broke; some of it may have broken a long
-   time ago.  This problem manifested itself in a variety of ways; in
-   some cases, user parameters were ignored, leading to incorrect
-   output, in other cases the program took an error and/or crashed.
+   This bug has been present since at least 4.1.99b2.  This problem
+   manifested itself in a variety of ways; in some cases, user
+   parameters were ignored, leading to incorrect output, in other
+   cases the program took an error and/or crashed.  Anyone who has had
+   any problem at all with the Ghostscript driver should try this
+   version before reporting a bug.
 
-2) The Gimp plug-in now uses a notebook for the printer and image
+   The Lexmark printing problems at 2400x1200 and 1200x1200 were
+   determined to be caused by this bug, so there is no longer an issue
+   with those resolutions on Lexmark printers.
+
+2) A new user's guide has been provided in doc/users_guide.  This
+   manual is installed along with the package.
+
+3) The Gimp plug-in now uses a notebook for the printer and image
    options.  There have been other UI improvements as well.  The
    plug-in now fits much better on smaller screens and is visually
    cleaner.
 
-3) Page margins for some Epson and Lexmark printers have been fixed.
+4) Page margins for some Epson and Lexmark printers have been fixed.
 
-4) "make uninstall" now works correctly.
+5) "make uninstall" now works correctly.
 
-5) A Swedish translation has been added.
+6) The Canon BJC-4400 now prints properly when used in color mode with
+   a black-only cartridge (the driver prints in grayscale).
+   Previously the driver crashed.
+
+7) Support for the Canon BJC-210, 240, and 250, and improvements for
+   the BJC-1000.
+
+8) Preliminary support for the Epson Stylus C70 and C80 and Stylus
+   Photo 810, and support for the Stylus Scan 2000.
+
+9) The test pattern generator catches more error cases, rather than
+   silently failing.
+
+10) A Swedish translation has been added.
+
+Known limitations of this release:
+
+1) The Epson Stylus C40UX (and very likely other printers in the C20
+   and C40 lines) do not identify themselves.  Therefore,
+
+   escputil -u -d
+
+   will not return anything useful.  This will not be fixed for 4.2,
+   as these printers do not have a known way of identifying
+   themselves.
+
+2) The "align color" (-o) command to escputil does not currently work
+   on the printers that should support it (Epson Stylus Color 480 and
+   580, and C20SX, C20UX, C40SX, and C40UX).  It is not presently
+   expected that this will be fixed for 4.2.
+
+3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+   supported.  This will not be fixed for 4.2.
+
+4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
+   7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
+   work correctly in all cases, and their outputs are not properly
+   tuned.  In addition, the Epson Stylus C70 and C80 are not fully
+   tested and may not work properly in all modes.
+
+5) The Canon BJC-8200 and S800 do not produce optimum quality.
+
+6) Some HP printers print poorly at high resolutions using the Glossy
+   Paper setting.  The workaround is to use the Premium Paper
+   setting.
 
 
 Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
@@ -85,39 +138,6 @@ Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
    output generated at high resolution/quality settings.
 
 12) The banner and help on escputil is friendlier.
-
-Known limitations of this release:
-
-1) The Epson Stylus C40UX (and very likely other printers in the C20
-   and C40 lines) do not identify themselves.  Therefore,
-
-   escputil -u -d
-
-   will not return anything useful.  This will not be fixed for 4.2,
-   as these printers do not have a known way of identifying
-   themselves.
-
-2) The "align color" (-o) command to escputil does not currently work
-   on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).  It is not known if this
-   will be fixed for 4.2.
-
-3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
-   supported.  This will not be fixed for 4.2.
-
-4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
-   7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
-   work correctly in all cases, and their outputs are not properly
-   tuned.
-
-5) The Canon BJC-8200 and S800 do not produce optimum quality.
-
-6) The Lexmark Z52 driver does not print correctly at 2400x1200 or
-   1200x1200.
-
-7) Some HP printers print poorly at high resolutions using the Glossy
-   Paper setting.  The workaround is to use the Premium Paper
-   setting.
 
 
 Gimp-Print 4.1.99b1 contains the following changes over 4.1.99a3:

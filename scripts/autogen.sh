@@ -75,6 +75,154 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
   DIE=1
 }
 
+# Check first for existence and then for proper version of Jade >= 1.2.1
+
+jade_err=0
+
+# Exists?
+test -z "$(type -p jade)" && jade_err=1
+
+# Proper rev?
+test "$jade_err" -eq 0 && {
+#  echo "Checking for proper revision of jade..."
+  tmp_file=$(mktemp /tmp/jade_conf.XXXXXX)
+  jade -v < /dev/null > $tmp_file 2>&1
+  jade_version=`grep -i "jade version" $tmp_file | awk -F\" '{print $2}'`
+  rm $tmp_file
+
+  jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
+  jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
+  jade_version_point=`echo $jade_version | awk -F. '{print $3}'`
+
+  test "$jade_version_major" -ge 1 || jade_err=1
+
+  test "$jade_version_minor" -lt 2 || {
+      test "$jade_version_minor" -eq 2 -a "$jade_version_point" -lt 1
+    } && jade_err=1
+
+  test "$jade_err" -eq 1 && {
+    echo " "
+    echo "***Warning***: You must have \"Jade\" version 1.2.1 or newer installed to"
+    echo "build the Gimp-Print user's guide."
+    echo "Get ftp://ftp.jclark.com/pub/jade/jade-1.2.1.tar.gz"
+    echo "(or a newer version if available)"
+    echo " "
+  }
+}
+
+# Check for existence of dvips
+
+test -z "$(type -p dvips)" && {
+  echo " "
+  echo "***Warning***: You must have \"dvips\" installed to"
+  echo "build the Gimp-Print user's guide."
+  echo " "
+}
+
+# Check for existence of jadetex
+
+test -z "$(type -p jadetex)" && {
+  echo " "
+  echo "***Warning***: You must have \"jadetex\" version 3.5 or newer installed to"
+  echo "build the Gimp-Print user's guide."
+  echo "Get ftp://prdownloads.sourceforge.net/jadetex/jadetex-3.5.tar.gz"
+  echo "(or a newer version if available)"
+  echo " "
+}
+
+# Check for OpenJade >= 1.3
+
+openjade_err=0
+
+# Exists?
+test -z "$(type -p openjade)" && openjade_err=1
+
+# Proper rev?
+test "$openjade_err" -eq 0 && {
+#  echo "Checking for proper revision of openjade..."
+  tmp_file=$(mktemp /tmp/open_jade.XXXXXX)
+  openjade -v < /dev/null > $tmp_file 2>&1
+  openjade_version=`grep -i "openjade version" $tmp_file | awk -F\" '{print $2}'`
+  rm $tmp_file
+
+  openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
+  openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
+  openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}'`
+
+#  echo $openjade_version
+#  echo $openjade_version_major
+#  echo $openjade_version_minor
+
+  test "$openjade_version_major" -ge 1 || openjade_err=1
+  test "$openjade_version_minor" -ge 3 || openjade_err=1
+
+  test "$openjade_err" -eq 1 && {
+    echo " "
+    echo "***Warning***: You must have \"OpenJade\" version 1.3 or newer installed to"
+    echo "build the Gimp-Print user's guide."
+    echo "Get http://download.sourceforge.net/openjade/openjade-1.3.tar.gz"
+    echo "(or a newer version if available)"
+    echo " "
+  }
+}
+
+# Check for ps2pdf
+
+test -z "$(type -p ps2pdf)" && {
+  echo " "
+  echo "***Warning***: You must have \"ps2pdf\" installed to"
+  echo "build the Gimp-Print user's guide."
+  echo "ps2pdf comes from the GNU Ghostscript software package."
+  echo "Get ftp://ftp.gnu.org/gnu/ghostscript/ghostscript-6.5.1.tar.gz"
+  echo "(or a newer version if available)"
+  echo " "
+}
+
+# Check for docbook-toys (seems to be SuSE specific?)
+# I will ultimately extract the essence of this and code it into the
+# Makefile.am in the doc/users_guide directory, but for now this will
+# have to do.  AMS 3-oct-2001
+
+test -z "$(type -p dvips)" && {
+  echo " "
+  echo "***Warning***: You must have \"docbook-toys\" installed to"
+  echo "build the Gimp-Print user's guide."
+  echo "Get http://www.suse.de/~ke/docbook-toys-0.15.2.tar.bz2"
+  echo "(or a newer version if available)"
+  echo " "
+}
+
+# Check first for existence and then for proper version of sgmltools-lite >=3.0.2
+
+sgmltools_err=0
+
+# Exists?
+test -z "$(type -p sgmltools)" && sgmltools_err=1
+
+# Proper rev?
+test "$sgmltools_err" -eq 0 && {
+#  echo "Checking for proper revision of sgmltools..."
+  sgmltools_version="$(sgmltools --version | awk '{print $3}')"
+
+  sgmltools_version_major=`echo $sgmltools_version | awk -F. '{print $1}'`
+  sgmltools_version_minor=`echo $sgmltools_version | awk -F. '{print $2}'`
+  sgmltools_version_point=`echo $sgmltools_version | awk -F. '{print $3}'`
+
+  test "$sgmltools_version_major" -ge 3 || sgmltools_err=1
+  test "$sgmltools_version_minor" -gt 0 ||
+    (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
+    sgmltools_err=1
+
+  test "$sgmltools_err" -eq 1 && {
+    echo " "
+    echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2 or newer installed to"
+    echo "build the Gimp-Print user's guide."
+    echo "Get http://prdownloads.sourceforge.net/projects/sgmltools-lite/sgmltools-lite-3.0.2.tar.gz"
+    echo "(or a newer version if available)"
+    echo " "
+  }
+}
+
 if test "$DIE" -eq 1; then
   exit 1
 fi

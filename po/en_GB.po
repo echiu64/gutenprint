@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-30 20:29-0400\n"
+"POT-Creation-Date: 2001-10-06 13:52-0400\n"
 "PO-Revision-Date: 2001-09-08 11:26+BST\n"
 "Last-Translator: Rog er Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: N/A\n"
@@ -73,89 +73,89 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/main/print-canon.c:1221 src/main/print-escp2.c:2764
+#: src/main/print-canon.c:1309 src/main/print-escp2.c:2764
 #: src/main/print-lexmark.c:790
 msgid "Plain Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1222 src/main/print-escp2.c:2776
+#: src/main/print-canon.c:1310 src/main/print-escp2.c:2776
 #: src/main/print-lexmark.c:796
 msgid "Transparencies"
 msgstr ""
 
-#: src/main/print-canon.c:1223
+#: src/main/print-canon.c:1311
 msgid "Back Print Film"
 msgstr ""
 
-#: src/main/print-canon.c:1224
+#: src/main/print-canon.c:1312
 msgid "Fabric Sheets"
 msgstr ""
 
-#: src/main/print-canon.c:1225
+#: src/main/print-canon.c:1313
 msgid "Envelope"
 msgstr ""
 
-#: src/main/print-canon.c:1226
+#: src/main/print-canon.c:1314
 msgid "High Resolution Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1227
+#: src/main/print-canon.c:1315
 msgid "T-Shirt Transfers"
 msgstr ""
 
-#: src/main/print-canon.c:1228
+#: src/main/print-canon.c:1316
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1229
+#: src/main/print-canon.c:1317
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1230
+#: src/main/print-canon.c:1318
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1231
+#: src/main/print-canon.c:1319
 msgid "Photo Paper Pro"
 msgstr ""
 
-#: src/main/print-canon.c:1232 src/main/print-escp2.c:2810
+#: src/main/print-canon.c:1320 src/main/print-escp2.c:2810
 #: src/main/print-lexmark.c:827
 msgid "Other"
 msgstr ""
 
-#: src/main/print-canon.c:1505 src/main/print-lexmark.c:1024
+#: src/main/print-canon.c:1593 src/main/print-lexmark.c:1024
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1506 src/main/print-lexmark.c:1025
+#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1025
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1507 src/main/print-lexmark.c:1026
+#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1026
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1600
+#: src/main/print-canon.c:1688
 msgid "Black"
 msgstr ""
 
-#: src/main/print-canon.c:1605
+#: src/main/print-canon.c:1693
 #, fuzzy
 msgid "CMY Color"
 msgstr "CMY Colour"
 
-#: src/main/print-canon.c:1610
+#: src/main/print-canon.c:1698
 #, fuzzy
 msgid "CMYK Color"
 msgstr "CMYK Colour"
 
-#: src/main/print-canon.c:1615
+#: src/main/print-canon.c:1703
 #, fuzzy
 msgid "Photo CcMmY Color"
 msgstr "Photo CcMmY Colour"
 
-#: src/main/print-canon.c:1620
+#: src/main/print-canon.c:1708
 #, fuzzy
 msgid "Photo CcMmYK Color"
 msgstr "Photo CcMmYK Colour"
