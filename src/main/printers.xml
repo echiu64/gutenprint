@@ -972,14 +972,6 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON MJ-520C" driver="escp2-mj520c">
-<color>
-<model value=1>
-<gamma value=0.597>
-<density value=1.0>
-<language value=escp2>
-</printer>
-
 <printer name="EPSON MJ-5100C" driver="escp2-mj5100c">
 <color>
 <model value=39>
