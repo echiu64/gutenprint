@@ -34,7 +34,9 @@ OUTPUTS = \
  $(MANUAL).ps \
  html
 
-STANDARD_TARGETS = $(MANUAL).pdf html-stamp $(MANUAL).ps
+USER_GUIDE = $(MANUAL).pdf html-stamp $(MANUAL).ps
+
+STANDARD_TARGETS=@USER_GUIDE@
 
 DISTHOOKDIRS = figures $(HTMLDIR)
 DISTHOOKFILES = $(STANDARD_TARGETS)
@@ -118,7 +120,7 @@ $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 $(MANUAL).ps.gz: $(MANUAL).ps
-	rm -f $(MANUAL).ps.gz
+	$(RM) $(MANUAL).ps.gz
 	$(GZIP) -9 $(MANUAL).ps
 
 html: html-stamp
@@ -147,43 +149,48 @@ all-local: $(STANDARD_TARGETS)
 	  if test "$(srcdir)" = "." ; then \
 	    echo "all-local: Not removing $(HTMLDIR)" ; \
 	  else \
-	    rm -rf $(HTMLDIR) ; \
+	    $(RM) $(HTMLDIR) ; \
 	    $(LN_S) $(srcdir)/$(HTMLDIR) $(HTMLDIR) ; \
-	  fi \
+	  fi ; \
 	  else \
 	    echo "all-local: $(srcdir)/$(HTMLDIR) not found" ; \
 	fi
 
 install-data-local: $(STANDARD_TARGETS)
-	$(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/figures
-	$(INSTALL_DATA) $(MANUAL).pdf $(datadir)/$(PACKAGE)/doc
-	cd users_guide ; \
-	for file in *.html *.css ; do \
-	  $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc ; \
-	done ; \
-	cd figures ; \
-	for file in *.png ; do \
-	  $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc/figures ; \
-	done ;
+	if test -n '$(STANDARD_TARGETS)' ; then \
+	  $(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/figures ; \
+	  $(INSTALL_DATA) $(MANUAL).pdf $(datadir)/$(PACKAGE)/doc ; \
+	  cd users_guide ; \
+	  for file in *.html *.css ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc ; \
+	  done ; \
+	  cd figures ; \
+	  for file in *.png ; do \
+	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc/figures ; \
+	  done ; \
+	fi
+
+uninstall-local:
+	$(RM) $(datadir)/$(PACKAGE)/doc
 
 clean-local: clean-figures
 	if test $(srcdir) = "." ; then \
 	  echo "clean-local: Not removing $(HTMLDIR)" ; \
 	else \
-	  rm -rf html-stamp $(HTMLDIR) ; \
+	  $(RM) html-stamp $(HTMLDIR) ; \
 	fi
-	rm -fr $(OUTPUTS)
-	rm -f *.tex *.log *.aux *.dvi *.gz
-	rm -fr $(MANUAL).junk
-	rm -f $(MANUAL).out
-	rm -fr db2html*
-	rm -fr DB2HTML*
+	$(RM) -r $(OUTPUTS)
+	$(RM) *.tex *.log *.aux *.dvi *.gz
+	$(RM) -r $(MANUAL).junk
+	$(RM) -r $(MANUAL).out
+	$(RM) -r db2html*
+	$(RM) -r DB2HTML*
 
 clean-figures:
-	rm -rf figures/*.eps figures/*.pdf
+	$(RM) figures/*.eps figures/*.pdf
 
 maintainer-clean-local:
-	rm -rf $(HTMLDIR) html-stamp
+	$(RM) -r $(HTMLDIR) html-stamp
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.

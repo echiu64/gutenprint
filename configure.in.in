@@ -132,6 +132,7 @@ dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 BUILD_ESCPUTIL=yes
 BUILD_LIBGIMPPRINT=yes
 INSTALL_SAMPLES=yes
+INSTALL_USER_GUIDE=yes
 PLUG_IN_PATH="admin-bin"
 AC_DIVERT_POP()dnl
 
@@ -225,6 +226,16 @@ AC_ARG_WITH(samples,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-samples]) ;;
   esac],[AC_MSG_RESULT([${INSTALL_SAMPLES}])])
+
+AC_MSG_CHECKING([whether to install user guide])
+AC_ARG_WITH(user-guide,
+[  --with-user-guide       install user guide [default=${INSTALL_USER_GUIDE}]],
+  [case "${withval}" in
+    yes) INSTALL_USER_GUIDE="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) INSTALL_USER_GUIDE="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-user-guide]) ;;
+  esac],[AC_MSG_RESULT([${INSTALL_USER_GUIDE}])])
 
 AC_MSG_CHECKING([whether to build escputil])
 AC_ARG_ENABLE(escputil,
@@ -539,6 +550,11 @@ if test x${INSTALL_SAMPLES} = xyes ; then
 fi
 AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
+if test x${INSTALL_USER_GUIDE} = xyes ; then
+  USER_GUIDE='$(USER_GUIDE)'
+fi
+AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
+
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 
 dnl CUPS path setup
@@ -644,6 +660,7 @@ AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(RELEASE_DATE)
 AC_SUBST(SAMPLE_IMAGES)
+AC_SUBST(USER_GUIDE)
 
 AC_OUTPUT_COMMANDS([],[
 exec_prefix=`eval echo ${exec_prefix}`
