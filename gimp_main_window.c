@@ -2043,11 +2043,91 @@ gimp_preview_update (void)
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (height_entry), NULL);
 
   /* draw image */
-  gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     1 + printable_left + preview_ppi * vars.left / 72,
-		     1 + printable_top + preview_ppi * vars.top / 72,
-                     FMAX(1, (preview_ppi * print_width) / 72),
-                     FMAX(1, (preview_ppi * print_height) / 72));
+  {
+    int preview_x = 1 + printable_left + preview_ppi * vars.left / 72;
+    int preview_y = 1 + printable_top + preview_ppi * vars.top / 72;
+    int preview_w = FMAX(1, (preview_ppi * print_width) / 72);
+    int preview_h = FMAX(1, (preview_ppi * print_height) / 72);
+    int bpp = thumbnail_bpp < 3 ? 1 : 3;
+
+    unsigned char preview_data[3 * preview_h * preview_w];
+
+    int v_denominator = preview_h > 1 ? preview_h - 1 : 1;
+    int v_numerator = (thumbnail_h - 1) % v_denominator;
+    int v_whole = (thumbnail_h - 1) / v_denominator;
+    int v_cur = 0;
+    int v_last = -1;
+    int v_error = v_denominator / 2;
+    int y = 0;
+
+    while (y < preview_h) {
+      if (v_cur == v_last) {
+	memcpy(preview_data + bpp * preview_w * y,
+	       preview_data + bpp * preview_w * (y - 1),
+	       bpp * preview_w);
+      } else {
+	unsigned char *inbuf = thumbnail_data - thumbnail_bpp
+	                        + thumbnail_bpp * thumbnail_w * v_cur;
+	unsigned char *outbuf = preview_data + bpp * preview_w * y;
+
+        int h_denominator = preview_w > 1 ? preview_w - 1 : 1;
+        int h_numerator = (thumbnail_w - 1) % h_denominator;
+        int h_whole = (thumbnail_w - 1) / h_denominator;
+        int h_cur = 0;
+        int h_last = -1;
+        int h_error = h_denominator / 2;
+        int x = 0;
+
+        v_last = v_cur;
+        while (x < preview_w) {
+	  if (h_cur == h_last) {
+	    if (bpp == 1) {
+	      outbuf[0] = outbuf[-1];
+	      outbuf++;
+	    } else {
+	      outbuf[0] = outbuf[-3];
+	      outbuf[1] = outbuf[-2];
+	      outbuf[2] = outbuf[-1];
+	      outbuf+=3;
+	    }
+	  } else {
+	    inbuf += thumbnail_bpp * (h_cur - h_last);
+	    h_last = h_cur;
+	    outbuf[0] = inbuf[0];
+	    outbuf++;
+	    if (bpp == 3) {
+	      outbuf[0] = inbuf[1];
+	      outbuf[1] = inbuf[2];
+	      outbuf += 2;
+	    }
+	  }
+	  x++;
+          h_cur += h_whole;
+          h_error += h_numerator;
+          if (h_error >= h_denominator) {
+	    h_error -= h_denominator;
+	    h_cur++;
+          }
+        }
+      }
+      y++;
+      v_cur += v_whole;
+      v_error += v_numerator;
+      if (v_error >= v_denominator) {
+	v_error -= v_denominator;
+	v_cur++;
+      }
+    }
+
+    if (bpp == 1)
+      gdk_draw_gray_image(preview->widget.window, gc,
+                          preview_x, preview_y, preview_w, preview_h,
+                          GDK_RGB_DITHER_NORMAL, preview_data, preview_w);
+    else
+      gdk_draw_rgb_image(preview->widget.window, gc,
+                         preview_x, preview_y, preview_w, preview_h,
+                         GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
+  }
 
   /* draw orientation arrow pointing to top-of-paper */
   {
