@@ -759,7 +759,7 @@ Lexmark Z42
 Lexmark Z43
 Lexmark Z52
 Lexmark Z53
-Olympus P-300 series
+Olympus P-300 series (Experimental)
 
 The following is the complete list of printers believed to be
 compatible with Gimp-print, along with recommended drivers.  Some of
@@ -1405,6 +1405,7 @@ Printer-Specific Notes:
       EPSON Stylus Color 900
       EPSON Stylus Color 980
       EPSON Stylus Color 1160
+      EPSON Stylus Photo EX3
       EPSON Stylus Photo 720
       EPSON Stylus Photo 750
       EPSON Stylus Photo 780/785/790
