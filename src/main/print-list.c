@@ -34,35 +34,44 @@
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+/** The internal representation of an stp_list_item_t list node. */
 struct stp_list_item
 {
-  void *data;                 /* data */
-  struct stp_list_item *prev; /* previous node */
-  struct stp_list_item *next; /* next node */
+  void *data;			/*!< Data		*/
+  struct stp_list_item *prev;	/*!< Previous node	*/
+  struct stp_list_item *next;	/*!< Next node		*/
 };
 
+/** The internal representation of an stp_list_t list. */
 struct stp_list
 {
-  int icache;                               /* index no of cached node */
-  int length;                               /* number of nodes */
-  struct stp_list_item *start;     /* start node */
-  struct stp_list_item *end;       /* end node */
-  struct stp_list_item *cache;     /* cached node */
-  stp_node_freefunc freefunc;	/* callback: free node data */
-  stp_node_copyfunc copyfunc;	/* callback: copy node */
-  stp_node_namefunc namefunc;	/* callback: get node name */
-  stp_node_namefunc long_namefunc;	/* callback: get node long name */
-  stp_node_sortfunc sortfunc;	/* callback: compare (sort) nodes */
-  char *name_cache;
-  struct stp_list_item *name_cache_node;
-  char *long_name_cache;
-  struct stp_list_item *long_name_cache_node;
+  int index_cache;				/*!< Cached node index			*/
+  struct stp_list_item *start;			/*!< Start node				*/
+  struct stp_list_item *end;			/*!< End node				*/
+  struct stp_list_item *index_cache_node;	/*!< Cached node (for index)		*/
+  int length;					/*!< Number of nodes			*/
+  stp_node_freefunc freefunc;			/*!< Callback to free node data		*/
+  stp_node_copyfunc copyfunc;			/*!< Callback to copy node		*/
+  stp_node_namefunc namefunc;			/*!< Callback to get node name		*/
+  stp_node_namefunc long_namefunc;		/*!< Callback to get node long name	*/
+  stp_node_sortfunc sortfunc;			/*!< Callback to compare (sort) nodes	*/
+  char *name_cache;				/*!< Cached name			*/
+  struct stp_list_item *name_cache_node;	/*!< Cached node (for name)		*/
+  char *long_name_cache;			/*!< Cached long name			*/
+  struct stp_list_item *long_name_cache_node;	/*!< Cached node (for long name)	*/
 };
 
+/**
+ * Cache a list node by its short name.
+ * @param list the list to use.
+ * @param name the short name.
+ * @param cache the node to cache.
+ */
 static void
 set_name_cache(stp_list_t *list,
 	       const char *name,
@@ -76,6 +85,12 @@ set_name_cache(stp_list_t *list,
   list->name_cache_node = cache;
 }
 
+/**
+ * Cache a list node by its long name.
+ * @param list the list to use.
+ * @param name the long name.
+ * @param cache the node to cache.
+ */
 static void
 set_long_name_cache(stp_list_t *list,
 		    const char *long_name,
@@ -89,15 +104,19 @@ set_long_name_cache(stp_list_t *list,
   list->long_name_cache_node = cache;
 }
 
+/**
+ * Clear cached nodes.
+ * @param list the list to use.
+ */
 static inline void
 clear_cache(stp_list_t *list)
 {
+  list->index_cache = 0;
+  list->index_cache_node = NULL;
   set_name_cache(list, NULL, NULL);
   set_long_name_cache(list, NULL, NULL);
 }
 
-/* node free callback for node data allocated with stp_malloc() (not
-   used by default) */
 void
 stp_list_node_free_data (void *item)
 {
@@ -105,38 +124,12 @@ stp_list_node_free_data (void *item)
   stp_deprintf(STP_DBG_LIST, "stp_list_node_free_data destructor\n");
 }
 
-static void
-null_list(void)
-{
-  stp_erprintf("Null stp_list_t! Please report this bug.\n");
-  stp_abort();
-}
+/** Check the validity of a list. */
+#define check_list(List) assert(List != NULL)
 
-static inline void
-check_list(const stp_list_t *list)
-{
-  if (list == NULL)
-    null_list();
-}
-
-static inline stp_list_item_t *
-get_start_internal(const stp_list_t *list)
-{
-  check_list(list);
-  return list->start;
-}
-
-static inline stp_list_item_t *
-get_end_internal(const stp_list_t *list)
-{
-  check_list(list);
-  return list->end;
-}
-
-/* list head functions */
-
-/* these functions operate on the list as a whole, and not the
-   individual nodes in a list */
+/* List head functions.
+ * These functions operate on the list as a whole, and not the
+ * individual nodes in a list. */
 
 /* create a new list */
 stp_list_t *
@@ -146,11 +139,11 @@ stp_list_create(void)
     stp_malloc(sizeof(stp_list_t));
 
   /* initialise an empty list */
-  list->icache = 0;
+  list->index_cache = 0;
   list->length = 0;
   list->start = NULL;
   list->end = NULL;
-  list->cache = NULL;
+  list->index_cache_node = NULL;
   list->freefunc = NULL;
   list->namefunc = NULL;
   list->long_namefunc = NULL;
@@ -170,7 +163,7 @@ stp_list_copy(const stp_list_t *list)
 {
   stp_list_t *ret;
   stp_node_copyfunc copyfunc = stp_list_get_copyfunc(list);
-  stp_list_item_t *item = get_start_internal(list);
+  stp_list_item_t *item = list->start;
 
   check_list(list);
 
@@ -203,7 +196,7 @@ stp_list_destroy(stp_list_t *list)
 
   check_list(list);
   clear_cache(list);
-  cur = get_start_internal(list);
+  cur = list->start;
   while(cur)
     {
       next = cur->next;
@@ -230,7 +223,7 @@ stp_list_get_length(const stp_list_t *list)
 stp_list_item_t *
 stp_list_get_start(const stp_list_t *list)
 {
-  return get_start_internal(list);
+  return list->start;
 }
 
 /* get the last node in the list */
@@ -238,7 +231,7 @@ stp_list_get_start(const stp_list_t *list)
 stp_list_item_t *
 stp_list_get_end(const stp_list_t *list)
 {
-  return get_end_internal(list);
+  return list->end;
 }
 
 /* get the node by its place in the list */
@@ -255,11 +248,11 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
     return NULL;
 
   /* see if using the cache is worthwhile */
-  if (list->icache)
+  if (list->index_cache)
     {
       if (idx < (list->length/2))
 	{
-	  if (idx > abs(idx - list->icache))
+	  if (idx > abs(idx - list->index_cache))
 	    c = 1;
 	  else
 	    d = 0;
@@ -267,7 +260,7 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
       else
 	{
 	  if (list->length - 1 - idx >
-	      abs (list->length - 1 - idx - list->icache))
+	      abs (list->length - 1 - idx - list->index_cache))
 	    c = 1;
 	  else
 	    d = 1;
@@ -277,24 +270,24 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
 
   if (c) /* use the cached index and node */
     {
-      if (idx > list->icache) /* forward */
+      if (idx > list->index_cache) /* forward */
 	d = 0;
       else /* backward */
 	d = 1;
-      i = list->icache;
-      node = list->cache;
+      i = list->index_cache;
+      node = list->index_cache_node;
     }
   else /* start from one end of the list */
     {
       if (d)
 	{
 	  i = list->length - 1;
-	  node = get_end_internal(list);
+	  node = list->end;
 	}
       else
 	{
 	  i = 0;
-	  node = get_start_internal(list);
+	  node = list->start;
 	}
     }
 
@@ -313,16 +306,24 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
     }
 
   /* update cache */
-  ((stp_list_t *)list)->icache = i;
-  ((stp_list_t *)list)->cache = node;
+  ((stp_list_t *)list)->index_cache = i;
+  ((stp_list_t *)list)->index_cache_node = node;
 
   return node;
 }
 
+/**
+ * Find an item in a list by its name.
+ * This internal helper is not optimised to use any caching.
+ * @param list the list to use.
+ * @param name the name to find.
+ * @returns a pointer to the list item, or NULL if the name is
+ * invalid or the list is empty.
+ */
 static stp_list_item_t *
 stp_list_get_item_by_name_internal(const stp_list_t *list, const char *name)
 {
-  stp_list_item_t *node = get_start_internal(list);
+  stp_list_item_t *node = list->start;
   while (node && strcmp(name, list->namefunc(node->data)))
     {
       node = node->next;
@@ -362,7 +363,7 @@ stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 	    }
 	}
       /* If not, check the index cache */
-      node = list->cache;
+      node = list->index_cache_node;
       if (node)
 	{
 	  new_name = list->namefunc(node->data);
@@ -383,11 +384,19 @@ stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 }
 
 
+/**
+ * Find an item in a list by its long name.
+ * This internal helper is not optimised to use any caching.
+ * @param list the list to use.
+ * @param long_name the long name to find.
+ * @returns a pointer to the list item, or NULL if the long name is
+ * invalid or the list is empty.
+ */
 static stp_list_item_t *
 stp_list_get_item_by_long_name_internal(const stp_list_t *list,
 					 const char *long_name)
 {
-  stp_list_item_t *node = get_start_internal(list);
+  stp_list_item_t *node = list->start;
   while (node && strcmp(long_name, list->long_namefunc(node->data)))
     {
       node = node->next;
@@ -427,7 +436,7 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 	    }
 	}
       /* If not, check the index cache */
-      node = list->cache;
+      node = list->index_cache_node;
       if (node)
 	{
 	  new_long_name = list->long_namefunc(node->data);
@@ -561,7 +570,7 @@ stp_list_item_create(stp_list_t *list,
   if (list->sortfunc)
     {
       /* set np to the previous node (before the insertion */
-      lnn = get_end_internal(list);
+      lnn = list->end;
       while (lnn)
 	{
 	  if (list->sortfunc(lnn->data, ln->data) <= 0)
@@ -579,7 +588,7 @@ stp_list_item_create(stp_list_t *list,
     {
       if (next)
 	{
-	  lnn = get_start_internal(list);
+	  lnn = list->start;
 	  while (lnn)
 	    {
 	      if (lnn == next)
