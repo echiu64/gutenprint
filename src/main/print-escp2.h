@@ -364,8 +364,11 @@ extern const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks;
 extern const inklist_t stpi_escp2_c80_inklist;
 extern const inklist_t stpi_escp2_cmy_inklist;
 extern const inklist_t stpi_escp2_photo7_inklist;
+extern const inklist_t stpi_escp2_f360_photo7_inklist;
 extern const inklist_t stpi_escp2_photo7_japan_inklist;
+extern const inklist_t stpi_escp2_f360_photo7_japan_inklist;
 extern const inklist_t stpi_escp2_photo_inklist;
+extern const inklist_t stpi_escp2_f360_photo_inklist;
 extern const inklist_t stpi_escp2_standard_inklist;
 extern const inklist_t stpi_escp2_x80_inklist;
 
