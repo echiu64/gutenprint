@@ -72,7 +72,7 @@ During package setup (from CVS):
 	
 Configure:
 	                           configure
-	              Makefile.in ------------> Makefile.am
+	              Makefile.in ------------> Makefile
 	              config.h.in ------------> config.h
 	             headers.h.in ------------> headers.h
 	             manpage.n.in ------------> manpage.n
