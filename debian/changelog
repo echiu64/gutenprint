@@ -8,11 +8,12 @@ gimp-print (4.1.4-1) unstable; urgency=low
     libgimpprint
   * Added /etc/cups/command.types as a conffile for package cupsys-
     driver-gimpprint
-  * Adsed gimp1.2-print html and sgml docs to doc-base
+  * Added gimp1.2-print html and sgml docs to doc-base
   * Remove /etc/cups in postrm for cupsys-driver-gimprint (but
     won't if not empty)
+  * Added versioned debhelper Build-Depends
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue, 13 Feb 2001 17:21:25 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri, 16 Feb 2001 00:16:10 +0000
 
 gimp-print (4.0.2-1) unstable; urgency=low
 

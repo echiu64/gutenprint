@@ -1,0 +1,26 @@
+.TH CUPS-CALIBRATE "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
+.SH NAME
+cups-calibrate \- ESP Printer Calibration Tool
+.SH SYNOPSIS
+.B cups-calibrate
+.SH DESCRIPTION
+
+This program allows you to calibrate the color output of printers
+using the \fIGIMP-PRINT\fP \fICUPS\fP or \fIESP Print Pro\fP drivers.
+
+Please note that this program \fBonly\fP works with the \fIGIMP-PRINT\fP \fICUPS\fP or
+\fIESP Print Pro\fP drivers. If you are using the GIMP-Print stp driver of
+GhostScript or the drivers of the GIMP-Print plug-in of GIMP, this
+calibration will not work.
+
+These drivers by the text "CUPS+GIMP-print" or "ESP Print Pro" in
+the model description displayed by the CUPS web interface, KUPS,
+the ESP Print Pro Printer Manager, or printerdrake.
+
+To make a calibration profile for all users, run this program as
+the "root" user.
+
+.SH SEE ALSO
+.BR gimp (1),
+.SH COPYRIGHT
+Copyright \(co  2001 Roger Leigh

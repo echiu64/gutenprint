@@ -503,6 +503,7 @@ Makefile
 intl/Makefile
 lib/Makefile
 man/Makefile
+man/cups-calibrate.8
 man/escputil.1
 man/gimpprint-config.1
 po/Makefile.in

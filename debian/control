@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Roger Leigh <roger@whinlatter.uklinux.net>
 Standards-Version: 3.1.1
-Build-Depends: libc6-dev, libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, xlibs-dev, zlib1g-dev
+Build-Depends: libc6-dev, libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, libreadline4-dev, debhelper (>= 2.2.18), xlibs-dev, zlib1g-dev
 
 Package: gimp1.2-print
 Architecture: any

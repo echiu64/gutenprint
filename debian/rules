@@ -65,6 +65,7 @@ binary-common:
 	dh_testroot
 #	dh_installdebconf
 	dh_installdocs
+	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
 	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	  cp doc/*.sgml debian/gimp1.2-print/usr/share/doc/gimp1.2-print

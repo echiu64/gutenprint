@@ -1,28 +1,9 @@
 Building this package from CVS
 ==============================
 
-Building from CVS currently requires a small modification to
-src/main/Makefile.am:
+If you have changed any of the build scripts, run ./autogen.sh first.
 
-diff src/main/Makefile.am.orig src/main/Makefile.am
-55c55
-< libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
----
-> ##libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
-64,68c64,68
-< ##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
-< ##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
-< ##	-export-dynamic                                         \
-< ##	-rpath $(libdir)                                        \
-< ##	@STRIP_END@
----
-> libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
-> 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
-> 	-export-dynamic                                         \
-> 	-rpath $(libdir)                                        \
-> 	@STRIP_END@
-
-To build the packages, do:
+To build the packages:
 $ dpkg-buildpackage -rfakeroot -us -uc
 or
 $ debuild -us -uc -L -i
@@ -34,4 +15,4 @@ especially gimp1.2-print, to avoid any problems with diversions.
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Tue, 13 Feb 2001 17:34:02 +0000
+Roger Leigh <roger@whinlatter.uklinux.net> -- Fri, 16 Feb 2001 00:34:24 +0000
