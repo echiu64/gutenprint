@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.25  1999/11/12 03:34:40  rlk
+ *   More tweaking
+ *
  *   Revision 1.24  1999/11/12 02:18:32  rlk
  *   Stubs for dynamic memory allocation
  *
@@ -349,8 +352,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 #define RATIO_Y DE_Y / NU_Y
 #define RATIO_Y1 (DE_Y + NU_Y) / NU_Y
 
-#define KDARKNESS_LOWER (16 * 256)
-#define KDARKNESS_UPPER (168 * 256)
+#define KDARKNESS_LOWER (64 * 256)
+#define KDARKNESS_UPPER (224 * 256)
 
 #define C_RANDOMIZER 1
 #define M_RANDOMIZER 1
@@ -413,7 +416,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   static int lcbits = 0;
   static int lmbits = 0;
   static int lybits = 0;
-  int black_fill = (horizontal_overdensity + 1) / 2;
 
 #ifdef PRINT_DEBUG
   long long odk, odc, odm, ody, dk, dc, dm, dy, xk, xc, xm, xy, yc, ym, yy;
@@ -594,9 +596,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     
       if (lmagenta)
 	{
-	  c += ck * 3 / 4;
-	  m += ck * 7 / 8;
-	  y += ck;
+	  c += ck * 9 / 8;
+	  m += ck * 5 / 4;
+	  y += ck * 3 / 2;
 	}
       else
 	{
