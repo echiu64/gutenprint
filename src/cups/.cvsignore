@@ -6,11 +6,11 @@ canon
 commandtocanon
 commandtoepson
 cups-calibrate
-cups-genppd
-cups-genppdconfig
-cups-genppdupdate
+cups-genppd.4.3
+cups-genppdconfig.4.3
+cups-genppdupdate.4.3
 epson
 genppd
 ppd
-rastertoprinter
+rastertogimpprint.4.3
 ppd-stamp
