@@ -127,12 +127,15 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    eliminate a common source of error that can yield unpredictable
    results or difficult-to-diagnose errors.
 
-5) Preliminary support for the Epson Stylus Photo R300 and PM-G700,
+5) The Epson Stylus Color 600, 800, 850, 1520, and 3000 should now
+   print correctly in grayscale/monochrome mode.
+
+6) Preliminary support for the Epson Stylus Photo R300 and PM-G700,
    PM-D750, and PM-G800.  These printers are not tuned and quality is
    likely to be poor.  The Stylus Photo R300, PM-G700, and PM-D750
    drivers likely work; the PM-G800 driver may or may not work.
 
-6) Direct printing to CD's is now supported experimentally on the
+7) Direct printing to CD's is now supported experimentally on the
    Epson Stylus Photo 900, 950, 960, 2100, 2200, R300, and the
    PM-950C.  To use this, select the Print To CD media source (input
    slot) and either CD - 5 inch or CD - 3 inch media size.  This is
@@ -145,7 +148,7 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    media size.  However, selecting a different media size will cause
    the job to error out early, during parameter verification.
 
-7) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
+8) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
    printing.  This mode only barely deposits enough ink to fill the
    page on most papers.  However, it prints as fast as 1440x720 DPI
    (although the calculation time is longer) and in some cases offers
