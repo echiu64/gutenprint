@@ -34,7 +34,7 @@ LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
 
-TESTS = run-testdither run-weavetest
+TESTS = curve run-testdither run-weavetest
 
 
 ## Programs
