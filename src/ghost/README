@@ -747,7 +747,7 @@ EXAMPLES:
 
 Example 1 (print charts to file, color, 360 dpi):
 gs -sDEVICE=stp -sModel=escp2-ex -dDensity=1.6 -dGamma=1.5 -dSaturation=0.9 \
-   -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
+   -dBrightness=.4 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \

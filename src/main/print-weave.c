@@ -1775,7 +1775,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->flushfunc = flushfunc;
 
   if (sw->oversample > jets) {
-    stp_eprintf((const stp_vars_t *) v,
+    stp_eprintf((const stp_vars_t) v,
 		"Weave error: oversample (%d) > jets (%d)\n",
 		sw->oversample, jets);
     free(sw);

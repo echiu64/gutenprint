@@ -61,7 +61,7 @@ typedef struct		/**** Printer List ****/
   int	active;			/* Do we know about this printer? */
   char	name[128];		/* Name of printer */
   stp_vars_t v;
-} stp_plist_t;
+} gp_plist_t;
 
 /*
  * Constants for GUI...

@@ -48,22 +48,23 @@ main(int argc, char **argv)
   int i, j, k;
   for (i = 0; i < stp_known_printers(); i++)
     {
-      const stp_printer_t *p = stp_get_printer_by_index(i);
+      const stp_printer_t p = stp_get_printer_by_index(i);
       char **retval;
       int count;
-      printf("# Printer model %s, long name `%s'\n", p->driver, p->long_name);
+      printf("# Printer model %s, long name `%s'\n",
+	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
       for (k = 0; k < nparams; k++)
 	{
-	  retval = (*p->printfuncs->parameters)(p, NULL, params[k], &count);
+	  retval = (*stp_printer_get_printfuncs(p)->parameters)(p, NULL, params[k], &count);
 	  if (count > 0)
 	    {
 	      for (j = 0; j < count; j++)
 		{
 		  if (j == 0)
 		    printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			   p->driver, params[k], retval[j]);
+			   stp_printer_get_driver(p), params[k], retval[j]);
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-			 p->driver, params[k], retval[j]);
+			 stp_printer_get_driver(p), params[k], retval[j]);
 		  free(retval[j]);
 		}
 	      free(retval);

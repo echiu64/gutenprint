@@ -224,9 +224,13 @@ typedef struct stp_softweave
  * Prototypes...
  */
 
+extern void	stp_default_media_size(const stp_printer_t printer,
+				       const stp_vars_t v, int *width,
+				       int *height);
+
 extern void *	stp_init_dither(int in_width, int out_width,
 				int horizontal_aspect,
-				int vertical_aspect, stp_vars_t *vars);
+				int vertical_aspect, stp_vars_t vars);
 extern void	stp_dither_set_matrix(void *vd, size_t x, size_t y,
 				      unsigned *data, int transpose,
 				      int prescaled, int x_shear, int y_shear);
@@ -357,16 +361,19 @@ stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
 
 extern void stp_destroy_weave(void *);
 
-extern void stp_zprintf(const stp_vars_t *v, const char *format, ...);
+extern int
+stp_verify_printer_params(const stp_printer_t, const stp_vars_t);
+
+extern void stp_zprintf(const stp_vars_t v, const char *format, ...);
 
 extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
-			const stp_vars_t *v);
+			const stp_vars_t v);
 
-extern void stp_putc(int ch, const stp_vars_t *v);
+extern void stp_putc(int ch, const stp_vars_t v);
 
-extern void stp_puts(const char *s, const stp_vars_t *v);
+extern void stp_puts(const char *s, const stp_vars_t v);
 
-extern void stp_eprintf(const stp_vars_t *v, const char *format, ...);
+extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
 
 
 /* Uncomment the next line to get performance statistics:

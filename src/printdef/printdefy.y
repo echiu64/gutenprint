@@ -50,7 +50,7 @@ initialize_the_printer(const char *name, const char *driver)
 {
   strncpy(thePrinter.printvars.output_to, name, 63);
   strncpy(thePrinter.printvars.driver, driver, 63);
-  thePrinter.printvars.linear = -1;
+  thePrinter.printvars.top = -1;
   thePrinter.model = -1;
   thePrinter.printvars.brightness = 1.0;
   thePrinter.printvars.gamma = 1.0;
@@ -69,18 +69,18 @@ output_the_printer(void)
   printf("    %s,\n", thePrinter.printvars.output_to);
   printf("    %s,\n", thePrinter.printvars.driver);
   printf("    %d,\n", thePrinter.model);
-  printf("    &stp_%s_printfuncs,\n", printfuncs[thePrinter.printvars.linear]);
+  printf("    &stp_%s_printfuncs,\n", printfuncs[thePrinter.printvars.top]);
   printf("    {\n");
   printf("      \"\",\n");	/* output_to */
   printf("      \"\",\n");	/* driver */
   printf("      \"\",\n");	/* ppd_file */
-  printf("      %d,\n", thePrinter.printvars.output_type);
   printf("      \"\",\n");	/* resolution */
   printf("      \"\",\n");	/* media_size */
   printf("      \"\",\n");	/* media_type */
   printf("      \"\",\n");	/* media_source */
   printf("      \"\",\n");	/* ink_type */
   printf("      \"\",\n");	/* dither_algorithm */
+  printf("      %d,\n", thePrinter.printvars.output_type);
   printf("      %.3f,\n", thePrinter.printvars.brightness);
   printf("      1.0,\n");	/* scaling */
   printf("      -1,\n");	/* orientation */
@@ -91,7 +91,6 @@ output_the_printer(void)
   printf("      %.3f,\n", thePrinter.printvars.cyan);
   printf("      %.3f,\n", thePrinter.printvars.magenta);
   printf("      %.3f,\n", thePrinter.printvars.yellow);
-  printf("      0,\n");		/* linear */
   printf("      %.3f,\n", thePrinter.printvars.saturation);
   printf("      %.3f,\n", thePrinter.printvars.density);
   printf("    }\n");
@@ -145,7 +144,7 @@ language:		tBEGIN LANGUAGE VALUE ASSIGN tCLASS tEND
 	    {
 	      if (!strcmp($5, printfuncs[i]))
 		{
-		  thePrinter.printvars.linear = i;
+		  thePrinter.printvars.top = i;
 		  break;
 		}
 	    }
@@ -202,10 +201,10 @@ main(int argc, char **argv)
   for (i = 0; i < nprintfuncs; i++)
     printf("const extern stp_printfuncs_t stp_%s_printfuncs;\n",
 	   printfuncs[i]);
-  printf("\nstatic const stp_printer_t printers[] =\n");
+  printf("\nstatic const stp_internal_printer_t printers[] =\n");
   printf("{\n");
   retval = yyparse();
   printf("};\n");
-  printf("static const int printer_count = sizeof(printers) / sizeof(stp_printer_t);\n");
+  printf("static const int printer_count = sizeof(printers) / sizeof(stp_internal_printer_t);\n");
   return retval;
 }

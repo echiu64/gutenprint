@@ -581,7 +581,7 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
 
 void *
 stp_init_dither(int in_width, int out_width, int horizontal_aspect,
-		int vertical_aspect, stp_vars_t *v)
+		int vertical_aspect, stp_vars_t v)
 {
   int i;
   dither_t *d = xmalloc(sizeof(dither_t));
@@ -601,7 +601,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   d->dither_type = D_FLOYD_HYBRID;
   for (i = 0; i < num_dither_algos; i++)
     {
-      if (!strcmp(v->dither_algorithm, _(dither_algos[i].name)))
+      if (!strcmp(stp_get_dither_algorithm(v), _(dither_algos[i].name)))
 	{
 	  d->dither_type = dither_algos[i].id;
 	  break;
@@ -642,9 +642,9 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
   stp_dither_set_ink_darkness(d, .4, .3, .2);
   stp_dither_set_density(d, 1.0);
-  if (v->image_type == IMAGE_MONOCHROME)
+  if (stp_get_image_type(v) == IMAGE_MONOCHROME)
     d->dither_class = DITHER_MONOCHROME;
-  else if (v->output_type == OUTPUT_GRAY)
+  else if (stp_get_output_type(v) == OUTPUT_GRAY)
     d->dither_class = DITHER_BLACK;
   else
     d->dither_class = DITHER_CMYK;

@@ -50,10 +50,6 @@ private dev_proc_map_color_rgb(stp_map_16m_color_rgb);
 private dev_proc_print_page(stp_print_page);
 private dev_proc_get_params(stp_get_params);
 private dev_proc_put_params(stp_put_params);
-private int stp_put_param_int(P6(gs_param_list *, gs_param_name, int *,
-				 int, int, int));
-private int stp_put_param_float(P6(gs_param_list *, gs_param_name,
-				   float *, float, float, int));
 private dev_proc_open_device(stp_open);
 
 /* 24-bit color. ghostscript driver */
@@ -85,40 +81,7 @@ typedef struct
 
 /* global variables, RO for subfunctions */
 private privdata_t stp_data =
-{ 0, 0,
-  {
-    "",				/* output_to */
-    "",				/* driver */
-    "",				/* PPD file */
-    OUTPUT_COLOR,		/* output_type */
-    "",				/* resolution */
-    "Letter",			/* Media size */
-    "",				/* Media type */
-    "",				/* Media source */
-    "",				/* Ink type */
-    "",				/* Dither algorithm */
-    1.0,			/* bright     */
-    100.0,			/* Scaling */
-    ORIENT_PORTRAIT,		/* Orientation */
-    0,				/* Left */
-    0,				/* Top */
-    1,				/* gamma      */
-    1.0,			/* cont       */
-    1.0,			/* c          */
-    1.0,			/* m          */
-    1.0,			/* y          */
-    0,				/* lin        */
-    1.0,			/* saturation */
-    1.0,			/* density */
-    0,				/* image type */
-    0,				/* unit */
-    1.0,			/* application gamma */
-    0,				/* Page width */
-    0,				/* Page height */
-    NULL,			/* lookup table */
-    NULL			/* Color map */
-  }
-};
+{ 0, 0, NULL };
 
 typedef struct
 {
@@ -173,25 +136,32 @@ private void
 stp_dbg(const char *msg, const privdata_t *stp_data)
 {
   fprintf(gs_stderr,"%s Settings: c: %f  m: %f  y: %f\n",
-	  msg, stp_data->v.cyan, stp_data->v.magenta, stp_data->v.yellow);
-  fprintf(gs_stderr, "Ink type %s\n", stp_data->v.ink_type);
+	  msg, stp_get_cyan(stp_data->v), stp_get_magenta(stp_data->v),
+	  stp_get_yellow(stp_data->v));
+  fprintf(gs_stderr, "Ink type %s\n", stp_get_ink_type(stp_data->v));
 
   fprintf(gs_stderr,"Settings: bright: %f  contrast: %f\n",
-	  stp_data->v.brightness, stp_data->v.contrast);
+	  stp_get_brightness(stp_data->v), stp_get_contrast(stp_data->v));
 
   fprintf(gs_stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+	  stp_get_gamma(stp_data->v), stp_get_saturation(stp_data->v),
+	  stp_get_density(stp_data->v));
   fprintf(gs_stderr, "Settings: width %d, height %d\n",
-	  stp_data->v.page_width, stp_data->v.page_height);
+	  stp_get_page_width(stp_data->v), stp_get_page_height(stp_data->v));
   fprintf(gs_stderr, "Settings: output type %d  image type %d\n",
-	  stp_data->v.output_type, stp_data->v.image_type);
-  fprintf(gs_stderr, "Settings: Quality %s\n", stp_data->v.resolution);
-  fprintf(gs_stderr, "Settings: Dither %s\n", stp_data->v.dither_algorithm);
-  fprintf(gs_stderr, "Settings: InputSlot %s\n", stp_data->v.media_source);
-  fprintf(gs_stderr, "Settings: MediaType %s\n", stp_data->v.media_type);
-  fprintf(gs_stderr, "Settings: MediaSize %s\n", stp_data->v.media_size);
-  fprintf(gs_stderr, "Settings: Model %s\n", stp_data->v.driver);
-  fprintf(gs_stderr, "Settings: InkType %s\n", stp_data->v.ink_type);
+	  stp_get_output_type(stp_data->v), stp_get_image_type(stp_data->v));
+  fprintf(gs_stderr, "Settings: Quality %s\n",
+	  stp_get_resolution(stp_data->v));
+  fprintf(gs_stderr, "Settings: Dither %s\n",
+	  stp_get_dither_algorithm(stp_data->v));
+  fprintf(gs_stderr, "Settings: InputSlot %s\n",
+	  stp_get_media_source(stp_data->v));
+  fprintf(gs_stderr, "Settings: MediaType %s\n",
+	  stp_get_media_type(stp_data->v));
+  fprintf(gs_stderr, "Settings: MediaSize %s\n",
+	  stp_get_media_size(stp_data->v));
+  fprintf(gs_stderr, "Settings: Model %s\n", stp_get_driver(stp_data->v));
+  fprintf(gs_stderr, "Settings: InkType %s\n", stp_get_ink_type(stp_data->v));
 }
 
 private void
@@ -216,6 +186,17 @@ stp_print_debug(const char *msg, gx_device *pdev,
   STP_DEBUG(stp_dbg(msg, stp_data));
 }
 
+private void
+stp_init_vars(void)
+{
+  if (! stp_data.v)
+    {
+      stp_data.v = stp_allocate_vars();
+      stp_set_driver(stp_data.v, "");
+      stp_set_media_size(stp_data.v, "Letter");
+    }
+}
+	
 
 private void
 stp_writefunc(void *file, const char *buf, size_t bytes)
@@ -230,26 +211,27 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_priv_image_t gsImage;
   private int printvars_merged = 0;
   int code;			/* return code */
-  const stp_printer_t *printer = NULL;
+  stp_printer_t printer = NULL;
   uint stp_raster;
   byte *stp_row;
-  const stp_papersize_t *p;
+  stp_papersize_t p;
   theImage.rep = &gsImage;
 
+  stp_init_vars();
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
   stp_raster = gdev_prn_raster(pdev);
-  printer = stp_get_printer_by_driver(stp_data.v.driver);
+  printer = stp_get_printer_by_driver(stp_get_driver(stp_data.v));
   if (printer == NULL)
     {
       fprintf(gs_stderr, "Printer %s is not a known printer model\n",
-	      stp_data.v.driver);
+	      stp_get_driver(stp_data.v));
       return_error(gs_error_rangecheck);
     }
 
   if (!printvars_merged)
     {
-      stp_merge_printvars(&(stp_data.v), &(printer->printvars));
+      stp_merge_printvars(stp_data.v, stp_printer_get_printvars(printer));
       printvars_merged = 1;
     }
   stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
@@ -257,42 +239,37 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   if (stp_row == 0)		/* can't allocate row buffer */
     return_error(gs_error_VMerror);
 
-  if (strlen(stp_data.v.resolution) == 0)
-    strncpy(stp_data.v.resolution,
-	    (*printer->printfuncs->default_resolution)(printer),
-	    sizeof(stp_data.v.resolution) - 1);
-  if (strlen(stp_data.v.dither_algorithm) == 0)
-    strncpy(stp_data.v.dither_algorithm,
-	    stp_default_dither_algorithm(),
-	    sizeof(stp_data.v.dither_algorithm) - 1);
+  if (strlen(stp_get_resolution(stp_data.v)) == 0)
+    stp_set_resolution(stp_data.v,
+		       (*stp_printer_get_printfuncs(printer)->default_resolution)(printer));
+  if (strlen(stp_get_dither_algorithm(stp_data.v)) == 0)
+    stp_set_dither_algorithm(stp_data.v, stp_default_dither_algorithm());
 
-  stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
+  stp_set_scaling(stp_data.v, -pdev->x_pixels_per_inch); /* resolution of image */
 
   /* compute lookup table: lut_t*,float dest_gamma,float app_gamma,stp_vars_t* */
-  stp_data.v.app_gamma = 1.7;
+  stp_set_app_gamma(stp_data.v, 1.7);
 
   stp_data.topoffset = 0;
-  stp_data.v.cmap = NULL;
+  stp_set_cmap(stp_data.v, NULL);
 
-  stp_data.v.page_width = pdev->MediaSize[0];
-  stp_data.v.page_height = pdev->MediaSize[1];
-  if ((p =
-       stp_get_papersize_by_size(stp_data.v.page_height, stp_data.v.page_width)) !=
-      NULL)
-    strncpy(stp_data.v.media_size, p->name, sizeof(stp_data.v.media_size) - 1);
+  stp_set_page_width(stp_data.v, pdev->MediaSize[0]);
+  stp_set_page_height(stp_data.v, pdev->MediaSize[1]);
+  if ((p = stp_get_papersize_by_size(stp_get_page_height(stp_data.v),
+				     stp_get_page_width(stp_data.v))) != NULL)
+    stp_set_media_size(stp_data.v, stp_papersize_get_name(p));
   stp_print_dbg("stp_print_page", pdev, &stp_data);
 
   gsImage.dev = pdev;
   gsImage.data = &stp_data;
   gsImage.raster = stp_raster;
-  stp_data.v.outfunc = stp_writefunc;
-  stp_data.v.errfunc = stp_writefunc;
-  stp_data.v.outdata = file;
-  stp_data.v.errdata = gs_stderr;
-  if (stp_verify_printer_params(printer, &(stp_data.v)))
-    (*printer->printfuncs->print)(printer,		/* I - Model */
-		      &theImage,	/* I - Image to print (dummy) */
-		      &stp_data.v);	/* stp_vars_t * */
+  stp_set_outfunc(stp_data.v, stp_writefunc);
+  stp_set_errfunc(stp_data.v, stp_writefunc);
+  stp_set_outdata(stp_data.v, file);
+  stp_set_errdata(stp_data.v, gs_stderr);
+  if (stp_printer_get_printfuncs(printer)->verify(printer, stp_data.v))
+    (stp_printer_get_printfuncs(printer)->print)
+      (printer, &theImage, stp_data.v);
   else
     code = 1;
 
@@ -328,6 +305,17 @@ stp_map_16m_color_rgb(gx_device * dev, gx_color_index color,
   return 0;
 }
 
+private int
+stp_write_float(gs_param_list *plist, const char *name, float value)
+{
+  return param_write_float(plist, name, &value);
+}
+
+private int
+stp_write_int(gs_param_list *plist, const char *name, int value)
+{
+  return param_write_int(plist, name, &value);
+}
 
 /*
  * Get parameters.  In addition to the standard and printer
@@ -345,32 +333,29 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string pInputSlot;
   gs_param_string palgorithm;
   gs_param_string pquality;
+  stp_init_vars();
 
-#if 0
   stp_print_debug("stp_get_params(0)", pdev, &stp_data);
-#endif
   code = gdev_prn_get_params(pdev, plist);
-#if 0
   stp_print_debug("stp_get_params(1)", pdev, &stp_data);
-#endif
-  param_string_from_string(pmediatype, stp_data.v.media_type);
-  param_string_from_string(pInputSlot, stp_data.v.media_source);
-  param_string_from_string(pinktype, stp_data.v.ink_type);
-  param_string_from_string(pmodel, stp_data.v.driver);
-  param_string_from_string(palgorithm, stp_data.v.dither_algorithm);
-  param_string_from_string(pquality, stp_data.v.resolution);
+  param_string_from_string(pmediatype, stp_get_media_type(stp_data.v));
+  param_string_from_string(pInputSlot, stp_get_media_source(stp_data.v));
+  param_string_from_string(pinktype, stp_get_ink_type(stp_data.v));
+  param_string_from_string(pmodel, stp_get_driver(stp_data.v));
+  param_string_from_string(palgorithm, stp_get_dither_algorithm(stp_data.v));
+  param_string_from_string(pquality, stp_get_resolution(stp_data.v));
 
   if (code < 0 ||
-      (code = param_write_float(plist, "Cyan", &stp_data.v.cyan)) < 0 ||
-      (code = param_write_float(plist, "Magenta", &stp_data.v.magenta)) < 0 ||
-      (code = param_write_float(plist, "Yellow", &stp_data.v.yellow)) < 0 ||
-      (code = param_write_float(plist, "Brightness", &stp_data.v.brightness)) < 0 ||
-      (code = param_write_float(plist, "Contrast", &stp_data.v.contrast)) < 0 ||
-      (code = param_write_int(plist, "Color", &stp_data.v.output_type)) < 0 ||
-      (code = param_write_int(plist, "ImageType", &stp_data.v.image_type)) < 0 ||
-      (code = param_write_float(plist, "Gamma", &stp_data.v.gamma)) < 0 ||
-      (code = param_write_float(plist, "Saturation", &stp_data.v.saturation)) < 0 ||
-      (code = param_write_float(plist, "Density", &stp_data.v.density)) < 0 ||
+      (code = stp_write_float(plist, "Cyan", stp_get_cyan(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Magenta", stp_get_magenta(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Yellow", stp_get_yellow(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Brightness", stp_get_brightness(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Contrast", stp_get_contrast(stp_data.v))) < 0 ||
+      (code = stp_write_int(plist, "Color", stp_get_output_type(stp_data.v))) < 0 ||
+      (code = stp_write_int(plist, "ImageType", stp_get_image_type(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Gamma", stp_get_gamma(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Saturation", stp_get_saturation(stp_data.v))) < 0 ||
+      (code = stp_write_float(plist, "Density", stp_get_density(stp_data.v))) < 0 ||
       (code = param_write_string(plist, "Model", &pinktype)) < 0 ||
       (code = param_write_string(plist, "Dither", &palgorithm)) < 0 ||
       (code = param_write_string(plist, "Quality", &pquality)) < 0 ||
@@ -384,23 +369,39 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   return 0;
 }
 
-private void
-gsncpy(char *d, const gs_param_string *s, int limit)
-{
-  if (limit > s->size)
-    limit = s->size;
-  strncpy(d, s->data, limit);
-  d[limit] = '\000';
-}
-
 /* Put parameters. */
 /* Yeah, I could have used a list for the options but... */
+
+#define STP_PUT_PARAM(plist, gtype, v, name, param, ecode)		    \
+do {									    \
+  int code;								    \
+  gtype value;								    \
+									    \
+  code = param_read_##gtype(plist, name, &value);			    \
+  switch (code)								    \
+    {									    \
+    case 0:								    \
+      if (value < stp_get_##param(lower) || value > stp_get_##param(upper)) \
+	{								    \
+	  param_signal_error(plist, name, gs_error_rangecheck);		    \
+	  ecode = -100;							    \
+	}								    \
+      else								    \
+	stp_set_##param(v, value);					    \
+      break;								    \
+    case 1:								    \
+      break;								    \
+    default:								    \
+      ecode = code;							    \
+      break;								    \
+    }									    \
+} while (0)
 
 private int
 stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
-  const stp_vars_t *lower = stp_minimum_settings();
-  const stp_vars_t *upper = stp_maximum_settings();
+  const stp_vars_t lower = stp_minimum_settings();
+  const stp_vars_t upper = stp_maximum_settings();
   gs_param_string pmediatype;
   gs_param_string pInputSlot;
   gs_param_string pinktype;
@@ -408,36 +409,27 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string palgorithm;
   gs_param_string pquality;
   int code   = 0;
+  stp_init_vars();
 
   stp_print_debug("stp_put_params(0)", pdev, &stp_data);
 
-  param_string_from_string(pmodel, stp_data.v.driver);
-  param_string_from_string(pInputSlot, stp_data.v.media_source);
-  param_string_from_string(pmediatype, stp_data.v.media_type);
-  param_string_from_string(pinktype, stp_data.v.ink_type);
-  param_string_from_string(palgorithm, stp_data.v.dither_algorithm);
-  param_string_from_string(pquality, stp_data.v.resolution);
+  param_string_from_string(pmodel, stp_get_driver(stp_data.v));
+  param_string_from_string(pInputSlot, stp_get_media_source(stp_data.v));
+  param_string_from_string(pmediatype, stp_get_media_type(stp_data.v));
+  param_string_from_string(pinktype, stp_get_ink_type(stp_data.v));
+  param_string_from_string(palgorithm, stp_get_dither_algorithm(stp_data.v));
+  param_string_from_string(pquality, stp_get_resolution(stp_data.v));
 
-  code = stp_put_param_float(plist, "Cyan", &stp_data.v.cyan,
-			     lower->cyan, upper->cyan, code);
-  code = stp_put_param_float(plist, "Magenta", &stp_data.v.magenta,
-			     lower->magenta, upper->magenta, code);
-  code = stp_put_param_float(plist, "Yellow", &stp_data.v.yellow,
-			     lower->yellow, upper->yellow, code);
-  code = stp_put_param_float(plist, "Brightness", &stp_data.v.brightness,
-			     lower->brightness, upper->brightness, code);
-  code = stp_put_param_float(plist, "Contrast", &stp_data.v.contrast,
-			     lower->contrast, upper->contrast, code);
-  code = stp_put_param_int(plist, "Color", &stp_data.v.output_type,
-			   0, 1, code);
-  code = stp_put_param_int(plist, "ImageType", &stp_data.v.image_type,
-			   0, NIMAGE_TYPES, code);
-  code = stp_put_param_float(plist, "Gamma", &stp_data.v.gamma,
-			     lower->gamma, upper->gamma, code);
-  code = stp_put_param_float(plist, "Saturation", &stp_data.v.saturation,
-			     lower->saturation, upper->saturation, code);
-  code = stp_put_param_float(plist, "Density", &stp_data.v.density,
-			     lower->density, upper->density, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Cyan", cyan, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Magenta", magenta, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Yellow", yellow, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Brightness", brightness, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Contrast", contrast, code);
+  STP_PUT_PARAM(plist, int, stp_data.v, "Color", output_type, code);
+  STP_PUT_PARAM(plist, int, stp_data.v, "ImageType", image_type, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Gamma", gamma, code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Saturation", saturation ,code);
+  STP_PUT_PARAM(plist, float, stp_data.v, "Density", density, code);
   param_read_string(plist, "Quality", &pquality);
   param_read_string(plist, "Dither", &palgorithm);
   param_read_string(plist, "InputSlot", &pInputSlot);
@@ -450,88 +442,22 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   if ( code < 0 )
     return code;
 
-  gsncpy(stp_data.v.driver, &pmodel, sizeof(stp_data.v.driver) - 1);
-  gsncpy(stp_data.v.media_type, &pmediatype,
-	 sizeof(stp_data.v.media_type) - 1);
-  gsncpy(stp_data.v.media_source, &pInputSlot,
-	 sizeof(stp_data.v.media_source) - 1);
-  gsncpy(stp_data.v.ink_type, &pinktype,
-	 sizeof(stp_data.v.ink_type) - 1);
-  gsncpy(stp_data.v.dither_algorithm, &palgorithm,
-	 sizeof(stp_data.v.dither_algorithm) - 1);
-  gsncpy(stp_data.v.resolution, &pquality,
-	 sizeof(stp_data.v.resolution) - 1);
+  STP_DEBUG(fprintf(gs_stderr, "pmodel.size %d pmodel.data %s\n",
+		    pmodel.size, pmodel.data));
+  STP_DEBUG(fprintf(gs_stderr, "pinktype.size %d pinktype.data %s\n",
+		    pinktype.size, pinktype.data));
+  STP_DEBUG(fprintf(gs_stderr, "pquality.size %d pquality.data %s\n",
+		    pquality.size, pquality.data));
+  stp_set_driver_n(stp_data.v, pmodel.data, pmodel.size);
+  stp_set_media_type_n(stp_data.v, pmediatype.data, pmediatype.size);
+  stp_set_media_source_n(stp_data.v, pInputSlot.data, pInputSlot.size);
+  stp_set_ink_type_n(stp_data.v, pinktype.data, pinktype.size);
+  stp_set_dither_algorithm_n(stp_data.v, palgorithm.data, palgorithm.size);
+  stp_set_resolution_n(stp_data.v, pquality.data, pquality.size);
   stp_print_debug("stp_put_params(1)", pdev, &stp_data);
 
   code = gdev_prn_put_params(pdev, plist);
   return code;
-}
-
-private int
-stp_put_param_int(gs_param_list *plist,
-		  gs_param_name pname,
-		  int *pvalue,
-		  int minval,
-		  int maxval,
-		  int ecode)
-{
-  int code, value;
-
-#if 0
-  stp_print_debug("stp_put_param_int", NULL, &stp_data);
-#endif
-  code = param_read_int(plist, pname, &value);
-  switch (code)
-    {
-    default:
-      return code;
-    case 1:
-      return ecode;
-    case 0:
-      if (value < minval || value > maxval)
-	{
-	  param_signal_error(plist, pname, gs_error_rangecheck);
-	  ecode = -100;
-        }
-      else
-	*pvalue = value;
-
-      return (ecode < 0 ? ecode : 1);
-    }
-}
-
-private int
-stp_put_param_float(gs_param_list *plist,
-		    gs_param_name pname,
-		    float *pvalue,
-		    float minval,
-		    float maxval,
-		    int ecode)
-{
-  int code;
-  float value;
-
-#if 0
-  stp_print_debug("stp_put_param_float", NULL, &stp_data);
-#endif
-  code = param_read_float(plist, pname, &value);
-  switch (code)
-    {
-    default:
-      return code;
-    case 1:
-      return ecode;
-    case 0:
-      if (value < minval || value > maxval)
-	{
-	  param_signal_error(plist, pname, gs_error_rangecheck);
-	  ecode = -100;
-        }
-      else
-	*pvalue = value;
-
-      return (ecode < 0 ? ecode : 1);
-    }
 }
 
 private int
@@ -540,38 +466,34 @@ stp_open(gx_device *pdev)
   /* Change the margins if necessary. */
   float st[4];
   int left,right,bottom,top,width,height;
-  const stp_printer_t *printer = stp_get_printer_by_driver(stp_data.v.driver);
+  stp_printer_t printer;
+  stp_init_vars();
+  printer = stp_get_printer_by_driver(stp_get_driver(stp_data.v));
   if (!printer)
     {
-      if (strlen(stp_data.v.driver) == 0)
+      if (strlen(stp_get_driver(stp_data.v)) == 0)
 	fprintf(gs_stderr, "Printer must be specified with -sModel\n");
       else
 	fprintf(gs_stderr, "Printer %s is not a known model\n",
-		stp_data.v.driver);
+		stp_get_driver(stp_data.v));
       return_error(gs_error_undefined);
     }
 
-  stp_data.v.page_width = pdev->MediaSize[0];
-  stp_data.v.page_height = pdev->MediaSize[1];
+  stp_set_page_width(stp_data.v, pdev->MediaSize[0]);
+  stp_set_page_height(stp_data.v, pdev->MediaSize[1]);
 
-  (*printer->printfuncs->media_size)(printer,
-			 &(stp_data.v),
-			 &width,
-			 &height);
+  (*stp_printer_get_printfuncs(printer)->media_size)
+    (printer, stp_data.v, &width, &height);
 
-  (*printer->printfuncs->imageable_area)(printer,	/* I - Printer model */
-			     &(stp_data.v),
-			     &left,	/* O - Left position in points */
-			     &right,	/* O - Right position in points */
-			     &bottom,	/* O - Bottom position in points */
-			     &top);	/* O - Top position in points */
+  (*stp_printer_get_printfuncs(printer)->imageable_area)
+    (printer, stp_data.v, &left, &right, &bottom, &top);
 
   st[1] = (float)bottom / 72;        /* bottom margin */
   st[3] = (float)(height-top) / 72;  /* top margin    */
   st[0] = (float)left / 72;          /* left margin   */
   st[2] = (float)(width-right) / 72; /* right margin  */
 
-  stp_data.v.top    = 0;
+  stp_set_top(stp_data.v, 0);
   stp_data.bottom = bottom + height-top;
 
   stp_print_debug("stp_open", pdev, &stp_data);
@@ -646,7 +568,8 @@ Image_height(stp_image_t *image)
   stp_priv_image_t *im = (stp_priv_image_t *) (image->rep);
   float tmp,tmp2;
 
-  tmp = im->data->v.top + im->data->bottom; /* top margin + bottom margin */
+  /* top margin + bottom margin */
+  tmp = stp_get_top(im->data->v) + im->data->bottom;
 
   /* calculate height in 1/72 inches */
   tmp2 = (float)(im->dev->height) / (float)(im->dev->y_pixels_per_inch) * 72.;

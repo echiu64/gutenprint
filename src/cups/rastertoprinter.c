@@ -128,9 +128,9 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
-  const stp_printer_t	*printer;	/* Printer driver */  
+  stp_printer_t	printer;	/* Printer driver */  
   stp_vars_t		v;		/* Printer driver variables */
-  const stp_papersize_t	*size;		/* Paper size */
+  stp_papersize_t	size;		/* Paper size */
   char			*buffer;	/* Overflow buffer */
   int		num_opts;		/* Number of printer options */
   char		**opts;			/* Printer options */
@@ -274,72 +274,70 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Setup printer driver variables...
     */
 
-    memcpy(&v, &(printer->printvars), sizeof(v));
+    v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
-    v.app_gamma   = 1.0;
-    v.brightness  = 1.0;
-    v.contrast    = 1.0;
-    v.cyan        = 1.0;
-    v.magenta     = 1.0;
-    v.yellow      = 1.0;
-    v.saturation  = 1.0;
-    v.density     = 1.0;
-    v.scaling     = 0; /* No scaling */
-    v.cmap        = NULL;
-    v.page_width  = cups.header.PageSize[0];
-    v.page_height = cups.header.PageSize[1];
-    v.orientation = ORIENT_PORTRAIT;
-    v.gamma       = 1.0;
-    v.image_type  = cups.header.cupsRowCount;
-    v.outfunc = cups_writefunc;
-    v.errfunc = cups_writefunc;
-    v.outdata = stdout;
-    v.errdata = stderr;
+    stp_set_app_gamma(v, 1.0);
+    stp_set_brightness(v, 1.0);
+    stp_set_contrast(v, 1.0);
+    stp_set_cyan(v, 1.0);
+    stp_set_magenta(v, 1.0);
+    stp_set_yellow(v, 1.0);
+    stp_set_saturation(v, 1.0);
+    stp_set_density(v, 1.0);
+    stp_set_scaling(v, 0); /* No scaling */
+    stp_set_cmap(v, NULL);
+    stp_set_page_width(v, cups.header.PageSize[0]);
+    stp_set_page_height(v, cups.header.PageSize[1]);
+    stp_set_orientation(v, ORIENT_PORTRAIT);
+    stp_set_gamma(v, 1.0);
+    stp_set_image_type(v, cups.header.cupsRowCount);
+    stp_set_outfunc(v, cups_writefunc);
+    stp_set_errfunc(v, cups_writefunc);
+    stp_set_outdata(v, stdout);
+    stp_set_errdata(v, stderr);
 
     if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
-      v.output_type = OUTPUT_GRAY;
+      stp_set_output_type(v, OUTPUT_GRAY);
     else
-      v.output_type = OUTPUT_COLOR;
+      stp_set_output_type(v, OUTPUT_COLOR);
 
-    strncpy(v.dither_algorithm, cups.header.OutputType,
-            sizeof(v.dither_algorithm) - 1);
-    strncpy(v.media_source, cups.header.MediaClass, sizeof(v.media_source) - 1);
-    strncpy(v.media_type, cups.header.MediaType, sizeof(v.media_type) - 1);
+    stp_set_dither_algorithm(v, cups.header.OutputType);
+    stp_set_media_source(v, cups.header.MediaClass);
+    stp_set_media_type(v, cups.header.MediaType);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
 
     if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
-                                      cups.header.PageSize[0])) != NULL)
-      strncpy(v.media_size, size->name, sizeof(v.media_size) - 1);
+					  cups.header.PageSize[0])) != NULL)
+      stp_set_media_size(v, stp_papersize_get_name(size));
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-    opts = (*(printer->printfuncs->parameters))(printer, NULL, "Resolution",
+    opts = (*(stp_printer_get_printfuncs(printer)->parameters))(printer, NULL, "Resolution",
 						&num_opts);
     if (cups.header.cupsCompression < 0 ||
 	cups.header.cupsCompression >= num_opts)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
-      strncpy(v.resolution, opts[cups.header.cupsCompression],
-	      sizeof(v.resolution) - 1);
+      stp_set_resolution(v, opts[cups.header.cupsCompression]);
 
    /*
     * Print the page...
     */
 
-    stp_merge_printvars(&v, &(printer->printvars));
-    fprintf(stderr, "DEBUG: v.output_to |%s|\n", v.output_to);
-    fprintf(stderr, "DEBUG: v.driver |%s|\n", v.driver);
-    fprintf(stderr, "DEBUG: v.ppd_file |%s|\n", v.ppd_file);
-    fprintf(stderr, "DEBUG: v.resolution |%s|\n", v.resolution);
-    fprintf(stderr, "DEBUG: v.media_size |%s|\n", v.media_size);
-    fprintf(stderr, "DEBUG: v.media_type |%s|\n", v.media_type);
-    fprintf(stderr, "DEBUG: v.media_source |%s|\n", v.media_source);
-    fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
-    fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
-    if (stp_verify_printer_params(printer, &v))
-      (*printer->printfuncs->print)(printer, &theImage, &v);
+    stp_merge_printvars(v, stp_printer_get_printvars(printer));
+    fprintf(stderr, "DEBUG: stp_get_output_to(v) |%s|\n", stp_get_output_to(v));
+    fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
+    fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
+    fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_resolution(v));
+    fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_media_size(v));
+    fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_media_type(v));
+    fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_media_source(v));
+    fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_ink_type(v));
+    fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_dither_algorithm(v));
+    if (stp_printer_get_printfuncs(printer)->verify(printer, v))
+      stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 
@@ -359,6 +357,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	cups.row ++;
       }
     }
+    stp_free_vars(v);
   }
 
  /*

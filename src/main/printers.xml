@@ -213,7 +213,7 @@
 
 <printer name="EPSON Stylus Color Pro XL" driver="escp2-pro-xl">
 <color>
-<model value=1>
+<model value=39>
 <gamma value=0.597>
 <density value=1.0>
 <language value=escp2>

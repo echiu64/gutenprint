@@ -43,8 +43,37 @@
 #include <errno.h>
 
 #ifdef __cplusplus
-  extern "C" {
+extern "C" {
 #endif
+
+/*
+ * Library versioning details
+ */
+
+/* compile time version
+ *  */
+#define GIMPPRINT_MAJOR_VERSION       (@GIMPPRINT_MAJOR_VERSION@)
+#define GIMPPRINT_MINOR_VERSION       (@GIMPPRINT_MINOR_VERSION@)
+#define GIMPPRINT_MICRO_VERSION       (@GIMPPRINT_MICRO_VERSION@)
+#define GIMPPRINT_CURRENT_INTERFACE   (@GIMPPRINT_CURRENT_INTERFACE@)
+#define GIMPPRINT_BINARY_AGE          (@GIMPPRINT_BINARY_AGE@)
+#define GIMPPRINT_INTERFACE_AGE       (@GIMPPRINT_INTERFACE_AGE@)
+#define GIMPPRINT_CHECK_VERSION(major,minor,micro) \
+  (GIMPPRINT_MAJOR_VERSION >  (major) || \
+  (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION > (minor)) || \
+  (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION == (minor) && \
+   GIMPPRINT_MICRO_VERSION >= (micro)))
+	
+extern const unsigned int gimpprint_major_version;
+extern const unsigned int gimpprint_minor_version;
+extern const unsigned int gimpprint_micro_version;
+extern const unsigned int gimpprint_current_interface;
+extern const unsigned int gimpprint_binary_age;
+extern const unsigned int gimpprint_interface_age;
+char* stp_check_version (unsigned int required_major,
+			 unsigned int required_minor,
+			 unsigned int required_micro);
+
 
 /*
  * Constants...
@@ -70,58 +99,11 @@
  * Printer driver control structure.  See "print.c" for the actual list...
  */
 
-typedef struct					/* Plug-in variables */
-{
-  char	output_to[256],		/* Name of file or command to print to */
-	driver[64],		/* Name of printer "driver" */
-	ppd_file[256];		/* PPD file */
-  int	output_type;		/* Color or grayscale output */
-  char	resolution[64],		/* Resolution */
-	media_size[64],		/* Media size */
-	media_type[64],		/* Media type */
-	media_source[64],	/* Media source */
-	ink_type[64],		/* Ink or cartridge */
-	dither_algorithm[64];	/* Dithering algorithm */
-  float	brightness;		/* Output brightness */
-  float	scaling;		/* Scaling, percent of printable area */
-  int	orientation,		/* Orientation - 0 = port., 1 = land.,
-				   -1 = auto */
-	left,			/* Offset from lower-lefthand corner, points */
-	top;			/* ... */
-  float gamma;                  /* Gamma */
-  float contrast,		/* Output Contrast */
-	cyan,			/* Output red level */
-	magenta,		/* Output green level */
-	yellow;			/* Output blue level */
-  int	linear;			/* Linear density (mostly for testing!) */
-  float	saturation;		/* Output saturation */
-  float	density;		/* Maximum output density */
-  int	image_type;		/* Image type (line art etc.) */
-  int	unit;			/* Units for preview area 0=Inch 1=Metric */
-  float app_gamma;		/* Application gamma */
-  int	page_width;		/* Width of page in points */
-  int	page_height;		/* Height of page in points */
-  void  *lut;			/* Look-up table */
-  unsigned char *cmap;		/* Color map */
-  void (*outfunc)(void *data, const char *buffer, size_t bytes);
-  void *outdata;
-  void (*errfunc)(void *data, const char *buffer, size_t bytes);
-  void *errdata;
-} stp_vars_t;
-
 typedef enum papersize_unit
 {
   PAPERSIZE_ENGLISH,
   PAPERSIZE_METRIC
 } stp_papersize_unit_t;
-
-typedef struct
-{
-  char name[32];
-  unsigned width;
-  unsigned height;
-  stp_papersize_unit_t paper_unit;
-} stp_papersize_t;
 
 /*
  * Abstract data type for interfacing with the image creation program
@@ -176,7 +158,7 @@ typedef struct stp_image
  *
  * The member functions are:
  *
- * char **(*parameters)(const struct *printer,
+ * char **(*parameters)(const stp_printer_t printer,
  *                      char *ppd_file,
  *                      char *name,
  *                      int *count)
@@ -218,8 +200,8 @@ typedef struct stp_image
  *       This is typically things like different input trays, manual feed,
  *       roll feed, and the like.
  *
- * void (*media_size)(const struct stp_printer *printer,
- *                    const stp_vars_t *v,
+ * void (*media_size)(const stp_printer_t printer,
+ *                    const stp_vars_t v,
  *                    int *width,
  *                    int *height)
  *
@@ -228,8 +210,8 @@ typedef struct stp_image
  *   in V; it may look at other data in V to determine the physical page
  *   size.  WIDTH and HEIGHT are expressed in units of 1/72".
  *
- * void (*imageable_area)(const struct stp_printer *printer,
- *                        const stp_vars_t *v,
+ * void (*imageable_area)(const stp_printer_t printer,
+ *                        const stp_vars_t v,
  *                        int *left,
  *                        int *right,
  *                        int *bottom,
@@ -243,17 +225,17 @@ typedef struct stp_image
  *   centering) on the page.  All returned values are in units of
  *   1/72".
  *
- * void (*limit)(const struct stp_printer *printer,
- *               const stp_vars_t *v,
+ * void (*limit)(const stp_printer_t printer,
+ *               const stp_vars_t v,
  *               int *width,
  *               int *height)
  *
  *   returns the maximum page size the printer can handle, in units of
  *   1/72".
  *
- * void (*print)(const struct stp_printer *printer,
+ * void (*print)(const stp_printer_t printer,
  *               stp_image_t *image,
- *               const stp_vars_t *v)
+ *               const stp_vars_t v)
  *
  *   prints a page.  The variable settings provided in V are used to control
  *   the printing; PRN is a file pointer that the raw printer output
@@ -261,12 +243,12 @@ typedef struct stp_image
  *   data to the driver (the contents of which are opaque to the low level
  *   driver and are interpreted by the high level program).
  *
- * const char *(*default_resolution)(const struct stp_printer *printer)
+ * const char *(*default_resolution)(const stp_printer_t printer)
  *
  *   returns the name of the default resolution for the printer.  The
  *   caller must not attempt to free the returned value.
  *
- * void (*describe_resolution)(const struct stp_printer *printer,
+ * void (*describe_resolution)(const stp_printer_t printer,
  *                             const char *resolution,
  *                             int *x,
  *                             int *y)
@@ -277,64 +259,129 @@ typedef struct stp_image
  *   
  */
 
-
-/*
- * Library versioning details
- */
-
-/* compile time version
- *  */
-#define GIMPPRINT_MAJOR_VERSION 	(@GIMPPRINT_MAJOR_VERSION@)
-#define GIMPPRINT_MINOR_VERSION 	(@GIMPPRINT_MINOR_VERSION@)
-#define GIMPPRINT_MICRO_VERSION 	(@GIMPPRINT_MICRO_VERSION@)
-#define GIMPPRINT_CURRENT_INTERFACE 	(@GIMPPRINT_CURRENT_INTERFACE@)
-#define GIMPPRINT_BINARY_AGE 		(@GIMPPRINT_BINARY_AGE@)
-#define GIMPPRINT_INTERFACE_AGE 	(@GIMPPRINT_INTERFACE_AGE@)
-#define GIMPPRINT_CHECK_VERSION(major,minor,micro) \
-  (GIMPPRINT_MAJOR_VERSION >  (major) || \
-  (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION > (minor)) || \
-  (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION == (minor) && \
-   GIMPPRINT_MICRO_VERSION >= (micro)))
-	
-extern const unsigned int gimpprint_major_version;
-extern const unsigned int gimpprint_minor_version;
-extern const unsigned int gimpprint_micro_version;
-extern const unsigned int gimpprint_current_interface;
-extern const unsigned int gimpprint_binary_age;
-extern const unsigned int gimpprint_interface_age;
-char* stp_check_version (unsigned int required_major,
-			 unsigned int required_minor,
-			 unsigned int required_micro);
-
-struct stp_printer;
+typedef void *stp_printer_t;
+typedef void *stp_vars_t;
+typedef void *stp_papersize_t;
 
 typedef struct
 {
-  char	**(*parameters)(const struct stp_printer *printer,
+  char	**(*parameters)(const stp_printer_t printer,
 			const char *ppd_file,
                         const char *name, int *count);
-  void	(*media_size)(const struct stp_printer *printer, const stp_vars_t *v,
+  void	(*media_size)(const stp_printer_t printer, const stp_vars_t v,
 		      int *width, int *height);
-  void	(*imageable_area)(const struct stp_printer *printer,
-			  const stp_vars_t *v,
+  void	(*imageable_area)(const stp_printer_t printer,
+			  const stp_vars_t v,
                           int *left, int *right, int *bottom, int *top);
-  void	(*limit)(const struct stp_printer *printer, const stp_vars_t *v,
+  void	(*limit)(const stp_printer_t printer, const stp_vars_t v,
 		 int *width, int *height);
-  void	(*print)(const struct stp_printer *printer,
-		 stp_image_t *image, const stp_vars_t *v);
-  const char *(*default_resolution)(const struct stp_printer *printer);
-  void  (*describe_resolution)(const struct stp_printer *printer,
+  void	(*print)(const stp_printer_t printer,
+		 stp_image_t *image, const stp_vars_t v);
+  const char *(*default_resolution)(const stp_printer_t printer);
+  void  (*describe_resolution)(const stp_printer_t printer,
 			       const char *resolution, int *x, int *y);
+  int   (*verify)(const stp_printer_t p, const stp_vars_t v);
 } stp_printfuncs_t;
 
-typedef struct stp_printer
-{
-  const char	*long_name,			/* Long name for UI */
-	*driver;			/* Short name for printrc file */
-  int	model;				/* Model number */
-  const stp_printfuncs_t *printfuncs;
-  stp_vars_t printvars;
-} stp_printer_t;
+extern const char *stp_printer_get_long_name(const stp_printer_t);
+extern const char *stp_printer_get_driver(const stp_printer_t);
+extern int stp_printer_get_model(const stp_printer_t);
+extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t);
+extern const stp_vars_t stp_printer_get_printvars(const stp_printer_t);
+
+typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
+
+extern stp_vars_t stp_allocate_vars(void);
+extern void stp_copy_vars(stp_vars_t vd, const stp_vars_t vs);
+extern stp_vars_t stp_allocate_copy(const stp_vars_t vs);
+
+extern void stp_free_vars(stp_vars_t vv);
+
+extern void	stp_set_output_to (stp_vars_t vv, const char *val);
+extern void	stp_set_driver (stp_vars_t vv, const char *val);
+extern void	stp_set_ppd_file (stp_vars_t vv, const char *val);
+extern void	stp_set_resolution (stp_vars_t vv, const char *val);
+extern void	stp_set_media_size (stp_vars_t vv, const char *val);
+extern void	stp_set_media_type (stp_vars_t vv, const char *val);
+extern void	stp_set_media_source (stp_vars_t vv, const char *val);
+extern void	stp_set_ink_type (stp_vars_t vv, const char *val);
+extern void	stp_set_dither_algorithm (stp_vars_t vv, const char *val);
+extern void	stp_set_output_to_n (stp_vars_t vv, const char *val,
+				     int bytes);
+extern void	stp_set_driver_n (stp_vars_t vv, const char *val,
+				  int bytes);
+extern void	stp_set_ppd_file_n (stp_vars_t vv, const char *val,
+				    int bytes);
+extern void	stp_set_resolution_n (stp_vars_t vv, const char *val,
+				      int bytes);
+extern void	stp_set_media_size_n (stp_vars_t vv, const char *val,
+				      int bytes);
+extern void	stp_set_media_type_n (stp_vars_t vv, const char *val,
+				      int bytes);
+extern void	stp_set_media_source_n (stp_vars_t vv, const char *val,
+					int bytes);
+extern void	stp_set_ink_type_n (stp_vars_t vv, const char *val,
+				    int bytes);
+extern void	stp_set_dither_algorithm_n (stp_vars_t vv, const char *val,
+					    int bytes);
+extern void	stp_set_output_type (stp_vars_t vv, int val);
+extern void	stp_set_orientation (stp_vars_t vv, int val);
+extern void	stp_set_left (stp_vars_t vv, int val);
+extern void	stp_set_top (stp_vars_t vv, int val);
+extern void	stp_set_image_type (stp_vars_t vv, int val);
+extern void	stp_set_unit (stp_vars_t vv, int val);
+extern void	stp_set_page_width (stp_vars_t vv, int val);
+extern void	stp_set_page_height (stp_vars_t vv, int val);
+extern void	stp_set_brightness (stp_vars_t vv, float val);
+extern void	stp_set_scaling (stp_vars_t vv, float val);
+extern void	stp_set_gamma (stp_vars_t vv, float val);
+extern void	stp_set_contrast (stp_vars_t vv, float val);
+extern void	stp_set_cyan (stp_vars_t vv, float val);
+extern void	stp_set_magenta (stp_vars_t vv, float val);
+extern void	stp_set_yellow (stp_vars_t vv, float val);
+extern void	stp_set_saturation (stp_vars_t vv, float val);
+extern void	stp_set_density (stp_vars_t vv, float val);
+extern void	stp_set_app_gamma (stp_vars_t vv, float val);
+extern void	stp_set_lut (stp_vars_t vv, void * val);
+extern void	stp_set_outdata (stp_vars_t vv, void * val);
+extern void	stp_set_errdata (stp_vars_t vv, void * val);
+extern void	stp_set_cmap (stp_vars_t vv, unsigned char * val);
+extern const char *	stp_get_output_to (const stp_vars_t vv);
+extern const char *	stp_get_driver (const stp_vars_t vv);
+extern const char *	stp_get_ppd_file (const stp_vars_t vv);
+extern const char *	stp_get_resolution (const stp_vars_t vv);
+extern const char *	stp_get_media_size (const stp_vars_t vv);
+extern const char *	stp_get_media_type (const stp_vars_t vv);
+extern const char *	stp_get_media_source (const stp_vars_t vv);
+extern const char *	stp_get_ink_type (const stp_vars_t vv);
+extern const char *	stp_get_dither_algorithm (const stp_vars_t vv);
+extern int 	stp_get_output_type (const stp_vars_t vv);
+extern int 	stp_get_orientation (const stp_vars_t vv);
+extern int 	stp_get_left (const stp_vars_t vv);
+extern int 	stp_get_top (const stp_vars_t vv);
+extern int 	stp_get_image_type (const stp_vars_t vv);
+extern int 	stp_get_unit (const stp_vars_t vv);
+extern int 	stp_get_page_width (const stp_vars_t vv);
+extern int 	stp_get_page_height (const stp_vars_t vv);
+extern float 	stp_get_brightness (const stp_vars_t vv);
+extern float 	stp_get_scaling (const stp_vars_t vv);
+extern float 	stp_get_gamma (const stp_vars_t vv);
+extern float 	stp_get_contrast (const stp_vars_t vv);
+extern float 	stp_get_cyan (const stp_vars_t vv);
+extern float 	stp_get_magenta (const stp_vars_t vv);
+extern float 	stp_get_yellow (const stp_vars_t vv);
+extern float 	stp_get_saturation (const stp_vars_t vv);
+extern float 	stp_get_density (const stp_vars_t vv);
+extern float 	stp_get_app_gamma (const stp_vars_t vv);
+extern void * 	stp_get_lut (const stp_vars_t vv);
+extern void * 	stp_get_outdata (const stp_vars_t vv);
+extern void * 	stp_get_errdata (const stp_vars_t vv);
+extern unsigned char * 	stp_get_cmap (const stp_vars_t vv);
+extern void	stp_set_outfunc(const stp_vars_t vv, stp_outfunc_t);
+extern stp_outfunc_t stp_get_outfunc (const stp_vars_t vv);
+extern void	stp_set_errfunc(const stp_vars_t vv, stp_outfunc_t);
+extern stp_outfunc_t stp_get_errfunc (const stp_vars_t vv);
+
 
 /*
  * hue_map is an array of 49 doubles representing the mapping of hue
@@ -342,38 +389,37 @@ typedef struct stp_printer
  * so hue=0 is cyan.
  */
 typedef void (*stp_convert_t)(unsigned char *in, unsigned short *out,
-			      int width, int bpp, unsigned char *cmap,
-			      const stp_vars_t *vars, const double *hue_map,
+			      int width, int bpp, const unsigned char *cmap,
+			      const stp_vars_t vars, const double *hue_map,
 			      const double *lum_map, const double *sat_map);
 
-extern void	stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print);
-extern void	stp_free_lut(stp_vars_t *v);
-extern void	stp_compute_lut(size_t steps, stp_vars_t *v);
-
-
-extern void	stp_default_media_size(const stp_printer_t *printer,
-				       const stp_vars_t *v, int *width,
-				       int *height);
+extern void	stp_merge_printvars(stp_vars_t user, const stp_vars_t print);
+extern void	stp_free_lut(stp_vars_t v);
+extern void	stp_compute_lut(size_t steps, stp_vars_t v);
 
 extern size_t	  stp_dither_algorithm_count(void);
 extern const char *stp_dither_algorithm_name(int);
 extern const char *stp_default_dither_algorithm(void);
 
 extern int	      		stp_known_papersizes(void);
-extern const stp_papersize_t	*stp_get_papersizes(void);
-extern const stp_papersize_t	*stp_get_papersize_by_name(const char *);
-extern const stp_papersize_t 	*stp_get_papersize_by_size(int l, int w);
+extern const stp_papersize_t	stp_get_papersize_by_name(const char *);
+extern const stp_papersize_t 	stp_get_papersize_by_size(int l, int w);
+extern const stp_papersize_t 	stp_get_papersize_by_index(int);
+extern const char *stp_papersize_get_name(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_width(const stp_papersize_t pt);
+extern unsigned stp_papersize_get_height(const stp_papersize_t pt);
+extern stp_papersize_unit_t stp_papersize_get_unit(const stp_papersize_t pt);
+
 
 extern int			stp_known_printers(void);
-extern const stp_printer_t	*stp_get_printers(void);
-extern const stp_printer_t	*stp_get_printer_by_index(int);
-extern const stp_printer_t	*stp_get_printer_by_long_name(const char *);
-extern const stp_printer_t	*stp_get_printer_by_driver(const char *);
+extern const stp_printer_t	stp_get_printer_by_index(int);
+extern const stp_printer_t	stp_get_printer_by_long_name(const char *);
+extern const stp_printer_t	stp_get_printer_by_driver(const char *);
 extern int			stp_get_printer_index_by_driver(const char *);
 
 extern stp_convert_t 	stp_choose_colorfunc(int, int,
 					     const unsigned char *, int *,
-					     const stp_vars_t *);
+					     const stp_vars_t);
 extern void
 stp_compute_page_parameters(int page_right, int page_left, int page_top,
 			    int page_bottom, double scaling, int image_width,
@@ -381,11 +427,9 @@ stp_compute_page_parameters(int page_right, int page_left, int page_top,
 			    int *page_width, int *page_height, int *out_width,
 			    int *out_height, int *left, int *top);
 
-extern int
-stp_verify_printer_params(const stp_printer_t *, const stp_vars_t *);
-extern const stp_vars_t *stp_default_settings(void);
-extern const stp_vars_t *stp_maximum_settings(void);
-extern const stp_vars_t *stp_minimum_settings(void);
+extern const stp_vars_t stp_default_settings(void);
+extern const stp_vars_t stp_maximum_settings(void);
+extern const stp_vars_t stp_minimum_settings(void);
 
 #ifdef __cplusplus
   }
