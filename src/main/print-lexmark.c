@@ -2217,7 +2217,6 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	      int           length,	/* I - Length of bitmap data */
 	      int           mode,	/* I - Which color */
 	      int           ydpi,		/* I - Vertical resolution */
-	      int           *empty,       /* IO- Preceeding empty lines */
 	      int           width,	/* I - Printed width */
 	      int           offset, 	/* I - Offset from left side */
 	      int           dmt)
@@ -2238,7 +2237,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   int calc_length;
   int rwidth; /* real with used at printing (includes shift between even & odd nozzles) */
 #ifdef DEBUG
-  /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
+  /* fprintf(stderr,"<%c>",("CMYKcmy"[coloridx])); */
 #endif
 
 
@@ -2640,8 +2639,6 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
 		   int           dmt,
 		   int           bidirectional_printing)
 {
-  static int empty= 0;
-  int written= 0;
   int i=1;
 
   Lexmark_head_colors head_colors[3]={{0, NULL,     0,  64/2},
@@ -2674,7 +2671,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
 			head_colors,
 			l, printMode & ~(COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM), /* we print colors only */
-			ydpi, &empty, width, offset, dmt))
+			ydpi, width, offset, dmt))
 	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
@@ -2689,7 +2686,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
 			head_colors,
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), /* we print black only */
-			ydpi, &empty, width, offset, dmt))
+			ydpi, width, offset, dmt))
 	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
@@ -2713,7 +2710,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
 			head_colors,
 			l, printMode, /* we print black only */
-			ydpi, &empty, width, offset, dmt))
+			ydpi, width, offset, dmt))
 	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
@@ -2729,18 +2726,11 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
 			head_colors,
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y),
-			ydpi, &empty, width, offset, dmt))
+			ydpi, width, offset, dmt))
 	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
   }
-
-
-
-  if (written)
-    stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
-  else
-    empty++;
 }
 
 
