@@ -1467,13 +1467,13 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
     if (!printed_black)
       {
-	c = print_color(d, &(d->c_dither), oc, (oc / 3 + density / 4), c,
+	c = print_color(d, &(d->c_dither), oc, (oc / 2 + density / 6), c,
 			x, row, cptr, lcptr, bit, length, 0, 1,
 			d->c_randomizer);
-	m = print_color(d, &(d->m_dither), om, (om / 3 + density / 4), m,
+	m = print_color(d, &(d->m_dither), om, (om / 2 + density / 6), m,
 			x, row, mptr, lmptr, bit, length, 1, 0,
 			d->m_randomizer);
-	y = print_color(d, &(d->y_dither), oy, (oy / 3 + density / 4), y,
+	y = print_color(d, &(d->y_dither), oy, (oy / 2 + density / 6), y,
 			x, row, yptr, lyptr, bit, length, 1, 1,
 			d->y_randomizer);
       }
@@ -1495,6 +1495,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.30  2000/04/24 01:56:37  rlk
+ *   Give the primary more weight, and the other colors less weight, in the
+ *   density calculation.  The previous weights resulted in too much dark
+ *   ink mixing in, which caused excessive graininess in some situations.
+ *
  *   Revision 1.29  2000/04/24 01:04:26  rlk
  *   fix warning in gtk_main_window.c
  *
