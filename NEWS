@@ -1,4 +1,4 @@
-Gimp-Print 4.3.23, released November 4, 2003, is a development
+Gimp-Print 4.3.24, released November 21, 2003, is a development
 release of this package.  Like all development releases, this version
 is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -7,9 +7,10 @@ release of Gimp-Print should use the latest 4.2 release.
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
 others.  These drivers provide high quality printing for UNIX
-(including Macintosh OS X 10.2 and newer) and Linux systems in many
-cases equal to or better than proprietary vendor-supplied drivers, and
-can be used for many of the most demanding printing tasks.
+(including Macintosh OS X 10.2 and newer) and Linux systems that in
+many cases equal to or better than proprietary vendor-supplied
+drivers, and can be used for many of the most demanding printing
+tasks.
 
 This software includes the Print plug-in for the Gimp, and Ghostscript
 and CUPS drivers, including Foomatic data.
@@ -36,7 +37,8 @@ later.
 Users of Macintosh OS X 10.2 and above can use this package, as the
 printing system is based on CUPS, which is supported by Gimp-print.
 Note that Macintosh OS X 10.0 and 10.1 (including 10.1.5) cannot use
-this package.
+this package.  A precompiled OS X package should be available shortly
+after the release of this package.
 
 Please read the README file for full instructions on installing this
 package.
@@ -101,12 +103,36 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    Finally, a Hybrid UniTone dither algorithm is provided, combining
    the principles of both of the above.
 
-2) Preliminary support for the Epson Stylus Photo R300 and PM-G700,
+2) The package now works properly under OS X 10.2 (Jaguar) and 10.3
+   (Panther).  A bug that prevented printing from applications from
+   working properly has been fixed.  The specific problem was due to
+   the fact that CUPS by default sets the input slot (media source) to
+   Autoselect; this was not recognized correctly by the driver.  The
+   current behavior is to treat the Autoselect option as the printer
+   default.
+
+3) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
+   generation program is now named cups-genppd.4.3.  This permits
+   installation of multiple versions of Gimp-Print on a system
+   (currently a 4.2 and a 4.3 version).  In the future, the CUPS
+   programs will be suffixed by the major and minor version numbers.
+
+4) The CUPS driver now enforces that the PPD file must match the exact
+   version of Gimp-Print installed on the system.  Therefore, when
+   installing the CUPS driver it is essential to upgrade your PPD
+   files, either by means of Configure Printer or by means of the
+   cups-genppdupdate.4.3 script supplied with Gimp-Print.  Failure to
+   upgrade the PPD files causes the Gimp-Print driver to not run,
+   printing a diagnostic message to the log.  This is being done to
+   eliminate a common source of error that can yield unpredictable
+   results or difficult-to-diagnose errors.
+
+5) Preliminary support for the Epson Stylus Photo R300 and PM-G700,
    PM-D750, and PM-G800.  These printers are not tuned and quality is
    likely to be poor.  The Stylus Photo R300, PM-G700, and PM-D750
    drivers likely work; the PM-G800 driver may or may not work.
 
-3) Direct printing to CD's is now supported experimentally on the
+6) Direct printing to CD's is now supported experimentally on the
    Epson Stylus Photo 900, 950, 960, 2100, 2200, R300, and the
    PM-950C.  To use this, select the Print To CD media source (input
    slot) and either CD - 5 inch or CD - 3 inch media size.  This is
@@ -119,23 +145,7 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    media size.  However, selecting a different media size will cause
    the job to error out early, during parameter verification.
 
-4) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
-   generation program is now named cups-genppd.4.3.  This permits
-   installation of multiple versions of Gimp-Print on a system
-   (currently a 4.2 and a 4.3 version).  In the future, the CUPS
-   programs will be suffixed by the major and minor version numbers.
-
-5) The CUPS driver now enforces that the PPD file must match the exact
-   version of Gimp-Print installed on the system.  Therefore, when
-   installing the CUPS driver it is essential to upgrade your PPD
-   files, either by means of Configure Printer or by means of the
-   cups-genppdupdate.4.3 script supplied with Gimp-Print.  Failure to
-   upgrade the PPD files causes the Gimp-Print driver to not run,
-   printing a diagnostic message to the log.  This is being done to
-   eliminate a common source of error that can yield unpredictable
-   results or difficult-to-diagnose errors.
-
-6) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
+7) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
    printing.  This mode only barely deposits enough ink to fill the
    page on most papers.  However, it prints as fast as 1440x720 DPI
    (although the calculation time is longer) and in some cases offers
