@@ -520,7 +520,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     cur_opt++;
   }
 
-  gzprintf(fp, "*VariableSizes: %s\n\n", variable_sizes ? "true" : "false");
+  gzprintf(fp, "*VariablePaperSize: %s\n\n", variable_sizes ? "true" : "false");
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
