@@ -178,18 +178,23 @@ density:		tBEGIN DENSITY VALUE ASSIGN tDOUBLE tEND
 ;
 
 Empty:
+;
 
 pstart: printerstart | printerstartalt
 ;
 
 parg: color | nocolor | model | language | brightness | gamma | contrast
 	| cyan | magenta | yellow | saturation | density
+;
 
 pargs: pargs parg | parg
+;
 
 Printer: pstart pargs printerend | pstart printerend
+;
 
 Printers: Printers Printer | Empty
+;
 
 %%
 
