@@ -246,7 +246,7 @@ STP_ARG_WITH([ghostscript],
              [BUILD_GHOSTSCRIPT],
              [(automatic)])
 
-STP_ARG_WITH_DETAILED([modules],
+ STP_ARG_WITH_DETAILED([modules],
                       [],
                       [enable loadable modules],
 	              [(options: ltdl, dlopen, static)],
@@ -259,7 +259,23 @@ STP_ARG_WITH_DETAILED([modules],
     static) [WITH_MODULES]="static";  AC_MSG_RESULT([static]) ;;
     *) AC_MSG_ERROR([${withval}: not a valid module loader]) ;;
                       ],[
-    [WITH_MODULES]="yes"])
+    # if shared libraries are disabled, modules must be static
+    if test x$enable_shared = xno; then
+      [WITH_MODULES]="static"
+    else
+      [WITH_MODULES]="yes"]
+    fi)
+
+# Abort if a broken configuration was required
+if test x$enable_shared = xno; then
+  if test $WITH_MODULES = no; then
+    :
+  elif test $WITH_MODULES = static; then
+    :
+  else
+    AC_MSG_ERROR([--enable-shared must be used with --with-modules])
+  fi
+fi 
 
 STP_ARG_ENABLE([debug],
                [turn on debugging in build],
