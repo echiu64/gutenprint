@@ -62,6 +62,41 @@ main (int argc, char **argv)
 @}
 @end example
 
+@cindex character set
+@cindex internationalisation
+@cindex output encoding
+@deftypefun {const char *} stp_set_output_codeset(const char *@var{codeset})
+
+This function sets the encoding of translated strings returned by
+libgimpprint (if gettext support was enabled).  @var{codeset} is a
+valid encoding name which can be used with @code{iconv_open}.  The
+default codeset is the current locale's character encoding.
+
+@code{stp_set_output_codeset} returns the currently selected codeset
+on success.  This memory may not be modified or freed.  On failure,
+NULL is returned and errno set if this was a memory allocation
+failure.  If gettext support was not enabled, every call will return
+@code{"US-ASCII"}.
+@end deftypefun
+
+@code{stp_set_output_codeset} will be of use when strings are required
+to be in a particular encoding.  GTK+-2.0 requires that all strings
+are UTF-8 encoded.  An example of possible usage:
+
+@example
+const char *codeset;
+codeset = stp_set_output_codeset("UTF-8");
+if (codeset == NULL)
+  @{
+    if (errno == ENOMEM)
+      fprintf(stderr, "Memory allocation failure while \
+              setting output codeset!\n");
+    else
+      fprintf(stderr, "Failed to set output codeset!\n");
+    exit(EXIT_FAILURE);
+  @}
+@end example
+
 @cindex memory allocation
 @deftypefun {void *} stp_malloc (size_t @var{size})
 

@@ -1636,6 +1636,16 @@ stp_init(void)
   return (0);
 }
 
+const char *
+stp_set_output_codeset(const char *codeset)
+{
+#ifdef ENABLE_NLS
+  return (const char *)(bind_textdomain_codeset(PACKAGE, codeset));
+#else
+  return "US-ASCII";
+#endif
+}
+
 #ifdef QUANTIFY
 unsigned quantify_counts[NUM_QUANTIFY_BUCKETS] = {0};
 struct timeval quantify_buckets[NUM_QUANTIFY_BUCKETS] = {{0,0}};

@@ -361,6 +361,11 @@ typedef struct
  */
 extern int stp_init (void);
 
+/*
+ * Set the encoding that all translated strings are output in.
+ */
+extern const char * stp_set_output_codeset(const char *codeset);
+
 extern const char * stp_printer_get_long_name (const stp_printer_t p);
 extern const char * stp_printer_get_driver (const stp_printer_t p);
 extern int stp_printer_get_model (const stp_printer_t p);
