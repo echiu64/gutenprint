@@ -104,5 +104,7 @@ $(LIBGIMPPRINT_LIBS):
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = foomatic-printermap foomatic-templates/*.xml
+EXTRA_DIST = foomatic-printermap 		\
+	foomatic-templates-gs/*.xml		\
+	foomatic-templates-ijs/*.xml
 
