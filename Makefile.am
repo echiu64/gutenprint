@@ -37,6 +37,10 @@ AM_CPPFLAGS = \
 
 print_LDADD = $(GIMP_LIBS)
 
+EXTRA_DIST=Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
+	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
+	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h
+
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
 		if test -f $$p; then \
@@ -62,7 +66,7 @@ files:
 
 ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c) Ghost/gdevstp-print.h
 
-Ghost/gdevstp%: print% Makefile
+Ghost/gdevstp-%: print-% Makefile
 	sed 's/print.h/gdevstp-print.h/' $< > $@
 
 Ghost/gdevstp-print.h: print.h Makefile
