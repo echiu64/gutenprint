@@ -2164,6 +2164,13 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
  * banding.  Conceivably, we could even use this ability to map out bad
  * jets.
  *
+ * Interestingly, apparently the Windows (and presumably Macintosh) drivers
+ * for most or all Epson printers still list a "microweave" mode.
+ * Experiments have demonstrated that this does not in fact use the
+ * "microweave" mode of the printer.  Possibly it does nothing, or it uses
+ * a different weave pattern from what the non-"microweave" mode does.
+ * This is unnecessarily confusing.
+ *
  * What makes this interesting is that there are many different ways of
  * of accomplishing this goal.  The naive way would be to divide the image
  * up into groups of 256 rows, and print all the mod8=0 rows in the first pass,
@@ -2247,6 +2254,60 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
  * quality that can be achieved very close to the top is poor enough that
  * Epson does not want to allow printing there.  That is a valid decision,
  * although we have taken another approach.
+ *
+ * To compute the weave information, we need to start with the following
+ * information:
+ *
+ * 1) The number of jets the print head has for each color;
+ *
+ * 2) The separation in rows between the jets;
+ *
+ * 3) The horizontal resolution of the printer;
+ *
+ * 4) The desired horizontal resolution of the output;
+ *
+ * 5) The desired extra passes to reduce banding.
+ *
+ * As discussed above, each row is actually printed in one or more passes
+ * of the print head; we refer to these as subpasses.  For example, if we're
+ * printing at 1440(h)x720(v) on a printer with true horizontal resolution of
+ * 360 dpi, and we wish to print each line twice with different nozzles
+ * to reduce banding, we need to use 8 subpasses.  The dither routine
+ * will feed us a complete row of bits for each color; we have to split that
+ * up, first by round robining the bits to ensure that they get printed at
+ * the right micro-position, and then to split up the bits that are actually
+ * turned on into two equal chunks to reduce banding.
+ *
+ * Given the above information, and the desired row index and subpass (which
+ * together form a line number), we can compute:
+ *
+ * 1) Which pass this line belongs to.  Passes are numbered consecutively,
+ *    and each pass must logically (see #3 below) start at no smaller a row
+ *    number than the previous pass, as the printer cannot advance by a
+ *    negative amount.
+ *
+ * 2) Which jet will print this line.
+ *
+ * 3) The "logical" first line of this pass.  That is, what line would be
+ *    printed by jet 0 in this pass.  This number may be less than zero.
+ *    If it is, there are ghost lines that don't actually contain any data.
+ *    The difference between the logical first line of this pass and the
+ *    logical first line of the preceding pass tells us how many lines must
+ *    be advanced.
+ *
+ * 4) The "physical" first line of this pass.  That is, the first line index
+ *    that is actually printed in this pass.  This information lets us know
+ *    when we must prepare this pass.
+ *
+ * 5) The last line of this pass.  This lets us know when we must actually
+ *    send this pass to the printer.
+ *
+ * 6) The number of ghost rows this pass contains.  We must still send the
+ *    ghost data to the printer, so this lets us know how much data we must
+ *    fill in prior to the start of the pass.
+ *
+ * The bookkeeping to keep track of all this stuff is quite hairy, and needs
+ * to be documented separately.
  *
  * The routine initialize_weave calculates the basic parameters, given
  * the number of jets and separation between jets, in rows.
@@ -2425,7 +2486,6 @@ initialize_weave(int jets,	/* Width of print head */
 		 int phys_lines) /* Total height of the page in rows */
 {
   int i;
-  int k;
   int lastline;
   escp2_softweave_t *sw = malloc(sizeof (escp2_softweave_t));
   if (jets <= 1)
@@ -2512,9 +2572,9 @@ initialize_weave(int jets,	/* Width of print head */
 
   sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
   sw->vertical_height = lineheight;
-  sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t) * sw->oversample);
-  sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t) * sw->oversample);
-  sw->linebases = malloc(sw->vmod * sizeof(linebufs_t) * sw->oversample);
+  sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t));
+  sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t));
+  sw->linebases = malloc(sw->vmod * sizeof(linebufs_t));
   sw->passes = malloc(sw->vmod * sizeof(pass_t));
   sw->linecounts = malloc(sw->vmod * sizeof(int));
   sw->lineno = 0;
@@ -2523,13 +2583,10 @@ initialize_weave(int jets,	/* Width of print head */
     {
       int j;
       sw->passes[i].pass = -1;
-      for (k = 0; k < sw->oversample; k++)
+      for (j = 0; j < sw->ncolors; j++)
 	{
-	  for (j = 0; j < sw->ncolors; j++)
-	    {
-	      sw->linebases[k * sw->vmod + i].v[j] =
-		malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
-	    }
+	  sw->linebases[i].v[j] =
+	    malloc(jets * sw->bitwidth * sw->horizontal_width / 8);
 	}
     }
   return (void *) sw;
@@ -2538,7 +2595,7 @@ initialize_weave(int jets,	/* Width of print head */
 static void
 destroy_weave(void *vsw)
 {
-  int i, j, k;
+  int i, j;
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
   free(sw->linecounts);
   free(sw->passes);
@@ -2546,12 +2603,9 @@ destroy_weave(void *vsw)
   free(sw->lineoffsets);
   for (i = 0; i < sw->vmod; i++)
     {
-      for (k = 0; k < sw->oversample; k++)
+      for (j = 0; j < sw->ncolors; j++)
 	{
-	  for (j = 0; j < sw->ncolors; j++)
-	    {
-	      free(sw->linebases[k * sw->vmod + i].v[j]);
-	    }
+	  free(sw->linebases[i].v[j]);
 	}
     }
   free(sw->linebases);
