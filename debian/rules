@@ -46,7 +46,7 @@ build-stamp: autoconfigure-stamp
 	dh_testdir
 
 	cd debian/build; \
-	$(MAKE); \
+	$(MAKE)
 
 	touch build-stamp
 
