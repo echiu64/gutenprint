@@ -78,13 +78,19 @@ static GtkWidget *recenter_vertical_button;
 static GtkWidget *recenter_horizontal_button;
 
 static GtkWidget *left_entry;
+/*
 static GtkWidget *right_entry;
+*/
 static GtkWidget *right_border_entry;
 static GtkWidget *top_entry;
+/*
 static GtkWidget *bottom_entry;
+*/
 static GtkWidget *bottom_border_entry;
 static GtkWidget *width_entry;
 static GtkWidget *height_entry;
+static GtkWidget *units_hbox;
+static GtkWidget *units_label;
 
 static GtkWidget *custom_size_width;
 static GtkWidget *custom_size_height;
@@ -1090,6 +1096,69 @@ create_positioning_button(GtkWidget *box, int invalid,
 }
 
 static void
+create_paper_size_frame(void)
+{
+  GtkWidget *frame;
+  GtkWidget *vbox;
+  GtkWidget *media_size_table;
+  GtkWidget *table;
+  int vpos = 0;
+
+  frame = gtk_frame_new (_("Paper Size"));
+  gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
+  gtk_widget_show (frame);
+
+  vbox = gtk_vbox_new (FALSE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  gtk_widget_show (vbox);
+
+  table = gtk_table_new (1, 1, FALSE);
+  gtk_container_add (GTK_CONTAINER (vbox), table);
+  gtk_widget_show (table);
+
+  /*
+   * Media size combo box.
+   */
+
+  page_size_table = gtk_table_new(1, 1, FALSE);
+  gtk_widget_show (page_size_table);
+  gtk_table_attach_defaults(GTK_TABLE(table), page_size_table,
+			    0, 2, vpos, vpos + 1);
+  vpos++;
+  show_all_paper_sizes_button =
+    gtk_check_button_new_with_label(_("Show All Paper Sizes"));
+  gtk_table_attach_defaults
+    (GTK_TABLE(table), show_all_paper_sizes_button, 0, 2, vpos, vpos + 1);
+  gtk_toggle_button_set_active
+    (GTK_TOGGLE_BUTTON(show_all_paper_sizes_button),
+     stpui_show_all_paper_sizes);
+  gtk_signal_connect(GTK_OBJECT(show_all_paper_sizes_button), "toggled",
+		     GTK_SIGNAL_FUNC(show_all_paper_sizes_callback), NULL);
+  gtk_widget_show(show_all_paper_sizes_button);
+  vpos++;
+
+  /*
+   * Custom media size entries
+   */
+
+  media_size_table = gtk_table_new (1, 1, FALSE);
+  stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
+			     0.0, 0.5, media_size_table, 1, TRUE);
+  gtk_table_set_col_spacings (GTK_TABLE (media_size_table), 4);
+
+  custom_size_width = stpui_create_entry
+    (media_size_table, 0, 3, _("Width:"),
+     _("Width of the paper that you wish to print to"),
+     custom_media_size_callback);
+
+  custom_size_height = stpui_create_entry
+    (media_size_table, 2, 3, _("Height:"),
+     _("Height of the paper that you wish to print to"),
+     custom_media_size_callback);
+}
+
+static void
 create_positioning_frame (void)
 {
   GtkWidget *frame;
@@ -1097,7 +1166,7 @@ create_positioning_frame (void)
   GtkWidget *box;
   GtkWidget *sep;
 
-  frame = gtk_frame_new (_("Position"));
+  frame = gtk_frame_new (_("Image Position"));
   gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
@@ -1141,20 +1210,24 @@ create_positioning_frame (void)
   left_entry = create_positioning_entry
     (table, 0, 2, _("Left:"),
      _("Distance from the left of the paper to the image"));
+#if 0
   right_entry = create_positioning_entry
     (table, 0, 3, _("Right:"),
      _("Distance from the left of the paper to the right of the image"));
+#endif
   right_border_entry = create_positioning_entry
-    (table, 0, 4, _("Right Border:"),
+    (table, 0, 4, _("Right:"),
      _("Distance from the right of the paper to the image"));
   top_entry = create_positioning_entry
     (table, 3, 2, _("Top:"),
      _("Distance from the top of the paper to the image"));
+#if 0
   bottom_entry = create_positioning_entry
     (table, 3, 3, _("Bottom:"),
      _("Distance from the top of the paper to bottom of the image"));
+#endif
   bottom_border_entry = create_positioning_entry
-    (table, 3, 4, _("Bottom Border:"),
+    (table, 3, 4, _("Bottom:"),
      _("Distance from the bottom of the paper to the image"));
   /*
    * Center options
@@ -1168,13 +1241,13 @@ create_positioning_frame (void)
   stpui_table_attach_aligned (GTK_TABLE (table), 0, 7, _("Center:"), 0.5, 0.5,
 			      box, 5, TRUE);
   recenter_vertical_button = create_positioning_button
-    (box, INVALID_TOP, _("Vertically"),
+    (box, INVALID_TOP, _("Vertical"),
      _("Center the image vertically on the paper"));
   recenter_button = create_positioning_button
     (box, INVALID_LEFT | INVALID_TOP, _("Both"),
      _("Center the image on the paper"));
   recenter_horizontal_button = create_positioning_button
-    (box, INVALID_LEFT, _("Horizontally"),
+    (box, INVALID_LEFT, _("Horizontal"),
      _("Center the image horizontally on the paper"));
 }
 
@@ -1415,7 +1488,6 @@ create_printer_settings_frame (void)
   GtkWidget *table;
   GtkWidget *sep;
   GtkWidget *printer_hbox;
-  GtkWidget *media_size_table;
   GtkWidget *button;
   GtkWidget *event_box;
   gint vpos = 0;
@@ -1489,48 +1561,6 @@ create_printer_settings_frame (void)
   gtk_widget_show (sep);
   vpos++;
 
-  /*
-   * Media size combo box.
-   */
-
-  page_size_table = gtk_table_new(1, 1, FALSE);
-  gtk_table_set_col_spacings (GTK_TABLE (page_size_table), 2);
-  gtk_table_set_row_spacings (GTK_TABLE (page_size_table), 0);
-  gtk_container_set_border_width (GTK_CONTAINER (page_size_table), 4);
-  gtk_widget_show (page_size_table);
-  gtk_table_attach_defaults(GTK_TABLE(table), page_size_table,
-			    0, 5, vpos, vpos + 1);
-  vpos++;
-  show_all_paper_sizes_button =
-    gtk_toggle_button_new_with_label(_("Show All Paper Sizes"));
-  gtk_table_attach_defaults
-    (GTK_TABLE(table), show_all_paper_sizes_button, 1, 2, vpos, vpos + 1);
-  fprintf(stderr, "show_all %d\n", stpui_show_all_paper_sizes);
-  gtk_toggle_button_set_active
-    (GTK_TOGGLE_BUTTON(show_all_paper_sizes_button),
-     stpui_show_all_paper_sizes);
-  gtk_signal_connect(GTK_OBJECT(show_all_paper_sizes_button), "toggled",
-		     GTK_SIGNAL_FUNC(show_all_paper_sizes_callback), NULL);
-  gtk_widget_show(show_all_paper_sizes_button);
-  vpos++;
-  /*
-   * Custom media size entries
-   */
-
-  media_size_table = gtk_table_new (1, 1, FALSE);
-  stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
-			     0.0, 0.5, media_size_table, 4, TRUE);
-
-  custom_size_width = stpui_create_entry
-    (media_size_table, 0, 3, _("Width:"),
-     _("Width of the paper that you wish to print to"),
-     custom_media_size_callback);
-
-  custom_size_height = stpui_create_entry
-    (media_size_table, 2, 3, _("Height:"),
-     _("Height of the paper that you wish to print to"),
-     custom_media_size_callback);
-
   printer_features_table = gtk_table_new(1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (printer_features_table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (printer_features_table), 0);
@@ -1545,21 +1575,26 @@ create_scaling_frame (void)
 {
   GtkWidget *frame;
   GtkWidget *vbox;
+  GtkWidget *hbox;
   GtkWidget *table;
   GtkWidget *box;
   GtkWidget *label;
   GtkWidget *event_box;
   GtkWidget *sep;
   GSList    *group;
-  gint i;
 
-  frame = gtk_frame_new (_("Size"));
+  frame = gtk_frame_new (_("Image Size"));
   gtk_box_pack_start (GTK_BOX (main_vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
+  hbox = gtk_hbox_new (FALSE, 2);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 4);
+  gtk_container_add (GTK_CONTAINER (frame), hbox);
+  gtk_widget_show (hbox);
+
   vbox = gtk_vbox_new (FALSE, 2);
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
+/*  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4); */
+  gtk_container_add (GTK_CONTAINER (hbox), vbox);
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
@@ -1581,12 +1616,8 @@ create_scaling_frame (void)
   gtk_signal_connect (GTK_OBJECT (scaling_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (scaling_update), NULL);
 
-  sep = gtk_hseparator_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
-  gtk_widget_show (sep);
-
   box = gtk_hbox_new (FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), box, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), box, TRUE, TRUE, 0);
   gtk_widget_show (box);
 
   /*
@@ -1621,7 +1652,7 @@ create_scaling_frame (void)
                       GTK_SIGNAL_FUNC (scaling_callback), NULL);
 
   scaling_ppi = gtk_radio_button_new_with_label (group, _("PPI"));
-  stpui_table_attach_aligned(GTK_TABLE (table), 0, 1, NULL, 0.5, 0.5,
+  stpui_table_attach_aligned(GTK_TABLE (table), 2, 0, NULL, 0.5, 0.5,
 			     scaling_ppi, 1, TRUE);
 
   stpui_set_help_data(scaling_ppi,
@@ -1630,7 +1661,7 @@ create_scaling_frame (void)
                       GTK_SIGNAL_FUNC (scaling_callback), NULL);
 
   sep = gtk_vseparator_new ();
-  gtk_box_pack_start (GTK_BOX (box), sep, FALSE, FALSE, 8);
+  gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 8);
   gtk_widget_show (sep);
 
   /*
@@ -1639,7 +1670,7 @@ create_scaling_frame (void)
 
   table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
-  gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
   width_entry = create_positioning_entry
@@ -1652,52 +1683,14 @@ create_scaling_frame (void)
    */
 
   scaling_image = gtk_button_new_with_label (_("Use Original\nImage Size"));
-  gtk_misc_set_padding (GTK_MISC (GTK_BIN (scaling_image)->child), 8, 4);
-  gtk_box_pack_start (GTK_BOX (box), scaling_image, FALSE, TRUE, 0);
+  gtk_misc_set_padding (GTK_MISC (GTK_BIN (scaling_image)->child), 2, 2);
+  gtk_box_pack_end (GTK_BOX (hbox), scaling_image, FALSE, FALSE, 0);
   gtk_widget_show (scaling_image);
 
   stpui_set_help_data(scaling_image,
 		_("Set the print size to the size of the image"));
   gtk_signal_connect (GTK_OBJECT (scaling_image), "clicked",
                       GTK_SIGNAL_FUNC (scaling_callback), NULL);
-
-  sep = gtk_vseparator_new ();
-  gtk_box_pack_start (GTK_BOX (box), sep, FALSE, FALSE, 8);
-  gtk_widget_show (sep);
-
-  /*
-   * The units toggles
-   */
-
-  table = gtk_table_new (1, 1, FALSE);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
-  gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
-  gtk_widget_show (table);
-
-  event_box = gtk_event_box_new ();
-  gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
-  gtk_widget_show (event_box);
-
-  label = gtk_label_new (_("Units:"));
-  gtk_container_add (GTK_CONTAINER (event_box), label);
-  gtk_widget_show (label);
-
-  stpui_set_help_data(event_box,
-		_("Select the base unit of measurement for printing"));
-
-  group = NULL;
-  for (i = 0; i < unit_count; i++)
-    {
-      unit_t *unit = &(units[i]);
-      unit->checkbox = gtk_radio_button_new_with_label(group, _(unit->name));
-      group = gtk_radio_button_group(GTK_RADIO_BUTTON(unit->checkbox));
-      stpui_table_attach_aligned(GTK_TABLE(table), i / 2, i % 2, NULL, 0.5,
-				 0.5, unit->checkbox, 1, TRUE);
-      stpui_set_help_data(unit->checkbox, _(unit->help));
-      gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
-			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
-    }
 }
 
 /*
@@ -1820,7 +1813,7 @@ create_image_settings_frame (void)
   vbox = gtk_vbox_new (FALSE, 4);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
-                            gtk_label_new (_("Image / Output Settings")));
+                            gtk_label_new (_("Output")));
   gtk_widget_show (vbox);
 
   table = gtk_table_new (1, 1, FALSE);
@@ -1889,6 +1882,65 @@ create_image_settings_frame (void)
 			     GTK_OBJECT (color_adjust_dialog));
 }
 
+static void
+create_units_frame (void)
+{
+  GtkWidget *vbox;
+  GtkWidget *table;
+  GtkWidget *label;
+  GtkWidget *event_box;
+  GSList    *group;
+  gint i;
+
+  units_hbox = gtk_hbox_new(FALSE, 0);
+  label = gtk_label_new(_("Size Units:"));
+  gtk_widget_show(label);
+  gtk_box_pack_start(GTK_BOX(units_hbox), label, TRUE, TRUE, 0);
+  units_label = gtk_label_new(_(" "));
+  gtk_widget_show(units_label);
+  gtk_box_pack_start(GTK_BOX(units_hbox), units_label, TRUE, TRUE, 0);
+  gtk_widget_show(units_hbox);
+
+  vbox = gtk_vbox_new (FALSE, 4);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, units_hbox);
+  gtk_widget_show (vbox);
+
+  /*
+   * The units toggles
+   */
+
+  table = gtk_table_new (1, 1, FALSE);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 4);
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+  gtk_widget_show (table);
+
+  event_box = gtk_event_box_new ();
+  gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
+                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+  gtk_widget_show (event_box);
+
+  label = gtk_label_new (_("Units:"));
+  gtk_container_add (GTK_CONTAINER (event_box), label);
+  gtk_widget_show (label);
+
+  stpui_set_help_data(event_box,
+		_("Select the base unit of measurement for printing"));
+
+  group = NULL;
+  for (i = 0; i < unit_count; i++)
+    {
+      unit_t *unit = &(units[i]);
+      unit->checkbox = gtk_radio_button_new_with_label(group, _(unit->name));
+      group = gtk_radio_button_group(GTK_RADIO_BUTTON(unit->checkbox));
+      stpui_table_attach_aligned(GTK_TABLE(table), i / 2, i % 2, NULL, 0.5,
+				 0.5, unit->checkbox, 1, TRUE);
+      stpui_set_help_data(unit->checkbox, _(unit->help));
+      gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
+			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
+    }
+}
+
 /*
  *  create_main_window()
  */
@@ -1909,6 +1961,8 @@ create_main_window (void)
 
   create_preview ();
   create_printer_settings_frame ();
+  create_units_frame();
+  create_paper_size_frame();
   create_positioning_frame ();
   create_scaling_frame ();
   create_image_settings_frame ();
@@ -2243,14 +2297,18 @@ position_callback (GtkWidget *widget)
 
   if (widget == top_entry)
     stp_set_top(pv->v, new_value);
+/*
   else if (widget == bottom_entry)
     stp_set_top(pv->v, new_value - print_height);
+*/
   else if (widget == bottom_border_entry)
     stp_set_top (pv->v, paper_height - print_height - new_value);
   else if (widget == left_entry)
     stp_set_left (pv->v, new_value);
+/*
   else if (widget == right_entry)
     stp_set_left(pv->v, new_value - print_width);
+*/
   else if (widget == right_border_entry)
     stp_set_left (pv->v, paper_width - print_width - new_value);
   else if (widget == width_entry || widget == height_entry)
@@ -2451,6 +2509,7 @@ do_all_updates(void)
 
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
 			       TRUE);
+  gtk_label_set_text(GTK_LABEL(units_label), units[pv->unit].name);
   suppress_preview_update--;
   preview_update ();
 }
@@ -2585,6 +2644,9 @@ set_media_size(const gchar *new_media_size)
     {
       gint default_width, default_height;
       gint size;
+      int old_width = stp_get_page_width(pv->v);
+      int old_height = stp_get_page_height(pv->v);
+      int need_preview_update = 0;
 
       if (! stpui_show_all_paper_sizes &&
 	  (pap->paper_unit == PAPERSIZE_METRIC_EXTENDED ||
@@ -2608,7 +2670,6 @@ set_media_size(const gchar *new_media_size)
 	    }
 	}
 	  
-
       if (pap->width == 0)
 	{
 	  stp_get_media_size(pv->v, &default_width, &default_height);
@@ -2622,8 +2683,12 @@ set_media_size(const gchar *new_media_size)
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
 	}
-      set_entry_value (custom_size_width, size, 0);
-      stp_set_page_width (pv->v, size);
+      if (size != old_width)
+	{
+	  need_preview_update = 1;
+	  set_entry_value (custom_size_width, size, 0);
+	  stp_set_page_width (pv->v, size);
+	}
 
       if (pap->height == 0)
 	{
@@ -2638,11 +2703,18 @@ set_media_size(const gchar *new_media_size)
 	  gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
 	}
-      set_entry_value (custom_size_height, size, 0);
-      stp_set_page_height (pv->v, size);
-      invalidate_preview_thumbnail();
-      invalidate_frame();
-      preview_update();
+      if (size != old_height)
+	{
+	  need_preview_update = 1;
+	  set_entry_value (custom_size_height, size, 0);
+	  stp_set_page_height (pv->v, size);
+	}
+      if (need_preview_update)
+	{
+	  invalidate_preview_thumbnail();
+	  invalidate_frame();
+	  preview_update();
+	}
     }
   setting_media_size--;
 }
@@ -2714,10 +2786,14 @@ set_all_entry_values(void)
 {
   set_entry_value (top_entry, (stp_get_top (pv->v)), 1);
   set_entry_value (left_entry, (stp_get_left (pv->v)), 1);
+/*
   set_entry_value (bottom_entry, (top + stp_get_top(pv->v) + print_height), 1);
+*/
   set_entry_value (bottom_border_entry,
                    (paper_height - (stp_get_top (pv->v) + print_height)), 1);
+/*
   set_entry_value (right_entry, (stp_get_left(pv->v) + print_width), 1);
+*/
   set_entry_value (right_border_entry,
                    (paper_width - (stp_get_left (pv->v) + print_width)), 1);
   set_entry_value (width_entry, print_width, 1);
@@ -2738,6 +2814,7 @@ unit_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       pv->unit = (gint) data;
+      gtk_label_set_text(GTK_LABEL(units_label), units[pv->unit].name);
       set_all_entry_values();
     }
 }
