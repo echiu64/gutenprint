@@ -3147,6 +3147,26 @@ static const input_slot_t roll_feed_input_slots[] =
   }
 };
 
+static const input_slot_t sp5000_input_slots[] =
+{
+  {
+    "CutSheet1",
+    N_("Cut Sheet Bin 1")
+  },
+  {
+    "CutSheet2",
+    N_("Cut Sheet Bin 2")
+  },
+  {
+    "CutSheetAuto",
+    N_("Cut Sheet Autoselect")
+  },
+  {
+    "ManualSelect",
+    N_("Manual Selection")
+  }
+};
+
 static const input_slot_list_t default_input_slot_list =
 {
   NULL, 
@@ -3157,6 +3177,12 @@ static const input_slot_list_t roll_feed_input_slot_list =
 {
   roll_feed_input_slots,
   sizeof(roll_feed_input_slots) / sizeof(const input_slot_t)
+};
+
+static const input_slot_list_t sp5000_input_slot_list =
+{
+  sp5000_input_slots,
+  sizeof(sp5000_input_slots) / sizeof(const input_slot_t)
 };
 
 static const init_sequence_t new_init_sequence =
@@ -3595,7 +3621,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, 0, 0, 4,
     sp5000_dotsizes, photo_densities, &simple_inks,
     &standard_paper_list, sp5000_reslist, &photo_inklist,
-    standard_bits, g3_base_res, &default_input_slot_list,
+    standard_bits, g3_base_res, &sp5000_input_slot_list,
     NULL, NULL
   },
   /* 28: Stylus Pro 7000 */
