@@ -1,4 +1,4 @@
-Gimp-Print 4.3.8, released January 6x, 2003, is a development release of
+Gimp-Print 4.3.9, released February 1x, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -30,14 +30,44 @@ this package.
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.3.8 is considered to be an unstable release, as more
-significant API changes have been introduced with relatively limited
-testing.  While most of the changes improve the clarity of the code,
-the limited testing and extensive nature of the changes suggests that
-this release is likely to be quite unstable.  We recommend that only
-people who want access to these new API features for development use
-this release.  There are very significant user-visible changes over
-earlier 4.3 releases, and few changes over the 4.2 stable line.
+
+Gimp-Print 4.3.9 is considered to be an unstable release, as more
+significant changes have been introduced with relatively limited
+testing.
+
+The overall focus of this release is a greatly enhanced Print plugin
+for the GIMP.  This now offers experimental features for color
+control, such as separate balance (density) and gamma controls for
+each channel, the opportunity to edit curves for each channel
+independently, and so forth.  This offers opportunities for people to
+experiment with the color controls to improve color matching accuracy.
+
+
+Gimp-Print 4.3.9 contains the following major changes over Gimp-Print
+4.3.8:
+
+1) The Print plugin now offers a variety of additional controls in the
+   Print Color Adjust window.  We suggest that you experiment with
+   these controls; we'd like to know what results you get and any
+   suggestions you may have.
+
+2) The exact controls that are available change dynamically depending
+   upon selected options; for example, when you select grayscale
+   output, the color controls go away.  Some controls are optional;
+   you must click a checkbox next to the control in order to enable
+   it.
+
+3) There are new controls adjacent to the color swatch in the Print
+   Color Adjust window that enable you to view the channels
+   individually.
+
+4) The Print plugin windows can be usefully resized.
+
+5) The Print plugin has a new printrc file format.  This format is not
+   back compatible with older versions of the plugin; the current
+   plugin can read old printrc files, but the saved format will not be
+   understood by older versions of the plugin.
+
 
 Gimp-Print 4.3.8 contains the following major changes over Gimp-Print
 4.3.7:
