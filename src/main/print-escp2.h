@@ -481,11 +481,11 @@ extern const escp2_drop_list_t stpi_escp2_variable_2000p_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops;
 
 extern const paperlist_t stpi_escp2_standard_paper_list;
-extern const paperlist_t stpi_escp2_c80_paper_list;
+extern const paperlist_t stpi_escp2_durabrite_paper_list;
 extern const paperlist_t stpi_escp2_ultrachrome_paper_list;
 
 extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_c80_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_durabrite_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_photo2_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
@@ -508,6 +508,7 @@ extern const res_t *const stpi_escp2_sc640_reslist[];
 extern const inkgroup_t stpi_escp2_cmy_inkgroup;
 extern const inkgroup_t stpi_escp2_standard_inkgroup;
 extern const inkgroup_t stpi_escp2_c80_inkgroup;
+extern const inkgroup_t stpi_escp2_c64_inkgroup;
 extern const inkgroup_t stpi_escp2_x80_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen1_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen2_inkgroup;

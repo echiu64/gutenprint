@@ -294,6 +294,18 @@
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus C63" driver="escp2-c63">
+        <color value="true"/>
+        <model value="61"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus C64" driver="escp2-c64">
+        <color value="true"/>
+        <model value="61"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus C70" driver="escp2-c70">
         <color value="true"/>
         <model value="44"/>
@@ -1037,6 +1049,12 @@
       <printer name="EPSON PM-10000" driver="escp2-pm10000">
         <color value="true"/>
         <model value="41"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PX-V500" driver="escp2-pxv500">
+        <color value="true"/>
+        <model value="61"/>
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>

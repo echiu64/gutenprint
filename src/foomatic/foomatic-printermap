@@ -113,6 +113,8 @@
 #gptofoo escp2-c60 printer/Epson-Stylus_C60
 #gptofoo escp2-c61 printer/Epson-Stylus_C61
 #gptofoo escp2-c62 printer/Epson-Stylus_C62
+#gptofoo escp2-c63 printer/Epson-Stylus_C63
+#gptofoo escp2-c64 printer/Epson-Stylus_C64
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2-c82 printer/Epson-Stylus_C82
@@ -236,6 +238,7 @@
 #gptofoo escp2-pm7000c printer/Epson-PM_7000C
 #gptofoo escp2-pm9000c printer/Epson-PM_9000C
 #gptofoo escp2-pm10000 printer/Epson-PM_10000
+#gptofoo escp2-pxv500 printer/Epson-PX_V500
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
 #gptofoo pcl-4 printer/Fujitsu-PrintPartner_10V

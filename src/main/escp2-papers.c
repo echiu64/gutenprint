@@ -560,7 +560,7 @@ static const paper_adjustment_t ultrachrome_matte_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
 
-static const paper_adjustment_t c80_adjustments[] =
+static const paper_adjustment_t durabrite_adjustments[] =
 {
   { "Plain", 0.769, 1, .075, .9, 1, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
@@ -602,7 +602,7 @@ static const paper_adjustment_t c80_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
 };
 
-DECLARE_PAPER_ADJUSTMENTS(c80);
+DECLARE_PAPER_ADJUSTMENTS(durabrite);
 
 static const paper_t standard_papers[] =
 {
@@ -648,7 +648,7 @@ static const paper_t standard_papers[] =
 
 DECLARE_PAPERS(standard);
 
-static const paper_t c80_papers[] =
+static const paper_t durabrite_papers[] =
 {
   { "Plain", N_("Plain Paper"), PAPER_PLAIN,
     1, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
@@ -690,7 +690,7 @@ static const paper_t c80_papers[] =
     0, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
 };
 
-DECLARE_PAPERS(c80);
+DECLARE_PAPERS(durabrite);
 
 static const paper_t ultrachrome_papers[] =
 {

@@ -131,7 +131,7 @@ Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
 
 4) Olympus and Olympus-compatible printers have been color-tuned.
 
-5) Preliminary support for the Epson Stylus C84.
+5) Preliminary support for the Epson Stylus C63, C64, C83, and C84.
 
 6) Margins for the Epson Stylus C70, C80, and C82 have been
    corrected.
@@ -1003,9 +1003,13 @@ EPSON Stylus C50
 EPSON Stylus C60
 EPSON Stylus C61
 EPSON Stylus C62
+EPSON Stylus C63
+EPSON Stylus C64
 EPSON Stylus C70
 EPSON Stylus C80
 EPSON Stylus C82
+EPSON Stylus C83
+EPSON Stylus C84
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -1113,6 +1117,7 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PX-V500
 EPSON PX-7000
 EPSON PX-9000
 HP DeskJet 340
@@ -1295,6 +1300,8 @@ Epson Stylus C50               escp2-c50       EPSON Stylus C50
 Epson Stylus C60               escp2-c60       EPSON Stylus C60
 Epson Stylus C61               escp2-c61       EPSON Stylus C61
 Epson Stylus C62               escp2-c62       EPSON Stylus C62
+Epson Stylus C63               escp2-c63       EPSON Stylus C63
+Epson Stylus C64               escp2-c64       EPSON Stylus C64
 Epson Stylus C70               escp2-c70       EPSON Stylus C70
 Epson Stylus C80               escp2-c80       EPSON Stylus C80
 Epson Stylus C82               escp2-c82       EPSON Stylus C82
@@ -1418,6 +1425,7 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
