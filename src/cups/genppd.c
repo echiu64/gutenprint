@@ -411,7 +411,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*%the GNU GPL.\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
+  /* Specify language of PPD translation */
   gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
+  /* Specify PPD translation encoding e.g. ISOLatin1 */
   gzprintf(fp, "*LanguageEncoding: %s\n", _("ISOLatin1"));
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", driver);
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
