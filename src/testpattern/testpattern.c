@@ -91,6 +91,8 @@ int global_image_type;
 int global_color_model;
 int global_bit_depth;
 int global_use_raw_cmyk;
+int global_did_something;
+int global_suppress_output = 0;
 
 static testpattern_t *static_testpatterns;
 
@@ -172,26 +174,13 @@ get_next_testpattern(void)
 }
 
 static void
-do_help(void)
-{
-  fprintf(stderr, "%s", "\
-Usage: testpattern -p printer [-n ramp_steps] [-I global_ink_limit]\n\
-                   [-r resolution] [-s media_source] [-t media_type]\n\
-                   [-z media_size] [-d dither_algorithm] [-e density]\n\
-                   [-G gamma] [-q] [-H width] [-V height] [-T top] [-L left]\n\
-       -H, -V, -T, -L expressed as fractions of the printable paper size\n\
-       0.0 < global_ink_limit <= 1.0\n\
-       1 < ramp_steps <= 4096\n\
-       0.1 <= density <= 2.0\n\
-       0.0 < cyan_level <= 10.0 same for magenta and yellow.\n");
-  exit(1);
-}
-
-static void
 writefunc(void *file, const char *buf, size_t bytes)
 {
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
+  if (!global_suppress_output)
+    {
+      FILE *prn = (FILE *)file;
+      fwrite(buf, 1, bytes, prn);
+    }
 }
 
 static void
@@ -222,18 +211,21 @@ initialize_global_parameters(void)
   global_color_model = COLOR_MODEL_CMY;
   global_bit_depth = 16;
   global_use_raw_cmyk = 0;
+  global_did_something = 0;
   if (static_testpatterns)
     free(static_testpatterns);
   static_testpatterns = NULL;
   if (global_vars)
     stp_vars_free(global_vars);
   global_vars = NULL;
+  if (global_printer)
+    free(global_printer);
+  global_printer = NULL;
 }
 
-int
-main(int argc, char **argv)
+static int
+do_print(void)
 {
-  int c;
   stp_vars_t v;
   stp_const_printer_t the_printer;
   int left, right, top, bottom;
@@ -245,7 +237,6 @@ main(int argc, char **argv)
   int i;
 
   initialize_global_parameters();
-  stp_init();
   global_vars = stp_vars_create();
   stp_set_outfunc(global_vars, writefunc);
   stp_set_errfunc(global_vars, writefunc);
@@ -254,72 +245,11 @@ main(int argc, char **argv)
 
   retval = yyparse();
   if (retval)
-    return retval;
+    return retval + 1;
 
-  while (1)
-    {
-      c = getopt(argc, argv, "qp:n:l:I:r:s:t:z:d:he:T:L:H:V:G:");
-      if (c == -1)
-	break;
-      switch (c)
-	{
-	case 'I':
-	  global_ink_limit = strtod(optarg, 0);
-	  break;
-	case 'G':
-	  global_gamma = strtod(optarg, 0);
-	  break;
-	case 'H':
-	  global_hsize = strtod(optarg, 0);
-	  break;
-	case 'L':
-	  global_xleft = strtod(optarg, 0);
-	  break;
-	case 'T':
-	  global_xtop = strtod(optarg, 0);
-	  break;
-	case 'V':
-	  global_vsize = strtod(optarg, 0);
-	  break;
-	case 'd':
-	  stp_set_string_parameter(global_vars, "DitherAlgorithm", optarg);
-	  break;
-	case 'e':
-	  global_density = strtod(optarg, 0);
-	  break;
-	case 'h':
-	  do_help();
-	  break;
-	case 'i':
-	  stp_set_string_parameter(global_vars, "InkType", optarg);
-	  break;
-	case 'n':
-	  global_steps = atoi(optarg);
-	  break;
-	case 'p':
-	  global_printer = optarg;
-	  break;
-	case 'q':
-	  global_noblackline = 1;
-	  break;
-	case 'r':
-	  stp_set_string_parameter(global_vars, "Resolution", optarg);
-	  break;
-	case 's':
-	  stp_set_string_parameter(global_vars, "InputSlot", optarg);
-	  break;
-	case 't':
-	  stp_set_string_parameter(global_vars, "MediaType", optarg);
-	  break;
-	case 'z':
-	  stp_set_string_parameter(global_vars, "PageSize", optarg);
-	  break;
-	default:
-	  fprintf(stderr, "Unknown option '-%c'\n", c);
-	  do_help();
-	  break;
-	}
-    }
+  if (!global_did_something)
+    return 1;
+
   v = stp_vars_create();
   the_printer = stp_get_printer_by_driver(global_printer);
   if (!the_printer)
@@ -333,7 +263,7 @@ main(int argc, char **argv)
 	  fprintf(stderr, "%-16s%s\n", stp_printer_get_driver(the_printer),
 		  stp_printer_get_long_name(the_printer));
 	}
-      return 1;
+      return 2;
     }
   stp_set_printer_defaults(v, the_printer);
   stp_set_outfunc(v, writefunc);
@@ -392,11 +322,40 @@ main(int argc, char **argv)
 
   stp_merge_printvars(v, stp_printer_get_defaults(the_printer));
   if (stp_print(v, &theImage) != 1)
-    return 1;
+    return 2;
   stp_vars_free(v);
   free(static_testpatterns);
   static_testpatterns = NULL;
   return 0;
+}
+
+int
+main(int argc, char **argv)
+{
+  int c;
+  int status;
+  while (1)
+    {
+      c = getopt(argc, argv, "n");
+      if (c == -1)
+	break;
+      switch (c)
+	{
+	case 'n':
+	  global_suppress_output = 1;
+	default:
+	  break;
+	}
+    }
+
+  stp_init();
+  while (1)
+    {
+      status = do_print();
+      if (status != 0)
+	break;
+    }
+  return status - 1;
 }
 
 static void

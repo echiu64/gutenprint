@@ -66,7 +66,7 @@ do							\
 digit		[0-9]
 integer		[-+]?{digit}+
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
-string		([\"][^\"\n]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)
+string		([\"][^\"]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)
 ws		[ \t]+
 
 %%
@@ -106,6 +106,8 @@ grey			yylval.ival = GRAY;DBG(GRAY); return GRAY;
 gray			yylval.ival = GRAY;DBG(GRAY); return GRAY;
 white			yylval.ival = WHITE;DBG(WHITE); return WHITE;
 raw			yylval.ival = RAW;DBG(RAW); return RAW;
+message			DBG(MESSAGE); return MESSAGE;
+end			DBG(END); return END;
 
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;

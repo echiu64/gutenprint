@@ -123,6 +123,8 @@ find_color(const char *name)
 %token RAW
 %token MODE
 %token PAGESIZE
+%token MESSAGE
+%token END
 
 %start Thing
 
@@ -388,24 +390,49 @@ image: IMAGE tINT tINT
 	}
 ;
 
+Message0: MESSAGE tSTRING
+	{ fprintf(stderr, $2); }
+;
+Message1: MESSAGE tSTRING tSTRING
+	{ fprintf(stderr, $2, $3); }
+;
+Message2: MESSAGE tSTRING tSTRING tSTRING
+	{ fprintf(stderr, $2, $3, $4); }
+;
+Message3: MESSAGE tSTRING tSTRING tSTRING tSTRING
+	{ fprintf(stderr, $2, $3, $4, $5); }
+;
+Message4: MESSAGE tSTRING tSTRING tSTRING tSTRING tSTRING
+	{ fprintf(stderr, $2, $3, $4, $5, $6); }
+;
+
+A_Message: Message0 | Message1 | Message2 | Message3 | Message4
+;
+
+message: A_Message
+;
+
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
-	| vsize | blackline | inputspec | page_size
+	| vsize | blackline | inputspec | page_size | message
 ;
 
 Rule: A_Rule SEMI
+	{ global_did_something = 1; }
 ;
 
-A_Pattern: pattern | xpattern | grid
+A_Pattern: pattern | xpattern | grid | message
 ;
 
 Pattern: A_Pattern SEMI
+	{ global_did_something = 1; }
 ;
 
 Patterns: /* empty */ | Patterns Pattern
 ;
 
 Image: image
+	{ global_did_something = 1; }
 ;
 
 Rules: /* empty */ | Rules Rule
@@ -414,11 +441,15 @@ Rules: /* empty */ | Rules Rule
 Output: Patterns | Image
 ;
 
-Thing: Rules
+EOF: /* empty */ | END SEMI
+	{ return 0; }
+;
+
+Thing: 	Rules
 	{
 	  current_testpattern = get_next_testpattern();
 	}
-	Output
+	Output EOF
 ;
 
 %%

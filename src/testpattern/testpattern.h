@@ -79,6 +79,7 @@ extern int global_image_type;
 extern int global_color_model;
 extern int global_bit_depth;
 extern int global_use_raw_cmyk;
+extern int global_did_something;
 
 
 extern char *c_strdup(const char *s);

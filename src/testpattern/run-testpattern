@@ -18,7 +18,11 @@ extra=''
 set_opt() {
     opt=`echo $1 | awk -F= '{print $1}'`
     val=`echo $1 | awk -F= '{print $2}'`
-    extra="`printf \'%s\nparameter \"%s\" \"%s\"\;' \"$extra\" $opt $val`"
+    extra="`printf '%s\nparameter \"%s\" \"%s\";' \"$extra\" $opt $val`"
+}
+
+set_message() {
+    the_message="`printf '%s\nmessage \"%s\";' \"$the_message\" \"$@\"`"
 }
 
 usage() {
@@ -42,11 +46,11 @@ set_args() {
     done
 }
 
-run_one_testpattern() {
+print_one_testpattern() {
     printer=$1
     shift
     stuff="$@"
-    cat > testpattern.test <<EOF
+    cat <<EOF
 printer "$printer";
 $stuff
 hsize 0.1;
@@ -111,13 +115,16 @@ pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.75 1.0  0.0 0.25 1.0 0.0 0.25 1.0 0.0 0.0 1.0;
 pattern 0.0 0.0 1.0 1.0 1.0 0.0 0.75 1.0  0.0 0.25 1.0 0.0 0.25 1.0 0.0 0.0 1.0;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
 pattern 0.0 0.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
+end;
 EOF
-    rm -f testp.out
+}
+
+run_testpattern() {
     case "$valgrind" in
-	1) valgrind $valopts -q --num-callers=100 --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
-	2) valgrind $valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
-	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern < testpattern.test > testp.out ;;
-	*) ./testpattern < testpattern.test > testp.out ;;
+	1) valgrind $valopts -q --num-callers=100 --leak-check=yes ./testpattern -n ;;
+	2) valgrind $valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern -n ;;
+	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern -n ;;
+	*) ./testpattern -n ;;
     esac
     if [ $? -ne 0 ] ; then
 	retval=1
@@ -132,20 +139,28 @@ fi
 
 StandardDithers="EvenTone Adaptive Ordered Fast VeryFast Floyd"
 
-if [ -z "`echo $extra |grep DitherAlgorithm`" ] ; then
-    for p in $args ; do
-	echo "$p"
-	for d in $StandardDithers ; do
-	    echo -n "    $d"
-	    run_one_testpattern "$p" "`printf '%s\n' \"parameter \\\"DitherAlgorithm\\\" \\\"$d\\\";\"`" "$extra"
+the_message=''
+
+print_all_testpatterns() {
+    if [ -z "`echo $extra |grep DitherAlgorithm`" ] ; then
+	for p in $args ; do
+	    set_message "$p
+"
+	    for d in $StandardDithers ; do
+		set_message "    $d"
+		print_one_testpattern "$p" "`printf '%s\n' \"parameter \\\"DitherAlgorithm\\\" \\\"$d\\\";\"`" "$extra" "$the_message"
+		the_message=''
+	    done
 	done
-    done
-else
-    for p in $args ; do
-	echo -n "$p"
-	run_one_testpattern "$p" "$extra"
-    done
-fi
+    else
+	for p in $args ; do
+	    the_message=''
+	    set_message "$p"
+	    print_one_testpattern "$p" "$extra" "$the_message"
+	done
+    fi
+}
 
+print_all_testpatterns | run_testpattern
 
-exit $retval
+exit $?
