@@ -348,7 +348,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     cups.row = 0;
 
-    fprintf(stderr, "PAGE: %d 1\n", cups.page);
+    fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
+    /* use 1-based page logging */
 
    /*
     * Debugging info...
