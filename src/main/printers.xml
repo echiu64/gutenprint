@@ -674,6 +674,7 @@
 <printer name="EPSON Stylus Pro 5500" driver="escp2-5500">
 <color>
 <model value=40>
+<cyan value=0.8>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -690,6 +691,7 @@
 <printer name="EPSON Stylus Pro 7500" driver="escp2-7500">
 <color>
 <model value=29>
+<cyan value=0.8>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>
@@ -706,6 +708,7 @@
 <printer name="EPSON Stylus Pro 9500" driver="escp2-9500">
 <color>
 <model value=31>
+<cyan value=0.8>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

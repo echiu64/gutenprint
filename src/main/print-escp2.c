@@ -1889,7 +1889,10 @@ static const escp2_dot_size_t sc670_dotsizes =
 static const escp2_dot_size_t sp2000_dotsizes =
 { -1,   0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
-static const escp2_dot_size_t spro_dotsizes =
+static const escp2_dot_size_t spro_dye_dotsizes =
+{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t spro_pigment_dotsizes =
 {    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro10000_dotsizes =
@@ -1951,8 +1954,11 @@ static const escp2_densities_t sc660_densities =
 static const escp2_densities_t sp2000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.775, 0.852, 0.388, 0.438, 0.219, 0.219, 0.110 };
 
-static const escp2_densities_t spro_densities =
+static const escp2_densities_t spro_dye_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
+
+static const escp2_densities_t spro_pigment_densities =
+{ 2.0, 2.0, 1.5, 1.5, 0.78, 0.78, 0.775, 0.775, 0.388, 0.388, 0.194, 0.194, 0.097 };
 
 static const escp2_densities_t spro10000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
@@ -2612,7 +2618,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4), 9, 9, 0, 9, 9, 9, 0, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
@@ -2628,7 +2634,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7), 9, 9, 9, 40, 9, 9, 9, 40,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
@@ -2644,7 +2650,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7), 9, 9, 9, 40, 9, 9, 9, 40,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
@@ -2660,7 +2666,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7), 9, 9, 9, 40, 9, 9, 9, 40,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
@@ -2676,7 +2682,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7), 9, 9, 9, 40, 9, 9, 9, 40,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
@@ -2818,9 +2824,9 @@ static const escp2_stp_printer_t model_capabilities[] =
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
     1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
-    INCH(13), INCH(1200), INCH(2), INCH(4), 9, 9, 0, 9, 9, 9, 0, 9,
+    INCH(13), INCH(1200), INCH(2), INCH(4), 9, 9, 9, 40, 9, 9, 9, 40,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    spro_dotsizes, spro_densities, &simple_6color_inks,
+    spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list
   },
