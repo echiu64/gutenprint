@@ -60,12 +60,6 @@
 #define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
 
-typedef enum
-{
-  COLOR_JET_ARRANGEMENT_DEFAULT = 0,
-  COLOR_JET_ARRANGEMENT_NEW_X80
-} color_jet_arrangement_t;
-
 typedef struct
 {
   double value;
@@ -319,7 +313,7 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int ncolors, int width, int linewidth,
 				  int lineheight, int vertical_row_separation,
 				  int first_line, int phys_lines, int strategy,
-                                  int color_jet_arrangement,  /* Get from model - used for 480/580 printers */
+                                  int *head_offset,  /* Get from model - used for 480/580 printers */
 				  const void *v,
 				  void (*flushfunc)(stp_softweave_t *sw,
 						    int passno, int model,

@@ -62,6 +62,28 @@ typedef unsigned long long model_cap_t;
 typedef unsigned long long model_featureset_t;
 
 /*
+ For each printhead (=color), the offset in escp2_base_separation (1/360") units is defined here.
+ */
+/* we really should have a define for the maximum number of colors */
+
+typedef union {		/* number of rows for a pass */
+  int v[8];		/* (really pass) */
+  struct {
+    int k;
+    int m;
+    int c;
+    int y;
+    int M;
+    int C;
+    int Y;
+    int dummy;
+    } p;
+  } head_offset_t;
+	
+#define COLOR_JET_ARRANGEMENT_DEFAULT {{0, 0, 0, 0, 0, 0, 0, 0}}
+#define COLOR_JET_ARRANGEMENT_NEW_X80 {{48, 48, 96 ,0, 0, 0, 0, 0}}
+
+/*
  * For each printer, we can select from a variety of dot sizes.
  * For single dot size printers, the available sizes are usually 0,
  * which is the "default", and some subset of 1-4.  For simple variable
@@ -1097,7 +1119,7 @@ typedef struct escp2_printer
 
   		 /* The stylus 480 and 580 have an unusual arrangement of
 				  color jets that need special handling */
-  color_jet_arrangement_t color_jet_arrangement;
+  head_offset_t head_offset;
 
   int		max_hres;
   int		max_vres;
@@ -2014,10 +2036,10 @@ escp2_sat_adjustment(int model, const stp_vars_t *v)
   return (model_capabilities[model].sat_adjustment);
 }
 
-static int
-escp2_color_jet_arrangement(int model)
+static int*
+escp2_head_offset(int model)
 {
-  return (model_capabilities[model].color_jet_arrangement);
+  return (& model_capabilities[model].head_offset.v[0]);
 }
 
 static void *
@@ -2592,6 +2614,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   double k_upper, k_lower;
   int max_vres;
   const unsigned char *cols[7];
+  int head_offset[8], *offsetPtr;
 
   memcpy(&nv, v, sizeof(stp_vars_t));
 
@@ -2706,6 +2729,16 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 	  if (ydpi > escp2_base_separation)
 	    nozzle_separation = nozzle_separation * ydpi /
 	      escp2_base_separation;
+	  
+	  offsetPtr = escp2_head_offset(model);
+	  for(i=0; i<8; i++)
+	    {
+	    if (ydpi > escp2_base_separation)
+	      head_offset[i] = offsetPtr[i] * ydpi / escp2_base_separation;
+	    else
+	      head_offset[i] = offsetPtr[i];
+	    }
+	  
 	  break;
 	}
       else if (!strcmp(resolution, ""))
@@ -2858,7 +2891,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 				   out_height, separation_rows,
 				   top * physical_ydpi / 72,
 				   page_height * physical_ydpi / 72,
-				   use_softweave, escp2_color_jet_arrangement(model),  
+				   use_softweave, head_offset,  
 				   &nv, flush_pass);
     }
   else

@@ -1743,7 +1743,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
 		     int first_line, /* First line that will be printed on page */
 		     int phys_lines, /* Total height of the page in rows */
 		     int weave_strategy, /* Which weaving pattern to use */
-		     int color_jet_arrangement,
+		     int *head_offset,
 		     const void *v,
 		     void (*flushfunc)(stp_softweave_t *sw, int passno,
 				       int model, int width, int hoffset,
@@ -1751,7 +1751,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
 				       int vertical_subpass))
 {
   int i;
-  int last_line;
+  int last_line, maxHeadOffset;
   stp_softweave_t *sw = xmalloc(sizeof (stp_softweave_t));
   if (sw == 0)
     return sw;
@@ -1782,9 +1782,23 @@ stp_initialize_weave(int jets,	/* Width of print head */
     return 0;
   }
 
-  last_line = first_line + lineheight - 1;
-  if(color_jet_arrangement == COLOR_JET_ARRANGEMENT_NEW_X80)
-    last_line += 2*sw->separation*(sw->jets+1);
+  /*
+   * setup printhead offsets.
+   * for monochrome (bw) printing, the offsets are 0.
+   */
+  if(ncolors > 1)
+    for(i=0; i<8; i++)
+      sw->head_offset[i] = head_offset[i];
+  else
+    for(i=0; i<8; i++)
+      sw->head_offset[i] = 0;
+
+  maxHeadOffset = 0;
+  for(i=0; i<8; i++)
+    if(sw->head_offset[i] > maxHeadOffset)
+      maxHeadOffset = sw->head_offset[i];
+  
+  last_line = first_line + lineheight - 1 + maxHeadOffset;
   
   sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
                                           sw->oversample, first_line, last_line,
@@ -1793,7 +1807,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
    * The value of vmod limits how many passes may be unfinished at a time.
    * If pass x is not yet printed, pass x+vmod cannot be started.
    */
-  sw->vmod = 2 * sw->separation * sw->oversample;
+  sw->vmod = 6 * sw->separation * sw->oversample;
   sw->separation_rows = separation_rows;
 
   sw->bitwidth = width;
@@ -1802,25 +1816,6 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->current_vertical_subpass = 0;
   sw->last_color = -1;
   sw->ncolors = ncolors;
-
-  /*
-   * Default offsets for printhead are all zero
-   */
-  for(i=0; i<8; i++)
-    sw->head_offset[i] = 0;	/* offset for printhead = 0 */
-
-  if((color_jet_arrangement == COLOR_JET_ARRANGEMENT_NEW_X80) &&
-     (sw->ncolors == 4))
-    {
-    sw->vmod *= 3;
-    /*
-     * setup offsets for the 480 printhead
-     */
-    sw->head_offset[0] = sw->separation * (sw->jets+1);	/* offset for printhead k */
-    sw->head_offset[1] = sw->separation * (sw->jets+1);	/* offset for printhead m */
-    sw->head_offset[2] = 2 * sw->separation * (sw->jets+1);	/* offset for printhead c */
-    sw->head_offset[3] = 0;	/* offset for printhead y */
-    }
 
   /*
    * It's possible for the "compression" to actually expand the line by
