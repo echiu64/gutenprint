@@ -1566,8 +1566,8 @@ typedef struct escp2_printer_attribute
 #define MODEL_YZEROMARGIN		(10)
 #define MODEL_ENHANCED_MICROWEAVE	(11)
 #define MODEL_VACUUM			(12)
-#define MODEL_LIMIT			(13)
-#define MODEL_MICROWEAVE_EXCEPTION	(14)
+#define MODEL_MICROWEAVE_EXCEPTION	(13)
+#define MODEL_LIMIT			(14)
 
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
@@ -3794,7 +3794,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   drop_size = escp2_ink_type(model, resid, nv);
 
   if (use_microweave &&
-      !(escp2_has_cap(model, MODEL_MICROWEAVE_EXCEPTION_MASK,
+      !(escp2_has_cap(model, MODEL_MICROWEAVE_EXCEPTION,
 		      MODEL_MICROWEAVE_EXCEPTION_NORMAL, nv)))
     {
       if (ydpi == 360)
@@ -4202,7 +4202,9 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     ydpi = escp2_max_vres(model, v);
   for (j = 0; j < sw->ncolors; j++)
     {
-      if (lineactive[0].v[j] > 0)
+      if (lineactive[0].v[j] > 0 ||
+        escp2_has_cap(model, MODEL_MICROWEAVE_EXCEPTION,
+                      MODEL_MICROWEAVE_EXCEPTION_BLACK, v))
 	{
 	  int nlines = linecount[0].v[j];
 	  int minlines = pd->min_nozzles;
