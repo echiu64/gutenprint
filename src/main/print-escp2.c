@@ -170,8 +170,8 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
   },
   {
-    "FullBleed", N_("Full Bleed"), N_("Basic Printer Setup"),
-    N_("Full Bleed"),
+    "FullBleed", N_("Borderless"), N_("Basic Printer Setup"),
+    N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
