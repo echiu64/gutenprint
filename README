@@ -1,14 +1,14 @@
 INTRODUCTION
 
-    This is Gimp-Print version 5.0.0 Beta 1, the first beta prerelease
-    of Gimp-Print 5.0.  Gimp-Print is a suite of printer drivers that
-    may be used with most common UNIX print spooling systems,
-    including CUPS, lpr, LPRng, or others.  These drivers provide high
-    quality printing for UNIX (including Macintosh OS X 10.2 and
-    newer) and Linux systems in many cases equal to or better than
-    proprietary vendor-supplied drivers, and can be used for many of
-    the most demanding printing tasks.  A complete list of supported
-    printers may be found in the NEWS file.
+    This is Gimp-Print version 5.0.0 Beta 2, the second beta
+    prerelease of Gimp-Print 5.0.  Gimp-Print is a suite of printer
+    drivers that may be used with most common UNIX print spooling
+    systems, including CUPS, lpr, LPRng, or others.  These drivers
+    provide high quality printing for UNIX (including Macintosh OS X
+    10.2 and newer) and Linux systems in many cases equal to or better
+    than proprietary vendor-supplied drivers, and can be used for many
+    of the most demanding printing tasks.  A complete list of
+    supported printers may be found in the NEWS file.
 
     Gimp-Print also includes a plug-in for the GIMP image editor.
     This plug-in is also distributed with the GIMP.
@@ -168,9 +168,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
 
-    If the version number (in this case, 5.0.0-beta1) does not match
+    If the version number (in this case, 5.0.0-beta2) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -201,15 +201,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(sv)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta1(fr)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(sv)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(fr)
 
     you may wish to turn off the translation of PPD files:
 

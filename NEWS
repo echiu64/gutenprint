@@ -1,14 +1,14 @@
-Welcome to Gimp-Print 5.0 Beta 1!  Please read these release notes
+Welcome to Gimp-Print 5.0 Beta 2!  Please read these release notes
 carefully.
 
-Gimp-Print 5.0.0-beta1 is the first beta prerelease of Gimp-Print 5.0.
-It is based on the 4.3 series that has been in development for over
-two years, and includes many improvements over the very popular 4.2
-series.  This release is not considered to be a fully stable release
-(there are still various things in flux, and it has not undergone the
-extensive testing that is required to declare a release stable), but
-we've been using it and we believe that it will be useful for many
-purposes.
+Gimp-Print 5.0.0-beta2 is the second beta prerelease of Gimp-Print
+5.0.  It is based on the 4.3 series that has been in development for
+over two years, and includes many improvements over the very popular
+4.2 series.  This release is not considered to be a fully stable
+release (there are still various things in flux, and it has not
+undergone the extensive testing that is required to declare a release
+stable), but we've been using it and we believe that it will be useful
+for many purposes.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -68,12 +68,75 @@ on building and installing Gimp-Print.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-alpha3 to 5.0.0-beta1
-2) Changes from 5.0.0-alpha2 to 5.0.0-alpha3
-3) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
-4) Overall changes from 4.2 to 5.0.
-5) List of supported printers
-6) Printer-specific notes
+1) Changes from 5.0.0-beta1 to 5.0.0-beta2
+2) Changes from 5.0.0-alpha3 to 5.0.0-beta1
+3) Changes from 5.0.0-alpha2 to 5.0.0-alpha3
+4) Changes from 5.0.0-alpha1 to 5.0.0-alpha2
+5) Overall changes from 4.2 to 5.0.
+6) List of supported printers
+7) Printer-specific notes
+
+================================================================
+
+* Major changes between Gimp-Print 5.0.0 beta 1 and 5.0.0 beta 2:
+
+  1) Printing direct to CD on Epson printers that support it now
+     works.  In addition, a choice of center hole size (16 mm or 43
+     mm) is now offered.
+
+     It is likely that this support will be further enhanced prior to
+     final release of 5.0.
+
+  2) Additional dye sublimation printers (Canon CP-220 and CP-330,
+     Olympus P-200 and P-400) are now supported; the Olympus P-10 is
+     now partially supported.
+
+  3) Additional page sizes are now available for Olympus and related
+     photo printers (including certain Canon and Sony dye sublimation
+     printers).  In addition, other supported page sizes now work
+     correctly on the Canon CP-100.
+
+  4) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
+     plugin directory, rather than the GIMP 1.2 directory.
+
+  5) A "predithered" color correction mode is now available, in
+     conjunction with a "predithered" dither algorithm.  These very
+     fast algorithms assume that the data has already been screened,
+     and simply perform a threshold with no correction whatsoever.
+     This is useful for certain custom applications.
+
+  6) The GIMP 2.0 plugin now uses new curve widgets, replacing the
+     GTK+ curve widgets.  These widgets will undergo further
+     development, adding new functionality.
+
+  7) A problem with Canon 6-color inkjet printers whereby the
+     transition between light and dark inks is fixed.  This problem
+     was specific to the 4.3/5.0 code line and was a regression from
+     4.2.
+
+  8) A problem with Canon printers in DMT mode whereby vertical lines
+     were printed across the page is fixed.  This problem was specific
+     to the 4.3/5.0 code line and was a regression from 4.2.
+
+  9) A few problems with the display of the preview window in the GIMP
+     plugin (both 1.2 and 2.0) are fixed.
+
+  10) The GIMP 2.0 plugin now handles the version 3 printrc file
+     correctly.
+
+  11) The printers.xml file now has a more flexible format that
+     permits specifying arbitrary parameters.
+
+  The following bugs have been fixed in this release:
+
+1001267 GIMP2 plugin does not handle v3 printrc format
+1001029 Auto orientation not updated in preview (causes jumbling)
+1000661 GIMP plugin does not refresh preview correctly in some cases
+993628  Overprinting a page on Olympus causes problems
+982642  Canon 6200 Photo Ink Problems
+981304  gimp2 print plugin installed in wrong directory
+980678  Canon DMT not correct
+
 
 ================================================================
 
@@ -747,26 +810,19 @@ and changes from 4.2, as follows:
      the top.  However, it works correctly along the left and right
      margins.  We do not have an estimated time for a fix.
 
-  2) Printing to CD probably does not work correctly on the Epson
-     Stylus Photo 900 and the Stylus Photo R300, although for
-     different reasons.  On the Stylus Photo 900, the positioning is
-     most likely incorrect, while the manual feed tray is not selected
-     correctly on the Stylus Photo R300.  We do not have an estimated
-     time for a fix.
-
-  3) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
+  2) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
      of the additional options and improvements that the Epson driver
      does.  We do not have an estimated time for fix.  Please contact
      us if you would like to assist with this.
 
-  4) Translation to other languages other than US-English is not
+  3) Translation to other languages other than US-English is not
      supported in this release.  This will be fixed prior to 5.0 final
      release.
 
-  5) Support for the Canon S200 has not yet been ported forward from
+  4) Support for the Canon S200 has not yet been ported forward from
      4.2.
 
-  6) This release is slower than 4.2 in many cases, particularly when
+  5) This release is slower than 4.2 in many cases, particularly when
      using High Accuracy (which is the default color correction in
      most cases) or Bright color correction.  It is possible that this
      release will not be able to drive some printers at full speed,
@@ -774,13 +830,14 @@ and changes from 4.2, as follows:
      has been only partially analyzed or tuned at present.  We hope to
      improve the performance prior to final release.
 
-  7) The user's manual and developer's guide have not been updated for
+  6) The user's manual and developer's guide have not been updated for
      this release.
 
-  8) The CUPS PPD update script (cups-genppdupdate.5.0) will not
-     update PPD files from 4.2 or from 4.3 prior to 4.3.21.
+  7) The CUPS PPD update script (cups-genppdupdate.5.0) will not
+     update PPD files from 4.2 or from 4.3 prior to 4.3.21.  This is a
+     permanent restriction.
 
-  9) With certain versions of CUPS and in certain non-default
+  8) With certain versions of CUPS and in certain non-default
      configurations, if a new version of Gimp-Print is installed over
      an existing version genppd will create PPD files based on the
      older version of Gimp-Print rather than the newer version.  This
@@ -849,7 +906,7 @@ and changes from 4.2, as follows:
 
      3) Edit cups-config to remove the reference to the run path.
 
-  10) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
+  9) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
      against GIMP 2.0) requires special build instructions if you are
      using a very old version of the GIMP 1.2 (versions affected are
      believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
