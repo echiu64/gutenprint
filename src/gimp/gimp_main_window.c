@@ -534,6 +534,20 @@ create_preview (void)
 }
 
 static GtkWidget *
+create_positioning_entry(GtkWidget *table, int hpos, int vpos,
+			 const char *text, const char *help)
+{
+  GtkWidget *entry = gtk_entry_new();
+  gtk_widget_set_usize(entry, 60, 0);
+  gimp_table_attach_aligned(GTK_TABLE(table), hpos, vpos, _(text),
+			    1.0, 0.5, entry, 1, TRUE);
+  gimp_help_set_help_data(entry, _(help), NULL);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		     GTK_SIGNAL_FUNC(position_callback), NULL);
+  return entry;
+}
+
+static GtkWidget *
 create_positioning_button(GtkWidget *box, const char *text, const char *help)
 {
   GtkWidget *button = gtk_button_new_with_label(_(text));
@@ -599,91 +613,24 @@ create_positioning_frame (void)
    * Position entries
    */
 
-  left_entry = gtk_entry_new ();
-  gtk_widget_set_usize (left_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 2,
-                             _("Left:"), 1.0, 0.5,
-                             left_entry, 1, TRUE);
-
-  gimp_help_set_help_data (left_entry,
-                           _("Distance from the left of the paper to the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (left_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  top_entry = gtk_entry_new ();
-  gtk_widget_set_usize (top_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 2, 2,
-                             _("Top:"), 1.0,
-			     0.5, top_entry, 1, TRUE);
-
-  gimp_help_set_help_data (top_entry,
-                           _("Distance from the top of the paper to the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (top_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  right_entry = gtk_entry_new ();
-  gtk_widget_set_usize (right_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
-                             _("Right:"), 1.0, 0.5,
-                             right_entry, 1, TRUE);
-
-  gimp_help_set_help_data (right_entry,
-                           _("Distance from the left of the paper to "
-                             "the right of the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (right_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  right_border_entry = gtk_entry_new ();
-  gtk_widget_set_usize (right_border_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 4,
-                             _("Right Border:"), 1.0, 0.5,
-                             right_border_entry, 1, TRUE);
-
-  gimp_help_set_help_data (right_border_entry,
-                           _("Distance from the right of the paper to "
-                             "the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (right_border_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  bottom_entry = gtk_entry_new ();
-  gtk_widget_set_usize (bottom_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 2, 3,
-                             _("Bottom:"), 1.0, 0.5,
-                             bottom_entry, 1, TRUE);
-
-  gimp_help_set_help_data (bottom_entry,
-                           _("Distance from the top of the paper to "
-                             "the bottom of the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (bottom_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  bottom_border_entry = gtk_entry_new ();
-  gtk_widget_set_usize (bottom_border_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 2, 4,
-                             _("Bottom Border:"), 1.0, 0.5,
-                             bottom_border_entry, 1, TRUE);
-
-  gimp_help_set_help_data (bottom_border_entry,
-                           _("Distance from the bottom of the paper to "
-                             "the image"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (bottom_border_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  sep = gtk_hseparator_new ();
-  gtk_table_attach_defaults (GTK_TABLE (table), sep, 0, 4, 5, 6);
-  gtk_widget_show (sep);
+  left_entry = create_positioning_entry
+    (table, 0, 2, N_("Left:"),
+     _("Distance from the left of the paper to the image"));
+  top_entry = create_positioning_entry
+    (table, 2, 2, N_("Top:"),
+     _("Distance from the top of the paper to the image"));
+  right_entry = create_positioning_entry
+    (table, 0, 3, N_("Right:"),
+     _("Distance from the left of the paper to the right of the image"));
+  right_border_entry = create_positioning_entry
+    (table, 2, 3, N_("Right Border:"),
+     _("Distance from the right of the paper to the image"));
+  bottom_entry = create_positioning_entry
+    (table, 0, 4, N_("Bottom:"),
+     _("Distance from the top of the paper to bottom of the image"));
+  bottom_border_entry = create_positioning_entry
+    (table, 2, 4, N_("Bottom Border:"),
+     _("Distance from the bottom of the paper to the image"));
 
   /*
    * Center options
