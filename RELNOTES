@@ -1,15 +1,16 @@
-This is the Print plugin for the Gimp, version 4.0b2.  This is the
-second beta of the 4.0 stable release.  It is not 4.0.
+This is gimp-print version 4.0b2.  This is the second beta of the 4.0
+stable release.  It is not 4.0.
 
-This software also comes with GhostScript and CUPS drivers.  The
-support for printers in GhostScript and CUPS is identical to the
-support for these printers in the Print plugin -- they use the
-identical code base.  Please read Ghost/README and CUPS/README.txt for
-more information on this.
+This software includes the Print plug-in for the Gimp, and GhostScript
+and CUPS drivers.  The support for printers in GhostScript and CUPS is
+identical to the support for these printers in the Print plugin --
+they use the identical code base.  Please read Ghost/README and
+CUPS/README.txt for more information on this.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
 
-Gimp-Print 4.0b2 contains the following fixes over Gimp-Print 4.0b1:
+Gimp-Print 4.0b2 contains the following fixes and improvements over
+Gimp-Print 4.0b1:
 
 1) The GhostScript and Foomatic drivers did not handle paper sizes
    other than letter size.
@@ -39,6 +40,14 @@ Gimp-Print 4.0b2 contains the following fixes over Gimp-Print 4.0b1:
 9) Print dot size at 360 DPI is now correct on the Epson Stylus Photo
    720.
 
+10) The default saturation level in Photograph mode (image type 2) has
+   been reduced.  The new default saturation of 1.0 corresponds to a
+   saturation level of 0.625 previously.
+
+11) The configure script in 4.0b1 will not function with the Gimp
+   1.1.26 (which was released after 4.0b1) or with certain very
+   recent snapshots of GNOME which may contain very new Gimp code.
+
 Errata:
 
 1) PostScript files (and PPD's) with embedded .setpagedevice commands
@@ -55,10 +64,11 @@ Errata:
 3) There are some known color generation problems.  In particular,
    greens (particularly weakly saturated greens) tend to be quite
    weak, giving grass a somewhat tan look.  This may be improved
-   somewhat by printing in 4-color rather than 6-color mode.
-   We do not anticipate much if any improvement in the release.  The
-   errors in color are not radical, but it may be hard to get a close
-   match for extremely critical work.
+   somewhat by printing in 4-color rather than 6-color mode.  We do
+   not anticipate much if any further improvement in the release
+   beyond the change in saturation noted above.  The errors in color
+   are not radical, but it may be hard to get a close match for
+   extremely critical work.
 
 4) Red Hat 6.1 users cannot configure the plug-in.  The problem is
    that neither the gimp nor the gimp-devel rpm's in that release
