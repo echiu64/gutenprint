@@ -92,7 +92,7 @@ while (<PPDFILES>) {
     chomp;
     push @ppd_files,  $_;
 }
-close PPDFILES or die "can't close grep pipe: $!";;
+close PPDFILES or ($! == 0) or die "can't close grep pipe: $!";
 
 
 # Update each of the Gimp-Print PPDs, where possible...

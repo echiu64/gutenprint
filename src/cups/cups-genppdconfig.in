@@ -475,7 +475,7 @@ sub dialog_read ($$) {
     while (defined($line = <DIALOG>)) {
 	$result .= $line;
     }
-    close DIALOG or !($!) or die "can't close dialog pipe: $!";
+    close DIALOG or ($! == 0) or die "can't close dialog pipe: $!";
     if ($? >> 8)
     {
 	return undef;
