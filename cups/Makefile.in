@@ -56,10 +56,10 @@ RANLIB	=	:
 #
 
 TARGETS	=	calibrate commandtoepson epson epson.dep genppd \
-		libutil.a rastertoepson
-LIBOBJS	=	check.o dither.o pack.o
-OBJS	=	$(LIBOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
-		rastertoepson.o
+		rastertoprinter
+DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
+		cups-ps.o cups-util.o cups-weave.o rastertoprinter.o
+OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o
 
 
 #
@@ -94,8 +94,8 @@ install:
 	$(CHMOD) 755 $(PREFIX)/lib/cups/backend/epson
 
 	-$(MKDIR) $(PREFIX)/lib/cups/filter
-	$(CP) rastertoepson $(PREFIX)/lib/cups/filter
-	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/rastertoepson
+	$(CP) rastertoprinter $(PREFIX)/lib/cups/filter
+	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/rastertoprinter
 	$(CP) commandtoepson $(PREFIX)/lib/cups/filter
 	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
 
@@ -150,26 +150,14 @@ genppd:	genppd.o
 
 
 #
-# libutil.a
+# rastertoprinter
 #
 
-libutil.a:	$(LIBOBJS)
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $(LIBOBJS)
-	$(RANLIB) $@
-
-$(LIBOBJS):	util.h
-
-
-#
-# rastertoepson
-#
-
-rastertoepson:	rastertoepson.o libutil.a
+rastertoprinter:	$(DRVOBJS)
 	echo Linking $@...
-	$(CC) $(LDFLAGS) -o rastertoepson rastertoepson.o libutil.a $(LIBS)
+	$(CC) $(LDFLAGS) -o rastertoprinter $(DRVOBJS) $(LIBS) -lm
 
-rastertoepson.o:	util.h
+$(DRVOBJS):	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
 
 
 #
