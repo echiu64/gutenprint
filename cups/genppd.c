@@ -458,14 +458,14 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   gzprintf(fp, "*ColorModel Gray/Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
-	       "/cupsBitsPerColor 8>>\"\n",
+	       "/cupsBitsPerColor 8>>setpagedevice\"\n",
            CUPS_CSPACE_W, CUPS_ORDER_CHUNKED);
 
   if (p->printvars.output_type == OUTPUT_COLOR)
     gzprintf(fp, "*ColorModel RGB/Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
-		 "/cupsBitsPerColor 8>>\"\n",
+		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
              CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED);
 
   gzputs(fp, "*CloseUI: *ColorModel\n");
