@@ -25,8 +25,8 @@
  * compile on generic platforms that don't support glib, gimp, gimpprint, etc.
  */
 
-#ifndef GIMP_PRINT_ARRAY_H
-#define GIMP_PRINT_ARRAY_H
+#ifndef __GIMP_PRINT_ARRAY_H__
+#define __GIMP_PRINT_ARRAY_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,4 +65,4 @@ extern stp_const_sequence_t stp_array_get_sequence(stp_const_array_t array);
   }
 #endif
 
-#endif /* GIMP_PRINT_ARRAY_H */
+#endif /* __GIMP_PRINT_ARRAY_H__ */

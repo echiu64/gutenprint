@@ -24,6 +24,11 @@
 #ifndef __GIMP_PRINT_INTL_INTERNAL_H__
 #define __GIMP_PRINT_INTL_INTERNAL_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #ifdef INCLUDE_LOCALE_H
 INCLUDE_LOCALE_H
 #else
@@ -49,6 +54,10 @@ INCLUDE_LOCALE_H
 #    define bindtextdomain(Domain,Directory) (Domain)
 #    define _(String) (String)
 #    define N_(String) (String)
+#endif
+
+#ifdef __cplusplus
+  }
 #endif
 
 #endif /* __GIMP_PRINT_INTL_INTERNAL_H__ */

@@ -29,17 +29,18 @@
 #ifndef __GIMP_PRINT_UI_H__
 #define __GIMP_PRINT_UI_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #ifdef __GNUC__
 #define inline __inline__
 #endif
 
 #include <gtk/gtk.h>
 
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
 #include <gimp-print/gimp-print.h>
-#endif
 
 /*
  * All Gimp-specific code is in this file.
@@ -107,5 +108,10 @@ extern void stpui_set_thumbnail_data(void *);
 extern void *stpui_get_thumbnail_data(void);
 
 extern int stpui_print(const stpui_plist_t *printer, stp_image_t *im);
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif  /* __GIMP_PRINT_UI_H__ */
