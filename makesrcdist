@@ -1,4 +1,4 @@
-#!/bin/csh -fv
+#!/bin/csh -f
 #
 # makesrcdist - make a source distribution of GIMP-print.
 #
@@ -39,9 +39,9 @@ endif
 
 echo "Making configuration script..."
 
-aclocal -I .
-autoconf
+aclocal
 automake
+autoconf
 
 echo "Removing CVS directories..."
 

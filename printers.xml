@@ -382,6 +382,46 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
+<color>
+<model value=27>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 7000" driver="escp2-7000">
+<color>
+<model value=28>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 7500" driver="escp2-7500">
+<color>
+<model value=29>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9000" driver="escp2-9000">
+<color>
+<model value=30>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9500" driver="escp2-9500">
+<color>
+<model value=31>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="HP DeskJet 340" driver="pcl-340">
 <color>
 <model value=340>
