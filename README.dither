@@ -185,12 +185,14 @@ be used for modes with 2:1 aspect ratio (e. g. 1440x720) than for 1:1
 every point be used.  Skipping points generates low-frequency noise.
 
 It's essential to use different matrices for deciding whether to print
-and for deciding what color to print.  This should be obvious; the
-decision about what color to print should be as independent as
-possible from the decision about what color to print.  We actually use
-the same matrices, but we shift them vertically and horizontally.
-Assuming that the matrices are not self-correlated, this will yield
-good results.
+and for deciding what color (dark or light) to print.  This should be
+obvious; the decision about whether to print at all should be as
+independent as possible from the decision about what color to print,
+because any bias will result in excess light or dark ink being
+printed, shifting the tonal balance.  We actually use the same
+matrices, but we shift them vertically and horizontally.  Assuming
+that the matrices are not self-correlated, this will yield good
+results.
 
 
 The ranges are computed from a list of ink values (between (0, 1] for
