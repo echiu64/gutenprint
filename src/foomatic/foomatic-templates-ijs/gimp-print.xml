@@ -3,7 +3,7 @@
  <url>http://gimp-print.sourceforge.net/</url>
  <execution>
   <filter />
-  <prototype>gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=ijs -sIjsServer=ijsgimpprint -dIjsUseOutputFD%A -sIjsParams=&quot;%B&quot;%Z -sOutputFile=- -</prototype>
+  <prototype>gs -q -dPARANOIDSAFER -dNOPAUSE -dBATCH -sDEVICE=ijs -sIjsServer=ijsgimpprint -dIjsUseOutputFD%A -sIjsParams=&quot;%B&quot;%Z -sOutputFile=- -</prototype>
  </execution>
  <comments>
   <en>
