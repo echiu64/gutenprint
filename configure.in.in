@@ -370,7 +370,7 @@ fi
 
 dnl Definitions
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
-AC_DEFINE_UNQUOTED(RELEASE_DATE, "`date '+%d %b %Y'`")
+AC_DEFINE_UNQUOTED(RELEASE_DATE, XXX)
 
 dnl Substitutions
 AC_SUBST(cups_prefix)
