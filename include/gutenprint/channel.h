@@ -57,6 +57,8 @@ extern void stp_channel_set_cutoff_adjustment(stp_vars_t *v,
 					      int color, int subchannel,
 					      double adjustment);
 extern void stp_channel_set_black_channel(stp_vars_t *v, int channel);
+extern void stp_channel_set_hue_angle(stp_vars_t *v,
+				      int color, double angle);
 
 extern void stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 				   int input_channel_count);

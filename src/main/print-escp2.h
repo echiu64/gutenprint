@@ -181,6 +181,7 @@ typedef struct
   const char *listname;
   const physical_subchannel_t *subchannels;
   short n_subchannels;
+  double hue;
 } ink_channel_t;
 
 typedef enum

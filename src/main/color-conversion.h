@@ -100,7 +100,6 @@ typedef unsigned (*stp_convert_t)(const stp_vars_t *vars,
 #define CMASK_RGB    (CMASK_R | CMASK_G | CMASK_B)
 #define CMASK_CMY    (CMASK_C | CMASK_M | CMASK_Y)
 #define CMASK_CMYK   (CMASK_CMY | CMASK_K)
-#define CMASK_CMYKRB (CMASK_CMYK | CMASK_R | CMASK_B)
 #define CMASK_ALL    (CMASK_CMYK | CMASK_RGB | CMASK_W)
 #define CMASK_EVERY  (CMASK_ALL | CMASK_RAW)
 
@@ -112,7 +111,6 @@ typedef enum
   COLOR_ID_CMY,
   COLOR_ID_CMYK,
   COLOR_ID_KCMY,
-  COLOR_ID_CMYKRB,
   COLOR_ID_RAW
 } color_id_t;
 
@@ -151,7 +149,9 @@ typedef struct
   stp_cached_curve_t contrast_correction;
   stp_cached_curve_t user_color_correction;
   stp_cached_curve_t channel_curves[STP_CHANNEL_LIMIT];
+  stp_cached_curve_t hue_angle;
   double gamma_values[STP_CHANNEL_LIMIT];
+  double hue_angles[STP_CHANNEL_LIMIT];
   double print_gamma;
   double app_gamma;
   double screen_gamma;
@@ -165,7 +165,6 @@ typedef struct
   stp_cached_curve_t gcr_curve;
   unsigned short *gray_tmp;	/* Color -> Gray */
   unsigned short *cmy_tmp;	/* CMY -> CMYK */
-  unsigned short *cmyk_tmp;	/* CMYK -> CMYKRB */
   unsigned char *in_data;
 } lut_t;
 
@@ -178,9 +177,6 @@ extern unsigned stpi_color_convert_to_color(const stp_vars_t *v,
 extern unsigned stpi_color_convert_to_kcmy(const stp_vars_t *v,
 					   const unsigned char *,
 					   unsigned short *);
-extern unsigned stpi_color_convert_to_cmykrb(const stp_vars_t *v,
-					     const unsigned char *,
-					     unsigned short *);
 extern unsigned stpi_color_convert_raw(const stp_vars_t *v,
 				       const unsigned char *,
 				       unsigned short *);

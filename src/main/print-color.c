@@ -129,8 +129,6 @@ static const color_description_t color_descriptions[] =
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_kcmy   },
   { "KCMY",       1, 1, COLOR_ID_KCMY,   COLOR_BLACK,   CMASK_CMYK,   4,
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_kcmy   },
-  { "CMYKRB",     0, 1, COLOR_ID_CMYKRB, COLOR_BLACK,   CMASK_CMYKRB, 6,
-    COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_cmykrb },
   { "Raw",        1, 1, COLOR_ID_RAW,    COLOR_UNKNOWN, 0,           -1,
     COLOR_CORRECTION_RAW,         &stpi_color_convert_raw       },
 };
@@ -705,7 +703,6 @@ copy_lut(void *vlut)
   stp_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
   /* Don't copy gray_tmp */
   /* Don't copy cmy_tmp */
-  /* Don't copy cmyk_tmp */
   if (src->in_data)
     {
       dest->in_data = stp_malloc(src->image_width * src->in_channels);
@@ -728,7 +725,6 @@ free_lut(void *vlut)
   stp_curve_free_curve_cache(&(lut->gcr_curve));
   STP_SAFE_FREE(lut->gray_tmp);
   STP_SAFE_FREE(lut->cmy_tmp);
-  STP_SAFE_FREE(lut->cmyk_tmp);
   STP_SAFE_FREE(lut->in_data);
   memset(lut, 0, sizeof(lut_t));
   stp_free(lut);
@@ -848,9 +844,9 @@ initialize_gcr_curve(const stp_vars_t *vars)
  *    synthesizing channels).
  *
  * 2) If the output is CMY or K only, we never synthesize channels.  We've
- *    now covered raw, black, and CMY/RGB outputs, leaving CMYK and CMYKRB.
+ *    now covered raw, black, and CMY/RGB outputs, leaving CMYK and MULTI.
  *
- * 3) Output channels above CMYK are synthesized (e. g. RB in CMYKRB).
+ * 3) Output channels above CMYK are synthesized.
  *
  * 4) If the input is CMYK, we do not synthesize channels.
  *

@@ -1794,7 +1794,6 @@ escp2_describe_output(const stp_vars_t *v)
 	  switch (ink_type->inkset)
 	    {
 	    case INKSET_CMYKRB:
-	      return "CMYKRB";
 	    case INKSET_CMYK:
 	    case INKSET_CcMmYK:
 	    case INKSET_CcMmYyK:
@@ -2090,6 +2089,7 @@ setup_inks(stp_vars_t *v)
 		stp_channel_set_cutoff_adjustment(v, i, j,
 						  paper->subchannel_cutoff);
 	    }
+	  stp_channel_set_hue_angle(v, i, channel->hue);
 	}
     }
   stp_flush_debug_messages(v);

@@ -279,7 +279,7 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 	  double weight;
 	  double g;
 	  double l2;
-	  double is,s2;
+	  double s2;
 
 	  g=-4.0 + el * 5.0;
 	  lumhigh=g * l + (1.0 - g);
@@ -1861,196 +1861,6 @@ KCMY_TO_KCMY_RAW_FUNC(unsigned char, 8)
 KCMY_TO_KCMY_RAW_FUNC(unsigned short, 16)
 GENERIC_COLOR_FUNC(kcmy, kcmy_raw)
 
-static unsigned
-generic_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
-		       unsigned short *out)
-{
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
-  unsigned short nz[6];
-  int width = lut->image_width;
-  const unsigned short *input_cache = NULL;
-  const unsigned short *output_cache = NULL;
-  int i, j;
-  unsigned retval = 0;
-
-  memset(nz, 0, sizeof(nz));
-
-  for (i = 0; i < width; i++, out += 6, in += 4)
-    {
-      if (input_cache && short_eq(input_cache, in, 4))
-	short_copy(out, output_cache, 6);
-      else
-	{
-	  int r = FMIN(in[2], in[3]);
-	  int b = FMIN(in[1], in[2]);
-	  int k = in[0];
-	  int excess_r = r - (b + k);
-	  int excess_b = b - (r + k);
-	  input_cache = in;
-	  for (j = 0; j < 4; j++)
-	    {
-	      out[j] = in[j];
-	      if (in[j])
-		nz[j] = 1;
-	    }
-	  if (excess_r > 0)
-	    {
-	      out[2] -= excess_r;
-	      out[3] -= excess_r;
-	      out[4] = excess_r;
-	      out[5] = 0;
-	      nz[4] = 1;
-	    }
-	  else if (excess_b > 0)
-	    {
-	      out[1] -= excess_b;
-	      out[2] -= excess_b;
-	      out[4] = 0;
-	      out[5] = excess_b;
-	      nz[5] = 1;
-	    }
-	  else
-	    {
-	      out[4] = 0;
-	      out[5] = 0;
-	    }
-	  output_cache = out;
-	}
-    }
-  for (j = 0; j < 6; j++)
-    if (nz[j] == 0)
-      retval |= (1 << j);
-  return retval;
-}
-
-static unsigned
-raw_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
-		   unsigned short *out)
-{
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
-  unsigned short nz[6];
-  int width = lut->image_width;
-  const unsigned short *input_cache = NULL;
-  const unsigned short *output_cache = NULL;
-  int i, j;
-  unsigned retval = 0;
-
-  memset(nz, 0, sizeof(nz));
-
-  for (i = 0; i < width; i++, out += 6, in += 4)
-    {
-      if (input_cache && short_eq(input_cache, in, 4))
-	short_copy(out, output_cache, 6);
-      else
-	{
-	  int r = FMIN(in[2], in[3]);
-	  int b = FMIN(in[1], in[2]);
-	  int k = in[0];
-	  int excess_r = r - (b + k);
-	  int excess_b = b - (r + k);
-	  input_cache = in;
-	  for (j = 0; j < 4; j++)
-	    {
-	      out[j] = in[j];
-	      if (in[j])
-		nz[j] = 1;
-	    }
-	  if (excess_r > 0)
-	    {
-	      out[2] -= excess_r;
-	      out[3] -= excess_r;
-	      out[4] = excess_r;
-	      out[5] = 0;
-	      nz[4] = 1;
-	    }
-	  else if (excess_b > 0)
-	    {
-	      out[1] -= excess_b;
-	      out[2] -= excess_b;
-	      out[4] = 0;
-	      out[5] = excess_b;
-	      nz[5] = 1;
-	    }
-	  else
-	    {
-	      out[4] = 0;
-	      out[5] = 0;
-	    }
-	  output_cache = out;
-	}
-    }
-  for (j = 0; j < 6; j++)
-    if (nz[j] == 0)
-      retval |= (1 << j);
-  return retval;
-}
-
-#define COLOR_TO_CMYKRB_FUNC(name, name2, name3, name4, bits)		    \
-static unsigned								    \
-name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
-			  unsigned short *out)				    \
-{									    \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	    \
-  size_t real_steps = lut->steps;					    \
-  unsigned status;							    \
-  if (!lut->cmyk_tmp)							    \
-    lut->cmyk_tmp = stp_malloc(4 * 2 * lut->image_width);		    \
-  name##_##bits##_to_##name3(vars, in, lut->cmyk_tmp);			    \
-  lut->steps = 65536;							    \
-  status = name4##_kcmy_to_cmykrb(vars, lut->cmyk_tmp, out);		    \
-  lut->steps = real_steps;						    \
-  return status;							    \
-}
-
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(gray, cmykrb)
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb_threshold, kcmy_threshold, generic, 8)
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb_threshold, kcmy_threshold, generic, 16)
-GENERIC_COLOR_FUNC(gray, cmykrb_threshold)
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb_raw, kcmy_raw, raw, 8)
-COLOR_TO_CMYKRB_FUNC(gray, cmykrb_raw, kcmy_raw, raw, 16)
-GENERIC_COLOR_FUNC(gray, cmykrb_raw)
-
-COLOR_TO_CMYKRB_FUNC(color, cmykrb, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(color, cmykrb)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_threshold, kcmy_threshold, generic, 8)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_threshold, kcmy_threshold, generic, 16)
-GENERIC_COLOR_FUNC(color, cmykrb_threshold)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_fast, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_fast, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(color, cmykrb_fast)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_raw, kcmy_raw, raw, 8)
-COLOR_TO_CMYKRB_FUNC(color, cmykrb_raw, kcmy_raw, raw, 16)
-GENERIC_COLOR_FUNC(color, cmykrb_raw)
-
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(cmyk, cmykrb)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_threshold, kcmy_threshold, generic, 8)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_threshold, kcmy_threshold, generic, 16)
-GENERIC_COLOR_FUNC(cmyk, cmykrb_threshold)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_fast, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_fast, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(cmyk, cmykrb_fast)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_raw, kcmy_raw, raw, 8)
-COLOR_TO_CMYKRB_FUNC(cmyk, cmykrb_raw, kcmy_raw, raw, 16)
-GENERIC_COLOR_FUNC(cmyk, cmykrb_raw)
-
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(kcmy, cmykrb)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_threshold, kcmy_threshold, generic, 8)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_threshold, kcmy_threshold, generic, 16)
-GENERIC_COLOR_FUNC(kcmy, cmykrb_threshold)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_fast, kcmy, generic, 8)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_fast, kcmy, generic, 16)
-GENERIC_COLOR_FUNC(kcmy, cmykrb_fast)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_raw, kcmy_raw, raw, 8)
-COLOR_TO_CMYKRB_FUNC(kcmy, cmykrb_raw, kcmy_raw, raw, 16)
-GENERIC_COLOR_FUNC(kcmy, cmykrb_raw)
-
 #define DESATURATED_FUNC(name, name2, bits)				   \
 static unsigned								   \
 name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	   \
@@ -2075,9 +1885,6 @@ GENERIC_COLOR_FUNC(color, color_desaturated)
 DESATURATED_FUNC(color, kcmy, 8)
 DESATURATED_FUNC(color, kcmy, 16)
 GENERIC_COLOR_FUNC(color, kcmy_desaturated)
-DESATURATED_FUNC(color, cmykrb, 8)
-DESATURATED_FUNC(color, cmykrb, 16)
-GENERIC_COLOR_FUNC(color, cmykrb_desaturated)
 
 DESATURATED_FUNC(cmyk, color, 8)
 DESATURATED_FUNC(cmyk, color, 16)
@@ -2085,9 +1892,6 @@ GENERIC_COLOR_FUNC(cmyk, color_desaturated)
 DESATURATED_FUNC(cmyk, kcmy, 8)
 DESATURATED_FUNC(cmyk, kcmy, 16)
 GENERIC_COLOR_FUNC(cmyk, kcmy_desaturated)
-DESATURATED_FUNC(cmyk, cmykrb, 8)
-DESATURATED_FUNC(cmyk, cmykrb, 16)
-GENERIC_COLOR_FUNC(cmyk, cmykrb_desaturated)
 
 DESATURATED_FUNC(kcmy, color, 8)
 DESATURATED_FUNC(kcmy, color, 16)
@@ -2095,9 +1899,6 @@ GENERIC_COLOR_FUNC(kcmy, color_desaturated)
 DESATURATED_FUNC(kcmy, kcmy, 8)
 DESATURATED_FUNC(kcmy, kcmy, 16)
 GENERIC_COLOR_FUNC(kcmy, kcmy_desaturated)
-DESATURATED_FUNC(kcmy, cmykrb, 8)
-DESATURATED_FUNC(kcmy, cmykrb, 16)
-GENERIC_COLOR_FUNC(kcmy, cmykrb_desaturated)
 
 #define CMYK_DISPATCH(name)						\
 static unsigned								\
@@ -2117,11 +1918,6 @@ CMYK_to_##name(const stp_vars_t *vars, const unsigned char *in,		\
     }									\
 }
 
-CMYK_DISPATCH(cmykrb)
-CMYK_DISPATCH(cmykrb_raw)
-CMYK_DISPATCH(cmykrb_fast)
-CMYK_DISPATCH(cmykrb_threshold)
-CMYK_DISPATCH(cmykrb_desaturated)
 CMYK_DISPATCH(color)
 CMYK_DISPATCH(color_raw)
 CMYK_DISPATCH(color_fast)
@@ -2335,9 +2131,7 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
 }
 
 CONVERSION_FUNCTION_WITH_FAST(cmyk, color, CMYK)
-CONVERSION_FUNCTION_WITH_FAST(cmyk, cmykrb, CMYK)
 CONVERSION_FUNCTION_WITH_FAST(color, color, color)
-CONVERSION_FUNCTION_WITH_FAST(color, cmykrb, color)
 CONVERSION_FUNCTION_WITH_FAST(color, kcmy, color)
 CONVERSION_FUNCTION_WITHOUT_FAST(cmyk, kcmy, CMYK)
 CONVERSION_FUNCTION_WITHOUT_DESATURATED(cmyk, gray, CMYK)
@@ -2345,7 +2139,6 @@ CONVERSION_FUNCTION_WITHOUT_DESATURATED(color, gray, color)
 CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, gray, gray)
 CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, color, gray)
 CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, kcmy, gray)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, cmykrb, gray)
 
 unsigned
 stpi_color_convert_to_gray(const stp_vars_t *v,
@@ -2408,28 +2201,6 @@ stpi_color_convert_to_kcmy(const stp_vars_t *v,
     case COLOR_ID_CMYK:
     case COLOR_ID_KCMY:
       return generic_cmyk_to_kcmy(v, in, out);
-    default:
-      return (unsigned) -1;
-    }
-}
-
-unsigned
-stpi_color_convert_to_cmykrb(const stp_vars_t *v,
-			     const unsigned char *in,
-			     unsigned short *out)
-{
-  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
-  switch (lut->input_color_description->color_id)
-    {
-    case COLOR_ID_GRAY:
-    case COLOR_ID_WHITE:
-      return generic_gray_to_cmykrb(v, in, out);
-    case COLOR_ID_RGB:
-    case COLOR_ID_CMY:
-      return generic_color_to_cmykrb(v, in, out);
-    case COLOR_ID_CMYK:
-    case COLOR_ID_KCMY:
-      return generic_cmyk_to_cmykrb(v, in, out);
     default:
       return (unsigned) -1;
     }
