@@ -1666,7 +1666,7 @@ gimp_save_callback (void)
 }
 
 /*
- *  gimp_setup_open__callback() -
+ *  gimp_setup_open_callback() -
  */
 static void
 gimp_setup_open_callback (void)
@@ -1702,8 +1702,8 @@ gimp_setup_open_callback (void)
   gtk_widget_show (setup_dialog);
   adjustment =
     gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
-  gtk_adjustment_set_value(adjustment, idx * adjustment->step_increment +
-			   adjustment->page_size);
+  gtk_adjustment_set_value(adjustment,
+			   idx * (adjustment->step_increment + 3));
   gtk_widget_show (setup_dialog);
 }
 
