@@ -249,21 +249,6 @@ static const double standard_lum_adjustment[49] =
 static const double standard_hue_adjustment[49] =
 {
   0.00,				/* C */
-  /*  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  -0.60,
-  -0.70,
-  -0.80,			/ * B * /
-  -0.70,
-  -0.60,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,*/
   0.05,
   0.04,
   0.01,
