@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.37  1999/12/05 23:24:08  rlk
+ *   don't want PRINT_LUT in release
+ *
  *   Revision 1.36  1999/12/05 04:33:34  rlk
  *   Good results for the night.
  *
@@ -1823,7 +1826,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
   }
 }
 
-#define PRINT_LUT
+/* #define PRINT_LUT */
 
 void
 compute_lut(lut_t *lut,
