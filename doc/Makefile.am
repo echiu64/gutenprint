@@ -42,6 +42,7 @@ endif
 
 # Rerun doxygen whenever autogen is run
 gimpprint-stamp: gimpprint.dox.in $(top_srcdir)/configure
+	$(RM) -rf gimpprint/html
 	$(DOXYGEN) gimpprint.dox
 	touch $@
 
