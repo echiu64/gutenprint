@@ -12,11 +12,11 @@ c_strdup(const char *s)
   return ret;
 }
 
-double c_level = 1.0;
-double m_level = 1.0;
-double y_level = 1.0;
+double global_c_level = 1.0;
+double global_m_level = 1.0;
+double global_y_level = 1.0;
 int levels = 256;
-double ink_limit = 65535.0;
+double ink_limit = 1.0;
 int width, height, bandheight;
 int printer_width, printer_height;
 
@@ -34,29 +34,7 @@ static void Image_rotate_180(stp_image_t *image);
 static void Image_rotate_cw(stp_image_t *image);
 static void Image_rotate_ccw(stp_image_t *image);
 static void Image_init(stp_image_t *image);
-extern const int n_fillfuncs;
-
-static void
-do_help(void)
-{
-  fprintf(stderr, "%s", "\
-Usage: testpattern -p printer [-n ramp_levels] [-l ink_limit] [-i ink_type]\n\
-                   [-r resolution] [-s media_source] [-t media_type]\n\
-                   [-z media_size] [-d dither_algorithm] [-e density]\n\
-                   [-C cyan_level] [-M magenta_level] [-Y yellow_level]\n\
-       0.0 < ink_limit <= 1.0\n\
-       1 < ramp_levels <= 4096\n\
-       0.1 <= density <= 2.0\n\
-       0.0 < cyan_level <= 10.0 same for magenta and yellow.\n");
-  exit(1);
-}
-
-static void
-writefunc(void *file, const char *buf, size_t bytes)
-{
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
-}
+extern const int n_testpatterns;
 
 static stp_image_t theImage =
 {
@@ -83,6 +61,41 @@ static stp_image_t theImage =
 typedef const char *(*defparm_t)(const stp_printer_t printer,
 				 const char *ppd_file,
 				 const char *name);
+
+typedef struct
+{
+  double c;
+  double m;
+  double y;
+  double k;
+  double c_level;
+  double m_level;
+  double y_level;
+  double lower;
+  double upper;
+} testpattern_t;
+
+static void
+do_help(void)
+{
+  fprintf(stderr, "%s", "\
+Usage: testpattern -p printer [-n ramp_levels] [-l ink_limit] [-i ink_type]\n\
+                   [-r resolution] [-s media_source] [-t media_type]\n\
+                   [-z media_size] [-d dither_algorithm] [-e density]\n\
+                   [-C cyan_level] [-M magenta_level] [-Y yellow_level]\n\
+       0.0 < ink_limit <= 1.0\n\
+       1 < ramp_levels <= 4096\n\
+       0.1 <= density <= 2.0\n\
+       0.0 < cyan_level <= 10.0 same for magenta and yellow.\n");
+  exit(1);
+}
+
+static void
+writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
 
 int
 main(int argc, char **argv)
@@ -118,7 +131,7 @@ main(int argc, char **argv)
 	  levels = atoi(optarg);
 	  break;
 	case 'l':
-	  ink_limit = 65535.0 * strtod(optarg, 0);
+	  ink_limit = strtod(optarg, 0);
 	  break;
 	case 'i':
 	  ink_type = c_strdup(optarg);
@@ -139,13 +152,13 @@ main(int argc, char **argv)
 	  dither_algorithm = c_strdup(optarg);
 	  break;
 	case 'C':
-	  c_level = strtod(optarg, 0);
+	  global_c_level = strtod(optarg, 0);
 	  break;
 	case 'M':
-	  m_level = strtod(optarg, 0);
+	  global_m_level = strtod(optarg, 0);
 	  break;
 	case 'Y':
-	  y_level = strtod(optarg, 0);
+	  global_y_level = strtod(optarg, 0);
 	  break;
 	case 'e':
 	  density = strtod(optarg, 0);
@@ -160,11 +173,11 @@ main(int argc, char **argv)
 	}
     }
   if (!printer ||
-      ink_limit <= 0 || ink_limit > 65535.0 ||
+      ink_limit <= 0 || ink_limit > 1.0 ||
       levels < 1 || levels > 4096 ||
-      c_level <= 0 || c_level > 10 ||
-      m_level <= 0 || m_level > 10 ||
-      y_level <= 0 || y_level > 10 ||
+      global_c_level <= 0 || global_c_level > 10 ||
+      global_m_level <= 0 || global_m_level > 10 ||
+      global_y_level <= 0 || global_y_level > 10 ||
       density < .1 || density > 2.0)
     do_help();
   stp_init();
@@ -232,11 +245,11 @@ main(int argc, char **argv)
   owidth = width;
   oheight = height;
   width = (width / levels) * levels;
-  height = (height / n_fillfuncs) * n_fillfuncs;
+  height = (height / n_testpatterns) * n_testpatterns;
   printer_width = width * x / 72;
   printer_height = height * y / 72;
 
-  bandheight = printer_height / n_fillfuncs;
+  bandheight = printer_height / n_testpatterns;
   stp_set_page_width(v, owidth);
   stp_set_page_height(v, oheight);
   stp_set_left(v, ((owidth - width) / 2));
@@ -301,30 +314,29 @@ main(int argc, char **argv)
  44) White band
 */
 
-typedef void (*fillfunc_t)(unsigned short *data, size_t len, size_t scount);
-
-static void
-fill_white(unsigned short *data, size_t len, size_t scount)
-{
-}
-
 static void
 fill_black(unsigned short *data, size_t len, size_t scount)
 {
   int i;
   for (i = 0; i < len; i++)
     {
-      data[3] = ink_limit;
+      data[3] = ink_limit * 65535;
       data += 4;
     }
 }
 
 static void
-fill_colors(unsigned short *data, size_t len, size_t scount,
-	    double c, double m, double y, double k,
-	    double c_level, double m_level, double y_level,
-	    double lower, double upper)
+fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 {
+  double c = p->c == -2 ? global_c_level : p->c;
+  double m = p->m == -2 ? global_m_level : p->m;
+  double y = p->y == -2 ? global_y_level : p->y;
+  double k = p->k;
+  double c_level = p->c_level == -2 ? global_c_level : p->c_level;
+  double m_level = p->m_level == -2 ? global_m_level : p->m_level;
+  double y_level = p->y_level == -2 ? global_y_level : p->y_level;
+  double lower = p->lower;
+  double upper = p->upper;
   int i;
   int j;
   int pixels;
@@ -358,14 +370,18 @@ fill_colors(unsigned short *data, size_t len, size_t scount,
       cc += cmyv * ink_limit * c_level;
       mm += cmyv * ink_limit * m_level;
       yy += cmyv * ink_limit * y_level;
-      if (cc > 65535)
-	cc = 65535;
-      if (mm > 65535)
-	mm = 65535;
-      if (yy > 65535)
-	yy = 65535;
-      if (kk > 65535)
-	kk = 65535;
+      if (cc > 1.0)
+	cc = 1.0;
+      if (mm > 1.0)
+	mm = 1.0;
+      if (yy > 1.0)
+	yy = 1.0;
+      if (kk > 1.0)
+	kk = 1.0;
+      cc *= 65535;
+      mm *= 65535;
+      yy *= 65535;
+      kk *= 65535;
       for (j = 0; j < pixels; j++)
 	{
 	  data[0] = cc;
@@ -376,331 +392,58 @@ fill_colors(unsigned short *data, size_t len, size_t scount,
 	}
     }
 }
-  
 
-static void
-fill_c(unsigned short *data, size_t len, size_t scount)
+testpattern_t the_testpatterns[] =
 {
-  fill_colors(data, len, scount, 1, 0, 0, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_m(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 1, 0, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_y(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 1, 0, 1, 1, 1, 1, 1);
-}
-
-
-static void
-fill_k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, 0, 0);
-}
-
-#if 0
-static void
-fill_cmy(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 1, 1, 1, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cmya(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, c_level, m_level, y_level, 0, 1, 1, 1, 1, 1);
-}
-#else
-static void
-fill_cmy(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cmya(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, 1, 1);
-}
-#endif
-
-static void
-fill_cmyk10_30(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, .1, .3);
-}
-
-static void
-fill_cmyk30_70a(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, .3, .7);
-}
-
-static void
-fill_cmyk10_999(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, .1, .999);
-}
-
-static void
-fill_cmyk30_999(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, .3, .999);
-}
-
-static void
-fill_cmyk50_999(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, .5, .999);
-}
-
-static void
-fill_cmyk10_30a(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, .1, .3);
-}
-
-static void
-fill_cmyk30_70(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, 1, 1, 1, .3, .7);
-}
-
-static void
-fill_cmyk10_999a(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, .1, .999);
-}
-
-static void
-fill_cmyk30_999a(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, .3, .999);
-}
-
-static void
-fill_cmyk50_999a(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 0, 0, 1, c_level, m_level, y_level, .5, .999);
-}
-
-static void
-fill_ym(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, 1, 1, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_ym25c(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .75, .75, .25, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_ym25k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .75, .75, .25, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_ym5c(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .5, .5, .5, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_ym5k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .5, .5, .5, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_ym75c(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .25, .25, .75, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_ym75k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .25, .25, .75, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_ym9c(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .1, .1, .9, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_ym9k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 0, .1, .1, .9, 1, 1, 1, 0, 0);
-}
-
-
-static void
-fill_cy(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 1, 0, 1, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cy25m(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .75, .0, .75, .25, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cy25k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .75, .0, .75, .25, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cy5m(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .5, .0, .5, .5, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cy5k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .5, .0, .5, .5, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cy75m(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .25, .0, .25, .75, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cy75k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .25, .0, .25, .75, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cy9m(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .1, .0, .1, .9, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cy9k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .1, .0, .1, .9, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cm(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, 1, 1, 0, 0, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cm25y(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .75, .75, 0, .25, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cm25k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .75, .75, 0, .25, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cm5y(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .5, .5, 0, .5, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cm5k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .5, .5, 0, .5, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cm75y(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .25, .25, 0, .75, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cm75k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .25, .25, 0, .75, 1, 1, 1, 0, 0);
-}
-
-static void
-fill_cm9y(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .1, .1, 0, .9, 1, 1, 1, 1, 1);
-}
-
-static void
-fill_cm9k(unsigned short *data, size_t len, size_t scount)
-{
-  fill_colors(data, len, scount, .1, .1, 0, .9, 1, 1, 1, 0, 0);
-}
-
-fillfunc_t the_fillfuncs[] =
-{
-  fill_white,
-  fill_c,
-  fill_m,
-  fill_y,
-  fill_cmy,
-  fill_k,
-  fill_cmya,
-  fill_cmyk10_30,
-  fill_cmyk10_30a,
-  fill_cmyk30_70,
-  fill_cmyk30_70a,
-  fill_cmyk10_999,
-  fill_cmyk10_999a,
-  fill_cmyk30_999,
-  fill_cmyk30_999a,
-  fill_cmyk50_999,
-  fill_cmyk50_999a,
-  fill_ym,
-  fill_ym25c,
-  fill_ym25k,
-  fill_ym5c,
-  fill_ym5k,
-  fill_ym75c,
-  fill_ym75k,
-  fill_ym9c,
-  fill_ym9k,
-  fill_cy,
-  fill_cy25m,
-  fill_cy25k,
-  fill_cy5m,
-  fill_cy5k,
-  fill_cy75m,
-  fill_cy75k,
-  fill_cy9m,
-  fill_cy9k,
-  fill_cm,
-  fill_cm25y,
-  fill_cm25k,
-  fill_cm5y,
-  fill_cm5k,
-  fill_cm75y,
-  fill_cm75k,
-  fill_cm9y,
-  fill_cm9k
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+  { 1, 0, 0, 0, 1, 1, 1, 1, 1 },
+  { 0, 1, 0, 0, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 1, 1, 1, 1, 1 },
+  { 1, 1, 1, 0, 1, 1, 1, 1, 1 },
+  { 0, 0, 0, 1, 1, 1, 1, 0, 0 },
+  { -2, -2, -2, 0, 1, 1, 1, 1, 1 },
+  { 0, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 0, 1, -2, -2, -2, 1, 1 },
+  { 0, 0, 0, 1, 1, 1, 1, .1, .3 },
+  { 0, 0, 0, 1, -2, -2, -2, .3, .7 },
+  { 0, 0, 0, 1, 1, 1, 1, .1, .999 },
+  { 0, 0, 0, 1, 1, 1, 1, .3, .999 },
+  { 0, 0, 0, 1, 1, 1, 1, .5, .999 },
+  { 0, 0, 0, 1, -2, -2, -2, .1, .3 },
+  { 0, 0, 0, 1, 1, 1, 1, .3, .7 },
+  { 0, 0, 0, 1, -2, -2, -2, .1, .999 },
+  { 0, 0, 0, 1, -2, -2, -2, .3, .999 },
+  { 0, 0, 0, 1, -2, -2, -2, .5, .999 },
+  { 0, 1, 1, 0, 1, 1, 1, 1, 1 },
+  { 0, .75, .75, .25, 1, 1, 1, 1, 1 },
+  { 0, .75, .75, .25, 1, 1, 1, 0, 0 },
+  { 0, .5, .5, .5, 1, 1, 1, 1, 1 },
+  { 0, .5, .5, .5, 1, 1, 1, 0, 0 },
+  { 0, .25, .25, .75, 1, 1, 1, 1, 1 },
+  { 0, .25, .25, .75, 1, 1, 1, 0, 0 },
+  { 0, .1, .1, .9, 1, 1, 1, 1, 1 },
+  { 0, .1, .1, .9, 1, 1, 1, 0, 0 },
+  { 1, 0, 1, 0, 1, 1, 1, 1, 1 },
+  { .75, .0, .75, .25, 1, 1, 1, 1, 1 },
+  { .75, .0, .75, .25, 1, 1, 1, 0, 0 },
+  { .5, .0, .5, .5, 1, 1, 1, 1, 1 },
+  { .5, .0, .5, .5, 1, 1, 1, 0, 0 },
+  { .25, .0, .25, .75, 1, 1, 1, 1, 1 },
+  { .25, .0, .25, .75, 1, 1, 1, 0, 0 },
+  { .1, .0, .1, .9, 1, 1, 1, 1, 1 },
+  { .1, .0, .1, .9, 1, 1, 1, 0, 0 },
+  { 1, 1, 0, 0, 1, 1, 1, 1, 1 },
+  { .75, .75, 0, .25, 1, 1, 1, 1, 1 },
+  { .75, .75, 0, .25, 1, 1, 1, 0, 0 },
+  { .5, .5, 0, .5, 1, 1, 1, 1, 1 },
+  { .5, .5, 0, .5, 1, 1, 1, 0, 0 },
+  { .25, .25, 0, .75, 1, 1, 1, 1, 1 },
+  { .25, .25, 0, .75, 1, 1, 1, 0, 0 },
+  { .1, .1, 0, .9, 1, 1, 1, 1, 1 },
+  { .1, .1, 0, .9, 1, 1, 1, 0, 0 },
 };
 
-const int n_fillfuncs = sizeof(the_fillfuncs) / sizeof(fillfunc_t);
+const int n_testpatterns = sizeof(the_testpatterns) / sizeof(testpattern_t);
 
 
 static stp_image_status_t
@@ -711,7 +454,8 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
   if (previous_band == -2)
     {
       memset(data, 0, printer_width * 4 * sizeof(unsigned short));
-      (the_fillfuncs[band])((unsigned short *)data, printer_width, levels);
+      fill_colors((unsigned short *)data, printer_width, levels,
+		  &(the_testpatterns[band]));
       previous_band = band;
     }
   else if (row == printer_height - 1)
@@ -719,7 +463,7 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
       memset(data, 0, printer_width * 4 * sizeof(unsigned short));
       fill_black((unsigned short *)data, printer_width, levels);
     }
-  else if (band >= n_fillfuncs)
+  else if (band >= n_testpatterns)
     memset(data, 0, printer_width * 4 * sizeof(unsigned short));
   else if (band != previous_band && band > 0)
     {
