@@ -188,6 +188,7 @@ ps_parameters(const stp_vars_t v, const char *name,
 	}
       else if (is_standard_param(name))
 	{
+	  description->bounds.str = NULL;
 	  description->is_active = 0;
 	}
       return;
