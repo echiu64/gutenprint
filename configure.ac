@@ -139,7 +139,10 @@ AC_SUBST(ALL_LINGUAS)
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
 AC_LIBTOOL_DLOPEN
-AC_DISABLE_STATIC
+# We need static libraries for CUPS genppd program for now, for bug 865265
+# --rlk 20031223
+AC_ENABLE_STATIC(yes)
+#AC_DISABLE_SHARED
 AM_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 dnl define HAVE_GNU_LD if GNU ld is present
@@ -278,21 +281,21 @@ STP_ARG_WITH_DETAILED([modules],
     static) [WITH_MODULES]="static";  AC_MSG_RESULT([static]) ;;
     *) AC_MSG_ERROR([${withval}: not a valid module loader]) ;;
                       ],[
-    # if shared libraries are disabled, modules must be static
-    if test x$enable_shared = xno; then
+    # if static libraries are enabled, modules must be static
+    if test x$enable_static = xyes; then
       [WITH_MODULES]="static"
     else
       [WITH_MODULES]="yes"]
     fi)
 
 # Abort if a broken configuration was required
-if test x$enable_shared = xno; then
+if test x$disable_static = xyes; then
   if test $WITH_MODULES = no; then
     :
   elif test $WITH_MODULES = static; then
     :
   else
-    AC_MSG_ERROR([--enable-shared must be used with --with-modules])
+    AC_MSG_ERROR([--disable-static must be used with --with-modules])
   fi
 fi 
 
@@ -330,12 +333,6 @@ else
   BUILD_GIMP="yes"
 fi
 
-if test "$BUILD_TEST" = "yes" ; then
-  BUILD_TESTPATTERN="yes"
-else
-  BUILD_TESTPATTERN="no"
-fi
-
 AM_PATH_GTK(1.2.0,
   BUILD_LIBGIMPPRINTUI="yes"
   GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}"
@@ -367,15 +364,21 @@ STP_ARG_ENABLE([escputil],
                [BUILD_ESCPUTIL],
                [yes])
 
-STP_ARG_ENABLE([testpattern],
-               [build testpattern generator],
-               [BUILD_TESTPATTERN],
-               [(automatic)])
-
 STP_ARG_ENABLE([test],
                [build test programs],
                [BUILD_TEST],
                [yes])
+
+if test "$BUILD_TEST" = "yes" ; then
+  BUILD_TESTPATTERN="yes"
+else
+  BUILD_TESTPATTERN="no"
+fi
+
+STP_ARG_ENABLE([testpattern],
+               [build testpattern generator],
+               [BUILD_TESTPATTERN],
+               [(automatic)])
 
 STP_ARG_ENABLE([user-install],
                [install GIMP plugin in home directory],
@@ -744,6 +747,14 @@ else
   AC_MSG_RESULT([static])
 fi
 AM_CONDITIONAL(BUILD_MODULES, test x$MODULE = xtrue)
+
+AM_CONDITIONAL(BUILD_GENPPD_STATIC, test x"$enable_static" = xyes)
+
+if test "$enable_static" = no -a "$BUILD_CUPS" = yes ; then
+  AC_MSG_WARN([--enable-static is disabled, but CUPS is being built.])
+  AC_MSG_WARN([This may result in a *SILENTLY* incorrect build.])
+  AC_MSG_WARN([Please read the release notes carefully!])
+fi
 
 dnl Define LTLIBOBJS
 AC_CONFIG_COMMANDS_PRE(
