@@ -640,7 +640,8 @@ and changes from 4.2, as follows:
      command that is determined based on the characteristics of the
      system, and also offers the choice of printing to a file or using
      a custom print command for each printer defined in the printrc
-     file.
+     file.  The default printing command is correct whether the output
+     is Postscript or not.
 
   5) The Print plugin now always displays all options relevant to
      what's being printed, enabling and disabling options as
