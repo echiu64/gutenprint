@@ -435,9 +435,12 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_set_dither_algorithm(v,
 			       stp_dither_algorithm_name(cups.header.cupsRowStep));
 
-    stp_set_media_source(v, cups.header.MediaClass);
-    stp_set_media_type(v, cups.header.MediaType);
-    stp_set_ink_type(v, cups.header.OutputType);
+    if (cups.header.MediaClass && strlen(cups.header.MediaClass) > 0)
+      stp_set_media_source(v, cups.header.MediaClass);
+    if (cups.header.MediaType && strlen(cups.header.MediaType) > 0)
+      stp_set_media_type(v, cups.header.MediaType);
+    if (cups.header.OutputType && strlen(cups.header.OutputType) > 0)
+      stp_set_ink_type(v, cups.header.OutputType);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
 	    cups.header.PageSize[1]);
