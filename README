@@ -192,15 +192,15 @@ There are four principal ways of requesting support for this package:
 
 DEBIAN
 
-The Debian packaging has been rewritten from scratch as of 4.1.4. It
-is compliant with Standards-Version 3.1.1, and is lintian-clean. It
-should build from source on potato, woody and sid (the packages should
-also work).  There are five separate packages:
+The Debian packaging has been rewritten from scratch as of 4.1.4.  It
+is compliant with Standards-Version 3.1.1, and is lintian-clean.  It
+should build from source on woody and sid, but will not build on potato.
+There are five separate packages:
 
 gimp1.2-print		The GIMP Print plugin. Also contains HTML and SGML
 			documentation that is registered with doc-base.
 cupsys-driver-gimpprint The CUPS driver and PPD files.
-libgimpprint		The libgimpprint library (GIMP-Print core).
+libgimpprint1		The libgimpprint library (GIMP-Print core).
 libgimpprint-dev	Headers, symlinks, m4 macro (AM_PATH_GIMPPRINT)
 			and gimpprint-config needed to develop programs
 			that link with libgimpprint.
@@ -209,7 +209,7 @@ escputil		The escputil printer tool.
 
 The library symlinks will get packaged without any modification needed
 to the debian packaging whatever library versioning scheme is
-used. Most packages depend on libgimpprint as this will provide
+used.  Most packages depend on libgimpprint as this will provide
 translations for i18n in the future that they will use, or they
 require libgimpprint anyway.
 
@@ -217,8 +217,7 @@ require libgimpprint anyway.
 INTERNATIONALIZATION
 
 All translatable strings are marked in the source for libgimpprint.
-Two translations are available: en_GB and en_TEST (the latter for
-testing only).
+The following translations are available: en_GB.
 
 TODO: make sure that the tagged strings are actually translated. This
 will involve some modifications to the source such as dynamically

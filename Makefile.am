@@ -24,6 +24,8 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+NONGIMP_SUBDIRS =
+NONGIMP_DISTDIRS =
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
 NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian
@@ -85,12 +87,16 @@ dist-hook:
 # Do some extra magic to make a distribution for GIMP CVS
 	status=0 ; \
 	if test -f .gimp-dist ; then \
-	  rm -rf $(distdir)/src/cups $(distdir)/src/escputil $(distdir)/src/foomatic $(distdir)/src/ghost ; \
-	  rm -rf $(distdir)/debian $(distdir)/scripts $(distdir)/test ; \
-	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/stamp-h.in ; \
+	  rm -rf $(distdir)/src/cups $(distdir)/src/foomatic $(distdir)/src/ghost ; \
+	  rm -rf $(distdir)/debian $(distdir)/scripts/* $(distdir)/test ; \
+	  rm -rf $(distdir)/intl $(distdir)/po/Makefile.in.in $(distdir)/po/*.gmo ; \
+	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/cups-gimpprint.list.in $(distdir)/stamp-h.in ; \
 	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
 	  cd $(distdir) ; \
-	  perl ../scripts/patch-gimp configure.in Makefile.am src/Makefile.am ; \
+	  perl ../scripts/patch-gimp configure.in ; \
+	  perl ../scripts/patch-gimp Makefile.am ; \
+	  perl ../scripts/patch-gimp src/Makefile.am ; \
+	  perl ../scripts/patch-gimp po/POTFILES.in ; \
 	  status=$$? ; \
 	  cd .. ; \
 	  rm -f .gimp-dist ; \
@@ -120,6 +126,19 @@ ps:
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
 
+DEBUILD_OPTIONS = -us -uc
+deb: debian/changelog debian/control debian/rules
+	$(MAKE) dist 
+	-rm -rf debian-build
+	-mkdir debian-build
+	cd debian-build ; \
+	mv ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
+	tar xfvz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
+	cd $(PACKAGE)-$(VERSION) ; \
+	debuild $(DEBUILD_OPTIONS) ; \
+	cd .. ; \
+	rm -r $(PACKAGE)-$(VERSION)
+
 CLEANSCRIPTS = \
 	config.guess \
 	config.sub \
@@ -133,7 +152,7 @@ CLEANFILES = .gimp-dist .noupdate
 MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
 
 ## @-@-@-@-@ NO-GIMP @-@-@-@-@
-.PHONY: gimp-dist install-cups install-ghost snapshot ChangeLog
+.PHONY: deb gimp-dist install-cups install-ghost snapshot ChangeLog
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 .PHONY: install-gimp html

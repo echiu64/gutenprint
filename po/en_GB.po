@@ -5,12 +5,12 @@
 #.
 #. *  Color adjust button
 #.
-#: src/gimp/gimp_main_window.c:1261 src/gimp/gimp_main_window.c:1282
+#: src/gimp/gimp_main_window.c:1260 src/gimp/gimp_main_window.c:1281
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-08 16:26+0100\n"
+"POT-Creation-Date: 2001-09-09 20:37+0100\n"
 "PO-Revision-Date: 2001-09-08 11:26+BST\n"
 "Last-Translator: Rog er Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: N/A\n"
@@ -543,7 +543,7 @@ msgstr "Four Colour Standard"
 msgid "Three Color Composite"
 msgstr "Three Colour Composite"
 
-#: src/gimp/gimp_main_window.c:1501 src/main/print-escp2.c:3119
+#: src/gimp/gimp_main_window.c:1500 src/main/print-escp2.c:3119
 #: src/main/print-pcl.c:198
 msgid "Standard"
 msgstr ""
@@ -1469,7 +1469,7 @@ msgid "Print"
 msgstr ""
 
 #: src/gimp/gimp_main_window.c:342 src/gimp/gimp_main_window.c:588
-#: src/gimp/gimp_main_window.c:736
+#: src/gimp/gimp_main_window.c:735
 msgid "Cancel"
 msgstr ""
 
@@ -1629,15 +1629,15 @@ msgstr ""
 msgid "Setup"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:586 src/gimp/gimp_main_window.c:734
-#: src/gimp/gimp_main_window.c:768
+#: src/gimp/gimp_main_window.c:586 src/gimp/gimp_main_window.c:733
+#: src/gimp/gimp_main_window.c:767
 msgid "OK"
 msgstr ""
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/gimp/gimp_main_window.c:609 src/gimp/gimp_main_window.c:842
+#: src/gimp/gimp_main_window.c:609 src/gimp/gimp_main_window.c:841
 msgid "Printer Model:"
 msgstr ""
 
@@ -1648,30 +1648,30 @@ msgstr ""
 #.
 #. * PPD file.
 #.
-#: src/gimp/gimp_main_window.c:651
+#: src/gimp/gimp_main_window.c:650
 msgid "PPD File:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:664 src/gimp/gimp_main_window.c:665
+#: src/gimp/gimp_main_window.c:663 src/gimp/gimp_main_window.c:664
 msgid "Enter the correct PPD filename for your printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:669
+#: src/gimp/gimp_main_window.c:668
 msgid "Browse"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:671 src/gimp/gimp_main_window.c:672
+#: src/gimp/gimp_main_window.c:670 src/gimp/gimp_main_window.c:671
 msgid "Choose the correct PPD filename for your printer"
 msgstr ""
 
 #.
 #. * Print command.
 #.
-#: src/gimp/gimp_main_window.c:683
+#: src/gimp/gimp_main_window.c:682
 msgid "Command:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:691 src/gimp/gimp_main_window.c:694
+#: src/gimp/gimp_main_window.c:690 src/gimp/gimp_main_window.c:693
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1681,48 +1681,48 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/gimp/gimp_main_window.c:705
+#: src/gimp/gimp_main_window.c:704
 msgid "Print To File?"
 msgstr ""
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/gimp/gimp_main_window.c:716
+#: src/gimp/gimp_main_window.c:715
 msgid "PPD File?"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:730
+#: src/gimp/gimp_main_window.c:729
 msgid "Define New Printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:750 src/gimp/gimp_main_window.c:751
+#: src/gimp/gimp_main_window.c:749 src/gimp/gimp_main_window.c:750
 msgid "Enter the name you wish to give this logical printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:755 src/gimp/gimp_main_window.c:839
+#: src/gimp/gimp_main_window.c:754 src/gimp/gimp_main_window.c:838
 msgid "Printer Name:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:764
+#: src/gimp/gimp_main_window.c:763
 msgid "About Gimp-Print "
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:815
+#: src/gimp/gimp_main_window.c:814
 msgid "Printer Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:835 src/gimp/gimp_main_window.c:837
+#: src/gimp/gimp_main_window.c:834 src/gimp/gimp_main_window.c:836
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:853
+#: src/gimp/gimp_main_window.c:852
 msgid "Setup Printer..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:858 src/gimp/gimp_main_window.c:860
+#: src/gimp/gimp_main_window.c:857 src/gimp/gimp_main_window.c:859
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
@@ -1731,183 +1731,183 @@ msgstr ""
 #.
 #. * Define new printer dialog
 #.
-#: src/gimp/gimp_main_window.c:872
+#: src/gimp/gimp_main_window.c:871
 msgid "New Printer..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:877 src/gimp/gimp_main_window.c:880
+#: src/gimp/gimp_main_window.c:876 src/gimp/gimp_main_window.c:879
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:897 src/gimp/gimp_main_window.c:898
+#: src/gimp/gimp_main_window.c:896 src/gimp/gimp_main_window.c:897
 msgid "Size of paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:899
+#: src/gimp/gimp_main_window.c:898
 msgid "Media Size:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:910
+#: src/gimp/gimp_main_window.c:909
 msgid "Dimensions:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:914 src/gimp/gimp_main_window.c:1107
+#: src/gimp/gimp_main_window.c:913 src/gimp/gimp_main_window.c:1106
 msgid "Width:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:920 src/gimp/gimp_main_window.c:921
+#: src/gimp/gimp_main_window.c:919 src/gimp/gimp_main_window.c:920
 msgid "Width of the paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:929 src/gimp/gimp_main_window.c:1125
+#: src/gimp/gimp_main_window.c:928 src/gimp/gimp_main_window.c:1124
 msgid "Height:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:935 src/gimp/gimp_main_window.c:936
+#: src/gimp/gimp_main_window.c:934 src/gimp/gimp_main_window.c:935
 msgid "Height of the paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:954 src/gimp/gimp_main_window.c:955
+#: src/gimp/gimp_main_window.c:953 src/gimp/gimp_main_window.c:954
 msgid "Type of media you're printing to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:956
+#: src/gimp/gimp_main_window.c:955
 msgid "Media Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:968 src/gimp/gimp_main_window.c:969
+#: src/gimp/gimp_main_window.c:967 src/gimp/gimp_main_window.c:968
 msgid "Source (input slot) of media you're printing to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:970
+#: src/gimp/gimp_main_window.c:969
 msgid "Media Source:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:982 src/gimp/gimp_main_window.c:983
+#: src/gimp/gimp_main_window.c:981 src/gimp/gimp_main_window.c:982
 msgid "Type of ink in the printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:984
+#: src/gimp/gimp_main_window.c:983
 msgid "Ink Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:996 src/gimp/gimp_main_window.c:997
+#: src/gimp/gimp_main_window.c:995 src/gimp/gimp_main_window.c:996
 msgid "Resolution and quality of the print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:998
+#: src/gimp/gimp_main_window.c:997
 msgid "Resolution:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1014
+#: src/gimp/gimp_main_window.c:1013
 msgid "Scaling"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1031
+#: src/gimp/gimp_main_window.c:1030
 msgid "Scaling:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1037 src/gimp/gimp_main_window.c:1038
+#: src/gimp/gimp_main_window.c:1036 src/gimp/gimp_main_window.c:1037
 msgid "Set the scale (size) of the image"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1051 src/gimp/gimp_main_window.c:1054
+#: src/gimp/gimp_main_window.c:1050 src/gimp/gimp_main_window.c:1053
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1063
+#: src/gimp/gimp_main_window.c:1062
 msgid "Percent"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1065 src/gimp/gimp_main_window.c:1066
+#: src/gimp/gimp_main_window.c:1064 src/gimp/gimp_main_window.c:1065
 msgid "Scale the print to the size of the page"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1073
+#: src/gimp/gimp_main_window.c:1072
 msgid "PPI"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1075 src/gimp/gimp_main_window.c:1076
+#: src/gimp/gimp_main_window.c:1074 src/gimp/gimp_main_window.c:1075
 msgid "Scale the print to the number of dots per inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1082
+#: src/gimp/gimp_main_window.c:1081
 msgid "Image Size"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1084 src/gimp/gimp_main_window.c:1085
+#: src/gimp/gimp_main_window.c:1083 src/gimp/gimp_main_window.c:1084
 msgid "Set the print size to the size of the image"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1113 src/gimp/gimp_main_window.c:1114
+#: src/gimp/gimp_main_window.c:1112 src/gimp/gimp_main_window.c:1113
 msgid "Set the width of the print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1131 src/gimp/gimp_main_window.c:1132
+#: src/gimp/gimp_main_window.c:1130 src/gimp/gimp_main_window.c:1131
 msgid "Set the height of the print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1146
+#: src/gimp/gimp_main_window.c:1145
 msgid "Units:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1152 src/gimp/gimp_main_window.c:1153
+#: src/gimp/gimp_main_window.c:1151 src/gimp/gimp_main_window.c:1152
 msgid "Select the base unit of measurement for printing"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1160
+#: src/gimp/gimp_main_window.c:1159
 msgid "Inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1162 src/gimp/gimp_main_window.c:1163
+#: src/gimp/gimp_main_window.c:1161 src/gimp/gimp_main_window.c:1162
 msgid "Set the base unit of measurement to inches"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1170
+#: src/gimp/gimp_main_window.c:1169
 msgid "cm"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1172 src/gimp/gimp_main_window.c:1173
+#: src/gimp/gimp_main_window.c:1171 src/gimp/gimp_main_window.c:1172
 msgid "Set the base unit of measurement to centimetres"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1194
+#: src/gimp/gimp_main_window.c:1193
 msgid "Image Settings"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1203
+#: src/gimp/gimp_main_window.c:1202
 msgid "Image Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1208 src/gimp/gimp_main_window.c:1209
+#: src/gimp/gimp_main_window.c:1207 src/gimp/gimp_main_window.c:1208
 msgid "Optimize the output for the type of image being printed"
 msgstr "Optimise the output for the type of image being printed"
 
-#: src/gimp/gimp_main_window.c:1219
+#: src/gimp/gimp_main_window.c:1218
 msgid "Line Art"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1221 src/gimp/gimp_main_window.c:1222
+#: src/gimp/gimp_main_window.c:1220 src/gimp/gimp_main_window.c:1221
 msgid "Fastest and brightest color for text and line art"
 msgstr "Fastest and brightest colour for text and line art"
 
-#: src/gimp/gimp_main_window.c:1231
+#: src/gimp/gimp_main_window.c:1230
 msgid "Solid Colors"
 msgstr "Solid Colours"
 
-#: src/gimp/gimp_main_window.c:1233 src/gimp/gimp_main_window.c:1234
+#: src/gimp/gimp_main_window.c:1232 src/gimp/gimp_main_window.c:1233
 msgid "Best for images dominated by regions of solid color"
 msgstr "Best for images dominated by regions of solid colour"
 
-#: src/gimp/gimp_main_window.c:1243
+#: src/gimp/gimp_main_window.c:1242
 msgid "Photograph"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1245 src/gimp/gimp_main_window.c:1247
+#: src/gimp/gimp_main_window.c:1244 src/gimp/gimp_main_window.c:1246
 msgid ""
 "Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
@@ -1915,46 +1915,46 @@ msgstr ""
 "Slowest, but most accurate and smoothest colour for continuous tone images "
 "and photographs"
 
-#: src/gimp/gimp_main_window.c:1265
+#: src/gimp/gimp_main_window.c:1264
 #, fuzzy
 msgid "Adjust Output..."
 msgstr "Adjust Colour"
 
-#: src/gimp/gimp_main_window.c:1267 src/gimp/gimp_main_window.c:1269
+#: src/gimp/gimp_main_window.c:1266 src/gimp/gimp_main_window.c:1268
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
 "Adjust colour balance, brightness, contrast, saturation, and dither algorithm"
 
-#: src/gimp/gimp_main_window.c:1292
+#: src/gimp/gimp_main_window.c:1291
 msgid "Output Type:"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1297 src/gimp/gimp_main_window.c:1298
+#: src/gimp/gimp_main_window.c:1296 src/gimp/gimp_main_window.c:1297
 msgid "Select the desired output type"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1302
+#: src/gimp/gimp_main_window.c:1301
 msgid "Color"
 msgstr "Colour"
 
-#: src/gimp/gimp_main_window.c:1303
+#: src/gimp/gimp_main_window.c:1302
 msgid "Color output"
 msgstr "Colour output"
 
-#: src/gimp/gimp_main_window.c:1312
+#: src/gimp/gimp_main_window.c:1311
 msgid "Grayscale"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1314 src/gimp/gimp_main_window.c:1315
+#: src/gimp/gimp_main_window.c:1313 src/gimp/gimp_main_window.c:1314
 msgid "Print in shades of gray using black ink"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1324
+#: src/gimp/gimp_main_window.c:1323
 msgid "Black and White"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1326 src/gimp/gimp_main_window.c:1328
+#: src/gimp/gimp_main_window.c:1325 src/gimp/gimp_main_window.c:1327
 msgid "Print in black and white (no color, and no shades of gray)"
 msgstr "Print in black and white (no colour, and no shades of gray)"
 

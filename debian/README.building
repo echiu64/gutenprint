@@ -1,3 +1,24 @@
+Building the gimp-print Debian packages	                 -*- mode: text -*-
+=======================================
+
+Please note the Build-Depends line in debian/control, which lists the
+packages needed to be installed in order to build the packages, in
+addition to the standard package building tools.
+
+The simplest way to build the packages is the `deb' target:
+
+$ make deb
+
+This must be done after running `configure' (or `autogen.sh' if
+building from CVS).  This target makes a tarball, unpacks it, then
+builds packages from it with `debuild'.  The output is placed in the
+directory `debian-build'.  If you wish to change the version number,
+edit debian/changelog first.
+
+If this is not flexible enough, the more detailed instructions below
+may be of help.
+
+
 Building this package from CVS
 ==============================
 
@@ -5,6 +26,7 @@ If you have changed any of the build scripts, run ./autogen.sh first.
 
 It is best to not build directly from your checked out CVS sources,
 but first run:
+
 $ ./configure
 $ touch .noupdate [prevent updating the ChangeLog, if this causes problems]
 $ make dist
@@ -15,37 +37,36 @@ Now proceed as for building from a tarball, below.
 Building this package from a tarball
 ====================================
 
-Then take the generated tarball gimp-print-VERSION.tar.gz, and copy it
-to an empty build directory.  Rename it to
-gimp-print_VERSION.orig.tar.gz.  This is the `upstream' source.  Then
-extract this with:
+Take the tarball gimp-print-VERSION.tar.gz, and copy it to an empty
+build directory.  Rename it to gimp-print_VERSION.orig.tar.gz.  This
+is the `upstream' source.  Then extract this with:
 
 $ tar xfvz gimp-print_VERSION.orig.tar.gz
 $ cd gimp-print-VERSION
 
 If needed, modify debian/changelog to change the version
 numbering. The version number should be the same as the package
-version number, followed by a hyphen and a debian package revision
-number e.g. 4.2.0-1 for release 4.2.0, debian revision 1.  If you use
-dpkg-buildpackage, run
+version number, followed by a hyphen and a Debian package revision
+number e.g. 4.2.0-1 for release 4.2.0, Debian revision 1.  If you use
+`dpkg-buildpackage', run
 
 $ debian/rules debian/control
 
 after changing the version number.  This is done automatically if
-using debuild.
+using `debuild'.
 
 To build the packages:
+
 $ dpkg-buildpackage -rfakeroot -us -uc
 or
 $ debuild -us -uc -L -i
 
-It should build without problems on Debian stable (2.2/potato) and the
-current testing and unstable distributions.  As this is the unstable
-CVS version, I advise you to remove (better: purge) the packages
-before upgrading them, especially gimp1.2-print, to avoid any problems
-with diversions.
+It should build without problems on Debian 3.0 (woody) and unstable,
+but will no longer build on Debian 2.2 (potato) current testing and
+unstable distributions.
+
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Tue, 31 Jul 2001 22:18:09 +0100
+Roger Leigh <roger@whinlatter.uklinux.net> -- Sun,  9 Sep 2001 17:29:27 +0100
 
