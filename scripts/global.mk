@@ -3,6 +3,9 @@
 
 # Variables
 
+export STP_MODULE_PATH = $(top_builddir)/src/main/.libs
+export STP_DATA_PATH = $(top_srcdir)/src/main
+
 AM_CFLAGS = $(GNUCFLAGS) $(LOCAL_CFLAGS) -I$(top_srcdir)/include -I$(top_builddir)/include -I$(top_srcdir)/intl
 
 LIBS = $(INTLLIBS) @LIBS@

@@ -26,7 +26,6 @@ MAINT_CHARSET = latin1
 include $(top_srcdir)/scripts/global.mk
 
 SUBDIRS = 					\
-	printdef 				\
 	main					\
 	libgimpprintui				\
 	escputil				\
@@ -34,7 +33,8 @@ SUBDIRS = 					\
 	cups					\
 	foomatic				\
 	ghost					\
-	testpattern
+	testpattern				\
+	printdef
 
 
 ## Clean

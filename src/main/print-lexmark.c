@@ -58,8 +58,9 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include "module.h"
 #include <string.h>
 #ifdef DEBUG
 #include <stdio.h>
@@ -1992,7 +1993,7 @@ densityDivisor /= 1.2;
   return status;
 }
 
-const stp_printfuncs_t stp_lexmark_printfuncs =
+static const stp_printfuncs_t stp_lexmark_printfuncs =
 {
   lexmark_list_parameters,
   lexmark_parameters,
@@ -2861,3 +2862,43 @@ static void readtestprintline(testdata *td, lexmark_linebufs_t *linebufs)
 }
 
 #endif
+
+
+static stp_internal_family_t stp_lexmark_module_data =
+  {
+    &stp_lexmark_printfuncs,
+    NULL
+  };
+
+static int
+lexmark_module_init(void)
+{
+  return stp_family_register(stp_lexmark_module_data.printer_list);
+}
+
+
+static int
+lexmark_module_exit(void)
+{
+  return stp_family_unregister(stp_lexmark_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version lexmark_LTX_stp_module_version
+#define stp_module_data lexmark_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "lexmark",
+    VERSION,
+    "Lexmark family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    lexmark_module_init,
+    lexmark_module_exit,
+    (void *) &stp_lexmark_module_data
+  };
+

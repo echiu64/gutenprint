@@ -30,8 +30,8 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
 #else
@@ -40,6 +40,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "print-escp2.h"
+#include "module.h"
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -1704,7 +1705,7 @@ escp2_job_end(const stp_vars_t v, stp_image_t *image)
   return escp2_do_print(v, image, OP_JOB_END);
 }
 
-const stp_printfuncs_t stp_escp2_printfuncs =
+static const stp_printfuncs_t stp_escp2_printfuncs =
 {
   escp2_list_parameters,
   escp2_parameters,
@@ -1916,3 +1917,44 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   sw->last_pass = pass->pass;
   pass->pass = -1;
 }
+
+
+static stp_internal_family_t stp_escp2_module_data =
+  {
+    &stp_escp2_printfuncs,
+    NULL
+  };
+
+
+static int
+escp2_module_init(void)
+{
+  return stp_family_register(stp_escp2_module_data.printer_list);
+}
+
+
+static int
+escp2_module_exit(void)
+{
+  return stp_family_unregister(stp_escp2_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version escp2_LTX_stp_module_version
+#define stp_module_data escp2_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "escp2",
+    VERSION,
+    "Epson family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    escp2_module_init,
+    escp2_module_exit,
+    (void *) &stp_escp2_module_data
+  };
+

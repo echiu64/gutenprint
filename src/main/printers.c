@@ -38,102 +38,58 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
+#include "printers.h"
+#include "list.h"
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
-typedef struct stp_internal_printer
-{
-  int        cookie;		/* Magic number */
-  const char *long_name;	/* Long name for UI */
-  const char *family;		/* Printer family */
-  int        model;		/* Model number */
-  int	     color;
-  const stp_printfuncs_t *printfuncs;
-  stp_vars_t printvars;
-} stp_internal_printer_t;
 
-
-#include "printlist.h"
-#include "printers-oldlist.h"
-
-
+void stp_printer_freefunc(stp_list_item_t *item);
 static const char* stp_printer_namefunc(const stp_list_item_t *item);
 static const char* stp_printer_long_namefunc(const stp_list_item_t *item);
 
-static stp_list_t *stp_printer_list;
+
+static stp_list_t *printer_list;
 
 
 int
 stp_init_printer_list(void)
 {
-  int i, len;
-  stp_internal_printer_t *printer;
+  if(printer_list)
+    stp_list_destroy(printer_list);
+  printer_list = stp_list_create();
+  stp_list_set_freefunc(printer_list, stp_list_node_free_data);
+  stp_list_set_namefunc(printer_list, stp_printer_namefunc);
+  stp_list_set_long_namefunc(printer_list, stp_printer_long_namefunc);
+  /* stp_list_set_sortfunc(printer_list, stp_printer_sortfunc); */
 
-  len = sizeof(stp_old_printer_list)/sizeof(stp_old_printer_t);
-
-  if(stp_printer_list)
-    stp_list_destroy(stp_printer_list);
-  stp_printer_list = stp_list_create();
-  stp_list_set_freefunc(stp_printer_list, stp_list_node_free_data);
-  stp_list_set_namefunc(stp_printer_list, stp_printer_namefunc);
-  stp_list_set_long_namefunc(stp_printer_list, stp_printer_long_namefunc);
-  /* stp_list_set_sortfunc(stp_printer_sortfunc); */
-
-  for (i=0; i < len; i++)
-    {
-      const stp_old_printer_t *src = &(stp_old_printer_list[i]);
-      stp_vars_t v = stp_allocate_vars();
-      const char *item = src->printer_data;
-      printer = stp_malloc(sizeof(stp_internal_printer_t));
-      printer->cookie = COOKIE_PRINTER;
-      printer->long_name = stp_strdup(src->long_name);
-      printer->model = src->model;
-      printer->printfuncs = src->printfuncs;
-      printer->family = stp_strdup(src->family);
-      printer->printvars = v;
-      stp_set_driver(v, src->short_name);
-      stp_set_output_type(v, src->color);
-      while (item && *item)
-	{
-	  const char *dptr = index(item, '=');
-	  if (dptr && (dptr - item) > 0)
-	    {
-	      char *endptr;
-	      double val = strtod(dptr + 1, &endptr);
-	      if (endptr && endptr > dptr + 1)
-		{
-		  char *name = stp_strndup(item, dptr - item);
-		  stp_set_float_parameter(v, name, val);
-		  item = index(endptr, ';');
-		  if (item)
-		    item++;
-		  stp_free(name);
-		}
-	    }
-	  else
-	    break;
-	}
-      stp_list_item_create(stp_printer_list,
-			   stp_list_get_end(stp_printer_list),
-			   (void *) printer);
-    }
   return 0;
 }
 
 int
 stp_known_printers(void)
 {
-  return stp_list_get_length(stp_printer_list);
+  return stp_list_get_length(printer_list);
 }
 
 const stp_printer_t
 stp_get_printer_by_index(int idx)
 {
   stp_list_item_t *printer;
-  printer = stp_list_get_item_by_index(stp_printer_list, idx);
+  printer = stp_list_get_item_by_index(printer_list, idx);
   if (printer == NULL)
     return NULL;
   return (const stp_printer_t) stp_list_item_get_data(printer);
+}
+
+void
+stp_printer_freefunc(stp_list_item_t *item)
+{
+  stp_internal_printer_t *printer =
+    (stp_internal_printer_t *) stp_list_item_get_data(item);
+  stp_free(printer->long_name);
+  stp_free(printer->family);
+  stp_free(printer);
 }
 
 static const char *
@@ -188,7 +144,7 @@ const stp_vars_t
 stp_printer_get_printvars(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
-  return (stp_vars_t) (val->printvars);
+  return (stp_vars_t) val->printvars;
 }
 
 
@@ -197,7 +153,7 @@ const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   stp_list_item_t *printer;
-  printer = stp_list_get_item_by_long_name(stp_printer_list, long_name);
+  printer = stp_list_get_item_by_long_name(printer_list, long_name);
   if (!printer)
     return NULL;
   return (const stp_printer_t) stp_list_item_get_data(printer);
@@ -207,7 +163,7 @@ const stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   stp_list_item_t *printer;
-  printer = stp_list_get_item_by_name(stp_printer_list, driver);
+  printer = stp_list_get_item_by_name(printer_list, driver);
   if (!printer)
     return NULL;
   return (const stp_printer_t) stp_list_item_get_data(printer);
@@ -624,4 +580,90 @@ stp_verify_printer_params(const stp_vars_t v)
       stp_free(errbuf.data);
     }
   return answer;
+}
+
+
+int
+stp_family_register(stp_list_t *family)
+{
+  stp_list_item_t *printer_item;
+  stp_list_item_t *old_printer_item;
+  stp_internal_printer_t *printer;
+  stp_internal_printer_t *old_printer;
+
+  printer_item = stp_list_get_start(family);
+
+  while(printer_item)
+    {
+      int error = 0;
+
+      printer = (stp_internal_printer_t *)
+	stp_list_item_get_data(printer_item);
+      old_printer_item = stp_list_get_start(printer_list);
+
+      while (old_printer_item)
+	{
+	  old_printer = (stp_internal_printer_t *)
+	    stp_list_item_get_data(old_printer_item);
+
+	  if (!strcmp(stp_get_driver(printer->printvars),
+		      stp_get_driver(old_printer->printvars)) &&
+	      !strcmp(printer->long_name, old_printer->long_name))
+	    error = 1;
+
+	  old_printer_item = stp_list_item_next(old_printer_item);
+	}
+
+      if (error == 0) /* No duplicates exist */
+	{
+	  stp_list_item_create(printer_list,
+			       NULL,
+			       (void *) printer);
+	}
+
+      printer_item = stp_list_item_next(printer_item);
+    }
+
+  return 0;
+}
+
+int
+stp_family_unregister(stp_list_t *family)
+{
+  stp_list_item_t *printer_item;
+  stp_list_item_t *old_printer_item;
+  stp_internal_printer_t *printer;
+  stp_internal_printer_t *old_printer;
+
+  printer_item = stp_list_get_start(family);
+
+  while(printer_item)
+    {
+      printer = (stp_internal_printer_t *)
+	stp_list_item_get_data(printer_item);
+      old_printer_item = stp_list_get_start(printer_list);
+
+      while (old_printer_item)
+	{
+	  old_printer = (stp_internal_printer_t *)
+	    stp_list_item_get_data(old_printer_item);
+
+
+	  if (printer == old_printer)
+	    {
+	      stp_list_item_t *tmp;
+	      tmp = stp_list_item_prev(old_printer_item);
+	      /* Remove the entry */
+	      stp_list_item_destroy(printer_list, old_printer_item);
+	      if (tmp == NULL)
+		tmp = stp_list_get_start(printer_list);
+	      old_printer_item = tmp;
+	    }
+	  else
+	    old_printer_item = stp_list_item_next(old_printer_item);
+	}
+
+      printer_item = stp_list_item_next(printer_item);
+    }
+  return 0;
 }

@@ -81,8 +81,8 @@ m4_if([$4], , , [AS_MKDIR_P([$4])])
 AC_MSG_NOTICE([creating $PKGCONFIG_FILE])
 dnl we're going to need uppercase, lowercase and user-friendly versions of the
 dnl string `MODULE'
-m4_pushdef([MODULE_UP], m4_translit([$1], [a-z-], [A-Z_]))dnl
-m4_pushdef([MODULE_DOWN], m4_translit([$1], [A-Z-], [a-z_]))dnl
+m4_pushdef([MODULE_UP],   m4_translit(m4_translit([$1], [-], [_]), [a-z], [A-Z]))dnl
+m4_pushdef([MODULE_DOWN], m4_translit(m4_translit([$1], [-], [_]), [A-Z], [a-z]))dnl
 if test -z "$MODULE_DOWN[]_cflags" ; then
   if test -n "$MODULE_UP[]_CFLAGS" ; then
       MODULE_DOWN[]_cflags="$MODULE_UP[]_CFLAGS"
@@ -127,7 +127,7 @@ fi
 echo 'Version: @MODULE_DOWN[]_version@' >>$PKGCONFIG_FILE
 echo 'Libs: -L${libdir} @MODULE_DOWN[]_libs@' >>$PKGCONFIG_FILE
 echo 'Cflags: -I${includedir} @MODULE_DOWN[]_cflags@' >>$PKGCONFIG_FILE
-m4_pushdef([PKGCONFIG_UP], [m4_translit([$1], [a-z-], [A-Z_])])dnl
+m4_pushdef([PKGCONFIG_UP], [m4_translit(m4_translit([$1], [-], [_]), [a-z], [A-Z])])dnl
 PKGCONFIG_UP[]_PKGCONFIG="PKGCONFIG_DIR[]$1-config"
 AC_SUBST(PKGCONFIG_UP[]_PKGCONFIG)
 dnl AC_CONFIG_FILES(PKGCONFIG_DIR[]$1[-config], [chmod +x ]PKGCONFIG_DIR[]$1[-config])

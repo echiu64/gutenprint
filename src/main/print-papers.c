@@ -38,30 +38,109 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
+#include "list.h"
 
-typedef struct
+
+static void stp_paper_freefunc(stp_list_item_t *item);
+static const char *stp_paper_namefunc(const stp_list_item_t *item);
+static const char *stp_paper_long_namefunc(const stp_list_item_t *item);
+
+stp_list_t *paper_list;
+
+
+int
+stp_init_paper_list(void)
 {
-  const char *name;
-  const char *text;
-  unsigned width;
-  unsigned height;
-  unsigned top;
-  unsigned left;
-  unsigned bottom;
-  unsigned right;
-  stp_papersize_unit_t paper_unit;
-} stp_internal_papersize_t;
+  if(paper_list)
+    stp_list_destroy(paper_list);
+  paper_list = stp_list_create();
+  stp_list_set_freefunc(paper_list, stp_paper_freefunc);
+  stp_list_set_namefunc(paper_list, stp_paper_namefunc);
+  stp_list_set_long_namefunc(paper_list, stp_paper_long_namefunc);
+  /* stp_list_set_sortfunc(stp_paper_sortfunc); */
 
-/*
- * Sizes are converted to 1/72in, then rounded down so that we don't
- * print off the edge of the paper.
- */
-#include "papers-oldlist.h"
+  return 0;
+}
+
+void
+stp_paper_freefunc(stp_list_item_t *item)
+{
+  stp_internal_papersize_t *paper =
+    (stp_internal_papersize_t *) stp_list_item_get_data(item);
+  stp_free(paper->name);
+  stp_free(paper->text);
+  stp_free(paper->comment);
+  stp_free(paper);
+}
+
+static const char *
+stp_paper_namefunc(const stp_list_item_t *item)
+{
+  stp_internal_papersize_t *paper =
+    (stp_internal_papersize_t *) stp_list_item_get_data(item);
+  return stp_papersize_get_name(paper);
+}
+
+static const char *
+stp_paper_long_namefunc(const stp_list_item_t *item)
+{
+  stp_internal_papersize_t *paper =
+    (stp_internal_papersize_t *) stp_list_item_get_data(item);
+  return stp_papersize_get_text(paper);
+}
+
+
+int stp_paper_create(stp_papersize_t pt)
+{
+  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  stp_list_item_t *paper_item;
+
+  /* Check the paper does not already exist */
+  paper_item = stp_list_get_start(paper_list);
+  while (paper_item)
+    {
+      const stp_internal_papersize_t *ep = (const stp_internal_papersize_t *)
+	stp_list_item_get_data(paper_item);
+      if (ep && !strcmp(p->name, ep->name))
+	return 1;
+      paper_item = stp_list_item_next(paper_item);
+    }
+
+  /* Add paper to list */
+  stp_list_item_create(paper_list,
+		       stp_list_get_end(paper_list),
+		       (void *) p);
+
+  return 0;
+}
+
+int stp_paper_destroy(stp_papersize_t pt)
+{
+  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  stp_list_item_t *paper_item;
+
+  /* Check if paper exists */
+  paper_item = stp_list_get_start(paper_list);
+  while (paper_item)
+    {
+      const stp_internal_papersize_t *ep = (const stp_internal_papersize_t *)
+	stp_list_item_get_data(paper_item);
+      if (ep && !strcmp(p->name, ep->name))
+	{
+	  stp_list_item_destroy (paper_list, paper_item);
+	  return 0;
+	}
+      paper_item = stp_list_item_next(paper_item);
+    }
+  /* Paper did not exist */
+  return 1;
+}
+
 
 int
 stp_known_papersizes(void)
 {
-  return sizeof(paper_sizes) / sizeof(stp_internal_papersize_t) - 1;
+  return stp_list_get_length(paper_list);
 }
 
 const char *
@@ -127,12 +206,23 @@ stp_papersize_get_unit(const stp_papersize_t pt)
   return p->paper_unit;
 }
 
+/*
 #if 1
+*/
+const stp_papersize_t
+stp_get_papersize_by_name(const char *name)
+{
+  stp_list_item_t *paper;
+  paper = stp_list_get_item_by_name(paper_list, name);
+  if (!paper)
+    return NULL;
+  else return (const stp_papersize_t) stp_list_item_get_data(paper);
+}
 /*
  * This is, of course, blatantly thread-unsafe.  However, it certainly
  * speeds up genppd by a lot!
  */
-const stp_papersize_t
+/*const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
   static int last_used_papersize = 0;
@@ -169,14 +259,16 @@ stp_get_papersize_by_name(const char *name)
   return NULL;
 }
 #endif
+*/
 
 const stp_papersize_t
 stp_get_papersize_by_index(int index)
 {
-  if (index < 0 || index >= stp_known_papersizes())
+  stp_list_item_t *paper;
+  paper = stp_list_get_item_by_index(paper_list, index);
+  if (!paper)
     return NULL;
-  else
-    return (stp_papersize_t) &(paper_sizes[index]);
+  else return (const stp_papersize_t) stp_list_item_get_data(paper);
 }
 
 static int
@@ -192,11 +284,13 @@ stp_get_papersize_by_size(int l, int w)
 {
   int score = INT_MAX;
   const stp_internal_papersize_t *ref = NULL;
-  const stp_internal_papersize_t *val = &(paper_sizes[0]);
-  int sizes = stp_known_papersizes();
+  const stp_internal_papersize_t *val = NULL;
   int i;
+  int sizes = stp_known_papersizes();
   for (i = 0; i < sizes; i++)
     {
+      val = stp_get_papersize_by_index(i);
+
       if (val->width == w && val->height == l)
 	return (stp_papersize_t) val;
       else
@@ -208,7 +302,6 @@ stp_get_papersize_by_size(int l, int w)
 	      score = myscore;
 	    }
 	}
-      val++;
     }
   return (stp_papersize_t) ref;
 }

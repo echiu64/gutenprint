@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in EPSON ESC/P2 driver for the GIMP.
+ *   Print plug-in RAW driver for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -34,6 +34,7 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
+#include "module.h"
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -308,3 +309,45 @@ const stp_printfuncs_t stp_raw_printfuncs =
   NULL,
   NULL
 };
+
+
+
+
+static stp_internal_family_t stp_raw_module_data =
+  {
+    &stp_raw_printfuncs,
+    NULL
+  };
+
+
+static int
+raw_module_init(void)
+{
+  return stp_family_register(stp_raw_module_data.printer_list);
+}
+
+
+static int
+raw_module_exit(void)
+{
+  return stp_family_unregister(stp_raw_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version raw_LTX_stp_module_version
+#define stp_module_data raw_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "raw",
+    VERSION,
+    "RAW family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    raw_module_init,
+    raw_module_exit,
+    (void *) &stp_raw_module_data
+  };

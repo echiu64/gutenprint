@@ -55,7 +55,6 @@ elementFormDefault="qualified">
 	<xsd:element ref="gamma" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="density" minOccurs="0" maxOccurs="1"/>
 	<xsd:element ref="saturation" minOccurs="0" maxOccurs="1"/>
-	<xsd:element ref="language" minOccurs="1" maxOccurs="1"/>
       </xsd:sequence>
     </xsd:complexType>
     <xsd:attributeGroup>
@@ -96,11 +95,6 @@ elementFormDefault="qualified">
   </xsd:element>
   <xsd:element name="saturation">
     <xsd:attributeGroup ref="saturationattrs" use="required"/>
-  </xsd:element>
-  <xsd:element name="language">
-    <xsd:attributeGroup>
-      <xsd:attribute name="value" type="token" use="required"/>
-    </xsd:attributeGroup>
   </xsd:element>
   <xsd:element name="paperdef">
     <xsd:complexType>

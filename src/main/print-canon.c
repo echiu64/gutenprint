@@ -55,6 +55,8 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
+#include "module.h"
+#include "printers.h"
 
 #if (0)
 #define EXPERIMENTAL_STUFF 0
@@ -2479,7 +2481,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   return status;
 }
 
-const stp_printfuncs_t stp_canon_printfuncs =
+static const stp_printfuncs_t stp_canon_printfuncs =
 {
   canon_list_parameters,
   canon_parameters,
@@ -2844,3 +2846,44 @@ canon_write_line(const stp_vars_t v,	/* I - Print file or command */
   else
     (*empty)+= 1;
 }
+
+
+static stp_internal_family_t stp_canon_module_data =
+  {
+    &stp_canon_printfuncs,
+    NULL
+  };
+
+
+static int
+canon_module_init(void)
+{
+  return stp_family_register(stp_canon_module_data.printer_list);
+}
+
+
+static int
+canon_module_exit(void)
+{
+  return stp_family_unregister(stp_canon_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version canon_LTX_stp_module_version
+#define stp_module_data canon_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "canon",
+    VERSION,
+    "Canon family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    canon_module_init,
+    canon_module_exit,
+    (void *) &stp_canon_module_data
+  };
+

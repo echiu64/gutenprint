@@ -8,6 +8,13 @@
    "$Id$"
 -->
 
+<!--
+   Sizes are converted to 1/72in, then rounded down so that we don't
+   print off the edge of the paper.
+-->
+
+
+
 <gimp-print xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd">

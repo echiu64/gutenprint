@@ -34,18 +34,6 @@
 #include "../main/util.h"
 #include "../main/vars.h"
 
-typedef struct
-{
-  const char *name;
-  const char *text;
-  unsigned width;
-  unsigned height;
-  unsigned top;
-  unsigned left;
-  unsigned bottom;
-  unsigned right;
-  stp_papersize_unit_t paper_unit;
-} stp_internal_papersize_t;
 
 void printer_output_start(void);
 void paper_output_start(void);

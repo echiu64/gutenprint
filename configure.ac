@@ -45,7 +45,7 @@ pushdef([GIMPPRINT_BINARY_AGE],        [0])
 pushdef([GIMPPRINT_VERSION], GIMPPRINT_MAJOR_VERSION.GIMPPRINT_MINOR_VERSION.GIMPPRINT_MICRO_VERSION[]GIMPPRINT_EXTRA_VERSION)
 
 AC_INIT(GIMPPRINT_NAME, GIMPPRINT_VERSION, [gimp-print-devel@lists.sourceforge.net])
-AC_PREREQ(2.50)
+AC_PREREQ(2.53)
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src/main/print-dither.c)
 AC_CONFIG_AUX_DIR(scripts)
@@ -138,6 +138,7 @@ AC_SUBST(ALL_LINGUAS)
 
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
+AC_LIBTOOL_DLOPEN
 AC_DISABLE_STATIC
 AM_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
@@ -245,10 +246,20 @@ STP_ARG_WITH([ghostscript],
              [BUILD_GHOSTSCRIPT],
              [(automatic)])
 
-STP_ARG_ENABLE([lexmarkutil],
-               [build lexmarkutil],
-               [BUILD_LEXMARKUTIL],
-               [no])
+STP_ARG_WITH_DETAILED([modules],
+                      [],
+                      [enable loadable modules],
+	              [(options: ltdl, dlopen, static)],
+	              [ENABLE_MODULES],
+	              [(automatic)],[
+    yes) [ENABLE_MODULES]="yes";  AC_MSG_RESULT([yes]) ;;
+    no) [ENABLE_MODULES]="no";  AC_MSG_RESULT([no]) ;;
+    ltdl) [ENABLE_MODULES]="ltdl";  AC_MSG_RESULT([ltdl]) ;;
+    dlopen) [ENABLE_MODULES]="dlopen";  AC_MSG_RESULT([dlopen]) ;;
+    static) [ENABLE_MODULES]="static";  AC_MSG_RESULT([static]) ;;
+    *) AC_MSG_ERROR([${withval}: not a valid module loader]) ;;
+                      ],[
+    [ENABLE_MODULES]="yes"])
 
 STP_ARG_ENABLE([debug],
                [turn on debugging in build],
@@ -510,11 +521,19 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
+dnl libltdl, used for dynamic module loading
+AC_CHECK_LIB(ltdl, lt_dlopen, [LTDL_LIBS="-lltdl"])
+
+AC_CHECK_LIB(dl, dlopen, [DLOPEN_LIBS="-ldl"])
+
 AC_CHECK_LIB(m,pow,
              GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} -lm"
              gimpprint_libdeps="${gimpprint_libdeps} -lm")
 
 PKG_CHECK_MODULES(LIBXML, libxml-2.0)
+GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${LIBXML_LIBS}"
+gimpprint_requires="${gimpprint_requires} libxml-2.0"
+
 
 STP_CUPS_LIBS
 
@@ -537,7 +556,9 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
     LIBREADLINE_DEPS="-lreadline $EXTRA_LIBREADLINE_DEPS"
   fi
 fi
+AC_CHECK_HEADERS(dlfcn.h)
 AC_CHECK_HEADERS(fcntl.h)
+AC_CHECK_HEADERS(ltdl.h)
 AC_CHECK_HEADERS(stdarg.h)
 AC_CHECK_HEADERS(sys/time.h sys/types.h)
 AC_CHECK_HEADERS(time.h)
@@ -570,14 +591,13 @@ AC_CHECK_FUNC(getopt_long,
   AC_LIBOBJ(getopt)
   AC_LIBOBJ(getopt1))
 
+
 dnl Define what has to be built
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
 AM_CONDITIONAL(BUILD_FOOMATIC_3, test x${BUILD_FOOMATIC_3} = xyes)
 
 AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
-
-AM_CONDITIONAL(BUILD_LEXMARKUTIL, test x${BUILD_LEXMARKUTIL} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
@@ -609,6 +629,56 @@ STP_CUPS_PATH
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
+# loadable modules
+# portable sh has no AND test...
+if test -n $HAVE_LTDL_H; then
+  if test -n $LTDL_LIBS; then
+    LDTL_POSSIBLE="true";
+  fi
+fi
+if test -n $HAVE_DLFCN_H; then
+  if test -n $DLOPEN_LIBS; then
+    DLOPEN_POSSIBLE="true";
+  fi
+fi
+# define what the user chose to build, if possible.
+# Prefer dlopen over ltdl.
+if test x$ENABLE_MODULES = xyes; then
+  if test x$DLOPEN_POSSIBLE = xtrue; then
+    USE_DLOPEN="true"
+  elif test x$LDTL_POSSIBLE = xtrue; then
+    USE_LTDL="true"
+  fi
+elif test x$ENABLE_MODULES = xltdl; then
+  if test x$LTDL_POSSIBLE = xtrue; then
+    USE_LTDL="true"
+  fi
+elif test x$ENABLE_MODULES = xdlopen; then
+  if test x$DLOPEN_POSSIBLE = xtrue; then
+    USE_DLOPEN="true"
+  fi
+fi
+# define what module system is to be used
+AC_MSG_CHECKING([which module system will be used])
+if test x$USE_LTDL = xtrue; then
+  MODULE="true"
+  AC_DEFINE(MODULE, "1", [Build a modular libgimpprint])
+  AC_DEFINE(USE_LTDL, "1", [Use GNU libltdl as module loader])
+  GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${LTDL_LIBS}"
+  gimpprint_libdeps="${gimpprint_libdeps} ${LTDL_LIBS}"
+  AC_MSG_RESULT([ltdl])
+elif test x$USE_DLOPEN = xtrue; then
+  MODULE="true"
+  AC_DEFINE(MODULE, "1", [Build a modular libgimpprint])
+  AC_DEFINE(USE_DLOPEN, "1", [Use libdl/dlopen as module loader])
+  GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${DLOPEN_LIBS}"
+  gimpprint_libdeps="${gimpprint_libdeps} ${DLOPEN_LIBS}"
+  AC_MSG_RESULT([dlopen])
+else
+  MODULE="false"
+  AC_MSG_RESULT([static])
+fi
+AM_CONDITIONAL(BUILD_MODULES, test x$MODULE = xtrue)
 
 dnl Define LTLIBOBJS
 AC_CONFIG_COMMANDS_PRE(

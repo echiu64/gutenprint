@@ -30,8 +30,9 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include "module.h"
 #include <time.h>
 #include <string.h>
 #ifdef HAVE_LIMITS_H
@@ -868,7 +869,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-const stp_printfuncs_t stp_ps_printfuncs =
+static const stp_printfuncs_t stp_ps_printfuncs =
 {
   ps_list_parameters,
   ps_parameters,
@@ -881,3 +882,44 @@ const stp_printfuncs_t stp_ps_printfuncs =
   NULL,
   NULL
 };
+
+
+static stp_internal_family_t stp_ps_module_data =
+  {
+    &stp_ps_printfuncs,
+    NULL
+  };
+
+
+static int
+ps_module_init(void)
+{
+  return stp_family_register(stp_ps_module_data.printer_list);
+}
+
+
+static int
+ps_module_exit(void)
+{
+  return stp_family_unregister(stp_ps_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version ps_LTX_stp_module_version
+#define stp_module_data ps_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "ps",
+    VERSION,
+    "Postscript family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    ps_module_init,
+    ps_module_exit,
+    (void *) &stp_ps_module_data
+  };
+

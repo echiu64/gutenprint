@@ -31,8 +31,9 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include "gimp-print-internal.h"
+#include "module.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -2657,7 +2658,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   return status;
 }
 
-const stp_printfuncs_t stp_pcl_printfuncs =
+static const stp_printfuncs_t stp_pcl_printfuncs =
 {
   pcl_list_parameters,
   pcl_parameters,
@@ -2710,3 +2711,44 @@ pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
   stp_zprintf(v, "\033*b%d%c", (int)(comp_ptr - comp_buf), last_plane ? 'W' : 'V');
   stp_zfwrite((const char *)comp_buf, comp_ptr - comp_buf, 1, v);
 }
+
+
+static stp_internal_family_t stp_pcl_module_data =
+  {
+    &stp_pcl_printfuncs,
+    NULL
+  };
+
+
+static int
+pcl_module_init(void)
+{
+  return stp_family_register(stp_pcl_module_data.printer_list);
+}
+
+
+static int
+pcl_module_exit(void)
+{
+  return stp_family_unregister(stp_pcl_module_data.printer_list);
+}
+
+
+/* Module header */
+#define stp_module_version pcl_LTX_stp_module_version
+#define stp_module_data pcl_LTX_stp_module_data
+
+stp_module_version_t stp_module_version = {0, 0};
+
+stp_module_t stp_module_data =
+  {
+    "pcl",
+    VERSION,
+    "PCL family driver",
+    STP_MODULE_CLASS_FAMILY,
+    NULL,
+    pcl_module_init,
+    pcl_module_exit,
+    (void *) &stp_pcl_module_data
+  };
+

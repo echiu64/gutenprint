@@ -42,6 +42,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "module.h"
+#include "xml.h"
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -299,12 +301,18 @@ stp_deprintf(unsigned long level, const char *format, ...)
   va_end(args);
 }
 
+/* pointers to the allocation functions to use, which may be set by
+   client applications */
+void *(*stp_malloc_func)(size_t size) = malloc;
+void *(*stp_realloc_func)(void *ptr, size_t size) = realloc;
+void (*stp_free_func)(void *ptr) = free;
+
 void *
 stp_malloc (size_t size)
 {
   register void *memptr = NULL;
 
-  if ((memptr = malloc (size)) == NULL)
+  if ((memptr = stp_malloc_func (size)) == NULL)
     {
       fputs("Virtual memory exhausted.\n", stderr);
       stp_abort();
@@ -325,7 +333,7 @@ stp_realloc (void *ptr, size_t size)
 {
   register void *memptr = NULL;
 
-  if (size > 0 && ((memptr = realloc (ptr, size)) == NULL))
+  if (size > 0 && ((memptr = stp_realloc_func (ptr, size)) == NULL))
     {
       fputs("Virtual memory exhausted.\n", stderr);
       stp_abort();
@@ -336,7 +344,7 @@ stp_realloc (void *ptr, size_t size)
 void
 stp_free(void *ptr)
 {
-  free(ptr);
+  stp_free_func(ptr);
 }
 
 int
@@ -353,9 +361,20 @@ stp_init(void)
 #endif
       stp_init_debug();
       stp_init_printer_list();
+      stp_init_paper_list();
+      /* Load modules */
+      if (stp_module_load())
+	return 1;
+      /* Load XML data */
+      if (stp_xml_init())
+	return 1;
+      /* Initialise modules */
+      if (stp_module_init())
+	return 1;
     }
+
   stp_is_initialised = 1;
-  return (0);
+  return 0;
 }
 
 size_t
