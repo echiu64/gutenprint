@@ -70,16 +70,42 @@ typedef struct
 static olympus_privdata_t privdata;
 
 typedef struct {
-  const char *name;
-  const char *text;
-  int xdpi;
-  int ydpi;
-  int x_max_res;	/* maximum width in pixels */
-  int y_max_res;	/* maximum height in pixels */
-} olympus_res_t;
+  const char* name;
+} olymp_resolution_t;
 
-#define OLYMPUS_RES_COUNT	5
-typedef olympus_res_t olympus_res_t_array[OLYMPUS_RES_COUNT];
+typedef struct {
+  const olymp_resolution_t *item;
+  size_t n_items;
+} olymp_resolution_list_t;
+
+typedef struct {
+  const char* name;
+  const char* text;
+  int width_pt;
+  int height_pt;
+  int border_pt_left;
+  int border_pt_right;
+  int border_pt_top;
+  int border_pt_bottom;
+} olymp_pagesize_t;
+
+typedef struct {
+  const olymp_pagesize_t *item;
+  size_t n_items;
+} olymp_pagesize_list_t;
+
+typedef struct {
+  const char* res_name;
+  const char* pagesize_name;
+  int width_px;
+  int height_px;
+} olymp_printsize_t;
+
+typedef struct {
+  const olymp_printsize_t *item;
+  size_t n_items;
+} olymp_printsize_list_t;
+
 
 typedef struct {
   const char *name;
@@ -95,15 +121,9 @@ typedef struct {
 typedef struct /* printer specific parameters */
 {
   int model;		/* printer model number from printers.xml*/
-  int max_paper_width;  /* maximum printable paper size in 1/72 inch */
-  int max_paper_height;
-  int min_paper_width;	/* minimum printable paper size in 1/72 inch */
-  int min_paper_height;
-  int border_left;	/* unprintable borders - unit 1/72"  */
-  int border_right;
-  int border_top;
-  int border_bottom;
-  const olympus_res_t_array *res;	/* list of possible resolutions */
+  const olymp_resolution_list_t *resolution;
+  const olymp_pagesize_list_t *pages;
+  const olymp_printsize_list_t *printsize;
   int interlacing;	/* color interlacing scheme */
   const char *planes;	/* name and order of ribbons */
   int block_size;
@@ -119,16 +139,45 @@ typedef struct /* printer specific parameters */
   const char *adj_magenta;
   const char *adj_yellow;
   const laminate_list_t *laminate;
+  const int borderless;
 } olympus_cap_t;
 
 static const olympus_cap_t* olympus_get_model_capabilities(int model);
 
-static const olympus_res_t_array p300_resolution = 
+static const olymp_resolution_t p300_res[] =
 {
-  { "306x306", N_ ("306x306 DPI"), 306, 306, 1024, 1376 },
-  { "153x153", N_ ("153x153 DPI"), 153, 153, 512, 688 },
-  { "", "", 0, 0, 0, 0 }
-}; 
+  { "306x306"},
+  { "153x153"},
+};
+
+static const olymp_resolution_list_t p300_res_list =
+{
+  p300_res, sizeof(p300_res) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t p300_page[] =
+{
+  { "Custom", NULL, -1, -1, 28, 28, 48, 48},
+  { "A6", NULL, -1, -1, 28, 28, 48, 48},
+};
+
+static const olymp_pagesize_list_t p300_page_list =
+{
+  p300_page, sizeof(p300_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t p300_printsize[] =
+{
+  { "306x306", "Custom", 1024, 1376},
+  { "153x153", "Custom", 1024, 1376},
+  { "306x306", "A6", 1024, 1376},
+  { "153x153", "A6",  512,  688},
+};
+
+static const olymp_printsize_list_t p300_printsize_list =
+{
+  p300_printsize, sizeof(p300_printsize) / sizeof(olymp_printsize_t)
+};
 
 static void p300_printer_init_func(stp_vars_t v)
 {
@@ -192,10 +241,40 @@ static const char p300_adj_yellow[] =
   "</gimp-print>\n";
 
 
-static const olympus_res_t_array p400_resolution =
+static const olymp_resolution_t res_314dpi[] =
 {
-  {"314x314", N_ ("314x314 DPI"), 314, 314, 2400, 3200},
-  {"", "", 0, 0, 0, 0}
+  { "314x314"},
+};
+
+static const olymp_resolution_list_t res_314dpi_list =
+{
+  res_314dpi, sizeof(res_314dpi) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t p400_page[] =
+{
+  { "Custom", NULL, -1, -1, 22, 22, 54, 54},
+  { "A4", NULL, -1, -1, 22, 22, 54, 54},
+  { "A5", "A5 wide", 595, 503, 22, 22, 22, 22},
+  { "B5", "A4 (2 Postcards)", -1, -1, 39, 38, 60, 362},
+};
+
+static const olymp_pagesize_list_t p400_page_list =
+{
+  p400_page, sizeof(p400_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t p400_printsize[] =
+{
+  { "314x314", "Custom", 2400, 3200},
+  { "314x314", "A4", 2400, 3200},
+  { "314x314", "A5", 2400, 2000},
+  { "314x314", "B5", 1920, 1328},
+};
+
+static const olymp_printsize_list_t p400_printsize_list =
+{
+  p400_printsize, sizeof(p400_printsize) / sizeof(olymp_printsize_t)
 };
 
 static void p400_printer_init_func(stp_vars_t v)
@@ -270,10 +349,35 @@ static const char p400_adj_yellow[] =
   "</gimp-print>\n";
 
 
-static const olympus_res_t_array cpx00_resolution =
+static const olymp_pagesize_t cpx00_page[] =
 {
-  {"314x314", N_ ("300x300 DPI"), 314, 314, 1232, 1808},
-  {"", "", 0, 0, 0, 0}
+  { "Custom", NULL, -1, -1, 13, 13, 16, 18},
+  { "Postcard", "Postcard 148x100mm", -1, -1, 0, 0, 0, 0},
+  { "ISOB7", "CP_L 89x119mm", 253, 334, 0, 0, 0, 0},
+  { "ISOB8", "Card 54x86mm", 155, 239, 0, 0, 0, 0},
+/*
+  { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
+  { "ISOB7", "CP_L 89x119mm", 253, 334, 13, 13, 15, 15},
+  { "ISOB8", "Card 54x86mm", 155, 239, 13, 13, 15, 15},
+*/
+};
+
+static const olymp_pagesize_list_t cpx00_page_list =
+{
+  cpx00_page, sizeof(cpx00_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t cpx00_printsize[] =
+{
+  { "314x314", "Custom", 1232, 1808},
+  { "314x314", "Postcard", 1232, 1808},
+  { "314x314", "ISOB7", 1100, 1456},
+  { "314x314", "ISOB8", 672, 1040},
+};
+
+static const olymp_printsize_list_t cpx00_printsize_list =
+{
+  cpx00_printsize, sizeof(cpx00_printsize) / sizeof(olymp_printsize_t)
 };
 
 static void cpx00_printer_init_func(stp_vars_t v)
@@ -331,10 +435,45 @@ static const char cpx00_adj_yellow[] =
   "</gimp-print>\n";
 
 
-static const olympus_res_t_array updp10_resolution =
+static const olymp_resolution_t updp10_res[] =
 {
-  {"306x312", N_ ("300x300 DPI"), 306, 312, 1200, 1800},
-  {"", "", 0, 0, 0, 0}
+  { "300x300"},
+};
+
+static const olymp_resolution_list_t updp10_res_list =
+{
+  updp10_res, sizeof(updp10_res) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t updp10_page[] =
+{
+  { "Custom", NULL, -1, -1, 12, 12, 0, 0},
+/*
+  { "w288h432", "UPC-10P23", -1, -1, 0, 0, 0, 0},
+  { "Postcard", "UPC-10P34", 288, 384, 0, 0, 0, 0},
+  { "A6", "UPC-10S01", 288, 432, 0, 0, 0, 0},
+*/
+  { "w288h432", "UPC-10P23", -1, -1, 12, 12, 18, 18},
+  { "Postcard", "UPC-10P34", 288, 384, 12, 12, 16, 16},
+  { "A6", "UPC-10S01", 288, 432, 12, 12, 18, 18},
+};
+
+static const olymp_pagesize_list_t updp10_page_list =
+{
+  updp10_page, sizeof(updp10_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t updp10_printsize[] =
+{
+  { "300x300", "Custom", 1200, 1800},
+  { "300x300", "w288h432", 1200, 1800},
+  { "300x300", "Postcard", 1200, 1600},
+  { "300x300", "A6", 1200, 1800},
+};
+
+static const olymp_printsize_list_t updp10_printsize_list =
+{
+  updp10_printsize, sizeof(updp10_printsize) / sizeof(olymp_printsize_t)
 };
 
 static void updp10_printer_init_func(stp_vars_t v)
@@ -394,10 +533,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
 {
   { /* Olympus P300 */
     0, 		
-    297, 420,	/* A6 */
-    283, 416,	/* Postcard */
-    28, 28, 48, 48,
-    &p300_resolution,
+    &p300_res_list,
+    &p300_page_list,
+    &p300_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "YMC",
     16,
     1, 0,
@@ -406,13 +544,13 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p300_block_init_func, NULL,
     p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
     NULL,
+    0,
   },
   { /* Olympus P400 */
     1,
-    595, 842,	/* A4 */
-    283, 416,	/* Postcard */
-    22, 22, 54, 54,
-    &p400_resolution,
+    &res_314dpi_list,
+    &p400_page_list,
+    &p400_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "123",
     180,
     1, 1,
@@ -421,13 +559,13 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p400_block_init_func, NULL,
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
     NULL,
+    0,
   },
   { /* Canon CP100 */
     1000,
-    283, 416, 	/* Postcard */
-    283, 416,	/* Postcard */
-    0, 0, 0, 0,
-    &cpx00_resolution,
+    &res_314dpi_list,
+    &cpx00_page_list,
+    &cpx00_printsize_list,
     OLYMPUS_INTERLACE_PLANE, "123",
     1808,
     1, 1,
@@ -436,13 +574,13 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
+    0,
   },
   { /* Sony UP-DP10  */
     2000,
-    283, 416, 	/* Postcard */
-    283, 416,	/* Postcard */
-    0, 0, 0, 0,
-    &updp10_resolution,
+    &updp10_res_list,
+    &updp10_page_list,
+    &updp10_printsize_list,
     OLYMPUS_INTERLACE_NONE, "123",
     1800,
     1, 1,
@@ -451,6 +589,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &updp10_laminate_list,
+    1,
   },
 };
 
@@ -497,7 +636,13 @@ static const stp_parameter_t the_parameters[] =
     "Laminate", N_("Laminate Pattern"),
     N_("Laminate Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1
+  },
+  {
+    "Borderless", N_("Borderless"),
+    N_("Print without borders"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1
   },
 };
 
@@ -583,21 +728,30 @@ static const olympus_cap_t* olympus_get_model_capabilities(int model)
   return &(olympus_model_capabilities[0]);
 }
 
-static const olympus_res_t*
-olympus_get_res_params(int model, const char *resolution)
+static void
+olympus_printsize(stp_const_vars_t v,
+		   int  *width,
+		   int  *height)
 {
-  const olympus_cap_t *caps = olympus_get_model_capabilities(model);
-  const olympus_res_t *res  = *(caps->res);
+  int i;
+  const char *page = stp_get_string_parameter(v, "PageSize");
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+		  				stpi_get_model_id(v));
+  const olymp_printsize_list_t *p = caps->printsize;
 
-  if (resolution)
-    while (res->xdpi)
-      {
-        if (strcmp(resolution, res->name) == 0)
-	  return res;
-        res++;
-      }
-  stpi_erprintf("olympus_get_res_params: resolution not found (%s)\n", resolution);
-  return NULL;
+  for (i = 0; i < p->n_items; i++)
+    {
+      if (strcmp(p->item[i].res_name,resolution) == 0 &&
+          strcmp(p->item[i].pagesize_name,page) == 0)
+        {
+          *width  = p->item[i].width_px;
+	  *height = p->item[i].height_px;
+          return;
+        }
+    }
+  stpi_erprintf("olympus_printsize: printsize not found (%s, %s)\n",
+		  page, resolution);
 }
 
 static stp_parameter_list_t
@@ -644,22 +798,18 @@ olympus_parameters(stp_const_vars_t v, const char *name,
       }
   if (strcmp(name, "PageSize") == 0)
     {
-      int papersizes = stp_known_papersizes();
+      const olymp_pagesize_list_t *p = caps->pages;
+      const char* text;
 
       description->bounds.str = stp_string_list_create();
-      for (i = 0; i < papersizes; i++)
+      for (i = 0; i < p->n_items; i++)
 	{
-	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	  if (strlen(pt->name) > 0 &&
-	      pt->width <= caps->max_paper_width &&
-	      pt->height <= caps->max_paper_height &&
-	      (pt->width >= caps->min_paper_width || pt->width == 0) &&
-	      (pt->height >= caps->min_paper_height || pt->height == 0))
-	    {
-/* stpi_erprintf("olympus: pagesize %s, %s\n", pt->name, pt->text); */
-	      stp_string_list_add_string(description->bounds.str,
-					pt->name, pt->text);
-	    }
+          const stp_papersize_t *pt = stp_get_papersize_by_name(
+			  p->item[i].name);
+
+	  text = (p->item[i].text ? p->item[i].text : pt->text);
+	  stp_string_list_add_string(description->bounds.str,
+			  p->item[i].name, text);
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -676,17 +826,18 @@ olympus_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "Resolution") == 0)
     {
-      const olympus_res_t *res;
-      description->bounds.str = stp_string_list_create();
+      char res_text[24];
+      const olymp_resolution_list_t *r = caps->resolution;
 
-      res =  *(caps->res); /* get resolution specific parameters of printer */
-      while (res->xdpi)
+      description->bounds.str = stp_string_list_create();
+      for (i = 0; i < r->n_items; i++)
         {
-/* stpi_erprintf("olympus: resolution %s, %s\n", res->name, res->text); */
-          stp_string_list_add_string(description->bounds.str,
-	  	res->name, _(res->text)); 
-	  res++;
+	  sprintf(res_text, "%s DPI", r->item[i].name);
+	  stp_string_list_add_string(description->bounds.str,
+		r->item[i].name, _(res_text));
 	}
+      if (r->n_items < 2)
+        description->is_active = 0;
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
@@ -698,6 +849,8 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 				  inks[i].name, inks[i].name);
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
+      if (ink_count < 2)
+        description->is_active = 0;
     }
   else if (strcmp(name, "Laminate") == 0)
     {
@@ -714,9 +867,13 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 	    }
           description->deflt.str =
 	  stp_string_list_param(description->bounds.str, 0)->name;
+          description->is_active = 1;
         }
-      else
-        description->is_active = 0;
+    }
+  else if (strcmp(name, "Borderless") == 0)
+    {
+      if (caps->borderless) 
+        description->is_active = 1;
     }
   else
     description->is_active = 0;
@@ -731,14 +888,42 @@ olympus_imageable_area(stp_const_vars_t v,
 		   int  *top)
 {
   int width, height;
+  int i;
+  const char *page = stp_get_string_parameter(v, "PageSize");
+  const stp_papersize_t *pt = stp_get_papersize_by_name(page);
   const olympus_cap_t *caps = olympus_get_model_capabilities(
-  						stpi_get_model_id(v));
-  
-  stpi_default_media_size(v, &width, &height);
-  *left = caps->border_left;
-  *top = caps->border_top;
-  *right = width - caps->border_right;
-  *bottom = height - caps->border_bottom;
+		  				stpi_get_model_id(v));
+  const olymp_pagesize_list_t *p = caps->pages;
+
+  for (i = 0; i < p->n_items; i++)
+    {
+      if (strcmp(p->item[i].name,pt->name) == 0)
+        {
+    	  if (p->item[i].width_pt >= 0)
+    		  stp_set_page_width(v, p->item[i].width_pt);
+    	  if (p->item[i].height_pt >= 0)
+    		  stp_set_page_height(v, p->item[i].height_pt);
+
+          stpi_default_media_size(v, &width, &height);
+    
+          
+	  if (caps->borderless && stp_get_boolean_parameter(v, "Borderless"))
+            {
+              *left = 0;
+              *top  = 0;
+              *right  = width;
+              *bottom = height;
+            }
+	  else
+	    {
+              *left = p->item[i].border_pt_left;
+              *top  = p->item[i].border_pt_top;
+              *right  = width  - p->item[i].border_pt_right;
+              *bottom = height - p->item[i].border_pt_bottom;
+	    }
+          break;
+        }
+    }
 }
 
 static void
@@ -797,9 +982,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   const int model           = stpi_get_model_id(v); 
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
   const olympus_cap_t *caps = olympus_get_model_capabilities(model);
-  const char *res_param     = stp_get_string_parameter(v, "Resolution");
-  const olympus_res_t *res  = olympus_get_res_params(model, res_param);
-
+  int max_print_px_width, max_print_px_height;
   int xdpi, ydpi;	/* Resolution */
 
   /* image in pixels */
@@ -839,10 +1022,11 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   stp_describe_resolution(v, &xdpi, &ydpi);
   olympus_imageable_area(v, &page_pt_left, &page_pt_right,
 	&page_pt_bottom, &page_pt_top);
+  olympus_printsize(v, &max_print_px_width, &max_print_px_height);
 
-  print_px_width  = MIN(res->x_max_res,
-			(page_pt_right - page_pt_left) * xdpi / 72);
-  print_px_height = MIN(res->y_max_res,
+  print_px_width  = MIN(max_print_px_width,
+		  	(page_pt_right - page_pt_left) * xdpi / 72);
+  print_px_height = MIN(max_print_px_height,
 			(page_pt_bottom - page_pt_top) * ydpi / 72);
   out_px_width  = out_pt_width  * xdpi / 72;
   out_px_height = out_pt_height * ydpi / 72;
