@@ -2428,6 +2428,34 @@ static const escp2_inkname_t two_color_extended_inkset =
   }
 };
 
+static const escp2_inkname_t three_color_extended_inkset =
+{
+  "PhysicalCMY", N_ ("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  NULL, NULL, NULL,
+  {
+    &standard_cyan_channels, &standard_magenta_channels,
+    &standard_yellow_channels
+  }
+};
+
+static const escp2_inkname_t x80_three_color_extended_inkset =
+{
+  "PhysicalCMY", N_ ("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  NULL, NULL, NULL,
+  {
+    &x80_cyan_channels, &x80_magenta_channels, &x80_yellow_channels
+  }
+};
+
+static const escp2_inkname_t c80_three_color_extended_inkset =
+{
+  "PhysicalCMY", N_ ("Three Color Raw"), 1, INKSET_EXTENDED, 0, 0, 3,
+  NULL, NULL, NULL,
+  {
+    &c80_cyan_channels, &c80_magenta_channels, &c80_yellow_channels
+  }
+};
+
 static const escp2_inkname_t four_color_extended_inkset =
 {
   "PhysicalCMYK", N_ ("Four Color Raw"), 1, INKSET_EXTENDED, 0, 0, 4,
@@ -2455,6 +2483,17 @@ static const escp2_inkname_t c80_four_color_extended_inkset =
   {
     &c80_black_channels, &c80_cyan_channels,
     &c80_magenta_channels, &c80_yellow_channels
+  }
+};
+
+static const escp2_inkname_t five_color_extended_inkset =
+{
+  "PhysicalCcMmY", N_ ("Five Color Raw"), 1, INKSET_EXTENDED, 0, 0, 5,
+  NULL, NULL, NULL,
+  {
+    &standard_cyan_channels, &extended_cyan_channels,
+    &standard_magenta_channels, &extended_magenta_channels,
+    &photo_yellow_channels
   }
 };
 
@@ -2519,7 +2558,8 @@ static const escp2_inkname_t *const standard_ink_types[] =
   &three_color_composite_inkset,
   &piezo_quadtone_inkset,
   &one_color_extended_inkset,
-  &four_color_extended_inkset
+  &three_color_extended_inkset,
+  &four_color_extended_inkset,
 };
 
 DECLARE_INKLIST(standard);
@@ -2530,7 +2570,8 @@ static const escp2_inkname_t *const c80_ink_types[] =
   &c80_three_color_composite_inkset,
   &c80_piezo_quadtone_inkset,
   &one_color_extended_inkset,
-  &c80_four_color_extended_inkset
+  &c80_three_color_extended_inkset,
+  &c80_four_color_extended_inkset,
 };
 
 DECLARE_INKLIST(c80);
@@ -2540,7 +2581,8 @@ static const escp2_inkname_t *const x80_ink_types[] =
   &x80_four_color_standard_inkset,
   &x80_three_color_composite_inkset,
   &one_color_extended_inkset,
-  &x80_four_color_extended_inkset
+  &x80_three_color_extended_inkset,
+  &x80_four_color_extended_inkset,
 };
 
 DECLARE_INKLIST(x80);
@@ -2553,7 +2595,9 @@ static const escp2_inkname_t *const photo_ink_types[] =
   &three_color_composite_inkset,
   &piezo_quadtone_inkset,
   &one_color_extended_inkset,
+  &three_color_extended_inkset,
   &four_color_extended_inkset,
+  &five_color_extended_inkset,
   &six_color_extended_inkset,
 };
 
@@ -2569,7 +2613,9 @@ static const escp2_inkname_t *const photo7_japan_ink_types[] =
   &three_color_composite_inkset,
   &piezo_quadtone_inkset,
   &one_color_extended_inkset,
+  &three_color_extended_inkset,
   &four_color_extended_inkset,
+  &five_color_extended_inkset,
   &six_color_extended_inkset,
   &seven_color_extended_inkset,
 };
@@ -2586,7 +2632,9 @@ static const escp2_inkname_t *const photo7_ink_types[] =
   &two_color_grayscale_inkset,
   &one_color_extended_inkset,
   &two_color_extended_inkset,
+  &three_color_extended_inkset,
   &four_color_extended_inkset,
+  &five_color_extended_inkset,
   &six_color_extended_inkset,
   &seven_color_extended_inkset,
 };
