@@ -2891,7 +2891,6 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
 {
   int		x,		/* Current X coordinate */
 		height;		/* Height of output bitmap in bytes */
-  int		c, m, y, k;	/* CMYK values */
   unsigned char	bit,		/* Current bit */
     		*cptr,		/* Current cyan pixel */
     		*mptr,		/* Current magenta pixel */
@@ -2973,14 +2972,18 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   QUANT(14);
   for (; x != dst_width; x++)
     {
-      /*
-       * First get the standard CMYK separation color values.
-       */
-
+      int c, m, y, k;
+      int oc, om, oy, ok;
+      int ck;
       c = cmyk[0];
       m = cmyk[1];
       y = cmyk[2];
-      k = cmyk[2];
+      k = cmyk[3];
+      ck = k + USMIN(c, USMIN(m, y));
+      oc = c + ck;
+      om = m + ck;
+      oy = y + ck;
+      ok = k;
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
@@ -2988,14 +2991,14 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
        */
       if (c > 0 || m > 0 || y > 0 || k > 0)
 	{
-
-	  print_color_fast(d, kd, k, k, x, row, kptr, NULL, bit, height,
-			   kdither, kdither_very_fast);
-	  print_color_fast(d, cd, c, c, x, row, cptr, lcptr, bit, height,
+	  if (black)
+	    print_color_fast(d, kd, ok, k, x, row, kptr, NULL, bit, height,
+			     kdither, kdither_very_fast);
+	  print_color_fast(d, cd, oc, c, x, row, cptr, lcptr, bit, height,
 			   cdither, cdither_very_fast);
-	  print_color_fast(d, md, m, m, x, row, mptr, lmptr, bit, height,
+	  print_color_fast(d, md, om, m, x, row, mptr, lmptr, bit, height,
 			   mdither, mdither_very_fast);
-	  print_color_fast(d, yd, y, y, x, row, yptr, lyptr, bit, height,
+	  print_color_fast(d, yd, oy, y, x, row, yptr, lyptr, bit, height,
 			   ydither, ydither_very_fast);
 	  QUANT(16);
 	}
@@ -3051,7 +3054,6 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
 {
   int		x,		/* Current X coordinate */
 		height;		/* Height of output bitmap in bytes */
-  int		c, m, y, k;	/* CMYK values */
   unsigned char	bit,		/* Current bit */
 		*cptr,		/* Current cyan pixel */
 		*mptr,		/* Current magenta pixel */
@@ -3116,14 +3118,18 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
    */
   for (; x != terminate; x ++)
     {
-      /*
-       * First get the standard CMYK separation color values.
-       */
-
+      int c, m, y, k;
+      int oc, om, oy, ok;
+      int ck;
       c = cmyk[0];
       m = cmyk[1];
       y = cmyk[2];
       k = cmyk[3];
+      ck = k + USMIN(c, USMIN(m, y));
+      oc = c + ck;
+      om = m + ck;
+      oy = y + ck;
+      ok = k;
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
@@ -3151,28 +3157,28 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
       else if (first_color == ECOLOR_K)
 	goto eck;
     ecc:
-      print_color(d, &(d->dither[ECOLOR_C]), c, c, c, x, row, cptr, lcptr,
+      print_color(d, &(d->dither[ECOLOR_C]), oc, oc, c, x, row, cptr, lcptr,
 		  bit, height, d->randomizer[ECOLOR_C], 0,
 		  &ink_budget, &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
 		  d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      print_color(d, &(d->dither[ECOLOR_M]), m, m, m, x, row, mptr, lmptr,
+      print_color(d, &(d->dither[ECOLOR_M]), om, om, m, x, row, mptr, lmptr,
 		  bit, height, d->randomizer[ECOLOR_M], 0,
 		  &ink_budget, &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
 		  d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      print_color(d, &(d->dither[ECOLOR_Y]), y, y, y, x, row, yptr, lyptr,
+      print_color(d, &(d->dither[ECOLOR_Y]), oy, oy, y, x, row, yptr, lyptr,
 		  bit, height, d->randomizer[ECOLOR_Y], 0,
 		  &ink_budget, &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
 		  d->dither_type);
       if (first_color == ECOLOR_K)
 	goto out;
     eck:
-      print_color(d, &(d->dither[ECOLOR_K]), k, k, k, x, row, kptr, NULL,
+      print_color(d, &(d->dither[ECOLOR_K]), ok, ok, k, x, row, kptr, NULL,
 		  bit, height, d->randomizer[ECOLOR_K], 0,
 		  &ink_budget, &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
 		  d->dither_type);
@@ -3239,7 +3245,6 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
 {
   int		x,		/* Current X coordinate */
     		height;		/* Height of output bitmap in bytes */
-  int		c, m, y, k;
   unsigned char	bit,		/* Current bit */
     		*cptr,		/* Current cyan pixel */
     		*mptr,		/* Current magenta pixel */
@@ -3355,10 +3360,18 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
    */
   for (; x != terminate; x += direction)
     {
+      int c, m, y, k;
+      int oc, om, oy, ok;
+      int ck;
       c = cmyk[0];
       m = cmyk[1];
       y = cmyk[2];
       k = cmyk[3];
+      ck = k + USMIN(c, USMIN(m, y));
+      oc = c + ck;
+      om = m + ck;
+      oy = y + ck;
+      ok = k;
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
@@ -3397,7 +3410,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       else if (first_color == ECOLOR_K)
 	goto eck;
     ecc:
-      c = print_color(d, &(d->dither[ECOLOR_C]), c, c,
+      c = print_color(d, &(d->dither[ECOLOR_C]), oc, oc,
 		      c, x, row, cptr, lcptr, bit, height,
 		      d->randomizer[ECOLOR_C], 0, &ink_budget,
 		      &(d->pick[ECOLOR_C]), &(d->dithermat[ECOLOR_C]),
@@ -3405,7 +3418,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->dither[ECOLOR_M]), m, m,
+      m = print_color(d, &(d->dither[ECOLOR_M]), om, om,
 		      m, x, row, mptr, lmptr, bit, height,
 		      d->randomizer[ECOLOR_M], 0, &ink_budget,
 		      &(d->pick[ECOLOR_M]), &(d->dithermat[ECOLOR_M]),
@@ -3413,7 +3426,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->dither[ECOLOR_Y]), y, y,
+      y = print_color(d, &(d->dither[ECOLOR_Y]), oy, oy,
 		      y, x, row, yptr, lyptr, bit, height,
 		      d->randomizer[ECOLOR_Y], 0, &ink_budget,
 		      &(d->pick[ECOLOR_Y]), &(d->dithermat[ECOLOR_Y]),
@@ -3421,7 +3434,7 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
       if (first_color == ECOLOR_K)
 	goto out;
     eck:
-      k = print_color(d, &(d->dither[ECOLOR_K]), k, k,
+      k = print_color(d, &(d->dither[ECOLOR_K]), ok, ok,
 		      k, x, row, kptr, NULL, bit, height,
 		      d->randomizer[ECOLOR_K], 0, &ink_budget,
 		      &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
@@ -3431,16 +3444,16 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
     out:
 
       QUANT(11);
-      ndither[ECOLOR_C] = update_dither(c, c, d->src_width, odb, odb_mask,
+      ndither[ECOLOR_C] = update_dither(c, oc, d->src_width, odb, odb_mask,
 					direction, error[ECOLOR_C][0],
 					error[ECOLOR_C][1], d);
-      ndither[ECOLOR_M] = update_dither(m, m, d->src_width, odb, odb_mask,
+      ndither[ECOLOR_M] = update_dither(m, om, d->src_width, odb, odb_mask,
 					direction, error[ECOLOR_M][0],
 					error[ECOLOR_M][1], d);
-      ndither[ECOLOR_Y] = update_dither(y, y, d->src_width, odb, odb_mask,
+      ndither[ECOLOR_Y] = update_dither(y, oy, d->src_width, odb, odb_mask,
 					direction, error[ECOLOR_Y][0],
 					error[ECOLOR_Y][1], d);
-      ndither[ECOLOR_K] = update_dither(k, k, d->src_width, odb, odb_mask,
+      ndither[ECOLOR_K] = update_dither(k, ok, d->src_width, odb, odb_mask,
 					direction, error[ECOLOR_K][0],
 					error[ECOLOR_K][1], d);
 
