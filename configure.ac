@@ -374,7 +374,7 @@ else
 dnl Quote to protect sed regexes
   [gimptool_check_major=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
   [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
-  if test "$gimptool_check_major" -eq 2 -a "$gimptool_check_minor" -eq 0; then
+  if test "$gimptool_check_major" -eq 2; then
     BUILD_GIMP2="yes"
   else
     BUILD_GIMP2="no"
