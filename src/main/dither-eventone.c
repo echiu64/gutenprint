@@ -602,9 +602,10 @@ stpi_dither_ut(stp_vars_t v,
 
     if (ddc->b > 131070)
       print_all_channels = 1;
-    else if (ddc->b > 65535)
+    else if (ddc->b > 65535) {
+      ddc->b -= 65535;
       channels_to_print = 1;
-
+    }
 
     if (ddc->b > 65535) {
       ddc->b = 65535;
