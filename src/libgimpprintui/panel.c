@@ -341,9 +341,8 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
   GtkWidget *gcurve =
     GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
   stp_curve_t seed = opt->info.curve.deflt;
-  if (!seed)
-    seed = opt->info.curve.deflt;
   set_gtk_curve_values(gcurve, seed);
+  set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
   return 1;
@@ -359,6 +358,7 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
   if (!seed)
     seed = opt->info.curve.deflt;
   set_gtk_curve_values(gcurve, seed);
+  set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
   return 1;
@@ -728,6 +728,9 @@ populate_option_table(GtkWidget *table, int p_class)
 	      stpui_create_new_combo(opt, table, 0,
 				     vpos[desc->p_level][desc->p_type]++,
 				     !(desc->is_mandatory));
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_string_parameter_active(pv->v, desc->name,
+						STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
@@ -743,6 +746,9 @@ populate_option_table(GtkWidget *table, int p_class)
 	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
 				 "value_changed",
 				 GTK_SIGNAL_FUNC(color_update), opt);
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_float_parameter_active(pv->v, desc->name,
+					       STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      opt->info.curve.current =
@@ -751,6 +757,26 @@ populate_option_table(GtkWidget *table, int p_class)
 				 vpos[desc->p_level][desc->p_type]++,
 				 _(desc->text), opt->info.curve.deflt,
 				 !(desc->is_mandatory));
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_curve_parameter_active(pv->v, desc->name,
+					       STP_PARAMETER_INACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      stp_set_int_parameter_active(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_INACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+					       STP_PARAMETER_INACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_RAW:
+	      stp_set_raw_parameter_active(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_INACTIVE);
+	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      if (strcmp(opt->fast_desc->name, "PPDFile") != 0)
+		stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+					      STP_PARAMETER_INACTIVE);
 	      break;
 	    default:
 	      break;
@@ -2212,6 +2238,22 @@ do_color_updates (void)
 }
 
 static void
+update_options(void)
+{
+  gtk_widget_hide(page_size_table);
+  gtk_widget_hide(printer_features_table);
+  gtk_widget_hide(color_adjustment_table);
+  populate_options(pv->v);
+  populate_option_table(page_size_table, STP_PARAMETER_CLASS_PAGE_SIZE);
+  populate_option_table(printer_features_table, STP_PARAMETER_CLASS_FEATURE);
+  populate_option_table(color_adjustment_table, STP_PARAMETER_CLASS_OUTPUT);
+  gtk_widget_show(page_size_table);
+  gtk_widget_show(printer_features_table);
+  gtk_widget_show(color_adjustment_table);
+  set_options_active();
+}
+
+static void
 do_all_updates(void)
 {
   gint i;
@@ -2258,18 +2300,7 @@ do_all_updates(void)
    * Now get option parameters.
    */
 
-  gtk_widget_hide(page_size_table);
-  gtk_widget_hide(printer_features_table);
-  gtk_widget_hide(color_adjustment_table);
-  populate_options(pv->v);
-  populate_option_table(page_size_table, STP_PARAMETER_CLASS_PAGE_SIZE);
-  populate_option_table(printer_features_table, STP_PARAMETER_CLASS_FEATURE);
-  populate_option_table(color_adjustment_table, STP_PARAMETER_CLASS_OUTPUT);
-  gtk_widget_show(page_size_table);
-  gtk_widget_show(printer_features_table);
-  gtk_widget_show(color_adjustment_table);
-  set_options_active();
-
+  update_options();
   do_color_updates ();
 
   gtk_option_menu_set_history (GTK_OPTION_MENU (orientation_menu),

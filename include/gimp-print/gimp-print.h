@@ -1076,6 +1076,11 @@ extern int stp_end_job(const stp_vars_t, stp_image_t *image);
  */
 extern const char *stp_set_output_codeset(const char *codeset);
 
+/*
+ * Remove inactive and unclaimed options from the list
+ */
+extern void stp_prune_inactive_options(stp_vars_t v);
+
 #ifdef __cplusplus
   }
 #endif

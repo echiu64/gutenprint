@@ -205,6 +205,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   int ink_channels = 1;
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
 
+  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));

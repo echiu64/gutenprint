@@ -2117,6 +2117,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   const canon_variable_inkset_t *inks;
   const canon_res_t *res = canon_resolutions;
 
+  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stpi_eprintf(nv, "Print options not verified; cannot print.\n");

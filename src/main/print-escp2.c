@@ -1081,9 +1081,11 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 	{
 	  double density = stp_get_float_parameter(v, "Density");
 	  int resid = init->res->resid;
+	  int xresid = resid;
+	  double xdensity = density;
 	  while (density > 1.0 && resid >= RES_360_M)
 	    {
-	      int tresid = resid - 2;
+	      int tresid = xresid - 2;
 	      int bits_now = escp2_bits(init->model, resid, v);
 	      double density_now = escp2_density(init->model, resid, v);
 	      int bits_then = escp2_bits(init->model, tresid, v);
@@ -1111,8 +1113,18 @@ adjust_density_and_ink_type(escp2_init_t *init, stp_image_t *image)
 	      if (bits_now != bits_then || density_then <= 0.0 ||
 		  drop_size_then == -1)
 		break;
-	      density = density * density_now / density_then / 2;
-	      resid = tresid;
+	      xdensity = density * density_then / density_now / 2;
+	      xresid = tresid;
+
+	      /*
+	       * If we wouldn't get a significant improvement by changing the
+	       * resolution, don't waste the effort trying.
+	       */
+	      if (density / xdensity > 1.001)
+		{
+		  density = xdensity;
+		  resid = tresid;
+		}
 	    }
 	  init->drop_size = escp2_ink_type(init->model, resid, init->v);
 	  init->ink_resid = resid;
@@ -1181,6 +1193,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->hue_adjustment, pt ? pt->hue_adjustment : NULL,
 	 STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
+      stp_set_curve_parameter_active(nv, "HueMap", STP_PARAMETER_ACTIVE);
       stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "SatMap", STP_PARAMETER_ACTIVE))
@@ -1189,6 +1202,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->sat_adjustment, pt ? pt->sat_adjustment : NULL,
 	 STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
+      stp_set_curve_parameter_active(nv, "SatMap", STP_PARAMETER_ACTIVE);
       stp_curve_free(sat_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "LumMap", STP_PARAMETER_ACTIVE))
@@ -1197,6 +1211,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->lum_adjustment, pt ? pt->lum_adjustment : NULL,
 	 STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
+      stp_set_curve_parameter_active(nv, "LumMap", STP_PARAMETER_ACTIVE);
       stp_curve_free(lum_adjustment);
     }
   cols = stpi_color_init(nv, image, 65536);
@@ -1797,6 +1812,7 @@ escp2_print(const stp_vars_t v, stp_image_t *image)
   int status;
   if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
+  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
   stp_vars_free(nv);
   return status;

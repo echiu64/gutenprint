@@ -68,10 +68,10 @@ static const char pgpp_hue_adjustment[] =
 static const paper_t standard_papers[] =
 {
   { "Plain", N_("Plain Paper"),
-    1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "PlainFast", N_("Plain Paper Fast Load"),
-    5, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    5, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Postcard", N_("Postcard"),
     2, 0, 0.83, .2, .6, 1.0, 1.0, 1.0, .9, 1.0, 1.1,
@@ -83,7 +83,7 @@ static const paper_t standard_papers[] =
     3, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   { "Envelope", N_("Envelopes"),
-    4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    4, 0, 0.769, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "BackFilm", N_("Back Light Film"),
     6, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -117,7 +117,7 @@ static const paper_t standard_papers[] =
     8, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
-    0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    0, 0, 0.769, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
@@ -130,10 +130,10 @@ const paperlist_t stpi_escp2_standard_paper_list =
 static const paper_t sp780_papers[] =
 {
   { "Plain", N_("Plain Paper"),
-    6, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    6, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "PlainFast", N_("Plain Paper Fast Load"),
-    1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Postcard", N_("Postcard"),
     3, 0, 0.83, .2, .6, 1.0, 1.0, 1.0, .9, 1.0, 1.1,
@@ -145,7 +145,7 @@ static const paper_t sp780_papers[] =
     0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   { "Envelope", N_("Envelopes"),
-    4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    4, 0, 0.769, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "BackFilm", N_("Back Light Film"),
     0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -179,7 +179,7 @@ static const paper_t sp780_papers[] =
     2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
-    0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    0, 0, 0.769, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
@@ -192,10 +192,10 @@ const paperlist_t stpi_escp2_sp780_paper_list =
 static const paper_t c80_papers[] =
 {
   { "Plain", N_("Plain Paper"),
-    1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "PlainFast", N_("Plain Paper Fast Load"),
-    5, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    5, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Postcard", N_("Postcard"),
     2, 0, 0.83, .2, .6, 1.0, 1.0, 1.0, .9, 1.0, 1.1,
@@ -207,7 +207,7 @@ static const paper_t c80_papers[] =
     3, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   { "Envelope", N_("Envelopes"),
-    4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    4, 0, 0.769, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "BackFilm", N_("Back Light Film"),
     6, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -241,7 +241,7 @@ static const paper_t c80_papers[] =
     8, 0, 1.20, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
-    0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    0, 0, 0.769, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
@@ -254,10 +254,10 @@ const paperlist_t stpi_escp2_c80_paper_list =
 static const paper_t sp950_papers[] =
 {
   { "Plain", N_("Plain Paper"),
-    6, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    6, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "PlainFast", N_("Plain Paper Fast Load"),
-    1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
+    1, 0, 0.769, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "Postcard", N_("Postcard"),
     3, 0, 0.83, .2, .6, 1.0, 1.0, 1.0, .9, 1.0, 1.1,
@@ -269,7 +269,7 @@ static const paper_t sp950_papers[] =
     0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   { "Envelope", N_("Envelopes"),
-    4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    4, 0, 0.769, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   { "BackFilm", N_("Back Light Film"),
     0, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -303,7 +303,7 @@ static const paper_t sp950_papers[] =
     2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "Other", N_("Other"),
-    0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+    0, 0, 0.769, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 

@@ -1046,6 +1046,29 @@ stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
   stpi_set_verified(vd, stpi_get_verified(vs));
 }
 
+void
+stp_prune_inactive_options(stp_vars_t v)
+{
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
+  int i;
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    {
+      stpi_list_t *list = vv->params[i];
+      stpi_list_item_t *item = stpi_list_get_start(list);
+      while (item)
+	{
+	  stpi_list_item_t *next = stpi_list_item_next(item);
+	  value_t *var = (value_t *)stpi_list_item_get_data(item);
+	  if (var->active < STP_PARAMETER_DEFAULTED ||
+	      !(stp_parameter_find(params, var->name)))
+	    stpi_list_item_destroy(list, item);
+	  item = next;
+	}
+    }
+  stp_parameter_list_free(params);
+}
+
 stp_vars_t
 stp_vars_create_copy(const stp_vars_t vs)
 {
