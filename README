@@ -1,4 +1,7 @@
-This is the Print plug-in for the Gimp, version 3.1.8 (development).
+This is the Print plug-in for the Gimp, version 3.1.9 (development).
+
+
+BASIC INSTALLATION
 
 To build and install:
 
@@ -11,6 +14,8 @@ combinations of options will work.  Please check our web site at
 http://gimp-print.sourceforge.net for details about what is and is not
 supported.
 
+Please report any problems to gimp-print-devel@sourceforge.net.
+
 If you have installed the Gimp as a precompiled package (e. g. from an
 RPM), you will need to install the gimp-devel package as well as the
 gimp package.  The gimp package as supplied in most distributions only
@@ -21,10 +26,34 @@ If you have installed the Gimp from source on Linux: after running
 make install, you must run ldconfig as root before attempting to build
 this plugin.
 
-Please report problems to gimp-print-devel@sourceforge.net.
+
+RECOMMENDED SETTINGS
+
+We recommend starting with all default settings for the slider
+adjustments in the Color Adjustment window.  The settings can be
+adjusted as necessary for particular combinations of ink, paper, and
+subject material.
+
+We recommend use of the Adaptive Hybrid dithering algorithm in most
+cases.  Users of four color printers may find that the Ordered
+dithering algorithm is faster and produces nearly as good output.  Use
+of this method is strongly discouraged on six color (photo) printers.
+
+On most inkjet printers, 720 dpi will produce very high quality;
+1440x720 dpi will produce extremely high quality.  With Epson Stylus
+printers, we recommend use of 720 DPI Softweave or 720 DPI High
+Quality for initial proofing; 720 DPI Highest Quality or 1440x720
+Softweave for general purpose work, and 1440x720 Highest Quality for
+final output onto high quality stock.  1440x720 Enhanced and 1440x2880
+Emulated may give improved output under some circumstances, but their
+use should be less critical than in 3.1.7 or 3.1.8.  They are much
+slower than 1440x720 DPI.
 
 
-For developers, prior to running configure, you must
+USE OF THE CVS REPOSITORY
+
+For developers and others using the CVS repository, prior to running
+configure, you must
 
 aclocal;autoconf;automake
 
@@ -43,8 +72,8 @@ diff -u /usr/local/share/aclocal/gimp.m4~ /usr/local/share/aclocal/gimp.m4
 +{
 +  NULL,    /* init_proc */
 +  NULL,    /* quit_proc */
-+  NULL,   /* query_proc */
-+  NULL,     /* run_proc */
++  NULL,    /* query_proc */
++  NULL,    /* run_proc */
 +};
  ],      [ return 0; ],
          [ echo "*** The test program compiled, but did not run. This usually means"

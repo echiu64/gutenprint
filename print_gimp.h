@@ -40,7 +40,7 @@
  * All Gimp-specific code is in this file.
  */
 
-#define PLUG_IN_VERSION		"3.1.8 - 11 Jul 2000"
+#define PLUG_IN_VERSION		"3.1.9 - 17 Jul 2000"
 #define PLUG_IN_NAME		"Print"
 
 /*

@@ -1,4 +1,4 @@
-This is the Print plugin for the Gimp, version 3.1.8.  This is a
+This is the Print plugin for the Gimp, version 3.1.9.  This is a
 development release.  If this software causes your print head to zoom
 off the end of your printer, spilling ink all over your 1000 year old
 Persian rug, don't blame us.  Remember, you installed the software.
@@ -9,6 +9,31 @@ driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+
+Print 3.1.9 contains the following improvements over Print 3.1.8:
+
+1) A bug in the GhostScript driver would cause the driver to go into
+   an infinite loop on some systems with some printers, depending upon
+   details of the compiler and so forth.  All users of the GhostScript
+   driver should immediately update.
+
+2) Substantial quality improvements across many printers:
+
+   * Output across printers and resolution modes is much more closely
+     matched (except probably 360 DPI).  The saturation may be
+     somewhat less than before, however.
+
+   * 720 DPI is greatly improved on Epson Stylus Color 860/1160 and
+     Stylus Photo 870/1270.  The 750/1200 may not show this
+     improvement.
+
+   * Artifacts in the adaptive hybrid and adaptive random dithering
+     modes have been eliminated.
+
+Please see the README for more information.
+
+
 
 Print 3.1.8 contains the following improvements over 3.1.7:
 

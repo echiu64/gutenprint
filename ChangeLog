@@ -1,3 +1,21 @@
+2000-07-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.24) (+85 -0)
+		print.c (1.104) (+2 -11)
+		print-dither.c (1.73) (+8 -8)
+		gtk_main_window.c (1.40) (+2 -34)
+		gtk_color_window.c (1.14) (+38 -9)
+		gimp_main_window.c (1.31) (+4 -35)
+		gimp_color_window.c (1.11) (+37 -9)
+	
+	Make more stuff static
+	
+2000-07-17	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.188) (+4 -4)
+	
+	Fix a name clash with some versions of Ghostscript
+	
 2000-07-16	<rlk@sourceforge.net>
 
 	Files:	gimp_main_window.c (1.30) (+5 -1)
