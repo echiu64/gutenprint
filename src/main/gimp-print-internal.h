@@ -384,10 +384,6 @@ extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
 
 extern void *stp_malloc (size_t);
 
-#ifndef HAVE_VASPRINTF
-#define vasprintf(Result,Format,Args) stp_vasprintf(Result,Format,Args)
-#endif
-	
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print
  * run, it will print out how long and how many time did
