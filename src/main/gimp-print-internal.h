@@ -443,6 +443,7 @@ extern void stp_erprintf(const char *format, ...);
 #define STP_DBG_ROWS		0x200
 extern void stp_dprintf(unsigned long level, const stp_vars_t v,
 			const char *format, ...);
+extern void stp_deprintf(unsigned long level, const char *format, ...);
 
 extern void *stp_malloc (size_t);
 extern void stp_free(void *ptr);

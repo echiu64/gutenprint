@@ -1460,6 +1460,23 @@ stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
     }
 }
 
+void
+stp_deprintf(unsigned long level, const char *format, ...)
+{
+  va_list args;
+  int bytes;
+  char *result;
+  init_stp_debug();
+  if (level & stp_debug_level)
+    {
+      va_start(args, format);
+      bytes = vasprintf(&result, format, args);
+      va_end(args);
+      stp_erprintf("%s", result);
+      free(result);
+    }
+}
+
 void *
 stp_malloc (size_t size)
 {

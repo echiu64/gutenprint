@@ -1365,9 +1365,7 @@ static int pcl_string_to_val(const char *string,		/* I: String */
        }
   }
 
-#ifdef DEBUG
-  stp_erprintf( "String: %s, Code: %d\n", string, code);
-#endif
+  stp_deprintf(STP_DBG_PCL, "String: %s, Code: %d\n", string, code);
 
   return(code);
 }
@@ -1395,9 +1393,7 @@ static const char * pcl_val_to_string(int code,			/* I: Code */
        }
   }
 
-#ifdef DEBUG
-  stp_erprintf( "Code: %d, String: %s\n", code, string);
-#endif
+  stp_deprintf(STP_DBG_PCL, "Code: %d, String: %s\n", code, string);
 
   return(string);
 }
@@ -1458,9 +1454,7 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
   media_code = pcl_string_to_val(media_size, pcl_media_sizes,
                                  sizeof(pcl_media_sizes) / sizeof(pcl_t));
 
-#ifdef DEBUG
-  stp_erprintf( "Media Size: %s, Code: %d\n", media_size, media_code);
-#endif
+  stp_deprintf(STP_DBG_PCL, "Media Size: %s, Code: %d\n", media_size, media_code);
 
  /*
   * Now see if the printer supports the code found.
@@ -1474,10 +1468,8 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
         return(media_code);		/* Is supported */
     }
 
-#ifdef DEBUG
-    stp_erprintf( "Media Code %d not supported by printer model %d.\n",
+    stp_deprintf(STP_DBG_PCL, "Media Code %d not supported by printer model %d.\n",
       media_code, model);
-#endif
     return(-1);				/* Not supported */
   }
   else
@@ -1515,14 +1507,12 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 
   caps = pcl_get_model_capabilities(model);
 
-#ifdef DEBUG
-  stp_erprintf( "Printer model = %d\n", model);
-  stp_erprintf( "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
-  stp_erprintf( "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
+  stp_deprintf(STP_DBG_PCL, "Printer model = %d\n", model);
+  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
+  stp_deprintf(STP_DBG_PCL, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
     caps->top_margin, caps->bottom_margin, caps->left_margin, caps->right_margin);
-  stp_erprintf( "Resolutions: %d\n", caps->resolutions);
-  stp_erprintf( "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
-#endif
+  stp_deprintf(STP_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
+  stp_deprintf(STP_DBG_PCL, "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
 
   if (strcmp(name, "PageSize") == 0)
     {
@@ -1645,14 +1635,12 @@ pcl_default_parameters(const stp_printer_t printer,
 
   caps = pcl_get_model_capabilities(model);
 
-#ifdef DEBUG
-  stp_erprintf( "Printer model = %d\n", model);
-  stp_erprintf( "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
-  stp_erprintf( "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
+  stp_deprintf(STP_DBG_PCL, "Printer model = %d\n", model);
+  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
+  stp_deprintf(STP_DBG_PCL, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
 	  caps->top_margin, caps->bottom_margin, caps->left_margin, caps->right_margin);
-  stp_erprintf( "Resolutions: %d\n", caps->resolutions);
-  stp_erprintf( "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
-#endif
+  stp_deprintf(STP_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
+  stp_deprintf(STP_DBG_PCL, "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
 
   if (strcmp(name, "PageSize") == 0)
     {
@@ -1882,9 +1870,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
 
-#ifdef DEBUG
-  stp_erprintf("pcl: resolution=%dx%d\n",xdpi,ydpi);
-#endif
+  stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",xdpi,ydpi);
 
  /*
   * Choose the correct color conversion function...
@@ -1921,15 +1907,11 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     dot_sizes_use=dot_sizes;
   }
 
-#ifdef DEBUG
-  stp_erprintf( "do_cret = %d\n", do_cret);
-  stp_erprintf( "do_cretb = %d\n", do_cretb);
-#endif
+  stp_deprintf(STP_DBG_PCL, "do_cret = %d\n", do_cret);
+  stp_deprintf(STP_DBG_PCL, "do_cretb = %d\n", do_cretb);
 
   do_6color = (strcmp(ink_type, _("Color + Photo Cartridges")) == 0);
-#ifdef DEBUG
-  stp_erprintf( "do_6color = %d\n", do_6color);
-#endif
+  stp_deprintf(STP_DBG_PCL, "do_6color = %d\n", do_6color);
 
  /*
   * Compute the output size...
@@ -1937,14 +1919,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   pcl_imageable_area(printer, nv, &page_left, &page_right,
                      &page_bottom, &page_top);
-#ifdef DEBUG
-  stp_erprintf("Before stp_compute_page_parameters()\n");
-  stp_erprintf("page_left = %d, page_right = %d, page_top = %d, page_bottom = %d\n",
+  stp_deprintf(STP_DBG_PCL,"Before stp_compute_page_parameters()\n");
+  stp_deprintf(STP_DBG_PCL,"page_left = %d, page_right = %d, page_top = %d, page_bottom = %d\n",
     page_left, page_right, page_top, page_bottom);
-  stp_erprintf("top = %d, left = %d\n", top, left);
-  stp_erprintf("scaling = %f, image_width = %d, image_height = %d\n", scaling,
+  stp_deprintf(STP_DBG_PCL,"top = %d, left = %d\n", top, left);
+  stp_deprintf(STP_DBG_PCL,"scaling = %f, image_width = %d, image_height = %d\n", scaling,
     image_width, image_height);
-#endif
 
   stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
@@ -1958,12 +1938,10 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   image_height = image->height(image);
   image_width = image->width(image);
 
-#ifdef DEBUG
-  stp_erprintf("After stp_compute_page_parameters()\n");
-  stp_erprintf("page_width = %d, page_height = %d\n", page_width, page_height);
-  stp_erprintf("out_width = %d, out_height = %d\n", out_width, out_height);
-  stp_erprintf("top = %d, left = %d\n", top, left);
-#endif /* DEBUG */
+  stp_deprintf(STP_DBG_PCL,"After stp_compute_page_parameters()\n");
+  stp_deprintf(STP_DBG_PCL,"page_width = %d, page_height = %d\n", page_width, page_height);
+  stp_deprintf(STP_DBG_PCL,"out_width = %d, out_height = %d\n", out_width, out_height);
+  stp_deprintf(STP_DBG_PCL,"top = %d, left = %d\n", top, left);
 
  /*
   * Let the user know what we're doing...
@@ -1999,9 +1977,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 
-#ifdef DEBUG
-  stp_erprintf("pcl_media_size = %d, media_size = %s\n", pcl_media_size, media_size);
-#endif
+  stp_deprintf(STP_DBG_PCL,"pcl_media_size = %d, media_size = %s\n", pcl_media_size, media_size);
 
  /*
   * If the media size requested is unknown, try it as a custom size.
@@ -2010,9 +1986,9 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   */
 
   if (pcl_media_size == -1) {
-    stp_erprintf( "Paper size %s is not directly supported by printer.\n",
+    stp_deprintf(STP_DBG_PCL, "Paper size %s is not directly supported by printer.\n",
       media_size);
-    stp_erprintf( "Trying as custom pagesize (watch the margins!)\n");
+    stp_deprintf(STP_DBG_PCL, "Trying as custom pagesize (watch the margins!)\n");
     pcl_media_size = PCL_PAPERSIZE_CUSTOM;			/* Custom */
   }
 
@@ -2029,13 +2005,11 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     pcl_media_source = pcl_string_to_val(media_source, pcl_media_sources,
                          sizeof(pcl_media_sources) / sizeof(pcl_t));
 
-#ifdef DEBUG
-    stp_erprintf("pcl_media_source = %d, media_source = %s\n", pcl_media_source,
+    stp_deprintf(STP_DBG_PCL,"pcl_media_source = %d, media_source = %s\n", pcl_media_source,
            media_source);
-#endif
 
     if (pcl_media_source == -1)
-      stp_erprintf( "Unknown media source %s, ignored.\n", media_source);
+      stp_deprintf(STP_DBG_PCL, "Unknown media source %s, ignored.\n", media_source);
     else if (pcl_media_source != PCL_PAPERSOURCE_STANDARD) {
 
 /* Correct the value by taking the modulus */
@@ -2053,13 +2027,11 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     pcl_media_type = pcl_string_to_val(media_type, pcl_media_types,
                        sizeof(pcl_media_types) / sizeof(pcl_t));
 
-#ifdef DEBUG
-    stp_erprintf("pcl_media_type = %d, media_type = %s\n", pcl_media_type,
+    stp_deprintf(STP_DBG_PCL,"pcl_media_type = %d, media_type = %s\n", pcl_media_type,
            media_type);
-#endif
 
     if (pcl_media_type == -1) {
-      stp_erprintf( "Unknown media type %s, set to PLAIN.\n", media_type);
+      stp_deprintf(STP_DBG_PCL, "Unknown media type %s, set to PLAIN.\n", media_type);
       pcl_media_type = PCL_PAPERTYPE_PLAIN;
     }
   }
@@ -2207,10 +2179,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   out_width  = xdpi * out_width / 72;
   out_height = ydpi * out_height / 72;
 
-#ifdef DEBUG
-  stp_erprintf( "left %d margin %d top %d margin %d width %d height %d\n",
+  stp_deprintf(STP_DBG_PCL, "left %d margin %d top %d margin %d width %d height %d\n",
 	  left, caps->left_margin, top, caps->top_margin, out_width, out_height);
-#endif
 
   if (!do_cretb) {
     stp_zprintf(v, "\033&a%dH", 10 * left);		/* Set left raster position */
@@ -2350,10 +2320,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
-#ifdef DEBUG
-    stp_erprintf("pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+    stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
            y, errline, errval, errmod, out_height);
-#endif /* DEBUG */
     if ((y & 63) == 0)
       image->note_progress(image, y, out_height);
 
@@ -2399,9 +2367,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
         if (blank_lines > 1)		/* Output accumulated lines */
         {
 	  blank_lines--;		/* correct for one already output */
-#ifdef DEBUG
-	  stp_erprintf( "Blank Lines = %d\n", blank_lines);
-#endif
+	  stp_deprintf(STP_DBG_PCL, "Blank Lines = %d\n", blank_lines);
 	  stp_zprintf(v, "\033*b%dY", blank_lines);
 	  blank_lines=0;
         }
@@ -2493,9 +2459,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   if (blank_lines > 1)
   {
     blank_lines--;		/* correct for one already output */
-#ifdef DEBUG
-    stp_erprintf( "Blank Lines = %d\n", blank_lines);
-#endif
+    stp_deprintf(STP_DBG_PCL, "Blank Lines = %d\n", blank_lines);
     stp_zprintf(v, "\033*b%dY", blank_lines);
     blank_lines=0;
   }
