@@ -6,7 +6,7 @@ test -z "$srcdir" && srcdir=.
 
 PKG_NAME="gimp-print"
 
-(test -f $srcdir/configure.ac.in -o -f $srcdir/configure.ac) || {
+(test -f $srcdir/configure.ac) || {
     echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
     echo " top-level directory"
     exit 1
