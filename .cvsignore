@@ -1,5 +1,6 @@
 .deps
 ABOUT-NLS
+ChangeLog
 Makefile
 Makefile.in
 aclocal.m4
@@ -9,6 +10,7 @@ config.h
 config.h.in
 config.status
 configure
+configure.in
 intl
 libtool
 stamp-h
