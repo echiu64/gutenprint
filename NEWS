@@ -41,6 +41,95 @@ this package.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
+4.3.23:
+
+1) Additional dither algorithms based on EvenTone dithering have been
+   added that show considerable promise as far as improving
+   smoothness.
+
+   The first variation is called Hybrid EvenTone.  This dither
+   algorithm perturbs the dot positions slightly to break up some
+   patterning seen in standard EvenTone dithering in solid regions of
+   pale tones.  This very slightly reduces the smoothness of texture
+   in exchange for largely eliminating this undesirable patterning.
+   This algorithm is also expected to be more resistant to
+   microbanding effects.
+
+   The second variation is called UniTone.  This dither algorithm
+   calculates the placement of all dots (except for yellow) using a
+   single EvenTone pass, not just all of the dots of one color.  This
+   technique improves the quality when multiple inks must be mixed,
+   such as when color inks are used to produce gray.  It does so by
+   ensuring that all dots are equally spaced.  Typically when printing
+   neutral tones with EvenTone dithering the cyan, magenta, and yellow
+   dots are positioned very close to each other, even though the
+   individual cyan dots are well-positioned.  This causes the groups
+   of dots to appear to be single, large dots.  UniTone dithering
+   evens out the spacing between all dots, producing a smoother
+   texture.
+
+   UniTone dithering works best at improving output when the drops are
+   already very small, which is usually at high resolutions.  With
+   these small drops, the eye has difficulty distinguishing the color
+   of the individual drops, so their color tends to be distinguished
+   primarily by their darkness.  While cyan ink is lighter than black
+   ink and magenta ink is lighter than cyan ink, these differences are
+   not overwhelming and hence the eye does not perceive a difference
+   between them.  With large drops, the eye perceives the color of the
+   individual drops, and small spots dominated by one ink become
+   apparent.
+
+   As noted above, UniTone dithers yellow separately.  This is because
+   the yellow ink is much lighter than any other ink, and the
+   positions occupied by yellow drops appear as holes, reducing the
+   quality of the print.  Even light cyan and light magenta inks
+   appear to be significantly darker than yellow.
+
+   Experiments conducted to date suggest that UniTone works very well
+   on the Stylus C80 at high resolutions, when the printer is using 3
+   picolitre drops.  On the Stylus Photo EX, at 1440x720 DPI, using 8
+   picolitre drops, quality is improved significantly when printing in
+   normal 6-color mode but quality is slightly worse in 4-color mode,
+   as the drops are apparent.  At 720 DPI (using 12 picolitre drops),
+   quality is improved in 6-color mode but degraded significantly in
+   4-color mode.
+
+   UniTone only functions when printing with more than one ink; when
+   printing black ink only, it becomes standard EvenTone dithering.
+
+   Finally, a Hybrid UniTone dither algorithm is provided, combining
+   the principles of both of the above.
+
+2) Direct printing to CD's is now supported experimentally on the
+   Epson Stylus Photo 900, 950, and 960, and the PM-950C.  To use
+   this, select the Print To CD media source (input slot) and either
+   CD - 5 inch or CD - 3 inch media size.  This is currently not
+   tuned, so it will require some experimentation to derive correct
+   ink levels.  Most likely, the density setting should be reduced
+   somewhat, as the surface of the CD's probably cannot absorb very
+   much ink.
+
+   The CUPS PPD files do not presently enforce the restriction on
+   media size.  However, selecting a different media size will cause
+   the job to error out early, during parameter verification.
+
+3) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
+   generation program is now named cups-genppd.4.3.  This permits
+   installation of multiple versions of Gimp-Print on a system
+   (currently a 4.2 and a 4.3 version).  In the future, the CUPS
+   programs will be suffixed by the major and minor version numbers.
+
+4) The CUPS driver now enforces that the PPD file must match the exact
+   version of Gimp-Print installed on the system.  Therefore, when
+   installing the CUPS driver it is essential to upgrade your PPD
+   files, either by means of Configure Printer or by means of the
+   cups-genppdupdate.4.3 script supplied with Gimp-Print.  Failure to
+   upgrade the PPD files causes the Gimp-Print driver to not run,
+   printing a diagnostic message to the log.  This is being done to
+   eliminate a common source of error that can yield unpredictable
+   results or difficult-to-diagnose errors.
+
 
 Gimp-Print 4.3.23 contains the following major changes over Gimp-Print
 4.3.22:

@@ -616,7 +616,7 @@
       </printer>
       <printer name="EPSON Stylus Photo 900" driver="escp2-ph900">
         <color value="true"/>
-        <model value="36"/>
+        <model value="62"/>
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
