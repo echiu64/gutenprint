@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2001-10-21 17:50-0400\n"
-"PO-Revision-Date: 2001-10-16 02:36+0200\n"
+"POT-Creation-Date: 2001-10-22 20:22-0400\n"
+"PO-Revision-Date: 2001-10-21 16:32+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1365,7 +1365,7 @@ msgstr "Bläcktyp"
 
 #: src/escputil/escputil.c:64
 msgid "Escputil version "
-msgstr ""
+msgstr "Escputil version "
 
 #: src/escputil/escputil.c:65
 msgid ""
@@ -1374,9 +1374,13 @@ msgid ""
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
+", Copyright © 2000-2001 Robert Krawitz\n"
+"Escputil kommer UTAN NÅGON SOM HELST GARANTI; skriv in \"escputil -l\" för\n"
+"mer information. Detta är fri programvara, och du är välkommen att\n"
+"vidaredistribuera det under vissa villkor; skriv in \"escputil -l\" för mer\n"
+"information.\n"
 
 #: src/escputil/escputil.c:70
-#, fuzzy
 msgid ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
@@ -1394,12 +1398,7 @@ msgid ""
 "along with this program; if not, write to the Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
-"\n"
-"\n"
-"Copyright © 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"och resten av utvecklingsteamet bakom Gimp-Print.\n"
-"\n"
-"Besök vår webbsida på http://gimp-print.sourceforge.net.\n"
+"Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "Följande text är en informell översättning som enbart tillhandahålls i\n"
 "informativt syfte. För alla juridiska tolkningar gäller den engelska\n"
@@ -1417,7 +1416,7 @@ msgstr ""
 "\n"
 "Du bör ha fått en kopia av GNU General Public License tillsammans med\n"
 "detta program. Om inte, skriv till Free Software Foundation, In.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.\n"
+"59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -1431,7 +1430,7 @@ msgstr ""
 "\n"
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA\n"
 
 #: src/escputil/escputil.c:110
 msgid ""
@@ -1475,6 +1474,46 @@ msgid ""
 "    -m|--model         Specify the precise printer model for head "
 "alignment.\n"
 msgstr ""
+"Användning: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                     [-P skrivare | -r enhet] [-u] [-q] [-m modell]\n"
+"Utför underhåll på EPSON Stylus ®-skrivare.\n"
+"Exempel: escputil --clean-head --printer stpex-on-third-floor\n"
+"         escputil --ink-level --new --raw-device /dev/lp0\n"
+"\n"
+"  Kommandon:\n"
+"    -c|--clean-head    Rensa utskriftshuvudet.\n"
+"    -n|--nozzle-check  Skriv ut ett mönster för test av munstycken.\n"
+"                       Smutsiga eller igentäppta munstycken kommer att\n"
+"                       visas som mellanrum i mönstret. Om du ser några\n"
+"                       mellanrum bör du rensa utskriftshuvudet.\n"
+"    -a|--align-head    Justera utskriftshuvudet. VARNING: Felaktigt\n"
+"                       användande av detta verktyg kan resultera i dålig\n"
+"                       utskriftskvalitet och/eller skada på skrivaren.\n"
+"    -o|--align-color   Justera färgutskriftshuvudet (endast Stylus Color\n"
+"                       480 och 580). VARNING: Felaktigt användande av detta\n"
+"                       verktyg kan resultera i dålig utskriftskvalitet\n"
+"                       och/eller skada på skrivaren.\n"
+"    -s|--status        Hämta skrivarstatus.\n"
+"    -i|--ink-level     Hämta information om bläcknivån i skrivaren. Detta\n"
+"                       kräver läs- och skrivrättigheter till den råa\n"
+"                       skrivarenheten.\n"
+"    -d|--identify      Undersök skrivaren för information om märke och\n"
+"                       modell. Detta kräver läs- och skrivrättigheter till\n"
+"                       den råa skrivarenheten.\n"
+"    -l|--license       Visa licens- och garantivillkoren för detta program.\n"
+"    -M|--list-models   Visa de tillgängliga skrivarmodellerna.\n"
+"    -h|--help          Visa detta hjälpmeddelande.\n"
+"  Flaggor:\n"
+"    -P|--printer-name  Ange namnet på skrivarkön som ska användas.\n"
+"                       Standardalternativet är standardskrivaren på\n"
+"                       systemet.\n"
+"    -r|--raw-device    Ange namnet på den enhet att skriva till direkt\n"
+"                       istället för att gå via en skrivarkö.\n"
+"    -u|--new           Skrivaren är en ny skrivare (Stylus Color 740 eller\n"
+"                       nyare).\n"
+"    -q|--quiet         Visa inte rubriken.\n"
+"    -m|--model         Ange den exakta skrivarmodellen för justering av\n"
+"                       huvud.\n"
 
 #: src/escputil/escputil.c:148
 msgid ""
@@ -1514,363 +1553,392 @@ msgid ""
 "    -q Suppress the banner.\n"
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
+"Användning: escputil [FLAGGOR] [KOMMANDON]\n"
+"Användning: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                     [-P skrivare | -r enhet] [-u] [-q] [-m modell]\n"
+"Utför underhåll på EPSON Stylus ®-skrivare.\n"
+"Exempel: escputil -c -P stpex-on-third-floor\n"
+"         escputil -i -u -r /dev/lp0\n"
+"\n"
+"  Kommandon:\n"
+"    -c Rensa utskriftshuvudet.\n"
+"    -n Skriv ut ett mönster för test av munstycken.\n"
+"          Smutsiga eller igentäppta munstycken kommer att visas som\n"
+"          mellanrum i mönstret. Om du ser några mellanrum bör du rensa\n"
+"          utskriftshuvudet.\n"
+"    -a Justera utskriftshuvudet. VARNING: Felaktigt användande av detta\n"
+"          verktyg kan resultera i dålig utskriftskvalitet och/eller skada\n"
+"          på skrivaren.\n"
+"    -o Justera färgutskriftshuvudet (endast Stylus Color 480 och 580).\n"
+"          VARNING: Felaktigt användande av detta verktyg kan resultera i\n"
+"          dålig utskriftskvalitet och/eller skada på skrivaren.\n"
+"    -s Hämta skrivarstatus.\n"
+"    -i Hämta information om bläcknivån i skrivaren. Detta kräver läs- och\n"
+"          skrivrättigheter till den råa skrivarenheten.\n"
+"    -d Undersök skrivaren för information om märke och modell. Detta\n"
+"          kräver läs- och skrivrättigheter till den råa skrivarenheten.\n"
+"    -l Visa licens- och garantivillkoren för detta program.\n"
+"    -M Visa de tillgängliga skrivarmodellerna.\n"
+"    -h Visa detta hjälpmeddelande.\n"
+"  Flaggor:\n"
+"    -P Ange namnet på skrivarkön som ska användas.\n"
+"          Standardalternativet är standardskrivaren på systemet.\n"
+"    -r Ange namnet på den enhet att skriva till direkt istället för att\n"
+"          gå via en skrivarkö.\n"
+"    -u Skrivaren är en ny skrivare (Stylus Color 740 eller nyare).\n"
+"    -q Visa inte rubriken.\n"
+"    -m Ange den exakta skrivarmodellen för justering av huvud.\n"
 
 #: src/escputil/escputil.c:199
 msgid "Stylus C20sx"
-msgstr ""
+msgstr "Stylus C20sx"
 
 #: src/escputil/escputil.c:200
 msgid "Stylus C20ux"
-msgstr ""
+msgstr "Stylus C20ux"
 
 #: src/escputil/escputil.c:201
 msgid "Stylus C40sx"
-msgstr ""
+msgstr "Stylus C40sx"
 
 #: src/escputil/escputil.c:202
 msgid "Stylus C40ux"
-msgstr ""
+msgstr "Stylus C40ux"
 
 #: src/escputil/escputil.c:203
 msgid "Stylus C60"
-msgstr ""
+msgstr "Stylus C60"
 
 #: src/escputil/escputil.c:204
 msgid "Stylus C70"
-msgstr ""
+msgstr "Stylus C70"
 
 #: src/escputil/escputil.c:205
 msgid "Stylus C80"
-msgstr ""
+msgstr "Stylus C80"
 
 #: src/escputil/escputil.c:206
-#, fuzzy
 msgid "Stylus Color"
-msgstr "Enstaka färger"
+msgstr "Stylus Color"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/escputil/escputil.c:207
-#, fuzzy
 msgid "Stylus Color Pro"
-msgstr "Sexfärgs foto"
+msgstr "Stylus Color Pro"
 
 #: src/escputil/escputil.c:208
 msgid "Stylus Color Pro XL"
-msgstr ""
+msgstr "Stylus Color Pro XL"
 
 #: src/escputil/escputil.c:209
 msgid "Stylus Color 400"
-msgstr ""
+msgstr "Stylus Color 400"
 
 #: src/escputil/escputil.c:210
 msgid "Stylus Color 440"
-msgstr ""
+msgstr "Stylus Color 440"
 
 #: src/escputil/escputil.c:211
 msgid "Stylus Color 460"
-msgstr ""
+msgstr "Stylus Color 460"
 
 #: src/escputil/escputil.c:212
 msgid "Stylus Color 480"
-msgstr ""
+msgstr "Stylus Color 480"
 
 #: src/escputil/escputil.c:213
 msgid "Stylus Color 500"
-msgstr ""
+msgstr "Stylus Color 500"
 
 #: src/escputil/escputil.c:214
 msgid "Stylus Color 580"
-msgstr ""
+msgstr "Stylus Color 580"
 
 #: src/escputil/escputil.c:215
 msgid "Stylus Color 600"
-msgstr ""
+msgstr "Stylus Color 600"
 
 #: src/escputil/escputil.c:216
 msgid "Stylus Color 640"
-msgstr ""
+msgstr "Stylus Color 640"
 
 #: src/escputil/escputil.c:217
 msgid "Stylus Color 660"
-msgstr ""
+msgstr "Stylus Color 660"
 
 #: src/escputil/escputil.c:218
 msgid "Stylus Color 670"
-msgstr ""
+msgstr "Stylus Color 670"
 
 #: src/escputil/escputil.c:219
 msgid "Stylus Color 680"
-msgstr ""
+msgstr "Stylus Color 680"
 
 #: src/escputil/escputil.c:220
 msgid "Stylus Color 740"
-msgstr ""
+msgstr "Stylus Color 740"
 
 #: src/escputil/escputil.c:221
 msgid "Stylus Color 760"
-msgstr ""
+msgstr "Stylus Color 760"
 
 #: src/escputil/escputil.c:222
 msgid "Stylus Color 777"
-msgstr ""
+msgstr "Stylus Color 777"
 
 #: src/escputil/escputil.c:223
 msgid "Stylus Color 800"
-msgstr ""
+msgstr "Stylus Color 800"
 
 #: src/escputil/escputil.c:224
 msgid "Stylus Color 850"
-msgstr ""
+msgstr "Stylus Color 850"
 
 #: src/escputil/escputil.c:225
 msgid "Stylus Color 860"
-msgstr ""
+msgstr "Stylus Color 860"
 
 #: src/escputil/escputil.c:226
 msgid "Stylus Color 880"
-msgstr ""
+msgstr "Stylus Color 880"
 
 #: src/escputil/escputil.c:227
 msgid "Stylus Color 83"
-msgstr ""
+msgstr "Stylus Color 83"
 
 #: src/escputil/escputil.c:228
 msgid "Stylus Color 900"
-msgstr ""
+msgstr "Stylus Color 900"
 
 #: src/escputil/escputil.c:229
 msgid "Stylus Color 980"
-msgstr ""
+msgstr "Stylus Color 980"
 
 #: src/escputil/escputil.c:230
 msgid "Stylus Color 1160"
-msgstr ""
+msgstr "Stylus Color 1160"
 
 #: src/escputil/escputil.c:231
 msgid "Stylus Color 1500"
-msgstr ""
+msgstr "Stylus Color 1500"
 
 #: src/escputil/escputil.c:232
 msgid "Stylus Color 1520"
-msgstr ""
+msgstr "Stylus Color 1520"
 
 #: src/escputil/escputil.c:233
 msgid "Stylus Color 3000"
-msgstr ""
+msgstr "Stylus Color 3000"
 
 #: src/escputil/escputil.c:234
-#, fuzzy
 msgid "Stylus Photo"
-msgstr "Glansigt foto"
+msgstr "Stylus Photo"
 
 #: src/escputil/escputil.c:235
 msgid "Stylus Photo 700"
-msgstr ""
+msgstr "Stylus Photo 700"
 
 #: src/escputil/escputil.c:236
 msgid "Stylus Photo EX"
-msgstr ""
+msgstr "Stylus Photo EX"
 
 #: src/escputil/escputil.c:237
 msgid "Stylus Photo 720"
-msgstr ""
+msgstr "Stylus Photo 720"
 
 #: src/escputil/escputil.c:238
 msgid "Stylus Photo 750"
-msgstr ""
+msgstr "Stylus Photo 750"
 
 #: src/escputil/escputil.c:239
 msgid "Stylus Photo 780"
-msgstr ""
+msgstr "Stylus Photo 780"
 
 #: src/escputil/escputil.c:240
 msgid "Stylus Photo 785"
-msgstr ""
+msgstr "Stylus Photo 785"
 
 #: src/escputil/escputil.c:241
 msgid "Stylus Photo 790"
-msgstr ""
+msgstr "Stylus Photo 790"
 
 #: src/escputil/escputil.c:242
 msgid "Stylus Photo 810"
-msgstr ""
+msgstr "Stylus Photo 810"
 
 #: src/escputil/escputil.c:243
 msgid "Stylus Photo 820"
-msgstr ""
+msgstr "Stylus Photo 820"
 
 #: src/escputil/escputil.c:244
 msgid "Stylus Photo 870"
-msgstr ""
+msgstr "Stylus Photo 870"
 
 #: src/escputil/escputil.c:245
 msgid "Stylus Photo 875"
-msgstr ""
+msgstr "Stylus Photo 875"
 
 #: src/escputil/escputil.c:246
 msgid "Stylus Photo 890"
-msgstr ""
+msgstr "Stylus Photo 890"
 
 #: src/escputil/escputil.c:247
 msgid "Stylus Photo 895"
-msgstr ""
+msgstr "Stylus Photo 895"
 
 #: src/escputil/escputil.c:248
 msgid "Stylus Photo 1200"
-msgstr ""
+msgstr "Stylus Photo 1200"
 
 #: src/escputil/escputil.c:249
 msgid "Stylus Photo 1270"
-msgstr ""
+msgstr "Stylus Photo 1270"
 
 #: src/escputil/escputil.c:250
 msgid "Stylus Photo 1280"
-msgstr ""
+msgstr "Stylus Photo 1280"
 
 #: src/escputil/escputil.c:251
 msgid "Stylus Photo 1290"
-msgstr ""
+msgstr "Stylus Photo 1290"
 
 #: src/escputil/escputil.c:252
 msgid "Stylus Photo 2000P"
-msgstr ""
+msgstr "Stylus Photo 2000P"
 
 #: src/escputil/escputil.c:253
 msgid "Stylus Pro 5000"
-msgstr ""
+msgstr "Stylus Pro 5000"
 
 #: src/escputil/escputil.c:254
 msgid "Stylus Pro 5500"
-msgstr ""
+msgstr "Stylus Pro 5500"
 
 #: src/escputil/escputil.c:255
 msgid "Stylus Pro 7000"
-msgstr ""
+msgstr "Stylus Pro 7000"
 
 #: src/escputil/escputil.c:256
 msgid "Stylus Pro 7500"
-msgstr ""
+msgstr "Stylus Pro 7500"
 
 #: src/escputil/escputil.c:257
 msgid "Stylus Pro 9000"
-msgstr ""
+msgstr "Stylus Pro 9000"
 
 #: src/escputil/escputil.c:258
 msgid "Stylus Pro 9500"
-msgstr ""
+msgstr "Stylus Pro 9500"
 
 #: src/escputil/escputil.c:259
 msgid "Stylus Pro 10000"
-msgstr ""
+msgstr "Stylus Pro 10000"
 
 #: src/escputil/escputil.c:260
 msgid "Stylus Scan 2000"
-msgstr ""
+msgstr "Stylus Scan 2000"
 
 #: src/escputil/escputil.c:261
 msgid "Stylus Scan 2500"
-msgstr ""
+msgstr "Stylus Scan 2500"
 
 #: src/escputil/escputil.c:341 src/escputil/escputil.c:350
 msgid "You may only specify one printer or raw device."
-msgstr ""
+msgstr "Du kan endast ange en skrivare eller rå enhet."
 
 #: src/escputil/escputil.c:359
 msgid "You may only specify one printer model."
-msgstr ""
+msgstr "Du kan endast ange en skrivarmodell."
 
 #: src/escputil/escputil.c:379
 #, c-format
 msgid "Unknown option %c\n"
-msgstr ""
+msgstr "Okänd flagga %c\n"
 
 #: src/escputil/escputil.c:439
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr ""
+msgstr "Kan inte öppna enheten %s: %s\n"
 
 #: src/escputil/escputil.c:462
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr ""
+msgstr "Kan inte skriva ut till skrivaren %s med %s\n"
 
 #: src/escputil/escputil.c:475 src/escputil/escputil.c:485
 msgid "Unable to send command to printer\n"
-msgstr ""
+msgstr "Kan inte skicka kommando till skrivare\n"
 
 #: src/escputil/escputil.c:578
-#, fuzzy
 msgid "Cyan"
-msgstr "Cyan:"
+msgstr "Cyan"
 
 #: src/escputil/escputil.c:579
-#, fuzzy
 msgid "Magenta"
-msgstr "Magenta:"
+msgstr "Magenta"
 
 #: src/escputil/escputil.c:580
-#, fuzzy
 msgid "Yellow"
-msgstr "Gult:"
+msgstr "Gult"
 
 #: src/escputil/escputil.c:581
 msgid "Light Cyan"
-msgstr ""
+msgstr "Ljus cyan"
 
 #: src/escputil/escputil.c:582
-#, fuzzy
 msgid "Light Magenta"
-msgstr "Magenta:"
+msgstr "Ljus magenta"
 
 #: src/escputil/escputil.c:596
 msgid "Obtaining ink levels requires using a raw device.\n"
-msgstr ""
+msgstr "Att få tag i bläcknivåerna kräver att en rå enhet används.\n"
 
 #: src/escputil/escputil.c:602 src/escputil/escputil.c:677
 #: src/escputil/escputil.c:720
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
-msgstr ""
+msgstr "Kan inte öppna %s för läsning och skrivning: %s\n"
 
 #: src/escputil/escputil.c:611 src/escputil/escputil.c:688
 #: src/escputil/escputil.c:729
 #, c-format
 msgid "Cannot write to %s: %s\n"
-msgstr ""
+msgstr "Kan inte skriva till %s: %s\n"
 
 #: src/escputil/escputil.c:618 src/escputil/escputil.c:695
 #: src/escputil/escputil.c:736
 #, c-format
 msgid "Cannot read from %s: %s\n"
-msgstr ""
+msgstr "Kan inte läsa från %s: %s\n"
 
 #: src/escputil/escputil.c:628
 msgid "Cannot parse output from printer\n"
-msgstr ""
+msgstr "Kan inte tolka utdata från skrivare\n"
 
 #: src/escputil/escputil.c:632
 msgid "Ink color"
-msgstr ""
+msgstr "Bläckfärg"
 
 #: src/escputil/escputil.c:632
 msgid "Percent remaining"
-msgstr ""
+msgstr "Återstående procent"
 
 #: src/escputil/escputil.c:671
 msgid "Printer identification requires using a raw device.\n"
-msgstr ""
+msgstr "Skrivaridentifiering kräver att en rå enhet används.\n"
 
 #: src/escputil/escputil.c:714
 msgid "Printer status requires using a raw device.\n"
-msgstr ""
+msgstr "Skrivarstatus kräver att en rå enhet används.\n"
 
 #: src/escputil/escputil.c:757
 msgid "Cleaning heads...\n"
-msgstr ""
+msgstr "Rensar huvuden...\n"
 
 #: src/escputil/escputil.c:766
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
+"Kör kontroll av munstycken, försäkra dig om att det finns papper i\n"
+"skrivaren.\n"
 
 #: src/escputil/escputil.c:770
 #, c-format
@@ -1910,6 +1978,41 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
+"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"\n"
+"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
+"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
+"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
+"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
+"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
+"dig.\n"
+"\n"
+"Detta verktyg skriver ut %d testmönster. Varje mönster ser väldigt likt ut.\n"
+"Mönstren består av vertikala linjer som överlappar varandra. Under varje\n"
+"linjepar finns ett tal mellan %d och %d.\n"
+"\n"
+"När du granskar linjeparen bör du leta efter de linjepar som är bäst\n"
+"justerade, det vill säga de som tillsammans bäst utgör en enda vertikal\n"
+"linje. Granska paren väldigt noggrannt för att hitta de som passar bäst.\n"
+"Att använda en lupp eller förstoringsglas rekommenderas för den mest\n"
+"kritiska granskningen. Det rekommenderas även att du använder ett bra\n"
+"kvalitetspapper för testet, så att linjerna blir hela och inte sprider ut\n"
+"sig i pappret. Efter det att du har valt det bästa paret lägger du tillbaka\n"
+"pappret i pappersfacket innan du anger det.\n"
+"\n"
+"Alla mönster är identiska, men de senare mönstren använder finare punkter\n"
+"för mer kritisk justering. Du måste genomföra alla passen för att justera\n"
+"skrivaren korrekt. Efter det att du har genomfört alla justeringspass\n"
+"kommer justeringsmönstren att skrivas ut en gång till. Du bör då finna att\n"
+"det mittersta paret (%d av %d) är det bästa av alla par.\n"
+"\n"
+"Efter att passen skrivs ut en gång till kommer du att erbjudas alternativen\n"
+"att spara resultaten (s), upprepa proceduren (r), eller avsluta utan att\n"
+"spara (q). Att avsluta kommer inte att återställa de tidigare värdena, men\n"
+"att stänga av och sätta på skrivaren kommer att göra det. Om du avslutar\n"
+"måste du upprepa hela proceduren om du vill spara resultaten senare.\n"
+"Det är viktigt att du inte stänger av din skrivare under denna process.\n"
+"\n"
 
 #: src/escputil/escputil.c:805
 #, c-format
@@ -1946,20 +2049,54 @@ msgid ""
 "this procedure.\n"
 "\n"
 msgstr ""
+"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"\n"
+"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
+"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
+"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
+"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
+"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
+"dig.\n"
+"\n"
+"Detta verktyg skriver ut ett testmönster som består av vertikala linjer som\n"
+"överlappar varandra. Under varje linjepar finns ett tal mellan %d och %d.\n"
+"\n"
+"När du granskar linjeparen bör du leta efter de linjepar som är bäst\n"
+"justerade, det vill säga de som tillsammans bäst utgör en enda vertikal\n"
+"justering. Granska paren väldigt noggrannt för att hitta de som passar\n"
+"bäst. Att använda en lupp eller förstoringsglas rekommenderas för den mest\n"
+"kritiska granskningen. Det rekommenderas även att du använder ett bra\n"
+"kvalitetspapper för testet, så att linjerna blir hela och inte sprider ut\n"
+"sig i pappret. Efter det att du har valt det bästa paret lägger du tillbaka\n"
+"pappret i pappersfacket innan du anger det.\n"
+"\n"
+"Efter det att du har kört justeringsmönstret kommer det att skrivas ut en\n"
+"gång till. Du bör då finna att det mittersta paret (%d av %d) är det bästa\n"
+"av alla par.\n"
+"Du kommer då att erbjudas alternativen att spara resultaten (s), upprepa\n"
+"proceduren (r), eller avsluta utan att spara (q). Att avsluta kommer inte\n"
+"att återställa de tidigare värdena, men att stänga av och sätta på\n"
+"skrivaren kommer att göra det.\n"
+"Om du avslutar måste du upprepa hela proceduren om du vill spara resultaten\n"
+"senare. Det är viktigt att du inte stänger av din skrivare under denna\n"
+"process.\n"
+"\n"
 
 #: src/escputil/escputil.c:849
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
+msgstr "Kan inte skicka kommando till skrivaren, avslutar.\n"
 
 #: src/escputil/escputil.c:867
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
+"Skrivarjustering måste göras med en rå enhet. I annat fall\n"
+"måste flaggan -m användas för att ange en skrivare.\n"
 
 #: src/escputil/escputil.c:871
 msgid "Attempting to detect printer model..."
-msgstr ""
+msgstr "Försöker detektera skrivarmodell..."
 
 #: src/escputil/escputil.c:876
 #, c-format
@@ -1967,6 +2104,8 @@ msgid ""
 "\n"
 "Cannot open %s read/write: %s\n"
 msgstr ""
+"\n"
+"Kan inte öppna %s för läsning/skrivning: %s\n"
 
 #: src/escputil/escputil.c:884
 #, c-format
@@ -1974,6 +2113,8 @@ msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr ""
+"\n"
+"Kan inte skriva till %s: %s\n"
 
 #: src/escputil/escputil.c:890
 #, c-format
@@ -1981,6 +2122,8 @@ msgid ""
 "\n"
 "Cannot read from %s: %s\n"
 msgstr ""
+"\n"
+"Kan inte läsa från %s: %s\n"
 
 #: src/escputil/escputil.c:903
 msgid ""
@@ -1988,11 +2131,14 @@ msgid ""
 "Cannot detect printer type.\n"
 "Please use -m to specify your printer model.\n"
 msgstr ""
+"\n"
+"Kan inte detektera skrivartyp.\n"
+"Använd flaggan -m för att ange din skrivarmodell.\n"
 
 #: src/escputil/escputil.c:920
 #, c-format
 msgid "Printer model %s is not known.\n"
-msgstr ""
+msgstr "Skrivarmodellen %s är okänd.\n"
 
 #: src/escputil/escputil.c:931
 msgid ""
@@ -2004,33 +2150,45 @@ msgid ""
 "You will then be asked to confirm your choice.\n"
 "What do you want to do (s, q, r)?\n"
 msgstr ""
+"Kontrollera den slutliga utskriften mycket noggrannt för att försäkra\n"
+"dig om att skrivaren är korrekt justerad. Du kan nu:\n"
+"  (s) Spara resultaten i skrivaren\n"
+"  (q) Avsluta utan att spara resultaten\n"
+"  (r) Upprepa hela förloppet från början\n"
+"Du kommer att få bekräfta ditt val.\n"
+"Vad vill du göra (s, q, r)?\n"
 
 #: src/escputil/escputil.c:939 src/escputil/escputil.c:946
 #: src/escputil/escputil.c:959 src/escputil/escputil.c:975
 #: src/escputil/escputil.c:1046 src/escputil/escputil.c:1187
 msgid "> "
-msgstr ""
+msgstr "> "
 
 #: src/escputil/escputil.c:944
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
+"Bekräfta att du vill avsluta utan att spara genom att trycka \"q\" igen:\n"
 
 #: src/escputil/escputil.c:949
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
+"OK, din skrivare är justerad, men justeringen har inte sparats.\n"
+"Om du vill spara justeringen måste du upprepa detta förlopp.\n"
 
 #: src/escputil/escputil.c:956
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
+"Bekräfta att du vill upprepa justeringsprocessen genom att\n"
+"ange \"r\" igen:\n"
 
 #: src/escputil/escputil.c:962
 msgid "Repeating the alignment process.\n"
-msgstr ""
+msgstr "Upprepar justeringsprocessen.\n"
 
 #: src/escputil/escputil.c:968
 msgid ""
@@ -2040,6 +2198,11 @@ msgid ""
 "Please confirm by typing 's' again that you wish to save the settings\n"
 "to your printer:\n"
 msgstr ""
+"Detta kommer att permanent ändra din skrivares konfiguration.\n"
+"VARNING: detta förlopp har inte godkänts av Seiko Epson, och kan\n"
+"skada din skrivare. Vill du fortsätta?\n"
+"Bekräfta att du vill spara ändringarna i skrivaren genom att ange\n"
+"\"s\" igen:\n"
 
 #: src/escputil/escputil.c:978
 msgid ""
@@ -2047,14 +2210,17 @@ msgid ""
 "for the final save of your alignment settings.  When the printer\n"
 "feeds the page through, your settings have been saved.\n"
 msgstr ""
+"Mata in din justeringstestsida en gång till i skrivaren för det\n"
+"slutgiltiga sparandet av justeringsinställningarna. När skrivaren\n"
+"matar igenom pappret är dina inställningar sparade.\n"
 
 #: src/escputil/escputil.c:992
 msgid "Unrecognized command.\n"
-msgstr ""
+msgstr "Okänt kommando.\n"
 
 #: src/escputil/escputil.c:995
 msgid "Final command was not confirmed.\n"
-msgstr ""
+msgstr "Sista kommandot bekräftades inte.\n"
 
 #: src/escputil/escputil.c:1000
 #, c-format
@@ -2066,12 +2232,18 @@ msgid ""
 "Please place a sheet of paper in your printer to begin the head\n"
 "alignment procedure.\n"
 msgstr ""
+"Denna procedur förutsätter att din skrivare är en Epson %s.\n"
+"Om detta inte är din skrivarmodell bör du trycka Control+C nu\n"
+"och välja din rätta skrivarmodell.\n"
+"\n"
+"Placera ett pappersark i skrivaren för att påbörja justeringen\n"
+"av huvudena.\n"
 
 #: src/escputil/escputil.c:1025 src/escputil/escputil.c:1054
 #: src/escputil/escputil.c:1090 src/escputil/escputil.c:1166
 #: src/escputil/escputil.c:1177
 msgid "Press enter to continue > "
-msgstr ""
+msgstr "Tryck retur för att fortsätta > "
 
 #: src/escputil/escputil.c:1036
 #, c-format
@@ -2080,6 +2252,9 @@ msgid ""
 "in pattern #%d, and then insert a fresh page in the input tray.\n"
 "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
 msgstr ""
+"Granska utskriften, och välj det bästa linjeparet i mönster nummer %d,\n"
+"och mata sedan in en ny sida i inmatningsfacket. Skriv in ett parnummer,\n"
+"\"?\" för hjälp, eller \"r\" för att upprepa försöket med detta mönster.\n"
 
 #: src/escputil/escputil.c:1041
 #, c-format
@@ -2088,23 +2263,26 @@ msgid ""
 "in pattern #%d, and then reinsert the page in the input tray.\n"
 "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
 msgstr ""
+"Granska utskriften, och välj det bästa linjeparet i mönster nummer %d,\n"
+"och mata sedan in sidan i inmatningsfacket. Skriv in ett parnummer,\n"
+"\"?\" för hjälp, eller \"r\" för att upprepa försöket med detta mönster.\n"
 
 #: src/escputil/escputil.c:1051
 msgid "Please insert a fresh sheet of paper.\n"
-msgstr ""
+msgstr "Mata in ett nytt pappersark.\n"
 
 #: src/escputil/escputil.c:1070 src/escputil/escputil.c:1206
 msgid "Number out of range!\n"
-msgstr ""
+msgstr "Numret är utanför intervallet!\n"
 
 #: src/escputil/escputil.c:1075 src/escputil/escputil.c:1211
 msgid "I cannot understand what you typed!\n"
-msgstr ""
+msgstr "Jag kan inte förstå vad du skrev!\n"
 
 #: src/escputil/escputil.c:1081
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr ""
+msgstr "Det bästa linjeparet bör vara numrerat mellan 1 och %d.\n"
 
 #: src/escputil/escputil.c:1088
 #, c-format
@@ -2112,11 +2290,13 @@ msgid ""
 "Aligning phase %d, and performing final test.\n"
 "Please insert a fresh sheet of paper.\n"
 msgstr ""
+"Justeringsfas %d, och utför sista testet.\n"
+"Mata in ett nytt pappersark.\n"
 
 #: src/escputil/escputil.c:1093
 #, c-format
 msgid "Aligning phase %d, and starting phase %d.\n"
-msgstr ""
+msgstr "Justeringsfas %d, och startar fas %d.\n"
 
 #: src/escputil/escputil.c:1107
 #, c-format
@@ -2151,17 +2331,48 @@ msgid ""
 "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
 "damage your printer!\n"
 msgstr ""
+"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"\n"
+"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
+"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
+"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
+"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
+"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
+"dig.\n"
+"\n"
+"Detta verktyg skriver ut %d överlappande testmönster på ett papper. Det\n"
+"skriver ut ett mönster och matar sedan ut sidan. Du måste sedan mata in\n"
+"samma papper igen, och den kommer att skriva ut ett nytt mönster. Varje\n"
+"mönster består av ett antal alternativ numrerade från %d till %d.\n"
+"\n"
+"När du granskar mönstren bör du leta efter det som har den mjukaste\n"
+"ytan (minst \"korn\"). Granska mönstren väldigt noggrannt för att hitta\n"
+"det bästa. Vi föreslår att du använder bläckstrålepapper av fotokvalitet\n"
+"Om du inte hittar ett mjukt mönster bör du upprepa testerna.\n"
+"\n"
+"Efter att du har granskat alternativen och valt ett mönster kommer du att\n"
+"erbjudas alternativen att spara resultaten (s) i skrivaren, upprepa\n"
+"proceduren (r), eller avsluta utan att spara (q). Att avsluta kommer inte\n"
+"att återställa de tidigare värdena, men att stänga av och sätta på\n"
+"skrivaren kommer att göra det. Om du avslutar måste du upprepa hela\n"
+"proceduren om du vill spara resultaten senare. Det är viktigt att du inte\n"
+"stänger av din skrivare under denna process.\n"
+"\n"
+"VARNING: DENNA FUNKTION ÄR INTE TESTAD ÄN! Den kanske inte fungerar, och\n"
+"den kanske skadar din skrivare!\n"
 
 #: src/escputil/escputil.c:1157
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
-msgstr ""
+msgstr "Skrivaren %s kräver inte justering av färgutskriftshuvudet.\n"
 
 #: src/escputil/escputil.c:1175
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
 msgstr ""
+"Mata in samma justeringspapper i skrivaren efter det att utskriften\n"
+"är klar.\n"
 
 #: src/escputil/escputil.c:1181
 msgid ""
@@ -2171,15 +2382,20 @@ msgid ""
 "best pattern, and repeat the procedure.\n"
 "Type a pattern number, or '?' for help.\n"
 msgstr ""
+"Granska justeringspappret och bestäm vilket mönster som är mjukast.\n"
+"Detta mönster har den minsta kornigheten.\n"
+"Om du inte kan hitta ett mjukt mönster bör du välja numret för det\n"
+"bästa mönstret och upprepa proceduren.\n"
+"Ange ett mönsternummer, eller \"?\" för hjälp.\n"
 
 #: src/escputil/escputil.c:1217
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr ""
+msgstr "Det bästa mönstret ska vara numrerat mellan 1 och %d.\n"
 
 #: src/escputil/escputil.c:1261
 msgid "Error in input\n"
-msgstr ""
+msgstr "Fel i indata\n"
 
 #: src/gimp/gimp_color_window.c:193
 msgid "Print Color Adjust"
