@@ -494,6 +494,11 @@ verify_param(stp_const_vars_t v, const char *parameter)
 {
   stp_parameter_t desc;
   stp_describe_parameter(v, parameter, &desc);
+  if (!desc.is_active)
+    {
+      stp_parameter_description_free(&desc);
+      return 1;
+    }
   switch (desc.p_type)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
