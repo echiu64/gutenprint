@@ -1219,7 +1219,7 @@ canon_printhead_colors(const char *name, canon_cap_t caps)
 static unsigned char
 canon_size_type(const stp_vars_t *v, canon_cap_t caps)
 {
-  const stp_papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
+  const stp_papersize_t *pp = stp_get_papersize_by_size(v->page_height, v->page_width);
   if (pp)
     {
       const char *name = pp->name;
@@ -1417,14 +1417,14 @@ canon_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
-    const stp_papersize_t *papersizes = get_papersizes();
-    valptrs = malloc(sizeof(char *) * known_papersizes());
+    const stp_papersize_t *papersizes = stp_get_papersizes();
+    valptrs = malloc(sizeof(char *) * stp_known_papersizes());
     *count = 0;
 
     width_limit = caps.max_width;
     height_limit = caps.max_height;
 
-    for (i = 0; i < known_papersizes(); i++) {
+    for (i = 0; i < stp_known_papersizes(); i++) {
       if (strlen(papersizes[i].name) > 0 &&
 	  papersizes[i].width <= width_limit &&
 	  papersizes[i].height <= height_limit) {
@@ -1521,7 +1521,7 @@ canon_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 
   canon_cap_t caps= canon_get_model_capabilities(printer->model);
 
-  default_media_size(printer, v, &width, &length);
+  stp_default_media_size(printer, v, &width, &length);
 
   *left   = caps.border_left;
   *right  = width - caps.border_right;
@@ -1866,7 +1866,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
    * Choose the correct color conversion function...
    */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
+  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Figure out the output resolution...
@@ -1895,7 +1895,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   canon_imageable_area(printer, &nv, &page_left, &page_right,
                        &page_bottom, &page_top);
 
-  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
 			  &out_width, &out_length, &left, &top);
@@ -1907,7 +1907,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
-  default_media_size(printer, &nv, &n, &page_true_height);
+  stp_default_media_size(printer, &nv, &n, &page_true_height);
 
   /*
   PUT("top        ",top,72);
@@ -2045,7 +2045,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   if (colormode == COLOR_MONOCHROME)
     nv.gamma /= .8;
-  compute_lut(256, &nv);
+  stp_compute_lut(256, &nv);
 
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",nv.density);
@@ -2056,11 +2056,11 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   */
 
   if (xdpi > ydpi)
-    dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
+    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
   else
-    dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
+    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
-  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
 
   if (use_6color)
     k_lower = .4 / bits + .1;
@@ -2076,51 +2076,51 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
       k_lower *= .5;
       k_upper = .5;
     }
-  dither_set_black_lower(dither, k_lower);
-  dither_set_black_upper(dither, k_upper);
+  stp_dither_set_black_lower(dither, k_lower);
+  stp_dither_set_black_upper(dither, k_upper);
   if (bits == 2)
     {
       if (use_6color)
-	dither_set_adaptive_divisor(dither, 8);
+	stp_dither_set_adaptive_divisor(dither, 8);
       else
-	dither_set_adaptive_divisor(dither, 16);
+	stp_dither_set_adaptive_divisor(dither, 16);
     }  
   else
-    dither_set_adaptive_divisor(dither, 4);
+    stp_dither_set_adaptive_divisor(dither, 4);
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
       if (inks->c)
-	dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
+	stp_dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
 			  inks->c->density * nv.density);
       if (inks->m)
-	dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
+	stp_dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
 			  inks->m->density * nv.density);
       if (inks->y)
-	dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
+	stp_dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
 			  inks->y->density * nv.density);
       if (inks->k)
-	dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
+	stp_dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
 			  inks->k->density * nv.density);
     }
 
   if (bits == 2)
     {
       if (use_6color)
-	dither_set_transition(dither, .7);
+	stp_dither_set_transition(dither, .7);
       else
-	dither_set_transition(dither, .5);
+	stp_dither_set_transition(dither, .5);
     }
   if (!strcmp(nv.dither_algorithm, "Ordered"))
-    dither_set_transition(dither, 1);
+    stp_dither_set_transition(dither, 1);
 
   switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
-      dither_set_ink_spread(dither, 19);
+      stp_dither_set_ink_spread(dither, 19);
       break;
     case IMAGE_SOLID_TONE:
-      dither_set_ink_spread(dither, 15);
+      stp_dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
       ink_spread = 13;
@@ -2130,10 +2130,10 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
       */
       if (bits > 1)
 	ink_spread++;
-      dither_set_ink_spread(dither, ink_spread);
+      stp_dither_set_ink_spread(dither, ink_spread);
       break;
     }
-  dither_set_density(dither, nv.density);
+  stp_dither_set_density(dither, nv.density);
 
   in  = malloc(image_width * image_bpp);
   out = malloc(image_width * out_bpp * 2);
@@ -2160,11 +2160,11 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
     }
 
     if (nv.image_type == IMAGE_MONOCHROME)
-      dither_monochrome(out, y, dither, black, duplicate_line);
+      stp_dither_monochrome(out, y, dither, black, duplicate_line);
     else if (output_type == OUTPUT_GRAY)
-      dither_black(out, y, dither, black, duplicate_line);
+      stp_dither_black(out, y, dither, black, duplicate_line);
     else
-      dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+      stp_dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		  yellow, 0, black, duplicate_line);
 
 #ifdef DEBUG
@@ -2203,7 +2203,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   }
   Image_progress_conclude(image);
 
-  free_dither(dither);
+  stp_free_dither(dither);
 
   /*
    * Flush delayed buffers...
@@ -2244,7 +2244,7 @@ canon_print(const stp_printer_t *printer,		/* I - Model */
   * Cleanup...
   */
 
-  free_lut(&nv);
+  stp_free_lut(&nv);
   free(in);
   free(out);
 

@@ -365,44 +365,44 @@ typedef struct
  * Prototypes...
  */
 
-extern void *	init_dither(int in_width, int out_width, int horizontal_aspect,
+extern void *	stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 			    int vertical_aspect, stp_vars_t *vars);
-extern void	dither_set_transition(void *vd, double);
-extern void	dither_set_density(void *vd, double);
-extern void	dither_set_black_density(void *vd, double);
-extern void 	dither_set_black_lower(void *vd, double);
-extern void 	dither_set_black_upper(void *vd, double);
-extern void	dither_set_black_levels(void *vd, double, double, double);
-extern void 	dither_set_randomizers(void *vd, double, double, double, double);
-extern void 	dither_set_ink_darkness(void *vd, double, double, double);
-extern void 	dither_set_light_inks(void *vd, double, double, double, double);
-extern void	dither_set_ranges(void *vd, int color, int nlevels,
+extern void	stp_dither_set_transition(void *vd, double);
+extern void	stp_dither_set_density(void *vd, double);
+extern void	stp_dither_set_black_density(void *vd, double);
+extern void 	stp_dither_set_black_lower(void *vd, double);
+extern void 	stp_dither_set_black_upper(void *vd, double);
+extern void	stp_dither_set_black_levels(void *vd, double, double, double);
+extern void 	stp_dither_set_randomizers(void *vd, double, double, double, double);
+extern void 	stp_dither_set_ink_darkness(void *vd, double, double, double);
+extern void 	stp_dither_set_light_inks(void *vd, double, double, double, double);
+extern void	stp_dither_set_ranges(void *vd, int color, int nlevels,
 				  const stp_simple_dither_range_t *ranges,
 				  double density);
-extern void	dither_set_ranges_full(void *vd, int color, int nlevels,
+extern void	stp_dither_set_ranges_full(void *vd, int color, int nlevels,
 				       const stp_full_dither_range_t *ranges,
 				       double density);
-extern void	dither_set_ranges_simple(void *vd, int color, int nlevels,
+extern void	stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 					 const double *levels, double density);
-extern void	dither_set_ranges_complete(void *vd, int color, int nlevels,
+extern void	stp_dither_set_ranges_complete(void *vd, int color, int nlevels,
 					   const stp_dither_range_t *ranges);
-extern void	dither_set_ink_spread(void *vd, int spread);
-extern void	dither_set_max_ink(void *vd, int, double);
-extern void	dither_set_x_oversample(void *vd, int os);
-extern void	dither_set_y_oversample(void *vd, int os);
-extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
+extern void	stp_dither_set_ink_spread(void *vd, int spread);
+extern void	stp_dither_set_max_ink(void *vd, int, double);
+extern void	stp_dither_set_x_oversample(void *vd, int os);
+extern void	stp_dither_set_y_oversample(void *vd, int os);
+extern void	stp_dither_set_adaptive_divisor(void *vd, unsigned divisor);
 
 
-extern void	free_dither(void *);
+extern void	stp_free_dither(void *);
 
 
-extern void	dither_monochrome(const unsigned short *, int, void *,
+extern void	stp_dither_monochrome(const unsigned short *, int, void *,
 				 unsigned char *, int duplicate_line);
 
-extern void	dither_black(const unsigned short *, int, void *,
+extern void	stp_dither_black(const unsigned short *, int, void *,
 			     unsigned char *, int duplicate_line);
 
-extern void	dither_cmyk(const unsigned short *, int, void *,
+extern void	stp_dither_cmyk(const unsigned short *, int, void *,
 			    unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
@@ -410,13 +410,13 @@ extern void	dither_cmyk(const unsigned short *, int, void *,
 			    int duplicate_line);
 
 
-extern void *	initialize_weave_params(int S, int J, int O,
+extern void *	stp_initialize_weave_params(int S, int J, int O,
 		                        int firstrow, int lastrow,
 		                        int pageheight, int strategy);
-extern void	calculate_row_parameters(void *w, int row, int subpass,
+extern void	stp_calculate_row_parameters(void *w, int row, int subpass,
 		                         int *pass, int *jet, int *startrow,
 					 int *phantomrows, int *jetsused);
-extern void	destroy_weave_params(void *vw);
+extern void	stp_destroy_weave_params(void *vw);
 
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
@@ -444,12 +444,12 @@ extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
 extern int	stp_pack(const unsigned char *line, int height,
 			 unsigned char *comp_buf, unsigned char **comp_ptr);
 
-extern void	merge_printvars(stp_vars_t *user, const stp_vars_t *print);
-extern void	free_lut(stp_vars_t *v);
-extern void	compute_lut(size_t steps, stp_vars_t *v);
+extern void	stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print);
+extern void	stp_free_lut(stp_vars_t *v);
+extern void	stp_compute_lut(size_t steps, stp_vars_t *v);
 
 
-extern void	default_media_size(const stp_printer_t *printer,
+extern void	stp_default_media_size(const stp_printer_t *printer,
 				   const stp_vars_t *v, int *width,
 				   int *height);
 
@@ -536,37 +536,37 @@ extern void     ps_describe_resolution(const struct printer *printer,
 				       const char *resolution,
 				       int *x, int *y);
 
-extern const char *default_dither_algorithm(void);
+extern const char *stp_default_dither_algorithm(void);
 
-extern int	      		known_papersizes(void);
-extern const stp_papersize_t	*get_papersizes(void);
-extern const stp_papersize_t	*get_papersize_by_name(const char *);
-extern const stp_papersize_t 	*get_papersize_by_size(int l, int w);
+extern int	      		stp_known_papersizes(void);
+extern const stp_papersize_t	*stp_get_papersizes(void);
+extern const stp_papersize_t	*stp_get_papersize_by_name(const char *);
+extern const stp_papersize_t 	*stp_get_papersize_by_size(int l, int w);
 
-extern int			known_printers(void);
-extern const stp_printer_t	*get_printers(void);
-extern const stp_printer_t	*get_printer_by_index(int);
-extern const stp_printer_t	*get_printer_by_long_name(const char *);
-extern const stp_printer_t	*get_printer_by_driver(const char *);
-extern int			get_printer_index_by_driver(const char *);
+extern int			stp_known_printers(void);
+extern const stp_printer_t	*stp_get_printers(void);
+extern const stp_printer_t	*stp_get_printer_by_index(int);
+extern const stp_printer_t	*stp_get_printer_by_long_name(const char *);
+extern const stp_printer_t	*stp_get_printer_by_driver(const char *);
+extern int			stp_get_printer_index_by_driver(const char *);
 
 extern int			num_dither_algos;
 extern char			*dither_algo_names[];
-extern stp_convert_t 		choose_colorfunc(int, int,
+extern stp_convert_t 		stp_choose_colorfunc(int, int,
 						 const unsigned char *, int *,
 						 const stp_vars_t *);
 extern void
-compute_page_parameters(int page_right, int page_left, int page_top,
+stp_compute_page_parameters(int page_right, int page_left, int page_top,
 			int page_bottom, double scaling, int image_width,
 			int image_height, Image image, int *orientation,
 			int *page_width, int *page_height, int *out_width,
 			int *out_height, int *left, int *top);
 
 extern int
-verify_printer_params(const stp_printer_t *, const stp_vars_t *);
-extern const stp_vars_t *print_default_settings(void);
-extern const stp_vars_t *print_maximum_settings(void);
-extern const stp_vars_t *print_minimum_settings(void);
+stp_verify_printer_params(const stp_printer_t *, const stp_vars_t *);
+extern const stp_vars_t *stp_default_settings(void);
+extern const stp_vars_t *stp_maximum_settings(void);
+extern const stp_vars_t *stp_minimum_settings(void);
 
 #ifdef QUANTIFY
 /* Used for performance analysis - to be called before and after

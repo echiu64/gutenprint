@@ -179,8 +179,8 @@ main(int  argc,			/* I - Number of command-line arguments */
     else
       usage();
 
-  for (i = 0; i < known_printers(); i++)
-    if (write_ppd(get_printer_by_index(i), prefix))
+  for (i = 0; i < stp_known_printers(); i++)
+    if (write_ppd(stp_get_printer_by_index(i), prefix))
       return (1);
 
   return (0);

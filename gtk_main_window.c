@@ -209,7 +209,7 @@ void gtk_create_main_window(void)
 #endif
     GSList*    image_type_group;  /* Grouping for image type */
 
-    const stp_printer_t *the_printer = get_printer_by_index(0);
+    const stp_printer_t *the_printer = stp_get_printer_by_index(0);
 
     static char   *orients[] =    /* Orientation strings */
     {
@@ -1015,7 +1015,7 @@ void gtk_create_main_window(void)
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (printer_crawler), list);
     gtk_widget_set_usize(printer_crawler, 200, 0);
 	gtk_widget_show (list);
-    for (i = 0; i < known_printers(); i ++)
+    for (i = 0; i < stp_known_printers(); i ++)
     {
         char *tmp;
 	if (!strcmp(the_printer->long_name, ""))
@@ -1599,7 +1599,7 @@ static void gtk_plist_callback(GtkWidget *widget, /* I - Driver option menu */
   {
     strcpy(vars.driver, p->v.driver);
 
-    current_printer = get_printer_by_driver(vars.driver);
+    current_printer = stp_get_printer_by_driver(vars.driver);
   }
 
   strcpy(vars.ppd_file, p->v.ppd_file);
@@ -1972,8 +1972,8 @@ static void gtk_setup_open_callback(void)
   GtkAdjustment *adjustment;
   int idx;
 
-  current_printer = get_printer_by_driver(plist[plist_current].v.driver);
-  idx = get_printer_index_by_driver(plist[plist_current].v.driver);
+  current_printer = stp_get_printer_by_driver(plist[plist_current].v.driver);
+  idx = stp_get_printer_index_by_driver(plist[plist_current].v.driver);
 
   gtk_clist_select_row(GTK_CLIST(printer_driver), idx, 0);
 
@@ -2047,7 +2047,7 @@ static void gtk_print_driver_callback(GtkWidget *widget, /* I - Driver list */
 				      gpointer      data)    /* I - Data */
 {
   data = gtk_clist_get_row_data(GTK_CLIST(widget), row);
-  current_printer = get_printer_by_index((int) data);
+  current_printer = stp_get_printer_by_index((int) data);
 
   if (strncmp(current_printer->driver, "ps", 2) == 0)
   {

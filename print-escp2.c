@@ -1473,7 +1473,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
-    64, 2, 64, 2, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
+    64, 2, 128, 1, 720, 360, INCH(17), INCH(55), 8, 9, 9, 40, 1, 4,
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 4, -1, 4, -1, -1 },
     { 2.0, 1.3, 1.3, .775, .775, .55, .55, .275, .275, .275, .275, .138 },
@@ -1945,12 +1945,12 @@ escp2_parameters(const stp_printer_t *printer,	/* I - Printer model */
   if (strcmp(name, "PageSize") == 0)
     {
       unsigned int height_limit, width_limit;
-      const stp_papersize_t *papersizes = get_papersizes();
-      valptrs = malloc(sizeof(char *) * known_papersizes());
+      const stp_papersize_t *papersizes = stp_get_papersizes();
+      valptrs = malloc(sizeof(char *) * stp_known_papersizes());
       *count = 0;
       width_limit = escp2_max_paper_width(model, &printer->printvars);
       height_limit = escp2_max_paper_height(model, &printer->printvars);
-      for (i = 0; i < known_papersizes(); i++)
+      for (i = 0; i < stp_known_papersizes(); i++)
 	{
 	  if (strlen(papersizes[i].name) > 0 &&
 	      papersizes[i].width <= width_limit &&
@@ -2061,7 +2061,7 @@ escp2_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
 {
   int	width, height;			/* Size of page */
 
-  default_media_size(printer, v, &width, &height);
+  stp_default_media_size(printer, v, &width, &height);
   *left =	escp2_left_margin(printer->model, &printer->printvars);
   *right =	width - escp2_right_margin(printer->model, &printer->printvars);
   *top =	height - escp2_top_margin(printer->model, &printer->printvars);
@@ -2511,7 +2511,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   * Choose the correct color conversion function...
   */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
+  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Compute the output size...
@@ -2519,7 +2519,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
   escp2_imageable_area(printer, &nv, &page_left, &page_right,
                        &page_bottom, &page_top);
 
-  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
 			  &out_width, &out_height, &left, &top);
@@ -2601,7 +2601,7 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
-  default_media_size(printer, &nv, &n, &page_true_height);
+  stp_default_media_size(printer, &nv, &n, &page_true_height);
   init.model = model;
   init.output_type = output_type;
   init.ydpi = ydpi;
@@ -2723,18 +2723,18 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
     nv.density = 1.0;
   if (colormode == COLOR_MONOCHROME)
     nv.gamma /= .8;
-  compute_lut(256, &nv);
+  stp_compute_lut(256, &nv);
 
  /*
   * Output the page...
   */
 
   if (xdpi > ydpi)
-    dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
+    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
   else
-    dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
+    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
-  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
   if (use_6color || use_7color)
     k_lower = .4 / bits + .1;
   else
@@ -2749,43 +2749,43 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
       k_lower *= .5;
       k_upper = .5;
     }
-  dither_set_black_lower(dither, k_lower);
-  dither_set_black_upper(dither, k_upper);
+  stp_dither_set_black_lower(dither, k_lower);
+  stp_dither_set_black_upper(dither, k_upper);
   if (bits == 2)
     {
       if (use_6color || use_7color)
-	dither_set_adaptive_divisor(dither, 8);
+	stp_dither_set_adaptive_divisor(dither, 8);
       else
-	dither_set_adaptive_divisor(dither, 16);
+	stp_dither_set_adaptive_divisor(dither, 16);
     }  
   else
-    dither_set_adaptive_divisor(dither, 4);
+    stp_dither_set_adaptive_divisor(dither, 4);
 
   inks = escp2_inks(model, resid, use_7color ? 7 : (use_6color ? 6 : 4), bits,
 		    &nv);
   if (inks)
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
-	dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
+	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
 			  (*inks)[i]->density * nv.density);
 
   if (bits == 2)
     {
       if (use_6color || use_7color)
-	dither_set_transition(dither, .7);
+	stp_dither_set_transition(dither, .7);
       else
-	dither_set_transition(dither, .5);
+	stp_dither_set_transition(dither, .5);
     }
   if (!strcmp(nv.dither_algorithm, "Ordered"))
-    dither_set_transition(dither, 1);
+    stp_dither_set_transition(dither, 1);
 
   switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
-      dither_set_ink_spread(dither, 19);
+      stp_dither_set_ink_spread(dither, 19);
       break;
     case IMAGE_SOLID_TONE:
-      dither_set_ink_spread(dither, 15);
+      stp_dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
       ink_spread = 13;
@@ -2793,10 +2793,10 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
 	ink_spread++;
       if (bits > 1)
 	ink_spread++;
-      dither_set_ink_spread(dither, ink_spread);
+      stp_dither_set_ink_spread(dither, ink_spread);
       break;
     }
-  dither_set_density(dither, nv.density);
+  stp_dither_set_density(dither, nv.density);
 
   in  = malloc(image_width * image_bpp);
   out = malloc(image_width * out_bpp * 2);
@@ -2827,11 +2827,11 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
     QUANT(1);
 
     if (nv.image_type == IMAGE_MONOCHROME)
-      dither_monochrome(out, y, dither, black, duplicate_line);
+      stp_dither_monochrome(out, y, dither, black, duplicate_line);
     else if (output_type == OUTPUT_GRAY)
-      dither_black(out, y, dither, black, duplicate_line);
+      stp_dither_black(out, y, dither, black, duplicate_line);
     else
-      dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+      stp_dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		  yellow, dyellow, black, duplicate_line);
     QUANT(2);
 
@@ -2862,13 +2862,13 @@ escp2_print(const stp_printer_t *printer,		/* I - Model */
     escp2_free_microweave();
   QUANT(5);
 
-  free_dither(dither);
+  stp_free_dither(dither);
 
  /*
   * Cleanup...
   */
 
-  free_lut(&nv);
+  stp_free_lut(&nv);
   free(in);
   free(out);
   if (use_softweave)
@@ -3481,7 +3481,7 @@ initialize_weave(int jets,	/* Width of print head */
     free(sw);
     return 0;
   }
-  sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
+  sw->weaveparm = stp_initialize_weave_params(sw->separation, sw->jets,
                                           sw->oversample, first_line,
                                           first_line + lineheight - 1,
                                           phys_lines, weave_strategy);
@@ -3561,7 +3561,7 @@ destroy_weave(void *vsw)
 	}
     }
   free(sw->linebases);
-  destroy_weave_params(sw->weaveparm);
+  stp_destroy_weave_params(sw->weaveparm);
   free(vsw);
 }
 
@@ -3585,7 +3585,7 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
   vcache = vertical_subpass;
 
   w->row = row;
-  calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
+  stp_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
                            &w->pass, &w->jet, &w->logicalpassstart,
                            &w->missingstartrows, &jetsused);
 

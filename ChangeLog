@@ -1,5 +1,35 @@
 2001-01-15	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.70) (+101 -0)
+		cups/rastertoprinter.c (1.13) (+5 -5)
+		cups/genppd.c (1.17) (+7 -7)
+		Matgen/patched-print-dither.c (1.5) (+13 -13)
+		Ghost/gdevstp.c (1.48) (+9 -9)
+		testdither.c (1.4) (+8 -8)
+		printer_options.c (1.4) (+2 -2)
+		printdefy.y (1.14) (+4 -4)
+		printdef.h (1.5) (+2 -2)
+		print.h (1.101) (+95 -87)
+		print.c (1.133) (+32 -32)
+		print-util.c (1.157) (+30 -30)
+		print-ps.c (1.52) (+16 -16)
+		print-pcl.c (1.109) (+44 -44)
+		print-lexmark.c (1.18) (+17 -17)
+		print-escp2.c (1.302) (+246 -220)
+		print-dither.c (1.116) (+9 -9)
+		print-color.c (1.10) (+17 -17)
+		print-canon.c (1.109) (+50 -50)
+		gtk_main_window.c (1.61) (+6 -6)
+		gtk_color_window.c (1.23) (+6 -6)
+		gimp_main_window.c (1.75) (+15 -15)
+		gimp_color_window.c (1.22) (+7 -7)
+		escputil.c (1.26) (+5 -5)
+		escp2-weavetest.c (1.18) (+2 -2)
+	
+	Rename all data types declared in print.h to have 'stp_' prefix.
+	
+2001-01-15	<rlk@sourceforge.net>
+
 	Files:	FAQ.html (1.3) (+34 -11)
 	
 	Fix the HTML.

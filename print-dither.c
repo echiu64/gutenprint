@@ -527,7 +527,7 @@ ditherpoint_fast(const dither_t *d, dither_matrix_t *mat, int x)
 }
 
 void *
-init_dither(int in_width, int out_width, int horizontal_aspect,
+stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	    int vertical_aspect, stp_vars_t *v)
 {
   int i;
@@ -540,7 +540,7 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   r.is_dark = 1;
   r.dot_size = 1;
   for (i = 0; i < NCOLORS; i++)
-    dither_set_ranges(d, i, 1, &r, 1.0);
+    stp_dither_set_ranges(d, i, 1, &r, 1.0);
   d->offset0_table = NULL;
   d->offset1_table = NULL;
   d->x_aspect = horizontal_aspect;
@@ -589,25 +589,25 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_M]), x_3, 2 * y_3);
   clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_Y]), 0, y_3);
   clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_K]), 0, 0);
-  dither_set_transition(d, .6);
+  stp_dither_set_transition(d, .6);
 
   d->src_width = in_width;
   d->dst_width = out_width;
   d->adaptive_divisor = 2;
 
-  dither_set_max_ink(d, INT_MAX, 1.0);
-  dither_set_ink_spread(d, 13);
-  dither_set_black_lower(d, .4);
-  dither_set_black_upper(d, .7);
-  dither_set_black_levels(d, 1.0, 1.0, 1.0);
-  dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
-  dither_set_ink_darkness(d, .4, .3, .2);
-  dither_set_density(d, 1.0);
+  stp_dither_set_max_ink(d, INT_MAX, 1.0);
+  stp_dither_set_ink_spread(d, 13);
+  stp_dither_set_black_lower(d, .4);
+  stp_dither_set_black_upper(d, .7);
+  stp_dither_set_black_levels(d, 1.0, 1.0, 1.0);
+  stp_dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
+  stp_dither_set_ink_darkness(d, .4, .3, .2);
+  stp_dither_set_density(d, 1.0);
   return d;
 }
 
 void
-dither_set_transition(void *vd, double exponent)
+stp_dither_set_transition(void *vd, double exponent)
 {
   int i;
   dither_t *d = (dither_t *) vd;
@@ -643,7 +643,7 @@ dither_set_transition(void *vd, double exponent)
 }
 
 void
-dither_set_density(void *vd, double density)
+stp_dither_set_density(void *vd, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (density > 1)
@@ -660,11 +660,11 @@ dither_set_density(void *vd, double density)
   d->d_cutoff = d->density / 16;
   d->adaptive_limit = d->density / d->adaptive_divisor;
   d->adaptive_lower_limit = d->adaptive_limit / 4;
-  dither_set_black_density(vd, density);
+  stp_dither_set_black_density(vd, density);
 }
 
 void
-dither_set_black_density(void *vd, double density)
+stp_dither_set_black_density(void *vd, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (density > 1)
@@ -681,7 +681,7 @@ imax(double a, double b)
 }
 
 void
-dither_set_max_ink(void *vd, int levels, double max_ink)
+stp_dither_set_max_ink(void *vd, int levels, double max_ink)
 {
   dither_t *d = (dither_t *) vd;
   d->ink_limit = imax(max_ink, 1)*levels;
@@ -692,7 +692,7 @@ dither_set_max_ink(void *vd, int levels, double max_ink)
 }
 
 void
-dither_set_adaptive_divisor(void *vd, unsigned divisor)
+stp_dither_set_adaptive_divisor(void *vd, unsigned divisor)
 {
   dither_t *d = (dither_t *) vd;
   d->adaptive_divisor = divisor;
@@ -701,21 +701,21 @@ dither_set_adaptive_divisor(void *vd, unsigned divisor)
 }
 
 void
-dither_set_black_lower(void *vd, double k_lower)
+stp_dither_set_black_lower(void *vd, double k_lower)
 {
   dither_t *d = (dither_t *) vd;
   d->k_lower = (int) (k_lower * 65535);
 }
 
 void
-dither_set_black_upper(void *vd, double k_upper)
+stp_dither_set_black_upper(void *vd, double k_upper)
 {
   dither_t *d = (dither_t *) vd;
   d->k_upper = (int) (k_upper * 65535);
 }
 
 void
-dither_set_ink_spread(void *vd, int spread)
+stp_dither_set_ink_spread(void *vd, int spread)
 {
   dither_t *d = (dither_t *) vd;
   if (d->offset0_table)
@@ -752,7 +752,7 @@ dither_set_ink_spread(void *vd, int spread)
 }
 
 void
-dither_set_black_levels(void *vd, double c, double m, double y)
+stp_dither_set_black_levels(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
   d->k_clevel = (int) (c * 64);
@@ -761,7 +761,7 @@ dither_set_black_levels(void *vd, double c, double m, double y)
 }
 
 void
-dither_set_randomizers(void *vd, double c, double m, double y, double k)
+stp_dither_set_randomizers(void *vd, double c, double m, double y, double k)
 {
   dither_t *d = (dither_t *) vd;
   d->randomizer[ECOLOR_C] = c * 65535;
@@ -771,7 +771,7 @@ dither_set_randomizers(void *vd, double c, double m, double y, double k)
 }
 
 void
-dither_set_ink_darkness(void *vd, double c, double m, double y)
+stp_dither_set_ink_darkness(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
   d->c_darkness = (int) (c * 64);
@@ -780,7 +780,7 @@ dither_set_ink_darkness(void *vd, double c, double m, double y)
 }
 
 void
-dither_set_light_inks(void *vd, double c, double m, double y, double density)
+stp_dither_set_light_inks(void *vd, double c, double m, double y, double density)
 {
   stp_simple_dither_range_t range[2];
   range[0].bit_pattern = 1;
@@ -793,24 +793,24 @@ dither_set_light_inks(void *vd, double c, double m, double y, double density)
     {
       range[0].value = c;
       range[0].dot_size = 1;
-      dither_set_ranges(vd, ECOLOR_C, 2, range, density);
+      stp_dither_set_ranges(vd, ECOLOR_C, 2, range, density);
     }
   if (m > 0)
     {
       range[0].value = m;
       range[0].dot_size = 1;
-      dither_set_ranges(vd, ECOLOR_M, 2, range, density);
+      stp_dither_set_ranges(vd, ECOLOR_M, 2, range, density);
     }
   if (y > 0)
     {
       range[0].value = y;
       range[0].dot_size = 1;
-      dither_set_ranges(vd, ECOLOR_Y, 2, range, density);
+      stp_dither_set_ranges(vd, ECOLOR_Y, 2, range, density);
     }
 }
 
 static void
-dither_set_generic_ranges(dither_color_t *s, int nlevels,
+stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
 			  const stp_simple_dither_range_t *ranges, double density)
 {
   int i;
@@ -822,7 +822,7 @@ dither_set_generic_ranges(dither_color_t *s, int nlevels,
     malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
 #ifdef VERBOSE
-  fprintf(stderr, "dither_set_generic_ranges nlevels %d density %f\n", nlevels, density);
+  fprintf(stderr, "stp_dither_set_generic_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
     fprintf(stderr, "  level %d value %f pattern %x is_dark %d\n", i,
 	    ranges[i].value, ranges[i].bit_pattern, ranges[i].is_dark);
@@ -916,7 +916,7 @@ dither_set_generic_ranges(dither_color_t *s, int nlevels,
 }
 
 static void
-dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
+stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
 			       const stp_full_dither_range_t *ranges,
 			       double density, int max_ink)
 {
@@ -930,7 +930,7 @@ dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
     malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
 #ifdef VERBOSE
-  fprintf(stderr, "dither_set_ranges nlevels %d density %f\n", nlevels, density);
+  fprintf(stderr, "stp_dither_set_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
     fprintf(stderr, "  level %d value: low %f high %f pattern low %x high %x is_dark low %d high %d\n", i,
 	    ranges[i].value_l, ranges[i].value_h, ranges[i].bits_l, ranges[i].bits_h,ranges[i].isdark_l, ranges[i].isdark_h);
@@ -993,17 +993,17 @@ dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
 }
 
 void
-dither_set_ranges(void *vd, int color, int nlevels,
+stp_dither_set_ranges(void *vd, int color, int nlevels,
 		  const stp_simple_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= NCOLORS)
     return;
-  dither_set_generic_ranges(&(d->dither[color]), nlevels, ranges, density);
+  stp_dither_set_generic_ranges(&(d->dither[color]), nlevels, ranges, density);
 }
 
 void
-dither_set_ranges_simple(void *vd, int color, int nlevels,
+stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 			 const double *levels, double density)
 {
   stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
@@ -1015,21 +1015,21 @@ dither_set_ranges_simple(void *vd, int color, int nlevels,
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
-  dither_set_ranges(vd, color, nlevels, r, density);
+  stp_dither_set_ranges(vd, color, nlevels, r, density);
   free(r);
 }
 
 void
-dither_set_ranges_full(void *vd, int color, int nlevels,
+stp_dither_set_ranges_full(void *vd, int color, int nlevels,
 		       const stp_full_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_generic_ranges_full(&(d->dither[color]), nlevels, ranges, density,
+  stp_dither_set_generic_ranges_full(&(d->dither[color]), nlevels, ranges, density,
 				 d->ink_limit);
 }
 
 void
-free_dither(void *vd)
+stp_free_dither(void *vd)
 {
   dither_t *d = (dither_t *) vd;
   int i;
@@ -1480,13 +1480,13 @@ print_color_fast(dither_t *d, dither_color_t *rv, int base,
  */
 
 /*
- * 'dither_monochrome()' - Dither grayscale pixels to black using a hard
+ * 'stp_dither_monochrome()' - Dither grayscale pixels to black using a hard
  * threshold.  This is for use with predithered output, or for text
  * or other pure black and white only.
  */
 
 void
-dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
+stp_dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
 		 int           	    row,	/* I - Current Y coordinate */
 		 void 		    *vd,
 		 unsigned char 	    *black,	/* O - Black bitmap pixels */
@@ -1599,12 +1599,12 @@ generate_black(dither_t *d,
 
 
 /*
- * 'dither_black()' - Dither grayscale pixels to black.
+ * 'stp_dither_black()' - Dither grayscale pixels to black.
  * This is for grayscale output.
  */
 
 static void
-dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
+stp_dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
 		  int           row,		/* I - Current Y coordinate */
 		  void 		*vd,
 		  unsigned char *black,		/* O - Black bitmap pixels */
@@ -1656,7 +1656,7 @@ dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
 }
 
 static void
-dither_black_ordered(const unsigned short   *gray,
+stp_dither_black_ordered(const unsigned short   *gray,
 		     int           	row,
 		     void 		*vd,
 		     unsigned char 	*black,
@@ -1712,7 +1712,7 @@ dither_black_ordered(const unsigned short   *gray,
 }
 
 static void
-dither_black_ed(const unsigned short   *gray,	/* I - Grayscale pixels */
+stp_dither_black_ed(const unsigned short   *gray,	/* I - Grayscale pixels */
 		int           	row,		/* I - Current Y coordinate */
 		void 		*vd,
 		unsigned char 	*black,		/* O - Black bitmap pixels */
@@ -2009,7 +2009,7 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
 }
 
 static void
-dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
+stp_dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 		 int           row,	/* I - Current Y coordinate */
 		 void 	    *vd,
 		 unsigned char *cyan,	/* O - Cyan bitmap pixels */
@@ -2195,7 +2195,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 }
 
 static void
-dither_cmyk_ordered(const unsigned short  *rgb,
+stp_dither_cmyk_ordered(const unsigned short  *rgb,
 		    int           row,
 		    void 	    *vd,
 		    unsigned char *cyan,
@@ -2439,7 +2439,7 @@ dither_cmyk_ordered(const unsigned short  *rgb,
 }
 
 static void
-dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
+stp_dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
 	       int           row,	/* I - Current Y coordinate */
 	       void 	    *vd,
 	       unsigned char *cyan,	/* O - Cyan bitmap pixels */
@@ -2778,7 +2778,7 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
 }
 
 void
-dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
+stp_dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	    int           row,	/* I - Current Y coordinate */
 	    void 	  *vd,
 	    unsigned char *cyan,	/* O - Cyan bitmap pixels */
@@ -2792,18 +2792,18 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 {
   dither_t *d = (dither_t *) vd;
   if (d->dither_type & D_FAST_BASE)
-    dither_cmyk_fast(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
+    stp_dither_cmyk_fast(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
 		       yellow, lyellow, black, duplicate_line);
   else if (d->dither_type & D_ORDERED_BASE)
-    dither_cmyk_ordered(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
+    stp_dither_cmyk_ordered(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
 			yellow, lyellow, black, duplicate_line);
   else
-    dither_cmyk_ed(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
+    stp_dither_cmyk_ed(rgb, row, vd, cyan, lcyan, magenta, lmagenta,
 		   yellow, lyellow, black, duplicate_line);
 }
 
 void
-dither_black(const unsigned short  *gray,	/* I - Grayscale pixels */
+stp_dither_black(const unsigned short  *gray,	/* I - Grayscale pixels */
 	     int          	    row,	/* I - Current Y coordinate */
 	     void 	  	   *vd,
 	     unsigned char 	   *black,	/* O - Black bitmap pixels */
@@ -2811,9 +2811,9 @@ dither_black(const unsigned short  *gray,	/* I - Grayscale pixels */
 {
   dither_t *d = (dither_t *) vd;
   if (d->dither_type & D_FAST_BASE)
-    dither_black_fast(gray, row, vd, black, duplicate_line);
+    stp_dither_black_fast(gray, row, vd, black, duplicate_line);
   else if (d->dither_type & D_ORDERED_BASE)
-    dither_black_ordered(gray, row, vd, black, duplicate_line);
+    stp_dither_black_ordered(gray, row, vd, black, duplicate_line);
   else
-    dither_black_ed(gray, row, vd, black, duplicate_line);
+    stp_dither_black_ed(gray, row, vd, black, duplicate_line);
 }

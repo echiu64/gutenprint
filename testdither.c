@@ -204,26 +204,26 @@ main(int  argc,				/* I - Number of command-line arguments */
   memset(&v, 0, sizeof(v));
   strcpy(v.dither_algorithm, "Adaptive Hybrid");
 
-  dither = init_dither(IMAGE_WIDTH, IMAGE_WIDTH, 1, 1, &v);
+  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, 1, 1, &v);
 
-  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
 
   if (dither_type == DITHER_PHOTO)
-    dither_set_black_lower(dither, 0.4 / dither_bits + 0.1);
+    stp_dither_set_black_lower(dither, 0.4 / dither_bits + 0.1);
   else
-    dither_set_black_lower(dither, 0.25 / dither_bits);
+    stp_dither_set_black_lower(dither, 0.25 / dither_bits);
 
-  dither_set_black_upper(dither, 0.5);
+  stp_dither_set_black_upper(dither, 0.5);
 
   if (dither_bits == 2)
   {
     if (dither_type == DITHER_PHOTO)
-      dither_set_adaptive_divisor(dither, 8);
+      stp_dither_set_adaptive_divisor(dither, 8);
     else
-      dither_set_adaptive_divisor(dither, 16);
+      stp_dither_set_adaptive_divisor(dither, 16);
   }  
   else
-    dither_set_adaptive_divisor(dither, 4);
+    stp_dither_set_adaptive_divisor(dither, 4);
 
   switch (dither_type)
   {
@@ -231,11 +231,11 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
-	      dither_set_transition(dither, 0.5);
-              dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+	      stp_dither_set_transition(dither, 0.5);
+              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
@@ -243,17 +243,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              dither_set_c_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              dither_set_m_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_c_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_m_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
-	      dither_set_transition(dither, 0.5);
-              dither_set_c_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              dither_set_m_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+	      stp_dither_set_transition(dither, 0.5);
+              stp_dither_set_c_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_m_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
@@ -261,24 +261,24 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              dither_set_c_ranges(dither, 2, photo_1bit_ranges, 1.0);
-              dither_set_m_ranges(dither, 2, photo_1bit_ranges, 1.0);
-              dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_c_ranges(dither, 2, photo_1bit_ranges, 1.0);
+              stp_dither_set_m_ranges(dither, 2, photo_1bit_ranges, 1.0);
+              stp_dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
-	      dither_set_transition(dither, 0.7);
-              dither_set_c_ranges(dither, 5, photo_2bit_ranges, 1.0);
-              dither_set_m_ranges(dither, 5, photo_2bit_ranges, 1.0);
-              dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+	      stp_dither_set_transition(dither, 0.7);
+              stp_dither_set_c_ranges(dither, 5, photo_2bit_ranges, 1.0);
+              stp_dither_set_m_ranges(dither, 5, photo_2bit_ranges, 1.0);
+              stp_dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
   }
 
-  dither_set_ink_spread(dither, 12 + dither_bits);
-  dither_set_density(dither, 1.0);
+  stp_dither_set_ink_spread(dither, 12 + dither_bits);
+  stp_dither_set_density(dither, 1.0);
 
  /*
   * Open the PPM/PGM file...
@@ -324,20 +324,20 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       case DITHER_GRAY :
           image_get_row(gray, i);
-          dither_black(gray, i, dither, black, 0);
+          stp_dither_black(gray, i, dither, black, 0);
 	  if (fp)
 	    write_gray(fp, black);
 	  break;
       case DITHER_COLOR :
           image_get_row(rgb, i);
-	  dither_cmyk(rgb, i, dither, cyan, 0, magenta, 0,
+	  stp_dither_cmyk(rgb, i, dither, cyan, 0, magenta, 0,
 		      yellow, 0, black, 0);
 	  if (fp)
 	    write_color(fp, cyan, magenta, yellow, black);
 	  break;
       case DITHER_PHOTO :
           image_get_row(rgb, i);
-	  dither_cmyk(rgb, i, dither, cyan, lcyan, magenta, lmagenta,
+	  stp_dither_cmyk(rgb, i, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, 0, black, 0);
 	  if (fp)
 	    write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
@@ -347,7 +347,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   end = time(NULL);
 
-  free_dither(dither);
+  stp_free_dither(dither);
 
   if (fp != NULL)
     fclose(fp);

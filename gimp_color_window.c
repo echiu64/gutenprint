@@ -127,9 +127,9 @@ gimp_create_color_adjust_window (void)
 {
   GtkWidget *dialog;
   GtkWidget *table;
-  const stp_vars_t *lower   = print_minimum_settings ();
-  const stp_vars_t *upper   = print_maximum_settings ();
-  const stp_vars_t *defvars = print_default_settings ();
+  const stp_vars_t *lower   = stp_minimum_settings ();
+  const stp_vars_t *upper   = stp_maximum_settings ();
+  const stp_vars_t *defvars = stp_default_settings ();
 
   gimp_color_adjust_dialog = dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",
@@ -423,7 +423,7 @@ gimp_do_color_updates (void)
 void
 gimp_set_color_defaults (void)
 {
-  const stp_vars_t *defvars = print_default_settings ();
+  const stp_vars_t *defvars = stp_default_settings ();
 
   plist[plist_current].v.brightness = defvars->brightness;
   plist[plist_current].v.gamma      = defvars->gamma;

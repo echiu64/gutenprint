@@ -95,10 +95,10 @@ ps_parameters(const stp_printer_t *printer,	/* I - Printer model */
     {
       if (strcmp(name, "PageSize") == 0)
 	{
-	  const stp_papersize_t *papersizes = get_papersizes();
-	  valptrs = malloc(sizeof(char *) * known_papersizes());
+	  const stp_papersize_t *papersizes = stp_get_papersizes();
+	  valptrs = malloc(sizeof(char *) * stp_known_papersizes());
 	  *count = 0;
-	  for (i = 0; i < known_papersizes(); i++)
+	  for (i = 0; i < stp_known_papersizes(); i++)
 	    {
 	      if (strlen(papersizes[i].name) > 0)
 		{
@@ -167,7 +167,7 @@ ps_media_size(const stp_printer_t *printer,	/* I - Printer model */
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
-    default_media_size(printer, v, width, height);
+    stp_default_media_size(printer, v, width, height);
 }
 
 
@@ -208,7 +208,7 @@ ps_imageable_area(const stp_printer_t *printer,	/* I - Printer model */
   }
   else
   {
-    default_media_size(printer, v, right, top);
+    stp_default_media_size(printer, v, right, top);
     *left   = 18;
     *right  -= 18;
     *top    -= 36;
@@ -311,7 +311,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   * Choose the correct color conversion function...
   */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
+  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
  /*
   * Compute the output size...
@@ -319,7 +319,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
 
   ps_imageable_area(printer, &nv, &page_left, &page_right,
                     &page_bottom, &page_top);
-  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
 			  &out_width, &out_height, &left, &top);
@@ -462,7 +462,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);
 
-  compute_lut(256, &nv);
+  stp_compute_lut(256, &nv);
 
   if (model == 0)
   {
@@ -545,7 +545,7 @@ ps_print(const stp_printer_t *printer,		/* I - Model (Level 1 or 2) */
   }
   Image_progress_conclude(image);
 
-  free_lut(&nv);
+  stp_free_lut(&nv);
   free(in);
   free(out);
 

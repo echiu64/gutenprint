@@ -337,7 +337,7 @@ run (char   *name,		/* I - Name of print program. */
    * Initialize parameter data...
    */
 
-  current_printer = get_printer_by_index (0);
+  current_printer = stp_get_printer_by_index (0);
   run_mode = (GRunModeType)param[0].data.d_int32;
 
   values = g_new (GParam, 1);
@@ -506,7 +506,7 @@ run (char   *name,		/* I - Name of print program. */
             vars.unit = 0;
 	}
 
-      current_printer = get_printer_by_driver (vars.driver);
+      current_printer = stp_get_printer_by_driver (vars.driver);
       break;
 
     case RUN_WITH_LAST_VALS:
@@ -517,7 +517,7 @@ run (char   *name,		/* I - Name of print program. */
       vars.page_width = 0;
       vars.page_height = 0;
 
-      current_printer = get_printer_by_driver (vars.driver);
+      current_printer = stp_get_printer_by_driver (vars.driver);
       break;
 
     default:
@@ -627,7 +627,7 @@ run (char   *name,		/* I - Name of print program. */
 	{
 	  Image image = Image_GDrawable_new(drawable);
 	  vars.app_gamma = gimp_gamma();
-	  merge_printvars(&vars, &(current_printer->printvars));
+	  stp_merge_printvars(&vars, &(current_printer->printvars));
 
 	  /*
 	   * Is the image an Indexed type?  If so we need the colormap...
@@ -643,7 +643,7 @@ run (char   *name,		/* I - Name of print program. */
 	   * and close the output file/command...
 	   */
 
-	  if (verify_printer_params(current_printer, &vars))
+	  if (stp_verify_printer_params(current_printer, &vars))
 	    (*current_printer->print) (current_printer, prn, image, &vars);
 	  else
 	    values[0].data.d_status = STATUS_EXECUTION_ERROR;
@@ -755,7 +755,7 @@ do_print_dialog (gchar *proc_name)
 static void
 initialize_printer(stp_plist_t *printer)
 {
-  const stp_vars_t *def = print_default_settings();
+  const stp_vars_t *def = stp_default_settings();
   printer->name[0] = '\0';
   printer->active=0;
   memcpy(&(printer->v), def, sizeof(stp_vars_t));
@@ -815,9 +815,9 @@ do {									\
     }									\
   else									\
     {									\
-      const stp_vars_t *maxvars = print_maximum_settings();			\
-      const stp_vars_t *minvars = print_minimum_settings();			\
-      const stp_vars_t *defvars = print_default_settings();			\
+      const stp_vars_t *maxvars = stp_maximum_settings();			\
+      const stp_vars_t *minvars = stp_minimum_settings();			\
+      const stp_vars_t *defvars = stp_default_settings();			\
       key.v.param = atof(lineptr);					\
       if (key.v.param > 0 &&						\
 	  (key.v.param > 2 * maxvars->param ||				\
@@ -937,7 +937,7 @@ printrc_load(void)
         GET_MANDATORY_STRING_PARAM(v.output_to);
         GET_MANDATORY_STRING_PARAM(v.driver);
 
-        if (! get_printer_by_driver(key.v.driver))
+        if (! stp_get_printer_by_driver(key.v.driver))
 	  continue;
 
         GET_MANDATORY_STRING_PARAM(v.ppd_file);
@@ -1055,7 +1055,7 @@ printrc_load(void)
 	  if (strcmp(_("File"), key.name) == 0
 	      && strcmp(plist[0].name, _("File")) == 0)
 	  {
-	    if (get_printer_by_driver(key.v.driver))
+	    if (stp_get_printer_by_driver(key.v.driver))
 	      {
 		p = &plist[0];
 		memcpy(p, &key, sizeof(stp_plist_t));
@@ -1064,7 +1064,7 @@ printrc_load(void)
 	  }
 	  else
 	  {
-	    if (get_printer_by_driver(key.v.driver))
+	    if (stp_get_printer_by_driver(key.v.driver))
 	      {
 		p = psearch(&key, plist + 1, plist_count - 1,
 			    sizeof(stp_plist_t),
@@ -1159,7 +1159,7 @@ printrc_load(void)
 	if (strcmp(_("File"), key.name) == 0
 	    && strcmp(plist[0].name, _("File")) == 0)
 	  {
-	    if (get_printer_by_driver(key.v.driver))
+	    if (stp_get_printer_by_driver(key.v.driver))
 	      {
 		p = &plist[0];
 		memcpy(p, &key, sizeof(stp_plist_t));
@@ -1168,7 +1168,7 @@ printrc_load(void)
 	  }
 	else
 	  {
-	    if (get_printer_by_driver(key.v.driver))
+	    if (stp_get_printer_by_driver(key.v.driver))
 	      {
 		p = psearch(&key, plist + 1, plist_count - 1,
 			    sizeof(stp_plist_t),

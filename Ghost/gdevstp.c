@@ -197,7 +197,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_print_dbg("stp_print_page", pdev, &stp_data);
   code = 0;
   stp_raster = gdev_prn_raster(pdev);
-  printer = get_printer_by_driver(stp_data.v.driver);
+  printer = stp_get_printer_by_driver(stp_data.v.driver);
   if (printer == NULL)
     {
       fprintf(gs_stderr, "Printer %s is not a known printer model\n",
@@ -207,7 +207,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
 
   if (!printvars_merged)
     {
-      merge_printvars(&(stp_data.v), &(printer->printvars));
+      stp_merge_printvars(&(stp_data.v), &(printer->printvars));
       printvars_merged = 1;
     }
   stp_row = gs_alloc_bytes(pdev->memory, stp_raster, "stp file buffer");
@@ -218,7 +218,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   if (strlen(stp_data.v.resolution) == 0)
     strcpy(stp_data.v.resolution, (*printer->default_resolution)(printer));
   if (strlen(stp_data.v.dither_algorithm) == 0)
-    strcpy(stp_data.v.dither_algorithm, default_dither_algorithm());
+    strcpy(stp_data.v.dither_algorithm, stp_default_dither_algorithm());
 
   stp_data.v.scaling = -pdev->x_pixels_per_inch; /* resolution of image */
 
@@ -231,7 +231,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   stp_data.v.page_width = pdev->MediaSize[0];
   stp_data.v.page_height = pdev->MediaSize[1];
   if ((p =
-       get_papersize_by_size(stp_data.v.page_height, stp_data.v.page_width)) !=
+       stp_get_papersize_by_size(stp_data.v.page_height, stp_data.v.page_width)) !=
       NULL)
     strcpy(stp_data.v.media_size, p->name);
   stp_print_dbg("stp_print_page", pdev, &stp_data);
@@ -239,7 +239,7 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   theImage.dev = pdev;
   theImage.data = &stp_data;
   theImage.raster = stp_raster;
-  if (verify_printer_params(printer, &(stp_data.v)))
+  if (stp_verify_printer_params(printer, &(stp_data.v)))
     (*printer->print)(printer,		/* I - Model */
 		      file,		/* I - File to print to */
 		      &theImage,	/* I - Image to print (dummy) */
@@ -350,8 +350,8 @@ gsncpy(char *d, const gs_param_string *s, int limit)
 private int
 stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
-  const stp_vars_t *lower = print_minimum_settings();
-  const stp_vars_t *upper = print_maximum_settings();
+  const stp_vars_t *lower = stp_minimum_settings();
+  const stp_vars_t *upper = stp_maximum_settings();
   gs_param_string pmediatype;
   gs_param_string pInputSlot;
   gs_param_string pinktype;
@@ -491,7 +491,7 @@ stp_open(gx_device *pdev)
   /* Change the margins if necessary. */
   float st[4];
   int left,right,bottom,top,width,height;
-  const stp_printer_t *printer = get_printer_by_driver(stp_data.v.driver);
+  const stp_printer_t *printer = stp_get_printer_by_driver(stp_data.v.driver);
   if (!printer)
     {
       if (strlen(stp_data.v.driver) == 0)

@@ -231,7 +231,7 @@ gimp_create_main_window (void)
   gint       i;
   gchar      s[100];
 
-  const stp_printer_t *the_printer = get_printer_by_index (0);
+  const stp_printer_t *the_printer = stp_get_printer_by_index (0);
   gchar *plug_in_name;
 
   /*
@@ -598,7 +598,7 @@ gimp_create_main_window (void)
 
   if (vars.scaling < 0.0)
     {
-      const stp_vars_t *lower = print_minimum_settings();
+      const stp_vars_t *lower = stp_minimum_settings();
       gdouble max_ppi_scaling;
       gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
       min_ppi_scaling1 = 72.0 * (gdouble) image_width /
@@ -618,7 +618,7 @@ gimp_create_main_window (void)
     }
   else
     {
-      const stp_vars_t *lower = print_minimum_settings();
+      const stp_vars_t *lower = stp_minimum_settings();
       scaling_adjustment =
         gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Scaling:"), 200, 75,
@@ -903,7 +903,7 @@ gimp_create_main_window (void)
 					list);
   gtk_widget_set_usize(printer_crawler, 200, 0);
   gtk_widget_show (list);
-  for (i = 0; i < known_printers(); i ++)
+  for (i = 0; i < stp_known_printers(); i ++)
     {
       char *tmp;
       if (!strcmp(the_printer->long_name, ""))
@@ -1024,7 +1024,7 @@ gimp_scaling_update (GtkAdjustment *adjustment)
 static void
 gimp_scaling_callback (GtkWidget *widget)
 {
-  const stp_vars_t *lower = print_minimum_settings ();
+  const stp_vars_t *lower = stp_minimum_settings ();
   gdouble max_ppi_scaling;
   gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   gdouble current_scale;
@@ -1163,7 +1163,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 static void
 gimp_do_misc_updates (void)
 {
-  const stp_vars_t *lower = print_minimum_settings ();
+  const stp_vars_t *lower = stp_minimum_settings ();
 
   vars.scaling     = plist[plist_current].v.scaling;
   vars.orientation = plist[plist_current].v.orientation;
@@ -1366,7 +1366,7 @@ gimp_plist_callback (GtkWidget *widget,
     {
       strcpy(vars.driver, p->v.driver);
 
-      current_printer = get_printer_by_driver (vars.driver);
+      current_printer = stp_get_printer_by_driver (vars.driver);
     }
 
   strcpy (vars.ppd_file, p->v.ppd_file);
@@ -1561,14 +1561,14 @@ gimp_media_size_callback (GtkWidget *widget,
     {
       const stp_papersize_t *pap;
       const gchar *new_media_size = Combo_get_text (media_size_combo);
-      pap = get_papersize_by_name(new_media_size);
+      pap = stp_get_papersize_by_name(new_media_size);
       if (pap)
 	{
 	  gint default_width, default_height;
 	  gdouble size;
 	  if (pap->width == 0)
 	    {
-	      default_media_size(current_printer, &vars,
+	      stp_default_media_size(current_printer, &vars,
 				 &default_width, &default_height);
 	      size = default_width / 72.0;
 	      if (vars.unit)
@@ -1592,7 +1592,7 @@ gimp_media_size_callback (GtkWidget *widget,
 	    }
 	  if (pap->height == 0)
 	    {
-	      default_media_size(current_printer, &vars,
+	      stp_default_media_size(current_printer, &vars,
 				 &default_width, &default_height);
 	      size = default_height / 72.0;
 	      if (vars.unit)
@@ -1820,8 +1820,8 @@ gimp_setup_update (void)
   GtkAdjustment *adjustment;
   gint idx;
 
-  current_printer = get_printer_by_driver (plist[plist_current].v.driver);
-  idx = get_printer_index_by_driver (plist[plist_current].v.driver);
+  current_printer = stp_get_printer_by_driver (plist[plist_current].v.driver);
+  idx = stp_get_printer_index_by_driver (plist[plist_current].v.driver);
 
   gtk_clist_select_row(GTK_CLIST(printer_driver), idx, 0);
 
@@ -1901,7 +1901,7 @@ gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 			    gpointer        data)   /* I - Data */
 {
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
-  current_printer = get_printer_by_index ((gint) data);
+  current_printer = stp_get_printer_by_index ((gint) data);
 
   if (strncmp (current_printer->driver, "ps", 2) == 0)
     {
@@ -1983,8 +1983,8 @@ gimp_update_adjusted_thumbnail (void)
 
   vars.density = 1.0;
 
-  compute_lut (256, &vars);
-  colourfunc = choose_colorfunc (vars.output_type, thumbnail_bpp, NULL,
+  stp_compute_lut (256, &vars);
+  colourfunc = stp_choose_colorfunc (vars.output_type, thumbnail_bpp, NULL,
 				 &adjusted_thumbnail_bpp, &vars);
 
   for (y = 0; y < thumbnail_h; y++)
@@ -1998,7 +1998,7 @@ gimp_update_adjusted_thumbnail (void)
 	}
     }
 
-  free_lut (&vars);
+  stp_free_lut (&vars);
 
   vars.density = old_density;
 

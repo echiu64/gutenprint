@@ -69,7 +69,7 @@ output_the_printer(void)
     {
     case 1:
       printf("    %s,\n", "canon_parameters");
-      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "stp_default_media_size");
       printf("    %s,\n", "canon_imageable_area");
       printf("    %s,\n", "canon_limit");
       printf("    %s,\n", "canon_print");
@@ -78,7 +78,7 @@ output_the_printer(void)
       break;
     case 2:
       printf("    %s,\n", "escp2_parameters");
-      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "stp_default_media_size");
       printf("    %s,\n", "escp2_imageable_area");
       printf("    %s,\n", "escp2_limit");
       printf("    %s,\n", "escp2_print");
@@ -87,7 +87,7 @@ output_the_printer(void)
       break;
     case 3:
       printf("    %s,\n", "pcl_parameters");
-      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "stp_default_media_size");
       printf("    %s,\n", "pcl_imageable_area");
       printf("    %s,\n", "pcl_limit");
       printf("    %s,\n", "pcl_print");
@@ -105,7 +105,7 @@ output_the_printer(void)
       break;
     case 5:
       printf("    %s,\n", "lexmark_parameters");
-      printf("    %s,\n", "default_media_size");
+      printf("    %s,\n", "stp_default_media_size");
       printf("    %s,\n", "lexmark_imageable_area");
       printf("    %s,\n", "lexmark_limit");
       printf("    %s,\n", "lexmark_print");

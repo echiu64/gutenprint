@@ -505,7 +505,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 }
 
 void *					/* O - weave parameter block */
-initialize_weave_params(int S,		/* I - jet separation */
+stp_initialize_weave_params(int S,		/* I - jet separation */
                         int J,		/* I - number of jets */
                         int H,		/* I - oversampling factor */
                         int firstrow,	/* I - first row number to print */
@@ -524,7 +524,7 @@ initialize_weave_params(int S,		/* I - jet separation */
 }
 
 void
-destroy_weave_params(void *vw)
+stp_destroy_weave_params(void *vw)
 {
 	cooked_t *w = (cooked_t *) vw;
 
@@ -536,7 +536,7 @@ destroy_weave_params(void *vw)
 }
 
 void
-calculate_row_parameters(void *vw,		/* I - weave parameters */
+stp_calculate_row_parameters(void *vw,		/* I - weave parameters */
                          int row,		/* I - row number */
                          int subpass,		/* I - subpass */
                          int *pass,		/* O - pass containing row */
@@ -1637,7 +1637,7 @@ main(int ac, char *av[])
 	       "pageheight=%d  strategy=%d\n",
 	       S, J, H, firstrow, lastrow, pageheight, strategy);
 
-	weave = initialize_weave_params(S, J, H, firstrow, lastrow,
+	weave = stp_initialize_weave_params(S, J, H, firstrow, lastrow,
 	                                pageheight, strategy);
 	passes = weave->first_unused_pass - weave->first_premapped_pass;
 

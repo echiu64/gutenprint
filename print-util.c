@@ -150,10 +150,10 @@ do						\
 } while (0)
 
 void
-merge_printvars(stp_vars_t *user, const stp_vars_t *print)
+stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print)
 {
-  const stp_vars_t *max = print_maximum_settings();
-  const stp_vars_t *min = print_minimum_settings();
+  const stp_vars_t *max = stp_maximum_settings();
+  const stp_vars_t *min = stp_minimum_settings();
   user->cyan = (user->cyan * print->cyan);
   ICLAMP(cyan);
   user->magenta = (user->magenta * print->magenta);
@@ -173,7 +173,7 @@ merge_printvars(stp_vars_t *user, const stp_vars_t *print)
 }
 
 /*
- * 'default_media_size()' - Return the size of a default page size.
+ * 'stp_default_media_size()' - Return the size of a default page size.
  */
 
 /*
@@ -199,6 +199,7 @@ const static stp_papersize_t paper_sizes[] =
   { "Manual",   396,  612, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
   { "12x18",    864, 1296, PAPERSIZE_ENGLISH },
   { "13x19",    936, 1368, PAPERSIZE_ENGLISH },
+  { "Super B",  936, 1368, PAPERSIZE_ENGLISH },	/* Apparently 13x19. */
 
   /* Other common photographic paper sizes */
   { "8x12",	576,  864, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
@@ -351,19 +352,19 @@ const static stp_papersize_t paper_sizes[] =
 };
 
 int
-known_papersizes(void)
+stp_known_papersizes(void)
 {
   return sizeof(paper_sizes) / sizeof(stp_papersize_t);
 }
 
 const stp_papersize_t *
-get_papersizes(void)
+stp_get_papersizes(void)
 {
   return paper_sizes;
 }
 
 const stp_papersize_t *
-get_papersize_by_name(const char *name)
+stp_get_papersize_by_name(const char *name)
 {
   const stp_papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
@@ -386,7 +387,7 @@ paper_size_mismatch(int l, int w, const stp_papersize_t *val)
 }
 
 const stp_papersize_t *
-get_papersize_by_size(int l, int w)
+stp_get_papersize_by_size(int l, int w)
 {
   int score = INT_MAX;
   const stp_papersize_t *ref = NULL;
@@ -410,7 +411,7 @@ get_papersize_by_size(int l, int w)
 }
 
 void
-default_media_size(const stp_printer_t *printer,
+stp_default_media_size(const stp_printer_t *printer,
 					/* I - Printer model (not used) */
 		   const stp_vars_t *v,	/* I */
         	   int  *width,		/* O - Width in points */
@@ -423,7 +424,7 @@ default_media_size(const stp_printer_t *printer,
     }
   else
     {
-      const stp_papersize_t *papersize = get_papersize_by_name(v->media_size);
+      const stp_papersize_t *papersize = stp_get_papersize_by_name(v->media_size);
       if (!papersize)
 	{
 	  *width = 1;
@@ -447,29 +448,29 @@ default_media_size(const stp_printer_t *printer,
 #include "print-printers.c"
 
 int
-known_printers(void)
+stp_known_printers(void)
 {
   return printer_count;
 }
 
 const stp_printer_t *
-get_printers(void)
+stp_get_printers(void)
 {
   return printers;
 }
 
 const stp_printer_t *
-get_printer_by_index(int idx)
+stp_get_printer_by_index(int idx)
 {
   return &(printers[idx]);
 }
 
 const stp_printer_t *
-get_printer_by_long_name(const char *long_name)
+stp_get_printer_by_long_name(const char *long_name)
 {
   const stp_printer_t *val = &(printers[0]);
   int i;
-  for (i = 0; i < known_printers(); i++)
+  for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->long_name, long_name))
 	return val;
@@ -479,11 +480,11 @@ get_printer_by_long_name(const char *long_name)
 }
 
 const stp_printer_t *
-get_printer_by_driver(const char *driver)
+stp_get_printer_by_driver(const char *driver)
 {
   const stp_printer_t *val = &(printers[0]);
   int i;
-  for (i = 0; i < known_printers(); i++)
+  for (i = 0; i < stp_known_printers(); i++)
     {
       if (!strcmp(val->driver, driver))
 	return val;
@@ -493,11 +494,11 @@ get_printer_by_driver(const char *driver)
 }
 
 int
-get_printer_index_by_driver(const char *driver)
+stp_get_printer_index_by_driver(const char *driver)
 {
   int idx = 0;
   const stp_printer_t *val = &(printers[0]);
-  for (idx = 0; idx < known_printers(); idx++)
+  for (idx = 0; idx < stp_known_printers(); idx++)
     {
       if (!strcmp(val->driver, driver))
 	return idx;
@@ -507,13 +508,13 @@ get_printer_index_by_driver(const char *driver)
 }
 
 const char *
-default_dither_algorithm(void)
+stp_default_dither_algorithm(void)
 {
   return dither_algo_names[0];
 }
 
 void
-compute_page_parameters(int page_right,	/* I */
+stp_compute_page_parameters(int page_right,	/* I */
 			int page_left, /* I */
 			int page_top, /* I */
 			int page_bottom, /* I */
@@ -636,7 +637,7 @@ compute_page_parameters(int page_right,	/* I */
 }
 
 int
-verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
+stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 {
   char **vptr;
   int count;
@@ -752,19 +753,19 @@ verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 }
 
 const stp_vars_t *
-print_default_settings()
+stp_default_settings()
 {
   return &default_vars;
 }
 
 const stp_vars_t *
-print_maximum_settings()
+stp_maximum_settings()
 {
   return &max_vars;
 }
 
 const stp_vars_t *
-print_minimum_settings()
+stp_minimum_settings()
 {
   return &min_vars;
 }

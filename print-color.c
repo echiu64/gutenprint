@@ -1373,7 +1373,7 @@ allocate_lut(size_t steps)
 }
 
 void
-free_lut(stp_vars_t *v)
+stp_free_lut(stp_vars_t *v)
 {
   if (v->lut)
     {
@@ -1399,7 +1399,7 @@ free_lut(stp_vars_t *v)
 /* #define PRINT_LUT */
 
 void
-compute_lut(size_t steps, stp_vars_t *uv)
+stp_compute_lut(size_t steps, stp_vars_t *uv)
 {
   double	pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
@@ -1548,7 +1548,7 @@ compute_lut(size_t steps, stp_vars_t *uv)
 }
 
 stp_convert_t
-choose_colorfunc(int output_type,
+stp_choose_colorfunc(int output_type,
 		 int image_bpp,
 		 const unsigned char *cmap,
 		 int *out_bpp,

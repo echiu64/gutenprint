@@ -105,9 +105,9 @@ void gtk_create_color_adjust_window(void)
     GtkWidget*  box;            /* Box container */
     GtkWidget*  scale;  /* Scale widget */
     GtkWidget*  entry;  /* Text entry widget */
-    const stp_vars_t *lower = print_minimum_settings();
-    const stp_vars_t *upper = print_maximum_settings();
-    const stp_vars_t *defvars = print_default_settings();
+    const stp_vars_t *lower = stp_minimum_settings();
+    const stp_vars_t *upper = stp_maximum_settings();
+    const stp_vars_t *defvars = stp_default_settings();
 
     GtkObject*  scale_data;  /* Scale data (limits) */
     char s[100]; /* Text string */

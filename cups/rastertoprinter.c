@@ -129,7 +129,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
 
-  if ((printer = get_printer_by_driver(ppd->modelname)) == NULL)
+  if ((printer = stp_get_printer_by_driver(ppd->modelname)) == NULL)
   {
     fprintf(stderr, "ERROR: Fatal error: Unable to find driver named \"%s\"!\n",
             ppd->modelname);
@@ -258,7 +258,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
 
-    if ((size = get_papersize_by_size(cups.header.PageSize[1],
+    if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
                                       cups.header.PageSize[0])) != NULL)
       strcpy(v.media_size, size->name);
     else
@@ -276,7 +276,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Print the page...
     */
 
-    merge_printvars(&v, &(printer->printvars));
+    stp_merge_printvars(&v, &(printer->printvars));
     fprintf(stderr, "DEBUG: v.output_to |%s|\n", v.output_to);
     fprintf(stderr, "DEBUG: v.driver |%s|\n", v.driver);
     fprintf(stderr, "DEBUG: v.ppd_file |%s|\n", v.ppd_file);
@@ -286,7 +286,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: v.media_source |%s|\n", v.media_source);
     fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
     fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
-    if (verify_printer_params(printer, &v))
+    if (stp_verify_printer_params(printer, &v))
       (*printer->print)(printer, stdout, &cups, &v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);

@@ -529,7 +529,7 @@ lexmark_size_type
 static unsigned char
 lexmark_size_type(const stp_vars_t *v, lexmark_cap_t caps)
 {
-  const stp_papersize_t *pp = get_papersize_by_size(v->page_height, v->page_width);
+  const stp_papersize_t *pp = stp_get_papersize_by_size(v->page_height, v->page_width);
   if (pp)
     {
       const char *name = pp->name;
@@ -631,14 +631,14 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0) {
     int height_limit, width_limit;
-    const stp_papersize_t *papersizes = get_papersizes();
-    valptrs = malloc(sizeof(char *) * known_papersizes());
+    const stp_papersize_t *papersizes = stp_get_papersizes();
+    valptrs = malloc(sizeof(char *) * stp_known_papersizes());
     *count = 0;
 
     width_limit = caps.max_width;
     height_limit = caps.max_length;
 
-    for (i = 0; i < known_papersizes(); i++) {
+    for (i = 0; i < stp_known_papersizes(); i++) {
       if (strlen(papersizes[i].name) > 0 &&
 	  papersizes[i].width <= width_limit &&
 	  papersizes[i].height <= height_limit) {
@@ -737,7 +737,7 @@ const stp_vars_t *v,   /* I */
 
   lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
 
-  default_media_size(printer, v, &width, &length);
+  stp_default_media_size(printer, v, &width, &length);
 
   *left   = caps.border_left;
   *right  = width - caps.border_right;
@@ -963,7 +963,8 @@ clean_color(unsigned char *line, int len)
 
 
 
-void setcol0(char *a, int al) {
+static void setcol0(char *a, int al) 
+{
   int i;
   
   for (i=0; i < al; i++) {
@@ -971,7 +972,8 @@ void setcol0(char *a, int al) {
   }
 }
 
-void setcol1(char *a, int al) {
+static void setcol1(char *a, int al) 
+{
   int i;
   
   for (i=0; i < al; i++) {
@@ -980,7 +982,8 @@ void setcol1(char *a, int al) {
   }
 }
 
-void setcol2(char *a, int al) {
+static void setcol2(char *a, int al) 
+{
   int i;
   
   for (i=0; i < al; i++) {
@@ -1119,7 +1122,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
    * Choose the correct color conversion function...
    */
 
-  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
+  colorfunc = stp_choose_colorfunc(output_type, image_bpp, cmap, &out_bpp, &nv);
 
 
   if (output_type == OUTPUT_GRAY) {
@@ -1231,7 +1234,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   lexmark_imageable_area(printer, &nv, &page_left, &page_right,
 			 &page_bottom, &page_top);
 
-  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+  stp_compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
 			  &out_width, &out_length, &left, &top);
@@ -1247,7 +1250,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   image_height = Image_height(image);
   image_width = Image_width(image);
 
-  default_media_size(printer, &nv, &n, &page_true_height);
+  stp_default_media_size(printer, &nv, &n, &page_true_height);
 
 
   Image_progress_init(image);
@@ -1366,18 +1369,18 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 
   if(nv.density > 1.0)nv.density = 1.0;
 
-  compute_lut(256, &nv);
+  stp_compute_lut(256, &nv);
 
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",nv.density);
 #endif
 
   if (xdpi > ydpi)
-    dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
+    dither = stp_init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
   else
-    dither = init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
+    dither = stp_init_dither(image_width, out_width, ydpi / xdpi, 1, &nv);
 
-  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
 
  
 
@@ -1399,32 +1402,32 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
       k_lower *= .5;
       k_upper = .5;
     }
-  dither_set_black_lower(dither, k_lower);
-  dither_set_black_upper(dither, k_upper);
+  stp_dither_set_black_lower(dither, k_lower);
+  stp_dither_set_black_upper(dither, k_upper);
 
   /*
   if(bits == 2)
     {
       if(use_6color)
-        dither_set_adaptive_divisor(dither, 8);
+        stp_dither_set_adaptive_divisor(dither, 8);
       else
-        dither_set_adaptive_divisor(dither, 16);
+        stp_dither_set_adaptive_divisor(dither, 16);
     }  
   else
-    dither_set_adaptive_divisor(dither, 4);
+    stp_dither_set_adaptive_divisor(dither, 4);
 	*/
 
 	/*
-	  dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));*/
-  /*dither_set_black_levels(dither, 0.5, 0.5, 0.5);
-    dither_set_black_lower(dither, 0.4);*/
+	  stp_dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1));*/
+  /*stp_dither_set_black_levels(dither, 0.5, 0.5, 0.5);
+    stp_dither_set_black_lower(dither, 0.4);*/
   /*
     if (use_glossy_film)
   */
-  dither_set_black_upper(dither, .8);
+  stp_dither_set_black_upper(dither, .8);
 
   if (!use_dmt) {
-    dither_set_light_inks(dither,
+    stp_dither_set_light_inks(dither,
 			  (lcyan)   ? (0.3333) : (0.0),
 			  (lmagenta)? (0.3333) : (0.0),
 			  (lyellow) ? (0.3333) : (0.0), nv.density);
@@ -1433,16 +1436,16 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
-      dither_set_ink_spread(dither, 19);
+      stp_dither_set_ink_spread(dither, 19);
       break;
     case IMAGE_SOLID_TONE:
-      dither_set_ink_spread(dither, 15);
+      stp_dither_set_ink_spread(dither, 15);
       break;
     case IMAGE_CONTINUOUS:
-      dither_set_ink_spread(dither, 14);
+      stp_dither_set_ink_spread(dither, 14);
       break;
     }
-  dither_set_density(dither, nv.density);
+  stp_dither_set_density(dither, nv.density);
 
   /*
    * Output the page...
@@ -1646,8 +1649,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
     
     Image_progress_conclude(image);
 
-    free_dither(dither);
-    free_lut(&nv);
+    stp_free_dither(dither);
+    stp_free_lut(&nv);
     free(in);
     free(out);
 
@@ -1715,11 +1718,11 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 	  }
 	/*      printf("Let's dither   %d    %d  %d\n", ((y%interlace)), buf_length, length);*/
 	if (nv.image_type == IMAGE_MONOCHROME)
-	  dither_monochrome(out, y, dither, black, duplicate_line);
+	  stp_dither_monochrome(out, y, dither, black, duplicate_line);
 	else if (output_type == OUTPUT_GRAY)
-	  dither_black(out, y, dither, black, duplicate_line);
+	  stp_dither_black(out, y, dither, black, duplicate_line);
 	else
-	  dither_cmyk(out, y, dither, 
+	  stp_dither_cmyk(out, y, dither, 
 		      cyan, 
 		      lcyan, 
 		      magenta, 
@@ -1787,7 +1790,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
     } 
   Image_progress_conclude(image);
 
-  free_dither(dither);
+  stp_free_dither(dither);
 
   /*
    * Flush delayed buffers...
@@ -1829,7 +1832,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   * Cleanup...
   */
 
-  free_lut(&nv);
+  stp_free_lut(&nv);
   free(in);
   free(out);
 

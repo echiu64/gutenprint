@@ -276,7 +276,7 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 
 
 void *
-init_dither(int in_width, int out_width, stp_vars_t *v)
+stp_init_dither(int in_width, int out_width, stp_vars_t *v)
 {
   int x, y;
   dither_t *d = malloc(sizeof(dither_t));
@@ -286,10 +286,10 @@ init_dither(int in_width, int out_width, stp_vars_t *v)
   r.bit_pattern = 1;
   r.is_dark = 1;
   r.dot_size = 1;
-  dither_set_c_ranges(d, 1, &r, 1.0);
-  dither_set_m_ranges(d, 1, &r, 1.0);
-  dither_set_y_ranges(d, 1, &r, 1.0);
-  dither_set_k_ranges(d, 1, &r, 1.0);
+  stp_dither_set_c_ranges(d, 1, &r, 1.0);
+  stp_dither_set_m_ranges(d, 1, &r, 1.0);
+  stp_dither_set_y_ranges(d, 1, &r, 1.0);
+  stp_dither_set_k_ranges(d, 1, &r, 1.0);
   d->offset0_table = NULL;
   d->offset1_table = NULL;
 
@@ -317,19 +317,19 @@ init_dither(int in_width, int out_width, stp_vars_t *v)
   d->src_width = in_width;
   d->dst_width = out_width;
 
-  dither_set_ink_budget(d, INT_MAX);
-  dither_set_ink_spread(d, 13);
-  dither_set_black_lower(d, .4);
-  dither_set_black_upper(d, .7);
-  dither_set_black_levels(d, 1.0, 1.0, 1.0);
-  dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
-  dither_set_ink_darkness(d, .4, .3, .2);
-  dither_set_density(d, 1.0);
+  stp_dither_set_ink_budget(d, INT_MAX);
+  stp_dither_set_ink_spread(d, 13);
+  stp_dither_set_black_lower(d, .4);
+  stp_dither_set_black_upper(d, .7);
+  stp_dither_set_black_levels(d, 1.0, 1.0, 1.0);
+  stp_dither_set_randomizers(d, 1.0, 1.0, 1.0, 1.0);
+  stp_dither_set_ink_darkness(d, .4, .3, .2);
+  stp_dither_set_density(d, 1.0);
   return d;
 }  
 
 void
-dither_set_density(void *vd, double density)
+stp_dither_set_density(void *vd, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (density > 1)
@@ -345,28 +345,28 @@ dither_set_density(void *vd, double density)
 }
 
 void
-dither_set_ink_budget(void *vd, unsigned budget)
+stp_dither_set_ink_budget(void *vd, unsigned budget)
 {
   dither_t *d = (dither_t *) vd;
   d->ink_limit = budget;
 }
 
 void
-dither_set_black_lower(void *vd, double k_lower)
+stp_dither_set_black_lower(void *vd, double k_lower)
 {
   dither_t *d = (dither_t *) vd;
   d->k_lower = (int) (k_lower * 65536);
 }
 
 void
-dither_set_black_upper(void *vd, double k_upper)
+stp_dither_set_black_upper(void *vd, double k_upper)
 {
   dither_t *d = (dither_t *) vd;
   d->k_upper = (int) (k_upper * 65536);
 }
 
 void
-dither_set_ink_spread(void *vd, int spread)
+stp_dither_set_ink_spread(void *vd, int spread)
 {
   dither_t *d = (dither_t *) vd;
   if (d->offset0_table)
@@ -403,7 +403,7 @@ dither_set_ink_spread(void *vd, int spread)
 }
 
 void
-dither_set_black_levels(void *vd, double c, double m, double y)
+stp_dither_set_black_levels(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
   d->k_clevel = (int) (c * 64);
@@ -412,7 +412,7 @@ dither_set_black_levels(void *vd, double c, double m, double y)
 }
 
 void
-dither_set_randomizers(void *vd, double c, double m, double y, double k)
+stp_dither_set_randomizers(void *vd, double c, double m, double y, double k)
 {
   dither_t *d = (dither_t *) vd;
   d->c_randomizer = c * 65536;
@@ -422,7 +422,7 @@ dither_set_randomizers(void *vd, double c, double m, double y, double k)
 }
 
 void
-dither_set_ink_darkness(void *vd, double c, double m, double y)
+stp_dither_set_ink_darkness(void *vd, double c, double m, double y)
 {
   dither_t *d = (dither_t *) vd;
   d->c_darkness = (int) (c * 64);
@@ -431,7 +431,7 @@ dither_set_ink_darkness(void *vd, double c, double m, double y)
 }
 
 void
-dither_set_light_inks(void *vd, double c, double m, double y, double density)
+stp_dither_set_light_inks(void *vd, double c, double m, double y, double density)
 {
   stp_simple_dither_range_t range[2];
   range[0].bit_pattern = 1;
@@ -444,24 +444,24 @@ dither_set_light_inks(void *vd, double c, double m, double y, double density)
     {
       range[0].value = c;
       range[0].dot_size = 1;
-      dither_set_c_ranges(vd, 2, range, density);
+      stp_dither_set_c_ranges(vd, 2, range, density);
     }
   if (m > 0)
     {
       range[0].value = m;
       range[0].dot_size = 1;
-      dither_set_m_ranges(vd, 2, range, density);
+      stp_dither_set_m_ranges(vd, 2, range, density);
     }
   if (y > 0)
     {
       range[0].value = y;
       range[0].dot_size = 1;
-      dither_set_y_ranges(vd, 2, range, density);
+      stp_dither_set_y_ranges(vd, 2, range, density);
     }
 }
 
 static void
-dither_set_ranges(dither_color_t *s, int nlevels,
+stp_dither_set_ranges(dither_color_t *s, int nlevels,
 		  const stp_simple_dither_range_t *ranges, double density)
 {
   int i;
@@ -473,7 +473,7 @@ dither_set_ranges(dither_color_t *s, int nlevels,
     malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
 #if 0
-  fprintf(stderr, "dither_set_ranges nlevels %d density %f\n", nlevels, density);
+  fprintf(stderr, "stp_dither_set_ranges nlevels %d density %f\n", nlevels, density);
   for (i = 0; i < nlevels; i++)
     fprintf(stderr, "  level %d value %f pattern %x is_dark %d\n", i,
 	    ranges[i].value, ranges[i].bit_pattern, ranges[i].is_dark);
@@ -567,15 +567,15 @@ dither_set_ranges(dither_color_t *s, int nlevels,
 }
 
 void
-dither_set_c_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
+stp_dither_set_c_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges(&(d->c_dither), nlevels, ranges, density);
+  stp_dither_set_ranges(&(d->c_dither), nlevels, ranges, density);
 }
 
 void
-dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
+stp_dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
   stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
@@ -587,20 +587,20 @@ dither_set_c_ranges_simple(void *vd, int nlevels, const double *levels,
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
-  dither_set_c_ranges(vd, nlevels, r, density);
+  stp_dither_set_c_ranges(vd, nlevels, r, density);
   free(r);
 }
 
 void
-dither_set_m_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
+stp_dither_set_m_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges(&(d->m_dither), nlevels, ranges, density);
+  stp_dither_set_ranges(&(d->m_dither), nlevels, ranges, density);
 }
 
 void
-dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
+stp_dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
   stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
@@ -612,45 +612,20 @@ dither_set_m_ranges_simple(void *vd, int nlevels, const double *levels,
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
-  dither_set_m_ranges(vd, nlevels, r, density);
-  free(r);
-}
-  
-void
-dither_set_y_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
-		    double density)
-{
-  dither_t *d = (dither_t *) vd;
-  dither_set_ranges(&(d->y_dither), nlevels, ranges, density);
-}
-
-void
-dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
-			   double density)
-{
-  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
-  int i;
-  for (i = 0; i < nlevels; i++)
-    {
-      r[i].bit_pattern = i + 1;
-      r[i].dot_size = i + 1;
-      r[i].value = levels[i];
-      r[i].is_dark = 1;
-    }
-  dither_set_y_ranges(vd, nlevels, r, density);
+  stp_dither_set_m_ranges(vd, nlevels, r, density);
   free(r);
 }
   
 void
-dither_set_k_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
+stp_dither_set_y_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
 		    double density)
 {
   dither_t *d = (dither_t *) vd;
-  dither_set_ranges(&(d->k_dither), nlevels, ranges, density);
+  stp_dither_set_ranges(&(d->y_dither), nlevels, ranges, density);
 }
 
 void
-dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
+stp_dither_set_y_ranges_simple(void *vd, int nlevels, const double *levels,
 			   double density)
 {
   stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
@@ -662,13 +637,38 @@ dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
       r[i].value = levels[i];
       r[i].is_dark = 1;
     }
-  dither_set_k_ranges(vd, nlevels, r, density);
+  stp_dither_set_y_ranges(vd, nlevels, r, density);
+  free(r);
+}
+  
+void
+stp_dither_set_k_ranges(void *vd, int nlevels, const stp_simple_dither_range_t *ranges,
+		    double density)
+{
+  dither_t *d = (dither_t *) vd;
+  stp_dither_set_ranges(&(d->k_dither), nlevels, ranges, density);
+}
+
+void
+stp_dither_set_k_ranges_simple(void *vd, int nlevels, const double *levels,
+			   double density)
+{
+  stp_simple_dither_range_t *r = malloc(nlevels * sizeof(stp_simple_dither_range_t));
+  int i;
+  for (i = 0; i < nlevels; i++)
+    {
+      r[i].bit_pattern = i + 1;
+      r[i].dot_size = i + 1;
+      r[i].value = levels[i];
+      r[i].is_dark = 1;
+    }
+  stp_dither_set_k_ranges(vd, nlevels, r, density);
   free(r);
 }
   
 
 void
-free_dither(void *vd)
+stp_free_dither(void *vd)
 {
   dither_t *d = (dither_t *) vd;
   int i;
@@ -1275,12 +1275,12 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
 }
 
 /*
- * 'dither_black_n()' - Dither grayscale pixels to n levels of black.
+ * 'stp_dither_black_n()' - Dither grayscale pixels to n levels of black.
  * This is for grayscale output.
  */
 
 void
-dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
+stp_dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 	     int           	row,		/* I - Current Y coordinate */
 	     void 		*vd,
 	     unsigned char 	*black)		/* O - Black bitmap pixels */
@@ -1356,7 +1356,7 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 }
 
 /*
- * 'dither_cmyk_n()' - Dither RGB pixels to n levels of cyan, magenta, yellow,
+ * 'stp_dither_cmyk_n()' - Dither RGB pixels to n levels of cyan, magenta, yellow,
  *                     and black.
  */
 
@@ -1370,7 +1370,7 @@ iabs(int a)
 }
 
 void
-dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
+stp_dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    int           row,	/* I - Current Y coordinate */
 	    void 	    *vd,
 	    unsigned char *cyan,	/* O - Cyan bitmap pixels */
