@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2003 by Easy Software Products and Robert Krawitz.
+ *   Copyright 1993-2005 by Easy Software Products and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -275,7 +275,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'V':
       printf("cups-genppd version %s, "
-	     "Copyright (c) 1993-2003 by Easy Software Products and Robert Krawitz.\n\n",
+	     "Copyright (c) 1993-2005 by Easy Software Products and Robert Krawitz.\n\n",
 	     VERSION);
       printf("Default CUPS PPD PostScript Level: %d\n", cups_ppd_ps_level);
       printf("Default PPD location (prefix):     %s\n", CUPS_MODELDIR);
@@ -499,8 +499,8 @@ static int
 dirent_sort(const void *a,
 	    const void *b)
 {
-  return strcoll ((*(const struct dirent **) a)->d_name,
-		  (*(const struct dirent **) b)->d_name);
+  return strcoll ((*(const struct dirent *const *) a)->d_name,
+		  (*(const struct dirent *const *) b)->d_name);
 }
 
 /*
@@ -846,7 +846,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/Gutenprint.\n");
-  gzputs(fp, "*%Copyright 1993-2003 by Easy Software Products and Robert Krawitz.\n");
+  gzputs(fp, "*%Copyright 1993-2005 by Easy Software Products and Robert Krawitz.\n");
   gzputs(fp, "*%This program is free software; you can redistribute it and/or\n");
   gzputs(fp, "*%modify it under the terms of the GNU General Public License,\n");
   gzputs(fp, "*%version 2, as published by the Free Software Foundation.\n");
@@ -922,7 +922,11 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
       gzputs(fp, "*PSVersion:	\"(3010.000) 653\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 704\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 707\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 800\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 815\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 850\"\n");
+      gzputs(fp, "*PSVersion:	\"(3010.000) 81501\"\n");
     }
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
