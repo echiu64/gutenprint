@@ -8,6 +8,7 @@ bin_PROGRAMS = unprint
 
 print_SOURCES = \
 	print-canon.c   \
+	print-dither.c	\
 	print-escp2.c	\
 	print-pcl.c	\
 	print-ps.c	\
