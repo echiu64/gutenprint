@@ -1,0 +1,13 @@
+yada
+control
+rules
+tmp*
+files*
+substvars
+build-stamp
+depends-stamp
+install-tree-stamp
+patch-stamp
+patch-*-applied
+backup-*
+backdown-*
