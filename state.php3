@@ -12,7 +12,7 @@ $supported_printers = array(
 		'EPSON Stylus Photo' => 'Fully Operational',
 		'EPSON Stylus Photo 700' => 'Fully Operational',
 		'EPSON Stylus Photo EX' => 'Fully Operational',
-		'EPSON Stylus Photo 720' => 'Needs Testing',
+		'EPSON Stylus Photo 720' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
 		'EPSON Stylus Photo 780' => 'Fully Operational (4.1 only;
 		use the 870 driver in 4.0)',
@@ -34,6 +34,7 @@ $supported_printers = array(
 		'EPSON Stylus C20UX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C60' => 'Untested (4.1 only)',
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
