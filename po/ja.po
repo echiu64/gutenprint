@@ -1,200 +1,196 @@
-# Swedish messages for gimp-print.
-# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-# Christian Rose <menthos@menthos.com>, 2001, 2002.
-#
-# $Id$
+# gimp-print ja.po.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Takeshi AIHANA <aihana@gnome.gr.jp>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gimp-print\n"
+"Project-Id-Version: gimp-print Version 4.2.3\n"
 "POT-Creation-Date: 2002-10-01 21:19-0400\n"
-"PO-Revision-Date: 2002-10-03 13:47+0200\n"
-"Last-Translator: Christian Rose <menthos@menthos.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2002-10-07 19:10+0900\n"
+"Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
+"Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=euc-jp\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: flaggan \"%s\" är flertydig\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '%s' Ã±ÂÎ¤Ç¤Ï»ÈÍÑ¤Ç¤­¤Þ¤»¤ó\n"
 
 #: lib/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"--%s\" tillåter inget argument\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '--%s' ¤Ë¤Ï°ú¿ô¤ÏÉÔÍ×¤Ç¤¹\n"
 
 #: lib/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"%c%s\" tillåter inget argument\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '%c%s' ¤Ë¤Ï°ú¿ô¤ÏÉÔÍ×¤Ç¤¹\n"
 
 #: lib/getopt.c:729 lib/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: flaggan \"%s\" kräver ett argument\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '%s' ¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹\n"
 
 #. --option
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: okänd flagga \"--%s\"\n"
+msgstr "%s: ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó '--%s'\n"
 
 #. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: okänd flagga \"%c%s\"\n"
+msgstr "%s: ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó '`%c%s'\n"
 
 #. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: illegal flagga -- %c\n"
+msgstr "%s: ÉÔÀµ¤Ê¥ª¥×¥·¥ç¥ó -- %c\n"
 
 #: lib/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: ogiltig flagga -- %c\n"
+msgstr "%s: ¤ª¤«¤·¤Ê¥ª¥×¥·¥ç¥ó -- %c\n"
 
 #. 1003.2 specifies the format of this message.
 #: lib/getopt.c:821 lib/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: flaggan kräver ett argument -- %c\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹ -- %c\n"
 
 #: lib/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: flaggan \"-W %s\" är flertydig\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '-W %s' Ã±ÂÎ¤Ç¤Ï»ÈÍÑ¤Ç¤­¤Þ¤»¤ó\n"
 
 #: lib/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: flaggan \"-W %s\" tillåter inget argument\n"
+msgstr "%s: ¥ª¥×¥·¥ç¥ó '-W %s' ¤Ë¤Ï°ú¿ô¤¬ÉÔÍ×¤Ç¤¹\n"
 
 #: src/main/print-canon.c:1310 src/main/print-escp2-data.c:2237
 #: src/main/print-escp2-data.c:2299 src/main/print-escp2-data.c:2361
 #: src/main/print-escp2-data.c:2423 src/main/print-lexmark.c:909
 msgid "Plain Paper"
-msgstr "Vanligt papper"
+msgstr "ÄÌ¾ï¤ÎÍÑ»æ"
 
 #: src/main/print-canon.c:1311 src/main/print-escp2-data.c:2249
 #: src/main/print-escp2-data.c:2311 src/main/print-escp2-data.c:2373
 #: src/main/print-escp2-data.c:2435 src/main/print-lexmark.c:915
 msgid "Transparencies"
-msgstr "Genomskinligheter"
+msgstr "¥¹¥é¥¤¥ÉÍÑ»æ"
 
 #: src/main/print-canon.c:1312
 msgid "Back Print Film"
-msgstr "Bakutskriftsfilm"
+msgstr "ÇØ·Ê°õºþÍÑ¥Õ¥£¥ë¥à"
 
 #: src/main/print-canon.c:1313
 msgid "Fabric Sheets"
-msgstr "Tygark"
+msgstr "Á¡°Ý¼Á¤ÎÍÑ»æ"
 
 #: src/main/print-canon.c:1314
 msgid "Envelope"
-msgstr "Kuvert"
+msgstr "ÉõÅû"
 
 #: src/main/print-canon.c:1315
 msgid "High Resolution Paper"
-msgstr "Högupplösningspapper"
+msgstr "¹â²òÁüÅÙ¤ÎÍÑ»æ"
 
 #: src/main/print-canon.c:1316
 msgid "T-Shirt Transfers"
-msgstr "T-shirttryck"
+msgstr "T-¥·¥ã¥Ä¤ÎÌÏÍÍ"
 
 #: src/main/print-canon.c:1317
 msgid "High Gloss Film"
-msgstr "Högglansig film"
+msgstr "¹â±ð¥Õ¥£¥ë¥à"
 
 #: src/main/print-canon.c:1318
 msgid "Glossy Photo Paper"
-msgstr "Glansigt fotopapper"
+msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥ÈÍÑ»æ"
 
 #: src/main/print-canon.c:1319
 msgid "Glossy Photo Cards"
-msgstr "Glansiga fotokort"
+msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥È¡¦¥«¡¼¥É"
 
 #: src/main/print-canon.c:1320
 msgid "Photo Paper Pro"
-msgstr "Professionellt fotopapper"
+msgstr "¥Õ¥©¥ÈÍÑ»æ Pro"
 
 #: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2286
 #: src/main/print-escp2-data.c:2348 src/main/print-escp2-data.c:2410
 #: src/main/print-escp2-data.c:2472 src/main/print-lexmark.c:945
 msgid "Other"
-msgstr "Annat"
+msgstr "¤½¤ÎÂ¾"
 
 #: src/main/print-canon.c:1594 src/main/print-lexmark.c:1160
 msgid "Auto Sheet Feeder"
-msgstr "Automatisk arkmatare"
+msgstr "¼«Æ°µë»æ"
 
 #: src/main/print-canon.c:1595 src/main/print-lexmark.c:1161
 msgid "Manual with Pause"
-msgstr "Manuell med paus"
+msgstr "¥Ý¡¼¥ºÉÕ¤­¼êÆ°µë»æ"
 
 #: src/main/print-canon.c:1596 src/main/print-lexmark.c:1162
 msgid "Manual without Pause"
-msgstr "Manuell utan paus"
+msgstr "¥Ý¡¼¥º¤Ê¤·¼êÆ°µë»æ"
 
 #: src/escputil/escputil.c:600 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
-msgstr "Svart"
+msgstr "¹õ¿§"
 
 #: src/main/print-canon.c:1693
 msgid "CMY Color"
-msgstr "CMY-färg"
+msgstr "CMY ¿§"
 
 #: src/main/print-canon.c:1698
 msgid "CMYK Color"
-msgstr "CMYK-färg"
+msgstr "CMYK ¿§"
 
 #: src/main/print-canon.c:1703
 msgid "Photo CcMmY Color"
-msgstr "CcMmY-fotofärg"
+msgstr "¥Õ¥©¥È CcMmY ¿§"
 
 #: src/main/print-canon.c:1708
 msgid "Photo CcMmYK Color"
-msgstr "CcMmYK-fotofärg"
+msgstr "¥Õ¥©¥È CcMmYK ¿§"
 
 #: src/main/print-dither.c:64
 msgid "Adaptive Hybrid"
-msgstr "Adaptiv hybrid"
+msgstr "¥¢¥À¥×¥Æ¥£¥Ö¡¦¥Ï¥¤¥Ö¥ê¥Ã¥ÉÊý¼°"
 
 #: src/main/print-dither.c:65
 msgid "Ordered"
-msgstr "Sorterad"
+msgstr "Å¬±þ½ç½øÊý¼°"
 
 #: src/main/print-dither.c:66
 msgid "Fast"
-msgstr "Snabb"
+msgstr "¹âÂ®Êý¼°"
 
 #: src/main/print-dither.c:67
 msgid "Very Fast"
-msgstr "Mycket snabb"
+msgstr "Ä¶¹âÂ®Êý¼°"
 
 #: src/main/print-dither.c:68
 msgid "Hybrid Floyd-Steinberg"
-msgstr "Hybrid Floyd-Steinberg"
+msgstr "¥Ï¥¤¥Ö¥ê¥Ã¥É¡¦¥Õ¥í¥¤¥É-¥¹¥¿¥¤¥ó¥Ð¡¼¥°Êý¼°"
 
 #. Note to translators: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
 #: src/main/print-dither.c:71
 msgid "EvenTone"
-msgstr "EvenTone"
+msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊý¼°"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2021 src/main/print-escp2-data.c:2031
 #: src/main/print-escp2-data.c:2041 src/main/print-lexmark.c:651
 #: src/main/print-lexmark.c:731
 msgid "Three Color Composite"
-msgstr "Trefärgers sammansatt"
+msgstr "Three Color Composite"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #. output_type   ncolors used_colors   pass_length  v_top_head_offset
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
@@ -203,38 +199,33 @@ msgstr "Trefärgers sammansatt"
 #: src/main/print-escp2-data.c:2071 src/main/print-lexmark.c:646
 #: src/main/print-lexmark.c:726
 msgid "Four Color Standard"
-msgstr "Fyrfärgs standard"
+msgstr "Four Color Standard"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2081 src/main/print-lexmark.c:656
 #: src/main/print-lexmark.c:736
 msgid "Six Color Photo"
-msgstr "Sexfärgs foto"
+msgstr "Six Color Photo"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2091 src/main/print-lexmark.c:661
 #: src/main/print-lexmark.c:741
 msgid "Five Color Photo Composite"
-msgstr "Femfärgsfoto sammansatt"
+msgstr "Five Color Photo Composite"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2101
 msgid "Seven Color Enhanced"
-msgstr "Sjufärgs förbättrad"
+msgstr "Seven Color Enhanced"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2111
 msgid "Six Color Enhanced Composite"
-msgstr "Sexfärgs förbättrad sammansatt"
+msgstr "Six Color Enhanced Composite"
 
-# Jag tror inte detta ska skrivas samman, jfr snarlika meddelanden
 #: src/main/print-escp2-data.c:2121
 msgid "Seven Color Photo"
-msgstr "Sjufärgs foto"
+msgstr "Seven Color Photo"
 
 #: src/main/print-escp2-data.c:2131
 msgid "Two Level Grayscale"
-msgstr "Tvånivås gråton"
+msgstr "Two Level Grayscale"
 
 #: src/main/print-escp2-data.c:2140 src/main/print-escp2-data.c:2149
 msgid "Quadtone"
@@ -243,114 +234,114 @@ msgstr "Quadtone"
 #: src/main/print-escp2-data.c:2240 src/main/print-escp2-data.c:2302
 #: src/main/print-escp2-data.c:2364 src/main/print-escp2-data.c:2426
 msgid "Plain Paper Fast Load"
-msgstr "Snabbladdning av vanligt papper"
+msgstr "ÄÌ¾ïÍÑ»æ¤Î¹âÂ®ÆÉ¹þ¤ß"
 
 #. 7.25 * 10.5in
 #: src/main/print-escp2-data.c:2243 src/main/print-escp2-data.c:2305
 #: src/main/print-escp2-data.c:2367 src/main/print-escp2-data.c:2429
 #: src/main/print-util.c:531
 msgid "Postcard"
-msgstr "Vykort"
+msgstr "¤Ï¤¬¤­"
 
 #: src/main/print-escp2-data.c:2246 src/main/print-escp2-data.c:2308
 #: src/main/print-escp2-data.c:2370 src/main/print-escp2-data.c:2432
 #: src/main/print-lexmark.c:912
 msgid "Glossy Film"
-msgstr "Glansig film"
+msgstr "¸÷ÂôÉÕ¤­¥Õ¥¤¥ë¥à"
 
 #: src/main/print-escp2-data.c:2252 src/main/print-escp2-data.c:2314
 #: src/main/print-escp2-data.c:2376 src/main/print-escp2-data.c:2438
 #: src/main/print-lexmark.c:918
 msgid "Envelopes"
-msgstr "Kuvert"
+msgstr "ÉõÅû"
 
 #: src/main/print-escp2-data.c:2255 src/main/print-escp2-data.c:2317
 #: src/main/print-escp2-data.c:2379 src/main/print-escp2-data.c:2441
 msgid "Back Light Film"
-msgstr "Bakljusfilm"
+msgstr "¥Ð¥Ã¥¯¥é¥¤¥È¡¦¥Õ¥£¥ë¥à"
 
 #: src/main/print-escp2-data.c:2258 src/main/print-escp2-data.c:2320
 #: src/main/print-escp2-data.c:2382 src/main/print-escp2-data.c:2444
 #: src/main/print-lexmark.c:921
 msgid "Matte Paper"
-msgstr "Matte-papper"
+msgstr "¥Þ¥Ã¥ÈÍÑ»æ"
 
 #: src/main/print-escp2-data.c:2261 src/main/print-escp2-data.c:2323
 #: src/main/print-escp2-data.c:2385 src/main/print-escp2-data.c:2447
 #: src/main/print-lexmark.c:924
 msgid "Inkjet Paper"
-msgstr "Bläckstrålepapper"
+msgstr "¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ"
 
 #: src/main/print-escp2-data.c:2264 src/main/print-escp2-data.c:2326
 #: src/main/print-escp2-data.c:2388 src/main/print-escp2-data.c:2450
 #: src/main/print-lexmark.c:927
 msgid "Photo Quality Inkjet Paper"
-msgstr "Bläckstrålepapper med fotokvalitet"
+msgstr "¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ (¥Õ¥©¥ÈÍÑ¹âÉÊ¼Á)"
 
 #: src/main/print-escp2-data.c:2267 src/main/print-escp2-data.c:2329
 #: src/main/print-escp2-data.c:2391 src/main/print-escp2-data.c:2453
 #: src/main/print-lexmark.c:930
 msgid "Photo Paper"
-msgstr "Fotopapper"
+msgstr "¥Õ¥©¥ÈÍÑ»æ"
 
 #: src/main/print-escp2-data.c:2270 src/main/print-escp2-data.c:2332
 #: src/main/print-escp2-data.c:2394 src/main/print-escp2-data.c:2456
 #: src/main/print-lexmark.c:933
 msgid "Premium Glossy Photo Paper"
-msgstr "Premiumglansigt fotopapper"
+msgstr "¹âµé¸÷ÂôÉÕ¤­¥Õ¥©¥ÈÍÑ»æ"
 
 #: src/main/print-escp2-data.c:2274 src/main/print-escp2-data.c:2336
 #: src/main/print-escp2-data.c:2398 src/main/print-escp2-data.c:2460
 #: src/main/print-lexmark.c:936
 msgid "Premium Luster Photo Paper"
-msgstr "Fotopapper med premiumlyster"
+msgstr "¹âµé¤Ä¤ä½Ð¤·¥Õ¥©¥ÈÍÑ»æ"
 
 #: src/main/print-escp2-data.c:2277 src/main/print-escp2-data.c:2339
 #: src/main/print-escp2-data.c:2401 src/main/print-escp2-data.c:2463
 #: src/main/print-lexmark.c:939
 msgid "Photo Quality Glossy Paper"
-msgstr "Glansigt papper med fotokvalitet"
+msgstr "¸÷ÂôÉÕ¤­ÍÑ»æ (¥Õ¥©¥ÈÍÑ¹âÉÊ¼Á)"
 
 #: src/main/print-escp2-data.c:2280 src/main/print-escp2-data.c:2342
 #: src/main/print-escp2-data.c:2404 src/main/print-escp2-data.c:2466
 #: src/main/print-lexmark.c:942
 msgid "Ilford Heavy Paper"
-msgstr "Tungt Ilford-papper"
+msgstr "Ilford Heavy Paper"
 
 #: src/main/print-escp2-data.c:2283 src/main/print-escp2-data.c:2345
 #: src/main/print-escp2-data.c:2407 src/main/print-escp2-data.c:2469
 msgid "ColorLife Paper"
-msgstr "ColorLife-papper"
+msgstr "ColorLife Paper"
 
 #: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2724
 #: src/main/print-escp2-data.c:2809 src/main/print-escp2-data.c:2811
 #: src/main/print-escp2-data.c:2884
 msgid "360 x 90 DPI Fast Economy Draft"
-msgstr "360 × 90 DPI snabbt och ekonomiskt utkast"
+msgstr "360 x 90 DPI Fast Economy Draft"
 
 #: src/main/print-escp2-data.c:2727 src/main/print-escp2-data.c:2729
 #: src/main/print-escp2-data.c:2814 src/main/print-escp2-data.c:2816
 #: src/main/print-escp2-data.c:2887
 msgid "360 x 120 DPI Economy Draft"
-msgstr "360 × 120 DPI ekonomiskt utkast"
+msgstr "360 x 120 DPI Economy Draft"
 
 #: src/main/print-escp2-data.c:2732 src/main/print-escp2-data.c:2734
 #: src/main/print-escp2-data.c:2819 src/main/print-escp2-data.c:2821
 #: src/main/print-escp2-data.c:2890
 msgid "180 DPI Economy Draft"
-msgstr "180 DPI ekonomiskt utkast"
+msgstr "180 DPI Economy Draft"
 
 #: src/main/print-escp2-data.c:2737 src/main/print-escp2-data.c:2739
 #: src/main/print-escp2-data.c:2824 src/main/print-escp2-data.c:2826
 #: src/main/print-escp2-data.c:2893
 msgid "360 x 240 DPI Draft"
-msgstr "360 × 240 DPI utkast"
+msgstr "360 x 240 DPI ¥É¥é¥Õ¥È"
 
 #: src/main/print-escp2-data.c:2742 src/main/print-escp2-data.c:2744
 #: src/main/print-escp2-data.c:2829 src/main/print-escp2-data.c:2831
 #: src/main/print-escp2-data.c:2896
 msgid "360 x 180 DPI Draft"
-msgstr "360 × 180 DPI utkast"
+msgstr "360 x 180 DPI ¥É¥é¥Õ¥È"
 
 #: src/main/print-escp2-data.c:2747 src/main/print-escp2-data.c:2755
 #: src/main/print-escp2-data.c:2834 src/main/print-escp2-data.c:2838
@@ -362,33 +353,33 @@ msgstr "360 DPI"
 #: src/main/print-escp2-data.c:2836 src/main/print-escp2-data.c:2840
 #: src/main/print-escp2-data.c:2905
 msgid "360 DPI Unidirectional"
-msgstr "360 DPI enkelriktad"
+msgstr "360 DPI Unidirectional"
 
 #: src/main/print-escp2-data.c:2751 src/main/print-escp2-data.c:2899
 msgid "360 DPI Microweave"
-msgstr "360 DPI mikroväv"
+msgstr "360 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2753 src/main/print-escp2-data.c:2901
 msgid "360 DPI Microweave Unidirectional"
-msgstr "360 DPI enkelriktad mikroväv"
+msgstr "360 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2760 src/main/print-escp2-data.c:2843
 #: src/main/print-escp2-data.c:2920
 msgid "720 x 360 DPI"
-msgstr "720 × 360 DPI"
+msgstr "720 x 360 DPI"
 
 #: src/main/print-escp2-data.c:2762 src/main/print-escp2-data.c:2845
 #: src/main/print-escp2-data.c:2922
 msgid "720 x 360 DPI Unidirectional"
-msgstr "720 × 360 DPI enkelriktad"
+msgstr "720 x 360 DPI Unidirectional"
 
 #: src/main/print-escp2-data.c:2765 src/main/print-escp2-data.c:2941
 msgid "720 DPI Microweave"
-msgstr "720 DPI mikroväv"
+msgstr "720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2767 src/main/print-escp2-data.c:2943
 msgid "720 DPI Microweave Unidirectional"
-msgstr "720 DPI enkelriktad mikroväv"
+msgstr "720 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2769 src/main/print-escp2-data.c:2848
 msgid "720 DPI"
@@ -396,67 +387,67 @@ msgstr "720 DPI"
 
 #: src/main/print-escp2-data.c:2771 src/main/print-escp2-data.c:2850
 msgid "720 DPI Unidirectional"
-msgstr "720 DPI enkelriktad"
+msgstr "720 DPI Unidirectional"
 
 #: src/main/print-escp2-data.c:2773 src/main/print-escp2-data.c:2852
 msgid "720 DPI High Quality"
-msgstr "720 DPI hög kvalitet"
+msgstr "720 DPI High Quality"
 
 #: src/main/print-escp2-data.c:2775 src/main/print-escp2-data.c:2854
 msgid "720 DPI High Quality Unidirectional"
-msgstr "720 DPI enkelriktad och hög kvalitet"
+msgstr "720 DPI High Quality Unidirectional"
 
 #: src/main/print-escp2-data.c:2777 src/main/print-escp2-data.c:2856
 msgid "720 DPI Highest Quality"
-msgstr "720 DPI högsta kvalitet"
+msgstr "720 DPI Highest Quality"
 
 #: src/main/print-escp2-data.c:2780 src/main/print-escp2-data.c:2954
 msgid "1440 x 720 DPI Microweave"
-msgstr "1440 × 720 DPI mikroväv"
+msgstr "1440 x 720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2782 src/main/print-escp2-data.c:2956
 msgid "1440 x 720 DPI Microweave Unidirectional"
-msgstr "1440 × 720 DPI enkelriktad mikroväv"
+msgstr "1440 x 720 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2784 src/main/print-escp2-data.c:2859
 msgid "1440 x 720 DPI"
-msgstr "1440 × 720 DPI"
+msgstr "1440 x 720 DPI"
 
 #: src/main/print-escp2-data.c:2786 src/main/print-escp2-data.c:2861
 msgid "1440 x 720 DPI Unidirectional"
-msgstr "1440 × 720 DPI enkelriktad"
+msgstr "1440 x 720 DPI Unidirectional"
 
 #: src/main/print-escp2-data.c:2788 src/main/print-escp2-data.c:2863
 msgid "1440 x 720 DPI Highest Quality"
-msgstr "1440 × 720 DPI högsta kvalitet"
+msgstr "1440 x 720 DPI Highest Quality"
 
 #: src/main/print-escp2-data.c:2791 src/main/print-escp2-data.c:2866
 msgid "2880 x 720 DPI"
-msgstr "2880 × 720 DPI"
+msgstr "2880 x 720 DPI"
 
 #: src/main/print-escp2-data.c:2793 src/main/print-escp2-data.c:2868
 msgid "2880 x 720 DPI Unidirectional"
-msgstr "2880 × 720 DPI enkelriktad"
+msgstr "2880 x 720 DPI Unidirectional"
 
 #: src/main/print-escp2-data.c:2796 src/main/print-escp2-data.c:2871
 msgid "1440 x 1440 DPI"
-msgstr "1440 × 1440 DPI"
+msgstr "1440 x 1440 DPI"
 
 #: src/main/print-escp2-data.c:2798 src/main/print-escp2-data.c:2873
 msgid "1440 x 1440 DPI Highest Quality"
-msgstr "1440 × 1440 DPI högsta kvalitet"
+msgstr "1440 x 1440 DPI Highest Quality"
 
 #: src/main/print-escp2-data.c:2801 src/main/print-escp2-data.c:2876
 msgid "2880 x 1440 DPI"
-msgstr "2880 × 1440 DPI"
+msgstr "2880 x 1440 DPI"
 
 #: src/main/print-escp2-data.c:2907
 msgid "360 DPI Full Overlap"
-msgstr "360 DPI helt överlappande"
+msgstr "360 DPI Full Overlap"
 
 #: src/main/print-escp2-data.c:2909
 msgid "360 DPI Full Overlap Unidirectional"
-msgstr "360 DPI helt överlappande och enkelriktad"
+msgstr "360 DPI Full Overlap Unidirectional"
 
 #: src/main/print-escp2-data.c:2911
 msgid "360 DPI FOL2"
@@ -464,7 +455,7 @@ msgstr "360 DPI FOL2"
 
 #: src/main/print-escp2-data.c:2913
 msgid "360 DPI FOL2 Unidirectional"
-msgstr "360 DPI enkelriktad FOL2"
+msgstr "360 DPI FOL2 Unidirectional"
 
 #: src/main/print-escp2-data.c:2915
 msgid "360 DPI MW2"
@@ -472,157 +463,157 @@ msgstr "360 DPI MW2"
 
 #: src/main/print-escp2-data.c:2917
 msgid "360 DPI MW2 Unidirectional"
-msgstr "360 DPI enkelriktad MW2"
+msgstr "360 DPI MW2 Unidirectional"
 
 #: src/main/print-escp2-data.c:2924
 msgid "720 x 360 DPI Microweave"
-msgstr "720 × 360 DPI mikroväv"
+msgstr "720 x 360 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2926
 msgid "720 x 360 DPI Microweave Unidirectional"
-msgstr "720 × 360 DPI enkelriktad mikroväv"
+msgstr "720 x 360 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2928
 msgid "720 x 360 DPI FOL"
-msgstr "720 × 360 DPI FOL"
+msgstr "720 x 360 DPI FOL"
 
 #: src/main/print-escp2-data.c:2930
 msgid "720 x 360 DPI FOL Unidirectional"
-msgstr "720 × 360 DPI enkelriktad FOL"
+msgstr "720 x 360 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:2932
 msgid "720 x 360 DPI FOL2"
-msgstr "720 × 360 DPI FOL2"
+msgstr "720 x 360 DPI FOL2"
 
 #: src/main/print-escp2-data.c:2934
 msgid "720 x 360 DPI FOL2 Unidirectional"
-msgstr "720 × 360 DPI enkelriktad FOL2"
+msgstr "720 x 360 DPI FOL2 Unidirectional"
 
 #: src/main/print-escp2-data.c:2936
 msgid "720 x 360 DPI MW2"
-msgstr "720 × 360 DPI MW2"
+msgstr "720 x 360 DPI MW2"
 
 #: src/main/print-escp2-data.c:2938
 msgid "720 x 360 DPI MW2 Unidirectional"
-msgstr "720 × 360 DPI enkelriktad MW2"
+msgstr "720 x 360 DPI MW2 Unidirectional"
 
 #: src/main/print-escp2-data.c:2945
 msgid "720 DPI Full Overlap"
-msgstr "720 DPI helt överlappande"
+msgstr "720 DPI Full Overlap"
 
 #: src/main/print-escp2-data.c:2947
 msgid "720 DPI Full Overlap Unidirectional"
-msgstr "720 DPI helt överlappande och enkelriktad"
+msgstr "720 DPI Full Overlap Unidirectional"
 
 #: src/main/print-escp2-data.c:2949
 msgid "720 DPI Four Pass"
-msgstr "720 DPI fyrpass"
+msgstr "720 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:2951
 msgid "720 DPI Four Pass Unidirectional"
-msgstr "720 DPI enkelriktad fyrpass"
+msgstr "720 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:2958
 msgid "1440 x 720 DPI FOL"
-msgstr "1440 × 720 DPI FOL"
+msgstr "1440 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:2960
 msgid "1440 x 720 DPI FOL Unidirectional"
-msgstr "1440 × 720 DPI enkelriktad FOL"
+msgstr "1440 x 720 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:2962
 msgid "1440 x 720 DPI Four Pass"
-msgstr "1440 × 720 DPI fyrpass"
+msgstr "1440 x 720 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:2964
 msgid "1440 x 720 DPI Four Pass Unidirectional"
-msgstr "1440 × 720 DPI enkelriktad fyrpass"
+msgstr "1440 x 720 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:2967
 msgid "2880 x 720 DPI Microweave"
-msgstr "2880 × 720 DPI mikroväv"
+msgstr "2880 x 720 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2969
 msgid "2880 x 720 DPI Microweave Unidirectional"
-msgstr "2880 × 720 DPI enkelriktad mikroväv"
+msgstr "2880 x 720 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2971
 msgid "2880 x 720 DPI FOL"
-msgstr "2880 × 720 DPI FOL"
+msgstr "2880 x 720 DPI FOL"
 
 #: src/main/print-escp2-data.c:2973
 msgid "2880 x 720 DPI FOL Unidirectional"
-msgstr "2880 × 720 DPI enkelriktad FOL"
+msgstr "2880 x 720 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:2975
 msgid "2880 x 720 DPI Four Pass"
-msgstr "2880 × 720 DPI fyrpass"
+msgstr "2880 x 720 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:2977
 msgid "2880 x 720 DPI Four Pass Unidirectional"
-msgstr "2880 × 720 DPI enkelriktad fyrpass"
+msgstr "2880 x 720 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:2980
 msgid "1440 x 1440 DPI Microweave"
-msgstr "1440 × 1440 DPI mikroväv"
+msgstr "1440 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2982
 msgid "1440 x 1440 DPI Microweave Unidirectional"
-msgstr "1440 × 1440 DPI enkelriktad mikroväv"
+msgstr "1440 x 1440 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2984
 msgid "1440 x 1440 DPI FOL"
-msgstr "1440 × 1440 DPI FOL"
+msgstr "1440 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:2986
 msgid "1440 x 1440 DPI FOL Unidirectional"
-msgstr "1440 × 1440 DPI enkelriktad FOL"
+msgstr "1440 x 1440 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:2988
 msgid "1440 x 1440 DPI Four Pass"
-msgstr "1440 × 1440 DPI fyrpass"
+msgstr "1440 x 1440 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:2990
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
-msgstr "1440 × 1440 DPI enkelriktad fyrpass"
+msgstr "1440 x 1440 DPI Four Pass Unidirectional"
 
 #: src/main/print-escp2-data.c:2993
 msgid "2880 x 1440 DPI Microweave"
-msgstr "2880 × 1440 DPI mikroväv"
+msgstr "2880 x 1440 DPI Microweave"
 
 #: src/main/print-escp2-data.c:2995
 msgid "2880 x 1440 DPI Microweave Unidirectional"
-msgstr "2880 × 1440 DPI enkelriktad mikroväv"
+msgstr "2880 x 1440 DPI Microweave Unidirectional"
 
 #: src/main/print-escp2-data.c:2997
 msgid "2880 x 1440 DPI FOL"
-msgstr "2880 × 1440 DPI FOL"
+msgstr "2880 x 1440 DPI FOL"
 
 #: src/main/print-escp2-data.c:2999
 msgid "2880 x 1440 DPI FOL Unidirectional"
-msgstr "2880 × 1440 DPI enkelriktad FOL"
+msgstr "2880 x 1440 DPI FOL Unidirectional"
 
 #: src/main/print-escp2-data.c:3001
 msgid "2880 x 1440 DPI Four Pass"
-msgstr "2880 × 1440 DPI fyrpass"
+msgstr "2880 x 1440 DPI Four Pass"
 
 #: src/main/print-escp2-data.c:3003
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
-msgstr "2880 × 1440 DPI enkelriktad fyrpass"
+msgstr "2880 x 1440 DPI Four Pass Unidirectional"
 
 #: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3013
 #: src/main/print-pcl.c:202
 msgid "Standard"
-msgstr "Standard"
+msgstr "É¸½à"
 
 #: src/main/print-escp2-data.c:3017
 msgid "Roll Feed"
-msgstr "Rullmatning"
+msgstr "¥í¡¼¥ë¼°µë»æ"
 
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
-msgstr "300 DPI × 600 DPI"
+msgstr "300 DPI x 600 DPI"
 
 #: src/main/print-lexmark.c:623 src/main/print-lexmark.c:709
 msgid "600 DPI"
@@ -630,11 +621,11 @@ msgstr "600 DPI"
 
 #: src/main/print-lexmark.c:624 src/main/print-lexmark.c:710
 msgid "600 DPI high quality"
-msgstr "600 DPI hög kvalitet"
+msgstr "600 DPI ¹âÉÊ¼Á"
 
 #: src/main/print-lexmark.c:625 src/main/print-lexmark.c:711
 msgid "600 DPI Unidirectional"
-msgstr "600 DPI enkelriktad"
+msgstr "600 DPI Unidirectional"
 
 #: src/main/print-lexmark.c:626 src/main/print-lexmark.c:712
 msgid "1200 DPI"
@@ -642,136 +633,136 @@ msgstr "1200 DPI"
 
 #: src/main/print-lexmark.c:627 src/main/print-lexmark.c:713
 msgid "1200 DPI high quality"
-msgstr "1200 DPI hög kvalitet"
+msgstr "1200 DPI ¹âÉÊ¼Á"
 
 #: src/main/print-lexmark.c:628 src/main/print-lexmark.c:714
 msgid "1200 DPI highest quality"
-msgstr "1200 DPI högsta kvalitet"
+msgstr "1200 DPI ¹âÉÊ¼Á"
 
 #: src/main/print-lexmark.c:629 src/main/print-lexmark.c:715
 msgid "1200 DPI  Unidirectional"
-msgstr "1200 DPI enkelriktad"
+msgstr "1200 DPI  Unidirectional"
 
 #: src/main/print-lexmark.c:630
 msgid "2400 DPI x 1200 DPI"
-msgstr "2400 DPI × 1200 DPI"
+msgstr "2400 DPI x 1200 DPI"
 
 #: src/main/print-lexmark.c:631
 msgid "2400 DPI x 1200 DPI high quality"
-msgstr "2400 DPI × 1200 DPI hög kvalitet"
+msgstr "2400 DPI x 1200 DPI ¹âÉÊ¼Á"
 
 #: src/main/print-lexmark.c:632
 msgid "2400 DPI x 1200 DPI highest quality"
-msgstr "2400 DPI × 1200 DPI högsta kvalitet"
+msgstr "2400 DPI x 1200 DPI ¹âÉÊ¼Á"
 
 #: src/main/print-lexmark.c:634
 msgid "test print"
-msgstr "testutskrift"
+msgstr "¥Æ¥¹¥È°õºþ"
 
 #: src/main/print-pcl.c:157
 msgid "Plain"
-msgstr "Vanlig"
+msgstr "ÄÌ¾ï"
 
 #: src/main/print-pcl.c:158
 msgid "Bond"
-msgstr "Band"
+msgstr "Bond"
 
 #: src/main/print-pcl.c:159
 msgid "Premium"
-msgstr "Premium"
+msgstr "¹âµé"
 
 #: src/main/print-pcl.c:160
 msgid "Glossy Photo"
-msgstr "Glansigt foto"
+msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥È"
 
 #: src/main/print-pcl.c:161
 msgid "Transparency"
-msgstr "Genomskinligt"
+msgstr "¥¹¥é¥¤¥É"
 
 #: src/main/print-pcl.c:162
 msgid "Quick-dry Photo"
-msgstr "Snabbtorkande foto"
+msgstr "Â¨´¥¥Õ¥©¥È"
 
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
-msgstr "Snabbtorkande genomskinligt"
+msgstr "Â¨´¥¥¹¥é¥¤¥É"
 
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
 msgid "Manual"
-msgstr "Manuell"
+msgstr "¼êÆ°"
 
 #. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
 #: src/main/print-pcl.c:205
 msgid "Tray 1"
-msgstr "Fack 1"
+msgstr "¥È¥ì¥¤£±"
 
 #: src/main/print-pcl.c:206 src/main/print-pcl.c:212
 msgid "Tray 2"
-msgstr "Fack 2"
+msgstr "¥È¥ì¥¤£²"
 
 #: src/main/print-pcl.c:207
 msgid "Tray 3"
-msgstr "Fack 3"
+msgstr "¥È¥ì¥¤£³"
 
 #: src/main/print-pcl.c:208
 msgid "Tray 4"
-msgstr "Fack 4"
+msgstr "¥È¥ì¥¤£´"
 
 #: src/main/print-pcl.c:209
 msgid "Portable Sheet Feeder"
-msgstr "Portabel arkmatare"
+msgstr "·ÈÂÓ¼°µë»æ"
 
 #: src/main/print-pcl.c:210
 msgid "Desktop Sheet Feeder"
-msgstr "Skrivbordsarkmatare"
+msgstr "¥Ç¥¹¥¯¥È¥Ã¥×µë»æ"
 
 #: src/main/print-pcl.c:211
 msgid "Tray"
-msgstr "Fack"
+msgstr "¥È¥ì¥¤"
 
 #: src/main/print-pcl.c:213
 msgid "Optional Source"
-msgstr "Valfri källa"
+msgstr "¥ª¥×¥·¥ç¥ó"
 
 #: src/main/print-pcl.c:214
 msgid "Autoselect"
-msgstr "Välj automatiskt"
+msgstr "¼«Æ°ÁªÂò"
 
 #: src/main/print-pcl.c:228
 msgid "150x150 DPI"
-msgstr "150×150 DPI"
+msgstr "150x150 DPI"
 
 #: src/main/print-pcl.c:229
 msgid "300x300 DPI"
-msgstr "300×300 DPI"
+msgstr "300x300 DPI"
 
 #: src/main/print-pcl.c:230
 msgid "600x300 DPI"
-msgstr "600×300 DPI"
+msgstr "600x300 DPI"
 
 #: src/main/print-pcl.c:231
 msgid "600x600 DPI monochrome"
-msgstr "600×600 DPI enfärgad"
+msgstr "600x600 DPI ¥â¥Î¥¯¥í"
 
 #: src/main/print-pcl.c:232
 msgid "600x600 DPI"
-msgstr "600×600 DPI"
+msgstr "600x600 DPI"
 
 #: src/main/print-pcl.c:233
 msgid "1200x600 DPI"
-msgstr "1200×600 DPI"
+msgstr "1200x600 DPI"
 
 #: src/main/print-pcl.c:234
 msgid "2400x600 DPI"
-msgstr "2400×600 DPI"
+msgstr "2400x600 DPI"
 
 #: src/main/print-pcl.c:1567
 msgid "Color + Black Cartridges"
-msgstr "Färgpatroner + svarta patroner"
+msgstr "¥«¥é¡¼ + ¹õ¥«¡¼¥È¥ê¥Ã¥¸"
 
 #: src/main/print-pcl.c:1568
 msgid "Color + Photo Cartridges"
-msgstr "Färgpatroner + fotopatroner"
+msgstr "¥«¥é¡¼ + ¥Õ¥©¥È¡¦¥«¡¼¥È¥ê¥Ã¥¸"
 
 #. Name of file or command to print to
 #: src/main/print-util.c:125 src/main/print-util.c:159
@@ -782,101 +773,101 @@ msgstr "ps2"
 #. Common imperial page sizes
 #: src/main/print-util.c:523
 msgid "Letter"
-msgstr "Letter"
+msgstr "¥ì¥¿¡¼"
 
 #. 8.5in x 11in
 #: src/main/print-util.c:525
 msgid "Legal"
-msgstr "Legal"
+msgstr "¥ê¡¼¥¬¥ë"
 
 #. 8.5in x 14in
 #: src/main/print-util.c:527
 msgid "Tabloid"
-msgstr "Tabloid"
+msgstr "¥¿¥Ö¥í¥¤¥É"
 
 #. 11in x 17in
 #: src/main/print-util.c:529
 msgid "Executive"
-msgstr "Executive"
+msgstr "¥¨¥¯¥¼¥¯¥Æ¥£¥Ö"
 
 #. 100mm x 147mm
 #: src/main/print-util.c:533
 msgid "3x5"
-msgstr "3×5"
+msgstr "3x5"
 
 #: src/main/print-util.c:535
 msgid "4x6"
-msgstr "4×6"
+msgstr "4x6"
 
 #: src/main/print-util.c:537
 msgid "Epson 4x6 Photo Paper"
-msgstr "Epson 4×6 fotopapper"
+msgstr "EPSON 4x6 ¥Õ¥©¥ÈÍÑ»æ"
 
 #: src/main/print-util.c:539
 msgid "5x7"
-msgstr "5×7"
+msgstr "5x7"
 
 #: src/main/print-util.c:541
 msgid "5x8"
-msgstr "5×8"
+msgstr "5x8"
 
 #: src/main/print-util.c:543
 msgid "6x8"
-msgstr "6×8"
+msgstr "6x8"
 
 #: src/main/print-util.c:545
 msgid "8x10"
-msgstr "8×10"
+msgstr "8x10"
 
 #. 5.5in x 8.5in
 #: src/main/print-util.c:549
 msgid "12x18"
-msgstr "12×18"
+msgstr "12x18"
 
 #: src/main/print-util.c:551
 msgid "Super B 13x19"
-msgstr "Super B 13×19"
+msgstr "¥¹¡¼¥Ñ¡¼ B 13x19"
 
 #. Other common photographic paper sizes
 #: src/main/print-util.c:555
 msgid "8x12"
-msgstr "8×12"
+msgstr "8x12"
 
 #. Sometimes used for 35 mm
 #: src/main/print-util.c:557
 msgid "11x14"
-msgstr "11×14"
+msgstr "11x14"
 
 #: src/main/print-util.c:559
 msgid "16x20"
-msgstr "16×20"
+msgstr "16x20"
 
 #: src/main/print-util.c:561
 msgid "16x24"
-msgstr "16×24"
+msgstr "16x24"
 
 #. 20x24 for 35 mm
 #: src/main/print-util.c:563
 msgid "20x24"
-msgstr "20×24"
+msgstr "20x24"
 
 #: src/main/print-util.c:565
 msgid "20x30"
-msgstr "20×30"
+msgstr "20x30"
 
 #. 24x30 for 35 mm
 #: src/main/print-util.c:567
 msgid "24x30"
-msgstr "24×30"
+msgstr "24x30"
 
 #: src/main/print-util.c:569
 msgid "24x36"
-msgstr "24×36"
+msgstr "24x36"
 
 #. Sometimes used for 35 mm
 #: src/main/print-util.c:571
 msgid "30x40"
-msgstr "30×40"
+msgstr "30x40"
 
 #. International Paper Sizes (mostly taken from BS4000:1968)
 #.
@@ -889,67 +880,67 @@ msgstr "30×40"
 #.
 #: src/main/print-util.c:584
 msgid "4A"
-msgstr "4A"
+msgstr "4AÈÇ"
 
 #. 1682mm x 2378mm
 #: src/main/print-util.c:586
 msgid "2A"
-msgstr "2A"
+msgstr "2AÈÇ"
 
 #. 1189mm x 1682mm
 #: src/main/print-util.c:588
 msgid "A0"
-msgstr "A0"
+msgstr "A0ÈÇ"
 
 #. 841mm x 1189mm
 #: src/main/print-util.c:590
 msgid "A1"
-msgstr "A1"
+msgstr "A1ÈÇ"
 
 #. 594mm x  841mm
 #: src/main/print-util.c:592
 msgid "A2"
-msgstr "A2"
+msgstr "A2ÈÇ"
 
 #. 420mm x  594mm
 #: src/main/print-util.c:594
 msgid "A3"
-msgstr "A3"
+msgstr "A3ÈÇ"
 
 #. 297mm x  420mm
 #: src/main/print-util.c:596
 msgid "A4"
-msgstr "A4"
+msgstr "A4ÈÇ"
 
 #. 210mm x  297mm
 #: src/main/print-util.c:598
 msgid "A5"
-msgstr "A5"
+msgstr "A5ÈÇ"
 
 #. 148mm x  210mm
 #: src/main/print-util.c:600
 msgid "A6"
-msgstr "A6"
+msgstr "A6ÈÇ"
 
 #. 105mm x  148mm
 #: src/main/print-util.c:602
 msgid "A7"
-msgstr "A7"
+msgstr "A7ÈÇ"
 
 #. 74mm x  105mm
 #: src/main/print-util.c:604
 msgid "A8"
-msgstr "A8"
+msgstr "A8ÈÇ"
 
 #. 52mm x   74mm
 #: src/main/print-util.c:606
 msgid "A9"
-msgstr "A9"
+msgstr "A9ÈÇ"
 
 #. 37mm x   52mm
 #: src/main/print-util.c:608
 msgid "A10"
-msgstr "A10"
+msgstr "A10ÈÇ"
 
 #. 26mm x   37mm
 #.
@@ -1014,112 +1005,112 @@ msgstr "SRA4"
 #.
 #: src/main/print-util.c:643
 msgid "4B ISO"
-msgstr "4B ISO"
+msgstr "4B (ISO)"
 
 #. 2000mm x 2828mm
 #: src/main/print-util.c:645
 msgid "2B ISO"
-msgstr "2B ISO"
+msgstr "2B (ISO)"
 
 #. 1414mm x 2000mm
 #: src/main/print-util.c:647
 msgid "B0 ISO"
-msgstr "B0 ISO"
+msgstr "B0 (ISO)"
 
 #. 1000mm x 1414mm
 #: src/main/print-util.c:649
 msgid "B1 ISO"
-msgstr "B1 ISO"
+msgstr "B1 (ISO)"
 
 #. 707mm x 1000mm
 #: src/main/print-util.c:651
 msgid "B2 ISO"
-msgstr "B2 ISO"
+msgstr "B2 (ISO)"
 
 #. 500mm x  707mm
 #: src/main/print-util.c:653
 msgid "B3 ISO"
-msgstr "B3 ISO"
+msgstr "B3 (ISO)"
 
 #. 353mm x  500mm
 #: src/main/print-util.c:655
 msgid "B4 ISO"
-msgstr "B4 ISO"
+msgstr "B4 (ISO)"
 
 #. 250mm x  353mm
 #: src/main/print-util.c:657
 msgid "B5 ISO"
-msgstr "B5 ISO"
+msgstr "B5 (ISO)"
 
 #. 176mm x  250mm
 #: src/main/print-util.c:659
 msgid "B6 ISO"
-msgstr "B6 ISO"
+msgstr "B6 (ISO)"
 
 #. 125mm x  176mm
 #: src/main/print-util.c:661
 msgid "B7 ISO"
-msgstr "B7 ISO"
+msgstr "B7 (ISO)"
 
 #. 88mm x  125mm
 #: src/main/print-util.c:663
 msgid "B8 ISO"
-msgstr "B8 ISO"
+msgstr "B8 (ISO)"
 
 #. 62mm x   88mm
 #: src/main/print-util.c:665
 msgid "B9 ISO"
-msgstr "B9 ISO"
+msgstr "B9 (ISO)"
 
 #. 44mm x   62mm
 #: src/main/print-util.c:667
 msgid "B10 ISO"
-msgstr "B10 ISO"
+msgstr "B10 (ISO)"
 
 #. 31mm x   44mm
 #: src/main/print-util.c:670
 msgid "B0 JIS"
-msgstr "B0 JIS"
+msgstr "B0 (JIS)"
 
 #: src/main/print-util.c:672
 msgid "B1 JIS"
-msgstr "B1 JIS"
+msgstr "B1 (JIS)"
 
 #: src/main/print-util.c:674
 msgid "B2 JIS"
-msgstr "B2 JIS"
+msgstr "B2 (JIS)"
 
 #: src/main/print-util.c:676
 msgid "B3 JIS"
-msgstr "B3 JIS"
+msgstr "B3 (JIS)"
 
 #: src/main/print-util.c:678
 msgid "B4 JIS"
-msgstr "B4 JIS"
+msgstr "B4 (JIS)"
 
 #: src/main/print-util.c:680
 msgid "B5 JIS"
-msgstr "B5 JIS"
+msgstr "B5 (JIS)"
 
 #: src/main/print-util.c:682
 msgid "B6 JIS"
-msgstr "B6 JIS"
+msgstr "B6 (JIS)"
 
 #: src/main/print-util.c:684
 msgid "B7 JIS"
-msgstr "B7 JIS"
+msgstr "B7 (JIS)"
 
 #: src/main/print-util.c:686
 msgid "B8 JIS"
-msgstr "B8 JIS"
+msgstr "B8 (JIS)"
 
 #: src/main/print-util.c:688
 msgid "B9 JIS"
-msgstr "B9 JIS"
+msgstr "B9 (JIS)"
 
 #: src/main/print-util.c:690
 msgid "B10 JIS"
-msgstr "B10 JIS"
+msgstr "B10 (JIS)"
 
 #.
 #. * "C" series: Envelopes or folders suitable for A size stationery.
@@ -1222,12 +1213,12 @@ msgstr "ArchE"
 #.
 #: src/main/print-util.c:742
 msgid "American foolscap"
-msgstr "Amerikansk folio"
+msgstr "American foolscap"
 
 #. American foolscap
 #: src/main/print-util.c:744
 msgid "European foolscap"
-msgstr "Europeisk folio"
+msgstr "European foolscap"
 
 #. European foolscap
 #.
@@ -1242,40 +1233,39 @@ msgstr "Crown Quarto"
 #. 189mm x 246mm
 #: src/main/print-util.c:754
 msgid "Large Crown Quarto"
-msgstr "Large crown quarto"
+msgstr "Large Crown Quarto"
 
-# får plats
 #. 201mm x 258mm
 #: src/main/print-util.c:756
 msgid "Demy Quarto"
-msgstr "Demy quarto"
+msgstr "Demy Quarto"
 
 #. 219mm x 276mm
 #: src/main/print-util.c:758
 msgid "Royal Quarto"
-msgstr "Royal quarto"
+msgstr "Royal Quarto"
 
 #. 237mm x 312mm
 #. { "ISO A4",             595,
 #. 841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm
 #: src/main/print-util.c:762
 msgid "Crown Octavo"
-msgstr "Crown octavo"
+msgstr "Crown Octavo"
 
 #. 123mm x 186mm
 #: src/main/print-util.c:764
 msgid "Large Crown Octavo"
-msgstr "Large crown octavo"
+msgstr "Large Crown Octavo"
 
 #. 129mm x 198mm
 #: src/main/print-util.c:766
 msgid "Demy Octavo"
-msgstr "Demy octavo"
+msgstr "Demy Octavo"
 
 #. 138mm x 216mm
 #: src/main/print-util.c:768
 msgid "Royal Octavo"
-msgstr "Royal octavo"
+msgstr "Royal Octavo"
 
 #. 156mm x 234mm
 #. { N_ ("ISO A5"),             419,
@@ -1283,43 +1273,43 @@ msgstr "Royal octavo"
 #. Paperback sizes in common usage
 #: src/main/print-util.c:774
 msgid "Small paperback"
-msgstr "Liten pocket"
+msgstr "Small paperback"
 
 #. 111mm x 178mm
 #: src/main/print-util.c:776
 msgid "Penguin small paperback"
-msgstr "Liten pingvinpocket"
+msgstr "Penguin small paperback"
 
 #. 111mm x 181mm
 #: src/main/print-util.c:778
 msgid "Penguin large paperback"
-msgstr "Stor pingvinpocket"
+msgstr "Penguin large paperback"
 
 #. 129mm x 198mm
 #. Miscellaneous sizes
 #: src/main/print-util.c:782
 msgid "Hagaki Card"
-msgstr "Hagaki-kort"
+msgstr "Hagaki Card"
 
 #. 100 x 148 mm
 #: src/main/print-util.c:784
 msgid "Oufuku Card"
-msgstr "Oufuku-kort"
+msgstr "Oufuku Card"
 
 #. 148 x 200 mm
 #: src/main/print-util.c:786
 msgid "Japanese long envelope #3"
-msgstr "Japanskt långt kuvert 3"
+msgstr "ÆüËÜ¤ÎÄ¹¤¤ÉõÅû #3"
 
 #. Japanese long envelope #3
 #: src/main/print-util.c:788
 msgid "Japanese long envelope #4"
-msgstr "Japanskt långt kuvert 4"
+msgstr "ÆüËÜ¤ÎÄ¹¤¤ÉõÅû #4"
 
 #. Japanese long envelope #4
 #: src/main/print-util.c:790
 msgid "Japanese Kaku envelope #4"
-msgstr "Japanskt Kaku-kuvert 4"
+msgstr "ÆüËÜ¤Î»Í³Ñ¤¤ÉõÅû #4"
 
 #. Japanese Kaku envelope #4
 #: src/main/print-util.c:792
@@ -1329,92 +1319,90 @@ msgstr "Commercial 10"
 #. US Commercial 10 env
 #: src/main/print-util.c:794
 msgid "A2 Invitation"
-msgstr "A2-inbjudan"
+msgstr "A2 Invitation"
 
 #. US A2 invitation
 #: src/main/print-util.c:796
 msgid "Monarch Envelope"
-msgstr "Monarkkuvert"
+msgstr "Monarch Envelope"
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:798
 msgid "Custom"
-msgstr "Anpassat"
+msgstr "¥«¥¹¥¿¥à"
 
 #: src/main/print-util.c:801
 msgid "89 mm Roll Paper"
-msgstr "89 mm rullpapper"
+msgstr "89mm ¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:803
 msgid "4 Inch Roll Paper"
-msgstr "4 tum rullpapper"
+msgstr "4 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:805
 msgid "5 Inch Roll Paper"
-msgstr "5 tum rullpapper"
+msgstr "5 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:807
 msgid "210 mm Roll Paper"
-msgstr "210 mm rullpapper"
+msgstr "210mm ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:809
 msgid "13 Inch Roll Paper"
-msgstr "13 tum rullpapper"
+msgstr "13 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:811
 msgid "22 Inch Roll Paper"
-msgstr "22 tum rullpapper"
+msgstr "22 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:813
 msgid "24 Inch Roll Paper"
-msgstr "24 tum rullpapper"
+msgstr "24 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:815
 msgid "36 Inch Roll Paper"
-msgstr "36 tum rullpapper"
+msgstr "36 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:817
 msgid "44 Inch Roll Paper"
-msgstr "44 tum rullpapper"
+msgstr "44 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
 
 #: src/main/print-util.c:1274 src/main/print-util.c:1283
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
-msgstr "%s är inte en giltig parameter av typen %s\n"
+msgstr "%s ¤Ï¼ïÎà %s ¤ËÂÐ¤¹¤ëÅ¬ÀÚ¤Ê¥Ñ¥é¥á¡¼¥¿¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó\n"
 
 #: src/main/print-util.c:1299
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
-msgstr "%s är utanför intervallet (värde %f, min %f, max %f)\n"
+msgstr "%s ¤ÎÈÏ°Ï¤ò±Û¤¨¤Þ¤·¤¿ (¸½ºß¤ÎÃÍ %f, ºÇ¾® %f, ºÇÂç %f)\n"
 
 #: src/main/print-util.c:1314
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr "%s är utanför intervallet (värde %d, min %d, max %d)\n"
+msgstr "%s ¤ÎÈÏ°Ï¤ò±Û¤¨¤Þ¤·¤¿ (¸½ºß¤ÎÃÍ %d, ºÇ¾® %d, ºÇÂç %d)\n"
 
 #: src/main/print-util.c:1340
 msgid "Printer does not support color output\n"
-msgstr "Skrivaren stöder inte färgutskrift\n"
+msgstr "¥×¥ê¥ó¥¿¤Ï¥«¥é¡¼°õºþ¤ò¥µ¥Ý¡¼¥È¤·¤Æ¤¤¤Þ¤»¤ó\n"
 
 #: src/main/print-util.c:1358
 msgid "Image size is not valid\n"
-msgstr "Bildstorleken är inte giltig\n"
+msgstr "²èÁü¥µ¥¤¥º¤¬Àµ¤·¤¯¤¢¤ê¤Þ¤»¤ó\n"
 
 #: src/main/print-util.c:1365
 msgid "Top margin must not be less than zero\n"
-msgstr "Övre marginalen får inte vara negativ\n"
+msgstr "¾å¥Þ¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
 
 #: src/main/print-util.c:1371
 msgid "Left margin must not be less than zero\n"
-msgstr "Vänstermarginalen får inte vara negativ\n"
+msgstr "º¸¥Þ¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
 
 #: src/main/print-util.c:1428
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
-msgstr "%s är inte en giltig färgutjämningsalgoritm\n"
+msgstr "%s ¤ÏÅ¬ÀÚ¤Ê¥Ç¥£¥¶Êý¼°¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó\n"
 
-# gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
-#
 #. Specify language of PPD translation
 #. Translators: Specify the language of the PPD translation.
 #. * Use the English name of your language here, e.g. "Swedish" instead of
@@ -1422,58 +1410,58 @@ msgstr "%s är inte en giltig färgutjämningsalgoritm\n"
 #.
 #: src/cups/genppd.c:438
 msgid "English"
-msgstr "Swedish"
+msgstr "±Ñ¸ì"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:440
 msgid "ISOLatin1"
-msgstr "ISOLatin1"
+msgstr "ISO ¥é¥Æ¥ó£±"
 
 #: src/cups/genppd.c:616
 msgid "Media Type"
-msgstr "Mediatyp"
+msgstr "ÍÑ»æ¤Î¼ïÎà"
 
 #: src/cups/genppd.c:642
 msgid "Media Source"
-msgstr "Mediakälla"
+msgstr "µë»æÊýË¡"
 
 #: src/cups/genppd.c:666
 msgid "Resolution"
-msgstr "Upplösning"
+msgstr "²òÁüÅÙ"
 
 #.
 #. * Image types...
 #.
 #: src/cups/genppd.c:706
 msgid "Image Type"
-msgstr "Bildtyp"
+msgstr "²èÁü¤Î¼ïÎà"
 
 #: src/cups/genppd.c:711 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
-msgstr "Linjegrafik"
+msgstr "¥é¥¤¥ó¡¦¥¢¡¼¥È"
 
 #: src/cups/genppd.c:713 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
-msgstr "Enstaka färger"
+msgstr "ÌµÃÏ¤Î¿§"
 
 #: src/cups/genppd.c:715 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
-msgstr "Fotografi"
+msgstr "¼Ì¿¿"
 
 #.
 #. * Dithering algorithms...
 #.
 #: src/cups/genppd.c:723
 msgid "Dither Algorithm"
-msgstr "Färgutjämningsalgoritm"
+msgstr "¥Ç¥£¥¶Êý¼°"
 
 #: src/cups/genppd.c:742
 msgid "Ink Type"
-msgstr "Bläcktyp"
+msgstr "¥¤¥ó¥¯¤Î¼ïÎà"
 
 #: src/escputil/escputil.c:64
 msgid "Escputil version "
-msgstr "Escputil version "
+msgstr "Escputil ¥Ð¡¼¥¸¥ç¥ó "
 
 #: src/escputil/escputil.c:65
 msgid ""
@@ -1482,11 +1470,10 @@ msgid ""
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
-", Copyright © 2000-2001 Robert Krawitz\n"
-"Escputil kommer UTAN NÅGON SOM HELST GARANTI; skriv in \"escputil -l\" för\n"
-"mer information. Detta är fri programvara, och du är välkommen att\n"
-"vidaredistribuera det under vissa villkor; skriv in \"escputil -l\" för mer\n"
-"information.\n"
+", Copyright (C) 2000-2001 Robert Krawitz\n"
+"Escputil ¤Ï´°Á´ÌµÊÝ¾Ú¤Ç¤¹; ¾ÜºÙ¤Ï `escputil -l` ¤Ç¤´Í÷²¼¤µ¤¤¡£\n"
+"¤³¤ì¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¤¤¯¤Ä¤«¤Î¾ò·ï¤Î²¼¤ÇºÆÇÛÉÛ¤ò\n"
+"´¿·Þ¤·¤Þ¤¹; ¾ÜºÙ¤Ï `escputil -l` ¤Ç¤´Í÷²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:70
 msgid ""
@@ -1508,37 +1495,18 @@ msgid ""
 msgstr ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Följande text är en informell översättning som enbart tillhandahålls i\n"
-"informativt syfte. För alla juridiska tolkningar gäller den engelska\n"
-"originaltexten, som är bifogad nedan.\n"
+"¤³¤Î¥×¥í¥°¥é¥à¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¹; ¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâÃÄ¤¬È¯¹Ô¤¹¤ë\n"
+"GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ÎÂèÆóÈÇ¤Þ¤¿¤Ï¤½¤ì°Ê¹ß¤ÎÈÇ¤Î²¼¤Ç²þÊÑ¡¦½¤Àµ¡¦ºÆÇÛÉÛ¤¬\n"
+"Ç§¤á¤é¤ì¤Æ¤¤¤Þ¤¹¡£\n"
 "\n"
-"Detta program är fri programvara. Du kan distribuera det och/eller\n"
-"modifiera det under villkoren i GNU General Public License, publicerad\n"
-"av Free Software Foundation, antingen version 2 eller (om du så vill)\n"
-"någon senare version.\n"
+"¤³¤Î¥×¥í¥°¥é¥à¤ÏÊØÍø¤Ë»È¤Ã¤Æ¤â¤é¤¨¤ë¤è¤¦¤ËÇÛÉÛ¤µ¤ì¤Æ¤¤¤Þ¤¹¤¬¡¢\n"
+"´°Á´¤ËÌµÊÝ¾Ú¤Ç¤¹; ¾¦ÍÑÍøÍÑ¤Þ¤¿¤Ï¤¢¤ëÆÃÄê¤ÎÌÜÅª¤Ë¤ª¤±¤ëÅ¬¹çÀ­¤ÎÊÝ¾Ú¤â\n"
+"¤¢¤ê¤Þ¤»¤ó¡£¾ÜºÙ¤Ï GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ò¤´Í÷²¼¤µ¤¤¡£\n"
 "\n"
-"Detta program distribueras i hopp om att det ska vara användbart, men\n"
-"UTAN NÅGON SOM HELST GARANTI, även utan underförstådd garanti om\n"
-"SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL. Se GNU General\n"
-"Public License för ytterligare information.\n"
-"\n"
-"Du bör ha fått en kopia av GNU General Public License tillsammans med\n"
-"detta program. Om inte, skriv till Free Software Foundation, In.,\n"
-"59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.\n"
-"\n"
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA\n"
+"µ®Êý¤Ï¡¢¤³¤Î¥×¥í¥°¥é¥à¤ËÅ¬±þ¤·¤¿ GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤Î¥³¥Ô¡¼¤ò\n"
+"¼õ¤±¼è¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹; ¤â¤·¼õ¤±¼è¤Ã¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢\n"
+"Free Software Foundation, Inc., 56 Temple Place - \n"
+"Suite 330, Boston, MA 02111-1307, USA ¤Þ¤ÇÏ¢Íí¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:110
 msgid ""
@@ -1582,46 +1550,48 @@ msgid ""
 "    -m|--model         Specify the precise printer model for head "
 "alignment.\n"
 msgstr ""
-"Användning: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                     [-P skrivare | -r enhet] [-u] [-q] [-m modell]\n"
-"Utför underhåll på EPSON Stylus ®-skrivare.\n"
-"Exempel: escputil --clean-head --printer stpex-on-third-floor\n"
-"         escputil --ink-level --new --raw-device /dev/lp0\n"
+"ÍÑË¡: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                [-P ¥×¥ê¥ó¥¿ | -r ¥Ç¥Ð¥¤¥¹Ì¾] [-u] [-q] [-m ·¿¼°]\n"
+"EPSON Stylus (R) ¥×¥ê¥ó¥¿¤Î´ÉÍý¤ò¹Ô¤¦¥Ä¡¼¥ë¤Ç¤¹¡£\n"
+"ÍÑÎã: escputil --clean-head --printer stpex-on-third-floor\n"
+"          escputil --ink-level --new --raw-device /dev/lp0\n"
 "\n"
-"  Kommandon:\n"
-"    -c|--clean-head    Rensa utskriftshuvudet.\n"
-"    -n|--nozzle-check  Skriv ut ett mönster för test av munstycken.\n"
-"                       Smutsiga eller igentäppta munstycken kommer att\n"
-"                       visas som mellanrum i mönstret. Om du ser några\n"
-"                       mellanrum bör du rensa utskriftshuvudet.\n"
-"    -a|--align-head    Justera utskriftshuvudet. VARNING: Felaktigt\n"
-"                       användande av detta verktyg kan resultera i dålig\n"
-"                       utskriftskvalitet och/eller skada på skrivaren.\n"
-"    -o|--align-color   Justera färgutskriftshuvudet (endast Stylus Color\n"
-"                       480 och 580). VARNING: Felaktigt användande av detta\n"
-"                       verktyg kan resultera i dålig utskriftskvalitet\n"
-"                       och/eller skada på skrivaren.\n"
-"    -s|--status        Hämta skrivarstatus.\n"
-"    -i|--ink-level     Hämta information om bläcknivån i skrivaren. Detta\n"
-"                       kräver läs- och skrivrättigheter till den råa\n"
-"                       skrivarenheten.\n"
-"    -d|--identify      Undersök skrivaren för information om märke och\n"
-"                       modell. Detta kräver läs- och skrivrättigheter till\n"
-"                       den råa skrivarenheten.\n"
-"    -l|--license       Visa licens- och garantivillkoren för detta program.\n"
-"    -M|--list-models   Visa de tillgängliga skrivarmodellerna.\n"
-"    -h|--help          Visa detta hjälpmeddelande.\n"
-"  Flaggor:\n"
-"    -P|--printer-name  Ange namnet på skrivarkön som ska användas.\n"
-"                       Standardalternativet är standardskrivaren på\n"
-"                       systemet.\n"
-"    -r|--raw-device    Ange namnet på den enhet att skriva till direkt\n"
-"                       istället för att gå via en skrivarkö.\n"
-"    -u|--new           Skrivaren är en ny skrivare (Stylus Color 740 eller\n"
-"                       nyare).\n"
-"    -q|--quiet         Visa inte rubriken.\n"
-"    -m|--model         Ange den exakta skrivarmodellen för justering av\n"
-"                       huvud.\n"
+"  ¥³¥Þ¥ó¥É:\n"
+"    -c|--clean-head    ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶ÁÝ¤¹¤ë¡£\n"
+"    -n|--nozzle-check  ¥Î¥º¥ë¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºþ¤¹¤ë¡£\n"
+"                       ¥Î¥º¥ë¤¬±ø¤«¤Ã¤¿¤ê¡¢µÍ¤Þ¤Ã¤Æ¤¤¤ë¤È¥Ñ¥¿¡¼¥ó¤Ë¹Â¤¬É½¼¨¤µ"
+"¤ì¤Þ¤¹¡£\n"
+"                       ¹Â¤¬°õºþ¤µ¤ì¤¿¤é¡¢¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶ÁÝ¤·¤Æ²¼¤µ¤¤¡£\n"
+"    -a|--align-head    ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¡£\n"
+"                      ¡Ú·Ù¹ð¡Û: ¤³¤Î¥³¥Þ¥ó¥É¤òÍðÍÑ¤¹¤ë¤È¡¢\n"
+"                       °õºþ¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê"
+"¤ê¤Þ¤¹¡£\n"
+"    -o|--align-color   ¥«¥é¡¼°õºþ¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë (Stylus Color 480 ¤È "
+"580 ¤Î¤ß)¡£\n"
+"                      ¡Ú·Ù¹ð¡Û: ¤³¤Î¥³¥Þ¥ó¥É¤òÍðÍÑ¤¹¤ë¤È¡¢\n"
+"                       °õºþ¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê"
+"¤ê¤Þ¤¹¡£\n"
+"    -s|--status        ¥×¥ê¥ó¥¿¤Î¾õÂÖ¤ò¼èÆÀ¤¹¤ë¡£\n"
+"    -i|--ink-level     ¥¤¥ó¥¯¤Î¥ì¥Ù¥ë¤ò¥×¥ê¥ó¥¿¤«¤é¼èÆÀ¤¹¤ë¡£\n"
+"                       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤Ø¤Î\n"
+"                       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
+"    -d|--identify      ¥×¥ê¥ó¥¿¾ðÊó (·¿¼°¤Ê¤É) ¤òÌä¤¤¹ç¤ï¤»¤ë¡£\n"
+"                       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤Ø¤Î\n"
+"                       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
+"    -l|--license       ¤³¤Î¥×¥í¥°¥é¥à¤Î¥é¥¤¥»¥ó¥¹/Ãí°Õ½ñ¤­¤òÉ½¼¨¤¹¤ë¡£\n"
+"    -M|--list-models   ÍøÍÑ²ÄÇ½¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ìÍ÷É½¼¨¤¹¤ë¡£\n"
+"    -h|--help          ¤³¤Î¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë¡£\n"
+"  ¥ª¥×¥·¥ç¥ó:\n"
+"    -P|--printer-name  ¥×¥ê¥ó¥¿¤òÁàºî¤¹¤ë¤¿¤á¤Ë¡¢¥×¥ê¥ó¥¿¡¦¥­¥å¡¼¤ÎÌ¾Á°¤ò»ØÄê"
+"¤¹¤ë¡£\n"
+"                       ½é´üÃÍ¤Ï¡¢¥Ç¥Õ¥©¥ë¥È¤Î¥·¥¹¥Æ¥à¡¦¥×¥ê¥ó¥¿Ì¾¤Ç¤¹¡£\n"
+"    -r|--raw-device    ¥×¥ê¥ó¥¿¡¦¥­¥å¡¼·ÐÍ³¤Ç¤Ï¤Ê¤¯¡¢Ä¾ÀÜ½ñ¤­¹þ¤à¥Ç¥Ð¥¤¥¹Ì¾¤ò"
+"»ØÄê¤¹¤ë¡£\n"
+"    -u|--new           ¿·¤·¤¤¥×¥ê¥ó¥¿¤Î¾ì¹ç¤Ë»ØÄê¤¹¤ë (Stylus Color 740 ¤Þ¤¿"
+"¤Ï¤½¤ì°Ê¹ß)¡£\n"
+"    -q|--quiet         ¥Ð¥Ê¡¼¤òÉ½¼¨¤·¤Ê¤¤¡£\n"
+"    -m|--model         ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¤¿¤á¤Ë¡¢Àµ³Î¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò»ØÄê"
+"¤¹¤ë¡£\n"
 
 #: src/escputil/escputil.c:148
 msgid ""
@@ -1661,41 +1631,41 @@ msgid ""
 "    -q Suppress the banner.\n"
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
-"Användning: escputil [FLAGGOR] [KOMMANDON]\n"
-"Användning: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                     [-P skrivare | -r enhet] [-u] [-q] [-m modell]\n"
-"Utför underhåll på EPSON Stylus ®-skrivare.\n"
-"Exempel: escputil -c -P stpex-on-third-floor\n"
-"         escputil -i -u -r /dev/lp0\n"
+"ÍÑË¡: escputil [¥ª¥×¥·¥ç¥ó] [¥³¥Þ¥ó¥É]\n"
+"ÍÑË¡: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                [-P ¥×¥ê¥ó¥¿ | -r ¥Ç¥Ð¥¤¥¹Ì¾] [-u] [-q] [-m ·¿¼°]\n"
+"EPSON Stylus (R) ¥×¥ê¥ó¥¿¤Î´ÉÍý¤ò¹Ô¤¦¥Ä¡¼¥ë¤Ç¤¹¡£\n"
+"ÍÑÎã: escputil -c -P stpex-on-third-floor\n"
+"          escputil -i -u -r /dev/lp0\n"
 "\n"
-"  Kommandon:\n"
-"    -c Rensa utskriftshuvudet.\n"
-"    -n Skriv ut ett mönster för test av munstycken.\n"
-"          Smutsiga eller igentäppta munstycken kommer att visas som\n"
-"          mellanrum i mönstret. Om du ser några mellanrum bör du rensa\n"
-"          utskriftshuvudet.\n"
-"    -a Justera utskriftshuvudet. VARNING: Felaktigt användande av detta\n"
-"          verktyg kan resultera i dålig utskriftskvalitet och/eller skada\n"
-"          på skrivaren.\n"
-"    -o Justera färgutskriftshuvudet (endast Stylus Color 480 och 580).\n"
-"          VARNING: Felaktigt användande av detta verktyg kan resultera i\n"
-"          dålig utskriftskvalitet och/eller skada på skrivaren.\n"
-"    -s Hämta skrivarstatus.\n"
-"    -i Hämta information om bläcknivån i skrivaren. Detta kräver läs- och\n"
-"          skrivrättigheter till den råa skrivarenheten.\n"
-"    -d Undersök skrivaren för information om märke och modell. Detta\n"
-"          kräver läs- och skrivrättigheter till den råa skrivarenheten.\n"
-"    -l Visa licens- och garantivillkoren för detta program.\n"
-"    -M Visa de tillgängliga skrivarmodellerna.\n"
-"    -h Visa detta hjälpmeddelande.\n"
-"  Flaggor:\n"
-"    -P Ange namnet på skrivarkön som ska användas.\n"
-"          Standardalternativet är standardskrivaren på systemet.\n"
-"    -r Ange namnet på den enhet att skriva till direkt istället för att\n"
-"          gå via en skrivarkö.\n"
-"    -u Skrivaren är en ny skrivare (Stylus Color 740 eller nyare).\n"
-"    -q Visa inte rubriken.\n"
-"    -m Ange den exakta skrivarmodellen för justering av huvud.\n"
+"  ¥³¥Þ¥ó¥É:\n"
+"    -c ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶ÁÝ¤¹¤ë¡£\n"
+"    -n ¥Î¥º¥ë¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºþ¤¹¤ë¡£\n"
+"       ¥Î¥º¥ë¤¬±ø¤«¤Ã¤¿¤ê¡¢µÍ¤Þ¤Ã¤Æ¤¤¤ë¤È¥Ñ¥¿¡¼¥ó¤Ë¹Â¤¬É½¼¨¤µ¤ì¤Þ¤¹¡£\n"
+"       ¹Â¤¬°õºþ¤µ¤ì¤¿¤é¡¢¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶ÁÝ¤·¤Æ²¼¤µ¤¤¡£\n"
+"    -a ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¡£\n"
+"       ¡Ú·Ù¹ð¡Û: ¤³¤Î¥³¥Þ¥ó¥É¤òÍðÍÑ¤¹¤ë¤È¡¢\n"
+"       °õºþ¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ê¤Þ¤¹\n"
+"    -o ¥«¥é¡¼°õºþ¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë (Stylus Color 480 ¤È 580 ¤Î¤ß)¡£\n"
+"       ¡Ú·Ù¹ð¡Û: ¤³¤Î¥³¥Þ¥ó¥É¤òÍðÍÑ¤¹¤ë¤È¡¢\n"
+"        °õºþ¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ê¤Þ¤¹¡£\n"
+"    -s ¥×¥ê¥ó¥¿¤Î¾õÂÖ¤ò¼èÆÀ¤¹¤ë¡£\n"
+"    -i ¥¤¥ó¥¯¤Î¥ì¥Ù¥ë¤ò¥×¥ê¥ó¥¿¤«¤é¼èÆÀ¤¹¤ë¡£\n"
+"       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤Ø¤Î¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç"
+"¤¹¡£\n"
+"    -d ¥×¥ê¥ó¥¿¾ðÊó (·¿¼°¤Ê¤É) ¤òÌä¤¤¹ç¤ï¤»¤ë¡£\n"
+"       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤Ø¤Î\n"
+"       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
+"    -l ¤³¤Î¥×¥í¥°¥é¥à¤Î¥é¥¤¥»¥ó¥¹/Ãí°Õ½ñ¤­¤òÉ½¼¨¤¹¤ë¡£\n"
+"    -M ÍøÍÑ²ÄÇ½¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ìÍ÷É½¼¨¤¹¤ë¡£\n"
+"    -h ¤³¤Î¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë¡£\n"
+"  ¥ª¥×¥·¥ç¥ó:\n"
+"    -P ¥×¥ê¥ó¥¿¤òÁàºî¤¹¤ë¤¿¤á¤Ë¡¢¥×¥ê¥ó¥¿¡¦¥­¥å¡¼¤ÎÌ¾Á°¤ò»ØÄê¤¹¤ë¡£\n"
+"       ½é´üÃÍ¤Ï¡¢¥Ç¥Õ¥©¥ë¥È¤Î¥·¥¹¥Æ¥à¡¦¥×¥ê¥ó¥¿Ì¾¤Ç¤¹¡£\n"
+"    -r ¥×¥ê¥ó¥¿¡¦¥­¥å¡¼·ÐÍ³¤Ç¤Ï¤Ê¤¯¡¢Ä¾ÀÜ½ñ¤­¹þ¤à¥Ç¥Ð¥¤¥¹Ì¾¤ò»ØÄê¤¹¤ë¡£\n"
+"    -u ¿·¤·¤¤¥×¥ê¥ó¥¿¤Î¾ì¹ç¤Ë»ØÄê¤¹¤ë (Stylus Color 740 ¤Þ¤¿¤Ï¤½¤ì°Ê¹ß)¡£\n"
+"    -q ¥Ð¥Ê¡¼¤òÉ½¼¨¤·¤Ê¤¤¡£\n"
+"    -m ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¤¿¤á¤Ë¡¢Àµ³Î¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò»ØÄê¤¹¤ë¡£\n"
 
 #: src/escputil/escputil.c:199
 msgid "Stylus C20sx"
@@ -2015,102 +1985,102 @@ msgstr "Stylus Scan 2500"
 
 #: src/escputil/escputil.c:364 src/escputil/escputil.c:373
 msgid "You may only specify one printer or raw device."
-msgstr "Du kan endast ange en skrivare eller rå enhet."
+msgstr "¥×¥ê¥ó¥¿¤Þ¤¿¤ÏÄã¥ì¥Ù¥ë¤Î¥Ç¥Ð¥¤¥¹¤ò°ì¤Ä»ØÄê¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£"
 
 #: src/escputil/escputil.c:382
 msgid "You may only specify one printer model."
-msgstr "Du kan endast ange en skrivarmodell."
+msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ì¤Ä»ØÄê¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£"
 
 #: src/escputil/escputil.c:402
 #, c-format
 msgid "Unknown option %c\n"
-msgstr "Okänd flagga %c\n"
+msgstr "ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó %c\n"
 
 #: src/escputil/escputil.c:462
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr "Kan inte öppna enheten %s: %s\n"
+msgstr "¥Ç¥Ð¥¤¥¹ %s ¤ò³«¤±¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:485
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr "Kan inte skriva ut till skrivaren %s med %s\n"
+msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºþ¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó\n"
 
 #: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 msgid "Unable to send command to printer\n"
-msgstr "Kan inte skicka kommando till skrivare\n"
+msgstr "¥×¥ê¥ó¥¿¤Ë¥³¥Þ¥ó¥É¤òÁ÷¿®¤Ç¤­¤Þ¤»¤ó\n"
 
 #: src/escputil/escputil.c:601
 msgid "Cyan"
-msgstr "Cyan"
+msgstr "¥·¥¢¥ó (C)"
 
 #: src/escputil/escputil.c:602
 msgid "Magenta"
-msgstr "Magenta"
+msgstr "¥Þ¥¼¥ó¥¿ (M)"
 
 #: src/escputil/escputil.c:603
 msgid "Yellow"
-msgstr "Gult"
+msgstr "²«¿§ (Y)"
 
 #: src/escputil/escputil.c:604
 msgid "Light Cyan"
-msgstr "Ljus cyan"
+msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
 
 #: src/escputil/escputil.c:605
 msgid "Light Magenta"
-msgstr "Ljus magenta"
+msgstr "ÌÀ¤ë¤¤¥Þ¥¼¥ó¥¿"
 
 #: src/escputil/escputil.c:619
 msgid "Obtaining ink levels requires using a raw device.\n"
-msgstr "Att få tag i bläcknivåerna kräver att en rå enhet används.\n"
+msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤ËÉ¬Í×¤Ê¥¤¥ó¥¯¡¦¥ì¥Ù¥ë¤ò¼èÆÀ¤·¤Þ¤¹¡£\n"
 
 #: src/escputil/escputil.c:625 src/escputil/escputil.c:700
 #: src/escputil/escputil.c:743
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
-msgstr "Kan inte öppna %s för läsning och skrivning: %s\n"
+msgstr "%s ¤òÆÉ¤ß½ñ¤­¥â¡¼¥É¤Ç³«¤±¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:634 src/escputil/escputil.c:711
 #: src/escputil/escputil.c:752
 #, c-format
 msgid "Cannot write to %s: %s\n"
-msgstr "Kan inte skriva till %s: %s\n"
+msgstr "%s ¤Ë½ñ¤­¹þ¤á¤Þ¤»¤ó; %s\n"
 
 #: src/escputil/escputil.c:641 src/escputil/escputil.c:718
 #: src/escputil/escputil.c:759
 #, c-format
 msgid "Cannot read from %s: %s\n"
-msgstr "Kan inte läsa från %s: %s\n"
+msgstr "%s ¤«¤éÆÉ¤ß¹þ¤á¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:651
 msgid "Cannot parse output from printer\n"
-msgstr "Kan inte tolka utdata från skrivare\n"
+msgstr "¥×¥ê¥ó¥¿¤«¤é¤Î½ÐÎÏ¤ò²òÀÏ¤Ç¤­¤Þ¤»¤ó\n"
 
 #: src/escputil/escputil.c:655
 msgid "Ink color"
-msgstr "Bläckfärg"
+msgstr "¥¤¥ó¥¯¤Î¿§"
 
 #: src/escputil/escputil.c:655
 msgid "Percent remaining"
-msgstr "Återstående procent"
+msgstr "»Ä¤ê¤Î³ä¹ç"
 
 #: src/escputil/escputil.c:694
 msgid "Printer identification requires using a raw device.\n"
-msgstr "Skrivaridentifiering kräver att en rå enhet används.\n"
+msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤Ë¥×¥ê¥ó¥¿¼±ÊÌ»Ò¤¬É¬Í×¤Ç¤¹¡£\n"
 
 #: src/escputil/escputil.c:737
 msgid "Printer status requires using a raw device.\n"
-msgstr "Skrivarstatus kräver att en rå enhet används.\n"
+msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤Ë¥×¥ê¥ó¥¿¤Î¾õÂÖ¤¬É¬Í×¤Ç¤¹¡£\n"
 
 #: src/escputil/escputil.c:780
 msgid "Cleaning heads...\n"
-msgstr "Rensar huvuden...\n"
+msgstr "¥Ø¥Ã¥É¤ÎÀ¶ÁÝÃæ...\n"
 
 #: src/escputil/escputil.c:789
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
-"Kör kontroll av munstycken, försäkra dig om att det finns papper i\n"
-"skrivaren.\n"
+"¥Î¥º¥ë¤ò¥Á¥§¥Ã¥¯¤·¤Þ¤¹¡£¥×¥ê¥ó¥¿¤ÎÃæ¤ËÍÑ»æ¤¬³Î¼Â¤ËÂ¸ºß¤·¤Æ¤¤¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ"
+"²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:793
 #, c-format
@@ -2150,41 +2120,43 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
-"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
-"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
-"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
-"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
-"dig.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
+"°õºþ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Þ¤¹¡£¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢\n"
+"°õºþ¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹¡£\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç¤Ï¤Ê¤¤¤Î¤Ç¡¢Á´¤¯ÌµÊÝ¾Ú¤Ç¤¹¡£\n"
+"¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg skriver ut %d testmönster. Varje mönster ser väldigt likt ut.\n"
-"Mönstren består av vertikala linjer som överlappar varandra. Under varje\n"
-"linjepar finns ett tal mellan %d och %d.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï %d ¸Ä¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºþ¤·¤Þ¤¹¡£³Æ¥Ñ¥¿¡¼¥ó¤Ï¤È¤Æ¤â\n"
+"¥·¥ó¥×¥ë¤Ç¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Ï¿âÄ¾¥é¥¤¥ó¤ò½Å¤Í¤Ê¤¬¤é°õºþ¤·¤¿\n"
+"¥Ú¥¢¤«¤é¹½À®¤µ¤ì¤ë¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºþ¤·¤Þ¤¹¡£\n"
+"³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Þ¤¹¡£\n"
 "\n"
-"När du granskar linjeparen bör du leta efter de linjepar som är bäst\n"
-"justerade, det vill säga de som tillsammans bäst utgör en enda vertikal\n"
-"linje. Granska paren väldigt noggrannt för att hitta de som passar bäst.\n"
-"Att använda en lupp eller förstoringsglas rekommenderas för den mest\n"
-"kritiska granskningen. Det rekommenderas även att du använder ett bra\n"
-"kvalitetspapper för testet, så att linjerna blir hela och inte sprider ut\n"
-"sig i pappret. Efter det att du har valt det bästa paret lägger du tillbaka\n"
-"pappret i pappersfacket innan du anger det.\n"
+"ÆóËÜ¤Î¥é¥¤¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤Î¥é¥¤¥ó¤Î¥Ú¥¢¤¬Åù¤·¤¤´Ö³Ö¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤ò\n"
+"³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤Ä¤Þ¤ê¡¢°ìËÜ¤Î¥é¥¤¥ó¤¬ºÇÅ¬¤Ê·Á¾õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ"
+"¤¤¡£\n"
+"¤½¤·¤Æ¡¢¤½¤ì¤È¥Ú¥¢¤Ë¤Ê¤ë¥é¥¤¥ó¤¬Ê¿¹Õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ"
+"¤¤¡£\n"
+"Ãî¥á¥¬¥Í¤ä³ÈÂç¶À¤ò»È¤Ã¤ÆºÙ¤«¤¤ÉôÊ¬¤Î³ÎÇ§¤ò¤ª¾©¤á¤·¤Þ¤¹¡£\n"
 "\n"
-"Alla mönster är identiska, men de senare mönstren använder finare punkter\n"
-"för mer kritisk justering. Du måste genomföra alla passen för att justera\n"
-"skrivaren korrekt. Efter det att du har genomfört alla justeringspass\n"
-"kommer justeringsmönstren att skrivas ut en gång till. Du bör då finna att\n"
-"det mittersta paret (%d av %d) är det bästa av alla par.\n"
+"¤Þ¤¿¥Æ¥¹¥ÈÍÑ¤Ë¹âÉÊ¼Á¤ÊÍÑ»æ¤ò¤ª»È¤¤¤¹¤ë¤³¤È¤â¤ª¾©¤á¤·¤Þ¤¹¡£¹âÉÊ¼Á¤ÊÍÑ»æ¤ò\n"
+"ÍøÍÑ¤¹¤ë¤È¡¢Ê£¿ô¤Î¥é¥¤¥ó¤¬¤­¤Ã¤Á¤ê¤È°õºþ¤µ¤ì¤Æ¤Ë¤¸¤ß¤¬¤Ê¤¯¤Ê¤ê¤Þ¤¹¡£\n"
+"ºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤ÎÈÖ¹æ¤ò¹µ¤¨¤¿¸å¤Ç¡¢¤½¤ÎÍÑ»æ¤òµë»æ¥È¥ì¥¤¤ËÌá¤·¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Efter att passen skrivs ut en gång till kommer du att erbjudas alternativen\n"
-"att spara resultaten (s), upprepa proceduren (r), eller avsluta utan att\n"
-"spara (q). Att avsluta kommer inte att återställa de tidigare värdena, men\n"
-"att stänga av och sätta på skrivaren kommer att göra det. Om du avslutar\n"
-"måste du upprepa hela proceduren om du vill spara resultaten senare.\n"
-"Det är viktigt att du inte stänger av din skrivare under denna process.\n"
+"³Æ¥Ñ¥¿¡¼¥ó¤Ï»÷ÄÌ¤Ã¤Æ¤¤¤Þ¤¹¤¬¡¢¼ê»æ¤Î¥Ñ¥¿¡¼¥ó¤Ï¤è¤êÈùºÙ¤ÊÇÛÃÖ¤ò¹Ô¤¦¤¿¤á¤Ë\n"
+"ºÙ¤«¤¤¥É¥Ã¥È¤òÍøÍÑ¤·¤Æ¤¤¤Þ¤¹¡£\n"
+"Àµ¤·¤¤ÊÂ¤Ó¤¬°õºþ¤µ¤ì¤ë¤è¤¦¡¢Á´¤Æ¤Î¥é¥¤¥ó¤ò¥Æ¥¹¥È¤·¤Æ²¼¤µ¤¤¡£\n"
+"Á´¤Æ¤Î¥é¥¤¥ó¤ò°õºþ¤¹¤ë¤È¡¢¥é¥¤¥ó¡¦¥Ñ¥¿¡¼¥ó¤ò¤â¤¦°ìÅÙ°õºþ¤·¤Þ¤¹¡£\n"
+"Ãæ´Ö¤Ë¤¢¤ë¥é¥¤¥ó¤Î¥Ú¥¢ (#%d / %d ÈÖÌÜ) ¤¬Á´¤Æ¤Î´Ö³Ö¤ËÂÐ¤·¤Æ\n"
+"ºÇÅ¬¤Ç¤¢¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
 "\n"
+"¥Ñ¥¿¡¼¥ó¤Î°õºþ¤¬´°Î»¤·¤¿¤é¡¢¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊÝÂ¸ (s) ¤¹¤ë¤«¡¢\n"
+"¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë (r) ¤«¡¢ÊÝÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«\n"
+"ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Þ¤»¤ó¤¬¡¢\n"
+"¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢\n"
+"¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊÝÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+"¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:828
 #, c-format
@@ -2221,54 +2193,52 @@ msgid ""
 "this procedure.\n"
 "\n"
 msgstr ""
-"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
-"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
-"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
-"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
-"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
-"dig.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
+"°õºþ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Þ¤¹¡£¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢\n"
+"°õºþ¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹¡£\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç¤Ï¤Ê¤¤¤Î¤Ç¡¢Á´¤¯ÌµÊÝ¾Ú¤Ç¤¹¡£\n"
+"¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg skriver ut ett testmönster som består av vertikala linjer som\n"
-"överlappar varandra. Under varje linjepar finns ett tal mellan %d och %d.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï¿âÄ¾¥é¥¤¥ó¤ò½Å¤Í¤Ê¤¬¤é°õºþ¤·¤¿¥Ú¥¢¤«¤é¹½À®¤µ¤ì¤ë¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó"
+"¤ò\n"
+"°õºþ¤·¤Þ¤¹¡£³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Þ"
+"¤¹¡£\n"
 "\n"
-"När du granskar linjeparen bör du leta efter de linjepar som är bäst\n"
-"justerade, det vill säga de som tillsammans bäst utgör en enda vertikal\n"
-"justering. Granska paren väldigt noggrannt för att hitta de som passar\n"
-"bäst. Att använda en lupp eller förstoringsglas rekommenderas för den mest\n"
-"kritiska granskningen. Det rekommenderas även att du använder ett bra\n"
-"kvalitetspapper för testet, så att linjerna blir hela och inte sprider ut\n"
-"sig i pappret. Efter det att du har valt det bästa paret lägger du tillbaka\n"
-"pappret i pappersfacket innan du anger det.\n"
+"ÆóËÜ¤Î¥é¥¤¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤Î¥é¥¤¥ó¤Î¥Ú¥¢¤¬Åù¤·¤¤´Ö³Ö¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤ò\n"
+"³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤Ä¤Þ¤ê¡¢°ìËÜ¤Î¥é¥¤¥ó¤¬ºÇÅ¬¤Ê·Á¾õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ"
+"¤¤¡£\n"
+"¤½¤·¤Æ¡¢¤½¤ì¤È¥Ú¥¢¤Ë¤Ê¤ë¥é¥¤¥ó¤¬Ê¿¹Õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ"
+"¤¤¡£\n"
+"Ãî¥á¥¬¥Í¤ä³ÈÂç¶À¤ò»È¤Ã¤ÆºÙ¤«¤¤ÉôÊ¬¤Î³ÎÇ§¤ò¤ª¾©¤á¤·¤Þ¤¹¡£\n"
 "\n"
-"Efter det att du har kört justeringsmönstret kommer det att skrivas ut en\n"
-"gång till. Du bör då finna att det mittersta paret (%d av %d) är det bästa\n"
-"av alla par.\n"
-"Du kommer då att erbjudas alternativen att spara resultaten (s), upprepa\n"
-"proceduren (r), eller avsluta utan att spara (q). Att avsluta kommer inte\n"
-"att återställa de tidigare värdena, men att stänga av och sätta på\n"
-"skrivaren kommer att göra det.\n"
-"Om du avslutar måste du upprepa hela proceduren om du vill spara resultaten\n"
-"senare. Det är viktigt att du inte stänger av din skrivare under denna\n"
-"process.\n"
-"\n"
+"Á´¤Æ¤Î¥é¥¤¥ó¤ò°õºþ¤·¤¿¤é¡¢¥é¥¤¥ó¡¦¥Ñ¥¿¡¼¥ó¤ò¤â¤¦°ìÅÙ°õºþ¤·¤Þ¤¹¡£\n"
+"Ãæ´Ö¤Ë¤¢¤ë¥é¥¤¥ó¤Î¥Ú¥¢ (#%d / %d ÈÖÌÜ) ¤¬Á´¤Æ¤Î´Ö³Ö¤ËÂÐ¤·¤Æ\n"
+"ºÇÅ¬¤Ç¤¢¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
+"¤½¤ì¤«¤é¡¢¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊÝÂ¸ (s) ¤¹¤ë¤«¡¢\n"
+"¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë (r) ¤«¡¢ÊÝÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«\n"
+"ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Þ¤»¤ó¤¬¡¢\n"
+"¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£\n"
+"½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊÝÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼"
+"¤µ¤¤¡£\n"
+"¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:872
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr "Kan inte skicka kommando till skrivaren, avslutar.\n"
+msgstr "¥×¥ê¥ó¥¿¤Ë¥³¥Þ¥ó¥É¤òÁ÷¿®¤Ç¤­¤Þ¤»¤ó¡£½ªÎ»¤·¤Þ¤¹¡£\n"
 
 #: src/escputil/escputil.c:890
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
 msgstr ""
-"Skrivarjustering måste göras med en rå enhet. I annat fall\n"
-"måste flaggan -m användas för att ange en skrivare.\n"
+"Åù´Ö³Ö¤Î°õºþ¤ÏÄã¥ì¥Ù¥ë¡¦¥Ç¥Ð¥¤¥¹¤ò»È¤¦¤«¡¢¤¢¤ë¤¤¤Ï\n"
+"'-m' ¥ª¥×¥·¥ç¥ó¤Ç¥×¥ê¥ó¥¿¤òÆÃÄê¤·¤Æ»ÈÍÑ¤¹¤ë¤è¤¦¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:894
 msgid "Attempting to detect printer model..."
-msgstr "Försöker detektera skrivarmodell..."
+msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤ò¸¡½ÐÃæ¤Ç¤¹..."
 
 #: src/escputil/escputil.c:899
 #, c-format
@@ -2277,7 +2247,7 @@ msgid ""
 "Cannot open %s read/write: %s\n"
 msgstr ""
 "\n"
-"Kan inte öppna %s för läsning/skrivning: %s\n"
+"%s ¤òÆÉ¤ß½ñ¤­¥â¡¼¥É¤Ç³«¤±¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:907
 #, c-format
@@ -2286,7 +2256,7 @@ msgid ""
 "Cannot write to %s: %s\n"
 msgstr ""
 "\n"
-"Kan inte skriva till %s: %s\n"
+"%s ¤Ë½ñ¤­¹þ¤á¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:913
 #, c-format
@@ -2295,7 +2265,7 @@ msgid ""
 "Cannot read from %s: %s\n"
 msgstr ""
 "\n"
-"Kan inte läsa från %s: %s\n"
+"%s ¤«¤éÆÉ¤ß¹þ¤á¤Þ¤»¤ó: %s\n"
 
 #: src/escputil/escputil.c:926
 msgid ""
@@ -2304,13 +2274,13 @@ msgid ""
 "Please use -m to specify your printer model.\n"
 msgstr ""
 "\n"
-"Kan inte detektera skrivartyp.\n"
-"Använd flaggan -m för att ange din skrivarmodell.\n"
+"¥×¥ê¥ó¥¿¤Î·¿¼°¤ò¸¡½Ð¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£\n"
+"¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤òÆÃÄê¤¹¤ë¤¿¤á¤Ë '-m' ¥ª¥×¥·¥ç¥ó¤ò»ÈÍÑ¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:943
 #, c-format
 msgid "Printer model %s is not known.\n"
-msgstr "Skrivarmodellen %s är okänd.\n"
+msgstr "¥×¥ê¥ó¥¿¤Î·¿¼° %s ¤ÏÉÔÌÀ¤Ç¤¹¡£\n"
 
 #: src/escputil/escputil.c:954
 msgid ""
@@ -2322,13 +2292,13 @@ msgid ""
 "You will then be asked to confirm your choice.\n"
 "What do you want to do (s, q, r)?\n"
 msgstr ""
-"Kontrollera den slutliga utskriften mycket noggrannt för att försäkra\n"
-"dig om att skrivaren är korrekt justerad. Du kan nu:\n"
-"  (s) Spara resultaten i skrivaren\n"
-"  (q) Avsluta utan att spara resultaten\n"
-"  (r) Upprepa hela förloppet från början\n"
-"Du kommer att få bekräfta ditt val.\n"
-"Vad vill du göra (s, q, r)?\n"
+"ºÇ½ª½ÐÎÏ¤Ç¥×¥ê¥ó¥¿¤¬Àµ¤·¤¤´Ö³Ö¤Ç°õºþ¤·¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
+"³ÎÇ§¸å¡¢¼¡¤ÎÃæ¤«¤éÁªÂò¤·¤Æ²¼¤µ¤¤:\n"
+"  (s) ¥×¥ê¥ó¥¿¤ÎÃæ¤Ë¤³¤ÎÀßÄê¤òÊÝÂ¸¤¹¤ë\n"
+"  (q) ¤³¤ÎÀßÄê¤òÊÝÂ¸¤·¤Ê¤¤¤Ç½ªÎ»¤¹¤ë\n"
+"  (r) ºÇ½é¤ËÌá¤Ã¤ÆºÆ¤ÓÀßÄê¤¹¤ë\n"
+"ÁªÂò¸å¤ËºÇ¸å¤Î³ÎÇ§¤¬¤¢¤ê¤Þ¤¹¡£\n"
+"ÁªÂò¤·¤Æ²¼¤µ¤¤ (s, q, r)¡£\n"
 
 #: src/escputil/escputil.c:962 src/escputil/escputil.c:969
 #: src/escputil/escputil.c:982 src/escputil/escputil.c:998
@@ -2339,28 +2309,25 @@ msgstr "> "
 #: src/escputil/escputil.c:967
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Bekräfta att du vill avsluta utan att spara genom att trycka \"q\" igen:\n"
+msgstr "ËÜÅö¤ËÀßÄê¤òÇË´þ¤·¤Æ½ªÎ»¤¹¤ë¾ì¹ç¤Ï¡¢ºÆÅÙ 'q' ¤òÆþÎÏ¤·¤Æ²¼¤µ¤¤:\n"
 
 #: src/escputil/escputil.c:972
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
-"OK, din skrivare är justerad, men justeringen har inte sparats.\n"
-"Om du vill spara justeringen måste du upprepa detta förlopp.\n"
+"¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤¬ÊäÀµ¤µ¤ì¤Þ¤·¤¿¡£Ã¢¤·¤½¤Î´Ö³Ö¤Ï¤Þ¤ÀÊÝÂ¸¤µ¤ì¤Æ¤¤¤Þ¤»¤ó¡£\n"
+"¤½¤Î´Ö³Ö¤òÊÝÂ¸¤¹¤ë¾ì¹ç¤Ï¡¢¤³¤Î¼ê½ç¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:979
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
-msgstr ""
-"Bekräfta att du vill upprepa justeringsprocessen genom att\n"
-"ange \"r\" igen:\n"
+msgstr "ËÜÅö¤Ë´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò¤ä¤êÄ¾¤¹¾ì¹ç¤Ï¡¢ºÆÅÙ 'r' ¤òÆþÎÏ¤·¤Æ²¼¤µ¤¤:\n"
 
 #: src/escputil/escputil.c:985
 msgid "Repeating the alignment process.\n"
-msgstr "Upprepar justeringsprocessen.\n"
+msgstr "´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò·«¤êÊÖ¤·¤Þ¤¹¡£\n"
 
 #: src/escputil/escputil.c:991
 msgid ""
@@ -2370,43 +2337,44 @@ msgid ""
 "Please confirm by typing 's' again that you wish to save the settings\n"
 "to your printer:\n"
 msgstr ""
-"Detta kommer att permanent ändra din skrivares konfiguration.\n"
-"VARNING: detta förlopp har inte godkänts av Seiko Epson, och kan\n"
-"skada din skrivare. Vill du fortsätta?\n"
-"Bekräfta att du vill spara ändringarna i skrivaren genom att ange\n"
-"\"s\" igen:\n"
+"¤³¤ÎÁàºî¤Ï¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ÎÀßÄê¤òÊÑ¹¹¤¹¤ë¤³¤È¤Ë¤Ê¤ê¤Þ¤¹¡£\n"
+"¡Ú·Ù¹ð¡Û: ¤³¤ÎÁàºî¤Ï SEIKO EPSON ¤Î¾µÇ§¤òÆÀ¤¿¤â¤Î¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó¡£\n"
+"          ¤Þ¤¿¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ËÂ»³²¤òÍ¿¤¨¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡£\n"
+"ËÜÅö¤Ëµ¹¤·¤¤¤Ç¤¹¤«¡©\n"
+"¤³¤ÎÀßÄê¤ò¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ËÊÝÂ¸¤¹¤ë¾ì¹ç¤Ï¡¢ºÆÅÙ 's' ¤òÆþÎÏ¤·¤Æ²¼¤µ¤¤:\n"
+"\n"
 
 #: src/escputil/escputil.c:1001
 msgid "About to save settings..."
-msgstr "Kommer att spara inställningar..."
+msgstr "ÀßÄê¤ÎÊÝÂ¸¤¹¤ë¤³¤È¤Ë¤Ä¤¤¤Æ..."
 
 #: src/escputil/escputil.c:1007
 msgid "failed!\n"
-msgstr "misslyckades!\n"
+msgstr "¼ºÇÔ¤Ç¤¹¡ª\n"
 
 #: src/escputil/escputil.c:1008
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
-"Dina inställningar sparades inte utan problem. Du måste upprepa\n"
-"justeringsproceduren.\n"
+"¤¢¤Ê¤¿¤ÎÀßÄê¤ÎÊÝÂ¸¤Ë¼ºÇÔ¤·¤Þ¤·¤¿¡£\n"
+"ºÆÅÙ¡¢´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1012
 msgid "succeeded!\n"
-msgstr "lyckades!\n"
+msgstr "´°Î»¤·¤Þ¤·¤¿¡ª\n"
 
 #: src/escputil/escputil.c:1013
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr "Dina justeringsinställningar har sparats till skrivaren.\n"
+msgstr "´Ö³ÖÊäÀµ¤ÎÀßÄê¤¬¥×¥ê¥ó¥¿¤ËÊÝÂ¸¤µ¤ì¤Þ¤·¤¿¡£\n"
 
 #: src/escputil/escputil.c:1018
 msgid "Unrecognized command.\n"
-msgstr "Okänt kommando.\n"
+msgstr "Ç§¼±¤Ç¤­¤Ê¤¤¥³¥Þ¥ó¥É¤Ç¤¹¡£\n"
 
 #: src/escputil/escputil.c:1021
 msgid "Final command was not confirmed.\n"
-msgstr "Sista kommandot bekräftades inte.\n"
+msgstr "ºÇ¸å¤Î¥³¥Þ¥ó¥É¤¬³ÎÇ§¤µ¤ì¤Æ¤¤¤Þ¤»¤ó¡£\n"
 
 #: src/escputil/escputil.c:1026
 #, c-format
@@ -2418,18 +2386,18 @@ msgid ""
 "Please place a sheet of paper in your printer to begin the head\n"
 "alignment procedure.\n"
 msgstr ""
-"Denna procedur förutsätter att din skrivare är en Epson %s.\n"
-"Om detta inte är din skrivarmodell bör du trycka Control+C nu\n"
-"och välja din rätta skrivarmodell.\n"
+"¤³¤ÎÁàºî¤Ï¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤¬ EPSON %s ¤Ç¤¢¤ë¤ÈÁÛÄê¤·¤¿¤â¤Î¤Ç¤¹¡£\n"
+"¤â¤·¥×¥ê¥ó¥¿¤Î·¿¼°¤¬°Û¤Ê¤ë¾ì¹ç¤Ï¡¢[CTRL]+C ¤òÆþÎÏ¤·¤ÆÃæÃÇ¤·¡¢\n"
+"Àµ¤·¤¤¥×¥ê¥ó¥¿¤Î·¿¼°¤òÁªÂò¤·¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Placera ett pappersark i skrivaren för att påbörja justeringen\n"
-"av huvudena.\n"
+"°õºþ¥Ø¥Ã¥É´Ö³ÖÊäÀµ¤ò³«»Ï¤¹¤ë¾ì¹ç¤Ï¡¢¥×¥ê¥ó¥¿¤Î¥È¥ì¥¤¤Ë\n"
+"ÍÑ»æ¤òÆþ¤ì¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1051 src/escputil/escputil.c:1073
 #: src/escputil/escputil.c:1116 src/escputil/escputil.c:1185
 #: src/escputil/escputil.c:1196
 msgid "Press enter to continue > "
-msgstr "Tryck retur för att fortsätta > "
+msgstr "²¿¤«¥­¡¼¤òÆþÎÏ¤¹¤ë¤ÈÂ³¹Ô¤·¤Þ¤¹ > "
 
 #: src/escputil/escputil.c:1058
 msgid ""
@@ -2437,39 +2405,39 @@ msgid ""
 "pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"Granska utskriften och välj det bästa linjeparet i varje mönster.\n"
-"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa "
-"proceduren.\n"
+"°õºþ·ë²Ì¤ò³ÎÇ§¤·¤Æ¡¢³Æ¥Ñ¥¿¡¼¥ó¤ÇºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤òÁªÂò¤·¤Æ²¼¤µ¤¤¡£\n"
+"¤½¤Î¥Ú¥¢¤ÎÈÖ¹æ¤òÆþÎÏ¤«¡¢'r' ¤Ç¤³¤ÎÀßÄê¤ò¤¯¤ê¤«¤¨¤¹¤«¡¢'?' ¤Ç¥Ø¥ë¥×¤òÉ½¼¨¤·¤Þ"
+"¤¹¡£\n"
 
 #: src/escputil/escputil.c:1064
 #, c-format
 msgid "Pass #%d"
-msgstr "Pass %d"
+msgstr "¥Ñ¥¹ #%d"
 
 #: src/escputil/escputil.c:1070 src/escputil/escputil.c:1115
 msgid "Please insert a fresh sheet of paper.\n"
-msgstr "Mata in ett nytt pappersark.\n"
+msgstr "¿·¤·¤¤ÍÑ»æ¤ò¥È¥ì¥¤¤ËÆþ¤ì¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1089 src/escputil/escputil.c:1225
 msgid "Number out of range!\n"
-msgstr "Numret är utanför intervallet!\n"
+msgstr "ÈÏ°Ï³°¤Î¥Ú¥¢ÈÖ¹æ¤Ç¤¹¡ª\n"
 
 #: src/escputil/escputil.c:1094 src/escputil/escputil.c:1230
 msgid "I cannot understand what you typed!\n"
-msgstr "Jag kan inte förstå vad du skrev!\n"
+msgstr "ÆþÎÏ¤·¤¿¤â¤Î¤ÏÌµ¸ú¤Ç¤¹¡ª\n"
 
 #: src/escputil/escputil.c:1100
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr "Det bästa linjeparet bör vara numrerat mellan 1 och %d.\n"
+msgstr "ºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤Ï 1 ¤È %d ¤Î´Ö¤ÎÈÖ¹æ¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1107
 msgid "Attempting to set alignment..."
-msgstr "Försöker ställa in justering..."
+msgstr "´Ö³ÖÊäÀµÃæ..."
 
 #: src/escputil/escputil.c:1110
 msgid "succeeded.\n"
-msgstr "lyckades.\n"
+msgstr "´°Î»¤·¤Þ¤·¤¿¡£\n"
 
 #: src/escputil/escputil.c:1111
 #, c-format
@@ -2479,10 +2447,10 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Verifiera att justeringen är korrekt. Efter det att justeringsmönstret\n"
-"skrivits ut igen bör du försäkra dig om att det bästa mönstret för varje\n"
-"linje är mönster %d. Om det inte är det bör du upprepa proceduren för\n"
-"att få bästa utskriftskvalitet.\n"
+"´Ö³ÖÊäÀµ¤¬Àµ¤·¤¤¤«³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£ºÆÅÙ¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤Î°õºþ¤¬´°Î»¤·¤¿¸å¤Ë\n"
+"³Æ¥é¥¤¥ó¤ÎºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤¬¥Ñ¥¿¡¼¥ó %d ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
+"¤â¤·ºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤Ç¤Ê¤¤¾ì¹ç¤Ï¡¢ºÇÅ¬¤Ê°õºþÉÊ¼Á¤òÆÀ¤ë¤¿¤á¤Ë\n"
+"Æ±ÍÍ¤ÎÁàºî¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1126
 #, c-format
@@ -2517,48 +2485,51 @@ msgid ""
 "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
 "damage your printer!\n"
 msgstr ""
-"Läs dessa instruktioner noggrannt innan du fortsätter.\n"
+"¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg låter dig justera utskriftshuvudet på din Epson\n"
-"Stylus-bläckstråleskrivare. Felaktigt användande av detta verktyg kan göra\n"
-"att utskriftskvaliteten försämras och att din skrivare kanske skadas. Detta\n"
-"verktygs korrekthet har inte granskats av Seiko Epson, och ingen som helst\n"
-"garanti medföljer. Hela ansvaret för användande av detta program vilar på\n"
-"dig.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
+"¥«¥é¡¼°õºþ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Þ¤¹¡£\n"
+"¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢°õºþ¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò\n"
+"°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç¤Ï¤Ê"
+"¤¤¤Î¤Ç\n"
+"¡¢Á´¤¯ÌµÊÝ¾Ú¤Ç¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Detta verktyg skriver ut %d överlappande testmönster på ett papper. Det\n"
-"skriver ut ett mönster och matar sedan ut sidan. Du måste sedan mata in\n"
-"samma papper igen, och den kommer att skriva ut ett nytt mönster. Varje\n"
-"mönster består av ett antal alternativ numrerade från %d till %d.\n"
+"¤³¤Î¥Ä¡¼¥ë¤Ï°ìËç¤ÎÍÑ»æ¤Ë %d ¸Ä¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò½Å¤Í°õºþ¤·¤Þ¤¹¡£\n"
+"¤Ä¤Þ¤ê¡¢°ì¥Ñ¥¿¡¼¥ó°õºþ¤¹¤ë¤ÈÇÓ»æ¤¹¤ë¤Î¤Ç¡¢Æ±¤¸ÍÑ»æ¤òµë»æ¤·¤ÆºÆÅÙ°õºþ¤·¤Þ"
+"¤¹¡£\n"
+"³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Þ¤¹¡£\n"
 "\n"
-"När du granskar mönstren bör du leta efter det som har den mjukaste\n"
-"ytan (minst \"korn\"). Granska mönstren väldigt noggrannt för att hitta\n"
-"det bästa. Vi föreslår att du använder bläckstrålepapper av fotokvalitet\n"
-"Om du inte hittar ett mjukt mönster bör du upprepa testerna.\n"
+"¥Ñ¥¿¡¼¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢°ì¤Ä¤Î¥Ñ¥Ã¥Á¤¬³ê¤é¤«¤Ê (\"Î³»Ò\" ¤Ë¶á¤¤) ¥Æ¥¯¥¹"
+"¥Á¥ã\n"
+"¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤½¤ÎÃæ¤«¤éºÇÅ¬¤Ê¥Ñ¥Ã¥Á¤òÁªÂò¤¹¤ë¤¿¤á¤Ë\n"
+"Ãí°Õ¿¼¤¯´Ñ»¡¤·¤Æ²¼¤µ¤¤¡£¥Õ¥©¥ÈÍÑ¤Î¹âÉÊ¼Á¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ¡¢¤¢¤ë¤¤¤Ï\n"
+"¤½¤ì¤Ë»÷¤¿¹âÉÊ¼Á¤ÎÍÑ»æ¤ò»È¤Ã¤Æ¥Æ¥¹¥È¤¹¤ë¤³¤È¤ò¤ª¾©¤á¤·¤Þ¤¹¡£\n"
+"¤â¤·³ê¤é¤«¤Ê¥Ñ¥¿¡¼¥ó¤¬¤Ê¤¤¾ì¹ç¤Ï¡¢¤³¤Î¥Æ¥¹¥È¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
 "\n"
-"Efter att du har granskat alternativen och valt ett mönster kommer du att\n"
-"erbjudas alternativen att spara resultaten (s) i skrivaren, upprepa\n"
-"proceduren (r), eller avsluta utan att spara (q). Att avsluta kommer inte\n"
-"att återställa de tidigare värdena, men att stänga av och sätta på\n"
-"skrivaren kommer att göra det. Om du avslutar måste du upprepa hela\n"
-"proceduren om du vill spara resultaten senare. Det är viktigt att du inte\n"
-"stänger av din skrivare under denna process.\n"
+"¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤Î´Ñ»¡¤¬´°Î»¤·¤¿¤é¥Ñ¥Ã¥Á¤òÀöÂõ¤·¡¢\n"
+"¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊÝÂ¸ (s) ¤¹¤ë¤«¡¢¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë (r) "
+"¤«¡¢\n"
+"ÊÝÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Þ¤»¤ó"
+"¤¬¡¢\n"
+"¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢\n"
+"¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊÝÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+"¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
 "\n"
-"VARNING: DENNA FUNKTION ÄR INTE TESTAD ÄN! Den kanske inte fungerar, och\n"
-"den kanske skadar din skrivare!\n"
+"¡Ú·Ù¹ð¡Û: ¤³¤Îµ¡Ç½¤Ï¤Þ¤À¥Æ¥¹¥È¤·¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢ Æ°ºî¤·¤Ê¤¤¤«¤â¤·¤ì¤Þ¤»¤ó¡ª\n"
+"          ¤Þ¤¿¡¢¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡ª\n"
 
 #: src/escputil/escputil.c:1176
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
-msgstr "Skrivaren %s kräver inte justering av färgutskriftshuvudet.\n"
+msgstr "¥×¥ê¥ó¥¿ %s ¤Ï¥«¥é¡¼¡¦¥Ø¥Ã¥É´Ö³Ö¤ÏÉ¬Í×¤¢¤ê¤Þ¤»¤ó¡£\n"
 
 #: src/escputil/escputil.c:1194
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
 msgstr ""
-"Mata in samma justeringspapper i skrivaren efter det att utskriften\n"
-"är klar.\n"
+"°õºþ¤¬´°Î»¤·¤¿¤é¡¢\n"
+"ºÆÅÙ¡¢¥×¥ê¥ó¥¿¤ËÁ°¤Ë»ÈÍÑ¤·¤¿´Ö³ÖÊäÀµÍÑ»æ¤òÁÞÆþ¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1200
 msgid ""
@@ -2568,97 +2539,96 @@ msgid ""
 "best pattern, and repeat the procedure.\n"
 "Type a pattern number, or '?' for help.\n"
 msgstr ""
-"Granska justeringspappret och bestäm vilket mönster som är mjukast.\n"
-"Detta mönster har den minsta kornigheten.\n"
-"Om du inte kan hitta ett mjukt mönster bör du välja numret för det\n"
-"bästa mönstret och upprepa proceduren.\n"
-"Ange ett mönsternummer, eller \"?\" för hjälp.\n"
+"´Ö³ÖÊäÀµÍÑ»æ¤ò³ÎÇ§¤·¡¢¤É¤Î¥Ñ¥¿¡¼¥ó¤¬°ìÈÖ¤Ê¤á¤é¤«¤Ç¤¢¤ë¤«¤ò¥Á¥§¥Ã¥¯¤·¤Æ²¼¤µ¤¤¡£\n"
+"¤½¤Î¤è¤¦¤Ê¥Ñ¥¿¡¼¥ó¤Ë¤Ï°ìÈÖ¾®¤µ¤¤ \"grain\" ¤¬É½¼¨¤µ¤ì¤Þ¤¹¡£\n"
+"¤½¤Î¤è¤¦¤Ê¥Ñ¥¿¡¼¥ó¤ò³ÎÇ§¤Ç¤­¤Ê¤¤¾ì¹ç¤Ï¡¢¤â¤Ã¤È¤âºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤ÎÈÖ¹æ¤òÁªÂò¤·¡¢\n"
+"¤³¤Î¼ê½ç¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
+"¥Ñ¥¿¡¼¥ó¤ÎÈÖ¹æ¤òÆþÎÏ¤·¤Æ²¼¤µ¤¤ ('?' ¤Ç¥Ø¥ë¥×¤òÉ½¼¨¤·¤Þ¤¹)¡£\n"
 
 #: src/escputil/escputil.c:1236
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr "Det bästa mönstret ska vara numrerat mellan 1 och %d.\n"
+msgstr "ºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤Ï 1 ¤È %d ¤Î´Ö¤ÎÈÖ¹æ¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/escputil/escputil.c:1280
 msgid "Error in input\n"
-msgstr "Fel i indata\n"
+msgstr "ÆþÎÏ¥¨¥é¡¼\n"
 
 #: src/gimp/gimp_color_window.c:193
 msgid "Print Color Adjust"
-msgstr "Justera utskriftsfärg"
+msgstr "°õºþ¥«¥é¡¼Ä´À°"
 
 #: src/gimp/gimp_color_window.c:197
 msgid "Set Defaults"
-msgstr "Ställ in standardvärden"
+msgstr "½é´üÃÍ¤ËÌá¤¹"
 
 #: src/gimp/gimp_color_window.c:199
 msgid "Close"
-msgstr "Stäng"
+msgstr "ÊÄ¤¸¤ë"
 
 #: src/gimp/gimp_color_window.c:230
 msgid "Image preview"
-msgstr "Förhandsgranskning av bild"
+msgstr "²èÁü¤Î¥×¥ì¥Ó¥å¡¼"
 
 #: src/gimp/gimp_color_window.c:240
 msgid "Brightness:"
-msgstr "Ljusstyrka:"
+msgstr "ÌÀ¤ë¤µ:"
 
 #: src/gimp/gimp_color_window.c:248
 msgid ""
 "Set the brightness of the print.\n"
 "0 is solid black, 2 is solid white"
 msgstr ""
-"Ställ in ljusstyrkan på utskriften.\n"
-"0 är helt svart, 2 är helt vitt"
+"°õºþ¤¹¤ëÌÀ¤ë¤µ¤ò¥»¥Ã¥È¤·¤Þ¤¹¡£\n"
+"(0.0Êý¸þ: °Å¤¯ 2.0Êý¸þ: ÌÀ¤ë¤¯)"
 
 #: src/gimp/gimp_color_window.c:260
 msgid "Contrast:"
-msgstr "Kontrast:"
+msgstr "¥³¥ó¥È¥é¥¹¥È:"
 
 #: src/gimp/gimp_color_window.c:268
 msgid "Set the contrast of the print"
-msgstr "Ställ in kontrasten på utskriften"
+msgstr "°õºþ»þ¤Î¥³¥ó¥È¥é¥¹¥È¤ò¥»¥Ã¥È¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_color_window.c:279
 msgid "Cyan:"
-msgstr "Cyan:"
+msgstr "¥·¥¢¥ó:"
 
 #: src/gimp/gimp_color_window.c:287
 msgid "Adjust the cyan balance of the print"
-msgstr "Justera cyanbalansen på utskriften"
+msgstr "°õºþ»þ¤Î¥·¥¢¥ó¿§¤Î¥Ð¥é¥ó¥¹¤òÄ´À°¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_color_window.c:298
 msgid "Magenta:"
-msgstr "Magenta:"
+msgstr "¥Þ¥¼¥ó¥¿:"
 
 #: src/gimp/gimp_color_window.c:306
 msgid "Adjust the magenta balance of the print"
-msgstr "Justera magentabalansen på utskriften"
+msgstr "°õºþ»þ¤Î¥Þ¥¼¥ó¥¿¿§¤Î¥Ð¥é¥ó¥¹¤òÄ´À°¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_color_window.c:317
 msgid "Yellow:"
-msgstr "Gult:"
+msgstr "²«¿§:"
 
 #: src/gimp/gimp_color_window.c:325
 msgid "Adjust the yellow balance of the print"
-msgstr "Justera gulbalansen på utskriften"
+msgstr "°õºþ»þ¤Î²«¿§¤Î¥Ð¥é¥ó¥¹¤òÄ´À°¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_color_window.c:336
 msgid "Saturation:"
-msgstr "Mättnad:"
+msgstr "ºÌÅÙ:"
 
 #: src/gimp/gimp_color_window.c:344
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
-"Justera mättnaden (färgbalansen) på utskriften\n"
-"Använd noll som mättnad för att skapa gråskaleutdata med färgbläck och svart "
-"bläck"
+"°õºþ»þ¤ÎºÌÅÙ (¥«¥é¡¼¡¦¥Ð¥é¥ó¥¹) ¤òÄ´À°¤·¤Þ¤¹¡£\n"
+"¥«¥é¡¼¤È¹õ¤ÎÎ¾Êý¤Î¥¤¥ó¥¯¤ò»È¤Ã¤Æ¥°¥ì¡¼¥¹¥±¡¼¥ë½ÐÎÏ¤¹¤ë¾ì¹ç¤Ï 0 ¤Ë¤·¤Æ²¼¤µ¤¤¡£"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
-msgstr "Intensitet:"
+msgstr "Ç»ÅÙ:"
 
 #: src/gimp/gimp_color_window.c:365
 msgid ""
@@ -2666,13 +2636,13 @@ msgid ""
 "ink bleeds through the paper or smears; increase the density if black "
 "regions are not solid."
 msgstr ""
-"Justera intensiteten (mängden bläck) på utskriften. Minska intensiteten om "
-"bläcket tränger igenom pappret eller smetar; öka intensiteten om svarta "
-"områden inte är helt svarta."
+"°õºþ»þ¤ÎÇ»ÅÙ (¥¤¥ó¥¯¤ÎÎÌ) ¤òÄ´À°¤·¤Þ¤¹¡£\n"
+"ÍÑ»æ¤ËÂçÎÌ¤Î¥¤¥ó¥¯¤¬ÉÕ¤¤¤¿¤ê±ø¤ì¤¿¤ê¤¹¤ë¾ì¹ç¤ÏÇ»ÅÙ¤òÄã¤¯¤·¤Æ²¼¤µ¤¤;\n"
+"¹õ¤ÎÉôÊ¬¤¬¤Þ¤Ð¤é¤Ë¤Ê¤ë¾ì¹ç¤ÏÇ»ÅÙ¤ò¹â¤¯¤·¤Æ²¼¤µ¤¤¡£"
 
 #: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
-msgstr "Gamma:"
+msgstr "¥¬¥ó¥Þ:"
 
 #: src/gimp/gimp_color_window.c:387
 msgid ""
@@ -2680,14 +2650,13 @@ msgid ""
 "brighter print, while smaller values will produce a generally darker print. "
 "Black and white will remain the same, unlike with the brightness adjustment."
 msgstr ""
-"Justera gammavärdet på utskriften. Större värden kommer att skapa en i "
-"allmänhet ljusare utskrift, medan mindre värden kommer att skapa en mörkare "
-"utskrift. Svart och vitt kommer att vara samma, till skillnad från då "
-"ljusstyrkeinställningen används."
+"°õºþ»þ¤Î¥¬¥ó¥ÞÃÍ¤òÄ´À°¤·¤Þ¤¹¡£\n"
+"ÃÍ¤òÂç¤­¤¯¤¹¤ë¤È°ìÈÌÅª¤ËÌÀ¤ë¤¤°õºþ¤Ë¤Ê¤ê¡¢¾®¤µ¤¯¤¹¤ë¤È°Å¤¤°õºþ¤Ë¤Ê¤ê¤Þ¤¹¡£\n"
+"ÌÀ¤ë¤µ¤ÎÄ´À°¤È¤Ï°Û¤Ê¤ê¡¢¹õ¿§¤ÈÇò¿§¤ÏÆ±¤¸¤Þ¤Þ¤Ç¤¹¡£"
 
 #: src/gimp/gimp_color_window.c:403
 msgid "Dither Algorithm:"
-msgstr "Färgutjämningsalgoritm:"
+msgstr "¥Ç¥£¥¶¥ê¥ó¥°Êý¼°:"
 
 #: src/gimp/gimp_color_window.c:411
 msgid ""
@@ -2698,13 +2667,13 @@ msgid ""
 "art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
-"Välj vilken färgutjämningsalgoritm som ska användas.\n"
-"Adaptiv hybrid producerar normalt bäst kvalitet i de flesta sammanhang.\n"
-"Sorterad är snabbare och producerar nästan lika bra kvalitet på "
-"fotografier.\n"
-"Snabb och Mycket snabb är avsevärt snabbare, och fungerar bra med text och "
-"radgrafik.\n"
-"Hybrid Floyd-Steinberg producerar i allmänhet mycket sämre resultat."
+"»ÈÍÑ¤¹¤ë¥Ç¥£¥¶¥ê¥ó¥°Êý¼°¤òÁªÂò¤·¤Þ¤¹¡£\n"
+"\"¥¢¥À¥×¥Æ¥£¥Ö¡¦¥Ï¥¤¥Ö¥ê¥Ã¥ÉÊý¼°\": °ìÈÌÅª¤ËºÇÅ¬¤ÊÉÊ¼Á¤òÄó¶¡¤·¤Þ¤¹¡£\n"
+"\"Å¬±þ½ç½øÊý¼°\": ¹âÂ®¤Ç¼Ì¿¿¤Ê¤É¤Î¹âÉÊ¼Á¤Ê½ÐÎÏ¤òÄó¶¡¤·¤Þ¤¹¡£\n"
+"\"¹âÂ®Êý¼°\",\"Ä¶¹âÂ®Êý¼°\": ¤«¤Ê¤ê¹âÂ®¤Ë°õºþ¤·¡¢¥Æ¥­¥¹¥È¤ä¥é¥¤¥ó¥¢¡¼¥È¤ËÅ¬¤·"
+"¤Æ¤¤¤Þ¤¹¡£\n"
+"\"¥Ï¥¤¥Ö¥ê¥Ã¥É¡¦¥Õ¥í¥¤¥É-¥¹¥¿¥¤¥ó¥Ð¡¼¥°Êý¼°\": °ìÈÌÅª¤ËÄãÉÊ¼Á¤Ê½ÐÎÏ¤òÄó¶¡¤·¤Þ"
+"¤¹¡£"
 
 #.
 #. * Create the main dialog
@@ -2712,40 +2681,40 @@ msgstr ""
 #: src/gimp/gimp_main_window.c:327
 #, c-format
 msgid "%s -- Print v%s"
-msgstr "%s -- Utskrift v%s"
+msgstr "%s -- °õºþ v%s"
 
 #: src/gimp/gimp_main_window.c:336
 msgid "About"
-msgstr "Om"
+msgstr "¾ðÊó"
 
 #: src/gimp/gimp_main_window.c:338
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr ""
-"Skriv ut och\n"
-"spara inställningar"
+"°õºþ¤È\n"
+"ÀßÄê¤ÎÊÝÂ¸"
 
 #: src/gimp/gimp_main_window.c:340
 msgid ""
 "Save\n"
 "Settings"
 msgstr ""
-"Spara\n"
-"inställningar"
+"ÀßÄê¤Î\n"
+"ÊÝÂ¸"
 
 #: src/gimp/gimp_main_window.c:342
 msgid "Print"
-msgstr "Skriv ut"
+msgstr "°õºþ"
 
 #: src/gimp/gimp_main_window.c:344 src/gimp/gimp_main_window.c:626
 #: src/gimp/gimp_main_window.c:795
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "¼è¤ê¾Ã¤·"
 
 #: src/gimp/gimp_main_window.c:383
 msgid "Preview"
-msgstr "Förhandsgranskning"
+msgstr "¥×¥ì¥Ó¥å¡¼"
 
 #: src/gimp/gimp_main_window.c:407
 msgid ""
@@ -2760,131 +2729,130 @@ msgid ""
 "If you click another button while dragging the mouse, the image will return "
 "to its original position."
 msgstr ""
-"Positionera bilden på sidan.\n"
-"Klicka och dra med huvudknappen för att positionera bilden.\n"
-"Klicka och dra med den andra knappen för att flytta bilden med finare "
-"precision; varje flyttenhet flyttar bilden med en punkt (1/72\")\n"
-"Klicka och dra med den tredje (mittersta) musknappen för att flytta bilden i "
-"enheter av bildstorleken.\n"
-"Att hålla ned skifttangenten vid klickande och dragande begränsar flytten "
-"till rörelse i endast horisontell och vertikal led.\n"
-"Om du klickar någon annan knapp under tiden du drar med musen kommer bilden "
-"att återgå till sin ursprungliga position."
+"°õºþ»þ¤Î²èÁü¤Î°ÌÃÖ¤òÀßÄê¤·¤Þ¤¹¡£\n"
+"¥Þ¥¦¥¹¤Îº¸¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤·¤¿¾ì½ê¤Ë²èÁü¤¬ÇÛÃÖ¤µ¤ì¤Þ¤¹¡£\n"
+"¥Þ¥¦¥¹¤Î±¦¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤¹¤ë¤È¡¢ºÙ¤«¤¤¥ì¥Ù¥ë¤Ç²èÁü¤ò°ÜÆ°¤·¤Þ¤¹; Ìó 1/72 ¥¤"
+"¥ó¥ÁÃ±°Ì¤Ç°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£\n"
+"¥Þ¥¦¥¹¤ÎÃæ¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤¹¤ë¤È¡¢²èÁü¤ÎÂç¤­¤µ¤ÎÃ±°Ì¤Ç°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç"
+"¤¹¡£\n"
+"[SHIFT] ¥­¡¼¤ò²¡¤·¤Ê¤¬¤é¥Þ¥¦¥¹¤ò¥É¥é¥Ã¥°¤¹¤ë¤È¡¢¿åÊ¿¤Þ¤¿¤Ï¿âÄ¾Êý¸þ¤Ë¤Î¤ß²èÁü"
+"¤ò°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£\n"
+"¥É¥é¥Ã¥°Ãæ¤ËÊÌ¤Î¥Ü¥¿¥ó¤ò¥¯¥ê¥Ã¥¯¤¹¤ë¤È¡¢²èÁü¤Ï¸µ¤Î¾ì½ê¤ËÌá¤ê¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:434
 msgid "Position"
-msgstr "Position"
+msgstr "°ÌÃÖ"
 
 #: src/gimp/gimp_main_window.c:452
 msgid "Auto"
-msgstr "Automatik"
+msgstr "¼«Æ°"
 
 #: src/gimp/gimp_main_window.c:454
 msgid "Portrait"
-msgstr "Stående"
+msgstr "½ÄÃÖ¤­"
 
 #: src/gimp/gimp_main_window.c:456
 msgid "Landscape"
-msgstr "Liggande"
+msgstr "²£ÃÖ¤­"
 
 #: src/gimp/gimp_main_window.c:458
 msgid "Upside down"
-msgstr "Uppochner"
+msgstr "¾å²¼"
 
 #: src/gimp/gimp_main_window.c:460
 msgid "Seascape"
-msgstr "Liggande uppochner"
+msgstr "²£Ä¹"
 
 #: src/gimp/gimp_main_window.c:464
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
-"Välj orientering: stående, liggande, uppochner eller liggande uppochner"
+"ÍÑ»æ¤ÎÊý¸þ¤òÁªÂò¤·¤Þ¤¹: ½ÄÃÖ¤­¡¢²£ÃÖ¤­¡¢¾å²¼¡¢¤Þ¤¿¤Ï²£Ä¹ (¾å²¼¤Ä¤­¤Î²£ÃÖ¤­)"
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
-msgstr "Orientering:"
+msgstr "ÍÑ»æ¤Î¸þ¤­:"
 
 #: src/gimp/gimp_main_window.c:483
 msgid "Left:"
-msgstr "Vänster:"
+msgstr "º¸Â¦:"
 
 #: src/gimp/gimp_main_window.c:487
 msgid "Distance from the left of the paper to the image"
-msgstr "Avstånd från vänsterkanten på pappret till bilden"
+msgstr "ÍÑ»æ¤Îº¸Ã¼¤«¤é²èÁü¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:496
 msgid "Top:"
-msgstr "Övre kant:"
+msgstr "¾åÂ¦:"
 
 #: src/gimp/gimp_main_window.c:500
 msgid "Distance from the top of the paper to the image"
-msgstr "Avstånd från överkanten på pappret till bilden"
+msgstr "ÍÑ»æ¤Î¾åÃ¼¤«¤é²èÁü¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:509
 msgid "Right:"
-msgstr "Höger:"
+msgstr "±¦Â¦:"
 
 #: src/gimp/gimp_main_window.c:513
 msgid "Distance from the left of the paper to the right of the image"
-msgstr "Avstånd från vänsterkanten på pappret till högerkanten på bilden"
+msgstr "ÍÑ»æ¤Îº¸Ã¼¤«¤é²èÁü¤Î±¦Ã¼¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:523
 msgid "Right Border:"
-msgstr "Högerkant:"
+msgstr "±¦Â¦¤Î±ï:"
 
 #: src/gimp/gimp_main_window.c:527
 msgid "Distance from the right of the paper to the image"
-msgstr "Avstånd från högerkanten på pappret till bilden"
+msgstr "ÍÑ»æ¤Î±¦Ã¼¤«¤é²èÁü¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:537
 msgid "Bottom:"
-msgstr "Nedre kant:"
+msgstr "²¼Â¦:"
 
 #: src/gimp/gimp_main_window.c:541
 msgid "Distance from the top of the paper to the bottom of the image"
-msgstr "Avstånd från överkanten på pappret till nederkanten på bilden"
+msgstr "ÍÑ»æ¤Î¾åÃ¼¤«¤é²èÁü¤Î²¼Ã¼¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:551
 msgid "Bottom Border:"
-msgstr "Nederkant:"
+msgstr "²¼Â¦¤Î±ï:"
 
 #: src/gimp/gimp_main_window.c:555
 msgid "Distance from the bottom of the paper to the image"
-msgstr "Avstånd från nederkanten på pappret till bilden"
+msgstr "ÍÑ»æ¤Î²¼Ã¼¤«¤é²èÁü¤Þ¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:572
 msgid "Center:"
-msgstr "Centrera:"
+msgstr "Ãæ¿´:"
 
 #: src/gimp/gimp_main_window.c:576
 msgid "Vertically"
-msgstr "Vertikalt"
+msgstr "¿âÄ¾"
 
 #: src/gimp/gimp_main_window.c:581
 msgid "Center the image vertically on the paper"
-msgstr "Centrera bilden vertikalt på pappret"
+msgstr "ÍÑ»æ¤Î¿âÄ¾Êý¸þ¤ÎÃæ¿´¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:587
 msgid "Both"
-msgstr "Både och"
+msgstr "Î¾Ã¼"
 
 #: src/gimp/gimp_main_window.c:592
 msgid "Center the image on the paper"
-msgstr "Centrera bilden på pappret"
+msgstr "ÍÑ»æ¤ÎÃæ¿´¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:599
 msgid "Horizontally"
-msgstr "Horisontellt"
+msgstr "¿åÊ¿"
 
 #: src/gimp/gimp_main_window.c:604
 msgid "Center the image horizontally on the paper"
-msgstr "Centrera bilden horisontellt på pappret"
+msgstr "ÍÑ»æ¤Î¿åÊ¿Êý¸þ¤ÎÃæ¿´¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:620
 msgid "Setup Printer"
-msgstr "Konfigurera skrivare"
+msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò"
 
 #: src/gimp/gimp_main_window.c:624 src/gimp/gimp_main_window.c:793
 #: src/gimp/gimp_main_window.c:830
@@ -2896,37 +2864,37 @@ msgstr "OK"
 #.
 #: src/gimp/gimp_main_window.c:648 src/gimp/gimp_main_window.c:906
 msgid "Printer Model:"
-msgstr "Skrivarmodell:"
+msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°:"
 
 #: src/gimp/gimp_main_window.c:660
 msgid "Select your printer model"
-msgstr "Välj din skrivarmodell"
+msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #.
 #. * PPD file.
 #.
 #: src/gimp/gimp_main_window.c:698
 msgid "PPD File:"
-msgstr "PPD-fil:"
+msgstr "PPD ¥Õ¥¡¥¤¥ë:"
 
 #: src/gimp/gimp_main_window.c:714
 msgid "Enter the correct PPD filename for your printer"
-msgstr "Ange rätt PPD-filnamn för din skrivare"
+msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ÍÑ¤Î PPD ¥Õ¥¡¥¤¥ëÌ¾¤òÆþÎÏ¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:717
 msgid "Browse"
-msgstr "Bläddra"
+msgstr "»²¾È"
 
 #: src/gimp/gimp_main_window.c:723
 msgid "Choose the correct PPD filename for your printer"
-msgstr "Välj rätt PPD-filnamn för din skrivare"
+msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ÍÑ¤Î PPD ¥Õ¥¡¥¤¥ë¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #.
 #. * Print command.
 #.
 #: src/gimp/gimp_main_window.c:733
 msgid "Command:"
-msgstr "Kommando:"
+msgstr "¥³¥Þ¥ó¥É:"
 
 #: src/gimp/gimp_main_window.c:746
 msgid ""
@@ -2934,43 +2902,42 @@ msgid ""
 "remove the `-l' or `-oraw' from the command string, or printing will "
 "probably fail!"
 msgstr ""
-"Ange rätt kommando för atyy skriva ut till din skrivare. Obs: Ta inte bort "
-"\"-l\" eller \"-oraw\" från kommandosträngen. Om du gör detta kommer "
-"utskriften troligtvis att misslyckas!"
+"¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¸þ¤±¤Î°õºþ¥³¥Þ¥ó¥É¤òÆþÎÏ¤·¤Þ¤¹¡£¡ÚÃíµ­¡Û: '-l' ¤Þ¤¿¤Ï '-"
+"oraw' ¥ª¥×¥·¥ç¥ó¤òºï½ü¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£°õºþ¤Ë¼ºÇÔ¤·¤Þ¤¹¡ª"
 
 #.
 #. * Output file selection dialog.
 #.
 #: src/gimp/gimp_main_window.c:755
 msgid "Print To File?"
-msgstr "Skriv ut till fil?"
+msgstr "¥Õ¥¡¥¤¥ë¤Ë°õºþ¤·¤Þ¤¹¤«¡©"
 
 #.
 #. * PPD file selection dialog.
 #.
 #: src/gimp/gimp_main_window.c:770
 msgid "PPD File?"
-msgstr "PPD-fil?"
+msgstr "PPD ¥Õ¥¡¥¤¥ë¤Ç¤¹¤«¡©"
 
 #: src/gimp/gimp_main_window.c:789
 msgid "Define New Printer"
-msgstr "Ange ny skrivare"
+msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
 
 #: src/gimp/gimp_main_window.c:810 src/gimp/gimp_main_window.c:901
 msgid "Printer Name:"
-msgstr "Skrivarnamn:"
+msgstr "¥×¥ê¥ó¥¿Ì¾:"
 
 #: src/gimp/gimp_main_window.c:814
 msgid "Enter the name you wish to give this logical printer"
-msgstr "Ange det namn som du vill ge denna logiska skrivare"
+msgstr "ÍøÍÑ¤¹¤ëÏÀÍý¥×¥ê¥ó¥¿Ì¾¤ò»ØÄê¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:826
 msgid "About Gimp-Print "
-msgstr "Om Gimp-Print "
+msgstr "Gimp-Print"
 
 #: src/gimp/gimp_main_window.c:836
 msgid "Gimp-Print Version "
-msgstr "Gimp-Print version "
+msgstr "Gimp-Print ¥Ð¡¼¥¸¥ç¥ó "
 
 #: src/gimp/gimp_main_window.c:836
 msgid ""
@@ -2997,172 +2964,149 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Copyright © 1997-2001 Michael Sweet, Robert Krawitz,\n"
-"och resten av utvecklingsteamet bakom Gimp-Print.\n"
+"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"¤½¤·¤Æ Gimp-Print ³«È¯¥Á¡¼¥à¡£\n"
 "\n"
-"Besök vår webbsida på http://gimp-print.sourceforge.net.\n"
+"¥Û¡¼¥à¥Ú¡¼¥¸ <http://gimp-print.sourceforge.net> ¤Ë¤ª±Û¤·²¼¤µ¤¤¡£\n"
 "\n"
-"Följande text är en informell översättning som enbart tillhandahålls i\n"
-"informativt syfte. För alla juridiska tolkningar gäller den engelska\n"
-"originaltexten, som är bifogad nedan.\n"
+"¤³¤Î¥×¥í¥°¥é¥à¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¹; ¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâÃÄ¤¬È¯¹Ô¤¹¤ë\n"
+"GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ÎÂèÆóÈÇ¤Þ¤¿¤Ï¤½¤ì°Ê¹ß¤ÎÈÇ¤Î²¼¤Ç²þÊÑ¡¦½¤Àµ¡¦ºÆÇÛÉÛ¤¬\n"
+"Ç§¤á¤é¤ì¤Æ¤¤¤Þ¤¹¡£\n"
 "\n"
-"Detta program är fri programvara. Du kan distribuera det och/eller\n"
-"modifiera det under villkoren i GNU General Public License, publicerad\n"
-"av Free Software Foundation, antingen version 2 eller (om du så vill)\n"
-"någon senare version.\n"
+"¤³¤Î¥×¥í¥°¥é¥à¤ÏÊØÍø¤Ë»È¤Ã¤Æ¤â¤é¤¨¤ë¤è¤¦¤ËÇÛÉÛ¤µ¤ì¤Æ¤¤¤Þ¤¹¤¬¡¢\n"
+"´°Á´¤ËÌµÊÝ¾Ú¤Ç¤¹; ¾¦ÍÑÍøÍÑ¤Þ¤¿¤Ï¤¢¤ëÆÃÄê¤ÎÌÜÅª¤Ë¤ª¤±¤ëÅ¬¹çÀ­¤ÎÊÝ¾Ú¤â\n"
+"¤¢¤ê¤Þ¤»¤ó¡£¾ÜºÙ¤Ï GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ò¤´Í÷²¼¤µ¤¤¡£\n"
 "\n"
-"Detta program distribueras i hopp om att det ska vara användbart, men\n"
-"UTAN NÅGON SOM HELST GARANTI, även utan underförstådd garanti om\n"
-"SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT ÄNDAMÅL. Se GNU General\n"
-"Public License för ytterligare information.\n"
-"\n"
-"Du bör ha fått en kopia av GNU General Public License tillsammans med\n"
-"detta program. Om inte, skriv till Free Software Foundation, In.,\n"
-"59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.\n"
-"\n"
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2 of the License, or\n"
-"(at your option) any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software\n"
-"Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
+"µ®Êý¤Ï¡¢¤³¤Î¥×¥í¥°¥é¥à¤ËÅ¬±þ¤·¤¿ GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤Î¥³¥Ô¡¼¤ò\n"
+"¼õ¤±¼è¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹; ¤â¤·¼õ¤±¼è¤Ã¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢\n"
+"Free Software Foundation, Inc., 56 Temple Place - \n"
+"Suite 330, Boston, MA 02111-1307, USA ¤Þ¤ÇÏ¢Íí¤·¤Æ²¼¤µ¤¤¡£\n"
 
 #: src/gimp/gimp_main_window.c:884
 msgid "Printer Settings"
-msgstr "Skrivarinställningar"
+msgstr "¥×¥ê¥ó¥¿¤ÎÀßÄê"
 
 #: src/gimp/gimp_main_window.c:897
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
-msgstr ""
-"Välj namnet på skrivaren (inte skrivarens typ eller modell) som du vill "
-"skriva ut till"
+msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ (¥×¥ê¥ó¥¿¤Î·¿¼°¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó) Ì¾¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #.
 #. * Setup printer button
 #.
 #: src/gimp/gimp_main_window.c:917
 msgid "Setup Printer..."
-msgstr "Konfigurera skrivare..."
+msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò..."
 
 #: src/gimp/gimp_main_window.c:919
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
-msgstr ""
-"Välj den skrivarmodell, PPD-fil och kommando som används för att skriva ut "
-"till denna skrivare"
+msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤È PPD ¥Õ¥¡¥¤¥ë¡¢°õºþ¥³¥Þ¥ó¥É¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #.
 #. * New printer button
 #.
 #: src/gimp/gimp_main_window.c:934
 msgid "New Printer..."
-msgstr "Ny skrivare..."
+msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿..."
 
 #: src/gimp/gimp_main_window.c:936
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
-"Ange en ny logisk skrivare. Detta kan användas för att namnge en samling "
-"inställningar som du vill komma ihåg för framtida användning."
+"¿·µ¬¤ËÏÀÍý¥×¥ê¥ó¥¿¤òÄêµÁ¤·¤Þ¤¹¡£¤³¤ì¤Ï¼¡²ó»ÈÍÑ¤¹¤ë¤¿¤á¤Ë³Ð¤¨¤Æ¤ª¤­¤¿¤¤ÀßÄêÌ¾"
+"¤Ë»ÈÍÑ¤µ¤ì¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
-msgstr "Storlek på pappret som du vill skriva ut till"
+msgstr "°õºþ¤¹¤ëÍÑ»æ¤Î¥µ¥¤¥º¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:960
 msgid "Media Size:"
-msgstr "Mediastorlek:"
+msgstr "ÍÑ»æ¥µ¥¤¥º:"
 
 #: src/gimp/gimp_main_window.c:969
 msgid "Dimensions:"
-msgstr "Dimensioner:"
+msgstr "À£Ë¡:"
 
 #: src/gimp/gimp_main_window.c:972 src/gimp/gimp_main_window.c:1188
 msgid "Width:"
-msgstr "Bredd:"
+msgstr "Éý:"
 
 #: src/gimp/gimp_main_window.c:983
 msgid "Width of the paper that you wish to print to"
-msgstr "Bredd på pappret som du vill skriva ut till"
+msgstr "°õºþ¤¹¤ëÍÑ»æ¤ÎÉý¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:989 src/gimp/gimp_main_window.c:1201
 msgid "Height:"
-msgstr "Höjd:"
+msgstr "¹â¤µ:"
 
 #: src/gimp/gimp_main_window.c:1000
 msgid "Height of the paper that you wish to print to"
-msgstr "Höjd på pappret som du vill skriva ut till"
+msgstr "°õºþ¤¹¤ëÍÑ»æ¤Î¹â¤µ¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1016
 msgid "Type of media you're printing to"
-msgstr "Typ av media som du skriver ut till"
+msgstr "°õºþ¤¹¤ëÍÑ»æ¤Î¼ïÎà¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1019
 msgid "Media Type:"
-msgstr "Mediatyp:"
+msgstr "ÍÑ»æ¤Î¼ïÎà:"
 
 #: src/gimp/gimp_main_window.c:1032
 msgid "Source (input slot) of media you're printing to"
-msgstr "Källa (inmatningsfack) med media som du skriver ut till"
+msgstr "°õºþ»þ¤Îµë»æÊý¼°¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1035
 msgid "Media Source:"
-msgstr "Mediakälla:"
+msgstr "µë»æÊýË¡:"
 
 #: src/gimp/gimp_main_window.c:1048
 msgid "Type of ink in the printer"
-msgstr "Typ av bläck i skrivaren"
+msgstr "°õºþ»þ¤Î¥¤¥ó¥¯¤Î¼ïÎà¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1051
 msgid "Ink Type:"
-msgstr "Bläcktyp:"
+msgstr "¥¤¥ó¥¯¤Î¼ïÎà:"
 
 #: src/gimp/gimp_main_window.c:1064
 msgid "Resolution and quality of the print"
-msgstr "Upplösning och kvalitet på utskriften"
+msgstr "°õºþ»þ¤Î²òÁüÅÙ¤ÈÉÊ¼Á¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1067
 msgid "Resolution:"
-msgstr "Upplösning:"
+msgstr "²òÁüÅÙ:"
 
 #: src/gimp/gimp_main_window.c:1083
 msgid "Size"
-msgstr "Storlek"
+msgstr "²èÁü¤Î¥µ¥¤¥º"
 
 #: src/gimp/gimp_main_window.c:1103
 msgid "Scaling:"
-msgstr "Skalning:"
+msgstr "³ÈÂç½Ì¾®:"
 
 #: src/gimp/gimp_main_window.c:1109
 msgid "Set the scale (size) of the image"
-msgstr "Ändra skalningen (storleken) på bilden"
+msgstr "²èÁü¥µ¥¤¥º¤Î³ÈÂç½Ì¾®¤ò¹Ô¤¤¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1142
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
-"Välj huruvida skalning mäts i procent av tillgänglig sidstorlek eller antal "
-"utdatapunkter per tum"
+"³ÈÂç½Ì¾®¤ÎÃ±°Ì¤È¤·¤Æ¡¢ÍÑ»æ¥µ¥¤¥º¤ËÂÐ¤¹¤ëÉ´Ê¬Î¨ (ÈæÎ¨) ¤«¡¢¥É¥Ã¥È¿ô/¥¤¥ó¥Á¤òÁª"
+"Âò¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1147
 msgid "Percent"
-msgstr "Procent"
+msgstr "ÈæÎ¨"
 
 #: src/gimp/gimp_main_window.c:1154
 msgid "Scale the print to the size of the page"
-msgstr "Skala utskriften till storleken på sidan"
+msgstr "ÍÑ»æ¥µ¥¤¥º¤ò 100 ¤È¤·¤¿¾ì¹ç¤ÎÈæÎ¨¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1160
 msgid "PPI"
@@ -3170,39 +3114,39 @@ msgstr "PPI"
 
 #: src/gimp/gimp_main_window.c:1166
 msgid "Scale the print to the number of dots per inch"
-msgstr "Skala utskriften till antalet punkter per tum"
+msgstr "²èÁü¤Î¥É¥Ã¥È¿ô/¥¤¥ó¥Á¤Ç¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1192
 msgid "Set the width of the print"
-msgstr "Ställ in bredden på utskriften"
+msgstr "°õºþ»þ¤ÎÉý¤ò¥»¥Ã¥È¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1205
 msgid "Set the height of the print"
-msgstr "Ställ in bredden på utskriften"
+msgstr "°õºþ»þ¤Î¹â¤µ¤ò¥»¥Ã¥È¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1225
 msgid "Units:"
-msgstr "Enheter:"
+msgstr "Ã±°Ì:"
 
 #: src/gimp/gimp_main_window.c:1230
 msgid "Select the base unit of measurement for printing"
-msgstr "Välj grundenheten för utskrift"
+msgstr "°õºþ»þ¤Î´ðËÜÃ±°Ì¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1233
 msgid "Inch"
-msgstr "tum"
+msgstr "¥¤¥ó¥Á"
 
 #: src/gimp/gimp_main_window.c:1240
 msgid "Set the base unit of measurement to inches"
-msgstr "Ställ in grundenheten till tum"
+msgstr "´ðËÜÃ±°Ì¤ò¥¤¥ó¥Á¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1246
 msgid "cm"
-msgstr "cm"
+msgstr "¥»¥ó¥Á¥á¡¼¥È¥ë"
 
 #: src/gimp/gimp_main_window.c:1252
 msgid "Set the base unit of measurement to centimetres"
-msgstr "Ställ in grundenheten till centimeter"
+msgstr "´ðËÜÃ±°Ì¤ò¥»¥ó¥Á¥á¡¼¥È¥ë¤Ë¤·¤Þ¤¹¡£"
 
 #.
 #. * The "image size" button
@@ -3212,290 +3156,171 @@ msgid ""
 "Use Original\n"
 "Image Size"
 msgstr ""
-"Använd\n"
-"originalbildstorlek"
+"¥ª¥ê¥¸¥Ê¥ë¤Î\n"
+"¥µ¥¤¥º¤ÎÍøÍÑ"
 
 #: src/gimp/gimp_main_window.c:1268
 msgid "Set the print size to the size of the image"
-msgstr "Ställ in storleken på utskriften till storleken på sidan"
+msgstr "²èÁü¤Î¥ª¥ê¥¸¥Ê¥ë¡¦¥µ¥¤¥º¤ò°õºþ¥µ¥¤¥º¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1292
 msgid "Image / Output Settings"
-msgstr "Bild-/utdatainställningar"
+msgstr "²èÁü / ½ÐÎÏÀßÄê"
 
 #: src/gimp/gimp_main_window.c:1305
 msgid "Image Type:"
-msgstr "Bildtyp:"
+msgstr "²èÁü¤Î¼ïÎà:"
 
 #: src/gimp/gimp_main_window.c:1310
 msgid "Optimize the output for the type of image being printed"
-msgstr "Optimera utdata för den typ av bild som skrivs ut"
+msgstr "°õºþ¤¹¤ë²èÁü¤Î¼ïÎà¤«¤é½ÐÎÏ·ë²Ì¤òºÇÅ¬²½¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1321
 msgid "Fastest and brightest color for text and line art"
-msgstr "Snabbaste och ljusaste färg för text och linjegrafik"
+msgstr "¥Æ¥­¥¹¥È¤ä¥é¥¤¥ó¥¢¡¼¥È¸þ¤±¤Ë°ìÈÖÌÀ¤ë¤¯¹âÂ®°õºþ¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1335
 msgid "Best for images dominated by regions of solid color"
-msgstr "Bäst för bilder som domineras av enfärgade områden"
+msgstr "³Ê»Ò¾å¤Î¿§¤Ç¹½À®¤µ¤ì¤¿²èÁü¤òºÇÅ¬²½¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1351
 msgid ""
 "Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
 msgstr ""
-"Långsammast, men noggrannast och mjukast färg för bilder med färgskalor och "
-"fotografier"
+"ÄãÂ®¤Ç¤¹¤¬¡¢Ï¢Â³¤·¤¿¥È¡¼¥ó²èÁü¤ä¼Ì¿¿¸þ¤±¤Ë¤â¤Ã¤È¤âÀºÌ©¤Ç³ê¤é¤«¤Ë¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
-msgstr "Utdatatyp:"
+msgstr "½ÐÎÏ¤Î¼ïÎà:"
 
 #: src/gimp/gimp_main_window.c:1382
 msgid "Select the desired output type"
-msgstr "Välj önskad typ av utdata"
+msgstr "½ÐÎÏ¤¹¤ë·ÁÂÖ¤òÁªÂò¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1385
 msgid "Color"
-msgstr "Färg"
+msgstr "¥«¥é¡¼"
 
 #: src/gimp/gimp_main_window.c:1391
 msgid "Color output"
-msgstr "Färgutdata"
+msgstr "¥«¥é¡¼¤Ç°õºþ¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1396
 msgid "Grayscale"
-msgstr "Gråtoner"
+msgstr "¥°¥ì¡¼¥¹¥±¡¼¥ë"
 
 #: src/gimp/gimp_main_window.c:1403
 msgid "Print in shades of gray using black ink"
-msgstr "Skriv ut i gråtoner genom att använda svart bläck"
+msgstr "¹õ¥¤¥ó¥¯¤ò»È¤Ã¤Æ¥°¥ì¡¼¤Î±Æ¤òÉÕ¤±¤Æ°õºþ¤·¤Þ¤¹¡£"
 
 #: src/gimp/gimp_main_window.c:1410
 msgid "Black and White"
-msgstr "Svartvitt"
+msgstr "¹õ¤ÈÇò"
 
 #: src/gimp/gimp_main_window.c:1417
 msgid "Print in black and white (no color, and no shades of gray)"
-msgstr "Skriv ut i svartvitt (ingen färg och inga gråtoner)"
+msgstr "¹õ¿§¤ÈÇò¿§¤ò»È¤Ã¤Æ°õºþ¤·¤Þ¤¹ (¥«¥é¡¼¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó¡£±Æ¤âÉÕ¤­¤Þ¤»¤ó)¡£"
 
 #.
 #. *  Color adjust button
 #.
 #: src/gimp/gimp_main_window.c:1428
 msgid "Adjust Output..."
-msgstr "Justera utdata..."
+msgstr "½ÐÎÏ¤ÎÄ´À°..."
 
 #: src/gimp/gimp_main_window.c:1435
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
-"Justera färgbalans, ljusstyrka, kontrast, mättnad och färgutjämningsalgoritm"
+"¥«¥é¡¼¥Ð¥é¥ó¥¹¡¢ÌÀ¤ë¤µ¡¢¥³¥ó¥È¥é¥¹¥È¡¢ºÌÅÙ¤È¥Ç¥£¥¶¥ê¥ó¥°Êý¼°¤òÄ´À°¤·¤Þ¤¹¡£"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
-msgstr "Skriver ut..."
+msgstr "°õºþÃæ..."
 
 #: src/gimp/print.c:166
 msgid "<Image>/File/Print..."
-msgstr "<Image>/Arkiv/Skriv ut..."
+msgstr "<Image>/File/°õºþ..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
 #: src/gimp/print.c:1182
 msgid "File"
-msgstr "Fil"
+msgstr "¥Õ¥¡¥¤¥ë"
 
 #: src/ghost/ijsgimpprint.c:140
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
-msgstr "Felaktigt färgutrymme: bps %d kanaler %d utrymme %s\n"
+msgstr "¤ª¤«¤·¤Ê¥«¥é¡¼¶õ´Ö: bps %d ¥Á¥ã¥ó¥Í¥ë %d ¶õ´Ö %s\n"
 
 #: src/ghost/ijsgimpprint.c:148
 msgid "No row buffer\n"
-msgstr "Ingen radbuffert\n"
+msgstr "Äã¥ì¥Ù¥ë¥Ð¥Ã¥Õ¥¡¤¬¤¢¤ê¤Þ¤»¤ó\n"
 
 #: src/ghost/ijsgimpprint.c:181
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-msgstr "Parametern %s är utanför intervallet (värde %f, min %f, max %f)\n"
+msgstr "¥Ñ¥é¥á¡¼¥¿ %s ¤ÏÈÏ°Ï³°¤Ç¤¹ (ÃÍ %f, ºÇ¾®ÃÍ %f, ºÇÂçÃÍ %f)\n"
 
 #: src/ghost/ijsgimpprint.c:187 src/ghost/ijsgimpprint.c:216
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
-msgstr "Kan inte tolka parametern %s=%s (ett tal förväntas)\n"
+msgstr "¥Ñ¥é¥á¡¼¥¿ %s=%s (¤ª¤½¤é¤¯¿ôÃÍ) ¤ò²òÀÏ¤Ç¤­¤Þ¤»¤ó\n"
 
 #: src/ghost/ijsgimpprint.c:210
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
-msgstr "Parametern %s är utanför intervallet (värde %d, min %d, max %d)\n"
+msgstr "¥Ñ¥é¥á¡¼¥¿ %s ¤ÏÈÏ°Ï³°¤Ç¤¹ (ÃÍ %d, ºÇ¾®ÃÍ %d, ºÇÂçÃÍ %d)\n"
 
 #: src/ghost/ijsgimpprint.c:363
 msgid "Printer must be specified with -sModel\n"
-msgstr "Skrivaren måste anges med -sModel\n"
+msgstr "¥×¥ê¥ó¥¿¤ò -s·¿¼° ¤ò»È¤Ã¤Æ»ØÄê¤·¤Æ²¼¤µ¤¤\n"
 
 #: src/ghost/ijsgimpprint.c:365
 #, c-format
 msgid "Printer %s is not a known model\n"
-msgstr "Skrivaren %s är inte en känd modell\n"
+msgstr "¥×¥ê¥ó¥¿ %s ¤ÏÉÔÌÀ¤Ê·¿¼°¤Ç¤¹\n"
 
 #: src/ghost/ijsgimpprint.c:635
 #, c-format
 msgid "Unknown option %s\n"
-msgstr "Okänd flagga %s\n"
+msgstr "ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó %s ¤Ç¤¹\n"
 
 #: src/ghost/ijsgimpprint.c:778
 #, c-format
 msgid "%.0f of %.0f\n"
-msgstr "%.0f av %.0f\n"
+msgstr "%.0f / %.0f\n"
 
 #: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
-msgstr "ijs_server_get_page_header misslyckades %d\n"
+msgstr "ijs_server_get_page_header ¤Ë¼ºÇÔ %d\n"
 
 #: src/ghost/ijsgimpprint.c:895
 #, c-format
 msgid "image_init failed %d\n"
-msgstr "image_init misslyckades %d\n"
+msgstr "image_init ¤Ë¼ºÇÔ %d\n"
 
 #: src/ghost/ijsgimpprint.c:906
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
-msgstr "Kan inte öppna fildeskriptor: %s\n"
+msgstr "¥Õ¥¡¥¤¥ë¡¦¥Ç¥£¥¹¥¯¥ê¥×¥¿¤ò³«¤±¤Þ¤»¤ó: %s\n"
 
 #: src/ghost/ijsgimpprint.c:918
 #, c-format
 msgid "Unable to open %s: %s\n"
-msgstr "Kan inte öppna %s: %s\n"
+msgstr "%s ¤ò³«¤±¤Þ¤»¤ó: %s\n"
 
 #: src/ghost/ijsgimpprint.c:930
 #, c-format
 msgid "Unknown printer %s\n"
-msgstr "Okänd skrivare %s\n"
+msgstr "¥×¥ê¥ó¥¿ %s ¤¬ÉÔÌÀ¤Ç¤¹\n"
 
 #: src/ghost/ijsgimpprint.c:961
 msgid "Bad parameters; cannot continue!\n"
-msgstr "Felaktiga parametrar; kan inte fortsätta!\n"
+msgstr "¤ª¤«¤·¤Ê¥Ñ¥é¥á¡¼¥¿; Â³¹Ô¤Ç¤­¤Þ¤»¤ó¡ª\n"
 
 #: src/ghost/ijsgimpprint.c:971
 #, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Hämtande av nästa rad misslyckades vid %.0f\n"
-
-#~ msgid ""
-#~ "Please inspect the print, and choose the pattern in each set.\n"
-#~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
-#~ msgstr ""
-#~ "Granska utskriften och välj mönstret i varje par.\n"
-#~ "Skriv in ett mönsternummer, \"?\" för hjälp, eller \"r\" för att upprepa "
-#~ "proceduren.\n"
-
-#~ msgid "13x19"
-#~ msgstr "13×19"
-
-#~ msgid "Monarch"
-#~ msgstr "Monarch"
-
-#~ msgid "Long 3"
-#~ msgstr "Long 3"
-
-#~ msgid "Long 4"
-#~ msgstr "Long 4"
-
-#~ msgid "Kaku"
-#~ msgstr "Kaku"
-
-#~ msgid "HP Greeting Card"
-#~ msgstr "HP-gratulationskort"
-
-#~ msgid "1440 x 360 DPI"
-#~ msgstr "1440 × 360 DPI"
-
-#~ msgid "1440 x 360 DPI Unidirectional"
-#~ msgstr "1440 × 360 DPI enkelriktad"
-
-#~ msgid "1440 x 360 DPI High Quality"
-#~ msgstr "1440 × 360 DPI hög kvalitet"
-
-#~ msgid "1440 x 360 DPI High Quality Uni"
-#~ msgstr "1440 × 360 DPI enkelriktad hög kvalitet"
-
-#~ msgid "1440 x 360 DPI Highest Quality"
-#~ msgstr "1440 × 360 DPI högsta kvalitet"
-
-#~ msgid ""
-#~ "Please insert your alignment test page in the printer once more\n"
-#~ "for the final save of your alignment settings.  When the printer\n"
-#~ "feeds the page through, your settings have been saved.\n"
-#~ msgstr ""
-#~ "Mata in din justeringstestsida en gång till i skrivaren för det\n"
-#~ "slutgiltiga sparandet av justeringsinställningarna. När skrivaren\n"
-#~ "matar igenom pappret är dina inställningar sparade.\n"
-
-#~ msgid ""
-#~ "Please inspect the print, and choose the best pair of lines\n"
-#~ "in pattern #%d, and then insert a fresh page in the input tray.\n"
-#~ "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-#~ msgstr ""
-#~ "Granska utskriften, och välj det bästa linjeparet i mönster nummer %d,\n"
-#~ "och mata sedan in en ny sida i inmatningsfacket. Skriv in ett parnummer,\n"
-#~ "\"?\" för hjälp, eller \"r\" för att upprepa försöket med detta mönster.\n"
-
-#~ msgid ""
-#~ "Aligning phase %d, and performing final test.\n"
-#~ "Please insert a fresh sheet of paper.\n"
-#~ msgstr ""
-#~ "Justeringsfas %d, och utför sista testet.\n"
-#~ "Mata in ett nytt pappersark.\n"
-
-#~ msgid "Aligning phase %d, and starting phase %d.\n"
-#~ msgstr "Justeringsfas %d, och startar fas %d.\n"
-
-#~ msgid "%s is not a valid %s\n"
-#~ msgstr "%s är inte en giltig %s\n"
-
-#~ msgid "%s is not a valid page size\n"
-#~ msgstr "%s är inte en giltig pappersstorlek\n"
-
-#~ msgid "%s is not a valid media source\n"
-#~ msgstr "%s är inte en giltig mediakälla\n"
-
-#~ msgid "%s is not a valid resolution\n"
-#~ msgstr "%s är inte en giltig upplösning\n"
-
-#~ msgid "%s is not a valid ink type\n"
-#~ msgstr "%s är inte en giltig bläcktyp\n"
-
-#~ msgid "flsa"
-#~ msgstr "flsa"
-
-#~ msgid "flse"
-#~ msgstr "flse"
-
-#~ msgid "Center the image vertically on the paper!"
-#~ msgstr "Centrera bilden vertikalt på pappret!"
-
-#~ msgid "Center the image on the paper!"
-#~ msgstr "Centrera bilden på pappret!"
-
-#~ msgid ""
-#~ "Right\n"
-#~ "Border:"
-#~ msgstr "Högerkant:"
-
-#~ msgid ""
-#~ "Bottom\n"
-#~ "Border:"
-#~ msgstr "Nederkant:"
-
-#~ msgid "Select the orientation of the image"
-#~ msgstr "Välj bildens orientering"
-
-#~ msgid "Setup"
-#~ msgstr "Inställningar"
-
-#~ msgid "Scaling"
-#~ msgstr "Skalning"
-
-#~ msgid "1200 DPI Unidirectional"
-#~ msgstr "1200 DPI enkelriktad"
+msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Þ¤¹\n"
