@@ -29,6 +29,13 @@
 #ifdef __GNU_LIBRARY__
 #include <getopt.h>
 #endif
+#ifdef HAVE_READLINE_READLINE_H
+#include <readline/readline.h>
+#endif
+#ifdef HAVE_READLINE_HISTORY_H
+#include <readline/history.h>
+#endif
+
 
 char *banner = "\
 Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n\
@@ -169,6 +176,7 @@ void do_nozzle_check(void);
 void do_align(void);
 void do_ink_level(void);
 void do_identify(void);
+char *do_get_input (const char *prompt);
 
 char *printer = NULL;
 char *raw_device = NULL;
@@ -657,7 +665,7 @@ align_error(void)
 void
 do_align(void)
 {
-  char inbuf[64];
+  char *inbuf;
   long answer;
   char *endptr;
   int passes = 0;
@@ -758,11 +766,12 @@ do_align(void)
   printf("\n");
   printf("Please place a sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");
-  memset(inbuf, 0, 64);
+  /*memset(inbuf, 0, 64);
   fflush(stdin);
   fgets(inbuf, 63, stdin);
   putc('\n', stdout);
-  fflush(stdout);
+  fflush(stdout);*/
+  inbuf = do_get_input("Press enter to continue ");
   initialize_print_cmd();
   for (curpass = 1; curpass <= passes; curpass ++)
     {
@@ -779,22 +788,26 @@ do_align(void)
       else
 	printf("in pattern #%d, and then reinsert the page in the input tray.\n",
 	       curpass);
-      printf("Type a pair number, '?' for help, or 'r' to retry this pattern. ==> ");
+      printf("Type a pair number, '?' for help, or 'r' to retry this pattern.\n");
       fflush(stdout);
-      memset(inbuf, 0, 64);
+      /*memset(inbuf, 0, 64);
       fflush(stdin);
       fgets(inbuf, 63, stdin);
-      putc('\n', stdout);
+      putc('\n', stdout);*/
+      inbuf = do_get_input("> ");
       switch (inbuf[0])
 	{
 	case 'r':
 	case 'R':
-	  printf("Please insert a fresh sheet of paper, and then type the enter key.\n");
+	  printf("Please insert a fresh sheet of paper.\n");
+	  fflush(stdout);
 	  initialize_print_cmd();
-	  fflush(stdin);
+	  /*fflush(stdin);
 	  fgets(inbuf, 15, stdin);
 	  putc('\n', stdout);
-	  fflush(stdout);
+	  fflush(stdout);*/
+	  (void) do_get_input("Press enter to continue");
+	  /* Ick. Surely there's a cleaner way? */
 	  goto top;
 	case 'h':
 	case '?':
@@ -807,6 +820,11 @@ do_align(void)
 	  break;
 	}
       answer = strtol(inbuf, &endptr, 10);
+      if (errno == ERANGE)
+      {
+	printf("Number out of range!\n");
+	goto reread;
+      }
       if (endptr == inbuf)
 	{
 	  printf("I cannot understand what you typed!\n");
@@ -824,6 +842,7 @@ do_align(void)
 	{
 	  printf("Aligning phase %d, and performing final test.\n", curpass);
 	  printf("Please insert a fresh sheet of paper.\n");
+	  (void) do_get_input("Press enter to continue");
 	}
       else
 	printf("Aligning phase %d, and starting phase %d.\n", curpass,
@@ -838,25 +857,29 @@ do_align(void)
     align_error();
  read_final:
   printf("Please inspect the final output very carefully to ensure that your\n");
-  printf("printer is in proper alignment.  You may now (s)ave the results in\n");
-  printf("the printer, (q)uit without saving the results, or (r)epeat the entire\n");
-  printf("process from the beginning.  You will then be asked to confirm your choice\n");
-  printf("What do you want to do (s, q, r)? ");
+  printf("printer is in proper alignment. You may now:\n");
+  printf("  (s)ave the results in the printer,\n");
+  printf("  (q)uit without saving the results, or\n");
+  printf("  (r)epeat the entire process from the beginning.\n");
+  printf("You will then be asked to confirm your choice.\n");
+  printf("What do you want to do (s, q, r)?\n");
   fflush(stdout);
-  memset(inbuf, 0, 64);
+  /*memset(inbuf, 0, 64);
   fflush(stdin);
   fgets(inbuf, 15, stdin);
-  putc('\n', stdout);
+  putc('\n', stdout);*/
+  inbuf = do_get_input("> ");
   switch (inbuf[0])
     {
     case 'q':
     case 'Q':
-      printf("Please confirm by typing 'q' again that you wish to quit without saving: ");
+      printf("Please confirm by typing 'q' again that you wish to quit without saving:\n");
       fflush(stdout);
-      memset(inbuf, 0, 64);
+      /*memset(inbuf, 0, 64);
       fflush(stdin);
       putc('\n', stdout);
-      fgets(inbuf, 15, stdin);
+      fgets(inbuf, 15, stdin);*/
+      inbuf = do_get_input ("> ");
       if (inbuf[0] == 'q' || inbuf[0] == 'Q')
 	{
 	  printf("OK, your printer is aligned, but the alignment has not been saved.\n");
@@ -867,12 +890,13 @@ do_align(void)
     case 'r':
     case 'R':
       printf("Please confirm by typing 'r' again that you wish to repeat the\n");
-      printf("alignment process: ");
+      printf("alignment process:\n");
       fflush(stdout);
-      memset(inbuf, 0, 64);
+      /*memset(inbuf, 0, 64);
       fflush(stdin);
       putc('\n', stdout);
-      fgets(inbuf, 15, stdin);
+      fgets(inbuf, 15, stdin);*/
+      inbuf = do_get_input("> ");
       if (inbuf[0] == 'r' || inbuf[0] == 'R')
 	{
 	  printf("Repeating the alignment process.\n");
@@ -881,16 +905,18 @@ do_align(void)
       break;
     case 's':
     case 'S':
+      printf("This will permanently alter the configuration of your printer.\n");
+      printf("WARNING: this procedure has not been approved by Seiko Epson, and\n");
+      printf("it may damage your printer. Proceed?\n");
       printf("Please confirm by typing 's' again that you wish to save the settings\n");
-      printf("to your printer.  This will permanently alter the configuration of\n");
-      printf("your printer.  WARNING: this procedure has not been approved by\n");
-      printf("Seiko Epson, and it may damage your printer.  Proceed? ");
+      printf("to your printer:\n");
 	     
       fflush(stdout);
-      memset(inbuf, 0, 64);
+      /*memset(inbuf, 0, 64);
       fflush(stdin);
       putc('\n', stdout);
-      fgets(inbuf, 15, stdin);
+      fgets(inbuf, 15, stdin);*/
+      inbuf = do_get_input("> ");
       if (inbuf[0] == 's' || inbuf[0] == 'S')
 	{
 	  printf("Please insert your alignment test page in the printer once more\n");
@@ -912,4 +938,52 @@ do_align(void)
     }
   printf("Final command was not confirmed.\n");
   goto read_final;
+}
+
+char *do_get_input (const char *prompt)
+{
+	static char *input = NULL;
+#if !defined HAVE_LIBREADLINE || !defined HAVE_READLINE_READLINE_H
+	char *fgets_status;
+#endif
+	/* free only if previously allocated */
+	if (input)
+	{
+		free (input);
+		input = NULL;
+	}
+#if defined HAVE_LIBREADLINE && defined HAVE_READLINE_READLINE_H
+	/* get input with libreadline, if present */
+	input = readline ((char *) prompt);
+	/* if input, add to history list */
+#ifdef HAVE_READLINE_HISTORY_H
+	if (input && *input)
+	{
+		add_history (input);
+	}
+#endif
+#else
+	/* no libreadline; use fgets instead */
+	input = malloc (sizeof (char) * BUFSIZ);
+	memset(input, 0, BUFSIZ);
+	printf ("%s", prompt);
+	fgets_status = fgets (input, BUFSIZ, stdin);
+	if (fgets_stat == NULL)
+	{
+		fprintf (stderr, "Error in input\n");
+		return (NULL);
+	}
+	else if (strlen (input) == 1 && input[0] == '\n')
+	{
+		/* user just hit enter: empty input buffer */
+		/* remove line feed */
+		input[0] = '\0';
+	}
+	else
+	{
+		/* remove line feed */
+		input[strlen (input) - 1] = '\0';
+	}
+#endif
+	return (input);
 }

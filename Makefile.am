@@ -82,6 +82,8 @@ AM_CPPFLAGS =\
 
 print_LDADD = $(GIMP_LIBS)
 
+escputil_LDADD = $(LIBREADLINE_DEPS)
+
 GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
 	gdevstp.c devs.mak.addon-5.10 escputil.c escputil.1 Makefile \
 	debian-patch debian-patch-stp $(GCOPY)

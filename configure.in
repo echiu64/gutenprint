@@ -84,10 +84,23 @@ fi
 
 dnl Checks for libraries.
 dnl Checking for the Gimp does all this
+AC_CHECK_LIB(readline, readline, HAVE_LIBREADLINE=true, HAVE_LIBREADLINE=false)
+if test x${HAVE_LIBREADLINE} = xtrue ; then
+  AC_DEFINE(HAVE_LIBREADLINE)
+fi
 
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADER(readline/readline.h, HAVE_READLINE_READLINE_H=true, HAVE_READLINE_READLINE_H=false)
+if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
+  AC_DEFINE(HAVE_READLINE_READLINE_H)
+  if test x${HAVE_LIBREADLINE} = xtrue ; then
+    LIBREADLINE_DEPS="-lreadline"
+  fi
+fi
+
+
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -100,6 +113,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNC(random, AC_DEFINE(HAVE_RANDOM))
 
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(RELDATE_DEF)
 AC_SUBST(MAINTAINER_PROGRAMS)
 AC_SUBST(MAINTAINER_CFLAGS)
