@@ -710,6 +710,9 @@ AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print he
 XXXRELEASE_DATE=XXX
 AC_DEFINE_UNQUOTED(RELEASE_DATE, "${RELEASE_DATE}", [Package release date.])
 
+dnl Some versions of make get very grouchy about $(RM)
+RM='rm'
+
 dnl Substitutions
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_SUBST(cups_prefix)
@@ -733,6 +736,7 @@ AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
+AC_SUBST(RM)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
 AC_SUBST(GIMP_BIN)

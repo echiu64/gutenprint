@@ -125,7 +125,7 @@ $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
 	sed -e 's/\.png"/.eps"/g' -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $< > $(MANUAL)-eps.sgml
 	$(DB2PS) $(MANUAL)-eps.sgml
 	mv $(MANUAL)-eps.ps $(MANUAL).ps
-	$(RM) $(MANUAL)-eps.*
+	-$(RM) -f $(MANUAL)-eps.*
 
 %.eps:
 	if test ! -d figures ; then mkdir figures ; fi
@@ -150,7 +150,7 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	for image in $(addprefix $(srcdir)/, $(PNG_IMAGES)) ; do \
 	  cp -p $$image $(MANUAL)/figures/`basename $$image` ; \
 	done
-	$(RM) -rf $(HTMLDIR)
+	-$(RM) -rf $(HTMLDIR)
 	mv $(MANUAL) $(HTMLDIR)
 	chmod a+rx $(HTMLDIR)
 	touch html-stamp
@@ -191,12 +191,12 @@ install-data-local: $(STANDARD_TARGETS)
 	fi
 
 uninstall-local:
-	$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
+	-$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
 CLEAN_MANUALS = \
-	$(RM) $(MANUAL).pdf $(MANUAL).ps ;	\
-	$(RM) -r html-stamp $(HTMLDIR) ;	\
-	$(RM) $(EPS_IMAGES)
+	$(RM) -f $(MANUAL).pdf $(MANUAL).ps ;	\
+	$(RM) -rf html-stamp $(HTMLDIR) ;	\
+	$(RM) -f $(EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
@@ -210,11 +210,11 @@ clean-local:
 	if test $(srcdir) = "." ; then \
 	  : ; \
 	else \
-	  $(RM) $(MANUAL).sgml ; \
-	  $(RM) -r figures ; \
+	  $(RM) -f $(MANUAL).sgml ; \
+	  $(RM) -rf figures ; \
 	fi
-	$(RM) -r *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
-	$(RM) -r db2html* DB2HTML*
+	-$(RM) -rf *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
+	-$(RM) -rf db2html* DB2HTML*
 
 veryclean:
 	$(MAKE) MAINT_MODE=true clean

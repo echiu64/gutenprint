@@ -91,7 +91,7 @@ html: html-stamp
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
 html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
-	$(RM) -r $(HTMLDIR)-tmp
+	$(RM) -rf $(HTMLDIR)-tmp
 	mkdir $(HTMLDIR)-tmp
 	for image in $(addprefix $(srcdir)/, $(IMAGES)) ; do \
 	  cp -p $$image $(HTMLDIR)-tmp ; \
@@ -99,7 +99,7 @@ html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	cd $(HTMLDIR)-tmp ; \
 	$(TEXI2HTML) -menu -split_node -number -expandinfo \
 	      -I ../$(srcdir) ../$(srcdir)/$(MANUAL).texi 2>&1
-	$(RM) -r $(HTMLDIR)
+	$(RM) -rf $(HTMLDIR)
 	mv $(HTMLDIR)-tmp $(HTMLDIR)
 	touch html-stamp
 
@@ -143,9 +143,9 @@ dist-hook: html
 	done
 
 CLEAN_MANUALS = \
-	$(RM) -r html-stamp manual-html ; \
-	$(RM) $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi ; \
-	$(RM) $(EPS_IMAGES)
+	$(RM) -rf html-stamp manual-html ; \
+	$(RM) -f $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi ; \
+	$(RM) -f $(EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = '.' -a $(MAINT_MODE) = false ; then \
@@ -157,9 +157,9 @@ clean-local:
 	else \
 	  $(CLEAN_MANUALS) ; \
 	fi
-	$(RM) -r *.tex *.log *.aux *.gz *.out *.junk *.fot
-	$(RM) -r *.ky *.pg *.toc *.tp *.vr *.vrs
-	$(RM) -r manual-html-tmp
+	-$(RM) -rf *.tex *.log *.aux *.gz *.out *.junk *.fot
+	-$(RM) -rf *.ky *.pg *.toc *.tp *.vr *.vrs
+	-$(RM) -rf manual-html-tmp
 
 veryclean:
 	$(MAKE) MAINT_MODE=true clean
@@ -174,7 +174,7 @@ maintainer-clean-local:
 # Unfortunately, this generates a warning about overriding commands for
 # mostlyclean-aminfo.
 mostlyclean-aminfo:
-	-rm -f gimpprint.aux gimpprint.cp gimpprint.cps \
+	-$(RM) -f gimpprint.aux gimpprint.cp gimpprint.cps \
 	  gimpprint.fn gimpprint.fns gimpprint.ky gimpprint.kys \
 	  gimpprint.log gimpprint.pg gimpprint.toc \
 	  gimpprint.tp gimpprint.tps gimpprint.vr gimpprint.vrs \
