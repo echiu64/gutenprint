@@ -372,6 +372,34 @@ static const escp2_variable_ink_t standard_6pl_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_x80_6pl_dither_ranges[] =
+{
+  { 0.25,  0x1, 1, 1 },
+  { 0.5,   0x2, 1, 2 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+static const escp2_variable_ink_t standard_x80_6pl_ink =
+{
+  standard_x80_6pl_dither_ranges,
+  sizeof(standard_x80_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
+{
+  { 0.5,   0x1, 1, 1 },
+  { 1.0,   0x2, 1, 2 },
+};
+
+static const escp2_variable_ink_t standard_x80_1440_6pl_ink =
+{
+  standard_x80_1440_6pl_dither_ranges,
+  sizeof(standard_x80_1440_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
 static stp_simple_dither_range_t standard_980_6pl_dither_ranges[] =
 {
   { 0.40,  0x1, 1, 1 },
@@ -541,6 +569,22 @@ static const escp2_variable_inkset_t escp2_6pl_standard_inks =
   &standard_6pl_ink,
   &standard_6pl_ink,
   &standard_6pl_ink
+};
+
+static const escp2_variable_inkset_t escp2_x80_6pl_standard_inks =
+{
+  &standard_x80_6pl_ink,
+  &standard_x80_6pl_ink,
+  &standard_x80_6pl_ink,
+  &standard_x80_6pl_ink
+};
+
+static const escp2_variable_inkset_t escp2_x80_1440_6pl_standard_inks =
+{
+  &standard_x80_1440_6pl_ink,
+  &standard_x80_1440_6pl_ink,
+  &standard_x80_1440_6pl_ink,
+  &standard_x80_1440_6pl_ink
 };
 
 static const escp2_variable_inkset_t escp2_6pl_standard_980_inks =
@@ -751,6 +795,36 @@ static const escp2_variable_inklist_t variable_6pl_4color_inks =
       &escp2_6pl_1440_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
+    }
+  }
+};
+
+static const escp2_variable_inklist_t variable_x80_6pl_4color_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_6pl_standard_inks,
+      &escp2_x80_1440_6pl_standard_inks,
+      &escp2_x80_1440_6pl_standard_inks,
+      &escp2_x80_1440_6pl_standard_inks,
+      &escp2_x80_1440_6pl_standard_inks,
     }
   }
 };
@@ -1237,7 +1311,7 @@ static const int sc660_dotsizes[] =
 { 3, 3, -1, 3, 0, 3, 0, -1, 0, -1, -1, -1, -1 };
 
 static const int sc480_dotsizes[] =
-{ 3, -1, 0x13, -1, 0x13, -1, 0x11, -1, 0x11, -1, -1, -1, -1 };
+{ 0, -1, 0x13, -1, 0x13, -1, 0x10, -1, 0x10, -1, -1, -1, -1 };
 
 static const int p4pl_dotsizes[] =
 { 4, 4, 0x12, 2, 0x12, 2, 0x11, -1, 0x10, -1, -1, -1, -1 };
@@ -1294,6 +1368,9 @@ static const double sc440_densities[] =
 
 static const double c6pl_densities[] =
 { 2.0, 1.3, 2.0, .65, 1.0, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 };
+
+static const double sc480_densities[] =
+{ 2.0, 0, 1.4, 0, .7, 0, .710, 0, .710, 0, .710, 0, .365, .1825 };
 
 static const double c3pl_densities[] =
 { 2.0, 1.3, 1.3, .65, .65, .646, .73, .7, .7, 1, 1, .91, .91, .455 };
@@ -1764,8 +1841,8 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_VACUUM_NO),
     15, 3, 47, 3, 360, 360, INCH(17 / 2), INCH(1200), 9, 9, 0, 30, 0, 1, 0,
     360, 720, 720, 14400,
-    x80_head_offset, -99, 0, 720, 720, sc480_dotsizes, c6pl_densities,
-    &variable_6pl_4color_inks,
+    x80_head_offset, -99, 0, 720, 720, sc480_dotsizes, sc480_densities,
+    &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
   /* 22: Stylus Photo 870 */
@@ -1985,8 +2062,8 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_VACUUM_NO),
     15, 3, 47, 3, 360, 360, INCH(17 / 2), INCH(1200), 9, 9, 0, 9, 0, 1, 0,
     360, 720, 720, 14400,
-    x80_head_offset, -99, 0, 1440, 720, sc480_dotsizes, c6pl_densities,
-    &variable_6pl_4color_inks,
+    x80_head_offset, -99, 0, 1440, 720, sc480_dotsizes, sc480_densities,
+    &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
   /* 39: Stylus Color Pro */
@@ -3272,10 +3349,10 @@ escp2_init_printer(const escp2_init_t *init)
   escp2_set_microweave(init);
   escp2_set_printhead_speed(init);
   escp2_set_dot_size(init);
+  escp2_set_printhead_resolution(init);
   escp2_set_page_height(init);
   escp2_set_margins(init);
   escp2_set_form_factor(init);
-  escp2_set_printhead_resolution(init);
 }
 
 static void

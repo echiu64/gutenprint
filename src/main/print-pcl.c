@@ -318,6 +318,30 @@ static const pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
+  /* DesignJet 750C */
+  { 750,
+    36 * 72, 100 * 12 * 72, /* Length limited to 51" in sheet mode */
+    PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    30, 30, 15, 15,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    {
+      PCL_PAPERSIZE_LETTER,
+      -1,
+    },
+    {
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    {
+      PCL_PAPERSOURCE_STANDARD,
+      -1,
+    },
+  },
   /* Deskjet 340 */
   { 340,
     17 * 72 / 2, 14 * 72,

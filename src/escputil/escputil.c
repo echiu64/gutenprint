@@ -874,8 +874,8 @@ do_align(void)
     }
   while (printer->short_name && notfound)
     {
-      if (!strcmp(printer_model, printer->short_name) ||
-	  !strcmp(printer_model, printer->long_name))
+      if (!strcasecmp(printer_model, printer->short_name) ||
+	  !strcasecmp(printer_model, printer->long_name))
 	{
 	  passes = printer->passes;
 	  choices = printer->choices;
@@ -907,7 +907,6 @@ do_align(void)
     top:
       add_newlines(7 * (curpass - 1));
       do_remote_cmd("DT", 3, 0, curpass - 1, 0);
-/*      do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1); */
       if (do_print_cmd())
 	printer_error();
     reread:
@@ -1152,8 +1151,8 @@ do_align_color(void)
     }
   while (printer->short_name && notfound)
     {
-      if (!strcmp(printer_model, printer->short_name) ||
-	  !strcmp(printer_model, printer->long_name))
+      if (!strcasecmp(printer_model, printer->short_name) ||
+	  !strcasecmp(printer_model, printer->long_name))
 	{
 	  passes = printer->color_passes;
 	  choices = printer->color_choices;
@@ -1185,10 +1184,9 @@ do_align_color(void)
   printf("Please place a fresh sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");
   inbuf = do_get_input("Press enter to continue > ");
-  initialize_print_cmd();
   for (curpass = 1; curpass <= passes; curpass ++)
     {
-      add_newlines(7 * (curpass - 1));
+      initialize_print_cmd();
       do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
       if (do_print_cmd())
 	printer_error();
@@ -1207,6 +1205,8 @@ do_align_color(void)
   printf("Type a pattern number, or '?' for help.\n");
   fflush(stdout);
   inbuf = do_get_input("> ");
+  if (!inbuf)
+    exit(1);
   switch (inbuf[0])
     {
     case 'h':

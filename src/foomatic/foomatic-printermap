@@ -20,8 +20,10 @@
 #gptofoo bjc-s800 printer/Canon-S800
 #gptofoo bjc-s4500 printer/602386
 #gptofoo compaq-ij750 printer/132864
-#gptofoo escp2-c20 printer/Epson-Stylus_C20
-#gptofoo escp2-c40 printer/Epson-Stylus_C40
+#gptofoo escp2-c20sx printer/Epson-Stylus_C20SX
+#gptofoo escp2-c20ux printer/Epson-Stylus_C20UX
+#gptofoo escp2-c40sx printer/Epson-Stylus_C40SX
+#gptofoo escp2-c40ux printer/Epson-Stylus_C40UX
 #gptofoo escp2 printer/61184
 #gptofoo escp2-pro printer/25824
 #gptofoo escp2-pro-xl printer/65856
@@ -99,6 +101,7 @@
 #gptofoo pcl-690 printer/70560
 #gptofoo pcl-690 printer/HP-DeskJet_695C
 #gptofoo pcl-690 printer/68672
+#gptofoo pcl-750 printer/HP-DesignJet_750
 #gptofoo pcl-810 printer/156105
 #gptofoo pcl-810 printer/HP-DeskJet_830C
 #gptofoo pcl-810 printer/250601

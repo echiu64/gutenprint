@@ -249,8 +249,10 @@ bjc-s450                CANON S450
 bjc-s800                CANON S800
 bjc-s4500               CANON S4500
 compaq-ij750            COMPAQ IJ750
-escp2-c20               EPSON Stylus C20/C20SX/C20UX
-escp2-c40               EPSON Stylus C40/C40SX/C40UX
+escp2-c20sx             EPSON Stylus C20SX
+escp2-c20ux             EPSON Stylus C20UX
+escp2-c40sx             EPSON Stylus C40SX
+escp2-c40ux             EPSON Stylus C40UX
 escp2                   EPSON Stylus Color
 escp2-pro               EPSON Stylus Color Pro
 escp2-pro-xl            EPSON Stylus Color Pro XL
@@ -314,6 +316,7 @@ pcl-560                 HP DeskJet 560C
 pcl-600                 HP DeskJet 600/600C (Single Cartridge)
 pcl-601                 HP DeskJet 600 series (2 Cartridge)
 pcl-690                 HP DeskJet 690 series (Photo-Ink capable)
+pcl-750			HP DesignJet 750
 pcl-810                 HP DeskJet 810C
 pcl-812                 HP DeskJet 812C
 pcl-840                 HP DeskJet 840C
