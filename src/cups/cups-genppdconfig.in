@@ -51,7 +51,7 @@ my @used_languages;                             # languages used on system
 my @chosen_printers = ();                       # chosen printers
 my @chosen_languages = ();                      # chosen languages
 my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
-my $chosen_location = "@cups_conf_datadir@/model/gimp-print/$version";
+my $chosen_location = "@cups_conf_datadir@/model/gutenprint/$version";
                                                 # chosen PPD prefix
 my $silent = 0;                                 # no dialog
 
@@ -253,7 +253,7 @@ There are three steps to generating the PPDs:
 [0. Directory]
 
 The default base directory to create PPD files in is
-@cups_conf_datadir@/model/gimp-print, and this is displayed on the
+@cups_conf_datadir@/model/gutenprint, and this is displayed on the
 main menu.  Choose the "Directory" option to change this, but in
 almost every case the default should be used.  Don\'t alter the default
 unless you know what you are doing.
@@ -286,7 +286,7 @@ printer, a separate PPD file for each language will be produced).
 
 Choose the "Save" menu option to generate the PPD files you requested.
 The files will be created in the default CUPS data directory
-\$cups_prefix/share/model/gimp-print.  Translations will be saved in
+\$cups_prefix/share/model/gutenprint.  Translations will be saved in
 subdirectories named according to the locale/language.
 
 
