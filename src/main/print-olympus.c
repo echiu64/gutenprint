@@ -74,17 +74,6 @@ typedef struct {
   size_t n_items;
 } ink_list_t;
 
-typedef struct
-{
-  int xdpi, ydpi;
-  int xsize, ysize;
-  char plane;
-  int block_min_x, block_min_y;
-  int block_max_x, block_max_y;
-} olympus_privdata_t;
-
-static olympus_privdata_t privdata;
-
 typedef struct {
   const char* name;
   int xdpi;
@@ -136,6 +125,19 @@ typedef struct {
   size_t n_items;
 } laminate_list_t;
 
+typedef struct
+{
+  int xdpi, ydpi;
+  int xsize, ysize;
+  char plane;
+  int block_min_x, block_min_y;
+  int block_max_x, block_max_y;
+  char* pagesize;
+  laminate_t* laminate;
+} olympus_privdata_t;
+
+static olympus_privdata_t privdata;
+
 typedef struct /* printer specific parameters */
 {
   int model;		/* printer model number from printers.xml*/
@@ -161,6 +163,7 @@ typedef struct /* printer specific parameters */
 
 
 static const olympus_cap_t* olympus_get_model_capabilities(int model);
+static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v);
 
 
 static const ink_t cmy_inks[] =
@@ -221,22 +224,9 @@ static const olymp_printsize_list_t p10_printsize_list =
 
 static void p10_printer_init_func(stp_vars_t *v)
 {
-  const char *lpar = stp_get_string_parameter(v, "Laminate");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
-		  				stp_get_model_id(v));
-  const laminate_list_t *llist = caps->laminate;
-  const laminate_t *l = NULL;
-  int i;
-
-  for (i = 0; i < llist->n_items; i++)
-    {
-      l = &(llist->item[i]);
-      if (strcmp(l->name, lpar) == 0)
-	 break;
-    }
-
   stp_zfwrite("\033R\033M\033S\2\033N\1\033D\1\033Y", 1, 15, v);
-  stp_zfwrite((l->seq).data, 1, (l->seq).bytes, v); /* laminate */
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+		  (privdata.laminate->seq).bytes, v); /* laminate */
   stp_zfwrite("\033Z\0", 1, 3, v);
 }
 
@@ -411,8 +401,8 @@ static const olymp_printsize_list_t p400_printsize_list =
 
 static void p400_printer_init_func(stp_vars_t *v)
 {
-  const char *p = stp_get_string_parameter(v, "PageSize");
-  int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
+  int wide = (strcmp(privdata.pagesize, "c8x10") == 0
+		  || strcmp(privdata.pagesize, "C6") == 0);
 
   stp_zprintf(v, "\033ZQ"); stp_zfwrite(zero, 1, 61, v);
   stp_zprintf(v, "\033FP"); stp_zfwrite(zero, 1, 61, v);
@@ -445,8 +435,8 @@ static void p400_plane_end_func(stp_vars_t *v)
 
 static void p400_block_init_func(stp_vars_t *v)
 {
-  const char *p = stp_get_string_parameter(v, "PageSize");
-  int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
+  int wide = (strcmp(privdata.pagesize, "c8x10") == 0
+		  || strcmp(privdata.pagesize, "C6") == 0);
 
   stp_zprintf(v, "\033Z%c", '3' - privdata.plane + 1);
   if (wide)
@@ -535,11 +525,10 @@ static const olymp_printsize_list_t cpx00_printsize_list =
 
 static void cpx00_printer_init_func(stp_vars_t *v)
 {
-  const char *p = stp_get_string_parameter(v, "PageSize");
-  char pg = (strcmp(p, "Postcard") == 0 ? '\1' :
-		(strcmp(p, "w253h337") == 0 ? '\2' :
-		(strcmp(p, "w244h155") == 0 ? '\3' :
-		(strcmp(p, "w283h566") == 0 ? '\4' : 
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
+		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
+		(strcmp(privdata.pagesize, "w244h155") == 0 ? '\3' :
+		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' : 
 		 '\1' ))));
 
   stp_put16_be(0x4000, v);
@@ -678,22 +667,10 @@ static void updp10_printer_init_func(stp_vars_t *v)
 
 static void updp10_printer_end_func(stp_vars_t *v)
 {
-  const char *lpar = stp_get_string_parameter(v, "Laminate");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
-		  				stp_get_model_id(v));
-  const laminate_list_t *llist = caps->laminate;
-  const laminate_t *l = NULL;
-  int i;
-
-  for (i = 0; i < llist->n_items; i++)
-    {
-      l = &(llist->item[i]);
-      if (strcmp(l->name, lpar) == 0)
-	 break;
-    }
 	stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
 		    "\x00\xb0\x00\x00\04", 1, 13, v);
-	stp_zfwrite((l->seq).data, 1, (l->seq).bytes, v); /*laminate pattern*/
+	stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
 	stp_zfwrite("\x00\x00\x00\x00" , 1, 4, v);
         stp_put16_be(privdata.ysize, v);
         stp_put16_be(privdata.xsize, v);
@@ -757,7 +734,6 @@ static const olymp_printsize_list_t cx400_printsize_list =
 
 static void cx400_printer_init_func(stp_vars_t *v)
 {
-  const char *p = stp_get_string_parameter(v, "PageSize");
   char pg = '\0';
   const char *pname = "XXXXXX";		  				
 
@@ -773,11 +749,11 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_putc('\0', v);
   stp_put16_le(privdata.xsize, v);
   stp_put16_le(privdata.ysize, v);
-  if (strcmp(p,"w288h504") == 0)
+  if (strcmp(privdata.pagesize,"w288h504") == 0)
     pg = '\x0d';
-  else if (strcmp(p,"w288h432") == 0)
+  else if (strcmp(privdata.pagesize,"w288h432") == 0)
     pg = '\x0c';
-  else if (strcmp(p,"w288h387") == 0)
+  else if (strcmp(privdata.pagesize,"w288h387") == 0)
     pg = '\x0b';
   stp_putc(pg, v);
   stp_zfwrite("\x00\x00\x00\x00\x00\x01\x00\x01\x00\x00\x00\x00"
@@ -1049,6 +1025,24 @@ static const olympus_cap_t* olympus_get_model_capabilities(int model)
   return &(olympus_model_capabilities[0]);
 }
 
+static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v)
+{
+  const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+		  				stp_get_model_id(v));
+  const laminate_list_t *llist = caps->laminate;
+  const laminate_t *l = NULL;
+  int i;
+
+  for (i = 0; i < llist->n_items; i++)
+    {
+      l = &(llist->item[i]);
+      if (strcmp(l->name, lpar) == 0)
+	 break;
+    }
+  return l;
+}
+  
 static void
 olympus_printsize(const stp_vars_t *v,
 		   int  *width,
@@ -1411,6 +1405,9 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_describe_resolution(v, &xdpi, &ydpi);
   olympus_printsize(v, &max_print_px_width, &max_print_px_height);
+
+  privdata.pagesize = stp_get_string_parameter(v, "PageSize");
+  privdata.laminate = olympus_get_laminate_pattern(v);
 
   if (olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
     stp_default_media_size(v, &page_pt_right, &page_pt_bottom);
