@@ -646,6 +646,11 @@ STP_CONFIG_LIBCONFIG_IN([gimpprint], [src/main])
 STP_CONFIG_PKGCONFIG_IN([gimpprint], [GIMP Print Top Quality Printer Drivers], [src/main])
 STP_CONFIG_GIMPPRINT_M4
 
+AC_OUTPUT_COMMANDS([ghost],[
+exec_prefix=`eval echo ${exec_prefix}`
+prefix=${prefix}
+])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([doc/Makefile doc/developer/Makefile doc/users_guide/Makefile])
 AC_CONFIG_FILES([include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h])
