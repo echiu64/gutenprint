@@ -96,7 +96,6 @@ printed?  What does it mean?  There are several possibilities,
 depending on the specific error message.  If the error message is
 "Invalid argument" (see following example), the problem is that the
 kernel is not configured with the CONFIG_PRINTER_READBACK option enabled.
-     </para>
 
   <programlisting>
   <![ CDATA [
@@ -112,7 +111,6 @@ Cannot read from /dev/lp0: Invalid argument
     ]]>
   </programlisting>
 
-   <para>
      Another possibile cause for error is that the raw printer device
 does not have both read and write permission for the user attempting
 to access the device.  In this case, the error message will read
@@ -138,6 +136,12 @@ additional "-P printer_name" switch, where "printer_name" is the name
 of the desired printer.
      </para>
      <para>
+       The printer will print a series of black (and colored) slanted
+lines on the paper.  Observe these lines carefully.  If there are gaps
+or spaces in these lines, then the corresponding nozzle is clogged and
+the print head must be cleaned.  However, if there are no gaps, the 
+nozzles are clean.
+     </para>
   <programlisting>
   <![ CDATA [
 # escputil -n       
@@ -150,14 +154,6 @@ under certain conditions; type 'escputil -l' for details.
 Running nozzle check, please ensure paper is in the printer.
     ]]>
   </programlisting>
-     </para>
-     <para>
-       The printer will print a series of black (and colored) slanted
-lines on the paper.  Observe these lines carefully.  If there are gaps
-or spaces in these lines, then the corresponding nozzle is clogged and
-the print head must be cleaned.  However, if there are no gaps, the 
-nozzles are clean.
-     </para>
    </sect2>
 
    <sect2><title>Clean the Print Head</title>
@@ -173,7 +169,6 @@ printers present, the desired printer must be specified with an
 additional "-P printer_name" switch, where "printer_name" is the name
 of the desired printer.
      </para>
-     <para>
   <programlisting>
   <![ CDATA [
 # escputil -c
@@ -186,7 +181,6 @@ under certain conditions; type 'escputil -l' for details.
 Cleaning heads...
     ]]>
   </programlisting>
-     </para>
      <para>
        Nothing will be printed on the paper.  The printer will make
 some noise as it cleans the print head.  Wait until the printer is
