@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2002-09-12 08:17-0400\n"
+"POT-Creation-Date: 2002-10-01 21:19-0400\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -74,15 +74,15 @@ msgstr "%s: voµba `-W %s` je viacznaèná\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: voµba `-W %s' nedovoµuje pou¾i» argument\n"
 
-#: src/main/print-canon.c:1310 src/main/print-escp2-data.c:2179
-#: src/main/print-escp2-data.c:2238 src/main/print-escp2-data.c:2297
-#: src/main/print-escp2-data.c:2356 src/main/print-lexmark.c:909
+#: src/main/print-canon.c:1310 src/main/print-escp2-data.c:2237
+#: src/main/print-escp2-data.c:2299 src/main/print-escp2-data.c:2361
+#: src/main/print-escp2-data.c:2423 src/main/print-lexmark.c:909
 msgid "Plain Paper"
 msgstr "Obyèajný papier"
 
-#: src/main/print-canon.c:1311 src/main/print-escp2-data.c:2191
-#: src/main/print-escp2-data.c:2250 src/main/print-escp2-data.c:2309
-#: src/main/print-escp2-data.c:2368 src/main/print-lexmark.c:915
+#: src/main/print-canon.c:1311 src/main/print-escp2-data.c:2249
+#: src/main/print-escp2-data.c:2311 src/main/print-escp2-data.c:2373
+#: src/main/print-escp2-data.c:2435 src/main/print-lexmark.c:915
 msgid "Transparencies"
 msgstr "Priesvitná fólia"
 
@@ -122,9 +122,9 @@ msgstr "Lesklé foto karty"
 msgid "Photo Paper Pro"
 msgstr "Foto papier pro"
 
-#: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2225
-#: src/main/print-escp2-data.c:2284 src/main/print-escp2-data.c:2343
-#: src/main/print-escp2-data.c:2402 src/main/print-lexmark.c:945
+#: src/main/print-canon.c:1321 src/main/print-escp2-data.c:2286
+#: src/main/print-escp2-data.c:2348 src/main/print-escp2-data.c:2410
+#: src/main/print-escp2-data.c:2472 src/main/print-lexmark.c:945
 msgid "Other"
 msgstr "Iné"
 
@@ -188,8 +188,8 @@ msgstr "Hybridný Floyd-Steinbergov"
 msgid "EvenTone"
 msgstr "Obálka"
 
-#: src/main/print-escp2-data.c:1965 src/main/print-escp2-data.c:1975
-#: src/main/print-escp2-data.c:1985 src/main/print-lexmark.c:651
+#: src/main/print-escp2-data.c:2021 src/main/print-escp2-data.c:2031
+#: src/main/print-escp2-data.c:2041 src/main/print-lexmark.c:651
 #: src/main/print-lexmark.c:731
 msgid "Three Color Composite"
 msgstr "Kompozitný trojfarebný"
@@ -198,433 +198,439 @@ msgstr "Kompozitný trojfarebný"
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2-data.c:1995 src/main/print-escp2-data.c:2005
-#: src/main/print-escp2-data.c:2015 src/main/print-lexmark.c:646
+#: src/main/print-escp2-data.c:2051 src/main/print-escp2-data.c:2061
+#: src/main/print-escp2-data.c:2071 src/main/print-lexmark.c:646
 #: src/main/print-lexmark.c:726
 msgid "Four Color Standard"
 msgstr "©tandardný ¹tvorfarebný"
 
-#: src/main/print-escp2-data.c:2025 src/main/print-lexmark.c:656
+#: src/main/print-escp2-data.c:2081 src/main/print-lexmark.c:656
 #: src/main/print-lexmark.c:736
 msgid "Six Color Photo"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/print-escp2-data.c:2035 src/main/print-lexmark.c:661
+#: src/main/print-escp2-data.c:2091 src/main/print-lexmark.c:661
 #: src/main/print-lexmark.c:741
 msgid "Five Color Photo Composite"
 msgstr "Kompozitný fotografický pä»farebný"
 
-#: src/main/print-escp2-data.c:2045
+#: src/main/print-escp2-data.c:2101
 msgid "Seven Color Enhanced"
 msgstr "Roz¹írený sedemfarebný"
 
-#: src/main/print-escp2-data.c:2055
+#: src/main/print-escp2-data.c:2111
 msgid "Six Color Enhanced Composite"
 msgstr "Kompozitný roz¹írený ¹es»farebný"
 
-#: src/main/print-escp2-data.c:2065
+#: src/main/print-escp2-data.c:2121
 #, fuzzy
 msgid "Seven Color Photo"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/print-escp2-data.c:2075
+#: src/main/print-escp2-data.c:2131
 #, fuzzy
 msgid "Two Level Grayscale"
 msgstr "V odtieòoch ¹edej"
 
-#: src/main/print-escp2-data.c:2084 src/main/print-escp2-data.c:2093
+#: src/main/print-escp2-data.c:2140 src/main/print-escp2-data.c:2149
 msgid "Quadtone"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2182 src/main/print-escp2-data.c:2241
-#: src/main/print-escp2-data.c:2300 src/main/print-escp2-data.c:2359
+#: src/main/print-escp2-data.c:2240 src/main/print-escp2-data.c:2302
+#: src/main/print-escp2-data.c:2364 src/main/print-escp2-data.c:2426
 msgid "Plain Paper Fast Load"
 msgstr "Obyèajný papier rýchle nasadenie"
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2-data.c:2185 src/main/print-escp2-data.c:2244
-#: src/main/print-escp2-data.c:2303 src/main/print-escp2-data.c:2362
+#: src/main/print-escp2-data.c:2243 src/main/print-escp2-data.c:2305
+#: src/main/print-escp2-data.c:2367 src/main/print-escp2-data.c:2429
 #: src/main/print-util.c:531
 msgid "Postcard"
 msgstr "Pohµadnica"
 
-#: src/main/print-escp2-data.c:2188 src/main/print-escp2-data.c:2247
-#: src/main/print-escp2-data.c:2306 src/main/print-escp2-data.c:2365
+#: src/main/print-escp2-data.c:2246 src/main/print-escp2-data.c:2308
+#: src/main/print-escp2-data.c:2370 src/main/print-escp2-data.c:2432
 #: src/main/print-lexmark.c:912
 msgid "Glossy Film"
 msgstr "Lesklý film"
 
-#: src/main/print-escp2-data.c:2194 src/main/print-escp2-data.c:2253
-#: src/main/print-escp2-data.c:2312 src/main/print-escp2-data.c:2371
+#: src/main/print-escp2-data.c:2252 src/main/print-escp2-data.c:2314
+#: src/main/print-escp2-data.c:2376 src/main/print-escp2-data.c:2438
 #: src/main/print-lexmark.c:918
 msgid "Envelopes"
 msgstr "Obálky"
 
-#: src/main/print-escp2-data.c:2197 src/main/print-escp2-data.c:2256
-#: src/main/print-escp2-data.c:2315 src/main/print-escp2-data.c:2374
+#: src/main/print-escp2-data.c:2255 src/main/print-escp2-data.c:2317
+#: src/main/print-escp2-data.c:2379 src/main/print-escp2-data.c:2441
 msgid "Back Light Film"
 msgstr ""
 
-#: src/main/print-escp2-data.c:2200 src/main/print-escp2-data.c:2259
-#: src/main/print-escp2-data.c:2318 src/main/print-escp2-data.c:2377
+#: src/main/print-escp2-data.c:2258 src/main/print-escp2-data.c:2320
+#: src/main/print-escp2-data.c:2382 src/main/print-escp2-data.c:2444
 #: src/main/print-lexmark.c:921
 msgid "Matte Paper"
 msgstr "Matný papier"
 
-#: src/main/print-escp2-data.c:2203 src/main/print-escp2-data.c:2262
-#: src/main/print-escp2-data.c:2321 src/main/print-escp2-data.c:2380
+#: src/main/print-escp2-data.c:2261 src/main/print-escp2-data.c:2323
+#: src/main/print-escp2-data.c:2385 src/main/print-escp2-data.c:2447
 #: src/main/print-lexmark.c:924
 msgid "Inkjet Paper"
 msgstr "Papier pre atramentovú tlaèiareò"
 
-#: src/main/print-escp2-data.c:2206 src/main/print-escp2-data.c:2265
-#: src/main/print-escp2-data.c:2324 src/main/print-escp2-data.c:2383
+#: src/main/print-escp2-data.c:2264 src/main/print-escp2-data.c:2326
+#: src/main/print-escp2-data.c:2388 src/main/print-escp2-data.c:2450
 #: src/main/print-lexmark.c:927
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papier s fotografickou kvalitou"
 
-#: src/main/print-escp2-data.c:2209 src/main/print-escp2-data.c:2268
-#: src/main/print-escp2-data.c:2327 src/main/print-escp2-data.c:2386
+#: src/main/print-escp2-data.c:2267 src/main/print-escp2-data.c:2329
+#: src/main/print-escp2-data.c:2391 src/main/print-escp2-data.c:2453
 #: src/main/print-lexmark.c:930
 msgid "Photo Paper"
 msgstr "Fotografický papier"
 
-#: src/main/print-escp2-data.c:2212 src/main/print-escp2-data.c:2271
-#: src/main/print-escp2-data.c:2330 src/main/print-escp2-data.c:2389
+#: src/main/print-escp2-data.c:2270 src/main/print-escp2-data.c:2332
+#: src/main/print-escp2-data.c:2394 src/main/print-escp2-data.c:2456
 #: src/main/print-lexmark.c:933
 msgid "Premium Glossy Photo Paper"
 msgstr "Lesklý foto papier Premium"
 
-#: src/main/print-escp2-data.c:2216 src/main/print-escp2-data.c:2275
-#: src/main/print-escp2-data.c:2334 src/main/print-escp2-data.c:2393
+#: src/main/print-escp2-data.c:2274 src/main/print-escp2-data.c:2336
+#: src/main/print-escp2-data.c:2398 src/main/print-escp2-data.c:2460
 #: src/main/print-lexmark.c:936
 msgid "Premium Luster Photo Paper"
 msgstr "Ligotavý foto papier Premium"
 
-#: src/main/print-escp2-data.c:2219 src/main/print-escp2-data.c:2278
-#: src/main/print-escp2-data.c:2337 src/main/print-escp2-data.c:2396
+#: src/main/print-escp2-data.c:2277 src/main/print-escp2-data.c:2339
+#: src/main/print-escp2-data.c:2401 src/main/print-escp2-data.c:2463
 #: src/main/print-lexmark.c:939
 msgid "Photo Quality Glossy Paper"
 msgstr "Lesklý fotografický papier"
 
-#: src/main/print-escp2-data.c:2222 src/main/print-escp2-data.c:2281
-#: src/main/print-escp2-data.c:2340 src/main/print-escp2-data.c:2399
+#: src/main/print-escp2-data.c:2280 src/main/print-escp2-data.c:2342
+#: src/main/print-escp2-data.c:2404 src/main/print-escp2-data.c:2466
 #: src/main/print-lexmark.c:942
 msgid "Ilford Heavy Paper"
 msgstr "Ilford »a¾ký papier"
 
-#: src/main/print-escp2-data.c:2646 src/main/print-escp2-data.c:2648
-#: src/main/print-escp2-data.c:2733 src/main/print-escp2-data.c:2735
-#: src/main/print-escp2-data.c:2808
+#: src/main/print-escp2-data.c:2283 src/main/print-escp2-data.c:2345
+#: src/main/print-escp2-data.c:2407 src/main/print-escp2-data.c:2469
+#, fuzzy
+msgid "ColorLife Paper"
+msgstr "Obyèajný papier"
+
+#: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2724
+#: src/main/print-escp2-data.c:2809 src/main/print-escp2-data.c:2811
+#: src/main/print-escp2-data.c:2884
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr "360 x 90 DPI Rýchly úsporný koncept"
 
-#: src/main/print-escp2-data.c:2651 src/main/print-escp2-data.c:2653
-#: src/main/print-escp2-data.c:2738 src/main/print-escp2-data.c:2740
-#: src/main/print-escp2-data.c:2811
+#: src/main/print-escp2-data.c:2727 src/main/print-escp2-data.c:2729
+#: src/main/print-escp2-data.c:2814 src/main/print-escp2-data.c:2816
+#: src/main/print-escp2-data.c:2887
 msgid "360 x 120 DPI Economy Draft"
 msgstr "360 x 120 DPI Úsporný koncept"
 
-#: src/main/print-escp2-data.c:2656 src/main/print-escp2-data.c:2658
-#: src/main/print-escp2-data.c:2743 src/main/print-escp2-data.c:2745
-#: src/main/print-escp2-data.c:2814
+#: src/main/print-escp2-data.c:2732 src/main/print-escp2-data.c:2734
+#: src/main/print-escp2-data.c:2819 src/main/print-escp2-data.c:2821
+#: src/main/print-escp2-data.c:2890
 msgid "180 DPI Economy Draft"
 msgstr "180 DPI Úsporný koncept"
 
-#: src/main/print-escp2-data.c:2661 src/main/print-escp2-data.c:2663
-#: src/main/print-escp2-data.c:2748 src/main/print-escp2-data.c:2750
-#: src/main/print-escp2-data.c:2817
+#: src/main/print-escp2-data.c:2737 src/main/print-escp2-data.c:2739
+#: src/main/print-escp2-data.c:2824 src/main/print-escp2-data.c:2826
+#: src/main/print-escp2-data.c:2893
 msgid "360 x 240 DPI Draft"
 msgstr "360 x 240 DPI Koncept"
 
-#: src/main/print-escp2-data.c:2666 src/main/print-escp2-data.c:2668
-#: src/main/print-escp2-data.c:2753 src/main/print-escp2-data.c:2755
-#: src/main/print-escp2-data.c:2820
+#: src/main/print-escp2-data.c:2742 src/main/print-escp2-data.c:2744
+#: src/main/print-escp2-data.c:2829 src/main/print-escp2-data.c:2831
+#: src/main/print-escp2-data.c:2896
 msgid "360 x 180 DPI Draft"
 msgstr "360 x 180 DPI Koncept"
 
-#: src/main/print-escp2-data.c:2671 src/main/print-escp2-data.c:2679
-#: src/main/print-escp2-data.c:2758 src/main/print-escp2-data.c:2762
-#: src/main/print-escp2-data.c:2827
+#: src/main/print-escp2-data.c:2747 src/main/print-escp2-data.c:2755
+#: src/main/print-escp2-data.c:2834 src/main/print-escp2-data.c:2838
+#: src/main/print-escp2-data.c:2903
 msgid "360 DPI"
 msgstr "360 DPI"
 
-#: src/main/print-escp2-data.c:2673 src/main/print-escp2-data.c:2681
-#: src/main/print-escp2-data.c:2760 src/main/print-escp2-data.c:2764
-#: src/main/print-escp2-data.c:2829
+#: src/main/print-escp2-data.c:2749 src/main/print-escp2-data.c:2757
+#: src/main/print-escp2-data.c:2836 src/main/print-escp2-data.c:2840
+#: src/main/print-escp2-data.c:2905
 msgid "360 DPI Unidirectional"
 msgstr "360 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2675 src/main/print-escp2-data.c:2823
+#: src/main/print-escp2-data.c:2751 src/main/print-escp2-data.c:2899
 msgid "360 DPI Microweave"
 msgstr "360 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2677 src/main/print-escp2-data.c:2825
+#: src/main/print-escp2-data.c:2753 src/main/print-escp2-data.c:2901
 msgid "360 DPI Microweave Unidirectional"
 msgstr "360 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2684 src/main/print-escp2-data.c:2767
-#: src/main/print-escp2-data.c:2844
+#: src/main/print-escp2-data.c:2760 src/main/print-escp2-data.c:2843
+#: src/main/print-escp2-data.c:2920
 msgid "720 x 360 DPI"
 msgstr "720 x 360 DPI"
 
-#: src/main/print-escp2-data.c:2686 src/main/print-escp2-data.c:2769
-#: src/main/print-escp2-data.c:2846
+#: src/main/print-escp2-data.c:2762 src/main/print-escp2-data.c:2845
+#: src/main/print-escp2-data.c:2922
 msgid "720 x 360 DPI Unidirectional"
 msgstr "720 x 360 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2689 src/main/print-escp2-data.c:2865
+#: src/main/print-escp2-data.c:2765 src/main/print-escp2-data.c:2941
 msgid "720 DPI Microweave"
 msgstr "720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2691 src/main/print-escp2-data.c:2867
+#: src/main/print-escp2-data.c:2767 src/main/print-escp2-data.c:2943
 msgid "720 DPI Microweave Unidirectional"
 msgstr "720 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2693 src/main/print-escp2-data.c:2772
+#: src/main/print-escp2-data.c:2769 src/main/print-escp2-data.c:2848
 msgid "720 DPI"
 msgstr "720 DPI"
 
-#: src/main/print-escp2-data.c:2695 src/main/print-escp2-data.c:2774
+#: src/main/print-escp2-data.c:2771 src/main/print-escp2-data.c:2850
 msgid "720 DPI Unidirectional"
 msgstr "720 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2697 src/main/print-escp2-data.c:2776
+#: src/main/print-escp2-data.c:2773 src/main/print-escp2-data.c:2852
 msgid "720 DPI High Quality"
 msgstr "720 DPI Vysoká kvalita"
 
-#: src/main/print-escp2-data.c:2699 src/main/print-escp2-data.c:2778
+#: src/main/print-escp2-data.c:2775 src/main/print-escp2-data.c:2854
 msgid "720 DPI High Quality Unidirectional"
 msgstr "720 DPI Vysoká kvalita jednosmerne"
 
-#: src/main/print-escp2-data.c:2701 src/main/print-escp2-data.c:2780
+#: src/main/print-escp2-data.c:2777 src/main/print-escp2-data.c:2856
 msgid "720 DPI Highest Quality"
 msgstr "720 DPI Najvy¹¹ia kvalita"
 
-#: src/main/print-escp2-data.c:2704 src/main/print-escp2-data.c:2878
+#: src/main/print-escp2-data.c:2780 src/main/print-escp2-data.c:2954
 msgid "1440 x 720 DPI Microweave"
 msgstr "1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2706 src/main/print-escp2-data.c:2880
+#: src/main/print-escp2-data.c:2782 src/main/print-escp2-data.c:2956
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr "1440 x 720 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2708 src/main/print-escp2-data.c:2783
+#: src/main/print-escp2-data.c:2784 src/main/print-escp2-data.c:2859
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-escp2-data.c:2710 src/main/print-escp2-data.c:2785
+#: src/main/print-escp2-data.c:2786 src/main/print-escp2-data.c:2861
 msgid "1440 x 720 DPI Unidirectional"
 msgstr "1440 x 720 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2712 src/main/print-escp2-data.c:2787
+#: src/main/print-escp2-data.c:2788 src/main/print-escp2-data.c:2863
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "1440 x 720 DPI Najvy¹¹ia kvalita"
 
-#: src/main/print-escp2-data.c:2715 src/main/print-escp2-data.c:2790
+#: src/main/print-escp2-data.c:2791 src/main/print-escp2-data.c:2866
 msgid "2880 x 720 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-escp2-data.c:2717 src/main/print-escp2-data.c:2792
+#: src/main/print-escp2-data.c:2793 src/main/print-escp2-data.c:2868
 msgid "2880 x 720 DPI Unidirectional"
 msgstr "2880 x 720 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2720 src/main/print-escp2-data.c:2795
+#: src/main/print-escp2-data.c:2796 src/main/print-escp2-data.c:2871
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:2722 src/main/print-escp2-data.c:2797
+#: src/main/print-escp2-data.c:2798 src/main/print-escp2-data.c:2873
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "1440 x 1440 DPI Najvy¹¹ia kvalita"
 
-#: src/main/print-escp2-data.c:2725 src/main/print-escp2-data.c:2800
+#: src/main/print-escp2-data.c:2801 src/main/print-escp2-data.c:2876
 msgid "2880 x 1440 DPI"
 msgstr "2880 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:2831
+#: src/main/print-escp2-data.c:2907
 msgid "360 DPI Full Overlap"
 msgstr "360 DPI Plné krytie"
 
-#: src/main/print-escp2-data.c:2833
+#: src/main/print-escp2-data.c:2909
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr "360 DPI Plné krytie jednosmerne"
 
-#: src/main/print-escp2-data.c:2835
+#: src/main/print-escp2-data.c:2911
 msgid "360 DPI FOL2"
 msgstr "360 DPI FOL2"
 
-#: src/main/print-escp2-data.c:2837
+#: src/main/print-escp2-data.c:2913
 msgid "360 DPI FOL2 Unidirectional"
 msgstr "360 DPI FOL2 jednosmerne"
 
-#: src/main/print-escp2-data.c:2839
+#: src/main/print-escp2-data.c:2915
 msgid "360 DPI MW2"
 msgstr "360 DPI MW2"
 
-#: src/main/print-escp2-data.c:2841
+#: src/main/print-escp2-data.c:2917
 msgid "360 DPI MW2 Unidirectional"
 msgstr "360 DPI MW2 jednosmerne"
 
-#: src/main/print-escp2-data.c:2848
+#: src/main/print-escp2-data.c:2924
 msgid "720 x 360 DPI Microweave"
 msgstr "720 x 360 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2850
+#: src/main/print-escp2-data.c:2926
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr "720 x 360 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2852
+#: src/main/print-escp2-data.c:2928
 msgid "720 x 360 DPI FOL"
 msgstr "720 x 360 DPI FOL"
 
-#: src/main/print-escp2-data.c:2854
+#: src/main/print-escp2-data.c:2930
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr "720 x 360 DPI FOL jednosmerne"
 
-#: src/main/print-escp2-data.c:2856
+#: src/main/print-escp2-data.c:2932
 msgid "720 x 360 DPI FOL2"
 msgstr "720 x 360 DPI FOL2"
 
-#: src/main/print-escp2-data.c:2858
+#: src/main/print-escp2-data.c:2934
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr "720 x 360 DPI FOL2 jednosmerne"
 
-#: src/main/print-escp2-data.c:2860
+#: src/main/print-escp2-data.c:2936
 msgid "720 x 360 DPI MW2"
 msgstr "720 x 360 DPI MW2"
 
-#: src/main/print-escp2-data.c:2862
+#: src/main/print-escp2-data.c:2938
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr "720 x 360 DPI MW2 jednosmerne"
 
-#: src/main/print-escp2-data.c:2869
+#: src/main/print-escp2-data.c:2945
 msgid "720 DPI Full Overlap"
 msgstr "720 DPI Plné krytie"
 
-#: src/main/print-escp2-data.c:2871
+#: src/main/print-escp2-data.c:2947
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr "720 DPI Plné krytie jednosmerne"
 
-#: src/main/print-escp2-data.c:2873
+#: src/main/print-escp2-data.c:2949
 msgid "720 DPI Four Pass"
 msgstr "720 DPI ©tvorprechodová tlaè"
 
-#: src/main/print-escp2-data.c:2875
+#: src/main/print-escp2-data.c:2951
 msgid "720 DPI Four Pass Unidirectional"
 msgstr "720 DPI ©tvorprechodová jednosmerná tlaè"
 
-#: src/main/print-escp2-data.c:2882
+#: src/main/print-escp2-data.c:2958
 msgid "1440 x 720 DPI FOL"
 msgstr "1440 x 720 DPI FOL"
 
-#: src/main/print-escp2-data.c:2884
+#: src/main/print-escp2-data.c:2960
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr "1440 x 720 DPI FOL jednosmerne"
 
-#: src/main/print-escp2-data.c:2886
+#: src/main/print-escp2-data.c:2962
 msgid "1440 x 720 DPI Four Pass"
 msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
 
-#: src/main/print-escp2-data.c:2888
+#: src/main/print-escp2-data.c:2964
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
 
-#: src/main/print-escp2-data.c:2891
+#: src/main/print-escp2-data.c:2967
 #, fuzzy
 msgid "2880 x 720 DPI Microweave"
 msgstr "1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2893
+#: src/main/print-escp2-data.c:2969
 #, fuzzy
 msgid "2880 x 720 DPI Microweave Unidirectional"
 msgstr "1440 x 720 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2895
+#: src/main/print-escp2-data.c:2971
 #, fuzzy
 msgid "2880 x 720 DPI FOL"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-escp2-data.c:2897
+#: src/main/print-escp2-data.c:2973
 #, fuzzy
 msgid "2880 x 720 DPI FOL Unidirectional"
 msgstr "2880 x 720 DPI Jednosmerne"
 
-#: src/main/print-escp2-data.c:2899
+#: src/main/print-escp2-data.c:2975
 #, fuzzy
 msgid "2880 x 720 DPI Four Pass"
 msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
 
-#: src/main/print-escp2-data.c:2901
+#: src/main/print-escp2-data.c:2977
 #, fuzzy
 msgid "2880 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
 
-#: src/main/print-escp2-data.c:2904
+#: src/main/print-escp2-data.c:2980
 #, fuzzy
 msgid "1440 x 1440 DPI Microweave"
 msgstr "1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2906
+#: src/main/print-escp2-data.c:2982
 #, fuzzy
 msgid "1440 x 1440 DPI Microweave Unidirectional"
 msgstr "1440 x 720 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2908
+#: src/main/print-escp2-data.c:2984
 #, fuzzy
 msgid "1440 x 1440 DPI FOL"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:2910
+#: src/main/print-escp2-data.c:2986
 #, fuzzy
 msgid "1440 x 1440 DPI FOL Unidirectional"
 msgstr "1440 x 720 DPI FOL jednosmerne"
 
-#: src/main/print-escp2-data.c:2912
+#: src/main/print-escp2-data.c:2988
 #, fuzzy
 msgid "1440 x 1440 DPI Four Pass"
 msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
 
-#: src/main/print-escp2-data.c:2914
+#: src/main/print-escp2-data.c:2990
 #, fuzzy
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
 
-#: src/main/print-escp2-data.c:2917
+#: src/main/print-escp2-data.c:2993
 #, fuzzy
 msgid "2880 x 1440 DPI Microweave"
 msgstr "720 x 360 DPI Microweave"
 
-#: src/main/print-escp2-data.c:2919
+#: src/main/print-escp2-data.c:2995
 #, fuzzy
 msgid "2880 x 1440 DPI Microweave Unidirectional"
 msgstr "720 x 360 DPI Microweave jednosmerne"
 
-#: src/main/print-escp2-data.c:2921
+#: src/main/print-escp2-data.c:2997
 #, fuzzy
 msgid "2880 x 1440 DPI FOL"
 msgstr "2880 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:2923
+#: src/main/print-escp2-data.c:2999
 #, fuzzy
 msgid "2880 x 1440 DPI FOL Unidirectional"
 msgstr "720 x 360 DPI FOL jednosmerne"
 
-#: src/main/print-escp2-data.c:2925
+#: src/main/print-escp2-data.c:3001
 #, fuzzy
 msgid "2880 x 1440 DPI Four Pass"
 msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
 
-#: src/main/print-escp2-data.c:2927
+#: src/main/print-escp2-data.c:3003
 #, fuzzy
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr "720 DPI ©tvorprechodová jednosmerná tlaè"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:2937
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3013
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "©tandardný"
 
-#: src/main/print-escp2-data.c:2941
+#: src/main/print-escp2-data.c:3017
 msgid "Roll Feed"
 msgstr "Kotúèový podávaè"
 
