@@ -1568,7 +1568,8 @@ gimp_preview_update (void)
   gint          tw0, tw1;	   /* Temporary printable_widths */
   gint          th0, th1;	   /* Temporary printable_heights */
   gint          ta0 = 0, ta1 = 0;  /* Temporary areas */
-  static GdkGC *gc = NULL;
+  static GdkGC	*gc = NULL,
+		*gcinv = NULL;
   gchar         s[255];
   gint          paper_left, paper_top;
 
@@ -1578,7 +1579,11 @@ gimp_preview_update (void)
   gdk_window_clear (preview->widget.window);
 
   if (gc == NULL)
+  {
     gc = gdk_gc_new (preview->widget.window);
+    gcinv = gdk_gc_new(preview->widget.window);
+    gdk_gc_set_function (gcinv, GDK_INVERT);
+  }
 
 
   (*current_printer->imageable_area) (current_printer->model, vars.ppd_file,
@@ -1780,6 +1785,30 @@ gimp_preview_update (void)
 		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
                      PREVIEW_PPI * print_width / 72,
                      PREVIEW_PPI * print_height / 72);
+
+  /* draw orientation arrow pointing to top-of-paper */
+  {
+    int ox, oy, u;
+    if (paper_width < paper_height)
+      u = PREVIEW_PPI * paper_width / 72 / 4;
+    else
+      u = PREVIEW_PPI * paper_height / 72 / 4;
+    ox = paper_left + PREVIEW_PPI * paper_width / 72;
+    oy = paper_top;
+    if (orient == ORIENT_LANDSCAPE) {
+      ox -= u;
+      oy += PREVIEW_PPI * paper_height / 72 / 2;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy-u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-2*u, oy);
+    } else {
+      ox -= PREVIEW_PPI * paper_width / 72 / 2;
+      oy += u;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox+u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox, oy+2*u);
+    }
+  }
 
   gdk_flush ();
 }

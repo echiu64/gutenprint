@@ -1945,7 +1945,8 @@ static void gtk_preview_update(void)
 		th0, th1,	/* Temporary printable_heights */
 		ta0 = 0, ta1 = 0;	/* Temporary areas */
   int           paper_left, paper_top; 
-  static GdkGC	*gc = NULL;	/* Graphics context */
+  static GdkGC	*gc = NULL,	/* Normal graphics context */
+		*gcinv = NULL;	/* GC for inverted drawing (arrow) */
   char s[255];
 
   if (preview->widget.window == NULL)
@@ -1954,7 +1955,11 @@ static void gtk_preview_update(void)
   gdk_window_clear(preview->widget.window);
 
   if (gc == NULL)
+  {
     gc = gdk_gc_new(preview->widget.window);
+    gcinv = gdk_gc_new(preview->widget.window);
+    gdk_gc_set_function (gcinv, GDK_INVERT);
+  }
 
   
   (*current_printer->imageable_area)(current_printer->model, vars.ppd_file,
@@ -2156,6 +2161,31 @@ static void gtk_preview_update(void)
 		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
                      PREVIEW_PPI * print_width / 72,
                      PREVIEW_PPI * print_height / 72);
+
+  /* draw orientation arrow pointing to top-of-paper */
+  {
+    int ox, oy, u;
+    if (paper_width < paper_height)
+      u = PREVIEW_PPI * paper_width / 72 / 4;
+    else
+      u = PREVIEW_PPI * paper_height / 72 / 4;
+    ox = paper_left + PREVIEW_PPI * paper_width / 72;
+    oy = paper_top;
+    if (orient == ORIENT_LANDSCAPE) {
+      ox -= u;
+      oy += PREVIEW_PPI * paper_height / 72 / 2;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy-u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-2*u, oy);
+    } else {
+      ox -= PREVIEW_PPI * paper_width / 72 / 2;
+      oy += u;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox+u, oy+u);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox, oy+2*u);
+    }
+  }
+
   gdk_flush();
 
 }
