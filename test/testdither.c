@@ -45,7 +45,7 @@
  */
 
 #define IMAGE_WIDTH	5760	/* 8in * 720dpi */
-#define IMAGE_HEIGHT	720	/* 4in * 720dpi */
+#define IMAGE_HEIGHT	2880	/* 4in * 720dpi */
 #define BUFFER_SIZE	IMAGE_WIDTH
 
 #define IMAGE_MIXED	0	/* Mix of line types */
