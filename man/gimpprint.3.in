@@ -16,30 +16,24 @@
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 .hy 0
-.TH CUPS-CALIBRATE "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
+.TH GIMPPRINT 3 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
+
 .SH NAME
-cups-calibrate \- ESP Printer Calibration Tool
+\fBgimpprint\fR - High quality bitmap printing library
+
 .SH SYNOPSIS
-.B cups-calibrate
+\fB#include <gimp-print/gimp-print.h>\fR
+.br
+
 .SH DESCRIPTION
-
-This program allows you to calibrate the color output of printers
-using the \fIGIMP-PRINT\fP \fICUPS\fP or \fIESP Print Pro\fP drivers.
-
-Please note that this program \fBonly\fP works with the \fIGIMP-PRINT\fP \fICUPS\fP or
-\fIESP Print Pro\fP drivers. If you are using the GIMP-Print stp driver of
-GhostScript or the drivers of the GIMP-Print plug-in of GIMP, this
-calibration will not work.
-
-These drivers by the text "CUPS+GIMP-print" or "ESP Print Pro" in
-the model description displayed by the CUPS web interface, KUPS,
-the ESP Print Pro Printer Manager, or printerdrake.
-
-To make a calibration profile for all users, run this program as
-the "root" user.
+The \fBgimpprint\fR library routines give programmers an interface to print
+high quality bitmap images on most modern printers.  It includes drivers which
+provide printing quality for UNIX/Linux on a par with proprietary
+vendor-supplied drivers in many cases, and can be used for many of the most
+demanding printing tasks.
 
 .SH COPYRIGHT
-Copyright \(co  2001 Michael Sweet (mike@easysw.com)
+Copyright \(co  2001 Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
@@ -49,7 +43,17 @@ any later version.
 This manual page was written by Roger Leigh (rl117@york.ac.uk)
 
 .SH SEE ALSO
-.BR gimp (1)
+The full documentation for
+.B GIMP-Print
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B GIMP-Print
+programs are properly installed at your site, the command
+.IP
+.B info gimp-print
+.PP
+should give you access to the complete manual.
 
 .\"#
 .\"# The following sets edit modes for GNU EMACS

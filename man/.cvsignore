@@ -1,5 +1,6 @@
 Makefile
 Makefile.in
+gimpprint.3
 cups-calibrate.8
 escputil.1
 gimpprint-config.1

@@ -1,4 +1,5 @@
 .deps
+.libs
 Makefile
 Makefile.in
 alloca.lo
@@ -6,4 +7,6 @@ strcspn.lo
 getopt1.lo
 getopt.lo
 libprintut.la
-lib/vasprintf.lo
+vasprintf.lo
+xgetcwd.lo
+xmalloc.lo

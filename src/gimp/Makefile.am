@@ -26,11 +26,9 @@ export DESTDIR
 
 MAINT_CHARSET = latin1
 
-CFLAGS = @CFLAGS@
+AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
-
-AM_CPPFLAGS =\
- @MAINTAINER_CFLAGS@
+LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 libexecdir = $(gimptool_prefix)/plug-ins
 

@@ -23,12 +23,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+AM_CFLAGS = @MAINTAINER_CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
-
-AM_CPPFLAGS =\
- -DLOCALEDIR=\""$(localedir)"\" \
- @MAINTAINER_CFLAGS@
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 

@@ -23,7 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-man_MANS = cups-calibrate.8 escputil.1 gimpprint-config.1
+man_MANS = cups-calibrate.8 escputil.1 gimpprint.3 gimpprint-config.1
 
 DISTCLEANFILES = cups-calibrate.8 escputil.1 gimpprint-config.1
 MAINTAINERCLEANFILES = Makefile.in

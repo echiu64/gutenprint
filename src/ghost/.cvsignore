@@ -12,6 +12,7 @@ gdevstp-util.c
 gdevstp-weave.c
 gdevstp-print.h
 gdevstp-print-internal.h
+gdevstp-print-intl-internal.h
 gdevstp-quickmatrix257.h
 gdevstp-ran.367.179.h
 gdevstp-ran.509.131.h
