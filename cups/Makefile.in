@@ -75,11 +75,11 @@ sysconfdir	=	@sysconfdir@
 #
 
 TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
-		ppd rastertoprinter
+		ppd rastertoprinter commandtocanon canon
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
 		cups-ps.o cups-util.o cups-weave.o
 OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
-		rastertoprinter.o
+		rastertoprinter.o commandtocanon.o canon.o
 
 
 #
@@ -126,6 +126,8 @@ install:	all
 	fi
 	$(SILENT) $(CP) epson $(libdir)/cups/backend
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/backend/epson
+	$(SILENT) $(CP) canon $(libdir)/cups/backend
+	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/backend/canon
 
 	$(SILENT) if test ! -d $(libdir)/cups/filter; then \
 		$(MKDIR) $(libdir)/cups/filter; \
@@ -134,6 +136,8 @@ install:	all
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/rastertoprinter
 	$(SILENT) $(CP) commandtoepson $(libdir)/cups/filter
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/commandtoepson
+	$(SILENT) $(CP) commandtocanon $(libdir)/cups/filter
+	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/commandtocanon
 
 	$(ECHO) Installing PPD files...
 	$(SILENT) if test ! -d $(datadir)/cups/model; then \
@@ -175,6 +179,23 @@ commandtoepson:	commandtoepson.o
 epson:	epson.o
 	$(ECHO) Linking $@...
 	$(SILENT) $(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
+
+#
+# commandtocanon
+#
+
+commandtocanon: commandtocanon.o
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o commandtocanon commandtocanon.o $(LIBS)
+
+
+#
+# canon
+#
+
+canon:	canon.o
+	$(ECHO) Linking $@...
+	$(SILENT) $(CC) $(LDFLAGS) -o canon canon.o $(LIBS)
 
 
 #
