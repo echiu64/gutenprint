@@ -416,7 +416,7 @@ stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
     ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
   int i, j, k;
   int physical_channel;
-  int nz[32];
+  int nz[STP_CHANNEL_LIMIT];
   unsigned black_value = 0;
   unsigned l_val = 0;
   unsigned i_val = 0;

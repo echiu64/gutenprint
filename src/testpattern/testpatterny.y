@@ -45,28 +45,39 @@ static int yyerror( const char *s )
 	return 0;
 }
 
+static int color_map[] =
+  {
+    BLACK,
+    CYAN,
+    MAGENTA,
+    YELLOW,
+    L_BLACK,
+    L_CYAN,
+    L_MAGENTA,
+    D_YELLOW,
+    -1
+  };
+
+static int current_index = 0;
+static testpattern_t *current_testpattern; 
+
 %}
 
 %token <ival> tINT
 %token <dval> tDOUBLE
 %token <sval> tSTRING
 
-%token C_GAMMA
-%token M_GAMMA
-%token Y_GAMMA
-%token K_GAMMA
-%token LC_GAMMA
-%token LM_GAMMA
-%token LK_GAMMA
+%token CYAN
+%token L_CYAN
+%token MAGENTA
+%token L_MAGENTA
+%token YELLOW
+%token D_YELLOW
+%token BLACK
+%token L_BLACK
 %token GAMMA
-%token C_LEVEL
-%token M_LEVEL
-%token Y_LEVEL
-%token K_LEVEL
-%token LC_LEVEL
-%token LM_LEVEL
-%token LK_LEVEL
-%token LEVELS
+%token LEVEL
+%token STEPS
 %token INK_LIMIT
 %token INK
 %token WIDTH
@@ -83,61 +94,59 @@ static int yyerror( const char *s )
 %token EXTENDED
 %token IMAGE
 %token GRID
+%token SEMI
 
 %start Thing
 
 %%
 
+COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
+	| YELLOW | D_YELLOW | BLACK | L_BLACK
+;
+
 extended: EXTENDED tINT
 	{ global_ink_depth = $2; }
 ;
-global_c_level: C_LEVEL tDOUBLE
-	{ global_c_level = $2; }
+
+level: LEVEL COLOR tDOUBLE
+	{
+	  int i = 0;
+	  while (color_map[i] >= 0 && color_map[i] != $2.ival)
+	    i++;
+	  if (color_map[i] >= 0)
+	    global_levels[i] = $3;
+	}
 ;
-global_m_level: M_LEVEL tDOUBLE
-	{ global_m_level = $2; }
+
+channel_level: LEVEL tINT tDOUBLE
+	{
+	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
+	    global_levels[$2] = $3;
+	}
 ;
-global_y_level: Y_LEVEL tDOUBLE
-	{ global_y_level = $2; }
+
+gamma: GAMMA COLOR tDOUBLE
+	{
+	  int i = 0;
+	  while (color_map[i] >= 0 && color_map[i] != $2.ival)
+	    i++;
+	  if (color_map[i] >= 0)
+	    global_gammas[i] = $3;
+	}
 ;
-global_k_level: K_LEVEL tDOUBLE
-	{ global_k_level = $2; }
+
+channel_gamma: GAMMA tINT tDOUBLE
+	{
+	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
+	    global_gammas[$2] = $3;
+	}
 ;
-global_c_gamma: C_GAMMA tDOUBLE
-	{ global_c_gamma = $2; }
-;
-global_m_gamma: M_GAMMA tDOUBLE
-	{ global_m_gamma = $2; }
-;
-global_y_gamma: Y_GAMMA tDOUBLE
-	{ global_y_gamma = $2; }
-;
-global_k_gamma: K_GAMMA tDOUBLE
-	{ global_k_gamma = $2; }
-;
-global_lc_level: LC_LEVEL tDOUBLE
-	{ global_lc_level = $2; }
-;
-global_lm_level: LM_LEVEL tDOUBLE
-	{ global_lm_level = $2; }
-;
-global_lk_level: LK_LEVEL tDOUBLE
-	{ global_lk_level = $2; }
-;
-global_lc_gamma: LC_GAMMA tDOUBLE
-	{ global_lc_gamma = $2; }
-;
-global_lm_gamma: LM_GAMMA tDOUBLE
-	{ global_lm_gamma = $2; }
-;
-global_lk_gamma: LK_GAMMA tDOUBLE
-	{ global_lk_gamma = $2; }
-;
+
 global_gamma: GAMMA tDOUBLE
 	{ global_gamma = $2; }
 ;
-levels: LEVELS tINT
-	{ levels = $2; }
+steps: STEPS tINT
+	{ steps = $2; }
 ;
 ink_limit: INK_LIMIT tDOUBLE
 	{ ink_limit = $2; }
@@ -171,82 +180,81 @@ blackline: BLACKLINE tINT
 	{ noblackline = !($2); }
 ;
 
-pattern: PATTERN tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
-	tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
-	tDOUBLE tDOUBLE
+color_block: tDOUBLE tDOUBLE tDOUBLE
 	{
-	  testpattern_t *t = get_next_testpattern();
-	  t->t = E_PATTERN;
-	  t->d.p.c_min = $2;
-	  t->d.p.c = $3;
-	  t->d.p.c_gamma = $4;
-	  t->d.p.m_min = $5;
-	  t->d.p.m = $6;
-	  t->d.p.m_gamma = $7;
-	  t->d.p.y_min = $8;
-	  t->d.p.y = $9;
-	  t->d.p.y_gamma = $10;
-	  t->d.p.k_min = $11;
-	  t->d.p.k = $12;
-	  t->d.p.k_gamma = $13;
-	  t->d.p.c_level = $14;
-	  t->d.p.m_level = $15;
-	  t->d.p.y_level = $16;
-	  t->d.p.lower = $17;
-	  t->d.p.upper = $18;
+	  if (current_index < STP_CHANNEL_LIMIT)
+	    {
+	      current_testpattern->d.p.mins[current_index] = $1;
+	      current_testpattern->d.p.vals[current_index] = $2;
+	      current_testpattern->d.p.gammas[current_index] = $3;
+	      current_index++;
+	    }
 	}
 ;
 
-xpattern: XPATTERN tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
-	  tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
-	  tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
+color_blocks: color_blocks color_block | Empty
+;
+
+patvars: tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	{
-	  testpattern_t *t = get_next_testpattern();
+	  int i;
+	  current_testpattern = get_next_testpattern();
+	  current_testpattern->t = E_PATTERN;
+	  current_index = 0;
+	  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
+	    {
+	      current_testpattern->d.p.mins[i] = 0;
+	      current_testpattern->d.p.vals[i] = 0;
+	      current_testpattern->d.p.gammas[i] = 1;
+	      current_testpattern->d.p.levels[i] = 0;
+	    }
+	  current_testpattern->d.p.lower = $1;
+	  current_testpattern->d.p.upper = $2;
+	  current_testpattern->d.p.levels[1] = $3;
+	  current_testpattern->d.p.levels[2] = $4;
+	  current_testpattern->d.p.levels[3] = $5;
+	}
+
+pattern: PATTERN patvars color_block color_block color_block color_block SEMI
+;
+
+xpattern: XPATTERN color_blocks SEMI
+	{
+	  int i;
+	  current_testpattern = get_next_testpattern();
 	  if (global_ink_depth == 0)
 	    {
 	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
 	      exit(1);
 	    }
-	  t->t = E_XPATTERN;
-	  t->d.p.k_min = $2;
-	  t->d.p.k = $3;
-	  t->d.p.k_gamma = $4;
-	  t->d.p.lk_min = $5;
-	  t->d.p.lk = $6;
-	  t->d.p.lk_gamma = $7;
-	  t->d.p.c_min = $8;
-	  t->d.p.c = $9;
-	  t->d.p.c_gamma = $10;
-	  t->d.p.lc_min = $11;
-	  t->d.p.lc = $12;
-	  t->d.p.lc_gamma = $13;
-	  t->d.p.m_min = $14;
-	  t->d.p.m = $15;
-	  t->d.p.m_gamma = $16;
-	  t->d.p.lm_min = $17;
-	  t->d.p.lm = $18;
-	  t->d.p.lm_gamma = $19;
-	  t->d.p.y_min = $20;
-	  t->d.p.y = $21;
-	  t->d.p.y_gamma = $22;
+	  current_testpattern->t = E_XPATTERN;
+	  current_index = 0;
+	  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
+	    {
+	      current_testpattern->d.p.mins[i] = 0;
+	      current_testpattern->d.p.vals[i] = 0;
+	      current_testpattern->d.p.gammas[i] = 1;
+	      current_testpattern->d.p.levels[i] = 1;
+	    }
 	}
 ;
 
-grid: GRID tINT
+grid: GRID tINT SEMI
 	{
-	  testpattern_t *t = get_next_testpattern();
-	  t->t = E_GRID;
-	  t->d.g.ticks = $2;
+	  current_testpattern = get_next_testpattern();
+	  current_testpattern->t = E_GRID;
+	  current_testpattern->d.g.ticks = $2;
 	}
 ;
 
 image: IMAGE tINT tINT
 	{
-	  testpattern_t *t = get_next_testpattern();
-	  t->t = E_IMAGE;
-	  t->d.i.x = $2;
-	  t->d.i.y = $3;
-	  if (t->d.i.x <= 0 || t->d.i.y <= 0)
+	  current_testpattern = get_next_testpattern();
+	  current_testpattern->t = E_IMAGE;
+	  current_testpattern->d.i.x = $2;
+	  current_testpattern->d.i.y = $3;
+	  if (current_testpattern->d.i.x <= 0 ||
+	      current_testpattern->d.i.y <= 0)
 	    {
 	      fprintf(stderr, "image width and height must be greater than zero\n");
 	      exit(1);
@@ -258,12 +266,8 @@ image: IMAGE tINT tINT
 Empty:
 ;
 
-Rule:   global_k_level | global_c_level | global_m_level | global_y_level
-	| global_lk_level | global_lc_level | global_lm_level
-	| global_c_gamma | global_m_gamma | global_y_gamma | global_k_gamma
-	| global_lc_gamma | global_lm_gamma | global_lk_gamma
-	| global_gamma | levels | ink_limit | printer | parameter | density
-	| top | left | hsize | vsize | blackline | extended
+Rule:   gamma | level | global_gamma | steps | ink_limit | printer | parameter
+	| density | top | left | hsize | vsize | blackline | extended
 ;
 
 A_Pattern: pattern | xpattern | grid

@@ -46,7 +46,6 @@ print-olympus.lo
 print-list.lo
 print-papers.lo
 print-pcl.lo
-print-printers.lo
 print-ps.lo
 print-raw.lo
 print-util.lo

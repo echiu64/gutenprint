@@ -70,22 +70,10 @@ static stp_image_t theImage =
 };
 stp_vars_t tv;
 
-double global_c_level = 1.0;
-double global_c_gamma = 1.0;
-double global_lc_level = 1.0;
-double global_lc_gamma = 1.0;
-double global_m_level = 1.0;
-double global_m_gamma = 1.0;
-double global_lm_level = 1.0;
-double global_lm_gamma = 1.0;
-double global_y_level = 1.0;
-double global_y_gamma = 1.0;
-double global_k_level = 1.0;
-double global_k_gamma = 1.0;
-double global_lk_level = 1.0;
-double global_lk_gamma = 1.0;
+double global_levels[STP_CHANNEL_LIMIT];
+double global_gammas[STP_CHANNEL_LIMIT];
 double global_gamma = 1.0;
-int levels = 256;
+int steps = 256;
 double ink_limit = 1.0;
 char *printer = 0;
 char *ink_type = 0;
@@ -169,16 +157,13 @@ static void
 do_help(void)
 {
   fprintf(stderr, "%s", "\
-Usage: testpattern -p printer [-n ramp_levels] [-I ink_limit] [-i ink_type]\n\
+Usage: testpattern -p printer [-n ramp_steps] [-I ink_limit] [-i ink_type]\n\
                    [-r resolution] [-s media_source] [-t media_type]\n\
                    [-z media_size] [-d dither_algorithm] [-e density]\n\
-                   [-c cyan_level] [-m magenta_level] [-y yellow_level]\n\
-                   [-C cyan_gamma] [-M magenta_gamma] [-Y yellow_gamma]\n\
-                   [-K black_gamma] [-G gamma] [-q]\n\
-                   [-H width] [-V height] [-T top] [-L left]\n\
+                   [-G gamma] [-q] [-H width] [-V height] [-T top] [-L left]\n\
        -H, -V, -T, -L expressed as fractions of the printable paper size\n\
        0.0 < ink_limit <= 1.0\n\
-       1 < ramp_levels <= 4096\n\
+       1 < ramp_steps <= 4096\n\
        0.1 <= density <= 2.0\n\
        0.0 < cyan_level <= 10.0 same for magenta and yellow.\n");
   exit(1);
@@ -206,6 +191,11 @@ main(int argc, char **argv)
   int count;
   int i;
 
+  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
+    {
+      global_levels[i] = 1.0;
+      global_gammas[i] = 1.0;
+    }
   stp_init();
   tv = stp_vars_create();
   stp_set_outfunc(tv, writefunc);
@@ -219,14 +209,11 @@ main(int argc, char **argv)
 
   while (1)
     {
-      c = getopt(argc, argv, "qp:n:l:I:r:s:t:z:d:hC:M:Y:K:e:T:L:H:V:c:m:y:G:");
+      c = getopt(argc, argv, "qp:n:l:I:r:s:t:z:d:he:T:L:H:V:G:");
       if (c == -1)
 	break;
       switch (c)
 	{
-	case 'C':
-	  global_c_gamma = strtod(optarg, 0);
-	  break;
 	case 'I':
 	  ink_limit = strtod(optarg, 0);
 	  break;
@@ -236,26 +223,14 @@ main(int argc, char **argv)
 	case 'H':
 	  hsize = strtod(optarg, 0);
 	  break;
-	case 'K':
-	  global_k_gamma = strtod(optarg, 0);
-	  break;
 	case 'L':
 	  xleft = strtod(optarg, 0);
-	  break;
-	case 'M':
-	  global_m_gamma = strtod(optarg, 0);
 	  break;
 	case 'T':
 	  xtop = strtod(optarg, 0);
 	  break;
 	case 'V':
 	  vsize = strtod(optarg, 0);
-	  break;
-	case 'Y':
-	  global_y_gamma = strtod(optarg, 0);
-	  break;
-	case 'c':
-	  global_c_level = strtod(optarg, 0);
 	  break;
 	case 'd':
 	  stp_set_string_parameter(tv, "DitherAlgorithm", optarg);
@@ -269,11 +244,8 @@ main(int argc, char **argv)
 	case 'i':
 	  stp_set_string_parameter(tv, "InkType", optarg);
 	  break;
-	case 'm':
-	  global_m_level = strtod(optarg, 0);
-	  break;
 	case 'n':
-	  levels = atoi(optarg);
+	  steps = atoi(optarg);
 	  break;
 	case 'p':
 	  printer = optarg;
@@ -290,9 +262,6 @@ main(int argc, char **argv)
 	case 't':
 	  stp_set_string_parameter(tv, "MediaType", optarg);
 	  break;
-	case 'y':
-	  global_y_level = strtod(optarg, 0);
-	  break;
 	case 'z':
 	  stp_set_string_parameter(tv, "PageSize", optarg);
 	  break;
@@ -306,10 +275,7 @@ main(int argc, char **argv)
   the_printer = stp_get_printer_by_driver(printer);
   if (!printer ||
       ink_limit <= 0 || ink_limit > 1.0 ||
-      levels < 1 || levels > 4096 ||
-      global_c_level <= 0 || global_c_level > 10 ||
-      global_m_level <= 0 || global_m_level > 10 ||
-      global_y_level <= 0 || global_y_level > 10 ||
+      steps < 1 || steps > 4096 ||
       xtop < 0 || xtop > 1 || xleft < 0 || xleft > 1 ||
       xtop + vsize > 1 || xleft + hsize > 1 ||
       hsize < 0 || hsize > 1 || vsize < 0 || vsize > 1)
@@ -377,11 +343,11 @@ main(int argc, char **argv)
   height = bottom - top;
   top += height * xtop;
   left += width * xleft;
-  if (levels > width)
-    levels = width;
+  if (steps > width)
+    steps = width;
 
 #if 0
-  width = (width / levels) * levels;
+  width = (width / steps) * steps;
   height = (height / n_testpatterns) * n_testpatterns;
 #endif
   stp_set_width(v, width * hsize);
@@ -468,110 +434,100 @@ fill_grid(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 static void
 fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 {
-  double c_min = p->d.p.c_min == -2 ? global_c_level : p->d.p.c_min;
-  double m_min = p->d.p.m_min == -2 ? global_m_level : p->d.p.m_min;
-  double y_min = p->d.p.y_min == -2 ? global_y_level : p->d.p.y_min;
-  double k_min = p->d.p.k_min;
-  double c = p->d.p.c == -2 ? global_c_level : p->d.p.c;
-  double m = p->d.p.m == -2 ? global_m_level : p->d.p.m;
-  double y = p->d.p.y == -2 ? global_y_level : p->d.p.y;
-  double c_gamma = p->d.p.c_gamma * global_gamma * global_c_gamma;
-  double m_gamma = p->d.p.m_gamma * global_gamma * global_m_gamma;
-  double y_gamma = p->d.p.y_gamma * global_gamma * global_y_gamma;
-  double k_gamma = p->d.p.k_gamma * global_gamma * global_k_gamma;
-  double k = p->d.p.k;
-  double c_level = p->d.p.c_level == -2 ? global_c_level : p->d.p.c_level;
-  double m_level = p->d.p.m_level == -2 ? global_m_level : p->d.p.m_level;
-  double y_level = p->d.p.y_level == -2 ? global_y_level : p->d.p.y_level;
+  double mins[4];
+  double vals[4];
+  double gammas[4];
+  double levels[4];
   double lower = p->d.p.lower;
   double upper = p->d.p.upper;
   int i;
   int j;
   int pixels;
-  c -= c_min;
-  m -= m_min;
-  y -= y_min;
-  k -= k_min;
+
+  vals[0] = p->d.p.vals[0];
+  mins[0] = p->d.p.mins[0];
+
+  for (j = 1; j < 4; j++)
+    {
+      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];
+      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];
+      levels[j] = p->d.p.levels[j] == -2 ? global_levels[j] : p->d.p.levels[j];
+    }
+  for (j = 0; j < 4; j++)
+    {
+      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];
+      vals[j] -= mins[j];
+    }
+
   if (scount > len)
     scount = len;
   pixels = len / scount;
   for (i = 0; i < scount; i++)
     {
+      int k;
       double where = (double) i / ((double) scount - 1);
       double cmyv;
       double kv;
       double val = where;
-      double cc = c_min + val * c;
-      double mm = m_min + val * m;
-      double yy = y_min + val * y;
-      double kk = k_min + k;
-      cc = pow(cc, c_gamma);
-      mm = pow(mm, m_gamma);
-      yy = pow(yy, y_gamma);
-      kk = pow(kk, k_gamma);
+      double xvals[4];
+      for (j = 0; j < 4; j++)
+	{
+	  if (j > 0)
+	    xvals[j] = mins[j] + val * vals[j];
+	  else
+	    xvals[j] = mins[j] + vals[j];
+	  xvals[j] = pow(xvals[j], gammas[j]);
+	}
+
       if (where <= lower)
 	kv = 0;
       else if (where > upper)
 	kv = where;
       else
 	kv = (where - lower) * upper / (upper - lower);
-      cmyv = k * (where - kv);
-      kk *= kv;
-      cc += cmyv * c_level;
-      mm += cmyv * m_level;
-      yy += cmyv * y_level;
-      if (cc > 1.0)
-	cc = 1.0;
-      if (mm > 1.0)
-	mm = 1.0;
-      if (yy > 1.0)
-	yy = 1.0;
-      if (kk > 1.0)
-	kk = 1.0;
-      cc *= ink_limit * 65535;
-      mm *= ink_limit * 65535;
-      yy *= ink_limit * 65535;
-      kk *= ink_limit * 65535;
-      for (j = 0; j < pixels; j++)
+      cmyv = vals[0] * (where - kv);
+      xvals[0] *= kv;
+      for (j = 1; j < 4; j++)
+	xvals[j] += cmyv * levels[j];
+      for (j = 0; j < 4; j++)
+	{
+	  if (xvals[j] > 1)
+	    xvals[j] = 1;
+	  xvals[j] *= ink_limit * 65535;
+	}
+      for (k = 0; k < pixels; k++)
 	{
 	  switch (global_ink_depth)
 	    {
 	    case 0:
-	      data[0] = cc;
-	      data[1] = mm;
-	      data[2] = yy;
-	      data[3] = kk;
+	      for (j = 0; j < 4; j++)
+		data[j] = xvals[(j + 1) % 4];
 	      data += 4;
 	      break;
 	    case 1:
-	      data[0] = kk;
+	      data[0] = xvals[0];
 	      break;
 	    case 2:
-	      data[0] = kk;
+	      data[0] = xvals[0];
 	      data[1] = 0;
 	      break;
 	    case 4:
-	      data[0] = kk;
-	      data[1] = cc;
-	      data[2] = mm;
-	      data[3] = yy;
+	      for (j = 0; j < 4; j++)
+		data[j] = xvals[j];
 	      break;
 	    case 6:
-	      data[0] = kk;
-	      data[1] = cc;
+	      data[0] = xvals[0];
+	      data[1] = xvals[1];
 	      data[2] = 0;
-	      data[3] = mm;
+	      data[3] = xvals[2];
 	      data[4] = 0;
-	      data[5] = yy;
+	      data[5] = xvals[3];
 	      break;
 	    case 7:
-	      data[0] = kk;
-	      data[1] = 0;
-	      data[2] = cc;
-	      data[3] = 0;
-	      data[4] = mm;
-	      data[5] = 0;
-	      data[6] = yy;
+	      for (j = 0; j < 4; j++)
+		data[j * 2] = xvals[j];
+	      for (j = 1; j < 6; j += 2)
+		data[j] = 0;
 	      break;
 	    }
 	  data += global_ink_depth;
@@ -583,37 +539,22 @@ static void
 fill_colors_extended(unsigned short *data, size_t len,
 		     size_t scount, testpattern_t *p)
 {
-  double c_min = p->d.p.c_min == -2 ? global_c_level : p->d.p.c_min;
-  double m_min = p->d.p.m_min == -2 ? global_m_level : p->d.p.m_min;
-  double y_min = p->d.p.y_min == -2 ? global_y_level : p->d.p.y_min;
-  double k_min = p->d.p.k_min == -2 ? global_k_level : p->d.p.k_min;
-  double lc_min = p->d.p.lc_min == -2 ? global_lc_level : p->d.p.lc_min;
-  double lm_min = p->d.p.lm_min == -2 ? global_lm_level : p->d.p.lm_min;
-  double lk_min = p->d.p.lk_min == -2 ? global_lk_level : p->d.p.lk_min;
-  double c = p->d.p.c == -2 ? global_c_level : p->d.p.c;
-  double m = p->d.p.m == -2 ? global_m_level : p->d.p.m;
-  double y = p->d.p.y == -2 ? global_y_level : p->d.p.y;
-  double k = p->d.p.k == -2 ? global_k_level : p->d.p.k;
-  double lc = p->d.p.lc == -2 ? global_lc_level : p->d.p.lc;
-  double lm = p->d.p.lm == -2 ? global_lm_level : p->d.p.lm;
-  double lk = p->d.p.lk == -2 ? global_lk_level : p->d.p.lk;
-  double c_gamma = p->d.p.c_gamma * global_gamma * global_c_gamma;
-  double m_gamma = p->d.p.m_gamma * global_gamma * global_m_gamma;
-  double y_gamma = p->d.p.y_gamma * global_gamma * global_y_gamma;
-  double k_gamma = p->d.p.k_gamma * global_gamma * global_k_gamma;
-  double lc_gamma = p->d.p.lc_gamma * global_gamma * global_lc_gamma;
-  double lm_gamma = p->d.p.lm_gamma * global_gamma * global_lm_gamma;
-  double lk_gamma = p->d.p.lk_gamma * global_gamma * global_lk_gamma;
+  double mins[STP_CHANNEL_LIMIT];
+  double vals[STP_CHANNEL_LIMIT];
+  double gammas[STP_CHANNEL_LIMIT];
   int i;
   int j;
+  int k;
   int pixels;
-  c -= c_min;
-  m -= m_min;
-  y -= y_min;
-  k -= k_min;
-  lc -= lc_min;
-  lm -= lm_min;
-  lk -= lk_min;
+  int channel_limit = global_ink_depth <= 7 ? 7 : global_ink_depth;
+
+  for (j = 0; j < channel_limit; j++)
+    {
+      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];
+      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];
+      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];
+      vals[j] -= mins[j];
+    }
   if (scount > len)
     scount = len;
   pixels = len / scount;
@@ -621,73 +562,63 @@ fill_colors_extended(unsigned short *data, size_t len,
     {
       double where = (double) i / ((double) scount - 1);
       double val = where;
-      double cc = c_min + val * c;
-      double mm = m_min + val * m;
-      double yy = y_min + val * y;
-      double kk = k_min + val * k;
-      double lcc = lc_min + val * lc;
-      double lmm = lm_min + val * lm;
-      double lkk = lk_min + val * lk;
-      cc = pow(cc, c_gamma);
-      mm = pow(mm, m_gamma);
-      yy = pow(yy, y_gamma);
-      kk = pow(kk, k_gamma);
-      lcc = pow(lcc, lc_gamma);
-      lmm = pow(lmm, lm_gamma);
-      lkk = pow(lkk, lk_gamma);
-      cc *= ink_limit * 65535;
-      mm *= ink_limit * 65535;
-      yy *= ink_limit * 65535;
-      kk *= ink_limit * 65535;
-      lcc *= ink_limit * 65535;
-      lmm *= ink_limit * 65535;
-      lkk *= ink_limit * 65535;
-      for (j = 0; j < pixels; j++)
+      double xvals[STP_CHANNEL_LIMIT];
+
+      for (j = 0; j < channel_limit; j++)
+	{
+	  xvals[j] = mins[j] + val * vals[j];
+	  xvals[j] = pow(xvals[j], gammas[j]);
+	  xvals[j] *= ink_limit * 65535;
+	}
+      for (k = 0; k < pixels; k++)
 	{
 	  switch (global_ink_depth)
 	    {
 	    case 1:
-	      data[0] = kk;
+	      data[0] = xvals[0];
 	      break;
 	    case 2:
-	      data[0] = kk;
-	      data[1] = lkk;
+	      data[0] = xvals[0];
+	      data[1] = xvals[4];
 	      break;
 	    case 3:
-	      data[0] = cc;
-	      data[1] = mm;
-	      data[2] = yy;
+	      data[0] = xvals[1];
+	      data[1] = xvals[2];
+	      data[2] = xvals[3];
 	      break;
 	    case 4:
-	      data[0] = kk;
-	      data[1] = cc;
-	      data[2] = mm;
-	      data[3] = yy;
+	      data[0] = xvals[0];
+	      data[1] = xvals[1];
+	      data[2] = xvals[2];
+	      data[3] = xvals[3];
 	      break;
 	    case 5:
-	      data[0] = cc;
-	      data[1] = lcc;
-	      data[2] = mm;
-	      data[3] = lmm;
-	      data[4] = yy;
+	      data[0] = xvals[1];
+	      data[1] = xvals[5];
+	      data[2] = xvals[2];
+	      data[3] = xvals[6];
+	      data[4] = xvals[3];
 	      break;
 	    case 6:
-	      data[0] = kk;
-	      data[1] = cc;
-	      data[2] = lcc;
-	      data[3] = mm;
-	      data[4] = lmm;
-	      data[5] = yy;
+	      data[0] = xvals[0];
+	      data[1] = xvals[1];
+	      data[2] = xvals[5];
+	      data[3] = xvals[2];
+	      data[4] = xvals[6];
+	      data[5] = xvals[3];
 	      break;
 	    case 7:
-	      data[0] = kk;
-	      data[1] = lkk;
-	      data[2] = cc;
-	      data[3] = lcc;
-	      data[4] = mm;
-	      data[5] = lmm;
-	      data[6] = yy;
+	      data[0] = xvals[0];
+	      data[1] = xvals[4];
+	      data[2] = xvals[1];
+	      data[3] = xvals[5];
+	      data[4] = xvals[2];
+	      data[5] = xvals[6];
+	      data[6] = xvals[3];
 	      break;
+	    default:
+	      for (j = 0; j < global_ink_depth; j++)
+		data[j] = xvals[j];
 	    }
 	  data += global_ink_depth;
 	}
@@ -723,15 +654,15 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	  switch (the_testpatterns[band].t)
 	    {
 	    case E_PATTERN:
-	      fill_colors((unsigned short *)data, printer_width, levels,
+	      fill_colors((unsigned short *)data, printer_width, steps,
 			  &(the_testpatterns[band]));
 	      break;
 	    case E_XPATTERN:
 	      fill_colors_extended((unsigned short *)data, printer_width,
-				   levels, &(the_testpatterns[band]));
+				   steps, &(the_testpatterns[band]));
 	      break;
 	    case E_GRID:
-	      fill_grid((unsigned short *)data, printer_width, levels,
+	      fill_grid((unsigned short *)data, printer_width, steps,
 			&(the_testpatterns[band]));
 	      break;
 	    default:
@@ -742,7 +673,7 @@ Image_get_row(stp_image_t *image, unsigned char *data,
       else if (row == printer_height - 1)
 	{
 	  memset(data, 0, printer_width * depth * sizeof(unsigned short));
-	  fill_black((unsigned short *)data, printer_width, levels);
+	  fill_black((unsigned short *)data, printer_width, steps);
 	}
       else if (band >= n_testpatterns)
 	memset(data, 0, printer_width * depth * sizeof(unsigned short));
@@ -752,15 +683,15 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	  switch (the_testpatterns[band].t)
 	    {
 	    case E_PATTERN:
-	      fill_colors((unsigned short *)data, printer_width, levels,
+	      fill_colors((unsigned short *)data, printer_width, steps,
 			  &(the_testpatterns[band]));
 	      break;
 	    case E_XPATTERN:
 	      fill_colors_extended((unsigned short *)data, printer_width,
-				   levels, &(the_testpatterns[band]));
+				   steps, &(the_testpatterns[band]));
 	      break;
 	    case E_GRID:
-	      fill_grid((unsigned short *)data, printer_width, levels,
+	      fill_grid((unsigned short *)data, printer_width, steps,
 			&(the_testpatterns[band]));
 	      break;
 	    default:

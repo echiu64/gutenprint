@@ -43,6 +43,8 @@ extern "C" {
 #define COLOR_MODEL_CMY         1
 #define NCOLOR_MODELS           2
 
+#define STP_CHANNEL_LIMIT	(32)
+
 /*
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).

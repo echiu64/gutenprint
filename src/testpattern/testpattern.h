@@ -38,34 +38,10 @@ typedef struct
   } t;
   union {
     struct {
-      double c_min;
-      double c;
-      double c_gamma;
-      double lc_min;
-      double lc;
-      double lc_gamma;
-      double m_min;
-      double m;
-      double m_gamma;
-      double lm_min;
-      double lm;
-      double lm_gamma;
-      double y_min;
-      double y;
-      double y_gamma;
-      double k_min;
-      double k;
-      double k_gamma;
-      double lk_min;
-      double lk;
-      double lk_gamma;
-      double k_level;
-      double lk_level;
-      double c_level;
-      double lc_level;
-      double m_level;
-      double lm_level;
-      double y_level;
+      double mins[32];
+      double vals[32];
+      double gammas[32];
+      double levels[32];
       double lower;
       double upper;
     } p;
@@ -88,22 +64,10 @@ typedef struct
 #define YY_ALWAYS_INTERACTIVE 1
 
 extern int global_ink_depth;
-extern double global_c_level;
-extern double global_c_gamma;
-extern double global_m_level;
-extern double global_m_gamma;
-extern double global_y_level;
-extern double global_y_gamma;
-extern double global_k_level;
-extern double global_k_gamma;
-extern double global_lc_level;
-extern double global_lc_gamma;
-extern double global_lm_level;
-extern double global_lm_gamma;
-extern double global_lk_level;
-extern double global_lk_gamma;
+extern double global_levels[];
+extern double global_gammas[];
 extern double global_gamma;
-extern int levels;
+extern int steps;
 extern double ink_limit;
 extern char *printer;
 extern double density;

@@ -197,10 +197,12 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
+BUILD_CUPS_PPDS="${BUILD_CUPS}"
+
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],
                [BUILD_CUPS_PPDS],
-               [yes])
+               [(automatic)])
 
 STP_ARG_ENABLE([translated-cups-ppds],
                [build translated CUPS PPD files],

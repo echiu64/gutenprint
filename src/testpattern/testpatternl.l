@@ -35,11 +35,13 @@
 
 int mylineno = 1;
 
-#if 0
-#define DBG(x) fprintf(stderr, "'%s'%s\n", yytext, #x);
-#else
-#define DBG(x)
-#endif
+#define DBG(x)						\
+do							\
+  {							\
+    if (getenv("STP_TESTPATTERN_DEBUG"))		\
+      fprintf(stderr, "'%s' => %s\n", yytext, #x);	\
+  }							\
+ while (0)
 
 %}
 
@@ -48,46 +50,42 @@ int mylineno = 1;
 digit		[0-9]
 integer		[-+]?{digit}+
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
-string		([\"][^\"\n]+[\"])|([^ \t\n"]+)
+string		([\"][^\"\n]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)
 ws		[ \t]+
 
 %%
 
-c_gamma			DBG(C_GAMMA) return C_GAMMA;
-m_gamma			DBG(M_GAMMA) return M_GAMMA;
-y_gamma			DBG(Y_GAMMA) return Y_GAMMA;
-k_gamma			DBG(K_GAMMA) return K_GAMMA;
-lc_gamma		DBG(LC_GAMMA) return LC_GAMMA;
-lm_gamma		DBG(LM_GAMMA) return LM_GAMMA;
-lk_gamma		DBG(LK_GAMMA) return LK_GAMMA;
-gamma			DBG(GAMMA) return GAMMA;
-c_level			DBG(C_LEVEL) return C_LEVEL;
-m_level			DBG(M_LEVEL) return M_LEVEL;
-y_level			DBG(Y_LEVEL) return Y_LEVEL;
-k_level			DBG(K_LEVEL) return K_LEVEL;
-lc_level		DBG(LC_LEVEL) return LC_LEVEL;
-lm_level		DBG(LM_LEVEL) return LM_LEVEL;
-lk_level		DBG(LK_LEVEL) return LK_LEVEL;
-levels			DBG(LEVELS) return LEVELS;
-ink_limit		DBG(INK_LIMIT) return INK_LIMIT;
-width			DBG(WIDTH) return WIDTH;
-printer			DBG(PRINTER) return PRINTER;
-parameter		DBG(PARAMETER) return PARAMETER;
-density			DBG(DENSITY) return DENSITY;
-top			DBG(TOP) return TOP;
-left			DBG(LEFT) return LEFT;
-hsize			DBG(HSIZE) return HSIZE;
-vsize			DBG(VSIZE) return VSIZE;
-blackline		DBG(BLACKLINE) return BLACKLINE;
-pattern			DBG(PATTERN) return PATTERN;
-xpattern		DBG(XPATTERN) return XPATTERN;
-image			DBG(IMAGE) return IMAGE;
-extended		DBG(EXTENDED) return EXTENDED;
-grid			DBG(GRID) return GRID;
+cyan			DBG(CYAN); return CYAN;
+l_cyan			DBG(L_CYAN); return L_CYAN;
+magenta			DBG(MAGENTA); return MAGENTA;
+l_magenta		DBG(L_MAGENTA); return L_MAGENTA;
+yellow			DBG(YELLOW); return YELLOW;
+d_yellow		DBG(D_YELLOW); return D_YELLOW;
+black			DBG(BLACK); return BLACK;
+l_black			DBG(L_BLACK); return L_BLACK;
+gamma			DBG(GAMMA); return GAMMA;
+level			DBG(LEVEL); return LEVEL;
+steps			DBG(STEPS); return STEPS;
+ink_limit		DBG(INK_LIMIT); return INK_LIMIT;
+width			DBG(WIDTH); return WIDTH;
+printer			DBG(PRINTER); return PRINTER;
+parameter		DBG(PARAMETER); return PARAMETER;
+density			DBG(DENSITY); return DENSITY;
+top			DBG(TOP); return TOP;
+left			DBG(LEFT); return LEFT;
+hsize			DBG(HSIZE); return HSIZE;
+vsize			DBG(VSIZE); return VSIZE;
+blackline		DBG(BLACKLINE); return BLACKLINE;
+pattern			DBG(PATTERN); return PATTERN;
+xpattern		DBG(XPATTERN); return XPATTERN;
+image			DBG(IMAGE); return IMAGE;
+extended		DBG(EXTENDED); return EXTENDED;
+grid			DBG(GRID); return GRID;
+;			DBG(SEMI); return SEMI;
 
-{integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
-{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;
-{string}		yylval.sval = c_strdup(yytext); DBG(tSTRING) return tSTRING;
-{ws}			DBG(whitespace1) 	/* Skip blanks/tabs */
-#[^\n]*			DBG(comment1) 	/* Skip comments */
-\n			DBG(newline) mylineno++;
+{integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
+{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
+{string}		yylval.sval = c_strdup(yytext); DBG(tSTRING); return tSTRING;
+{ws}			DBG(whitespace); 	/* Skip blanks/tabs */
+#[^\n]*			DBG(comment); 	/* Skip comments */
+\n			DBG(newline); mylineno++;
