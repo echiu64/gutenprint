@@ -552,15 +552,17 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
       (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
     {
       double h, s, l;
+      double oh;
       rgbout[0] ^= 65535;
       rgbout[1] ^= 65535;
       rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
+      oh = h;
       h = adjust_hue(lut->hue_map, h, h_points);
       if (lut->lum_map && l > 0.0001 && l < .9999)
 	{
-	  double nh = h * l_points / 6.0;
+	  double nh = oh * l_points / 6.0;
 	  double el;
 	  if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
 	    {
@@ -599,7 +601,7 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
       if (lut->sat_map)
 	{
 	  double tmp;
-	  double nh = h * s_points / 6.0;
+	  double nh = oh * s_points / 6.0;
 	  if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
 	      (tmp < .9999 || tmp > 1.0001))
 	    {
@@ -2075,9 +2077,9 @@ stpi_color_traditional_init(stp_vars_t v,
 	      SET_COLORFUNC(rgb_8_to_rgb_line_art);
 	    case 2:
 	    case 1:
-	      SET_COLORFUNC(rgb_16_to_rgb);
+	      SET_COLORFUNC(rgb_8_to_rgb);
 	    case 0:
-	      SET_COLORFUNC(fast_rgb_16_to_rgb);
+	      SET_COLORFUNC(fast_rgb_8_to_rgb);
 	    default:
 	      SET_COLORFUNC(NULL);
 	    }
