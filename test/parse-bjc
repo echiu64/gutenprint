@@ -1,0 +1,145 @@
+#!/usr/bin/perl
+
+while (<>) {
+    $stuff .= $_;
+}
+
+$OFFS=$ENV{"OFFS"};
+$GRX=$ENV{"GRX"};
+
+%seqtable = ( "@", 0,
+	      "\x0d", 0,
+	      "[K", 4,
+	      "(a", "VARIABLE",
+	      "(b", "VARIABLE",
+	      "(c", "VARIABLE",
+	      "(d", "VARIABLE",
+	      "(e", "GRAPHICS",
+	      "(l", "VARIABLE",
+	      "(m", "VARIABLE",
+	      "(p", "VARIABLE",
+	      "(q", "VARIABLE",
+	      "(r", "VARIABLE",
+	      "(t", "VARIABLE",
+	      "(A", "GRAPHICS",
+	      "\\", 2,
+	      "\$", 2,
+	      "(\\", "VARIABLE",
+	      "(C", "VARIABLE",
+	      ".", "SPECIAL",
+	      "i", "SPECIAL1"
+	  );
+
+$esc = "\033";
+
+$skipcount = 0;
+$curpos = 0;
+$verbose = 1;
+
+while ($stuff ne "") {
+      if ($stuff=~ s/^(BJLSTART.+BJLEND)//sm) {
+
+	printf "\n$1"; 
+	$curpos+= length($1);
+
+      } elsif (substr($stuff, 0, 1) eq "\xa") {
+
+	print "<a";
+	$curpos++;
+	substr($stuff, 0, 1) = "";
+
+      } elsif (substr($stuff, 0, 1) eq "\xd") {
+
+	print "<d" if ($GRX);
+	$curpos++;
+	substr($stuff, 0, 1) = "";
+
+      } elsif (substr($stuff, 0, 1) eq "$esc") {
+
+	$found = 0;
+	foreach $key (keys %seqtable) {
+	    if (substr($stuff, 1, length $key) eq $key) {
+		$skipchars = $seqtable{$key};
+		if ($skipchars eq "GRAPHICS") {
+		    if ($GRX) {
+		        print "\n";
+			printf "%08x ", $curpos if ($OFFS);
+			print "1b ";
+		    }
+		    $startoff = 0;
+		    $lchar = substr($stuff, (length $key) + 1, 1);
+		    $nlchar = unpack("C", $lchar);
+		    $hchar = substr($stuff, (length $key) + 2, 1);
+		    $nhchar = unpack("C", $hchar);
+		    $skipchars = ($nhchar * 256) + $nlchar;
+		    $startoff = 2;
+		    
+		    if ($GRX) {
+		      for ($i = 0;
+			 $i < $skipchars + (length $key) + $startoff;
+			 $i++) {
+			$char = substr($stuff, $i + 1, 1);
+			$nchar = unpack("C", $char);
+			if ($i < 2 && $nchar >= 32 && $nchar < 127) {
+			    print "$char ";
+			} elsif ($i==4 && $nchar >= 32 && $nchar < 127) {
+			    print "$char$char  ";
+			} else {
+			    printf "%02x ", unpack("C", $char);
+			}
+		      }
+		    }
+		    $found = 1;
+		} else {
+		    print "\n";
+		    printf "%08x ", $curpos if ($OFFS); 
+		    print "1b ";
+		    $startoff = 0;
+		    if ($skipchars eq "VARIABLE") {
+			$lchar = substr($stuff, (length $key) + 1, 1);
+			$nlchar = unpack("C", $lchar);
+			$hchar = substr($stuff, (length $key) + 2, 1);
+			$nhchar = unpack("C", $hchar);
+			$skipchars = ($nhchar * 256) + $nlchar;
+			$startoff = 2;
+		    }
+		    for ($i = 0;
+			 $i < $skipchars + (length $key) + $startoff;
+			 $i++) {
+			$char = substr($stuff, $i + 1, 1);
+			$nchar = unpack("C", $char);
+			if ($i < 2 && $nchar >= 32 && $nchar < 127) {
+			    print "$char ";
+			} else {
+			    printf "%02x ", unpack("C", $char);
+			}
+		    }
+		    $found = 1;
+		}
+		$bytes = length($key) + 1 + $skipchars + $startoff;
+		last;
+	    }
+	}
+	if (! $found) {
+	    print "\n";
+	    printf "%08x ", $curpos if ($OFFS);
+	    print "1b ";
+	    substr($stuff, 0, 1) = "";
+	    $curpos += 1;
+	} elsif ($found == 1) {
+	    substr($stuff, 0, $bytes) = "";
+	    $curpos += $bytes;
+	} else {
+	}
+    } else {
+	$char = substr($stuff, 0, 1);
+	$nchar = unpack("C", $char);
+	if ($nchar >= 32 && $nchar < 127) {
+	    print "*$char ";
+	} else {
+	    printf "*%02x ", unpack("C", $char);
+	}
+	$curpos++;
+	substr($stuff, 0, 1) = "";
+    }
+}
