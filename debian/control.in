@@ -248,13 +248,18 @@ Package: foomatic-db-gimp-print
 Architecture: all
 Section: text
 Depends: foomatic-db, ijsgimpprint (>= ${Source-Version})
-Description: Printer/Driver database and print system - gimp-print database
- Foomatic is a printer and driver database with PPD generator and
- filter backends for various printing systems from cups over lp* to
- pdq.
+Conflicts: foomatic-bin (<< 2.9), foomatic-db (<< 2.9)
+Description: linuxprinting.org printer support - database for Gimp-Print printer drivers
+ Foomatic is a printing system designed to make it easier to set up
+ common printers for use with Debian (and other operating systems).
+ It provides the "glue" between a print spooler (like CUPS or lpr) and
+ your actual printer, by telling your computer how to process files
+ sent to the printer.
  .
- This package contains the database for the gimp-print printer
- drivers.
+ This package includes support for printers using the Gimp-Print
+ printer driver suite.
+ .
+ Home Page: http://www.linuxprinting.org/
  .
  This is Gimp-Print version #UPSTREAM_VERSION#, an unstable
  development release in the 4.3 line.

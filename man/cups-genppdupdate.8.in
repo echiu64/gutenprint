@@ -14,24 +14,24 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH CUPS-GENPPDUPDATE "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
+.TH CUPS\-GENPPDUPDATE "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
-cups-genppdupdate \- update CUPS+Gimp-Print PPD files
+cups\-genppdupdate \- update CUPS+Gimp\-Print PPD files
 .SH SYNOPSIS
-.B cups-genppdupdate
+.B cups\-genppdupdate
 [\fI\-h\fP]
 [\fI\-n\fP]
 [\fI\-q\fP | \fI\-v\fP]
 [\fI\-s ppd-directory\fP]
 .SH DESCRIPTION
-\fBcups-genppdupdate\fP regenerates the \fIgimp-print\fP PPD files in use by
-CUPS, using the PPD files under \fI@cups_conf_datadir@/model/gimp-print\fP as
+\fBcups\-genppdupdate\fP regenerates the \fIGimp-Print\fP PPD files in use by
+CUPS, using the PPD files under \fI@cups_conf_datadir@/model/gimp\-print\fP as
 templates.  The new PPD file replaces the old PPD file under
 \fI@cups_conf_serverroot@/ppd\fP, but all the options set in the old PPD will
 be merged into the new PPD, provided that they are still valid in the new file.
 .PP
-cups-genppdupdate does \fBnot\fP restart cupsd.  cupsd will need manually
-reloading (or send SIGHUP) once cups-genppdupdate has completed.
+cups\-genppdupdate does \fBnot\fP restart cupsd.  cupsd will need manually
+reloading (or send SIGHUP) once cups\-genppdupdate has completed.
 .SH OPTIONS
 .TP
 .B \-h
@@ -50,16 +50,16 @@ output will not be of use to the average user.
 .TP
 .B \-s \fIppd-directory\fP
 Use \fIppd-directory\fP as the base directory to read PPD files from.  By
-default, the base directory is \fP@cups_conf_datadir@/model/gimp-print\fP.
+default, the base directory is \fP@cups_conf_datadir@/model/gimp\-print\fP.
 Under this directory, the PPD files are located in subdirectories according to
 language code and territory.
 .SH SEE ALSO
-.BR cups-genppd (8),
-.BR cups-genppdconfig (8),
+.BR cups\-genppd (8),
+.BR cups\-genppdconfig (8),
 gimpprint.info,
 CUPS Software Administrators Manual, http://localhost:631/documentation.html
 .SH COPYRIGHT
-Copyright \(co  2002-2003 Roger Leigh (roger@whinlatter.uklinux.net)
+Copyright \(co  2002\-2003 Roger Leigh (roger@whinlatter.uklinux.net)
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as

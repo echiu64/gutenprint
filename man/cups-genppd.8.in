@@ -14,29 +14,29 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH CUPS-GENPPD "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
+.TH CUPS\-GENPPD "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
-cups-genppd \- generate gimp-print PPD files for use with CUPS
+cups\-genppd \- generate Gimp-Print PPD files for use with CUPS
 .SH SYNOPSIS
-.B cups-genppd
-[\fI-c localedir\fR] [\fI-l locale\fR] [\fI-p prefix\fR] [\fI-q\fR]
-[\fI-v\fR] \fImodel1\fR \fI[model2, ...modeln]\fR
+.B cups\-genppd
+[\fI\-c localedir\fR] [\fI\-l locale\fR] [\fI\-p prefix\fR] [\fI\-q\fR]
+[\fI\-v\fR] \fImodel1\fR \fI[model2, ...modeln]\fR
 .br
-.B cups-genppd
-\fI-L \fR[\fI-c localedir\fR]
+.B cups\-genppd
+\fI\-L \fR[\fI\-c localedir\fR]
 .br
-.B cups-genppd
-\fI-M \fR[\fI-v\fR]
+.B cups\-genppd
+\fI\-M \fR[\fI\-v\fR]
 .br
-.B cups-genppd
-\fI-h\fR
+.B cups\-genppd
+\fI\-h\fR
 .br
-.B cups-genppd
-\fI-V\fR
+.B cups\-genppd
+\fI\-V\fR
 .SH DESCRIPTION
-\fBcups-genppd\fR generates \fIgimp-print\fR PPD files for use with CUPS.
+\fBcups\-genppd\fR generates \fIGimp-Print\fR PPD files for use with CUPS.
 The default behavior is to output PPD files for all models of printer
-that the \fIgimp-print\fR printer driver library supports.  You may
+that the \fIGimp-Print\fR printer driver library supports.  You may
 restrict the models by listing either the driver names or the full names
 of the printers you wish to generate PPD files for after any options.
 Additionally, the PPD files may be \fIlocalised\fR, that is,
@@ -45,7 +45,7 @@ are commands to find out what printer models and languages are
 supported.
 .SH EXAMPLES
 .TP
-.B cups-genppd -v bjc-6200 'EPSON Stylus Photo 1280' 'HP DeskJet 850C'
+.B cups\-genppd \-v bjc\-6200 'EPSON Stylus Photo 1280' 'HP DeskJet 850C'
 verbosely generate three PPD files, listing the driver name in the
 first case, and the full name in the second.
 .TP
@@ -54,11 +54,11 @@ generate PPDs for all available models, in directory \fIppd\fR using
 the locale data found under \fI/usr/share/locale\fR.  The language to
 use is taken from the environment (de_DE).
 .TP
-.B cups-genppd \-L \-c /usr/local/share/locale
+.B cups\-genppd \-L \-c /usr/local/share/locale
 list available languages using the locale data found under
 \fI/usr/local/share/locale\fR.
 .TP
-.B cups-genppd \-M \-v
+.B cups\-genppd \-M \-v
 list available drivers, with long model descriptions
 .SH COMMANDS
 .TP

@@ -16,9 +16,9 @@
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 .TH GIMPPRINT 3 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
 .SH NAME
-\fBgimpprint\fR - High quality raster image printing library
+\fBgimpprint\fR \- High quality raster image printing library
 .SH SYNOPSIS
-\fB#include <gimp-print/gimp-print.h>\fR
+\fB#include <gimp\-print/gimp\-print.h>\fR
 .SH DESCRIPTION
 The \fBgimpprint\fR library routines give programmers an interface to print
 high quality bitmap images on most modern printers.  It includes drivers which
@@ -36,15 +36,15 @@ version.
 .PP
 This manual page was written by Roger Leigh (roger@whinlatter.uklinux.net)
 .SH SEE ALSO
-.BR gimpprint-color (7),
-.BR gimpprint-dithers (7),
-.BR gimpprint-imagetypes (7),
-.BR gimpprint-inktypes (7),
-.BR gimpprint-mediasizes (7),
-.BR gimpprint-mediasources (7),
-.BR gimpprint-mediatypes (7),
-.BR gimpprint-models (7),
-.BR gimpprint-resolutions (7).
+.BR gimpprint\-color (7),
+.BR gimpprint\-dithers (7),
+.BR gimpprint\-imagetypes (7),
+.BR gimpprint\-inktypes (7),
+.BR gimpprint\-mediasizes (7),
+.BR gimpprint\-mediasources (7),
+.BR gimpprint\-mediatypes (7),
+.BR gimpprint\-models (7),
+.BR gimpprint\-resolutions (7).
 .PP
 The full documentation for
 .B Gimp-Print
@@ -54,7 +54,7 @@ and
 .B Gimp-Print
 programs are properly installed at your site, the command
 .IP
-.B info gimp-print
+.B info gimp\-print
 .PP
 should give you access to the complete manual.
 .\"#
