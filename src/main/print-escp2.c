@@ -1329,6 +1329,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       nozzles = 1;
       privdata.min_nozzles = 1;
       nozzle_separation = 1;
+      init.nozzle_separation = nozzle_separation;
       init.use_black_parameters = 0;
     }
   init.nozzles = nozzles;
