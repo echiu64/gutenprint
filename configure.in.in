@@ -207,6 +207,9 @@ AC_ARG_WITH(readline,
   [case "${withval}" in
     yes) USE_READLINE="yes" ; AC_MSG_RESULT([yes]) ;;
     no) USE_READLINE="no" ; AC_MSG_RESULT([no]) ;;
+    only) USE_READLINE="yes"
+	  EXTRA_LIBREADLINE_DEPS=" "
+	  AC_MSG_RESULT([yes (using only readline)]) ;;
     *) USE_READLINE="yes"
        EXTRA_LIBREADLINE_DEPS="${withval}"
        AC_MSG_RESULT([yes (using extra libraries ${withval})]) ;;
