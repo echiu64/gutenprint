@@ -1577,6 +1577,14 @@
 <language value=pcl>
 </printer>
 
+<printer name="HP LaserJet IIP series" driver="pcl-2p">
+<nocolor>
+<model value=21>
+<gamma value=1.000>
+<density value=1.000>
+<language value=pcl>
+</printer>
+
 <printer name="HP LaserJet III series" driver="pcl-3">
 <nocolor>
 <model value=3>
