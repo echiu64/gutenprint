@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.62  2000/02/04 09:40:28  gandy
+ *   Models BJC-1000/2000/3000/6000/6100/7000/7100 ready for testing.
+ *
  *   Revision 1.61  2000/02/04 01:02:15  rlk
  *   Prelim support for 850/860/870/1200; fix stupid bug in ESC(S
  *
@@ -2874,7 +2877,20 @@ const static printer_t	printers[] =	/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Photo",	"escp2-photo",	1,	8,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "CANON BJC 6000",           "bjc-6000",     1,      6000,   0.8,    0.8,
+
+  { "CANON BJC 1000",           "bjc-1000",     1,      1000,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 2000",           "bjc-2000",     1,      2000,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 3000",           "bjc-3000",     1,      3000,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 6000",           "bjc-6000",     1,      6000,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 6100",           "bjc-6100",     1,      6100,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 7000",           "bjc-7000",     1,      7000,   1.0,    0.8,
+    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
+  { "CANON BJC 7100",           "bjc-7100",     1,      7100,   1.0,    0.8,
     canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
 };
 
