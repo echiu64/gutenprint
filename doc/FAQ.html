@@ -273,6 +273,14 @@ to connect it to the printer queue of your choice.
 you can create multiple queues with different settings, for example
 one for draft mode and one for high quality.
 
+<p><li><h3>I'm printing through Samba, and my printer prints
+garbage!</h3>
+
+<p>There are a number of Samba configuration issues that cause
+problems; a common problem is translation from UNIX newlines (\n) to
+Windows newlines (\r\n).  It's important to ensure that sending raw
+data, with no translation, to the printer.
+
 </ol>
 
 </body></html>
