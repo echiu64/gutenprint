@@ -1025,55 +1025,55 @@ static const double standard_lum_adjustment[49] =
 
 static const double standard_hue_adjustment[49] =
 {
-  0,				/* C */
-  0.17,
-  0.29,
-  0.38,
-  0.47,
-  0.52,
-  0.57,
-  0.62,
-  0.65,				/* B */
-  0.7,
-  0.85,
-  1.05,
-  1.25,
-  1.45,
-  1.65,
-  1.8,
-  2.00,				/* M */
-  2.08,
-  2.16,
-  2.24,
-  2.32,
-  2.4,
-  2.48,
-  2.56,
-  2.65,				/* R */
-  2.75,
-  2.95,
-  3.15,
-  3.35,
-  3.55,
-  3.75,
-  3.85,
-  4.0,				/* Y */
-  4.2,
-  4.35,
-  4.45,
-  4.55,
-  4.65,
-  4.72,
-  4.75,
-  4.8,				/* G */
-  4.95,
-  5.05,
-  5.2,
-  5.35,
-  5.5,
-  5.65,
-  5.8,
-  6.0				/* C */
+  0.00,				/* C */
+  0.05,
+  0.04,
+  0.01,
+  -0.03,
+  -0.10,
+  -0.18,
+  -0.26,
+  -0.35,			/* B */
+  -0.43,
+  -0.40,
+  -0.32,
+  -0.25,
+  -0.18,
+  -0.10,
+  -0.07,
+  0.00,				/* M */
+  -0.04,
+  -0.09,
+  -0.13,
+  -0.18,
+  -0.23,
+  -0.27,
+  -0.31,
+  -0.35,			/* R */
+  -0.38,
+  -0.30,
+  -0.23,
+  -0.15,
+  -0.08,
+  0.00,
+  -0.02,
+  0.00,				/* Y */
+  0.08,
+  0.10,
+  0.08,
+  0.05,
+  0.03,
+  -0.03,
+  -0.12,
+  -0.20,			/* G */
+  -0.17,
+  -0.20,
+  -0.17,
+  -0.15,
+  -0.12,
+  -0.10,
+  -0.08,
+  0.00,				/* C */
 };
 
 /*
@@ -1918,6 +1918,165 @@ static const double plain_paper_lum_adjustment[49] =
   1.2				/* C */
 };
 
+static const double pgpp_sat_adjustment[49] =
+{
+  1.00,				/* C */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* B */
+  1.00,
+  1.00,
+  1.03,
+  1.05,
+  1.07,
+  1.09,
+  1.11,
+  1.13,				/* M */
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,				/* R */
+  1.10,
+  1.05,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* Y */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* G */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* C */
+};
+
+static const double pgpp_lum_adjustment[49] =
+{
+  1.00,				/* C */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* B */
+  1.00,
+  1.00,
+  1.03,
+  1.05,
+  1.07,
+  1.09,
+  1.11,
+  1.13,				/* M */
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,				/* R */
+  1.10,
+  1.05,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* Y */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* G */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* C */
+};
+
+static const double pgpp_hue_adjustment[49] =
+{
+  0.00,				/* C */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.01,
+  0.02,
+  0.03,
+  0.05,				/* B */
+  0.05,
+  0.05,
+  0.04,
+  0.04,
+  0.03,
+  0.02,
+  0.01,
+  0.00,				/* M */
+  -.03,
+  -.05,
+  -.07,
+  -.09,
+  -.11,
+  -.13,
+  -.14,
+  -.15,				/* R */
+  -.13,
+  -.10,
+  -.06,
+  -.04,
+  -.02,
+  -.01,
+  0.00,
+  0.00,				/* Y */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,				/* G */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,				/* C */
+};
+
 typedef struct
 {
   const char name[65];
@@ -1938,35 +2097,35 @@ typedef struct
 
 static const paper_t escp2_paper_list[] =
 {
-  {N_("Plain Paper"), 1, 0, .7, .1, .5, 0, 0, 0, 1, 1.0,
-   NULL, plain_paper_lum_adjustment,NULL},
-  {N_("Plain Paper Fast Load"), 5, 0, .7, .1, .5, 0, 0, 0, 1, 1.0,
+  {N_("Plain Paper"),                1, 0, 0.70, .1, .5, 0, 0, 0, 1, 1.0,
    NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Postcard"), 2, 0, .75, .2, .6, 0, 0, 0, 1, 1.0,
+  {N_("Plain Paper Fast Load"),      5, 0, 0.70, .1, .5, 0, 0, 0, 1, 1.0,
    NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Glossy Film"), 3, 0, 1.0 ,1, .999, 0, 0, 0, 1, 1.0,
-   NULL,plain_paper_lum_adjustment,NULL},
-  {N_("Transparencies"), 3, 0, 1.0, 1, .999, 0, 0, 0, 1.0, 1.0,
-   NULL,plain_paper_lum_adjustment,NULL},
-  {N_("Envelopes"), 4, 0, .7, .125, .5, 0, 0, 0, 1, 1.0,
-   NULL, plain_paper_lum_adjustment,NULL},
-  {N_("Back Light Film"), 6, 0, 1.0, 1, .999, 0, 0, 0, 1, 1.0,
+  {N_("Postcard"),                   2, 0, 0.75, .2, .6, 0, 0, 0, 1, 1.0,
+   NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Glossy Film"),                3, 0, 1.00 ,1, .999, 0, 0, 0, 1, 1.0,
+   NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Transparencies"),             3, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
+   NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Envelopes"),                  4, 0, 0.70, .125, .5, 0, 0, 0, 1, 1.0,
+   NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Back Light Film"),            6, 0, 1.00, 1, .999, 0, 0, 0, 1, 1.0,
    NULL, NULL, NULL},
-  {N_("Matte Paper"), 7, 0, .85, 1.0, .999, 0, 0, 0, 1, 1.0,
+  {N_("Matte Paper"),                7, 0, 0.85, 1.0, .999, 0, 0, 0, 1, 1.0,
    NULL, NULL, NULL},
-  {N_("Inkjet Paper"),7, 0, .78, .25, .6, 0, 0, 0, 1, 1.0,
-   NULL,plain_paper_lum_adjustment,NULL},
-  {N_("Photo Quality Inkjet Paper"), 7, 0, 1, 1.0, .999, 0, 0, 0, 1, 1.0,
+  {N_("Inkjet Paper"),               7, 0, 0.78, .25, .6, 0, 0, 0, 1, 1.0,
+   NULL, plain_paper_lum_adjustment, NULL},
+  {N_("Photo Quality Inkjet Paper"), 7, 0, 1.00, 1.0, .999, 0, 0, 0, 1, 1.0,
    NULL, NULL, NULL},
-  {N_("Photo Paper"), 8, 0, 1, 1.0, .9, 0, 0, 0, 1, 1.0,
+  {N_("Photo Paper"),                8, 0, 1.00, 1.0, .9, 0, 0, 0, 1, 1.0,
    NULL, NULL, NULL},
-  {N_("Premium Glossy Photo Paper"), 8, 0, 1.05, 1, .999, 0, .03, 0, 1.2, .9,
+  {N_("Premium Glossy Photo Paper"), 8, 0, 1.00, 1, .999, 0, .03, 0, 1.1, 1.0,
+   pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
+  {N_("Premium Luster Photo Paper"), 8, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
    NULL, NULL, NULL},
-  {N_("Premium Luster Photo Paper"), 8, 0, 1.0, 1, .999, 0, 0, 0, 1.0, 1.0,
+  {N_("Photo Quality Glossy Paper"), 6, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
    NULL, NULL, NULL},
-  {N_("Photo Quality Glossy Paper"), 6, 0, 1.0, 1, .999, 0, 0, 0, 1.0, 1.0,
-   NULL, NULL, NULL},
-  {N_("Other"), 0, 0, .7, .125, .5, 0, 0, 0, 1, 1.0,
+  {N_("Other"),                      0, 0, 0.70, 0.125, .5, 0, 0, 0, 1, 1.0,
    NULL, plain_paper_lum_adjustment, NULL},
 };
 

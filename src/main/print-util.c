@@ -1164,18 +1164,16 @@ stp_compute_page_parameters(int page_right,	/* I */
       && *left >= 0)
     {
       *left = *page_width - *left - *out_width;
-      if (*left < 0) {
+      if (*left < 0)
 	*left = 0;
-      }
     }
 
   if ((*orientation == ORIENT_UPSIDEDOWN || *orientation == ORIENT_LANDSCAPE)
       && *top >= 0)
     {
       *top = *page_height - *top - *out_height;
-      if (*top < 0) {
+      if (*top < 0)
 	*top = 0;
-      }
     }
 
   if (*left < 0)
@@ -1223,11 +1221,6 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
     {
       int height, width;
       (*printfuncs->limit)(p, v, &width, &height);
-#if 0
-      stp_eprintf(v, "limit %d %d dims %d %d\n",
-		  width, height, stp_get_page_width(v),
-		  stp_get_page_height(v));
-#endif
       if (stp_get_page_height(v) <= 0 || stp_get_page_height(v) > height ||
 	  stp_get_page_width(v) <= 0 || stp_get_page_width(v) > width)
 	{
