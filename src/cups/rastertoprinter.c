@@ -673,7 +673,12 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
         *data = ((1 << CHAR_BIT) - 1) - *data;
   }
   else
-    memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
+    {
+      if (cups->header.cupsColorSpace == CUPS_CSPACE_CMYK)
+	memset(data, 0, bytes_per_line);
+      else
+	memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
+    }
   return Image_status;
 }
 
