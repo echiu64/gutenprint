@@ -1,10 +1,18 @@
-This is the Print plug-in for the Gimp, version 3.1 (development).
+This is the Print plug-in for the Gimp, version 3.1.0 (development).
 
 To build and install:
 
 ./configure
 make
 make install
+
+This is a development release, and as such, not all printers or
+combinations of options will work.  Please check our web site at
+http://gimp-print.sourceforge.net for details about what is and is not
+supported.
+
+Please report problems to gimp-print-devel@sourceforge.net.
+
 
 For developers, prior to running configure, you must
 
