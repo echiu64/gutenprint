@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-22 13:53+0100\n"
+"POT-Creation-Date: 2004-08-25 07:57-0400\n"
 "PO-Revision-Date: 2004-08-22 21:01+0100\n"
 "Last-Translator: Roger Leigh <rleigh@debian.org>\n"
 "Language-Team: British English\n"
@@ -517,14 +517,14 @@ msgstr "Photo CcMmY Colour"
 msgid "Photo CcMmYK Color"
 msgstr "Photo CcMmYK Colour"
 
-#: src/main/print-canon.c:1812 src/main/print-escp2.c:1601
+#: src/main/print-canon.c:1812 src/main/print-escp2.c:1600
 #: src/main/print-lexmark.c:1282 src/main/print-pcl.c:1726
 #: src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/libgimpprintui/panel.c:277
 msgid "Color"
 msgstr "Colour"
 
-#: src/main/print-canon.c:1814 src/main/print-escp2.c:1603
+#: src/main/print-canon.c:1814 src/main/print-escp2.c:1602
 #: src/main/print-lexmark.c:1284 src/main/print-pcl.c:1728
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 msgid "Black and White"
@@ -981,8 +981,8 @@ msgstr ""
 #: src/main/print-escp2-data.c:283 src/main/print-escp2-data.c:311
 #: src/main/print-escp2-data.c:348 src/main/print-escp2-data.c:403
 #: src/main/print-escp2-data.c:449 src/main/print-escp2-data.c:542
-#: src/main/print-escp2.c:1392 src/main/print-escp2.c:1489
-#: src/main/print-escp2.c:1501 src/main/print-pcl.c:227
+#: src/main/print-escp2.c:1391 src/main/print-escp2.c:1488
+#: src/main/print-escp2.c:1500 src/main/print-pcl.c:227
 #: src/libgimpprintui/panel.c:2499
 msgid "Standard"
 msgstr "Standard"
@@ -1241,48 +1241,48 @@ msgstr "Normal"
 msgid "Print To Hub"
 msgstr "Print To Hub"
 
-#: src/main/print-escp2.c:1339
+#: src/main/print-escp2.c:1338
 msgid "Manual Control"
 msgstr "Manual Control"
 
-#: src/main/print-escp2.c:1466 src/cups/genppd.c:1264
+#: src/main/print-escp2.c:1465 src/cups/genppd.c:1264
 msgid "Automatic"
 msgstr "Automatic"
 
-#: src/main/print-escp2.c:1468
+#: src/main/print-escp2.c:1467
 msgid "Bidirectional"
 msgstr "Bidirectional"
 
-#: src/main/print-escp2.c:1470
+#: src/main/print-escp2.c:1469
 msgid "Unidirectional"
 msgstr "Unidirectional"
 
-#: src/main/print-escp2.c:1503
+#: src/main/print-escp2.c:1502
 msgid "Alternate Fill"
 msgstr "Alternate Fill"
 
-#: src/main/print-escp2.c:1505
+#: src/main/print-escp2.c:1504
 msgid "Ascending Fill"
 msgstr "Ascending Fill"
 
-#: src/main/print-escp2.c:1507
+#: src/main/print-escp2.c:1506
 msgid "Descending Fill"
 msgstr "Descending Fill"
 
-#: src/main/print-escp2.c:1509
+#: src/main/print-escp2.c:1508
 msgid "Ascending Double"
 msgstr "Ascending Double"
 
-#: src/main/print-escp2.c:1511
+#: src/main/print-escp2.c:1510
 msgid "Nearest Neighbor Avoidance"
 msgstr "Nearest Neighbour Avoidance"
 
-#: src/main/print-escp2.c:1862
+#: src/main/print-escp2.c:1861
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "This printer does not support raw printer output at depth %d\n"
 
-#: src/main/print-escp2.c:2666 src/main/print-raw.c:217
+#: src/main/print-escp2.c:2665 src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print options not verified; cannot print.\n"
 
