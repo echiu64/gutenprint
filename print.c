@@ -49,6 +49,8 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
+#define PLUG_IN_VERSION		"3.1.2 - 21 Mar 2000"
+#define PLUG_IN_NAME		"Print"
 
 #include <math.h>
 #include <signal.h>
@@ -111,6 +113,7 @@
 
 #define SCALE_WIDTH		64
 #define ENTRY_WIDTH		64
+#define PREVIEW_SIZE		240	/* Assuming max media size of 24" A2 */
 
 /*
  * Types...
@@ -166,10 +169,15 @@ static void	print_driver_callback(GtkWidget *, gint);
 static void	file_ok_callback(void);
 static void	file_cancel_callback(void);
 
+static void	preview_update(void);
+static void	preview_button_callback(GtkWidget *, GdkEventButton *);
+static void	preview_motion_callback(GtkWidget *, GdkEventMotion *);
+static void	position_callback(GtkWidget *);
+
 static void gtk_show_adjust_button_callback(GtkWidget *);
 
-extern void  gtk_create_color_adjust_window(void);
-extern void  gtk_create_main_window(void);
+extern void  gtk_create_color_adjust_window();
+
 
 #if 0
 static void	cleanupfunc(void);
@@ -229,7 +237,7 @@ vars_t vars =
 	IMAGE_CONTINUOUS	/* Image type */
 };
 
-GtkWidget/*	*print_dialog,		 Print dialog window */
+GtkWidget	*print_dialog,		/* Print dialog window */
 		*media_size,		/* Media size option button */
 		*media_size_menu=NULL,	/* Media size menu */
 		*media_type,		/* Media type option button */
@@ -285,6 +293,17 @@ char		**ink_types;		/* Ink type strings */
 int		num_resolutions=0;	/* Number of resolutions */
 char		**resolutions;		/* Resolution strings */
 
+GtkDrawingArea	*preview;		/* Preview drawing area widget */
+int		mouse_x,		/* Last mouse X */
+		mouse_y;		/* Last mouse Y */
+int		image_width,		/* Width of image */
+		image_height,		/* Height of image */
+		page_left,		/* Left pixel column of page */
+		page_top,		/* Top pixel row of page */
+		page_width,		/* Width of page on screen */
+		page_height,		/* Height of page on screen */
+		print_width,		/* Printed width of image */
+		print_height;		/* Printed height of image */
 
 int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
@@ -294,9 +313,6 @@ int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
 const printer_t *current_printer = 0;	/* Current printer index */
 gint32          image_ID;	        /* image ID */
-
-int image_width;
-int image_height;
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
@@ -724,15 +740,6 @@ init_gtk ()
   gtk_rc_parse (gimp_gtkrc ());
 }
 
-/* Temporary externals, until everything transferred to gtk_main_window.c */
-extern GtkWidget *table; /* Table "container" for controls */
-extern GtkWidget* print_dialog;
-extern GtkWidget* dialog;	/* Dialog window */
-extern GtkDrawingArea* preview;
-extern int page_width, page_height, print_width, print_height, page_left,
-    page_top;
-static void gtk_preview_update(void);
-
 /*
  * 'do_print_dialog()' - Pop up the print dialog...
  */
@@ -742,7 +749,9 @@ do_print_dialog(void)
 {
   int		i;		/* Looping var */
   char		s[100];		/* Text string */
-  GtkWidget	*label,		/* Label string */
+  GtkWidget	*dialog,	/* Dialog window */
+		*table,		/* Table "container" for controls */
+		*label,		/* Label string */
 		*hbbox,	        /* button_box for OK/Cancel buttons */
 		*button,	/* OK/Cancel buttons */
 		*scale,		/* Scale widget */
@@ -764,6 +773,8 @@ do_print_dialog(void)
     N_("Portrait"),
     N_("Landscape")
   };
+  gchar *plug_in_name;
+
 
  /*
   * Initialize the program's display...
@@ -785,7 +796,128 @@ do_print_dialog(void)
  /*
   * Print dialog window...
   */
-  gtk_create_main_window();
+
+  print_dialog = dialog = gtk_dialog_new();
+
+  plug_in_name = g_strdup_printf (_("Print v%s"), PLUG_IN_VERSION);
+  gtk_window_set_title(GTK_WINDOW(dialog), plug_in_name);
+  g_free (plug_in_name);
+  
+  gtk_window_set_wmclass(GTK_WINDOW(dialog), "print", "Gimp");
+  gtk_window_position(GTK_WINDOW(dialog), GTK_WIN_POS_MOUSE);
+  gtk_container_border_width(GTK_CONTAINER(dialog), 0);
+  gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
+		     (GtkSignalFunc)close_callback, NULL);
+
+ /*
+  * Top-level table for dialog...
+  */
+
+  table = gtk_table_new(20, 4, FALSE);
+  gtk_container_border_width(GTK_CONTAINER(table), 6);
+  gtk_table_set_col_spacings(GTK_TABLE(table), 4);
+  gtk_table_set_row_spacings(GTK_TABLE(table), 8);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), table, FALSE, FALSE, 0);
+  gtk_widget_show(table);
+
+ /*
+  * Drawing area for page preview...
+  */
+
+  preview = (GtkDrawingArea *)gtk_drawing_area_new();
+  gtk_drawing_area_size(preview, PREVIEW_SIZE, PREVIEW_SIZE);
+  gtk_table_attach(GTK_TABLE(table), (GtkWidget *)preview, 0, 2, 0, 7,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_signal_connect(GTK_OBJECT((GtkWidget *)preview), "expose_event",
+		     (GtkSignalFunc)preview_update,
+		     NULL);
+  gtk_signal_connect(GTK_OBJECT((GtkWidget *)preview), "button_press_event",
+		     (GtkSignalFunc)preview_button_callback,
+		     NULL);
+  gtk_signal_connect(GTK_OBJECT((GtkWidget *)preview), "button_release_event",
+		     (GtkSignalFunc)preview_button_callback,
+		     NULL);
+  gtk_signal_connect(GTK_OBJECT((GtkWidget *)preview), "motion_notify_event",
+		     (GtkSignalFunc)preview_motion_callback,
+		     NULL);
+  gtk_widget_show((GtkWidget *)preview);
+
+  gtk_widget_set_events((GtkWidget *)preview,
+                        GDK_EXPOSURE_MASK | GDK_BUTTON_MOTION_MASK |
+                        GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+  recenter_button = button = gtk_button_new_with_label(_("Center Image"));
+  gtk_table_attach(GTK_TABLE(table), button, 1, 2, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     (GtkSignalFunc)position_callback, NULL);
+  gtk_widget_show(button);
+
+  label = gtk_label_new(_("Left:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 2, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  left_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)position_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Top:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  top_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.top));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)position_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Right:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 2, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  right_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)position_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
+
+
+  label = gtk_label_new(_("Bottom:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 2, 3, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 3, 4, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+  bottom_entry = entry = gtk_entry_new();
+  sprintf(s, "%.3f", fabs(vars.left));
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     (GtkSignalFunc)position_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 60, 0);
+  gtk_widget_show(entry);
 
 
  /*
@@ -1387,7 +1519,7 @@ scaling_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_entry_set_text(GTK_ENTRY(scaling_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
 
-    gtk_preview_update();
+    preview_update();
   }
 }
 
@@ -1451,6 +1583,55 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
 #endif
 }
 
+static void
+position_callback(GtkWidget *widget)
+{
+  int dontcheck = 0;
+  if (widget == top_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      vars.top = (new_value + 1.0 / 144) * 72;
+    }
+  else if (widget == left_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      vars.left = (new_value + 1.0 / 144) * 72;
+    }
+  else if (widget == bottom_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      if (vars.scaling < 0)
+	vars.top =
+	  (new_value + 1.0 / 144) * 72 - (image_height * -72.0 / vars.scaling);
+      else
+	vars.top = (new_value + 1.0 / 144) * 72 - print_height;
+    }
+  else if (widget == right_entry)
+    {
+      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      if (vars.scaling < 0)
+	vars.left =
+	  (new_value + 1.0 / 144) * 72 - (image_width * -72.0 / vars.scaling);
+      else
+	vars.left = (new_value + 1.0 / 144) * 72 - print_width;
+    }
+  else if (widget == recenter_button)
+    {
+      vars.left = -1;
+      vars.top = -1;
+      dontcheck = 1;
+    }
+  if (!dontcheck)
+    {
+      if (vars.left < 0)
+	vars.left = 0;
+      if (vars.top < 0)
+	vars.top = 0;
+    }
+  plist[plist_current].v.left = vars.left;
+  plist[plist_current].v.top = vars.top;
+  preview_update();
+}
 
 /*
  * 'plist_build_menu()' - Build an option menu for the given parameters...
@@ -1622,7 +1803,7 @@ do_misc_updates()
       break;
     }
 
-  gtk_preview_update();
+  preview_update();
 }
 
 /*
@@ -1756,7 +1937,7 @@ media_size_callback(GtkWidget *widget,		/* I - Media size option menu */
   plist[plist_current].v.left = vars.left;
   plist[plist_current].v.top = vars.top;
 
-  gtk_preview_update();
+  preview_update();
 }
 
 
@@ -1827,7 +2008,7 @@ orientation_callback(GtkWidget *widget,		/* I - Orientation option menu */
   plist[plist_current].v.left = vars.left;
   plist[plist_current].v.top = vars.top;
 
-  gtk_preview_update();
+  preview_update();
 }
 
 
@@ -2069,6 +2250,235 @@ static void gtk_show_adjust_button_callback(GtkWidget * w)
     gtk_widget_show(gtk_color_adjust_dialog);
 }
 
+
+static void
+preview_update(void)
+{
+  int		temp,		/* Swapping variable */
+		orient,		/* True orientation of page */
+		tw0, tw1,	/* Temporary page_widths */
+		th0, th1,	/* Temporary page_heights */
+		ta0 = 0, ta1 = 0;	/* Temporary areas */
+  int		left, right,	/* Imageable area */
+		top, bottom,
+		width, length;	/* Physical width */
+  static GdkGC	*gc = NULL;	/* Graphics context */
+  char s[255];
+
+
+  if (preview->widget.window == NULL)
+    return;
+
+  gdk_window_clear(preview->widget.window);
+
+  if (gc == NULL)
+    gc = gdk_gc_new(preview->widget.window);
+
+  (*current_printer->imageable_area)(current_printer->model, vars.ppd_file,
+				     vars.media_size, &left, &right,
+				     &bottom, &top);
+
+  page_width  = right - left;
+  page_height = top - bottom;
+
+  (*current_printer->media_size)(current_printer->model, vars.ppd_file,
+				 vars.media_size, &width, &length);
+
+  if (vars.scaling < 0)
+  {
+    tw0 = 72 * -image_width / vars.scaling;
+    th0 = tw0 * image_height / image_width;
+    tw1 = tw0;
+    th1 = th0;
+  }
+  else
+  {
+    /* Portrait */
+    tw0 = page_width * vars.scaling / 100;
+    th0 = tw0 * image_height / image_width;
+    if (th0 > page_height * vars.scaling / 100)
+    {
+      th0 = page_height * vars.scaling / 100;
+      tw0 = th0 * image_width / image_height;
+    }
+    ta0 = tw0 * th0;
+
+    /* Landscape */
+    tw1 = page_height * vars.scaling / 100;
+    th1 = tw1 * image_height / image_width;
+    if (th1 > page_width * vars.scaling / 100)
+    {
+      th1 = page_width * vars.scaling / 100;
+      tw1 = th1 * image_width / image_height;
+    }
+    ta1 = tw1 * th1;
+  }
+
+  if (vars.orientation == ORIENT_AUTO)
+  {
+    if (vars.scaling < 0)
+    {
+      if ((page_width > page_height && tw0 > th0) ||
+	  (page_height > page_width && th0 > tw0))
+	{
+	  orient = ORIENT_PORTRAIT;
+	  if (tw0 > page_width)
+	    {
+	      vars.scaling *= (double) page_width / (double) tw0;
+	      th0 = th0 * page_width / tw0;
+	    }
+	  if (th0 > page_height)
+	    {
+	      vars.scaling *= (double) page_height / (double) th0;
+	      tw0 = tw0 * page_height / th0;
+	    }
+	}
+      else
+	{
+	  orient = ORIENT_LANDSCAPE;
+	  if (tw1 > page_height)
+	    {
+	      vars.scaling *= (double) page_height / (double) tw1;
+	      th1 = th1 * page_height / tw1;
+	    }
+	  if (th1 > page_width)
+	    {
+	      vars.scaling *= (double) page_width / (double) th1;
+	      tw1 = tw1 * page_width / th1;
+	    }
+	}
+    }
+    else
+    {
+      if (ta0 >= ta1)
+	orient = ORIENT_PORTRAIT;
+      else
+	orient = ORIENT_LANDSCAPE;
+    }
+  }
+  else
+    orient = vars.orientation;
+
+  if (orient == ORIENT_LANDSCAPE)
+  {
+    temp         = page_width;
+    page_width   = page_height;
+    page_height  = temp;
+    temp         = width;
+    width        = length;
+    length       = temp;
+    print_width  = tw1;
+    print_height = th1;
+  }
+  else
+  {
+    print_width  = tw0;
+    print_height = th0;
+  }
+
+  page_left = (PREVIEW_SIZE - 10 * page_width / 72) / 2;
+  page_top  = (PREVIEW_SIZE - 10 * page_height / 72) / 2;
+
+  gdk_draw_rectangle(preview->widget.window, gc, 0,
+                     (PREVIEW_SIZE - (10 * width / 72)) / 2,
+                     (PREVIEW_SIZE - (10 * length / 72)) / 2,
+                     10 * width / 72, 10 * length / 72);
+
+
+  if (vars.left < 0)
+    vars.left = (page_width - print_width) / 2;
+
+  left = vars.left;
+
+  if (left > (page_width - print_width))
+    {
+      left      = page_width - print_width;
+      vars.left = left;
+      plist[plist_current].v.left = vars.left;
+    }
+
+  if (vars.top < 0)
+    vars.top  = (page_height - print_height) / 2;
+  top  = vars.top;
+
+  if (top > (page_height - print_height))
+    {
+      top      = page_height - print_height;
+      vars.top = top;
+      plist[plist_current].v.top = vars.top;
+    }
+  
+  sprintf(s, "%.2f", vars.top / 72.0);
+  gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
+  gtk_entry_set_text(GTK_ENTRY(top_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(top_entry), NULL);
+
+  sprintf(s, "%.2f", vars.left / 72.0);
+  gtk_signal_handler_block_by_data(GTK_OBJECT(left_entry), NULL);
+  gtk_entry_set_text(GTK_ENTRY(left_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(left_entry), NULL);
+
+  gtk_signal_handler_block_by_data(GTK_OBJECT(bottom_entry), NULL);
+  if (vars.scaling < 0)
+    sprintf(s, "%.2f",
+	    (vars.top + (image_height * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.2f", (vars.top + print_height) / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(bottom_entry), NULL);
+
+  gtk_signal_handler_block_by_data(GTK_OBJECT(right_entry), NULL);
+  if (vars.scaling < 0)
+    sprintf(s, "%.2f",
+	    (vars.left + (image_width * -72.0 / vars.scaling)) / 72.0);
+  else
+    sprintf(s, "%.2f", (vars.left + print_width) / 72.0);
+  gtk_entry_set_text(GTK_ENTRY(right_entry), s);
+  gtk_signal_handler_unblock_by_data(GTK_OBJECT(right_entry), NULL);
+
+  gdk_draw_rectangle(preview->widget.window, gc, 1,
+		     page_left + 10 * left / 72, page_top + 10 * top / 72,
+                     10 * print_width / 72, 10 * print_height / 72);
+
+  gdk_flush();
+}
+
+
+static void
+preview_button_callback(GtkWidget      *w,
+                        GdkEventButton *event)
+{
+  mouse_x = event->x;
+  mouse_y = event->y;
+}
+
+
+static void
+preview_motion_callback(GtkWidget      *w,
+                        GdkEventMotion *event)
+{
+  if (vars.left < 0 || vars.top < 0)
+  {
+    vars.left = 72 * (page_width - print_width) / 20;
+    vars.top  = 72 * (page_height - print_height) / 20;
+  }
+
+  vars.left += 72 * (event->x - mouse_x) / 10;
+  vars.top  += 72 * (event->y - mouse_y) / 10;
+
+  if (vars.left < 0)
+    vars.left = 0;
+
+  if (vars.top < 0)
+    vars.top = 0;
+  plist[plist_current].v.left = vars.left;
+  plist[plist_current].v.top = vars.top;
+
+  preview_update();
+
+  mouse_x = event->x;
+  mouse_y = event->y;
+}
 
 static void
 initialize_printer(plist_t *printer)
@@ -2681,201 +3091,6 @@ Image_get_pluginname(Image image)
   return pluginname;
 }
 
-/****************************************************************************
- *
- * gtk_preview_update_callback() - 
- *
- ****************************************************************************/
-static void gtk_preview_update(void)
-{
-  int		temp,		/* Swapping variable */
-		orient,		/* True orientation of page */
-		tw0, tw1,	/* Temporary page_widths */
-		th0, th1,	/* Temporary page_heights */
-		ta0 = 0, ta1 = 0;	/* Temporary areas */
-  int		left, right,	/* Imageable area */
-		top, bottom,
-		width, length;	/* Physical width */
-  static GdkGC	*gc = NULL;	/* Graphics context */
-  char s[255];
-
-
-  if (preview->widget.window == NULL)
-    return;
-
-  gdk_window_clear(preview->widget.window);
-
-  if (gc == NULL)
-    gc = gdk_gc_new(preview->widget.window);
-
-  (*current_printer->imageable_area)(current_printer->model, vars.ppd_file,
-				     vars.media_size, &left, &right,
-				     &bottom, &top);
-
-  page_width  = right - left;
-  page_height = top - bottom;
-
-  (*current_printer->media_size)(current_printer->model, vars.ppd_file,
-				 vars.media_size, &width, &length);
-
-  if (vars.scaling < 0)
-  {
-    tw0 = 72 * -image_width / vars.scaling;
-    th0 = tw0 * image_height / image_width;
-    tw1 = tw0;
-    th1 = th0;
-  }
-  else
-  {
-    /* Portrait */
-    tw0 = page_width * vars.scaling / 100;
-    th0 = tw0 * image_height / image_width;
-    if (th0 > page_height * vars.scaling / 100)
-    {
-      th0 = page_height * vars.scaling / 100;
-      tw0 = th0 * image_width / image_height;
-    }
-    ta0 = tw0 * th0;
-
-    /* Landscape */
-    tw1 = page_height * vars.scaling / 100;
-    th1 = tw1 * image_height / image_width;
-    if (th1 > page_width * vars.scaling / 100)
-    {
-      th1 = page_width * vars.scaling / 100;
-      tw1 = th1 * image_width / image_height;
-    }
-    ta1 = tw1 * th1;
-  }
-
-  if (vars.orientation == ORIENT_AUTO)
-  {
-    if (vars.scaling < 0)
-    {
-      if ((page_width > page_height && tw0 > th0) ||
-	  (page_height > page_width && th0 > tw0))
-	{
-	  orient = ORIENT_PORTRAIT;
-	  if (tw0 > page_width)
-	    {
-	      vars.scaling *= (double) page_width / (double) tw0;
-	      th0 = th0 * page_width / tw0;
-	    }
-	  if (th0 > page_height)
-	    {
-	      vars.scaling *= (double) page_height / (double) th0;
-	      tw0 = tw0 * page_height / th0;
-	    }
-	}
-      else
-	{
-	  orient = ORIENT_LANDSCAPE;
-	  if (tw1 > page_height)
-	    {
-	      vars.scaling *= (double) page_height / (double) tw1;
-	      th1 = th1 * page_height / tw1;
-	    }
-	  if (th1 > page_width)
-	    {
-	      vars.scaling *= (double) page_width / (double) th1;
-	      tw1 = tw1 * page_width / th1;
-	    }
-	}
-    }
-    else
-    {
-      if (ta0 >= ta1)
-	orient = ORIENT_PORTRAIT;
-      else
-	orient = ORIENT_LANDSCAPE;
-    }
-  }
-  else
-    orient = vars.orientation;
-
-  if (orient == ORIENT_LANDSCAPE)
-  {
-    temp         = page_width;
-    page_width   = page_height;
-    page_height  = temp;
-    temp         = width;
-    width        = length;
-    length       = temp;
-    print_width  = tw1;
-    print_height = th1;
-  }
-  else
-  {
-    print_width  = tw0;
-    print_height = th0;
-  }
-
-  page_left = (PREVIEW_SIZE_HORIZ - 10 * page_width / 72) / 2;
-  page_top  = (PREVIEW_SIZE_VERT - 10 * page_height / 72) / 2;
-
-  gdk_draw_rectangle(preview->widget.window, gc, 0,
-                     (PREVIEW_SIZE_HORIZ - (10 * width / 72)) / 2,
-                     (PREVIEW_SIZE_VERT - (10 * length / 72)) / 2,
-                     10 * width / 72, 10 * length / 72);
-
-
-  if (vars.left < 0)
-    vars.left = (page_width - print_width) / 2;
-
-  left = vars.left;
-
-  if (left > (page_width - print_width))
-    {
-      left      = page_width - print_width;
-      vars.left = left;
-      plist[plist_current].v.left = vars.left;
-    }
-
-  if (vars.top < 0)
-    vars.top  = (page_height - print_height) / 2;
-  top  = vars.top;
-
-  if (top > (page_height - print_height))
-    {
-      top      = page_height - print_height;
-      vars.top = top;
-      plist[plist_current].v.top = vars.top;
-    }
-  
-  sprintf(s, "%.2f", vars.top / 72.0);
-  gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
-  gtk_entry_set_text(GTK_ENTRY(top_entry), s);
-  gtk_signal_handler_unblock_by_data(GTK_OBJECT(top_entry), NULL);
-
-  sprintf(s, "%.2f", vars.left / 72.0);
-  gtk_signal_handler_block_by_data(GTK_OBJECT(left_entry), NULL);
-  gtk_entry_set_text(GTK_ENTRY(left_entry), s);
-  gtk_signal_handler_unblock_by_data(GTK_OBJECT(left_entry), NULL);
-
-  gtk_signal_handler_block_by_data(GTK_OBJECT(bottom_entry), NULL);
-  if (vars.scaling < 0)
-    sprintf(s, "%.2f",
-	    (vars.top + (image_height * -72.0 / vars.scaling)) / 72.0);
-  else
-    sprintf(s, "%.2f", (vars.top + print_height) / 72.0);
-  gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
-  gtk_signal_handler_unblock_by_data(GTK_OBJECT(bottom_entry), NULL);
-
-  gtk_signal_handler_block_by_data(GTK_OBJECT(right_entry), NULL);
-  if (vars.scaling < 0)
-    sprintf(s, "%.2f",
-	    (vars.left + (image_width * -72.0 / vars.scaling)) / 72.0);
-  else
-    sprintf(s, "%.2f", (vars.left + print_width) / 72.0);
-  gtk_entry_set_text(GTK_ENTRY(right_entry), s);
-  gtk_signal_handler_unblock_by_data(GTK_OBJECT(right_entry), NULL);
-
-  gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     page_left + 10 * left / 72, page_top + 10 * top / 72,
-                     10 * print_width / 72, 10 * print_height / 72);
-
-  gdk_flush();
-}
 /*
  * End of "$Id$".
  */
