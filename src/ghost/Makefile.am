@@ -32,8 +32,12 @@ MAINHEADERS = print.h print-internal.h print-intl-internal.h quickmatrix257.h ra
 MAINFILES = $(MAINCODE) $(MAINHEADERS)
 
 if BUILD_GHOST
-all-local: $(srcdir)/$(addprefix gdevstp-,$(MAINCODE)) $(srcdir)/$(addprefix gdevstp-,$(MAINHEADERS))
+ALL_LOCAL_DEPS = $(srcdir)/$(addprefix gdevstp-,$(MAINCODE)) $(srcdir)/$(addprefix gdevstp-,$(MAINHEADERS))
+else
+ALL_LOCAL_DEPS =
 endif
+
+all-local: $(ALL_LOCAL_DEPS)
 
 GHCODE = -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/' -e 's/^\\\#include <gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
 

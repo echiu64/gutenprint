@@ -71,9 +71,9 @@ dist-hook:
 	done
 # Do some extra magic to make a distribution for GIMP CVS
 	if test -f .gimp-dist ; then \
-	  rm -rf $(distdir)/src/cups $(distdir)/src/ghost ; \
-	  rm -rf $(distdir)/scripts $(distdir)/test ; \
-	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/stamp-h.in ; \
+	  rm -rf $(distdir)/src/cups $(distdir)/src/escputil $(distdir)/src/foomatic $(distdir)/src/ghost ; \
+	  rm -rf $(distdir)/debian $(distdir)/scripts $(distdir)/test ; \
+	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/stamp-h.in ; \
 	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
 	  rm -f .gimp-dist ; \
 	fi

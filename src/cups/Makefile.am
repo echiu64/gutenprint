@@ -79,13 +79,23 @@ pkgdata_DATA = @CUPS_PKG@
 pkgsysconf_DATA = @CUPS_CONF@
 
 if BUILD_CUPS
-install-data-local: ppd
+INSTALL_DATA_LOCAL_DEPS = ppd
 endif
-	$(mkinstalldirs) $(DESTDIR)$(cups_modeldir)
-	cd ppd ; \
-	for ppdfile in * ; do \
-	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir) ; \
-	done
+
+if BUILD_CUPS
+INSTALL_PPD = true
+else
+INSTALL_PPD =
+endif
+
+install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
+	if test -n "$(INSTALL_PPD)" ; then \
+	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
+	  cd ppd ; \
+	  for ppdfile in * ; do \
+	    $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir) ; \
+	  done \
+	fi
 
 install-data-hook:
 # Remove unused directories in install tree
