@@ -118,7 +118,7 @@ extern void	dither_black(unsigned short *, int, int, int, unsigned char *);
 extern void	dither_cmyk(unsigned short *, int, int, int, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
-			    unsigned char *, unsigned char *);
+			    unsigned char *, unsigned char *, int);
 
 extern void	dither_black4(unsigned short *, int, int, int,
 			      unsigned char *);
