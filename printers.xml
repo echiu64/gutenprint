@@ -436,8 +436,8 @@
 <printer name="CANON BJC 6000" driver="bjc-6000">
 <color>
 <model value=6000>
-<gamma value=1.000>
-<density value=0.800>
+<gamma value=0.750>
+<density value=1.000>
 <language value=canon>
 </printer>
 
