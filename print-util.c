@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.50  2000/01/15 00:57:53  rlk
+ *   Intermediate version
+ *
  *   Revision 1.49  2000/01/08 23:30:37  rlk
  *   Some tweaking
  *
@@ -288,6 +291,9 @@
  */
 
 #define ERROR_ROWS 2
+#define MAX_BPI (4 * 720)
+#define MAX_WIDTH (14)
+#define NCOLORS (4)
 
 typedef union error
 {
@@ -303,7 +309,8 @@ typedef union error
 
 error_t *nerror = 0;
 
-int	error[2][4][14*2880+1];
+
+int	error[ERROR_ROWS][NCOLORS][MAX_WIDTH*MAX_BPI+1];
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
@@ -979,7 +986,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     density += (c + m + y) >> overdensity_bits;
 /*     density >>= 1; */
 
-    if (! (*kptr & bit))
+    if (!kptr || !(*kptr & bit))
       {
 	PRINT_COLOR(cyan, c, C, 1, 2);
 	PRINT_COLOR(magenta, m, M, 2, 3);
