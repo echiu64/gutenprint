@@ -2527,18 +2527,23 @@ canon_fold_3bit(const unsigned char *line,
 		int single_length,
 		unsigned char *outbuf)
 {
-  int i;
-  for (i = 0; i < single_length-3; i++) {
-    unsigned char 
-      A0= line[0],
-      A1= line[1],
-      A2= line[2],
-      B0= line[single_length],
-      B1= line[single_length+1],
-      B2= line[single_length+2],
-      C0= line[2*single_length],
-      C1= line[2*single_length+1],
-      C2= line[2*single_length+2];
+  unsigned char A0,A1,A2,B0,B1,B2,C0,C1,C2;
+  const unsigned char *last= line+single_length;
+
+  for (; line < last; line+=3, outbuf+=8) {
+
+    A0= line[0]; B0= line[single_length]; C0= line[2*single_length];
+    
+    if (line<last-2) {
+      A1= line[1]; B1= line[single_length+1]; C1= line[2*single_length+1];
+    } else {
+      A1= 0; B1= 0; C1= 0;
+    }
+    if (line<last-1) {
+      A2= line[2]; B2= line[single_length+2]; C2= line[2*single_length+2];
+    } else {
+      A2= 0; B2= 0; C2= 0;
+    }
       
     outbuf[0] =
       ((C0 & 0x80) >> 0) |
@@ -2612,8 +2617,6 @@ canon_fold_3bit(const unsigned char *line,
       ((C2 & 0x01) << 2) |
       ((B2 & 0x01) << 1) |
       ((A2 & 0x01) << 0);
-    line+=3;
-    outbuf += 8;
   }
 }
 
@@ -2679,17 +2682,17 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
   
 
   if (bits==2) {
-    memset(in_fold,0,length*2+2);
+    memset(in_fold,0,length*2);
     canon_fold_2bit(line,length,in_fold);
     in_ptr= in_fold;
-    length*= 2;
-    offset*= 2;
+    length= (length*8/4); /* 4 pixels in 8bit */
+    offset= (offset*8/4); /* 4 pixels in 8bit  */
   }
   if (bits==3) {
-    memset(in_fold,0,length*3+30);
+    memset(in_fold,0,length*3);
     canon_fold_3bit(line,length,in_fold);
     in_ptr= in_fold;
-    length= ((length-1)*24)/9;
+    length= (length*8)/3;
     offset= (offset/3)*8;
 #if 0
     switch(offset%3){
