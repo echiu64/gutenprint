@@ -230,11 +230,11 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus C65" driver="escp2-c65" manufacturer="Epson" model="61">
+      <printer name="EPSON Stylus C65" driver="escp2-c65" manufacturer="Epson" model="66">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus C66" driver="escp2-c66" manufacturer="Epson" model="61">
+      <printer name="EPSON Stylus C66" driver="escp2-c66" manufacturer="Epson" model="66">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>

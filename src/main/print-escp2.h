@@ -514,6 +514,7 @@ extern const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_2pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops;

@@ -230,6 +230,9 @@ static const escp2_densities_t c4pl_pigment_densities =
 static const escp2_densities_t c3pl_pigment_densities =
 { 2.4, 1.2,  0.60, 0.600, 0.512, 0.512, 0.512, 0.0   };
 
+static const escp2_densities_t c3pl_pigment_c66_densities =
+{ 2.8, 1.4,  0.70, 0.600, 0.512, 0.512, 0.512, 0.0   };
+
 static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
 
@@ -1745,6 +1748,24 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_standard_inkgroup,
+    variable_bits, variable_base_res, &default_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL
+  },
+  /* 66: Stylus Color C65/C66 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO | MODEL_SEND_ZERO_ADVANCE_YES |
+     MODEL_SUPPORTS_INK_CHANGE_NO | MODEL_PACKET_MODE_YES |
+     MODEL_PRINT_TO_CD_NO),
+    29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
+    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 0, -180, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
+    4, 15, 0, 0,
+    c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, &stpi_escp2_variable_3pl_pigment_c66_drops,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c64_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL
