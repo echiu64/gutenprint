@@ -318,7 +318,8 @@ GHOSTSCRIPT
 
     You must have the IJS libraries installed for this to work.
     Instructions for that are included with GNU Ghostscript 6.53 and
-    beyond, and AFPL Ghostscript 7.04 and beyond.
+    beyond, AFPL Ghostscript 7.04 and beyond, and ESP Ghostscript 7.05
+    and beyond.
 
     Detailed instructions for building and using the Ghostscript driver is
     described in src/ghost/README.

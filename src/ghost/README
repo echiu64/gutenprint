@@ -1056,7 +1056,9 @@ EXAMPLES:
 ---------
 
 Note that a lot of these options are used for demonstration; generally
-adjusting the density is a bad idea!
+adjusting the density is a bad idea.  Also, replace
+"/usr/local/bin/ijsgimpprint" with the location where ijsgimpprint is
+installed on your system.
 
 Example 1 (print charts to file, using A4 paper, color, 360 dpi):
 gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint \
