@@ -1,3 +1,11 @@
+gimp-print (4.3.8-1) unstable; urgency=low
+
+  * New upstream development release (4.3.8).
+  * cupsys-driver-gimpprint generates the PPDs in postinst, and removes them
+    in prerm
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Mon, 20 Jan 2003 19:04:04 +0000
+
 gimp-print (4.3.7-1) unstable; urgency=low
 
   * New upstream development release (4.3.7).

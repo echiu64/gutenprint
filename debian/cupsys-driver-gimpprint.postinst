@@ -26,6 +26,7 @@ set -e
 
 if [ "$1" = "configure" ]; then
 # Upgrade in-use PPD files
+  /usr/sbin/cups-genppdconfig -u
   /usr/sbin/cups-genppdupdate
 # Restart CUPSys (to register new and updated PPDs)
   /etc/init.d/cupsys reload

@@ -5,7 +5,6 @@ debian/install/usr/sbin/cups-genppdconfig              usr/sbin
 debian/install/usr/sbin/cups-genppdupdate              usr/sbin
 debian/install/usr/lib/cups                            usr/lib
 debian/install/usr/share/cups/calibrate.ppm            usr/share/cups
-debian/install/usr/share/cups/model/gimp-print         usr/share/cups/model
 debian/install/usr/share/man/man8/cups-calibrate.8     usr/share/man/man8
 debian/install/usr/share/man/man8/cups-genppd.8        usr/share/man/man8
 debian/install/usr/share/man/man8/cups-genppdconfig.8  usr/share/man/man8
