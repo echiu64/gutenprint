@@ -2000,6 +2000,7 @@ create_color_adjust_window (void)
   GtkWidget *label;
   GtkWidget *event_box;
   GtkWidget *scrolled_window;
+  gint x, y; /* Window dimensions */
 
   initialize_thumbnail();
 
@@ -2099,6 +2100,10 @@ create_color_adjust_window (void)
 			    0, 2, 1, 2);
   gtk_widget_show(scrolled_window);
 
+  /* The initial size request does not account for the
+     GtkScrolledWindow. */
+  gtk_window_get_size(GTK_WINDOW(color_adjust_dialog), &x, &y);
+  gtk_window_set_default_size(GTK_WINDOW(color_adjust_dialog), x, y+300);
 }
 
 static void
@@ -2253,6 +2258,7 @@ create_units_frame (void)
 static void
 create_main_window (void)
 {
+  gint x, y; /* Window dimensions */
 
   set_current_printer();
   manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
@@ -2282,6 +2288,11 @@ create_main_window (void)
   build_printer_combo ();
   plist_callback (NULL, (gpointer) stpui_plist_current);
   update_adjusted_thumbnail ();
+
+  /* The initial size request does not account for the
+     GtkScrolledWindow. */
+  gtk_window_get_size(GTK_WINDOW(print_dialog), &x, &y);
+  gtk_window_set_default_size(GTK_WINDOW(print_dialog), x, y+80);
 
   gtk_widget_show (print_dialog);
 }
