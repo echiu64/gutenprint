@@ -272,6 +272,7 @@
 #gptofoo pcl-2 printer/80160
 #gptofoo pcl-2 printer/Okidata-OL400
 #gptofoo pcl-2 printer/Okidata-OL400e
+#gptofoo pcl-2 printer/Generic-PCL_4_Printer
 #gptofoo pcl-3 printer/65696
 #gptofoo pcl-3 printer/48064
 #gptofoo pcl-3 printer/141417
@@ -360,6 +361,8 @@
 #gptofoo pcl-4 printer/Kyocera-FS-3800
 #gptofoo pcl-4 printer/Kyocera-FS-9100DN
 #gptofoo pcl-4 printer/Kyocera-FS-9500DN
+#gptofoo pcl-4 printer/Generic-PCL_5_5e_Printer
+#gptofoo pcl-4 printer/Generic-PCL_5c_Printer
 #gptofoo pcl-4l printer/257577
 #gptofoo pcl-4l printer/59776
 #gptofoo pcl-4l printer/82496
@@ -398,8 +401,11 @@
 #gptofoo pcl-6 printer/HP-LaserJet_2200
 #gptofoo pcl-6 printer/HP-LaserJet_3200m
 #gptofoo pcl-6 printer/HP-LaserJet_4100
+#gptofoo pcl-6 printer/HP-LaserJet_4200
+#gptofoo pcl-6 printer/HP-LaserJet_4300
 #gptofoo pcl-6 printer/HP-LaserJet_8150
 #gptofoo pcl-6 printer/HP-LaserJet_9000
+#gptofoo pcl-6 printer/Generic-PCL_6_PCL_XL_Printer
 #gptofoo lexmark-4076 printer/Lexmark-4076
 #gptofoo lexmark-z42 printer/593266
 #gptofoo lexmark-z43 printer/Lexmark-Z43
