@@ -298,5 +298,5 @@ main(int argc, char **argv)
   stp_curve_destroy(curve1);
 
   printf("%d total errors\n", global_error_count);
-  return global_error_count ? 0 : 1;
+  return global_error_count ? 1 : 0;
 }
