@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.50  2000/02/03 00:16:47  rlk
+ *   Don't get too fancy with the new, undocumented ESC(c command
+ *
  *   Revision 1.49  2000/02/02 03:03:55  rlk
  *   Move all the constants into members of a struct.  This will eventually permit
  *   us to use different dithering constants for each printer, or even vary them
@@ -876,6 +879,8 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(0, prn);
       putc(0, prn);
 
+#if 0
+      /* This seems to confuse some printers... */
       fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
       n = ydpi * (page_length - page_top) / 72;
       putc(n & 255, prn);
@@ -889,6 +894,17 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(n >> 8, prn);
       putc(0, prn);
       putc(0, prn);
+#else
+      fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
+      n = ydpi * (page_length - page_top) / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      n = ydpi * (page_length - page_bottom) / 72;
+      if (use_softweave)
+	n += 320 * ydpi / 720;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+#endif
 
       fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
       n = ydpi * (page_length - top) / 72;
