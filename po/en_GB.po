@@ -6,12 +6,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-17 19:21+0100\n"
-"PO-Revision-Date: 2004-08-22 21:01+0100\n"
+"POT-Creation-Date: 2004-09-17 20:04+0100\n"
+"PO-Revision-Date: 2004-09-23 00:10+0100\n"
 "Last-Translator: Roger Leigh <rleigh@debian.org>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/main/dither-main.c:46 src/main/print-color.c:49
@@ -131,123 +131,123 @@ msgstr "Dither algorithm"
 
 #: src/main/print-canon.c:1140
 msgid "90x90 DPI"
-msgstr "90x90 DPI"
+msgstr "90×90 DPI"
 
 #: src/main/print-canon.c:1140
 msgid "90x90 DPI DMT"
-msgstr "90x90 DPI DMT"
+msgstr "90×90 DPI DMT"
 
 #: src/main/print-canon.c:1141
 msgid "180x180 DPI"
-msgstr "180x180 DPI"
+msgstr "180×180 DPI"
 
 #: src/main/print-canon.c:1141
 msgid "180x180 DPI DMT"
-msgstr "180x180 DPI DMT"
+msgstr "180×180 DPI DMT"
 
 #: src/main/print-canon.c:1142
 msgid "360x360 DPI"
-msgstr "360x360 DPI"
+msgstr "360×360 DPI"
 
 #: src/main/print-canon.c:1142
 msgid "360x360 DPI DMT"
-msgstr "360x360 DPI DMT"
+msgstr "360×360 DPI DMT"
 
 #: src/main/print-canon.c:1143
 msgid "720x360 DPI"
-msgstr "720x360 DPI"
+msgstr "720×360 DPI"
 
 #: src/main/print-canon.c:1143
 msgid "720x360 DPI DMT"
-msgstr "720x360 DPI DMT"
+msgstr "720×360 DPI DMT"
 
 #: src/main/print-canon.c:1144
 msgid "720x720 DPI"
-msgstr "720x720 DPI"
+msgstr "720×720 DPI"
 
 #: src/main/print-canon.c:1144
 msgid "720x720 DPI DMT"
-msgstr "720x720 DPI DMT"
+msgstr "720×720 DPI DMT"
 
 #: src/main/print-canon.c:1145
 msgid "1440x720 DPI"
-msgstr "1440x720 DPI"
+msgstr "1440×720 DPI"
 
 #: src/main/print-canon.c:1145
 msgid "1440x720 DPI DMT"
-msgstr "1440x720 DPI DMT"
+msgstr "1440×720 DPI DMT"
 
 #: src/main/print-canon.c:1146
 msgid "1440x1440 DPI"
-msgstr "1440x1440 DPI"
+msgstr "1440×1440 DPI DMT"
 
 #: src/main/print-canon.c:1146
 msgid "1440x1440 DPI DMT"
-msgstr "1440x1440 DPI DMT"
+msgstr "1440×1440 DPI DMT"
 
 #: src/main/print-canon.c:1147
 msgid "2880x2880 DPI"
-msgstr "2880x2880 DPI"
+msgstr "2880×2880 DPI"
 
 #: src/main/print-canon.c:1147
 msgid "2880x2880 DPI DMT"
-msgstr "2880x2880 DPI DMT"
+msgstr "2880×2880 DPI DMT"
 
 #: src/main/print-canon.c:1148 src/main/print-pcl.c:253
 msgid "150x150 DPI"
-msgstr "150�150 DPI"
+msgstr "150×150 DPI"
 
 #: src/main/print-canon.c:1148
 msgid "150x150 DPI DMT"
-msgstr "150x150 DPI DMT"
+msgstr "150×150 DPI DMT"
 
 #: src/main/print-canon.c:1149 src/main/print-pcl.c:254
 msgid "300x300 DPI"
-msgstr "300�300 DPI"
+msgstr "300×300 DPI"
 
 #: src/main/print-canon.c:1149
 msgid "300x300 DPI DMT"
-msgstr "300x300 DPI DMT"
+msgstr "300×300 DPI DMT"
 
 #: src/main/print-canon.c:1150 src/main/print-pcl.c:255
 msgid "600x300 DPI"
-msgstr "600�300 DPI"
+msgstr "600×300 DPI"
 
 #: src/main/print-canon.c:1150
 msgid "600x300 DPI DMT"
-msgstr "600x300 DPI DMT"
+msgstr "600×300 DPI DMT"
 
 #: src/main/print-canon.c:1151 src/main/print-pcl.c:257
 msgid "600x600 DPI"
-msgstr "600�600 DPI"
+msgstr "600×600 DPI"
 
 #: src/main/print-canon.c:1151
 msgid "600x600 DPI DMT"
-msgstr "600x600 DPI DMT"
+msgstr "600×600 DPI DMT"
 
 #: src/main/print-canon.c:1152 src/main/print-pcl.c:258
 msgid "1200x600 DPI"
-msgstr "1200�600 DPI"
+msgstr "1200×600 DPI"
 
 #: src/main/print-canon.c:1152
 msgid "1200x600 DPI DMT"
-msgstr "1200x600 DPI DMT"
+msgstr "1200×600 DPI DMT"
 
 #: src/main/print-canon.c:1153
 msgid "1200x1200 DPI"
-msgstr "1200x1200 DPI"
+msgstr "1200×1200 DPI"
 
 #: src/main/print-canon.c:1153
 msgid "1200x1200 DPI DMT"
-msgstr "1200x1200 DPI DMT"
+msgstr "1200×1200 DPI DMT"
 
 #: src/main/print-canon.c:1154
 msgid "2400x2400 DPI"
-msgstr "2400x2400 DPI"
+msgstr "2400×2400 DPI"
 
 #: src/main/print-canon.c:1154
 msgid "2400x2400 DPI DMT"
-msgstr "2400x2400 DPI DMT"
+msgstr "2400×2400 DPI DMT"
 
 #: src/main/print-canon.c:1202 src/main/print-lexmark.c:857
 msgid "Plain Paper"
@@ -721,9 +721,8 @@ msgid "Adjust the blue gamma"
 msgstr "Adjust the blue gamma"
 
 #: src/main/print-color.c:307
-#, fuzzy
 msgid "Adjust the black gamma"
-msgstr "Adjust the blue gamma"
+msgstr "Adjust the black gamma"
 
 #: src/main/print-color.c:314
 msgid "Saturation"
@@ -893,9 +892,8 @@ msgid "Gray component reduction curve"
 msgstr "Gray component reduction curve"
 
 #: src/main/print-color.c:1602
-#, fuzzy
 msgid "Traditional Gutenprint color conversion"
-msgstr "Traditional Gimp-Print colour conversion"
+msgstr "Traditional Gutenprint colour conversion"
 
 #: src/main/printers.c:459
 #, c-format
@@ -1295,7 +1293,7 @@ msgstr "Print options not verified; cannot print.\n"
 
 #: src/main/print-lexmark.c:577 src/main/print-lexmark.c:653
 msgid "300 DPI x 600 DPI"
-msgstr "300 DPI � 600 DPI"
+msgstr "300 DPI × 600 DPI"
 
 #: src/main/print-lexmark.c:578 src/main/print-lexmark.c:654
 msgid "600 DPI"
@@ -1327,15 +1325,15 @@ msgstr "1200 DPI  Unidirectional"
 
 #: src/main/print-lexmark.c:585
 msgid "2400 DPI x 1200 DPI"
-msgstr "2400 DPI � 1200 DPI"
+msgstr "2400 DPI × 1200 DPI"
 
 #: src/main/print-lexmark.c:586
 msgid "2400 DPI x 1200 DPI high quality"
-msgstr "2400 DPI � 1200 DPI high quality"
+msgstr "2400 DPI × 1200 DPI high quality"
 
 #: src/main/print-lexmark.c:587
 msgid "2400 DPI x 1200 DPI highest quality"
-msgstr "2400 DPI � 1200 DPI highest quality"
+msgstr "2400 DPI × 1200 DPI highest quality"
 
 #: src/main/print-lexmark.c:589
 msgid "test print"
@@ -1467,11 +1465,11 @@ msgstr "Autoselect"
 
 #: src/main/print-pcl.c:256
 msgid "600x600 DPI monochrome"
-msgstr "600�600 DPI monochrome"
+msgstr "600×600 DPI monochrome"
 
 #: src/main/print-pcl.c:259
 msgid "2400x600 DPI"
-msgstr "2400�600 DPI"
+msgstr "2400×600 DPI"
 
 #: src/main/print-pcl.c:1188
 msgid "Double-Sided Printing"
@@ -1536,83 +1534,83 @@ msgstr "Postcard"
 
 #: src/main/xmli18n-tmp.h:9
 msgid "3x5"
-msgstr "3x5"
+msgstr "3×5"
 
 #: src/main/xmli18n-tmp.h:10
 msgid "4x6"
-msgstr "4x6"
+msgstr "4×6"
 
 #: src/main/xmli18n-tmp.h:11
 msgid "Epson 4x6 Photo Paper"
-msgstr "Epson 4x6 Photo Paper"
+msgstr "Epson 4×6 Photo Paper"
 
 #: src/main/xmli18n-tmp.h:12
 msgid "5x7"
-msgstr "5x7"
+msgstr "5×7"
 
 #: src/main/xmli18n-tmp.h:13
 msgid "5x8"
-msgstr "5x8"
+msgstr "5×8"
 
 #: src/main/xmli18n-tmp.h:14
 msgid "6x8"
-msgstr "6x8"
+msgstr "6×8"
 
 #: src/main/xmli18n-tmp.h:15
 msgid "8x10"
-msgstr "8x10"
+msgstr "8×10"
 
 #: src/main/xmli18n-tmp.h:17
 msgid "12x18"
-msgstr "12x18"
+msgstr "12×18"
 
 #: src/main/xmli18n-tmp.h:18
 msgid "Super B 13x19"
-msgstr "Super B 13x19"
+msgstr "Super B 13×19"
 
 #: src/main/xmli18n-tmp.h:19
 msgid "Engineering C 17x22"
-msgstr "Engineering C 17x22"
+msgstr "Engineering C 17×22"
 
 #: src/main/xmli18n-tmp.h:20
 msgid "8x12"
-msgstr "8x12"
+msgstr "8×12"
 
 #: src/main/xmli18n-tmp.h:21
 msgid "11x14"
-msgstr "11x14"
+msgstr "11×14"
 
 #: src/main/xmli18n-tmp.h:22
 msgid "16x20"
-msgstr "16x20"
+msgstr "16×20"
 
 #: src/main/xmli18n-tmp.h:23
 msgid "16x24"
-msgstr "16x24"
+msgstr "16×24"
 
 #: src/main/xmli18n-tmp.h:24
 msgid "20x24"
-msgstr "20x24"
+msgstr "20×24"
 
 #: src/main/xmli18n-tmp.h:25
 msgid "20x30"
-msgstr "20x30"
+msgstr "20×30"
 
 #: src/main/xmli18n-tmp.h:26
 msgid "22x30"
-msgstr "22x30"
+msgstr "22×30"
 
 #: src/main/xmli18n-tmp.h:27
 msgid "24x30"
-msgstr "24x30"
+msgstr "24×30"
 
 #: src/main/xmli18n-tmp.h:28
 msgid "Super A1 24x36"
-msgstr "Super A1 24x36"
+msgstr "Super A1 24×36"
 
 #: src/main/xmli18n-tmp.h:29
 msgid "30x40"
-msgstr "30x40"
+msgstr "30×40"
 
 #: src/main/xmli18n-tmp.h:30
 msgid "4A"
@@ -2004,11 +2002,11 @@ msgstr "Monarch Envelope"
 
 #: src/main/xmli18n-tmp.h:127
 msgid "4x5 3/8"
-msgstr "4x5 3/8"
+msgstr "4×5 3/8"
 
 #: src/main/xmli18n-tmp.h:128
 msgid "4x7"
-msgstr "4x7"
+msgstr "4×7"
 
 #: src/main/xmli18n-tmp.h:129
 msgid "CP_L"
@@ -3483,17 +3481,14 @@ msgid "Enter the name you wish to give this logical printer"
 msgstr "Enter the name you wish to give this logical printer"
 
 #: src/gutenprintui/panel.c:1735 src/gutenprintui2/panel.c:1735
-#, fuzzy
 msgid "About Gutenprint "
-msgstr "About Gimp-Print "
+msgstr "About Gutenprint "
 
 #: src/gutenprintui/panel.c:1742 src/gutenprintui2/panel.c:1742
-#, fuzzy
 msgid "Gutenprint Version "
-msgstr "Gimp-Print Version "
+msgstr "Gutenprint Version "
 
 #: src/gutenprintui/panel.c:1742 src/gutenprintui2/panel.c:1742
-#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -3519,7 +3514,7 @@ msgstr ""
 "\n"
 "\n"
 "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
-"and the rest of the Gimp-Print Development Team.\n"
+"and the rest of the Gutenprint Development Team.\n"
 "\n"
 "Please visit our web site at http://gimp-print.sourceforge.net.\n"
 "\n"
@@ -3758,9 +3753,8 @@ msgstr "Extra 5"
 
 #. TRANSLATORS: "Gutenprint" is a proper name, not a description
 #: src/cups/genppd.c:192 src/cups/genppd.c:201
-#, fuzzy
 msgid "Gutenprint"
-msgstr "test print"
+msgstr "Gutenprint"
 
 #: src/cups/genppd.c:870
 msgid "English"
@@ -4541,6 +4535,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#~ msgid "Gimp-Print"
-#~ msgstr "Gimp-Print"
