@@ -273,9 +273,13 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string palgorithm;
   gs_param_string pquality;
 
+#if 0
   stp_print_debug("stp_get_params(0)", pdev, &stp_data);
+#endif
   code = gdev_prn_get_params(pdev, plist);
+#if 0
   stp_print_debug("stp_get_params(1)", pdev, &stp_data);
+#endif
   param_string_from_string(pmediatype, stp_data.v.media_type);
   param_string_from_string(pmediasource, stp_data.v.media_source);
   param_string_from_string(pinktype, stp_data.v.ink_type);
@@ -391,7 +395,9 @@ stp_put_param_int(gs_param_list *plist,
 {
   int code, value;
 
+#if 0
   stp_print_debug("stp_put_param_int", NULL, &stp_data);
+#endif
   code = param_read_int(plist, pname, &value);
   switch (code)
     {
@@ -423,7 +429,9 @@ stp_put_param_float(gs_param_list *plist,
   int code;
   float value;
 
+#if 0
   stp_print_debug("stp_put_param_float", NULL, &stp_data);
+#endif
   code = param_read_float(plist, pname, &value);
   switch (code)
     {
@@ -478,7 +486,8 @@ stp_open(gx_device *pdev)
   stp_data.v.top    = length-top;
   stp_data.bottom = bottom;
 
-  STP_DEBUG(fprintf(stderr,"margins: %f %f %f %f\n",st[0],st[1],st[2],st[3]));
+  STP_DEBUG(fprintf(stderr, "margins:  l %f  b %f  r %f  t %f\n",
+		    st[0], st[1], st[2], st[3]));
 
   gx_device_set_margins(pdev, st, true);
   return gdev_prn_open(pdev);
@@ -556,7 +565,7 @@ Image_height(Image image)
   tmp2 -= tmp;			/* subtract margins from sizes */
 
   /* calculate new image height */
-  tmp2 *= (float)(im->dev->y_pixels_per_inch) / 72.;
+  tmp2 *= (float)(im->dev->x_pixels_per_inch) / 72.;
 
   STP_DEBUG(fprintf(stderr,"corrected page length %f\n",tmp2));
 
