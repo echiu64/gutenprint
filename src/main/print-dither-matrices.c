@@ -463,9 +463,9 @@ stpi_xml_dither_cache_get(int x, int y)
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
   if (!dither_matrix_cache)
-  if (stpi_debug_level & STPI_DBG_XML)
     {
-      stpi_erprintf("cache does not exist\n");
+      if (stpi_debug_level & STPI_DBG_XML)
+	stpi_erprintf("cache does not exist\n");
       return NULL;
     }
 
