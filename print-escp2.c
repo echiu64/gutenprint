@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.15  1999/11/01 03:38:53  rlk
+ *   First cut at weaving
+ *
  *   Revision 1.14  1999/10/26 23:58:31  rlk
  *   indentation
  *
@@ -230,11 +233,23 @@
 
 #include "print.h"
 
+#define Static
+
 /*
  * Local functions...
  */
 
-static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int, int);
+Static void	escp2_write(FILE *, unsigned char *, int, int, int, int, int, int, int);
+Static void initialize_weave(int jets, int separation);
+Static void escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn);
+Static void
+escp2_write_weave(FILE *, int, int, int, int, int,
+		  unsigned char *c,
+		  unsigned char *m,
+		  unsigned char *y,
+		  unsigned char *k,
+		  unsigned char *C,
+		  unsigned char *M);
 
 #define MODEL_PAPER_SIZE_MASK	0x3
 #define MODEL_PAPER_SMALL 	0x0
@@ -294,13 +309,13 @@ int model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO),
 };
 
-static int
+Static int
 escp2_has_cap(int model, int featureset, int class)
 {
   return ((model_capabilities[model] & featureset) == class);
 }
 
-static int
+Static int
 escp2_cap(int model, int featureset)
 {
   return (model_capabilities[model] & featureset);
@@ -420,7 +435,6 @@ escp2_imageable_area(int  model,	/* I - Printer model */
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
-
 void
 escp2_print(int       model,		/* I - Model */
             char      *ppd_file,	/* I - PPD file (not used) */
@@ -706,15 +720,11 @@ escp2_print(int       model,		/* I - Model */
     case MODEL_INIT_PHOTO:
         if (ydpi > 360)
 	  {
-#if 1
-	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-	    fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+	    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033(i\001\000\000", 6, 1, prn);	/* Microweave off! */
 	    fwrite("\033\0311", 3, 1, prn); /* ??? */
-	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Micro dots */
-#else
-	    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
-	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Super micro dots */
-#endif
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
+	    initialize_weave(32, 8);
 	  }
 	else
 	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
@@ -833,12 +843,24 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
-	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
-        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+	if (ydpi >= 720)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left,
+			    cyan, magenta, yellow, black, lcyan, lmagenta);
+	else
+	  {
+	    escp2_write(prn, black, length, 0, 0, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width,
+			left);
+	  }
       }
       else
       {
@@ -852,7 +874,9 @@ escp2_print(int       model,		/* I - Model */
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
 
-      fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
+      if (ydpi < 720 ||
+	  !(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
+	fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
       errval += errmod;
       errline -= errdiv;
@@ -862,6 +886,9 @@ escp2_print(int       model,		/* I - Model */
         errline --;
       }
     }
+    if (ydpi >= 720 &&
+	(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
+      escp2_flush(model, out_width, left, ydpi, prn);
   }
   else
   {
@@ -903,12 +930,24 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
 		      magenta, lmagenta, yellow, 0, black);
 
-        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+	if (ydpi >= 720)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left,
+			    cyan, magenta, yellow, black, lcyan, lmagenta);
+	else
+	  {
+	    escp2_write(prn, black, length, 0, 0, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width,
+			left);
+	  }
       }
       else
       {
@@ -922,7 +961,9 @@ escp2_print(int       model,		/* I - Model */
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
       }
 
-      fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
+      if (ydpi < 720 ||
+	  !(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
+	fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
       errval += errmod;
       errline += errdiv;
@@ -932,6 +973,9 @@ escp2_print(int       model,		/* I - Model */
         errline ++;
       }
     }
+    if (ydpi >= 720 &&
+	(escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)))
+      escp2_flush(model, out_width, left, ydpi, prn);
   }
 
  /*
@@ -955,11 +999,495 @@ escp2_print(int       model,		/* I - Model */
 }
 
 
+typedef struct
+{
+  int row;
+  int pass;
+  int jet;
+  int missingstartrows;
+  int logicalpassstart;
+  int physpassstart;
+  int physpassend;
+} weave_t;
+
+typedef struct
+{
+  int pass;
+  int missingstartrows;
+  int logicalpassstart;
+  int physpassstart;
+  int physpassend;
+} pass_t;
+
+typedef union {
+  off_t v[6];
+  struct {
+    off_t c;
+    off_t m;
+    off_t y;
+    off_t k;
+    off_t C;
+    off_t M;
+  } p;
+} lineoff_t;
+
+typedef union {
+  unsigned char *v[6];
+  struct {
+    unsigned char *c;
+    unsigned char *m;
+    unsigned char *y;
+    unsigned char *k;
+    unsigned char *C;
+    unsigned char *M;
+  } p;
+} linebufs_t;
+
+Static char *linebufs;
+Static lineoff_t *lineoffsets;
+Static linebufs_t *linebases;
+Static int *linecounts;
+Static pass_t *passes;
+Static int last_pass_offset;
+Static int last_pass;
+
+Static int njets;
+Static int separation;
+
+Static int weavefactor;
+Static int jetsused;
+Static int initialoffset;
+Static int jetsleftover;
+Static int weavespan;
+
+Static int currentpass;
+Static int currentline;
+
+Static int color_indices[16] = { 0, 1, 2, -1,
+				 3, -1, -1, -1,
+				 -1, 4, 5, -1,
+				 -1, -1, -1, -1 };
+Static int colors[6] = { 0, 1, 2, 4, 1, 2 };
+Static int densities[6] = { 0, 0, 0, 0, 1, 1 };
+
+Static int
+get_color_by_params(int plane, int density)
+{
+  if (plane > 4 || plane < 0 || density > 1 || density < 0)
+    return -1;
+  return color_indices[density * 8 + plane];
+}
+
+Static void
+initialize_weave(int jets, int sep)
+{
+  int i;
+  char *bufbase;
+  if (jets <= 1)
+    separation = 1;
+  if (sep <= 0)
+    separation = 1;
+  else
+    separation = sep;
+  njets = jets;
+
+  weavefactor = jets / separation;
+  jetsused = ((weavefactor - 1) * separation) + 1;
+  initialoffset = (jetsused - weavefactor) * separation;
+  jetsleftover = njets - jetsused + 1;
+  weavespan = (jetsused - 1) * separation;
+
+  currentpass = 0;
+  currentline = 0;
+  last_pass_offset = -initialoffset;
+  last_pass = -1;
+
+  linebufs = malloc(6 * 1536 * weavespan * jetsused);
+  lineoffsets = malloc(separation * sizeof(lineoff_t));
+  linebases = malloc(separation * sizeof(linebufs_t));
+  passes = malloc(separation * sizeof(pass_t));
+  linecounts = malloc(separation * sizeof(int));
+
+  bufbase = linebufs;
+  for (i = 0; i < separation; i++)
+    {
+      int j;
+      passes[i].pass = -1;
+      for (j = 0; j < 6; j++)
+	{
+	  linebases[i].v[j] = bufbase;
+	  bufbase += 1536 * jetsused;
+	}
+    }
+}
+
+Static lineoff_t *
+get_lineoffsets(int row)
+{
+  return &(lineoffsets[row % separation]);
+}
+
+Static int *
+get_linecount(int row)
+{
+  return &(linecounts[row % separation]);
+}
+
+Static const linebufs_t *
+get_linebases(int row)
+{
+  return &(linebases[row % separation]);
+}
+
+Static pass_t *
+get_pass(int row_or_pass)
+{
+  return &(passes[row_or_pass % separation]);
+}
+
+Static void
+weave_parameters_by_row(int row, weave_t *w)
+{
+  int passblockstart = (row + initialoffset) / jetsused;
+  int internallogicalpassstart;
+  w->row = row;
+  w->pass = (passblockstart - (separation - 1)) +
+    (separation + row - passblockstart - 1) % separation;
+  internallogicalpassstart = (w->pass * jetsused)  - initialoffset;
+  w->logicalpassstart =  internallogicalpassstart -
+    (separation * (w->pass % jetsleftover));
+  w->jet = ((row - w->logicalpassstart) / separation);
+  if (internallogicalpassstart >= 0)
+    w->physpassstart = internallogicalpassstart;
+  else
+    w->physpassstart = internallogicalpassstart +
+      (separation * ((separation - internallogicalpassstart - 1) / separation));
+  w->physpassend = (jetsused - 1) * separation + internallogicalpassstart;
+  w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
+}
+
+Static void
+fillin_start_rows(int row, int width, int missingstartrows)
+{
+  lineoff_t *offsets = get_lineoffsets(row);
+  const linebufs_t *bufs = get_linebases(row);
+  int i = 0;
+  int k = 0;
+  int j;
+  for (k = 0; k < missingstartrows; k++)
+    {
+      int bytes_to_fill = width;
+      int full_blocks = bytes_to_fill / 1024;
+      int leftover = (7 + (bytes_to_fill % 1024)) / 8;
+      int l = 0;
+  
+      while (l < full_blocks)
+	{
+	  for (j = 0; j < 6; j++)
+	    {
+	      (bufs->v[j][2 * i]) = 129;
+	      (bufs->v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	  l++;
+	}
+      if (leftover == 1)
+	{
+	  for (j = 0; j < 6; j++)
+	    {
+	      (bufs->v[j][2 * i]) = 1;
+	      (bufs->v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	}
+      else if (leftover > 0)
+	{
+	  for (j = 0; j < 6; j++)
+	    {
+	      (bufs->v[j][2 * i]) = 257 - leftover;
+	      (bufs->v[j][2 * i + 1]) = 0;
+	    }
+	  i++;
+	}
+    }
+  for (j = 0; j < 6; j++)
+    offsets->v[j] = 2 * i;
+}
+
+Static void
+initialize_row(int row, int width)
+{
+  weave_t w;
+  weave_parameters_by_row(row, &w);
+  if (w.physpassstart == row)
+    {
+      lineoff_t *lineoffs = get_lineoffsets(row);
+      int *linecount = get_linecount(row);
+      int j;
+      pass_t *pass = get_pass(row);
+      pass->pass = w.pass;
+      pass->missingstartrows = w.missingstartrows;
+      pass->logicalpassstart = w.logicalpassstart;
+      pass->physpassstart = w.physpassstart;
+      pass->physpassend = w.physpassend;
+      for (j = 0; j < 6; j++)
+	{
+	  lineoffs->v[j] = 0;
+	}
+      *linecount = 0;
+      if (w.missingstartrows > 0)
+	fillin_start_rows(row, width, w.missingstartrows);
+    }
+}
+
+Static void
+flush_pass(int passno, int model, int width, int hoffset, int ydpi, FILE *prn)
+{
+  int j;
+  lineoff_t *lineoffs = get_lineoffsets(passno);
+  const linebufs_t *bufs = get_linebases(passno);
+  pass_t *pass = get_pass(passno);
+  int *linecount = get_linecount(passno);
+  fprintf(stderr, "Flushing pass %d start %d last %d\n", passno, pass->physpassstart, last_pass_offset);
+  if (pass->physpassstart > last_pass_offset)
+    {
+      int advance = pass->logicalpassstart - last_pass_offset;
+      int alo = advance % 256;
+      int ahi = advance / 256;
+      fprintf(stderr, "  advancing %d lines\n", advance);
+      fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
+      last_pass_offset = pass->logicalpassstart;
+    }
+  for (j = 0; j < 6; j++)
+    {
+      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	{
+	  fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	  fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+		  (hoffset * 1440 / ydpi) & 255,
+		  (hoffset * 1440 / ydpi) >> 8);
+	}
+      else if (densities[j] > 0)
+	continue;
+      else
+	{
+	  fprintf(prn, "\033r%c", colors[j]);
+	  fprintf(prn, "\033\\%c%c", hoffset & 255, hoffset >> 8);
+	}
+      switch (ydpi)				/* Raster graphics header */
+	{
+	case 180 :
+	  fwrite("\033.\001\024\024\001", 6, 1, prn);
+	  break;
+	case 360 :
+	  fwrite("\033.\001\012\012\001", 6, 1, prn);
+	  break;
+	case 720 :
+	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033.%c%c%c%c", 1, 8 * 5, 5,
+		    *linecount + pass->missingstartrows);
+	  else if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK,
+				 MODEL_720DPI_600))
+	    fwrite("\033.\001\050\005\001", 6, 1, prn);
+	  else
+	    fwrite("\033.\001\005\005\001", 6, 1, prn);
+	  break;
+	}
+
+      putc(width & 255, prn);	/* Width of raster line in pixels */
+      putc(width >> 8, prn);
+      fwrite(bufs->v[j], lineoffs->v[j], 1, prn);
+      fprintf(stderr, "Sending %d bytes, plane %d, density %d, lines %d\n",
+	      lineoffs->v[j], colors[j], densities[j],
+	      *linecount + pass->missingstartrows);
+      putc('\r', prn);
+    }
+  last_pass = pass->pass;
+  pass->pass = -1;
+}
+
+Static void
+add_to_row(int row, unsigned char *buf, size_t nbytes, int plane, int density)
+{
+  weave_t w;
+  int color = get_color_by_params(plane, density);
+  lineoff_t *lineoffs = get_lineoffsets(row);
+  const linebufs_t *bufs = get_linebases(row);
+  if (color < 0)
+    return;
+  weave_parameters_by_row(row, &w);
+  memcpy(bufs->v[color] + lineoffs->v[color], buf, nbytes);
+  lineoffs->v[color] += nbytes;
+}
+
+Static void
+finalize_row(int row, int model, int width, int hoffset, int ydpi, FILE *prn)
+{
+  weave_t w;
+  int *lines = get_linecount(row);
+  weave_parameters_by_row(row, &w);
+  (*lines)++;
+  if (w.physpassend == row)
+    {
+      pass_t *pass = get_pass(row);
+      flush_pass(pass->pass, model, width, hoffset, ydpi, prn);
+    }
+}
+
+Static void
+escp2_flush(int model, int width, int hoffset, int ydpi, FILE *prn)
+{
+  while (1)
+    {
+      pass_t *pass = get_pass(last_pass + 1);
+      if (pass->pass < 0)
+	return;
+      flush_pass(pass->pass, model, width, hoffset, ydpi, prn);
+    }
+}
+
+Static void
+escp2_pack(unsigned char *line,
+	   int length,
+	   unsigned char *comp_buf,
+	   unsigned char **comp_ptr)
+{
+  unsigned char *start;			/* Start of compressed data */
+  unsigned char repeat;			/* Repeating char */
+  int count;			/* Count of compressed bytes */
+  int tcount;			/* Temporary count < 128 */
+
+  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
+    return;
+
+  /*
+   * Compress using TIFF "packbits" run-length encoding...
+   */
+
+  (*comp_ptr) = comp_buf;
+
+  while (length > 0)
+    {
+      /*
+       * Get a run of non-repeated chars...
+       */
+
+      start  = line;
+      line   += 2;
+      length -= 2;
+
+      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+	{
+	  line ++;
+	  length --;
+	}
+
+      line   -= 2;
+      length += 2;
+
+      /*
+       * Output the non-repeated sequences (max 128 at a time).
+       */
+
+      count = line - start;
+      while (count > 0)
+	{
+	  tcount = count > 128 ? 128 : count;
+
+	  (*comp_ptr)[0] = tcount - 1;
+	  memcpy((*comp_ptr) + 1, start, tcount);
+
+	  (*comp_ptr) += tcount + 1;
+	  start    += tcount;
+	  count    -= tcount;
+	}
+
+      if (length <= 0)
+	break;
+
+      /*
+       * Find the repeated sequences...
+       */
+
+      start  = line;
+      repeat = line[0];
+
+      line ++;
+      length --;
+
+      while (length > 0 && *line == repeat)
+	{
+	  line ++;
+	  length --;
+	}
+
+      /*
+       * Output the repeated sequences (max 128 at a time).
+       */
+
+      count = line - start;
+      while (count > 0)
+	{
+	  tcount = count > 128 ? 128 : count;
+
+	  (*comp_ptr)[0] = 1 - tcount;
+	  (*comp_ptr)[1] = repeat;
+
+	  (*comp_ptr) += 2;
+	  count    -= tcount;
+	}
+    }
+}
+
+Static void
+escp2_write_weave(FILE          *prn,	/* I - Print file or command */
+		  int           length,	/* I - Length of bitmap data */
+		  int           ydpi,	/* I - Vertical resolution */
+		  int           model,	/* I - Printer model */
+		  int           width,	/* I - Printed width */
+		  int           offset,
+		  unsigned char *c,
+		  unsigned char *m,
+		  unsigned char *y,
+		  unsigned char *k,
+		  unsigned char *C,
+		  unsigned char *M)
+{
+  static int lineno = 0;
+  unsigned char comp_buf[1536];
+  unsigned char *comp_ptr;
+
+  initialize_row(lineno, width);
+  
+  escp2_pack(c, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 2, 0);
+
+  escp2_pack(m, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 1, 0);
+
+  escp2_pack(y, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 4, 0);
+
+  escp2_pack(k, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 0, 0);
+
+  escp2_pack(C, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 2, 1);
+
+  escp2_pack(M, length, comp_buf, &comp_ptr);
+  add_to_row(lineno, comp_buf, comp_ptr - comp_buf, 1, 1);
+
+  finalize_row(lineno, model, width, offset, ydpi, prn);
+  lineno++;
+
+}
+
+	   
 /*
  * 'escp2_write()' - Send ESC/P2 graphics using TIFF packbits compression.
  */
 
-void
+Static void
 escp2_write(FILE          *prn,	/* I - Print file or command */
 	     unsigned char *line,	/* I - Output bitmap data */
 	     int           length,	/* I - Length of bitmap data */
@@ -971,11 +1499,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 	     int           offset)	/* I - Offset from left side */
 {
   unsigned char	comp_buf[1536],		/* Compression buffer */
-		*comp_ptr,		/* Current slot in buffer */
-		*start,			/* Start of compressed data */
-		repeat;			/* Repeating char */
-  int		count,			/* Count of compressed bytes */
-		tcount;			/* Temporary count < 128 */
+    *comp_ptr;
   static int    last_density = 0;       /* Last density printed */
   static int	last_plane = 0;		/* Last color plane printed */
 
@@ -987,83 +1511,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
   if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
     return;
 
- /*
-  * Compress using TIFF "packbits" run-length encoding...
-  */
-
-  comp_ptr = comp_buf;
-
-  while (length > 0)
-  {
-   /*
-    * Get a run of non-repeated chars...
-    */
-
-    start  = line;
-    line   += 2;
-    length -= 2;
-
-    while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
-    {
-      line ++;
-      length --;
-    }
-
-    line   -= 2;
-    length += 2;
-
-   /*
-    * Output the non-repeated sequences (max 128 at a time).
-    */
-
-    count = line - start;
-    while (count > 0)
-    {
-      tcount = count > 128 ? 128 : count;
-
-      comp_ptr[0] = tcount - 1;
-      memcpy(comp_ptr + 1, start, tcount);
-
-      comp_ptr += tcount + 1;
-      start    += tcount;
-      count    -= tcount;
-    }
-
-    if (length <= 0)
-      break;
-
-   /*
-    * Find the repeated sequences...
-    */
-
-    start  = line;
-    repeat = line[0];
-
-    line ++;
-    length --;
-
-    while (length > 0 && *line == repeat)
-    {
-      line ++;
-      length --;
-    }
-
-   /*
-    * Output the repeated sequences (max 128 at a time).
-    */
-
-    count = line - start;
-    while (count > 0)
-    {
-      tcount = count > 128 ? 128 : count;
-
-      comp_ptr[0] = 1 - tcount;
-      comp_ptr[1] = repeat;
-
-      comp_ptr += 2;
-      count    -= tcount;
-    }
-  }
+  escp2_pack(line, length, comp_buf, &comp_ptr);
 
  /*
   * Set the print head position.
@@ -1119,6 +1567,847 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 
   fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
 }
+
+
+
+
+
+
+
+
+
+
+#ifdef OLD_SOFTWEAVE
+
+void
+escp2_print(int       model,		/* I - Model */
+            char      *ppd_file,	/* I - PPD file (not used) */
+            char      *resolution,	/* I - Resolution */
+            char      *media_size,	/* I - Media size */
+            char      *media_type,	/* I - Media type */
+            char      *media_source,	/* I - Media source */
+            int       output_type,	/* I - Output type (color/grayscale) */
+            int       orientation,	/* I - Orientation of image */
+            float     scaling,		/* I - Scaling of image */
+            int       left,		/* I - Left offset of image (points) */
+            int       top,		/* I - Top offset of image (points) */
+            int       copies,		/* I - Number of copies */
+            FILE      *prn,		/* I - File to print to */
+	    Image     image,		/* I - Image to print */
+            unsigned char    *cmap,	/* I - Colormap (for indexed images) */
+	    lut_t     *lut,		/* I - Brightness lookup table */
+	    float     saturation	/* I - Saturation */
+	    )
+{
+  int		x, y;		/* Looping vars */
+  int		xdpi, ydpi;	/* Resolution */
+  int		n;		/* Output number */
+  unsigned short *out;	/* Output pixels (16-bit) */
+  unsigned char	*in,		/* Input pixels */
+		*black,		/* Black bitmap data */
+		*cyan,		/* Cyan bitmap data */
+		*magenta,	/* Magenta bitmap data */
+		*lcyan,		/* Light cyan bitmap data */
+		*lmagenta,	/* Light magenta bitmap data */
+		*yellow;	/* Yellow bitmap data */
+  int		page_left,	/* Left margin of page */
+		page_right,	/* Right margin of page */
+		page_top,	/* Top of page */
+		page_bottom,	/* Bottom of page */
+		page_width,	/* Width of page */
+		page_height,	/* Height of page */
+		page_length,	/* True length of page */
+		out_width,	/* Width of image on page */
+		out_height,	/* Height of image on page */
+		out_bpp,	/* Output bytes per pixel */
+		temp_width,	/* Temporary width of image on page */
+		temp_height,	/* Temporary height of image on page */
+		landscape,	/* True if we rotate the output 90 degrees */
+		length,		/* Length of raster data */
+		errdiv,		/* Error dividend */
+		errmod,		/* Error modulus */
+		errval,		/* Current error value */
+		errline,	/* Current raster line */
+		errlast;	/* Last raster line loaded */
+  convert_t	colorfunc = 0;	/* Color conversion function... */
+  int           image_height,
+                image_width,
+                image_bpp;
+  int		weave = 1;
+  int		weavebins = 1;
+
+ /*
+  * Setup a read-only pixel region for the entire image...
+  */
+
+  Image_init(image);
+  image_height = Image_height(image);
+  image_width = Image_width(image);
+  image_bpp = Image_bpp(image);
+
+ /*
+  * Choose the correct color conversion function...
+  */
+
+  if (image_bpp < 3 && cmap == NULL)
+    output_type = OUTPUT_GRAY;		/* Force grayscale output */
+
+  if (output_type == OUTPUT_COLOR)
+  {
+    out_bpp = 3;
+
+    if (image_bpp >= 3)
+      colorfunc = rgb_to_rgb;
+    else
+      colorfunc = indexed_to_rgb;
+  }
+  else
+  {
+    out_bpp = 1;
+
+    if (image_bpp >= 3)
+      colorfunc = rgb_to_gray;
+    else if (cmap == NULL)
+      colorfunc = gray_to_gray;
+    else
+      colorfunc = indexed_to_gray;
+  }
+
+ /*
+  * Figure out the output resolution...
+  */
+
+  xdpi = ydpi = atoi(resolution);
+
+ /*
+  * Compute the output size...
+  */
+
+  landscape   = 0;
+  escp2_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
+                       &page_bottom, &page_top);
+
+  page_width  = page_right - page_left;
+  page_height = page_top - page_bottom;
+
+  default_media_size(model, ppd_file, media_size, &n, &page_length);
+
+ /*
+  * Portrait width/height...
+  */
+
+  if (scaling < 0.0)
+  {
+   /*
+    * Scale to pixels per inch...
+    */
+
+    out_width  = image_width * -72.0 / scaling;
+    out_height = image_height * -72.0 / scaling;
+  }
+  else
+  {
+   /*
+    * Scale by percent...
+    */
+
+    out_width  = page_width * scaling / 100.0;
+    out_height = out_width * image_height / image_width;
+    if (out_height > page_height)
+    {
+      out_height = page_height * scaling / 100.0;
+      out_width  = out_height * image_width / image_height;
+    }
+  }
+
+ /*
+  * Landscape width/height...
+  */
+
+  if (scaling < 0.0)
+  {
+   /*
+    * Scale to pixels per inch...
+    */
+
+    temp_width  = image_height * -72.0 / scaling;
+    temp_height = image_width * -72.0 / scaling;
+  }
+  else
+  {
+   /*
+    * Scale by percent...
+    */
+
+    temp_width  = page_width * scaling / 100.0;
+    temp_height = temp_width * image_width / image_height;
+    if (temp_height > page_height)
+    {
+      temp_height = page_height;
+      temp_width  = temp_height * image_height / image_width;
+    }
+  }
+
+ /*
+  * See which orientation has the greatest area (or if we need to rotate the
+  * image to fit it on the page...)
+  */
+
+  if (orientation == ORIENT_AUTO)
+  {
+    if (scaling < 0.0)
+    {
+      if ((out_width > page_width && out_height < page_width) ||
+          (out_height > page_height && out_width < page_height))
+	orientation = ORIENT_LANDSCAPE;
+      else
+	orientation = ORIENT_PORTRAIT;
+    }
+    else
+    {
+      if ((temp_width * temp_height) > (out_width * out_height))
+	orientation = ORIENT_LANDSCAPE;
+      else
+	orientation = ORIENT_PORTRAIT;
+    }
+  }
+
+  if (orientation == ORIENT_LANDSCAPE)
+  {
+    out_width  = temp_width;
+    out_height = temp_height;
+    landscape  = 1;
+
+   /*
+    * Swap left/top offsets...
+    */
+
+    x    = top;
+    top  = left;
+    left = x;
+  }
+
+  if (left < 0)
+    left = (page_width - out_width) / 2 + page_left;
+
+  if (top < 0)
+    top  = (page_height + out_height) / 2 + page_bottom;
+  else
+    top = page_height - top + page_bottom;
+
+ /*
+  * Let the user know what we're doing...
+  */
+
+  Image_progress_init(image);
+
+ /*
+  * Send ESC/P2 initialization commands...
+  */
+
+  fputs("\033@", prn); 				/* ESC/P2 reset */
+
+#if 0
+  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_PHOTO))
+    {
+      fwrite("\033@", 2, 1, prn);
+      fwrite("\033(R\010\000\000REMOTE1PM\002\000\000\000SN\003\000\000\000\003MS\010\000\000\000\010\000\364\013x\017\033\000\000\000", 42, 1, prn);
+    }
+#endif
+  fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
+  switch (ydpi)					/* Set line feed increment */
+  {
+    case 180 :
+        fwrite("\033(U\001\000\024", 6, 1, prn);
+        break;
+
+    case 360 :
+        fwrite("\033(U\001\000\012", 6, 1, prn);
+        break;
+
+    case 720 :
+        fwrite("\033(U\001\000\005", 6, 1, prn);
+        break;
+  }
+
+  switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
+  {
+    case MODEL_INIT_COLOR : /* ESC */
+        if (output_type == OUTPUT_COLOR && ydpi > 360)
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        break;
+
+    case MODEL_INIT_PRO : /* ESC Pro, Pro XL, 400, 500 */
+        fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
+
+        if (ydpi > 360)
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        break;
+
+    case MODEL_INIT_1500 : /* ESC 1500 */
+        fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
+
+        if (ydpi > 360)
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        break;
+
+    case MODEL_INIT_600 : /* ESC 600, 800, 1520, 3000 */
+	if (output_type == OUTPUT_GRAY)
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	else
+	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
+
+        fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Small dots */
+
+        if (ydpi > 360)
+      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        break;
+
+    case MODEL_INIT_PHOTO:
+        if (ydpi > 360)
+	  {
+#if 1
+	    weave = 32;
+	    weavebins = 8;
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033(i\001\000\000", 6, 1, prn);	/* Microweave mode on */
+#if 0
+	    fwrite("\033(K\001\000\004", 6, 1, prn);
+	    fwrite("\033\0311", 3, 1, prn); /* ??? */
+#endif
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Micro dots */
+#else
+	    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Super micro dots */
+#endif
+	  }
+	else
+	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
+        break;
+
+#if 0
+	if (output_type == OUTPUT_GRAY)
+	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
+	else
+	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
+#endif
+  }
+
+  fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
+  n = ydpi * page_length / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+
+  fwrite("\033(c\004\000", 5, 1, prn);		/* Top/bottom margins */
+  n = ydpi * (page_length - page_top) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+  n = ydpi * (page_length - page_bottom) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+
+  fwrite("\033(V\002\000", 5, 1, prn);		/* Absolute vertical position */
+  n = ydpi * (page_length - top) / 72;
+  putc(n & 255, prn);
+  putc(n >> 8, prn);
+
+ /*
+  * Convert image size to printer resolution...
+  */
+
+  out_width  = xdpi * out_width / 72;
+  out_height = ydpi * out_height / 72;
+
+  left = ydpi * (left - page_left) / 72;
+
+ /*
+  * Allocate memory for the raster data...
+  */
+
+  length = (out_width + 7) / 8;
+
+  if (output_type == OUTPUT_GRAY)
+  {
+    black   = malloc(length);
+    cyan    = NULL;
+    magenta = NULL;
+    lcyan    = NULL;
+    lmagenta = NULL;
+    yellow  = NULL;
+  }
+  else
+  {
+    cyan    = malloc(length);
+    magenta = malloc(length);
+    yellow  = malloc(length);
+  
+    if (escp2_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES))
+      black = malloc(length);
+    else
+      black = NULL;
+    if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
+      lcyan = malloc(length);
+      lmagenta = malloc(length);
+    } else {
+      lcyan = NULL;
+      lmagenta = NULL;
+    }
+  }
+    
+ /*
+  * Output the page, rotating as necessary...
+  */
+
+  if (landscape)
+  {
+    in  = malloc(image_height * image_bpp);
+    out = malloc(image_height * out_bpp * 2);
+
+    errdiv  = image_width / out_height;
+    errmod  = image_width % out_height;
+    errval  = 0;
+    errlast = -1;
+    errline  = image_width - 1;
+    
+    for (x = 0; x < out_height; x ++)
+    {
+#ifdef DEBUG
+      printf("escp2_print: x = %d, line = %d, val = %d, mod = %d, height = %d\n",
+             x, errline, errval, errmod, out_height);
+#endif /* DEBUG */
+
+      if ((x & 255) == 0)
+	Image_note_progress(image, x, out_height);
+
+      if (errline != errlast)
+      {
+        errlast = errline;
+	Image_get_col(image, in, errline);
+      }
+
+      (*colorfunc)(in, out, image_height, image_bpp, lut, cmap,
+		   saturation);
+
+      if (output_type == OUTPUT_GRAY)
+      {
+        dither_black(out, x, image_height, out_width, black);
+        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+      else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      {
+        dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
+		      magenta, lmagenta, yellow, 0, black);
+
+	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+      else
+      {
+        dither_cmyk(out, x, image_height, out_width, cyan, 0, magenta, 0,
+		      yellow, 0, black);
+
+        if (black != NULL)
+          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		      weave, weavebins, 0);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+
+#if 0
+      if (((x + 1) % weave) == 0)
+	fprintf(prn, "\033(v\002%c%c%c", 0, (weave > 1 ? weave - 1 : 1), 0);
+      fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
+#endif
+      errval += errmod;
+      errline -= errdiv;
+      if (errval >= out_height)
+      {
+        errval -= out_height;
+        errline --;
+      }
+    }
+    if (x % weave) {
+      if (black)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (lcyan)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (lmagenta)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (cyan)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (magenta)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (yellow)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+    }
+  }
+  else
+  {
+    in  = malloc(image_width * image_bpp);
+    out = malloc(image_width * out_bpp * 2);
+
+    errdiv  = image_height / out_height;
+    errmod  = image_height % out_height;
+    errval  = 0;
+    errlast = -1;
+    errline  = 0;
+    
+    for (y = 0; y < out_height; y ++)
+    {
+#ifdef DEBUG
+      printf("escp2_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
+             y, errline, errval, errmod, out_height);
+#endif /* DEBUG */
+
+      if ((y & 255) == 0)
+	Image_note_progress(image, y, out_height);
+
+      if (errline != errlast)
+      {
+        errlast = errline;
+	Image_get_row(image, in, errline);
+      }
+
+      (*colorfunc)(in, out, image_width, image_bpp, lut, cmap,
+		   saturation);
+
+      if (output_type == OUTPUT_GRAY)
+      {
+        dither_black(out, y, image_width, out_width, black);
+        escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+      else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+      {
+        dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
+		      magenta, lmagenta, yellow, 0, black);
+
+        escp2_write(prn, lcyan, length, 1, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+	escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+      else
+      {
+        dither_cmyk(out, y, image_width, out_width, cyan, 0, magenta, 0,
+		      yellow, 0, black);
+
+        if (black != NULL)
+          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left,
+		      weave, weavebins, 0);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+      }
+
+#if 0
+      if (((y + 1) % weave) == 0)
+	fprintf(prn, "\033(v\002%c%c%c", 0, (weave > 1 ? weave - 1 : 1), 0);
+      fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
+#endif
+
+      errval += errmod;
+      errline += errdiv;
+      if (errval >= out_height)
+      {
+        errval -= out_height;
+        errline ++;
+      }
+    }
+    if (y % weave) {
+      if (black)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (lcyan)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (lmagenta)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (cyan)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (magenta)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 0);
+      if (yellow)
+	escp2_write(prn, 0, length, 0, 0, ydpi, model, out_width, left,
+		    weave, weavebins, 1);
+    }
+  }
+
+ /*
+  * Cleanup...
+  */
+
+  free(in);
+  free(out);
+
+  if (black != NULL)
+    free(black);
+  if (cyan != NULL)
+  {
+    free(cyan);
+    free(magenta);
+    free(yellow);
+  }
+
+  putc('\014', prn);			/* Eject page */
+  fputs("\033@", prn);			/* ESC/P2 reset */
+}
+
+
+/*
+ * 'escp2_write()' - Send ESC/P2 graphics using TIFF packbits compression.
+ */
+
+void
+escp2_write(FILE          *prn,		/* I - Print file or command */
+	     unsigned char *line,	/* I - Output bitmap data */
+	     int           length,	/* I - Length of bitmap data */
+	     int	   density,     /* I - 0 for dark, 1 for light */
+	     int           plane,	/* I - Which color */
+	     int           ydpi,	/* I - Vertical resolution */
+	     int           model,	/* I - Printer model */
+	     int           width,	/* I - Printed width */
+	     int           offset,	/* I - Offset from left side */
+	    int	   weave,
+	    int		weavebins,
+	    int		lastrow)
+{
+  unsigned char	comp_buf[1536],		/* Compression buffer */
+		*comp_ptr,		/* Current slot in buffer */
+		*start,			/* Start of compressed data */
+		repeat;			/* Repeating char */
+  int		count,			/* Count of compressed bytes */
+		tcount;			/* Temporary count < 128 */
+  static int    last_density = -1;       /* Last density printed */
+  static int	last_plane = -1;		/* Last color plane printed */
+  int coloritem = ((density & 1) << 3) + (plane & 7);
+  int index = color_indices[coloritem];
+  int i, j;
+
+  if (!softweave_initialized)
+    {
+#if 0
+      memset(linecounts, 0, sizeof(linecounts));
+      memset(lineoffsets, 0, sizeof(lineoffsets));
+      memset(linebufs, 0, sizeof(linebufs));
+      memset(weaveidx, 0, sizeof(linebufs));
+#endif
+      softweave_initialized = 1;
+    }
+
+ /*
+  * Don't send blank lines...
+  */
+
+  if (line)
+    {
+      if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
+	return;
+
+      /*
+       * Compress using TIFF "packbits" run-length encoding...
+       */
+
+      comp_ptr = comp_buf;
+
+      while (length > 0)
+	{
+	  /*
+	   * Get a run of non-repeated chars...
+	   */
+
+	  start  = line;
+	  line   += 2;
+	  length -= 2;
+
+	  while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
+	    {
+	      line ++;
+	      length --;
+	    }
+
+	  line   -= 2;
+	  length += 2;
+
+	  /*
+	   * Output the non-repeated sequences (max 128 at a time).
+	   */
+
+	  count = line - start;
+	  while (count > 0)
+	    {
+	      tcount = count > 128 ? 128 : count;
+
+	      comp_ptr[0] = tcount - 1;
+	      memcpy(comp_ptr + 1, start, tcount);
+
+	      comp_ptr += tcount + 1;
+	      start    += tcount;
+	      count    -= tcount;
+	    }
+
+	  if (length <= 0)
+	    break;
+
+	  /*
+	   * Find the repeated sequences...
+	   */
+
+	  start  = line;
+	  repeat = line[0];
+
+	  line ++;
+	  length --;
+
+	  while (length > 0 && *line == repeat)
+	    {
+	      line ++;
+	      length --;
+	    }
+
+	  /*
+	   * Output the repeated sequences (max 128 at a time).
+	   */
+
+	  count = line - start;
+	  while (count > 0)
+	    {
+	      tcount = count > 128 ? 128 : count;
+
+	      comp_ptr[0] = 1 - tcount;
+	      comp_ptr[1] = repeat;
+
+	      comp_ptr += 2;
+	      count    -= tcount;
+	    }
+	}
+
+      if (index >= 0)
+	{
+	  int this_bytes = comp_ptr - comp_buf;
+	  int curbin = weaveidx[index];
+	  memcpy(linebufs[index][curbin] + lineoffsets[index][curbin],
+		 comp_buf, this_bytes);
+	  lineoffsets[index][curbin] += this_bytes;
+	  linecounts[index][curbin]++;
+	  weaveidx[index]++;
+	  if (weaveidx[index] >= weavebins)
+	    weaveidx[index] = 0;
+	  if (linecounts[index][curbin] < weave ||
+	      weaveidx[index] > 0 || lastrow == 0)
+	    return;
+	}
+    }
+
+  for (i = 0; i < weavebins; i++)
+    {
+      fprintf(stderr, "weaveidx is %d/%d\n", i, weavebins);
+      for (j = 0; j < 6; j++)
+	{
+	  fprintf(stderr, "   colorplane %d (%d, %d)\n", j, colors[j],
+		  densities[j]);
+	  if (lineoffsets[j][i] == 0)
+	    continue;
+	  /*
+	   * Set the print head position.
+	   */
+
+	  /*
+	   * Set the color if necessary...
+	   */
+
+	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	  else
+	    fprintf(prn, "\033r%c", colors[j]);
+
+	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+		    (offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8);
+	  else
+	    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
+
+	  /*
+	   * Send a line of raster graphics...
+	   */
+
+	  switch (ydpi)				/* Raster graphics header */
+	    {
+	    case 180 :
+	      fwrite("\033.\001\024\024\001", 6, 1, prn);
+	      break;
+	    case 360 :
+	      fwrite("\033.\001\012\012\001", 6, 1, prn);
+	      break;
+	    case 720 :
+	      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+		fprintf(prn, "\033.%c%c%c%c", 1, 8 * 5, 5, linecounts[j][i]);
+	      else if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
+		fwrite("\033.\001\050\005\001", 6, 1, prn);
+	      else
+		fwrite("\033.\001\005\005\001", 6, 1, prn);
+	      break;
+	    }
+
+	  putc(width & 255, prn);		/* Width of raster line in pixels */
+	  putc(width >> 8, prn);
+
+	  fwrite(linebufs[j][i], lineoffsets[j][i], 1, prn);
+	  putc('\r', prn);
+
+	  lineoffsets[j][i] = 0;
+	  linecounts[j][i] = 0;
+	}
+      fprintf(stderr, "   advancing 1 line\n");
+      fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
+    }
+  for (i = 0; i < 6; i++)
+    weaveidx[i] = 0;
+  if (weave > 1)
+    {
+      int advance = 1 + (weave - 1) * weavebins;
+      int alo = advance % 256;
+      int ahi = advance / 256;
+      fprintf(stderr, "  advancing %d lines\n", advance);
+      fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
+    }
+}
+#endif
 
 /*
  * End of "$Id$".
