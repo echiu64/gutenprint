@@ -18,8 +18,14 @@ require('standard_html_header.php3');
 including a working download link.</strong>.  We've also added a
 GhostScript driver for Epson Stylus inkjet printers.</p>
 
-<P><strong><em><font color="#ff0000">New as of July 11,
-2000!</font></em></strong> Version 3.1.8 is now released.</p>
+<P><strong><em><font color="#ff0000">New as of August 9,
+2000!</font></em></strong> Version 4.0a1 is now released.  This is the
+first alpha release of 4.0 (formerly called 3.2), following the 3.1
+development cycle.  This version contains a GhostScript driver equal
+to the Print plugin in all respects, including supported printers.
+<strong>Please read the Ghost/README file very carefully if you use
+the Ghostscript driver, as the usage is completely different from
+before!</p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
@@ -41,7 +47,7 @@ user more control over the output.</p>
 
 <p>After stabilizing version 3.0 in preparation for releasing The Gimp
 version 1.2, we started work on version 3.1.  This developers' version
-will form the basis for version 3.2, which will be the next stable
+will form the basis for version 4.0, which will be the next stable
 release.<p>
 
 <?require('standard_html_footer.php3');?>
