@@ -67,7 +67,6 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include "../../lib/libprintut.h"
-#include "gimp-print-cups.h"
 
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */

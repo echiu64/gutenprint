@@ -85,8 +85,6 @@
 #ifndef CUPS_PPD_PS_LEVEL
 #  define CUPS_PPD_PS_LEVEL 3
 #endif
-#include "gimp-print-cups.h"
-
 
 /*
  * File handling stuff...
@@ -323,7 +321,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
  */
 
   stp_init();
-  initialize_stp_options();
 
  /*
   * Set the language...

@@ -688,10 +688,10 @@ typedef struct
 
 static const stpi_xml_prop_t stpi_xml_props[] =
 {
-  { "black", "Black" },
-  { "cyan", "Cyan" },
-  { "yellow", "Yellow" },
-  { "magenta", "Magenta" },
+  { "black", "BlackGamma" },
+  { "cyan", "CyanGamma" },
+  { "yellow", "YellowGamma" },
+  { "magenta", "MagentaGamma" },
   { "brightness", "Brightness" },
   { "gamma", "Gamma" },
   { "density", "Density" },
