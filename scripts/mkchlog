@@ -73,7 +73,7 @@ sub compare_versions
 
     my ($vw, $vl) = @_;
     if ($vw eq "") {
-	return 1;
+	return 2;
     }
     my (@vvw) = split /\./, $vw;
     my (@vvl) = split /\./, $vl;
@@ -107,7 +107,18 @@ while (<>) {
 	next;
     } elsif (/^revision /) {
 	($ignore, $revision) = split;
-	$skipme = ! &compare_versions($fileversions{$currentfile}, $revision);
+	my ($check) =&compare_versions($fileversions{$currentfile}, $revision);
+	#
+	# Special case -- if a file is not in the current sandbox, but is
+	# at top level, log it; otherwise if it is not in the current
+	# sandbox, don't log it.
+	# 
+	if (($check == 2 && !($currentfile =~ /\//)) ||
+	    $check == 1) {
+	    $skipme = 0;
+	} else {
+	    $skipme = 1;
+	}
     } elsif (/^date: /) {
 	($ignore, $date, $time, $ignore, $author, $ignore, $ignore,
 	 $ignore, $plus, $minus, $ignore) = split;
