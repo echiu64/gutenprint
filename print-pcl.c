@@ -36,6 +36,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.34  2000/02/28 18:37:31  davehill
+ *   Fixed the "configure data" command again!
+ *
  *   Revision 1.33  2000/02/26 00:14:44  rlk
  *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
  *
@@ -937,7 +940,8 @@ pcl_print(int       model,		/* I - Model */
                 image_bpp;
   void *	dither;
   pcl_cap_t	caps;		/* Printer capabilities */
-  int		do_cret;	/* 300 DPI CRet printing */
+  int		do_cret,	/* 300 DPI CRet printing */
+		planes;		/* # of outut planes */
   int           tempwidth,	/* From default_media_size() */
                 templength,	/* From default_media_size() */
                 pcl_media_size; /* PCL media size code */
@@ -1229,92 +1233,57 @@ pcl_print(int       model,		/* I - Model */
     }
   }
 
-  if (xdpi != ydpi)				/* Set resolution for 600 series */
+  if ((xdpi != ydpi) || (do_cret == 1))		/* Set resolution for 600 series */
   {
+
    /*
-    * Send 26-byte configure image data command with horizontal and
+    * Send configure image data command with horizontal and
     * vertical resolutions as well as a color count...
     */
 
-    fputs("\033*g26W", prn);
-    putc(2, prn);				/* Format 2 */
     if (output_type != OUTPUT_GRAY)
       if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
-        putc(3, prn);				/* # output planes */
+        planes = 3;
       else
-        putc(4, prn);				/* # output planes */
+        planes = 4;
     else
-      putc(1, prn);				/* # output planes */
+      planes = 1;
 
-    putc(xdpi >> 8, prn);			/* Black resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(2, prn);				/* # of black levels */
-
-    putc(xdpi >> 8, prn);			/* Cyan resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(2, prn);				/* # of cyan levels */
-
-    putc(xdpi >> 8, prn);			/* Magenta resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(2, prn);				/* # of magenta levels */
-
-    putc(xdpi >> 8, prn);			/* Yellow resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(2, prn);				/* # of yellow levels */
-  }
-  else if (do_cret)				/* 300 DPI CRet */
-  {
-   /*
-    * Send 26-byte configure image data command with horizontal and
-    * vertical resolutions as well as a color count...
-    */
-
-    fputs("\033*g26W", prn);
+    fprintf(prn, "\033*g%dW", 2 + (planes * 6));
     putc(2, prn);				/* Format 2 */
-    if (output_type != OUTPUT_GRAY)
-      putc(4, prn);				/* # output planes */
-    else
-      putc(1, prn);				/* # output planes */
+    putc(planes, prn);				/* # output planes */
 
-    putc(xdpi >> 8, prn);			/* Black resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(4, prn);				/* # of black levels */
+    if (planes != 3) {
+      putc(xdpi >> 8, prn);			/* Black resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
+    }
 
-    putc(xdpi >> 8, prn);			/* Cyan resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(4, prn);				/* # of cyan levels */
+    if (planes != 1) {
+      putc(xdpi >> 8, prn);			/* Cyan resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
 
-    putc(xdpi >> 8, prn);			/* Magenta resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(4, prn);				/* # of magenta levels */
+      putc(xdpi >> 8, prn);			/* Magenta resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
 
-    putc(xdpi >> 8, prn);			/* Yellow resolution */
-    putc(xdpi, prn);
-    putc(ydpi >> 8, prn);
-    putc(ydpi, prn);
-    putc(0, prn);
-    putc(4, prn);				/* # of yellow levels */
+      putc(xdpi >> 8, prn);			/* Yellow resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
+    }
   }
   else
   {
