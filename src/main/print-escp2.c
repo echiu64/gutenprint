@@ -551,8 +551,7 @@ static const escp2_variable_ink_t standard_multishot_pigment_ink =
 
 static stp_simple_dither_range_t standard_6pl_pigment_dither_ranges[] =
 {
-  { 0.350, 0x1, 1, 1 },
-  { 0.500, 0x2, 1, 2 },
+  { 0.300, 0x1, 1, 1 },
   { 1.0,   0x3, 1, 3 }
 };
 
