@@ -2,6 +2,14 @@
 @chapter Programs
 @cindex programs
 
+This chapter of the manual describes the use of some of the programs
+which use the GIMP-Print library (libgimpprint).  Note that there is now
+a user manual in DocBook/SGML format, currently provided in HTML,
+PostScript and PDF formats which is distributed with GIMP-Print.  This
+manual currently covers the use of the GIMP Print plugin and CUPS
+drivers.
+
+
 @menu
 * The GIMP plugin::             The print plugin for the GIMP
 * Ghostscript::                 Printer driver

@@ -168,13 +168,13 @@ ppd-stamp: genppd
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) prefix=$${wdir}/catalog install
-	-rm -rf ppd
+	-$(RM) -r ppd
 	-mkdir ppd
 	for language in C $(ALL_LINGUAS) ; do \
 	  mkdir ppd/$$language ; \
 	  ./genppd --prefix=ppd/$$language --language=$$language --catalog=`pwd`/catalog/share/locale ; \
 	done
-	rm -rf catalog
+	$(RM) -r catalog
 	touch ppd-stamp
 
 $(LIBGIMPPRINT_LIBS):
@@ -194,7 +194,7 @@ dist-hook:
 	done
 
 clean-local:
-	-rm -rf ppd
+	-$(RM) -r ppd
 
 
 ## Clean

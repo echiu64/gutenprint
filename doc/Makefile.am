@@ -39,6 +39,12 @@ IMAGES = \
    
 EPS_IMAGES = $(addsuffix .eps,$(basename $(IMAGES)))
 
+if MAINTAINER_MODE
+MAINT_MODE = true
+else
+MAINT_MODE = false
+endif
+
 
 ## Data
 
@@ -55,7 +61,7 @@ all-local: html
 	  if test "$(srcdir)" = "." ; then \
 	    echo "all-local: Not removing manual-html" ; \
 	  else \
-	    rm -rf manual-html ; \
+	    $(RM) -r manual-html ; \
 	    $(LN_S) $(srcdir)/manual-html manual-html ; \
 	  fi \
 	else \
@@ -82,7 +88,7 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	  echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
 	else \
 	  stat=1; \
-	  rm -rf manual-html-tmp ; \
+	  $(RM) -r manual-html-tmp ; \
 	  mkdir manual-html-tmp ; \
 	  cd manual-html-tmp ; \
 	  if test $(srcdir) = '.' ; then \
@@ -96,7 +102,7 @@ html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS
 	    stat=$$? ; stat=`expr 1 - $$stat` ; \
 	fi ; \
 	exit $$stat
-	rm -rf manual-html ; \
+	$(RM) -r manual-html ; \
 	mv manual-html-tmp manual-html ; \
 	touch html-stamp
 
@@ -126,16 +132,18 @@ dist-hook: html
 	  fi \
 	done
 
+CLEAN_MANUALS = $(RM) -r html-stamp manual-html
+
 clean-local:
-	if test $(srcdir) = "." ; then \
+	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
 	  echo "clean-local: Not removing manual-html" ; \
 	else \
-	  rm -rf html-stamp manual-html ; \
+	  $(CLEAN_MANUALS) ; \
 	fi
-	rm -rf manual-html-tmp
+	$(RM) -r manual-html-tmp
 
 maintainer-clean-local:
-	rm -rf manual-html
+	$(CLEAN_MANUALS)
 
 
 ## Clean
@@ -146,4 +154,4 @@ MAINTAINERCLEANFILES = Makefile.in html-stamp
 
 EXTRA_DIST = $(DOCS) $(IMAGES) html-stamp
 
-.PHONY: html ps pdf docs
+.PHONY: html ps pdf docs clean-manuals

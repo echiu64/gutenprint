@@ -60,7 +60,7 @@ ChangeLog:
 	    mv ChangeLog.tmp ChangeLog ; \
 	  else \
 	    echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
-	    rm ChangeLog.tmp ; \
+	    $(RM) ChangeLog.tmp ; \
 	    exit 1 ; \
 	  fi \
 	elif test -s ChangeLog ; then \
@@ -93,11 +93,11 @@ dist-hook:
 # Do some extra magic to make a distribution for GIMP CVS
 	status=0 ; \
 	if test -f .gimp-dist ; then \
-	  rm -rf $(distdir)/src/cups $(distdir)/src/foomatic $(distdir)/src/ghost ; \
-	  rm -rf $(distdir)/debian $(distdir)/scripts/* $(distdir)/test ; \
-	  rm -rf $(distdir)/intl $(distdir)/po/Makefile.in.in $(distdir)/po/*.gmo ; \
-	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/cups-gimpprint.list.in $(distdir)/stamp-h.in ; \
-	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
+	  $(RM) -r $(distdir)/src/cups $(distdir)/src/foomatic $(distdir)/src/ghost ; \
+	  $(RM) -r $(distdir)/debian $(distdir)/scripts/* $(distdir)/test ; \
+	  $(RM) -r $(distdir)/intl $(distdir)/po/Makefile.in.in $(distdir)/po/*.gmo ; \
+	  $(RM) -r $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/cups-gimpprint.list.in $(distdir)/stamp-h.in ; \
+	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty $(RM) ; \
 	  cd $(distdir) ; \
 	  $(PERL) ../scripts/patch-gimp configure.in ; \
 	  $(PERL) ../scripts/patch-gimp Makefile.am ; \
@@ -105,7 +105,7 @@ dist-hook:
 	  $(PERL) ../scripts/patch-gimp po/POTFILES.in ; \
 	  status=$$? ; \
 	  cd .. ; \
-	  rm -f .gimp-dist ; \
+	  $(RM) .gimp-dist ; \
 	fi ; \
 	exit $$status
 
@@ -148,7 +148,7 @@ snapshot:
 DEBUILD_OPTIONS = -us -uc
 deb: debian/changelog debian/control debian/rules
 	$(MAKE) dist 
-	-rm -rf debian-build
+	-$(RM) -r debian-build
 	-mkdir debian-build
 	cd debian-build ; \
 	mv ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
@@ -156,7 +156,7 @@ deb: debian/changelog debian/control debian/rules
 	cd $(PACKAGE)-$(VERSION) ; \
 	debuild $(DEBUILD_OPTIONS) ; \
 	cd .. ; \
-	rm -r $(PACKAGE)-$(VERSION)
+	$(RM) -r $(PACKAGE)-$(VERSION)
 
 debian/control:
 	debian/rules debian/control

@@ -78,12 +78,12 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	fi
 
 clean-local:
-	-rm -rf foomatic-db
+	-$(RM) -r foomatic-db
 
 foomatic-data: foomatic-stamp
 
 foomatic-stamp: foomatic-generator $(EXTRA_PROGRAMS)
-	-rm -rf foomatic-db
+	-$(RM) -r foomatic-db
 	./foomatic-generator
 	touch foomatic-stamp
 
