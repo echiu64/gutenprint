@@ -661,7 +661,14 @@ list_devices(void)
     if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct canon:%s \"CANON\" \"Parallel Port #%d\"\n", device, i + 1);
+      printf("direct canon:%s \"CANON\" \"Parallel Port #%d (interrupt-driven)\"\n", device, i + 1);
+    }
+
+    sprintf(device, "/dev/lpa%d", i);
+    if ((fd = open(device, O_RDWR)) >= 0)
+    {
+      close(fd);
+      printf("direct canon:%s \"CANON\" \"Parallel Port #%d (polled)\"\n", device, i + 1);
     }
   }
 
