@@ -153,7 +153,7 @@ static const pcl_t pcl_media_types[] =
     { "Plain", N_ ("Plain"), PCL_PAPERTYPE_PLAIN},
     { "Bond", N_ ("Bond"), PCL_PAPERTYPE_BOND},
     { "Premium", N_ ("Premium"), PCL_PAPERTYPE_PREMIUM},
-    { "Glossy", N_ ("Glossy/Photo"), PCL_PAPERTYPE_GLOSSY},
+    { "Glossy", N_ ("Glossy Photo"), PCL_PAPERTYPE_GLOSSY},
     { "Transparency", N_ ("Transparency"), PCL_PAPERTYPE_TRANS},
     { "GlossyQD", N_ ("Quick-dry Photo"), PCL_PAPERTYPE_QPHOTO},
     { "TransparencyQD", N_ ("Quick-dry Transparency"), PCL_PAPERTYPE_QTRANS},
@@ -255,8 +255,10 @@ pcl_describe_resolution(const stp_printer_t printer,
 
 typedef struct {
   int model;
-  int max_width;
-  int max_height;
+  int custom_max_width;
+  int custom_max_height;
+  int custom_min_width;
+  int custom_min_height;
   int resolutions;
   int top_margin;
   int bottom_margin;
@@ -306,6 +308,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Default/unknown printer - assume laserjet */
   { 0,
     17 * 72 / 2, 14 * 72,		/* Max paper size */
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
     12, 12, 18, 18,			/* Margins */
     PCL_COLOR_NONE,
@@ -326,6 +329,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* DesignJet 750C */
   { 750,
     36 * 72, 100 * 12 * 72, /* Length limited to 51" in sheet mode */
+    5 * 72, 583 * 72 / 100,		/* Min paper size */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     30, 30, 15, 15,
     PCL_COLOR_CMYK,
@@ -350,6 +354,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 340 */
   { 340,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 41, 18, 18,
     PCL_COLOR_CMY,
@@ -380,6 +385,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 400 */
   { 400,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 41, 18, 18,
     PCL_COLOR_CMY,
@@ -406,6 +412,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 500, 520 */
   { 500,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 41, 18, 18,
     PCL_COLOR_NONE,
@@ -437,6 +444,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 500C */
   { 501,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 33, 18, 18,
     PCL_COLOR_CMY,
@@ -466,6 +474,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 540C */
   { 540,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 33, 18, 18,
     PCL_COLOR_CMY,
@@ -505,6 +514,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 550C, 560C */
   { 550,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     3, 33, 18, 18,
     PCL_COLOR_CMYK,
@@ -536,6 +546,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 600/600C */
   { 600,
     17 * 72 / 2, 14 * 72,
+    5 * 72, 583 * 72 / 100,		/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
     PCL_COLOR_CMY,
@@ -571,6 +582,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 6xx series, plus 810/812/842/895 */
   { 601,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
     PCL_COLOR_CMYK,
@@ -607,6 +619,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 69x series (Photo Capable) */
   { 690,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600,
     0, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYKcm,
@@ -643,6 +656,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 850/855/870/890 (C-RET) */
   { 800,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
@@ -679,6 +693,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 840 (C-RET) */
   { 840,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600,
     0, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4b,
@@ -715,6 +730,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 900 series, 1220C, PhotoSmart P1000/P1100 */
   { 900,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 /* | PCL_RES_1200_600 | PCL_RES_2400_600 */,
     3, 33, 18, 18,
     PCL_COLOR_CMYK,
@@ -750,6 +766,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 1220C (or other large format 900) */
   { 901,
     13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 /* | PCL_RES_1200_600 | PCL_RES_2400_600 */,
     3, 33, 18, 18,
     PCL_COLOR_CMYK,
@@ -799,6 +816,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 1100C, 1120C */
   { 1100,
     13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
@@ -847,6 +865,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 1200C */
   { 1200,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_CMY,
@@ -882,6 +901,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 1600C */
   { 1600,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
@@ -917,6 +937,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 2000 */
   { 2000,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
@@ -959,6 +980,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* Deskjet 2500 */
   { 2500,
     13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_CMYK,
@@ -1006,6 +1028,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet II series */
   { 2,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1038,6 +1061,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet III series */
   { 3,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1070,6 +1094,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet 4L */
   { 4,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1102,6 +1127,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet 4V, 4Si, 5Si */
   { 5,
     13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1141,6 +1167,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet 4 series (except as above), 5 series, 6 series */
   { 6,
     17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1173,6 +1200,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* LaserJet 5Si */
   { 7,
     13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     12, 12, 18, 18,
     PCL_COLOR_NONE,
@@ -1538,6 +1566,71 @@ static stp_param_t ink_types[] =
 
 
 /*
+ * 'pcl_papersize_valid()' - Is the paper size valid for this printer.
+ */
+
+static const int
+pcl_papersize_valid(const stp_papersize_t pt,
+		    int model)
+{
+
+  const pcl_cap_t *caps = pcl_get_model_capabilities(model);
+
+#ifdef PCL_NO_CUSTOM_PAPERSIZES
+  int use_custom = 0;
+#else
+  int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
+                     == PCL_PRINTER_CUSTOM_SIZE);
+#endif
+
+  unsigned int pwidth = stp_papersize_get_width(pt);
+  unsigned int pheight = stp_papersize_get_height(pt);
+
+/*
+ * This function decides whether a paper size is allowed for the
+ * current printer. The DeskJet feed mechanisms set a minimum and
+ * maximum size for the paper, BUT some of the directly supported
+ * media sizes are less than this minimum (eg card and envelopes)
+ * So, we allow supported sizes though, but clamp custom sizes
+ * to the min and max sizes.
+ */
+
+/*
+ * Is it a valid name?
+ */
+
+  if (strlen(stp_papersize_get_name(pt)) <= 0)
+    return(0);
+
+/*
+ * Is it a recognised supported name?
+ */
+
+  if (pcl_convert_media_size(stp_papersize_get_name(pt), model) != -1)
+    return(1);
+
+/*
+ * If we are not allowed to use custom paper sizes, we are done
+ */
+
+  if (use_custom == 0)
+    return(0);
+
+/*
+ * We are allowed custom paper sizes. Check that the size is within
+ * limits.
+ */
+
+  if (pwidth <= caps->custom_max_width &&
+     pheight <= caps->custom_max_height &&
+     (pheight >=  caps->custom_min_height || pheight == 0) &&
+     (pwidth >= caps->custom_min_width || pwidth == 0))
+    return(1);
+
+  return(0);
+}
+
+/*
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
@@ -1560,10 +1653,13 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
   if (name == NULL)
     return (NULL);
 
+  stp_deprintf(STP_DBG_PCL, "pcl_parameters(): Name = %s\n", name);
+
   caps = pcl_get_model_capabilities(model);
 
   stp_deprintf(STP_DBG_PCL, "Printer model = %d\n", model);
-  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
+  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->custom_max_width, caps->custom_max_height);
+  stp_deprintf(STP_DBG_PCL, "MinPageWidth = %d, MinPageHeight = %d\n", caps->custom_min_width, caps->custom_min_height);
   stp_deprintf(STP_DBG_PCL, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
     caps->top_margin, caps->bottom_margin, caps->left_margin, caps->right_margin);
   stp_deprintf(STP_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
@@ -1571,31 +1667,20 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
     {
-      unsigned height_limit = caps->max_height;
-      unsigned width_limit = caps->max_width;
       int papersizes = stp_known_papersizes();
-#ifdef PCL_NO_CUSTOM_PAPERSIZES
-      int use_custom = 0;
-#else
-      int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
-                         == PCL_PRINTER_CUSTOM_SIZE);
-#endif
       valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
       *count = 0;
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
-	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      stp_papersize_get_width(pt) <= width_limit &&
-	      stp_papersize_get_height(pt) <= height_limit &&
-              ((use_custom == 1) ||
-	       ((use_custom == 0) &&
-		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
-		 != -1))))
+	  if (strlen(stp_papersize_get_name(pt)) > 0)
 	    {
-	      valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
-	      valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
-	      (*count)++;
+	      if (pcl_papersize_valid(pt, model))
+		{
+		  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
+		  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
+		  (*count)++;
+		}
 	    }
 	}
       return (valptrs);
@@ -1696,10 +1781,13 @@ pcl_default_parameters(const stp_printer_t printer,
   if (name == NULL)
     return (NULL);
 
+  stp_deprintf(STP_DBG_PCL, "pcl_default_parameters(): Name = %s\n", name);
+
   caps = pcl_get_model_capabilities(model);
 
   stp_deprintf(STP_DBG_PCL, "Printer model = %d\n", model);
-  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->max_width, caps->max_height);
+  stp_deprintf(STP_DBG_PCL, "PageWidth = %d, PageHeight = %d\n", caps->custom_max_width, caps->custom_max_height);
+  stp_deprintf(STP_DBG_PCL, "MinPageWidth = %d, MinPageHeight = %d\n", caps->custom_min_width, caps->custom_min_height);
   stp_deprintf(STP_DBG_PCL, "Margins: top = %d, bottom = %d, left = %d, right = %d\n",
 	  caps->top_margin, caps->bottom_margin, caps->left_margin, caps->right_margin);
   stp_deprintf(STP_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
@@ -1707,25 +1795,12 @@ pcl_default_parameters(const stp_printer_t printer,
 
   if (strcmp(name, "PageSize") == 0)
     {
-      unsigned height_limit = caps->max_height;
-      unsigned width_limit = caps->max_width;
       int papersizes = stp_known_papersizes();
-#ifdef PCL_NO_CUSTOM_PAPERSIZES
-      int use_custom = 0;
-#else
-      int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
-			== PCL_PRINTER_CUSTOM_SIZE);
-#endif
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      stp_papersize_get_width(pt) <= width_limit &&
-	      stp_papersize_get_height(pt) <= height_limit &&
-              ((use_custom == 1) ||
-	       ((use_custom == 0) &&
-		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
-		 != -1))))
+	      pcl_papersize_valid(pt, model))
 	    {
 	      return (stp_papersize_get_name(pt));
 	    }
@@ -1832,10 +1907,10 @@ pcl_limit(const stp_printer_t printer,	/* I - Printer model */
 	  int *min_height)
 {
   const pcl_cap_t *caps= pcl_get_model_capabilities(stp_printer_get_model(printer));
-  *width =	caps->max_width;
-  *height =	caps->max_height;
-  *min_width = 1;
-  *min_height = 1;
+  *width =	caps->custom_max_width;
+  *height =	caps->custom_max_height;
+  *min_width =	caps->custom_min_width;
+  *min_height =	caps->custom_min_height;
 }
 
 /*

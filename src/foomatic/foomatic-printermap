@@ -84,6 +84,7 @@
 #gptofoo escp2-9500 printer/Epson-Stylus_Pro_9500
 #gptofoo escp2-10000 printer/Epson-Stylus_Pro_10000
 #gptofoo escp2-scan2000 printer/Epson-Stylus_Scan_2000
+#gptofoo escp2-scan2500 printer/516274
 #gptofoo pcl-340 printer/153056
 #gptofoo pcl-400 printer/63040
 #gptofoo pcl-500 printer/58363

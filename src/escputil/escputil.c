@@ -256,6 +256,7 @@ stp_printer_t printer_list[] =
   { "9500",	"Stylus Pro 9500",	1,	7,	0,	0,	0 },
   { "10000",	"Stylus Pro 10000",	3,	15,	0,	0,	0 },
   { "scan2000",	"Stylus Scan 2000",	3,	15,	0,	0,	0 },  
+  { "scan2500",	"Stylus Scan 2500",	3,	15,	0,	0,	0 },  
   { NULL,	NULL,			0,	0,	0,	0,	0 },
 };
 
