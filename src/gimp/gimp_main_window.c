@@ -39,6 +39,10 @@
  */
 #define PREVIEW_SIZE_VERT  400
 #define PREVIEW_SIZE_HORIZ 300
+#define MOVE_CONSTRAIN	   0
+#define MOVE_HORIZONTAL	   1
+#define MOVE_VERTICAL      2
+#define MOVE_ANY           (MOVE_HORIZONTAL | MOVE_VERTICAL)
 
 /*
  *  Main window widgets
@@ -113,6 +117,7 @@ static gint	       old_left;	/* Previous position */
 static gint	       buttons_pressed = 0;
 static gint	       preview_active = 0;
 static gint	       buttons_mask = 0;
+static gint	       move_constraint = 0;
 static gint            mouse_button = -1;	/* Button being dragged with */
 static gint	       suppress_preview_reset = 0;
 
@@ -2507,6 +2512,10 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
 	  preview_active = 1;
+	  if (event->state & GDK_SHIFT_MASK)
+	    move_constraint = MOVE_CONSTRAIN;
+	  else
+	    move_constraint = MOVE_ANY;
 	}
       else if (preview_active == 1)
 	{
@@ -2555,57 +2564,74 @@ gimp_preview_motion_callback (GtkWidget      *widget,
       stp_set_left(*pv, 72 * (printable_width - print_width) / 20);
       stp_set_top(*pv, 72 * (printable_height - print_height) / 20);
     }
+  if (move_constraint == MOVE_CONSTRAIN)
+    {
+      int dx = abs(event->x - mouse_x);
+      int dy = abs(event->y - mouse_y);
+      if (dx > dy && dx > 3)
+	move_constraint = MOVE_HORIZONTAL;
+      else if (dy > dx && dy > 3)
+	move_constraint = MOVE_VERTICAL;
+      else
+	return;
+    }
 
   if (mouse_button == 2)
     {
       int changes = 0;
-      int x_threshold = MAX (1, (preview_ppi * print_width) / 72);
       int y_threshold = MAX (1, (preview_ppi * print_height) / 72);
 
-      while (event->x - mouse_x >= x_threshold)
+      if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  if (left + stp_get_left(*pv) + (print_width * 2) <= right)
+	  int x_threshold = MAX (1, (preview_ppi * print_width) / 72);
+	  while (event->x - mouse_x >= x_threshold)
 	    {
-	      stp_set_left(*pv, stp_get_left(*pv) + print_width);
-	      mouse_x += x_threshold;
-	      changes = 1;
+	      if (left + stp_get_left(*pv) + (print_width * 2) <= right)
+		{
+		  stp_set_left(*pv, stp_get_left(*pv) + print_width);
+		  mouse_x += x_threshold;
+		  changes = 1;
+		}
+	      else
+		break;
 	    }
-	  else
-	    break;
-	}
-      while (mouse_x - event->x >= x_threshold)
-	{
-	  if (stp_get_left(*pv) >= print_width)
+	  while (mouse_x - event->x >= x_threshold)
 	    {
-	      stp_set_left(*pv, stp_get_left(*pv) - print_width);
-	      mouse_x -= x_threshold;
-	      changes = 1;
+	      if (stp_get_left(*pv) >= print_width)
+		{
+		  stp_set_left(*pv, stp_get_left(*pv) - print_width);
+		  mouse_x -= x_threshold;
+		  changes = 1;
+		}
+	      else
+		break;
 	    }
-	  else
-	    break;
 	}
 
-      while (event->y - mouse_y >= y_threshold)
+      if (move_constraint & MOVE_VERTICAL)
 	{
-	  if (top + stp_get_top(*pv) + (print_height * 2) <= bottom)
+	  while (event->y - mouse_y >= y_threshold)
 	    {
-	      stp_set_top(*pv, stp_get_top(*pv) + print_height);
-	      mouse_y += y_threshold;
-	      changes = 1;
+	      if (top + stp_get_top(*pv) + (print_height * 2) <= bottom)
+		{
+		  stp_set_top(*pv, stp_get_top(*pv) + print_height);
+		  mouse_y += y_threshold;
+		  changes = 1;
+		}
+	      else
+		break;
 	    }
-	  else
-	    break;
-	}
-      while (mouse_y - event->y >= y_threshold)
-	{
-	  if (stp_get_top(*pv) >= print_height)
+	  while (mouse_y - event->y >= y_threshold)
 	    {
-	      stp_set_top(*pv, stp_get_top(*pv) - print_height);
-	      mouse_y -= y_threshold;
-	      changes = 1;
+	      if (stp_get_top(*pv) >= print_height)
+		{
+		  stp_set_top(*pv, stp_get_top(*pv) - print_height);
+		  mouse_y -= y_threshold;
+		  changes = 1;
+		}
+	      else
+		break;
 	    }
-	  else
-	    break;
 	}
       if (!changes)
 	return;
@@ -2619,13 +2645,17 @@ gimp_preview_motion_callback (GtkWidget      *widget,
       int changes = 0;
       if (mouse_button == 1)
 	{
-	  new_top += 72 * (event->y - mouse_y) / preview_ppi;
-	  new_left += 72 * (event->x - mouse_x) / preview_ppi;
+	  if (move_constraint & MOVE_VERTICAL)
+	    new_top += 72 * (event->y - mouse_y) / preview_ppi;
+	  if (move_constraint & MOVE_HORIZONTAL)
+	    new_left += 72 * (event->x - mouse_x) / preview_ppi;
 	}
       else
 	{
-	  new_top += event->y - mouse_y;
-	  new_left += event->x - mouse_x;
+	  if (move_constraint & MOVE_VERTICAL)
+	    new_top += event->y - mouse_y;
+	  if (move_constraint & MOVE_HORIZONTAL)
+	    new_left += event->x - mouse_x;
 	}
       if (new_top < 0)
 	new_top = 0;
