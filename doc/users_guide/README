@@ -5,7 +5,7 @@ to build "The User's Guide to the Gimp-Print Top Quality Printer Drivers".
 Type:  make pdf   - to build the PDF documentation file
        make ps    - to build the Postscript documentation file
        make html  - to build the HTML documentation files
-
+       make docs  - to build all of the documentation files
 
 This is what will be generated:
 
@@ -37,7 +37,7 @@ All of the HTML files are contained in the "html" subdirectory.
 Your constructive feedback is most welcome.
 
 Andy Stewart
-3-oct-2001
+6-oct-2001
 
 
 

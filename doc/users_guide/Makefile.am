@@ -27,7 +27,7 @@ MAINT_CHARSET = latin1
 ## Variables
 
 MANUAL = users_guide
-HTMLDIR = $(MANUAL)
+HTMLDIR = html
 
 OUTPUTS = \
  $(MANUAL).pdf \
@@ -137,31 +137,16 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	    cp -p $$image $(MANUAL)/figures ; \
 	  done ; \
 	fi ; \
-	if test ! $(HTMLDIR) = $(MANUAL) ; then \
-	  mv $(MANUAL) $(HTMLDIR) ; \
-	fi ; \
+	mv $(MANUAL) $(HTMLDIR) ; \
 	chmod a+rx $(HTMLDIR); \
 	touch html-stamp
-
-# Symlink to distributed html manual, if possible
-all-local: $(STANDARD_TARGETS)
-	if test -d $(srcdir)/$(HTMLDIR) ; then \
-	  if test "$(srcdir)" = "." ; then \
-	    echo "all-local: Not removing $(HTMLDIR)" ; \
-	  else \
-	    $(RM) $(HTMLDIR) ; \
-	    $(LN_S) $(srcdir)/$(HTMLDIR) $(HTMLDIR) ; \
-	  fi ; \
-	  else \
-	    echo "all-local: $(srcdir)/$(HTMLDIR) not found" ; \
-	fi
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
 	  $(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/figures ; \
 	  $(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/stylesheet-images ; \
 	  $(INSTALL_DATA) $(MANUAL).pdf $(datadir)/$(PACKAGE)/doc ; \
-	  cd users_guide ; \
+	  cd $(HTMLDIR) ; \
 	  for file in *.html *.css ; do \
 	    $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc ; \
 	  done ; \
@@ -223,7 +208,7 @@ maintainer-clean-local:
 help:
 	@echo "  "
 	@echo "Supported targets in this Makefile:"
-	@echo "    doc     - creates PS, PDF, and HTML documentation files"
+	@echo "    docs    - creates PS, PDF, and HTML documentation files"
 	@echo "    ps      - creates PostScript documentation"
 	@echo "    pdf     - creates PDF documentation"
 	@echo "    html    - creates HTML documentation"
@@ -236,6 +221,6 @@ help:
 
 CLEANFILES = $(EPS_IMAGES) $(PDF_IMAGES)
 
-MAINTAINERCLEANFILES = Makefile.in html-stamp
+MAINTAINERCLEANFILES = Makefile Makefile.in html-stamp
 
 EXTRA_DIST = README $(MANUAL).sgml

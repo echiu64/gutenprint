@@ -102,8 +102,8 @@ test "$jade_err" -eq 0 && {
 
   test "$jade_err" -eq 1 && {
     echo " "
-    echo "***Warning***: You must have \"Jade\" version 1.2.1 or newer installed to"
-    echo "build the Gimp-Print user's guide."
+    echo "***Warning***: You must have \"Jade\" version 1.2.1 or"
+    echo "newer installed to build the Gimp-Print user's guide."
     echo "Get ftp://ftp.jclark.com/pub/jade/jade-1.2.1.tar.gz"
     echo "(or a newer version if available)"
     echo " "
@@ -123,8 +123,8 @@ test -z "$(type -p dvips)" && {
 
 test -z "$(type -p jadetex)" && {
   echo " "
-  echo "***Warning***: You must have \"jadetex\" version 3.5 or newer installed to"
-  echo "build the Gimp-Print user's guide."
+  echo "***Warning***: You must have \"jadetex\" version 3.5 or"
+  echo "newer installed to build the Gimp-Print user's guide."
   echo "Get ftp://prdownloads.sourceforge.net/jadetex/jadetex-3.5.tar.gz"
   echo "(or a newer version if available)"
   echo " "
@@ -149,17 +149,13 @@ test "$openjade_err" -eq 0 && {
   openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
   openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}'`
 
-#  echo $openjade_version
-#  echo $openjade_version_major
-#  echo $openjade_version_minor
-
   test "$openjade_version_major" -ge 1 || openjade_err=1
   test "$openjade_version_minor" -ge 3 || openjade_err=1
 
   test "$openjade_err" -eq 1 && {
     echo " "
-    echo "***Warning***: You must have \"OpenJade\" version 1.3 or newer installed to"
-    echo "build the Gimp-Print user's guide."
+    echo "***Warning***: You must have \"OpenJade\" version 1.3 or"
+    echo "newer installed to build the Gimp-Print user's guide."
     echo "Get http://download.sourceforge.net/openjade/openjade-1.3.tar.gz"
     echo "(or a newer version if available)"
     echo " "
@@ -172,7 +168,7 @@ test -z "$(type -p ps2pdf)" && {
   echo " "
   echo "***Warning***: You must have \"ps2pdf\" installed to"
   echo "build the Gimp-Print user's guide."
-  echo "ps2pdf comes from the GNU Ghostscript software package."
+  echo "\"ps2pdf\" comes from the GNU Ghostscript software package."
   echo "Get ftp://ftp.gnu.org/gnu/ghostscript/ghostscript-6.5.1.tar.gz"
   echo "(or a newer version if available)"
   echo " "
@@ -221,6 +217,26 @@ test "$sgmltools_err" -eq 0 && {
     echo "(or a newer version if available)"
     echo " "
   }
+}
+
+# Check for convert
+
+test -z "$(type -p convert)" && {
+  echo " "
+  echo "***Warning***: You must have \"convert\" installed to"
+  echo "build the Gimp-Print user's guide."
+  echo "\"convert\" comes from the ImageMagick software package."
+  echo "Go to http://sourceforge.imagemagick.net/http and get"
+  echo "the file ImageMagick-5.3.1.tar.gz"
+  echo "(or a newer version if available)"
+  echo " "
+}
+
+test -d "/usr/share/sgml/docbook_4" || {
+  echo " "
+  echo "***Warning***: You must have "Docbook v4" installed to"
+  echo "build the Gimp-Print user's guide."
+  echo " "
 }
 
 if test "$DIE" -eq 1; then
