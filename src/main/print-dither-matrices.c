@@ -452,14 +452,13 @@ typedef struct
   int x;
   int y;
   const char *filename;
+  stp_const_array_t dither_array;
 } stpi_xml_dither_cache_t;
 
-static const char *
+static stpi_xml_dither_cache_t *
 stpi_xml_dither_cache_get(int x, int y)
 {
   stpi_list_item_t *ln;
-
-  stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
@@ -475,15 +474,12 @@ stpi_xml_dither_cache_get(int x, int y)
 	  if (stpi_debug_level & STPI_DBG_XML)
 	    stpi_erprintf("found\n");
 
-	  stpi_xml_exit();
-	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->filename;
+	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln));
 	}
       ln = stpi_list_item_next(ln);
     }
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("missing\n");
-
-  stpi_xml_exit();
 
   return NULL;
 }
@@ -508,6 +504,7 @@ stpi_xml_dither_cache_set(int x, int y, const char *filename)
   cacheval->x = x;
   cacheval->y = y;
   cacheval->filename = stpi_strdup(filename);
+  cacheval->dither_array = NULL;
 
   stpi_list_item_create(dither_matrix_cache, NULL, (void *) cacheval);
 
@@ -650,22 +647,24 @@ stpi_dither_array_create_from_file(const char* file)
 static stp_array_t
 stpi_xml_get_dither_array(int x, int y)
 {
-  const char *file;
+  stpi_xml_dither_cache_t *cachedval;
   stp_array_t ret;
 
-  stpi_xml_init();
+  cachedval = stpi_xml_dither_cache_get(x, y);
 
-  file = stpi_xml_dither_cache_get(x, y);
-  if (file == NULL)
-    {
-      stpi_xml_exit();
-      return NULL;
-    }
+  if (!cachedval)
+    return NULL;
 
-  ret = stpi_dither_array_create_from_file(file);
+  if (cachedval->dither_array)
+    return stp_array_create_copy(cachedval->dither_array);
 
-  stpi_xml_exit();
-  return ret;
+  if (cachedval->filename == NULL)
+    return NULL;
+
+  ret = stpi_dither_array_create_from_file(cachedval->filename);
+
+  cachedval->dither_array = ret;
+  return stp_array_create_copy(ret);
 }
 
 void
