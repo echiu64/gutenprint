@@ -13,7 +13,7 @@ require('standard_html_header.php3');
 <H2>Gimp-Print FAQ for Mac OS X Jaguar and Darwin</H2>
  <ol>
  <li><a href="p_FAQ_OS_X.php3#description">
- What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
+ What is Gimp-Print? Why would I want to install it?
  </a>
  <li><a href="p_FAQ_OS_X.php3#getMoreInfo">
  How can I find out more information about Gimp-Print? Where can I get
@@ -22,6 +22,11 @@ require('standard_html_header.php3');
  <li><a href="p_FAQ_OS_X.php3#contactInfo">
  I've read this entire document but I'm still having problems. How can I
  contact the developers?
+ </a>
+ <li><a href="p_FAQ_OS_X.php3#pantherInstallerBug">
+ I am trying to install GImp-Print on Mac OS X Panther (10.3.x) but when I get
+ to the installer screen where I select the destination volume, there is a large 
+ red exclamation mark and I can't install it.
  </a>
  <li><a href="p_FAQ_OS_X.php3#didntReadTheInstructions">
  I do not see the "Advanced" option in Print Center. How can I find it?
@@ -155,10 +160,10 @@ require('standard_html_header.php3');
  <ol>
  <br>
  <br>
- <a name="description">
+ <a name="description"></a>
  <li><h3>
  What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
- </h3></a>
+ </h3>
  <p>
  Gimp-Print is a package of high quality printer drivers for Mac OS X
  Jaguar, Darwin, Linux, BSD, Solaris, IRIX, and other UNIX-alike
@@ -173,21 +178,21 @@ require('standard_html_header.php3');
  excellent drivers for many printers that are otherwise unsupported on
  Mac OS X.
  </p>
- <a name="getMoreInfo">
+ <a name="getMoreInfo"></a>
  <li><h3>
  How can I find out more information about Gimp-Print? Where can I get
  the newest version?
- </h3></a>
+ </h3>
  <p>
  For the latest information or the newest version of Gimp-Print be sure
  to check the <a href= "http://gimp-print.sourceforge.net/MacOSX.php3"
  >Gimp-Print web page</a>.
  </p>
- <a name="contactInfo">
+ <a name="contactInfo"></a>
  <li><h3>
  I've read this entire document but I'm still having problems. How can I
  contact the developers?
- </h3></a>
+ </h3>
  <p>
  If you're having problems it's a good bet that you're not the only one.
  If you can't find a solution to your problem in this FAQ or in <em>How
@@ -204,20 +209,36 @@ require('standard_html_header.php3');
  Please browse the forums before posting as your question may already be
  answered.
  </p>
- <a name="didntReadTheInstructions">
+ <a name="pantherInstallerBug"></a>
+ <li><h3>
+ I am trying to install GImp-Print on Mac OS X Panther (10.3.x) but when I get
+ to the installer screen where I select the destination volume, there is a large 
+ red exclamation mark and I can't install it.
+ </h3>
+ <p>
+ There is an apparent bug in the Panther Installer that prevents the installer
+ from running over "newer" releases. So if you have ever installed 4.3.x or
+ 5.0alpha or something it will get you. This bug is not present in Jaguar. The
+ workaround in Panther is to run the Gimp-Print uninstaller and remove any other
+ versions of Gimp-Print.
+
+ Please note that when you run the uninstaller you will most likely want to click "Customize" and skip the "Gimp-Print printer remover" option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php3#usbSetup">secret command-shift-elbow process</a> again to recreate them.
+
+ </p>
+ <a name="didntReadTheInstructions"></a>
  <li><h3>
  I do not see the "Advanced" option in Print Center. How can I find it?
- </h3></a>
+ </h3>
  <p>
  Make sure you are holding down the <em>option</em> key (on the keyboard)
  when you click the <tt>Add Printer</tt> button.
  </p>
- <a name="espgs">
+ <a name="espgs"></a>
  <li><h3>
  Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
- </h3></a>
+ </h3>
  <p>
  The Gimp-Print drivers for OS X are CUPS plugin filters. In Mac OS 10.2
  and 10.2.1 when users print with CUPS-based drivers from a "Carbon"
@@ -231,11 +252,11 @@ require('standard_html_header.php3');
  "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
  >Mac OS X installer</a> and run it.
  </p>
- <a name="tellMeMore">
+ <a name="tellMeMore"></a>
  <li><h3>
  I want to know more about the new printing system in Mac OS X Jaguar. How do
  the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
- </h3></a>
+ </h3>
  <p>
  The best place to start is with the CUPS documentation. In particular, the <a
  href= "http://www.cups.org/overview.html" >CUPS overview</a> will help you
@@ -265,11 +286,11 @@ require('standard_html_header.php3');
  applications submit a PDF for printing. Certain PostScript centric programs
  such as Adobe applications cause the second filter chain to run.
  </p>
- <a name="tcpip">
+ <a name="tcpip"></a>
  <li><h3>
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
- </h3></a>
+ </h3>
   <p>  
   The Epson type-B ethernet card is a curious thing. Typically you can
  generate a page describing the printer's network interface settings if you
@@ -316,11 +337,10 @@ require('standard_html_header.php3');
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
-  <a name="1394">
+  <a name="1394"></a>
  <li><h3>
- 
  How can I print using FireWire (IEEE 1394)?
- </h3></a>
+ </h3>
  <p>
  In a nutshell, you can't. Not yet.  CUPS uses "backends" to transfer the driver code to the printer. On Mac OS X Gimp-Print uses CUPS and since there is not yet a FireWire backend available for Mac OS X you can't print with Gimp-Print over Firewire.  You <em>can</em> print to a printer that has a FireWire port, you simply need to use a <em>different</em> port, such as the USB port, an ethernet port, or the parallel port via a converter.
  </p>
@@ -390,10 +410,10 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  This procedure may be necessary for each document you wish to print. On subsequent
  prints of the same document the regular "Print" button should work as expected.
  </p>
- <a name="HPUSB">
+ <a name="HPUSB"></a>
  <li><h3>
  My multi-function HP Device is not printing over the USB port. What's wrong?
- </h3></a>
+ </h3>
  <p>  
  Several users have reported USB compatibility issues with certain HP 
  multi-function devices. While the driver generates the correct device code to 
@@ -409,10 +429,10 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  Devices that lack a parallel port may possibly function with a compatible USB
  print server.
  </p>  
- <a name="escp2-7600">
+ <a name="escp2-7600"></a>
  <li><h3>
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
- </h3></a>
+ </h3>
  <p>  
  That driver has been fixed since the the 4.2.3 release.  You will likely get much
  better quality output if you use 4.2.5-pre1 or later, as this printer was not tuned
@@ -420,11 +440,11 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  roll-feed paper make sure that you have selected the "Roll Feed" option in the 
  "Paper Feed" print dialog (the "Auto Select" option is currently non-functional).
  </p>
- <a name="installer">
+ <a name="installer"></a>
  <li><h3>
  What files are installed by the Gimp-Print installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
- </h3></a>
+ </h3>
  <p>
  "The Gimp-Print drivers for <a href= "http://www.cups.org/" >CUPS</a>,
  and the required PPD files." That's the short answer to the first
@@ -450,23 +470,23 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  You will need to enter an admin password (yours if you're the only user on
  your system) to use sudo.
  </p>
- <a name="uninstaller">
+ <a name="uninstaller"></a>
  <li><h3>
  The Gimp-Print installer for Jaguar is very nice, thanks for providing
  it. But, why haven't you provided me with an easy way to remove the
  Gimp-Print files from my system?
- </h3></a>
+ </h3>
  <p>
  An unistaller is under development.  Again, if you delete all of the Gimp-Print
  Printers from your Print Center "Printer List" the software will be completely
  disabled. If you simply <em>must</em> remove the files then see the answer to the preceding question.
  </p>
- <a name="pslevel1">
+ <a name="pslevel1"></a>
  <li><h3>
  The list of supported printers says that PostScript Level 1 printing is
  supported, but I can't use Gimp-Print to print to my Level 1 printer
  (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
- </h3></a>
+ </h3>
  <p>
  Currently, printing to level 1 printers is not supported on Jaguar.
  Generating the necessary level 1 compatible output requires a postscript
@@ -474,28 +494,28 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  Ghostscript</a> and some special printing "filters". A solution to this
  problem may become available in the future.
  </p>
- <a name="version">
+ <a name="version"></a>
  <li><h3>
  Which versions of Mac OS are compatible with Gimp-Print?
- </h3></a>
+ </h3>
  <p>
  Gimp-Print is compatible with Mac OS X version 10.2.x (Jaguar) or later.
  It does not work with version 10.1.x or 10.0.x or any version of Mac OS 9.
  </p>
- <a name="versionX">
+ <a name="versionX"></a>
  <li><h3>
  I have never heard of version "10.1.x" but I have 10.1.5, does
  Gimp-Print work with that?
- </h3></a>
+ </h3>
  <p>
  "10.1.x" means "any" minor version of 10.1 such as 10.1.1, 10.1.2,
  ...,10.1.5. So, if you want to use Gimp-Print you should upgrade to at
  least 10.2.
  </p>
- <a name="supportedPrinters">
+ <a name="supportedPrinters"></a>
  <li><h3>
  Is my printer supported by Gimp-Print?
- </h3></a>
+ </h3>
  <p>
  There is a comprehensive <a href=
  "http://Gimp-Print.sourceforge.net/p_Supported_Printers.php3" >list of
@@ -507,11 +527,11 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  still be able to print by trying the driver for a printer that is similar
  to yours, but the results may disappoint you.
  </p>
- <a name="generalSetup">
+ <a name="generalSetup"></a>
  <li><h3>
  OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
- </h3></a>
+ </h3>
  <p>
  The Gimp-Print 4.2.2 installer package (and all later versions) contains
  an illustrated set-up guide called <em>How to Print with Gimp-Print</em> 
@@ -532,10 +552,10 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <p>
  see question on supported printers.
  </p>
- <a name="usbSetup">
+ <a name="usbSetup"></a>
  <h4>
  <li>USB connection
- </h4></a>
+ </h4>
  If your printer is supported by Gimp-Print and it is connected directly
  to your Mac with a USB cable then you should follow these steps to set
  it up:
@@ -569,10 +589,10 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <li> Print a test page.
  </p>
  </ol>
- <a name="networkSetup">
+ <a name="networkSetup"></a>
  <h4>
  <li>Network connection
- </h4></a>
+ </h4>
  If your printer is supported by Gimp-Print and it is available over
  TCP/IP via a built-in network card (such as the Epson 10/100 ethernet
  type-b card available for certain printers) or an inexpensive network
@@ -608,10 +628,10 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <li> Print a test page.
  </ol>
  </p>
- <a name="sambaSetup">
+ <a name="sambaSetup"></a>
  <h4>
  <li>Windows printer via SAMBA
- </h4></a>
+ </h4>
  If you want to print to a shared printer connected to a Windows XP
  computer try these instructions (this procedure has not been thoroughly
  tested):
@@ -650,20 +670,20 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  </ol>
  </ul>
  </p>
- <a name="whereAreTheSettings">
+ <a name="whereAreTheSettings"></a>
  <li><h3>
  OK, my printer is printing now, but how do I change the print settings
  like paper type and resolution?
- </h3></a>
+ </h3>
  <p>
  You can access the settings for the Gimp-Print driver whenever a print
  sheet is open. Just click on the popup menu that says "<tt>Copies &
  Pages</tt>" and choose "<tt>Printer Features</tt>".
  </p>
- <a name="whatSettings">
+ <a name="whatSettings"></a>
  <li><h3>
  Ok, I found all the settings, but what do they do?
- </h3></a>
+ </h3>
  <p>
  Please see the <! a href= "http://Gimp-Print.sourceforge.net/p_FAQ.php3"
  >Gimp-Print General FAQ<! /a> for answers to these questions.
