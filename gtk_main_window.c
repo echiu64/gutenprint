@@ -34,7 +34,7 @@
 #include "print-intl.h"
 #include <math.h>
 
-int vars_unit=0;	/* Units (cm or Inch) don't know where to store it */
+static int vars_unit=0;	/* Units (cm or Inch) don't know where to store it */
 /*
  * Constants for GUI...
  */
