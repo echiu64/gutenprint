@@ -82,6 +82,8 @@ typedef struct dither_segment
   unsigned value_span;		/* Span of values */
   unsigned dot_size[2];		/* Size of lower, upper dot */
   int isdark[2];		/* Is lower, upper value dark ink? */
+  int is_same_ink;		/* Are both endpoints using the same dots? */
+  int is_equal;			/* Are both endpoints using the same ink? */
 } dither_segment_t;
 
 typedef struct dither_color
@@ -911,6 +913,17 @@ stp_dither_set_generic_ranges(dither_t *d, dither_color_t *s, int nlevels,
     }
   for (i = 0; i < s->nlevels; i++)
     {
+      if (s->ranges[i].isdark[0] == s->ranges[i].isdark[1] &&
+	  s->ranges[i].dot_size[0] == s->ranges[i].dot_size[1])
+	s->ranges[i].is_same_ink = 1;
+      else
+	s->ranges[i].is_same_ink = 0;
+      if (s->ranges[i].range_span > 0 &&
+	  (s->ranges[i].value_span > 0 ||
+	   s->ranges[i].isdark[0] != s->ranges[i].isdark[1]))
+	s->ranges[i].is_equal = 0;
+      else
+	s->ranges[i].is_equal = 1;
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
 		  i, s->ranges[i].value[0], s->ranges[i].value[1],
@@ -919,8 +932,10 @@ stp_dither_set_generic_ranges(dither_t *d, dither_color_t *s, int nlevels,
 		  "       bits[0] %d bits[1] %d isdark[0] %d isdark[1] %d\n",
 		  s->ranges[i].bits[0], s->ranges[i].bits[1],
 		  s->ranges[i].isdark[0], s->ranges[i].isdark[1]);
-      stp_dprintf(STP_DBG_INK, d->v, "       rangespan %d valuespan %d\n",
-	      s->ranges[i].range_span, s->ranges[i].value_span);
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "       rangespan %d valuespan %d same_ink %d equal %d\n",
+		  s->ranges[i].range_span, s->ranges[i].value_span,
+		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
     }
   stp_dprintf(STP_DBG_INK, d->v,
 	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
@@ -989,6 +1004,17 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_color_t *s, int nlevels,
     }
   for (i = 0; i < s->nlevels; i++)
     {
+      if (s->ranges[i].isdark[0] == s->ranges[i].isdark[1] &&
+	  s->ranges[i].dot_size[0] == s->ranges[i].dot_size[1])
+	s->ranges[i].is_same_ink = 1;
+      else
+	s->ranges[i].is_same_ink = 0;
+      if (s->ranges[i].range_span > 0 &&
+	  (s->ranges[i].value_span > 0 ||
+	   s->ranges[i].isdark[0] != s->ranges[i].isdark[1]))
+	s->ranges[i].is_equal = 0;
+      else
+	s->ranges[i].is_equal = 1;
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
 		  i, s->ranges[i].value[0], s->ranges[i].value[1],
@@ -997,8 +1023,10 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_color_t *s, int nlevels,
 		  "       bits[0] %d bits[1] %d isdark[0] %d isdark[1] %d\n",
 		  s->ranges[i].bits[0], s->ranges[i].bits[1],
 		  s->ranges[i].isdark[0], s->ranges[i].isdark[1]);
-      stp_dprintf(STP_DBG_INK, d->v, "       rangespan %d valuespan %d\n",
-	      s->ranges[i].range_span, s->ranges[i].value_span);
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "       rangespan %d valuespan %d same_ink %d equal %d\n",
+		  s->ranges[i].range_span, s->ranges[i].value_span,
+		  s->ranges[i].is_same_ink, s->ranges[i].is_equal);
     }
   stp_dprintf(STP_DBG_INK, d->v,
 	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
@@ -1384,8 +1412,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
        * We scale the input linearly against the top and bottom of the
        * range.
        */
-      if (dd->range_span > 0 &&
-	  (dd->value_span > 0 || dd->isdark[0] != dd->isdark[1]))
+      if (!dd->is_equal)
 	rangepoint =
 	  ((unsigned) (density - dd->range[0])) * 65535 / dd->range_span;
 
@@ -1466,7 +1493,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int x, int y,
 	{
 	  int subchannel;
 
-	  if (dd->isdark[1] == dd->isdark[0] && dd->bits[1] == dd->bits[0])
+	  if (dd->is_same_ink)
 	    subchannel = 1;
 	  else
 	    {
@@ -1558,8 +1585,7 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
        * We scale the input linearly against the top and bottom of the
        * range.
        */
-      if (dd->range_span == 0 ||
-	  (dd->value_span == 0 && dd->isdark[0] == dd->isdark[1]))
+      if (dd->is_equal)
 	rangepoint = 32768;
       else
 	rangepoint =
@@ -1606,7 +1632,7 @@ print_color_ordered(const dither_t *d, dither_channel_t *dc, int x, int y,
 	{
 	  int subchannel;
 
-	  if (dd->isdark[1] == dd->isdark[0] && dd->bits[1] == dd->bits[0])
+	  if (dd->is_same_ink)
 	    subchannel = 1;
 	  else
 	    {
@@ -1682,7 +1708,7 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
 	    continue;
 	  dpoint = ditherpoint(d, dither_matrix, x);
 
-	  if (dd->isdark[1] == dd->isdark[0] && dd->bits[1] == dd->bits[0])
+	  if (dd->is_same_ink)
 	    subchannel = 1;
 	  else
 	    {
