@@ -113,7 +113,9 @@ fi
 dnl Checks for libraries.
 AC_CHECK_LIB(readline, readline, HAVE_LIBREADLINE=true, HAVE_LIBREADLINE=false)
 if test x${HAVE_LIBREADLINE} = xtrue ; then
-  AC_DEFINE(HAVE_LIBREADLINE)
+  AC_DEFINE(HAVE_LIBREADLINE,1)
+else
+  AC_DEFINE(HAVE_LIBREADLINE,0)
 fi
 
 dnl Checks for header files.

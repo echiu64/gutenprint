@@ -919,7 +919,7 @@ do_align(void)
 char *do_get_input (const char *prompt)
 {
 	static char *input = NULL;
-#if !defined HAVE_LIBREADLINE || !defined HAVE_READLINE_READLINE_H
+#if (HAVE_LIBREADLINE == 0 || !defined HAVE_READLINE_READLINE_H)
 	char *fgets_status;
 #endif
 	/* free only if previously allocated */
@@ -928,7 +928,7 @@ char *do_get_input (const char *prompt)
 		free (input);
 		input = NULL;
 	}
-#if defined HAVE_LIBREADLINE && defined HAVE_READLINE_READLINE_H
+#if (HAVE_LIBREADLINE > 0 && defined HAVE_READLINE_READLINE_H)
 	/* get input with libreadline, if present */
 	input = readline ((char *) prompt);
 	/* if input, add to history list */
