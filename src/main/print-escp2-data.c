@@ -2257,9 +2257,146 @@ static const res_t pro_reslist[] =
 
 #define INCH(x)		(72 * x)
 
+static const physical_subchannel_t standard_black_subchannels[] =
+{
+  { 0, -1 }
+};
+
+static const ink_channel_t standard_black_channels =
+{
+  standard_black_subchannels,
+  sizeof(standard_black_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t standard_cyan_subchannels[] =
+{
+  { 2, -1 }
+};
+
+static const ink_channel_t standard_cyan_channels =
+{
+  standard_cyan_subchannels,
+  sizeof(standard_cyan_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t standard_magenta_subchannels[] =
+{
+  { 1, -1 }
+};
+
+static const ink_channel_t standard_magenta_channels =
+{
+  standard_magenta_subchannels,
+  sizeof(standard_magenta_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t standard_yellow_subchannels[] =
+{
+  { 4, -1 }
+};
+
+static const ink_channel_t standard_yellow_channels =
+{
+  standard_yellow_subchannels,
+  sizeof(standard_yellow_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t photo_black_subchannels[] =
+{
+  { 0, 0 }
+};
+
+static const ink_channel_t photo_black_channels =
+{
+  photo_black_subchannels,
+  sizeof(photo_black_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t photo_cyan_subchannels[] =
+{
+  { 2, 0 },
+  { 2, 1 }
+};
+
+static const ink_channel_t photo_cyan_channels =
+{
+  photo_cyan_subchannels,
+  sizeof(photo_cyan_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t photo_magenta_subchannels[] =
+{
+  { 1, 0 },
+  { 1, 1 }
+};
+
+static const ink_channel_t photo_magenta_channels =
+{
+  photo_magenta_subchannels,
+  sizeof(photo_magenta_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t photo_yellow_subchannels[] =
+{
+  { 4, 0 }
+};
+
+static const ink_channel_t photo_yellow_channels =
+{
+  photo_yellow_subchannels,
+  sizeof(photo_yellow_subchannels) / sizeof(physical_subchannel_t)
+};
+
+/* For Japanese 7-color printers, with dark yellow */
+static const physical_subchannel_t photo2_yellow_subchannels[] =
+{
+  { 4, 0 },
+  { 4, 1 }
+};
+
+static const ink_channel_t photo2_yellow_channels =
+{
+  photo2_yellow_subchannels,
+  sizeof(photo2_yellow_subchannels) / sizeof(physical_subchannel_t)
+};
+
+static const physical_subchannel_t photo2_black_subchannels[] =
+{
+  { 0, 0 },
+  { 0, 1 }
+};
+
+static const ink_channel_t photo2_black_channels =
+{
+  photo2_black_subchannels,
+  sizeof(photo2_black_subchannels) / sizeof(physical_subchannel_t)
+};
+
+#ifdef QUADTONE
+static const physical_subchannel_t quadtone_subchannels[] =
+{
+  { 4, -1 },
+  { 1, -1 },
+  { 2, -1 },
+  { 0, -1 }
+};
+
+static const ink_channel_t quadtone_channels =
+{
+  quadtone_subchannels,
+  sizeof(quadtone_subchannels) / sizeof(physical_subchannel_t)
+};
+#endif
+
 static const escp2_inkname_t cmy_ink_types[] =
 {
-  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+  {
+    "RGB", N_ ("Three Color Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  }
 };
 
 static const inklist_t cmy_inklist =
@@ -2270,8 +2407,28 @@ static const inklist_t cmy_inklist =
 
 static const escp2_inkname_t standard_ink_types[] =
 {
-  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
-  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+  {
+    "CMYK", N_ ("Four Color Standard"), 1,
+    {
+      &standard_black_channels, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "RGB", N_ ("Three Color Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+#ifdef QUADTONE
+  {
+    "Quadtone", N_ ("Quadtone"), 0,
+    {
+      &quadtone_channels, NULL, NULL, NULL
+    }
+  }
+#endif
 };
 
 static const inklist_t standard_inklist =
@@ -2282,10 +2439,42 @@ static const inklist_t standard_inklist =
 
 static const escp2_inkname_t photo_ink_types[] =
 {
-  { "PhotoCMYK",    N_ ("Six Color Photo"),		 1, 6 },
-  { "PhotoCMY",     N_ ("Five Color Photo Composite"),   0, 6 },
-  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
-  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+  {
+    "PhotoCMYK", N_ ("Six Color Photo"), 1,
+    {
+      &photo_black_channels, &photo_cyan_channels,
+      &photo_magenta_channels, &photo_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    {
+      NULL, &photo_cyan_channels,
+      &photo_magenta_channels, &photo_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Four Color Standard"), 1,
+    {
+      &standard_black_channels, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "RGB", N_ ("Three Color Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+#ifdef QUADTONE
+  {
+    "Quadtone", N_ ("Quadtone"), 0,
+    {
+      &quadtone_channels, NULL, NULL, NULL
+    }
+  },
+#endif
 };
 
 static const inklist_t photo_inklist =
@@ -2294,14 +2483,104 @@ static const inklist_t photo_inklist =
   photo_ink_types
 };
 
+static const escp2_inkname_t photo7_japan_ink_types[] =
+{
+  {
+    "Photo7J", N_ ("Seven Color Enhanced"), 1,
+    {
+      &photo_black_channels, &photo_cyan_channels,
+      &photo_magenta_channels, &photo2_yellow_channels
+    }
+  },
+  {
+    "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "PhotoCMYK", N_ ("Six Color Photo"), 1,
+    {
+      &photo_black_channels, &photo_cyan_channels,
+      &photo_magenta_channels, &photo_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Four Color Standard"), 1,
+    {
+      &standard_black_channels, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "RGB", N_ ("Three Color Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+#ifdef QUADTONE
+  {
+    "Quadtone", N_ ("Quadtone"), 0,
+    {
+      &quadtone_channels, NULL, NULL, NULL
+    }
+  }
+#endif
+};
+
+static const inklist_t photo7_japan_inklist =
+{
+  sizeof(photo7_japan_ink_types) / sizeof(escp2_inkname_t),
+  photo7_japan_ink_types
+};
+
 static const escp2_inkname_t photo7_ink_types[] =
 {
-  { "Photo7",       N_ ("Seven Color Enhanced"),	 1, 7 },
-  { "PhotoEnhance", N_ ("Six Color Enhanced Composite"), 0, 7 },
-  { "PhotoCMYK",    N_ ("Six Color Photo"),		 1, 6 },
-  { "PhotoCMY",     N_ ("Five Color Photo Composite"),   0, 6 },
-  { "CMYK",         N_ ("Four Color Standard"),		 1, 4 },
-  { "RGB",          N_ ("Three Color Composite"),	 0, 4 }
+  {
+    "PhotoCMYK", N_ ("Six Color Photo"), 1,
+    {
+      &photo2_black_channels, &photo_cyan_channels,
+      &photo_magenta_channels, &photo_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "CMYK", N_ ("Four Color Standard"), 1,
+    {
+      &standard_black_channels, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+  {
+    "RGB", N_ ("Three Color Composite"), 1,
+    {
+      NULL, &standard_cyan_channels,
+      &standard_magenta_channels, &standard_yellow_channels
+    }
+  },
+#ifdef QUADTONE
+  {
+    "Quadtone", N_ ("Quadtone"), 0,
+    {
+      &quadtone_channels, NULL, NULL, NULL
+    }
+  }
+#endif
 };
 
 static const inklist_t photo7_inklist =

@@ -95,26 +95,6 @@ colors2inkset(int colors)
     }
 }
 
-/*
- * Mapping between color and linear index.  The colors are
- * black, magenta, cyan, yellow, light magenta, light cyan
- */
-
-static const int color_indices[16] = { 0, 1, 2, -1,
-				       3, -1, -1, -1,
-				       -1, 4, 5, -1,
-				       6, -1, -1, -1 };
-static const int colors[7] = { 0, 1, 2, 4, 1, 2, 4};
-static const int densities[7] = { 0, 0, 0, 0, 1, 1, 1 };
-
-static inline int
-get_color_by_params(int plane, int density)
-{
-  if (plane > 4 || plane < 0 || density > 1 || density < 0)
-    return -1;
-  return color_indices[density * 8 + plane];
-}
-
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "init_sequence",	 	0, 4 },
@@ -145,6 +125,7 @@ typedef struct
   int initial_vertical_offset;
   int min_nozzles;
   int printed_something;
+  const physical_subchannel_t **channels;
 } escp2_privdata_t;
 
 typedef struct escp2_init
@@ -1074,44 +1055,40 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
 	  if (pt && pt->hue_adjustment)
 	    hue_adjustment[i] += pt->hue_adjustment[i];
 	}
-    } 
-} 
+    }
+}
 
-static void
-get_inktype(const stp_printer_t printer, const stp_vars_t v,
-	    int model, int *hasblack, int *ncolors)
+static int
+count_channels(const escp2_inkname_t *inks)
 {
-  int		output_type = stp_get_output_type(v);
+  int answer = 0;
+  int i;
+  for (i = 0; i < NCOLORS; i++)
+    if (inks->channels[i])
+      answer += inks->channels[i]->n_subchannels;
+  return answer;
+}
+
+static const escp2_inkname_t *
+get_inktype(const stp_printer_t printer, const stp_vars_t v, int model)
+{
   const char	*ink_type = stp_get_ink_type(v);
-  const inklist_t *ink_names = escp2_inklist(model, v);
+  const inklist_t *ink_list = escp2_inklist(model, v);
   int i;
 
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    *ncolors = 1;
-  else
-    for (i = 0; i < ink_names->n_inks; i++)
-      {
-	if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
-	  {
-	    *hasblack = ink_names->inknames[i].hasblack;
-	    *ncolors = ink_names->inknames[i].ncolors;
-	    break;
-	  }
-      }
-  if (ncolors == 0)
+  for (i = 0; i < ink_list->n_inks; i++)
     {
-      ink_type = escp2_default_parameters(printer, NULL, "InkType");
-      for (i = 0; i < ink_names->n_inks; i++)
-	{
-	  if (strcmp(ink_type, ink_names->inknames[i].name) == 0)
-	    {
-	      *hasblack = ink_names->inknames[i].hasblack;
-	      *ncolors = ink_names->inknames[i].ncolors;
-	      break;
-	    }
-	}
+      if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
+	return &(ink_list->inknames[i]);
     }
-}  
+  ink_type = escp2_default_parameters(printer, NULL, "InkType");
+  for (i = 0; i < ink_list->n_inks; i++)
+    {
+      if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
+	return &(ink_list->inknames[i]);
+    }
+  return NULL;
+}
 
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
@@ -1171,7 +1148,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		vertical_passes = 1;
   int		vertical_oversample = 1;
   int		unidirectional = 0;
-  int		hasblack = 0;
   const res_t	*res;
   int		bits = 1;
   int		physical_bits = 1;
@@ -1181,7 +1157,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
   int max_vres;
-  unsigned char *cols[7];
+  unsigned char **cols;
   int head_offset[8];
   const int *offset_ptr;
   int max_head_offset;
@@ -1191,6 +1167,11 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int drop_size;
   int min_nozzles;
   stp_dither_data_t *dt;
+  const escp2_inkname_t *ink_type;
+  int channel_count;
+  int current_channel;
+  int channel_limit;
+  int has_color;
 
   if (!stp_get_verified(nv))
     {
@@ -1203,7 +1184,19 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   privdata.printed_something = 0;
   stp_set_driver_data(nv, &privdata);
 
-  get_inktype(printer, nv, model, &hasblack, &ncolors);
+  ink_type = get_inktype(printer, nv, model);
+  channel_count = count_channels(ink_type);
+  ncolors = channel_count;	/* Shouldn't necessarily be! */
+  has_color = ink_type->is_color;
+  if (output_type != OUTPUT_GRAY && output_type != OUTPUT_MONOCHROME &&
+      !has_color)
+    {
+      output_type = OUTPUT_GRAY;
+      stp_set_output_type(nv, OUTPUT_GRAY);
+    }
+
+  stp_erprintf("channel_count %d ncolors %d has_color %d output_type %d\n",
+	       channel_count, ncolors, has_color, output_type);
 
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
@@ -1413,35 +1406,35 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   */
 
   length = (out_width + 7) / 8;
-  memset(cols, 0, 7 * sizeof(unsigned char *));
-
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    cols[0] = stp_zalloc(length * physical_bits);
-  else
-    {
-      cols[1] = stp_zalloc(length * physical_bits);
-      cols[2] = stp_zalloc(length * physical_bits);
-      cols[3] = stp_zalloc(length * physical_bits);
-
-      if (ncolors == 7)
-	cols[6] = stp_zalloc(length * physical_bits);
-      if (ncolors >= 5)
-	{
-	  cols[4] = stp_zalloc(length * physical_bits);
-	  cols[5] = stp_zalloc(length * physical_bits);
-	}
-      if (hasblack)
-	cols[0] = stp_zalloc(length * physical_bits);
-    }
-
   dt = stp_create_dither_data();
-  stp_add_channel(dt, cols[0], ECOLOR_K, 0);
-  stp_add_channel(dt, cols[2], ECOLOR_C, 0);
-  stp_add_channel(dt, cols[5], ECOLOR_C, 1);
-  stp_add_channel(dt, cols[1], ECOLOR_M, 0);
-  stp_add_channel(dt, cols[4], ECOLOR_M, 1);
-  stp_add_channel(dt, cols[3], ECOLOR_Y, 0);
-  stp_add_channel(dt, cols[6], ECOLOR_Y, 1);
+
+  cols = stp_zalloc(sizeof(unsigned char *) * channel_count);
+  privdata.channels =
+    stp_zalloc(sizeof(physical_subchannel_t *) * channel_count);
+  current_channel = 0;
+
+  channel_limit = NCOLORS;
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+    channel_limit = 1;
+  for (i = 0; i < channel_limit; i++)
+    {
+      const ink_channel_t *channel = ink_type->channels[i];
+      if (channel)
+	{
+	  int j;
+	  for (j = 0; j < channel->n_subchannels; j++)
+	    {
+	      cols[current_channel] = stp_zalloc(length * physical_bits);
+	      privdata.channels[current_channel] = &(channel->channels[j]);
+	      stp_erprintf("Adding channel %d/%d, color %d, %d %d\n",
+			   current_channel, j, i,
+			   privdata.channels[current_channel]->color,
+			   privdata.channels[current_channel]->density);
+	      stp_add_channel(dt, cols[current_channel], i, j);
+	      current_channel++;
+	    }
+	}
+    }
 
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc(image_width * out_bpp * 2);
@@ -1518,9 +1511,10 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   stp_free(out);
   stp_destroy_weave(weave);
 
-  for (i = 0; i < 7; i++)
-    if (cols[i])
-      stp_free((unsigned char *) cols[i]);
+  for (i = 0; i < channel_count; i++)
+    stp_free((unsigned char *) cols[i]);
+  stp_free(cols);
+  stp_free(privdata.channels);
 
 #ifdef QUANTIFY
   print_timers(nv);
@@ -1577,11 +1571,13 @@ set_color(stp_softweave_t *sw, stp_pass_t *pass, int model, const stp_vars_t v,
       (sw->jets == 1 || escp2_has_cap(model, MODEL_VARIABLE_DOT,
 				      MODEL_VARIABLE_NORMAL, v)))
     {
-      if (!escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
-	stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, densities[color],
-		    colors[color]);
+      escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
+      int ncolor = pd->channels[color]->color;
+      int density = pd->channels[color]->density;
+      if (density >= 0)
+	stp_zprintf(v, "\033(r%c%c%c%c", 2, 0, density, ncolor);
       else
-	stp_zprintf(v, "\033r%c", colors[color]);
+	stp_zprintf(v, "\033r%c", ncolor);
       sw->last_color = color;
     }
 }
@@ -1653,7 +1649,9 @@ send_print_command(stp_softweave_t *sw, stp_pass_t *pass, int model, int color,
     }
   else
     {
-      int ncolor = (densities[color] << 4) | colors[color];
+      escp2_privdata_t *pd = (escp2_privdata_t *) stp_get_driver_data(v);
+      int ncolor = (((pd->channels[color]->density) << 4) |
+		    (pd->channels[color]->density));
       int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
       stp_zprintf(v, "\033i%c%c%c%c%c%c%c", ncolor, COMPRESSION,
 		  sw->bitwidth, nwidth & 255, (nwidth >> 8) & 255,

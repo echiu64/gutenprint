@@ -266,10 +266,22 @@ typedef struct
 
 typedef struct
 {
+  int color;
+  int density;
+} physical_subchannel_t;
+
+typedef struct
+{
+  const physical_subchannel_t *channels;
+  int n_subchannels;
+} ink_channel_t;
+
+typedef struct
+{
   const char *name;
   const char *text;
-  int hasblack;
-  int ncolors;
+  int is_color;
+  const ink_channel_t *channels[NCOLORS];
 } escp2_inkname_t;
 
 typedef struct
