@@ -62,6 +62,17 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
+#ifdef ENABLE_NLS
+
+#ifdef INCLUDE_LOCALE_H
+INCLUDE_LOCALE_H
+#else
+#include <locale.h>
+#endif
+
+#include "libgnuintl.h"
+#endif
+
 #include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 

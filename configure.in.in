@@ -611,6 +611,9 @@ if test "${sysconfdir}" = "\${prefix}/etc"; then
     cups_sysconfdir="${cups_prefix}/etc"
   fi
 fi
+
+AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
+
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl Define LTLIBOBJS
