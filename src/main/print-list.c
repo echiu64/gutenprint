@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "list.h"
+#include <string.h>
 
 /*
  * Uncomment to enable debugging and strict list integrity checking.
