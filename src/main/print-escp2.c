@@ -89,12 +89,14 @@ typedef struct
 
 static const stp_parameter_t the_parameters[] =
 {
+#if 0
   {
     "AutoMode", N_("Automatic Printing Mode"),
     N_("Automatic printing mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
+#endif
   {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
@@ -524,15 +526,17 @@ escp2_paperlist(stp_const_vars_t v)
 static int
 using_automatic_settings(stp_const_vars_t v)
 {
+#if 0
   if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
       strcmp(stp_get_string_parameter(v, "AutoMode"), "Manual") != 0)
     return 1;
   else
+#endif
     return 0;
 }    
 
 static int
-compute_resid(const res_t *res)
+compute_internal_resid(int hres, int vres)
 {
   static int resolutions[RES_N] =
     {
@@ -545,7 +549,7 @@ compute_resid(const res_t *res)
       2880 * 1440,
       2880 * 2880,
     };
-  int total_resolution = res->hres * res->vres;
+  int total_resolution = hres * vres;
   int i;
   for (i = 0; i < RES_N; i++)
     {
@@ -553,6 +557,12 @@ compute_resid(const res_t *res)
 	return i - 1;
     }
   return RES_N - 1;
+}  
+
+static int
+compute_resid(const res_t *res)
+{
+  return compute_internal_resid(res->hres, res->vres);
 }
 
 
@@ -870,16 +880,43 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       const res_t *const *res = escp2_reslist(v);
       description->bounds.str = stp_string_list_create();
       i = 0;
+      if (escp2_min_vres(v) < 180)
+	stp_string_list_add_string(description->bounds.str, "FastEconomy",
+				   _("Fast Economy"));
+      if (escp2_min_vres(v) < 360)
+	stp_string_list_add_string(description->bounds.str, "Economy",
+				   _("Economy"));
+      if (escp2_min_vres(v) <= 360 && escp2_min_hres(v) <= 360)
+	stp_string_list_add_string(description->bounds.str, "Draft",
+				   _("Draft"));
       stp_string_list_add_string(description->bounds.str, "Standard",
-				 _("Default"));
+				 _("Standard Quality"));
+      stp_string_list_add_string(description->bounds.str, "High",
+				 _("High Quality"));
+      if (escp2_max_vres(v) >= 720 && escp2_max_hres(v) >= 1440)
+	stp_string_list_add_string(description->bounds.str, "Photo",
+				   _("Photo Quality"));
+      if (escp2_max_vres(v) >= 2880 && escp2_max_hres(v) >= 2880)
+	stp_string_list_add_string(description->bounds.str, "HighPhoto",
+				   _("Super Photo Quality"));
+      if (escp2_max_vres(v) >= 2880 && escp2_max_hres(v) >= 2880)
+	stp_string_list_add_string(description->bounds.str, "Best",
+				   _("Ultra Photo Quality"));
+      else if (escp2_max_vres(v) >= 720 && escp2_max_hres(v) >= 2880)
+	stp_string_list_add_string(description->bounds.str, "Best",
+				   _("Super Photo Quality"));
+      else
+	stp_string_list_add_string(description->bounds.str, "Best",
+				   _("Best Quality"));
       description->deflt.str = "Standard";
-      while (res[i])
-	{
-	  if (verify_resolution(v, res[i]))
-	    stp_string_list_add_string(description->bounds.str,
-				       res[i]->name, _(res[i]->text));
-	  i++;
-	}
+      if (!using_automatic_settings(v))
+	while (res[i])
+	  {
+	    if (verify_resolution(v, res[i]))
+	      stp_string_list_add_string(description->bounds.str,
+					 res[i]->name, _(res[i]->text));
+	    i++;
+	  }
     }
   else if (strcmp(name, "InkType") == 0)
     {
@@ -994,22 +1031,59 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 }
 
 static const res_t *
-escp2_find_resolution(stp_const_vars_t v, const char *resolution)
+find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres)
 {
   const res_t *const *res = escp2_reslist(v);
   int i = 0;
-  if (!resolution || !strcmp(resolution, ""))
-    return NULL;
-  if (strcmp(resolution, "Standard") == 0)
+  if (desired_hres < 0)
     {
+      const res_t *retval = NULL;
       while (res[i])
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      (res[i]->vres >= 360 && res[i]->hres >= 360))
-	    return res[i];
+	  retval = res[i];
 	  i++;
 	}
-      res = escp2_reslist(v);
+      return retval;
+    }
+  while (res[i])
+    {
+      if (verify_resolution(v, res[i]) &&
+	  res[i]->vres >= desired_vres && res[i]->hres >= desired_hres)
+	return res[i];
+      i++;
+    }
+  return NULL;
+}
+
+static const res_t *
+escp2_find_resolution(stp_const_vars_t v, const char *resolution)
+{
+  const res_t *const *res = escp2_reslist(v);
+  const res_t *default_res = NULL;
+  int i = 0;
+  if (!resolution || !strcmp(resolution, ""))
+    return NULL;
+  if (strcmp(resolution, "FastEconomy") == 0)
+    default_res = find_default_resolution(v, 180, 90);
+  else if (strcmp(resolution, "Economy") == 0)
+    default_res = find_default_resolution(v, 180, 180);
+  else if (strcmp(resolution, "Draft") == 0)
+    default_res = find_default_resolution(v, 360, 360);
+  else if (strcmp(resolution, "Standard") == 0)
+    default_res = find_default_resolution(v, 720, 360);
+  else if (strcmp(resolution, "High") == 0)
+    default_res = find_default_resolution(v, 720, 720);
+  else if (strcmp(resolution, "Photo") == 0)
+    default_res = find_default_resolution(v, 1440, 720);
+  else if (strcmp(resolution, "HighPhoto") == 0)
+    default_res = find_default_resolution(v, 2880, 1440);
+  else if (strcmp(resolution, "Best") == 0)
+    default_res = find_default_resolution(v, -1, -1);
+  if (default_res)
+    {
+      stpi_dprintf(STPI_DBG_ESCP2, v, "Changing resolution from %s to %s\n",
+		   resolution, default_res->name);
+      return default_res;
     }
   while (res[i])
     {
@@ -1118,19 +1192,15 @@ static void
 escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const res_t *const *res = escp2_reslist(v);
-  int i = 0;
-
-  while (res[i])
+  if (resolution)
     {
-      if (resolution && strcmp(resolution, res[i]->name) == 0 &&
-	  verify_resolution(v, res[i]))
+      const res_t *res = escp2_find_resolution(v, resolution);
+      if (res && verify_resolution(v, res))
 	{
-	  *x = res[i]->hres;
-	  *y = res[i]->vres;
+	  *x = res->hres;
+	  *y = res->vres;
 	  return;
 	}
-      i++;
     }
   *x = -1;
   *y = -1;
