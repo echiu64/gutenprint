@@ -1065,6 +1065,7 @@ printrc_load(void)
 		  }
 	      }
 	  }
+	  initialize_printer(&key);
 	  strncpy(key.name, value, 127);
 	} else if (strcasecmp("destination", keyword) == 0) {
 	  strncpy(key.v.output_to, value, 255);
