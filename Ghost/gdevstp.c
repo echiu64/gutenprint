@@ -252,7 +252,6 @@ private int
 stp_get_params(gx_device *pdev, gs_param_list *plist)
 {
   int code;
-  gs_param_string pmediasize;
   gs_param_string pinktype;
   gs_param_string pmodel;
   gs_param_string pmediatype;
@@ -282,7 +281,6 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
        (code = param_write_string(plist, "Dither", &palgorithm)) < 0 ||
        (code = param_write_string(plist, "Quality", &pquality)) < 0 ||
        (code = param_write_string(plist, "InkType", &pinktype) < 0) ||
-       (code = param_write_string(plist, "PAPERSIZE", &pmediasize)) < 0 ||
        (code = param_write_string(plist, "MediaType", &pmediatype)) < 0 ||
        (code = param_write_string(plist, "MediaSource", &pmediasource)) < 0 ||
        (code = param_write_float(plist, "Gamma", &stp_data.v.gamma)) < 0 ||
@@ -294,12 +292,19 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   return 0;
 }
 
+private void
+gsncpy(char *d, const gs_param_string *s, int limit)
+{
+  if (limit > s->size)
+    limit = s->size;
+  strncpy(d, s->data, limit);
+}
+
 /* Put parameters. */
 /* Yeah, I could have used a list for the options but... */
 private int 
 stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
-  gs_param_string pmediasize;
   gs_param_string pmediatype;
   gs_param_string pmediasource;
   gs_param_string pinktype;
@@ -341,51 +346,45 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
 
   if( param_read_string(plist, "Quality", &pquality) == 0)
     {
-      /*
-	fprintf(stderr,"Resolution defined: %s\n",pquality.data);
-      */
+#ifdef DRV_DEBUG
+	fprintf(stderr,"Resolution defined: |%s|, %d\n",pquality.data,
+		pquality.size);
+#endif
     }
 
   if( param_read_string(plist, "Dither", &palgorithm) == 0)
     {
-      /*
+#ifdef DRV_DEBUG
 	fprintf(stderr,"Dither algorithm defined: %s\n",palgorithm.data);
-      */
-    }
-
-  if( param_read_string(plist, "PAPERSIZE", &pmediasize) == 0)
-    {
-      /*
-	fprintf(stderr,"Paper size defined: %s\n",pmediasize.data);
-      */
+#endif
     }
 
   if( param_read_string(plist, "MediaSource", &pmediasource) == 0)
     {
-      /*
+#ifdef DRV_DEBUG
 	fprintf(stderr,"Media source defined: %s\n",pmediasource.data);
-      */
+#endif
     }
 
   if( param_read_string(plist, "MediaType", &pmediatype) == 0)
     {
-      /*
+#ifdef DRV_DEBUG
 	fprintf(stderr,"Media defined: %s\n",pmediatype.data);
-      */
+#endif
     }
 
   if( param_read_string(plist, "Model", &pmodel) == 0)
     {
-      /*
+#ifdef DRV_DEBUG
 	fprintf(stderr,"Model defined: %s\n",pmodel.data);
-      */
+#endif
     }
 
   if( param_read_string(plist, "InkType", &pinktype) == 0)
     {
-      /*
+#ifdef DRV_DEBUG
 	fprintf(stderr,"Ink type: |%s|\n",pinktype.data);
-      */
+#endif
     }
 
   if ( code < 0 )
@@ -398,16 +397,16 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   stp_data.v.contrast = cont;
   stp_data.v.output_type = color;
   stp_data.v.image_type = itype;
-  strncpy(stp_data.v.driver, pmodel.data, sizeof(stp_data.v.driver) - 1);
-  strncpy(stp_data.v.media_type, pmediatype.data,
+  gsncpy(stp_data.v.driver, &pmodel, sizeof(stp_data.v.driver) - 1);
+  gsncpy(stp_data.v.media_type, &pmediatype,
 	  sizeof(stp_data.v.media_type) - 1);
-  strncpy(stp_data.v.media_source, pmediasource.data,
+  gsncpy(stp_data.v.media_source, &pmediasource,
 	  sizeof(stp_data.v.media_source) - 1);
-  strncpy(stp_data.v.ink_type, pinktype.data,
+  gsncpy(stp_data.v.ink_type, &pinktype,
 	  sizeof(stp_data.v.ink_type) - 1);
-  strncpy(stp_data.v.dither_algorithm, palgorithm.data,
+  gsncpy(stp_data.v.dither_algorithm, &palgorithm,
 	  sizeof(stp_data.v.dither_algorithm) - 1);
-  strncpy(stp_data.v.resolution, pquality.data,
+  gsncpy(stp_data.v.resolution, &pquality,
 	  sizeof(stp_data.v.resolution) - 1);
   stp_data.v.gamma = gamma;
   stp_data.v.saturation = sat;
@@ -532,7 +531,6 @@ stp_open(gx_device *pdev)
 void 
 Image_get_row(Image image, unsigned char *data, int row)
 {
-  int i;
   memset(data, 0, stp_pdev->width * 3);
   if (stp_pdev->x_pixels_per_inch == stp_pdev->y_pixels_per_inch)
     {
