@@ -1,10 +1,10 @@
-gimp-print (4.1.99-b3-1) unstable; urgency=low
+gimp-print (4.1.99-b4-1) unstable; urgency=low
 
   * New upstream release
   * cupsys-driver-gimpprint only includes the basic `C' POSIX locale
     ppd files due to the size of the ppd files
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu, 27 Sep 2001 18:49:05 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Mon, 15 Oct 2001 20:45:13 +0100
 
 gimp-print (4.1.99-b2-5) unstable; urgency=low
 
