@@ -1040,6 +1040,28 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus CX-5300" driver="escp2-cx5300">
+<color>
+<model value=55>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus CX-5400" driver="escp2-cx5400">
+<color>
+<model value=55>
+<gamma value=0.688>
+<density value=1.0>
+<cyan value=0.96>
+<magenta value=1.02>
+<yellow value=1.02>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus CX-6300" driver="escp2-cx6300">
 <color>
 <model value=60>
