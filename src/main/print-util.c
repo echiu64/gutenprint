@@ -953,13 +953,11 @@ stp_get_papersize_by_index(int index)
     return (stp_papersize_t) &(paper_sizes[index]);
 }
 
-#define IABS(a) ((a) > 0 ? a : -(a))
-
 static int
 paper_size_mismatch(int l, int w, const stp_internal_papersize_t *val)
 {
-  int hdiff = IABS(l - (int) val->height);
-  int vdiff = fabs(w - (int) val->width);
+  int hdiff = abs(l - (int) val->height);
+  int vdiff = abs(w - (int) val->width);
   return hdiff + vdiff;
 }
 
@@ -1264,6 +1262,33 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p,
   stp_set_driver(v, stp_printer_get_driver(p));
 }
 
+static int
+verify_param(const char *checkval, stp_param_t *vptr,
+	     int count, const char *what, const stp_vars_t v)
+{
+  int answer = 0;
+  int i;
+  if (count > 0)
+    {
+      for (i = 0; i < count; i++)
+	if (!strcmp(checkval, vptr[i].name))
+	  {
+	    answer = 1;
+	    break;
+	  }
+      if (!answer)
+	stp_eprintf(v, "%s is not a valid %s\n", checkval, what);
+      for (i = 0; i < count; i++)
+	{
+	  stp_free((void *)vptr[i].name);
+	  stp_free((void *)vptr[i].text);
+	}
+    }
+  if (vptr)
+    free(vptr);
+  return answer;
+}
+
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 {
@@ -1286,24 +1311,9 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
     }
   if (strlen(stp_get_media_size(v)) > 0)
     {
+      const char *checkval = stp_get_media_size(v);
       vptr = (*printfuncs->parameters)(p, NULL, "PageSize", &count);
-      if (count > 0)
-	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_size(v), vptr[i].name))
-	      goto good_page_size;
-	  answer = 0;
-	  stp_eprintf(v, "%s is not a valid page size\n",
-		      stp_get_media_size(v));
-	good_page_size:
-	  for (i = 0; i < count; i++)
-	  {
-	    stp_free((void *)vptr[i].name);
-	    stp_free((void *)vptr[i].text);
-	  }
-	}
-      if (vptr)
-	stp_free(vptr);
+      answer &= verify_param(checkval, vptr, count, "page size", v);
     }
   else
     {
@@ -1321,95 +1331,36 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 
   if (strlen(stp_get_media_type(v)) > 0)
     {
+      const char *checkval = stp_get_media_type(v);
       vptr = (*printfuncs->parameters)(p, NULL, "MediaType", &count);
-      if (count > 0)
-	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_type(v), vptr[i].name))
-	      goto good_media_type;
-	  answer = 0;
-	  stp_eprintf(v, "%s is not a valid media type\n",
-		      stp_get_media_type(v));
-	good_media_type:
-	  for (i = 0; i < count; i++)
-	  {
-	    stp_free((void *)vptr[i].name);
-	    stp_free((void *)vptr[i].text);
-	  }
-	}
-      if (vptr)
-	stp_free(vptr);
+      answer &= verify_param(checkval, vptr, count, "media type", v);
     }
 
   if (strlen(stp_get_media_source(v)) > 0)
     {
+      const char *checkval = stp_get_media_source(v);
       vptr = (*printfuncs->parameters)(p, NULL, "InputSlot", &count);
-      if (count > 0)
-	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_source(v), vptr[i].name))
-	      goto good_media_source;
-	  answer = 0;
-	  stp_eprintf(v, "%s is not a valid media source\n",
-		      stp_get_media_source(v));
-	good_media_source:
-	  for (i = 0; i < count; i++)
-	  {
-	    stp_free((void *)vptr[i].name);
-	    stp_free((void *)vptr[i].text);
-	  }
-	}
-      if (vptr)
-	stp_free(vptr);
+      answer &= verify_param(checkval, vptr, count, "media source", v);
     }
 
   if (strlen(stp_get_resolution(v)) > 0)
     {
+      const char *checkval = stp_get_resolution(v);
       vptr = (*printfuncs->parameters)(p, NULL, "Resolution", &count);
-      if (count > 0)
-	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_resolution(v), vptr[i].name))
-	      goto good_resolution;
-	  answer = 0;
-	  stp_eprintf(v, "%s is not a valid resolution\n",
-		      stp_get_resolution(v));
-	good_resolution:
-	  for (i = 0; i < count; i++)
-	  {
-	    stp_free((void *)vptr[i].name);
-	    stp_free((void *)vptr[i].text);
-	  }
-	}
-      if (vptr)
-	stp_free(vptr);
+      answer &= verify_param(checkval, vptr, count, "resolution", v);
     }
 
   if (strlen(stp_get_ink_type(v)) > 0)
     {
+      const char *checkval = stp_get_ink_type(v);
       vptr = (*printfuncs->parameters)(p, NULL, "InkType", &count);
-      if (count > 0)
-	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_ink_type(v), vptr[i].name))
-	      goto good_ink_type;
-	  answer = 0;
-	  stp_eprintf(v, "%s is not a valid ink type\n", stp_get_ink_type(v));
-	good_ink_type:
-	  for (i = 0; i < count; i++)
-	  {
-	    stp_free((void *)vptr[i].name);
-	    stp_free((void *)vptr[i].text);
-	  }
-	}
-      if (vptr)
-	stp_free(vptr);
+      answer &= verify_param(checkval, vptr, count, "ink type", v);
     }
 
   for (i = 0; i < stp_dither_algorithm_count(); i++)
     if (!strcmp(stp_get_dither_algorithm(v), stp_dither_algorithm_name(i)))
       {
-	stp_set_verified(v, 1);
+	stp_set_verified(v, answer);
 	return answer;
       }
 
