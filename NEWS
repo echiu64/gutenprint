@@ -1,4 +1,4 @@
-Gimp-Print 4.3.22, released November 1, 2003, is a development
+Gimp-Print 4.3.23, released November 4, 2003, is a development
 release of this package.  Like all development releases, this version
 is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -40,6 +40,17 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.23 contains the following major changes over Gimp-Print
+4.3.22:
+
+1) A failure to compile with gcc 2.x that was introduced in 4.3.22 as
+   part of making inlining work correctly in gcc 3.x has been fixed.
+
+2) The Epson driver now allows a choice of weave patterns.  Depending
+   upon the printer, paper type, and/or resolution you may find that a
+   weave pattern other than the default works better.
 
 
 Gimp-Print 4.3.22 contains the following major changes over Gimp-Print
