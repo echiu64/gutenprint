@@ -452,9 +452,10 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LEX
 AC_PROG_YACC
-AC_PATH_PROG(FIND, find)
-AC_PATH_PROG(PERL, perl)
-AC_PATH_PROG(CONVERT, convert)
+AC_PATH_PROG([FIND], [find])
+AC_PATH_PROG([PERL], [perl])
+AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
+AC_PATH_PROG([CONVERT], [convert])
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   if test x${CONVERT} = x ; then
     AC_MSG_WARN([PostScript user's guide cannot be regenerated!])

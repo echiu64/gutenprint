@@ -42,6 +42,10 @@ extern "C" {
 
 #include <gimp-print/gimp-print.h>
 
+#include <gimp-print-ui2/curve.h>
+#include <gimp-print-ui2/gammacurve.h>
+#include <gimp-print-ui2/typebuiltins.h>
+
 /*
  * All Gimp-specific code is in this file.
  */

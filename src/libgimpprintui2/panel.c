@@ -307,11 +307,11 @@ static guchar *adjusted_thumbnail_data;
 static guchar *preview_thumbnail_data;
 
 static void
-set_gtk_curve_values(GtkWidget *gcurve, const stp_curve_t *seed)
+set_stpui_curve_values(GtkWidget *gcurve, const stp_curve_t *seed)
 {
   if (stp_curve_get_gamma(seed))
     {
-      gtk_curve_set_gamma(GTK_CURVE(gcurve), stp_curve_get_gamma(seed));
+      stpui_curve_set_gamma(STPUI_CURVE(gcurve), stp_curve_get_gamma(seed));
     }
   else
     {
@@ -320,7 +320,7 @@ set_gtk_curve_values(GtkWidget *gcurve, const stp_curve_t *seed)
       size_t count;
       stp_curve_resample(copy, 256);
       fdata = stp_curve_get_float_data(copy, &count);
-      gtk_curve_set_vector(GTK_CURVE(gcurve), count, (float *) fdata);
+      stpui_curve_set_vector(STPUI_CURVE(gcurve), count, (float *) fdata);
       stp_curve_destroy(copy);
     }
 }
@@ -333,7 +333,7 @@ set_stp_curve_values(GtkWidget *widget, option_t *opt)
   gfloat vector[256];
   GtkWidget *gcurve = GTK_WIDGET(widget);
   stp_curve_t *curve = stp_curve_create_copy(opt->info.curve.deflt);
-  gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+  stpui_curve_get_vector(STPUI_CURVE(gcurve), 256, vector);
   stp_curve_get_bounds(opt->info.curve.deflt, &lo, &hi);
   for (i = 0; i < 256; i++)
     {
@@ -342,9 +342,9 @@ set_stp_curve_values(GtkWidget *widget, option_t *opt)
       else if (vector[i] < lo)
 	vector[i] = lo;
     }
-  switch (GTK_CURVE(gcurve)->curve_type)
+  switch (STPUI_CURVE(gcurve)->curve_type)
     {
-    case GTK_CURVE_TYPE_SPLINE:
+    case STPUI_CURVE_TYPE_SPLINE:
       stp_curve_set_interpolation_type(curve, STP_CURVE_TYPE_SPLINE);
       break;
     default:
@@ -363,7 +363,7 @@ open_curve_editor(GtkObject *button, gpointer xopt)
   if (opt->info.curve.is_visible == FALSE)
     {
       GtkWidget *gcurve =
-	GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+	GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
       const stp_curve_t *seed =
 	stp_get_curve_parameter(pv->v, opt->fast_desc->name);
       stp_curve_t *nseed = NULL;
@@ -373,7 +373,7 @@ open_curve_editor(GtkObject *button, gpointer xopt)
 	nseed = stp_curve_create_copy(seed);
       gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), FALSE);
       gtk_widget_show(GTK_WIDGET(opt->info.curve.dialog));
-      set_gtk_curve_values(gcurve, seed);
+      set_stpui_curve_values(gcurve, seed);
       opt->info.curve.is_visible = TRUE;
       if (opt->info.curve.current)
 	stp_curve_destroy(opt->info.curve.current);
@@ -390,9 +390,9 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
-    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+    GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
   const stp_curve_t *seed = opt->info.curve.deflt;
-  set_gtk_curve_values(gcurve, seed);
+  set_stpui_curve_values(gcurve, seed);
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
@@ -404,11 +404,11 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
-    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+    GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
   const stp_curve_t *seed = opt->info.curve.current;
   if (!seed)
     seed = opt->info.curve.deflt;
-  set_gtk_curve_values(gcurve, seed);
+  set_stpui_curve_values(gcurve, seed);
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
@@ -420,7 +420,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
   GtkWidget *gcurve =
-    GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
+    GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
   gtk_widget_hide(opt->info.curve.dialog);
   gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
   opt->info.curve.is_visible = FALSE;
@@ -525,21 +525,22 @@ stpui_create_curve(option_t *opt,
 		     opt, NULL, NULL, FALSE, FALSE,
 		     NULL);
   gtk_window_set_policy(GTK_WINDOW(opt->info.curve.dialog), 1, 1, 1);
-  opt->info.curve.gamma_curve = gtk_gamma_curve_new();
+  opt->info.curve.gamma_curve = stpui_gamma_curve_new();
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(opt->info.curve.dialog)->vbox),
 		     opt->info.curve.gamma_curve, TRUE, TRUE, 0);
   stp_curve_get_bounds(opt->info.curve.deflt, &lower, &upper);
-  gtk_curve_set_range(GTK_CURVE(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
-		      0.0, 1.0, lower, upper);
+  stpui_curve_set_range
+    (STPUI_CURVE (STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+     0.0, 1.0, lower, upper);
   gtk_widget_set_usize
-    (GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve), 256, 256);
+    (GTK_WIDGET(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve), 256, 256);
   gtk_widget_show(opt->info.curve.gamma_curve);
 
   g_signal_connect
-    (G_OBJECT(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+    (G_OBJECT(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
      "curve-type-changed", G_CALLBACK(curve_type_changed), opt);
   g_signal_connect
-    (G_OBJECT(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
+    (G_OBJECT(STPUI_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve),
      "event", G_CALLBACK(curve_draw_callback), opt);
 
   if (opt->fast_desc->help)

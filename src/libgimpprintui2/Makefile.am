@@ -46,6 +46,9 @@ libgimpprintui2_la_SOURCES =			\
 	plist.c					\
 	ui-utils.c				\
 	print-image-thumbnail.c			\
+	curve.c					\
+	gammacurve.c				\
+	typebuiltins.c				\
 	gimp-print-ui-internal.h
 
 libgimpprintui2_la_LIBADD = $(GIMPPRINTUI2_LIBDEPS)
@@ -69,6 +72,23 @@ pkgconfigdata_DATA = gimpprintui2.pc
 
 
 ## Rules
+
+# Copied from include/gimp-print-ui2/Makefile.am
+# This duplication needs fixing somehow
+stpui_public_h_sources = \
+	$(top_srcdir)/include/gimp-print-ui2/gimp-print-ui.h	\
+	$(top_srcdir)/include/gimp-print-ui2/curve.h		\
+	$(top_srcdir)/include/gimp-print-ui2/gammacurve.h
+
+# Really need to depend upon $(stpui_public_h_sources) here...
+typebuiltins.c: Makefile
+	( cd $(srcdir) && $(GLIB_MKENUMS) \
+			--fhead "#include <gimp-print-ui2/gimp-print-ui.h>" \
+			--fprod "\n/* enumerations from \"@filename@\" */" \
+			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" \
+			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
+			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
+		$(stpui_public_h_sources) ) > $@
 
 
 ## Clean
