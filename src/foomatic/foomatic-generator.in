@@ -100,15 +100,6 @@ if ($foomatic3) {
     print STDERR "done.\n";
 }
 
-open PIPE, "./stp_limits|" or die "Cannot run stp_limits: $!\n";
-print STDERR "Loading options from ./stp_limits...";
-while(<PIPE>) {
-    next if m!^#!;
-    eval $_;
-}
-close PIPE or die "Cannot run stp_limits: $!\n";
-print STDERR "done.\n";
-
 open PIPE, "./printers|" or die "Cannot run printers: $!\n";
 print STDERR "Loading options from ./printers...";
 while(<PIPE>) {
