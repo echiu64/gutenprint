@@ -419,7 +419,7 @@ do_print_dialog (gchar *proc_name)
   char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
   stpui_set_printrc_file(filename);
   g_free(filename);
-/*  stpui_set_errfunc(gimp_errfunc); */
+  stpui_set_errfunc(gimp_errfunc);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
   stpui_set_thumbnail_data((void *) image_ID);
   return stpui_do_print_dialog();
