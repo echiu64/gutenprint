@@ -18,21 +18,19 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.4 gnu
+AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies 
 
 @SET_MAKE@
 
 MAINT_CHARSET = latin1
-
+ACLOCAL_AMFLAGS = -I m4 -I m4local
 
 ## Variables
 
 NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian
 SUBDIRS = include intl lib man src samples $(NONGIMP_SUBDIRS) po doc
-DISTDIRS = m4 scripts $(NONGIMP_DISTDIRS)
-
-EXTRA_DIST = configure.in.in autogen.sh
+DISTDIRS = m4 m4extra scripts $(NONGIMP_DISTDIRS)
 
 
 ## Rules
@@ -65,17 +63,6 @@ ChangeLog:
 	  exit 1 ; \
 	fi
 
-
-# Rebuild configure.in from configure.in.in if configure.in.in is available.
-# If not, don't do anything.
-
-configure.in: configure.in.in
-	if test -f configure.in.in ; then \
-	  sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date '+%d %b %Y'`\"/" configure.in.in > configure.in ; \
-	fi
-
-configure.in.in:
-	true
 
 dist-hook:
 	for dir in $(DISTDIRS) ; do \
@@ -144,15 +131,17 @@ debian/control:
 ## Clean
 
 CLEANSCRIPTS = \
-	config.guess \
-	config.sub \
+	depcomp \
 	install-sh \
 	ltconfig \
-	ltmain.sh \
+	mdate-sh \
 	missing \
 	mkinstalldirs
 
 CLEANFILES = .noupdate
 MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
+
+
+EXTRA_DIST = autogen.sh
 
 .PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLog

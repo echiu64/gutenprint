@@ -30,16 +30,14 @@ AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
-libexecdir = $(gimptool_prefix)/plug-ins
+gimp_plug_indir = $(gimptool_prefix)/plug-ins
 
 
 ## Programs
 
-GIMP_BIN = print
-
-libexec_PROGRAMS = @GIMP_BIN@
-
-EXTRA_PROGRAMS = print
+if BUILD_GIMP
+gimp_plug_in_PROGRAMS = print
+endif
 
 print_SOURCES = \
 	print-image-gimp.c \
@@ -54,9 +52,9 @@ print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 ## Rules
 
-install-libexecPROGRAMS: $(libexec_PROGRAMS)
+install-gimp_plug_inPROGRAMS: $(gimp_plug_in_PROGRAMS)
 	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(libexec_PROGRAMS)'; for p in $$list; do \
+	list='$(gimp_plug_in_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
 	    if test -f .libs/$$p; then \
 	      cd .libs; \
@@ -66,9 +64,9 @@ install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	  else :; fi; \
 	done
 
-uninstall-libexecPROGRAMS:
+uninstall-gimp_plug_inPROGRAMS:
 	@DESTDIR='$(DESTDIR)'; export DESTDIR;\
-	list='$(libexec_PROGRAMS)'; for p in $$list; do \
+	list='$(gimp_plug_in_PROGRAMS)'; for p in $$list; do \
 	    echo $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
             $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
 	    echo $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
@@ -83,5 +81,4 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

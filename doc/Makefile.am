@@ -29,19 +29,19 @@ SUBDIRS = developer users_guide
 ## Data
 
 docs:
-	cd programming; $(MAKE) doc
-	cd users_guide; $(MAKE) doc
+	cd developer; $(MAKE)
+	cd users_guide; $(MAKE)
 
 ps: $(MANUAL).ps
-	cd programming; $(MAKE) ps
+	cd developer; $(MAKE) ps
 	cd users_guide; $(MAKE) ps
 
 pdf: $(MANUAL).pdf
-	cd programming; $(MAKE) pdf
+	cd developer; $(MAKE) pdf
 	cd users_guide; $(MAKE) pdf
 
 html: 
-	cd programming; $(MAKE) html
+	cd developer; $(MAKE) html
 	cd users_guide; $(MAKE) html
 
 

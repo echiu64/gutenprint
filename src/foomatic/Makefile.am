@@ -33,13 +33,10 @@ LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
 
-FOOMATIC_NOINST_BIN = printer_options paper_sizes gimp-print-version \
+if BUILD_FOOMATIC
+noinst_PROGRAMS = printer_options paper_sizes gimp-print-version \
 	stp_limits printers
-
-noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
-
-EXTRA_PROGRAMS = printer_options gimp-print-version paper_sizes \
-	stp_limits printers
+endif
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = $(LIBGIMPPRINT_LIBS)
@@ -87,7 +84,7 @@ clean-local:
 
 foomatic-data: foomatic-stamp
 
-foomatic-stamp: foomatic-generator foomatic-printermap $(EXTRA_PROGRAMS)
+foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS)
 	-$(RM) -r foomatic-db
 	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates
 	touch foomatic-stamp
@@ -99,7 +96,6 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Clean
 
-CLEANFILES = $(noinst_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = foomatic-printermap foomatic-templates/*.xml

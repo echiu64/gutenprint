@@ -29,19 +29,18 @@ MAINT_CHARSET = latin1
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@
 
-pkgconfigdir = $(prefix)/lib/pkgconfig
+m4datadir = $(datadir)/aclocal
+pkgconfigdatadir = $(prefix)/lib/pkgconfig
 
 
 ## Programs
 
-MAIN_BIN = libgimpprint.la
-MAIN_SCR = gimpprint-config
-
-bin_SCRIPTS = @MAIN_SCR@
-EXTRA_SCRIPTS = gimpprint-config
-
-lib_LTLIBRARIES = @MAIN_BIN@
-EXTRA_LTLIBRARIES = libgimpprint.la
+if BUILD_LIBGIMPPRINT
+lib_LTLIBRARIES = libgimpprint.la
+endif
+if BUILD_LIBGIMPPRINT
+bin_SCRIPTS = gimpprint-config
+endif
 
 libgimpprint_la_SOURCES = \
 	gimp-print-internal.h \
@@ -73,12 +72,12 @@ libgimpprint_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
 
 ## Data
 
-MAIN_DAT = gimpprint.m4
-
-m4datadir = $(datadir)/aclocal
-m4data_DATA = @MAIN_DAT@
-
-pkgconfig_DATA = gimp-print.pc
+if BUILD_LIBGIMPPRINT
+m4data_DATA = gimpprint.m4
+endif
+if BUILD_LIBGIMPPRINT
+pkgconfigdata_DATA = gimpprint.pc
+endif
 
 
 ## Rules
@@ -98,7 +97,7 @@ printdefl.o: printdefy.o
 ## Clean
 
 CLEANFILES = print-printers.c
-DISTCLEANFILES = gimpprint-config gimp-print.pc
+DISTCLEANFILES = gimpprint-config gimpprint-config.in gimpprint.pc gimpprint.pc.in gimpprint.m4
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimpprint.m4 gimpprint-config.in printers.xml
+EXTRA_DIST = gimpprint.m4.top gimpprint.m4.bot printers.xml

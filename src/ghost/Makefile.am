@@ -23,6 +23,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
+## Clean
+
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
@@ -43,11 +46,9 @@ LIBS = @IJS_LIBS@ @LIBS@ $(INTLLIBS)
 
 ## Programs
 
-IJS_BIN = ijsgimpprint
-
-bin_PROGRAMS = @IJS_BIN@
-
-EXTRA_PROGRAMS = ijsgimpprint
+if BUILD_IJS
+bin_PROGRAMS = ijsgimpprint
+endif
 
 ijsgimpprint_LDADD = $(LIBGIMPPRINT_LIBS)
 ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)

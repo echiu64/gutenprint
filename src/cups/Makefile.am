@@ -46,19 +46,19 @@ LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
 
-CUPS_BIN = cups-calibrate
-CUPS_BACKEND_BIN = epson canon
-CUPS_FILTER_BIN = rastertoprinter commandtoepson commandtocanon
-CUPS_NOINST_BIN = genppd
+if BUILD_CUPS
+bin_PROGRAMS = cups-calibrate
+endif
+if BUILD_CUPS
+cupsexec_backend_PROGRAMS = epson canon
+endif
+if BUILD_CUPS
+cupsexec_filter_PROGRAMS = rastertoprinter commandtoepson commandtocanon
+endif
+if BUILD_CUPS
+noinst_PROGRAMS = genppd
+endif
 
-bin_PROGRAMS = @CUPS_BIN@
-cupsexec_backend_PROGRAMS = @CUPS_BACKEND_BIN@
-cupsexec_filter_PROGRAMS = @CUPS_FILTER_BIN@
-noinst_PROGRAMS = @CUPS_NOINST_BIN@
-
-EXTRA_PROGRAMS = cups-calibrate commandtoepson epson genppd rastertoprinter commandtocanon canon
-
-CUPS_LIBS = @CUPS_LIBS@
 
 cups_calibrate_SOURCES = cups-calibrate.c
 cups_calibrate_LDADD = -lm
@@ -83,11 +83,15 @@ rastertoprinter_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 ## Data
 
+if BUILD_CUPS
 CUPS_PKG = calibrate.ppm
+endif
+if BUILD_CUPS
 CUPS_CONF = command.types
+endif
 
-pkgdata_DATA = @CUPS_PKG@
-pkgsysconf_DATA = @CUPS_CONF@
+pkgdata_DATA = $(CUPS_PKG)
+pkgsysconf_DATA = $(CUPS_CONF)
 
 if BUILD_CUPS
 INSTALL_DATA_LOCAL_DEPS = ppd
@@ -226,7 +230,7 @@ clean-local:
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS) ppd-stamp
+CLEANFILES = ppd-stamp
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \

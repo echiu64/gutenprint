@@ -33,16 +33,13 @@ LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
 
-ESCPUTIL_BIN = escputil
-
-bin_PROGRAMS = @ESCPUTIL_BIN@
-
-EXTRA_PROGRAMS = escputil
+if BUILD_ESCPUTIL
+bin_PROGRAMS = escputil
+endif
 
 escputil_LDADD = $(LIBREADLINE_DEPS)
 
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in

@@ -32,11 +32,9 @@ LIBS = @LIBS@ $(INTLLIBS)
 
 ## Programs
 
-TESTPATTERN_BIN = testpattern
-
-bin_PROGRAMS = @TESTPATTERN_BIN@
-
-EXTRA_PROGRAMS = testpattern
+if BUILD_TESTPATTERN
+bin_PROGRAMS = testpattern
+endif
 
 LFLAGS = -i
 YFLAGS = -d
@@ -60,7 +58,7 @@ pkgdata_DATA = @SAMPLE_IMAGES@
 
 ## Clean
 
+DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
 MAINTAINERCLEANFILES = Makefile.in
 
-DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
 EXTRA_DIST =  testpatterny.h testpattern.sample
