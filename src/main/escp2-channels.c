@@ -180,7 +180,7 @@ DECLARE_INK_CHANNEL(photo_black);
 
 static const physical_subchannel_t f360_photo_black_subchannels[] =
 {
-  { 0, 0, 1, "BlackDensity", NULL }
+  { 0, 0, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_black);
