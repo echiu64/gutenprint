@@ -199,7 +199,9 @@ typedef struct
 {
   const char *name;
   const ink_channel_t *const *channels;
+  const ink_channel_t *const *aux_channels;
   short channel_count;
+  short aux_channel_count;
 } channel_set_t;
 
 typedef struct
@@ -598,6 +600,7 @@ typedef struct
   int drop_size;		/* ID of the drop size we're using */
   int ink_resid;		/* Array index for the drop set we're using */
   const escp2_inkname_t *inkname; /* Description of the ink set */
+  int use_aux_channels;		/* Use gloss channel */
 
   /* Ink channels */
   int logical_channels;		/* Number of logical ink channels (e.g.CMYK) */

@@ -150,6 +150,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Separation_rows", pd->separation_rows);
   print_remote_int_param(v, "Pseudo_separation_rows", pd->pseudo_separation_rows);
   print_remote_int_param(v, "Extra_720dpi_separation", pd->extra_720dpi_separation);
+  print_remote_int_param(v, "Use_aux_channels", pd->use_aux_channels);
   print_remote_param(v, "Ink name", pd->inkname->name);
   print_remote_int_param(v, "  channels", pd->inkname->channel_set->channel_count);
   print_remote_int_param(v, "  inkset", pd->inkname->inkset);
