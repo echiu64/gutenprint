@@ -1283,29 +1283,6 @@ printrc_save(void)
     fprintf(stderr, "Number of printers: %d\n", plist_count);
 #endif
 
-#if 0
-    fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
-
-    for (i = 0, p = plist; i < plist_count; i ++, p ++)
-      {
-	fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,",
-		p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
-		p->v.output_type, p->v.resolution, p->v.media_size,
-		p->v.media_type, p->v.media_source);
-	fprintf(fp, "%.3f,%.3f,%d,%d,%d,%.3f,",
-		p->v.brightness, p->v.scaling, p->v.orientation, p->v.left,
-		p->v.top, p->v.gamma);
-	fprintf(fp, "%.3f,%.3f,%.3f,%.3f,%d,%d,%.3f,%.3f,%s,%s,%d,\n",
-		p->v.contrast, p->v.cyan, p->v.magenta, p->v.yellow,
-		p->v.linear, p->v.image_type, p->v.saturation, p->v.density,
-		p->v.ink_type, p->v.dither_algorithm, p->v.unit);
-
-#ifdef DEBUG
-        fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
-#endif
-
-      }
-#else
     fputs("#PRINTRCv1 written by GIMP-PRINT " PLUG_IN_VERSION "\n", fp);
 
     fprintf(fp, "Current-Printer: %s\n", plist[plist_current].name);
@@ -1346,7 +1323,6 @@ printrc_save(void)
 #endif
 
       }
-#endif
     fclose(fp);
   } else {
     fprintf(stderr,"could not open printrc file \"%s\"\n",filename);
