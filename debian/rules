@@ -77,8 +77,6 @@ install: build debian/control
 	cd debian/gimp-print-build ; \
 	$(MAKE) DESTDIR=`pwd`/../gimp-print-install install
 
-	scripts/mkinstalldirs debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins
-
 	dh_movefiles --sourcedir=debian/gimp-print-install
 	rm debian/foomatic-db-gimp-print/usr/share/foomatic/kitload.log
 
