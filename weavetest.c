@@ -3,7 +3,7 @@
  *
  *   Print plug-in EPSON ESC/P2 driver for the GIMP.
  *
- *   Copyright 1999 Robert-2000 Krawitz (rlk@alum.mit.edu)
+ *   Copyright 1999-2000 Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -339,14 +339,22 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
   w->pass += separation * vertical_subpass;
   w->logicalpassstart = (w->pass * jetsused) - initialoffset - (weavefactor * separation) +
     modd((w->pass + separation - 2), separation);
+#if 0
   printf("%d ", w->logicalpassstart);
+#endif
   w->jet = divv((row + (realjets * separation) - w->logicalpassstart),
 		separation) - realjets;
+#if 0
   printf("%d ", w->jet);
+#endif
   w->jet += jetsused * (vertical_subpasses - 1);
+#if 0
   printf("%d ", w->jet);
+#endif
   w->logicalpassstart = w->row - (w->jet * separation);
+#if 0
   printf("%d\n", w->logicalpassstart);
+#endif
   if (w->logicalpassstart >= 0)
     w->physpassstart = w->logicalpassstart;
   else
@@ -375,11 +383,6 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 #endif
 }
 
-int nrows = 1000;
-int physjets = 1;
-int physsep = 1;
-int physpasses = 1;
-
 int
 main(int argc, char **argv)
 {
@@ -389,14 +392,35 @@ main(int argc, char **argv)
   int errors = 0;
   int lastpass = -1;
   int newestpass = -1;
-  int *passstarts = malloc(sizeof(int) * nrows);
-  int *logpassstarts = malloc(sizeof(int) * nrows);
-  int *passends = malloc(sizeof(int) * nrows);
-  int *passcounts = malloc(sizeof(int) * nrows);
-  char *physpassstuff = malloc(nrows);
-  char *rowdetail = malloc(nrows * physjets);
+  int *passstarts;
+  int *logpassstarts;
+  int *passends;
+  int *passcounts;
+  char *physpassstuff;
+  char *rowdetail;
+  int nrows;
+  int physjets;
+  int physsep;
+  int physpasses;
+  if (argc != 5)
+    {
+      fprintf(stderr, "Usage: %s jets separation passes rows\n",
+	      argv[0]);
+      return 2;
+    }
+  physjets = strtol(argv[1], 0, 0);
+  physsep = strtol(argv[2], 0, 0);
+  physpasses = strtol(argv[3], 0, 0);
+  nrows = strtol(argv[4], 0, 0);
+  passstarts = malloc(sizeof(int) * nrows);
+  logpassstarts = malloc(sizeof(int) * nrows);
+  passends = malloc(sizeof(int) * nrows);
+  passcounts = malloc(sizeof(int) * nrows);
+  physpassstuff = malloc(nrows);
+  rowdetail = malloc(nrows * physjets);
   memset(rowdetail, 0, nrows * physjets);
   memset(physpassstuff, -1, nrows);
+
   initialize_weave(physjets, physsep, physpasses);
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
