@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
  *   Revision 1.4  1999/10/17 23:01:01  rlk
  *   Move various dither functions into print-utils.c
  *
@@ -405,8 +408,8 @@ pcl_print(int       model,		/* I - Model */
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   GPixelRgn	rgn;		/* Image region */
+  unsigned short *out;
   unsigned char	*in,		/* Input pixels */
-		*out,		/* Output pixels */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
@@ -429,7 +432,7 @@ pcl_print(int       model,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert_t	colorfunc;	/* Color conversion function... */
+  convert16_t	colorfunc;	/* Color conversion function... */
   void		(*writefunc)(FILE *, unsigned char *, int, int);
 				/* PCL output function */
 
@@ -453,20 +456,20 @@ pcl_print(int       model,		/* I - Model */
     out_bpp = 3;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_rgb;
+      colorfunc = rgb_to_rgb16;
     else
-      colorfunc = indexed_to_rgb;
+      colorfunc = indexed_to_rgb16;
   }
   else
   {
     out_bpp = 1;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_gray;
+      colorfunc = rgb_to_gray16;
     else if (cmap == NULL)
-      colorfunc = gray_to_gray;
+      colorfunc = gray_to_gray16;
     else
-      colorfunc = indexed_to_gray;
+      colorfunc = indexed_to_gray16;
   };
 
  /*
@@ -824,7 +827,7 @@ pcl_print(int       model,		/* I - Model */
   if (landscape)
   {
     in  = g_malloc(drawable->height * drawable->bpp);
-    out = g_malloc(drawable->height * out_bpp);
+    out = g_malloc(drawable->height * out_bpp * 2);
 
     errdiv  = drawable->width / out_height;
     errmod  = drawable->width % out_height;
@@ -848,7 +851,7 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       };
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
+      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)
@@ -859,14 +862,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, x, drawable->height, out_width, black);
+          dither_black4_16(out, x, drawable->height, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4(out, x, drawable->height, out_width, cyan, magenta,
-                       yellow, black);
+          dither_cmyk4_16(out, x, drawable->height, out_width, cyan, magenta,
+			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -886,13 +889,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, x, drawable->height, out_width, black);
+          dither_black16(out, x, drawable->height, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk(out, x, drawable->height, out_width, cyan, magenta,
-                      yellow, black);
+          dither_cmyk16(out, x, drawable->height, out_width, cyan, magenta,
+			yellow, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);
@@ -914,7 +917,7 @@ pcl_print(int       model,		/* I - Model */
   else
   {
     in  = g_malloc(drawable->width * drawable->bpp);
-    out = g_malloc(drawable->width * out_bpp);
+    out = g_malloc(drawable->width * out_bpp * 2);
 
     errdiv  = drawable->height / out_height;
     errmod  = drawable->height % out_height;
@@ -938,7 +941,7 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       };
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
 		   saturation);
 
       if (xdpi == 300 && model == 800)
@@ -949,14 +952,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, y, drawable->width, out_width, black);
+          dither_black4_16(out, y, drawable->width, out_width, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk4(out, y, drawable->width, out_width, cyan, magenta,
-                       yellow, black);
+          dither_cmyk4_16(out, y, drawable->width, out_width, cyan, magenta,
+			  yellow, black);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -976,13 +979,13 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, x, drawable->width, out_width, black);
+          dither_black16(out, x, drawable->width, out_width, black);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
 	{
-          dither_cmyk(out, x, drawable->width, out_width, cyan, magenta,
-                      yellow, black);
+          dither_cmyk16(out, x, drawable->width, out_width, cyan, magenta,
+			yellow, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);

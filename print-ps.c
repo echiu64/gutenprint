@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
  *   Revision 1.3  1999/10/14 01:59:59  rlk
  *   Saturation
  *
@@ -326,8 +329,8 @@ static char	*ps_ppd_file = NULL;
  * Local functions...
  */
 
-static void	ps_hex(FILE *, guchar *, int);
-static void	ps_ascii85(FILE *, guchar *, int, int);
+static void	ps_hex(FILE *, gushort *, int);
+static void	ps_ascii85(FILE *, gushort *, int, int);
 static char	*ppd_find(char *, char *, char *, int *);
 
 
@@ -524,8 +527,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   int		i, j;		/* Looping vars */
   int		x, y;		/* Looping vars */
   GPixelRgn	rgn;		/* Image region */
-  guchar	*in,		/* Input pixels from image */
-		*out;		/* Output pixels for printer */
+  guchar	*in;		/* Input pixels from image */
+  gushort	*out;		/* Output pixels for printer */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -541,7 +544,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 		temp_height,	/* Temporary height of image on page */
 		landscape;	/* True if we rotate the output 90 degrees */
   time_t	curtime;	/* Current time of day */
-  convert_t	colorfunc;	/* Color conversion function... */
+  convert16_t	colorfunc;	/* Color conversion function... */
   char		*command;	/* PostScript command */
   int		order,		/* Order of command */
 		num_commands;	/* Number of commands */
@@ -571,20 +574,20 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     out_bpp = 3;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_rgb;
+      colorfunc = rgb_to_rgb16;
     else
-      colorfunc = indexed_to_rgb;
+      colorfunc = indexed_to_rgb16;
   }
   else
   {
     out_bpp = 1;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_gray;
+      colorfunc = rgb_to_gray16;
     else if (cmap == NULL)
-      colorfunc = gray_to_gray;
+      colorfunc = gray_to_gray16;
     else
-      colorfunc = indexed_to_gray;
+      colorfunc = indexed_to_gray16;
   };
 
  /*
@@ -831,7 +834,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
   };
 
   in  = g_malloc(drawable->width * drawable->bpp);
-  out = g_malloc(drawable->width * out_bpp + 3);
+  out = g_malloc((drawable->width * out_bpp + 3) * 2);
 
   if (model == 0)
   {
@@ -855,7 +858,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
 		   saturation);
 
       ps_hex(prn, out, drawable->width * out_bpp);
@@ -899,8 +902,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut, cmap,
-		   saturation);
+      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut16,
+		   cmap, saturation);
 
       out_length = out_offset + drawable->width * out_bpp;
 
@@ -936,7 +939,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 
 static void
 ps_hex(FILE   *prn,	/* I - File to print to */
-       guchar *data,	/* I - Data to print */
+       gushort *data,	/* I - Data to print */
        int    length)	/* I - Number of bytes to print */
 {
   int		col;	/* Current column */
@@ -946,13 +949,14 @@ ps_hex(FILE   *prn,	/* I - File to print to */
   col = 0;
   while (length > 0)
   {
+    guchar pixel = (*data & 0xff00) >> 8;
    /*
     * Put the hex chars out to the file; note that we don't use fprintf()
     * for speed reasons...
     */
 
-    putc(hex[*data >> 4], prn);
-    putc(hex[*data & 15], prn);
+    putc(hex[pixel >> 4], prn);
+    putc(hex[pixel & 15], prn);
 
     data ++;
     length --;
@@ -973,7 +977,7 @@ ps_hex(FILE   *prn,	/* I - File to print to */
 
 static void
 ps_ascii85(FILE   *prn,		/* I - File to print to */
-	   guchar *data,	/* I - Data to print */
+	   gushort *data,	/* I - Data to print */
 	   int    length,	/* I - Number of bytes to print */
 	   int    last_line)	/* I - Last line of raster data? */
 {
@@ -984,7 +988,11 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
 
   while (length > 3)
   {
-    b = (((((data[0] << 8) | data[1]) << 8) | data[2]) << 8) | data[3];
+    guchar d0 = (data[0] & 0xff00) >> 8;
+    guchar d1 = (data[1] & 0xff00) >> 8;
+    guchar d2 = (data[2] & 0xff00) >> 8;
+    guchar d3 = (data[3] & 0xff00) >> 8;
+    b = (((((d0 << 8) | d1) << 8) | d2) << 8) | d3;
 
     if (b == 0)
       putc('z', prn);

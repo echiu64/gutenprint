@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
  *   Revision 1.5  1999/10/14 01:59:59  rlk
  *   Saturation
  *
@@ -346,9 +349,8 @@ escp2_print(int       model,		/* I - Model */
   int		xdpi, ydpi;	/* Resolution */
   int		n;		/* Output number */
   GPixelRgn	rgn;		/* Image region */
-  unsigned short *out16;	/* Output pixels (16-bit) */
+  unsigned short *out;	/* Output pixels (16-bit) */
   unsigned char	*in,		/* Input pixels */
-		*out,		/* Output pixels */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
@@ -374,8 +376,7 @@ escp2_print(int       model,		/* I - Model */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-  convert_t	colorfunc = 0;	/* Color conversion function... */
-  convert16_t	colorfunc16 = 0;	/* Color conversion function... */
+  convert16_t	colorfunc = 0;	/* Color conversion function... */
 
 
  /*
@@ -397,25 +398,20 @@ escp2_print(int       model,		/* I - Model */
     out_bpp = 3;
 
     if (drawable->bpp >= 3)
-      {
-	if (model == 7)
-	  colorfunc16 = rgb_to_rgb16;
-	else
-	  colorfunc = rgb_to_rgb;
-      }
+      colorfunc = rgb_to_rgb16;
     else
-      colorfunc = indexed_to_rgb;
+      colorfunc = indexed_to_rgb16;
   }
   else
   {
     out_bpp = 1;
 
     if (drawable->bpp >= 3)
-      colorfunc = rgb_to_gray;
+      colorfunc = rgb_to_gray16;
     else if (cmap == NULL)
-      colorfunc = gray_to_gray;
+      colorfunc = gray_to_gray16;
     else
-      colorfunc = indexed_to_gray;
+      colorfunc = indexed_to_gray16;
   };
 
  /*
@@ -702,8 +698,7 @@ escp2_print(int       model,		/* I - Model */
   if (landscape)
   {
     in  = g_malloc(drawable->height * drawable->bpp);
-    out16 = g_malloc(drawable->height * out_bpp * 2);
-    out = g_malloc(drawable->height * out_bpp);
+    out = g_malloc(drawable->height * out_bpp * 2);
 
     errdiv  = drawable->width / out_height;
     errmod  = drawable->width % out_height;
@@ -727,21 +722,17 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       };
 
-      if (colorfunc)
-	(*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
-		     saturation);
-      else if (colorfunc16)
-	(*colorfunc16)(in, out16, drawable->height, drawable->bpp, lut16, cmap,
-		       saturation);
+      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
+		   saturation);
 
       if (output_type == OUTPUT_GRAY)
       {
-        dither_black(out, x, drawable->height, out_width, black);
+        dither_black16(out, x, drawable->height, out_width, black);
         escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
       }
       else if (model == 7)
       {
-        dither_cmyk6_16(out16, x, drawable->height, out_width, cyan, magenta,
+        dither_cmyk6_16(out, x, drawable->height, out_width, cyan, magenta,
 			lcyan, lmagenta, yellow, black);
 
 	escp2_write6(prn, black, length, 0, 0, ydpi, model, out_width, left);
@@ -753,7 +744,7 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk(out, x, drawable->height, out_width, cyan, magenta,
+        dither_cmyk16(out, x, drawable->height, out_width, cyan, magenta,
                     yellow, black);
 
         escp2_write(prn, cyan, length, 2, ydpi, model, out_width, left);
@@ -777,8 +768,7 @@ escp2_print(int       model,		/* I - Model */
   else
   {
     in  = g_malloc(drawable->width * drawable->bpp);
-    out = g_malloc(drawable->width * out_bpp);
-    out16 = g_malloc(drawable->width * out_bpp * 2);
+    out = g_malloc(drawable->width * out_bpp * 2);
 
     errdiv  = drawable->height / out_height;
     errmod  = drawable->height % out_height;
@@ -802,25 +792,22 @@ escp2_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       };
 
-      if (colorfunc)
-	(*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
-		     saturation);
-      else if (colorfunc16)
-	(*colorfunc16)(in, out16, drawable->width, drawable->bpp, lut16, cmap,
-		       saturation);
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
+		   saturation);
 
       if (output_type == OUTPUT_GRAY)
       {
-        dither_black(out, y, drawable->width, out_width, black);
+        dither_black16(out, y, drawable->width, out_width, black);
         escp2_write(prn, black, length, 0, ydpi, model, out_width, left);
       }
       else if (model == 7)
       {
-        dither_cmyk6_16(out16, y, drawable->width, out_width, cyan, magenta,
+        dither_cmyk6_16(out, y, drawable->width, out_width, cyan, magenta,
 			lcyan, lmagenta, yellow, black);
 
         escp2_write6(prn, lcyan, length, 1, 2, ydpi, model, out_width, left);
-        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width, left);
+        escp2_write6(prn, lmagenta, length, 1, 1, ydpi, model, out_width,
+		     left);
         escp2_write6(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
         escp2_write6(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
         escp2_write6(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
@@ -828,8 +815,8 @@ escp2_print(int       model,		/* I - Model */
       }
       else
       {
-        dither_cmyk(out, y, drawable->width, out_width, cyan, magenta,
-                    yellow, black);
+        dither_cmyk16(out, y, drawable->width, out_width, cyan, magenta,
+		      yellow, black);
 
         escp2_write(prn, cyan, length, 2, ydpi, model, out_width, left);
         escp2_write(prn, magenta, length, 1, ydpi, model, out_width, left);

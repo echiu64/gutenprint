@@ -115,53 +115,79 @@ typedef void (*convert16_t)(guchar *in, gushort *out, int width, int bpp,
  */
 
 extern void	dither_black(guchar *, int, int, int, unsigned char *);
+extern void	dither_black16(gushort *, int, int, int, unsigned char *);
+
 extern void	dither_cmyk(guchar *, int, int, int, unsigned char *,
 		            unsigned char *, unsigned char *, unsigned char *);
-extern void	dither_cmyk6(guchar *, int, int, int, unsigned char *,
-			     unsigned char *, unsigned char *, unsigned char *,
-			     unsigned char *, unsigned char *);
+extern void	dither_cmyk16(gushort *, int, int, int, unsigned char *,
+			       unsigned char *, unsigned char *,
+			       unsigned char *);
+
 extern void	dither_cmyk6_16(gushort *, int, int, int, unsigned char *,
-				unsigned char *, unsigned char *, unsigned char *,
-				unsigned char *, unsigned char *);
+				unsigned char *, unsigned char *,
+				unsigned char *, unsigned char *,
+				unsigned char *);
 
 extern void	dither_black4(guchar *, int, int, int, unsigned char *);
-extern void	dither_cmyk4(guchar *, int, int, int, unsigned char *,
-		             unsigned char *, unsigned char *, unsigned char *);
+extern void	dither_black4_16(gushort *, int, int, int, unsigned char *);
 
-extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *,
-			     float);
-extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *,
-				float);
-extern void	indexed_to_rgb(guchar *, guchar *, int, int, lut_t *, guchar *,
-			       float);
-extern void	rgb_to_gray(guchar *, guchar *, int, int, lut_t *, guchar *,
-			    float);
+extern void	dither_cmyk4(guchar *, int, int, int, unsigned char *,
+		             unsigned char *, unsigned char *,
+			     unsigned char *);
+extern void	dither_cmyk4_16(gushort *, int, int, int, unsigned char *,
+				unsigned char *, unsigned char *,
+				unsigned char *);
+
+
+extern void	gray_to_gray(guchar *, guchar *, int, int, lut_t *,
+			     guchar *, float);
+extern void	indexed_to_gray(guchar *, guchar *, int, int, lut_t *,
+				guchar *, float);
+extern void	indexed_to_rgb(guchar *, guchar *, int, int, lut_t *,
+			       guchar *, float);
+extern void	rgb_to_gray(guchar *, guchar *, int, int, lut_t *,
+			    guchar *, float);
 extern void	rgb_to_rgb(guchar *, guchar *, int, int, lut_t *, guchar *,
 			   float);
-extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut16_t *, guchar *,
-			     float);
+
+extern void	gray_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+			       guchar *, float);
+extern void	indexed_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+				  guchar *, float);
+extern void	indexed_to_rgb16(guchar *, gushort *, int, int, lut16_t *,
+				 guchar *, float);
+extern void	rgb_to_gray16(guchar *, gushort *, int, int, lut16_t *,
+			      guchar *, float);
+extern void	rgb_to_rgb16(guchar *, gushort *, int, int, lut16_t *,
+			     guchar *, float);
+
 
 extern void	default_media_size(int model, char *ppd_file, char *media_size,
 		                   int *width, int *length);
 
+
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
 		                   int *count);
-extern void	escp2_imageable_area(int model, char *ppd_file, char *media_size,
-		                     int *left, int *right, int *bottom, int *top);
+extern void	escp2_imageable_area(int model, char *ppd_file,
+				     char *media_size, int *left, int *right,
+				     int *bottom, int *top);
 extern void	escp2_print(int model, char *ppd_file, char *resolution,
-		            char *media_size, char *media_type, char *media_source,
-		            int output_type, int orientation, float scaling,
-		            int left, int top, int copies, FILE *prn,
-		            GDrawable *drawable, lut_t *lut, guchar *cmap,
+		            char *media_size, char *media_type,
+			    char *media_source, int output_type,
+			    int orientation, float scaling, int left,
+			    int top, int copies, FILE *prn,
+			    GDrawable *drawable, lut_t *lut, guchar *cmap,
 			    lut16_t *lut16, float saturation);
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 		                 int *count);
 extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
-		                   int *left, int *right, int *bottom, int *top);
+		                   int *left, int *right, int *bottom,
+				   int *top);
 extern void	pcl_print(int model, char *ppd_file, char *resolution,
-		          char *media_size, char *media_type, char *media_source,
-		          int output_type, int orientation, float scaling,
+		          char *media_size, char *media_type,
+			  char *media_source, int output_type,
+			  int orientation, float scaling,
 		          int left, int top, int copies, FILE *prn,
 		          GDrawable *drawable, lut_t *lut, guchar *cmap,
 			  lut16_t *lut16, float saturation);
@@ -171,18 +197,22 @@ extern char	**ps_parameters(int model, char *ppd_file, char *name,
 extern void	ps_media_size(int model, char *ppd_file, char *media_size,
 		              int *width, int *length);
 extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
-		                  int *left, int *right, int *bottom, int *top);
+		                  int *left, int *right, int *bottom,
+				  int *top);
 extern void	ps_print(int model, char *ppd_file, char *resolution,
-		         char *media_size, char *media_type, char *media_source,
-		         int output_type, int orientation, float scaling,
-		         int left, int top, int copies, FILE *prn,
-		         GDrawable *drawable, lut_t *lut, guchar *cmap,
-			 lut16_t *lut16, float saturation);
+		         char *media_size, char *media_type,
+			 char *media_source, int output_type,
+			 int orientation, float scaling, int left, int top,
+			 int copies, FILE *prn, GDrawable *drawable,
+			 lut_t *lut, guchar *cmap, lut16_t *lut16,
+			 float saturation);
 
 extern void calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v);
-extern void calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat, double *val);
+extern void calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat,
+			      double *val);
 extern void calc_hsv_to_rgb(guchar *rgb, double h, double s, double v);
-extern void calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat, double *val);
+extern void calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat,
+			    double *val);
 
 /*
  * End of "$Id$".

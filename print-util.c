@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.8  1999/10/17 23:44:07  rlk
+ *   16-bit everything (untested)
+ *
  *   Revision 1.7  1999/10/17 23:01:01  rlk
  *   Move various dither functions into print-utils.c
  *
@@ -195,6 +198,79 @@ dither_black(guchar        *gray,	/* I - Grayscale pixels */
     {
       *kptr |= bit;
       k -= 255;
+    };
+
+    if (ditherbit & bit)
+    {
+      kerror1[0] = 5 * k;
+      ditherk    = kerror0[1] + 3 * k;
+    }
+    else
+    {
+      kerror1[0] = 3 * k;
+      ditherk    = kerror0[1] + 5 * k;
+    };
+
+    if (bit == 1)
+    {
+      kptr ++;
+      bit       = 128;
+      ditherbit = rand();
+    }
+    else
+      bit >>= 1;
+
+    gray   += xstep;
+    xerror += xmod;
+    if (xerror >= dst_width)
+    {
+      xerror -= dst_width;
+      gray   ++;
+    };
+  };
+}
+
+void
+dither_black16(gushort       *gray,	/* I - Grayscale pixels */
+	       int           row,	/* I - Current Y coordinate */
+	       int           src_width,	/* I - Width of input row */
+	       int           dst_width,	/* I - Width of output row */
+	       unsigned char *black)	/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k,		/* Current black error */
+		ditherk,	/* Next error value in buffer */
+		*kerror0,	/* Pointer to current error row */
+		*kerror1;	/* Pointer to next error row */
+  int		ditherbit;	/* Random dithering bitmask */
+
+
+  xstep  = src_width / dst_width;
+  xmod   = src_width % dst_width;
+  length = (dst_width) / 8;
+
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
+
+  memset(black, 0, length);
+
+  for (x = 0, bit = 128, kptr = black, xerror = 0,
+           ditherbit = rand(), ditherk = *kerror0;
+       x < dst_width;
+       x ++, kerror0 ++, kerror1 ++)
+  {
+    k = 65535 - *gray + ditherk / 8;
+
+    if (k > 32767)
+    {
+      *kptr |= bit;
+      k -= 65535;
     };
 
     if (ditherbit & bit)
@@ -408,6 +484,217 @@ dither_cmyk(guchar        *rgb,		/* I - RGB pixels */
     {
       *yptr |= bit;
       y -= 255;
+    };
+
+    if (ditherbit & bit)
+    {
+      yerror1[0] = 5 * y;
+      dithery    = yerror0[1] + 3 * y;
+    }
+    else
+    {
+      yerror1[0] = 3 * y;
+      dithery    = yerror0[1] + 5 * y;
+    };
+
+    if (bit == 1)
+    {
+      cptr ++;
+      mptr ++;
+      yptr ++;
+      bit       = 128;
+      ditherbit = rand();
+    }
+    else
+      bit >>= 1;
+
+    rgb    += xstep;
+    xerror += xmod;
+    if (xerror >= dst_width)
+    {
+      xerror -= dst_width;
+      rgb    += 3;
+    };
+  };
+}
+
+void
+dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
+	      int           row,	/* I - Current Y coordinate */
+	      int           src_width,	/* I - Width of input row */
+	      int           dst_width,	/* I - Width of output rows */
+	      unsigned char *cyan,	/* O - Cyan bitmap pixels */
+	      unsigned char *magenta,	/* O - Magenta bitmap pixels */
+	      unsigned char *yellow,	/* O - Yellow bitmap pixels */
+	      unsigned char *black)	/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  long long	c, m, y, k,	/* CMYK values */
+		divk,		/* Inverse of K */
+		diff;		/* Average color difference */
+  unsigned char	bit,		/* Current bit */
+		*cptr,		/* Current cyan pixel */
+		*mptr,		/* Current magenta pixel */
+		*yptr,		/* Current yellow pixel */
+		*kptr;		/* Current black pixel */
+  int		ditherc,	/* Next error value in buffer */
+		*cerror0,	/* Pointer to current error row */
+		*cerror1;	/* Pointer to next error row */
+  int		dithery,	/* Next error value in buffer */
+		*yerror0,	/* Pointer to current error row */
+		*yerror1;	/* Pointer to next error row */
+  int		ditherm,	/* Next error value in buffer */
+		*merror0,	/* Pointer to current error row */
+		*merror1;	/* Pointer to next error row */
+  int		ditherk,	/* Next error value in buffer */
+		*kerror0,	/* Pointer to current error row */
+		*kerror1;	/* Pointer to next error row */
+  int		ditherbit;	/* Random dither bitmask */
+
+  xstep  = 3 * (src_width / dst_width);
+  xmod   = src_width % dst_width;
+  length = (dst_width) / 8;
+
+  cerror0 = error[row & 1][0];
+  cerror1 = error[1 - (row & 1)][0];
+
+  merror0 = error[row & 1][1];
+  merror1 = error[1 - (row & 1)][1];
+
+  yerror0 = error[row & 1][2];
+  yerror1 = error[1 - (row & 1)][2];
+
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
+
+  memset(cyan, 0, length);
+  memset(magenta, 0, length);
+  memset(yellow, 0, length);
+  if (black != NULL)
+    memset(black, 0, length);
+
+  for (x = 0, bit = 128, cptr = cyan, mptr = magenta, yptr = yellow,
+           kptr = black, xerror = 0, ditherbit = rand(), ditherc = cerror0[0],
+           ditherm = merror0[0], dithery = yerror0[0], ditherk = kerror0[0];
+       x < dst_width;
+       x ++, cerror0 ++, cerror1 ++, merror0 ++, merror1 ++, yerror0 ++,
+           yerror1 ++, kerror0 ++, kerror1 ++)
+  {
+   /*
+    * First compute the standard CMYK separation color values...
+    */
+
+    c = 65535 - rgb[0];
+    m = 65535 - rgb[1];
+    y = 65535 - rgb[2];
+    k = MIN(c, MIN(m, y));
+
+    if (black != NULL)
+    {
+     /*
+      * Since we're printing black, adjust the black level based upon
+      * the amount of color in the pixel (colorful pixels get less black)...
+      */
+
+      diff = 65535 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      diff = diff * diff * diff / (65536ll * 65536ll); /* diff = diff^3 */
+      diff--;
+      k    = diff * k / 65535ll;
+      divk = 65535 - k;
+      
+      if (divk == 0)
+        c = m = y = 0;	/* Grayscale */
+      else
+      {
+       /*
+        * Full color; update the CMY values for the black value and reduce
+        * CMY as necessary to give better blues, greens, and reds... :)
+        */
+
+        c  = (65535 - rgb[1] / 4) * (c - k) / divk;
+        m  = (65535 - rgb[2] / 4) * (m - k) / divk;
+        y  = (65535 - rgb[0] / 4) * (y - k) / divk;
+      };
+
+      k += ditherk / 8;
+      if (k > 32767)
+      {
+	*kptr |= bit;
+	k -= 65535;
+      };
+
+      if (ditherbit & bit)
+      {
+	kerror1[0] = 5 * k;
+	ditherk    = kerror0[1] + 3 * k;
+      }
+      else
+      {
+	kerror1[0] = 3 * k;
+	ditherk    = kerror0[1] + 5 * k;
+      };
+
+      if (bit == 1)
+        kptr ++;
+    }
+    else
+    {
+     /*
+      * We're not printing black, but let's adjust the CMY levels to produce
+      * better reds, greens, and blues...
+      */
+
+      c  = (65535 - rgb[1] / 4) * (c - k) / 65535 + k;
+      m  = (65535 - rgb[2] / 4) * (m - k) / 65535 + k;
+      y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
+    };
+
+    c += ditherc / 8;
+    if (c > 32767)
+    {
+      *cptr |= bit;
+      c -= 65535;
+    };
+
+
+    if (ditherbit & bit)
+    {
+      cerror1[0] = 5 * c;
+      ditherc    = cerror0[1] + 3 * c;
+    }
+    else
+    {
+      cerror1[0] = 3 * c;
+      ditherc    = cerror0[1] + 5 * c;
+    };
+
+    m += ditherm / 8;
+    if (m > 32767)
+    {
+      *mptr |= bit;
+      m -= 65535;
+    };
+
+    if (ditherbit & bit)
+    {
+      merror1[0] = 5 * m;
+      ditherm    = merror0[1] + 3 * m;
+    }
+    else
+    {
+      merror1[0] = 3 * m;
+      ditherm    = merror0[1] + 5 * m;
+    };
+
+    y += dithery / 8;
+    if (y > 32767)
+    {
+      *yptr |= bit;
+      y -= 65535;
     };
 
     if (ditherbit & bit)
@@ -1024,12 +1311,18 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
 /*
  * Constants for 4-level dithering functions...
+ * NOTE that these constants are HP-specific!
  */
 
 #define LEVEL_3	255
 #define LEVEL_2	213
 #define LEVEL_1	127
 #define LEVEL_0	0
+
+#define LEVEL_3_16	65535
+#define LEVEL_2_16	(213 * 65536)
+#define LEVEL_1_16	32767
+#define LEVEL_0_16	0
 
 
 /*
@@ -1085,6 +1378,91 @@ dither_black4(guchar        *gray,	/* I - Grayscale pixels */
       k -= LEVEL_2;
     }
     else if (k > ((LEVEL_0 + LEVEL_1) / 2))
+    {
+      kptr[0] |= bit;
+      k -= LEVEL_1;
+    };
+
+    if (ditherbit & bit)
+    {
+      kerror1[0] = 5 * k;
+      ditherk    = kerror0[1] + 3 * k;
+    }
+    else
+    {
+      kerror1[0] = 3 * k;
+      ditherk    = kerror0[1] + 5 * k;
+    };
+
+    if (bit == 1)
+    {
+      kptr ++;
+
+      bit       = 128;
+      ditherbit = rand();
+    }
+    else
+      bit >>= 1;
+
+    gray   += xstep;
+    xerror += xmod;
+    if (xerror >= dst_width)
+    {
+      xerror -= dst_width;
+      gray ++;
+    };
+  };
+}
+
+void
+dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
+		 int           row,	/* I - Current Y coordinate */
+		 int           src_width,	/* I - Width of input row */
+		 int           dst_width,	/* I - Width of output rows */
+		 unsigned char *black)	/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k,		/* Current black value */
+		ditherk,	/* Next error value in buffer */
+		*kerror0,	/* Pointer to current error row */
+		*kerror1;	/* Pointer to next error row */
+  int		ditherbit;	/* Random dither bitmask */
+
+
+  xstep  = src_width / dst_width;
+  xmod   = src_width % dst_width;
+  length = (dst_width + 7) / 8;
+
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
+
+  memset(black, 0, length * 2);
+
+  for (x = 0, bit = 128, kptr = black, xerror = 0, ditherbit = rand(),
+           ditherk = kerror0[0];
+       x < dst_width;
+       x ++, kerror0 ++, kerror1 ++)
+  {
+    k = 65535 - *gray + ditherk / 8;
+
+    if (k > ((LEVEL_2_16 + LEVEL_3_16) / 2))
+    {
+      kptr[0]      |= bit;
+      kptr[length] |= bit;
+      k -= LEVEL_3;
+    }
+    else if (k > ((LEVEL_1_16 + LEVEL_2_16) / 2))
+    {
+      kptr[length] |= bit;
+      k -= LEVEL_2;
+    }
+    else if (k > ((LEVEL_0_16 + LEVEL_1_16) / 2))
     {
       kptr[0] |= bit;
       k -= LEVEL_1;
@@ -1365,6 +1743,245 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
   };
 }
 
+void
+dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
+		int           row,		/* I - Current Y coordinate */
+		int           src_width,	/* I - Width of input row */
+		int           dst_width,	/* I - Width of output rows */
+		unsigned char *cyan,		/* O - Cyan bitmap pixels */
+		unsigned char *magenta,		/* O - Magenta bitmap pixels */
+		unsigned char *yellow,		/* O - Yellow bitmap pixels */
+		unsigned char *black)		/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  long long	c, m, y, k,	/* CMYK values */
+		divk,		/* Inverse of K */
+		diff;		/* Average color difference */
+  unsigned char	bit,		/* Current bit */
+		*cptr,		/* Current cyan pixel */
+		*mptr,		/* Current magenta pixel */
+		*yptr,		/* Current yellow pixel */
+		*kptr;		/* Current black pixel */
+  int		ditherc,	/* Next error value in buffer */
+		*cerror0,	/* Pointer to current error row */
+		*cerror1;	/* Pointer to next error row */
+  int		dithery,	/* Next error value in buffer */
+		*yerror0,	/* Pointer to current error row */
+		*yerror1;	/* Pointer to next error row */
+  int		ditherm,	/* Next error value in buffer */
+		*merror0,	/* Pointer to current error row */
+		*merror1;	/* Pointer to next error row */
+  int		ditherk,	/* Next error value in buffer */
+		*kerror0,	/* Pointer to current error row */
+		*kerror1;	/* Pointer to next error row */
+  int		ditherbit;	/* Random dither bitmask */
+
+
+  xstep  = 3 * (src_width / dst_width);
+  xmod   = src_width % dst_width;
+  length = (dst_width + 7) / 8;
+
+  cerror0 = error[row & 1][0];
+  cerror1 = error[1 - (row & 1)][0];
+
+  merror0 = error[row & 1][1];
+  merror1 = error[1 - (row & 1)][1];
+
+  yerror0 = error[row & 1][2];
+  yerror1 = error[1 - (row & 1)][2];
+
+  kerror0 = error[row & 1][3];
+  kerror1 = error[1 - (row & 1)][3];
+
+  memset(cyan, 0, length * 2);
+  memset(magenta, 0, length * 2);
+  memset(yellow, 0, length * 2);
+  memset(black, 0, length * 2);
+
+  for (x = 0, bit = 128, cptr = cyan, mptr = magenta, yptr = yellow,
+           kptr = black, xerror = 0, ditherbit = rand(), ditherc = cerror0[0],
+           ditherm = merror0[0], dithery = yerror0[0], ditherk = kerror0[0];
+       x < dst_width;
+       x ++, cerror0 ++, cerror1 ++, merror0 ++, merror1 ++, yerror0 ++,
+           yerror1 ++, kerror0 ++, kerror1 ++)
+  {
+   /*
+    * First compute the standard CMYK separation color values...
+    */
+
+    c = 65535 - rgb[0];
+    m = 65535 - rgb[1];
+    y = 65535 - rgb[2];
+    k = MIN(c, MIN(m, y));
+
+   /*
+    * Since we're printing black, adjust the black level based upon
+    * the amount of color in the pixel (colorful pixels get less black)...
+    */
+
+    diff = 65536 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+    diff = diff * diff * diff / (65536ll * 65536ll); /* diff = diff^3 */
+    diff--;
+    k    = diff * k / 65535ll;
+    divk = 65535 - k;
+
+    if (divk == 0)
+      c = m = y = 0;	/* Grayscale */
+    else
+    {
+     /*
+      * Full color; update the CMY values for the black value and reduce
+      * CMY as necessary to give better blues, greens, and reds... :)
+      */
+
+      c  = (65535 - rgb[1] / 4) * (c - k) / divk;
+      m  = (65535 - rgb[2] / 4) * (m - k) / divk;
+      y  = (65535 - rgb[0] / 4) * (y - k) / divk;
+    };
+
+    k += ditherk / 8;
+    if (k > ((LEVEL_2_16 + LEVEL_3_16) / 2))
+    {
+      kptr[0]      |= bit;
+      kptr[length] |= bit;
+      k -= LEVEL_3_16;
+    }
+    else if (k > ((LEVEL_1_16 + LEVEL_2_16) / 2))
+    {
+      kptr[length] |= bit;
+      k -= LEVEL_2_16;
+    }
+    else if (k > ((LEVEL_0_16 + LEVEL_1_16) / 2))
+    {
+      kptr[0] |= bit;
+      k -= LEVEL_1_16;
+    };
+
+    if (ditherbit & bit)
+    {
+      kerror1[0] = 5 * k;
+      ditherk    = kerror0[1] + 3 * k;
+    }
+    else
+    {
+      kerror1[0] = 3 * k;
+      ditherk    = kerror0[1] + 5 * k;
+    };
+
+    c += ditherc / 8;
+    if (c > ((LEVEL_2_16 + LEVEL_3_16) / 2))
+    {
+      cptr[0]      |= bit;
+      cptr[length] |= bit;
+      c -= LEVEL_3_16;
+    }
+    else if (c > ((LEVEL_1_16 + LEVEL_2_16) / 2))
+    {
+      cptr[length] |= bit;
+      c -= LEVEL_2_16;
+    }
+    else if (c > ((LEVEL_0_16 + LEVEL_1_16) / 2))
+    {
+      cptr[0] |= bit;
+      c -= LEVEL_1_16;
+    };
+
+    if (ditherbit & bit)
+    {
+      cerror1[0] = 5 * c;
+      ditherc    = cerror0[1] + 3 * c;
+    }
+    else
+    {
+      cerror1[0] = 3 * c;
+      ditherc    = cerror0[1] + 5 * c;
+    };
+
+    m += ditherm / 8;
+    if (m > ((LEVEL_2_16 + LEVEL_3_16) / 2))
+    {
+      mptr[0]      |= bit;
+      mptr[length] |= bit;
+      m -= LEVEL_3_16;
+    }
+    else if (m > ((LEVEL_1_16 + LEVEL_2_16) / 2))
+    {
+      mptr[length] |= bit;
+      m -= LEVEL_2_16;
+    }
+    else if (m > ((LEVEL_0_16 + LEVEL_1_16) / 2))
+    {
+      mptr[0] |= bit;
+      m -= LEVEL_1_16;
+    };
+
+    if (ditherbit & bit)
+    {
+      merror1[0] = 5 * m;
+      ditherm    = merror0[1] + 3 * m;
+    }
+    else
+    {
+      merror1[0] = 3 * m;
+      ditherm    = merror0[1] + 5 * m;
+    };
+
+    y += dithery / 8;
+    if (y > ((LEVEL_2_16 + LEVEL_3_16) / 2))
+    {
+      yptr[0]      |= bit;
+      yptr[length] |= bit;
+      y -= LEVEL_3_16;
+    }
+    else if (y > ((LEVEL_1_16 + LEVEL_2_16) / 2))
+    {
+      yptr[length] |= bit;
+      y -= LEVEL_2_16;
+    }
+    else if (y > ((LEVEL_0_16 + LEVEL_1_16) / 2))
+    {
+      yptr[0] |= bit;
+      y -= LEVEL_1_16;
+    };
+
+    if (ditherbit & bit)
+    {
+      yerror1[0] = 5 * y;
+      dithery    = yerror0[1] + 3 * y;
+    }
+    else
+    {
+      yerror1[0] = 3 * y;
+      dithery    = yerror0[1] + 5 * y;
+    };
+
+    if (bit == 1)
+    {
+      cptr ++;
+      mptr ++;
+      yptr ++;
+      kptr ++;
+
+      bit       = 128;
+      ditherbit = rand();
+    }
+    else
+      bit >>= 1;
+
+    rgb    += xstep;
+    xerror += xmod;
+    if (xerror >= dst_width)
+    {
+      xerror -= dst_width;
+      rgb    += 3;
+    };
+  };
+}
+
 
 /*
  * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
@@ -1378,8 +1995,50 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
              int    bpp,	/* I - Bytes-per-pixel in grayin */
              lut_t  *lut,	/* I - Brightness lookup table */
              guchar *cmap,	/* I - Colormap (unused) */
-	     float  saturation		/* I - Saturation */
+	     float  saturation	/* I - Saturation */
 	     )
+{
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *grayout = lut->composite[*grayin];
+
+      grayin ++;
+      grayout ++;
+      width --;
+    };
+  }
+  else
+  {
+   /*
+    * Handle alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *grayout = lut->composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
+
+      grayin += bpp;
+      grayout ++;
+      width --;
+    };
+  };
+}
+
+void
+gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
+	       gushort *grayout,	/* O - RGB pixels */
+	       int    width,		/* I - Width of row */
+	       int    bpp,		/* I - Bytes-per-pixel in grayin */
+	       lut16_t  *lut,		/* I - Brightness lookup table */
+	       guchar *cmap,		/* I - Colormap (unused) */
+	       float  saturation	/* I - Saturation */
+	       )
 {
   if (bpp == 1)
   {
@@ -1465,6 +2124,53 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
   };
 }
 
+void
+indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
+		  gushort *gray,	/* O - Grayscale pixels */
+		  int    width,		/* I - Width of row */
+		  int    bpp,		/* I - Bytes-per-pixel in indexed */
+		  lut16_t  *lut,	/* I - Brightness lookup table */
+		  guchar *cmap,		/* I - Colormap */
+		  float  saturation	/* I - Saturation */
+		  )
+{
+  int		i;			/* Looping var */
+  unsigned char	gray_cmap[256];		/* Grayscale colormap */
+
+
+  for (i = 0; i < 256; i ++, cmap += 3)
+    gray_cmap[i] = (cmap[0] * LUM_RED + cmap[1] * LUM_GREEN + cmap[2] * LUM_BLUE) / 100;
+
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[gray_cmap[*indexed]];
+      indexed ++;
+      gray ++;
+      width --;
+    };
+  }
+  else
+  {
+   /*
+    * Handle alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[gray_cmap[indexed[0] * indexed[1] / 255] + 255 - indexed[1]];
+      indexed += bpp;
+      gray ++;
+      width --;
+    };
+  };
+}
+
 
 /*
  * 'indexed_to_rgb()' - Convert indexed image data to RGB.
@@ -1477,7 +2183,7 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
                int    bpp,		/* I - Bytes-per-pixel in indexed */
                lut_t  *lut,		/* I - Brightness lookup table */
                guchar *cmap,		/* I - Colormap */
-	       float  saturation		/* I - Saturation */
+	       float  saturation	/* I - Saturation */
 	       )
 {
   if (bpp == 1)
@@ -1528,6 +2234,65 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
   };
 }
 
+void
+indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
+		 gushort *rgb,		/* O - RGB pixels */
+		 int    width,		/* I - Width of row */
+		 int    bpp,		/* I - Bytes-per-pixel in indexed */
+		 lut16_t  *lut,		/* I - Brightness lookup table */
+		 guchar *cmap,		/* I - Colormap */
+		 float  saturation	/* I - Saturation */
+		 )
+{
+  if (bpp == 1)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
+      rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
+      rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb16_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb16(rgb, h, s, v);
+	}
+      rgb += 3;
+      indexed ++;
+      width --;
+    };
+  }
+  else
+  {
+   /*
+    * RGBA image...
+    */
+
+    while (width > 0)
+    {
+      double h, s, v;
+      rgb[0] = lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 + 255 - indexed[1]];
+      rgb[1] = lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 + 255 - indexed[1]];
+      rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 + 255 - indexed[1]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb16_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb16(rgb, h, s, v);
+	}
+      rgb += 3;
+      indexed += bpp;
+      width --;
+    };
+  };
+}
+
+
 
 /*
  * 'rgb_to_gray()' - Convert RGB image data to grayscale.
@@ -1571,6 +2336,51 @@ rgb_to_gray(guchar *rgb,		/* I - RGB pixels */
 			      rgb[1] * LUM_GREEN +
 			      rgb[2] * LUM_BLUE) *
 			    rgb[3] / 25500 + 255 - rgb[3]];
+      gray ++;
+      rgb += bpp;
+      width --;
+    };
+  };
+}
+
+void
+rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
+	      gushort *gray,		/* O - Grayscale pixels */
+	      int    width,		/* I - Width of row */
+	      int    bpp,		/* I - Bytes-per-pixel in RGB */
+	      lut16_t  *lut,		/* I - Brightness lookup table */
+	      guchar *cmap,		/* I - Colormap (unused) */
+	      float  saturation		/* I - Saturation */
+	      )
+{
+  if (bpp == 3)
+  {
+   /*
+    * No alpha in image...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[(rgb[0] * LUM_RED +
+			      rgb[1] * LUM_GREEN +
+			      rgb[2] * LUM_BLUE) / 100];
+      gray ++;
+      rgb += 3;
+      width --;
+    };
+  }
+  else
+  {
+   /*
+    * Image has alpha channel...
+    */
+
+    while (width > 0)
+    {
+      *gray = lut->composite[((rgb[0] * LUM_RED +
+			       rgb[1] * LUM_GREEN +
+			       rgb[2] * LUM_BLUE) *
+			      rgb[3] / 25500 + 255 - rgb[3])];
       gray ++;
       rgb += bpp;
       width --;
