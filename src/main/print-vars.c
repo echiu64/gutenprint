@@ -41,16 +41,6 @@
 
 #define COOKIE_VARS      0x1a18376c
 
-typedef struct stp_internal_option
-{
-  int	cookie;
-  char *name;
-  size_t length;
-  char *data;
-  struct stp_internal_option *next;
-  struct stp_internal_option *prev;
-} stp_internal_option_t;
-
 typedef struct					/* Plug-in variables */
 {
   int	cookie;
@@ -93,7 +83,6 @@ typedef struct					/* Plug-in variables */
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
-  stp_internal_option_t *options;
   int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
 
@@ -502,44 +491,6 @@ stp_get_verified(const stp_vars_t vv)
 }
 
 void
-stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
-{
-  const stp_internal_vars_t *src = (const stp_internal_vars_t *)vs;
-  stp_internal_vars_t *dest = (stp_internal_vars_t *)vd;
-  stp_internal_option_t *popt = NULL;
-  stp_internal_option_t *opt;
-  check_vars(src);
-  check_vars(dest);
-  opt = (stp_internal_option_t *) src->options;
-  if (opt)
-    {
-      stp_internal_option_t *nopt = stp_malloc(sizeof(stp_internal_option_t));
-      stp_set_verified(vd, 0);
-      dest->options = nopt;
-      memcpy(nopt, opt, sizeof(stp_internal_option_t));
-      nopt->name = stp_malloc(stp_strlen(opt->name) + 1);
-      strcpy(nopt->name, opt->name);
-      nopt->data = stp_malloc(opt->length);
-      memcpy(nopt->data, opt->data, opt->length);
-      opt = opt->next;
-      popt = nopt;
-      while (opt)
-        {
-          nopt = stp_malloc(sizeof(stp_internal_option_t));
-          memcpy(nopt, opt, sizeof(stp_internal_option_t));
-          nopt->prev = popt;
-          popt->next = nopt;
-          nopt->name = stp_malloc(stp_strlen(opt->name) + 1);
-          strcpy(nopt->name, opt->name);
-          nopt->data = stp_malloc(opt->length);
-          memcpy(nopt->data, opt->data, opt->length);
-          opt = opt->next;
-          popt = nopt;
-        }
-    }
-}
-
-void
 stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 			   const char *value, int bytes)
 {
@@ -758,7 +709,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 	  break;
 	}
     }
-  stp_copy_options(vd, vs);
   stp_set_verified(vd, stp_get_verified(vs));
 }
 
