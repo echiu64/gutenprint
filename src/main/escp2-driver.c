@@ -349,17 +349,8 @@ static void
 escp2_set_margins(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int bot = pd->page_bottom;
+  int bot = pd->page_management_units * pd->page_bottom / 72;
   int top = pd->page_management_units * pd->page_top / 72;
-
-  /* adjust bottom margin for a 480 like head configuration */
-  bot -= pd->max_head_offset * 72 / pd->page_management_units;
-  if ((pd->max_head_offset * 72 % pd->page_management_units) != 0)
-    bot -= 1;
-  if (pd->page_bottom < 0)
-    bot = 0;
-
-  bot = bot * pd->page_management_units / 72;
 
   top += pd->initial_vertical_offset;
   if (pd->use_extended_commands &&
