@@ -1948,13 +1948,20 @@ densityDivisor /= 1.2;
   errlast = -1;
   errline  = 0;
 
-  stpi_dither_add_channel(v, cols.p.k, ECOLOR_K, 0);
-  stpi_dither_add_channel(v, cols.p.c, ECOLOR_C, 0);
-  stpi_dither_add_channel(v, cols.p.C, ECOLOR_C, 1);
-  stpi_dither_add_channel(v, cols.p.m, ECOLOR_M, 0);
-  stpi_dither_add_channel(v, cols.p.M, ECOLOR_M, 1);
-  stpi_dither_add_channel(v, cols.p.y, ECOLOR_Y, 0);
-  stpi_dither_add_channel(v, cols.p.Y, ECOLOR_Y, 1);
+  if (cols.p.k)
+    stpi_dither_add_channel(v, cols.p.k, ECOLOR_K, 0);
+  if (cols.p.c)
+    stpi_dither_add_channel(v, cols.p.c, ECOLOR_C, 0);
+  if (cols.p.C)
+    stpi_dither_add_channel(v, cols.p.C, ECOLOR_C, 1);
+  if (cols.p.m)
+    stpi_dither_add_channel(v, cols.p.m, ECOLOR_M, 0);
+  if (cols.p.M)
+    stpi_dither_add_channel(v, cols.p.M, ECOLOR_M, 1);
+  if (cols.p.y)
+    stpi_dither_add_channel(v, cols.p.y, ECOLOR_Y, 0);
+  if (cols.p.Y)
+    stpi_dither_add_channel(v, cols.p.Y, ECOLOR_Y, 1);
   privdata.hoffset = left;
   privdata.ydpi = ydpi;
   privdata.model = model;

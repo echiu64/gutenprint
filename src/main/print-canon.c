@@ -82,6 +82,16 @@
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+static const int channel_color_map[] =
+{
+  ECOLOR_K, ECOLOR_C, ECOLOR_M, ECOLOR_Y, ECOLOR_C, ECOLOR_M, ECOLOR_Y
+};
+
+static const int subchannel_color_map[] =
+{
+  0, 0, 0, 0, 1, 1, 1
+};
+
 #define USE_3BIT_FOLD_TYPE 323
 
 /*
@@ -2522,13 +2532,12 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 
   out = stpi_zalloc(image_width * out_channels * 2);
 
-  stpi_dither_add_channel(v, privdata.cols[0], ECOLOR_K, 0);
-  stpi_dither_add_channel(v, privdata.cols[1], ECOLOR_C, 0);
-  stpi_dither_add_channel(v, privdata.cols[4], ECOLOR_C, 1);
-  stpi_dither_add_channel(v, privdata.cols[2], ECOLOR_M, 0);
-  stpi_dither_add_channel(v, privdata.cols[5], ECOLOR_M, 1);
-  stpi_dither_add_channel(v, privdata.cols[3], ECOLOR_Y, 0);
-  stpi_dither_add_channel(v, privdata.cols[6], ECOLOR_Y, 1);
+  for (i = 0; i < 7; i++)
+    {
+      if (privdata.cols[i])
+	stpi_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
+				subchannel_color_map[i]);
+    }
   stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
