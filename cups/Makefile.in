@@ -43,11 +43,9 @@ RANLIB	=	:
 # Rules...
 #
 
-.SILENT:
 .SUFFIXES:	.c .o
 
 .c.o:
-	echo Compiling $<
 	$(CC) $(CFLAGS) -c $<
 
 
@@ -55,7 +53,7 @@ RANLIB	=	:
 # Files...
 #
 
-TARGETS	=	libdrv.a calibrate commandtoepson epson genppd \
+TARGETS	=	libdrv.a calibrate commandtoepson epson done_genppd \
 		rastertoprinter
 DRVOBJS	=	cups-canon.o cups-dither.o cups-escp2.o cups-pcl.o \
 		cups-ps.o cups-util.o cups-weave.o
@@ -76,7 +74,7 @@ all:	$(TARGETS)
 
 clean:
 	$(RM) $(OBJS) $(TARGETS)
-	$(RM) ppd/*
+	$(RM) -rf ppd/*
 
 
 #
@@ -110,7 +108,6 @@ install:
 #
 
 calibrate:	calibrate.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
 
 
@@ -119,7 +116,6 @@ calibrate:	calibrate.o
 #
 
 commandtoepson:	commandtoepson.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
 
 
@@ -128,7 +124,6 @@ commandtoepson:	commandtoepson.o
 #
 
 epson:	epson.o
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
 
 
@@ -136,23 +131,21 @@ epson:	epson.o
 # genppd
 #
 
-genppd:	genppd.o libdrv.a
-	echo Linking $@...
-	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
-	echo Cleaning old PPD files...
-	$(RM) ppd/*
-	echo Running $@...
-	genppd
-
 genppd.o:	cups-print.h cups-printers.c
+genppd:	genppd.o libdrv.a
+	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
 
+done_genppd:	genppd
+	echo Cleaning old PPD files...
+	$(RM) -rf ppd/*
+	./genppd
+	touch done_genppd
 
 #
 # libdrv.a
 #
 
 libdrv.a:	$(DRVOBJS)
-	echo Archiving $@...
 	$(RM) $@
 	$(AR) $(ARFLAGS) $@ $(DRVOBJS)
 	$(RANLIB) $@
@@ -166,7 +159,6 @@ cups-util.c:	cups-printers.c
 #
 
 rastertoprinter:	rastertoprinter.o libdrv.a
-	echo Linking $@...
 	$(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
 rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
