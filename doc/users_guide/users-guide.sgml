@@ -3,8 +3,8 @@
 
  <bookinfo>
   <title>The User's Guide to the Gimp-Print Top Quality Printer Drivers</title>
-  <date>October 27, 2001</date>
-  <pubdate>October 27, 2001</pubdate>
+  <date>November 23, 2001</date>
+  <pubdate>November 23, 2001</pubdate>
   <author>
     <firstname>Andy</firstname>
     <surname>Stewart</surname>
@@ -57,7 +57,7 @@ Foomatic is not covered in this document.  These topics may be covered
 in a future revision of this document.
   </para>
   <para>
-  This document corresponds to version 4.2 of the Gimp-Print
+  This document corresponds to version 4.2.0 of the Gimp-Print
 software. This document will serve as a guide to the user, and as such
 will not explain how to install Gimp-Print, CUPS, GIMP, Ghostscript,
 Foomatic, or any other related software.
@@ -125,8 +125,8 @@ over what the software could do at the Printing Summit.
   </para>
   <para>
 The team started serious work on version 4.1 in December
-2000, and version 4.2 was released in November 2001.  Despite the fact
-that version 4.2 is a "minor" release over version 4.0, there are vast
+2000, and version 4.2.0 was released in November 2001.  Despite the fact
+that version 4.2.0 is a "minor" release over version 4.0, there are vast
 improvements:
   <itemizedlist>
     <listitem>
@@ -168,7 +168,7 @@ The print quality (in particular, color accuracy, a well-known weakness in 4.0) 
 Releases of Gimp-Print have been historically numbered in
 a fashion similar to that of the Linux kernel, where major releases
 are denoted by the first digit (in this case '4'), while minor
-releases are denoted by subsequent digits (such as '4.2').  Even
+releases are denoted by subsequent digits (such as '4.2.0').  Even
 numbered minor releases are considered stable, while odd numbered
 minor releases are considered development releases (whose stability
 may vary for any given release).
@@ -569,31 +569,33 @@ separation between the stripes.  This effect is called "banding" and
 is undesirable.  In the <emphasis>high</emphasis> and
 <emphasis>highest</emphasis> quality modes, the printer will make more
 passes over the same part of the page in order to improve quality and
-(reduce or) eliminate banding.  This requires more temporary space and
-prints more slowly, but does not require significantly more processing
-time.
+(reduce or) eliminate banding.  This requires more temporary disk
+space and prints more slowly, but does not require significantly more
+processing time.
        </para>
      </sect4>
      <sect4><title>Microweave</title>
        <para>
-       Certain (mostly older) Epson printers support a printing mode
-       called <emphasis>Microweave</emphasis>.  This uses special
-       software within the printer to improve the print quality.
-       Microweave print modes will usually produce better quality than
-       non-Microweave modes, with only a small performance penalty.
-       Don't worry if Microweave is not listed at your chosen
-       resolution; in those cases, the non-Microweave print modes do
-       similar printing quality improvements.
+       Certain Epson printers (older models mostly) support a printing
+       mode called <emphasis>Microweave</emphasis>.  This mode uses
+       special software within the printer to improve the print quality.
+       Microweave print modes will usually produce better quality
+       output than non-Microweave modes, with only a small performance
+       penalty.  If Microweave is not listed at your chosen
+       resolution, fear not.  In those cases, the non-Microweave print
+       modes offer similar printing quality improvements.
        </para>
      </sect4>
      <sect4><title>DMT</title>
        <para>
-       DMT, or <emphasis>D</emphasis>ot
-       <emphasis>M</emphasis>odulation <emphasis>T</emphasis>echnology
-       is used by certain Canon printers to improve the printing
-       quality.  The available DMT modes do not currently all work
-       correctly, but the cases that work correctly will offer
-       significantly improved printing quality.
+       DMT is an acronym which stands for <emphasis>D</emphasis>ot
+       <emphasis>M</emphasis>odulation
+       <emphasis>T</emphasis>echnology.
+       This term refers to a print mode used by certain Canon printers
+       to improve the quality of the printed output.  Unfortunately,
+       at this time,  all of the available DMT modes do not work
+       correctly.  The cases which do work correctly will offer
+       significantly improved printing quality. 
        </para>
      </sect4>
    </sect3>
@@ -1090,16 +1092,13 @@ Gimp-Print GUI window.
      <para>
        CUPS is an acronym which stands for <emphasis>C</emphasis>ommon
 <emphasis>U</emphasis>nix <emphasis>P</emphasis>rinting
-<emphasis>S</emphasis>ystem.
-     </para>
-     <para>
-It is assumed that the reader has properly installed the CUPS
-software and the Gimp-Print software.  This section will discuss
-adding a printer to CUPS that uses a Gimp-Print printer driver, as
-well as how to modify the various settings supplied by Gimp-Print.
-This will be a rather quick explanation, as the CUPS software is quite
-well documented, and it is not my intention to attempt to duplicate
-the CUPS documentation here.
+<emphasis>S</emphasis>ystem.  It is assumed that the reader has
+properly installed the CUPS software and the Gimp-Print software.
+This section will discuss adding a printer to CUPS that uses a
+Gimp-Print printer driver, as well as how to modify the various
+settings supplied by Gimp-Print. This will be a rather quick
+explanation, as the CUPS software is quite well documented, and it is
+not my intention to attempt to duplicate the CUPS documentation here.
      </para>
    </sect1>
 
@@ -1164,7 +1163,7 @@ description which meets your own needs.  Once this is done, click on
 the <guibutton>Continue</guibutton> button, and then this screen will appear.
    </para>
 
-   <figure><title>The CUPS Admin Device Window</title>
+   <figure id="fig-cups-admin-device"><title>The CUPS Admin Device Window</title>
    <mediaobject>
    <imageobject>
    <imagedata scale="35" fileref="figures/cups_admin_device.png" FORMAT="PNG">
@@ -1180,44 +1179,7 @@ Click on the drop down menu next to the word
 <guilabel>Device</guilabel> and a list of possible printer devices
 appears.  Select the device appropriate for your printer.  Note that
 there are a range of serial, parallel, USB, and other devices from
-which to choose.
-   </para>
-
-   <caution>
-   <title>If you use a USB printer</title>
-
-   <para>
-If you are using CUPS versions 1.1.11 or above,
-you must have a printer connected to at least one USB port, and the
-printer must be turned ON, when you start CUPS (typically, when you
-boot your machine).  If the printer is not connected and turned on at
-the time CUPS was started, you will not find a USB connection in the
-list of devices.  You may then enter 'usb:/dev/usblp0' (or whatever
-the correct name for your printer port is) in the next screen, but
-later on in the configuration process you will get an error
-"client_error_not_possible" with no explanation.  Note that entering
-'file:/dev/usblp0' will not work; CUPS will allow this, but printing
-(at least in some situations) will not actually work.
-   </para>
-
-   <para>
-Again, this requires that the printer be connected and powered on
-<emphasis>at the time CUPS is started</emphasis>.  You cannot simply plug
-in the printer and turn it on before configuring it; CUPS must see the
-USB port when it starts up.  This only applies to USB devices;
-parallel ports are always visible to CUPS whether a printer is
-connected or not.
-   </para>
-
-   <para>
-While CUPS 1.1.10 and earlier will also not display the USB connection
-in the list of devices, those versions of CUPS will allow you to enter
-the name of the USB connection.
-   </para>
-   </caution>
-
-   <para>
-Once the selection is made, click the
+which to choose.  Once the selection is made, click the
 <guibutton>Continue</guibutton> button.  Now, this screen appears.
    </para>
 
@@ -1232,22 +1194,54 @@ Once the selection is made, click the
    </mediaobject>
    </figure>
 
+   <caution>
+   <title>Caution Regarding USB Printers</title>
+
+   <para>
+CUPS versions 1.1.11 and later <emphasis>REQUIRE</emphasis>
+the user to insure that the desired USB printer is powered on
+<emphasis>AND</emphasis> physically connected to the USB bus
+<emphasis>BEFORE</emphasis> starting the CUPS software.  
+   </para>
+   <para>
+CUPS must see the USB printer when the software starts.  The CUPS software
+is typically started when the computer boots.  Note that one cannot
+simply plug in the USB printer and power it on after CUPS has started.
+(Note that this does not apply to parallel port printers).
+   </para>
+   <para>
+If the USB printer was not connected and powered on at the time CUPS was
+started, there will not be a USB printer shown in the
+list of devices on the CUPS Admin Device Window (see 
+<xref linkend="fig-cups-admin-device">).  In this event, stop the CUPS
+software, properly connect and power on the USB printer, and restart
+the CUPS software.
+   </para>
+   <para>
+From the list of devices shown in the CUPS Admin Device Window
+(see <xref linkend="fig-cups-admin-device">), a clever user might
+attempt to avoid this issue by selecting 
+<guimenuitem>Internet Printing Protocol</guimenuitem> 
+and then enter something similar to 'usb:/dev/usblp0' in the next
+screen.  However, this fails later in the configuration process with a
+"client_error_not_possible" error message with no other explanation.
+Note that entering 'file:/dev/usblp0' will not work either. While CUPS
+will allow this, printing will not actually work in some situations.
+   </para>
+   <para>
+CUPS versions 1.1.10 and earlier exhibit similar behavior with regard
+to not displaying the USB printer if it was not connected to the USB
+bus and powered up prior to starting the CUPS software.  However,
+these versions of CUPS will indeed allow the user to enter the name of
+the USB connection, unlike versions 1.1.11 and later.
+   </para>
+   </caution>
+
    <para>
 Select the manufacturer of your printer and click the
 <guibutton>Continue</guibutton> button.  A window will appear which
 asks you to select the specific model number for your printer.
    </para>
-
-   <figure><title>The 2nd CUPS Admin Model/Driver Window</title>
-   <mediaobject>
-   <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_model.png" FORMAT="PNG">
-   </imageobject>
-   <textobject>
-   <phrase>The 2nd CUPS Admin Model/Driver Window</phrase>
-   </textobject>
-   </mediaobject>
-   </figure>
 
    <para>
 Scroll through the long list and find the model number for your
@@ -1255,17 +1249,28 @@ printer.  Notice carefully that there are many different languages
 supported for each printer, as denoted by the initials in parenthesis.
 (en) would be for English, (da) for Danish, (sv) for Swedish, (fr) for
 French, (no) for Norwegian, (pl) for Polish, and (en_GB) for British
-English.  Also take note of the Gimp-Print revision for the driver,
-and ensure that it is indeed the version of Gimp-Print which you have
-most recently installed.  It would appear that the author has some old
-drivers still installed!  Once you have made the proper selection,
-click on the <guibutton>Continue</guibutton> button.
+English (see <xref linkend="fig-cups-admin-model">).  Also take note
+of the Gimp-Print revision for the driver, and ensure that it is
+indeed the version of Gimp-Print which you have most recently
+installed.  Once you have made the proper selection, click on the
+<guibutton>Continue</guibutton> button. 
    </para>
+
+   <figure id="fig-cups-admin-model"><title>The 2nd CUPS Admin Model/Driver Window</title>
+   <mediaobject>
+   <imageobject>
+   <imagedata scale="55" fileref="figures/cups_admin_model.png" FORMAT="PNG">
+   </imageobject>
+   <textobject>
+   <phrase>The 2nd CUPS Admin Model/Driver Window</phrase>
+   </textobject>
+   </mediaobject>
+   </figure>
 
    <figure><title>The CUPS Admin Success Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_success.png" FORMAT="PNG">
+   <imagedata scale="39" fileref="figures/cups_admin_success.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Admin Success Window</phrase>
@@ -1278,14 +1283,12 @@ Congratulations!  You should now see the CUPS window indicating that
 your printer was successfully installed.  Notice the sentence which
 reads "Printer your_printer has been added successfully".  Click on
 your_printer, which will be the underlined name for your printer.
-After doing so, your window will appear something
-<xref linkend="fig-cups-my-printer">.
    </para>
 
    <figure id="fig-cups-my-printer"><title>The CUPS Window for Your Printer</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_my_printer.png" FORMAT="PNG">
+   <imagedata scale="65" fileref="figures/cups_my_printer.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Window for Your Printer</phrase>
@@ -1294,6 +1297,8 @@ After doing so, your window will appear something
    </figure>
 
    <para>
+After clicking on your_printer (epson_870 in this example), a window
+will appear similar to that shown in <xref linkend="fig-cups-my-printer">.
 It would probably be a good idea at this point to click on the
 <guibutton>Print Test Page</guibutton> button to ensure that
 everything is working properly.  Take note of the Gimp-Print revision
