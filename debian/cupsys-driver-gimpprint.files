@@ -1,6 +1,8 @@
 /etc/cups
 /usr/bin/cups-calibrate
+/usr/bin/cups-genppd
 /usr/lib/cups
 /usr/share/cups/calibrate.ppm
 /usr/share/cups/model/C
 /usr/share/man/man8/cups-calibrate.8
+/usr/share/man/man8/cups-genppd.8

@@ -39,7 +39,7 @@ cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model
 
 AM_CFLAGS = $(GNUCFLAGS)
-DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
+DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
 GIMPPRINT_DEPLIBS = -lm
@@ -50,16 +50,13 @@ LIBS = $(INTLLIBS) @LIBS@
 ## Programs
 
 if BUILD_CUPS
-bin_PROGRAMS = cups-calibrate
+bin_PROGRAMS = cups-calibrate cups-genppd
 endif
 if BUILD_CUPS
 cupsexec_backend_PROGRAMS = epson canon
 endif
 if BUILD_CUPS
 cupsexec_filter_PROGRAMS = rastertoprinter commandtoepson commandtocanon
-endif
-if BUILD_CUPS
-noinst_PROGRAMS = genppd
 endif
 
 
@@ -75,8 +72,8 @@ canon_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 epson_SOURCES = epson.c
 epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
-genppd_SOURCES = genppd.c
-genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
+cups_genppd_SOURCES = genppd.c
+cups_genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
 
 rastertoprinter_SOURCES = rastertoprinter.c
 rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
@@ -176,7 +173,7 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
 
-ppd-stamp: genppd
+ppd-stamp: cups-genppd
 	$(MAKE) ppd-stamp-phony
 	touch ppd-stamp
 
@@ -186,22 +183,22 @@ ppd-stamp-pre:
 	-$(RM) -r ppd
 	-mkdir ppd
 
-ppd-nonls: genppd
+ppd-nonls: cups-genppd
 	for language in C ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	 ./genppd --prefix=ppd/$$language ; \
+	 ./cups-genppd -p ppd/$$language ; \
 	done
 
-ppd-nls: genppd
+ppd-nls: cups-genppd
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	for language in $(LINGUAS) ; do \
+	for language in `./cups-genppd -L -c \`pwd\`/catalog/share/locale` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	  LANGUAGE=$$language ./genppd --prefix=ppd/$$language --catalog=`pwd`/catalog/share/locale ; \
+	  LANGUAGE=$$language ./cups-genppd -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
 	$(RM) -r catalog
 

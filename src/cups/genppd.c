@@ -32,7 +32,13 @@
  *   main()                   - Process files on the command-line...
  *   initialize_stp_options() - Initialize the min/max values for
  *                              each STP numeric option.
- *   usage()                  - Show program usage...
+ *   usage()                  - Show program usage.
+ *   help()                   - Show detailed program usage.
+ *   getlangs()               - Get available translations.
+ *   printlangs()             - Show available translations.
+ *   printmodels()            - Show available printer models.
+ *   checkcat()               - Check message catalogue exists.
+ *   xmalloc()                - Die gracefully if malloc fails.
  *   write_ppd()              - Write a PPD file.
  */
 
@@ -45,6 +51,8 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -95,6 +103,7 @@
 
 #define DEFAULT_SIZE	"Letter"
 /*#define DEFAULT_SIZE	"A4"*/
+#define CATALOG       "LC_MESSAGES/gimp-print.mo"
 
 typedef struct				/**** Media size values ****/
 {
@@ -123,14 +132,14 @@ static struct				/**** STP numeric options ****/
     		step;			/* Step (thousandths) */
 }		stp_options[] =
 {
-  { "stpBrightness",	"Brightness" },
-  { "stpContrast",	"Contrast" },
-  { "stpGamma",		"Gamma" },
-  { "stpDensity",	"Density" },
-  { "stpCyan",		"Cyan" },
-  { "stpMagenta",	"Magenta" },
-  { "stpYellow",	"Yellow" },
-  { "stpSaturation",	"Saturation" }
+  { "stpBrightness",	N_("Brightness") },
+  { "stpContrast",	N_("Contrast") },
+  { "stpGamma",		N_("Gamma") },
+  { "stpDensity",	N_("Density") },
+  { "stpCyan",		N_("Cyan") },
+  { "stpMagenta",	N_("Magenta") },
+  { "stpYellow",	N_("Yellow") },
+  { "stpSaturation",	N_("Saturation") }
 };
 
 
@@ -140,57 +149,57 @@ static struct				/**** STP numeric options ****/
 
 void	initialize_stp_options(void);
 void	usage(void);
+void    help(void);
+char ** getlangs(void);
+int     checkcat (const struct dirent *localedir);
+void    printlangs(char** langs);
+void    printmodels(int verbose);
+void *  xmalloc (size_t size);
 int	write_ppd(const stp_printer_t p, const char *prefix,
-	          const char *language, int verbose);
+	          int verbose);
+
+
+/*
+ * Global variables...
+ */
+const char *baselocaledir = PACKAGE_LOCALE_DIR;
 
 
 /*
  * 'main()' - Process files on the command-line...
  */
 
-int				/* O - Exit status */
-main(int  argc,			/* I - Number of command-line arguments */
-     char *argv[])		/* I - Command-line arguments */
+int				    /* O - Exit status */
+main(int  argc,			    /* I - Number of command-line arguments */
+     char *argv[])		    /* I - Command-line arguments */
 {
-  int		i;		/* Looping var */
-  int		option_index;	/* Option index */
-  const char	*prefix;	/* Directory prefix for output */
-  const char	*language;	/* Language */
-  const char    *catalog = NULL;/* Catalog location */
-  stp_printer_t	printer;	/* Pointer to printer driver */
-  int           verbose = 0;
-  static struct option long_options[] =
-		{		/* Command-line options */
-		  /* name,	has_arg,		flag	val */
-		  {"help",	no_argument,		0,	(int) 'h'},
-		  {"verbose",	no_argument,		0,	(int) 'v'},
-		  {"quiet",	no_argument,		0,	(int) 'q'},
-		  {"catalog",	required_argument,	0,	(int) 'c'},
-		  {"prefix",	required_argument,	0,	(int) 'p'},
-		  {0,		0,			0,	0}
-		};
+  int		i;		    /* Looping var */
+  const char	*prefix;	    /* Directory prefix for output */
+  const char	*language = NULL;   /* Language */
+  stp_printer_t	printer;	    /* Pointer to printer driver */
+  int           verbose = 0;        /* Verbose messages */
+  char          **langs = NULL;     /* Available translations */
+  char          **models = NULL;    /* Models to output, all if NULL */
+  int           opt_printlangs = 0; /* Print available translations */
+  int           opt_printmodels = 0;/* Print available models */
 
  /*
   * Parse command-line args...
   */
 
-  prefix   = "ppd";
-  language = "C";
+  prefix   = GENPPD_PPD_PREFIX;
 
   initialize_stp_options();
 
-  option_index = 0;
-
   for (;;)
   {
-    if ((i = getopt_long(argc, argv, "hvqc:p:", long_options,
-			 &option_index)) == -1)
+    if ((i = getopt(argc, argv, "hvqc:p:l:LMV")) == -1)
       break;
 
     switch (i)
     {
     case 'h':
-      usage();
+      help();
       break;
     case 'v':
       verbose = 1;
@@ -199,9 +208,9 @@ main(int  argc,			/* I - Number of command-line arguments */
       verbose = 0;
       break;
     case 'c':
-      catalog = optarg;
+      baselocaledir = optarg;
 #ifdef DEBUG
-      fprintf (stderr, "DEBUG: catalog: %s\n", catalog);
+      fprintf (stderr, "DEBUG: baselocaledir: %s\n", baselocaledir);
 #endif
       break;
     case 'p':
@@ -210,11 +219,83 @@ main(int  argc,			/* I - Number of command-line arguments */
       fprintf (stderr, "DEBUG: prefix: %s\n", prefix);
 #endif
       break;
+    case 'l':
+      language = optarg;
+      break;
+    case 'L':
+      opt_printlangs = 1;
+      break;
+    case 'M':
+      opt_printmodels = 1;
+      break;
+    case 'V':
+      printf("cups-genppd version %s, "
+	     "Copyright (c) 1993-2001 by Easy Software Products.\n\n",
+	     VERSION);
+      printf("CUPS PPD PostScript Level:     %d\n", CUPS_PPD_PS_LEVEL);
+      printf("Default PPD location (prefix): %s\n", GENPPD_PPD_PREFIX);
+      printf("Default base locale directory: %s\n\n", PACKAGE_LOCALE_DIR);
+      puts("This program is free software; you can redistribute it and/or\n"
+	   "modify it under the terms of the GNU General Public License,\n"
+	   "version 2, as published by the Free Software Foundation.\n"
+	   "\n"
+	   "This program is distributed in the hope that it will be useful,\n"
+	   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+	   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+	   "GNU General Public License for more details.\n"
+	   "\n"
+	   "You should have received a copy of the GNU General Public License\n"
+	   "along with this program; if not, please contact Easy Software\n"
+	   "Products at:\n"
+	   "\n"
+	   "    Attn: CUPS Licensing Information\n"
+	   "    Easy Software Products\n"
+	   "    44141 Airport View Drive, Suite 204\n"
+	   "    Hollywood, Maryland 20636-3111 USA\n"
+	   "\n"
+	   "    Voice: (301) 373-9603\n"
+	   "    EMail: cups-info@cups.org\n"
+	   "      WWW: http://www.cups.org\n");
+      exit (EXIT_SUCCESS);
+      break;
     default:
       usage();
+      exit (EXIT_FAILURE);
       break;
     }
   }
+  if (optind < argc) {
+    int n, numargs;
+    numargs = argc-optind;
+    models = xmalloc((numargs+1) * sizeof(char*));
+    for (n=0; n<numargs; n++)
+      {
+	models[n] = argv[optind+n];
+      }
+    models[numargs] = (char*) NULL;
+
+    n=0;
+  }
+
+#ifdef ENABLE_NLS
+  langs = getlangs();
+#endif
+
+  /*
+   * Print lists
+   */
+
+  if (opt_printlangs)
+    {
+      printlangs(langs);
+      exit (EXIT_SUCCESS);
+    }
+
+  if (opt_printmodels)
+    {
+      printmodels(verbose);
+      exit (EXIT_SUCCESS);
+    }
 
 /*
  * Initialise libgimpprint
@@ -222,53 +303,92 @@ main(int  argc,			/* I - Number of command-line arguments */
 
   stp_init();
 
-
  /*
   * Set the language...
   */
 
+  if (language)
+    {
+      unsetenv("LC_CTYPE");
+      unsetenv("LC_COLLATE");
+      unsetenv("LC_TIME");
+      unsetenv("LC_NUMERIC");
+      unsetenv("LC_MONETARY");
+      unsetenv("LC_MESSAGES");
+      unsetenv("LC_ALL");
+      unsetenv("LANG");
+      setenv("LC_ALL", language, 1);
+      setenv("LANG", language, 1);
+    }
   setlocale(LC_ALL, "");
 
  /*
   * Set up the catalog
   */
 
-  if (catalog)
+#ifdef ENABLE_NLS
+  if (baselocaledir)
   {
-    if ((bindtextdomain(PACKAGE, catalog)) == NULL)
+    if ((bindtextdomain(PACKAGE, baselocaledir)) == NULL)
     {
-      fprintf(stderr, "genppd: cannot load message catalog %s: %s\n", catalog,
-              strerror(errno));
-      exit(1);
+      fprintf(stderr, "cups-genppd: cannot load message catalog %s under %s: %s\n",
+	      PACKAGE, baselocaledir, strerror(errno));
+      exit(EXIT_FAILURE);
     }
 #ifdef DEBUG
-    fprintf (stderr, "DEBUG: bound textdomain: %s\n", catalog);
+    fprintf (stderr, "DEBUG: bound textdomain: %s under %s\n",
+	     PACKAGE, baselocaledir);
 #endif
     if ((textdomain(PACKAGE)) == NULL)
     {
-      fprintf(stderr, "genppd: cannot select message catalog %s: %s\n",
-              catalog, strerror(errno));
-      exit(1);
+      fprintf(stderr, "cups-genppd: cannot select message catalog %s under %s: %s\n",
+              PACKAGE, baselocaledir, strerror(errno));
+      exit(EXIT_FAILURE);
     }
 #ifdef DEBUG
     fprintf (stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
 #endif
   }
+#endif
 
 
  /*
   * Write PPD files...
   */
 
-  for (i = 0; i < stp_known_printers(); i++)
-  {
-    printer = stp_get_printer_by_index(i);
+  if (models)
+    {
+      int n;
+      for (n=0; models[n]; n++)
+	{
+	  printer = stp_get_printer_by_driver(models[n]);
+	  if (!printer)
+	    printer = stp_get_printer_by_long_name(models[n]);
 
-    if (printer && write_ppd(printer, prefix, language, verbose))
-      return (1);
-  }
+	  if (printer)
+	    {
+	      if (write_ppd(printer, prefix, verbose))
+		return 1;
+	    }
+	  else
+	    {
+	      printf("Driver not found: %s\n", models[n]);
+	      return (1);
+	    }
+	}
+    }
+  else
+    {
+      for (i = 0; i < stp_known_printers(); i++)
+	{
+	  printer = stp_get_printer_by_index(i);
+
+	  if (printer && write_ppd(printer, prefix, verbose))
+	    return (1);
+	}
+    }
   if (!verbose)
-    fprintf(stderr, "\n");
+    fprintf(stderr, " done.\n");
 
   return (0);
 }
@@ -336,10 +456,179 @@ initialize_stp_options(void)
 void
 usage(void)
 {
-  fputs("Usage: genppd [--help] [--catalog=domain] "
-        "[--language=locale] [--prefix=dir]\n", stderr);
+  puts("Usage: cups-genppd [-c localedir] "
+        "[-l locale] [-p prefix] [-q] [-v] models...\n"
+        "       cups-genppd -L [-c localedir]\n"
+	"       cups-genppd -M [-v]\n"
+	"       cups-genppd -h\n"
+	"       cups-genppd -V\n");
+}
 
-  exit(EXIT_FAILURE);
+void
+help(void)
+{
+  puts("Generate gimp-print PPD files for use with CUPS\n\n");
+  usage();
+  puts("\nExamples: LANG=de_DE cups-genppd -p ppd -c /usr/share/locale\n"
+       "          cups-genppd -L -c /usr/share/locale\n"
+       "          cups-genppd -M -v\n\n"
+       "Commands:\n"
+       "  -h            Show this help message.\n"
+       "  -L            List available translations (message catalogs).\n"
+       "  -M            List available printer models.\n"
+       "  -V            Show version information and defaults.\n"
+       "  The default is to output PPDs.\n"
+       "Options:\n"
+       "  -c localedir  Use localedir as the base directory for locale data.\n"
+       "  -l locale     Output PPDs translated with messages for locale.\n"
+       "  -p prefix     Output PPDs in directory prefix.\n"
+       "  -q            Quiet mode.\n"
+       "  -v            Verbose mode.\n"
+       "models:\n"
+       "  A list of printer models, either the driver or quoted full name.\n");
+}
+
+
+/*
+ * 'getlangs()' - Get a list of available translations
+ */
+
+char **
+getlangs(void)
+{
+  struct dirent** langdirs;
+  int n;
+  char **langs;
+
+  n = scandir (baselocaledir, &langdirs, checkcat, alphasort);
+  if (n >= 0)
+    {
+      int idx;
+      langs = xmalloc((n+1) * sizeof(char*));
+      for (idx = 0; idx < n; ++idx)
+	{
+	  langs[idx] = (char*) xmalloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
+	  strcpy(langs[idx], langdirs[idx]->d_name);
+	  free (langdirs[idx]);
+	}
+      langs[n] = NULL;
+      free (langdirs);
+    }
+  else
+    return NULL;
+
+  return langs;
+}
+
+
+/*
+ * 'printlangs()' - Print list of available translations
+ */
+
+void printlangs(char **langs)
+{
+  if (langs)
+    {
+      int n = 0;
+      while (langs && langs[n])
+	{
+	  printf("%s\n", langs[n]);
+	  n++;
+	}
+    }
+  exit (EXIT_SUCCESS);
+}
+
+
+/*
+ * 'printmodels' - Print a list of available models
+ */
+
+void printmodels(int verbose)
+{
+  stp_printer_t p;
+  int i;
+
+  for (i = 0; i < stp_known_printers(); i++)
+    {
+      p = stp_get_printer_by_index(i);
+      if (p &&
+	  !(strcmp(stp_printer_get_driver(p), "ps") == 0 ||
+	    strcmp(stp_printer_get_driver(p), "ps2") == 0))
+	{
+	  if(verbose)
+	    printf("%-20s%s\n", stp_printer_get_driver(p),
+		   stp_printer_get_long_name(p));
+	  else
+	    printf("%s\n", stp_printer_get_driver(p));
+	}
+    }
+  exit (EXIT_SUCCESS);
+}
+
+
+/*
+ * 'checkcat()' - A callback for scandir() to check
+ *                if a message catalogue exists
+ */
+
+int
+checkcat (const struct dirent *localedir)
+{
+  char* catpath;
+  int catlen, status = 0, savederr;
+  struct stat catstat;
+
+  savederr = errno; /* since we are a callback, preserve scandir() state */
+
+  /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
+  /* Add 3, for two '/' separators and '\0'   */
+  catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
+  catpath = (char*) xmalloc(catlen * sizeof(char));
+
+  strncpy (catpath, baselocaledir, strlen(baselocaledir));
+  catlen = strlen(baselocaledir);
+  *(catpath+catlen) = '/';
+  catlen++;
+  strncpy (catpath+catlen, localedir->d_name, strlen(localedir->d_name));
+  catlen += strlen(localedir->d_name);
+  *(catpath+catlen) = '/';
+  catlen++;
+  strncpy (catpath+catlen, CATALOG, strlen(CATALOG));
+  catlen += strlen(CATALOG);
+  *(catpath+catlen) = '\0';
+
+  if (!stat (catpath, &catstat))
+    {
+      if (S_ISREG(catstat.st_mode))
+	{
+	  status = 1;
+	}
+     }
+ 
+  free (catpath);
+
+  errno = savederr;
+  return status;
+}
+
+
+/*
+ * 'xmalloc() - die gracefully if malloc() fails
+ */
+
+void *
+xmalloc (size_t size)
+{
+  register void *p = NULL;
+  
+  if ((p = malloc (size)) == NULL)
+    {
+      fprintf (stderr, "cups-genppd: Memory allocation failed: %s.\n",
+	       strerror(errno));
+      exit (EXIT_FAILURE);
+    }
+  return (p);
 }
 
 
@@ -350,7 +639,6 @@ usage(void)
 int					/* O - Exit status */
 write_ppd(const stp_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
-	  const char          *language,/* I - Language/locale */
 	  int                 verbose)
 {
   int		i, j;			/* Looping vars */
@@ -372,7 +660,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   const stp_printfuncs_t *printfuncs;	/* Driver functions */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
-
+  struct stat   dir;                    /* prefix dir status */
 
  /*
   * Initialize driver-specific variables...
@@ -398,7 +686,18 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Make sure the destination directory exists...
   */
 
-  mkdir(prefix, 0777);
+
+  
+  if (stat(prefix, &dir) && !S_ISDIR(dir.st_mode))
+    {
+      printf ("***B***\n");
+      if (mkdir(prefix, 0777))
+	{
+	  printf("cups-genppd: Cannot create directory %s: %s\n",
+		 prefix, strerror(errno));
+	  exit (EXIT_FAILURE);
+	}
+    }
   sprintf(filename, "%s/%s" PPDEXT, prefix, driver);
 
  /*
@@ -407,7 +706,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   if ((fp = gzopen(filename, "wb")) == NULL)
   {
-    fprintf(stderr, "genppd: Unable to create file \"%s\" - %s.\n",
+    fprintf(stderr, "cups-genppd: Unable to create file \"%s\" - %s.\n",
             filename, strerror(errno));
     return (2);
   }
@@ -469,7 +768,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   opts = (*(printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "PageSize");
-  the_papers = malloc(sizeof(paper_t) * num_opts);
+  the_papers = xmalloc(sizeof(paper_t) * num_opts);
 
   for (i = 0; i < num_opts; i++)
   {
@@ -835,6 +1134,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   stp_free_vars(v);
   return (0);
 }
+
 
 /*
  * End of "$Id$".
