@@ -255,6 +255,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   static char	*dithers[][2] =
 		{
 		  { "Fast", "Fast" },
+		  { "VeryFast", "Very Fast" },
 		  { "Ordered", "Ordered" },
 		  { "AdaptHybrid", "Adaptive Hybrid" },
 		  { "AdaptRandom", "Adaptive Random" },
@@ -538,7 +539,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   gzputs(fp, "*OrderDependency: 10 AnySetup *Dither\n");
   gzprintf(fp, "*DefaultDither: %s\n", dithers[0][0]);
 
-  for (i = 0; i < 6; i ++)
+  for (i = 0; i < (sizeof(dithers) / sizeof(dithers[0])); i ++)
     gzprintf(fp, "*Dither %s/%s: \"<</OutputType(%s)>>setpagedevice\"\n",
              dithers[i][0], dithers[i][1], dithers[i][1]);
 
@@ -570,11 +571,11 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
     * Figure out the quality index...
     */
 
-    for (j = 0; j < 7; j ++)
+    for (j = 0; j < (sizeof(qualities) / sizeof(qualities[0])); j ++)
       if (strcasecmp(quality, qualities[j]) == 0)
         break;
 
-    if (j >= 7)
+    if (j >= (sizeof(qualities) / sizeof(qualities[0])))
       j = 0;
 
    /*

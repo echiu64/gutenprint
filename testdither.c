@@ -119,6 +119,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   convert_t	colorfunc;		/* Color conversion function... */
   unsigned short rgb[IMAGE_WIDTH * 3],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
+  int		write_image;		/* Write the image to disk? */
   FILE		*fp;			/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   time_t	start, end;		/* Start and end times */
@@ -143,8 +144,16 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Get command-line args...
   */
 
+  write_image = 1;
+
   for (i = 1; i < argc; i ++)
   {
+    if (strcmp(argv[i], "no-image") == 0)
+    {
+      write_image = 0;
+      continue;
+    }
+
     if (strcmp(argv[i], "1-bit") == 0)
     {
       dither_bits = 1;
@@ -273,22 +282,27 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Open the PPM/PGM file...
   */
 
-  sprintf(filename, "%s-%s-%dbit.%s", image_types[image_type],
-          dither_types[dither_type], dither_bits,
-	  dither_type == DITHER_GRAY ? "pgm" : "ppm");
-
-  if ((fp = fopen(filename, "wb")) != NULL)
+  if (write_image)
   {
-    puts(filename);
-    if (dither_type == DITHER_GRAY)
-      fputs("P5\n", fp);
-    else
-      fputs("P6\n", fp);
+    sprintf(filename, "%s-%s-%dbit.%s", image_types[image_type],
+            dither_types[dither_type], dither_bits,
+	    dither_type == DITHER_GRAY ? "pgm" : "ppm");
 
-    fprintf(fp, "%d\n%d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+    if ((fp = fopen(filename, "wb")) != NULL)
+    {
+      puts(filename);
+      if (dither_type == DITHER_GRAY)
+	fputs("P5\n", fp);
+      else
+	fputs("P6\n", fp);
+
+      fprintf(fp, "%d\n%d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+    }
+    else
+      perror(filename);
   }
   else
-    perror(filename);
+    fp = NULL;
 
  /*
   * Now dither the "page"...
@@ -298,27 +312,33 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   for (i = 0; i < IMAGE_HEIGHT; i ++)
   {
-    printf("\rProcessing row %d...", i);
-    fflush(stdout);
+    if ((i & 15) == 0)
+    {
+      printf("\rProcessing row %d...", i);
+      fflush(stdout);
+    }
 
     switch (dither_type)
     {
       case DITHER_GRAY :
           image_get_row(gray, i);
           dither_black(gray, i, dither, black, 0);
-	  write_gray(fp, black);
+	  if (fp)
+	    write_gray(fp, black);
 	  break;
       case DITHER_COLOR :
           image_get_row(rgb, i);
 	  dither_cmyk(rgb, i, dither, cyan, 0, magenta, 0,
 		      yellow, 0, black, 0);
-	  write_color(fp, cyan, magenta, yellow, black);
+	  if (fp)
+	    write_color(fp, cyan, magenta, yellow, black);
 	  break;
       case DITHER_PHOTO :
           image_get_row(rgb, i);
 	  dither_cmyk(rgb, i, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, 0, black, 0);
-	  write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
+	  if (fp)
+	    write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
 	  break;
     }
   }
