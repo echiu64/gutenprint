@@ -1433,7 +1433,7 @@ static const double standard_hue_adjustment[49] =
 /*   0     1     2     3     4     5     6     7     8     9    10    11    12 */
 
 static const escp2_dot_size_t g1_dotsizes =
-{   -2,   -1,   -2,   -1,   -1,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
+{   -2,   -1,   -2,   -1,   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc1500_dotsizes =
 {   -2,   -1,   -2,   -1,   -1,   -2,   -2,   -1,   -1,   -1,   -1,   -1,   -1 };
@@ -4495,15 +4495,15 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   * Issue print command
 	   */
 	  if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
-	      sw->bitwidth == 1)
+	      sw->jets == 1 && sw->bitwidth == 1)
 	    {
 	      int ygap = 3600 / ydpi;
 	      int xgap = 3600 / xdpi;
 	      if (ydpi == 720 &&
 		  escp2_has_cap(model, MODEL_720DPI_MODE, MODEL_720DPI_600, v))
 		ygap *= 8;
-	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap, 1,
-			  lwidth & 255, (lwidth >> 8) & 255);
+	      stp_zprintf(v, "\033.%c%c%c%c%c%c", COMPRESSION, ygap, xgap,
+			  1, lwidth & 255, (lwidth >> 8) & 255);
 	    }
 	  else if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
 		   escp2_has_cap(model, MODEL_VARIABLE_DOT,
