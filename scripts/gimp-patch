@@ -227,14 +227,14 @@ diff -ur gimp-print-4.1.99-a3/configure.in gimp-print-4.1.99-a3-GIMP-CVS-DIST/co
  
  AC_MSG_CHECKING([if user install is enabled])
  AC_ARG_ENABLE(user-install,
-@@ -514,31 +514,31 @@
+@@ -514,5 +514,5 @@
  LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
  
  dnl Definitions
 -AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
 +dnl AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
  AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H})
- RELEASE_DATE="29 Jul 2001"
+@@ -520,25 +520,25 @@
  AC_DEFINE_UNQUOTED(RELEASE_DATE, "${RELEASE_DATE}")
  
  dnl Substitutions
