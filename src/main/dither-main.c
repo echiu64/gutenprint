@@ -138,6 +138,8 @@ stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
     }
+  else
+    return;
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
       stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
     description->is_active = 0;
