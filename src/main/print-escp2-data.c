@@ -560,6 +560,22 @@ static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 
 DECLARE_INK(photo_2pl_2880, 0.75);
 
+static const stp_simple_dither_range_t photo_2pl_2880_c_dither_ranges[] =
+{
+  { 0.26, 0x1, 1, 1 },
+  { 1.00, 0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_2pl_2880_c, 0.75);
+
+static const stp_simple_dither_range_t photo_2pl_2880_m_dither_ranges[] =
+{
+  { 0.31, 0x1, 1, 1 },
+  { 1.00, 0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_2pl_2880_m, 0.75);
+
 static const stp_simple_dither_range_t piezo_2pl_2880_quadtone_dither_ranges[]=
 {
   { PIEZO_0, 0x1, 0, 1 },
@@ -1057,8 +1073,8 @@ static const escp2_variable_inkset_t escp2_2pl_2880_standard_inks =
 static const escp2_variable_inkset_t escp2_2pl_2880_photo_inks =
 {
   &standard_2pl_2880_ink,
-  &photo_2pl_2880_ink,
-  &photo_2pl_2880_ink,
+  &photo_2pl_2880_c_ink,
+  &photo_2pl_2880_m_ink,
   &standard_2pl_2880_ink
 };
 
@@ -2288,8 +2304,8 @@ static const paper_t sp950_papers[] =
     2, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
     1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
   { "GlossyPhoto", N_("Premium Glossy Photo Paper"),
-    7, 0, 1.10, 1.0, .999, 1.0, 1.0, 1.0, 1.0, 1.03, 1.0,
-    1, 1.0, 0x80, 0x00, 0x02,
+    7, 0, 0.85, 1.0, .999, 0.9, 1.04, 0.93, 0.9, 1.04, 0.93,
+    0.9, 1.0, 0x80, 0x00, 0x02,
     pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment},
   { "Luster", N_("Premium Luster Photo Paper"),
     7, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -2530,7 +2546,7 @@ static const escp2_densities_t c3pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 2.0, 1.05,1.05,0.64, 0.74, 0.48,  0.48,  0.495, 0.495, 1.00,  1.00,  0.52 };
+{ 2.0, 2.0, 1.05,1.05,0.64, 0.74, 0.48,  0.48,  0.495, 0.495, 1.20,  1.20,  0.52 };
 
 static const escp2_densities_t c4pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
