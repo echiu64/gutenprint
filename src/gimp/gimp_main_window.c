@@ -101,7 +101,11 @@ static gint   suppress_preview_update = 0;
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
 static gint            mouse_y;		/* Last mouse Y */
-static gint            mouse_button;	/* Button being dragged with */
+static gint	       old_top;		/* Previous position */
+static gint	       old_left;	/* Previous position */
+static gint	       buttons_pressed = 0;
+static gint	       preview_active = 0;
+static gint            mouse_button = -1;	/* Button being dragged with */
 
 static gint            printable_left;	/* Left pixel column of page */
 static gint            printable_top;	/* Top pixel row of page */
@@ -2509,9 +2513,37 @@ gimp_preview_button_callback (GtkWidget      *widget,
 			      GdkEventButton *event,
 			      gpointer        data)
 {
-  mouse_x = event->x;
-  mouse_y = event->y;
-  mouse_button = event->button;
+  if (event->type == GDK_BUTTON_PRESS)
+    {
+      if (preview_active == 0)
+	{
+	  mouse_x = event->x;
+	  mouse_y = event->y;
+	  old_left = stp_get_left(vars);
+	  old_top = stp_get_top(vars);
+	  mouse_button = event->button;
+	  buttons_pressed++;
+	  preview_active = 1;
+	}
+      else if (preview_active == 1)
+	{
+	  preview_active = -1;
+	  stp_set_left(vars, old_left);
+	  stp_set_top(vars, old_top);
+	  stp_set_left(plist[plist_current].v, stp_get_left(vars));
+	  stp_set_top(plist[plist_current].v, stp_get_top(vars));
+	  gimp_preview_update ();
+	  buttons_pressed++;
+	}
+      else
+	buttons_pressed++;
+    }
+  else
+    {
+      buttons_pressed--;
+      if (buttons_pressed == 0)
+	preview_active = 0;
+    }
 }
 
 /*
@@ -2522,6 +2554,8 @@ gimp_preview_motion_callback (GtkWidget      *widget,
 			      GdkEventMotion *event,
 			      gpointer        data)
 {
+  if (preview_active != 1)
+    return;
   if (stp_get_left(vars) < 0 || stp_get_top(vars) < 0)
     {
       stp_set_left(vars, 72 * (printable_width - print_width) / 20);
@@ -2530,13 +2564,73 @@ gimp_preview_motion_callback (GtkWidget      *widget,
 
   if (mouse_button == 1)
     {
-      stp_set_left(vars, stp_get_left(vars) + 72 * (event->x - mouse_x) / preview_ppi);
-      stp_set_top(vars, stp_get_top(vars) + 72 * (event->y - mouse_y) / preview_ppi);
+      stp_set_left(vars, stp_get_left(vars) +
+		   72 * (event->x - mouse_x) / preview_ppi);
+      stp_set_top(vars, stp_get_top(vars) +
+		  72 * (event->y - mouse_y) / preview_ppi);
+      mouse_x = event->x;
+      mouse_y = event->y;
+    }
+  else if (mouse_button == 2)
+    {
+      int changes = 0;
+      int x_threshold = MAX (1, (preview_ppi * print_width) / 72);
+      int y_threshold = MAX (1, (preview_ppi * print_height) / 72);
+
+      while (event->x - mouse_x >= x_threshold)
+	{
+	  if (stp_get_left(vars) + (print_width * 2) <= right)
+	    {
+	      stp_set_left(vars, stp_get_left(vars) + print_width);
+	      mouse_x += x_threshold;
+	      changes = 1;
+	    }
+	  else
+	    break;
+	}
+      while (mouse_x - event->x >= x_threshold)
+	{
+	  if (stp_get_left(vars) >= print_width)
+	    {
+	      stp_set_left(vars, stp_get_left(vars) - print_width);
+	      mouse_x -= x_threshold;
+	      changes = 1;
+	    }
+	  else
+	    break;
+	}
+
+      while (event->y - mouse_y >= y_threshold)
+	{
+	  if (stp_get_top(vars) + (print_height * 2) <= bottom)
+	    {
+	      stp_set_top(vars, stp_get_top(vars) + print_height);
+	      mouse_y += y_threshold;
+	      changes = 1;
+	    }
+	  else
+	    break;
+	}
+      while (mouse_y - event->y >= y_threshold)
+	{
+	  if (stp_get_top(vars) >= print_height)
+	    {
+	      stp_set_top(vars, stp_get_top(vars) - print_height);
+	      mouse_y -= y_threshold;
+	      changes = 1;
+	    }
+	  else
+	    break;
+	}
+      if (!changes)
+	return;
     }
   else
     {
       stp_set_left(vars, stp_get_left(vars) + event->x - mouse_x);
       stp_set_top(vars, stp_get_top(vars) + event->y - mouse_y);
+      mouse_x = event->x;
+      mouse_y = event->y;
     }
 
   if (stp_get_left(vars) < 0)
@@ -2549,6 +2643,4 @@ gimp_preview_motion_callback (GtkWidget      *widget,
 
   gimp_preview_update ();
 
-  mouse_x = event->x;
-  mouse_y = event->y;
 }
