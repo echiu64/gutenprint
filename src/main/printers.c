@@ -422,8 +422,36 @@ static int
 verify_curve_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
-  /* Curves are automatically within range...or are they? */
-  return 1;
+  int answer = 1;
+  if (desc->bounds.curve &&
+      (desc->is_mandatory || stp_check_curve_parameter(v, parameter)))
+    {
+      stp_curve_t checkval = stp_get_curve_parameter(v, parameter);
+      if (checkval)
+	{
+	  double u0, l0;
+	  double u1, l1;
+	  stp_curve_get_bounds(checkval, &l0, &u0);
+	  stp_curve_get_bounds(desc->bounds.curve, &l1, &u1);
+	  if (u0 > u1 || l0 < l1)
+	    {
+	      stp_eprintf(v, _("%s bounds must be between %f and %f\n"),
+			  parameter, l1, u1);
+	      answer = 0;
+	    }
+	  if (stp_curve_get_wrap(checkval) !=
+	      stp_curve_get_wrap(desc->bounds.curve))
+	    {
+	      stp_eprintf(v, _("%s wrap mode must be %s\n"),
+			  parameter,
+			  (stp_curve_get_wrap(desc->bounds.curve) ==
+			   STP_CURVE_WRAP_NONE) ?
+			  _("no wrap") : _("wrap around"));
+	      answer = 0;
+	    }
+	}
+    }
+  return answer;
 }
 
 static int

@@ -225,7 +225,10 @@ raw_print(const stp_vars_t v, stp_image_t *image)
 	  }
     }
 
-  out_channels = stp_color_init(nv, image, 65536);
+  if (bytes_per_channel == 1)
+    out_channels = stp_color_init(nv, image, 256);
+  else
+    out_channels = stp_color_init(nv, image, 65536);
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {

@@ -324,7 +324,7 @@ typedef struct
   int is_mandatory;
   union				/* Limits on the values */
   {				/* the parameter may take */
-    stp_double_bound_t curve;
+    stp_curve_t curve;
     stp_double_bound_t dbl;
     stp_int_bound_t integer;
     stp_string_list_t  str;

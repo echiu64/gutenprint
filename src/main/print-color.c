@@ -56,9 +56,9 @@ typedef struct
   int image_width;
   stp_convert_t colorfunc;
   stp_curve_t composite;
-  stp_curve_t red;
-  stp_curve_t green;
-  stp_curve_t blue;
+  stp_curve_t cyan;
+  stp_curve_t magenta;
+  stp_curve_t yellow;
   stp_curve_t hue_map;
   stp_curve_t lum_map;
   stp_curve_t sat_map;
@@ -72,7 +72,7 @@ typedef struct
   double defval;
 } float_param_t;
 
-static float_param_t the_parameters[] =
+static float_param_t float_parameters[] =
 {
   {
     {
@@ -157,30 +157,6 @@ static float_param_t the_parameters[] =
   },
   {
     {
-      "HueMap", N_("Hue Map"),
-      N_("Hue adjustment curve"),
-      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }, 0, 0, 0
-  },
-  {
-    {
-      "SatMap", N_("Saturation Map"),
-      N_("Saturation adjustment curve"),
-      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }
-  },
-  {
-    {
-      "LumMap", N_("Luminosity Map"),
-      N_("Luminosity adjustment curve"),
-      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }
-  },
-  {
-    {
       "ImageOptimization", N_("Image Type"),
       N_("Optimize the settings for the type of image to be printed"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
@@ -189,8 +165,84 @@ static float_param_t the_parameters[] =
   }
 };
 
-static const int the_parameter_count =
-sizeof(the_parameters) / sizeof(float_param_t);
+static const int float_parameter_count =
+sizeof(float_parameters) / sizeof(float_param_t);
+
+typedef struct
+{
+  const stp_parameter_t param;
+  stp_curve_t *defval;
+} curve_param_t;
+
+static int standard_curves_initialized = 0;
+
+static stp_curve_t hue_map_bounds = NULL;
+static stp_curve_t lum_map_bounds = NULL;
+static stp_curve_t sat_map_bounds = NULL;
+static stp_curve_t color_curve_bounds = NULL;
+
+static curve_param_t curve_parameters[] =
+{
+  {
+    {
+      "CompositeCurve", N_("Composite Curve"),
+      N_("Composite (Grayscale) curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }, &color_curve_bounds
+  },
+  {
+    {
+      "CyanCurve", N_("Cyan Curve"),
+      N_("Cyan curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }, &color_curve_bounds
+  },
+  {
+    {
+      "MagentaCurve", N_("Magenta Curve"),
+      N_("Magenta curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }, &color_curve_bounds
+  },
+  {
+    {
+      "YellowCurve", N_("Yellow Curve"),
+      N_("Yellow curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0
+    }, &color_curve_bounds
+  },
+  {
+    {
+      "HueMap", N_("Hue Map"),
+      N_("Hue adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0
+    }, &hue_map_bounds
+  },
+  {
+    {
+      "SatMap", N_("Saturation Map"),
+      N_("Saturation adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0
+    }, &sat_map_bounds
+  },
+  {
+    {
+      "LumMap", N_("Luminosity Map"),
+      N_("Luminosity adjustment curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0
+    }, &lum_map_bounds
+  },
+};
+
+static const int curve_parameter_count =
+sizeof(curve_parameters) / sizeof(float_param_t);
 
 /*
  * RGB to grayscale luminance constants...
@@ -383,13 +435,13 @@ adjust_density(const stp_vars_t vars, lut_t *lut)
       stp_curve_rescale(lut->composite,
 			stp_get_float_parameter(vars, "Density"),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
-      stp_curve_rescale(lut->red,
+      stp_curve_rescale(lut->cyan,
 			stp_get_float_parameter(vars, "Density"),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
-      stp_curve_rescale(lut->green,
+      stp_curve_rescale(lut->magenta,
 			stp_get_float_parameter(vars, "Density"),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
-      stp_curve_rescale(lut->blue,
+      stp_curve_rescale(lut->yellow,
 			stp_get_float_parameter(vars, "Density"),
 			STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_CLIP);
       lut->density_is_adjusted = 1;
@@ -592,9 +644,9 @@ rgb_to_rgb(const stp_vars_t vars,
   lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;
   int split_saturation = ssat > 1.4;
-  const unsigned short *red = stp_curve_get_ushort_data(lut->red, &count);
-  const unsigned short *green = stp_curve_get_ushort_data(lut->green, &count);
-  const unsigned short *blue = stp_curve_get_ushort_data(lut->blue, &count);
+  const unsigned short *red = stp_curve_get_ushort_data(lut->cyan, &count);
+  const unsigned short *green = stp_curve_get_ushort_data(lut->magenta, &count);
+  const unsigned short *blue = stp_curve_get_ushort_data(lut->yellow, &count);
   size_t h_points = 0;
   size_t l_points = 0;
   size_t s_points = 0;
@@ -767,9 +819,9 @@ solid_rgb_to_rgb(const stp_vars_t vars,
   int nz2 = 0;
   lut_t *lut = (lut_t *)(stp_get_color_data(vars));
   size_t count;
-  const unsigned short *red = stp_curve_get_ushort_data(lut->red, &count);
-  const unsigned short *green = stp_curve_get_ushort_data(lut->green, &count);
-  const unsigned short *blue = stp_curve_get_ushort_data(lut->blue, &count);
+  const unsigned short *red = stp_curve_get_ushort_data(lut->cyan, &count);
+  const unsigned short *green = stp_curve_get_ushort_data(lut->magenta, &count);
+  const unsigned short *blue = stp_curve_get_ushort_data(lut->yellow, &count);
   size_t h_points = 0;
   size_t l_points = 0;
   size_t s_points = 0;
@@ -928,9 +980,9 @@ gray_to_rgb(const stp_vars_t vars,
   const unsigned short *green;
   const unsigned short *blue;
   adjust_density(vars, lut);
-  red = stp_curve_get_ushort_data(lut->red, &count);
-  green = stp_curve_get_ushort_data(lut->green, &count);
-  blue = stp_curve_get_ushort_data(lut->blue, &count);
+  red = stp_curve_get_ushort_data(lut->cyan, &count);
+  green = stp_curve_get_ushort_data(lut->magenta, &count);
+  blue = stp_curve_get_ushort_data(lut->yellow, &count);
 
   while (width > 0)
     {
@@ -1009,12 +1061,12 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   double isat = 1.0;
   double saturation = stp_get_float_parameter(vars, "Saturation");
 
-  stp_curve_resample(lut->red, 256);
-  stp_curve_resample(lut->green, 256);
-  stp_curve_resample(lut->blue, 256);
-  red = stp_curve_get_ushort_data(lut->red, &count);
-  green = stp_curve_get_ushort_data(lut->green, &count);
-  blue = stp_curve_get_ushort_data(lut->blue, &count);
+  stp_curve_resample(lut->cyan, 256);
+  stp_curve_resample(lut->magenta, 256);
+  stp_curve_resample(lut->yellow, 256);
+  red = stp_curve_get_ushort_data(lut->cyan, &count);
+  green = stp_curve_get_ushort_data(lut->magenta, &count);
+  blue = stp_curve_get_ushort_data(lut->yellow, &count);
 
   if (saturation > 1)
     isat = 1.0 / saturation;
@@ -1100,13 +1152,13 @@ fast_gray_to_rgb(const stp_vars_t vars,
   const unsigned short *green;
   const unsigned short *blue;
 
-  stp_curve_resample(lut->red, 256);
-  stp_curve_resample(lut->green, 256);
-  stp_curve_resample(lut->blue, 256);
+  stp_curve_resample(lut->cyan, 256);
+  stp_curve_resample(lut->magenta, 256);
+  stp_curve_resample(lut->yellow, 256);
   adjust_density(vars, lut);
-  red = stp_curve_get_ushort_data(lut->red, &count);
-  green = stp_curve_get_ushort_data(lut->green, &count);
-  blue = stp_curve_get_ushort_data(lut->blue, &count);
+  red = stp_curve_get_ushort_data(lut->cyan, &count);
+  green = stp_curve_get_ushort_data(lut->magenta, &count);
+  blue = stp_curve_get_ushort_data(lut->yellow, &count);
 
   while (width > 0)
     {
@@ -1404,13 +1456,13 @@ allocate_lut(void)
 {
   lut_t *ret = stp_malloc(sizeof(lut_t));
   ret->composite = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->red = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->green = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->blue = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  ret->cyan = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  ret->magenta = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  ret->yellow = stp_curve_allocate(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(ret->composite, 0, 65535);
-  stp_curve_set_bounds(ret->red, 0, 65535);
-  stp_curve_set_bounds(ret->green, 0, 65535);
-  stp_curve_set_bounds(ret->blue, 0, 65535);
+  stp_curve_set_bounds(ret->cyan, 0, 65535);
+  stp_curve_set_bounds(ret->magenta, 0, 65535);
+  stp_curve_set_bounds(ret->yellow, 0, 65535);
   ret->hue_map = NULL;
   ret->lum_map = NULL;
   ret->sat_map = NULL;
@@ -1432,9 +1484,9 @@ copy_lut(const stp_vars_t v)
     return NULL;
   dest = allocate_lut();
   dest->composite = stp_curve_allocate_copy(src->composite);
-  dest->red = stp_curve_allocate_copy(src->red);
-  dest->green = stp_curve_allocate_copy(src->green);
-  dest->blue = stp_curve_allocate_copy(src->blue);
+  dest->cyan = stp_curve_allocate_copy(src->cyan);
+  dest->magenta = stp_curve_allocate_copy(src->magenta);
+  dest->yellow = stp_curve_allocate_copy(src->yellow);
   if (src->hue_map)
     dest->hue_map = stp_curve_allocate_copy(src->hue_map);
   if (src->lum_map)
@@ -1461,12 +1513,12 @@ stp_free_lut(stp_vars_t v)
       lut_t *lut = (lut_t *)(stp_get_color_data(v));
       if (lut->composite)
 	stp_curve_destroy(lut->composite);
-      if (lut->red)
-	stp_curve_destroy(lut->red);
-      if (lut->green)
-	stp_curve_destroy(lut->green);
-      if (lut->blue)
-	stp_curve_destroy(lut->blue);
+      if (lut->cyan)
+	stp_curve_destroy(lut->cyan);
+      if (lut->magenta)
+	stp_curve_destroy(lut->magenta);
+      if (lut->yellow)
+	stp_curve_destroy(lut->yellow);
       if (lut->hue_map)
 	stp_curve_destroy(lut->hue_map);
       if (lut->lum_map)
@@ -1481,79 +1533,22 @@ stp_free_lut(stp_vars_t v)
     }
 }
 
-static void
-stp_compute_lut(stp_vars_t v, size_t steps)
+static stp_curve_t
+compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
+		double print_gamma, double contrast, double app_gamma,
+		double brightness, double screen_gamma, int input_color_model,
+		int output_color_model)
 {
-  double	pixel,		/* Pixel value */
-		red_pixel,	/* Pixel value */
-		green_pixel,	/* Pixel value */
-		blue_pixel;	/* Pixel value */
-  int i;
-  stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
-  stp_curve_t lum = stp_get_curve_parameter(v, "SatMap");
-  stp_curve_t sat = stp_get_curve_parameter(v, "LumMap");
-  /*
-   * Got an output file/command, now compute a brightness lookup table...
-   */
-
-  double cyan = stp_get_float_parameter(v, "Cyan");
-  double magenta = stp_get_float_parameter(v, "Magenta");
-  double yellow = stp_get_float_parameter(v, "Yellow");
-  double print_gamma = stp_get_float_parameter(v, "Gamma");
-  double contrast = stp_get_float_parameter(v, "Contrast");
-  double app_gamma = stp_get_float_parameter(v, "AppGamma");
-  double brightness = stp_get_float_parameter(v, "Brightness");
-  double screen_gamma = app_gamma / 4.0; /* "Empirical" */
+  double *tmp = stp_malloc(sizeof(double) * steps);
   double pivot = .25;
   double ipivot = 1.0 - pivot;
-  lut_t *lut;
-  double *red, *green, *blue, *composite;
-
-  /*
-   * Monochrome mode simply thresholds the input
-   * to decide whether to print at all.  The printer gamma
-   * is intended to represent the analog response of the printer.
-   * Using it shifts the threshold, which is not the intent
-   * of how this works.
-   */
-  if (stp_get_output_type(v) == OUTPUT_MONOCHROME)
-    print_gamma = 1.0;
-
-  lut = allocate_lut();
-
-  /*
-   * TODO check that these are wraparound curves and all that
-   */
-  if (hue)
-    lut->hue_map = stp_curve_allocate_copy(hue);
-  if (lum)
-    lut->lum_map = stp_curve_allocate_copy(lum);
-  if (sat)
-    lut->sat_map = stp_curve_allocate_copy(sat);
-
-  red = stp_malloc(sizeof(double) * steps);
-  green = stp_malloc(sizeof(double) * steps);
-  blue = stp_malloc(sizeof(double) * steps);
-  composite = stp_malloc(sizeof(double) * steps);
-  lut->steps = steps;
-
-  stp_set_color_data(v, lut);
-  stp_set_copy_color_data_func(v, copy_lut);
-  stp_set_destroy_color_data_func(v, stp_free_lut);
-  stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
-  stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
-  stp_dprintf(STP_DBG_LUT, v, " magenta %.3f\n", magenta);
-  stp_dprintf(STP_DBG_LUT, v, " yellow %.3f\n", yellow);
-  stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
-  stp_dprintf(STP_DBG_LUT, v, " contrast %.3f\n", contrast);
-  stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", brightness);
-  stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
+  int i;
   for (i = 0; i < steps; i ++)
     {
-      double temp_pixel;
+      double temp_pixel, pixel;
       pixel = (double) i / (double) (steps - 1);
 
-      if (stp_get_input_color_model(v) == COLOR_MODEL_CMY)
+      if (input_color_model == COLOR_MODEL_CMY)
 	pixel = 1.0 - pixel;
 
       /*
@@ -1610,71 +1605,129 @@ stp_compute_lut(stp_vars_t v, size_t steps)
       else if (pixel > 1.0)
 	pixel = 1.0;
 
-      if (pixel > .9999 && cyan < .00001)
-	red_pixel = 0;
+      if (pixel > .9999 && c_gamma < .00001)
+	pixel = 0;
       else
-	red_pixel = 1 - pow(1 - pixel, cyan);
-      if (pixel > .9999 && magenta < .00001)
-	green_pixel = 0;
-      else
-	green_pixel = 1 - pow(1 - pixel, magenta);
-      if (pixel > .9999 && yellow < .00001)
-	blue_pixel = 0;
-      else
-	blue_pixel = 1 - pow(1 - pixel, yellow);
+	pixel = 1 - pow(1 - pixel, c_gamma);
 
       /*
        * Finally, fix up print gamma and scale
        */
 
       pixel = 65535 * pow(pixel, print_gamma) + .5;
-      red_pixel = 65535 * pow(red_pixel, print_gamma) + .5;
-      green_pixel = 65535 * pow(green_pixel, print_gamma) + .5;
-      blue_pixel = 65535 * pow(blue_pixel, print_gamma) + .5;
-      if (stp_get_output_color_model(v) == COLOR_MODEL_RGB)
-	{
-	  pixel = 65535 - pixel;
-	  red_pixel = 65535 - red_pixel;
-	  blue_pixel = 65535 - blue_pixel;
-	  green_pixel = 65535 - green_pixel;
-	}
+      if (output_color_model == COLOR_MODEL_RGB)
+	pixel = 65535 - pixel;
 
       if (pixel <= 0.0)
-	composite[i] = 0;
+	tmp[i] = 0;
       else if (pixel >= 65535.0)
-	composite[i] = 65535;
+	tmp[i] = 65535;
       else
-	composite[i] = (pixel);
-
-      if (red_pixel <= 0.0)
-	red[i] = 0;
-      else if (red_pixel >= 65535.0)
-	red[i] = 65535;
-      else
-	red[i] = (red_pixel);
-
-      if (green_pixel <= 0.0)
-	green[i] = 0;
-      else if (green_pixel >= 65535.0)
-	green[i] = 65535;
-      else
-	green[i] = (green_pixel);
-
-      if (blue_pixel <= 0.0)
-	blue[i] = 0;
-      else if (blue_pixel >= 65535.0)
-	blue[i] = 65535;
-      else
-	blue[i] = (blue_pixel);
-      stp_dprintf(STP_DBG_LUT, v,
-		  "%3i  %5d  %5d  %5d  %5d\n",
-		  i, (unsigned) composite[i], (unsigned) red[i],
-		  (unsigned) green[i], (unsigned) blue[i]);
+	tmp[i] = (pixel);
     }
-  stp_curve_set_data(lut->composite, steps, composite);
-  stp_curve_set_data(lut->red, steps, red);
-  stp_curve_set_data(lut->green, steps, green);
-  stp_curve_set_data(lut->blue, steps, blue);
+  stp_curve_set_data(curve, steps, tmp);
+  stp_free(tmp);
+}
+
+static void
+stp_compute_lut(stp_vars_t v, size_t steps)
+{
+  stp_curve_t hue = stp_get_curve_parameter(v, "HueMap");
+  stp_curve_t lum = stp_get_curve_parameter(v, "SatMap");
+  stp_curve_t sat = stp_get_curve_parameter(v, "LumMap");
+  stp_curve_t composite_curve = stp_get_curve_parameter(v, "CompositeCurve");
+  stp_curve_t cyan_curve = stp_get_curve_parameter(v, "CyanCurve");
+  stp_curve_t magenta_curve = stp_get_curve_parameter(v, "MagentaCurve");
+  stp_curve_t yellow_curve = stp_get_curve_parameter(v, "YellowCurve");
+  /*
+   * Got an output file/command, now compute a brightness lookup table...
+   */
+
+  double cyan = stp_get_float_parameter(v, "Cyan");
+  double magenta = stp_get_float_parameter(v, "Magenta");
+  double yellow = stp_get_float_parameter(v, "Yellow");
+  double print_gamma = stp_get_float_parameter(v, "Gamma");
+  double contrast = stp_get_float_parameter(v, "Contrast");
+  double app_gamma = stp_get_float_parameter(v, "AppGamma");
+  double brightness = stp_get_float_parameter(v, "Brightness");
+  double screen_gamma = app_gamma / 4.0; /* "Empirical" */
+  lut_t *lut;
+
+  /*
+   * Monochrome mode simply thresholds the input
+   * to decide whether to print at all.  The printer gamma
+   * is intended to represent the analog response of the printer.
+   * Using it shifts the threshold, which is not the intent
+   * of how this works.
+   */
+  if (stp_get_output_type(v) == OUTPUT_MONOCHROME)
+    print_gamma = 1.0;
+
+  lut = allocate_lut();
+
+  /*
+   * TODO check that these are wraparound curves and all that
+   */
+  if (hue)
+    lut->hue_map = stp_curve_allocate_copy(hue);
+  if (lum)
+    lut->lum_map = stp_curve_allocate_copy(lum);
+  if (sat)
+    lut->sat_map = stp_curve_allocate_copy(sat);
+
+  lut->steps = steps;
+
+  stp_set_color_data(v, lut);
+  stp_set_copy_color_data_func(v, copy_lut);
+  stp_set_destroy_color_data_func(v, stp_free_lut);
+  stp_dprintf(STP_DBG_LUT, v, "stp_compute_lut\n");
+  stp_dprintf(STP_DBG_LUT, v, " cyan %.3f\n", cyan);
+  stp_dprintf(STP_DBG_LUT, v, " magenta %.3f\n", magenta);
+  stp_dprintf(STP_DBG_LUT, v, " yellow %.3f\n", yellow);
+  stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
+  stp_dprintf(STP_DBG_LUT, v, " contrast %.3f\n", contrast);
+  stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", brightness);
+  stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
+  if (composite_curve)
+    {
+      stp_curve_copy(lut->composite, composite_curve);
+      stp_curve_resample(lut->composite, steps);
+    }
+  else
+    compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
+		    app_gamma, brightness, screen_gamma,
+		    stp_get_input_color_model(v),
+		    stp_get_output_color_model(v));
+  if (cyan_curve)
+    {
+      stp_curve_copy(lut->cyan, cyan_curve);
+      stp_curve_resample(lut->cyan, steps);
+    }
+  else
+    compute_a_curve(lut->cyan, steps, cyan, print_gamma, contrast,
+		    app_gamma, brightness, screen_gamma,
+		    stp_get_input_color_model(v),
+		    stp_get_output_color_model(v));
+  if (magenta_curve)
+    {
+      stp_curve_copy(lut->magenta, magenta_curve);
+      stp_curve_resample(lut->magenta, steps);
+    }
+  else
+    compute_a_curve(lut->magenta, steps, magenta, print_gamma, contrast,
+		    app_gamma, brightness, screen_gamma,
+		    stp_get_input_color_model(v),
+		    stp_get_output_color_model(v));
+  if (yellow_curve)
+    {
+      stp_curve_copy(lut->yellow, yellow_curve);
+      stp_curve_resample(lut->yellow, steps);
+    }
+  else
+    compute_a_curve(lut->yellow, steps, yellow, print_gamma, contrast,
+		    app_gamma, brightness, screen_gamma,
+		    stp_get_input_color_model(v),
+		    stp_get_output_color_model(v));
 }
 
 static void
@@ -1820,8 +1873,10 @@ stp_color_list_parameters(const stp_vars_t v)
 {
   stp_list_t *ret = stp_parameter_list_create();
   int i;
-  for (i = 0; i < the_parameter_count; i++)
-    stp_parameter_list_add_param(ret, &(the_parameters[i].param));
+  for (i = 0; i < float_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(float_parameters[i].param));
+  for (i = 0; i < curve_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(curve_parameters[i].param));
   return ret;
 }
 
@@ -1833,23 +1888,33 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   if (name == NULL)
     return;
-  for (i = 0; i < the_parameter_count; i++)
+  if (!standard_curves_initialized)
     {
-      if (strcmp(name, the_parameters[i].param.name) == 0)
+      hue_map_bounds = stp_curve_allocate_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;-6.0;6.0:0;0;");
+      lum_map_bounds = stp_curve_allocate_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
+      sat_map_bounds = stp_curve_allocate_read_string
+	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
+      color_curve_bounds = stp_curve_allocate_read_string
+	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;65535.0:");
+      standard_curves_initialized = 1;
+    }
+  for (i = 0; i < float_parameter_count; i++)
+    {
+      float_param_t *param = &(float_parameters[i]);
+      if (strcmp(name, param->param.name) == 0)
 	{
-	  stp_fill_parameter_settings(description, &(the_parameters[i].param));
-	  switch (the_parameters[i].param.p_type)
+	  stp_fill_parameter_settings(description, &(param->param));
+	  switch (param->param.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      description->bounds.dbl.upper = the_parameters[i].max;
-	      description->bounds.dbl.lower = the_parameters[i].min;
-	      description->deflt.dbl = the_parameters[i].defval;
-	      break;
-	    case STP_PARAMETER_TYPE_CURVE:
-	      description->deflt.curve = NULL;
+	      description->bounds.dbl.upper = param->max;
+	      description->bounds.dbl.lower = param->min;
+	      description->deflt.dbl = param->defval;
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      if (!strcmp(the_parameters[i].param.name, "ImageOptimization"))
+	      if (!strcmp(param->param.name, "ImageOptimization"))
 		{
 		  description->bounds.str = stp_string_list_allocate();
 		  stp_string_list_add_param
@@ -1860,6 +1925,24 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
 		    (description->bounds.str, "Photograph", _("Photographs"));
 		  description->deflt.str = "LineArt";
 		}
+	      break;
+	    default:
+	      break;
+	    }
+	  return;
+	}
+    }
+  for (i = 0; i < curve_parameter_count; i++)
+    {
+      curve_param_t *param = &(curve_parameters[i]);
+      if (strcmp(name, param->param.name) == 0)
+	{
+	  stp_fill_parameter_settings(description, &(param->param));
+	  switch (param->param.p_type)
+	    {
+	    case STP_PARAMETER_TYPE_CURVE:
+	      description->deflt.curve = *(param->defval);
+	      description->bounds.curve = *(param->defval);
 	      break;
 	    default:
 	      break;
