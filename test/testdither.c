@@ -145,11 +145,10 @@ main(int  argc,				/* I - Number of command-line arguments */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
-  stp_vars_t	v = stp_allocate_vars();		/* Dither variables */
-  /* Arbitrary printer, so we can get dither algorithms */
-  stp_printer_t p = stp_get_printer_by_driver("escp2-ex");
-  stp_param_list_t params = stp_printer_get_parameters(p, v,"DitherAlgorithm");
-  int		count = stp_param_list_count(params);
+  stp_vars_t	v; 		        /* Dither variables */
+  stp_printer_t p;
+  stp_param_list_t params;
+  int		count;
   static const char	*dither_types[] =	/* Different dithering modes */
 		{
 		  "gray",
@@ -177,6 +176,12 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   stp_init();
   v = stp_allocate_vars();
+
+  /* Arbitrary printer, so we can get dither algorithms */
+  p = stp_get_printer_by_driver("escp2-ex");
+  params = stp_printer_get_parameters(p, v,"DitherAlgorithm");
+  count = stp_param_list_count(params);
+
 
  /*
   * Get command-line args...
