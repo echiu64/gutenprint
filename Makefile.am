@@ -4,7 +4,7 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint escp2-weavetest pcl-unprint
+bin_PROGRAMS = unprint escp2-weavetest pcl-unprint escputil
 
 noinst_PROGRAMS = printdef
 
@@ -59,15 +59,16 @@ AM_CPPFLAGS =					\
 
 print_LDADD = $(GIMP_LIBS)
 
+GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
+	gdevstp-dither.c gdevstp-escp2.c gdevstp-print.h \
+	gdevstp-util.c gdevstp.c gdevstp.h \
+	gdevstp-printers.c gs-stp.pdq com-stp.ppd \
+	gdevstp-quickmatrix257.h devs.mak.addon-5.10 \
+	debian-patch debian-patch-stp
+
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
-	README.dither quickmatrix199-2.h quickmatrix199.h quickmatrix257.h \
-	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
-	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
-	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
-	Ghost/gdevstp-printers.c Ghost/gs-stp.pdq \
-	Ghost/gdevstp-quickmatrix199.h Ghost/gdevstp-quickmatrix199-2.h \
-	Ghost/gdevstp-quickmatrix257.h Ghost/devs.mak.addon-5.10 make-deb.sh \
-	Ghost/debian-patch Ghost/debian-patch-stp README.escp2
+	README.dither quickmatrix257.h make-deb.sh README.escp2 \
+	$(addprefix Ghost/, $(GHOST_DIST))
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
@@ -95,7 +96,7 @@ files:
 	  echo $$p; \
 	done
 
-GHDRS=print.h quickmatrix199.h quickmatrix199-2.h quickmatrix257.h print.h
+GHDRS=print.h quickmatrix257.h print.h
 GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
 ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c printers.c $(GHDRS))
