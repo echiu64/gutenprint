@@ -32,13 +32,12 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.
-Anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the uninstaller included with this package to remove the old software.
+ <a href="MacOSX.php3#5.0.0-beta2"><b>Aug 26, 2004 -</b></a> Gimp-Print 
+ 5.0.0-beta2 is now available for download.
  </p>
  <p>
- <a href="MacOSX.php3#5.0.0-beta1"><b>July 30, 2004 -</b></a> Gimp-Print 
- 5.0.0-beta1 is now available for download. Gimp-Print 5.0.0-beta1 is the
- first beta release in the Gimp-Print 5.0 line.
+ <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.
+Anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the uninstaller included with this package to remove the old software.
  </p>
  <p>
  <a href="MacOSX.php3#4.2.7"><b>July 14, 2004 -</b></a> Gimp-Print 4.2.7 is now available for download. This is the most recent stable release of Gimp-Print, and very likely the last version to be released in the 4.2.x series.
@@ -69,7 +68,7 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  <font color="#ff0000">Check the Forums</font>
  </h2>
  <p>
- If your question about Gimp-Print isn't answered in the <a href=
+ If your question about Gimp-Print is not answered in the <a href=
  "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >FAQ</a> or in the
  documentation included with the installer your next stop should be the
  Gimp-Print project <a href= "http://sourceforge.net/forum/?group_id=1537"
@@ -155,27 +154,26 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
 --!>
- <b>Gimp-Print 5.0.0-beta1</b>
+ <b>Gimp-Print 5.0.0-beta2</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta1.ppc.dmg?download"
- >gimp-print-5.0.0-beta1.ppc.dmg</a>&nbsp;(6.8 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta2.ppc.dmg?download"
+ >gimp-print-5.0.0-beta2.ppc.dmg</a>&nbsp;(6.9 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta1.tar.bz2?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta2.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 5.0.0-beta1 is the first Mac OS X release in the new 5.0 series. 
- This release represents the state-of-the-art in current Gimp-Print development, but it is currently only beta quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
- install, if necessary</b>). ESP Ghostscript is not required for Mac OS X "Panther". 
+ Gimp-Print 5.0.0-beta2 is the latest beta release in the new 5.0 series. 
+ This release represents the state-of-the-art in current Gimp-Print development, but it is currently only beta quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
  </p>
  <b>Gimp-Print Uninstaller</b>
  </td>
@@ -267,6 +265,26 @@ delayed. All new development is focused on the 5.0 series.
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="5.0.0-beta2"></a>
+ <B>Gimp-Print 5.0.0-beta2</B>
+ </TD>
+ <TD align="right" >
+ <B>2004-07-30</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print  5.0.0-beta2 is the first beta release in the 5.x series. The changes between 5.0.0-beta2 and 5.0.0-beta1 are described in the <a href="https://sourceforge.net/project/shownotes.php?release_id=248831">release notes</a>.
+</p><p>
+
+Please note that the behavior of the 5.0.0-beta2 Mac OS X installer for Gimp-Print is unchanged from <a href= "MacOSX.php3#5.0.0-beta1">5.0.0-beta1</a>.
+</p>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
   <a name ="5.0.0-beta1"></a>
