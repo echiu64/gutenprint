@@ -1261,7 +1261,7 @@ compute_lut(size_t steps, vars_t *uv)
 	temp_pixel = 1.0 - pixel;
       else
 	temp_pixel = pixel;
-      if (pixel <= .000001 && contrast <= .0001)
+      if (temp_pixel <= .000001 && contrast <= .0001)
 	temp_pixel = .5;
       else
 	temp_pixel = .5 * pow(2 * temp_pixel, contrast * contrast * contrast);
