@@ -79,6 +79,7 @@ typedef struct
   unsigned lower_multi_limit;
   unsigned angle_count;
   stpi_channel_angle_t *angles;
+  unsigned gloss_limit;
   unsigned short *input_data;
   unsigned short *multi_tmp;
   unsigned short *split_input;
@@ -87,6 +88,8 @@ typedef struct
   unsigned short *alloc_data_2;
   unsigned short *alloc_data_3;
   int black_channel;
+  int gloss_channel;
+  int gloss_physical_channel;
 } stpi_channel_group_t;
 
 
@@ -173,6 +176,7 @@ stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
     {
       cg = stp_zalloc(sizeof(stpi_channel_group_t));
       cg->black_channel = -1;
+      cg->gloss_channel = -1;
       stp_allocate_component_data(v, "Channel", NULL, stpi_channel_free, cg);
     }
   if (channel >= cg->channel_count)
@@ -251,6 +255,25 @@ stp_channel_set_black_channel(stp_vars_t *v, int channel)
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
   stp_dprintf(STP_DBG_INK, v, "black_channel %d\n", channel);
   cg->black_channel = channel;
+}
+
+void
+stp_channel_set_gloss_channel(stp_vars_t *v, int channel)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stp_dprintf(STP_DBG_INK, v, "gloss_channel %d\n", channel);
+  cg->gloss_channel = channel;
+}
+
+void
+stp_channel_set_gloss_limit(stp_vars_t *v, double limit)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stp_dprintf(STP_DBG_INK, v, "gloss_limit %f\n", limit);
+  if (limit > 0)
+    cg->gloss_limit = 65535 * limit;
 }
 
 void
@@ -446,6 +469,16 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
       for (j = 0; j < c->subchannel_count; j++)
 	cg->max_density += c->sc[j].s_density;
     }
+  if (cg->gloss_channel >= 0)
+    {
+      for (i = 0; i < cg->channel_count; i++)
+	{
+	  if (cg->gloss_channel == i)
+	    break;
+	  cg->gloss_physical_channel += cg->c[i].subchannel_count;
+	}
+    }
+	  
   cg->input_channels = input_channel_count;
   cg->width = width;
   cg->alloc_data_1 =
@@ -453,7 +486,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   cg->output_data = cg->alloc_data_1;
   if (angle_count == 0)
     {
-      if (input_needs_splitting(v))
+      if (input_needs_splitting(v) || cg->gloss_channel != -1)
 	{
 	  cg->alloc_data_2 =
 	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
@@ -488,10 +521,12 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
   stp_dprintf(STP_DBG_INK, v, "   width          %d\n", cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
+  stp_dprintf(STP_DBG_INK, v, "   gloss_limit    %d\n", cg->gloss_limit);
   stp_dprintf(STP_DBG_INK, v, "   max_density    %d\n", cg->max_density);
   stp_dprintf(STP_DBG_INK, v, "   multi_limit    %d\n", cg->lower_multi_limit);
   stp_dprintf(STP_DBG_INK, v, "   angle_count    %d\n", cg->angle_count);
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
+  stp_dprintf(STP_DBG_INK, v, "   gloss_channel  %d\n", cg->gloss_channel);
   stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
 	      (void *) cg->input_data);
   stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %p\n",
@@ -898,29 +933,76 @@ scale_channels(const stp_vars_t *v, unsigned *zero_mask)
       if (ch->subchannel_count > 0)
 	for (j = 0; j < ch->subchannel_count; j++)
 	  {
-	    stpi_subchannel_t *sch = &(ch->sc[j]);
-	    unsigned density = sch->s_density;
-	    unsigned short *output = cg->output_data + physical_channel;
-	    if (density == 0)
+	    if (cg->gloss_channel != i)
 	      {
-		clear_channel(output, cg->width, cg->total_channels);
-		if (zero_mask)
-		  *zero_mask |= 1 << physical_channel;
-	      }
-	    else if (density != 65535)
-	      {
-		if (scale_channel(output, cg->width, cg->total_channels,
-				  density) == 0)
-		  if (zero_mask)
-		    *zero_mask |= 1 << physical_channel;
-	      }
-	    else if (zero_mask)
-	      {
-		if (scan_channel(output, cg->width, cg->total_channels) == 0)
-		  *zero_mask |= 1 << physical_channel;
+		stpi_subchannel_t *sch = &(ch->sc[j]);
+		unsigned density = sch->s_density;
+		unsigned short *output = cg->output_data + physical_channel;
+		if (density == 0)
+		  {
+		    clear_channel(output, cg->width, cg->total_channels);
+		    if (zero_mask)
+		      *zero_mask |= 1 << physical_channel;
+		  }
+		else if (density != 65535)
+		  {
+		    if (scale_channel(output, cg->width, cg->total_channels,
+				      density) == 0)
+		      if (zero_mask)
+			*zero_mask |= 1 << physical_channel;
+		  }
+		else if (zero_mask)
+		  {
+		    if (scan_channel(output, cg->width, cg->total_channels)==0)
+		      *zero_mask |= 1 << physical_channel;
+		  }
 	      }
 	    physical_channel++;
 	  }
+    }
+}
+
+static void
+generate_gloss(const stp_vars_t *v, unsigned *zero_mask)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  unsigned short *output = cg->output_data;
+  unsigned gloss_mask;
+  int i, j, k;
+  if (cg->gloss_channel == -1 || cg->gloss_limit <= 0)
+    return;
+  gloss_mask = ~(1 << cg->gloss_physical_channel);
+  for (i = 0; i < cg->width; i++)
+    {
+      int physical_channel = 0;
+      unsigned channel_sum = 0;
+      output[cg->gloss_physical_channel] = 0;
+      for (j = 0; j < cg->channel_count; j++)
+	{
+	  stpi_channel_t *ch = &(cg->c[j]);
+	  for (k = 0; k < ch->subchannel_count; k++)
+	    {
+	      if (cg->gloss_channel != j)
+		{
+		  channel_sum += (unsigned) output[physical_channel];
+		  if (channel_sum >= cg->gloss_limit)
+		    goto next;
+		}
+	      physical_channel++;
+	    }
+	}
+      if (channel_sum < cg->gloss_limit)
+	{
+	  unsigned gloss_required = cg->gloss_limit - channel_sum;
+	  if (gloss_required > 65535)
+	    gloss_required = 65535;
+	  output[cg->gloss_physical_channel] = gloss_required;
+	  if (zero_mask)
+	    *zero_mask &= gloss_mask;
+	}
+    next:
+      output += cg->total_channels;
     }
 }
 
@@ -934,6 +1016,7 @@ stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
   else
     scale_channels(v, zero_mask);
   (void) limit_ink(v);
+  (void) generate_gloss(v, zero_mask);
 }
 
 unsigned short *

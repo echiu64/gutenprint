@@ -416,8 +416,8 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "GlossDensity", N_("Gloss Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the gloss balance"),
+      "GlossLimit", N_("Gloss Level"), N_("Output Level Adjustment"),
+      N_("Adjust the gloss level"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 6, 1, 0
     }, 0.0, 2.0, 1.0, 1
@@ -1556,7 +1556,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     set_density_parameter(v, description, XCOLOR_R);
   else if (strcmp(name, "BlueDensity") == 0)
     set_density_parameter(v, description, XCOLOR_B);
-  else if (strcmp(name, "GlossDensity") == 0)
+  else if (strcmp(name, "GlossLimit") == 0)
     set_density_parameter(v, description, XCOLOR_GLOSS);
   else if (strcmp(name, "GrayTransition") == 0)
     set_gray_transition_parameter(v, description, 2);
@@ -2078,6 +2078,8 @@ setup_inks(stp_vars_t *v)
   const escp2_inkname_t *ink_type = pd->inkname;
   const paper_adjustment_t *paper = pd->paper_adjustment;
   double multi_channel_limit = 1.0;
+  int gloss_channel = -1;
+  double gloss_scale = get_double_param(v, "Density");
 
   drops = escp2_dropsizes(v, pd->ink_resid);
   stp_init_debug_messages(v);
@@ -2100,6 +2102,11 @@ setup_inks(stp_vars_t *v)
 	    }
 	  if (strcmp(param, "BlackDensity") == 0)
 	    stp_channel_set_black_channel(v, i);
+	  else if (strcmp(param, "GlossDensity") == 0)
+	    {
+	      gloss_scale *= get_double_param(v, param);
+	      gloss_channel = i;
+	    }
 	  stp_dither_set_inks(v, i, 1.0, ink_darknesses[i % 8],
 			      channel->n_subchannels, shades->shades,
 			      drops->numdropsizes, drops->dropsizes);
@@ -2116,6 +2123,11 @@ setup_inks(stp_vars_t *v)
 	    }
 	  stp_channel_set_hue_angle(v, i, channel->hue);
 	}
+    }
+  if (gloss_channel != -1)
+    {
+      stp_channel_set_gloss_channel(v, gloss_channel);
+      stp_channel_set_gloss_limit(v, gloss_scale);
     }
   stp_flush_debug_messages(v);
 }
