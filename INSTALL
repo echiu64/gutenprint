@@ -1,1 +1,5 @@
-Use autoconf.
+Run aclocal.
+Run autoconf.
+Run automake.
+Run configure.
+Run make.
