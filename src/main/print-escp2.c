@@ -612,8 +612,8 @@ escp2_describe_resolution(const stp_printer_t printer,
       if (!strcmp(resolution, res->name) &&
 	  verify_resolution(res, model, v))
 	{
-	  *x = res->hres;
-	  *y = res->vres;
+	  *x = res->external_hres;
+	  *y = res->external_vres;
 	  return;
 	}
       res++;

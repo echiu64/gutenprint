@@ -205,6 +205,8 @@ typedef struct
   const char *text;
   int hres;
   int vres;
+  int external_hres;
+  int external_vres;
   int softweave;
   int microweave;
   int vertical_passes;
