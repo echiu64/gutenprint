@@ -17,308 +17,84 @@
 <language value=ps>
 </printer>
 
-<printer name="HP DeskJet 340" driver="pcl-340">
+<printer name="CANON BJC 1000" driver="bjc-1000">
 <color>
-<model value=340>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
+<model value=1000>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP DeskJet 400" driver="pcl-400">
-<color>
-<model value=400>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 500" driver="pcl-500">
-<nocolor>
-<model value=500>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 500C" driver="pcl-501">
-<color>
-<model value=501>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 520" driver="pcl-520">
-<nocolor>
-<model value=500>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 540C" driver="pcl-540">
-<color>
-<model value=540>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 550C" driver="pcl-550">
-<color>
-<model value=550>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 560C" driver="pcl-560">
-<color>
-<model value=550>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 600/600C" driver="pcl-600">
-<color>
-<model value=600>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 600 series" driver="pcl-601">
-<color>
-<model value=601>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 690 series" driver="pcl-690">
-<color>
-<model value=690>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 810C" driver="pcl-810">
-<color>
-<model value=601>	# Uses 6XX driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 812C" driver="pcl-812">
-<color>
-<model value=601>	# Uses 6XX driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 840C" driver="pcl-840">
-<color>
-<model value=601>	# Uses 6XX driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 842C" driver="pcl-842">
-<color>
-<model value=601>	# Uses 6XX driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 850C" driver="pcl-850">
-<color>
-<model value=800>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 855C" driver="pcl-855">
-<color>
-<model value=800>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 870C" driver="pcl-870">
-<color>
-<model value=800>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 890C" driver="pcl-890">
-<color>
-<model value=800>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 895C" driver="pcl-895">
-<color>
-<model value=601>	# Uses 6XX driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 900 series" driver="pcl-900">
-<color>
-<model value=900>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP PhotoSmart P1000" driver="pcl-P1000">
-<color>
-<model value=900>	# Uses 900 series driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 1100C" driver="pcl-1100">
-<color>
-<model value=1100>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP PhotoSmart P1100" driver="pcl-P1100">
-<color>
-<model value=900>	# Uses 900 series driver
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 1120C" driver="pcl-1120">
-<color>
-<model value=1100>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 1200C" driver="pcl-1200">
-<color>
-<model value=1200>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 1220C" driver="pcl-1220">
-<color>
-<model value=901>	# Uses 900 series driver (large)
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 1600C" driver="pcl-1600">
-<color>
-<model value=1200>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
-</printer>
-
-<printer name="HP DeskJet 2000 series" driver="pcl-2000">
+<printer name="CANON BJC 2000" driver="bjc-2000">
 <color>
 <model value=2000>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP DeskJet 2500 series" driver="pcl-2500">
+<printer name="CANON BJC 3000" driver="bjc-3000">
 <color>
-<model value=2500>
-<gamma value=0.818>
-<density value=0.786>
-<language value=pcl>
+<model value=3000>
+<gamma value=1.000>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet II series" driver="pcl-2">
-<nocolor>
-<model value=2>
-<gamma value=1.000>
-<density value=0.596>
-<language value=pcl>
+<printer name="CANON BJC 4300" driver="bjc-4300">
+<color>
+<model value=4300>
+<gamma value=0.750>
+<density value=1.000>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet III series" driver="pcl-3">
-<nocolor>
-<model value=3>
+<printer name="CANON BJC 4400 photo" driver="bjc-4400">
+<color>
+<model value=4400>
 <gamma value=1.000>
-<density value=0.596>
-<language value=pcl>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet 4 series" driver="pcl-4">
-<nocolor>
-<model value=6>
-<gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
+<printer name="CANON BJC 6000" driver="bjc-6000">
+<color>
+<model value=6000>
+<gamma value=0.750>
+<density value=1.000>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet 4L" driver="pcl-4l">
-<nocolor>
-<model value=4>
+<printer name="CANON BJC 6100" driver="bjc-6100">
+<color>
+<model value=6100>
 <gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet 4V, 4Si" driver="pcl-4v">
-<nocolor>
-<model value=5>
+<printer name="CANON BJC 7000" driver="bjc-7000">
+<color>
+<model value=7000>
 <gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet 5 series" driver="pcl-5">
-<nocolor>
-<model value=6>
+<printer name="CANON BJC 7100" driver="bjc-7100">
+<color>
+<model value=7100>
 <gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
+<density value=0.800>
+<language value=canon>
 </printer>
 
-<printer name="HP LaserJet 5Si" driver="pcl-5si">
-<nocolor>
-<model value=7>
+<printer name="CANON BJC 8200" driver="bjc-8200">
+<color>
+<model value=8200>
 <gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
-</printer>
-
-<printer name="HP LaserJet 6 series" driver="pcl-6">
-<nocolor>
-<model value=6>
-<gamma value=1.000>
-<density value=0.615>
-<language value=pcl>
+<density value=0.800>
+<language value=canon>
 </printer>
 
 <printer name="EPSON Stylus Color" driver="escp2">
@@ -590,84 +366,308 @@
 <language value=escp2>
 </printer>
 
-<printer name="CANON BJC 1000" driver="bjc-1000">
+<printer name="HP DeskJet 340" driver="pcl-340">
 <color>
-<model value=1000>
-<gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<model value=340>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 2000" driver="bjc-2000">
+<printer name="HP DeskJet 400" driver="pcl-400">
+<color>
+<model value=400>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 500" driver="pcl-500">
+<nocolor>
+<model value=500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 500C" driver="pcl-501">
+<color>
+<model value=501>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 520" driver="pcl-520">
+<nocolor>
+<model value=500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 540C" driver="pcl-540">
+<color>
+<model value=540>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 550C" driver="pcl-550">
+<color>
+<model value=550>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 560C" driver="pcl-560">
+<color>
+<model value=550>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 600/600C" driver="pcl-600">
+<color>
+<model value=600>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 600 series" driver="pcl-601">
+<color>
+<model value=601>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 690 series" driver="pcl-690">
+<color>
+<model value=690>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 810C" driver="pcl-810">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 812C" driver="pcl-812">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 840C" driver="pcl-840">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 842C" driver="pcl-842">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 850C" driver="pcl-850">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 855C" driver="pcl-855">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 870C" driver="pcl-870">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 890C" driver="pcl-890">
+<color>
+<model value=800>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 895C" driver="pcl-895">
+<color>
+<model value=601>	# Uses 6XX driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 900 series" driver="pcl-900">
+<color>
+<model value=900>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1100C" driver="pcl-1100">
+<color>
+<model value=1100>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1120C" driver="pcl-1120">
+<color>
+<model value=1100>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1200C" driver="pcl-1200">
+<color>
+<model value=1200>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1220C" driver="pcl-1220">
+<color>
+<model value=901>	# Uses 900 series driver (large)
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 1600C" driver="pcl-1600">
+<color>
+<model value=1200>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 2000 series" driver="pcl-2000">
 <color>
 <model value=2000>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 2500 series" driver="pcl-2500">
+<color>
+<model value=2500>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP PhotoSmart P1000" driver="pcl-P1000">
+<color>
+<model value=900>	# Uses 900 series driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP PhotoSmart P1100" driver="pcl-P1100">
+<color>
+<model value=900>	# Uses 900 series driver
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP LaserJet II series" driver="pcl-2">
+<nocolor>
+<model value=2>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.596>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 3000" driver="bjc-3000">
-<color>
-<model value=3000>
+<printer name="HP LaserJet III series" driver="pcl-3">
+<nocolor>
+<model value=3>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.596>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 4300" driver="bjc-4300">
-<color>
-<model value=4300>
-<gamma value=0.750>
-<density value=1.000>
-<language value=canon>
-</printer>
-
-<printer name="CANON BJC 4400 photo" driver="bjc-4400">
-<color>
-<model value=4400>
+<printer name="HP LaserJet 4 series" driver="pcl-4">
+<nocolor>
+<model value=6>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.615>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 6000" driver="bjc-6000">
-<color>
-<model value=6000>
-<gamma value=0.750>
-<density value=1.000>
-<language value=canon>
-</printer>
-
-<printer name="CANON BJC 6100" driver="bjc-6100">
-<color>
-<model value=6100>
+<printer name="HP LaserJet 4L" driver="pcl-4l">
+<nocolor>
+<model value=4>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.615>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 7000" driver="bjc-7000">
-<color>
-<model value=7000>
+<printer name="HP LaserJet 4V, 4Si" driver="pcl-4v">
+<nocolor>
+<model value=5>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.615>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 7100" driver="bjc-7100">
-<color>
-<model value=7100>
+<printer name="HP LaserJet 5 series" driver="pcl-5">
+<nocolor>
+<model value=6>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.615>
+<language value=pcl>
 </printer>
 
-<printer name="CANON BJC 8200" driver="bjc-8200">
-<color>
-<model value=8200>
+<printer name="HP LaserJet 5Si" driver="pcl-5si">
+<nocolor>
+<model value=7>
 <gamma value=1.000>
-<density value=0.800>
-<language value=canon>
+<density value=0.615>
+<language value=pcl>
+</printer>
+
+<printer name="HP LaserJet 6 series" driver="pcl-6">
+<nocolor>
+<model value=6>
+<gamma value=1.000>
+<density value=0.615>
+<language value=pcl>
 </printer>
 
 <printer name="Lexmark 4076" driver="lexmark-4076">
