@@ -1192,10 +1192,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (escp2_has_cap(model, MODEL_ZEROMARGIN_MASK, MODEL_ZEROMARGIN_YES))
     {
      /*
-      * In zero-margin mode, the origin is 1/10" to the left of the
+      * In zero-margin mode, the origin is about 3/20" to the left of the
       * paper's left edge.
       */
-      left += 72;
+      left += 108;
     }
 
  /*
