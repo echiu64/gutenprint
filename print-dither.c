@@ -127,10 +127,10 @@ typedef struct dither
   int k_lower;			/* Transition range (lower/upper) for CMY */
   int k_upper;			/* vs. K */
 
-  int c_randomizer;		/* With Floyd-Steinberg dithering, control */
-  int m_randomizer;		/* how much randomness is applied to the */
-  int y_randomizer;		/* threshold values (0-65536).  With ordered */
-  int k_randomizer;		/* dithering, how much randomness is added */
+  unsigned c_randomizer;	/* With Floyd-Steinberg dithering, control */
+  unsigned m_randomizer;	/* how much randomness is applied to the */
+  unsigned y_randomizer;	/* threshold values (0-65536).  With ordered */
+  unsigned k_randomizer;	/* dithering, how much randomness is added */
 				/* to the matrix value. */
 
   int k_clevel;			/* Amount of each ink (in 64ths) required */
@@ -604,8 +604,8 @@ dither_set_density(void *vd, double density)
   d->adaptive_lower_limit = d->adaptive_limit / 4;
 }
 
-static int
-imax(int a, int b)
+static double
+imax(double a, double b)
 {
   return ((a > b) ? a : b);
 }

@@ -1698,7 +1698,7 @@ compute_page_parameters(int page_right,	/* I */
 			int page_left, /* I */
 			int page_top, /* I */
 			int page_bottom, /* I */
-			int scaling, /* I */
+			double scaling, /* I */
 			int image_width, /* I */
 			int image_height, /* I */
 			Image image, /* IO */

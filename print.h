@@ -407,7 +407,7 @@ extern convert_t choose_colorfunc(int, int, const unsigned char *, int *,
 				  const vars_t *);
 extern void
 compute_page_parameters(int page_right, int page_left, int page_top,
-			int page_bottom, int scaling, int image_width,
+			int page_bottom, double scaling, int image_width,
 			int image_height, Image image, int *orientation,
 			int *page_width, int *page_height, int *out_width,
 			int *out_height, int *left, int *top);

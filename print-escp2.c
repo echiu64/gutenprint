@@ -567,52 +567,52 @@ typedef struct escp2_printer
   escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
 } escp2_printer_t;
 
-#define MODEL_INIT_MASK		0xf /* Is a special initialization sequence */
-#define MODEL_INIT_STANDARD	0x0 /* required for this printer, and if */
-#define MODEL_INIT_900		0x1 /* so, what */
+#define MODEL_INIT_MASK		0xfull /* Is a special init sequence */
+#define MODEL_INIT_STANDARD	0x0ull /* required for this printer, and if */
+#define MODEL_INIT_900		0x1ull /* so, what */
 
-#define MODEL_HASBLACK_MASK	0x10 /* Can this printer print black ink */
-#define MODEL_HASBLACK_YES	0x00 /* when it is also printing color? */
-#define MODEL_HASBLACK_NO	0x10 /* Only the 1500 can't. */
+#define MODEL_HASBLACK_MASK	0x10ull /* Can this printer print black ink */
+#define MODEL_HASBLACK_YES	0x00ull /* when it is also printing color? */
+#define MODEL_HASBLACK_NO	0x10ull /* Only the 1500 can't. */
 
-#define MODEL_6COLOR_MASK	0x20 /* Is this a 6-color printer? */
-#define MODEL_6COLOR_NO		0x00
-#define MODEL_6COLOR_YES	0x20
+#define MODEL_6COLOR_MASK	0x20ull /* Is this a 6-color printer? */
+#define MODEL_6COLOR_NO		0x00ull
+#define MODEL_6COLOR_YES	0x20ull
 
-#define MODEL_1440DPI_MASK	0x40 /* Can this printer do 1440x720 dpi? */
-#define MODEL_1440DPI_NO	0x00
-#define MODEL_1440DPI_YES	0x40
+#define MODEL_1440DPI_MASK	0x40ull /* Can this printer do 1440x720 dpi? */
+#define MODEL_1440DPI_NO	0x00ull
+#define MODEL_1440DPI_YES	0x40ull
 
-#define MODEL_GRAYMODE_MASK	0x80 /* Does this printer support special */
-#define MODEL_GRAYMODE_NO	0x00 /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x80
+#define MODEL_GRAYMODE_MASK	0x80ull /* Does this printer support special */
+#define MODEL_GRAYMODE_NO	0x00ull /* fast black printing? */
+#define MODEL_GRAYMODE_YES	0x80ull
 
-#define MODEL_720DPI_MODE_MASK	0x300 /* Does this printer require old */
-#define MODEL_720DPI_DEFAULT	0x000 /* or new setting for printing */
-#define MODEL_720DPI_600	0x100 /* 720 dpi?  Only matters for */
-				      /* single dot size printers */
+#define MODEL_720DPI_MODE_MASK	0x300ull /* Does this printer require old */
+#define MODEL_720DPI_DEFAULT	0x000ull /* or new setting for printing */
+#define MODEL_720DPI_600	0x100ull /* 720 dpi?  Only matters for */
+				         /* single dot size printers */
 
-#define MODEL_VARIABLE_DOT_MASK	0xc00 /* Does this printer support variable */
-#define MODEL_VARIABLE_NORMAL	0x000 /* dot size printing? The newest */
-#define MODEL_VARIABLE_4	0x400 /* printers support multiple modes */
-#define MODEL_VARIABLE_MULTI	0x800 /* of variable dot sizes. */
+#define MODEL_VARIABLE_DOT_MASK	0xc00ull /* Does this printer support var */
+#define MODEL_VARIABLE_NORMAL	0x000ull /* dot size printing? The newest */
+#define MODEL_VARIABLE_4	0x400ull /* printers support multiple modes */
+#define MODEL_VARIABLE_MULTI	0x800ull /* of variable dot sizes. */
 
-#define MODEL_COMMAND_MASK	0xf000 /* What general command set does */
-#define MODEL_COMMAND_GENERIC	0x0000 /* this printer use? */
-#define MODEL_COMMAND_1998	0x1000
-#define MODEL_COMMAND_1999	0x2000 /* The 1999 series printers */
+#define MODEL_COMMAND_MASK	0xf000ull /* What general command set does */
+#define MODEL_COMMAND_GENERIC	0x0000ull /* this printer use? */
+#define MODEL_COMMAND_1998	0x1000ull
+#define MODEL_COMMAND_1999	0x2000ull /* The 1999 series printers */
 
-#define MODEL_INK_MASK		0x10000	/* Does this printer support */
-#define MODEL_INK_NORMAL	0x00000	/* different types of inks? */
-#define MODEL_INK_SELECTABLE	0x10000	/* Only the Stylus Pro's do */
+#define MODEL_INK_MASK		0x10000ull /* Does this printer support */
+#define MODEL_INK_NORMAL	0x00000ull /* different types of inks? */
+#define MODEL_INK_SELECTABLE	0x10000ull /* Only the Stylus Pro's do */
 
-#define MODEL_ROLLFEED_MASK	0x20000	/* Does this printer support */
-#define MODEL_ROLLFEED_NO	0x00000	/* a roll feed? */
-#define MODEL_ROLLFEED_YES	0x20000
+#define MODEL_ROLLFEED_MASK	0x20000ull /* Does this printer support */
+#define MODEL_ROLLFEED_NO	0x00000ull /* a roll feed? */
+#define MODEL_ROLLFEED_YES	0x20000ull
 
-#define MODEL_ZEROMARGIN_MASK	0x40000	/* Does this printer support */
-#define MODEL_ZEROMARGIN_NO	0x00000	/* zero margin mode? */
-#define MODEL_ZEROMARGIN_YES	0x40000	/* (print to the edge of the paper) */
+#define MODEL_ZEROMARGIN_MASK	0x40000ull /* Does this printer support */
+#define MODEL_ZEROMARGIN_NO	0x00000ull /* zero margin mode? */
+#define MODEL_ZEROMARGIN_YES	0x40000ull /* (print to the edge of the paper) */
 
 #define INCH(x)		(72 * x)
 
@@ -1065,7 +1065,7 @@ static const paper_t escp2_paper_list[] = {
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
 
-const paper_t *
+static const paper_t *
 get_media_type(const char *name)
 {
   int i;

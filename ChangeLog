@@ -1,3 +1,96 @@
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	README (1.25) (+1 -1)
+	
+	Bump version number
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	configure.in (1.25) (+1 -1)
+		print-ps.c (1.41) (+3 -3)
+	
+	Bump version number
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	README (1.24) (+14 -9)
+	
+	Clarification
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.32) (+336 -0)
+		Ghost/gdevstp.c (1.38) (+9 -9)
+		Ghost/README (1.40) (+3 -1)
+		printers.xml (1.22) (+18 -0)
+		printdefy.y (1.9) (+6 -6)
+		print.c (1.111) (+2 -23)
+		print-util.c (1.125) (+43 -47)
+		print-ps.c (1.40) (+5 -19)
+		print-pcl.c (1.73) (+2 -19)
+		print-image-gimp.c (1.7) (+2 -10)
+		print-escp2.c (1.233) (+2 -14)
+		print-canon.c (1.79) (+2 -14)
+		gtk_main_window.c (1.47) (+41 -47)
+		gtk_color_window.c (1.18) (+9 -17)
+		gimp_main_window.c (1.46) (+43 -41)
+		escp2-unprint.c (1.3) (+4 -4)
+		RELNOTES (1.20) (+97 -1)
+		README.new-printer (1.3) (+4 -0)
+	
+	Further tuning of color generation.  At present, CMY controls can be
+	used to balance grayscale reasonably effectively.  The grayscale for
+	the Stylus Photo 870/1270 was tuned with this.
+	
+	Change use of floats to doubles for better accuracy (and because
+	floats are always passed as doubles in C, anyway).
+	
+	Change GhostScript -sMediaSource to -sInputSlot to conform to PPD
+	standard.
+	
+	Nominally support Stylus Color 880 and 980.
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.232) (+3 -3)
+	
+	Try dot size 4 for 360 dpi for the 740.
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.231) (+5 -6)
+	
+	Try again on the 670.  I do not believe the manual; low end printers
+	don't generally have a 48/144 head configuration.  Also, it's not a 4
+	pl drop size.
+	
+2000-09-02	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.124) (+70 -70)
+	
+	Tune the color stuff a bit more
+	
+2000-08-31	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.45) (+7 -5)
+	
+	Fix bottom/right borders and preview rectangle
+	
+2000-08-30	<davehill@sourceforge.net>
+
+	Files:	print.c (1.110) (+3 -65)
+		print_gimp.h (1.27) (+10 -1)
+	
+	Removed compatability defines. We now define GIMP_ENABLE_COMPAT_CRUFT
+	to turn back on the old API definitions (for now). Changed GIMP_INDEXED
+	to INDEXED for 1.0.4.
+	
+2000-08-30	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.123) (+13 -11)
+	
+	Expand the range of the CMY controls, and really allow CMY values of 0.
+	
 2000-08-29	<rlk@sourceforge.net>
 
 	Files:	print-escp2.c (1.230) (+2 -2)
