@@ -1790,7 +1790,7 @@ escp2_job_end(stp_const_vars_t v, stp_image_t *image)
   return status;
 }
 
-static const stpi_printfuncs_t stpi_escp2_printfuncs =
+static const stpi_printfuncs_t print_escp2_printfuncs =
 {
   escp2_list_parameters,
   escp2_parameters,
@@ -1804,30 +1804,30 @@ static const stpi_printfuncs_t stpi_escp2_printfuncs =
   escp2_job_end
 };
 
-static stpi_internal_family_t stpi_escp2_module_data =
+static stpi_internal_family_t print_escp2_module_data =
   {
-    &stpi_escp2_printfuncs,
+    &print_escp2_printfuncs,
     NULL
   };
 
 
 static int
-escp2_module_init(void)
+print_escp2_module_init(void)
 {
-  return stpi_family_register(stpi_escp2_module_data.printer_list);
+  return stpi_family_register(print_escp2_module_data.printer_list);
 }
 
 
 static int
-escp2_module_exit(void)
+print_escp2_module_exit(void)
 {
-  return stpi_family_unregister(stpi_escp2_module_data.printer_list);
+  return stpi_family_unregister(print_escp2_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version escp2_LTX_stpi_module_version
-#define stpi_module_data escp2_LTX_stpi_module_data
+#define stpi_module_version print_escp2_LTX_stpi_module_version
+#define stpi_module_data print_escp2_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -1838,8 +1838,8 @@ stpi_module_t stpi_module_data =
     "Epson family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    escp2_module_init,
-    escp2_module_exit,
-    (void *) &stpi_escp2_module_data
+    print_escp2_module_init,
+    print_escp2_module_exit,
+    (void *) &print_escp2_module_data
   };
 

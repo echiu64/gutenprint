@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   libgimpprint module loader - load modules with libltdl.
+ *   libgimpprint module loader - load modules with libltdl/libdl.
  *
  *   Copyright 2002 Roger Leigh (roger@whinlatter.uklinux.net)
  *
@@ -53,6 +53,7 @@ static stpi_internal_module_class_t module_classes[] =
   {
     {STPI_MODULE_CLASS_MISC, N_("Miscellaneous (unclassified)")},
     {STPI_MODULE_CLASS_FAMILY, N_("Family driver")},
+    {STPI_MODULE_CLASS_COLOR, N_("Color conversion module")},
     {STPI_MODULE_CLASS_DITHER, N_("Dither algorithm")},
     {STPI_MODULE_CLASS_INVALID, NULL} /* Must be last */
   };
@@ -395,6 +396,11 @@ static void *stpi_dlsym(void *handle,           /* Module */
    full_symbol = prefix_symbol;
  }
 #endif
+
+ /* Change any hyphens to underscores */
+ for (len = 0; full_symbol[len] != '\0'; len++)
+   if (full_symbol[len] == '-')
+     full_symbol[len] = '_';
 
  if (stpi_debug_level & STPI_DBG_MODULE)
    stpi_erprintf("SYMBOL: %s\n", full_symbol);

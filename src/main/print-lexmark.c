@@ -2140,7 +2140,7 @@ lexmark_print(stp_const_vars_t v, stp_image_t *image)
   return status;
 }
 
-static const stpi_printfuncs_t stpi_lexmark_printfuncs =
+static const stpi_printfuncs_t print_lexmark_printfuncs =
 {
   lexmark_list_parameters,
   lexmark_parameters,
@@ -3011,29 +3011,29 @@ static void readtestprintline(testdata *td, lexmark_linebufs_t *linebufs)
 #endif
 
 
-static stpi_internal_family_t stpi_lexmark_module_data =
+static stpi_internal_family_t print_lexmark_module_data =
   {
-    &stpi_lexmark_printfuncs,
+    &print_lexmark_printfuncs,
     NULL
   };
 
 static int
-lexmark_module_init(void)
+print_lexmark_module_init(void)
 {
-  return stpi_family_register(stpi_lexmark_module_data.printer_list);
+  return stpi_family_register(print_lexmark_module_data.printer_list);
 }
 
 
 static int
-lexmark_module_exit(void)
+print_lexmark_module_exit(void)
 {
-  return stpi_family_unregister(stpi_lexmark_module_data.printer_list);
+  return stpi_family_unregister(print_lexmark_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version lexmark_LTX_stpi_module_version
-#define stpi_module_data lexmark_LTX_stpi_module_data
+#define stpi_module_version print_lexmark_LTX_stpi_module_version
+#define stpi_module_data print_lexmark_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -3044,8 +3044,8 @@ stpi_module_t stpi_module_data =
     "Lexmark family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    lexmark_module_init,
-    lexmark_module_exit,
-    (void *) &stpi_lexmark_module_data
+    print_lexmark_module_init,
+    print_lexmark_module_exit,
+    (void *) &print_lexmark_module_data
   };
 

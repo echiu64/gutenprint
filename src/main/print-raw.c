@@ -295,7 +295,7 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   return status;
 }
 
-static const stpi_printfuncs_t stpi_raw_printfuncs =
+static const stpi_printfuncs_t print_raw_printfuncs =
 {
   raw_list_parameters,
   raw_parameters,
@@ -312,30 +312,30 @@ static const stpi_printfuncs_t stpi_raw_printfuncs =
 
 
 
-static stpi_internal_family_t stpi_raw_module_data =
+static stpi_internal_family_t print_raw_module_data =
   {
-    &stpi_raw_printfuncs,
+    &print_raw_printfuncs,
     NULL
   };
 
 
 static int
-raw_module_init(void)
+print_raw_module_init(void)
 {
-  return stpi_family_register(stpi_raw_module_data.printer_list);
+  return stpi_family_register(print_raw_module_data.printer_list);
 }
 
 
 static int
-raw_module_exit(void)
+print_raw_module_exit(void)
 {
-  return stpi_family_unregister(stpi_raw_module_data.printer_list);
+  return stpi_family_unregister(print_raw_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version raw_LTX_stpi_module_version
-#define stpi_module_data raw_LTX_stpi_module_data
+#define stpi_module_version print_raw_LTX_stpi_module_version
+#define stpi_module_data print_raw_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -346,7 +346,7 @@ stpi_module_t stpi_module_data =
     "RAW family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    raw_module_init,
-    raw_module_exit,
-    (void *) &stpi_raw_module_data
+    print_raw_module_init,
+    print_raw_module_exit,
+    (void *) &print_raw_module_data
   };

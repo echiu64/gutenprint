@@ -871,7 +871,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-static const stpi_printfuncs_t stpi_ps_printfuncs =
+static const stpi_printfuncs_t print_ps_printfuncs =
 {
   ps_list_parameters,
   ps_parameters,
@@ -886,30 +886,30 @@ static const stpi_printfuncs_t stpi_ps_printfuncs =
 };
 
 
-static stpi_internal_family_t stpi_ps_module_data =
+static stpi_internal_family_t print_ps_module_data =
   {
-    &stpi_ps_printfuncs,
+    &print_ps_printfuncs,
     NULL
   };
 
 
 static int
-ps_module_init(void)
+print_ps_module_init(void)
 {
-  return stpi_family_register(stpi_ps_module_data.printer_list);
+  return stpi_family_register(print_ps_module_data.printer_list);
 }
 
 
 static int
-ps_module_exit(void)
+print_ps_module_exit(void)
 {
-  return stpi_family_unregister(stpi_ps_module_data.printer_list);
+  return stpi_family_unregister(print_ps_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version ps_LTX_stpi_module_version
-#define stpi_module_data ps_LTX_stpi_module_data
+#define stpi_module_version print_ps_LTX_stpi_module_version
+#define stpi_module_data print_ps_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -920,8 +920,8 @@ stpi_module_t stpi_module_data =
     "Postscript family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    ps_module_init,
-    ps_module_exit,
-    (void *) &stpi_ps_module_data
+    print_ps_module_init,
+    print_ps_module_exit,
+    (void *) &print_ps_module_data
   };
 

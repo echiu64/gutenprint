@@ -2662,7 +2662,7 @@ canon_print(stp_const_vars_t v, stp_image_t *image)
   return status;
 }
 
-static const stpi_printfuncs_t stpi_canon_printfuncs =
+static const stpi_printfuncs_t print_canon_printfuncs =
 {
   canon_list_parameters,
   canon_parameters,
@@ -3009,30 +3009,30 @@ canon_write_line(stp_vars_t v)
 }
 
 
-static stpi_internal_family_t stpi_canon_module_data =
+static stpi_internal_family_t print_canon_module_data =
   {
-    &stpi_canon_printfuncs,
+    &print_canon_printfuncs,
     NULL
   };
 
 
 static int
-canon_module_init(void)
+print_canon_module_init(void)
 {
-  return stpi_family_register(stpi_canon_module_data.printer_list);
+  return stpi_family_register(print_canon_module_data.printer_list);
 }
 
 
 static int
-canon_module_exit(void)
+print_canon_module_exit(void)
 {
-  return stpi_family_unregister(stpi_canon_module_data.printer_list);
+  return stpi_family_unregister(print_canon_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version canon_LTX_stpi_module_version
-#define stpi_module_data canon_LTX_stpi_module_data
+#define stpi_module_version print_canon_LTX_stpi_module_version
+#define stpi_module_data print_canon_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -3043,8 +3043,8 @@ stpi_module_t stpi_module_data =
     "Canon family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    canon_module_init,
-    canon_module_exit,
-    (void *) &stpi_canon_module_data
+    print_canon_module_init,
+    print_canon_module_exit,
+    (void *) &print_canon_module_data
   };
 

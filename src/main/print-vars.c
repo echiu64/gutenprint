@@ -68,6 +68,7 @@ typedef struct					/* Plug-in variables */
 {
   int	cookie;
   char *driver;			/* Name of printer "driver" */
+  char *color_conversion;       /* Color module in use */
   int	output_type;		/* Color or grayscale output */
   int	input_color_model;	/* Color model for this device */
   int	output_color_model;	/* Color model for this device */
@@ -94,6 +95,7 @@ static stpi_internal_vars_t default_vars =
 {
 	COOKIE_VARS,
 	NULL,		       	/* Name of printer "driver" */
+	NULL,                   /* Name of color module */
 	OUTPUT_COLOR,		/* Color or grayscale output */
 	1.0,			/* Application gamma placeholder */
 	COLOR_MODEL_RGB,	/* Input color model */
@@ -323,6 +325,7 @@ initialize_standard_vars(void)
       for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
 	default_vars.params[i] = create_vars_list();
       default_vars.driver = stpi_strdup(_("ps2"));
+      default_vars.color_conversion = stpi_strdup(_("traditional"));
       default_vars.internal_data = create_compdata_list();
       standard_vars_initialized = 1;
     }
@@ -413,6 +416,7 @@ stp##i##_get_##s(stp_const_vars_t vv)		\
 #define DEF_EXTERNAL_FUNCS(s, t, u) DEF_FUNCS(s, t, u,)
 
 DEF_EXTERNAL_STRING_FUNCS(driver)
+DEF_EXTERNAL_STRING_FUNCS(color_conversion)
 DEF_EXTERNAL_FUNCS(output_type, int, )
 DEF_EXTERNAL_FUNCS(left, int, )
 DEF_EXTERNAL_FUNCS(top, int, )
@@ -1227,6 +1231,7 @@ stp_vars_copy(stp_vars_t vd, stp_const_vars_t vs)
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
+  stp_set_color_conversion(vd, stp_get_color_conversion(vs));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
       stpi_list_destroy(vvd->params[i]);

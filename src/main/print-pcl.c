@@ -2703,7 +2703,7 @@ pcl_print(stp_const_vars_t v, stp_image_t *image)
   return status;
 }
 
-static const stpi_printfuncs_t stpi_pcl_printfuncs =
+static const stpi_printfuncs_t print_pcl_printfuncs =
 {
   pcl_list_parameters,
   pcl_parameters,
@@ -2759,30 +2759,30 @@ pcl_mode2(stp_vars_t v,		/* I - Print file or command */
 }
 
 
-static stpi_internal_family_t stpi_pcl_module_data =
+static stpi_internal_family_t print_pcl_module_data =
   {
-    &stpi_pcl_printfuncs,
+    &print_pcl_printfuncs,
     NULL
   };
 
 
 static int
-pcl_module_init(void)
+print_pcl_module_init(void)
 {
-  return stpi_family_register(stpi_pcl_module_data.printer_list);
+  return stpi_family_register(print_pcl_module_data.printer_list);
 }
 
 
 static int
-pcl_module_exit(void)
+print_pcl_module_exit(void)
 {
-  return stpi_family_unregister(stpi_pcl_module_data.printer_list);
+  return stpi_family_unregister(print_pcl_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version pcl_LTX_stpi_module_version
-#define stpi_module_data pcl_LTX_stpi_module_data
+#define stpi_module_version print_pcl_LTX_stpi_module_version
+#define stpi_module_data print_pcl_LTX_stpi_module_data
 
 stpi_module_version_t stpi_module_version = {0, 0};
 
@@ -2793,8 +2793,8 @@ stpi_module_t stpi_module_data =
     "PCL family driver",
     STPI_MODULE_CLASS_FAMILY,
     NULL,
-    pcl_module_init,
-    pcl_module_exit,
-    (void *) &stpi_pcl_module_data
+    print_pcl_module_init,
+    print_pcl_module_exit,
+    (void *) &print_pcl_module_data
   };
 

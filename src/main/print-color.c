@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Print plug-in color management for the GIMP.
+ *   Gimp-Print color management module - traditional Gimp-Print algorithm.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -37,6 +37,7 @@
 #include <limits.h>
 #endif
 #include <string.h>
+#include "module.h"
 #include "xml.h"
 
 #ifdef __GNUC__
@@ -1665,9 +1666,11 @@ initialize_channels(stp_vars_t v, stp_image_t *image)
   lut->channels_are_initialized = 1;
 }
 
-int
-stpi_color_get_row(stp_const_vars_t v, stp_image_t *image, int row,
-		   unsigned *zero_mask)
+static int
+stpi_color_traditional_get_row(stp_const_vars_t v,
+			       stp_image_t *image,
+			       int row,
+			       unsigned *zero_mask)
 {
   const lut_t *lut = (const lut_t *)(stpi_get_component_data(v, "Color"));
   unsigned zero;
@@ -2069,8 +2072,10 @@ stpi_dprintf(STPI_DBG_COLORFUNC, v,					     \
 lut->colorfunc = x;							     \
 break
 
-int
-stpi_color_init(stp_vars_t v, stp_image_t *image, size_t steps)
+static int
+stpi_color_traditional_init(stp_vars_t v,
+			    stp_image_t *image,
+			    size_t steps)
 {
   const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
   int itype = 0;
@@ -2358,8 +2363,8 @@ initialize_standard_curves(void)
     }
 }
 
-stp_parameter_list_t
-stpi_color_list_parameters(stp_const_vars_t v)
+static stp_parameter_list_t
+stpi_color_traditional_list_parameters(stp_const_vars_t v)
 {
   stpi_list_t *ret = stp_parameter_list_create();
   int i;
@@ -2371,9 +2376,10 @@ stpi_color_list_parameters(stp_const_vars_t v)
   return ret;
 }
 
-void
-stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
-			      stp_parameter_t *description)
+static void
+stpi_color_traditional_describe_parameter(stp_const_vars_t v,
+					  const char *name,
+					  stp_parameter_t *description)
 {
   int i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -2451,3 +2457,53 @@ stpi_color_describe_parameter(stp_const_vars_t v, const char *name,
 	}
     }
 }
+
+
+static const stpi_printfuncs_t stpi_color_traditional_colorfuncs =
+{
+  &stpi_color_traditional_init,
+  &stpi_color_traditional_get_row,
+  &stpi_color_traditional_list_parameters,
+  &stpi_color_traditional_describe_parameter
+};
+
+static const stpi_internal_color_t stpi_color_traditional_module_data =
+  {
+    COOKIE_COLOR,
+    "traditional",
+    N_("Traditional Gimp-Print color conversion"),
+    &stpi_color_traditional_colorfuncs
+  };
+
+
+static int
+color_traditional_module_init(void)
+{
+  return stpi_color_register(&stpi_color_traditional_module_data);
+}
+
+
+static int
+color_traditional_module_exit(void)
+{
+  return stpi_color_unregister(&stpi_color_traditional_module_data);
+}
+
+
+/* Module header */
+#define stpi_module_version color_traditional_LTX_stpi_module_version
+#define stpi_module_data color_traditional_LTX_stpi_module_data
+
+stpi_module_version_t stpi_module_version = {0, 0};
+
+stpi_module_t stpi_module_data =
+  {
+    "traditional",
+    VERSION,
+    "Traditional Gimp-Print color conversion",
+    STPI_MODULE_CLASS_COLOR,
+    NULL,
+    color_traditional_module_init,
+    color_traditional_module_exit,
+    (void *) &stpi_color_traditional_module_data
+  };

@@ -39,13 +39,24 @@ pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
 ## Programs
 
 if BUILD_MODULES
-pkgmodule_LTLIBRARIES = canon.la escp2.la lexmark.la pcl.la ps.la olympus.la raw.la
+pkgmodule_LTLIBRARIES = \
+	color-traditional.la \
+	print-canon.la \
+	print-escp2.la \
+	print-lexmark.la \
+	print-pcl.la \
+	print-ps.la \
+	print-olympus.la \
+	print-raw.la
 endif
 
-canon_la_SOURCES = print-canon.c
-canon_la_LDFLAGS = -module -avoid-version
+color_traditional_la_SOURCES = print-color.c
+color_traditional_la_LDFLAGS = -module -avoid-version
 
-escp2_la_SOURCES = \
+print_canon_la_SOURCES = print-canon.c
+print_canon_la_LDFLAGS = -module -avoid-version
+
+print_escp2_la_SOURCES = \
 	print-escp2.c \
 	escp2-driver.c \
 	print-escp2.h \
@@ -54,33 +65,34 @@ escp2_la_SOURCES = \
 	escp2-inks.c \
 	escp2-papers.c \
 	escp2-resolutions.c
-escp2_la_LDFLAGS = -module -avoid-version
+print_escp2_la_LDFLAGS = -module -avoid-version
 
-lexmark_la_SOURCES = print-lexmark.c
-lexmark_la_LDFLAGS = -module -avoid-version
+print_lexmark_la_SOURCES = print-lexmark.c
+print_lexmark_la_LDFLAGS = -module -avoid-version
 
-pcl_la_SOURCES = print-pcl.c
-pcl_la_LDFLAGS = -module -avoid-version
+print_pcl_la_SOURCES = print-pcl.c
+print_pcl_la_LDFLAGS = -module -avoid-version
 
-ps_la_SOURCES = print-ps.c
-ps_la_LDFLAGS = -module -avoid-version
+print_ps_la_SOURCES = print-ps.c
+print_ps_la_LDFLAGS = -module -avoid-version
 
-olympus_la_SOURCES = print-olympus.c
-olympus_la_LDFLAGS = -module -avoid-version
+print_olympus_la_SOURCES = print-olympus.c
+print_olympus_la_LDFLAGS = -module -avoid-version
 
-raw_la_SOURCES = print-raw.c
-raw_la_LDFLAGS = -module -avoid-version
+print_raw_la_SOURCES = print-raw.c
+print_raw_la_LDFLAGS = -module -avoid-version
 
 lib_LTLIBRARIES = libgimpprint.la
 
 module_SOURCES = \
-	$(canon_la_SOURCES) \
-	$(escp2_la_SOURCES) \
-	$(lexmark_la_SOURCES) \
-	$(pcl_la_SOURCES) \
-	$(ps_la_SOURCES) \
-	$(olympus_la_SOURCES) \
-	$(raw_la_SOURCES)
+	$(color_traditional_la_SOURCES)
+	$(print_canon_la_SOURCES) \
+	$(print_escp2_la_SOURCES) \
+	$(print_lexmark_la_SOURCES) \
+	$(print_pcl_la_SOURCES) \
+	$(print_ps_la_SOURCES) \
+	$(print_olympus_la_SOURCES) \
+	$(print_raw_la_SOURCES)
 
 if !BUILD_MODULES
 libgimpprint_modules = $(module_SOURCES)
@@ -90,6 +102,7 @@ libgimpprint_la_SOURCES = \
 	array.c \
 	bit-ops.c \
 	channel.c \
+	color.c \
 	color.h \
 	curve.c \
 	dither.h \
@@ -111,7 +124,6 @@ libgimpprint_la_SOURCES = \
 	print-util.c \
 	print-vars.c \
 	print-papers.c \
-	print-color.c \
 	print-weave.c \
 	print-version.c \
 	printers.c \
@@ -134,8 +146,10 @@ libgimpprint_version = -release $(GIMPPRINT_VERSION)
 # Uncomment to build a versioned library
 #libgimpprint_version = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libgimpprint_la_LDFLAGS = $(libgimpprint_version) \
-	-rpath $(libdir) \
-	-export-symbols $(srcdir)/libgimpprint.sym
+	-rpath $(libdir)
+# libtool currently needs a patch for symbol export to work correctly
+# using a linker version script.
+#	-export-symbols $(srcdir)/libgimpprint.sym
 
 
 ## Data

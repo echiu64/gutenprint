@@ -128,7 +128,7 @@ stp_get_printer_by_index(int idx)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_index(printer_list, idx);
@@ -212,7 +212,7 @@ stp_get_printer_by_long_name(const char *long_name)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_long_name(printer_list, long_name);
@@ -228,7 +228,7 @@ stp_get_printer_by_driver(const char *driver)
   if (printer_list == NULL)
     {
       stpi_erprintf("No printer drivers found: "
-		   "are STP_DATA_PATH and STPI_MODULE_PATH correct?\n");
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
   printer = stpi_list_get_item_by_name(printer_list, driver);
