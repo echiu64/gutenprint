@@ -122,7 +122,7 @@ popdef([GIMPPRINT_NAME])
 popdef([GIMPPRINT_VERSION])
 
 dnl Specify a configuration file.
-AM_CONFIG_HEADER(include/config.h)
+AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
 ALL_LINGUAS="da el en_GB fr nl no pl sk sv"
