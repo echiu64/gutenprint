@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2, released September XX, 2002, is a stable release in
+Gimp-Print 4.2.2, released September 12, 2002, is a stable release in
 the Gimp-Print 4.2 series.  This release primarily offers bug fixes
 and support for all Epson Stylus printers announced since Gimp-Print
 4.2.1.
@@ -123,6 +123,18 @@ Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
      This limitation is not specific to Gimp-Print.  Please check the
      Gimp-Print web site (http://gimp-print.sourceforge.net) for
      updates and possible fixes.
+
+  2) The Epson PM-950C (Japanese version of the Stylus Photo 950/960)
+     does not use the additional dark yellow ink available on that
+     printer.
+
+  3) Certain older Epson Stylus printers (the Stylus Color 3000 is
+     known; some or all of the 600, 800, 850, and 1520 may also suffer
+     this problem; the Stylus Photo 700 and EX do *not*) print much
+     too dark at 1440x720 DPI.  This was reported too late in the
+     cycle to fix for this release.  The best workaround is to print
+     at 720 DPI, which will yield only a minor reduction in print
+     quality.
 
 
 The following bugs have been fixed in Gimp-Print 4.2.2:
@@ -849,6 +861,23 @@ Epson Stylus Pro 9600          escp2-9600      EPSON Stylus Pro 9600
 Epson Stylus Pro XL            escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
+Epson PM-700C		       escp2-photo     EPSON Stylus Photo
+Epson PM-730C		       escp2-780       EPSON Stylus Photo 780
+Epson PM-750C		       escp2-700       EPSON Stylus Photo 700
+Epson PM-770C		       escp2-750       EPSON Stylus Photo 750
+Epson PM-780C		       escp2-780       EPSON Stylus Photo 780
+Epson PM-790PT		       escp2-785       EPSON Stylus Photo 785
+Epson PM-880C		       escp2-890       EPSON Stylus Photo 890
+Epson PM-950C		       escp2-950       EPSON Stylus Photo 950
+Epson PM-2000C		       escp2-ex	       EPSON Stylus Photo EX
+Epson PM-3000C		       escp2-1200      EPSON Stylus Photo 1200
+Epson PM-3500C		       escp2-1280      EPSON Stylus Photo 1280
+Epson PM-4000PX		       escp2-2100      EPSON Stylus Photo 2100/2200
+Epson MC-5000		       escp2-5000      EPSON Stylus Pro 5000
+Epson PM-7000C		       escp2-7000      EPSON Stylus Pro 7000
+Epson PM-9000C		       escp2-9000      EPSON Stylus Pro 9000
+Epson PM-10000		       escp2-10000     EPSON Stylus Pro 10000
+Epson MC-10000		       escp2-10000     EPSON Stylus Pro 10000
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 16DV      pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 20W       pcl-6           HP LaserJet 6 series
