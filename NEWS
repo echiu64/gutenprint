@@ -1042,6 +1042,7 @@ EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
 EPSON Stylus CX-3100
 EPSON Stylus CX-3200
+EPSON Stylus CX-4600 (Experimental)
 EPSON Stylus CX-5100
 EPSON Stylus CX-5200
 EPSON Stylus CX-5300
@@ -1381,6 +1382,7 @@ Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
 Epson Stylus CX3100            escp2-cx3100    EPSON Stylus CX-3100
 Epson Stylus CX3200            escp2-cx3200    EPSON Stylus CX-3200
+Epson Stylus CX4600            escp2-cx4600    EPSON Stylus CX-4600
 Epson Stylus CX5100            escp2-cx5100    EPSON Stylus CX-5100
 Epson Stylus CX5200            escp2-cx5200    EPSON Stylus CX-5200
 Epson Stylus CX5300            escp2-cx5300    EPSON Stylus CX-5300
