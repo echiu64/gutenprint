@@ -447,7 +447,7 @@ do_print_cmd(void)
 }
 
 static int
-read_from_printer(int fd, char *buf, int bufsize)
+read_from_printer(int fd, char *buf, int bufsize, int quiet)
 {
 #ifdef HAVE_POLL
   struct pollfd ufds;
@@ -480,9 +480,15 @@ read_from_printer(int fd, char *buf, int bufsize)
   while ((status == 0) && (--retry != 0));
 
   if (status == 0 && retry == 0)
-    fprintf(stderr, _("Read from printer timed out\n"));
+    {
+      if (!quiet)
+	fprintf(stderr, _("Read from printer timed out\n"));
+    }
   else if (status < 0)
-    fprintf(stderr, _("Cannot read from %s: %s\n"), raw_device, strerror(errno));
+    {
+      if (!quiet)
+	fprintf(stderr, _("Cannot read from %s: %s\n"), raw_device, strerror(errno));
+    }
 
   return status;
 }
@@ -596,7 +602,7 @@ get_printer(int quiet)
 	  printf(_("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
 	  exit(1);
 	}
-      status = read_from_printer(fd, buf, 1024);
+      status = read_from_printer(fd, buf, 1024, quiet);
       if (status < 0)
 	exit(1);
       (void) close(fd);
@@ -609,9 +615,13 @@ get_printer(int quiet)
 	spos = strchr(pos, (int) ';');
       if (!pos)
 	{
-	  printf(_("\nCannot detect printer type.\n"
-		   "Please use -m to specify your printer model.\n"));
-	  do_help(1);
+	  if (!quiet)
+	    {
+	      printf(_("\nCannot detect printer type.\n"
+		       "Please use -m to specify your printer model.\n"));
+	      do_help(1);
+	    }
+	  return NULL;
 	}
       if (spos)
 	*spos = '\000';
@@ -636,7 +646,8 @@ get_printer(int quiet)
 	    return printer;
 	}
     }
-  printf(_("Printer model %s is not known.\n"), printer_model);
+  if (!quiet && printer_model)
+    printf(_("Printer model %s is not known.\n"), printer_model);
   if (!quiet)
     do_help(1);
   return NULL;
@@ -674,28 +685,28 @@ do_ink_level(void)
        * -- rlk 20040508
        */
       if (isnew && !(retry & 1))
-				do_remote_cmd("IQ", 1, 1);
+	do_remote_cmd("IQ", 1, 1);
       else
-				do_remote_cmd("ST", 2, 0, 1);
+	do_remote_cmd("ST", 2, 0, 1);
       add_resets(2);
       if (write(fd, printer_cmd, bufpos) < bufpos)
-				{
-					fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
-									strerror(errno));
-					exit(1);
-				}
-      status = read_from_printer(fd, buf, 1024);
+	{
+	  fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      status = read_from_printer(fd, buf, 1024, 1);
       if (status < 0)
-				exit(1);
+	exit(1);
       (void) close(fd);
       ind = buf;
       do
-				ind = strchr(ind, 'I');
+	ind = strchr(ind, 'I');
       while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
       if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
-				{
-					ind = NULL;
-				}
+	{
+	  ind = NULL;
+	}
     } while (--retry != 0 && !ind);
   if (!ind)
     {
@@ -776,7 +787,7 @@ do_extended_ink_info(int extended_output)
               strerror(errno));
       exit(1);
     }
-  status = read_from_printer(fd, buf, 1024);
+  status = read_from_printer(fd, buf, 1024, 1);
   if (status < 0)
     exit(1);
   (void) close(fd);
@@ -808,7 +819,7 @@ do_extended_ink_info(int extended_output)
                     strerror(errno));
             exit(1);
           }
-          status = read_from_printer(fd, buf, 1024);
+          status = read_from_printer(fd, buf, 1024, 1);
 
           if (status < 0)
             exit(1);
@@ -873,8 +884,13 @@ do_identify(void)
 	printf("%s\n", stp_printer_get_driver(printer));
       else
 	printf("%s\n", _(stp_printer_get_long_name(printer)));
+      exit(0);
     }
-  exit(0);
+  else
+    {
+      fprintf(stderr, "Cannot determine printer model.\n");
+      exit(1);
+    }
 }
 
 void
@@ -906,14 +922,14 @@ do_status(void)
 	      raw_device, strerror(errno));
       exit(1);
     }
-  status = read_from_printer(fd, buf, 1024);
+  status = read_from_printer(fd, buf, 1024, 0);
   if (status < 0)
     exit(1);
   initialize_print_cmd();
   do_remote_cmd("ST", 2, 0, 0);
   add_resets(2);
   (void) write(fd, printer_cmd, bufpos);
-  (void) read_from_printer(fd, buf, 1024);
+  (void) read_from_printer(fd, buf, 1024, 0);
   while ((where = strchr(buf, ';')) != NULL)
     *where = '\n';
   printf("%s\n", buf);
