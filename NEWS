@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-pre2, released June 5, 2002, is a prerelease in
+Gimp-Print 4.2.2-pre3, released July 22, 2002, is a prerelease in
 the Gimp-Print 4.2 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -31,50 +31,53 @@ following major changes over Gimp-Print 4.2.2-pre2:
      Epson printers either failed or produced incorrect results.  This
      bug has been present for a while.
 
-  2) A failure in the CUPS installation has been fixed.
+  2) The GIMP Print plugin will not attempt to build if the GIMP is
+     not installed.
 
-  3) The Even Tone dither algorithm now produces correct colors in
+  3) A failure in the CUPS installation has been fixed.
+
+  4) The Even Tone dither algorithm now produces correct colors in
      CMYK mode.
 
-  4) A portability issue in gimpprint-config has been fixed.
+  5) A portability issue in gimpprint-config has been fixed.
 
-  5) An installation problem with the CUPS PPD files on systems
+  6) An installation problem with the CUPS PPD files on systems
      lacking an appropriate install script has been fixed.
 
-  6) Partial translations for Spanish and Portuguese have been added.
+  7) Partial translations for Spanish and Portuguese have been added.
 
-  7) Preliminary support for the Epson Stylus Photo 950 and 2100/2200,
+  8) Preliminary support for the Epson Stylus Photo 950 and 2100/2200,
      and the Stylus Pro 7600 and 9600.  The Stylus Photo 950 has been
      verified and partially tuned.  The other printers are untested
      and may or may work.
 
-  8) The Gimp Print plugin will now compile properly on commercial
+  9) The Gimp Print plugin will now compile properly on commercial
      UNIX systems that do not have the asprintf function (which is
-     libc-specific).
+     GNU libc-specific).
 
-  9) Quad tone grayscale inks, such as the Piezography (TM) inks, are
+  10) Quad tone grayscale inks, such as the Piezography (TM) inks, are
      now supported for most Epson Stylus printers.  This is not tuned
      for a particular inkset at this time, so the results will not be
      of top quality yet.
 
-  10) Various improvements to EvenTone dithering.
+  11) Various improvements to EvenTone dithering.
 
-  11) The printer data in the Epson driver has been substantially
+  12) The printer data in the Epson driver has been substantially
      reorganized.  This allows the driver to support the new
      UltraChrome inks (for the Stylus Photo 2100/2200 and Stylus Pro
-     7600 and 9600).  This will also permit the driver to support
-     quadtone or hextone grayscale inks, although that capability is
-     not enabled at present.
+     7600 and 9600) and quadtone printing.
 
-  12) The testpattern generator has some improvements, including the
+  13) The testpattern generator has some improvements, including the
      ability to print 16-bit images.  The image format is not
      documented, as this is likely to change, but people may wish to
      study the code and experiment with it.
 
 The following bugs have been fixed in 4.2.2-pre2:
 
+534059 print dialog - wrong and confusing label
 554149 solaris x86 install erroe
 581446 Improper printing at very low resolution
+
 
 Gimp-Print 4.2.2-pre2 contains the following major changes over
 Gimp-Print 4.2.2-pre1:
@@ -92,6 +95,7 @@ The following bugs have been fixed in 4.2.2-pre2:
 
 565091 IJS driver fails on very large images
 565092 Crash in stp_vasprintf on some systems
+
 
 Gimp-Print 4.2.2-pre1 contains the following major changes over
 Gimp-Print 4.2.1:
