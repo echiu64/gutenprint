@@ -886,6 +886,7 @@ printrc_load(void)
     * File exists - read the contents and update the printer list...
     */
 
+    (void) memset(&key, 0, sizeof(plist_t));
     (void) memset(line, 0, 1024);
     while (fgets(line, sizeof(line), fp) != NULL)
     {
@@ -965,7 +966,7 @@ printrc_load(void)
 	  }
         else
 	  {
-            if ((p = bsearch(&key, plist + 1, system_printers, sizeof(plist_t),
+            if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
                          (int (*)(const void *, const void *))compare_printers))
 	        != NULL)
 	      {
@@ -1035,74 +1036,86 @@ printrc_load(void)
 	  current_printer = strdup(value);
 	} else if (strcasecmp("printer", keyword) == 0) {
 	  /* Switch to printer named VALUE */
-	  if (strcmp(_("File"), value) == 0
+	  if (strcmp(_("File"), key.name) == 0
 	      && strcmp(plist[0].name, _("File")) == 0)
 	  {
 	    p = &plist[0];
+	    memcpy(p, &key, sizeof(plist_t));
+	    p->active = 1;
 	  }
 	  else
 	  {
-	    p = bsearch(&key, plist + 1, system_printers,
-	                sizeof(plist_t),
-	                (int (*)(const void *, const void *)) compare_printers);
-	    if (p == NULL)
-	    {
-	      check_plist(plist_count + 1);
-	      p = plist + plist_count;
-	      plist_count++;
-	    }
+	    if (get_printer_by_driver(key.v.driver))
+	      {
+		p = bsearch(&key, plist + 1, plist_count - 1,
+			    sizeof(plist_t),
+			    (int (*)(const void *, const void *)) compare_printers);
+		if (p == NULL)
+		  {
+		    check_plist(plist_count + 1);
+		    p = plist + plist_count;
+		    plist_count++;
+		    memcpy(p, &key, sizeof(plist_t));
+		    p->active = 0;
+		  }
+		else
+		  {
+		    memcpy(p, &key, sizeof(plist_t));
+		    p->active = 1;
+		  }
+	      }
 	  }
-	  if (p) strncpy(p->name, value, 127);
+	  strncpy(key.name, value, 127);
 	} else if (strcasecmp("destination", keyword) == 0) {
-	  if (p) strncpy(p->v.output_to, value, 255);
+	  strncpy(key.v.output_to, value, 255);
 	} else if (strcasecmp("driver", keyword) == 0) {
-	  if (p) strncpy(p->v.driver, value, 63);
+	  strncpy(key.v.driver, value, 63);
 	} else if (strcasecmp("ppd-file", keyword) == 0) {
-	  if (p) strncpy(p->v.ppd_file, value, 256);
+	  strncpy(key.v.ppd_file, value, 256);
 	} else if (strcasecmp("output-type", keyword) == 0) {
-	  if (p) p->v.output_type = atoi(value);
+	  key.v.output_type = atoi(value);
 	} else if (strcasecmp("resolution", keyword) == 0) {
-	  if (p) strncpy(p->v.resolution, value, 63);
+	  strncpy(key.v.resolution, value, 63);
 	} else if (strcasecmp("media-size", keyword) == 0) {
-	  if (p) strncpy(p->v.media_size, value, 63);
+	  strncpy(key.v.media_size, value, 63);
 	} else if (strcasecmp("media-type", keyword) == 0) {
-	  if (p) strncpy(p->v.media_type, value, 63);
+	  strncpy(key.v.media_type, value, 63);
 	} else if (strcasecmp("media-source", keyword) == 0) {
-	  if (p) strncpy(p->v.media_source, value, 63);
+	  strncpy(key.v.media_source, value, 63);
 	} else if (strcasecmp("brightness", keyword) == 0) {
-	  if (p) p->v.brightness = atof(value);
+	  key.v.brightness = atof(value);
 	} else if (strcasecmp("scaling", keyword) == 0) {
-	  if (p) p->v.scaling = atof(value);
+	  key.v.scaling = atof(value);
 	} else if (strcasecmp("orientation", keyword) == 0) {
-	  if (p) p->v.orientation = atoi(value);
+	  key.v.orientation = atoi(value);
 	} else if (strcasecmp("left", keyword) == 0) {
-	  if (p) p->v.left = atoi(value);
+	  key.v.left = atoi(value);
 	} else if (strcasecmp("top", keyword) == 0) {
-	  if (p) p->v.top = atoi(value);
+	  key.v.top = atoi(value);
 	} else if (strcasecmp("gamma", keyword) == 0) {
-	  if (p) p->v.gamma = atof(value);
+	  key.v.gamma = atof(value);
 	} else if (strcasecmp("contrast", keyword) == 0) {
-	  if (p) p->v.contrast = atof(value);
+	  key.v.contrast = atof(value);
 	} else if (strcasecmp("cyan", keyword) == 0) {
-	  if (p) p->v.cyan = atof(value);
+	  key.v.cyan = atof(value);
 	} else if (strcasecmp("magenta", keyword) == 0) {
-	  if (p) p->v.magenta = atof(value);
+	  key.v.magenta = atof(value);
 	} else if (strcasecmp("yellow", keyword) == 0) {
-	  if (p) p->v.yellow = atof(value);
+	  key.v.yellow = atof(value);
 	} else if (strcasecmp("linear", keyword) == 0) {
-	  if (p) p->v.linear = atoi(value);
+	  key.v.linear = atoi(value);
 	} else if (strcasecmp("image-type", keyword) == 0) {
-	  if (p) p->v.image_type = atoi(value);
+	  key.v.image_type = atoi(value);
 	} else if (strcasecmp("saturation", keyword) == 0) {
-	  if (p) p->v.saturation = atof(value);
+	  key.v.saturation = atof(value);
 	} else if (strcasecmp("density", keyword) == 0) {
-	  if (p) p->v.density = atof(value);
+	  key.v.density = atof(value);
 	} else if (strcasecmp("ink-type", keyword) == 0) {
-	  if (p) strncpy(p->v.ink_type, value, 63);
+	  strncpy(key.v.ink_type, value, 63);
 	} else if (strcasecmp("dither-algorithm", keyword) == 0) {
-	  if (p) strncpy(p->v.dither_algorithm, value, 63);
+	  strncpy(key.v.dither_algorithm, value, 63);
 	} else if (strcasecmp("unit", keyword) == 0) {
-	  if (p) p->v.unit = atoi(value);
+	  key.v.unit = atoi(value);
 	} else {
 	  /* Unrecognised keyword; ignore it... */
 #if 1
@@ -1117,7 +1130,38 @@ printrc_load(void)
         */
       }
     }
-
+    if (format > 0)
+      {
+	if (strcmp(_("File"), key.name) == 0
+	    && strcmp(plist[0].name, _("File")) == 0)
+	  {
+	    p = &plist[0];
+	    memcpy(p, &key, sizeof(plist_t));
+	    p->active = 1;
+	  }
+	else
+	  {
+	    if (get_printer_by_driver(key.v.driver))
+	      {
+		p = bsearch(&key, plist + 1, plist_count - 1,
+			    sizeof(plist_t),
+			    (int (*)(const void *, const void *)) compare_printers);
+		if (p == NULL)
+		  {
+		    check_plist(plist_count + 1);
+		    p = plist + plist_count;
+		    plist_count++;
+		    memcpy(p, &key, sizeof(plist_t));
+		    p->active = 0;
+		  }
+		else
+		  {
+		    memcpy(p, &key, sizeof(plist_t));
+		    p->active = 1;
+		  }
+	      }
+	  }
+      }
     fclose(fp);
   }
 
@@ -1277,7 +1321,7 @@ static int
 compare_printers(plist_t *p1,	/* I - First printer to compare */
                  plist_t *p2)	/* I - Second printer to compare */
 {
-  return (strcmp(p1->v.output_to, p2->v.output_to));
+  return (strcmp(p1->name, p2->name));
 }
 
 
