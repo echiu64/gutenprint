@@ -68,7 +68,7 @@ GimpPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
   run,   /* run_proc   */
 };
 
-static gp_plist_t gimp_vars;
+static stpui_plist_t gimp_vars;
 
 int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
@@ -143,8 +143,8 @@ query (void)
 }
 
 static guchar *
-get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
-			    gint *bpp, gint page)
+stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
+				  gint *bpp, gint page)
 {
   return gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
 }
@@ -197,7 +197,7 @@ run (char   *name,		/* I - Name of print program. */
   INIT_LOCALE (PACKAGE);
 #endif
 
-  initialize_printer(&gimp_vars);
+  stpui_printer_initialize(&gimp_vars);
   stp_set_input_color_model(gimp_vars.v, COLOR_MODEL_RGB);
   stp_set_output_color_model(gimp_vars.v, COLOR_MODEL_RGB);
   /*
@@ -221,7 +221,7 @@ run (char   *name,		/* I - Name of print program. */
   image_filename = gimp_image_get_filename (image_ID);
   if (strchr(image_filename, '/'))
     image_filename = strrchr(image_filename, '/') + 1;
-  set_image_filename(image_filename);
+  stpui_set_image_filename(image_filename);
 
   /*  eventually export the image */
   switch (run_mode)
@@ -269,7 +269,7 @@ run (char   *name,		/* I - Name of print program. */
 
       if (!do_print_dialog (name))
 	goto cleanup;
-      copy_printer(&gimp_vars, &(plist[plist_current]));
+      stpui_plist_copy(&gimp_vars, &(plist[plist_current]));
       break;
 
     case GIMP_RUN_NONINTERACTIVE:
@@ -280,7 +280,7 @@ run (char   *name,		/* I - Name of print program. */
 	values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
       else
 	{
-	  plist_set_output_to(&gimp_vars, param[3].data.d_string);
+	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
 	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
 	  stp_set_ppd_file(gimp_vars.v, param[5].data.d_string);
 	  stp_set_output_type(gimp_vars.v, param[6].data.d_int32);
@@ -367,7 +367,7 @@ run (char   *name,		/* I - Name of print program. */
 	gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
 				gimp_tile_width () + 1);
 
-      if (! do_print(&gimp_vars, image))
+      if (! stpui_print(&gimp_vars, image))
 	  values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
 
       /*
@@ -411,22 +411,22 @@ do_print_dialog (gchar *proc_name)
   * Generate the filename for the current user...
   */
   char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
-  set_printrc_file(filename);
+  stpui_set_printrc_file(filename);
   g_free(filename);
-  set_errfunc(gimp_writefunc);
-  set_errdata(stderr);
-  set_thumbnail_func(get_thumbnail_data_function);
-  set_thumbnail_data((void *) image_ID);
+  stpui_set_errfunc(gimp_writefunc);
+  stpui_set_errdata(stderr);
+  stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
+  stpui_set_thumbnail_data((void *) image_ID);
 
   /*
    * Get printrc options...
    */
-  printrc_load ();
+  stpui_printrc_load ();
 
   /*
    * Print dialog window...
    */
-  create_main_window();
+  stpui_create_main_window();
 
   gtk_main ();
   gdk_flush ();
@@ -435,7 +435,7 @@ do_print_dialog (gchar *proc_name)
    * Set printrc options...
    */
   if (saveme)
-    printrc_save ();
+    stpui_printrc_save ();
   g_free (filename);
 
   /*

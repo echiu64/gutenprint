@@ -282,10 +282,10 @@ static const gint image_type_count = (sizeof(image_types) /
 static gdouble preview_ppi = 10;
 
 static stp_string_list_t printer_list = 0;
-gp_plist_t *pv;
+stpui_plist_t *pv;
 
 void
-set_image_filename(const char *name)
+stpui_set_image_filename(const char *name)
 {
   if (name && name == image_filename)
     return;
@@ -298,32 +298,32 @@ set_image_filename(const char *name)
 }
 
 const char *
-get_image_filename(void)
+stpui_get_image_filename(void)
 {
-  set_image_filename(image_filename);
+  stpui_set_image_filename(image_filename);
   return(image_filename);
 }
 
 void
-set_errfunc(stp_outfunc_t wfunc)
+stpui_set_errfunc(stp_outfunc_t wfunc)
 {
   the_errfunc = wfunc;
 }
 
 stp_outfunc_t
-get_errfunc(void)
+stpui_get_errfunc(void)
 {
   return the_errfunc;
 }
 
 void
-set_errdata(void *errdata)
+stpui_set_errdata(void *errdata)
 {
   the_errdata = errdata;
 }
 
 void *
-get_errdata(void)
+stpui_get_errdata(void)
 {
   return the_errdata;
 }
@@ -508,7 +508,7 @@ create_top_level_structure(void)
    */
 
   plug_in_name = g_strdup_printf (_("%s -- Print v%s"),
-                                  get_image_filename(),
+                                  stpui_get_image_filename(),
 				  VERSION " - " RELEASE_DATE);
 
   print_dialog =
@@ -1318,10 +1318,10 @@ create_image_settings_frame (void)
 }
 
 /*
- *  create_main_window()
+ *  stpui_create_main_window()
  */
 void
-create_main_window (void)
+stpui_create_main_window (void)
 {
 
   pv = &(plist[plist_current]);
@@ -1579,7 +1579,7 @@ set_image_resolution(gdouble xres, gdouble yres)
 }
 
 gint
-compute_orientation(void)
+stpui_compute_orientation(void)
 {
   if ((printable_width >= printable_height &&
        image_true_width >= image_true_height) ||
@@ -1595,7 +1595,7 @@ set_orientation(int orientation)
 {
   pv->orientation = orientation;
   if (orientation == ORIENT_AUTO)
-    orientation = compute_orientation();
+    orientation = stpui_compute_orientation();
   physical_orientation = orientation;
   switch (orientation)
     {
@@ -2066,7 +2066,7 @@ static void
 save_callback (void)
 {
   reset_preview ();
-  printrc_save ();
+  stpui_printrc_save ();
 }
 
 /*
@@ -2098,7 +2098,7 @@ setup_update (void)
       gtk_widget_hide (ppd_label);
     }
 
-  gtk_entry_set_text (GTK_ENTRY (output_cmd), plist_get_output_to (pv));
+  gtk_entry_set_text (GTK_ENTRY (output_cmd), stpui_plist_get_output_to (pv));
 
   if (plist_current == 0)
     gtk_widget_hide (output_cmd);
@@ -2149,7 +2149,7 @@ set_printer(void)
 {
   stp_vars_t printvars = stp_printer_get_printvars (tmp_printer);
   stp_set_driver (pv->v, stp_printer_get_driver (tmp_printer));
-  plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
+  stpui_plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
   stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
   gtk_label_set_text (GTK_LABEL (printer_model_label),
                       gettext (stp_printer_get_long_name (tmp_printer)));
@@ -2186,18 +2186,18 @@ static void
 new_printer_ok_callback (void)
 {
   const gchar *data = gtk_entry_get_text (GTK_ENTRY (new_printer_entry));
-  gp_plist_t   key;
+  stpui_plist_t   key;
 
   if (strlen(data))
     {
       memset(&key, 0, sizeof(key));
-      initialize_printer (&key);
-      copy_printer(&key, pv);
-      plist_set_name(&key, data);
+      stpui_printer_initialize (&key);
+      stpui_plist_copy(&key, pv);
+      stpui_plist_set_name(&key, data);
 
       key.active = 0;
 
-      if (add_printer (&key, 1))
+      if (stpui_plist_add (&key, 1))
 	{
 	  plist_current = plist_count - 1;
 	  build_printer_combo ();
@@ -2273,7 +2273,7 @@ static void
 file_ok_callback (void)
 {
   gtk_widget_hide (file_browser);
-  plist_set_output_to
+  stpui_plist_set_output_to
     (pv, gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_browser)));
 
   runme = TRUE;
@@ -2330,8 +2330,8 @@ update_adjusted_thumbnail (void)
       stp_set_height(nv, thumbnail_h);
       stp_set_outfunc(nv, fill_buffer_writefunc);
       stp_set_outdata(nv, &priv);
-      stp_set_errfunc(nv, get_errfunc());
-      stp_set_errdata(nv, get_errdata());
+      stp_set_errfunc(nv, stpui_get_errfunc());
+      stp_set_errdata(nv, stpui_get_errdata());
       stp_set_string_parameter(nv, "PageSize", "Custom");
       if (thumbnail_bpp == 1)
 	stp_set_string_parameter(nv, "InkType", "RGBGray");

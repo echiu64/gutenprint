@@ -40,11 +40,11 @@
 
 #include "print-intl.h"
 
-static int	compare_printers (gp_plist_t *p1, gp_plist_t *p2);
+static int	compare_printers (stpui_plist_t *p1, stpui_plist_t *p2);
 
 int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
-gp_plist_t	*plist;			/* System printers */
+stpui_plist_t	*plist;			/* System printers */
 stp_printer_t current_printer = 0;	/* Current printer index */
 static char *printrc_name = NULL;
 
@@ -57,7 +57,7 @@ do						\
 } while (0)
 
 void
-set_printrc_file(const char *name)
+stpui_set_printrc_file(const char *name)
 {
   if (name && name == printrc_name)
     return;
@@ -73,15 +73,15 @@ set_printrc_file(const char *name)
 }
 
 const char *
-get_printrc_file(void)
+stpui_get_printrc_file(void)
 {
   if (!printrc_name)
-    set_printrc_file(NULL);
+    stpui_set_printrc_file(NULL);
   return printrc_name;
 }
 
 void
-plist_set_output_to(gp_plist_t *p, const char *val)
+stpui_plist_set_output_to(stpui_plist_t *p, const char *val)
 {
   if (p->output_to == val)
     return;
@@ -90,7 +90,7 @@ plist_set_output_to(gp_plist_t *p, const char *val)
 }
 
 void
-plist_set_output_to_n(gp_plist_t *p, const char *val, int n)
+stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->output_to == val)
     return;
@@ -99,13 +99,13 @@ plist_set_output_to_n(gp_plist_t *p, const char *val, int n)
 }
 
 const char *
-plist_get_output_to(const gp_plist_t *p)
+stpui_plist_get_output_to(const stpui_plist_t *p)
 {
   return p->output_to;
 }
 
 void
-plist_set_name(gp_plist_t *p, const char *val)
+stpui_plist_set_name(stpui_plist_t *p, const char *val)
 {
   if (p->name == val)
     return;
@@ -114,7 +114,7 @@ plist_set_name(gp_plist_t *p, const char *val)
 }
 
 void
-plist_set_name_n(gp_plist_t *p, const char *val, int n)
+stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->name == val)
     return;
@@ -123,16 +123,16 @@ plist_set_name_n(gp_plist_t *p, const char *val, int n)
 }
 
 const char *
-plist_get_name(const gp_plist_t *p)
+stpui_plist_get_name(const stpui_plist_t *p)
 {
   return p->name;
 }
 
 void
-initialize_printer(gp_plist_t *printer)
+stpui_printer_initialize(stpui_plist_t *printer)
 {
-  plist_set_output_to(printer, "");
-  plist_set_name(printer, "");
+  stpui_plist_set_output_to(printer, "");
+  stpui_plist_set_name(printer, "");
   printer->active = 0;
   printer->scaling = 100.0;
   printer->orientation = ORIENT_AUTO;
@@ -142,7 +142,7 @@ initialize_printer(gp_plist_t *printer)
 }
 
 void
-copy_printer(gp_plist_t *vd, const gp_plist_t *vs)
+stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
 {
   if (vs == vd)
     return;
@@ -152,17 +152,17 @@ copy_printer(gp_plist_t *vd, const gp_plist_t *vs)
   vd->orientation = vs->orientation;
   vd->unit = vs->unit;
   vd->invalid_mask = vs->invalid_mask;
-  plist_set_name(vd, plist_get_name(vs));
-  plist_set_output_to(vd, plist_get_output_to(vs));
+  stpui_plist_set_name(vd, stpui_plist_get_name(vs));
+  stpui_plist_set_output_to(vd, stpui_plist_get_output_to(vs));
 }
 
-static gp_plist_t *
-allocate_copy_printer(const gp_plist_t *vs)
+static stpui_plist_t *
+allocate_stpui_plist_copy(const stpui_plist_t *vs)
 {
-  gp_plist_t *rep = xmalloc(sizeof(gp_plist_t));
-  memset(rep, 0, sizeof(gp_plist_t));
+  stpui_plist_t *rep = xmalloc(sizeof(stpui_plist_t));
+  memset(rep, 0, sizeof(stpui_plist_t));
   rep->v = stp_allocate_vars();
-  copy_printer(rep, vs);
+  stpui_plist_copy(rep, vs);
   return rep;
 }
 
@@ -176,11 +176,11 @@ check_plist(int count)
   else if (current_plist_size == 0)
     {
       current_plist_size = count;
-      plist = xmalloc(current_plist_size * sizeof(gp_plist_t));
+      plist = xmalloc(current_plist_size * sizeof(stpui_plist_t));
       for (i = 0; i < current_plist_size; i++)
 	{
-	  memset(&(plist[i]), 0, sizeof(gp_plist_t));
-	  initialize_printer(&(plist[i]));
+	  memset(&(plist[i]), 0, sizeof(stpui_plist_t));
+	  stpui_printer_initialize(&(plist[i]));
 	}
     }
   else
@@ -189,11 +189,11 @@ check_plist(int count)
       current_plist_size *= 2;
       if (current_plist_size < count)
 	current_plist_size = count;
-      plist = realloc(plist, current_plist_size * sizeof(gp_plist_t));
+      plist = realloc(plist, current_plist_size * sizeof(stpui_plist_t));
       for (i = old_plist_size; i < current_plist_size; i++)
 	{
-	  memset(&(plist[i]), 0, sizeof(gp_plist_t));
-	  initialize_printer(&(plist[i]));
+	  memset(&(plist[i]), 0, sizeof(stpui_plist_t));
+	  stpui_printer_initialize(&(plist[i]));
 	}
     }
 }
@@ -202,7 +202,7 @@ check_plist(int count)
 do {								\
   if ((commaptr = strchr(lineptr, ',')) == NULL)		\
     continue;							\
-  plist_set_##param##_n(&key, lineptr, commaptr - line);	\
+  stpui_plist_set_##param##_n(&key, lineptr, commaptr - line);	\
   lineptr = commaptr + 1;					\
 } while (0)
 
@@ -347,14 +347,14 @@ psearch(const void *key, const void *base, size_t nmemb, size_t size,
 }
 
 int
-add_printer(const gp_plist_t *key, int add_only)
+stpui_plist_add(const stpui_plist_t *key, int add_only)
 {
   /*
    * The format of the list is the File printer followed by a qsort'ed list
    * of system printers. So, if we want to update the file printer, it is
    * always first in the list, else call psearch.
    */
-  gp_plist_t *p;
+  stpui_plist_t *p;
   if (strcmp(_("File"), key->name) == 0
       && strcmp(plist[0].name, _("File")) == 0)
     {
@@ -366,7 +366,7 @@ add_printer(const gp_plist_t *key, int add_only)
 	  printf("Updated File printer directly\n");
 #endif
 	  p = &plist[0];
-	  copy_printer(p, key);
+	  stpui_plist_copy(p, key);
 	  p->active = 1;
 	}
       return 1;
@@ -374,7 +374,7 @@ add_printer(const gp_plist_t *key, int add_only)
   else if (stp_get_printer(key->v))
     {
       p = psearch(key, plist + 1, plist_count - 1,
-		  sizeof(gp_plist_t),
+		  sizeof(stpui_plist_t),
 		  (int (*)(const void *, const void *)) compare_printers);
       if (p == NULL)
 	{
@@ -385,7 +385,7 @@ add_printer(const gp_plist_t *key, int add_only)
 	  check_plist(plist_count + 1);
 	  p = plist + plist_count;
 	  plist_count++;
-	  copy_printer(p, key);
+	  stpui_plist_copy(p, key);
 	  p->active = 0;
 	}
       else
@@ -395,7 +395,7 @@ add_printer(const gp_plist_t *key, int add_only)
 #ifdef DEBUG
 	  printf("Updating printer %s.\n", key->name);
 #endif
-	  copy_printer(p, key);
+	  stpui_plist_copy(p, key);
 	  p->active = 1;
 	}
     }
@@ -403,21 +403,21 @@ add_printer(const gp_plist_t *key, int add_only)
 }
 
 /*
- * 'printrc_load()' - Load the printer resource configuration file.
+ * 'stpui_printrc_load()' - Load the printer resource configuration file.
  */
 void
-printrc_load(void)
+stpui_printrc_load(void)
 {
   int		i;		/* Looping var */
   FILE		*fp;		/* Printrc file */
   char		line[1024],	/* Line in printrc file */
 		*lineptr,	/* Pointer in line */
 		*commaptr;	/* Pointer to next comma */
-  gp_plist_t	key;		/* Search key */
+  stpui_plist_t	key;		/* Search key */
   int		format = 0;	/* rc file format version */
   int		system_printers; /* printer count before reading printrc */
   char *	current_printer = 0; /* printer to select */
-  const char *filename = get_printrc_file();
+  const char *filename = stpui_get_printrc_file();
 
   check_plist(1);
 
@@ -425,7 +425,7 @@ printrc_load(void)
   * Get the printer list...
   */
 
-  get_system_printers();
+  stpui_get_system_printers();
 
   system_printers = plist_count - 1;
 
@@ -435,8 +435,8 @@ printrc_load(void)
     * File exists - read the contents and update the printer list...
     */
 
-    (void) memset(&key, 0, sizeof(gp_plist_t));
-    initialize_printer(&key);
+    (void) memset(&key, 0, sizeof(stpui_plist_t));
+    stpui_printer_initialize(&key);
     strcpy(key.name, _("File"));
     (void) memset(line, 0, 1024);
     while (fgets(line, sizeof(line), fp) != NULL)
@@ -460,7 +460,7 @@ printrc_load(void)
 	* Read old format printrc lines...
 	*/
 
-        initialize_printer(&key);
+        stpui_printer_initialize(&key);
 	key.invalid_mask = 0;
         lineptr = line;
 
@@ -504,7 +504,7 @@ printrc_load(void)
 	get_optional_string_param(key.v, "InkType", &lineptr, &keepgoing);
 	get_optional_string_param(key.v,"DitherAlgorithm",&lineptr,&keepgoing);
         GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
-	add_printer(&key, 0);
+	stpui_plist_add(&key, 0);
       }
       else if (format == 1)
       {
@@ -552,16 +552,16 @@ printrc_load(void)
 	  current_printer = g_strdup(value);
 	} else if (strcasecmp("printer", keyword) == 0) {
 	  /* Switch to printer named VALUE */
-	  add_printer(&key, 0);
+	  stpui_plist_add(&key, 0);
 #ifdef DEBUG
 	  printf("output_to is now %s\n", stp_get_output_to(p->v));
 #endif
 
-	  initialize_printer(&key);
+	  stpui_printer_initialize(&key);
 	  key.invalid_mask = 0;
-	  plist_set_name(&key, value);
+	  stpui_plist_set_name(&key, value);
 	} else if (strcasecmp("destination", keyword) == 0) {
-	  plist_set_output_to(&key, value);
+	  stpui_plist_set_output_to(&key, value);
 	} else if (strcasecmp("driver", keyword) == 0) {
 	  stp_set_driver(key.v, value);
 	} else if (strcasecmp("ppd-file", keyword) == 0) {
@@ -631,7 +631,7 @@ printrc_load(void)
       }
     }
     if (format > 0)
-      add_printer(&key, 0);
+      stpui_plist_add(&key, 0);
     fclose(fp);
   }
 
@@ -653,15 +653,15 @@ printrc_load(void)
 }
 
 /*
- * 'printrc_save()' - Save the current printer resource configuration.
+ * 'stpui_printrc_save()' - Save the current printer resource configuration.
  */
 void
-printrc_save(void)
+stpui_printrc_save(void)
 {
   FILE		*fp;		/* Printrc file */
   int		i;		/* Looping var */
-  gp_plist_t	*p;		/* Current printer */
-  const char *filename = get_printrc_file();
+  stpui_plist_t	*p;		/* Current printer */
+  const char *filename = stpui_get_printrc_file();
 
 
   if ((fp = fopen(filename, "w")) != NULL)
@@ -685,7 +685,7 @@ printrc_save(void)
 	const stp_curve_t curve;
 	const stp_parameter_t *params = stp_list_parameters(p->v, &count);
 	fprintf(fp, "\nPrinter: %s\n", p->name);
-	fprintf(fp, "Destination: %s\n", plist_get_output_to(p));
+	fprintf(fp, "Destination: %s\n", stpui_plist_get_output_to(p));
 	fprintf(fp, "Scaling: %.3f\n", p->scaling);
 	fprintf(fp, "Orientation: %d\n", p->orientation);
 	fprintf(fp, "Unit: %d\n", p->unit);
@@ -744,13 +744,13 @@ printrc_save(void)
  */
 
 static int
-compare_printers(gp_plist_t *p1, gp_plist_t *p2)
+compare_printers(stpui_plist_t *p1, stpui_plist_t *p2)
 {
   return (strcmp(p1->name, p2->name));
 }
 
 /*
- * 'get_system_printers()' - Get a complete list of printers from the spooler.
+ * 'stpui_get_system_printers()' - Get a complete list of printers from the spooler.
  */
 
 #define PRINTERS_NONE	0
@@ -760,7 +760,7 @@ compare_printers(gp_plist_t *p1, gp_plist_t *p2)
 const char *current_printer_name = NULL;
 
 void
-get_system_printers(void)
+stpui_get_system_printers(void)
 {
   int   i;			/* Looping var */
   int	type;			/* 0 = none, 1 = lpc, 2 = lpstat */
@@ -787,7 +787,7 @@ get_system_printers(void)
 
   check_plist(1);
   plist_count = 1;
-  initialize_printer(&plist[0]);
+  stpui_printer_initialize(&plist[0]);
   strcpy(plist[0].name, _("File"));
   stp_set_driver(plist[0].v, "ps2");
   stp_set_output_type(plist[0].v, OUTPUT_COLOR);
@@ -862,14 +862,14 @@ get_system_printers(void)
 		  break;
 
 		check_plist(plist_count + 1);
-		initialize_printer(&plist[plist_count]);
-		plist_set_name(&(plist[plist_count]), line);
+		stpui_printer_initialize(&plist[plist_count]);
+		stpui_plist_set_name(&(plist[plist_count]), line);
 #ifdef DEBUG
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   line);
 #endif
 		result = g_strdup_printf("lpr -P%s -l", line);
-		plist_set_output_to(&(plist[plist_count]), result);
+		stpui_plist_set_output_to(&(plist[plist_count]), result);
 		free(result);
 		stp_set_driver(plist[plist_count].v, "ps2");
 		plist_count ++;
@@ -893,14 +893,14 @@ get_system_printers(void)
 		if (printer_exists)
 		  break;
 		check_plist(plist_count + 1);
-		initialize_printer(&plist[plist_count]);
-		plist_set_name(&(plist[plist_count]), name);
+		stpui_printer_initialize(&plist[plist_count]);
+		stpui_plist_set_name(&(plist[plist_count]), name);
 #ifdef DEBUG
                 fprintf(stderr, "Adding new printer from lpc: <%s>\n",
                   name);
 #endif
 		result = g_strdup_printf("lp -s -d%s -oraw", name);
-		plist_set_output_to(&(plist[plist_count]), result);
+		stpui_plist_set_output_to(&(plist[plist_count]), result);
 		free(result);
 		stp_set_driver(plist[plist_count].v, "ps2");
         	plist_count ++;
@@ -915,7 +915,7 @@ get_system_printers(void)
   }
 
   if (plist_count > 2)
-    qsort(plist + 1, plist_count - 1, sizeof(gp_plist_t),
+    qsort(plist + 1, plist_count - 1, sizeof(stpui_plist_t),
           (int (*)(const void *, const void *))compare_printers);
 
   if (defname[0] != '\0')
@@ -949,7 +949,7 @@ writefunc(void *file, const char *buf, size_t bytes)
 }
 
 int
-do_print(const gp_plist_t *printer, stp_image_t *image)
+stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 {
   int		ppid = getpid (), /* PID of plugin */
 		opid,		/* PID of output process */
@@ -987,7 +987,7 @@ do_print(const gp_plist_t *printer, stp_image_t *image)
 	    dup2 (pipefd[0], 0);
 	    close (pipefd[0]);
 	    close (pipefd[1]);
-	    execl("/bin/sh", "/bin/sh", "-c", plist_get_output_to(printer),
+	    execl("/bin/sh", "/bin/sh", "-c", stpui_plist_get_output_to(printer),
 		  NULL);
 	    /* NOTREACHED */
 	    exit (1);
@@ -1034,11 +1034,11 @@ do_print(const gp_plist_t *printer, stp_image_t *image)
       }
     }
   else
-    prn = fopen (plist_get_output_to(printer), "wb");
+    prn = fopen (stpui_plist_get_output_to(printer), "wb");
 
   if (prn != NULL)
     {
-      gp_plist_t *np = allocate_copy_printer(printer);
+      stpui_plist_t *np = allocate_stpui_plist_copy(printer);
       int orientation;
       stp_merge_printvars(np->v, stp_printer_get_printvars(current_printer));
 
@@ -1047,7 +1047,7 @@ do_print(const gp_plist_t *printer, stp_image_t *image)
        */
       orientation = np->orientation;
       if (orientation == ORIENT_AUTO)
-	orientation = compute_orientation();
+	orientation = stpui_compute_orientation();
       switch (orientation)
 	{
 	case ORIENT_PORTRAIT:
@@ -1069,9 +1069,9 @@ do_print(const gp_plist_t *printer, stp_image_t *image)
        */
 
       stp_set_outfunc(np->v, writefunc);
-      stp_set_errfunc(np->v, get_errfunc());
+      stp_set_errfunc(np->v, stpui_get_errfunc());
       stp_set_outdata(np->v, prn);
-      stp_set_errdata(np->v, get_errdata());
+      stp_set_errdata(np->v, stpui_get_errdata());
       if (stp_print(np->v, image) != 1)
 	{
 	  stp_vars_free(np->v);

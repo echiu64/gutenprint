@@ -49,7 +49,9 @@ print_SOURCES = \
 	print.c \
 	gimp_color_window.c \
 	gimp_main_window.c \
-	print_gimp.h
+	print_gimp.h \
+	gimp-print-ui.h \
+	gimp-print-ui-internal.h
 print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS)
 
 
