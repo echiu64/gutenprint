@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <b>October 2, 2002 -</b> Gimp-Print 4.2.3-pre1, the newest prerelease in the
+ <b>October 14, 2002 -</b> Gimp-Print 4.2.3-pre3, the newest prerelease in the
  stable 4.2 series, is now available for download.
  </p>
  <p>
@@ -128,19 +128,19 @@ require('standard_html_header.php3');
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre1.ppc.dmg?download"
- >gimp-print-4.2.3-pre1.ppc.dmg</a>&nbsp;(5.1 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre3.ppc.dmg?download"
+ >gimp-print-4.2.3-pre3.ppc.dmg</a>&nbsp;(5.5 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre1.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-pre3.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.3-pre1 is a pre-release of version 4.2.3. It contains bug
+ Gimp-Print 4.2.3-pre3 is a pre-release of version 4.2.3. It contains bug
  fixes over 4.2.2, but may also contain new bugs. This package requires (but
  does not include) ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and
  install, if necessary</b>).
@@ -152,7 +152,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/espgs/espgs-7.05.5-0.ppc.dmg?download"
- >espgs-7.05.5-0.ppc.dmg</a>&nbsp;(5.5 MB)
+ >espgs-7.05.5-0.ppc.dmg</a>&nbsp;(5.2 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -221,6 +221,41 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <B>Gimp-Print 4.2.3-pre3</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-10-14</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.3-pre3 is the newest pre-release build in the stable
+ 4.2 series; it contains the following improvements over Gimp-Print 4.2.3-pre1:
+ </p>
+ <ul>
+ <li>The CUPS driver now permits printing variable page sizes, using -o
+ CustomPageSize.widthxheight, where width and height are in 1/72 of an inch
+ (e. g. 200x400)</li>
+ <li>A Japanese translation has been added.</li>
+ <li>Two bugs in the IJS driver have been fixed.</li>
+ <li>The change to the Epson Stylus 660 margins in 4.2.3-pre1 has been backed
+ out; retesting demonstrated that the bug was in fact fixed in 4.2.2.</li>
+ <li> A reported problem with very large prints (A0 or B0 size) failingto print
+ correctly on Stylus Pro printers is likely fixed.</li>
+ </ul>
+ <dl>
+ <dt>Bugs fixed in this release:
+ <dd>622612 CUPS driver forbids custom page sizes
+ <dd>597964 Epson 660 wrong margins
+ <dd>619992 IJS driver prints spurious first line
+ <dd>620016 IJS driver does not print properly in monochrome
+ <dd>621667 Very large prints on Epson 9500 fail
+ </dl>
+ &nbsp;
+ </td>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <B>Gimp-Print 4.2.3-pre1</B>
