@@ -313,12 +313,17 @@ require('standard_html_header.php3');
  I am having trouble printing with Gimp-Print from Adobe InDesign.
  </h3></a>
  <p>  
-The InDesign application uses a somewhat non-standard printing procedure. The following
- workaround procedure may help you achieve the desired printer output: 
- <dd>Within the InDesign print dialog, click "Print..."
- <dd>Dismiss the warning dialog by clicking "OK"
- <dd>Click "Print" in the system print dialog (the Indesign print dialog will remain).
- <dd>Click "Print" in the InDesign dialog.
+The InDesign application uses a somewhat non-standard printing procedure. The 
+ following workaround procedure may help you achieve the desired printer output:
+ <dl>
+ <dd> Select <b>Print...</b> from the <b>File</b> menu, or press <em>command-P</em>.
+ <dd>Within the InDesign print dialog, click the <b>Printer...</b> button (*not* the blue flashing <b>Print</b> button!)
+ <dd>Dismiss any warning dialog by clicking <b>OK</b>
+ <dd>Set any Gimp-Print driver features under the <b>Printer Features</b> popup item.
+ <dd>Click <b>Print</b> in the system print dialog (you will return to the InDesign
+  print dialog).
+ <dd>Click <b>Print</b> in the InDesign dialog.
+ </dl>
  <br>
  This procedure may be necessary for each document you wish to print. On subsequent
  prints of the same document the regular "Print" button should work as expected.
