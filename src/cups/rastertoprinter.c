@@ -193,59 +193,13 @@ print_debug_block(cups_image_t *cups)
 }
 
 static stp_vars_t
-initialize_page(cups_image_t *cups, const stp_printer_t printer,
-		cups_option_t *options, int num_options)
+initialize_page(cups_image_t *cups, const stp_vars_t default_settings)
 {
   int i;
   const stp_papersize_t	*size;		/* Paper size */
   stp_parameter_list_t params;
   int nparams;
-  stp_vars_t v = stp_vars_create();
-  stp_set_printer_defaults(v, printer);
-
-  stp_set_float_parameter(v, "AppGamma", 1.0);
-  for (i = 0; i < num_options; i++)
-    {
-      cups_option_t *opt = &(options[i]);
-      const char *name;
-      stp_parameter_t desc;
-      if (!opt || !(opt->name) || strlen(opt->name) < 4 ||
-	  strncmp(opt->name, "Stp", 3) != 0 ||
-	  strcmp(opt->value, "DEFAULT") == 0)
-	continue;
-      name = opt->name + 3;	/* Skip leading "stp" prefix */
-      stp_describe_parameter(v, name, &desc);
-      switch (desc.p_type)
-	{
-	case STP_PARAMETER_TYPE_STRING_LIST:
-	  fprintf(stderr, "DEBUG: Gimp-Print set string %s to %s\n",
-		  name, opt->value);
-	  stp_set_string_parameter(v, name, opt->value);
-	  break;
-	case STP_PARAMETER_TYPE_INT:
-	  fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n",
-		  name, opt->value);
-	  stp_set_int_parameter(v, name, atoi(opt->value));
-	  break;
-	case STP_PARAMETER_TYPE_BOOLEAN:
-	  fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n",
-		  name, opt->value);
-	  stp_set_boolean_parameter(v, name,
-				    strcmp(opt->value, "True") == 0 ? 1 : 0);
-	  break;
-	case STP_PARAMETER_TYPE_DOUBLE:
-	  fprintf(stderr, "DEBUG: Gimp-Print set float %s to %s\n",
-		  name, opt->value);
-	  stp_set_float_parameter(v, name, atof(opt->value) * 0.001);
-	  break;
-	case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
-	case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole! */
-	case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
-	  break;
-	default:
-	  break;
-	}
-    }
+  stp_vars_t v = stp_vars_create_copy(default_settings);
 
   stp_set_page_width(v, cups->header.PageSize[0]);
   stp_set_page_height(v, cups->header.PageSize[1]);
@@ -288,7 +242,6 @@ initialize_page(cups_image_t *cups, const stp_printer_t printer,
   else
     fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-  stp_merge_printvars(v, stp_printer_get_defaults(printer));
 
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
@@ -370,6 +323,69 @@ purge_excess_data(cups_image_t *cups)
   free(buffer);
 }
 
+static void
+set_one_option(stp_vars_t v, const char *name, const char *value)
+{
+  stp_parameter_t desc;
+  stp_describe_parameter(v, name, &desc);
+  switch (desc.p_type)
+    {
+    case STP_PARAMETER_TYPE_STRING_LIST:
+      fprintf(stderr, "DEBUG: Gimp-Print set string %s to %s\n", name, value);
+      stp_set_string_parameter(v, name, value);
+      break;
+    case STP_PARAMETER_TYPE_INT:
+      fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n", name, value);
+      stp_set_int_parameter(v, name, atoi(value));
+      break;
+    case STP_PARAMETER_TYPE_BOOLEAN:
+      fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n", name, value);
+      stp_set_boolean_parameter(v, name, strcmp(value, "True") == 0 ? 1 : 0);
+      break;
+    case STP_PARAMETER_TYPE_DOUBLE:
+      fprintf(stderr, "DEBUG: Gimp-Print set float %s to %s\n", name, value);
+      stp_set_float_parameter(v, name, atof(value) * 0.001);
+      break;
+    case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
+    case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole! */
+    case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
+      break;
+    default:
+      break;
+    }
+  stp_parameter_description_free(&desc);
+}
+
+static void
+set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
+		ppd_file_t *ppd)
+{
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  int nparams = stp_parameter_list_count(params);
+  int i;
+  for (i = 0; i < nparams; i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(params, i);
+      char *ppd_option_name = xmalloc(strlen(param->name) + 4);	/* StpFOO\0 */
+
+      const char *val;		/* CUPS option value */
+      ppd_option_t *ppd_option;
+
+      sprintf(ppd_option_name, "Stp%s", param->name);
+      val = cupsGetOption(ppd_option_name, num_options, options);
+      if (!val)
+	{
+	  ppd_option = ppdFindOption(ppd, ppd_option_name);
+	  if (ppd_option)
+	    val = ppd_option->defchoice;
+	}
+      if (val && strcmp(val, "DEFAULT") != 0)
+	set_one_option(v, param->name, val);
+      free(ppd_option_name);
+    }
+  stp_parameter_list_free(params);
+}
+
 /*
  * 'main()' - Main entry and processing of driver.
  */
@@ -386,6 +402,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
   stp_vars_t		v = NULL;
+  stp_vars_t		default_settings = stp_vars_create();
 
  /*
   * Initialise libgimpprint
@@ -456,8 +473,6 @@ main(int  argc,				/* I - Number of command-line arguments */
       return (1);
     }
 
-  ppdClose(ppd);
-
  /*
   * Open the page stream...
   */
@@ -473,6 +488,12 @@ main(int  argc,				/* I - Number of command-line arguments */
   }
   else
     fd = 0;
+
+  stp_set_printer_defaults(default_settings, printer);
+  stp_set_float_parameter(default_settings, "AppGamma", 1.0);
+  set_all_options(default_settings, options, num_options, ppd);
+  stp_merge_printvars(default_settings, stp_printer_get_defaults(printer));
+  ppdClose(ppd);
 
   cups.ras = cupsRasterOpen(fd, CUPS_RASTER_READ);
 
@@ -503,7 +524,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       /*
        * Setup printer driver variables...
        */
-      v = initialize_page(&cups, printer, options, num_options);
+      v = initialize_page(&cups, default_settings);
       stp_set_page_number(v, cups.page);
       cups.row = 0;
       fprintf(stderr, "PAGE: %d 1\n", cups.page);
