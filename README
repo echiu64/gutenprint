@@ -11,6 +11,12 @@ combinations of options will work.  Please check our web site at
 http://gimp-print.sourceforge.net for details about what is and is not
 supported.
 
+If you have installed the Gimp as a precompiled package (e. g. from an
+RPM), you will need to install the gimp-devel package as well as the
+gimp package.  The gimp package as supplied in most distributions only
+contains what's needed to run the Gimp.  The gimp-devel package
+contains additional files required to actually build new plugins.
+
 Please report problems to gimp-print-devel@sourceforge.net.
 
 
