@@ -1,4 +1,4 @@
-Gimp-Print 4.2.7, released June 11, 2004, is a stable release in the
+Gimp-Print 4.2.7, released June 12, 2004, is a stable release in the
 Gimp-Print 4.2 series.  This is expected to be the last release in the
 4.2 series unless any critical bugs are found or 5.0 is further
 delayed.
@@ -99,6 +99,14 @@ Gimp-Print 4.2.7 contains the following major changes over Gimp-Print
      Stylus printers.  In addition, ink level reporting is more
      reliable in general, with fewer timeouts or unparseable output.
 
+  9) (bug 971832) The HP DesignJet 2500 and 3500 now support correct
+     maximum page widths of 36" and 54" respectively, rather than 44"
+     for both.
+
+  10) (bug 971833) The PPD files now use the recommended manufacturer
+     names.  Previously, certain CUPS applications could display the
+     manufacturer names incorrectly.
+
 
 * New functionality:
 
@@ -116,9 +124,6 @@ Gimp-Print 4.2.7 contains the following major changes over Gimp-Print
 
   4) Translations for Hungarian, Ukrainian, and Norwegian/Bokmaal have
      been added.  In addition, other translations have been updated.
-
-  5) The HP DesignJet 2500 and 3500 now support correct maximum page
-     widths of 36" and 54" respectively, rather than 44" for both.
 
 
 * Exceptions and Workarounds:
