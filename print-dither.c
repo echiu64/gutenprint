@@ -154,9 +154,6 @@ typedef struct dither
   int x_aspect;			/* Aspect ratio numerator */
   int y_aspect;			/* Aspect ratio denominator */
 
-  int error_mix;		/* How much error gets mixed in to decide */
-				/* what color to print */
-
   dither_color_t c_dither;
   dither_color_t m_dither;
   dither_color_t y_dither;
@@ -1068,13 +1065,6 @@ dither_set_k_ranges_full(void *vd, int nlevels,
   dither_t *d = (dither_t *) vd;
   dither_set_ranges_full(&(d->k_dither), nlevels, ranges, density,
 			 d->ink_limit);
-}
-
-void
-dither_set_error_mix(void *vd, double mix_ratio)
-{
-  dither_t *d = (dither_t *) vd;
-  d->error_mix = mix_ratio * 256;
 }
 
 void
@@ -2461,21 +2451,21 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      c = print_color(d, &(d->c_dither), oc, oc + (c - oc) * d->error_mix / 256,
+      c = print_color(d, &(d->c_dither), oc, oc,
 		      c, x, row, cptr, lcptr, bit, length,
 		      d->c_randomizer, printed_black, &ink_budget,
 		      &(d->c_pick), &(d->c_dithermat), d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->m_dither), om, om + (m - om) * d->error_mix / 256,
+      m = print_color(d, &(d->m_dither), om, om,
 		      m, x, row, mptr, lmptr, bit, length,
 		      d->m_randomizer, printed_black, &ink_budget,
 		      &(d->m_pick), &(d->m_dithermat), d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->y_dither), oy, oy + (y - oy) * d->error_mix / 256,
+      y = print_color(d, &(d->y_dither), oy, oy,
 		      y, x, row, yptr, lyptr, bit, length,
 		      d->y_randomizer, printed_black, &ink_budget,
 		      &(d->y_pick), &(d->y_dithermat), d->dither_type);

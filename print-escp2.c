@@ -2058,7 +2058,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	dither_set_adaptive_divisor(dither, 8);
       else
 	dither_set_adaptive_divisor(dither, 16);
-      dither_set_error_mix(dither, .5);
     }  
   else
     dither_set_adaptive_divisor(dither, 4);

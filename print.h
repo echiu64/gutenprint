@@ -295,7 +295,6 @@ extern void	dither_set_max_ink(void *vd, int, double);
 extern void	dither_set_x_oversample(void *vd, int os);
 extern void	dither_set_y_oversample(void *vd, int os);
 extern void	dither_set_adaptive_divisor(void *vd, unsigned divisor);
-extern void	dither_set_error_mix(void *vd, double);
 
 
 extern void	free_dither(void *);

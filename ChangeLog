@@ -1,3 +1,173 @@
+2000-09-06	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.242) (+2 -2)
+	
+	Fix STC800 margins
+	
+2000-09-06	<cpbs@sourceforge.net>
+
+	Files:	escp2-weavetest.c (1.16) (+3 -2)
+		print.h (1.85) (+3 -3)
+		print-weave.c (1.4) (+126 -17)
+		print-escp2.c (1.241) (+6 -5)
+	
+	Add a "strategy" argument to the weave code.  This is currently taken
+	from the use_softweave member of the res_t list.  The purpose is to allow
+	different softweave patterns to be used; depending on the circumstances,
+	different weave might be appropriate.  (I don't suggest letting the user
+	select a weave, but the driver might do this.)
+	
+	At the moment, weave pattern 1 is identical to what we had before.  On my
+	870 in 720 softweave, pattern 4 produces less banding than pattern 1,
+	while patterns 2 and 3 seem to produce more.  Pattern 1's banding comes
+	in "waves".  Pattern 6 seems to do reasonably well...  I think this has
+	something to do with what happens when a row of ink is laid down touching
+	another row which isn't fully dry yet.  If this is the case, it's not
+	obvious how to decide which strategy to use in any given situation.
+	
+2000-09-05	<cpbs@sourceforge.net>
+
+	Files:	print-util.c (1.133) (+14 -7)
+	
+	Fix a pair of nasty cut-and-paste bugs which caused the yellow control
+	not to function; the yellow channel was being adjusted by the magenta
+	control instead.
+	
+	Change the contrast control a bit.  Its effect was rather "sharp" before,
+	so don't cube contrast before applying it.  Also, remove the extra
+	contrast reduction which was being done if contrast < 1.0.  Finally, fix
+	a bug where "pixel" was being used at one point instead of "temp_pixel".
+	
+2000-09-05	<cpbs@sourceforge.net>
+
+	Files:	unprint.c (1.41) (+68 -10)
+	
+	Handle NULs, EJL and remote mode commands a bit more gracefully.
+	Don't reject a dot size of 0x11 as invalid.
+	
+2000-09-05	<cpbs@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.16) (+110 -14)
+		gimp_main_window.c (1.52) (+13 -1)
+	
+	Add a thumbnail of the image to the top of the colour window and update
+	it in real time to show the effects of the colour adjustment controls.
+	I'm afraid I didn't bother to port it to the GTK ui (call me lazy...)
+	
+2000-09-05	<cpbs@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.51) (+62 -15)
+		print.h (1.84) (+4 -2)
+		print-util.c (1.132) (+31 -17)
+		gtk_main_window.c (1.53) (+51 -13)
+	
+	Add upside-down and seascape orientations, matching the orientation
+	names used by gv.
+	
+2000-09-05	<cpbs@sourceforge.net>
+
+	Files:	gtk_color_window.c (1.19) (+2 -2)
+		printdefy.y (1.10) (+2 -2)
+		printdefl.l (1.5) (+2 -2)
+		print-util.c (1.131) (+2 -2)
+		print-escp2.c (1.240) (+13 -7)
+		gtk_main_window.c (1.52) (+1 -31)
+	
+	Fix some global replacements which had changed "redistribute" into
+	"cyanistribute".
+	
+	Remove stuff in the GTK ui conditionalised on "#ifndef GIMP_1_0".
+	Reasoning is as follows.  The GTK ui is there to support gimp 1.0; the
+	gimpui ui is preferred for gimp 1.1/1.2.  Therefore, the only reason to
+	use the gtk ui with GIMP_1_0 not defined is for the developers to test
+	it, and in those circumstances we should see as near as possible the
+	same as the gimp 1.0 users see.
+	
+	Amend code which decides whether a given resolution is valid for escp2
+	printers to use criteria consistent with the current weave code.
+	
+2000-09-05	<sharkey@sourceforge.net>
+
+	Files:	print-weave.c (1.3) (+2 -1)
+	
+	Add #include <string.h> to declare the type of memcpy.  Suggested by
+	Henryk, who notes that its absence can lead to a fatal error on
+	64 bit platforms.
+	
+2000-09-05	<sharkey@sourceforge.net>
+
+	Files:	print-canon.c (1.84) (+2 -2)
+	
+	Famed Lexmark hacker Henryk Paluch <paluch@kmlinux.fjfi.cvut.cz> notes
+	that:
+	
+	        va_arg() may not reference char according to compiler
+	        error and stdarg(3) man page (char is converted to int
+	        when passed through ... prototype).
+	
+	He's right.  va_arg(3) says va_arg only takes "fully promoted types" and
+	characters must be ints which are then cast to chars.
+	
+2000-09-05	<iay@sourceforge.net>
+
+	Files:	print-escp2.c (1.239) (+3 -2)
+	
+	Print 360dpi softweave modes as dark as we can on the ESC740.
+	Add a new "Photo Quality Glossy Paper" type; same paper feed mechanism
+	as backlight film.
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.44) (+1 -1)
+	
+	-sDither, not -Dither!
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	README (1.26) (+1 -0)
+	
+	4.0a3 release
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.21) (+34 -13)
+	
+	Updates
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.50) (+2 -37)
+		Ghost/README (1.43) (+10 -4)
+		print.h (1.83) (+3 -15)
+		print-pcl.c (1.77) (+6 -19)
+		print-escp2.c (1.238) (+2 -10)
+		print-dither.c (1.87) (+74 -57)
+		print-canon.c (1.83) (+2 -10)
+		gtk_main_window.c (1.51) (+1 -31)
+	
+	Add Fast dither algorithm, and remove fast color and fast grayscale
+	image types.
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.42) (+11 -1)
+	
+	Speed up Fast Color; add Fast Grayscale mode
+	
+2000-09-05	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.34) (+78 -0)
+		print_gimp.h (1.28) (+1 -8)
+		print.h (1.82) (+8 -4)
+		print-pcl.c (1.76) (+8 -3)
+		print-escp2.c (1.237) (+9 -4)
+		print-dither.c (1.86) (+140 -115)
+		print-canon.c (1.82) (+10 -5)
+		gtk_main_window.c (1.50) (+18 -2)
+		gimp_main_window.c (1.49) (+41 -7)
+	
+	Speed up Fast Color; add Fast Grayscale mode
+	
 2000-09-04	<rlk@sourceforge.net>
 
 	Files:	print-canon.c (1.81) (+13 -15)

@@ -1268,19 +1268,13 @@ compute_lut(size_t steps, vars_t *uv)
 	temp_pixel = 1.0 - pixel;
       else
 	temp_pixel = pixel;
-#if 1
-      if (contrast <= .000001)
-	temp_pixel = .5;
-      else
-	temp_pixel = .5 * pow(2 * temp_pixel, contrast);
-#else
       if (temp_pixel <= .000001 && contrast <= .0001)
 	temp_pixel = .5;
-      else
-	temp_pixel = .5 * pow(2 * temp_pixel, contrast * contrast * contrast);
-      if (contrast < 1)
-	temp_pixel = 0.5 - ((0.5 - temp_pixel) * contrast);
-#endif
+      else if (temp_pixel > 1)
+	temp_pixel = .5 * pow(2 * temp_pixel, pow(contrast, contrast));
+      else if (temp_pixel < 1)
+	temp_pixel = 0.5 -
+	  ((0.5 - .5 * pow(2 * temp_pixel, contrast)) * contrast);
       if (temp_pixel > .5)
 	temp_pixel = .5;
       else if (temp_pixel < 0)

@@ -213,7 +213,6 @@ gimp_create_main_window (void)
   GtkWidget *box;
   GtkWidget *box0;
   GtkWidget *box1;
-  GtkWidget *box2;
   GSList    *group;
 #ifdef DO_LINEAR
   GSList    *linear_group;
