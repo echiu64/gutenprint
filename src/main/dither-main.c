@@ -46,8 +46,8 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "None",           N_ ("Default"),                -1 },
   { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
   { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
-  { "SingleEvenTone", N_ ("Single EvenTone"),        D_SINGLE_EVENTONE },
-  { "HybridSingleEvenTone", N_ ("Hybrid Single EvenTone"), D_HYBRID_SINGLE_EVENTONE },
+  { "UniTone",        N_ ("UniTone"),                D_UNITONE },
+  { "HybridUniTone",  N_ ("Hybrid UniTone"),         D_HYBRID_UNITONE },
   { "Adaptive",	      N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
   { "Fast",	      N_ ("Fast"),                   D_FAST },
@@ -242,7 +242,7 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	{
 	  d->stpi_dither_type = D_EVENTONE;
 	  /* EvenTone performs poorly if the aspect ratio is greater than 2 */
-	  if (d->stpi_dither_type & D_EVENTONE &&
+	  if ((d->stpi_dither_type & (D_EVENTONE | D_UNITONE)) &&
 	      (d->x_aspect > 2 || d->y_aspect > 2))
 	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
 	}	
@@ -256,9 +256,10 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
     case D_HYBRID_EVENTONE:
     case D_EVENTONE:
-    case D_HYBRID_SINGLE_EVENTONE:
-    case D_SINGLE_EVENTONE:
       RETURN_DITHERFUNC(stpi_dither_et, v);
+    case D_HYBRID_UNITONE:
+    case D_UNITONE:
+      RETURN_DITHERFUNC(stpi_dither_ut, v);
     default:
       RETURN_DITHERFUNC(stpi_dither_ed, v);
     }

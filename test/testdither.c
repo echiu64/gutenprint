@@ -350,11 +350,11 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.5);
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;
@@ -363,17 +363,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_inks_full(v, ECOLOR_C, 1, normal_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_M, 1, normal_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_C, 1, normal_1bit_shades, 1.0, 0.65);
+              stpi_dither_set_inks_full(v, ECOLOR_M, 1, normal_1bit_shades, 1.0, 0.6);
+              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.5);
-              stpi_dither_set_inks_full(v, ECOLOR_C, 1, normal_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_M, 1, normal_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_C, 1, normal_2bit_shades, 1.0, 0.65);
+              stpi_dither_set_inks_full(v, ECOLOR_M, 1, normal_2bit_shades, 1.0, 0.6);
+              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;
@@ -382,17 +382,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_1bit_shades, 1.0, 0.65);
+              stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_1bit_shades, 1.0, 0.6);
+              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_1bit_shades, 1.0, 1.0);
 	      break;
 	  case 2 :
 	      stpi_dither_set_transition(v, 0.7);
-              stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0);
-              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0);
+              stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_2bit_shades, 1.0, 0.65);
+              stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_2bit_shades, 1.0, 0.6);
+              stpi_dither_set_inks_full(v, ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+              stpi_dither_set_inks_full(v, ECOLOR_K, 1, normal_2bit_shades, 1.0, 1.0);
 	      break;
        }
        break;

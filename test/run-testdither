@@ -19,7 +19,7 @@ if [ -z "$image_types" ] ; then
 fi
 
 if [ -z "$algos" ] ; then
-    algos='Adaptive Ordered Fast VeryFast Floyd EvenTone'
+    algos='Adaptive Ordered Fast VeryFast Floyd EvenTone HybridUniTone'
 fi
 
 if [ -z "$print_image" ] ; then

@@ -174,7 +174,7 @@ et_setup(stpi_dither_t *d)
   d->aux_freefunc = free_eventone_data;
 }
 
-int
+static int
 et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
   int i;
@@ -382,13 +382,13 @@ print_ink(stpi_dither_t *d, unsigned char *tptr, const stpi_ink_defn_t *ink,
     }
 }
 
-static void
-stpi_dither_et_standard(stp_vars_t v,
-			int row,
-			const unsigned short *raw,
-			int duplicate_line,
-			int zero_mask,
-			const unsigned char *mask)
+void
+stpi_dither_et(stp_vars_t v,
+	       int row,
+	       const unsigned short *raw,
+	       int duplicate_line,
+	       int zero_mask,
+	       const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
@@ -495,13 +495,13 @@ stpi_dither_et_standard(stp_vars_t v,
     stpi_dither_reverse_row_ends(d);
 }
 
-static void
-stpi_dither_et_single(stp_vars_t v,
-		      int row,
-		      const unsigned short *raw,
-		      int duplicate_line,
-		      int zero_mask,
-		      const unsigned char *mask)
+void
+stpi_dither_ut(stp_vars_t v,
+	       int row,
+	       const unsigned short *raw,
+	       int duplicate_line,
+	       int zero_mask,
+	       const unsigned char *mask)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
@@ -516,6 +516,11 @@ stpi_dither_et_single(stp_vars_t v,
   int		xerror, xstep, xmod;
   int		channel_count = CHANNEL_COUNT(d);
   stpi_dither_channel_t *ddc;
+
+  if (channel_count) {
+    stpi_dither_et(v, row, raw, duplicate_line, zero_mask, mask);
+    return;
+  }
 
   if (!et_initializer(d, duplicate_line, zero_mask))
     return;
@@ -687,19 +692,4 @@ stpi_dither_et_single(stp_vars_t v,
   }
   if (direction == -1)
     stpi_dither_reverse_row_ends(d);
-}
-
-void
-stpi_dither_et(stp_vars_t v,
-	       int row,
-	       const unsigned short *raw,
-	       int duplicate_line,
-	       int zero_mask,
-	       const unsigned char *mask)
-{
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
-  if ((d->stpi_dither_type & D_ADAPTIVE_BASE) && (CHANNEL_COUNT(d) > 1))
-    stpi_dither_et_single(v, row, raw, duplicate_line, zero_mask, mask);
-  else
-    stpi_dither_et_standard(v, row, raw, duplicate_line, zero_mask, mask);
 }
