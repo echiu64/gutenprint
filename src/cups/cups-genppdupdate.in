@@ -196,8 +196,8 @@ sub update_ppd ($) {
     my $source = find_ppd($filename, $langcode, $region);
     if (!defined($source)) {
         # There wasn't a valid source PPD file, so give up.
-	print STDERR "$_: no valid candidate for replacement, skipping\n";
-	print STDERR "$_: please upgrade this PPD manually\n";
+        print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
+        print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
 	return;
     }
     if ($debug) {
