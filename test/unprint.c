@@ -267,7 +267,7 @@ void write_output(FILE *fp_w)
 {
   int c,l,p,left,right,first,last,width,height,i;
   unsigned int amount;
-  ppmpixel pixel;
+  ppmpixel *out_row;
   int oversample = pstate.absolute_horizontal_units /
     pstate.absolute_vertical_units;
   if (oversample == 0)
@@ -301,27 +301,29 @@ void write_output(FILE *fp_w)
   if (width<0) {
     width=0;
   }
+  out_row = malloc(sizeof(ppmpixel) * width);
+  /* start with white, add inks */
   fprintf(stderr,"Writing output...\n");
   /* write out the PPM header */
   fprintf(fp_w,"P6\n");
   fprintf(fp_w,"%d %d\n",width,height);
   fprintf(fp_w,"255\n");
   for (l=first;l<=last;l++) {
-    for (i=0;i<oversample;i++) {
-      for (p=left;p<=right;p++) {
-	memset(pixel,255,3); /* start with white, add inks */
-	for (c=0;c<MAX_INKS;c++) {
-	  if ((page[l])&&(page[l]->line[c])&&
-	      (page[l]->startx[c]<=p)&&
-	      (page[l]->stopx[c]>=p)) {
-	    amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
-	    mix_ink(pixel,c,amount);
-	  }
+    memset(out_row, 255, (sizeof(ppmpixel) * width));
+    for (p=left;p<=right;p++) {
+      for (c=0;c<MAX_INKS;c++) {
+	if ((page[l])&&(page[l]->line[c])&&
+	    (page[l]->startx[c]<=p)&&
+	    (page[l]->stopx[c]>=p)) {
+	  amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
+	  mix_ink(out_row[p - left],c,amount);
 	}
-	fwrite(pixel,sizeof(pixel),1,fp_w);
       }
     }
+    for (i = 0; i < oversample; i++)
+      fwrite(out_row, sizeof(ppmpixel), width, fp_w);
   }
+  free(out_row);
 }
 
 #if 0
