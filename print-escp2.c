@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.89  2000/02/21 00:40:25  rlk
+ *   change softweave sequence for older printers
+ *
  *   Revision 1.88  2000/02/19 20:58:19  rlk
  *   Try one more time to fix 740
  *
@@ -2447,7 +2450,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	      fwrite("\033.\001\012\012\001", 6, 1, prn);
 	      break;
 	    case 720 :
-	      fprintf(prn, "\033.%c%c%c%c", 1, 8 * 5, 5,
+	      fprintf(prn, "\033.%c%c%c%c", 1, 5, 5,
 		      *linecount + pass->missingstartrows);
 	      break;
 	    }
