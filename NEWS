@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.7, a development release on the 4.1 line.
+This is gimp-print version 4.1.8, a development release on the 4.1 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -7,6 +7,16 @@ they use the identical code base.  Please read src/ghost/README and
 src/cups/README for more information on this.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.8 contains the following changes over 4.1.7:
+
+1) A bug introduced in 4.1.7 that caused older Epson printers with
+   roll feed capability (such as the 870 and 1270) to fail to print
+   under at least some circumstances is fixed.
+
+2) Color quality on Epson printers (particularly in the blue range) is
+   improved.
+
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:
 
