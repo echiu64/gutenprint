@@ -671,6 +671,22 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 2100" driver="escp2-2100">
+<color>
+<model value=47>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Photo 2200" driver="escp2-2200">
+<color>
+<model value=47>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
 <color>
 <model value=27>

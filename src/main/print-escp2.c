@@ -153,6 +153,7 @@ typedef struct escp2_init
   int ncolors;
   const char *paper_type;
   const char *media_source;
+  const escp2_inkname_t *inkname;
   stp_vars_t v;
 } escp2_init_t;
 
@@ -434,8 +435,8 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     *count = 0;
     for (i = 0; i < inks->n_inks; i++)
     {
-      valptrs[*count].name = c_strdup(inks->inknames[i].name);
-      valptrs[*count].text = c_strdup(_(inks->inknames[i].text));
+      valptrs[*count].name = c_strdup(inks->inknames[i]->name);
+      valptrs[*count].text = c_strdup(_(inks->inknames[i]->text));
       (*count)++;
     }
     return valptrs;
@@ -588,7 +589,7 @@ escp2_default_parameters(const stp_printer_t printer,
   else if (strcmp(name, "InkType") == 0)
     {
       const inklist_t *inks = escp2_inklist(model, v);
-      return inks->inknames[0].name;
+      return inks->inknames[0]->name;
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -958,10 +959,8 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
-  if (init->ncolors > 4)
-    k_lower = .5;
-  else
-    k_lower = .25;
+  k_lower = init->inkname->k_lower;
+  k_upper = init->inkname->k_upper;
 
   pt = get_media_type(init->model, stp_get_media_type(nv), nv);
   if (pt)
@@ -982,13 +981,13 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
       stp_set_saturation(nv, stp_get_saturation(nv) * pt->saturation);
       stp_set_gamma(nv, stp_get_gamma(nv) * pt->gamma);
       k_lower *= pt->k_lower_scale;
-      k_upper = pt->k_upper;
+      k_upper *= pt->k_upper;
     }
   else				/* Can't find paper type? Assume plain */
     {
       stp_set_density(nv, stp_get_density(nv) * .8);
       k_lower *= .1;
-      k_upper = .5;
+      k_upper *= .5;
     }
   stp_set_density(nv, stp_get_density(nv) *
 		  escp2_density(init->model, init->resid, nv));
@@ -1078,14 +1077,14 @@ get_inktype(const stp_printer_t printer, const stp_vars_t v, int model)
 
   for (i = 0; i < ink_list->n_inks; i++)
     {
-      if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
-	return &(ink_list->inknames[i]);
+      if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
+	return ink_list->inknames[i];
     }
   ink_type = escp2_default_parameters(printer, NULL, "InkType");
   for (i = 0; i < ink_list->n_inks; i++)
     {
-      if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
-	return &(ink_list->inknames[i]);
+      if (strcmp(ink_type, ink_list->inknames[i]->name) == 0)
+	return ink_list->inknames[i];
     }
   return NULL;
 }
@@ -1100,13 +1099,11 @@ static const ink_channel_t default_black_channels =
   default_black_subchannels, 1
 };
 
-static const escp2_inkname_t default_black_ink_types[] =
+static const escp2_inkname_t default_black_ink =
 {
+  NULL, NULL, 0, 0, 0,
   {
-    NULL, NULL, 0,
-    {
-      &default_black_channels, NULL, NULL, NULL
-    }
+    &default_black_channels, NULL, NULL, NULL
   }
 };
 
@@ -1409,6 +1406,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.media_source = media_source;
   init.v = nv;
   init.ncolors = ncolors;
+  init.inkname = ink_type;
 
   escp2_init_printer(&init);
 
@@ -1465,7 +1463,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 				    channel_limit, length * physical_bits);
   if (current_channel == 0)
     {
-      ink_type = default_black_ink_types;
+      ink_type = &default_black_ink;
       current_channel = setup_ink_types(ink_type, &privdata, cols, dt,
 					channel_limit, length * physical_bits);
     }

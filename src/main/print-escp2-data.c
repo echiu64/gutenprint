@@ -29,18 +29,21 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "print-escp2.h"
 
+#define DECLARE_INK(name, density)					\
+static const escp2_variable_ink_t name##_ink =				\
+{									\
+  name##_dither_ranges,							\
+  sizeof(name##_dither_ranges) / sizeof(stp_simple_dither_range_t),	\
+  density								\
+}
+
 static const stp_simple_dither_range_t photo_cyan_dither_ranges[] =
 {
   { 0.27, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-static const escp2_variable_ink_t photo_cyan_ink =
-{
-  photo_cyan_dither_ranges,
-  sizeof(photo_cyan_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1
-};
+DECLARE_INK(photo_cyan, 1);
 
 static const stp_simple_dither_range_t photo_magenta_dither_ranges[] =
 {
@@ -48,12 +51,15 @@ static const stp_simple_dither_range_t photo_magenta_dither_ranges[] =
   { 1.0,  0x1, 0, 1 }
 };
 
-static const escp2_variable_ink_t photo_magenta_ink =
+DECLARE_INK(photo_magenta, 1);
+
+static const stp_simple_dither_range_t photo2_black_dither_ranges[] =
 {
-  photo_magenta_dither_ranges,
-  sizeof(photo_magenta_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1
+  { 0.27, 0x1, 1, 1 },
+  { 1.0,  0x1, 0, 1 }
 };
+
+DECLARE_INK(photo2_black, 1);
 
 
 static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
@@ -66,12 +72,7 @@ static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 4 }
 };
 
-static const escp2_variable_ink_t photo_6pl_ink =
-{
-  photo_6pl_dither_ranges,
-  sizeof(photo_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_6pl, 1.0);
 
 
 static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
@@ -83,12 +84,7 @@ static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
   { 1.0,   0x2, 0, 2 },
 };
 
-static const escp2_variable_ink_t photo_6pl_1440_ink =
-{
-  photo_6pl_1440_dither_ranges,
-  sizeof(photo_6pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_6pl_1440, 1.0);
 
 
 static const stp_simple_dither_range_t photo_pigment_dither_ranges[] =
@@ -99,12 +95,7 @@ static const stp_simple_dither_range_t photo_pigment_dither_ranges[] =
   { 1.0,   0x2, 0, 2 }
 };
 
-static const escp2_variable_ink_t photo_pigment_ink =
-{
-  photo_pigment_dither_ranges,
-  sizeof(photo_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_pigment, 1.0);
 
 
 static const stp_simple_dither_range_t photo_4pl_dither_ranges[] =
@@ -115,12 +106,7 @@ static const stp_simple_dither_range_t photo_4pl_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t photo_4pl_ink =
-{
-  photo_4pl_dither_ranges,
-  sizeof(photo_4pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_4pl, 1.0);
 
 static const stp_simple_dither_range_t photo_2pl_dither_ranges[] =
 {
@@ -130,12 +116,7 @@ static const stp_simple_dither_range_t photo_2pl_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t photo_2pl_ink =
-{
-  photo_2pl_dither_ranges,
-  sizeof(photo_2pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_2pl, 1.0);
 
 static const stp_simple_dither_range_t spro10000_photo_dither_ranges[] =
 {
@@ -145,12 +126,7 @@ static const stp_simple_dither_range_t spro10000_photo_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t spro10000_photo_ink =
-{
-  spro10000_photo_dither_ranges,
-  sizeof(spro10000_photo_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(spro10000_photo, 1.0);
 
 static const stp_simple_dither_range_t spro10000_standard_dither_ranges[] =
 {
@@ -158,12 +134,7 @@ static const stp_simple_dither_range_t spro10000_standard_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t spro10000_standard_ink =
-{
-  spro10000_standard_dither_ranges,
-  sizeof(spro10000_standard_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(spro10000_standard, 1.0);
 
 static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
@@ -171,12 +142,7 @@ static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
   { 1.00,  0x1, 0, 3 },
 };
 
-static const escp2_variable_ink_t photo_4pl_2880_ink =
-{
-  photo_4pl_2880_dither_ranges,
-  sizeof(photo_4pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_4pl_2880, 1.0);
 
 static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 {
@@ -184,12 +150,7 @@ static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
   { 1.00,  0x1, 0, 4 },
 };
 
-static const escp2_variable_ink_t photo_2pl_2880_ink =
-{
-  photo_2pl_2880_dither_ranges,
-  sizeof(photo_2pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_2pl_2880, 1.0);
 
 
 static const stp_simple_dither_range_t standard_680_6pl_dither_ranges[] =
@@ -199,12 +160,7 @@ static const stp_simple_dither_range_t standard_680_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 6 }
 };
 
-static const escp2_variable_ink_t standard_680_6pl_ink =
-{
-  standard_680_6pl_dither_ranges,
-  sizeof(standard_680_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_680_6pl, 1.0);
 
 
 static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
@@ -214,12 +170,7 @@ static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 4 }
 };
 
-static const escp2_variable_ink_t standard_6pl_ink =
-{
-  standard_6pl_dither_ranges,
-  sizeof(standard_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_6pl, 1.0);
 
 
 static const stp_simple_dither_range_t standard_x80_6pl_dither_ranges[] =
@@ -229,12 +180,7 @@ static const stp_simple_dither_range_t standard_x80_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 6 }
 };
 
-static const escp2_variable_ink_t standard_x80_6pl_ink =
-{
-  standard_x80_6pl_dither_ranges,
-  sizeof(standard_x80_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_x80_6pl, 1.0);
 
 static const stp_simple_dither_range_t standard_x80_multishot_dither_ranges[] =
 {
@@ -243,12 +189,7 @@ static const stp_simple_dither_range_t standard_x80_multishot_dither_ranges[] =
   { 1.0,   0x3, 0, 6 }
 };
 
-static const escp2_variable_ink_t standard_x80_multishot_ink =
-{
-  standard_x80_multishot_dither_ranges,
-  sizeof(standard_x80_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_x80_multishot, 1.0);
 
 static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
 {
@@ -256,12 +197,7 @@ static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
   { 1.0,   0x2, 0, 3 },
 };
 
-static const escp2_variable_ink_t standard_x80_1440_6pl_ink =
-{
-  standard_x80_1440_6pl_dither_ranges,
-  sizeof(standard_x80_1440_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_x80_1440_6pl, 1.0);
 
 
 static const stp_simple_dither_range_t standard_980_6pl_dither_ranges[] =
@@ -271,12 +207,7 @@ static const stp_simple_dither_range_t standard_980_6pl_dither_ranges[] =
   { 1.0,   0x3, 0, 10 }
 };
 
-static const escp2_variable_ink_t standard_980_6pl_ink =
-{
-  standard_980_6pl_dither_ranges,
-  sizeof(standard_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_980_6pl, 1.0);
 
 
 static const stp_simple_dither_range_t standard_6pl_1440_dither_ranges[] =
@@ -285,12 +216,7 @@ static const stp_simple_dither_range_t standard_6pl_1440_dither_ranges[] =
   { 1.0,   0x2, 0, 2 },
 };
 
-static const escp2_variable_ink_t standard_6pl_1440_ink =
-{
-  standard_6pl_1440_dither_ranges,
-  sizeof(standard_6pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_6pl_1440, 1.0);
 
 
 static const stp_simple_dither_range_t standard_pigment_dither_ranges[] =
@@ -299,12 +225,7 @@ static const stp_simple_dither_range_t standard_pigment_dither_ranges[] =
   { 1.0,   0x2, 0, 2 }
 };
 
-static const escp2_variable_ink_t standard_pigment_ink =
-{
-  standard_pigment_dither_ranges,
-  sizeof(standard_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_pigment, 1.0);
 
 
 static const stp_simple_dither_range_t standard_4pl_dither_ranges[] =
@@ -313,24 +234,14 @@ static const stp_simple_dither_range_t standard_4pl_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t standard_4pl_ink =
-{
-  standard_4pl_dither_ranges,
-  sizeof(standard_4pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_4pl, 1.0);
 
 static const stp_simple_dither_range_t standard_4pl_2880_dither_ranges[] =
 {
   { 1.00,  0x1, 0, 1 },
 };
 
-static const escp2_variable_ink_t standard_4pl_2880_ink =
-{
-  standard_4pl_2880_dither_ranges,
-  sizeof(standard_4pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_4pl_2880, 1.0);
 
 
 static const stp_simple_dither_range_t standard_3pl_dither_ranges[] =
@@ -340,12 +251,7 @@ static const stp_simple_dither_range_t standard_3pl_dither_ranges[] =
   { 1.0,   0x3, 0, 8 }
 };
 
-static const escp2_variable_ink_t standard_3pl_ink =
-{
-  standard_3pl_dither_ranges,
-  sizeof(standard_3pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_3pl, 1.0);
 
 
 static const stp_simple_dither_range_t standard_3pl_1440_dither_ranges[] =
@@ -354,12 +260,7 @@ static const stp_simple_dither_range_t standard_3pl_1440_dither_ranges[] =
   { 1.0,  0x2, 0, 5 }
 };
 
-static const escp2_variable_ink_t standard_3pl_1440_ink =
-{
-  standard_3pl_1440_dither_ranges,
-  sizeof(standard_3pl_1440_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_3pl_1440, 1.0);
 
 
 static const stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
@@ -367,12 +268,7 @@ static const stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
   { 1.0,   0x1, 0, 1 }
 };
 
-static const escp2_variable_ink_t standard_3pl_2880_ink =
-{
-  standard_3pl_2880_dither_ranges,
-  sizeof(standard_3pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_3pl_2880, 1.0);
 
 
 static const stp_simple_dither_range_t standard_2pl_dither_ranges[] =
@@ -381,24 +277,14 @@ static const stp_simple_dither_range_t standard_2pl_dither_ranges[] =
   { 1.00,  0x2, 0, 3 }
 };
 
-static const escp2_variable_ink_t standard_2pl_ink =
-{
-  standard_2pl_dither_ranges,
-  sizeof(standard_2pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_2pl, 1.0);
 
 static const stp_simple_dither_range_t standard_2pl_2880_dither_ranges[] =
 {
   { 1.00,  0x1, 0, 1 },
 };
 
-static const escp2_variable_ink_t standard_2pl_2880_ink =
-{
-  standard_2pl_2880_dither_ranges,
-  sizeof(standard_2pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_2pl_2880, 1.0);
 
 
 static const stp_simple_dither_range_t standard_economy_pigment_dither_ranges[] =
@@ -406,12 +292,7 @@ static const stp_simple_dither_range_t standard_economy_pigment_dither_ranges[] 
   { 1.0,   0x3, 0, 3 }
 };
 
-static const escp2_variable_ink_t standard_economy_pigment_ink =
-{
-  standard_economy_pigment_dither_ranges,
-  sizeof(standard_economy_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_economy_pigment, 1.0);
 
 static const stp_simple_dither_range_t standard_multishot_pigment_dither_ranges[] =
 {
@@ -419,12 +300,7 @@ static const stp_simple_dither_range_t standard_multishot_pigment_dither_ranges[
   { 1.0,   0x3, 0, 5 }
 };
 
-static const escp2_variable_ink_t standard_multishot_pigment_ink =
-{
-  standard_multishot_pigment_dither_ranges,
-  sizeof(standard_multishot_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_multishot_pigment, 1.0);
 
 static const stp_simple_dither_range_t standard_6pl_pigment_dither_ranges[] =
 {
@@ -432,12 +308,7 @@ static const stp_simple_dither_range_t standard_6pl_pigment_dither_ranges[] =
   { 1.0,   0x3, 0, 10 }
 };
 
-static const escp2_variable_ink_t standard_6pl_pigment_ink =
-{
-  standard_6pl_pigment_dither_ranges,
-  sizeof(standard_6pl_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_6pl_pigment, 1.0);
 
 static const stp_simple_dither_range_t standard_3pl_pigment_dither_ranges[] =
 {
@@ -445,12 +316,7 @@ static const stp_simple_dither_range_t standard_3pl_pigment_dither_ranges[] =
   { 1.000, 0x2, 0, 3 },
 };
 
-static const escp2_variable_ink_t standard_3pl_pigment_ink =
-{
-  standard_3pl_pigment_dither_ranges,
-  sizeof(standard_3pl_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_3pl_pigment, 1.0);
 
 
 static const stp_simple_dither_range_t standard_3pl_pigment_2880_dither_ranges[] =
@@ -458,12 +324,7 @@ static const stp_simple_dither_range_t standard_3pl_pigment_2880_dither_ranges[]
   { 1.0,   0x1, 0, 1 }
 };
 
-static const escp2_variable_ink_t standard_3pl_pigment_2880_ink =
-{
-  standard_3pl_pigment_2880_dither_ranges,
-  sizeof(standard_3pl_pigment_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_3pl_pigment_2880, 1.0);
 
 
 static const stp_simple_dither_range_t photo_multishot_dither_ranges[] =
@@ -474,12 +335,7 @@ static const stp_simple_dither_range_t photo_multishot_dither_ranges[] =
   { 1.0,    0x3, 0, 3 }
 };
 
-static const escp2_variable_ink_t photo_multishot_ink =
-{
-  photo_multishot_dither_ranges,
-  sizeof(photo_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(photo_multishot, 1.0);
 
 
 static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
@@ -489,12 +345,7 @@ static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
   { 1.0,   0x3, 0, 7 }
 };
 
-static const escp2_variable_ink_t standard_multishot_ink =
-{
-  standard_multishot_dither_ranges,
-  sizeof(standard_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_multishot, 1.0);
 
 
 static const stp_simple_dither_range_t standard_680_multishot_dither_ranges[] =
@@ -504,12 +355,7 @@ static const stp_simple_dither_range_t standard_680_multishot_dither_ranges[] =
   { 1.0,   0x3, 0, 8 }
 };
 
-static const escp2_variable_ink_t standard_680_multishot_ink =
-{
-  standard_680_multishot_dither_ranges,
-  sizeof(standard_680_multishot_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
-};
+DECLARE_INK(standard_680_multishot, 1.0);
 
 
 static const escp2_variable_inkset_t standard_inks =
@@ -1300,6 +1146,58 @@ static const escp2_variable_inklist_t variable_2pl_6color_inks =
   }
 };
 
+static const escp2_variable_inklist_t variable_4pl_pigment_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_2pl_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+    },
+    {
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_2pl_photo_inks,
+      &escp2_2pl_2880_photo_inks,
+      &escp2_2pl_2880_photo_inks,
+      &escp2_2pl_2880_photo_inks
+    }
+  }
+};
+
 static const double standard_sat_adjustment[49] =
 {
   1.0,				/* C */
@@ -1928,6 +1826,9 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 static const escp2_dot_size_t c2pl_dotsizes =
 {   -1, 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x13,   -1, 0x10,  0x10 };
 
+static const escp2_dot_size_t c4pl_pigment_dotsizes =
+{ -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x10,   -1, 0x10, 0x10 };
+
 /*
  * Bits are for:
  *
@@ -2065,6 +1966,9 @@ static const escp2_densities_t c3pl_pigment_densities =
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 2.0, 0.7, 0.7, 0.40, 0.40, 0.32,  0.32,  0.45,  0.45,  0.52,  0.52,  0.260 };
+
+static const escp2_densities_t c4pl_pigment_densities =
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -2388,204 +2292,157 @@ static const ink_channel_t quadtone_channels =
 };
 #endif
 
-static const escp2_inkname_t cmy_ink_types[] =
+static const escp2_inkname_t three_color_composite_ink = 
 {
+  "RGB", N_ ("Three Color Composite"), 1, 0, 0,
   {
-    "RGB", N_ ("Three Color Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
+    NULL, &standard_cyan_channels,
+    &standard_magenta_channels, &standard_yellow_channels
   }
+};
+
+static const escp2_inkname_t four_color_standard_ink =
+{
+  "CMYK", N_ ("Four Color Standard"), 1, .25, 1.0,
+  {
+    &standard_black_channels, &standard_cyan_channels,
+    &standard_magenta_channels, &standard_yellow_channels
+  }
+};
+
+static const escp2_inkname_t six_color_photo_ink =
+{
+  "PhotoCMYK", N_ ("Six Color Photo"), 1, .5, 1.0,
+  {
+    &photo_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t five_color_photo_composite_ink =
+{
+  "PhotoCMY", N_ ("Five Color Photo Composite"), 1, 0, 0,
+  {
+    NULL, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t j_seven_color_enhanced_ink =
+{
+  "Photo7J", N_ ("Seven Color Enhanced"), 1, .5, 1.0,
+  {
+    &photo_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo2_yellow_channels
+  }
+};
+
+static const escp2_inkname_t j_six_color_enhanced_composite_ink =
+{
+  "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1, .5, 1.0,
+  {
+    NULL, &standard_cyan_channels,
+    &standard_magenta_channels, &standard_yellow_channels
+  }
+};
+
+static const escp2_inkname_t seven_color_photo_ink =
+{
+  "PhotoCMYK", N_ ("Six Color Photo"), 1, .1, .25,
+  {
+    &photo2_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+#ifdef QUADTONE
+
+static const escp2_inkname_t quadtone_ink =
+{
+  "Quadtone", N_ ("Quadtone"), 0, 0, 0,
+  {
+    &quadtone_channels, NULL, NULL, NULL
+  }
+};
+
+#endif
+
+
+
+static const escp2_inkname_t *cmy_ink_types[] =
+{
+  &three_color_composite_ink
 };
 
 static const inklist_t cmy_inklist =
 {
-  sizeof(cmy_ink_types) / sizeof(escp2_inkname_t),
+  sizeof(cmy_ink_types) / sizeof(escp2_inkname_t *),
   cmy_ink_types
 };
 
-static const escp2_inkname_t standard_ink_types[] =
+static const escp2_inkname_t *standard_ink_types[] =
 {
-  {
-    "CMYK", N_ ("Four Color Standard"), 1,
-    {
-      &standard_black_channels, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "RGB", N_ ("Three Color Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
+  &four_color_standard_ink,
+  &three_color_composite_ink,
 #ifdef QUADTONE
-  {
-    "Quadtone", N_ ("Quadtone"), 0,
-    {
-      &quadtone_channels, NULL, NULL, NULL
-    }
-  }
+  &quadtone_ink
 #endif
 };
 
 static const inklist_t standard_inklist =
 {
-  sizeof(standard_ink_types) / sizeof(escp2_inkname_t),
+  sizeof(standard_ink_types) / sizeof(escp2_inkname_t *),
   standard_ink_types
 };
 
-static const escp2_inkname_t photo_ink_types[] =
+static const escp2_inkname_t *photo_ink_types[] =
 {
-  {
-    "PhotoCMYK", N_ ("Six Color Photo"), 1,
-    {
-      &photo_black_channels, &photo_cyan_channels,
-      &photo_magenta_channels, &photo_yellow_channels
-    }
-  },
-  {
-    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
-    {
-      NULL, &photo_cyan_channels,
-      &photo_magenta_channels, &photo_yellow_channels
-    }
-  },
-  {
-    "CMYK", N_ ("Four Color Standard"), 1,
-    {
-      &standard_black_channels, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "RGB", N_ ("Three Color Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
+  &six_color_photo_ink,
+  &five_color_photo_composite_ink,
+  &four_color_standard_ink,
+  &three_color_composite_ink,
 #ifdef QUADTONE
-  {
-    "Quadtone", N_ ("Quadtone"), 0,
-    {
-      &quadtone_channels, NULL, NULL, NULL
-    }
-  },
+  &quadtone_ink
 #endif
 };
 
 static const inklist_t photo_inklist =
 {
-  sizeof(photo_ink_types) / sizeof(escp2_inkname_t),
+  sizeof(photo_ink_types) / sizeof(escp2_inkname_t *),
   photo_ink_types
 };
 
-static const escp2_inkname_t photo7_japan_ink_types[] =
+static const escp2_inkname_t *photo7_japan_ink_types[] =
 {
-  {
-    "Photo7J", N_ ("Seven Color Enhanced"), 1,
-    {
-      &photo_black_channels, &photo_cyan_channels,
-      &photo_magenta_channels, &photo2_yellow_channels
-    }
-  },
-  {
-    "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "PhotoCMYK", N_ ("Six Color Photo"), 1,
-    {
-      &photo_black_channels, &photo_cyan_channels,
-      &photo_magenta_channels, &photo_yellow_channels
-    }
-  },
-  {
-    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "CMYK", N_ ("Four Color Standard"), 1,
-    {
-      &standard_black_channels, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "RGB", N_ ("Three Color Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
+  &j_seven_color_enhanced_ink,
+  &j_six_color_enhanced_composite_ink,
+  &four_color_standard_ink,
+  &three_color_composite_ink,
 #ifdef QUADTONE
-  {
-    "Quadtone", N_ ("Quadtone"), 0,
-    {
-      &quadtone_channels, NULL, NULL, NULL
-    }
-  }
+  &quadtone_ink
 #endif
 };
 
 static const inklist_t photo7_japan_inklist =
 {
-  sizeof(photo7_japan_ink_types) / sizeof(escp2_inkname_t),
+  sizeof(photo7_japan_ink_types) / sizeof(escp2_inkname_t *),
   photo7_japan_ink_types
 };
 
-static const escp2_inkname_t photo7_ink_types[] =
+static const escp2_inkname_t *photo7_ink_types[] =
 {
-  {
-    "PhotoCMYK", N_ ("Six Color Photo"), 1,
-    {
-      &photo2_black_channels, &photo_cyan_channels,
-      &photo_magenta_channels, &photo_yellow_channels
-    }
-  },
-  {
-    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "CMYK", N_ ("Four Color Standard"), 1,
-    {
-      &standard_black_channels, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
-  {
-    "RGB", N_ ("Three Color Composite"), 1,
-    {
-      NULL, &standard_cyan_channels,
-      &standard_magenta_channels, &standard_yellow_channels
-    }
-  },
+  &seven_color_photo_ink,
+  &five_color_photo_composite_ink,
+  &four_color_standard_ink,
+  &three_color_composite_ink,
 #ifdef QUADTONE
-  {
-    "Quadtone", N_ ("Quadtone"), 0,
-    {
-      &quadtone_channels, NULL, NULL, NULL
-    }
-  }
+  &quadtone_ink
 #endif
 };
 
 static const inklist_t photo7_inklist =
 {
-  sizeof(photo7_ink_types) / sizeof(escp2_inkname_t),
+  sizeof(photo7_ink_types) / sizeof(escp2_inkname_t *),
   photo7_ink_types
 };
 
@@ -3433,7 +3290,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     96, 1, 2, 96, 1, 2,
-    360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, default_head_offset, 0, 0,
@@ -3441,5 +3298,23 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     stp950_bits, stp950_base_res
+  },
+  /* 47: Stylus Photo 2100/2200 */
+  {
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL |
+     MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4 |
+     MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO | MODEL_MICROWEAVE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO |
+     MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
+     MODEL_DEINITIALIZE_JE_NO),
+    48, 1, 3, 144, 1, 1,
+    360, 720, 720, 14400, -1, 2880, 2880, 1440, 180,
+    INCH(13), INCH(1200), INCH(2), INCH(4),
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, default_head_offset, 0, 0,
+    c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_6color_inks,
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+    &standard_paper_list, standard_reslist, &photo7_inklist,
+    variable_bits, variable_base_res
   },
 };

@@ -281,13 +281,15 @@ typedef struct
   const char *name;
   const char *text;
   int is_color;
+  double k_lower;
+  double k_upper;
   const ink_channel_t *channels[NCOLORS];
 } escp2_inkname_t;
 
 typedef struct
 {
   int n_inks;
-  const escp2_inkname_t *inknames;
+  const escp2_inkname_t **inknames;
 } inklist_t;
 
 typedef struct escp2_printer
