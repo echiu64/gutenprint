@@ -57,8 +57,6 @@ EXTRA_DIST = \
 	libgutenprint.install.in \
 	libgutenprintui2-dev.install \
 	libgutenprintui2.install.in \
-	libgutenprintui-dev.install \
-	libgutenprintui.install.in \
 	README.building \
 	README.Debian \
 	rules

@@ -28,7 +28,7 @@ LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
 #LIBRARY_VERSION = 1
 
 autoconfigure: autoconfigure-stamp
-autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install debian/libgutenprintui.install debian/libgutenprintui2.install
+autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install debian/libgutenprintui2.install
 	dh_testdir
 # Create versioned symlinks
 	cd debian; \
@@ -43,6 +43,7 @@ autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libguten
 	  --prefix=/usr --mandir=\$${prefix}/share/man \
 	  --disable-static --enable-shared --disable-rpath \
 	  --with-modules=dlopen \
+	  --disable-libgutenprintui --enable-libgutenprintui2 \
 	  --without-gimp --with-gimp2 --with-cups --with-ijs \
 	  --with-foomatic --with-foomatic3 \
 	  --disable-test \
@@ -74,7 +75,7 @@ clean: debian/control
 	rm -rf debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install
 	rm -rf debian/libgutenprint$(LIBRARY_VERSION).files
 	rm -rf debian/libgutenprint$(LIBRARY_VERSION).postinst
-	rm -rf debian/libgutenprintui.install debian/libgutenprintui2.install
+	rm -rf debian/libgutenprintui2.install
 	-$(MAKE) distclean
 
 	rm -rf $(CURDIR)/debian/libgutenprint*$(LIBRARY_VERSION)*
@@ -128,7 +129,7 @@ binary-arch: build install
 	chrpath --delete debian/cupsys-driver-gutenprint/usr/sbin/cups-genppd.5.0
 	dh_makeshlibs -a -V -X usr/lib/gutenprint
 	dh_installdeb -a
-	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2$(LIBRARY_VERSION)/usr/lib
+	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2$(LIBRARY_VERSION)/usr/lib
 	dh_perl -a
 	dh_gencontrol -a
 	dh_md5sums -a
@@ -156,10 +157,6 @@ debian/libgutenprint.install: debian/libgutenprint.install.in debian/changelog
 
 # Make sure debian/libgutenprint-doc.install is up-to-date.
 debian/libgutenprint-doc.install: debian/libgutenprint-doc.install.in debian/changelog
-	sed $(SEDPATTERN) <$< >$@
-
-# Make sure debian/libgutenprintui.install is up-to-date.
-debian/libgutenprintui.install: debian/libgutenprintui.install.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
 # Make sure debian/libgutenprintui2.install is up-to-date.
