@@ -55,7 +55,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <gimp-print.h>
-
+#include "../../lib/libprintut.h"
 
 /*
  * Structure for page raster data...
