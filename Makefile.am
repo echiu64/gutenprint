@@ -6,7 +6,7 @@ libexec_PROGRAMS = print
 
 bin_PROGRAMS = escputil @MAINTAINER_PROGRAMS@
 
-EXTRA_PROGRAMS=escp2-weavetest printer_options unprint pcl-unprint
+EXTRA_PROGRAMS = escp2-weavetest printer_options unprint pcl-unprint
 
 noinst_PROGRAMS = printdef
 
@@ -41,10 +41,10 @@ print_SOURCES = \
 	gtk_main_window.c	\
 	print_gimp.h
 
-print-util.c: print-printers.c
+$(srcdir)/print-util.c: $(srcdir)/print-printers.c
 
-print-printers.c: printdef printers.xml
-	./printdef < printers.xml > print-printers.c
+$(srcdir)/print-printers.c: ./printdef $(srcdir)/printers.xml
+	./printdef < $(srcdir)/printers.xml > $(srcdir)/print-printers.c
 
 printdef_SOURCES = printdefl.l printdefy.y printdef.h
 
@@ -84,7 +84,7 @@ print_LDADD = $(GIMP_LIBS)
 
 escputil_LDADD = $(LIBREADLINE_DEPS)
 
-GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
+GHOST_DIST = COPYING ChangeLog README README.bsd contrib.mak.addon \
 	gdevstp.c devs.mak.addon-5.10 escputil.c escputil.1 Makefile \
 	debian-patch debian-patch-stp $(GCOPY)
 
@@ -96,7 +96,7 @@ CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
 DOC_DIST = print-color.png docbook.css print-main.png print.html \
 	print-setup.png print.sgml
 
-EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
+EXTRA_DIST = print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h ran.509.131.h \
 	make-deb.sh README.escp2 escputil.1 LICENSE \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
@@ -126,34 +126,40 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 .PHONY: files ghost ChangeLog force_aclocal doit
 
 ChangeLog:
-	cvs log | perl ./mkchlog > ChangeLog.tmp
-	mv ChangeLog.tmp ChangeLog
+	cd $(top_srcdir) ; \
+	cvs log | perl ./mkchlog > ChangeLog.tmp ; \
+	mv ChangeLog.tmp /ChangeLog
 
 files:
-	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
+	@cd $(top_srcdir) ; \
+	files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
 	  echo $$p; \
 	done
 
 GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
-ghost: $(addprefix Ghost/, $(GCOPY))
-	cp escputil.c Ghost/escputil.c
-	cp escputil.1 Ghost/escputil.1
+ghost: $(top_srcdir)/$(addprefix Ghost/, $(GCOPY))
+	cp $(top_srcdir)/escputil.c $(top_srcdir)/Ghost/escputil.c ; \
+	cp escputil.1 $(top_srcdir)/Ghost/escputil.1
 
-Ghost/gdevstp-%.h: %.h Makefile
+Ghost/gdevstp-%.h: $(top_srcdir)/%.h Makefile
+	cd $(top_srcdir) ; \
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
 
-Ghost/gdevstp-%: print-% Makefile
+Ghost/gdevstp-%: $(top_srcdir)/print-% Makefile
+	cd $(top_srcdir) ; \
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
 
 CUPSCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "cups-\1.h"/'
 
-cups: $(addprefix cups/, $(CUPSCOPY))
+cups: $(top_srcdir)/$(addprefix cups/, $(CUPSCOPY))
 
-cups/cups-%.h: %.h Makefile
+cups/cups-%.h: $(srcdir)/%.h Makefile
+	cd $(srcdir) ; \
 	sed -e 's/print-printers.c/cups-printers.c/' $(CUPSCODE) $< > $@
 
-cups/cups-%: print-% Makefile
+cups/cups-%: $(srcdir)/print-% Makefile
+	cd $(srcdir) ; \
 	sed -e 's/print-printers.c/cups-printers.c/' $(CUPSCODE) $< > $@
 
 FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
@@ -180,13 +186,14 @@ FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 #       gimptool_major_version=`$GIMPTOOL $gimptool_args --version | \
 #              sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
 
-gdist: ghost cups force_aclocal
+gdist: ghost $(top_srcdir)/cups force_aclocal
 
 doit:
 	-@exit 0
 
 Ghost/stp-md5sum: doit
-	wget -q -O Ghost/stp-md5sum.new http://www.linuxprinting.org/stp-interfaces.tar.gz.md5sum	
+	cd $(top_srcdir) ; \
+	wget -q -O Ghost/stp-md5sum.new http://www.linuxprinting.org/stp-interfaces.tar.gz.md5sum ; \
 	if [ -f Ghost/stp-md5sum -a -f Ghost/stp-interfaces.tar.gz ] ; then \
 		(cd Ghost; md5sum stp-interfaces.tar.gz > stp-md5sum.tmp ) ; \
 		cat Ghost/stp-md5sum.new Ghost/stp-md5sum.tmp ; \
@@ -200,7 +207,8 @@ Ghost/stp-md5sum: doit
 	fi ; \
 	exit 0
 
-Ghost/stp-interfaces.tar.gz: Ghost/stp-md5sum
+Ghost/stp-interfaces.tar.gz: $(top_srcdir)/Ghost/stp-md5sum
+	cd $(top_srcdir) ; \
 	wget -q -O Ghost/stp-interfaces.tar.gz http://www.linuxprinting.org/stp-interfaces.tar.gz
 
 # Until we get the foomatic stuff solved, don't use it in 4.1.
@@ -212,13 +220,14 @@ Ghost/stp-interfaces.tar.gz: Ghost/stp-md5sum
 #	$(MAKE) dist FORCE_ACLOCAL=
 
 force_aclocal:
-	touch configure.in
+	cd $(top_srcdir) ; \
+	touch configure.in ; \
 	$(MAKE) dist FORCE_ACLOCAL=
 
 print_gimp.h: Makefile
-	touch print_gimp.h
+	touch $(top_srcdir)/print_gimp.h
 
-testdither:	testdither.o print-dither.o
+testdither: testdither.o print-dither.o
 	$(CC) $(CFLAGS) -o testdither testdither.o print-dither.o -lm
 
-testdither.o:	print.h
+testdither.o: $(srcdir)/print.h
