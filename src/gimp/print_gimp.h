@@ -34,14 +34,6 @@
 #endif
 
 #include <gtk/gtk.h>
-
-/*
- * We define GIMP_ENABLE_COMPAT_CRUFT here because we are still using
- * the old API names. This is because we have to support 1.0 as well.
- * This define is required as the default in Gimp was changed 24 Aug 00.
- * This should be removed when we stop supporting 1.0.
- */
-
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 
@@ -63,11 +55,6 @@
 #define ORIENT_LANDSCAPE        1       /* Landscape orientation */
 #define ORIENT_UPSIDEDOWN       2       /* Reverse portrait orientation */
 #define ORIENT_SEASCAPE         3       /* Reverse landscape orientation */
-
-#define UNIT_INCH		0
-#define UNIT_CM			1
-#define UNIT_POINT		2
-#define UNIT_MM			3
 
 typedef struct		/**** Printer List ****/
 {
