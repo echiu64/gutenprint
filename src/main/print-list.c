@@ -41,13 +41,6 @@
 
 #define COOKIE_LIST    0xbfea218e
 
-/*
- * Uncomment to enable debugging and strict list integrity checking.
- * This may have a significant performance impact.
- */
-/*#define STPI_LIST_DEBUG 1*/
-
-
 /* node free callback for node data allocated with stpi_malloc() (not
    used by default) */
 void
@@ -55,9 +48,8 @@ stpi_list_node_free_data (stpi_list_item_t *item)
 {
   stpi_internal_list_node_t *ln = (stpi_internal_list_node_t *) item;
   stpi_free(ln->data);
-#ifdef STPI_LIST_DEBUG
-  fprintf(stderr, "stpi_list_node_free_data destructor\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_LIST)
+    stpi_erprintf("stpi_list_node_free_data destructor\n");
 }
 
 static void
@@ -97,9 +89,8 @@ stpi_list_create(void)
   lh->sortfunc = NULL;
   lh->copyfunc = NULL;
 
-#ifdef STPI_LIST_DEBUG
-  fprintf(stderr, "stpi_list_head constructor\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_LIST)
+    stpi_erprintf("stpi_list_head constructor\n");
   return (stpi_list_t *) lh;
 }
 
@@ -147,9 +138,8 @@ stpi_list_destroy(stpi_list_t *list)
       stpi_list_item_destroy(list, (stpi_list_item_t *) cur);
       cur = next;
     }
-#ifdef STPI_LIST_DEBUG
-  fprintf(stderr, "stpi_list_head destructor\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_LIST)
+    stpi_erprintf("stpi_list_head destructor\n");
   lh->cookie = 0;
   stpi_free(lh);
 
@@ -438,8 +428,7 @@ stpi_list_item_create(stpi_list_t *list,
 	  lnn = lnn->prev;
 	}
     }
-#ifdef STPI_LIST_DEBUG
-  else /* check prev exists: only use when debugging, due to overhead */
+  else if (stpi_debug_level & STPI_DBG_LIST)
     {
       if (next)
 	{
@@ -454,9 +443,8 @@ stpi_list_item_create(stpi_list_t *list,
       else
 	lnn = (stpi_internal_list_node_t *) NULL;
     }
-#else
-  lnn = (stpi_internal_list_node_t *) next;
-#endif
+  else
+    lnn = (stpi_internal_list_node_t *) next;
 
   /* got lnp; now insert the new ln */
 
@@ -493,9 +481,8 @@ stpi_list_item_create(stpi_list_t *list,
   /* increment reference count */
   lh->length++;
 
-#ifdef STPI_LIST_DEBUG
-  fprintf(stderr, "stpi_list_node constructor\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_LIST)
+    stpi_erprintf("stpi_list_node constructor\n");
   return 0;
 }
 
@@ -524,9 +511,8 @@ stpi_list_item_destroy(stpi_list_t *list,
     lh->end = ln->prev;
   stpi_free(ln);
 
-#ifdef STPI_LIST_DEBUG
-  fprintf(stderr, "stpi_list_node destructor\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_LIST)
+    stpi_erprintf("stpi_list_node destructor\n");
   return 0;
 }
 

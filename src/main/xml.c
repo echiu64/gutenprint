@@ -95,13 +95,12 @@ int stpi_xml_init(void)
   item = stpi_list_get_start(file_list);
   while (item)
     {
-#ifdef DEBUG
-      fprintf(stderr, "stp-xml: source file: %s\n",
-	      (const char *) stpi_list_item_get_data(item));
-#endif
-  xmlInitParser();
+      if (stpi_debug_level & STPI_DBG_XML)
+	stpi_erprintf("stp-xml: source file: %s\n",
+		      (const char *) stpi_list_item_get_data(item));
+      xmlInitParser();
       stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
-  xmlCleanupParser();
+      xmlCleanupParser();
       item = stpi_list_item_next(item);
     }
   stpi_list_destroy(file_list);
@@ -125,9 +124,8 @@ stpi_xml_parse_file(const char *file) /* File to parse */
   xmlDocPtr doc;   /* libXML document pointer */
   xmlNodePtr cur;  /* libXML node pointer */
 
-#ifdef DEBUG
-  fprintf(stderr, "stp-xml-parse: reading  `%s'...\n", file);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stp-xml-parse: reading  `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
@@ -174,8 +172,7 @@ xmlstrtol(xmlChar* textval)
 
   if (val == LONG_MIN || val == LONG_MAX)
     {
-      fprintf(stderr, "Value incorrect: %s\n",
-	      strerror(errno));
+      stpi_erprintf("Value incorrect: %s\n", strerror(errno));
       exit (EXIT_FAILURE);
     }
   return val;
@@ -193,8 +190,7 @@ xmlstrtoul(xmlChar* textval)
 
   if (val == ULONG_MAX)
     {
-      fprintf(stderr, "Value incorrect: %s\n",
-	      strerror(errno));
+      stpi_erprintf("Value incorrect: %s\n", strerror(errno));
       exit (EXIT_FAILURE);
     }
   return val;
@@ -211,8 +207,7 @@ xmlstrtof(xmlChar *textval)
 
   if (val == HUGE_VAL || val == -HUGE_VAL)
     {
-      fprintf(stderr, "Value incorrect: %s\n",
-	      strerror(errno));
+      stpi_erprintf("Value incorrect: %s\n", strerror(errno));
       exit (EXIT_FAILURE);
     }
   return (float) val;
@@ -289,10 +284,9 @@ stpi_xml_process_family(xmlNodePtr family)     /* The family node */
       if (!xmlStrcmp(family_name, (const xmlChar *)
 		     family_module_data->name))
 	{
-#ifdef DEBUG
-	  fprintf(stderr, "xml-family: family module: %s\n",
-		  family_module_data->name);
-#endif
+	  if (stpi_debug_level & STPI_DBG_XML)
+	    stpi_erprintf("xml-family: family module: %s\n",
+			  family_module_data->name);
 	  family_data = family_module_data->syms;
 	  if (family_data->printer_list == NULL)
 	    family_data->printer_list = stpi_list_create();
@@ -453,11 +447,12 @@ stpi_xml_process_printer(xmlNodePtr printer,           /* The printer node */
     }
   if (driver && long_name && color && model && printfuncs)
     {
-#ifdef DEBUG
-      stmp = xmlGetProp(printer, (const xmlChar*) "driver");
-      fprintf(stderr, "xml-family: printer: %s\n", stmp);
-      xmlFree(stmp);
-#endif
+      if (stpi_debug_level & STPI_DBG_XML)
+	{
+	  stmp = xmlGetProp(printer, (const xmlChar*) "driver");
+	  stpi_erprintf("xml-family: printer: %s\n", stmp);
+	  xmlFree(stmp);
+	}
       return outprinter;
     }
   stpi_free(outprinter);
@@ -514,11 +509,12 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
     width = 0,                          /* Check width is present */
     unit = 0;                           /* Check unit is present */
 
-#ifdef DEBUG
-  stmp = xmlGetProp(paper, (const xmlChar*) "name");
-  fprintf(stderr, "xml-paper: name: %s\n", stmp);
-  xmlFree(stmp);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    {
+      stmp = xmlGetProp(paper, (const xmlChar*) "name");
+      stpi_erprintf("xml-paper: name: %s\n", stmp);
+      xmlFree(stmp);
+    }
 
   outpaper = stpi_malloc(sizeof(stpi_internal_papersize_t));
   if (!outpaper)

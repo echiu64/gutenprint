@@ -119,7 +119,7 @@ int stpi_module_load(void)
     {
       if (lt_dlinit())
 	{
-	  fprintf(stderr, "Error initialising libltdl: %s\n", DLERROR());
+	  stpi_erprintf("Error initialising libltdl: %s\n", DLERROR());
 	  return 1;
 	}
       ltdl_is_initialised = 1;
@@ -237,9 +237,8 @@ stpi_module_open(const char *modulename /* Module filename */)
   stpi_list_item_t *reg_module;         /* Pointer to module list nodes */
   int error = 0;                       /* Error status */
 
-#ifdef DEBUG
-  fprintf(stderr, "stp-module: open: %s\n", modulename);
-#endif
+  if (stpi_debug_level & STPI_DBG_MODULE)
+    stpi_erprintf("stp-module: open: %s\n", modulename);
   while(1)
     {
       module = DLOPEN(modulename);
@@ -267,10 +266,9 @@ stpi_module_open(const char *modulename /* Module filename */)
 	      data->class == ((stpi_module_t *)
 			      stpi_list_item_get_data(reg_module))->class)
 	    {
-#ifdef DEBUG
-	      fprintf(stderr, "stp-module: reject duplicate: %s\n",
-		      data->name);
-#endif
+	      if (stpi_debug_level & STPI_DBG_MODULE)
+		stpi_erprintf("stp-module: reject duplicate: %s\n",
+			      data->name);
 	      error = 1;
 	      break;
 	    }
@@ -301,10 +299,9 @@ static int stpi_module_register(stpi_module_t *module /* Module to register */)
   if (stpi_list_item_create(module_list, NULL, module))
     return 1;
 
-#ifdef DEBUG
-      fprintf(stderr, "stp-module: register: %s\n", module->name);
-#endif
-      return 0;
+  if (stpi_debug_level & STPI_DBG_MODULE)
+    stpi_erprintf("stp-module: register: %s\n", module->name);
+  return 0;
 }
 
 
@@ -322,17 +319,14 @@ int stpi_module_init(void)
       module = (stpi_module_t *) stpi_list_item_get_data(module_item);
       if (module)
 	{
-#ifdef DEBUG
-	  fprintf(stderr, "stp-module-init: %s\n",
-		  module->name);
-#endif
+	  if (stpi_debug_level & STPI_DBG_MODULE)
+	    stpi_erprintf("stp-module-init: %s\n", module->name);
 	  /* Initialise module */
 	  if (module->init && module->init())
 	    {
-#ifdef DEBUG
-	      fprintf(stderr, "stp-module-init: %s: Module init failed\n",
-		      module->name);
-#endif
+	      if (stpi_debug_level & STPI_DBG_MODULE)
+		stpi_erprintf("stp-module-init: %s: Module init failed\n",
+			      module->name);
 	    }
 	}
       module_item = stpi_list_item_next(module_item);
@@ -399,9 +393,8 @@ static void *stpi_dlsym(void *handle,           /* Module */
  }
 #endif
 
-#ifdef DEBUG
-  fprintf(stderr, "SYMBOL: %s\n", full_symbol);
-#endif
+ if (stpi_debug_level & STPI_DBG_MODULE)
+   stpi_erprintf("SYMBOL: %s\n", full_symbol);
 
   return dlsym(handle, full_symbol);
 }

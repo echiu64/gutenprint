@@ -92,9 +92,8 @@ int stpi_paper_create(stp_papersize_t pt)
   if (paper_list == NULL)
     {
       stpi_paper_list_init();
-#ifdef DEBUG
-      fprintf (stderr, "stpi_paper_create(): initialising paper_list...\n");
-#endif
+      if (stpi_debug_level & STPI_DBG_PAPER)
+	stpi_erprintf("stpi_paper_create(): initialising paper_list...\n");
     }
 
   /* Check the paper does not already exist */
@@ -124,9 +123,8 @@ int stpi_paper_destroy(stp_papersize_t pt)
       stpi_erprintf("No papers found: "
 		   "is STP_MODULE_PATH correct?\n");
       stpi_paper_list_init();
-#ifdef DEBUG
-      fprintf (stderr, "stpi_paper_destroy(): initialising paper_list...\n");
-#endif
+      if (stpi_debug_level & STPI_DBG_PAPER)
+	stpi_erprintf("stpi_paper_destroy(): initialising paper_list...\n");
     }
 
   /* Check if paper exists */

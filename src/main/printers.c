@@ -654,9 +654,9 @@ stpi_family_register(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-#ifdef DEBUG
-      fprintf (stderr, "stpi_family_register(): initialising printer_list...\n");
-#endif
+      if (stpi_debug_level & STPI_DBG_PRINTERS)
+	stpi_erprintf
+	  ("stpi_family_register(): initialising printer_list...\n");
     }
 
   if (family)
@@ -688,9 +688,9 @@ stpi_family_unregister(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-#ifdef DEBUG
-      fprintf (stderr, "stpi_family_unregister(): initialising printer_list...\n");
-#endif
+      if (stpi_debug_level & STPI_DBG_PRINTERS)
+	stpi_erprintf
+	  ("stpi_family_unregister(): initialising printer_list...\n");
     }
 
   if (family)

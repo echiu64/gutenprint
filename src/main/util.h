@@ -94,10 +94,16 @@ extern void stpi_xio_free(void *ixio);
 #define STPI_DBG_PCL		0x10
 #define STPI_DBG_ESCP2		0x20
 #define STPI_DBG_CANON		0x40
-#define STPI_DBG_LEXMARK		0x80
+#define STPI_DBG_LEXMARK	0x80
 #define STPI_DBG_WEAVE_PARAMS	0x100
 #define STPI_DBG_ROWS		0x200
-#define STPI_DBG_MARK_FILE       0x400
+#define STPI_DBG_MARK_FILE      0x400
+#define STPI_DBG_LIST           0x800
+#define STPI_DBG_MODULE         0x1000
+#define STPI_DBG_PATH           0x2000
+#define STPI_DBG_PAPER          0x4000
+#define STPI_DBG_PRINTERS       0x8000
+#define STPI_DBG_XML            0x10000
 extern unsigned long stpi_debug_level;
 
 extern void stpi_dprintf(unsigned long level, const stp_vars_t v,
