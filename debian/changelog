@@ -9,8 +9,11 @@ gimp-print (4.3.6-1) unstable; urgency=low
     slightly cleaner, and debian/install is unchanged after install.
   * Create symlinks for HTML manuals, since different versions of
     texi2html and db2html create different names.
+  * Make the dependencies sane (remove incorrect dependencies, and correct
+    dubious ones).  foomatic-db-gimp-print now depends only upon foomatic-db
+    and ijsgimpprint. 
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun,  8 Dec 2002 22:44:06 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue, 10 Dec 2002 15:28:44 +0000
 
 gimp-print (4.3.5-1) unstable; urgency=low
 
