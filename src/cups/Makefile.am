@@ -110,14 +110,14 @@ endif
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION); \
+	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@; \
 	  cd ppd ; \
 	  for language in * ; do \
 	    cd ..; \
-	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION)/$$language; \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/$$language; \
 	    cd ppd/$$language; \
 	    for ppdfile in * ; do \
-	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)$(CUPS_VERSION)/$$language) ; \
+	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/$$language) ; \
 	    done; \
 	  cd ..; \
 	  done \

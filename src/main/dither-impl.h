@@ -52,6 +52,7 @@ extern "C" {
 #define D_FAST (D_FAST_BASE)
 #define D_VERY_FAST (D_FAST_BASE + 1)
 #define D_EVENTONE 32
+#define D_HYBRID_EVENTONE (D_ADAPTIVE_BASE | D_EVENTONE)
 
 #define DITHER_FAST_STEPS (6)
 

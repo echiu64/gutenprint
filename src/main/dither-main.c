@@ -43,13 +43,14 @@ static const stpi_dither_algorithm_t dither_algos[] =
 {
   /* Note to translators: "EvenTone" is the proper name, rather than a */
   /* descriptive name, of this algorithm. */
-  { "None",     N_ ("Default"),                -1 },
-  { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
-  { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
-  { "Ordered",	N_ ("Ordered"),                D_ORDERED },
-  { "Fast",	N_ ("Fast"),                   D_FAST },
-  { "VeryFast",	N_ ("Very Fast"),              D_VERY_FAST },
-  { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID }
+  { "None",           N_ ("Default"),                -1 },
+  { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
+  { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
+  { "Adaptive",	      N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
+  { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
+  { "Fast",	      N_ ("Fast"),                   D_FAST },
+  { "VeryFast",	      N_ ("Very Fast"),              D_VERY_FAST },
+  { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
@@ -69,7 +70,7 @@ static const unsigned sq2[] =
 static const stp_parameter_t dither_parameters[] =
 {
   {
-    "Density", N_("Density"),
+    "Density", N_("Density"), N_("Output Level Adjustment"),
     N_("Adjust the density (amount of ink) of the print. "
        "Reduce the density if the ink bleeds through the "
        "paper or smears; increase the density if black "
@@ -78,7 +79,7 @@ static const stp_parameter_t dither_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED, 0, 1, -1, 1
   },
   {
-    "DitherAlgorithm", N_("Dither Algorithm"),
+    "DitherAlgorithm", N_("Dither Algorithm"), N_("Screening Adjustment"),
     N_("Choose the dither algorithm to be used.\n"
        "Adaptive Hybrid usually produces the best all-around quality.\n"
        "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
@@ -200,7 +201,7 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	  if (image_type &&
 	      (strcmp(image_type, "LineArt") == 0 ||
 	       strcmp(image_type, "TextGraphics") == 0))
-	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
+	    d->stpi_dither_type = D_HYBRID_EVENTONE;
 	  else if (image_type && (strcmp(image_type, "Photo") == 0))
 	    d->stpi_dither_type = D_EVENTONE;
 	  else
@@ -212,11 +213,16 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
 	case 9:
 	case 10:
 	default:
-	  d->stpi_dither_type = D_EVENTONE;
+	  if (image_type &&
+	      (strcmp(image_type, "LineArt") == 0 ||
+	       strcmp(image_type, "TextGraphics") == 0))
+	    d->stpi_dither_type = D_HYBRID_EVENTONE;
+	  else
+	    d->stpi_dither_type = D_EVENTONE;
 	  break;
 	}
       /* EvenTone performs poorly if the aspect ratio is greater than 2 */
-      if (d->stpi_dither_type == D_EVENTONE &&
+      if (d->stpi_dither_type & D_EVENTONE &&
 	  (d->x_aspect > 2 || d->y_aspect > 2))
 	d->stpi_dither_type = D_ADAPTIVE_HYBRID;
     }
@@ -246,6 +252,7 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
     case D_ORDERED:
     case D_FAST:
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
+    case D_HYBRID_EVENTONE:
     case D_EVENTONE:
       RETURN_DITHERFUNC(stpi_dither_et, v);
     default:
@@ -345,6 +352,11 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   d->transition = 1.0;
   d->adaptive_limit = .75 * 65535;
 
+  /*
+   * For hybrid EvenTone we want to use the good matrix.  For regular
+   * EvenTone, we don't need to pay the cost.
+   */
+  
   if (d->stpi_dither_type == D_VERY_FAST || d->stpi_dither_type == D_FAST ||
       d->stpi_dither_type == D_EVENTONE)
     {

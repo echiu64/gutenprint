@@ -372,6 +372,7 @@ stpi_dither_et(stp_vars_t v,
 	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
 	  stpi_ink_defn_t *inkp;
 	  stpi_ink_defn_t lower, upper;
+	  int comparison = 32768;
 
 	  advance_eventone_pre(sp, et, x);
 
@@ -390,10 +391,14 @@ stpi_dither_et(stp_vars_t v,
 
 	  point_error += eventone_adjust(dc, et, inkspot, range_point);
 
-	  /* Determine whether to print the larger or smaller dot */
+	  if ((d->stpi_dither_type & D_ADAPTIVE_BASE) &&
+	      point_error > 32768 - 2048 &&
+	      point_error < 32768 + 2048)
+	    comparison += (ditherpoint(d, &(dc->dithermat), x) / 16) - 2048;
 
+	  /* Determine whether to print the larger or smaller dot */
 	  inkp = &lower;
-	  if (point_error >= 32768) {
+	  if (point_error >= comparison) {
 	    point_error -= 65535;
 	    inkp = &upper;
 	    dc->v -= 131070;

@@ -725,43 +725,43 @@ static const olympus_cap_t olympus_model_capabilities[] =
 static const stp_parameter_t the_parameters[] =
 {
   {
-    "PageSize", N_("Page Size"),
+    "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "MediaType", N_("Media Type"),
+    "MediaType", N_("Media Type"), N_("Basic Printer Setup"),
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "InputSlot", N_("Media Source"),
+    "InputSlot", N_("Media Source"), N_("Basic Printer Setup"),
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "InkType", N_("Ink Type"),
-    N_("Type of ink in the printer"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
-  },
-  {
-    "Resolution", N_("Resolution"),
+    "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "Laminate", N_("Laminate Pattern"),
+    "InkType", N_("Ink Type"), N_("Advanced Printer Setup"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+  },
+  {
+    "Laminate", N_("Laminate Pattern"), N_("Advanced Printer Setup"),
     N_("Laminate Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1
   },
   {
-    "Borderless", N_("Borderless"),
+    "Borderless", N_("Borderless"), N_("Advanced Printer Setup"),
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1
@@ -784,7 +784,7 @@ static const float_param_t float_parameters[] =
 {
   {
     {
-      "CyanDensity", N_("Cyan Balance"),
+      "CyanDensity", N_("Cyan Balance"), N_("Output Level Adjustment"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1
@@ -792,7 +792,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "MagentaDensity", N_("Magenta Balance"),
+      "MagentaDensity", N_("Magenta Balance"), N_("Output Level Adjustment"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1
@@ -800,7 +800,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "YellowDensity", N_("Yellow Balance"),
+      "YellowDensity", N_("Yellow Balance"), N_("Output Level Adjustment"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1
@@ -808,27 +808,11 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "BlackDensity", N_("Black Balance"),
+      "BlackDensity", N_("Black Balance"), N_("Output Level Adjustment"),
       N_("Adjust the black balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1
     }, 0.0, 2.0, 1.0, 1
-  },
-  {
-    {
-      "LightCyanTransition", N_("Light Cyan Transition"),
-      N_("Light Cyan Transition"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
-    }, 0.0, 5.0, 1.0, 1
-  },
-  {
-    {
-      "LightMagentaTransition", N_("Light Magenta Transition"),
-      N_("Light Magenta Transition"),
-      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
-    }, 0.0, 5.0, 1.0, 1
   },
 };    
 

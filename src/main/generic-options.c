@@ -52,12 +52,14 @@ static const stpi_image_type_t standard_image_types[] =
 static const stp_parameter_t the_parameters[] =
 {
   {
-    "Quality", N_("Print Quality"), N_("Print Quality"),
+    "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
+    N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
   {
-    "ImageType", N_("Image Type"), N_("Type of image being printed"),
+    "ImageType", N_("Image Type"), N_("Basic Image Adjustment"),
+    N_("Type of image being printed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },

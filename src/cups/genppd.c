@@ -1192,7 +1192,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 #if 0
 		  gzprintf(fp, "*OrderDependency: %d AnySetup *Stp%s\n",
 			   (100 + l + (j * param_count) +
-			    (k * STP_PARAMETER_LEVEL_ADVANCED5 * param_count)),
+			    (k * STP_PARAMETER_LEVEL_INTERNAL * param_count)),
 			   desc.name);
 #endif
 		  if (!desc.is_mandatory)

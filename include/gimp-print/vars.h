@@ -101,7 +101,7 @@ typedef enum
   STP_PARAMETER_LEVEL_ADVANCED2,
   STP_PARAMETER_LEVEL_ADVANCED3,
   STP_PARAMETER_LEVEL_ADVANCED4,
-  STP_PARAMETER_LEVEL_ADVANCED5,
+  STP_PARAMETER_LEVEL_INTERNAL,
   STP_PARAMETER_LEVEL_INVALID
 } stp_parameter_level_t;
 
@@ -161,6 +161,7 @@ typedef struct
 {
   const char *name;		/* Internal name (key) */
   const char *text;		/* User-visible name */
+  const char *category;		/* User-visible category name */
   const char *help;		/* Help string */
   stp_parameter_type_t p_type;
   stp_parameter_class_t p_class;
