@@ -19,7 +19,7 @@
 cups-genppdconfig \- a user-friendly interface to generate gimp-print PPD files for use with CUPS
 .SH SYNOPSIS
 .B cups-genppdconfig
-[\fI\-d pdd_directory\fR]
+[\fI\-d ppd_directory\fR]
 .br
 .B update-cups-genppd
 [\fI\-d pdd_directory\fR]
@@ -37,18 +37,19 @@ will be used instead to create a simpler, though functionally identical,
 interface.
 .SH OPTIONS
 .TP
-.B \-d \fIppd_directory\fP
-Use \fIppd_directory\fP as the base directory to create PPD files in.  The
+.B \-d \fIppd-directory\fP
+Use \fIppd-directory\fP as the base directory to create PPD files in.  The
 default printer and language selections will also be obtained from this
 directory.  By default, the base directory is
 \fP@cups_conf_datadir@/model/gimp-print\fP.
 .SH SEE ALSO
 .BR cups-genppd (8),
+.BR cups-genppdupdate (8),
 .BR dialog (1),
 gimpprint.info,
 CUPS Software Administrators Manual, http://localhost:631/documentation.html
 .SH COPYRIGHT
-Copyright \(co  1992\-2002 Roger Leigh (roger@whinlatter.uklinux.net)
+Copyright \(co  2002\-2003 Roger Leigh (roger@whinlatter.uklinux.net)
 .PP
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as

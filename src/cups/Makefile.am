@@ -49,7 +49,7 @@ if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate cups-genppd
 endif
 if BUILD_CUPS
-bin_SCRIPTS = cups-genppdconfig
+bin_SCRIPTS = cups-genppdconfig cups-genppdupdate
 endif
 if BUILD_CUPS
 cupsexec_backend_PROGRAMS = epson canon
@@ -206,7 +206,7 @@ clean-local:
 ## Clean
 
 CLEANFILES = ppd-stamp
-DISTCLEANFILES = cups-genppdconfig
+DISTCLEANFILES = cups-genppdconfig cups-genppdupdate
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \

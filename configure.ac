@@ -776,6 +776,7 @@ AC_CONFIG_FILES([man/Makefile])
 AC_CONFIG_FILES([man/cups-calibrate.8])
 AC_CONFIG_FILES([man/cups-genppd.8])
 AC_CONFIG_FILES([man/cups-genppdconfig.8])
+AC_CONFIG_FILES([man/cups-genppdupdate.8])
 AC_CONFIG_FILES([man/escputil.1])
 AC_CONFIG_FILES([man/gimpprint.3])
 AC_CONFIG_FILES([man/gimpprint-color.7])
@@ -795,6 +796,8 @@ AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
                 [chmod +x src/cups/cups-genppdconfig])
+AC_CONFIG_FILES([src/cups/cups-genppdupdate],
+                [chmod +x src/cups/cups-genppdupdate])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
