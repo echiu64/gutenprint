@@ -1,3 +1,63 @@
+2000-10-12	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.67) (+4 -2)
+	
+	116696: gcc dependency
+	
+2000-10-12	<easysw@sourceforge.net>
+
+	Files:	print-util.c (1.150) (+3 -4)
+		cups/rastertoprinter.c (1.7) (+3 -2)
+		cups/genppd.c (1.12) (+17 -2)
+	
+	Changed /'s in size names to dashes - /'s not compatible with PPD files...
+	
+	Removed duplicate 8x12 size entry (caused off-by-one problems in GUI
+	interfaces)
+	
+	Added support for image type option (default to continuous/photo)
+	
+2000-10-12	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.51) (+54 -40)
+	
+	116084: Update to Debian info in Ghost/README
+	
+2000-10-12	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.52) (+44 -0)
+		configure.in (1.35) (+1 -1)
+		RELNOTES (1.32) (+74 -1)
+		README (1.34) (+1 -1)
+	
+	Prep for 4.0b3
+	
+2000-10-12	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.17) (+3 -3)
+		cups/rastertoprinter.c (1.6) (+48 -11)
+		cups/genppd.c (1.11) (+13 -10)
+	
+	Fixes for PCL and BJC driver resolutions - they use XRESxYRES, while the
+	EPSON driver uses "XRES x YRES"...
+	
+	Added monochrome resolution mode for PCL driver.
+	
+	Added mergevars and validatevars calls per Robert's patch.
+	
+	The install target now depends on "all".
+	
+	Added code to limit the number of lines read to the raster height, and
+	to flush any unused lines in the buffer.  This should only be needed if
+	the GIMP-print driver code gives up on printing before reading all of the
+	image data...
+	
+2000-10-11	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.69) (+21 -0)
+	
+	Warning in regards bug 116313
+	
 2000-10-11	<rlk@sourceforge.net>
 
 	Files:	Makefile.am (1.68) (+1 -1)
