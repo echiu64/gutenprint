@@ -74,6 +74,15 @@ while(<PIPE>) {
 close PIPE or die "Cannot run stp_limits: $!\n";
 print STDERR "done.\n";
 
+open PIPE, "./printers|" or die "Cannot run printers: $!\n";
+print STDERR "Loading options from ./printers...";
+while(<PIPE>) {
+    next if m!^#!;
+    eval $_;
+}
+close PIPE or die "Cannot run printers: $!\n";
+print STDERR "done.\n";
+
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
 
 # Invert, to build %bar{$optionname} = [ choice1, choice2 ];
@@ -81,8 +90,10 @@ my ($a, $otmp, $vtmp);
 for $a (keys(%stpdata)) {
     for $otmp (keys %{$stpdata{$a}}) {
 	for $vtmp (keys (%{$stpdata{$a}{$otmp}})) {
-	    push (@{$ev_choices{$otmp}}, $vtmp)
-		if (!$seen_evchoice{$otmp}{$vtmp}++);
+	    if (!$seen_evchoice{$otmp}{$vtmp}++) {
+		push (@{$ev_choices{$otmp}}, [ $vtmp,
+					       $stpdata{$a}{$otmp}{$vtmp}]);
+	    }
 	}
     }
 }
@@ -241,19 +252,19 @@ sub build_ev {
     my $ev;
     for $ev (@{$ev_choices{$stpopt}}) {
 	#  Put in the basic choice info: ev names, etc
-	my $ev_longname = $ev;
-	my $ev_shortname = get_ev_shortname($ev);
-	my $ev_id = get_ev_key($ev, $drvname);
+	my $ev_longname = @$ev[1];
+	my $ev_shortname = @$ev[0];
+	my $ev_id = get_ev_key($ev_shortname, $drvname);
 	my $ev_driverval;
 
 	# Either call a per-option function to get the driverval, or
 	# just use the string choice name.
 	if (defined($drivervals->{$stpopt})) {
-	    $ev_driverval = &{$drivervals->{$stpopt}}($ev);
-	    die "Undefined driverval for option $stpopt value $ev!\n"
+	    $ev_driverval = &{$drivervals->{$stpopt}}($ev_shortname);
+	    die "Undefined driverval for option $stpopt value $ev_shortname!\n"
 		if (! defined($ev));
 	} else {
-	    $ev_driverval = $ev;
+	    $ev_driverval = $ev_shortname;
 	}
 	push (@vals,
 	      "    <enum_val id='$ev_id'>\n",
@@ -271,7 +282,7 @@ sub build_ev {
 	for $stpprn (keys(%stpdata)) {
 	    my $fooprn;
 	    for $fooprn (@{$mapstp{$stpprn}}) {
-		if ($stpdata{$stpprn}{$stpopt}{$ev}) {
+		if ($stpdata{$stpprn}{$stpopt}{$ev_shortname}) {
 		    # OK, this choice applies to this enum
 		    push (@vals,
 			  "        <constraint sense='true'>\n",
@@ -442,7 +453,8 @@ sub build_model_ev {
     my $ev;
     for $ev (keys(%mapstp)) {
 	#  Put in the basic choice info: ev names, etc
-	my $ev_longname = $ev;
+	my $ev_shortname = $ev;
+	my $ev_longname = $printer_name{$ev};
 	my $ev_shortname = get_ev_shortname($ev);
 	my $ev_id = get_ev_key($ev, $drvname);
 	my $ev_driverval = $ev;

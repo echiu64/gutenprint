@@ -68,8 +68,9 @@ main(int argc, char **argv)
 	    {
 	      for (j = 0; j < count; j++)
 		{
-		  printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-			 stp_printer_get_driver(p), params[k], retval[j].name);
+		  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+			 stp_printer_get_driver(p), params[k], retval[j].name,
+			 retval[j].text);
 		  free((void *)retval[j].name);
 		  free((void *)retval[j].text);
 		}
@@ -83,9 +84,10 @@ main(int argc, char **argv)
 		 stp_printer_get_driver(p), "Dither",
 		 stp_dither_algorithm_name(0));
 	  for (k = 0; k < stp_dither_algorithm_count(); k++)
-	    printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
+	    printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 		   stp_printer_get_driver(p), "Dither",
-		   stp_dither_algorithm_name(k));
+		   stp_dither_algorithm_name(k),
+		   stp_dither_algorithm_text(k));
 	  if (stp_get_output_type(pv) == OUTPUT_COLOR)
 	    {
 	      printf("$defaults{'%s'}{'%s'} = '%s';\n",

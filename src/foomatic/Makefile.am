@@ -33,11 +33,13 @@ LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
 
-FOOMATIC_NOINST_BIN = printer_options paper_sizes gimp-print-version stp_limits
+FOOMATIC_NOINST_BIN = printer_options paper_sizes gimp-print-version \
+	stp_limits printers
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 
-EXTRA_PROGRAMS = printer_options gimp-print-version paper_sizes stp_limits
+EXTRA_PROGRAMS = printer_options gimp-print-version paper_sizes \
+	stp_limits printers
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = $(LIBGIMPPRINT_LIBS)
@@ -54,6 +56,10 @@ paper_sizes_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 stp_limits_SOURCES = stp_limits.c
 stp_limits_LDADD = $(LIBGIMPPRINT_LIBS)
 stp_limits_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+printers_SOURCES = printers.c
+printers_LDADD = $(LIBGIMPPRINT_LIBS)
+printers_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 
 ## Rules
