@@ -32,10 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.4-rc1"><b>November 20, 2002 -</b></a> Gimp-Print 4.2.4-rc1, a release candidate for 4.2.4 is now available for download.
- </p>
- <p>
- <a href="MacOSX.php3#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
+ <a href="MacOSX.php3#4.2.4"><b>November 25, 2002 -</b></a> Gimp-Print 4.2.4, the newest stable release, is now available for download.
  </p>
  <br>
  </td>
@@ -98,54 +95,56 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <br>
- <b>Gimp-Print 4.2.3</b>
+ <b>Gimp-Print 4.2.4</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-1.ppc.dmg?download"
- >gimp-print-4.2.3-1.ppc.dmg</a>&nbsp;(5.2 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-1.ppc.dmg?download"
+ >gimp-print-4.2.4-1.ppc.dmg</a>&nbsp;(5.3 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.3 is the newest final release for Mac OS X; it includes 186
- drivers supporting over 300 printers. The disk image file includes an OS X
+ Gimp-Print 4.2.4 is the newest final release for Mac OS X; it includes 197
+ drivers supporting over 300 printers. The disk-image file includes an OS X
  installer package plus illustrated documentation to easily guide you through
- the printer set up process. This package requires (but does not include) ESP
+ the printer set-up process. This package requires (but does not include) ESP
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <b>Gimp-Print 4.2.4-rc1</b>
+ <!-- save for 4.2.5
+ <b>Gimp-Print 4.2.5-pre1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-rc1.ppc.dmg?download"
- >gimp-print-4.2.4-rc1.ppc.dmg</a>&nbsp;(5.3 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.5-pre1.ppc.dmg?download"
+ >gimp-print-4.2.5-pre1.ppc.dmg</a>&nbsp;(5.3 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-rc1.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.5-pre1.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.4-rc1 is the newest release candidate for Mac OS X; it includes bug fixes
- over 4.2.3 in preparation for the final release fo 4.2.4. This package requires (but does not include)
+ Gimp-Print 4.2.5-pre1 is the newest pre-release for Mac OS X; it includes bug fixes
+ over 4.2.4, but it may contain new bugs. This package requires (but does not include)
  ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
+ -->
  <b>ESP Ghostscript 7.05.5</b>
  </td>
  </tr>
@@ -222,6 +221,139 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.4"></a>
+ <B>Gimp-Print 4.2.4</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-11-25</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.4 is the newest final release build in the stable
+ 4.2 series; it contains the following improvements over <a href=
+ "MacOSX.php3#4.2.3">Gimp-Print 4.2.3</a>:
+ </p>
+<b>Major Improvements</b>
+ <ul>
+   <li> (bugs 603702 and 619537) All PCL laser printers (including HP
+     LaserJet and many other printer lines) printed too light (black
+     came out as medium gray).</li>
+   <li> (bugs 631993 and 633910) Various problems with the PPD files
+     used by the native CUPS driver worked incorrectly with many
+     applications, leading to failures to print, failures to recognize
+     certain page sizes, and custom page sizes not working correctly
+     have been fixed.  To fix these problems, you must reinstall all
+     of your printer queues using Gimp-Print PPD files.  To do this,
+     you must delete and re-create the printer queue (merely modifying
+     or configuring the queue will not solve the problem).
+     Please see the release notes for 4.2.3 (below) for instructions
+     on using custom page sizes.</li>
+   <li> (bug 628698) Lexmark printers produced severely distorted colors
+     in some cases.</li>
+   <li> (bug 631498) Canon large-format printers did not support A3 paper
+     size; these printers are now capable of printing on that size
+     paper.</li>
+   <li> (no bug number) PCL laser printers now have correct margins on
+     A4-size paper.</li>
+   <li> (bug 630365) The Epson Stylus Photo 950 now prints correctly in
+     1440x1440 and 2880x720 DPI modes.  This is not significant new
+     functionality; these modes are actually printed at 2880x1440,
+     which did not have htis problem.</li>
+   <li> (no bug number, but related to 628698) 6-color HP printers should
+     now print correctly using all 6 colors.</li>
+   <li> (no bug number) The dimensions for 22x30 watercolor paper were
+     incorrect.</li>
+ </ul>
+<b>New Functionality</b>:
+ <ul>
+ <li> The following HP DesignJet large-format plotters are now
+     supported: DesignJet 230, 250, 430, 450, 455, 488, 700, 2500, and
+     3500.  Other DesignJet printers may work with one of these
+     drivers.</li>
+ <li> The following Epson multi-function devices are now supported as
+     printers: Stylus 3200CX and 5200CX.  This project does not
+     support scanners, so we cannot offer any advice on the scanner
+     component of these units.</li>
+ <li> The Epson MJ-930C is now supported.</li>
+ <li> Various manual pages have been added or updated.  See
+     gimpprint(3), ijsgimpprint(1), escputil(1), and cups-calibrate(8)
+     for more information.</li>
+ <li> Transverse versions of the US CAD standard paper sizes (ArchA,
+     ArchB, ArchC, ArchD, and ArchE) have been added.  This permits
+     printing e. g. ArchD size (24x36) plots on ArchE (36 inch wide)
+     paper.</li>
+ </ul>
+<b>Exceptions and Workarounds</b>:
+ <ul>
+ <li> The new HP DesignJets have not been fully tuned.  In particular,
+     there are reports that they print too light.  This can be
+     corrected with the Density adjustment (try 1.5~1.7 or
+     thereabouts).</li>
+ <li> The version of libtool used to build this package, 1.4.2, does
+     not create shared libraries correctly on some platforms (in
+     particular, MIPS and MIPSEL).  The workaround is to either build
+     static libraries only (configure --disable-shared), or to
+     regenerate the libtool with libtool 1.4.3.  We expect this to be
+     fixed in a future release.</li>
+ <li> The Epson Stylus 2200 has not been tuned in 7-color mode, and
+     reports are that quality is subpar in this mode.  We recommend
+     using 6-color mode until this is tuned, which we hope to be in
+     the near future.</li>
+ <li> There are longstanding reports of problems printing with certain
+     USB-parallel and USB-serial adapters on Macintosh OS X.  In
+     particular, many users have reported problems with the Keyspan
+     adapter; we recommend that users having problems try different
+     brands of adapters, and avoid using USB hubs.  Please check our
+     web site (http://gimp-print.sourceforge.net) for updates.</li>
+ <li> The list of compatible and potentially compatible Hewlett-Packard
+     printers has been updated with the latest available information. If a
+     particular printer does not work with the recommended
+     driver, we recommend that you try other similar drivers, check the 
+ <a href= "http://sourceforge.net/tracker/?atid=101537&group_id=1537&func=browse">Feature
+     Requests</a>, and if the printer is not listed please file a feature request
+     (via the Submit New button).</li>
+ </ul>
+ <dl>
+<dt><b>The following bugs have been fixed in Gimp-Print 4.2.4</b>:</dt>
+
+<dd>603702 QUALITY-HP LaserJet 5L print is too light
+<dd>619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+<dd>628698 Lexmark color reversal
+<dd>630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
+<dd>631498 Canon driver does not support A3 page size for large format
+<dd>631936 HP DesignJet Margin Problems
+<dd>631993 Macintosh OS X: Custom page size problems w/some apps
+<dd>633910 Epson 1520 ppd bug gimp-print 4.2.3
+</dl><dl>
+<dt><b>The following bugs are currently open</b>:</dt>
+
+<dd>409612 Minor positioning prob on 4x6 glossy
+<dd>538097 QUALITY-Poor quality printing on Canon s400
+<dd>549677 Incorrect scaling on Canon BJC-1000
+<dd>557868 QUALITY-Washed out color under Gimp on HP560c
+<dd>581168 Canon BJC 250 just spits out pages
+<dd>601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+<dd>602933 QUALITY-Poor quality on Canon S800
+<dd>613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+<dd>614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+<dd>619299 QUALITY - brightness adjustment problem
+<dd>621668 Epson Stylus full bleed prints have slight margin
+<dd>625780 Epson Stylus Pro <dd>5000 does not print
+<dd>627266 Epson Stylus Pro Autoselect paper feed broken
+<dd>627978 QUALITY: Canon BJC-<dd>6500 has magenta cast.
+<dd>631937 HP DesignJet Sheet Cutter Problem
+<dd>639356 Build system: The version of libtool is too old
+<dd>641992 HP DesignJet 455CA printing rotated 90
+<dd>641981 HP DesignJet 455 too light
+<dd>641628 QUALITY: Epson Stylus 2200 print quality is low in 7-color
+ </dl>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.4-rc1"></a>
