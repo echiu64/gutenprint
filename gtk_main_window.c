@@ -1508,74 +1508,77 @@ static void gtk_do_misc_updates(void)
  * gtk_position_callback() - callback for position entry widgets
  *
  ****************************************************************************/
-static void gtk_position_callback(GtkWidget *widget)
+static void
+gtk_position_callback (GtkWidget *widget)
 {
-  int dontcheck = 0;
-  gdouble unit_scaler = 1.0;
-
-  if(vars.unit) unit_scaler = 1.0 / 2.54;
-  if (widget == top_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.top = ((new_value * unit_scaler + 1.0 / 144) * 72) - top;
-    }
-  else if (widget == left_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.left = ((new_value * unit_scaler + 1.0 / 144) * 72) - left;
-    }
-  else if (widget == bottom_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.top = ((new_value * unit_scaler + 1.0 / 144) * 72) -
-			  (top + print_height);
-    }
-  else if (widget == right_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.left = ((new_value * unit_scaler + 1.0 / 144) * 72) -
-			  (left + print_width);
-    }
-  else if (widget == width_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
-			  unit_scaler;
-      new_value += 1.0 / 144.0;
-      if (vars.scaling >= 0) {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-	gtk_scaling_callback (scaling_ppi);
-      }
-      GTK_ADJUSTMENT(scaling_adjustment)->value = image_width / new_value;
-      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-    }
-  else if (widget == height_entry)
-    {
-      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
-			  unit_scaler;
-      new_value += 1.0 / 144.0;
-      if (vars.scaling >= 0) {
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
-	gtk_scaling_callback (scaling_ppi);
-      }
-      GTK_ADJUSTMENT(scaling_adjustment)->value = image_height / new_value;
-      gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-    }
-  else if (widget == recenter_button)
+  if (widget == recenter_button)
     {
       vars.left = -1;
       vars.top = -1;
-      dontcheck = 1;
     }
-  if (!dontcheck)
+  else
     {
+      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      gdouble unit_scaler = 1.0;
+      gboolean was_percent = 0;
+      if (vars.unit)
+	unit_scaler /= 2.54;
+      new_value *= unit_scaler;
+      if (widget == top_entry)
+	vars.top = ((new_value + (1.0 / 144.0)) * 72) - top;
+      else if (widget == bottom_entry)
+	vars.top = ((new_value + (1.0 / 144.0)) * 72) - (top + print_height);
+      else if (widget == left_entry)
+	vars.left = ((new_value + (1.0 / 144.0)) * 72) - left;
+      else if (widget == right_entry)
+	vars.left = ((new_value + (1.0 / 144.0)) * 72) - (left + print_width);
+      else if (widget == width_entry)
+	{
+	  if (vars.scaling >= 0)
+	    {
+	      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (scaling_ppi),
+					    TRUE);
+	      gtk_scaling_callback (scaling_ppi);
+	      was_percent = 1;
+	    }
+	  GTK_ADJUSTMENT(scaling_adjustment)->value =
+	    (image_width - .5) / new_value;
+	  gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+	  if (was_percent)
+	    {
+	      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (scaling_percent),
+					    TRUE);
+	      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+	    }
+	}
+      else if (widget == height_entry)
+	{
+	  if (vars.scaling >= 0)
+	    {
+	      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (scaling_ppi),
+					    TRUE);
+	      gtk_scaling_callback (scaling_ppi);
+	      was_percent = 1;
+	    }
+	  GTK_ADJUSTMENT(scaling_adjustment)->value =
+	    (image_height - .5) / new_value;
+	  gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+	  if (was_percent)
+	    {
+	      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (scaling_percent),
+					    TRUE);
+	      gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
+	    }
+	}
       if (vars.left < 0)
 	vars.left = 0;
       if (vars.top < 0)
 	vars.top = 0;
     }
+
   plist[plist_current].v.left = vars.left;
   plist[plist_current].v.top = vars.top;
-  gtk_preview_update();
+  gtk_preview_update ();
 }
 
 
@@ -2183,8 +2186,9 @@ static void gtk_preview_update(void)
 
   if (vars.scaling < 0)
   {
-    min_ppi_scaling1 = 72.0 * (gdouble) image_width / (gdouble) printable_width;
-    min_ppi_scaling2 = 72.0 * (gdouble) image_height / (gdouble) printable_height;
+    double twidth;
+    min_ppi_scaling1 = 72.0 * (gdouble) image_width / printable_width;
+    min_ppi_scaling2 = 72.0 * (gdouble) image_height / printable_height;
     if (min_ppi_scaling1 > min_ppi_scaling2)
       min_ppi_scaling = min_ppi_scaling1;
     else
@@ -2192,8 +2196,9 @@ static void gtk_preview_update(void)
     max_ppi_scaling = min_ppi_scaling * 20;
     if (vars.scaling > -min_ppi_scaling)
       vars.scaling = -min_ppi_scaling;
-    print_width = 72 * image_width / -vars.scaling;
-    print_height = print_width * image_height / image_width;
+    twidth = (72.0 * image_width / -vars.scaling) + .5;
+    print_width = twidth;
+    print_height = (twidth * (gdouble) image_height / image_width) + .5;
     GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
     GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
     GTK_ADJUSTMENT (scaling_adjustment)->value = -vars.scaling;
@@ -2212,13 +2217,15 @@ static void gtk_preview_update(void)
       /* i.e. if image is wider relative to its height than the width
          of the printable area relative to its height */
     {
-      print_width = printable_width * vars.scaling / 100;
-      print_height = print_width * image_height / image_width;
+      double twidth = .5 + printable_width * vars.scaling / 100;
+      print_width = twidth;
+      print_height = twidth * image_height / image_width;
     }
     else
     {
-      print_height = printable_height * vars.scaling / 100;
-      print_width = print_height * image_width / image_height;
+      double theight = .5 + printable_height * vars.scaling / 100;
+      print_height = theight;
+      print_width = theight * image_width / image_height;
     }
   }
 

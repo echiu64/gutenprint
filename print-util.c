@@ -269,9 +269,9 @@ update_cmyk(unsigned short *rgb)
    * too dark.
    */
 
-  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 2 + FMAX(m, y) * 2 + k) / 8;
-  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 2 + FMAX(c, y) * 2 + k) / 8;
-  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 2 + FMAX(c, m) * 2 + k) / 8;
+  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 5 + FMAX(m, y) * 0 + k) / 8;
+  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 5 + FMAX(c, y) * 0 + k) / 8;
+  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 5 + FMAX(c, m) * 0 + k) / 8;
 
   /*
    * Make sure we didn't go overboard.  We don't want to go too
