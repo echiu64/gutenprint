@@ -4,7 +4,7 @@ libexecdir = $(gimpplugindir)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint
+bin_PROGRAMS = unprint weavetest
 
 print_SOURCES = \
 	print-canon.c   \
@@ -17,6 +17,8 @@ print_SOURCES = \
 	print.h   
 
 unprint_SOURCES = unprint.c
+
+weavetest_SOURCES = weavetest.c
 
 INCLUDES = \
 	-I$(top_srcdir)			\
