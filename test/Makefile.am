@@ -64,4 +64,4 @@ $(LIBGIMPPRINT_LIBS):
 CLEANFILES = $(EXTRA_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif mixed-color-1bit.ppm parse-escp2 run-weavetest
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
