@@ -2038,6 +2038,29 @@ escp2_default_resolution(const printer_t *printer)
   return NULL;
 }
 
+void
+escp2_describe_resolution(const printer_t *printer,
+			  const char *resolution, int *x, int *y)
+{
+  const res_t *res = &(escp2_reslist[0]);
+  while (res->hres)
+    {
+      if (escp2_ink_type(printer->model, res->hres, res->vres, !res->softweave)
+	  != -1 &&
+	  res->vres <= escp2_max_vres(printer->model) &&
+	  res->hres <= escp2_max_hres(printer->model) &&
+	  !strcmp(resolution, res->name))
+	{
+	  *x = res->hres;
+	  *y = res->vres;
+	  return;
+	}
+      res++;
+    }
+  *x = -1;
+  *y = -1;
+}
+
 static void
 escp2_reset_printer(FILE *prn, escp_init_t *init)
 {

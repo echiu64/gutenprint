@@ -1,3 +1,66 @@
+2000-12-09	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.277) (+8 -7)
+	
+	Add premium luster photo paper.
+	
+2000-12-09	<rlk@sourceforge.net>
+
+	Files:	LICENSE (1.1) ( )
+		print-escp2.c (1.276) (+21 -21)
+		Makefile.am (1.77) (+1 -1)
+	
+	Change some resolution names in Epson driver.
+	
+	Put a copy of the GPL in the top level distribution.
+	
+2000-12-08	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.103) (+472 -227)
+		print-escp2.c (1.275) (+41 -36)
+	
+	Finally figured out how to do error diffusion on black ink with color
+	printing!  I'm not entirely sure what didn't work before.
+	
+	Improve printing quality on 4 pl printers at 1440x720 dpi.
+	
+	Add a whole slew of additional unidirectional resolutions to
+	get better print quality with halfway decent speed.
+	
+2000-12-04	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.102) (+9 -11)
+		ran.509.131.h (1.3) (+6063 -6668)
+		ran.367.179.h (1.3) (+5974 -6591)
+		quickmatrix257.h (1.4) (+6006 -5953)
+	
+	Prescale the dither matrices to [0..65535] to allow storing them
+	as unsigned short arrays in the binary, to substantially reduce
+	binary size.
+	
+2000-12-04	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.101) (+7 -1)
+	
+	Actually do the black density.
+	
+2000-12-04	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.60) (+57 -0)
+		print.h (1.95) (+3 -2)
+		print-pcl.c (1.100) (+53 -1)
+		print-dither.c (1.100) (+16 -1)
+		configure.in (1.39) (+19 -15)
+		README.dither (1.9) (+12 -0)
+	
+	Actually add luminosity lookup to PCL driver.
+	
+	Add black density to allow setting density of black independent of
+	color in color mode.
+	
+	Don't forcibly set optimization level in configure if user has
+	specified something else.
+	
 2000-12-03	<rlk@sourceforge.net>
 
 	Files:	gimp_main_window.c (1.70) (+2 -2)

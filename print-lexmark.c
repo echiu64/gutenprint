@@ -469,6 +469,16 @@ lexmark_default_resolution(const printer_t *printer)
     return "180x180 DPI";
 }
 
+void
+lexmark_describe_resolution(const printer_t *printer,
+			    const char *resolution, int *x, int *y)
+{
+  *x = -1;
+  *y = -1;
+  sscanf(resolution, "%dx%d", x, y);
+  return;
+}	  
+
 /*
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */

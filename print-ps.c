@@ -230,6 +230,19 @@ ps_default_resolution(const printer_t *printer)
 }
 
 /*
+ * This is really bogus...
+ */
+void
+ps_describe_resolution(const printer_t *printer,
+			const char *resolution, int *x, int *y)
+{
+  *x = -1;
+  *y = -1;
+  sscanf(resolution, "%dx%d", x, y);
+  return;
+}
+
+/*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 

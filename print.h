@@ -183,10 +183,11 @@ typedef struct printer
                           int *left, int *right, int *bottom, int *top);
   void	(*limit)(const struct printer *printer, const vars_t *v,
 		 int *width, int *length);
-  /* Print function */
   void	(*print)(const struct printer *printer, int copies, FILE *prn,
 		 Image image, const vars_t *v);
   const char *(*default_resolution)(const struct printer *printer);
+  void  (*describe_resolution)(const struct printer *printer,
+			       const char *resolution, int *x, int *y);
   vars_t printvars;
 } printer_t;
 
@@ -359,6 +360,9 @@ extern void	lexmark_limit(const printer_t *printer, const vars_t *v,
 extern void	lexmark_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *lexmark_default_resolution(const printer_t *printer);
+extern void     lexmark_describe_resolution(const struct printer *printer,
+					    const char *resolution,
+					    int *x, int *y);
 
 
 extern char	**escp2_parameters(const printer_t *printer, char *ppd_file,
@@ -371,6 +375,9 @@ extern void	escp2_limit(const printer_t *printer, const vars_t *v,
 extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *escp2_default_resolution(const printer_t *printer);
+extern void     escp2_describe_resolution(const struct printer *printer,
+					  const char *resolution,
+					  int *x, int *y);
 
 
 extern char	**canon_parameters(const printer_t *printer, char *ppd_file,
@@ -383,6 +390,9 @@ extern void	canon_limit(const printer_t *printer, const vars_t *v,
 extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *canon_default_resolution(const printer_t *printer);
+extern void     canon_describe_resolution(const struct printer *printer,
+					  const char *resolution,
+					  int *x, int *y);
 
 
 extern char	**pcl_parameters(const printer_t *printer, char *ppd_file,
@@ -395,6 +405,9 @@ extern void	pcl_limit(const printer_t *printer, const vars_t *v,
 extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
 			  Image image, const vars_t *v);
 extern const char *pcl_default_resolution(const printer_t *printer);
+extern void     pcl_describe_resolution(const struct printer *printer,
+					const char *resolution,
+					int *x, int *y);
 
 
 extern char	**ps_parameters(const printer_t *printer, char *ppd_file,
@@ -409,6 +422,9 @@ extern void	ps_limit(const printer_t *printer, const vars_t *v,
 extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 			 Image image, const vars_t *v);
 extern const char *ps_default_resolution(const printer_t *printer);
+extern void     ps_describe_resolution(const struct printer *printer,
+				       const char *resolution,
+				       int *x, int *y);
 
 extern const char *default_dither_algorithm(void);
 

@@ -225,6 +225,23 @@ pcl_default_resolution(const printer_t *printer)
   return pcl_resolutions[0].pcl_name;
 }
 
+void
+pcl_describe_resolution(const printer_t *printer,
+			const char *resolution, int *x, int *y)
+{
+  int i;
+  for (i = 0; i < NUM_RESOLUTIONS; i++)
+    {
+      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+	{
+	  sscanf(resolution, "%dx%d", x, y);
+	  return;
+	}
+    }
+  *x = -1;
+  *y = -1;
+}
+
 /*
  * Printer capability data
  */
