@@ -1,3 +1,47 @@
+2000-10-11	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.68) (+1 -1)
+		Ghost/README.bsd (1.1) ( )
+	
+	Description about how to build GhostScript under BSD
+	
+2000-10-10	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.89) (+14 -9)
+	
+	116092 Bad bjc-7000 specifications
+	
+2000-10-10	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.13) (+135 -12)
+	
+	More remote mode goodies
+	
+2000-10-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.264) (+8 -8)
+		printers.xml (1.26) (+10 -7)
+		print-util.c (1.149) (+13 -1)
+	
+	115794 ESC 480 doesn't print
+	116113 print-escp2.c requires #include <sys/types.h> (not really)
+	116286 Some PCL paper sizes listed in print-pcl but not print-util
+	
+2000-10-10	<rlk@sourceforge.net>
+
+	Files:	Ghost/contrib.mak.addon (1.9) (+1 -1)
+		Ghost/gdevstp.c (1.43) (+6 -3)
+		Ghost/devs.mak.addon-5.10 (1.4) (+1 -1)
+	
+	116211 Ghostscript driver does not pass printer variables through.
+	116213 Ghostscript makefile fragments missing dependency.
+	
+2000-10-05	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.51) (+29 -0)
+	
+	gimp-print 4.0b2 release
+	
 2000-10-05	<rlk@sourceforge.net>
 
 	Files:	RELNOTES (1.31) (+9 -2)
