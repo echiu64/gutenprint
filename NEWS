@@ -1077,9 +1077,17 @@ EPSON Stylus Photo 2000P
 EPSON Stylus Photo 2100
 EPSON Stylus Photo 2200
 EPSON Stylus Photo R200
+EPSON Stylus Photo R210
 EPSON Stylus Photo R300
+EPSON Stylus Photo R310
+EPSON Stylus Photo RX400
+EPSON Stylus Photo RX420
+EPSON Stylus Photo RX430
 EPSON Stylus Photo RX500
+EPSON Stylus Photo RX510
 EPSON Stylus Photo RX600
+EPSON Stylus Photo RX620
+EPSON Stylus Photo RX630
 EPSON Stylus Photo R800   (Experimental, CMYK only)
 EPSON Stylus Photo R1800  (Experimental, CMYK only)
 EPSON Stylus Pro 5000
@@ -1093,8 +1101,10 @@ EPSON Stylus Pro 9600
 EPSON Stylus Pro 10000
 EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
+EPSON Stylus CX-1500
 EPSON Stylus CX-3100
 EPSON Stylus CX-3200
+EPSON Stylus CX-3500
 EPSON Stylus CX-3600
 EPSON Stylus CX-3650
 EPSON Stylus CX-4600 (Experimental)
@@ -1104,6 +1114,7 @@ EPSON Stylus CX-5300
 EPSON Stylus CX-5400
 EPSON Stylus CX-6300
 EPSON Stylus CX-6400
+EPSON Stylus CX-6500
 EPSON Stylus CX-6600
 EPSON Stylus CX-8300
 EPSON Stylus CX-8400
@@ -1423,8 +1434,11 @@ Epson Stylus Photo EX          escp2-ex        EPSON Stylus Photo EX
 Epson Stylus Photo EX3         escp2-ex3       EPSON Stylus Photo EX3
 Epson Stylus Photo R200        escp2-r200      EPSON Stylus Photo R200
 Epson Stylus Photo R300        escp2-r300      EPSON Stylus Photo R300
+Epson Stylus Photo RX400       escp2-rx400     EPSON Stylus Photo RX400
+Epson Stylus Photo RX420       escp2-rx420     EPSON Stylus Photo RX420
 Epson Stylus Photo RX500       escp2-rx500     EPSON Stylus Photo RX500
 Epson Stylus Photo RX600       escp2-rx600     EPSON Stylus Photo RX600
+Epson Stylus Photo RX620       escp2-rx620     EPSON Stylus Photo RX620
 Epson Stylus Photo R800        escp2-r800      EPSON Stylus Photo R800
 Epson Stylus Photo R1800       escp2-r1800     EPSON Stylus Photo R1800
 Epson Stylus Pro 5000          escp2-5000      EPSON Stylus Pro 5000
@@ -1440,6 +1454,9 @@ Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
 Epson Stylus CX3100            escp2-cx3100    EPSON Stylus CX-3100
 Epson Stylus CX3200            escp2-cx3200    EPSON Stylus CX-3200
+Epson Stylus CX3500            escp2-cx3500    EPSON Stylus CX-3500
+Epson Stylus CX3600            escp2-cx3600    EPSON Stylus CX-3600
+Epson Stylus CX3650            escp2-cx3650    EPSON Stylus CX-3650
 Epson Stylus CX4600            escp2-cx4600    EPSON Stylus CX-4600
 Epson Stylus CX5100            escp2-cx5100    EPSON Stylus CX-5100
 Epson Stylus CX5200            escp2-cx5200    EPSON Stylus CX-5200
