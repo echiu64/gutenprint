@@ -267,6 +267,14 @@ static curve_param_t curve_parameters[] =
   },
   {
     {
+      "BlackCurve", N_("Black Curve"),
+      N_("Black curve"),
+      STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
+    }, &color_curve_bounds, 1
+  },
+  {
+    {
       "HueMap", N_("Hue Map"),
       N_("Hue adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
@@ -1125,7 +1133,6 @@ compute_gcr_curve(const stp_vars_t vars)
   double k_upper = 1.0;
   double k_gamma = 1.0;
   double *tmp_data = stpi_malloc(sizeof(double) * lut->steps);
-  int step = 65535 / (lut->steps - 1); /* 1 or 257 */
   int i;
 
   if (stp_check_float_parameter(vars, "GCRUpper", STP_PARAMETER_ACTIVE))
@@ -1700,6 +1707,7 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   stp_curve_t cyan_curve = NULL;
   stp_curve_t magenta_curve = NULL;
   stp_curve_t yellow_curve = NULL;
+  stp_curve_t black_curve = NULL;
   /*
    * Got an output file/command, now compute a brightness lookup table...
    */
@@ -1732,6 +1740,8 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
     magenta_curve = stp_get_curve_parameter(v, "MagentaCurve");
   if (stp_check_curve_parameter(v, "YellowCurve", STP_PARAMETER_ACTIVE))
     yellow_curve = stp_get_curve_parameter(v, "YellowCurve");
+  if (stp_check_curve_parameter(v, "BlackCurve", STP_PARAMETER_ACTIVE))
+    black_curve = stp_get_curve_parameter(v, "BlackCurve");
 
   /*
    * TODO check that these are wraparound curves and all that
@@ -1760,26 +1770,23 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
     {
       stp_curve_copy(lut->composite, composite_curve);
       invert_curve(lut->composite, input_color_model, output_color_model);
-      stp_curve_copy(lut->black, composite_curve);
-/*
-      invert_curve(lut->black, COLOR_MODEL_CMY, COLOR_MODEL_CMY);
-*/
       stp_curve_rescale(lut->composite, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
       stp_curve_resample(lut->composite, steps);
-      stp_curve_rescale(lut->black, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->black, steps);
     }
   else
     {
       compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
 		      app_gamma, brightness, screen_gamma,
 		      input_color_model, output_color_model);
-      compute_a_curve(lut->black, steps, 1.0, print_gamma, contrast,
-		      app_gamma, brightness, screen_gamma,
-		      COLOR_MODEL_CMY, COLOR_MODEL_CMY);
     }
+  if (black_curve)
+    stp_curve_copy(lut->black, black_curve);
+  else
+    lut->black = stp_curve_create_copy(color_curve_bounds);
+  stp_curve_rescale(lut->black, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+		    STP_CURVE_BOUNDS_RESCALE);
+  stp_curve_resample(lut->black, steps);
   if (cyan_curve)
     {
       stp_curve_copy(lut->cyan, cyan_curve);
