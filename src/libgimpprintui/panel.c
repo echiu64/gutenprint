@@ -544,6 +544,38 @@ checkbox_callback(GtkObject *button, gpointer xopt)
   return 1;
 }
 
+static int
+print_mode_is_color(stp_const_vars_t v)
+{
+  const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
+  if (!printing_mode)
+    {
+      int answer = 1;
+      stp_parameter_t desc;
+      stp_describe_parameter(v, "PrintingMode", &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
+	  strcmp(desc.deflt.str, "BW") == 0)
+	answer = 0;
+      stp_parameter_description_destroy(&desc);
+      return answer;
+    }
+  if (strcmp(printing_mode, "BW") == 0)
+    return 0;
+  else
+    return 1;
+}
+
+static void
+set_current_printer(void)
+{
+  pv = &(stpui_plist[stpui_plist_current]);
+  if (print_mode_is_color(pv->v))
+    stp_set_string_parameter(pv->v, "PrintingMode", "Color");
+  else
+    stp_set_string_parameter(pv->v, "PrintingMode", "BW");
+}
+
+
 static void
 stpui_create_boolean(option_t *opt,
 		     GtkTable *table,
@@ -2076,7 +2108,7 @@ static void
 create_main_window (void)
 {
 
-  pv = &(stpui_plist[stpui_plist_current]);
+  set_current_printer();
   manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
   /*
    * Create the various dialog components.  Note that we're not
@@ -2741,7 +2773,7 @@ plist_callback (GtkWidget *widget,
       stpui_plist_current = (gint) data;
     }
 
-  pv = &(stpui_plist[stpui_plist_current]);
+  set_current_printer();
   manufacturer = stp_printer_get_manufacturer(stp_get_printer(pv->v));
   build_printer_driver_clist();
 
@@ -3303,7 +3335,7 @@ new_printer_ok_callback (void)
 	  free(key.name);
 	  free(key.output_to);
 	  stpui_plist_current = stpui_plist_count - 1;
-	  pv = &(stpui_plist[stpui_plist_current]);
+	  set_current_printer();
 	  build_printer_combo ();
 	  set_printer();
 	}
@@ -3533,7 +3565,7 @@ redraw_color_swatch (void)
 	  cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
 	}
 
-      if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
+      if (!print_mode_is_color(pv->v))
 	gdk_draw_gray_image(swatch->widget.window, gc, 0, 0,
 			    thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
 			    adjusted_thumbnail_data, thumbnail_w);
@@ -3652,7 +3684,7 @@ compute_thumbnail(stp_const_vars_t v)
   stp_set_outdata(nv, &priv);
   stp_set_errfunc(nv, stpui_get_errfunc());
   stp_set_errdata(nv, stpui_get_errdata());
-  if (strcmp(stp_get_string_parameter(nv, "PrintingMode"), "BW") == 0)
+  if (!print_mode_is_color(nv))
     {
       priv.bpp = 1;
       stp_set_string_parameter(nv, "InkType", "RGBGray");
@@ -3686,7 +3718,7 @@ set_thumbnail_orientation(void)
   gint           x, y;
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
   gint bpp;
-  if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
+  if (!print_mode_is_color(pv->v))
     bpp = 1;
   else
     bpp = 3;
@@ -3758,9 +3790,7 @@ create_valid_preview(guchar **preview_data)
 {
   if (adjusted_thumbnail_data)
     {
-      gint bpp =
-	(strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0) ?
-	1 : 3;
+      gint bpp = (print_mode_is_color(pv->v)) ? 3 : 1;
       gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
       gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
       gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
@@ -3985,7 +4015,7 @@ do_preview_thumbnail (void)
   if (!preview_valid)
     gdk_draw_rectangle (preview->widget.window, gc, 1,
 			preview_x, preview_y, preview_w, preview_h);
-  else if (strcmp(stp_get_string_parameter(pv->v, "PrintingMode"), "BW") == 0)
+  else if (!print_mode_is_color(pv->v))
     gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);
