@@ -256,7 +256,10 @@ static void
 reset_preview(void)
 {
   if (!suppress_preview_reset)
-    buttons_pressed = preview_active = 0;
+    {
+      gtk_tooltips_enable(tooltips);
+      buttons_pressed = preview_active = 0;
+    }
 }
 
 static void
@@ -2487,8 +2490,7 @@ gimp_update_adjusted_thumbnail (void)
 
   stp_set_density(*pv, old_density);
 
-  if (!preview_valid)
-    gimp_redraw_color_swatch ();
+  gimp_redraw_color_swatch ();
   gimp_preview_update ();
 }
 
@@ -2940,6 +2942,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
 	  preview_active = 1;
+	  gtk_tooltips_disable(tooltips);
 	  if (event->state & GDK_SHIFT_MASK)
 	    move_constraint = MOVE_CONSTRAIN;
 	  else
@@ -2949,6 +2952,7 @@ gimp_preview_button_callback (GtkWidget      *widget,
 	{
 	  if ((buttons_mask & (1 << event->button)) == 0)
 	    {
+	      gtk_tooltips_enable(tooltips);
 	      preview_active = -1;
 	      stp_set_left(*pv, old_left);
 	      stp_set_top(*pv, old_top);
@@ -2971,7 +2975,10 @@ gimp_preview_button_callback (GtkWidget      *widget,
       buttons_pressed--;
       buttons_mask &= ~(1 << event->button);
       if (buttons_pressed == 0)
-	preview_active = 0;
+	{
+	  gtk_tooltips_enable(tooltips);
+	  preview_active = 0;
+	}
     }
 }
 

@@ -503,7 +503,6 @@ gimp_saturation_update (GtkAdjustment *adjustment)
 static void
 gimp_density_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
   if (stp_get_density(*pv) != adjustment->value)
     {
       stp_set_density(*pv, adjustment->value);
