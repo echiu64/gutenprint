@@ -1256,11 +1256,62 @@ setup_ink_types(const escp2_inkname_t *ink_type,
   return channels_in_use;
 }
 
+static int
+escp2_print_data(stp_vars_t v, stp_image_t *image, void *weave,
+		 int height, int width, unsigned short *out,
+		 unsigned char **cols)
+{
+  int errdiv  = stpi_image_height(image) / height;
+  int errmod  = stpi_image_height(image) % height;
+  int errval  = 0;
+  int errlast = -1;
+  int errline  = 0;
+  int y;
+
+  stpi_image_progress_init(image);
+
+  QUANT(0);
+  for (y = 0; y < height; y ++)
+    {
+      int duplicate_line = 1;
+      int zero_mask;
+      if ((y & 63) == 0)
+	stpi_image_note_progress(image, y, height);
+
+      if (errline != errlast)
+	{
+	  errlast = errline;
+	  duplicate_line = 0;
+	  if (stpi_color_get_row(v, image, errline, out, &zero_mask))
+	    return 2;
+	}
+      QUANT(1);
+
+      stpi_dither(v, y, out, duplicate_line, zero_mask);
+      QUANT(2);
+
+      stpi_write_weave(weave, width, cols);
+      QUANT(3);
+      errval += errmod;
+      errline += errdiv;
+      if (errval >= height)
+	{
+	  errval -= height;
+	  errline ++;
+	}
+      QUANT(4);
+    }
+  stpi_image_progress_conclude(image);
+  stpi_flush_all(weave);
+  QUANT(5);
+  return 1;
+}  
+
 /*
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
 static int
-escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
+escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
 {
   int		model = stpi_get_model_id(v);
   int		output_type = stp_get_output_type(v);
@@ -1269,7 +1320,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   int		status = 1;
 
   int		i;
-  int		y;		/* Looping vars */
 
   const res_t	*res;
   int		xdpi;
@@ -1287,11 +1337,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 		page_width,	/* Width of page */
 		page_height,	/* Height of page */
 		page_true_height;	/* True height of page */
-  int		errdiv,		/* Error dividend */
-		errmod,		/* Error modulus */
-		errval,		/* Current error value */
-		errline,	/* Current raster line */
-		errlast;	/* Last raster line loaded */
 
   int		nozzles;
   int		nozzle_separation;
@@ -1299,7 +1344,6 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   int		bits;
   void *	weave;
-  stp_vars_t	nv = stp_vars_create_copy(v);
   escp2_init_t	init;
   int		max_vres;
   int 		*head_offset;
@@ -1311,16 +1355,14 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   int 		channel_limit;
   const char *input_slot = stp_get_string_parameter(v, "InputSlot");
 
-  if (!stp_verify(nv))
+  if (!stp_verify(v))
     {
-      stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));
-      stp_vars_free(nv);
+      stpi_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
   if (model < 0 || model >= stpi_escp2_model_limit)
     {
-      stpi_eprintf(nv, _("Model %d out of range.\n"), model);
-      stp_vars_free(nv);
+      stpi_eprintf(v, _("Model %d out of range.\n"), model);
       return 0;
     }
 
@@ -1339,19 +1381,18 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	if (inks->inknames[i]->inkset == INKSET_EXTENDED &&
 	    inks->inknames[i]->channel_limit * 2 == stpi_image_bpp(image))
 	  {
-	    stpi_dprintf(STPI_DBG_INK, nv, "Changing ink type from %s to %s\n",
-			stp_get_string_parameter(nv, "InkType") ?
-			stp_get_string_parameter(nv, "InkType") : "NULL",
+	    stpi_dprintf(STPI_DBG_INK, v, "Changing ink type from %s to %s\n",
+			stp_get_string_parameter(v, "InkType") ?
+			stp_get_string_parameter(v, "InkType") : "NULL",
 			inks->inknames[i]->name);
-	    stp_set_string_parameter(nv, "InkType", inks->inknames[i]->name);
+	    stp_set_string_parameter(v, "InkType", inks->inknames[i]->name);
 	    found = 1;
 	    break;
 	  }
       if (!found)
 	{
-	  stpi_eprintf(nv, _("This printer does not support raw printer output at depth %d\n"),
+	  stpi_eprintf(v, _("This printer does not support raw printer output at depth %d\n"),
 		      stpi_image_bpp(image) / 2);
-	  stp_vars_free(nv);
 	  return 0;
 	}
     }
@@ -1366,38 +1407,38 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   privdata.initial_vertical_offset = 0;
   privdata.printed_something = 0;
   privdata.last_color = -1;
-  stpi_set_driver_data(nv, &privdata);
+  stpi_set_driver_data(v, &privdata);
 
-  ink_type = get_inktype(nv, model);
+  ink_type = get_inktype(v, model);
   total_channels = count_channels(ink_type);
   if (output_type != OUTPUT_GRAY &&
       output_type != OUTPUT_RAW_PRINTER && !ink_type->is_color)
     {
       output_type = OUTPUT_GRAY;
-      stp_set_output_type(nv, OUTPUT_GRAY);
+      stp_set_output_type(v, OUTPUT_GRAY);
     }
   if (output_type == OUTPUT_COLOR && ink_type->channels[0] != NULL)
     {
       output_type = OUTPUT_RAW_CMYK;
-      stp_set_output_type(nv, OUTPUT_RAW_CMYK);
+      stp_set_output_type(v, OUTPUT_RAW_CMYK);
     }
 
  /*
   * Figure out the output resolution...
   */
-  res = escp2_find_resolution(model, nv,
-			      stp_get_string_parameter(nv, "Resolution"));
+  res = escp2_find_resolution(model, v,
+			      stp_get_string_parameter(v, "Resolution"));
   if (res->softweave)
-    max_vres = escp2_max_vres(model, nv);
+    max_vres = escp2_max_vres(model, v);
   else
-    max_vres = escp2_base_resolution(model, nv);
+    max_vres = escp2_base_resolution(model, v);
   xdpi = res->hres;
   ydpi = res->vres;
   undersample = res->vertical_undersample;
   privdata.undersample = res->vertical_undersample;
   privdata.denominator = res->vertical_denominator;
 
-  physical_xdpi = escp2_base_res(model, res->resid, nv);
+  physical_xdpi = escp2_base_res(model, res->resid, v);
   if (physical_xdpi > xdpi)
     physical_xdpi = xdpi;
 
@@ -1405,15 +1446,15 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   if (ydpi > max_vres)
     physical_ydpi = max_vres;
 
-  bits = escp2_bits(model, res->resid, nv);
+  bits = escp2_bits(model, res->resid, v);
 
-  escp2_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
+  escp2_imageable_area(v, &page_left, &page_right, &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  stpi_default_media_size(nv, &n, &page_true_height);
+  stpi_default_media_size(v, &n, &page_true_height);
 
   left = physical_ydpi * undersample * left / 72 / res->vertical_denominator;
 
@@ -1421,13 +1462,13 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   * Adjust for zero-margin printing...
   */
 
-  if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, nv))
+  if (escp2_has_cap(model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES, v))
     {
      /*
       * In zero-margin mode, the origin is about 3/20" to the left of the
       * paper's left edge.
       */
-      left += escp2_zero_margin_offset(model, nv) * physical_ydpi *
+      left += escp2_zero_margin_offset(model, v) * physical_ydpi *
 	undersample / max_vres / res->vertical_denominator;
     }
 
@@ -1452,7 +1493,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
     }
   if (channels_in_use == 1)
     head_offset[0] = 0;
-  if (escp2_has_cap(model, MODEL_FAST_360, MODEL_FAST_360_YES, nv) &&
+  if (escp2_has_cap(model, MODEL_FAST_360, MODEL_FAST_360_YES, v) &&
       (ink_type->inkset == INKSET_CMYK || channels_in_use == 1) &&
       xdpi == 360 && ydpi == 360)
     init.use_fast_360 = 1;
@@ -1466,39 +1507,39 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
     {
       horizontal_passes = xdpi / physical_xdpi;
       if (channels_in_use == 1 &&
-	  (ydpi >= (escp2_base_separation(model, nv) /
-		    escp2_black_nozzle_separation(model, nv))) &&
-	  (escp2_max_black_resolution(model, nv) < 0 ||
-	   ydpi <= escp2_max_black_resolution(model, nv)) &&
-	  escp2_black_nozzles(model, nv))
+	  (ydpi >= (escp2_base_separation(model, v) /
+		    escp2_black_nozzle_separation(model, v))) &&
+	  (escp2_max_black_resolution(model, v) < 0 ||
+	   ydpi <= escp2_max_black_resolution(model, v)) &&
+	  escp2_black_nozzles(model, v))
 	init.use_black_parameters = 1;
       else
 	init.use_black_parameters = 0;
       if (init.use_fast_360)
 	{
-	  nozzles = escp2_fast_nozzles(model, nv);
-	  nozzle_separation = escp2_fast_nozzle_separation(model, nv);
-	  privdata.min_nozzles = escp2_min_fast_nozzles(model, nv);
+	  nozzles = escp2_fast_nozzles(model, v);
+	  nozzle_separation = escp2_fast_nozzle_separation(model, v);
+	  privdata.min_nozzles = escp2_min_fast_nozzles(model, v);
 	}
       else if (init.use_black_parameters)
 	{
-	  nozzles = escp2_black_nozzles(model, nv);
-	  nozzle_separation = escp2_black_nozzle_separation(model, nv);
-	  privdata.min_nozzles = escp2_min_black_nozzles(model, nv);
+	  nozzles = escp2_black_nozzles(model, v);
+	  nozzle_separation = escp2_black_nozzle_separation(model, v);
+	  privdata.min_nozzles = escp2_min_black_nozzles(model, v);
 	}
       else
 	{
-	  nozzles = escp2_nozzles(model, nv);
-	  nozzle_separation = escp2_nozzle_separation(model, nv);
-	  privdata.min_nozzles = escp2_min_nozzles(model, nv);
+	  nozzles = escp2_nozzles(model, v);
+	  nozzle_separation = escp2_nozzle_separation(model, v);
+	  privdata.min_nozzles = escp2_min_nozzles(model, v);
 	}
       init.nozzle_separation = nozzle_separation;
       nozzle_separation =
-	nozzle_separation * ydpi / escp2_base_separation(model, nv);
+	nozzle_separation * ydpi / escp2_base_separation(model, v);
     }
   else
     {
-      horizontal_passes = xdpi / escp2_base_resolution(model, nv);
+      horizontal_passes = xdpi / escp2_base_resolution(model, v);
       nozzles = 1;
       privdata.min_nozzles = 1;
       nozzle_separation = 1;
@@ -1514,7 +1555,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   if (channels_in_use > 1)
     for (i = 0; i < total_channels; i++)
       {
-	head_offset[i] = head_offset[i] * ydpi/escp2_base_separation(model,nv);
+	head_offset[i] = head_offset[i] * ydpi/escp2_base_separation(model,v);
 	if (head_offset[i] > max_head_offset)
 	  max_head_offset = head_offset[i];
       }
@@ -1523,7 +1564,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   * Send ESC/P2 initialization commands...
   */
   init.model = model;
-  init.v = nv;
+  init.v = v;
   init.output_type = output_type;
   init.ydpi = ydpi * undersample;
   if (init.ydpi > escp2_max_vres(init.model, init.v))
@@ -1539,17 +1580,17 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       if (init.use_black_parameters)
 	init.initial_vertical_offset =
 	  escp2_black_initial_vertical_offset(init.model, init.v) * init.ydpi /
-	  escp2_base_separation(model, nv);
+	  escp2_base_separation(model, v);
       else
 	init.initial_vertical_offset =
 	  head_offset[0] +
 	  (escp2_initial_vertical_offset(init.model, init.v) *
-	   init.ydpi / escp2_base_separation(model, nv));
+	   init.ydpi / escp2_base_separation(model, v));
     }
   else
     init.initial_vertical_offset =
       escp2_initial_vertical_offset(init.model, init.v) * init.ydpi /
-      escp2_base_separation(model, nv);
+      escp2_base_separation(model, v);
 
    /* adjust bottom margin for a 480 like head configuration */
   init.page_bottom = page_bottom - max_head_offset * 72 / ydpi;
@@ -1631,81 +1672,34 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   bits, out_width, out_height,
 				   top * physical_ydpi / 72,
 				   (page_height * physical_ydpi / 72 +
-				    escp2_extra_feed(model, nv) *
+				    escp2_extra_feed(model, v) *
 				    physical_ydpi /
-				    escp2_base_resolution(model, nv)),
-				   1, head_offset, nv, flush_pass,
+				    escp2_base_resolution(model, v)),
+				   1, head_offset, v, flush_pass,
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
-      stpi_set_output_color_model(nv, COLOR_MODEL_CMY);
+      stpi_set_output_color_model(v, COLOR_MODEL_CMY);
 
       out_channels = adjust_print_quality(&init, image);
-      stpi_dither_init(nv, image, out_width, xdpi, ydpi);
+      stpi_dither_init(v, image, out_width, xdpi, ydpi);
       channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
-					nv, channel_limit, length * bits);
+					v, channel_limit, length * bits);
       setup_inks(&init);
 
       out = stpi_malloc(stpi_image_width(image) * out_channels * 2);
 
-      /*
-       * Let the user know what we're doing...
-       */
-
-      stpi_image_progress_init(image);
-
-      errdiv  = stpi_image_height(image) / out_height;
-      errmod  = stpi_image_height(image) % out_height;
-      errval  = 0;
-      errlast = -1;
-      errline  = 0;
-
-      QUANT(0);
-      for (y = 0; y < out_height; y ++)
-	{
-	  int duplicate_line = 1;
-	  int zero_mask;
-	  if ((y & 63) == 0)
-	    stpi_image_note_progress(image, y, out_height);
-
-	  if (errline != errlast)
-	    {
-	      errlast = errline;
-	      duplicate_line = 0;
-	      if (stpi_color_get_row(nv, image, errline, out, &zero_mask))
-		{
-		  status = 2;
-		  break;
-		}
-	    }
-	  QUANT(1);
-
-	  stpi_dither(nv, y, out, duplicate_line, zero_mask);
-	  QUANT(2);
-
-	  stpi_write_weave(weave, length, cols);
-	  QUANT(3);
-	  errval += errmod;
-	  errline += errdiv;
-	  if (errval >= out_height)
-	    {
-	      errval -= out_height;
-	      errline ++;
-	    }
-	  QUANT(4);
-	}
-      stpi_image_progress_conclude(image);
-      stpi_flush_all(weave);
-      QUANT(5);
+      status = escp2_print_data(v, image, weave, out_height, length,
+				out, cols);
 
       /*
        * Cleanup...
        */
       stpi_destroy_weave(weave);
-      stpi_dither_free(nv);
+      stpi_dither_free(v);
       stpi_free(out);
       if (!privdata.printed_something)
-	stpi_send_command(nv, "\n", "");
-      stpi_send_command(nv, "\f", "");	/* Eject page */
+	stpi_send_command(v, "\n", "");
+      stpi_send_command(v, "\f", "");	/* Eject page */
       for (i = 0; i < total_channels; i++)
 	if (cols[i])
 	  stpi_free((unsigned char *) cols[i]);
@@ -1718,31 +1712,40 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   stpi_free(head_offset);
 
 #ifdef QUANTIFY
-  print_timers(nv);
+  print_timers(v);
 #endif
-  stp_vars_free(nv);
   return status;
 }
 
 static int
 escp2_print(const stp_vars_t v, stp_image_t *image)
 {
+  stp_vars_t nv = stp_vars_create_copy(v);
   int op = OP_JOB_PRINT;
+  int status;
   if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
-  return escp2_do_print(v, image, op);
+  status = escp2_do_print(nv, image, op);
+  stp_vars_free(nv);
+  return status;
 }
 
 static int
 escp2_job_start(const stp_vars_t v, stp_image_t *image)
 {
-  return escp2_do_print(v, image, OP_JOB_START);
+  stp_vars_t nv = stp_vars_create_copy(v);
+  int status = escp2_do_print(nv, image, OP_JOB_START);
+  stp_vars_free(nv);
+  return status;
 }
 
 static int
 escp2_job_end(const stp_vars_t v, stp_image_t *image)
 {
-  return escp2_do_print(v, image, OP_JOB_END);
+  stp_vars_t nv = stp_vars_create_copy(v);
+  int status = escp2_do_print(nv, image, OP_JOB_END);
+  stp_vars_free(nv);
+  return status;
 }
 
 static const stpi_printfuncs_t stpi_escp2_printfuncs =
