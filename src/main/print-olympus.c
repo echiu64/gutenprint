@@ -1128,9 +1128,9 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int min_x, max_x;
   int out_channels, out_bytes;
   unsigned short *final_out = NULL;
-  unsigned char  *char_out;
-  unsigned short *real_out;
-  unsigned short *err_out;
+  unsigned char  *char_out = NULL;
+  unsigned short *real_out = NULL;
+  unsigned short *err_out = NULL;
   int char_out_width;
   int status = 1;
   int ink_channels = 1;
@@ -1180,7 +1180,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int print_px_height;
   
   const char *l;
-  unsigned char *zeros;
+  unsigned char *zeros = NULL;
 
   if (!stp_verify(v))
     {
@@ -1538,6 +1538,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   stpi_image_conclude(image);
   if (final_out)
     stpi_free(final_out);
+  if (err_out)
+    stpi_free(err_out);
+  if (zeros)
+    stpi_free(zeros);
   return status;
 }
 

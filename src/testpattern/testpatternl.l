@@ -71,14 +71,14 @@ ws		[ \t]+
 
 %%
 
-cyan			yylval.sval = c_strdup(yytext);DBG(CYAN); return CYAN;
-l_cyan			yylval.sval = c_strdup(yytext);DBG(L_CYAN); return L_CYAN;
-magenta			yylval.sval = c_strdup(yytext);DBG(MAGENTA); return MAGENTA;
-l_magenta		yylval.sval = c_strdup(yytext);DBG(L_MAGENTA); return L_MAGENTA;
-yellow			yylval.sval = c_strdup(yytext);DBG(YELLOW); return YELLOW;
-d_yellow		yylval.sval = c_strdup(yytext);DBG(D_YELLOW); return D_YELLOW;
-black			yylval.sval = c_strdup(yytext);DBG(BLACK); return BLACK;
-l_black			yylval.sval = c_strdup(yytext);DBG(L_BLACK); return L_BLACK;
+cyan			yylval.sval = yytext;DBG(CYAN); return CYAN;
+l_cyan			yylval.sval = yytext;DBG(L_CYAN); return L_CYAN;
+magenta			yylval.sval = yytext;DBG(MAGENTA); return MAGENTA;
+l_magenta		yylval.sval = yytext;DBG(L_MAGENTA); return L_MAGENTA;
+yellow			yylval.sval = yytext;DBG(YELLOW); return YELLOW;
+d_yellow		yylval.sval = yytext;DBG(D_YELLOW); return D_YELLOW;
+black			yylval.sval = yytext;DBG(BLACK); return BLACK;
+l_black			yylval.sval = yytext;DBG(L_BLACK); return L_BLACK;
 gamma			DBG(GAMMA); return GAMMA;
 level			DBG(LEVEL); return LEVEL;
 steps			DBG(STEPS); return STEPS;

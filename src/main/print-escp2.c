@@ -1415,7 +1415,6 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	  int nprinter_weaves = 0;
 	  if (use_printer_weave(v) && (!res || res->printer_weave))
 	    nprinter_weaves = printer_weaves->n_printer_weaves;
-	  description->bounds.str = stp_string_list_create();
 	  if (nprinter_weaves)
 	    {
 	      stp_string_list_add_string(description->bounds.str, "None",
