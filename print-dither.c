@@ -885,9 +885,9 @@ do {									\
 	offset = xdw1;							\
       if (tmp##r > 65535)						\
 	tmp##r = 65535;							\
-	myspread = 3;							\
+      myspread = 3;							\
       if (offset == 0)							\
-	dist = 5 * tmp##r;						\
+	dist = myspread * tmp##r;					\
       else								\
 	dist = myspread * tmp##r / ((offset + 1) * (offset + 1));	\
       if (x > 0 && 0 < xdw1)						\
@@ -1876,6 +1876,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.17  2000/03/21 01:58:48  rlk
+ *   dumb typo
+ *
  *   Revision 1.16  2000/03/17 13:06:38  rlk
  *   Weaken the horizontal lines
  *
