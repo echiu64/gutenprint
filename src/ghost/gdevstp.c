@@ -441,6 +441,12 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   param_read_string(plist, "Model", &pmodel);
   param_read_string(plist, "InkType", &pinktype);
 
+  if (stp_get_output_type(stp_data.v) == OUTPUT_RAW_CMYK)
+    {
+      param_signal_error(plist, "Color", gs_error_rangecheck);
+      code = -100;
+    }
+
   if ( code < 0 )
     return code;
 

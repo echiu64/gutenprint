@@ -2,8 +2,12 @@ This is Gimp-Print version 4.1.8, a development release in the 4.1
 line.  Gimp-print is the print facility for the Gimp, and in addition
 a suite of drivers that may be used with common UNIX spooling systems
 using GhostScript or CUPS.  These drivers provide printing quality for
-UNIX/Linux on a par with proprietary vendor-supplied drivers in many
-cases, and can be used for many of the most demanding printing tasks.
+UNIX/Linux in many cases equal to or better than proprietary
+vendor-supplied drivers, and can be used for many of the most
+demanding printing tasks.
+
+Please read this README carefully!  Many things have changed from
+Gimp-Print 4.0.
 
 
 BASIC INSTALLATION
@@ -39,9 +43,7 @@ make install, you must run ldconfig as root before attempting to build
 this plugin.
 
 Gimp-print 4.1 requires the Gimp 1.2.  As of Gimp-print 4.1.6, the
-plugin will no longer compile against the Gimp 1.0 or 1.1.  While the
-plugin should continue to compile against the Gimp 1.1.21 and above
-(in the 1.1 line), such use is not supported.
+plugin will no longer compile against the Gimp 1.0 or 1.1.
 
 
 GHOSTSCRIPT
@@ -49,9 +51,9 @@ GHOSTSCRIPT
 This package includes a Ghostscript driver that may be built, allowing
 use of this software for general printing purposes.  Please read
 src/ghost/README for more information, including how to build and
-install it; the build procedure here merely creates the necessary
-source files that you must add to your Ghostscript source.  To build
-the Ghostscript driver, you must run:
+install it, and available options; the build procedure here merely
+creates the necessary source files that you must add to your
+Ghostscript source.  To build the Ghostscript driver, you must run:
 
 ./configure --with-ghost
 make
@@ -60,6 +62,9 @@ cd src/ghost
 If you do not wish to build the Gimp Print plugin, you must run
 
 ./configure --with-ghost --without-gimp
+
+Again, please be sure to read src/Ghost/README for the available
+options, which may change from release to release.
 
 
 CUPS

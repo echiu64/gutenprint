@@ -481,7 +481,6 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   gzprintf(fp, "*ImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
   gzprintf(fp, "*ImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");
   gzprintf(fp, "*ImageType Continuous/Photograph:\t\"<</cupsRowCount 2>>setpagedevice\"\n");
-  gzprintf(fp, "*ImageType Monochrome/Monochrome:\t\"<</cupsRowCount 3>>setpagedevice\"\n");
 
   gzputs(fp, "*CloseUI: *ImageType\n");
 

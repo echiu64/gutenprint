@@ -3025,9 +3025,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   separation_rows = escp2_separation_rows(model, nv);
   max_vres = escp2_max_vres(model, nv);
 
-  if (stp_get_image_type(nv) == IMAGE_MONOCHROME)
-    output_type = OUTPUT_GRAY;
-  if (output_type == OUTPUT_GRAY)
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     ncolors = 1;
   else
     for (i = 0; i < escp2_ninktypes; i++)
@@ -3116,7 +3114,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       physical_xdpi = (xdpi > escp2_enhanced_resolution) ?
 	escp2_enhanced_xres(model, nv) : escp2_xres(model, nv);
       horizontal_passes = xdpi / physical_xdpi;
-      if (output_type == OUTPUT_GRAY && escp2_black_nozzles(model, nv))
+      if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
+	  escp2_black_nozzles(model, nv))
 	{
 	  nozzles = escp2_black_nozzles(model, nv);
 	  nozzle_separation = escp2_black_nozzle_separation(model, nv);
@@ -3165,6 +3164,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   stp_default_media_size(printer, nv, &n, &page_true_height);
   init.model = model;
   init.output_type = output_type;
+  if (init.output_type == OUTPUT_MONOCHROME)
+    init.output_type = OUTPUT_GRAY;
   init.ydpi = ydpi * undersample;
   init.xdpi = xdpi;
   init.use_softweave = use_softweave;
@@ -3230,7 +3231,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   length = (out_width + 7) / 8;
 
-  if (output_type == OUTPUT_GRAY)
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     black = xzmalloc(length * bits);
   else
     {

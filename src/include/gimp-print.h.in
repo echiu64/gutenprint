@@ -79,8 +79,8 @@ extern const char* stp_check_version (unsigned int required_major,
 
 #define OUTPUT_GRAY             0       /* Grayscale output */
 #define OUTPUT_COLOR            1       /* Color output */
-#define OUTPUT_RAW_CMYK         2       /* Raw CMYK output */
-#define OUTPUT_GRAY_COLOR       3       /* Grayscale output using color */
+#define OUTPUT_MONOCHROME       2       /* Raw monochrome output */
+#define OUTPUT_RAW_CMYK         3       /* Raw CMYK output */
 
 #define ORIENT_AUTO             -1      /* Best orientation */
 #define ORIENT_PORTRAIT         0       /* Portrait orientation */
@@ -91,8 +91,7 @@ extern const char* stp_check_version (unsigned int required_major,
 #define IMAGE_LINE_ART          0
 #define IMAGE_SOLID_TONE        1
 #define IMAGE_CONTINUOUS        2
-#define IMAGE_MONOCHROME        3
-#define NIMAGE_TYPES            4
+#define NIMAGE_TYPES            3
 
 #define COLOR_MODEL_RGB         0
 #define COLOR_MODEL_CMY         1

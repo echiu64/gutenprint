@@ -10,17 +10,41 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.8 contains the following changes over 4.1.7:
 
-1) A bug introduced in 4.1.7 that caused roll feed printing to fail is
-   fixed.  The symptoms are typically that the ready light on the
-   printer flashes as data is sent, but nothing is printed.
+1) The way to print black and white only images has changed.  In the
+   Gimp plugin, the option has been moved from the Image Type group of
+   buttons to the Output Type group.  In the Ghostscript driver, it
+   has been moved from -dImageType=3 to -dColor=2.  It has been
+   removed, at least temporarily, from the CUPS driver.
 
-2) Color quality on Epson printers (particularly in the blue range) is
+   It is likely that there will be further changes related to all of
+   this before 4.2.
+
+2) A bug introduced in 4.1.7 that caused roll feed printing to fail on
+   Epson Stylus printers (such as the Stylus Photo 870) is fixed.  The
+   symptoms are typically that the ready light on the printer flashes
+   as data is sent, but nothing is printed.
+
+3) Color quality on Epson printers (particularly in the blue range) is
    improved.
 
-3) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
+4) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
    newer) Epson Stylus Photo printers.  This paper was specifically
    designed for these printers, and may not give optimal results with
    older printers.
+
+5) Very dark tones and very saturated colors should be improved
+   somewhat.  The result may be a bit darker and more contrasty; this
+   will need some experimentation.
+
+6) The Gimp plugin should now build on systems not using GNU make.
+
+7) The Gimp plugin now permits the user to define a new printer name.
+   This allows the user to define multiple "printers" with different
+   settings.
+
+8) The Gimp plugin will no longer compile against any version of 1.1.
+   It no longer uses the transitional "compatibility" API; rather, it
+   uses the 1.2 API.
 
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:

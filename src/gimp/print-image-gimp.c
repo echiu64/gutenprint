@@ -59,8 +59,8 @@
 /* Concrete type to represent image */
 typedef struct
 {
-  GDrawable *drawable;
-  GPixelRgn  rgn;
+  GimpDrawable *drawable;
+  GimpPixelRgn  rgn;
 
   /*
    * Transformations we can impose on the image.  The transformations
@@ -127,7 +127,7 @@ static stp_image_t theImage =
 };
 
 stp_image_t *
-Image_GDrawable_new(GDrawable *drawable)
+Image_GimpDrawable_new(GimpDrawable *drawable)
 {
   Gimp_Image_t *i = xmalloc(sizeof(Gimp_Image_t));
   i->drawable = drawable;

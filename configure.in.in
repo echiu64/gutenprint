@@ -56,8 +56,8 @@ dnl
 GIMPPRINT_MAJOR_VERSION=4
 GIMPPRINT_MINOR_VERSION=1
 GIMPPRINT_MICRO_VERSION=8
-GIMPPRINT_CURRENT_INTERFACE=4
-GIMPPRINT_INTERFACE_AGE=1
+GIMPPRINT_CURRENT_INTERFACE=5
+GIMPPRINT_INTERFACE_AGE=0
 GIMPPRINT_BINARY_AGE=0
 GIMPPRINT_VERSION=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION.$GIMPPRINT_MICRO_VERSION
 dnl
@@ -383,7 +383,7 @@ if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
   AM_PATH_GIMP(1.1.21,
     [SAVE_GTK_LIBS="$GIMP_LIBS"
     SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
-    AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root, and make sure gimptool is on your PATH.))
+    AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root and make sure gimptool is on your PATH.))
 fi
 
 dnl Checks for header files.

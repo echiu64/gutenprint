@@ -536,7 +536,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
     stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
-    if (output_type == OUTPUT_GRAY)
+    if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
       stp_puts("{currentfile picture readhexstring pop} image\n", v);
     else
       stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
@@ -555,7 +555,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   }
   else
   {
-    if (output_type == OUTPUT_GRAY)
+    if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
       stp_puts("/DeviceGray setcolorspace\n", v);
     else
       stp_puts("/DeviceRGB setcolorspace\n", v);
@@ -567,7 +567,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
     stp_zprintf(v, "\t/Height %d\n", image_height);
     stp_puts("\t/BitsPerComponent 8\n", v);
 
-    if (output_type == OUTPUT_GRAY)
+    if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
       stp_puts("\t/Decode [ 0 1 ]\n", v);
     else
       stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);

@@ -1619,7 +1619,7 @@ stp_compute_lut(stp_vars_t v, size_t steps)
    * Using it shifts the threshold, which is not the intent
    * of how this works.
    */
-  if (stp_get_image_type(v) == IMAGE_MONOCHROME)
+  if (stp_get_output_type(v) == OUTPUT_MONOCHROME)
     print_gamma = 1.0;
 
   lut = allocate_lut(steps);
@@ -1766,8 +1766,9 @@ stp_choose_colorfunc(int output_type,
 		     int *out_bpp,
 		     const stp_vars_t v)
 {
-  if (stp_get_image_type(v) == IMAGE_MONOCHROME)
+  switch (stp_get_output_type(v))
     {
+    case OUTPUT_MONOCHROME:
       *out_bpp = 1;
       switch (image_bpp)
 	{
@@ -1788,9 +1789,8 @@ stp_choose_colorfunc(int output_type,
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
-    }
-  else if (output_type == OUTPUT_RAW_CMYK)
-    {
+      break;
+    case OUTPUT_RAW_CMYK:
       *out_bpp = 4;
       switch (image_bpp)
 	{
@@ -1801,35 +1801,30 @@ stp_choose_colorfunc(int output_type,
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
-    }
-  else if (output_type == OUTPUT_COLOR)
-    {
+      break;
+    case OUTPUT_COLOR:
       *out_bpp = 3;
-
-      if (image_bpp >= 3)
+      if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
 	{
-	  if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
+	  if (image_bpp >= 3)
 	    RETURN_COLORFUNC(rgb_to_rgb);
-	  else
-	    RETURN_COLORFUNC(fast_rgb_to_rgb);
-	}
-      else if (cmap == NULL)
-        {
-          if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
+	  else if (cmap == NULL)
 	    RETURN_COLORFUNC(gray_to_rgb);
-          else
-	    RETURN_COLORFUNC(fast_gray_to_rgb);
-        }
+	  else
+	    RETURN_COLORFUNC(indexed_to_rgb);
+	}
       else
 	{
-	  if (stp_get_image_type(v) == IMAGE_CONTINUOUS)
-	    RETURN_COLORFUNC(indexed_to_rgb);
+	  if (image_bpp >= 3)
+	    RETURN_COLORFUNC(fast_rgb_to_rgb);
+	  else if (cmap == NULL)
+	    RETURN_COLORFUNC(fast_gray_to_rgb);
 	  else
 	    RETURN_COLORFUNC(fast_indexed_to_rgb);
 	}
-    }
-  else				/* Grayscale */
-    {
+      break;
+    case OUTPUT_GRAY:
+    default:
       *out_bpp = 1;
       switch (image_bpp)
 	{
@@ -1850,5 +1845,6 @@ stp_choose_colorfunc(int output_type,
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
+      break;
     }
 }

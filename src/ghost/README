@@ -741,10 +741,14 @@ For PCL (Hewlett-Packard and Lexmark 4076) printers:
 'Autoselect'
 
 
-Image type (to optimize the dither):
------ ---- --- -------- --- --------
+Output Type
+------ ----
 
--dColor=x          x:   0 ...   1  (1)
+-dColor=x          x:   0 ...   2  (1 on color printers, 0 otherwise)
+
+0  Grayscale
+1  Color
+2  Black and white
 
  Choose color vs. grayscale output.  Color output is the default.
  Choosing -dColor=0 results in only black ink (no color ink) being
@@ -759,30 +763,33 @@ Image type (to optimize the dither):
  appears darker than green.  -dColor=1 and -dSaturation=0.0 does not
  use luminance.
 
--dImageType=x x:   0 ...   3  (0)
+ -dColor=2 prints only black and white (thresholding).  This option is
+ extremely fast (particularly when combined with Very Fast dithering)
+ for printing pure black and white line art or text.
+
+
+Image type (to optimize the dither):
+----- ---- --- -------- --- --------
+
+-dImageType=x x:   0 ...   2  (0)
 Select the image type most representative of what's being printed.  
 
 0  Line art (color or gray scale)
 1  Primarily solid colors or smooth gradients (color or gray scale)
 2  Continuous-tone photographs (color or gray scale)
-3  Pure black and white or pre-screened (currently black only)
 
 Option 2 provides greatly improved color quality.  Option 0 will
 dither faster and yield sharper text, but at some possible cost to
 color accuracy and/or smoothness.  Option 1 may yield smoother images
 and/or more accurate color.  Option 2 will yield the best natural
-images, but is quite slow.  Option 3 is very fast and accurate, but
-should not be used if there are any tones other than pure black and
-white (or you want absolute black and white contrast).  Option 3
-combined with Very Fast dithering results in extremely fast rendering.
+images, but is quite slow.
 
-Note that any of the modes (except monochrome) may be used with either
-color or black & white output.  If black and white output is
-requested, but a color mode used, composite color will be printed.
-This generally offers smoother tone, but less purity of gray or black,
-than pure black ink.  Furthermore, it is possible to tune the color of
-the gray (to achieve warmer or cooler effects) using the color
-controls in this fashion.
+Note that any of the modes may be used with either color or black &
+white output.  If black and white output is requested, but a color
+mode used, composite color will be printed.  This generally offers
+smoother tone, but less purity of gray or black, than pure black ink.
+Furthermore, it is possible to tune the color of the gray (to achieve
+warmer or cooler effects) using the color controls in this fashion.
 
 
 EXAMPLES:
@@ -799,7 +806,7 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
 
 Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
-   -sQuality='720 DPI Softweave' -dImageType=3 -sOutputFile=- foo.ps
+   -sQuality='720 DPI Softweave' -dOutputType=2 -sOutputFile=- foo.ps
 
 
 SPOOLER CONFIGURATION

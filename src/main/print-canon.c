@@ -1711,7 +1711,8 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
   else
     arg_63_1= 0x30;
 
-  if (init->output_type==OUTPUT_GRAY) arg_63_1|= 0x01;
+  if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
+    arg_63_1|= 0x01;
 
   if (init->pt) arg_63_2= init->pt->media_code;
 
@@ -1801,14 +1802,20 @@ canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
     return;
   
   arg_6d_a= canon_size_type(v,init->caps);
-  if (!arg_6d_a) arg_6d_b= 1;
+  if (!arg_6d_a)
+    arg_6d_b= 1;
 
-  if (init->print_head==0) arg_6d_1= 0x03;
-  else if (init->print_head<=2) arg_6d_1= 0x02;
-  else if (init->print_head<=4) arg_6d_1= 0x04;
-  if (init->output_type==OUTPUT_GRAY) arg_6d_2= 0x02;
+  if (init->print_head==0)
+    arg_6d_1= 0x03;
+  else if (init->print_head<=2)
+    arg_6d_1= 0x02;
+  else if (init->print_head<=4)
+    arg_6d_1= 0x04;
+  if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
+    arg_6d_2= 0x02;
 
-  if (init->caps->model==8200) arg_6d_3= 0x01;
+  if (init->caps->model==8200)
+    arg_6d_3= 0x01;
 
   canon_cmd(v,ESC28,0x6d,12, arg_6d_1,
 	    0xff,0xff,0x00,0x00,0x07,0x00,
@@ -2070,15 +2077,11 @@ canon_print(const stp_printer_t printer,		/* I - Model */
    *                 or single black cartridge installed
    */
 
-  if (stp_get_image_type(nv) == IMAGE_MONOCHROME)
-    {
-      output_type = OUTPUT_GRAY;
-    }
-
-  if (printhead == 0 || caps->inks == CANON_INK_K)
+  if ((printhead == 0 || caps->inks == CANON_INK_K) &&
+      output_type != OUTPUT_MONOCHROME)
     output_type = OUTPUT_GRAY;
 
-  if (output_type == OUTPUT_GRAY)
+  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     colormode = COLOR_MONOCHROME;
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
@@ -2101,7 +2104,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") &&
       (caps->features & CANON_CAP_DMT) &&
-      stp_get_image_type(nv) != IMAGE_MONOCHROME) {
+      output_type != OUTPUT_MONOCHROME) {
     bits= 2;
 #ifdef DEBUG
     stp_erprintf("canon: using drop modulation technology\n");

@@ -38,8 +38,6 @@
  * This should be removed when we stop supporting 1.0.
  */
 
-#define GIMP_ENABLE_COMPAT_CRUFT
-
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 
@@ -68,7 +66,7 @@ typedef struct		/**** Printer List ****/
  */
 
 /* How to create an Image wrapping a Gimp drawable */
-extern stp_image_t *Image_GDrawable_new(GDrawable *drawable);
+extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable);
 extern int add_printer(const gp_plist_t *key, int add_only);
 extern void initialize_printer(gp_plist_t *printer);
 

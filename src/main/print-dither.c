@@ -60,11 +60,6 @@
 
 #define DITHER_FAST_STEPS (6)
 
-#define DITHER_MONOCHROME (0)
-#define DITHER_BLACK (1)
-#define DITHER_CMYK (2)
-#define DITHER_RAW_CMYK (3)
-
 typedef struct
 {
   const char *name;
@@ -602,14 +597,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   stp_dither_set_ink_darkness(d, ECOLOR_M, .3);
   stp_dither_set_ink_darkness(d, ECOLOR_Y, .2);
   stp_dither_set_density(d, 1.0);
-  if (stp_get_image_type(v) == IMAGE_MONOCHROME)
-    d->dither_class = DITHER_MONOCHROME;
-  else if (stp_get_output_type(v) == OUTPUT_RAW_CMYK)
-    d->dither_class = DITHER_RAW_CMYK;
-  else if (stp_get_output_type(v) == OUTPUT_GRAY)
-    d->dither_class = DITHER_BLACK;
-  else
-    d->dither_class = DITHER_CMYK;
+  d->dither_class = stp_get_output_type(v);
   for (i = 0; i < NCOLORS; i++)
     {
       d->channel[i].dither.first_position_light = -1;
@@ -4218,10 +4206,10 @@ stp_dither(const unsigned short  *input,
     }
   switch (d->dither_class)
     {
-    case DITHER_MONOCHROME:
+    case OUTPUT_MONOCHROME:
       stp_dither_monochrome(input, row, vd, black, duplicate_line, zero_mask);
       break;
-    case DITHER_BLACK:
+    case OUTPUT_GRAY:
       if (d->dither_type & D_FAST_BASE)
 	stp_dither_black_fast(input, row, vd, black, duplicate_line,
 			      zero_mask);
@@ -4231,7 +4219,7 @@ stp_dither(const unsigned short  *input,
       else
 	stp_dither_black_ed(input, row, vd, black, duplicate_line, zero_mask);
       break;
-    case DITHER_CMYK:
+    case OUTPUT_COLOR:
       if (black)
 	{
 	  if (d->dither_type & D_FAST_BASE)
@@ -4263,7 +4251,7 @@ stp_dither(const unsigned short  *input,
 			      zero_mask);
 	}
       break;
-    case DITHER_RAW_CMYK:
+    case OUTPUT_RAW_CMYK:
       if (d->dither_type & D_FAST_BASE)
 	stp_dither_raw_cmyk_fast(input, row, vd, cyan, lcyan, magenta,
 				 lmagenta, yellow, lyellow, black,
