@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print Version 4.2.3\n"
-"POT-Creation-Date: 2003-01-23 21:57-0500\n"
+"POT-Creation-Date: 2003-04-18 19:10-0400\n"
 "PO-Revision-Date: 2002-10-07 19:10+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -138,7 +138,7 @@ msgstr "ポーズ付き手動給紙"
 msgid "Manual without Pause"
 msgstr "ポーズなし手動給紙"
 
-#: src/escputil/escputil.c:600 src/main/print-canon.c:1688
+#: src/escputil/escputil.c:601 src/main/print-canon.c:1688
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "黒色"
@@ -313,353 +313,356 @@ msgstr "Ilford Heavy Paper"
 msgid "ColorLife Paper"
 msgstr "ColorLife Paper"
 
-#: src/main/print-escp2-data.c:3177 src/main/print-escp2-data.c:3179
-#: src/main/print-escp2-data.c:3405 src/main/print-escp2-data.c:3407
-#: src/main/print-escp2-data.c:3480
+#: src/main/print-escp2-data.c:3187 src/main/print-escp2-data.c:3189
+#: src/main/print-escp2-data.c:3446 src/main/print-escp2-data.c:3448
+#: src/main/print-escp2-data.c:3521
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr "360 x 90 DPI Fast Economy Draft"
 
-#: src/main/print-escp2-data.c:3182 src/main/print-escp2-data.c:3184
-#: src/main/print-escp2-data.c:3410 src/main/print-escp2-data.c:3412
-#: src/main/print-escp2-data.c:3483
+#: src/main/print-escp2-data.c:3192 src/main/print-escp2-data.c:3194
+#: src/main/print-escp2-data.c:3451 src/main/print-escp2-data.c:3453
+#: src/main/print-escp2-data.c:3524
 msgid "360 x 120 DPI Economy Draft"
 msgstr "360 x 120 DPI Economy Draft"
 
-#: src/main/print-escp2-data.c:3187 src/main/print-escp2-data.c:3189
-#: src/main/print-escp2-data.c:3264 src/main/print-escp2-data.c:3415
-#: src/main/print-escp2-data.c:3417 src/main/print-escp2-data.c:3486
+#: src/main/print-escp2-data.c:3197 src/main/print-escp2-data.c:3199
+#: src/main/print-escp2-data.c:3274 src/main/print-escp2-data.c:3456
+#: src/main/print-escp2-data.c:3458 src/main/print-escp2-data.c:3527
 msgid "180 DPI Economy Draft"
 msgstr "180 DPI Economy Draft"
 
-#: src/main/print-escp2-data.c:3192 src/main/print-escp2-data.c:3194
-#: src/main/print-escp2-data.c:3420 src/main/print-escp2-data.c:3422
-#: src/main/print-escp2-data.c:3489
+#: src/main/print-escp2-data.c:3202 src/main/print-escp2-data.c:3204
+#: src/main/print-escp2-data.c:3461 src/main/print-escp2-data.c:3463
+#: src/main/print-escp2-data.c:3530
 msgid "360 x 240 DPI Draft"
 msgstr "360 x 240 DPI ドラフト"
 
-#: src/main/print-escp2-data.c:3197 src/main/print-escp2-data.c:3199
-#: src/main/print-escp2-data.c:3267 src/main/print-escp2-data.c:3303
-#: src/main/print-escp2-data.c:3305 src/main/print-escp2-data.c:3354
-#: src/main/print-escp2-data.c:3356 src/main/print-escp2-data.c:3425
-#: src/main/print-escp2-data.c:3427 src/main/print-escp2-data.c:3492
+#: src/main/print-escp2-data.c:3207 src/main/print-escp2-data.c:3209
+#: src/main/print-escp2-data.c:3277 src/main/print-escp2-data.c:3313
+#: src/main/print-escp2-data.c:3315 src/main/print-escp2-data.c:3395
+#: src/main/print-escp2-data.c:3397 src/main/print-escp2-data.c:3466
+#: src/main/print-escp2-data.c:3468 src/main/print-escp2-data.c:3533
 msgid "360 x 180 DPI Draft"
 msgstr "360 x 180 DPI ドラフト"
 
-#: src/main/print-escp2-data.c:3202 src/main/print-escp2-data.c:3210
-#: src/main/print-escp2-data.c:3270 src/main/print-escp2-data.c:3308
-#: src/main/print-escp2-data.c:3359 src/main/print-escp2-data.c:3430
-#: src/main/print-escp2-data.c:3434 src/main/print-escp2-data.c:3499
+#: src/main/print-escp2-data.c:3212 src/main/print-escp2-data.c:3220
+#: src/main/print-escp2-data.c:3280 src/main/print-escp2-data.c:3318
+#: src/main/print-escp2-data.c:3400 src/main/print-escp2-data.c:3471
+#: src/main/print-escp2-data.c:3475 src/main/print-escp2-data.c:3540
 msgid "360 DPI"
 msgstr "360 DPI"
 
-#: src/main/print-escp2-data.c:3204 src/main/print-escp2-data.c:3212
-#: src/main/print-escp2-data.c:3272 src/main/print-escp2-data.c:3310
-#: src/main/print-escp2-data.c:3361 src/main/print-escp2-data.c:3432
-#: src/main/print-escp2-data.c:3436 src/main/print-escp2-data.c:3501
+#: src/main/print-escp2-data.c:3214 src/main/print-escp2-data.c:3222
+#: src/main/print-escp2-data.c:3282 src/main/print-escp2-data.c:3320
+#: src/main/print-escp2-data.c:3402 src/main/print-escp2-data.c:3473
+#: src/main/print-escp2-data.c:3477 src/main/print-escp2-data.c:3542
 msgid "360 DPI Unidirectional"
 msgstr "360 DPI Unidirectional"
 
-#: src/main/print-escp2-data.c:3206 src/main/print-escp2-data.c:3495
+#: src/main/print-escp2-data.c:3216 src/main/print-escp2-data.c:3536
 msgid "360 DPI Microweave"
 msgstr "360 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3208 src/main/print-escp2-data.c:3497
+#: src/main/print-escp2-data.c:3218 src/main/print-escp2-data.c:3538
 msgid "360 DPI Microweave Unidirectional"
 msgstr "360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3215 src/main/print-escp2-data.c:3275
-#: src/main/print-escp2-data.c:3313 src/main/print-escp2-data.c:3364
-#: src/main/print-escp2-data.c:3439 src/main/print-escp2-data.c:3516
+#: src/main/print-escp2-data.c:3225 src/main/print-escp2-data.c:3285
+#: src/main/print-escp2-data.c:3323 src/main/print-escp2-data.c:3364
+#: src/main/print-escp2-data.c:3405 src/main/print-escp2-data.c:3480
+#: src/main/print-escp2-data.c:3557
 msgid "720 x 360 DPI"
 msgstr "720 x 360 DPI"
 
-#: src/main/print-escp2-data.c:3217 src/main/print-escp2-data.c:3277
-#: src/main/print-escp2-data.c:3315 src/main/print-escp2-data.c:3366
-#: src/main/print-escp2-data.c:3441 src/main/print-escp2-data.c:3518
+#: src/main/print-escp2-data.c:3227 src/main/print-escp2-data.c:3287
+#: src/main/print-escp2-data.c:3325 src/main/print-escp2-data.c:3366
+#: src/main/print-escp2-data.c:3407 src/main/print-escp2-data.c:3482
+#: src/main/print-escp2-data.c:3559
 msgid "720 x 360 DPI Unidirectional"
 msgstr "720 x 360 DPI Unidirectional"
 
-#: src/main/print-escp2-data.c:3220 src/main/print-escp2-data.c:3537
+#: src/main/print-escp2-data.c:3230 src/main/print-escp2-data.c:3578
 msgid "720 DPI Microweave"
 msgstr "720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3222 src/main/print-escp2-data.c:3539
+#: src/main/print-escp2-data.c:3232 src/main/print-escp2-data.c:3580
 msgid "720 DPI Microweave Unidirectional"
 msgstr "720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3224 src/main/print-escp2-data.c:3280
-#: src/main/print-escp2-data.c:3318 src/main/print-escp2-data.c:3369
-#: src/main/print-escp2-data.c:3444
+#: src/main/print-escp2-data.c:3234 src/main/print-escp2-data.c:3290
+#: src/main/print-escp2-data.c:3328 src/main/print-escp2-data.c:3369
+#: src/main/print-escp2-data.c:3410 src/main/print-escp2-data.c:3485
 msgid "720 DPI"
 msgstr "720 DPI"
 
-#: src/main/print-escp2-data.c:3226 src/main/print-escp2-data.c:3282
-#: src/main/print-escp2-data.c:3320 src/main/print-escp2-data.c:3371
-#: src/main/print-escp2-data.c:3446
+#: src/main/print-escp2-data.c:3236 src/main/print-escp2-data.c:3292
+#: src/main/print-escp2-data.c:3330 src/main/print-escp2-data.c:3371
+#: src/main/print-escp2-data.c:3412 src/main/print-escp2-data.c:3487
 msgid "720 DPI Unidirectional"
 msgstr "720 DPI Unidirectional"
 
-#: src/main/print-escp2-data.c:3228 src/main/print-escp2-data.c:3284
-#: src/main/print-escp2-data.c:3322 src/main/print-escp2-data.c:3373
-#: src/main/print-escp2-data.c:3448
+#: src/main/print-escp2-data.c:3238 src/main/print-escp2-data.c:3294
+#: src/main/print-escp2-data.c:3332 src/main/print-escp2-data.c:3373
+#: src/main/print-escp2-data.c:3414 src/main/print-escp2-data.c:3489
 msgid "720 DPI High Quality"
 msgstr "720 DPI High Quality"
 
-#: src/main/print-escp2-data.c:3230 src/main/print-escp2-data.c:3286
-#: src/main/print-escp2-data.c:3324 src/main/print-escp2-data.c:3375
-#: src/main/print-escp2-data.c:3450
+#: src/main/print-escp2-data.c:3240 src/main/print-escp2-data.c:3296
+#: src/main/print-escp2-data.c:3334 src/main/print-escp2-data.c:3375
+#: src/main/print-escp2-data.c:3416 src/main/print-escp2-data.c:3491
 msgid "720 DPI High Quality Unidirectional"
 msgstr "720 DPI High Quality Unidirectional"
 
-#: src/main/print-escp2-data.c:3232 src/main/print-escp2-data.c:3288
-#: src/main/print-escp2-data.c:3326 src/main/print-escp2-data.c:3377
-#: src/main/print-escp2-data.c:3452
+#: src/main/print-escp2-data.c:3242 src/main/print-escp2-data.c:3298
+#: src/main/print-escp2-data.c:3336 src/main/print-escp2-data.c:3377
+#: src/main/print-escp2-data.c:3418 src/main/print-escp2-data.c:3493
 msgid "720 DPI Highest Quality"
 msgstr "720 DPI Highest Quality"
 
-#: src/main/print-escp2-data.c:3235 src/main/print-escp2-data.c:3550
+#: src/main/print-escp2-data.c:3245 src/main/print-escp2-data.c:3591
 msgid "1440 x 720 DPI Microweave"
 msgstr "1440 x 720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3237 src/main/print-escp2-data.c:3552
+#: src/main/print-escp2-data.c:3247 src/main/print-escp2-data.c:3593
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr "1440 x 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3239 src/main/print-escp2-data.c:3291
-#: src/main/print-escp2-data.c:3329 src/main/print-escp2-data.c:3380
-#: src/main/print-escp2-data.c:3455
+#: src/main/print-escp2-data.c:3249 src/main/print-escp2-data.c:3301
+#: src/main/print-escp2-data.c:3339 src/main/print-escp2-data.c:3380
+#: src/main/print-escp2-data.c:3421 src/main/print-escp2-data.c:3496
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-escp2-data.c:3241 src/main/print-escp2-data.c:3293
-#: src/main/print-escp2-data.c:3331 src/main/print-escp2-data.c:3382
-#: src/main/print-escp2-data.c:3457
+#: src/main/print-escp2-data.c:3251 src/main/print-escp2-data.c:3303
+#: src/main/print-escp2-data.c:3341 src/main/print-escp2-data.c:3382
+#: src/main/print-escp2-data.c:3423 src/main/print-escp2-data.c:3498
 msgid "1440 x 720 DPI Unidirectional"
 msgstr "1440 x 720 DPI Unidirectional"
 
-#: src/main/print-escp2-data.c:3243 src/main/print-escp2-data.c:3295
-#: src/main/print-escp2-data.c:3333 src/main/print-escp2-data.c:3384
-#: src/main/print-escp2-data.c:3459
+#: src/main/print-escp2-data.c:3253 src/main/print-escp2-data.c:3305
+#: src/main/print-escp2-data.c:3343 src/main/print-escp2-data.c:3384
+#: src/main/print-escp2-data.c:3425 src/main/print-escp2-data.c:3500
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "1440 x 720 DPI Highest Quality"
 
-#: src/main/print-escp2-data.c:3246 src/main/print-escp2-data.c:3336
-#: src/main/print-escp2-data.c:3387 src/main/print-escp2-data.c:3462
+#: src/main/print-escp2-data.c:3256 src/main/print-escp2-data.c:3346
+#: src/main/print-escp2-data.c:3428 src/main/print-escp2-data.c:3503
 msgid "2880 x 720 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-escp2-data.c:3248 src/main/print-escp2-data.c:3338
-#: src/main/print-escp2-data.c:3389 src/main/print-escp2-data.c:3464
+#: src/main/print-escp2-data.c:3258 src/main/print-escp2-data.c:3348
+#: src/main/print-escp2-data.c:3430 src/main/print-escp2-data.c:3505
 msgid "2880 x 720 DPI Unidirectional"
 msgstr "2880 x 720 DPI Unidirectional"
 
-#: src/main/print-escp2-data.c:3251 src/main/print-escp2-data.c:3341
-#: src/main/print-escp2-data.c:3392 src/main/print-escp2-data.c:3467
+#: src/main/print-escp2-data.c:3261 src/main/print-escp2-data.c:3351
+#: src/main/print-escp2-data.c:3433 src/main/print-escp2-data.c:3508
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:3253 src/main/print-escp2-data.c:3343
-#: src/main/print-escp2-data.c:3394 src/main/print-escp2-data.c:3469
+#: src/main/print-escp2-data.c:3263 src/main/print-escp2-data.c:3353
+#: src/main/print-escp2-data.c:3435 src/main/print-escp2-data.c:3510
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "1440 x 1440 DPI Highest Quality"
 
-#: src/main/print-escp2-data.c:3256 src/main/print-escp2-data.c:3346
-#: src/main/print-escp2-data.c:3397 src/main/print-escp2-data.c:3472
+#: src/main/print-escp2-data.c:3266 src/main/print-escp2-data.c:3356
+#: src/main/print-escp2-data.c:3387 src/main/print-escp2-data.c:3438
+#: src/main/print-escp2-data.c:3513
 msgid "2880 x 1440 DPI"
 msgstr "2880 x 1440 DPI"
 
-#: src/main/print-escp2-data.c:3503
+#: src/main/print-escp2-data.c:3544
 msgid "360 DPI Full Overlap"
 msgstr "360 DPI Full Overlap"
 
-#: src/main/print-escp2-data.c:3505
+#: src/main/print-escp2-data.c:3546
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr "360 DPI Full Overlap Unidirectional"
 
-#: src/main/print-escp2-data.c:3507
+#: src/main/print-escp2-data.c:3548
 msgid "360 DPI FOL2"
 msgstr "360 DPI FOL2"
 
-#: src/main/print-escp2-data.c:3509
+#: src/main/print-escp2-data.c:3550
 msgid "360 DPI FOL2 Unidirectional"
 msgstr "360 DPI FOL2 Unidirectional"
 
-#: src/main/print-escp2-data.c:3511
+#: src/main/print-escp2-data.c:3552
 msgid "360 DPI MW2"
 msgstr "360 DPI MW2"
 
-#: src/main/print-escp2-data.c:3513
+#: src/main/print-escp2-data.c:3554
 msgid "360 DPI MW2 Unidirectional"
 msgstr "360 DPI MW2 Unidirectional"
 
-#: src/main/print-escp2-data.c:3520
+#: src/main/print-escp2-data.c:3561
 msgid "720 x 360 DPI Microweave"
 msgstr "720 x 360 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3522
+#: src/main/print-escp2-data.c:3563
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr "720 x 360 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3524
+#: src/main/print-escp2-data.c:3565
 msgid "720 x 360 DPI FOL"
 msgstr "720 x 360 DPI FOL"
 
-#: src/main/print-escp2-data.c:3526
+#: src/main/print-escp2-data.c:3567
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr "720 x 360 DPI FOL Unidirectional"
 
-#: src/main/print-escp2-data.c:3528
+#: src/main/print-escp2-data.c:3569
 msgid "720 x 360 DPI FOL2"
 msgstr "720 x 360 DPI FOL2"
 
-#: src/main/print-escp2-data.c:3530
+#: src/main/print-escp2-data.c:3571
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr "720 x 360 DPI FOL2 Unidirectional"
 
-#: src/main/print-escp2-data.c:3532
+#: src/main/print-escp2-data.c:3573
 msgid "720 x 360 DPI MW2"
 msgstr "720 x 360 DPI MW2"
 
-#: src/main/print-escp2-data.c:3534
+#: src/main/print-escp2-data.c:3575
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr "720 x 360 DPI MW2 Unidirectional"
 
-#: src/main/print-escp2-data.c:3541
+#: src/main/print-escp2-data.c:3582
 msgid "720 DPI Full Overlap"
 msgstr "720 DPI Full Overlap"
 
-#: src/main/print-escp2-data.c:3543
+#: src/main/print-escp2-data.c:3584
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr "720 DPI Full Overlap Unidirectional"
 
-#: src/main/print-escp2-data.c:3545
+#: src/main/print-escp2-data.c:3586
 msgid "720 DPI Four Pass"
 msgstr "720 DPI Four Pass"
 
-#: src/main/print-escp2-data.c:3547
+#: src/main/print-escp2-data.c:3588
 msgid "720 DPI Four Pass Unidirectional"
 msgstr "720 DPI Four Pass Unidirectional"
 
-#: src/main/print-escp2-data.c:3554
+#: src/main/print-escp2-data.c:3595
 msgid "1440 x 720 DPI FOL"
 msgstr "1440 x 720 DPI FOL"
 
-#: src/main/print-escp2-data.c:3556
+#: src/main/print-escp2-data.c:3597
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr "1440 x 720 DPI FOL Unidirectional"
 
-#: src/main/print-escp2-data.c:3558
+#: src/main/print-escp2-data.c:3599
 msgid "1440 x 720 DPI Four Pass"
 msgstr "1440 x 720 DPI Four Pass"
 
-#: src/main/print-escp2-data.c:3560
+#: src/main/print-escp2-data.c:3601
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr "1440 x 720 DPI Four Pass Unidirectional"
 
-#: src/main/print-escp2-data.c:3563
+#: src/main/print-escp2-data.c:3604
 msgid "2880 x 720 DPI Microweave"
 msgstr "2880 x 720 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3565
+#: src/main/print-escp2-data.c:3606
 msgid "2880 x 720 DPI Microweave Unidirectional"
 msgstr "2880 x 720 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3567
+#: src/main/print-escp2-data.c:3608
 msgid "2880 x 720 DPI FOL"
 msgstr "2880 x 720 DPI FOL"
 
-#: src/main/print-escp2-data.c:3569
+#: src/main/print-escp2-data.c:3610
 msgid "2880 x 720 DPI FOL Unidirectional"
 msgstr "2880 x 720 DPI FOL Unidirectional"
 
-#: src/main/print-escp2-data.c:3571
+#: src/main/print-escp2-data.c:3612
 msgid "2880 x 720 DPI Four Pass"
 msgstr "2880 x 720 DPI Four Pass"
 
-#: src/main/print-escp2-data.c:3573
+#: src/main/print-escp2-data.c:3614
 msgid "2880 x 720 DPI Four Pass Unidirectional"
 msgstr "2880 x 720 DPI Four Pass Unidirectional"
 
-#: src/main/print-escp2-data.c:3576
+#: src/main/print-escp2-data.c:3617
 msgid "1440 x 1440 DPI Microweave"
 msgstr "1440 x 1440 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3578
+#: src/main/print-escp2-data.c:3619
 msgid "1440 x 1440 DPI Microweave Unidirectional"
 msgstr "1440 x 1440 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3580
+#: src/main/print-escp2-data.c:3621
 msgid "1440 x 1440 DPI FOL"
 msgstr "1440 x 1440 DPI FOL"
 
-#: src/main/print-escp2-data.c:3582
+#: src/main/print-escp2-data.c:3623
 msgid "1440 x 1440 DPI FOL Unidirectional"
 msgstr "1440 x 1440 DPI FOL Unidirectional"
 
-#: src/main/print-escp2-data.c:3584
+#: src/main/print-escp2-data.c:3625
 msgid "1440 x 1440 DPI Four Pass"
 msgstr "1440 x 1440 DPI Four Pass"
 
-#: src/main/print-escp2-data.c:3586
+#: src/main/print-escp2-data.c:3627
 msgid "1440 x 1440 DPI Four Pass Unidirectional"
 msgstr "1440 x 1440 DPI Four Pass Unidirectional"
 
-#: src/main/print-escp2-data.c:3589
+#: src/main/print-escp2-data.c:3630
 msgid "2880 x 1440 DPI Microweave"
 msgstr "2880 x 1440 DPI Microweave"
 
-#: src/main/print-escp2-data.c:3591
+#: src/main/print-escp2-data.c:3632
 msgid "2880 x 1440 DPI Microweave Unidirectional"
 msgstr "2880 x 1440 DPI Microweave Unidirectional"
 
-#: src/main/print-escp2-data.c:3593
+#: src/main/print-escp2-data.c:3634
 msgid "2880 x 1440 DPI FOL"
 msgstr "2880 x 1440 DPI FOL"
 
-#: src/main/print-escp2-data.c:3595
+#: src/main/print-escp2-data.c:3636
 msgid "2880 x 1440 DPI FOL Unidirectional"
 msgstr "2880 x 1440 DPI FOL Unidirectional"
 
-#: src/main/print-escp2-data.c:3597
+#: src/main/print-escp2-data.c:3638
 msgid "2880 x 1440 DPI Four Pass"
 msgstr "2880 x 1440 DPI Four Pass"
 
-#: src/main/print-escp2-data.c:3599
+#: src/main/print-escp2-data.c:3640
 msgid "2880 x 1440 DPI Four Pass Unidirectional"
 msgstr "2880 x 1440 DPI Four Pass Unidirectional"
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3609
-#: src/main/print-escp2-data.c:3635 src/main/print-escp2-data.c:3669
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2-data.c:3650
+#: src/main/print-escp2-data.c:3676 src/main/print-escp2-data.c:3710
 #: src/main/print-pcl.c:202
 msgid "Standard"
 msgstr "標準"
 
-#: src/main/print-escp2-data.c:3617 src/main/print-escp2-data.c:3677
+#: src/main/print-escp2-data.c:3658 src/main/print-escp2-data.c:3718
 msgid "Roll Feed"
 msgstr "ロール式給紙"
 
-#: src/main/print-escp2-data.c:3643
+#: src/main/print-escp2-data.c:3684
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3651
+#: src/main/print-escp2-data.c:3692
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3695
+#: src/main/print-escp2-data.c:3736
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3703
+#: src/main/print-escp2-data.c:3744
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:3711
+#: src/main/print-escp2-data.c:3752
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "自動選択"
 
-#: src/main/print-escp2-data.c:3719
+#: src/main/print-escp2-data.c:3760
 msgid "Manual Selection"
 msgstr ""
 
@@ -809,11 +812,11 @@ msgstr "1200x600 DPI"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1703
+#: src/main/print-pcl.c:1737
 msgid "Color + Black Cartridges"
 msgstr "カラー + 黒カートリッジ"
 
-#: src/main/print-pcl.c:1704
+#: src/main/print-pcl.c:1738
 msgid "Color + Photo Cartridges"
 msgstr "カラー + フォト・カートリッジ"
 
@@ -1492,54 +1495,62 @@ msgstr "%s は適切なディザ方式ではありません\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:443
+#: src/cups/genppd.c:455
 msgid "English"
 msgstr "Japanese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:445
+#: src/cups/genppd.c:457
 msgid "ISOLatin1"
 msgstr "ISO ラテン１"
 
-#: src/cups/genppd.c:651
+#: src/cups/genppd.c:718
 msgid "Media Type"
 msgstr "用紙の種類"
 
-#: src/cups/genppd.c:677
+#: src/cups/genppd.c:744
 msgid "Media Source"
 msgstr "給紙方法"
 
-#: src/cups/genppd.c:701
+#: src/cups/genppd.c:768
 msgid "Resolution"
 msgstr "解像度"
 
 #.
+#. * STP option group...
+#.
+#: src/cups/genppd.c:802
+#, fuzzy
+msgid "GIMP-print"
+msgstr "印刷"
+
+#.
 #. * Image types...
 #.
-#: src/cups/genppd.c:741
+#: src/cups/genppd.c:808
 msgid "Image Type"
 msgstr "画像の種類"
 
-#: src/cups/genppd.c:746 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:813 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "ライン・アート"
 
-#: src/cups/genppd.c:748 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:815 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "無地の色"
 
-#: src/cups/genppd.c:750 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:817 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "写真"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:758
+#: src/cups/genppd.c:825
 msgid "Dither Algorithm"
 msgstr "ディザ方式"
 
-#: src/cups/genppd.c:777
+#: src/cups/genppd.c:844
 msgid "Ink Type"
 msgstr "インクの種類"
 
@@ -1784,393 +1795,398 @@ msgid "Stylus C42ux"
 msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:207
-msgid "Stylus C60"
+#, fuzzy
+msgid "Stylus C50"
 msgstr "Stylus C60"
 
 #: src/escputil/escputil.c:208
+msgid "Stylus C60"
+msgstr "Stylus C60"
+
+#: src/escputil/escputil.c:209
 msgid "Stylus C61"
 msgstr "Stylus C61"
 
-#: src/escputil/escputil.c:209
+#: src/escputil/escputil.c:210
 msgid "Stylus C62"
 msgstr "Stylus C62"
 
-#: src/escputil/escputil.c:210
+#: src/escputil/escputil.c:211
 msgid "Stylus C70"
 msgstr "Stylus C70"
 
-#: src/escputil/escputil.c:211
+#: src/escputil/escputil.c:212
 msgid "Stylus C80"
 msgstr "Stylus C80"
 
-#: src/escputil/escputil.c:212
+#: src/escputil/escputil.c:213
 msgid "Stylus C82"
 msgstr "Stylus C82"
 
-#: src/escputil/escputil.c:213
+#: src/escputil/escputil.c:214
 msgid "Stylus Color"
 msgstr "Stylus Color"
 
-#: src/escputil/escputil.c:214
+#: src/escputil/escputil.c:215
 msgid "Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/escputil/escputil.c:215
+#: src/escputil/escputil.c:216
 msgid "Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/escputil/escputil.c:216
+#: src/escputil/escputil.c:217
 msgid "Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/escputil/escputil.c:217
+#: src/escputil/escputil.c:218
 msgid "Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/escputil/escputil.c:218
+#: src/escputil/escputil.c:219
 msgid "Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/escputil/escputil.c:219
+#: src/escputil/escputil.c:220
 msgid "Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/escputil/escputil.c:220
+#: src/escputil/escputil.c:221
 msgid "Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/escputil/escputil.c:221
+#: src/escputil/escputil.c:222
 msgid "Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/escputil/escputil.c:222
+#: src/escputil/escputil.c:223
 msgid "Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/escputil/escputil.c:223
+#: src/escputil/escputil.c:224
 msgid "Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/escputil/escputil.c:224
+#: src/escputil/escputil.c:225
 msgid "Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/escputil/escputil.c:225
+#: src/escputil/escputil.c:226
 msgid "Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/escputil/escputil.c:226
+#: src/escputil/escputil.c:227
 msgid "Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/escputil/escputil.c:227
+#: src/escputil/escputil.c:228
 msgid "Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/escputil/escputil.c:228
+#: src/escputil/escputil.c:229
 msgid "Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/escputil/escputil.c:229
+#: src/escputil/escputil.c:230
 msgid "Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/escputil/escputil.c:230
+#: src/escputil/escputil.c:231
 msgid "Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/escputil/escputil.c:231
+#: src/escputil/escputil.c:232
 msgid "Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/escputil/escputil.c:232
+#: src/escputil/escputil.c:233
 msgid "Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/escputil/escputil.c:233
+#: src/escputil/escputil.c:234
 msgid "Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/escputil/escputil.c:234
+#: src/escputil/escputil.c:235
 msgid "Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/escputil/escputil.c:235
+#: src/escputil/escputil.c:236
 msgid "Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/escputil/escputil.c:236
+#: src/escputil/escputil.c:237
 msgid "Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/escputil/escputil.c:237
+#: src/escputil/escputil.c:238
 msgid "Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/escputil/escputil.c:238
+#: src/escputil/escputil.c:239
 msgid "Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/escputil/escputil.c:239
+#: src/escputil/escputil.c:240
 msgid "Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/escputil/escputil.c:240
+#: src/escputil/escputil.c:241
 msgid "Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/escputil/escputil.c:241
+#: src/escputil/escputil.c:242
 msgid "Stylus Photo"
 msgstr "Stylus Photo"
 
-#: src/escputil/escputil.c:242
+#: src/escputil/escputil.c:243
 msgid "Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/escputil/escputil.c:243
+#: src/escputil/escputil.c:244
 msgid "Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/escputil/escputil.c:244
+#: src/escputil/escputil.c:245
 msgid "Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/escputil/escputil.c:245
+#: src/escputil/escputil.c:246
 msgid "Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/escputil/escputil.c:246
+#: src/escputil/escputil.c:247
 msgid "Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/escputil/escputil.c:247
+#: src/escputil/escputil.c:248
 msgid "Stylus Photo 785"
 msgstr "Stylus Photo 785"
 
-#: src/escputil/escputil.c:248
+#: src/escputil/escputil.c:249
 msgid "Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/escputil/escputil.c:249
+#: src/escputil/escputil.c:250
 msgid "Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/escputil/escputil.c:250
+#: src/escputil/escputil.c:251
 msgid "Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/escputil/escputil.c:251
+#: src/escputil/escputil.c:252
 msgid "Stylus Photo 830"
 msgstr "Stylus Photo 830"
 
-#: src/escputil/escputil.c:252
+#: src/escputil/escputil.c:253
 msgid "Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/escputil/escputil.c:253
+#: src/escputil/escputil.c:254
 msgid "Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/escputil/escputil.c:254
+#: src/escputil/escputil.c:255
 msgid "Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/escputil/escputil.c:255
+#: src/escputil/escputil.c:256
 msgid "Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
-#: src/escputil/escputil.c:256
+#: src/escputil/escputil.c:257
 msgid "Stylus Photo 915"
 msgstr "Stylus Photo 915"
 
-#: src/escputil/escputil.c:257
+#: src/escputil/escputil.c:258
 msgid "Stylus Photo 925"
 msgstr "Stylus Photo 925"
 
-#: src/escputil/escputil.c:258
+#: src/escputil/escputil.c:259
 msgid "Stylus Photo 950"
 msgstr "Stylus Photo 950"
 
-#: src/escputil/escputil.c:259
+#: src/escputil/escputil.c:260
 msgid "Stylus Photo 960"
 msgstr "Stylus Photo 960"
 
-#: src/escputil/escputil.c:260
+#: src/escputil/escputil.c:261
 msgid "Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/escputil/escputil.c:261
+#: src/escputil/escputil.c:262
 msgid "Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/escputil/escputil.c:262
+#: src/escputil/escputil.c:263
 msgid "Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/escputil/escputil.c:263
+#: src/escputil/escputil.c:264
 msgid "Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/escputil/escputil.c:264
+#: src/escputil/escputil.c:265
 msgid "Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/escputil/escputil.c:265
+#: src/escputil/escputil.c:266
 msgid "Stylus Photo 2100"
 msgstr "Stylus Photo 2100"
 
-#: src/escputil/escputil.c:266
+#: src/escputil/escputil.c:267
 msgid "Stylus Photo 2200"
 msgstr "Stylus Photo 2200"
 
-#: src/escputil/escputil.c:267
+#: src/escputil/escputil.c:268
 msgid "Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/escputil/escputil.c:268
+#: src/escputil/escputil.c:269
 msgid "Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/escputil/escputil.c:269
+#: src/escputil/escputil.c:270
 msgid "Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/escputil/escputil.c:270
+#: src/escputil/escputil.c:271
 msgid "Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/escputil/escputil.c:271
+#: src/escputil/escputil.c:272
 msgid "Stylus Pro 7600"
 msgstr "Stylus Pro 7600"
 
-#: src/escputil/escputil.c:272
+#: src/escputil/escputil.c:273
 msgid "Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/escputil/escputil.c:273
+#: src/escputil/escputil.c:274
 msgid "Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/escputil/escputil.c:274
+#: src/escputil/escputil.c:275
 msgid "Stylus Pro 9600"
 msgstr "Stylus Pro 9600"
 
-#: src/escputil/escputil.c:275
+#: src/escputil/escputil.c:276
 msgid "Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/escputil/escputil.c:276
+#: src/escputil/escputil.c:277
 msgid "Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/escputil/escputil.c:277
+#: src/escputil/escputil.c:278
 msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/escputil/escputil.c:364 src/escputil/escputil.c:373
+#: src/escputil/escputil.c:365 src/escputil/escputil.c:374
 msgid "You may only specify one printer or raw device."
 msgstr "プリンタまたは低レベルのデバイスを一つ指定することが可能です。"
 
-#: src/escputil/escputil.c:382
+#: src/escputil/escputil.c:383
 msgid "You may only specify one printer model."
 msgstr "プリンタの型式を一つ指定することが可能です。"
 
-#: src/escputil/escputil.c:402
+#: src/escputil/escputil.c:403
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "不明なオプション %c\n"
 
-#: src/escputil/escputil.c:462
+#: src/escputil/escputil.c:463
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "デバイス %s を開けません: %s\n"
 
-#: src/escputil/escputil.c:485
+#: src/escputil/escputil.c:486
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "プリンタ %s に %s を使って印刷することができません\n"
 
-#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
+#: src/escputil/escputil.c:499 src/escputil/escputil.c:509
 msgid "Unable to send command to printer\n"
 msgstr "プリンタにコマンドを送信できません\n"
 
-#: src/escputil/escputil.c:601
+#: src/escputil/escputil.c:602
 msgid "Cyan"
 msgstr "シアン (C)"
 
-#: src/escputil/escputil.c:602
+#: src/escputil/escputil.c:603
 msgid "Magenta"
 msgstr "マゼンタ (M)"
 
-#: src/escputil/escputil.c:603
+#: src/escputil/escputil.c:604
 msgid "Yellow"
 msgstr "黄色 (Y)"
 
-#: src/escputil/escputil.c:604
+#: src/escputil/escputil.c:605
 msgid "Light Cyan"
 msgstr "明るいシアン"
 
-#: src/escputil/escputil.c:605
+#: src/escputil/escputil.c:606
 msgid "Light Magenta"
 msgstr "明るいマゼンタ"
 
-#: src/escputil/escputil.c:606
+#: src/escputil/escputil.c:607
 msgid "Black/Dark Yellow"
 msgstr ""
 
-#: src/escputil/escputil.c:620
+#: src/escputil/escputil.c:621
 msgid "Obtaining ink levels requires using a raw device.\n"
 msgstr "低レベル・デバイスを利用するために必要なインク・レベルを取得します。\n"
 
-#: src/escputil/escputil.c:626 src/escputil/escputil.c:701
-#: src/escputil/escputil.c:744
+#: src/escputil/escputil.c:627 src/escputil/escputil.c:702
+#: src/escputil/escputil.c:745
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "%s を読み書きモードで開けません: %s\n"
 
-#: src/escputil/escputil.c:635 src/escputil/escputil.c:712
-#: src/escputil/escputil.c:753
+#: src/escputil/escputil.c:636 src/escputil/escputil.c:713
+#: src/escputil/escputil.c:754
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "%s に書き込めません; %s\n"
 
-#: src/escputil/escputil.c:642 src/escputil/escputil.c:719
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:643 src/escputil/escputil.c:720
+#: src/escputil/escputil.c:761
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "%s から読み込めません: %s\n"
 
-#: src/escputil/escputil.c:652
+#: src/escputil/escputil.c:653
 msgid "Cannot parse output from printer\n"
 msgstr "プリンタからの出力を解析できません\n"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:657
 msgid "Ink color"
 msgstr "インクの色"
 
-#: src/escputil/escputil.c:656
+#: src/escputil/escputil.c:657
 msgid "Percent remaining"
 msgstr "残りの割合"
 
-#: src/escputil/escputil.c:695
+#: src/escputil/escputil.c:696
 msgid "Printer identification requires using a raw device.\n"
 msgstr "低レベル・デバイスを利用するためにプリンタ識別子が必要です。\n"
 
-#: src/escputil/escputil.c:738
+#: src/escputil/escputil.c:739
 msgid "Printer status requires using a raw device.\n"
 msgstr "低レベル・デバイスを利用するためにプリンタの状態が必要です。\n"
 
-#: src/escputil/escputil.c:781
+#: src/escputil/escputil.c:782
 msgid "Cleaning heads...\n"
 msgstr "ヘッドの清掃中...\n"
 
-#: src/escputil/escputil.c:790
+#: src/escputil/escputil.c:791
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 "ノズルをチェックします。プリンタの中に用紙が確実に存在していることを確認して"
 "下さい。\n"
 
-#: src/escputil/escputil.c:794
+#: src/escputil/escputil.c:795
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2246,7 +2262,7 @@ msgstr ""
 "あとでその設定を保存したい場合は、もう一度同じ手順を行って下さい。\n"
 "この作業を行っている最中に電源を OFF にしないで下さい。\n"
 
-#: src/escputil/escputil.c:829
+#: src/escputil/escputil.c:830
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2312,11 +2328,11 @@ msgstr ""
 "さい。\n"
 "この作業を行っている最中に電源を OFF にしないで下さい。\n"
 
-#: src/escputil/escputil.c:873
+#: src/escputil/escputil.c:874
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "プリンタにコマンドを送信できません。終了します。\n"
 
-#: src/escputil/escputil.c:891
+#: src/escputil/escputil.c:892
 msgid ""
 "Printer alignment must be done with a raw device or else\n"
 "the -m option must be used to specify a printer.\n"
@@ -2324,11 +2340,11 @@ msgstr ""
 "等間隔の印刷は低レベル・デバイスを使うか、あるいは\n"
 "'-m' オプションでプリンタを特定して使用するようにして下さい。\n"
 
-#: src/escputil/escputil.c:895
+#: src/escputil/escputil.c:896
 msgid "Attempting to detect printer model..."
 msgstr "プリンタの型式を検出中です..."
 
-#: src/escputil/escputil.c:900
+#: src/escputil/escputil.c:901
 #, c-format
 msgid ""
 "\n"
@@ -2337,7 +2353,7 @@ msgstr ""
 "\n"
 "%s を読み書きモードで開けません: %s\n"
 
-#: src/escputil/escputil.c:908
+#: src/escputil/escputil.c:909
 #, c-format
 msgid ""
 "\n"
@@ -2346,7 +2362,7 @@ msgstr ""
 "\n"
 "%s に書き込めません: %s\n"
 
-#: src/escputil/escputil.c:914
+#: src/escputil/escputil.c:915
 #, c-format
 msgid ""
 "\n"
@@ -2355,7 +2371,7 @@ msgstr ""
 "\n"
 "%s から読み込めません: %s\n"
 
-#: src/escputil/escputil.c:927
+#: src/escputil/escputil.c:928
 msgid ""
 "\n"
 "Cannot detect printer type.\n"
@@ -2365,12 +2381,12 @@ msgstr ""
 "プリンタの型式を検出できませんでした。\n"
 "お使いのプリンタを特定するために '-m' オプションを使用して下さい。\n"
 
-#: src/escputil/escputil.c:944
+#: src/escputil/escputil.c:945
 #, c-format
 msgid "Printer model %s is not known.\n"
 msgstr "プリンタの型式 %s は不明です。\n"
 
-#: src/escputil/escputil.c:955
+#: src/escputil/escputil.c:956
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
 "printer is in proper alignment. You may now:\n"
@@ -2388,18 +2404,18 @@ msgstr ""
 "選択後に最後の確認があります。\n"
 "選択して下さい (s, q, r)。\n"
 
-#: src/escputil/escputil.c:963 src/escputil/escputil.c:970
-#: src/escputil/escputil.c:983 src/escputil/escputil.c:999
-#: src/escputil/escputil.c:1066 src/escputil/escputil.c:1207
+#: src/escputil/escputil.c:964 src/escputil/escputil.c:971
+#: src/escputil/escputil.c:984 src/escputil/escputil.c:1000
+#: src/escputil/escputil.c:1067 src/escputil/escputil.c:1208
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:968
+#: src/escputil/escputil.c:969
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr "本当に設定を破棄して終了する場合は、再度 'q' を入力して下さい:\n"
 
-#: src/escputil/escputil.c:973
+#: src/escputil/escputil.c:974
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
@@ -2407,17 +2423,17 @@ msgstr ""
 "お使いのプリンタが補正されました。但しその間隔はまだ保存されていません。\n"
 "その間隔を保存する場合は、この手順を繰り返して下さい。\n"
 
-#: src/escputil/escputil.c:980
+#: src/escputil/escputil.c:981
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr "本当に間隔補正の設定をやり直す場合は、再度 'r' を入力して下さい:\n"
 
-#: src/escputil/escputil.c:986
+#: src/escputil/escputil.c:987
 msgid "Repeating the alignment process.\n"
 msgstr "間隔補正の設定を繰り返します。\n"
 
-#: src/escputil/escputil.c:992
+#: src/escputil/escputil.c:993
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
 "WARNING: this procedure has not been approved by Seiko Epson, and\n"
@@ -2432,15 +2448,15 @@ msgstr ""
 "この設定をお使いのプリンタに保存する場合は、再度 's' を入力して下さい:\n"
 "\n"
 
-#: src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1003
 msgid "About to save settings..."
 msgstr "設定の保存することについて..."
 
-#: src/escputil/escputil.c:1008
+#: src/escputil/escputil.c:1009
 msgid "failed!\n"
 msgstr "失敗です！\n"
 
-#: src/escputil/escputil.c:1009
+#: src/escputil/escputil.c:1010
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
@@ -2448,23 +2464,23 @@ msgstr ""
 "あなたの設定の保存に失敗しました。\n"
 "再度、間隔補正の設定を行って下さい。\n"
 
-#: src/escputil/escputil.c:1013
+#: src/escputil/escputil.c:1014
 msgid "succeeded!\n"
 msgstr "完了しました！\n"
 
-#: src/escputil/escputil.c:1014
+#: src/escputil/escputil.c:1015
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "間隔補正の設定がプリンタに保存されました。\n"
 
-#: src/escputil/escputil.c:1019
+#: src/escputil/escputil.c:1020
 msgid "Unrecognized command.\n"
 msgstr "認識できないコマンドです。\n"
 
-#: src/escputil/escputil.c:1022
+#: src/escputil/escputil.c:1023
 msgid "Final command was not confirmed.\n"
 msgstr "最後のコマンドが確認されていません。\n"
 
-#: src/escputil/escputil.c:1027
+#: src/escputil/escputil.c:1028
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -2481,13 +2497,13 @@ msgstr ""
 "印刷ヘッド間隔補正を開始する場合は、プリンタのトレイに\n"
 "用紙を入れて下さい。\n"
 
-#: src/escputil/escputil.c:1052 src/escputil/escputil.c:1074
-#: src/escputil/escputil.c:1117 src/escputil/escputil.c:1186
-#: src/escputil/escputil.c:1197
+#: src/escputil/escputil.c:1053 src/escputil/escputil.c:1075
+#: src/escputil/escputil.c:1118 src/escputil/escputil.c:1187
+#: src/escputil/escputil.c:1198
 msgid "Press enter to continue > "
 msgstr "何かキーを入力すると続行します > "
 
-#: src/escputil/escputil.c:1059
+#: src/escputil/escputil.c:1060
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
 "pattern.\n"
@@ -2497,37 +2513,37 @@ msgstr ""
 "そのペアの番号を入力か、'r' でこの設定をくりかえすか、'?' でヘルプを表示しま"
 "す。\n"
 
-#: src/escputil/escputil.c:1065
+#: src/escputil/escputil.c:1066
 #, c-format
 msgid "Pass #%d"
 msgstr "パス #%d"
 
-#: src/escputil/escputil.c:1071 src/escputil/escputil.c:1116
+#: src/escputil/escputil.c:1072 src/escputil/escputil.c:1117
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "新しい用紙をトレイに入れて下さい。\n"
 
-#: src/escputil/escputil.c:1090 src/escputil/escputil.c:1226
+#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1227
 msgid "Number out of range!\n"
 msgstr "範囲外のペア番号です！\n"
 
-#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1231
+#: src/escputil/escputil.c:1096 src/escputil/escputil.c:1232
 msgid "I cannot understand what you typed!\n"
 msgstr "入力したものは無効です！\n"
 
-#: src/escputil/escputil.c:1101
+#: src/escputil/escputil.c:1102
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "最適なラインのペアは 1 と %d の間の番号にして下さい。\n"
 
-#: src/escputil/escputil.c:1108
+#: src/escputil/escputil.c:1109
 msgid "Attempting to set alignment..."
 msgstr "間隔補正中..."
 
-#: src/escputil/escputil.c:1111
+#: src/escputil/escputil.c:1112
 msgid "succeeded.\n"
 msgstr "完了しました。\n"
 
-#: src/escputil/escputil.c:1112
+#: src/escputil/escputil.c:1113
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -2540,7 +2556,7 @@ msgstr ""
 "もし最適なパターンでない場合は、最適な印刷品質を得るために\n"
 "同様の操作を繰り返して下さい。\n"
 
-#: src/escputil/escputil.c:1127
+#: src/escputil/escputil.c:1128
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -2606,12 +2622,12 @@ msgstr ""
 "【警告】: この機能はまだテストしていないので、 動作しないかもしれません！\n"
 "          また、プリンタ故障の原因になるかもしれません！\n"
 
-#: src/escputil/escputil.c:1177
+#: src/escputil/escputil.c:1178
 #, c-format
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "プリンタ %s はカラー・ヘッド間隔は必要ありません。\n"
 
-#: src/escputil/escputil.c:1195
+#: src/escputil/escputil.c:1196
 msgid ""
 "Please re-insert the same alignment sheet in the printer when it is\n"
 "finished printing.\n"
@@ -2619,7 +2635,7 @@ msgstr ""
 "印刷が完了したら、\n"
 "再度、プリンタに前に使用した間隔補正用紙を挿入して下さい。\n"
 
-#: src/escputil/escputil.c:1201
+#: src/escputil/escputil.c:1202
 msgid ""
 "Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
 "This pattern will appear to have the least ``grain''.\n"
@@ -2635,12 +2651,12 @@ msgstr ""
 "この手順を繰り返して下さい。\n"
 "パターンの番号を入力して下さい ('?' でヘルプを表示します)。\n"
 
-#: src/escputil/escputil.c:1237
+#: src/escputil/escputil.c:1238
 #, c-format
 msgid "The best pattern should be numbered between 1 and %d.\n"
 msgstr "最適なパターンは 1 と %d の間の番号にして下さい。\n"
 
-#: src/escputil/escputil.c:1281
+#: src/escputil/escputil.c:1282
 msgid "Error in input\n"
 msgstr "入力エラー\n"
 
