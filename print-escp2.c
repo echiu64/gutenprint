@@ -1210,9 +1210,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
   dither_set_black_levels(dither, 1.5, 1.5, 1.5);
   dither_set_black_lower(dither, .4);
   if (use_glossy_film)
-    dither_set_black_upper(dither, 1.0);
+    dither_set_black_upper(dither, .999);
   else
-    dither_set_black_upper(dither, 1.0);
+    dither_set_black_upper(dither, .999);
   if (bits == 2)
     {
       dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
@@ -1284,12 +1284,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
 			  xdpi, cyan, magenta, yellow, black, lcyan, lmagenta);
       else
-	{
-	  escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
-				 lmagenta, length, xdpi, ydpi, model,
-				 out_width, left, bits);
-	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
-	}
+	escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
+			       lmagenta, length, xdpi, ydpi, model,
+			       out_width, left, bits);
 
       errval += errmod;
       errline -= errdiv;
@@ -1340,12 +1337,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
 			  xdpi, cyan, magenta, yellow, black, lcyan, lmagenta);
       else
-	{
-	  escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
-				 lmagenta, length, xdpi, ydpi, model,
-				 out_width, left, bits);
-	  fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
-	}
+	escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
+			       lmagenta, length, xdpi, ydpi, model,
+			       out_width, left, bits);
       errval += errmod;
       errline += errdiv;
       if (errval >= out_height)
@@ -1973,6 +1967,8 @@ escp2_pack(const unsigned char *line,
 static unsigned char *microweave_s = 0;
 static unsigned char *microweave_comp_ptr[6][4];
 static int microweave_setactive[6][4];
+static int accumulated_spacing = 0;
+static int last_color = -1;
 
 #define MICRO_S(c, l) (microweave_s + COMPBUFWIDTH * (l) + COMPBUFWIDTH * (c) * 4)
 
@@ -1981,6 +1977,7 @@ escp2_init_microweave()
 {
   if (!microweave_s)
     microweave_s = malloc(6 * 4 * COMPBUFWIDTH);
+  accumulated_spacing = 0;
 }
 
 static void
@@ -2084,13 +2081,20 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
   gsetactive |= escp2_do_microweave_pack(lm, length, oversample, bits, 4);
   gsetactive |= escp2_do_microweave_pack(lc, length, oversample, bits, 5);
   if (!gsetactive)
-    return;
+    {
+      accumulated_spacing++;
+      return;
+    }
   for (i = 0; i < oversample; i++)
     {
       for (j = 0; j < 6; j++)
 	{
 	  if (!microweave_setactive[j][i])
 	    continue;
+	  if (accumulated_spacing > 0)
+	    fprintf(prn, "\033(v\002%c%c%c", 0, accumulated_spacing % 256,
+		    (accumulated_spacing >> 8) % 256);
+	  accumulated_spacing = 0;
 	  /*
 	   * Set the print head position.
 	   */
@@ -2100,22 +2104,35 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	    {
 	      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 				MODEL_VARIABLE_4))
-		fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-			((offset * xdpi / 1440) + i) & 255,
-			(((offset * xdpi / 1440) + i) >> 8) & 255,
-			(((offset * xdpi / 1440) + i) >> 16) & 255,
-			(((offset * xdpi / 1440) + i) >> 24) & 255);
+		{
+		  if (((offset * xdpi / 1440) + i) > 0)
+		    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
+			    ((offset * xdpi / 1440) + i) & 255,
+			    (((offset * xdpi / 1440) + i) >> 8) & 255,
+			    (((offset * xdpi / 1440) + i) >> 16) & 255,
+			    (((offset * xdpi / 1440) + i) >> 24) & 255);
+		}
 	      else
-		fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-			((offset * 1440 / ydpi) + i) & 255,
-			((offset * 1440 / ydpi) + i) >> 8);
+		{
+		  if (((offset * 1440 / ydpi) + i) > 0)
+		    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+			    ((offset * 1440 / ydpi) + i) & 255,
+			    ((offset * 1440 / ydpi) + i) >> 8);
+		}
 	    }
 	  else
-	    fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
-	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
-	  else
-	    fprintf(prn, "\033r%c", colors[j]);
+	    {
+	      if (offset > 0)
+		fprintf(prn, "\033\\%c%c", offset & 255, offset >> 8);
+	    }
+	  if (j != last_color)
+	    {
+	      if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+		fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	      else
+		fprintf(prn, "\033r%c", colors[j]);
+	      last_color = j;
+	    }
 	  /*
 	   * Send a line of raster graphics...
 	   */
@@ -2144,6 +2161,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	  putc('\r', prn);
 	}
     }
+  accumulated_spacing++;
 }
 
 
@@ -2354,6 +2372,7 @@ typedef struct {
 				/* This is used for the 1520/3000, which */
 				/* use a funny value for the "print density */
 				/* in the vertical direction". */
+  int last_color;
 } escp2_softweave_t;
 
 #ifndef WEAVETEST
@@ -2415,6 +2434,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->last_pass_offset = 0;
   sw->last_pass = -1;
   sw->current_vertical_subpass = 0;
+  sw->last_color = -1;
 
   switch (colormode)
     {
@@ -2759,49 +2779,65 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
     ydpi = 720;
   if (passno == 0)
     sw->last_pass_offset = pass->logicalpassstart;
-  else if (pass->logicalpassstart > sw->last_pass_offset)
-    {
-      int advance = pass->logicalpassstart - sw->last_pass_offset -
-	(sw->separation_rows - 1);
-      int alo = advance % 256;
-      int ahi = advance / 256;
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
-	fprintf(prn, "\033(v\004%c%c%c%c%c", 0, alo, ahi, 0, 0);
-      else
-	fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
-      sw->last_pass_offset = pass->logicalpassstart;
-    }
   for (j = 0; j < sw->ncolors; j++)
     {
       if (lineactive[0].v[j] == 0)
 	continue;
-      if (ydpi >= 720 &&
-	  escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
-	;
-      else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-	fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
-      else
-	fprintf(prn, "\033r%c", colors[j]);
+      if (pass->logicalpassstart > sw->last_pass_offset)
+	{
+	  int advance = pass->logicalpassstart - sw->last_pass_offset -
+	    (sw->separation_rows - 1);
+	  int alo = advance % 256;
+	  int ahi = advance / 256;
+	  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+	    {
+	      int a3 = (advance >> 16) % 256;
+	      int a4 = (advance >> 24) % 256;
+	      ahi = ahi % 256;
+	      fprintf(prn, "\033(v\004%c%c%c%c%c", 0, alo, ahi, a3, a4);
+	    }
+	  else
+	    fprintf(prn, "\033(v\002%c%c%c", 0, alo, ahi);
+	  sw->last_pass_offset = pass->logicalpassstart;
+	}
+      if (last_color != j)
+	{
+	  if (ydpi >= 720 &&
+	      escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+	    ;
+	  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	  else
+	    fprintf(prn, "\033r%c", colors[j]);
+	  last_color = j;
+	}
       if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
 	{
 	  /* FIXME need a more general way of specifying column */
 	  /* separation */
 	  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
-	    fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-		    ((hoffset * xdpi / 720) + microoffset) & 255,
-		    (((hoffset * xdpi / 720) + microoffset) >> 8) & 255,
-		    (((hoffset * xdpi / 720) + microoffset) >> 16) & 255,
-		    (((hoffset * xdpi / 720) + microoffset) >> 24) & 255);
+	    {
+	      if (((hoffset * xdpi / 720) + microoffset) > 0)
+		fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
+			((hoffset * xdpi / 720) + microoffset) & 255,
+			(((hoffset * xdpi / 720) + microoffset) >> 8) & 255,
+			(((hoffset * xdpi / 720) + microoffset) >> 16) & 255,
+			(((hoffset * xdpi / 720) + microoffset) >> 24) & 255);
+	    }
 	  else
-	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
-		    ((hoffset * 1440 / ydpi) + microoffset) >> 8);
+	    {
+	      if (((hoffset * 1440 / ydpi) + microoffset) > 0)
+		fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
+			((hoffset * 1440 / ydpi) + microoffset) & 255,
+			((hoffset * 1440 / ydpi) + microoffset) >> 8);
+	    }
 	}
       else
 	{
-	  fprintf(prn, "\033\\%c%c",
-		  (hoffset + microoffset) & 255,
-		  (hoffset + microoffset) >> 8);
+	  if ((hoffset + microoffset) > 0)
+	    fprintf(prn, "\033\\%c%c",
+		    (hoffset + microoffset) & 255,
+		    (hoffset + microoffset) >> 8);
 	}
       if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	{
@@ -3039,6 +3075,11 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.136  2000/05/05 00:46:22  rlk
+ *   Optimize out head motion and color commands where possible.
+ *   We can still optimize out some horizontal movements.
+ *   Avoid printing color in *pure* black.
+ *
  *   Revision 1.135  2000/05/04 01:09:04  rlk
  *   Improve use of black ink to reduce sharp grain.
  *
