@@ -43,8 +43,8 @@ problems. How can I contact the developers?
 not the only one. If you can't find a solution to your
 problem in the Gimp-Print documentation or in this FAQ your
 next stop should be the gimp-print project <a
-href="http://sourceforge.net/forum/?group_id=1537">forums</
-a>. If you've looked through the forums and you still can't
+href="http://sourceforge.net/forum/?group_id=1537">forums</a>.
+ If you've looked through the forums and you still can't
 find a reference to your problem then you may simply be the
 first person to encouter it. It's helpful to the developers
 and users of Gimp-Print if you post a description of the
