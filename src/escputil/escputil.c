@@ -175,6 +175,7 @@ stp_printer_t printer_list[] =
   { "890",	"Stylus Photo 890",	3,	15 },
   { "1200",	"Stylus Photo 1200",	3,	15 },
   { "1270",	"Stylus Photo 1270",	3,	15 },
+  { "1280",	"Stylus Photo 1280",	3,	15 },
   { "1290",	"Stylus Photo 1290",	3,	15 },
   { "2000",	"Stylus Photo 2000P",	2,	15 },
   { NULL,	NULL,			0,	0 }

@@ -1674,7 +1674,7 @@ static escp2_stp_printer_t model_capabilities[] =
     &variable_4pl_6color_inks, x70_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
-  /* 37: Stylus Photo 1290 */
+  /* 37: Stylus Photo 1280/1290 */
   {
     (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
