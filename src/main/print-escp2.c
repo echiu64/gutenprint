@@ -79,7 +79,7 @@ typedef union {		/* number of rows for a pass */
     int dummy;
     } p;
   } head_offset_t;
-	
+
 #define COLOR_JET_ARRANGEMENT_DEFAULT {{0, 0, 0, 0, 0, 0, 0, 0}}
 #define COLOR_JET_ARRANGEMENT_NEW_X80 {{48, 48, 96 ,0, 0, 0, 0, 0}}
 
@@ -934,7 +934,7 @@ static double standard_sat_adjustment[49] =
   1.0,
   1.0,
   1.0				/* C */
-};  
+};
 
 static double standard_lum_adjustment[49] =
 {
@@ -987,7 +987,7 @@ static double standard_lum_adjustment[49] =
   0.51,
   0.51,
   0.50				/* C */
-};  
+};
 
 static double x70_lum_adjustment[49] =
 {
@@ -1040,7 +1040,7 @@ static double x70_lum_adjustment[49] =
   0.51,
   0.51,
   0.50				/* C */
-};  
+};
 
 static double standard_hue_adjustment[49] =
 {
@@ -1217,7 +1217,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES 
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     15, 4, 15, 4, 720, 720, INCH(17 / 2), INCH(44), 14, 14, 9, 49, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1231,7 +1231,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO 
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 48, 3, 720, 720, INCH(17 / 2), INCH(44), 14, 14, 0, 30, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1245,7 +1245,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_NO | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO 
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 1, 720, 720, INCH(17), INCH(44), 14, 14, 9, 49, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1345,7 +1345,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_6 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO 
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 4, 32, 4, 720, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 30, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1364,7 +1364,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES 
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 4, 21, 4, 720, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1770,7 +1770,7 @@ static escp2_stp_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO 
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 3, 48, 3, 720, 720, INCH(13), INCH(44), 14, 14, 0, 30, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
@@ -1869,6 +1869,59 @@ typedef struct {
   stp_simple_dither_range_t *photo_dither;
 } ink_t;
 
+static double plain_paper_lum_adjustment[49] =
+{
+  1.2,				/* C */
+  1.22,
+  1.28,
+  1.34,
+  1.39,
+  1.42,
+  1.45,
+  1.48,
+  1.5,				/* B */
+  1.4,
+  1.3,
+  1.25,
+  1.2,
+  1.1,
+  1.05,
+  1.05,
+  1.05,				/* M */
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,				/* R */
+  1.05,
+  1.05,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,				/* Y */
+  1.15,
+  1.3,
+  1.45,
+  1.6,
+  1.75,
+  1.9,
+  2.0,
+  2.1,				/* G */
+  2.0,
+  1.8,
+  1.7,
+  1.6,
+  1.5,
+  1.4,
+  1.3,
+  1.2				/* C */
+};  
+
 typedef struct {
   const char name[65];
   int paper_feed_sequence;
@@ -1876,24 +1929,42 @@ typedef struct {
   double base_density;
   double k_lower_scale;
   double k_upper;
+  double *hue_adjustment;
+  double *lum_adjustment;
+  double *sat_adjustment;
 } paper_t;
 
 static const paper_t escp2_paper_list[] = {
-  { N_ ("Plain Paper"), 1, 0, .7, .1, .5 },
-  { N_ ("Plain Paper Fast Load"), 5, 0, .7, .1, .5 },
-  { N_ ("Postcard"), 2, 0, .75, .2, .6 },
-  { N_ ("Glossy Film"), 3, 0, 1.0, 1.0, .999 },
-  { N_ ("Transparencies"), 3, 0, 1.0, 1.0, .999 },
-  { N_ ("Envelopes"), 4, 0, .7, .125, .5 },
-  { N_ ("Back Light Film"), 6, 0, 1.0, 1.0, .999 },
-  { N_ ("Matte Paper"), 7, 0, .85, 1.0, .999 },
-  { N_ ("Inkjet Paper"), 7, 0, .78, .25, .6 },
-  { N_ ("Photo Quality Inkjet Paper"), 7, 0, 1, 1.0, .999 },
-  { N_ ("Photo Paper"), 8, 0, 1, 1.0, .9 },
-  { N_ ("Premium Glossy Photo Paper"), 8, 0, .9, 1.0, .999 },
-  { N_ ("Premium Luster Photo Paper"), 8, 0, 1.0, 1.0, .999 },
-  { N_ ("Photo Quality Glossy Paper"), 6, 0, 1.0, 1.0, .999 },
-  { N_ ("Other"), 0, 0, .7, .125, .5 },
+  { N_ ("Plain Paper"), 1, 0, .7, .1, .5,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Plain Paper Fast Load"), 5, 0, .7, .1, .5,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Postcard"), 2, 0, .75, .2, .6,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Glossy Film"), 3, 0, 1.0, 1.0, .999,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Transparencies"), 3, 0, 1.0, 1.0, .999,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Envelopes"), 4, 0, .7, .125, .5,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Back Light Film"), 6, 0, 1.0, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Matte Paper"), 7, 0, .85, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Inkjet Paper"), 7, 0, .78, .25, .6,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { N_ ("Photo Quality Inkjet Paper"), 7, 0, 1, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Photo Paper"), 8, 0, 1, 1.0, .9,
+    NULL, NULL, NULL },
+  { N_ ("Premium Glossy Photo Paper"), 8, 0, .9, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Premium Luster Photo Paper"), 8, 0, 1.0, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Photo Quality Glossy Paper"), 6, 0, 1.0, 1.0, .999,
+    NULL, NULL, NULL },
+  { N_ ("Other"), 0, 0, .7, .125, .5,
+    NULL, plain_paper_lum_adjustment, NULL },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -2241,11 +2312,11 @@ escp2_imageable_area(const stp_printer_t printer,	/* I - Printer model */
   *right =	width - escp2_right_margin(stp_printer_get_model(printer),
 					   stp_printer_get_printvars(printer));
 
- /* 
+ /*
   * All printers should have 0 vertical margin capability in Roll Feed
   * mode --  They waste any paper they need automatically, and the
-  * driver should print as much as the user wants 
-  */ 
+  * driver should print as much as the user wants
+  */
 
   if (rollfeed) {
      *top =      height - 0;
@@ -2358,7 +2429,7 @@ escp2_set_remote_sequence(const stp_vars_t v, escp2_init_t *init)
 	stp_zprintf(v, /* Set zero-margin print mode */
 		"FP\003%c%c\260\377", 0, 0);
 
-      /* set up Roll-Feed options on appropriate printers 
+      /* set up Roll-Feed options on appropriate printers
 	 (tested for STP 870, which has no cutter) */
       if (escp2_has_cap(init->model, MODEL_ROLLFEED,
 			MODEL_ROLLFEED_YES, init->v))
@@ -2366,13 +2437,13 @@ escp2_set_remote_sequence(const stp_vars_t v, escp2_init_t *init)
 	  if(strcmp(init->media_source,_("Roll Feed")) == 0)
 	    stp_zprintf(v, /* Set Roll Feed mode */
 		    "IR\002%c%c%c"
-		    "EX\006%c%c%c%c%c%c%c", 
+		    "EX\006%c%c%c%c%c%c%c",
 		    0, 0, 1,
 		    0, 0,0,0,0,5,1);
 	  else
 	    stp_zprintf(v, /* Set non-Roll Feed mode */
 		    "IR\002%c%c%c"
-		    "EX\006%c%c%c%c%c%c%c", 
+		    "EX\006%c%c%c%c%c%c%c",
 		    0, 0, 3,
 		    0, 0, 0, 0, 0, 5, 0);
 	}
@@ -2553,7 +2624,7 @@ escp2_deinit_printer(const stp_vars_t v, escp2_init_t *init)
     {
       stp_zprintf(v, /* Enter remote mode */
 	      "\033(R\010%c%cREMOTE1", 0, 0);
-      /* set up Roll-Feed options on appropriate printers 
+      /* set up Roll-Feed options on appropriate printers
 	 (tested for STP 870, which has no cutter) */
       if (escp2_has_cap(init->model, MODEL_ROLLFEED,
 			MODEL_ROLLFEED_YES, init->v))
@@ -2654,6 +2725,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   const unsigned char *cols[7];
   int head_offset[8], *offsetPtr;
   int maxHeadOffset;
+  double lum_adjustment[49], sat_adjustment[49], hue_adjustment[49];
 
   separation_rows = escp2_separation_rows(model, nv);
   max_vres = escp2_max_vres(model, nv);
@@ -2766,7 +2838,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  if (ydpi > escp2_base_separation)
 	    nozzle_separation = nozzle_separation * ydpi /
 	      escp2_base_separation;
-	  
+
 	  offsetPtr = escp2_head_offset(model);
 	  maxHeadOffset = 0;
 	  for(i=0; i<8; i++)
@@ -2778,7 +2850,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	    if(head_offset[i] > maxHeadOffset)
 	      maxHeadOffset = head_offset[i];
 	    }
-	  
+
 	  break;
 	}
       else if (!strcmp(resolution, ""))
@@ -2812,14 +2884,14 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.page_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;
-  
+
    /* adjust bottom margin for a 480 like head configuration */
   init.page_bottom = page_bottom - maxHeadOffset*72/ydpi;
   if((maxHeadOffset*72 % ydpi) != 0)
     init.page_bottom -= 1;
   if(init.page_bottom < 0)
     init.page_bottom = 0;
-    
+
   init.horizontal_passes = horizontal_passes;
   init.vertical_passes = vertical_passes;
   init.vertical_oversample = vertical_oversample;
@@ -2938,7 +3010,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 				   out_height, separation_rows,
 				   top * physical_ydpi / 72,
 				   page_height * physical_ydpi / 72,
-				   use_softweave, head_offset,  
+				   use_softweave, head_offset,
 				   nv, flush_pass);
     }
   else
@@ -3042,6 +3114,36 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   errval  = 0;
   errlast = -1;
   errline  = 0;
+  if (escp2_lum_adjustment(model, nv))
+    {
+      int k;
+      for (k = 0; k < 49; k++)
+	{
+	  lum_adjustment[k] = escp2_lum_adjustment(model, nv)[k];
+	  if (pt->lum_adjustment)
+	    lum_adjustment[k] *= pt->lum_adjustment[k];
+	}
+    }
+  if (escp2_sat_adjustment(model, nv))
+    {
+      int k;
+      for (k = 0; k < 49; k++)
+	{
+	  sat_adjustment[k] = escp2_sat_adjustment(model, nv)[k];
+	  if (pt->sat_adjustment)
+	    sat_adjustment[k] *= pt->sat_adjustment[k];
+	}
+    }
+  if (escp2_hue_adjustment(model, nv))
+    {
+      int k;
+      for (k = 0; k < 49; k++)
+	{
+	  hue_adjustment[k] = escp2_hue_adjustment(model, nv)[k];
+	  if (pt->hue_adjustment)
+	    hue_adjustment[k] += pt->hue_adjustment[k];
+	}
+    }
 
   QUANT(0);
   for (y = 0; y < out_height; y ++)
@@ -3056,9 +3158,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       duplicate_line = 0;
       image->get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, nv,
-		   escp2_hue_adjustment(model, nv),
-		   escp2_lum_adjustment(model, nv),
-		   escp2_sat_adjustment(model, nv));
+		   escp2_hue_adjustment(model, nv) ? hue_adjustment : NULL,
+		   escp2_lum_adjustment(model, nv) ? lum_adjustment : NULL,
+		   escp2_sat_adjustment(model, nv) ? sat_adjustment : NULL);
     }
     QUANT(1);
 
@@ -3347,7 +3449,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
   int advance = pass->logicalpassstart - sw->last_pass_offset -
     (sw->separation_rows - 1);
-  
+
   if (ydpi > escp2_max_vres(model, v))
     ydpi = escp2_max_vres(model, v);
   for (j = 0; j < sw->ncolors; j++)
@@ -3355,7 +3457,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
       if (lineactive[0].v[j] == 0)
 	{
 	  lineoffs[0].v[j] = 0;
-	  linecount[0].v[j] = 0;	  
+	  linecount[0].v[j] = 0;
 	  continue;
 	}
       if (pass->logicalpassstart > sw->last_pass_offset)
