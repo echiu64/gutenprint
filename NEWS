@@ -19,8 +19,11 @@ Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
 
 2) The Epson Stylus Color 980 should print with better density.
 
-3) The Stylus Color 480/580 positions the image more accurately on the
-   page.
+3) Major quality and positioning improvements on the Epson Stylus
+   Color 480, 580, C20, and C40 printers.  The Stylus Color 480 does
+   not print at 720 DPI in black and white and grayscale, although the
+   C40UX does.  It is not currently known whether this is a flaw with
+   the printer or the library.
 
 4) The CUPS driver cleanly aborts printing if an active job is removed
    from the queue.  It may take up to 30 seconds or so for the printer
@@ -41,7 +44,22 @@ Gimp-Print 4.1.99a3 contains the following changes over 4.1.99a2:
 9) Changing ink cartridges on the Epson Stylus Color 480/580 will not
    be supported in at least initial 4.2 releases.  This project
    appears to be somewhat more complicated and riskier than previously
-   believed.
+   believed.  The cartridge can be changed by hand by unplugging and
+   plugging in the printer.  During the initial cleaning cycle, the
+   heads will move to the left.  When the head is in position, quickly
+   unplug the printer.  The head will slide easily into positions that
+   allow changing the cartridge.  WARNING: this may damage the printer
+   over the long term; be careful!
+
+10) Initial support for the HP DesignJet 750 (wide carriage printer).
+
+11) The escputil command now returns ink levels and status more
+   reliably, particularly for USB-connected printers.
+
+12) A new test program, testpattern, is available in the test
+   directory.  This program uses the 16-bit raw CMYK input.  In
+   addition to demonstrating use of 16-bit raw CMYK, this program is
+   also an example of how to use the libgimpprint API.
 
 
 Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
