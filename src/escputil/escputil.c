@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Printer maintenance utility for Epson Stylus printers
+ *   Printer maintenance utility for EPSON Stylus (R) printers
  *
  *   Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)
  *
@@ -109,7 +109,7 @@ struct option optlist[] =
 const char *help_msg = "\
 Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
-Perform maintenance on Epson (R) Stylus printers.\n\
+Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil --clean-head --printer stpex-on-third-floor\n\
           escputil --ink-level --raw-device --new /dev/lp0\n\
 \n\
@@ -148,7 +148,7 @@ const char *help_msg = "\
 Usage: escputil [OPTIONS] [COMMAND]\n\
 Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
-Perform maintenance on Epson (R) Stylus printers.\n\
+Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil -c -P stpex-on-third-floor\n\
           escputil -i -r -u /dev/lp0\n\
 \n\
