@@ -235,29 +235,27 @@ Known Limitations:
 
    escputil -u -d
 
-   will not return anything useful, and head alignment requires
-   specification of the printer model.  This is not expected to be
-   fixed, as these printers do not have a known way of identifying
+   will not return anything useful.  This will not be fixed for 4.2,
+   as these printers do not have a known way of identifying
    themselves.
 
 2) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).
+   580, and C20SX, C20UX, C40SX, and C40UX).  It is not presently
+   expected that this will be fixed for 4.2.
 
 3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
-   supported.
+   supported.  This will not be fixed for 4.2.
 
 4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
    work correctly in all cases, and their outputs are not properly
-   tuned.
+   tuned.  In addition, the Epson Stylus C70 and C80 are not fully
+   tested and may not work properly in all modes.
 
 5) The Canon BJC-8200 and S800 do not produce optimum quality.
 
-6) The Lexmark Z52 driver does not print correctly at 2400x1200 or
-   1200x1200.
-
-7) Some HP printers print poorly at high resolutions using the Glossy
+6) Some HP printers print poorly at high resolutions using the Glossy
    Paper setting.  The workaround is to use the Premium Paper
    setting.
 
