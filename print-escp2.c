@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.85  2000/02/18 00:31:28  rlk
+ *   Remove debug printf
+ *
  *   Revision 1.84  2000/02/18 00:17:44  rlk
  *   Update line spacing for ESC900
  *
@@ -1224,7 +1227,6 @@ escp2_print(int       model,		/* I - Model */
       int extra_points = ((escp2_nozzles(model) - 1) *
 			  escp2_nozzle_separation(model) + 5) / 10;
       top += extra_points;
-      fprintf(stderr, "Adjusted top is %d\n", top);
     }
 
  /*
