@@ -103,8 +103,8 @@ DOTSIZE(standard_pigment) = { 0.55, 1.0 };
 
 /* Stylus Photo 2200, Stylus Pro 7600 */
 DOTSIZE(standard_4pl_pigment_low) = { 0.4, 0.7, 1.0 };
-DOTSIZE(standard_4pl_pigment) = { 0.265, 0.5, 1.0 };
-DOTSIZE(standard_4pl_pigment_1440) = { 0.53, 1.0 };
+DOTSIZE(standard_4pl_pigment) = { 0.25, 0.5, 1.0 };
+DOTSIZE(standard_4pl_pigment_1440) = { 0.5, 1.0 };
 DOTSIZE(standard_4pl_pigment_2880) = { 1.0 };
 
 /* Stylus Pro 10000 */
