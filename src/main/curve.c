@@ -39,6 +39,8 @@
 #define inline __inline__
 #endif
 
+#undef inline
+#define inline
 
 static const int curve_point_limit = 1048576;
 
@@ -46,6 +48,7 @@ struct stp_curve
 {
   stp_curve_type_t curve_type;
   stp_curve_wrap_mode_t wrap_mode;
+  int piecewise;
   int recompute_interval;	/* Do we need to recompute the deltas? */
   double gamma;			/* 0.0 means that the curve is not a gamma */
   stp_sequence_t *seq;          /* Sequence (contains the curve data) */
@@ -96,7 +99,10 @@ check_curve(const stp_curve_t *curve)
 static size_t
 get_real_point_count(const stp_curve_t *curve)
 {
-  return stp_sequence_get_size(curve->seq);
+  if (curve->piecewise)
+    return stp_sequence_get_size(curve->seq) / 2;
+  else
+    return stp_sequence_get_size(curve->seq);
 }
 
 /*
@@ -107,9 +113,7 @@ get_real_point_count(const stp_curve_t *curve)
 static size_t
 get_point_count(const stp_curve_t *curve)
 {
-  size_t count;
-
-  count = stp_sequence_get_size(curve->seq);
+  size_t count = get_real_point_count(curve);
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
     count -= 1;
 
@@ -119,11 +123,7 @@ get_point_count(const stp_curve_t *curve)
 static void
 invalidate_auxiliary_data(stp_curve_t *curve)
 {
-  if (curve->interval)
-    {
-      stp_free(curve->interval);
-      curve->interval = NULL;
-    }
+  STP_SAFE_FREE(curve->interval);
 }
 
 static void
@@ -156,11 +156,107 @@ compute_linear_deltas(stp_curve_t *curve)
 
   curve->interval = stp_malloc(sizeof(double) * delta_count);
   for (i = 0; i < delta_count; i++)
-    curve->interval[i] = data[i + 1] - data[i];
+    {
+      if (curve->piecewise)
+	curve->interval[i] = data[(2 * (i + 1)) + 1] - data[(2 * i) + 1];
+      else
+	curve->interval[i] = data[i + 1] - data[i];
+    }
 }
 
 static void
-compute_spline_deltas(stp_curve_t *curve)
+compute_spline_deltas_piecewise(stp_curve_t *curve)
+{
+  int i;
+  int k;
+  double *u;
+  double *y2;
+  const double *data = NULL;
+  const stp_curve_point_t *dp;
+  size_t point_count;
+  size_t real_point_count;
+  double sig;
+  double p;
+
+  point_count = get_point_count(curve);
+
+  stp_sequence_get_data(curve->seq, &real_point_count, &data);
+  dp = (const stp_curve_point_t *)data;
+  real_point_count = real_point_count / 2;
+
+  u = stp_malloc(sizeof(double) * real_point_count);
+  y2 = stp_malloc(sizeof(double) * real_point_count);
+
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    {
+      int reps = 3;
+      int count = reps * real_point_count;
+      double *y2a = stp_malloc(sizeof(double) * count);
+      double *ua = stp_malloc(sizeof(double) * count);
+      y2a[0] = 0.0;
+      ua[0] = 0.0;
+      for (i = 1; i < count - 1; i++)
+	{
+	  int im1 = (i - 1) % point_count;
+	  int ia = i % point_count;
+	  int ip1 = (i + 1) % point_count;
+
+	  sig = (dp[ia].x - dp[im1].x) / (dp[ip1].x - dp[im1].x);
+	  p = sig * y2a[im1] + 2.0;
+	  y2a[i] = (sig - 1.0) / p;
+
+	  ua[i] = ((dp[ip1].y - dp[ia].y) / (dp[ip1].x - dp[ia].x)) -
+	    ((dp[ia].y - dp[im1].y) / (dp[ia].x - dp[im1].x));
+	  ua[i] =
+	    (((6.0 * ua[ia]) / (dp[ip1].x - dp[im1].x)) - (sig * ua[im1])) / p;
+	}
+      y2a[count - 1] = 0.0;
+      for (k = count - 2 ; k >= 0; k--)
+	y2a[k] = y2a[k] * y2a[k + 1] + ua[k];
+      memcpy(u, ua + ((reps / 2) * point_count),
+	     sizeof(double) * real_point_count);
+      memcpy(y2, y2a + ((reps / 2) * point_count),
+	     sizeof(double) * real_point_count);
+      stp_free(y2a);
+      stp_free(ua);
+    }
+  else
+    {
+      int count = real_point_count - 1;
+
+      y2[0] = 0;
+      u[0] = 2 * (dp[1].y - dp[0].y);
+      for (i = 1; i < count; i++)
+	{
+	  int im1 = (i - 1);
+	  int ip1 = (i + 1);
+
+	  sig = (dp[i].x - dp[im1].x) / (dp[ip1].x - dp[im1].x);
+	  p = sig * y2[im1] + 2.0;
+	  y2[i] = (sig - 1.0) / p;
+
+	  u[i] = ((dp[ip1].y - dp[i].y) / (dp[ip1].x - dp[i].x)) -
+	    ((dp[i].y - dp[im1].y) / (dp[i].x - dp[im1].x));
+	  u[i] =
+	    (((6.0 * u[i]) / (dp[ip1].x - dp[im1].x)) - (sig * u[im1])) / p;
+	  stp_deprintf(STP_DBG_CURVE,
+		       "%d sig %f p %f y2 %f u %f x %f %f %f y %f %f %f\n",
+		       i, sig, p, y2[i], u[i],
+		       dp[im1].x, dp[i].x, dp[ip1].x,
+		       dp[im1].y, dp[i].y, dp[ip1].y);
+	}
+      y2[count] = 0.0;
+      u[count] = 0.0;
+      for (k = real_point_count - 2; k >= 0; k--)
+	y2[k] = y2[k] * y2[k + 1] + u[k];
+    }
+
+  curve->interval = y2;
+  stp_free(u);
+}
+
+static void
+compute_spline_deltas_dense(stp_curve_t *curve)
 {
   int i;
   int k;
@@ -242,6 +338,15 @@ compute_spline_deltas(stp_curve_t *curve)
   stp_free(u);
 }
 
+static void
+compute_spline_deltas(stp_curve_t *curve)
+{
+  if (curve->piecewise)
+    compute_spline_deltas_piecewise(curve);
+  else
+    compute_spline_deltas_dense(curve);
+}
+
 /*
  * Recompute the delta values for interpolation.
  * When we actually do support spline curves, this routine will
@@ -282,6 +387,8 @@ stpi_curve_set_points(stp_curve_t *curve, size_t points)
   clear_curve_data(curve);
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
     points++;
+  if (curve->piecewise)
+    points *= 2;
   if ((stp_sequence_set_size(curve->seq, points)) == 0)
     return 0;
   return 1;
@@ -297,6 +404,7 @@ stpi_curve_ctor(stp_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
   stp_sequence_set_bounds(curve->seq, 0.0, 1.0);
   curve->curve_type = STP_CURVE_TYPE_LINEAR;
   curve->wrap_mode = wrap_mode;
+  curve->piecewise = 0;
   stpi_curve_set_points(curve, 2);
   curve->recompute_interval = 1;
   if (wrap_mode == STP_CURVE_WRAP_NONE)
@@ -344,6 +452,7 @@ stp_curve_copy(stp_curve_t *dest, const stp_curve_t *source)
   dest->wrap_mode = source->wrap_mode;
   dest->gamma = source->gamma;
   dest->seq = stp_sequence_create_copy(source->seq);
+  dest->piecewise = source->piecewise;
   dest->recompute_interval = 1;
 }
 
@@ -396,6 +505,13 @@ stp_curve_get_wrap(const stp_curve_t *curve)
 {
   check_curve(curve);
   return curve->wrap_mode;
+}
+
+int
+stp_curve_is_piecewise(const stp_curve_t *curve)
+{
+  check_curve(curve);
+  return curve->piecewise;
 }
 
 int
@@ -453,7 +569,8 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
   for (i = 0; i < count; i++)
     if (! finite(data[i]) || data[i] < low || data[i] > high)
       {
-	stp_erprintf("stp_curve_set_data: datum out of bounds: "
+	stp_deprintf(STP_DBG_CURVE_ERRORS,
+		     "stp_curve_set_data: datum out of bounds: "
 		     "%g (require %g <= x <= %g), n = %d\n",
 		     data[i], low, high, i);
 	return 0;
@@ -470,6 +587,98 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
   return 1;
 }
 
+int
+stp_curve_set_data_points(stp_curve_t *curve, size_t count,
+			  const stp_curve_point_t *data)
+{
+  size_t i;
+  size_t real_count = count;
+  double low, high;
+  double last_x = -1;
+  check_curve(curve);
+  if (count < 2)
+    {
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_set_data_points: too few points %d\n", count);
+      return 0;
+    }
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    real_count++;
+  if (real_count > curve_point_limit)
+    {
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_set_data_points: too many points %d\n",
+		   real_count);
+      return 0;
+    }
+
+  /* Validate the data before we commit to it. */
+  stp_sequence_get_bounds(curve->seq, &low, &high);
+  for (i = 0; i < count; i++)
+    {
+      if (! finite(data[i].y) || data[i].y < low || data[i].y > high)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: datum out of bounds: "
+		       "%g (require %g <= x <= %g), n = %d\n",
+		       data[i].y, low, high, i);
+	  return 0;
+	}
+      if (i == 0 && data[i].x != 0.0)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: first point must have x=0\n");
+	  return 0;
+	}
+      if (curve->wrap_mode == STP_CURVE_WRAP_NONE && i == count - 1 &&
+	  data[i].x != 1.0)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: last point must have x=1\n");
+	  return 0;
+	}
+      if (curve->wrap_mode == STP_CURVE_WRAP_AROUND &&
+	  data[i].x >= 1.0 - .000001)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: horizontal value must "
+		       "not exceed .99999\n");
+	  return 0;
+	}	  
+      if (data[i].x < 0 || data[i].x > 1)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: horizontal position out of bounds: "
+		       "%g, n = %d\n",
+		       data[i].x, i);
+	  return 0;
+	}
+      if (data[i].x - .000001 < last_x)
+	{
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_set_data_points: horizontal position must "
+		       "exceed previous position by .000001: %g, %g, n = %d\n",
+		       data[i].x, last_x, i);
+	  return 0;
+	}
+      last_x = data[i].x;
+    }
+  /* Allocate sequence; also accounts for WRAP_MODE */
+  curve->piecewise = 1;
+  stpi_curve_set_points(curve, count);
+  curve->gamma = 0.0;
+  stp_sequence_set_subrange(curve->seq, 0, count * 2, (const double *) data);
+
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    {
+      stp_sequence_set_point(curve->seq, count * 2, data[0].x);
+      stp_sequence_set_point(curve->seq, count * 2 + 1, data[0].y);
+    }
+  curve->recompute_interval = 1;
+
+  return 1;
+}
+
 
 /*
  * Note that we return a pointer to the raw data here.
@@ -481,8 +690,34 @@ stp_curve_get_data(const stp_curve_t *curve, size_t *count)
 {
   const double *ret;
   check_curve(curve);
+  if (curve->piecewise)
+    return NULL;
   stp_sequence_get_data(curve->seq, count, &ret);
   *count = get_point_count(curve);
+  return ret;
+}
+
+const stp_curve_point_t *
+stp_curve_get_data_points(const stp_curve_t *curve, size_t *count)
+{
+  const stp_curve_point_t *ret;
+  check_curve(curve);
+  if (!curve->piecewise)
+    return NULL;
+  stp_sequence_get_data(curve->seq, count, (const double **) &ret);
+  *count = get_point_count(curve);
+  return ret;
+}
+
+static const double *
+stpi_curve_get_data_internal(const stp_curve_t *curve, size_t *count)
+{
+  const double *ret;
+  check_curve(curve);
+  stp_sequence_get_data(curve->seq, count, &ret);
+  *count = get_point_count(curve);
+  if (curve->piecewise)
+    *count *= 2;
   return ret;
 }
 
@@ -526,6 +761,8 @@ DEFINE_DATA_SETTER(unsigned short, ushort)
 const t *								\
 stp_curve_get_##name##_data(const stp_curve_t *curve, size_t *count)    \
 {									\
+  if (curve->piecewise)							\
+    return 0;								\
   return stp_sequence_get_##name##_data(curve->seq, count);		\
 }
 
@@ -546,6 +783,8 @@ stp_curve_get_subrange(const stp_curve_t *curve, size_t start, size_t count)
   double blo, bhi;
   const double *data;
   if (start + count > stp_curve_count_points(curve) || count < 2)
+    return NULL;
+  if (curve->piecewise)
     return NULL;
   retval = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_get_bounds(curve, &blo, &bhi);
@@ -570,15 +809,18 @@ stp_curve_set_subrange(stp_curve_t *curve, const stp_curve_t *range,
   check_curve(curve);
   if (start + stp_curve_count_points(range) > stp_curve_count_points(curve))
     return 0;
+  if (curve->piecewise)
+    return 0;
   stp_sequence_get_bounds(curve->seq, &blo, &bhi);
   stp_sequence_get_range(curve->seq, &rlo, &rhi);
   if (rlo < blo || rhi > bhi)
     return 0;
-  stp_sequence_get_data(curve->seq, &count, &data);
+  stp_sequence_get_data(range->seq, &count, &data);
   curve->recompute_interval = 1;
   curve->gamma = 0.0;
   invalidate_auxiliary_data(curve);
-  stp_sequence_set_subrange(curve->seq, start, count, data);
+  stp_sequence_set_subrange(curve->seq, start, stp_curve_count_points(range),
+			    data);
   return 1;
 }
 
@@ -591,6 +833,8 @@ stp_curve_set_point(stp_curve_t *curve, size_t where, double data)
     return 0;
   curve->gamma = 0.0;
 
+  if (curve->piecewise)
+    return 0;
   if ((stp_sequence_set_point(curve->seq, where, data)) == 0)
     return 0;
   if (where == 0 && curve->wrap_mode == STP_CURVE_WRAP_AROUND)
@@ -607,6 +851,8 @@ stp_curve_get_point(const stp_curve_t *curve, size_t where, double *data)
   check_curve(curve);
   if (where >= get_point_count(curve))
     return 0;
+  if (curve->piecewise)
+    return 0;
   return stp_sequence_get_point(curve->seq, where, data);
 }
 
@@ -614,6 +860,8 @@ const stp_sequence_t *
 stp_curve_get_sequence(const stp_curve_t *curve)
 {
   check_curve(curve);
+  if (curve->piecewise)
+    return NULL;
   return curve->seq;
 }
 
@@ -628,6 +876,9 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
   size_t count;
 
   check_curve(curve);
+
+  if (curve->piecewise)
+    return 0;
 
   real_point_count = get_real_point_count(curve);
 
@@ -721,17 +972,15 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
   double blo, bhi;
   if (curve->gamma && curve->wrap_mode)
     {
-#ifdef DEBUG
-      stp_erprintf("curve sets both gamma and wrap_mode\n");
-#endif
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "curve sets both gamma and wrap_mode\n");
       return 0;
     }
   stp_sequence_get_bounds(curve->seq, &blo, &bhi);
   if (blo > bhi)
     {
-#ifdef DEBUG
-      stp_erprintf("curve low bound is greater than high bound\n");
-#endif
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "curve low bound is greater than high bound\n");
       return 0;
     }
   return 1;
@@ -754,11 +1003,22 @@ interpolate_gamma_internal(const stp_curve_t *curve, double where)
       fgamma = -fgamma;
     }
   stp_sequence_get_bounds(curve->seq, &blo, &bhi);
-#ifdef DEBUG
-  stp_erprintf("interpolate_gamma %f %f %f %f %f\n", where, fgamma,
+  stp_deprintf(STP_DBG_CURVE,
+	       "interpolate_gamma %f %f %f %f %f\n", where, fgamma,
 	       blo, bhi, pow(where, fgamma));
-#endif
   return blo + (bhi - blo) * pow(where, fgamma);
+}
+
+static inline double
+do_interpolate_spline(double low, double high, double frac,
+		      double interval_low, double interval_high)
+{
+  double a = 1.0 - frac;
+  double b = frac;
+  double retval =
+    ((a * a * a - a) * interval_low) + ((b * b * b - b) * interval_high);
+  retval = (a * low) + (b * high) + (retval / 6);
+  return retval;
 }
 
 static inline double
@@ -787,8 +1047,6 @@ interpolate_point_internal(stp_curve_t *curve, double where)
   else
     {
       size_t point_count;
-      double a = 1.0 - frac;
-      double b = frac;
       double ival, ip1val;
       double retval;
       int i = integer;
@@ -798,14 +1056,13 @@ interpolate_point_internal(stp_curve_t *curve, double where)
 
       if (ip1 >= point_count)
 	ip1 -= point_count;
-      retval = ((a * a * a - a) * curve->interval[i] +
-		(b * b * b - b) * curve->interval[ip1]);
 
       if ((stp_sequence_get_point(curve->seq, i, &ival)) == 0 ||
 	  (stp_sequence_get_point(curve->seq, ip1, &ip1val)) == 0)
 	return HUGE_VAL; /* Infinity */
 
-      retval = a * ival + b * ip1val + retval / 6;
+      retval = do_interpolate_spline(ival, ip1val, frac,
+				     curve->interval[i], curve->interval[ip1]);
 
       stp_sequence_get_bounds(curve->seq, &blo, &bhi);
       if (retval > bhi)
@@ -823,6 +1080,8 @@ stp_curve_interpolate_value(const stp_curve_t *curve, double where,
   size_t limit;
 
   check_curve(curve);
+  if (curve->piecewise)
+    return 0;
 
   limit = get_real_point_count(curve);
 
@@ -845,14 +1104,14 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
 
   check_curve(curve);
 
-  if (points == get_point_count(curve) && curve->seq)
+  if (points == get_point_count(curve) && curve->seq && !(curve->piecewise))
     return 1;
 
   if (points < 2)
     return 1;
 
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
-      limit++;
+    limit++;
   if (limit > curve_point_limit)
     return 0;
   old = get_real_point_count(curve);
@@ -868,15 +1127,74 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
    * If we're not careful how we do it, we might get a small roundoff
    * error
    */
-  for (i = 0; i < limit; i++)
-    if (curve->gamma)
-      new_vec[i] =
-	interpolate_gamma_internal(curve, ((double) i * (double) old /
-					   (double) (limit - 1)));
-    else
-      new_vec[i] =
-	interpolate_point_internal(curve, ((double) i * (double) old /
-					   (double) (limit - 1)));
+  if (curve->piecewise)
+    {
+      int curpos = 0;
+      if (curve->recompute_interval)
+	compute_intervals(curve);
+      for (i = 0; i < old; i++)
+	{
+	  double low;
+	  double high;
+	  double low_y;
+	  double high_y;
+	  if (!stp_sequence_get_point(curve->seq, i * 2, &low))
+	    {
+	      stp_free(new_vec);
+	      return 0;
+	    }
+	  if (i == old - 1)
+	    high = 1.0;
+	  else if (!stp_sequence_get_point(curve->seq, ((i + 1) * 2), &high))
+	    {
+	      stp_free(new_vec);
+	      return 0;
+	    }
+	  if (!stp_sequence_get_point(curve->seq, (i * 2) + 1, &low_y))
+	    {
+	      stp_free(new_vec);
+	      return 0;
+	    }
+	  if (!stp_sequence_get_point(curve->seq, ((i + 1) * 2) + 1, &high_y))
+	    {
+	      stp_free(new_vec);
+	      return 0;
+	    }
+	  stp_deprintf(STP_DBG_CURVE,
+		       "Filling slots at %d %d: %f %f  %f %f  %d\n",
+		       i,curpos, high, low, high_y, low_y, limit);
+	  high *= (limit - 1);
+	  low *= (limit - 1);
+	  while (curpos <= high)
+	    {
+	      double frac = (curpos - low) / (high - low);
+	      if (curve->curve_type == STP_CURVE_TYPE_LINEAR)
+		new_vec[curpos] = low_y + frac * (high_y - low_y);
+	      else
+		new_vec[curpos] =
+		  do_interpolate_spline(low_y, high_y, frac,
+					curve->interval[i],
+					curve->interval[i + 1]);
+	      stp_deprintf(STP_DBG_CURVE,
+			   "  Filling slot %d %f %f\n",
+			   curpos, frac, new_vec[curpos]);
+	      curpos++;
+	    }
+	}
+      curve->piecewise = 0;
+    }
+  else
+    {
+      for (i = 0; i < limit; i++)
+	if (curve->gamma)
+	  new_vec[i] =
+	    interpolate_gamma_internal(curve, ((double) i * (double) old /
+					       (double) (limit - 1)));
+	else
+	  new_vec[i] =
+	    interpolate_point_internal(curve, ((double) i * (double) old /
+					       (double) (limit - 1)));
+    }
   stpi_curve_set_points(curve, points);
   stp_sequence_set_subrange(curve->seq, 0, limit, new_vec);
   curve->recompute_interval = 1;
@@ -949,13 +1267,15 @@ interpolate_points(stp_curve_t *a, stp_curve_t *b,
       if (!stp_curve_interpolate_value
 	  (a, (double) i * (points_a - 1) / (points - 1), &pa))
 	{
-	  stp_erprintf("interpolate_points: interpolate curve a value failed\n");
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "interpolate_points: interpolate curve a value failed\n");
 	  return 0;
 	}
       if (!stp_curve_interpolate_value
 	  (b, (double) i * (points_b - 1) / (points - 1), &pb))
 	{
-	  stp_erprintf("interpolate_points: interpolate curve b value failed\n");
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "interpolate_points: interpolate curve b value failed\n");
 	  return 0;
 	}
       if (mode == STP_CURVE_COMPOSE_ADD)
@@ -964,7 +1284,8 @@ interpolate_points(stp_curve_t *a, stp_curve_t *b,
 	pa *= pb;
       if (! finite(pa))
 	{
-	  stp_erprintf("interpolate_points: interpolated point %lu is invalid\n",
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "interpolate_points: interpolated point %lu is invalid\n",
 		       (unsigned long) i);
 	  return 0;
 	}
@@ -986,6 +1307,8 @@ stp_curve_compose(stp_curve_t **retval,
   unsigned points_b = stp_curve_count_points(b);
   double alo, ahi, blo, bhi;
 
+  if (a->piecewise || b->piecewise)
+    return 0;
   if (mode != STP_CURVE_COMPOSE_ADD && mode != STP_CURVE_COMPOSE_MULTIPLY)
     return 0;
   if (stp_curve_get_wrap(a) != stp_curve_get_wrap(b))
@@ -1059,6 +1382,7 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
   double fgamma;                          /* Gamma value */
   stp_sequence_t *seq = NULL;             /* Sequence data */
   double low, high;                       /* Sequence bounds */
+  int piecewise = 0;
 
   stp_xml_init();
   /* Get curve type */
@@ -1071,13 +1395,15 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 	  curve_type = STP_CURVE_TYPE_SPLINE;
       else
 	{
-	  stp_erprintf("stp_curve_create_from_xmltree: %s: \"type\" invalid\n", stmp);
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_create_from_xmltree: %s: \"type\" invalid\n", stmp);
 	  goto error;
 	}
     }
   else
     {
-      stp_erprintf("stp_curve_create_from_xmltree: \"type\" missing\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_xmltree: \"type\" missing\n");
       goto error;
     }
   /* Get curve wrap mode */
@@ -1092,13 +1418,15 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 	}
       else
 	{
-	  stp_erprintf("stp_curve_create_from_xmltree: %s: \"wrap\" invalid\n", stmp);
+	  stp_deprintf(STP_DBG_CURVE_ERRORS,
+		       "stp_curve_create_from_xmltree: %s: \"wrap\" invalid\n", stmp);
 	  goto error;
 	}
     }
   else
     {
-      stp_erprintf("stp_curve_create_from_xmltree: \"wrap\" missing\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_xmltree: \"wrap\" missing\n");
       goto error;
     }
   /* Get curve gamma */
@@ -1109,16 +1437,20 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
     }
   else
     {
-      stp_erprintf("stp_curve_create_from_xmltree: \"gamma\" missing\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_xmltree: \"gamma\" missing\n");
       goto error;
     }
   /* If gamma is set, wrap_mode must be STP_CURVE_WRAP_NONE */
   if (fgamma && wrap_mode != STP_CURVE_WRAP_NONE)
     {
-      stp_erprintf("stp_curve_create_from_xmltree: "
+      stp_deprintf(STP_DBG_CURVE_ERRORS, "stp_curve_create_from_xmltree: "
 		   "gamma set and \"wrap\" is not STP_CURVE_WRAP_NONE\n");
       goto error;
     }
+  stmp = stp_mxmlElementGetAttr(curve, "piecewise");
+  if (stmp && strcmp(stmp, "true") == 0)
+    piecewise = 1;
 
   /* Set up the curve */
   ret = stp_curve_create(wrap_mode);
@@ -1130,7 +1462,8 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 
   if (seq == NULL)
     {
-      stp_erprintf("stp_curve_create_from_xmltree: sequence read failed\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_xmltree: sequence read failed\n");
       goto error;
     }
 
@@ -1146,10 +1479,31 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
       const double* data;
 
       stp_sequence_get_data(seq, &seq_count, &data);
-      if (stp_curve_set_data(ret, seq_count, data) == 0)
+      if (piecewise)
 	{
-	  stp_erprintf("stp_curve_create_from_xmltree: failed to set curve data\n");
-	  goto error;
+	  if ((seq_count % 2) != 0)
+	    {
+	      stp_deprintf(STP_DBG_CURVE_ERRORS,
+			   "stp_curve_create_from_xmltree: invalid data count %d\n",
+			   seq_count);
+	      goto error;
+	    }
+	  if (stp_curve_set_data_points(ret, seq_count / 2,
+					(const stp_curve_point_t *) data) == 0)
+	    {
+	      stp_deprintf(STP_DBG_CURVE_ERRORS,
+			   "stp_curve_create_from_xmltree: failed to set curve data points\n");
+	      goto error;
+	    }
+	}
+      else
+	{
+	  if (stp_curve_set_data(ret, seq_count, data) == 0)
+	    {
+	      stp_deprintf(STP_DBG_CURVE_ERRORS,
+			   "stp_curve_create_from_xmltree: failed to set curve data\n");
+	      goto error;
+	    }
 	}
     }
 
@@ -1162,7 +1516,8 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
     /* Validate curve */
   if (stpi_curve_check_parameters(ret, stp_curve_count_points(ret)) == 0)
     {
-      stp_erprintf("stp_curve_create_from_xmltree: parameter check failed\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_xmltree: parameter check failed\n");
       goto error;
     }
 
@@ -1171,7 +1526,8 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
   return ret;
 
  error:
-  stp_erprintf("stp_curve_create_from_xmltree: error during curve read\n");
+  stp_deprintf(STP_DBG_CURVE_ERRORS,
+	       "stp_curve_create_from_xmltree: error during curve read\n");
   if (ret)
     stp_curve_destroy(ret);
   stp_xml_exit();
@@ -1187,8 +1543,6 @@ stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
   double gammaval, low, high;
   stp_sequence_t *seq;
 
-  char *wrap;
-  char *type;
   char *cgamma;
 
   stp_mxml_node_t *curvenode = NULL;
@@ -1203,23 +1557,23 @@ stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
 
   if (gammaval && wrapmode != STP_CURVE_WRAP_NONE)
     {
-      stp_erprintf("stp_xmltree_create_from_curve: "
+      stp_deprintf(STP_DBG_CURVE_ERRORS, "stp_xmltree_create_from_curve: "
 		   "curve sets gamma and wrap_mode is not STP_CURVE_WRAP_NONE\n");
       goto error;
     }
 
   /* Construct the allocated strings required */
-  stp_asprintf(&wrap, "%s", stpi_wrap_mode_names[wrapmode]);
-  stp_asprintf(&type, "%s", stpi_curve_type_names[interptype]);
   stp_asprintf(&cgamma, "%g", gammaval);
 
   curvenode = stp_mxmlNewElement(NULL, "curve");
-  stp_mxmlElementSetAttr(curvenode, "wrap", wrap);
-  stp_mxmlElementSetAttr(curvenode, "type", type);
+  stp_mxmlElementSetAttr(curvenode, "wrap", stpi_wrap_mode_names[wrapmode]);
+  stp_mxmlElementSetAttr(curvenode, "type", stpi_curve_type_names[interptype]);
   stp_mxmlElementSetAttr(curvenode, "gamma", cgamma);
+  if (curve->piecewise)
+    stp_mxmlElementSetAttr(curvenode, "piecewise", "true");
+  else
+    stp_mxmlElementSetAttr(curvenode, "piecewise", "false");
 
-  stp_free(wrap);
-  stp_free(type);
   stp_free(cgamma);
 
   seq = stp_sequence_create();
@@ -1233,7 +1587,7 @@ stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
     {
       const double *data;
       size_t count;
-      data = stp_curve_get_data(curve, &count);
+      data = stpi_curve_get_data_internal(curve, &count);
       stp_sequence_set_data(seq, count, data);
     }
 
@@ -1247,7 +1601,8 @@ stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
 
   if (child == NULL)
     {
-      stp_erprintf("stp_xmltree_create_from_curve: sequence node is NULL\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_xmltree_create_from_curve: sequence node is NULL\n");
       goto error;
     }
   stp_mxmlAdd(curvenode, STP_MXML_ADD_AFTER, NULL, child);
@@ -1257,7 +1612,8 @@ stp_xmltree_create_from_curve(const stp_curve_t *curve)  /* The curve */
   return curvenode;
 
  error:
-  stp_erprintf("stp_xmltree_create_from_curve: error during xmltree creation\n");
+  stp_deprintf(STP_DBG_CURVE_ERRORS,
+	       "stp_xmltree_create_from_curve: error during xmltree creation\n");
   if (curvenode)
     stp_mxmlDelete(curvenode);
   if (child)
@@ -1278,21 +1634,24 @@ xmldoc_create_from_curve(const stp_curve_t *curve)
   curvenode = stp_xmltree_create_from_curve(curve);
   if (curvenode == NULL)
     {
-      stp_erprintf("xmldoc_create_from_curve: error creating curve node\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "xmldoc_create_from_curve: error creating curve node\n");
       return NULL;
     }
   /* Create the XML tree */
   xmldoc = stp_xmldoc_create_generic();
   if (xmldoc == NULL)
     {
-      stp_erprintf("xmldoc_create_from_curve: error creating XML document\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "xmldoc_create_from_curve: error creating XML document\n");
       return NULL;
     }
   rootnode = xmldoc->child;
   if (rootnode == NULL)
     {
       stp_mxmlDelete(xmldoc);
-      stp_erprintf("xmldoc_create_from_curve: error getting XML document root node\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "xmldoc_create_from_curve: error getting XML document root node\n");
       return NULL;
     }
 
@@ -1414,7 +1773,8 @@ xml_doc_get_curve(stp_mxml_node_t *doc)
 
   if (doc == NULL )
     {
-      stp_erprintf("xml_doc_get_curve: XML file not parsed successfully.\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "xml_doc_get_curve: XML file not parsed successfully.\n");
       return NULL;
     }
 
@@ -1422,7 +1782,8 @@ xml_doc_get_curve(stp_mxml_node_t *doc)
 
   if (cur == NULL)
     {
-      stp_erprintf("xml_doc_get_curve: empty document\n");
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "xml_doc_get_curve: empty document\n");
       return NULL;
     }
 
@@ -1442,7 +1803,8 @@ stp_curve_create_from_file(const char* file)
   FILE *fp = fopen(file, "r");
   if (!fp)
     {
-      stp_erprintf("stp_curve_create_from_file: unable to open %s: %s\n",
+      stp_deprintf(STP_DBG_CURVE_ERRORS,
+		   "stp_curve_create_from_file: unable to open %s: %s\n",
 		    file, strerror(errno));
       return NULL;
     }

@@ -91,7 +91,7 @@ typedef enum
   STP_CURVE_COMPOSE_EXPONENTIATE
 } stp_curve_compose_t;
 
-  /** Bounds exceeded behaviour. */
+  /** Behaviour when curve exceeds bounds. */
 typedef enum
 {
   /** Rescale the bounds. */
@@ -102,11 +102,20 @@ typedef enum
   STP_CURVE_BOUNDS_ERROR
 } stp_curve_bounds_t;
 
+  /** Point (x,y) for piecewise curve. */
+typedef struct
+{
+  /** Horizontal position. */
+  double x;
+  /** Vertical position. */
+  double y;
+} stp_curve_point_t;
 
 /**
  * Create a new curve.  Curves have y=lower..upper.  The default
  * bounds are 0..1.  The default interpolation type is linear.  There
- * are no points allocated, and the gamma is defaulted to 1.
+ * are no points allocated, and the gamma is defaulted to 1.  The curve
+ * is a dense (equally-spaced) curve.
  *
  * A wrapped curve has the same value at x=0 and x=1.  The wrap mode
  * of a curve cannot be changed except by routines that destroy the
@@ -170,6 +179,13 @@ extern void stp_curve_get_bounds(const stp_curve_t *curve,
  */
 extern stp_curve_wrap_mode_t stp_curve_get_wrap(const stp_curve_t *curve);
 
+/**
+ * Determine whether the curve is piecewise
+ * @param curve the curve to use.
+ * @returns whether the curve is piecewise
+ */
+extern int stp_curve_is_piecewise(const stp_curve_t *curve);
+
 /*
  * Get the range (lowest and highest value of points) in the curve.
  * This does not account for any interpolation that may place
@@ -207,7 +223,7 @@ extern stp_curve_type_t stp_curve_get_interpolation_type(const stp_curve_t *curv
 /**
  * Set all data points of the curve.  If any of the data points fall
  * outside the bounds, the operation is not performed and FALSE is
- * returned.
+ * returned.  This creates a curve with equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of points (must be at least two and not
  * more than 1048576).
@@ -219,9 +235,25 @@ extern int stp_curve_set_data(stp_curve_t *curve, size_t count,
 			      const double *data);
 
 /**
+ * Set all data points of the curve.  If any of the data points fall
+ * outside the bounds, the operation is not performed and FALSE is
+ * returned.  This creates a piecewise curve.
+ * @param curve the curve to use.
+ * @param count the number of points (must be at least two and not
+ * more than 1048576).
+ * @param data a pointer to an array of points (must be at least
+ * count in size).  The first point must have X=0, and each point must
+ * have an X value at least .000001 greater than the previous point.  If
+ * the curve is not a wraparound curve, the last point must have X=1.
+ * @returns 1 on success, 0 on failure.
+ */
+extern int stp_curve_set_data_points(stp_curve_t *curve, size_t count,
+				     const stp_curve_point_t *data);
+
+/**
  * Set the data points in a curve from float values.  If any of the
  * data points fall outside the bounds, the operation is not performed
- * and FALSE is returned.
+ * and FALSE is returned.  This creates a curve with equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -235,7 +267,7 @@ extern int stp_curve_set_float_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from long values.  If any of the
  * data points fall outside the bounds, the operation is not performed
- * and FALSE is returned.
+ * and FALSE is returned.  This creates a curve with equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -249,7 +281,8 @@ extern int stp_curve_set_long_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from unsigned long values.  If any
  * of the data points fall outside the bounds, the operation is not
- * performed and FALSE is returned.
+ * performed and FALSE is returned.  This creates a curve with
+ * equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -263,7 +296,7 @@ extern int stp_curve_set_ulong_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from integer values.  If any of the
  * data points fall outside the bounds, the operation is not performed
- * and FALSE is returned.
+ * and FALSE is returned.  This creates a curve with equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -277,7 +310,8 @@ extern int stp_curve_set_int_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from unsigned integer values.  If
  * any of the data points fall outside the bounds, the operation is
- * not performed and FALSE is returned.
+ * not performed and FALSE is returned.  This creates a curve with
+ * equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -291,7 +325,7 @@ extern int stp_curve_set_uint_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from short values.  If any of the
  * data points fall outside the bounds, the operation is not performed
- * and FALSE is returned.
+ * and FALSE is returned.  This creates a curve with equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -305,7 +339,8 @@ extern int stp_curve_set_short_data(stp_curve_t *curve,
 /**
  * Set the data points in a curve from unsigned short values.  If any
  * of the data points fall outside the bounds, the operation is not
- * performed and FALSE is returned.
+ * performed and FALSE is returned.  This creates a curve with
+ * equally-spaced points.
  * @param curve the curve to use.
  * @param count the number of the number of points (must be at least
  * two and not more than 1048576).
@@ -321,6 +356,7 @@ extern int stp_curve_set_ushort_data(stp_curve_t *curve,
  * is invalid, the returned curve will compare equal to NULL (i. e. it
  * will be a null pointer).  start and count must not exceed the
  * number of points in the curve, and count must be at least 2.
+ * The curve must be a dense (equally-spaced) curve
  * @param curve the curve to use.
  * @param start the start of the subrange.
  * @param count the number of point starting at start.
@@ -333,7 +369,7 @@ extern stp_curve_t *stp_curve_get_subrange(const stp_curve_t *curve,
 /*
  * Set part of a curve to the range in another curve.  The data in the
  * range must fit within both the bounds and the number of points in
- * the first curve.
+ * the first curve.  The curve must be a dense (equally-spaced) curve.
  * @param curve the curve to use (destination).
  * @param range the source curve.
  * @param start the starting point in the destination range.
@@ -349,9 +385,22 @@ extern int stp_curve_set_subrange(stp_curve_t *curve, const stp_curve_t *range,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This call also returns NULL if the curve is a piecewise
+ * curve.
  */
 extern const double *stp_curve_get_data(const stp_curve_t *curve, size_t *count);
+
+/**
+ * Get a pointer to the curve's raw data as points.
+ * @param curve the curve to use.
+ * @param count a pointer to a size_t to store the curve size in.
+ * @returns a pointer to the curve data.  This data is not guaranteed
+ * to be valid beyond the next non-const curve call.  If the curve is
+ * a pure gamma curve (no associated points), NULL is returned and the
+ * count is 0.  This call also returns NULL if the curve is a dense
+ * (equally-spaced) curve.
+ */
+extern const stp_curve_point_t *stp_curve_get_data_points(const stp_curve_t *curve, size_t *count);
 
 
 /**
@@ -361,7 +410,7 @@ extern const double *stp_curve_get_data(const stp_curve_t *curve, size_t *count)
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const float *stp_curve_get_float_data(const stp_curve_t *curve,
 					     size_t *count);
@@ -373,7 +422,7 @@ extern const float *stp_curve_get_float_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const long *stp_curve_get_long_data(const stp_curve_t *curve,
 					   size_t *count);
@@ -385,7 +434,7 @@ extern const long *stp_curve_get_long_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const unsigned long *stp_curve_get_ulong_data(const stp_curve_t *curve,
 						     size_t *count);
@@ -397,7 +446,7 @@ extern const unsigned long *stp_curve_get_ulong_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const int *stp_curve_get_int_data(const stp_curve_t *curve,
 					 size_t *count);
@@ -409,7 +458,7 @@ extern const int *stp_curve_get_int_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const unsigned int *stp_curve_get_uint_data(const stp_curve_t *curve,
 						   size_t *count);
@@ -421,7 +470,7 @@ extern const unsigned int *stp_curve_get_uint_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const short *stp_curve_get_short_data(const stp_curve_t *curve,
 					     size_t *count);
@@ -433,7 +482,7 @@ extern const short *stp_curve_get_short_data(const stp_curve_t *curve,
  * @returns a pointer to the curve data.  This data is not guaranteed
  * to be valid beyond the next non-const curve call.  If the curve is
  * a pure gamma curve (no associated points), NULL is returned and the
- * count is 0.
+ * count is 0.  This also returns NULL if the curve is a piecewise curve.
  */
 extern const unsigned short *stp_curve_get_ushort_data(const stp_curve_t *curve,
 						       size_t *count);
@@ -443,7 +492,8 @@ extern const unsigned short *stp_curve_get_ushort_data(const stp_curve_t *curve,
  * is derived from.
  * This can be used for fast access to the raw data.
  * @param curve the curve to use.
- * @returns the stp_sequence_t.
+ * @returns the stp_sequence_t.  If the curve is a piecewise curve, the
+ * sequence returned is NULL;
  */
 extern const stp_sequence_t *stp_curve_get_sequence(const stp_curve_t *curve);
 
@@ -453,8 +503,9 @@ extern const stp_sequence_t *stp_curve_get_sequence(const stp_curve_t *curve);
  * positive, the function is increasing; if negative, the function is
  * decreasing.  Count must be either 0 or at least 2.  If the count is
  * zero, the gamma of the curve is set for interpolation purposes, but
- * points cannot be assigned to.  It is illegal, to set gamma on a
- * wrap-mode curve.
+ * points cannot be assigned to.  It is illegal to set gamma on a
+ * wrap-mode curve.  The resulting curve is treated as a dense
+ * (equally-spaced) curve.
  * @param curve the curve to use.
  * @param f_gamma the gamma value to set.
  * @returns FALSE if the gamma value is illegal (0, infinity, or NaN),
@@ -476,7 +527,8 @@ extern double stp_curve_get_gamma(const stp_curve_t *curve);
  * @param where the point to set.
  * @param data the value to set where to.
  * @returns FALSE if data is outside the valid bounds or if where is
- * outside the number of valid points.
+ * outside the number of valid points.  This also returns NULL if
+ * the curve is a piecewise curve.
  */
 extern int stp_curve_set_point(stp_curve_t *curve, size_t where, double data);
 
@@ -486,7 +538,7 @@ extern int stp_curve_set_point(stp_curve_t *curve, size_t where, double data);
  * @param where the point to get.
  * @param data a pointer to a double to store the value of where in.
  * @returns FALSE if where is outside of the number of valid
- * points.
+ * points.  This also returns NULL if the curve is a piecewise curve.
  */
 extern int stp_curve_get_point(const stp_curve_t *curve, size_t where,
 			       double *data);
@@ -500,7 +552,8 @@ extern int stp_curve_get_point(const stp_curve_t *curve, size_t where,
  * (as could happen with spline interpolation), the value is clipped
  * to the range.
  * @returns FALSE if 'where' is less than 0 or greater than the number
- * of points, an error is returned.
+ * of points, an error is returned.  Also returns FALSE if the curve
+ * is a piecewise curve.
  */
 extern int stp_curve_interpolate_value(const stp_curve_t *curve,
 				       double where, double *result);
@@ -509,7 +562,9 @@ extern int stp_curve_interpolate_value(const stp_curve_t *curve,
  * Resample a curve (change the number of points).  This does not
  * destroy the gamma value of a curve.  Points are interpolated as
  * required; any interpolation that would place points outside of the
- * bounds of the curve will be clipped to the bounds.
+ * bounds of the curve will be clipped to the bounds.  The resulting
+ * curve is always dense (equally-spaced).  This is the correct way
+ * to convert a piecewise curve to an equally-spaced curve.
  * @param curve the curve to use (must not exceed 1048576).
  * @param points the number of points.
  * @returns FALSE if the number of points is invalid (less than two,
@@ -525,7 +580,8 @@ extern int stp_curve_resample(stp_curve_t *curve, size_t points);
  * @param scale the scaling factor.
  * @param mode the composition mode.
  * @param bounds_mode the bounds exceeding mode.
- * @returns FALSE if this would exceed floating point limits.
+ * @returns FALSE if this would exceed floating point limits or if the
+ * curve is a piecewise curve.
  */
 extern int stp_curve_rescale(stp_curve_t *curve, double scale,
 			     stp_curve_compose_t mode,
@@ -535,8 +591,8 @@ extern int stp_curve_rescale(stp_curve_t *curve, double scale,
  * Write a curve to a file.
  * The printable representation is guaranteed to contain only 7-bit
  * printable ASCII characters, and is null-terminated.  The curve will
- * not contain any space, newline, or comma characters.  Furthermore,
- * a printed curve will be read back correctly in all locales.
+ * not contain any space, newline, single quote, or comma characters.
+ * Furthermore, a printed curve will be read back correctly in all locales.
  * These calls are not guaranteed to provide more than 6 decimal places
  * of precision or +/-0.5e-6 accuracy, whichever is less.
  * @warning NOTE that these calls are not thread-safe!  These

@@ -111,15 +111,17 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_LEXMARK	        0x80
 #define STP_DBG_WEAVE_PARAMS	0x100
 #define STP_DBG_ROWS		0x200
-#define STP_DBG_MARK_FILE      0x400
-#define STP_DBG_LIST           0x800
-#define STP_DBG_MODULE         0x1000
-#define STP_DBG_PATH           0x2000
-#define STP_DBG_PAPER          0x4000
-#define STP_DBG_PRINTERS       0x8000
-#define STP_DBG_XML            0x10000
-#define STP_DBG_VARS           0x20000
-#define STP_DBG_OLYMPUS        0x40000
+#define STP_DBG_MARK_FILE	0x400
+#define STP_DBG_LIST		0x800
+#define STP_DBG_MODULE		0x1000
+#define STP_DBG_PATH		0x2000
+#define STP_DBG_PAPER		0x4000
+#define STP_DBG_PRINTERS	0x8000
+#define STP_DBG_XML		0x10000
+#define STP_DBG_VARS		0x20000
+#define STP_DBG_OLYMPUS		0x40000
+#define STP_DBG_CURVE		0x80000
+#define STP_DBG_CURVE_ERRORS	0x100000
 
 extern unsigned long stp_get_debug_level(void);
 extern void stp_dprintf(unsigned long level, const stp_vars_t *v,
