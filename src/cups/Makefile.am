@@ -65,7 +65,12 @@ epson_LDADD = $(CUPS_LIBS)
 
 genppd_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
 
+genppd_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
 rastertoprinter_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+
+rastertoprinter_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
 
 ## Data
 
