@@ -152,9 +152,9 @@ OPTIONS:
 Color Balancing Values: (min,max,default)
 ----- --------- ------- -----------------
 
--dCyan=xxx       xxx: 0.0 ... 2.0  (1.0)
--dMagenta=xxx    xxx: 0.0 ... 2.0  (1.0)
--dYellow=xxx     xxx: 0.0 ... 2.0  (1.0)
+-dCyan=xxx       xxx: 0.0 ... 4.0  (1.0)
+-dMagenta=xxx    xxx: 0.0 ... 4.0  (1.0)
+-dYellow=xxx     xxx: 0.0 ... 4.0  (1.0)
 -dBrightness=xxx xxx: 0.0 ... 2.0  (1.0)
 -dContrast=xxx   xxx: 0.0 ... 4.0  (1.0)
 -dGamma=xxx      xxx: 0.1 ... 4.0  (1.0)

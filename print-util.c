@@ -140,9 +140,9 @@ static vars_t max_vars =
 	-1,			/* Y offset (-1 = center) */
 	4.0,			/* Screen gamma */
 	4.0,			/* Contrast */
-	2.0,			/* Cyan */
-	2.0,			/* Magenta */
-	2.0,			/* Yellow */
+	4.0,			/* Cyan */
+	4.0,			/* Magenta */
+	4.0,			/* Yellow */
 	0,			/* Linear */
 	9.0,			/* Output saturation */
 	2.0,			/* Density */
