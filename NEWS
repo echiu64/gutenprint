@@ -1043,9 +1043,13 @@ EPSON Stylus C50                (experimental)
 EPSON Stylus C60
 EPSON Stylus C61
 EPSON Stylus C62
+EPSON Stylus C63                (experimental)
+EPSON Stylus C64                (experimental)
 EPSON Stylus C70
 EPSON Stylus C80
 EPSON Stylus C82
+EPSON Stylus C83                (experimental)
+EPSON Stylus C84                (experimental)
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -1148,6 +1152,7 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PX-V500                (experimental)
 EPSON PX-7000
 EPSON PX-9000
 HP DeskJet 340
@@ -1321,9 +1326,13 @@ Epson Stylus C50               escp2-c50       EPSON Stylus C50
 Epson Stylus C60               escp2-c60       EPSON Stylus C60
 Epson Stylus C61               escp2-c61       EPSON Stylus C61
 Epson Stylus C62               escp2-c62       EPSON Stylus C62
+Epson Stylus C63               escp2-c63       EPSON Stylus C63
+Epson Stylus C64               escp2-c64       EPSON Stylus C64
 Epson Stylus C70               escp2-c70       EPSON Stylus C70
 Epson Stylus C80               escp2-c80       EPSON Stylus C80
 Epson Stylus C82               escp2-c82       EPSON Stylus C82
+Epson Stylus C83               escp2-c83       EPSON Stylus C83
+Epson Stylus C84               escp2-c84       EPSON Stylus C84
 Epson Stylus Color             escp2           EPSON Stylus Color
 Epson Stylus Color I           escp2           EPSON Stylus Color
 Epson Stylus Color II          escp2           EPSON Stylus Color
@@ -1437,6 +1446,7 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series

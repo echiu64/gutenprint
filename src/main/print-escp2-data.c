@@ -2338,6 +2338,13 @@ static const physical_subchannel_t c80_black_subchannels[] =
 
 DECLARE_INK_CHANNEL(c80_black);
 
+static const physical_subchannel_t c64_black_subchannels[] =
+{
+  { 0, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c64_black);
+
 static const physical_subchannel_t standard_cyan_subchannels[] =
 {
   { 2, -1, 0 }
@@ -2358,6 +2365,13 @@ static const physical_subchannel_t c80_cyan_subchannels[] =
 };
 
 DECLARE_INK_CHANNEL(c80_cyan);
+
+static const physical_subchannel_t c64_cyan_subchannels[] =
+{
+  { 2, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c64_cyan);
 
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
@@ -2380,6 +2394,13 @@ static const physical_subchannel_t c80_magenta_subchannels[] =
 
 DECLARE_INK_CHANNEL(c80_magenta);
 
+static const physical_subchannel_t c64_magenta_subchannels[] =
+{
+  { 1, -1, 90 }
+};
+
+DECLARE_INK_CHANNEL(c64_magenta);
+
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
   { 4, -1, 0 }
@@ -2400,6 +2421,13 @@ static const physical_subchannel_t c80_yellow_subchannels[] =
 };
 
 DECLARE_INK_CHANNEL(c80_yellow);
+
+static const physical_subchannel_t c64_yellow_subchannels[] =
+{
+  { 4, -1, 180 }
+};
+
+DECLARE_INK_CHANNEL(c64_yellow);
 
 static const physical_subchannel_t photo_black_subchannels[] =
 {
@@ -2467,6 +2495,16 @@ static const physical_subchannel_t c80_quadtone_subchannels[] =
 };
 
 DECLARE_INK_CHANNEL(c80_quadtone);
+
+static const physical_subchannel_t c64_quadtone_subchannels[] =
+{
+  { 4, -1, 180 },
+  { 1, -1, 90 },
+  { 2, -1, 0 },
+  { 0, -1, 0 }
+};
+
+DECLARE_INK_CHANNEL(c64_quadtone);
 
 static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 {
@@ -2560,6 +2598,16 @@ static const escp2_inkname_t c80_three_color_composite_inkset =
   }
 };
 
+static const escp2_inkname_t c64_three_color_composite_inkset =
+{
+  "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &c64_cyan_channels,
+    &c64_magenta_channels, &c64_yellow_channels
+  }
+};
+
 static const escp2_inkname_t four_color_standard_inkset =
 {
   "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
@@ -2587,6 +2635,16 @@ static const escp2_inkname_t c80_four_color_standard_inkset =
   {
     &c80_black_channels, &c80_cyan_channels,
     &c80_magenta_channels, &c80_yellow_channels
+  }
+};
+
+static const escp2_inkname_t c64_four_color_standard_inkset =
+{
+  "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &c64_black_channels, &c64_cyan_channels,
+    &c64_magenta_channels, &c64_yellow_channels
   }
 };
 
@@ -2664,6 +2722,15 @@ static const escp2_inkname_t c80_piezo_quadtone_inkset =
   NULL, NULL, NULL,
   {
     &c80_quadtone_channels, NULL, NULL, NULL
+  }
+};
+
+static const escp2_inkname_t c64_piezo_quadtone_inkset =
+{
+  "Quadtone", N_ ("Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0,
+  NULL, NULL, NULL,
+  {
+    &c64_quadtone_channels, NULL, NULL, NULL
   }
 };
 
@@ -2759,6 +2826,15 @@ static const escp2_inkname_t *const c80_ink_types[] =
 };
 
 DECLARE_INKLIST(c80);
+
+static const escp2_inkname_t *const c64_ink_types[] =
+{
+  &c64_four_color_standard_inkset,
+  &c64_three_color_composite_inkset,
+  &c64_piezo_quadtone_inkset
+};
+
+DECLARE_INKLIST(c64);
 
 static const escp2_inkname_t *const x80_ink_types[] =
 {
@@ -3147,7 +3223,7 @@ static const escp2_dot_size_t sc720_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
-{ -1,      3,    3,   -1,    3,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
+{  3,     -1,    3,   -1,    3,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
 { -1,   0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1, 0x10, 0x10 };
@@ -4233,7 +4309,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
-    0, 1, 8, 0, 0, 0, 8,
+    0, 1, 0, 0, 0, 0, 8,
     sc660_dotsizes,sc660_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list,
@@ -4854,7 +4930,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 60: Stylus C82/CX-5200 */
+  /* 60: Stylus C83/C84 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
@@ -4866,6 +4942,21 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 1, 0, 0, -240, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
     &c80_paper_list, standard_reslist, &c80_inklist,
+    variable_bits, variable_base_res, &default_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 61: Stylus C63/C64 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    29, 30, 3, 90, 90, 3, 90, 90, 3,
+    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, -180, 0, 0,
+    c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
+    &c80_paper_list, standard_reslist, &c64_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
