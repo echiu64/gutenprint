@@ -3,6 +3,11 @@ html-stamp
 gimpprint.pgs
 version.texi
 gimpprint.info
+gimpprint.info-1
+gimpprint.info-2
+gimpprint.info-3
+gimpprint.info-4
+gimpprint.info-5
 texinfo.tex
 gimpprint.tocs
 Makefile.in
