@@ -96,7 +96,7 @@ USE OF THE CVS REPOSITORY
 If you have a copy of the source from the CVS repository, then prior
 to running configure, you must
 
-aclocal;autoconf;automake
+aclocal;autoconf;autoheader;automake
 
 If you do run aclocal, beware that versions of the Gimp from 1.1.17
 and earlier have a version of gimp.m4 that will create an incorrect
