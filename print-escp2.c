@@ -1417,6 +1417,59 @@ static const paper_t escp2_paper_list[] = {
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
+static double lum_adjustment[49] =
+{
+  0.714,			/* C */
+  0.769,
+  0.769,
+  0.769,
+  0.769,
+  0.769,
+  0.714,
+  0.667,
+  0.625,				/* B */
+  0.667,
+  0.714,
+  0.769,
+  0.833,
+  0.909,
+  1.0,
+  1.0,
+  1.0,				/* M */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* R */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  1.0,
+  0.952,
+  0.909,
+  0.909,
+  0.869,
+  0.833,
+  0.769,
+  0.714,			/* G */
+  0.769,
+  0.833,
+  0.833,
+  0.833,
+  0.8,
+  0.769,
+  0.74,
+  0.714				/* C */
+};  
+
 static double hue_adjustment[49] =
 {
   0,				/* C */
@@ -1427,14 +1480,14 @@ static double hue_adjustment[49] =
   0.5,
   0.55,
   0.6,
-  0.65,				/* B */
-  0.78,
-  0.9,
-  1.05,
+  0.7,				/* B */
+  0.8,
+  1.0,
   1.2,
   1.35,
-  1.55,
-  1.75,
+  1.5,
+  1.65,
+  1.8,
   1.95,				/* M */
   2.05,
   2.1,
@@ -1460,13 +1513,13 @@ static double hue_adjustment[49] =
   4.8,
   4.85,
   4.9,				/* G */
-  4.95,
-  5.0,
-  5.15,
+  5.05,
+  5.1875,
   5.3,
   5.45,
   5.6,
-  5.8,
+  5.75,
+  5.875,
   6.0				/* C */
 };
 
@@ -2597,7 +2650,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       duplicate_line = 0;
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
-		   hue_adjustment);
+		   hue_adjustment, lum_adjustment);
     }
     QUANT(1);
 

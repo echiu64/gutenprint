@@ -1208,10 +1208,10 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
       int dist1;
       int offset;
       int delta, delta1;
-      int nextspread = 4;
-      int thisspread = 8 - nextspread;
       if (tmp > 65535)
 	tmp = 65535;
+      tmp += tmp;
+      tmp += tmp;
       if (odb >= 16 || o >= 2048)
 	offset = 0;
       else
@@ -1225,32 +1225,63 @@ update_dither(int r, int o, int width, int odb, int odb_mask,
 	}
       if (offset == 0)
 	{
-	  dist = nextspread * tmp;
-	  error1[0] += dist;
-	  return error0[direction] + thisspread * tmp;
+	  error1[0] += tmp;
+	  if (direction < 0)
+	    return error0[-1] + tmp;
+	  else
+	    return error0[1] + tmp;
 	}
       else
 	{
-	  dist = nextspread * tmp / d->offset0_table[offset];
-	  dist1 = thisspread * tmp / d->offset1_table[offset];
-	  delta1 = dist1 * offset;
+	  dist = tmp / d->offset0_table[offset];
+	  if (offset == 1)
+	    dist1 = tmp;
+	  else
+	    dist1 = tmp / d->offset1_table[offset];
 	}
       delta = dist;
-      for (i = -offset; i <= offset; i++)
+      if (direction < 0)
 	{
-	  error1[i] += delta;
-	  if ((i > 0 && direction > 0) || (i < 0 && direction < 0))
+	  delta1 = dist1;
+	  for (i = -offset; i < 0; i++)
+	    {
+	      error1[i] += delta;
+	      error0[i] += delta1;
+	      delta1 += dist1;
+	      delta += dist;
+	    }
+	  for (i = 0; i <= offset; i++)
+	    {
+	      error1[i] += delta;
+	      delta -= dist;
+	    }
+	  return error0[-1];
+	}
+      else
+	{
+	  delta1 = 0;
+	  for (i = -offset; i < 0; i++)
+	    {
+	      error1[i] += delta;
+	      delta += dist;
+	      delta1 += dist1;
+	    }
+	  error1[0] += delta;
+	  delta -= dist;
+	  for (i = 1; i <= offset; i++)
 	    {
 	      error0[i] += delta1;
+	      error1[i] += delta;
 	      delta1 -= dist1;
+	      delta -= dist;
 	    }
-	  if (i < 0)
-	    delta += dist;
-	  else
-	    delta -= dist;
+	  return error0[1];
 	}
     }
-  return error0[direction];
+  if (direction < 0)
+    return error0[-1];
+  else
+    return error0[1];
 }
 
 /*
@@ -1897,9 +1928,11 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
   int ub, lb;
   int ok;
   int bk;
+  unsigned density;
 
   ub = d->k_upper;    /* Upper bound */
   lb = d->k_lower;    /* Lower bound */
+  density = d->density;
 
   /*
    * Calculate total ink amount.
@@ -1917,13 +1950,12 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
     ok = kdarkness / 3;
   else
     ok = k;
-  if ( ok > lb )
-    kl = (unsigned) ( ok - lb ) * (unsigned) d->density /
-      d->dlb_range;
-  else
+  if (ok <= lb)
     kl = 0;
-  if (kl > d->density)
-    kl = d->density;
+  else if (ok >= density)
+    kl = density;
+  else
+    kl = (unsigned) ( ok - lb ) * density / d->dlb_range;
 
   /*
    * We have a second value, ks, that will be the scaler.
@@ -1931,15 +1963,12 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
    * amount is between upper and lower bounds:
    */
 
-  if ( k > ub )
-    ks = d->density;
-  else if ( k < lb )
+  if (k >= ub)
+    ks = density;
+  else if (k <= lb)
     ks = 0;
   else
-    ks = (unsigned) (k - lb) * (unsigned) d->density /
-      d->bound_range;
-  if (ks > d->density)
-    ks = d->density;
+    ks = (unsigned) (k - lb) * density / d->bound_range;
 
   /*
    * ks is then processed by a second order function that produces
@@ -1949,9 +1978,12 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
    * ak = ks;
    */
   ak = ks;
-  k = (unsigned) kl * (unsigned) ak / (unsigned) d->density;
-  if (k > d->density)
-    k = d->density;
+  if (kl == 0 || ak == 0)
+    k = 0;
+  else if (ak == density)
+    k = kl;
+  else
+    k = (unsigned) kl * (unsigned) ak / density;
   ok = k;
   bk = k;
 
@@ -1967,24 +1999,29 @@ update_cmyk(const dither_t *d, int c, int m, int y, int k,
        * dull.
        */
 
-      ok = (unsigned) k * (unsigned) ak / (unsigned) d->density;
+      if (ak == density)
+	ok = k;
+      else
+	ok = (unsigned) k * (unsigned) ak / density;
+
       if (d->k_clevel == 64)
 	c -= ok;
       else
 	c -= (ok * d->k_clevel) >> 6;
+      if (c < 0)
+	c = 0;
+
       if (d->k_mlevel == 64)
 	m -= ok;
       else
 	m -= (ok * d->k_mlevel) >> 6;
+      if (m < 0)
+	m = 0;
+
       if (d->k_ylevel == 64)
 	y -= ok;
       else
 	y -= (ok * d->k_ylevel) >> 6;
-
-      if (c < 0)
-	c = 0;
-      if (m < 0)
-	m = 0;
       if (y < 0)
 	y = 0;
     }

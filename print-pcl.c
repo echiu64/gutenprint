@@ -2040,7 +2040,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       duplicate_line = 0;
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
-		   hue_adjustment);
+		   hue_adjustment, NULL);
     }
 
     if (do_cret)
