@@ -2823,7 +2823,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       ndither[i] = 0;
       wetness[i] = 0;
       et_hi[i] = CHANNEL(d, i).ranges[0].value[1] / 20;
-      et_lo[i] = et_hi[i] / 2;
+      et_lo[i] = 0;
       dx[i] = et->dx2;
       dy[i] = et->dy2;
       r_sq[i] = 0;
@@ -2891,7 +2891,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	if (CHANNEL(d, i).b > et_hi[i]) {
 	  value += ndither[i];
 	} else if (CHANNEL(d, i).b >et_lo[i]) {
-	  value += ndither[i] * (CHANNEL(d, i).b - et_lo[i]) / et_lo[i];
+	  value += ndither[i] * (CHANNEL(d, i).b - et_lo[i]) / (et_hi[i] - et_lo[i]);
 	}
 	  
 	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
@@ -3039,7 +3039,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	  if (CHANNEL(d, i).b > et_lo[i]) {
 	    fraction = (ndither[i] + 5) / 10;
 	    if (CHANNEL(d, i).b < et_hi[i]) {
-	      fraction = fraction * (CHANNEL(d, i).b - et_lo[i]) / et_lo[i];
+	      fraction = fraction * (CHANNEL(d, i).b - et_lo[i]) / (et_hi[i] - et_lo[i]);
 	    }
 	  }
 	  error[i][1][0] += 3 * fraction;
