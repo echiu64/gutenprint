@@ -81,7 +81,15 @@ libgimpprint_la_SOURCES = \
 	path.c \
 	path.h \
 	papers.h \
-	print-dither.c \
+	dither-main.c \
+	dither-ed.c \
+	dither-ordered.c \
+	dither-fast.c \
+	dither-eventone.c \
+	dither-very-fast.c \
+	dither-inks.c \
+	dither-impl.h \
+	dither-inlined-functions.h \
 	print-dither-matrices.c \
 	print-list.c \
 	print-util.c \

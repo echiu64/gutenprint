@@ -34,6 +34,7 @@
 #include "path.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "dither-impl.h"
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -73,7 +74,6 @@ try_file(const char *name, stp_list_t *file_list)
 	    filename = pathname;
 	  else
 	    filename++;
-	  stp_erprintf("  Trying %s %s %s\n", name, filename, pathname);
 	  if (strcmp(name, filename) == 0)
 	    {
 	      stp_curve_t answer = read_matrix_from_file(pathname);
@@ -120,8 +120,6 @@ stp_find_standard_dither_matrix(int x_aspect, int y_aspect)
 
   if (!(dir_list = stp_list_create()))
     return NULL;
-  stp_erprintf("x_aspect %d _aspect %d divisor %d\n", x_aspect, y_aspect,
-	       divisor);
   x_aspect /= divisor;
   y_aspect /= divisor;
   stp_list_set_freefunc(dir_list, stp_list_node_free_data);
@@ -443,4 +441,114 @@ stp_dither_matrix_set_row(dither_matrix_t *mat, int y)
   mat->last_y = y;
   mat->last_y_mod = mat->x_size * ((y + mat->y_offset) % mat->y_size);
   mat->index = mat->last_x_mod + mat->last_y_mod;
+}
+
+static void
+preinit_matrix(stp_vars_t v)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  int i;
+  for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
+    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
+  stp_dither_matrix_destroy(&(d->dither_matrix));
+}
+
+static void
+postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
+  int i, j;
+  int color = 0;
+  unsigned x_n = d->dither_matrix.x_size / rc;
+  unsigned y_n = d->dither_matrix.y_size / rc;
+  if (x_shear || y_shear)
+    stp_dither_matrix_shear(&(d->dither_matrix), x_shear, y_shear);
+  for (i = 0; i < rc; i++)
+    for (j = 0; j < rc; j++)
+      if (color < PHYSICAL_CHANNEL_COUNT(d))
+	{
+	  stp_dither_matrix_clone(&(d->dither_matrix),
+				  &(PHYSICAL_CHANNEL(d, color).dithermat),
+				  x_n * i, y_n * j);
+	  color++;
+	}
+  stp_dither_set_transition(v, d->transition);
+}
+
+void
+stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
+			       const unsigned *data, int prescaled,
+			       int x_shear, int y_shear)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  preinit_matrix(v);
+  stp_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
+  postinit_matrix(v, x_shear, y_shear);
+}
+
+void
+stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_t *matrix,
+		      int transposed, int x_shear, int y_shear)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  int x = transposed ? matrix->y : matrix->x;
+  int y = transposed ? matrix->x : matrix->y;
+  preinit_matrix(v);
+  if (matrix->bytes == 2)
+    stp_dither_matrix_init_short(&(d->dither_matrix), x, y,
+				 (const unsigned short *) matrix->data,
+				 transposed, matrix->prescaled);
+  else if (matrix->bytes == 4)
+    stp_dither_matrix_init(&(d->dither_matrix), x, y,
+			   (const unsigned *)matrix->data,
+			   transposed, matrix->prescaled);
+  postinit_matrix(v, x_shear, y_shear);
+}
+
+void
+stp_dither_set_matrix_from_curve(stp_vars_t v, const stp_curve_t curve,
+				 int transpose)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  preinit_matrix(v);
+  stp_dither_matrix_init_from_curve(&(d->dither_matrix), curve, transpose);
+  postinit_matrix(v, 0, 0);
+}
+
+void
+stp_dither_set_transition(stp_vars_t v, double exponent)
+{
+  dither_t *d = (dither_t *) stp_get_dither_data(v);
+  unsigned rc = 1 + (unsigned) ceil(sqrt(PHYSICAL_CHANNEL_COUNT(d)));
+  int i, j;
+  int color = 0;
+  unsigned x_n = d->dither_matrix.x_size / rc;
+  unsigned y_n = d->dither_matrix.y_size / rc;
+  for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
+    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).pick));
+  stp_dither_matrix_destroy(&(d->transition_matrix));
+  stp_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
+  d->transition = exponent;
+  if (exponent < .999 || exponent > 1.001)
+    stp_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
+  for (i = 0; i < rc; i++)
+    for (j = 0; j < rc; j++)
+      if (color < PHYSICAL_CHANNEL_COUNT(d))
+	{
+	  stp_dither_matrix_clone(&(d->dither_matrix),
+				  &(PHYSICAL_CHANNEL(d, color).pick),
+				  x_n * i, y_n * j);
+	  color++;
+	}
+  if (exponent < .999 || exponent > 1.001)
+    for (i = 0; i < 65536; i++)
+      {
+	double dd = i / 65535.0;
+	dd = pow(dd, 1.0 / exponent);
+	d->virtual_dot_scale[i] = dd * 65535;
+      }
+  else
+    for (i = 0; i < 65536; i++)
+      d->virtual_dot_scale[i] = i;
 }
