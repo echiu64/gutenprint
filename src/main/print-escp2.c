@@ -878,33 +878,20 @@ static void
 print_debug_params(const escp2_init_t *init)
 {
   const stp_vars_t v = init->v;
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  int count = stp_parameter_list_count(params);
+  int i;
   print_remote_param(v, "Package", PACKAGE);
   print_remote_param(v, "Version", VERSION);
   print_remote_param(v, "Release Date", RELEASE_DATE);
   print_remote_param(v, "Driver", stp_get_driver(v));
-  print_remote_param(v, "Resolution", stp_get_string_parameter(v, "Resolution"));
-  print_remote_param(v, "Media Size", stp_get_string_parameter(v, "PageSize"));
-  print_remote_param(v, "Media Type", stp_get_string_parameter(v, "MediaType"));
-  print_remote_param(v, "Media Source", stp_get_string_parameter(v, "InputSlot"));
-  print_remote_param(v, "Ink Type", stp_get_string_parameter(v, "InkType"));
-  print_remote_param(v, "Dither", stp_get_string_parameter(v, "DitherAlgorithm"));
   print_remote_int_param(v, "Output Type", stp_get_output_type(v));
   print_remote_int_param(v, "Left", stp_get_left(v));
   print_remote_int_param(v, "Top", stp_get_top(v));
-  print_remote_param(v, "Image Type", stp_get_string_parameter(v, "ImageOptimization"));
   print_remote_int_param(v, "Page Width", stp_get_page_width(v));
   print_remote_int_param(v, "Page Height", stp_get_page_height(v));
   print_remote_int_param(v, "Input Model", stp_get_input_color_model(v));
   print_remote_int_param(v, "Output Model", stpi_get_output_color_model(v));
-  print_remote_float_param(v, "Brightness", stp_get_float_parameter(v, "Brightness"));
-  print_remote_float_param(v, "Gamma", stp_get_float_parameter(v, "Gamma"));
-  print_remote_float_param(v, "App Gamma", stp_get_float_parameter(v, "AppGamma"));
-  print_remote_float_param(v, "Contrast", stp_get_float_parameter(v, "Contrast"));
-  print_remote_float_param(v, "Cyan", stp_get_float_parameter(v, "Cyan"));
-  print_remote_float_param(v, "Magenta", stp_get_float_parameter(v, "Magenta"));
-  print_remote_float_param(v, "Yellow", stp_get_float_parameter(v, "Yellow"));
-  print_remote_float_param(v, "Saturation", stp_get_float_parameter(v, "Saturation"));
-  print_remote_float_param(v, "Density", stp_get_float_parameter(v, "Density"));
   print_remote_int_param(v, "Model", stpi_get_model_id(v));
   print_remote_int_param(v, "Ydpi", init->ydpi);
   print_remote_int_param(v, "Xdpi", init->xdpi);
@@ -933,6 +920,40 @@ print_debug_params(const escp2_init_t *init)
   print_remote_int_param(v, "  is_color", init->inkname->is_color);
   print_remote_int_param(v, "  channels", init->inkname->channel_limit);
   print_remote_int_param(v, "  inkset", init->inkname->inkset);
+  for (i = 0; i < count; i++)
+    {
+      const stp_parameter_t *p = stp_parameter_list_param(params, i);
+      switch (p->p_type)
+	{
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  if (stp_check_float_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+	    print_remote_float_param(v, p->name,
+				     stp_get_float_parameter(v, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  if (stp_check_int_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+	    print_remote_int_param(v, p->name,
+				   stp_get_int_parameter(v, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  if (stp_check_string_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+	    print_remote_param(v, p->name,
+			       stp_get_string_parameter(v, p->name));
+	  break;
+	case STP_PARAMETER_TYPE_CURVE:
+	  if (stp_check_curve_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+	    {
+	      char *curve =
+		stp_curve_print_string(stp_get_curve_parameter(v, p->name));
+	      print_remote_param(v, p->name, curve);
+	      stpi_free(curve);
+	    }
+	  break;
+	default:
+	  break;
+	}
+    }
+  stp_parameter_list_free(params);
   stpi_send_command(v, "\033", "c", 0);
 }
 
@@ -1446,12 +1467,34 @@ setup_inks(const escp2_init_t *init)
     }
 }
 
+static void
+setup_head_offset(stp_vars_t v,
+		  const escp2_inkname_t *ink_type,
+		  int *head_offset,
+		  int channel_limit)
+{
+  int i;
+  int channels_in_use = 0;
+  for (i = 0; i < channel_limit; i++)
+    {
+      const ink_channel_t *channel = ink_type->channels[i];
+      if (channel)
+	{
+	  int j;
+	  for (j = 0; j < channel->n_subchannels; j++)
+	    {
+	      head_offset[channels_in_use] = channel->channels[j].head_offset;
+	      channels_in_use++;
+	    }
+	}
+    }
+}
+
 static int
 setup_ink_types(stp_vars_t v,
 		const escp2_inkname_t *ink_type,
 		escp2_privdata_t *privdata,
 		unsigned char **cols,
-		int *head_offset,
 		int channel_limit,
 		int line_length)
 {
@@ -1468,7 +1511,6 @@ setup_ink_types(stp_vars_t v,
 	      cols[channels_in_use] = stpi_zalloc(line_length);
 	      privdata->channels[channels_in_use] = &(channel->channels[j]);
 	      stpi_dither_add_channel(v, cols[channels_in_use], i, j);
-	      head_offset[channels_in_use] = channel->channels[j].head_offset;
 	      channels_in_use++;
 	    }
 	}
@@ -1667,6 +1709,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       ink_type = &default_black_ink;
       channels_in_use = compute_channel_count(ink_type, channel_limit);
     }
+  setup_head_offset(v, ink_type, head_offset, channel_limit);
   if (channels_in_use == 1)
     head_offset[0] = 0;
   if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
@@ -1853,7 +1896,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
       out_channels = adjust_print_quality(&init, image);
       stpi_dither_init(v, image, out_width, xdpi, ydpi);
       channels_in_use =
-	setup_ink_types(v, ink_type, &privdata, cols, head_offset,
+	setup_ink_types(v, ink_type, &privdata, cols,
 			channel_limit, length * init.bits);
       setup_inks(&init);
 
