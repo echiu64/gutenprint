@@ -1310,9 +1310,9 @@ color_##bits##_to_gray(stp_const_vars_t vars,				   \
 									   \
   if (lut->input_color_model == COLOR_MODEL_CMY)			   \
     {									   \
-      l_red = 100 - l_red;						   \
-      l_green = 100 - l_green;						   \
-      l_blue = 100 - l_blue;						   \
+      l_red = (100 - l_red) / 2;					   \
+      l_green = (100 - l_green) / 2;					   \
+      l_blue = (100 - l_blue) / 2;					   \
     }									   \
 									   \
   for (i = 0; i < lut->image_width; i++)				   \
