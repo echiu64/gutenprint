@@ -221,6 +221,20 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     http://www.cups.org for information on downloading and installing
     CUPS.
 
+    PRINTING TO A WINDOWS-HOSTED PRINTER: There have been numerous
+    reports of incomplete printing to Windows-hosted printers.  The
+    symptoms are that the bottom of the last page is incomplete.  The
+    lower the printing resolution, the more of the page is cut off.
+    This does not happen in all configurations; it appears to be more
+    common printing to a Windows 95/98/ME-hosted printer.  This is not
+    thought to be a Gimp-print bug.  This is listed as bug 510185.
+
+    One user has reported success by disabling bidirectional support
+    in the printer's setting on the Windows box (this is NOT the same
+    thing as using a unidirectional mode such as 720 DPI
+    Unidirectional; this refers to the printer port).  This will
+    disable the ink monitor utility.
+
 
 FOOMATIC
 
@@ -569,12 +583,13 @@ KNOWN BUILD ISSUES
       as KUPS or http://localhost:631 to display many copies of each
       PPD file, all in the English (en) language.  In fact, the PPD
       files should be translated into Swedish, Polish, Norwegian,
-      French, Danish, Spanish, Slovakian, Greek, and British English.
-      With CUPS 1.1.10 and lower, there should be two copies of the
-      (en) PPD file, and one copy each of (sv), (no), (fr), (pl),
-      (da), (sk), (el), (es), and (nl).  With CUPS 1.1.11 and above,
-      there should be (en), (en_GB), (sv), (no), (fr), (pl), (da),
-      (sk), (el), (es), and (nl) PPD files.
+      French, Danish, Spanish, Slovakian, Greek, British English,
+      Dutch, German, and Portuguese.  With CUPS 1.1.10 and lower,
+      there should be two copies of the (en) PPD file, and one copy
+      each of (sv), (no), (fr), (pl), (da), (sk), (el), (es), (nl),
+      (de), and (pt).  With CUPS 1.1.11 and above, there should be
+      (en), (en_GB), (sv), (no), (fr), (pl), (da), (sk), (el), (es),
+      (nl), (de), and (pt) PPD files.
 
       The PPD files are created by a program named "genppd" in the
       src/cups directory.  This program is called once for each
@@ -789,11 +804,11 @@ PACKAGING
       + "calibrate.ppm" belongs in /usr/share/cups.
 
       The PPD's packaged with Gimp-print are rather bulky, about 1 MB
-      for each language installed.  At present, nine language
+      for each language installed.  At present, twelve language
       translations are installed, in addition to the US English
       defaults: GB English, Swedish, Danish, Norwegian, French,
-      Polish, Slovakian, Greek, Spanish, and Dutch.  You may wish to
-      install these selectively.
+      Polish, Slovakian, Greek, Spanish, Dutch, German, and
+      Portuguese.  You may wish to install these selectively.
 
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
