@@ -26,7 +26,7 @@ build-stamp: configure
 	cd .. ; \
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
-	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --disable-test --without-translated-ppds --disable-cups-level3-ps; \
+	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode ; \
 	$(MAKE) ; \
 	cd src/gimp ; \
 	$(MAKE) print
@@ -67,15 +67,14 @@ binary-indep: build install ChangeLog
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
-	  cp doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
-#	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
-	  cp -r doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
+	  cp debian/gimp-print-build/doc/gimpprint.ps debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
+	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	  cd debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html ; \
 	  if test ! -f gimpprint.html ; then \
 	    ln -s gimpprint_toc.html gimpprint.html ; \
 	  fi
-	cp doc/users_guide/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
-	cp -r doc/users_guide/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
+	cp debian/gimp-print-build/doc/users_guide/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
+	cp -r debian/gimp-print-build/doc/users_guide/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i
