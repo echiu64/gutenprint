@@ -444,6 +444,8 @@ bjc-4300                CANON BJC 4300
 bjc-4400                CANON BJC 4400 photo
 bjc-6000                CANON BJC 6000
 bjc-6100                CANON BJC 6100
+bjc-6200                CANON BJC 6200
+bjc-6500                CANON BJC 6500
 bjc-7000                CANON BJC 7000
 bjc-7100                CANON BJC 7100
 bjc-8200                CANON BJC 8200
@@ -504,6 +506,7 @@ escp2-785               EPSON Stylus Photo 785EPX
 escp2-790               EPSON Stylus Photo 790
 escp2-810               EPSON Stylus Photo 810
 escp2-820               EPSON Stylus Photo 820
+escp2-825               EPSON Stylus Photo 825
 escp2-830               EPSON Stylus Photo 830
 escp2-870               EPSON Stylus Photo 870
 escp2-875               EPSON Stylus Photo 875
@@ -577,8 +580,8 @@ pcl-desnj-455           HP DesignJet 455
 pcl-desnj-488           HP DesignJet 488
 pcl-desnj-700           HP DesignJet 700
 pcl-750                 HP DesignJet 750C
-pcl-desnj-250           HP DesignJet 2500
-pcl-desnj-350           HP DesignJet 3500
+pcl-desnj-2500          HP DesignJet 2500
+pcl-desnj-3500          HP DesignJet 3500
 pcl-340                 HP DeskJet 340
 pcl-400                 HP DeskJet 400
 pcl-500                 HP DeskJet 500
@@ -613,6 +616,7 @@ pcl-2500                HP DeskJet 2500 series
 pcl-2                   HP LaserJet II series
 pcl-3                   HP LaserJet III series
 pcl-4                   HP LaserJet 4 series
+pcl-4l                  HP LaserJet 4L
 pcl-4v                  HP LaserJet 4V, 4Si
 pcl-5                   HP LaserJet 5 series
 pcl-5si                 HP LaserJet 5Si
