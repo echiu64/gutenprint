@@ -1704,8 +1704,8 @@ escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
   const res_t *res = escp2_find_resolution(v);
   if (res && verify_resolution(v, res))
     {
-      *x = res->hres;
-      *y = res->vres;
+      *x = res->printed_hres;
+      *y = res->printed_vres;
       return;
     }
   *x = -1;
