@@ -1,5 +1,8 @@
-Gimp-Print 4.3.15, released May 11, 2003, is a development release of
-this package.
+Gimp-Print 4.3.15, released May 30, 2003, is a development release of
+this package.  Like all development releases, this version is
+considered unstable and should only be used by those individuals
+tolerant of the likelihood of problems.  Individuals desiring a stable
+release of Gimp-Print should use the latest 4.2 release.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -11,14 +14,25 @@ can be used for many of the most demanding printing tasks.
 This software includes the Print plug-in for the Gimp, and Ghostscript
 and CUPS drivers, including Foomatic data.
 
-The print plugin for the Gimp requires the Gimp 1.2 (later versions of
-the Gimp are not supported).
+This package requires libxml2 2.5 or above.  You may need to install a
+package named "libxml2-devel" or the like on many distributions.
 
-The CUPS driver requires CUPS 1.1.15 or higher.
+The Print plugin for the Gimp requires the Gimp 1.2 (later versions of
+the Gimp are not supported).  You may need to install a package named
+"gimp-devel" or the like on many distributions.
+
+The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
+install a package named "cups-devel" or the like on many
+distributions.
+
+The Foomatic data will work with either Foomatic 2.x or 3.x.  Foomatic
+3.x has additional capabilities that this package detects and takes
+advantage of.
 
 The IJS-based GhostScript plugin driver requires GNU Ghostscript 6.53
 or later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
-later.
+later.  It also requires that glib 1.2 be installed.  You may need to
+install a package named "glib-devel" or the like on many distributions.
 
 Users of Macintosh OS X 10.2 and above can use this package, as the
 printing system is based on CUPS, which is supported by Gimp-print.
@@ -47,17 +61,26 @@ Gimp-Print 4.3.15 contains the following major changes over Gimp-Print
    Internally, this is implemented by means of a new "channel"
    architecture, which is responsible for conversions of this type.
 
-2) An experimental driver for the Olympus P-300 has been added.  This
+2) The existing Line Art image optimization has been renamed to
+   Uncorrected, which is a better description of its effect.  There is
+   a new Threshold mode, which simply computes a threshold value
+   (either on or off for each color).
+
+3) The default image optimization mode is now Photographs (which has
+   the best color correction) rather than the old Line Art (which as
+   noted above is now called Uncorrected).
+
+4) An experimental driver for the Olympus P-300 has been added.  This
    driver has significant limitations; the size of an image much
    closely match the size of a print from this printer.
 
-3) The Fast and Very Fast dither algorithms are significantly
+5) The Fast and Very Fast dither algorithms are significantly
    different from before.  The Fast dither algorithm now uses the same
    dither pattern previously used by the Very Fast algorithm, and the
    Very Fast algorithm only uses the largest drop size.  The Ordered
    algorithm should now run as fast as the Fast algorithm did before.
 
-4) This package now uses gettext 0.11 internally.
+6) This package now uses gettext 0.11 internally.
 
 
 Gimp-Print 4.3.14 contains the following major changes over Gimp-Print

@@ -15,8 +15,9 @@ INTRODUCTION
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite
-    different in many ways from Gimp-Print 4.0, and you should read
-    these instructions carefully.
+    different in many ways from Gimp-Print 4.2, and you should read
+    these instructions carefully.  In addition, the NEWS file contains
+    specific software requirements.
 
     A user's manual exists in doc/users_guide; it is normally
     installed in PDF and HTML form in /usr/local/share/gimp-print/doc.
