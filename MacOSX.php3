@@ -214,7 +214,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  <td colspan="2" >
  <p>
  ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from
- GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as  it provides full support for printing from all &quot;Carbon&quot; applications.
+ GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as  it provides full support for printing from all &quot;Carbon&quot; applications. Gimp-Print users running &quot;Panther&quot; and later versions of Mac OS X do not require this software.
  </p>
  </td>
  </tr>
