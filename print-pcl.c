@@ -167,6 +167,7 @@ const static pcl_t pcl_media_types[] =
 
 #define PAPERSOURCE_MOD			16
 
+#define PCL_PAPERSOURCE_STANDARD	0	/* Don't output code */
 #define PCL_PAPERSOURCE_MANUAL		2
 #define PCL_PAPERSOURCE_ENVELOPE	3	/* Not used */
 
@@ -193,6 +194,7 @@ const static pcl_t pcl_media_types[] =
 
 const static pcl_t pcl_media_sources[] =
 {
+    {"Standard", PCL_PAPERSOURCE_STANDARD},
     {"Manual", PCL_PAPERSOURCE_MANUAL},
 /*  {"Envelope", PCL_PAPERSOURCE_ENVELOPE}, */
     {"Tray 1", PCL_PAPERSOURCE_LJ_TRAY1},
@@ -384,6 +386,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -412,6 +415,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -450,6 +454,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -480,6 +485,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -710,6 +716,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -744,6 +751,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -785,6 +793,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_TRAY,
       -1,
@@ -828,6 +837,7 @@ static pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_DJ_AUTO,
       PCL_PAPERSOURCE_DJ_TRAY,
@@ -852,6 +862,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper types */
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -876,6 +887,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper types */
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -900,6 +912,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper types */
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -931,6 +944,7 @@ static pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper types */
     },
     {
+      PCL_PAPERSOURCE_STANDARD,
       PCL_PAPERSOURCE_MANUAL,
       PCL_PAPERSOURCE_LJ_TRAY1,
       PCL_PAPERSOURCE_LJ_TRAY2,
@@ -1464,7 +1478,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   fputs("\033&l0E", prn);			/* Reset top margin to 0 */
 
  /*
-  * Convert media type string to the code, if specified.
+  * Convert media source string to the code, if specified.
   */
 
   if (strlen(media_source) != 0) {
@@ -1478,7 +1492,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
     if (pcl_media_source == -1)
       fprintf(stderr, "Unknown media source %s, ignored.\n", media_source);
-    else {
+    else if (pcl_media_source != PCL_PAPERSOURCE_STANDARD) {
 
 /* Correct the value by taking the modulus */
 
