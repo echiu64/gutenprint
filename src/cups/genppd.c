@@ -62,8 +62,9 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
-#include <gimp-print/gimp-print-intl.h>
+#include <gimp-print/gimp-print-intl-internal.h>
 #include "../../lib/libprintut.h"
+
 
 /*
  * File handling stuff...
@@ -590,7 +591,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   if (num_opts > 0)
   {
-    gzputs(fp, "*OpenUI *MediaType: PickOne\n");
+    gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
     gzprintf(fp, "*DefaultMediaType: %s\n", defopt);
 
@@ -616,7 +617,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   if (num_opts > 0)
   {
-    gzputs(fp, "*OpenUI *InputSlot: PickOne\n");
+    gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
     gzprintf(fp, "*DefaultInputSlot: %s\n", defopt);
 
@@ -640,7 +641,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   opts   = (*(printfuncs->parameters))(p, NULL, "Resolution", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "Resolution");
 
-  gzputs(fp, "*OpenUI *Resolution: PickOne\n");
+  gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
   gzprintf(fp, "*DefaultResolution: %s\n", defopt);
 
@@ -680,13 +681,16 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Image types...
     */
 
-    gzputs(fp, "*OpenUI *stpImageType/Image Type: PickOne\n");
+    gzprintf(fp, "*OpenUI *stpImageType/%s: PickOne\n", _("Image Type"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpImageType\n");
     gzputs(fp, "*DefaultstpImageType: LineArt\n");
 
-    gzprintf(fp, "*stpImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
-    gzprintf(fp, "*stpImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");
-    gzprintf(fp, "*stpImageType Continuous/Photograph:\t\"<</cupsRowCount 2>>setpagedevice\"\n");
+    gzprintf(fp, "*stpImageType LineArt/%s:\t\"<</cupsRowCount 0>>setpagedevice\"\n",
+            _("Line Art"));
+    gzprintf(fp, "*stpImageType SolidTone/%s:\t\"<</cupsRowCount 1>>setpagedevice\"\n",
+            _("Solid Colors"));
+    gzprintf(fp, "*stpImageType Continuous/%s:\t\"<</cupsRowCount 2>>setpagedevice\"\n",
+            _("Photograph"));
 
     gzputs(fp, "*CloseUI: *stpImageType\n");
 
@@ -694,7 +698,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Dithering algorithms...
     */
 
-    gzputs(fp, "*OpenUI *stpDither/Dither Algorithm: PickOne\n");
+    gzprintf(fp, "*OpenUI *stpDither/%s: PickOne\n", _("Dither Algorithm"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
     gzprintf(fp, "*DefaultstpDither: %s\n", stp_default_dither_algorithm());
 
@@ -713,7 +717,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     if (num_opts > 0)
     {
-      gzputs(fp, "*OpenUI *stpInkType/Ink Type: PickOne\n");
+      gzprintf(fp, "*OpenUI *stpInkType/%s: PickOne\n", _("Ink Type"));
       gzputs(fp, "*OrderDependency: 20 AnySetup *stpInkType\n");
       gzprintf(fp, "*DefaultstpInkType: %s\n", defopt);
 
