@@ -173,6 +173,31 @@ typedef struct canon_variable_inklist
 } canon_variable_inklist_t;
 
 
+#ifdef EXPERIMENTAL_STUFF
+/* 
+ * A printmode is defined by its resolution (xdpi x ydpi), the bits per pixel 
+ * and the installed printhead. 
+ *
+ * For a hereby defined printmode we specify the density and gamma multipliers
+ * and the ink definition with optional adjustments for lum, hue and sat
+ *
+ */
+typedef struct canon_variable_printmode
+{
+  const int xdpi;                      /* horizontal resolution */
+  const int ydpi;                      /* vertical resolution   */
+  const int bits;                      /* bits per pixel        */
+  const int printhead;                 /* installed printhead   */
+  const int quality;                   /* maximum init-quality  */
+  const double density;                /* density multiplier    */
+  const double gamma;                  /* gamma multiplier      */
+  const canon_variable_inkset_t *inks; /* ink definition        */
+  const double *lum_adjustment;        /* optional lum adj.     */
+  const double *hue_adjustment;        /* optional hue adj.     */
+  const double *sat_adjustment;        /* optional sat adj.     */
+} canon_variable_printmode_t;
+#endif
+
 /* NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE  NOTE
  *
  * The following dither ranges were taken from print-escp2.c and do NOT
@@ -605,6 +630,12 @@ typedef struct canon_caps {
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
   unsigned long features;       /* special bjl settings */
+#ifdef EXPERIMENTAL_STUFF
+  const canon_variable_printmode_t *printmodes;
+  int printmodes_cnt;
+#else
+  int dummy;
+#endif
   const canon_dot_size_t dot_sizes;   /* Vector of dot sizes for resolutions */
   const canon_densities_t densities;   /* List of densities for each printer */
   const canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
@@ -669,7 +700,63 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
 
+#ifdef EXPERIMENTAL_STUFF
+#define CANON_MODES(A) A,sizeof(A)/sizeof(canon_variable_printmode_t*)
+#else 
+#define CANON_MODES(A) 0
+#endif
+
 #define CANON_INK(A) A,sizeof(A)/sizeof(canon_variable_inklist_t*)
+
+
+#ifdef EXPERIMENTAL_STUFF
+
+#define BC_10   CANON_INK_K
+#define BC_11   CANON_INK_CMYK    /* color */
+#define BC_12   CANON_INK_CMYK    /* photo */
+#define BC_20   CANON_INK_K
+#define BC_21   CANON_INK_CMYK    /* color */
+#define BC_22   CANON_INK_CMYK    /* photo */
+#define BC_3031 CANON_INK_CMYK    /* color */
+#define BC_3231 CANON_INK_CcMmYK  /* photo */
+
+
+static const canon_variable_printmode_t canon_nomodes[] = 
+{
+  {0,0,0,0,0,0,0,0,0,0}
+};
+
+static const canon_variable_printmode_t canon_modes_30[] = {
+  {  180, 180, 1, BC_10, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 1, BC_10, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  720, 360, 1, BC_10, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+};
+
+static const canon_variable_printmode_t canon_modes_85[] = {
+  {  360, 360, 1, BC_10, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 1, BC_11, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 2, BC_11, 2,  1.0, 1.0, &ci_CMYK_2,   0,0,0 },
+  {  360, 360, 1, BC_21, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 2, BC_21, 2,  1.0, 1.0, &ci_CMYK_2,   0,0,0 },
+};
+
+static const canon_variable_printmode_t canon_modes_2x00[] = {
+  {  360, 360, 1, BC_20, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 1, BC_21, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 1, BC_22, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+};
+
+static const canon_variable_printmode_t canon_modes_6x00[] = {
+  {  360, 360, 1, BC_3031, 2,  1.8, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 2, BC_3031, 2,  1.8, 1.0, &ci_CMYK_2,   0,0,0 },
+  {  720, 720, 1, BC_3031, 2,  1.0, 1.0, &ci_CMYK_1,   0,0,0 },
+  { 1440, 720, 1, BC_3031, 2,  0.5, 1.0, &ci_CMYK_1,   0,0,0 },
+  {  360, 360, 1, BC_3231, 2,  1.8, 1.0, &ci_CcMmYK_1, 0,0,0 },
+  {  360, 360, 2, BC_3231, 2,  1.8, 1.0, &ci_CcMmYK_2, 0,0,0 },
+  {  720, 720, 1, BC_3231, 2,  1.0, 1.0, &ci_CcMmYK_1, 0,0,0 },
+  { 1440, 720, 1, BC_3231, 2,  0.5, 1.0, &ci_CcMmYK_1, 0,0,0 },
+};
+#endif
 
 static const canon_cap_t canon_model_capabilities[] =
 {
@@ -694,6 +781,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
 
   { /* Canon BJ 30 */
+    /* heads: BC-10 */
     30,
     9.5*72, 14*72,
     90, 360, 360, 2,
@@ -701,6 +789,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
+    CANON_MODES(canon_modes_30),
     {-1,0,0,0,-1,-1}, /*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
@@ -710,6 +799,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 85 */
+    /* heads: BC-20 BC-21 BC-22 */
     85,
     9.5*72, 14*72,
     90, 720, 360, 2,
@@ -717,6 +807,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
+    CANON_MODES(canon_modes_85),
     {-1,-1,1,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
@@ -726,6 +817,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4300 */
+    /* heads: BC-20 BC-21 BC-22 BC-29 */
     4300,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -733,6 +825,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -742,6 +835,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4400 */
+    /* heads: BC-20 BC-21 BC-22 BC-29 */
     4400,
     9.5*72, 14*72,
     90, 720, 360, 2,
@@ -749,6 +843,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
     {-1,-1,0,0,-1,-1},/*090x090 180x180 360x360 720x360 720x720 1440x1440*/ 
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/ 
     CANON_INK(canon_ink_standard),
@@ -758,6 +853,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6000 */
+    /* heads: BC-30/BC-31 BC-32/BC-31 */
     6000,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -765,6 +861,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
+    CANON_MODES(canon_modes_6x00),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1.8,1,0.5,1,1},/*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
@@ -774,6 +871,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6200 */
+    /* heads: BC-30/BC-31 BC-32/BC-31 */
     6200,
     618, 936,      /* 8.58" x 13 " */
     180, 1440, 720, 2,
@@ -781,6 +879,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
+    CANON_MODES(canon_modes_6x00),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
@@ -790,6 +889,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6500 */
+    /* heads: BC-30/BC-31 BC-32/BC-31 */
     6500,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -797,6 +897,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT,
+    CANON_MODES(canon_modes_6x00),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
@@ -806,13 +907,15 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 8200 */
+    /* heads: BC-50 */
     8200,
     11*72, 17*72,
-    150, 600,600, 4,
+    150, 1200,1200, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
+    CANON_MODES(canon_nomodes),
     {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_superphoto),
@@ -830,6 +933,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
 
   { /* Canon BJC 1000 */
+    /* heads: BC-20 BC-21 BC-22 BC-29 */
     1000,
     11*72, 17*72,
     180, 360, 360, 2,
@@ -837,6 +941,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_K | CANON_INK_CMY,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
+    CANON_MODES(canon_nomodes),
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -845,6 +950,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 2000 */
+    /* heads: BC-20 BC-21 BC-22 BC-29 */
     2000,
     11*72, 17*72,
     180, 720, 360, 2,
@@ -852,6 +958,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
+    CANON_MODES(canon_nomodes),
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -860,6 +967,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 3000 */
+    /* heads: BC-30 BC-33 BC-34 */
     3000,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -867,6 +975,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT, /*FIX? should have _r? */
+    CANON_MODES(canon_nomodes),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -875,6 +984,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 6100 */
+    /* heads: BC-30/BC-31 BC-32/BC-31 */
     6100,
     11*72, 17*72,
     180, 1440, 720, 2,
@@ -882,6 +992,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r | CANON_CAP_DMT,
+    CANON_MODES(canon_modes_6x00),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -890,6 +1001,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 7000 */
+    /* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7000,
     11*72, 17*72,
     150, 1200, 600, 2,
@@ -897,6 +1009,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1,
+    CANON_MODES(canon_nomodes),
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1.8,1,1,1},  /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -905,6 +1018,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 7100 */
+    /* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100,
     11*72, 17*72,
     150, 1200, 600, 2,
@@ -912,6 +1026,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYyK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
+    CANON_MODES(canon_nomodes),
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -928,6 +1043,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /*****************************/
 
   { /* Canon BJC 5100 */
+    /* heads: BC-20 BC-21 BC-22 BC-23 BC-29 */
     5100,
     17*72, 22*72,
     180, 1440, 720, 2,
@@ -935,6 +1051,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -943,6 +1060,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 5500 */
+    /* heads: BC-20 BC-21 BC-29 */
     5500,
     22*72, 34*72,
     180, 720, 360, 2,
@@ -950,6 +1068,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0 | CANON_CAP_a,
+    CANON_MODES(canon_nomodes),
     {0,0,-1,-1,-1,-1},/*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -958,6 +1077,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 6500 */
+    /* heads: BC-30/BC-31 BC-32/BC-31 */
     6500,
     17*72, 22*72,
     180, 1440, 720, 2,
@@ -965,6 +1085,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_DMT,
+    CANON_MODES(canon_nomodes),
     {-1,1,0,0,-1,-1}, /*180x180 360x360 720x720 1440x720 1440x1440 2880x2880*/
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standard),
@@ -973,6 +1094,7 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
   { /* Canon BJC 8500 */
+    /* heads: BC-80/BC-81 BC-82/BC-81 */
     8500,
     17*72, 22*72,
     150, 1200,1200, 2,
@@ -980,6 +1102,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
     CANON_CAP_STD0,
+    CANON_MODES(canon_nomodes),
     {-1,0,0,-1,0,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_standard),
@@ -1919,6 +2042,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
       arg_74_2= 0x90;
       arg_74_3= 0x04;
       init->bits=3; 
+      if (init->ydpi>600)  arg_74_3= 0x09;
     } else {
       arg_74_1= 0x01;
       arg_74_2= 0x00;
@@ -2198,7 +2322,12 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   canon_init_printer(nv, &init);
 
+  /* possibly changed during initialitation 
+   * to enforce valid modes of operation:
+   */
   bits= init.bits;
+  xdpi= init.xdpi;
+  ydpi= init.ydpi;
 
  /*
   * Convert image size to printer resolution...
