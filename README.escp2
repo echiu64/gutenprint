@@ -411,6 +411,10 @@ manual.  Much of this information is interpreted; none is tested.
 				     vertical trim lines at the left
 				     and right margins.
 
+				     On a Stylus Color 3000, the value
+				     0x5 was observed where the 0x14
+				     is listed.
+
    * PH BC=2 00 xx		     Select Paper Thickness.  Set the
 				     paper thickness in .1 mm units.
 				     This must not exceed 0x10 (1.6
@@ -420,6 +424,18 @@ manual.  Much of this information is interpreted; none is tested.
 				     other case reads "less than 0.5
 				     mm"), the platen gap is set high
 				     irrespective of the SN command.
+
+   * PM BC=2 00	00		     Function unknown.  Used on the
+				     STC 3000 at least when using roll
+				     feed.
+
+   * ST BC=2 00 01		     Function unknown.  Used on the
+				     STC 3000 at least when using roll
+				     feed.
+
+   * SM BC=2 00 02		     Function unknown.  Used on the
+				     STC 3000 at least when using roll
+				     feed.
 
 Appropriate Remote Command Sequences
 ====================================
@@ -443,3 +459,12 @@ An alignment sequence goes like this:
 
    5. We are done: host sends a SV command and exits.
 
+
+The sequence used (by the STC 3000, at least) to print from the roll
+feed is (with byte count omitted)
+
+     PM 00 00
+     SN 00 00 00
+     EX 00 00 00 00 05 01
+     ST 00 01
+     SM 00 02
