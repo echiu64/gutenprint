@@ -269,13 +269,13 @@ void save2xbm(const char *filename,char col, bitimage_t *img,
     return;
   }
 
-  i0= (ymin>0 && ymin<img->height) ? ymin : 0;
-  i1= (ymax>0 && ymax<img->height) ? ymax : img->height-1;
+  i0= (ymin>0) ? ymin-img->y0 : 0;
+  i1= (ymax>0) ? ymax-img->y0 : img->height;
   j0= (xmin>0 && xmin<img->width*8) ? xmin/8 : 0;
   j1= (xmax>0 && xmax<img->width*8) ? xmax/8 : img->width-1;
 
   w= j1-j0+1;
-  h= i1-i0+1;
+  h= i1-i0;
 
   if (col)
     fprintf(o,"#define %s_%c_width %d\n#define %s_%c_height %d\nstatic char %s_%c_bits[] = {",
@@ -288,11 +288,11 @@ void save2xbm(const char *filename,char col, bitimage_t *img,
 	    outfilename,h,
 	    outfilename);
     
-  fprintf(stderr,"%d %d %d %d\n",i0,i1,j0,j1); 
-  for (i=i0,k=0; i<=i1; i++) {
+  fprintf(stderr,"%d %d %d %d\n",i0,h,j0,w); 
+  for (i=i0,k=0; i<i1; i++) {
     for (j=j0; j<=j1; j++) {
       if (k%16 == 0) fprintf(o,"\n");
-      fprintf(o,"0x%02x, ",conv(img->buf[i*img->width+j])&0xff); 
+      fprintf(o,"0x%02x, ",(i>=0 && i<img->height)? conv(img->buf[i*img->width+j])&0xff : 0); 
       k++;
     }
   }
@@ -332,7 +332,7 @@ int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
   return cmd;
 }
 
-int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_)
+int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int *ymax_)
 {
   unsigned char inbuff[65540];
   scanline_t *sl[7], *nsl;
@@ -410,6 +410,8 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_)
 
   *xmin_= xmin;
   *xmax_= xmax;
+  *ymin_= ymin;
+  *ymax_= ymax;
 
   return 1;
 }
@@ -438,6 +440,7 @@ int main(int argc, char **argv)
   scanline_t *scanlines[7];
   char colname[7] = { 'K', 'Y', 'M', 'C', 'y', 'm', 'c' };
   int xmin,xmax;
+  int ymin,ymax;
 
   if (argc>1) {
     if (argc>2)
@@ -450,15 +453,15 @@ int main(int argc, char **argv)
 
     xsize=ysize=0;
 
-    process(infile,scanlines,&xmin,&xmax);
+    process(infile,scanlines,&xmin,&xmax,&ymin,&ymax);
 
-    save2xbm(outfilename,colname[0],scanlines2bitimage(scanlines[0]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[1],scanlines2bitimage(scanlines[1]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[2],scanlines2bitimage(scanlines[2]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[3],scanlines2bitimage(scanlines[3]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[4],scanlines2bitimage(scanlines[4]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[5],scanlines2bitimage(scanlines[5]),xmin,-1,xmax,-1);
-    save2xbm(outfilename,colname[6],scanlines2bitimage(scanlines[6]),xmin,-1,xmax,-1);
+    save2xbm(outfilename,colname[0],scanlines2bitimage(scanlines[0]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[1],scanlines2bitimage(scanlines[1]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[2],scanlines2bitimage(scanlines[2]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[3],scanlines2bitimage(scanlines[3]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[4],scanlines2bitimage(scanlines[4]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[5],scanlines2bitimage(scanlines[5]),xmin,ymin,xmax,ymax);
+    save2xbm(outfilename,colname[6],scanlines2bitimage(scanlines[6]),xmin,ymin,xmax,ymax);
 
   } else {
     fprintf(stderr,"\nusage: bjc-unprint INFILE [OUTFILE]\n\n");

@@ -51,7 +51,7 @@
 #define DEBUG 1 
 #endif
 
-#define USE_3BIT_FOLD_TYPE 2
+#define USE_3BIT_FOLD_TYPE 323
 
 /*
  * For each printer, we can select from a variety of dot sizes.
@@ -244,15 +244,22 @@ static const canon_variable_ink_t canon_ink_Xx_2bit =
 /*
  * Dither ranges specifically for any Color and 3bit/pixel
  * (see NOTE above)
+ * 
+ * BIG NOTE: The bjc8200 has this kind of ink. One Byte seems to hold
+ *           drop sizes for 3 pixels in a 3/2/2 bit fashion.
+ *           Size values for 3bit-sized pixels range from 1 to 7,
+ *           size values for 2bit-sized picels from 1 to 3 (kill msb).
+ *
+ *
  */
 static const stp_simple_dither_range_t canon_dither_ranges_X_3bit[] =
 {
   { 0.45,  0x1, 1, 1 },
   { 0.55,  0x2, 1, 2 },
   { 0.66,  0x3, 1, 3 },
-  { 0.77,  0x5, 1, 5 },
-  { 0.88,  0x6, 1, 6 },
-  { 1.0,   0x7, 1, 7 }
+  { 0.77,  0x4, 1, 4 },
+  { 0.88,  0x5, 1, 5 },
+  { 1.0,   0x6, 1, 6 }
 };
 
 static const canon_variable_ink_t canon_ink_X_3bit =
@@ -270,13 +277,14 @@ static const stp_simple_dither_range_t canon_dither_ranges_Xx_3bit[] =
 {
   { 0.15,  0x1, 0, 1 },
   { 0.227, 0x2, 0, 2 },
+  { 0.333, 0x3, 0, 3 },
 /*  { 0.333, 0x3, 0, 3 }, */
   { 0.45,  0x1, 1, 1 },
   { 0.55,  0x2, 1, 2 },
   { 0.66,  0x3, 1, 3 },
-  { 0.77,  0x5, 1, 5 },
-  { 0.88,  0x6, 1, 6 },
-  { 1.0,   0x7, 1, 7 }
+  { 0.77,  0x4, 1, 4 },
+  { 0.88,  0x5, 1, 5 },
+  { 1.0,   0x6, 1, 6 }
 };
 
 static const canon_variable_ink_t canon_ink_Xx_3bit =
@@ -1797,6 +1805,7 @@ canon_init_setImage(const stp_vars_t v, canon_init_t *init)
       arg_74_1= 0x01;
       arg_74_2= 0x00;
       arg_74_3= 0x01;
+      if (init->ydpi>600)  arg_74_3= 0x09;
     }
   }
 
@@ -2470,7 +2479,7 @@ canon_fold_2bit(const unsigned char *line,
 #error YOU MUST CHOOSE A VALUE FOR USE_3BIT_FOLD_TYPE
 #endif
 
-#if USE_3BIT_FOLD_TYPE == 1
+#if USE_3BIT_FOLD_TYPE == 333
 
 static void
 canon_fold_3bit(const unsigned char *line,
@@ -2511,7 +2520,7 @@ canon_fold_3bit(const unsigned char *line,
   }
 }
 
-#elif USE_3BIT_FOLD_TYPE == 2
+#elif USE_3BIT_FOLD_TYPE == 323
 
 static void
 canon_fold_3bit(const unsigned char *line,
@@ -2519,8 +2528,92 @@ canon_fold_3bit(const unsigned char *line,
 		unsigned char *outbuf)
 {
   int i;
-  for (i = 0; i < single_length; i++) {
-    outbuf += 3;
+  for (i = 0; i < single_length-3; i++) {
+    unsigned char 
+      A0= line[0],
+      A1= line[1],
+      A2= line[2],
+      B0= line[single_length],
+      B1= line[single_length+1],
+      B2= line[single_length+2],
+      C0= line[2*single_length],
+      C1= line[2*single_length+1],
+      C2= line[2*single_length+2];
+      
+    outbuf[0] =
+      ((C0 & 0x80) >> 0) |
+      ((B0 & 0x80) >> 1) |
+      ((A0 & 0x80) >> 2) |
+      ((B0 & 0x40) >> 2) |
+      ((A0 & 0x40) >> 3) |
+      ((C0 & 0x20) >> 3) |
+      ((B0 & 0x20) >> 4) |
+      ((A0 & 0x20) >> 5);
+    outbuf[1] =
+      ((C0 & 0x10) << 3) |
+      ((B0 & 0x10) << 2) |
+      ((A0 & 0x10) << 1) |
+      ((B0 & 0x08) << 1) |
+      ((A0 & 0x08) << 0) |
+      ((C0 & 0x04) >> 0) |
+      ((B0 & 0x04) >> 1) |
+      ((A0 & 0x04) >> 2);
+    outbuf[2] =
+      ((C0 & 0x02) << 6) |
+      ((B0 & 0x02) << 5) |
+      ((A0 & 0x02) << 4) |
+      ((B0 & 0x01) << 4) |
+      ((A0 & 0x01) << 3) |
+      ((C1 & 0x80) >> 5) |
+      ((B1 & 0x80) >> 6) |
+      ((A1 & 0x80) >> 7);
+    outbuf[3] =
+      ((C1 & 0x40) << 1) |
+      ((B1 & 0x40) << 0) |
+      ((A1 & 0x40) >> 1) |
+      ((B1 & 0x20) >> 1) |
+      ((A1 & 0x20) >> 2) |
+      ((C1 & 0x10) >> 2) |
+      ((B1 & 0x10) >> 3) |
+      ((A1 & 0x10) >> 4);
+    outbuf[4] =
+      ((C1 & 0x08) << 4) |
+      ((B1 & 0x08) << 3) |
+      ((A1 & 0x08) << 2) |
+      ((B1 & 0x04) << 2) |
+      ((A1 & 0x04) << 1) |
+      ((C1 & 0x02) << 1) |
+      ((B1 & 0x02) >> 0) |
+      ((A1 & 0x02) >> 1);
+    outbuf[5] =
+      ((C1 & 0x01) << 7) |
+      ((B1 & 0x01) << 6) |
+      ((A1 & 0x01) << 5) |
+      ((B2 & 0x80) >> 3) |
+      ((A2 & 0x80) >> 4) |
+      ((C2 & 0x40) >> 4) |
+      ((B2 & 0x40) >> 5) |
+      ((A2 & 0x40) >> 6);
+    outbuf[6] =
+      ((C2 & 0x20) << 2) |
+      ((B2 & 0x20) << 1) |
+      ((A2 & 0x20) << 0) |
+      ((B2 & 0x10) >> 0) |
+      ((A2 & 0x10) >> 1) |
+      ((C2 & 0x08) >> 1) |
+      ((B2 & 0x08) >> 2) |
+      ((A2 & 0x08) >> 3);
+    outbuf[7] =
+      ((C2 & 0x04) << 5) |
+      ((B2 & 0x04) << 4) |
+      ((A2 & 0x04) << 3) |
+      ((B2 & 0x02) << 3) |
+      ((A2 & 0x02) << 2) |
+      ((C2 & 0x01) << 2) |
+      ((B2 & 0x01) << 1) |
+      ((A2 & 0x01) << 0);
+    line+=3;
+    outbuf += 8;
   }
 }
 
@@ -2538,6 +2631,16 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
     }
     line[0] = line[0] >> 1;
   }
+}
+
+static void
+canon_shift_buffer2(unsigned char *line,int length,int bits)
+{
+  int i;
+  for (i=length; i>0; i--) {
+    line[length]= (line[length] >> bits) | (line[length-1] << (8-bits));
+  }
+  line[0] = line[0] >> bits;
 }
 
 
@@ -2573,17 +2676,28 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
   /* fold lsb/msb pairs if drop modulation is active */
 
+  
+
   if (bits==2) {
+    memset(in_fold,0,length*2+2);
     canon_fold_2bit(line,length,in_fold);
     in_ptr= in_fold;
     length*= 2;
     offset*= 2;
   }
   if (bits==3) {
+    memset(in_fold,0,length*3+30);
     canon_fold_3bit(line,length,in_fold);
     in_ptr= in_fold;
-    length*= 3;
-    offset*= 3;
+    length= ((length-1)*24)/9;
+    offset= (offset/3)*8;
+#if 0
+    switch(offset%3){
+    case 0: offset= (offset/3)*8;   break;
+    case 1: offset= (offset/3)*8/*+3 CAREFUL! CANNOT SHIFT _AFTER_ RECODING!!*/; break;
+    case 2: offset= (offset/3)*8/*+5 CAREFUL! CANNOT SHIFT _AFTER_ RECODING!!*/; break;
+    }
+#endif
   }
   /* pack left border rounded to multiples of 8 dots */
 
