@@ -2000,6 +2000,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   int rwidth; /* real with used at printing (includes shift between even & odd nozzles) */
 #ifdef DEBUG
   /* fprintf(stderr,"<%c>",("CMYKcmy"[coloridx])); */
+  fprintf(stderr,"pass length %d\n", pass_length);
 #endif
 
 
@@ -2361,8 +2362,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   fprintf(stderr, "microoffset %d, vertical_subpass %d, sw->horizontal_weave %d\n", microoffset,vertical_subpass, sw->horizontal_weave);
 
   fprintf(stderr,"Lexmark: last_pass_offset %d, last_pass %d, logicalpassstart %d\n", sw->last_pass_offset, sw->last_pass, pass->logicalpassstart);
-  fprintf(stderr,"Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  advance %d\n", caps->y_raster_res, ydpi, advance);
-  fprintf(stderr, "lineactive[0].p.c %d, lineactive[0].p.m %d, lineactive[0].p.y %d, lineactive[0].p.k %d\n", lineactive[0].p.c, lineactive[0].p.m, lineactive[0].p.y, lineactive[0].p.k);
+  fprintf(stderr,"Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  \n", caps->y_raster_res, ydpi);
 
 #endif
 
@@ -2370,9 +2370,6 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 
 #ifdef DEBUG
   fprintf(stderr,"1\n");
-  fprintf(stderr,"pixle: ");
-  for (i=0; i < 20; i++)
-    fprintf(stderr," %x", bufs[0].v[1][i*4]);
   fprintf(stderr,"\n");
   fprintf(stderr,"lineoffs[0].v[j]  %d\n", lineoffs[0].v[0]);
   fprintf(stderr,"lineoffs[0].v[j]  %d\n", lineoffs[0].v[1]);
@@ -2396,6 +2393,11 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     return;
     break;
   }
+  /* calculate paper shift and adapt actual resoution to physical positioning resolution */
+  paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi); 
+
+
+  if ((bufs[0].p.c != NULL) || (bufs[0].p.m != NULL) || (bufs[0].p.y != NULL)) {
 
   head_colors[0].line = bufs[0].p.c;
   head_colors[0].used_jets = linecount[0].p.c;
@@ -2406,13 +2408,12 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   head_colors[2].line = bufs[0].p.y;
   head_colors[2].used_jets = linecount[0].p.y;
 
-  /* calculate paper shift and adapt actual resoution to physical positioning resolution */
-  paperShift = (pass->logicalpassstart - sw->last_pass_offset) * (caps->y_raster_res/ydpi); 
 
-#ifdef DEBUG
+#ifdef DEBUGxx
 #define lineoffcalc(n) ((((lwidth+7)/8)*i))
   /*#define lineoffcalc(n) (lineoffs[0].v[n]*i)*/
-
+  {
+    int i;
   printf("Let's go lex_show_dither (sw->jets %d,  paperShift %d)\n", sw->jets, paperShift);
   for (i=0; i < sw->jets; i++) {
     int mywidth=lwidth;
@@ -2425,6 +2426,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		    NULL, /* lmagenta,   */
 		    bufs[0].p.k+lineoffcalc(0), /* black,   */
 		    mywidth); /*out_width*/
+  }
   }
 #endif
 
@@ -2448,13 +2450,32 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		0                      /* dmt */);
   if (bidirectional_printing)
     direction = (direction +1) & 1;
+  }
 
-  head_colors[2].line = bufs[0].p.k;
-  head_colors[2].used_jets = linecount[0].p.k;
-
-  head_colors[0].used_jets = 0;
-  head_colors[1].used_jets = 0;
-
+  if (bufs[0].p.k != NULL) {
+    if (sw->jets != 208) {
+      head_colors[0].line = bufs[0].p.k;
+      head_colors[0].used_jets = linecount[0].p.k;
+      
+      head_colors[2].line = NULL;
+      head_colors[2].used_jets = 0;
+      head_colors[1].line = NULL;
+      head_colors[1].used_jets = 0;
+    } else {
+      head_colors[0].line = bufs[0].p.k;
+      head_colors[0].used_jets = linecount[0].p.k;
+      head_colors[0].head_nozzle_start = 0;
+      head_colors[0].head_nozzle_end = sw->jets/2;
+      
+      head_colors[2].line = NULL;
+      head_colors[2].used_jets = 0;
+      head_colors[2].head_nozzle_start = 0;
+      head_colors[2].head_nozzle_end = 0;
+      head_colors[1].line = NULL;
+      head_colors[1].used_jets = 0;
+      head_colors[1].head_nozzle_start = 0;
+      head_colors[1].head_nozzle_end = 0;
+    }
   lexmark_write(nv,		/* I - Print file or command */
 		outbuf,                           /*unsigned char *prnBuf,   mem block to buffer output */
 		&paperShift,           /* int *paperShift, */
@@ -2472,7 +2493,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 		0                      /* dmt */);
   if (bidirectional_printing)
     direction = (direction +1) & 1;
- 
+  } 
   /* store paper position in respect if there was a paper shift */
   sw->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
  
