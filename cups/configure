@@ -15,7 +15,7 @@ ac_default_prefix=/usr
 ac_help="$ac_help
   --enable-debug        turn on debugging [default=no]"
 ac_help="$ac_help
-  --enable-silent       turn on silent builds [default=yes]"
+  --enable-silent       turn on silent builds [default=no]"
 
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -535,8 +535,8 @@ fi
 
 CFLAGS="${CFLAGS:=}"
 OPTIM=""
-SILENT="@"
-ECHO="@echo"
+SILENT=""
+ECHO="@:"
 
 # Check whether --enable-debug or --disable-debug was given.
 if test "${enable_debug+set}" = set; then
@@ -550,9 +550,9 @@ fi
 # Check whether --enable-silent or --disable-silent was given.
 if test "${enable_silent+set}" = set; then
   enableval="$enable_silent"
-  if eval "test x$enable_debug = xno"; then
-	SILENT=""
-	ECHO=":"
+  if eval "test x$enable_silent = xyes"; then
+	SILENT="@"
+	ECHO="@echo"
 fi
 fi
 

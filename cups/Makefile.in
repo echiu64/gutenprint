@@ -43,6 +43,7 @@ LDFLAGS	=	@LDFLAGS@
 LIBS	=	@LIBS@
 MKDIR	=	@MKDIR@
 RANLIB	=	:
+SHELL	=	/bin/sh
 SILENT	=	@SILENT@
 
 
@@ -108,31 +109,43 @@ clean:
 
 install:
 	$(ECHO) Installing calibration utility...
-	-$(SILENT) $(MKDIR) $(bindir)
+	$(SILENT) if test ! -d $(bindir); then \
+		$(MKDIR) $(bindir); \
+	fi
 	$(SILENT) $(CP) calibrate $(bindir)
 	$(SILENT) $(CHMOD) a+rx $(bindir)/calibrate
-	-$(SILENT) $(MKDIR) $(datadir)/cups
+	$(SILENT) if test ! -d $(datadir)/cups; then \
+		$(MKDIR) $(datadir)/cups; \
+	fi
 	$(SILENT) $(CP) calibrate.ppm $(datadir)/cups
 	$(SILENT) $(CHMOD) a+r $(datadir)/cups/calibrate.ppm
 
 	$(ECHO) Installing drivers...
-	-$(SILENT) $(MKDIR) $(libdir)/cups/backend
+	$(SILENT) if test ! -d $(libdir)/cups/backend; then \
+		$(MKDIR) $(libdir)/cups/backend; \
+	fi
 	$(SILENT) $(CP) epson $(libdir)/cups/backend
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/backend/epson
 
-	-$(SILENT) $(MKDIR) $(libdir)/cups/filter
+	$(SILENT) if test ! -d $(libdir)/cups/filter; then \
+		$(MKDIR) $(libdir)/cups/filter; \
+	fi
 	$(SILENT) $(CP) rastertoprinter $(libdir)/cups/filter
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/rastertoprinter
 	$(SILENT) $(CP) commandtoepson $(libdir)/cups/filter
 	$(SILENT) $(CHMOD) a+rx $(libdir)/cups/filter/commandtoepson
 
 	$(ECHO) Installing PPD files...
-	-$(SILENT) $(MKDIR) $(datadir)/cups/model
+	$(SILENT) if test ! -d $(datadir)/cups/model; then \
+		$(MKDIR) $(datadir)/cups/model; \
+	fi
 	$(SILENT) $(CP) ppd/* $(datadir)/cups/model
 	$(SILENT) $(CHMOD) a+r $(datadir)/cups/model/*
 
 	$(ECHO) Installing new command MIME type...
-	-$(SILENT) $(MKDIR) $(sysconfdir)/cups
+	$(SILENT) if test ! -d $(sysconfdir)/cups; then \
+		$(MKDIR) $(sysconfdir)/cups; \
+	fi
 	$(SILENT) $(CP) command.types $(sysconfdir)/cups
 	$(SILENT) $(CHMOD) a+r $(sysconfdir)/cups/command.types
 
