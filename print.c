@@ -58,7 +58,11 @@
 
 #include "print-intl.h"
 
-#ifdef GIMP_1_0
+/*
+ * Note that older versions of gimp 1.1 have the compatibility cruft
+ * stuff partially fixed
+ */
+#if !defined(GIMP_MINOR_VERSION) || (GIMP_MAJOR_VERSION == 1 && GIMP_MINOR_VERSION == 0)
 #ifndef GIMP_PDB_STRING
 #define GIMP_PDB_STRING PARAM_STRING
 #endif
