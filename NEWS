@@ -84,18 +84,41 @@ These release notes contain the following sections:
      while borderless printing works correctly in CUPS, the actual
      prints don't come out perfectly borderless in all cases.
 
-  2) A minor compliance issue in the CUPS PPD files is fixed.
+  2) A problem manifesting itself as unprinted bars within a page has
+     been fixed.
 
-  3) Boolean options are handled correctly in the Foomatic data.
+  3) A number of crash problems in the Print plugin have been fixed,
+     and potential crash problems in the core library have been fixed.
 
-  4) The header files have been reorganized; all header files intended
+  4) The CUPS driver now prints correctly at 1440x1440 DPI on certain
+     Epson printers.  Previously it rendered at 2880x1440, which in
+     addition to being slower could also cause incorrect results on
+     certain types of material.
+
+  5) A minor compliance issue in the CUPS PPD files is fixed.
+
+  6) Boolean options are handled correctly in the Foomatic data.
+
+  7) escputil now returns ink levels correctly on all Epson printers.
+     In addition, it is more robust on printers that it previously
+     worked correctly on.
+
+  8) The header files have been reorganized; all header files intended
      for use by either client programs or modules (such as family
      drivers) have been moved to include/gimp-print.  Client programs
      should continue to #include <gimp-print/gimp-print.h> as before.
-     Modules should #include <gimp-print/gimp-print-module.h>.
+     Modules should #include <gimp-print/gimp-print-module.h>.  All
+     routines and objects intended for use by either modules or
+     clients are now prefixed "stp_" rather than "stpi_" as was the
+     case for routines intended for use by modules.
 
-  5) Numerous functions and procedures have been renamed for internal
-     consistency.  Specifically:
+  9) There are a number of API changes in this release that are
+     incompatible with earlier 4.3/5.0 alpha releases.  In particular:
+
+     * All data types are forward-declared structs rather than void
+       pointers.  This enables the compiler to type check programs
+       more effectively and makes it more clear that the object is
+       being passed by reference.
 
      * All functions ending in _free have been renamed to _destroy:
 
@@ -111,8 +134,9 @@ These release notes contain the following sections:
      This is planned to be the last incompatible API change in the 5.0
      development line.  Therefore, we would like all authors of client
      programs to inspect and test this thoroughly and report issues.
+     There may be minor compatible API changes.
 
-  6) More header files have been documented with Doxygen.
+  10) More header files have been documented with Doxygen.
 
 ================================================================
 

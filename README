@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 5.0.0 Alpha 2, the second public alpha
+    This is Gimp-Print version 5.0.0 Alpha 3, the third public alpha
     release (technology preview) in the line that will eventually lead
     to Gimp-Print 5.0.  Gimp-Print is a suite of printer drivers that
     may be used with most common UNIX print spooling systems,
@@ -67,7 +67,7 @@ BASIC INSTALLATION
 
     By default dynamically loadable modules (plug-ins) will be built,
     and loaded at run-time if your operating system supports it.  If
-    you experience problems --with-modules=dlopen or
+    you experience problems, --with-modules=dlopen or
     --with-modules=ltdl may be used to select the module loading
     method (dlopen is the default, but GNU libltdl is more portable),
     or --with-modules=static or --without-modules disables them.
@@ -158,9 +158,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(en)
 
-    If the version number (in this case, 5.0.0-alpha2) does not match
+    If the version number (in this case, 5.0.0-alpha3) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -191,15 +191,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(sv)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha2(fr)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(sv)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha3(fr)
 
     you may wish to turn off the translation of PPD files:
 
