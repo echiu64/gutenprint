@@ -79,6 +79,7 @@ unsigned short sh;
 pstate_t pstate;
 int unweave;
 
+
 line_type **page=NULL;
 
 
@@ -1034,22 +1035,25 @@ void parse_canon(FILE *fp_r){
      getn(bufsize,"Corrupt file.  Error reading data buffer.\n");
 
      switch(ch) {
+/* Color Codes:
+   color    Epson1  Epson2   Sequential
+   Black    0       0        0 K
+   Magenta  1       1        1 M
+   Cyan     2       2        2 C
+   Yellow   4       4        3 Y
+   L.Mag.   17      257      4 m
+   L.Cyan   18      258      5 c 
+   L.Yellow NA      NA       6 y
+ */
      case 'A': /* 0x41 - transfer graphics data */
-       switch (*buf) {
-       case 'C': currentcolor= 2; currentdelay= delay_C;
-	 break;
-       case 'M': currentcolor= 1; currentdelay= delay_M;
-	 break;
-       case 'Y': currentcolor= 3; currentdelay= delay_Y;
-	 break;
-       case 'K': currentcolor= 0; currentdelay= delay_K;
-	 break;
-       case 'c': currentcolor= 5; currentdelay= delay_c;
-	 break;
-       case 'm': currentcolor= 4; currentdelay= delay_m;
-	 break;
-       case 'y': currentcolor= 6; currentdelay= delay_y;
-	 break;
+       switch (*buf) { 
+       case 'K': currentcolor= 0; currentdelay= delay_K; break;
+       case 'M': currentcolor= 1; currentdelay= delay_M; break;
+       case 'C': currentcolor= 2; currentdelay= delay_C; break;
+       case 'Y': currentcolor= 3; currentdelay= delay_Y; break;
+       case 'm': currentcolor= 4; currentdelay= delay_m; break;
+       case 'c': currentcolor= 5; currentdelay= delay_c; break;
+       case 'y': currentcolor= 6; currentdelay= delay_y; break;
        default:
 	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
 	 /* exit(-1); */
