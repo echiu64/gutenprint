@@ -65,7 +65,7 @@ static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth,
 			      int lineheight, int vertical_row_separation,
-			      int first_line, int phys_lines);
+			      int first_line, int phys_lines, int strategy);
 static void escp2_flush_all(void *, int model, int width, int hoffset,
 			    int ydpi, int xdpi, FILE *prn);
 static void
@@ -2008,7 +2008,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			     out_width * escp2_xres(model) / physical_ydpi,
 			     out_height, separation_rows,
 			     top * physical_ydpi / 72,
-			     page_height * physical_ydpi / 72);
+			     page_height * physical_ydpi / 72, use_softweave);
   else
     escp2_init_microweave(top * ydpi / 72);
 
@@ -3397,7 +3397,8 @@ initialize_weave(int jets,	/* Width of print head */
 				/* although they don't seem to do softweave */
 				/* anyway) */
 		 int first_line, /* First line that will be printed on page */
-		 int phys_lines) /* Total height of the page in rows */
+		 int phys_lines, /* Total height of the page in rows */
+		 int weave_strategy) /* Which weaving pattern to use */
 {
   int i;
   escp2_softweave_t *sw = malloc(sizeof (escp2_softweave_t));
@@ -3429,7 +3430,7 @@ initialize_weave(int jets,	/* Width of print head */
   sw->weaveparm = initialize_weave_params(sw->separation, sw->jets,
                                           sw->oversample, first_line,
                                           first_line + lineheight - 1,
-                                          phys_lines);
+                                          phys_lines, weave_strategy);
 
   /*
    * The value of vmod limits how many passes may be unfinished at a time.

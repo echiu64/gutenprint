@@ -303,7 +303,7 @@ extern void	free_dither(void *);
 
 extern void *	initialize_weave_params(int S, int J, int O,
 		                        int firstrow, int lastrow,
-		                        int pagelength);
+		                        int pagelength, int strategy);
 extern void	calculate_row_parameters(void *w, int row, int subpass,
 		                         int *pass, int *jet, int *startrow,
 					 int *phantomrows, int *jetsused);
