@@ -80,7 +80,6 @@ static void	get_system_printers(void);
 
 static void	query (void);
 static void	run (char *, int, GParam *, int *, GParam **);
-static void     init_gtk (void);
 static int	do_print_dialog (char *proc_name);
 
 #ifndef GIMP_1_0
@@ -292,6 +291,7 @@ get_tmp_filename()
   return tmp_path;
 }
 #endif
+
 /*
  * 'run()' - Run the plug-in...
  */
@@ -345,7 +345,7 @@ run (char   *name,		/* I - Name of print program. */
     {
     case RUN_INTERACTIVE:
     case RUN_WITH_LAST_VALS:
-      init_gtk ();
+      gimp_ui_init ("print", TRUE);
       export = gimp_export_image (&image_ID, &drawable_ID, "Print", 
 				  (CAN_HANDLE_RGB |
 				   CAN_HANDLE_GRAY |
@@ -391,7 +391,7 @@ run (char   *name,		/* I - Name of print program. */
        */
 
       if (!do_print_dialog (name))
-	return;
+	goto cleanup;
       break;
 
     case RUN_NONINTERACTIVE:
@@ -599,44 +599,34 @@ run (char   *name,		/* I - Name of print program. */
    */
   gimp_drawable_detach (drawable);
 
+
+ cleanup:
 #ifndef GIMP_1_0
   if (export == EXPORT_EXPORT)
     gimp_image_delete (image_ID);
 #endif
 }
 
-static void 
-init_gtk (void)
-{
-  gchar **argv;
-  gint argc;
-
-  argc = 1;
-  argv = g_new (gchar *, 1);
-  argv[0] = g_strdup ("print");
-  
-  gtk_init (&argc, &argv);
-  gtk_rc_parse (gimp_gtkrc ());
-}
-
-
 /*
  * 'do_print_dialog()' - Pop up the print dialog...
  */
 
-int
-do_print_dialog (char *proc_name)
+static gint
+do_print_dialog (gchar *proc_name)
 {
-  /*
-   * Initialize the program's display...
-   */
-  init_gtk ();
-  gdk_set_use_xshm (gimp_use_xshm());
+#ifdef GIMP_1_0
+  gchar **argv;
+  gint    argc;
 
-#ifdef SIGBUS
-  signal (SIGBUS, SIG_DFL);
+  argc    = 1;
+  argv    = g_new (gchar *, 1);
+  argv[0] = g_strdup ("print");
+
+  gtk_init (&argc, &argv);
+  gtk_rc_parse (gimp_gtkrc ());
+
+  gdk_set_use_xshm (gimp_use_xshm());
 #endif
-  signal (SIGSEGV, SIG_DFL);
 
   /*
    * Get printrc options...
@@ -789,6 +779,7 @@ printrc_load(void)
 #else
   filename = gimp_personal_rc_file ("printrc");
 #endif
+
 #ifdef __EMX__
   _fnslashify(filename);
 #endif
@@ -935,6 +926,7 @@ printrc_save(void)
 #else
   filename = gimp_personal_rc_file ("printrc");
 #endif
+
 #ifdef __EMX__
   _fnslashify(filename);
 #endif
@@ -990,11 +982,14 @@ compare_printers(plist_t *p1,	/* I - First printer to compare */
 static void
 get_system_printers(void)
 {
-  int	i;
-  char defname[17];
+  int   i;
+  char  defname[17];
 #if defined(LPC_COMMAND) || defined(LPSTAT_COMMAND)
-  FILE	*pfile;
-  char	line[129], name[17];
+  FILE *pfile;
+  char  line[129];
+#endif
+#if defined(LPSTAT_COMMAND)
+  char  name[17];
 #endif
 #ifdef __EMX__
   BYTE  pnum;
