@@ -52,6 +52,8 @@ my $funcs = { 'InputSlot' => { 'OPTCONSTRAINTS' => \&build_cons,
 			     'ENUMVALS' => \&build_ev },
 	      'DitherAlgorithm' => { 'OPTCONSTRAINTS' => \&build_cons,
 			     'ENUMVALS' => \&build_ev },
+	      'ImageOptimization' => { 'OPTCONSTRAINTS' => \&build_cons,
+			     'ENUMVALS' => \&build_ev },
 	      'Color' => { 'OPTCONSTRAINTS' => \&build_cons,
 			     'ENUMVALS' => \&build_ev },
 	      'Resolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
@@ -282,7 +284,7 @@ my $optiongroups = { 'PageSize' => 'General',
 		     'Resolution' => 'PrintoutMode',
 		     'Quality' => 'PrintoutMode',
 		     'Color' => 'PrintoutMode',
-		     'ImageType' => 'PrintoutMode',
+		     'ImageOptimization' => 'PrintoutMode',
 		     'DitherAlgorithm' => 'PrintoutMode',
 		     'Gamma' => 'Adjustment',
 		     'Density' => 'Adjustment',
@@ -1081,7 +1083,7 @@ sub getprintoutmode {
 	    # Do not use resolutions with less than 150 dpi in both
 	    # demensions.
 
-	    # VeryFast dithering, ImageType LineArt
+	    # VeryFast dithering, ImageOptimization LineArt
 
 	    if (($respersquareinch < $draftminres) ||
 		(($respersquareinch == $draftminres) && 
@@ -1109,7 +1111,7 @@ sub getprintoutmode {
 	    # unidirectional if possible, use 600x600 dpi for
 	    # Lexmark Z..
 
-	    # Adaptive Hybrid dithering, ImageType Photographs
+	    # Adaptive Hybrid dithering, ImageOptimization Photographs
 
 	    if ((($stpprn =~ /^lexmark\-z/) &&
 		 ($xres == 600) && ($yres == 600) && ($qualstr eq "uni")) ||
@@ -1133,7 +1135,7 @@ sub getprintoutmode {
 	    # unidirectional if possible, 
 	    # not "fol", "fourp", "hq", "hq2"
 
-	    # Adaptive Hybrid dithering, ImageType Photographs
+	    # Adaptive Hybrid dithering, ImageOptimization Photographs
 
 	    if (($respersquareinch > $highmaxres) ||
 		(($respersquareinch == $highmaxres) && 
@@ -1168,7 +1170,7 @@ sub getprintoutmode {
 
 	    # On Epsons: Maximum 1440x720, not "hq2".
 
-	    # Adaptive Hybrid dithering, ImageType Photographs
+	    # Adaptive Hybrid dithering, ImageOptimization Photographs
 
 	    if (($respersquareinch > $veryhighmaxres) ||
 		(($respersquareinch == $veryhighmaxres) && 
@@ -1200,7 +1202,7 @@ sub getprintoutmode {
 
 	    # On Epsons: Maximum 2880x720
 
-	    # EvenTone dithering, ImageType Photographs
+	    # EvenTone dithering, ImageOptimization Photographs
 
 	    if (($respersquareinch > $photomaxres) ||
 		(($respersquareinch == $photomaxres) && 
@@ -1241,7 +1243,7 @@ sub getprintoutmode {
 		"$modeinfo->{$m}{'yres'}DPI " .
 		"Quality=$modeinfo->{$m}{'quality'} " .
 		"DitherAlgorithm=$modeinfo->{$m}{'dither'} " .
-		"ImageType=$modeinfo->{$m}{'image'}";
+		"ImageOptimization=$modeinfo->{$m}{'image'}";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
 		# Color printer
 		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
