@@ -4,22 +4,32 @@
 </head>
 
 <body>
-<h2>Gimp print FAQ</h2>
+<h2>Gimp-Print FAQ</h2>
 
 <ol>
 
 <p><li><h3>Is it only for Gimp?</h3>
 
-<p>Gimp-print started out as a driver for The Gimp, the well known
-image manipulation program.  Early in development versions for
-Ghostscript and later CUPS were added.  The emphasis is still on
-quality color printing, though performance gets a lot of attention
-these days.
+<p>No, it can be used for many printing needs. Gimp-print started out
+as a driver for The Gimp, the well known image manipulation program.
+Early in development versions for Ghostscript and later CUPS were
+added.  The emphasis is still on quality color printing, though
+performance gets a lot of attention these days.
  
 <p><li><h3>I cannot install it, it complains about missing Gimp files</h3>
 
-<p>You need to have Gimp development files installed on your system.
-These are called gimp-devel-something.rpm on most systems.
+<ul>
+
+<p><li>If you have the Gimp installed on your system, you probably
+have the user package, but not the development package, installed.
+You will need to install the latter from your installation media; it's
+usually named gimp-devel.
+
+<p><li>If you don't have the Gimp installed on your system, you need
+to pass <tt>configure</tt> the option <tt>--with-gimp=no</tt>, so it
+won't try to look for the Gimp and fail.
+
+</ul>
 
 <p><li><h3>What is the difference between B/W, Line art, solid color and
 Photo mode (or ImageType in Ghostscript)?</h3>
@@ -31,7 +41,8 @@ printing.
 
 <p><li><h3>I selected my printer and it doesn't work at all</h3>
 
-<p>Please check your printing system (lp/lpr, etc.) configuration.
+<p>Please check your printing system (lpd, CUPS, LPRng, etc.)
+configuration.
 
 <p><li><h3>I selected the right printer and nonsense gets printed</h3>
 
@@ -45,9 +56,10 @@ what doesn't, file a bug report.
 <p>One common cause of this is not using "raw" mode when printing from
 the Gimp plugin.  Depending upon your printing system, you will need
 to use either -l (traditional BSD lpd), -oraw (CUPS lpr), or -d (most
-versions of System V lp).  Otherwise the printing system attempts to
-interpret the output as something else, and tries to apply a filter to
-it.
+versions of System V lp, including CUPS).  Otherwise the printing
+system attempts to interpret the output as something else, and tries
+to apply a filter to it to convert it to something else (usually
+PostScript).
   
 <p><li><h3>What's up with the HP Deskjet 1200?</h3>
 
@@ -83,7 +95,7 @@ voluminous output with little or no improvement in quality.
 
 <p><li><h3>How do I start setting options for Ghostscript?</h3>
 
-<p>Please see Ghost/README for more information.
+<p>Please see src/ghost/README for more information.
 
 <p><li><h3><tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:</h3>
 
@@ -97,5 +109,25 @@ Cannot read from /dev/lp0: Invalid argument
 
 <p>You need to rebuild your kernel with CONFIG_PRINTER_READBACK
 enabled.
+
+<p><li><h3>My USB-connected Epson Stylus printer won't work with
+{Free,Net,Open}BSD!</h3>
+
+<p>By default, the BSD device driver for the USB printer device (usually
+ulpt0) does a prime, or USB bus reset, when the device is opened.  This
+causes the printer to reset itself (one can hear the print head moving back
+and forth when this happens) and lose sync.  After this the printer
+won't go into graphics mode and instead spews characters all over you
+expensive photo paper.  This has been observed on the Stylus Photo
+870; it likely exists with other USB-connected Epson Stylus printers.
+
+<p>The fix is to use the "unlpt0" device instead of "ulpt0".  The driver
+doesn't perform the USB prime when unlpt is opened.  If this device
+doesn't exist on your system you can create it with 
+
+<p><pre>mknod unlpt0 c 113 64 root wheel</pre>
+
+<p>in the /dev directory.
+
 
 </body></html>
