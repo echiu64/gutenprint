@@ -191,6 +191,7 @@ static void gimp_file_ok_callback      (void);
 static void gimp_file_cancel_callback  (void);
 
 static void gimp_preview_update              (void);
+static void gimp_preview_expose              (void);
 static void gimp_preview_button_callback     (GtkWidget      *widget,
 					      GdkEventButton *bevent,
 					      gpointer        data);
@@ -392,7 +393,7 @@ create_preview(void)
   gtk_widget_show(GTK_WIDGET(event_box));
   gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET(event_box));
   gtk_signal_connect (GTK_OBJECT (preview), "expose_event",
-                      GTK_SIGNAL_FUNC (gimp_preview_update), NULL);
+                      GTK_SIGNAL_FUNC (gimp_preview_expose), NULL);
   gtk_signal_connect (GTK_OBJECT (preview), "button_press_event",
                       GTK_SIGNAL_FUNC (gimp_preview_button_callback), NULL);
   gtk_signal_connect (GTK_OBJECT (preview), "button_release_event",
@@ -1204,7 +1205,7 @@ create_image_settings_frame(void)
   gtk_widget_show(GTK_WIDGET(event_box));
   gtk_tooltips_set_tip(tooltips, event_box,
 		       "Optimize the output for the type of image being printed",
-		       "Optimize the output for the type of image being printed");		       
+		       "Optimize the output for the type of image being printed");
   gtk_box_pack_start (GTK_BOX (hbox), event_box, TRUE, TRUE, 0);
   gtk_widget_show (label);
 
@@ -2549,7 +2550,7 @@ draw_arrow(GdkWindow *w, GdkGC *gc,
       gdk_draw_line (w, gc, ox, oy - u, ox + u, oy);
       gdk_draw_line (w, gc, ox, oy - u, ox, oy + u);
     }
-}  
+}
 
 /*
  *  gimp_preview_update_callback() -
@@ -2559,12 +2560,14 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 {
   static GdkGC	*gc    = NULL;
   static GdkGC  *gcinv = NULL;
-  static GdkGC  *gcclear = NULL;
+  static GdkGC  *gcset = NULL;
   static gint opx = 0;
   static gint opy = 0;
+  static gint oph = 0;
+  static gint opw = 0;
   gint frame_is_clear = 0;
   int preview_was_valid = preview_valid;
-  
+
   gint preview_x = 1 + printable_left + preview_ppi * stp_get_left(*pv) / 72;
   gint preview_y = 1 + printable_top + preview_ppi * stp_get_top(*pv) / 72;
   gint preview_w = MAX (1, (preview_ppi * print_width) / 72 - 1);
@@ -2664,37 +2667,53 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
       gc = gdk_gc_new (preview->widget.window);
       gcinv = gdk_gc_new (preview->widget.window);
       gdk_gc_set_function (gcinv, GDK_INVERT);
-      gcclear = gdk_gc_new (preview->widget.window);
-      gdk_gc_set_function (gcclear, GDK_SET);
+      gcset = gdk_gc_new (preview->widget.window);
+      gdk_gc_set_function (gcset, GDK_SET);
     }
 
   if (!frame_valid)
     {
       gdk_window_clear (preview->widget.window);
+      /* draw paper frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  paper_left, paper_top,
+			  MAX(2, preview_ppi * paper_width / 72),
+			  MAX(2, preview_ppi * paper_height / 72));
+
+      /* draw printable frame */
+      gdk_draw_rectangle (preview->widget.window, gc, 0,
+			  printable_left, printable_top,
+			  MAX(2, preview_ppi * printable_width / 72),
+			  MAX(2, preview_ppi * printable_height / 72));
       frame_valid = 1;
       frame_is_clear = 1;
     }
-  /* draw paper frame */
-  /* We shouldn't have to redraw it, but otherwise it seems that we don't */
-  /* handle expose events correctly.  What do I know about gdk???!!! */
-  gdk_draw_rectangle (preview->widget.window, gc, 0,
-		      paper_left, paper_top,
-		      MAX(2, preview_ppi * paper_width / 72),
-		      MAX(2, preview_ppi * paper_height / 72));
 
-  /* draw printable frame */
-  gdk_draw_rectangle (preview->widget.window, gc, 0,
-		      printable_left, printable_top,
-		      MAX(2, preview_ppi * printable_width / 72),
-		      MAX(2, preview_ppi * printable_height / 72));
+  if (!frame_is_clear)
+    {
+      if (opx + opw <= preview_x || opy + oph <= preview_y ||
+	  preview_x + preview_w <= opx || preview_y + preview_h <= opy)
+	gdk_window_clear_area(preview->widget.window, opx, opy, opw, oph);
+      else
+	{
+	  if (opx < preview_x)
+	    gdk_window_clear_area(preview->widget.window,
+				  opx, opy, preview_x - opx, oph);
+	  if (opy < preview_y)
+	    gdk_window_clear_area(preview->widget.window,
+				  opx, opy, opw, preview_y - opy);
+	  if (opx + opw > preview_x + preview_w)
+	    gdk_window_clear_area(preview->widget.window,
+				  preview_x + preview_w, opy,
+				  (opx + opw) - (preview_x + preview_w), oph);
+	  if (opy + oph > preview_y + preview_h)
+	    gdk_window_clear_area(preview->widget.window,
+				  opx, preview_y + preview_h,
+				  opw, (opy + oph) - (preview_y + preview_h));
+	}
+    }
 
-  if (! frame_is_clear && !preview_was_valid)
-    gdk_window_clear_area(preview->widget.window,
-			  printable_left + 1, printable_top + 1,
-			  (preview_ppi * printable_width / 72) - 1,
-			  (preview_ppi * printable_height / 72) - 1);
-    
-  draw_arrow(preview->widget.window, gcclear, paper_left, paper_top, orient);
+  draw_arrow(preview->widget.window, gcset, paper_left, paper_top, orient);
 
   if (adjusted_thumbnail_bpp == 1)
     gdk_draw_gray_image (preview->widget.window, gc,
@@ -2705,61 +2724,21 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 			preview_x, preview_y, preview_w, preview_h,
 			GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
 
-  if (! frame_is_clear && preview_was_valid)
-    {
-      if (preview_x < opx)
-	{
-	  gdk_window_clear_area(preview->widget.window,
-				preview_x + preview_w, preview_y,
-				opx - preview_x, preview_h);
-	  if (preview_y < opy)
-	    gdk_window_clear_area(preview->widget.window,
-				  preview_x + preview_w,
-				  preview_y + preview_h,
-				  opx - preview_x,
-				  opy - preview_y);
-	  else if (opy < preview_y)
-	    gdk_window_clear_area(preview->widget.window,
-				  preview_x + preview_w,
-				  opy,
-				  opx - preview_x,
-				  preview_y - opy);
-	}
-      else if (preview_x > opx)
-	{
-	  gdk_window_clear_area(preview->widget.window, opx, preview_y,
-				preview_x - opx, preview_h);
-	  if (preview_y < opy)
-	    gdk_window_clear_area(preview->widget.window,
-				  opx,
-				  preview_y + preview_h,
-				  preview_x - opx,
-				  opy - preview_y);
-	  else if (opy < preview_y)
-	    gdk_window_clear_area(preview->widget.window,
-				  opx,
-				  opy,
-				  preview_x - opx,
-				  preview_y - opy);
-	}
-
-      if (preview_y < opy)
-	gdk_window_clear_area(preview->widget.window,
-			      preview_x, preview_y + preview_h,
-			      preview_w, opy - preview_y);
-      else if (preview_y > opy)
-	gdk_window_clear_area(preview->widget.window,
-			      preview_x, opy,
-			      preview_w, preview_y - opy);
-    }      
+  /* draw orientation arrow pointing to top-of-paper */
+  draw_arrow(preview->widget.window, gcinv, paper_left, paper_top, orient);
 
   opx = preview_x;
   opy = preview_y;
-
-  /* draw orientation arrow pointing to top-of-paper */
-  draw_arrow(preview->widget.window, gcinv, paper_left, paper_top, orient);
+  oph = preview_h;
+  opw = preview_w;
 }
 
+static void
+gimp_preview_expose(void)
+{
+  gimp_invalidate_frame();
+  gimp_preview_update();
+}
 
 static void
 gimp_preview_update (void)
