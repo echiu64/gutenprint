@@ -92,13 +92,48 @@ require('standard_html_header.php3');
  </p>
  <li>
  <h3>
+ I want to know more about the new printing system in Mac OS X Jaguar. How do
+ the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
+ </h3>
+ <p>
+ The best place to start is with the CUPS documentation. In particular, the <a
+ href= "http://www.cups.org/overview.html" >CUPS overview</a> will help you
+ understand how the filters are chained together. You'll find more filter
+ information <a href= "http://www.cups.org/sdd.html#3_7" >here</a>.
+ </p><p>
+ When printing, CUPS tries to string together a series of tools in order to
+ convert the submitted file to the format needed by a printer. In OS X the
+ files submitted are generally either PDF or PICT files with embedded
+ PostScript. When printing to a gimp-print driver, if the input file format is
+ PDF then the OS X PDF to raster filter is run and the raster data handed to
+ the gimp-print driver. If instead the input file format is PICT with
+ PostScript, then the OS X PICT to PostScript filter is run. In order to get
+ from PostScript to raster, the ESP GhostScript filter is run next in the chain
+ and then the raster data is handed to the gimp-printer.
+ </p><p>
+ So you have the following two chains:
+ </p>
+ <pre>
+ PDF file -> cgpdftoraster filter -> rastertoprinter filter -> printer
+
+ PICTwPS -> pictwpstops filter -> pstoraster (GhostScript) filter ->
+ rastertoprinter filter -> printer
+ </pre> 
+ </p><p>
+ The application determines which of these two paths are invoked. Most OS X
+ applications submit a PDF for printing. Certain PostScript centric programs
+ such as Adobe applications cause the second filter chain to run.
+ </p>
+ <li>
+ <h3>
  I cannnot print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </h3>
  <p>  
- That driver is currently busted. Keep checking the webpage for the next
- available update to Gimp-Print.
+ That driver is broken in the 4.2.2 release. Try using the 4.2.3-pre1 release,
+ but please note that the driver is not fully tested or optimized, so your
+ output quality may be less than you expect. Keep checking the Gimp-Print web
+ site for newer releases that may offer more improvements for this driver.  
  </p>
-
  <li>
  <h3>
  What files are installed by the Gimp-Print installer for Jaguar and
