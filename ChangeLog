@@ -1,3 +1,63 @@
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	configure.in
+	
+	Release 3.1.3
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	RELNOTES
+		print_gimp.h
+	
+	Release 3.1.2
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Adaptive algorithms.  These are the normal random and hybrid Floyd-Steinberg
+	algorithms except in very pale regions, where ordered dithering is used to
+	improve smoothness.
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	Makefile.am
+		printdefy.y
+		print-escp2.c
+		pcl-unprint.c
+		escp2-weavetest.c
+	
+	Code cleanup
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	Ghost/README
+		Ghost/gs-stp.pdq
+		Ghost/gdevstp.c
+	
+	Bug fixes to the driver, so it should now work correctly.
+	
+	Update documentation.
+	
+	Updated the pdq description.
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	ChangeLog
+		Ghost/gdevstp.c
+		Ghost/README
+		print-dither.c
+	
+	Break up ordered dither pattern a bit.
+	
+	Fix Ghostscript driver slightly
+	
+2000-04-22	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Try to vary the randomness -- more random at paler colors.
+	
 2000-04-20	<rlk@sourceforge.net>
 
 	Files:	print-canon.c
