@@ -62,7 +62,7 @@ cupsexec_filter_PROGRAMS = rastertogimpprint.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRIN
 endif
 
 if BUILD_GENPPD_STATIC
-STATIC_LDOPTS=-static
+STATIC_LDOPTS=-static -export-dynamic
 endif
 
 cups_calibrate_SOURCES = cups-calibrate.c
