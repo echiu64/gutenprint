@@ -594,17 +594,20 @@ static simple_dither_range_t standard_dither_ranges[] =
 
 static simple_dither_range_t multishot_variable_dither_ranges[] =
 {
-  { 0.15,  0x1, 0, 1 },
-/*  { 0.222, 0x2, 0, 2 }, */
+  { 0.1097, 0x1, 0, 1 },
+  { 0.227,  0x2, 0, 2 },
 /*  { 0.333, 0x3, 0, 3 }, */
-  { 0.45,  0x1, 1, 1 },
-  { 0.68,   0x2, 1, 2  },
-  { 1.0,   0x3, 1, 3 }
+  { 0.28,   0x1, 1, 1 },
+  { 0.58,   0x2, 1, 2 },
+  { 0.85,   0x3, 1, 3 },
+  { 1.0,    0x3, 1, 3 }
 };
 
 static simple_dither_range_t multishot_standard_dither_ranges[] =
 {
-  { 0.45,  0x1, 1, 1 },
+  { 0.28,  0x1, 1, 1 },
+  { 0.58,  0x2, 1, 2 },
+  { 0.85,  0x3, 1, 3 },
   { 1.0,   0x3, 1, 3 }
 };
 
