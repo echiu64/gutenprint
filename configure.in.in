@@ -410,9 +410,13 @@ fi
 AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
 if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_BIN="libgimpprint.la"
-  MAIN_MAIN="gimpprint-config.1"
+  MAIN_DAT="gimpprint.m4"
+  MAIN_MAN="gimpprint-config.1"
   LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
   GIMP_PRINT_H="gimp-print.h"
+else
+  AM_PATH_GIMPPRINT
+  LIBGIMPPRINT_LIBS="${GIMPPRINT_LIBS}"
 fi
 if test x${BUILD_TEST} = xyes ; then
   TEST_BIN="escp2-weavetest printer_options unprint escp2-unprint pcl-unprint"
@@ -502,6 +506,7 @@ AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(LTLIBOBJS)
 AC_SUBST(LTALLOCA)
 AC_SUBST(MAIN_BIN)
+AC_SUBST(MAIN_DAT)
 AC_SUBST(MAIN_MAN)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)

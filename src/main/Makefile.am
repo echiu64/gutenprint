@@ -60,7 +60,7 @@ libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
 ##	-rpath $(libdir)
 
 m4datadir = $(datadir)/aclocal
-m4data_DATA = gimpprint.m4
+m4data_DATA = @MAIN_DAT@
 
 $(srcdir)/print-util.c: print-printers.c
 

@@ -9,13 +9,13 @@ AC_DEFUN(AM_PATH_GIMPPRINT,
 [dnl 
 dnl Get the cflags and libraries from the gimpprint-config script
 dnl
-AC_ARG_WITH(gimpprint-prefix,[  --with-gimpprint-prefix=PFX
-                          Prefix where gimpprint is installed (optional)],
+AC_ARG_WITH(gimpprint-prefix,[  --with-gimpprint-prefix=PFX Prefix where GIMP-PRINT is installed (optional)],
             gimpprint_config_prefix="$withval", gimpprint_config_prefix="")
-AC_ARG_WITH(gimpprint-exec-prefix,[  --with-gimpprint-exec-prefix=PFX
-                          Exec prefix where gimpprint is installed (optional)],
+AC_ARG_WITH(gimpprint-exec-prefix,[  --with-gimpprint-exec-prefix=PFX Exec prefix where GIMP-PRINT is installed
+                          (optional)],
             gimpprint_config_exec_prefix="$withval", gimpprint_config_exec_prefix="")
-AC_ARG_ENABLE(gimpprinttest, [  --disable-gimpprinttest Do not try to compile and run a test gimpprint program],
+AC_ARG_ENABLE(gimpprinttest, [  --disable-gimpprinttest Do not try to compile and run a test GIMP-PRINT
+                          program],
 		    , enable_gimpprinttest=yes)
 
   if test x$gimpprint_config_exec_prefix != x ; then
