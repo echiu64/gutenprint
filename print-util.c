@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.84  2000/03/05 19:51:24  rlk
+ *   Create list of printers externally
+ *
  *   Revision 1.83  2000/03/03 00:11:20  rlk
  *   Silly bug in rgb_to_gray
  *
@@ -1090,124 +1093,15 @@ default_media_size(int  model,		/* I - Printer model */
     }
 }
 
-#ifndef ESCP2_GHOST
-const
-#endif
-static
-printer_t	printers[] =	/* List of supported printer types */
-{
-#ifndef ESCP2_GHOST
-  { "PostScript Level 1",	"ps",		1,	0,	1.000,	1.000,
-    ps_parameters,	ps_media_size,	ps_imageable_area,	ps_print },
-  { "PostScript Level 2",	"ps2",		1,	1,	1.000,	1.000,
-    ps_parameters,	ps_media_size,	ps_imageable_area,	ps_print },
-
-  { "HP DeskJet 500, 520",	"pcl-500",	0,	500,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 500C, 540C",	"pcl-501",	1,	501,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 550C, 560C",	"pcl-550",	1,	550,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 600/600C",	"pcl-600",	1,	600,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 600 series",	"pcl-601",	1,	601,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 800 series",	"pcl-800",	1,	800,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 1100C, 1120C",	"pcl-1100",	1,	1100,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP DeskJet 1200C, 1600C",	"pcl-1200",	1,	1200,	0.818,	0.786,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet II series",	"pcl-2",	0,	2,	1.000,	0.596,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet III series",	"pcl-3",	0,	3,	1.000,	0.596,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet 4 series",	"pcl-4",	0,	4,	1.000,	0.615,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet 4V, 4Si",	"pcl-4v",	0,	5,	1.000,	0.615,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet 5 series",	"pcl-5",	0,	4,	1.000,	0.615,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet 5Si",		"pcl-5si",	0,	5,	1.000,	0.615,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-  { "HP LaserJet 6 series",	"pcl-6",	0,	4,	1.000,	0.615,
-    pcl_parameters,	default_media_size,	pcl_imageable_area,	pcl_print },
-#endif
-
-  { "EPSON Stylus Color",	"escp2",	1,	0,	0.597,	0.568,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color Pro",	"escp2-pro",	1,	1,	0.597,	0.631,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color Pro XL","escp2-proxl",	1,	1,	0.597,	0.631,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 1500",	"escp2-1500",	1,	2,	0.597,	0.631,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 400",	"escp2-400",	1,	1,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 440",	"escp2-440",	1,	10,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 460",	"escp2-460",	1,	10,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 500",	"escp2-500",	1,	1,	0.597,	0.631,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 600",	"escp2-600",	1,	3,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 640",	"escp2-640",	1,	11,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 740",	"escp2-740",	1,	12,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 800",	"escp2-800",	1,	4,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 850",	"escp2-850",	1,	5,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 860",	"escp2-860",	1,	16,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 900",	"escp2-900",	1,	13,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 1160",	"escp2-1160",	1,	17,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 1520",	"escp2-1520",	1,	6,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Color 3000",	"escp2-3000",	1,	6,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 700",	"escp2-700",	1,	7,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo EX",	"escp2-ex",	1,	8,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 750",	"escp2-750",	1,	14,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 870",	"escp2-870",	1,	14,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 1200",	"escp2-1200",	1,	15,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo 1270",	"escp2-1270",	1,	15,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-  { "EPSON Stylus Photo",	"escp2-photo",	1,	9,	0.585,	0.646,
-    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
-
-#ifndef ESCP2_GHOST
-  { "CANON BJC 1000",           "bjc-1000",     1,      1000,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 2000",           "bjc-2000",     1,      2000,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 3000",           "bjc-3000",     1,      3000,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 6000",           "bjc-6000",     1,      6000,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 6100",           "bjc-6100",     1,      6100,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 7000",           "bjc-7000",     1,      7000,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-  { "CANON BJC 7100",           "bjc-7100",     1,      7100,   1.0,    0.8,
-    canon_parameters,   default_media_size,     canon_imageable_area,   canon_print },
-#endif
-};
-
+/*
+ * The list of printers has been moved to printers.c
+ */
+#include "print-printers.c"
 
 int
 known_printers(void)
 {
-  return sizeof(printers) / sizeof(printer_t);
+  return printer_count;
 }
 
 const printer_t *

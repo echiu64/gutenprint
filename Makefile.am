@@ -4,7 +4,7 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint escp2-weavetest pcl-unprint
+bin_PROGRAMS = unprint escp2-weavetest pcl-unprint printdef
 
 print_SOURCES = \
 	print-canon.c   \
@@ -14,7 +14,17 @@ print_SOURCES = \
 	print-ps.c	\
 	print-util.c	\
 	print.c		\
-	print.h   
+	print.h
+
+print-util.c: print-printers.c
+
+print-printers.c: printdef printers.xml
+	./printdef < printers.xml > print-printers.c
+
+printdef_SOURCES = printdefl.l printdefy.y printdef.h
+
+LFLAGS = -i
+YFLAGS = -d
 
 unprint_SOURCES = unprint.c
 escp2_weavetest_SOURCES = escp2-weavetest.c
@@ -35,10 +45,11 @@ AM_CPPFLAGS = \
 
 print_LDADD = $(GIMP_LIBS)
 
-EXTRA_DIST=parse-escp2 RELNOTES \
+EXTRA_DIST=print-printers.c parse-escp2 RELNOTES \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
-	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h
+	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
+	Ghost/gdevstp-printers.c
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
@@ -63,10 +74,10 @@ files:
 	  echo $$p; \
 	done
 
-ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c) Ghost/gdevstp-print.h
+ghost: $(addprefix Ghost/gdevstp-, dither.c escp2.c util.c printers.c) Ghost/gdevstp-print.h
 
 Ghost/gdevstp-%: print-% Makefile
-	sed 's/print.h/gdevstp-print.h/' $< > $@
+	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@
 
 Ghost/gdevstp-print.h: print.h Makefile
-	sed 's/print.h/gdevstp-print.h/' $< > $@
+	sed -e 's/print.h/gdevstp-print.h/' -e 's/print-printers.c/gdevstp-printers.c/' $< > $@

@@ -149,10 +149,7 @@ typedef struct
 {
   char	*long_name,			/* Long name for UI */
 	*driver;			/* Short name for printrc file */
-  int	color,				/* TRUE if supports color */
-	model;				/* Model number */
-  float	gamma,				/* Gamma correction */
-	density;			/* Ink "density" or black level */
+  int	model;				/* Model number */
   char	**(*parameters)(int model, char *ppd_file, char *name, int *count);
 					/* Parameter names */
   void	(*media_size)(int model, char *ppd_file, char *media_size,
@@ -162,7 +159,11 @@ typedef struct
   /* Print function */
   void	(*print)(int model, int copies, FILE *prn, Image image,
 		 unsigned char *cmap, vars_t *v);
+  vars_t printvars;
 } printer_t;
+
+extern const printer_t printers[];
+extern const int printer_count;
 
 typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
 			     int bpp, unsigned char *cmap, vars_t *vars);
@@ -224,21 +225,22 @@ extern void	default_media_size(int model, char *ppd_file, char *media_size,
 		                   int *width, int *length);
 
 
-extern char	**canon_parameters(int model, char *ppd_file, char *name,
-		                   int *count);
-extern void	canon_imageable_area(int model, char *ppd_file,
-				     char *media_size, int *left, int *right,
-				     int *bottom, int *top);
-extern void	canon_print(int model, int copies, FILE *prn,
-			    Image image, unsigned char *cmap, vars_t *v);
-
-
 extern char	**escp2_parameters(int model, char *ppd_file, char *name,
 		                   int *count);
 extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
 extern void	escp2_print(int model, int copies, FILE *prn,
+			    Image image, unsigned char *cmap, vars_t *v);
+
+
+#ifndef ESCP2_GHOST
+extern char	**canon_parameters(int model, char *ppd_file, char *name,
+		                   int *count);
+extern void	canon_imageable_area(int model, char *ppd_file,
+				     char *media_size, int *left, int *right,
+				     int *bottom, int *top);
+extern void	canon_print(int model, int copies, FILE *prn,
 			    Image image, unsigned char *cmap, vars_t *v);
 
 
@@ -260,6 +262,18 @@ extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 				  int *top);
 extern void	ps_print(int model, int copies, FILE *prn,
 			 Image image, unsigned char *cmap, vars_t *v);
+#else
+#define canon_parameters NULL
+#define canon_imageable_area NULL
+#define canon_print NULL
+#define pcl_parameters NULL
+#define pcl_imageable_area NULL
+#define pcl_print NULL
+#define ps_parameters NULL
+#define ps_imageable_area NULL
+#define ps_print NULL
+#define ps_media_size NULL
+#endif
 
 int		      known_papersizes(void);
 const papersize_t    *get_papersizes(void);

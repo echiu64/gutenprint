@@ -54,8 +54,9 @@ Installation and Compilation:
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
  - copy "gdevstp-escp2.c", "gdevstp-print.h", "gdevstp-util.c",
-   "gdevstp-dither.c" "gdevstp.c" and "gdevstp.h" to the "src/"
-   subdirectory of ghostscript`s distribution
+   "gdevstp-dither.c", "gdevstp-printers.c, "gdevstp.c" and
+   "gdevstp.h" to the "src/" subdirectory of ghostscript`s
+   distribution.
  - edit the file "contrib.mak" in the "src/" subdirectory by adding
    the contents of "contrib.mak.addon"
  - add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"

@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.1.1 - 05 Mar 2000"
+#define PLUG_IN_VERSION		"3.1.2 - 05 Mar 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>
@@ -670,8 +670,8 @@ run(char   *name,		/* I - Name of print program. */
       {
 	Gimp_Image_t image;
 	image.drawable = drawable;
-	vars.density *= current_printer->density;
-	compute_lut(current_printer->gamma, gimp_gamma(), &vars);
+	vars.density *= current_printer->printvars.density;
+	compute_lut(current_printer->printvars.gamma, gimp_gamma(), &vars);
 	/*
 	 * Is the image an Indexed type?  If so we need the colormap...
 	 */

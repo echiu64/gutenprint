@@ -43,7 +43,7 @@ int mylineno = 1;
 
 digit		[0-9]
 integer		[-+]?{digit}+
-float		[-+]?{digit}+(\.{digit})?([eE][-+]?{digit}+)?
+float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
 class		[a-zA-Z][a-zA-Z0-9_]+
 string		[\"][^\"]+[\"]
 ws		[ \t]+
