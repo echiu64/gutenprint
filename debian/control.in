@@ -9,7 +9,7 @@ Package: gimp-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp (>= 2.0.4-1)
 Suggests: gutenprint-doc (>= ${Source-Version}), gutenprint-locales (>= ${Source-Version})
-Description: The Print plugin for the GIMP
+Description: print plugin for the GIMP
  This package includes the Print plugin for the GIMP.
  .
  This is Gutenprint version #UPSTREAM_VERSION#, a beta release
@@ -29,7 +29,7 @@ Section: graphics
 Depends: ${shlibs:Depends}, ${perl:Depends}, libperlmenu-perl, cupsys (>= 1.1.4) | cups (>= 1.1.4)
 Recommends: gs-esp (>= 7.05.2-1) | gs-gpl (>= 8.01-1) | postscript-viewer
 Suggests: gutenprint-doc (>= ${Source-Version}), gutenprint-locales (>= ${Source-Version})
-Description: Gutenprint printer drivers for CUPS
+Description: printer drivers for CUPS
  This package includes a CUPS driver based on Gutenprint.
  .
  The CUPS drivers contain all of the files needed to support
@@ -57,7 +57,7 @@ Provides: libgutenprint-dev
 Conflicts: libgutenprint-dev
 Replaces: libgutenprint-dev
 Suggests: libgutenprint#LIBRARY_VERSION#-doc (= ${Source-Version})
-Description: Development files for the Gutenprint printer driver library
+Description: development files for the Gutenprint printer driver library
  This package contains the header files for the Gutenprint library,
  along with a static version of libgutenprint.
  .
@@ -79,7 +79,7 @@ Architecture: all
 Section: doc
 Replaces: libgutenprint-doc
 Suggests: libgutenprint#LIBRARY_VERSION#-dev (= ${Source-Version})
-Description: Documentation for the Gutenprint printer driver library
+Description: documentation for the Gutenprint printer driver library
  This package contains lots of info-files, DVI docs and other
  documentation about the Gutenprint library for photo-quality
  printing.
@@ -102,7 +102,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
 Suggests: gutenprint-locales (>= ${Source-Version})
-Description: The Gutenprint printer driver library
+Description: runtime for the Gutenprint printer driver library
  This package includes the Gutenprint shared library, needed to
  run programs using Gutenprint drivers.
  .
@@ -124,7 +124,7 @@ Provides: libgutenprintui-dev
 Conflicts: libgutenprintui-dev
 Replaces: libgutenprintui-dev
 Suggests: libgutenprint#LIBRARY_VERSION#-doc (= ${Source-Version})
-Description: Development files for the Gutenprint printer driver user interface library
+Description: development files for the Gutenprint printer driver user interface library
  This package contains the header files for the libgutenprintui
  library, along with a static version of libgutenprintui.
  libgutenprintui contains GTK+ widgets which may be used for print
@@ -148,7 +148,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
 Recommends: gutenprint-locales (>= ${Source-Version})
-Description: The Gutenprint printer driver user interface library
+Description: runtime for the Gutenprint printer driver user interface library
  This package includes the libgutenprintui library.  libgutenprintui
  contains GTK+ widgets which may be used for print dialogs etc. for
  use with libgutenprint.
@@ -171,7 +171,7 @@ Provides: libgutenprintui2-dev
 Conflicts: libgutenprintui2-dev
 Replaces: libgutenprintui2-dev
 Suggests: libgutenprint#LIBRARY_VERSION#-doc (= ${Source-Version})
-Description: Development files for the Gutenprint printer driver user interface library
+Description: development files for the Gutenprint printer driver user interface library
  This package contains the header files for the libgutenprintui
  library, along with a static version of libgutenprintui.
  libgutenprintui contains GTK+ widgets which may be used for print
@@ -195,7 +195,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}
 Recommends: gutenprint-locales (>= ${Source-Version})
-Description: The Gutenprint printer driver user interface library
+Description: runtime for the Gutenprint printer driver user interface library
  This package includes the libgutenprintui library, necessary to run
  gimp-print.  libgutenprintui contains GTK+ widgets which may be
  used for print dialogs etc. for use with libgutenprint.
@@ -214,7 +214,7 @@ Package: gutenprint-locales
 Architecture: all
 Section: libs
 Replaces: libgutenprint1 (<= 4.2.0-1)
-Description: Locale data files for Gutenprint
+Description: locale data files for Gutenprint
  This package contains the i18n files of Gutenprint, used by
  libgutenprint#LIBRARY_VERSION#, cupsys-driver-gutenprint and
  escputil.  It is also used by the GIMP Print plugin.
@@ -236,7 +236,7 @@ Package: gutenprint-doc
 Architecture: all
 Section: doc
 Suggests: cupsys-driver-gutenprint (>= ${Source-Version}), foomatic-db-gutenprint (>= ${Source-Version}), gimp-print (>= ${Source-Version}), ijsgutenprint (>= ${Source-Version})
-Description: Users' Guide for Gutenprint and CUPS
+Description: users' guide for Gutenprint and CUPS
  This package contains a user guide for programs using the
  Gutenprint library for photographic quality printing.  Currently
  this covers using the Print plugin for the GIMP and the Common Unix
@@ -260,7 +260,7 @@ Architecture: any
 Section: utils
 Depends: ${shlibs:Depends}
 Suggests: gutenprint-locales (>= ${Source-Version})
-Description: A maintenance utility for Epson Stylus printers
+Description: maintenance utility for Epson Stylus printers
  escputil is a utility to clean and align the heads of Epson Stylus
  printers.  It can also check the current ink levels in the printer.
  .
@@ -278,7 +278,7 @@ Package: ijsgutenprint
 Architecture: any
 Section: text
 Depends: ${shlibs:Depends}, gs (>= 6.53) | gs-esp (>= 6.53) | gs-aladdin (>= 7.04)
-Description: Inkjet Server - Ghostscript driver for Gutenprint
+Description: inkjet server - Ghostscript driver for Gutenprint
  This package contains the ijsgutenprint binary which provides
  Ghostscript with a Gutenprint driver, including all printers
  supported by Gutenprint.
