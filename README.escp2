@@ -305,14 +305,24 @@ This is a list of all remote commands we have seen:
    * NC BC=2 00 00                   print a nozzle check pattern
 
    * VI BC=2 00 00                   on my 740, prints the following:
-                                          W01286 I02382\n
+                                          W01286 I02382\r\n
                                      probably "version information"
 
-   * LD BC=0                         Load printer defaults from NVRAM,
-				     DIP switches, and/or ROM.  This
+   * AI BC=3 00 00 00		     Prints a "printer ID".  On one 870,
+				     prints the following:
+					  51-51-50-51-49-48\r\n
+				     The Windows driver has a text entry
+				     field where this number can be
+				     entered, but its purpose is unknown.
+
+   * LD BC=0			     Load printer defaults from NVRAM,
+				     DIP switches, and/or ROM.	This
 				     apparently does not load factory
 				     defaults per se, but any settings
-				     that are saved.
+				     that are saved.  This is commonly
+				     used right at the end of each
+				     print job after the "ESC @" printer
+				     reset command.
 
    * CH BC=2 00 00                   perform a head cleaning cycle
 
@@ -341,19 +351,65 @@ This is a list of all remote commands we have seen:
 				     of digits are hexadecimal
 				     representations of percent.
 
+The following two commands have been observed on an STP 870.
+
+   * IR BC=2 00 xx		     Function unknown.	This command has
+				     been observed on an STP 870 with
+				     xx=03 at the start of a job and
+				     xx=02 at the end of a job (where
+				     it is followed by an LD command).
+				     When in roll mode, the values change
+				     to xx=01 at the start of a job and
+				     xx=00 at the end of a job.
+
+   * FP BC=3 00 xx yy		     xx=00 and yy=00 selects the
+				     printer's normal left margin
+				     (about 3mm).  xx=0xb0 and yy=0xff
+				     selects zero-margin mode, where the
+				     left-most print position is shifted
+				     to a point about 0.1" to the left
+				     of the left-hand edge of the paper,
+				     allowing printing up to (and off)
+				     the left-hand edge of the paper.
+
 The commands below are partially documented in the Stylus Pro 9000
 manual.  Much of this information is interpreted; none is tested.
 
-   * SN BC=3 00 xx yy		     Select Mechanism Sequence.  xx
-				     controls which sub-operation is
-				     performed.  xx=00 selects the
-				     "Feed paper sequence setting"; yy
-				     can take on values of either 00
-				     or 01.  01 appears to be the one
-				     most commonly set by Epson
-				     drivers.  xx=01 controls the
-				     platen gap setting; yy=0 is the
-				     default, yy=01 is "high".
+   * SN BC=3 00 xx yy		     Select Mechanism Sequence.
+				     xx controls which sub-operation
+				     is performed.
+
+				     xx=00 selects the "Feed paper
+				     sequence setting"; yy can take
+				     on values of either 00 or 01.
+				     01 appears to be the one most
+				     commonly set by Epson drivers.
+				     On a STP 870, the following values
+				     of yy have been observed:
+				     01 when printing on "plain paper"
+				     03 for "photo quality glossy film"
+					or "ink jet transparencies"
+				     06 for "matte paper - heavyweight"
+				     07 for "360dpi ink jet paper" or
+					"photo quality ink jet paper"
+				     08 for "photo paper" or "premium
+					glossy photo paper"
+				     Experimentation suggests that this
+				     setting changes details of how the
+				     printer's cut sheet feeder works,
+				     presumably to tune it for different
+				     types of paper.
+
+				     xx=01 controls the platen gap
+				     setting; yy=00 is the default,
+				     yy=01 is "high".
+
+				     xx=02 has been observed on the STP
+				     870, where yy=01 when printing on
+				     "plain paper", "360dpi ink jet
+				     paper" or "ink jet transparencies",
+				     and yy=00 for all other paper
+				     type settings.
 
    * PP BC=3 00 xx yy                Set Paper Path.  xx=2 indicates
 				     manual feed, xx=3 is for roll
@@ -411,9 +467,9 @@ manual.  Much of this information is interpreted; none is tested.
 				     vertical trim lines at the left
 				     and right margins.
 
-				     On a Stylus Color 3000, the value
-				     0x5 was observed where the 0x14
-				     is listed.
+				     On a Stylus Color 3000 and a Stylus
+				     Photo 870, the value 0x5 was observed
+				     where the 0x14 is listed.
 
    * PH BC=2 00 xx		     Select Paper Thickness.  Set the
 				     paper thickness in .1 mm units.
@@ -425,13 +481,21 @@ manual.  Much of this information is interpreted; none is tested.
 				     mm"), the platen gap is set high
 				     irrespective of the SN command.
 
-   * PM BC=2 00	00		     Function unknown.  Used on the
-				     STC 3000 at least when using roll
-				     feed.
+   * PM BC=2 00 00		     Function unknown.	Used on the STC
+				     3000 at least when using roll feed,
+				     and on the STP 870 in all print
+				     files analysed to date.
 
    * ST BC=2 00 01		     Function unknown.  Used on the
 				     STC 3000 at least when using roll
 				     feed.
+
+				     Epson's STP 750/1200 programming
+				     guide refers to the ST command
+				     as "Set printer state reply".
+				     Perhaps it instructs the printer
+				     to send back periodic ink status
+				     reports to the host.
 
    * SM BC=2 00 02		     Function unknown.  Used on the
 				     STC 3000 at least when using roll
@@ -468,3 +532,39 @@ feed is (with byte count omitted)
      EX 00 00 00 00 05 01
      ST 00 01
      SM 00 02
+
+The sequence used by the STP 870 to print on plain paper is
+
+     PM 00 00
+     IR 00 03
+     SN 00 00 01
+     SN 00 01 00
+     SN 00 02 01
+     EX 00 00 00 00 05 00
+     FP 00 00 00
+
+and the job finishes with
+
+     IR 00 02
+     LD
+
+For different paper type settings on the STP 870, the arguments to
+SN vary.  The arguments to the first and third SN commands are as
+outlined in the description of the SN command above; the arguments to the
+second ("platten gap") are "00 01 01" for thick papers ("matte paper -
+heavyweight", "photo paper" and "premium glossy photo paper") and "00
+01 00" for all others.
+
+For roll-mode printing, the STP 870's sequence changes as follows.
+IR's arguments become "00 01" in the header, and "00 00" after the job,
+and EX's last argument changes from 00 to 01.
+
+For zero-margin printing on the STP 870, the arguments to FP become
+"00 0xb0 0xff".  This moves the origin about 5.5mm to the left, to
+a point one tenth of an inch to the left of the left-hand edge of the
+paper, allowing printing right up to (and beyond) the edge of the paper.
+Some printers (at least the STP 870) include white absorbent pads at the
+left margin position and other positions (89mm and 100mm on the STP 870)
+to soak up ink which misses the edge of the paper.  Printing off the edge
+of paper of a width not aligned with a pad could result in making a mess
+of the inside of the printer and ink getting on the reverse of the paper.
