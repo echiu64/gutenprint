@@ -33,11 +33,6 @@
  * black and white).
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <gimp-print/gimp-print.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -72,6 +67,7 @@ static stp_image_t theImage =
   Image_progress_conclude,
   NULL
 };
+stp_vars_t tv;
 
 double global_c_level = 1.0;
 double global_c_gamma = 1.0;
@@ -204,8 +200,19 @@ main(int argc, char **argv)
   int left, right, top, bottom;
   int x, y;
   int width, height;
+  int retval;
+  const char **parameters;
+  int count;
+  int i;
 
-  int retval = yyparse();
+  stp_init();
+  tv = stp_allocate_vars();
+  stp_set_outfunc(tv, writefunc);
+  stp_set_errfunc(tv, writefunc);
+  stp_set_outdata(tv, stdout);
+  stp_set_errdata(tv, stderr);
+
+  retval = yyparse();
   if (retval)
     return retval;
 
@@ -250,7 +257,7 @@ main(int argc, char **argv)
 	  global_c_level = strtod(optarg, 0);
 	  break;
 	case 'd':
-	  dither_algorithm = c_strdup(optarg);
+	  stp_set_parameter(tv, "DitherAlgorithm", optarg);
 	  break;
 	case 'e':
 	  density = strtod(optarg, 0);
@@ -259,7 +266,7 @@ main(int argc, char **argv)
 	  do_help();
 	  break;
 	case 'i':
-	  ink_type = c_strdup(optarg);
+	  stp_set_parameter(tv, "InkType", optarg);
 	  break;
 	case 'm':
 	  global_m_level = strtod(optarg, 0);
@@ -274,19 +281,19 @@ main(int argc, char **argv)
 	  noblackline = 1;
 	  break;
 	case 'r':
-	  resolution = c_strdup(optarg);
+	  stp_set_parameter(tv, "Resolution", optarg);
 	  break;
 	case 's':
-	  media_source = c_strdup(optarg);
+	  stp_set_parameter(tv, "InputSlot", optarg);
 	  break;
 	case 't':
-	  media_type = c_strdup(optarg);
+	  stp_set_parameter(tv, "MediaType", optarg);
 	  break;
 	case 'y':
 	  global_y_level = strtod(optarg, 0);
 	  break;
 	case 'z':
-	  media_size = c_strdup(optarg);
+	  stp_set_parameter(tv, "PageSize", optarg);
 	  break;
 	default:
 	  fprintf(stderr, "Unknown option '-%c'\n", c);
@@ -294,6 +301,8 @@ main(int argc, char **argv)
 	  break;
 	}
     }
+  v = stp_allocate_vars();
+  the_printer = stp_get_printer_by_driver(printer);
   if (!printer ||
       ink_limit <= 0 || ink_limit > 1.0 ||
       levels < 1 || levels > 4096 ||
@@ -304,9 +313,6 @@ main(int argc, char **argv)
       xtop + vsize > 1 || xleft + hsize > 1 ||
       hsize < 0 || hsize > 1 || vsize < 0 || vsize > 1)
     do_help();
-  stp_init();
-  v = stp_allocate_vars();
-  the_printer = stp_get_printer_by_driver(printer);
   if (!the_printer)
     {
       the_printer = stp_get_printer_by_long_name(printer);
@@ -329,18 +335,11 @@ main(int argc, char **argv)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
   stp_set_density(v, density);
-  if (resolution)
-    stp_set_resolution(v, resolution);
-  if (ink_type)
-    stp_set_ink_type(v, ink_type);
-  if (media_type)
-    stp_set_media_type(v, media_type);
-  if (media_source)
-    stp_set_media_source(v, media_source);
-  if (media_size)
-    stp_set_media_size(v, media_size);
-  if (dither_algorithm)
-    stp_set_dither_algorithm(v, dither_algorithm);
+  
+  parameters = stp_printer_list_parameters(the_printer, v, &count);
+  for (i = 0; i < count; i++)
+    if (strlen(stp_get_parameter(tv, parameters[i])))
+      stp_set_parameter(v, parameters[i],stp_get_parameter(tv,parameters[i]));
 
   /*
    * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
@@ -351,7 +350,7 @@ main(int argc, char **argv)
   else
     stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
-  pt = stp_get_papersize_by_name(stp_get_media_size(v));
+  pt = stp_get_papersize_by_name(stp_get_parameter(v, "PageSize"));
   if (!pt)
     {
       fprintf(stderr, "Papersize %s unknown\n", media_size);

@@ -136,6 +136,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   const char		*val;		/* CUPS option value */
   int			num_res;	/* Number of printer resolutions */
   stp_param_t		*res;		/* Printer resolutions */
+  int			i;
   float			stp_gamma,	/* STP options */
 			stp_brightness,
 			stp_cyan,
@@ -404,22 +405,29 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  break;
     }
 
-    if (cups.header.cupsRowStep >= stp_dither_algorithm_count())
+    res = stp_printer_get_parameters(printer, v, "DitherAlgorithm", &num_res);
+
+    if (cups.header.cupsRowStep >= num_res)
       fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
     else
-      stp_set_dither_algorithm(v,
-                               stp_dither_algorithm_name(cups.header.cupsRowStep));
+      stp_set_parameter(v,"DitherAlgorithm",res[cups.header.cupsRowStep].name);
+    for (i = 0; i < num_res; i++)
+      {
+	free((void *)res[i].name);
+	free((void *)res[i].text);
+      }
+    free(res);
 
-    stp_set_media_source(v, cups.header.MediaClass);
-    stp_set_media_type(v, cups.header.MediaType);
-    stp_set_ink_type(v, cups.header.OutputType);
+    stp_set_parameter(v, "InputSlot", cups.header.MediaClass);
+    stp_set_parameter(v, "MediaType", cups.header.MediaType);
+    stp_set_parameter(v, "InkType", cups.header.OutputType);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
 
     if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
 					  cups.header.PageSize[0])) != NULL)
-      stp_set_media_size(v, stp_papersize_get_name(size));
+      stp_set_parameter(v, "PageSize", stp_papersize_get_name(size));
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
@@ -427,7 +435,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     if (cups.header.cupsCompression >= num_res)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
-      stp_set_resolution(v, res[cups.header.cupsCompression].name);
+      stp_set_parameter(v, "Resolution",res[cups.header.cupsCompression].name);
 
    /*
     * Print the page...
@@ -436,12 +444,12 @@ main(int  argc,				/* I - Number of command-line arguments */
     stp_merge_printvars(v, stp_printer_get_printvars(printer));
     fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
     fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
-    fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_resolution(v));
-    fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_media_size(v));
-    fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_media_type(v));
-    fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_media_source(v));
-    fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_ink_type(v));
-    fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_dither_algorithm(v));
+    fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_parameter(v, "Resolution"));
+    fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_parameter(v, "PageSize"));
+    fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_parameter(v, "MediaType"));
+    fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_parameter(v, "InputSlot"));
+    fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_parameter(v, "InkType"));
+    fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_parameter(v, "DitherAlgorithm"));
     fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
     fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
     fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));

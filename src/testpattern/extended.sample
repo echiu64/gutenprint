@@ -6,17 +6,17 @@
 printer escp2-2200
 extended 7
 # Resolution, or print quality
-resolution 720swuni
+parameter Resolution 720swuni
 # Media source (if appropriate for your printer)
-#media_source Standard
+#parameter InputSlot Standard
 # Media type (what kind of paper)
-media_type Plain
+parameter MediaType Plain
 # ink_type
-ink_type CMYK
+parameter InkType CMYK
 # Paper size
-media_size Letter
+parameter PageSize Letter
 # Dither algorithm
-dither_algorithm Adaptive
+parameter DitherAlgorithm Adaptive
 
 # Note that due to limitations in the lexical analyzer and parser, all
 # floating point values must be specified with a decimal point.

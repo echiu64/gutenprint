@@ -1141,7 +1141,7 @@ static void
 lexmark_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
 			    int *x, int *y)
 {
-  const char *resolution = stp_get_resolution(v);
+  const char *resolution = stp_get_parameter(v, "Resolution");
   const lexmark_res_t *res = lexmark_get_resolution_para(printer, resolution);
 
   if (res)
@@ -1267,6 +1267,8 @@ lexmark_parameters(const stp_printer_t printer,
     *count = 3;
     p = media_sources;
   }
+  else if (strcmp(name, "DitherAlgorithm") == 0)
+    return stp_dither_algorithms(count);
   else
     return (NULL);
 
@@ -1342,6 +1344,8 @@ lexmark_default_parameters(const stp_printer_t printer,
   {
     return (media_sources[0].name);
   }
+  else if (strcmp(name, "DitherAlgorithm") == 0)
+    return stp_get_default_dither_algorithm();
   else
     return (NULL);
 }
@@ -1683,11 +1687,11 @@ lexmark_print(const stp_printer_t printer,
 
   const unsigned char *cmap   = stp_get_cmap(v);
   int		model         = stp_printer_get_model(printer);
-  const char	*resolution   = stp_get_resolution(v);
-  const char	*media_type   = stp_get_media_type(v);
-  const char	*media_source = stp_get_media_source(v);
+  const char	*resolution   = stp_get_parameter(v, "Resolution");
+  const char	*media_type   = stp_get_parameter(v, "MediaType");
+  const char	*media_source = stp_get_parameter(v, "InputSlot");
   int 		output_type   = stp_get_output_type(v);
-  const char	*ink_type     = stp_get_ink_type(v);
+  const char	*ink_type     = stp_get_parameter(v, "InkType");
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   stp_vars_t	nv            = stp_allocate_copy(v);

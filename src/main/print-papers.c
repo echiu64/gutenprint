@@ -531,7 +531,7 @@ stp_default_media_size(const stp_printer_t printer,
   else
     {
       const stp_papersize_t papersize =
-	stp_get_papersize_by_name(stp_get_media_size(v));
+	stp_get_papersize_by_name(stp_get_parameter(v, "PageSize"));
       if (!papersize)
 	{
 	  *width = 1;

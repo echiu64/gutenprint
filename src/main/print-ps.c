@@ -256,11 +256,11 @@ ps_media_size(const stp_printer_t printer,	/* I - Printer model */
   stp_dprintf(STP_DBG_PS, v,
 	      "ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n",
 	      stp_printer_get_model(printer), stp_get_ppd_file(v),
-	      stp_get_media_size(v),
+	      stp_get_parameter(v, "PageSize"),
 	      width, height);
 
   if ((dimensions = ppd_find(stp_get_ppd_file(v), "PaperDimension",
-			     stp_get_media_size(v), NULL))
+			     stp_get_parameter(v, "PageSize"), NULL))
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
@@ -289,7 +289,7 @@ ps_imageable_area(const stp_printer_t printer,	/* I - Printer model */
   ps_media_size(printer, v, &width, &height);
 
   if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea",
-		       stp_get_media_size(v), NULL))
+		       stp_get_parameter(v, "PageSize"), NULL))
       != NULL)
     {
       stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
@@ -333,7 +333,7 @@ static void
 ps_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
 		       int *x, int *y)
 {
-  const char *resolution = stp_get_resolution(v);
+  const char *resolution = stp_get_parameter(v, "Resolution");
   *x = -1;
   *y = -1;
   sscanf(resolution, "%dx%d", x, y);
@@ -353,10 +353,10 @@ ps_print(const stp_printer_t printer,
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
   const char	*ppd_file = stp_get_ppd_file(v);
-  const char	*resolution = stp_get_resolution(v);
-  const char	*media_size = stp_get_media_size(v);
-  const char	*media_type = stp_get_media_type(v);
-  const char	*media_source = stp_get_media_source(v);
+  const char	*resolution = stp_get_parameter(v, "Resolution");
+  const char	*media_size = stp_get_parameter(v, "PageSize");
+  const char	*media_type = stp_get_parameter(v, "MediaType");
+  const char	*media_source = stp_get_parameter(v, "InputSlot");
   int 		output_type = stp_get_output_type(v);
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);

@@ -188,8 +188,6 @@ typedef struct
   const char *help;
   gint count;
   stp_param_t *params;
-  const char *(*accessor)(const stp_vars_t);
-  void (*mutator)(stp_vars_t, const gchar *);
   void (*extra)(const gchar *);
   gint callback_id;
   GtkWidget *combo;
@@ -199,19 +197,19 @@ static list_option_t the_list_options[] =
   {
     { "MediaType", N_("Media Type:"),
       N_("Type of media you're printing to"),
-      0, NULL, stp_get_media_type, stp_set_media_type, NULL, -1 },
+      0, NULL, NULL, -1 },
     { "PageSize", N_("Media Size:"),
       N_("Size of paper that you wish to print to"),
-      0, NULL, stp_get_media_size, stp_set_media_size, set_media_size, -1 },
+      0, NULL, set_media_size, -1 },
     { "InputSlot", N_("Media Source:"),
       N_("Source (input slot) of media you're printing to"),
-      0, NULL, stp_get_media_source, stp_set_media_source, NULL, -1 },
+      0, NULL, NULL, -1 },
     { "InkType", N_("Ink Type:"),
       N_("Type of ink in the printer"),
-      0, NULL, stp_get_ink_type, stp_set_ink_type, NULL, -1 },
+      0, NULL, NULL, -1 },
     { "Resolution", N_("Resolution:"),
       N_("Resolution and quality of the print"),
-      0, NULL, stp_get_resolution, stp_set_resolution, NULL, -1 },
+      0, NULL, NULL, -1 },
   };
 
 static const gint list_option_count = sizeof(the_list_options) / sizeof(list_option_t);
@@ -1722,7 +1720,7 @@ plist_callback (GtkWidget *widget,
 
   suppress_preview_update++;
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry),
-                      stp_get_dither_algorithm (pv->v));
+                      stp_get_parameter (pv->v, "DitherAlgorithm"));
 
   setup_update ();
 
@@ -1750,13 +1748,16 @@ plist_callback (GtkWidget *widget,
 	(current_printer, pv->v, option->name, &(option->count));
       default_parameter =
 	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
-      if ((option->accessor)(pv->v)[0] == '\0')
-	(option->mutator)(pv->v, default_parameter);
+      if (stp_get_parameter(pv->v, option->name)[0] == '\0')
+	stp_set_parameter(pv->v, option->name, default_parameter);
+      else if (option->params == NULL)
+	stp_set_parameter(pv->v, option->name, NULL);
       plist_build_combo(option->combo, option->count, option->params,
-			(option->accessor)(pv->v), default_parameter,
-			combo_callback, &(option->callback_id), option);
+			stp_get_parameter(pv->v, option->name),
+			default_parameter, combo_callback,
+			&(option->callback_id), option);
       if (option->extra)
-	(option->extra)((option->accessor)(pv->v));
+	(option->extra)(stp_get_parameter(pv->v, option->name));
     }
 
   if (dither_algo_combo)
@@ -1859,13 +1860,13 @@ combo_callback(GtkWidget *widget, gpointer data)
   const gchar *new_value = Combo_get_name(option->combo, option->count,
 					  option->params);
   reset_preview();
-  if (strcmp((option->accessor)(pv->v), new_value) != 0)
+  if (strcmp(stp_get_parameter(pv->v, option->name), new_value) != 0)
     {
       invalidate_frame();
       invalidate_preview_thumbnail();
       if (option->extra)
 	(option->extra)(new_value);
-      (option->mutator)(pv->v, new_value);
+      stp_set_parameter(pv->v, option->name, new_value);
       preview_update();
     }
 }

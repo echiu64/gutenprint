@@ -150,7 +150,7 @@ of values, may be found in
 .BR gimpprint-color (7).
 .SH DITHERING ALGORITHMS
 .TP
-\fBDither\fP=\fIalgorithm\fP
+\fBDitherAlgorithm\fP=\fIalgorithm\fP
 Possible values for \fIalgorithm\fP may be found in
 .BR gimpprint-dithers (7).
 .SH OUTPUT TYPE

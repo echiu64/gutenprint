@@ -108,6 +108,20 @@ typedef enum stp_image_status
   STP_IMAGE_ABORT
 } stp_image_status_t;
 
+typedef enum stp_parameter_type
+{
+  STP_PARAMETER_TYPE_INVALID,
+  STP_PARAMETER_TYPE_ENUM_STRING
+} stp_parameter_type_t;
+
+typedef enum stp_parameter_class
+{
+  STP_PARAMETER_CLASS_INVALID,
+  STP_PARAMETER_CLASS_FEATURE,
+  STP_PARAMETER_CLASS_OUTPUT,
+  STP_PARAMETER_CLASS_PAGE_SIZE
+} stp_parameter_class_t;
+
 /*
  * Abstract data type for interfacing with the image creation program
  * (in this case, the Gimp).
@@ -348,25 +362,33 @@ extern stp_vars_t stp_allocate_copy(const stp_vars_t vs);
 extern void stp_free_vars(stp_vars_t v);
 
 extern void stp_set_driver(stp_vars_t v, const char *val);
+extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
+
+extern const char **stp_printer_list_parameters(const stp_printer_t printer,
+						const stp_vars_t v,
+						int *count);
+
+extern stp_parameter_class_t
+stp_printer_parameter_class(const stp_printer_t printer,
+			    const stp_vars_t v,
+			    const char *parameter_name);
+
+extern stp_parameter_type_t
+stp_printer_parameter_type(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   const char *parameter_name);
+
+extern void stp_set_parameter(stp_vars_t v, const char *parameter,
+			      const char *value);
 extern void stp_set_ppd_file(stp_vars_t v, const char *val);
-extern void stp_set_resolution(stp_vars_t v, const char *val);
-extern void stp_set_media_size(stp_vars_t v, const char *val);
-extern void stp_set_media_type(stp_vars_t v, const char *val);
-extern void stp_set_media_source(stp_vars_t v, const char *val);
-extern void stp_set_ink_type(stp_vars_t v, const char *val);
-extern void stp_set_dither_algorithm(stp_vars_t v, const char *val);
+
+extern void stp_set_parameter_n(stp_vars_t v, const char *parameter,
+				const char *value, int bytes);
+extern void stp_set_ppd_file_n(stp_vars_t v, const char *val, int bytes);
 
 /*
  * The _n variants are used for strings that are not null-delimited.
  */
-extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_ppd_file_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_resolution_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_media_size_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_media_type_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_media_source_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_ink_type_n(stp_vars_t v, const char *val, int bytes);
-extern void stp_set_dither_algorithm_n(stp_vars_t v, const char *val, int bytes);
 
 extern void stp_set_output_type(stp_vars_t v, int val);
 extern void stp_set_orientation(stp_vars_t v, int val);
@@ -427,13 +449,10 @@ extern void stp_set_outdata(stp_vars_t v, void * val);
 extern void stp_set_errdata(stp_vars_t v, void * val);
 
 extern const char * stp_get_driver(const stp_vars_t v);
+
+extern const char * stp_get_parameter(const stp_vars_t v, const char *param);
 extern const char * stp_get_ppd_file(const stp_vars_t v);
-extern const char * stp_get_resolution(const stp_vars_t v);
-extern const char * stp_get_media_size(const stp_vars_t v);
-extern const char * stp_get_media_type(const stp_vars_t v);
-extern const char * stp_get_media_source(const stp_vars_t v);
-extern const char * stp_get_ink_type(const stp_vars_t v);
-extern const char * stp_get_dither_algorithm(const stp_vars_t v);
+
 extern int stp_get_output_type(const stp_vars_t v);
 extern int stp_get_left(const stp_vars_t v);
 extern int stp_get_top(const stp_vars_t v);
@@ -478,11 +497,6 @@ typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                const double *sat_map);
 
 extern void stp_merge_printvars(stp_vars_t user, const stp_vars_t print);
-
-extern size_t stp_dither_algorithm_count(void);
-extern const char * stp_dither_algorithm_name(int id);
-extern const char * stp_dither_algorithm_text(int id);
-extern const char * stp_default_dither_algorithm(void);
 
 extern int stp_known_papersizes(void);
 extern const stp_papersize_t stp_get_papersize_by_name(const char *name);

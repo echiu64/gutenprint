@@ -932,9 +932,9 @@ Dithering Algorithms:
 
 The option names are case sensitive.  Two names are listed for each
 resolution; the first (short) name is the value that must be passed to
--sIjsParams=Dither, and the second (long) name is descriptive.
+-sIjsParams=DitherAlgorithm, and the second (long) name is descriptive.
 
-IJS: -sIjsParams=Dither=algorithm
+IJS: -sIjsParams=DitherAlgorithm=algorithm
 
 Adaptive        Adaptive Hybrid
 EvenTone        EvenTone screening (experimental)

@@ -37,7 +37,8 @@ const char *params[] =
   "Resolution",
   "InkType",
   "MediaType",
-  "InputSlot"
+  "InputSlot",
+  "DitherAlgorithm"
 };
 
 int nparams = sizeof(params) / sizeof(const char *);
@@ -73,7 +74,7 @@ main(int argc, char **argv)
 		  if (strcmp(params[k], "Resolution") == 0)
 		    {
 		      int x, y;
-		      stp_set_resolution(pv, retval[j].name);
+		      stp_set_parameter(pv, "Resolution", retval[j].name);
 		      stp_printer_describe_resolution(p, pv, &x, &y);
 		      if (x > 0 && y > 0)
 			{
@@ -94,14 +95,6 @@ main(int argc, char **argv)
 	}
       if (tcount > 0)
 	{
-	  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-		 stp_printer_get_driver(p), "Dither",
-		 stp_dither_algorithm_name(0));
-	  for (k = 0; k < stp_dither_algorithm_count(); k++)
-	    printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		   stp_printer_get_driver(p), "Dither",
-		   stp_dither_algorithm_name(k),
-		   stp_dither_algorithm_text(k));
 	  if (stp_get_output_type(pv) == OUTPUT_COLOR)
 	    {
 	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
@@ -112,24 +105,16 @@ main(int argc, char **argv)
 	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 		     stp_printer_get_driver(p), "Color", "RawCMYK",
 		     "Raw CMYK");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     stp_printer_get_driver(p), "Color", "Grayscale",
-		     "Gray Scale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     stp_printer_get_driver(p), "Color", "BlackAndWhite",
-		     "Black and White");
 	    }
 	  else
-	    {
-	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-		     stp_printer_get_driver(p), "Color", "Grayscale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     stp_printer_get_driver(p), "Color", "Grayscale",
-		     "Grayscale");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     stp_printer_get_driver(p), "Color", "BlackAndWhite",
-		     "Black and White");
-	    }
+	    printf("$defaults{'%s'}{'%s'} = '%s';\n",
+		   stp_printer_get_driver(p), "Color", "Grayscale");
+	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		 stp_printer_get_driver(p), "Color", "Grayscale",
+		 "Gray Scale");
+	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+		 stp_printer_get_driver(p), "Color", "BlackAndWhite",
+		 "Black and White");
 	}
       stp_free_vars(pv);
     }

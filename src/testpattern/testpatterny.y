@@ -72,12 +72,7 @@ static int yyerror( const char *s )
 %token INK
 %token WIDTH
 %token PRINTER
-%token INK_TYPE
-%token RESOLUTION
-%token MEDIA_SOURCE
-%token MEDIA_TYPE
-%token MEDIA_SIZE
-%token DITHER_ALGORITHM
+%token PARAMETER
 %token DENSITY
 %token TOP
 %token LEFT
@@ -150,23 +145,8 @@ ink_limit: INK_LIMIT tDOUBLE
 printer: PRINTER tSTRING
 	{ printer = c_strdup($2); }
 ;
-ink_type: INK_TYPE tSTRING
-	{ ink_type = c_strdup($2); }
-;
-resolution: RESOLUTION tSTRING
-	{ resolution = c_strdup($2); }
-;
-media_source: MEDIA_SOURCE tSTRING
-	{ media_source = c_strdup($2); }
-;
-media_type: MEDIA_TYPE tSTRING
-	{ media_type = c_strdup($2); }
-;
-media_size: MEDIA_SIZE tSTRING
-	{ media_size = c_strdup($2); }
-;
-dither_algorithm: DITHER_ALGORITHM tSTRING
-	{ dither_algorithm = c_strdup($2); }
+parameter: PARAMETER tSTRING tSTRING
+	{ stp_set_parameter(tv, $2, $3); }
 ;
 density: DENSITY tDOUBLE
 	{ density = $2; }
@@ -261,27 +241,35 @@ image: IMAGE tINT tINT
 	    }
 	  return 0;
 	}
+;
 
 Empty:
+;
 
 Rule:   global_k_level | global_c_level | global_m_level | global_y_level
 	| global_lk_level | global_lc_level | global_lm_level
 	| global_c_gamma | global_m_gamma | global_y_gamma | global_k_gamma
 	| global_lc_gamma | global_lm_gamma | global_lk_gamma
-	| global_gamma | levels | ink_limit | printer | ink_type | resolution
-	| media_source | media_type | media_size | dither_algorithm | density
+	| global_gamma | levels | ink_limit | printer | parameter | density
 	| top | left | hsize | vsize | blackline | extended
+;
 
 A_Pattern: pattern | xpattern
+;
 
 Patterns: Patterns A_Pattern | Empty
+;
 
 Image: image
+;
 
 Rules: Rules Rule | Empty
+;
 
 Output: Patterns | Image
+;
 
 Thing: Rules Output Empty
+;
 
 %%

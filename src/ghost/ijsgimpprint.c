@@ -299,7 +299,7 @@ gimp_list_cb (void *list_cb_data,
 	      char *val_buf,
 	      int val_size)
 {
-  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,Dither,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
+  const char *param_list = "OutputFile,OutputFD,DeviceManufacturer,DeviceModel,Quality,MediaName,MediaType,MediaSource,InkType,DitherAlgorithm,ImageType,Brightness,Gamma,Contrast,Cyan,Magenta,Yellow,Saturation,Density,PrintableArea,PrintableTopLeft,TopLeft,Dpi";
   int size = strlen (param_list);
 
   if (size > val_size)
@@ -474,26 +474,14 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       stp_printer_t printer = stp_get_printer_by_driver(vbuf);
       stp_set_driver(img->v, vbuf);
       if (printer)
-	{
-	  stp_set_printer_defaults(img->v, printer);
-	  if (strlen(stp_get_resolution(img->v)) == 0)
-	    stp_set_resolution(img->v,
-			       (stp_printer_get_default_parameter
-				(printer, img->v, "Resolution")));
-	  if (strlen(stp_get_dither_algorithm(img->v)) == 0)
-	    stp_set_dither_algorithm(img->v, stp_default_dither_algorithm());
-	}
+	stp_set_printer_defaults(img->v, printer);
       else
 	code = IJS_ERANGE;
     }
   else if (strcmp(key, "PPDFile") == 0)
     stp_set_ppd_file(img->v, vbuf);
   else if (strcmp(key, "Quality") == 0)
-    stp_set_resolution(img->v, vbuf);
-#if 0
-  else if (strcmp(key, "MediaName") == 0)
-    stp_set_media_size(img->v, vbuf);
-#endif
+    stp_set_parameter(img->v, "Resolution", vbuf);
   else if (strcmp(key, "TopLeft") == 0)
     {
       int l, r, b, t, pw, ph;
@@ -533,20 +521,12 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    {
 	      STP_DEBUG(fprintf(stderr, "Found page size %s\n",
 				stp_papersize_get_name(p)));
-	      stp_set_media_size(img->v, stp_papersize_get_name(p));
+	      stp_set_parameter(img->v, "PageSize", stp_papersize_get_name(p));
 	    }
 	  else
 	    STP_DEBUG(fprintf(stderr, "No matching paper size found\n"));
 	}
     }
-  else if (strcmp(key, "MediaType") == 0)
-    stp_set_media_type(img->v, vbuf);
-  else if (strcmp(key, "MediaSource") == 0)
-    stp_set_media_source(img->v, vbuf);
-  else if (strcmp(key, "InkType") == 0)
-    stp_set_ink_type(img->v, vbuf);
-  else if (strcmp(key, "Dither") == 0)
-    stp_set_dither_algorithm(img->v, vbuf);
   else if (strcmp(key, "ImageType") == 0)
     {
       code = get_int(vbuf, key, &i,
@@ -623,10 +603,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
     }
   else
-    {
-      fprintf(stderr, _("Unknown option %s\n"), key);
-      code = -1;
-    }
+    stp_set_parameter(img->v, key, vbuf);
 
   if (code == 0)
     {
@@ -812,9 +789,9 @@ gimp_image_progress_conclude(stp_image_t *image)
 static void
 stp_dbg(const char *msg, const stp_vars_t v)
 {
+  fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
   fprintf(stderr,"%s Settings: c: %f  m: %f  y: %f\n",
 	  msg, stp_get_cyan(v), stp_get_magenta(v), stp_get_yellow(v));
-  fprintf(stderr, "Ink type %s\n", stp_get_ink_type(v));
   fprintf(stderr,"Settings: bright: %f  contrast: %f\n",
 	  stp_get_brightness(v), stp_get_contrast(v));
   fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
@@ -823,13 +800,12 @@ stp_dbg(const char *msg, const stp_vars_t v)
 	  stp_get_page_width(v), stp_get_page_height(v));
   fprintf(stderr, "Settings: output type %d  image type %d\n",
 	  stp_get_output_type(v), stp_get_image_type(v));
-  fprintf(stderr, "Settings: Quality %s\n", stp_get_resolution(v));
-  fprintf(stderr, "Settings: Dither %s\n", stp_get_dither_algorithm(v));
-  fprintf(stderr, "Settings: MediaSource %s\n", stp_get_media_source(v));
-  fprintf(stderr, "Settings: MediaType %s\n", stp_get_media_type(v));
-  fprintf(stderr, "Settings: MediaSize %s\n", stp_get_media_size(v));
-  fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
-  fprintf(stderr, "Settings: InkType %s\n", stp_get_ink_type(v));
+  fprintf(stderr, "Settings: Quality %s\n", stp_get_parameter(v, "Resolution"));
+  fprintf(stderr, "Settings: Dither %s\n", stp_get_parameter(v, "DitherAlgorithm"));
+  fprintf(stderr, "Settings: MediaSource %s\n", stp_get_parameter(v, "InputSlot"));
+  fprintf(stderr, "Settings: MediaType %s\n", stp_get_parameter(v, "MediaType"));
+  fprintf(stderr, "Settings: MediaSize %s\n", stp_get_parameter(v, "PageSize"));
+  fprintf(stderr, "Settings: InkType %s\n", stp_get_parameter(v, "InkType"));
 }
 
 int
@@ -949,12 +925,6 @@ main (int argc, char **argv)
 	      break;
 	    }
 	  stp_merge_printvars(img.v, stp_printer_get_printvars(printer));
-	  if (strlen(stp_get_resolution(img.v)) == 0)
-	    stp_set_resolution(img.v, 
-			       (stp_printer_get_default_parameter
-				(printer, img.v, "Resolution")));
-	  if (strlen(stp_get_dither_algorithm(img.v)) == 0)
-	    stp_set_dither_algorithm(img.v, stp_default_dither_algorithm());
 	}
 
       page++;

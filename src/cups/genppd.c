@@ -799,7 +799,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     if (width <= 0 || height <= 0)
       continue;
 
-    stp_set_media_size(v, opts[i].name);
+    stp_set_parameter(v, "PageSize", opts[i].name);
 
     stp_printer_get_media_size(p, v, &width, &height);
     stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
@@ -864,7 +864,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   {
     stp_printer_get_size_limit(p, v, &max_width, &max_height,
 			       &min_width, &min_height);
-    stp_set_media_size(v, "Custom");
+    stp_set_parameter(v, "PageSize", "Custom");
     stp_printer_get_media_size(p, v, &width, &height);
     stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
 
@@ -1004,7 +1004,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Strip resolution name to its essentials...
     */
 
-    stp_set_resolution(v, opts[i].name);
+    stp_set_parameter(v, "Resolution", opts[i].name);
     stp_printer_describe_resolution(p, v, &xdpi, &ydpi);
 
     /* This should not happen! */
@@ -1052,13 +1052,21 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Dithering algorithms...
     */
 
+    opts   = stp_printer_get_parameters(p, v, "DitherAlgorithm", &num_opts);
+    defopt = stp_printer_get_default_parameter(p, v, "DitherAlgorithm");
+
     gzprintf(fp, "*OpenUI *stpDither/%s: PickOne\n", _("Dither Algorithm"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
-    gzprintf(fp, "*DefaultstpDither: %s\n", stp_default_dither_algorithm());
+    gzprintf(fp, "*DefaultstpDither: %s\n", defopt);
 
-    for (i = 0; i < stp_dither_algorithm_count(); i ++)
+    for (i = 0; i < num_opts; i ++)
+    {
       gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
-               stp_dither_algorithm_name(i), stp_dither_algorithm_text(i), i);
+	       opts[i].name, opts[i].text, i);
+      free((void *)opts[i].name);
+      free((void *)opts[i].text);
+    }
+    free(opts);
 
     gzputs(fp, "*CloseUI: *stpDither\n\n");
 

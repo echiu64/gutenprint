@@ -5,17 +5,17 @@
 # Printer model
 printer escp2-870
 # Resolution, or print quality
-resolution 360sw
+parameter Resolution 360sw
 # Media source (if appropriate for your printer)
-media_source Standard
+parameter InputSlot Standard
 # Media type (what kind of paper)
-media_type Photo
+parameter MediaType Photo
 # ink_type
-ink_type PhotoCMYK
+parameter InkType PhotoCMYK
 # Paper size
-media_size Letter
+parameter PageSize Letter
 # Dither algorithm
-dither_algorithm Ordered
+parameter DitherAlgorithm Ordered
 
 # Note that due to limitations in the lexical analyzer and parser, all
 # floating point values must be specified with a decimal point.

@@ -104,38 +104,34 @@ dither_algo_callback (GtkWidget *widget, gpointer data)
 {
   const gchar *new_algo =
     gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
-  int i;
-
-  for (i = 0; i < stp_dither_algorithm_count (); i ++)
-    if (strcasecmp (new_algo, stp_dither_algorithm_text (i)) == 0)
-      {
-        stp_set_dither_algorithm (pv->v, stp_dither_algorithm_name (i));
-        break;
-      }
+  stp_set_parameter(pv->v, "DitherAlgorithm", new_algo);
 }
 
 void
 build_dither_combo (void)
 {
   int i;
-  stp_param_t *vec = xmalloc(sizeof(stp_param_t) * stp_dither_algorithm_count());
-
-  for (i = 0; i < stp_dither_algorithm_count(); i++)
-    {
-      vec[i].name = g_strdup (stp_dither_algorithm_name (i));
-      vec[i].text = g_strdup (stp_dither_algorithm_text (i));
-    }
+  int count;
+  stp_param_t *vec = stp_printer_get_parameters(current_printer, pv->v,
+						"DitherAlgorithm", &count);
+  const char *default_parameter =
+    stp_printer_get_default_parameter(current_printer, pv->v,
+				      "DitherAlgorithm");
+  if (stp_get_parameter(pv->v, "DitherAlgorithm")[0] == '\0')
+    stp_set_parameter(pv->v, "DitherAlgorithm", default_parameter);
+  else if (count == 0)
+    stp_set_parameter(pv->v, "DitherAlgorithm", NULL);
 
   plist_build_combo (dither_algo_combo,
-		     stp_dither_algorithm_count (),
+		     count,
 		     vec,
-		     stp_get_dither_algorithm (pv->v),
-		     stp_default_dither_algorithm (),
+		     stp_get_parameter (pv->v, "DitherAlgorithm"),
+		     default_parameter,
 		     &dither_algo_callback,
 		     &dither_algo_callback_id,
 		     NULL);
 
-  for (i = 0; i < stp_dither_algorithm_count (); i++)
+  for (i = 0; i < count; i++)
     {
       free ((void *) vec[i].name);
       free ((void *) vec[i].text);

@@ -145,7 +145,12 @@ main(int  argc,				/* I - Number of command-line arguments */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
-  stp_vars_t	v;			/* Dither variables */
+  int		count;
+  stp_vars_t	v = stp_allocate_vars();		/* Dither variables */
+  /* Arbitrary printer, so we can get dither algorithms */
+  stp_printer_t p = stp_get_printer_by_driver("escp2-ex");
+  stp_param_t	*params = stp_printer_get_parameters(p, v, "DitherAlgorithm",
+						     &count);
   static const char	*dither_types[] =	/* Different dithering modes */
 		{
 		  "gray",
@@ -220,15 +225,9 @@ main(int  argc,				/* I - Number of command-line arguments */
       continue;
     }
 
-    for (j = 0; j < stp_dither_algorithm_count(); j ++)
-      if (strcmp(argv[i], stp_dither_algorithm_name(j)) == 0)
-        break;
-
-    if (j < stp_dither_algorithm_count())
-    {
-      dither_name = stp_dither_algorithm_name(j);
-      continue;
-    }
+    for (j = 0; j < count; j ++)
+      if (strcmp(argv[i], params[j].name) == 0)
+	dither_name = params[j].name;
 
     printf("Unknown option \"%s\" ignored!\n", argv[i]);
   }
@@ -248,7 +247,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   */
 
   if (dither_name)
-    stp_set_dither_algorithm(v, dither_name);
+    stp_set_parameter(v, "DitherAlgorithm", dither_name);
 
   switch (dither_type)
     {
@@ -349,7 +348,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
 	  dither_types[dither_type],
-	  dither_name ? dither_name : stp_default_dither_algorithm(),
+	  dither_name ? dither_name :
+	  stp_printer_get_default_parameter(p, v, "DitherAlgorithm"),	  
 	  dither_bits,
 	  (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME) ?
 	  "pgm" : "ppm");

@@ -1,5 +1,5 @@
 /*
- * "$Id$"
+* "$Id$"
  *
  *   Print plug-in for the GIMP.
  *
@@ -463,10 +463,10 @@ run (char   *name,		/* I - Name of print program. */
 	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
 	  stp_set_ppd_file(gimp_vars.v, param[5].data.d_string);
 	  stp_set_output_type(gimp_vars.v, param[6].data.d_int32);
-	  stp_set_resolution(gimp_vars.v, param[7].data.d_string);
-	  stp_set_media_size(gimp_vars.v, param[8].data.d_string);
-	  stp_set_media_type(gimp_vars.v, param[9].data.d_string);
-	  stp_set_media_source(gimp_vars.v, param[10].data.d_string);
+	  stp_set_parameter(gimp_vars.v, "Resolution", param[7].data.d_string);
+	  stp_set_parameter(gimp_vars.v, "PageSize", param[8].data.d_string);
+	  stp_set_parameter(gimp_vars.v, "MediaType", param[9].data.d_string);
+	  stp_set_parameter(gimp_vars.v, "InputSlot", param[10].data.d_string);
 
           if (nparams > 11)
 	    stp_set_brightness(gimp_vars.v, param[11].data.d_float);
@@ -508,10 +508,11 @@ run (char   *name,		/* I - Name of print program. */
             stp_set_density(gimp_vars.v, param[24].data.d_float);
 
 	  if (nparams > 24)
-	    stp_set_ink_type(gimp_vars.v, param[25].data.d_string);
+	    stp_set_parameter(gimp_vars.v, "InkType", param[25].data.d_string);
 
 	  if (nparams > 25)
-	    stp_set_dither_algorithm(gimp_vars.v, param[26].data.d_string);
+	    stp_set_parameter(gimp_vars.v, "DitherAlgorithm",
+			      param[26].data.d_string);
 
           if (nparams > 26)
 	    gimp_vars.unit = param[27].data.d_int32;
@@ -775,6 +776,14 @@ do {							\
   lineptr = commaptr + 1;				\
 } while (0)
 
+#define GET_MANDATORY_NAMED_STRING_PARAM(param)			\
+do {								\
+  if ((commaptr = strchr(lineptr, ',')) == NULL)		\
+    continue;							\
+  stp_set_parameter_n(key.v, param, lineptr, commaptr - line);	\
+  lineptr = commaptr + 1;					\
+} while (0)
+
 #define GET_MANDATORY_INT_PARAM(param)			\
 do {							\
   if ((commaptr = strchr(lineptr, ',')) == NULL)	\
@@ -791,18 +800,18 @@ do {							\
   lineptr = commaptr + 1;				\
 } while (0)
 
-#define GET_OPTIONAL_STRING_PARAM(param)			\
-do {								\
-  if ((commaptr = strchr(lineptr, ',')) == NULL)		\
-    {								\
-      stp_set_##param(key.v, lineptr);				\
-      keepgoing = 0;						\
-    }								\
-  else								\
-    {								\
-      stp_set_##param##_n(key.v, lineptr, commaptr - lineptr);	\
-      lineptr = commaptr + 1;					\
-    }								\
+#define GET_OPTIONAL_NAMED_STRING_PARAM(param)				\
+do {									\
+  if ((commaptr = strchr(lineptr, ',')) == NULL)			\
+    {									\
+      stp_set_parameter(key.v, param, lineptr);				\
+      keepgoing = 0;							\
+    }									\
+  else									\
+    {									\
+      stp_set_parameter_n(key.v, param, lineptr, commaptr - lineptr);	\
+      lineptr = commaptr + 1;						\
+    }									\
 } while (0)
 
 #define GET_OPTIONAL_INT_PARAM(param)					\
@@ -1037,11 +1046,11 @@ printrc_load(void)
 
         GET_MANDATORY_STRING_PARAM(ppd_file);
         GET_MANDATORY_INT_PARAM(output_type);
-        GET_MANDATORY_STRING_PARAM(resolution);
-        GET_MANDATORY_STRING_PARAM(media_size);
-        GET_MANDATORY_STRING_PARAM(media_type);
+        GET_MANDATORY_NAMED_STRING_PARAM("Resolution");
+        GET_MANDATORY_NAMED_STRING_PARAM("PageSize");
+        GET_MANDATORY_NAMED_STRING_PARAM("MediaType");
 
-        GET_OPTIONAL_STRING_PARAM(media_source);
+        GET_OPTIONAL_NAMED_STRING_PARAM("InputSlot");
         GET_OPTIONAL_FLOAT_PARAM(brightness);
         GET_OPTIONAL_INTERNAL_FLOAT_PARAM(scaling);
         GET_OPTIONAL_INTERNAL_INT_PARAM(orientation);
@@ -1056,8 +1065,8 @@ printrc_load(void)
         GET_OPTIONAL_INT_PARAM(image_type);
         GET_OPTIONAL_FLOAT_PARAM(saturation);
         GET_OPTIONAL_FLOAT_PARAM(density);
-        GET_OPTIONAL_STRING_PARAM(ink_type);
-        GET_OPTIONAL_STRING_PARAM(dither_algorithm);
+        GET_OPTIONAL_NAMED_STRING_PARAM("InkType");
+        GET_OPTIONAL_NAMED_STRING_PARAM("DitherAlgorithm");
         GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
 	add_printer(&key, 0);
       }
@@ -1125,13 +1134,13 @@ printrc_load(void)
 	} else if (strcasecmp("output-type", keyword) == 0) {
 	  stp_set_output_type(key.v, atoi(value));
 	} else if (strcasecmp("resolution", keyword) == 0) {
-	  stp_set_resolution(key.v, value);
+	  stp_set_parameter(key.v, "Resolution", value);
 	} else if (strcasecmp("media-size", keyword) == 0) {
-	  stp_set_media_size(key.v, value);
+	  stp_set_parameter(key.v, "PageSize", value);
 	} else if (strcasecmp("media-type", keyword) == 0) {
-	  stp_set_media_type(key.v, value);
+	  stp_set_parameter(key.v, "MediaType", value);
 	} else if (strcasecmp("media-source", keyword) == 0) {
-	  stp_set_media_source(key.v, value);
+	  stp_set_parameter(key.v, "InputSlot", value);
 	} else if (strcasecmp("brightness", keyword) == 0) {
 	  stp_set_brightness(key.v, atof(value));
 	} else if (strcasecmp("scaling", keyword) == 0) {
@@ -1161,9 +1170,9 @@ printrc_load(void)
 	} else if (strcasecmp("density", keyword) == 0) {
 	  stp_set_density(key.v, atof(value));
 	} else if (strcasecmp("ink-type", keyword) == 0) {
-	  stp_set_ink_type(key.v, value);
+	  stp_set_parameter(key.v, "InkType", value);
 	} else if (strcasecmp("dither-algorithm", keyword) == 0) {
-	  stp_set_dither_algorithm(key.v, value);
+	  stp_set_parameter(key.v, "DitherAlgorithm", value);
 	} else if (strcasecmp("unit", keyword) == 0) {
 	  key.unit = atoi(value);
 	} else if (strcasecmp("custom-page-width", keyword) == 0) {
@@ -1172,7 +1181,10 @@ printrc_load(void)
 	  stp_set_page_height(key.v, atoi(value));
 	} else {
 	  /* Unrecognised keyword; ignore it... */
+	  stp_set_parameter(key.v, keyword, value);
+#if 0
           printf("Unrecognized keyword `%s' in printrc; value `%s'\n", keyword, value);
+#endif
 	}
       }
       else
@@ -1258,33 +1270,38 @@ printrc_save(void)
 
     for (i = 0, p = plist; i < plist_count; i ++, p ++)
       {
+	int count;
+	int j;
+	const stp_printer_t pr=stp_get_printer_by_driver(stp_get_driver(p->v));
+	const char **params = stp_printer_list_parameters(pr, p->v, &count);
 	fprintf(fp, "\nPrinter: %s\n", p->name);
 	fprintf(fp, "Destination: %s\n", plist_get_output_to(p));
-	fprintf(fp, "Driver: %s\n", stp_get_driver(p->v));
-	fprintf(fp, "PPD-File: %s\n", stp_get_ppd_file(p->v));
-	fprintf(fp, "Output-Type: %d\n", stp_get_output_type(p->v));
-	fprintf(fp, "Resolution: %s\n", stp_get_resolution(p->v));
-	fprintf(fp, "Media-Size: %s\n", stp_get_media_size(p->v));
-	fprintf(fp, "Media-Type: %s\n", stp_get_media_type(p->v));
-	fprintf(fp, "Media-Source: %s\n", stp_get_media_source(p->v));
-	fprintf(fp, "Brightness: %.3f\n", stp_get_brightness(p->v));
 	fprintf(fp, "Scaling: %.3f\n", p->scaling);
 	fprintf(fp, "Orientation: %d\n", p->orientation);
+	fprintf(fp, "Unit: %d\n", p->unit);
+
+	fprintf(fp, "Driver: %s\n", stp_get_driver(p->v));
+	fprintf(fp, "PPD-File: %s\n", stp_get_ppd_file(p->v));
+
 	fprintf(fp, "Left: %d\n", stp_get_left(p->v));
 	fprintf(fp, "Top: %d\n", stp_get_top(p->v));
+	fprintf(fp, "Custom-Page-Width: %d\n", stp_get_page_width(p->v));
+	fprintf(fp, "Custom-Page-Height: %d\n", stp_get_page_height(p->v));
+
+	fprintf(fp, "Output-Type: %d\n", stp_get_output_type(p->v));
+	fprintf(fp, "Image-Type: %d\n", stp_get_image_type(p->v));
+
 	fprintf(fp, "Gamma: %.3f\n", stp_get_gamma(p->v));
 	fprintf(fp, "Contrast: %.3f\n", stp_get_contrast(p->v));
 	fprintf(fp, "Cyan: %.3f\n", stp_get_cyan(p->v));
 	fprintf(fp, "Magenta: %.3f\n", stp_get_magenta(p->v));
 	fprintf(fp, "Yellow: %.3f\n", stp_get_yellow(p->v));
-	fprintf(fp, "Image-Type: %d\n", stp_get_image_type(p->v));
 	fprintf(fp, "Saturation: %.3f\n", stp_get_saturation(p->v));
+	fprintf(fp, "Brightness: %.3f\n", stp_get_brightness(p->v));
 	fprintf(fp, "Density: %.3f\n", stp_get_density(p->v));
-	fprintf(fp, "Ink-Type: %s\n", stp_get_ink_type(p->v));
-	fprintf(fp, "Dither-Algorithm: %s\n", stp_get_dither_algorithm(p->v));
-	fprintf(fp, "Unit: %d\n", p->unit);
-	fprintf(fp, "Custom-Page-Width: %d\n", stp_get_page_width(p->v));
-	fprintf(fp, "Custom-Page-Height: %d\n", stp_get_page_height(p->v));
+
+	for (j = 0; j < count; j++)
+	  fprintf(fp, "%s: %s\n", params[j],stp_get_parameter(p->v,params[j]));
 
 #ifdef DEBUG
         fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);

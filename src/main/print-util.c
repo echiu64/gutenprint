@@ -114,6 +114,13 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
     }
+  else
+    {
+      va_list args;
+      va_start(args, format);
+      vfprintf(stderr, format, args);
+      va_end(args);
+    }
 }
 
 void

@@ -240,7 +240,7 @@ pcl_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
 			int *x, int *y)
 {
   int i;
-  const char *resolution = stp_get_resolution(v);
+  const char *resolution = stp_get_parameter(v, "Resolution");
   for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
       if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
@@ -1770,6 +1770,8 @@ pcl_parameters(const stp_printer_t printer,
     else
       return(NULL);
   }
+  else if (strcmp(name, "DitherAlgorithm") == 0)
+    return stp_dither_algorithms(count);
   else
     return (NULL);
 }
@@ -1868,6 +1870,8 @@ pcl_default_parameters(const stp_printer_t printer,
       else
 	return(NULL);
     }
+  else if (strcmp(name, "DitherAlgorithm") == 0)
+    return stp_get_default_dither_algorithm();
   else
     return (NULL);
 }
@@ -1931,11 +1935,11 @@ pcl_print(const stp_printer_t printer,
   int		status = 1;
   unsigned char *cmap = stp_get_cmap(v);
   int		model = stp_printer_get_model(printer);
-  const char	*resolution = stp_get_resolution(v);
+  const char	*resolution = stp_get_parameter(v, "Resolution");
   const char	*media_size;
-  const char	*media_type = stp_get_media_type(v);
-  const char	*media_source = stp_get_media_source(v);
-  const char	*ink_type = stp_get_ink_type(v);
+  const char	*media_type = stp_get_parameter(v, "MediaType");
+  const char	*media_source = stp_get_parameter(v, "InputSlot");
+  const char	*ink_type = stp_get_parameter(v, "InkType");
   int 		output_type = stp_get_output_type(v);
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -2114,8 +2118,8 @@ pcl_print(const stp_printer_t printer,
   * Set media size
   */
 
-  if (strlen(stp_get_media_size(v)) > 0)
-    media_size = stp_get_media_size(v);
+  if (strlen(stp_get_parameter(v, "MediaSize")) > 0)
+    media_size = stp_get_parameter(v, "MediaSize");
   else if ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
 					   stp_get_page_width(v))) != NULL)
     media_size = stp_papersize_get_name(pp);

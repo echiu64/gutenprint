@@ -20,6 +20,14 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gimp-print/gimp-print.h>
+
+extern stp_vars_t tv;
+
 typedef struct
 {
   enum {
@@ -94,12 +102,6 @@ extern double global_gamma;
 extern int levels;
 extern double ink_limit;
 extern char *printer;
-extern char *ink_type;
-extern char *resolution;
-extern char *media_source;
-extern char *media_type;
-extern char *media_size;
-extern char *dither_algorithm;
 extern double density;
 extern double xtop;
 extern double xleft;

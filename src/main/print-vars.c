@@ -202,8 +202,8 @@ stp_free_vars(stp_vars_t vv)
   stp_free(v);
 }
 
-#define DEF_STRING_FUNCS(s)				\
-void							\
+#define DEF_STRING_FUNCS(s, t)				\
+t void							\
 stp_set_##s(stp_vars_t vv, const char *val)		\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
@@ -214,7 +214,7 @@ stp_set_##s(stp_vars_t vv, const char *val)		\
   v->verified = 0;					\
 }							\
 							\
-void							\
+t void							\
 stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
@@ -225,7 +225,7 @@ stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
   v->verified = 0;					\
 }							\
 							\
-const char *						\
+t const char *						\
 stp_get_##s(const stp_vars_t vv)			\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
@@ -248,14 +248,14 @@ stp_get_##s(const stp_vars_t vv)			\
   return v->s;						\
 }
 
-DEF_STRING_FUNCS(driver)
-DEF_STRING_FUNCS(ppd_file)
-DEF_STRING_FUNCS(resolution)
-DEF_STRING_FUNCS(media_size)
-DEF_STRING_FUNCS(media_type)
-DEF_STRING_FUNCS(media_source)
-DEF_STRING_FUNCS(ink_type)
-DEF_STRING_FUNCS(dither_algorithm)
+DEF_STRING_FUNCS(driver, )
+DEF_STRING_FUNCS(ppd_file, )
+DEF_STRING_FUNCS(resolution, static)
+DEF_STRING_FUNCS(media_size, static)
+DEF_STRING_FUNCS(media_type, static)
+DEF_STRING_FUNCS(media_source, static)
+DEF_STRING_FUNCS(ink_type, static)
+DEF_STRING_FUNCS(dither_algorithm, static)
 DEF_FUNCS(output_type, int)
 DEF_FUNCS(left, int)
 DEF_FUNCS(top, int)
@@ -330,6 +330,59 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
           popt = nopt;
         }
     }
+}
+
+void
+stp_set_parameter_n(stp_vars_t v, const char *parameter,
+		    const char *value, int bytes)
+{
+  if      (strcmp(parameter, "Resolution") == 0)
+    stp_set_resolution_n(v, value, bytes);
+  else if (strcmp(parameter, "PageSize") == 0)
+    stp_set_media_size_n(v, value, bytes);
+  else if (strcmp(parameter, "MediaType") == 0)
+    stp_set_media_type_n(v, value, bytes);
+  else if (strcmp(parameter, "InputSlot") == 0)
+    stp_set_media_source_n(v, value, bytes);
+  else if (strcmp(parameter, "InkType") == 0)
+    stp_set_ink_type_n(v, value, bytes);
+  else if (strcmp(parameter, "DitherAlgorithm") == 0)
+    stp_set_dither_algorithm_n(v, value, bytes);
+  else
+    stp_eprintf(v, "WARNING: Attempt to set unknown parameter %s to %s\n",
+		parameter, value);
+}
+
+const char *
+stp_get_parameter(const stp_vars_t v, const char *parameter)
+{
+  if      (strcmp(parameter, "Resolution") == 0)
+    return stp_get_resolution(v);
+  else if (strcmp(parameter, "PageSize") == 0)
+    return stp_get_media_size(v);
+  else if (strcmp(parameter, "MediaType") == 0)
+    return stp_get_media_type(v);
+  else if (strcmp(parameter, "InputSlot") == 0)
+    return stp_get_media_source(v);
+  else if (strcmp(parameter, "InkType") == 0)
+    return stp_get_ink_type(v);
+  else if (strcmp(parameter, "DitherAlgorithm") == 0)
+    return stp_get_dither_algorithm(v);
+  else
+    {
+      stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+		  parameter);
+      return NULL;
+    }
+}
+
+void
+stp_set_parameter(stp_vars_t v, const char *parameter, const char *value)
+{
+  if (value == NULL)
+    stp_set_parameter_n(v, parameter, NULL, 0);
+  else
+    stp_set_parameter_n(v, parameter, value, strlen(value));
 }
 
 void
@@ -426,7 +479,8 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
   stp_set_media_type(v, stp_printer_get_default_parameter(p, v, "MediaType"));
   stp_set_media_source(v, stp_printer_get_default_parameter(p, v,"InputSlot"));
   stp_set_media_size(v, stp_printer_get_default_parameter(p, v, "PageSize"));
-  stp_set_dither_algorithm(v, stp_default_dither_algorithm());
+  stp_set_dither_algorithm
+    (v, stp_printer_get_default_parameter(p, v, "DitherAlgorithm"));
   stp_set_driver(v, stp_printer_get_driver(p));
 }
 
@@ -446,10 +500,4 @@ const stp_vars_t
 stp_minimum_settings()
 {
   return (stp_vars_t) &min_vars;
-}
-
-const char *
-stp_default_dither_algorithm(void)
-{
-  return stp_dither_algorithm_name(0);
 }

@@ -40,6 +40,16 @@
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
+static const char *global_parameters[] =
+  {
+    "PageSize",
+    "Resolution",
+    "MediaType",
+    "InputSlot",
+    "InkType",
+    "DitherAlgorithm"
+  };
+
 const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
@@ -165,12 +175,72 @@ stp_print(const stp_printer_t printer,
   return (printfuncs->print)(printer, v, image);
 }
 
-static int
-verify_param(const char *checkval, stp_param_t *vptr,
-	     int count, const char *what, const stp_vars_t v)
+const char **
+stp_printer_list_parameters(const stp_printer_t printer,
+			    const stp_vars_t v,
+			    int *count)
 {
+  *count = sizeof(global_parameters) / sizeof(char *);
+  return global_parameters;
+}
+
+stp_parameter_type_t
+stp_printer_parameter_type(const stp_printer_t printer,
+			   const stp_vars_t v,
+			   const char *parameter)
+{
+  if      (strcmp(parameter, "Resolution"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else if (strcmp(parameter, "PageSize"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else if (strcmp(parameter, "MediaType"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else if (strcmp(parameter, "InputSlot"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else if (strcmp(parameter, "InkType"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else if (strcmp(parameter, "DitherAlgorithm"))
+    return STP_PARAMETER_TYPE_ENUM_STRING;
+  else
+    return STP_PARAMETER_TYPE_INVALID;
+}
+
+stp_parameter_class_t
+stp_printer_parameter_class(const stp_printer_t printer,
+			    const stp_vars_t v,
+			    const char *parameter)
+{
+  if      (strcmp(parameter, "Resolution"))
+    return STP_PARAMETER_CLASS_FEATURE;
+  else if (strcmp(parameter, "PageSize"))
+    return STP_PARAMETER_CLASS_PAGE_SIZE;
+  else if (strcmp(parameter, "MediaType"))
+    return STP_PARAMETER_CLASS_FEATURE;
+  else if (strcmp(parameter, "InputSlot"))
+    return STP_PARAMETER_CLASS_FEATURE;
+  else if (strcmp(parameter, "InkType"))
+    return STP_PARAMETER_CLASS_FEATURE;
+  else if (strcmp(parameter, "DitherAlgorithm"))
+    return STP_PARAMETER_CLASS_OUTPUT;
+  else
+    return STP_PARAMETER_CLASS_INVALID;
+}
+
+static int
+verify_param(const stp_printer_t p, const stp_vars_t v, const char *parameter)
+{
+  int count;
+  const char *checkval = stp_get_parameter(v, parameter);
+  stp_param_t *vptr = stp_printer_get_parameters(p, v, parameter, &count);
   int answer = 0;
   int i;
+  if (checkval == NULL)
+    {
+      if (count == 0)
+	return 1;
+      else
+	return 0;
+    }
   if (count > 0)
     {
       for (i = 0; i < count; i++)
@@ -180,15 +250,17 @@ verify_param(const char *checkval, stp_param_t *vptr,
 	    break;
 	  }
       if (!answer)
-	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
+	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
       for (i = 0; i < count; i++)
 	{
 	  stp_free((void *)vptr[i].name);
 	  stp_free((void *)vptr[i].text);
 	}
     }
+  else if (strlen(checkval) == 0)
+    answer = 1;
   else
-    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, what);
+    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
   if (vptr)
     stp_free(vptr);
   return answer;
@@ -227,8 +299,8 @@ do									\
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 {
-  stp_param_t *vptr;
-  int count;
+  const char **params;
+  int nparams;
   int i;
   int answer = 1;
   int left, top, bottom, right, width, height;
@@ -245,11 +317,9 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       answer = 0;
       stp_eprintf(v, _("Printer does not support color output\n"));
     }
-  if (strlen(stp_get_media_size(v)) > 0)
+  if (strlen(stp_get_parameter(v, "PageSize")) > 0)
     {
-      const char *checkval = stp_get_media_size(v);
-      vptr = stp_printer_get_parameters(p, v, "PageSize", &count);
-      answer &= verify_param(checkval, vptr, count, "page size", v);
+      answer &= verify_param(p, v, "PageSize");
     }
   else
     {
@@ -316,43 +386,15 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
   CHECK_INT_RANGE(v, input_color_model);
   CHECK_INT_RANGE(v, output_color_model);
 
-  if (strlen(stp_get_media_type(v)) > 0)
+  params = stp_printer_list_parameters(p, v, &nparams);
+  for (i = 0; i < nparams; i++)
     {
-      const char *checkval = stp_get_media_type(v);
-      vptr = stp_printer_get_parameters(p, v, "MediaType", &count);
-      answer &= verify_param(checkval, vptr, count, "media type", v);
+      if (stp_printer_parameter_class(p, v, params[i]) ==
+	  STP_PARAMETER_CLASS_PAGE_SIZE)
+	continue;
+      if (strlen(stp_get_parameter(v, params[i])) > 0)
+	answer &= verify_param(p, v, params[i]);
     }
-
-  if (strlen(stp_get_media_source(v)) > 0)
-    {
-      const char *checkval = stp_get_media_source(v);
-      vptr = stp_printer_get_parameters(p, v, "InputSlot", &count);
-      answer &= verify_param(checkval, vptr, count, "media source", v);
-    }
-
-  if (strlen(stp_get_resolution(v)) > 0)
-    {
-      const char *checkval = stp_get_resolution(v);
-      vptr = stp_printer_get_parameters(p, v, "Resolution", &count);
-      answer &= verify_param(checkval, vptr, count, "resolution", v);
-    }
-
-  if (strlen(stp_get_ink_type(v)) > 0)
-    {
-      const char *checkval = stp_get_ink_type(v);
-      vptr = stp_printer_get_parameters(p, v, "InkType", &count);
-      answer &= verify_param(checkval, vptr, count, "ink type", v);
-    }
-
-  for (i = 0; i < stp_dither_algorithm_count(); i++)
-    if (!strcmp(stp_get_dither_algorithm(v), stp_dither_algorithm_name(i)))
-      {
-	stp_set_verified(v, answer);
-	return answer;
-      }
-
-  stp_eprintf(v, _("%s is not a valid dither algorithm\n"),
-	      stp_get_dither_algorithm(v));
-  stp_set_verified(v, 0);
-  return 0;
+  stp_set_verified(v, answer);
+  return answer;
 }

@@ -267,26 +267,32 @@ static const unsigned sq2[] =
   3, 1
 };
 
-size_t
-stp_dither_algorithm_count(void)
+static char *
+c_strdup(const char *s)
 {
-  return num_dither_algos;
+  char *ret = stp_malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
+stp_param_t *
+stp_dither_algorithms(int *count)
+{
+  int i;
+  stp_param_t *valptrs = stp_malloc(sizeof(stp_param_t) * num_dither_algos);
+  for (i = 0; i < num_dither_algos; i++)
+    {
+      valptrs[i].name = c_strdup(dither_algos[i].name);
+      valptrs[i].text = c_strdup(_(dither_algos[i].text));
+    }
+  *count = num_dither_algos;
+  return valptrs;
 }
 
 const char *
-stp_dither_algorithm_name(int id)
+stp_get_default_dither_algorithm(void)
 {
-  if (id < 0 || id >= num_dither_algos)
-    return NULL;
-  return (dither_algos[id].name);
-}
-
-const char *
-stp_dither_algorithm_text(int id)
-{
-  if (id < 0 || id >= num_dither_algos)
-    return NULL;
-  return _(dither_algos[id].text);
+  return dither_algos[0].name;
 }
 
 /*
@@ -416,7 +422,8 @@ stp_set_dither_function(dither_t *d, int image_bpp)
   d->dither_type = D_ADAPTIVE_HYBRID;
   for (i = 0; i < num_dither_algos; i++)
     {
-      if (!strcmp(stp_get_dither_algorithm(d->v), _(dither_algos[i].name)))
+      if (!strcmp(stp_get_parameter(d->v, "DitherAlgorithm"),
+		  _(dither_algos[i].name)))
 	{
 	  d->dither_type = dither_algos[i].id;
 	  break;
