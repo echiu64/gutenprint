@@ -28,7 +28,6 @@ MAINT_CHARSET = latin1
 
 DOCS = \
  FAQ.html \
- README.dither \
  README.maintaining \
  docbook.css \
  print-color.png \
@@ -42,7 +41,7 @@ DOCS = \
 
 info_TEXINFOS = gimpprint.texi
 
-gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi new-printer.texi indices.texi
+gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi new-printer.texi indices.texi integrating.texi
 
 
 ## Rules
@@ -50,14 +49,20 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 all-local: html
 
 html: html-stamp
+
+## Note the rather weird way of setting the exit status; this is because
+## texi2html doesn't set the exit status.
 html-stamp: gimpprint.texi $(gimpprint_TEXINFOS)
+	stat=1; \
 	if test x$(TEXI2HTML_PROG) != x ; then \
 	  rm -rf manual-html ; \
 	  mkdir manual-html ; \
 	  cd manual-html ; \
 	    $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
-	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi ; \
-	fi
+	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi 2>&1 | grep . ; \
+	    stat=$$? ; stat=`expr 1 - $$stat` ; \
+	fi; \
+	exit $$stat
 	touch html-stamp
 
 dist-hook: html
