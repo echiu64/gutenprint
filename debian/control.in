@@ -23,9 +23,10 @@ Description: The Print plugin for the GIMP
  tasks.  Gutenprint was formerly known as Gimp-Print.
 
 Package: cupsys-driver-gutenprint
+Replaces: cupsys-driver-gimpprint, cupsys-driver-gimpprint-data
 Architecture: any
 Section: graphics
-Depends: ${shlibs:Depends}, ${perl:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
+Depends: ${shlibs:Depends}, ${perl:Depends}, libperlmenu-perl, cupsys (>= 1.1.4) | cups (>= 1.1.4)
 Recommends: gs-esp (>= 7.05.2-1) | gs-gpl (>= 8.01-1) | postscript-viewer
 Suggests: gutenprint-doc (>= ${Source-Version}), gutenprint-locales (>= ${Source-Version})
 Description: Gutenprint printer drivers for CUPS
