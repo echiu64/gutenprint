@@ -108,6 +108,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
   {
+    "OutputOrder", N_("Output Order"),
+    N_("Output Order"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+  },
+  {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
@@ -1098,6 +1104,11 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	stp_string_list_param(description->bounds.str, 0)->name;
       if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
+    }
+  else if (strcmp(name, "OutputOrder") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      description->deflt.str = "Reverse";
     }
   else if (strcmp(name, "FullBleed") == 0)
     {

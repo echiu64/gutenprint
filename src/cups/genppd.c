@@ -131,6 +131,7 @@ const char *special_options[] =
   "MediaType",
   "InputSlot",
   "Resolution",
+  "OutputOrder",
   NULL
 };
 
@@ -1067,6 +1068,11 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   stp_parameter_description_free(&desc);
 
   gzputs(fp, "*CloseUI: *Resolution\n\n");
+
+  stp_describe_parameter(v, "OutputOrder", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    gzprintf(fp, "*DefaultOutputOrder: %s\n\n", desc.deflt.str);
+  stp_parameter_description_free(&desc);
 
   param_list = stp_get_parameter_list(v);
 
