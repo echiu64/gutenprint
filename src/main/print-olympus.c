@@ -290,10 +290,10 @@ static const olymp_resolution_list_t res_314dpi_list =
 
 static const olymp_pagesize_t p400_page[] =
 {
-  { "Custom", NULL, -1, -1, 22, 22, 54, 54},
   { "A4", NULL, -1, -1, 22, 22, 54, 54},
   { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85},
   { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9},
+  { "Custom", NULL, -1, -1, 22, 22, 54, 54},
 };
 
 static const olymp_pagesize_list_t p400_page_list =
@@ -303,10 +303,10 @@ static const olymp_pagesize_list_t p400_page_list =
 
 static const olymp_printsize_t p400_printsize[] =
 {
-  { "314x314", "Custom", 2400, 3200},
   { "314x314", "A4", 2400, 3200},
   { "314x314", "c8x10", 2000, 2400},
   { "314x314", "C6", 1328, 1920},
+  { "314x314", "Custom", 2400, 3200},
 };
 
 static const olymp_printsize_list_t p400_printsize_list =
@@ -414,10 +414,10 @@ static const char p400_adj_yellow[] =
 /* Canon CP-100 series */
 static const olymp_pagesize_t cpx00_page[] =
 {
-  { "Custom", NULL, -1, -1, 13, 13, 16, 18},
   { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
   { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15},
   { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15},
+  { "Custom", NULL, -1, -1, 13, 13, 16, 18},
 };
 
 static const olymp_pagesize_list_t cpx00_page_list =
@@ -427,10 +427,10 @@ static const olymp_pagesize_list_t cpx00_page_list =
 
 static const olymp_printsize_t cpx00_printsize[] =
 {
-  { "314x314", "Custom", 1232, 1808},
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
   { "314x314", "w155h244", 672, 1040},
+  { "314x314", "Custom", 1232, 1808},
 };
 
 static const olymp_printsize_list_t cpx00_printsize_list =
@@ -506,10 +506,10 @@ static const olymp_resolution_list_t updp10_res_list =
 
 static const olymp_pagesize_t updp10_page[] =
 {
-  { "Custom", NULL, -1, -1, 12, 12, 0, 0},
   { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18},
   { "w288h387", "UPC-10P34 (3:4)", -1, -1, 12, 12, 16, 16},
   { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18},
+  { "Custom", NULL, -1, -1, 12, 12, 0, 0},
 };
 
 static const olymp_pagesize_list_t updp10_page_list =
@@ -519,9 +519,9 @@ static const olymp_pagesize_list_t updp10_page_list =
 
 static const olymp_printsize_t updp10_printsize[] =
 {
-  { "300x300", "Custom", 1200, 1800},
   { "300x300", "w288h432", 1200, 1800},
   { "300x300", "w288h387", 1200, 1600},
+  { "300x300", "Custom", 1200, 1800},
 };
 
 static const olymp_printsize_list_t updp10_printsize_list =
@@ -598,10 +598,10 @@ static const olymp_resolution_list_t cx400_res_list =
 
 static const olymp_pagesize_t cx400_page[] =
 {
-  { "Custom", NULL, -1, -1, 0, 0, 0, 0},
   { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26},
   { "w288h432", NULL, -1, -1, 23, 23, 28, 28},
   { "w288h504", NULL, -1, -1, 23, 23, 23, 22},
+  { "Custom", NULL, -1, -1, 0, 0, 0, 0},
 };
 
 static const olymp_pagesize_list_t cx400_page_list =
@@ -611,10 +611,10 @@ static const olymp_pagesize_list_t cx400_page_list =
 
 static const olymp_printsize_t cx400_printsize[] =
 {
-  { "317x316", "Custom", 1268, 1842},
   { "317x316", "w288h387", 1268, 1658},
   { "317x316", "w288h432", 1268, 1842},
   { "317x316", "w288h504", 1268, 2208},
+  { "317x316", "Custom", 1268, 1842},
 };
 
 static const olymp_printsize_list_t cx400_printsize_list =
@@ -926,6 +926,7 @@ olympus_parameters(stp_const_vars_t v, const char *name,
       }
   if (strcmp(name, "PageSize") == 0)
     {
+      int default_specified = 0;
       const olymp_pagesize_list_t *p = caps->pages;
       const char* text;
 
@@ -938,9 +939,15 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 	  text = (p->item[i].text ? p->item[i].text : pt->text);
 	  stp_string_list_add_string(description->bounds.str,
 			  p->item[i].name, text);
+	  if (! default_specified && pt && pt->width > 0 && pt->height > 0)
+	    {
+	      description->deflt.str = p->item[i].name;
+	      default_specified = 1;
+	    }
 	}
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
+      if (!default_specified)
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
     }
   else if (strcmp(name, "MediaType") == 0)
     {

@@ -619,7 +619,12 @@ check_page_size(const char *paper_size)
 static void
 build_page_size_combo(option_t *option)
 {
-  if (stpui_show_all_paper_sizes)
+  /*
+   * Some printers don't support any "standard" page sizes.  If the number
+   * of page sizes is small, just display all of them.
+   */
+  if (stpui_show_all_paper_sizes ||
+      stp_string_list_count(option->info.list.params) < 10)
     plist_build_combo(option->info.list.combo, option->info.list.label,
 		      option->info.list.params, option->is_active,
 		      stp_get_string_parameter(pv->v, option->fast_desc->name),
