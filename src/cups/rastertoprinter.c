@@ -47,6 +47,9 @@
  * Include necessary headers...
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <cups/cups.h>
 #include <cups/ppd.h>
 #include <cups/raster.h>
@@ -64,6 +67,7 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include "../../lib/libprintut.h"
+#include "gimp-print-cups.h"
 
 /*
  * Structure for page raster data...
@@ -114,6 +118,22 @@ static stp_image_t theImage =
 
 static volatile stp_image_status_t Image_status;
 
+static void
+set_special_parameter(stp_vars_t v, const char *name, int choice)
+{
+  stp_parameter_t desc;
+  stp_describe_parameter(v, name, &desc);
+  if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      if (choice >= stp_string_list_count(desc.bounds.str))
+	fprintf(stderr, "ERROR: Unable to set %s!\n", name);
+      else
+	stp_set_string_parameter
+	  (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
+      stp_string_list_free(desc.bounds.str);
+    }
+}
+
 /*
  * 'main()' - Main entry and processing of driver.
  */
@@ -134,17 +154,9 @@ main(int  argc,				/* I - Number of command-line arguments */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
   const char		*val;		/* CUPS option value */
-  int			num_res;	/* Number of printer resolutions */
-  stp_param_t		*res;		/* Printer resolutions */
-  float			stp_gamma,	/* STP options */
-			stp_brightness,
-			stp_cyan,
-			stp_magenta,
-			stp_yellow,
-			stp_contrast,
-			stp_saturation,
-			stp_density;
-
+  int			i;
+  const stp_parameter_t *params;
+  int			nparams;
 
  /*
   * Initialise libgimpprint
@@ -200,63 +212,18 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Get the STP options, if any...
   */
 
+  initialize_stp_options();
+
   num_options = cupsParseOptions(argv[5], 0, &options);
-
-  if ((val = cupsGetOption("stpGamma", num_options, options)) != NULL)
-    stp_gamma = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpGamma")) != NULL)
-    stp_gamma = atof(option->defchoice) * 0.001;
-  else
-    stp_gamma = 1.0;
-
-  if ((val = cupsGetOption("stpBrightness", num_options, options)) != NULL)
-    stp_brightness = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpBrightness")) != NULL)
-    stp_brightness = atof(option->defchoice) * 0.001;
-  else
-    stp_brightness = 1.0;
-
-  if ((val = cupsGetOption("stpCyan", num_options, options)) != NULL)
-    stp_cyan = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpCyan")) != NULL)
-    stp_cyan = atof(option->defchoice) * 0.001;
-  else
-    stp_cyan = 1.0;
-
-  if ((val = cupsGetOption("stpMagenta", num_options, options)) != NULL)
-    stp_magenta = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpMagenta")) != NULL)
-    stp_magenta = atof(option->defchoice) * 0.001;
-  else
-    stp_magenta = 1.0;
-
-  if ((val = cupsGetOption("stpYellow", num_options, options)) != NULL)
-    stp_yellow = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpYellow")) != NULL)
-    stp_yellow = atof(option->defchoice) * 0.001;
-  else
-    stp_yellow = 1.0;
-
-  if ((val = cupsGetOption("stpContrast", num_options, options)) != NULL)
-    stp_contrast = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpContrast")) != NULL)
-    stp_contrast = atof(option->defchoice) * 0.001;
-  else
-    stp_contrast = 1.0;
-
-  if ((val = cupsGetOption("stpSaturation", num_options, options)) != NULL)
-    stp_saturation = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpSaturation")) != NULL)
-    stp_saturation = atof(option->defchoice) * 0.001;
-  else
-    stp_saturation = 1.0;
-
-  if ((val = cupsGetOption("stpDensity", num_options, options)) != NULL)
-    stp_density = atof(val) * 0.001;
-  else if ((option = ppdFindOption(ppd, "stpDensity")) != NULL)
-    stp_density = atof(option->defchoice) * 0.001;
-  else
-    stp_density = 1.0;
+  for (i = 0; i < stp_option_count; i++)
+    {
+      struct stp_option *opt = &(stp_options[i]);
+      if ((val = cupsGetOption(opt->name, num_options, options)) != NULL)
+	opt->defval = atof(val);
+      else if ((option = ppdFindOption(ppd, opt->name)) != NULL)
+	opt->defval = atof(option->defchoice);
+      opt++;
+    }
 
  /*
   * Figure out which driver to use...
@@ -364,20 +331,15 @@ main(int  argc,				/* I - Number of command-line arguments */
 
     v = stp_allocate_copy(stp_printer_get_printvars(printer));
 
-    stp_set_app_gamma(v, 1.0);
-    stp_set_brightness(v, stp_brightness);
-    stp_set_contrast(v, stp_contrast);
-    stp_set_cyan(v, stp_cyan);
-    stp_set_magenta(v, stp_magenta);
-    stp_set_yellow(v, stp_yellow);
-    stp_set_saturation(v, stp_saturation);
-    stp_set_density(v, stp_density);
+    stp_set_float_parameter(v, "AppGamma", 1.0);
+    for (i = 0; i < stp_option_count; i++)
+      stp_set_float_parameter(v, stp_options[i].iname,
+			      stp_options[i].defval / 1000.0);
     stp_set_cmap(v, NULL);
     stp_set_page_width(v, cups.header.PageSize[0]);
     stp_set_page_height(v, cups.header.PageSize[1]);
     stp_set_left(v, 0);
     stp_set_top(v, 0);
-    stp_set_gamma(v, stp_gamma);
     stp_set_image_type(v, cups.header.cupsRowCount);
     stp_set_outfunc(v, cups_writefunc);
     stp_set_errfunc(v, cups_writefunc);
@@ -404,53 +366,48 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  break;
     }
 
-    res = stp_printer_get_parameters(printer, v, "DitherAlgorithm");
-    num_res = stp_param_list_count(res);
+    set_special_parameter(v, "DitherAlgorithm", cups.header.cupsRowStep);
+    set_special_parameter(v, "Resolution", cups.header.cupsCompression);
 
-    if (cups.header.cupsRowStep >= num_res)
-      fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
-    else
-      stp_set_parameter
-	(v, "DitherAlgorithm",
-	 stp_param_list_param(res, cups.header.cupsRowStep)->name);
-    stp_param_list_free(res);
-
-    stp_set_parameter(v, "InputSlot", cups.header.MediaClass);
-    stp_set_parameter(v, "MediaType", cups.header.MediaType);
-    stp_set_parameter(v, "InkType", cups.header.OutputType);
+    stp_set_string_parameter(v, "InputSlot", cups.header.MediaClass);
+    stp_set_string_parameter(v, "MediaType", cups.header.MediaType);
+    stp_set_string_parameter(v, "InkType", cups.header.OutputType);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
 
     if ((size = stp_get_papersize_by_size(cups.header.PageSize[1],
 					  cups.header.PageSize[0])) != NULL)
-      stp_set_parameter(v, "PageSize", stp_papersize_get_name(size));
+      stp_set_string_parameter(v, "PageSize", stp_papersize_get_name(size));
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
-
-    res = stp_printer_get_parameters(printer, v, "Resolution");
-    num_res = stp_param_list_count(res);
-    if (cups.header.cupsCompression >= num_res)
-      fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
-    else
-      stp_set_parameter
-	(v, "Resolution",
-	 stp_param_list_param(res, cups.header.cupsRowStep)->name);
-    stp_param_list_free(res);
 
    /*
     * Print the page...
     */
 
     stp_merge_printvars(v, stp_printer_get_printvars(printer));
+
+    params = stp_list_parameters(v, &nparams);
+    for (i = 0; i < nparams; i++)
+      {
+	switch (params[i].type)
+	  {
+	  case STP_PARAMETER_TYPE_STRING_LIST:
+	    fprintf(stderr, "DEBUG: stp_get_%s(v) |%s|\n",
+		    params[i].name,stp_get_string_parameter(v,params[i].name));
+	    break;
+	  case STP_PARAMETER_TYPE_DOUBLE:
+	    fprintf(stderr, "DEBUG: stp_get_%s(v) |%.3f|\n",
+		    params[i].name,stp_get_float_parameter(v,params[i].name));
+	    break;
+	  default:
+	    break;
+	  }
+      }
+
     fprintf(stderr, "DEBUG: stp_get_driver(v) |%s|\n", stp_get_driver(v));
     fprintf(stderr, "DEBUG: stp_get_ppd_file(v) |%s|\n", stp_get_ppd_file(v));
-    fprintf(stderr, "DEBUG: stp_get_resolution(v) |%s|\n", stp_get_parameter(v, "Resolution"));
-    fprintf(stderr, "DEBUG: stp_get_media_size(v) |%s|\n", stp_get_parameter(v, "PageSize"));
-    fprintf(stderr, "DEBUG: stp_get_media_type(v) |%s|\n", stp_get_parameter(v, "MediaType"));
-    fprintf(stderr, "DEBUG: stp_get_media_source(v) |%s|\n", stp_get_parameter(v, "InputSlot"));
-    fprintf(stderr, "DEBUG: stp_get_ink_type(v) |%s|\n", stp_get_parameter(v, "InkType"));
-    fprintf(stderr, "DEBUG: stp_get_dither_algorithm(v) |%s|\n", stp_get_parameter(v, "DitherAlgorithm"));
     fprintf(stderr, "DEBUG: stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
     fprintf(stderr, "DEBUG: stp_get_left(v) |%d|\n", stp_get_left(v));
     fprintf(stderr, "DEBUG: stp_get_top(v) |%d|\n", stp_get_top(v));
@@ -459,19 +416,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
     fprintf(stderr, "DEBUG: stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
     fprintf(stderr, "DEBUG: stp_get_output_color_model(v) |%d|\n", stp_get_output_color_model(v));
-    fprintf(stderr, "DEBUG: stp_get_brightness(v) |%.3f|\n", stp_get_brightness(v));
-    fprintf(stderr, "DEBUG: stp_get_gamma(v) |%.3f|\n", stp_get_gamma(v));
-    fprintf(stderr, "DEBUG: stp_get_contrast(v) |%.3f|\n", stp_get_contrast(v));
-    fprintf(stderr, "DEBUG: stp_get_cyan(v) |%.3f|\n", stp_get_cyan(v));
-    fprintf(stderr, "DEBUG: stp_get_magenta(v) |%.3f|\n", stp_get_magenta(v));
-    fprintf(stderr, "DEBUG: stp_get_yellow(v) |%.3f|\n", stp_get_yellow(v));
-    fprintf(stderr, "DEBUG: stp_get_saturation(v) |%.3f|\n", stp_get_saturation(v));
-    fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
-    fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
 
-    stp_printer_get_media_size(printer, v, &(cups.width), &(cups.height));
-    stp_printer_get_imageable_area(printer, v, &(cups.left), &(cups.right),
-				   &(cups.bottom), &(cups.top));
+    stp_get_media_size(v, &(cups.width), &(cups.height));
+    stp_get_imageable_area(v, &(cups.left), &(cups.right),
+			   &(cups.bottom), &(cups.top));
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
     stp_set_width(v, cups.right - cups.left);
@@ -490,10 +438,10 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
 	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
 
-    if (stp_printer_verify(printer, v))
+    if (stp_verify(v))
     {
       signal(SIGTERM, cancel_job);
-      stp_print(printer, v, &theImage);
+      stp_print(v, &theImage);
       fflush(stdout);
     }
     else

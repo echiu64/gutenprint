@@ -143,11 +143,13 @@ void output_start(void)
 void output_printer(stp_printdef_printer_t *printer)
 {
   fprintf(stdout, "  {\n");
+  fprintf(stdout, "    COOKIE_PRINTER,\n");
   fprintf(stdout, "    \"%s\",\n", printer->long_name);
   fprintf(stdout, "    \"%s\",\n", printer->driver);
   fprintf(stdout, "    %d,\n", printer->model);
   fprintf(stdout, "    &stp_%s_printfuncs,\n", printer->family);
   fprintf(stdout, "    {\n");
+  fprintf(stdout, "      COOKIE_VARS,\n");
   fprintf(stdout, "      \"%s\",\n", printer->printvars.driver);   /* driver */
   fprintf(stdout, "      \"\",\n");      /* ppd_file */
   fprintf(stdout, "      \"\",\n");      /* resolution */

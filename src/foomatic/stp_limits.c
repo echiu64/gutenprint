@@ -34,66 +34,26 @@
 int
 main(int argc, char **argv)
 {
-  const stp_vars_t minimum = stp_minimum_settings();
-  const stp_vars_t maximum = stp_maximum_settings();
-  const stp_vars_t defvars = stp_default_settings();
+  stp_parameter_t desc;
+  int nparams;
+  int i;
+  const stp_parameter_t *params;
 
   stp_init();
-  printf("$stp_values{'MINVAL'}{'Brightness'} = %.3f\n",
-	 stp_get_brightness(minimum));
-  printf("$stp_values{'MAXVAL'}{'Brightness'} = %.3f\n",
-	 stp_get_brightness(maximum));
-  printf("$stp_values{'DEFVAL'}{'Brightness'} = %.3f\n",
-	 stp_get_brightness(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Contrast'} = %.3f\n",
-	 stp_get_contrast(minimum));
-  printf("$stp_values{'MAXVAL'}{'Contrast'} = %.3f\n",
-	 stp_get_contrast(maximum));
-  printf("$stp_values{'DEFVAL'}{'Contrast'} = %.3f\n",
-	 stp_get_contrast(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Density'} = %.3f\n",
-	 stp_get_density(minimum));
-  printf("$stp_values{'MAXVAL'}{'Density'} = %.3f\n",
-	 stp_get_density(maximum));
-  printf("$stp_values{'DEFVAL'}{'Density'} = %.3f\n",
-	 stp_get_density(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Gamma'} = %.3f\n",
-	 stp_get_gamma(minimum));
-  printf("$stp_values{'MAXVAL'}{'Gamma'} = %.3f\n",
-	 stp_get_gamma(maximum));
-  printf("$stp_values{'DEFVAL'}{'Gamma'} = %.3f\n",
-	 stp_get_gamma(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Cyan'} = %.3f\n",
-	 stp_get_cyan(minimum));
-  printf("$stp_values{'MAXVAL'}{'Cyan'} = %.3f\n",
-	 stp_get_cyan(maximum));
-  printf("$stp_values{'DEFVAL'}{'Cyan'} = %.3f\n",
-	 stp_get_cyan(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Magenta'} = %.3f\n",
-	 stp_get_magenta(minimum));
-  printf("$stp_values{'MAXVAL'}{'Magenta'} = %.3f\n",
-	 stp_get_magenta(maximum));
-  printf("$stp_values{'DEFVAL'}{'Magenta'} = %.3f\n",
-	 stp_get_magenta(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Yellow'} = %.3f\n",
-	 stp_get_yellow(minimum));
-  printf("$stp_values{'MAXVAL'}{'Yellow'} = %.3f\n",
-	 stp_get_yellow(maximum));
-  printf("$stp_values{'DEFVAL'}{'Yellow'} = %.3f\n",
-	 stp_get_yellow(defvars));
-
-  printf("$stp_values{'MINVAL'}{'Saturation'} = %.3f\n",
-	 stp_get_saturation(minimum));
-  printf("$stp_values{'MAXVAL'}{'Saturation'} = %.3f\n",
-	 stp_get_saturation(maximum));
-  printf("$stp_values{'DEFVAL'}{'Saturation'} = %.3f\n",
-	 stp_get_saturation(defvars));
-
+  params = stp_list_parameters(stp_default_settings(), &nparams);
+  for (i = 0; i < nparams; i++)
+    {
+      if (params[i].type == STP_PARAMETER_TYPE_DOUBLE)
+	{
+	  stp_describe_parameter(stp_default_settings(),
+				 params[i].name, &desc);
+	  printf("$stp_values{'MINVAL'}{'%s'} = %.3f\n",
+		 params[i].name, desc.bounds.dbl.lower);
+	  printf("$stp_values{'MAXVAL'}{'%s'} = %.3f\n",
+		 params[i].name, desc.bounds.dbl.upper);
+	  printf("$stp_values{'DEFVAL'}{'%s'} = %.3f\n",
+		 params[i].name, desc.deflt.dbl);
+	}
+    }
   return 0;
 }

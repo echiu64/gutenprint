@@ -78,6 +78,7 @@
 #ifndef CUPS_PPD_PS_LEVEL
 #define CUPS_PPD_PS_LEVEL 2
 #endif
+#include "gimp-print-cups.h"
 
 
 /*
@@ -119,35 +120,9 @@ typedef struct				/**** Media size values ****/
 
 
 /*
- * STP option data...
- */
-
-static struct				/**** STP numeric options ****/
-{
-  const char	*name,			/* Name of option */
-    		*text;			/* Human-readable text */
-  int		low,			/* Low value (thousandths) */
-    		high,			/* High value (thousandths) */
-	        defval,			/* Default value */
-    		step;			/* Step (thousandths) */
-}		stp_options[] =
-{
-  { "stpBrightness",	N_("Brightness") },
-  { "stpContrast",	N_("Contrast") },
-  { "stpGamma",		N_("Gamma") },
-  { "stpDensity",	N_("Density") },
-  { "stpCyan",		N_("Cyan") },
-  { "stpMagenta",	N_("Magenta") },
-  { "stpYellow",	N_("Yellow") },
-  { "stpSaturation",	N_("Saturation") }
-};
-
-
-/*
  * Local functions...
  */
 
-void	initialize_stp_options(void);
 void	usage(void);
 void    help(void);
 char ** getlangs(void);
@@ -188,8 +163,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
   */
 
   prefix   = GENPPD_PPD_PREFIX;
-
-  initialize_stp_options();
 
   for (;;)
   {
@@ -286,7 +259,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
  */
 
   stp_init();
-
+  initialize_stp_options();
 
  /*
   * Set the language...
@@ -393,62 +366,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   return (0);
 }
-
-
-/*
- * 'initialize_stp_options()' - Initialize the min/max values for
- *                              each STP numeric option.
- */
-
-void
-initialize_stp_options(void)
-{
-  const stp_vars_t lower = stp_minimum_settings();
-  const stp_vars_t upper = stp_maximum_settings();
-  const stp_vars_t defvars = stp_default_settings();
-
-
-  stp_options[0].low = 1000 * stp_get_brightness(lower);
-  stp_options[0].high = 1000 * stp_get_brightness(upper);
-  stp_options[0].defval = 1000 * stp_get_brightness(defvars);
-  stp_options[0].step = 50;
-
-  stp_options[1].low = 1000 * stp_get_contrast(lower);
-  stp_options[1].high = 1000 * stp_get_contrast(upper);
-  stp_options[1].defval = 1000 * stp_get_contrast(defvars);
-  stp_options[1].step = 50;
-
-  stp_options[2].low = 1000 * stp_get_gamma(lower);
-  stp_options[2].high = 1000 * stp_get_gamma(upper);
-  stp_options[2].defval = 1000 * stp_get_gamma(defvars);
-  stp_options[2].step = 50;
-
-  stp_options[3].low = 1000 * stp_get_density(lower);
-  stp_options[3].high = 1000 * stp_get_density(upper);
-  stp_options[3].defval = 1000 * stp_get_density(defvars);
-  stp_options[3].step = 50;
-
-  stp_options[4].low = 1000 * stp_get_cyan(lower);
-  stp_options[4].high = 1000 * stp_get_cyan(upper);
-  stp_options[4].defval = 1000 * stp_get_cyan(defvars);
-  stp_options[4].step = 50;
-
-  stp_options[5].low = 1000 * stp_get_magenta(lower);
-  stp_options[5].high = 1000 * stp_get_magenta(upper);
-  stp_options[5].defval = 1000 * stp_get_magenta(defvars);
-  stp_options[5].step = 50;
-
-  stp_options[6].low = 1000 * stp_get_yellow(lower);
-  stp_options[6].high = 1000 * stp_get_yellow(upper);
-  stp_options[6].defval = 1000 * stp_get_yellow(defvars);
-  stp_options[6].step = 50;
-
-  stp_options[7].low = 1000 * stp_get_saturation(lower);
-  stp_options[7].high = 1000 * stp_get_saturation(upper);
-  stp_options[7].defval = 1000 * stp_get_saturation(defvars);
-  stp_options[7].step = 50;
-}
-
 
 /*
  * 'usage()' - Show program usage...
@@ -647,8 +564,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   char		filename[1024];		/* Filename */
   char		manufacturer[64];	/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
-  stp_param_list_t opts;		/* Printer options */
-  const char	*defopt;		/* Default printer option */
   int		xdpi, ydpi;		/* Resolution info */
   stp_vars_t	v;			/* Variable info */
   int		width, height,		/* Page information */
@@ -657,7 +572,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   const char	*driver;		/* Driver name */
   const char	*long_name;		/* Driver long name */
   stp_vars_t	printvars;		/* Printer option names */
-  int		model;			/* Driver model number */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
   struct stat   dir;                    /* prefix dir status */
@@ -666,7 +580,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 		min_height,
 		max_width,
 		max_height;
-
+  stp_parameter_t desc;
+  const stp_param_string_t *opt;
 
  /*
   * Initialize driver-specific variables...
@@ -675,7 +590,6 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   driver     = stp_printer_get_driver(p);
   long_name  = stp_printer_get_long_name(p);
   printvars  = stp_printer_get_printvars(p);
-  model      = stp_printer_get_model(p);
   the_papers = NULL;
   cur_opt    = 0;
 
@@ -761,7 +675,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*TTRasterizer:	Type42\n");
 
   gzputs(fp, "*cupsVersion:	1.1\n");
-  gzprintf(fp, "*cupsModelNumber: \"%d\"\n", model);
+  gzprintf(fp, "*cupsModelNumber: \"0\"\n");
   gzputs(fp, "*cupsManualCopies: True\n");
   gzputs(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertoprinter\"\n");
   if (strcasecmp(manufacturer, "EPSON") == 0)
@@ -774,15 +688,15 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   v = stp_allocate_copy(printvars);
   variable_sizes = 0;
-  opts = stp_printer_get_parameters(p, v, "PageSize");
-  num_opts = stp_param_list_count(opts);
-  defopt = stp_printer_get_default_parameter(p, v, "PageSize");
+  stp_describe_parameter(v, "PageSize", &desc);
+  num_opts = stp_string_list_count(desc.bounds.str);
   the_papers = xmalloc(sizeof(paper_t) * num_opts);
 
   for (i = 0; i < num_opts; i++)
   {
-    const stp_param_t *opt = stp_param_list_param(opts, i);
-    const stp_papersize_t papersize = stp_get_papersize_by_name(opt->name);
+    stp_papersize_t papersize;
+    opt = stp_string_list_param(desc.bounds.str, i);
+    papersize = stp_get_papersize_by_name(opt->name);
 
     if (!papersize)
     {
@@ -802,10 +716,10 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     if (width <= 0 || height <= 0)
       continue;
 
-    stp_set_parameter(v, "PageSize", opt->name);
+    stp_set_string_parameter(v, "PageSize", opt->name);
 
-    stp_printer_get_media_size(p, v, &width, &height);
-    stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
+    stp_get_media_size(v, &width, &height);
+    stp_get_imageable_area(v, &left, &right, &bottom, &top);
 
     the_papers[cur_opt].name   = opt->name;
     the_papers[cur_opt].text   = opt->text;
@@ -823,7 +737,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
-  gzprintf(fp, "*DefaultPageSize: %s\n", defopt);
+  gzprintf(fp, "*DefaultPageSize: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageSize %s", the_papers[i].name);
@@ -834,7 +748,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   gzputs(fp, "*OpenUI *PageRegion: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
-  gzprintf(fp, "*DefaultPageRegion: %s\n", defopt);
+  gzprintf(fp, "*DefaultPageRegion: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageRegion %s", the_papers[i].name);
@@ -843,7 +757,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   }
   gzputs(fp, "*CloseUI: *PageRegion\n\n");
 
-  gzprintf(fp, "*DefaultImageableArea: %s\n", defopt);
+  gzprintf(fp, "*DefaultImageableArea: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*ImageableArea %s", the_papers[i].name);
@@ -853,7 +767,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   }
   gzputs(fp, "\n");
 
-  gzprintf(fp, "*DefaultPaperDimension: %s\n", defopt);
+  gzprintf(fp, "*DefaultPaperDimension: %s\n", desc.deflt.str);
 
   for (i = 0; i < cur_opt; i ++)
   {
@@ -865,11 +779,11 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   if (variable_sizes)
   {
-    stp_printer_get_size_limit(p, v, &max_width, &max_height,
+    stp_get_size_limit(v, &max_width, &max_height,
 			       &min_width, &min_height);
-    stp_set_parameter(v, "PageSize", "Custom");
-    stp_printer_get_media_size(p, v, &width, &height);
-    stp_printer_get_imageable_area(p, v, &left, &right, &bottom, &top);
+    stp_set_string_parameter(v, "PageSize", "Custom");
+    stp_get_media_size(v, &width, &height);
+    stp_get_imageable_area(v, &left, &right, &bottom, &top);
 
     gzprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
     gzprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
@@ -885,7 +799,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n\n");
   }
 
-  stp_param_list_free(opts);
+  stp_string_list_free(desc.bounds.str);
   if (the_papers)
     free(the_papers);
 
@@ -932,24 +846,23 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Media types...
   */
 
-  opts   = stp_printer_get_parameters(p, v, "MediaType");
-  num_opts = stp_param_list_count(opts);
-  defopt = stp_printer_get_default_parameter(p, v, "MediaType");
+  stp_describe_parameter(v, "MediaType", &desc);
+  num_opts = stp_string_list_count(desc.bounds.str);
 
   if (num_opts > 0)
   {
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
-    gzprintf(fp, "*DefaultMediaType: %s\n", defopt);
+    gzprintf(fp, "*DefaultMediaType: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
     {
-      const stp_param_t *opt = stp_param_list_param(opts, i);
+      opt = stp_string_list_param(desc.bounds.str, i);
       gzprintf(fp, "*MediaType %s/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n",
                opt->name, opt->text, opt->name);
     }
 
-    stp_param_list_free(opts);
+    stp_string_list_free(desc.bounds.str);
 
     gzputs(fp, "*CloseUI: *MediaType\n\n");
   }
@@ -958,24 +871,23 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Input slots...
   */
 
-  opts   = stp_printer_get_parameters(p, v, "InputSlot");
-  num_opts = stp_param_list_count(opts);
-  defopt = stp_printer_get_default_parameter(p, v, "InputSlot");
+  stp_describe_parameter(v, "InputSlot", &desc);
+  num_opts = stp_string_list_count(desc.bounds.str);
 
   if (num_opts > 0)
   {
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
-    gzprintf(fp, "*DefaultInputSlot: %s\n", defopt);
+    gzprintf(fp, "*DefaultInputSlot: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
     {
-      const stp_param_t *opt = stp_param_list_param(opts, i);
+      opt = stp_string_list_param(desc.bounds.str, i);
       gzprintf(fp, "*InputSlot %s/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n",
                opt->name, opt->text, opt->name);
     }
 
-    stp_param_list_free(opts);
+    stp_string_list_free(desc.bounds.str);
 
     gzputs(fp, "*CloseUI: *InputSlot\n\n");
   }
@@ -984,22 +896,21 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   * Resolutions...
   */
 
-  opts   = stp_printer_get_parameters(p, v, "Resolution");
-  num_opts = stp_param_list_count(opts);
-  defopt = stp_printer_get_default_parameter(p, v, "Resolution");
+  stp_describe_parameter(v, "Resolution", &desc);
+  num_opts = stp_string_list_count(desc.bounds.str);
 
   gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
-  gzprintf(fp, "*DefaultResolution: %s\n", defopt);
+  gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
 
   for (i = 0; i < num_opts; i ++)
   {
    /*
     * Strip resolution name to its essentials...
     */
-    const stp_param_t *opt = stp_param_list_param(opts, i);
-    stp_set_parameter(v, "Resolution", opt->name);
-    stp_printer_describe_resolution(p, v, &xdpi, &ydpi);
+    opt = stp_string_list_param(desc.bounds.str, i);
+    stp_set_string_parameter(v, "Resolution", opt->name);
+    stp_describe_resolution(v, &xdpi, &ydpi);
 
     /* This should not happen! */
     if (xdpi == -1 || ydpi == -1)
@@ -1013,7 +924,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
              opt->name, opt->text, xdpi, ydpi, i);
   }
 
-  stp_param_list_free(opts);
+  stp_string_list_free(desc.bounds.str);
 
   gzputs(fp, "*CloseUI: *Resolution\n\n");
 
@@ -1044,21 +955,20 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * Dithering algorithms...
     */
 
-    opts   = stp_printer_get_parameters(p, v, "DitherAlgorithm");
-    num_opts = stp_param_list_count(opts);
-    defopt = stp_printer_get_default_parameter(p, v, "DitherAlgorithm");
+    stp_describe_parameter(v, "DitherAlgorithm", &desc);
+    num_opts = stp_string_list_count(desc.bounds.str);
 
     gzprintf(fp, "*OpenUI *stpDither/%s: PickOne\n", _("Dither Algorithm"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
-    gzprintf(fp, "*DefaultstpDither: %s\n", defopt);
+    gzprintf(fp, "*DefaultstpDither: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
     {
-      const stp_param_t *opt = stp_param_list_param(opts, i);
+      opt = stp_string_list_param(desc.bounds.str, i);
       gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
 	       opt->name, opt->text, i);
     }
-    stp_param_list_free(opts);
+    stp_string_list_free(desc.bounds.str);
 
     gzputs(fp, "*CloseUI: *stpDither\n\n");
 
@@ -1066,27 +976,26 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     * InkTypes...
     */
 
-    opts   = stp_printer_get_parameters(p, v, "InkType");
-    num_opts = stp_param_list_count(opts);
-    defopt = stp_printer_get_default_parameter(p, v, "InkType");
+    stp_describe_parameter(v, "InkType", &desc);
+    num_opts = stp_string_list_count(desc.bounds.str);
 
     if (num_opts > 0)
     {
       gzprintf(fp, "*OpenUI *stpInkType/%s: PickOne\n", _("Ink Type"));
       gzputs(fp, "*OrderDependency: 20 AnySetup *stpInkType\n");
-      gzprintf(fp, "*DefaultstpInkType: %s\n", defopt);
+      gzprintf(fp, "*DefaultstpInkType: %s\n", desc.deflt.str);
 
       for (i = 0; i < num_opts; i ++)
       {
        /*
 	* Write the inktype option...
 	*/
-	const stp_param_t *opt = stp_param_list_param(opts, i);
+	opt = stp_string_list_param(desc.bounds.str, i);
 	gzprintf(fp, "*stpInkType %s/%s:\t\"<</OutputType(%s)>>setpagedevice\"\n",
 		 opt->name, opt->text, opt->name);
       }
 
-      stp_param_list_free(opts);
+      stp_string_list_free(desc.bounds.str);
 
       gzputs(fp, "*CloseUI: *stpInkType\n\n");
     }
@@ -1096,7 +1005,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     */
 
     if (stp_get_output_type(printvars) == OUTPUT_COLOR)
-      num_opts = 8;
+      num_opts = stp_option_count;
     else
       num_opts = 4;
 

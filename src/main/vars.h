@@ -34,6 +34,7 @@ extern "C" {
 
 typedef struct stp_internal_option
 {
+  int	cookie;
   char *name;
   size_t length;
   char *data;
@@ -43,10 +44,11 @@ typedef struct stp_internal_option
 
 typedef struct					/* Plug-in variables */
 {
+  int	cookie;
   const char	*driver,		/* Name of printer "driver" */
 	*ppd_file,		/* PPD file */
         *resolution,		/* Resolution */
-	*media_size,		/* Media size */
+	*media_size_name,	/* Media size */
 	*media_type,		/* Media type */
 	*media_source,		/* Media source */
 	*ink_type,		/* Ink or cartridge */
@@ -82,17 +84,26 @@ typedef struct					/* Plug-in variables */
 } stp_internal_vars_t;
 
 
-extern void	stp_set_driver_data (stp_vars_t vv, void * val);
-extern void * 	stp_get_driver_data (const stp_vars_t vv);
+extern void     stp_set_driver_data (stp_vars_t vv, void * val);
+extern void *   stp_get_driver_data (const stp_vars_t vv);
 
-extern void	stp_set_verified(stp_vars_t vv, int value);
-extern int	stp_get_verified(stp_vars_t vv);
+extern void     stp_set_verified(stp_vars_t vv, int value);
+extern int      stp_get_verified(stp_vars_t vv);
 
 extern void     stp_copy_options(stp_vars_t vd, const stp_vars_t vs);
 
+extern const stp_vars_t stp_minimum_settings(void);
+extern const stp_vars_t stp_maximum_settings(void);
 
-#ifdef __cplusplus
-  }
-#endif
+extern void
+stp_describe_internal_parameter(const stp_vars_t v, const char *name,
+				stp_parameter_t *description);
+
+extern void
+stp_fill_parameter_settings(stp_parameter_t *desc, const char *name);
+
 
 #endif /* GIMP_PRINT_INTERNAL_VARS_H */
+/*
+ * End of "$Id$".
+ */

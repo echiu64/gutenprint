@@ -42,9 +42,8 @@ extern "C" {
 #endif
 
 
-extern void	stp_default_media_size(const stp_printer_t printer,
-				       const stp_vars_t v, int *width,
-				       int *height);
+extern void stp_default_media_size(const stp_vars_t v,
+				   int *width, int *height);
 
 
 #ifdef __cplusplus

@@ -146,7 +146,7 @@ printer: PRINTER tSTRING
 	{ printer = c_strdup($2); }
 ;
 parameter: PARAMETER tSTRING tSTRING
-	{ stp_set_parameter(tv, $2, $3); }
+	{ stp_set_string_parameter(tv, $2, $3); }
 ;
 density: DENSITY tDOUBLE
 	{ density = $2; }

@@ -146,9 +146,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   stp_vars_t	v; 		        /* Dither variables */
-  stp_printer_t p;
-  stp_param_list_t params;
-  int		count;
+  stp_parameter_t desc;
   static const char	*dither_types[] =	/* Different dithering modes */
 		{
 		  "gray",
@@ -176,12 +174,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   stp_init();
   v = stp_allocate_vars();
-
-  /* Arbitrary printer, so we can get dither algorithms */
-  p = stp_get_printer_by_driver("escp2-ex");
-  params = stp_printer_get_parameters(p, v,"DitherAlgorithm");
-  count = stp_param_list_count(params);
-
+  stp_set_driver(v, "escp2-ex");
+  stp_describe_parameter(v, "DitherAlgorithm", &desc);
 
  /*
   * Get command-line args...
@@ -229,11 +223,12 @@ main(int  argc,				/* I - Number of command-line arguments */
       continue;
     }
 
-    for (j = 0; j < count; j ++)
-      if (strcmp(argv[i], stp_param_list_param(params, j)->name) == 0)
-	dither_name = stp_param_list_param(params, j)->name;
+    for (j = 0; j < stp_string_list_count(desc.bounds.str); j ++)
+      if (strcmp(argv[i], stp_string_list_param(desc.bounds.str,j)->name) == 0)
+	dither_name = stp_string_list_param(desc.bounds.str, j)->name;
 
-    printf("Unknown option \"%s\" ignored!\n", argv[i]);
+    if (!dither_name)
+      printf("Unknown option \"%s\" ignored!\n", argv[i]);
   }
 
  /*
@@ -251,7 +246,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   */
 
   if (dither_name)
-    stp_set_parameter(v, "DitherAlgorithm", dither_name);
+    stp_set_string_parameter(v, "DitherAlgorithm", dither_name);
 
   switch (dither_type)
     {
@@ -352,9 +347,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
 	  dither_types[dither_type],
-	  dither_name ? dither_name :
-	  stp_printer_get_default_parameter(p, v, "DitherAlgorithm"),	  
-	  dither_bits,
+	  dither_name ? dither_name : desc.deflt.str, dither_bits,
 	  (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME) ?
 	  "pgm" : "ppm");
 

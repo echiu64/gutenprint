@@ -160,9 +160,8 @@ image_finish(IMAGE *img)
   img->row_buf = NULL;
 }
 
-static int
-get_float(const char *str, const char *name, float *pval,
-	  float min_value, float max_value)
+static double
+get_float(const char *str, const char *name, double *pval)
 {
   float new_value;
   /* Force locale to "C", because decimal numbers coming from the IJS
@@ -171,28 +170,20 @@ get_float(const char *str, const char *name, float *pval,
   if (sscanf(str, "%f", &new_value) == 1)
     {
       setlocale(LC_ALL, "");
-      if ((new_value >= min_value) && (new_value <= max_value))
-	{
-	  *pval = new_value;
-	  return 0;
-	}
-      else
-	fprintf(stderr,
-		_("Parameter %s out of range (value %f, min %f, max %f)\n"),
-		name, new_value, min_value, max_value);
+      *pval = new_value;
+      return 0;
     }
   else
     {
       setlocale(LC_ALL, "");
       fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
 	      name, str);
+      return -1;
     }
-  return -1;
 }
 
 static int
-get_int(const char *str, const char *name, int *pval,
-	int min_value, int max_value)
+get_int(const char *str, const char *name, int *pval)
 {
   int new_value;
   /* Force locale to "C", because decimal numbers sent to the IJS
@@ -201,22 +192,16 @@ get_int(const char *str, const char *name, int *pval,
   if (sscanf(str, "%d", &new_value) == 1)
     {
       setlocale(LC_ALL, "");
-      if ((new_value >= min_value) && (new_value <= max_value))
-	{
-	  *pval = new_value;
-	  return 0;
-	}
-	fprintf(stderr,
-		_("Parameter %s out of range (value %d, min %d, max %d)\n"),
-		name, new_value, min_value, max_value);
+      *pval = new_value;
+      return 0;
     }
   else
     {
       setlocale(LC_ALL, "");
       fprintf(stderr, _("Unable to parse parameter %s=%s (expect a number)\n"),
 	      name, str);
+      return -1;
     }
-  return -1;
 }
 
 /* A C implementation of /^(\d\.+\-eE)+x(\d\.+\-eE)+$/ */
@@ -350,7 +335,7 @@ gimp_get_cb (void *get_cb_data,
 {
   IMAGE *img = (IMAGE *)get_cb_data;
   stp_vars_t v = img->v;
-  stp_printer_t printer = stp_get_printer_by_driver(stp_get_driver(v));
+  stp_printer_t printer = stp_get_printer(v);
   GimpParamList *pl = img->params;
   GimpParamList *curs;
   const char *val = NULL;
@@ -379,7 +364,7 @@ gimp_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      stp_printer_get_imageable_area(printer, v, &l, &r, &b, &t);
+      stp_get_imageable_area(v, &l, &r, &b, &t);
       h = b - t;
       w = r - l;
       /* Force locale to "C", because decimal numbers sent to the IJS
@@ -393,7 +378,7 @@ gimp_get_cb (void *get_cb_data,
   else if (!strcmp(key, "Dpi"))
     {
       int x, y;
-      stp_printer_describe_resolution(printer, v, &x, &y);
+      stp_describe_resolution(v, &x, &y);
       /* Force locale to "C", because decimal numbers sent to the IJS
 	 client must have a decimal point, nver a decimal comma */
       setlocale(LC_ALL, "C");
@@ -406,8 +391,8 @@ gimp_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      stp_printer_get_media_size(printer, v, &w, &h);
-      stp_printer_get_imageable_area(printer, v, &l, &r, &b, &t);
+      stp_get_media_size(v, &w, &h);
+      stp_get_imageable_area(v, &l, &r, &b, &t);
       /* Force locale to "C", because decimal numbers sent to the IJS
 	 client must have a decimal point, nver a decimal comma */
       setlocale(LC_ALL, "C");
@@ -442,10 +427,8 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 {
   int code = 0;
   char vbuf[256];
-  const stp_vars_t lower = stp_minimum_settings();
-  const stp_vars_t upper = stp_maximum_settings();
   int i;
-  float z;
+  double z;
   IMAGE *img = (IMAGE *)set_cb_data;
   STP_DEBUG(fprintf (stderr, "gimp_set_cb: %s=", key));
   STP_DEBUG(fwrite (value, 1, value_size, stderr));
@@ -481,15 +464,13 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
   else if (strcmp(key, "PPDFile") == 0)
     stp_set_ppd_file(img->v, vbuf);
   else if (strcmp(key, "Quality") == 0)
-    stp_set_parameter(img->v, "Resolution", vbuf);
+    stp_set_string_parameter(img->v, "Resolution", vbuf);
   else if (strcmp(key, "TopLeft") == 0)
     {
       int l, r, b, t, pw, ph;
       double w, h;
-      stp_printer_t printer =
-	stp_get_printer_by_driver(stp_get_driver(img->v));
-      stp_printer_get_imageable_area(printer, img->v, &l, &r, &b, &t);
-      stp_printer_get_media_size(printer, img->v, &pw, &ph);
+      stp_get_imageable_area(img->v, &l, &r, &b, &t);
+      stp_get_media_size(img->v, &pw, &ph);
       STP_DEBUG(fprintf(stderr, "l %d r %d t %d b %d pw %d ph %d\n",
 			l, r, t, b, pw, ph));
       code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
@@ -521,7 +502,8 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    {
 	      STP_DEBUG(fprintf(stderr, "Found page size %s\n",
 				stp_papersize_get_name(p)));
-	      stp_set_parameter(img->v, "PageSize", stp_papersize_get_name(p));
+	      stp_set_string_parameter(img->v, "PageSize",
+				       stp_papersize_get_name(p));
 	    }
 	  else
 	    STP_DEBUG(fprintf(stderr, "No matching paper size found\n"));
@@ -529,66 +511,9 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else if (strcmp(key, "ImageType") == 0)
     {
-      code = get_int(vbuf, key, &i,
-		     stp_get_image_type(lower), stp_get_image_type(upper));
+      code = get_int(vbuf, key, &i);
       if (code == 0)
 	stp_set_image_type(img->v, i);
-    }
-  else if (strcmp(key, "Brightness") == 0)
-    {
-      code = get_float(vbuf, key, &z,
-		       stp_get_brightness(lower), stp_get_brightness(upper));
-      if (code == 0)
-	stp_set_brightness(img->v, z);
-    }
-  else if (strcmp(key, "Gamma") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_gamma(lower), stp_get_gamma(upper));
-      if (code == 0)
-	stp_set_gamma(img->v, z);
-    }
-  else if (strcmp(key, "Contrast") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_contrast(lower), stp_get_contrast(upper));
-      if (code == 0)
-	stp_set_contrast(img->v, z);
-    }
-  else if (strcmp(key, "Cyan") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_cyan(lower), stp_get_cyan(upper));
-      if (code == 0)
-	stp_set_cyan(img->v, z);
-    }
-  else if (strcmp(key, "Magenta") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_magenta(lower), stp_get_magenta(upper));
-      if (code == 0)
-	stp_set_magenta(img->v, z);
-    }
-  else if (strcmp(key, "Yellow") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_yellow(lower), stp_get_yellow(upper));
-      if (code == 0)
-	stp_set_yellow(img->v, z);
-    }
-  else if (strcmp(key, "Saturation") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_saturation(lower), stp_get_saturation(upper));
-      if (code == 0)
-	stp_set_saturation(img->v, z);
-    }
-  else if (strcmp(key, "Density") == 0)
-    {
-      code = get_float(vbuf, key, &z, 
-		       stp_get_density(lower), stp_get_density(upper));
-      if (code == 0)
-	stp_set_density(img->v, z);
     }
   else if (strcmp (key, "Duplex") == 0)
     {
@@ -603,7 +528,23 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
     }
   else
-    stp_set_parameter(img->v, key, vbuf);
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(img->v, key, &desc);
+      switch (desc.type)
+	{
+	case STP_PARAMETER_TYPE_STRING_LIST:
+	  stp_set_string_parameter(img->v, key, vbuf);
+	  stp_string_list_free(desc.bounds.str);
+	  break;
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  code = get_float(vbuf, key, &z);
+	  if (code == 0)
+	    stp_set_float_parameter(img->v, key, z);
+	default:
+	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.type));
+	}
+    }
 
   if (code == 0)
     {
@@ -790,22 +731,33 @@ static void
 stp_dbg(const char *msg, const stp_vars_t v)
 {
   fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
-  fprintf(stderr,"%s Settings: c: %f  m: %f  y: %f\n",
-	  msg, stp_get_cyan(v), stp_get_magenta(v), stp_get_yellow(v));
+  fprintf(stderr,"%s Settings: c: %f  m: %f  y: %f\n", msg,
+	  stp_get_float_parameter(v, "Cyan"),
+	  stp_get_float_parameter(v, "Magenta"),
+	  stp_get_float_parameter(v, "Yellow"));
   fprintf(stderr,"Settings: bright: %f  contrast: %f\n",
-	  stp_get_brightness(v), stp_get_contrast(v));
+	  stp_get_float_parameter(v, "Brightness"),
+	  stp_get_float_parameter(v, "Contrast"));
   fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-	  stp_get_gamma(v), stp_get_saturation(v), stp_get_density(v));
+	  stp_get_float_parameter(v, "Gamma"),
+	  stp_get_float_parameter(v, "Saturation"),
+	  stp_get_float_parameter(v, "Density"));
   fprintf(stderr, "Settings: width %d, height %d\n",
 	  stp_get_page_width(v), stp_get_page_height(v));
   fprintf(stderr, "Settings: output type %d  image type %d\n",
 	  stp_get_output_type(v), stp_get_image_type(v));
-  fprintf(stderr, "Settings: Quality %s\n", stp_get_parameter(v, "Resolution"));
-  fprintf(stderr, "Settings: Dither %s\n", stp_get_parameter(v, "DitherAlgorithm"));
-  fprintf(stderr, "Settings: MediaSource %s\n", stp_get_parameter(v, "InputSlot"));
-  fprintf(stderr, "Settings: MediaType %s\n", stp_get_parameter(v, "MediaType"));
-  fprintf(stderr, "Settings: MediaSize %s\n", stp_get_parameter(v, "PageSize"));
-  fprintf(stderr, "Settings: InkType %s\n", stp_get_parameter(v, "InkType"));
+  fprintf(stderr, "Settings: Quality %s\n",
+	  stp_get_string_parameter(v, "Resolution"));
+  fprintf(stderr, "Settings: Dither %s\n",
+	  stp_get_string_parameter(v, "DitherAlgorithm"));
+  fprintf(stderr, "Settings: MediaSource %s\n",
+	  stp_get_string_parameter(v, "InputSlot"));
+  fprintf(stderr, "Settings: MediaType %s\n",
+	  stp_get_string_parameter(v, "MediaType"));
+  fprintf(stderr, "Settings: MediaSize %s\n",
+	  stp_get_string_parameter(v, "PageSize"));
+  fprintf(stderr, "Settings: InkType %s\n",
+	  stp_get_string_parameter(v, "InkType"));
 }
 
 int
@@ -916,7 +868,7 @@ main (int argc, char **argv)
 	  /* Printer data to file */
 	  stp_set_outdata(img.v, f);
 
-	  printer = stp_get_printer_by_driver(stp_get_driver(img.v));
+	  printer = stp_get_printer(img.v);
 	  if (printer == NULL)
 	    {
 	      fprintf(stderr, _("Unknown printer %s\n"),
@@ -933,19 +885,19 @@ main (int argc, char **argv)
 	* (double) ph.height;
       img.bytes_left = img.total_bytes;
 
-      stp_set_app_gamma(img.v, (float)1.7);
+      stp_set_float_parameter(img.v, "AppGamma", 1.7);
       stp_set_cmap(img.v, NULL);
       stp_set_output_type(img.v, img.output_type); 
-      stp_printer_get_media_size(printer, img.v, &w, &h);
-      stp_printer_get_imageable_area(printer, img.v, &l, &r, &b, &t);
+      stp_get_media_size(img.v, &w, &h);
+      stp_get_imageable_area(img.v, &l, &r, &b, &t);
       width = r - l;
       stp_set_width(img.v, width);
       height = b - t;
       stp_set_height(img.v, height);
       STP_DEBUG(stp_dbg("about to print", img.v));
-      if (stp_printer_verify(printer, img.v))
+      if (stp_verify(img.v))
 	{
-	  stp_print(printer, img.v, &si);
+	  stp_print(img.v, &si);
 	}
       else
 	{

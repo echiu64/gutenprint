@@ -75,10 +75,10 @@ canon_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 epson_SOURCES = epson.c
 epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
-cups_genppd_SOURCES = genppd.c
+cups_genppd_SOURCES = genppd.c gimp-print-cups.c
 cups_genppd_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
 
-rastertoprinter_SOURCES = rastertoprinter.c
+rastertoprinter_SOURCES = rastertoprinter.c gimp-print-cups.c
 rastertoprinter_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
 
 

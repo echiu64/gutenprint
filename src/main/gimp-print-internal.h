@@ -38,6 +38,12 @@ extern "C" {
 #endif
 
 
+#define COOKIE_VARS      0x1a18376c
+#define COOKIE_OPTION     0x3ab27f93
+#define COOKIE_PARAM_LIST 0x96cf0387
+#define COOKIE_PRINTER  0x0722922c
+
+
 #include "dither.h"
 #include "dither-matrices.h"
 #include "list.h"

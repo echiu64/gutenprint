@@ -43,7 +43,7 @@ typedef struct
   const char *name;
   const char *text;
   const char *help;
-  stp_param_list_t params;
+  stp_string_list_t params;
   void (*extra)(const gchar *);
   gint callback_id;
   GtkWidget *combo;
@@ -234,11 +234,11 @@ static unit_t units[] =
       72.0, NULL, "%.2f" },
     { N_("cm"), N_("Set the base unit of measurement to centimetres"),
       72.0 / 2.54, NULL, "%.2f" },
-    { N_("Points"), N_("Set the base unit of measurement to points"),
+    { N_("Points"), N_("Set the base unit of measurement to points (1/72\")"),
       1.0, NULL, "%.0f" },
     { N_("mm"), N_("Set the base unit of measurement to millimetres"),
       72.0 / 25.4, NULL, "%.1f" },
-    { N_("Pica"), N_("Set the base unit of measurement to picas"),
+    { N_("Pica"), N_("Set the base unit of measurement to picas (1/12\")"),
       72.0 / 12.0, NULL, "%.1f" },
   };
 static const gint unit_count = sizeof(units) / sizeof(unit_t);
@@ -273,9 +273,60 @@ static const gint image_type_count = (sizeof(image_types) /
 
 static gdouble preview_ppi = 10;
 
-static stp_param_list_t printer_list = 0;
+static stp_string_list_t printer_list = 0;
 gp_plist_t *pv;
 
+
+static GtkWidget *
+create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
+	     const char *help, GtkSignalFunc callback)
+{
+  GtkWidget *entry = gtk_entry_new();
+  gtk_widget_set_usize(entry, 60, 0);
+  table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
+		       1.0, 0.5, entry, 1, TRUE);
+  set_help_data(entry, help);
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+		     GTK_SIGNAL_FUNC(callback), NULL);
+  return entry;
+}
+
+static GtkWidget *
+create_positioning_entry(GtkWidget *table, int hpos, int vpos,
+			 const char *text, const char *help)
+{
+  return create_entry
+    (table, hpos, vpos, text, help, GTK_SIGNAL_FUNC(position_callback));
+}
+
+static GtkWidget *
+create_positioning_button(GtkWidget *box, int invalid,
+			  const char *text, const char *help)
+{
+  GtkWidget *button = gtk_button_new_with_label(_(text));
+  gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
+  gtk_widget_show(button);
+  set_help_data(button, help);
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+		     GTK_SIGNAL_FUNC(position_button_callback),
+		     (gpointer) invalid);
+  return button;
+}
+
+static GSList *
+create_radio_button(radio_group_t *radio, GSList *group,
+		    GtkWidget *table, int hpos, int vpos,
+		    GtkSignalFunc callback)
+{
+  radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
+  group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
+  table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
+		       radio->button, 1, FALSE);
+  set_help_data(radio->button, _(radio->help));
+  gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
+		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
+  return group;
+}
 
 static list_option_t *
 get_list_option_by_name(const char *name)
@@ -336,11 +387,11 @@ create_new_combo(list_option_t *list_option, GtkWidget *table,
 
 static const char *
 Combo_get_name(GtkWidget   *combo,
-	       const stp_param_list_t options)
+	       const stp_string_list_t options)
 {
   gchar *text;
   gint   i;
-  gint num_options = stp_param_list_count(options);
+  gint num_options = stp_string_list_count(options);
 
   if ((text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))) ==NULL)
     return (NULL);
@@ -349,8 +400,8 @@ Combo_get_name(GtkWidget   *combo,
     return ((const char *)text);
 
   for (i = 0; i < num_options; i ++)
-    if (strcmp(stp_param_list_param(options, i)->text, text) == 0)
-      return (stp_param_list_param(options, i)->name);
+    if (strcmp(stp_string_list_param(options, i)->text, text) == 0)
+      return (stp_string_list_param(options, i)->name);
 
   return (NULL);
 }
@@ -360,23 +411,23 @@ build_printer_combo(void)
 {
   int i;
   if (printer_list)
-    stp_param_list_free(printer_list);
-  printer_list = stp_param_list_allocate();
+    stp_string_list_free(printer_list);
+  printer_list = stp_string_list_allocate();
   for (i = 0; i < plist_count; i++)
     {
       if (plist[i].active)
-	stp_param_list_add_param(printer_list, plist[i].name, plist[i].name);
+	stp_string_list_add_param(printer_list, plist[i].name, plist[i].name);
       else
 	{
 	  gchar *name = malloc(strlen(plist[i].name) + 2);
 	  strcpy(name + 1, plist[i].name);
 	  name[0] = '*';
-	  stp_param_list_add_param(printer_list, name, name);
+	  stp_string_list_add_param(printer_list, name, name);
 	}
     }
   plist_build_combo(printer_combo,
 		    printer_list,
-		    stp_param_list_param(printer_list, plist_current)->name,
+		    stp_string_list_param(printer_list, plist_current)->name,
 		    NULL,
 		    plist_callback,
 		    &plist_callback_id,
@@ -484,57 +535,6 @@ create_preview (void)
   gtk_widget_set_events (GTK_WIDGET (preview),
                          GDK_EXPOSURE_MASK | GDK_BUTTON_MOTION_MASK |
                          GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-}
-
-static GtkWidget *
-create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
-	     const char *help, GtkSignalFunc callback)
-{
-  GtkWidget *entry = gtk_entry_new();
-  gtk_widget_set_usize(entry, 60, 0);
-  table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
-		       1.0, 0.5, entry, 1, TRUE);
-  set_help_data(entry, help);
-  gtk_signal_connect(GTK_OBJECT(entry), "activate",
-		     GTK_SIGNAL_FUNC(callback), NULL);
-  return entry;
-}
-
-static GtkWidget *
-create_positioning_entry(GtkWidget *table, int hpos, int vpos,
-			 const char *text, const char *help)
-{
-  return create_entry
-    (table, hpos, vpos, text, help, GTK_SIGNAL_FUNC(position_callback));
-}
-
-static GtkWidget *
-create_positioning_button(GtkWidget *box, int invalid,
-			  const char *text, const char *help)
-{
-  GtkWidget *button = gtk_button_new_with_label(_(text));
-  gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
-  gtk_widget_show(button);
-  set_help_data(button, help);
-  gtk_signal_connect(GTK_OBJECT(button), "clicked",
-		     GTK_SIGNAL_FUNC(position_button_callback),
-		     (gpointer) invalid);
-  return button;
-}
-
-static GSList *
-create_radio_button(radio_group_t *radio, GSList *group,
-		    GtkWidget *table, int hpos, int vpos,
-		    GtkSignalFunc callback)
-{
-  radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
-  group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
-  table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
-		       radio->button, 1, FALSE);
-  set_help_data(radio->button, _(radio->help));
-  gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
-		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
-  return group;
 }
 
 static void
@@ -1432,7 +1432,7 @@ scaling_callback (GtkWidget *widget)
  ****************************************************************************/
 void
 plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
-		   stp_param_list_t items,      /* I - Menu items */
+		   stp_string_list_t items,      /* I - Menu items */
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
 		   GtkSignalFunc   callback,    /* I - Callback */
@@ -1441,8 +1441,11 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 {
   gint      i; /* Looping var */
   GList    *list = 0;
-  gint num_items = stp_param_list_count(items);
+  gint num_items = 0;
   GtkEntry *entry = GTK_ENTRY (GTK_COMBO (combo)->entry);
+
+  if (items)
+    num_items = stp_string_list_count(items);
 
   if (*callback_id != -1)
     gtk_signal_disconnect (GTK_OBJECT (entry), *callback_id);
@@ -1459,7 +1462,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append(list, g_strdup(stp_param_list_param(items, i)->text));
+    list = g_list_append(list, g_strdup(stp_string_list_param(items, i)->text));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
@@ -1467,21 +1470,18 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 				     data);
 
   for (i = 0; i < num_items; i ++)
-    if (strcmp(stp_param_list_param(items, i)->name, cur_item) == 0)
+    if (strcmp(stp_string_list_param(items, i)->name, cur_item) == 0)
       break;
 
+  if (i >= num_items && def_value)
+    for (i = 0; i < num_items; i ++)
+      if (strcmp(stp_string_list_param(items, i)->name, def_value) == 0)
+	break;
+
   if (i >= num_items)
-    {
-      if (def_value)
-        for (i = 0; i < num_items; i ++)
-          if (strcmp(stp_param_list_param(items, i)->name, def_value) == 0)
-            break;
+    i = 0;
 
-      if (i >= num_items)
-        i = 0;
-    }
-
-  gtk_entry_set_text (entry, g_strdup (stp_param_list_param(items, i)->text));
+  gtk_entry_set_text (entry, g_strdup (stp_string_list_param(items, i)->text));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
@@ -1575,13 +1575,11 @@ position_callback (GtkWidget *widget)
     stp_set_left (pv->v, paper_width - print_width - new_value);
   else if (widget == width_entry || widget == height_entry)
     {
-      gboolean was_percent = 0;
+      gboolean was_percent = (pv->scaling >= 0);
       if (pv->scaling >= 0)
 	{
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi),
-					TRUE);
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
 	  scaling_callback (scaling_ppi);
-	  was_percent = 1;
 	}
       if  (widget == width_entry)
 	GTK_ADJUSTMENT (scaling_adjustment)->value =
@@ -1592,10 +1590,8 @@ position_callback (GtkWidget *widget)
       gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
       if (was_percent)
 	{
-	  gtk_toggle_button_set_active
-	    (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-	  gtk_adjustment_value_changed
-	    (GTK_ADJUSTMENT (scaling_adjustment));
+	  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_percent),TRUE);
+	  gtk_adjustment_value_changed(GTK_ADJUSTMENT (scaling_adjustment));
 	}
     }
 
@@ -1670,23 +1666,29 @@ do_all_updates(void)
 
   for (i = 0; i < list_option_count; i++)
     {
+      stp_parameter_t desc;
       list_option_t *option = &(the_list_options[i]);
-      const gchar *default_parameter =
-	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
       if (option->params)
-	stp_param_list_free(option->params);
-      option->params = stp_printer_get_parameters
-	(current_printer, pv->v, option->name);
-      if (stp_get_parameter(pv->v, option->name)[0] == '\0')
-	stp_set_parameter(pv->v, option->name, default_parameter);
-      else if (option->params == NULL)
-	stp_set_parameter(pv->v, option->name, NULL);
+	{
+	  stp_string_list_free(option->params);
+	  option->params = NULL;
+	}
+      stp_describe_parameter(pv->v, option->name, &desc);
+      if (desc.type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  option->params = desc.bounds.str;
+	  if (stp_get_string_parameter(pv->v, option->name)[0] == '\0')
+	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
+	  else if (option->params == NULL)
+	    stp_set_string_parameter(pv->v, option->name, NULL);
+	}
       plist_build_combo(option->combo, option->params,
-			stp_get_parameter(pv->v, option->name),
-			default_parameter, combo_callback,
+			stp_get_string_parameter(pv->v, option->name),
+			desc.deflt.str, combo_callback,
 			&(option->callback_id), option);
+
       if (option->extra)
-	(option->extra)(stp_get_parameter(pv->v, option->name));
+	(option->extra)(stp_get_string_parameter(pv->v, option->name));
     }
 
   build_dither_combo ();
@@ -1712,7 +1714,7 @@ plist_callback (GtkWidget *widget,
 
       for (i = 0; i < plist_count; i++)
 	{
-	  if (! strcmp (result, stp_param_list_param(printer_list, i)->text))
+	  if (! strcmp (result, stp_string_list_param(printer_list, i)->text))
 	    {
 	      plist_current = i;
 	      break;
@@ -1727,7 +1729,7 @@ plist_callback (GtkWidget *widget,
   pv = &(plist[plist_current]);
 
   if (strcmp(stp_get_driver(pv->v), ""))
-    current_printer = stp_get_printer_by_driver (stp_get_driver (pv->v));
+    current_printer = stp_get_printer(pv->v);
 
   suppress_preview_update++;
   setup_update ();
@@ -1748,9 +1750,8 @@ custom_media_size_callback(GtkWidget *widget,
   invalidate_preview_thumbnail ();
   reset_preview ();
 
-  stp_printer_get_size_limit(current_printer, pv->v,
-			     &width_limit, &height_limit,
-			     &min_width_limit, &min_height_limit);
+  stp_get_size_limit(pv->v, &width_limit, &height_limit,
+		     &min_width_limit, &min_height_limit);
   if (widget == custom_size_width)
     {
       if (new_value < min_width_limit)
@@ -1787,8 +1788,7 @@ set_media_size(const gchar *new_media_size)
 
       if (stp_papersize_get_width (pap) == 0)
 	{
-	  stp_printer_get_media_size
-	    (current_printer, pv->v, &default_width, &default_height);
+	  stp_get_media_size(pv->v, &default_width, &default_height);
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
 	  size = default_width;
@@ -1804,8 +1804,7 @@ set_media_size(const gchar *new_media_size)
 
       if (stp_papersize_get_height (pap) == 0)
 	{
-	  stp_printer_get_media_size
-	    (current_printer, pv->v, &default_height, &default_height);
+	  stp_get_media_size(pv->v, &default_height, &default_height);
 	  gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
 	  gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
 	  size = default_height;
@@ -1828,13 +1827,13 @@ combo_callback(GtkWidget *widget, gpointer data)
   const gchar *new_value =
     Combo_get_name(option->combo, option->params);
   reset_preview();
-  if (strcmp(stp_get_parameter(pv->v, option->name), new_value) != 0)
+  if (strcmp(stp_get_string_parameter(pv->v, option->name), new_value) != 0)
     {
       invalidate_frame();
       invalidate_preview_thumbnail();
       if (option->extra)
 	(option->extra)(new_value);
-      stp_set_parameter(pv->v, option->name, new_value);
+      stp_set_string_parameter(pv->v, option->name, new_value);
       preview_update();
     }
 }
@@ -2002,7 +2001,7 @@ setup_update (void)
   GtkAdjustment *adjustment;
   gint           idx;
 
-  current_printer = stp_get_printer_by_driver (stp_get_driver (pv->v));
+  current_printer = stp_get_printer(pv->v);
   idx = stp_get_printer_index_by_driver (stp_get_driver (pv->v));
 
   gtk_clist_select_row (GTK_CLIST (printer_driver), idx, 0);
@@ -2224,18 +2223,20 @@ update_adjusted_thumbnail (void)
 {
   gint           x, y;
   stp_convert_t  colorfunc;
-  gushort        out[3 * (THUMBNAIL_MAXW + THUMBNAIL_MAXH)];
+  gushort        *out;
   guchar        *adjusted_data = adjusted_thumbnail_data;
-  gfloat         old_density = stp_get_density(pv->v);
+  gfloat         old_density = stp_get_float_parameter(pv->v, "Density");
   gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
 
   if (thumbnail_data == 0 || adjusted_thumbnail_data == 0)
     return;
 
-  stp_set_density (pv->v, 1.0);
+  stp_set_float_parameter (pv->v, "Density", 1.0);
   stp_compute_lut (pv->v, 256);
   colorfunc = stp_choose_colorfunc (stp_get_output_type(pv->v), thumbnail_bpp,
 				    NULL, &adjusted_thumbnail_bpp, pv->v);
+  out = g_malloc(adjusted_thumbnail_bpp * thumbnail_h * thumbnail_w *
+		 sizeof(gushort));
   for (y = 0; y < thumbnail_h; y++)
     {
       (*colorfunc) (pv->v, thumbnail_data + thumbnail_bpp * thumbnail_w * y,
@@ -2246,10 +2247,11 @@ update_adjusted_thumbnail (void)
 	  *adjusted_data++ = out[x] / 0x0101U;
 	}
     }
+  free(out);
 
   stp_free_lut (pv->v);
 
-  stp_set_density (pv->v, old_density);
+  stp_set_float_parameter (pv->v, "Density", old_density);
 
   switch (physical_orientation)
     {
@@ -2320,6 +2322,79 @@ draw_arrow (GdkWindow *w,
   gdk_draw_line (w, gc, ox, oy - u, ox, oy + u);
 }
 
+static void
+create_valid_preview(guchar **preview_data)
+{
+  gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
+  gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
+  gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
+  gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
+  gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
+  gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
+  gint adjusted_preview_width = adjusted_thumbnail_bpp * preview_w;
+  gint adjusted_thumbnail_width = adjusted_thumbnail_bpp * preview_thumbnail_w;
+  gint v_cur = 0;
+  gint v_last = -1;
+  gint v_error = v_denominator / 2;
+  gint y;
+  gint i;
+
+  if (*preview_data)
+    free (*preview_data);
+  *preview_data = g_malloc (3 * preview_h * preview_w);
+
+  for (y = 0; y < preview_h; y++)
+    {
+      guchar *outbuf = *preview_data + adjusted_preview_width * y;
+
+      if (v_cur == v_last)
+	memcpy (outbuf, outbuf-adjusted_preview_width, adjusted_preview_width);
+      else
+	{
+	  guchar *inbuf = preview_thumbnail_data - adjusted_thumbnail_bpp
+	    + adjusted_thumbnail_width * v_cur;
+
+	  gint h_cur = 0;
+	  gint h_last = -1;
+	  gint h_error = h_denominator / 2;
+	  gint x;
+
+	  v_last = v_cur;
+	  for (x = 0; x < preview_w; x++)
+	    {
+	      if (h_cur == h_last)
+		{
+		  for (i = 0; i < adjusted_thumbnail_bpp; i++)
+		    outbuf[i] = outbuf[i - adjusted_thumbnail_bpp];
+		}
+	      else
+		{
+		  inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
+		  h_last = h_cur;
+		  for (i = 0; i < adjusted_thumbnail_bpp; i++)
+		    outbuf[i] = inbuf[i];
+		}
+	      outbuf += adjusted_thumbnail_bpp;
+	      h_cur += h_whole;
+	      h_error += h_numerator;
+	      if (h_error >= h_denominator)
+		{
+		  h_error -= h_denominator;
+		  h_cur++;
+		}
+	    }
+	}
+      v_cur += v_whole;
+      v_error += v_numerator;
+      if (v_error >= v_denominator)
+	{
+	  v_error -= v_denominator;
+	  v_cur++;
+	}
+    }
+  preview_valid = TRUE;
+}
+
 /*
  *  preview_update_callback() -
  */
@@ -2330,10 +2405,10 @@ do_preview_thumbnail (void)
   static GdkGC  *gcinv = NULL;
   static GdkGC  *gcset = NULL;
   static guchar *preview_data = NULL;
-  static gint    opx = 0;
-  static gint    opy = 0;
-  static gint    oph = 0;
-  static gint    opw = 0;
+  gint    opx = preview_x;
+  gint    opy = preview_y;
+  gint    oph = preview_h;
+  gint    opw = preview_w;
   gint paper_display_left, paper_display_top;
   gint printable_display_left, printable_display_top;
   gint paper_display_width, paper_display_height;
@@ -2399,80 +2474,7 @@ do_preview_thumbnail (void)
     }
 
   if (!preview_valid)
-    {
-      gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
-      gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
-      gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
-      gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
-      gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
-      gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
-      gint adjusted_preview_width = adjusted_thumbnail_bpp * preview_w;
-      gint adjusted_thumbnail_width = adjusted_thumbnail_bpp *
-	preview_thumbnail_w;
-      gint v_cur = 0;
-      gint v_last = -1;
-      gint v_error = v_denominator / 2;
-      gint y;
-      gint i;
-
-      if (preview_data)
-	free (preview_data);
-      preview_data = g_malloc (3 * preview_h * preview_w);
-
-      for (y = 0; y < preview_h; y++)
-	{
-	  guchar *outbuf = preview_data + adjusted_preview_width * y;
-
-	  if (v_cur == v_last)
-	    {
-	      memcpy (outbuf, outbuf - adjusted_preview_width,
-                      adjusted_preview_width);
-	    }
-	  else
-	    {
-	      guchar *inbuf = preview_thumbnail_data - adjusted_thumbnail_bpp
-		+ adjusted_thumbnail_width * v_cur;
-
-	      gint h_cur = 0;
-	      gint h_last = -1;
-	      gint h_error = h_denominator / 2;
-	      gint x;
-
-	      v_last = v_cur;
-	      for (x = 0; x < preview_w; x++)
-		{
-		  if (h_cur == h_last)
-		    {
-		      for (i = 0; i < adjusted_thumbnail_bpp; i++)
-			outbuf[i] = outbuf[i - adjusted_thumbnail_bpp];
-		    }
-		  else
-		    {
-		      inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
-		      h_last = h_cur;
-		      for (i = 0; i < adjusted_thumbnail_bpp; i++)
-			outbuf[i] = inbuf[i];
-		    }
-		  outbuf += adjusted_thumbnail_bpp;
-		  h_cur += h_whole;
-		  h_error += h_numerator;
-		  if (h_error >= h_denominator)
-		    {
-		      h_error -= h_denominator;
-		      h_cur++;
-		    }
-		}
-	    }
-	  v_cur += v_whole;
-	  v_error += v_numerator;
-	  if (v_error >= v_denominator)
-	    {
-	      v_error -= v_denominator;
-	      v_cur++;
-	    }
-	}
-      preview_valid = TRUE;
-    }
+    create_valid_preview(&preview_data);
 
   if (need_exposure)
     {
@@ -2543,11 +2545,6 @@ do_preview_thumbnail (void)
   draw_arrow (preview->widget.window, gcinv, paper_display_left,
 	      paper_display_top);
   gdk_flush();
-
-  opx = preview_x;
-  opy = preview_y;
-  oph = preview_h;
-  opw = preview_w;
 }
 
 static void
@@ -2564,11 +2561,9 @@ preview_update (void)
   gdouble min_ppi_scaling;   /* Minimum PPI for current page size */
 
   suppress_preview_update++;
-  stp_printer_get_media_size(current_printer, pv->v,
-			     &paper_width, &paper_height);
+  stp_get_media_size(pv->v, &paper_width, &paper_height);
 
-  stp_printer_get_imageable_area(current_printer, pv->v,
-				 &left, &right, &bottom, &top);
+  stp_get_imageable_area(pv->v, &left, &right, &bottom, &top);
 
   printable_width  = right - left;
   printable_height = bottom - top;
@@ -2633,7 +2628,6 @@ preview_update (void)
   if (stp_get_left(pv->v) < left)
     stp_set_left(pv->v, left);
 
-  /* we leave stp_get_left(pv->v) etc. relative to printable area */
   if (stp_get_left (pv->v) > right - print_width)
     stp_set_left (pv->v, right - print_width);
 
@@ -2676,31 +2670,21 @@ preview_button_callback (GtkWidget      *widget,
 	  buttons_pressed++;
 	  preview_active = 1;
 	  disable_help();
-	  if (event->state & GDK_SHIFT_MASK)
-	    move_constraint = MOVE_CONSTRAIN;
-	  else
-	    move_constraint = MOVE_ANY;
+	  move_constraint =
+	    (event->state & GDK_SHIFT_MASK) ? MOVE_CONSTRAIN : MOVE_ANY;
 	}
-      else if (preview_active == 1)
+      else if ((buttons_mask & (1 << event->button)) == 0)
 	{
-	  if ((buttons_mask & (1 << event->button)) == 0)
+	  if (preview_active == 1)
 	    {
 	      enable_help();
 	      preview_active = -1;
 	      stp_set_left (pv->v, orig_left);
 	      stp_set_top (pv->v, orig_top);
 	      preview_update ();
-	      buttons_mask |= 1 << event->button;
-	      buttons_pressed++;
 	    }
-	}
-      else
-	{
-	  if ((buttons_mask & (1 << event->button)) == 0)
-	    {
-	      buttons_mask |= 1 << event->button;
-	      buttons_pressed++;
-	    }
+	  buttons_mask |= 1 << event->button;
+	  buttons_pressed++;
 	}
     }
   else if (event->type == GDK_BUTTON_RELEASE)
@@ -2723,9 +2707,13 @@ preview_motion_callback (GtkWidget      *widget,
 			 GdkEventMotion *event,
 			 gpointer        data)
 {
-  if (event->type != GDK_MOTION_NOTIFY)
-    return;
-  if (preview_active != 1)
+
+  gint old_top  = stp_get_top (pv->v);
+  gint old_left = stp_get_left (pv->v);
+  gint new_top  = old_top;
+  gint new_left = old_left;
+  gint steps;
+  if (preview_active != 1 || event->type != GDK_MOTION_NOTIFY)
     return;
   if (move_constraint == MOVE_CONSTRAIN)
     {
@@ -2739,111 +2727,59 @@ preview_motion_callback (GtkWidget      *widget,
 	return;
     }
 
-  if (mouse_button == 2)
+  switch (mouse_button)
     {
-      int changes = 0;
-      int y_threshold = MAX (1, (preview_ppi * print_height) / INCH);
-
+    case 1:
+      if (move_constraint & MOVE_VERTICAL)
+	new_top = orig_top + INCH * (event->y - mouse_y) / preview_ppi;
+      if (move_constraint & MOVE_HORIZONTAL)
+	new_left = orig_left + INCH * (event->x - mouse_x) / preview_ppi;
+      break;
+    case 3:
+      if (move_constraint & MOVE_VERTICAL)
+	new_top = orig_top + event->y - mouse_y;
+      if (move_constraint & MOVE_HORIZONTAL)
+	new_left = orig_left + event->x - mouse_x;
+      break;
+    case 2:
       if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  int x_threshold = MAX (1, (preview_ppi * print_width) / INCH);
-	  while (event->x - mouse_x >= x_threshold)
-	    {
-	      if (stp_get_left (pv->v) + (print_width * 2) <= right)
-		{
-		  stp_set_left (pv->v, stp_get_left (pv->v) + print_width);
-		  mouse_x += x_threshold;
-		  changes = 1;
-		}
-	      else
-		break;
-	    }
-	  while (mouse_x - event->x >= x_threshold)
-	    {
-	      if (stp_get_left (pv->v) >= print_width + left)
-		{
-		  stp_set_left (pv->v, stp_get_left (pv->v) - print_width);
-		  mouse_x -= x_threshold;
-		  changes = 1;
-		}
-	      else
-		break;
-	    }
+	  gint x_threshold = MAX (1, (preview_ppi * print_width) / INCH);
+	  if (event->x > mouse_x)
+	    steps = MIN((event->x - mouse_x) / x_threshold,
+			((right - orig_left) / print_width) - 1);
+	  else
+	    steps = -(MIN((mouse_x - event->x) / x_threshold,
+			  (orig_left - left) / print_width));
+	  new_left = orig_left + steps * print_width;
 	}
-
       if (move_constraint & MOVE_VERTICAL)
 	{
-	  while (event->y - mouse_y >= y_threshold)
-	    {
-	      if (stp_get_top (pv->v) + (print_height * 2) <= bottom)
-		{
-		  stp_set_top (pv->v, stp_get_top (pv->v) + print_height);
-		  mouse_y += y_threshold;
-		  changes = 1;
-		}
-	      else
-		break;
-	    }
-	  while (mouse_y - event->y >= y_threshold)
-	    {
-	      if (stp_get_top (pv->v) >= print_height + top)
-		{
-		  stp_set_top (pv->v, stp_get_top (pv->v) - print_height);
-		  mouse_y -= y_threshold;
-		  changes = 1;
-		}
-	      else
-		break;
-	    }
+	  gint y_threshold = MAX (1, (preview_ppi * print_height) / INCH);
+	  if (event->y > mouse_y)
+	    steps = MIN((event->y - mouse_y) / y_threshold,
+			((bottom - orig_top) / print_height) - 1);
+	  else
+	    steps = -(MIN((mouse_y - event->y) / y_threshold,
+			  (orig_top - top) / print_height));
+	  new_top = orig_top + steps * print_height;
 	}
-      if (!changes)
-	return;
+      break;
     }
-  else
+
+  if (new_top < top)
+    new_top = top;
+  if (new_top > bottom - print_height)
+    new_top = bottom - print_height;
+  if (new_left < left)
+    new_left = left;
+  if (new_left > right - print_width)
+    new_left = right - print_width;
+
+  if (new_top != old_top || new_left != old_left)
     {
-      gint old_top  = stp_get_top (pv->v);
-      gint old_left = stp_get_left (pv->v);
-      gint new_top  = old_top;
-      gint new_left = old_left;
-      gint changes  = 0;
-
-      if (mouse_button == 1)
-	{
-	  if (move_constraint & MOVE_VERTICAL)
-	    new_top = orig_top + INCH * (event->y - mouse_y) / preview_ppi;
-	  if (move_constraint & MOVE_HORIZONTAL)
-	    new_left = orig_left + INCH * (event->x - mouse_x) / preview_ppi;
-	}
-      else
-	{
-	  if (move_constraint & MOVE_VERTICAL)
-	    new_top = orig_top + event->y - mouse_y;
-	  if (move_constraint & MOVE_HORIZONTAL)
-	    new_left = orig_left + event->x - mouse_x;
-	}
-
-      if (new_top < top)
-	new_top = top;
-      if (new_top > bottom - print_height)
-	new_top = bottom - print_height;
-      if (new_left < left)
-	new_left = left;
-      if (new_left > right - print_width)
-	new_left = right - print_width;
-
-      if (new_top != old_top)
-	{
-	  stp_set_top (pv->v, new_top);
-	  changes = 1;
-	}
-      if (new_left != old_left)
-	{
-	  stp_set_left (pv->v, new_left);
-	  changes = 1;
-	}
-      if (!changes)
-	return;
+      stp_set_top (pv->v, new_top);
+      stp_set_left (pv->v, new_left);
+      preview_update ();
     }
-
-  preview_update ();
 }

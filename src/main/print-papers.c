@@ -463,7 +463,7 @@ stp_get_papersize_by_name(const char *name)
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
   if (!name)
     return NULL;
-  while (c_strlen(val->name) > 0)
+  while (stp_strlen(val->name) > 0)
     {
       if (!strcmp(val->name, name))
 	return (stp_papersize_t) val;
@@ -517,9 +517,7 @@ stp_get_papersize_by_size(int l, int w)
 }
 
 void
-stp_default_media_size(const stp_printer_t printer,
-					/* I - Printer model (not used) */
-		       const stp_vars_t v,	/* I */
+stp_default_media_size(const stp_vars_t v,	/* I */
 		       int  *width,		/* O - Width in points */
 		       int  *height)	/* O - Height in points */
 {
@@ -531,7 +529,7 @@ stp_default_media_size(const stp_printer_t printer,
   else
     {
       const stp_papersize_t papersize =
-	stp_get_papersize_by_name(stp_get_parameter(v, "PageSize"));
+	stp_get_papersize_by_name(stp_get_string_parameter(v, "PageSize"));
       if (!papersize)
 	{
 	  *width = 1;

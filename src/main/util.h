@@ -44,24 +44,16 @@ extern "C" {
 
 typedef struct
 {
-  stp_param_list_t (*parameters)(const stp_printer_t printer,
-				 const stp_vars_t v, const char *name);
-  void  (*media_size)(const stp_printer_t printer, const stp_vars_t v,
-                      int *width, int *height);
-  void  (*imageable_area)(const stp_printer_t printer,
-                          const stp_vars_t v,
-                          int *left, int *right, int *bottom, int *top);
-  void  (*limit)(const stp_printer_t printer, const stp_vars_t v,
-                 int *max_width, int *max_height,
+  void  (*parameters)(const stp_vars_t v, const char *name,
+		      stp_parameter_t *);
+  void  (*media_size)(const stp_vars_t v, int *width, int *height);
+  void  (*imageable_area)(const stp_vars_t v,
+			  int *left, int *right, int *bottom, int *top);
+  void  (*limit)(const stp_vars_t v, int *max_width, int *max_height,
                  int *min_width, int *min_height);
-  int   (*print)(const stp_printer_t printer,
-		 const stp_vars_t v, stp_image_t *image);
-  const char *(*default_parameters)(const stp_printer_t printer,
-				    const stp_vars_t v,
-                                    const char *name);
-  void  (*describe_resolution)(const stp_printer_t printer, const stp_vars_t v,
-                               int *x, int *y);
-  int   (*verify)(const stp_printer_t p, const stp_vars_t v);
+  int   (*print)(const stp_vars_t v, stp_image_t *image);
+  void  (*describe_resolution)(const stp_vars_t v, int *x, int *y);
+  int   (*verify)(const stp_vars_t v);
 } stp_printfuncs_t;
 
 
@@ -98,6 +90,10 @@ extern void *stp_malloc (size_t);
 extern void *stp_zalloc (size_t);
 extern void *stp_realloc (void *ptr, size_t);
 extern void stp_free(void *ptr);
+
+extern size_t stp_strlen(const char *s);
+extern char *stp_strndup(const char *s, int n);
+extern char *stp_strdup(const char *s);
 
 
 /* Uncomment the next line to get performance statistics:

@@ -45,15 +45,12 @@ extern "C" {
 #include "util.h"
 
 
-extern stp_list_t *stp_printer_list;
-
-
-extern int stp_init_printer_list(void);
+extern int stp_get_model(const stp_vars_t v);
 
 extern const stp_printfuncs_t *stp_printer_get_printfuncs(const stp_printer_t p);
 
 extern int
-stp_verify_printer_params(const stp_printer_t, const stp_vars_t);
+stp_verify_printer_params(const stp_vars_t);
 
 
 #ifdef __cplusplus

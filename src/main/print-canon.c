@@ -1435,14 +1435,6 @@ canon_size_type(const stp_vars_t v, const canon_cap_t * caps)
   return 0;
 }
 
-static char *
-c_strdup(const char *s)
-{
-  char *ret = stp_malloc(strlen(s) + 1);
-  strcpy(ret, s);
-  return ret;
-}
-
 #ifndef EXPERIMENTAL_STUFF
 static int canon_res_code(const canon_cap_t * caps, int xdpi, int ydpi)
 {
@@ -1500,26 +1492,23 @@ canon_ink_type(const canon_cap_t * caps, int res_code)
 }
 
 static const double *
-canon_lum_adjustment(const stp_printer_t printer)
+canon_lum_adjustment(int model)
 {
-  const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+  const canon_cap_t * caps= canon_get_model_capabilities(model);
   return (caps->lum_adjustment);
 }
 
 static const double *
-canon_hue_adjustment(const stp_printer_t printer)
+canon_hue_adjustment(int model)
 {
-  const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+  const canon_cap_t * caps= canon_get_model_capabilities(model);
   return (caps->hue_adjustment);
 }
 
 static const double *
-canon_sat_adjustment(const stp_printer_t printer)
+canon_sat_adjustment(int model)
 {
-  const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+  const canon_cap_t * caps= canon_get_model_capabilities(model);
   return (caps->sat_adjustment);
 }
 
@@ -1582,17 +1571,16 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 }
 
 static void
-canon_describe_resolution(const stp_printer_t printer, const stp_vars_t v,
-			  int *x, int *y)
+canon_describe_resolution(const stp_vars_t v, int *x, int *y)
 {
-  const char *resolution = stp_get_parameter(v, "Resolution");
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
   *y = -1;
   sscanf(resolution, "%dx%d", x, y);
   return;
 }
 
-static stp_param_t media_sources[] =
+static stp_param_string_t media_sources[] =
               {
                 { "Auto",	N_ ("Auto Sheet Feeder") },
                 { "Manual",	N_ ("Manual with Pause") },
@@ -1604,24 +1592,25 @@ static stp_param_t media_sources[] =
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_list_t
-canon_parameters(const stp_printer_t printer,
-                 const stp_vars_t v,
-                 const char *name)
+static void
+canon_parameters(const stp_vars_t v, const char *name,
+		 stp_parameter_t *description)
 {
   int		i;
-  stp_param_list_t valptrs = stp_param_list_allocate();
 
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+    canon_get_model_capabilities(stp_get_model(v));
+  description->type = STP_PARAMETER_TYPE_INVALID;
 
   if (name == NULL)
-    return valptrs;
+    return;
 
+  stp_fill_parameter_settings(description, name);
   if (strcmp(name, "PageSize") == 0)
   {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
+    description->bounds.str = stp_string_list_allocate();
 
     width_limit = caps->max_width;
     height_limit = caps->max_height;
@@ -1632,7 +1621,10 @@ canon_parameters(const stp_printer_t printer,
 	  stp_papersize_get_width(pt) <= width_limit &&
 	  stp_papersize_get_height(pt) <= height_limit)
 	{
-	  stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+	  if (stp_string_list_count(description->bounds.str) == 0)
+	    description->deflt.str = stp_papersize_get_name(pt);
+	  stp_string_list_add_param(description->bounds.str,
+				   stp_papersize_get_name(pt),
 				   stp_papersize_get_text(pt));
 	}
     }
@@ -1642,6 +1634,7 @@ canon_parameters(const stp_printer_t printer,
     char tmp1[100], tmp2[100];
     int x,y;
     int t;
+    description->bounds.str= stp_string_list_allocate();
 
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
@@ -1650,7 +1643,9 @@ canon_parameters(const stp_printer_t printer,
 		  (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
 	  sprintf(tmp2,"%dx%d DPI",
 		   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	  stp_param_list_add_param(valptrs, tmp1, tmp2);
+	  if (stp_string_list_count(description->bounds.str) == 0)
+	    description->deflt.str = stp_strdup(tmp1);
+	  stp_string_list_add_param(description->bounds.str, tmp1, tmp2);
 	  stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
 
 	  if (t==1) {
@@ -1658,7 +1653,7 @@ canon_parameters(const stp_printer_t printer,
 		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
 	    sprintf(tmp2,"%dx%d DPI DMT",
 		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	    stp_param_list_add_param(valptrs, tmp1, tmp2);
+	    stp_string_list_add_param(description->bounds.str, tmp1, tmp2);
 	    stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
 	  }
 	}
@@ -1667,121 +1662,49 @@ canon_parameters(const stp_printer_t printer,
   }
   else if (strcmp(name, "InkType") == 0)
   {
+    description->bounds.str= stp_string_list_allocate();
     /* used internally: do not translate */
     if ((caps->inks & CANON_INK_K))
-      stp_param_list_add_param(valptrs, "Gray", _("Black"));
+      stp_string_list_add_param(description->bounds.str,
+			       "Gray", _("Black"));
     if ((caps->inks & CANON_INK_CMY))
-      stp_param_list_add_param(valptrs, "RGB", _("CMY Color"));
+      stp_string_list_add_param(description->bounds.str,
+			       "RGB", _("CMY Color"));
     if ((caps->inks & CANON_INK_CMYK))
-      stp_param_list_add_param(valptrs, "CMYK", _("CMYK Color"));
+      stp_string_list_add_param(description->bounds.str,
+			       "CMYK", _("CMYK Color"));
     if ((caps->inks & CANON_INK_CcMmYK))
-      stp_param_list_add_param(valptrs, "PhotoCMY", _("Photo CcMmY Color"));
+      stp_string_list_add_param(description->bounds.str,
+			       "PhotoCMY", _("Photo CcMmY Color"));
     if ((caps->inks & CANON_INK_CcMmYyK))
-      stp_param_list_add_param(valptrs, "PhotoCMYK", _("Photo CcMmYK Color"));
+      stp_string_list_add_param(description->bounds.str,
+			       "PhotoCMYK", _("Photo CcMmYK Color"));
+    description->deflt.str =
+      stp_string_list_param(description->bounds.str, 0)->name;
   }
   else if (strcmp(name, "MediaType") == 0)
   {
     int count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
+    description->bounds.str= stp_string_list_allocate();
+    description->deflt.str= canon_paper_list[0].name;
 
     for (i = 0; i < count; i ++)
-      stp_param_list_add_param(valptrs, canon_paper_list[i].name,
-			       _(canon_paper_list[i].text));
+      stp_string_list_add_param(description->bounds.str,
+				canon_paper_list[i].name,
+				_(canon_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
     int count = 3;
+    description->bounds.str= stp_string_list_allocate();
+    description->deflt.str= media_sources[0].name;
     for (i = 0; i < count; i ++)
-      stp_param_list_add_param(valptrs, media_sources[i].name,
-			       _(media_sources[i].text));
+      stp_string_list_add_param(description->bounds.str,
+				media_sources[i].name,
+				_(media_sources[i].text));
   }
-  else if (strcmp(name, "DitherAlgorithm") == 0)
-    stp_dither_algorithms(valptrs);
-  return (valptrs);
-}
-
-static const char *
-canon_default_parameters(const stp_printer_t printer,
-			 const stp_vars_t v,
-			 const char *name)
-{
-  int		i;
-  const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
-
-  if (name == NULL)
-    return (NULL);
-
-  if (strcmp(name, "PageSize") == 0)
-  {
-    int height_limit, width_limit;
-    int papersizes = stp_known_papersizes();
-
-    width_limit  = caps->max_width;
-    height_limit = caps->max_height;
-
-    for (i = 0; i < papersizes; i++) {
-      const stp_papersize_t pt = stp_get_papersize_by_index(i);
-      if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	  stp_papersize_get_width(pt) <= width_limit &&
-	  stp_papersize_get_height(pt) <= height_limit)
-	return (stp_papersize_get_name(pt));
-    }
-    return NULL;
-  }
-  else if (strcmp(name, "Resolution") == 0)
-  {
-    char tmp[100];
-    int x,y;
-    int t;
-    int min_res = caps->base_res;
-    while (min_res < 300)
-      min_res *= 2;
-
-    for (x=1; x<6; x++)
-      {
-	for (y=x-1; y<x+1; y++)
-	  {
-	    if ((t= canon_ink_type(caps,(x<<4)|y)) > -1)
-	      {
-	        if (t == 1)
-		  sprintf(tmp, "%dx%ddmt", min_res, min_res);
-		else
-		  sprintf(tmp,"%dx%ddpi", min_res, min_res);
-
-		stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp);
-		return (c_strdup(tmp));
-	      }
-	  }
-      }
-    return NULL;
-  }
-  else if (strcmp(name, "InkType") == 0)
-  {
-    /* used internally: do not translate */
-    if ((caps->inks & CANON_INK_K))
-      return ("Gray");
-    if ((caps->inks & CANON_INK_CMY))
-      return ("RGB");
-    if ((caps->inks & CANON_INK_CMYK))
-      return ("CMYK");
-    if ((caps->inks & CANON_INK_CcMmYK))
-      return ("PhotoCMY");
-    if ((caps->inks & CANON_INK_CcMmYyK))
-      return ("PhotoCMYK");
-    return NULL;
-  }
-  else if (strcmp(name, "MediaType") == 0)
-  {
-    return (canon_paper_list[0].name);
-  }
-  else if (strcmp(name, "InputSlot") == 0)
-  {
-    return (media_sources[0].name);
-  }
-  else if (strcmp(name, "DitherAlgorithm") == 0)
-    return stp_get_default_dither_algorithm();
   else
-    return (NULL);
+    stp_describe_internal_parameter(v, name, description);
 }
 
 
@@ -1790,8 +1713,7 @@ canon_default_parameters(const stp_printer_t printer,
  */
 
 static void
-canon_imageable_area(const stp_printer_t printer,	/* I - Printer model */
-		     const stp_vars_t v,   /* I */
+canon_imageable_area(const stp_vars_t v,   /* I */
                      int  *left,	/* O - Left position in points */
                      int  *right,	/* O - Right position in points */
                      int  *bottom,	/* O - Bottom position in points */
@@ -1799,10 +1721,9 @@ canon_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+  const canon_cap_t * caps= canon_get_model_capabilities(stp_get_model(v));
 
-  stp_default_media_size(printer, v, &width, &length);
+  stp_default_media_size(v, &width, &length);
 
   *left   = caps->border_left;
   *right  = width - caps->border_right;
@@ -1811,15 +1732,14 @@ canon_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 }
 
 static void
-canon_limit(const stp_printer_t printer,	/* I - Printer model */
-	    const stp_vars_t v,  		/* I */
+canon_limit(const stp_vars_t v,  		/* I */
 	    int *width,
 	    int *height,
 	    int *min_width,
 	    int *min_height)
 {
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_printer_get_model(printer));
+    canon_get_model_capabilities(stp_get_model(v));
   *width =	caps->max_width;
   *height =	caps->max_height;
   *min_width = 1;
@@ -2204,18 +2124,16 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
  * 'canon_print()' - Print an image to a CANON printer.
  */
 static int
-canon_print(const stp_printer_t printer,	
-	    const stp_vars_t v,
-	    stp_image_t *image)
+canon_print(const stp_vars_t v, stp_image_t *image)
 {
   int i;
   int		status = 1;
   const unsigned char *cmap = stp_get_cmap(v);
-  int		model = stp_printer_get_model(printer);
-  const char	*resolution = stp_get_parameter(v, "Resolution");
-  const char	*media_source = stp_get_parameter(v, "InputSlot");
+  int		model = stp_get_model(v);
+  const char	*resolution = stp_get_string_parameter(v, "Resolution");
+  const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   int 		output_type = stp_get_output_type(v);
-  const char	*ink_type = stp_get_parameter(v, "InkType");
+  const char	*ink_type = stp_get_string_parameter(v, "InkType");
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		y;		/* Looping vars */
@@ -2280,7 +2198,7 @@ canon_print(const stp_printer_t printer,
   const canon_variable_inkset_t *inks;
   stp_dither_data_t *dt;
 
-  if (!stp_printer_verify(printer, nv))
+  if (!stp_verify(nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
       return 0;
@@ -2345,8 +2263,7 @@ canon_print(const stp_printer_t printer,
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  canon_imageable_area(printer, nv, &page_left, &page_right, &page_bottom,
-		       &page_top);
+  canon_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
   page_width = page_right - page_left;
@@ -2355,7 +2272,7 @@ canon_print(const stp_printer_t printer,
   image_height = image->height(image);
   image_width = image->width(image);
 
-  stp_default_media_size(printer, nv, &n, &page_true_height);
+  stp_default_media_size(nv, &n, &page_true_height);
 
   PUT("top        ",top,72);
   PUT("left       ",left,72);
@@ -2368,7 +2285,7 @@ canon_print(const stp_printer_t printer,
   PUT("top     ",top,72);
   PUT("left    ",left,72);
 
-  pt = get_media_type(stp_get_parameter(nv, "MediaType"));
+  pt = get_media_type(stp_get_string_parameter(nv, "MediaType"));
 
   init.caps = caps;
   init.output_type = output_type;
@@ -2470,7 +2387,8 @@ canon_print(const stp_printer_t printer,
 	       cyan ? "C" : "", lcyan ? "c" : "", magenta ? "M" : "",
 	       lmagenta ? "m" : "", yellow ? "Y" : "", black ? "K" : "");
 
-  stp_deprintf(STP_DBG_CANON,"density is %f\n",stp_get_density(nv));
+  stp_deprintf(STP_DBG_CANON,"density is %f\n",
+	       stp_get_float_parameter(nv, "Density"));
 
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
@@ -2479,18 +2397,22 @@ canon_print(const stp_printer_t printer,
   if (output_type != OUTPUT_RAW_PRINTER && output_type != OUTPUT_RAW_CMYK)
     {
       if (pt)
-	stp_set_density(nv, stp_get_density(nv) * pt->base_density);
+	stp_set_float_parameter(nv, "Density",
+			  stp_get_float_parameter(nv, "Density") * pt->base_density);
       else			/* Can't find paper type? Assume plain */
-	stp_set_density(nv, stp_get_density(nv) * .5);
-      stp_set_density(nv, stp_get_density(nv) * canon_density(caps, res_code));
+	stp_set_float_parameter(nv, "Density",
+			  stp_get_float_parameter(nv, "Density") * .5);
+      stp_set_float_parameter(nv, "Density",
+			stp_get_float_parameter(nv, "Density") * canon_density(caps, res_code));
     }
-  if (stp_get_density(nv) > 1.0)
-    stp_set_density(nv, 1.0);
+  if (stp_get_float_parameter(nv, "Density") > 1.0)
+    stp_set_float_parameter(nv, "Density", 1.0);
   if (colormode == COLOR_MONOCHROME)
-    stp_set_gamma(nv, stp_get_gamma(nv) / .8);
+    stp_set_float_parameter(nv, "Gamma", stp_get_float_parameter(nv, "Gamma") / .8);
   stp_compute_lut(nv, 256);
 
-  stp_deprintf(STP_DBG_CANON,"density is %f\n",stp_get_density(nv));
+  stp_deprintf(STP_DBG_CANON,"density is %f\n",
+	       stp_get_float_parameter(nv, "Density"));
 
  /*
   * Output the page...
@@ -2522,16 +2444,20 @@ canon_print(const stp_printer_t printer,
     {
       if (inks->c)
 	stp_dither_set_ranges(dither, ECOLOR_C, inks->c->count, inks->c->range,
-			  inks->c->density * stp_get_density(nv));
+			      inks->c->density *
+			      stp_get_float_parameter(nv, "Density"));
       if (inks->m)
 	stp_dither_set_ranges(dither, ECOLOR_M, inks->m->count, inks->m->range,
-			  inks->m->density * stp_get_density(nv));
+			      inks->m->density *
+			      stp_get_float_parameter(nv, "Density"));
       if (inks->y)
 	stp_dither_set_ranges(dither, ECOLOR_Y, inks->y->count, inks->y->range,
-			  inks->y->density * stp_get_density(nv));
+			      inks->y->density *
+			      stp_get_float_parameter(nv, "Density"));
       if (inks->k)
 	stp_dither_set_ranges(dither, ECOLOR_K, inks->k->count, inks->k->range,
-			  inks->k->density * stp_get_density(nv));
+			      inks->k->density *
+			      stp_get_float_parameter(nv, "Density"));
     }
 
   switch (stp_get_image_type(nv))
@@ -2553,7 +2479,7 @@ canon_print(const stp_printer_t printer,
       stp_dither_set_ink_spread(dither, ink_spread);
       break;
     }
-  stp_dither_set_density(dither, stp_get_density(nv));
+  stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   in  = stp_zalloc(image_width * image_bpp);
   out = stp_zalloc(image_width * out_bpp * 2);
@@ -2563,31 +2489,31 @@ canon_print(const stp_printer_t printer,
   errval  = 0;
   errlast = -1;
   errline  = 0;
-  if (canon_lum_adjustment(printer)) {
+  if (canon_lum_adjustment(model)) {
     int k;
     for (k = 0; k < 49; k++) {
       have_lum_adjustment= 1;
-      lum_adjustment[k] = canon_lum_adjustment(printer)[k];
+      lum_adjustment[k] = canon_lum_adjustment(model)[k];
       if(pt)
 	if (pt->lum_adjustment)
 	  lum_adjustment[k] *= pt->lum_adjustment[k];
     }
   }
-  if (canon_sat_adjustment(printer)) {
+  if (canon_sat_adjustment(model)) {
     int k;
     for (k = 0; k < 49; k++) {
       have_sat_adjustment= 1;
-      sat_adjustment[k] = canon_sat_adjustment(printer)[k];
+      sat_adjustment[k] = canon_sat_adjustment(model)[k];
       if(pt)
 	if (pt->sat_adjustment)
 	  sat_adjustment[k] *= pt->sat_adjustment[k];
     }
   }
-  if (canon_hue_adjustment(printer)) {
+  if (canon_hue_adjustment(model)) {
     int k;
     for (k = 0; k < 49; k++) {
       have_hue_adjustment= 1;
-      hue_adjustment[k] = canon_hue_adjustment(printer)[k];
+      hue_adjustment[k] = canon_hue_adjustment(model)[k];
       if(pt)
 	if (pt->hue_adjustment)
 	  hue_adjustment[k] += pt->hue_adjustment[k];
@@ -2713,7 +2639,6 @@ const stp_printfuncs_t stp_canon_printfuncs =
   canon_imageable_area,
   canon_limit,
   canon_print,
-  canon_default_parameters,
   canon_describe_resolution,
   stp_verify_printer_params
 };

@@ -201,7 +201,7 @@ main(int argc, char **argv)
   int x, y;
   int width, height;
   int retval;
-  const char **parameters;
+  const stp_parameter_t *params;
   int count;
   int i;
 
@@ -257,7 +257,7 @@ main(int argc, char **argv)
 	  global_c_level = strtod(optarg, 0);
 	  break;
 	case 'd':
-	  stp_set_parameter(tv, "DitherAlgorithm", optarg);
+	  stp_set_string_parameter(tv, "DitherAlgorithm", optarg);
 	  break;
 	case 'e':
 	  density = strtod(optarg, 0);
@@ -266,7 +266,7 @@ main(int argc, char **argv)
 	  do_help();
 	  break;
 	case 'i':
-	  stp_set_parameter(tv, "InkType", optarg);
+	  stp_set_string_parameter(tv, "InkType", optarg);
 	  break;
 	case 'm':
 	  global_m_level = strtod(optarg, 0);
@@ -281,19 +281,19 @@ main(int argc, char **argv)
 	  noblackline = 1;
 	  break;
 	case 'r':
-	  stp_set_parameter(tv, "Resolution", optarg);
+	  stp_set_string_parameter(tv, "Resolution", optarg);
 	  break;
 	case 's':
-	  stp_set_parameter(tv, "InputSlot", optarg);
+	  stp_set_string_parameter(tv, "InputSlot", optarg);
 	  break;
 	case 't':
-	  stp_set_parameter(tv, "MediaType", optarg);
+	  stp_set_string_parameter(tv, "MediaType", optarg);
 	  break;
 	case 'y':
 	  global_y_level = strtod(optarg, 0);
 	  break;
 	case 'z':
-	  stp_set_parameter(tv, "PageSize", optarg);
+	  stp_set_string_parameter(tv, "PageSize", optarg);
 	  break;
 	default:
 	  fprintf(stderr, "Unknown option '-%c'\n", c);
@@ -334,12 +334,14 @@ main(int argc, char **argv)
   stp_set_errfunc(v, writefunc);
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
-  stp_set_density(v, density);
+  stp_set_float_parameter(v, "Density", density);
   
-  parameters = stp_printer_list_parameters(the_printer, v, &count);
+  params = stp_list_parameters(v, &count);
   for (i = 0; i < count; i++)
-    if (strlen(stp_get_parameter(tv, parameters[i])))
-      stp_set_parameter(v, parameters[i],stp_get_parameter(tv,parameters[i]));
+    if (params[i].type == STP_PARAMETER_TYPE_STRING_LIST &&
+	strlen(stp_get_string_parameter(tv, params[i].name)) > 0)
+      stp_set_string_parameter(v, params[i].name,
+			       stp_get_string_parameter (tv, params[i].name));
 
   /*
    * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
@@ -350,15 +352,15 @@ main(int argc, char **argv)
   else
     stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
-  pt = stp_get_papersize_by_name(stp_get_parameter(v, "PageSize"));
+  pt = stp_get_papersize_by_name(stp_get_string_parameter(v, "PageSize"));
   if (!pt)
     {
       fprintf(stderr, "Papersize %s unknown\n", media_size);
       return 1;
     }
 
-  stp_printer_get_imageable_area(the_printer, v, &left, &right, &bottom, &top);
-  stp_printer_describe_resolution(the_printer, v, &x, &y);
+  stp_get_imageable_area(v, &left, &right, &bottom, &top);
+  stp_describe_resolution(v, &x, &y);
   if (x < 0)
     x = 300;
   if (y < 0)
@@ -386,7 +388,7 @@ main(int argc, char **argv)
   stp_set_top(v, top);
 
   stp_merge_printvars(v, stp_printer_get_printvars(the_printer));
-  if (stp_print(the_printer, v, &theImage) != 1)
+  if (stp_print(v, &theImage) != 1)
     return 1;
   stp_free_vars(v);
   return 0;

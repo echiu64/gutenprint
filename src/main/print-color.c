@@ -286,7 +286,7 @@ gray_to_gray(const stp_vars_t vars,
   int o0 = 0;
   int nz = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
   while (width)
@@ -325,7 +325,7 @@ gray_alpha_to_gray(const stp_vars_t vars,
   int o0 = 0;
   int nz = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
   while (width)
@@ -450,7 +450,7 @@ indexed_to_gray(const stp_vars_t vars,
   int nz = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
   unsigned char	gray_cmap[256];		/* Grayscale colormap */
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
 
@@ -497,7 +497,7 @@ indexed_alpha_to_gray(const stp_vars_t vars,
   int i;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
   unsigned char	gray_cmap[256];		/* Grayscale colormap */
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
 
@@ -646,7 +646,7 @@ rgb_to_gray(const stp_vars_t vars,
   int o0 = 0;
   int nz = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
   while (width)
@@ -690,7 +690,7 @@ rgb_alpha_to_gray(const stp_vars_t vars,
   int o0 = 0;
   int nz = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   if (width <= 0)
     return;
   while (width)
@@ -826,9 +826,9 @@ rgb_to_rgb(const stp_vars_t vars,
 	   const double *lum_map,
 	   const double *sat_map)
 {
-  unsigned ld = stp_get_density(vars) * 65536;
+  unsigned ld = stp_get_float_parameter(vars, "Density") * 65536;
   double isat = 1.0;
-  double ssat = stp_get_saturation(vars);
+  double ssat = stp_get_float_parameter(vars, "Saturation");
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -1089,9 +1089,9 @@ solid_rgb_to_rgb(const stp_vars_t vars,
 		 const double *lum_map,
 		 const double *sat_map)
 {
-  unsigned ld = stp_get_density(vars) * 65536;
+  unsigned ld = stp_get_float_parameter(vars, "Density") * 65536;
   double isat = 1.0;
-  double ssat = stp_get_saturation(vars);
+  double ssat = stp_get_float_parameter(vars, "Saturation");
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -1348,7 +1348,7 @@ gray_to_rgb(const stp_vars_t vars,
   int nz1 = 0;
   int nz2 = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   while (width > 0)
     {
       unsigned short trgb[3];
@@ -1443,8 +1443,8 @@ fast_indexed_to_rgb(const stp_vars_t vars,
   int nz2 = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
   double isat = 1.0;
-  double saturation = stp_get_saturation(vars);
-  double density = stp_get_density(vars);
+  double saturation = stp_get_float_parameter(vars, "Saturation");
+  double density = stp_get_float_parameter(vars, "Density");
   if (saturation > 1)
     isat = 1.0 / saturation;
   while (width > 0)
@@ -1544,7 +1544,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
 		const double *lum_map,
 		const double *sat_map)
 {
-  unsigned ld = stp_get_density(vars) * 65536;
+  unsigned ld = stp_get_float_parameter(vars, "Density") * 65536;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -1557,7 +1557,7 @@ fast_rgb_to_rgb(const stp_vars_t vars,
   int nz2 = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
   double isat = 1.0;
-  double saturation = stp_get_saturation(vars);
+  double saturation = stp_get_float_parameter(vars, "Saturation");
   if (saturation > 1)
     isat = 1.0 / saturation;
   while (width > 0)
@@ -1671,7 +1671,7 @@ fast_gray_to_rgb(const stp_vars_t vars,
   int nz1 = 0;
   int nz2 = 0;
   lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  double density = stp_get_density(vars);
+  double density = stp_get_float_parameter(vars, "Density");
   while (width > 0)
     {
       if (bpp == 1)
@@ -1758,11 +1758,11 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
   static double print_gamma = -1.0;
 
   memset(nz, 0, sizeof(nz));
-  if (density != stp_get_density(vars) ||
-      print_gamma != stp_get_gamma(vars))
+  if (density != stp_get_float_parameter(vars, "Density") ||
+      print_gamma != stp_get_float_parameter(vars, "Gamma"))
   {
-    density     = stp_get_density(vars);
-    print_gamma = stp_get_gamma(vars);
+    density     = stp_get_float_parameter(vars, "Density");
+    print_gamma = stp_get_float_parameter(vars, "Gamma");
 
     for (i = 0; i < 256; i ++)
       lut[i] = 65535.0 * density * pow((double)i / 255.0, print_gamma) + 0.5;
@@ -1925,13 +1925,13 @@ stp_compute_lut(stp_vars_t v, size_t steps)
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  double cyan = stp_get_cyan(v);
-  double magenta = stp_get_magenta(v);
-  double yellow = stp_get_yellow(v);
-  double print_gamma = stp_get_gamma(v);
-  double contrast = stp_get_contrast(v);
-  double app_gamma = stp_get_app_gamma(v);
-  double brightness = stp_get_brightness(v);
+  double cyan = stp_get_float_parameter(v, "Cyan");
+  double magenta = stp_get_float_parameter(v, "Magenta");
+  double yellow = stp_get_float_parameter(v, "Yellow");
+  double print_gamma = stp_get_float_parameter(v, "Gamma");
+  double contrast = stp_get_float_parameter(v, "Contrast");
+  double app_gamma = stp_get_float_parameter(v, "AppGamma");
+  double brightness = stp_get_float_parameter(v, "Brightness");
   double screen_gamma = app_gamma / 4.0; /* "Empirical" */
   double pivot = .25;
   double ipivot = 1.0 - pivot;

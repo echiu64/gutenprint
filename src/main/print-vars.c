@@ -41,6 +41,7 @@
 
 static const stp_internal_vars_t default_vars =
 {
+	COOKIE_VARS,
 	N_ ("ps2"),	       	/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	"",			/* Output resolution */
@@ -72,6 +73,7 @@ static const stp_internal_vars_t default_vars =
 
 static const stp_internal_vars_t min_vars =
 {
+	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	"",			/* Output resolution */
@@ -103,6 +105,7 @@ static const stp_internal_vars_t min_vars =
 
 static const stp_internal_vars_t max_vars =
 {
+	COOKIE_VARS,
 	N_ ("ps2"),		/* Name of printer "driver" */
 	"",			/* Name of PPD file */
 	"",			/* Output resolution */
@@ -132,10 +135,142 @@ static const stp_internal_vars_t max_vars =
 	NCOLOR_MODELS - 1	/* Output color model */
 };
 
+static const stp_parameter_t global_parameters[] =
+  {
+    {
+      "PageSize", N_("Page Size"),
+      N_("Size of the paper being printed to"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "MediaType", N_("Media Type"),
+      N_("Type of media (plain paper, photo paper, etc.)"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "InputSlot", N_("Media Source"),
+      N_("Source (input slot) of the media"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "InkType", N_("Ink Type"),
+      N_("Type of ink in the printer"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Resolution", N_("Resolutions"),
+      N_("Resolution and quality of the print"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "DitherAlgorithm", N_("Dither Algorithm"),
+      N_("Choose the dither algorithm to be used.\n"
+	 "Adaptive Hybrid usually produces the best all-around quality.\n"
+	 "EvenTone is a new, experimental algorithm that often produces excellent results.\n"
+	 "Ordered is faster and produces almost as good quality on photographs.\n"
+	 "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+	 "Hybrid Floyd-Steinberg generally produces inferior output."),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Brightness", N_("Brightness"),
+      N_("Brightness of the print (0 is solid black, 2 is solid white)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Contrast", N_("Contrast"),
+      N_("Contrast of the print (0 is solid gray)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Density", N_("Density"),
+      N_("Adjust the density (amount of ink) of the print. "
+	 "Reduce the density if the ink bleeds through the "
+	 "paper or smears; increase the density if black "
+	 "regions are not solid."),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Gamma", N_("Gamma"),
+      N_("Adjust the gamma of the print. Larger values will "
+	 "produce a generally brighter print, while smaller "
+	 "values will produce a generally darker print. "
+	 "Black and white will remain the same, unlike with "
+	 "the brightness adjustment."),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "AppGamma", N_("AppGamma"),
+      N_("Gamma value assumed by application"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED
+    },
+    {
+      "Cyan", N_("Cyan"),
+      N_("Adjust the cyan balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Magenta", N_("Magenta"),
+      N_("Adjust the magenta balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Yellow", N_("Yellow"),
+      N_("Adjust the yellow balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      "Saturation", N_("Saturation"),
+      N_("Adjust the saturation (color balance) of the print\n"
+	 "Use zero saturation to produce grayscale output "
+	 "using color and black inks"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC
+    },
+    {
+      NULL, NULL, NULL,
+      STP_PARAMETER_TYPE_INVALID, STP_PARAMETER_CLASS_INVALID,
+      STP_PARAMETER_LEVEL_INVALID
+    }
+  };
+
+const stp_vars_t
+stp_default_settings(void)
+{
+  return (stp_vars_t) &default_vars;
+}
+
+const stp_vars_t
+stp_maximum_settings(void)
+{
+  return (stp_vars_t) &max_vars;
+}
+
+const stp_vars_t
+stp_minimum_settings(void)
+{
+  return (stp_vars_t) &min_vars;
+}
+
 stp_vars_t
 stp_allocate_vars(void)
 {
-  void *retval = stp_zalloc(sizeof(stp_internal_vars_t));
+  stp_internal_vars_t *retval = stp_zalloc(sizeof(stp_internal_vars_t));
+  retval->cookie = COOKIE_VARS;
   stp_copy_vars(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
@@ -148,53 +283,25 @@ do						\
   ((x)) = NULL;					\
 } while (0)
 
-static size_t
-c_strlen(const char *s)
+static void
+check_vars(const stp_internal_vars_t *v)
 {
-  return strlen(s);
-}
-
-static char *
-c_strndup(const char *s, int n)
-{
-  char *ret;
-  if (!s || n < 0)
+  if (v->cookie != COOKIE_VARS)
     {
-      ret = stp_malloc(1);
-      ret[0] = 0;
-      return ret;
+      stp_erprintf("Bad stp_vars_t!\n");
+      exit(2);
     }
-  else
-    {
-      ret = stp_malloc(n + 1);
-      memcpy(ret, s, n);
-      ret[n] = 0;
-      return ret;
-    }
-}
-
-static char *
-c_strdup(const char *s)
-{
-  char *ret;
-  if (!s)
-    {
-      ret = stp_malloc(1);
-      ret[0] = 0;
-      return ret;
-    }
-  else
-    return c_strndup(s, c_strlen(s));
 }
 
 void
 stp_free_vars(stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  check_vars(v);
   SAFE_FREE(v->driver);
   SAFE_FREE(v->ppd_file);
   SAFE_FREE(v->resolution);
-  SAFE_FREE(v->media_size);
+  SAFE_FREE(v->media_size_name);
   SAFE_FREE(v->media_type);
   SAFE_FREE(v->media_source);
   SAFE_FREE(v->ink_type);
@@ -202,91 +309,119 @@ stp_free_vars(stp_vars_t vv)
   stp_free(v);
 }
 
-#define DEF_STRING_FUNCS(s, t)				\
-t void							\
+#define DEF_STRING_FUNCS(s)				\
+void							\
 stp_set_##s(stp_vars_t vv, const char *val)		\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
   if (v->s == val)					\
     return;						\
   SAFE_FREE(v->s);					\
-  v->s = c_strdup(val);					\
+  v->s = stp_strdup(val);				\
   v->verified = 0;					\
 }							\
 							\
-t void							\
+void							\
 stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
   if (v->s == val)					\
     return;						\
   SAFE_FREE(v->s);					\
-  v->s = c_strndup(val, n);				\
+  v->s = stp_strndup(val, n);				\
   v->verified = 0;					\
 }							\
 							\
-t const char *						\
+const char *						\
 stp_get_##s(const stp_vars_t vv)			\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
   return v->s;						\
 }
 
-#define DEF_FUNCS(s, t)					\
-void							\
+#define DEF_STRING_FUNCS_INTERNAL(s)			\
+static void						\
+stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
+{							\
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
+  if (v->s == val)					\
+    return;						\
+  SAFE_FREE(v->s);					\
+  v->s = stp_strndup(val, n);				\
+  v->verified = 0;					\
+}							\
+							\
+static const char *					\
+stp_get_##s(const stp_vars_t vv)			\
+{							\
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
+  return v->s;						\
+}
+
+#define DEF_FUNCS(s, t, u)				\
+u void							\
 stp_set_##s(stp_vars_t vv, t val)			\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
   v->verified = 0;					\
   v->s = val;						\
 }							\
 							\
-t							\
+u t							\
 stp_get_##s(const stp_vars_t vv)			\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  check_vars(v);					\
   return v->s;						\
 }
 
-DEF_STRING_FUNCS(driver, )
-DEF_STRING_FUNCS(ppd_file, )
-DEF_STRING_FUNCS(resolution, static)
-DEF_STRING_FUNCS(media_size, static)
-DEF_STRING_FUNCS(media_type, static)
-DEF_STRING_FUNCS(media_source, static)
-DEF_STRING_FUNCS(ink_type, static)
-DEF_STRING_FUNCS(dither_algorithm, static)
-DEF_FUNCS(output_type, int)
-DEF_FUNCS(left, int)
-DEF_FUNCS(top, int)
-DEF_FUNCS(width, int)
-DEF_FUNCS(height, int)
-DEF_FUNCS(image_type, int)
-DEF_FUNCS(page_width, int)
-DEF_FUNCS(page_height, int)
-DEF_FUNCS(input_color_model, int)
-DEF_FUNCS(output_color_model, int)
-DEF_FUNCS(brightness, float)
-DEF_FUNCS(gamma, float)
-DEF_FUNCS(contrast, float)
-DEF_FUNCS(cyan, float)
-DEF_FUNCS(magenta, float)
-DEF_FUNCS(yellow, float)
-DEF_FUNCS(saturation, float)
-DEF_FUNCS(density, float)
-DEF_FUNCS(app_gamma, float)
-DEF_FUNCS(lut, void *)
-DEF_FUNCS(outdata, void *)
-DEF_FUNCS(errdata, void *)
-DEF_FUNCS(driver_data, void *)
-DEF_FUNCS(cmap, unsigned char *)
-DEF_FUNCS(outfunc, stp_outfunc_t)
-DEF_FUNCS(errfunc, stp_outfunc_t)
+DEF_STRING_FUNCS(driver)
+DEF_STRING_FUNCS(ppd_file)
+DEF_FUNCS(output_type, int, )
+DEF_FUNCS(left, int, )
+DEF_FUNCS(top, int, )
+DEF_FUNCS(width, int, )
+DEF_FUNCS(height, int, )
+DEF_FUNCS(image_type, int, )
+DEF_FUNCS(page_width, int, )
+DEF_FUNCS(page_height, int, )
+DEF_FUNCS(input_color_model, int, )
+DEF_FUNCS(output_color_model, int, )
+DEF_FUNCS(lut, void *, )
+DEF_FUNCS(outdata, void *, )
+DEF_FUNCS(errdata, void *, )
+DEF_FUNCS(driver_data, void *, )
+DEF_FUNCS(cmap, unsigned char *, )
+DEF_FUNCS(outfunc, stp_outfunc_t, )
+DEF_FUNCS(errfunc, stp_outfunc_t, )
+
+DEF_STRING_FUNCS_INTERNAL(resolution)
+DEF_STRING_FUNCS_INTERNAL(media_size_name)
+DEF_STRING_FUNCS_INTERNAL(media_type)
+DEF_STRING_FUNCS_INTERNAL(media_source)
+DEF_STRING_FUNCS_INTERNAL(ink_type)
+DEF_STRING_FUNCS_INTERNAL(dither_algorithm)
+DEF_FUNCS(brightness, float, static)
+DEF_FUNCS(gamma, float, static)
+DEF_FUNCS(contrast, float, static)
+DEF_FUNCS(cyan, float, static)
+DEF_FUNCS(magenta, float, static)
+DEF_FUNCS(yellow, float, static)
+DEF_FUNCS(saturation, float, static)
+DEF_FUNCS(density, float, static)
+DEF_FUNCS(app_gamma, float, static)
 
 void
 stp_set_verified(stp_vars_t vv, int val)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  check_vars(v);
   v->verified = val;
 }
 
@@ -294,6 +429,7 @@ int
 stp_get_verified(const stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  check_vars(v);
   return v->verified;
 }
 
@@ -302,15 +438,18 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
 {
   const stp_internal_vars_t *src = (const stp_internal_vars_t *)vs;
   stp_internal_vars_t *dest = (stp_internal_vars_t *)vd;
-  stp_internal_option_t *opt = (stp_internal_option_t *) src->options;
   stp_internal_option_t *popt = NULL;
+  stp_internal_option_t *opt;
+  check_vars(src);
+  check_vars(dest);
+  opt = (stp_internal_option_t *) src->options;
   if (opt)
     {
       stp_internal_option_t *nopt = stp_malloc(sizeof(stp_internal_option_t));
       stp_set_verified(vd, 0);
       dest->options = nopt;
       memcpy(nopt, opt, sizeof(stp_internal_option_t));
-      nopt->name = stp_malloc(c_strlen(opt->name) + 1);
+      nopt->name = stp_malloc(stp_strlen(opt->name) + 1);
       strcpy(nopt->name, opt->name);
       nopt->data = stp_malloc(opt->length);
       memcpy(nopt->data, opt->data, opt->length);
@@ -322,7 +461,7 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
           memcpy(nopt, opt, sizeof(stp_internal_option_t));
           nopt->prev = popt;
           popt->next = nopt;
-          nopt->name = stp_malloc(c_strlen(opt->name) + 1);
+          nopt->name = stp_malloc(stp_strlen(opt->name) + 1);
           strcpy(nopt->name, opt->name);
           nopt->data = stp_malloc(opt->length);
           memcpy(nopt->data, opt->data, opt->length);
@@ -333,13 +472,13 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
 }
 
 void
-stp_set_parameter_n(stp_vars_t v, const char *parameter,
-		    const char *value, int bytes)
+stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
+			   const char *value, int bytes)
 {
   if      (strcmp(parameter, "Resolution") == 0)
     stp_set_resolution_n(v, value, bytes);
   else if (strcmp(parameter, "PageSize") == 0)
-    stp_set_media_size_n(v, value, bytes);
+    stp_set_media_size_name_n(v, value, bytes);
   else if (strcmp(parameter, "MediaType") == 0)
     stp_set_media_type_n(v, value, bytes);
   else if (strcmp(parameter, "InputSlot") == 0)
@@ -353,13 +492,91 @@ stp_set_parameter_n(stp_vars_t v, const char *parameter,
 		parameter, value);
 }
 
+void
+stp_set_string_parameter(stp_vars_t v, const char *parameter,
+			 const char *value)
+{
+  int byte_count = 0;
+  if (value)
+    byte_count = strlen(value);
+  stp_set_string_parameter_n(v, parameter, value, byte_count);
+}
+
+void
+stp_set_curve_parameter(stp_vars_t v, const char *parameter,
+			const stp_curve_t *curve)
+{
+  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+	      parameter);
+}
+
+void
+stp_set_float_parameter(stp_vars_t v, const char *parameter, double value)
+{
+  if (strcmp(parameter, "Brightness") == 0)
+    stp_set_brightness(v, value);
+  else if (strcmp(parameter, "Contrast") == 0)
+    stp_set_contrast(v, value);
+  else if (strcmp(parameter, "Density") == 0)
+    stp_set_density(v, value);
+  else if (strcmp(parameter, "Gamma") == 0)
+    stp_set_gamma(v, value);
+  else if (strcmp(parameter, "AppGamma") == 0)
+    stp_set_app_gamma(v, value);
+  else if (strcmp(parameter, "Cyan") == 0)
+    stp_set_cyan(v, value);
+  else if (strcmp(parameter, "Magenta") == 0)
+    stp_set_magenta(v, value);
+  else if (strcmp(parameter, "Yellow") == 0)
+    stp_set_yellow(v, value);
+  else if (strcmp(parameter, "Saturation") == 0)
+    stp_set_saturation(v, value);
+}
+
+const double
+stp_get_float_parameter(stp_vars_t v, const char *parameter)
+{
+  if (strcmp(parameter, "Brightness") == 0)
+    return stp_get_brightness(v);
+  else if (strcmp(parameter, "Contrast") == 0)
+    return stp_get_contrast(v);
+  else if (strcmp(parameter, "Density") == 0)
+    return stp_get_density(v);
+  else if (strcmp(parameter, "AppGamma") == 0)
+    return stp_get_app_gamma(v);
+  else if (strcmp(parameter, "Gamma") == 0)
+    return stp_get_gamma(v);
+  else if (strcmp(parameter, "Cyan") == 0)
+    return stp_get_cyan(v);
+  else if (strcmp(parameter, "Magenta") == 0)
+    return stp_get_magenta(v);
+  else if (strcmp(parameter, "Yellow") == 0)
+    return stp_get_yellow(v);
+  else if (strcmp(parameter, "Saturation") == 0)
+    return stp_get_saturation(v);
+  else
+    {
+      stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+		  parameter);
+      return 0;
+    }
+}
+
+const stp_curve_t *
+stp_get_curve_parameter(stp_vars_t v, const char *parameter)
+{
+  stp_eprintf(v, "WARNING: Attempt to retrieve unknown parameter %s\n",
+	      parameter);
+  return NULL;
+}
+
 const char *
-stp_get_parameter(const stp_vars_t v, const char *parameter)
+stp_get_string_parameter(stp_vars_t v, const char *parameter)
 {
   if      (strcmp(parameter, "Resolution") == 0)
     return stp_get_resolution(v);
   else if (strcmp(parameter, "PageSize") == 0)
-    return stp_get_media_size(v);
+    return stp_get_media_size_name(v);
   else if (strcmp(parameter, "MediaType") == 0)
     return stp_get_media_type(v);
   else if (strcmp(parameter, "InputSlot") == 0)
@@ -377,28 +594,36 @@ stp_get_parameter(const stp_vars_t v, const char *parameter)
 }
 
 void
-stp_set_parameter(stp_vars_t v, const char *parameter, const char *value)
+stp_fill_parameter_settings(stp_parameter_t *desc, const char *name)
 {
-  if (value == NULL)
-    stp_set_parameter_n(v, parameter, NULL, 0);
-  else
-    stp_set_parameter_n(v, parameter, value, strlen(value));
+  const stp_parameter_t *param = global_parameters;
+  while (param->name)
+    {
+      if (strcmp(name, param->name) == 0)
+	{
+	  desc->type = param->type;
+	  desc->level = param->level;
+	  desc->class = param->class;
+	  desc->name = stp_strdup(param->name);
+	  desc->text = stp_strdup(param->text);
+	  desc->help = stp_strdup(param->help);
+	  return;
+	}
+      param++;
+    }
 }
 
 void
 stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 {
+  int count;
+  int i;
+  const stp_parameter_t *params;
   if (vs == vd)
     return;
   stp_set_driver(vd, stp_get_driver(vs));
   stp_set_driver_data(vd, stp_get_driver_data(vs));
   stp_set_ppd_file(vd, stp_get_ppd_file(vs));
-  stp_set_resolution(vd, stp_get_resolution(vs));
-  stp_set_media_size(vd, stp_get_media_size(vs));
-  stp_set_media_type(vd, stp_get_media_type(vs));
-  stp_set_media_source(vd, stp_get_media_source(vs));
-  stp_set_ink_type(vd, stp_get_ink_type(vs));
-  stp_set_dither_algorithm(vd, stp_get_dither_algorithm(vs));
   stp_set_output_type(vd, stp_get_output_type(vs));
   stp_set_left(vd, stp_get_left(vs));
   stp_set_top(vd, stp_get_top(vs));
@@ -407,15 +632,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_image_type(vd, stp_get_image_type(vs));
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
-  stp_set_brightness(vd, stp_get_brightness(vs));
-  stp_set_gamma(vd, stp_get_gamma(vs));
-  stp_set_contrast(vd, stp_get_contrast(vs));
-  stp_set_cyan(vd, stp_get_cyan(vs));
-  stp_set_magenta(vd, stp_get_magenta(vs));
-  stp_set_yellow(vd, stp_get_yellow(vs));
-  stp_set_saturation(vd, stp_get_saturation(vs));
-  stp_set_density(vd, stp_get_density(vs));
-  stp_set_app_gamma(vd, stp_get_app_gamma(vs));
   stp_set_input_color_model(vd, stp_get_input_color_model(vd));
   stp_set_output_color_model(vd, stp_get_output_color_model(vd));
   stp_set_lut(vd, stp_get_lut(vs));
@@ -424,6 +640,26 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_cmap(vd, stp_get_cmap(vs));
   stp_set_outfunc(vd, stp_get_outfunc(vs));
   stp_set_errfunc(vd, stp_get_errfunc(vs));
+  params = stp_list_parameters(vs, &count);
+  for (i = 0; i < count; i++)
+    switch (params[i].type)
+      {
+      case STP_PARAMETER_TYPE_STRING_LIST:
+      case STP_PARAMETER_TYPE_FILE:
+	stp_set_string_parameter(vd, params[i].name,
+				 stp_get_string_parameter(vs, params[i].name));
+	break;
+      case STP_PARAMETER_TYPE_DOUBLE:
+	stp_set_float_parameter(vd, params[i].name,
+				stp_get_float_parameter(vs, params[i].name));
+	break;
+      case STP_PARAMETER_TYPE_CURVE:
+	stp_set_curve_parameter(vd, params[i].name,
+				stp_get_curve_parameter(vs, params[i].name));
+	break;
+      default:
+	break;
+      }
   stp_copy_options(vd, vs);
   stp_set_verified(vd, stp_get_verified(vs));
 }
@@ -436,68 +672,96 @@ stp_allocate_copy(const stp_vars_t vs)
   return (vd);
 }
 
-#define ICLAMP(value)						\
-do								\
-{								\
-  if (stp_get_##value(user) < stp_get_##value(min))		\
-    stp_set_##value(user, stp_get_##value(min));		\
-  else if (stp_get_##value(user) > stp_get_##value(max))	\
-    stp_set_##value(user, stp_get_##value(max));		\
-} while (0)
-
 void
 stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 {
-  const stp_vars_t max = stp_maximum_settings();
-  const stp_vars_t min = stp_minimum_settings();
-  stp_set_cyan(user, stp_get_cyan(user) * stp_get_cyan(print));
-  ICLAMP(cyan);
-  stp_set_magenta(user, stp_get_magenta(user) * stp_get_magenta(print));
-  ICLAMP(magenta);
-  stp_set_yellow(user, stp_get_yellow(user) * stp_get_yellow(print));
-  ICLAMP(yellow);
-  stp_set_contrast(user, stp_get_contrast(user) * stp_get_contrast(print));
-  ICLAMP(contrast);
-  stp_set_brightness(user, stp_get_brightness(user)*stp_get_brightness(print));
-  ICLAMP(brightness);
-  stp_set_gamma(user, stp_get_gamma(user) / stp_get_gamma(print));
-  ICLAMP(gamma);
-  stp_set_saturation(user, stp_get_saturation(user)*stp_get_saturation(print));
-  ICLAMP(saturation);
-  stp_set_density(user, stp_get_density(user) * stp_get_density(print));
-  ICLAMP(density);
+  int count;
+  int i;
+  const stp_parameter_t *params = stp_list_parameters(print, &count);
+  for (i = 0; i < count; i++)
+    if (params[i].type == STP_PARAMETER_TYPE_DOUBLE &&
+	params[i].class == STP_PARAMETER_CLASS_OUTPUT &&
+	params[i].level == STP_PARAMETER_LEVEL_BASIC)
+      {
+	stp_parameter_t desc;
+	double usrval = stp_get_float_parameter(user, params[i].name);
+	double prnval = stp_get_float_parameter(print, params[i].name);
+	stp_describe_parameter(print, params[i].name, &desc);
+	if (strcmp(params[i].name, "Gamma") == 0)
+	  usrval /= prnval;
+	else
+	  usrval *= prnval;
+	if (usrval < desc.bounds.dbl.lower)
+	  usrval = desc.bounds.dbl.lower;
+	else if (usrval > desc.bounds.dbl.upper)
+	  usrval = desc.bounds.dbl.upper;
+	stp_set_float_parameter(user, params[i].name, usrval);
+      }
   if (stp_get_output_type(print) == OUTPUT_GRAY &&
-      stp_get_output_type(user) == OUTPUT_COLOR)
+      (stp_get_output_type(user) == OUTPUT_COLOR ||
+       stp_get_output_type(user) == OUTPUT_RAW_CMYK))
     stp_set_output_type(user, OUTPUT_GRAY);
 }
 
 void
 stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 {
-  stp_set_resolution(v, stp_printer_get_default_parameter(p, v, "Resolution"));
-  stp_set_ink_type(v, stp_printer_get_default_parameter(p, v, "InkType"));
-  stp_set_media_type(v, stp_printer_get_default_parameter(p, v, "MediaType"));
-  stp_set_media_source(v, stp_printer_get_default_parameter(p, v,"InputSlot"));
-  stp_set_media_size(v, stp_printer_get_default_parameter(p, v, "PageSize"));
-  stp_set_dither_algorithm
-    (v, stp_printer_get_default_parameter(p, v, "DitherAlgorithm"));
+  const stp_parameter_t *params;
+  int count;
+  int i;
+  stp_parameter_t desc;
   stp_set_driver(v, stp_printer_get_driver(p));
+  params = stp_list_parameters(v, &count);
+  for (i = 0; i < count; i++)
+    {
+      if (params[i].type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  stp_describe_parameter(v, params[i].name, &desc);
+	  stp_set_string_parameter(v, params[i].name, desc.deflt.str);
+	  stp_string_list_free(desc.bounds.str);
+	}
+    }
 }
 
-const stp_vars_t
-stp_default_settings()
+void
+stp_describe_internal_parameter(const stp_vars_t v, const char *name,
+				stp_parameter_t *description)
 {
-  return (stp_vars_t) &default_vars;
+  const stp_parameter_t *param = global_parameters;
+  if (strcmp(name, "DitherAlgorithm") == 0)
+    {
+      stp_fill_parameter_settings(description, name);
+      description->bounds.str = stp_string_list_allocate();
+      stp_dither_algorithms(description->bounds.str);
+      description->deflt.str = 
+	stp_string_list_param(description->bounds.str, 0)->name;
+      return;
+    }
+  while (param->type)
+    {
+      if (param->type == STP_PARAMETER_TYPE_DOUBLE &&
+	  strcmp(name, param->name) == 0)
+	{
+	  stp_fill_parameter_settings(description, name);
+	  if (description->type == STP_PARAMETER_TYPE_DOUBLE)
+	    {
+	      description->bounds.dbl.lower =
+		stp_get_float_parameter(stp_minimum_settings(), name);
+	      description->bounds.dbl.upper =
+		stp_get_float_parameter(stp_maximum_settings(), name);
+	      description->deflt.dbl =
+		stp_get_float_parameter(stp_default_settings(), name);
+	    }
+	  return;
+	}
+      param++;
+    }
+  description->type = STP_PARAMETER_TYPE_INVALID;
 }
 
-const stp_vars_t
-stp_maximum_settings()
+const stp_parameter_t *
+stp_list_parameters(const stp_vars_t v, int *count)
 {
-  return (stp_vars_t) &max_vars;
-}
-
-const stp_vars_t
-stp_minimum_settings()
-{
-  return (stp_vars_t) &min_vars;
+  *count = (sizeof(global_parameters) / sizeof(const stp_parameter_t)) - 1;
+  return global_parameters;
 }

@@ -267,18 +267,12 @@ static const unsigned sq2[] =
 };
 
 void
-stp_dither_algorithms(stp_param_list_t valptrs)
+stp_dither_algorithms(stp_string_list_t valptrs)
 {
   int i;
   for (i = 0; i < num_dither_algos; i++)
-    stp_param_list_add_param(valptrs, dither_algos[i].name,
+    stp_string_list_add_param(valptrs, dither_algos[i].name,
 			     _(dither_algos[i].text));
-}
-
-const char *
-stp_get_default_dither_algorithm(void)
-{
-  return dither_algos[0].name;
 }
 
 /*
@@ -408,7 +402,7 @@ stp_set_dither_function(dither_t *d, int image_bpp)
   d->dither_type = D_ADAPTIVE_HYBRID;
   for (i = 0; i < num_dither_algos; i++)
     {
-      if (!strcmp(stp_get_parameter(d->v, "DitherAlgorithm"),
+      if (!strcmp(stp_get_string_parameter(d->v, "DitherAlgorithm"),
 		  _(dither_algos[i].name)))
 	{
 	  d->dither_type = dither_algos[i].id;
