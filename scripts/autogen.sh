@@ -333,7 +333,6 @@ do
 	  else
 	    echo "no" | gettextize --force --copy
 	  fi
-	  echo "no" | gettextize --force --copy
 	  echo "Making $dr/aclocal.m4 writable ..."
 	  test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
         fi
