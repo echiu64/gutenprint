@@ -639,7 +639,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_set_page_number(v, cups.page);
       cups.row = 0;
       fprintf(stderr, "DEBUG: Gimp-Print printing page %d\n", cups.page);
-      fprintf(stderr, "PAGE: %d 1\n", cups.page);
+      fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
       print_debug_block(v, &cups);
       if (!stp_verify(v))
 	{
