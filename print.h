@@ -123,6 +123,7 @@ typedef struct					/* Plug-in variables */
   int	linear;			/* Linear density (mostly for testing!) */
   float	saturation;		/* Output saturation */
   float	density;		/* Maximum output density */
+  int	image_type;		/* Image type (line art etc.) */
   lut_t lut;			/* Look-up table */
 } vars_t;
 
@@ -242,7 +243,7 @@ extern char	**canon_parameters(int model, char *ppd_file, char *name,
 extern void	canon_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
-extern void	canon_print(int model, int copies, FILE *prn,
+extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, unsigned char *cmap, vars_t *v);
 
 
@@ -251,7 +252,7 @@ extern char	**escp2_parameters(int model, char *ppd_file, char *name,
 extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
-extern void	escp2_print(int model, int copies, FILE *prn,
+extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
 			    Image image, unsigned char *cmap, vars_t *v);
 
 
@@ -260,7 +261,7 @@ extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
-extern void	pcl_print(int model, int copies, FILE *prn,
+extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
 			  Image image, unsigned char *cmap, vars_t *v);
 
 
@@ -271,7 +272,7 @@ extern void	ps_media_size(int model, char *ppd_file, char *media_size,
 extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 		                  int *left, int *right, int *bottom,
 				  int *top);
-extern void	ps_print(int model, int copies, FILE *prn,
+extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
 			 Image image, unsigned char *cmap, vars_t *v);
 
 int		      known_papersizes(void);
