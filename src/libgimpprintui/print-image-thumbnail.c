@@ -29,7 +29,7 @@
 #include "../../lib/libprintut.h"
 #include <string.h>
 
-#include <gimp-print/gimp-print-ui.h>
+#include <gimp-print-ui/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 
 /* Concrete type to represent image */

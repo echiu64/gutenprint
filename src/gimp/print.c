@@ -26,7 +26,7 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include <gimp-print/gimp-print-ui.h>
+#include <gimp-print-ui/gimp-print-ui.h>
 #include "print_gimp.h"
 
 #include <sys/types.h>

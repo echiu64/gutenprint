@@ -28,7 +28,7 @@
 
 #include "../../lib/libprintut.h"
 #include <gimp-print/gimp-print-intl-internal.h>
-#include <gimp-print/gimp-print-ui.h>
+#include <gimp-print-ui/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 #include "printrc.h"
 

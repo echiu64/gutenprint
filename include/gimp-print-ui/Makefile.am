@@ -26,32 +26,15 @@ MAINT_CHARSET = latin1
 include $(top_srcdir)/scripts/global.mk
 
 
+pkgincludedir = $(includedir)/gimp-print-ui
+
+
 ## Data
 
-noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
-
 pkginclude_HEADERS = \
-	gimp-print.h \
-	array.h \
-	color.h \
-	curve.h \
-	sequence.h \
-	image.h \
-	paper.h \
-	printers.h \
-	sequence.h \
-	string-list.h \
-	util.h \
-	vars.h
-
-nodist_pkginclude_HEADERS = gimp-print-version.h
+	gimp-print-ui.h
 
 
 ## Clean
 
-DISTCLEANFILES = gimp-print-version.h
 MAINTAINERCLEANFILES = Makefile.in
-
-EXTRA_DIST = gimp-print-version.h.in
-
-TAGS_FILES = gimp-print-version.h.in

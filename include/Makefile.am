@@ -23,7 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = gimp-print
+SUBDIRS = gimp-print gimp-print-ui
 
 include $(top_srcdir)/scripts/global.mk
 

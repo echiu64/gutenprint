@@ -34,7 +34,7 @@
 #define SCALE(x, y) (((x) + (1.0 / (2.0 * (y)))) * (y))
 
 #include <gimp-print/gimp-print-intl-internal.h>
-#include <gimp-print/gimp-print-ui.h>
+#include <gimp-print-ui/gimp-print-ui.h>
 #include "gimp-print-ui-internal.h"
 
 #include <string.h>

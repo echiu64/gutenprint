@@ -46,7 +46,7 @@
 #ifdef INCLUDE_GIMP_PRINT_UI_H
 #include INCLUDE_GIMP_PRINT_UI_H
 #else
-#include <gimp-print/gimp-print-ui.h>
+#include <gimp-print-ui/gimp-print-ui.h>
 #endif
 
 /* How to create an Image wrapping a Gimp drawable */
