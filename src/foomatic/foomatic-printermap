@@ -102,6 +102,11 @@
 #gptofoo pcl-500 printer/58363
 #gptofoo pcl-501 printer/79840
 #gptofoo pcl-520 printer/129184
+#gptofoo pcl-520 printer/HP-OfficeJet
+#gptofoo pcl-520 printer/HP-OfficeJet_LX
+#gptofoo pcl-520 printer/HP-OfficeJet_300
+#gptofoo pcl-520 printer/HP-OfficeJet_330
+#gptofoo pcl-520 printer/HP-OfficeJet_350
 #gptofoo pcl-540 printer/99616
 #gptofoo pcl-550 printer/58464
 #gptofoo pcl-560 printer/22624
@@ -136,6 +141,7 @@
 #gptofoo pcl-842 printer/133152
 #gptofoo pcl-845 printer/HP-DeskJet_845C
 #gptofoo pcl-850 printer/61024
+#gptofoo pcl-850 printer/421714
 #gptofoo pcl-855 printer/60992
 #gptofoo pcl-870 printer/60256
 #gptofoo pcl-890 printer/226985
