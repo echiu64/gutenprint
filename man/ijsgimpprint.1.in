@@ -17,13 +17,13 @@
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 .hy 0
-.TH IJSGIMPPRINT 1 "07 Oct 2002" "Version 4.3.5" "GIMP-Print Manual Pages"
+.TH IJSGIMPPRINT 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP-Print Manual Pages"
 .SH NAME
 ijsgimpprint - Ghostscript driver for GIMP-Print
 .SH SYNOPSIS
 .B gs
 \-sDEVICE=ijs
-\-sIjsServer=/usr/local/bin/ijsgimpprint
+\-sIjsServer=@prefix@/bin/ijsgimpprint
 \-sDeviceManufacturer=\fIvendor\fP
 \-sDeviceModel=\fIname\fP
 [ \fI\-dIjsUseOutputFD\fP ]
@@ -1261,7 +1261,7 @@ adjusting the density is a bad idea!
 .SS Example 1
 Print charts to file, using A4 paper, color, 360 dpi:
 .IP
-.B gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint
+.B gs -sDEVICE=ijs -sIjsServer=@prefix@/bin/ijsgimpprint
 .br
 .B    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-ex -sPAPERSIZE=a4
 .br
@@ -1273,7 +1273,7 @@ Print charts to file, using A4 paper, color, 360 dpi:
 .SS Example 2
 Print color photograph to /dev/lp0 at maximum quality:
 .IP
-.B gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint
+.B gs -sDEVICE=ijs -sIjsServer=@prefix@/bin/ijsgimpprint
 .br
 .B    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-870
 .br
@@ -1285,7 +1285,7 @@ Print color photograph to /dev/lp0 at maximum quality:
 .SS Example 3
 Print pure black text to stdout:
 .IP
-.B gs -sDEVICE=ijs -sIjsServer=/usr/local/bin/ijsgimpprint
+.B gs -sDEVICE=ijs -sIjsServer=@prefix@/bin/ijsgimpprint
 .br
 .B    -sDeviceManufacturer=EPSON -sDeviceModel=escp2-660 -dIjsUseOutputFD
 .br
