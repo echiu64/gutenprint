@@ -1,3 +1,20 @@
+2000-08-15	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.19) (+14 -1)
+	
+	Last minute changes.
+	
+2000-08-15	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.30) (+156 -0)
+		Ghost/README (1.34) (+10 -2)
+		configure.in (1.24) (+1 -1)
+		RELNOTES (1.18) (+24 -2)
+		README (1.23) (+1 -1)
+		Makefile.am (1.50) (+1 -1)
+	
+	Prep for 4.0a2
+	
 2000-08-15	<mitsch@sourceforge.net>
 
 	Files:	gimp_main_window.c (1.38) (+19 -18)
