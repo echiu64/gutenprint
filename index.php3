@@ -23,7 +23,8 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
 
-<p>Red Hat users may want to check out <a href="gs_stp.html">this
+<p>Red Hat users may want to check out <a
+href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm">this
 site</a> for quick and easy setup.</p>
 
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
