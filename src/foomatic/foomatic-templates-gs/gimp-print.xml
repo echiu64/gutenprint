@@ -3,7 +3,7 @@
  <url>http://gimp-print.sourceforge.net/</url>
  <execution>
   <ghostscript />
-  <prototype>gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=stp %A%Z -sOutputFile=- -</prototype>
+  <prototype>gs -q -dPARANOIDSAFER -dNOPAUSE -dBATCH -sDEVICE=stp %A%Z -sOutputFile=- -</prototype>
  </execution>
  <comments>
   <en>
