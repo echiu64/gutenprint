@@ -877,6 +877,7 @@ void parse_canon(FILE *fp_r){
 	 pstate.monomode=0;
 	 pstate.xposition= 0;
 	 pstate.yposition= 0;
+	 fprintf(stderr,"canon: init printer\n");
        }
      } else {
        fprintf(stderr,"Warning: Unknown command ESC %c 0x%X at 0x%08X.\n",0x5b,ch,cmdcounter);

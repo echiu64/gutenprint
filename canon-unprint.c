@@ -20,10 +20,10 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<limits.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <string.h>
 
 typedef struct {
   unsigned char unidirectional;
@@ -37,14 +37,13 @@ typedef struct {
   int bottom_margin; /* dots */
   int page_length; /* dots */
   int dotsize;
-  int bpp; /* bits per pixel */
+  int bpp;
   int current_color;
   int xposition; /* dots */
   int yposition; /* dots */
   int monomode;
   int nozzle_separation;
   int nozzles;
-  int extraskip;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -72,12 +71,12 @@ unsigned char minibuf[256];
 unsigned short bufsize;
 unsigned char ch;
 unsigned short sh;
+int i,m,n,c;
+FILE *fp_r,*fp_w;
 
 pstate_t pstate;
-int unweave;
 
 line_type **page=NULL;
-
 
 /* Color Codes:
    color    Epson1  Epson2   Sequential
@@ -128,7 +127,7 @@ void *myrealloc(void *ptr, size_t size){
   exit(-1);
 }
 
-int get_bits(unsigned char *p,int index) {
+int get_bits(unsigned char *p,int index,int bpp) {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Extract the
    * indexth bpp bit width field and return that value.  Ignore byte
@@ -138,14 +137,14 @@ int get_bits(unsigned char *p,int index) {
   int value,b;
   
   value=0;
-  for (b=0;b<pstate.bpp;b++) {
+  for (b=0;b<bpp;b++) {
     value*=2;
-    value|=(p[(index*pstate.bpp+b)/8]>>(7-((index*pstate.bpp+b)%8)))&1;
+    value|=(p[(index*bpp+b)/8]>>(7-((index*bpp+b)%8)))&1;
   }
   return(value);
 }
 
-void set_bits(unsigned char *p,int index,int value) {
+void set_bits(unsigned char *p,int index,int bpp,int value) {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Set the
    * indexth bpp bit width field to value value.  Ignore byte
@@ -154,11 +153,11 @@ void set_bits(unsigned char *p,int index,int value) {
 
   int b;
   
-  for (b=pstate.bpp-1;b>=0;b--) {
+  for (b=bpp-1;b>=0;b--) {
     if (value&1) {
-      p[(index*pstate.bpp+b)/8]|=1<<(7-((index*pstate.bpp+b)%8));
+      p[(index*bpp+b)/8]|=1<<(7-((index*bpp+b)%8));
     } else {
-      p[(index*pstate.bpp+b)/8]&=~(1<<(7-((index*pstate.bpp+b)%8)));
+      p[(index*bpp+b)/8]&=~(1<<(7-((index*bpp+b)%8)));
     }
     value/=2;
   }
@@ -168,11 +167,14 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
   /* this is pretty crude */
 
-  int i;
   float ink[3];
   float size;
 
-  size=(float)a/((float)((1<<pstate.bpp)-1));
+  if (pstate.dotsize&0x10) {
+    size=(float)a/3.0;
+  } else {
+    size=1.0;
+  }
   if (a) {
     switch (c) {
       case 0: ink[0]=ink[1]=ink[2]=0;break; /* black */
@@ -191,9 +193,8 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
 }
 
-void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color){
+void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color, int bpp){
 
-  int i;
   int temp,shift,length,lvalue,pvalue,oldstop;
   unsigned char *tempp;
 
@@ -213,27 +214,27 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   
   oldstop=p->stopx[color];
   p->stopx[color]=(stopl>p->stopx[color])?stopl:p->stopx[color];
-  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8);
-  memset(p->line[color]+((oldstop-p->startx[color]+1)*pstate.bpp+7)/8,0,
-          ((p->stopx[color]-p->startx[color]+1)*pstate.bpp+7)/8-
-          ((oldstop-p->startx[color]+1)*pstate.bpp+7)/8);
+  p->line[color]=myrealloc(p->line[color],((p->stopx[color]-p->startx[color]+1)*bpp+7)/8);
+  memset(p->line[color]+((oldstop-p->startx[color]+1)*bpp+7)/8,0,
+          ((p->stopx[color]-p->startx[color]+1)*bpp+7)/8-
+          ((oldstop-p->startx[color]+1)*bpp+7)/8);
   for (i=0;i<length;i++) {
-    lvalue=get_bits(l,i);
-    pvalue=get_bits(p->line[color],i+shift);
+    lvalue=get_bits(l,i,bpp);
+    pvalue=get_bits(p->line[color],i+shift,bpp);
     if (0&&pvalue&&lvalue) {
       fprintf(stderr,"Warning!  Double printing detected at x,y=%d!\n",p->startx[color]+i);
     } else {
     pvalue+=lvalue;
-    if (pvalue>(1<<pstate.bpp)-1) {
+    if (pvalue>(1<<bpp)-1) {
 /*      fprintf(stderr,"Warning!  Clipping at x=%d!\n",p->startx[color]+i); */
-      pvalue=(1<<pstate.bpp)-1;
+      pvalue=(1<<bpp)-1;
     }
-    set_bits(p->line[color],i+shift,pvalue);
+    set_bits(p->line[color],i+shift,bpp,pvalue);
     }
   }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) {
+void expand_line (unsigned char *src, unsigned char *dst, int length, int bpp, int skip) {
 
   /* src is a pointer to a bit stream which is composed of fields of length
    * bpp starting with the most significant bit of the first byte and
@@ -247,22 +248,19 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) 
    * We want to copy each field from the src to the dst, spacing the fields
    * out every skip fields.
    */
-
-  int i;
-
   if (skip==1) { /* the trivial case, this should be faster */
-    memcpy(dst,src,(length*pstate.bpp+7)/8);
+    memcpy(dst,src,(length*bpp+7)/8);
     return;
   }
 
   for (i=0;i<length;i++) {
-    set_bits(dst,i*skip,get_bits(src,i));
+    set_bits(dst,i*skip,bpp,get_bits(src,i,bpp));
   }
 
 }
 
-void write_output(FILE *fp_w) {
-  int c,l,p,left,right,first,last,width,height;
+void write_output(FILE *fp_w,int bpp) {
+  int l,p,left,right,first,last,width,height;
   unsigned int amount;
   ppmpixel pixel;
 
@@ -302,7 +300,7 @@ void write_output(FILE *fp_w) {
       memset(pixel,255,3); /* start with white, add inks */
       for (c=0;c<MAX_INKS;c++) {
         if ((page[l])&&(page[l]->line[c])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
-          amount=get_bits(page[l]->line[c],p-page[l]->startx[c]);
+          amount=get_bits(page[l]->line[c],p-page[l]->startx[c],bpp);
           mix_ink(pixel,c,amount);
         }
       }
@@ -311,21 +309,20 @@ void write_output(FILE *fp_w) {
   }
 }
 
-int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density) {
+void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,int density) {
 
   int y,skip,oldstart,oldstop,mi;
   unsigned char *oldline;
 
   if ((n==0)||(m==0)) {
-    return(0);  /* shouldn't happen */
+    return;  /* shouldn't happen */
   }
 
   skip=pstate.relative_horizontal_units/density;
-  skip*=pstate.extraskip;
 
   if (skip==0) {
     fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
-    return(0);
+    return;
   }
  
   if (!page) {
@@ -338,10 +335,6 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
   }
   for (mi=0,y=pstate.yposition;y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
        y+=(pstate.microweave?1:pstate.nozzle_separation),mi++) {
-    if (y>=pstate.bottom_margin) {
-      fprintf(stderr,"Warning. Unprinter out of unpaper.\n");
-      return(1);
-    }
     if (!(page[y])) {
       page[y]=(line_type *) mycalloc(sizeof(line_type),1);
     }
@@ -355,22 +348,66 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
       oldstop = -1;
     }
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
-                                                    (((n-1)*skip+1)*pstate.bpp+7)/8);
+                                                    (((n-1)*skip+1)*bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
     page[y]->stopx[color]=pstate.xposition+((n-1)*skip);
-    expand_line(buf+mi*((n*pstate.bpp+7)/8),
-                   page[y]->line[color],n,skip);
+    expand_line(buf+mi*((n*bpp+7)/8),
+                   page[y]->line[color],n,bpp,skip);
     if (oldline) {
-      merge_line(page[y],oldline,oldstart,oldstop,color);
+      merge_line(page[y],oldline,oldstart,oldstop,color,bpp);
     }
   }
   pstate.xposition+=n?(n-1)*skip+1:0;
-  return(0);
+}
+
+/* 'rle_decode'
+ *
+ * run-length-decodes a given buffer of length "n" 
+ * and stores the result in the same buffer 
+ * not exceeding a size of "max" bytes.
+ */
+int rle_decode(unsigned char *inbuf, int n, int max)
+{
+  unsigned char outbuf[1440*20];
+  int cnt,num;
+  int i= 0, j;
+  int o= 0;
+
+  if (max>1440*20) max= 1440*20; /* FIXME: this can be done much better! */
+
+  while (i<n && o<max) {
+    cnt= inbuf[i];
+    if (cnt<0) { 
+      // cnt identical bytes
+      // fprintf(stderr,"rle 0x%02x = %4d = %4d\n",cnt&0xff,cnt,1-cnt);
+      num= 1-cnt;
+      // fprintf (stderr,"+%6d ",num);
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+1];
+      o+= num;
+      i+= 2;
+    } else { 
+      // cnt individual bytes
+      // fprintf(stderr,"raw 0x%02x = %4d = %4d\n",cnt&0xff,cnt,cnt + 1);
+      num= cnt+1;
+      // fprintf (stderr,"*%6d ",num);
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+j+1];
+      o+= num;
+      i+= num+1;
+    }
+  }
+  if (o>=max) {
+    fprintf(stderr,"Warning: rle decompression exceeds output buffer - dumped\n");
+    return 0;
+  }
+  /* copy decompressed data to inbuf: */
+  memset(inbuf,0,max-1);
+  memcpy(inbuf,outbuf,o);
+  return o;
 }
 
 void parse_canon(FILE *fp_r){
 
-  /*  int i,m=0,n=0,c=0; */
+  int m=0;
   int currentcolor,currentbpp,density,eject,got_graphics;
   int count,counter,cmdcounter;
 
@@ -445,6 +482,9 @@ void parse_canon(FILE *fp_r){
 	 pstate.bottom_margin=
 	   pstate.page_length=22*360; /* 22 inches is default ??? */
 	 pstate.monomode=0;
+	 pstate.xposition= 0;
+	 pstate.yposition= 0;
+	 fprintf(stderr,"canon: init printer\n");
        }
      } else {
        fprintf(stderr,"Warning: Unknown command ESC %c 0x%X at 0x%08X.\n",0x5b,ch,cmdcounter);
@@ -465,24 +505,29 @@ void parse_canon(FILE *fp_r){
      switch(ch) {
      case 'A': /* 0x41 - transfer graphics data */
        switch (*buf) { 
-       case 'C':
+       case 'C': currentcolor= 2;
 	 break;
-       case 'M':
+       case 'M': currentcolor= 1;
 	 break;
-       case 'Y':
+       case 'Y': currentcolor= 3;
 	 break;
-       case 'K':
+       case 'K': currentcolor= 0;
 	 break;
-       case 'c':
+       case 'c': currentcolor= 5;
 	 break;
-       case 'm':
+       case 'm': currentcolor= 4;
 	 break;
-       case 'y':
+       case 'y': currentcolor= 3; /* FIXME: change this to 6? */
 	 break;
        default:
 	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
 	 exit(-1);
        }
+       pstate.current_color= currentcolor;
+       m= rle_decode(buf+1,sh-1,256*256-1);
+       /* reverse_bit_order(buf+1,m); */
+       if (m) update_page(buf+1,m,1,m,currentcolor,pstate.bpp,pstate.absolute_vertical_units);
+       fprintf(stderr,"%c:%d->%d",*buf,sh-1,m); 
        break;
      case 'a': /* 0x61 - turn something on/off */
        break;
@@ -495,12 +540,24 @@ void parse_canon(FILE *fp_r){
 	 fprintf(stderr,"Setting the page format in the middle of printing a page is not supported.\n");
 	 exit(-1);
        }
-       page=(line_type **)mycalloc(pstate.bottom_margin,
-				   sizeof(line_type *));
+       pstate.relative_vertical_units=   
+	 pstate.absolute_vertical_units=   
+	 buf[1]+256*buf[0];
+       pstate.relative_horizontal_units= 
+	 pstate.absolute_horizontal_units= 
+	 buf[3]+256*buf[2];
+       pstate.bottom_margin= pstate.relative_vertical_units* 22; 
+       /* FIXME: replace with real page length */
+       fprintf(stderr,"canon: res is %d x %d dpi\n",
+	       pstate.relative_horizontal_units,pstate.relative_vertical_units);
+
+       page=(line_type **)mycalloc(pstate.bottom_margin,sizeof(line_type *));
        break;
      case 'e': /* 0x65 - vertical head movement */
+       pstate.yposition+= (buf[1]+256*buf[0]);
+       fprintf(stderr,"\n"); /* DEBUG */
        break;
-     case 'l': /* 0x6c - some information about the print job*/
+     case 'l': /* 0x6c - some more information about the print job*/
        break;
      case 'm': /* 0x6d - used printheads and other things */
        break;
@@ -526,13 +583,11 @@ void parse_canon(FILE *fp_r){
 
 int main(int argc,char *argv[]){
 
-  int arg;
-  char *s;
-  FILE *fp_r,*fp_w;
+  int currentbpp= 1;
+
+  int arg,unweave;
 
     unweave=0;
-    pstate.nozzle_separation=6;
-    pstate.extraskip=2;
     fp_r = fp_w = NULL;
     for (arg=1;arg<argc;arg++) {
       if (argv[arg][0]=='-') {
@@ -542,23 +597,7 @@ int main(int argc,char *argv[]){
                  else
                    fp_r=stdin;
                  break;
-          case 'n':if (argv[arg][2]) {
-                     s=argv[arg]+2;
-                   } else {
-                     if (argc<=arg+1) {
-                       fprintf(stderr,"Missing nozzle separation\n");
-                       exit(-1);
-                     } else {
-                       s=argv[++arg];
-                     }
-                   }
-                   if (!sscanf(s,"%d",&pstate.nozzle_separation)) {
-                     fprintf(stderr,"Error parsing nozzle separation\n");
-                     exit(-1);
-                   }
-                  break;
           case 'u':unweave=1;
-                 break;
         }
       } else {
         if (fp_r) {
@@ -579,16 +618,19 @@ int main(int argc,char *argv[]){
     if (!fp_w)
       fp_w=stdout;
 
+    /* FIXME: need fancy shmancy command line options for the following */
     if (unweave) {
       pstate.nozzle_separation=1;
+    } else {
+      pstate.nozzle_separation=6;
     }
-    pstate.nozzles=96;
+    pstate.nozzles=48;
 
     parse_canon(fp_r);
-    fprintf(stderr,"Done reading.\n");
-    write_output(fp_w);
-    fclose(fp_w);
-    fprintf(stderr,"Segmentation integrity.  (core contained)\n");
 
-    return(0);
+  fprintf(stderr,"Done reading.\n");
+  write_output(fp_w,currentbpp);
+  fclose(fp_w);
+
+  return(0);
 }
