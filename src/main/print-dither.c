@@ -2936,6 +2936,13 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
 
   int dst_width = d->dst_width;
   int xerror, xstep, xmod;
+
+  if (d->n_ghost_channels)
+    {
+      stp_dither_raw_fast(cmyk, row, d, duplicate_line, zero_mask);
+      return;
+    }
+
   if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
       ((1 << d->n_input_channels) - 1))
     return;
@@ -2985,6 +2992,13 @@ stp_dither_raw_cmyk_very_fast(const unsigned short  *cmyk,
 
   int dst_width = d->dst_width;
   int xerror, xstep, xmod;
+
+  if (d->n_ghost_channels)
+    {
+      stp_dither_raw_very_fast(cmyk, row, d, duplicate_line, zero_mask);
+      return;
+    }
+
   if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
       ((1 << d->n_input_channels) - 1))
     return;
@@ -3043,6 +3057,12 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
   int		terminate;
   int xerror, xstep, xmod;
 
+  if (d->n_ghost_channels)
+    {
+      stp_dither_raw_ordered(cmyk, row, d, duplicate_line, zero_mask);
+      return;
+    }
+
   if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
       ((1 << d->n_input_channels) - 1))
     return;
@@ -3097,6 +3117,12 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int xerror, xstep, xmod;
+
+  if (d->n_ghost_channels)
+    {
+      stp_dither_raw_ed(cmyk, row, d, duplicate_line, zero_mask);
+      return;
+    }
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -3165,6 +3191,12 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
+
+  if (d->n_ghost_channels)
+    {
+      stp_dither_raw_et(cmyk, row, d, duplicate_line, zero_mask);
+      return;
+    }
 
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
