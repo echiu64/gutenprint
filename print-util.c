@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.39  1999/12/12 20:49:01  rlk
+ *   Various changes
+ *
  *   Revision 1.38  1999/12/11 23:12:06  rlk
  *   Better matching between cmy/k
  *
@@ -375,11 +378,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 3
+#define DE_C 1
 #define NU_M 1
-#define DE_M 3
+#define DE_M 1
 #define NU_Y 1
-#define DE_Y 3
+#define DE_Y 1
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -403,8 +406,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * in more CMY being used in dark tones, which results in less pure black.
  * Decreasing the gap too much results in sharp crossover and stairstepping.
  */
-#define KDARKNESS_LOWER (32 * 256)
-#define KDARKNESS_UPPER (96 * 256)
+#define KDARKNESS_LOWER (12 * 256)
+#define KDARKNESS_UPPER (78 * 256)
 
 /*
  * Randomizing values for deciding when to output a bit.  Normally with the
@@ -758,9 +761,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
         * CMY as necessary to give better blues, greens, and reds... :)
         */
 
-        c  = (65535 - (unsigned) rgb[1] / 4) * (c - k) / divk;
-        m  = (65535 - (unsigned) rgb[2] / 4) * (m - k) / divk;
-        y  = (65535 - (unsigned) rgb[0] / 4) * (y - k) / divk;
+        c  = (65535 - (rgb[2] + rgb[1]) / 8) * (c - k) / divk;
+        m  = (65535 - (rgb[1] + rgb[2]) / 8) * (m - k) / divk;
+        y  = (65535 - (rgb[0] + rgb[2]) / 8) * (y - k) / divk;
       }
 #ifdef PRINT_DEBUG
       yc = c;
@@ -830,9 +833,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (lmagenta)
 	{
-	  c += ck * 10 / 8 * 3 / 2;
+	  c += ck * 8 / 8 * 3 / 2;
 	  m += ck * 19 / 16 * 3 / 2;
-	  y += ck * 3 / 2 * 3 / 2;
+	  y += ck * 8 / 8 * 3 / 2;
 	}
       else
 	{
