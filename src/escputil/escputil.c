@@ -309,6 +309,13 @@ main(int argc, char **argv)
   int quiet = 0;
   int operation = 0;
   int c;
+
+  /* Set up gettext */
+#ifdef ENABLE_NLS
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+#endif
+  
   while (1)
     {
 #ifdef __GNU_LIBRARY__
