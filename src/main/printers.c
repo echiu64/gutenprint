@@ -66,7 +66,7 @@ stp_init_printer_list(void)
 }
 
 int
-stp_known_printers(void)
+stp_printer_model_count(void)
 {
   if (printer_list == NULL)
     {
@@ -139,7 +139,7 @@ stp_printer_get_long_name(const stp_printer_t p)
 const char *
 stp_printer_get_driver(const stp_printer_t p)
 {
-  return stp_get_driver(stp_printer_get_printvars(p));
+  return stp_get_driver(stp_printer_get_defaults(p));
 }
 
 const char *
@@ -167,7 +167,7 @@ stp_printer_get_printfuncs(const stp_printer_t p)
 }
 
 const stp_vars_t
-stp_printer_get_printvars(const stp_printer_t p)
+stp_printer_get_defaults(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
   check_printer(val);
@@ -213,7 +213,7 @@ stp_get_printer_index_by_driver(const char *driver)
 {
   /* There should be no need to ever know the index! */
   int idx = 0;
-  for (idx = 0; idx < stp_known_printers(); idx++)
+  for (idx = 0; idx < stp_printer_model_count(); idx++)
     {
       const stp_printer_t val = stp_get_printer_by_index(idx);
       if (!strcmp(stp_printer_get_driver(val), driver))
@@ -524,7 +524,7 @@ stp_verify_printer_params(const stp_vars_t v)
   int i;
   int answer = 1;
   int left, top, bottom, right;
-  const stp_vars_t printvars = stp_printer_get_printvars(p);
+  const stp_vars_t printvars = stp_printer_get_defaults(p);
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
 
   stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
@@ -604,7 +604,7 @@ stp_verify_printer_params(const stp_vars_t v)
   CHECK_INT_RANGE(v, page_number, 0, INT_MAX);
   CHECK_INT_RANGE(v, job_mode, STP_JOB_MODE_PAGE, STP_JOB_MODE_JOB);
 
-  params = stp_list_parameters(v);
+  params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
@@ -612,7 +612,7 @@ stp_verify_printer_params(const stp_vars_t v)
       if (p->p_class != STP_PARAMETER_CLASS_PAGE_SIZE && p->is_active)
 	answer &= verify_param(v, p->name);
     }
-  stp_parameter_list_destroy(params);
+  stp_parameter_list_free(params);
   stp_set_errfunc((stp_vars_t) v, ofunc);
   stp_set_errdata((stp_vars_t) v, odata);
   stp_set_verified(v, answer);

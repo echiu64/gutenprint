@@ -120,14 +120,14 @@ raw_parameters(const stp_vars_t v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	  if (stp_papersize_get_width(pt) == 0 &&
 	      stp_papersize_get_height(pt) == 0)
 	    {
-	      stp_string_list_add_param(description->bounds.str,
+	      stp_string_list_add_string(description->bounds.str,
 					stp_papersize_get_name(pt),
 					stp_papersize_get_text(pt));
 	      break;
@@ -138,9 +138,9 @@ raw_parameters(const stp_vars_t v, const char *name,
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       for (i = 0; i < ink_count; i++)
-	stp_string_list_add_param(description->bounds.str,
+	stp_string_list_add_string(description->bounds.str,
 				  inks[i].name, inks[i].name);
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -195,7 +195,7 @@ raw_print(const stp_vars_t v, stp_image_t *image)
   int height = stp_get_page_height(v);
   int		i, j;
   int		y;		/* Looping vars */
-  stp_vars_t	nv = stp_allocate_copy(v);
+  stp_vars_t	nv = stp_vars_create_copy(v);
   int out_channels;
   unsigned short *out;	/* Output pixels (16-bit) */
   unsigned short *final_out = NULL;

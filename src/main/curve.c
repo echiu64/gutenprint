@@ -295,7 +295,7 @@ stp_curve_ctor(stp_internal_curve_t *curve, stp_curve_wrap_mode_t wrap_mode)
 }
 
 stp_curve_t
-stp_curve_allocate(stp_curve_wrap_mode_t wrap_mode)
+stp_curve_create(stp_curve_wrap_mode_t wrap_mode)
 {
   stp_internal_curve_t *ret;
   if (wrap_mode != STP_CURVE_WRAP_NONE && wrap_mode != STP_CURVE_WRAP_AROUND)
@@ -316,7 +316,7 @@ curve_dtor(stp_curve_t curve)
 }
 
 void
-stp_curve_destroy(stp_curve_t curve)
+stp_curve_free(stp_curve_t curve)
 {
   if (curve)
     {
@@ -350,12 +350,12 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
 }
 
 stp_curve_t
-stp_curve_allocate_copy(const stp_curve_t curve)
+stp_curve_create_copy(const stp_curve_t curve)
 {
   stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
   stp_curve_t ret;
   check_curve(icurve);
-  ret = stp_curve_allocate(icurve->wrap_mode);
+  ret = stp_curve_create(icurve->wrap_mode);
   stp_curve_copy(ret, curve);
   return ret;
 }
@@ -529,13 +529,13 @@ stp_curve_get_subrange(const stp_curve_t curve, size_t start, size_t count)
   const double *data;
   if (start + count > stp_curve_count_points(curve) || count < 2)
     return NULL;
-  retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  retval = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_get_bounds(curve, &blo, &bhi);
   stp_curve_set_bounds(retval, blo, bhi);
   data = stp_curve_get_data(curve, &ncount);
   if (! stp_curve_set_data(retval, count, data + start))
     {
-      stp_curve_destroy(retval);
+      stp_curve_free(retval);
       return NULL;
     }
   return retval;
@@ -833,7 +833,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
     return 0;
 
   setlocale(LC_ALL, "C");
-  ret = stp_curve_allocate(wrap_mode);
+  ret = stp_curve_create(wrap_mode);
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
@@ -871,23 +871,23 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   iret->recompute_interval = 1;
   iret->recompute_range = 1;
   stp_curve_copy(curve, ret);
-  stp_curve_destroy(ret);
+  stp_curve_free(ret);
   setlocale(LC_ALL, "");
   return 1;
 
  bad:
-  stp_curve_destroy(ret);
+  stp_curve_free(ret);
   setlocale(LC_ALL, "");
   return 0;
 }
 
 stp_curve_t
-stp_curve_allocate_read(FILE *f)
+stp_curve_create_read(FILE *f)
 {
-  stp_curve_t ret = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  stp_curve_t ret = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (! stp_curve_read(f, ret))
     {
-      stp_curve_destroy(ret);
+      stp_curve_free(ret);
       ret = NULL;
     }
   return ret;
@@ -926,7 +926,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
     return 0;
 
   setlocale(LC_ALL, "C");
-  ret = stp_curve_allocate(wrap_mode);
+  ret = stp_curve_create(wrap_mode);
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
@@ -965,23 +965,23 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   iret->recompute_interval = 1;
   iret->recompute_range = 1;
   stp_curve_copy(curve, ret);
-  stp_curve_destroy(ret);
+  stp_curve_free(ret);
   setlocale(LC_ALL, "");
   return offset;
 
  bad:
-  stp_curve_destroy(ret);
+  stp_curve_free(ret);
   setlocale(LC_ALL, "");
   return 0;
 }
 
 stp_curve_t
-stp_curve_allocate_read_string(const char *text)
+stp_curve_create_read_string(const char *text)
 {
-  stp_curve_t ret = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  stp_curve_t ret = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (! stp_curve_read_string(text, ret))
     {
-      stp_curve_destroy(ret);
+      stp_curve_free(ret);
       ret = NULL;
     }
   return ret;
@@ -1150,12 +1150,12 @@ static int
 create_gamma_curve(stp_curve_t *retval, double lo, double hi, double gamma,
 		   int points)
 {
-  *retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  *retval = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (stp_curve_set_bounds(*retval, lo, hi) &&
       stp_curve_set_gamma(*retval, gamma) &&
       stp_curve_resample(*retval, points))
     return 1;
-  stp_curve_destroy(*retval);
+  stp_curve_free(*retval);
   *retval = 0;
   return 0;
 }
@@ -1236,7 +1236,7 @@ stp_curve_compose(stp_curve_t *retval,
       stp_free(tmp_data);
       return 0;
     }
-  ret = stp_curve_allocate(stp_curve_get_wrap(a));
+  ret = stp_curve_create(stp_curve_get_wrap(a));
   if (mode == STP_CURVE_COMPOSE_ADD)
     {
       stp_curve_rescale(ret, (ahi - alo) + (bhi - blo),
@@ -1257,7 +1257,7 @@ stp_curve_compose(stp_curve_t *retval,
   stp_free(tmp_data);
   return 1;
  bad1:
-  stp_curve_destroy(ret);
+  stp_curve_free(ret);
   stp_free(tmp_data);
   return 0;
 }

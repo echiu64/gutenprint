@@ -40,7 +40,7 @@ main(int argc, char **argv)
   stp_parameter_list_t params;
 
   stp_init();
-  params = stp_list_parameters(stp_default_settings());
+  params = stp_get_parameter_list(stp_default_settings());
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
     {
@@ -70,6 +70,6 @@ main(int argc, char **argv)
 	  stp_free_parameter_description(&desc);
 	}
     }
-  stp_parameter_list_destroy(params);
+  stp_parameter_list_free(params);
   return 0;
 }

@@ -207,7 +207,7 @@ main(int argc, char **argv)
   int i;
 
   stp_init();
-  tv = stp_allocate_vars();
+  tv = stp_vars_create();
   stp_set_outfunc(tv, writefunc);
   stp_set_errfunc(tv, writefunc);
   stp_set_outdata(tv, stdout);
@@ -302,7 +302,7 @@ main(int argc, char **argv)
 	  break;
 	}
     }
-  v = stp_allocate_vars();
+  v = stp_vars_create();
   the_printer = stp_get_printer_by_driver(printer);
   if (!printer ||
       ink_limit <= 0 || ink_limit > 1.0 ||
@@ -321,7 +321,7 @@ main(int argc, char **argv)
 	{
 	  int i;
 	  fprintf(stderr, "Unknown printer %s\nValid printers are:\n",printer);
-	  for (i = 0; i < stp_known_printers(); i++)
+	  for (i = 0; i < stp_printer_model_count(); i++)
 	    {
 	      the_printer = stp_get_printer_by_index(i);
 	      fprintf(stderr, "%-16s%s\n", stp_printer_get_driver(the_printer),
@@ -337,7 +337,7 @@ main(int argc, char **argv)
   stp_set_errdata(v, stderr);
   stp_set_float_parameter(v, "Density", density);
 
-  params = stp_list_parameters(v);
+  params = stp_get_parameter_list(v);
   count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
@@ -346,7 +346,7 @@ main(int argc, char **argv)
       if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST && val && strlen(val) > 0)
 	stp_set_string_parameter(v, p->name, val);
     }
-  stp_parameter_list_destroy(params);
+  stp_parameter_list_free(params);
 
   /*
    * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
@@ -392,7 +392,7 @@ main(int argc, char **argv)
   stp_set_left(v, left);
   stp_set_top(v, top);
 
-  stp_merge_printvars(v, stp_printer_get_printvars(the_printer));
+  stp_merge_printvars(v, stp_printer_get_defaults(the_printer));
   if (stp_print(v, &theImage) != 1)
     return 1;
   stp_vars_free(v);

@@ -296,17 +296,17 @@ build_printer_combo(void)
   int i;
   if (printer_list)
     stp_string_list_free(printer_list);
-  printer_list = stp_string_list_allocate();
+  printer_list = stp_string_list_create();
   for (i = 0; i < stpui_plist_count; i++)
     {
       if (stpui_plist[i].active)
-	stp_string_list_add_param(printer_list, stpui_plist[i].name, stpui_plist[i].name);
+	stp_string_list_add_string(printer_list, stpui_plist[i].name, stpui_plist[i].name);
       else
 	{
 	  gchar *name = malloc(strlen(stpui_plist[i].name) + 2);
 	  strcpy(name + 1, stpui_plist[i].name);
 	  name[0] = '*';
-	  stp_string_list_add_param(printer_list, name, name);
+	  stp_string_list_add_string(printer_list, name, name);
 	  free(name);
 	}
     }
@@ -324,7 +324,7 @@ build_printer_combo(void)
 static void
 populate_options(stp_vars_t v)
 {
-  stp_parameter_list_t params = stp_list_parameters(v);
+  stp_parameter_list_t params = stp_get_parameter_list(v);
   int i;
   for (i = 0; i < list_option_count; i++)
     {
@@ -650,7 +650,7 @@ create_printer_dialog (void)
   gtk_signal_connect (GTK_OBJECT (printer_driver), "select_row",
                       GTK_SIGNAL_FUNC (print_driver_callback), NULL);
 
-  for (i = 0; i < stp_known_printers (); i ++)
+  for (i = 0; i < stp_printer_model_count (); i ++)
     {
       stp_printer_t the_printer = stp_get_printer_by_index (i);
 
@@ -1806,7 +1806,7 @@ plist_callback (GtkWidget *widget,
   if (strcmp(stp_get_driver(pv->v), ""))
     tmp_printer = stp_get_printer(pv->v);
 
-  if (stp_get_output_type (stp_printer_get_printvars(tmp_printer)) ==
+  if (stp_get_output_type (stp_printer_get_defaults(tmp_printer)) ==
       OUTPUT_COLOR)
     {
       gtk_widget_set_sensitive (output_types[0].button, TRUE);
@@ -2244,7 +2244,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   tmp_printer = stp_get_printer_by_index ((gint) data);
 
-  v = stp_printer_get_printvars(tmp_printer);
+  v = stp_printer_get_defaults(tmp_printer);
   if (stp_parameter_find_in_settings(v, "PPDFile"))
     {
       gtk_widget_show (ppd_label);
@@ -2442,7 +2442,7 @@ compute_thumbnail(stp_vars_t v)
   int answer = 1;
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
-  stp_vars_t nv = stp_allocate_copy(v);
+  stp_vars_t nv = stp_vars_create_copy(v);
   stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);

@@ -516,12 +516,12 @@ escp2_parameters(const stp_vars_t v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	  if (verify_papersize(pt, model, v))
-	    stp_string_list_add_param(description->bounds.str,
+	    stp_string_list_add_string(description->bounds.str,
 				      stp_papersize_get_name(pt),
 				      stp_papersize_get_text(pt));
 	}
@@ -531,12 +531,12 @@ escp2_parameters(const stp_vars_t v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
     {
       const res_t *res = escp2_reslist(model, v);
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       while (res->hres)
 	{
 	  if (verify_resolution(res, model, v))
 	    {
-	      stp_string_list_add_param(description->bounds.str,
+	      stp_string_list_add_string(description->bounds.str,
 					res->name, _(res->text));
 	      if (res->vres >= 360 && res->hres >= 360 &&
 		  description->deflt.str == NULL)
@@ -549,12 +549,12 @@ escp2_parameters(const stp_vars_t v, const char *name,
     {
       const inklist_t *inks = escp2_inklist(model, v);
       int ninktypes = inks->n_inks;
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       if (ninktypes)
 	{
 	  for (i = 0; i < ninktypes; i++)
 	    if (verify_inktype(inks->inknames[i], model, v))
-	      stp_string_list_add_param(description->bounds.str,
+	      stp_string_list_add_string(description->bounds.str,
 					inks->inknames[i]->name,
 					_(inks->inknames[i]->text));
 	  description->deflt.str =
@@ -567,11 +567,11 @@ escp2_parameters(const stp_vars_t v, const char *name,
     {
       const paperlist_t *p = escp2_paperlist(model, v);
       int nmediatypes = p->paper_count;
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       if (nmediatypes)
 	{
 	  for (i = 0; i < nmediatypes; i++)
-	    stp_string_list_add_param(description->bounds.str,
+	    stp_string_list_add_string(description->bounds.str,
 				      p->papers[i].name,
 				      _(p->papers[i].text));
 	  description->deflt.str =
@@ -584,11 +584,11 @@ escp2_parameters(const stp_vars_t v, const char *name,
     {
       const input_slot_list_t *slots = escp2_input_slots(model, v);
       int ninputslots = slots->n_input_slots;
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       if (ninputslots)
 	{
 	  for (i = 0; i < ninputslots; i++)
-	    stp_string_list_add_param(description->bounds.str,
+	    stp_string_list_add_string(description->bounds.str,
 				      slots->slots[i].name,
 				      _(slots->slots[i].text));
 	  description->deflt.str =
@@ -1109,7 +1109,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->hue_adjustment, pt ? pt->hue_adjustment : NULL,
 	 STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
+      stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "SatMap"))
     {
@@ -1117,7 +1117,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->sat_adjustment, pt ? pt->sat_adjustment : NULL,
 	 STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-      stp_curve_destroy(sat_adjustment);
+      stp_curve_free(sat_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "LumMap"))
     {
@@ -1125,7 +1125,7 @@ adjust_print_quality(const escp2_init_t *init, stp_image_t *image)
 	(init->inkname->lum_adjustment, pt ? pt->lum_adjustment : NULL,
 	 STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-      stp_curve_destroy(lum_adjustment);
+      stp_curve_free(lum_adjustment);
     }
   cols = stp_color_init(nv, image, 65536);
   return cols;
@@ -1299,7 +1299,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
   int		bits;
   void *	weave;
-  stp_vars_t	nv = stp_allocate_copy(v);
+  stp_vars_t	nv = stp_vars_create_copy(v);
   escp2_init_t	init;
   int		max_vres;
   int 		*head_offset;

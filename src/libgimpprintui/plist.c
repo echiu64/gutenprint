@@ -136,7 +136,7 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->scaling = 100.0;
   printer->orientation = ORIENT_AUTO;
   printer->unit = 0;
-  printer->v = stp_allocate_vars();
+  printer->v = stp_vars_create();
   printer->invalid_mask = INVALID_TOP | INVALID_LEFT;
 }
 
@@ -145,7 +145,7 @@ stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
 {
   if (vs == vd)
     return;
-  stp_copy_vars(vd->v, vs->v);
+  stp_vars_copy(vd->v, vs->v);
   vd->active = vs->active;
   vd->scaling = vs->scaling;
   vd->orientation = vs->orientation;
@@ -160,7 +160,7 @@ allocate_stpui_plist_copy(const stpui_plist_t *vs)
 {
   stpui_plist_t *rep = xmalloc(sizeof(stpui_plist_t));
   memset(rep, 0, sizeof(stpui_plist_t));
-  rep->v = stp_allocate_vars();
+  rep->v = stp_vars_create();
   stpui_plist_copy(rep, vs);
   return rep;
 }
@@ -616,11 +616,11 @@ stpui_printrc_load_v1(FILE *fp)
 	      stp_set_boolean_parameter(key.v, keyword, atoi(value));
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
-	      curve = stp_curve_allocate_read_string(value);
+	      curve = stp_curve_create_read_string(value);
 	      if (curve)
 		{
 		  stp_set_curve_parameter(key.v, keyword, curve);
-		  stp_curve_destroy(curve);
+		  stp_curve_free(curve);
 		}
 	      break;
 	    default:
@@ -730,7 +730,7 @@ stpui_printrc_save(void)
 	{
 	  int count;
 	  int j;
-	  stp_parameter_list_t *params = stp_list_parameters(p->v);
+	  stp_parameter_list_t *params = stp_get_parameter_list(p->v);
 	  count = stp_parameter_list_count(params);
 	  fprintf(fp, "\nPrinter: %s\n", p->name);
 	  fprintf(fp, "Destination: %s\n", stpui_plist_get_output_to(p));
@@ -796,7 +796,7 @@ stpui_printrc_save(void)
 		  break;
 		}
 	    }
-	  stp_parameter_list_destroy(params);
+	  stp_parameter_list_free(params);
 #ifdef DEBUG
 	  fprintf(stderr, "Wrote printer %d: %s\n", i, param->name);
 #endif
@@ -1164,7 +1164,7 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
     {
       stpui_plist_t *np = allocate_stpui_plist_copy(printer);
       stp_vars_t current_vars =
-	stp_printer_get_printvars(stp_get_printer(np->v));
+	stp_printer_get_defaults(stp_get_printer(np->v));
       int orientation;
       stp_merge_printvars(np->v, current_vars);
 

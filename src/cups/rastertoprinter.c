@@ -331,7 +331,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       {
 	stp_parameter_list_t params;
 	int nparams;
-	v = stp_allocate_copy(stp_printer_get_printvars(printer));
+	v = stp_vars_create_copy(stp_printer_get_defaults(printer));
 
 	stp_set_float_parameter(v, "AppGamma", 1.0);
 	for (i = 0; i < stp_option_count; i++)
@@ -382,9 +382,9 @@ main(int  argc,				/* I - Number of command-line arguments */
 	else
 	  fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-	stp_merge_printvars(v, stp_printer_get_printvars(printer));
+	stp_merge_printvars(v, stp_printer_get_defaults(printer));
 
-	params = stp_list_parameters(v);
+	params = stp_get_parameter_list(v);
 	nparams = stp_parameter_list_count(params);
 	for (i = 0; i < nparams; i++)
 	  {
@@ -412,7 +412,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 		break;
 	      }
 	  }
-	stp_parameter_list_destroy(params);
+	stp_parameter_list_free(params);
 	stp_set_job_mode(v, STP_JOB_MODE_JOB);
       }
 

@@ -1534,7 +1534,7 @@ canon_parameters(const stp_vars_t v, const char *name,
   {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
 
     width_limit = caps->max_width;
     height_limit = caps->max_height;
@@ -1547,7 +1547,7 @@ canon_parameters(const stp_vars_t v, const char *name,
 	{
 	  if (stp_string_list_count(description->bounds.str) == 0)
 	    description->deflt.str = stp_papersize_get_name(pt);
-	  stp_string_list_add_param(description->bounds.str,
+	  stp_string_list_add_string(description->bounds.str,
 				   stp_papersize_get_name(pt),
 				   stp_papersize_get_text(pt));
 	}
@@ -1557,7 +1557,7 @@ canon_parameters(const stp_vars_t v, const char *name,
   {
     int x,y;
     int t;
-    description->bounds.str= stp_string_list_allocate();
+    description->bounds.str= stp_string_list_create();
     description->deflt.str = NULL;
 
     for (x=1; x<6; x++) {
@@ -1568,14 +1568,14 @@ canon_parameters(const stp_vars_t v, const char *name,
 	  const canon_res_t *res = canon_resolutions;
 	  while (res->x > 0) {
 	    if (xx == res->x && yy == res->y) {
-	      stp_string_list_add_param(description->bounds.str,
+	      stp_string_list_add_string(description->bounds.str,
 					res->name, _(res->text));
 	      stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			   res->name);
 	      if (xx >= 300 && yy >= 300 && description->deflt.str == NULL)
 		description->deflt.str = res->name;
 	      if (t == 1) {
-		stp_string_list_add_param(description->bounds.str,
+		stp_string_list_add_string(description->bounds.str,
 					  res->name_dmt, _(res->text_dmt));
 		stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			     res->name_dmt);
@@ -1590,22 +1590,22 @@ canon_parameters(const stp_vars_t v, const char *name,
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    description->bounds.str= stp_string_list_allocate();
+    description->bounds.str= stp_string_list_create();
     /* used internally: do not translate */
     if ((caps->inks & CANON_INK_K))
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       "Gray", _("Black"));
     if ((caps->inks & CANON_INK_CMY))
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       "RGB", _("CMY Color"));
     if ((caps->inks & CANON_INK_CMYK))
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       "CMYK", _("CMYK Color"));
     if ((caps->inks & CANON_INK_CcMmYK))
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       "PhotoCMY", _("Photo CcMmY Color"));
     if ((caps->inks & CANON_INK_CcMmYyK))
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       "PhotoCMYK", _("Photo CcMmYK Color"));
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
@@ -1613,21 +1613,21 @@ canon_parameters(const stp_vars_t v, const char *name,
   else if (strcmp(name, "MediaType") == 0)
   {
     int count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
-    description->bounds.str= stp_string_list_allocate();
+    description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_paper_list[0].name;
 
     for (i = 0; i < count; i ++)
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 				canon_paper_list[i].name,
 				_(canon_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
     int count = 3;
-    description->bounds.str= stp_string_list_allocate();
+    description->bounds.str= stp_string_list_create();
     description->deflt.str= media_sources[0].name;
     for (i = 0; i < count; i ++)
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 				media_sources[i].name,
 				_(media_sources[i].text));
   }
@@ -2104,7 +2104,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   int           use_6color= 0;
   double        k_upper, k_lower;
   int           emptylines= 0;
-  stp_vars_t	nv = stp_allocate_copy(v);
+  stp_vars_t	nv = stp_vars_create_copy(v);
   stp_curve_t lum_adjustment = NULL;
   stp_curve_t hue_adjustment = NULL;
   stp_curve_t sat_adjustment = NULL;
@@ -2383,7 +2383,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 	(canon_hue_adjustment(model),
 	 pt ? pt->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
+      stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "LumMap"))
     {
@@ -2391,7 +2391,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 	(canon_lum_adjustment(model),
 	 pt ? pt->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-      stp_curve_destroy(lum_adjustment);
+      stp_curve_free(lum_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "SatMap"))
     {
@@ -2399,7 +2399,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 	(canon_sat_adjustment(model),
 	 pt ? pt->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-      stp_curve_destroy(sat_adjustment);
+      stp_curve_free(sat_adjustment);
     }
   if (output_type == OUTPUT_COLOR && black)
     {

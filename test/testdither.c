@@ -198,7 +198,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   */
 
   stp_init();
-  v = stp_allocate_vars();
+  v = stp_vars_create();
   stp_set_driver(v, "escp2-ex");
   stp_describe_parameter(v, "DitherAlgorithm", &desc);
 

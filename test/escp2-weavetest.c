@@ -340,7 +340,7 @@ main(int argc, char **argv)
 
   stp_init();
 
-  v = stp_allocate_vars();
+  v = stp_vars_create();
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);
   stp_set_outdata(v, stdout);

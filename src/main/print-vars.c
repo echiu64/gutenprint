@@ -120,7 +120,7 @@ value_freefunc(stp_list_item_t *item)
       stp_free(v->value.rval.data);
       break;
     case STP_PARAMETER_TYPE_CURVE:
-      stp_curve_destroy(v->value.cval);
+      stp_curve_free(v->value.cval);
       break;
     default:
       break;
@@ -149,7 +149,7 @@ value_copy(const stp_list_item_t *item)
   switch (v->typ)
     {
     case STP_PARAMETER_TYPE_CURVE:
-      ret->value.cval = stp_curve_allocate_copy(ret->value.cval);
+      ret->value.cval = stp_curve_create_copy(ret->value.cval);
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
@@ -205,7 +205,7 @@ stp_default_settings(void)
 }
 
 stp_vars_t
-stp_allocate_vars(void)
+stp_vars_create(void)
 {
   int i;
   stp_internal_vars_t *retval = stp_zalloc(sizeof(stp_internal_vars_t));
@@ -213,7 +213,7 @@ stp_allocate_vars(void)
   retval->cookie = COOKIE_VARS;
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     retval->params[i] = create_vars_list();
-  stp_copy_vars(retval, (stp_vars_t)&default_vars);
+  stp_vars_copy(retval, (stp_vars_t)&default_vars);
   return (retval);
 }
 
@@ -578,7 +578,7 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
       if (item)
 	{
 	  val = (value_t *) stp_list_item_get_data(item);
-	  stp_curve_destroy(val->value.cval);
+	  stp_curve_free(val->value.cval);
 	}
       else
 	{
@@ -587,7 +587,7 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 	  val->typ = STP_PARAMETER_TYPE_CURVE;
 	  stp_list_item_create(list, NULL, val);
 	}
-      val->value.cval = stp_curve_allocate_copy(curve);
+      val->value.cval = stp_curve_create_copy(curve);
     }
   else if (item)
     stp_list_item_destroy(list, item);
@@ -609,7 +609,7 @@ stp_set_default_curve_parameter(stp_vars_t v, const char *parameter,
 	  if (item)
 	    {
 	      val = (value_t *) stp_list_item_get_data(item);
-	      stp_curve_destroy(val->value.cval);
+	      stp_curve_free(val->value.cval);
 	    }
 	  else
 	    {
@@ -618,7 +618,7 @@ stp_set_default_curve_parameter(stp_vars_t v, const char *parameter,
 	      val->typ = STP_PARAMETER_TYPE_CURVE;
 	      stp_list_item_create(list, NULL, val);
 	    }
-	  val->value.cval = stp_curve_allocate_copy(curve);
+	  val->value.cval = stp_curve_create_copy(curve);
 	}
     }
   stp_set_verified(v, 0);
@@ -946,7 +946,7 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
 }
 
 void
-stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
+stp_vars_copy(stp_vars_t vd, const stp_vars_t vs)
 {
   int i;
   stp_internal_vars_t *vvd = (stp_internal_vars_t *)vd;
@@ -993,10 +993,10 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
 }
 
 stp_vars_t
-stp_allocate_copy(const stp_vars_t vs)
+stp_vars_create_copy(const stp_vars_t vs)
 {
-  stp_vars_t vd = stp_allocate_vars();
-  stp_copy_vars(vd, vs);
+  stp_vars_t vd = stp_vars_create();
+  stp_vars_copy(vd, vs);
   return (vd);
 }
 
@@ -1005,7 +1005,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 {
   int count;
   int i;
-  stp_parameter_list_t params = stp_list_parameters(print);
+  stp_parameter_list_t params = stp_get_parameter_list(print);
   count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
@@ -1034,7 +1034,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
       (stp_get_output_type(user) == OUTPUT_COLOR ||
        stp_get_output_type(user) == OUTPUT_RAW_CMYK))
     stp_set_output_type(user, OUTPUT_GRAY);
-  stp_parameter_list_destroy(params);
+  stp_parameter_list_free(params);
 }
 
 void
@@ -1045,7 +1045,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
   int i;
   stp_parameter_t desc;
   stp_set_driver(v, stp_printer_get_driver(p));
-  params = stp_list_parameters(v);
+  params = stp_get_parameter_list(v);
   count = stp_parameter_list_count(params);
   for (i = 0; i < count; i++)
     {
@@ -1059,7 +1059,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	  stp_free_parameter_description(&desc);
 	}
     }
-  stp_parameter_list_destroy(params);
+  stp_parameter_list_free(params);
 }
 
 static const char *
@@ -1096,22 +1096,22 @@ stp_parameter_list_add_param(stp_parameter_list_t list,
 }
 
 stp_parameter_list_t
-stp_list_parameters(const stp_vars_t v)
+stp_get_parameter_list(const stp_vars_t v)
 {
   stp_parameter_list_t ret = stp_parameter_list_create();
   stp_parameter_list_t tmp_list;
 
   tmp_list = stp_printer_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_destroy(tmp_list);
+  stp_parameter_list_free(tmp_list);
 
   tmp_list = stp_color_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_destroy(tmp_list);
+  stp_parameter_list_free(tmp_list);
 
   tmp_list = stp_dither_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_destroy(tmp_list);
+  stp_parameter_list_free(tmp_list);
 
   return ret;
 }
@@ -1137,7 +1137,7 @@ stp_free_parameter_description(stp_parameter_t *desc)
     {
     case STP_PARAMETER_TYPE_CURVE:
       if (desc->bounds.curve)
-	stp_curve_destroy(desc->bounds.curve);
+	stp_curve_free(desc->bounds.curve);
       desc->bounds.curve = NULL;
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
@@ -1153,9 +1153,9 @@ stp_free_parameter_description(stp_parameter_t *desc)
 const stp_parameter_t *
 stp_parameter_find_in_settings(const stp_vars_t v, const char *name)
 {
-  stp_parameter_list_t param_list = stp_list_parameters(v);
+  stp_parameter_list_t param_list = stp_get_parameter_list(v);
   const stp_parameter_t *param = stp_parameter_find(param_list, name);
-  stp_parameter_list_destroy(param_list);
+  stp_parameter_list_free(param_list);
   return param;
 }
 
@@ -1189,7 +1189,7 @@ stp_parameter_list_param(const stp_parameter_list_t list, size_t item)
 }
 
 void
-stp_parameter_list_destroy(stp_parameter_list_t list)
+stp_parameter_list_free(stp_parameter_list_t list)
 {
   stp_list_destroy((stp_list_t *)list);
 }

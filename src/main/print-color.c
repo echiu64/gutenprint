@@ -1159,7 +1159,7 @@ compute_gcr_curve(const stp_vars_t vars)
 	double where = (i - k_lower) / (k_upper - k_lower);
 	tmp_data[i] = k_upper * pow(where, k_gamma) / 65535;
       }
-  curve = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   if (! stp_curve_set_data(curve, lut->steps, tmp_data))
     {
       stp_eprintf(vars, "set curve data failed!\n");
@@ -1188,7 +1188,7 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
     {
       if (stp_check_curve_parameter(vars, "GCRCurve"))
 	lut->gcr_curve =
-	  stp_curve_allocate_copy(stp_get_curve_parameter(vars, "GCRCurve"));
+	  stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
       else
 	lut->gcr_curve = compute_gcr_curve(vars);
       stp_curve_rescale(lut->gcr_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
@@ -1452,10 +1452,10 @@ static lut_t *
 allocate_lut(void)
 {
   lut_t *ret = stp_malloc(sizeof(lut_t));
-  ret->composite = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->cyan = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->magenta = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  ret->yellow = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  ret->composite = stp_curve_create(STP_CURVE_WRAP_NONE);
+  ret->cyan = stp_curve_create(STP_CURVE_WRAP_NONE);
+  ret->magenta = stp_curve_create(STP_CURVE_WRAP_NONE);
+  ret->yellow = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(ret->composite, 0, 65535);
   stp_curve_set_bounds(ret->cyan, 0, 65535);
   stp_curve_set_bounds(ret->magenta, 0, 65535);
@@ -1481,18 +1481,18 @@ copy_lut(const stp_vars_t v)
   if (!src)
     return NULL;
   dest = allocate_lut();
-  dest->composite = stp_curve_allocate_copy(src->composite);
-  dest->cyan = stp_curve_allocate_copy(src->cyan);
-  dest->magenta = stp_curve_allocate_copy(src->magenta);
-  dest->yellow = stp_curve_allocate_copy(src->yellow);
+  dest->composite = stp_curve_create_copy(src->composite);
+  dest->cyan = stp_curve_create_copy(src->cyan);
+  dest->magenta = stp_curve_create_copy(src->magenta);
+  dest->yellow = stp_curve_create_copy(src->yellow);
   if (src->hue_map)
-    dest->hue_map = stp_curve_allocate_copy(src->hue_map);
+    dest->hue_map = stp_curve_create_copy(src->hue_map);
   if (src->lum_map)
-    dest->lum_map = stp_curve_allocate_copy(src->lum_map);
+    dest->lum_map = stp_curve_create_copy(src->lum_map);
   if (src->sat_map)
-    dest->sat_map = stp_curve_allocate_copy(src->sat_map);
+    dest->sat_map = stp_curve_create_copy(src->sat_map);
   if (src->gcr_curve)
-    dest->gcr_curve = stp_curve_allocate_copy(src->gcr_curve);
+    dest->gcr_curve = stp_curve_create_copy(src->gcr_curve);
   dest->steps = src->steps;
   dest->colorfunc = src->colorfunc;
   dest->image_bpp = src->image_bpp;
@@ -1512,21 +1512,21 @@ stp_free_lut(stp_vars_t v)
     {
       lut_t *lut = (lut_t *)(stp_get_color_data(v));
       if (lut->composite)
-	stp_curve_destroy(lut->composite);
+	stp_curve_free(lut->composite);
       if (lut->cyan)
-	stp_curve_destroy(lut->cyan);
+	stp_curve_free(lut->cyan);
       if (lut->magenta)
-	stp_curve_destroy(lut->magenta);
+	stp_curve_free(lut->magenta);
       if (lut->yellow)
-	stp_curve_destroy(lut->yellow);
+	stp_curve_free(lut->yellow);
       if (lut->hue_map)
-	stp_curve_destroy(lut->hue_map);
+	stp_curve_free(lut->hue_map);
       if (lut->lum_map)
-	stp_curve_destroy(lut->lum_map);
+	stp_curve_free(lut->lum_map);
       if (lut->sat_map)
-	stp_curve_destroy(lut->sat_map);
+	stp_curve_free(lut->sat_map);
       if (lut->gcr_curve)
-	stp_curve_destroy(lut->gcr_curve);
+	stp_curve_free(lut->gcr_curve);
       if (lut->in_data)
 	stp_free(lut->in_data);
       if (lut->cmy_tmp)
@@ -1671,11 +1671,11 @@ stp_compute_lut(stp_vars_t v, size_t steps)
    * TODO check that these are wraparound curves and all that
    */
   if (hue)
-    lut->hue_map = stp_curve_allocate_copy(hue);
+    lut->hue_map = stp_curve_create_copy(hue);
   if (lum)
-    lut->lum_map = stp_curve_allocate_copy(lum);
+    lut->lum_map = stp_curve_create_copy(lum);
   if (sat)
-    lut->sat_map = stp_curve_allocate_copy(sat);
+    lut->sat_map = stp_curve_create_copy(sat);
 
   lut->steps = steps;
 
@@ -1912,15 +1912,15 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
     return;
   if (!standard_curves_initialized)
     {
-      hue_map_bounds = stp_curve_allocate_read_string
+      hue_map_bounds = stp_curve_create_read_string
 	("STP_CURVE;Wrap ;Linear ;2;0.0;-6.0;6.0:0;0;");
-      lum_map_bounds = stp_curve_allocate_read_string
+      lum_map_bounds = stp_curve_create_read_string
 	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
-      sat_map_bounds = stp_curve_allocate_read_string
+      sat_map_bounds = stp_curve_create_read_string
 	("STP_CURVE;Wrap ;Linear ;2;0.0;0.0;4.0:0;0;");
-      color_curve_bounds = stp_curve_allocate_read_string
+      color_curve_bounds = stp_curve_create_read_string
 	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
-      gcr_curve_bounds = stp_curve_allocate_read_string
+      gcr_curve_bounds = stp_curve_create_read_string
 	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
       standard_curves_initialized = 1;
     }
@@ -1944,12 +1944,12 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (!strcmp(param->param.name, "ImageOptimization"))
 		{
-		  description->bounds.str = stp_string_list_allocate();
-		  stp_string_list_add_param
+		  description->bounds.str = stp_string_list_create();
+		  stp_string_list_add_string
 		    (description->bounds.str, "LineArt", _("Line Art"));
-		  stp_string_list_add_param
+		  stp_string_list_add_string
 		    (description->bounds.str, "Solid", _("Solid Colors"));
-		  stp_string_list_add_param
+		  stp_string_list_add_string
 		    (description->bounds.str, "Photograph", _("Photographs"));
 		  description->deflt.str = "LineArt";
 		}
@@ -1975,7 +1975,7 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
 	    case STP_PARAMETER_TYPE_CURVE:
 	      description->deflt.curve = *(param->defval);
 	      description->bounds.curve =
-		stp_curve_allocate_copy(*(param->defval));
+		stp_curve_create_copy(*(param->defval));
 	      break;
 	    default:
 	      break;

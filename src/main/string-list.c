@@ -66,7 +66,7 @@ long_namefunc(const stp_list_item_t *item)
 }
 
 stp_string_list_t
-stp_string_list_allocate(void)
+stp_string_list_create(void)
 {
   stp_list_t *ret = stp_list_create();
   stp_list_set_freefunc(ret, free_list_element);
@@ -96,23 +96,23 @@ stp_string_list_count(const stp_string_list_t list)
 }
 
 stp_string_list_t
-stp_string_list_duplicate(const stp_string_list_t list)
+stp_string_list_create_copy(const stp_string_list_t list)
 {
   return (stp_string_list_t) stp_list_copy((stp_list_t *)list);
 }
 
 stp_string_list_t
-stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count)
+stp_string_list_create_from_params(const stp_param_string_t *list, size_t count)
 {
   size_t i = 0;
-  stp_string_list_t retval = stp_string_list_allocate();
+  stp_string_list_t retval = stp_string_list_create();
   for (i = 0; i < count; i++)
-    stp_string_list_add_param(retval, list[i].name, list[i].text);
+    stp_string_list_add_string(retval, list[i].name, list[i].text);
   return retval;
 }
 
 void
-stp_string_list_add_param(stp_string_list_t list,
+stp_string_list_add_string(stp_string_list_t list,
 			  const char *name, const char *text)
 {
   stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));

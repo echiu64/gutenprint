@@ -545,10 +545,10 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_file_parameter(img->v, key, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
-	  curve = stp_curve_allocate_read_string(vbuf);
+	  curve = stp_curve_create_read_string(vbuf);
 	  if (curve)
 	    stp_set_curve_parameter(img->v, key, curve);
-	  stp_curve_destroy(curve);
+	  stp_curve_free(curve);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
 	  if (! img->monochrome_flag || strcmp (key, "Contrast") != 0)
@@ -797,7 +797,7 @@ main (int argc, char **argv)
     return 1;
 
   stp_init();
-  img.v = stp_allocate_vars();
+  img.v = stp_vars_create();
   if (img.v == NULL)
     {
       ijs_server_done(img.ctx);
@@ -889,7 +889,7 @@ main (int argc, char **argv)
 	      status = -1;
 	      break;
 	    }
-	  stp_merge_printvars(img.v, stp_printer_get_printvars(printer));
+	  stp_merge_printvars(img.v, stp_printer_get_defaults(printer));
 	}
 
 

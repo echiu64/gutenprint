@@ -388,7 +388,7 @@ stp_xml_process_printer(xmlNodePtr printer,           /* The printer node */
   outprinter = stp_malloc(sizeof(stp_internal_printer_t));
   if (!outprinter)
     return NULL;
-  outprinter->printvars = stp_allocate_vars();
+  outprinter->printvars = stp_vars_create();
   if (outprinter->printvars == NULL)
     {
       stp_free(outprinter);

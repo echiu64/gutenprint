@@ -38,12 +38,12 @@ main(int argc, char **argv) {
   int i, k;
 
   stp_init();
-  for (i = 0; i < stp_known_printers(); i++) {
+  for (i = 0; i < stp_printer_model_count(); i++) {
     const stp_printer_t p = stp_get_printer_by_index(i);
     const char *driver = stp_printer_get_driver(p);
     const char *family = stp_printer_get_family(p);
     stp_vars_t pv = 
-      stp_allocate_copy(stp_printer_get_printvars(p));
+      stp_vars_create_copy(stp_printer_get_defaults(p));
     stp_parameter_t desc;
     int num_opts;
     const stp_param_string_t *opt;

@@ -113,11 +113,11 @@ stp_dither_describe_parameter(const stp_vars_t v, const char *name,
   if (strcmp(name, "DitherAlgorithm") == 0)
     {
       stp_fill_parameter_settings(description, &(dither_parameters[1]));
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       for (i = 0; i < num_dither_algos; i++)
 	{
 	  const dither_algo_t *dt = &dither_algos[i];
-	  stp_string_list_add_param(description->bounds.str,
+	  stp_string_list_add_string(description->bounds.str,
 				    dt->name, dt->text);
 	}
       description->deflt.str =
@@ -329,7 +329,7 @@ stp_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       if (the_curve)
 	{
 	  stp_dither_set_matrix_from_curve(v, the_curve, transposed);
-	  stp_curve_destroy(the_curve);
+	  stp_curve_free(the_curve);
 	}
       else
 	{

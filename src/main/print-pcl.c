@@ -1730,13 +1730,13 @@ pcl_parameters(const stp_vars_t v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      description->bounds.str = stp_string_list_allocate();
+      description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
 	      pcl_papersize_valid(pt, model))
-	    stp_string_list_add_param(description->bounds.str,
+	    stp_string_list_add_string(description->bounds.str,
 				      stp_papersize_get_name(pt),
 				      stp_papersize_get_text(pt));
 	}
@@ -1745,11 +1745,11 @@ pcl_parameters(const stp_vars_t v, const char *name,
     }
   else if (strcmp(name, "MediaType") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     if (caps->paper_types[0] != -1)
       {
 	for (i=0; (i < NUM_PRINTER_PAPER_TYPES) && (caps->paper_types[i] != -1); i++)
-	  stp_string_list_add_param(description->bounds.str,
+	  stp_string_list_add_string(description->bounds.str,
 				    pcl_val_to_string(caps->paper_types[i],
 						      pcl_media_types,
 						      NUM_PRINTER_PAPER_TYPES),
@@ -1764,11 +1764,11 @@ pcl_parameters(const stp_vars_t v, const char *name,
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     if (caps->paper_sources[0] != -1)
       {
 	for (i=0; (i < NUM_PRINTER_PAPER_SOURCES) && (caps->paper_sources[i] != -1); i++)
-	  stp_string_list_add_param(description->bounds.str,
+	  stp_string_list_add_string(description->bounds.str,
 				    pcl_val_to_string(caps->paper_sources[i],
 						      pcl_media_sources,
 						      NUM_PRINTER_PAPER_SOURCES),
@@ -1783,7 +1783,7 @@ pcl_parameters(const stp_vars_t v, const char *name,
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     description->deflt.str = NULL;
     for (i = 0; i < NUM_RESOLUTIONS; i++)
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
@@ -1793,7 +1793,7 @@ pcl_parameters(const stp_vars_t v, const char *name,
 	    description->deflt.str =
 	      pcl_val_to_string(pcl_resolutions[i].pcl_code,
 				pcl_resolutions, NUM_RESOLUTIONS);
-	  stp_string_list_add_param
+	  stp_string_list_add_string
 	    (description->bounds.str,
 	     pcl_val_to_string(pcl_resolutions[i].pcl_code,
 			       pcl_resolutions, NUM_RESOLUTIONS),
@@ -1805,13 +1805,13 @@ pcl_parameters(const stp_vars_t v, const char *name,
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     if (caps->color_type & PCL_COLOR_CMYKcm)
     {
       description->deflt.str = ink_types[0].name;
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       ink_types[0].name,_(ink_types[0].text));
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       ink_types[1].name,_(ink_types[1].text));
     }
     else
@@ -1945,7 +1945,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
   const double *dot_sizes_use,dot_sizes_cret[]={1.0,1.0,1.0};         /* The dot size used */
-  stp_vars_t	nv = stp_allocate_copy(v);
+  stp_vars_t	nv = stp_vars_create_copy(v);
   stp_papersize_t pp;
   int		len_c,		/* Active length of Cyan buffers */
 		len_lc,		/* Ditto Light Cyan */
@@ -2430,14 +2430,14 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
   if (!stp_check_curve_parameter(nv, "HueMap"))
     {
-      hue_adjustment = stp_curve_allocate_read_string(standard_hue_adjustment);
+      hue_adjustment = stp_curve_create_read_string(standard_hue_adjustment);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
+      stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "LumMap"))
     {
-      lum_adjustment = stp_curve_allocate_read_string(standard_lum_adjustment);
-      stp_curve_destroy(lum_adjustment);
+      lum_adjustment = stp_curve_create_read_string(standard_lum_adjustment);
+      stp_curve_free(lum_adjustment);
     }
   if (output_type == OUTPUT_COLOR && black)
     {

@@ -38,14 +38,14 @@ main(int argc, char **argv)
   int i, j, k;
 
   stp_init();
-  for (i = 0; i < stp_known_printers(); i++)
+  for (i = 0; i < stp_printer_model_count(); i++)
     {
       stp_parameter_list_t params;
       int nparams;
       const stp_printer_t p = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(p);
       const char *family = stp_printer_get_family(p);
-      stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
+      stp_vars_t pv = stp_vars_create_copy(stp_printer_get_defaults(p));
       int tcount = 0;
       size_t count;
       if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
@@ -53,7 +53,7 @@ main(int argc, char **argv)
       printf("# Printer model %s, long name `%s'\n", driver,
 	     stp_printer_get_long_name(p));
 
-      params = stp_list_parameters(pv);
+      params = stp_get_parameter_list(pv);
       nparams = stp_parameter_list_count(params);
 
       for (k = 0; k < nparams; k++)
@@ -95,7 +95,7 @@ main(int argc, char **argv)
 	    }
 	  tcount += count;
 	}
-      stp_parameter_list_destroy(params);
+      stp_parameter_list_free(params);
       if (tcount > 0)
 	{
 	  if (stp_get_output_type(pv) == OUTPUT_COLOR)

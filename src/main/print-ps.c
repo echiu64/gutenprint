@@ -174,12 +174,12 @@ ps_parameters(const stp_vars_t v, const char *name,
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  description->bounds.str = stp_string_list_allocate();
+	  description->bounds.str = stp_string_list_create();
 	  for (i = 0; i < papersizes; i++)
 	    {
 	      const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
-		stp_string_list_add_param
+		stp_string_list_add_string
 		  (description->bounds.str,
 		   stp_papersize_get_name(pt), stp_papersize_get_text(pt));
 	    }
@@ -194,7 +194,7 @@ ps_parameters(const stp_vars_t v, const char *name,
     }
 
   rewind(ps_ppd);
-  description->bounds.str = stp_string_list_allocate();
+  description->bounds.str = stp_string_list_create();
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
@@ -211,7 +211,7 @@ ps_parameters(const stp_vars_t v, const char *name,
       else
         ltext = loption;
 
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       loption, ltext);
     }
   }
@@ -378,7 +378,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   int           image_height,
                 image_width,
                 image_bpp;
-  stp_vars_t	nv = stp_allocate_copy(v);
+  stp_vars_t	nv = stp_vars_create_copy(v);
   if (!resolution)
     resolution = "";
   if (!media_size)

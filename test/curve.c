@@ -85,8 +85,8 @@ main(int argc, char **argv)
 {
   char *tmp1, tmp2;
   int i;
-  stp_curve_t curve1 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
-  stp_curve_t curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  stp_curve_t curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
+  stp_curve_t curve2 = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_t curve3;
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
@@ -104,7 +104,7 @@ main(int argc, char **argv)
       global_error_count++;
     }
   stp_curve_print(stdout, curve2);
-  stp_curve_destroy(curve1);
+  stp_curve_free(curve1);
   fprintf(stdout, "\n");
   for (i = 0; i < bad_curve_count; i++)
     {
@@ -133,11 +133,11 @@ main(int argc, char **argv)
 	  free(tmp1);
 	}
     }
-  stp_curve_destroy(curve2);
+  stp_curve_free(curve2);
   printf("allocate 1\n");
-  curve1 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
   printf("allocate 2\n");
-  curve2 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  curve2 = stp_curve_create(STP_CURVE_WRAP_NONE);
   printf("set gamma 1\n");
   if (!stp_curve_set_gamma(curve1, 1.2))
     {
@@ -172,7 +172,7 @@ main(int argc, char **argv)
   else
     stp_curve_print(stdout, curve1);
   fprintf(stdout, "\n");
-  stp_curve_destroy(curve3);
+  stp_curve_free(curve3);
   printf("compose multiply\n");
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, 64))
     {
@@ -182,7 +182,7 @@ main(int argc, char **argv)
   else
     stp_curve_print(stdout, curve3);
   fprintf(stdout, "\n");
-  stp_curve_destroy(curve3);
+  stp_curve_free(curve3);
 
   stp_curve_print(stdout, curve2);
   fprintf(stdout, "\n");
@@ -204,12 +204,12 @@ main(int argc, char **argv)
   else
     stp_curve_print(stdout, curve3);
   fprintf(stdout, "\n");
-  stp_curve_destroy(curve3);
-  stp_curve_destroy(curve1);
-  stp_curve_destroy(curve2);
+  stp_curve_free(curve3);
+  stp_curve_free(curve1);
+  stp_curve_free(curve2);
 
-  curve1 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
-  curve2 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
+  curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
+  curve2 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   if (!stp_curve_read_string(spline_curve_1, curve1))
     {
       fprintf(stderr, "stp_curve_read_string failed\n");
@@ -279,10 +279,10 @@ main(int argc, char **argv)
     }
   stp_curve_print(stdout, curve2);
   fprintf(stdout, "\n");
-  stp_curve_destroy(curve1);
-  stp_curve_destroy(curve2);
+  stp_curve_free(curve1);
+  stp_curve_free(curve2);
 
-  curve1 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
+  curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   stp_curve_set_interpolation_type(curve1, STP_CURVE_TYPE_SPLINE);
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
@@ -295,7 +295,7 @@ main(int argc, char **argv)
     }
   stp_curve_print(stdout, curve1);
   fprintf(stdout, "\n");
-  stp_curve_destroy(curve1);
+  stp_curve_free(curve1);
 
   printf("%d total errors\n", global_error_count);
   return global_error_count ? 1 : 0;

@@ -37,7 +37,7 @@ main(int argc, char **argv)
   int i;
 
   stp_init();
-  for (i = 0; i < stp_known_printers(); i++)
+  for (i = 0; i < stp_printer_model_count(); i++)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
       printf("$printer_name{'%s'} = '%s';\n", stp_printer_get_driver(p),

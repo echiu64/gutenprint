@@ -1060,7 +1060,7 @@ lexmark_parameters(const stp_vars_t v, const char *name,
     unsigned int height_limit, width_limit;
     unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
 
     width_limit  = caps->max_paper_width;
     height_limit = caps->max_paper_height;
@@ -1078,7 +1078,7 @@ lexmark_parameters(const stp_vars_t v, const char *name,
 	{
 	  if (stp_string_list_count(description->bounds.str) == 0)
 	    description->deflt.str = stp_papersize_get_name(pt);
-	  stp_string_list_add_param(description->bounds.str,
+	  stp_string_list_add_string(description->bounds.str,
 				    stp_papersize_get_name(pt),
 				    stp_papersize_get_text(pt));
 	}
@@ -1087,7 +1087,7 @@ lexmark_parameters(const stp_vars_t v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
   {
     const lexmark_res_t *res;
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
 
     res =  *(caps->res_parameters); /* get resolution specific parameters of printer */
 
@@ -1096,35 +1096,35 @@ lexmark_parameters(const stp_vars_t v, const char *name,
       {
 	if (stp_string_list_count(description->bounds.str) == 0)
 	  description->deflt.str = res->name;
-	stp_string_list_add_param(description->bounds.str,
+	stp_string_list_add_string(description->bounds.str,
 				  res->name, _(res->text));
 	res++;
       }
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     description->deflt.str = caps->ink_types[0].name;
     for (i = 0; caps->ink_types[i].name != NULL; i++)
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       caps->ink_types[i].name,
 			       _(caps->ink_types[i].text));
   }
   else if (strcmp(name, "MediaType") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     description->deflt.str = lexmark_paper_list[0].name;
     for (i = 0; i < paper_type_count; i++)
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       lexmark_paper_list[i].name,
 			       _(lexmark_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    description->bounds.str = stp_string_list_allocate();
+    description->bounds.str = stp_string_list_create();
     description->deflt.str = media_sources[0].name;
     for (i = 0; i < sizeof(media_sources) / sizeof(stp_param_string_t); i++)
-      stp_string_list_add_param(description->bounds.str,
+      stp_string_list_add_string(description->bounds.str,
 			       media_sources[i].name,
 			       _(media_sources[i].name));
   }
@@ -1465,7 +1465,7 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
   const char	*ink_type     = stp_get_string_parameter(v, "InkType");
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
-  stp_vars_t	nv            = stp_allocate_copy(v);
+  stp_vars_t	nv            = stp_vars_create_copy(v);
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   const lexmark_res_t *res_para_ptr =
@@ -1832,7 +1832,7 @@ densityDivisor /= 1.2;
 	(lexmark_hue_adjustment(caps, nv),
 	 media ? media->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(nv, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
+      stp_curve_free(hue_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "LumMap"))
     {
@@ -1840,7 +1840,7 @@ densityDivisor /= 1.2;
 	(lexmark_lum_adjustment(caps, nv),
 	 media ? media->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "LumMap", lum_adjustment);
-      stp_curve_destroy(lum_adjustment);
+      stp_curve_free(lum_adjustment);
     }
   if (!stp_check_curve_parameter(nv, "SatMap"))
     {
@@ -1848,7 +1848,7 @@ densityDivisor /= 1.2;
 	(lexmark_sat_adjustment(caps, nv),
 	 media ? media->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(nv, "SatMap", sat_adjustment);
-      stp_curve_destroy(sat_adjustment);
+      stp_curve_free(sat_adjustment);
     }
   if (output_type == OUTPUT_COLOR && cols.p.k)
     {
