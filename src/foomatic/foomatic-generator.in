@@ -1616,7 +1616,7 @@ sub getprintoutmode {
 		 "ImageType=$modeinfo->{$m}{'image'} " : "") .
 		(defined($stpdata{$stpprn}{'Quality'}) ? 
 		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
-		"GSResolution=$modeinfo->{$m}{'xres'}x" .
+		"Resolution=$modeinfo->{$m}{'xres'}x" .
 		"$modeinfo->{$m}{'yres'}dpi";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
 		# Color printer
