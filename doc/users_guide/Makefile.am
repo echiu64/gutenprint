@@ -60,9 +60,21 @@ PNG_IMAGES = figures/cups_admin.png			\
 
 EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
 
+if MAINTAINER_MODE
+MAINT_MODE = true
+else
+MAINT_MODE = false
+endif
+
+if MAINTAINER_MODE
+ALL_LOCAL_TARGETS = docs
+else
+ALL_LOCAL_TARGETS = $(STANDARD_TARGETS)
+endif
+
 ## Rules
 
-dist-hook: $(STANDARD_TARGETS)
+dist-hook: $(USER_GUIDE)
 	for dir in $(DISTHOOKDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -87,7 +99,7 @@ $(MANUAL).pdf:  $(MANUAL).sgml
 
 docs: html-stamp ps pdf
 
-all-local: docs
+all-local: $(ALL_LOCAL_TARGETS)
 
 pdf: $(MANUAL).pdf
 
@@ -151,27 +163,28 @@ install-data-local: $(STANDARD_TARGETS)
 uninstall-local:
 	$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
+CLEAN_MANUALS = \
+	$(RM) $(MANUAL).pdf $(MANUAL).ps ;	\
+	$(RM) -r html-stamp $(HTMLDIR) ;	\
+	$(RM) $(EPS_IMAGES)
+
 clean-local:
-	if test $(srcdir) = "." ; then \
+	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
 	  echo "clean-local: Not removing $(HTMLDIR)" ; \
 	  echo 'clean-local: Not removing $(MANUAL).pdf' ; \
 	  echo 'clean-local: Not removing $(MANUAL).ps' ; \
 	  echo 'clean-local: Not removing EPS figures' ; \
 	else \
-	  $(RM) $(MANUAL).pdf $(MANUAL).ps ; \
-	  $(RM) -r html-stamp $(HTMLDIR) ; \
-	  $(RM) -r $(EPS_IMAGES) ; \
+	  $(CLEAN_MANUALS) ; \
 	fi
 	$(RM) -r *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
-	$(RM) -r db2html*
-	$(RM) -r DB2HTML*
+	$(RM) -r db2html* DB2HTML*
 
-veryclean: clean maintainer-clean-local
+veryclean:
+	$(MAKE) MAINT_MODE=true clean
 
 maintainer-clean-local:
-	$(RM) -r $(HTMLDIR) html-stamp
-	$(RM) $(MANUAL).pdf $(MANUAL).ps
-	$(RM) -r $(EPS_IMAGES)
+	$(CLEAN_MANUALS)
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.

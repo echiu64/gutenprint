@@ -55,18 +55,7 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 
 ## Rules
 
-# Symlink to distributed html manual, if possible
 all-local: html
-	if test -d $(srcdir)/manual-html ; then \
-	  if test "$(srcdir)" = "." ; then \
-	    echo "all-local: Not removing manual-html" ; \
-	  else \
-	    $(RM) -r manual-html ; \
-	    $(LN_S) $(srcdir)/manual-html manual-html ; \
-	  fi \
-	else \
-	  echo "all-local: $(srcdir)/manual-html not found" ; \
-	fi
 
 docs: html ps pdf
 	cd users_guide ; \
@@ -84,27 +73,39 @@ html: html-stamp
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
 html-stamp: $(srcdir)/gimpprint.texi $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS))
-	if test x$(TEXI2HTML) = x ; then \
-	  echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
+	if test '$(srcdir)' = '.' ; then \
+	  : ; \
 	else \
-	  stat=1; \
-	  $(RM) -r manual-html-tmp ; \
-	  mkdir manual-html-tmp ; \
-	  cd manual-html-tmp ; \
-	  if test $(srcdir) = '.' ; then \
-	    SOURCE='..' ; \
-	  else \
-	    SOURCE=$(srcdir) ; \
+	  if test -f $(srcdir)/html-stamp ; then \
+	    $(LN_S) $(srcdir)/html-stamp html-stamp ; \
 	  fi ; \
-	  cp $${SOURCE}/*.png . ; \
-	  $(TEXI2HTML) -menu -split_node -number -expandinfo \
-	    -I $(srcdir) $${SOURCE}/gimpprint.texi 2>&1 | grep . ; \
-	    stat=$$? ; stat=`expr 1 - $$stat` ; \
+	fi ; \
+	if test -f html-stamp -o -L html-stamp ; then \
+	  : ; \
+	else \
+	  if test x$(TEXI2HTML) = x ; then \
+	    echo "html-stamp: texi2html not found: not regenerating HTML manual" ; \
+	  else \
+	    stat=1; \
+	    rm -rf manual-html-tmp ; \
+	    mkdir manual-html-tmp ; \
+	    cd manual-html-tmp ; \
+	    if test $(srcdir) = '.' ; then \
+	      SOURCE='..' ; \
+	    else \
+	      SOURCE=$(srcdir) ; \
+	    fi ; \
+	    cp $${SOURCE}/*.png . ; \
+	    $(TEXI2HTML) -menu -split_node -number -expandinfo \
+	      -I $(srcdir) $${SOURCE}/gimpprint.texi 2>&1 | grep . ; \
+	      stat=$$? ; stat=`expr 1 - $$stat` ; \
+	  fi ; \
+	  cd .. ; \
+	  rm -rf manual-html ; \
+	  mv manual-html-tmp manual-html ; \
+	  touch html-stamp ; \
 	fi ; \
 	exit $$stat
-	$(RM) -r manual-html ; \
-	mv manual-html-tmp manual-html ; \
-	touch html-stamp
 
 ps: gimpprint.ps
 	cd users_guide ; \
@@ -135,8 +136,8 @@ dist-hook: html
 CLEAN_MANUALS = $(RM) -r html-stamp manual-html
 
 clean-local:
-	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
-	  echo "clean-local: Not removing manual-html" ; \
+	if test $(srcdir) = '.' -a $(MAINT_MODE) = false ; then \
+	  echo 'clean-local: Not removing manual-html' ; \
 	else \
 	  $(CLEAN_MANUALS) ; \
 	fi
