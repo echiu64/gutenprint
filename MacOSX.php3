@@ -290,13 +290,9 @@ require('standard_html_header.php3');
    <li>The man pages have been updated.</li>
    <li>On Mac OS X when using the provided installer package the PPDs are
     now stored in the standard PPD location<pre>
-
           /Library/Printers/PPDs/Contents/Resources/en.lproj
-
     </pre>rather than in<pre>
-
           /usr/share/cups/model/C
-
     </pre>which is different from all previous releases. This change was
     made for performance reasons (memory usage).  As a consequence,
     the PPDs will no longer be available for printer setup when
@@ -311,28 +307,6 @@ require('standard_html_header.php3');
 <dd>729918 Postscript family driver fails in non-US locale
 <dd>735493 CUPS PPD files lacking *OutputOrder
 </dl>
-
-   <li></li>
-   <li>The Mac OS X installer package now includes an "uninstaller" which will
-   completley (and safely) remove the Gimp-Print software.</li>
-   <li>Preliminary support for Epson Stylus C50, Stylus Photo 900, CL-740,
-   PM-870C, PM-930C, PM-970C, and PM-3700C.  The PM-930C and PM-970C
-   are limited to 2880x1440 DPI in this release; this restriction will
-   not be lifted in 4.2.x line.</li>
-   <li>Better conformance to the PPD spec on the part of the CUPS PPD
-   files.</li>
-   <li>Per-page variables in the CUPS driver are now set at the beginning
-   of each page.  This makes it possible to change the page size (for
-   example) in the middle of a document.</li>
-   <li>The PostScript LanguageLevel attribute in the CUPS PPD files now
-   defaults to 3, as all current Ghostscript releases are fully
-   compatible with Level 3 PostScript.</li>
-   <li>Minor speed improvement for the HP LaserJet IIP.</li>
-   <li>The Foomatic data now uses the clear-text printer ID's from
-   Foomatic 3.0, in addition to legacy support for the older numeric
-   ideas.</li>
-   <li>Minor adjustment to the HP DeskJet 340 margins.</li>
- </ol>
  &nbsp;
  </td>
  </tr>
