@@ -105,6 +105,7 @@ typedef struct dither_channel
   unsigned bit_max;
   unsigned signif_bits;
   unsigned density;
+  double darkness;		/* Relative darkness of this ink */
 
   int v;
   int o;

@@ -63,6 +63,7 @@ typedef struct shade_segment
   distance_t *et_dis;
   stpi_ink_defn_t lower;
   stpi_ink_defn_t upper;
+  int share_this_channel;
 } shade_distance_t;
 
 
@@ -140,6 +141,10 @@ et_setup(stpi_dither_t *d)
     shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
     shade->dis = et->d_sq;
     shade->et_dis = stpi_malloc(sizeof(distance_t) * d->dst_width);
+    if (CHANNEL(d, i).darkness > .1)
+      shade->share_this_channel = 1;
+    else
+      shade->share_this_channel = 0;
     for (x = 0; x < d->dst_width; x++) {
       shade->et_dis[x] = et->d_sq;
     }
@@ -169,7 +174,7 @@ et_setup(stpi_dither_t *d)
   d->aux_freefunc = free_eventone_data;
 }
 
-static int
+int
 et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
   int i;
@@ -196,7 +201,7 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
       memset(et->dummy_channel->errs[0], 0, d->dst_width * sizeof(int));
     }
     for (i = 0; i < CHANNEL_COUNT(d); i++)
-      memset(&CHANNEL(d, i).errs[0], 0, d->dst_width * sizeof(int));
+      memset(CHANNEL(d, i).errs[0], 0, d->dst_width * sizeof(int));
     return 0;
   }
   for (i = 0; i < CHANNEL_COUNT(d); i++)
@@ -549,7 +554,6 @@ stpi_dither_et_single(stp_vars_t v,
     stpi_dither_channel_t *best_channel = NULL;
     int best_channel_value = INT_MIN;
     int random_value = ditherpoint(d, &(d->dither_matrix), x);
-    int dummy_point_error = 0;
 
     if (d->stpi_dither_type & D_ORDERED_BASE)
       comparison += (random_value / 16) - 2048;
@@ -573,11 +577,14 @@ stpi_dither_et_single(stp_vars_t v,
 	 */
 	dc->b = find_segment_and_ditherpoint(dc, raw[i],
 					     &(sp->lower), &(sp->upper));
-	if (dc->b > maximum_value)
-	  maximum_value = dc->b;
-	ddc->b += dc->b;
+	if (sp->share_this_channel) {
+	  if (dc->b > maximum_value)
+	    maximum_value = dc->b;
+	  ddc->b += dc->b;
+	}
 	/* Incorporate error data from previous line */
 	dc->v += 2 * dc->b + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
+	dc->o = eventone_adjust_single(dc, et, dc->v - dc->b, dc->b);
       }
     }
 
@@ -595,27 +602,28 @@ stpi_dither_et_single(stp_vars_t v,
     
     ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
     total_error += eventone_adjust(ddc, et, ddc->v - ddc->b, ddc->b);
-
-    for (i=0; i < channel_count; i++) {
-      stpi_dither_channel_t *dc = &CHANNEL(d, i);
-      
-      if (dc->ptr) {
-
-	dc->o = eventone_adjust_single(dc, et, dc->v - dc->b, dc->b);
-	dummy_point_error += dc->o;
-	if (dc->o > best_channel_value) {
-	  best_channel = dc;
-	  if (dc->o >= 32768)
-	    best_channel_value = INT_MAX;
-	  else
-	    best_channel_value = dc->o;
-	}
-      }
-    }
-
-
     if (total_error >= comparison) {
       channels_to_print = 1;
+    }
+
+    if (!print_all_channels) {
+      for (i=0; i < channel_count; i++) {
+	stpi_dither_channel_t *dc = &CHANNEL(d, i);
+	shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
+      
+	if (dc->ptr) {
+
+	  if (!print_all_channels && sp->share_this_channel) {
+	    if (dc->o > best_channel_value) {
+	      best_channel = dc;
+	      if (dc->o >= 32768)
+		best_channel_value = INT_MAX;
+	      else
+		best_channel_value = dc->o;
+	    }
+	  }
+	}
+      }
     }
     
     for (i=0; i < channel_count; i++) {
@@ -630,19 +638,19 @@ stpi_dither_et_single(stp_vars_t v,
 	  dc->o = 0;
 	else if (dc->o > 65535)
 	  dc->o = 65535;
-	point_error += dc->o;
-	if ((print_all_channels && point_error >= comparison) ||
-	    (channels_to_print == 1 && best_channel == dc)) {
-	  point_error -= 65535;
+	if (print_all_channels || !sp->share_this_channel) {
+	  point_error += dc->o;
+	  if (point_error >= comparison) {
+	    point_error -= 65535;
+	    inkp = &(sp->upper);
+	    dc->v -= 131070;
+	    sp->dis = et->d_sq;
+	  }
+	} else if (channels_to_print == 1 && best_channel == dc) {
 	  inkp = &(sp->upper);
 	  dc->v -= 131070;
 	  sp->dis = et->d_sq;
-	  if (total_error >= comparison) {
-	    ddc->v -= 131070;
-	    total_error -= 65535;
-	    ssp->dis = et->d_sq;
-	  }
-	}
+	}	  
 	if (inkp->bits) {
 	  if (!mask || (*(mask + d->ptr_offset) & bit)) {
 	    set_row_ends(dc, x);
@@ -652,6 +660,11 @@ stpi_dither_et_single(stp_vars_t v,
 	  }
 	}
       }
+    }
+    if (total_error >= comparison) {
+      ddc->v -= 131070;
+      total_error -= 65535;
+      ssp->dis = et->d_sq;
     }
 
     eventone_update(ddc, et, x, direction);

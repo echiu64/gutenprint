@@ -120,7 +120,7 @@ initialize_channel(stp_vars_t v, int channel, int subchannel)
   shade.numsizes = 1;
   dot.bit_pattern = 1;
   dot.value = 1.0;
-  stpi_dither_set_inks_full(v, channel, 1, &shade, 1.0);
+  stpi_dither_set_inks_full(v, channel, 1, &shade, 1.0, 1.0);
 }
 
 static void
@@ -258,8 +258,8 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 }
 
 static void
-stpi_dither_set_ranges(stp_vars_t v, int color,
-		       const stpi_shade_t *shade, double density)
+stpi_dither_set_ranges(stp_vars_t v, int color, const stpi_shade_t *shade,
+		       double density, double darkness)
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   stpi_dither_channel_t *dc = &(CHANNEL(d, color));
@@ -277,6 +277,7 @@ stpi_dither_set_ranges(stp_vars_t v, int color,
     stpi_zalloc((dc->nlevels + 1) * sizeof(stpi_ink_defn_t));
   dc->bit_max = 0;
   dc->density = density * 65535;
+  dc->darkness = darkness;
   stpi_init_debug_messages(v);
   stpi_dprintf(STPI_DBG_INK, v,
 	      "stpi_dither_set_ranges channel %d nlevels %d density %f\n",
@@ -342,7 +343,8 @@ stpi_dither_set_ranges(stp_vars_t v, int color,
 
 void
 stpi_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
-			    const double *levels, double density)
+			    const double *levels, double density,
+			    double darkness)
 {
   stpi_shade_t s;
   stpi_dotsize_t *d = stpi_malloc(nlevels * sizeof(stpi_dotsize_t));
@@ -356,13 +358,14 @@ stpi_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
       d[i].bit_pattern = i + 1;
       d[i].value = levels[i];
     }
-  stpi_dither_set_inks_full(v, color, 1, &s, density);
+  stpi_dither_set_inks_full(v, color, 1, &s, density, darkness);
   stpi_free(d);
 }
 
 void
 stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
-			  const stpi_shade_t *shades, double density)
+			  const stpi_shade_t *shades, double density,
+			  double darkness)
 {
   int i;
   int idx;
@@ -381,7 +384,8 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 
       stpi_channel_add(v, color, subchannel, shades[i].value);
       if (idx >= 0)
-	stpi_dither_set_ranges(v, idx, &shades[i], density);
+	stpi_dither_set_ranges(v, idx, &shades[i], density,
+			       shades[i].value * darkness);
       stpi_dprintf(STPI_DBG_INK, v,
 		   "  shade %d value %f\n",
 		   i, shades[i].value);
@@ -389,7 +393,7 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 }
 
 void
-stpi_dither_set_inks(stp_vars_t v, int color, double density,
+stpi_dither_set_inks(stp_vars_t v, int color, double density, double darkness,
 		     int nshades, const double *svalues,
 		     int ndotsizes, const double *dvalues)
 {
@@ -413,7 +417,7 @@ stpi_dither_set_inks(stp_vars_t v, int color, double density,
       shades[i].numsizes = j;
       shades[i].dot_sizes = dotsizes;
     }
-  stpi_dither_set_inks_full(v, color, nshades, shades, density);
+  stpi_dither_set_inks_full(v, color, nshades, shades, density, darkness);
   stpi_free(dotsizes);
   stpi_free(shades);
 }

@@ -1981,15 +1981,18 @@ densityDivisor /= 1.2;
   if (!use_dmt) {
     if (cols.p.C)
       {
-	stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_dither_shades, 1.0);
+	stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_dither_shades, 1.0,
+				  0.31 / .5);
       }
     if (cols.p.M)
       {
-	stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_dither_shades, 1.0);
+	stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_dither_shades, 1.0,
+				  0.61 / .97);
       }
     if (cols.p.Y)
       {
-	stpi_dither_set_inks_full(v, ECOLOR_Y, 2, photo_dither_shades, 1.0);
+	stpi_dither_set_inks_full(v, ECOLOR_Y, 2, photo_dither_shades, 1.0,
+				  0.08);
       }
   }
 

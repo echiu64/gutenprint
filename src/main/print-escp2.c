@@ -68,6 +68,11 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "supports_ink_change",     11, 1 },
 };
 
+static const double ink_darknesses[] =
+{
+  1.0, 0.31 / .4, 0.61 / .96, 0.08, 0.31 * 0.33 / .4, 0.61 * 0.33 / .96, 0.33, 1.0
+};
+
 #define INCH(x)		(72 * x)
 
 static const res_t *escp2_find_resolution(stp_const_vars_t v);
@@ -1790,7 +1795,7 @@ setup_inks(stp_vars_t v)
 	    }
 	  if (strcmp(param, "BlackDensity") == 0)
 	    stpi_channel_set_black_channel(v, i);
-	  stpi_dither_set_inks(v, i, 1.0,
+	  stpi_dither_set_inks(v, i, 1.0, ink_darknesses[i % 8],
 			       channel->n_subchannels, shades->shades,
 			       drops->numdropsizes, drops->dropsizes);
 	  for (j = 0; j < channel->n_subchannels; j++)

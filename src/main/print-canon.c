@@ -92,6 +92,11 @@ static const int subchannel_color_map[] =
   0, 0, 0, 0, 1, 1, 1
 };
 
+static const double ink_darknesses[] =
+{
+  1.0, 0.31 / .5, 0.61 / .97, 0.08
+};
+
 #define USE_3BIT_FOLD_TYPE 323
 
 /*
@@ -2256,7 +2261,8 @@ set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color,
 {
   if (!ink)
     return;
-  stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0);
+  stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0,
+			    ink_darknesses[color]);
   stpi_channel_set_density_adjustment
     (v, color, 1, (get_double_param(v, channel_param) *
 		   get_double_param(v, subchannel_param) *

@@ -161,12 +161,13 @@ extern void stpi_dither_set_adaptive_limit(stp_vars_t v, double limit);
 extern int stpi_dither_get_first_position(stp_vars_t v, int color, int subchan);
 extern int stpi_dither_get_last_position(stp_vars_t v, int color, int subchan);
 extern void stpi_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
-					const double *levels, double density);
+					const double *levels, double density,
+					double darkness);
 extern void stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 				      const stpi_shade_t *shades,
-				      double density);
+				      double density, double darkness);
 extern void stpi_dither_set_inks(stp_vars_t v, int color,
-				 double density,
+				 double density, double darkness,
 				 int nshades, const double *svalues,
 				 int ndotsizes, const double *dvalues);
 
