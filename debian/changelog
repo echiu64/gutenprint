@@ -1,3 +1,15 @@
+gimp-print (4.2.5-1) unstable; urgency=low
+
+  * New stable release
+  * Use debian/build and debian/install instead of debian/gimp-print-build
+    and debian/gimp-print-install, respectively.
+  * Use dh_install rather than dh_movefiles.  This makes debian/rules
+    slightly cleaner, and debian/install is unchanged after install.
+  * Create symlinks for HTML manuals, since different versions of texi2html
+    and db2html create different names.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun,  8 Dec 2002 18:27:13 +0000
+
 gimp-print (4.2.4-1) unstable; urgency=low
 
   * New stable release

@@ -27,16 +27,16 @@ UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" |
 LIBRARY_VERSION = 1
 
 autoconfigure: autoconfigure-stamp
-autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base
+autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
 	dh_testdir
 
-	cd debian ; \
+	cd debian; \
 	for file in libgimpprint*; do \
-	  ln -sf $$file `echo $$file | sed -e 's/libgimpprint/libgimpprint$(LIBRARY_VERSION)/'` ; \
+	  ln -sf $$file `echo $$file | sed -e 's/libgimpprint/libgimpprint$(LIBRARY_VERSION)/'`; \
 	done
 	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
-	mkdir debian/gimp-print-build ; \
-	cd debian/gimp-print-build ; \
+	mkdir debian/build; \
+	cd debian/build; \
 	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --with-ijs --with-foomatic --disable-test --without-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
 	touch autoconfigure-stamp
 
@@ -44,9 +44,9 @@ build: build-stamp debian/control
 build-stamp: autoconfigure-stamp
 	dh_testdir
 
-	cd debian/gimp-print-build ; \
-	$(MAKE) ; \
-	cd src/gimp ; \
+	cd debian/build; \
+	$(MAKE); \
+	cd src/gimp; \
 	$(MAKE) print
 
 	touch build-stamp
@@ -61,7 +61,8 @@ clean: debian/control
 	-test -r /usr/share/misc/config.guess && \
 	  cp -f /usr/share/misc/config.guess config.guess
 
-	rm -rf debian/gimp-print-build debian/gimp-print-install
+	rm -rf debian/build debian/install
+	rm -rf debian/libgimpprint-doc.doc-base debian/libgimpprint-doc.install
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).files
 	rm -rf debian/libgimpprint$(LIBRARY_VERSION).postinst
 	-$(MAKE) distclean
@@ -76,14 +77,13 @@ install: build debian/control
 	dh_clean -k
 	dh_installdirs
 
-	cd debian/gimp-print-build ; \
-	$(MAKE) DESTDIR=`pwd`/../gimp-print-install install
+	cd debian/build; \
+	$(MAKE) DESTDIR=`pwd`/../install install
 
 	scripts/mkinstalldirs debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins
-	/usr/bin/install -c debian/gimp-print-build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
+	/usr/bin/install -c debian/build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
 
-	dh_movefiles --sourcedir=debian/gimp-print-install
-	rm debian/foomatic-db-gimp-print/usr/share/foomatic/kitload.log
+	dh_install
 
 
 # Build architecture-independent files here.
@@ -92,14 +92,14 @@ binary-indep: build install ChangeLog
 	dh_testroot -i
 #	dh_installdebconf -i
 	dh_installdocs -i
-	  cp debian/gimp-print-install/usr/share/gimp-print/doc/gimpprint.ps debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc
-	  cp -r debian/gimp-print-install/usr/share/gimp-print/doc/manual-html debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc/html
-	  cd debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc/html ; \
-	  if test ! -f gimpprint.html ; then \
-	    ln -s gimpprint_toc.html gimpprint.html ; \
+	  cd debian/libgimpprint$(LIBRARY_VERSION)-doc/usr/share/doc/libgimpprint$(LIBRARY_VERSION)-doc/html; \
+	  if test ! -f gimpprint.html; then \
+	    ln -s gimpprint_toc.html gimpprint.html; \
 	  fi
-	cp debian/gimp-print-install/usr/share/gimp-print/doc/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
-	cp -r debian/gimp-print-install/usr/share/gimp-print/doc/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
+	  cd debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html;
+	  if test ! -f index.html; then \
+	    ln -s book1.html index.html; \
+	  fi
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i
@@ -109,7 +109,7 @@ binary-indep: build install ChangeLog
 #	dh_installinit -i
 #	dh_installcron -i
 #	dh_installmanpages -i
-	dh_installinfo -i -plibgimpprint$(LIBRARY_VERSION)-doc debian/gimp-print-install/usr/share/info/*
+	dh_installinfo -i -plibgimpprint$(LIBRARY_VERSION)-doc debian/install/usr/share/info/*
 	dh_undocumented -i
 	dh_installchangelogs -i NEWS
 	dh_link -i
@@ -128,13 +128,7 @@ binary-arch: build install ChangeLog
 #	dh_installdebconf -a
 	dh_installdocs -a
 	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
-	  mkdir debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
-	  cp doc/*.html doc/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/html ; \
 	dh_installexamples -a
-	  mkdir -p debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
-	  cp -r samples/*.png debian/gimp1.2-print/usr/share/doc/gimp1.2-print/samples
-	  mkdir -p debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/samples
-	  cp -r samples/profile.jpg debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/samples
 #	dh_installmenu -a
 #	dh_installlogrotate -a
 #	dh_installemacsen -a
@@ -175,25 +169,30 @@ debian/control: debian/changelog debian/control.in
 debian/libgimpprint-doc.doc-base: debian/changelog debian/libgimpprint-doc.doc-base.in
 	sed $(SEDPATTERN) <debian/libgimpprint-doc.doc-base.in >debian/libgimpprint-doc.doc-base
 
+# Make sure debian/libgimpprint-doc.install is up-to-date.
+debian/libgimpprint-doc.install: debian/changelog debian/libgimpprint-doc.install.in
+	sed $(SEDPATTERN) <debian/libgimpprint-doc.install.in >debian/libgimpprint-doc.install
+
+
 # Make sure that configure is up-to-date.
 configure: configure.in scripts/install-sh
-	if test -f configure.in ; then \
-	  if test -f autogen.sh ; then \
-	    export NOCONFIGURE=TRUE ; \
-	    /bin/sh autogen.sh ; \
+	if test -f configure.in; then \
+	  if test -f autogen.sh; then \
+	    export NOCONFIGURE=TRUE; \
+	    /bin/sh autogen.sh; \
 	  fi \
 	fi
 
 configure.in: configure.in.in
-	if test -f configure.in.in ; then \
-	  if test -f autogen.sh ; then \
-	    NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
+	if test -f configure.in.in; then \
+	  if test -f autogen.sh; then \
+	    NOCONFIGURE=TRUE /bin/sh autogen.sh; \
 	  fi \
 	fi
 
 scripts/install-sh:
-	if test -f autogen.sh ; then \
-	  NOCONFIGURE=TRUE /bin/sh autogen.sh ; \
+	if test -f autogen.sh; then \
+	  NOCONFIGURE=TRUE /bin/sh autogen.sh; \
 	fi
 
 configure.in.in:
