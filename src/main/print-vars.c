@@ -1252,6 +1252,7 @@ stpi_fill_parameter_settings(stp_parameter_t *desc,
       desc->channel = param->channel;
       desc->name = param->name;
       desc->text = param->text;
+      desc->category = param->category;
       desc->help = param->help;
       return;
     }
