@@ -1,3 +1,69 @@
+2000-11-06	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.89.2.3) (+2 -2)
+	
+	Fixed malformed debugmessage
+	
+2000-11-06	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.94) (+2 -2)
+	
+	Fixed malformed debug message
+	
+2000-11-05	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.33.2.7) (+4 -0)
+	
+	Update
+	
+2000-11-04	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.89.2.2) (+8 -2)
+	
+	121601 Canon driver fails with no specified InkType
+	
+2000-11-04	<rlk@sourceforge.net>
+
+	Files:	INSTALL (1.5.12.2) (+1 -1)
+		cups/rastertoprinter.c (1.8.2.1) (+9 -2)
+		Ghost/gdevstp.c (1.43.2.1) (+3 -3)
+		configure.in (1.36.2.4) (+1 -1)
+		RELNOTES (1.33.2.6) (+13 -1)
+		README (1.35.2.3) (+1 -1)
+	
+	121169 Ghostscript driver prints second+ pages incorrectly
+	121170 CUPS driver produces incorrect color balance/density
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	cups/rastertoprinter.c (1.10) (+3 -2)
+	
+	Need to do yellow too
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	cups/rastertoprinter.c (1.9) (+8 -2)
+	
+	Attempt to fix 121170
+	
+2000-11-03	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.44) (+3 -3)
+	
+	Try to fix 121169
+	
+2000-11-02	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.56.2.6) (+6 -0)
+	
+	print 4.0.1 reissue
+	
+2000-11-02	<rlk@sourceforge.net>
+
+	Files:	mkchlog (1.4.2.1) (+0 -5)
+	
+	Do not ignore branch versions
+	
 2000-11-02	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.56.2.5) (+554 -0)
