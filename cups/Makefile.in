@@ -1,0 +1,158 @@
+#
+# "$Id$"
+#
+#   Makefile for the CUPS driver development kit.
+#
+#   Copyright 1997-2000 by Easy Software Products, all rights reserved.
+#
+#   These coded instructions, statements, and computer programs are the
+#   property of Easy Software Products and are protected by Federal
+#   copyright law.  Distribution and use rights are outlined in the file
+#   "LICENSE.txt" which should have been included with this file.  If this
+#   file is missing or damaged please contact Easy Software Products
+#   at:
+#
+#       Attn: CUPS Licensing Information
+#       Easy Software Products
+#       44141 Airport View Drive, Suite 204
+#       Hollywood, Maryland 20636-3111 USA
+#
+#       Voice: (301) 373-9603
+#       EMail: cups-info@cups.org
+#         WWW: http://www.cups.org
+#
+
+#
+# Definitions...
+#
+
+CC	=	@CC@
+CFLAGS	=	@CFLAGS@ @DEFS@
+CHMOD	=	@CHMOD@
+CP	=	@CP@
+LDFLAGS	=	@LDFLAGS@
+LIBS	=	@LIBS@
+MKDIR	=	@MKDIR@
+PREFIX	=	@prefix@
+
+
+#
+# Rules...
+#
+
+.SILENT:
+.SUFFIXES:	.c .o
+
+.c.o:
+	echo Compiling $<
+	$(CC) $(CFLAGS) -c $<
+
+
+#
+# Files...
+#
+
+TARGETS	=	calibrate commandtoepson.o epson epson.dep genppd \
+		rastertoepson
+OBJS	=	calibrate.o commandtoepson.o epson.o genppd.o rastertoepson.o
+
+
+#
+# Make all targets...
+#
+
+all:	$(TARGETS)
+
+
+#
+# Clean all object files...
+#
+
+clean:
+	
+	$(RM) $(OBJS) $(TARGETS)
+
+
+#
+# Install all targets...
+#
+
+install:
+	echo Installing calibration utility...
+	-$(MKDIR) $(PREFIX)/bin
+	$(CP) calibrate $(PREFIX)/bin
+	$(CHMOD) 755 $(PREFIX)/bin/calibrate
+
+	echo Installing EPSON drivers...
+	-$(MKDIR) $(PREFIX)/lib/cups/backend
+	$(CP) epson $(PREFIX)/lib/cups/backend
+	$(CHMOD) 755 $(PREFIX)/lib/cups/backend/epson
+
+	-$(MKDIR) $(PREFIX)/lib/cups/filter
+	$(CP) rastertoepson $(PREFIX)/lib/cups/filter
+	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/rastertoepson
+	$(CP) commandtoepson $(PREFIX)/lib/cups/filter
+	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
+
+	-$(MKDIR) $(PREFIX)/share/cups/model
+	$(CP) -r ppd/* $(PREFIX)/share/cups/model
+	$(CHMOD) 644 $(PREFIX)/share/cups/model/*/*.ppd.gz
+
+
+#
+# calibrate
+#
+
+calibrate:	calibrate.o
+	echo Linking $@...
+	$(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
+
+
+#
+# commandtoepson
+#
+
+commandtoepson:	commandtoepson.o
+	echo Linking $@...
+	$(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
+
+
+#
+# epson
+#
+
+epson:	epson.o
+	echo Linking $@...
+	$(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
+
+
+#
+# epson.dep (for PPD files)
+#
+
+epson.dep:	epson.drv genppd
+	echo Generating EPSON PPDs...
+	./genppd epson.drv
+
+
+#
+# genppd
+#
+
+genppd:	genppd.o
+	echo Linking $@...
+	$(CC) $(LDFLAGS) -o genppd genppd.o $(LIBS)
+
+
+#
+# rastertoepson
+#
+
+rastertoepson:	rastertoepson.o
+	echo Linking $@...
+	$(CC) $(LDFLAGS) -o rastertoepson rastertoepson.o $(LIBS)
+
+
+#
+# End of "$Id$".
+#

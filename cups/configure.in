@@ -1,0 +1,82 @@
+dnl
+dnl "$Id$"
+dnl
+dnl   Makefile for the CUPS driver development kit.
+dnl
+dnl   Copyright 1997-2000 by Easy Software Products, all rights reserved.
+dnl
+dnl   These coded instructions, statements, and computer programs are the
+dnl   property of Easy Software Products and are protected by Federal
+dnl   copyright law.  Distribution and use rights are outlined in the file
+dnl   "LICENSE.txt" which should have been included with this file.  If this
+dnl   file is missing or damaged please contact Easy Software Products
+dnl   at:
+dnl
+dnl       Attn: CUPS Licensing Information
+dnl       Easy Software Products
+dnl       44141 Airport View Drive, Suite 204
+dnl       Hollywood, Maryland 20636-3111 USA
+dnl
+dnl       Voice: (301) 373-9603
+dnl       EMail: cups-info@cups.org
+dnl         WWW: http://www.cups.org
+dnl
+
+dnl Make sure we have the template for the makefile...
+AC_INIT(Makefile.in)
+AC_PREFIX_DEFAULT(/usr)
+
+dnl What OS?
+uname=`uname`
+if test "$uname" = "IRIX64"; then
+    uname="IRIX"
+fi
+
+dnl Checks for programs...
+AC_PROG_CC
+AC_PATH_PROG(CHMOD,chmod)
+AC_PATH_PROG(CP,cp)
+AC_PATH_PROG(MKDIR,mkdir)
+
+dnl Check for libraries...
+AC_CHECK_LIB(socket,socket,
+if test "$uname" != "IRIX"; then
+	LIBS="-lsocket $LIBS"
+else
+	echo "Not using -lsocket since you are running IRIX."
+fi)
+AC_CHECK_LIB(nsl,gethostbyaddr,
+if test "$uname" != "IRIX"; then
+	LIBS="-lnsl $LIBS"
+else
+	echo "Not using -lnsl since you are running IRIX."
+fi)
+
+AC_CHECK_LIB(z,gzgets)
+
+dnl Require CUPS 1.1...
+AC_CHECK_LIB(cups,cupsPrintFiles)
+AC_CHECK_LIB(cupsimage,cupsRasterOpen)
+
+dnl add warnings to compiler switches:
+dnl do this last so messing with switches does not break tests
+if test -n "$GXX"; then
+    CFLAGS="-Wall -fno-rtti $CFLAGS"
+    CXXFLAGS="-Wall -Wno-return-type -fno-rtti $CXXFLAGS"
+
+    # See if GCC supports -fno-exceptions...
+    echo "Testing if GCC supports -fno-exceptions..."
+    OLDCFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -fno-exceptions"
+    AC_TRY_COMPILE(,,
+	echo "Congratulations - your GCC supports exceptions; disabling them for FLTK...",
+	CFLAGS="$OLDCFLAGS"
+	echo "GCC does not support exceptions...")
+fi
+
+dnl Output the makefile...
+AC_OUTPUT(Makefile)
+
+dnl
+dnl End of configure script.
+dnl
