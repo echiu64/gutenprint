@@ -692,6 +692,12 @@
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus Photo R300" driver="escp2-r300">
+        <color value="true"/>
+        <model value="63"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
         <color value="true"/>
         <model value="27"/>
@@ -1085,6 +1091,18 @@
       <printer name="EPSON PM-10000" driver="escp2-pm10000">
         <color value="true"/>
         <model value="41"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PM-D750" driver="escp2-pmd750">
+        <color value="true"/>
+        <model value="63"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON PM-G700" driver="escp2-pmg700">
+        <color value="true"/>
+        <model value="63"/>
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>

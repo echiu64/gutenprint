@@ -101,26 +101,29 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    Finally, a Hybrid UniTone dither algorithm is provided, combining
    the principles of both of the above.
 
-2) Direct printing to CD's is now supported experimentally on the
-   Epson Stylus Photo 900, 950, and 960, and the PM-950C.  To use
-   this, select the Print To CD media source (input slot) and either
-   CD - 5 inch or CD - 3 inch media size.  This is currently not
-   tuned, so it will require some experimentation to derive correct
-   ink levels.  Most likely, the density setting should be reduced
-   somewhat, as the surface of the CD's probably cannot absorb very
-   much ink.
+2) Preliminary support for the Epson Stylus Photo R300.  This printer
+   is not tuned and quality is likely to be poor.
+
+3) Direct printing to CD's is now supported experimentally on the
+   Epson Stylus Photo 900, 950, 960, 2100, 2200, R300, and the
+   PM-950C.  To use this, select the Print To CD media source (input
+   slot) and either CD - 5 inch or CD - 3 inch media size.  This is
+   currently not tuned, so it will require some experimentation to
+   derive correct ink levels.  Most likely, the density setting should
+   be reduced somewhat, as the surface of the CD's probably cannot
+   absorb very much ink.
 
    The CUPS PPD files do not presently enforce the restriction on
    media size.  However, selecting a different media size will cause
    the job to error out early, during parameter verification.
 
-3) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
+4) The CUPS driver has been renamed rastertogimpprint.4.3, and the PPD
    generation program is now named cups-genppd.4.3.  This permits
    installation of multiple versions of Gimp-Print on a system
    (currently a 4.2 and a 4.3 version).  In the future, the CUPS
    programs will be suffixed by the major and minor version numbers.
 
-4) The CUPS driver now enforces that the PPD file must match the exact
+5) The CUPS driver now enforces that the PPD file must match the exact
    version of Gimp-Print installed on the system.  Therefore, when
    installing the CUPS driver it is essential to upgrade your PPD
    files, either by means of Configure Printer or by means of the
@@ -130,7 +133,7 @@ Gimp-Print 4.3.24 contains the following major changes over Gimp-Print
    eliminate a common source of error that can yield unpredictable
    results or difficult-to-diagnose errors.
 
-5) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
+6) The Epson Stylus Photo 2100/2200 now supports 1440x1440 DPI
    printing.  This mode only barely deposits enough ink to fill the
    page on most papers.  However, it prints as fast as 1440x720 DPI
    (although the calculation time is longer) and in some cases offers
@@ -1279,6 +1282,7 @@ EPSON Stylus Photo 1280/1290
 EPSON Stylus Photo 2000P
 EPSON Stylus Photo 2100
 EPSON Stylus Photo 2200
+EPSON Stylus Photo R300
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
@@ -1313,9 +1317,11 @@ EPSON MJ-5100C
 EPSON MJ-6000C
 EPSON MJ-8000C
 EPSON PM-700C
+EPSON PM-G700
 EPSON PM-730C
 EPSON PM-740C	(Experimental)
 EPSON PM-750C
+EPSON PM-D750
 EPSON PM-760C
 EPSON PM-770C
 EPSON PM-780C
@@ -1592,6 +1598,7 @@ Epson Stylus Photo 2100        escp2-2100      EPSON Stylus Photo 2100
 Epson Stylus Photo 2200        escp2-2200      EPSON Stylus Photo 2200
 Epson Stylus Photo EX          escp2-ex        EPSON Stylus Photo EX
 Epson Stylus Photo EX3         escp2-ex3       EPSON Stylus Photo EX3
+Epson Stylus Photo R300        escp2-r300      EPSON Stylus Photo R300
 Epson Stylus Pro 5000          escp2-5000      EPSON Stylus Pro 5000
 Epson Stylus Pro 5500          escp2-5500      EPSON Stylus Pro 5500
 Epson Stylus Pro 7000          escp2-7000      EPSON Stylus Pro 7000
@@ -1626,9 +1633,11 @@ Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-6000C                 escp2-mj6000c   EPSON MJ-6000C
 Epson MJ-8000C                 escp2-mj8000c   EPSON MJ-8000C
 Epson PM-700C                  escp2-pm700c    EPSON PM-700C
+Epson PM-G700                  escp2-pmg700    EPSON PM-G700
 Epson PM-730C                  escp2-pm730c    EPSON PM-730C
 Epson PM-740C                  escp2-pm740c    EPSON PM-740C
 Epson PM-750C                  escp2-pm750c    EPSON PM-750C
+Epson PM-D750                  escp2-pmd750    EPSON PM-D750
 Epson PM-760C                  escp2-pm760c    EPSON PM-760C
 Epson PM-770C                  escp2-pm770c    EPSON PM-770C
 Epson PM-780C                  escp2-pm780c    EPSON PM-780C
@@ -2090,14 +2099,13 @@ Printer-Specific Notes:
       EPSON Stylus Photo 900
       EPSON Stylus Photo 915
       EPSON Stylus Photo 925
-      EPSON Stylus Photo 950
-      EPSON Stylus Photo 960
+      EPSON Stylus Photo 950/960
       EPSON Stylus Photo 1200
       EPSON Stylus Photo 1270
       EPSON Stylus Photo 1280/1290
       EPSON Stylus Photo 2000P
-      EPSON Stylus Photo 2100
-      EPSON Stylus Photo 2200
+      EPSON Stylus Photo 2100/2100
+      EPSON Stylus Photo R300
       EPSON Stylus Scan 2000
       EPSON Stylus Scan 2500
       EPSON Stylus CX-3100

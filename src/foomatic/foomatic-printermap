@@ -181,6 +181,7 @@
 #gptofoo escp2-2200 printer/Epson-Stylus_Photo_2200
 #gptofoo escp2-ex printer/Epson-Stylus_Photo_EX
 #gptofoo escp2-ex3 printer/Epson-Stylus_Photo_EX3
+#gptofoo escp2-r300 printer/Epson-Stylus_Photo_R300
 #gptofoo escp2-5000 printer/Epson-Stylus_Pro_5000
 #gptofoo escp2-5500 printer/Epson-Stylus_Pro_5500
 #gptofoo escp2-7000 printer/Epson-Stylus_Pro_7000
@@ -215,9 +216,11 @@
 #gptofoo escp2-mj6000c printer/Epson-MJ_6000C
 #gptofoo escp2-mj8000c printer/Epson-MJ_8000C
 #gptofoo escp2-pm700c printer/Epson-PM_700C
+#gptofoo escp2-pmg700 printer/Epson-PM_G700
 #gptofoo escp2-pm730c printer/Epson-PM_730C
 #gptofoo escp2-pm740c printer/Epson-PM_740C
 #gptofoo escp2-pm750c printer/Epson-PM_750C
+#gptofoo escp2-pmd750 printer/Epson-PM_D700
 #gptofoo escp2-pm760c printer/Epson-PM_760C
 #gptofoo escp2-pm770c printer/Epson-PM_770C
 #gptofoo escp2-pm780c printer/Epson-PM_780C
