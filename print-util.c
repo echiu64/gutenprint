@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.24  1999/11/12 02:18:32  rlk
+ *   Stubs for dynamic memory allocation
+ *
  *   Revision 1.23  1999/11/12 01:53:37  rlk
  *   Remove silly spurious stuff
  *
@@ -204,7 +207,7 @@
  * Error buffer for dither functions.  This needs to be at least 14xMAXDPI
  * (currently 720) to avoid problems...
  *
- * Want to dynamically allocate this so we can 
+ * Want to dynamically allocate this so we can save memory!
  */
 
 #define ERROR_ROWS 2
@@ -213,12 +216,12 @@ typedef union error
 {
   struct
   {
-    int c[2];
-    int m[2];
-    int y[2];
-    int k[2];
+    int c[ERROR_ROWS];
+    int m[ERROR_ROWS];
+    int y[ERROR_ROWS];
+    int k[ERROR_ROWS];
   } c;
-  int v[4][2];
+  int v[4][ERROR_ROWS];
 } error_t;
 
 error_t *nerror = 0;
