@@ -27,9 +27,26 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-MAINCODE = canon.c color.c dither.c escp2.c lexmark.c pcl.c printers.c ps.c util.c weave.c dither-matrices.c
+MAINCODE = canon.c				\
+	color.c					\
+	dither.c				\
+	escp2.c					\
+	lexmark.c				\
+	pcl.c					\
+	printers.c				\
+	ps.c					\
+	util.c					\
+	weave.c					\
+	dither-matrices.c			\
+	escp2-data.c
 
-MAINHEADERS = print.h print-internal.h print-intl-internal.h quickmatrix257.h ran.367.179.h ran.509.131.h
+MAINHEADERS = print.h				\
+	print-internal.h			\
+	print-intl-internal.h			\
+	quickmatrix257.h			\
+	ran.367.179.h				\
+	ran.509.131.h				\
+	print-escp2.h
 
 MAINFILES = $(MAINCODE) $(MAINHEADERS)
 
@@ -44,9 +61,12 @@ endif
 
 all-local: $(ALL_LOCAL_DEPS)
 
-GHCODE = -e 's/print-printers.c/gdevstp-printers.c/' -e 's/^\\\#include "\(gimp\-\)*\(.*\)\.h"$$/\\\#include "gdevstp-\2.h"/' -e 's/^\\\#include <gimp-print\/gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/'
+GHCODE = -e 's/print-printers.c/gdevstp-printers.c/' -e 's/^\\\#include "\(gimp\-\)*\(.*\)\.h"$$/\\\#include "gdevstp-\2.h"/' -e 's/^\\\#include <gimp-print\/gimp-print\(.*\)\.h>$$/\\\#include "gdevstp-print\1.h"/' -e 's/^\\\#include <print-escp2\.h>$$/\\\#include "gdevstp-print-escp2.h"/'
 
 $(srcdir)/gdevstp-print.h: $(top_srcdir)/include/gimp-print/gimp-print.h
+	sed $(GHCODE) $< > $(srcdir)/$@
+
+$(srcdir)/gdevstp-print-escp2.h: $(top_srcdir)/src/main/print-escp2.h
 	sed $(GHCODE) $< > $(srcdir)/$@
 
 $(srcdir)/gdevstp-print-internal.h: $(top_srcdir)/src/main/gimp-print-internal.h
@@ -82,6 +102,7 @@ CLEANFILES = \
  $(srcdir)/gdevstp-ran.509.131.h \
  $(srcdir)/gdevstp-color.c \
  $(srcdir)/gdevstp-print.h \
+ $(srcdir)/gdevstp-print-escp2.h \
  $(srcdir)/gdevstp-print-internal.h \
  $(srcdir)/gdevstp-print-intl-internal.h \
  $(srcdir)/gdevstp-quickmatrix257.h \
@@ -91,6 +112,7 @@ CLEANFILES = \
  $(srcdir)/gdevstp-dither.c \
  $(srcdir)/gdevstp-dither-matrices.c \
  $(srcdir)/gdevstp-escp2.c \
+ $(srcdir)/gdevstp-escp2-data.c \
  $(srcdir)/gdevstp-lexmark.c \
  $(srcdir)/gdevstp-pcl.c \
  $(srcdir)/gdevstp-ps.c
