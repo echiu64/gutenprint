@@ -71,11 +71,12 @@ panel and then print the resulting document from the
 Preview application (this work-around may not work if you
 use an application other than "Preview" for viewing print
 previews). The solution is to install a PostScript
-interpreter that has a plugin for the <a
+interpreter that has a plugin filter for the <a
 href="http://www.cups.org/">CUPS</a> print spooler. <a
 href="http://sourceforge.net/projects/espgs/">ESP
-Ghostscript</a> is a good choice, but there is not yet a
-pre-built OS X installer available.
+Ghostscript</a> is a good choice, and there is now a
+pre-built OS X installer available at <a href=
+"http://www.allosx.com/1031773924/index_html">All OS X</a>.
 <p>
 <li>
 <h3>
@@ -338,9 +339,9 @@ menu that says "<tt>Copies & Pages</tt>" and choose
 <h3>
 Ok, I found all the settings, but what do they do?
 </h3>
-</p> Please see the <a
+</p> Please see the <! a
 href="http://gimp-print.sourceforge.net/p_FAQ.php3">
-Gimp-Print General FAQ</a> for answers to these questions.
+Gimp-Print General FAQ<! /a> for answers to these questions.
 </ol>
 
 <?require('standard_html_footer.php3');?>
