@@ -2111,26 +2111,22 @@ print_all_inks(dither_t *d, et_chdata_t *cd, int print_inks, int pick, unsigned 
 }
 
 static inline void
-diffuse_error(dither_t *d, int *ndither, int ***error, int aspect, int direction, int do_diffuse)
+diffuse_error(dither_t *d, int *ndither, int ***error, int aspect, int direction)
 {
   int i;
   int fraction, frac_2, frac_3;
   int *err;
+  static const int diff_fact[] = {1, 10, 16, 23, 32};
+  int factor = diff_fact[aspect];
   
-  if (do_diffuse) {
-    for (i=0; i < d->n_channels; i++, ndither++, error++) {
-      fraction = (*ndither + 5) / 10;
-      frac_2 = fraction + fraction;
-      frac_3 = frac_2 + fraction;
-      err = (*error)[1];
-      err[0] += frac_3;
-      err[-aspect] += frac_2;
-      *ndither += (*error)[0][direction] - frac_2 - frac_3;
-    }
-  } else {
-    for (i=0; i<d->n_channels; i++) {
-      *ndither++ += (*error++)[0][direction];
-    }
+  for (i=0; i < d->n_channels; i++, ndither++, error++) {
+    fraction = (*ndither + (factor>>1)) / factor;
+    frac_2 = fraction + fraction;
+    frac_3 = frac_2 + fraction;
+    err = (*error)[1];
+    err[0] += frac_3;
+    err[-direction] += frac_2;
+    *ndither += (*error)[0][direction] - frac_2 - frac_3;
   }
 }
 
@@ -2422,12 +2418,10 @@ stp_dither_black_et(const unsigned short  *gray,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  int		aspect_m1;
   
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
-  aspect_m1 = aspect - 1;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -2445,7 +2439,6 @@ stp_dither_black_et(const unsigned short  *gray,
   terminate = (direction == 1) ? d->dst_width : -1;
   if (direction == -1) {
     gray += d->src_width - 1;
-    aspect = -aspect;
   }
 
   QUANT(6);
@@ -2493,7 +2486,7 @@ stp_dither_black_et(const unsigned short  *gray,
       QUANT(11);
   
       /* Diffuse the error round a bit */
-      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+      diffuse_error(d, ndither, error, aspect, direction);
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, gray, direction, 1, xerror, xmod, error,
@@ -2732,12 +2725,10 @@ stp_dither_cmy_et(const unsigned short  *cmy,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  int		aspect_m1;
   
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
-  aspect_m1 = aspect - 1;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -2755,7 +2746,6 @@ stp_dither_cmy_et(const unsigned short  *cmy,
   terminate = (direction == 1) ? d->dst_width : -1;
   if (direction == -1) {
     cmy += (3 * (d->src_width - 1));
-    aspect = -aspect;
   }
 
   QUANT(6);
@@ -2816,7 +2806,7 @@ stp_dither_cmy_et(const unsigned short  *cmy,
       QUANT(11);
   
       /* Diffuse the error round a bit */
-      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+      diffuse_error(d, ndither, error, aspect, direction);
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
@@ -3214,7 +3204,6 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  int		aspect_m1;
   
   if (!CHANNEL(d, ECOLOR_K).ptrs[0])
     {
@@ -3225,7 +3214,6 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
-  aspect_m1 = aspect - 1;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -3243,7 +3231,6 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   terminate = (direction == 1) ? d->dst_width : -1;
   if (direction == -1) {
     cmy += (3 * (d->src_width - 1));
-    aspect = -aspect;
   }
 
   QUANT(6);
@@ -3348,7 +3335,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       QUANT(11);
   
       /* Diffuse the error round a bit */
-      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+      diffuse_error(d, ndither, error, aspect, direction);
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
@@ -3608,12 +3595,10 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  int		aspect_m1;
   
   if (aspect >= 4) { aspect = 4; }
   else if (aspect >= 2) { aspect = 2; }
   else aspect = 1;
-  aspect_m1 = aspect - 1;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -3631,7 +3616,6 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
   terminate = (direction == 1) ? d->dst_width : -1;
   if (direction == -1) {
     cmyk += (4 * (d->src_width - 1));
-    aspect = -aspect;
   }
 
   QUANT(6);
@@ -3725,7 +3709,7 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
       QUANT(11);
   
       /* Diffuse the error round a bit */
-      diffuse_error(d, ndither, error, aspect, direction, ((x & aspect_m1)==0));
+      diffuse_error(d, ndither, error, aspect, direction);
 
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, cmyk, direction, 4, xerror, xmod, error,
