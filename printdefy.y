@@ -74,6 +74,7 @@ output_the_printer(void)
       printf("    %s,\n", "canon_limit");
       printf("    %s,\n", "canon_print");
       printf("    %s,\n", "canon_default_resolution");
+      printf("    %s,\n", "canon_describe_resolution");
       break;
     case 2:
       printf("    %s,\n", "escp2_parameters");
@@ -82,6 +83,7 @@ output_the_printer(void)
       printf("    %s,\n", "escp2_limit");
       printf("    %s,\n", "escp2_print");
       printf("    %s,\n", "escp2_default_resolution");
+      printf("    %s,\n", "escp2_describe_resolution");
       break;
     case 3:
       printf("    %s,\n", "pcl_parameters");
@@ -90,6 +92,7 @@ output_the_printer(void)
       printf("    %s,\n", "pcl_limit");
       printf("    %s,\n", "pcl_print");
       printf("    %s,\n", "pcl_default_resolution");
+      printf("    %s,\n", "pcl_describe_resolution");
       break;
     case 4:
       printf("    %s,\n", "ps_parameters");
@@ -98,6 +101,7 @@ output_the_printer(void)
       printf("    %s,\n", "ps_limit");
       printf("    %s,\n", "ps_print");
       printf("    %s,\n", "ps_default_resolution");
+      printf("    %s,\n", "ps_describe_resolution");
       break;
     case 5:
       printf("    %s,\n", "lexmark_parameters");
@@ -106,6 +110,7 @@ output_the_printer(void)
       printf("    %s,\n", "lexmark_limit");
       printf("    %s,\n", "lexmark_print");
       printf("    %s,\n", "lexmark_default_resolution");
+      printf("    %s,\n", "lexmark_describe_resolution");
       break;
     default:
       printf("    %s,\n", "NULL");
