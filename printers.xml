@@ -227,7 +227,7 @@
 
 <printer name="HP DeskJet 1220C" driver="pcl-1220">
 <color>
-<model value=900>	# Uses 900 series driver
+<model value=901>	# Uses 900 series driver (large)
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
