@@ -666,6 +666,7 @@ generate_special_channels(const stp_vars_t *v)
 	      /* If only one component is non-zero, we have nothing to do. */
 	      if ((c + m + y) > max)
 		{
+		  int total = c + m + y;
 		  for (j = 1; j < cg->total_channels; j++)
 		    output[j] = 0;
 		  if (c == max)
@@ -693,27 +694,46 @@ generate_special_channels(const stp_vars_t *v)
 			  double where = ((hue - cg->angles[j].hue_angle) /
 					  (cg->angles[j + 1].hue_angle -
 					   cg->angles[j].hue_angle));
+			  int upper, lower, sum;
 			  if (where <= .5)
 			    {
-			      output[cg->angles[j].channel_id] = max;
-			      output[cg->angles[j + 1].channel_id] =
-				max * (where / .5);
+			      lower = max;
+			      upper = max * (where / .5);
 			    }
 			  else
 			    {
-			      output[cg->angles[j].channel_id] =
-				max * ((1.0 - where) / .5);
-			      output[cg->angles[j + 1].channel_id] = max;
+			      lower = max * ((1.0 - where) / .5);
+			      upper = max;
 			    }
+			  sum = upper + lower;
+			  if (sum < total)
+			    /* We need more ink! */
+			    {
+			      int delta = total - sum; /* How much more? */
+			      double frac = (double) delta / total;
+			      c *= frac;
+			      m *= frac;
+			      y *= frac;
+			    }
+			  else
+			    {
+			      if (sum > total)
+				{
+				  double frac = (double) total / sum;
+				  upper *= frac;
+				  lower *= frac;
+				}
+			      c = 0;
+			      m = 0;
+			      y = 0;
+			    }
+			  output[cg->angles[j].channel_id] = lower;
+			  output[cg->angles[j + 1].channel_id] = upper;
+			  output[STP_ECOLOR_C] += c + min;
+			  output[STP_ECOLOR_M] += m + min;
+			  output[STP_ECOLOR_Y] += y + min;
 			  break;
 			}
-		    }
-		  if (min > 0)
-		    {
-		      /* Add the gray component back */
-		      output[STP_ECOLOR_C] += min;
-		      output[STP_ECOLOR_M] += min;
-		      output[STP_ECOLOR_Y] += min;
 		    }
 		}
 	      else
