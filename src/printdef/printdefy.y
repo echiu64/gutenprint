@@ -225,7 +225,7 @@ main(int argc, char **argv)
   for (i = 0; i < nprintfuncs; i++)
     printf("const extern stp_printfuncs_t stp_%s_printfuncs;\n",
 	   printfuncs[i]);
-  printf("const stp_internal_printer_t stp_printer_list[] =\n");
+  printf("static const stp_internal_printer_t stp_printer_list[] =\n");
   printf("{\n");
   retval = yyparse();
   printf("};\n\n");
