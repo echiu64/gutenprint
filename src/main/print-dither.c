@@ -2801,10 +2801,9 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   int		direction = row & 1 ? 1 : -1;
   int		xerror, xstep, xmod;
   int		aspect = d->y_aspect / d->x_aspect;
-  int		diffuse_k1 = 1, diffuse_k2 = 2;
   
-  if (aspect >= 4) { diffuse_k1 = 3; diffuse_k2 = 19; }
-  else if (aspect >= 2) {diffuse_k1 = 2; diffuse_k2 = 7; }
+  if (aspect >= 4) { aspect = 4; }
+  else if (aspect >= 2) { aspect = 2; }
 
 
   length = (d->dst_width + 7) / 8;
@@ -2886,22 +2885,22 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	}
 
 	value = ndither[i] + CHANNEL(d, i).b / 2;		/* Only use half of cmy[] to avoid dark->light problems */
+	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
-	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
 	
 	maxwet = (65536 + d->density) * CHANNEL(d, i).maxdot - wetness[i];
 	if (maxwet < 0) maxwet = 0;
 	maxwet >>= 16;
 
-        dr[i] = find_segment(d, &CHANNEL(d, i), maxwet, CHANNEL(d, i).v);
+        dr[i] = find_segment(d, &CHANNEL(d, i), maxwet, value);
 
-	if (CHANNEL(d, i).v > dr[i]->value[1]) {
+	if (value > dr[i]->value[1]) {
 	  ri[i] = 65535;
-	} else if (CHANNEL(d, i).v < dr[i]->value[0]) {
+	} else if (value < dr[i]->value[0]) {
 	  ri[i] = 0;
 	} else if (dr[i]->value_span != 0) {
-	  ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
+	  ri[i] = (65535 * (value - dr[i]->value[0])) / dr[i]->value_span;
 	  /* Adjust for Eventone here */
 	  if (dr[i]->value[0] == 0) {
 	    int t;
@@ -2988,7 +2987,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
         /* Adjust error values for dither */
 	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).b - printed_black;
         for (i=1; i < NCOLORS; i++) {
-	  ndither[i] += CHANNEL(d, i).b + point[ECOLOR_K] - point[i];
+	  ndither[i] += CHANNEL(d, i).v + point[ECOLOR_K] - point[i];
         }
       }
 
@@ -3023,11 +3022,13 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
         ndither[i] -= fraction;
       }
       */
-      for (i=0; i < NCOLORS; i++) {
-        int fraction = (ndither[i] + 5) / 10;
-	error[i][1][0] += 3 * fraction;
-	error[i][1][-direction] += 2 * fraction;
-	ndither[i] -= 5 * fraction;
+      if ((x & (aspect-1)) == 0) {
+	for (i=0; i < NCOLORS; i++) {
+	  int fraction = (ndither[i] + 5) / 10;
+	  error[i][1][0] += 3 * fraction;
+	  error[i][1][-direction*aspect] += 2 * fraction;
+	  ndither[i] -= 5 * fraction;
+	}
       }
 
       QUANT(12);
