@@ -709,6 +709,22 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_sat_adjustment
   },
 
+  { /* Canon BJC 85 */
+    85,
+    9.5*72, 14*72,
+    90, 720, 360, 2,
+    11, 9, 10, 18,
+    CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
+    CANON_SLOT_ASF1,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_DMT,
+    {-1,1,0,0,-1,-1}, /* max res of 720x360 !! */
+    {1,1,1,1,1,1},
+    CANON_INK(canon_ink_standard),
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
+
   { /* Canon BJC 4300 */
     4300,
     618, 936,      /* 8.58" x 13 " */

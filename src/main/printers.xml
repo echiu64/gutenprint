@@ -53,7 +53,7 @@
 
 <printer name="CANON BJC 85" driver="bjc-85">
 <color>
-<model value=4400>
+<model value=85>
 <gamma value=0.5>
 <density value=0.800>
 <language value=canon>
