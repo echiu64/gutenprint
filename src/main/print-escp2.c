@@ -1308,9 +1308,9 @@ typedef struct escp2_printer_attribute
 #define MODEL_YZEROMARGIN_NO	0x00000ull /* zero margin mode? */
 #define MODEL_YZEROMARGIN_YES	0x80000ull /* (print to the edge of the paper) */
 
-#define MODEL_ENHANCED_MICROWEAVE_MASK	0x80000ull
-#define MODEL_ENHANCED_MICROWEAVE_NO	0x80000ull
-#define MODEL_ENHANCED_MICROWEAVE_YES	0x80000ull
+#define MODEL_ENHANCED_MICROWEAVE_MASK	0x100000ull
+#define MODEL_ENHANCED_MICROWEAVE_NO	0x000000ull
+#define MODEL_ENHANCED_MICROWEAVE_YES	0x100000ull
 
 #define MODEL_INIT			(0)
 #define MODEL_HASBLACK			(1)
