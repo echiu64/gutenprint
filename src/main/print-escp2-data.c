@@ -180,8 +180,8 @@ static const escp2_variable_ink_t photo_4pl_2880_ink =
 
 static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 {
-  { 0.35,  0x1, 1, 1 },
-  { 1.00,  0x1, 0, 3 },
+  { 0.235, 0x1, 1, 1 },
+  { 1.00,  0x1, 0, 4 },
 };
 
 static const escp2_variable_ink_t photo_2pl_2880_ink =
@@ -2064,7 +2064,7 @@ static const escp2_densities_t c3pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
+{ 2.0, 2.0, 0.7, 0.7, 0.40, 0.40, 0.32,  0.32,  0.45,  0.45,  0.52,  0.52,  0.260 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -3153,11 +3153,11 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_YES |
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
-    96, 96, 2, 192, 192, 2,
+    96, 1, 2, 96, 1, 2,
     360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 55, default_head_offset, 0, 0,
+    0, 1, 0, 190, default_head_offset, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &sp780_paper_list, standard_reslist, &photo_inklist,
