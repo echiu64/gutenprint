@@ -265,7 +265,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'V':
       printf("cups-genppd version %s, "
-	     "Copyright (c) 1993-2001 by Easy Software Products.\n\n",
+	     "Copyright (c) 1993-2003 by Easy Software Products and Robert Krawitz.\n\n",
 	     VERSION);
       printf("CUPS PPD PostScript Level:     %d\n", CUPS_PPD_PS_LEVEL);
       printf("Default PPD location (prefix): %s\n", GENPPD_PPD_PREFIX);
