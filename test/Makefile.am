@@ -37,10 +37,10 @@ EXTRA_PROGRAMS = escp2-weavetest printer_options unprint escp2-unprint pcl-unpri
 escp2_weavetest_SOURCES = escp2-weavetest.c
 
 escp2_weavetest.o: escp2_weavetest.c 
-escp2_weavetest_LDADD = $(GIMPPRINT_LIBS)
+escp2_weavetest_LDADD = $(LIBGIMPPRINT_LIBS)
 
 printer_options_SOURCES = printer_options.c
-printer_options_LDADD = -lm $(GIMPPRINT_LIBS)
+printer_options_LDADD = -lm $(LIBGIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
 
@@ -49,9 +49,9 @@ escp2_unprint_SOURCES = escp2-unprint.c
 pcl_unprint_SOURCES = pcl-unprint.c
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = -lm $(GIMPPRINT_LIBS)
+testdither_LDADD = -lm $(LIBGIMPPRINT_LIBS)
 
-$(GIMPPRINT_LIBS):
+$(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../src/main
 
 EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest

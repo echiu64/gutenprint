@@ -51,21 +51,13 @@ libgimpprint_la_SOURCES = \
 	ran.367.179.h \
 	ran.509.131.h
 libgimpprint_la_LIBADD = ../../lib/libprintut.la -lm
-## Uncommment to build an unversioned library (version in soname)
+# Uncommment to build an unversioned library (version in soname)
 libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
-## Uncomment to build a versioned library with MAJOR and MINOR in soname
-##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
-##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
-##	-release $(LT_RELEASE)                                  \
-##	-export-dynamic                                         \
-##	-rpath $(libdir)                                        \
-##	@STRIP_END@
-## Uncomment to build a versioned library with static soname
-##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
+## Uncomment to build a versioned library
+##libgimpprint_la_LDFLAGS = \
 ##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
 ##	-export-dynamic                                         \
-##	-rpath $(libdir)                                        \
-##	@STRIP_END@
+##	-rpath $(libdir)
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = gimpprint.m4

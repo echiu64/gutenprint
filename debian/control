@@ -20,7 +20,7 @@ Description: print plugin for the GIMP
  
 Package: cupsys-driver-gimpprint
 Architecture: any
-Depends: ${shlibs:Depends}, libgimpprint (>= ${Source-Version})
+Depends: ${shlibs:Depends}, cupsys (>= 1.1.4), libgimpprint (>= ${Source-Version})
 Description: gimp-print printer driver for CUPS
  This is Gimp-Print version 4.1.4, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition

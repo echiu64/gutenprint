@@ -48,11 +48,11 @@ print_SOURCES = \
 	gtk_main_window.c \
 	print_gimp.h
 
-print_LDADD = $(GIMP_LIBS) $(GIMPPRINT_LIBS) ../../lib/libprintut.la
+print_LDADD = $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS) ../../lib/libprintut.la
 
-print_DEPENDENCIES = $(GIMPPRINT_LIBS)
+print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
-$(GIMPPRINT_LIBS):
+$(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../main
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)

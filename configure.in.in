@@ -36,19 +36,28 @@ dnl we need to AC_DIVERT_PUSH/AC_DIVERT_POP these variable definitions so they
 dnl are available for $ac_help expansion (don't we all *love* autoconf?)
 AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
 dnl
-dnl Making releases:
-dnl   GIMPPRINT_MICRO_VERSION += 1;
-dnl   GIMPPRINT_INTERFACE_AGE += 1;
-dnl   GIMPPRINT_BINARY_AGE += 1;
-dnl if any functions have been added, set GIMPPRINT_INTERFACE_AGE to 0.
-dnl if backwards compatibility has been broken,
-dnl set GIMPPRINT_BINARY_AGE and GIMPPRINT_INTERFACE_AGE to 0.
+dnl MAKING RELEASES (a step-by-step guide!)
+dnl ===============
+dnl 
+dnl Since the last release:
+dnl 1. if only source code (not the interface) has changed, set
+dnl      GIMPPRINT_MICRO_VERSION += 1;
+dnl      GIMPPRINT_INTERFACE_AGE += 1;
+dnl 2. if any functions have been added, removed, or changed, set
+dnl      GIMPPRINT_INTERFACE_AGE = 0;
+dnl      GIMPPRINT_CURRENT_INTERFACE += 1;
+dnl 3. if interfaces have been added, set
+dnl      GIMPPRINT_BINARY_AGE += 1;
+dnl 4. if interfaces have been removed, set
+dnl      GIMPPRINT_BINARY_AGE = 0;
+dnl
+dnl For more detailed information, see the libtool info documentation.
 dnl
 GIMPPRINT_MAJOR_VERSION=4
 GIMPPRINT_MINOR_VERSION=1
 GIMPPRINT_MICRO_VERSION=4
 GIMPPRINT_CURRENT_INTERFACE=1
-GIMPPRINT_INTERFACE_AGE=0
+GIMPPRINT_INTERFACE_AGE=1
 GIMPPRINT_BINARY_AGE=0
 GIMPPRINT_VERSION=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION.$GIMPPRINT_MICRO_VERSION
 dnl
@@ -64,6 +73,7 @@ AC_SUBST(GIMPPRINT_VERSION)
 AC_DEFINE_UNQUOTED(GIMPPRINT_MAJOR_VERSION,${GIMPPRINT_MAJOR_VERSION})
 AC_DEFINE_UNQUOTED(GIMPPRINT_MINOR_VERSION,${GIMPPRINT_MINOR_VERSION})
 AC_DEFINE_UNQUOTED(GIMPPRINT_MICRO_VERSION,${GIMPPRINT_MICRO_VERSION})
+AC_DEFINE_UNQUOTED(GIMPPRINT_CURRENT_INTERFACE,${GIMPPRINT_CURRENT_INTERFACE})
 AC_DEFINE_UNQUOTED(GIMPPRINT_INTERFACE_AGE,${GIMPPRINT_INTERFACE_AGE})
 AC_DEFINE_UNQUOTED(GIMPPRINT_BINARY_AGE,${GIMPPRINT_BINARY_AGE})
 AC_DEFINE_UNQUOTED(GIMPPRINT_VERSION,${GIMPPRINT_VERSION})
@@ -71,10 +81,8 @@ AC_DEFINE_UNQUOTED(GIMPPRINT_VERSION,${GIMPPRINT_VERSION})
 dnl libtool versioning
 LT_RELEASE=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION
 LT_CURRENT=$GIMPPRINT_CURRENT_INTERFACE
-dnl LT_CURRENT=`expr $GIMPPRINT_MICRO_VERSION - $GIMPPRINT_INTERFACE_AGE`
 LT_REVISION=$GIMPPRINT_INTERFACE_AGE
 LT_AGE=$GIMPPRINT_BINARY_AGE
-dnl LT_AGE=`expr $GIMPPRINT_BINARY_AGE - $GIMPPRINT_INTERFACE_AGE`
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -241,21 +249,6 @@ AM_PROG_LEX
 AC_PATH_PROG(BISON_PROG, bison)
 AC_PATH_PROG(YACC_PROG, yacc)
 
-AC_MSG_CHECKING(whether make is GNU Make)
-STRIP_BEGIN=
-STRIP_END=
-if $ac_make --version 2>/dev/null | grep '^GNU Make ' >/dev/null ; then
-  STRIP_BEGIN='$(strip $(STRIP_DUMMY)'
-  STRIP_END=')'
-  AC_MSG_RESULT(yes)
-else
-  AC_MSG_RESULT(no)
-fi
-dnl some Make 3.79 $(strip ) versions are broken and require an empty arg
-STRIP_DUMMY=
-AC_SUBST(STRIP_DUMMY)
-AC_SUBST(STRIP_BEGIN)
-AC_SUBST(STRIP_END)
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT
@@ -328,6 +321,7 @@ if test x${BUILD_CUPS} = xyes ; then
     CUPS_LIBS="${CUPS_LIBS} -lnsl"
   fi)
   AC_CHECK_LIB(m,pow,
+    GIMPPRINT_LIBS="${GIMPPRINT_LIBS} -lm"
     CUPS_LIBS="${CUPS_LIBS} -lm")
   AC_CHECK_LIB(z,gzgets,
     HAVE_LIBZ=true, HAVE_LIBZ=false)
@@ -394,6 +388,7 @@ if test x${BUILD_CUPS} = xyes ; then
   CUPS_BACKEND_BIN="epson canon"
   CUPS_FILTER_BIN="rastertoprinter commandtoepson commandtocanon"
   CUPS_NOINST_BIN="genppd"
+  CUPS_MAIN="cups-calibrate.8"
   CUPS_PKG="calibrate.ppm"
   CUPS_CONF="command.types"
   CUPS_INSTALL="install-am"
@@ -407,14 +402,16 @@ fi
 if test x${BUILD_GHOST} = xyes ; then
   GHOST_BIN="true"
 fi
-AM_CONDITIONAL(GHOST_BIN, test x${BUILD_GHOST} = xyes)
+AM_CONDITIONAL(BUILD_GHOST, test x${BUILD_GHOST} = xyes)
 if test x${BUILD_ESCPUTIL} = xyes ; then
   ESCPUTIL_BIN="escputil"
+  ESCPUTIL_MAIN="escputil.1"
 fi
 AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
 if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_BIN="libgimpprint.la"
-  GIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
+  MAIN_MAIN="gimpprint-config.1"
+  LIBGIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
   GIMP_PRINT_H="gimp-print.h"
 fi
 if test x${BUILD_TEST} = xyes ; then
@@ -485,17 +482,27 @@ AC_SUBST(CUPS_PKG)
 AC_SUBST(CUPS_CONF)
 AC_SUBST(CUPS_INSTALL)
 AC_SUBST(CUPS_LIBS)
+AC_SUBST(CUPS_MAN)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(ESCPUTIL_BIN)
+AC_SUBST(ESCPUTIL_MAN)
 AC_SUBST(GIMP_BIN)
 AC_SUBST(GIMP_LIBS)
 AC_SUBST(GIMP_PRINT_H)
+AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
+GIMPPRINT_DEPLIBS="${GIMPPRINT_LIBS}"
+AC_SUBST(GIMPPRINT_DEPLIBS)
+AC_SUBST(gimpprint_cflags)
+gimpprint_libs="${GIMPPRINT_LIBS}"
+AC_SUBST(gimpprint_libs)
 AC_SUBST(INCLUDES)
+AC_SUBST(LIBGIMPPRINT_LIBS)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(LTLIBOBJS)
 AC_SUBST(LTALLOCA)
 AC_SUBST(MAIN_BIN)
+AC_SUBST(MAIN_MAN)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(RELEASE_DATE)

@@ -63,9 +63,9 @@ canon_LDADD = $(CUPS_LIBS)
 
 epson_LDADD = $(CUPS_LIBS)
 
-genppd_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
+genppd_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
 
-rastertoprinter_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
+rastertoprinter_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
 
 ## Data
 
@@ -103,7 +103,7 @@ ppd:    genppd
 	-rm -rf ppd
 	./genppd
 
-$(GIMPPRINT_LIBS):
+$(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../main
 
 dist-hook:

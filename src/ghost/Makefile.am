@@ -31,7 +31,7 @@ MAINHEADERS = print.h print-internal.h print-intl-internal.h quickmatrix257.h ra
 
 MAINFILES = $(MAINCODE) $(MAINHEADERS)
 
-if GHOST_BIN
+if BUILD_GHOST
 all-local: $(srcdir)/$(addprefix gdevstp-,$(MAINCODE)) $(srcdir)/$(addprefix gdevstp-,$(MAINHEADERS))
 endif
 

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+gimpprint_libs="@gimpprint_libs@"
+gimpprint_cflags="@gimpprint_cflags@"
+
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 exec_prefix_set=no
@@ -80,11 +83,11 @@ if test "$echo_cflags" = "yes"; then
       if test @includedir@ != /usr/include ; then
         includes=-I@includedir@
       fi
-      echo $includes
+      echo $includes $gimpprint_cflags
 fi
 
 if test "$echo_libs" = "yes"; then
       libdirs=-L@libdir@
-      echo $libdirs -lgimpprint @INTLLIBS@ -lm
+      echo $libdirs -lgimpprint $gimpprint_libs @INTLLIBS@ 
 fi      
 
