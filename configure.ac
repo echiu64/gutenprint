@@ -181,7 +181,7 @@ STP_ARG_WITH_DETAILED(
   [whether to build CUPS driver],
   [(default PREFIX=/usr)],
   [BUILD_CUPS],
-  [(automatic)],
+  [${BUILD_CUPS}],
   [
     yes) [BUILD_CUPS]="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
     no) [BUILD_CUPS]="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
@@ -202,7 +202,7 @@ BUILD_CUPS_PPDS="${BUILD_CUPS}"
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],
                [BUILD_CUPS_PPDS],
-               [(automatic)])
+               [${BUILD_CUPS_PPDS}])
 
 STP_ARG_ENABLE([translated-cups-ppds],
                [build translated CUPS PPD files],
@@ -223,12 +223,12 @@ fi
 STP_ARG_ENABLE([cups-ppds-at-top-level],
 	       [place CUPS PPD files at top level],
 	       [CUPS_PPDS_AT_TOP_LEVEL],
-	       [(no)])
+	       [${CUPS_PPDS_AT_TOP_LEVEL}])
 
 STP_ARG_ENABLE([cups-level3-ppds],
                [generate PostScript level 3 PPD files],
                [USE_LEVEL3_PS],
-               [(automatic)])
+               [${USE_LEVEL3_PS}])
 
 AC_PATH_PROG(FOOMATIC_CONFIGURE, foomatic-configure)
 if test -z "${FOOMATIC_CONFIGURE}" ; then
@@ -239,7 +239,7 @@ fi
 STP_ARG_WITH([foomatic],
              [build foomatic data files],
              [BUILD_FOOMATIC],
-             [(automatic)])
+             [${BUILD_FOOMATIC}])
 
 
 AC_PATH_PROG(FOOMATIC_PPDFILE, foomatic-ppdfile)
@@ -251,7 +251,7 @@ fi
 STP_ARG_WITH([foomatic3],
              [make use of foomatic 3 extra features],
              [BUILD_FOOMATIC_3],
-             [(automatic)])
+             [${BUILD_FOOMATIC_3}])
 
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 
@@ -263,14 +263,14 @@ fi
 STP_ARG_WITH([ghostscript],
              [build Ghostscript driver],
              [BUILD_GHOSTSCRIPT],
-             [(automatic)])
+             [${BUILD_GHOSTSCRIPT}])
 
 STP_ARG_WITH_DETAILED([modules],
                       [],
                       [enable loadable modules],
 	              [(options: ltdl, dlopen, static)],
 	              [WITH_MODULES],
-	              [(automatic)],[
+	              [${WITH_MODULES}],[
     yes) [WITH_MODULES]="yes";  AC_MSG_RESULT([yes]) ;;
     no) [WITH_MODULES]="no";  AC_MSG_RESULT([no]) ;;
     ltdl) [WITH_MODULES]="ltdl";  AC_MSG_RESULT([ltdl]) ;;
@@ -345,12 +345,12 @@ AM_PATH_GTK(1.2.0,
 STP_ARG_WITH([gimp],
              [build GIMP Print plugin],
              [BUILD_GIMP],
-             [(automatic)])
+             [${BUILD_GIMP}])
 
 STP_ARG_ENABLE([libgimpprintui],
                [build Gimp-Print user interface library],
                [BUILD_LIBGIMPPRINTUI],
-               [(automatic)])
+               [${BUILD_LIBGIMPPRINTUI}])
 
 STP_ARG_ENABLE([samples],
                [install sample images],
@@ -370,7 +370,7 @@ STP_ARG_ENABLE([escputil],
 STP_ARG_ENABLE([testpattern],
                [build testpattern generator],
                [BUILD_TESTPATTERN],
-               [(automatic)])
+               [${BUILD_TESTPATTERN}])
 
 STP_ARG_ENABLE([test],
                [build test programs],
