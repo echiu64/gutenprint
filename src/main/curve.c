@@ -33,6 +33,7 @@
 #include <limits.h>
 
 #define COOKIE_CURVE 0x1ce0b247
+static const int curve_point_limit = 1048576;
 
 typedef struct
 {
@@ -257,8 +258,9 @@ set_curve_points(stp_internal_curve_t *curve, size_t points)
 {
   if (points < 2)
     return 0;
-  if (points > 65536 ||
-      (curve->wrap_mode == STP_CURVE_WRAP_AROUND && points > 65535))
+  if (points > curve_point_limit ||
+      (curve->wrap_mode == STP_CURVE_WRAP_AROUND &&
+       points > curve_point_limit - 1))
     return 0;
   clear_curve_data(curve);
   curve->point_count = points;
@@ -456,7 +458,7 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
     return 0;
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
     real_count++;
-  if (real_count > 65536)
+  if (real_count > curve_point_limit)
     return 0;
 
   /* Validate the data before we commit to it. */
@@ -1077,7 +1079,7 @@ stp_curve_resample(stp_curve_t curve, size_t points)
       limit++;
       old++;
     }
-  if (limit > 65536)
+  if (limit > curve_point_limit)
     return 0;
   if (old < 0)
     old = 1;
@@ -1126,10 +1128,6 @@ gcd(unsigned a, unsigned b)
     }
 }
 
-/*
- * a and be must be < 65536.  However, in the context in which this
- * is used this will always be true.
- */
 static unsigned
 lcm(unsigned a, unsigned b)
 {
@@ -1138,7 +1136,13 @@ lcm(unsigned a, unsigned b)
   else if (a * b == 0)
     return a > b ? a : b;
   else
-    return a * b / gcd(a, b);
+    {
+      double rval = (double) a / gcd(a, b) * b;
+      if (rval > curve_point_limit)
+	return curve_point_limit;
+      else
+	return rval;
+    }
 }
 
 static int
@@ -1216,8 +1220,9 @@ stp_curve_compose(stp_curve_t *retval,
       if (stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND)
 	points--;
     }
-  if (points < 2 || points > 65536 ||
-      ((stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND) && points > 65535))
+  if (points < 2 || points > curve_point_limit ||
+      ((stp_curve_get_wrap(a) == STP_CURVE_WRAP_AROUND) &&
+       points > curve_point_limit - 1))
     return 0;
 
   if (gamma_a && gamma_b && gamma_a * gamma_b > 0 &&
