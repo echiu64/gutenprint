@@ -90,12 +90,12 @@ gimp_dither_algo_callback (GtkWidget *widget,
     gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
   int i;
 
-  for (i = 0; i < stp_dither_algorithm_count(); i ++)
-    if (strcasecmp(new_algo, stp_dither_algorithm_text(i)) == 0)
-    {
-      stp_set_dither_algorithm(*pv, stp_dither_algorithm_name(i));
-      break;
-    }
+  for (i = 0; i < stp_dither_algorithm_count (); i ++)
+    if (strcasecmp (new_algo, stp_dither_algorithm_text (i)) == 0)
+      {
+        stp_set_dither_algorithm (*pv, stp_dither_algorithm_name (i));
+        break;
+      }
 }
 
 void
@@ -105,24 +105,25 @@ gimp_build_dither_combo (void)
   stp_param_t *vec = xmalloc(sizeof(stp_param_t) * stp_dither_algorithm_count());
 
   for (i = 0; i < stp_dither_algorithm_count(); i++)
-  {
-    vec[i].name = c_strdup(stp_dither_algorithm_name(i));
-    vec[i].text = c_strdup(stp_dither_algorithm_text(i));
-  }
+    {
+      vec[i].name = c_strdup (stp_dither_algorithm_name (i));
+      vec[i].text = c_strdup (stp_dither_algorithm_text (i));
+    }
 
   gimp_plist_build_combo (dither_algo_combo,
-			  stp_dither_algorithm_count(),
+			  stp_dither_algorithm_count (),
 			  vec,
-			  stp_get_dither_algorithm(*pv),
-			  stp_default_dither_algorithm(),
+			  stp_get_dither_algorithm (*pv),
+			  stp_default_dither_algorithm (),
 			  &gimp_dither_algo_callback,
 			  &dither_algo_callback_id);
-  for (i = 0; i < stp_dither_algorithm_count(); i++)
-  {
-    free((void *)vec[i].name);
-    free((void *)vec[i].text);
-  }
-  free(vec);
+
+  for (i = 0; i < stp_dither_algorithm_count (); i++)
+    {
+      free ((void *) vec[i].name);
+      free ((void *) vec[i].text);
+    }
+  free (vec);
 }
 
 void
@@ -177,8 +178,8 @@ gimp_create_color_adjust_window (void)
 
   thumbnail_w = THUMBNAIL_MAXW;
   thumbnail_h = THUMBNAIL_MAXH;
-  thumbnail_data = gimp_image_get_thumbnail_data(image_ID, &thumbnail_w,
-						 &thumbnail_h, &thumbnail_bpp);
+  thumbnail_data = gimp_image_get_thumbnail_data (image_ID, &thumbnail_w,
+                                                  &thumbnail_h, &thumbnail_bpp);
 
   /*
    * thumbnail_w and thumbnail_h have now been adjusted to the actual
@@ -191,12 +192,13 @@ gimp_create_color_adjust_window (void)
   gimp_color_adjust_dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",
 		     gimp_standard_help_func, "filters/print.html",
-		     GTK_WIN_POS_MOUSE,
-		     FALSE, TRUE, FALSE,
+		     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
+
 		     _("Set Defaults"), gimp_set_color_defaults,
 		     NULL, NULL, NULL, FALSE, FALSE,
 		     _("Close"), gtk_widget_hide,
 		     NULL, 1, NULL, TRUE, TRUE,
+
 		     NULL);
 
   table = gtk_table_new (10, 3, FALSE);
@@ -214,20 +216,21 @@ gimp_create_color_adjust_window (void)
    * Drawing area for color swatch feedback display...
    */
 
-  swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
-  event_box = gtk_event_box_new();
-  gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(swatch));
-  gimp_help_set_help_data(GTK_WIDGET(event_box),
-			  _("Image preview"), _("Image preview"));
-  gtk_widget_show(GTK_WIDGET(event_box));
-  gtk_drawing_area_size (swatch, SWATCH_W, SWATCH_H);
+  event_box = gtk_event_box_new ();
+  gtk_widget_show (GTK_WIDGET (event_box));
   gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (event_box),
                     0, 3, 0, 1, 0, 0, 0, 0);
+
+  swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
+  gtk_widget_set_events (GTK_WIDGET (swatch), GDK_EXPOSURE_MASK);
+  gtk_drawing_area_size (swatch, SWATCH_W, SWATCH_H);
+  gtk_container_add (GTK_CONTAINER (event_box), GTK_WIDGET (swatch));
+  gtk_widget_show (GTK_WIDGET (swatch));
+
+  gimp_help_set_help_data (GTK_WIDGET (event_box), _("Image preview"), NULL);
   gtk_signal_connect (GTK_OBJECT (swatch), "expose_event",
                       GTK_SIGNAL_FUNC (gimp_redraw_color_swatch),
                       NULL);
-  gtk_widget_show (GTK_WIDGET (swatch));
-  gtk_widget_set_events (GTK_WIDGET (swatch), GDK_EXPOSURE_MASK);
 
   /*
    * Brightness slider...
@@ -235,17 +238,16 @@ gimp_create_color_adjust_window (void)
 
   brightness_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 1, _("Brightness:"), 200, 0,
-                          stp_get_brightness(defvars),
-			  stp_get_brightness(lower),
-			  stp_get_brightness(upper),
-			  stp_get_brightness(defvars) / 100,
-			  stp_get_brightness(defvars) / 10,
+                          stp_get_brightness (defvars),
+			  stp_get_brightness (lower),
+			  stp_get_brightness (upper),
+			  stp_get_brightness (defvars) / 100,
+			  stp_get_brightness (defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(brightness_adjustment,
-			 _("Set the brightness of the print.\n"
-			   "0 is solid black, 2 is solid white"),
-			 _("Set the brightness of the print.\n"
-			   "0 is solid black, 2 is solid white"));
+  set_adjustment_tooltip (brightness_adjustment,
+                          _("Set the brightness of the print.\n"
+                            "0 is solid black, 2 is solid white"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (brightness_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_brightness_update),
                       NULL);
@@ -256,15 +258,15 @@ gimp_create_color_adjust_window (void)
 
   contrast_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 2, _("Contrast:"), 200, 0,
-                          stp_get_contrast(defvars),
-			  stp_get_contrast(lower),
-			  stp_get_contrast(upper),
-			  stp_get_contrast(defvars) / 100,
-			  stp_get_contrast(defvars) / 10,
+                          stp_get_contrast (defvars),
+			  stp_get_contrast (lower),
+			  stp_get_contrast (upper),
+			  stp_get_contrast (defvars) / 100,
+			  stp_get_contrast (defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(contrast_adjustment,
-			 _("Set the contrast of the print"),
-			 _("Set the contrast of the print"));
+  set_adjustment_tooltip (contrast_adjustment,
+                          _("Set the contrast of the print"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (contrast_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_contrast_update),
                       NULL);
@@ -275,15 +277,15 @@ gimp_create_color_adjust_window (void)
 
   cyan_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 3, _("Cyan:"), 200, 0,
-                          stp_get_cyan(defvars),
-			  stp_get_cyan(lower),
-			  stp_get_cyan(upper),
-			  stp_get_cyan(defvars) / 100,
-			  stp_get_cyan(defvars) / 10,
+                          stp_get_cyan (defvars),
+			  stp_get_cyan (lower),
+			  stp_get_cyan (upper),
+			  stp_get_cyan (defvars) / 100,
+			  stp_get_cyan (defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(cyan_adjustment,
-			 _("Adjust the cyan balance of the print"),
-			 _("Adjust the cyan balance of the print"));
+  set_adjustment_tooltip (cyan_adjustment,
+                          _("Adjust the cyan balance of the print"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (cyan_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_cyan_update),
                       NULL);
@@ -294,15 +296,15 @@ gimp_create_color_adjust_window (void)
 
   magenta_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 4, _("Magenta:"), 200, 0,
-                          stp_get_magenta(defvars),
-			  stp_get_magenta(lower),
-			  stp_get_magenta(upper),
-			  stp_get_magenta(defvars) / 100,
-			  stp_get_magenta(defvars) / 10,
+                          stp_get_magenta (defvars),
+			  stp_get_magenta (lower),
+			  stp_get_magenta (upper),
+			  stp_get_magenta (defvars) / 100,
+			  stp_get_magenta (defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(magenta_adjustment,
-			 _("Adjust the magenta balance of the print"),
-			 _("Adjust the magenta balance of the print"));
+  set_adjustment_tooltip (magenta_adjustment,
+                          _("Adjust the magenta balance of the print"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (magenta_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_magenta_update),
                       NULL);
@@ -313,15 +315,15 @@ gimp_create_color_adjust_window (void)
 
   yellow_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 5, _("Yellow:"), 200, 0,
-                          stp_get_yellow(defvars),
-			  stp_get_yellow(lower),
-			  stp_get_yellow(upper),
-			  stp_get_yellow(defvars) / 100,
-			  stp_get_yellow(defvars) / 10,
+                          stp_get_yellow (defvars),
+			  stp_get_yellow (lower),
+			  stp_get_yellow (upper),
+			  stp_get_yellow (defvars) / 100,
+			  stp_get_yellow (defvars) / 10,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(yellow_adjustment,
-			 _("Adjust the yellow balance of the print"),
-			 _("Adjust the yellow balance of the print"));
+  set_adjustment_tooltip (yellow_adjustment,
+                          _("Adjust the yellow balance of the print"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (yellow_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_yellow_update),
                       NULL);
@@ -332,19 +334,17 @@ gimp_create_color_adjust_window (void)
 
   saturation_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 6, _("Saturation:"), 200, 0,
-                          stp_get_saturation(defvars),
-			  stp_get_saturation(lower),
-			  stp_get_saturation(upper),
-			  stp_get_saturation(defvars) / 1000,
-			  stp_get_saturation(defvars) / 100,
+                          stp_get_saturation (defvars),
+			  stp_get_saturation (lower),
+			  stp_get_saturation (upper),
+			  stp_get_saturation (defvars) / 1000,
+			  stp_get_saturation (defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(saturation_adjustment,
-			 _("Adjust the saturation (color balance) of the print\n"
-			   "Use zero saturation to produce grayscale output "
-			   "using color and black inks"),
-			 _("Adjust the saturation (color balance) of the print\n"
-			   "Use zero saturation to produce grayscale output "
-			   "using color and black inks"));
+  set_adjustment_tooltip (saturation_adjustment,
+                          _("Adjust the saturation (color balance) of the print\n"
+                            "Use zero saturation to produce grayscale output "
+                            "using color and black inks"),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (saturation_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_saturation_update),
                       NULL);
@@ -355,21 +355,18 @@ gimp_create_color_adjust_window (void)
 
   density_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 7, _("Density:"), 200, 0,
-                          stp_get_density(defvars),
-			  stp_get_density(lower),
-			  stp_get_density(upper),
-			  stp_get_density(defvars) / 1000,
-			  stp_get_density(defvars) / 100,
+                          stp_get_density (defvars),
+			  stp_get_density (lower),
+			  stp_get_density (upper),
+			  stp_get_density (defvars) / 1000,
+			  stp_get_density (defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(density_adjustment,
-			 _("Adjust the density (amount of ink) of the print. "
-			   "Reduce the density if the ink bleeds through the "
-			   "paper or smears; increase the density if black "
-			   "regions are not solid."),
-			 _("Adjust the density (amount of ink) of the print. "
-			   "Reduce the density if the ink bleeds through the "
-			   "paper or smears; increase the density if black "
-			   "regions are not solid."));
+  set_adjustment_tooltip (density_adjustment,
+                          _("Adjust the density (amount of ink) of the print. "
+                            "Reduce the density if the ink bleeds through the "
+                            "paper or smears; increase the density if black "
+                            "regions are not solid."),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (density_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_density_update),
                       NULL);
@@ -380,23 +377,19 @@ gimp_create_color_adjust_window (void)
 
   gamma_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 8, _("Gamma:"), 200, 0,
-                          stp_get_gamma(defvars),
-			  stp_get_gamma(lower),
-			  stp_get_gamma(upper),
-			  stp_get_gamma(defvars) / 1000,
-			  stp_get_gamma(defvars) / 100,
+                          stp_get_gamma (defvars),
+			  stp_get_gamma (lower),
+			  stp_get_gamma (upper),
+			  stp_get_gamma (defvars) / 1000,
+			  stp_get_gamma (defvars) / 100,
 			  3, TRUE, 0, 0, NULL, NULL);
-  set_adjustment_tooltip(gamma_adjustment,
-			 _("Adjust the gamma of the print. Larger values will "
-			   "produce a generally brighter print, while smaller "
-			   "values will produce a generally darker print. "
-			   "Black and white will remain the same, unlike with "
-			   "the brightness adjustment."),
-			 _("Adjust the gamma of the print. Larger values will "
-			   "produce a generally brighter print, while smaller "
-			   "values will produce a generally darker print. "
-			   "Black and white will remain the same, unlike with "
-			   "the brightness adjustment."));
+  set_adjustment_tooltip (gamma_adjustment,
+                          _("Adjust the gamma of the print. Larger values will "
+                            "produce a generally brighter print, while smaller "
+                            "values will produce a generally darker print. "
+                            "Black and white will remain the same, unlike with "
+                            "the brightness adjustment."),
+                          NULL);
   gtk_signal_connect (GTK_OBJECT (gamma_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_gamma_update),
                       NULL);
@@ -404,32 +397,27 @@ gimp_create_color_adjust_window (void)
   /*
    * Dither algorithm option combo...
    */
-  dither_algo_combo = gtk_combo_new ();
-  event_box = gtk_event_box_new();
-  gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(dither_algo_combo));
-  gtk_widget_show(GTK_WIDGET(event_box));
-  gimp_help_set_help_data(GTK_WIDGET(event_box),
-			  _("Choose the dither algorithm to be used.\n"
-			  "Adaptive Hybrid usually produces the best "
-			  "all-around quality.\n"
-			  "Ordered is faster and produces almost as good "
-			  "quality on photographs.\n"
-			  "Fast and Very Fast are considerably faster, and "
-			  "work well for text and line art.\n"
-			  "Hybrid Floyd-Steinberg generally produces "
-			  "inferior output."),
-			  _("Choose the dither algorithm to be used.\n"
-			  "Adaptive Hybrid usually produces the best "
-			  "all-around quality.\n"
-			  "Ordered is faster and produces almost as good "
-			  "quality on photographs.\n"
-			  "Fast and Very Fast are considerably faster, and "
-			  "work well for text and line art.\n"
-			  "Hybrid Floyd-Steinberg generally produces "
-			  "inferior output."));
+
+  event_box = gtk_event_box_new ();
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 9,
                              _("Dither Algorithm:"), 1.0, 0.5,
                              event_box, 1, TRUE);
+
+  dither_algo_combo = gtk_combo_new ();
+  gtk_container_add (GTK_CONTAINER(event_box), dither_algo_combo);
+  gtk_widget_show (dither_algo_combo);
+
+  gimp_help_set_help_data (GTK_WIDGET (event_box),
+                           _("Choose the dither algorithm to be used.\n"
+                             "Adaptive Hybrid usually produces the best "
+                             "all-around quality.\n"
+                             "Ordered is faster and produces almost as good "
+                             "quality on photographs.\n"
+                             "Fast and Very Fast are considerably faster, and "
+                             "work well for text and line art.\n"
+                             "Hybrid Floyd-Steinberg generally produces "
+                             "inferior output."),
+                           NULL);
 
   gimp_build_dither_combo ();
 }
@@ -437,10 +425,10 @@ gimp_create_color_adjust_window (void)
 static void
 gimp_brightness_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_brightness(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+  if (stp_get_brightness (*pv) != adjustment->value)
     {
-      stp_set_brightness(*pv, adjustment->value);
+      stp_set_brightness (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -448,10 +436,11 @@ gimp_brightness_update (GtkAdjustment *adjustment)
 static void
 gimp_contrast_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_contrast(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_contrast (*pv) != adjustment->value)
     {
-      stp_set_contrast(*pv, adjustment->value);
+      stp_set_contrast (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -459,10 +448,11 @@ gimp_contrast_update (GtkAdjustment *adjustment)
 static void
 gimp_cyan_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_cyan(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_cyan (*pv) != adjustment->value)
     {
-      stp_set_cyan(*pv, adjustment->value);
+      stp_set_cyan (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -470,10 +460,11 @@ gimp_cyan_update (GtkAdjustment *adjustment)
 static void
 gimp_magenta_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_magenta(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_magenta (*pv) != adjustment->value)
     {
-      stp_set_magenta(*pv, adjustment->value);
+      stp_set_magenta (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -481,10 +472,11 @@ gimp_magenta_update (GtkAdjustment *adjustment)
 static void
 gimp_yellow_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_yellow(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_yellow (*pv) != adjustment->value)
     {
-      stp_set_yellow(*pv, adjustment->value);
+      stp_set_yellow (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -492,10 +484,11 @@ gimp_yellow_update (GtkAdjustment *adjustment)
 static void
 gimp_saturation_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_saturation(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_saturation (*pv) != adjustment->value)
     {
-      stp_set_saturation(*pv, adjustment->value);
+      stp_set_saturation (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
@@ -503,68 +496,71 @@ gimp_saturation_update (GtkAdjustment *adjustment)
 static void
 gimp_density_update (GtkAdjustment *adjustment)
 {
-  if (stp_get_density(*pv) != adjustment->value)
+  if (stp_get_density (*pv) != adjustment->value)
     {
-      stp_set_density(*pv, adjustment->value);
+      stp_set_density (*pv, adjustment->value);
     }
 }
 
 static void
 gimp_gamma_update (GtkAdjustment *adjustment)
 {
-  gimp_invalidate_preview_thumbnail();
-  if (stp_get_gamma(*pv) != adjustment->value)
+  gimp_invalidate_preview_thumbnail ();
+
+  if (stp_get_gamma (*pv) != adjustment->value)
     {
-      stp_set_gamma(*pv, adjustment->value);
+      stp_set_gamma (*pv, adjustment->value);
       gimp_update_adjusted_thumbnail ();
     }
 }
 
 static void
-gimp_set_adjustment_active(GtkObject *adj, int active)
+gimp_set_adjustment_active (GtkObject *adj,
+                            gboolean   active)
 {
-  gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_LABEL(adj)), active);
-  gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SCALE(adj)), active);
-  gtk_widget_set_sensitive(GTK_WIDGET(GIMP_SCALE_ENTRY_SPINBUTTON(adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (GIMP_SCALE_ENTRY_LABEL (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (GIMP_SCALE_ENTRY_SCALE (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (GIMP_SCALE_ENTRY_SPINBUTTON (adj)),
+                            active);
 }
 
 void
-gimp_set_color_sliders_active(int active)
+gimp_set_color_sliders_active (gboolean active)
 {
-  gimp_set_adjustment_active(cyan_adjustment, active);
-  gimp_set_adjustment_active(magenta_adjustment, active);
-  gimp_set_adjustment_active(yellow_adjustment, active);
-  gimp_set_adjustment_active(saturation_adjustment, active);
+  gimp_set_adjustment_active (cyan_adjustment, active);
+  gimp_set_adjustment_active (magenta_adjustment, active);
+  gimp_set_adjustment_active (yellow_adjustment, active);
+  gimp_set_adjustment_active (saturation_adjustment, active);
 }
 
 void
 gimp_do_color_updates (void)
 {
   gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment),
-			    stp_get_brightness(*pv));
+			    stp_get_brightness (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment),
-			    stp_get_gamma(*pv));
+			    stp_get_gamma (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
-			    stp_get_contrast(*pv));
+			    stp_get_contrast (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (cyan_adjustment),
-			    stp_get_cyan(*pv));
+			    stp_get_cyan (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (magenta_adjustment),
-			    stp_get_magenta(*pv));
+			    stp_get_magenta (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (yellow_adjustment),
-			    stp_get_yellow(*pv));
+			    stp_get_yellow (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
-			    stp_get_saturation(*pv));
+			    stp_get_saturation (*pv));
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
-			    stp_get_density(*pv));
+			    stp_get_density (*pv));
 
-  gimp_update_adjusted_thumbnail();
+  gimp_update_adjusted_thumbnail ();
 }
 
 void
@@ -572,14 +568,14 @@ gimp_set_color_defaults (void)
 {
   const stp_vars_t defvars = stp_default_settings ();
 
-  stp_set_brightness(*pv, stp_get_brightness(defvars));
-  stp_set_gamma(*pv, stp_get_gamma(defvars));
-  stp_set_contrast(*pv, stp_get_contrast(defvars));
-  stp_set_cyan(*pv, stp_get_cyan(defvars));
-  stp_set_magenta(*pv, stp_get_magenta(defvars));
-  stp_set_yellow(*pv, stp_get_yellow(defvars));
-  stp_set_saturation(*pv, stp_get_saturation(defvars));
-  stp_set_density(*pv, stp_get_density(defvars));
+  stp_set_brightness (*pv, stp_get_brightness (defvars));
+  stp_set_gamma (*pv, stp_get_gamma (defvars));
+  stp_set_contrast (*pv, stp_get_contrast (defvars));
+  stp_set_cyan (*pv, stp_get_cyan (defvars));
+  stp_set_magenta (*pv, stp_get_magenta (defvars));
+  stp_set_yellow (*pv, stp_get_yellow (defvars));
+  stp_set_saturation (*pv, stp_get_saturation (defvars));
+  stp_set_density (*pv, stp_get_density (defvars));
 
   gimp_do_color_updates ();
 }
