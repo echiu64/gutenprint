@@ -28,7 +28,6 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-INCLUDES = $(GIMPPRINT_CFLAGS)
 PACKAGE = cups
 
 bindir = @cups_bindir@
@@ -42,7 +41,7 @@ cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model/gimp-print
 
-DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
+DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)/gimp-print\" -DGIMP_PRINT_VERSION=\"$(VERSION)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS)
 
 
 ## Programs

@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-INCLUDES = @LIBXML_CFLAGS@
+INCLUDES = $(AM_CFLAGS) @LIBXML_CFLAGS@
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
 TESTS = run-testpattern

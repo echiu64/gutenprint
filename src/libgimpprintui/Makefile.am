@@ -48,7 +48,7 @@ libgimpprintui_la_SOURCES =			\
 
 libgimpprintui_la_LIBADD = $(GIMPPRINT_UI_LIBDEPS)
 # Uncommment to build an unversioned library (version in soname)
-libgimpprintui_la_CFLAGS = $(GIMPPRINT_CFLAGS) $(GTK_CFLAGS) $(AM_CFLAGS)
+libgimpprintui_la_CFLAGS = $(AM_CFLAGS) $(GIMPPRINT_CFLAGS) $(GTK_CFLAGS)
 libgimpprintui_la_LDFLAGS = -release $(GIMPPRINT_VERSION) -rpath $(libdir)
 # Uncomment to build a versioned library
 #libgimpprintui_la_LDFLAGS = \

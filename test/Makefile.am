@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-INCLUDES = -I$(top_srcdir)/src/main $(GIMPPRINT_CFLAGS)
+INCLUDES = -I$(top_srcdir)/src/main $(AM_CFLAGS) $(GIMPPRINT_CFLAGS)
 
 TESTS = curve run-testdither run-weavetest
 
