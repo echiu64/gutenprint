@@ -24,12 +24,11 @@ Gimp-Print currently contains over 200 drivers supporting in excess of
 600 printer models.
 
 The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
-1.2 line (more recent versions of the GIMP, such as 1.3 and 2.0, are
-not supported at present).  You may need to install packages named
-"gimp-devel", "gtk-devel", and "glib-devel" (or similar equivalents)
-on many systems.  This plug-in will work with any printing system, and
-offers a comprehensive user interface to control all aspects of the
-printing process.
+1.2 line, or the GIMP 2.0 or 2.1.  You may need to install packages
+named "gimp-devel", "gtk-devel", and "glib-devel" (or similar
+equivalents) on many systems.  This plug-in will work with any
+printing system, and offers a comprehensive user interface to control
+all aspects of the printing process.
 
 The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
 install a package named "cups-devel" or similar on many systems.
@@ -105,12 +104,21 @@ These release notes contain the following sections:
      Finally, color->black generation is now done correctly for RGB
      and whitescale inputs.
 
-  2) The GIMP plugin now saves the printc file in a form that can be
+  2) An experimental Print plugin for the GIMP 2.0 is now provided.
+     This plugin is newly developed and is likely less stable than the
+     older plugin for the GIMP 1.2.
+
+     NOTE: This plugin will eventually be migrated to the GIMP source
+     tree for the GIMP 2.2 and beyond.  Therefore, this plugin may be
+     removed from the Gimp-Print source tree in the future, or
+     restricted to use with the GIMP 2.0 only.
+
+  3) The GIMP plugin now saves the printc file in a form that can be
      read back in any locale.  Previously, the file was not always
      saved in a form that could be read back in all locales (bug
      955436).
 
-  3) Printer detection and command logic in the GIMP plugin has been
+  4) Printer detection and command logic in the GIMP plugin has been
      completely reworked as follows:
 
      * The plugin now uses a much faster technique to discover
@@ -137,44 +145,10 @@ These release notes contain the following sections:
        printrc file in this release will yield a file that cannot be
        read by earlier releases.
 
-  4) A compiler warning/error in the GIMP plugin was fixed (bug
+  5) A compiler warning/error in the GIMP plugin was fixed (bug
      964781).
 
-  5) A compile error on systems lacking the "alphasort" function has
-     been fixed (bug 960211).  This includes at least some versions of
-     Solaris.
-
-  6) The page widths for the HP DesignJet 2500 and 3500 printers have
-     been fixed to be 36 and 54 inches respectively.  Previously both
-     printers were specified to be 44 inches wide.
-
-  7) (bug 972014) A bug in the Postscript output driver causes the
-     GIMP plugin to misbehave with certain PPD files.  This bug is not
-     related to locale.  At least certain PPD files from the Epson
-     PIPS drivers are known to result in this problem.
-
-  8) Build problems when VPATH is used have been fixed.
-
-  9) The cups-genppdupdate.5.0 script now exits with a success status
-     if no PPD files have been updated but there are otherwise no
-     errors.  This permits the script to run successfully if there are
-     no Gimp-Print printer queues defined or all Gimp-Print-based
-     queues are using Gimp-Print 4.2 PPD files.  This could cause
-     upgrade scripts to fail inappropriately.
-
-  10) The stp_string_list_t data type now uses forward declaration and
-     pointers.  This was missed in the API cleanup in 5.0.0-alpha3.
-
-  11) The API now offers piecewise curves (using linear or cubic spline
-     interpolation).  None of the current applications can utilize
-     these curves properly, however.  Another problem with spline
-     interpolation has been fixed.
-
-  12) Additional automated testing of the color code has been added,
-     and various bugs in the color code in certain cases have been
-     fixed as a result.
-
-  13) Duplex printing is now supported on an experimental basis in the
+  6) Duplex printing is now supported on an experimental basis in the
      PCL driver for the HP LaserJet 4, 5, 6 series (and other
      equivalents that use the "pcl-4" driver) and HP DeskJet 900
      series (and other equivalents that use the "pcl-900"
@@ -197,6 +171,43 @@ These release notes contain the following sections:
      and a LexMark Optra T.
 
      The "pcl-900" driver has not been tested on a real printer.
+
+  7) The page widths for the HP DesignJet 2500 and 3500 printers have
+     been fixed to be 36 and 54 inches respectively.  Previously both
+     printers were specified to be 44 inches wide.
+
+  8) (bug 972014) A bug in the Postscript output driver causes the
+     GIMP plugin to misbehave with certain PPD files.  This bug is not
+     related to locale.  At least certain PPD files from the Epson
+     PIPS drivers are known to result in this problem.
+
+  9) The Olympus P400 printer now works correctly from CUPS or
+     Ghostscript (bug 972478).
+
+  10) The cups-genppdupdate.5.0 script now exits with a success status
+     if no PPD files have been updated but there are otherwise no
+     errors.  This permits the script to run successfully if there are
+     no Gimp-Print printer queues defined or all Gimp-Print-based
+     queues are using Gimp-Print 4.2 PPD files.  This could cause
+     upgrade scripts to fail inappropriately.
+
+  11) The stp_string_list_t data type now uses forward declaration and
+     pointers.  This was missed in the API cleanup in 5.0.0-alpha3.
+
+  12) The API now offers piecewise curves (using linear or cubic spline
+     interpolation).  None of the current applications can utilize
+     these curves properly, however.  Another problem with spline
+     interpolation has been fixed.
+
+  13) Additional automated testing of the color code has been added,
+     and various bugs in the color code in certain cases have been
+     fixed as a result.
+
+  14) A compile error on systems lacking the "alphasort" function has
+     been fixed (bug 960211).  This includes at least some versions of
+     Solaris.
+
+  15) Build problems when VPATH is used have been fixed.
 
   Please see the change log for full information.
 ================================================================
@@ -624,18 +635,23 @@ and changes from 4.2, as follows:
 
 * Changes to the Print plugin for the GIMP:
 
-  1) The plugin now always displays the page preview with the top of
+  1) A new plugin for the GIMP 2.0 is now provided.  At present it is
+     experimental.  In the long run it will be distributed with the
+     GIMP rather than with Gimp-Print.  This is anticipated for the
+     GIMP 2.2 release.
+
+  2) The plugin now always displays the page preview with the top of
      the page at the top of the preview pane, rotating the image
      preview as necessary to display landscape or portrait mode.
 
-  2) The positioning controls have been simplified.
+  3) The positioning controls have been simplified.
 
-  3) The printrc file format is different.  Gimp-Print 5.0 can read
+  4) The printrc file format is different.  Gimp-Print 5.0 can read
      printrc files created by Gimp-Print 4.2 and earlier, but it
      writes out the printrc file in a format that earlier versions of
      Gimp-Print cannot read.
 
-  4) Printer queue discovery and command specification are greatly
+  5) Printer queue discovery and command specification are greatly
      simplified over 4.2.  The plugin now offers a default printing
      command that is determined based on the characteristics of the
      system, and also offers the choice of printing to a file or using
@@ -643,11 +659,11 @@ and changes from 4.2, as follows:
      file.  The default printing command is correct whether the output
      is Postscript or not.
 
-  5) The Print plugin now always displays all options relevant to
+  6) The Print plugin now always displays all options relevant to
      what's being printed, enabling and disabling options as
      appropriate.
 
-  6) If you are using an older version of the GIMP 1.2, and the GIMP
+  7) If you are using an older version of the GIMP 1.2, and the GIMP
      is installed in a non-standard location on your system such that
      you cannot run configure in Gimp-Print without using
      --with-gimp-prefix or --with-gimp-exec-prefix, please read item
@@ -1048,29 +1064,29 @@ PostScript level 2        (GIMP Plugin only)
 Apple Color StyleWriter 4100   (same as HP DeskJet 660C)
 Apple Color StyleWriter 4500   (same as HP DeskJet 690C)
 Apple Color StyleWriter 6500   (same as HP Deskjet 850C)
-CANON BJC 30
-CANON BJC 50
-CANON BJC 55
-CANON BJC 80
-CANON BJC 85
-CANON BJC 210
-CANON BJC 240
-CANON BJC 250
-CANON BJC 1000
-CANON BJC 2000
-CANON BJC 3000
-CANON BJC 4300
-CANON BJC 4400 photo
-CANON BJC 6000
-CANON BJC 6100
-CANON BJC 7000
-CANON BJC 7100
-CANON BJC 8200
-CANON CP-100 series	(Experimental)
-CANON S400
-CANON S450
-CANON S800
-CANON S4500
+Canon BJC 30
+Canon BJC 50
+Canon BJC 55
+Canon BJC 80
+Canon BJC 85
+Canon BJC 210
+Canon BJC 240
+Canon BJC 250
+Canon BJC 1000
+Canon BJC 2000
+Canon BJC 3000
+Canon BJC 4300
+Canon BJC 4400 photo
+Canon BJC 6000
+Canon BJC 6100
+Canon BJC 7000
+Canon BJC 7100
+Canon BJC 8200
+Canon CP-100 series	(Experimental)
+Canon S400
+Canon S450
+Canon S800
+Canon S4500
 EPSON Stylus C20SX
 EPSON Stylus C20UX
 EPSON Stylus C40SX
@@ -1218,8 +1234,8 @@ EPSON PM-10000
 EPSON PX-V500
 EPSON PX-7000
 EPSON PX-9000
-FUJIFILM Printpix CX-400 (Experimental)
-FUJIFILM Printpix CX-550 (Experimental)
+Fujifilm Printpix CX-400 (Experimental)
+Fujifilm Printpix CX-550 (Experimental)
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -1321,48 +1337,48 @@ Brother MFC-6550MC             pcl-2           HP LaserJet II series
 Brother MFC-8300               pcl-3           HP LaserJet III series
 Brother MFC-9500               pcl-2           HP LaserJet II series
 Brother MFC-9600               pcl-2           HP LaserJet II series
-Canon BJ-30                    bjc-30          CANON BJC 30
-Canon BJC-50                   bjc-50          CANON BJC 50
-Canon BJC-55                   bjc-55          CANON BJC 55
-Canon BJC-80                   bjc-80          CANON BJC 80
-Canon BJC-85                   bjc-85          CANON BJC 85
-Canon BJC-210                  bjc-210         CANON BJC 210
-Canon BJC-240                  bjc-240         CANON BJC 240
-Canon BJC-250                  bjc-250         CANON BJC 250
-Canon BJC-1000                 bjc-1000        CANON BJC 1000
-Canon BJC-2000                 bjc-2000        CANON BJC 2000
-Canon BJC-2010                 bjc-2000        CANON BJC 2000
-Canon BJC-2100                 bjc-4300        CANON BJC 4300
-Canon BJC-2110                 bjc-2000        CANON BJC 2000
-Canon BJC-3000                 bjc-3000        CANON BJC 3000
-Canon BJC-4000                 bjc-4300        CANON BJC 4300
-Canon BJC-4300                 bjc-4300        CANON BJC 4300
-Canon BJC-4400                 bjc-4400        CANON BJC 4400 photo
-Canon BJC-6000                 bjc-6000        CANON BJC 6000
-Canon BJC-6100                 bjc-6100        CANON BJC 6100
-Canon BJC-6200                 bjc-6200        CANON BJC 6200
-Canon BJC-6500                 bjc-6500        CANON BJC 6500
-Canon BJC-7000                 bjc-7000        CANON BJC 7000
-Canon BJC-7100                 bjc-7100        CANON BJC 7100
-Canon BJC-8200                 bjc-8200        CANON BJC 8200
-Canon CP-100                   canon-cp100     CANON CP100
-Canon CP-200                   canon-cp100     CANON CP100
-Canon CP-300                   canon-cp100     CANON CP100
+Canon BJ-30                    bjc-30          Canon BJC 30
+Canon BJC-50                   bjc-50          Canon BJC 50
+Canon BJC-55                   bjc-55          Canon BJC 55
+Canon BJC-80                   bjc-80          Canon BJC 80
+Canon BJC-85                   bjc-85          Canon BJC 85
+Canon BJC-210                  bjc-210         Canon BJC 210
+Canon BJC-240                  bjc-240         Canon BJC 240
+Canon BJC-250                  bjc-250         Canon BJC 250
+Canon BJC-1000                 bjc-1000        Canon BJC 1000
+Canon BJC-2000                 bjc-2000        Canon BJC 2000
+Canon BJC-2010                 bjc-2000        Canon BJC 2000
+Canon BJC-2100                 bjc-4300        Canon BJC 4300
+Canon BJC-2110                 bjc-2000        Canon BJC 2000
+Canon BJC-3000                 bjc-3000        Canon BJC 3000
+Canon BJC-4000                 bjc-4300        Canon BJC 4300
+Canon BJC-4300                 bjc-4300        Canon BJC 4300
+Canon BJC-4400                 bjc-4400        Canon BJC 4400 photo
+Canon BJC-6000                 bjc-6000        Canon BJC 6000
+Canon BJC-6100                 bjc-6100        Canon BJC 6100
+Canon BJC-6200                 bjc-6200        Canon BJC 6200
+Canon BJC-6500                 bjc-6500        Canon BJC 6500
+Canon BJC-7000                 bjc-7000        Canon BJC 7000
+Canon BJC-7100                 bjc-7100        Canon BJC 7100
+Canon BJC-8200                 bjc-8200        Canon BJC 8200
+Canon CP-100                   canon-cp100     Canon CP100
+Canon CP-200                   canon-cp100     Canon CP100
+Canon CP-300                   canon-cp100     Canon CP100
 Canon GP 335                   pcl-4           HP LaserJet 4 series
 Canon LBP-4sx                  pcl-3           HP LaserJet III series
 Canon LBP-430                  pcl-4l          HP LaserJet 4L
 Canon LBP-1000                 pcl-6           HP LaserJet 6 series
 Canon LBP-1260                 pcl-6           HP LaserJet 6 series
 Canon LBP-1760                 pcl-6           HP LaserJet 6 series
-Canon S100                     bjc-4300        CANON BJC 4300
-Canon S300                     bjc-s800        CANON S800
-Canon S400                     bjc-s400        CANON S400
-Canon S450                     bjc-s450        CANON S450
-Canon S500                     bjc-8200        CANON BJC 8200
-Canon S600                     bjc-8200        CANON BJC 8200
-Canon S630                     bjc-8200        CANON BJC 8200
-Canon S800                     bjc-s800        CANON S800
-Canon S4500                    bjc-s4500       CANON S4500
+Canon S100                     bjc-4300        Canon BJC 4300
+Canon S300                     bjc-s800        Canon S800
+Canon S400                     bjc-s400        Canon S400
+Canon S450                     bjc-s450        Canon S450
+Canon S500                     bjc-8200        Canon BJC 8200
+Canon S600                     bjc-8200        Canon BJC 8200
+Canon S630                     bjc-8200        Canon BJC 8200
+Canon S800                     bjc-s800        Canon S800
+Canon S4500                    bjc-s4500       Canon S4500
 Canon imageRunner 330s         pcl-4           HP LaserJet 4 series
 Citizen ProJet II              pcl-2           HP LaserJet II series
 DEC 1800                       pcl-3           HP LaserJet III series
@@ -1974,7 +1990,7 @@ Printer-Specific Notes:
 
       We do not currently plan to offer resolutions higher than
       2880x2880 DPI on any Epson Stylus printer with a drop size of 1
-      pl or larger.  At the time of Gimp-Print 5.0 Alpha, the smallest
+      pl or larger.  At the time of Gimp-Print 5.0 Beta, the smallest
       drop size offered by any Epson Stylus printer is 1.5 pl.  If
       such a printer is offered, we will evaluate whether to offer
       higher resolutions.
