@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.57  2000/02/06 21:18:12  rlk
+ *   Try to fix microweave on newer printers...?
+ *
  *   Revision 1.56  2000/02/06 11:44:12  sharkey
  *   Don't cut corners by padding the 32 bit horizontal shifts with 0's in the
  *   upper 16 bits.  Do the full shifting and masking.  This is important when
@@ -1634,7 +1637,6 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   * Set the print head position.
   */
 
-  putc('\r', prn);
  /*
   * Set the color if necessary...
   */
@@ -1664,26 +1666,36 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
   * Send a line of raster graphics...
   */
 
-  switch (ydpi)				/* Raster graphics header */
-  {
-    case 180 :
-        fwrite("\033.\001\024\024\001", 6, 1, prn);
-        break;
-    case 360 :
-        fwrite("\033.\001\012\012\001", 6, 1, prn);
-        break;
-    case 720 :
-        if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
-          fwrite("\033.\001\050\005\001", 6, 1, prn);
-	else
-          fwrite("\033.\001\005\005\001", 6, 1, prn);
-        break;
-  }
-
-  putc(width & 255, prn);		/* Width of raster line in pixels */
-  putc(width >> 8, prn);
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+    {
+      int ncolor = (density << 4) | plane;
+      int nwidth = bits * ((width + 7) / 8);
+      fprintf(prn, "\033i%c%c%c%c%c%c%c", ncolor, 1, bits,
+	      nwidth & 255, nwidth >> 8, 1, 0);
+    }
+  else
+    {
+      switch (ydpi)				/* Raster graphics header */
+	{
+	case 180 :
+	  fwrite("\033.\001\024\024\001", 6, 1, prn);
+	  break;
+	case 360 :
+	  fwrite("\033.\001\012\012\001", 6, 1, prn);
+	  break;
+	case 720 :
+	  if (escp2_has_cap(model, MODEL_720DPI_MODE_MASK, MODEL_720DPI_600))
+	    fwrite("\033.\001\050\005\001", 6, 1, prn);
+	  else
+	    fwrite("\033.\001\005\005\001", 6, 1, prn);
+	  break;
+	}
+      putc(width & 255, prn);		/* Width of raster line in pixels */
+      putc(width >> 8, prn);
+    }
 
   fwrite(comp_buf, comp_ptr - comp_buf, 1, prn);
+  putc('\r', prn);
 }
 
 
