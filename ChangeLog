@@ -1,5 +1,17 @@
 2000-07-12	<rlk@sourceforge.net>
 
+	Files:	Makefile.am (1.42) (+1 -1)
+	
+	Need to include 367x179 matrix
+	
+2000-07-12	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.22) (+13 -0)
+	
+	3.1.8 release
+	
+2000-07-12	<rlk@sourceforge.net>
+
 	Files:	ChangeLog (1.21) (+265 -0)
 		Ghost/gdevstp.c (1.27) (+34 -19)
 		Ghost/README (1.26) (+21 -5)
