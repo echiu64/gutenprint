@@ -8,3 +8,7 @@ gimp-print.pot
 stamp-cat-id
 ChangeLog
 messages
+Rules-quot
+*.header
+*.sin
+*.sed

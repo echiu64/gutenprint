@@ -12,11 +12,14 @@ config.h
 config.h.in
 config.rpath
 config.status
+config.sub
+config.guess
 configure
 configure.in
 cups-gimpprint.list
 debian-build
 intl
+ltmain.sh
 libtool
 m4local
 stamp-h
