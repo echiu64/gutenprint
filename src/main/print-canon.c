@@ -2635,7 +2635,7 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
 {
   int i,j;
   for (j=0; j<bits; j++) {
-    for (i=length; i>0; i--) {
+    for (i=length-1; i>0; i--) {
       line[i]= (line[i] >> 1) | (line[i-1] << 7);
     }
     line[0] = line[0] >> 1;
@@ -2646,7 +2646,7 @@ static void
 canon_shift_buffer2(unsigned char *line,int length,int bits)
 {
   int i;
-  for (i=length; i>0; i--) {
+  for (i=length-1; i>0; i--) {
     line[i]= (line[i] >> bits) | (line[i-1] << (8-bits));
   }
   line[0] = line[0] >> bits;
