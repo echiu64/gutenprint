@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-LOCAL_CFLAGS = $(GIMPPRINT_CFLAGS) $(GIMP_CFLAGS)
+LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) $(GIMP_CFLAGS)
 
 
 ## Programs
