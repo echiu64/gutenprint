@@ -114,7 +114,7 @@ Gimp-Print 4.2.4 contains the following major changes over Gimp-Print
 
   2) The version of libtool used to build this package, 1.4.2, does
      not create shared libraries correctly on some platforms (in
-     particular, 68k and MIPS).  The workaround is to either build
+     particular, MIPS and MIPSEL).  The workaround is to either build
      static libraries only (configure --disable-shared), or to
      regenerate the libtool with libtool 1.4.3.  We expect this to be
      fixed in a future release.
@@ -984,7 +984,9 @@ Lexmark Z53
 
 The following is the complete list of printers believed to be
 compatible with Gimp-print, along with recommended drivers.  Some of
-these printers may work only partially.
+these printers may work only partially; the specified drivers may not
+support the full range of resolutions, paper sizes, media sources,
+etc. that some of these printers may offer.
 
 Printer Name                   Driver Name     Driver Description
 ------- ----                   ------ ----     ------ -----------
@@ -1196,6 +1198,16 @@ Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 16DV      pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 20W       pcl-6           HP LaserJet 6 series
 Fujitsu PrintPartner 8000      pcl-3           HP LaserJet III series
+HP 2000C                       pcl-2000        HP DeskJet 2000 series
+HP 2500C                       pcl-2500        HP DeskJet 2500 series
+HP 2500CM                      pcl-2500        HP DeskJet 2500 series
+HP Business Inkjet 2200        pcl-900         HP DeskJet 900 series
+HP Business Inkjet 2230        pcl-900         HP DeskJet 900 series
+HP Business Inkjet 2250        pcl-900         HP DeskJet 900 series
+HP Business Inkjet 2250TN      pcl-900         HP DeskJet 900 series
+HP Business Inkjet 2280        pcl-900         HP DeskJet 900 series
+HP Color Inkjet Printer CP1160 pcl-900         HP DeskJet 900 series
+HP Color Inkjet Printer CP1700 pcl-900         HP DeskJet 900 series
 HP Color LaserJet 4550         pcl-4           HP LaserJet 4 series
 HP Color LaserJet 5000         pcl-4           HP LaserJet 4 series
 HP DesignJet 230               pcl-desnj-230   HP DesignJet 230
@@ -1213,6 +1225,7 @@ HP DeskJet 340C                pcl-340         HP DeskJet 340
 HP DeskJet 400                 pcl-400         HP DeskJet 400
 HP DeskJet 400C                pcl-540         HP DeskJet 540C
 HP DeskJet 420C                pcl-540         HP DeskJet 540C
+HP DeskJet 450                 pcl-900         HP DeskJet 900 series
 HP DeskJet 500                 pcl-500         HP DeskJet 500
 HP DeskJet 505J Plus           pcl-500         HP DeskJet 500
 HP DeskJet 500C                pcl-501         HP DeskJet 500C
@@ -1222,11 +1235,11 @@ HP DeskJet 540C                pcl-540         HP DeskJet 540C
 HP DeskJet 550C                pcl-550         HP DeskJet 550C
 HP DeskJet 560C                pcl-560         HP DeskJet 560C
 HP DeskJet 600                 pcl-600         HP DeskJet 600/600C
-HP DeskJet 610C                pcl-601         HP DeskJet 600 series
-HP DeskJet 610CL               pcl-601         HP DeskJet 600 series
-HP DeskJet 612C                pcl-601         HP DeskJet 600 series
-HP DeskJet 640C                pcl-601         HP DeskJet 600 series
-HP DeskJet 648C                pcl-601         HP DeskJet 600 series
+HP DeskJet 610C                pcl-601         HP DeskJet 690 series
+HP DeskJet 610CL               pcl-601         HP DeskJet 690 series
+HP DeskJet 612C                pcl-601         HP DeskJet 690 series
+HP DeskJet 640C                pcl-601         HP DeskJet 690 series
+HP DeskJet 648C                pcl-601         HP DeskJet 690 series
 HP DeskJet 660C                pcl-601         HP DeskJet 600 series
 HP DeskJet 670C                pcl-601         HP DeskJet 600 series
 HP DeskJet 672C                pcl-601         HP DeskJet 600 series
@@ -1270,9 +1283,12 @@ HP DeskJet 952C                pcl-900         HP DeskJet 900 series
 HP DeskJet 955C                pcl-900         HP DeskJet 900 series
 HP DeskJet 957C                pcl-900         HP DeskJet 900 series
 HP DeskJet 959C                pcl-900         HP DeskJet 900 series
+HP DeskJet 960C                pcl-900         HP DeskJet 900 series
 HP DeskJet 970C                pcl-900         HP DeskJet 900 series
 HP DeskJet 975C                pcl-900         HP DeskJet 900 series
+HP DeskJet 980C                pcl-900         HP DeskJet 900 series
 HP DeskJet 990C                pcl-900         HP DeskJet 900 series
+HP DeskJet 995C                pcl-900         HP DeskJet 900 series
 HP DeskJet 1100C               pcl-1100        HP DeskJet 1100C
 HP DeskJet 1120C               pcl-1120        HP DeskJet 1120C
 HP DeskJet 1125C               pcl-1120        HP DeskJet 1120C
@@ -1280,13 +1296,14 @@ HP DeskJet 1200C               pcl-1200        HP DeskJet 1200C
 HP DeskJet 1220C               pcl-1220        HP DeskJet 1220C
 HP DeskJet 1600C               pcl-1600        HP DeskJet 1600C
 HP DeskJet 1600CM              pcl-1600        HP DeskJet 1600C
-HP DeskJet 2000C               pcl-2000        HP DeskJet 2000 series
-HP DeskJet 2500C               pcl-2500        HP DeskJet 2500 series
-HP DeskJet 2500CM              pcl-2500        HP DeskJet 2500 series
 HP DeskJet 3810                pcl-900         HP DeskJet 900 series
 HP DeskJet 3816                pcl-900         HP DeskJet 900 series
 HP DeskJet 3820                pcl-900         HP DeskJet 900 series
 HP DeskJet 3822                pcl-900         HP DeskJet 900 series
+HP DeskJet 5550                pcl-900         HP DeskJet 900 series
+HP DeskJet 5551                pcl-900         HP DeskJet 900 series
+HP DeskJet 6122                pcl-900         HP DeskJet 900 series
+HP DeskJet 6127                pcl-900         HP DeskJet 900 series
 HP E-printer E20               pcl-601         HP DeskJet 600 series
 HP LaserJet 2                  pcl-2           HP LaserJet II series
 HP LaserJet 2D                 pcl-2           HP LaserJet II series
@@ -1323,6 +1340,12 @@ HP LaserJet 3200se             pcl-6           HP LaserJet 6 series
 HP LaserJet 4000               pcl-6           HP LaserJet 6 series
 HP LaserJet 4050               pcl-6           HP LaserJet 6 series
 HP LaserJet 4100               pcl-6           HP LaserJet 6 series
+HP LaserJet 4200               pcl-6           HP LaserJet 6 series
+HP LaserJet 4300               pcl-6           HP LaserJet 6 series
+HP LaserJet 5000               pcl-6           HP LaserJet 6 series
+HP LaserJet 5100               pcl-6           HP LaserJet 6 series
+HP LaserJet 8000               pcl-6           HP LaserJet 6 series
+HP LaserJet 8100               pcl-6           HP LaserJet 6 series
 HP LaserJet 8150               pcl-6           HP LaserJet 6 series
 HP LaserJet 9000               pcl-6           HP LaserJet 6 series
 HP OfficeJet                   pcl-520         HP DeskJet 520
@@ -1351,13 +1374,27 @@ HP OfficeJet R80               pcl-810         HP DeskJet 810C
 HP OfficeJet T45               pcl-810         HP DeskJet 810C
 HP OfficeJet T65               pcl-810         HP DeskJet 810C
 HP OfficeJet V40               pcl-900         HP DeskJet 900 series
+HP OfficeJet D125              pcl-900         HP DeskJet 900 series
+HP OfficeJet D135              pcl-900         HP DeskJet 900 series
+HP OfficeJet D145              pcl-900         HP DeskJet 900 series
+HP OfficeJet D155              pcl-900         HP DeskJet 900 series
 HP PhotoSmart P1000            pcl-P1000       HP PhotoSmart P1000
 HP PhotoSmart P1100            pcl-P1100       HP PhotoSmart P1100
+HP PhotoSmart P1115            pcl-900         HP DeskJet 900 series
+HP PhotoSmart P1215            pcl-900         HP DeskJet 900 series
+HP PhotoSmart P1218            pcl-900         HP DeskJet 900 series
+HP PhotoSmart P1315            pcl-900         HP DeskJet 900 series
+HP PhotoSmart 7150             pcl-900         HP DeskJet 900 series
+HP PhotoSmart 7350             pcl-900         HP DeskJet 900 series
+HP PhotoSmart 7550             pcl-900         HP DeskJet 900 series
 HP PSC 370                     pcl-690         HP DeskJet 690 series
 HP PSC 380                     pcl-690         HP DeskJet 690 series
 HP PSC 500                     pcl-810         HP DeskJet 810C
 HP PSC 750                     pcl-900         HP DeskJet 900 series
 HP PSC 950                     pcl-900         HP DeskJet 900 series
+HP PSC 2110                    pcl-900         HP DeskJet 900 series
+HP PSC 2150                    pcl-900         HP DeskJet 900 series
+HP PSC 2210                    pcl-900         HP DeskJet 900 series
 IBM 4019                       pcl-2           HP LaserJet II series
 IBM 4029 030 LaserPrinter 10   pcl-2           HP LaserJet II series
 IBM 4029 030 LaserPrinter 10   pcl-3           HP LaserJet III series
@@ -1445,11 +1482,9 @@ Xerox DocuPrint 4508           pcl-4           HP LaserJet 4 series
 Xerox DocuPrint N4512          pcl-4           HP LaserJet 4 series
 Xerox DocuPrint N4512 PS       pcl-4           HP LaserJet 4 series
 Xerox Document Centre 400      pcl-4           HP LaserJet 4 series
-generic PCL-2 laser printer    pcl-2           HP LaserJet II series
-generic PCL-3 laser printer    pcl-3           HP LaserJet III series
-generic PCL-4 laser printer    pcl-4           HP LaserJet 4 series
-generic PCL-5 laser printer    pcl-5           HP LaserJet 5 series
-generic PCL-6 laser printer    pcl-6           HP LaserJet 6 series
+Generic PCL 4 Printer          pcl-2           HP LaserJet II series
+Generic PCL 5/5e Printer       pcl-4           HP LaserJet 4 series
+Generic PCL 6/PCL XL Printer   pcl-6           HP LaserJet 6 series
 
 
 Printer-Specific Notes:
