@@ -25,21 +25,20 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
 released!</blink></font></h2>
 
-<P><strong><em><font color="#ff0000">New as of December 22,
-2000!</strong></em></font> Daniele Berti has packaged up rpm's of
-GhostScript 5.50 with the Gimp-Print stp driver.  It's available at <a
-href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.
-
-<P><strong><em><font color="#ff0000">New as of December 17,
-2000!</strong></em></font> Gimp-Print 4.1.0, the first development
-release in the 4.1 line, is out.  It features greatly improved print
-quality and many new options for Epson Stylus printers, among other
-improvements.  Note that it is <strong>not</strong> currently
-compatible with <a
+<P><strong><em><font color="#ff0000">New as of December 24,
+2000!</strong></em></font> Gimp-Print 4.1.1, a development release in
+the 4.1 line, is out.  It features further print quality improvements,
+use of readline in escputil, and some bug fixes.  Note that it is
+<strong>not</strong> currently compatible with <a
 href="http://linuxprinting.org/foomatic.html">foomatic</a>, although
 we're working on remedying that state of affairs.  Also note that the
 PPD files used by the native CUPS driver are not forward or backward
 compatible with the PPD files in any of the 4.0 releases.
+
+<P><strong><em><font color="#ff0000">New as of December 22,
+2000!</strong></em></font> Daniele Berti has packaged up rpm's of
+GhostScript 5.50 with the Gimp-Print stp driver.  It's available at <a
+href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.
 
 <P><strong><em><font color="#ff0000">New as of November 27,
 2000!</strong></em></font> Gimp-Print 4.0.4 is out.  All users should
