@@ -454,10 +454,16 @@ escp2-c20sx             EPSON Stylus C20SX
 escp2-c20ux             EPSON Stylus C20UX
 escp2-c40sx             EPSON Stylus C40SX
 escp2-c40ux             EPSON Stylus C40UX
+escp2-c41sx             EPSON Stylus C41SX
+escp2-c41ux             EPSON Stylus C41UX
+escp2-c42sx             EPSON Stylus C42SX
 escp2-c42ux             EPSON Stylus C42UX
 escp2-c60               EPSON Stylus C60
+escp2-c61               EPSON Stylus C61
+escp2-c62               EPSON Stylus C62
 escp2-c70               EPSON Stylus C70
 escp2-c80               EPSON Stylus C80
+escp2-c82               EPSON Stylus C82
 escp2                   EPSON Stylus Color
 escp2-pro               EPSON Stylus Color Pro
 escp2-pro-xl            EPSON Stylus Color Pro XL
@@ -496,10 +502,13 @@ escp2-785               EPSON Stylus Photo 785EPX
 escp2-790               EPSON Stylus Photo 790
 escp2-810               EPSON Stylus Photo 810
 escp2-820               EPSON Stylus Photo 820
+escp2-830               EPSON Stylus Photo 830
 escp2-870               EPSON Stylus Photo 870
 escp2-875               EPSON Stylus Photo 875
 escp2-890               EPSON Stylus Photo 890
 escp2-895               EPSON Stylus Photo 895
+escp2-915               EPSON Stylus Photo 915
+escp2-925               EPSON Stylus Photo 925
 escp2-950               EPSON Stylus Photo 950
 escp2-960               EPSON Stylus Photo 960
 escp2-1200              EPSON Stylus Photo 1200
@@ -684,10 +693,10 @@ see the notes at the end of this section.
 360uni           360 DPI Unidirectional                   (6)
 360mw            360 DPI Microweave                       (6, *)
 360mwuni         360 DPI Microweave Unidirectional        (6)
-360sw            360 DPI                                  (7, *)
-360swuni         360 DPI Unidirectional                   (7)
-360hq            360 DPI High Quality                     (7, 8)
-360hquni         360 DPI High Quality Unidirectional      (7, 8)
+360sw            360 DPI                                  (7, 17, *)
+360swuni         360 DPI Unidirectional                   (7, 17)
+360hq            360 DPI High Quality                     (7, 8, 17)
+360hquni         360 DPI High Quality Unidirectional      (7, 8, 17)
 
 720x360sw        720 x 360 DPI                            (9, 10)
 720x360swuni     720 x 360 DPI Unidirectional             (9, 10)
@@ -727,16 +736,18 @@ see the notes at the end of this section.
     440, 460, 600, 640, 660, 670, 800, 850, 900, 980, 1500, 1520,
     3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
-(3) Works on Stylus C70 and C80.
+(3) Works on Stylus C70, C80, and C82; and Stylus Photo 950, 960,
+    2100, and 2200.
 
 (4) Works on older printers with dot spacing of 1/120 inch.  This
     includes the Stylus Color Pro, Pro XL, 400, and 500.
 
 (5) Works on newer printers with dot spacing of 1/120 inch.  This
-    includes the Stylus C20, C40, and C60, the Stylus Color 480, 580,
-    680, 740, 760, 777, 860, 880, 83, and 1160, and the Stylus Photo
-    750, 780, 785, 790, 810, 820, 870, 875, 890, 895, 1270, 1280,
-    1290, and 2000P, and the Stylus Scan 2000.
+    includes the Stylus C20, C40, C41, C42, C60, C61, and C62; the
+    Stylus Color 480, 580, 680, 740, 760, 777, 860, 880, 83, and 1160,
+    and the Stylus Photo 750, 780, 785, 790, 810, 820, 830, 870, 875,
+    890, 895, 915, 925, 1270, 1280, 1290, and 2000P, and the Stylus
+    Scan 2000 and 2500.
 
 (6) Works on all printers that do not support variable drop sizes.
     This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
@@ -778,59 +789,100 @@ see the notes at the end of this section.
     the Stylus Color 900.
 
 (15) Works on all printers that support 2880x720 DPI.  This includes
-    the Stylus C60, C70, and C80, the Stylus Color 680, 777, 880, 83,
-    and 980, and Stylus Photo 780, 790, 810, 820, 890, 1280, and 1290.
+    the Stylus C60, C61, C62, C70, C80, and C82, the Stylus Color 680,
+    777, 880, 83, and 980, and Stylus Photo 780, 790, 810, 820, 830,
+    890, 915, 925, 950, 960, 1280, and 1290.  This resolution is
+    offered on the Stylus Photo 2100 and 2200, but may not work
+    correctly.
 
-(16) Works on Stylus C70 and Stylus C80.  These resolutions are not
-    supported by Epson and may not work on all C70 or C80 printers.
+(16) Works on Epson Stylus Photo 830, 925, 950, 960, 2100, 2200;
+    Stylus C61, C62, C70, C80, C82 ; Stylus Pro 7600 and 9600.  This
+    resolution is not supported by Epson on the C70 and C80, but it
+    works correctly on at least some such printers.
+
+(17) These resolutions print at particularly high speed on the Epson
+    Stylus Photo 950, 960, 2100, and 2200 when printing in Four Color
+    Standard or Three Color Composite modes, or when printing in
+    monochrome or grayscale with any ink type other than Two Level
+    Grayscale, Seven Color Photo, or Quadtone.
 
 
-The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 9000,
-9500, and 10000) support additional microweave modes known as Full
-Overlap (FOL), Four Pass, and FOL2.  The Stylus Pro 5500, 7500, 9500,
-and 10000 additionally have a mode called MW2.  These modes can only
-be used at certain resolutions.  Stylus Pro printers support the
+The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 7600,
+9000, 9500, 9600, and 10000) support additional microweave modes known
+as Full Overlap (FOL), Four Pass, and FOL2.  The Stylus Pro 5500,
+7500, 7600, 9500, 9600, and 10000 additionally have a mode called MW2.
+These modes can only be used at certain resolutions.  Stylus Pro
+printers support the following resolutions:
+
+180dpi            180 DPI
+
+360dpi            360 DPI
+360uni            360 DPI Unidirectional
+360mw             360 DPI Microweave
+360mwuni          360 DPI Microweave Unidirectional
+360fol            360 DPI Full Overlap
+360foluni         360 DPI Full Overlap Unidirectional
+360fol2           360 DPI FOL2
+360fol2uni        360 DPI FOL2 Unidirectional
+360mw2            360 DPI MW2
+360mw2uni         360 DPI MW2 Unidirectional
+
+720x360dpi        720 x 360 DPI
+720x360uni        720 x 360 DPI Unidirectional
+720x360fol        720 x 360 DPI FOL
+720x360foluni     720 x 360 DPI FOL Unidirectional
+720x360fol2       720 x 360 DPI FOL2
+720x360fol2uni    720 x 360 DPI FOL2 Unidirectional
+720x360mw2        720 x 360 DPI MW2
+720x360mw2uni     720 x 360 DPI MW2 Unidirectional
+
+720dpi            720 DPI
+720uni            720 DPI Unidirectional
+720mw             720 DPI Microweave
+720mwuni          720 DPI Microweave Unidirectional
+720fol            720 DPI Full Overlap
+720foluni         720 DPI Full Overlap Unidirectional
+720fourp          720 DPI Four Pass
+720fourpuni       720 DPI Four Pass Unidirectional
+
+1440x720dpi       1440 x 720 DPI
+1440x720uni       1440 x 720 DPI Unidirectional
+1440x720mw        1440 x 720 DPI Microweave
+1440x720mwuni     1440 x 720 DPI Microweave Unidirectional
+1440x720fol       1440 x 720 DPI FOL
+1440x720foluni    1440 x 720 DPI FOL Unidirectional
+1440x720fourp     1440 x 720 DPI Four Pass
+1440x720fourpuni  1440 x 720 DPI Four Pass Unidirectional
+
+In addition, the Stylus Pro 7600 and 9600 printers support the
 following resolutions:
 
-180dpi           180 DPI
+2880x720dpi       2880 x 720 DPI
+2880x720uni       2880 x 720 DPI Unidirectional
+2880x720mw        2880 x 720 DPI Microweave
+2880x720mwuni     2880 x 720 DPI Microweave Unidirectional
+2880x720fol       2880 x 720 DPI FOL
+2880x720foluni    2880 x 720 DPI FOL Unidirectional
+2880x720fourp     2880 x 720 DPI Four Pass
+2880x720fourpuni  2880 x 720 DPI Four Pass Unidirectional
 
-360dpi           360 DPI
-360uni           360 DPI Unidirectional
-360mw            360 DPI Microweave
-360mwuni         360 DPI Microweave Unidirectional
-360fol           360 DPI Full Overlap
-360foluni        360 DPI Full Overlap Unidirectional
-360fol2          360 DPI FOL2
-360fol2uni       360 DPI FOL2 Unidirectional
-360mw2           360 DPI MW2
-360mw2uni        360 DPI MW2 Unidirectional
+1440x1440dpi      1440 x 1440 DPI
+1440x1440uni      1440 x 1440 DPI Unidirectional
+1440x1440mw       1440 x 1440 DPI Microweave
+1440x1440mwuni    1440 x 1440 DPI Microweave Unidirectional
+1440x1440fol      1440 x 1440 DPI FOL
+1440x1440foluni   1440 x 1440 DPI FOL Unidirectional
+1440x1440fourp    1440 x 1440 DPI Four Pass
+1440x1440fourpuni 1440 x 1440 DPI Four Pass Unidirectional
 
-720x360dpi       720 x 360 DPI
-720x360uni       720 x 360 DPI Unidirectional
-720x360fol       720 x 360 DPI FOL
-720x360foluni    720 x 360 DPI FOL Unidirectional
-720x360fol2      720 x 360 DPI FOL2
-720x360fol2uni   720 x 360 DPI FOL2 Unidirectional
-720x360mw2       720 x 360 DPI MW2
-720x360mw2uni    720 x 360 DPI MW2 Unidirectional
-
-720dpi           720 DPI
-720uni           720 DPI Unidirectional
-720mw            720 DPI Microweave
-720mwuni         720 DPI Microweave Unidirectional
-720fol           720 DPI Full Overlap
-720foluni        720 DPI Full Overlap Unidirectional
-720fourp         720 DPI Four Pass
-720fourpuni      720 DPI Four Pass Unidirectional
-
-1440x720dpi      1440 x 720 DPI
-1440x720uni      1440 x 720 DPI Unidirectional
-1440x720mw       1440 x 720 DPI Microweave
-1440x720mwuni    1440 x 720 DPI Microweave Unidirectional
-1440x720fol      1440 x 720 DPI FOL
-1440x720foluni   1440 x 720 DPI FOL Unidirectional
-1440x720fourp    1440 x 720 DPI Four Pass
-1440x720fourpuni 1440 x 720 DPI Four Pass Unidirectional
+2880x1440dpi      2880 x 1440 DPI
+2880x1440uni      2880 x 1440 DPI Unidirectional
+2880x1440mw       2880 x 1440 DPI Microweave
+2880x1440mwuni    2880 x 1440 DPI Microweave Unidirectional
+2880x1440fol      2880 x 1440 DPI FOL
+2880x1440foluni   2880 x 1440 DPI FOL Unidirectional
+2880x1440fourp    2880 x 1440 DPI Four Pass
+2880x1440fourpuni 2880 x 1440 DPI Four Pass Unidirectional
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
@@ -913,15 +965,17 @@ mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
 with colored inks; on this printer, Three Color Composite must be
 used.
 
-Photo7          Seven Color Enhanced (CcMmYKk, for the Epson Stylus
-                Photo 2100 and 2200, and Stylus Pro 7600 and 9600).
+Photo7          Seven Color Photo (CcMmYKk, for the Epson Stylus
+                Photo 2100 and 2200, and Stylus Pro 7600 and 9600)
 PhotoCMYK       Six Color Photo
 PhotoCMY        Five Color Photo Composite
 CMYK            Four Color Standard
 RGB             Three Color Composite
 Quadtone        Quadtone grayscale inks (special third party inksets
                 designed to produce superior results for grayscale
-                images).
+                images)
+Gray2           Two Level Grayscale (Kk, for the Epson stylus Photo
+                2100 and 2200, and Stylus Pro 7600 and 9600)
 
 
 For Canon printers:
