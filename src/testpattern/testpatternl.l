@@ -39,7 +39,8 @@ static char *
 c_strstrip(char *s)
 {
   size_t len = strlen(s);
-  if (len >= 2 && s[0] == '"' && s[len - 1] == '"')
+  if (len >= 2 && ((s[0] == '"' && s[len - 1] == '"') ||
+		   (s[0] == '\'' && s[len - 1] == '\'')))
     {
       char *sn = malloc(len - 1);
       memcpy(sn, s + 1, len - 2);
