@@ -2579,13 +2579,17 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   QUANT(14);
   for (; x != dst_width; x++)
     {
+      int extra_k;
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
+      extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < NCOLORS; i++)
 	{
-	  CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).v;
+	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  if (i != ECOLOR_K)
+	    CHANNEL(d, i).o += extra_k;
 	  if (CHANNEL(d, i).ptrs[0])
 	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
 	}
@@ -2626,13 +2630,17 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
   QUANT(6);
   for (; x != terminate; x ++)
     {
+      int extra_k;
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
+      extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < NCOLORS; i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  if (i != ECOLOR_K)
+	    CHANNEL(d, i).o += extra_k;
 	  print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
 	}
 
@@ -2713,13 +2721,17 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   QUANT(6);
   for (; x != terminate; x += direction)
     {
+      int extra_k;
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
+      extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < NCOLORS; i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  if (i != ECOLOR_K)
+	    CHANNEL(d, i).o += extra_k;
 	  CHANNEL(d, i).b = CHANNEL(d, i).v;
 	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
