@@ -1148,6 +1148,15 @@ stp_describe_parameter(const stp_vars_t v, const char *name,
   stp_dither_describe_parameter(v, name, description);
 }
 
+const stp_parameter_t *
+stp_parameter_find_in_settings(const stp_vars_t v, const char *name)
+{
+  stp_parameter_list_t param_list = stp_list_parameters(v);
+  const stp_parameter_t *param = stp_parameter_find(param_list, name);
+  stp_parameter_list_destroy(param_list);
+  return param;
+}
+
 size_t
 stp_parameter_list_count(const stp_parameter_list_t list)
 {

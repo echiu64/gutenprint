@@ -211,9 +211,10 @@ static void update_adjusted_thumbnail (void);
 static void set_media_size(const gchar *new_media_size);
 static stp_printer_t tmp_printer = NULL;
 
+static list_option_t page_size_option = { "PageSize", set_media_size, -1 };
+
 static list_option_t the_list_options[] =
   {
-    { "PageSize", set_media_size, -1 },
     { "MediaType", NULL, -1 },
     { "InputSlot", NULL, -1 },
     { "InkType", NULL, -1 },
@@ -902,7 +903,9 @@ create_printer_settings_frame (void)
    * Media size combo box.
    */
 
-  stpui_create_new_combo(get_list_option_by_name("PageSize"), table, 0, vpos++);
+  page_size_option.fast_desc =
+    stp_parameter_find_in_settings(stp_default_settings(), "PageSize");
+  stpui_create_new_combo(&page_size_option, table, 0, vpos++);
 
   /*
    * Custom media size entries
@@ -1668,6 +1671,38 @@ do_color_updates (void)
 }
 
 static void
+build_a_combo(list_option_t *option)
+{
+  if (option->fast_desc &&
+      option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      stp_parameter_t desc;
+      const gchar *val = stp_get_string_parameter(pv->v, option->name);
+      stp_describe_parameter(pv->v, option->name, &desc);
+      if (desc.is_active)
+	{
+	  option->params = desc.bounds.str;
+	  option->default_val = desc.deflt.str;
+	}
+      if (option->params == NULL ||
+	  stp_string_list_count(option->params) == 0)
+	stp_set_string_parameter(pv->v, option->name, NULL);
+      else if (!val || strlen(val) == 0)
+	stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
+      plist_build_combo(option->combo, option->label, option->params,
+			desc.is_active,
+			stp_get_string_parameter(pv->v, option->name),
+			option->default_val, combo_callback,
+			&(option->callback_id), option);
+      if (option->extra)
+	(option->extra)(stp_get_string_parameter(pv->v, option->name));
+    }
+  else
+    plist_build_combo(option->combo, option->label, NULL, 0, "", "",
+		      combo_callback, &(option->callback_id), option);
+}
+
+static void
 do_all_updates(void)
 {
   gint i;
@@ -1716,37 +1751,8 @@ do_all_updates(void)
 
   populate_options(pv->v);
   for (i = 0; i < list_option_count; i++)
-    {
-      list_option_t *option = &(the_list_options[i]);
-      if (option->fast_desc &&
-	  option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST)
-	{
-	  stp_parameter_t desc;
-	  const gchar *val = stp_get_string_parameter(pv->v, option->name);
-	  stp_describe_parameter(pv->v, option->name, &desc);
-	  if (desc.is_active)
-	    {
-	      option->params = desc.bounds.str;
-	      option->default_val = desc.deflt.str;
-	    }
-	  if (option->params == NULL ||
-	      stp_string_list_count(option->params) == 0)
-	    stp_set_string_parameter(pv->v, option->name, NULL);
-	  else if (!val || strlen(val) == 0)
-	    stp_set_string_parameter(pv->v, option->name, desc.deflt.str);
-	  plist_build_combo(option->combo, option->label, option->params,
-			    desc.is_active,
-			    stp_get_string_parameter(pv->v, option->name),
-			    option->default_val, combo_callback,
-			    &(option->callback_id), option);
-	  if (option->extra)
-	    (option->extra)(stp_get_string_parameter(pv->v, option->name));
-	}
-      else
-	plist_build_combo(option->combo, option->label, NULL, 0,
-			  "", "", combo_callback,
-			  &(option->callback_id), option);
-    }
+    build_a_combo(&(the_list_options[i]));
+  build_a_combo(&(page_size_option));
 
   do_color_updates ();
 

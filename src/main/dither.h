@@ -188,7 +188,6 @@ extern void stp_dither_set_ink_spread(stp_vars_t v, int spread);
 extern void stp_dither_set_adaptive_limit(stp_vars_t v, double limit);
 extern int stp_dither_get_first_position(stp_vars_t v, int color, int subchan);
 extern int stp_dither_get_last_position(stp_vars_t v, int color, int subchan);
-extern void stp_dither_set_light_ink(stp_vars_t v, int color, double, double);
 extern void stp_dither_set_shades(stp_vars_t v, int color, int nshades,
 				  const stp_shade_t *shades, double density);
 

@@ -73,6 +73,11 @@
 #define max(a, b) ((a > b) ? a : b)
 #define INCH(x)		(72 * x)
 
+static const stp_dither_range_simple_t photo_dither_ranges[] =
+{
+  { 0.3333, 0x1, 1, 1 },
+  { 1.0000, 0x1, 0, 1 }
+};
 
 
 typedef enum Lex_model { m_lex7500,   m_z52=10052, m_z42=10042, m_3200=3200 } Lex_model;
@@ -1803,11 +1808,14 @@ densityDivisor /= 1.2;
 
   if (!use_dmt) {
     if (cols.p.C)
-      stp_dither_set_light_ink(nv, ECOLOR_C, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_ranges(nv, ECOLOR_C, 2, photo_dither_ranges,
+			    stp_get_float_parameter(nv, "Density"));
     if (cols.p.M)
-      stp_dither_set_light_ink(nv, ECOLOR_M, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_ranges(nv, ECOLOR_M, 2, photo_dither_ranges,
+			    stp_get_float_parameter(nv, "Density"));
     if (cols.p.Y)
-      stp_dither_set_light_ink(nv, ECOLOR_Y, .3333, stp_get_float_parameter(nv, "Density"));
+      stp_dither_set_ranges(nv, ECOLOR_Y, 2, photo_dither_ranges,
+			    stp_get_float_parameter(nv, "Density"));
   }
 
   /*
