@@ -96,8 +96,6 @@ extern gint             plist_current;     /* Current system printer */
 extern gp_plist_t         *plist;		  /* System printers */
 extern gint32           image_ID;
 extern const gchar     *image_filename;
-extern gint             image_width;
-extern gint             image_height;
 extern gint             image_true_width;
 extern gint             image_true_height;
 extern gint		printable_width;

@@ -156,6 +156,10 @@ static gint            print_height;	/* Printed height of image */
 static gint	       left, right;	        /* Imageable area */
 static gint            top, bottom;
 static gint	       paper_width, paper_height;	/* Physical width */
+static gint image_width;
+static gint image_height;
+gint image_true_width;
+gint image_true_height;
 
 static gint		num_media_sizes = 0;
 static stp_param_t	*media_sizes;

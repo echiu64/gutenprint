@@ -89,10 +89,6 @@ stp_printer_t current_printer = 0;	/* Current printer index */
 gint32          image_ID;	        /* image ID */
 
 const char *image_filename;
-int image_width;
-int image_height;
-int image_true_width;
-int image_true_height;
 
 #define SAFE_FREE(x)				\
 do						\
