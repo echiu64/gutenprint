@@ -310,7 +310,7 @@ reverse_row_ends(dither_t *d)
 {
   int i, j;
   for (i = 0; i < d->n_channels; i++)
-    for (j = 0; j < 2; j++)
+    for (j = 0; j < CHANNEL(d, i).subchannels; j++)
       {
 	int tmp = CHANNEL(d, i).row_ends[0][j];
 	CHANNEL(d, i).row_ends[0][j] =
