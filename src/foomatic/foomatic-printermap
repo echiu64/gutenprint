@@ -124,6 +124,7 @@
 #gptofoo escp2-mc5000 printer/Epson-MC_5000
 #gptofoo escp2-mc7000 printer/Epson-MC_7000
 #gptofoo escp2-mc9000 printer/Epson-MC_9000
+#gptofoo escp2-mj930c printer/Epson-MJ_930C
 #gptofoo escp2-mj5100c printer/Epson-MJ_5100C
 #gptofoo escp2-mj6000c printer/Epson-MJ_6000C
 #gptofoo escp2-mj8000c printer/Epson-MJ_8000C

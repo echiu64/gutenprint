@@ -1,5 +1,5 @@
-Gimp-Print 4.2.3, released October 19, 2002, is a stable release in
-the Gimp-Print 4.2 series.
+Gimp-Print 4.2.4-pre1, released November 6, 2002, is a prerelease in
+the stable Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -39,6 +39,56 @@ available at http://gimp-print.sourceforge.net.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.2.4-pre1 contains the following fixes and changes over
+Gimp-Print 4.2.3:
+
+  1) Serious color errors with Lexmark printers have been fixed.
+
+  2) An inability of CUPS to print certain page sizes has been fixed.
+
+  3) 6-color HP and Lexmark printers now print correctly.
+
+  4) The Epson Stylus Photo 950, 960, and PM-950C now print correctly
+     at 1440x1440 and 2880x720 DPI.  This is not a major fix; these
+     resolutions are actually printed at 2880x1440 DPI (which did not
+     have problems).  This printer (these are all different names for
+     the same printer) is not actually capable of printing at
+     1440x1440 or 2880x720 DPI.
+
+  5) Page sizes for some Canon printers have been corrected; A3-format
+     printing is now supported on appropriate printers.
+
+  6) Support for the Epson MJ-930C has been added.
+
+The following bugs have been fixed in Gimp-Print 4.2.4-pre1:
+
+628698 Lexmark color reversal
+630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
+631498 Canon driver does not support A3 page size for large format
+633910 Epson 1520 ppd bug gimp-print 4.2.3
+
+The following bugs are currently open:
+
+409612 Minor positioning prob on 4x6 glossy
+538097 QUALITY-Poor quality printing on Canon s400
+549677 Incorrect scaling on Canon BJC-1000
+557868 QUALITY-Washed out color under Gimp on HP560c
+581168 Canon BJC 250 just spits out pages
+601767 Mac OS X: Canon BJC 2100 does not print multiple pages
+602933 QUALITY-Poor quality on Canon S800
+603702 QUALITY-HP LaserJet 5L print is too light
+613054 Mac OS X: Printing from InDesign 2.0 on OS 10.2.1
+614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
+619299 QUALITY - brightness adjustment problem
+619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+621668 Epson Stylus full bleed prints have slight margin
+625780 Epson Stylus Pro 5000 does not print
+627266 Epson Stylus Pro Autoselect paper feed broken
+627978 QUALITY: Canon BJC-6500 has magenta cast.
+631936 HP DesignJet Margin Problems
+631937 HP DesignJet Sheet Cutter Problem
+631993 Macintosh OS X: Custom page size problems w/some apps
 
 
 
@@ -135,23 +185,6 @@ The following bugs have been fixed in Gimp-Print 4.2.3:
 621667 Very large prints on Epson 9500 fail
 622612 CUPS driver forbids custom page sizes
 625602 QUALITY Pale output on Stylus Pro 7500
-
-
-The following bugs are open against Gimp-Print 4.2.3:
-
-409612 Minor positioning prob on 4x6 glossy
-538097 QUALITY-Poor quality printing on Canon s400
-549677 Incorrect scaling on Canon BJC-1000
-557868 QUALITY-Washed out color under Gimp on HP560c
-581168 BJC 250 just spits out pages
-601767 Mac OS X: Canon BJC 2100 does not print multiple pages
-602933 QUALITY-Poor quality on Canon S800
-603702 QUALITY-HP LaserJet 5L print is too light
-613054 Printing from InDesign 2.0 on OS 10.2.1
-614882 QUALITY - Problems with CANON BJC-55 - Gimp-Print
-619299 QUALITY - brightness adjustment problem
-619537 QUALITY - Poor quality w/ Lexmark OprtaE+ & pcl-4
-621668 Full bleed prints have slight margin
 
 
 
@@ -1033,6 +1066,7 @@ Epson MC-7000                  escp2-mc7000    EPSON MC-7000
 Epson MC-9000                  escp2-mc9000    EPSON MC-9000
 Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-520C                  escp2-mj520c    EPSON MJ-520C
+Epson MJ-930C                  escp2-mj930c    EPSON MJ-930C
 Epson MJ-6000C                 escp2-mj6000c   EPSON MJ-6000C
 Epson MJ-8000C                 escp2-mj8000c   EPSON MJ-8000C
 Epson MC-10000                 escp2-mc10000   EPSON MC-10000
