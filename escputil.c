@@ -413,7 +413,7 @@ do_ink_level(void)
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
       exit(1);
     }
-  ind = index(buf, 'I');
+  ind = strchr(buf, 'I');
   if (!ind || ind[1] != 'Q' || ind[2] != ':')
     {
       fprintf(stderr, "Cannot parse output from printer\n");

@@ -1090,7 +1090,7 @@ get_system_printers(void)
   {
     while (fgets(line, sizeof(line), pfile) != NULL) {
       if (!strncmp(line,"Press RETURN to continue",24)) {
-	char *ptr= index(line,':')+2;
+	char *ptr= strchr(line,':')+2;
 	if (ptr && strlen(ptr)<(ptr-line))
 	  strcpy(line,ptr);
       }
