@@ -1546,6 +1546,7 @@ gimp_image_type_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       vars.image_type = (gint) data;
+      gimp_update_adjusted_thumbnail();
       plist[plist_current].v.image_type = (gint) data;
     }
 }
