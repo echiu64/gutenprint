@@ -1,6 +1,6 @@
 <?
 
-$plugin_version_number = '4.1.3';
+$plugin_version_number = '4.1.7';
 
 $maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
@@ -14,14 +14,19 @@ $supported_printers = array(
 		'EPSON Stylus Photo EX' => 'Fully Operational',
 		'EPSON Stylus Photo 720' => 'Needs Testing',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
-		'EPSON Stylus Photo 780' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Photo 790' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 780' => 'Fully Operational (4.1 only;
+		use the 870 driver in 4.0)',
+		'EPSON Stylus Photo 790' => 'Fully Operational (4.1 only;
+		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
-		'EPSON Stylus Photo 890' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 890' => 'Fully Operational (4.1 only;
+		use the 870 driver in 4.0)',
 		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 1270' => 'Fully Operational',
-		'EPSON Stylus Photo 1280' => 'Needs Testing (4.1 only)',
-		'EPSON Stylus Photo 1290' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 1280' => 'Fully Operational (4.1 only;
+		use the 1270 driver in 4.0)',
+		'EPSON Stylus Photo 1290' => 'Fully Operational (4.1 only;
+		use the 1270 driver in 4.0)',
 		'EPSON Stylus Photo 2000P' => 'Testing in Progress, untuned'
 		),
 	'Stylus Color Range' => array(
@@ -38,17 +43,20 @@ $supported_printers = array(
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
 		'EPSON Stylus Color 670' => 'Fully Operational',
-		'EPSON Stylus Color 680' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus Color 680' => 'Fully Operational',
 		'EPSON Stylus Color 740' => 'Fully Operational',
 		'EPSON Stylus Color 760' => 'Fully Operational',
-		'EPSON Stylus Color 777' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus Color 777' => 'Fully Operational',
 		'EPSON Stylus Color 800' => 'Fully Operational',
 		'EPSON Stylus Color 850' => 'Fully Operational',
 		'EPSON Stylus Color 860' => 'Fully Operational',
-		'EPSON Stylus Color 880' => 'Testing in Progress (4.1 only)',
-		'EPSON Stylus Color 83' => 'Testing in Progress (4.1 only)',
+		'EPSON Stylus Color 880' => 'Testing in Progress (4.1
+		only; use the 860 driver in 4.0)',
+		'EPSON Stylus Color 83' => 'Testing in Progress (4.1
+		only; use the 860 driver in 4.0)',
 		'EPSON Stylus Color 900' => 'Fully Operational (tuned in 4.1 only)',
-		'EPSON Stylus Color 980' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus Color 980' => 'Fully Operational (4.1
+		only; use the 900 driver for partial operation in 4.0)',
 		'EPSON Stylus Color 1160' => 'Fully Operational',
 		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 1520' => 'Fully Operational',
