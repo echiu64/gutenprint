@@ -1,24 +1,32 @@
 Welcome to Gutenprint 5.0 Beta 3!  Please read these release notes
 carefully.
 
-Gutenprint 5.0.0-beta3 is the second beta prerelease of Gutenprint
-5.0.  It is based on the 4.3 series that has been in development for
-over two years, and includes many improvements over the very popular
-4.2 series.  This release is not considered to be a fully stable
-release (there are still various things in flux, and it has not
+Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
+that may be used with most common UNIX print spooling systems,
+including CUPS, lpr, LPRng, or others.  These drivers provide high
+quality printing for UNIX (including Macintosh OS X 10.2 and 10.3) and
+Linux systems that in many cases equal or exceed proprietary
+vendor-supplied drivers in quality and functionality, and can be used
+for demanding printing tasks requiring flexibility and high quality.
+This software package includes the Print plug-in for the GIMP and
+Ghostscript and CUPS drivers, as well as Foomatic data.
+
+The package has been renamed in order to clearly distinguish it from
+the GIMP.  While this package started out as the Print plugin for the
+GIMP, it has expanded into a collection of general purpose printer
+drivers, and the Print plugin for the GIMP is now only a small (but
+important) piece of the package.  Furthermore, the name Gutenprint
+recognizes Johannes Gutenberg, the inventor of the movable type
+printing press.  Finally, the word "guten" means "good" in German.
+
+Gutenprint 5.0.0-beta3 is the third beta prerelease of Gutenprint 5.0.
+It is based on the Gimp-Print 4.3 series that has been in development
+for over two years, and includes many improvements over the very
+popular 4.2 series.  This release is not considered to be a fully
+stable release (there are still various things in flux, and it has not
 undergone the extensive testing that is required to declare a release
 stable), but we've been using it and we believe that it will be useful
 for many purposes.
-
-Gutenprint is a suite of printer drivers that may be used with most
-common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  These drivers provide high quality printing for UNIX
-(including Macintosh OS X 10.2 and 10.3) and Linux systems that in
-many cases equal or exceed proprietary vendor-supplied drivers in
-quality and functionality, and can be used for demanding printing
-tasks requiring flexibility and high quality.  This software package
-includes the Print plug-in for the GIMP and Ghostscript and CUPS
-drivers, as well as Foomatic data.
 
 Gutenprint currently contains over 200 drivers supporting in excess of
 600 printer models.
@@ -68,10 +76,29 @@ on building and installing Gutenprint.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-beta1 to 5.0.0-beta2
-2) Overall changes from 4.2 to 5.0.
-3) List of supported printers
-4) Printer-specific notes
+1) Changes from 5.0.0-beta2 to 5.0.0-beta3
+2) Changes from 5.0.0-beta1 to 5.0.0-beta2
+3) Overall changes from 4.2 to 5.0.
+4) List of supported printers
+5) Printer-specific notes
+
+================================================================
+
+* Major changes between Gimp-Print 5.0.0 beta 2 and Gutenprint 5.0.0 beta 3:
+
+  1) The package has been renamed Gutenprint, and library and header
+     file names have been changed accordingly.  All programs using
+     Gutenprint will need to be changed appropriately.
+
+  2) Color correction has been tweaked to improve tonality and hue.
+
+  3) Shared libraries now build correctly on AIX.
+
+  4) The Print plugin for the GIMP now handles unnamed images
+     correctly.
+
+  5) Various minor compilation problems have been fixed.
+
 
 ================================================================
 
@@ -1165,7 +1192,7 @@ Olympus P-440   (Experimental)
 Sony UP-DP10    (Experimental)
 
 The following is the complete list of printers believed to be
-compatible with Gimp-print, along with recommended drivers.  Some of
+compatible with Gutenprint, along with recommended drivers.  Some of
 these printers may work only partially; the specified drivers may not
 support the full range of resolutions, paper sizes, media sources,
 etc. that some of these printers may offer.
