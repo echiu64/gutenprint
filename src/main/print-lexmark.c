@@ -46,7 +46,7 @@
  *
  */
 
-/*#define DEBUG 1*/
+/* #define DEBUG 1*/
 #define USEEPSEWAVE 1
 
 #ifdef __GNUC__
@@ -86,10 +86,13 @@ typedef struct testdata {
   char *input_line;
 } testdata;
 
+const stp_vars_t  *dbgfileprn;
 const stp_vars_t  *dbgfile;
 int  lex_show_lcount, lex_show_length;
 
 void lex_show_dither(const stp_vars_t file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length);
+const stp_vars_t lex_open_tmp_file();
+const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int length);
 const stp_vars_t lex_show_init(int x, int y);
 void lex_show_deinit(const stp_vars_t file);
 static void testprint(testdata *td);
@@ -727,7 +730,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     618, 936,         /* max paper size *//* 8.58" x 13 " */
     INCH(2), INCH(4), /* min paper size */
     2400, 1200, 2, /* max resolution */
-    0, 0, 5, 15, /* 36 border l,r,t,b    unit is 1/72 DPI */
+    0, 0, 5, 15, /* 15 36 border l,r,t,b    unit is 1/72 DPI */
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT,
@@ -1391,6 +1394,9 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 		case m_z52:
 			stp_zfwrite((const char *) startHeader_z52,
 				    LXM_Z52_STARTSIZE,1,v);
+#ifdef DEBUG
+			lex_write_tmp_file(dbgfileprn, (void *)startHeader_z52, LXM_Z52_STARTSIZE);
+#endif
 			break;
 
 		case m_3200:
@@ -1421,14 +1427,18 @@ static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * cap
 	switch(caps->model)	{
 		case m_z52:
 		{
-			char buffer[4];
+			char buffer[40];
 
 			memcpy(buffer, ESC2a, 2);
 			buffer[2] = 0x7;
 			buffer[3] = 0x65;
 
+#ifdef DEBUG
+			stp_erprintf("lexmark: <<eject page.>> %x %x %x %x   %lx\n", buffer[0],  buffer[1], buffer[2], buffer[3], dbgfileprn);
+			lex_write_tmp_file(dbgfileprn, (void *)&(buffer[0]), 4);
+#endif
 			/* eject page */
-			stp_zfwrite(buffer, 4, 1, v);
+			stp_zfwrite(buffer, 1, 4, v);
 		}
 		break;
 
@@ -1476,6 +1486,9 @@ static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * ca
 			buf[3] = (unsigned char)(offset >> 8);
 			buf[4] = (unsigned char)(offset & 0xFF);
 			stp_zfwrite((const char *)buf, 1, 5, v);
+#ifdef DEBUG
+			lex_write_tmp_file(dbgfileprn, (void *)buf, 5);
+#endif
 		}
 		break;
 
@@ -1630,6 +1643,10 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   const paper_t *media = get_media_type(media_type,caps);
   const lexmark_inkparam_t *ink_parameter = lexmark_get_ink_parameter(ink_type, output_type, caps, nv);
 
+
+#ifdef DEBUG
+  dbgfileprn = lex_open_tmp_file(); /* open file with xx */
+#endif
 
   if (ink_parameter == NULL)
     {
@@ -2093,9 +2110,9 @@ densityDivisor /= 1.2;
       clean_color(cols.p.m, length);
       clean_color(cols.p.y, length);
 
-#ifdef DEBUGxx
+#ifdef DEBUG
       stp_erprintf("Let's go lex_show_dither\n");
-      lex_show_dither(dbgfile, cols.p.y, cols.p.c, cols.p.m, cols.p.Y, cols.p.C, cols.p.M, , out_width);
+      lex_show_dither(dbgfile, cols.p.y, cols.p.c, cols.p.m, cols.p.Y, cols.p.C, cols.p.M, cols.p.k, out_width);
 #endif
 
 #ifdef DEBUGyy
@@ -2120,6 +2137,11 @@ densityDivisor /= 1.2;
   stp_flush_all(weave, model, out_width, left,
 		      ydpi, xdpi, physical_xdpi);
 
+
+
+  lexmark_deinit_printer(nv, caps);
+
+
   if (doTestPrint == 0) {
     stp_free_dither(dither);
   }
@@ -2132,6 +2154,7 @@ densityDivisor /= 1.2;
   stp_free_lut(nv);
   stp_free(in);
   stp_free(out);
+  stp_destroy_weave(weave);
   if (privdata.outbuf != NULL) {
     stp_free(privdata.outbuf);/* !!!!!!!!!!!!!! */
   }
@@ -2148,9 +2171,9 @@ densityDivisor /= 1.2;
 
 #ifdef DEBUG
   lex_show_deinit(dbgfile);
+  lex_tmp_file_deinit(dbgfileprn);
 #endif
 
-  lexmark_deinit_printer(nv, caps);
   stp_free_vars(nv);
 }
 
@@ -2401,6 +2424,8 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 #ifdef DEBUG
    stp_erprintf("!! Line too long !! reduce it from %d", width);
 #endif
+   stp_erprintf("!! Line too long !! reduce it from %d", width);
+   exit(2);
     width = ((((caps->max_paper_width*caps->x_raster_res)/72) - offset)*xdpi)/caps->x_raster_res;
 #ifdef DEBUG
    stp_erprintf(" down to %d\n", width);
@@ -2590,6 +2615,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     /* now we write the image line */
     stp_zfwrite((const char *)prnBuf,1,clen,v);
 #ifdef DEBUG
+    lex_write_tmp_file(dbgfileprn, (void *)prnBuf,clen);
     stp_erprintf("lexmark: line written.\n");
 #endif
     return 1;
@@ -2608,6 +2634,40 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 #ifdef DEBUG
+const stp_vars_t lex_open_tmp_file() {
+  int i;
+  const stp_vars_t ofile;
+  char tmpstr[256];
+
+      stp_erprintf(" create file !\n");
+  for (i=0, sprintf(tmpstr, "/tmp/xx%d.prn", i), ofile = fopen(tmpstr, "r"); 
+       ofile != NULL; 
+       i++, sprintf(tmpstr, "/tmp/xx%d.prn", i), ofile = fopen(tmpstr, "r")) {
+    if (ofile != NULL) 
+      {
+	fclose(ofile);
+      }
+  }
+      stp_erprintf("Create file %s !\n", tmpstr);
+  ofile = fopen(tmpstr, "wb");
+  if (ofile == NULL)
+    {
+      stp_erprintf("Can't create file !\n");
+      exit(2);
+    }
+  return ofile;
+}
+
+void lex_tmp_file_deinit(const stp_vars_t file) {
+  stp_erprintf("Close file %lx\n", file);
+  fclose(file);
+}
+
+const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int length) {
+  fwrite(data, 1, length, ofile);
+}
+
+
 const stp_vars_t lex_show_init(int x, int y)
 {
   const stp_vars_t ofile;
@@ -2714,6 +2774,7 @@ void lex_show_dither(const stp_vars_t file, unsigned char *y,
 
 void lex_show_deinit(const stp_vars_t file) {
   stp_erprintf("lex_show_lcount %d,   lex_show_length %d\n", lex_show_lcount, lex_show_length);
+  fclose(file);
 }
 
 
