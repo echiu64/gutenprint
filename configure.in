@@ -314,7 +314,7 @@ if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   GIMPPRINT_LIBS="\$(top_srcdir)/src/main/libgimpprint.la"
 fi
 if test x${BUILD_TEST} = xyes ; then
-  TEST_BIN="escp2-weavetest printer_options"
+  TEST_BIN="escp2-weavetest printer_options unprint escp2-unprint pcl-unprint"
 fi
 
 dnl CUPS path setup

@@ -37,7 +37,7 @@ endif
 
 GHCODE = -e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
-$(srcdir)/gdevstp-print.h: $(top_srcdir)/src/include/print.h
+$(srcdir)/gdevstp-print.h: $(top_srcdir)/src/include/gimp-print.h
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $(srcdir)/$@
 
 gdevstp-%.h: $(srcdir)/../main/%.h Makefile
