@@ -655,11 +655,12 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	      goto good_page_size;
 	  answer = 0;
 	  fprintf(stderr, "%s is not a valid page size\n", v->media_size);
+	good_page_size:
+	  for (i = 0; i < count; i++)
+	    free(vptr[i]);
 	}
-    good_page_size:
-      for (i = 0; i < count; i++)
-	free(vptr[i]);
-      free(vptr);
+      if (vptr)
+	free(vptr);
     }
   else
     {
@@ -687,11 +688,12 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	      goto good_media_type;
 	  answer = 0;
 	  fprintf(stderr, "%s is not a valid media type\n", v->media_type);
+	good_media_type:
+	  for (i = 0; i < count; i++)
+	    free(vptr[i]);
 	}
-    good_media_type:
-      for (i = 0; i < count; i++)
-	free(vptr[i]);
-      free(vptr);
+      if (vptr)
+	free(vptr);
     }
 
   if (strlen(v->media_source) > 0)
@@ -704,11 +706,12 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	      goto good_media_source;
 	  answer = 0;
 	  fprintf(stderr, "%s is not a valid media source\n", v->media_source);
+	good_media_source:
+	  for (i = 0; i < count; i++)
+	    free(vptr[i]);
 	}
-    good_media_source:
-      for (i = 0; i < count; i++)
-	free(vptr[i]);
-      free(vptr);
+      if (vptr)
+	free(vptr);
     }
 
   if (strlen(v->resolution) > 0)
@@ -721,11 +724,12 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	      goto good_resolution;
 	  answer = 0;
 	  fprintf(stderr, "%s is not a valid resolution\n", v->resolution);
+	good_resolution:
+	  for (i = 0; i < count; i++)
+	    free(vptr[i]);
 	}
-    good_resolution:
-      for (i = 0; i < count; i++)
-	free(vptr[i]);
-      free(vptr);
+      if (vptr)
+	free(vptr);
     }
 
   if (strlen(v->ink_type) > 0)
@@ -738,11 +742,12 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
 	      goto good_ink_type;
 	  answer = 0;
 	  fprintf(stderr, "%s is not a valid ink type\n", v->ink_type);
+	good_ink_type:
+	  for (i = 0; i < count; i++)
+	    free(vptr[i]);
 	}
-    good_ink_type:
-      for (i = 0; i < count; i++)
-	free(vptr[i]);
-      free(vptr);
+      if (vptr)
+	free(vptr);
     }
 
   for (i = 0; i < stp_dither_algorithm_count(); i++)
