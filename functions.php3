@@ -1,4 +1,5 @@
 <?
+
 require('state.php3');
 
 function includeImage ($imageName,$altString = "Image",$border="0",$misc="") {
