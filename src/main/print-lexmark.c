@@ -37,7 +37,7 @@
  */
 
 /* #define DEBUG 1 */
-
+#define USEEPSEWAVE 1
 
 
 #ifdef HAVE_CONFIG_H
@@ -54,7 +54,7 @@ static int maxclen = 0;
 
 static int lxm3200_headpos = 0;
 static int lxm3200_linetoeject = 0;
-static int lxm3200_nozzles = 192;
+static int lxm_nozzles_used = 192;
 
 #define LXM3200_LEFTOFFS 6254
 #define LXM3200_RIGHTOFFS (LXM3200_LEFTOFFS-2120)
@@ -93,6 +93,7 @@ typedef struct {
   Lex_model model;    /* printer model */
   int max_width;      /* maximum printable paper size */
   int max_length;
+  unsigned int supp_res; /* list of allowed resolution right bit represents index 0 */
   int max_xdpi;
   int max_ydpi;
   int max_quality;
@@ -317,6 +318,12 @@ static double hue_adjustment[49] =
 static int lr_shift[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
 
+
+
+
+
+
+
 static void lexmark_write_line(FILE *,
 			       unsigned char *prnBuf,/* mem block to buffer output */
 			       int printMode,
@@ -335,7 +342,7 @@ static void lexmark_write_line(FILE *,
 			       unsigned char *, int,
 			       unsigned char *, int,
 			       unsigned char *, int,
-			       int, int, int, int);
+			       int, int, int, int, int);
 
 #define MAX_OVERSAMPLED 4
 #define MAX_BPP 2
@@ -388,6 +395,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
   { /* Lexmark */
     m_z52,
     618, 936,      /* max paper size *//* 8.58" x 13 " */
+    0xffff,        /* supp_res */
     2400, 1200, 2, /* max resolution */
     11, 9, 10, 10, /* border */
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -399,11 +407,12 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     0,         /* real left paper border */
     300,       /* real top paper border */
     1,
-    1200/72    /* z52 uses a vertical resolution of 1200 dpi */
+    1200/72    /* use a vertical resolution of 1200 dpi */
   },
   { /* Lexmark 3200 */
     m_3200,
     618, 936,      /* 8.58" x 13 " */
+    0xffff,        /* supp_res */
     1200, 1200, 2,
     11, 9, 10, 18,
     LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -420,6 +429,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
   { /*  */
     m_lex7500,
     618, 936,      /* 8.58" x 13 " */
+    0xffff,        /* supp_res */
     2400, 1200, 2,
     11, 9, 10, 18,
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -560,6 +570,20 @@ lexmark_size_type(const stp_vars_t *v, lexmark_cap_t caps)
   return 0;
 }
 
+
+int lexmark_get_color_nozzles(const stp_printer_t *printer) {
+  return 192;
+}
+
+int lexmark_get_black_nozzles(const stp_printer_t *printer) {
+  return 208;
+}
+
+int lexmark_get_nozzle_resolution(const stp_printer_t *printer) {
+  return 1200;
+}
+
+
 static char *
 c_strdup(const char *s)
 {
@@ -578,15 +602,76 @@ lexmark_default_resolution(const stp_printer_t *printer)
     return "180x180 DPI";
 }
 
+
+
+typedef struct {
+  const char name[65];
+  int hres;
+  int vres;
+  int softweave;
+  int vertical_passes;
+  int vertical_oversample;
+  int unidirectional;
+  int resid;
+} lexmark_res_t;
+
+static const lexmark_res_t lexmark_reslist[] = {
+  { "300 DPI",                                  300,  300,  0, 1, 1, 0, 0 },
+  { "300 DPI Unidirectional",                   300,  300,  0, 1, 1, 1, 0 },
+  { "600 DPI",                                  600,  600,  0, 1, 1, 0, 1 },
+  { "600 DPI Unidirectional",                   600,  600,  0, 1, 1, 1, 1 },
+  { "1200 DPI ",                               1200, 1200,  1, 2, 1, 0, 2 },
+  { "1200 DPI  Unidirectional",                1200, 1200,  0, 1, 1, 1, 2 },
+  { "", 0, 0, 0, 0, 0, -1 }
+};
+
+
+static const lexmark_res_t 
+*lexmark_get_resolution_para(const stp_printer_t *printer,
+			    const char *resolution)
+{
+  lexmark_cap_t caps= lexmark_get_model_capabilities(printer->model);
+
+  const lexmark_res_t *res = &(lexmark_reslist[0]);
+  while (res->hres)
+    {
+      if (res->vres <= caps.max_ydpi != -1 &&
+	  res->hres <= caps.max_xdpi != -1 &&
+	  !strcmp(resolution, res->name))
+	{
+	  return res;
+	}
+      res++;
+    }
+  return NULL;
+}	  
+
+int
+lexmark_print_bidirectional(const stp_printer_t *printer,
+			    const char *resolution)
+{
+  const lexmark_res_t *res_para = lexmark_get_resolution_para(printer, resolution);
+  return !res_para->unidirectional;
+}
+
 static void
 lexmark_describe_resolution(const stp_printer_t *printer,
 			    const char *resolution, int *x, int *y)
 {
+  const lexmark_res_t *res = lexmark_get_resolution_para(printer, resolution);
+  
+  if (res)
+    {
+      *x = res->hres;
+      *y = res->vres;
+      return;
+    }
   *x = -1;
   *y = -1;
-  sscanf(resolution, "%dx%d", x, y);
-  return;
-}	  
+}
+
+
+
 
 /*
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
@@ -655,34 +740,21 @@ lexmark_parameters(const stp_printer_t *printer,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
     {
-      int x= caps.max_xdpi, y= caps.max_ydpi;
+      unsigned int supported_resolutions = caps.supp_res;
       int c= 0;
+      const lexmark_res_t *res;
       valptrs = malloc(sizeof(char *) * 10);
-      if (!(caps.max_xdpi%300)) {
 
-	if ( 300<=x && 300<=y)
-	  valptrs[c++]= c_strdup("300x300 DPI");
-	if ( 600<=x && 600<=y)
-	  valptrs[c++]= c_strdup("600x600 DPI");
-	if (1200==x && 600==y)
-	  valptrs[c++]= c_strdup("1200x600 DPI");
-	if (1200<=x && 1200<=y)
-	  valptrs[c++]= c_strdup("1200x1200 DPI");
-	/*	if (2400<=x && 1200<=y)
-		valptrs[c++]= c_strdup("2400x1200 DPI"); not already supported !! */
-
-      } else if (!(caps.max_xdpi%180)) {
-
-	if ( 180<=x && 180<=y)
-	  valptrs[c++]= c_strdup("180x180 DPI");
-
-      } else {
-#ifdef DEBUG
-	fprintf(stderr,"lexmark: unknown resolution multiplier for model %d\n",
-		caps.model);
-#endif
-	return 0;
-      }
+      res = &(lexmark_reslist[0]);
+      /* check for allowed resolutions */
+      while (res->hres)
+	{
+	  if ((supported_resolutions & 1) == 1) {
+	    valptrs[c++]= c_strdup(res->name);
+	  }
+	  res++;
+	  supported_resolutions = supported_resolutions >> 1;
+	}
       *count= c;
       return (valptrs);
     }
@@ -1097,7 +1169,9 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
   int  densityDivisor;  /* This parameter is will adapt the density according the resolution */
   double k_lower, k_upper;
-
+  int  physical_xdpi = 0;
+  int  physical_ydpi = 0;
+  void *weaveparm;		/* Weave calculation parameter block */
 
 
   memcpy(&nv, v, sizeof(stp_vars_t));
@@ -1138,9 +1212,9 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   if (output_type == OUTPUT_GRAY) {
     printMode |= COLOR_MODE_K;
     pass_length=208;
-    lxm3200_nozzles = 208;
+    lxm_nozzles_used = lexmark_get_black_nozzles(printer);
   } else {
-    lxm3200_nozzles = 192;
+    lxm_nozzles_used = lexmark_get_color_nozzles(printer);
 
     /* color mode */
     printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M;
@@ -1164,7 +1238,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   * Figure out the output resolution...
   */
 
-  sscanf(resolution,"%dx%d",&xdpi,&ydpi);
+lexmark_describe_resolution(printer,
+			    resolution, &xdpi,&ydpi);
 #ifdef DEBUG
   fprintf(stderr,"lexmark: resolution=%dx%d\n",xdpi,ydpi);
 #endif
@@ -1174,21 +1249,29 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
     densityDivisor = 1;
     xresolution = DPI300;
     printMode |= PRINT_MODE_300;
+    physical_xdpi = 300;
+    physical_ydpi = 1200;
     break;
   case 600:
     densityDivisor = 2;
     xresolution = DPI600;
     printMode |= PRINT_MODE_600;
+    physical_xdpi = 600;
+    physical_ydpi = 1200;
     break;
   case 1200:
     densityDivisor = 4;
     xresolution = DPI1200;
     printMode |= PRINT_MODE_1200;
+    physical_xdpi = 1200;
+    physical_ydpi = 1200;
     break;
   case 2400:
     densityDivisor = 16;
     xresolution = DPI2400;
     printMode |= PRINT_MODE_2400;
+    physical_xdpi = 1200;
+    physical_ydpi = 1200;
     break;
   default:
     return;
@@ -1361,6 +1444,10 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
   fprintf(stderr,"\n");
 #endif
 
+
+
+
+
 #ifdef DEBUG
   fprintf(stderr,"density is %f\n",nv.density);
 #endif
@@ -1495,7 +1582,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 		       lcyan,    delay_lc, \
 		       lmagenta, delay_lm, \
 		       lyellow,  delay_ly, \
-		       length, out_width, left, use_dmt);
+		       length, out_width, left, use_dmt, \
+		       1);
  
 
   if (printhead == 5) {
@@ -1648,7 +1736,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 			   lcyan,    delay_lc,
 			   lmagenta, delay_lm,
 			   lyellow,  delay_ly,
-			   length, out_width, left, use_dmt);
+			   length, out_width, left, use_dmt,
+			   lexmark_print_bidirectional(printer, resolution));
      
 
       }
@@ -1658,6 +1747,7 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 
     
     image->progress_conclude(image);
+
 
     stp_free_dither(dither);
     stp_free_lut(&nv);
@@ -1780,7 +1870,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 			 lcyan,    delay_lc,
 			 lmagenta, delay_lm,
 			 lyellow,  delay_ly,
-			 length, out_width, left, use_dmt);
+			 length, out_width, left, use_dmt,
+			 lexmark_print_bidirectional(printer, resolution));
      
 
       /* we have to collect the lines for the inkjets */
@@ -1833,7 +1924,8 @@ lexmark_print(const stp_printer_t *printer,		/* I - Model */
 			   lcyan,    delay_lc,
 			   lmagenta, delay_lm,
 			   lyellow,  delay_ly,
-			   length, out_width, left, use_dmt);
+			   length, out_width, left, use_dmt,
+			   lexmark_print_bidirectional(printer, resolution));
      
       } /* for yl */
   } /* if delay_max */
@@ -1978,7 +2070,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
 	  prnBuf[2] = 0x80;
 	}
 
-      if(lxm3200_nozzles == 208)
+      if(lxm_nozzles_used == 208)
 	{
 	  prnBuf[2] |= 0x10;
 	}
@@ -2492,7 +2584,8 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 		   int           l,	/* I - Length of bitmap data */
 		   int           width,	/* I - Printed width */
 		   int           offset,  /* I - horizontal offset */
-		   int           dmt)
+		   int           dmt,
+		   int           bidirectional_printing)
 {
   static int empty= 0;
   int written= 0;
@@ -2529,7 +2622,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			head_colors,
 			l, printMode & ~(COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM), /* we print colors only */
 			ydpi, &empty, width, offset, dmt))
-	if (caps.res_specific[xresolution].bidirectional_printing)
+	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
     if ((printMode & COLOR_MODE_MASK) == (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_K)) {
@@ -2544,7 +2637,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			head_colors, 
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), /* we print black only */
 			ydpi, &empty, width, offset, dmt))
-	if (caps.res_specific[xresolution].bidirectional_printing)
+	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
     if ((printMode & (COLOR_MODE_MASK)) == COLOR_MODE_K) {
@@ -2568,7 +2661,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			head_colors, 
 			l, printMode, /* we print black only */
 			ydpi, &empty, width, offset, dmt))
-	if (caps.res_specific[xresolution].bidirectional_printing)
+	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
     if ((printMode & (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) == (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) {
@@ -2584,7 +2677,7 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			head_colors,   
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), 
 			ydpi, &empty, width, offset, dmt))
-	if (caps.res_specific[xresolution].bidirectional_printing)
+	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
   }
