@@ -1697,6 +1697,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
     if (do_6color)
       dither_set_light_inks(dither, .25, .25, 0.0, nv.density);
 
+  if (xdpi > ydpi)
+    dither_set_aspect_ratio(dither, 1, xdpi / ydpi);
+  else if (ydpi > xdpi)
+    dither_set_aspect_ratio(dither, ydpi / xdpi, 1);
+			  
   switch (nv.image_type)
     {
     case IMAGE_LINE_ART:

@@ -143,6 +143,9 @@ typedef struct dither
   int adaptive_limit;
   int adaptive_lower_limit;
 
+  int x_aspect;			/* Aspect ratio numerator */
+  int y_aspect;			/* Aspect ratio denominator */
+
   dither_color_t c_dither;
   dither_color_t m_dither;
   dither_color_t y_dither;
@@ -344,7 +347,7 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
 
 
 static inline unsigned
-ditherpoint(dither_matrix_t *mat, int x, int y)
+ditherpoint(const dither_t *d, dither_matrix_t *mat, int x, int y)
 {
   /*
    * This rather bizarre code is an attempt to avoid having to compute a lot
@@ -362,7 +365,7 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
       mat->index++;
       if (mat->last_x_mod >= mat->size)
 	{
-	  mat->last_x_mod = 0;
+	  mat->last_x_mod -= mat->size;
 	  mat->index -= mat->size;
 	}
     }
@@ -373,7 +376,7 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
       mat->index--;
       if (mat->last_x_mod < 0)
 	{
-	  mat->last_x_mod = mat->size - 1;
+	  mat->last_x_mod += mat->size;
 	  mat->index += mat->size;
 	}
     }
@@ -393,7 +396,7 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
       mat->index += mat->size;
       if (mat->last_y_mod >= mat->size)
 	{
-	  mat->last_y_mod = 0;
+	  mat->last_y_mod -= mat->size;
 	  mat->index -= (mat->size * mat->size);
 	}
     }
@@ -401,10 +404,10 @@ ditherpoint(dither_matrix_t *mat, int x, int y)
     {
       mat->last_y = y;
       mat->last_y_mod--;
-      mat->index -= mat->size;
+      mat->index -= mat->size;;
       if (mat->last_y_mod < 0)
 	{
-	  mat->last_y_mod = mat->size - 1;
+	  mat->last_y_mod += mat->size;
 	  mat->index += (mat->size * mat->size);
 	}
     }
@@ -474,6 +477,7 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->dst_width = out_width;
   d->adaptive_divisor = 2;
 
+  dither_set_aspect_ratio(d, 1, 1);
   dither_set_max_ink(d, INT_MAX, 1.0);
   dither_set_ink_spread(d, 13);
   dither_set_black_lower(d, .4);
@@ -484,6 +488,14 @@ init_dither(int in_width, int out_width, vars_t *v)
   dither_set_density(d, 1.0);
   return d;
 }  
+
+void
+dither_set_aspect_ratio(void *vd, int horizontal, int vertical)
+{
+  dither_t *d = (dither_t *) vd;
+  d->x_aspect = horizontal;
+  d->y_aspect = vertical;
+}
 
 void
 dither_set_density(void *vd, double density)
@@ -1269,7 +1281,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	       */
 	    case D_ORDERED:
 	    default:
-	      vmatrix = ditherpoint(pick_matrix, x, y);
+	      vmatrix = ditherpoint(d, pick_matrix, x, y);
 	    }
 
 	  if (vmatrix == 65536 && virtual_value == 65536)
@@ -1328,7 +1340,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	      v = dd->value_h;
 	      dot_size = dd->dot_size_h;
 	    }
-	  else if (rangepoint >= ditherpoint(dither_matrix, x, y))
+	  else if (rangepoint >= ditherpoint(d, dither_matrix, x, y))
 	    {
 	      isdark = dd->isdark_h;
 	      bits = dd->bits_h;
@@ -1404,7 +1416,7 @@ dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
     {
       if (gray[0] < 32768)
 	{
-	  if (d->density >= ditherpoint(&(d->k_dithermat), x, row))
+	  if (d->density >= ditherpoint(d, &(d->k_dithermat), x, row))
 	    kptr[0] |= bit;
 	}
 
