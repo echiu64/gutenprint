@@ -22,11 +22,13 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#define EXPANDED_PREVIEW_WINDOW
+
 #include "print_gimp.h"
 
 #ifndef GIMP_1_0
 
-#define MAX_PREVIEW_PPI        (20)
+#define MAX_PREVIEW_PPI        (30)
 
 #include "print-intl.h"
 
@@ -189,6 +191,7 @@ gimp_create_main_window (void)
   GtkWidget *hbox;
   GtkWidget *frame;
   GtkWidget *vbox;
+  GtkWidget *ppvbox;
   GtkWidget *table;
   GtkWidget *printer_table;
 
@@ -256,7 +259,7 @@ gimp_create_main_window (void)
   gtk_box_pack_start (GTK_BOX (main_vbox), hbox, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
 
-  frame = gtk_frame_new (_("Position"));
+  frame = gtk_frame_new (_("Preview"));
   gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
 
@@ -264,6 +267,10 @@ gimp_create_main_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 4);
   gtk_container_add (GTK_CONTAINER (frame), vbox);
   gtk_widget_show (vbox);
+
+  ppvbox = gtk_vbox_new (FALSE, 7);
+  gtk_box_pack_end (GTK_BOX (hbox), GTK_WIDGET (ppvbox), FALSE, FALSE, 0);
+  gtk_widget_show (ppvbox);
 
   /*
    * Drawing area for page preview...
@@ -292,10 +299,15 @@ gimp_create_main_window (void)
                          GDK_BUTTON_PRESS_MASK |
                          GDK_BUTTON_RELEASE_MASK);
 
-  table = gtk_table_new (4, 4, FALSE);
+  frame = gtk_frame_new (_("Position"));
+  gtk_box_pack_end (GTK_BOX (ppvbox), frame, TRUE, TRUE, 0);
+  gtk_widget_show (frame);
+
+  table = gtk_table_new (4, 6, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 4);
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+  gtk_container_add (GTK_CONTAINER (frame), table);
   gtk_widget_show (table);
 
   recenter_button = button = gtk_button_new_with_label (_("Center Image"));
@@ -375,11 +387,30 @@ gimp_create_main_window (void)
                              entry, 1, TRUE);
 
   /*
+   * Orientation option menu...
+   */
+
+  option = gimp_option_menu_new (FALSE,
+                                 _("Auto"), gimp_orientation_callback,
+                                 (gpointer) -1, NULL, NULL,
+				 vars.orientation == ORIENT_AUTO,
+                                 _("Portrait"), gimp_orientation_callback,
+                                 (gpointer) 0, NULL, NULL,
+				 vars.orientation == ORIENT_PORTRAIT,
+                                 _("Landscape"), gimp_orientation_callback,
+                                 (gpointer) 1, NULL, NULL,
+				 vars.orientation == ORIENT_LANDSCAPE,
+                                 NULL);
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 3,
+                             _("Orientation:"), 1.0, 0.5,
+                             option, 1, TRUE);
+
+  /*
    *  Printer settings frame...
    */
 
   frame = gtk_frame_new (_("Printer Settings"));
-  gtk_box_pack_start (GTK_BOX (hbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (ppvbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
   vbox = gtk_vbox_new (FALSE, 4);
@@ -431,30 +462,11 @@ gimp_create_main_window (void)
                              option, 1, TRUE);
 
   /*
-   * Orientation option menu...
-   */
-
-  option = gimp_option_menu_new (FALSE,
-                                 _("Auto"), gimp_orientation_callback,
-                                 (gpointer) -1, NULL, NULL,
-				 vars.orientation == ORIENT_AUTO,
-                                 _("Portrait"), gimp_orientation_callback,
-                                 (gpointer) 0, NULL, NULL,
-				 vars.orientation == ORIENT_PORTRAIT,
-                                 _("Landscape"), gimp_orientation_callback,
-                                 (gpointer) 1, NULL, NULL,
-				 vars.orientation == ORIENT_LANDSCAPE,
-                                 NULL);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
-                             _("Orientation:"), 1.0, 0.5,
-                             option, 1, TRUE);
-
-  /*
    * Resolution option menu...
    */
 
   resolution = option = gtk_option_menu_new ();
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 6,
+  gimp_table_attach_aligned (GTK_TABLE (table), 0, 5,
                              _("Resolution:"), 1.0, 0.5,
                              option, 1, TRUE);
 
@@ -532,13 +544,13 @@ gimp_create_main_window (void)
    */
 
   label = gtk_label_new(_("Output Type:"));
-  gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
   gtk_widget_show(label);
   
   vbox = gtk_vbox_new (FALSE, 1);
   gtk_box_set_spacing (GTK_BOX (vbox), -2);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
-  gtk_box_pack_start (GTK_BOX (box), vbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (box), vbox, TRUE, TRUE, 0);
   gtk_widget_show (vbox);
 
   output_gray = button = gtk_radio_button_new_with_label (NULL, _("B&W"));
@@ -606,7 +618,7 @@ gimp_create_main_window (void)
                       GTK_SIGNAL_FUNC (gimp_scaling_update),
                       NULL);
 
-  box = gtk_hbox_new (FALSE, 5);
+  box = gtk_hbox_new (FALSE, 7);
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
                              NULL, 0, 0,
                              box, 1, FALSE);
@@ -636,8 +648,15 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (gimp_scaling_callback),
                       NULL);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, TRUE, 0);
   gtk_widget_show (button);
+
+  /*
+   * Use a dummy label as a spacer
+   */
+  label = gtk_label_new(_(""));
+  gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
+  gtk_widget_show(label);
 
   label = gtk_label_new(_("Width:"));
   gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
@@ -743,7 +762,7 @@ gimp_create_main_window (void)
    * Printer driver option menu...
    */
 
-  label = gtk_label_new (_("Driver:"));
+  label = gtk_label_new (_("Printer Model:"));
   gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 2,
                     GTK_FILL, GTK_FILL, 0, 0);
