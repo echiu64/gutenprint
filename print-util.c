@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.75  2000/02/21 15:12:57  rlk
+ *   Minor release prep
+ *
  *   Revision 1.74  2000/02/17 01:09:10  rlk
  *   Alpha channel problems
  *
@@ -545,35 +548,36 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     )
 {
   if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      *grayout = vars->lut.composite[*grayin];
+      /*
+       * No alpha in image...
+       */
 
-      grayin ++;
-      grayout ++;
-      width --;
+      while (width > 0)
+	{
+	  *grayout = vars->lut.composite[*grayin];
+
+	  grayin ++;
+	  grayout ++;
+	  width --;
+	}
     }
-  }
   else
-  {
-   /*
-    * Handle alpha in image...
-    */
-
-    while (width > 0)
     {
-      *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
+      /*
+       * Handle alpha in image...
+       */
 
-      grayin += bpp;
-      grayout ++;
-      width --;
+      while (width > 0)
+	{
+	  *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 +
+					255 - grayin[1]];
+
+	  grayin += bpp;
+	  grayout ++;
+	  width --;
+	}
     }
-  }
 }
 
 
@@ -583,14 +587,14 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 
 void
 indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
-		  unsigned short *gray,		/* O - Grayscale pixels */
-		  int    width,			/* I - Width of row */
-		  int    bpp,			/* I - bpp in indexed */
-		  unsigned char *cmap,		/* I - Colormap */
-		  vars_t   *vars		/* I - Saturation */
-		  )
+		unsigned short *gray,		/* O - Grayscale pixels */
+		int    width,			/* I - Width of row */
+		int    bpp,			/* I - bpp in indexed */
+		unsigned char *cmap,		/* I - Colormap */
+		vars_t   *vars			/* I - Saturation */
+		)
 {
-  int		i;			/* Looping var */
+  int		i;
   unsigned char	gray_cmap[256];		/* Grayscale colormap */
 
 
@@ -600,95 +604,95 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		    cmap[2] * LUM_BLUE) / 100;
 
   if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      *gray = vars->lut.composite[gray_cmap[*indexed]];
-      indexed ++;
-      gray ++;
-      width --;
+      /*
+       * No alpha in image...
+       */
+
+      while (width > 0)
+	{
+	  *gray = vars->lut.composite[gray_cmap[*indexed]];
+	  indexed ++;
+	  gray ++;
+	  width --;
+	}
     }
-  }
   else
-  {
-   /*
-    * Handle alpha in image...
-    */
-
-    while (width > 0)
     {
-      *gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255] +
-			    255 - indexed[1]];
-      indexed += bpp;
-      gray ++;
-      width --;
+      /*
+       * Handle alpha in image...
+       */
+
+      while (width > 0)
+	{
+	  *gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255]
+				     + 255 - indexed[1]];
+	  indexed += bpp;
+	  gray ++;
+	  width --;
+	}
     }
-  }
 }
 
 
 void
 indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
-		 unsigned short *rgb,	/* O - RGB pixels */
-		 int    width,		/* I - Width of row */
-		 int    bpp,		/* I - Bytes-per-pixel in indexed */
-		 unsigned char *cmap,	/* I - Colormap */
-		 vars_t   *vars	/* I - Saturation */
-		 )
+	       unsigned short *rgb,	/* O - RGB pixels */
+	       int    width,		/* I - Width of row */
+	       int    bpp,		/* I - Bytes-per-pixel in indexed */
+	       unsigned char *cmap,	/* I - Colormap */
+	       vars_t   *vars		/* I - Saturation */
+	       )
 {
   if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      double h, s, v;
-      rgb[0] = vars->lut.red[cmap[*indexed * 3 + 0]];
-      rgb[1] = vars->lut.green[cmap[*indexed * 3 + 1]];
-      rgb[2] = vars->lut.blue[cmap[*indexed * 3 + 2]];
-      if (vars->saturation != 1.0)
+      /*
+       * No alpha in image...
+       */
+
+      while (width > 0)
 	{
-	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
-	  calc_hsv_to_rgb(rgb, h, s, v);
+	  double h, s, v;
+	  rgb[0] = vars->lut.red[cmap[*indexed * 3 + 0]];
+	  rgb[1] = vars->lut.green[cmap[*indexed * 3 + 1]];
+	  rgb[2] = vars->lut.blue[cmap[*indexed * 3 + 2]];
+	  if (vars->saturation != 1.0)
+	    {
+	      calc_rgb_to_hsv(rgb, &h, &s, &v);
+	      s = pow(s, 1.0 / vars->saturation);
+	      calc_hsv_to_rgb(rgb, h, s, v);
+	    }
+	  rgb += 3;
+	  indexed ++;
+	  width --;
 	}
-      rgb += 3;
-      indexed ++;
-      width --;
     }
-  }
   else
-  {
-   /*
-    * RGBA image...
-    */
-
-    while (width > 0)
     {
-      double h, s, v;
-      rgb[0] = vars->lut.red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 +
-		       255 - indexed[1]];
-      rgb[1] = vars->lut.green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 +
-			 255 - indexed[1]];
-      rgb[2] = vars->lut.blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 +
-			255 - indexed[1]];
-      if (vars->saturation != 1.0)
+      /*
+       * RGBA image...
+       */
+
+      while (width > 0)
 	{
-	  calc_rgb_to_hsv(rgb, &h, &s, &v);
-	  s = pow(s, 1.0 / vars->saturation);
-	  calc_hsv_to_rgb(rgb, h, s, v);
+	  double h, s, v;
+	  rgb[0] = vars->lut.red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255
+				+ 255 - indexed[1]];
+	  rgb[1] = vars->lut.green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255
+				  + 255 - indexed[1]];
+	  rgb[2] = vars->lut.blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255
+				 + 255 - indexed[1]];
+	  if (vars->saturation != 1.0)
+	    {
+	      calc_rgb_to_hsv(rgb, &h, &s, &v);
+	      s = pow(s, 1.0 / vars->saturation);
+	      calc_hsv_to_rgb(rgb, h, s, v);
+	    }
+	  rgb += 3;
+	  indexed += bpp;
+	  width --;
 	}
-      rgb += 3;
-      indexed += bpp;
-      width --;
     }
-  }
 }
 
 
@@ -699,46 +703,46 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 
 void
 rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
-	      unsigned short *gray,	/* O - Grayscale pixels */
-	      int    width,		/* I - Width of row */
-	      int    bpp,		/* I - Bytes-per-pixel in RGB */
-	      unsigned char *cmap,	/* I - Colormap (unused) */
-	      vars_t   *vars		/* I - Saturation */
-	      )
+	    unsigned short *gray,	/* O - Grayscale pixels */
+	    int    width,		/* I - Width of row */
+	    int    bpp,			/* I - Bytes-per-pixel in RGB */
+	    unsigned char *cmap,	/* I - Colormap (unused) */
+	    vars_t   *vars		/* I - Saturation */
+	    )
 {
   if (bpp == 3)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      *gray = vars->lut.composite[(rgb[0] * LUM_RED +
-			      rgb[1] * LUM_GREEN +
-			      rgb[2] * LUM_BLUE) / 100];
-      gray ++;
-      rgb += 3;
-      width --;
+      /*
+       * No alpha in image...
+       */
+
+      while (width > 0)
+	{
+	  *gray = vars->lut.composite[(rgb[0] * LUM_RED +
+				       rgb[1] * LUM_GREEN +
+				       rgb[2] * LUM_BLUE) / 100];
+	  gray ++;
+	  rgb += 3;
+	  width --;
+	}
     }
-  }
   else
-  {
-   /*
-    * Image has alpha channel...
-    */
-
-    while (width > 0)
     {
-      *gray = vars->lut.composite[((rgb[0] * LUM_RED +
-			       rgb[1] * LUM_GREEN +
-			       rgb[2] * LUM_BLUE) *
-			      rgb[3] / 255 + 255 - rgb[3])];
-      gray ++;
-      rgb += bpp;
-      width --;
+      /*
+       * Image has alpha channel...
+       */
+
+      while (width > 0)
+	{
+	  *gray = vars->lut.composite[((rgb[0] * LUM_RED +
+					rgb[1] * LUM_GREEN +
+					rgb[2] * LUM_BLUE) *
+				       rgb[3] / 255 + 255 - rgb[3])];
+	  gray ++;
+	  rgb += bpp;
+	  width --;
+	}
     }
-  }
 }
 
 /*
@@ -755,102 +759,105 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   )
 {
   if (bpp == 3)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      double h, s, v;
-      rgbout[0] = vars->lut.red[rgbin[0]];
-      rgbout[1] = vars->lut.green[rgbin[1]];
-      rgbout[2] = vars->lut.blue[rgbin[2]];
-      if (vars->saturation != 1.0 || vars->contrast != 100)
+      /*
+       * No alpha in image...
+       */
+
+      while (width > 0)
 	{
-	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  if (vars->saturation != 1.0)
-	    s = pow(s, 1.0 / vars->saturation);
+	  double h, s, v;
+	  rgbout[0] = vars->lut.red[rgbin[0]];
+	  rgbout[1] = vars->lut.green[rgbin[1]];
+	  rgbout[2] = vars->lut.blue[rgbin[2]];
+	  if (vars->saturation != 1.0 || vars->contrast != 100)
+	    {
+	      calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	      if (vars->saturation != 1.0)
+		s = pow(s, 1.0 / vars->saturation);
 #if 0
-	  if (vars->contrast != 100)
-	    {
-	      double contrast = vars->contrast / 100.0;
-	      double tv = fabs(v - .5) * 2.0;
-	      tv = pow(tv, 1.0 / (contrast * contrast));
-	      if (v < .5)
-		tv = - tv;
-	      v = (tv / 2.0) + .5;
-	    }
+	      if (vars->contrast != 100)
+		{
+		  double contrast = vars->contrast / 100.0;
+		  double tv = fabs(v - .5) * 2.0;
+		  tv = pow(tv, 1.0 / (contrast * contrast));
+		  if (v < .5)
+		    tv = - tv;
+		  v = (tv / 2.0) + .5;
+		}
 #endif
-	  calc_hsv_to_rgb(rgbout, h, s, v);
-	}
-      if (vars->density != 1.0)
-	{
-	  float t;
-	  int i;
-	  for (i = 0; i < 3; i++)
-	    {
-	      t = ((float) rgbout[i]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
-	      if (t < 0.0)
-		t = 0.0;
-	      rgbout[i] = (unsigned short) (t * 65536.0);
+	      calc_hsv_to_rgb(rgbout, h, s, v);
 	    }
+	  if (vars->density != 1.0)
+	    {
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgbout[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgbout[i] = (unsigned short) (t * 65536.0);
+		}
+	    }
+	  rgbin += 3;
+	  rgbout += 3;
+	  width --;
 	}
-      rgbin += 3;
-      rgbout += 3;
-      width --;
     }
-  }
   else
-  {
-   /*
-    * RGBA image...
-    */
-
-    while (width > 0)
     {
-      double h, s, v;
-      rgbout[0] = vars->lut.red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[1] = vars->lut.green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
-      rgbout[2] = vars->lut.blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
-      if (vars->saturation != 1.0 || vars->contrast != 100 ||
-	  vars->density != 1.0)
+      /*
+       * RGBA image...
+       */
+
+      while (width > 0)
 	{
-	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
-	  if (vars->saturation != 1.0)
-	    s = pow(s, 1.0 / vars->saturation);
+	  double h, s, v;
+	  rgbout[0] = vars->lut.red[rgbin[0] * rgbin[3] / 255 +
+				   255 - rgbin[3]];
+	  rgbout[1] = vars->lut.green[rgbin[1] * rgbin[3] / 255 +
+				     255 - rgbin[3]];
+	  rgbout[2] = vars->lut.blue[rgbin[2] * rgbin[3] / 255 +
+				    255 - rgbin[3]];
+	  if (vars->saturation != 1.0 || vars->contrast != 100 ||
+	      vars->density != 1.0)
+	    {
+	      calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	      if (vars->saturation != 1.0)
+		s = pow(s, 1.0 / vars->saturation);
 #if 0
-	  if (vars->contrast != 100)
-	    {
-	      double contrast = vars->contrast / 100.0;
-	      double tv = fabs(v - .5) * 2.0;
-	      tv = pow(tv, 1.0 / (contrast * contrast));
-	      if (v < .5)
-		tv = - tv;
-	      v = (tv / 2.0) + .5;
-	    }
+	      if (vars->contrast != 100)
+		{
+		  double contrast = vars->contrast / 100.0;
+		  double tv = fabs(v - .5) * 2.0;
+		  tv = pow(tv, 1.0 / (contrast * contrast));
+		  if (v < .5)
+		    tv = - tv;
+		  v = (tv / 2.0) + .5;
+		}
 #endif
-	  calc_hsv_to_rgb(rgbout, h, s, v);
-	}
-      if (vars->density != 1.0)
-	{
-	  float t;
-	  int i;
-	  for (i = 0; i < 3; i++)
-	    {
-	      t = ((float) rgbout[i]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
-	      if (t < 0.0)
-		t = 0.0;
-	      rgbout[i] = (unsigned short) (t * 65536.0);
+	      calc_hsv_to_rgb(rgbout, h, s, v);
 	    }
+	  if (vars->density != 1.0)
+	    {
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgbout[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgbout[i] = (unsigned short) (t * 65536.0);
+		}
+	    }
+	  rgbin += bpp;
+	  rgbout += 3;
+	  width --;
 	}
-      rgbin += bpp;
-      rgbout += 3;
-      width --;
     }
-  }
 }
 
 /*
@@ -859,71 +866,74 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 
 void
 gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
-	   unsigned short 	*rgbout,	/* O - RGB pixels */
-	   int    		width,		/* I - Width of row */
-	   int    		bpp,		/* I - Bytes/pix in indexed */
-	   unsigned char 	*cmap,		/* I - Colormap */
-	   vars_t  		*vars		/* I - Saturation */
-	   )
+	    unsigned short 	*rgbout,	/* O - RGB pixels */
+	    int    		width,		/* I - Width of row */
+	    int    		bpp,		/* I - Bytes/pix in indexed */
+	    unsigned char 	*cmap,		/* I - Colormap */
+	    vars_t  		*vars		/* I - Saturation */
+	    )
 {
   if (bpp == 1)
-  {
-   /*
-    * No alpha in image...
-    */
-
-    while (width > 0)
     {
-      rgbout[0] = vars->lut.red[grayin[0]];
-      rgbout[1] = vars->lut.green[grayin[0]];
-      rgbout[2] = vars->lut.blue[grayin[0]];
-      if (vars->density != 1.0)
+      /*
+       * No alpha in image...
+       */
+
+      while (width > 0)
 	{
-	  float t;
-	  int i;
-	  for (i = 0; i < 3; i++)
+	  rgbout[0] = vars->lut.red[grayin[0]];
+	  rgbout[1] = vars->lut.green[grayin[0]];
+	  rgbout[2] = vars->lut.blue[grayin[0]];
+	  if (vars->density != 1.0)
 	    {
-	      t = ((float) rgbout[i]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
-	      if (t < 0.0)
-		t = 0.0;
-	      rgbout[i] = (unsigned short) (t * 65536.0);
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgbout[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgbout[i] = (unsigned short) (t * 65536.0);
+		}
 	    }
+	  grayin++;
+	  rgbout += 3;
+	  width --;
 	}
-      grayin++;
-      rgbout += 3;
-      width --;
     }
-  }
   else
-  {
-   /*
-    * RGBA image...
-    */
-
-    while (width > 0)
     {
-      rgbout[0] = vars->lut.red[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
-      rgbout[1] = vars->lut.green[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
-      rgbout[2] = vars->lut.blue[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
-      if (vars->density != 1.0)
+      /*
+       * RGBA image...
+       */
+
+      while (width > 0)
 	{
-	  float t;
-	  int i;
-	  for (i = 0; i < 3; i++)
+	  rgbout[0] = vars->lut.red[(grayin[0] * grayin[1] / 255 +
+				     255 - grayin[1])];
+	  rgbout[1] = vars->lut.green[(grayin[0] * grayin[1] / 255 +
+				       255 - grayin[1])];
+	  rgbout[2] = vars->lut.blue[(grayin[0] * grayin[1] / 255 +
+				      255 - grayin[1])];
+	  if (vars->density != 1.0)
 	    {
-	      t = ((float) rgbout[i]) / 65536.0;
-	      t = (1.0 + ((t - 1.0) * vars->density));
-	      if (t < 0.0)
-		t = 0.0;
-	      rgbout[i] = (unsigned short) (t * 65536.0);
+	      float t;
+	      int i;
+	      for (i = 0; i < 3; i++)
+		{
+		  t = ((float) rgbout[i]) / 65536.0;
+		  t = (1.0 + ((t - 1.0) * vars->density));
+		  if (t < 0.0)
+		    t = 0.0;
+		  rgbout[i] = (unsigned short) (t * 65536.0);
+		}
 	    }
+	  grayin += bpp;
+	  rgbout += 3;
+	  width --;
 	}
-      grayin += bpp;
-      rgbout += 3;
-      width --;
     }
-  }
 }
 
 /* #define PRINT_LUT */

@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.91  2000/02/21 15:12:57  rlk
+ *   Minor release prep
+ *
  *   Revision 1.90  2000/02/21 01:08:02  rlk
  *   Weird init sequence for newer printers
  *
@@ -476,6 +479,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_PAPER_SMALL 	0x0
 #define MODEL_PAPER_LARGE 	0x1
 #define MODEL_PAPER_1319	0x2
+#define MODEL_PAPER_A2		0x3
 
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
@@ -562,7 +566,7 @@ typedef model_cap_t model_class_t;
  * A lot of these are guesses
  */
 
-model_cap_t model_capabilities[] =
+static model_cap_t model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */
   /* 0: Stylus Color */
@@ -596,7 +600,7 @@ model_cap_t model_capabilities[] =
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
   /* 6: Stylus Color 1520/3000 */
-  (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_600
+  (MODEL_PAPER_A2 | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL | MODEL_MAKE_XRES(720)
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
@@ -752,6 +756,11 @@ escp2_parameters(int  model,		/* I - Printer model */
 	{
 	  width_limit = 11 * 72;
 	  length_limit = 17 * 72;
+	}
+      else if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK, MODEL_PAPER_A2))
+	{
+	  width_limit = 33 * 72 / 2; /* 16.5" */
+	  length_limit = 24 * 72;
 	}
       else if (escp2_has_cap(model, MODEL_PAPER_SIZE_MASK,
 			     MODEL_PAPER_1319))

@@ -1,0 +1,41 @@
+This is the Print plugin for the Gimp, version 3.1.0.  This is a
+development release, the first on the 3.1 branch.  If this software
+causes your print head to zoom off the end of your printer, spilling
+ink all over your 1000 year old Persian rug, don't blame us.
+Remember, you installed the software.
+
+This software also comes with a GhostScript driver for Epson Stylus
+printers.  The support for Epson Stylus printers in the GhostScript
+driver is identical to the support for these printers in the Print
+plugin -- they use the identical code base.
+
+This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Print 3.1.0 contains the following user-visible improvements over
+Print 3.0.5, the version distributed with the Gimp 1.1.17:
+
+1) Preliminary support for Canon BubbleJet printers (specifically the
+   BJC6000).
+
+2) Preliminary support for the Epson Stylus Color 440/640/740/900 and
+   Stylus Photo 750/1200 printers.  These printers should in theory
+   work in all modes, although that has not been comprehensively
+   tested.  1440 dpi mode on the 900 in particular may not work.
+   There is also pre-preliminary support for the Stylus Photo 870 and
+   1270 based on the published specifications.  This driver is
+   completely untuned for these printers at present.
+
+3) Ability to position the image on the page to the point (1/72", or
+   about .35 mm), along with a more accurate depiction of the
+   positioning on the page.
+
+4) One-click ability to scale to the image resolution (Gimp 1.1 only).
+
+5) Much better handling of the saved state (printrc file), including
+   saving of parameters related to file output.
+
+6) Utilities (in various states of completion) to reconstitute an
+   image from a print file.
+
+There are additional improvements over Print 2.0.2 (the version
+distributed with Gimp 1.1.11 and earlier) too numerous to list here.

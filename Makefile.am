@@ -36,7 +36,7 @@ AM_CPPFLAGS = \
 
 print_LDADD = $(GIMP_LIBS)
 
-EXTRA_DIST=parse-escp2 \
+EXTRA_DIST=parse-escp2 RELNOTES \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
 	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h

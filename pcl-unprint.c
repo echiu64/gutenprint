@@ -26,6 +26,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
+#include<string.h>
 
 static char *id="@(#) $Id$";
 
@@ -1113,6 +1114,9 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  2000/02/21 15:12:57  rlk
+ *   Minor release prep
+ *
  *   Revision 1.2  2000/02/20 20:52:31  davehill
  *   Now does TIFF compressed files and 2 level colour in CMY
  *   or CMYK

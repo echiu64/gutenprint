@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.26  2000/02/21 15:12:57  rlk
+ *   Minor release prep
+ *
  *   Revision 1.25  2000/02/16 00:59:19  rlk
  *   1) Use correct convert functions (canon, escp2, pcl, ps).
  *
@@ -216,7 +219,7 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_CAP_DMT       2    /* Drop Modulation Technology */
 #define CANON_CAP_MSB_FIRST 4    /* how to send data */
 
-canon_cap_t canon_model_capabilities[] =
+static canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
 
@@ -737,7 +740,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 /*
  *  'alloc_buffer()' allocates buffer and fills it with 0
  */ 
-unsigned char *canon_alloc_buffer(int size)
+static unsigned char *canon_alloc_buffer(int size)
 {
   unsigned char *buf= malloc(size);
   if (buf) memset(buf,0,size);
@@ -751,7 +754,7 @@ unsigned char *canon_alloc_buffer(int size)
  *                  !!! buf must contain more than (num) lines !!!
  *                      also sets first line to 0s if num<1
  */
-void
+static void
 canon_advance_buffer(unsigned char *buf, int len, int num)
 {
   if (!buf || !len) return;
