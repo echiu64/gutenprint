@@ -36,6 +36,7 @@ DISTDIRS = m4 m4extra
 
 # Libtool dependency
 libtool: $(LIBTOOL_DEPS)
+	cd $(srcdir); \
 	$(SHELL) ./config.status --recheck
 
 ChangeLog:

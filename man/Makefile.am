@@ -36,15 +36,20 @@ if BUILD_ESCPUTIL
 ESCPUTIL_MAN = escputil.1
 endif
 
+if BUILD_IJS
+IJS_MAN = ijsgimpprint.1
+endif
+
 MAIN_MAN = gimpprint.3 gimpprint-config.1
 
-man_MANS = $(CUPS_MAN) $(ESCPUTIL_MAN) $(MAIN_MAN)
+man_MANS = $(CUPS_MAN) $(ESCPUTIL_MAN) $(IJS_MAN) $(MAIN_MAN)
 
 EXTRA_man_MANS = \
 	cups-calibrate.8 \
 	cups-genppd.8 \
 	cups-genppdconfig.8 \
 	escputil.1 \
+	ijsgimpprint.1 \
 	gimpprint.3 \
 	gimpprint-config.1
 
