@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1-pre2, released March 2, 2002, is a pre-release of
+Gimp-Print 4.2.1-pre4, released March 30, 2002, is a pre-release of
 Gimp-Print 4.2.1.  This prerelease offers a number of fixes and
 improvements over 4.2.0
 
@@ -18,6 +18,49 @@ later GNU Ghostscript release based on 6.51 (e. g. 6.52).
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.2.1-pre4 contains the following major changes and fixes
+over Gimp-Print 4.2.1-pre3:
+
+  1) The CUPS drivers will now output the complete page when the job
+     completes rather than waiting for the next job under some
+     circumstances.
+
+  2) Page logging works correctly in CUPS.
+
+  3) The CUPS driver now offers both interrupt-driven and polled
+     parallel ports for BSD; under some circumstances, the polled port
+     is faster.
+
+  4) A Dutch translation has been added.
+
+  5) Quality improvements for pigment-based Epson Stylus Pro printers
+     (5500, 7500, and 9500).
+
+  6) Very fast dithering now works correctly.
+
+  7) Epson Stylus Pro printers now print correctly positioned on roll
+     feed paper, and will not attempt to print to the edge of the
+     page.
+
+  8) Additional Epson, Canon, Okidata, and Kyocera laser printers have
+     been tested.
+
+The following bugs are fixed in 4.2.1-pre4:
+
+533400 Very fast dithering works incorrectly
+525779 Buffering bug in epson cups backend
+528922 rastertoprinter doesn't log pages
+
+The following critical bug has been reported against all 4.2 releases
+to date and is believed to be unresolved in this release.  It is
+possible that the fix for bug 525779 has partially solved this.  The
+symptoms are that prints to Windows shared printers are incomplete:
+the bottom of the last page will not be printed.  There is no known
+workaround for this issue.
+
+510185 Incomplete print using CUPS->Samba
+
 
 Gimp-Print 4.2.1-pre3 contains the following major changes and fixes
 over Gimp-Print 4.2.1-pre2:

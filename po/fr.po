@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.1.99-b2\n"
-"POT-Creation-Date: 2002-03-13 20:28-0500\n"
+"POT-Creation-Date: 2002-03-30 15:21-0500\n"
 "PO-Revision-Date: 2001-11-09 13:17+0100\n"
 "Last-Translator: Christophe Fergeau <teuf@users.sourceforge.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -249,206 +249,206 @@ msgstr "Papier photo brillant"
 msgid "Ilford Heavy Paper"
 msgstr "Papier épais Ilford"
 
-#: src/main/print-escp2.c:2936 src/main/print-escp2.c:2938
+#: src/main/print-escp2.c:3001 src/main/print-escp2.c:3003
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr "Brouillon rapide 360x90 ppp"
 
-#: src/main/print-escp2.c:2941 src/main/print-escp2.c:2943
+#: src/main/print-escp2.c:3006 src/main/print-escp2.c:3008
 msgid "360 x 120 DPI Economy Draft"
 msgstr "Brouillon 360x120 ppp"
 
-#: src/main/print-escp2.c:2946 src/main/print-escp2.c:2948
+#: src/main/print-escp2.c:3011 src/main/print-escp2.c:3013
 msgid "180 DPI Economy Draft"
 msgstr "Économique 180 ppp"
 
-#: src/main/print-escp2.c:2951 src/main/print-escp2.c:2953
+#: src/main/print-escp2.c:3016 src/main/print-escp2.c:3018
 msgid "360 x 240 DPI Draft"
 msgstr "Brouillon 360 x 240 ppp"
 
-#: src/main/print-escp2.c:2956 src/main/print-escp2.c:2958
+#: src/main/print-escp2.c:3021 src/main/print-escp2.c:3023
 msgid "360 x 180 DPI Draft"
 msgstr "Brouillon 360 x 180 ppp"
 
-#: src/main/print-escp2.c:2961 src/main/print-escp2.c:2969
+#: src/main/print-escp2.c:3026 src/main/print-escp2.c:3034
 msgid "360 DPI"
 msgstr "360 ppp"
 
-#: src/main/print-escp2.c:2963 src/main/print-escp2.c:2971
+#: src/main/print-escp2.c:3028 src/main/print-escp2.c:3036
 msgid "360 DPI Unidirectional"
 msgstr "360 ppp unidirectionnel"
 
-#: src/main/print-escp2.c:2965
+#: src/main/print-escp2.c:3030
 msgid "360 DPI Microweave"
 msgstr "360 ppp Microweave"
 
-#: src/main/print-escp2.c:2967
+#: src/main/print-escp2.c:3032
 msgid "360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2973
+#: src/main/print-escp2.c:3038
 msgid "360 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2975
+#: src/main/print-escp2.c:3040
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2977
+#: src/main/print-escp2.c:3042
 msgid "360 DPI FOL2"
 msgstr ""
 
-#: src/main/print-escp2.c:2979
+#: src/main/print-escp2.c:3044
 msgid "360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2981
+#: src/main/print-escp2.c:3046
 msgid "360 DPI MW2"
 msgstr ""
 
-#: src/main/print-escp2.c:2983
+#: src/main/print-escp2.c:3048
 msgid "360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2986 src/main/print-escp2.c:2990
+#: src/main/print-escp2.c:3051 src/main/print-escp2.c:3055
 msgid "720 x 360 DPI"
 msgstr "720 x 360 ppp"
 
-#: src/main/print-escp2.c:2988 src/main/print-escp2.c:2992
+#: src/main/print-escp2.c:3053 src/main/print-escp2.c:3057
 msgid "720 x 360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2994
+#: src/main/print-escp2.c:3059
 msgid "720 x 360 DPI Microweave"
 msgstr "720x360 ppp Microweave"
 
-#: src/main/print-escp2.c:2996
+#: src/main/print-escp2.c:3061
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2998
+#: src/main/print-escp2.c:3063
 msgid "720 x 360 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2.c:3000
+#: src/main/print-escp2.c:3065
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3002
+#: src/main/print-escp2.c:3067
 msgid "720 x 360 DPI FOL2"
 msgstr ""
 
-#: src/main/print-escp2.c:3004
+#: src/main/print-escp2.c:3069
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3006
+#: src/main/print-escp2.c:3071
 msgid "720 x 360 DPI MW2"
 msgstr ""
 
-#: src/main/print-escp2.c:3008
+#: src/main/print-escp2.c:3073
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3011 src/main/print-escp2.c:3027
+#: src/main/print-escp2.c:3076 src/main/print-escp2.c:3092
 msgid "720 DPI"
 msgstr "720 ppp"
 
-#: src/main/print-escp2.c:3013 src/main/print-escp2.c:3029
+#: src/main/print-escp2.c:3078 src/main/print-escp2.c:3094
 msgid "720 DPI Unidirectional"
 msgstr "720 ppp unidirectionnel"
 
-#: src/main/print-escp2.c:3015
+#: src/main/print-escp2.c:3080
 msgid "720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:3017
+#: src/main/print-escp2.c:3082
 msgid "720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3019
+#: src/main/print-escp2.c:3084
 msgid "720 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:3021
+#: src/main/print-escp2.c:3086
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3023
+#: src/main/print-escp2.c:3088
 msgid "720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2.c:3025
+#: src/main/print-escp2.c:3090
 msgid "720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3031
+#: src/main/print-escp2.c:3096
 msgid "720 DPI High Quality"
 msgstr "Haute qualité 720 ppp"
 
-#: src/main/print-escp2.c:3033
+#: src/main/print-escp2.c:3098
 msgid "720 DPI High Quality Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3035
+#: src/main/print-escp2.c:3100
 msgid "720 DPI Highest Quality"
 msgstr "Trés haute qualité 720 ppp"
 
-#: src/main/print-escp2.c:3038 src/main/print-escp2.c:3054
+#: src/main/print-escp2.c:3103 src/main/print-escp2.c:3119
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 ppp"
 
-#: src/main/print-escp2.c:3040 src/main/print-escp2.c:3056
+#: src/main/print-escp2.c:3105 src/main/print-escp2.c:3121
 msgid "1440 x 720 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3042
+#: src/main/print-escp2.c:3107
 msgid "1440 x 720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:3044
+#: src/main/print-escp2.c:3109
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3046
+#: src/main/print-escp2.c:3111
 msgid "1440 x 720 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2.c:3048
+#: src/main/print-escp2.c:3113
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3050
+#: src/main/print-escp2.c:3115
 msgid "1440 x 720 DPI Four Pass"
 msgstr "Quatre passes 1440x720 ppp"
 
-#: src/main/print-escp2.c:3052
+#: src/main/print-escp2.c:3117
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3058
+#: src/main/print-escp2.c:3123
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "Trés haute qualité 1440x720 ppp"
 
-#: src/main/print-escp2.c:3061
+#: src/main/print-escp2.c:3126
 msgid "2880 x 720 DPI"
 msgstr "2880x720 ppp"
 
-#: src/main/print-escp2.c:3063
+#: src/main/print-escp2.c:3128
 msgid "2880 x 720 DPI Unidirectional"
 msgstr ""
 
 #.
 #. * Nothing thus far supports 1440 DPI vertical resolution
 #.
-#: src/main/print-escp2.c:3069
+#: src/main/print-escp2.c:3134
 msgid "1440 x 1440 DPI"
 msgstr "1440x1440 ppp"
 
-#: src/main/print-escp2.c:3071
+#: src/main/print-escp2.c:3136
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "Très haute qualité 1440x1440 ppp"
 
-#: src/main/print-escp2.c:3074
+#: src/main/print-escp2.c:3139
 msgid "2880 x 1440 DPI"
 msgstr "2880x1440 ppp"
 
@@ -457,41 +457,41 @@ msgstr "2880x1440 ppp"
 #. * nor any faster than 720x720 DPI.  They exist to permit testing
 #. * 2880x720 (4:1 aspect) on 1440x720 printers.
 #.
-#: src/main/print-escp2.c:3082
+#: src/main/print-escp2.c:3147
 msgid "1440 x 360 DPI"
 msgstr "1440x360 ppp"
 
-#: src/main/print-escp2.c:3084
+#: src/main/print-escp2.c:3149
 msgid "1440 x 360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:3086
+#: src/main/print-escp2.c:3151
 msgid "1440 x 360 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:3088
+#: src/main/print-escp2.c:3153
 msgid "1440 x 360 DPI High Quality Uni"
 msgstr ""
 
-#: src/main/print-escp2.c:3090
+#: src/main/print-escp2.c:3155
 msgid "1440 x 360 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:3106
+#: src/main/print-escp2.c:3171
 #, fuzzy
 msgid "Seven Color Enhanced"
 msgstr "Extension de couleurs..."
 
-#: src/main/print-escp2.c:3107
+#: src/main/print-escp2.c:3172
 msgid "Six Color Enhanced Composite"
 msgstr ""
 
-#: src/main/print-escp2.c:3108 src/main/print-lexmark.c:629
+#: src/main/print-escp2.c:3173 src/main/print-lexmark.c:629
 #: src/main/print-lexmark.c:709
 msgid "Six Color Photo"
 msgstr "Photo six couleurs"
 
-#: src/main/print-escp2.c:3109 src/main/print-lexmark.c:634
+#: src/main/print-escp2.c:3174 src/main/print-lexmark.c:634
 #: src/main/print-lexmark.c:714
 msgid "Five Color Photo Composite"
 msgstr ""
@@ -500,22 +500,22 @@ msgstr ""
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2.c:3110 src/main/print-lexmark.c:619
+#: src/main/print-escp2.c:3175 src/main/print-lexmark.c:619
 #: src/main/print-lexmark.c:699
 msgid "Four Color Standard"
 msgstr ""
 
-#: src/main/print-escp2.c:3111 src/main/print-lexmark.c:624
+#: src/main/print-escp2.c:3176 src/main/print-lexmark.c:624
 #: src/main/print-lexmark.c:704
 msgid "Three Color Composite"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:3434
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:3503
 #: src/main/print-pcl.c:200
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2.c:3436
+#: src/main/print-escp2.c:3505
 msgid "Roll Feed"
 msgstr ""
 
