@@ -208,7 +208,8 @@ typedef void *stp_vars_t;
 typedef enum stp_parameter_type
 {
   STP_PARAMETER_TYPE_STRING_LIST, /* Single string choice from a list */
-  STP_PARAMETER_TYPE_INT,	/* Integer point number */
+  STP_PARAMETER_TYPE_INT,	/* Integer */
+  STP_PARAMETER_TYPE_BOOLEAN,	/* Boolean */
   STP_PARAMETER_TYPE_DOUBLE,	/* Floating point number */
   STP_PARAMETER_TYPE_CURVE,	/* Curve */
   STP_PARAMETER_TYPE_FILE,	/* Filename (NYI, need to consider security) */
@@ -334,6 +335,7 @@ typedef struct
     stp_curve_t curve;
     double dbl;
     int integer;
+    int boolean;
     const char *str;
   } deflt;
 } stp_parameter_t;
@@ -518,6 +520,8 @@ extern void stp_set_float_parameter(stp_vars_t v, const char *parameter,
 				    double value);
 extern void stp_set_int_parameter(stp_vars_t v, const char *parameter,
 				  int value);
+extern void stp_set_boolean_parameter(stp_vars_t v, const char *parameter,
+				      int value);
 extern void stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 				    const stp_curve_t value);
 extern void stp_set_raw_parameter(stp_vars_t v, const char *parameter,
@@ -531,6 +535,8 @@ extern const double stp_get_float_parameter(const stp_vars_t v,
 					    const char *param);
 extern const int stp_get_int_parameter(const stp_vars_t v,
 				       const char *param);
+extern const int stp_get_boolean_parameter(const stp_vars_t v,
+					   const char *param);
 extern const stp_curve_t stp_get_curve_parameter(const stp_vars_t v,
 						 const char *param);
 extern const stp_raw_t *stp_get_raw_parameter(const stp_vars_t v,
@@ -540,6 +546,7 @@ extern int stp_check_string_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_file_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_float_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_int_parameter(const stp_vars_t v, const char *param);
+extern int stp_check_boolean_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_curve_parameter(const stp_vars_t v, const char *param);
 extern int stp_check_raw_parameter(const stp_vars_t v, const char *param);
 

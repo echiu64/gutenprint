@@ -405,6 +405,10 @@ main(int  argc,				/* I - Number of command-line arguments */
 		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
 			p->name, stp_get_int_parameter(v, p->name));
 		break;
+	      case STP_PARAMETER_TYPE_BOOLEAN:
+		fprintf(stderr, "DEBUG: stp_get_%s(v) |%.d|\n",
+			p->name, stp_get_boolean_parameter(v, p->name));
+		break;
 	      default:
 		break;
 	      }

@@ -594,6 +594,9 @@ stpui_printrc_load_v1(FILE *fp)
 	    case STP_PARAMETER_TYPE_INT:
 	      stp_set_int_parameter(key.v, keyword, atoi(value));
 	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_set_int_parameter(key.v, keyword, atoi(value));
+	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      curve = stp_curve_allocate_read_string(value);
 	      if (curve)
@@ -743,6 +746,11 @@ stpui_printrc_save(void)
 		  if (stp_check_int_parameter(p->v, param->name))
 		    fprintf(fp, "%s: %d\n", param->name,
 			    stp_get_int_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_BOOLEAN:
+		  if (stp_check_boolean_parameter(p->v, param->name))
+		    fprintf(fp, "%s: %d\n", param->name,
+			    stp_get_boolean_parameter(p->v, param->name));
 		  break;
 		case STP_PARAMETER_TYPE_CURVE:
 		  if (stp_check_curve_parameter(p->v, param->name))

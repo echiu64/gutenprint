@@ -427,6 +427,8 @@ verify_param(const stp_vars_t v, const char *parameter)
     case STP_PARAMETER_TYPE_RAW:
     case STP_PARAMETER_TYPE_FILE:
       return 1;			/* No way to verify this here */
+    case STP_PARAMETER_TYPE_BOOLEAN:
+      return 1;			/* Booleans always OK */
     default:
       stp_eprintf(v, _("Unknown type parameter %s (%d)\n"),
 		  parameter, desc.p_type);
@@ -434,19 +436,15 @@ verify_param(const stp_vars_t v, const char *parameter)
     }
 }
 
-#define CHECK_INT_RANGE(v, component)					\
-do									\
-{									\
-  const stp_vars_t max = stp_maximum_settings();			\
-  const stp_vars_t min = stp_minimum_settings();			\
-  if (stp_get_##component((v)) < stp_get_##component(min) ||		\
-      stp_get_##component((v)) > stp_get_##component(max))		\
-    {									\
-      answer = 0;							\
-      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),	\
-		  #component, stp_get_##component(v),			\
-		  stp_get_##component(min), stp_get_##component(max));	\
-    }									\
+#define CHECK_INT_RANGE(v, component, min, max)				    \
+do									    \
+{									    \
+  if (stp_get_##component((v)) < (min) || stp_get_##component((v)) > (max)) \
+    {									    \
+      answer = 0;							    \
+      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),	    \
+		  #component, stp_get_##component(v), min, max);	    \
+    }									    \
 } while (0)
 
 typedef struct
@@ -555,11 +553,11 @@ stp_verify_printer_params(const stp_vars_t v)
       stp_eprintf(v, _("Image is too long for the page\n"));
     }
 
-  CHECK_INT_RANGE(v, output_type);
-  CHECK_INT_RANGE(v, input_color_model);
-  CHECK_INT_RANGE(v, output_color_model);
-  CHECK_INT_RANGE(v, page_number);
-  CHECK_INT_RANGE(v, job_mode);
+  CHECK_INT_RANGE(v, output_type, 0, OUTPUT_RAW_PRINTER);
+  CHECK_INT_RANGE(v, input_color_model, 0, NCOLOR_MODELS - 1);
+  CHECK_INT_RANGE(v, output_color_model, 0, NCOLOR_MODELS - 1);
+  CHECK_INT_RANGE(v, page_number, 0, INT_MAX);
+  CHECK_INT_RANGE(v, job_mode, STP_JOB_MODE_PAGE, STP_JOB_MODE_JOB);
 
   params = stp_list_parameters(v);
   nparams = stp_parameter_list_count(params);

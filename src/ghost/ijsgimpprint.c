@@ -548,6 +548,10 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  code = get_int(vbuf, key, &i);
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, key, i);
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  code = get_int(vbuf, key, &i);
+	  if (code == 0)
+	    stp_set_boolean_parameter(img->v, key, i);
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}

@@ -28,81 +28,77 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 
-typedef struct
-{
-  int cookie;
-  size_t count;
-  size_t active_count;
-  stp_param_string_t *list;
-} stp_internal_param_list_t;
-
 static void
-check_param_list(const stp_internal_param_list_t *v)
+free_list_element(stp_list_item_t *item)
 {
-  if (v->cookie != COOKIE_PARAM_LIST)
-    {
-      stp_erprintf("Bad string list!\n");
-      stp_abort();
-    }
+  stp_param_string_t *string =
+    (stp_param_string_t *) stp_list_item_get_data(item);
+  stp_free((char *) string->name);
+  stp_free((char *) string->text);
+  stp_free(string);
+}
+
+static const char *
+namefunc(const stp_list_item_t *item)
+{
+  stp_param_string_t *string =
+    (stp_param_string_t *) stp_list_item_get_data(item);
+  return string->name;
+}
+
+static void *
+copyfunc(const stp_list_item_t *item)
+{
+  stp_param_string_t *string =
+    (stp_param_string_t *) stp_list_item_get_data(item);
+  stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
+  new_string->name = stp_strdup(string->name);
+  new_string->text = stp_strdup(string->text);
+  return new_string;
+}
+
+static const char *
+long_namefunc(const stp_list_item_t *item)
+{
+  stp_param_string_t *string =
+    (stp_param_string_t *) stp_list_item_get_data(item);
+  return string->text;
 }
 
 stp_string_list_t
 stp_string_list_allocate(void)
 {
-  stp_internal_param_list_t *ret =
-    stp_zalloc(sizeof(stp_internal_param_list_t));
-  ret->cookie = COOKIE_PARAM_LIST;
+  stp_list_t *ret = stp_list_create();
+  stp_list_set_freefunc(ret, free_list_element);
+  stp_list_set_namefunc(ret, namefunc);
+  stp_list_set_copyfunc(ret, copyfunc);
+  stp_list_set_long_namefunc(ret, long_namefunc);
   return (stp_string_list_t) ret;
 }
 
 void
 stp_string_list_free(stp_string_list_t list)
 {
-  stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
-  size_t i = 0;
-  check_param_list(ilist);
-  while (i < ilist->active_count)
-    {
-      stp_free((void *) (ilist->list[i].name));
-      stp_free((void *) (ilist->list[i].text));
-      i++;
-    }
-  if (ilist->list)
-    stp_free(ilist->list);
-  stp_free(ilist);
+  stp_list_destroy((stp_list_t *) list);
 }
 
 stp_param_string_t *
 stp_string_list_param(const stp_string_list_t list, size_t element)
 {
-  const stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
-  check_param_list(ilist);
-  if (element >= ilist->active_count)
-    return NULL;
-  else
-    return &(ilist->list[element]);
+  return (stp_param_string_t *) stp_list_item_get_data
+    (stp_list_get_item_by_index((stp_list_t *)list, element));
 }
 
 size_t
 stp_string_list_count(const stp_string_list_t list)
 {
-  const stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
-  check_param_list(ilist);
-  return ilist->active_count;
+  return stp_list_get_length((stp_list_t *)list);
 }
 
 stp_string_list_t
 stp_string_list_duplicate(const stp_string_list_t list)
 {
-  size_t i = 0;
-  stp_string_list_t retval = stp_string_list_allocate();
-  while (i < stp_string_list_count(list))
-    {
-      const stp_param_string_t *param = stp_string_list_param(list, i);
-      stp_string_list_add_param(retval, param->name, param->text);
-      i++;
-    }
-  return retval;
+  return (stp_string_list_t) stp_list_copy((stp_list_t *)list);
 }
 
 stp_string_list_t
@@ -120,23 +116,12 @@ stp_string_list_duplicate_params(const stp_param_string_t *list, size_t count)
 
 void
 stp_string_list_add_param(stp_string_list_t list,
-			 const char *name, const char *text)
+			  const char *name, const char *text)
 {
-  stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
-  check_param_list(ilist);
-  if (ilist->count == 0)
-    {
-      ilist->list = stp_zalloc(sizeof(stp_param_string_t));
-      ilist->count = 1;
-    }
-  else if (ilist->active_count == ilist->count)
-    {
-      ilist->list =
-	stp_realloc(ilist->list,
-		    2 * ilist->count * sizeof(stp_param_string_t));
-      ilist->count *= 2;
-    }
-  ilist->list[ilist->active_count].name = stp_strdup(name);
-  ilist->list[ilist->active_count].text = stp_strdup(text);
-  ilist->active_count++;
+  stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
+  new_string->name = stp_strdup(name);
+  new_string->text = stp_strdup(text);
+  stp_list_item_create((stp_list_t *) list,
+		       stp_list_get_end((stp_list_t *) list),
+		       new_string);
 }

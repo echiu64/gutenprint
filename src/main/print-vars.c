@@ -78,6 +78,7 @@ typedef struct
   union
   {
     int ival;
+    int bval;
     double dval;
     stp_curve_t cval;
     stp_raw_t rval;
@@ -95,28 +96,6 @@ static stp_internal_vars_t default_vars =
 	COLOR_MODEL_RGB,	/* Input color model */
 	COLOR_MODEL_RGB,	/* Output color model */
 	STP_JOB_MODE_PAGE	/* Job mode */
-};
-
-static stp_internal_vars_t min_vars =
-{
-	COOKIE_VARS,
-	N_ ("ps2"),		/* Name of printer "driver" */
-	0,			/* Color or grayscale output */
-	1.0,			/* Application gamma placeholder */
-	0,			/* Input color model */
-	0,			/* Output color model */
-	STP_JOB_MODE_PAGE	/* Job mode */
-};
-
-static stp_internal_vars_t max_vars =
-{
-	COOKIE_VARS,
-	N_ ("ps2"),		/* Name of printer "driver" */
-	OUTPUT_RAW_PRINTER,	/* Color or grayscale output */
-	1.0,			/* Application gamma placeholder */
-	NCOLOR_MODELS - 1,	/* Input color model */
-	NCOLOR_MODELS - 1,	/* Output color model */
-	STP_JOB_MODE_JOB	/* Job mode */
 };
 
 static const char *
@@ -178,6 +157,7 @@ value_copy(const stp_list_item_t *item)
       ((char *) (ret->value.rval.data))[v->value.rval.bytes] = '\0';
       break;
     case STP_PARAMETER_TYPE_INT:
+    case STP_PARAMETER_TYPE_BOOLEAN:
       ret->value.ival = v->value.ival;
       break;
     case STP_PARAMETER_TYPE_DOUBLE:
@@ -209,35 +189,7 @@ initialize_standard_vars(void)
     {
       int i;
       for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
-	{
-	  min_vars.params[i] = create_vars_list();
-	  max_vars.params[i] = create_vars_list();
-	  default_vars.params[i] = create_vars_list();
-	}
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Brightness", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Brightness", 2.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Brightness", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Gamma", 0.1);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Gamma", 4.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Gamma", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Contrast", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Contrast", 4.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Contrast", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Cyan", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Cyan", 4.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Cyan", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Magenta", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Magenta", 4.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Magenta", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Yellow", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Yellow", 4.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Yellow", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Saturation", 0.0);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Saturation", 9.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Saturation", 1.0);
-      stp_set_float_parameter((stp_vars_t) &min_vars, "Density", 0.1);
-      stp_set_float_parameter((stp_vars_t) &max_vars, "Density", 2.0);
-      stp_set_float_parameter((stp_vars_t) &default_vars, "Density", 1.0);
+	default_vars.params[i] = create_vars_list();
       standard_vars_initialized = 1;
     }
 }
@@ -247,20 +199,6 @@ stp_default_settings(void)
 {
   initialize_standard_vars();
   return (stp_vars_t) &default_vars;
-}
-
-const stp_vars_t
-stp_maximum_settings(void)
-{
-  initialize_standard_vars();
-  return (stp_vars_t) &max_vars;
-}
-
-const stp_vars_t
-stp_minimum_settings(void)
-{
-  initialize_standard_vars();
-  return (stp_vars_t) &min_vars;
 }
 
 stp_vars_t
@@ -630,6 +568,46 @@ stp_get_int_parameter(const stp_vars_t v, const char *parameter)
 }
 
 void
+stp_set_boolean_parameter(stp_vars_t v, const char *parameter, int ival)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+    }
+  else
+    {
+      val = stp_malloc(sizeof(value_t));
+      val->name = stp_strdup(parameter);
+      val->typ = STP_PARAMETER_TYPE_BOOLEAN;
+      stp_list_item_create(list, stp_list_get_end(list), val);
+    }
+  if (ival)
+    val->value.ival = 1;
+  else
+    val->value.ival = 0;
+}
+
+const int
+stp_get_boolean_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
+  value_t *val;
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  if (item)
+    {
+      val = (value_t *) stp_list_item_get_data(item);
+      return val->value.ival;
+    }
+  else
+    return 0;
+}
+
+void
 stp_set_float_parameter(stp_vars_t v, const char *parameter, double dval)
 {
   stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
@@ -698,6 +676,15 @@ stp_check_int_parameter(const stp_vars_t v, const char *parameter)
 {
   stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
   stp_list_t *list = vv->params[STP_PARAMETER_TYPE_INT];
+  stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  return item ? 1 : 0;
+}
+
+int
+stp_check_boolean_parameter(const stp_vars_t v, const char *parameter)
+{
+  stp_internal_vars_t *vv = (stp_internal_vars_t *)v;
+  stp_list_t *list = vv->params[STP_PARAMETER_TYPE_BOOLEAN];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
   return item ? 1 : 0;
 }
