@@ -1155,14 +1155,14 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append (list, strdup(gettext (items[i])));
+    list = g_list_append (list, c_strdup(gettext (items[i])));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed",
 				     callback,
 				     NULL);
-  ncur_item = strdup(cur_item);
+  ncur_item = c_strdup(cur_item);
 
   gtk_entry_set_text (entry, ncur_item);
 
@@ -1171,7 +1171,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       break;
 
   if (i == num_items)
-    gtk_entry_set_text (entry, strdup(gettext (items[0])));
+    gtk_entry_set_text (entry, c_strdup(gettext (items[0])));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);

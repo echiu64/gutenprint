@@ -297,7 +297,7 @@ fi
 
 dnl Compiler flags
 if test "$CC" = "gcc" ; then
-  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs"
+  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -ansi -pedantic"
 fi
 AC_SUBST(GNUCFLAGS)
 

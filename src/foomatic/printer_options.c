@@ -31,7 +31,7 @@
 #endif
 #include "../../lib/libprintut.h"
 
-char *params[] =
+const char *params[] =
 {
   "PageSize",
   "Resolution",

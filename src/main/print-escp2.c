@@ -34,6 +34,10 @@
 #include <gimp-print-intl-internal.h>
 #include <string.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 #ifdef TEST_UNCOMPRESSED
 #define COMPRESSION (0)
 #define FILLFUNC stp_fill_uncompressed
@@ -56,8 +60,8 @@ static void flush_pass(stp_softweave_t *sw, int passno, int model, int width,
  * Various classes of printer capabilities are represented by bitmasks.
  */
 
-typedef unsigned long long model_cap_t;
-typedef unsigned long long model_featureset_t;
+typedef unsigned long model_cap_t;
+typedef unsigned long model_featureset_t;
 
 
 /*
@@ -1274,61 +1278,61 @@ typedef struct escp2_printer_attribute
   int bits;
 } escp2_printer_attr_t;
 
-#define MODEL_INIT_MASK		0xfull /* Is a special init sequence */
-#define MODEL_INIT_STANDARD	0x0ull /* required for this printer, and if */
-#define MODEL_INIT_NEW		0x1ull /* so, what */
+#define MODEL_INIT_MASK		0xful /* Is a special init sequence */
+#define MODEL_INIT_STANDARD	0x0ul /* required for this printer, and if */
+#define MODEL_INIT_NEW		0x1ul /* so, what */
 
-#define MODEL_HASBLACK_MASK	0x10ull /* Can this printer print black ink */
-#define MODEL_HASBLACK_YES	0x00ull /* when it is also printing color? */
-#define MODEL_HASBLACK_NO	0x10ull /* Only the 1500 can't. */
+#define MODEL_HASBLACK_MASK	0x10ul /* Can this printer print black ink */
+#define MODEL_HASBLACK_YES	0x00ul /* when it is also printing color? */
+#define MODEL_HASBLACK_NO	0x10ul /* Only the 1500 can't. */
 
-#define MODEL_COLOR_MASK	0x60ull /* Is this a 6-color printer? */
-#define MODEL_COLOR_4		0x00ull
-#define MODEL_COLOR_6		0x20ull
-#define MODEL_COLOR_7		0x40ull
+#define MODEL_COLOR_MASK	0x60ul /* Is this a 6-color printer? */
+#define MODEL_COLOR_4		0x00ul
+#define MODEL_COLOR_6		0x20ul
+#define MODEL_COLOR_7		0x40ul
 
-#define MODEL_GRAYMODE_MASK	0x80ull /* Does this printer support special */
-#define MODEL_GRAYMODE_NO	0x00ull /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x80ull
+#define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
+#define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
+#define MODEL_GRAYMODE_YES	0x80ul
 
-#define MODEL_720DPI_MODE_MASK	0x300ull /* Does this printer require old */
-#define MODEL_720DPI_DEFAULT	0x000ull /* or new setting for printing */
-#define MODEL_720DPI_600	0x100ull /* 720 dpi?  Only matters for */
+#define MODEL_720DPI_MODE_MASK	0x300ul /* Does this printer require old */
+#define MODEL_720DPI_DEFAULT	0x000ul /* or new setting for printing */
+#define MODEL_720DPI_600	0x100ul /* 720 dpi?  Only matters for */
 					 /* single dot size printers */
 
-#define MODEL_VARIABLE_DOT_MASK	0xc00ull /* Does this printer support var */
-#define MODEL_VARIABLE_NORMAL	0x000ull /* dot size printing? The newest */
-#define MODEL_VARIABLE_4	0x400ull /* printers support multiple modes */
-#define MODEL_VARIABLE_MULTI	0x800ull /* of variable dot sizes. */
+#define MODEL_VARIABLE_DOT_MASK	0xc00ul /* Does this printer support var */
+#define MODEL_VARIABLE_NORMAL	0x000ul /* dot size printing? The newest */
+#define MODEL_VARIABLE_4	0x400ul /* printers support multiple modes */
+#define MODEL_VARIABLE_MULTI	0x800ul /* of variable dot sizes. */
 
-#define MODEL_COMMAND_MASK	0xf000ull /* What general command set does */
-#define MODEL_COMMAND_1998	0x0000ull
-#define MODEL_COMMAND_1999	0x1000ull /* The 1999 series printers */
-#define MODEL_COMMAND_PRO	0x2000ull /* Stylus Pro printers */
+#define MODEL_COMMAND_MASK	0xf000ul /* What general command set does */
+#define MODEL_COMMAND_1998	0x0000ul
+#define MODEL_COMMAND_1999	0x1000ul /* The 1999 series printers */
+#define MODEL_COMMAND_PRO	0x2000ul /* Stylus Pro printers */
 
-#define MODEL_INK_MASK		0x10000ull /* Does this printer support */
-#define MODEL_INK_NORMAL	0x00000ull /* different types of inks? */
-#define MODEL_INK_SELECTABLE	0x10000ull /* Only the Stylus Pro's do */
+#define MODEL_INK_MASK		0x10000ul /* Does this printer support */
+#define MODEL_INK_NORMAL	0x00000ul /* different types of inks? */
+#define MODEL_INK_SELECTABLE	0x10000ul /* Only the Stylus Pro's do */
 
-#define MODEL_ROLLFEED_MASK	0x20000ull /* Does this printer support */
-#define MODEL_ROLLFEED_NO	0x00000ull /* a roll feed? */
-#define MODEL_ROLLFEED_YES	0x20000ull
+#define MODEL_ROLLFEED_MASK	0x20000ul /* Does this printer support */
+#define MODEL_ROLLFEED_NO	0x00000ul /* a roll feed? */
+#define MODEL_ROLLFEED_YES	0x20000ul
 
-#define MODEL_XZEROMARGIN_MASK	0x40000ull /* Does this printer support */
-#define MODEL_XZEROMARGIN_NO	0x00000ull /* zero margin mode? */
-#define MODEL_XZEROMARGIN_YES	0x40000ull /* (print to the edge of the paper) */
+#define MODEL_XZEROMARGIN_MASK	0x40000ul /* Does this printer support */
+#define MODEL_XZEROMARGIN_NO	0x00000ul /* zero margin mode? */
+#define MODEL_XZEROMARGIN_YES	0x40000ul /* (print to the edge of the paper) */
 
-#define MODEL_YZEROMARGIN_MASK	0x80000ull /* Does this printer support */
-#define MODEL_YZEROMARGIN_NO	0x00000ull /* zero margin mode? */
-#define MODEL_YZEROMARGIN_YES	0x80000ull /* (print to the edge of the paper) */
+#define MODEL_YZEROMARGIN_MASK	0x80000ul /* Does this printer support */
+#define MODEL_YZEROMARGIN_NO	0x00000ul /* zero margin mode? */
+#define MODEL_YZEROMARGIN_YES	0x80000ul /* (print to the edge of the paper) */
 
-#define MODEL_ENHANCED_MICROWEAVE_MASK	0x100000ull
-#define MODEL_ENHANCED_MICROWEAVE_NO	0x000000ull
-#define MODEL_ENHANCED_MICROWEAVE_YES	0x100000ull
+#define MODEL_ENHANCED_MICROWEAVE_MASK	0x100000ul
+#define MODEL_ENHANCED_MICROWEAVE_NO	0x000000ul
+#define MODEL_ENHANCED_MICROWEAVE_YES	0x100000ul
 
-#define MODEL_VACUUM_MASK	0x200000ull
-#define MODEL_VACUUM_NO		0x000000ull
-#define MODEL_VACUUM_YES	0x200000ull
+#define MODEL_VACUUM_MASK	0x200000ul
+#define MODEL_VACUUM_NO		0x000000ul
+#define MODEL_VACUUM_YES	0x200000ul
 
 #define MODEL_INIT			(0)
 #define MODEL_HASBLACK			(1)
@@ -2242,23 +2246,23 @@ typedef struct
 
 static const paper_t escp2_paper_list[] =
 {
-  {N_("Plain Paper"),                1, 0, 0.70, .1, .5, 0, 0, 0, 1, 1.0,
+  {N_("Plain Paper"),                1, 0, 0.80, .1, .5, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Plain Paper Fast Load"),      5, 0, 0.70, .1, .5, 0, 0, 0, 1, 1.0,
+  {N_("Plain Paper Fast Load"),      5, 0, 0.80, .1, .5, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Postcard"),                   2, 0, 0.75, .2, .6, 0, 0, 0, 1, 1.0,
+  {N_("Postcard"),                   2, 0, 0.83, .2, .6, 0, 0, 0, 1, 1.0,
    0x00, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
   {N_("Glossy Film"),                3, 0, 1.00 ,1, .999, 0, 0, 0, 1, 1.0,
    0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   {N_("Transparencies"),             3, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
    0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
-  {N_("Envelopes"),                  4, 0, 0.70, .125, .5, 0, 0, 0, 1, 1.0,
+  {N_("Envelopes"),                  4, 0, 0.80, .125, .5, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   {N_("Back Light Film"),            6, 0, 1.00, 1, .999, 0, 0, 0, 1, 1.0,
    0x6d, 0x00, 0x01, NULL, NULL, NULL},
   {N_("Matte Paper"),                7, 0, 0.85, 1.0, .999, 0, 0, 0, 1, 1.0,
    0x00, 0x00, 0x02, NULL, NULL, NULL},
-  {N_("Inkjet Paper"),               7, 0, 0.78, .25, .6, 0, 0, 0, 1, 1.0,
+  {N_("Inkjet Paper"),               7, 0, 0.85, .25, .6, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
   {N_("Photo Quality Inkjet Paper"), 7, 0, 1.00, 1.0, .999, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, NULL, NULL},
@@ -2271,7 +2275,7 @@ static const paper_t escp2_paper_list[] =
    0x80, 0x00, 0x02, NULL, NULL, NULL},
   {N_("Photo Quality Glossy Paper"), 6, 0, 1.00, 1, .999, 0, 0, 0, 1.0, 1.0,
    0x6b, 0x1a, 0x01, NULL, NULL, NULL},
-  {N_("Other"),                      0, 0, 0.70, 0.125, .5, 0, 0, 0, 1, 1.0,
+  {N_("Other"),                      0, 0, 0.80, 0.125, .5, 0, 0, 0, 1, 1.0,
    0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
 };
 
@@ -2343,7 +2347,7 @@ escp2_has_cap(int model, int feature,
   else
     {
       model_featureset_t featureset =
-	(((1ull << escp2_printer_attrs[feature].bits) - 1ull) <<
+	(((1ul << escp2_printer_attrs[feature].bits) - 1ul) <<
 	 escp2_printer_attrs[feature].shift);
       return ((model_capabilities[model].flags & featureset) == class);
     }
@@ -2532,6 +2536,14 @@ xzmalloc(size_t bytes)
   return (retval);
 }
 
+static char *
+c_strdup(const char *s)
+{
+  char *ret = stp_malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -2666,8 +2678,8 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
       else
 	{      /* Roll Feed capable printers */
 	  valptrs = stp_malloc(sizeof(char *) * 2);
-	  valptrs[0] = strdup(_("Standard"));
-	  valptrs[1] = strdup(_("Roll Feed"));
+	  valptrs[0] = c_strdup(_("Standard"));
+	  valptrs[1] = c_strdup(_("Roll Feed"));
 	  *count = 2;
 	  return valptrs;
 	}
@@ -2871,52 +2883,40 @@ escp2_set_remote_sequence(const stp_vars_t v, escp2_init_t *init)
     {
       int feed_sequence = 0;
       const paper_t *p = get_media_type(init->paper_type);
-      stp_zprintf(v, /* Enter remote mode */
-		  "\033(R\%c%c%cREMOTE1",
-		  8, 0, 0);
+      /* Enter remote mode */
+      stp_zprintf(v, "\033(R%c%c%cREMOTE1", 8, 0, 0);
       if (escp2_has_cap(init->model, MODEL_COMMAND,
 			MODEL_COMMAND_PRO, init->v))
 	{
+	  /* Set Roll Feed mode */
 	  if (strcmp(init->media_source,_("Roll Feed")) == 0)
-	    stp_zprintf(v, /* Set Roll Feed mode */
-			"PP%c%c%c%c%c",
-			3, 0, 0, 3, 0);
+	    stp_zprintf(v, "PP%c%c%c%c%c", 3, 0, 0, 3, 0);
 	  else
-	    stp_zprintf(v, /* Set Roll Feed mode */
-			"PP%c%c%c%c%c",
-			3, 0, 0, 2, 0);
+	    stp_zprintf(v, "PP%c%c%c%c%c", 3, 0, 0, 2, 0);
 	  if (p)
 	    {
-	      stp_zprintf(v, "PH%c%c%c%c",
-			  2, 0, 0, p->paper_thickness);
+	      stp_zprintf(v, "PH%c%c%c%c", 2, 0, 0, p->paper_thickness);
 	      if (escp2_has_cap(init->model, MODEL_VACUUM, MODEL_VACUUM_YES,
 				init->v))
-		stp_zprintf(v, "SN%c%c%c%c%c",
-			    3, 0, 0, 5, p->vacuum_intensity);
-	      stp_zprintf(v, "SN%c%c%c%c%c",
-			  3, 0, 0, 4, p->feed_adjustment);
+		stp_zprintf(v, "SN%c%c%c%c%c", 3, 0, 0, 5,p->vacuum_intensity);
+	      stp_zprintf(v, "SN%c%c%c%c%c", 3, 0, 0, 4, p->feed_adjustment);
 	    }
 	}
       else
 	{
 	  if (p)
 	    feed_sequence = p->paper_feed_sequence;
-	  stp_zprintf(v,
-		      /* Function unknown */
-		      "PM%c%c%c%c"
-		      /* Set mechanism sequence */
-		      "SN%c%c%c%c%c",
-		      2, 0, 0, 0,
-		      3, 0, 0, 0, feed_sequence);
+	  /* Function unknown */
+	  stp_zprintf(v, "PM%c%c%c%c", 2, 0, 0, 0);
+	  /* Set mechanism sequence */
+	  stp_zprintf(v, "SN%c%c%c%c%c", 3, 0, 0, 0, feed_sequence);
 	  if (escp2_has_cap(init->model, MODEL_XZEROMARGIN,
 			    MODEL_XZEROMARGIN_YES, init->v))
-	    stp_zprintf(v, /* Set zero-margin print mode */
-			"FP%c%c%c\260\377", 3, 0, 0);
+	    stp_zprintf(v, "FP%c%c%c\260\377", 3, 0, 0);
 
 	  if (escp2_has_cap(init->model, MODEL_YZEROMARGIN,
 			    MODEL_YZEROMARGIN_YES, init->v))
-	    stp_zprintf(v, /* Set zero-margin print mode */
-			"SN%c%c%c%c%c", 3, 0, 0, 9, 1);
+	    stp_zprintf(v, "SN%c%c%c%c%c", 3, 0, 0, 9, 1);
 
 	  /* set up Roll-Feed options on appropriate printers
 	     (tested for STP 870, which has no cutter) */
@@ -2937,8 +2937,8 @@ escp2_set_remote_sequence(const stp_vars_t v, escp2_init_t *init)
 			    6, 0, 0, 0, 0, 0, 5, 0);
 	    }
 	}
-      stp_zprintf(v, /* Exit remote mode */
-		  "\033%c%c%c", 0, 0, 0);
+      /* Exit remote mode */
+      stp_zprintf(v, "\033%c%c%c", 0, 0, 0);
     }
 }
 
@@ -3833,7 +3833,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  /*
 	   * Send the data
 	   */
-	  stp_zfwrite(bufs[0].v[j], lineoffs[0].v[j], 1, v);
+	  stp_zfwrite((const char *)bufs[0].v[j], lineoffs[0].v[j], 1, v);
 	  stp_putc('\r', v);
 	}
       lineoffs[0].v[j] = 0;

@@ -34,6 +34,10 @@
 #include <limits.h>
 #include <math.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 #define D_FLOYD_HYBRID 0
 #define D_ADAPTIVE_BASE 4
 #define D_ADAPTIVE_HYBRID (D_ADAPTIVE_BASE | D_FLOYD_HYBRID)
@@ -210,7 +214,7 @@ stp_dither_algorithm_name(int id)
 
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
-		   int size, const int *map)
+		   int size, const unsigned *map)
 {
   int i, j;
   unsigned retval = 0;
@@ -270,8 +274,8 @@ init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
 	mat->matrix[x + y * mat->x_size] =
 	  calc_ordered_point(x, y, mat->exp, 1, mat->base, array);
 	mat->matrix[x + y * mat->x_size] =
-	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	  (long long) (mat->x_size * mat->y_size);
+	  (double) mat->matrix[x + y * mat->x_size] * 65536.0 /
+	  (double) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -324,8 +328,8 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
 	if (!prescaled)
 	  mat->matrix[x + y * mat->x_size] =
-	    (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	    (long long) (mat->x_size * mat->y_size);
+	    (double) mat->matrix[x + y * mat->x_size] * 65536.0 /
+	    (double) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -357,8 +361,8 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
 	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
 	if (!prescaled)
 	  mat->matrix[x + y * mat->x_size] =
-	    (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	    (long long) (mat->x_size * mat->y_size);
+	    (double) mat->matrix[x + y * mat->x_size] * 65536.0 /
+	    (double) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -544,7 +548,6 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
     {
       stp_dither_matrix_t *mat;
       int transposed = 0;
-      stp_erprintf("x %d y %d\n", d->x_aspect, d->y_aspect);
       if (d->y_aspect == d->x_aspect)
 	mat = (stp_dither_matrix_t *) &stp_1_1_matrix;
       else if (d->y_aspect > d->x_aspect)

@@ -160,7 +160,7 @@ main(int  argc,			/* I - Number of command-line arguments */
      char *argv[])		/* I - Command-line arguments */
 {
   int		i;		/* Looping var */
-  char		*prefix;	/* Directory prefix for output */
+  const char		*prefix;	/* Directory prefix for output */
 
   prefix = "ppd";
 

@@ -33,7 +33,7 @@
 #include<ctype.h>
 #include<string.h>
 
-static char *id="@(#) $Id$";
+static const char *id="@(#) $Id$";
 
 /*
  * Largest data attached to a command. 1024 means that we can have up to 8192
@@ -139,14 +139,14 @@ typedef struct {
 #define PCL_PALETTE_CONFIGURATION 32
 
 typedef struct {
-    char initial_command[3];		/* First part of command */
-    char final_command;			/* Last part of command */
-    int has_data;			/* Data follows */
-    int command;			/* Command name */
-    char *description;			/* Text for printing */
+  const char initial_command[3];		/* First part of command */
+  const char final_command;			/* Last part of command */
+  int has_data;			/* Data follows */
+  int command;			/* Command name */
+  const char *description;			/* Text for printing */
 } commands_t;
 
-commands_t pcl_commands[] =
+const commands_t pcl_commands[] =
     {
 /* Two-character sequences ESC <x> */
 	{ "E", '\0', 0, PCL_RESET, "PCL RESET" },

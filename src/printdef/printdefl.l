@@ -37,6 +37,19 @@ int mylineno = 1;
 #define DBG(x)
 #endif
 
+static char *
+c_strdup(const char *s)
+{
+  char *ret = malloc(strlen(s) + 1);
+  if (!ret)
+    {
+      fprintf(stderr, "Malloc failed.\n");
+      exit(1);
+    }
+  strcpy(ret, s);
+  return ret;
+}
+
 %}
 
 %option noyywrap
@@ -73,8 +86,8 @@ value			DBG(VALUE) return VALUE;
 
 {integer}		yylval.ival = atoi(yytext); DBG(tINT) return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE) return tDOUBLE;
-{string}		yylval.sval = strdup(yytext); DBG(tSTRING) return tSTRING;
-{class}			yylval.sval = strdup(yytext); DBG(tCLASS) return tCLASS;
+{string}		yylval.sval = c_strdup(yytext); DBG(tSTRING) return tSTRING;
+{class}			yylval.sval = c_strdup(yytext); DBG(tCLASS) return tCLASS;
 {ws}			DBG(whitespace1) 	/* Skip blanks/tabs */
 #[^\n]*			DBG(comment1) 	/* Skip comments */
 \n			DBG(newline) mylineno++;

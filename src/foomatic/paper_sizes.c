@@ -31,17 +31,6 @@
 #endif
 #include "../../lib/libprintut.h"
 
-char *params[] =
-{
-  "PageSize",
-  "Resolution",
-  "InkType",
-  "MediaType",
-  "InputSlot"
-};
-
-int nparams = sizeof(params) / sizeof(const char *);
-
 int
 main(int argc, char **argv)
 {

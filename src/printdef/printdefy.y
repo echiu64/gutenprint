@@ -45,7 +45,7 @@ const char *printfuncs[] =
 
 const size_t nprintfuncs = sizeof(printfuncs) / sizeof(const char *);
 
-void
+static void
 initialize_the_printer(const char *name, const char *driver)
 {
   strncpy(thePrinter.printvars.output_to, name, 63);
@@ -62,7 +62,7 @@ initialize_the_printer(const char *name, const char *driver)
   thePrinter.printvars.density = 1.0;
 }
 
-void
+static void
 output_the_printer(void)
 {
   printf("  {\n");
@@ -100,7 +100,7 @@ output_the_printer(void)
 extern int mylineno;
 extern char* yytext;
 
-int yyerror( const char *s )
+static int yyerror( const char *s )
 {
 	fprintf(stderr,"stdin:%d: %s before '%s'\n",mylineno,s,yytext);
 	return 0;

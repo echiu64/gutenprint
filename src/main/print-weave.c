@@ -1880,7 +1880,7 @@ stp_destroy_weave(void *vsw)
   stp_free(vsw);
 }
 
-static inline void
+static void
 weave_parameters_by_row(const stp_softweave_t *sw, int row,
 			int vertical_subpass, stp_weave_t *w)
 {
@@ -2251,7 +2251,7 @@ stp_write_weave(void *        vsw,
         for (i = 0; i < h_passes; i++)
 	  {
 	    if (!sw->s[i])
-	      sw->s[i] = stp_malloc(sw->bitwidth * sw->horizontal_width / 8);
+	      sw->s[i] = stp_malloc(sw->bitwidth * sw->horizontal_width / 4);
 	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i, sw->head_offset[j]);
 	    bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i, sw->head_offset[j]);

@@ -349,42 +349,42 @@ stp_get_##s(const stp_vars_t vv)			\
   return v->s;						\
 }
 
-DEF_STRING_FUNCS(output_to);
-DEF_STRING_FUNCS(driver);
-DEF_STRING_FUNCS(ppd_file);
-DEF_STRING_FUNCS(resolution);
-DEF_STRING_FUNCS(media_size);
-DEF_STRING_FUNCS(media_type);
-DEF_STRING_FUNCS(media_source);
-DEF_STRING_FUNCS(ink_type);
-DEF_STRING_FUNCS(dither_algorithm);
-DEF_FUNCS(output_type, int);
-DEF_FUNCS(orientation, int);
-DEF_FUNCS(left, int);
-DEF_FUNCS(top, int);
-DEF_FUNCS(image_type, int);
-DEF_FUNCS(unit, int);
-DEF_FUNCS(page_width, int);
-DEF_FUNCS(page_height, int);
-DEF_FUNCS(input_color_model, int);
-DEF_FUNCS(output_color_model, int);
-DEF_FUNCS(brightness, float);
-DEF_FUNCS(scaling, float);
-DEF_FUNCS(gamma, float);
-DEF_FUNCS(contrast, float);
-DEF_FUNCS(cyan, float);
-DEF_FUNCS(magenta, float);
-DEF_FUNCS(yellow, float);
-DEF_FUNCS(saturation, float);
-DEF_FUNCS(density, float);
-DEF_FUNCS(app_gamma, float);
-DEF_FUNCS(lut, void *);
-DEF_FUNCS(outdata, void *);
-DEF_FUNCS(errdata, void *);
-DEF_FUNCS(driver_data, void *);
-DEF_FUNCS(cmap, unsigned char *);
-DEF_FUNCS(outfunc, stp_outfunc_t);
-DEF_FUNCS(errfunc, stp_outfunc_t);
+DEF_STRING_FUNCS(output_to)
+DEF_STRING_FUNCS(driver)
+DEF_STRING_FUNCS(ppd_file)
+DEF_STRING_FUNCS(resolution)
+DEF_STRING_FUNCS(media_size)
+DEF_STRING_FUNCS(media_type)
+DEF_STRING_FUNCS(media_source)
+DEF_STRING_FUNCS(ink_type)
+DEF_STRING_FUNCS(dither_algorithm)
+DEF_FUNCS(output_type, int)
+DEF_FUNCS(orientation, int)
+DEF_FUNCS(left, int)
+DEF_FUNCS(top, int)
+DEF_FUNCS(image_type, int)
+DEF_FUNCS(unit, int)
+DEF_FUNCS(page_width, int)
+DEF_FUNCS(page_height, int)
+DEF_FUNCS(input_color_model, int)
+DEF_FUNCS(output_color_model, int)
+DEF_FUNCS(brightness, float)
+DEF_FUNCS(scaling, float)
+DEF_FUNCS(gamma, float)
+DEF_FUNCS(contrast, float)
+DEF_FUNCS(cyan, float)
+DEF_FUNCS(magenta, float)
+DEF_FUNCS(yellow, float)
+DEF_FUNCS(saturation, float)
+DEF_FUNCS(density, float)
+DEF_FUNCS(app_gamma, float)
+DEF_FUNCS(lut, void *)
+DEF_FUNCS(outdata, void *)
+DEF_FUNCS(errdata, void *)
+DEF_FUNCS(driver_data, void *)
+DEF_FUNCS(cmap, unsigned char *)
+DEF_FUNCS(outfunc, stp_outfunc_t)
+DEF_FUNCS(errfunc, stp_outfunc_t)
 
 void
 stp_set_verified(stp_vars_t vv, int val)
@@ -917,7 +917,7 @@ stp_get_papersize_by_name(const char *name)
     {
       int size_to_try = (i + base) % sizes;
       const stp_internal_papersize_t *val = &(paper_sizes[size_to_try]);
-      if (!strcasecmp(_(val->name), name))
+      if (!strcmp(_(val->name), name))
 	{
 	  last_used_papersize = size_to_try;
 	  return (const stp_papersize_t) val;
@@ -932,7 +932,7 @@ stp_get_papersize_by_name(const char *name)
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
     {
-      if (!strcasecmp(_(val->name), name))
+      if (!strcmp(_(val->name), name))
 	return (const stp_papersize_t) val;
       val++;
     }

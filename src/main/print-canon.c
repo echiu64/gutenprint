@@ -604,7 +604,7 @@ typedef struct canon_caps {
   int border_bottom;  /* absolute bottom margin, points */
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
-  int features;       /* special bjl settings */
+  unsigned long features;       /* special bjl settings */
   const canon_dot_size_t dot_sizes;   /* Vector of dot sizes for resolutions */
   const canon_densities_t densities;   /* List of densities for each printer */
   const canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
@@ -648,20 +648,20 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 #define CANON_SLOT_MAN2    8
 
 /* model peculiarities */
-#define CANON_CAP_DMT       0x01ull    /* Drop Modulation Technology */
-#define CANON_CAP_MSB_FIRST 0x02ull    /* how to send data           */
-#define CANON_CAP_a         0x04ull
-#define CANON_CAP_b         0x08ull
-#define CANON_CAP_q         0x10ull
-#define CANON_CAP_m         0x20ull
-#define CANON_CAP_d         0x40ull
-#define CANON_CAP_t         0x80ull
-#define CANON_CAP_c         0x100ull
-#define CANON_CAP_p         0x200ull
-#define CANON_CAP_l         0x400ull
-#define CANON_CAP_r         0x800ull
-#define CANON_CAP_g         0x1000ull
-#define CANON_CAP_ACKSHORT  0x2000ull
+#define CANON_CAP_DMT       0x01ul    /* Drop Modulation Technology */
+#define CANON_CAP_MSB_FIRST 0x02ul    /* how to send data           */
+#define CANON_CAP_a         0x04ul
+#define CANON_CAP_b         0x08ul
+#define CANON_CAP_q         0x10ul
+#define CANON_CAP_m         0x20ul
+#define CANON_CAP_d         0x40ul
+#define CANON_CAP_t         0x80ul
+#define CANON_CAP_c         0x100ul
+#define CANON_CAP_p         0x200ul
+#define CANON_CAP_l         0x400ul
+#define CANON_CAP_r         0x800ul
+#define CANON_CAP_g         0x1000ul
+#define CANON_CAP_ACKSHORT  0x2000ul
 
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
@@ -1407,7 +1407,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
 	if ((t= canon_ink_type(caps,(x<<4)|y)) > -1) {
-	  snprintf(tmp,99,"%dx%d DPI",
+	  sprintf(tmp,"%dx%d DPI",
 		   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
 #ifdef DEBUG
 	  stp_erprintf("supports mode '%s'\n",tmp);
@@ -1415,7 +1415,7 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
 	  valptrs[c++]= c_strdup(tmp);
 
 	  if (t==1) {
-	    snprintf(tmp,99,"%dx%d DPI DMT",
+	    sprintf(tmp,"%dx%d DPI DMT",
 		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
 #ifdef DEBUG
 	    stp_erprintf("supports mode '%s'\n",tmp);
@@ -1530,7 +1530,7 @@ canon_default_parameters(const stp_printer_t printer,
 	    {
 	      if ((t= canon_ink_type(caps,(x<<4)|y)) > -1)
 		{
-		  snprintf(tmp,99,"%dx%d DPI",
+		  sprintf(tmp,"%dx%d DPI",
 			   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
 #ifdef DEBUG
 		  stp_erprintf("supports mode '%s'\n",tmp);
@@ -1636,7 +1636,7 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
       stp_putc((num & 255),v);
       stp_putc((num >> 8 ),v);
       if (num)
-	stp_zfwrite(buffer,num,1,v);
+	stp_zfwrite((const char *)buffer,num,1,v);
     }
   stp_free(buffer);
 }
@@ -1660,7 +1660,7 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 static void
 canon_init_resetPrinter(const stp_vars_t v, canon_init_t *init)
 {
-  long long f=init->caps->features;
+  unsigned long f=init->caps->features;
   if (f & (CANON_CAP_ACKSHORT)) 
     {
       canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x1f);
@@ -2832,7 +2832,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
   stp_putc(color,v);
-  stp_zfwrite(comp_buf, newlength, 1, v);
+  stp_zfwrite((const char *)comp_buf, newlength, 1, v);
   stp_putc('\x0d', v);
   return 1;
 }

@@ -140,13 +140,13 @@ main(int  argc,				/* I - Number of command-line arguments */
   FILE		*fp;			/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   stp_vars_t	v;			/* Dither variables */
-  static char	*dither_types[] =	/* Different dithering modes */
+  static const char	*dither_types[] =	/* Different dithering modes */
 		{
 		  "gray",
 		  "color",
 		  "photo"
 		};
-  static char	*image_types[] =	/* Different image types */
+  static const char	*image_types[] =	/* Different image types */
 		{
 		  "mixed",
 		  "white",

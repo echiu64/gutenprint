@@ -35,6 +35,10 @@
 #include <math.h>
 #include <limits.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 typedef struct
 {
   unsigned steps;

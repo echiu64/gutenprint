@@ -2508,7 +2508,7 @@ pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
           int           last_plane)	/* I - True if this is the last plane */
 {
   stp_zprintf(v, "\033*b%d%c", height, last_plane ? 'W' : 'V');
-  stp_zfwrite(line, height, 1, v);
+  stp_zfwrite((const char *) line, height, 1, v);
 }
 
 
@@ -2532,5 +2532,5 @@ pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
   */
 
   stp_zprintf(v, "\033*b%d%c", (int)(comp_ptr - comp_buf), last_plane ? 'W' : 'V');
-  stp_zfwrite(comp_buf, comp_ptr - comp_buf, 1, v);
+  stp_zfwrite((const char *)comp_buf, comp_ptr - comp_buf, 1, v);
 }
