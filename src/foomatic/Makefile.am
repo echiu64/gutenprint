@@ -33,7 +33,7 @@ LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
 
-FOOMATIC_NOINST_BIN="printer_options paper_sizes gimp-print-version"
+FOOMATIC_NOINST_BIN=printer_options paper_sizes gimp-print-version
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 
