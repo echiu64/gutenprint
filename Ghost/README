@@ -2,7 +2,8 @@ Type of program:
 ----------------
 
  Epson Stylus Color/Photo color printer driver for
- Ghostscript version 5.x/6.x offering CMYK 4 color and  CMYKcm 6 color HQ prints.
+ Ghostscript version 5.x/6.x offering CMYK 4 color and
+ CMYKcm 6 color HQ prints.
 
 
 Author:
@@ -56,7 +57,7 @@ Installation and Compilation:
  - Get a recent Ghostscript (5.10 or better) and prepare the sources as
    described in the documentation (don`t forget zlib, libpng and libjpeg
    when downloading the source) for compiling
- - copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript`s
+ - copy all "*.c" and "*.h" files to the "src/" subdirectory of ghostscript's
    distribution.
  - edit the file "contrib.mak" in the "src/" subdirectory by adding
    the contents of "contrib.mak.addon"
@@ -254,6 +255,18 @@ Currently supported Media Selection:
 -sPAPERSIZE=a3
 
 
+Ink Types
+--- -----
+
+Six color printers can print using four color inks or all six colors.
+Six color mode is recommended for photographs.  Four color mode may be
+useful when printing text with embedded graphics to reduce ink
+consumption.
+
+-sInkType='Six Color Photo'
+-sInkType='Four Color Standard'
+
+
 Image type (to optimize the dither):
 ----- ---- --- -------- --- --------
 
@@ -278,13 +291,16 @@ Examples:
 ---------
 
 Example 1 (print charts to file, color, 360 dpi):
-gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
+gs -sDEVICE=stp -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 \
+   -dBrightness=40 -dImageType=1 -sOutputFile=itsyourchoice.prn foo.ps
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 -dQuality=6 -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 \
+   -dQuality=6 -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
 
 Example 3 (print pure black text to stdout)
-gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 -sOutputFile=- foo.ps
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 \
+   -dQuality=2 -dImageType=3 -sOutputFile=- foo.ps
 
 
 PDQ and CUPS

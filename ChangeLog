@@ -1,3 +1,268 @@
+2000-07-11	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.26) (+6 -3)
+	
+	Pass the correct arguments to escp2_imageable_area (from Ed Hynan,
+	ehy@delphi.com).
+	
+2000-07-10	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.25) (+1 -1)
+	
+	Document saturation may be zero
+	
+2000-07-10	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.25) (+2 -2)
+	
+	Allow saturation of 0.
+	
+	Still need to do ink type
+	
+2000-07-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.181) (+2 -2)
+	
+	Do the ink type correctly
+	
+2000-07-10	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.180) (+34 -14)
+	
+	Allow choice of four color vs. six color ink rather than
+	single/variable dot size.  Variable dot size is reliable now, and
+	there are real reasons (ink economy, printing highly saturated
+	graphics) to use four color rather than six color ink for certain
+	purposes.
+	
+	Tweak 6-color, single dot size printing characteristics.
+	
+	Add error checks to weave code.
+	
+2000-07-06	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.10) (+2 -2)
+		print-util.c (1.105) (+75 -108)
+		gtk_color_window.c (1.13) (+2 -2)
+	
+	Saturation adjustment must be based on HSL (hue-saturation-lightness)
+	space rather than HSV (hue-saturation-value).  Now it does the right
+	thing.  Also, allow saturation of 0.
+	
+2000-07-04	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.64) (+41 -15)
+		printers.xml (1.18) (+9 -1)
+	
+	Split the 540C out from the 500C as it supports more paper sizes
+	including custom paper sizes.
+	
+2000-07-03	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.63) (+133 -15)
+	
+	Re-added extra supported paper types now that print-util has a bigger
+	list. Changed max size of A3 printers to include 13x19 "Super B" size.
+	Fixed value of "TABLOID".
+	
+2000-07-03	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.104) (+13 -2)
+	
+	Add standard photographic paper sizes
+	
+2000-07-03	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.179) (+181 -97)
+	
+	Explicitly break out initialization sequence into discrete steps for
+	clarity.
+	
+2000-07-02	<davehill@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.9) (+2 -6)
+		gtk_color_window.c (1.12) (+2 -6)
+	
+	Correctly retrieve "dither_algorithm" from current printer.
+	
+2000-07-02	<davehill@sourceforge.net>
+
+	Files:	print.c (1.103) (+22 -23)
+	
+	Stop garbage being written into printcap (ppd_file not init'ed mainly)
+	plus other tidy up.
+	
+2000-06-30	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.8) (+3 -3)
+		Ghost/gdevstp.c (1.24) (+2 -2)
+		Ghost/README (1.24) (+13 -8)
+		printers.xml (1.17) (+64 -16)
+		print-escp2.c (1.178) (+166 -79)
+	
+	Nominally support large paper sizes on many printers.
+	
+2000-06-30	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.177) (+2 -2)
+	
+	STC 480 doesn't do 1440 DPI.
+	
+2000-06-30	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.176) (+10 -3)
+		Ghost/gdevstp.c (1.23) (+2 -2)
+		Ghost/README (1.23) (+1 -0)
+		run-weavetest (1.16) (+2 -2)
+		printers.xml (1.16) (+8 -0)
+	
+	Epson Stylus 480 (non-US model).  Very strange printer, with 15 jets.
+	Presumably separation of 8.
+	
+	ESC 860/1160 are definitely variable drop size!  It's only the 660
+	that isn't.
+	
+2000-06-30	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.175) (+8 -1)
+		Ghost/gdevstp.c (1.22) (+2 -2)
+		Ghost/README (1.22) (+3 -0)
+		printers.xml (1.15) (+8 -0)
+	
+	Support for Epson Stylus Photo 720 (overseas model)
+	
+2000-06-29	<cpbs@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.29) (+8 -8)
+		print.h (1.68) (+27 -24)
+		print-util.c (1.103) (+3 -2)
+		print-ps.c (1.35) (+11 -11)
+		print-pcl.c (1.62) (+14 -14)
+		print-escp2.c (1.174) (+11 -10)
+		print-canon.c (1.68) (+8 -8)
+		gtk_main_window.c (1.38) (+8 -8)
+	
+	Replace the "model" parameter to the parameters(), media_size() and
+	imageable_area() methods in struct printer to a "printer" parameter to
+	reduce the amount of inside knowledge needed to call the driver.
+	
+2000-06-29	<cpbs@sourceforge.net>
+
+	Files:	printdefy.y (1.6) (+3 -1)
+	
+	Declare yylex() to clean up a pesky compiler warning.
+	
+2000-06-26	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.67) (+11 -1)
+		printers.xml (1.14) (+8 -0)
+	
+	Added model "BJC 4400 photo" from a patch by Alex Butcher
+	
+2000-06-26	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.66) (+12 -58)
+	
+	removed changes since rev 1.63
+	
+2000-06-25	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.69) (+8 -2)
+		print.h (1.67) (+12 -26)
+		print-escp2.c (1.173) (+12 -6)
+	
+	Minor cleanup
+	
+2000-06-24	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.28) (+3 -11)
+		gtk_main_window.c (1.37) (+3 -11)
+	
+	Position printer driver window correctly, thanks to Sven Neuman for
+	the suggestion.
+	
+2000-06-24	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.27) (+30 -12)
+		print-util.c (1.102) (+3 -3)
+		gtk_main_window.c (1.36) (+36 -20)
+	
+	Eliminate GTK warning on startup.
+	
+	Enlarge printer scrolling window, and try to position it correctly on
+	activate.  Currently, the scrollbar positions correctly, but the
+	window itself doesn't.  GTK bug?
+	
+2000-06-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.172) (+9 -11)
+	
+	Rename some variables for clarity
+	
+2000-06-24	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.7) (+6 -1)
+	
+	Minor update
+	
+2000-06-24	<rlk@sourceforge.net>
+
+	Files:	README.escp2 (1.6) (+103 -16)
+	
+	Update with commands documented in the Stylus Pro 9000 manual
+	
+2000-06-24	<gandy@sourceforge.net>
+
+	Files:	print.c (1.102) (+18 -14)
+	
+	Once again, fix a problem with "lpc status" - with plp, a printer occurs
+	right behind the message "Press RETURN to continue...: ".  If a line
+	received from "lpc stat" begins with this string, the first occurence of
+	':' is searched and the string 2 chars behind that ':' is copied to the
+	beginning of the line.  This seems to be the most sane fix for me until
+	the printer selection stuff is settled once and for all - and it shouldn't
+	touch the behaviour in other spooling systems.
+	
+2000-06-23	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.65) (+4 -4)
+	
+	fix for compile errors introduced with last commit
+	
+2000-06-23	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.64) (+58 -12)
+	
+	Preparations to improve color output on the canon printers (might break
+	things till the next commit)
+	
+2000-06-22	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.63) (+3 -1)
+	
+	Further fix for the bjc-8200 to use the 6d-command (properly set
+	the printhead, etc) -- set CANON_CAP_CMD6d to test it
+	
+2000-06-22	<easysw@sourceforge.net>
+
+	Files:	escp2-weavetest.c (1.13) (+27 -28)
+		print-util.c (1.101) (+5 -1)
+		print-escp2.c (1.171) (+6 -2)
+		print-dither.c (1.68) (+5 -1)
+		gtk_main_window.c (1.35) (+5 -1)
+		escputil.c (1.5) (+2 -2)
+	
+	Fixes to make things compile under IRIX.
+	
+2000-06-22	<gandy@sourceforge.net>
+
+	Files:	ChangeLog (1.20) (+333 -0)
+		print-canon.c (1.62) (+23 -8)
+	
+	* Added new command for the bjc-8200
+	* Changed order of colors to KYMCymc (hope this fixes problem with the bjc-8200)
+	* Added (experimental) variable dot size support to the bjc-8200
+	
 2000-06-22	<rlk@sourceforge.net>
 
 	Files:	gimp_main_window.c (1.26) (+5 -4)

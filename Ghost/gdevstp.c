@@ -141,6 +141,23 @@ static privdata_t stp_data =
 * ghostscript driver function calls                                    *
 ***********************************************************************/
 
+#ifdef DRV_DEBUG
+static void
+stp_dbg(const char *msg, const privdata_t *stp_data)
+{
+  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
+	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
+  fprintf(stderr, "Media size %s\n", stp_data->v.media_size);
+  fprintf(stderr, "Ink type %s\n", stp_data->v.ink_type);
+
+  fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
+	  stp_data->model, stp_data->v.brightness, stp_data->v.contrast);
+
+  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
+	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+}
+#endif
+
 static void
 stp_print_dbg(const char *msg, gx_device_printer *pdev,
 	      const privdata_t *stp_data)
@@ -150,16 +167,7 @@ stp_print_dbg(const char *msg, gx_device_printer *pdev,
     fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
 	    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
 	    pdev->y_pixels_per_inch);
-
-  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
-	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
-  fprintf(stderr, "Media size %s\n", stp_data->v.media_size);
-
-  fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-	  stp_data->model, stp_data->v.brightness, stp_data->v.contrast);
-
-  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+  stp_dbg(msg, stp_data);
 #endif
 }
 
@@ -172,16 +180,7 @@ stp_print_debug(const char *msg, gx_device *pdev,
     fprintf(stderr,"%s Image: %d x %d pixels, %f x %f dpi\n",
 	    msg, pdev->width, pdev->height, pdev->x_pixels_per_inch,
 	    pdev->y_pixels_per_inch);
-
-  fprintf(stderr,"%s Settings: r: %d  g: %d  b: %d\n",
-	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
-  fprintf(stderr, "Media size %s\n", stp_data->v.media_size);
-
-  fprintf(stderr,"Settings: model: %d  bright: %d  contrast: %d\n",
-	  stp_data->model, stp_data->v.brightness, stp_data->v.contrast);
-
-  fprintf(stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
-	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
+  stp_dbg(msg, stp_data);
 #endif
 }
 
@@ -281,11 +280,13 @@ private int stp_get_params(gx_device *pdev, gs_param_list *plist)
 {
   int code;
   gs_param_string pmedia;
+  gs_param_string pinktype;
 
   stp_print_debug("stp_get_params(0)", pdev, &stp_data);
   code = gdev_prn_get_params(pdev, plist);
   stp_print_debug("stp_get_params(1)", pdev, &stp_data);
   param_string_from_string(pmedia, stp_data.v.media_size);
+  param_string_from_string(pinktype, stp_data.v.ink_type);
 
   if ( code < 0 ||
        (code = param_write_int(plist, "Red", &stp_data.v.red)) < 0 ||
@@ -298,6 +299,7 @@ private int stp_get_params(gx_device *pdev, gs_param_list *plist)
        (code = param_write_int(plist, "Quality", &stp_data.resnr)) < 0 ||
        (code = param_write_int(plist, "Dither", &stp_data.algnr)) < 0 ||
        (code = param_write_int(plist, "ImageType", &stp_data.v.image_type)) < 0 ||
+       (code = param_write_string(plist, "InkType", &pinktype) < 0) ||
        (code = param_write_string(plist, "PAPERSIZE", &pmedia)) < 0 ||
        (code = param_write_float(plist, "Gamma", &stp_data.v.gamma)) < 0 ||
        (code = param_write_float(plist, "Saturation", &stp_data.v.saturation)) < 0 ||
@@ -313,6 +315,7 @@ private int stp_get_params(gx_device *pdev, gs_param_list *plist)
 private int stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
   gs_param_string pmedia;
+  gs_param_string pinktype;
   int red    = stp_data.v.red;
   int green  = stp_data.v.green;
   int blue   = stp_data.v.blue;
@@ -332,6 +335,7 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
   stp_print_debug("stp_put_params", pdev, &stp_data);
 
   param_string_from_string(pmedia, stp_data.v.media_size);
+  param_string_from_string(pinktype, stp_data.v.ink_type);
 
   code = stp_put_param_int(plist, "Red", &red, 0, 200, code);
   code = stp_put_param_int(plist, "Green", &green, 0, 200, code);
@@ -354,6 +358,13 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
       */
     }
 
+  if( param_read_string(plist, "InkType", &pinktype) == 0)
+    {
+      /*
+	fprintf(stderr,"Ink type: |%s|\n",pinktype.data);
+      */
+    }
+
   if ( code < 0 )
     return code;
 
@@ -367,7 +378,8 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
   stp_data.resnr = qual;
   stp_data.algnr = algo;
   stp_data.v.image_type = itype;
-  strcpy(stp_data.v.media_size,pmedia.data);
+  strcpy(stp_data.v.media_size, pmedia.data);
+  strcpy(stp_data.v.ink_type, pinktype.data);
   stp_data.v.gamma = gamma;
   stp_data.v.saturation = sat;
   stp_data.v.density = den;
@@ -382,6 +394,9 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
     fprintf(stderr,"Media defined: %s\n",stp_data.v.media_size);
 #endif
   }
+#if 0
+  fprintf(stderr,"Ink type: |%s|\n",stp_data.v.ink_type);
+#endif
 
   code = gdev_prn_put_params(pdev, plist);
   return code;

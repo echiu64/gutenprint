@@ -1216,9 +1216,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
   else
     bits = 1;
 
-  if (!use_softweave)
-    use_6color = 0;
-
  /*
   * Let the user know what we're doing...
   */

@@ -1,4 +1,4 @@
-This is the Print plugin for the Gimp, version 3.1.7.  This is a
+This is the Print plugin for the Gimp, version 3.1.8.  This is a
 development release.  If this software causes your print head to zoom
 off the end of your printer, spilling ink all over your 1000 year old
 Persian rug, don't blame us.  Remember, you installed the software.
@@ -9,6 +9,57 @@ driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Print 3.1.8 contains the following improvements over 3.1.7:
+
+1) The entries for printer model and paper size have been greatly
+   improved.  There are many additional paper sizes offered.
+
+2) Print quality using adaptive, hybrid, and ordered modes is improved
+   at 1440x720 DPI.
+
+3) The UI now offers a choice of metric or English units for
+   measurements.
+
+4) The print preview is much larger, affording easier viewing of the
+   placement of the image.  An arrow is used to indicate the top of
+   the paper, and the size of the arrow gives an indication of the
+   actual paper size.
+
+5) It is now possible to specify the output width or height directly.
+
+6) Dragging the preview image with a button other than the left moves
+   the image in units of points rather than screen pixels, affording
+   finer placement control.
+
+7) A new emulated 1440x2880 mode has been added for highest quality
+   printing on Epson Stylus printers.  It is of most use on the Stylus
+   Photo 750, 1200, 870, and 1270.
+
+8) Experimental improvements for the Canon BJC-8200.
+
+9) The plug-in should operate correctly with the plp spooling system.
+
+10) Support for the Epson Stylus Photo 720 and Stylus Color 480.  Also
+   correct the Stylus Color 860 and 1160 entries.
+
+11) Support for the HP 540C printer.
+
+12) Correct treatment of saturation adjustment, and allow saturation
+   of 0.  This allows printing a color image in black and white using
+   color inks for maximum smoothness.
+
+13) Allow choice of four and six color printing on six color
+   printers.  This is useful for economy (normal printing uses much
+   more light cyan and magenta than dark), and may improve saturation
+   for graphics.
+
+14) Bug fixes for Ghostscript driver.  Also, Ghostscript driver now
+    offers choice of ink type.
+
+15) Some improvement in Epson Stylus Photo, Photo 700, and Photo EX
+    output quality.
+
 
 Print 3.1.7 contains the following improvements over Print 3.1.6:
 
