@@ -63,7 +63,7 @@ EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	Ghost/COPYING Ghost/ChangeLog Ghost/README Ghost/contrib.mak.addon \
 	Ghost/gdevstp-dither.c Ghost/gdevstp-escp2.c Ghost/gdevstp-print.h \
 	Ghost/gdevstp-util.c Ghost/gdevstp.c Ghost/gdevstp.h \
-	Ghost/gdevstp-printers.c
+	Ghost/gdevstp-printers.c Ghost/gs-stp.pdq
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
