@@ -79,7 +79,8 @@ F  The current pass's starting row is not consistent with the previously\n\
    observed starting row of this pass.
 G  The current pass's ending row is not consistent with the previously\n\
    observed ending row of this pass.\n\
-H  The current row does not match the computed current row.\n\
+H  The current row does not match the computed current row based on jet and\n\
+   start of pass.\n\
 I  The number of missing start rows is less than zero or greater than or\n\
    equal to the actual number of jets.\n\
 J  The first printed row of this pass is less than zero.\n\
