@@ -279,6 +279,12 @@ Image_note_progress(Image image, double current, double total)
   gimp_progress_update(current / total);
 }
 
+void
+Image_progress_conclude(Image image)
+{
+  gimp_progress_update(1);
+}
+
 const char *
 Image_get_appname(Image image)
 {

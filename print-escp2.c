@@ -514,8 +514,8 @@ static const res_t escp2_reslist[] = {
   { "1440 x 720 DPI Microweave", 1440, 720, 0, 2, 1, 1 },
   { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 1, 1 },
   { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 2, 1 },
-  { "1440 x 720 DPI Enhanced", 1440, 1440, 1, 2, 1, 2 },
-  { "1440 x 2880 DPI Super", 1440, 2880, 1, 2, 1, 4 },
+  { "1440 x 1440 DPI Emulated", 1440, 1440, 1, 2, 1, 2 },
+  { "1440 x 2880 DPI Emulated", 1440, 2880, 1, 2, 1, 4 },
   { "", 0, 0, 0, 0, 0 }
 };
 
@@ -1393,7 +1393,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
 
   for (y = 0; y < out_height; y ++)
   {
-    int i, j;
     if ((y & 255) == 0)
       Image_note_progress(image, y, out_height);
 
@@ -1428,6 +1427,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       errline ++;
     }
   }
+  Image_progress_conclude(image);
   if (use_softweave)
     escp2_flush(weave, model, out_width, left, ydpi, xdpi, prn);
   else

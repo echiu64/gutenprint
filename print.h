@@ -173,6 +173,7 @@ extern void Image_get_row(Image image, unsigned char *data, int row);
 extern const char *Image_get_appname(Image image);
 extern void Image_progress_init(Image image);
 extern void Image_note_progress(Image image, double current, double total);
+extern void Image_progress_conclude(Image image);
 
 
 typedef struct printer

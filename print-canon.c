@@ -361,25 +361,6 @@ c_strdup(const char *s)
   return ret;
 }
 
-static char *
-canon_resolutions[] =
-{
-  "300x300 DPI",
-  "300x300 DPI w/ DMT",
-  "600x600 DPI",
-  "600x600 DPI w/ DMT",
-  "1200x600 DPI",
-  "1200x1200 DPI",
-  "180x180 DPI",
-  "360x360 DPI",
-  "360x360 DPI w/ DMT",
-  "720x360 DPI",
-  "720x720 DPI",
-  "1440x720 DPI",
-  "1440x1440 DPI",
-  NULL
-};
-
 const char *
 canon_default_resolution(const printer_t *printer)
 {
@@ -1168,6 +1149,7 @@ canon_print(const printer_t *printer,		/* I - Model */
       errline ++;
     }
   }
+  Image_progress_conclude(image);
 
   free_dither(dither);
 

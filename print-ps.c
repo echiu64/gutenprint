@@ -535,6 +535,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
         memcpy(out, out + out_length - out_offset, out_offset);
     }
   }
+  Image_progress_conclude(image);
 
   free_lut(&nv);
   free(in);

@@ -1851,6 +1851,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       errline ++;
     }
   }
+  Image_progress_conclude(image);
 
   free_dither(dither);
 

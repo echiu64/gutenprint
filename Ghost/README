@@ -258,10 +258,10 @@ For Epson Stylus printers:
 '1440 x 720 DPI Highest Quality'         (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-'1440 x 720 DPI Enhanced'                (works on all 1440x720 dpi
+'1440 x 1440 DPI Emulated'               (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
-'1440 x 2880 DPI Super'                  (works on all 1440x720 dpi
+'1440 x 2880 DPI Emulated'               (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
 
