@@ -86,6 +86,8 @@ typedef struct
   int			top;
   int			width;
   int			height;
+  int			adjusted_width;
+  int			adjusted_height;
   int			last_percent;
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
@@ -183,6 +185,10 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gimp-Print Tumble = %d\n", cups->header.Tumble);
   fprintf(stderr, "DEBUG: Gimp-Print cupsWidth = %d\n", cups->header.cupsWidth);
   fprintf(stderr, "DEBUG: Gimp-Print cupsHeight = %d\n", cups->header.cupsHeight);
+  fprintf(stderr, "DEBUG: Gimp-Print cups->width = %d\n", cups->width);
+  fprintf(stderr, "DEBUG: Gimp-Print cups->height = %d\n", cups->height);
+  fprintf(stderr, "DEBUG: Gimp-Print cups->adjusted_width = %d\n", cups->adjusted_width);
+  fprintf(stderr, "DEBUG: Gimp-Print cups->adjusted_height = %d\n", cups->adjusted_height);
   fprintf(stderr, "DEBUG: Gimp-Print cupsMediaType = %d\n", cups->header.cupsMediaType);
   fprintf(stderr, "DEBUG: Gimp-Print cupsBitsPerColor = %d\n", cups->header.cupsBitsPerColor);
   fprintf(stderr, "DEBUG: Gimp-Print cupsBitsPerPixel = %d\n", cups->header.cupsBitsPerPixel);
@@ -293,7 +299,7 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
       stp_set_string_parameter(v, "InputImageType", "KCMY");
       break;
     default :
-      fprintf(stderr, "ERROR: Gimp-Print Bad colorspace %d!",
+      fprintf(stderr, "ERROR: Gimp-Print Bad colorspace %d!\n",
 	      cups->header.cupsColorSpace);
       break;
     }
@@ -331,14 +337,21 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   cups->width = cups->header.HWResolution[0] * cups->width / 72;
   cups->left = cups->header.HWResolution[0] * cups->left / 72;
   cups->right = cups->header.HWResolution[0] * cups->right / 72;
+  cups->adjusted_width = cups->width;
+  if (cups->adjusted_width > cups->header.cupsWidth)
+    cups->adjusted_width = cups->header.cupsWidth;
 
   cups->bottom = cups->height - cups->bottom;
   cups->height = cups->height - cups->top - cups->bottom;
   cups->height = cups->header.HWResolution[1] * cups->height / 72;
   cups->top = cups->header.HWResolution[1] * cups->top / 72;
   cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
-  fprintf(stderr, "DEBUG: Gimp-Print CUPS settings w %d l %d r %d  h %d t %d b %d\n",
-	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
+  cups->adjusted_height = cups->height;
+  if (cups->adjusted_height > cups->header.cupsHeight)
+    cups->adjusted_height = cups->header.cupsHeight;
+  fprintf(stderr, "DEBUG: Gimp-Print CUPS settings w %d %d l %d r %d  h %d %d t %d b %d\n",
+	  cups->width, cups->adjusted_width, cups->left, cups->right,
+	  cups->height, cups->adjusted_width, cups->top, cups->bottom);
 
   return v;
 }
@@ -812,7 +825,9 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       fprintf(stderr, "ERROR: Gimp-Print image is null!  Please report this bug to gimp-print-devel@lists.sourceforge.net\n");
       return STP_IMAGE_STATUS_ABORT;
     }
-  bytes_per_line = cups->width * cups->header.cupsBitsPerPixel / CHAR_BIT;
+  bytes_per_line =
+    ((cups->adjusted_width * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
+    CHAR_BIT;
   margin = cups->header.cupsBytesPerLine - bytes_per_line;
 
   if (cups->row < cups->header.cupsHeight)
@@ -829,22 +844,26 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	    throwaway_data(margin, cups);
 	  }
       }
-
-   /*
-    * Invert black data for monochrome output...
-    */
-    if (cups->header.cupsColorSpace == CUPS_CSPACE_K) {
-      unsigned char *dp = data;
-      for (i = bytes_per_line; i > 0; i --, dp++)
-        *dp = ((1 << CHAR_BIT) - 1) - *dp;
-    }
   }
   else
     {
-      if (cups->header.cupsColorSpace == CUPS_CSPACE_CMYK)
-	memset(data, 0, bytes_per_line);
-      else
-	memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
+      switch (cups->header.cupsColorSpace)
+	{
+	case CUPS_CSPACE_K:
+	case CUPS_CSPACE_CMYK:
+	case CUPS_CSPACE_KCMY:
+	case CUPS_CSPACE_CMY:
+	  memset(data, 0, bytes_per_line);
+	  break;
+	case CUPS_CSPACE_RGB:
+	case CUPS_CSPACE_W:
+	  memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
+	  break;
+	default:
+	  fprintf(stderr, "ERROR: Gimp-Print Unknown colorspace %d!\n",
+		  cups->header.cupsColorSpace);
+	  return STP_IMAGE_STATUS_ABORT;
+	}
     }
 
   /*
@@ -858,11 +877,11 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       if (warned == 0)
 	{
 	  fprintf(stderr,
-		  "WARNING: GIMP-PRINT detected broken job options.  "
+		  "WARNING: Gimp-Print detected broken job options.  "
 		  "Output quality is degraded.  Are you using psnup or non-ADSC PostScript?\n");
 	  warned = 1;
 	}
-      for (i = cups->width - 1; i >= 0; i--)
+      for (i = cups->adjusted_width - 1; i >= 0; i--)
 	{
 	  if ( (data[i/8] >> (7 - i%8)) &0x1)
 	    data[i]=255;
@@ -879,10 +898,9 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       cups->last_percent = new_percent;
     }
 
-  if (cups->row < cups->header.cupsHeight)
   if (tmp_image_status != STP_IMAGE_STATUS_OK)
     fprintf(stderr, "DEBUG: Gimp-Print image status %d\n", tmp_image_status);
-      return tmp_image_status;
+  return tmp_image_status;
 }
 
 
@@ -899,8 +917,8 @@ Image_height(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  fprintf(stderr, "DEBUG: Gimp-Print: Image_height %d\n", cups->height);
-  return (cups->height);
+  fprintf(stderr, "DEBUG: Gimp-Print: Image_height %d\n", cups->adjusted_height);
+  return (cups->adjusted_height);
 }
 
 
@@ -950,8 +968,8 @@ Image_width(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  fprintf(stderr, "DEBUG: Gimp-Print: Image_width %d\n", cups->width);
-  return (cups->width);
+  fprintf(stderr, "DEBUG: Gimp-Print: Image_width %d\n", cups->adjusted_width);
+  return (cups->adjusted_width);
 }
 
 
