@@ -22,7 +22,7 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
 </p>
 
-<H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
+<H2><font color="#ff0000"><blink>Gimp-Print 4.1.7 is
 released!</blink></font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 9,
