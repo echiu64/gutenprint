@@ -12,7 +12,7 @@
    <arg_spot>A</arg_spot>
    <arg_required />
    <arg_postscript />
-   <arg_proto>&lt;&lt;/Color(%s)&gt;&gt;setpagedevice</arg_proto>
+   <arg_proto>&lt;&lt;/Color %s&gt;&gt;setpagedevice</arg_proto>
   </arg_execution>
 
   @@OPTCONSTRAINTS@@
