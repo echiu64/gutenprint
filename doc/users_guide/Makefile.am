@@ -67,35 +67,30 @@ HTMLDIR = html
 
 UTIL_OUTPUTS = \
  $(UTIL_MANUAL).pdf \
- $(UTIL_MANUAL).ps \
  util_html
 
 GIMP_OUTPUTS = \
  $(GIMP_MANUAL).pdf \
- $(GIMP_MANUAL).ps \
  gimp_html
 
 CUPS_OUTPUTS = \
  $(CUPS_MANUAL).pdf \
- $(CUPS_MANUAL).ps \
  cups_html
 
 OUTPUTS = \
  $(MANUAL).pdf \
- $(MANUAL).ps \
  html
 
-UTIL_GUIDE = $(UTIL_MANUAL).pdf util_html $(UTIL_MANUAL).ps
-GIMP_GUIDE = $(GIMP_MANUAL).pdf gimp_html $(GIMP_MANUAL).ps
-CUPS_GUIDE = $(CUPS_MANUAL).pdf cups_html $(CUPS_MANUAL).ps
-USER_GUIDE = $(MANUAL).pdf html $(MANUAL).ps
+UTIL_GUIDE = $(UTIL_MANUAL).pdf util_html
+GIMP_GUIDE = $(GIMP_MANUAL).pdf gimp_html
+CUPS_GUIDE = $(CUPS_MANUAL).pdf cups_html
+USER_GUIDE = $(MANUAL).pdf html
 
 if INSTALL_USER_GUIDE
 STANDARD_TARGETS = $(USER_GUIDE)
 endif
 
-DISTHOOKDIRS = figures $(HTMLDIR)
-DISTHOOKFILES = $(STANDARD_TARGETS)
+DISTHOOKDIRS = $(HTMLDIR)/stylesheet-images
 
 UTIL_PNG_IMAGES =
 
@@ -123,6 +118,8 @@ PNG_IMAGES = \
 	$(CUPS_PNG_IMAGES) 				\
 	$(GIMP_PNG_IMAGES)
 
+DISTHOOKFILES = $(PNG_IMAGES) $(STANDARD_TARGETS) $(HTMLDIR)/*.html $(HTMLDIR)/*.css
+
 UTIL_EPS_IMAGES = $(addsuffix .eps,$(basename $(UTIL_PNG_IMAGES)))
 GIMP_EPS_IMAGES = $(addsuffix .eps,$(basename $(GIMP_PNG_IMAGES)))
 CUPS_EPS_IMAGES = $(addsuffix .eps,$(basename $(CUPS_PNG_IMAGES)))
@@ -143,6 +140,14 @@ endif
 ## Rules
 
 dist-hook: $(USER_GUIDE)
+	for file in $(DISTHOOKFILES) ; do \
+	  if test -f $$file ; then \
+            if ! test -d $(distdir)/`dirname $$file` ; then \
+	      mkdir $(distdir)/`dirname $$file` ; \
+	    fi ; \
+	    cp -p $$file $(distdir)/`dirname $$file` ; \
+	  fi ; \
+	done
 	for dir in $(DISTHOOKDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -155,11 +160,6 @@ dist-hook: $(USER_GUIDE)
 	      fi ; \
 	    done \
 	  fi \
-	done
-	for file in $(DISTHOOKFILES) ; do \
-	  if test -f $$file ; then \
-	    cp -p $$file $(distdir) ; \
-	fi ; \
 	done
 
 $(UTIL_MANUAL).pdf:  $(UTIL_MANUAL_SRC_FILES)
@@ -237,10 +237,15 @@ $(MANUAL).pdf:  $(MANUAL_SRC_FILES)
 
 editions:  docs cups_docs gimp_docs util_docs
 
-util_docs: util_html util_ps util_pdf
-gimp_docs: gimp_html gimp_ps gimp_pdf
-cups_docs: cups_html cups_ps cups_pdf
-docs: html ps pdf
+util_docs: util_html util_pdf
+gimp_docs: gimp_html gimp_pdf
+cups_docs: cups_html cups_pdf
+docs: html pdf
+
+all_util_docs: util_html util_ps util_pdf
+all_gimp_docs: gimp_html gimp_ps gimp_pdf
+all_cups_docs: cups_html cups_ps cups_pdf
+all_docs: html ps pdf
 
 all-local: $(ALL_LOCAL_TARGETS)
 
@@ -416,7 +421,7 @@ install-data-local: $(STANDARD_TARGETS)
 	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html ; \
 	    fi ; \
 	  done ; \
-	  for file in $$HTMLGENDIR/figures/*.png ; do \
+	  for file in $(srcdir)/figures/*.png ; do \
 	    if test -f $$file ; then \
 	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
 	    fi ; \
@@ -494,6 +499,7 @@ help:
 	@echo "Targets for the complete user's guide:"
 	@echo "  "
 	@echo "    docs      - creates PS, PDF, and HTML documentation files"
+	@echo "    all_docs  - creates PS and HTML documentation files"
 	@echo "    ps        - creates PostScript documentation"
 	@echo "    pdf       - creates PDF documentation"
 	@echo "    html      - creates HTML documentation"
@@ -503,7 +509,6 @@ help:
 	@echo ""
 	@echo "Targets for specific manual editions:"
 	@echo "  "
-	@echo "    cups_docs - generate HTML, PDF, and PS for CUPS edition of the manual"
 	@echo "    cups_html - generate HTML for CUPS edition of the manual"
 	@echo "    cups_pdf  - generate PDF for CUPS edition of the manual"
 	@echo "    cups_ps   - generate PS for CUPS edition of the manual"
@@ -535,6 +540,7 @@ EXTRA_DIST = README				\
 	util-edition.sgml
 
 .PHONY: docs cups_docs gimp_docs util_docs
+.PHONY: all_docs all_cups_docs all_gimp_docs all_util_docs
 .PHONY: html cups_html gimp_html util_html
 .PHONY: ps cups_ps gimp_ps util_ps
 .PHONY: pdf cups_pdf gimp_pdf util_pdf
