@@ -74,9 +74,11 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  </h2>
  <p>
  Gimp-Print is available in source code form under the GPL (GNU General
- Public License). You are entitled to download the <a
- href="http://sourceforge.net/project/showfiles.php?group_id=1537&release
- _id=110475">source code</a>.
+ Public License). You are entitled to read the <a href=
+ "http://sourceforge.net/project/shownotes.php?release_id=110475"
+ >release notes</a> and download the <a href=
+"http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2.tar.gz?download" 
+ >source code</a>.
  </p>
  <p>
  Gimp-print on Mac OS X would not be possible without <a
