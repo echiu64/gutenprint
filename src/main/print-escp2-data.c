@@ -3071,14 +3071,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_MICROWEAVE_ENHANCED | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO |
      MODEL_YZEROMARGIN_NO | MODEL_VACUUM_NO |
      MODEL_MICROWEAVE_EXCEPTION_NORMAL | MODEL_DEINITIALIZE_JE_NO),
-    1, 1, 1, 1, 1, 1,
+    96, 1, 2, 96, 1, 2,
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo7_inklist,
+    &standard_paper_list, standard_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &default_input_slot_list
   },
   /* 48: Stylus Pro 7600 */
