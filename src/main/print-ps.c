@@ -283,7 +283,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 		page_height,	/* Height of page */
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
-		out_bpp,	/* Output bytes per pixel */
+		out_channels,	/* Output bytes per pixel */
 		out_ps_height,	/* Output height (Level 2 output) */
 		out_offset;	/* Output offset (Level 2 output) */
   time_t	curtime;	/* Current time of day */
@@ -321,7 +321,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   * Choose the correct color conversion function...
   */
 
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
  /*
   * Compute the output size...
@@ -491,13 +491,13 @@ ps_print(const stp_vars_t v, stp_image_t *image)
           (double)out_height / ((double)image_height));
 
   in  = stp_zalloc(image_width * image_bpp);
-  out = stp_zalloc((image_width * out_bpp + 3) * 2);
+  out = stp_zalloc((image_width * out_channels + 3) * 2);
 
   stp_compute_lut(nv, 256, NULL, NULL, NULL);
 
   if (model == 0)
   {
-    stp_zprintf(v, "/picture %d string def\n", image_width * out_bpp);
+    stp_zprintf(v, "/picture %d string def\n", image_width * out_channels);
 
     stp_zprintf(v, "%d %d 8\n", image_width, image_height);
 
@@ -520,7 +520,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 	}
       (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp);
 
-      ps_hex(v, out, image_width * out_bpp);
+      ps_hex(v, out, image_width * out_channels);
     }
   }
   else
@@ -565,7 +565,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
       (*colorfunc)(nv, in, out + out_offset, &zero_mask, image_width,
 		   image_bpp);
 
-      out_ps_height = out_offset + image_width * out_bpp;
+      out_ps_height = out_offset + image_width * out_channels;
 
       if (y < (image_height - 1))
       {

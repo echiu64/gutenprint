@@ -473,12 +473,12 @@ do_print_cmd(void)
         if (printer == NULL)
           strcpy(command, "lpr -l");
 	else
-          sprintf(command, "lpr -P%s -l", printer);
+          snprintf(command, 1023, "lpr -P%s -l", printer);
         }
       else if (printer == NULL)
 	strcpy(command, "lp -s -oraw");
       else
-	sprintf(command, "lp -s -oraw -d%s", printer);
+	snprintf(command, 1023, "lp -s -oraw -d%s", printer);
 
       if ((pfile = popen(command, "w")) == NULL)
 	{

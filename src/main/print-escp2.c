@@ -1124,7 +1124,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 		page_true_height;	/* True height of page */
   int		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
-		out_bpp,	/* Output bytes per pixel */
+		out_channels,	/* Output bytes per pixel */
 		length;		/* Length of raster data */
   int		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
@@ -1463,10 +1463,10 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 				   FILLFUNC, PACKFUNC, COMPUTEFUNC);
 
       stp_set_output_color_model(nv, COLOR_MODEL_CMY);
-      colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_bpp);
+      colorfunc = stp_choose_colorfunc(nv, image->bpp(image), &out_channels);
 
       in  = stp_malloc(image->width(image) * image->bpp(image));
-      out = stp_malloc(image->width(image) * out_bpp * 2);
+      out = stp_malloc(image->width(image) * out_channels * 2);
 
       dither = stp_init_dither(image->width(image), out_width,
 			       image->bpp(image), xdpi, ydpi, nv);

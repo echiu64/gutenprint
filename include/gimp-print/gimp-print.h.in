@@ -922,7 +922,7 @@ typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
  * and output.
  */
 extern stp_convert_t stp_choose_colorfunc(const stp_vars_t v, int image_bpp,
-					  int *out_bpp);
+					  int *out_channels);
 
 /*
  * hue_map, lum_map, and sat_map adjust the hue, luminosity, and saturation

@@ -260,6 +260,87 @@ adjust_density(const stp_vars_t vars, lut_t *lut)
 }
 
 
+static void
+gray_to_monochrome(const stp_vars_t vars,
+		   const unsigned char *grayin,
+		   unsigned short *grayout,
+		   int *zero_mask,
+		   int width,
+		   int bpp)
+{
+  int i0 = -1;
+  int o0 = 0;
+  int nz = 0;
+  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  size_t count;
+  const unsigned short *composite;
+  stp_curve_resample(lut->composite, 256);
+  composite = stp_curve_get_ushort_data(lut->composite, &count);
+
+  while (width > 0)
+    {
+      if (i0 != grayin[0])
+	{
+	  i0 = grayin[0];
+	  o0 = composite[grayin[0]];
+	  if (o0 < 32768)
+	    o0 = 0;
+	  else
+	    o0  = 65535;
+	  nz |= o0;
+	}
+      grayout[0] = o0;
+      grayin ++;
+      grayout ++;
+      width --;
+    }
+  if (zero_mask)
+    *zero_mask = nz ? 0 : 1;
+}
+
+static void
+rgb_to_monochrome(const stp_vars_t vars,
+		  const unsigned char *rgb,
+		  unsigned short *gray,
+		  int *zero_mask,
+		  int width,
+		  int bpp)
+{
+  int i0 = -1;
+  int i1 = -1;
+  int i2 = -1;
+  int o0 = 0;
+  int nz = 0;
+  lut_t *lut = (lut_t *)(stp_get_lut(vars));
+  size_t count;
+  const unsigned short *composite;
+  stp_curve_resample(lut->composite, 256);
+  composite = stp_curve_get_ushort_data(lut->composite, &count);
+
+  while (width > 0)
+    {
+      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2])
+	{
+	  i0 = rgb[0];
+	  i1 = rgb[1];
+	  i2 = rgb[2];
+	  o0 = composite[(i0 * LUM_RED + i1 * LUM_GREEN +
+			       i2 * LUM_BLUE) / 100];
+	  if (o0 < 32768)
+	    o0 = 0;
+	  else
+	    o0 = 65535;
+	  nz |= o0;
+	}
+      gray[0] = o0;
+      rgb += 3;
+      gray ++;
+      width --;
+    }
+  if (zero_mask)
+    *zero_mask = nz ? 0 : 1;
+}
+
 /*
  * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
  *                    adjusted).
@@ -283,54 +364,12 @@ gray_to_gray(const stp_vars_t vars,
   adjust_density(vars, lut);
   composite = stp_curve_get_ushort_data(lut->composite, &count);
 
-  if (width <= 0)
-    return;
-  while (width)
+  while (width > 0)
     {
       if (i0 != grayin[0])
 	{
 	  i0 = grayin[0];
 	  o0 = composite[i0];
-	  nz |= o0;
-	}
-      grayout[0] = o0;
-      grayin ++;
-      grayout ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-gray_to_monochrome(const stp_vars_t vars,
-		   const unsigned char *grayin,
-		   unsigned short *grayout,
-		   int *zero_mask,
-		   int width,
-		   int bpp)
-{
-  int i0 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != grayin[0])
-	{
-	  i0 = grayin[0];
-	  o0 = composite[grayin[0]];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0  = 65535;
 	  nz |= o0;
 	}
       grayout[0] = o0;
@@ -377,51 +416,6 @@ rgb_to_gray(const stp_vars_t vars,
 	  i2 = rgb[2];
 	  o0 = composite[(i0 * LUM_RED + i1 * LUM_GREEN + i2 * LUM_BLUE) /
 			 100];
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      rgb += 3;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-rgb_to_monochrome(const stp_vars_t vars,
-		  const unsigned char *rgb,
-		  unsigned short *gray,
-		  int *zero_mask,
-		  int width,
-		  int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int i2 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_lut(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  if (width <= 0)
-    return;
-  while (width)
-    {
-      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2])
-	{
-	  i0 = rgb[0];
-	  i1 = rgb[1];
-	  i2 = rgb[2];
-	  o0 = composite[(i0 * LUM_RED + i1 * LUM_GREEN +
-			       i2 * LUM_BLUE) / 100];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0 = 65535;
 	  nz |= o0;
 	}
       gray[0] = o0;
@@ -1373,19 +1367,19 @@ do									\
 {									\
   stp_dprintf(STP_DBG_COLORFUNC, v,					\
 	      "stp_choose_colorfunc(type %d bpp %d) ==> %s, %d\n",	\
-	      stp_get_output_type(v), image_bpp, #x, *out_bpp);		\
+	      stp_get_output_type(v), image_bpp, #x, *out_channels);	\
   return (x);								\
 } while (0)
 
 stp_convert_t
 stp_choose_colorfunc(const stp_vars_t v,
 		     int image_bpp,
-		     int *out_bpp)
+		     int *out_channels)
 {
   switch (stp_get_output_type(v))
     {
     case OUTPUT_MONOCHROME:
-      *out_bpp = 1;
+      *out_channels = 1;
       switch (image_bpp)
 	{
 	case 1:
@@ -1397,7 +1391,7 @@ stp_choose_colorfunc(const stp_vars_t v,
 	}
       break;
     case OUTPUT_RAW_CMYK:
-      *out_bpp = 4;
+      *out_channels = 4;
       switch (image_bpp)
 	{
 	case 4:
@@ -1409,41 +1403,37 @@ stp_choose_colorfunc(const stp_vars_t v,
 	}
       break;
     case OUTPUT_COLOR:
-      *out_bpp = 3;
+      *out_channels = 3;
+      if (image_bpp != 1 && image_bpp != 3)
+	RETURN_COLORFUNC(NULL);
       switch (stp_get_image_type(v))
 	{
 	case IMAGE_CONTINUOUS:
 	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(rgb_to_rgb);
-	  else if (image_bpp == 1)
-	    RETURN_COLORFUNC(gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(NULL);
+	    RETURN_COLORFUNC(gray_to_rgb);
 	case IMAGE_SOLID_TONE:
 	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(solid_rgb_to_rgb);
-	  else if (image_bpp == 1)
-	    RETURN_COLORFUNC(gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(NULL);
+	    RETURN_COLORFUNC(gray_to_rgb);
 	case IMAGE_LINE_ART:
 	  if (image_bpp == 3)
 	    RETURN_COLORFUNC(fast_rgb_to_rgb);
-	  else if (image_bpp == 1)
-	    RETURN_COLORFUNC(fast_gray_to_rgb);
 	  else
-	    RETURN_COLORFUNC(NULL);
+	    RETURN_COLORFUNC(fast_gray_to_rgb);
 	default:
 	  RETURN_COLORFUNC(NULL);
 	}
     case OUTPUT_RAW_PRINTER:
       if ((image_bpp & 1) || image_bpp > 64)
 	RETURN_COLORFUNC(NULL);
-      *out_bpp = image_bpp / 2;
+      *out_channels = image_bpp / 2;
       RETURN_COLORFUNC(raw_to_raw);
     case OUTPUT_GRAY:
     default:
-      *out_bpp = 1;
+      *out_channels = 1;
       switch (image_bpp)
 	{
 	case 1:

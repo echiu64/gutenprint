@@ -1356,7 +1356,7 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
     page_true_height,	/* True length of page */
     out_width,	/* Width of image on page in pixles */
     out_height,	/* Length of image on page */
-    out_bpp,	/* Output bytes per pixel */
+    out_channels,	/* Output bytes per pixel */
     length,		/* Length of raster data in bytes*/
     buf_length,     /* Length of raster data buffer (dmt) */
     errdiv,		/* Error dividend */
@@ -1462,7 +1462,7 @@ lexmark_print(const stp_vars_t v, stp_image_t *image)
    * Choose the correct color conversion function...
    */
 
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
 
   ncolors = ink_parameter->ncolors;
@@ -1817,7 +1817,7 @@ densityDivisor /= 1.2;
 
 
   in  = stp_malloc(image_width * image_bpp);
-  out = stp_malloc(image_width * out_bpp * 2);
+  out = stp_malloc(image_width * out_channels * 2);
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
 #ifdef DEBUG

@@ -1988,7 +1988,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
 		page_true_height,	/* True length of page */
 		out_width,	/* Width of image on page */
 		out_height,	/* Length of image on page */
-		out_bpp,	/* Output bytes per pixel */
+		out_channels,	/* Output bytes per pixel */
 		length,		/* Length of raster data */
                 buf_length,     /* Length of raster data buffer (dmt) */
 		errdiv,		/* Error dividend */
@@ -2056,7 +2056,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
    * Choose the correct color conversion function...
    */
 
-  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_bpp);
+  colorfunc = stp_choose_colorfunc(nv, image_bpp, &out_channels);
 
  /*
   * Figure out the output resolution...
@@ -2304,7 +2304,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   stp_dither_set_density(dither, stp_get_float_parameter(nv, "Density"));
 
   in  = stp_zalloc(image_width * image_bpp);
-  out = stp_zalloc(image_width * out_bpp * 2);
+  out = stp_zalloc(image_width * out_channels * 2);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
