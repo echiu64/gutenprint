@@ -35,7 +35,7 @@ require('standard_html_header.php3');
  <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
  </p>
  <p>
- <b>April 30, 2003 -</b> ESP Ghostscript version 7.0.5.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
+ <a href="MacOSX.php3#downloadESPGS"><b>April 30, 2003 -</b></a> ESP Ghostscript version 7.05.6 (ESPGS) is now available as a Mac OS X installer package in the downloads section. All Gimp-Print users should update to this version of ESPGS.
  </p>
  <p>
  <p>
@@ -152,6 +152,7 @@ require('standard_html_header.php3');
  not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>).
  </p>
+ <a name="downloadESPGS"></a>
  <b>ESP Ghostscript 7.05.6</b>
  </td>
  </tr>
