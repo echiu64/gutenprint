@@ -78,7 +78,11 @@ fi
 dnl MRS: Only GCC supports -Wall and other GCC options...
 
 if test -n "$GCC"; then
-  MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes'
+  if test "$USE_MAINTAINER_MODE" = "yes" ; then
+    MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes'
+  else
+    MAINTAINER_CFLAGS='-Wall'
+  fi
 else
   MAINTAINER_CFLAGS=''
 fi

@@ -8,7 +8,11 @@
 
 errstatus=0
 
-for file
+base=`dirname $1`/
+
+extras=`find Ghost/stp-interfaces -type d -print | sed "s,^,$base,"`
+
+for file in "$@" $extras
 do
    set fnord `echo ":$file" | sed -ne 's/^:\//#/;s/^://;s/\// /g;s/^#/\//;p'`
    shift

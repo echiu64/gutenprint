@@ -598,6 +598,18 @@ Image_rotate_ccw(Image img)
 }
 
 void
+Image_rotate_cw(Image img)
+{
+ /* dummy function, Seascape printing unsupported atm */
+}
+
+void
+Image_rotate_180(Image img)
+{
+ /* dummy function,  upside down printing unsupported atm */
+}
+
+void
 Image_init(Image image)
 {
  /* dummy function */

@@ -33,6 +33,9 @@ Eugene Anikin		<eugene@anikin.com>
 	Performance instrumentation
 	Sharp-eyed bug fixer
 
+Grant Taylor		<gtaylor@picante.com>
+	Implementor of the "foomatic" spooler configuration system
+
 Henryk "Buggs" Richter	<tfa652@cks1.rz.uni-rostock.de>
 	Initial implementation of the Ghostscript driver
 

@@ -94,6 +94,7 @@ EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
+	$(shell find Ghost/stp-interfaces -type f -print) \
 	$(FORCE_ACLOCAL)
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
@@ -149,6 +150,10 @@ gdist: force_aclocal
 
 force_aclocal:
 	touch configure.in
+	-rm -rf Ghost/stp-interfaces
+	wget -O Ghost/stp-interfaces.tar.gz http://www.linuxprinting.org/stp-interfaces.tar.gz
+	(cd Ghost;tar xzvf stp-interfaces.tar.gz)
+	-find Ghost/stp-interfaces -name '*~' -exec rm -f '{}' \;
 	$(MAKE) dist FORCE_ACLOCAL=
 
 print_gimp.h: Makefile

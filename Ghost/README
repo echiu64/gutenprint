@@ -541,25 +541,16 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
    -sQuality='720 DPI Softweave' -dImageType=3 -sOutputFile=- foo.ps
 
 
-PDQ AND CUPS
-------------
+SPOOLER CONFIGURATION
+------- -------------
 
-CUPS users may use the CUPS driver in ../cups.
+Since the options to this driver are extremely complex, we recommend
+use of the foomatic package developed by Grant Taylor
+<gtaylor@picante.com>.  Please read stp-interfaces/README for more
+information.  The stp-interfaces directory contains all of the
+necessary files to configure an lpd, PDQ, or CUPS-based printing
+system.
 
-A new, experimental printer configuration method may be found at the
-following locations, depending upon the printing method that you
-currently use:
-
-LPD: http://www.linuxprinting.org/lpd-doc.html
-PDQ: http://www.linuxprinting.org/pdq-doc.html
-CUPS: http://www.linuxprinting.org/cups-doc.html
-
-BUGS AND LIMITATIONS:
----------------------
-
-- This driver is relatively slow, and memory-hungry with large paper
-  sizes and high quality settings.
-- In some cases (the Epson Stylus Color 850 is a known example), the
-  top margin on the paper will be somewhat wider than desired
-  (typically by about 1 cm or 3/8").  This is more likely to happen
-  with older printers.
+CUPS users may also use the CUPS driver in ../cups.  This is a more
+traditional CUPS driver written by Mike Sweet that may be more
+familiar to CUPS users.
