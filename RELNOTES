@@ -71,8 +71,35 @@ Gimp-Print 4.0a3:
 15) Additional performance improvements over earlier versions of this
     package.
 
-16) A number of miscellaneous bugs have been fixed.
+16) Support for the HP Deskjet 800 series has been changed.
+    The "pcl-800" driver (HP Deskjet 800 series) no longer exists,
+    since the 800 series printers fall into two distinct groups,
+    the older 850/855/870/890 printers which supported 4-level
+    dithering (HP calls this C-RET) at 300x300 DPI, and the newer
+    810/812/840/842/895 printers which do not support C-RET at
+    300x300 DPI (these are the same as the Deskjet 600 series).
 
+    If you are using the gimp plugin, re-select your 800 series printer
+    from the combo box and re-save the settings.
+
+    If you are using the Ghostscript driver, choose from one of the
+    pcl-8xx values detailed in Ghost/README.
+
+    If you have an 800 series printer that is not on the list, please
+    try both the old C-RET driver (choose model 890) and the non C-RET
+    driver (choose model 895) and see which one works at 300x300 dpi.
+    Also, please let us know; the address is in the README file.
+
+17) The HP Deskjet 1220C has been grouped with the 900 series.
+
+18) The HP PhotoSmart P1000 and P1100 have been added, they are like
+    the HP 900 series.
+
+19) The higher resolutions of the HP Deskjet 900/1220C and the HP
+    PhotoSmart P1000/P1100 have been disabled as they do not work.
+    Investigation into these modes (Photo-Ret III) is continuing.
+
+20) A number of miscellaneous bugs have been fixed.
 
 Gimp-Print 4.0a3 contains the following improvements over Gimp-Print
 4.0a2:

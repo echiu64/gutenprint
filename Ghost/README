@@ -219,17 +219,27 @@ escp2-2000		EPSON Stylus Photo 2000P
 pcl-340			HP DeskJet 340
 pcl-400			HP DeskJet 400
 pcl-500			HP DeskJet 500
-pcl-520			HP DeskJet 520
 pcl-501			HP DeskJet 500C
+pcl-520			HP DeskJet 520
 pcl-540			HP DeskJet 540C
 pcl-550			HP DeskJet 550C
 pcl-560			HP DeskJet 560C
-pcl-600			HP DeskJet 600/600C
-pcl-601			HP DeskJet 600 series
-pcl-690			HP DeskJet 690 series
-pcl-800			HP DeskJet 800 series
+pcl-600			HP DeskJet 600/600C (Single Cartridge)
+pcl-601			HP DeskJet 600 series (2 Cartridge)
+pcl-690			HP DeskJet 690 series (Photo-Ink capable)
+pcl-810			HP DeskJet 810C
+pcl-812			HP DeskJet 812C
+pcl-840			HP DeskJet 840C
+pcl-842			HP DeskJet 842C
+pcl-850			HP DeskJet 850C
+pcl-855			HP DeskJet 855C
+pcl-870			HP DeskJet 870C
+pcl-890			HP DeskJet 890C
+pcl-895			HP DeskJet 895C
 pcl-900			HP DeskJet 900 series
+pcl-P1000		HP PhotoSmart P1000
 pcl-1100		HP DeskJet 1100C
+pcl-P1100		HP PhotoSmart P1100
 pcl-1120		HP DeskJet 1120C
 pcl-1220		HP DeskJet 1220C
 pcl-1200		HP DeskJet 1200C
@@ -318,14 +328,16 @@ yield unsatisfactory results.
 
 For PCL printers (including Hewlett-Packard and Lexmark):
 
-'150x150 DPI'
-'300x300 DPI'
-'600x300 DPI'
-'600x600 DPI monochrome'
-'600x600 DPI'
-'1200x1200 DPI'
-'2400x1200 DPI'
+'150x150 DPI'			(should work on all printers)
+'300x300 DPI'			(should work on all printers, C-RET on
+				DJ 850/855/870/890)
+'600x300 DPI'			(DJ 6xx/810/812/840/842/895)
+'600x600 DPI monochrome'	(DJ 6xx (except 69x) /8xx/1100/1120)
+'600x600 DPI'			(DJ 69x/9xx/1220/2000/2500, PhotoSmart P1000
+				P1100, LJ5/5Si/6)
 
+Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
+not yet supported.
 
 For Canon printers:
 
@@ -417,7 +429,7 @@ For Canon printers:
 For PCL (Hewlett-Packard and Lexmark) printers:
 
 'Color + Black Cartridges'
-'Color + Photo Cartridges'
+'Color + Photo Cartridges' (For Deskjet 69x only)
 
 
 Media Types
@@ -490,6 +502,7 @@ For Canon printers:
 
 For PCL (Hewlett-Packard and Lexmark) printers:
 
+'Standard'	(Feed from printer defined source)
 'Manual'
 'Tray 1'
 'Tray 2'
