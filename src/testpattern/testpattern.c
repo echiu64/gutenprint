@@ -622,11 +622,23 @@ fill_colors_extended(unsigned short *data, size_t len,
 	      data[0] = kk;
 	      data[1] = lkk;
 	      break;
+	    case 3:
+	      data[0] = cc;
+	      data[1] = mm;
+	      data[2] = yy;
+	      break;
 	    case 4:
 	      data[0] = kk;
 	      data[1] = cc;
 	      data[2] = mm;
 	      data[3] = yy;
+	      break;
+	    case 5:
+	      data[0] = cc;
+	      data[1] = lcc;
+	      data[2] = mm;
+	      data[3] = lmm;
+	      data[4] = yy;
 	      break;
 	    case 6:
 	      data[0] = kk;
