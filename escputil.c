@@ -28,21 +28,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-struct option optlist[] =
-{
-  { "printer-name",	1,	NULL,	(int) 'P' },
-  { "raw-device",	1,	NULL,	(int) 'r' },
-  { "ink-level",	0,	NULL,	(int) 'i' },
-  { "clean-head",	0,	NULL,	(int) 'c' },
-  { "nozzle-check",	0,	NULL,	(int) 'n' },
-  { "align-head",	0,	NULL,	(int) 'a' },
-  { "usb",		0,	NULL,	(int) 'u' },
-  { "help",		0,	NULL,	(int) 'h' },
-  { "new-series",	0,	NULL,	(int) 'l' },
-  { "old-series",	0,	NULL,	(int) 'o' },
-  { "identify",		0,	NULL,	(int) 'd' },
-  { NULL,		0,	NULL,	0 	  }
-};
 
 char *printer = NULL;
 char *raw_device = NULL;
@@ -69,6 +54,24 @@ along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n";
 
 
+#ifdef __GNU_LIBRARY__
+
+struct option optlist[] =
+{
+  { "printer-name",	1,	NULL,	(int) 'P' },
+  { "raw-device",	1,	NULL,	(int) 'r' },
+  { "ink-level",	0,	NULL,	(int) 'i' },
+  { "clean-head",	0,	NULL,	(int) 'c' },
+  { "nozzle-check",	0,	NULL,	(int) 'n' },
+  { "align-head",	0,	NULL,	(int) 'a' },
+  { "usb",		0,	NULL,	(int) 'u' },
+  { "help",		0,	NULL,	(int) 'h' },
+  { "new-series",	0,	NULL,	(int) 'l' },
+  { "old-series",	0,	NULL,	(int) 'o' },
+  { "identify",		0,	NULL,	(int) 'd' },
+  { NULL,		0,	NULL,	0 	  }
+};
+
 char *help_msg = "\
 Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
     -P|--printer-name  Specify the name of the printer to operate on.\n\
@@ -89,8 +92,32 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
                        and newer; Epson Stylus Photo 750 and newer).\n\
     -o|--old-series    For older ESCP/2 printers.\n\
     -u|--usb           The printer is connected via USB.\n\
-    -h|--help          Print this help message.\n
+    -h|--help          Print this help message.\n\
     -q|--quiet         Suppress the banner.\n";
+#else
+char *help_msg = "\
+Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
+    -P Specify the name of the printer to operate on.\n\
+          Default is the default system printer.\n\
+    -r Specify the name of the device to write to directly\n\
+          rather than going through a printer queue.\n\
+    -c Clean the print head.\n\
+    -n Print a nozzle test pattern.\n\
+          Dirty or clogged nozzles will show as gaps in the\n\
+          pattern.  If you see any gaps, you should run a\n\
+          head cleaning pass.\n\
+    -a Align the print head.  CAUTION: Misuse of this\n\
+          utility may result in poor print quality and/or\n\
+          damage to the printer.\n\
+    -i Obtain the ink level from the printer.  This requires\n\
+          read/write access to the raw printer device.\n\
+    -l For newer ESCP/2 printers (Epson Stylus Color 440\n\
+          and newer; Epson Stylus Photo 750 and newer).\n\
+    -o For older ESCP/2 printers.\n\
+    -u The printer is connected via USB.\n\
+    -h Print this help message.\n\
+    -q Suppress the banner.\n";
+#endif
 
 void initialize_print_cmd(void);
 void do_head_clean(void);
@@ -114,8 +141,12 @@ main(int argc, char **argv)
   int c;
   while (1)
     {
+#ifdef __GNU_LIBRARY__
       int option_index = 0;
       c = getopt_long(argc, argv, "P:r:icnaduolq", optlist, &option_index);
+#else
+      c = getopt(argc, argv, "P:r:icnaduolq");
+#endif
       if (c == -1)
 	break;
       switch (c)
@@ -207,7 +238,7 @@ do_print_cmd(void)
   bufpos += 5;
   if (raw_device)
     {
-      pfile = fopen(raw_device, "rb");
+      pfile = fopen(raw_device, "wb");
       if (!pfile)
 	{
 	  fprintf(stderr, "Cannot open device %s: %s\n", raw_device,
