@@ -144,8 +144,8 @@ my %oldid;
 if ($opt_o) {
     # Load table to translate the Foomatic IDs to the old (numerical) ones
     print STDERR
-	"Loading printer ID translation table from ./oldprinterids...";
-    my $translation_table = "./oldprinterids";
+	"Loading printer ID translation table from @srcdir@/oldprinterids...";
+    my $translation_table = "@srcdir@/oldprinterids";
     open TRTAB, "< $translation_table" or
 	die "Cannot read printer ID translation table: $!\n";
     while (<TRTAB>) {
