@@ -38,6 +38,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.38  1999/12/11 23:12:06  rlk
+ *   Better matching between cmy/k
+ *
+ *   Smoother dither!
+ *
  *   Revision 1.37  1999/12/05 23:24:08  rlk
  *   don't want PRINT_LUT in release
  *
@@ -825,9 +830,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (lmagenta)
 	{
-	  c += ck * 10 / 8;
-	  m += ck * 19 / 16;
-	  y += ck * 3 / 2;
+	  c += ck * 10 / 8 * 3 / 2;
+	  m += ck * 19 / 16 * 3 / 2;
+	  y += ck * 3 / 2 * 3 / 2;
 	}
       else
 	{
@@ -894,10 +899,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     }
 
 
+    density = (c + m + y) / horizontal_overdensity;
     UPDATE_COLOR(c);
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
-    density = (c + m + y) / horizontal_overdensity;
+    density += (c + m + y) / horizontal_overdensity;
+    density /= 2;
 
     /*****************************************************************
      * Cyan
