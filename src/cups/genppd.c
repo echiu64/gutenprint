@@ -891,6 +891,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzputs(fp, "*Product:	\"(AFPL Ghostscript)\"\n");
   gzputs(fp, "*Product:	\"(GNU Ghostscript)\"\n");
   gzputs(fp, "*Product:	\"(ESP Ghostscript)\"\n");
+  gzputs(fp, "*Product:	\"(GPL Ghostscript)\"\n");
 
  /*
   * The ModelName attribute now provides the long name rather than the
