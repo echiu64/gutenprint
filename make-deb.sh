@@ -18,7 +18,7 @@ case $DEBVERSION in
             cp ../../Ghost/README contrib/stp/README.stp
             cp ../../Ghost/gdevstp* contrib/stp
             cp ../../Ghost/devs.mak.addon-5.10 contrib/stp
-            dpkg-buildpackage
+            fakeroot dpkg-buildpackage
             ;;
        *)
             echo "Debian release $DEBVERSION not yet supported."
