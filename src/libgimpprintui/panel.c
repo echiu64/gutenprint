@@ -225,7 +225,7 @@ static void position_button_callback    (GtkWidget      *widget,
 					 gpointer        data);
 static void plist_build_combo(GtkWidget *combo,
 			      GtkWidget *label,
-			      stp_string_list_t items,
+			      stp_string_list_t *items,
 			      int active,
 			      const gchar *cur_item,
 			      const gchar *def_value,
@@ -273,7 +273,7 @@ static const gint output_type_count = (sizeof(output_types) /
 
 static gdouble preview_ppi = 10;
 
-static stp_string_list_t printer_list = 0;
+static stp_string_list_t *printer_list = 0;
 static stpui_plist_t *pv;
 static const char *manufacturer = 0;
 
@@ -1371,7 +1371,7 @@ create_printer_dialog (void)
   GtkWidget *label;
   GtkWidget *event_box;
   gint       i;
-  stp_string_list_t manufacturer_list = stp_string_list_create();
+  stp_string_list_t *manufacturer_list = stp_string_list_create();
 
   setup_dialog = stpui_dialog_new(_("Setup Printer"), "print",
 				  GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
@@ -2314,7 +2314,7 @@ scaling_callback (GtkWidget *widget)
 static void
 plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 		   GtkWidget      *label,
-		   stp_string_list_t items,      /* I - Menu items */
+		   stp_string_list_t *items,    /* I - Menu items */
 		   int		  active,
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
@@ -2330,7 +2330,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 
   if (check_func && items)
     {
-      stp_string_list_t new_items = stp_string_list_create();
+      stp_string_list_t *new_items = stp_string_list_create();
       num_items = stp_string_list_count(items);
       for (i = 0; i < num_items; i++)
 	{

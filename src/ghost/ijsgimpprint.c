@@ -304,7 +304,7 @@ list_all_parameters(void)
   size_t offset = 0;
   if (param_length == 0)
     {
-      stp_string_list_t sl = stp_string_list_create();
+      stp_string_list_t *sl = stp_string_list_create();
       int printer_count = stp_printer_model_count();
       int i;
       stp_string_list_add_string(sl, "PrintableArea", NULL);

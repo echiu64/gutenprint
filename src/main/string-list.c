@@ -62,7 +62,7 @@ long_namefunc(const void *item)
   return string->text;
 }
 
-stp_string_list_t
+stp_string_list_t *
 stp_string_list_create(void)
 {
   stp_list_t *ret = stp_list_create();
@@ -70,48 +70,49 @@ stp_string_list_create(void)
   stp_list_set_namefunc(ret, namefunc);
   stp_list_set_copyfunc(ret, copyfunc);
   stp_list_set_long_namefunc(ret, long_namefunc);
-  return (stp_string_list_t) ret;
+  return (stp_string_list_t *) ret;
 }
 
 void
-stp_string_list_destroy(stp_string_list_t list)
+stp_string_list_destroy(stp_string_list_t *list)
 {
   stp_list_destroy((stp_list_t *) list);
 }
 
 stp_param_string_t *
-stp_string_list_param(stp_const_string_list_t list, size_t element)
+stp_string_list_param(const stp_string_list_t *list, size_t element)
 {
   return (stp_param_string_t *) stp_list_item_get_data
     (stp_list_get_item_by_index((const stp_list_t *)list, element));
 }
 
 size_t
-stp_string_list_count(stp_const_string_list_t list)
+stp_string_list_count(const stp_string_list_t *list)
 {
   return stp_list_get_length((const stp_list_t *)list);
 }
 
-stp_string_list_t
-stp_string_list_create_copy(stp_const_string_list_t list)
+stp_string_list_t *
+stp_string_list_create_copy(const stp_string_list_t *list)
 {
-  return (stp_string_list_t) stp_list_copy((const stp_list_t *)list);
+  return (stp_string_list_t *) stp_list_copy((const stp_list_t *)list);
 }
 
-stp_string_list_t
+stp_string_list_t *
 stp_string_list_create_from_params(const stp_param_string_t *list,
 				   size_t count)
 {
   size_t i = 0;
-  stp_string_list_t retval = stp_string_list_create();
+  stp_string_list_t *retval = stp_string_list_create();
   for (i = 0; i < count; i++)
     stp_string_list_add_string(retval, list[i].name, list[i].text);
   return retval;
 }
 
 void
-stp_string_list_add_string(stp_string_list_t list,
-			   const char *name, const char *text)
+stp_string_list_add_string(stp_string_list_t *list,
+			   const char *name,
+			   const char *text)
 {
   stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
   new_string->name = stp_strdup(name);
@@ -120,7 +121,8 @@ stp_string_list_add_string(stp_string_list_t list,
 }
 
 int
-stp_string_list_is_present(stp_const_string_list_t list, const char *value)
+stp_string_list_is_present(const stp_string_list_t *list,
+			   const char *value)
 {
   if (list && value)
     {

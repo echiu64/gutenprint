@@ -437,7 +437,7 @@ verify_string_param(const stp_vars_t *v, const char *parameter,
       stp_check_string_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
       const char *checkval = stp_get_string_parameter(v, parameter);
-      stp_string_list_t vptr = desc->bounds.str;
+      stp_string_list_t *vptr = desc->bounds.str;
       size_t count = 0;
       int i;
       stp_dprintf(STP_DBG_VARS, v, "     value %s\n",

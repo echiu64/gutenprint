@@ -29,6 +29,21 @@
 extern "C" {
 #endif
 
+struct stp_string_list;
+/** The string_list opaque data type. */
+typedef struct stp_string_list stp_string_list_t;
+
+/**
+ * String parameter.
+ * Representation of a choice list of strings.  The choices themselves
+ * consist of a key and a human-readable name.  The list object is
+ * opaque.
+ */
+typedef struct
+{
+  const char	*name,	/*!< Option name (key, untranslated). */
+		*text;	/*!< Human-readable (translated) text. */
+} stp_param_string_t;
 
 /****************************************************************
 *                                                               *
@@ -38,26 +53,33 @@ extern "C" {
 
 /* The string_list opaque data type is defined in vars.h */
 
-extern stp_string_list_t stp_string_list_create(void);
-extern void stp_string_list_destroy(stp_string_list_t list);
+extern stp_string_list_t *
+stp_string_list_create(void);
 
-extern stp_param_string_t *stp_string_list_param(stp_const_string_list_t,
-						 size_t element);
+extern void
+stp_string_list_destroy(stp_string_list_t *list);
 
-extern size_t stp_string_list_count(stp_const_string_list_t list);
+extern stp_param_string_t *
+stp_string_list_param(const stp_string_list_t *list,
+		      size_t element);
 
-extern stp_string_list_t stp_string_list_create_copy(stp_const_string_list_t);
+extern size_t
+stp_string_list_count(const stp_string_list_t *list);
 
-extern void stp_string_list_add_string(stp_string_list_t list,
-				       const char *name, const char *text);
+extern stp_string_list_t *
+stp_string_list_create_copy(const stp_string_list_t *list);
 
-extern stp_string_list_t
+extern void
+stp_string_list_add_string(stp_string_list_t *list,
+			   const char *name, const char *text);
+
+extern stp_string_list_t *
 stp_string_list_create_from_params(const stp_param_string_t *list,
 				   size_t count);
 
 extern int
-stp_string_list_is_present(stp_const_string_list_t list, const char *value);
-
+stp_string_list_is_present(const stp_string_list_t *list,
+			   const char *value);
 
 #ifdef __cplusplus
   }

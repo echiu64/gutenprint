@@ -31,6 +31,7 @@
 
 #include <gimp-print/array.h>
 #include <gimp-print/curve.h>
+#include <gimp-print/string-list.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -116,24 +117,6 @@ typedef enum
   STP_PARAMETER_ACTIVE     /*!< Parameter is active (used). */
 } stp_parameter_activity_t;
 
-
-/**
- * String parameter.
- * Representation of a choice list of strings.  The choices themselves
- * consist of a key and a human-readable name.  The list object is
- * opaque.
- */
-typedef struct
-{
-  const char	*name,	/*!< Option name (key, untranslated). */
-		*text;	/*!< Human-readable (translated) text. */
-} stp_param_string_t;
-
-/** The string_list opaque data type. */
-typedef void *stp_string_list_t;
-/** The contant string_list opaque data type. */
-typedef const void *stp_const_string_list_t;
-
 /*
  * Other parameter types
  */
@@ -179,7 +162,7 @@ typedef struct
     stp_curve_t *curve;       /*!< curve parameter value. */
     stp_double_bound_t dbl;  /*!< double_bound parameter value. */
     stp_int_bound_t integer; /*!< int_bound parameter value. */
-    stp_string_list_t str;   /*!< string_list parameter value. */
+    stp_string_list_t *str;   /*!< string_list parameter value. */
     stp_array_t *array;      /*!< array parameter value. */
   } bounds; /*!< Limits on the values the parameter may take. */
   union
