@@ -30,14 +30,13 @@ site</a> for quick and easy setup.</p>
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
 
-<H2><strong><em><font color=#ff0000">Macintosh OS X
-Users!</font></em></strong></H2>
+<h2><strong><em><font color=#ff0000>Macintosh OS X
+Users!</font></em></strong></h2>
 
 <p>There is now a <a
-href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">Gimp-Print FAQ for
+href="http://gimp-print.sourceforge.net/MacOSX.php3">Gimp-Print web page for
 OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
-"Jaguar".  Keep watching for the final release of Gimp-Print 4.2.2, which will fully
-support Jaguar and contain many bug fixes.</p>
+"Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.2 for Mac OS X Jaguar is available now!</p>
 
 <H2><font color="#ff0000">Gimp-Print 4.2.2 is released!</font></h2>
 
@@ -101,7 +100,7 @@ Compared to that series, Gimp-Print 4.2 offers:</p>
 <ul>
 
 <li>Support for many new printers, including Lexmark printers for the
-first time</li
+first time</li>
 
 <li>User's and developer's manuals</li>
 
@@ -132,7 +131,7 @@ will eventually become the successor to 4.2.</p>
 
 <hr>
 
-<P>Please visit <a
+<p>Please visit <a
 href="http://sourceforge.net/project/?group_id=1537">our
 project page</a>, which contains a lot more information about us!</p>
 
@@ -178,7 +177,7 @@ standards, the print quality (in particular, color accuracy, a
 well-known weakness in 4.0) is even better, performance is better,
 there are more options, and more printers supported.  <a
 href="http://www.linuxplanet.com/linuxplanet/opinions/3689/1/">This
-article in LinuxPlanet</a> is one user's take on it.</a>
+article in LinuxPlanet</a> is one user's take on it.
 
 <p>We're not done.  We're going to start work on 4.3, which will
 become 5.0.  We hope to implement proper color management, improved
