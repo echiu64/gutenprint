@@ -48,6 +48,7 @@
 #define D_FAST_BASE 16
 #define D_FAST (D_FAST_BASE)
 #define D_VERY_FAST (D_FAST_BASE + 1)
+#define D_ERROR_DIFFUSION_2 32
 
 #define DITHER_FAST_STEPS (6)
 
@@ -64,7 +65,8 @@ static const dither_algo_t dither_algos[] =
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
   { "Fast",	N_ ("Fast"),                   D_FAST },
   { "VeryFast",	N_ ("Very Fast"),              D_VERY_FAST },
-  { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID }
+  { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
+  { "Error",     N_ ("Error Diffusion"), D_ERROR_DIFFUSION_2 }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(dither_algo_t);
@@ -201,6 +203,9 @@ static void stp_dither_raw_cmyk_ordered(const unsigned short *, int,
 					dither_t *, int, int);
 static void stp_dither_raw_cmyk_ed(const unsigned short *, int, dither_t *,
 				   int, int);
+static void stp_dither_cmyk_ed2(const unsigned short *, int, dither_t *,
+				   int, int);
+
 
 #define CHANNEL(d, c) ((d)->channel[(c)])
 
@@ -431,6 +436,9 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	  break;
 	case D_ORDERED:
 	  SET_DITHERFUNC(d, stp_dither_cmyk_ordered, v);
+	  break;
+	case D_ERROR_DIFFUSION_2:
+	  SET_DITHERFUNC(d, stp_dither_cmyk_ed2, v);
 	  break;
 	default:
 	  SET_DITHERFUNC(d, stp_dither_cmyk_ed, v);
@@ -1603,6 +1611,81 @@ print_color_fast(const dither_t *d, dither_channel_t *dc, int x, int y,
     }
 }
 
+#define V_WHITE		0
+#define V_CYAN		(1<<ECOLOR_C)
+#define V_MAGENTA	(1<<ECOLOR_M)
+#define V_YELLOW	(1<<ECOLOR_Y)
+#define V_BLUE		(V_CYAN|V_MAGENTA)
+#define V_GREEN		(V_CYAN|V_YELLOW)
+#define V_RED		(V_MAGENTA|V_YELLOW)
+#define V_BLACK		(V_CYAN|V_MAGENTA|V_YELLOW)
+
+static inline int
+pick_vertex(const int cmy[])
+{
+	int vmax;
+	int best;
+
+	int c,m,y;
+	
+	c = cmy[ECOLOR_C]; m = cmy[ECOLOR_M], y = cmy[ECOLOR_Y];
+	
+	if (c+m+y <= 65535) {
+		best = V_WHITE; vmax = 65535-c-m-y;					/* White */
+		if (c > vmax) { best = V_CYAN; vmax = c; }				/* Cyan */
+		if (m > vmax) { best = V_MAGENTA; vmax = m; }				/* Magenta */
+		if (y > vmax) { best = V_YELLOW; vmax = y; }				/* Yellow */
+	} else if (c+m+y >= 2*65535) {
+		best = V_BLACK; vmax = c+m+y-2*65535;					/* Black */
+		if (65535-y > vmax) {best = V_BLUE; vmax = 65535-y; }			/* Blue */
+		if (65535-m > vmax) {best = V_GREEN; vmax = 65535-m; }			/* Green */
+		if (65535-c > vmax) {best = V_RED; vmax = 65535-c; }			/* Red */
+	} else if (m+c <= 65535) {
+		if (m+y <= 65535) {
+			best = V_GREEN; vmax = c+m+y-65535;				/* Green */
+			if (m > vmax) {best = V_MAGENTA; vmax = m;}			/* Magenta */
+			if (65535-m-y > vmax) {best = V_CYAN; vmax = 65535-m-y;}	/* Cyan */
+			if (65535-c-m > vmax) {best = V_YELLOW; vmax = 65535-c-m;}	/* Yellow */
+		} else {
+			best = V_RED; vmax = m+y-65535;					/* Red */
+			if (c > vmax) { best = V_GREEN; vmax = c;}			/* Green */
+			if (65535-y > vmax) {best = V_MAGENTA; vmax = 65535-y;}		/* Magenta */
+			if (65535-m-c > vmax) {best = V_YELLOW; vmax = 65535-m-c;}	/* Yellow */
+		}
+	} else {
+		if (m+y > 65535) {
+			best = V_MAGENTA; vmax = 2*65535-m-c-y;				/* Magenta */
+			if (c+m-65535 > vmax) { best = V_BLUE; vmax = c+m-65535;}	/* Blue */
+			if (y+m-65535 > vmax) { best = V_RED; vmax = y+m-65535;}	/* Red */
+			if (65535-m > vmax) { best = V_GREEN; vmax = 65535-m;}		/* Green */
+		} else {
+			best = V_CYAN; vmax = 65535-y-m;				/* Cyan */
+			if (c+m-65535 > vmax) { best = V_BLUE; vmax = c+m-65535;}	/* Blue */
+			if (65535-c > vmax) { best = V_MAGENTA; vmax = 65535-c;}	/* Magenta */
+			if (y > vmax) { best = V_GREEN; vmax = y;}			/* Green */
+		}
+	}
+	return best;
+}
+
+static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int color, int density)
+{
+	int i;
+	dither_segment_t *dd;
+
+	for (i = dc->nlevels-1; i > 0; i--) {
+		dd = &(dc->ranges[i]);
+		if (density <= dd->range[0]) continue;
+		return dd;
+	}
+	/* I want the bottom of the first range to say "no ink to print" */
+	dd = &dc->ranges[0];
+	dd->range[0] = 0;
+	dd->value[0] = 0;
+	dd->bits[0] = 0;
+	return dd;
+}
+
 static inline void
 update_cmyk(dither_t *d)
 {
@@ -2587,6 +2670,225 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     stp_free(error[i]);
   if (direction == -1)
     reverse_row_ends(d);
+}
+
+static void
+stp_dither_cmyk_ed2(const unsigned short  *cmy,
+		   int           row,
+		   dither_t 	 *d,
+		   int		 duplicate_line,
+		   int		 zero_mask)
+{
+  int		x,
+	        length;
+  unsigned char	bit;
+  int		i;
+  int		ndither[NCOLORS];
+  int		threshold[NCOLORS];
+  int		*error[NCOLORS][ERROR_ROWS];
+
+  int		terminate;
+  int		direction = row & 1 ? 1 : -1;
+  int xerror, xstep, xmod;
+
+  if (!duplicate_line)
+    {
+      if ((zero_mask & 7) != 7)
+	d->last_line_was_empty = 0;
+      else
+	d->last_line_was_empty++;
+    }
+  else if (d->last_line_was_empty)
+    d->last_line_was_empty++;
+  if (d->last_line_was_empty >= 5)
+    return;
+  length = (d->dst_width + 7) / 8;
+
+  for (i = 1; i < NCOLORS; i++)
+    { int j;
+      for (j = 0; j < ERROR_ROWS; j++)
+	error[i][j] = get_errline(d, row + j, i);
+      memset(error[i][ERROR_ROWS - 1], 0, d->dst_width * sizeof(int));
+      threshold[i] = CHANNEL(d, i).ranges[0].range[1] / 4 - 1;
+    }
+  if (d->last_line_was_empty >= 4)
+    {
+      if (d->last_line_was_empty == 4)
+	{
+	  for (i = 1; i < NCOLORS; i++)
+	    { int j;
+	      for (j = 0; j < ERROR_ROWS - 1; j++)
+		memset(error[i][j], 0, d->dst_width * sizeof(int));
+	    }
+	}
+      return;
+    }
+
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  bit = 1 << (7 - (x & 7));
+  xstep  = 3 * (d->src_width / d->dst_width);
+  xmod   = d->src_width % d->dst_width;
+  xerror = (xmod * x) % d->dst_width;
+  terminate = (direction == 1) ? d->dst_width : -1;
+  if (direction == -1)
+    {
+      cmy += (3 * (d->src_width - 1));
+      for (i = 1; i < NCOLORS; i++) {
+        int j;
+	for (j = 0; j < ERROR_ROWS; j++) {
+	  error[i][j] += d->dst_width - 1;
+	}
+      }
+      d->ptr_offset = length - 1;
+    }
+  for (i = 1; i < NCOLORS; i++)
+    ndither[i] = error[i][0][0];
+  QUANT(6);
+  for (; x != terminate; x += direction)
+    { int pick, print_inks;
+      dither_segment_t *dr[NCOLORS];
+      
+      for (i=1; i < NCOLORS; i++) {
+        int value;
+	value = cmy[i-1];
+	CHANNEL(d, i).b = value;				/* Original before modifying for density */
+	value *= d->density / 256;
+	value /= 256;
+	if (d->density != d->black_density) {
+	  value *= d->density / d->black_density;
+	}
+	CHANNEL(d, i).o = value;				/* Remember value we want printed here */
+
+	value = threshold[i] + ndither[i] + CHANNEL(d, i).o / 2;
+								/* Compute colour for this pixel */
+								/* Only use half of cmy[] to avoid dark->light problems */
+	if (value < 0) value = 0;
+	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
+
+	if (i == 1 || value < CHANNEL(d, ECOLOR_K).o)
+	  CHANNEL(d, ECOLOR_K).o = value;			/* Set black amount to minimum of CMY */
+      }
+
+      /* Adjust black amount based on black density */
+      CHANNEL(d, ECOLOR_K).v = (CHANNEL(d, ECOLOR_K).o * (d->black_density/256)) / 256;
+
+      { int ri[NCOLORS];
+
+        /* Find the dither segments which bound our pixel */
+        for (i=0; i < NCOLORS; i++) {
+          dr[i] = find_segment(d, &CHANNEL(d, i), i, CHANNEL(d, i).v);
+        }
+
+        /* Now compute relative indices into cube of colour we have created */
+        /* Ignore amount of black at this stage */
+      
+        for (i=1; i < NCOLORS; i++) {
+	  if (CHANNEL(d, i).v > dr[i]->range[1]) {
+	    ri[i] = 65355;
+	  } else if (CHANNEL(d, i).v < dr[i]->range[0]) {
+	    ri[i] = 0;
+	  } else {
+	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->range[0])) / dr[i]->range_span;
+	  }
+	}
+        /* Now we can find out what to really print */
+
+        pick = pick_vertex(ri);
+      }
+
+      /* Compute the values we're going to use (ignoring black's influence) */
+      /* And find out whether the bigger black dot would be more suitable than the small one */
+
+      { int point[NCOLORS];
+        int blacksize = 1;		/* Assume large black is OK */
+	int useblack = 0;		/* Do we print black at all? */
+
+        point[ECOLOR_K] = dr[ECOLOR_K]->range[blacksize] * 65535 / d->black_density;
+
+        for (i=1; i < NCOLORS; i++) {
+          if (pick & (1 << i)) {
+	    point[i] = dr[i]->range[1];
+	    if (point[i] < point[ECOLOR_K]) {
+	      blacksize = 0;		/* Use small black instead */
+	    }
+	  } else {
+	    point[i] = dr[i]->range[0];
+	    if (CHANNEL(d, i).v < point[ECOLOR_K]) {
+	      blacksize = 0;		/* Use small black instead */
+	    }
+	  }
+        }
+
+        point[ECOLOR_K] = dr[ECOLOR_K]->range[blacksize] * 65535 / d->black_density;
+
+        /* We know which sizes of each colour we want to use, and also the size of the black ink. */
+        /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
+
+        for (i=1; i < NCOLORS; i++) {
+          if (point[i] <= point[ECOLOR_K]) {
+	    useblack = 1;
+	    break;
+	  }
+        }
+	
+	/* Channels which we actually print */
+	print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
+
+	/* Adjust colours to print based on black ink */
+        if (useblack) {
+	  print_inks = (1 << ECOLOR_K);
+          if (blacksize) pick |= (1 << ECOLOR_K);
+	  for (i=1; i < NCOLORS; i++) {
+	    if (point[i] <= point[ECOLOR_K]) {
+	      point[i] = point[ECOLOR_K];
+	    } else {
+	      print_inks |= (1 << i);
+	    }
+	  }
+        }
+
+        /* Adjust error values for dither */
+        for (i=1; i < NCOLORS; i++) {
+	  ndither[i] += CHANNEL(d, i).o - point[i];
+        }
+      }
+
+      /* Now we can finally print it! */
+
+      for (i = 0; i < NCOLORS; i++) {
+        int j;
+	int subc = (pick & (1 << i)) ? 1 : 0;
+	int bits = dr[i]->bits[subc];
+	int subchannel = dr[i]->subchannel[subc];
+	unsigned char *tptr = CHANNEL(d, i).ptrs[subchannel] + d->ptr_offset;
+	
+        if (!(print_inks & (1 << i))) continue;
+	
+	for (j=1; j <= bits; j+=j, tptr += length) {
+	  if (j & bits) *tptr |= bit;
+	}
+      }
+
+      QUANT(11);
+      
+      /* Diffuse the error round a bit */
+      /* At the moment do a simple diffusion directly down and across */
+      
+      for (i=1; i < NCOLORS; i++) {
+        int fraction = ndither[i] / 2;
+        error[i][1][0] += fraction;
+	ndither[i] += error[i][0][direction] - fraction;
+      }
+
+      QUANT(12);
+      ADVANCE_BIDIRECTIONAL(d, bit, cmy, direction, 3, xerror, xmod, error,
+			    NCOLORS, ERROR_ROWS);
+      QUANT(13);
+    }
+    /* Save the resulting error for the next line */
+    for (i=1; i < NCOLORS; i++) {
+      error[i][1][-direction] += ndither[i];
+    }
 }
 
 static void
