@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.61  2000/02/04 01:02:15  rlk
+ *   Prelim support for 850/860/870/1200; fix stupid bug in ESC(S
+ *
  *   Revision 1.60  2000/02/02 13:17:10  rlk
  *   Add a few more parameters to the dither_t struct.
  *
@@ -2849,6 +2852,8 @@ const static printer_t	printers[] =	/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 850",	"escp2-850",	1,	15,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { "EPSON Stylus Color 860",	"escp2-860",	1,	16,	0.585,	0.646,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 900",	"escp2-900",	1,	12,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Color 1520",	"escp2-1520",	1,	5,	0.585,	0.646,
@@ -2861,7 +2866,11 @@ const static printer_t	printers[] =	/* List of supported printer types */
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Photo 750",	"escp2-750",	1,	13,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { "EPSON Stylus Photo 870",	"escp2-870",	1,	13,	0.585,	0.646,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Photo 1200",	"escp2-1200",	1,	14,	0.585,	0.646,
+    escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
+  { "EPSON Stylus Photo 1270",	"escp2-1270",	1,	14,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },
   { "EPSON Stylus Photo",	"escp2-photo",	1,	8,	0.585,	0.646,
     escp2_parameters,	default_media_size,	escp2_imageable_area,	escp2_print },

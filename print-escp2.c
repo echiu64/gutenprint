@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.51  2000/02/04 01:02:15  rlk
+ *   Prelim support for 850/860/870/1200; fix stupid bug in ESC(S
+ *
  *   Revision 1.50  2000/02/03 00:16:47  rlk
  *   Don't get too fancy with the new, undocumented ESC(c command
  *
@@ -553,12 +556,12 @@ model_cap_t model_capabilities[] =
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Photo 750 */
+  /* Stylus Photo 750, 870 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
-  /* Stylus Photo 1200 */
+  /* Stylus Photo 1200, 1270 */
   (MODEL_PAPER_1319 | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4
@@ -567,7 +570,12 @@ model_cap_t model_capabilities[] =
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL
-   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(24) | MODEL_MAKE_SEPARATION(8)),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
+  /* Stylus Color 860 */
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_COLOR
+   | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
+   | MODEL_VARIABLE_NORMAL
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(8)),
 };
 
 typedef struct {
@@ -915,14 +923,14 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
       fwrite("\033(S\010\000", 5, 1, prn);
       fprintf(prn, "%c%c%c%c%c%c%c%c",
-	      (((page_width * 720 / 72) >> 0) && 0xff),
-	      (((page_width * 720 / 72) >> 8) && 0xff),
-	      (((page_width * 720 / 72) >> 16) && 0xff),
-	      (((page_width * 720 / 72) >> 24) && 0xff),
-	      (((page_length * 720 / 72) >> 0) && 0xff),
-	      (((page_length * 720 / 72) >> 8) && 0xff),
-	      (((page_length * 720 / 72) >> 16) && 0xff),
-	      (((page_length * 720 / 72) >> 24) && 0xff));
+	      (((page_width * 720 / 72) >> 0) & 0xff),
+	      (((page_width * 720 / 72) >> 8) & 0xff),
+	      (((page_width * 720 / 72) >> 16) & 0xff),
+	      (((page_width * 720 / 72) >> 24) & 0xff),
+	      (((page_length * 720 / 72) >> 0) & 0xff),
+	      (((page_length * 720 / 72) >> 8) & 0xff),
+	      (((page_length * 720 / 72) >> 16) & 0xff),
+	      (((page_length * 720 / 72) >> 24) & 0xff));
     }
   else
     {
