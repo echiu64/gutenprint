@@ -22,7 +22,7 @@ Please read the README file for full instructions on building and
 installing this package.
 
 Gimp-Print 4.2.2-rc3 contains the following major changes over
-Gimp-Print 4.2.2-rc1:
+Gimp-Print 4.2.2-rc2:
 
   1) A problem introduced in Gimp-Print 4.2.2-rc2 whereby printing to
      Epson printers failed or produced otherwise incorrect results is
