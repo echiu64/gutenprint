@@ -29,6 +29,7 @@ typedef struct {
   int yposition; /* dots */
   int monomode;
   int nozzle_separation;
+  int nozzles;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -344,27 +345,46 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
 int main(int argc,char *argv[]){
 
   int currentcolor,currentbpp,density,eject,got_graphics;
+  int arg,unweave;
 
-    if(argc == 1){
-        fp_r = stdin;
-        fp_w = stdout;
-    }
-    else if(argc == 2){
-        fp_r = fopen(argv[1],"r");
-        fp_w = stdout;
-    }
-    else {
-        if(*argv[1] == '-'){
-            fp_r = stdin;
-            fp_w = fopen(argv[2],"w");
+    unweave=0;
+    fp_r = fp_w = NULL;
+    for (arg=1;arg<argc;arg++) {
+      if (argv[arg][0]=='-') {
+        switch (argv[arg][1]) {
+          case 0:if (fp_r)
+                   fp_w=stdout;
+                 else
+                   fp_r=stdin;
+                 break;
+          case 'u':unweave=1;
         }
-        else {
-            fp_r = fopen(argv[1],"r");
-            fp_w = fopen(argv[2],"w");
+      } else {
+        if (fp_r) {
+          if (!(fp_w = fopen(argv[arg],"w"))) {
+            perror("Error opening ouput file");
+            exit(-1);
+          }
+        } else {
+          if (!(fp_r = fopen(argv[arg],"r"))) {
+            perror("Error opening input file");
+            exit(-1);
+          }
         }
+      }
     }
+    if (!fp_r)
+      fp_r=stdin;
+    if (!fp_w)
+      fp_w=stdout;
+
     /* FIXME: need fancy shmancy command line options for the following */
-    pstate.nozzle_separation=6;
+    if (unweave) {
+      pstate.nozzle_separation=1;
+    } else {
+      pstate.nozzle_separation=6;
+    }
+    pstate.nozzles=48;
 
 #define get1(error) if (!fread(&ch,1,1,fp_r)) {fprintf(stderr,error);eject=1;continue;}
 #define get2(error) {if(!fread(minibuf,1,2,fp_r)){\
@@ -642,7 +662,9 @@ int main(int argc,char *argv[]){
                 switch (bufsize) {
                     case 4:i=(buf[2]<<16)+(buf[3]<<24);
                     case 2:i+=(buf[0])+(256*buf[1]);
-                      /* i=48; always go down 48 */
+                      if (unweave) {
+                        i=pstate.nozzles;
+                      }
                       pstate.yposition+=i;
                     break;
                   default:
