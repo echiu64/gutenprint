@@ -1,8 +1,11 @@
 #!@PERL@
 
-# Get mapfile from command line
-use Getopt::Std;
-getopts("m:t:d:");
+# Get command line options
+use Getopt::Long;
+Getopt::Long::Configure("no_ignore_case", "pass_through");
+GetOptions("m=s" => \$opt_m,         # Map file
+           "t=s" => \$opt_t,         # Template directory
+           "d=s" => \@opt_d);        # which Drivers?
 
 # Wherever we put it...
 my $mapfile;
@@ -12,22 +15,29 @@ $mapfile = $opt_m;
 my $templatedir;
 $templatedir = $opt_t;
 
-my @drivertypes = ("gs", "ijs");
-if (lc($opt_d) eq "gs") {
-    @drivertypes = ("gs");
-} elsif (lc($opt_d) eq "nogs") {
-    @drivertypes = ("ijs");
-} elsif (lc($opt_d) eq "ijs") {
-    @drivertypes = ("ijs");
-} elsif (lc($opt_d) eq "noijs") {
-    @drivertypes = ("gs");
-} elsif (lc($opt_d) eq "all") {
-    @drivertypes = ("gs", "ijs");
-} elsif (lc($opt_d) eq "both") {
-    @drivertypes = ("gs", "ijs");
-} elsif ($opt_d) {
-    die ("Invalid driver type \"$opt_d\"!\n");
+my @drivertypes = ();
+for my $d (@opt_d) {
+    if (lc($d) eq "gs") {
+	push (@drivertypes, "gs");
+    }
+    if (lc($d) eq "ijs") {
+	push (@drivertypes, "ijs");
+    }
+    if (lc($d) eq "nogs") {
+	@drivertypes = ("ijs");
+    }
+    if (lc($d) eq "noijs") {
+	@drivertypes = ("gs");
+    }
+    if (lc($d) eq "all") {
+	@drivertypes = ("gs", "ijs");
+    }
+    if (lc($d) eq "both") {
+	@drivertypes = ("gs", "ijs");
+    }
 }
+
+exit 0 if ($#drivertypes < 0); # Nothing to be done, exit silently
 
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (ie '4.1.5')
