@@ -2,6 +2,7 @@
 .noupdate
 ABOUT-NLS
 ChangeLog
+ChangeLogStamp
 Makefile
 Makefile.in
 aclocal.m4
@@ -27,3 +28,5 @@ stamp-h*
 stamp-h.in
 gimp-print*.tar.gz
 gimp-print*.tar.bz2
+Makefile
+Makefile.in
