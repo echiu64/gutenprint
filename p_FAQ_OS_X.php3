@@ -516,7 +516,7 @@ require('standard_html_header.php3');
  </p>
  <p>
  In addition, certain printers don't work well on certain kinds of paper.
- Epson printers work well on Epson printers, but don't work well on many
+ Epson printers work well on Epson papers, but don't work well on many
  third party papers (particularly the high quality photo papers made by
  other vendors). This isn't a conspiracy to lock you into their paper,
  it's because they've formulated the paper and ink to work well together.
