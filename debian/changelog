@@ -3,8 +3,14 @@ gimp-print (4.3.6-1) unstable; urgency=low
   * New upstream development release (4.3.6)
   * Update to Standards-Version 3.5.7
   * Add cups-genppdconfig to cupsys-driver-gimpprint
+  * Use debian/build and debian/install instead of debian/gimp-print-build
+    and debian/gimp-print-install, respectively.
+  * Use dh_install rather than dh_movefiles.  This makes debian/rules
+    slightly cleaner, and debian/install is unchanged after install.
+  * Create symlinks for HTML manuals, since different versions of
+    texi2html and db2html create different names.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun, 17 Nov 2002 18:05:43 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Sun,  8 Dec 2002 22:44:06 +0000
 
 gimp-print (4.3.5-1) unstable; urgency=low
 

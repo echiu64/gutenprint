@@ -9,7 +9,7 @@ Package: gimp1.2-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp1.2
 Recommends: gimpprint-locales (>= ${Source-Version})
-Suggests: libgimpprint-doc (= ${Source-Version}), gimpprint-doc (= ${Source-Version})
+Suggests: gimpprint-doc (>= ${Source-Version})
 Description: The Print plugin for the GIMP
  This package includes the Print plugin for the GIMP.
  .
@@ -27,7 +27,7 @@ Package: cupsys-driver-gimpprint
 Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
 Recommends: postscript-viewer | gs (>= 6.51), gimpprint-locales (>= ${Source-Version})
-Suggests: gimpprint-doc (= ${Source-Version})
+Suggests: gimpprint-doc (>= ${Source-Version})
 Description: Gimp-Print printer drivers for CUPS
  This package includes a CUPS driver based on gimp-print.
  .
@@ -55,6 +55,7 @@ Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Provides: libgimpprint-dev
 Conflicts: libgimpprint-dev
 Replaces: libgimpprint-dev
+Suggests: libgimpprint#LIBRARY_VERSION#-doc (= ${Source-Version})
 Description: Header files and extras for compiling programs with libgimpprint
  This package contains the header files for the libgimpprint library,
  along with a static version of libgimpprint.
@@ -76,7 +77,7 @@ Package: libgimpprint#LIBRARY_VERSION#-doc
 Architecture: all
 Section: doc
 Replaces: libgimpprint-doc
-Suggests: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
+Suggests: libgimpprint#LIBRARY_VERSION#-dev (= ${Source-Version})
 Description: Documentation and example code for the libgimpprint library
  This package contains lots of info-files, DVI docs and other
  documentation about the gimpprint library for photo-quality printing.
@@ -141,7 +142,7 @@ Description: Locale data files for gimp-print
 Package: gimpprint-doc
 Architecture: all
 Section: doc
-Suggests: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
+Suggests: cupsys-driver-gimpprint (>= ${Source-Version}), foomatic-db-gimp-print (>= ${Source-Version}), gimp1.2-print (>= ${Source-Version}), ijsgimpprint (>= ${Source-Version})
 Description: Users' Guide for GIMP-Print and CUPS
  This package contains a user guide for programs using the
  libgimpprint library for photographic quality printing.  Currently
@@ -202,7 +203,7 @@ Description: Inkjet Server - Ghostscript driver for GIMP-Print
 Package: foomatic-db-gimp-print
 Architecture: all
 Section: text
-Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version}), foomatic-db
+Depends: foomatic-db, ijsgimpprint (>= ${Source-Version})
 Description: Printer/Driver database and print system - gimp-print database
  Foomatic is a printer and driver database with PPD generator and
  filter backends for various printing systems from cups over lp* to
