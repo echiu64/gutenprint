@@ -1384,7 +1384,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 					   0x6d,0x00,0x14,0x01,0xf4,0x02,0x00,0x01,
 					   0xf0,0x1b,0x2a,0x07,0x63};
 
-#define LXM_Z42_STARTSIZE 0x30 
+#define LXM_Z42_STARTSIZE 0x30
   /* 600 dpi */
   unsigned char startHeader_z42[LXM_Z42_STARTSIZE]={0x1B,0x2A,0x81,0x00,0x1C,0x50,0x41,0x00,
 					   0x01,0x00,0x58,0x02,0x04,0x00,0xC0,0x12,
@@ -2250,7 +2250,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
   switch(caps->model)  {
   case m_z52:
   case m_z42:
-    if (caps->model == m_z52)  
+    if (caps->model == m_z52)
       {
 	header_size = LXM_Z52_HEADERSIZE;
 	memcpy(prnBuf, outbufHeader_z52, header_size);
