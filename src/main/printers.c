@@ -329,7 +329,7 @@ stp_end_job(const stp_vars_t v, stp_image_t *image)
     stpi_get_printfuncs(stp_get_printer(v));
   if (!stpi_get_verified(v))
     return 0;
-  if (stp_get_job_mode(v) == STP_JOB_MODE_JOB)
+  if (stp_get_job_mode(v) == STP_JOB_MODE_PAGE)
     return 1;
   if (printfuncs->end_job)
     return (printfuncs->end_job)(v, image);
