@@ -130,7 +130,11 @@ install-data-hook:
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
-ppd-stamp: genppd catalog
+ppd-stamp: genppd
+	wdir=`pwd` ; \
+	cd $(top_builddir)/po ; \
+	$(MAKE) ; \
+	$(MAKE) prefix=$${wdir}/catalog install ; \
 	-rm -rf ppd
 	-mkdir ppd
 	for language in C $(ALL_LINGUAS) ; do \
@@ -139,13 +143,6 @@ ppd-stamp: genppd catalog
 	done
 	rm -rf catalog
 	touch ppd-stamp
-
-catalog:
-	wdir=`pwd` ; \
-	cd $(top_builddir)/po ; \
-	$(MAKE) ; \
-	$(MAKE) prefix=$${wdir}/catalog install ; \
-	$(MAKE) clean
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../main
