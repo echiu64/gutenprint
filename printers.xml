@@ -730,6 +730,16 @@
 <language value=pcl>
 </printer>
 
+<printer name="Lexmark 3200" driver="lexmark-3200">
+<color>
+<model value=3200>
+<gamma value=0.5>
+<density value=2.0>
+<magenta value=0.95>
+<yellow value=1.0>
+<language value=lexmark>
+</printer>
+
 <printer name="Lexmark 4076" driver="lexmark-4076">
 <nocolor>
 <model value=500>
@@ -741,16 +751,6 @@
 <printer name="Lexmark Z52" driver="lexmark-z52">
 <color>
 <model value=10052>
-<gamma value=0.5>
-<density value=2.0>
-<magenta value=0.95>
-<yellow value=1.0>
-<language value=lexmark>
-</printer>
-
-<printer name="Lexmark 3200" driver="lexmark-3200">
-<color>
-<model value=3200>
 <gamma value=0.5>
 <density value=2.0>
 <magenta value=0.95>
