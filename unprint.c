@@ -28,6 +28,7 @@ typedef struct {
   int xposition; /* dots */
   int yposition; /* dots */
   int monomode;
+  int nozzle_separation;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -290,10 +291,8 @@ void write_output(FILE *fp_w) {
 
 void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,int density) {
 
-  int y,skip,oldstart,oldstop;
+  int y,skip,oldstart,oldstop,mi;
   unsigned char *oldline;
-  oldstart = -2;
-  oldstop = -3;
 
   skip=pstate.relative_horizontal_units/density;
 
@@ -310,7 +309,8 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
      * for a real printer, too!  */
     page=(line_type **)mycalloc(pstate.bottom_margin, sizeof(line_type *));
   }
-  for (y=pstate.yposition;y<pstate.yposition+m;y++) {
+  for (mi=0,y=pstate.yposition;y<pstate.yposition+m*(pstate.microweave?1:pstate.nozzle_separation);
+       y+=(pstate.microweave?1:pstate.nozzle_separation),mi++) {
     if (!(page[y])) {
       page[y]=(line_type *) mycalloc(sizeof(line_type),1);
     }
@@ -320,12 +320,14 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
        oldstop=page[y]->stopx[color];
     } else {
       oldline=NULL;
+      oldstart = -1;
+      oldstop = -1;
     }
     page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
                                                     (n*skip*bpp+7)/8);
     page[y]->startx[color]=pstate.xposition;
     page[y]->stopx[color]=pstate.xposition+(n?((n-1)*skip+1):0);
-    expand_line(buf+(y-pstate.yposition)*((n*skip*bpp+7)/8),
+    expand_line(buf+mi*((n*skip*bpp+7)/8),
                    page[y]->line[color],n,bpp,skip);
     if (oldline) {
       merge_line(page[y],oldline,oldstart,oldstop,color,bpp);
@@ -356,6 +358,8 @@ int main(int argc,char *argv[]){
             fp_w = fopen(argv[2],"w");
         }
     }
+    /* FIXME: need fancy shmancy command line options for the following */
+    pstate.nozzle_separation=6;
 
 #define get1(error) if (!fread(&ch,1,1,fp_r)) {fprintf(stderr,error);eject=1;continue;}
 #define get2(error) {if(!fread(minibuf,1,2,fp_r)){\
