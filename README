@@ -63,6 +63,13 @@ BASIC INSTALLATION
     CUPS drivers) without the GIMP being present, you must use the
     --without-gimp option to configure.
 
+    By default dynamically loadable modules (plug-ins) will be built,
+    and loaded at run-time if your operating system supports it.  If
+    you experience problems --with-modules=dlopen or
+    --with-modules=ltdl may be used to select the module loading
+    method (dlopen is the default, but GNU libltdl is more portable),
+    or --with-modules=static or --without-modules disables them.
+
     Note: This package requires the use of GNU Make to compile.  On
     systems with both GNU make and another make installed, GNU make
     may be named `gmake' or `gnumake'.  BSD users in particular will
@@ -722,15 +729,17 @@ DEBIAN
 			    and SGML documentation that is registered
 			    with doc-base.
     cupsys-driver-gimpprint The CUPS driver and PPD files.
+    ijsgimpprint	    Ghostscript IJS server.
     foomatic-db-gimpprint   Foomatic data files for gimp-print drivers.
     libgimpprint1	    The libgimpprint library (GIMP-Print core).
-    libgimpprint-dev	    Headers, symlinks, m4 macro
+    libgimpprint1-dev	    Headers, symlinks, m4 macro
 			    (AM_PATH_GIMPPRINT) and gimpprint-config
 			    needed to develop programs that link with
 			    libgimpprint.
     gimpprint-doc	    User's Guide in HTML and PDF format
-    libgimpprint-doc	    Programmer's Guide in Info, DVI and HTML
+    libgimpprint1-doc	    Programmer's Guide in Info, DVI and HTML
 			    format.
+    gimpprint-locales	    Message catalogues for internationalisation.
     escputil		    The escputil printer tool for Epson printers.
 
     The library symlinks will get packaged without any modification needed
