@@ -34,17 +34,21 @@ LIBS = $(INTLLIBS) @LIBS@
 
 ## Programs
 
-FOOMATIC_NOINST_BIN = printer_options paper_sizes gimp-print-version \
+FOOMATIC_NOINST_BIN = printer_options printer_margins paper_sizes gimp-print-version \
 	stp_limits printers
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 
-EXTRA_PROGRAMS = printer_options gimp-print-version paper_sizes \
+EXTRA_PROGRAMS = printer_options printer_margins gimp-print-version paper_sizes \
 	stp_limits printers
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
 printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+printer_margins_SOURCES = printer_margins.c
+printer_margins_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+printer_margins_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 gimp_print_version_SOURCES = gimp-print-version.c
 gimp_print_version_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
