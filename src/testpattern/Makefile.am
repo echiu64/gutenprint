@@ -28,7 +28,7 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+LIBS = @LIBS@ $(INTLLIBS)
 
 ## Programs
 TESTPATTERN_BIN = testpattern

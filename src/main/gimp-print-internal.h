@@ -33,9 +33,18 @@
 #ifndef _GIMP_PRINT_INTERNAL_H_
 #define _GIMP_PRINT_INTERNAL_H_
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#ifndef DISABLE_NLS
-#include "../../lib/libprintut.h"
+#ifndef HAVE_ASPRINTF
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
+#else
+#include <stdarg.h>
+#endif
+extern int vasprintf (char **result, const char *format, va_list args);
+extern int asprintf (char **result, const char *format, ...);
 #endif
 
 /*
