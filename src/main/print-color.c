@@ -962,6 +962,7 @@ compute_gcr_curve(stp_const_vars_t vars)
   double k_lower = 0.0;
   double k_upper = 1.0;
   double k_gamma = 1.0;
+  double i_k_gamma = 1.0;
   double *tmp_data = stpi_malloc(sizeof(double) * lut->steps);
   int i;
 
@@ -978,6 +979,7 @@ compute_gcr_curve(stp_const_vars_t vars)
     k_lower = lut->steps;
   if (k_upper < k_lower)
     k_upper = k_lower + 1;
+  i_k_gamma = 1.0 / k_gamma;
 
   for (i = 0; i < k_lower; i ++)
     tmp_data[i] = 0;
@@ -986,8 +988,11 @@ compute_gcr_curve(stp_const_vars_t vars)
       for (i = ceil(k_lower); i < k_upper; i ++)
 	{
 	  double where = (i - k_lower) / (k_upper - k_lower);
-	  tmp_data[i] = 65535.0 * k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
-	    (double) (lut->steps - 1);
+	  double g1 = pow(where, i_k_gamma);
+	  double g2 = 1.0 - pow(1.0 - where, k_gamma);
+	  double value = (g1 > g2 ? g1 : g2);
+	  tmp_data[i] = 65535.0 * lut->steps * value / (double) (lut->steps - 1);
+	  tmp_data[i] = floor(tmp_data[i] + .5);
 	}
       for (i = ceil(k_upper); i < lut->steps; i ++)
 	tmp_data[i] = 65535.0 * i / (double) (lut->steps - 1);
@@ -996,8 +1001,10 @@ compute_gcr_curve(stp_const_vars_t vars)
     for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	tmp_data[i] = 65535.0 * lut->steps * pow(where, k_gamma) /
-	  (double) (lut->steps - 1);
+	double g1 = pow(where, i_k_gamma);
+	double g2 = 1.0 - pow(1.0 - where, k_gamma);
+	double value = (g1 > g2 ? g1 : g2);
+	tmp_data[i] = 65535.0 * lut->steps * value / (double) (lut->steps - 1);
 	tmp_data[i] = floor(tmp_data[i] + .5);
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
