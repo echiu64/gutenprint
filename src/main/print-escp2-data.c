@@ -146,7 +146,7 @@ DECLARE_INK(spro10000_standard, 1.0);
 
 static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
-  { 0.35,  0x1, 1, 1 },
+  { 0.26,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
 };
 
