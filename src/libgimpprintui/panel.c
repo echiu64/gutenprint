@@ -652,7 +652,8 @@ build_a_combo(option_t *option)
 						   option->fast_desc->name),
 			  option->info.list.default_val, combo_callback,
 			  &(option->info.list.callback_id), NULL, option);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
+      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
+	  strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size
 	  (stp_get_string_parameter(pv->v, option->fast_desc->name));
     }
@@ -2889,7 +2890,8 @@ combo_callback(GtkWidget *widget, gpointer data)
       invalidate_frame();
       invalidate_preview_thumbnail();
       stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
+      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
+	  strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size(new_value);
       g_idle_add(refresh_all_options, (gpointer) &refresh_all_options);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
