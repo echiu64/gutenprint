@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2003-06-20 21:28-0400\n"
-"PO-Revision-Date: 2003-01-05 15:25+0000\n"
+"PO-Revision-Date: 2003-06-29 17:44+0100\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -148,7 +148,7 @@ msgstr "Family driver"
 
 #: src/main/module.c:56
 msgid "Color conversion module"
-msgstr ""
+msgstr "Colour conversion module"
 
 #: src/main/module.c:57
 msgid "Dither algorithm"
@@ -436,9 +436,8 @@ msgid "Light Magenta Transition"
 msgstr "Light Magenta Transition"
 
 #: src/main/print-canon.c:1313 src/main/print-canon.c:1314
-#, fuzzy
 msgid "Light Yellow Transition"
-msgstr "Dark Yellow Transition"
+msgstr "Light Yellow Transition"
 
 #: src/main/print-canon.c:1600 src/main/print-lexmark.c:1122
 msgid "Auto Sheet Feeder"
@@ -672,20 +671,19 @@ msgstr "Solid Colours"
 
 #: src/main/print-color.c:2400
 msgid "Threshold"
-msgstr ""
+msgstr "Threshold"
 
 #: src/main/print-color.c:2402
 msgid "HSL-corrected"
 msgstr "HSL-corrected"
 
 #: src/main/print-color.c:2404
-#, fuzzy
 msgid "Uncorrected"
-msgstr "HSL-corrected"
+msgstr "Uncorrected"
 
 #: src/main/print-color.c:2457
 msgid "Traditional Gimp-Print color conversion"
-msgstr ""
+msgstr "Traditional Gimp-Print colour conversion"
 
 #: src/main/printers.c:388
 #, c-format
@@ -806,66 +804,59 @@ msgstr "Manual Selection"
 
 #: src/main/print-escp2-data.c:412
 msgid "Fast Economy"
-msgstr ""
+msgstr "Fast Economy"
 
 #: src/main/print-escp2-data.c:413
 msgid "Economy"
-msgstr ""
+msgstr "Economy"
 
 #: src/main/print-escp2-data.c:414
 msgid "Draft"
-msgstr ""
+msgstr "Draft"
 
 #: src/main/print-escp2-data.c:416
-#, fuzzy
 msgid "High"
-msgstr "Height:"
+msgstr "High"
 
 #: src/main/print-escp2-data.c:417
-#, fuzzy
 msgid "Photo"
-msgstr "Photographs"
+msgstr "Photo"
 
 #: src/main/print-escp2-data.c:418
-#, fuzzy
 msgid "Super Photo"
-msgstr "Stylus Photo"
+msgstr "Super Photo"
 
 #: src/main/print-escp2-data.c:419
-#, fuzzy
 msgid "Ultra Photo"
-msgstr "Six Colour Photo"
+msgstr "Ultra Photo"
 
 #: src/main/print-escp2-data.c:420
 msgid "Best"
-msgstr ""
+msgstr "Best"
 
 #: src/main/print-escp2.c:93
 msgid "Automatic Printing Mode"
-msgstr ""
+msgstr "Automatic Printing Mode"
 
 #: src/main/print-escp2.c:94
 msgid "Automatic printing mode"
-msgstr ""
+msgstr "Automatic printing mode"
 
 #: src/main/print-escp2.c:105 src/main/print-escp2.c:106
 msgid "Print Quality"
-msgstr ""
+msgstr "Print Quality"
 
 #: src/main/print-escp2.c:111 src/main/print-escp2.c:112
-#, fuzzy
 msgid "Output Order"
-msgstr "Output Type:"
+msgstr "Output Order"
 
 #: src/main/print-escp2.c:136
-#, fuzzy
 msgid "Resolution of the print"
-msgstr "Resolution and quality of the print"
+msgstr "Resolution of the print"
 
 #: src/main/print-escp2.c:152
-#, fuzzy
 msgid "Ink Set"
-msgstr "Ink Type"
+msgstr "Ink Set"
 
 #: src/main/print-escp2.c:158
 msgid "Printing Direction"
@@ -896,38 +887,32 @@ msgid "Gray Transition"
 msgstr "Gray Transition"
 
 #: src/main/print-escp2.c:282 src/main/print-escp2.c:283
-#, fuzzy
 msgid "Dark Gray Transition"
-msgstr "Gray Transition"
+msgstr "Dark Gray Transition"
 
 #: src/main/print-escp2.c:290
-#, fuzzy
 msgid "Mid Gray Transition"
-msgstr "Gray Transition"
+msgstr "Mid Gray Transition"
 
 #: src/main/print-escp2.c:291
-#, fuzzy
 msgid "Medium Gray Transition"
-msgstr "Gray Transition"
+msgstr "Medium Gray Transition"
 
 #: src/main/print-escp2.c:298 src/main/print-escp2.c:299
-#, fuzzy
 msgid "Light Gray Transition"
-msgstr "Light Cyan Transition"
+msgstr "Light Gray Transition"
 
 #: src/main/print-escp2.c:960
-#, fuzzy
 msgid "Full Manual Control"
-msgstr "Output Control"
+msgstr "Full Manual Control"
 
 #: src/main/print-escp2.c:962
 msgid "Automatic Setting Control"
-msgstr ""
+msgstr "Automatic Setting Control"
 
 #: src/main/print-escp2.c:985
-#, fuzzy
 msgid "Manual Control"
-msgstr "Output Control"
+msgstr "Manual Control"
 
 #: src/main/print-escp2.c:1098 src/libgimpprintui/panel.c:1233
 msgid "Auto"
@@ -1159,9 +1144,8 @@ msgid "ps2"
 msgstr "ps2"
 
 #: src/main/print-vars.c:328
-#, fuzzy
 msgid "traditional"
-msgstr "Bidirectional"
+msgstr "traditional"
 
 #: src/main/xmli18n-tmp.h:1
 msgid "Letter"
@@ -2036,9 +2020,8 @@ msgid "EPSON Stylus Photo 925"
 msgstr "EPSON Stylus Photo 925"
 
 #: src/main/xmli18n-tmp.h:220
-#, fuzzy
 msgid "EPSON Stylus Photo 935"
-msgstr "EPSON Stylus Photo 895"
+msgstr "EPSON Stylus Photo 935"
 
 #: src/main/xmli18n-tmp.h:221
 msgid "EPSON Stylus Photo 950"
@@ -2237,9 +2220,8 @@ msgid "EPSON PM-930C"
 msgstr "EPSON PM-930C"
 
 #: src/main/xmli18n-tmp.h:270
-#, fuzzy
 msgid "EPSON PM-940C"
-msgstr "EPSON PM-740C"
+msgstr "EPSON PM-940C"
 
 #: src/main/xmli18n-tmp.h:271
 msgid "EPSON PM-950C"
@@ -2250,9 +2232,8 @@ msgid "EPSON PM-970C"
 msgstr "EPSON PM-970C"
 
 #: src/main/xmli18n-tmp.h:273
-#, fuzzy
 msgid "EPSON PM-980C"
-msgstr "EPSON PM-780C"
+msgstr "EPSON PM-980C"
 
 #: src/main/xmli18n-tmp.h:274
 msgid "EPSON PM-2000C"
@@ -2714,9 +2695,8 @@ msgid "Height of the paper that you wish to print to"
 msgstr "Height of the paper that you wish to print to"
 
 #: src/libgimpprintui/panel.c:1199
-#, fuzzy
 msgid "Automatic Paper Size"
-msgstr "Paper Size"
+msgstr "Automatic Paper Size"
 
 #: src/libgimpprintui/panel.c:1216
 msgid "Image Position"
@@ -3137,9 +3117,8 @@ msgid "Yes"
 msgstr "Yes"
 
 #: src/cups/genppd.c:1158
-#, fuzzy
 msgid "Fine Adjustment"
-msgstr "Linear Contrast Adjustment"
+msgstr "Fine Adjustment"
 
 #: src/escputil/escputil.c:66
 msgid "Escputil version "
@@ -4274,6 +4253,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#~ msgid "Line Art"
-#~ msgstr "Line Art"
