@@ -170,7 +170,7 @@ FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 #       gimptool_major_version=`$GIMPTOOL $gimptool_args --version | \
 #              sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
 
-gdist: force_aclocal
+gdist: ghost cups force_aclocal
 
 doit:
 	-@exit 0

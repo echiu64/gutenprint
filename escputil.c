@@ -112,7 +112,7 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
     -u The printer is connected via USB.\n\
     -h Print this help message.\n\
     -q Suppress the banner.\n\
-    -m Specify the precise printer model for head alignment.\n"
+    -m Specify the precise printer model for head alignment.\n";
 #endif
 
 typedef struct

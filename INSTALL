@@ -1,15 +1,1 @@
-This is the Print plug-in for the Gimp, version 3.1.2 (development).
-
-To build and install:
-
-./configure
-make
-make install
-
-This is a development release, and as such, not all printers or
-combinations of options will work.  Please check our web site at
-http://gimp-print.sourceforge.net for details about what is and is not
-supported.
-
-To build and install the GhostScript driver, please see the file
-Ghost/README.
+Please see the README file for more information.
