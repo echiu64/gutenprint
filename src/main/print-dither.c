@@ -113,8 +113,7 @@ typedef struct dither_channel
   int very_fast;
   int subchannels;
 
-  int photomax;			/* Maximum photo ink density */
-  int darkmin;			/* Minimum dark ink density */
+  int maxdot;			/* Maximum dot size */
 
   dither_segment_t *ranges;
   dither_segment_t temp_range;
@@ -781,8 +780,7 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
       lbit >>= 1;
     }
 
-  s->photomax = 0;
-  s->darkmin = 65535;
+  s->maxdot = 0;
 
   for (i = 0; i < s->nlevels; i++)
     {
@@ -802,15 +800,9 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
       else
 	s->ranges[i].is_equal = 1;
 
-      if  (s->ranges[i].subchannel[0] == 0) {
-        if (s->ranges[i].value[0] < s->darkmin) {
-	  s->darkmin = s->ranges[i].value[0];
-	}
-      } else {
-        if (s->ranges[i].value[0] > s->photomax) {
-	  s->photomax = s->ranges[i].value[0];
-	}
-      }
+      if (s->ranges[i].dot_size[0] > s->maxdot) s->maxdot = s->ranges[i].dot_size[0];
+      if (s->ranges[i].dot_size[1] > s->maxdot) s->maxdot = s->ranges[i].dot_size[1];
+
       stp_dprintf(STP_DBG_INK, d->v,
 		  "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
 		  i, s->ranges[i].value[0], s->ranges[i].value[1],
@@ -1697,29 +1689,39 @@ pick_vertex(const int cmy[])
 	return best;
 }
 
-static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int dark_only, int density)
+static inline dither_segment_t *find_segment(dither_t *d, dither_channel_t *dc, int max_dot, int density)
 {
 	int i;
 	dither_segment_t *dd;
 
+	memset(&dc->temp_range, 0, sizeof(dc->temp_range));
+
 	for (i = dc->nlevels-1; i > 0; i--) {
 		dd = &(dc->ranges[i]);
-		if (dd->subchannel[0] != 0 && dark_only) {
-		  dc->temp_range = *dd;
-		  dd = &dc->temp_range;
-		  goto clear_lower;
-		}
 		if (density < dd->value[0]) continue;
-		return dd;
+		if (max_dot < dd->dot_size[0]) continue;
+		dc->temp_range.range[0] = dd->range[0];
+		dc->temp_range.value[0] = dd->value[0];
+		dc->temp_range.bits[0] = dd->bits[0];
+		dc->temp_range.subchannel[0] = dd->subchannel[0];
+		dc->temp_range.dot_size[0] = dd->dot_size[0];
+		break;
 	}
-	/* I want the bottom of the first range to say "no ink to print" */
-	dd = &dc->ranges[0];
-clear_lower:
-	dd->range[0] = 0; dd->range_span = dd->range[1];
-	dd->value[0] = 0; dd->value_span = dd->value[1];
-	dd->bits[0] = 0;
-	dd->subchannel[0] = 0;
-	return dd;
+	
+	for (i=0; i < dc->nlevels - 1; i++) {
+		dd = &(dc->ranges[i]);
+		if (max_dot < dd->dot_size[1]) continue;
+		dc->temp_range.range[1] = dd->range[1];
+		dc->temp_range.value[1] = dd->value[1];
+		dc->temp_range.bits[1] = dd->bits[1];
+		dc->temp_range.subchannel[1] = dd->subchannel[1];
+		dc->temp_range.dot_size[1] = dd->dot_size[1];
+		if (density < dd->value[1]) break;
+	}
+
+	dc->temp_range.range_span = dc->temp_range.range[1] - dc->temp_range.range[0];
+	dc->temp_range.value_span = dc->temp_range.value[1] - dc->temp_range.value[0];
+	return &dc->temp_range;
 }
 
 static inline void
@@ -2790,6 +2792,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
   int		*ndither;
   eventone_t	*et;
   int		dx[NCOLORS], dy[NCOLORS], r_sq[NCOLORS];
+  int		wetness[NCOLORS];
   int		***error;
 
   int		terminate;
@@ -2812,6 +2815,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
   for (i = 0; i < NCOLORS; i++)
     {
       ndither[i] = 0;
+      wetness[i] = 0;
       dx[i] = et->dx2;
       dy[i] = et->dy2;
       r_sq[i] = 0;
@@ -2872,34 +2876,27 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
       }
 
-      pick = 0;
-
       for (i=0; i < NCOLORS; i++) {
         int value;
-	int dark_only;
+	int maxwet;
 
         ndither[i] += error[i][0][0];
+	
+	if ((wetness[i] -= CHANNEL(d, i).maxdot * d->density) < 0) {
+	  wetness[i] = 0;
+	}
 
 	value = ndither[i] + CHANNEL(d, i).o / 2;		/* Only use half of cmy[] to avoid dark->light problems */
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
-
-        dark_only = 0;
-        if (CHANNEL(d, i).photomax != 0) {
-	  int photoh = CHANNEL(d, i).photomax / 2;
-	  int dark_density = d->densityh;
-	  if (CHANNEL(d, i).o < CHANNEL(d, i).darkmin) {
-	    if (CHANNEL(d, i).o > photoh) {
-	      dark_density += d->densityh * (CHANNEL(d, i).o - photoh) / (CHANNEL(d, i).darkmin - photoh);
-	    }
-	  } else dark_density = d->density;
-
-          dark_only = (r_sq[i] * et->aspect < et->recip[dark_density]) ? 1 : 0;
-	}
-
-        dr[i] = find_segment(d, &CHANNEL(d, i), dark_only, CHANNEL(d, i).v);
 	
+	maxwet = (65536 + d->density) * CHANNEL(d, i).maxdot - wetness[i];
+	if (maxwet < 0) maxwet = 0;
+	maxwet >>= 16;
+
+        dr[i] = find_segment(d, &CHANNEL(d, i), maxwet, CHANNEL(d, i).v);
+
 	if (CHANNEL(d, i).v > dr[i]->value[1]) {
 	  ri[i] = 65535;
 	} else if (CHANNEL(d, i).v < dr[i]->value[0]) {
@@ -2924,17 +2921,13 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	} else {
 	    ri[i] = 32768;  /* doesn't matter really */
 	}
-
-	if (i == ECOLOR_K) {
-	  CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[0];
-	  if (ri[ECOLOR_K] >= 32768) {
-	    CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[1];
-	    pick = (1 << ECOLOR_K);
-	  }
-	}
       }
 
-      pick |= pick_vertex(ri);
+      pick = pick_vertex(ri);
+
+      if (ri[ECOLOR_K] >= 32768) {
+	pick |= (1 << ECOLOR_K);
+      }
 
       /* Compute the values we're going to use (ignoring black's influence) */
       /* And find out whether the bigger black dot would be more suitable than the small one */
@@ -2942,17 +2935,17 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       { int point[NCOLORS];
 	int useblack = 0;		/* Do we print black at all? */
 
-        point[ECOLOR_K] = CHANNEL(d, ECOLOR_K).b;
-	if (d->black_density != d->density) {
-	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
-	}
-
-        for (i=1; i < NCOLORS; i++) {
+        for (i=0; i < NCOLORS; i++) {
 	  if (pick & (1 << i)) {
 	    point[i] = dr[i]->value[1];
 	  } else {
 	    point[i] = dr[i]->value[0];
 	  }
+	}
+
+        CHANNEL(d, ECOLOR_K).b = point[ECOLOR_K];
+	if (d->black_density != d->density) {
+	  point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
 	}
 
 	for (i=0; i < NCOLORS; i++) {
@@ -3007,6 +3000,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	unsigned char *tptr = CHANNEL(d, i).ptrs[subchannel] + d->ptr_offset;
 	
         if (!(print_inks & (1 << i))) continue;
+
+	wetness[i] += dr[i]->dot_size[subc] << 16;
 	
 	for (j=1; j <= bits; j+=j, tptr += length) {
 	  if (j & bits) *tptr |= bit;
