@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.44  1999/12/24 12:57:38  rlk
+ *   Reduce grain; improve red
+ *
  *   Revision 1.43  1999/12/22 03:24:34  rlk
  *   round length up, not down
  *
@@ -390,11 +393,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 3
+#define DE_C 1
 #define NU_M 1
-#define DE_M 3
+#define DE_M 2
 #define NU_Y 1
-#define DE_Y 3
+#define DE_Y 1
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -418,8 +421,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * in more CMY being used in dark tones, which results in less pure black.
  * Decreasing the gap too much results in sharp crossover and stairstepping.
  */
-#define KDARKNESS_LOWER (12 * 256)
-#define KDARKNESS_UPPER (78 * 256)
+#define KDARKNESS_LOWER (20 * 256)
+#define KDARKNESS_UPPER (84 * 256)
 
 /*
  * Randomizing values for deciding when to output a bit.  Normally with the
@@ -429,10 +432,10 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * result in greater randomizing.  We use less randomness for black output
  * to avoid production of black speckles in light regions.
  */
-#define C_RANDOMIZER 4
-#define M_RANDOMIZER 4
-#define Y_RANDOMIZER 4
-#define K_RANDOMIZER 8
+#define C_RANDOMIZER 32
+#define M_RANDOMIZER 32
+#define Y_RANDOMIZER 32
+#define K_RANDOMIZER 32
 
 #ifdef PRINT_DEBUG
 #define UPDATE_COLOR_DBG(r)			\
@@ -560,28 +563,27 @@ do {									     \
 } while (0)
 
 #if 1
-#define UPDATE_DITHER(r, d2, x, width)			\
-do {							\
-  if (ditherbit##d2 & bit)				\
-    {							\
-      if (x > 0 && x < dst_width - 1)			\
-	r##error1[-direction] += r;			\
-      else						\
-	r##error1[0] = r;				\
-      r##error1[0] += 3 * r;				\
-      r##error1[direction] = r;				\
-      dither##r    = r##error0[direction] + 3 * r;	\
-    }							\
-  else							\
-    {							\
-      if (x > 0 && x < dst_width - 1)			\
-	r##error1[-direction] += r * 3 / 4;		\
-      else						\
-	r##error1[0] = r * 3 / 4;			\
-      r##error1[0] +=  r * 3 / 2;			\
-      r##error1[direction] = r * 3 / 4;			\
-      dither##r    = r##error0[direction] + 5 * r;	\
-    }							\
+#define UPDATE_DITHER(r, d2, x, width)					    \
+do {									    \
+  int offset = (15 - ((o##r & 0xf000) >> 12)) * horizontal_overdensity / 3; \
+  if (x < offset)							    \
+    offset = x;								    \
+  else if (x > dst_width - offset - 1)					    \
+    offset = dst_width - x - 1;						    \
+  if (ditherbit##d2 & bit)						    \
+    {									    \
+      r##error1[-offset] += r * 3 / 2;					    \
+      r##error1[0] += 2 * r;						    \
+      r##error1[offset] += r * 3 / 2;					    \
+      dither##r    = r##error0[direction] + 3 * r;			    \
+    }									    \
+  else									    \
+    {									    \
+      r##error1[-offset] += r;						    \
+      r##error1[0] +=  r;						    \
+      r##error1[offset] += r;						    \
+      dither##r    = r##error0[direction] + 5 * r;			    \
+    }									    \
 } while (0)
 #else
 #define UPDATE_DITHER(r, d2, x, width)			\
@@ -691,6 +693,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
   kerror0 = error[row & 1][3];
   kerror1 = error[1 - (row & 1)][3];
+  memset(kerror1, 0, dst_width * sizeof(int));
+  memset(cerror1, 0, dst_width * sizeof(int));
+  memset(merror1, 0, dst_width * sizeof(int));
+  memset(yerror1, 0, dst_width * sizeof(int));
   cptr = cyan;
   mptr = magenta;
   yptr = yellow;
@@ -962,8 +968,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     UPDATE_COLOR(c);
     UPDATE_COLOR(m);
     UPDATE_COLOR(y);
+#if 0
     density += (c + m + y) / horizontal_overdensity;
     density /= 2;
+#endif
 
     /*****************************************************************
      * Cyan
