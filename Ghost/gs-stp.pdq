@@ -58,9 +58,8 @@ driver epson-gs-and-gimp-driver-0.1 {
          desc = "Photo EX"
       }
       choice "PHOTO" {
-         desc = "Photo"
          value = "9"
-         help = "The Stylus Photo"
+         desc = "Photo"
       }
       choice "COLOR440" {
          value = "10"
@@ -118,18 +117,25 @@ driver epson-gs-and-gimp-driver-0.1 {
          value = "4"
          desc = "720dpi Highest Quality"
       }
-      choice "DPI1440A" {
+      choice "DPI1440M" {
          value = "5"
-         desc = "1440x720dpi Softweave"
+         desc = "1440x720dpi Microweave"
       }
       choice "DPI1440A" {
          value = "6"
+         desc = "1440x720dpi Softweave"
+      }
+      choice "DPI1440B" {
+         value = "7"
          desc = "1440x720dpi Highest Quality"
       }
-      choice "DPI1440A" {
-         value = "7"
-         desc = "1440x720dpi Two-pass"
-         help = "untested"
+      choice "DPISPECIALA" {
+         value = "8"
+         desc = "Emulated 1440x1440dpi Two-pass"
+      }
+      choice "DPISPECIALB" {
+         value = "9"
+         desc = "Emulated 2880x720dpi Two-pass"
       }
    }
 
@@ -178,6 +184,34 @@ driver epson-gs-and-gimp-driver-0.1 {
       choice "CONTINUOUSTONE" {
           value = "2"
 	  desc = "Continuous Tone Photo"
+      }
+      choice "PREDITHERED" {
+	  value = "3"
+	  desc = "Pure black and white"
+      }
+   }
+
+   option {
+      var = "DITHERTYPE"
+      choice "HYBRID" {
+          value = "Hybrid Floyd-Steinberg"
+	  desc = "Line Art"
+      }
+      choice "ORDERED" {
+          value = "1"
+	  desc = "Ordered"
+      }
+      choice "RANDOM" {
+          value = "2"
+	  desc = "Random Floyd-Steinberg"
+      }
+      choice "ADAPTIVEHYBRID" {
+	  value = "3"
+	  desc = "Adaptive Hybrid"
+      }
+      choice "ADAPTIVERANDOM" {
+	  value = "4"
+	  desc = "Adaptive Random"
       }
    }
 
@@ -254,6 +288,7 @@ driver epson-gs-and-gimp-driver-0.1 {
 	     -dModel=$MODEL \
 	     -dQuality=$QUALITY \
 	     -dImageType=$IMAGETYPE \
+	     -dDither=$DITHERTYPE \
              -sOutputFile=$OUTPUT $INPUT
       }
    }

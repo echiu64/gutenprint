@@ -123,28 +123,33 @@ Options:
 --------
 
 
- Options for Stylus Photo Printer driver are given in normal ghostscript
- manner. The resolution of the image calculated by ghostscript is not 
- bound to the resolution of the printer output. It is for example possible
- to specify "-r360" to gs and print the output in 1440x720 dpi (see below
- for driver parameter). The result is a somewhat faster operation of the driver.
+ Options for Stylus Photo Printer driver are given in normal
+ ghostscript manner. The resolution of the image calculated by
+ ghostscript is not bound to the resolution of the printer output. It
+ is for example possible to specify "-r360" to gs and print the output
+ in 1440x720 dpi (see below for driver parameter). The result is a
+ somewhat faster operation of the driver.
 
 
 Color Balancing Values: (min,max,default)
+----- --------- ------- -----------------
+
 -dRed=xxx        xxx:   0 ... 200  (100)
 -dGreen=xxx      xxx:   0 ... 200  (100)
 -dBlue=xxx       xxx:   0 ... 200  (100)
 -dBrightness=xxx xxx:   0 ... 400  (100)
 -dContrast=xxx   xxx:  25 ... 400  (100)
 -dGamma=xxx      xxx: 0.1 ... 3.0  (1.0)
--dDensity=xxx    xxx: 0.1 ... 2.0  (0.8)
+-dDensity=xxx    xxx: 0.1 ... 2.0  (1.0)
 -dSaturation=xxx xxx: 0.1 ... 9.0  (1.0)
 -dColor=x          x:   0 ...   1  (1) (0==gray, 1==color) 
 
+
 Printer Model Selection:
+------- ----- ----------
+
 -dModel=xx
 
-xx: 0...15 (6)
 0   Stylus Color
 1   Stylus Color Pro/Pro XL/400/500
 2   Stylus Color 1500
@@ -167,25 +172,46 @@ xx: 0...15 (6)
 Note that not all printers are fully functional yet.
 
 Print Resolution Selection:
+----- ---------- ----------
+
 -dQuality=x
 
-x: 0..7 (0)
 0  360 DPI                               (works on all functioning printers)
 1  720 DPI Microweave                    (works on all functioning printers)
 2  720 DPI Softweave                     (works on most printers)
 3  720 DPI High Quality                  (works on most printers)
 4  720 DPI Highest Quality               (works on most printers)
-5  1440 x 720 DPI Softweave              (works on selected printers)
-6  1440 x 720 DPI Highest Quality        (works on selected printers)
-7  1440 x 720 DPI Two-pass               (works on some printers)
+5  1440 x 720 DPI Microweave             (works on selected printers)
+6  1440 x 720 DPI Softweave              (works on selected printers)
+7  1440 x 720 DPI Highest Quality        (works on selected printers)
+8  Emulated 1440 x 1440 DPI              (works on selected printers)
+9  Emulated 2880 x 720 DPI               (works on selected printers)
 
-Dithering Algorithm:
+Modes 8 and 9 use oversampling to emulate higher resolutions than the
+printers support.
+
+
+Dithering Algorithms:
+--------- -----------
+
 -dDither=x
+
 0  Hybrid Floyd-Steinberg
 1  Ordered
 2  Random Floyd-Steinberg
+3  Adaptive Hybrid Floyd-Steinberg
+4  Adaptive Random Floyd-Steinberg
 
-currently supported Media Selection:
+Hybrid algorithms use error diffusion, but a matrix is used when a
+random number is required.  Adaptive algorithms use error diffusion
+except in very light regions, where ordered dithering is used.
+
+Ordered dithering typically works best in solid-color graphics.
+
+
+Currently supported Media Selection:
+--------- --------- ----- ----------
+
 (important: always use lower case names)
 
 -sPAPERSIZE=letter
@@ -193,7 +219,10 @@ currently supported Media Selection:
 -sPAPERSIZE=a4
 -sPAPERSIZE=a3
 
-Image type (to optimize the dither)
+
+Image type (to optimize the dither):
+----- ---- --- -------- --- --------
+
 -dImageType=x x:   0 ...   3  (0)
 Select the image type most representative of what's being printed.  
 
@@ -210,6 +239,7 @@ the best natural images, but text will be noticeably fuzzy.  Option 3
 is very fast and accurate, but should not be used if there are any
 tones other than pure black and white.
 
+
 Examples:
 ---------
 
@@ -221,6 +251,7 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r1440 -dQuality=6 
 
 Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -dModel=6 -dDensity=0.8 -r720 -dQuality=2 -dImageType=3 foo.ps -sOutputFile=-
+
 
 Settings you might try:
 -----------------------
