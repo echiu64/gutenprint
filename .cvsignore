@@ -13,6 +13,7 @@ config.status
 configure
 configure.in
 cups-gimpprint.list
+debian-build
 intl
 libtool
 stamp-h
