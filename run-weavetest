@@ -1,0 +1,12 @@
+#!/bin/sh
+
+modes='32,8 48,8 64,8 21,7 96,8 48,6 96,6'
+passes='1,1 2,1 1,2 1,4 2,2'
+
+for mode in $modes ; do
+    for pass in $passes ; do
+	stuff=`echo "$mode,$pass" | awk -F, '{printf "%d %d %d %d\n", $1, $2, $3, $4}'`
+	echo -n "$stuff  "
+	./weavetest $stuff 1000 | tail -1
+    done
+done
