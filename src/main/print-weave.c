@@ -53,9 +53,18 @@
 #endif
 
 #ifdef ASSERTIONS
-#define assert(x,v) if (!(x)) { stp_eprintf(v, "ASSERTION FAILURE!  \"%s\", line %d.\n", __FILE__, __LINE__); exit(1); }
+#define assert(x,v)							\
+do									\
+{									\
+  if (!(x))								\
+    {									\
+      stp_eprintf(v, "Assertion %s failed! file %s, line %d.\n",	\
+		  #x, __FILE__, __LINE__);				\
+      exit(1);								\
+    }									\
+} while (0)
 #else
-#define assert(x,v) /* nothing */
+#define assert(x,v) do {} while (0)
 #endif
 
 #ifdef TEST
