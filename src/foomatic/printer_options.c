@@ -50,7 +50,7 @@ main(int argc, char **argv)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
       const stp_vars_t pv = stp_printer_get_printvars(p);
-      char **retval;
+      stp_param_t *retval;
       const char *retval1;
       int count;
       int tcount = 0;
@@ -69,8 +69,9 @@ main(int argc, char **argv)
 	      for (j = 0; j < count; j++)
 		{
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
-			 stp_printer_get_driver(p), params[k], retval[j]);
-		  free(retval[j]);
+			 stp_printer_get_driver(p), params[k], retval[j].name);
+		  free((void *)retval[j].name);
+		  free((void *)retval[j].text);
 		}
 	      free(retval);
 	    }

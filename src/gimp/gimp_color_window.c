@@ -88,17 +88,28 @@ gimp_dither_algo_callback (GtkWidget *widget,
 {
   const gchar *new_algo =
     gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
+  int i;
 
-  stp_set_dither_algorithm(*pv, new_algo);
+  for (i = 0; i < stp_dither_algorithm_count(); i ++)
+    if (strcasecmp(new_algo, stp_dither_algorithm_text(i)) == 0)
+    {
+      stp_set_dither_algorithm(*pv, stp_dither_algorithm_name(i));
+      break;
+    }
 }
 
 void
 gimp_build_dither_combo (void)
 {
   int i;
-  char **vec = xmalloc(sizeof(const char *) * stp_dither_algorithm_count());
+  stp_param_t *vec = xmalloc(sizeof(stp_param_t) * stp_dither_algorithm_count());
+
   for (i = 0; i < stp_dither_algorithm_count(); i++)
-    vec[i] = c_strdup(stp_dither_algorithm_name(i));
+  {
+    vec[i].name = c_strdup(stp_dither_algorithm_name(i));
+    vec[i].text = c_strdup(stp_dither_algorithm_text(i));
+  }
+
   gimp_plist_build_combo (dither_algo_combo,
 			  stp_dither_algorithm_count(),
 			  vec,
@@ -107,7 +118,10 @@ gimp_build_dither_combo (void)
 			  &gimp_dither_algo_callback,
 			  &dither_algo_callback_id);
   for (i = 0; i < stp_dither_algorithm_count(); i++)
-    free(vec[i]);
+  {
+    free((void *)vec[i].name);
+    free((void *)vec[i].text);
+  }
   free(vec);
 }
 

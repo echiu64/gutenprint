@@ -131,6 +131,17 @@ static gint	       left, right;	        /* Imageable area */
 static gint            top, bottom;
 static gint	       paper_width, paper_height;	/* Physical width */
 
+static gint		num_media_sizes = 0;
+static stp_param_t	*media_sizes;
+static gint		num_media_types = 0;	/* Number of media types */
+static stp_param_t	*media_types;		/* Media type strings */
+static gint		num_media_sources = 0;	/* Number of media sources */
+static stp_param_t	*media_sources;        /* Media source strings */
+static gint		num_ink_types = 0;	/* Number of ink types */
+static stp_param_t	*ink_types;		/* Ink type strings */
+static gint		num_resolutions = 0;	/* Number of resolutions */
+static stp_param_t	*resolutions;		/* Resolution strings */
+
 static void gimp_scaling_update        (GtkAdjustment *adjustment);
 static void gimp_scaling_callback      (GtkWidget     *widget);
 static void gimp_plist_callback        (GtkWidget     *widget,
@@ -188,6 +199,28 @@ stp_vars_t *pv;
 #define Combo_get_text(combo) \
 	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
 
+static const char *
+Combo_get_name(GtkWidget   *combo,
+               int         num_options,
+	       stp_param_t *options)
+{
+  gchar *text;
+  int   i;
+
+
+  if ((text = Combo_get_text(combo)) == NULL)
+    return (NULL);
+
+  if (num_options == 0)
+    return ((const char *)text);
+
+  for (i = 0; i < num_options; i ++)
+    if (strcasecmp(options[i].text, text) == 0)
+      return (options[i].name);
+
+  return (NULL);
+}
+
 
 static gchar *
 c_strdup(const gchar *s)
@@ -197,7 +230,7 @@ c_strdup(const gchar *s)
   return ret;
 }
 
-static char **printer_list = 0;
+static stp_param_t *printer_list = 0;
 static int printer_count = 0;
 
 static void
@@ -226,29 +259,33 @@ gimp_build_printer_combo(void)
   if (printer_list)
     {
       for (i = 0; i < printer_count; i++)
-	free(printer_list[i]);
+      {
+	free((void *)printer_list[i].name);
+	free((void *)printer_list[i].text);
+      }
       free(printer_list);
     }
-  printer_list = malloc(sizeof(char *) * plist_count);
+  printer_list = malloc(sizeof(stp_param_t) * plist_count);
   for (i = 0; i < plist_count; i++)
     {
       if (plist[i].active)
 	{
-	  printer_list[i] = malloc(strlen(plist[i].name) + 1);
-	  strcpy(printer_list[i], plist[i].name);
+	  printer_list[i].name = c_strdup(plist[i].name);
+	  printer_list[i].text = c_strdup(plist[i].name);
 	}
       else
 	{
-	  printer_list[i] = malloc(strlen(plist[i].name) + 2);
-	  strcpy(printer_list[i] + 1, plist[i].name);
-	  printer_list[i][0] = '*';
+	  printer_list[i].name = c_strdup(plist[i].name);
+	  printer_list[i].text = malloc(strlen(plist[i].name) + 2);
+	  strcpy((char *)printer_list[i].text + 1, plist[i].name);
+	  ((char *)printer_list[i].text)[0] = '*';
 	}
     }
   printer_count = plist_count;
   gimp_plist_build_combo(printer_combo,
 			 printer_count,
 			 printer_list,
-			 printer_list[plist_current],
+			 printer_list[plist_current].text,
 			 NULL,
 			 gimp_plist_callback,
 			 &plist_callback_id);
@@ -1142,17 +1179,16 @@ gimp_scaling_callback (GtkWidget *widget)
  ****************************************************************************/
 void
 gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
-			gint            num_items,   /* I - Number of items */
-			gchar    **items,       /* I - Menu items */
-			const gchar     *cur_item,    /* I - Current item */
-			const gchar	*def_value, /* I - default item */
-			GtkSignalFunc   callback,    /* I - Callback */
+			gint           num_items,   /* I - Number of items */
+			stp_param_t    *items,       /* I - Menu items */
+			const gchar    *cur_item,    /* I - Current item */
+			const gchar    *def_value, /* I - default item */
+			GtkSignalFunc  callback,    /* I - Callback */
 			gint           *callback_id) /* IO - Callback ID (init to -1) */
 {
   gint      i; /* Looping var */
   GList    *list = 0;
   GtkEntry *entry = GTK_ENTRY (GTK_COMBO (combo)->entry);
-  char *ncur_item;
 
   if (*callback_id != -1)
     gtk_signal_disconnect (GTK_OBJECT (entry), *callback_id);
@@ -1172,27 +1208,29 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append (list, c_strdup(gettext (items[i])));
+    list = g_list_append (list, c_strdup(items[i].text));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed", callback,
 				     NULL);
-  ncur_item = c_strdup(cur_item);
-
-  gtk_entry_set_text (entry, ncur_item);
 
   for (i = 0; i < num_items; i ++)
-    if (strcmp(items[i], ncur_item) == 0)
+    if (strcmp(items[i].name, cur_item) == 0)
       break;
 
-  if (i == num_items)
-    {
-      if (def_value)
-	gtk_entry_set_text(entry, c_strdup(gettext(def_value)));
-      else
-	gtk_entry_set_text (entry, c_strdup(gettext (items[0])));
-    }
+  if (i >= num_items)
+  {
+    if (def_value)
+      for (i = 0; i < num_items; i ++)
+	if (strcmp(items[i].name, def_value) == 0)
+	  break;
+
+    if (i >= num_items)
+      i = 0;
+  }
+
+  gtk_entry_set_text (entry, c_strdup(items[i].text));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
@@ -1391,18 +1429,9 @@ static void
 gimp_plist_callback (GtkWidget *widget,
 		     gpointer   data)
 {
-  gint     i;
-  gint		num_media_sizes;
-  gchar		**media_sizes;
-  gint		num_media_types;	/* Number of media types */
-  gchar		**media_types;		/* Media type strings */
-  gint		num_media_sources;	/* Number of media sources */
-  gchar		**media_sources;        /* Media source strings */
-  gint		num_ink_types;		/* Number of ink types */
-  gchar		**ink_types;		/* Ink type strings */
-  gint		num_resolutions;	/* Number of resolutions */
-  gchar		**resolutions;		/* Resolution strings */
+  gint     	i;
   const gchar	*default_parameter;
+
   reset_preview();
 
   if (widget)
@@ -1410,7 +1439,7 @@ gimp_plist_callback (GtkWidget *widget,
       const gchar *result = Combo_get_text(printer_combo);
       for (i = 0; i < plist_count; i++)
 	{
-	  if (!strcmp(result, printer_list[i]))
+	  if (!strcmp(result, printer_list[i].text))
 	    {
 	      plist_current = i;
 	      break;
@@ -1436,6 +1465,17 @@ gimp_plist_callback (GtkWidget *widget,
    * Now get option parameters.
    */
 
+  if (num_media_sizes > 0)
+    {
+      for (i = 0; i < num_media_sizes; i ++)
+      {
+	free ((void *)media_sizes[i].name);
+	free ((void *)media_sizes[i].text);
+      }
+      free (media_sizes);
+      num_media_sizes = 0;
+    }
+
   media_sizes = (*(stp_printer_get_printfuncs(current_printer)->parameters))
     (current_printer, stp_get_ppd_file(*pv), "PageSize", &num_media_sizes);
   default_parameter =
@@ -1451,11 +1491,15 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_media_size_callback,
 			  &media_size_callback_id);
 
-  if (num_media_sizes > 0)
+  if (num_media_types > 0)
     {
-      for (i = 0; i < num_media_sizes; i ++)
-	free (media_sizes[i]);
-      free (media_sizes);
+      for (i = 0; i < num_media_types; i ++)
+      {
+	free ((void *)media_types[i].name);
+	free ((void *)media_types[i].text);
+      }
+      free (media_types);
+      num_media_types = 0;
     }
 
   media_types = (*(stp_printer_get_printfuncs(current_printer)->parameters))
@@ -1475,11 +1519,15 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_media_type_callback,
 			  &media_type_callback_id);
 
-  if (num_media_types > 0)
+  if (num_media_sources > 0)
     {
-      for (i = 0; i < num_media_types; i ++)
-	free (media_types[i]);
-      free (media_types);
+      for (i = 0; i < num_media_sources; i ++)
+      {
+	free ((void *)media_sources[i].name);
+	free ((void *)media_sources[i].text);
+      }
+      free (media_sources);
+      num_media_sources = 0;
     }
 
   media_sources = (*(stp_printer_get_printfuncs(current_printer)->parameters))
@@ -1499,11 +1547,15 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_media_source_callback,
 			  &media_source_callback_id);
 
-  if (num_media_sources > 0)
+  if (num_ink_types > 0)
     {
-      for (i = 0; i < num_media_sources; i ++)
-	free (media_sources[i]);
-      free (media_sources);
+      for (i = 0; i < num_ink_types; i ++)
+      {
+	free ((void *)ink_types[i].name);
+	free ((void *)ink_types[i].text);
+      }
+      free (ink_types);
+      num_ink_types = 0;
     }
 
   ink_types = (*(stp_printer_get_printfuncs(current_printer)->parameters))
@@ -1523,11 +1575,15 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_ink_type_callback,
 			  &ink_type_callback_id);
 
-  if (num_ink_types > 0)
+  if (num_resolutions > 0)
     {
-      for (i = 0; i < num_ink_types; i ++)
-	free (ink_types[i]);
-      free (ink_types);
+      for (i = 0; i < num_resolutions; i ++)
+      {
+	free ((void *)resolutions[i].name);
+	free ((void *)resolutions[i].text);
+      }
+      free (resolutions);
+      num_resolutions = 0;
     }
 
   resolutions = (*(stp_printer_get_printfuncs(current_printer)->parameters))
@@ -1547,12 +1603,6 @@ gimp_plist_callback (GtkWidget *widget,
 			  gimp_resolution_callback,
 			  &resolution_callback_id);
 
-  if (num_resolutions > 0)
-    {
-      for (i = 0; i < num_resolutions; i ++)
-	free (resolutions[i]);
-      free (resolutions);
-    }
   if (dither_algo_combo)
     gimp_build_dither_combo();
   suppress_preview_update--;
@@ -1615,7 +1665,9 @@ gimp_media_size_callback (GtkWidget *widget,
     }
   else
     {
-      const gchar *new_media_size = Combo_get_text (media_size_combo);
+      const gchar *new_media_size = Combo_get_name(media_size_combo,
+                                                   num_media_sizes,
+						   media_sizes);
       const stp_papersize_t pap = stp_get_papersize_by_name(new_media_size);
       if (pap)
 	{
@@ -1683,7 +1735,7 @@ static void
 gimp_media_type_callback (GtkWidget *widget,
 			  gpointer   data)
 {
-  const gchar *new_media_type = Combo_get_text (media_type_combo);
+  const gchar *new_media_type = Combo_get_name (media_type_combo, num_media_types, media_types);
   reset_preview();
   stp_set_media_type(*pv, new_media_type);
   gimp_preview_update ();
@@ -1696,7 +1748,7 @@ static void
 gimp_media_source_callback (GtkWidget *widget,
 			    gpointer   data)
 {
-  const gchar *new_media_source = Combo_get_text (media_source_combo);
+  const gchar *new_media_source = Combo_get_name (media_source_combo, num_media_sources, media_sources);
   reset_preview();
   stp_set_media_source(*pv, new_media_source);
   gimp_preview_update ();
@@ -1709,7 +1761,7 @@ static void
 gimp_ink_type_callback (GtkWidget *widget,
 			gpointer   data)
 {
-  const gchar *new_ink_type = Combo_get_text (ink_type_combo);
+  const gchar *new_ink_type = Combo_get_name (ink_type_combo, num_ink_types, ink_types);
   reset_preview();
   stp_set_ink_type(*pv, new_ink_type);
   gimp_preview_update ();
@@ -1722,7 +1774,7 @@ static void
 gimp_resolution_callback (GtkWidget *widget,
 			  gpointer   data)
 {
-  const gchar *new_resolution = Combo_get_text (resolution_combo);
+  const gchar *new_resolution = Combo_get_name (resolution_combo, num_resolutions, resolutions);
   reset_preview();
   stp_set_resolution(*pv, new_resolution);
   gimp_preview_update ();

@@ -606,17 +606,17 @@ static const double media_parameters[][3] =
 static int
 lexmark_media_type(const char *name, const lexmark_cap_t * caps)
 {
-  if (!strcmp(name,_("Plain Paper")))           return  1;
-  if (!strcmp(name,_("Transparencies")))        return  2;
-  if (!strcmp(name,_("Back Print Film")))       return  3;
-  if (!strcmp(name,_("Fabric Sheets")))         return  4;
-  if (!strcmp(name,_("Envelope")))              return  5;
-  if (!strcmp(name,_("High Resolution Paper"))) return  6;
-  if (!strcmp(name,_("T-Shirt Transfers")))     return  7;
-  if (!strcmp(name,_("High Gloss Film")))       return  8;
-  if (!strcmp(name,_("Glossy Photo Paper")))    return  9;
-  if (!strcmp(name,_("Glossy Photo Cards")))    return 10;
-  if (!strcmp(name,_("Photo Paper Pro")))       return 11;
+  if (!strcmp(name,"Plain"))           return  1;
+  if (!strcmp(name,"Transparency"))        return  2;
+  if (!strcmp(name,"BackPrint"))       return  3;
+  if (!strcmp(name,"Fabric"))         return  4;
+  if (!strcmp(name,"Envelope"))              return  5;
+  if (!strcmp(name,"Coated")) return  6;
+  if (!strcmp(name,"TShirt"))     return  7;
+  if (!strcmp(name,"GlossyFilm"))       return  8;
+  if (!strcmp(name,"GlossyPaper"))    return  9;
+  if (!strcmp(name,"GlossyCard"))    return 10;
+  if (!strcmp(name,"GlossyPro"))       return 11;
 
 #ifdef DEBUG
   stp_erprintf("lexmark: Unknown media type '%s' - reverting to plain\n",name);
@@ -627,9 +627,9 @@ lexmark_media_type(const char *name, const lexmark_cap_t * caps)
 static int
 lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 {
-  if (!strcmp(name,_("Auto Sheet Feeder")))    return 4;
-  if (!strcmp(name,_("Manual with Pause")))    return 0;
-  if (!strcmp(name,_("Manual without Pause"))) return 1;
+  if (!strcmp(name,"Auto"))    return 4;
+  if (!strcmp(name,"Manual"))    return 0;
+  if (!strcmp(name,"ManualNP")) return 1;
 
 #ifdef DEBUG
   stp_erprintf("lexmark: Unknown source type '%s' - reverting to auto\n",name);
@@ -640,14 +640,12 @@ lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 static int
 lexmark_printhead_type(const char *name, const lexmark_cap_t * caps)
 {
-
-
-  if (!strcmp(name,_("Black")))       return 0;
-  if (!strcmp(name,_("Color")))       return 1;
-  if (!strcmp(name,_("Black/Color"))) return 2;
-  if (!strcmp(name,_("Photo/Color"))) return 3;
-  if (!strcmp(name,_("Photo")))       return 4;
-  if (!strcmp(name,_("Check/Clean nozzles")))       return 5;
+  if (!strcmp(name,"Gray"))       return 0;
+  if (!strcmp(name,"RGB"))       return 1;
+  if (!strcmp(name,"CMYK")) return 2;
+  if (!strcmp(name,"PhotoCMY")) return 3;
+  if (!strcmp(name,"PhotoCMYK"))       return 4;
+  if (!strcmp(name,"Clean"))       return 5;
 
 
 #ifdef DEBUG
@@ -708,16 +706,16 @@ lexmark_size_type(const stp_vars_t v, const lexmark_cap_t * caps)
     {
       const char *name = stp_papersize_get_name(pp);
       /* built ins: */
-      if (!strcmp(name,_("A5")))          return 0x01;
-      if (!strcmp(name,_("A4")))          return 0x03;
-      if (!strcmp(name,_("B5")))          return 0x08;
-      if (!strcmp(name,_("Letter")))      return 0x0d;
-      if (!strcmp(name,_("Legal")))       return 0x0f;
-      if (!strcmp(name,_("Envelope 10"))) return 0x16;
-      if (!strcmp(name,_("Envelope DL"))) return 0x17;
-      if (!strcmp(name,_("Letter+")))     return 0x2a;
-      if (!strcmp(name,_("A4+")))         return 0x2b;
-      if (!strcmp(name,_("Lexmark 4x2"))) return 0x2d;
+      if (!strcmp(name,"A5"))		return 0x01;
+      if (!strcmp(name,"A4"))		return 0x03;
+      if (!strcmp(name,"B5"))		return 0x08;
+      if (!strcmp(name,"Letter"))	return 0x0d;
+      if (!strcmp(name,"Legal"))	return 0x0f;
+      if (!strcmp(name,"COM10"))	return 0x16;
+      if (!strcmp(name,"DL"))		return 0x17;
+      if (!strcmp(name,"LetterExtra"))	return 0x2a;
+      if (!strcmp(name,"A4Extra"))	return 0x2b;
+      if (!strcmp(name,"w288h144"))	return 0x2d;
       /* custom */
 
 #ifdef DEBUG
@@ -764,6 +762,7 @@ c_strdup(const char *s)
 
 typedef struct {
   const char *name;
+  const char *text;
   int hres;
   int vres;
   int softweave;
@@ -777,21 +776,21 @@ typedef struct {
 static const lexmark_res_t lexmark_reslist[LEXM_RES_COUNT] =
 {
   /*     name                                  hres vres softw v_pass overs unidir resid     */
-  { N_ ("300 DPI x 600 DPI"),	       	       300,  600,  0,    1,    1,    0,    DPI300 },
-  { N_ ("600 DPI"),		      	       600,  600,  0,    1,    1,    0,    DPI600 },
-  { N_ ("600 DPI high quality"),	       600,  600,  1,    4,    1,    0,    DPI600 },
-  { N_ ("600 DPI Unidirectional"),	       600,  600,  0,    1,    1,    1,    DPI600 },
-  { N_ ("1200 DPI"),		      	      1200, 1200,  1,    1,    1,    0,    DPI1200},
-  { N_ ("1200 DPI high quality"),             1200, 1200,  1,    1,    1,    0,    DPI300 },
-  { N_ ("1200 DPI highest quality"),          1200, 1200,  1,    1,    1,    0,    DPI600 },
-  { N_ ("1200 DPI  Unidirectional"),          1200, 1200,  0,    1,    1,    1,    DPI1200},
-  { N_ ("2400 DPI x 1200 DPI"),	      	      2400, 1200,  1,    1,    1,    0,    DPI1200},
-  { N_ ("2400 DPI x 1200 DPI high quality"),  2400, 1200,  1,    1,    1,    0,    DPI600 },
-  { N_ ("2400 DPI x 1200 DPI highest quality"),2400, 1200,  1,    1,    1,    0,    DPI300},
+  { "300x600dpi",	N_ ("300 DPI x 600 DPI"),	       	       300,  600,  0,    1,    1,    0,    DPI300 },
+  { "600dpi",		N_ ("600 DPI"),		      	       600,  600,  0,    1,    1,    0,    DPI600 },
+  { "600hq",		N_ ("600 DPI high quality"),	       600,  600,  1,    4,    1,    0,    DPI600 },
+  { "600uni",		N_ ("600 DPI Unidirectional"),	       600,  600,  0,    1,    1,    1,    DPI600 },
+  { "1200dpi",		N_ ("1200 DPI"),		      	      1200, 1200,  1,    1,    1,    0,    DPI1200},
+  { "1200hq",		N_ ("1200 DPI high quality"),             1200, 1200,  1,    1,    1,    0,    DPI300 },
+  { "1200hq2",		N_ ("1200 DPI highest quality"),          1200, 1200,  1,    1,    1,    0,    DPI600 },
+  { "1200uni",		N_ ("1200 DPI  Unidirectional"),          1200, 1200,  0,    1,    1,    1,    DPI1200},
+  { "2400x1200dpi",	N_ ("2400 DPI x 1200 DPI"),	      	      2400, 1200,  1,    1,    1,    0,    DPI1200},
+  { "2400x1200hq",	N_ ("2400 DPI x 1200 DPI high quality"),  2400, 1200,  1,    1,    1,    0,    DPI600 },
+  { "2400x1200hq2",	N_ ("2400 DPI x 1200 DPI highest quality"),2400, 1200,  1,    1,    1,    0,    DPI300},
 #ifdef DEBUG
-  { N_ ("test print"),                        1200, 1200,  1,    1,    1,    0,    DPItest},
+  { "testprint",	N_ ("test print"),                        1200, 1200,  1,    1,    1,    0,    DPItest},
 #endif
-  { "", 0, 0, 0, 0, 0, -1 }
+  { "",			"", 0, 0, 0, 0, 0, -1 }
 };
 
 
@@ -806,7 +805,7 @@ static const lexmark_res_t
     {
       if (res->vres <= caps->max_ydpi != -1 &&
 	  res->hres <= caps->max_xdpi != -1 &&
-	  !strcmp(resolution, _(res->name)))
+	  !strcmp(resolution, res->name))
 	{
 	  return res;
 	}
@@ -843,40 +842,41 @@ lexmark_describe_resolution(const stp_printer_t printer,
 }
 
 
+static stp_param_t media_types[] =
+{
+  { "Plain",		N_("Plain Paper") },
+  { "Transparency",	N_("Transparencies") },
+  { "BackPrint",	N_("Back Print Film") },
+  { "Fabric",		N_("Fabric Sheets") },
+  { "Envelope",		N_("Envelope") },
+  { "Coated",		N_("High Resolution Paper") },
+  { "TShirt",		N_("T-Shirt Transfers") },
+  { "GlossyFilm",	N_("High Gloss Film") },
+  { "GlossyPaper",	N_("Glossy Photo Paper") },
+  { "GlossyCard",	N_("Glossy Photo Cards") },
+  { "GlossyPro",	N_("Photo Paper Pro") }
+};
+static stp_param_t media_sources[] =
+{
+  { "Auto",		N_("Auto Sheet Feeder") },
+  { "Manual",		N_("Manual with Pause") },
+  { "ManualNP",		N_("Manual without Pause") }
+};
+
+
 /*
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */
 
-static char **				/* O - Parameter values */
+static stp_param_t *				/* O - Parameter values */
 lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 		   const char *ppd_file,	/* I - PPD file (not used) */
 		   const char *name,		/* I - Name of parameter */
 		   int  *count)		/* O - Number of values */
 {
   int		i;
-  const char **p= 0;
-  char **valptrs= 0;
-
-  static const char   *media_types[] =
-  {
-    (N_ ("Plain Paper")),
-    (N_ ("Transparencies")),
-    (N_ ("Back Print Film")),
-    (N_ ("Fabric Sheets")),
-    (N_ ("Envelope")),
-    (N_ ("High Resolution Paper")),
-    (N_ ("T-Shirt Transfers")),
-    (N_ ("High Gloss Film")),
-    (N_ ("Glossy Photo Paper")),
-    (N_ ("Glossy Photo Cards")),
-    (N_ ("Photo Paper Pro"))
-  };
-  static const char   *media_sources[] =
-  {
-    (N_ ("Auto Sheet Feeder")),
-    (N_ ("Manual with Pause")),
-    (N_ ("Manual without Pause")),
-  };
+  stp_param_t	*p= 0;
+  stp_param_t	*valptrs= 0;
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
@@ -888,11 +888,126 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   if (name == NULL)
     return (NULL);
 
-  if (strcmp(name, "PageSize") == 0) {
+  if (strcmp(name, "PageSize") == 0)
+  {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = stp_malloc(sizeof(char *) * papersizes);
+    valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
     *count = 0;
+
+    width_limit  = caps->max_width;
+    height_limit = caps->max_length;
+
+    for (i = 0; i < papersizes; i++) {
+      const stp_papersize_t pt = stp_get_papersize_by_index(i);
+      if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	  stp_papersize_get_width(pt) <= width_limit &&
+	  stp_papersize_get_height(pt) <= height_limit)
+	{
+	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
+	  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
+	  (*count)++;
+	}
+    }
+    return (valptrs);
+  }
+  else if (strcmp(name, "Resolution") == 0)
+  {
+    unsigned int supported_resolutions = caps->supp_res;
+    int c= 0;
+    const lexmark_res_t *res;
+    valptrs = stp_malloc(sizeof(stp_param_t) * LEXM_RES_COUNT);
+
+    res = &(lexmark_reslist[0]);
+    /* check for allowed resolutions */
+    while (res->hres)
+    {
+      if ((supported_resolutions & 1) == 1)
+      {
+	valptrs[c].name   = c_strdup(res->name);
+	valptrs[c++].text = c_strdup(_(res->text));
+      }
+      res++;
+      supported_resolutions = supported_resolutions >> 1;
+    }
+    *count= c;
+    return (valptrs);
+  }
+  else if (strcmp(name, "InkType") == 0)
+  {
+    int c= 0;
+    valptrs = stp_malloc(sizeof(stp_param_t) * 5);
+    if ((caps->inks & LEXMARK_INK_K))
+    {
+      valptrs[c].name   = c_strdup("Gray");
+      valptrs[c++].text = c_strdup(_("Black"));
+    }
+    if ((caps->inks & LEXMARK_INK_CMY))
+    {
+      valptrs[c].name   = c_strdup("RGB");
+      valptrs[c++].text = c_strdup(_("Color"));
+    }
+    if ((caps->inks & LEXMARK_INK_CMYK))
+    {
+      valptrs[c].name   = c_strdup("CMYK");
+      valptrs[c++].text = c_strdup(_("Black/Color"));
+    }
+    if ((caps->inks & LEXMARK_INK_CcMmYK))
+    {
+      valptrs[c].name   = c_strdup("PhotoCMYK");
+      valptrs[c++].text = c_strdup(_("Photo/Color/Black"));
+    }
+    if ((caps->inks & LEXMARK_INK_CcMmYy))
+    {
+      valptrs[c].name   = c_strdup("PhotoCMY");
+      valptrs[c++].text = c_strdup(_("Photo/Color"));
+    }
+
+    valptrs[c].name   = c_strdup("Clean");
+    valptrs[c++].text = c_strdup(_("Check/Clean Nozzles"));
+    *count = c;
+    return (valptrs);
+  }
+  else if (strcmp(name, "MediaType") == 0)
+  {
+    *count = 11;
+    p = media_types;
+  }
+  else if (strcmp(name, "InputSlot") == 0)
+  {
+    *count = 3;
+    p = media_sources;
+  }
+  else
+    return (NULL);
+
+  valptrs = stp_malloc(*count * sizeof(stp_param_t));
+  for (i = 0; i < *count; i ++)
+  {
+    /* translate media_types and media_sources */
+    valptrs[i].name = c_strdup(p[i].name);
+    valptrs[i].text = c_strdup(_(p[i].text));
+  }
+
+  return (valptrs);
+}
+
+static const char *
+lexmark_default_parameters(const stp_printer_t printer,
+			   const char *ppd_file,
+			   const char *name)
+{
+  int		i;
+
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+
+  if (name == NULL)
+    return (NULL);
+
+  if (strcmp(name, "PageSize") == 0)
+  {
+    int height_limit, width_limit;
+    int papersizes = stp_known_papersizes();
 
     width_limit = caps->max_width;
     height_limit = caps->max_length;
@@ -904,163 +1019,49 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 	    stp_papersize_get_width(pt) <= width_limit &&
 	    stp_papersize_get_height(pt) <= height_limit)
 	  {
-	    valptrs[*count] = stp_malloc(strlen(stp_papersize_get_name(pt)) +1);
-	    strcpy(valptrs[*count], stp_papersize_get_name(pt));
-	    (*count)++;
+	    return (stp_papersize_get_name(pt));
 	  }
       }
-    return (valptrs);
+    return NULL;
   }
   else if (strcmp(name, "Resolution") == 0)
-    {
-      unsigned int supported_resolutions = caps->supp_res;
-      int c= 0;
-      const lexmark_res_t *res;
-      valptrs = stp_malloc(sizeof(char *) * LEXM_RES_COUNT);
+  {
+    unsigned int supported_resolutions = caps->supp_res;
+    const lexmark_res_t *res;
 
-      res = &(lexmark_reslist[0]);
-      /* check for allowed resolutions */
-      while (res->hres)
-	{
-	  if ((supported_resolutions & 1) == 1) {
-	    valptrs[c++]= c_strdup(_(res->name));
+    res = &(lexmark_reslist[0]);
+    /* check for allowed resolutions */
+    while (res->hres)
+      {
+	if ((supported_resolutions & 1) == 1)
+	  {
+	    return (res->name);
 	  }
-	  res++;
-	  supported_resolutions = supported_resolutions >> 1;
-	}
-      *count= c;
-      return (valptrs);
-    }
+      }
+    return NULL;
+  }
   else if (strcmp(name, "InkType") == 0)
-    {
-      int c= 0;
-      valptrs = stp_malloc(sizeof(char *) * 5);
-      if ((caps->inks & LEXMARK_INK_K))
-	valptrs[c++]= c_strdup(_("Black"));
-      if ((caps->inks & LEXMARK_INK_CMY))
-	valptrs[c++]= c_strdup(_("Color"));
-      if ((caps->inks & LEXMARK_INK_CMYK))
-	valptrs[c++]= c_strdup(_("Black/Color"));
-      if ((caps->inks & LEXMARK_INK_CcMmYK))
-	valptrs[c++]= c_strdup(_("Photo/Color"));
-      if ((caps->inks & LEXMARK_INK_CcMmYy))
-	valptrs[c++]= c_strdup(_("Photo/Color"));
-      valptrs[c++]= c_strdup(_("Check/Clean nozzles"));
-      *count = c;
-      return (valptrs);
-    }
-  else if (strcmp(name, "MediaType") == 0)
-    {
-      *count = 11;
-      p = media_types;
-    }
-  else if (strcmp(name, "InputSlot") == 0)
-    {
-      *count = 3;
-      p = media_sources;
-    }
-  else
-    return (NULL);
-
-  valptrs = stp_malloc(*count * sizeof(char *));
-  for (i = 0; i < *count; i ++)
-    /* translate media_types and media_sources */
-    valptrs[i] = c_strdup(_(p[i]));
-
-  return ((char **) valptrs);
-}
-
-static const char *
-lexmark_default_parameters(const stp_printer_t printer,
-			   const char *ppd_file,
-			   const char *name)
-{
-  int		i;
-
-  static const char   *media_types[] =
   {
-    (N_ ("Plain Paper")),
-    (N_ ("Transparencies")),
-    (N_ ("Back Print Film")),
-    (N_ ("Fabric Sheets")),
-    (N_ ("Envelope")),
-    (N_ ("High Resolution Paper")),
-    (N_ ("T-Shirt Transfers")),
-    (N_ ("High Gloss Film")),
-    (N_ ("Glossy Photo Paper")),
-    (N_ ("Glossy Photo Cards")),
-    (N_ ("Photo Paper Pro"))
-  };
-  static const char   *media_sources[] =
-  {
-    (N_ ("Auto Sheet Feeder")),
-    (N_ ("Manual with Pause")),
-    (N_ ("Manual without Pause")),
-  };
-
-  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
-
-  if (name == NULL)
-    return (NULL);
-
-  if (strcmp(name, "PageSize") == 0)
-    {
-      int height_limit, width_limit;
-      int papersizes = stp_known_papersizes();
-
-      width_limit = caps->max_width;
-      height_limit = caps->max_length;
-
-      for (i = 0; i < papersizes; i++)
-	{
-	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
-	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      stp_papersize_get_width(pt) <= width_limit &&
-	      stp_papersize_get_height(pt) <= height_limit)
-	    {
-	      return _(stp_papersize_get_name(pt));
-	    }
-	}
-      return NULL;
-    }
-  else if (strcmp(name, "Resolution") == 0)
-    {
-      unsigned int supported_resolutions = caps->supp_res;
-      const lexmark_res_t *res;
-
-      res = &(lexmark_reslist[0]);
-      /* check for allowed resolutions */
-      while (res->hres)
-	{
-	  if ((supported_resolutions & 1) == 1)
-	    {
-	      return (_(res->name));
-	    }
-	}
-      return NULL;
-    }
-  else if (strcmp(name, "InkType") == 0)
-    {
-      if ((caps->inks & LEXMARK_INK_K))
-	return (_("Black"));
-      if ((caps->inks & LEXMARK_INK_CMY))
-	return (_("Color"));
-      if ((caps->inks & LEXMARK_INK_CMYK))
-	return (_("Black/Color"));
-      if ((caps->inks & LEXMARK_INK_CcMmYK))
-	return (_("Photo/Color"));
-      if ((caps->inks & LEXMARK_INK_CcMmYy))
-	return (_("Photo/Color"));
-      return NULL;
-    }
+    if ((caps->inks & LEXMARK_INK_K))
+      return ("Gray");
+    if ((caps->inks & LEXMARK_INK_CMY))
+      return ("RGB");
+    if ((caps->inks & LEXMARK_INK_CMYK))
+      return ("CMYK");
+    if ((caps->inks & LEXMARK_INK_CcMmYK))
+      return ("PhotoCMYK");
+    if ((caps->inks & LEXMARK_INK_CcMmYy))
+      return ("PhotoCMY");
+    return NULL;
+  }
   else if (strcmp(name, "MediaType") == 0)
-    {
-      return _(media_types[0]);
-    }
+  {
+    return (media_types[0].name);
+  }
   else if (strcmp(name, "InputSlot") == 0)
-    {
-      return _(media_sources[0]);
-    }
+  {
+    return (media_sources[0].name);
+  }
   else
     return (NULL);
 }

@@ -52,8 +52,9 @@ static void	pcl_mode2(const stp_vars_t, unsigned char *, int, int);
 
 typedef struct
 {
-  const char  *pcl_name;
-  int   pcl_code;
+  const char	*pcl_name;
+  const char	*pcl_text;
+  int		pcl_code;
 } pcl_t;
 
 /*
@@ -102,33 +103,34 @@ typedef struct
 
 static const pcl_t pcl_media_sizes[] =
 {
-    {N_ ("Executive"), PCL_PAPERSIZE_EXECUTIVE},		/* US Exec (7.25 x 10.5 in) */
-    {N_ ("Letter"), PCL_PAPERSIZE_LETTER},			/* US Letter (8.5 x 11 in) */
-    {N_ ("Legal"), PCL_PAPERSIZE_LEGAL},			/* US Legal (8.5 x 14 in) */
-    {N_ ("Tabloid"), PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
-    {N_ ("Manual"), PCL_PAPERSIZE_STATEMENT},			/* US Manual/Statement (5.5 x 8.5 in) */
-    {N_ ("13x19"), PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
-    {N_ ("A5"), PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
-    {N_ ("A4"), PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
-    {N_ ("A3"), PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
-    {N_ ("B5 JIS"), PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
-    {N_ ("B4 JIS"), PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
-    {N_ ("Hagaki Card"), PCL_PAPERSIZE_HAGAKI_CARD},		/* Japanese Hagaki Card (100 x 148 mm) */
-    {N_ ("Oufuku Card"), PCL_PAPERSIZE_OUFUKU_CARD},		/* Japanese Oufuku Card (148 x 200 mm) */
-    {N_ ("A6"), PCL_PAPERSIZE_A6_CARD},				/* ISO/JIS A6 card */
-    {N_ ("4x6"), PCL_PAPERSIZE_4x6},				/* US Index card (4 x 6 in) */
-    {N_ ("5x8"), PCL_PAPERSIZE_5x8},				/* US Index card (5 x 8 in) */
-    {N_ ("3x5"), PCL_PAPERSIZE_3x5},				/* US Index card (3 x 5 in) */
-    {N_ ("Monarch"), PCL_PAPERSIZE_MONARCH_ENV},		/* Monarch Envelope (3 7/8 x 7 1/2 in) */
-    {N_ ("Commercial 10"), PCL_PAPERSIZE_COMMERCIAL10_ENV},	/* US Commercial 10 Envelope (4.125 x 9.5 in) Portrait */
-    {N_ ("DL"), PCL_PAPERSIZE_DL_ENV},				/* DL envelope (110 x 220 mm) Portrait */
-    {N_ ("C5"), PCL_PAPERSIZE_C5_ENV},				/* C5 envelope (162 x 229 mm) */
-    {N_ ("C6"), PCL_PAPERSIZE_C6_ENV},				/* C6 envelope (114 x 162 mm) */
-    {N_ ("A2 Invitation"), PCL_PAPERSIZE_INVITATION_ENV},	/* US A2 Invitation envelope (4 3/8 x 5 3/4 in) */
-    {N_ ("Long 3"), PCL_PAPERSIZE_JAPANESE_3_ENV},		/* Japanese Long Envelope #3 (120 x 235 mm) */
-    {N_ ("Long 4"), PCL_PAPERSIZE_JAPANESE_4_ENV},		/* Japanese Long Envelope #4 (90 x 205 mm) */
-    {N_ ("Kaku"), PCL_PAPERSIZE_KAKU_ENV},			/* Japanese Kaku Envelope (240 x 332.1 mm) */
-    {N_ ("HP Greeting Card"), PCL_PAPERSIZE_HP_CARD}, 	/* Hp greeting card (size?? */
+    { "Executive", N_ ("Executive"), PCL_PAPERSIZE_EXECUTIVE},		/* US Exec (7.25 x 10.5 in) */
+    { "Letter", N_ ("Letter"), PCL_PAPERSIZE_LETTER},			/* US Letter (8.5 x 11 in) */
+    { "Legal", N_ ("Legal"), PCL_PAPERSIZE_LEGAL},			/* US Legal (8.5 x 14 in) */
+    { "Tabloid", N_ ("Tabloid"), PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
+    { "Statement", N_ ("Manual"), PCL_PAPERSIZE_STATEMENT},			/* US Manual/Statement (5.5 x 8.5 in) */
+    { "SuperB", N_ ("13x19"), PCL_PAPERSIZE_SUPER_B},			/* US 13x19/Super B (13 x 19 in) */
+    { "A5", N_ ("A5"), PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
+    { "A4", N_ ("A4"), PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
+    { "A3", N_ ("A3"), PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
+    { "B5", N_ ("B5 JIS"), PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
+    { "B4", N_ ("B4 JIS"), PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
+    { "w283h420", N_ ("Hagaki Card"), PCL_PAPERSIZE_HAGAKI_CARD},		/* Japanese Hagaki Card (100 x 148 mm) */
+    { "w420h567", N_ ("Oufuku Card"), PCL_PAPERSIZE_OUFUKU_CARD},		/* Japanese Oufuku Card (148 x 200 mm) */
+    { "A6", N_ ("A6"), PCL_PAPERSIZE_A6_CARD},				/* ISO/JIS A6 card */
+    { "w288h432", N_ ("4x6"), PCL_PAPERSIZE_4x6},				/* US Index card (4 x 6 in) */
+    { "w360h576", N_ ("5x8"), PCL_PAPERSIZE_5x8},				/* US Index card (5 x 8 in) */
+    { "w216h360", N_ ("3x5"), PCL_PAPERSIZE_3x5},				/* US Index card (3 x 5 in) */
+    { "Monarch", N_ ("Monarch"), PCL_PAPERSIZE_MONARCH_ENV},		/* Monarch Envelope (3 7/8 x 7 1/2 in) */
+    { "COM10", N_ ("Commercial 10"), PCL_PAPERSIZE_COMMERCIAL10_ENV},	/* US Commercial 10 Envelope (4.125 x 9.5 in) Portrait */
+    { "DL", N_ ("DL"), PCL_PAPERSIZE_DL_ENV},				/* DL envelope (110 x 220 mm) Portrait */
+    { "C5", N_ ("C5"), PCL_PAPERSIZE_C5_ENV},				/* C5 envelope (162 x 229 mm) */
+    { "C6", N_ ("C6"), PCL_PAPERSIZE_C6_ENV},				/* C6 envelope (114 x 162 mm) */
+    { "ENVA2", N_ ("A2 Invitation"), PCL_PAPERSIZE_INVITATION_ENV},	/* US A2 Invitation envelope (4 3/8 x 5 3/4 in) */
+    { "w340h666", N_ ("Long 3"), PCL_PAPERSIZE_JAPANESE_3_ENV},		/* Japanese Long Envelope #3 (120 x 235 mm) */
+    { "w255h581", N_ ("Long 4"), PCL_PAPERSIZE_JAPANESE_4_ENV},		/* Japanese Long Envelope #4 (90 x 205 mm) */
+    { "w680h941", N_ ("Kaku"), PCL_PAPERSIZE_KAKU_ENV},			/* Japanese Kaku Envelope (240 x 332.1 mm) */
+/**** MRS: this size not supported by print-util funcs! ****/
+    { "w612h792", N_ ("HP Greeting Card"), PCL_PAPERSIZE_HP_CARD}, 	/* Hp greeting card (size?? */
 };
 #define NUM_PRINTER_PAPER_SIZES	(sizeof(pcl_media_sizes) / sizeof(pcl_t))
 
@@ -146,13 +148,13 @@ static const pcl_t pcl_media_sizes[] =
 
 static const pcl_t pcl_media_types[] =
 {
-    {N_ ("Plain"), PCL_PAPERTYPE_PLAIN},
-    {N_ ("Bond"), PCL_PAPERTYPE_BOND},
-    {N_ ("Premium"), PCL_PAPERTYPE_PREMIUM},
-    {N_ ("Glossy/Photo"), PCL_PAPERTYPE_GLOSSY},
-    {N_ ("Transparency"), PCL_PAPERTYPE_TRANS},
-    {N_ ("Quick-dry Photo"), PCL_PAPERTYPE_QPHOTO},
-    {N_ ("Quick-dry Transparency"), PCL_PAPERTYPE_QTRANS},
+    { "Plain", N_ ("Plain"), PCL_PAPERTYPE_PLAIN},
+    { "Bond", N_ ("Bond"), PCL_PAPERTYPE_BOND},
+    { "Premium", N_ ("Premium"), PCL_PAPERTYPE_PREMIUM},
+    { "Glossy", N_ ("Glossy/Photo"), PCL_PAPERTYPE_GLOSSY},
+    { "Transparency", N_ ("Transparency"), PCL_PAPERTYPE_TRANS},
+    { "GlossyQD", N_ ("Quick-dry Photo"), PCL_PAPERTYPE_QPHOTO},
+    { "TransparencyQD", N_ ("Quick-dry Transparency"), PCL_PAPERTYPE_QTRANS},
 };
 #define NUM_PRINTER_PAPER_TYPES	(sizeof(pcl_media_types) / sizeof(pcl_t))
 
@@ -191,19 +193,19 @@ static const pcl_t pcl_media_types[] =
 
 static const pcl_t pcl_media_sources[] =
 {
-    {N_ ("Standard"), PCL_PAPERSOURCE_STANDARD},
-    {N_ ("Manual"), PCL_PAPERSOURCE_MANUAL},
+    { "Standard", N_ ("Standard"), PCL_PAPERSOURCE_STANDARD},
+    { "Manual", N_ ("Manual"), PCL_PAPERSOURCE_MANUAL},
 /*  {"Envelope", PCL_PAPERSOURCE_ENVELOPE}, */
-    {N_ ("Tray 1"), PCL_PAPERSOURCE_LJ_TRAY1},
-    {N_ ("Tray 2"), PCL_PAPERSOURCE_LJ_TRAY2},
-    {N_ ("Tray 3"), PCL_PAPERSOURCE_LJ_TRAY3},
-    {N_ ("Tray 4"), PCL_PAPERSOURCE_LJ_TRAY4},
-    {N_ ("Portable Sheet Feeder"), PCL_PAPERSOURCE_340_PCSF},
-    {N_ ("Desktop Sheet Feeder"), PCL_PAPERSOURCE_340_DCSF},
-    {N_ ("Tray"), PCL_PAPERSOURCE_DJ_TRAY},
-    {N_ ("Tray 2"), PCL_PAPERSOURCE_DJ_TRAY2},
-    {N_ ("Optional Source"), PCL_PAPERSOURCE_DJ_OPTIONAL},
-    {N_ ("Autoselect"), PCL_PAPERSOURCE_DJ_AUTO},
+    { "MultiPurpose", N_ ("Tray 1"), PCL_PAPERSOURCE_LJ_TRAY1},
+    { "Upper", N_ ("Tray 2"), PCL_PAPERSOURCE_LJ_TRAY2},
+    { "Lower", N_ ("Tray 3"), PCL_PAPERSOURCE_LJ_TRAY3},
+    { "LargeCapacity", N_ ("Tray 4"), PCL_PAPERSOURCE_LJ_TRAY4},
+    { "Portable", N_ ("Portable Sheet Feeder"), PCL_PAPERSOURCE_340_PCSF},
+    { "Desktop", N_ ("Desktop Sheet Feeder"), PCL_PAPERSOURCE_340_DCSF},
+    { "Tray", N_ ("Tray"), PCL_PAPERSOURCE_DJ_TRAY},
+    { "Tray2", N_ ("Tray 2"), PCL_PAPERSOURCE_DJ_TRAY2},
+    { "Optional", N_ ("Optional Source"), PCL_PAPERSOURCE_DJ_OPTIONAL},
+    { "Auto", N_ ("Autoselect"), PCL_PAPERSOURCE_DJ_AUTO},
 };
 #define NUM_PRINTER_PAPER_SOURCES	(sizeof(pcl_media_sources) / sizeof(pcl_t))
 
@@ -217,13 +219,13 @@ static const pcl_t pcl_media_sources[] =
 
 static const pcl_t pcl_resolutions[] =
 {
-    {N_ ("150x150 DPI"), PCL_RES_150_150},
-    {N_ ("300x300 DPI"), PCL_RES_300_300},
-    {N_ ("600x300 DPI"), PCL_RES_600_300},
-    {N_ ("600x600 DPI monochrome"), PCL_RES_600_600_MONO},
-    {N_ ("600x600 DPI"), PCL_RES_600_600},
-    {N_ ("1200x600 DPI"), PCL_RES_1200_600},
-    {N_ ("2400x600 DPI"), PCL_RES_2400_600},
+    { "150dpi", N_ ("150x150 DPI"), PCL_RES_150_150},
+    { "300dpi", N_ ("300x300 DPI"), PCL_RES_300_300},
+    { "600x300dpi", N_ ("600x300 DPI"), PCL_RES_600_300},
+    { "600mono", N_ ("600x600 DPI monochrome"), PCL_RES_600_600_MONO},
+    { "600dpi", N_ ("600x600 DPI"), PCL_RES_600_600},
+    { "1200x600dpi", N_ ("1200x600 DPI"), PCL_RES_1200_600},
+    { "2400x600dpi", N_ ("2400x600 DPI"), PCL_RES_2400_600},
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
@@ -234,7 +236,7 @@ pcl_describe_resolution(const stp_printer_t printer,
   int i;
   for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
-      if (!strcmp(resolution, _(pcl_resolutions[i].pcl_name)))
+      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
 	{
 	  sscanf(resolution, "%dx%d", x, y);
 	  return;
@@ -1383,7 +1385,7 @@ static int pcl_string_to_val(const char *string,		/* I: String */
   */
 
   for (i=0; i<num_options; i++) {
-    if (!strcmp(string, _(options[i].pcl_name))) {
+    if (!strcmp(string, options[i].pcl_name)) {
        code=options[i].pcl_code;
        break;
        }
@@ -1413,6 +1415,30 @@ static const char * pcl_val_to_string(int code,			/* I: Code */
   for (i=0; i<num_options; i++) {
     if (code == options[i].pcl_code) {
        string=options[i].pcl_name;
+       break;
+       }
+  }
+
+  stp_deprintf(STP_DBG_PCL, "Code: %d, String: %s\n", code, string);
+
+  return(string);
+}
+
+static const char * pcl_val_to_text(int code,			/* I: Code */
+                           const pcl_t *options,	/* I: Options */
+			   int num_options)		/* I: Num options */
+{
+
+  int i;
+  const char *string = NULL;
+
+ /*
+  * Look up the code in the table and convert to the string.
+  */
+
+  for (i=0; i<num_options; i++) {
+    if (code == options[i].pcl_code) {
+       string=options[i].pcl_text;
        break;
        }
   }
@@ -1500,11 +1526,19 @@ static int pcl_convert_media_size(const char *media_size,	/* I: Media size strin
     return(-1);				/* Not supported */
 }
 
+
+static stp_param_t ink_types[] =
+{
+  { "CMYK",	N_ ("Color + Black Cartridges") },
+  { "Photo",	N_ ("Color + Photo Cartridges") }
+};
+
+
 /*
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
-static char **				/* O - Parameter values */
+static stp_param_t *				/* O - Parameter values */
 pcl_parameters(const stp_printer_t printer,/* I - Printer model */
                const char *ppd_file,		/* I - PPD file (not used) */
                const char *name,		/* I - Name of parameter */
@@ -1512,14 +1546,8 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 {
   int		model = stp_printer_get_model(printer);
   int		i;
-  char		**valptrs;
+  stp_param_t	*valptrs;
   const pcl_cap_t *caps;
-
-  static const char *ink_types[] =
-  {
-    N_ ("Color + Black Cartridges"),
-    N_ ("Color + Photo Cartridges")
-  };
 
   if (count == NULL)
     return (NULL);
@@ -1549,7 +1577,7 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
       int use_custom = ((caps->stp_printer_type & PCL_PRINTER_CUSTOM_SIZE)
                          == PCL_PRINTER_CUSTOM_SIZE);
 #endif
-      valptrs = stp_malloc(sizeof(char *) * papersizes);
+      valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
       *count = 0;
       for (i = 0; i < papersizes; i++)
 	{
@@ -1562,8 +1590,8 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
 		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
 		 != -1))))
 	    {
-	      valptrs[*count] = stp_malloc(strlen(stp_papersize_get_name(pt)) +1);
-	      strcpy(valptrs[*count], stp_papersize_get_name(pt));
+	      valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
+	      valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
 	      (*count)++;
 	    }
 	}
@@ -1578,11 +1606,16 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
     }
     else
     {
-      valptrs = stp_malloc(sizeof(char *) * NUM_PRINTER_PAPER_TYPES);
+      valptrs = stp_malloc(sizeof(stp_param_t) * NUM_PRINTER_PAPER_TYPES);
       *count = 0;
-      for (i=0; (i < NUM_PRINTER_PAPER_TYPES) && (caps->paper_types[i] != -1); i++) {
-        valptrs[i] = c_strdup(pcl_val_to_string(caps->paper_types[i], pcl_media_types,
-                                        NUM_PRINTER_PAPER_TYPES));
+      for (i=0; (i < NUM_PRINTER_PAPER_TYPES) && (caps->paper_types[i] != -1); i++)
+      {
+        valptrs[i].name = c_strdup(pcl_val_to_string(caps->paper_types[i],
+	                                             pcl_media_types,
+                                                     NUM_PRINTER_PAPER_TYPES));
+        valptrs[i].text = c_strdup(pcl_val_to_text(caps->paper_types[i],
+	                                           pcl_media_types,
+                                                   NUM_PRINTER_PAPER_TYPES));
         (*count)++;
       }
       return(valptrs);
@@ -1597,11 +1630,16 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
     }
     else
     {
-      valptrs = stp_malloc(sizeof(char *) * NUM_PRINTER_PAPER_SOURCES);
+      valptrs = stp_malloc(sizeof(stp_param_t) * NUM_PRINTER_PAPER_SOURCES);
       *count = 0;
-      for (i=0; (i < NUM_PRINTER_PAPER_SOURCES) && (caps->paper_sources[i] != -1); i++) {
-        valptrs[i] = c_strdup(pcl_val_to_string(caps->paper_sources[i], pcl_media_sources,
-                                        NUM_PRINTER_PAPER_SOURCES));
+      for (i=0; (i < NUM_PRINTER_PAPER_SOURCES) && (caps->paper_sources[i] != -1); i++)
+      {
+        valptrs[i].name = c_strdup(pcl_val_to_string(caps->paper_sources[i],
+	                                             pcl_media_sources,
+                                                     NUM_PRINTER_PAPER_SOURCES));
+        valptrs[i].text = c_strdup(pcl_val_to_text(caps->paper_sources[i],
+	                                           pcl_media_sources,
+                                                   NUM_PRINTER_PAPER_SOURCES));
         (*count)++;
       }
       return(valptrs);
@@ -1610,13 +1648,15 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
   else if (strcmp(name, "Resolution") == 0)
   {
     *count = 0;
-    valptrs = stp_malloc(sizeof(char *) * NUM_RESOLUTIONS);
+    valptrs = stp_malloc(sizeof(stp_param_t) * NUM_RESOLUTIONS);
     for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
       {
-         valptrs[*count] = c_strdup(pcl_val_to_string(pcl_resolutions[i].pcl_code,
-					pcl_resolutions, NUM_RESOLUTIONS));
+         valptrs[*count].name = c_strdup(pcl_val_to_string(pcl_resolutions[i].pcl_code,
+					                   pcl_resolutions, NUM_RESOLUTIONS));
+         valptrs[*count].text = c_strdup(pcl_val_to_text(pcl_resolutions[i].pcl_code,
+					                 pcl_resolutions, NUM_RESOLUTIONS));
          (*count)++;
       }
     }
@@ -1626,9 +1666,11 @@ pcl_parameters(const stp_printer_t printer,/* I - Printer model */
   {
     if (caps->color_type & PCL_COLOR_CMYKcm)
     {
-      valptrs = stp_malloc(sizeof(char *) * 2);
-      valptrs[0] = c_strdup(ink_types[0]);
-      valptrs[1] = c_strdup(ink_types[1]);
+      valptrs = stp_malloc(sizeof(stp_param_t) * 2);
+      valptrs[0].name = c_strdup(ink_types[0].name);
+      valptrs[0].text = c_strdup(_(ink_types[0].text));
+      valptrs[1].name = c_strdup(ink_types[1].name);
+      valptrs[1].text = c_strdup(_(ink_types[1].text));
       *count = 2;
       return(valptrs);
     }
@@ -1647,12 +1689,6 @@ pcl_default_parameters(const stp_printer_t printer,
   int		model = stp_printer_get_model(printer);
   int		i;
   const pcl_cap_t *caps;
-
-  static const char *ink_types[] =
-  {
-    N_ ("Color + Black Cartridges"),
-    N_ ("Color + Photo Cartridges")
-  };
 
   if (name == NULL)
     return (NULL);
@@ -1688,7 +1724,7 @@ pcl_default_parameters(const stp_printer_t printer,
 		(pcl_convert_media_size(stp_papersize_get_name(pt), model)
 		 != -1))))
 	    {
-	      return _(stp_papersize_get_name(pt));
+	      return (stp_papersize_get_name(pt));
 	    }
 	}
       return NULL;
@@ -1701,7 +1737,7 @@ pcl_default_parameters(const stp_printer_t printer,
 	}
       else
 	{
-	  return _(pcl_val_to_string(caps->paper_types[0], pcl_media_types,
+	  return (pcl_val_to_string(caps->paper_types[0], pcl_media_types,
 				     NUM_PRINTER_PAPER_TYPES));
 	}
     }
@@ -1713,7 +1749,7 @@ pcl_default_parameters(const stp_printer_t printer,
 	}
       else
 	{
-	  return _(pcl_val_to_string(caps->paper_sources[0], pcl_media_sources,
+	  return (pcl_val_to_string(caps->paper_sources[0], pcl_media_sources,
 				     NUM_PRINTER_PAPER_SOURCES));
 	}
     }
@@ -1724,7 +1760,7 @@ pcl_default_parameters(const stp_printer_t printer,
 	  if ((caps->resolutions & pcl_resolutions[i].pcl_code) &&
 	      (pcl_resolutions[i].pcl_code >= PCL_RES_300_300))
 	    {
-	      return _(pcl_val_to_string(pcl_resolutions[i].pcl_code,
+	      return (pcl_val_to_string(pcl_resolutions[i].pcl_code,
 					 pcl_resolutions, NUM_RESOLUTIONS));
 	    }
 	}
@@ -1734,7 +1770,7 @@ pcl_default_parameters(const stp_printer_t printer,
 	{
 	  if ((caps->resolutions & pcl_resolutions[i].pcl_code))
 	    {
-	      return _(pcl_val_to_string(pcl_resolutions[i].pcl_code,
+	      return (pcl_val_to_string(pcl_resolutions[i].pcl_code,
 					 pcl_resolutions, NUM_RESOLUTIONS));
 	    }
 	}
@@ -1744,7 +1780,7 @@ pcl_default_parameters(const stp_printer_t printer,
     {
       if (caps->color_type & PCL_COLOR_CMYKcm)
 	{
-	  return _(ink_types[0]);
+	  return (ink_types[0].name);
 	}
       else
 	return(NULL);
@@ -1934,7 +1970,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   stp_deprintf(STP_DBG_PCL, "do_cret = %d\n", do_cret);
   stp_deprintf(STP_DBG_PCL, "do_cretb = %d\n", do_cretb);
 
-  do_6color = (strcmp(ink_type, _("Color + Photo Cartridges")) == 0);
+  do_6color = (strcmp(ink_type, "Photo") == 0);
   stp_deprintf(STP_DBG_PCL, "do_6color = %d\n", do_6color);
 
  /*

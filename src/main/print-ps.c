@@ -58,7 +58,7 @@ static char	*ppd_find(const char *, const char *, const char *, int *);
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-static char **					/* O - Parameter values */
+static stp_param_t *				/* O - Parameter values */
 ps_parameters(const stp_printer_t printer,	/* I - Printer model */
               const char *ppd_file,		/* I - PPD file (not used) */
               const char *name,		/* I - Name of parameter */
@@ -67,8 +67,10 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
   int		i;
   char		line[1024],
 		lname[255],
-		loption[255];
-  char		**valptrs;
+		loption[255],
+		*ltext;
+  stp_param_t	*valptrs;
+
 
   if (count == NULL)
     return (NULL);
@@ -96,16 +98,15 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  valptrs = stp_malloc(sizeof(char *) * papersizes);
+	  valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
 	  *count = 0;
 	  for (i = 0; i < papersizes; i++)
 	    {
 	      const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
 		{
-		  valptrs[*count] =
-		    stp_malloc(strlen(stp_papersize_get_name(pt)) +1 );
-		  strcpy(valptrs[*count], stp_papersize_get_name(pt));
+		  valptrs[*count].name = strdup(stp_papersize_get_name(pt));
+		  valptrs[*count].text = strdup(stp_papersize_get_text(pt));
 		  (*count)++;
 		}
 	    }
@@ -118,20 +119,25 @@ ps_parameters(const stp_printer_t printer,	/* I - Printer model */
   rewind(ps_ppd);
   *count = 0;
 
-  valptrs = stp_malloc(100 * sizeof(char *));
+  valptrs = stp_malloc(100 * sizeof(stp_param_t));
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
     if (line[0] != '*')
       continue;
 
-    if (sscanf(line, "*%s %[^/:]", lname, loption) != 2)
+    if (sscanf(line, "*%s %[^:]", lname, loption) != 2)
       continue;
 
     if (strcasecmp(lname, name) == 0)
     {
-      valptrs[(*count)] = stp_malloc(strlen(loption) + 1);
-      strcpy(valptrs[(*count)], loption);
+      if ((ltext = strchr(loption, '/')) != NULL)
+        *ltext++ = '\0';
+      else
+        ltext = loption;
+
+      valptrs[(*count)].name = strdup(loption);
+      valptrs[(*count)].text = strdup(ltext);
       (*count) ++;
     }
   }
@@ -153,15 +159,13 @@ ps_default_parameters(const stp_printer_t printer,
   int		i;
   char		line[1024],
 		lname[255],
-		loption[255];
+		loption[255],
+		defname[255];
 
   if (ppd_file == NULL || name == NULL)
     return (NULL);
 
-  if (strcmp(name, "Resolution") == 0)
-    {
-      return _("default");
-    }
+  sprintf(defname, "Default%s", name);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {
@@ -186,7 +190,7 @@ ps_default_parameters(const stp_printer_t printer,
 	      const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
 		{
-		  return _(stp_papersize_get_name(pt));
+		  return stp_papersize_get_name(pt);
 		}
 	    }
 	  return NULL;
@@ -202,14 +206,20 @@ ps_default_parameters(const stp_printer_t printer,
     if (line[0] != '*')
       continue;
 
-    if (sscanf(line, "*%s %[^/:]", lname, loption) != 2)
+    if (sscanf(line, "*%[^:]:%s", lname, loption) != 2)
       continue;
 
-    if (strcasecmp(lname, name) == 0)
+    if (strcasecmp(lname, defname) == 0)
     {
-      return _(loption);
+      return strdup(loption);
     }
   }
+
+  if (strcmp(name, "Resolution") == 0)
+    {
+      return "default";
+    }
+
   return NULL;
 }
 

@@ -103,13 +103,13 @@ extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable);
 extern int add_printer(const gp_plist_t *key, int add_only);
 extern void initialize_printer(gp_plist_t *printer);
 extern void gimp_update_adjusted_thumbnail (void);
-extern void gimp_plist_build_combo         (GtkWidget      *combo,
-					    gint            num_items,
-					    gchar         **items,
-					    const gchar          *cur_item,
-					    const gchar		*def_value,
-					    GtkSignalFunc   callback,
-					    gint           *callback_id);
+extern void gimp_plist_build_combo         (GtkWidget     *combo,
+					    gint          num_items,
+					    stp_param_t   *items,
+					    const gchar   *cur_item,
+					    const gchar	  *def_value,
+					    GtkSignalFunc callback,
+					    gint          *callback_id);
 
 extern void gimp_do_color_updates    (void);
 extern void gimp_redraw_color_swatch (void);

@@ -87,60 +87,22 @@
 #define DEFAULT_SIZE	"Letter"
 /*#define DEFAULT_SIZE	"A4"*/
 
-typedef struct
+typedef struct				/**** Media size values ****/
 {
-  const char	*name;			/* Name of size */
-  int		width,			/* Width in points */
-		height;			/* Height in points */
-} msize_t;
+  const char	*name,			/* Media size name */
+		*text;			/* Media size text */
+  int		width,			/* Media width */
+		height,			/* Media height */
+		left,			/* Media left margin */
+		right,			/* Media right margin */
+		bottom,			/* Media bottom margin */
+		top;			/* Media top margin */
+} paper_t;
 
-msize_t	sizes[] =
-	{
-	  { "A0",		2384, 3370 },
-	  { "A0.Transverse",	3370, 2384 },
-	  { "A1",		1684, 2384 },
-	  { "A1.Transverse",	2384, 1684 },
-	  { "A2",		1191, 1684 },
-	  { "A2.Transverse",	1684, 1191 },
-	  { "A3",		842,  1191 },
-	  { "A3.Transverse",	1191, 842 },
-	  { "A4",		595,  842 },
-	  { "A4.Transverse",	842,  595 },
-	  { "A5",		420,  595 },
-	  { "A5.Transverse",	595,  420 },
-	  { "A6",		297,  420 },
-	  { "AnsiC",		1224, 1584 },
-	  { "AnsiD",		1584, 2448 },
-	  { "AnsiE",		2448, 3168 },
-	  { "ARCHA",		648,  864 },
-	  { "ARCHA.Transverse",	864,  648 },
-	  { "ARCHB",		864,  1296 },
-	  { "ARCHB.Transverse",	1296, 864 },
-	  { "ARCHC",		1296, 1728 },
-	  { "ARCHC.Transverse",	1728, 1296 },
-	  { "ARCHD",		1728, 2592 },
-	  { "ARCHD.Transverse",	2592, 1728 },
-	  { "ARCHE",		2592, 3456 },
-	  { "ARCHE.Transverse",	3456, 2592 },
-	  { "B0",		2918, 4128 },
-	  { "B1",		2064, 2918 },
-	  { "B2",		1458, 2064 },
-	  { "B3",		1032, 1458 },
-	  { "B4",		729,  1032 },
-	  { "B5",		516,  729 },
-	  { "Env10",		297,  684 },
-	  { "EnvC5",		459,  649 },
-	  { "EnvDL",		312,  624 },
-	  { "EnvISOB5",		499,  709 },
-	  { "EnvMonarch",	279,  540 },
-	  { "Executive",	522,  756 },
-	  { "FanFoldUS",	1071, 792 },
-	  { "Legal",		612,  1008 },
-	  { "Letter",		612,  792 },
-	  { "Letter.Transverse",792,  612 },
-	  { "Tabloid",		792,  1224 },
-	  { "TabloidExtra",	864,  1296 }
-	};
+
+/*
+ * STP option data...
+ */
 
 static struct				/**** STP numeric options ****/
 {
@@ -291,18 +253,6 @@ usage(void)
 }
 
 
-typedef struct
-{
-  char *name;
-  char *canonical_name;
-  int width;
-  int height;
-  int left;
-  int right;
-  int bottom;
-  int top;
-} paper_t;
-
 /*
  * 'write_ppd()' - Write a PPD file.
  */
@@ -315,11 +265,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
   char		manufacturer[64];	/* Manufacturer name */
-  msize_t	*size;			/* Page size */
   int		num_opts;		/* Number of printer options */
-  char		**opts;			/* Printer options */
-  const char	*opt;			/* Pointer into option string */
-  const char	*defopt;
+  stp_param_t	*opts;			/* Printer options */
+  const char	*defopt;		/* Default printer option */
   int		xdpi, ydpi;		/* Resolution info */
   stp_vars_t	v;			/* Variable info */
   int		width, height,		/* Page information */
@@ -424,7 +372,13 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   for (i = 0; i < num_opts; i++)
   {
-    const stp_papersize_t papersize = stp_get_papersize_by_name(opts[i]);
+    const stp_papersize_t papersize = stp_get_papersize_by_name(opts[i].name);
+
+    if (!papersize)
+    {
+      printf("Unable to lookup size %s!\n", opts[i].name);
+      continue;
+    }
 
     width  = stp_papersize_get_width(papersize);
     height = stp_papersize_get_height(papersize);
@@ -432,36 +386,19 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     if (width <= 0 || height <= 0)
       continue;
 
-    stp_set_media_size(v, opts[i]);
+    stp_set_media_size(v, opts[i].name);
 
     (*(printfuncs->media_size))(p, v, &width, &height);
     (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
 
-    the_papers[cur_opt].name   = opts[i];
+    the_papers[cur_opt].name   = opts[i].name;
+    the_papers[cur_opt].text   = opts[i].text;
     the_papers[cur_opt].width  = width;
     the_papers[cur_opt].height = height;
     the_papers[cur_opt].left   = left;
     the_papers[cur_opt].right  = right;
     the_papers[cur_opt].bottom = bottom;
     the_papers[cur_opt].top    = top;
-
-    for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes;
-	 j > 0;
-	 j --, size ++)
-      if (size->width == width && size->height == height)
-	break;
-
-    if (j)
-    {
-      the_papers[cur_opt].canonical_name = malloc(strlen(size->name) + 1);
-      strcpy(the_papers[cur_opt].canonical_name, size->name);
-    }
-    else
-    {
-      the_papers[cur_opt].canonical_name = malloc(32);
-      sprintf(the_papers[cur_opt].canonical_name,
-	      "w%dh%d", width, height);
-    }
 
     cur_opt++;
   }
@@ -473,9 +410,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "\n");
   for (i = 0; i < cur_opt; i ++)
   {
-    gzprintf(fp,  "*PageSize %s", the_papers[i].canonical_name);
+    gzprintf(fp,  "*PageSize %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-             the_papers[i].name, the_papers[i].width, the_papers[i].height);
+             the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
   gzputs(fp, "*CloseUI: *PageSize\n");
 
@@ -486,9 +423,9 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "\n");
   for (i = 0; i < cur_opt; i ++)
   {
-    gzprintf(fp,  "*PageRegion %s", the_papers[i].canonical_name);
+    gzprintf(fp,  "*PageRegion %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"<</PageRegion[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-	     the_papers[i].name, the_papers[i].width, the_papers[i].height);
+	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
   gzputs(fp, "*CloseUI: *PageRegion\n");
 
@@ -497,8 +434,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "\n");
   for (i = 0; i < cur_opt; i ++)
   {
-    gzprintf(fp,  "*ImageableArea %s", the_papers[i].canonical_name);
-    gzprintf(fp, "/%s:\t\"%d %d %d %d\"\n", the_papers[i].name,
+    gzprintf(fp,  "*ImageableArea %s", the_papers[i].name);
+    gzprintf(fp, "/%s:\t\"%d %d %d %d\"\n", the_papers[i].text,
              the_papers[i].left, the_papers[i].bottom,
 	     the_papers[i].right, the_papers[i].top);
   }
@@ -508,27 +445,24 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "\n");
   for (i = 0; i < cur_opt; i ++)
   {
-    gzprintf(fp, "*PaperDimension %s", the_papers[i].canonical_name);
+    gzprintf(fp, "*PaperDimension %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"%d %d\"\n",
-	     the_papers[i].name, the_papers[i].width, the_papers[i].height);
+	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
   }
 
   if (opts)
   {
     for (i = 0; i < num_opts; i++)
-      free(opts[i]);
+    {
+      free((void *)opts[i].name);
+      free((void *)opts[i].text);
+    }
 
     free(opts);
   }
 
   if (the_papers)
-  {
-    for (i = 0; i < cur_opt; i++)
-      free(the_papers[i].canonical_name);
-
     free(the_papers);
-  }
-    
 
  /*
   * Do we support color?
@@ -580,22 +514,14 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   {
     gzputs(fp, "*OpenUI *MediaType: PickOne\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
-    gzputs(fp, "*DefaultMediaType: ");
-    for (opt = defopt; *opt; opt ++)
-      if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
-	gzputc(fp, *opt);
-    gzputc(fp, '\n');
+    gzprintf(fp, "*DefaultMediaType: %s\n", defopt);
 
     for (i = 0; i < num_opts; i ++)
     {
-      gzputs(fp, "*MediaType ");
-
-      for (opt = opts[i]; *opt; opt ++)
-	if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
-	  gzputc(fp, *opt);
-
-      gzprintf(fp, "/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n", opts[i], opts[i]);
-      free(opts[i]);
+      gzprintf(fp, "*MediaType %s/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n",
+               opts[i].name, opts[i].text, opts[i].name);
+      free((void *)opts[i].name);
+      free((void *)opts[i].text);
     }
 
     free(opts);
@@ -614,22 +540,14 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   {
     gzputs(fp, "*OpenUI *InputSlot: PickOne\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
-    gzputs(fp, "*DefaultInputSlot: ");
-    for (opt = defopt; *opt; opt ++)
-      if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
-	gzputc(fp, *opt);
-    gzputc(fp, '\n');
+    gzprintf(fp, "*DefaultInputSlot: %s\n", defopt);
 
     for (i = 0; i < num_opts; i ++)
     {
-      gzputs(fp, "*InputSlot ");
-
-      for (opt = opts[i]; *opt; opt ++)
-	if (*opt != ' ' && *opt != '/' && *opt != '\'' && *opt != '\"')
-	  gzputc(fp, *opt);
-
-      gzprintf(fp, "/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n", opts[i], opts[i]);
-      free(opts[i]);
+      gzprintf(fp, "*InputSlot %s/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n",
+               opts[i].name, opts[i].text, opts[i].name);
+      free((void *)opts[i].name);
+      free((void *)opts[i].text);
     }
 
     free(opts);
@@ -646,56 +564,28 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   gzputs(fp, "*OpenUI *Resolution: PickOne\n");
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
-
-  if (defopt)
-  {
-    const char *s = defopt;
-    char *copy = xmalloc(strlen(defopt) + 1);
-    char *d = copy;
-
-    do
-    {
-      if (*s != ' ' && *s != '\t' && *s != '-')
-	*d++ = *s;
-    }
-    while (*s++);
-
-    gzprintf(fp, "*DefaultResolution: %s\n", copy);
-  }
+  gzprintf(fp, "*DefaultResolution: %s\n", defopt);
 
   for (i = 0; i < num_opts; i ++)
   {
-    char *s;
-    char *copy = xmalloc(strlen(opts[i]) + 1);
-    char *d = copy;
-
    /* 
     * Strip resolution name to its essentials...
     */
 
-    (printfuncs->describe_resolution)(p, opts[i], &xdpi, &ydpi);
+    (printfuncs->describe_resolution)(p, opts[i].name, &xdpi, &ydpi);
 
     /* This should not happen! */
     if (xdpi == -1 || ydpi == -1)
       continue;
-
-    s = opts[i];
-
-    do
-    {
-      if (*s != ' ' && *s != '/' && *s != '\'' && *s != '\"' && *s != '-')
-	*d++ = *s;
-    }
-    while (*s++);
 
    /*
     * Write the resolution option...
     */
 
     gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-             copy, opts[i], xdpi, ydpi, i);
-    free(copy);
-    free(opts[i]);
+             opts[i].name, opts[i].text, xdpi, ydpi, i);
+    free((void *)opts[i].name);
+    free((void *)opts[i].text);
   }
 
   free(opts);
@@ -728,28 +618,11 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*OpenUI *stpDither/Dither Algorithm: PickOne\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpDither\n");
+    gzprintf(fp, "*DefaultstpDither: %s\n", stp_default_dither_algorithm());
 
     for (i = 0; i < stp_dither_algorithm_count(); i ++)
-    {
-      const char *s;
-      char *copy = xmalloc(strlen(stp_dither_algorithm_name(i)) + 1);
-      char *d = copy;
-
-      s = stp_dither_algorithm_name(i);
-
-      do
-      {
-	if (*s != ' ' && *s != '\t' && *s != '-' && *s != '\'' && *s != '\"')
-	  *d++ = *s;
-      }
-      while (*s++);
-
-      if (i == 0)
-	gzprintf(fp, "*DefaultstpDither: %s\n", copy);
       gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
-               copy, stp_dither_algorithm_name(i), i);
-      free(copy);
-    }
+               stp_dither_algorithm_name(i), stp_dither_algorithm_text(i), i);
 
     gzputs(fp, "*CloseUI: *stpDither\n");
 
@@ -764,45 +637,18 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     {
       gzputs(fp, "*OpenUI *stpInkType/Ink Type: PickOne\n");
       gzputs(fp, "*OrderDependency: 20 AnySetup *stpInkType\n");
-
-      if (defopt)
-      {
-	const char *s = defopt;
-	char *copy = xmalloc(strlen(defopt) + 1);
-	char *d = copy;
-
-	do
-	{
-	  if (*s != ' ' && *s != '\t' && *s != '-')
-	    *d++ = *s;
-	}
-	while (*s++);
-
-	gzprintf(fp, "*DefaultstpInkType: %s\n", copy);
-      }
+      gzprintf(fp, "*DefaultstpInkType: %s\n", defopt);
 
       for (i = 0; i < num_opts; i ++)
       {
-	char *s;
-	char *copy = xmalloc(strlen(opts[i]) + 1);
-	char *d = copy;
-
-	s = opts[i];
-	do
-	{
-	  if (*s != ' ' && *s != '/' && *s != '\'' && *s != '\"' && *s != '-')
-	    *d++ = *s;
-	}
-	while (*s++);
-
        /*
-	* Write the resolution option...
+	* Write the inktype option...
 	*/
 
 	gzprintf(fp, "*stpInkType %s/%s:\t\"<</OutputType(%s)>>setpagedevice\"\n",
-        	 copy, opts[i], opts[i]);
-	free(copy);
-	free(opts[i]);
+        	 opts[i].name, opts[i].text, opts[i].name);
+	free((void *)opts[i].name);
+	free((void *)opts[i].text);
       }
 
       free(opts);

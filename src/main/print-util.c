@@ -109,6 +109,7 @@ typedef struct stp_internal_printer
 typedef struct
 {
   const char *name;
+  const char *text;
   unsigned width;
   unsigned height;
   unsigned top;
@@ -537,34 +538,32 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 static stp_internal_papersize_t paper_sizes[] =
 {
   /* Common imperial page sizes */
-  { N_ ("Letter"),   612,  792, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
-  { N_ ("Legal"),    612, 1008, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 8.5in x 14in */
-  { N_ ("Tabloid"),  792, 1224, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/*  11in x 17in */
-  { N_ ("Executive"), 522, 756, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 7.25 * 10.5in */
-  { N_ ("Postcard"), 283,  416, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 100mm x 147mm */
-  { N_ ("3x5"),	216,  360, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("4x6"),      288,  432, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("Epson 4x6 Photo Paper"), 324, 495, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("5x7"),      360,  504, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("5x8"),      360,  576, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("HalfLetter"), 396, 612, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("6x8"),      432,  576, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("8x10"),     576,  720, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("Manual"),   396,  612, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
-  { N_ ("12x18"),    864, 1296, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("13x19"),    936, 1368, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("Super B"),  936, 1368, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* Apparently 13x19. */
+  { "Letter",		N_ ("Letter"),   612,  792, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */
+  { "Legal",		N_ ("Legal"),    612, 1008, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 8.5in x 14in */
+  { "Tabloid",		N_ ("Tabloid"),  792, 1224, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/*  11in x 17in */
+  { "Executive",	N_ ("Executive"), 522, 756, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 7.25 * 10.5in */
+  { "Postcard",		N_ ("Postcard"), 283,  416, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 100mm x 147mm */
+  { "w216h360",		N_ ("3x5"),	216,  360, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w288h432",		N_ ("4x6"),      288,  432, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w324h495",		N_ ("Epson 4x6 Photo Paper"), 324, 495, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w360h504",		N_ ("5x7"),      360,  504, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w360h576",		N_ ("5x8"),      360,  576, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w432h576",		N_ ("6x8"),      432,  576, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "8x10",		N_ ("8x10"),     576,  720, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "Statement",	N_ ("Manual"),   396,  612, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
+  { "TabloidExtra",	N_ ("12x18"),    864, 1296, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "SuperB",		N_ ("Super B 13x19"),    936, 1368, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   /* Other common photographic paper sizes */
-  { N_ ("8x12"),	576,  864, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
-  { N_ ("11x14"),    792, 1008, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("16x20"),   1152, 1440, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("16x24"),   1152, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* 20x24 for 35 mm */
-  { N_ ("20x24"),   1440, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("20x30"),   1440, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 24x30 for 35 mm */
-  { N_ ("24x30"),   1728, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("24x36"),   1728, 2592, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
-  { N_ ("30x40"),   2160, 2880, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w576h864",		N_ ("8x12"),	576,  864, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
+  { "w792h1008",	N_ ("11x14"),    792, 1008, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1152h1440",	N_ ("16x20"),   1152, 1440, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1152h1728",	N_ ("16x24"),   1152, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* 20x24 for 35 mm */
+  { "w1440h1728",	N_ ("20x24"),   1440, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1440h2160",	N_ ("20x30"),   1440, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },	/* 24x30 for 35 mm */
+  { "w1728h2160",	N_ ("24x30"),   1728, 2160, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1728h2592",	N_ ("24x36"),   1728, 2592, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* Sometimes used for 35 mm */
+  { "w2160h2880",	N_ ("30x40"),   2160, 2880, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   /* International Paper Sizes (mostly taken from BS4000:1968) */
 
@@ -576,141 +575,141 @@ static stp_internal_papersize_t paper_sizes[] =
    * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
    * size is obtained by doubling or halving another A size.
    */
-  { N_ ("4A"),       4768, 6749, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
-  { N_ ("2A"),       3370, 4768, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
-  { N_ ("A0"),       2384, 3370, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
-  { N_ ("A1"),       1684, 2384, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  594mm x  841mm */
-  { N_ ("A2"),       1191, 1684, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  420mm x  594mm */
-  { N_ ("A3"),        842, 1191, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  297mm x  420mm */
-  { N_ ("A4"),        595,  842, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  210mm x  297mm */
-  { N_ ("A5"),        420,  595, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  148mm x  210mm */
-  { N_ ("A6"),        297,  420, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  105mm x  148mm */
-  { N_ ("A7"),        210,  297, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   74mm x  105mm */
-  { N_ ("A8"),        148,  210, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   52mm x   74mm */
-  { N_ ("A9"),        105,  148, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   37mm x   52mm */
-  { N_ ("A10"),        73,  105, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   26mm x   37mm */
+  { "w4768h6749",	N_ ("4A"),       4768, 6749, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
+  { "w3370h4768",	N_ ("2A"),       3370, 4768, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
+  { "A0",		N_ ("A0"),       2384, 3370, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
+  { "A1",		N_ ("A1"),       1684, 2384, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  594mm x  841mm */
+  { "A2",		N_ ("A2"),       1191, 1684, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  420mm x  594mm */
+  { "A3",		N_ ("A3"),        842, 1191, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  297mm x  420mm */
+  { "A4",		N_ ("A4"),        595,  842, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  210mm x  297mm */
+  { "A5",		N_ ("A5"),        420,  595, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  148mm x  210mm */
+  { "A6",		N_ ("A6"),        297,  420, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  105mm x  148mm */
+  { "A7",		N_ ("A7"),        210,  297, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   74mm x  105mm */
+  { "A8",		N_ ("A8"),        148,  210, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   52mm x   74mm */
+  { "A9",		N_ ("A9"),        105,  148, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   37mm x   52mm */
+  { "A10",		N_ ("A10"),        73,  105, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   26mm x   37mm */
 
   /*
    * Stock sizes for normal trims.
    * Allowance for trim is 3 millimetres.
    */
-  { N_ ("RA0"),      2437, 3458, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  860mm x 1220mm */
-  { N_ ("RA1"),      1729, 2437, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  610mm x  860mm */
-  { N_ ("RA2"),      1218, 1729, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  430mm x  610mm */
-  { N_ ("RA3"),       864, 1218, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  305mm x  430mm */
-  { N_ ("RA4"),       609,  864, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  215mm x  305mm */
+  { "w2437h3458",	N_ ("RA0"),      2437, 3458, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  860mm x 1220mm */
+  { "w1729h2437",	N_ ("RA1"),      1729, 2437, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  610mm x  860mm */
+  { "w1218h1729",	N_ ("RA2"),      1218, 1729, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  430mm x  610mm */
+  { "w864h1218",	N_ ("RA3"),       864, 1218, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  305mm x  430mm */
+  { "w609h864",		N_ ("RA4"),       609,  864, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  215mm x  305mm */
 
   /*
    * Stock sizes for bled work or extra trims.
    */
-  { N_ ("SRA0"),     2551, 3628, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  900mm x 1280mm */
-  { N_ ("SRA1"),     1814, 2551, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  640mm x  900mm */
-  { N_ ("SRA2"),     1275, 1814, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  450mm x  640mm */
-  { N_ ("SRA3"),      907, 1275, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  320mm x  450mm */
-  { N_ ("SRA4"),      637,  907, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  225mm x  320mm */
+  { "w2551h3628",	N_ ("SRA0"),     2551, 3628, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  900mm x 1280mm */
+  { "w1814h2551",	N_ ("SRA1"),     1814, 2551, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  640mm x  900mm */
+  { "w1275h1814",	N_ ("SRA2"),     1275, 1814, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  450mm x  640mm */
+  { "w907h1275",	N_ ("SRA3"),      907, 1275, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  320mm x  450mm */
+  { "w637h907",		N_ ("SRA4"),      637,  907, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  225mm x  320mm */
 
   /*
    * "B" series: Posters, wall charts and similar items.
    */
-  { N_ ("4B ISO"),   5669, 8016, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 2000mm x 2828mm */
-  { N_ ("2B ISO"),   4008, 5669, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1414mm x 2000mm */
-  { N_ ("B0 ISO"),   2834, 4008, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1000mm x 1414mm */
-  { N_ ("B1 ISO"),   2004, 2834, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  707mm x 1000mm */
-  { N_ ("B2 ISO"),   1417, 2004, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  500mm x  707mm */
-  { N_ ("B3 ISO"),   1000, 1417, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  353mm x  500mm */
-  { N_ ("B4 ISO"),    708, 1000, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  250mm x  353mm */
-  { N_ ("B5 ISO"),    498,  708, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  176mm x  250mm */
-  { N_ ("B6 ISO"),    354,  498, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  125mm x  176mm */
-  { N_ ("B7 ISO"),    249,  354, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   88mm x  125mm */
-  { N_ ("B8 ISO"),    175,  249, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   62mm x   88mm */
-  { N_ ("B9 ISO"),    124,  175, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   44mm x   62mm */
-  { N_ ("B10 ISO"),    87,  124, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   31mm x   44mm */
+  { "w5669h8016",	N_ ("4B ISO"),   5669, 8016, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 2000mm x 2828mm */
+  { "w4008h5669",	N_ ("2B ISO"),   4008, 5669, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1414mm x 2000mm */
+  { "ISOB0",		N_ ("B0 ISO"),   2834, 4008, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1000mm x 1414mm */
+  { "ISOB1",		N_ ("B1 ISO"),   2004, 2834, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  707mm x 1000mm */
+  { "ISOB2",		N_ ("B2 ISO"),   1417, 2004, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  500mm x  707mm */
+  { "ISOB3",		N_ ("B3 ISO"),   1000, 1417, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  353mm x  500mm */
+  { "ISOB4",		N_ ("B4 ISO"),    708, 1000, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  250mm x  353mm */
+  { "ISOB5",		N_ ("B5 ISO"),    498,  708, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  176mm x  250mm */
+  { "ISOB6",		N_ ("B6 ISO"),    354,  498, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  125mm x  176mm */
+  { "ISOB7",		N_ ("B7 ISO"),    249,  354, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   88mm x  125mm */
+  { "ISOB8",		N_ ("B8 ISO"),    175,  249, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   62mm x   88mm */
+  { "ISOB9",		N_ ("B9 ISO"),    124,  175, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   44mm x   62mm */
+  { "ISOB10",		N_ ("B10 ISO"),    87,  124, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   31mm x   44mm */
 
-  { N_ ("B0 JIS"),   2919, 4127, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B1 JIS"),   2063, 2919, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B2 JIS"),   1459, 2063, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B3 JIS"),   1029, 1459, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B4 JIS"),    727, 1029, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B5 JIS"),    518,  727, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B6 JIS"),    362,  518, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B7 JIS"),    257,  362, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B8 JIS"),    180,  257, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B9 JIS"),    127,  180, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("B10 JIS"),    90,  127, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B0",		N_ ("B0 JIS"),   2919, 4127, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B1",		N_ ("B1 JIS"),   2063, 2919, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B2",		N_ ("B2 JIS"),   1459, 2063, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B3",		N_ ("B3 JIS"),   1029, 1459, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B4",		N_ ("B4 JIS"),    727, 1029, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B5",		N_ ("B5 JIS"),    518,  727, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B6",		N_ ("B6 JIS"),    362,  518, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B7",		N_ ("B7 JIS"),    257,  362, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B8",		N_ ("B8 JIS"),    180,  257, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B9",		N_ ("B9 JIS"),    127,  180, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "B10",		N_ ("B10 JIS"),    90,  127, 0, 0, 0, 0, PAPERSIZE_METRIC },
 
   /*
    * "C" series: Envelopes or folders suitable for A size stationery.
    */
-  { N_ ("C0"),       2599, 3676, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  917mm x 1297mm */
-  { N_ ("C1"),       1836, 2599, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  648mm x  917mm */
-  { N_ ("C2"),       1298, 1836, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  458mm x  648mm */
-  { N_ ("C3"),        918, 1298, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  324mm x  458mm */
-  { N_ ("C4"),        649,  918, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  229mm x  324mm */
-  { N_ ("C5"),        459,  649, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  162mm x  229mm */
-  { N_ ("B6-C4"),     354,  918, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  125mm x  324mm */
-  { N_ ("C6"),        323,  459, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  114mm x  162mm */
-  { N_ ("DL"),        311,  623, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  110mm x  220mm */
-  { N_ ("C7-6"),      229,  459, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   81mm x  162mm */
-  { N_ ("C7"),        229,  323, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   81mm x  114mm */
-  { N_ ("C8"),        161,  229, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   57mm x   81mm */
-  { N_ ("C9"),        113,  161, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   40mm x   57mm */
-  { N_ ("C10"),        79,  113, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   28mm x   40mm */
+  { "C0",		N_ ("C0"),       2599, 3676, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  917mm x 1297mm */
+  { "C1",		N_ ("C1"),       1836, 2599, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  648mm x  917mm */
+  { "C2",		N_ ("C2"),       1298, 1836, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  458mm x  648mm */
+  { "C3",		N_ ("C3"),        918, 1298, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  324mm x  458mm */
+  { "C4",		N_ ("C4"),        649,  918, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  229mm x  324mm */
+  { "C5",		N_ ("C5"),        459,  649, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  162mm x  229mm */
+  { "w354h918",		N_ ("B6-C4"),     354,  918, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  125mm x  324mm */
+  { "C6",		N_ ("C6"),        323,  459, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  114mm x  162mm */
+  { "DL",		N_ ("DL"),        311,  623, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  110mm x  220mm */
+  { "w229h459",		N_ ("C7-6"),      229,  459, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   81mm x  162mm */
+  { "C7",		N_ ("C7"),        229,  323, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   81mm x  114mm */
+  { "C8",		N_ ("C8"),        161,  229, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   57mm x   81mm */
+  { "C9",		N_ ("C9"),        113,  161, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   40mm x   57mm */
+  { "C10",		N_ ("C10"),        79,  113, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   28mm x   40mm */
 
   /*
    * US CAD standard paper sizes
    */
-  { N_ ("ArchA"),	 648,  864, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("ArchB"),	 864, 1296, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("ArchC"),	1296, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("ArchD"),	1728, 2592, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("ArchE"),	2592, 3456, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "ARCHA",		N_ ("ArchA"),	 648,  864, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "ARCHB",		N_ ("ArchB"),	 864, 1296, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "ARCHC",		N_ ("ArchC"),	1296, 1728, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "ARCHD",		N_ ("ArchD"),	1728, 2592, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "ARCHE",		N_ ("ArchE"),	2592, 3456, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   /*
    * Foolscap
    */
-  { N_ ("flsa"),	 612,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* American foolscap */
-  { N_ ("flse"),	 648,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* European foolscap */
+  { "w612h936",		N_ ("flsa"),	 612,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* American foolscap */
+  { "w648h936",		N_ ("flse"),	 648,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* European foolscap */
 
   /*
    * Sizes for book production
    * The BPIF and the Publishers Association jointly recommend ten
    * standard metric sizes for case-bound titles as follows:
    */
-  { N_ ("Crown Quarto"),       535,  697, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 189mm x 246mm */
-  { N_ ("Large Crown Quarto"), 569,  731, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 201mm x 258mm */
-  { N_ ("Demy Quarto"),        620,  782, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 219mm x 276mm */
-  { N_ ("Royal Quarto"),       671,  884, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 237mm x 312mm */
+  { "w535h697",		N_ ("Crown Quarto"),       535,  697, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 189mm x 246mm */
+  { "w569h731",		N_ ("Large Crown Quarto"), 569,  731, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 201mm x 258mm */
+  { "w620h782",		N_ ("Demy Quarto"),        620,  782, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 219mm x 276mm */
+  { "w671h884",		N_ ("Royal Quarto"),       671,  884, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 237mm x 312mm */
 /*{ "ISO A4",             595,  841, PAPERSIZE_METRIC, 0, 0, 0, 0 },    210mm x 297mm */
-  { N_ ("Crown Octavo"),       348,  527, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 123mm x 186mm */
-  { N_ ("Large Crown Octavo"), 365,  561, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 129mm x 198mm */
-  { N_ ("Demy Octavo"),        391,  612, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 138mm x 216mm */
-  { N_ ("Royal Octavo"),       442,  663, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 156mm x 234mm */
+  { "w348h527",		N_ ("Crown Octavo"),       348,  527, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 123mm x 186mm */
+  { "w365h561",		N_ ("Large Crown Octavo"), 365,  561, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 129mm x 198mm */
+  { "w391h612",		N_ ("Demy Octavo"),        391,  612, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 138mm x 216mm */
+  { "w442h663",		N_ ("Royal Octavo"),       442,  663, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 156mm x 234mm */
 /*{ N_ ("ISO A5"),             419,  595, 0, 0, 0, 0, PAPERSIZE_METRIC },    148mm x 210mm */
 
   /* Paperback sizes in common usage */
-  { N_ ("Small paperback"),         314, 504, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 111mm x 178mm */
-  { N_ ("Penguin small paperback"), 314, 513, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 111mm x 181mm */
-  { N_ ("Penguin large paperback"), 365, 561, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 129mm x 198mm */
+  { "w314h504",		N_ ("Small paperback"),         314, 504, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 111mm x 178mm */
+  { "w314h513",		N_ ("Penguin small paperback"), 314, 513, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 111mm x 181mm */
+  { "w365h561",		N_ ("Penguin large paperback"), 365, 561, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 129mm x 198mm */
 
   /* Miscellaneous sizes */
-  { N_ ("Hagaki Card"), 283, 420, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 100 x 148 mm */
-  { N_ ("Oufuku Card"), 420, 567, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 148 x 200 mm */
-  { N_ ("Long 3"), 340, 666, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #3 */
-  { N_ ("Long 4"), 255, 581, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #4 */
-  { N_ ("Kaku"), 680, 941, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese Kaku envelope #4 */
-  { N_ ("Commercial 10"), 297, 684, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
-  { N_ ("A2 Invitation"), 315, 414, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US A2 invitation */
-  { N_ ("Custom"), 0, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w283h420",		N_ ("Hagaki Card"), 283, 420, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 100 x 148 mm */
+  { "w420h567",		N_ ("Oufuku Card"), 420, 567, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 148 x 200 mm */
+  { "w340h666",		N_ ("Long 3"), 340, 666, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #3 */
+  { "w255h581",		N_ ("Long 4"), 255, 581, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #4 */
+  { "w680h941",		N_ ("Kaku"), 680, 941, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese Kaku envelope #4 */
+  { "w297h684",		N_ ("Commercial 10"), 297, 684, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
+  { "w315h414",		N_ ("A2 Invitation"), 315, 414, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US A2 invitation */
+  { "Custom",		N_ ("Custom"), 0, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
-  { N_ ("89 mm Roll Paper"), 252, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("4 Inch Roll Paper"), 288, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("5 Inch Roll Paper"), 360, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("210 mm Roll Paper"), 595, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
-  { N_ ("13 Inch Roll Paper"), 936, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("22 Inch Roll Paper"), 1584, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("24 Inch Roll Paper"), 1728, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("36 Inch Roll Paper"), 2592, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
-  { N_ ("44 Inch Roll Paper"), 3168, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w252",		N_ ("89 mm Roll Paper"), 252, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "w288",		N_ ("4 Inch Roll Paper"), 288, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w360",		N_ ("5 Inch Roll Paper"), 360, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w595",		N_ ("210 mm Roll Paper"), 595, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { "w936",		N_ ("13 Inch Roll Paper"), 936, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1584",		N_ ("22 Inch Roll Paper"), 1584, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w1728",		N_ ("24 Inch Roll Paper"), 1728, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w2592",		N_ ("36 Inch Roll Paper"), 2592, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { "w3168",		N_ ("44 Inch Roll Paper"), 3168, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
   { "",           0,    0, 0, 0, 0, 0, PAPERSIZE_METRIC }
 };
@@ -726,6 +725,13 @@ stp_papersize_get_name(const stp_papersize_t pt)
 {
   const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
   return p->name;
+}
+
+const char *
+stp_papersize_get_text(const stp_papersize_t pt)
+{
+  const stp_internal_papersize_t *p = (const stp_internal_papersize_t *) pt;
+  return p->text;
 }
 
 unsigned
@@ -1139,7 +1145,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p,
 int
 stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 {
-  char **vptr;
+  stp_param_t *vptr;
   int count;
   int i;
   int answer = 1;
@@ -1162,14 +1168,17 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_size(v), vptr[i]))
+	    if (!strcmp(stp_get_media_size(v), vptr[i].name))
 	      goto good_page_size;
 	  answer = 0;
 	  stp_eprintf(v, "%s is not a valid page size\n",
 		      stp_get_media_size(v));
 	good_page_size:
 	  for (i = 0; i < count; i++)
-	    stp_free(vptr[i]);
+	  {
+	    stp_free((void *)vptr[i].name);
+	    stp_free((void *)vptr[i].text);
+	  }
 	}
       if (vptr)
 	stp_free(vptr);
@@ -1192,14 +1201,17 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_type(v), vptr[i]))
+	    if (!strcmp(stp_get_media_type(v), vptr[i].name))
 	      goto good_media_type;
 	  answer = 0;
 	  stp_eprintf(v, "%s is not a valid media type\n",
 		      stp_get_media_type(v));
 	good_media_type:
 	  for (i = 0; i < count; i++)
-	    stp_free(vptr[i]);
+	  {
+	    stp_free((void *)vptr[i].name);
+	    stp_free((void *)vptr[i].text);
+	  }
 	}
       if (vptr)
 	stp_free(vptr);
@@ -1211,14 +1223,17 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_media_source(v), vptr[i]))
+	    if (!strcmp(stp_get_media_source(v), vptr[i].name))
 	      goto good_media_source;
 	  answer = 0;
 	  stp_eprintf(v, "%s is not a valid media source\n",
 		      stp_get_media_source(v));
 	good_media_source:
 	  for (i = 0; i < count; i++)
-	    stp_free(vptr[i]);
+	  {
+	    stp_free((void *)vptr[i].name);
+	    stp_free((void *)vptr[i].text);
+	  }
 	}
       if (vptr)
 	stp_free(vptr);
@@ -1230,14 +1245,17 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_resolution(v), vptr[i]))
+	    if (!strcmp(stp_get_resolution(v), vptr[i].name))
 	      goto good_resolution;
 	  answer = 0;
 	  stp_eprintf(v, "%s is not a valid resolution\n",
 		      stp_get_resolution(v));
 	good_resolution:
 	  for (i = 0; i < count; i++)
-	    stp_free(vptr[i]);
+	  {
+	    stp_free((void *)vptr[i].name);
+	    stp_free((void *)vptr[i].text);
+	  }
 	}
       if (vptr)
 	stp_free(vptr);
@@ -1249,13 +1267,16 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
       if (count > 0)
 	{
 	  for (i = 0; i < count; i++)
-	    if (!strcmp(stp_get_ink_type(v), vptr[i]))
+	    if (!strcmp(stp_get_ink_type(v), vptr[i].name))
 	      goto good_ink_type;
 	  answer = 0;
 	  stp_eprintf(v, "%s is not a valid ink type\n", stp_get_ink_type(v));
 	good_ink_type:
 	  for (i = 0; i < count; i++)
-	    stp_free(vptr[i]);
+	  {
+	    stp_free((void *)vptr[i].name);
+	    stp_free((void *)vptr[i].text);
+	  }
 	}
       if (vptr)
 	stp_free(vptr);

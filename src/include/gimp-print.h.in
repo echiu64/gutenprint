@@ -272,14 +272,19 @@ typedef void *stp_printer_t;
 typedef void *stp_vars_t;
 typedef void *stp_option_t;
 typedef void *stp_papersize_t;
+typedef struct
+{
+  const char	*name,	/* Option name */
+		*text;	/* Human-readable (translated) text */
+} stp_param_t;
 
 typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
 typedef struct
 {
-  char  **(*parameters)(const stp_printer_t printer,
-                        const char *ppd_file,
-                        const char *name, int *count);
+  stp_param_t *(*parameters)(const stp_printer_t printer,
+                             const char *ppd_file,
+                             const char *name, int *count);
   void  (*media_size)(const stp_printer_t printer, const stp_vars_t v,
                       int *width, int *height);
   void  (*imageable_area)(const stp_printer_t printer,
@@ -420,6 +425,7 @@ extern void stp_compute_lut (stp_vars_t v, size_t steps);
 
 extern size_t stp_dither_algorithm_count (void);
 extern const char * stp_dither_algorithm_name (int id);
+extern const char * stp_dither_algorithm_text (int id);
 extern const char * stp_default_dither_algorithm (void);
 
 extern int stp_known_papersizes (void);
@@ -427,6 +433,7 @@ extern const stp_papersize_t stp_get_papersize_by_name (const char *name);
 extern const stp_papersize_t stp_get_papersize_by_size (int l, int w);
 extern const stp_papersize_t stp_get_papersize_by_index (int index);
 extern const char * stp_papersize_get_name (const stp_papersize_t pt);
+extern const char * stp_papersize_get_text (const stp_papersize_t pt);
 extern unsigned stp_papersize_get_width (const stp_papersize_t pt);
 extern unsigned stp_papersize_get_height (const stp_papersize_t pt);
 extern unsigned stp_papersize_get_top (const stp_papersize_t pt);
