@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-03-30 18:54-0500\n"
+"POT-Creation-Date: 2002-04-06 14:21-0500\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -2859,41 +2859,41 @@ msgstr ""
 msgid "Printer %s is not a known model\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:566
+#: src/ghost/ijsgimpprint.c:589
 #, fuzzy, c-format
 msgid "Unknown option %s\n"
 msgstr "Nieznana opcja %c\n"
 
-#: src/ghost/ijsgimpprint.c:709
+#: src/ghost/ijsgimpprint.c:732
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:821
+#: src/ghost/ijsgimpprint.c:844
 #, c-format
 msgid "image_init failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:832
+#: src/ghost/ijsgimpprint.c:855
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:867
 #, fuzzy, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:856
+#: src/ghost/ijsgimpprint.c:879
 #, fuzzy, c-format
 msgid "Unknown printer %s\n"
 msgstr "Nieznana opcja %c\n"
 
-#: src/ghost/ijsgimpprint.c:887
+#: src/ghost/ijsgimpprint.c:910
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:897
+#: src/ghost/ijsgimpprint.c:920
 #, c-format
 msgid "Get next row failed at %d\n"
 msgstr ""
