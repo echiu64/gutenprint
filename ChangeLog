@@ -1,3 +1,32 @@
+2000-10-05	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.31) (+9 -2)
+	
+	Minor updates
+	
+2000-10-04	<rlk@sourceforge.net>
+
+	Files:	RELNOTES (1.30) (+34 -3)
+	
+	Updates
+	
+2000-10-04	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.50) (+70 -0)
+		print.c (1.127) (+4 -3)
+		gtk_main_window.c (1.57) (+4 -1)
+		gtk_color_window.c (1.21) (+2 -2)
+		gimp_main_window.c (1.66) (+4 -1)
+	
+	115959: dither algorithm isn't set for new printers
+	115960: parameters are set incorrectly when a new printer is added.
+	
+2000-10-04	<mitsch@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.65) (+2 -2)
+	
+	s/gtk_container_border_width/gtk_container_set_border_width/
+	
 2000-10-04	<mitsch@sourceforge.net>
 
 	Files:	gimp_color_window.c (1.20) (+73 -67)
