@@ -2,11 +2,14 @@
 Makefile
 Makefile.in
 aclocal.m4
+canon-unprint
+canunprint
 config.cache
 config.log
 config.status
 configure
+escp2-weavetest
+pcl-unprint
 print
-canunprint
 unprint
 weavetest

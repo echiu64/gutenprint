@@ -7,6 +7,14 @@ for mode in $modes ; do
     for pass in $passes ; do
 	stuff=`echo "$mode,$pass" | awk -F, '{printf "%d %d %d %d\n", $1, $2, $3, $4}'`
 	echo -n "$stuff  "
-	./escp2-weavetest $stuff 1000 | tail -1
+	a=`echo $stuff | cut -f1 '-d '`
+	b=`echo $stuff | cut -f2 '-d '`
+	c=`echo $stuff | cut -f3 '-d '`
+	d=`echo $stuff | cut -f4 '-d '`
+	if [ $a -ge `expr $b \* $c \* $d` ] ; then
+	    eval ./escp2-weavetest $stuff 1000 | tail -1
+	else
+	    echo '(skipped)'
+	fi
     done
 done
