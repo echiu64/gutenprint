@@ -8,6 +8,40 @@ CUPS/README.txt for more information on this.
 
 The Gimp Print plugin requires the Gimp 1.2.
 
+Print 4.1.2 contains the following fixes and improvements over 4.1.1:
+
+1) We believe this release contains an important bug fix that in some
+   cases caused the Epson driver to seg fault upon completion.  This
+   resulted in the page being slightly incomplete at the bottom, and
+   in addition the page was not ejected.
+
+2) Further improvements in quality (we believe) in Photograph mode.
+
+3) Correct sizing for extremely tiny images in the Print plugin.
+
+4) First cut at roll feed printing for the Epson Stylus Photo
+   870/1270.
+
+5) Support for custom paper sizes in the Print plugin.
+
+6) Initial support for the Lexmark 3200, and other improvements in the
+   Lexmark driver.
+
+7) Preliminary support for the Epson Stylus Photo 790/890/1290
+   (followons to the 870/1270).
+
+8) Fixes to the Debian installation.
+
+9) Preliminary support for the Canon BJC-55 and BJC-85.
+
+10) The Ghostscript Makefile snippets now contain a proper dependency
+   on gdevstp-print.h.
+
+11) Many internal changes to prepare for a major code reorganization
+   that is coming up shortly.  These changes should be completely
+   invisible at user level.
+
+
 Print 4.1.1 contains the following fixes and improvements over 4.1.0:
 
 1) Further improvements in quality (we believe) in Photograph mode.
