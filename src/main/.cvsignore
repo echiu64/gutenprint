@@ -15,7 +15,9 @@ array.lo
 bit-ops.lo
 channel.lo
 color.lo
+color-conversions.lo
 curve.lo
+curve-cache.lo
 dither-ed.lo
 dither-eventone.lo
 dither-inks.lo

@@ -50,7 +50,11 @@ pkgmodule_LTLIBRARIES = \
 	print-raw.la
 endif
 
-color_traditional_la_SOURCES = print-color.c
+color_traditional_la_SOURCES = \
+	print-color.c \
+	color-conversion.h \
+	color-conversions.c
+
 color_traditional_la_LDFLAGS = -module -avoid-version
 
 print_canon_la_SOURCES = print-canon.c
@@ -108,6 +112,7 @@ mxml_SOURCES =					\
 libgimpprint_headers =				\
 	bit-ops.h				\
 	color.h					\
+	curve-cache.h				\
 	dither-impl.h				\
 	dither-inlined-functions.h		\
 	dither.h				\
@@ -128,6 +133,7 @@ libgimpprint_la_SOURCES =			\
 	channel.c				\
 	color.c					\
 	curve.c					\
+	curve-cache.c				\
 	dither-ed.c				\
 	dither-eventone.c			\
 	dither-inks.c				\
