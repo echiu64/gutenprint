@@ -491,7 +491,7 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
   bits = npix * pstate.bpp;
   bytes = bits / 8;
   extra = bits % 8;
-  words = bytes / sizeof(long);
+  words = bytes / sizeof(int);
 
   /*
    * First, find the leftmost pixel.  We first identify the word
@@ -499,11 +499,11 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
    * the byte.  It does seem like this is unnecessarily complex, perhaps?
    */
   max = words;
-  for (i = 0; (i < max) && (((long *)buff)[i] == 0); i++)
+  for (i = 0; (i < max) && (((int *)buff)[i] == 0); i++)
     ;
-  max = (i < words) ? (i + 1) * sizeof(long) : bytes;
+  max = (i < words) ? (i + 1) * sizeof(int) : bytes;
 
-  i *= sizeof(long);		/* Convert from longs to bytes */
+  i *= sizeof(int);		/* Convert from ints to bytes */
   for (; (i < max) && (buff[i] == 0); i++)
     ;
   max = (i < bytes) ? 8 : extra;
@@ -526,9 +526,9 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
     }
   *right = extra;  /*temporarily store right in bits to avoid rounding error*/
 
-  for (i = 0; (i < bytes % sizeof(long)) && !(buff[bytes - 1 - i]); i++)
+  for (i = 0; (i < bytes % sizeof(int)) && !(buff[bytes - 1 - i]); i++)
     ;
-  if (i < bytes % sizeof(long))
+  if (i < bytes % sizeof(int))
     {
       for (j = 0; (j < 8) && !(buff[bytes - 1 - i] & (1 << j)); j++)
 	;
@@ -542,15 +542,15 @@ find_white(unsigned char *buff,int npix, int *left, int *right)
 
   if (i < words)
     {
-      *right += i * sizeof(long) * 8;
+      *right += i * sizeof(int) * 8;
       for (j = 0;
-	   (j < sizeof(long)) && !(buff[(words - i) * sizeof(long) - 1 - j]);
+	   (j < sizeof(int)) && !(buff[(words - i) * sizeof(int) - 1 - j]);
 	   j++)
 	;
-      if (j < sizeof(long))
+      if (j < sizeof(int))
 	{
 	  *right += j * 8;
-	  max = (words - i) * sizeof(long) - 1 - j;
+	  max = (words - i) * sizeof(int) - 1 - j;
 	  for (j = 0; (j < 8) && !(buff[max] & (1 << j)); j++)
 	    ;
 	  if (j < 8)
