@@ -1093,9 +1093,9 @@
 <language value=lexmark>
 </printer>
 
-<printer name="LEXMARK Z52" driver="lexmark-z52">
+<printer name="LEXMARK Z42" driver="lexmark-z42">
 <color>
-<model value=10052>
+<model value=10042>
 <gamma value=0.5>
 <density value=2.0>
 <magenta value=0.95>
@@ -1103,9 +1103,9 @@
 <language value=lexmark>
 </printer>
 
-<printer name="LEXMARK Z42" driver="lexmark-z42">
+<printer name="LEXMARK Z52" driver="lexmark-z52">
 <color>
-<model value=10042>
+<model value=10052>
 <gamma value=0.5>
 <density value=2.0>
 <magenta value=0.95>
