@@ -338,7 +338,7 @@
 #gptofoo pcl-900 printer/HP-DeskJet_6122
 #gptofoo pcl-900 printer/HP-DeskJet_6127
 #gptofoo pcl-601 printer/HP-e-printer_e20
-#gptofoo pcl-2p printer/HP-LaserJet_2
+#gptofoo pcl-2 printer/HP-LaserJet_2
 #gptofoo pcl-2 printer/HP-LaserJet_2D
 #gptofoo pcl-2p printer/HP-LaserJet_2P
 #gptofoo pcl-2p printer/HP-LaserJet_2P_Plus
