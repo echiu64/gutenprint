@@ -36,7 +36,7 @@ $supported_printers = array(
 		'EPSON Stylus C20UX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
-		'EPSON Stylus C60' => 'Untested (4.1 only)',
+		'EPSON Stylus C60' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus C70' => 'Untested (4.1 only)',
 		'EPSON Stylus C80' => 'Testing in Progress (4.1 only)',
 		'EPSON Stylus Color' => 'Fully Operational',
@@ -81,6 +81,8 @@ $supported_printers = array(
 		)
 	'Stylus Scan Range' => array(
 		'EPSON Stylus Scan 2000' => 'Fully Operational (4.1
+		only; use the 740 driver in 4.0)'
+		'EPSON Stylus Scan 2500' => 'Fully Operational (4.1
 		only; use the 740 driver in 4.0)'
 		)
 	),
