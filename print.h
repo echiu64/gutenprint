@@ -145,13 +145,23 @@ typedef struct
  */
 typedef void *Image;
 
+/* For how to create an Image wrapping a Gimp drawable, see print_gimp.h */
+
 extern void Image_init(Image image);
-extern int Image_bpp(Image image);
-extern int Image_width(Image image);
-extern int Image_height(Image image);
-extern const char *Image_get_pluginname(Image image);
+extern void Image_transpose(Image image);
+extern void Image_hflip(Image image);
+extern void Image_vflip(Image image);
+extern void Image_crop(Image image, int left, int top, int right, int bottom);
+extern void Image_rotate_ccw(Image image);
+extern void Image_rotate_cw(Image image);
+extern void Image_rotate_180(Image image);
+extern int  Image_bpp(Image image);
+extern int  Image_width(Image image);
+extern int  Image_height(Image image);
 extern void Image_get_col(Image image, unsigned char *data, int column);
 extern void Image_get_row(Image image, unsigned char *data, int row);
+
+extern const char *Image_get_pluginname(Image image);
 extern void Image_progress_init(Image image);
 extern void Image_note_progress(Image image, double current, double total);
 

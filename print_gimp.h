@@ -54,4 +54,11 @@
 #define GIMP_1_0
 #endif
 
+/*
+ * Function prototypes
+ */
+
+/* How to create an Image wrapping a Gimp drawable */
+extern Image Image_GDrawable_new(GDrawable *drawable);
+
 #endif  /* __PRINT_GIMP_H__ */

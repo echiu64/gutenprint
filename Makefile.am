@@ -15,6 +15,7 @@ print_SOURCES = \
 	print-pcl.c		\
 	print-ps.c      	\
 	print-util.c		\
+	print-image-gimp.c	\
 	print-intl.h		\
 	print.c			\
 	print.h			\
