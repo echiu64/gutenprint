@@ -60,7 +60,7 @@ host_alias = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
 AA = 
 AS = @AS@
-CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
+CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sk.gmo sv.gmo
 CATOBJEXT = .gmo
 CC = /opt/pgcc-2.95.1/bin/gcc
 CFLAGS = -O6 -g -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
@@ -76,12 +76,12 @@ GIMP =
 GIMPDOCS = 
 GIMPINSTALL = 
 GIMPTOOL = ../../gimptool
-GIMP_CFLAGS = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib  -lgimpui
-GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib 
+GIMP_CFLAGS = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib  -lgimpui
+GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib 
 GIMP_MAJOR_VERSION = 1
-GIMP_MICRO_VERSION = 10
+GIMP_MICRO_VERSION = 11
 GIMP_MINOR_VERSION = 1
 GIMP_MODULES = modules
 GIMP_MP_FLAGS = 
@@ -90,17 +90,17 @@ GIMP_PERL = perl
 GIMP_PLUGINS = plug-ins
 GIMP_THREAD_FLAGS = 
 GIMP_THREAD_LIBS = 
-GIMP_VERSION = 1.1.10
-GLIB_CFLAGS = -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
-GLIB_LIBS = -L/mnt1/gnome.new/lib -lglib
-GMOFILES =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
+GIMP_VERSION = 1.1.11
+GLIB_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
+GLIB_LIBS = -L/usr/lib -lglib
+GMOFILES =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sk.gmo sv.gmo
 GMSGFMT = /usr/bin/msgfmt
-GNOME_CONFIG = /mnt1/gnome.new/bin/gnome-config
-GTKXMHTML_CFLAGS = -I/mnt1/gnome.new/include -DNEED_GNOMESUPPORT_H -I/mnt1/gnome.new/lib/gnome-libs/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include
-GTKXMHTML_LIBS = -rdynamic -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXext -lX11 -lm
-GTK_CFLAGS = -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
-GTK_CONFIG = /mnt1/gnome.new/bin/gtk-config
-GTK_LIBS = -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
+GNOME_CONFIG = /opt/gnome/bin/gnome-config
+GTKXMHTML_CFLAGS = -I/opt/gnome/include -DNEED_GNOMESUPPORT_H -I/opt/gnome/lib/gnome-libs/include -I/usr/X11R6/include -I/usr/lib/glib/include
+GTKXMHTML_LIBS = -rdynamic -L/opt/gnome/lib -L/usr/lib -L/usr/X11R6/lib -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXext -lX11 -lm
+GTK_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
+GTK_CONFIG = /usr/bin/gtk-config
+GTK_LIBS = -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
 GT_NO = 
 GT_YES = #YES#
 HELPBROWSER = helpbrowser
@@ -111,7 +111,7 @@ INTLLIBS =
 INTLOBJS = 
 IN_GIMP = 1
 JPEG = jpeg
-LD = /usr/bin/ld
+LD = /usr/i486-linux/bin/ld
 LDFLAGS = 
 LIBAA = 
 LIBJPEG = -ljpeg
@@ -133,7 +133,7 @@ LPSTAT_DEF = -DLPSTAT_COMMAND=\"/usr/bin/lpstat\"
 LP_COMMAND = /usr/bin/lp
 LP_DEF = -DLP_COMMAND=\"/usr/bin/lp\"
 LT_AGE = 0
-LT_CURRENT = 10
+LT_CURRENT = 11
 LT_RELEASE = 1.1
 LT_REVISION = 0
 MAILER = -DMAILER=\"/usr/sbin/sendmail\"
@@ -147,7 +147,7 @@ OBJDUMP = @OBJDUMP@
 PACKAGE = gimp
 PERL = /usr/bin/perl
 PNG = png
-POFILES =  cs.po da.po de.po fi.po fr.po hu.po it.po ja.po ko.po nl.po no.po pl.po ru.po sv.po
+POFILES =  cs.po da.po de.po fi.po fr.po hu.po it.po ja.po ko.po nl.po no.po pl.po ru.po sk.po sv.po
 POSUB = po
 PSP = psp
 PYGIMP_CFLAGS_NOUI = 
@@ -162,19 +162,19 @@ SO =
 TIFF = tiff
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 1.1.10
+VERSION = 1.1.11
 WEBBROWSER = webbrowser
 XJT = xjt
 XPM = xpm
-brushdata = 10x10square.gbr 10x10squareBlur.gbr 11circle.gbr 11fcircle.gbr 13circle.gbr 13fcircle.gbr 15circle.gbr 15fcircle.gbr 17circle.gbr 17fcircle.gbr 19circle.gbr 19fcircle.gbr 1circle.gbr 20x20square.gbr 20x20squareBlur.gbr 3circle.gbr 3fcircle.gbr 5circle.gbr 5fcircle.gbr 5x5square.gbr 5x5squareBlur.gbr 7circle.gbr 7fcircle.gbr 9circle.gbr 9fcircle.gbr DStar11.gbr DStar17.gbr DStar25.gbr callig1.gbr callig2.gbr callig3.gbr callig4.gbr confetti.gbr dunes.gbr galaxy.gbr galaxy_big.gbr galaxy_small.gbr pepper.gpb pixel.gbr thegimp.gbr vine.gih xcf.gbr
+brushdata = 10x10square.gbr 10x10squareBlur.gbr 11circle.gbr 11fcircle.gbr 13circle.gbr 13fcircle.gbr 15circle.gbr 15fcircle.gbr 17circle.gbr 17fcircle.gbr 19circle.gbr 19fcircle.gbr 1circle.gbr 20x20square.gbr 20x20squareBlur.gbr 3circle.gbr 3fcircle.gbr 5circle.gbr 5fcircle.gbr 5x5square.gbr 5x5squareBlur.gbr 7circle.gbr 7fcircle.gbr 9circle.gbr 9fcircle.gbr CVS DStar11.gbr DStar17.gbr DStar25.gbr callig1.gbr callig2.gbr callig3.gbr callig4.gbr confetti.gbr dunes.gbr galaxy.gbr galaxy_big.gbr galaxy_small.gbr pepper.gpb pixel.gbr thegimp.gbr vine.gih xcf.gbr
 gimpdatadir = ${prefix}/Libraries/share/gimp
 gimpdir = .gimp-1.1
 gimpplugindir = ${exec_prefix}/Libraries///gimp/1.1
-gradientdata = Abstract_1 Abstract_2 Abstract_3 Aneurism Blinds Blue_Green Browns Brushed_Aluminium Burning_Paper Burning_Transparency CD CD_Half Caribbean_Blues Coffee Cold_Steel Cold_Steel_2 Crown_molding Dark_1 Deep_Sea Default Flare_Glow_Angular_1 Flare_Glow_Radial_1 Flare_Glow_Radial_2 Flare_Glow_Radial_3 Flare_Glow_Radial_4 Flare_Radial_101 Flare_Radial_102 Flare_Radial_103 Flare_Rays_Radial_1 Flare_Rays_Radial_2 Flare_Rays_Size_1 Flare_Sizefac_101 Four_bars French_flag French_flag_smooth Full_saturation_spectrum_CCW Full_saturation_spectrum_CW German_flag German_flag_smooth Golden Greens Horizon_1 Horizon_2 Incandescent Land_1 Land_and_Sea Metallic_Something Mexican_flag Mexican_flag_smooth Nauseating_Headache Neon_Cyan Neon_Green Neon_Yellow Pastel_Rainbow Pastels Purples Radial_Eyeball_Blue Radial_Eyeball_Brown Radial_Eyeball_Green Radial_Glow_1 Radial_Rainbow_Hoop Romanian_flag Romanian_flag_smooth Rounded_edge Shadows_1 Shadows_2 Shadows_3 Skyline Skyline_polluted Square_Wood_Frame Sunrise Three_bars_sin Tropical_Colors Tube_Red Wood_1 Wood_2 Yellow_Contrast Yellow_Orange
+gradientdata = Abstract_1 Abstract_2 Abstract_3 Aneurism Blinds Blue_Green Browns Brushed_Aluminium Burning_Paper Burning_Transparency CD CD_Half CVS Caribbean_Blues Coffee Cold_Steel Cold_Steel_2 Crown_molding Dark_1 Deep_Sea Default Flare_Glow_Angular_1 Flare_Glow_Radial_1 Flare_Glow_Radial_2 Flare_Glow_Radial_3 Flare_Glow_Radial_4 Flare_Radial_101 Flare_Radial_102 Flare_Radial_103 Flare_Rays_Radial_1 Flare_Rays_Radial_2 Flare_Rays_Size_1 Flare_Sizefac_101 Four_bars French_flag French_flag_smooth Full_saturation_spectrum_CCW Full_saturation_spectrum_CW German_flag German_flag_smooth Golden Greens Horizon_1 Horizon_2 Incandescent Land_1 Land_and_Sea Metallic_Something Mexican_flag Mexican_flag_smooth Nauseating_Headache Neon_Cyan Neon_Green Neon_Yellow Pastel_Rainbow Pastels Purples Radial_Eyeball_Blue Radial_Eyeball_Brown Radial_Eyeball_Green Radial_Glow_1 Radial_Rainbow_Hoop Romanian_flag Romanian_flag_smooth Rounded_edge Shadows_1 Shadows_2 Shadows_3 Skyline Skyline_polluted Square_Wood_Frame Sunrise Three_bars_sin Tropical_Colors Tube_Red Wood_1 Wood_2 Yellow_Contrast Yellow_Orange
 l = 
 localedir = ${prefix}/${DATADIRNAME}/locale
-palettedata = Bears Bgold Blues Borders Browns_And_Yellows Caramel Cascade China Coldfire Cool_Colors Cranes Dark_pastels Default Ega Firecode Gold GrayViolet Grayblue Grays Greens Hilite Kahki Lights Muted Named_Colors News3 Op2 Paintjet Pastels Plasma Reds Reds_And_Purples Royal Topographic Visibone Visibone2 Volcano Warm_Colors Web
-patterndata = 3dgreen.pat Craters.pat Moonfoot.pat amethyst.pat bark.pat blue.pat bluegrid.pat bluesquares.pat blueweb.pat brick.pat burlap.pat burlwood.pat choc_swirl.pat corkboard.pat cracked.pat crinklepaper.pat electric.pat fibers.pat granite1.pat ground1.pat ice.pat java.pat leather.pat leaves.pat leopard.pat lightning.pat marble1.pat marble2.pat marble3.pat nops.pat paper.pat parque1.pat parque2.pat parque3.pat pastel.pat pine.pat pink_marble.pat pool.pat qube1.pat rain.pat recessed.pat redcube.pat rock.pat sky.pat slate.pat sm_squares.pat starfield.pat stone33.pat terra.pat walnut.pat warning.pat wood1.pat wood2.pat wood3.pat wood4.pat wood5.pat
+palettedata = Bears Bgold Blues Borders Browns_And_Yellows CVS Caramel Cascade China Coldfire Cool_Colors Cranes Dark_pastels Default Ega Firecode Gold GrayViolet Grayblue Grays Greens Hilite Kahki Lights Muted Named_Colors News3 Op2 Paintjet Pastels Plasma Reds Reds_And_Purples Royal Topographic Visibone Visibone2 Volcano Warm_Colors Web
+patterndata = 3dgreen.pat CVS Craters.pat Moonfoot.pat amethyst.pat bark.pat blue.pat bluegrid.pat bluesquares.pat blueweb.pat brick.pat burlap.pat burlwood.pat choc_swirl.pat corkboard.pat cracked.pat crinklepaper.pat electric.pat fibers.pat granite1.pat ground1.pat ice.pat java.pat leather.pat leaves.pat leopard.pat lightning.pat marble1.pat marble2.pat marble3.pat nops.pat paper.pat parque1.pat parque2.pat parque3.pat pastel.pat pine.pat pink_marble.pat pool.pat qube1.pat rain.pat recessed.pat redcube.pat rock.pat sky.pat slate.pat sm_squares.pat starfield.pat stone33.pat terra.pat walnut.pat warning.pat wood1.pat wood2.pat wood3.pat wood4.pat wood5.pat
 prefix = /usr/local
 pyexecdir = 
 pythondir = 
@@ -337,7 +337,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -349,32 +349,36 @@ print-escp2.o: print-escp2.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-pcl.o: print-pcl.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-ps.o: print-ps.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/stdplugins-intl.h \
+	../../libgimp/gimpintl.h
 print-util.o: print-util.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h
+	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
+	../../libgimp/gimpcompat.h
 print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
 	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/gimpui.h ../../libgimp/gimpmenu.h \
-	../../libgimp/gimpexport.h ../../libgimp/stdplugins-intl.h \
-	../../libgimp/gimpintl.h
+	../../libgimp/gimpcompat.h ../../libgimp/gimpui.h \
+	../../libgimp/gimpmenu.h ../../libgimp/gimpexport.h \
+	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 
 info-am:
 info: info-am
