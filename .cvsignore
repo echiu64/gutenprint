@@ -10,6 +10,7 @@ config.status
 configure
 escp2-weavetest
 escputil
+escputil.1
 pcl-unprint
 print
 print-printers.c
