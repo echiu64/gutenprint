@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.0.0-beta3!  Please read these release notes
+Welcome to Gutenprint 5.0.0-beta4!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -76,11 +76,114 @@ on building and installing Gutenprint.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-beta2 to 5.0.0-beta3
-2) Changes from 5.0.0-beta1 to 5.0.0-beta2
-3) Overall changes from 4.2 to 5.0.
-4) List of supported printers
-5) Printer-specific notes
+1) Changes from 5.0.0-beta3 to 5.0.0-beta4
+2) Changes from 5.0.0-beta2 to 5.0.0-beta3
+3) Changes from 5.0.0-beta1 to 5.0.0-beta2
+4) Overall changes from 4.2 to 5.0.
+5) List of supported printers
+6) Printer-specific notes
+
+================================================================
+
+* Major changes between Gutenprint 5.0.0 beta 3 and Gutenprint 5.0.0 beta 4:
+
+  1) The Foomatic data generator and ijsgutenprint (the Ghostscript
+     driver) now works correctly and supports the full range of
+     options.  However, due to Foomatic limitations, additional steps
+     may be required to install the data and generate correct PPD
+     files.  Please read these instructions carefully if you decide to
+     use Foomatic with Gutenprint 5.0.0-beta4.
+
+     * Before installing Gutenprint 5.0.0-beta4, you must manually
+       remove any existing Foomatic option files.  This is because the
+       Foomatic utility to load data kits (foomatic-kitload) does not
+       remove obsolete data files from the Foomatic database.  If you
+       do not do this, any PPD files you generate will be incorrect
+       and printing may work incorrectly or not at all.
+
+       Foomatic option files are usually located in 
+
+       /usr/local/share/foomatic/db/source/opt
+
+       or
+
+       /usr/share/foomatic/db/source/opt
+
+       Assuming they're in the former location, you must remove data
+       files associated with the Gutenprint driver.  The command to do
+       this, which must be run as the superuser (root) is
+
+       cd /usr/local/share/foomatic/db/source/opt
+       ls -l gutenprint-ijs*.xml
+
+       If there are existing files present, you must remove them:
+
+       rm -f gutenprint-ijs*.xml
+
+       Now check to make sure that they are gone:
+
+       ls -l gutenprint-ijs*.xml
+
+       CAUTION: Be very careful when typing this command!  Minor
+       errors in typing these commands may result in severe damage to
+       your system.
+
+       After this, you may run 'make install' in your Gutenprint
+       source directory to install the package.
+
+       In general, you will have to perform this procedure any time
+       you install a new version of Gutenprint.
+
+       Please check the Foomatic site
+       (http://www.linuxprinting.org/foomatic.html) and the Gutenprint
+       site (http://gimp-print.sourceforge.net) for updated
+       instructions about this.
+
+     * Unlike with the CUPS native driver, there is no simple way to
+       update all PPD files when you install a new version of
+       Gutenprint.  You must either use the foomatic-ppdfile command
+       to upgrade PPD files individually, or foomatic-compiledb to
+       build all PPD files.
+
+  2) The Epson Stylus Photo R800 and R1800 are now fully supported in
+     6-color mode, for resolutions up to 2880x2880 DPI.  The use of
+     gloss enhancer is now supported, although not used by default.
+
+     It is likely that further tuning work will be performed on this
+     printer, so colors may not be the same as in future releases.
+
+  3) The definitions for the Epson Stylus CX3500, 3600, and 3650 have
+     been corrected, and these multi-function devices now work
+     correctly.  Additional Epson multi-function devices have also
+     been added to the driver.
+
+  4) It is now possible to print to A4-size sheet paper on HP
+     DesignJet large-format plotter/printers.
+
+  5) Various improvements have been made to escputil, the command-line
+     Epson inkjet printer management utility:
+
+     * A new extended ink information command has been added.  This
+       command, which is supported on printers with separate
+       individual ink cartridges, prints additional information about
+       the ink cartridge in addition to the amount of ink present.
+
+     * Ink level detection now works on all known supported printers.
+       Previously it did not work on some newer printers.  However, it
+       is considerably slower on these printers than it is on older
+       printers that support the faster ink detection method.
+
+     * It is now no longer necessary to use the -u flag with certain
+       printers in most cases.  The utility now autodetects the
+       printer model and generates appropriate commands in all cases.
+
+       If you supply a printer queue (with the -P option) rather than
+       a raw device (with the -r option), you will still need to
+       provide the -u flag, as the utility cannot detect the actual
+       printer connected to a queue.  However, bidirectional commands
+       (ink level, identify, printer status, and alignment) do not
+       normally require the -u option any more.
+
 
 ================================================================
 

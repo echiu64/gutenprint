@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gutenprint version 5.0.0 Beta 3, the second beta
+    This is Gutenprint version 5.0.0 beta 4, the fourth beta
     prerelease of Gutenprint 5.0.  Gutenprint, formerly named
     Gimp-Print, is a suite of printer drivers that may be used with
     most common UNIX print spooling systems, including CUPS, lpr,
@@ -181,9 +181,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
 
-    If the version number (in this case, 5.0.0-beta2) does not match
+    If the version number (in this case, 5.0.0-beta4) does not match
     the version of Gutenprint that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -214,15 +214,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(sv)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(fr)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(sv)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(fr)
 
     you may wish to turn off the translation of PPD files:
 

@@ -303,6 +303,10 @@ X     + Update of the Foomatic data to the new data scheme.  The
 	This is COMPLETE, although subject to minor changes and bug
 	fixes.
 
+	UPDATE 20050324 Foomatic finally works (at least for simple
+	cases, and the option system seems to work correctly) with
+	Gutenprint 5.0.
+
 
     * Critical:
 
