@@ -1,5 +1,5 @@
-Gimp-Print 4.2.6-pre2, released May XX, 2003, is a prerelease in the
-Gimp-Print 4.2 series.
+Gimp-Print 4.2.6-pre2, released September 15, 2003, is a prerelease in
+the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -45,22 +45,37 @@ package from source code.
 Gimp-Print 4.2.6-pre2 contains the following major changes over
 Gimp-Print 4.2.6-pre1:
 
-1) The CUPS driver now offers normal and reversed paper order,
+1) A bug in the CUPS driver whereby the quality degrades on each
+   successive page of a multi-page job has been fixed.  This bug was
+   introduced in 4.2.6-pre1, and is not present in 4.2.5.
+
+2) The CUPS driver now offers normal and reversed paper order,
    permitting printing documents in the correct order on inkjet
    printers.
 
-2) The Postscript driver in the GIMP plug-in now works correctly in
+3) The Postscript driver in the GIMP plug-in now works correctly in
    non-US locales.
 
-3) A Czech language translation has been added.
+4) Preliminary support for the Epson Stylus C83 and C84.
 
-4) The printer compatibility list has been updated to reflect the
+5) Preliminary support for the Canon S200.
+
+6) A Czech language translation has been added.
+
+7) The printer compatibility list has been updated to reflect the
    latest information from linuxprinting.org.
 
-5) Engineering C paper size is now added.
+8) Engineering C paper size is now added.
 
-The following bugs have been fixed in Gimp-Print 4.2.6-pre1:
+9) escputil will no longer hang if the printer does not respond.
 
+10) The Swedish and German translations have been updated.
+
+11) The man pages have been updated.
+
+The following bugs have been fixed in Gimp-Print 4.2.6-pre2:
+
+806902 CUPS quality degrades on multi-page jobs (4.2.6-pre1 only)
 729918 Postscript family driver fails in non-US locale
 735493 CUPS PPD files lacking *OutputOrder
 
