@@ -767,8 +767,22 @@ void gtk_create_main_window(void)
     gtk_widget_show(box);
 
     if (vars.scaling < 0.0)
+      {
+	double max_ppi_scaling;
+	double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+	min_ppi_scaling1 = 72.0 * (double) image_width /
+	  (double) printable_width;
+	min_ppi_scaling2 = 72.0 * (double) image_height /
+	  (double) printable_height;
+	if (min_ppi_scaling1 > min_ppi_scaling2)
+	  min_ppi_scaling = min_ppi_scaling1;
+	else
+	  min_ppi_scaling = min_ppi_scaling2;
+	max_ppi_scaling = min_ppi_scaling * 20;
 	scaling_adjustment = scale_data =
-	    gtk_adjustment_new(-vars.scaling, 36.0, 1201.0, 1.0, 1.0, 1.0);
+	  gtk_adjustment_new(-vars.scaling, min_ppi_scaling,
+			     max_ppi_scaling + 1, 1.0, 1.0, 1.0);
+      }
     else
 	scaling_adjustment = scale_data =
 	    gtk_adjustment_new(vars.scaling, 5.0, 101.0, 1.0, 1.0, 1.0);
