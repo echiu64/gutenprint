@@ -259,8 +259,16 @@ typedef struct
 
 typedef struct
 {
+  const char *data;
+  size_t length;
+} init_sequence_t;
+
+typedef struct
+{
   const char *name;
   const char *text;
+  init_sequence_t init_sequence;
+  init_sequence_t deinit_sequence;
 } input_slot_t;
 
 typedef struct
@@ -268,12 +276,6 @@ typedef struct
   const input_slot_t *slots;
   size_t n_input_slots;
 } input_slot_list_t;
-
-typedef struct
-{
-  const char *data;
-  size_t length;
-} init_sequence_t;
 
 typedef struct escp2_printer
 {
