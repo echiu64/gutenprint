@@ -170,6 +170,37 @@ Cannot read from /dev/lp0: Invalid argument
 <p>You need to rebuild your kernel with CONFIG_PRINTER_READBACK
 enabled.
 
+<p><li><h3>I tried to test my Epson printer by 'cat .cshrc > /dev/lp0'
+and nothing prints!!!???</h3>
+
+<p>The classic test of printer connectivity -- sending an ASCII file
+to it -- doesn't work on many Epson printers out of the box (or after
+printing from Windows or Macintosh).  Epson printers from the Stylus
+Color 740 and newer use a special "packet mode" in which they do not
+recognize standard commands or ASCII text.  They must be sent a
+special sequence that takes them out of packet mode.  The command
+
+<p><pre>escputil -u -s -r /dev/lp0</pre>
+
+<p>will take the printer out of packet mode and enable you to print to
+it.  Of course, as soon as you've read back status from the printer,
+you know it's working (although if you're unable to read status out of
+the printer, you might have a different problem; see above).
+
+<p>Printing to your printer from Gimp-Print, whether you use the Print
+plugin, the CUPS driver, or the Ghostscript driver, will also take the
+printer out of packet mode.  But then again, if you successfully print
+to your printer, you know it's working, so why worry?  If you're
+trying to test your spooler, though, the escputil trick above will do
+it.  Just make sure that /dev/lp0 is the right device; if it isn't,
+substitute whatever is.
+
+<p><em>Note:</em> this does not apply to printers prior to the 740
+(such as the Stylus Photo EX, Stylus Color 850, or anything even
+older).  Those printers are always capable of printing ASCII text, and
+don't have packet mode.  You can read status from them, but you must
+leave off the '-u' option.
+
 <p><li><h3>My USB-connected Epson Stylus printer won't work with
 {Free,Net,Open}BSD!</h3>
 
