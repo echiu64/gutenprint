@@ -416,7 +416,7 @@ static const quality_t standard_qualities[] =
   { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
   { "Photo",       N_("Photo"),        0, 0, 1440, 720, 1440, 720 },
   { "HighPhoto",   N_("Super Photo"),  0, 0, 2880, 2880, 2880, 1440 },
-  { "Best",        N_("Ultra Photo"),  0, 0, 2880, 2880, -1, -1 },
+  { "Best",        N_("Ultra Photo"),  0, 0, 2880, 2880, 2880, 2880 },
   { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
 };
 
