@@ -517,13 +517,13 @@ stpi_dither_et_single(stp_vars_t v,
 
     shade_distance_t *ssp = (shade_distance_t *) ddc->aux_data;
     int point_error = 0;
-    int dummy_point_error = 0;
     int total_error = 0;
     int channels_to_print = 0;
     int print_all_channels = 0;
+    int maximum_value = 0;
     int comparison = 32768;
     stpi_dither_channel_t *best_channel = NULL;
-    int best_channel_value = 0;
+    int best_channel_value = 4096;
     int random_value = ditherpoint(d, &(d->dither_matrix), x);
 
     if (d->stpi_dither_type & D_ORDERED_BASE)
@@ -548,17 +548,26 @@ stpi_dither_et_single(stp_vars_t v,
 	 */
 	dc->b = find_segment_and_ditherpoint(dc, raw[i],
 					     &(sp->lower), &(sp->upper));
+	if (sp->lower.bits)
+	  print_all_channels = 1;
+	if (dc->b > maximum_value)
+	  maximum_value = dc->b;
 	ddc->b += dc->b;
 	/* Incorporate error data from previous line */
 	dc->v += 2 * dc->b + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
       }
     }
 
+    if ((3 * (ddc->b - maximum_value)) < maximum_value)
+      print_all_channels = 1;
+
+    if (ddc->b > 16383)
+      print_all_channels = 1;
 
     if (ddc->b > 65535) {
       ddc->b = 65535;
-      print_all_channels = 1;
     }
+    
     ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
     total_error += eventone_adjust(ddc, et, ddc->v - ddc->b, ddc->b);
 
@@ -566,7 +575,6 @@ stpi_dither_et_single(stp_vars_t v,
       stpi_dither_channel_t *dc = &CHANNEL(d, (i + random_value) % channel_count);
       
       if (dc->ptr) {
-	int et_val;
 
 	dc->o = eventone_adjust(dc, et, dc->v - dc->b, dc->b);
 	if (dc->o > best_channel_value) {
@@ -578,9 +586,6 @@ stpi_dither_et_single(stp_vars_t v,
 
 
     if (total_error >= comparison) {
-      ddc->v -= 131070;
-      total_error -= 65535;
-      ssp->dis = et->d_sq;
       channels_to_print = 1;
     }
     
@@ -598,6 +603,11 @@ stpi_dither_et_single(stp_vars_t v,
 	  point_error -= 65535;
 	  inkp = &(sp->upper);
 	  dc->v -= 131070;
+	  if (total_error >= comparison) {
+	    ddc->v -= 131070;
+	    total_error -= 65535;
+	    ssp->dis = et->d_sq;
+	  }
 	  sp->dis = et->d_sq;
 	}
 	if (inkp->bits) {
