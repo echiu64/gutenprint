@@ -179,12 +179,26 @@ static const physical_subchannel_t standard_red_subchannels[] =
 
 DECLARE_INK_CHANNEL(standard_red, 3.0);
 
+static const physical_subchannel_t f360_red_subchannels[] =
+{
+  { 7, -1, 1, "RedDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_red, 3.0);
+
 static const physical_subchannel_t standard_blue_subchannels[] =
 {
   { 8, -1, 0, "BlueDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_blue, 1.2);
+
+static const physical_subchannel_t f360_blue_subchannels[] =
+{
+  { 8, -1, 1, "BlueDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_blue, 1.2);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {
@@ -193,12 +207,26 @@ static const physical_subchannel_t standard_gloss_subchannels[] =
 
 DECLARE_INK_CHANNEL(standard_gloss, -1.0);
 
+static const physical_subchannel_t f360_gloss_subchannels[] =
+{
+  { 9, -1, 1, "GlossDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_gloss, -1.0);
+
 static const physical_subchannel_t standard_photo_black_subchannels[] =
 {
   { 0, 4, 0, "PhotoBlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_photo_black, -1.0);
+
+static const physical_subchannel_t r800_matte_black_subchannels[] =
+{
+  { 0, 0, 0, "BlackDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(r800_matte_black, -1.0);
 
 static const physical_subchannel_t photo_black_subchannels[] =
 {
@@ -903,9 +931,9 @@ static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 
 static const ink_channel_t *const standard_cmykrb_channels[] =
 {
-  &standard_black_channel, &standard_cyan_channel,
-  &standard_magenta_channel, &standard_yellow_channel,
-  &standard_red_channel, &standard_blue_channel
+  &standard_black_channel, &f360_standard_cyan_channel,
+  &f360_standard_magenta_channel, &f360_standard_yellow_channel,
+  &f360_red_channel, &f360_blue_channel
 };
 
 DECLARE_CHANNEL_SET(standard_cmykrb);

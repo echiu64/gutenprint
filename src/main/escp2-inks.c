@@ -90,7 +90,7 @@ static const escp2_dropsize_t escp2_2pl_2880_dropsizes =
 /* PM-G800 */
 /* Guess */
 static const escp2_dropsize_t escp2_1_5pl_360_dropsizes =
-  { "1_5pl_360", 3, { 0.25, 0.5, 1.0 } };
+  { "1_5pl_360", 1, { 1, 0, 1.0 } };
 /* 7, 14, 20 pl */
 static const escp2_dropsize_t escp2_1_5pl_720_dropsizes =
   { "1_5pl_720", 3, { 0.35, 0.70, 1.0 } };
@@ -100,14 +100,16 @@ static const escp2_dropsize_t escp2_1_5pl_720_dropsizes =
  * is unclear: it says 3 pl MSDT, but the diagram reads 2 pl
  */
 /* 3, 6, 13 pl */
+/* Looks like 3, 7.5, 15 */
 static const escp2_dropsize_t escp2_1_5pl_1440_dropsizes =
-  { "1_5pl_1440", 3, { 0.231, 0.462, 1.0 } };
+  { "1_5pl_1440", 3, { 0.2, 0.5, 1.0 } };
 /*
  * See above comment.  3 pl makes more sense than 2 pl
  */
 /* 1.5, 3, 6 pl */
+/* Looks like 1.5, 3.5, 7 */
 static const escp2_dropsize_t escp2_1_5pl_2880_dropsizes =
-  { "1_5pl_2880", 3, { 0.25, 0.50, 1.0 } };
+  { "1_5pl_2880", 3, { 0.23, 0.429, 1.0 } };
 
 /* Stylus Photo R300 */
 static const escp2_dropsize_t escp2_r300_360_dropsizes =
@@ -265,7 +267,7 @@ const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
 {
   &escp2_1_5pl_360_dropsizes,
   &escp2_1_5pl_360_dropsizes,
-  &escp2_1_5pl_360_dropsizes,
+  &escp2_1_5pl_720_dropsizes,	/* Even though we use 0x10 drop size */
   &escp2_1_5pl_720_dropsizes,
   &escp2_1_5pl_1440_dropsizes,
   &escp2_1_5pl_2880_dropsizes,
