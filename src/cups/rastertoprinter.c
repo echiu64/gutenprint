@@ -785,7 +785,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   {
     fprintf(stderr, "DEBUG2: Gimp-Print reading %d %d\n",
 	    bytes_per_line, cups->row);
-    while (cups->row < row)
+    while (cups->row <= row && cups->row < cups->header.cupsHeight)
       {
 	cupsRasterReadPixels(cups->ras, data, bytes_per_line);
 	cups->row ++;
