@@ -468,14 +468,27 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 #endif
   else if (strcmp(key, "TopLeft") == 0)
     {
+      int l, r, b, t, pw, ph;
       double w, h;
+      stp_printer_t printer =
+	(stp_get_printer_by_driver(stp_get_driver(img->v)));
+      ((*stp_printer_get_printfuncs(printer)->imageable_area))
+	(printer, img->v, &l, &r, &b, &t);
+      (*stp_printer_get_printfuncs(printer)->media_size)
+	(printer, img->v, &pw, &ph);
+      STP_DEBUG(fprintf(stderr, "l %d r %d t %d b %d pw %d ph %d\n",
+			l, r, t, b, pw, ph));
       code = gimp_parse_wxh(vbuf, strlen(vbuf), &w, &h);
       if (code == 0)
 	{
-	  STP_DEBUG(fprintf(stderr, "left top %f %f %s\n",
-			    w * 72, h * 72, vbuf));
-	  stp_set_left(img->v, w * 72);
-	  stp_set_top(img->v, h * 72);
+	  int al = (w * 72) - l;
+	  int ah = (h * 72) - (ph - t);
+	  STP_DEBUG(fprintf(stderr, "left top %f %f %d %d %s\n",
+			    w * 72, h * 72, al, ah, vbuf));
+	  if (al >= 0)
+	    stp_set_left(img->v, al);
+	  if (ah >= 0)
+	    stp_set_top(img->v, ah);
 	}
     }      
   else if (strcmp(key, "PaperSize") == 0)
