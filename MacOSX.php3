@@ -32,7 +32,8 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.  ESP Ghostscript is not necessary for Gimp-Print users running Mac OS X Panther (10.3.x), but anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the included uninstaller to remove the software.
+ <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.
+Anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the uninstaller included with this package to remove the old software.
  </p>
  <p>
  <a href="MacOSX.php3#5.0.0-beta1"><b>July 30, 2004 -</b></a> Gimp-Print 
@@ -213,9 +214,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  <td colspan="2" >
  <p>
  ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from
- GNU Ghostscript. This package is required for users on Mac OS X &quot;Jaguar&quot;; it provides full support for
- printing from Carbon applications in Mac OS X (<b>there is no need to install
- the same version of this package more than once</b>).
+ GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as  it provides full support for printing from all &quot;Carbon&quot; applications.
  </p>
  </td>
  </tr>
