@@ -26,6 +26,8 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
+pkgdatadir = $(datadir)/$(PACKAGE)/samples
+
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
@@ -33,6 +35,7 @@ GIMPPRINT_DEPLIBS = -lm
 LIBGIMPPRINT_LIBS = $(GIMPPRINT_LIBS) $(GIMPPRINT_DEPLIBS)
 LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 LIBS = $(INTLLIBS) @LIBS@
+
 
 ## Programs
 
@@ -53,15 +56,13 @@ $(GIMPPRINT_LIBS):
 	cd ../main ; \
 	$(MAKE)
 
-SAMPLE_IMAGES = testpattern.sample
-
-pkgdatadir = $(datadir)/$(PACKAGE)/samples
-
-pkgdata_DATA = @SAMPLE_IMAGES@
+if BUILD_TESTPATTERN
+pkgdata_DATA = testpattern.sample extended.sample
+endif
 
 ## Clean
 
 DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST =  testpatterny.h testpattern.sample
+EXTRA_DIST =  testpatterny.h $(pkgdata_DATA)

@@ -18,31 +18,29 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies 
+AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies
 
 @SET_MAKE@
 
 MAINT_CHARSET = latin1
 ACLOCAL_AMFLAGS = -I m4 -I m4local
+DISTCHECK_CONFIGURE_FLAGS = --enable-non-native-prefix=\$$\{prefix\}
 
 ## Variables
 
-NONGIMP_SUBDIRS = test
-NONGIMP_DISTDIRS = debian
-SUBDIRS = include intl lib man src samples $(NONGIMP_SUBDIRS) po doc
-DISTDIRS = m4 m4extra scripts $(NONGIMP_DISTDIRS)
+SUBDIRS = include intl lib man src samples test po doc debian scripts
+DISTDIRS = m4 m4extra
 
 
 ## Rules
 
-## Libtool dependency
+# Libtool dependency
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
 ChangeLog:
 	@cd $(top_srcdir) ; \
-	echo `pwd`
-	if test -f .noupdate ; then \
+	if test -f $(top_builddir)/.noupdate ; then \
 	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
 	elif test -d CVS ; then \
 	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
@@ -63,6 +61,8 @@ ChangeLog:
 	  exit 1 ; \
 	fi
 
+configure.in:
+	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
 
 dist-hook:
 	for dir in $(DISTDIRS) ; do \
@@ -76,12 +76,16 @@ dist-hook:
 	  fi \
 	done
 # Remove configure.in (libtool bug workaround)
-	$(RM) $(distdir)/configure.in
-# Create debian/control
-	DEBIAN_VERSION=`grep "(" debian/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
-	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*$$//"` ; \
-	LIBRARY_VERSION="-$${UPSTREAM_VERSION}" ; \
-	sed -e "s/#UPSTREAM_VERSION#/$${UPSTREAM_VERSION}/g"  -e "s/#LIBRARY_VERSION#/$${LIBRARY_VERSION}/g" <debian/control.in >$(distdir)/debian/control
+	$(RM) -f $(distdir)/configure.in
+# Remove any backup files found in distdir
+	$(FIND) $(distdir) -name '.*' -print | xargs $(RM) -rf
+	$(FIND) $(distdir) -name '#*' -print | xargs $(RM) -rf
+	$(FIND) $(distdir) -name '*~' -print | xargs $(RM) -rf
+
+maintainer-clean-local:
+	$(FIND) . -name '.*' -type f -print | xargs $(RM) -f
+	$(FIND) . -name '#*' -type f -print | xargs $(RM) -f
+	$(FIND) . -name '*~' -type f -print | xargs $(RM) -f
 
 install-cups: all
 	cd src/cups ; \
@@ -141,9 +145,53 @@ CLEANSCRIPTS = \
 	missing \
 	mkinstalldirs
 
-CLEANFILES = .noupdate
-MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
+CLEANMFOUR = \
+	codeset.m4 \
+	gettext.m4 \
+	glibc21.m4 \
+	iconv.m4 \
+	intdiv0.m4 \
+	inttypes_h.m4 \
+	inttypes.m4 \
+	inttypes-pri.m4 \
+	isc-posix.m4 \
+	lcmessage.m4 \
+	lib-ld.m4 \
+	lib-link.m4 \
+	lib-prefix.m4 \
+	progtest.m4 \
+	stdint_h.m4 \
+	uintmax_t.m4 \
+	ulonglong.m4
 
+CLEANPO = \
+	boldquot.sed \
+	en@boldquot.header \
+	en@quot.header \
+	insert-header.sin \
+	Makevars.template \
+	quot.sed \
+	remove-potcdate.sin \
+	Rules-quot
+
+CLEANFILES = .noupdate
+
+MAINTAINERCLEANFILES = \
+	ABOUT-NLS \
+	INSTALL \
+	aclocal.m4 \
+	config.h.in \
+	configure \
+	configure.in \
+	Makefile.in \
+	stamp-h.in \
+	stamp-h1.in \
+	stamp-h2.in \
+	stamp-h3.in \
+	stamp-h4.in \
+	$(addprefix scripts/, $(CLEANSCRIPTS)) \
+	$(addprefix m4/, $(CLEANMFOUR)) \
+	$(addprefix po/, $(CLEANPO))
 
 EXTRA_DIST = autogen.sh
 

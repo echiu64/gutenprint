@@ -122,7 +122,7 @@ popdef([GIMPPRINT_NAME])
 popdef([GIMPPRINT_VERSION])
 
 dnl Specify a configuration file.
-AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER([config.h])
 
 dnl Available languages (translations)
 ALL_LINGUAS="da de el en_GB es fr nl no pl pt sk sv"
@@ -290,12 +290,12 @@ STP_ARG_ENABLE([testpattern],
 STP_ARG_ENABLE([test],
                [build test programs],
                [BUILD_TEST],
-               [no])
+               [yes])
 
 STP_ARG_ENABLE([user-install],
-                  [install GIMP plugin in home directory],
-                  [USER_INSTALL],
-                  [no])
+               [install GIMP plugin in home directory],
+               [USER_INSTALL],
+               [no])
 if test x$USER_INSTALL = xyes ; then
   PLUG_IN_PATH="bin"
 else
@@ -314,6 +314,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LEX
 AC_PROG_YACC
+AC_PATH_PROG(FIND, find)
 AC_PATH_PROG(PERL, perl)
 AC_PATH_PROG(CONVERT, convert)
 if test x${USE_MAINTAINER_MODE} = xyes ; then
@@ -363,7 +364,7 @@ STP_CUPS_PROGS
 
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
-  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , $PATH:/usr/sbin:/usr/local/sbin)
+  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH:/usr/sbin:/usr/local/sbin])
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
   fi
@@ -379,11 +380,8 @@ if test x${BUILD_IJS} = xyes ; then
 fi
 
 dnl GNU gettext checks.
-AH_TEMPLATE(ENABLE_NLS, [AM_GNU_GETTEXT should provide this])
-AH_TEMPLATE(HAVE_CATGETS, [AM_GNU_GETTEXT should provide this])
-AH_TEMPLATE(HAVE_GETTEXT, [AM_GNU_GETTEXT should provide this])
-AH_TEMPLATE(HAVE_LC_MESSAGES, [AM_GNU_GETTEXT should provide this])
-AM_GNU_GETTEXT
+dnl AM_GNU_GETTEXT_VERSION([0.10.40])
+AM_GNU_GETTEXT([use-libtool])
 
 dnl Set PACKAGE_LOCALE_DIR in config.h
 AH_TEMPLATE(PACKAGE_LOCALE_DIR, [Package locale directory])
@@ -581,7 +579,7 @@ LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 AC_SUBST(LTALLOCA)])
 
 dnl Definitions
-AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
+AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_conf_datadir}/share/cups", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
 AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
 STP_RELEASE_DATE
@@ -596,30 +594,14 @@ AC_SUBST(cups_bindir)
 AC_SUBST(cups_conf_datadir)
 AC_SUBST(cups_conf_serverbin)
 AC_SUBST(cups_conf_serverroot)
-AC_SUBST(CUPS_BIN)
-AC_SUBST(CUPS_BACKEND_BIN)
-AC_SUBST(CUPS_FILTER_BIN)
-AC_SUBST(CUPS_PKG)
-AC_SUBST(CUPS_CONF)
-AC_SUBST(CUPS_INSTALL)
 AC_SUBST(CUPS_CFLAGS)
 AC_SUBST(CUPS_LIBS)
-AC_SUBST(CUPS_MAN)
 AC_SUBST(CUPS_PPD_PS_LEVEL)
-AC_SUBST(CUPS_NOINST_BIN)
-AC_SUBST(FOOMATIC_NOINST_BIN)
-AC_SUBST(FOOMATIC_INSTALL)
+AC_SUBST(FOOMATIC_KITLOAD)
 AC_SUBST(GENPPD_LIBS)
-AC_SUBST(IJS_BIN)
-AC_SUBST(IJS_INSTALL)
 AC_SUBST(IJS_CFLAGS)
 AC_SUBST(IJS_LIBS)
-AC_SUBST(TEST_BIN)
-AC_SUBST(TESTPATTERN_BIN)
 AC_SUBST(RM)
-AC_SUBST(ESCPUTIL_BIN)
-AC_SUBST(ESCPUTIL_MAN)
-AC_SUBST(GIMP_BIN)
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
 AC_SUBST(gimp_plug_indir)
@@ -632,14 +614,8 @@ gimpprint_libs="${GIMPPRINT_LIBS} ${GIMPPRINT_DEPLIBS}"
 AC_SUBST(gimpprint_libs)
 AC_SUBST(INCLUDES)
 AC_SUBST(LIBREADLINE_DEPS)
-AC_SUBST(MAIN_BIN)
-AC_SUBST(MAIN_DAT)
-AC_SUBST(MAIN_MAN)
-AC_SUBST(MAIN_SCR)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
-AC_SUBST(SAMPLE_IMAGES)
-AC_SUBST(USER_GUIDE)
 
 dnl Output files
 dnl po/Makefile.in *MUST* be surrounded by spaces to work with buggy
@@ -658,6 +634,7 @@ AC_SUBST(literal_includedir)
 AC_SUBST(literal_libdir)
 
 AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([debian/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/developer/Makefile])
 AC_CONFIG_FILES([doc/users_guide/Makefile])
@@ -691,6 +668,7 @@ AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/printdef/Makefile])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
+AC_CONFIG_FILES([scripts/Makefile])
 AC_CONFIG_FILES([src/ghost/contrib.mak.addon], [
 if test -f src/ghost/contrib.mak.addon ; then
   sed -e 's;${exec_prefix};'"${literal_exec_prefix};" -e 's;${prefix};'"${literal_prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp

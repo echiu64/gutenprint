@@ -26,6 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
+DISTDIRS = foomatic-templates-gs foomatic-templates-ijs
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
@@ -106,13 +107,22 @@ $(GIMPPRINT_LIBS):
 	cd ../main ; \
 	$(MAKE)
 
+dist-hook:
+	for dir in $(DISTDIRS) ; do \
+	  if test -d $(srcdir)/$$dir ; then \
+	    mkdir $(distdir)/$$dir; \
+	    for dirfile in $(srcdir)/$$dir/*.xml; do \
+	      if test -f $$dirfile ; then \
+	        cp -p $$dirfile $(distdir)/$$dir; \
+	      fi \
+	    done \
+	  fi \
+	done
+
 
 ## Clean
 
 CLEANFILES = foomatic-stamp
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = foomatic-printermap 		\
-	foomatic-templates-gs/*.xml		\
-	foomatic-templates-ijs/*.xml
-
+EXTRA_DIST = foomatic-printermap

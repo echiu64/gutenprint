@@ -1,0 +1,93 @@
+## Process this file with automake to produce Makefile.in
+## $Id$
+## Copyright (C) 2000 Roger Leigh
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+## Process this file with automake to produce Makefile.in.
+
+AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies 
+
+@SET_MAKE@
+
+MAINT_CHARSET = latin1
+
+
+## Variables
+
+EXTRA_DIST = \
+	changelog \
+	compat \
+	config \
+	control \
+	control.in \
+	copyright \
+	cupsys-driver-gimpprint.docs \
+	cupsys-driver-gimpprint.files \
+	cupsys-driver-gimpprint.postinst \
+	cupsys-driver-gimpprint.postrm \
+	escputil.docs \
+	escputil.files \
+	foomatic-db-gimp-print.files \
+	gimp1.2-print.docs \
+	gimp1.2-print.postrm \
+	gimp1.2-print.preinst \
+	gimpprint-doc.doc-base \
+	gimpprint-locales.files \
+	libgimpprint-dev.docs \
+	libgimpprint-dev.files \
+	libgimpprint-doc.doc-base.in \
+	libgimpprint.files \
+	README.building \
+	README.Debian \
+	rules \
+	templates
+
+
+## Rules
+
+dist-hook:
+# Create debian/control
+	DEBIAN_VERSION=`grep "(" $(srcdir)/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
+	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*$$//"` ; \
+	LIBRARY_VERSION="-$${UPSTREAM_VERSION}" ; \
+	sed -e "s/#UPSTREAM_VERSION#/$${UPSTREAM_VERSION}/g" \
+	    -e "s/#LIBRARY_VERSION#/$${LIBRARY_VERSION}/g" \
+	    <$(srcdir)/control.in >$(distdir)/control
+
+DEBUILD_OPTIONS = -us -uc
+deb: debian/changelog debian/control debian/rules
+	$(MAKE) dist
+	-$(RM) -r debian-build
+	-mkdir debian-build
+	cd debian-build ; \
+	mv ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
+	tar xfvz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
+	cd $(PACKAGE)-$(VERSION) ; \
+	debuild $(DEBUILD_OPTIONS) ; \
+	cd .. ; \
+	$(RM) -r $(PACKAGE)-$(VERSION)
+
+debian/control:
+	debian/rules debian/control
+
+
+## Clean
+
+MAINTAINERCLEANFILES = \
+	Makefile.in
+
+
+.PHONY: deb
