@@ -2097,7 +2097,7 @@ stpi_color_traditional_init(stp_vars_t v,
   lut = (lut_t *)(stpi_get_component_data(v, "Color"));
   lut->image_bpp = image_bpp;
   lut->image_width = stpi_image_width(image);
-  if (image_type)
+  if (image_type && strcmp(image_type, "None") != 0)
     {
       if (strcmp(image_type, "Text") == 0)
 	itype = 4;
