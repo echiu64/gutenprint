@@ -308,6 +308,7 @@ AC_PATH_PROG(DB2HTML, db2html)
 AC_PATH_PROG(PS2PDF, ps2pdf)
 AC_PATH_PROG(JADE, jade)
 AC_PATH_PROG(GZIP, gzip)
+AC_PATH_PROG(PS2PDF, ps2pdf)
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
