@@ -368,6 +368,7 @@ int update_page(unsigned char *buf,int bufsize,int m,int n,int color,int density
   return(0);
 }
 
+
 void parse_escp2(FILE *fp_r){
 
   int i,m=0,n=0,c=0;
@@ -727,10 +728,261 @@ counter=0;
     }
 }
 
+
+/* 'reverse_bit_order' 
+ *
+ * reverse the bit order in an array of bytes - does not reverse byte order! 
+ */
+void reverse_bit_order(unsigned char *buf, int n)
+{
+  int i;
+  unsigned char a;
+  if (!n) return; /* nothing to do */
+  
+  for (i= 0; i<n; i++) {
+    a= buf[i];
+    buf[i]=
+      (a & 0x01) << 7 |
+      (a & 0x02) << 5 |
+      (a & 0x04) << 3 |
+      (a & 0x08) << 1 |
+      (a & 0x10) >> 1 |
+      (a & 0x20) >> 3 |
+      (a & 0x40) >> 5 |
+      (a & 0x80) >> 7;
+  }
+}
+
+/* 'rle_decode'
+ *
+ * run-length-decodes a given buffer of length "n" 
+ * and stores the result in the same buffer 
+ * not exceeding a size of "max" bytes.
+ */
+int rle_decode(unsigned char *inbuf, int n, int max)
+{
+  unsigned char outbuf[1440*20];
+  int cnt,num;
+  int i= 0, j;
+  int o= 0;
+
+  if (max>1440*20) max= 1440*20; /* FIXME: this can be done much better! */
+
+  while (i<n && o<max) {
+    cnt= inbuf[i];
+    if (cnt<0) { 
+      // cnt identical bytes
+      // fprintf(stderr,"rle 0x%02x = %4d = %4d\n",cnt&0xff,cnt,1-cnt);
+      num= 1-cnt;
+      // fprintf (stderr,"+%6d ",num);
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+1];
+      o+= num;
+      i+= 2;
+    } else { 
+      // cnt individual bytes
+      // fprintf(stderr,"raw 0x%02x = %4d = %4d\n",cnt&0xff,cnt,cnt + 1);
+      num= cnt+1;
+      // fprintf (stderr,"*%6d ",num);
+      for (j=0; j<num && o+j<max; j++) outbuf[o+j]=inbuf[i+j+1];
+      o+= num;
+      i+= num+1;
+    }
+  }
+  if (o>=max) {
+    fprintf(stderr,"Warning: rle decompression exceeds output buffer - dumped\n");
+    return 0;
+  }
+  /* copy decompressed data to inbuf: */
+  memset(inbuf,0,max-1);
+  memcpy(inbuf,outbuf,o);
+  return o;
+}
+
+void parse_canon(FILE *fp_r){
+
+  int m=0;
+  int currentcolor,currentbpp,density,eject,got_graphics;
+  int count,counter,cmdcounter;
+
+  counter=0;
+#define get1(error) if (!(count=fread(&ch,1,1,fp_r))) {fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
+                       fprintf(stderr,error);eject=1;continue;} else counter+=count;\
+                       sh=minibuf[0]+minibuf[1]*256;}
+#define getn(n,error) if (!(count=fread(buf,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){fprintf(stderr,error);eject=1;continue;} else counter+=count;
+ 
+  page= 0;
+  eject=got_graphics=currentbpp=currentcolor=density=0;
+  while ((!eject)&&(fread(&ch,1,1,fp_r))){
+    counter++;
+   if (ch==0xd) { /* carriage return */
+     pstate.xposition=0;
+     continue;
+   }
+   if (ch==0xc) { /* form feed */
+     eject=1;
+     continue;
+   }
+   if (ch=='B') {
+     fgets(buf,256*256,fp_r);
+     counter+= strlen(buf);
+     if (!strncmp(buf,"JLSTART",7)) {
+       while (strncmp(buf,"BJLEND",6)) {
+	 fgets(buf,256*256,fp_r);
+	 counter+= strlen(buf);
+	 fprintf(stderr,"got BJL-plaintext-command %s",buf);
+       }
+     } else {
+       fprintf(stderr,"Error: expected BJLSTART but got B%s",buf);
+     }
+     counter= ftell(fp_r);
+     continue;
+   }
+   if (ch!=0x1b) {
+     fprintf(stderr,"Corrupt file?  No ESC found.  Found: %02X at 0x%08X\n",ch,counter-1);
+     continue;
+   }
+   get1("Corrupt file.  No command found.\n");
+   /* fprintf(stderr,"Got a %X.\n",ch); */
+   switch (ch) {
+   case '[': /* 0x5b initialize printer */
+     get1("Error reading CEM-code.\n");
+     cmdcounter= counter;
+     get2("Error reading CEM-data size.\n");
+     getn(sh,"Error reading CEM-data.\n");
+     
+     if (ch=='K') /* 0x4b */ {
+       if (sh!=2 || buf[0]!=0x00 ) {
+	 fprintf(stderr,"Error initializing printer with ESC [ K\n");
+	 eject=1;
+	 continue;
+       }
+       if (page) {
+	 eject=1;
+	 continue;
+       } else {
+	 pstate.unidirectional=0;
+	 pstate.microweave=0;
+	 pstate.dotsize=0;
+	 pstate.bpp=1;
+	 pstate.page_management_units=360;
+	 pstate.relative_horizontal_units=180;
+	 pstate.absolute_horizontal_units=60;
+	 pstate.relative_vertical_units=360;
+	 pstate.absolute_vertical_units=360;
+	 pstate.top_margin=120;
+	 pstate.bottom_margin=
+	   pstate.page_length=22*360; /* 22 inches is default ??? */
+	 pstate.monomode=0;
+	 pstate.xposition= 0;
+	 pstate.yposition= 0;
+       }
+     } else {
+       fprintf(stderr,"Warning: Unknown command ESC %c 0x%X at 0x%08X.\n",0x5b,ch,cmdcounter);
+     }
+     break;
+     
+   case '@': /* 0x40 */
+     eject=1; 
+     break;
+     
+   case '(': /* 0x28 */
+     get1("Corrupt file.  Incomplete extended command.\n");
+     cmdcounter= counter;
+     get2("Corrupt file.  Error reading buffer size.\n");
+     bufsize=sh;
+     getn(bufsize,"Corrupt file.  Error reading data buffer.\n");
+     
+     switch(ch) {
+     case 'A': /* 0x41 - transfer graphics data */
+       switch (*buf) { 
+       case 'C': currentcolor= 2;
+	 break;
+       case 'M': currentcolor= 1;
+	 break;
+       case 'Y': currentcolor= 3;
+	 break;
+       case 'K': currentcolor= 0;
+	 break;
+       case 'c': currentcolor= 5;
+	 break;
+       case 'm': currentcolor= 4;
+	 break;
+       case 'y': currentcolor= 3; /* FIXME: change this to 6? */
+	 break;
+       default:
+	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
+	 exit(-1);
+       }
+       pstate.current_color= currentcolor;
+       m= rle_decode(buf+1,sh-1,256*256-1);
+       /* reverse_bit_order(buf+1,m); */
+       if (m) update_page(buf+1,m,1,m,currentcolor,/*currentbpp,*/pstate.absolute_vertical_units);
+       fprintf(stderr,"%c:%d->%d",*buf,sh-1,m); 
+       break;
+     case 'a': /* 0x61 - turn something on/off */
+       break;
+     case 'b': /* 0x62 - turn something else on/off */
+       break;
+     case 'c': /* 0x63 - some information about the print job */
+       break;
+     case 'd': /* 0x64 - set resolution */
+       if (page) {
+	 fprintf(stderr,"Setting the page format in the middle of printing a page is not supported.\n");
+	 exit(-1);
+       }
+       pstate.relative_vertical_units=   
+	 pstate.absolute_vertical_units=   
+	 buf[1]+256*buf[0];
+       pstate.relative_horizontal_units= 
+	 pstate.absolute_horizontal_units= 
+	 buf[3]+256*buf[2];
+       pstate.bottom_margin= pstate.relative_vertical_units* 22; 
+       /* FIXME: replace with real page length */
+       fprintf(stderr,"canon: res is %d x %d dpi\n",
+	       pstate.relative_horizontal_units,pstate.relative_vertical_units);
+
+       page=(line_type **)mycalloc(pstate.bottom_margin,sizeof(line_type *));
+       break;
+     case 'e': /* 0x65 - vertical head movement */
+       pstate.yposition+= (buf[1]+256*buf[0]);
+       fprintf(stderr,"\n"); /* DEBUG */
+       break;
+     case 'l': /* 0x6c - some more information about the print job*/
+       break;
+     case 'm': /* 0x6d - used printheads and other things */
+       break;
+     case 'p': /* 0x70 - set printable area */
+       break;
+     case 'q': /* 0x71 - turn yet something else on/off */
+       break;
+     case 't': /* 0x74 - contains bpp and line delaying*/
+       break;
+       
+       
+     default:
+       fprintf(stderr,"Warning: Unknown command ESC ( 0x%X at 0x%08X.\n",ch,cmdcounter);
+     }
+     break;
+     
+   default:
+     fprintf(stderr,"Warning: Unknown command ESC 0x%X at 0x%08X.\n",ch,counter-2);
+   }
+ }
+
+}
+
+
+
+
+
+
 int main(int argc,char *argv[]){
 
   int arg;
   char *s;
+  char *UNPRINT;
   FILE *fp_r,*fp_w;
 
     unweave=0;
@@ -787,7 +1039,11 @@ int main(int argc,char *argv[]){
     }
     pstate.nozzles=96;
 
-    parse_escp2(fp_r);
+    UNPRINT= getenv("UNPRINT");
+    if (!strcmp(UNPRINT,"canon"))
+      parse_canon(fp_r);
+    else
+      parse_escp2(fp_r);
     fprintf(stderr,"Done reading.\n");
     write_output(fp_w);
     fclose(fp_w);
