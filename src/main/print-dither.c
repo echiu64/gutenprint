@@ -2693,7 +2693,11 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
-  int xerror, xstep, xmod;
+  int		xerror, xstep, xmod;
+  double 	aspect = d->y_aspect / d->x_aspect;
+  int		divisor;
+
+  divisor = 4 + 4 * aspect;
 
   length = (d->dst_width + 7) / 8;
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
@@ -2870,9 +2874,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       /* Other spreading around try - Thomas Tonino */
      
       for (i=1; i < NCOLORS; i++) {
-        int fraction = ndither[i] / 8;
-        error[i][1][0] += fraction;
-        error[i][1][-2*direction] += fraction;
+        int fraction = ndither[i] / divisor;
+        error[i][1][0] += 1*fraction;
+        error[i][1][-2*direction] += 1*fraction;
         error[i][1][direction] += 2*fraction;
 	ndither[i] -= 4*fraction;
       }
