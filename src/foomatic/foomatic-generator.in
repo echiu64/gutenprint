@@ -76,10 +76,10 @@ my $debug = 0;
 $colormap = { 'gs' => { 'Grayscale' => '0',
 			'Color' => '1',
 			'BlackAndWhite' => '2' },
-	      'ijs' => { 'Grayscale' => 'DeviceGrayscale',
+	      'ijs' => { 'Grayscale' => 'DeviceGray',
 			 'Color' => 'DeviceRGB',
 			 'BlackAndWhite' =>
-			     'DeviceGrayscale -dBitsPerSample=1',
+			     'DeviceGray -dBitsPerSample=1',
 			 'RawCMYK' => 'DeviceCMYK' }
 	    };
 
