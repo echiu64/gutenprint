@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.108  2000/03/03 01:04:06  rlk
+ *   correct parameters for ESC(D
+ *
  *   Revision 1.107  2000/03/03 00:11:20  rlk
  *   Silly bug in rgb_to_gray
  *
@@ -1121,7 +1124,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	      (((page_length * 720 / 72) >> 16) & 0xff),
 	      (((page_length * 720 / 72) >> 24) & 0xff));
 
-      fwrite("\033(D\004\000\100\070\170\050", 9, 1, prn);
+      fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
+	      escp2_nozzle_separation(model) * 14400 / 720,
+	      14400 / escp2_xres(model));
 
       fwrite("\033(v\004\000", 5, 1, prn);     /* Absolute vertical position */
       n = ydpi * top / 72;
