@@ -2,7 +2,9 @@
 .libs
 Makefile
 Makefile.in
+curve.lo
 libgimpprint.la
+papers-oldlist.h
 print-lexmark.lo
 print-canon.lo
 print-dither.lo
@@ -16,6 +18,12 @@ print-util.lo
 print-color.lo
 print-weave.lo
 print-version.lo
+print-papers.lo
+print-printers.lo
+print-vars.lo
+printers-oldlist.h
+printers.lo
+string-list.lo
 gimpprint-config.in
 gimpprint-config
 gimpprint.pc
