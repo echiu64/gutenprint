@@ -113,6 +113,9 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 static const escp2_dot_size_t c2pl_dotsizes =
 {   -1, 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x13,   -1, 0x13, 0x10, 0x10 };
 
+static const escp2_dot_size_t c1_8pl_dotsizes =
+{   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12, 0x12, 0x13 };
+
 static const escp2_dot_size_t c4pl_pigment_dotsizes =
 { -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x10, 0x10, 0x10 };
 
@@ -152,6 +155,9 @@ static const escp2_bits_t ultrachrome_bits =
 static const escp2_bits_t standard_bits =
 {    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 };
 
+static const escp2_bits_t c1_8_bits =
+{    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    1,    1,    1,    1 };
+
 /*
  * Base resolutions are for:
  *
@@ -187,6 +193,9 @@ static const escp2_base_resolutions_t stp950_base_res =
 
 static const escp2_base_resolutions_t ultrachrome_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720,  720,  720,  720 };
+
+static const escp2_base_resolutions_t c1_8_base_res =
+{  360,  360,  360,  360,  720,  720,  720,  720,  720,  720, 1440, 1440, 1440, 1440 };
 
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  360,  360,  360,  360,  180,  180,  180,  180,  360,  360 };
@@ -267,7 +276,10 @@ static const escp2_densities_t c3pl_pigment_densities =
 { 2.6, 2.6, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293, 0.147 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.3, 2.3, 1.15,1.15,0.57, 0.57, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650, 0.360 };
+{ 2.3, 2.3, 1.15,1.15,0.57, 0.57, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650, 0.650, 0.325 };
+
+static const escp2_densities_t c1_8pl_densities =
+{ 2.3, 2.3, 1.15,1.15,0.57, 0.57, 0.650, 0.650, 0.650, 0.650,     0,     0, 0.650, 0.360 };
 
 static const escp2_densities_t c4pl_pigment_densities =
 { 2.7, 2.7, 1.35,1.35,0.68, 0.68, 0.518, 0.518, 0.518, 0.518, 0.518, 0.518, 0.259, 0.130 };
@@ -1348,10 +1360,10 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 190, 0, 0, 0,
-    c2pl_dotsizes, c2pl_densities,
+    c1_8pl_dotsizes, c1_8pl_densities,
     &stpi_escp2_variable_2pl_inks, &stpi_escp2_sp950_paper_list,
-    stpi_escp2_escp950_reslist, &stpi_escp2_photo7_japan_inklist,
-    stp950_bits, stp950_base_res, &cutter_roll_feed_input_slot_list,
+    stpi_escp2_c1_8_reslist, &stpi_escp2_photo7_japan_inklist,
+    c1_8_bits, c1_8_base_res, &cutter_roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
 };

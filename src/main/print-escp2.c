@@ -943,8 +943,8 @@ print_debug_params(const escp2_init_t *init)
 	case STP_PARAMETER_TYPE_CURVE:
 	  if (stp_check_curve_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
 	    {
-	      char *curve =
-		stp_curve_print_string(stp_get_curve_parameter(v, p->name));
+	      char *curve = (char *)
+		stp_curve_write_string(stp_get_curve_parameter(v, p->name));
 	      print_remote_param(v, p->name, curve);
 	      stpi_free(curve);
 	    }
@@ -1714,7 +1714,7 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
     head_offset[0] = 0;
   if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (ink_type->inkset == INKSET_CMYK || channels_in_use == 1) &&
-      xdpi == 360 && ydpi == 360)
+      xdpi == physical_xdpi && ydpi == 360)
     init.use_fast_360 = 1;
   else
     init.use_fast_360 = 0;
