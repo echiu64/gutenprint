@@ -803,6 +803,8 @@ static stp_internal_papersize_t paper_sizes[] =
     365, 561, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 129mm x 198mm */
 
   /* Miscellaneous sizes */
+  { "w283h425",		N_ ("10cm x 15cm"),
+    283, 425, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 100 x 150 mm */
   { "w283h420",		N_ ("Hagaki Card"),
     283, 420, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 100 x 148 mm */
   { "w420h567",		N_ ("Oufuku Card"),
