@@ -14,7 +14,8 @@ require('standard_html_header.php3');
 <p>The <a href="users-guide.pdf">user's manual</a> is available <a
 href="users-guide.pdf">here</a>.</p>
 
-<p>The <a href="gimpprint.pdf">developer's reference manual</a> is available <a
-href="gimpprint.pdf">here</a>.</p>
+<p>The <a href="developer-html/gimpprint.html">developer's reference
+manual</a> is available <a
+href="developer-html/gimp-print.html">here</a> (PDF version is <a href="gimpprint.pdf">here</a>).</p>
 
 <?require('standard_html_footer.php3');?>
