@@ -10,6 +10,54 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
 
+1) Major improvements in the Debian packaging yada yada yada.
+
+2) Initial internationalization yada yada yada.
+
+3) The Ghostscript driver should now compile on all systems.
+
+4) Added support for Epson 83 printer (appears to be more or less a
+   clone of the 880), Stylus Photo 1280, and Stylus Photo 480/580.
+   Note: it is still not possible to change ink cartridge on the
+   480/580 with this driver.
+
+5) Initial support for the Compaq IJ750 (aka Lexmark 3200) and Lexmark
+   Z31.
+
+6) Initial support for Canon BJC6500, S400, S450, S800, and S4500.
+
+7) Some improvements in quality for the Epson Stylus Color 900/980.
+
+8) Fix for Set Image Scale in GUI when image scaling was previously in
+   percent mode.
+
+9) Other minor UI improvements.
+
+10) Print correctly in grayscale mode when the source resolution is
+   better than the output resolution.  This bug manifested itself as
+   printing an image squashed, usually with the other 2/3 of it black.
+
+11) Some improvements in the Lexmark driver.
+
+12) Fix for print width of Epson Stylus Photo 2000P (it can print to
+   13" wide).
+
+13) Tune page length for a number of Epson printers (should eliminate
+   problem of printing off the end of the page).
+
+14) New 180x120 and 360x120 DPI modes for Epson printers that cannot
+   print 180x180 DPI.  These modes are for very quick and dirty
+   economy printing; they will not print solid black even on plain
+   paper.
+
+15) New gimpprint-config script (with man page) to ease linking
+   against libgimpprint.
+
+16) Significant print quality improvements for many variable dot size
+   printers.
+
+17) Cleaned up some black speckling problems.
+
 
 Print 4.1.3 contains the following fixes and improvements over 4.1.2:
 
