@@ -114,6 +114,7 @@ static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
 static gboolean   suppress_scaling_adjustment = FALSE;
 static gboolean   suppress_scaling_callback   = FALSE;
 
+static gint   suppress_preview_update = 0;
 
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
@@ -148,10 +149,6 @@ static void gimp_output_type_callback  (GtkWidget     *widget,
 					gpointer       data);
 static void gimp_unit_callback         (GtkWidget     *widget,
 					gpointer       data);
-#ifdef DO_LINEAR
-static void gimp_linear_callback       (GtkWidget     *widget,
-					gpointer       data);
-#endif
 static void gimp_orientation_callback  (GtkWidget     *widget,
 					gpointer       data);
 static void gimp_printandsave_callback (void);
@@ -232,9 +229,6 @@ gimp_create_main_window (void)
   GtkWidget *box0;
   GtkWidget *box1;
   GSList    *group;
-#ifdef DO_LINEAR
-  GSList    *linear_group;
-#endif
   GSList    *image_type_group;
   gint       i;
   gchar      s[100];
@@ -1183,6 +1177,7 @@ gimp_do_misc_updates (void)
   vars.page_width  = plist[plist_current].v.page_width;
   vars.page_height = plist[plist_current].v.page_height;
 
+  suppress_preview_update++;
   gimp_preview_update ();
 
   if (plist[plist_current].v.scaling < 0)
@@ -1237,13 +1232,6 @@ gimp_do_misc_updates (void)
   else
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_cm), TRUE);
 
-#ifdef DO_LINEAR
-  if (plist[plist_current].v.linear == 0)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (linear_off), TRUE);
-  else
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (linear_on), TRUE);
-#endif
-
   switch (plist[plist_current].v.image_type)
     {
     case IMAGE_LINE_ART:
@@ -1264,6 +1252,7 @@ gimp_do_misc_updates (void)
       break;
     }
 
+  suppress_preview_update--;
   gimp_preview_update ();
 }
 
@@ -1273,6 +1262,7 @@ gimp_do_misc_updates (void)
 static void
 gimp_position_callback (GtkWidget *widget)
 {
+  suppress_preview_update++;
   if (widget == recenter_button)
     {
       vars.left = -1;
@@ -1346,6 +1336,7 @@ gimp_position_callback (GtkWidget *widget)
 
   plist[plist_current].v.left = vars.left;
   plist[plist_current].v.top = vars.top;
+  suppress_preview_update--;
   gimp_preview_update ();
 }
 
@@ -1388,6 +1379,7 @@ gimp_plist_callback (GtkWidget *widget,
   strcpy (vars.resolution, p->v.resolution);
   strcpy (vars.output_to, p->v.output_to);
 
+  suppress_preview_update++;
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry),
                       vars.dither_algorithm);
 
@@ -1502,6 +1494,8 @@ gimp_plist_callback (GtkWidget *widget,
     }
   if (dither_algo_combo)
     gimp_build_dither_combo();
+  suppress_preview_update--;
+  gimp_preview_update();
 }
 
 #define Combo_get_text(combo) \
@@ -1739,23 +1733,6 @@ gimp_unit_callback (GtkWidget *widget,
       gimp_preview_update();
     }
 }
-
-/*
- *  gimp_linear_callback() - Update the current linear gradient mode...
- */
-#ifdef DO_LINEAR
-static void
-gimp_linear_callback (GtkWidget *widget,
-		      gpointer   data)
-{
-  if (GTK_TOGGLE_BUTTON (widget)->active)
-    {
-      vars.linear = (gint) data;
-      plist[plist_current].v.linear = (gint) data;
-    }
-  gimp_preview_update ();
-}
-#endif
 
 /*
  *  gimp_image_type_callback() - Update the current image type mode...
@@ -2259,6 +2236,8 @@ gimp_preview_update (void)
   gtk_signal_handler_unblock_by_data (GTK_OBJECT (custom_size_height), NULL);
 
   /* draw image */
+  if (suppress_preview_update)
+    return;
   {
     gint ox, oy, u;
     gint preview_x = 1 + printable_left + preview_ppi * vars.left / 72;

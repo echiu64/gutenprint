@@ -85,10 +85,6 @@ static GtkWidget* scaling_percent;        /* Scale by percent */
 static GtkWidget* scaling_ppi;            /* Scale by pixels-per-inch */
 static GtkWidget* output_gray;            /* Output type toggle, black */
 static GtkWidget* output_color;           /* Output type toggle, color */
-#ifdef DO_LINEAR
-static GtkWidget* linear_on;              /* Linear toggle, on */
-static GtkWidget* linear_off;             /* Linear toggle, off */
-#endif
 static GtkWidget* image_line_art;
 static GtkWidget* image_solid_tone;
 static GtkWidget* image_continuous_tone;
@@ -143,9 +139,6 @@ static void gtk_ink_type_callback(GtkWidget *, gint);
 static void gtk_resolution_callback(GtkWidget *, gint);
 static void gtk_output_type_callback(GtkWidget *, gint);
 static void gtk_unit_callback(GtkWidget *, gint);
-#ifdef DO_LINEAR
-static void gtk_linear_callback(GtkWidget *, gint);
-#endif
 static void gtk_orientation_callback(GtkWidget *, gint);
 static void gtk_printandsave_callback(void);
 static void gtk_print_callback(void);
@@ -212,9 +205,6 @@ void gtk_create_main_window(void)
     GtkWidget* box;        /* Box container */
     GtkObject* scale_data; /* Scale data (limits) */
     GSList*    group;      /* Grouping for output type */
-#ifdef DO_LINEAR
-    GSList* linear_group;  /* Grouping for linear scale */
-#endif
     GSList*    image_type_group;  /* Grouping for image type */
 
     const stp_printer_t *the_printer = stp_get_printer_by_index(0);
@@ -645,48 +635,6 @@ void gtk_create_main_window(void)
 		       (gpointer)OUTPUT_COLOR);
     gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
     gtk_widget_show(button);
-
-#ifdef DO_LINEAR
-    label = gtk_label_new(_("Output Level:"));
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),
-		     label,
-		     3, 4,
-		     10, 11,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
-    gtk_widget_show(label);
-
-    box = gtk_hbox_new(FALSE, 8);
-    gtk_table_attach(GTK_TABLE(table),
-		     box,
-		     4, 5,
-		     10, 11,
-		     GTK_FILL, GTK_FILL,
-		     0, 0);
-    gtk_widget_show(box);
-
-    linear_off = button =
-	              gtk_radio_button_new_with_label(NULL, _("Normal scale"));
-    linear_group = gtk_radio_button_group(GTK_RADIO_BUTTON(button));
-    if (vars.linear == 0)
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button), "toggled",
-		       (GtkSignalFunc)gtk_linear_callback,
-		       (gpointer)0);
-    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-    gtk_widget_show(button);
-
-    linear_on = button = gtk_radio_button_new_with_label(linear_group,
-					       _("Experimental linear scale"));
-    if (vars.linear == 1)
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), TRUE);
-    gtk_signal_connect(GTK_OBJECT(button), "toggled",
-		       (GtkSignalFunc)gtk_linear_callback,
-		       (gpointer)1);
-    gtk_box_pack_start(GTK_BOX(box), button, FALSE, FALSE, 0);
-    gtk_widget_show(button);
-#endif
 
     /*
      * Image type
@@ -1477,13 +1425,6 @@ static void gtk_do_misc_updates(void)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(unit_inch), TRUE);
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(unit_cm), TRUE);
-
-#ifdef DO_LINEAR
-  if (plist[plist_current].v.linear == 0)
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
-  else
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_on), TRUE);
-#endif
 
   switch (plist[plist_current].v.image_type)
     {
