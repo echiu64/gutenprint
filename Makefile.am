@@ -75,6 +75,8 @@ dist-hook:
 	    done \
 	  fi \
 	done
+# Remove configure.in (libtool bug workaround)
+	$(RM) $(distdir)/configure.in
 # Create debian/control
 	DEBIAN_VERSION=`grep "(" debian/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
 	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*$$//"` ; \
