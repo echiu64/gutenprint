@@ -1,8 +1,12 @@
 gutenprint (5.0.0-beta3-1) unstable; urgency=low
 
   * New upstream beta release.
+  * gimp-print:
+    - Install the plug-in into the GIMP 2.0 plug-in directory rather
+      than the 1.2 directory.
+    - Don't install a duplicate copy of FAQ.html.
 
- -- Roger Leigh <rleigh@debian.org>  Sat, 23 Oct 2004 23:56:07 +0100 
+ -- Roger Leigh <rleigh@debian.org>  Tue, 16 Nov 2004 22:40:23 +0000
 
 gutenprint (5.0.0-beta2-1) unstable; urgency=low
 
