@@ -107,7 +107,7 @@ clean:
 # Install all targets...
 #
 
-install:
+install:	all
 	$(ECHO) Installing calibration utility...
 	$(SILENT) if test ! -d $(bindir); then \
 		$(MKDIR) $(bindir); \

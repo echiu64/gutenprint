@@ -237,10 +237,11 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 		  "",
 		  "Softweave",
 		  "Microweave",
-		  "High",
-		  "Highest",
+		  "High Quality",
+		  "Highest Quality",
 		  "Emulated",
-		  "DMT"
+		  "DMT",
+		  "monochrome"
 		};
   static char	*qnames[] =		/* Quality names for resolution */
 		{
@@ -250,7 +251,8 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 		  "hq",
 		  "hq2",
 		  "emul",
-		  "dmt"
+		  "dmt",
+		  "mono"
 		};
   static char	*dithers[][2] =
 		{
@@ -561,10 +563,11 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
 
     quality[0] = '\0';
     if (sscanf(opts[i], "%d x %d DPI%s", &xdpi, &ydpi, quality) == 1)
-    {
-      sscanf(opts[i], "%d DPI%s", &xdpi, quality);
-      ydpi = xdpi;
-    }
+      if (sscanf(opts[i], "%dx%d DPI%s", &xdpi, &ydpi, quality) == 1)
+      {
+	sscanf(opts[i], "%d DPI%s", &xdpi, quality);
+	ydpi = xdpi;
+      }
 
    /*
     * Figure out the quality index...

@@ -65,6 +65,7 @@ typedef struct
 {
   cups_raster_t		*ras;		/* Raster stream to read from */
   int			page;		/* Current page number */
+  int			row;		/* Current row number */
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
@@ -84,6 +85,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   const printer_t	*printer;	/* Printer driver */  
   vars_t		v;		/* Printer driver variables */
   const papersize_t	*size;		/* Paper size */
+  char			*buffer;	/* Overflow buffer */
   static char		*qualities[] =	/* Quality strings for resolution */
 			{
 			  "",
@@ -91,8 +93,9 @@ main(int  argc,				/* I - Number of command-line arguments */
 			  " Microweave",
 			  " High Quality",
 			  " Highest Quality",
-			  " Emulated"
-			  " DMT"
+			  " Emulated",
+			  " DMT",
+			  " monochrome"
 			};
 
 
@@ -177,6 +180,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     */
 
     cups.page ++;
+    cups.row = 0;
 
    /*
     * Debugging info...
@@ -241,16 +245,17 @@ main(int  argc,				/* I - Number of command-line arguments */
     v.page_width  = cups.header.PageSize[0];
     v.page_height = cups.header.PageSize[1];
     v.orientation = ORIENT_PORTRAIT;
-    v.gamma       = 1.7;
+    v.gamma       = 1.0;
 
     if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
       v.output_type = OUTPUT_GRAY;
     else
       v.output_type = OUTPUT_COLOR;
 
-    strcpy(v.dither_algorithm, cups.header.OutputType);
-    strcpy(v.media_source, cups.header.MediaClass);
-    strcpy(v.media_type, cups.header.MediaType);
+    strncpy(v.dither_algorithm, cups.header.OutputType,
+            sizeof(v.dither_algorithm) - 1);
+    strncpy(v.media_source, cups.header.MediaClass, sizeof(v.media_source) - 1);
+    strncpy(v.media_type, cups.header.MediaType, sizeof(v.media_type) - 1);
 
     fprintf(stderr, "DEBUG: PageSize = %dx%d\n", cups.header.PageSize[0],
             cups.header.PageSize[1]);
@@ -265,7 +270,13 @@ main(int  argc,				/* I - Number of command-line arguments */
     * The resolution variable needs a big overhaul...
     */
 
-    if (cups.header.HWResolution[0] == cups.header.HWResolution[1])
+    if (strncmp(printer->driver, "bjc", 3) == 0 ||
+        strncmp(printer->driver, "pcl", 3) == 0)
+      sprintf(v.resolution, "%dx%d DPI%s",
+	      cups.header.HWResolution[0],
+	      cups.header.HWResolution[1],
+	      qualities[cups.header.cupsCompression]);
+    else if (cups.header.HWResolution[0] == cups.header.HWResolution[1])
       sprintf(v.resolution, "%d DPI%s",
 	      cups.header.HWResolution[0],
 	      qualities[cups.header.cupsCompression]);
@@ -279,7 +290,27 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Print the page...
     */
 
-    (*printer->print)(printer, 1, stdout, &cups, &v);
+    merge_printvars(&v, &(printer->printvars));
+    if (verify_printer_params(printer, &v))
+      (*printer->print)(printer, 1, stdout, &cups, &v);
+    else
+      fputs("ERROR: Invalid printer settings!\n", stderr);
+
+   /*
+    * Purge any remaining bitmap data...
+    */
+
+    if (cups.row < cups.header.cupsHeight)
+    {
+      if ((buffer = malloc(cups.header.cupsBytesPerLine)) == NULL)
+        break;
+
+      while (cups.row < cups.header.cupsHeight)
+      {
+        cupsRasterReadPixels(cups.ras, buffer, cups.header.cupsBytesPerLine);
+	cups.row ++;
+      }
+    }
   }
 
  /*
@@ -356,7 +387,13 @@ Image_get_row(Image         image,	/* I - Image */
   if ((cups = (cups_image_t *)image) == NULL)
     return;
 
-  cupsRasterReadPixels(cups->ras, data, cups->header.cupsBytesPerLine);
+  if (cups->row < cups->header.cupsHeight)
+  {
+    cupsRasterReadPixels(cups->ras, data, cups->header.cupsBytesPerLine);
+    cups->row ++;
+  }
+  else
+    memset(data, 255, cups->header.cupsBytesPerLine);
 }
 
 
