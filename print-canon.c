@@ -157,6 +157,16 @@ static canon_cap_t canon_model_capabilities[] =
     CANON_CAP_DMT
   },
 
+  { /* Canon BJC 6200 */
+    6200,
+    618, 936,      /* 8.58" x 13 " */
+    1440, 720, 2,
+    11, 9, 10, 18,
+    CANON_INK_CMYK | CANON_INK_CcMmYK,
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    CANON_CAP_DMT
+  },
+
   { /* Canon BJC 8200 */
     8200,
     11*72, 17*72,

@@ -81,6 +81,14 @@
 <language value=canon>
 </printer>
 
+<printer name="CANON BJC 6200" driver="bjc-6200">
+<color>
+<model value=6200>
+<gamma value=0.750>
+<density value=1.000>
+<language value=canon>
+</printer>
+
 <printer name="CANON BJC 7000" driver="bjc-7000">
 <color>
 <model value=7000>
