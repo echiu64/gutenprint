@@ -129,7 +129,6 @@ MAINTAINERCLEANFILES = Makefile.in
 EXTRA_DIST = \
 	COPYING \
 	README \
-	ChangeLog \
 	cups-calibrate.c \
 	calibrate.ppm \
 	canon.c \
