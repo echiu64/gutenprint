@@ -45,12 +45,6 @@
 #define OLYMPUS_INTERLACE_LINE	1
 #define OLYMPUS_INTERLACE_PLANE	2
 
-#define OLYMPUS_PLANEORDER_CMY	"\1\2\3"
-#define OLYMPUS_PLANEORDER_YMC	"\3\2\1"
-#define OLYMPUS_PLANEORDER_RGB	OLYMPUS_PLANEORDER_CMY
-#define OLYMPUS_PLANEORDER_BRG	OLYMPUS_PLANEORDER_YMC
-#define OLYMPUS_PLANEORDER_NONE	"\1"
-
 #define OLYMPUS_FEATURE_FULL_WIDTH	0x00000001
 #define OLYMPUS_FEATURE_FULL_HEIGHT	0x00000002
 #define OLYMPUS_FEATURE_BLOCK_ALIGN	0x00000004
@@ -67,6 +61,7 @@ typedef struct
   const char *output_type;
   int output_channels;
   const char *name;
+  const char *channel_order;
 } ink_t;
 
 typedef struct {
@@ -132,8 +127,8 @@ typedef struct
   char plane;
   int block_min_x, block_min_y;
   int block_max_x, block_max_y;
-  char* pagesize;
-  laminate_t* laminate;
+  const char* pagesize;
+  const laminate_t* laminate;
 } olympus_privdata_t;
 
 static olympus_privdata_t privdata;
@@ -146,7 +141,6 @@ typedef struct /* printer specific parameters */
   const olymp_pagesize_list_t *pages;
   const olymp_printsize_list_t *printsize;
   int interlacing;	/* color interlacing scheme */
-  const char *planes;	/* order of ribbons */
   int block_size;
   int features;		
   void (*printer_init_func)(stp_vars_t *);
@@ -168,7 +162,7 @@ static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v);
 
 static const ink_t cmy_inks[] =
 {
-  { "CMY", 3, "CMY" },
+  { "CMY", 3, "CMY", "\1\2\3" },
 };
 
 static const ink_list_t cmy_ink_list =
@@ -176,14 +170,34 @@ static const ink_list_t cmy_ink_list =
   cmy_inks, sizeof(cmy_inks) / sizeof(ink_t)
 };
 
+static const ink_t ymc_inks[] =
+{
+  { "CMY", 3, "CMY", "\3\2\1" },
+};
+
+static const ink_list_t ymc_ink_list =
+{
+  ymc_inks, sizeof(ymc_inks) / sizeof(ink_t)
+};
+
 static const ink_t rgb_inks[] =
 {
-  { "RGB", 3, "RGB" },
+  { "RGB", 3, "RGB", "\1\2\3" },
 };
 
 static const ink_list_t rgb_ink_list =
 {
   rgb_inks, sizeof(rgb_inks) / sizeof(ink_t)
+};
+
+static const ink_t bgr_inks[] =
+{
+  { "RGB", 3, "RGB", "\3\2\1" },
+};
+
+static const ink_list_t bgr_ink_list =
+{
+  bgr_inks, sizeof(bgr_inks) / sizeof(ink_t)
 };
 
 
@@ -496,6 +510,108 @@ static const char p400_adj_yellow[] =
   "</gimp-print>\n";
 
 
+/* Olympus P-440 series */
+static const olymp_pagesize_t p440_page[] =
+{
+  { "A4", NULL, -1, -1, 10, 9, 54, 54},
+  { "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72},
+  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9},
+  { "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24},
+  { "Custom", NULL, -1, -1, 22, 22, 54, 54},
+};
+
+static const olymp_pagesize_list_t p440_page_list =
+{
+  p440_page, sizeof(p440_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t p440_printsize[] =
+{
+  { "314x314", "A4", 2508, 3200},
+  { "314x314", "c8x10", 2000, 2508},
+  { "314x314", "C6", 1328, 1920},
+  { "314x314", "w255h581", 892, 2320},
+  { "314x314", "Custom", 2508, 3200},
+};
+
+static const olymp_printsize_list_t p440_printsize_list =
+{
+  p440_printsize, sizeof(p440_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void p440_printer_init_func(stp_vars_t *v)
+{
+  int wide = ! (strcmp(privdata.pagesize, "A4") == 0
+		  || strcmp(privdata.pagesize, "Custom") == 0);
+
+  stp_zprintf(v, "\033FP"); stp_zfwrite(zero, 1, 61, v);
+  stp_zprintf(v, "\033Y");
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+		  (privdata.laminate->seq).bytes, v); /* laminate */ 
+  stp_zfwrite(zero, 1, 61, v);
+  stp_zprintf(v, "\033FC"); stp_zfwrite(zero, 1, 61, v);
+  stp_zprintf(v, "\033ZF");
+  stp_putc((wide ? '\x40' : '\x00'), v); stp_zfwrite(zero, 1, 60, v);
+  stp_zprintf(v, "\033N\1"); stp_zfwrite(zero, 1, 61, v);
+  stp_zprintf(v, "\033ZS");
+  if (wide)
+    {
+      stp_put16_be(privdata.ysize, v);
+      stp_put16_be(privdata.xsize, v);
+    }
+  else
+    {
+      stp_put16_be(privdata.xsize, v);
+      stp_put16_be(privdata.ysize, v);
+    }
+  stp_zfwrite(zero, 1, 57, v);
+  if (strcmp(privdata.pagesize, "C6") == 0)
+    {
+      stp_zprintf(v, "\033ZC"); stp_zfwrite(zero, 1, 61, v);
+    }
+}
+
+static void p440_printer_end_func(stp_vars_t *v)
+{
+  stp_zprintf(v, "\033P"); stp_zfwrite(zero, 1, 62, v);
+}
+
+static void p440_block_init_func(stp_vars_t *v)
+{
+  int wide = ! (strcmp(privdata.pagesize, "A4") == 0
+		  || strcmp(privdata.pagesize, "Custom") == 0);
+
+  stp_zprintf(v, "\033ZT");
+  if (wide)
+    {
+      stp_put16_be(privdata.ysize - privdata.block_max_y - 1, v);
+      stp_put16_be(privdata.xsize - privdata.block_max_x - 1, v);
+      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+    }
+  else
+    {
+      stp_put16_be(privdata.block_min_x, v);
+      stp_put16_be(privdata.block_min_y, v);
+      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+    }
+  stp_zfwrite(zero, 1, 53, v);
+}
+
+static void p440_block_end_func(stp_vars_t *v)
+{
+  int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
+	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
+  stp_deprintf(STP_DBG_OLYMPUS,
+		  "olympus: max_x %d min_x %d max_y %d min_y %d\n",
+  		  privdata.block_max_x, privdata.block_min_x,
+	  	  privdata.block_max_y, privdata.block_min_y);
+  stp_deprintf(STP_DBG_OLYMPUS, "olympus: olympus-p440 padding=%d\n", pad);
+  stp_zfwrite(zero, 1, pad, v);
+}
+
+
 /* Canon CP-100 series */
 static const olymp_pagesize_t cpx00_page[] =
 {
@@ -708,8 +824,8 @@ static const olymp_resolution_list_t cx400_res_list =
 
 static const olymp_pagesize_t cx400_page[] =
 {
-  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26},
   { "w288h432", NULL, -1, -1, 23, 23, 28, 28},
+  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26},
   { "w288h504", NULL, -1, -1, 23, 23, 23, 22},
   { "Custom", NULL, -1, -1, 0, 0, 0, 0},
 };
@@ -786,7 +902,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &res_320dpi_list,
     &p10_page_list,
     &p10_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_RGB,
+    OLYMPUS_INTERLACE_PLANE,
     1848,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
     &p10_printer_init_func, &p10_printer_end_func,
@@ -797,11 +913,11 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Olympus P-300 */
     0, 		
-    &cmy_ink_list,
+    &ymc_ink_list,
     &p300_res_list,
     &p300_page_list,
     &p300_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
+    OLYMPUS_INTERLACE_PLANE,
     16,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN,
     &p300_printer_init_func, NULL,
@@ -812,11 +928,11 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Olympus P-400 */
     1,
-    &cmy_ink_list,
+    &ymc_ink_list,
     &res_314dpi_list,
     &p400_page_list,
     &p400_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
+    OLYMPUS_INTERLACE_PLANE,
     180,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
     &p400_printer_init_func, NULL,
@@ -825,13 +941,28 @@ static const olympus_cap_t olympus_model_capabilities[] =
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
     NULL,
   },
+  { /* Olympus P-440 */
+    3,
+    &bgr_ink_list,
+    &res_314dpi_list,
+    &p440_page_list,
+    &p440_printsize_list,
+    OLYMPUS_INTERLACE_NONE,
+    128,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    &p440_printer_init_func, &p440_printer_end_func,
+    NULL, NULL,
+    &p440_block_init_func, &p440_block_end_func,
+    NULL, NULL, NULL,
+    &p10_laminate_list,
+  },
   { /* Canon CP-100, CP-200, CP-300 */
     1000,
-    &cmy_ink_list,
+    &ymc_ink_list,
     &res_314dpi_list,
     &cpx00_page_list,
     &cpx00_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
+    OLYMPUS_INTERLACE_PLANE,
     1808,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER,
@@ -843,11 +974,11 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Canon CP-220, CP-330 */
     1001,
-    &cmy_ink_list,
+    &ymc_ink_list,
     &res_314dpi_list,
     &cp220_page_list,
     &cp220_printsize_list,
-    OLYMPUS_INTERLACE_PLANE, OLYMPUS_PLANEORDER_YMC,
+    OLYMPUS_INTERLACE_PLANE,
     1808,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER,
@@ -863,7 +994,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updp10_res_list,
     &updp10_page_list,
     &updp10_printsize_list,
-    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
+    OLYMPUS_INTERLACE_NONE,
     1800,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -879,7 +1010,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_res_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
+    OLYMPUS_INTERLACE_NONE,
     2208,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -895,7 +1026,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_res_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    OLYMPUS_INTERLACE_NONE, OLYMPUS_PLANEORDER_NONE,
+    OLYMPUS_INTERLACE_NONE,
     2208,
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
@@ -1347,6 +1478,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int char_out_width;
   int status = 1;
   int ink_channels = 1;
+  const char *ink_order = NULL;
   stp_curve_t   *adjustment = NULL;
 
   int r_errdiv, r_errmod;
@@ -1390,7 +1522,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int print_px_width;
   int print_px_height;
   
-  const char *l;
+  int pl;
   unsigned char *zeros = NULL;
 
   if (!stp_verify(v))
@@ -1407,7 +1539,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   olympus_printsize(v, &max_print_px_width, &max_print_px_height);
 
   privdata.pagesize = stp_get_string_parameter(v, "PageSize");
-  privdata.laminate = olympus_get_laminate_pattern(v);
+  if (caps->laminate)
+	  privdata.laminate = olympus_get_laminate_pattern(v);
 
   if (olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
     stp_default_media_size(v, &page_pt_right, &page_pt_bottom);
@@ -1507,6 +1640,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 	    stp_set_string_parameter(v, "STPIOutputType",
 				     caps->inks->item[i].output_type);
 	    ink_channels = caps->inks->item[i].output_channels;
+	    ink_order = caps->inks->item[i].channel_order;
 	    break;
 	  }
     }
@@ -1532,7 +1666,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_set_float_parameter(v, "Density", 1.0);
 
-  if (ink_type && strcmp(ink_type, "RGB") == 0)
+  if (ink_type && 
+  	(strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0))
     {
       zeros = stp_malloc(ink_channels * print_px_width + 1);
       (void) memset(zeros, '\xff', ink_channels * print_px_width + 1);
@@ -1584,14 +1719,15 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   c_errdiv = image_px_width / out_px_width;
   c_errmod = image_px_width % out_px_width;
 
-  for (l = caps->planes; *l ; l++)
+  for (pl = 0; pl < (caps->interlacing == OLYMPUS_INTERLACE_PLANE
+			? ink_channels : 1); pl++)
     {
       r_errval  = 0;
       r_errlast = -1;
       r_errline = 0;
 
-      privdata.plane = *l;
-      stp_deprintf(STP_DBG_OLYMPUS, "olympus: plane %d\n", *l);
+      privdata.plane = ink_order[pl];
+      stp_deprintf(STP_DBG_OLYMPUS, "olympus: plane %d\n", privdata.plane);
 
       /* plane init */
       if (caps->plane_init_func)
@@ -1672,7 +1808,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
         	    c_errlast = c_errcol;
         	  for (j = 0; j < ink_channels; j++)
           	    err_out[i * ink_channels + j] =
-      				out[c_errcol * ink_channels + j];
+      				out[c_errcol * ink_channels + ink_order[j]-1];
 
                   c_errval += c_errmod;
                   c_errcol += c_errdiv;
@@ -1712,7 +1848,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
     	      for (i = 0; i < char_out_width; i++)
 	        {
                   if (caps->interlacing == OLYMPUS_INTERLACE_PLANE)
-  	            j = i * ink_channels + (*l - 1);
+  	            j = i * ink_channels + pl;
   	          else if (caps->interlacing == OLYMPUS_INTERLACE_LINE)
   	            j = (i % out_px_width) + (i / out_px_width);
   	          else  /* OLYMPUS_INTERLACE_NONE */

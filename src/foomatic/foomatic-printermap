@@ -602,8 +602,10 @@
 #gptofoo olympus-p10 printer/Olympus-P-10
 #gptofoo olympus-p300 printer/Olympus-P-300E
 #gptofoo olympus-p300 printer/Olympus-P-300U
+#gptofoo olympus-p300 printer/Olympus-P-330E
 #gptofoo olympus-p300 printer/Olympus-P-330NE
 #gptofoo olympus-p400 printer/Olympus-P-400
+#gptofoo olympus-p440 printer/Olympus-P-440
 #gptofoo pcl-2 printer/PCPI-1030
 #gptofoo pcl-2 printer/Panasonic-KX-P4410
 #gptofoo pcl-3 printer/Panasonic-KX-P4450

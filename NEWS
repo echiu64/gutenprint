@@ -1293,7 +1293,8 @@ Lexmark Z52
 Lexmark Z53
 Olympus P-10	(Experimental)
 Olympus P-300 series (Experimental)
-Olympus P-400 series (Experimental)
+Olympus P-400	(Experimental)
+Olympus P-440	(Experimental)
 Sony UP-DP10	(Experimental)
 
 The following is the complete list of printers believed to be
@@ -1908,8 +1909,10 @@ Olivetti PG 306                pcl-2           HP LaserJet II series
 Olympus P-10                   olympus-p10     Olympus P10 
 Olympus P-300E                 olympus-p300    Olympus P300
 Olympus P-300U                 olympus-p300    Olympus P300
+Olympus P-330E                 olympus-p300    Olympus P300
 Olympus P-330NE                olympus-p300    Olympus P300
 Olympus P-400                  olympus-p400    Olympus P400
+Olympus P-440                  olympus-p440    Olympus P440
 PCPI 1030                      pcl-2           HP LaserJet II series
 Panasonic KX-P4410             pcl-2           HP LaserJet II series
 Panasonic KX-P4450             pcl-3           HP LaserJet III series

@@ -1314,6 +1314,9 @@
       <printer name="Olympus P400" driver="olympus-p400" manufacturer="Olympus">
         <model value="1"/>
       </printer>
+      <printer name="Olympus P440" driver="olympus-p440" manufacturer="Olympus">
+        <model value="3"/>
+      </printer>
       <printer name="Canon CP100" driver="canon-cp100" manufacturer="Canon">
         <model value="1000"/>
       </printer>
