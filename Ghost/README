@@ -499,7 +499,7 @@ For PCL (Hewlett-Packard and Lexmark) printers:
 Image type (to optimize the dither):
 ----- ---- --- -------- --- --------
 
--dImageType=x x:   0 ...   4  (0)
+-dImageType=x x:   0 ...   3  (0)
 Select the image type most representative of what's being printed.  
 
 0  Line art (color or gray scale)
@@ -544,16 +544,7 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
 PDQ AND CUPS
 ------------
 
-The PDQ driver declaration in file gs-stp.pdq can be used with PDQ
-(http://feynman.tam.uiuc.edu/pdq/) to give a nice control panel for
-this driver.  To use it, put the file somewhere, and add a try_include
-"filename" clause to your ~/.printrc file.  Then run xpdq and select
-Printer->Add Printer.
-
-The PPD file com-stp.ppd can be used with CUPS.
-
-For more information, see the Printing HOWTO
-http://www.linuxprinting.org/~gtaylor/howto/
+CUPS users may use the CUPS driver in ../cups.
 
 A new, experimental printer configuration method may be found at the
 following locations, depending upon the printing method that you
@@ -562,7 +553,6 @@ currently use:
 LPD: http://www.linuxprinting.org/lpd-doc.html
 PDQ: http://www.linuxprinting.org/pdq-doc.html
 CUPS: http://www.linuxprinting.org/cups-doc.html
-
 
 BUGS AND LIMITATIONS:
 ---------------------

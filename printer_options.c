@@ -51,6 +51,9 @@ main(int argc, char **argv)
 	    {
 	      for (j = 0; j < count; j++)
 		{
+		  if (j == 0)
+		    printf("$defaults{'%s'}{'%s'} = '%s';\n",
+			   p->driver, params[k], retval[j]);
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = 1;\n",
 			 p->driver, params[k], retval[j]);
 		  free(retval[j]);

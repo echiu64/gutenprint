@@ -428,9 +428,20 @@ dither_set_ink_spread() takes a small integer representing the amount
    printed; less spread is desirable).
 
 
-dither_set_adaptive_divisor() takes an integer representing the
-   upper limit of the transition zone between error diffusion and
-   ordered dither if adaptive dithering is used.
+dither_set_adaptive_divisor() takes a float representing the
+   transition point between error diffusion and ordered dither if
+   adaptive dithering is used.  The float is a fraction of the
+   printing density.  For example, if you wish the transition to be at
+   1/4 of the maximum density (which works well on simple 4-color
+   printers), you would pass .25 here.  With six colors and/or with
+   multiple dot sizes, the values should be set lower.
+
+
+dither_set_transition() takes a float representing the exponent of the
+   transition curve between light and dark inks/dot sizes.  A value
+   less than 1 (typical when using error diffusion) mixes in less dark
+   ink/small dots at lower ends of the range, to reduce speckling.
+   When using ordered dithering, this must be set to 1.
 
 
 dither_set_X_ranges_simple (X=c, m, y, or k) describes the ink choices

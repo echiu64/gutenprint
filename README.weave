@@ -1,7 +1,146 @@
 Weaving for inkjet printers
 ---------------------------
 
-I assume you've already read Robert Krawitz's comments in print-escp2.c.
+by Charles Briscoe-Smith and Robert Krawitz
+
+
+
+The Epson Stylus Color/Photo printers don't have memory to print
+using all of the nozzles in the print head.  For example, the Stylus Photo
+700/EX has 32 nozzles.  At 720 dpi, with an 8" wide image, a single line
+requires (8 * 720 * 6 / 8) bytes, or 4320 bytes (because the Stylus Photo
+printers have 6 ink colors).  To use 32 nozzles would require 138240 bytes.
+It's actually worse than that, though, because the nozzles are spaced 8
+rows apart.  Therefore, in order to store enough data to permit sending the
+page as a simple raster, the printer would require enough memory to store
+256 rows, or 1105920 bytes.  Considering that the Photo EX can print
+11" wide, we're looking at more like 1.5 MB.  In fact, these printers are
+capable of 1440 dpi horizontal resolution.  This would require 3 MB.  The
+printers actually have 64K-256K.
+
+With the newer (740/750 and later) printers it's even worse, since these
+printers support multiple dot sizes.  But that's neither here nor there.
+
+Older Epson printers had a mode called MicroWeave (tm).  In this mode, the
+host fed the printer individual rows of dots, and the printer bundled them
+up and sent them to the print head in the correct order to achieve high
+quality.  This MicroWeave mode still works in new printers, but the
+implementation is very minimal: the printer uses exactly one nozzle of
+each color (the first one).  This makes printing extremely slow (more than
+30 minutes for one 8.5x11" page), although the quality is extremely high
+with no visible banding whatsoever.  It's not good for the print head,
+though, since no ink is flowing through the other nozzles.  This leads to
+drying of ink and possible permanent damage to the print head.
+
+By the way, although the Epson manual says that microweave mode should be
+used at 720 dpi, 360 dpi continues to work in much the same way.  At 360
+dpi, data is fed to the printer one row at a time on all Epson printers.
+The pattern that the printer uses to print is very prone to banding.
+However, 360 dpi is inherently a low quality mode; if you're using it,
+presumably you don't much care about quality.
+
+Printers from roughly the Stylus Color 600 and later do not have the
+capability to do MicroWeave correctly in many cases (some printers can
+do MicroWeave correctly at 720 DPI).  Instead, the host must arrange
+the output in the order that it will be sent to the print head.  This
+is a very complex process; the jets in the print head are spaced more
+than one row (1/720") apart, so we can't simply send consecutive rows
+of dots to the printer.  Instead, we have to pass e. g. the first,
+ninth, 17th, 25th... rows in order for them to print in the correct
+position on the paper.  This interleaving process is called "soft"
+weaving.
+
+This decision was probably made to save money on memory in the printer.
+It certainly makes the driver code far more complicated than it would
+be if the printer could arrange the output.  Is that a bad thing?
+Usually this takes far less CPU time than the dithering process, and it
+does allow us more control over the printing process, e. g. to reduce
+banding.  Conceivably, we could even use this ability to map out bad
+jets.
+
+Interestingly, apparently the Windows (and presumably Macintosh) drivers
+for most or all Epson printers still list a "microweave" mode.
+Experiments have demonstrated that this does not in fact use the
+"microweave" mode of the printer.  Possibly it does nothing, or it uses
+a different weave pattern from what the non-"microweave" mode does.
+This is unnecessarily confusing.
+
+What makes this interesting is that there are many different ways of
+of accomplishing this goal.  The naive way would be to divide the image
+up into groups of 256 rows, and print all the mod8=0 rows in the first pass,
+mod8=1 rows in the second, and so forth.  The problem with this approach
+is that the individual ink jets are not perfectly uniform; some emit
+slightly bigger or smaller drops than others.  Since each group of 8
+adjacent rows is printed with the same nozzle, that means that there will
+be distinct streaks of lighter and darker bands within the image (8 rows
+is 1/90", which is visible; 1/720" is not).  Possibly worse is that these
+patterns will repeat every 256 rows.  This creates banding patterns that
+are about 1/3" wide.
+
+So we have to do something to break up this patterning.
+
+Epson does not publish the weaving algorithms that they use in their
+bundled drivers.  Indeed, their developer web site
+(http://www.ercipd.com/isv/edr_docs.htm) does not even describe how to
+do this weaving at all; it says that the only way to achieve 720 dpi
+is to use MicroWeave.  It does note (correctly) that 1440 dpi horizontal
+can only be achieved by the driver (i. e. in software).  The manual
+actually makes it fairly clear how to do this (it requires two passes
+with horizontal head movement between passes), and it is presumably
+possible to do this with MicroWeave.
+
+The information about how to do this is apparently available under NDA.
+It's actually easy enough to reverse engineer what's inside a print file
+with a simple Perl script.  In any event, we weren't particularly
+interested in the weaving patterns Epson used.  There are many factors
+that go into choosing a good weaving pattern; we're learning them as
+we go along.  Issues such as drying time (giving the ink a few seconds
+more or less to dry can have highly visible effects) affect the
+quality of the output.
+
+The Uniprint GhostScript driver has been able to do weaving for a long
+time.  It uses patterns that must be specified for each choice of
+resolution and printer.  We preferred an algorithmic approach that
+computes a weave pattern for any given choice of inputs.  This
+obviously requires extensive testing; we developed a test suite
+specifically for this purpose.
+
+I considered a few algorithms to perform the weave.  The first one I
+devised let me use only (jets - distance_between_jets + 1) nozzles, or
+25.  This is OK in principle, but it's slower than using all nozzles.
+By playing around with it some more, I came up with an algorithm that
+lets me use all of the nozzles, except near the top and bottom of the
+page.
+
+This still produces some banding, though.  Even better quality can be
+achieved by using multiple nozzles on the same line.  How do we do this?
+In 1440x720 mode, we're printing two output lines at the same vertical
+position.  However, if we want four passes, we have to effectively print
+each line twice.  Actually doing this would increase the density, so
+what we do is print half the dots on each pass.  This produces near-perfect
+output, and it's far faster than using (pseudo) "MicroWeave".
+
+Yet another complication is how to get near the top and bottom of the
+page.  This algorithm lets us print to within one head width of the
+top of the page, and a bit more than one head width from the bottom.
+That leaves a lot of blank space.  Doing the weave properly outside of
+this region is increasingly difficult as we get closer to the edge of
+the paper; in the interior region, any nozzle can print any line, but
+near the top and bottom edges, only some nozzles can print.  We
+originally handled this by using the naive way mentioned above near
+the borders, and switching over to the high quality method in the
+interior.  Unfortunately, this meant that the quality is quite visibly
+degraded near the top and bottom of the page.  We have since devised
+better algorithms that allow printing to the extreme top and bottom of
+the region that can physically be printed, with only minimal loss of
+quality.
+
+Epson does not advertise that the printers can print at the very top
+of the page, although in practice most of them can.  I suspect that
+the quality that can be achieved very close to the top is poor enough
+that Epson does not want to allow printing there.  That is a valid
+decision, although we have taken another approach.
+
 
 The initial problem is to calculate the starting position of each
 pass; the row number of the printer's top jet when printing that pass.

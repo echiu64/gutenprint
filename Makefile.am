@@ -4,7 +4,9 @@ libexecdir = $(gimptool_prefix)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint escp2-weavetest pcl-unprint escputil printer_options
+bin_PROGRAMS = unprint pcl-unprint escputil @MAINTAINER_PROGRAMS@
+
+EXTRA_PROGRAMS=escp2-weavetest printer_options
 
 noinst_PROGRAMS = printdef
 
@@ -71,6 +73,7 @@ INCLUDES = \
 
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\
+ @MAINTAINER_CFLAGS@\
  @LP_DEF@\
  @LPSTAT_DEF@\
  @LPR_DEF@\
