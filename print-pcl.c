@@ -32,6 +32,10 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.30  2000/02/19 12:45:27  davehill
+ *   Fixed OUTPUT_COLOR vs OUTPUT_GRAY.
+ *   Fixed number of planes output for DJ600 in 600dpi mode.
+ *
  *   Revision 1.29  2000/02/16 00:59:19  rlk
  *   1) Use correct convert functions (canon, escp2, pcl, ps).
  *
@@ -523,7 +527,7 @@ pcl_print(int       model,		/* I - Model */
   xdpi = atoi(resolution);
 
   if ((model == 800 || model == 1100) &&
-      output_type == OUTPUT_COLOR && xdpi == 600)
+      output_type != OUTPUT_GRAY && xdpi == 600)
     xdpi = 300;
 
   if ((model == 600 || model == 601) && xdpi == 600)
@@ -728,8 +732,11 @@ pcl_print(int       model,		/* I - Model */
 
     fputs("\033*g26W", prn);
     putc(2, prn);				/* Format 2 */
-    if (output_type == OUTPUT_COLOR)
-      putc(4, prn);				/* # output planes */
+    if (output_type != OUTPUT_GRAY)
+      if (model == 600)
+        putc(3, prn);				/* # output planes */
+      else
+        putc(4, prn);				/* # output planes */
     else
       putc(1, prn);				/* # output planes */
 
@@ -770,7 +777,7 @@ pcl_print(int       model,		/* I - Model */
 
     fputs("\033*g26W", prn);
     putc(2, prn);				/* Format 2 */
-    if (output_type == OUTPUT_COLOR)
+    if (output_type != OUTPUT_GRAY)
       putc(4, prn);				/* # output planes */
     else
       putc(1, prn);				/* # output planes */
@@ -806,7 +813,7 @@ pcl_print(int       model,		/* I - Model */
   else
   {
     fprintf(prn, "\033*t%dR", xdpi);		/* Simple resolution */
-    if (output_type == OUTPUT_COLOR)
+    if (output_type != OUTPUT_GRAY)
     {
       if (model == 501 || model == 600 || model == 1200)
         fputs("\033*r-3U", prn);		/* Simple CMY color */
