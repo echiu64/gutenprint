@@ -21,8 +21,8 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef __GIMP_PRINT_INTL_H__
-#define __GIMP_PRINT_INTL_H__
+#ifndef __GIMP_PRINT_INTL_INTERNAL_H__
+#define __GIMP_PRINT_INTL_INTERNAL_H__
 
 #ifdef INCLUDE_LOCALE_H
 INCLUDE_LOCALE_H
@@ -30,21 +30,16 @@ INCLUDE_LOCALE_H
 #include <locale.h>
 #endif
 
-#ifdef ENABLE_NLS
-
-#include <libintl.h>
-#ifndef _
-#define _(String) gettext (String)
-#endif
-#ifndef gettext_noop
-#define gettext_noop(String) (String)
-#endif
-#ifdef gettext_noop
-# define N_(String) gettext_noop (String)
-#else
-# define N_(String) (String)
-#endif
-
+#if defined ENABLE_NLS && !defined DISABLE_NLS
+#    include <libintl.h>
+#    define _(String) dgettext (PACKAGE, String)
+#    undef gettext
+#    define gettext(String) dgettext (PACKAGE, String)
+#    ifdef gettext_noop
+#        define N_(String) gettext_noop (String)
+#    else
+#        define N_(String) (String)
+#    endif
 #else /* ifndef ENABLE_NLS */
 /* Stubs that do something close enough.  */
 #    define textdomain(String) (String)
@@ -54,7 +49,6 @@ INCLUDE_LOCALE_H
 #    define bindtextdomain(Domain,Directory) (Domain)
 #    define _(String) (String)
 #    define N_(String) (String)
-
 #endif
 
-#endif /* __GIMP_PRINT_INTL_H__ */
+#endif /* __GIMP_PRINT_INTL_INTERNAL_H__ */

@@ -26,7 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Data
 
-noinst_HEADERS = gimp-print-intl.h
+noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
 pkginclude_HEADERS = @GIMP_PRINT_H@
 
