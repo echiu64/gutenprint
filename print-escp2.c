@@ -1416,6 +1416,7 @@ static const res_t escp2_reslist[] = {
   { "360 DPI High Quality",                     360,  360,  1, 0, 2, 1, 0, 3 },
   { "360 DPI High Quality Unidirectional",      360,  360,  1, 0, 2, 1, 1, 3 },
   { "720 DPI Microweave",                       720,  720,  0, 1, 1, 1, 0, 4 },
+  { "720 DPI Microweave Unidirectional",        720,  720,  0, 1, 1, 1, 1, 4 },
   { "720 DPI Softweave",                        720,  720,  1, 0, 1, 1, 0, 5 },
   { "720 DPI Softweave Unidirectional",         720,  720,  1, 0, 1, 1, 1, 5 },
   { "720 DPI High Quality",                     720,  720,  1, 0, 2, 1, 0, 5 },
