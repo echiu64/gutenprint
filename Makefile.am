@@ -102,7 +102,7 @@ dist-hook:
 # Create debian/control
 	DEBIAN_VERSION=`grep "(" debian/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
 	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*$$//"` ; \
-	LIBRARY_VERSION=$(LT_CURRENT) ; \
+	LIBRARY_VERSION=$$(($(LT_CURRENT) - $(LT_AGE))) ; \
 	sed -e "s/#UPSTREAM_VERSION#/$${UPSTREAM_VERSION}/g" -e "s/#LIBRARY_VERSION#/$${LIBRARY_VERSION}/g" <debian/control.in >$(distdir)/debian/control
 # Do some extra magic to make a distribution for GIMP CVS
 	status=0 ; \
