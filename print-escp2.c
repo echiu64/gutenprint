@@ -600,7 +600,8 @@ escp2_parameters(int  model,		/* I - Printer model */
 	      int separation = escp2_nozzle_separation(model);
 	      int max_weave = nozzles / separation;
 	      if ((((720 / escp2_xres(model)) * res->horizontal_passes *
-		    res->vertical_passes) <= 4) &&
+		    res->vertical_passes) <= 8) &&
+		  ((720 / escp2_xres(model)) * res->horizontal_passes <= 4) &&
 		  (! res->softweave ||
 		   (nozzles > 1 && res->vertical_passes <= max_weave)))
 		{
@@ -657,9 +658,6 @@ escp2_imageable_area(int  model,	/* I - Printer model */
                      int  *top)		/* O - Top position in points */
 {
   int	width, length;			/* Size of page */
-  /* Assuming 720 dpi ydpi hardware! */
-  /* int softweave_margin = (9 + (escp2_nozzles(model)) *
-			  escp2_nozzle_separation(model)) / 10; */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
   *left =	escp2_left_margin(model);
@@ -675,18 +673,22 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 		   int nozzle_separation, int horizontal_passes,
 		   int vertical_passes, int vertical_subsample, int bits)
 {
-  int n;
+  int l, t;
   if (ydpi > 720)
     ydpi = 720;
+  l = ydpi * page_length / 72;
+  t = ydpi * page_top / 72;
+
   /*
    * Hack that seems to be necessary for these silly things to print.
-   * No, I don't know what it means. -- rlk
+   * Apparently this lets USB port work if needed.
    */
   if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_900))
     fprintf(prn, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
 
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
+  /* Magic remote mode commands, whatever they do */
   if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
     fprintf(prn,
 	    "\033(R\010%c%cREMOTE1PM\002%c%c%cSN\003%c%c%c\001\033%c%c%c",
@@ -702,23 +704,26 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
   else
     fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);	    
 
-  /* Printer capabilities */
+  /* Gray/color */
   if (escp2_has_cap(model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
     fprintf(prn, "\033(K\002%c%c%c", 0, 0,
 	    (output_type == OUTPUT_GRAY ? 1 : 2));
 
+  /* Microweave? */
   fprintf(prn, "\033(i\001%c%c", 0,
 	  (use_softweave || ydpi < 720) ? 0 : 1);
 
+  /* Direction/speed */
   if (horizontal_passes * vertical_passes * vertical_subsample > 2)
     {
       fprintf(prn, "\033U%c", 1);
-      if (xdpi > 720)
-      fprintf(prn, "\033(s%c%c%c", 1, 0, 2);
+      if (xdpi > 720)		/* Slow mode if available */
+	fprintf(prn, "\033(s%c%c%c", 1, 0, 2);
     }
   else
     fprintf(prn, "\033U%c", 0);
 
+  /* Dot size */
   if (!use_softweave)
     {
       if (escp2_micro_ink(model) > 0)
@@ -733,41 +738,21 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
       use_softweave)
     {
-      fwrite("\033(C\004\000", 5, 1, prn);	/* Page length */
-      n = ydpi * page_length / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      putc(0, prn);
-      putc(0, prn);
+      /* Page length */
+      fprintf(prn, "\033(C\004%c%c%c%c%c", 0,
+	      l & 0xff, (l >> 8) & 0xff, (l >> 16) & 0xff, (l >> 24) & 0xff);
 
+      /* Top/bottom margins */
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
-	{
-	  /* This seems to confuse some printers... */
-	  fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
-	  n = ydpi * (page_top) / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	  putc(0, prn);
-	  putc(0, prn);
-	  n = ydpi * (page_length) / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	  putc(0, prn);
-	  putc(0, prn);
-	}
+	fprintf(prn, "\033(c\010%c%c%c%c%c%c%c%c%c", 0,
+		t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff,
+		l & 0xff, l >> 8, (l >> 16) & 0xff, (l >> 24) & 0xff);
       else
-	{
-	  fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
-	  n = ydpi * (page_top) / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	  n = ydpi * (page_length) / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	}
+	fprintf(prn, "\033(c\004%c%c%c%c%c", 0,
+		t & 0xff, t >> 8, l & 0xff, l >> 8);
 
-      fwrite("\033(S\010\000", 5, 1, prn);
-      fprintf(prn, "%c%c%c%c%c%c%c%c",
+      /* Page form factor */
+      fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
 	      (((page_width * 720 / 72) >> 0) & 0xff),
 	      (((page_width * 720 / 72) >> 8) & 0xff),
 	      (((page_width * 720 / 72) >> 16) & 0xff),
@@ -777,56 +762,37 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
 	      (((page_length * 720 / 72) >> 16) & 0xff),
 	      (((page_length * 720 / 72) >> 24) & 0xff));
 
+      /* Magic resolution cookie */
       fprintf(prn, "\033(D%c%c%c%c%c%c", 4, 0, 14400 % 256, 14400 / 256,
 	      escp2_nozzle_separation(model) * 14400 / 720,
 	      14400 / escp2_xres(model));
 
-      if (!use_softweave)
-	{
-	  fwrite("\033(v\004\000", 5, 1, prn); /* Absolute vertical position */
-	  n = ydpi * top / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	  putc(0, prn);
-	  putc(0, prn);
-	}
+      if (!use_softweave || ydpi < 720)
+	fprintf(prn, "\033(v\004%c%c%c%c%c", 0,
+		t & 0xff, t >> 8, (t >> 16) & 0xff, (t >> 24) & 0xff);
     }
   else
     {
-      fwrite("\033(C\002\000", 5, 1, prn);	/* Page length */
-      n = ydpi * page_length / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
+      /* Page length */
+      fprintf(prn, "\033(C\002%c%c%c", 0, l & 255, l >> 8);
 
-      fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
-      n = ydpi * (page_top) / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      n = ydpi * (page_length) / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
+      /* Top/bottom margins */
+      fprintf(prn, "\033(c\004%c%c%c%c%c", 0,
+	      t & 0xff, t >> 8, l & 0xff, l >> 8);
 
       if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
-	{
-	  fwrite("\033(S\010\000", 5, 1, prn);
-	  fprintf(prn, "%c%c%c%c%c%c%c%c",
-		  (((page_width * 720 / 72) >> 0) & 0xff),
-		  (((page_width * 720 / 72) >> 8) & 0xff),
-		  (((page_width * 720 / 72) >> 16) & 0xff),
-		  (((page_width * 720 / 72) >> 24) & 0xff),
-		  (((page_length * 720 / 72) >> 0) & 0xff),
-		  (((page_length * 720 / 72) >> 8) & 0xff),
-		  (((page_length * 720 / 72) >> 16) & 0xff),
-		  (((page_length * 720 / 72) >> 24) & 0xff));
-	}
+	fprintf(prn, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
+		(((page_width * 720 / 72) >> 0) & 0xff),
+		(((page_width * 720 / 72) >> 8) & 0xff),
+		(((page_width * 720 / 72) >> 16) & 0xff),
+		(((page_width * 720 / 72) >> 24) & 0xff),
+		(((page_length * 720 / 72) >> 0) & 0xff),
+		(((page_length * 720 / 72) >> 8) & 0xff),
+		(((page_length * 720 / 72) >> 16) & 0xff),
+		(((page_length * 720 / 72) >> 24) & 0xff));
 
-      if (!use_softweave)
-	{
-	  fwrite("\033(V\002\000", 5, 1, prn); /* Absolute vertical position */
-	  n = ydpi * top / 72;
-	  putc(n & 255, prn);
-	  putc(n >> 8, prn);
-	}
+      if (!use_softweave || ydpi < 720)
+	fprintf(prn, "\033(v\002%c%c%c", 0, t & 0xff, t >> 8);
     }
 }
 
@@ -1440,45 +1406,32 @@ escp2_fold(const unsigned char *line,
 }
 
 static void
-escp2_split_2_2(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      outlo[i] = inbyte & 0x33;
-      outhi[i] = inbyte & 0xcc;
-    }
-}
-
-static void
-escp2_split_2_even(int length,
-		   const unsigned char *in,
-		   unsigned char *outhi,
-		   unsigned char *outlo)
+escp2_split_2(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *outhi,
+	      unsigned char *outlo)
 {
   int i, j;
   int row = 0;
+  int base = (1 << bits) - 1;
   for (i = 0; i < length * 2; i++)
     {
       unsigned char inbyte = in[i];
       outlo[i] = 0;
       outhi[i] = 0;
-      for (j = 1; j <= 128; j += j)
+      for (j = base; j < 256; j <<= bits)
 	{
 	  if (inbyte & j)
 	    {
 	      if (row == 0)
 		{
-		  outlo[i] |= j;
+		  outlo[i] |= j & inbyte;
 		  row = 1;
 		}
 	      else
 		{
-		  outhi[i] |= j;
+		  outhi[i] |= j & inbyte;
 		  row = 0;
 		}
 	    }
@@ -1487,34 +1440,17 @@ escp2_split_2_even(int length,
 }
 
 static void
-escp2_split_4_2(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
-{
-  int i;
-  for (i = 0; i < length * 2; i++)
-    {
-      unsigned char inbyte = in[i];
-      out0[i] = inbyte & 0xc0;
-      out1[i] = inbyte & 0x30;
-      out2[i] = inbyte & 0x0c;
-      out3[i] = inbyte & 0x03;
-    }
-}
-
-static void
-escp2_split_4_even(int length,
-		   const unsigned char *in,
-		   unsigned char *out0,
-		   unsigned char *out1,
-		   unsigned char *out2,
-		   unsigned char *out3)
+escp2_split_4(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *out0,
+	      unsigned char *out1,
+	      unsigned char *out2,
+	      unsigned char *out3)
 {
   int i, j;
   int row = 0;
+  int base = (1 << bits) - 1;
   for (i = 0; i < length; i++)
     {
       unsigned char inbyte = in[i];
@@ -1522,23 +1458,23 @@ escp2_split_4_even(int length,
       out1[i] = 0;
       out2[i] = 0;
       out3[i] = 0;
-      for (j = 1; j <= 128; j += j)
+      for (j = base; j < 256; j <<= bits)
 	{
 	  if (inbyte & j)
 	    {
 	      switch (row)
 		{
 		case 0:
-		  out0[i] |= j;
+		  out0[i] |= j & inbyte;
 		  break;
 		case 1:
-		  out1[i] |= j;
+		  out1[i] |= j & inbyte;
 		  break;
 		case 2:
-		  out2[i] |= j;
+		  out2[i] |= j & inbyte;
 		  break;
 		case 3:
-		  out3[i] |= j;
+		  out3[i] |= j & inbyte;
 		  break;
 		}
 	      row = (row + 1) & 3;
@@ -1549,10 +1485,10 @@ escp2_split_4_even(int length,
 
 
 static void
-escp2_unpack_2(int length,
-	       const unsigned char *in,
-	       unsigned char *outlo,
-	       unsigned char *outhi)
+escp2_unpack_2_1(int length,
+		 const unsigned char *in,
+		 unsigned char *outlo,
+		 unsigned char *outhi)
 {
   int i;
   for (i = 0; i < length; i++)
@@ -1625,12 +1561,25 @@ escp2_unpack_2_2(int length,
 }
 
 static void
-escp2_unpack_4(int length,
+escp2_unpack_2(int length,
+	       int bits,
 	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3)
+	       unsigned char *outlo,
+	       unsigned char *outhi)
+{
+  if (bits == 1)
+    escp2_unpack_2_1(length, in, outlo, outhi);
+  else
+    escp2_unpack_2_2(length, in, outlo, outhi);
+}
+
+static void
+escp2_unpack_4_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3)
 {
   int i;
   for (i = 0; i < length; i++)
@@ -1748,6 +1697,21 @@ escp2_unpack_4_2(int length,
 	}
       in++;
     }
+}
+
+static void
+escp2_unpack_4(int length,
+	       int bits,
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3)
+{
+  if (bits == 1)
+    escp2_unpack_4_1(length, in, out0, out1, out2, out3);
+  else
+    escp2_unpack_4_2(length, in, out0, out1, out2, out3);
 }
 
 static int
@@ -1912,16 +1876,10 @@ escp2_do_microweave_pack(const unsigned char *line,
       memcpy(s[0], in, bits * length);
       break;
     case 2:
-      if (bits == 1)
-	escp2_unpack_2(length, in, s[0], s[1]);
-      else
-	escp2_unpack_2_2(length, in, s[0], s[1]);
+      escp2_unpack_2(length, bits, in, s[0], s[1]);
       break;
     case 4:
-      if (bits == 1)
-	escp2_unpack_4(length, in, s[0], s[1], s[2], s[3]);
-      else
-	escp2_unpack_4_2(length, in, s[0], s[1], s[2], s[3]);
+      escp2_unpack_4(length, bits, in, s[0], s[1], s[2], s[3]);
       break;
     }
   for (i = 0; i < oversample; i++)
@@ -2846,27 +2804,25 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  /* separation */
 	  if (escp2_has_cap(model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999))
 	    {
-	      if (((hoffset * xdpi / 720) + microoffset) > 0)
+	      int pos = ((hoffset * xdpi / 720) + microoffset);
+	      if (pos > 0)
 		fprintf(prn, "\033($%c%c%c%c%c%c", 4, 0,
-			((hoffset * xdpi / 720) + microoffset) & 255,
-			(((hoffset * xdpi / 720) + microoffset) >> 8) & 255,
-			(((hoffset * xdpi / 720) + microoffset) >> 16) & 255,
-			(((hoffset * xdpi / 720) + microoffset) >> 24) & 255);
+			pos & 255, (pos >> 8) & 255,
+			(pos >> 16) & 255, (pos >> 24) & 255);
 	    }
 	  else
 	    {
-	      if (((hoffset * 1440 / ydpi) + microoffset) > 0)
+	      int pos = ((hoffset * 1440 / ydpi) + microoffset);
+	      if (pos > 0)
 		fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
-			((hoffset * 1440 / ydpi) + microoffset) & 255,
-			((hoffset * 1440 / ydpi) + microoffset) >> 8);
+			pos & 255, pos >> 8);
 	    }
 	}
       else
 	{
-	  if ((hoffset + microoffset) > 0)
-	    fprintf(prn, "\033\\%c%c",
-		    (hoffset + microoffset) & 255,
-		    (hoffset + microoffset) >> 8);
+	  int pos = (hoffset + microoffset);
+	  if (pos > 0)
+	    fprintf(prn, "\033\\%c%c", pos & 255, pos >> 8);
 	}
       if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
 	{
@@ -2874,8 +2830,7 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 	  int nlines = *linecount + pass->missingstartrows;
 	  int nwidth = sw->bitwidth * ((lwidth + 7) / 8);
 	  fprintf(prn, "\033i%c%c%c%c%c%c%c", ncolor, 1, sw->bitwidth,
-		  nwidth & 255, nwidth >> 8, nlines & 255,
-		  nlines >> 8);
+		  nwidth & 255, nwidth >> 8, nlines & 255, nlines >> 8);
 	}
       else
 	{
@@ -2981,7 +2936,7 @@ escp2_write_weave(void *        vsw,
 		  const unsigned char *M)
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
-  static unsigned char *s[4];
+  static unsigned char *s[8];
   static unsigned char *fold_buf;
   static unsigned char *comp_buf;
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
@@ -3025,46 +2980,46 @@ escp2_write_weave(void *        vsw,
 	      switch (sw->horizontal_weave)
 		{
 		case 2:
-		  if (sw->bitwidth == 1)
-		    escp2_unpack_2(length, in, s[0], s[1]);
-		  else
-		    escp2_unpack_2_2(length, in, s[0], s[1]);
+		  escp2_unpack_2(length, sw->bitwidth, in, s[0], s[1]);
 		  break;
 		case 4:
-		  if (sw->bitwidth == 1)
-		    escp2_unpack_4(length, in, s[0], s[1], s[2], s[3]);
-		  else
-		    escp2_unpack_4_2(length, in, s[0], s[1], s[2], s[3]);
+		  escp2_unpack_4(length, sw->bitwidth, in,
+				 s[0], s[1], s[2], s[3]);
 		  break;
 		}
 	      switch (sw->vertical_subpasses)
 		{
 		case 4:
-		  if (sw->bitwidth == 1)
-		    escp2_split_4_even(length, in, s[0], s[1], s[2], s[3]);
-		  else
-		    escp2_split_4_2(length, in, s[0], s[1], s[2], s[3]);
+		  switch (sw->horizontal_weave)
+		    {
+		    case 1:
+		      escp2_split_4(length, sw->bitwidth, in,
+				    s[0], s[1], s[2], s[3]);
+		      break;
+		    case 2:
+		      escp2_split_4(length, sw->bitwidth, s[0],
+				    s[0], s[2], s[4], s[6]);
+		      escp2_split_4(length, sw->bitwidth, s[1],
+				    s[1], s[3], s[5], s[7]);
+		      break;
+		    }
 		  break;
 		case 2:
-		  if (sw->horizontal_weave == 1)
+		  switch (sw->horizontal_weave)
 		    {
-		      if (sw->bitwidth == 1)
-			escp2_split_2_even(xlength, in, s[0], s[1]);
-		      else
-			escp2_split_2_2(xlength, in, s[0], s[1]);
-		    }
-		  else
-		    {		    
-		      if (sw->bitwidth == 1)
-			{
-			  escp2_split_2_even(xlength, s[1], s[1], s[3]);
-			  escp2_split_2_2(xlength, s[0], s[0], s[2]);
-			}
-		      else
-			{
-			  escp2_split_2_even(xlength, s[1], s[1], s[3]);
-			  escp2_split_2_2(xlength, s[0], s[0], s[2]);
-			}
+		    case 1:
+		      escp2_split_2(xlength, sw->bitwidth, in, s[0], s[1]);
+		      break;
+		    case 2:
+		      escp2_split_2(xlength, sw->bitwidth, s[0], s[0], s[2]);
+		      escp2_split_2(xlength, sw->bitwidth, s[1], s[1], s[3]);
+		      break;
+		    case 4:
+		      escp2_split_2(xlength, sw->bitwidth, s[0], s[0], s[4]);
+		      escp2_split_2(xlength, sw->bitwidth, s[1], s[1], s[5]);
+		      escp2_split_2(xlength, sw->bitwidth, s[2], s[2], s[6]);
+		      escp2_split_2(xlength, sw->bitwidth, s[3], s[3], s[7]);
+		      break;
 		    }
 		  break;
 		  /* case 1 is taken care of because the various unpack */
@@ -3072,7 +3027,7 @@ escp2_write_weave(void *        vsw,
 		}
 	      for (i = 0; i < h_passes; i++)
 		{
-		  int k = sw->current_vertical_subpass * sw->horizontal_weave;
+		  int k = sw->current_vertical_subpass * h_passes;
 		  setactive = escp2_pack(s[i], sw->bitwidth * xlength,
 					 comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
@@ -3081,12 +3036,9 @@ escp2_write_weave(void *        vsw,
 	    }
 	  else
 	    {
-	      int k = sw->current_vertical_subpass * sw->horizontal_weave;
-	      if (sw->bitwidth == 1)
-		setactive = escp2_pack(cols[j], length, comp_buf, &comp_ptr);
-	      else
-		setactive = escp2_pack(fold_buf, length * 2, comp_buf,
-				       &comp_ptr);
+	      int k = sw->current_vertical_subpass * h_passes;
+	      setactive = escp2_pack(in, length * sw->bitwidth,
+				     comp_buf, &comp_ptr);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
 			 colors[j], densities[j], k, setactive);
 	    }
