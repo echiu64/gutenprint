@@ -1,4 +1,4 @@
-This is the Print plugin for the Gimp, version 3.1.5.  This is a
+This is the Print plugin for the Gimp, version 3.1.6.  This is a
 development release.  If this software causes your print head to zoom
 off the end of your printer, spilling ink all over your 1000 year old
 Persian rug, don't blame us.  Remember, you installed the software.
@@ -9,6 +9,40 @@ driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+
+Print 3.1.6 contains the following improvements over Print 3.1.5:
+
+1) Print speed has been greatly improved for sparse pages.  This will
+   not help too much for images, but it will help greatly for text and
+   other typical PostScript printing.
+
+2) 3.1.5 turned out not to improve print quality over 3.1.4; in fact,
+   there was some regression.  There has been some improvement over
+   3.1.5, particularly for higher end printers.  1440x720 enhanced
+   mode (which is computed as 1440x1440) using adaptive hybrid or
+   adaptive random dithering appears to work best.
+
+3) Microweave and 360 dpi positioning is now correct.
+
+4) The Lexmark 4076 is now supported (as a PCL printer).
+
+5) The preview window now notes the size of the image in addition to
+   the position.
+
+6) The code now uses much less memory at high quality settings.
+
+7) Perturbed ordered dithering has been removed.
+
+8) An experimental program to perform nozzle check, head cleaning, and
+   head alignment is now included.  This is potentially dangerous, so
+   read the accompanying help information carefully before performing
+   head alignment!
+
+9) The Ghostscript driver now correctly handles -r1440x720.
+
+10) The PDQ support has been updated, and a CUPS .ppd file added
+   (these are not tested).
 
 
 Print 3.1.5 contains the following improvements over Print 3.1.4:

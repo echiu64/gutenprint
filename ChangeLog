@@ -1,3 +1,74 @@
+2000-06-17	<iay@sourceforge.net>
+
+	Files:	README.escp2 (1.3) (+92 -8)
+	
+	Added information about remote mode commands gleaned from examination of
+	the output of the Epson utilities for the ESC740.
+	
+2000-06-15	<sharkey@sourceforge.net>
+
+	Files:	make-deb.sh (1.2) (+1 -1)
+	
+	Zheesh.  I thought I committed this weeks ago...
+	
+	Modify the gs debian package build script to work as a non-root user by
+	using the fakeroot package.
+	
+2000-06-15	<rlk@sourceforge.net>
+
+	Files:	escp2-unprint.c (1.2) (+8 -8)
+		Ghost/gdevstp.c (1.15) (+24 -24)
+		unprint.c (1.39) (+44 -44)
+		quickmatrix257.h (1.2) (+5951 -5951)
+		quickmatrix199.h (1.2) (+3466 -3466)
+		quickmatrix199-2.h (1.2) (+3466 -3466)
+		print.c (1.98) (+6 -6)
+		print-util.c (1.95) (+4 -4)
+		print-pcl.c (1.57) (+61 -61)
+		print-escp2.c (1.165) (+18 -18)
+		print-dither.c (1.63) (+96 -64)
+		print-canon.c (1.56) (+138 -138)
+		pcl-unprint.c (1.13) (+11 -11)
+		gtk_main_window.c (1.22) (+29 -29)
+		gtk_color_window.c (1.10) (+7 -7)
+		gimp_main_window.c (1.18) (+19 -19)
+		gimp_color_window.c (1.7) (+2 -2)
+		escp2-weavetest.c (1.12) (+2 -2)
+	
+	ccept non-square dither matrices (e. g. for non-square pixels).
+	
+	Strip trailing whitespace from everything (minor nit cleanup).
+	
+2000-06-15	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.164) (+33 -23)
+	
+	Fix microweave positioning
+	
+	Add additional ink drop size for low res printing
+	
+2000-06-15	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.163) (+2 -2)
+	
+	Generate smoother output with quadratic sliding
+	
+2000-06-15	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.62) (+24 -12)
+	
+	Scale quadratically rather than linearly between tones to improve
+	transition regions on 6-color and variable dot size printers.
+	
+2000-06-13	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.15) (+86 -0)
+		print.h (1.60) (+3 -3)
+		print-ps.c (1.31) (+2 -2)
+		print-image-gimp.c (1.2) (+3 -3)
+	
+	Rename Image_get_pluginname to Image_get_appname
+	
 2000-06-13	<rlk@sourceforge.net>
 
 	Files:	print-dither.c (1.61) (+55 -37)
