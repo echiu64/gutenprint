@@ -101,7 +101,6 @@ libgimpprint_la_SOURCES = \
 	dither-main.c \
 	dither-ed.c \
 	dither-ordered.c \
-	dither-fast.c \
 	dither-eventone.c \
 	dither-very-fast.c \
 	dither-inks.c \

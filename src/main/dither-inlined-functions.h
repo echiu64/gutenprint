@@ -28,11 +28,6 @@
 
 
 /*
- * All of these functions have been profiled, and I have determined that
- * inlining them improves performance measurably.
- */
-
-/*
  * Inlining has yielded significant (measured) speedup, even with the
  * more complicated dither function. --rlk 20011219
  */
@@ -75,16 +70,6 @@ ditherpoint(const stpi_dither_t *d, dither_matrix_t *mat, int x)
     }
   mat->last_x = x;
   return mat->matrix[mat->index];
-}
-
-static inline int
-compute_black(const stpi_dither_t *d)
-{
-  int answer = INT_MAX;
-  int i;
-  for (i = 1; i < CHANNEL_COUNT(d); i++)
-    answer = USMIN(answer, CHANNEL(d, i).v);
-  return answer;
 }
 
 static inline void

@@ -41,10 +41,8 @@
  * improvement -- rlk 20030119
  */
 
-#define UPDATE_COLOR(color, dither) (\
-        ((dither) >= 0)? \
-                (color) + ((dither) >> 3): \
-                (color) - ((-(dither)) >> 3))
+#define UPDATE_COLOR(color, dither) (					   \
+((dither) >= 0)? (color) + ((dither) >> 3) : (color) - ((-(dither)) >> 3))
 
 static int *
 get_errline(stpi_dither_t *d, int row, int color)
@@ -145,12 +143,10 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
   int base = dc->b;
   int density = dc->o;
   int adjusted = dc->v;
-  int xdensity = density;
   unsigned randomizer = dc->randomizer;
   dither_matrix_t *pick_matrix = &(dc->pick);
   dither_matrix_t *dither_matrix = &(dc->dithermat);
   unsigned rangepoint = 32768;
-  unsigned virtual_value;
   unsigned vmatrix;
   int i;
   int j;
@@ -159,7 +155,6 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
   unsigned v;
   int levels = dc->nlevels - 1;
   int dither_value = adjusted;
-  stpi_dither_segment_t *dd;
   stpi_ink_defn_t *lower;
   stpi_ink_defn_t *upper;
 
@@ -179,9 +174,9 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
    */
   for (i = levels; i >= 0; i--)
     {
-      dd = &(dc->ranges[i]);
+      stpi_dither_segment_t *dd = &(dc->ranges[i]);
 
-      if (xdensity <= dd->lower->range)
+      if (density <= dd->lower->range)
 	continue;
 
       /*
@@ -214,79 +209,88 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
       lower = dd->lower;
       upper = dd->upper;
 
-      if (!dd->is_equal)
-	rangepoint =
-	  ((unsigned) (xdensity - lower->range)) * 65535 / dd->range_span;
-      rangepoint = d->virtual_dot_scale[rangepoint];
-
-      /*
-       * Compute the virtual dot size that we're going to print.
-       * This is somewhere between the two candidate dot sizes.
-       * This is scaled between the high and low value.
-       */
-
-      if (dd->value_span == 0)
-	virtual_value = upper->value;
-      else if (dd->range_span == 0)
-	virtual_value = (upper->value + lower->value) / 2;
-      else
-	virtual_value = lower->value + (dd->value_span * rangepoint / 65535);
-
       /*
        * Reduce the randomness as the base value increases, to get
        * smoother output in the midtones.  Idea suggested by
        * Thomas Tonino.
        */
       if (stpi_dither_type & D_ORDERED_BASE)
-	randomizer = 65535;	/* With ordered dither, we need this */
-      else if (randomizer > 0)
 	{
-	  if (base > d->d_cutoff)
-	    randomizer = 0;
-	  else if (base > d->d_cutoff / 2)
-	    randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
+	  rangepoint = density - dd->lower->range;
+	  if (dd->range_span < 65535)
+	    rangepoint = rangepoint * 65535 / dd->range_span;
+	  vmatrix = 0;
 	}
-
-      /*
-       * Compute the comparison value to decide whether to print at
-       * all.  If there is no randomness, simply divide the virtual
-       * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
-       * matrix dithering, which degenerates to a threshold).
-       */
-      if (randomizer == 0)
-	vmatrix = virtual_value / 2;
       else
 	{
+
 	  /*
-	   * First, compute a value between 0 and 65535 that will be
-	   * scaled to produce an offset from the desired threshold.
+	   * Compute the virtual dot size that we're going to print.
+	   * This is somewhere between the two candidate dot sizes.
+	   * This is scaled between the high and low value.
 	   */
-	  vmatrix = ditherpoint(d, dither_matrix, x);
+
+	  unsigned virtual_value;
+	  rangepoint = density - dd->lower->range;
+	  if (dd->range_span < 65535)
+	    rangepoint = rangepoint * 65535 / dd->range_span;
+	  if (dd->value_span == 0)
+	    virtual_value = upper->value;
+	  else /* if (dd->range_span == 0) */
+	    virtual_value = (upper->value + lower->value) / 2;
 	  /*
-	   * Now, scale the virtual dot size appropriately.  Note that
-	   * we'll get something evenly distributed between 0 and
-	   * the virtual dot size, centered on the dot size / 2,
-	   * which is the normal threshold value.
+	    else
+	    virtual_value = lower->value + (dd->value_span * rangepoint / 65535);
+	  */
+	  randomizer = 0;
+	  if (randomizer > 0)
+	    {
+	      if (base > d->d_cutoff)
+		randomizer = 0;
+	      else if (base > d->d_cutoff / 2)
+		randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
+	    }
+
+	  /*
+	   * Compute the comparison value to decide whether to print at
+	   * all.  If there is no randomness, simply divide the virtual
+	   * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
+	   * matrix dithering, which degenerates to a threshold).
 	   */
-	  vmatrix = vmatrix * virtual_value / 65535;
-	  if (randomizer != 65535)
+	  if (randomizer == 0)
+	    vmatrix = virtual_value / 2;
+	  else
 	    {
 	      /*
-	       * We want vmatrix to be scaled between 0 and
-	       * virtual_value when randomizer is 65535 (fully random).
-	       * When it's less, we want it to scale through part of
-	       * that range. In all cases, it should center around
-	       * virtual_value / 2.
-	       *
-	       * vbase is the bottom of the scaling range.
+	       * First, compute a value between 0 and 65535 that will be
+	       * scaled to produce an offset from the desired threshold.
 	       */
-	      unsigned vbase = virtual_value * (65535u - randomizer) /
-		131070u;
-	      vmatrix = vmatrix * randomizer / 65535;
-	      vmatrix += vbase;
-	    }
-	} /* randomizer != 0 */
-
+	      vmatrix = ditherpoint(d, dither_matrix, x);
+	      /*
+	       * Now, scale the virtual dot size appropriately.  Note that
+	       * we'll get something evenly distributed between 0 and
+	       * the virtual dot size, centered on the dot size / 2,
+	       * which is the normal threshold value.
+	       */
+	      vmatrix = vmatrix * virtual_value / 65535;
+	      if (randomizer != 65535)
+		{
+		  /*
+		   * We want vmatrix to be scaled between 0 and
+		   * virtual_value when randomizer is 65535 (fully random).
+		   * When it's less, we want it to scale through part of
+		   * that range. In all cases, it should center around
+		   * virtual_value / 2.
+		   *
+		   * vbase is the bottom of the scaling range.
+		   */
+		  unsigned vbase = virtual_value * (65535u - randomizer) /
+		    131070u;
+		  vmatrix = vmatrix * randomizer / 65535;
+		  vmatrix += vbase;
+		}
+	    } /* randomizer != 0 */
+	}
       /*
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
@@ -426,6 +430,13 @@ stpi_dither_ed(stp_vars_t v,
   int xerror, xstep, xmod;
 
   length = (d->dst_width + 7) / 8;
+  if (d->stpi_dither_type & D_ADAPTIVE_BASE)
+    for (i = 0; i < CHANNEL_COUNT(d); i++)
+      if (CHANNEL(d, i).nlevels > 1)
+	{
+	  stpi_dither_ordered(v, row, raw, duplicate_line, zero_mask);
+	  return;
+	}
   if (!shared_ed_initializer(d, row, duplicate_line, zero_mask, length,
 			     direction, &error, &ndither))
     return;

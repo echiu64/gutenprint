@@ -34,33 +34,14 @@
 #include "dither-impl.h"
 #include "dither-inlined-functions.h"
 
-static inline int
-print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
-		    unsigned char bit, int length, int dontprint)
+static inline void
+print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
+		    int x, int y, unsigned char bit, int length)
 {
-  int density = dc->o;
-  int adjusted = dc->v;
-  int xdensity = density;
-  dither_matrix_t *pick_matrix = &(dc->pick);
-  dither_matrix_t *dither_matrix = &(dc->dithermat);
-  unsigned rangepoint;
-  unsigned virtual_value;
-  unsigned vmatrix;
   int i;
   int j;
-  unsigned char *tptr;
   unsigned bits;
-  unsigned v;
   int levels = dc->nlevels - 1;
-  int dither_value = adjusted;
-  stpi_dither_segment_t *dd;
-  stpi_ink_defn_t *lower;
-  stpi_ink_defn_t *upper;
-
-  if (adjusted <= 0 || density <= 0)
-    return 0;
-  if (density > 65535)
-    density = 65535;
 
   /*
    * Look for the appropriate range into which the input value falls.
@@ -72,105 +53,43 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, in
    */
   for (i = levels; i >= 0; i--)
     {
-      dd = &(dc->ranges[i]);
+      stpi_dither_segment_t *dd = &(dc->ranges[i]);
 
-      if (xdensity <= dd->lower->range)
-	continue;
-
-      /*
-       * Where are we within the range.  If we're going to print at
-       * all, this determines the probability of printing the darker
-       * vs. the lighter ink.  If the inks are identical (same value
-       * and darkness), it doesn't matter.
-       *
-       * We scale the input linearly against the top and bottom of the
-       * range.
-       */
-
-      lower = dd->lower;
-      upper = dd->upper;
-
-      if (dd->is_equal)
-	rangepoint = 32768;
-      else
-	rangepoint =
-	  ((unsigned) (xdensity - lower->range)) * 65535 / dd->range_span;
-      rangepoint = d->virtual_dot_scale[rangepoint];
-
-      /*
-       * Compute the virtual dot size that we're going to print.
-       * This is somewhere between the two candidate dot sizes.
-       * This is scaled between the high and low value.
-       */
-
-      if (dd->value_span == 0)
-	virtual_value = upper->value;
-      else if (dd->range_span == 0)
-	virtual_value = (upper->value + lower->value) / 2;
-      else
-	virtual_value = lower->value + (dd->value_span * rangepoint / 65535);
-
-      /*
-       * Compute the comparison value to decide whether to print at
-       * all.  If there is no randomness, simply divide the virtual
-       * dotsize by 2 to get standard "pure" Floyd-Steinberg (or "pure"
-       * matrix dithering, which degenerates to a threshold).
-       */
-      /*
-       * First, compute a value between 0 and 65535 that will be
-       * scaled to produce an offset from the desired threshold.
-       */
-      vmatrix = ditherpoint(d, dither_matrix, x);
-      /*
-       * Now, scale the virtual dot size appropriately.  Note that
-       * we'll get something evenly distributed between 0 and
-       * the virtual dot size, centered on the dot size / 2,
-       * which is the normal threshold value.
-       */
-      vmatrix = vmatrix * virtual_value / 65535;
-
-      /*
-       * After all that, printing is almost an afterthought.
-       * Pick the actual dot size (using a matrix here) and print it.
-       */
-      if (dither_value > 0 && dither_value >= vmatrix)
+      if (val > dd->lower->value)
 	{
-	  stpi_ink_defn_t *subc;
+	  /*
+	   * Where are we within the range.
+	   */
 
-	  if (dd->is_same_ink)
-	    subc = upper;
+	  unsigned rangepoint = val - dd->lower->value;
+	  if (dd->value_span < 65535)
+	    rangepoint = rangepoint * 65535 / dd->value_span;
+
+	  if (rangepoint >= ditherpoint(d, &(dc->dithermat), x))
+	    bits = dd->upper->bits;
 	  else
+	    bits = dd->lower->bits;
+
+	  if (bits)
 	    {
-	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
-		subc = upper;
-	      else
-		subc = lower;
-	    }
-	  bits = subc->bits;
-	  v = subc->value;
-	  if (dc->ptr)
-	    {
-	      tptr = dc->ptr + d->ptr_offset;
+	      unsigned char *tptr = dc->ptr + d->ptr_offset;
 
 	      /*
 	       * Lay down all of the bits in the pixel.
 	       */
-	      if (dontprint < v)
+	      set_row_ends(dc, x);
+	      for (j = 1; j <= bits; j += j, tptr += length)
 		{
-		  set_row_ends(dc, x);
-		  for (j = 1; j <= bits; j += j, tptr += length)
-		    {
-		      if (j & bits)
-			tptr[0] |= bit;
-		    }
-		  return v;
+		  if (j & bits)
+		    tptr[0] |= bit;
 		}
+
 	    }
+	  return;
 	}
-      return 0;
     }
-  return 0;
 }
+
 
 void
 stpi_dither_ordered(stp_vars_t v,
@@ -185,7 +104,6 @@ stpi_dither_ordered(stp_vars_t v,
   unsigned char	bit;
   int i;
 
-  int		terminate;
   int xerror, xstep, xmod;
 
   if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
@@ -198,23 +116,18 @@ stpi_dither_ordered(stp_vars_t v,
   xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
-  terminate = d->dst_width;
 
   QUANT(6);
-  for (x = 0; x != terminate; x ++)
+  for (x = 0; x != d->dst_width; x ++)
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  if (CHANNEL(d, i).ptr)
-	    {
-	      CHANNEL(d, i).v = raw[i];
-	      CHANNEL(d, i).o = CHANNEL(d, i).v;
-	      print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
-	    }
+	  if (CHANNEL(d, i).ptr && raw[i])
+	    print_color_ordered(d, &(CHANNEL(d, i)), raw[i], x, row, bit, length);
 	}
 
       QUANT(11);
       ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
       QUANT(13);
-  }
+    }
 }

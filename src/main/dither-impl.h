@@ -213,7 +213,6 @@ typedef struct dither
 #define USMIN(a, b) ((a) < (b) ? (a) : (b))
 
 
-extern stpi_ditherfunc_t stpi_dither_fast;
 extern stpi_ditherfunc_t stpi_dither_very_fast;
 extern stpi_ditherfunc_t stpi_dither_ordered;
 extern stpi_ditherfunc_t stpi_dither_ed;

@@ -159,11 +159,10 @@ stpi_set_dither_function(stp_vars_t v, int image_bpp)
     }
   switch (d->stpi_dither_type)
     {
-    case D_FAST:
-      RETURN_DITHERFUNC(stpi_dither_fast, v);
     case D_VERY_FAST:
       RETURN_DITHERFUNC(stpi_dither_very_fast, v);
     case D_ORDERED:
+    case D_FAST:
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
     case D_EVENTONE:
       RETURN_DITHERFUNC(stpi_dither_et, v);
@@ -271,7 +270,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
   d->transition = 1.0;
   d->adaptive_limit = .75 * 65535;
 
-  if (d->stpi_dither_type == D_VERY_FAST)
+  if (d->stpi_dither_type == D_VERY_FAST || d->stpi_dither_type == D_FAST)
     {
       if (stp_check_int_parameter(v, "DitherVeryFastSteps",
 				  STP_PARAMETER_ACTIVE))

@@ -34,17 +34,34 @@
 #include "dither-impl.h"
 #include "dither-inlined-functions.h"
 
-
-static inline unsigned
-ditherpoint_fast(const stpi_dither_t *d, dither_matrix_t *mat, int x)
+static inline void
+print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
+		      int val, int x, int y, unsigned char bit, int length)
 {
-  return mat->matrix[(mat->last_y_mod+((x + mat->x_offset) & mat->fast_mask))];
+  int j;
+  stpi_dither_segment_t *dd = &(dc->ranges[dc->nlevels - 1]);
+  unsigned bits = dd->upper->bits;
+  if (bits && val >= ditherpoint(d, &(dc->dithermat), x))
+    {
+      unsigned char *tptr = dc->ptr + d->ptr_offset;
+
+      /*
+       * Lay down all of the bits in the pixel.
+       */
+      set_row_ends(dc, x);
+      for (j = 1; j <= bits; j += j, tptr += length)
+	{
+	  if (j & bits)
+	    tptr[0] |= bit;
+	}
+
+    }
 }
 
 void
 stpi_dither_very_fast(stp_vars_t v,
 		      int row,
-		      const unsigned short *input,
+		      const unsigned short *raw,
 		      int duplicate_line,
 		      int zero_mask)
 {
@@ -53,14 +70,8 @@ stpi_dither_very_fast(stp_vars_t v,
 		length;
   unsigned char	bit;
   int i;
-  int dst_width = d->dst_width;
+
   int xerror, xstep, xmod;
-  for (i = 0; i < CHANNEL_COUNT(d); i++)
-    if (!(CHANNEL(d, i).very_fast))
-      {
-	stpi_dither_fast(v, row, input, duplicate_line, zero_mask);
-	return;
-      }
 
   if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) ==
       ((1 << CHANNEL_COUNT(d)) - 1))
@@ -72,22 +83,19 @@ stpi_dither_very_fast(stp_vars_t v,
   xstep  = CHANNEL_COUNT(d) * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
-  x = 0;
 
-  QUANT(14);
-  for (x = 0; x != dst_width; x++)
+  QUANT(6);
+  for (x = 0; x != d->dst_width; x ++)
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
-	  stpi_dither_channel_t *dc = &(CHANNEL(d, i));
-	  if (dc->ptr && (input[i] > ditherpoint_fast(d, &(dc->dithermat), x)))
-	    {
-	      set_row_ends(dc, x);
-	      dc->ptr[d->ptr_offset] |= bit;
-	    }
+	  if (CHANNEL(d, i).ptr && raw[i])
+	    print_color_very_fast(d, &(CHANNEL(d, i)), raw[i], x, row,
+				  bit, length);
 	}
-      QUANT(16);
-      ADVANCE_UNIDIRECTIONAL(d, bit, input, CHANNEL_COUNT(d), xerror, xstep, xmod);
-      QUANT(17);
+
+      QUANT(11);
+      ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror, xstep, xmod);
+      QUANT(13);
     }
 }

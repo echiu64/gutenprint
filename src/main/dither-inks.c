@@ -244,7 +244,7 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 		   i, dc->ranges[i].lower->value, dc->ranges[i].upper->value,
 		   dc->ranges[i].lower->range, dc->ranges[i].upper->range);
       stpi_dprintf(STPI_DBG_INK, v,
-		   "       bits[0] %d bits[1] %d\n dot_size[0] %d dot_size[1] %d\n",
+		   "       bits[0] %d bits[1] %d dot_size[0] %d dot_size[1] %d\n",
 		   dc->ranges[i].lower->bits, dc->ranges[i].upper->bits,
 		   dc->ranges[i].lower->dot_size,
 		   dc->ranges[i].upper->dot_size);
@@ -301,8 +301,8 @@ stpi_dither_set_ranges(stp_vars_t v, int color,
   dc->ranges[0].lower = &dc->ink_list[0];
   dc->ranges[0].upper = &dc->ink_list[1];
   dc->ink_list[0].range = 0;
-  dc->ink_list[0].value = ranges[0].value * 65535.0;
-  dc->ink_list[0].bits = ranges[0].bit_pattern;
+  dc->ink_list[0].value = 0;
+  dc->ink_list[0].bits = 0;
   if (nlevels == 1)
     dc->ink_list[1].range = 65535;
   else
@@ -316,7 +316,7 @@ stpi_dither_set_ranges(stp_vars_t v, int color,
   if (ranges[0].bit_pattern > dc->bit_max)
     dc->bit_max = ranges[0].bit_pattern;
   dc->ranges[0].range_span = dc->ranges[0].upper->range;
-  dc->ranges[0].value_span = 0;
+  dc->ranges[0].value_span = dc->ranges[0].upper->value;
   if (dc->nlevels > 1)
     {
       for (i = 1; i < nlevels; i++)
