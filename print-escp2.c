@@ -85,11 +85,11 @@ static void destroy_weave(void *);
 /*
  * We really need to get away from this silly static nonsense...
  */
-#define PHYSICAL_BPI 720
+#define MAX_PHYSICAL_BPI 2880
 #define MAX_OVERSAMPLED 8
 #define MAX_BPP 2
 #define BITS_PER_BYTE 8
-#define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
+#define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
 
 static int escp2_base_separation = 360;
@@ -2889,7 +2889,7 @@ static void
 escp2_init_microweave(int top)
 {
   if (!microweave_s)
-    microweave_s = malloc(6 * 4 * COMPBUFWIDTH);
+    microweave_s = malloc(7 * 4 * COMPBUFWIDTH);
   accumulated_spacing = top;
 }
 
