@@ -277,7 +277,7 @@ delayed. All new development is focused on the 5.0 series.
  <TR>
  <TD colspan="2" >
  <p>
- Gimp-Print  5.0.0-beta2 is the first beta release in the 5.x series. The changes between 5.0.0-beta2 and 5.0.0-beta1 are described in the <a href="https://sourceforge.net/project/shownotes.php?release_id=248831">release notes</a>.
+ Gimp-Print  5.0.0-beta2 is the first beta release in the 5.x series. The changes between 5.0.0-beta2 and 5.0.0-beta1 are described in the <a href="https://sourceforge.net/project/shownotes.php?release_id=263385">release notes</a>.
 </p><p>
 
 Please note that the behavior of the 5.0.0-beta2 Mac OS X installer for Gimp-Print is unchanged from <a href= "MacOSX.php3#5.0.0-beta1">5.0.0-beta1</a>.
