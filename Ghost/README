@@ -181,8 +181,9 @@ x: 0..7 (0)
 
 Dithering Algorithm:
 -dDither=x
-0  Modified Floyd-Steinberg
+0  Hybrid Floyd-Steinberg
 1  Ordered
+2  Random Floyd-Steinberg
 
 currently supported Media Selection:
 (important: always use lower case names)

@@ -1,3 +1,88 @@
+2000-04-20	<rlk@sourceforge.net>
+
+	Files:	print-canon.c
+		print-pcl.c
+		print-escp2.c
+	
+	Clean up the solid color and line art modes a bit.
+	
+2000-04-20	<rlk@sourceforge.net>
+
+	Files:	RELNOTES
+		print_gimp.h
+		print.h
+		print.c
+		print-util.c
+		print-ps.c
+		print-pcl.c
+		print-escp2.c
+		print-dither.c
+		print-canon.c
+		gtk_main_window.c
+		gtk_color_window.c
+		gimp_main_window.c
+		gimp_color_window.c
+	
+	Reduce initial memory footprint.
+	
+	Add random Floyd-Steinberg dither.
+	
+2000-04-19	<rlk@sourceforge.net>
+
+	Files:	README.dither
+	
+	Intermediate discussion of dithering
+	
+2000-04-19	<rlk@sourceforge.net>
+
+	Files:	RELNOTES
+		gimp_main_window.c
+	
+	Fix (somewhat) handling of orientation; also prevent scaling from
+	exceeding 100% (the Gimp toolkit handles these things correctly; the
+	GTK toolkit doesn't, so there were a few port issues).
+	
+2000-04-19	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	Try again for 1440 uweave
+	
+2000-04-18	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c
+	
+	One more microweave bug
+	
+2000-04-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog
+		print_gimp.h
+		print-pcl.c
+		print-escp2.c
+		print-dither.c
+		print-canon.c
+	
+	Fix incorrect printing for variable drop sizes
+	
+2000-04-17	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	Better matrix for ordered dither
+	
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	print-dither.c
+	
+	We really do need to randomize the black transition
+	
+2000-04-16	<rlk@sourceforge.net>
+
+	Files:	Makefile.am
+	
+	Create change log as part of release
+	
 2000-04-16	<rlk@sourceforge.net>
 
 	Files:	gimp_color_window.c
