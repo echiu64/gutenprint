@@ -27,6 +27,8 @@ over Gimp-Print 4.2.1-pre1:
   2) The Lexmark Z53 has been verified to work with the Z52 driver,
      and is now supported.
 
+  3) The align command in escputil has been simplified.
+
 
 Gimp-Print 4.2.1-pre1 contains the following major changes and fixes
 over Gimp-Print 4.2.0:
