@@ -51,7 +51,7 @@ typedef struct
   int   d2y;
   distance_t	d_sq;
   int	aspect;
-  int   single_aspect;
+  int   unitone_aspect;
   int	physical_aspect;
   int	diff_factor;
   stpi_dither_channel_t *dummy_channel;
@@ -69,8 +69,8 @@ typedef struct shade_segment
 
 #define EVEN_C1 256
 #define EVEN_C2 (EVEN_C1 * sqrt(3.0) / 2.0)
-#define EVEN_C1_SINGLE 16384
-#define EVEN_C2_SINGLE (EVEN_C1_SINGLE * sqrt(3.0) / 2.0)
+#define UNITONE_C1 16384
+#define UNITONE_C2 (UNITONE_C1 * sqrt(3.0) / 2.0)
 
 static void
 free_eventone_data(stpi_dither_t *d)
@@ -110,7 +110,7 @@ et_setup(stpi_dither_t *d)
     CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
     CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
   }
-  if (d->stpi_dither_type & D_ADAPTIVE_BASE) {
+  if (d->stpi_dither_type & D_UNITONE) {
     stpi_dither_channel_t *dc = stpi_zalloc(sizeof(stpi_dither_channel_t));
     stpi_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
     stpi_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
@@ -133,7 +133,7 @@ et_setup(stpi_dither_t *d)
   et->d2y = 2 * et->d_sq.dy;
 
   et->aspect = EVEN_C2 / (xa * ya);
-  et->single_aspect = EVEN_C2_SINGLE / (xa * ya);
+  et->unitone_aspect = UNITONE_C2 / (xa * ya);
   et->d_sq.r_sq = 0;
 
   for (i = 0; i < CHANNEL_COUNT(d); i++) {
@@ -150,7 +150,7 @@ et_setup(stpi_dither_t *d)
     }
     CHANNEL(d, i).aux_data = shade;
   }
-  if (d->stpi_dither_type & D_ADAPTIVE_BASE) {
+  if (et->dummy_channel) {
     int x;
     shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
     shade->dis = et->d_sq;
@@ -291,8 +291,8 @@ eventone_adjust(stpi_dither_channel_t *dc, eventone_t *et, int dither_point,
 }
 
 static inline int
-eventone_adjust_single(stpi_dither_channel_t *dc, eventone_t *et,
-		       int dither_point, unsigned int desired)
+unitone_adjust(stpi_dither_channel_t *dc, eventone_t *et,
+	       int dither_point, unsigned int desired)
 {
   if (dither_point <= 0)
     return INT_MIN;
@@ -302,8 +302,8 @@ eventone_adjust_single(stpi_dither_channel_t *dc, eventone_t *et,
     dither_point = INT_MIN;
   } else {
     shade_distance_t *shade = (shade_distance_t *) dc->aux_data;
-    dither_point += shade->dis.r_sq * et->single_aspect -
-      (EVEN_C1_SINGLE * 65535) / desired;
+    dither_point += shade->dis.r_sq * et->unitone_aspect -
+      (UNITONE_C1 * 65535u) / desired;
   }
   return dither_point;
 }
@@ -517,7 +517,7 @@ stpi_dither_ut(stp_vars_t v,
   int		channel_count = CHANNEL_COUNT(d);
   stpi_dither_channel_t *ddc;
 
-  if (channel_count) {
+  if (channel_count == 1) {
     stpi_dither_et(v, row, raw, duplicate_line, zero_mask, mask);
     return;
   }
@@ -557,7 +557,9 @@ stpi_dither_ut(stp_vars_t v,
     int maximum_value = 0;
     int comparison = 32768;
     stpi_dither_channel_t *best_channel = NULL;
+    stpi_dither_channel_t *second_best_channel = NULL;
     int best_channel_value = INT_MIN;
+    int second_best_channel_value = INT_MIN;
     int random_value = ditherpoint(d, &(d->dither_matrix), x);
 
     if (d->stpi_dither_type & D_ORDERED_BASE)
@@ -589,7 +591,7 @@ stpi_dither_ut(stp_vars_t v,
 	}
 	/* Incorporate error data from previous line */
 	dc->v += 2 * dc->b + (dc->errs[0][x + MAX_SPREAD] + 8) / 16;
-	dc->o = eventone_adjust_single(dc, et, dc->v - dc->b, dc->b);
+	dc->o = unitone_adjust(dc, et, dc->v - dc->b, dc->b);
       }
     }
 
@@ -598,8 +600,11 @@ stpi_dither_ut(stp_vars_t v,
       print_all_channels = 1;
 #endif
 
-    if (ddc->b > 65535)
+    if (ddc->b > 131070)
       print_all_channels = 1;
+    else if (ddc->b > 65535)
+      channels_to_print = 1;
+
 
     if (ddc->b > 65535) {
       ddc->b = 65535;
@@ -608,7 +613,7 @@ stpi_dither_ut(stp_vars_t v,
     ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
     total_error += eventone_adjust(ddc, et, ddc->v - ddc->b, ddc->b);
     if (total_error >= comparison) {
-      channels_to_print = 1;
+      channels_to_print += 1;
     }
 
     if (!print_all_channels) {
@@ -618,13 +623,21 @@ stpi_dither_ut(stp_vars_t v,
       
 	if (dc->ptr) {
 
-	  if (!print_all_channels && sp->share_this_channel) {
+	  if (sp->share_this_channel) {
 	    if (dc->o > best_channel_value) {
+	      second_best_channel = best_channel;
 	      best_channel = dc;
+	      second_best_channel_value = best_channel_value;
 	      if (dc->o >= 32768)
 		best_channel_value = INT_MAX;
 	      else
 		best_channel_value = dc->o;
+	    } else if (dc->o > second_best_channel_value) {
+	      second_best_channel = dc;
+	      if (dc->o >= 32768)
+		second_best_channel_value = INT_MAX;
+	      else
+		second_best_channel_value = dc->o;
 	    }
 	  }
 	}
@@ -651,7 +664,8 @@ stpi_dither_ut(stp_vars_t v,
 	    dc->v -= 131070;
 	    sp->dis = et->d_sq;
 	  }
-	} else if (channels_to_print == 1 && best_channel == dc) {
+	} else if (channels_to_print >= 1 && best_channel == dc ||
+		   channels_to_print >= 2 && second_best_channel == dc) {
 	  inkp = &(sp->upper);
 	  dc->v -= 131070;
 	  sp->dis = et->d_sq;
