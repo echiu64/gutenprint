@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
-"POT-Creation-Date: 2003-11-21 21:43-0500\n"
+"POT-Creation-Date: 2003-11-26 23:12-0500\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -70,7 +70,7 @@ msgstr "%s: voµba `-W %s` je viacznaèná\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: voµba `-W %s' nedovoµuje pou¾i» argument\n"
 
-#: src/main/dither-main.c:46 src/main/print-color.c:2330
+#: src/main/dither-main.c:46 src/main/print-color.c:2369
 #, fuzzy
 msgid "Default"
 msgstr "Nastavi» ¹tandardné"
@@ -410,7 +410,7 @@ msgstr "Veµkos» papiera, na ktorý chcete tlaèi»"
 
 #: src/main/print-canon.c:1229 src/main/print-escp2.c:132
 #: src/main/print-lexmark.c:273 src/main/print-pcl.c:1122
-#: src/main/print-ps.c:73 src/cups/genppd.c:1019
+#: src/main/print-ps.c:73 src/cups/genppd.c:1020
 msgid "Media Type"
 msgstr "Typ média"
 
@@ -422,7 +422,7 @@ msgstr ""
 
 #: src/main/print-canon.c:1235 src/main/print-escp2.c:138
 #: src/main/print-lexmark.c:279 src/main/print-pcl.c:1128
-#: src/main/print-ps.c:79 src/cups/genppd.c:1043
+#: src/main/print-ps.c:79 src/cups/genppd.c:1044
 msgid "Media Source"
 msgstr "Zdroj média"
 
@@ -435,7 +435,7 @@ msgstr "Zdroj (vstupné miesto) média, na ktoré tlaèíte"
 
 #: src/main/print-canon.c:1241 src/main/print-escp2.c:144
 #: src/main/print-lexmark.c:285 src/main/print-pcl.c:1134
-#: src/main/print-ps.c:85 src/cups/genppd.c:1115
+#: src/main/print-ps.c:85 src/cups/genppd.c:1116
 msgid "Resolution"
 msgstr "Rozlí¹enie"
 
@@ -590,61 +590,61 @@ msgstr "Fotografická CcMmY farba"
 msgid "Photo CcMmYK Color"
 msgstr "Fotografická CcMmYK farba"
 
-#: src/main/print-color.c:89
+#: src/main/print-color.c:95
 msgid "Color Correction"
 msgstr ""
 
-#: src/main/print-color.c:89 src/main/print-color.c:97
-#: src/main/print-color.c:105 src/main/print-color.c:165
+#: src/main/print-color.c:95 src/main/print-color.c:103
+#: src/main/print-color.c:111 src/main/print-color.c:171
 msgid "Basic Image Adjustment"
 msgstr ""
 
-#: src/main/print-color.c:90
+#: src/main/print-color.c:96
 msgid "Color correction to be applied"
 msgstr ""
 
-#: src/main/print-color.c:97
+#: src/main/print-color.c:103
 #, fuzzy
 msgid "Brightness"
 msgstr "Jas:"
 
-#: src/main/print-color.c:98
+#: src/main/print-color.c:104
 #, fuzzy
 msgid "Brightness of the print (0 is solid black, 2 is solid white)"
 msgstr ""
 "Nastavenie jasu tlaèe.\n"
 "0 je jednoliatu èiernu, 2 pre jednoliatu bielu"
 
-#: src/main/print-color.c:105
+#: src/main/print-color.c:111
 #, fuzzy
 msgid "Contrast"
 msgstr "Kontrast:"
 
-#: src/main/print-color.c:106
+#: src/main/print-color.c:112
 msgid "Contrast of the print (0 is solid gray)"
 msgstr ""
 
-#: src/main/print-color.c:113
+#: src/main/print-color.c:119
 msgid "Linear Contrast Adjustment"
 msgstr ""
 
-#: src/main/print-color.c:113
+#: src/main/print-color.c:119
 #, fuzzy
 msgid "Advanced Image Control"
 msgstr "Typ výstupu:"
 
-#: src/main/print-color.c:114
+#: src/main/print-color.c:120
 msgid "Use linear vs. fixed end point contrast adjustment"
 msgstr ""
 
-#: src/main/print-color.c:121 src/main/print-color.c:133
-#: src/main/print-color.c:141 src/main/print-color.c:149
-#: src/main/print-color.c:157
+#: src/main/print-color.c:127 src/main/print-color.c:139
+#: src/main/print-color.c:147 src/main/print-color.c:155
+#: src/main/print-color.c:163
 #, fuzzy
 msgid "Gamma"
 msgstr "Gama:"
 
-#: src/main/print-color.c:122
+#: src/main/print-color.c:128
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
@@ -654,51 +654,51 @@ msgstr ""
 "tlaè, kým ni¾¹ie hodnoty vyprodukujú tmav¹iu tlaè. Èierna a biela zostanú "
 "také isté na rozdiel od nastavovania jasu."
 
-#: src/main/print-color.c:133
+#: src/main/print-color.c:139
 #, fuzzy
 msgid "AppGamma"
 msgstr "Gama:"
 
-#: src/main/print-color.c:134
+#: src/main/print-color.c:140
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/main/print-color.c:141 src/libgimpprintui/panel.c:1824
+#: src/main/print-color.c:147 src/libgimpprintui/panel.c:1824
 #: src/escputil/escputil.c:527
 msgid "Cyan"
 msgstr "Azúrová"
 
-#: src/main/print-color.c:142
+#: src/main/print-color.c:148
 #, fuzzy
 msgid "Adjust the cyan gamma"
 msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 
-#: src/main/print-color.c:149 src/libgimpprintui/panel.c:1831
+#: src/main/print-color.c:155 src/libgimpprintui/panel.c:1831
 #: src/escputil/escputil.c:528
 msgid "Magenta"
 msgstr "Purpurová"
 
-#: src/main/print-color.c:150
+#: src/main/print-color.c:156
 #, fuzzy
 msgid "Adjust the magenta gamma"
 msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
-#: src/main/print-color.c:157 src/libgimpprintui/panel.c:1838
+#: src/main/print-color.c:163 src/libgimpprintui/panel.c:1838
 #: src/escputil/escputil.c:529
 msgid "Yellow"
 msgstr "®ltá"
 
-#: src/main/print-color.c:158
+#: src/main/print-color.c:164
 #, fuzzy
 msgid "Adjust the yellow gamma"
 msgstr "Prispôsobenie vyvá¾enie ¾ltej farby pre tlaè"
 
-#: src/main/print-color.c:165
+#: src/main/print-color.c:171
 #, fuzzy
 msgid "Saturation"
 msgstr "Sýtos»:"
 
-#: src/main/print-color.c:166
+#: src/main/print-color.c:172
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
@@ -707,156 +707,156 @@ msgstr ""
 "Pou¾ite nulu na vyprodukovanie výstupu v odtieòoch ¹edej s pou¾itím "
 "farebného a èierneho atramentu"
 
-#: src/main/print-color.c:176
+#: src/main/print-color.c:182
 #, fuzzy
 msgid "Ink Limit"
 msgstr "Typ atramentu"
 
-#: src/main/print-color.c:176 src/main/print-color.c:184
-#: src/main/print-color.c:192 src/main/print-color.c:200
-#: src/main/print-color.c:307
+#: src/main/print-color.c:182 src/main/print-color.c:190
+#: src/main/print-color.c:198 src/main/print-color.c:206
+#: src/main/print-color.c:313
 #, fuzzy
 msgid "Advanced Output Control"
 msgstr "Typ výstupu:"
 
-#: src/main/print-color.c:177
+#: src/main/print-color.c:183
 msgid "Limit the total ink printed to the page"
 msgstr ""
 
-#: src/main/print-color.c:184
+#: src/main/print-color.c:190
 msgid "GCR Transition"
 msgstr ""
 
-#: src/main/print-color.c:185
+#: src/main/print-color.c:191
 msgid "Adjust the gray component transition rate"
 msgstr ""
 
-#: src/main/print-color.c:192
+#: src/main/print-color.c:198
 msgid "GCR Lower Bound"
 msgstr ""
 
-#: src/main/print-color.c:193
+#: src/main/print-color.c:199
 msgid "Lower bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:200
+#: src/main/print-color.c:206
 msgid "GCR Upper Bound"
 msgstr ""
 
-#: src/main/print-color.c:201
+#: src/main/print-color.c:207
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:243
+#: src/main/print-color.c:249
 msgid "Composite Curve"
 msgstr ""
 
-#: src/main/print-color.c:243 src/main/print-color.c:251
-#: src/main/print-color.c:259 src/main/print-color.c:267
-#: src/main/print-color.c:275
+#: src/main/print-color.c:249 src/main/print-color.c:257
+#: src/main/print-color.c:265 src/main/print-color.c:273
+#: src/main/print-color.c:281
 #, fuzzy
 msgid "Output Curves"
 msgstr "Typ výstupu:"
 
-#: src/main/print-color.c:244
+#: src/main/print-color.c:250
 msgid "Composite (Grayscale) curve"
 msgstr ""
 
-#: src/main/print-color.c:251
+#: src/main/print-color.c:257
 msgid "Cyan Curve"
 msgstr ""
 
-#: src/main/print-color.c:252
+#: src/main/print-color.c:258
 #, fuzzy
 msgid "Cyan curve"
 msgstr "Storno"
 
-#: src/main/print-color.c:259
+#: src/main/print-color.c:265
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "Purpurová"
 
-#: src/main/print-color.c:260
+#: src/main/print-color.c:266
 #, fuzzy
 msgid "Magenta curve"
 msgstr "Purpurová"
 
-#: src/main/print-color.c:267
+#: src/main/print-color.c:273
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "®ltá"
 
-#: src/main/print-color.c:268
+#: src/main/print-color.c:274
 #, fuzzy
 msgid "Yellow curve"
 msgstr "®ltá"
 
-#: src/main/print-color.c:275
+#: src/main/print-color.c:281
 #, fuzzy
 msgid "Black Curve"
 msgstr "Èierna"
 
-#: src/main/print-color.c:276
+#: src/main/print-color.c:282
 #, fuzzy
 msgid "Black curve"
 msgstr "Èierna"
 
-#: src/main/print-color.c:283
+#: src/main/print-color.c:289
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:283 src/main/print-color.c:291
-#: src/main/print-color.c:299
+#: src/main/print-color.c:289 src/main/print-color.c:297
+#: src/main/print-color.c:305
 msgid "Advanced HSL Curves"
 msgstr ""
 
-#: src/main/print-color.c:284
+#: src/main/print-color.c:290
 msgid "Hue adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:291
+#: src/main/print-color.c:297
 #, fuzzy
 msgid "Saturation Map"
 msgstr "Sýtos»:"
 
-#: src/main/print-color.c:292
+#: src/main/print-color.c:298
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:299
+#: src/main/print-color.c:305
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:300
+#: src/main/print-color.c:306
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:307
+#: src/main/print-color.c:313
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:308
+#: src/main/print-color.c:314
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/main/print-color.c:2332
+#: src/main/print-color.c:2371
 msgid "High Accuracy"
 msgstr ""
 
-#: src/main/print-color.c:2334
+#: src/main/print-color.c:2373
 #, fuzzy
 msgid "Bright"
 msgstr "Jas:"
 
-#: src/main/print-color.c:2336
+#: src/main/print-color.c:2375
 msgid "Threshold"
 msgstr ""
 
-#: src/main/print-color.c:2338
+#: src/main/print-color.c:2377
 msgid "Uncorrected"
 msgstr ""
 
-#: src/main/print-color.c:2395
+#: src/main/print-color.c:2434
 msgid "Traditional Gimp-Print color conversion"
 msgstr ""
 
@@ -1053,15 +1053,19 @@ msgstr "Rozlí¹enie a kvalita tlaèe"
 msgid "Ink Set"
 msgstr "Typ atramentu"
 
-#: src/main/print-escp2.c:167 src/main/print-escp2.c:168
-#, fuzzy
-msgid "Microweave"
-msgstr "360 DPI Microweave"
+#: src/main/print-escp2.c:167
+msgid "Built-in Printer Weave"
+msgstr ""
 
 #: src/main/print-escp2.c:167 src/main/print-escp2.c:173
 #: src/main/print-escp2.c:185
 msgid "Advanced Output Adjustment"
 msgstr ""
+
+#: src/main/print-escp2.c:168
+#, fuzzy
+msgid "PrinterWeave"
+msgstr "Názov tlaèiarne:"
 
 #: src/main/print-escp2.c:173
 msgid "Printing Direction"
@@ -1161,7 +1165,7 @@ msgstr ""
 msgid "Manual Control"
 msgstr "Typ výstupu:"
 
-#: src/main/print-escp2.c:1310 src/cups/genppd.c:1124
+#: src/main/print-escp2.c:1310 src/cups/genppd.c:1125
 #, fuzzy
 msgid "Automatic"
 msgstr "Veµkos»"
@@ -1201,7 +1205,7 @@ msgstr ""
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 
-#: src/main/print-escp2.c:2400 src/main/print-raw.c:188
+#: src/main/print-escp2.c:2398 src/main/print-raw.c:188
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
@@ -3625,32 +3629,33 @@ msgstr "Zásobník 4"
 msgid "Extra 5"
 msgstr ""
 
-#: src/cups/genppd.c:193 src/cups/genppd.c:202
+#. TRANSLATORS: "Gimp-Print" is a proper name, not a description
+#: src/cups/genppd.c:194 src/cups/genppd.c:203
 #, fuzzy
 msgid "Gimp-Print"
 msgstr "O Gimp-Print "
 
-#: src/cups/genppd.c:752
+#: src/cups/genppd.c:753
 msgid "English"
 msgstr "Slovak"
 
-#: src/cups/genppd.c:754
+#: src/cups/genppd.c:755
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1208 src/cups/genppd.c:1223
+#: src/cups/genppd.c:1209 src/cups/genppd.c:1224
 msgid "None"
 msgstr ""
 
-#: src/cups/genppd.c:1225
+#: src/cups/genppd.c:1226
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1227
+#: src/cups/genppd.c:1228
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1255
+#: src/cups/genppd.c:1256
 msgid "Fine Adjustment"
 msgstr ""
 
@@ -4831,207 +4836,6 @@ msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
 #, fuzzy
 #~ msgid "ColorLife Paper"
 #~ msgstr "Obyèajný papier"
-
-#~ msgid "360 x 90 DPI Fast Economy Draft"
-#~ msgstr "360 x 90 DPI Rýchly úsporný koncept"
-
-#~ msgid "360 x 120 DPI Economy Draft"
-#~ msgstr "360 x 120 DPI Úsporný koncept"
-
-#~ msgid "180 DPI Economy Draft"
-#~ msgstr "180 DPI Úsporný koncept"
-
-#~ msgid "360 x 240 DPI Draft"
-#~ msgstr "360 x 240 DPI Koncept"
-
-#~ msgid "360 x 180 DPI Draft"
-#~ msgstr "360 x 180 DPI Koncept"
-
-#~ msgid "360 DPI"
-#~ msgstr "360 DPI"
-
-#~ msgid "360 DPI Unidirectional"
-#~ msgstr "360 DPI Jednosmerne"
-
-#~ msgid "360 DPI Microweave Unidirectional"
-#~ msgstr "360 DPI Microweave jednosmerne"
-
-#~ msgid "720 x 360 DPI Unidirectional"
-#~ msgstr "720 x 360 DPI Jednosmerne"
-
-#~ msgid "720 DPI Microweave"
-#~ msgstr "720 DPI Microweave"
-
-#~ msgid "720 DPI Microweave Unidirectional"
-#~ msgstr "720 DPI Microweave jednosmerne"
-
-#~ msgid "720 DPI"
-#~ msgstr "720 DPI"
-
-#~ msgid "720 DPI Unidirectional"
-#~ msgstr "720 DPI Jednosmerne"
-
-#~ msgid "720 DPI High Quality"
-#~ msgstr "720 DPI Vysoká kvalita"
-
-#~ msgid "720 DPI High Quality Unidirectional"
-#~ msgstr "720 DPI Vysoká kvalita jednosmerne"
-
-#~ msgid "1440 x 720 DPI Microweave"
-#~ msgstr "1440 x 720 DPI Microweave"
-
-#~ msgid "1440 x 720 DPI Microweave Unidirectional"
-#~ msgstr "1440 x 720 DPI Microweave jednosmerne"
-
-#~ msgid "1440 x 720 DPI Unidirectional"
-#~ msgstr "1440 x 720 DPI Jednosmerne"
-
-#~ msgid "1440 x 720 DPI Highest Quality"
-#~ msgstr "1440 x 720 DPI Najvy¹¹ia kvalita"
-
-#~ msgid "2880 x 720 DPI Unidirectional"
-#~ msgstr "2880 x 720 DPI Jednosmerne"
-
-#~ msgid "1440 x 1440 DPI Highest Quality"
-#~ msgstr "1440 x 1440 DPI Najvy¹¹ia kvalita"
-
-#~ msgid "2880 x 1440 DPI"
-#~ msgstr "2880 x 1440 DPI"
-
-#~ msgid "360 DPI Full Overlap"
-#~ msgstr "360 DPI Plné krytie"
-
-#~ msgid "360 DPI Full Overlap Unidirectional"
-#~ msgstr "360 DPI Plné krytie jednosmerne"
-
-#~ msgid "360 DPI FOL2"
-#~ msgstr "360 DPI FOL2"
-
-#~ msgid "360 DPI FOL2 Unidirectional"
-#~ msgstr "360 DPI FOL2 jednosmerne"
-
-#~ msgid "360 DPI MW2"
-#~ msgstr "360 DPI MW2"
-
-#~ msgid "360 DPI MW2 Unidirectional"
-#~ msgstr "360 DPI MW2 jednosmerne"
-
-#~ msgid "720 x 360 DPI Microweave"
-#~ msgstr "720 x 360 DPI Microweave"
-
-#~ msgid "720 x 360 DPI Microweave Unidirectional"
-#~ msgstr "720 x 360 DPI Microweave jednosmerne"
-
-#~ msgid "720 x 360 DPI FOL"
-#~ msgstr "720 x 360 DPI FOL"
-
-#~ msgid "720 x 360 DPI FOL Unidirectional"
-#~ msgstr "720 x 360 DPI FOL jednosmerne"
-
-#~ msgid "720 x 360 DPI FOL2"
-#~ msgstr "720 x 360 DPI FOL2"
-
-#~ msgid "720 x 360 DPI FOL2 Unidirectional"
-#~ msgstr "720 x 360 DPI FOL2 jednosmerne"
-
-#~ msgid "720 x 360 DPI MW2 Unidirectional"
-#~ msgstr "720 x 360 DPI MW2 jednosmerne"
-
-#~ msgid "720 DPI Full Overlap"
-#~ msgstr "720 DPI Plné krytie"
-
-#~ msgid "720 DPI Full Overlap Unidirectional"
-#~ msgstr "720 DPI Plné krytie jednosmerne"
-
-#~ msgid "720 DPI Four Pass"
-#~ msgstr "720 DPI ©tvorprechodová tlaè"
-
-#~ msgid "720 DPI Four Pass Unidirectional"
-#~ msgstr "720 DPI ©tvorprechodová jednosmerná tlaè"
-
-#~ msgid "1440 x 720 DPI FOL"
-#~ msgstr "1440 x 720 DPI FOL"
-
-#~ msgid "1440 x 720 DPI FOL Unidirectional"
-#~ msgstr "1440 x 720 DPI FOL jednosmerne"
-
-#~ msgid "1440 x 720 DPI Four Pass"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
-
-#~ msgid "1440 x 720 DPI Four Pass Unidirectional"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI Microweave"
-#~ msgstr "1440 x 720 DPI Microweave"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI Microweave Unidirectional"
-#~ msgstr "1440 x 720 DPI Microweave jednosmerne"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI FOL"
-#~ msgstr "2880 x 720 DPI"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI FOL Unidirectional"
-#~ msgstr "2880 x 720 DPI Jednosmerne"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI Four Pass"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
-
-#, fuzzy
-#~ msgid "2880 x 720 DPI Four Pass Unidirectional"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI Microweave"
-#~ msgstr "1440 x 720 DPI Microweave"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI Microweave Unidirectional"
-#~ msgstr "1440 x 720 DPI Microweave jednosmerne"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI FOL"
-#~ msgstr "1440 x 1440 DPI"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI FOL Unidirectional"
-#~ msgstr "1440 x 720 DPI FOL jednosmerne"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI Four Pass"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI Four Pass Unidirectional"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová jednosmerná tlaè"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI Microweave"
-#~ msgstr "720 x 360 DPI Microweave"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI Microweave Unidirectional"
-#~ msgstr "720 x 360 DPI Microweave jednosmerne"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI FOL"
-#~ msgstr "2880 x 1440 DPI"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI FOL Unidirectional"
-#~ msgstr "720 x 360 DPI FOL jednosmerne"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI Four Pass"
-#~ msgstr "1440 x 720 DPI ©tvorprechodová tlaè"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI Four Pass Unidirectional"
-#~ msgstr "720 DPI ©tvorprechodová jednosmerná tlaè"
 
 #, fuzzy
 #~ msgid "Resolutions"

@@ -218,17 +218,6 @@ perform more passes, printing fewer dots with each pass over the same
 line and using different nozzles for each pass.  This reduces banding
 effects, but requires more time.
 
-"Microweave" modes use algorithms within the printer to generate the
-sequence of rows printed.  These algorithms generally only work well
-at low printing resolutions.  Many printers do not support this kind
-of printing at resolutions of 720 DPI and above, and some printers
-that do actually print just one row (using just one nozzle per color)
-at a time.  While this particular use will produce extremely high
-quality (no banding whatsoever, normally), it is extremely slow and
-may eventually damage the print head due to ink pooling.  If you find
-printing at 720 DPI microweave to be excessively slow, please try a
-different mode.
-
 We generally recommend the following resolutions for the following
 purposes.  The available Quality settings for each resolution are
 described in the next section.
@@ -256,8 +245,8 @@ described in the next section.
           paper; proofs on photo-quality paper.  On many printers,
           there will be little difference between this and 720x360 on
           plain paper.  On older printers that do not offer 1440x720
-          DPI, we recommend use of either 720 DPI Microweave or 720
-          DPI Highest Quality to minimize microbanding.
+          DPI, we recommend use of 720 DPI Highest Quality to minimize
+          microbanding.
 
 1440x720  Very high quality on good inkjet paper; high quality on
           photo paper; use 1440x720 Highest Quality to reduce
@@ -309,7 +298,7 @@ section.  Please see the notes at the end of this section.
 360x240sw        360 x 240 DPI Draft                      (6)
 
 360dpi           360 DPI                                  (7)
-360mw            360 DPI Microweave                       (7, *)
+360mw            360 DPI High Quality                     (7, *)
 360sw            360 DPI                                  (8, 9, *)
 
 720x360sw        720 x 360 DPI                            (10, 11, 12)
@@ -317,7 +306,7 @@ section.  Please see the notes at the end of this section.
 720sw            720 DPI                                  (13)
 720hq            720 DPI High Quality                     (13)
 720hq2           720 DPI Highest Quality                  (13)
-720mw            720 DPI Microweave                       (14)
+720mw            720 DPI                                  (14)
 
 1440x720sw       1440 x 720 DPI                           (15)
 1440x720hq       1440 x 720 DPI Highest Quality           (16)
@@ -436,54 +425,29 @@ section.  Please see the notes at the end of this section.
 (21) Works on all printers that support 2880x2880 DPI.  This includes
     the PM-930C and PM-970C.
 
-
 The Stylus Pro printers (Stylus Pro 5000, 5500, 7000, 7500, 7600,
-9000, 9500, 9600, and 10000) support additional microweave modes known
-as Full Overlap (FOL), Four Pass, and FOL2.  The Stylus Pro 5500,
-7500, 7600, 9500, 9600, and 10000 additionally have a mode called MW2.
-These modes can only be used at certain resolutions.  Stylus Pro
-printers support the following Quality settings:
+9000, 9500, 9600, and 10000) support the following Quality settings:
 
 180dpi            180 DPI
 
-360dpi            360 DPI
-360mw             360 DPI Microweave
-360fol            360 DPI Full Overlap
-360fol2           360 DPI FOL2
-360mw2            360 DPI MW2
+360x180dpi        360 x 180 DPI
 
-720x360dpi        720 x 360 DPI
-720x360fol        720 x 360 DPI FOL
-720x360fol2       720 x 360 DPI FOL2
-720x360mw2        720 x 360 DPI MW2
+360pro            360 DPI
 
-720dpi            720 DPI
-720mw             720 DPI Microweave
-720fol            720 DPI Full Overlap
-720fourp          720 DPI Four Pass
+720x360mw         720 x 360 DPI
 
-1440x720dpi       1440 x 720 DPI
-1440x720mw        1440 x 720 DPI Microweave
-1440x720fol       1440 x 720 DPI FOL
-1440x720fourp     1440 x 720 DPI Four Pass
+720mw             720 DPI
+
+1440x720mw        1440 x 720 DPI
 
 In addition, the Stylus Pro 7600 and 9600 printers support the
 following Quality settings:
 
-2880x720dpi       2880 x 720 DPI
-2880x720mw        2880 x 720 DPI Microweave
-2880x720fol       2880 x 720 DPI FOL
-2880x720fourp     2880 x 720 DPI Four Pass
+2880x720mw        2880 x 720 DPI
 
-1440x1440dpi      1440 x 1440 DPI
-1440x1440mw       1440 x 1440 DPI Microweave
-1440x1440fol      1440 x 1440 DPI FOL
-1440x1440fourp    1440 x 1440 DPI Four Pass
+1440x1440mw       1440 x 1440 DPI
 
-2880x1440dpi      2880 x 1440 DPI
-2880x1440mw       2880 x 1440 DPI Microweave
-2880x1440fol      2880 x 1440 DPI FOL
-2880x1440fourp    2880 x 1440 DPI Four Pass
+2880x1440mw       2880 x 1440 DPI
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):

@@ -251,7 +251,7 @@ Gimp-Print 4.3.22 contains the following major changes over Gimp-Print
    grid lines spaced according to the percentage of page size.  To
    move the image along this grid, use control-middle button.
 
-19) Microweave is now a separate control for Epson Stylus printers
+19) Interleave is now a separate control for Epson Stylus printers
    that support it.  This simplifies the resolution lists for some
    printers, particularly the Stylus Pro printers.
 

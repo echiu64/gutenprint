@@ -65,8 +65,14 @@ static const res_t r_360x240sw =
   360,  240,  360,  240,  1, 0, 1 };
 
 static const res_t r_360mw =
-{ "360mw",         N_("360 DPI"),
+{ "360mw",         N_("360 DPI High Quality"),
   360,  360,  360,  360,  0, 1, 1 };
+static const res_t r_360pro =
+{ "360pro",        N_("360 DPI"),
+  360,  360,  360,  360,  0, 1, 1 };
+static const res_t r_360 =
+{ "360",           N_("360 DPI"),
+  360,  360,  360,  360,  0, 0, 1 };
 static const res_t r_360sw =
 { "360sw",         N_("360 DPI"),
   360,  360,  360,  360,  1, 0, 1 };
@@ -150,6 +156,7 @@ const res_t *const stpi_escp2_720dpi_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+  &r_360,
 
   &r_720x360sw,
 
@@ -250,6 +257,7 @@ const res_t *const stpi_escp2_g3_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+  &r_360,
 
   &r_720x360sw,
 
@@ -296,6 +304,7 @@ const res_t *const stpi_escp2_sc500_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+  &r_360,
 
   &r_720x360mw,
 
@@ -317,6 +326,7 @@ const res_t *const stpi_escp2_g3_720dpi_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+  &r_360,
 
   &r_720x360sw,
 
@@ -359,6 +369,7 @@ const res_t *const stpi_escp2_sc640_reslist[] =
   &r_360x180dpi,
 
   &r_360mw,
+  &r_360,
 
   &r_720x360sw,
 
@@ -378,7 +389,7 @@ const res_t *const stpi_escp2_pro_reslist[] =
 
   &r_360x180dpi,
 
-  &r_360mw,
+  &r_360pro,
 
   &r_720x360mw,
 
@@ -397,65 +408,54 @@ const res_t *const stpi_escp2_pro_reslist[] =
   NULL
 };
 
-#define DECLARE_MICROWEAVES(name)				\
-const microweave_list_t stpi_escp2_##name##_microweave_list =	\
+#define DECLARE_PRINTER_WEAVES(name)				\
+const printer_weave_list_t stpi_escp2_##name##_printer_weave_list =	\
 {								\
   #name,							\
-  sizeof(name##_microweaves) / sizeof(microweave_t),		\
-  name##_microweaves						\
+  sizeof(name##_printer_weaves) / sizeof(printer_weave_t),		\
+  name##_printer_weaves						\
 }
 
-static const microweave_t standard_microweaves[] =
+static const printer_weave_t standard_printer_weaves[] =
 {
   { "Off", N_("Off"), 0 },
   { "On", N_("On"), 1 }
 };
 
-DECLARE_MICROWEAVES(standard);
+DECLARE_PRINTER_WEAVES(standard);
 
-static const microweave_t sp2200_microweaves[] =
+static const printer_weave_t pro7000_printer_weaves[] =
 {
   { "Off", N_("Off"), 0 },
-  { "MW1", N_("1"), 1 },
-  { "MW2", N_("2"), 2 },
-  { "MW3", N_("3"), 3 },
-  { "MW4", N_("4"), 4 },
-};
-
-DECLARE_MICROWEAVES(sp2200);
-
-static const microweave_t pro7000_microweaves[] =
-{
-  { "Off", N_("Off"), 0 },
-  { "On", N_("On"), 1 },
+  { "On", N_("Interleave"), 1 },
   { "FOL", N_("Full Overlap"), 2 },
   { "FourPass", N_("Four Pass"), 3 },
   { "FOL2", N_("Full Overlap 2"), 4 },
 };
 
-DECLARE_MICROWEAVES(pro7000);
+DECLARE_PRINTER_WEAVES(pro7000);
 
-static const microweave_t pro7500_microweaves[] =
+static const printer_weave_t pro7500_printer_weaves[] =
 {
   { "Off", N_("Off"), 0 },
-  { "On", N_("On"), 1 },
+  { "On", N_("Interleave"), 1 },
   { "FOL", N_("Full Overlap"), 2 },
   { "FourPass", N_("Four Pass"), 3 },
   { "FOL2", N_("Full Overlap 2"), 4 },
-  { "MW2", N_("Microweave 2"), 5 },
+  { "MW2", N_("Interleave 2"), 5 },
 };
 
-DECLARE_MICROWEAVES(pro7500);
+DECLARE_PRINTER_WEAVES(pro7500);
 
-static const microweave_t pro7600_microweaves[] =
+static const printer_weave_t pro7600_printer_weaves[] =
 {
   { "Off", N_("Off"), 0 },
-  { "On", N_("On"), 1 },
+  { "On", N_("Interleave"), 1 },
   { "FOL", N_("Full Overlap"), 2 },
   { "FourPass", N_("Four Pass"), 3 },
   { "FOL2", N_("Full Overlap 2"), 4 },
-  { "MW2", N_("Microweave 2"), 5 },
-  { "EightPass", N_("Eight Pass"), 5 },
+  { "MW2", N_("Interleave 2"), 5 },
+  { "EightPass", N_("Eight Pass"), 6 },
 };
 
-DECLARE_MICROWEAVES(pro7600);
+DECLARE_PRINTER_WEAVES(pro7600);

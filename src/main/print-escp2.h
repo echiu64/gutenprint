@@ -150,7 +150,7 @@ typedef struct
   short printed_hres;
   short printed_vres;
   short softweave;
-  short microweave;
+  short printer_weave;
   short vertical_passes;
 } res_t;
 
@@ -327,14 +327,14 @@ typedef struct
   const char *name;
   const char *text;
   short value;
-} microweave_t;
+} printer_weave_t;
 
 typedef struct
 {
   const char *name;
-  size_t n_microweaves;
-  const microweave_t *microweaves;
-} microweave_list_t;
+  size_t n_printer_weaves;
+  const printer_weave_t *printer_weaves;
+} printer_weave_list_t;
 
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
 #define MODEL_COMMAND_1998	0x0ul
@@ -423,7 +423,7 @@ typedef struct escp2_printer
   short		separation_rows; /* Some printers require funky spacing */
 				/* arguments in softweave mode. */
   short		pseudo_separation_rows;/* Some printers require funky */
-				/* spacing arguments in microweave mode */
+				/* spacing arguments in printer_weave mode */
 
   short         zero_margin_offset;   /* Offset to use to achieve */
 				      /* zero-margin printing */
@@ -444,7 +444,7 @@ typedef struct escp2_printer
   short		right_margin;	/* Right margin, points */
   short		top_margin;	/* Absolute top margin, points */
   short		bottom_margin;	/* Absolute bottom margin, points */
-				/* "Micro"weave: */
+				/* Printer weave: */
   short		m_left_margin;	/* Left margin, points */
   short		m_right_margin;	/* Right margin, points */
   short		m_top_margin;	/* Absolute top margin, points */
@@ -455,7 +455,7 @@ typedef struct escp2_printer
   short		roll_right_margin;	/* Right margin, points */
   short		roll_top_margin;	/* Absolute top margin, points */
   short		roll_bottom_margin;	/* Absolute bottom margin, points */
-				/* "Micro"weave: */
+				/* Printer weave: */
   short		m_roll_left_margin;	/* Left margin, points */
   short		m_roll_right_margin;	/* Right margin, points */
   short		m_roll_top_margin;	/* Absolute top margin, points */
@@ -485,7 +485,7 @@ typedef struct escp2_printer
   const stp_raw_t *preinit_sequence;
   const stp_raw_t *postinit_remote_sequence;
 /*****************************************************************************/
-  const microweave_list_t *const microweaves;
+  const printer_weave_list_t *const printer_weaves;
 } stpi_escp2_printer_t;
 
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
@@ -518,7 +518,7 @@ extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustme
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_matte_paper_adjustment_list;
 
 extern const res_t *const stpi_escp2_superfine_reslist[];
-extern const res_t *const stpi_escp2_no_microweave_reslist[];
+extern const res_t *const stpi_escp2_no_printer_weave_reslist[];
 extern const res_t *const stpi_escp2_pro_reslist[];
 extern const res_t *const stpi_escp2_sp5000_reslist[];
 extern const res_t *const stpi_escp2_720dpi_reslist[];
@@ -548,11 +548,11 @@ extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
 
 extern const escp2_inkname_t stpi_escp2_default_black_inkset;
 
-extern const microweave_list_t stpi_escp2_standard_microweave_list;
-extern const microweave_list_t stpi_escp2_sp2200_microweave_list;
-extern const microweave_list_t stpi_escp2_pro7000_microweave_list;
-extern const microweave_list_t stpi_escp2_pro7500_microweave_list;
-extern const microweave_list_t stpi_escp2_pro7600_microweave_list;
+extern const printer_weave_list_t stpi_escp2_standard_printer_weave_list;
+extern const printer_weave_list_t stpi_escp2_sp2200_printer_weave_list;
+extern const printer_weave_list_t stpi_escp2_pro7000_printer_weave_list;
+extern const printer_weave_list_t stpi_escp2_pro7500_printer_weave_list;
+extern const printer_weave_list_t stpi_escp2_pro7600_printer_weave_list;
 
 typedef struct
 {
@@ -611,7 +611,7 @@ typedef struct
 				   to print a complete row */
   int physical_xdpi;		/* Horizontal distance between dots in pass */
   const res_t *res;		/* Description of the printing resolution */
-  const microweave_t *microweave; /* Microweave parameters */
+  const printer_weave_t *printer_weave; /* Printer weave parameters */
   int use_printer_weave;	/* Use the printer weaving mechanism */
 
   /* page parameters */		/* Indexed from top left */

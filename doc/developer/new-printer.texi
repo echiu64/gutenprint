@@ -144,76 +144,102 @@ An @code{escp2_printer_t} is a C struct defined as follows:
 @example
 typedef struct escp2_printer
 @{
-  model_cap_t	flags;		/* Bitmask of flags, see below */
-/*****************************************************************/
-  int		nozzles;	/* Number of nozzles per color */
-  int		min_nozzles;	/* Minimum number of nozzles per color */
-  int		nozzle_separation; /* Separation between rows, in 1/360" */
-  int		black_nozzles;	/* Number of black nozzles (may be extra) */
-  int		min_black_nozzles;	/* # of black nozzles (may be extra) */
-  int		black_nozzle_separation; /* Separation between rows */
-/*****************************************************************/
-  int		xres;		/* Normal distance between dots in */
-				/* softweave mode (inverse inches) */
-  int		enhanced_xres;	/* Distance between dots in highest */
-				/* quality modes */
-  int		base_separation; /* Basic unit of row separation */
-  int		base_resolution; /* Base hardware spacing (above this */
-				/* always requires multiple passes) */
-  int		enhanced_resolution;/* Above this we use the */
-				    /* enhanced_xres rather than xres */
-  int		resolution_scale;   /* Scaling factor for ESC(D command */
-  int		max_black_resolution; /* Above this resolution, we */
+  model_cap_t	flags;		/* Bitmask of flags, see above */
+/*****************************************************************************/
+  /* Basic head configuration */
+  short		nozzles;	/* Number of nozzles per color */
+  short		min_nozzles;	/* Minimum number of nozzles per color */
+  short		nozzle_separation; /* Separation between rows, in 1/360" */
+  short		black_nozzles;	/* Number of black nozzles (may be extra) */
+  short		min_black_nozzles;	/* # of black nozzles (may be extra) */
+  short		black_nozzle_separation; /* Separation between rows */
+  short		fast_nozzles;	/* Number of fast nozzles */
+  short		min_fast_nozzles;	/* # of fast nozzles (may be extra) */
+  short		fast_nozzle_separation; /* Separation between rows */
+  short		physical_channels; /* Number of ink channels */
+/*****************************************************************************/
+  /* Print head resolution */
+  short		base_separation; /* Basic unit of row separation */
+  short		resolution_scale;   /* Scaling factor for ESC(D command */
+  short		max_black_resolution; /* Above this resolution, we */
 				      /* must use color parameters */
 				      /* rather than (faster) black */
 				      /* only parameters*/
-  int		max_hres;
-  int		max_vres;
-  int		min_hres;
-  int		min_vres;
-/*****************************************************************/
+  short		max_hres;
+  short		max_vres;
+  short		min_hres;
+  short		min_vres;
+  /* Miscellaneous printer-specific data */
+  short		extra_feed;	/* Extra distance the paper can be spaced */
+				/* beyond the bottom margin, in 1/360". */
+				/* (maximum useful value is */
+				/* nozzles * nozzle_separation) */
+  short		separation_rows; /* Some printers require funky spacing */
+				/* arguments in softweave mode. */
+  short		pseudo_separation_rows;/* Some printers require funky */
+				/* spacing arguments in printer_weave mode */
+
+  short         zero_margin_offset;   /* Offset to use to achieve */
+				      /* zero-margin printing */
+  short		initial_vertical_offset;
+  short		black_initial_vertical_offset;
+  short		extra_720dpi_separation;
+/*****************************************************************************/
+  /* Paper size limits */
   int		max_paper_width; /* Maximum paper width, in points */
   int		max_paper_height; /* Maximum paper height, in points */
   int		min_paper_width; /* Maximum paper width, in points */
   int		min_paper_height; /* Maximum paper height, in points */
+/*****************************************************************************/
+  /* Borders */
+				/* SHEET FED: */
 				/* Softweave: */
-  int		left_margin;	/* Left margin, points */
-  int		right_margin;	/* Right margin, points */
-  int		top_margin;	/* Absolute top margin, points */
-  int		bottom_margin;	/* Absolute bottom margin, points */
-				/* "Micro"weave: */
-  int		m_left_margin;	/* Left margin, points */
-  int		m_right_margin;	/* Right margin, points */
-  int		m_top_margin;	/* Absolute top margin, points */
-  int		m_bottom_margin;	/* Absolute bottom margin, points */
-/*****************************************************************/
-  int		extra_feed;	/* Extra distance the paper can be spaced */
-				/* beyond the bottom margin, in 1/360". */
-				/* (maximum useful value is */
-				/* nozzles * nozzle_separation) */
-  int		separation_rows; /* Some printers require funky spacing */
-				/* arguments in microweave mode. */
-  int		pseudo_separation_rows;/* Some printers require funky */
-				/* spacing arguments in softweave mode */
-
-  int           zero_margin_offset;   /* Offset to use for */
-				      /* zero-margin printing */
-/*****************************************************************/
-		 /* The stylus 480 and 580 have an unusual arrangement of
-				  color jets that need special handling */
-  const int *head_offset;
-  int		initial_vertical_offset;
-  int		black_initial_vertical_offset;
-
-/*****************************************************************/
-  const int *dot_sizes;		/* Vector of dot sizes for resolutions */
-  const double *densities;	/* List of densities for each printer */
-  const escp2_variable_inklist_t *inks; /* Choices of inks */
-/*****************************************************************/
-  const double *lum_adjustment;
-  const double *hue_adjustment;
-  const double *sat_adjustment;
-  const paperlist_t *paperlist;
+  short		left_margin;	/* Left margin, points */
+  short		right_margin;	/* Right margin, points */
+  short		top_margin;	/* Absolute top margin, points */
+  short		bottom_margin;	/* Absolute bottom margin, points */
+				/* Printer weave: */
+  short		m_left_margin;	/* Left margin, points */
+  short		m_right_margin;	/* Right margin, points */
+  short		m_top_margin;	/* Absolute top margin, points */
+  short		m_bottom_margin;	/* Absolute bottom margin, points */
+				/* ROLL FEED: */
+				/* Softweave: */
+  short		roll_left_margin;	/* Left margin, points */
+  short		roll_right_margin;	/* Right margin, points */
+  short		roll_top_margin;	/* Absolute top margin, points */
+  short		roll_bottom_margin;	/* Absolute bottom margin, points */
+				/* Printer weave: */
+  short		m_roll_left_margin;	/* Left margin, points */
+  short		m_roll_right_margin;	/* Right margin, points */
+  short		m_roll_top_margin;	/* Absolute top margin, points */
+  short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
+				/* Print directly to CD */
+  short		cd_x_offset;	/* Center of CD (horizontal offset) */
+  short		cd_y_offset;	/* Center of CD (vertical offset) */
+/*****************************************************************************/
+  /* Parameters for escputil */
+  short		alignment_passes;
+  short		alignment_choices;
+  short		alternate_alignment_passes;
+  short		alternate_alignment_choices;
+/*****************************************************************************/
+  const short *dot_sizes;	/* Vector of dot sizes for resolutions */
+  const float *densities;	/* List of densities for each printer */
+  const escp2_drop_list_t *drops; /* Drop sizes */
+/*****************************************************************************/
+  const res_t *const *reslist;
+  const inkgroup_t *inkgroup;
+/*****************************************************************************/
+  const short *bits;
+  const short *base_resolutions;
+  const input_slot_list_t *input_slots;
+/*****************************************************************************/
+  const quality_list_t *quality_list;
+  const stp_raw_t *preinit_sequence;
+  const stp_raw_t *postinit_remote_sequence;
+/*****************************************************************************/
+  const printer_weave_list_t *const printer_weaves;
 @} escp2_printer_t;
 @end example
 @end deftypevr
@@ -329,14 +355,9 @@ are required for printers to process the paper correctly, and a set of
 adjustment values.  These are not currently discussed here.
 
 
-The lists of dot sizes and densities contain values for 13 printing
-modes: 120/180 DPI using printer weaving (single row; incorrectly
-referred to as ``microweave'') and ``soft'' weaving (the driver
-determines the exact pattern of dot layout), 360 DPI microweave and
-softweave, 720x360 DPI microweave and softweave, 720 DPI microweave
-and softweave, 1440x720 microweave and softweave, 2880x720 microweave
-and softweave, and 2880x1440 softweave only.  Printer weaving is
-referred to as ``microweave'' for historical reasons.
+The lists of dot sizes and densities contain values for 8 printing
+modes: 120/180 DPI, 360 DPI, 720x360 DPI, 720 DPI, 1440x720 DPI,
+2880x720 or 1440x1440 DPI, 2880x1440 DPI, and 2880x2880 DPI.
 
 For the dot sizes, the value for each element in the vector selects
 the dot size to be used when printing at this (or similar)

@@ -41,7 +41,7 @@
  */
 typedef struct {
   unsigned char unidirectional;
-  unsigned char microweave;
+  unsigned char printer_weave;
   int page_management_units; /* dpi */
   int relative_horizontal_units; /* dpi */
   int absolute_horizontal_units; /* dpi, assumed to be >= relative */
@@ -589,7 +589,7 @@ update_page(unsigned char *buff, /* I - pixel data               */
       page = (line_type **) xcalloc(pstate.bottom_margin - pstate.top_margin,
 				    sizeof(line_type *));
     }
-  if (pstate.microweave)
+  if (pstate.printer_weave)
     sep = 1;
   else
     sep = pstate.nozzle_separation;
@@ -863,7 +863,7 @@ parse_escp2_extended(FILE *fp_r)
       break;
     case 'G': /* select graphics mode */
       /* FIXME: this is supposed to have more side effects */
-      pstate.microweave = 0;
+      pstate.printer_weave = 0;
       pstate.dotsize = 0;
       pstate.bpp = 1;
       break;
@@ -900,11 +900,11 @@ parse_escp2_extended(FILE *fp_r)
 	  break;
 	}
       break;
-    case 'i': /* set MicroWeave mode */
+    case 'i': /* set printer weave mode */
       if (bufsize != 1)
-	fprintf(stderr,"Malformed microweave setting command.\n");
+	fprintf(stderr,"Malformed printer weave setting command.\n");
       else
-	pstate.microweave = buf[0] % 0x30;
+	pstate.printer_weave = buf[0] % 0x30;
       break;
     case 'e': /* set dot size */
       if ((bufsize != 2) || (buf[0] != 0))
@@ -1137,7 +1137,7 @@ parse_escp2_command(FILE *fp_r)
       else
 	{
 	  pstate.unidirectional = 0;
-	  pstate.microweave = 0;
+	  pstate.printer_weave = 0;
 	  pstate.dotsize = 0;
 	  pstate.bpp = 1;
 	  pstate.page_management_units = 360;
@@ -1385,7 +1385,7 @@ parse_canon(FILE *fp_r)
 	 continue;
        } else {
 	 pstate.unidirectional=0;
-	 pstate.microweave=0;
+	 pstate.printer_weave=0;
 	 pstate.dotsize=0;
 	 pstate.bpp=1;
 	 pstate.page_management_units=360;

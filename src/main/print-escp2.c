@@ -164,12 +164,6 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "Microweave", N_("Microweave"), N_("Advanced Output Adjustment"),
-    N_("Microweave"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
-  },
-  {
     "PrintingDirection", N_("Printing Direction"), N_("Advanced Output Adjustment"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -182,8 +176,8 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
-    "Weave", N_("Weave Method"), N_("Advanced Output Adjustment"),
-    N_("Weave pattern to use"),
+    "Weave", N_("Interleave Method"), N_("Advanced Output Adjustment"),
+    N_("Interleave pattern to use"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
   },    
@@ -511,7 +505,7 @@ DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
-DEF_COMPOSITE_ACCESSOR(microweaves, const microweave_list_t *)
+DEF_COMPOSITE_ACCESSOR(printer_weaves, const printer_weave_list_t *)
 
 DEF_ROLL_ACCESSOR(left_margin, unsigned)
 DEF_ROLL_ACCESSOR(right_margin, unsigned)
@@ -713,21 +707,21 @@ get_input_slot(stp_const_vars_t v)
   return NULL;
 }
 
-static const microweave_t *
-get_microweave(stp_const_vars_t v)
+static const printer_weave_t *
+get_printer_weave(stp_const_vars_t v)
 {
   int i;
-  const microweave_list_t *p = escp2_microweaves(v);
+  const printer_weave_list_t *p = escp2_printer_weaves(v);
   if (p)
     {
-      const char *name = stp_get_string_parameter(v, "Microweave");
-      int microweave_count = p->n_microweaves;
+      const char *name = stp_get_string_parameter(v, "Weave");
+      int printer_weave_count = p->n_printer_weaves;
       if (name)
 	{
-	  for (i = 0; i < microweave_count; i++)
+	  for (i = 0; i < printer_weave_count; i++)
 	    {
-	      if (!strcmp(name, p->microweaves[i].name))
-		return &(p->microweaves[i]);
+	      if (!strcmp(name, p->printer_weaves[i].name))
+		return &(p->printer_weaves[i]);
 	    }
 	}
     }
@@ -735,17 +729,14 @@ get_microweave(stp_const_vars_t v)
 }
 
 static int
-use_microweave(stp_const_vars_t v)
+use_printer_weave(stp_const_vars_t v)
 {
   const res_t *res = escp2_find_resolution(v);
-  const microweave_list_t *microweaves = escp2_microweaves(v);
-  if (!microweaves)
-    return 0;
-  else if (!res)
+  if (!res)
     return 1;
   else if (!(res->softweave))
     return 1;
-  else if (res->microweave)
+  else if (res->printer_weave)
     return 1;
   else
     return 0;
@@ -1280,29 +1271,6 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       else
 	description->is_active = 0;
     }
-  else if (strcmp(name, "Microweave") == 0)
-    {
-      const res_t *res = escp2_find_resolution(v);
-      const microweave_list_t *microweaves = escp2_microweaves(v);
-      int nmicroweaves = 0;
-      if (use_microweave(v) && (!res || res->microweave))
-	nmicroweaves = microweaves->n_microweaves;
-      description->bounds.str = stp_string_list_create();
-      if (nmicroweaves)
-	{
-	  stp_string_list_add_string(description->bounds.str, "None",
-				     _("Standard"));
-	  for (i = 0; i < nmicroweaves; i++)
-	    stp_string_list_add_string(description->bounds.str,
-				       microweaves->microweaves[i].name,
-				       _(microweaves->microweaves[i].text));
-	  description->deflt.str = "None";
-	  if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
-	    description->is_active = 0;
-	}
-      else
-	description->is_active = 0;
-    }
   else if (strcmp(name, "PrintingDirection") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -1320,18 +1288,41 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "Weave") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      stp_string_list_add_string
-	(description->bounds.str, "None", _("Standard"));
-      stp_string_list_add_string
-	(description->bounds.str, "Alternate", _("Alternate Fill"));
-      stp_string_list_add_string
-	(description->bounds.str, "Ascending", _("Ascending Fill"));
-      stp_string_list_add_string
-	(description->bounds.str, "Descending", _("Descending Fill"));
-      stp_string_list_add_string
-	(description->bounds.str, "Ascending2X", _("Ascending Double"));
-      stp_string_list_add_string
-	(description->bounds.str, "Staggered", _("Nearest Neighbor Avoidance"));
+      if (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO))
+	{
+	  const res_t *res = escp2_find_resolution(v);
+	  const printer_weave_list_t *printer_weaves = escp2_printer_weaves(v);
+	  int nprinter_weaves = 0;
+	  if (use_printer_weave(v) && (!res || res->printer_weave))
+	    nprinter_weaves = printer_weaves->n_printer_weaves;
+	  description->bounds.str = stp_string_list_create();
+	  if (nprinter_weaves)
+	    {
+	      stp_string_list_add_string(description->bounds.str, "None",
+					 _("Standard"));
+	      for (i = 0; i < nprinter_weaves; i++)
+		stp_string_list_add_string(description->bounds.str,
+					   printer_weaves->printer_weaves[i].name,
+					   _(printer_weaves->printer_weaves[i].text));
+	    }
+	  else
+	    description->is_active = 0;
+	}
+      else
+	{
+	  stp_string_list_add_string
+	    (description->bounds.str, "None", _("Standard"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Alternate", _("Alternate Fill"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Ascending", _("Ascending Fill"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Descending", _("Descending Fill"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Ascending2X", _("Ascending Double"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Staggered", _("Nearest Neighbor Avoidance"));
+	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
       if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
@@ -2048,7 +2039,7 @@ setup_softweave_parameters(stp_vars_t v)
 }
 
 static void
-setup_microweave_parameters(stp_vars_t v)
+setup_printer_weave_parameters(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->horizontal_passes = 1;
@@ -2081,12 +2072,12 @@ setup_head_parameters(stp_vars_t v)
 	compute_channel_count(pd->inkname, pd->logical_channels);
     }
 
-  pd->use_printer_weave = use_microweave(v);
+  pd->use_printer_weave = use_printer_weave(v);
   if (pd->use_printer_weave)
     {
-      pd->microweave = get_microweave(v);
-      if (pd->res->softweave && pd->microweave && pd->microweave->value == 0)
-	pd->microweave = NULL;
+      pd->printer_weave = get_printer_weave(v);
+      if (pd->res->softweave && pd->printer_weave && pd->printer_weave->value == 0)
+	pd->printer_weave = NULL;
     }
   
 
@@ -2101,7 +2092,7 @@ setup_head_parameters(stp_vars_t v)
    * Set up the printer-specific parameters (weaving)
    */
   if (pd->use_printer_weave)
-    setup_microweave_parameters(v);
+    setup_printer_weave_parameters(v);
   else
     setup_softweave_parameters(v);
   pd->separation_rows = escp2_separation_rows(v);
@@ -2245,7 +2236,6 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
   double outer_r_sq = 0;
   double inner_r_sq = 0;
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
-  int y_center = pd->cd_y_offset * pd->res->printed_vres / pd->micro_units;
   unsigned char *cd_mask = NULL;
   if (pd->cd_outer_radius > 0)
     {

@@ -106,8 +106,8 @@ print_debug_params(stp_vars_t v)
   print_remote_int_param(v, "Ydpi", pd->res->vres);
   print_remote_int_param(v, "Xdpi", pd->res->hres);
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
-  print_remote_int_param(v, "Use_microweave", pd->res->microweave);
-  print_remote_int_param(v, "Use_microweave", pd->use_printer_weave);
+  print_remote_int_param(v, "Use_printer_weave", pd->res->printer_weave);
+  print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);
   print_remote_int_param(v, "Page_left", pd->page_left);
   print_remote_int_param(v, "Page_right", pd->page_right);
   print_remote_int_param(v, "Page_top", pd->page_top);
@@ -296,13 +296,15 @@ escp2_set_color(stp_vars_t v)
 }
 
 static void
-escp2_set_microweave(stp_vars_t v)
+escp2_set_printer_weave(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int microweave_parm = 0;
-  if (pd->microweave)
-    microweave_parm = pd->microweave->value;
-  stpi_send_command(v, "\033(i", "bc", microweave_parm);
+  int printer_weave_parm = 0;
+  if (pd->printer_weave)
+    printer_weave_parm = pd->printer_weave->value;
+  else if (pd->res->printer_weave)
+    printer_weave_parm = pd->res->printer_weave;
+  stpi_send_command(v, "\033(i", "bc", printer_weave_parm);
 }
 
 static void
@@ -546,7 +548,7 @@ stpi_escp2_init_printer(stp_vars_t v)
   escp2_set_graphics_mode(v);
   escp2_set_resolution(v);
   escp2_set_color(v);
-  escp2_set_microweave(v);
+  escp2_set_printer_weave(v);
   escp2_set_printhead_speed(v);
   escp2_set_dot_size(v);
   escp2_set_printhead_resolution(v);
