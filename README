@@ -537,12 +537,12 @@ KNOWN BUILD ISSUES
       variable, LANGUAGE, which unconditionally looks up translations
       according to the language, ignoring LANG and the LC_*
       environment variables that are normally used for translation.
-      This library is included with the Gimp-Print tarball, but it is
-      not used unless --with-included-gettext is specified on the
-      configure command line.  This is because many systems provide
-      translation machinery in their standard libraries, and it may
-      not always be best to use foreign libraries to replace standard
-      system functionality.
+      This library is no longer included with Gimp-Print
+      (--with-included-gettext will not work).  Install the GNU
+      gettext package first if you need libintl.a.  Many systems
+      provide translation machinery in their standard libraries, and
+      it may not always be best to use foreign libraries to replace
+      standard system functionality.
 
       We have chosen to use LANGUAGE for this purpose, as the GNU
       gettext library appears to offer the most reliable translation,
@@ -568,11 +568,10 @@ KNOWN BUILD ISSUES
       than translated into the appropriate languages, we suggest the
       following:
 
-      1) Use --with-included-gettext to use the GNU gettext.  If your
-         system is not based on GNU libc (Linux usually is based on
-         GNU libc; BSD, Solaris, IRIX, etc. are not), you will need
-         this option to have any possibility of creating the
-         translated PPD files.
+      1) Install GNU gettext (libintl).  If your system is not based
+         on GNU libc (Linux usually is based on GNU libc; BSD,
+         Solaris, IRIX, etc. are not), you will need this to have any
+         possibility of creating the translated PPD files.
 
       2) Run 'make install' to install the package (including the
          message catalogs) onto the system first, and then do the
