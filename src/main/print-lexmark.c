@@ -80,26 +80,26 @@ typedef enum Lex_model { m_lex7500,   m_z52=10052, m_z42=10042, m_3200=3200 } Le
 
 typedef union {			/* Offsets from the start of each line */
   unsigned long v[NCHANNELS];		/* (really pass) */
-  struct {
+  struct {     /* IMPORTANT: order corresponds to ECOLOR_* */
     unsigned long k;
-    unsigned long m;
     unsigned long c;
+    unsigned long m;
     unsigned long y;
-    unsigned long M;
     unsigned long C;
+    unsigned long M;
     unsigned long Y;
   } p;
 } lexmark_lineoff_t;
 
 typedef union {			/* Base pointers for each pass */
   unsigned char *v[NCHANNELS];
-  struct {
+  struct {     /* IMPORTANT: order corresponds to ECOLOR_* */
     unsigned char *k;
-    unsigned char *m;
     unsigned char *c;
+    unsigned char *m;
     unsigned char *y;
-    unsigned char *M;
     unsigned char *C;
+    unsigned char *M;
     unsigned char *Y;
   } p;
 } lexmark_linebufs_t;
@@ -2836,7 +2836,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  head_colors[0].used_jets = 0;
 	}
 
-      if ((ECOLOR_Y < sw->ncolors) && (lineactive[0].v[ECOLOR_M] > 0))
+      if ((ECOLOR_M < sw->ncolors) && (lineactive[0].v[ECOLOR_M] > 0))
 	{
 	  head_colors[1].line = bufs[0].v[ECOLOR_M];
 	  head_colors[1].used_jets = linecount[0].v[ECOLOR_M];
