@@ -134,8 +134,8 @@ static gint need_exposure = 0;
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
 static gint            mouse_y;		/* Last mouse Y */
-static gint	       old_top;		/* Previous position */
-static gint	       old_left;	/* Previous position */
+static gint	       orig_top;	/* Previous position */
+static gint	       orig_left;	/* Previous position */
 static gint	       buttons_pressed = 0;
 static gint	       preview_active = 0;
 static gint	       buttons_mask = 0;
@@ -3155,8 +3155,8 @@ preview_button_callback (GtkWidget      *widget,
 	{
 	  mouse_x = event->x;
 	  mouse_y = event->y;
-	  old_left = stp_get_left (pv->v);
-	  old_top = stp_get_top (pv->v);
+	  orig_left = stp_get_left (pv->v);
+	  orig_top = stp_get_top (pv->v);
 	  mouse_button = event->button;
 	  buttons_mask = 1 << event->button;
 	  buttons_pressed++;
@@ -3173,8 +3173,8 @@ preview_button_callback (GtkWidget      *widget,
 	    {
 	      gimp_help_enable_tooltips ();
 	      preview_active = -1;
-	      stp_set_left (pv->v, old_left);
-	      stp_set_top (pv->v, old_top);
+	      stp_set_left (pv->v, orig_left);
+	      stp_set_top (pv->v, orig_top);
 	      preview_update ();
 	      buttons_mask |= 1 << event->button;
 	      buttons_pressed++;
@@ -3296,16 +3296,16 @@ preview_motion_callback (GtkWidget      *widget,
       if (mouse_button == 1)
 	{
 	  if (move_constraint & MOVE_VERTICAL)
-	    new_top += INCH * (event->y - mouse_y) / preview_ppi;
+	    new_top = orig_top + INCH * (event->y - mouse_y) / preview_ppi;
 	  if (move_constraint & MOVE_HORIZONTAL)
-	    new_left += INCH * (event->x - mouse_x) / preview_ppi;
+	    new_left = orig_left + INCH * (event->x - mouse_x) / preview_ppi;
 	}
       else
 	{
 	  if (move_constraint & MOVE_VERTICAL)
-	    new_top += event->y - mouse_y;
+	    new_top = orig_top + event->y - mouse_y;
 	  if (move_constraint & MOVE_HORIZONTAL)
-	    new_left += event->x - mouse_x;
+	    new_left = orig_left + event->x - mouse_x;
 	}
 
       if (new_top < top)
@@ -3327,8 +3327,6 @@ preview_motion_callback (GtkWidget      *widget,
 	  stp_set_left (pv->v, new_left);
 	  changes = 1;
 	}
-      mouse_x = event->x;
-      mouse_y = event->y;
       if (!changes)
 	return;
     }
