@@ -509,7 +509,7 @@ calculate_pass_map(cooked_t *w,		/* I - weave parameters */
 	}
 }
 
-void *					/* O - weave parameter block */
+static void *				/* O - weave parameter block */
 initialize_weave_params(int S,		/* I - jet separation */
                         int J,		/* I - number of jets */
                         int H,		/* I - oversampling factor */
