@@ -346,37 +346,22 @@ stp_write_weave(void *        vsw,
 		int		physical_xdpi,
 		const unsigned char *cols[]);
 
-stp_lineoff_t *
-stp_get_lineoffsets(const stp_softweave_t *sw, int row, int subpass, int offset);
-
-stp_lineactive_t *
-stp_get_lineactive(const stp_softweave_t *sw, int row, int subpass, int offset);
-
-stp_linecount_t *
-stp_get_linecount(const stp_softweave_t *sw, int row, int subpass, int offset);
-
-const stp_linebufs_t *
-stp_get_linebases(const stp_softweave_t *sw, int row, int subpass, int offset);
-
-stp_pass_t *
-stp_get_pass_by_row(const stp_softweave_t *sw, int row, int subpass, int offset);
-
-stp_lineoff_t *
+extern stp_lineoff_t *
 stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);
 
-stp_lineactive_t *
+extern stp_lineactive_t *
 stp_get_lineactive_by_pass(const stp_softweave_t *sw, int pass);
 
-stp_linecount_t *
+extern stp_linecount_t *
 stp_get_linecount_by_pass(const stp_softweave_t *sw, int pass);
 
-const stp_linebufs_t *
+extern const stp_linebufs_t *
 stp_get_linebases_by_pass(const stp_softweave_t *sw, int pass);
 
-stp_pass_t *
+extern stp_pass_t *
 stp_get_pass_by_pass(const stp_softweave_t *sw, int pass);
 
-void
+extern void
 stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
 			    int vertical_subpass, stp_weave_t *w);
 
