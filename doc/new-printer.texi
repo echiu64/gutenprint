@@ -273,7 +273,7 @@ with current printers.
 
 The fourth section specifies the minimum and maximum paper sizes, and
 the margins.  Some printers allow use of narrower margins when
-softweave is used; both sets of margins are specified. 
+softweave is used; both sets of margins are specified.
 
 There is a convenient @samp{INCH} macro defined to make specification of
 the @code{max_paper_width} and @code{max_paper_height} more legible.  It
@@ -602,14 +602,14 @@ well for me.
 @node Canon inkjet printers, , Tuning Epson printers, New Printer
 @appendixsection Canon inkjet printers
 
-Basically, a new canon printer can be added to @file{print-canon.c} in a
+Basically, a new Canon printer can be added to @file{print-canon.c} in a
 similar way as described above for the epson inkjet printers. The main
 differences are noted here:
 
-In general, canon printers have more ``built-in intelligence'' than epson 
-printers which results in the fact that the driver only has to tell the 
-printing conditions like resolutions, dot sizes, etc. to the printer and 
-afterwards transfer the raster data line by line for each color used. 
+In general, Canon printers have more ``built-in intelligence'' than Epson
+printers which results in the fact that the driver only has to tell the
+printing conditions like resolutions, dot sizes, etc. to the printer and
+afterwards transfer the raster data line by line for each color used.
 
 @code{canon_cap_t} is a C struct defined as follows:
 
@@ -618,11 +618,11 @@ afterwards transfer the raster data line by line for each color used.
 typedef struct canon_caps @{
   int model;          /* model number as used in printers.xml */
   int max_width;      /* maximum printable paper size */
-  int max_height;     
+  int max_height;
   int base_res;       /* base resolution - shall be 150 or 180 */
   int max_xdpi;       /* maximum horizontal resolution */
   int max_ydpi;       /* maximum vertical resolution */
-  int max_quality;    
+  int max_quality;
   int border_left;    /* left margin, points */
   int border_right;   /* right margin, points */
   int border_top;     /* absolute top margin, points */
@@ -637,7 +637,7 @@ typedef struct canon_caps @{
 @end example
 @end deftypevr
 
-Since there are canon printers which print in resolutions of
+Since there are Canon printers which print in resolutions of
 @math{2^n*150} dpi (e.g. 300, 600, 1200) and others which support
 resolutions of @math{2^n*180} dpi (e.g. 360, 720, 1440), there's a base
 resolution (150 or 180, respectively) given in the
@@ -645,7 +645,7 @@ resolution (150 or 180, respectively) given in the
 @code{canon_densities_t} and @code{canon_variable_inklist_t} refer to
 resolutions being multiples of the base resolution.
 
-For the canon driver, the struct @code{canon_dot_size_t} holds values
+For the Canon driver, the struct @code{canon_dot_size_t} holds values
 for a model's capabilities at a given resolution: @samp{-1} if the
 resolution is not supported.  @samp{0} if it can be used and @samp{1} if
 the resolution can be used for variable dot size printing.
@@ -655,8 +655,8 @@ be specified like for an epson printer, the same holds true for
 @code{canon_variable_inklist_t}.  See the descriptions above to learn
 about how to adjust your model's output to yield nice results.
 
-There's a slight difference though in the way the canon driver and the escp2 
-driver define their variable inklists: In the canon driver, you need to define
+There's a slight difference though in the way the Canon driver and the escp2
+driver define their variable inklists: In the Canon driver, you need to define
 an inklist like this:
 
 @example
