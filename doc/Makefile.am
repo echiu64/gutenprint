@@ -30,11 +30,14 @@ DOCS = \
  FAQ.html \
  README.maintaining \
  docbook.css \
- print-color.png \
- print-main.png \
- print-setup.png \
  print.html \
  print.sgml
+
+IMAGES = \
+ print-color.png \
+ print-main.png \
+ print-setup.png
+   
 
 
 ## Data
@@ -112,6 +115,6 @@ maintainer-clean-local:
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) html-stamp
+EXTRA_DIST = $(DOCS) $(IMAGES) html-stamp
 
 .PHONY: html
