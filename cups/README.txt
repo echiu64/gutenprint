@@ -94,6 +94,24 @@ For the impatient:
 and then use the web interface to add your printer.
 
 
+If you downloaded a CVS snapshot of this software, this directory will
+not include many of the source files that are generated from the
+gimp-print source.  To create these files, you must run the following
+commands from the parent directory:
+
+   aclocal
+   autoconf
+   automake
+   ./configure
+   make cups
+
+If this fails (because you do not have the Gimp or any of the
+autoconfigure tools installed on your system), you can use the
+configure script from any release, and run
+
+   configure --disable-gimptest
+   make cups
+
 WHO DO I CONTACT TO GET HELP?
 
 The main developer for these drivers is me, Michael Sweet, at
