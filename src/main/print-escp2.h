@@ -286,6 +286,8 @@ typedef struct escp2_printer
   int		max_paper_height; /* Maximum paper height, in points */
   int		min_paper_width; /* Maximum paper width, in points */
   int		min_paper_height; /* Maximum paper height, in points */
+/*****************************************************************************/
+				/* SHEET FED: */
 				/* Softweave: */
   int		left_margin;	/* Left margin, points */
   int		right_margin;	/* Right margin, points */
@@ -296,6 +298,17 @@ typedef struct escp2_printer
   int		m_right_margin;	/* Right margin, points */
   int		m_top_margin;	/* Absolute top margin, points */
   int		m_bottom_margin;	/* Absolute bottom margin, points */
+				/* ROLL FEED: */
+				/* Softweave: */
+  int		roll_left_margin;	/* Left margin, points */
+  int		roll_right_margin;	/* Right margin, points */
+  int		roll_top_margin;	/* Absolute top margin, points */
+  int		roll_bottom_margin;	/* Absolute bottom margin, points */
+				/* "Micro"weave: */
+  int		m_roll_left_margin;	/* Left margin, points */
+  int		m_roll_right_margin;	/* Right margin, points */
+  int		m_roll_top_margin;	/* Absolute top margin, points */
+  int		m_roll_bottom_margin;	/* Absolute bottom margin, points */
 /*****************************************************************************/
   int		extra_feed;	/* Extra distance the paper can be spaced */
 				/* beyond the bottom margin, in 1/360". */

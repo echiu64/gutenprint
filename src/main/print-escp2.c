@@ -276,6 +276,10 @@ DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(top_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(bottom_margin, unsigned)
+DEF_MICROWEAVE_ACCESSOR(roll_left_margin, unsigned)
+DEF_MICROWEAVE_ACCESSOR(roll_right_margin, unsigned)
+DEF_MICROWEAVE_ACCESSOR(roll_top_margin, unsigned)
+DEF_MICROWEAVE_ACCESSOR(roll_bottom_margin, unsigned)
 
 static int
 reslist_count(const res_t *rt)
@@ -546,22 +550,17 @@ escp2_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 
   stp_default_media_size(printer, v, &width, &height);
 
-  *left =	escp2_left_margin(model, v);
-  *right =	width - escp2_right_margin(model, v);
-
-  /*
-   * All printers should have 0 vertical margin capability in Roll Feed
-   * mode --  They waste any paper they need automatically, and the
-   * driver should print as much as the user wants
-   */
-
   if (rollfeed)
     {
-      *top =      height - 0;
-      *bottom =   0;
+      *left =	escp2_roll_left_margin(model, v);
+      *right =	width - escp2_roll_right_margin(model, v);
+      *top =	height - escp2_roll_top_margin(model, v);
+      *bottom =	escp2_roll_bottom_margin(model, v);
     }
   else
     {
+      *left =	escp2_left_margin(model, v);
+      *right =	width - escp2_right_margin(model, v);
       *top =	height - escp2_top_margin(model, v);
       *bottom =	escp2_bottom_margin(model, v);
     }
