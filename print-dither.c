@@ -75,12 +75,17 @@
 #define D_FLOYD_HYBRID 0
 #define D_ORDERED 1
 #define D_FLOYD 2
+#define D_ADAPTIVE_BASE 4
+#define D_ADAPTIVE_HYBRID (D_ADAPTIVE_BASE | D_FLOYD_HYBRID)
+#define D_ADAPTIVE_RANDOM (D_ADAPTIVE_BASE | D_FLOYD)
 
 char *dither_algo_names[] =
 {
   "Hybrid Floyd-Steinberg",
   "Ordered",
   "Random Floyd-Steinberg",
+  "Adaptive Hybrid",
+  "Adaptive Random",
 };
 
 int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
@@ -285,7 +290,7 @@ init_dither(int in_width, int out_width, vars_t *v)
     for (y = 0; y < MATRIX_SIZE2; y++)
       {
 	d->ordered_dither_matrix2[x][y] =
-	  calc_ordered_point_5(x, y, MATRIX_NB2, 1, msq1);
+	  calc_ordered_point_5(x, y, MATRIX_NB2, 1, msq0);
 	d->ordered_dither_matrix2[x][y] =
 	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2);
       }
@@ -304,6 +309,10 @@ init_dither(int in_width, int out_width, vars_t *v)
     d->dither_type = D_FLOYD;
   else if (!strcmp(v->dither_algorithm, "Ordered"))
     d->dither_type = D_ORDERED;
+  else if (!strcmp(v->dither_algorithm, "Adaptive Hybrid"))
+    d->dither_type = D_ADAPTIVE_HYBRID;
+  else if (!strcmp(v->dither_algorithm, "Adaptive Random"))
+    d->dither_type = D_ADAPTIVE_RANDOM;
   else
     d->dither_type = D_FLOYD_HYBRID;
 
@@ -847,9 +856,31 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
       dither_segment_t *dd = &(rv->ranges[i]);
       if (density > dd->range_l)
 	{
+	  int dither_value = adjusted;
 	  unsigned rangepoint;
 	  unsigned virtual_value;
 	  unsigned vmatrix;
+	  int dither_type = d->dither_type;
+
+	  if (dither_type & D_ADAPTIVE_BASE)
+	    {
+	      dither_type -= D_ADAPTIVE_BASE;
+	      if (base < d->density / 128)
+		{
+		  dither_type = D_ORDERED;
+		  dither_value = base;
+		}
+	      else if (base < d->density / 64)
+		{
+		  unsigned dtmp = (base - d->density / 128) * 128 * 65536
+		    / d->density;
+		  if (((rand() & 0xffff000) >> 12) > dtmp)
+		    {
+		      dither_type = D_ORDERED;
+		      dither_value = base;
+		    }
+		}
+	    }
 
 	  /*
 	   * Where are we within the range.  If we're going to print at
@@ -882,7 +913,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	   * smoother output in the midtones.  Idea suggested by
 	   * Thomas Tonino.
 	   */
-	  if (d->dither_type != D_ORDERED)
+	  if (dither_type != D_ORDERED)
 	    {
 	      if (base > d->d_cutoff)
 		randomizer = 0;
@@ -891,24 +922,29 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		  / d->d_cutoff;
 	    }
 
-	  if (invert_x)
-	    x = 1048519 - x;
 	  if (invert_y)
-	    y = 1048546 - y;
-	  if (randomizer == 0)
+	    {
+	      unsigned tmp = x;
+	      x = y + 33;
+	      y = tmp + 29;
+	      
+	    }
+ 	  if (randomizer == 0)
 	    vmatrix = virtual_value / 2;
 	  else
 	    {
-	      if (d->dither_type == D_FLOYD)
+	      if (dither_type == D_FLOYD)
 		vmatrix = ((rand() & 0xffff000) +
 			   (rand() & 0xffff000) +
 			   (rand() & 0xffff000) +
 			   (rand() & 0xffff000)) >> 14;
-	      else if (d->dither_type == D_FLOYD_HYBRID)
-		vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d)>>2;
+	      else if (dither_type == D_FLOYD_HYBRID)
+		vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d);
 	      else
-		vmatrix = DITHERPOINT((x + y / 3), (y + x / 3), 0, d);
+		vmatrix = DITHERPOINT((x + (y / 3)), (y + (x / 3)), 0, d);
 
+	      if (invert_x)
+		vmatrix = 65536 - vmatrix;
 	      if (vmatrix == 65536 && virtual_value == 65536)
 		vmatrix = 32768;
 	      else
@@ -933,11 +969,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		}
 	    }
 
-	  /*
-	   * FIXME we should use a matrix rather than just an error
-	   * threshold
-	   */
-	  if (adjusted >= vmatrix)
+	  if (dither_value >= vmatrix)
 	    {
 	      int j;
 	      int isdark;
@@ -949,7 +981,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 		  isdark = dd->isdark_h;
 		  bits = dd->bits_h;
 		}
-	      else if (rangepoint >= DITHERPOINT(x, y, 2, d))
+	      else if (rangepoint >= DITHERPOINT(x, y, 3, d))
 		{
 		  isdark = dd->isdark_h;
 		  bits = dd->bits_h;
@@ -1156,7 +1188,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
   int		ditherbit;	/* Random dither bitmask */
-  int		nk;
   int		ck;
   int		bk;
   int		ub, lb;
@@ -1334,7 +1365,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	  else if (kdarkness < ub)
 	    {
-	      if (d->dither_type == D_FLOYD)
+	      if ((d->dither_type & ~D_ADAPTIVE_BASE) == D_FLOYD)
 		ditherbit = ((rand() & 0x7ffff000) >> 12) % rb;
 	      else
 		ditherbit = (DITHERPOINT(row, x, 1, d) ^
@@ -1435,6 +1466,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.28  2000/04/22 23:28:55  rlk
+ *   Adaptive algorithms.  These are the normal random and hybrid Floyd-Steinberg
+ *   algorithms except in very pale regions, where ordered dithering is used to
+ *   improve smoothness.
+ *
  *   Revision 1.27  2000/04/22 03:57:47  rlk
  *   Break up ordered dither pattern a bit.
  *
