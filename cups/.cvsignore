@@ -1,0 +1,15 @@
+.deps
+Makefile
+Makefile.in
+aclocal.m4
+calibrate
+commandtoepson
+config.cache
+config.log
+config.status
+configure
+epson
+epson.dep
+genppd
+ppd
+rastertoepson
