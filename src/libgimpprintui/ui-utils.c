@@ -803,9 +803,9 @@ stpui_create_new_combo(list_option_t *list_option, GtkWidget *table,
   list_option->combo = gtk_combo_new();
   gtk_container_add(GTK_CONTAINER(event_box), list_option->combo);
   gtk_widget_show(list_option->combo);
-  stpui_set_help_data(event_box, _(list_option->help));
+  stpui_set_help_data(event_box, _(list_option->fast_desc->help));
   list_option->label = stpui_table_attach_aligned
-    (GTK_TABLE(table), hpos, vpos, _(list_option->text),
+    (GTK_TABLE(table), hpos, vpos, _(list_option->fast_desc->text),
      1.0, 0.5, event_box, 1, TRUE);
 }
 
@@ -813,19 +813,21 @@ const char *
 stpui_combo_get_name(GtkWidget   *combo,
 		     const stp_string_list_t options)
 {
-  gchar *text;
-  gint   i;
-  gint num_options = stp_string_list_count(options);
+  if (options)
+    {
+      gint   i;
+      gint num_options = stp_string_list_count(options);
+      gchar *text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)));
 
-  if ((text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))) ==NULL)
-    return (NULL);
+      if (text == NULL)
+	return (NULL);
 
-  if (num_options == 0)
-    return ((const char *)text);
+      if (num_options == 0)
+	return ((const char *)text);
 
-  for (i = 0; i < num_options; i ++)
-    if (strcmp(stp_string_list_param(options, i)->text, text) == 0)
-      return (stp_string_list_param(options, i)->name);
-
+      for (i = 0; i < num_options; i ++)
+	if (strcmp(stp_string_list_param(options, i)->text, text) == 0)
+	  return (stp_string_list_param(options, i)->name);
+    }
   return (NULL);
 }

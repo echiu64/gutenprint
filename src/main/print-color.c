@@ -70,6 +70,7 @@ typedef struct
   double min;
   double max;
   double defval;
+  int color_only;
 } float_param_t;
 
 static float_param_t float_parameters[] =
@@ -79,16 +80,16 @@ static float_param_t float_parameters[] =
       "Brightness", N_("Brightness"),
       N_("Brightness of the print (0 is solid black, 2 is solid white)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 2.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 2.0, 1.0, 0
   },
   {
     {
       "Contrast", N_("Contrast"),
       N_("Contrast of the print (0 is solid gray)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 4.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 4.0, 1.0, 0
   },
   {
     {
@@ -98,8 +99,8 @@ static float_param_t float_parameters[] =
 	 "paper or smears; increase the density if black "
 	 "regions are not solid."),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.1, 2.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.1, 2.0, 1.0, 0
   },
   {
     {
@@ -110,40 +111,40 @@ static float_param_t float_parameters[] =
 	 "Black and white will remain the same, unlike with "
 	 "the brightness adjustment."),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.1, 4.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.1, 4.0, 1.0, 0
   },
   {
     {
       "AppGamma", N_("AppGamma"),
       N_("Gamma value assumed by application"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 1
-    }, 0.1, 4.0, 1.0
+      STP_PARAMETER_LEVEL_ADVANCED, 1, 1
+    }, 0.1, 4.0, 1.0, 0
   },
   {
     {
       "Cyan", N_("Cyan"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 4.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 4.0, 1.0, 1
   },
   {
     {
       "Magenta", N_("Magenta"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 4.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 4.0, 1.0, 1
   },
   {
     {
       "Yellow", N_("Yellow"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 4.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 4.0, 1.0, 1
   },
   {
     {
@@ -152,16 +153,16 @@ static float_param_t float_parameters[] =
 	 "Use zero saturation to produce grayscale output "
 	 "using color and black inks"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1
-    }, 0.0, 9.0, 1.0
+      STP_PARAMETER_LEVEL_BASIC, 1, 1
+    }, 0.0, 9.0, 1.0, 1
   },
   {
     {
       "ImageOptimization", N_("Image Type"),
       N_("Optimize the settings for the type of image to be printed"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 0
-    },
+      STP_PARAMETER_LEVEL_BASIC, 0, 1
+    }, 0.0, 0.0, 0.0, 1
   }
 };
 
@@ -172,6 +173,7 @@ typedef struct
 {
   const stp_parameter_t param;
   stp_curve_t *defval;
+  int color_only;
 } curve_param_t;
 
 static int standard_curves_initialized = 0;
@@ -188,56 +190,56 @@ static curve_param_t curve_parameters[] =
       "CompositeCurve", N_("Composite Curve"),
       N_("Composite (Grayscale) curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }, &color_curve_bounds
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+    }, &color_curve_bounds, 0
   },
   {
     {
       "CyanCurve", N_("Cyan Curve"),
       N_("Cyan curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }, &color_curve_bounds
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+    }, &color_curve_bounds, 1
   },
   {
     {
       "MagentaCurve", N_("Magenta Curve"),
       N_("Magenta curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }, &color_curve_bounds
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+    }, &color_curve_bounds, 1
   },
   {
     {
       "YellowCurve", N_("Yellow Curve"),
       N_("Yellow curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0
-    }, &color_curve_bounds
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1
+    }, &color_curve_bounds, 1
   },
   {
     {
       "HueMap", N_("Hue Map"),
       N_("Hue adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0
-    }, &hue_map_bounds
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+    }, &hue_map_bounds, 1
   },
   {
     {
       "SatMap", N_("Saturation Map"),
       N_("Saturation adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0
-    }, &sat_map_bounds
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+    }, &sat_map_bounds, 1
   },
   {
     {
       "LumMap", N_("Luminosity Map"),
       N_("Luminosity adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0
-    }, &lum_map_bounds
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1
+    }, &lum_map_bounds, 1
   },
 };
 
@@ -1914,6 +1916,12 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       if (strcmp(name, param->param.name) == 0)
 	{
 	  stp_fill_parameter_settings(description, &(param->param));
+	  if (param->color_only &&
+	      (stp_get_output_type(v) == OUTPUT_GRAY ||
+	       stp_get_output_type(v) == OUTPUT_MONOCHROME))
+	    description->is_active = 0;
+	  else
+	    description->is_active = 1;
 	  switch (param->param.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_DOUBLE:
@@ -1946,6 +1954,12 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       if (strcmp(name, param->param.name) == 0)
 	{
 	  stp_fill_parameter_settings(description, &(param->param));
+	  if (param->color_only &&
+	      (stp_get_output_type(v) == OUTPUT_GRAY ||
+	       stp_get_output_type(v) == OUTPUT_MONOCHROME))
+	    description->is_active = 0;
+	  else
+	    description->is_active = 1;
 	  switch (param->param.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_CURVE:

@@ -726,6 +726,7 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->p_level = param->p_level;
       desc->p_class = param->p_class;
       desc->is_mandatory = param->is_mandatory;
+      desc->is_active = param->is_active;
       desc->name = param->name;
       desc->text = param->text;
       desc->help = param->help;

@@ -203,9 +203,6 @@ stp_papersize_get_unit(const stp_papersize_t pt)
   return p->paper_unit;
 }
 
-/*
-#if 1
-*/
 const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
@@ -215,48 +212,6 @@ stp_get_papersize_by_name(const char *name)
     return NULL;
   else return (const stp_papersize_t) stp_list_item_get_data(paper);
 }
-/*
- * This is, of course, blatantly thread-unsafe.  However, it certainly
- * speeds up genppd by a lot!
- */
-/*const stp_papersize_t
-stp_get_papersize_by_name(const char *name)
-{
-  static int last_used_papersize = 0;
-  int base = last_used_papersize;
-  int sizes = stp_known_papersizes();
-  int i;
-  if (!name)
-    return NULL;
-  for (i = 0; i < sizes; i++)
-    {
-      int size_to_try = (i + base) % sizes;
-      const stp_internal_papersize_t *val = &(paper_sizes[size_to_try]);
-      if (!strcmp(val->name, name))
-	{
-	  last_used_papersize = size_to_try;
-	  return (const stp_papersize_t) val;
-	}
-    }
-  return NULL;
-}
-#else
-const stp_papersize_t
-stp_get_papersize_by_name(const char *name)
-{
-  const stp_internal_papersize_t *val = &(paper_sizes[0]);
-  if (!name)
-    return NULL;
-  while (stp_strlen(val->name) > 0)
-    {
-      if (!strcmp(val->name, name))
-	return (stp_papersize_t) val;
-      val++;
-    }
-  return NULL;
-}
-#endif
-*/
 
 const stp_papersize_t
 stp_get_papersize_by_index(int index)
@@ -315,8 +270,10 @@ stp_default_media_size(const stp_vars_t v,	/* I */
     }
   else
     {
-      const stp_papersize_t papersize =
-	stp_get_papersize_by_name(stp_get_string_parameter(v, "PageSize"));
+      const char *page_size = stp_get_string_parameter(v, "PageSize");
+      stp_papersize_t papersize = NULL;
+      if (page_size)
+	papersize = stp_get_papersize_by_name(page_size);
       if (!papersize)
 	{
 	  *width = 1;
