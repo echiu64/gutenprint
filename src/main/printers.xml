@@ -1,6 +1,8 @@
 # pseudo-XML description of printers known to the Print plugin
 # This file was originally generated.  It should be edited by hand.
 
+# "$Id$"
+
 <printer name="PostScript Level 1" driver="ps">
 <color>
 <model value=0>
@@ -530,6 +532,54 @@
 <printer name="EPSON Stylus Photo 2000P" driver="escp2-2000">
 <color>
 <model value=26>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
+<color>
+<model value=27>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 5500" driver="escp2-5500">
+<color>
+<model value=40>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 7000" driver="escp2-7000">
+<color>
+<model value=28>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 7500" driver="escp2-7500">
+<color>
+<model value=29>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9000" driver="escp2-9000">
+<color>
+<model value=30>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
+<printer name="EPSON Stylus Pro 9500" driver="escp2-9500">
+<color>
+<model value=31>
 <gamma value=0.585>
 <density value=1.0>
 <language value=escp2>

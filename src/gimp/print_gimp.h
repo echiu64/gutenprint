@@ -61,14 +61,56 @@ typedef struct		/**** Printer List ****/
   stp_vars_t v;
 } gp_plist_t;
 
+extern gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
+extern guchar *thumbnail_data;
+extern gint    adjusted_thumbnail_bpp;
+extern guchar *adjusted_thumbnail_data;
+
+extern stp_vars_t           vars;
+extern gint             plist_count;	   /* Number of system printers */
+extern gint             plist_current;     /* Current system printer */
+extern gp_plist_t         *plist;		  /* System printers */
+extern gint32           image_ID;
+extern const gchar     *image_filename;
+extern gint             image_width;
+extern gint             image_height;
+extern stp_printer_t current_printer;
+extern gint             runme;
+extern gint             saveme;
+
+extern GtkWidget *gimp_color_adjust_dialog;
+extern GtkWidget *dither_algo_combo;
+
 /*
  * Function prototypes
  */
 
 /* How to create an Image wrapping a Gimp drawable */
+extern void  printrc_save (void);
+
 extern stp_image_t *Image_GimpDrawable_new(GimpDrawable *drawable);
 extern int add_printer(const gp_plist_t *key, int add_only);
 extern void initialize_printer(gp_plist_t *printer);
+extern void gimp_update_adjusted_thumbnail (void);
+extern void gimp_plist_build_combo         (GtkWidget      *combo,
+					    gint            num_items,
+					    gchar         **items,
+					    const gchar          *cur_item,
+					    GtkSignalFunc   callback,
+					    gint           *callback_id);
 
+extern void gimp_do_color_updates    (void);
+extern void gimp_redraw_color_swatch (void);
+extern void gimp_build_dither_combo  (void);
+extern void gimp_create_color_adjust_window  (void);
+extern void gimp_update_adjusted_thumbnail   (void);
+extern void
+gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
+			gint            num_items,   /* I - Number of items */
+			gchar    **items,       /* I - Menu items */
+			const gchar     *cur_item,    /* I - Current item */
+			GtkSignalFunc   callback,    /* I - Callback */
+			gint           *callback_id); /* IO - Callback ID (init to -1) */
+extern void     gimp_create_main_window (void);
 
 #endif  /* __PRINT_GIMP_H__ */

@@ -419,7 +419,6 @@ dnl Checks for library functions.
 AC_FUNC_ALLOCA
 dnl [commented out while I find a memcmp.c for lib/] AC_FUNC_MEMCMP
 dnl GNU libc memcmp.c is too glibc-dependent to include.
-AC_CHECK_FUNC(random, AC_DEFINE(HAVE_RANDOM))
 AC_CHECK_FUNC(poll, AC_DEFINE(HAVE_POLL))
 dnl The following is used to build a "utility library" in lib/
 AC_REPLACE_FUNCS(xgetcwd xmalloc)

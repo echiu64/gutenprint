@@ -56,8 +56,6 @@ static void	query (void);
 static void	run (char *, int, GimpParam *, int *, GimpParam **);
 static int	do_print_dialog (char *proc_name);
 
-extern void     gimp_create_main_window (void);
-
 #if 0
 static void	cleanupfunc(void);
 #endif

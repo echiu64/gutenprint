@@ -44,6 +44,7 @@ libgimpprint_la_SOURCES = \
 	print-color.c \
 	print-weave.c \
 	print-version.c \
+	print-dither-matrices.c \
 	quickmatrix257.h \
 	ran.367.179.h \
 	ran.509.131.h

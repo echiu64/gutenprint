@@ -6,8 +6,8 @@ UNIX/Linux in many cases equal to or better than proprietary
 vendor-supplied drivers, and can be used for many of the most
 demanding printing tasks.
 
-Please read this README carefully!  Many things have changed from
-Gimp-Print 4.0.
+Please read this README, and the NEWS file carefully!  Many things
+have changed from Gimp-Print 4.0.
 
 
 BASIC INSTALLATION
@@ -64,7 +64,9 @@ If you do not wish to build the Gimp Print plugin, you must run
 ./configure --with-ghost --without-gimp
 
 Again, please be sure to read src/Ghost/README for the available
-options, which may change from release to release.
+options, which may change from release to release.  In particular, the
+source files may well change from release to release; be certain to
+follow the directions PRECISELY for each release!
 
 
 CUPS

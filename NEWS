@@ -24,25 +24,37 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    symptoms are typically that the ready light on the printer flashes
    as data is sent, but nothing is printed.
 
-3) Color quality on Epson printers (particularly in the blue range) is
+3) Initial support for the Epson Stylus Pro printers: 5000, 5500,
+   7000, 7500, 9000, 9500.  It is not yet tested and tuned.  There is
+   also currently no support for the paper cutter.
+
+4) Explicit support for various types of roll paper supported by Epson
+   printers.  This enables Gimp users to specify the height of the
+   page with a fixed width.
+
+5) A bug that in some cases prevented certain options from being
+   selected (and may have resulted in crashes) in the GIMP plugin has
+   been fixed.
+
+6) Color quality on Epson printers (particularly in the blue range) is
    improved.
 
-4) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
+7) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
    newer) Epson Stylus Photo printers.  This paper was specifically
    designed for these printers, and may not give optimal results with
    older printers.
 
-5) Very dark tones and very saturated colors should be improved
+8) Very dark tones and very saturated colors should be improved
    somewhat.  The result may be a bit darker and more contrasty; this
    will need some experimentation.
 
-6) The Gimp plugin should now build on systems not using GNU make.
+9) The Gimp plugin should now build on systems not using GNU make.
 
-7) The Gimp plugin now permits the user to define a new printer name.
+10) The Gimp plugin now permits the user to define a new printer name.
    This allows the user to define multiple "printers" with different
    settings.
 
-8) The Gimp plugin will no longer compile against any version of 1.1.
+11) The Gimp plugin will no longer compile against any version of 1.1.
    It no longer uses the transitional "compatibility" API; rather, it
    uses the 1.2 API.
 

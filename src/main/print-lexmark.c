@@ -1399,8 +1399,11 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
 
   const lexmark_res_t *res_para_ptr = lexmark_get_resolution_para(printer, resolution);
 
-
-
+  if (!stp_get_verified(nv))
+    {
+      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      return;
+    }
 
   /*
   * Setup a read-only pixel region for the entire image...

@@ -14,6 +14,7 @@ lib/xmalloc.c
 src/main/print-canon.c
 src/main/print-color.c
 src/main/print-dither.c
+src/main/print-dither-matrices.c
 src/main/print-escp2.c
 src/main/print-lexmark.c
 src/main/print-pcl.c

@@ -29,6 +29,10 @@
 #include <gimp-print.h>
 #endif
 #include "../lib/libprintut.h"
+#include "../src/main/gimp-print-internal.h"
+#include <stdio.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 /*
  * NOTE: writing of 2-bit dither images is currently broken due to the
@@ -107,6 +111,13 @@ void write_photo(FILE *fp, unsigned char *cyan, unsigned char *lcyan,
                  unsigned char *yellow, unsigned char *black);
 
 
+double
+compute_interval(struct timeval *tv1, struct timeval *tv2)
+{
+  return ((double) tv2->tv_sec + (double) tv2->tv_usec / 1000000.) -
+    ((double) tv1->tv_sec + (double) tv1->tv_usec / 1000000.);
+}
+
 /*
  * 'main()' - Test dithering code for performance measurement.
  */
@@ -123,13 +134,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 		lmagenta[BUFFER_SIZE],	/* Light magenta bitmap data */
 		yellow[BUFFER_SIZE];	/* Yellow bitmap data */
   void		*dither;		/* Dither data */
-  stp_convert_t	colorfunc;		/* Color conversion function... */
   unsigned short rgb[IMAGE_WIDTH * 3],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp;			/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
-  time_t	start, end;		/* Start and end times */
   stp_vars_t	v;			/* Dither variables */
   static char	*dither_types[] =	/* Different dithering modes */
 		{
@@ -145,12 +154,14 @@ main(int  argc,				/* I - Number of command-line arguments */
 		  "color",
 		  "random"
 		};
+  struct timeval tv1, tv2;
 
  /*
   * Initialise libgimpprint
   */
 
   stp_init();
+  v = stp_allocate_vars();
 
  /*
   * Get command-line args...
@@ -211,12 +222,12 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Output the page...
   */
 
-  memset(&v, 0, sizeof(v));
-  strcpy(v.dither_algorithm, "Adaptive Hybrid");
+  stp_set_dither_algorithm(v, "Adaptive Hybrid");
 
-  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, 1, 1, &v);
+  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, 1, 1, v);
 
-  stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  for (i = 0; i < NCOLORS; i++)
+    stp_dither_set_black_level(dither, i, 1.0);
 
   if (dither_type == DITHER_PHOTO)
     stp_dither_set_black_lower(dither, 0.4 / dither_bits + 0.1);
@@ -225,27 +236,17 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   stp_dither_set_black_upper(dither, 0.5);
 
-  if (dither_bits == 2)
-  {
-    if (dither_type == DITHER_PHOTO)
-      stp_dither_set_adaptive_divisor(dither, 8);
-    else
-      stp_dither_set_adaptive_divisor(dither, 16);
-  }
-  else
-    stp_dither_set_adaptive_divisor(dither, 4);
-
   switch (dither_type)
   {
     case DITHER_GRAY :
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(dither, 0.5);
-              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
@@ -253,17 +254,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_c_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              stp_dither_set_m_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              stp_dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_C, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_M, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_Y, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(dither, 0.5);
-              stp_dither_set_c_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              stp_dither_set_m_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              stp_dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_C, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_M, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_Y, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
@@ -271,17 +272,17 @@ main(int  argc,				/* I - Number of command-line arguments */
         switch (dither_bits)
 	{
 	  case 1 :
-              stp_dither_set_c_ranges(dither, 2, photo_1bit_ranges, 1.0);
-              stp_dither_set_m_ranges(dither, 2, photo_1bit_ranges, 1.0);
-              stp_dither_set_y_ranges(dither, 1, normal_1bit_ranges, 1.0);
-              stp_dither_set_k_ranges(dither, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_C, 2, photo_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_M, 2, photo_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_Y, 1, normal_1bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 1, normal_1bit_ranges, 1.0);
 	      break;
 	  case 2 :
 	      stp_dither_set_transition(dither, 0.7);
-              stp_dither_set_c_ranges(dither, 5, photo_2bit_ranges, 1.0);
-              stp_dither_set_m_ranges(dither, 5, photo_2bit_ranges, 1.0);
-              stp_dither_set_y_ranges(dither, 3, normal_2bit_ranges, 1.0);
-              stp_dither_set_k_ranges(dither, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_C, 5, photo_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_M, 5, photo_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_Y, 3, normal_2bit_ranges, 1.0);
+              stp_dither_set_ranges(dither, ECOLOR_K, 3, normal_2bit_ranges, 1.0);
 	      break;
        }
        break;
@@ -320,7 +321,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Now dither the "page"...
   */
 
-  start = time(NULL);
+  (void) gettimeofday(&tv1, NULL);
 
   for (i = 0; i < IMAGE_HEIGHT; i ++)
   {
@@ -334,37 +335,38 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       case DITHER_GRAY :
           image_get_row(gray, i);
-          stp_dither_black(gray, i, dither, black, 0);
+          stp_dither(gray, i, dither, 0, 0, 0, 0, 0, 0, black, 0, 0);
 	  if (fp)
 	    write_gray(fp, black);
 	  break;
       case DITHER_COLOR :
           image_get_row(rgb, i);
-	  stp_dither_cmyk(rgb, i, dither, cyan, 0, magenta, 0,
-		      yellow, 0, black, 0);
+	  stp_dither(rgb, i, dither, cyan, 0, magenta, 0,
+		     yellow, 0, black, 0, 0);
 	  if (fp)
 	    write_color(fp, cyan, magenta, yellow, black);
 	  break;
       case DITHER_PHOTO :
           image_get_row(rgb, i);
-	  stp_dither_cmyk(rgb, i, dither, cyan, lcyan, magenta, lmagenta,
-		      yellow, 0, black, 0);
+	  stp_dither(rgb, i, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, 0, black, 0, 0);
 	  if (fp)
 	    write_photo(fp, cyan, lcyan, magenta, lmagenta, yellow, black);
 	  break;
     }
   }
 
-  end = time(NULL);
+  (void) gettimeofday(&tv2, NULL);
 
   stp_free_dither(dither);
 
   if (fp != NULL)
     fclose(fp);
 
-  printf("\rTotal dither time for %d pixels is %d seconds, or %.2f pixels/sec.\n",
-         IMAGE_WIDTH * IMAGE_HEIGHT, end - start,
-	 (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / (float)(end - start));
+  printf("\rTotal dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
+         IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
+	 (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
+  return 0;
 }
 
 
@@ -376,37 +378,39 @@ image_get_row(unsigned short *data,
 
 
   switch (image_type)
-  {
+    {
     case IMAGE_MIXED :
-        switch ((row / 100) & 3)
+      switch ((row / 100) & 3)
 	{
-	  case 0 :
-              src = white_line;
-	      break;
-	  case 1 :
-              src = color_line;
-	      break;
-	  case 2 :
-              src = black_line;
-	      break;
-	  case 3 :
-              src = random_line;
-	      break;
+	case 0 :
+	  src = white_line;
+	  break;
+	case 1 :
+	  src = color_line;
+	  break;
+	case 2 :
+	  src = black_line;
+	  break;
+	case 3 :
+	default:
+	  src = random_line;
+	  break;
 	}
-        break;
+      break;
     case IMAGE_WHITE :
-        src = white_line;
-        break;
+      src = white_line;
+      break;
     case IMAGE_BLACK :
-        src = black_line;
-        break;
+      src = black_line;
+      break;
     case IMAGE_COLOR :
-        src = color_line;
-        break;
+      src = color_line;
+      break;
     case IMAGE_RANDOM :
-        src = random_line;
-        break;
-  }
+    default:
+      src = random_line;
+      break;
+    }
 
   if (dither_type == DITHER_GRAY)
     memcpy(data, src, IMAGE_WIDTH * 2);
@@ -469,8 +473,7 @@ void
 write_gray(FILE          *fp,
            unsigned char *black)
 {
-  int		count,
-		offset;
+  int		count;
   unsigned char	byte,
 		bit,
 		shift;
@@ -687,8 +690,9 @@ write_photo(FILE          *fp,
   }
   else
   {
-    for (count = IMAGE_WIDTH, cbyte = *cyan++, mbyte = *magenta++,
-             ybyte = *yellow++, kbyte = *black++, shift = 6;
+    for (count = IMAGE_WIDTH, cbyte = *cyan++, lcbyte = *lcyan++,
+	   mbyte = *magenta++, lmbyte = *lmagenta++,
+	   ybyte = *yellow++, kbyte = *black++, shift = 6;
 	 count > 0;
 	 count --)
     {

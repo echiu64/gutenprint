@@ -40,27 +40,6 @@
 #define PREVIEW_SIZE_VERT  320 /* Assuming max media size of 24" A2 */
 #define PREVIEW_SIZE_HORIZ 280 /* Assuming max media size of 24" A2 */
 
-extern stp_vars_t           vars;
-extern gint             plist_count;	   /* Number of system printers */
-extern gint             plist_current;     /* Current system printer */
-extern gp_plist_t         *plist;		  /* System printers */
-extern gint32           image_ID;
-extern const gchar     *image_filename;
-extern gint             image_width;
-extern gint             image_height;
-extern stp_printer_t current_printer;
-extern gint             runme;
-extern gint             saveme;
-
-extern void  printrc_save (void);
-
-extern GtkWidget *gimp_color_adjust_dialog;
-extern GtkWidget *dither_algo_combo;
-
-extern void gimp_do_color_updates    (void);
-extern void gimp_redraw_color_swatch (void);
-extern void gimp_build_dither_combo  (void);
-
 /*
  *  Main window widgets
  */
@@ -184,16 +163,6 @@ static void gimp_preview_motion_callback     (GtkWidget      *widget,
 static void gimp_position_callback           (GtkWidget      *widget);
 static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
-
-extern void gimp_create_color_adjust_window  (void);
-extern void gimp_update_adjusted_thumbnail   (void);
-extern void
-gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
-			gint            num_items,   /* I - Number of items */
-			gchar    **items,       /* I - Menu items */
-			const gchar     *cur_item,    /* I - Current item */
-			GtkSignalFunc   callback,    /* I - Callback */
-			gint           *callback_id); /* IO - Callback ID (init to -1) */
 
 static gint preview_ppi = 10;
 
@@ -1162,6 +1131,7 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   gint      i; /* Looping var */
   GList    *list = 0;
   GtkEntry *entry = GTK_ENTRY (GTK_COMBO (combo)->entry);
+  char *ncur_item;
 
   if (*callback_id != -1)
     gtk_signal_disconnect (GTK_OBJECT (entry), *callback_id);
@@ -1188,11 +1158,12 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed",
 				     callback,
 				     NULL);
+  ncur_item = strdup(cur_item);
 
-  gtk_entry_set_text (entry, strdup(cur_item));
+  gtk_entry_set_text (entry, ncur_item);
 
   for (i = 0; i < num_items; i ++)
-    if (strcmp(items[i], cur_item) == 0)
+    if (strcmp(items[i], ncur_item) == 0)
       break;
 
   if (i == num_items)
@@ -1461,7 +1432,7 @@ gimp_plist_callback (GtkWidget *widget,
   gimp_plist_build_combo (media_size_combo,
 			  num_media_sizes,
 			  media_sizes,
-			  (char *) stp_get_media_size(p->v),
+			  stp_get_media_size(p->v),
 			  gimp_media_size_callback,
 			  &media_size_callback_id);
 
@@ -1481,7 +1452,7 @@ gimp_plist_callback (GtkWidget *widget,
   gimp_plist_build_combo (media_type_combo,
 			  num_media_types,
 			  media_types,
-			  (char *) stp_get_media_type(p->v),
+			  stp_get_media_type(p->v),
 			  gimp_media_type_callback,
 			  &media_type_callback_id);
 
@@ -1501,7 +1472,7 @@ gimp_plist_callback (GtkWidget *widget,
   gimp_plist_build_combo (media_source_combo,
 			  num_media_sources,
 			  media_sources,
-			  (char *) stp_get_media_source(p->v),
+			  stp_get_media_source(p->v),
 			  gimp_media_source_callback,
 			  &media_source_callback_id);
 
@@ -1521,7 +1492,7 @@ gimp_plist_callback (GtkWidget *widget,
   gimp_plist_build_combo (ink_type_combo,
 			  num_ink_types,
 			  ink_types,
-			  (char *) stp_get_ink_type(p->v),
+			  stp_get_ink_type(p->v),
 			  gimp_ink_type_callback,
 			  &ink_type_callback_id);
 
@@ -1541,7 +1512,7 @@ gimp_plist_callback (GtkWidget *widget,
   gimp_plist_build_combo (resolution_combo,
 			  num_resolutions,
 			  resolutions,
-			  (char *) stp_get_resolution(p->v),
+			  stp_get_resolution(p->v),
 			  gimp_resolution_callback,
 			  &resolution_callback_id);
 
@@ -1634,6 +1605,7 @@ gimp_media_size_callback (GtkWidget *widget,
 		size *= 2.54;
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+	      gtk_widget_set_sensitive(GTK_WIDGET(custom_size_width), TRUE);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_width), TRUE);
 	      stp_set_page_width(plist[plist_current].v, default_width);
 	      stp_set_page_width(vars, default_width);
@@ -1645,6 +1617,7 @@ gimp_media_size_callback (GtkWidget *widget,
 		size *= 2.54;
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+	      gtk_widget_set_sensitive(GTK_WIDGET(custom_size_width), FALSE);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_width), FALSE);
 	      stp_set_page_width(plist[plist_current].v,
 				 stp_papersize_get_width(pap));
@@ -1659,6 +1632,7 @@ gimp_media_size_callback (GtkWidget *widget,
 		size *= 2.54;
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+	      gtk_widget_set_sensitive(GTK_WIDGET(custom_size_height), TRUE);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), TRUE);
 	      stp_set_page_height(plist[plist_current].v, default_height);
 	      stp_set_page_height(vars, default_height);
@@ -1670,6 +1644,7 @@ gimp_media_size_callback (GtkWidget *widget,
 		size *= 2.54;
 	      g_snprintf(s, sizeof(s), "%.2f", size);
 	      gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+	      gtk_widget_set_sensitive(GTK_WIDGET(custom_size_height), FALSE);
 	      gtk_entry_set_editable(GTK_ENTRY(custom_size_height), FALSE);
 	      stp_set_page_height(plist[plist_current].v,
 				  stp_papersize_get_height(pap));

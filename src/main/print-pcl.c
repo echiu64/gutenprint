@@ -1803,6 +1803,12 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 		is_blank,	/* Current line is blank */
 		do_blank;	/* Blank line removal required */
 
+  if (!stp_get_verified(nv))
+    {
+      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      return;
+    }
+
   caps = pcl_get_model_capabilities(model);
 
  /*

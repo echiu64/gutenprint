@@ -25,7 +25,7 @@ MAINT_CHARSET = latin1
 
 # Use old compatability method for now...
 
-MAINCODE = canon.c color.c dither.c escp2.c lexmark.c pcl.c printers.c ps.c util.c weave.c
+MAINCODE = canon.c color.c dither.c escp2.c lexmark.c pcl.c printers.c ps.c util.c weave.c dither-matrices.c
 
 MAINHEADERS = print.h print-internal.h print-intl-internal.h quickmatrix257.h ran.367.179.h ran.509.131.h
 

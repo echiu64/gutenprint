@@ -217,6 +217,18 @@ usage(void)
 }
 
 
+typedef struct
+{
+  char *name;
+  char *canonical_name;
+  int width;
+  int height;
+  int left;
+  int right;
+  int bottom;
+  int top;
+} paper_t;
+
 /*
  * 'write_ppd()' - Write a PPD file.
  */
@@ -244,6 +256,8 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   const stp_vars_t printvars = stp_printer_get_printvars(p);
   int model = stp_printer_get_model(p);
   const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(p);
+  paper_t *the_papers = NULL;
+  int cur_opt = 0;
 
  /*
   * Skip the PostScript drivers...
@@ -315,40 +329,58 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   * Get the page sizes from the driver...
   */
 
+  v = stp_allocate_copy(printvars);
+
   opts = (*(printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "PageSize");
+  the_papers = malloc(sizeof(paper_t) * num_opts);
+  for (i = 0; i < num_opts; i++)
+    {
+      const stp_papersize_t papersize = stp_get_papersize_by_name(opts[i]);
+      width = stp_papersize_get_width(papersize);
+      height = stp_papersize_get_height(papersize);
+      if (stp_papersize_get_width(papersize) <= 0 ||
+	  stp_papersize_get_height(papersize) <= 0)
+	continue;
+      stp_set_media_size(v, opts[i]);
+      (*(printfuncs->media_size))(p, v, &width, &height);
+      (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
+      the_papers[cur_opt].name = opts[i];
+      the_papers[cur_opt].width = width;
+      the_papers[cur_opt].height = height;
+      the_papers[cur_opt].left = left;
+      the_papers[cur_opt].right = right;
+      the_papers[cur_opt].bottom = bottom;
+      the_papers[cur_opt].top = top;
+      for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes;
+	   j > 0;
+	   j --, size ++)
+	if (size->width == width && size->height == height)
+	  break;
+      if (j)
+	{
+	  the_papers[cur_opt].canonical_name = malloc(strlen(size->name) + 1);
+	  strcpy(the_papers[cur_opt].canonical_name, size->name);
+	}
+      else
+	{
+	  the_papers[cur_opt].canonical_name = malloc(32);
+	  sprintf(the_papers[cur_opt].canonical_name,
+		  "w%dh%d", width, height);
+	}
+      cur_opt++;
+    }
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
   gzputs(fp, "*DefaultPageSize: ");
   gzputs(fp, defopt);
   gzputs(fp, "\n");
-
-  v = stp_allocate_copy(printvars);
-
-  for (i = 0; i < num_opts; i ++)
+  for (i = 0; i < cur_opt; i ++)
   {
-   /*
-    * Get the media size...
-    */
-
-    if (strcmp(opts[i], "Custom") == 0)
-      continue;
-    stp_set_media_size(v, opts[i]);
-
-    (*(printfuncs->media_size))(p, v, &width, &height);
-
-    for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->height == height)
-        break;
-
-    if (j)
-      gzprintf(fp, "*PageSize %s", size->name);
-    else
-      gzprintf(fp, "*PageSize w%dh%d", width, height);
-
+    gzprintf(fp,  "*PageSize %s", the_papers[i].canonical_name);
     gzprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-             opts[i], width, height);
+             the_papers[i].name, the_papers[i].width, the_papers[i].height);
   }
   gzputs(fp, "*CloseUI: *PageSize\n");
 
@@ -357,91 +389,48 @@ write_ppd(const stp_printer_t p,		/* I - Printer driver */
   gzputs(fp, "*DefaultPageRegion: ");
   gzputs(fp, defopt);
   gzputs(fp, "\n");
-
-  for (i = 0; i < num_opts; i ++)
+  for (i = 0; i < cur_opt; i ++)
   {
-   /*
-    * Get the media size...
-    */
-    if (strcmp(opts[i], "Custom") == 0)
-      continue;
-    stp_set_media_size(v, opts[i]);
-
-    (*(printfuncs->media_size))(p, v, &width, &height);
-
-    for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->height == height)
-        break;
-
-    if (j)
-      gzprintf(fp, "*PageRegion %s", size->name);
-    else
-      gzprintf(fp, "*PageRegion w%dh%d", width, height);
-
+    gzprintf(fp,  "*PageRegion %s", the_papers[i].canonical_name);
     gzprintf(fp, "/%s:\t\"<</PageRegion[%d %d]/ImagingBBox null>>setpagedevice\"\n",
-             opts[i], width, height);
+	     the_papers[i].name, the_papers[i].width, the_papers[i].height);
   }
   gzputs(fp, "*CloseUI: *PageRegion\n");
 
   gzputs(fp, "*DefaultImageableArea: ");
   gzputs(fp, defopt);
   gzputs(fp, "\n");
-  for (i = 0; i < num_opts; i ++)
+  for (i = 0; i < cur_opt; i ++)
   {
-   /*
-    * Get the media size and margins...
-    */
-
-    if (strcmp(opts[i], "Custom") == 0)
-      continue;
-    stp_set_media_size(v, opts[i]);
-
-    (*(printfuncs->media_size))(p, v, &width, &height);
-    (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
-
-    for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->height == height)
-        break;
-
-    if (j)
-      gzprintf(fp, "*ImageableArea %s", size->name);
-    else
-      gzprintf(fp, "*ImageableArea w%dh%d", width, height);
-
-    gzprintf(fp, "/%s:\t\"%d %d %d %d\"\n", opts[i],
-             left, bottom, right, top);
+    gzprintf(fp,  "*ImageableArea %s", the_papers[i].canonical_name);
+    gzprintf(fp, "/%s:\t\"%d %d %d %d\"\n", the_papers[i].name,
+             the_papers[i].left, the_papers[i].bottom,
+	     the_papers[i].right, the_papers[i].top);
   }
 
   gzputs(fp, "*DefaultPaperDimension: ");
   gzputs(fp, defopt);
   gzputs(fp, "\n");
-
-  for (i = 0; i < num_opts; i ++)
+  for (i = 0; i < cur_opt; i ++)
   {
-   /*
-    * Get the media size...
-    */
-
-    if (strcmp(opts[i], "Custom") == 0)
-      continue;
-    stp_set_media_size(v, opts[i]);
-
-    (*(printfuncs->media_size))(p, v, &width, &height);
-
-    for (j = sizeof(sizes) / sizeof(sizes[0]), size = sizes; j > 0; j --, size ++)
-      if (size->width == width && size->height == height)
-        break;
-
-    if (j)
-      gzprintf(fp, "*PaperDimension %s", size->name);
-    else
-      gzprintf(fp, "*PaperDimension w%dh%d", width, height);
-
-    gzprintf(fp, "/%s:\t\"%d %d\"\n", opts[i], width, height);
-    free(opts[i]);
+    gzprintf(fp, "*PaperDimension %s", the_papers[i].canonical_name);
+    gzprintf(fp, "/%s:\t\"%d %d\"\n",
+	     the_papers[i].name, the_papers[i].width, the_papers[i].height);
   }
+
   if (opts)
-    free(opts);
+    {
+      for (i = 0; i < num_opts; i++)
+	free(opts[i]);
+      free(opts);
+    }
+  if (the_papers)
+    {
+      for (i = 0; i < cur_opt; i++)
+	free(the_papers[i].canonical_name);
+      free(the_papers);
+    }
+    
 
  /*
   * Do we support color?

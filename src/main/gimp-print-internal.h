@@ -40,11 +40,13 @@
 #define xmalloc malloc
 #endif
 
-
-#define ECOLOR_C 0
-#define ECOLOR_M 1
-#define ECOLOR_Y 2
-#define ECOLOR_K 3
+/*
+ * ECOLOR_K must be 0
+ */
+#define ECOLOR_K 0
+#define ECOLOR_C 1
+#define ECOLOR_M 2
+#define ECOLOR_Y 3
 #define NCOLORS (4)
 
 #define MAX_CARRIAGE_WIDTH	80 /* This really needs to go away */
@@ -80,12 +82,9 @@ typedef struct
 
 typedef struct
 {
-   double value_l;
-   double value_h;
-   unsigned bits_l;
-   unsigned bits_h;
-   int isdark_l;
-   int isdark_h;
+   double value[2];
+   unsigned bits[2];
+   int isdark[2];
 } stp_full_dither_range_t;
 
 typedef struct			/* Weave parameters for a specific row */
@@ -228,6 +227,37 @@ typedef struct stp_softweave
 	      unsigned char *out, unsigned char **optr);
 } stp_softweave_t;
 
+typedef struct stp_dither_matrix_short
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const unsigned short *data;
+} stp_dither_matrix_short_t;
+
+typedef struct stp_dither_matrix_normal
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const unsigned *data;
+} stp_dither_matrix_normal_t;
+
+typedef struct stp_dither_matrix
+{
+  int x;
+  int y;
+  int bytes;
+  int prescaled;
+  const void *data;
+} stp_dither_matrix_t;
+
+extern const stp_dither_matrix_short_t stp_1_1_matrix;
+extern const stp_dither_matrix_short_t stp_2_1_matrix;
+extern const stp_dither_matrix_short_t stp_4_1_matrix;
+
 /*
  * Prototypes...
  */
@@ -235,6 +265,8 @@ typedef struct stp_softweave
 extern void	stp_set_driver_data (stp_vars_t vv, void * val);
 extern void * 	stp_get_driver_data (const stp_vars_t vv);
 
+extern void	stp_set_verified(stp_vars_t vv, int value);
+extern int	stp_get_verified(stp_vars_t vv);
 
 extern void	stp_default_media_size(const stp_printer_t printer,
 				       const stp_vars_t v, int *width,
@@ -243,18 +275,13 @@ extern void	stp_default_media_size(const stp_printer_t printer,
 extern void *	stp_init_dither(int in_width, int out_width,
 				int horizontal_aspect,
 				int vertical_aspect, stp_vars_t vars);
-extern void	stp_dither_set_matrix(void *vd, size_t x, size_t y,
-				      const unsigned *data, int transpose,
-				      int prescaled, int x_shear, int y_shear);
 extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
 					       size_t iterations,
 					       const unsigned *data,
 					       int prescaled,
 					       int x_shear, int y_shear);
-extern void	stp_dither_set_matrix_short(void *vd, size_t x, size_t y,
-					    const unsigned short *data,
-					    int transpose, int prescaled,
-					    int x_shear, int y_shear);
+extern void	stp_dither_set_matrix(void *vd, const stp_dither_matrix_t *mat,
+				      int transpose, int x_shear, int y_shear);
 extern void	stp_dither_set_transition(void *vd, double);
 extern void	stp_dither_set_density(void *vd, double);
 extern void	stp_dither_set_black_density(void *vd, double);
@@ -276,7 +303,6 @@ extern void	stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 extern void	stp_dither_set_ranges_complete(void *vd, int color, int nlevels,
 					       const stp_dither_range_t *ranges);
 extern void	stp_dither_set_ink_spread(void *vd, int spread);
-extern void	stp_dither_set_max_ink(void *vd, int, double);
 extern void	stp_dither_set_x_oversample(void *vd, int os);
 extern void	stp_dither_set_y_oversample(void *vd, int os);
 extern void	stp_dither_set_adaptive_limit(void *vd, double limit);

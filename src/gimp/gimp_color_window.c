@@ -32,11 +32,6 @@
 #include "print-intl.h"
 #include <string.h>
 
-extern stp_vars_t   vars;
-extern gint     plist_count;       /* Number of system printers */
-extern gint     plist_current;     /* Current system printer */
-extern gp_plist_t *plist;             /* System printers */
-
 GtkWidget *gimp_color_adjust_dialog;
 
 static GtkObject *brightness_adjustment;
@@ -64,27 +59,42 @@ static void gimp_set_color_defaults (void);
 static void gimp_dither_algo_callback (GtkWidget *widget,
 				       gpointer   data);
 
-extern void gimp_update_adjusted_thumbnail (void);
-extern void gimp_plist_build_combo         (GtkWidget      *combo,
-					    gint            num_items,
-					    gchar         **items,
-					    const gchar          *cur_item,
-					    GtkSignalFunc   callback,
-					    gint           *callback_id);
 
 void gimp_build_dither_combo               (void);
-void gimp_redraw_color_swatch              (void);
 
 static GtkDrawingArea *swatch = NULL;
 
 #define SWATCH_W (128)
 #define SWATCH_H (128)
 
-extern gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
-extern guchar *thumbnail_data;
-extern gint    adjusted_thumbnail_bpp;
-extern guchar *adjusted_thumbnail_data;
+static void
+gimp_dither_algo_callback (GtkWidget *widget,
+			   gpointer   data)
+{
+  const gchar *new_algo =
+    gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
 
+  stp_set_dither_algorithm(vars, new_algo);
+  stp_set_dither_algorithm(plist[plist_current].v, new_algo);
+}
+
+void
+gimp_build_dither_combo (void)
+{
+  int i;
+  char **vec = xmalloc(sizeof(const char *) * stp_dither_algorithm_count());
+  for (i = 0; i < stp_dither_algorithm_count(); i++)
+    vec[i] = strdup(stp_dither_algorithm_name(i));
+  gimp_plist_build_combo (dither_algo_combo,
+			  stp_dither_algorithm_count(),
+			  vec,
+			  stp_get_dither_algorithm(plist[plist_current].v),
+			  &gimp_dither_algo_callback,
+			  &dither_algo_callback_id);
+  for (i = 0; i < stp_dither_algorithm_count(); i++)
+    free(vec[i]);
+  free(vec);
+}
 
 void
 gimp_redraw_color_swatch (void)
@@ -440,33 +450,4 @@ gimp_set_color_defaults (void)
   stp_set_density(plist[plist_current].v, stp_get_density(defvars));
 
   gimp_do_color_updates ();
-}
-
-void
-gimp_build_dither_combo (void)
-{
-  int i;
-  char **vec = xmalloc(sizeof(const char *) * stp_dither_algorithm_count());
-  for (i = 0; i < stp_dither_algorithm_count(); i++)
-    vec[i] = strdup(stp_dither_algorithm_name(i));
-  gimp_plist_build_combo (dither_algo_combo,
-			  stp_dither_algorithm_count(),
-			  vec,
-			  stp_get_dither_algorithm(plist[plist_current].v),
-			  &gimp_dither_algo_callback,
-			  &dither_algo_callback_id);
-  for (i = 0; i < stp_dither_algorithm_count(); i++)
-    free(vec[i]);
-  free(vec);
-}
-
-static void
-gimp_dither_algo_callback (GtkWidget *widget,
-			   gpointer   data)
-{
-  const gchar *new_algo =
-    gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
-
-  stp_set_dither_algorithm(vars, new_algo);
-  stp_set_dither_algorithm(plist[plist_current].v, new_algo);
 }

@@ -4,6 +4,7 @@
 
 stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-dither.$(OBJ) \
+	$(GLOBJ)gdevstp-dither-matrices.$(OBJ) \
 	$(GLOBJ)gdevstp-util.$(OBJ) \
 	$(GLOBJ)gdevstp-color.$(OBJ) \
 	$(GLOBJ)gdevstp-weave.$(OBJ) \
@@ -30,6 +31,9 @@ $(GLOBJ)gdevstp-color.$(OBJ) : $(GLSRC)gdevstp-color.c $(PDEVH) $(GLSRC)gdevstp-
 
 $(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH) $(GLSRC)gdevstp-print.h $(GLSRC)gdevstp-print-internal.h
 	$(GLCC) $(GLO_)gdevstp-dither.$(OBJ) $(C_) -DDISABLE_NLS $(GLSRC)gdevstp-dither.c
+
+$(GLOBJ)gdevstp-dither-matrices.$(OBJ) : $(GLSRC)gdevstp-dither-matrices.c $(PDEVH) $(GLSRC)gdevstp-print.h $(GLSRC)gdevstp-print-internal.h
+	$(GLCC) $(GLO_)gdevstp-dither-matrices.$(OBJ) $(C_) -DDISABLE_NLS $(GLSRC)gdevstp-dither-matrices.c
 
 $(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH) $(GLSRC)gdevstp-print.h $(GLSRC)gdevstp-print-internal.h
 	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) -DDISABLE_NLS $(GLSRC)gdevstp-escp2.c

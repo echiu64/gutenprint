@@ -90,6 +90,7 @@ typedef struct					/* Plug-in variables */
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
   stp_internal_option_t *options;
+  int verified;			/* Ensure that params are OK! */
 } stp_internal_vars_t;
 
 typedef struct stp_internal_printer
@@ -311,6 +312,7 @@ stp_set_##s(stp_vars_t vv, const char *val)		\
     return;						\
   SAFE_FREE(v->s);					\
   v->s = c_strdup(val);					\
+  v->verified = 0;					\
 }							\
 							\
 void							\
@@ -321,6 +323,7 @@ stp_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
     return;						\
   SAFE_FREE(v->s);					\
   v->s = c_strndup(val, n);				\
+  v->verified = 0;					\
 }							\
 							\
 const char *						\
@@ -335,6 +338,7 @@ void							\
 stp_set_##s(stp_vars_t vv, t val)			\
 {							\
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;	\
+  v->verified = 0;					\
   v->s = val;						\
 }							\
 							\
@@ -383,6 +387,20 @@ DEF_FUNCS(outfunc, stp_outfunc_t);
 DEF_FUNCS(errfunc, stp_outfunc_t);
 
 void
+stp_set_verified(stp_vars_t vv, int val)
+{
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  v->verified = val;
+}
+
+int
+stp_get_verified(const stp_vars_t vv)
+{
+  stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
+  return v->verified;
+}
+
+void
 stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
 {
   const stp_internal_vars_t *src = (const stp_internal_vars_t *)vs;
@@ -392,6 +410,7 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
   if (opt)
     {
       stp_internal_option_t *nopt = xmalloc(sizeof(stp_internal_option_t));
+      stp_set_verified(vd, 0);
       dest->options = nopt;
       memcpy(nopt, opt, sizeof(stp_internal_option_t));
       nopt->name = xmalloc(strlen(opt->name) + 1);
@@ -459,6 +478,7 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_errfunc(vd, stp_get_errfunc(vs));
   stp_clear_all_options(vd);
   stp_copy_options(vd, vs);
+  stp_set_verified(vd, stp_get_verified(vs));
 }
 
 stp_vars_t
@@ -806,6 +826,16 @@ static const stp_internal_papersize_t paper_sizes[] =
   { N_ ("A2 Invitation"), 315, 414, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US A2 invitation */
   { N_ ("Custom"), 0, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
 
+  { N_ ("89 mm Roll Paper"), 252, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { N_ ("4\" Roll Paper"), 288, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("5\" Roll Paper"), 360, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("210 mm Roll Paper"), 595, 0, 0, 0, 0, 0, PAPERSIZE_METRIC },
+  { N_ ("13\" Roll Paper"), 936, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("22\" Roll Paper"), 1584, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("24\" Roll Paper"), 1728, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("36\" Roll Paper"), 2592, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+  { N_ ("44\" Roll Paper"), 3168, 0, 0, 0, 0, 0, PAPERSIZE_ENGLISH },
+
   { "",           0,    0, 0, 0, 0, 0, PAPERSIZE_METRIC }
 };
 
@@ -871,6 +901,31 @@ stp_papersize_get_unit(const stp_papersize_t pt)
   return p->paper_unit;
 }
 
+#if 0
+/*
+ * This is, of course, blatantly thread-unsafe.  However, it certainly
+ * speeds up genppd by a lot!
+ */
+const stp_papersize_t
+stp_get_papersize_by_name(const char *name)
+{
+  static int last_used_papersize = 0;
+  int base = last_used_papersize;
+  int sizes = stp_known_papersizes();
+  int i;
+  for (i = 0; i < sizes; i++)
+    {
+      int size_to_try = (i + base) % sizes;
+      const stp_internal_papersize_t *val = &(paper_sizes[size_to_try]);
+      if (!strcasecmp(_(val->name), name))
+	{
+	  last_used_papersize = size_to_try;
+	  return (const stp_papersize_t) val;
+	}
+    }
+  return NULL;
+}
+#else
 const stp_papersize_t
 stp_get_papersize_by_name(const char *name)
 {
@@ -883,6 +938,7 @@ stp_get_papersize_by_name(const char *name)
     }
   return NULL;
 }
+#endif
 
 const stp_papersize_t
 stp_get_papersize_by_index(int index)
@@ -909,7 +965,9 @@ stp_get_papersize_by_size(int l, int w)
   int score = INT_MAX;
   const stp_internal_papersize_t *ref = NULL;
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
-  while (strlen(val->name) > 0)
+  int sizes = stp_known_papersizes();
+  int i;
+  for (i = 0; i < sizes; i++)
     {
       if (val->width == w && val->height == l)
 	return (const stp_papersize_t) val;
@@ -1310,10 +1368,14 @@ stp_verify_printer_params(const stp_printer_t p, const stp_vars_t v)
 
   for (i = 0; i < stp_dither_algorithm_count(); i++)
     if (!strcmp(stp_get_dither_algorithm(v), stp_dither_algorithm_name(i)))
-      return answer;
+      {
+	stp_set_verified(v, 1);
+	return answer;
+      }
 
   stp_eprintf(v, "%s is not a valid dither algorithm\n",
 	      stp_get_dither_algorithm(v));
+  stp_set_verified(v, 0);
   return 0;
 }
 
