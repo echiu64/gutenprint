@@ -30,7 +30,7 @@ SUBDIRS = users_guide
 
 MANUAL = gimpprint
 HTMLDIR = manual-html
-DOCS = $(MANUAL).dvi $(MANUAL).ps html
+DOCS = $(MANUAL).dvi $(MANUAL).ps html-stamp
 
 IMAGES = \
  print-color.png \
@@ -93,7 +93,8 @@ html: html-stamp
 html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	$(RM) -rf $(HTMLDIR)-tmp
 	mkdir $(HTMLDIR)-tmp
-	for image in $(addprefix $(srcdir)/, $(IMAGES)) ; do \
+	images="$(addprefix $(srcdir)/, $(IMAGES))"; \
+	for image in $$images ; do \
 	  cp -p $$image $(HTMLDIR)-tmp ; \
 	done
 	cd $(HTMLDIR)-tmp ; \
@@ -112,7 +113,7 @@ $(MANUAL).pdf: $(MANUAL).dvi
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
-	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/manual-html ; \
+	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/$(HTMLDIR) ; \
 	  if test -f $(MANUAL).ps ; then \
 	    $(INSTALL_DATA) $(MANUAL).ps $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  elif test -f $(srcdir)/$(MANUAL).ps ; then \
@@ -125,13 +126,13 @@ install-data-local: $(STANDARD_TARGETS)
 	  fi ; \
 	  for file in * ; do \
 	    if test -f $$file ; then \
-	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/manual-html ; \
+	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/$(HTMLDIR) ; \
 	    fi ; \
 	  done ; \
 	fi
 
 dist-hook: html
-	for dir in manual-html ; do \
+	for dir in $(HTMLDIR) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
 	    for dirfile in $(srcdir)/$$dir/*; do \
@@ -143,13 +144,13 @@ dist-hook: html
 	done
 
 CLEAN_MANUALS = \
-	$(RM) -rf html-stamp manual-html ; \
+	$(RM) -rf html-stamp $(HTMLDIR) ; \
 	$(RM) -f $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi ; \
 	$(RM) -f $(EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = '.' -a $(MAINT_MODE) = false ; then \
-	  echo 'clean-local: Not removing manual-html' ; \
+	  echo 'clean-local: Not removing $(HTMLDIR)' ; \
 	  echo 'clean-local: Not removing $(MANUAL).pdf' ; \
 	  echo 'clean-local: Not removing $(MANUAL).ps' ; \
 	  echo 'clean-local: Not removing $(MANUAL).dvi' ; \
@@ -159,7 +160,7 @@ clean-local:
 	fi
 	-$(RM) -rf *.tex *.log *.aux *.gz *.out *.junk *.fot
 	-$(RM) -rf *.ky *.pg *.toc *.tp *.vr *.vrs
-	-$(RM) -rf manual-html-tmp
+	-$(RM) -rf $(HTMLDIR)-tmp
 
 veryclean:
 	$(MAKE) MAINT_MODE=true clean
@@ -185,6 +186,6 @@ mostlyclean-aminfo:
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) html-stamp FAQ.html README.maintaining
+EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) FAQ.html README.maintaining
 
 .PHONY: html ps pdf docs clean-manuals
