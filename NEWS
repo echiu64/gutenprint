@@ -77,7 +77,17 @@ These release notes contain the following sections:
 
 * Major changes between Gimp-Print 5.0.0 beta 1 and 5.0.0 beta 2:
 
-  1) Printing direct to CD on Epson printers that support it now
+  1) Color generation has been adjusted to improve tonality.  The
+     result should be more definition in the highlights and shadows
+     and overall lighter tone without reducing maximum density.
+
+     This has been tested on some Epson printers, but has not been
+     comprehensively tested.  Please report any issues you may find.
+
+     Note that this change invalidates any profiles generated for
+     earlier versions of Gimp-Print.
+
+  2) Printing direct to CD on Epson printers that support it now
      works.  In addition, a choice of center hole size (16 mm or 43
      mm) is now offered.  A fine adjustment is provided to permit
      control over positioning of the image on the CD.
@@ -85,62 +95,69 @@ These release notes contain the following sections:
      It is likely that this support will be further enhanced prior to
      final release of 5.0.
 
-  2) Additional dye sublimation printers (Canon CP-220 and CP-330,
+  3) Additional dye sublimation printers (Canon CP-220 and CP-330,
      Olympus P-200 and P-400) are now supported; the Olympus P-10 is
      now partially supported.
 
-  3) Additional page sizes are now available for Olympus and related
+  4) Additional page sizes are now available for Olympus and related
      photo printers (including certain Canon and Sony dye sublimation
      printers).  In addition, other supported page sizes now work
      correctly on the Canon CP-100.
 
-  4) A problem whereby the CUPS driver was linked incorrectly in
+  5) A problem whereby the CUPS driver was linked incorrectly in
      certain configurations is fixed.
 
-  5) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
+  6) The GIMP 2.0 plugin is now installed correctly in the GIMP 2.0
      plugin directory, rather than the GIMP 1.2 directory.
 
-  6) A "predithered" color correction mode is now available, in
+  7) Black generation has been improved for the Epson Stylus Photo
+     R300 and related printers on many older paper types.  In
+     particular, more black ink is now being used, which should give
+     more solid shadows with less color shift.
+
+  8) A "predithered" color correction mode is now available, in
      conjunction with a "predithered" dither algorithm.  These very
      fast algorithms assume that the data has already been screened,
      and simply perform a threshold with no correction whatsoever.
      This is useful for certain custom applications.
 
-  7) The GIMP 2.0 plugin now uses new curve widgets, replacing the
+  9) The GIMP 2.0 plugin now uses new curve widgets, replacing the
      GTK+ curve widgets.  These widgets will undergo further
      development, adding new functionality.
 
-  8) A problem with Canon 6-color inkjet printers whereby the
+  10) A problem with Canon 6-color inkjet printers whereby the
      transition between light and dark inks is fixed.  This problem
      was specific to the 4.3/5.0 code line and was a regression from
      4.2.
 
-  9) A problem with Canon printers in DMT mode whereby vertical lines
+  11) A problem with Canon printers in DMT mode whereby vertical lines
      were printed across the page is fixed.  This problem was specific
      to the 4.3/5.0 code line and was a regression from 4.2.
 
-  10) A few problems with the display of the preview window in the GIMP
+  12) A few problems with the display of the preview window in the GIMP
      plugin (both 1.2 and 2.0) are fixed.
 
-  11) Gimp-Print now compiles correctly on Solaris.
+  13) Gimp-Print now compiles correctly on Solaris.
 
-  12) The GIMP 2.0 plugin now handles the version 3 printrc file
+  14) The GIMP 2.0 plugin now handles the version 3 printrc file
      correctly.
 
-  13) The printers.xml file now has a more flexible format that
+  15) The printers.xml file now has a more flexible format that
      permits specifying arbitrary parameters.
 
-  14) A problem trying to print a grayscale file from the GIMP with a
+  16) A problem trying to print a grayscale file from the GIMP with a
      pre-existing printrc file predating Gimp-Print 5.0 alpha-2 has
      been fixed.  Depending upon the system, the bug could cause data
      corruption, a crash at startup, or erroneous display in the
      preview window.
 
-  15) A problem whereby compiling with --enable-static fails in some
+  17) A problem whereby compiling with --enable-static fails in some
      circumstances has been fixed.
 
   The following bugs have been fixed in this release:
 
+1013470	QUALITY - ESP R300 generates poor black
+1013465	QUALITY - highlights and shadows blown out
 1003003 CUPS executables linked incorrectly
 1002380 Printing grayscale image w/old printrc file crashes at start
 1001267 GIMP2 plugin does not handle v3 printrc format
