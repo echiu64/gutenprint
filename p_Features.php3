@@ -11,49 +11,62 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
+<H2>Gimp-Print Functionality</H2>
 
+<p>Gimp-Print is a package of high quality printer drivers for Linux,
+BSD, Solaris, IRIX, and other UNIX-alike operating systems.  In many
+cases, these drivers rival or exceed the OEM drivers in quality and
+functionality.  Our goal is to produce the highest possible output
+quality from all supported printers.  To that end, we have done
+extensive work on screening algorithms, color generation, and printer
+feature utilization.  We are continuing our work in all of these areas
+to produce ever higher quality results, particularly on the
+ubiquitous, inexpensive inkjet printers that are nonetheless capable
+of nearly photographic output quality.</p>
 
-<P>Features I've added to the plugin include:
+<p>Despite the name, printing support for <a
+href="http://www.gimp.org">The GIMP</a> is only one small part of what
+Gimp-Print does, and indeed, the Print plugin may eventually be
+removed from the core Gimp-Print distribution.  Gimp-Print printer
+drivers can be used with all common UNIX print spooling systems, by
+means of either <a href="http://www.cups.org">CUPS</a> or <a
+href="http://www.ghostscript.com">Ghostscript</a>.</p>
+
+<p>Here is a list of selected features:</p>
 
 <ul>
-<li><p>Support for the Stylus Photo, Stylus Photo 700, and Stylus
-Photo EX printer 6-color capability (these printers have light cyan
-and light magenta ink, improving the printing of paler tones).  These
-printers also print much faster in 720 and 1440 dpi modes, offering
-various tradeoffs between print speed and quality.
 
-<li><p>Computations are done on 16-bit lookup tables rather than
-8-bit, which eliminates stair-stepping effects in pale tones.  The
-stair-stepping happens because the mapping between color levels and
-ink quantities is not linear, so multiple input levels will map to a
-single output level if there isn't enough resolution.  With 16 bits of
-resolution, this problem is eliminated.
+<p><li>Support for almost 300 printers made by Canon, Epson,
+Hewlett-Packard, Lexmark, and true compatibles.</li></p>
 
-<li><p>Use of CMY mixtures in addition to black for the black
-component.  This reduces speckling effects.
+<p><li>The Print plug-in for the GIMP.</li></p>
 
-<li><p>Lots of hand tuning of the dithering code to improve
-smoothness.
+<p><li>A native CUPS driver, providing simple configuration and
+operation with CUPS.</li></p>
 
-<li><p>Lots of additional output controls.
-</ul>
+<p><li>A native Ghostscript driver that can be compiled into
+Ghostscript.</li></p>
 
-<p>At this point, I prefer the output of my driver in many ways to the
-output of the Windows driver.  I consider the color fidelity and tonal
-characteristics to be better, at the expense of increased graininess
-with my driver (part of what the Windows driver appears to do is avoid
-printing altogether in areas where grain is likely to show up).
+<p><li>A new, IJS-based Ghostscript driver that greatly simplifies
+installation for Ghostscript versions 6.53 and newer.</li></p>
 
-<p>I've also moved all of the Gimp-specific code outside of all of the
-core print engine, to make it easier to port to Ghostscript or some
-other free RIP.  That hasn't actually been done yet.  One of these
-days...
+<p><li>Complete <a
+href="http://www.linuxprinting.org/foomatic.html">Foomatic</a> support
+for simplified configuration with all common printing systems.</li></p>
 
+<p><li>Extensive output adjustments offer a tremendous range of
+adjustment to match color, brightness, and contrast.</li></p>
 
+<p><li>Support for a wide range of printer output resolutions,
+permitting you to trade off printing speed against output
+quality.</li></p>
 
+<p><li>16-bit precision, producing virtually stepless output.</li></p>
 
+<p><li>Bundled utilities to perform basic maintenance for Epson and
+Lexmark printers.</li></p>
 
-
+<p><li>Extensive documentation for both users and developers.</li></p>
 
 
 <?require('standard_html_footer.php3');?>
