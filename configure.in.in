@@ -483,6 +483,14 @@ fi
 dnl GNU gettext checks.
 AM_GNU_GETTEXT
 
+AC_MSG_ERROR([echo "Libintl:: x${USE_INCLUDED_LIBINTL}"])
+
+if test x${USE_INCLUDED_LIBINTL} = xyes ; then
+  :
+else
+  GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} ${INTLLIBS}"
+fi
+
 dnl Set PACKAGE_LOCALE_DIR in config.h
 if test "x${prefix}" = "xNONE"; then
   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale")
