@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.61  2000/02/07 01:35:05  rlk
+ *   Try to improve variable dot stuff
+ *
  *   Revision 1.60  2000/02/06 22:31:04  rlk
  *   1) Use old methods only for microweave printing.
  *
@@ -1407,10 +1410,10 @@ escp2_fold(const unsigned char *line,
 	((line[0] & (1 << 2)) << 2) +
 	((line[0] & (1 << 1)) << 1) +
 	((line[0] & (1 << 0)) << 0) +
-	((line[single_length] & (1 << 3)) << 2) +
-	((line[single_length] & (1 << 2)) << 1) +
-	((line[single_length] & (1 << 1)) << 0) +
-	((line[single_length] & (1 << 0)) >> 1);
+	((line[single_length] & (1 << 3)) << 4) +
+	((line[single_length] & (1 << 2)) << 3) +
+	((line[single_length] & (1 << 1)) << 2) +
+	((line[single_length] & (1 << 0)) << 1);
       line++;
       outbuf += 2;
     }

@@ -23,6 +23,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.2  2000/02/07 01:35:05  rlk
+ *   Try to improve variable dot stuff
+ *
  *   Revision 1.1  2000/02/06 18:40:53  rlk
  *   Split out dither stuff from print-util
  *
@@ -172,24 +175,31 @@ init_dither(int in_width, int out_width, int horizontal_overdensity)
   d->m_darkness = 16;
   d->y_darkness = 10;
   d->nc_l = 4;
+  d->nc_log = 2;
   d->c_transitions = malloc(4 * sizeof(int));
   d->c_levels = malloc(4 * sizeof(int));
   d->nlc_l = 4;
+  d->nlc_log = 2;
   d->lc_transitions = malloc(4 * sizeof(int));
   d->lc_levels = malloc(4 * sizeof(int));
   d->nm_l = 4;
+  d->nm_log = 2;
   d->m_transitions = malloc(4 * sizeof(int));
   d->m_levels = malloc(4 * sizeof(int));
   d->nlm_l = 4;
+  d->nlm_log = 2;
   d->lm_transitions = malloc(4 * sizeof(int));
   d->lm_levels = malloc(4 * sizeof(int));
   d->ny_l = 4;
+  d->ny_log = 2;
   d->y_transitions = malloc(4 * sizeof(int));
   d->y_levels = malloc(4 * sizeof(int));
   d->nly_l = 4;
+  d->nly_log = 2;
   d->ly_transitions = malloc(4 * sizeof(int));
   d->ly_levels = malloc(4 * sizeof(int));
   d->nk_l = 4;
+  d->nk_log = 2;
   d->k_transitions = malloc(4 * sizeof(int));
   d->k_levels = malloc(4 * sizeof(int));
   d->c_levels[0] = 0;
@@ -1508,17 +1518,18 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
     else if (x > d->dst_width - offset - 1)
       offset = d->dst_width - x - 1;
 
-    for (i = d->nk_l; i > 0; i--)
+    for (i = d->nk_l - 1; i > 0; i--)
       {
 	if (k > d->k_transitions[i])
 	  {
 	    if (d->kbits++ == d->horizontal_overdensity)
 	      {
 		int j;
-		for (j = 0; j < d->nm_log; j++)
+		unsigned char *tptr = kptr;
+		for (j = 1; j <= i; j += j, tptr += length)
 		  {
 		    if (j & i)
-		      kptr[j * length] |= bit;
+		      *tptr |= bit;
 		  }
 		d->kbits = 1;
 	      }
@@ -1588,17 +1599,18 @@ dither_black4(unsigned short    *gray,		/* I - Grayscale pixels */
 #define DO_PRINT_COLOR_4(base, r, ratio)			\
 do {								\
   int i;							\
-  for (i = d->n##r##_l; i > 0; i--)				\
+  for (i = d->n##r##_l - 1; i > 0; i--)				\
     {								\
       if (base > d->r##_transitions[i])				\
 	{							\
 	  if (d->r##bits++ == d->horizontal_overdensity)	\
 	    {							\
 	      int j;						\
-	      for (j = 0; j < d->n##r##_log; j++)		\
+	      unsigned char *tptr = r##ptr;			\
+	      for (j = 1; j <= i; j += j, tptr += length)	\
 		{						\
 		  if (j & i)					\
-		    r##ptr[j * length] |= bit;			\
+		    *r##ptr |= bit;				\
 		}						\
 	      d->r##bits = 1;					\
 	    }							\
