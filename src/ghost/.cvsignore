@@ -3,6 +3,7 @@ Makefile.in
 gdevstp-canon.c
 gdevstp-color.c
 gdevstp-dither.c
+gdevstp-dither-matrices.c
 gdevstp-escp2.c
 gdevstp-lexmark.c
 gdevstp-pcl.c
