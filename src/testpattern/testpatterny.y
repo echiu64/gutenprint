@@ -272,7 +272,7 @@ page_size_name: PAGESIZE tSTRING
 page_size_custom: PAGESIZE tINT tINT
 	{
 	  stp_set_page_width(global_vars, $2);
-	  stp_set_page_width(global_vars, $3);
+	  stp_set_page_height(global_vars, $3);
 	}
 ;
 
