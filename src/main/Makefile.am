@@ -84,19 +84,15 @@ endif
 
 libgimpprint_la_SOURCES = \
 	array.c \
-	array.h \
 	bit-ops.c \
 	color.h \
 	curve.c \
-	curve.h \
 	dither.h \
 	gimp-print-internal.h \
-	list.h \
 	module.c \
 	module.h \
 	path.c \
 	path.h \
-	papers.h \
 	dither-main.c \
 	dither-ed.c \
 	dither-ordered.c \
@@ -119,7 +115,6 @@ libgimpprint_la_SOURCES = \
 	image.h \
 	printers.h \
 	sequence.c \
-	sequence.h \
 	string-list.c \
 	util.h \
 	vars.h \

@@ -37,6 +37,7 @@
 #include "module.h"
 #include <stdio.h>
 #include <string.h>
+#include "weave.h"
 
 /* #define DEBUG */
 /* #define PCL_DEBUG_DISABLE_COMPRESSION */

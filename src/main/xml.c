@@ -39,7 +39,6 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include "list.h"
 #include "module.h"
 #include "path.h"
 #include "xml.h"

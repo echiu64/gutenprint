@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "curve.h"
 #include "xml.h"
 
 #ifdef __GNUC__
@@ -39,22 +38,38 @@
 #endif
 
 
-const char *stpi_curve_type_names[] =
+#define COOKIE_CURVE 0x1ce0b247
+static const int curve_point_limit = 1048576;
+
+typedef struct
+{
+  int cookie;
+  stp_curve_type_t curve_type;
+  stp_curve_wrap_mode_t wrap_mode;
+  int recompute_interval;	/* Do we need to recompute the deltas? */
+  double gamma;			/* 0.0 means that the curve is not a gamma */
+  stp_sequence_t seq;           /* Sequence (contains the curve data) */
+  double *interval;		/* We allocate an extra slot for the
+				   wrap-around value. */
+
+} stpi_internal_curve_t;
+
+static const char *stpi_curve_type_names[] =
   {
     "linear",
     "spline",
   };
 
-const int stpi_curve_type_count =
+static const int stpi_curve_type_count =
 (sizeof(stpi_curve_type_names) / sizeof(const char *));
 
-const char *stpi_wrap_mode_names[] =
+static const char *stpi_wrap_mode_names[] =
   {
     "nowrap",
     "wrap"
   };
 
-const int stpi_wrap_mode_count =
+static const int stpi_wrap_mode_count =
 (sizeof(stpi_wrap_mode_names) / sizeof(const char *));
 
 /*
@@ -733,8 +748,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   return 1;
 }
 
-
-int
+static int
 stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;  double blo, bhi;
@@ -755,7 +769,6 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
     }
   return 1;
 }
-
 
 static inline double
 interpolate_gamma_internal(const stp_curve_t curve, double where)

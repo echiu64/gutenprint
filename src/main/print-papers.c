@@ -38,7 +38,6 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "papers.h"
 #include "xml.h"
 
 static stpi_list_t *paper_list = NULL;
@@ -70,7 +69,7 @@ stpi_paper_long_namefunc(const stpi_list_item_t *item)
   return paper->text;
 }
 
-int
+static int
 stpi_paper_list_init(void)
 {
   if (paper_list)
@@ -94,7 +93,7 @@ check_paperlist(void)
     }
 }
 
-int
+static int
 stpi_paper_create(stp_papersize_t *p)
 {
   stpi_list_item_t *paper_item;
@@ -123,7 +122,7 @@ stpi_paper_create(stp_papersize_t *p)
   return 0;
 }
 
-int
+static int
 stpi_paper_destroy(stp_papersize_t *p)
 {
   stpi_list_item_t *paper_item;

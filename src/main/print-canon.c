@@ -56,6 +56,7 @@
 #include <limits.h>
 #endif
 #include "module.h"
+#include "weave.h"
 
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */

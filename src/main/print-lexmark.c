@@ -61,11 +61,15 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "gimp-print-internal.h"
 #include "module.h"
+#include "weave.h"
 #include <string.h>
 #ifdef DEBUG
 #include <stdio.h>
 #endif
 
+#define ECOLOR_LC 4
+#define ECOLOR_LM 5
+#define ECOLOR_LY 6
 
 #define false 0
 #define true  1

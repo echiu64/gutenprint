@@ -35,6 +35,7 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
+#include "weave.h"
 
 void
 stpi_fold(const unsigned char *line,

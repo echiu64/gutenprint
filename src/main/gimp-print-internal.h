@@ -41,7 +41,6 @@ extern "C" {
 #include "color.h"
 #include "dither.h"
 #include "printers.h"
-#include "weave.h"
 #include "image.h"
 
 

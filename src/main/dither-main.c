@@ -36,8 +36,6 @@
 #endif
 #include <math.h>
 #include <string.h>
-#include "array.h"
-#include "sequence.h"
 #include "dither-impl.h"
 #include "vars.h"
 

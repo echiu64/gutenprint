@@ -34,10 +34,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "array.h"
 #include "dither-impl.h"
 #include "path.h"
-#include "sequence.h"
 #include "xml.h"
 
 #ifdef __GNUC__
@@ -561,79 +559,6 @@ stpi_xml_process_dither_matrix(xmlNodePtr dm,     /* The dither matrix node */
 
   stpi_xml_dither_cache_set(x, y, file);
   return 1;
-}
-
-static stp_array_t
-stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
-{
-  xmlChar *stmp;                          /* Temporary string */
-  xmlNodePtr child;                       /* Child sequence node */
-  int x_size, y_size;
-  size_t count;
-  stp_sequence_t seq = NULL;
-  stp_array_t ret = NULL;
-  stpi_internal_array_t *iret;
-
-  stmp = xmlGetProp(array, (const xmlChar *) "x-size");
-  if (stmp)
-    {
-      x_size = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
-    }
-  else
-    {
-      stpi_erprintf("stpi_array_create_from_xmltree: \"x-size\" missing\n");
-      goto error;
-    }
-  /* Get y-size */
-  stmp = xmlGetProp(array, (const xmlChar *) "y-size");
-  if (stmp)
-    {
-      y_size = (int) stpi_xmlstrtoul(stmp);
-      xmlFree(stmp);
-    }
-  else
-    {
-      stpi_erprintf("stpi_array_create_from_xmltree: \"y-size\" missing\n");
-      goto error;
-    }
-
-  /* Get the sequence data */
-
-  child = array->children;
-  while (child)
-    {
-      if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
-	{
-	  seq = stpi_sequence_create_from_xmltree(child);
-	  break;
-	}
-      child = child->next;
-    }
-
-  if (seq == NULL)
-    goto error;
-
-  ret = stp_array_create(x_size, y_size);
-  iret = (stpi_internal_array_t *) ret;
-  if (iret->data)
-    stp_sequence_destroy(iret->data);
-  iret->data = seq;
-
-  count = stp_sequence_get_size(seq);
-  if (count != (x_size * y_size))
-    {
-      stpi_erprintf("stpi_array_create_from_xmltree: size mismatch between array and sequence\n");
-      goto error;
-    }
-
-  return ret;
-
- error:
-  stpi_erprintf("stpi_array_create_from_xmltree: error during curve read\n");
-  if (ret)
-    stp_array_destroy(ret);
-  return NULL;
 }
 
 static stp_array_t

@@ -74,6 +74,7 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include <gimp-print-internal.h>
+#include "../src/main/weave.h"
 
 const char header[] = "Legend:\n"
 "A  Negative pass number.\n"

@@ -36,10 +36,34 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "list.h"
 #include <string.h>
 
 #define COOKIE_LIST    0xbfea218e
+
+struct stpi_internal_list_node;
+
+typedef struct stpi_internal_list_node
+{
+  void *data;                          /* data */
+  struct stpi_internal_list_node *prev; /* previous node */
+  struct stpi_internal_list_node *next; /* next node */
+} stpi_internal_list_node_t;
+
+
+typedef struct stpi_internal_list_head
+{
+  int cookie;			/* Magic cookie */
+  int icache;                               /* index no of cached node */
+  int length;                               /* number of nodes */
+  struct stpi_internal_list_node *start;     /* start node */
+  struct stpi_internal_list_node *end;       /* end node */
+  struct stpi_internal_list_node *cache;     /* cached node */
+  node_freefunc freefunc;	/* callback: free node data */
+  node_copyfunc copyfunc;	/* callback: copy node */
+  node_namefunc namefunc;	/* callback: get node name */
+  node_namefunc long_namefunc;	/* callback: get node long name */
+  node_sortfunc sortfunc;	/* callback: compare (sort) nodes */
+} stpi_internal_list_head_t;
 
 /* node free callback for node data allocated with stpi_malloc() (not
    used by default) */

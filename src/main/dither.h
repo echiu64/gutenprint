@@ -43,6 +43,14 @@ extern "C" {
 
 #include "array.h"
 
+/*
+ * ECOLOR_K must be 0
+ */
+#define ECOLOR_K  0
+#define ECOLOR_C  1
+#define ECOLOR_M  2
+#define ECOLOR_Y  3
+#define NCOLORS (4)
 
 typedef struct stpi_dither_matrix_short
 {

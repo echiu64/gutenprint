@@ -73,6 +73,8 @@ extern void stpi_xml_preinit(void);
 extern stp_sequence_t stpi_sequence_create_from_xmltree(xmlNodePtr da);
 extern xmlNodePtr stpi_xmltree_create_from_sequence(stp_sequence_t seq);
 
+extern stp_array_t stpi_array_create_from_xmltree(xmlNodePtr array);
+
 #endif /* GIMP_PRINT_INTERNAL_XML_H */
 /*
  * End of "$Id$".

@@ -41,18 +41,6 @@ extern "C" {
 #include <config.h>
 #endif
 
-
-/*
- * ECOLOR_K must be 0
- */
-#define ECOLOR_K  0
-#define ECOLOR_C  1
-#define ECOLOR_M  2
-#define ECOLOR_Y  3
-#define ECOLOR_LC 4
-#define ECOLOR_LM 5
-#define ECOLOR_LY 6
-#define NCOLORS (4)
 #define MAX_WEAVE (8)
 
 

@@ -35,6 +35,7 @@
 #include <string.h>
 #include "print-escp2.h"
 #include "module.h"
+#include "weave.h"
 
 #ifdef __GNUC__
 #define inline __inline__
