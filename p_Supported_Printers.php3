@@ -11,25 +11,24 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
-<?## I'll do this in code in a short while, from an array or something.?>
-
 <ul>
-<li><p>Epson
-	<ul>
-		<li><p>Stylus Photo Range
-			<ul>
-				<li><p>Stylus Photo
-				<li><p>Stylus Photo 700
-				<li><p>Stylus Photo EX
-		</ul>
-	</ul>
+<?
+while ( list( $key, $val ) = each( $GLOBALS['supported_printers']) ) {
+	echo  '<li><P>' . $key ;
+	echo '<ul>';
+	while ( list( $ke, $va ) = each( $val ) ) {
+		echo  '<li><P>' . $ke ;
+		echo '<ul>';
+		while ( list( $k, $v ) = each( $va ) ) {
+			echo  '<li><p>' . $k ;
+			echo '' . $v . '';
+		}
+		echo '</ul>';
+	}
+	echo '</ul>';
+}
+?>
 </ul>
-
-
-
-
-
-
 
 
 <?require('standard_html_footer.php3');?>
