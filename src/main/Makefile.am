@@ -28,11 +28,8 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) -DPKGMODULEDIR=\"$(pkgmoduledir)\" -DPKGXMLDATADIR=\"$(pkgxmldatadir)\" -DPKGMISCDATADIR=\"$(pkgmiscdatadir)\"
-
 pkgconfigdatadir = $(prefix)/lib/pkgconfig
 pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
-pkgmiscdatadir = $(pkgdatadir)/$(VERSION)
 pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
 
 

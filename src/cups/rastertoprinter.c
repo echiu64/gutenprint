@@ -548,7 +548,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
   else if (strlen(ppd->nickname) <
-	   strlen(ppd->modelname) + strlen(PPD_NICKNAME_STRING) + 3)
+	   strlen(ppd->modelname) + strlen(CUPS_PPD_NICKNAME_STRING) + 3)
   {
     fprintf(stderr, "ERROR: Gimp-Print Fatal error: Corrupted NickName attribute in PPD file \"%s\"!\n",
             ppdfile);
@@ -556,11 +556,11 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
   else if (strcmp(ppd->nickname + strlen(ppd->modelname) +
-		  strlen(PPD_NICKNAME_STRING), VERSION) != 0)
+		  strlen(CUPS_PPD_NICKNAME_STRING), VERSION) != 0)
   {
     fprintf(stderr, "ERROR: Gimp-Print: The version of Gimp-Print software installed (%s) does not match the PPD file (%s).\n",
 	    VERSION,
-	    ppd->nickname+strlen(ppd->modelname)+strlen(PPD_NICKNAME_STRING));
+	    ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING));
     fprintf(stderr, "ERROR: Gimp-Print: If you have upgraded your version of Gimp-Print\n");
     fprintf(stderr, "ERROR: Gimp-Print: recently, you must reinstall all printer queues.\n");
     fprintf(stderr, "ERROR: Gimp-Print: If the previous installed version of Gimp-Print\n");
@@ -573,7 +573,7 @@ main(int  argc,				/* I - Number of command-line arguments */
      */
     fprintf(stderr, "ERROR: Gimp-Print: The version of Gimp-Print software installed (%s) does not match the PPD file (%s).\n",
 	    VERSION,
-	    ppd->nickname+strlen(ppd->modelname)+strlen(PPD_NICKNAME_STRING));
+	    ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING));
     ppdClose(ppd);
     return 1;
   }

@@ -227,7 +227,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   * Parse command-line args...
   */
 
-  prefix   = GENPPD_PPD_PREFIX;
+  prefix   = CUPS_MODELDIR;
 
   for (;;)
   {
@@ -280,7 +280,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	     "Copyright (c) 1993-2003 by Easy Software Products and Robert Krawitz.\n\n",
 	     VERSION);
       printf("Default CUPS PPD PostScript Level: %d\n", cups_ppd_ps_level);
-      printf("Default PPD location (prefix):     %s\n", GENPPD_PPD_PREFIX);
+      printf("Default PPD location (prefix):     %s\n", CUPS_MODELDIR);
       printf("Default base locale directory:     %s\n\n", PACKAGE_LOCALE_DIR);
       puts("This program is free software; you can redistribute it and/or\n"
 	   "modify it under the terms of the GNU General Public License,\n"
@@ -810,7 +810,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
    * rastertoprinter.c.  Look for "ppd->nickname"
    */
   gzprintf(fp, "*NickName:      \"%s%s%s\"\n",
-	   long_name, PPD_NICKNAME_STRING, VERSION);
+	   long_name, CUPS_PPD_NICKNAME_STRING, VERSION);
   if (cups_ppd_ps_level == 2)
     gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
   else
