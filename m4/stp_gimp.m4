@@ -19,28 +19,12 @@
 
 
 ## Table of Contents:
-## 1. GIMP source tree support
-## 2. GIMP library checks
-## 3. gimptool support
-
-
-## --------------------------- ##
-## 1. GIMP source tree support ##
-## --------------------------- ##
-
-
-# STP_GIMP_EXCLUDE [(EXCLUDE [,INCLUDE])]
-# ---------------------------------------
-AC_DEFUN([STP_GIMP_EXCLUDE],
-[dnl exclude all quoted text if building in the GIMP tree
-m4_if(GIMP_SOURCE_TREE, [no], [$1], [$2])dnl
-])dnl
-
-
+## 1. GIMP library checks
+## 2. gimptool support
 
 
 ## ---------------------- ##
-## 2. GIMP library checks ##
+## 1. GIMP library checks ##
 ## ---------------------- ##
 
 
@@ -66,10 +50,21 @@ fi
 ])
 
 
+# STP_GIMP2_LIBS
+# --------------
+# GIMP library checks
+AC_DEFUN([STP_GIMP2_LIBS],
+[dnl GIMP library checks
+if test x${BUILD_GIMP2} = xyes ; then
+  GIMP2_DATA_DIR=`$PKG_CONFIG gimp-2.0 --variable=gimpdatadir`
+  GIMP2_PLUGIN_DIR=`$PKG_CONFIG gimp-2.0 --variable=gimplibdir`
+fi
+])
+
 
 
 ## ------------------- ##
-## 3. gimptool support ##
+## 2. gimptool support ##
 ## ------------------- ##
 
 
@@ -89,5 +84,23 @@ if test x${BUILD_GIMP} = xyes ; then
   AC_MSG_RESULT([$gimp_plug_indir])
 else
   gimp_plug_indir="$libdir/gimp/1.2/plug-ins"
+fi
+])  
+
+
+# STP_GIMP2_PLUG_IN_DIR
+# ---------------------
+# Locate the GIMP plugin directory using libtool
+AC_DEFUN([STP_GIMP2_PLUG_IN_DIR],
+[dnl Extract directory using --dry-run and sed
+if test x${BUILD_GIMP2} = xyes ; then
+  AC_MSG_CHECKING([for GIMP 2.0 plug-in directory])
+# create temporary "plug-in" to install
+  touch print
+  chmod 755 print
+  GIMPTOOL2_OUTPUT=`$GIMPTOOL2_CHECK --dry-run --install-${PLUG_IN_PATH} print | tail -n 1`
+  rm print
+  GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | sed -e 's/.* \(.*\)\/print/\1/'`
+  AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
 fi
 ])  

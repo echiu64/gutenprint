@@ -122,11 +122,14 @@ dnl *_libs:     libs for pkg-config
 
 GIMPPRINT_LIBS="-lgimpprint"
 GIMPPRINT_UI_LIBS="-lgimpprintui"
+GIMPPRINTUI2_LIBS="-lgimpprintui2"
 gimpprint_version=${GIMPPRINT_VERSION}
 gimpprint_ui_version=${GIMPPRINT_VERSION}
+gimpprintui2_version=${GIMPPRINT_VERSION}
 
 GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} \$(GIMPPRINT_LIBS)"
 gimpprint_ui_requires="${gimpprint_ui_requires} gimpprint"
+gimpprintui2_requires="${gimpprint_ui_requires} gimpprint gimpui-2.0"
 
 
 dnl Specify a configuration file.
@@ -351,13 +354,48 @@ AM_PATH_GTK(1.2.0,
   BUILD_LIBGIMPPRINTUI="no")
 
 STP_ARG_WITH([gimp],
-             [build GIMP Print plugin],
+             [build GIMP 1.2 Print plugin],
              [BUILD_GIMP],
              [(automatic)])
 
 STP_ARG_ENABLE([libgimpprintui],
-               [build Gimp-Print user interface library],
+               [build Gimp-Print GTK+-1.2 user interface library],
                [BUILD_LIBGIMPPRINTUI],
+               [(automatic)])
+
+AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
+if test -z "${GIMPTOOL2_CHECK}" ; then
+  BUILD_GIMP2="no"
+else
+  # Check we have version 2.0
+  gimptool_check_version=`${GIMPTOOL2_CHECK} --version`
+dnl Quote to protect sed regexes
+  [gimptool_check_major=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
+  [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
+  if test "$gimptool_check_major" -eq 2 -a "$gimptool_check_minor" -eq 0; then
+    BUILD_GIMP2="yes"
+  else
+    BUILD_GIMP2="no"
+  fi
+fi
+
+PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
+                  [HAVE_GTK2=yes
+                   BUILD_LIBGIMPPRINTUI2=yes
+                   GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"
+                   gimpprintui2_libdeps="${gimpprintui2_libdeps} ${GTK2_LIBS}"],
+                  [HAVE_GTK2=no
+	           BUILD_LIBGIMPPRINTUI2=no])
+PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
+
+STP_ARG_WITH([gimp2],
+             [build GIMP 2.0 Print plugin],
+             [BUILD_GIMP2],
+             [(automatic)])
+
+STP_ARG_ENABLE([libgimpprintui2],
+               [build Gimp-Print GTK+-2.0 user interface library],
+               [BUILD_LIBGIMPPRINTUI2],
                [(automatic)])
 
 STP_ARG_ENABLE([samples],
@@ -607,6 +645,8 @@ fi
 
 STP_GIMP_LIBS
 STP_GIMP_PLUG_IN_DIR
+STP_GIMP2_LIBS
+STP_GIMP2_PLUG_IN_DIR
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -687,7 +727,11 @@ AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 
 AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI, test x${BUILD_LIBGIMPPRINTUI} = xyes)
 
+AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI2, test x${BUILD_LIBGIMPPRINTUI2} = xyes)
+
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
+
+AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
 
 AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
@@ -789,6 +833,8 @@ AC_SUBST(IJS_LIBS)
 AC_SUBST(RM)
 AC_SUBST(GIMP_CFLAGS)
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(GIMP2_CFLAGS)
+AC_SUBST(GIMP2_LIBS)
 AC_SUBST(gimp_plug_indir)
 AC_SUBST(GIMPPRINT_CFLAGS)
 AC_SUBST(GIMPPRINT_LIBS)
@@ -798,12 +844,19 @@ AC_SUBST(GIMPPRINT_UI_CFLAGS)
 AC_SUBST(GIMPPRINT_UI_LIBS)
 AC_SUBST(GIMPPRINT_UI_LIBDEPS)
 AC_SUBST(GIMPPRINT_UI_VERSION)
+AC_SUBST(GIMPPRINTUI2_CFLAGS)
+AC_SUBST(GIMPPRINTUI2_LIBS)
+AC_SUBST(GIMPPRINTUI2_LIBDEPS)
+AC_SUBST(GIMPPRINTUI2_VERSION)
 AC_SUBST(gimpprint_cflags)
 gimpprint_libs="${GIMPPRINT_LIBS} ${gimpprint_libdeps}"
 AC_SUBST(gimpprint_libs)
 AC_SUBST(gimpprint_ui_cflags)
 gimpprint_ui_libs="${GIMPPRINT_UI_LIBS} ${gimpprint_ui_libdeps}"
 AC_SUBST(gimpprint_ui_libs)
+AC_SUBST(gimpprintui2_cflags)
+gimpprintui2_libs="${GIMPPRINTUI2_LIBS} ${gimpprintui2_libdeps}"
+AC_SUBST(gimpprintui2_libs)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
@@ -815,8 +868,12 @@ STP_CONFIG_PKGCONFIG_IN([gimpprint],
                         [Gimp-Print Top Quality Printer Drivers],
                         [src/main])
 STP_CONFIG_PKGCONFIG_IN([gimpprint-ui],
-                        [Gimp-Print-UI],
-                        [Gimp-Print Top Quality Printer Drivers - User Interface],
+                        [Gimp-Print-UI (GTK+-1.2 version)],
+                        [Gimp-Print Top Quality Printer Drivers - GTK+-1.2 User Interface],
+			[src/libgimpprintui])
+STP_CONFIG_PKGCONFIG_IN([gimpprintui2],
+                        [Gimp-Print-UI (GTK+-2.0 version)],
+                        [Gimp-Print Top Quality Printer Drivers - GTK+-2.0 User Interface],
 			[src/libgimpprintui])
 
 
@@ -871,6 +928,7 @@ AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/libgimpprintui/Makefile])
 AC_CONFIG_FILES([src/libgimpprintui/gimpprint-ui.pc])
+AC_CONFIG_FILES([src/libgimpprintui/gimpprintui2.pc])
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
