@@ -207,27 +207,35 @@ FOOMATIC
     `gimp-print'.  The data for the Gimp-Print 4.0 driver is not
     compatible with the 4.2 driver.
 
-    To build the Foomatic data, you must run:
+    To verify that you have an appropriate version of Foomatic, please
+    run
+
+    foomatic-kitload
+
+    or
+
+    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on
+    your PATH).
+
+    If you don't have Foomatic installed, or the version that is
+    installed is too old, please download the Foomatic package from
+    http://www.linuxprinting.org/download/foomatic/foomatic-current.tar.gz
+    following the instructions in that package.
+
+    After Foomatic is installed, build the Foomatic data as follows:
 
     ./configure --with-foomatic
     make
     make install
 
-    The "make install" step will add the necessary data to your Foomatic
-    installation.  It will not create the spooler-specific data files; to
-    do that, you must follow this procedure:
-
-      - examine the output of `foomatic-configure -O', and find the
-	foomatic ID for your printer.
-
-      - Run foomatic-datafile with that printer ID, the driver name
-	'gimp-print', and the spooler type you wish to use.
-	foomatic-datafile -h explains how to run this program.  It
-	will generate a foomatic filter datafile on stdout.
-
-      - This datafile may then be used instead of the ones from the
-	linxuprinting.org website.  Follow the instructions for your
-	spooler from the website to install the data file and filter.
+    The "make install" step will add the necessary data to your
+    Foomatic installation.  It must be run as root.  It will fail if
+    Foomatic is not installed or your Foomatic is too old.  Now you
+    can either set up a queue for your printer with
+    "foomatic-configure" (see USAGE file in the Foomatic package) or
+    generate the printer description file for your spooler and
+    configure your printer as described on the spooler-specific web
+    pages of linuxprinting.org.
 
     Note that it almost never makes sense to build the Foomatic driver
     without also building the Ghostscript driver, even if Foomatic is
