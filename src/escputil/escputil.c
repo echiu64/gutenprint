@@ -328,11 +328,11 @@ main(int argc, char **argv)
     printf("%s\n", banner);
   if (operation == 0)
     {
-      fprintf(stderr, "Usage: %s [OPTIONS] command\n", argv[0]);
+      fprintf(stderr, _("Usage: %s [OPTIONS] command\n"), argv[0]);
 #ifdef __GNU_LIBRARY__
-      fprintf(stderr, "Type `%s --help' for more information.\n", argv[0]);
+      fprintf(stderr, _("Type `%s --help' for more information.\n"), argv[0]);
 #else
-      fprintf(stderr, "Type `%s -h' for more information.\n", argv[0]);
+      fprintf(stderr, _("Type `%s -h' for more information.\n"), argv[0]);
 #endif
       exit(1);
     }
@@ -517,6 +517,16 @@ do_remote_cmd(const char *cmd, int nargs, ...)
 }
 
 static void
+add_string(const char *str, int size)
+{
+  if (size > 0)
+    {
+      memcpy(printer_cmd + bufpos, str, size);
+      bufpos += size;
+    }
+}
+
+static void
 add_newlines(int count)
 {
   int i;
@@ -538,32 +548,6 @@ add_resets(int count)
     }
 }
 
-const char *colors[] =
-{
-  N_("Black"),
-  N_("Cyan"),
-  N_("Magenta"),
-  N_("Yellow"),
-  N_("Light Cyan/Red"),
-  N_("Light Magenta/Blue"),
-  N_("Black/Dark Yellow"),
-  N_("Gloss Optimizer"),
-  0
-};
-
-const char *colors_new[] =
-{
-  N_("Yellow"),
-  N_("Magenta"),
-  N_("Cyan"),
-  N_("Matte Black"),
-  N_("Photo Black"),
-  N_("Red"),
-  N_("Blue"),
-  N_("Gloss Optimizer"),
-  0
-};
-
 static const stp_printer_t *
 get_printer(int quiet)
 {
@@ -576,12 +560,17 @@ get_printer(int quiet)
       int status;
       char *pos = NULL;
       char *spos = NULL;
+      const char *init_str = "\033\001@EJL ID\r\n";
       if (!raw_device)
 	{
-	  fprintf(stderr,
-		  _("Printer alignment must be done with a raw device or else\n"
-		   "the -m option must be used to specify a printer.\n"));
-	  do_help(1);
+	  if (!quiet)
+	    {
+	      fprintf(stderr,
+		      _("Printer alignment must be done with a raw device or else\n"
+			"the -m option must be used to specify a printer.\n"));
+	      do_help(1);
+	    }
+	  return NULL;
 	}
       if (!quiet)
 	{
@@ -591,28 +580,38 @@ get_printer(int quiet)
       fd = open(raw_device, O_RDWR, 0666);
       if (fd == -1)
 	{
-	  printf(_("\nCannot open %s read/write: %s\n"), raw_device,
+	  fprintf(stderr, _("\nCannot open %s read/write: %s\n"), raw_device,
 		  strerror(errno));
-	  exit(1);
+	  return NULL;
 	}
-      bufpos = 0;
-      sprintf(printer_cmd, "\033\001@EJL ID\r\n");
-      if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
+      for (i = 0; i < 4; i++)	/* Four tries seems to be enough */
 	{
-	  printf(_("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
-	  exit(1);
+	  if (i > 0)
+	    isnew = 1;
+	  initialize_print_cmd();
+	  add_string(init_str, strlen(init_str));
+	  if (write(fd, printer_cmd, bufpos) < bufpos)
+	    {
+	      fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
+	      return NULL;
+	    }
+	  status = read_from_printer(fd, buf, 1024, quiet);
+	  if (status < 0)
+	    return NULL;
+	  pos = strstr(buf, "@EJL ID");
+	  if (pos)
+	    pos = strchr(pos, (int) ';');
+	  if (pos)
+	    pos = strchr(pos + 1, (int) ';');
+	  if (pos)
+	    pos = strchr(pos, (int) ':');
+	  if (pos)
+	    {
+	      spos = strchr(pos, (int) ';');
+	      break;
+	    }
 	}
-      status = read_from_printer(fd, buf, 1024, quiet);
-      if (status < 0)
-	exit(1);
       (void) close(fd);
-      pos = strchr(buf, (int) ';');
-      if (pos)
-	pos = strchr(pos + 1, (int) ';');
-      if (pos)
-	pos = strchr(pos, (int) ':');
-      if (pos)
-	spos = strchr(pos, (int) ';');
       if (!pos)
 	{
 	  if (!quiet)
@@ -661,10 +660,27 @@ do_ink_level(void)
   int retry = 6;
   char buf[1024];
   char *ind;
+  char *oind;
   int i;
+  const stp_printer_t *printer;
+  const stp_vars_t *printvars;
+  stp_parameter_t desc;
   if (!raw_device)
     {
       fprintf(stderr,_("Obtaining ink levels requires using a raw device.\n"));
+      exit(1);
+    }
+  printer = get_printer(1);
+  if (!printer)
+    {
+      fprintf(stderr, _("Cannot identify printer!\n"));
+      exit(0);
+    }
+  printvars = stp_printer_get_defaults(printer);
+  stp_describe_parameter(printvars, "ChannelNames", &desc);
+  if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      fprintf(stderr, _("Printer does not support listing ink types!\n"));
       exit(1);
     }
   do
@@ -701,8 +717,11 @@ do_ink_level(void)
       (void) close(fd);
       ind = buf;
       do
-	ind = strchr(ind, 'I');
-      while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
+	{
+	  oind = ind;
+	  ind = strchr(ind, 'I');
+	}
+      while (ind && oind != ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
       if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
 	{
 	  ind = NULL;
@@ -716,7 +735,7 @@ do_ink_level(void)
     }
   ind += 3;
   printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-  for (i = 0; i < 8; i++)
+  for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
     {
       int val, j;
       if (!ind[0] || ind[0] == ';')
@@ -733,9 +752,11 @@ do_ink_level(void)
 	    exit(1);
 	}
       val = (ind[0] << 4) + ind[1];
-      printf("%20s    %3d\n", _(colors[i]), val);
+      printf("%20s    %3d\n",_(stp_string_list_param(desc.bounds.str, i)->text),
+	     val);
       ind += 2;
     }
+  stp_parameter_description_destroy(&desc);
   exit(0);
 }
 
@@ -764,12 +785,17 @@ do_extended_ink_info(int extended_output)
   */
   char *ind;
   int i;
+  const stp_printer_t *printer;
+  const stp_vars_t *printvars;
+  stp_parameter_t desc;
+  
   if (!raw_device) 
     {
       fprintf(stderr,_("Obtaining extended ink information requires using a raw device.\n"));
       exit(1);
     }
 
+  printer = get_printer(1);
   fd = open(raw_device, O_RDWR, 0666);
   if (fd == -1){
     fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
@@ -791,8 +817,21 @@ do_extended_ink_info(int extended_output)
   if (status < 0)
     exit(1);
   (void) close(fd);
+  if (!printer)
+    {
+      fprintf(stderr, _("Cannot identify printer!\n"));
+      exit(0);
+    }
+  printvars = stp_printer_get_defaults(printer);
+  stp_describe_parameter(printvars, "ChannelNames", &desc);
+  if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      fprintf(stderr, _("Printer does not support listing ink types!\n"));
+      exit(1);
+    }
+  
 
-  for (i = 0; i < 8; i++) 
+  for (i = 0; i < stp_string_list_count(desc.bounds.str); i++) 
     {
       retry = 6;
       do 
@@ -852,16 +891,22 @@ do_extended_ink_info(int extended_output)
       if (extended_output)
 	{
 	  if (i == 0) 
-	    printf("%15s    %20s   %12s   %7s\n", _("Ink color"), _("Percent remaining"), _("Part number"), _("Date"));
-	  printf("%15s    %20d    T0%03d            20%02d-%02d\n", _(colors_new[i]), val, id, year, month);
+	    printf("%15s    %20s   %12s   %7s\n",
+		   _("Ink color"), _("Percent remaining"), _("Part number"),
+		   _("Date"));
+	  printf("%15s    %20d    T0%03d            20%02d-%02d\n",
+		 _(stp_string_list_param(desc.bounds.str, i)->text),
+		   val, id, year, month);
 	}
       else
 	{	
 	  if (i == 0) 
 	    printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-	  printf("%20s    %3d\n", _(colors_new[i]), val);
+	  printf("%20s    %3d\n",
+		 _(stp_string_list_param(desc.bounds.str, i)->text), val);
 	}
     }
+  stp_parameter_description_destroy(&desc);
   exit(0);
 }
 
@@ -888,7 +933,7 @@ do_identify(void)
     }
   else
     {
-      fprintf(stderr, "Cannot determine printer model.\n");
+      fprintf(stderr, _("Cannot identify printer model.\n"));
       exit(1);
     }
 }
@@ -906,6 +951,7 @@ do_status(void)
       fprintf(stderr, _("Printer status requires using a raw device.\n"));
       exit(1);
     }
+  (void) get_printer(1);
   fd = open(raw_device, O_RDWR, 0666);
   if (fd == -1)
     {
@@ -925,14 +971,13 @@ do_status(void)
   status = read_from_printer(fd, buf, 1024, 0);
   if (status < 0)
     exit(1);
+  while ((where = strchr(buf, ';')) != NULL)
+    *where = '\n';
+  printf("%s\n", buf);
   initialize_print_cmd();
   do_remote_cmd("ST", 2, 0, 0);
   add_resets(2);
   (void) write(fd, printer_cmd, bufpos);
-  (void) read_from_printer(fd, buf, 1024, 0);
-  while ((where = strchr(buf, ';')) != NULL)
-    *where = '\n';
-  printf("%s\n", buf);
   (void) close(fd);
   exit(0);
 }
@@ -941,6 +986,8 @@ do_status(void)
 void
 do_head_clean(void)
 {
+  if (raw_device)
+    (void) get_printer(1);
   do_remote_cmd("CH", 2, 0, 0);
   printf(_("Cleaning heads...\n"));
   exit(do_print_cmd());
@@ -949,6 +996,8 @@ do_head_clean(void)
 void
 do_nozzle_check(void)
 {
+  if (raw_device)
+    (void) get_printer(1);
   do_remote_cmd("VI", 2, 0, 0);
   do_remote_cmd("NC", 2, 0, 0);
   printf(_("Running nozzle check, please ensure paper is in the printer.\n"));

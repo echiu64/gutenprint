@@ -237,6 +237,13 @@ typedef struct
   const inklist_t *const *inklists;
   short n_inklists;
 } inkgroup_t;
+
+typedef struct
+{
+  const char *listname;
+  int count;
+  const char *const *names;
+} channel_name_t;
     
 
 /*
@@ -496,6 +503,7 @@ typedef struct escp2_printer
   const stp_raw_t *postinit_remote_sequence;
 /*****************************************************************************/
   const printer_weave_list_t *const printer_weaves;
+  const channel_name_t *channel_names;
 } stpi_escp2_printer_t;
 
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
