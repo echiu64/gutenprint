@@ -181,6 +181,6 @@ mostlyclean-aminfo:
 
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
-EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES)
+EXTRA_DIST = $(DOCS) $(IMAGES) $(EPS_IMAGES) stamp-vti
 
 .PHONY: html ps pdf docs
