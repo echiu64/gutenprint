@@ -415,18 +415,31 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string pmodel;
   gs_param_string palgorithm;
   gs_param_string pquality;
+  char *pmediatypestr;
+  char *pInputSlotstr;
+  char *pinktypestr;
+  char *pmodelstr;
+  char *palgorithmstr;
+  char *pqualitystr;
   int code   = 0;
   stp_printer_t printer;
   stp_init_vars();
 
   stp_print_debug("stp_put_params(0)", pdev, &stp_data);
 
-  param_string_from_string(pmodel, stp_get_driver(stp_data.v));
-  param_string_from_string(pInputSlot, stp_get_media_source(stp_data.v));
-  param_string_from_string(pmediatype, stp_get_media_type(stp_data.v));
-  param_string_from_string(pinktype, stp_get_ink_type(stp_data.v));
-  param_string_from_string(palgorithm, stp_get_dither_algorithm(stp_data.v));
-  param_string_from_string(pquality, stp_get_resolution(stp_data.v));
+  pmodelstr = strdup(stp_get_driver(stp_data.v));
+  pInputSlotstr = strdup(stp_get_media_source(stp_data.v));
+  pmediatypestr = strdup(stp_get_media_type(stp_data.v));
+  pinktypestr = strdup(stp_get_ink_type(stp_data.v));
+  palgorithmstr = strdup(stp_get_dither_algorithm(stp_data.v));
+  pqualitystr = strdup(stp_get_resolution(stp_data.v));
+
+  param_string_from_string(pmodel, pmodelstr);
+  param_string_from_string(pInputSlot, pInputSlotstr);
+  param_string_from_string(pmediatype, pmediatypestr);
+  param_string_from_string(pinktype, pinktypestr);
+  param_string_from_string(palgorithm, palgorithmstr);
+  param_string_from_string(pquality, pqualitystr);
 
   STP_PUT_PARAM(plist, float, stp_data.v, "Cyan", cyan, code);
   STP_PUT_PARAM(plist, float, stp_data.v, "Magenta", magenta, code);
@@ -454,7 +467,16 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
     }
 
   if ( code < 0 )
-    return code;
+    {
+      free(pmodelstr);
+      free(pInputSlotstr);
+      free(pmediatypestr);
+      free(pinktypestr);
+      free(palgorithmstr);
+      free(pqualitystr);
+      
+      return code;
+    }
 
   STP_DEBUG(fprintf(gs_stderr, "pmodel.size %d pmodel.data %s\n",
 		    pmodel.size, pmodel.data));
@@ -476,14 +498,28 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
     }
   else
     stp_set_printer_defaults(stp_data.v, printer, NULL);
-  stp_set_media_type_n(stp_data.v, pmediatype.data, pmediatype.size);
-  stp_set_media_source_n(stp_data.v, pInputSlot.data, pInputSlot.size);
-  stp_set_ink_type_n(stp_data.v, pinktype.data, pinktype.size);
-  stp_set_dither_algorithm_n(stp_data.v, palgorithm.data, palgorithm.size);
-  stp_set_resolution_n(stp_data.v, pquality.data, pquality.size);
+
+  if (pmediatype.data && strlen(pmediatype.data) != 0)
+    stp_set_media_type_n(stp_data.v, pmediatype.data, pmediatype.size);
+  if (pInputSlot.data && strlen(pInputSlot.data) != 0)
+    stp_set_media_source_n(stp_data.v, pInputSlot.data, pInputSlot.size);
+  if (pinktype.data && strlen(pinktype.data) != 0)
+    stp_set_ink_type_n(stp_data.v, pinktype.data, pinktype.size);
+  if (palgorithm.data && strlen(palgorithm.data) != 0)
+    stp_set_dither_algorithm_n(stp_data.v, palgorithm.data, palgorithm.size);
+  if (pquality.data && strlen(pquality.data) != 0)
+    stp_set_resolution_n(stp_data.v, pquality.data, pquality.size);
   stp_print_debug("stp_put_params(1)", pdev, &stp_data);
 
   code = gdev_prn_put_params(pdev, plist);
+
+  free(pmodelstr);
+  free(pInputSlotstr);
+  free(pmediatypestr);
+  free(pinktypestr);
+  free(palgorithmstr);
+  free(pqualitystr);
+
   return code;
 }
 
