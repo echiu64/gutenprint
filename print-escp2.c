@@ -451,6 +451,13 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
     48, 6, 144, 360, 3, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
+  /* 20: Stylus Photo 720 (Australia) */
+  {
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES
+     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
+    32, 8, 48, 360, 2, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
+  },
 
 };
 

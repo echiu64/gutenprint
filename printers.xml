@@ -321,6 +321,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 720" driver="escp2-720">
+<color>
+<model value=20>
+<gamma value=0.585>
+<density value=0.646>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 750" driver="escp2-750">
 <color>
 <model value=14>
