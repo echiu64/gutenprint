@@ -41,8 +41,10 @@ unprint_SOURCES = unprint.c
 escp2_weavetest_SOURCES = escp2-weavetest.c
 pcl_unprint_SOURCES = pcl-unprint.c
 
-clean-generic:
-	-rm -f printdefl.c printdefy.c printdefy.h
+CLEANFILES = printdefl.c printdefy.c printdefy.h print-printers.c \
+	$(addprefix Ghost/gdevstp-, $(GCOPY))
+
+MAINTAINERCLEANFILES = configure Makefile.in aclocal.m4
 
 INCLUDES = \
 	-I$(top_srcdir)			\
