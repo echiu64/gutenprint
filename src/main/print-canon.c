@@ -1775,7 +1775,7 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
 		break;		/*	tbd */
 
   	case 1:			/* 360 dpi series - BJC-4000, BJC-210, BJC-70 and their descendants */
-		if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
+		if (init->output_type==OUTPUT_GRAY)
     			arg_63_1|= 0x01;					/* PRINT_COLOUR */
 
   		arg_63_2 = ((init->pt ? init->pt->media_code : 0) << 4)		/* PRINT_MEDIA */
@@ -1788,7 +1788,7 @@ canon_init_setColor(const stp_vars_t v, canon_init_t *init)
 		break;
 
 	case 3:			/* 720 dpi series - BJC-3000 and descendants */
-		if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
+		if (init->output_type==OUTPUT_GRAY)
     			arg_63_1|= 0x01;					/* colour mode */
 
   		arg_63_2 = (init->pt) ? init->pt->media_code : 0;		/* print media type */
@@ -1891,7 +1891,7 @@ canon_init_setPrintMode(const stp_vars_t v, canon_init_t *init)
     arg_6d_1= 0x02;
   else if (init->print_head<=4)
     arg_6d_1= 0x04;
-  if (init->output_type==OUTPUT_GRAY || init->output_type == OUTPUT_MONOCHROME)
+  if (init->output_type==OUTPUT_GRAY)
     arg_6d_2= 0x02;
 
   if (init->caps->model==8200)
@@ -2141,14 +2141,13 @@ canon_print(const stp_vars_t v, stp_image_t *image)
    *                 or single black cartridge installed
    */
 
-  if ((printhead == 0 || caps->inks == CANON_INK_K) &&
-      output_type != OUTPUT_MONOCHROME)
+  if (printhead == 0 || caps->inks == CANON_INK_K)
     {
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, output_type);
     }
 
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+  if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
@@ -2174,8 +2173,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   res_code= canon_res_code(caps,xdpi,ydpi);
 
   if (strcmp(resolution, res->name_dmt) == 0 &&
-      (caps->features & CANON_CAP_DMT) &&
-      output_type != OUTPUT_MONOCHROME) {
+      (caps->features & CANON_CAP_DMT)) {
     bits= 2;
     stp_deprintf(STP_DBG_CANON,"canon: using drop modulation technology\n");
   }

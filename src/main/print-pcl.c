@@ -2002,15 +2002,14 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Choose the correct color conversion function...
   */
   if (((caps->resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
-      output_type != OUTPUT_GRAY && output_type != OUTPUT_MONOCHROME &&
-      xdpi == 600 && ydpi == 600)
+      output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600)
     {
       stp_eprintf(v, "600x600 resolution only available in MONO\n");
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
     }
 
-  if (caps->color_type == PCL_COLOR_NONE && output_type != OUTPUT_MONOCHROME)
+  if (caps->color_type == PCL_COLOR_NONE)
     {
       output_type = OUTPUT_GRAY;
       stp_set_output_type(nv, OUTPUT_GRAY);
@@ -2018,11 +2017,9 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
   do_cret = (xdpi >= 300 &&
-	     ((caps->color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
-	     output_type != OUTPUT_MONOCHROME);
+	     ((caps->color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4));
   do_cretb = (xdpi >= 600 && ydpi >= 600 &&
 	      ((caps->color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
-	      output_type != OUTPUT_MONOCHROME &&
 	      output_type != OUTPUT_GRAY);
   if (do_cretb){
     do_cret = 1;
@@ -2201,7 +2198,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
     * vertical resolutions as well as a color count...
     */
 
-    if (output_type != OUTPUT_GRAY && output_type != OUTPUT_MONOCHROME)
+    if (output_type != OUTPUT_GRAY)
       if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         planes = 3;
       else
@@ -2271,7 +2268,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   else
   {
     stp_zprintf(v, "\033*t%dR", xdpi);		/* Simple resolution */
-    if (output_type != OUTPUT_GRAY && output_type != OUTPUT_MONOCHROME)
+    if (output_type != OUTPUT_GRAY)
     {
       if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         stp_puts("\033*r-3U", v);		/* Simple CMY color */
@@ -2336,7 +2333,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   if (do_cret)
     height *= 2;
 
-  if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+  if (output_type == OUTPUT_GRAY)
   {
     black   = stp_malloc(height);
     cyan    = NULL;
@@ -2537,7 +2534,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
        /*
         * 4-level (CRet) dithers...
         */
-        if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+        if (output_type == OUTPUT_GRAY)
         {
           (*writefunc)(v, comp_buf, black + height / 2, height / 2, 0);
           (*writefunc)(v, comp_buf, black, height / 2, 1);
@@ -2577,7 +2574,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
         * Standard 2-level dithers...
         */
 
-        if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
+        if (output_type == OUTPUT_GRAY)
         {
           (*writefunc)(v, comp_buf, black, height, 1);
         }

@@ -52,9 +52,8 @@
 #define DITHER_GRAY	0	/* Dither grayscale pixels */
 #define DITHER_COLOR	1	/* Dither color pixels */
 #define DITHER_PHOTO	2	/* Dither photo pixels */
-#define DITHER_MONOCHROME	3	/* Dither photo pixels */
-#define DITHER_CMYK	4	/* Dither photo pixels */
-#define DITHER_PHOTO_CMYK	5	/* Dither photo pixels */
+#define DITHER_CMYK	3	/* Dither photo pixels */
+#define DITHER_PHOTO_CMYK	4	/* Dither photo pixels */
 
 
 /*
@@ -181,7 +180,6 @@ main(int  argc,				/* I - Number of command-line arguments */
 		  "gray",
 		  "color",
 		  "photo",
-		  "monochrome",
 		  "cmyk",
 		  "photocmyk"
 		};
@@ -283,10 +281,6 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_set_output_type(v, OUTPUT_GRAY);
       bpp = 1;
       break;
-    case DITHER_MONOCHROME:
-      stp_set_output_type(v, OUTPUT_MONOCHROME);
-      bpp = 1;
-      break;
     case DITHER_COLOR:
     case DITHER_PHOTO:
       stp_set_output_type(v, OUTPUT_COLOR);
@@ -314,7 +308,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   switch (dither_type)
   {
     case DITHER_GRAY :
-    case DITHER_MONOCHROME :
         switch (dither_bits)
 	{
 	  case 1 :
@@ -377,8 +370,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
 	  dither_types[dither_type],
 	  dither_name ? dither_name : desc.deflt.str, dither_bits,
-	  (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME) ?
-	  "pgm" : "ppm");
+	  (dither_type == DITHER_GRAY) ? "pgm" : "ppm");
 
   printf("%s ", filename);
 
@@ -387,7 +379,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       if ((fp = fopen(filename, "wb")) != NULL)
 	{
 	  puts(filename);
-	  if (dither_type == DITHER_GRAY || dither_type == DITHER_MONOCHROME)
+	  if (dither_type == DITHER_GRAY)
 	    fputs("P5\n", fp);
 	  else
 	    fputs("P6\n", fp);
@@ -417,7 +409,6 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
       /* FALLTHROUGH */
     case DITHER_GRAY:
-    case DITHER_MONOCHROME:
       stp_dither_add_channel(dt, black, ECOLOR_K, 0);
     }
 
@@ -434,7 +425,6 @@ main(int  argc,				/* I - Number of command-line arguments */
     switch (dither_type)
     {
       case DITHER_GRAY :
-      case DITHER_MONOCHROME :
           image_get_row(gray, i);
           stp_dither(gray, i, dither, dt, 0, 0);
 	  if (fp)
@@ -518,7 +508,6 @@ image_get_row(unsigned short *data,
   switch (dither_type)
     {
     case DITHER_GRAY:
-    case DITHER_MONOCHROME:
       memcpy(data, src, IMAGE_WIDTH * 2);
       break;
     case DITHER_COLOR:
@@ -563,7 +552,6 @@ image_init(void)
     switch (dither_type)
       {
       case DITHER_GRAY:
-      case DITHER_MONOCHROME:
 	*cptr++ = 65535 * j / 63;
 	*rptr++ = 65535 * (rand() & 255) / 255;
 	break;

@@ -350,7 +350,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 	    stp_set_output_type(v, OUTPUT_GRAY);
 	    break;
 	  case CUPS_CSPACE_K :
-	    stp_set_output_type(v, OUTPUT_MONOCHROME);
+	    stp_set_output_type(v, OUTPUT_GRAY);
+	    stp_set_float_parameter(v, "Density", 4.0);
 	    break;
 	  case CUPS_CSPACE_RGB :
 	    stp_set_output_type(v, OUTPUT_COLOR);

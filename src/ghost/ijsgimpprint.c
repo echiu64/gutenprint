@@ -68,6 +68,7 @@ typedef struct _IMAGE
   int xres;		/* dpi */
   int yres;
   int output_type;
+  int monochrome_flag;	/* for monochrome output */
   int row;		/* row number in buffer */
   int row_width;	/* length of a row */
   char *row_buf;	/* buffer for raster */
@@ -110,8 +111,13 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   if ((img->bps == 1) && (img->n_chan == 1) &&
       (strncmp(ph->cs, DeviceGray, strlen(DeviceGray)) == 0))
     {
+      stp_parameter_t desc;
       STP_DEBUG(fprintf(stderr, "output monochrome\n"));
-      img->output_type = OUTPUT_MONOCHROME;
+      img->output_type = OUTPUT_GRAY;
+      stp_describe_parameter(img->v, "Contrast", &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+	stp_set_float_parameter(img->v, "Contrast", desc.bounds.dbl.upper);
+      img->monochrome_flag = 1;
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 1) &&
@@ -119,6 +125,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     {
       STP_DEBUG(fprintf(stderr, "output gray\n"));
       img->output_type = OUTPUT_GRAY;
+      img->monochrome_flag = 0;
       /* 8-bit greyscale */
     }
   else if ((img->bps == 8) && (img->n_chan == 3) &&
@@ -126,6 +133,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     {
       STP_DEBUG(fprintf(stderr, "output color\n"));
       img->output_type = OUTPUT_COLOR;
+      img->monochrome_flag = 0;
       /* 24-bit colour */
     }
   else if ((img->bps == 8) && (img->n_chan == 4) &&
@@ -133,6 +141,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     {
       STP_DEBUG(fprintf(stderr, "output CMYK\n"));
       img->output_type = OUTPUT_RAW_CMYK;
+      img->monochrome_flag = 0;
       /* 32-bit CMYK colour */
     }
   else
@@ -541,9 +550,12 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_curve_destroy(curve);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
-	  code = get_float(vbuf, key, &z);
-	  if (code == 0)
-	    stp_set_float_parameter(img->v, key, z);
+	  if (! img->monochrome_flag || strcmp (key, "Contrast") != 0)
+	    {
+	      code = get_float(vbuf, key, &z);
+	      if (code == 0)
+		stp_set_float_parameter(img->v, key, z);
+	    }
 	case STP_PARAMETER_TYPE_INT:
 	  code = get_int(vbuf, key, &i);
 	  if (code == 0)

@@ -236,8 +236,6 @@ typedef struct dither
 typedef void ditherfunc_t(const unsigned short *, int, struct dither *, int, int);
 
 static ditherfunc_t
-  stp_dither_monochrome,
-  stp_dither_monochrome_very_fast,
   stp_dither_cmyk_fast,
   stp_dither_cmyk_very_fast,
   stp_dither_cmyk_ordered,
@@ -470,17 +468,6 @@ stp_set_dither_function(dither_t *d, int image_bpp)
     }
   switch (d->dither_class)
     {
-    case OUTPUT_MONOCHROME:
-      d->n_channels = 1;
-      d->n_input_channels = 1;
-      switch (d->dither_type)
-	{
-	case D_VERY_FAST:
-	  RETURN_DITHERFUNC(stp_dither_monochrome_very_fast, d->v);
-	default:
-	  RETURN_DITHERFUNC(stp_dither_monochrome, d->v);
-	}
-      break;
     case OUTPUT_GRAY:
       d->n_channels = 1;
       d->n_input_channels = 1;
@@ -2341,104 +2328,6 @@ found_segment:
  *
  * Documentation moved to README.dither
  */
-
-/*
- * 'stp_dither_monochrome()' - Dither grayscale pixels to black using a hard
- * threshold.  This is for use with predithered output, or for text
- * or other pure black and white only.
- */
-
-static void
-stp_dither_monochrome(const unsigned short  *gray,
-		      int           	    row,
-		      dither_t 		    *d,
-		      int		    duplicate_line,
-		      int		  zero_mask)
-{
-  int		x,
-		xerror,
-		xstep,
-		xmod,
-		length;
-  unsigned char	bit,
-		*kptr;
-  dither_channel_t *dc = &(CHANNEL(d, ECOLOR_K));
-  dither_matrix_t *kdither = &(dc->dithermat);
-  unsigned bits = dc->signif_bits;
-  int j;
-  unsigned char *tptr;
-  int dst_width = d->dst_width;
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
-    return;
-
-  kptr = CHANNEL(d, ECOLOR_K).ptrs[0];
-  length = (d->dst_width + 7) / 8;
-
-  bit = 128;
-  x = 0;
-
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
-  xerror = 0;
-  for (x = 0; x < dst_width; x++)
-    {
-      if (gray[0] && (d->density >= ditherpoint(d, kdither, x)))
-	{
-	  tptr = kptr + d->ptr_offset;
-	  set_row_ends(dc, x, 0);
-	  for (j = 0; j < bits; j++, tptr += length)
-	    tptr[0] |= bit;
-	}
-      ADVANCE_UNIDIRECTIONAL(d, bit, gray, 1, xerror, xstep, xmod);
-    }
-}
-
-static void
-stp_dither_monochrome_very_fast(const unsigned short  *gray,
-				int           	    row,
-				dither_t 		    *d,
-				int		    duplicate_line,
-				int		  zero_mask)
-{
-  int		x,
-		xerror,
-		xstep,
-		xmod,
-		length;
-  unsigned char	bit,
-		*kptr;
-  dither_channel_t *dc = &(CHANNEL(d, ECOLOR_K));
-  dither_matrix_t *kdither = &(dc->dithermat);
-  int dst_width = d->dst_width;
-  if ((zero_mask & ((1 << d->n_input_channels) - 1)) ==
-      ((1 << d->n_input_channels) - 1))
-    return;
-  if (!dc->very_fast)
-    {
-      stp_dither_monochrome(gray, row, d, duplicate_line, zero_mask);
-      return;
-    }
-
-  kptr = CHANNEL(d, ECOLOR_K).ptrs[0];
-  length = (d->dst_width + 7) / 8;
-
-  bit = 128;
-  x = 0;
-
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
-  xerror = 0;
-  for (x = 0; x < dst_width; x++)
-    {
-      if (gray[0] && (d->density > ditherpoint_fast(d, kdither, x)))
-	{
-	  set_row_ends(dc, x, 0);
-	  kptr[d->ptr_offset] |= bit;
-	}
-      ADVANCE_UNIDIRECTIONAL(d, bit, gray, 1, xerror, xstep, xmod);
-    }
-}
 
 static void
 stp_dither_cmyk_fast(const unsigned short  *cmy,

@@ -78,9 +78,8 @@ extern const char* stp_check_version(unsigned int required_major,
 
 #define OUTPUT_GRAY             0       /* Grayscale output */
 #define OUTPUT_COLOR            1       /* Color output */
-#define OUTPUT_MONOCHROME       2       /* Raw monochrome output */
-#define OUTPUT_RAW_CMYK         3       /* Raw CMYK output */
-#define OUTPUT_RAW_PRINTER	4	/* Printer-specific raw output */
+#define OUTPUT_RAW_CMYK         2       /* Raw CMYK output */
+#define OUTPUT_RAW_PRINTER	3	/* Printer-specific raw output */
 
 #define COLOR_MODEL_RGB         0
 #define COLOR_MODEL_CMY         1
@@ -105,7 +104,7 @@ extern const char* stp_check_version(unsigned int required_major,
  * and presence of a color map, if supplied, to determine the format
  * of the input:
  *
- * Output_type is OUTPUT_MONOCHROME, OUTPUT_COLOR, or OUTPUT_GRAY:
+ * Output_type is OUTPUT_COLOR, or OUTPUT_GRAY:
  *
  *    bpp           No color map                Color map present
  *     1            grayscale                   indexed color (256 colors)

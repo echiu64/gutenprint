@@ -451,87 +451,6 @@ adjust_density(const stp_vars_t vars, lut_t *lut)
 }
 
 
-static void
-gray_to_monochrome(const stp_vars_t vars,
-		   const unsigned char *grayin,
-		   unsigned short *grayout,
-		   int *zero_mask,
-		   int width,
-		   int bpp)
-{
-  int i0 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  while (width > 0)
-    {
-      if (i0 != grayin[0])
-	{
-	  i0 = grayin[0];
-	  o0 = composite[grayin[0]];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0  = 65535;
-	  nz |= o0;
-	}
-      grayout[0] = o0;
-      grayin ++;
-      grayout ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
-static void
-rgb_to_monochrome(const stp_vars_t vars,
-		  const unsigned char *rgb,
-		  unsigned short *gray,
-		  int *zero_mask,
-		  int width,
-		  int bpp)
-{
-  int i0 = -1;
-  int i1 = -1;
-  int i2 = -1;
-  int o0 = 0;
-  int nz = 0;
-  lut_t *lut = (lut_t *)(stp_get_color_data(vars));
-  size_t count;
-  const unsigned short *composite;
-  stp_curve_resample(lut->composite, 256);
-  composite = stp_curve_get_ushort_data(lut->composite, &count);
-
-  while (width > 0)
-    {
-      if (i0 != rgb[0] || i1 != rgb[1] || i2 != rgb[2])
-	{
-	  i0 = rgb[0];
-	  i1 = rgb[1];
-	  i2 = rgb[2];
-	  o0 = composite[(i0 * LUM_RED + i1 * LUM_GREEN +
-			       i2 * LUM_BLUE) / 100];
-	  if (o0 < 32768)
-	    o0 = 0;
-	  else
-	    o0 = 65535;
-	  nz |= o0;
-	}
-      gray[0] = o0;
-      rgb += 3;
-      gray ++;
-      width --;
-    }
-  if (zero_mask)
-    *zero_mask = nz ? 0 : 1;
-}
-
 /*
  * 'gray_to_gray()' - Convert grayscale image data to grayscale (brightness
  *                    adjusted).
@@ -1249,35 +1168,6 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
 }
 
 static void
-cmyk_8_to_monochrome(const stp_vars_t vars,
-		     const unsigned char *cmykin,
-		     unsigned short *grayout,
-		     int *zero_mask,
-		     int width,
-		     int bpp)
-{
-  int i;
-  int j;
-  int nz[4];
-
-  memset(nz, 0, sizeof(nz));
-  for (i = 0; i < width; i++)
-    {
-      j = *cmykin++;
-      if (j < 32768)
-	j = 0;
-      else
-	j = 65535;
-      nz[0] |= j;
-      *grayout++ = j;
-    }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-    }
-}
-
-static void
 cmyk_8_to_gray(const stp_vars_t vars,
 	       const unsigned char *cmykin,
 	       unsigned short *grayout,
@@ -1400,37 +1290,6 @@ cmyk_to_gray(const stp_vars_t vars,
     {
       nz[0] |= scmykin[0];
       grayout[0] = scmykin[0];
-      scmykin += 4;
-      grayout += 1;
-    }
-  if (zero_mask)
-    {
-      *zero_mask = nz[0] ? 0 : 1;
-    }
-}
-
-static void
-cmyk_to_monochrome(const stp_vars_t vars,
-		   const unsigned char *cmykin,
-		   unsigned short *grayout,
-		   int *zero_mask,
-		   int width,
-		   int bpp)
-{
-  int i;
-  int nz[4];
-  const unsigned short *scmykin = (const unsigned short *) cmykin;
-
-  memset(nz, 0, sizeof(nz));
-  for (i = 0; i < width; i++)
-    {
-      unsigned short out = scmykin[0];
-      if (out < 32768)
-	out = 0;
-      else
-	out = 65535;
-      nz[0] |= out;
-      grayout[0] = out;
       scmykin += 4;
       grayout += 1;
     }
@@ -1663,16 +1522,6 @@ stp_compute_lut(stp_vars_t v, size_t steps)
   double screen_gamma = app_gamma / 4.0; /* "Empirical" */
   lut_t *lut;
 
-  /*
-   * Monochrome mode simply thresholds the input
-   * to decide whether to print at all.  The printer gamma
-   * is intended to represent the analog response of the printer.
-   * Using it shifts the threshold, which is not the intent
-   * of how this works.
-   */
-  if (stp_get_output_type(v) == OUTPUT_MONOCHROME)
-    print_gamma = 1.0;
-
   lut = allocate_lut();
 
   /*
@@ -1778,23 +1627,6 @@ stp_color_init(stp_vars_t v,
     }
   switch (stp_get_output_type(v))
     {
-    case OUTPUT_MONOCHROME:
-      out_channels = 1;
-      switch (image_bpp)
-	{
-	case 1:
-	  SET_COLORFUNC(gray_to_monochrome);
-	case 3:
-	  SET_COLORFUNC(rgb_to_monochrome);
-	case 4:
-	  SET_COLORFUNC(cmyk_8_to_monochrome);
-	case 8:
-	  SET_COLORFUNC(cmyk_to_monochrome);
-	default:
-	  set_null_colorfunc();
-	  SET_COLORFUNC(NULL);
-	}
-      break;
     case OUTPUT_RAW_CMYK:
       out_channels = 4;
       switch (image_bpp)
@@ -1916,9 +1748,7 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       if (strcmp(name, param->param.name) == 0)
 	{
 	  stp_fill_parameter_settings(description, &(param->param));
-	  if (param->color_only &&
-	      (stp_get_output_type(v) == OUTPUT_GRAY ||
-	       stp_get_output_type(v) == OUTPUT_MONOCHROME))
+	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
 	  else
 	    description->is_active = 1;
@@ -1954,9 +1784,7 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
       if (strcmp(name, param->param.name) == 0)
 	{
 	  stp_fill_parameter_settings(description, &(param->param));
-	  if (param->color_only &&
-	      (stp_get_output_type(v) == OUTPUT_GRAY ||
-	       stp_get_output_type(v) == OUTPUT_MONOCHROME))
+	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
 	  else
 	    description->is_active = 1;
