@@ -30,7 +30,6 @@ DOCS = \
  FAQ.html \
  README.dither \
  README.maintaining \
- README.new-printer \
  docbook.css \
  print-color.png \
  print-main.png \
@@ -43,7 +42,7 @@ DOCS = \
 
 info_TEXINFOS = gimpprint.texi
 
-gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi types.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi indices.texi
+gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using.texi types.texi functions.texi programs.texi problems.texi appendices.texi dither.texi weave.texi escp2.texi new-printer.texi indices.texi
 
 
 ## Rules

@@ -2,7 +2,8 @@
 @appendix Weaving for inkjet printers
 @cindex weaving
 
-@noindent by Charles Briscoe-Smith and Robert Krawitz.
+@noindent
+by Charles Briscoe-Smith and Robert Krawitz.
 
 @menu
 * Weaving introduction::        Just what is weaving?
@@ -249,12 +250,13 @@ naive implementation might look like this:
 11                                                           *---*---*---*---*--
 @end example
 
-@noindent (Now you can see why this process is called ``weaving''!)
+@noindent
+(Now you can see why this process is called ``weaving''!)
 
 
 @node Perfect weaving, Weaving collisions, Simple weaving algorithms, Weaving algorithms
 @appendixsubsec  Perfect weaving
-@cindex perfect weaving
+@cindex perfect weave
 
 This simple weave pattern prints every row, but will give conspicuous
 banding patterns for the reasons discussed above.
@@ -307,7 +309,8 @@ consider later how to fill in the missing rows.
 Let's look at a few more examples of perfect weaves:
 
 
-@noindent @math{S=2},  @math{J=7},  @math{start=(2-1)*(7-1)=6}:
+@noindent
+@math{S=2},  @math{J=7},  @math{start=(2-1)*(7-1)=6}:
 
 @example
         starting row of full weave
@@ -322,7 +325,8 @@ Let's look at a few more examples of perfect weaves:
 7                                                  *-*-*-*-*-*-*
 @end example
 
-@noindent @math{S=7},  @math{J=2},  @math{start=6}:
+@noindent
+@math{S=7},  @math{J=2},  @math{start=6}:
 
 @example
         start
@@ -339,7 +343,8 @@ Let's look at a few more examples of perfect weaves:
 9                   *------*
 @end example
 
-@noindent @math{S=4},  @math{J=13},  @math{start=36}:
+@noindent
+@math{S=4},  @math{J=13},  @math{start=36}:
 
 @example
                                       start
@@ -352,7 +357,8 @@ Let's look at a few more examples of perfect weaves:
 5                                                                  *---*---*---*
 @end example
 
-@noindent @math{S=13},  @math{J=4},  @math{start=36}:
+@noindent
+@math{S=13},  @math{J=4},  @math{start=36}:
 
 @example
                                       start
@@ -379,7 +385,8 @@ Let's look at a few more examples of perfect weaves:
 19                                                                            *-
 @end example
 
-@noindent @math{S=8},  @math{J=5},  @math{start=28}:
+@noindent
+@math{S=8},  @math{J=5},  @math{start=28}:
 
 @example
                               start
@@ -402,7 +409,8 @@ Let's look at a few more examples of perfect weaves:
 15                                                                           *--
 @end example
 
-@noindent @math{S=9},  @math{J=5},  @math{start=32}:
+@noindent
+@math{S=9},  @math{J=5},  @math{start=32}:
 
 @example
                                   start
@@ -425,7 +433,8 @@ Let's look at a few more examples of perfect weaves:
 15                                                                           *--
 @end example
 
-@noindent @math{S=6},  @math{J=7},  @math{start=30}:
+@noindent
+@math{S=6},  @math{J=7},  @math{start=30}:
 
 @example
                                 start
@@ -453,7 +462,8 @@ Let's look at a few more examples of perfect weaves:
 This perfect weave is not possible in all cases.  Let's look at another
 example:
 
-@noindent @math{S=6},  @math{J=4}:
+@noindent
+@math{S=6},  @math{J=4}:
 
 @example
 0 *-----*-----*-----*
@@ -466,10 +476,11 @@ example:
                       |     |
 @end example
 
-@noindent Here we have a collision.  Some lines printed in later passes
-overprint lines printed by earlier passes.  We can see why by
-considering which row number is printed by a given jet number @math{j}
-(numbered from 0) of a given pass, @math{p}:
+@noindent
+Here we have a collision.  Some lines printed in later passes overprint
+lines printed by earlier passes.  We can see why by considering which
+row number is printed by a given jet number @math{j} (numbered from 0)
+of a given pass, @math{p}:
 
 @example
 @math{row(p, j) = p*J + j*S}
@@ -488,7 +499,8 @@ In fact, with this particular weave pattern, jets 0 and 1 of pass
 represent overprinting rows by a @samp{^} in our diagrams, and correct
 rows by @samp{*}:
 
-@noindent @math{S=6}  @math{J=4}:
+@noindent
+@math{S=6}  @math{J=4}:
 
 @example
 0 *-----*-----*-----*
@@ -555,7 +567,8 @@ for any given row number.  If @math{S} and @math{J} are not relatively
 prime, this assumption breaks down.  (For conciseness, let
 @math{G=@r{GCD}(S,J)}.)
 
-@noindent @math{S=8},  @math{J=6},  @math{G=2}:
+@noindent
+@math{S=8},  @math{J=6},  @math{G=2}:
 
 @example
 0 *-------*-------*-------*-------*-------*
@@ -624,7 +637,8 @@ occurs.
 
 Another example:
 
-@noindent @math{S=6},  @math{J=9},  @math{G=3},  @math{C=S/G=2}:
+@noindent
+@math{S=6},  @math{J=9},  @math{G=3},  @math{C=S/G=2}:
 
 @example
 0 *-----*-----*-----*-----*-----*-----*-----*-----*
@@ -637,11 +651,13 @@ Another example:
               These rows need filling in.
 @end example
 
-@noindent In this case, the first @math{J-(J/G) = 9-9/3 = 6} jets of
-pass @math{p+(6/3)=p+2} collide with the last 6 jets of pass @math{p}.
-Only one row in every @math{G=2} rows is printed by this weave.
+@noindent
+In this case, the first @math{J-(J/G) = 9-9/3 = 6} jets of pass
+@math{p+(6/3)=p+2} collide with the last 6 jets of pass @math{p}.  Only
+one row in every @math{G=2} rows is printed by this weave.
 
-@noindent @math{S=9},  @math{J=6},  @math{G=3},  @math{C=3}:
+@noindent
+@math{S=9},  @math{J=6},  @math{G=3},  @math{C=3}:
 
 @example
 0 *--------*--------*--------*--------*--------*
@@ -652,7 +668,8 @@ Only one row in every @math{G=2} rows is printed by this weave.
 5                               ^--------^--------^--------^--------*--------*
 @end example
 
-@noindent Here, the first @math{J-(J/G) = 6-6/3 = 4} jets of pass
+@noindent
+Here, the first @math{J-(J/G) = 6-6/3 = 4} jets of pass
 @math{p+(9/3)=p+3} collide with the last 4 jets of pass @math{p}.
 
 Note that, in these overprinting cases, only rows divisible by @math{G}
@@ -671,7 +688,8 @@ previous block would have printed, if the print head had one extra jet.
 Looking back at an example of a perfect weave, we can divide it into
 pass blocks:
 
-@noindent @math{S=7},  @math{J=2},  @math{G=1}:
+@noindent
+@math{S=7},  @math{J=2},  @math{G=1}:
 
 @example
                 imaginary extra jet
@@ -725,7 +743,8 @@ third subblock have 2 added, and so on.  Thus, the offset of pass
 
 This gives us a weave pattern looking like this:
 
-@noindent @math{S=6},  @math{J=9},  @math{G=3},  @math{B=2}:
+@noindent
+@math{S=6},  @math{J=9},  @math{G=3},  @math{B=2}:
 
 @example
 0 *-----*-----*-----*-----*-----*-----*-----*-----*
@@ -743,7 +762,8 @@ This gives us a weave pattern looking like this:
   start of passblock 0, subblock 0 (pass start calculated as p*J)
 @end example
 
-@noindent @math{S=9},  @math{J=6},  @math{G=3},  @math{B=3}:
+@noindent
+@math{S=9},  @math{J=6},  @math{G=3},  @math{B=3}:
 
 @example
 0 *--------*--------*--------*--------*--------*
@@ -765,7 +785,8 @@ This method of choosing offsets for subblocks can result in an occasional
 small offset (as shown above) between one pass and the next, particularly
 when @math{G} is large compared to @math{J}.  For example:
 
-@noindent @math{S=8},  @math{J=4},  @math{G=4},  @math{B=2}:
+@noindent
+@math{S=8},  @math{J=4},  @math{G=4},  @math{B=2}:
 
 @example
 0 *-------*-------*-------*
@@ -798,8 +819,9 @@ subblock number
 3    *
 @end example
 
-@noindent The discontinuity in this plot results in the small offset
-between passes.
+@noindent
+The discontinuity in this plot results in the small offset between
+passes.
 
 As we said at the beginning, we want the offsets from each pass to the
 next to be as similar as possible.  We can fix this by calculating the
@@ -836,7 +858,8 @@ We can visualise this as follows, for @math{G=10}:
 9  *
 @end example
 
-@noindent and for @math{G=11}:
+@noindent
+and for @math{G=11}:
 
 @example
              1
@@ -865,9 +888,11 @@ We can visualise this as follows, for @math{G=10}:
 10  *
 @end example
 
-@noindent This gives a weave looking like this:
+@noindent
+This gives a weave looking like this:
 
-@noindent @math{S=12},  @math{J=6},  @math{G=6},  @math{B=2}:
+@noindent
+@math{S=12},  @math{J=6},  @math{G=6},  @math{B=2}:
 
 @example
 0 *-----------*-----------*-----------*-----------*-----------*
@@ -999,7 +1024,8 @@ jet = (r - subblockoffset - pass * J) / S
 
 Let's look at some examples of imperfect but correct weave patterns:
 
-@noindent @math{S=6},  @math{J=4},  @math{@r{GCD}=2},
+@noindent
+@math{S=6},  @math{J=4},  @math{@r{GCD}=2},
 @*passesperblock=@math{S}=6,
 @*passespersubblock=@math{S/G}=6/2=3:
 
@@ -1026,7 +1052,8 @@ Let's look at some examples of imperfect but correct weave patterns:
 19                                                                            *-
 @end example
 
-@noindent @math{S=8},  @math{J=6},  @math{G=2},
+@noindent
+@math{S=8},  @math{J=6},  @math{G=2},
 @*passesperblock=@math{S}=8,
 @*passespersubblock=@math{S/G}=8/2=4:
 
@@ -1046,7 +1073,8 @@ Let's look at some examples of imperfect but correct weave patterns:
 12                                                                         *----
 @end example
 
-@noindent @math{S=6},  @math{J=12},  @math{G=6},
+@noindent
+@math{S=6},  @math{J=12},  @math{G=6},
 @*passesperblock=@math{S}=6,
 @*passespersubblock=@math{S/G}=6/6=1:
 
@@ -1117,7 +1145,8 @@ To keep our weave pattern working correctly, so that overprinting does
 not occur within a pass block, we also have to redefine @math{G} as
 @math{@r{GCD}(S,A)}.  Here's an example of an oversampled weave pattern:
 
-@noindent @math{S=4}, @math{J=10}, @math{H=2}, @math{A=J/H=10/2=5},
+@noindent
+@math{S=4}, @math{J=10}, @math{H=2}, @math{A=J/H=10/2=5},
 @math{G=@r{GCD}(4,5)=1},
 @*passesperblock=@math{S}=4,
 @*passespersubblock=@math{S/G}=4/1=4:
@@ -1169,7 +1198,8 @@ block 0 with line 0, pass block 1 with line 1, pass block 2 with line
 15                                                                           1--
 @end example
 
-@noindent @math{S=4},  @math{J=12},  @math{H=2},  @math{A=J/H=12/2=6},  @math{G=@r{GCD}(4,6)=2},
+@noindent
+@math{S=4},  @math{J=12},  @math{H=2},  @math{A=J/H=12/2=6},  @math{G=@r{GCD}(4,6)=2},
 @*passesperblock=@math{S}=4,
 @*passespersubblock=@math{S/G}=4/2=2:
 
@@ -1195,7 +1225,8 @@ before giving in and taking the easy (but less elegant) way out.  The
 easy solution is to round @math{J/H} down, then add on the accumulated
 error at the end of each band.
 
-@noindent @math{S=4},  @math{J=11},  @math{H=2}  @math{A=@r{floor}(J/H)=@r{floor}(11/2)=5},  @math{G=@r{GCD}(4,5)},
+@noindent
+@math{S=4},  @math{J=11},  @math{H=2}  @math{A=@r{floor}(J/H)=@r{floor}(11/2)=5},  @math{G=@r{GCD}(4,5)},
 @*passesperblock=@math{S}=4,
 @*passespersubblock=@math{S/G}=4/1=4
 

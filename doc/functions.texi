@@ -13,7 +13,8 @@ every source file that uses gimpprint functions by putting
 #include <gimp-print/gimp-print.h>
 @end example
 
-@noindent at the top of each file.
+@noindent
+at the top of each file.
 
 @menu
 * Main functions::              Essential functions every program must call.

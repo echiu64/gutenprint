@@ -381,7 +381,8 @@ For printing, the proper sequence is:
 ESC (v
 @end example
 
-@noindent and repeat for each color:
+@noindent
+and repeat for each color:
 
 @example
 ESC ($ @r{or} ESC (\ @r{or} ESC \
@@ -448,7 +449,8 @@ on my 740, prints the following:
 W01286 I02382\r\n
 @end example
 
-@noindent probably ``version information''
+@noindent
+probably ``version information''
 @end deffn
 
 @deffn {ESC/P2 remote command} @code{* AI @var{BC}=3 00 00 00}
@@ -528,14 +530,16 @@ return looks like
 IQ:KKCCMMYY
 @end example
 
-@noindent or 
+@noindent
+or 
 
 @example
 IQ:KKCCMMYYccmm
 @end example
 
-@noindent (for 4-color and 6-color printers respectively), where each
-pair of digits are hexadecimal representations of percent.
+@noindent
+(for 4-color and 6-color printers respectively), where each pair of
+digits are hexadecimal representations of percent.
 @end deffn
 
 The following two commands have been observed on an STP 870.
@@ -701,7 +705,8 @@ INK:...;
 \f
 @end example
 
-@noindent (@samp{\r} is carriage return; @samp{\n} is newline; @samp{\f} is
+@noindent
+(@samp{\r} is carriage return; @samp{\n} is newline; @samp{\f} is
 formfeed.)
 
 @samp{ST} is the printer status:
@@ -815,7 +820,7 @@ roll feed.
 @end deffn
 
 
-@node ESC/P2 Appropriate Remote Commands, Data Type and Variable Index, ESC/P2 Remote Mode Commands, ESC/P2
+@node ESC/P2 Appropriate Remote Commands, New Printer, ESC/P2 Remote Mode Commands, ESC/P2
 @appendixsection Appropriate Remote Commands
 
 All of the remote commands described above are wrapped up with the usual
@@ -859,7 +864,8 @@ The sequence used by the STP 870 to print on plain paper is
      FP 00 00 00
 @end example
 
-@noindent and the job finishes with
+@noindent
+and the job finishes with
 
 @example
      IR 00 02

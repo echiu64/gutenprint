@@ -1,4 +1,4 @@
-@node Data Type and Variable Index, Function and Macro Index, ESC/P2 Appropriate Remote Commands, Top
+@node Data Type and Variable Index, Function and Macro Index, Canon inkjet printers, Top
 @unnumbered Data Type and Variable Index
 
 @printindex vr

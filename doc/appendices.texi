@@ -1,11 +1,12 @@
 @node Appendices, Dithering, Problems, Top
 @menu
-* Dithering::                   Dither algorithms
-* Weaving::                     Weaving algorithms
-* ESC/P2::                      Epson ESC/P2 printer control language
+* Dithering::                   Dither algorithms.
+* Weaving::                     Weaving algorithms.
+* ESC/P2::                      Epson ESC/P2 printer control language.
+* New Printer::                 Adding a new printer to libgimpprint.
 @end menu
 
 @include dither.texi
 @include weave.texi
 @include escp2.texi
-
+@include new-printer.texi
