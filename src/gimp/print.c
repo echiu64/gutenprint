@@ -790,7 +790,7 @@ do_print_dialog (gchar *proc_name)
   /*
    * Print dialog window...
    */
-  gimp_create_main_window();
+  create_main_window();
 
   gtk_main ();
   gdk_flush ();
