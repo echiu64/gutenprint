@@ -1933,6 +1933,7 @@ typedef struct escp2_printer
   int		black_nozzles;	/* Number of black nozzles (may be extra) */
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
+/*****************************************************************************/
   int		xres;		/* Normal distance between dots in */
 				/* softweave mode (inverse inches) */
   int		enhanced_xres;	/* Distance between dots in highest */
