@@ -534,7 +534,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   for (i = 0; i < num_dither_algos; i ++)
   {
     char *s;
-    char *copy = malloc(strlen(dither_algo_names[i] + 1));
+    char *copy = malloc(strlen(dither_algo_names[i]) + 1);
     char *d = copy;
     s = dither_algo_names[i];
     do
@@ -564,7 +564,7 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   for (i = 0; i < num_opts; i ++)
   {
     char *s;
-    char *copy = malloc(strlen(opts[i] + 1));
+    char *copy = malloc(strlen(opts[i]) + 1);
     char *d = copy;
    /* 
     * Strip resolution name to its essentials...
