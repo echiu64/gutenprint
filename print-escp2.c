@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.31  1999/12/05 22:10:53  rlk
+ *   minor, prep for release
+ *
  *   Revision 1.30  1999/12/05 04:33:43  rlk
  *   fencepost
  *
@@ -895,9 +898,7 @@ escp2_print(int       model,		/* I - Model */
 		  fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 		else
 		  fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-#if 0
 		fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off! */
-#endif
 		initialize_weave(nozzles, nozzle_separation, horizontal_passes);
 		fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	      }
@@ -905,7 +906,7 @@ escp2_print(int       model,		/* I - Model */
 	      {
 		fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 		fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-		fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Microdots */
+		fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	      }
 #if 0
 	    fwrite("\033\0311", 3, 1, prn); /* ??? */
