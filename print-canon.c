@@ -344,12 +344,12 @@ canon_size_type(const vars_t *v, canon_cap_t caps)
       if (!strcmp(name,"Letter+"))     return 0x2a;
       if (!strcmp(name,"A4+"))         return 0x2b;
       if (!strcmp(name,"Canon 4x2"))   return 0x2d;
-    }
-  /* custom */
+      /* custom */
 
 #ifdef DEBUG
-  fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
+      fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
 #endif
+    }
   return 0;
 }
 
@@ -1033,7 +1033,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"\n");
 #endif
 
-  nv.density *= ydpi / xdpi;
+  nv.density = nv.density * ydpi / xdpi;
   if (nv.density > 1.0)
     nv.density = 1.0;
   compute_lut(256, &nv);
