@@ -58,6 +58,7 @@ int read_pointer;
 int read_size;
 int eof;
 int combined_command = 0;
+int skip_output = 0;
 
 /*
  * Data about the image
@@ -94,7 +95,7 @@ typedef struct {
     char **lmagenta_bufs;
     int lmagenta_data_rows_per_row;
     int buffer_length;
-    int active_height;			/* Height of output data */
+    int active_length;			/* Length of output data */
     int output_depth;
 } output_t;
 
@@ -104,7 +105,7 @@ typedef struct {
 #define PCL_CMYKcm 6
 
 #define PCL_COMPRESSION_NONE 0
-#define PCL_COMPRESSION_RUNHEIGHT 1
+#define PCL_COMPRESSION_RUNLENGTH 1
 #define PCL_COMPRESSION_TIFF 2
 #define PCL_COMPRESSION_DELTA 3
 #define PCL_COMPRESSION_CRDR 9		/* Compressed row delta replacement */
@@ -153,6 +154,7 @@ typedef struct {
 #define PCL_ENTER_PCL 40
 #define PCL_ENTER_HPGL2 41
 #define PCL_NEGATIVE_MOTION 42
+#define PCL_MEDIA_DEST 43
 
 typedef struct {
   const char initial_command[3];		/* First part of command */
@@ -181,6 +183,7 @@ const commands_t pcl_commands[] =
 	{ "&l", 'A', 0, PCL_MEDIA_SIZE , "Media Size" },
 	{ "&l", 'D', 0, PCL_LPI , "Lines per Inch" },
 	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
+	{ "&l", 'G', 0, PCL_MEDIA_DEST, "Media Destination" },
 	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
 	{ "&l", 'L', 0, PCL_PERF_SKIP , "Perf. Skip" },
 	{ "&l", 'M', 0, PCL_MEDIA_TYPE , "Media Type" },
@@ -227,7 +230,7 @@ void fill_buffer (void);
 void pcl_read_command (void);
 void write_grey (output_t *output, image_t *image);
 void write_colour (output_t *output, image_t *image);
-int decode_tiff (char *in_buffer, int data_height, char *decode_buf,
+int decode_tiff (char *in_buffer, int data_length, char *decode_buf,
                  int maxlen);
 void pcl_reset (image_t *i);
 int depth_to_rows (int depth);
@@ -357,6 +360,8 @@ void pcl_read_command(void)
 
 	    skipped_chars = 0;
 	    while (c != (char) 0x1b) {
+		if (c == (char) 0x0c)
+		    fprintf(stderr, "FF ");
 		skipped_chars++;
 		fill_buffer();
 		if (eof == 1) {
@@ -552,8 +557,8 @@ void write_grey(output_t *output,	/* I: data */
     char tb[8];
 
 #ifdef DEBUG
-    fprintf(stderr, "Data Height: %d, wholebytes: %d, crumbs: %d\n",
-	output->active_height, wholebytes, crumbs);
+    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d\n",
+	output->active_length, wholebytes, crumbs);
 #endif
 
     for (i=0; i < wholebytes; i++) {
@@ -599,27 +604,27 @@ void write_colour(output_t *output,		/* I: Data buffers */
 	black_buf = NULL;
 
 #ifdef DEBUG
-    fprintf(stderr, "Data Height: %d, wholebytes: %d, crumbs: %d, planes: %d\n",
-	output->active_height, wholebytes, crumbs, image->colour_type);
+    fprintf(stderr, "Data Length: %d, wholebytes: %d, crumbs: %d, planes: %d\n",
+	output->active_length, wholebytes, crumbs, image->colour_type);
 
     fprintf(stderr, "Cyan: ");
-    for (i=0; i < output->active_height; i++) {
+    for (i=0; i < output->active_length; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) cyan_buf[i]);
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "Magenta: ");
-    for (i=0; i < output->active_height; i++) {
+    for (i=0; i < output->active_length; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) magenta_buf[i]);
     }
     fprintf(stderr, "\n");
     fprintf(stderr, "Yellow: ");
-    for (i=0; i < output->active_height; i++) {
+    for (i=0; i < output->active_length; i++) {
 	fprintf(stderr, "%02x ", (unsigned char) yellow_buf[i]);
     }
     fprintf(stderr, "\n");
     if (image->colour_type == PCL_CMYK) {
 	fprintf(stderr, "Black: ");
-	for (i=0; i < output->active_height; i++) {
+	for (i=0; i < output->active_length; i++) {
 	    fprintf(stderr, "%02x ", (unsigned char) black_buf[i]);
 	}
 	fprintf(stderr, "\n");
@@ -701,9 +706,9 @@ void write_colour(output_t *output,		/* I: Data buffers */
  */
 
 int decode_tiff(char *in_buffer,		/* I: Data buffer */
-		int data_height,		/* I: Height of data */
+		int data_length,		/* I: Length of data */
 		char *decode_buf,		/* O: decoded data */
-		int maxlen)			/* I: Max height of decode_buf */
+		int maxlen)			/* I: Max length of decode_buf */
 {
 /* The TIFF coding consists of either:-
  *
@@ -719,7 +724,7 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
     int i;
 #endif
 
-    while(pos < data_height ) {
+    while(pos < data_length ) {
 
 	count = in_buffer[pos];
 
@@ -852,7 +857,7 @@ int main(int argc, char *argv[])
     output_data.lmagenta_bufs = NULL;
     output_data.lmagenta_data_rows_per_row = 0;
     output_data.buffer_length = 0;
-    output_data.active_height = 0;
+    output_data.active_length = 0;
     output_data.output_depth = 0;
 
     id = id;				/* Remove compiler warning */
@@ -900,9 +905,9 @@ int main(int argc, char *argv[])
     while (1) {
 	pcl_read_command();
 	if (eof == 1) {
-#ifdef DEBUG
+/* #ifdef DEBUG */
 	    fprintf(stderr, "EOF while reading command.\n");
-#endif
+/* #endif */
 	    (void) fclose(read_fd);
 	    (void) fclose(write_fd);
 	    exit(EXIT_SUCCESS);
@@ -1006,188 +1011,192 @@ int main(int argc, char *argv[])
 		}
 
 		if (i != 0) {
-		    fprintf(stderr, "Cannot continue.\n");
-		    exit (EXIT_FAILURE);
+		    fprintf(stderr, "PNM output suppressed, will continue diagnostic output.\n");
+		    skip_output = 1;
 		}
 
-		if (image_data.colour_type == PCL_MONO)
-		    (void) fputs("P5\n", write_fd);	/* Raw, Grey */
-		else
-		    (void) fputs("P6\n", write_fd);	/* Raw, RGB */
+		if (skip_output == 0) {
+		    if (image_data.colour_type == PCL_MONO)
+			(void) fputs("P5\n", write_fd);	/* Raw, Grey */
+		    else
+			(void) fputs("P6\n", write_fd);	/* Raw, RGB */
 
-		(void) fputs("# Written by pclunprint.\n", write_fd);
+		    (void) fputs("# Written by pclunprint.\n", write_fd);
 
 /*
  * Remember the file position where we wrote the image width and height
  * (you don't want to know why!)
  */
 
-		filepos = ftell(write_fd);
+		    filepos = ftell(write_fd);
 
-		fprintf(write_fd, "%10d %10d\n", image_data.image_width,
-		    image_data.image_height);
+		    fprintf(write_fd, "%10d %10d\n", image_data.image_width,
+			image_data.image_height);
 
 /*
  * Write the depth of the image
  */
 
-		if (image_data.black_depth != 0)
-		    output_data.output_depth = image_data.black_depth - 1;
-		else
-		    output_data.output_depth = image_data.cyan_depth - 1;
-		fprintf(write_fd, "%d\n", output_data.output_depth);
+		    if (image_data.black_depth != 0)
+			output_data.output_depth = image_data.black_depth - 1;
+		    else
+			output_data.output_depth = image_data.cyan_depth - 1;
+		    fprintf(write_fd, "%d\n", output_data.output_depth);
 
-		image_row_counter = 0;
-		current_data_row = 0;
+		    image_row_counter = 0;
+		    current_data_row = 0;
 
-		output_data.black_data_rows_per_row = depth_to_rows(image_data.black_depth);
-		output_data.cyan_data_rows_per_row = depth_to_rows(image_data.cyan_depth);
-		output_data.magenta_data_rows_per_row = depth_to_rows(image_data.magenta_depth);
-		output_data.yellow_data_rows_per_row = depth_to_rows(image_data.yellow_depth);
-		output_data.lcyan_data_rows_per_row = depth_to_rows(image_data.lcyan_depth);
-		output_data.lmagenta_data_rows_per_row = depth_to_rows(image_data.lmagenta_depth);
+		    output_data.black_data_rows_per_row = depth_to_rows(image_data.black_depth);
+		    output_data.cyan_data_rows_per_row = depth_to_rows(image_data.cyan_depth);
+		    output_data.magenta_data_rows_per_row = depth_to_rows(image_data.magenta_depth);
+		    output_data.yellow_data_rows_per_row = depth_to_rows(image_data.yellow_depth);
+		    output_data.lcyan_data_rows_per_row = depth_to_rows(image_data.lcyan_depth);
+		    output_data.lmagenta_data_rows_per_row = depth_to_rows(image_data.lmagenta_depth);
 
 /*
  * Allocate some storage for the expected planes
  */
 
-		output_data.buffer_length = (image_data.image_width + 7) / 8;
+		    output_data.buffer_length = (image_data.image_width + 7) / 8;
 
-		if (output_data.black_data_rows_per_row != 0) {
-		    output_data.black_bufs = stp_malloc(output_data.black_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.black_data_rows_per_row; i++) {
-			output_data.black_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.black_data_rows_per_row != 0) {
+			output_data.black_bufs = stp_malloc(output_data.black_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.black_data_rows_per_row; i++) {
+			    output_data.black_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
-		if (output_data.cyan_data_rows_per_row != 0) {
-		    output_data.cyan_bufs = stp_malloc(output_data.cyan_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
-			output_data.cyan_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.cyan_data_rows_per_row != 0) {
+			output_data.cyan_bufs = stp_malloc(output_data.cyan_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
+			    output_data.cyan_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
-		if (output_data.magenta_data_rows_per_row != 0) {
-		    output_data.magenta_bufs = stp_malloc(output_data.magenta_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
-			output_data.magenta_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.magenta_data_rows_per_row != 0) {
+			output_data.magenta_bufs = stp_malloc(output_data.magenta_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
+			    output_data.magenta_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
-		if (output_data.yellow_data_rows_per_row != 0) {
-		    output_data.yellow_bufs = stp_malloc(output_data.yellow_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
-			output_data.yellow_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.yellow_data_rows_per_row != 0) {
+			output_data.yellow_bufs = stp_malloc(output_data.yellow_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
+			    output_data.yellow_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
-		if (output_data.lcyan_data_rows_per_row != 0) {
-		    output_data.lcyan_bufs = stp_malloc(output_data.lcyan_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
-			output_data.lcyan_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.lcyan_data_rows_per_row != 0) {
+			output_data.lcyan_bufs = stp_malloc(output_data.lcyan_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
+			     output_data.lcyan_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
-		if (output_data.lmagenta_data_rows_per_row != 0) {
-		    output_data.lmagenta_bufs = stp_malloc(output_data.lmagenta_data_rows_per_row * sizeof (char *));
-		    for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
-			output_data.lmagenta_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+		    if (output_data.lmagenta_data_rows_per_row != 0) {
+			output_data.lmagenta_bufs = stp_malloc(output_data.lmagenta_data_rows_per_row * sizeof (char *));
+			for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
+			    output_data.lmagenta_bufs[i] = stp_malloc(output_data.buffer_length * sizeof (char));
+			}
 		    }
-		}
 
 /*
  * Now store the pointers in the right order to make life easier in the
  * decoding phase
  */
 
-		expected_data_rows_per_row = output_data.black_data_rows_per_row +
-		    output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row +
-		    output_data.yellow_data_rows_per_row + output_data.lcyan_data_rows_per_row +
-		    output_data.lmagenta_data_rows_per_row;
+		    expected_data_rows_per_row = output_data.black_data_rows_per_row +
+			output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row +
+			output_data.yellow_data_rows_per_row + output_data.lcyan_data_rows_per_row +
+			output_data.lmagenta_data_rows_per_row;
 
-		received_rows = stp_malloc(expected_data_rows_per_row * sizeof(char *));
-		j = 0;
-		for (i = 0; i < output_data.black_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.black_bufs[i];
-		for (i = 0; i < output_data.cyan_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.cyan_bufs[i];
-		for (i = 0; i < output_data.magenta_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.magenta_bufs[i];
-		for (i = 0; i < output_data.yellow_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.yellow_bufs[i];
-		for (i = 0; i < output_data.lcyan_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.lcyan_bufs[i];
-		for (i = 0; i < output_data.lmagenta_data_rows_per_row; i++)
-		    received_rows[j++] = output_data.lmagenta_bufs[i];
-
+		    received_rows = stp_malloc(expected_data_rows_per_row * sizeof(char *));
+		    j = 0;
+		    for (i = 0; i < output_data.black_data_rows_per_row; i++)
+			received_rows[j++] = output_data.black_bufs[i];
+		    for (i = 0; i < output_data.cyan_data_rows_per_row; i++)
+			received_rows[j++] = output_data.cyan_bufs[i];
+		    for (i = 0; i < output_data.magenta_data_rows_per_row; i++)
+			received_rows[j++] = output_data.magenta_bufs[i];
+		    for (i = 0; i < output_data.yellow_data_rows_per_row; i++)
+			received_rows[j++] = output_data.yellow_bufs[i];
+		    for (i = 0; i < output_data.lcyan_data_rows_per_row; i++)
+			received_rows[j++] = output_data.lcyan_bufs[i];
+		    for (i = 0; i < output_data.lmagenta_data_rows_per_row; i++)
+			received_rows[j++] = output_data.lmagenta_bufs[i];
+		}
 		break;
 
 	    case PCL_END_RASTER :
 	    case PCL_END_COLOUR_RASTER :
 		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
 
+		if (skip_output == 0) {
+
 /*
  * Check that we got the correct number of rows of data. If the expected number is
- * -1, invoke MAJOR BODGERY!
+ * -1, we have to go back and fill in the PNM parameters (which is why we remembered
+ * where they were in the file!)
  */
 
-		if (image_data.image_height == -1) {
-		    image_data.image_height = image_row_counter;
-		    if (fseek(write_fd, filepos, SEEK_SET) != -1) {
-			fprintf(write_fd, "%10d %10d\n", image_data.image_width,
-			    image_data.image_height);
-			fseek(write_fd, 0L, SEEK_END);
+		    if (image_data.image_height == -1) {
+			image_data.image_height = image_row_counter;
+			if (fseek(write_fd, filepos, SEEK_SET) != -1) {
+			    fprintf(write_fd, "%10d %10d\n", image_data.image_width,
+				image_data.image_height);
+			    fseek(write_fd, 0L, SEEK_END);
+			}
 		    }
-		}
 
-		if (image_row_counter != image_data.image_height)
-		    fprintf(stderr, "ERROR: Row count mismatch. Expected %d rows, got %d rows.\n",
-			image_data.image_height, image_row_counter);
-		else
-		    fprintf(stderr, "\t%d rows processed.\n", image_row_counter);
+		    if (image_row_counter != image_data.image_height)
+			fprintf(stderr, "ERROR: Row count mismatch. Expected %d rows, got %d rows.\n",
+			    image_data.image_height, image_row_counter);
+		    else
+			fprintf(stderr, "\t%d rows processed.\n", image_row_counter);
 
-		image_data.image_height = -1;
+		    image_data.image_height = -1;
 
-		if (output_data.black_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.black_data_rows_per_row; i++) {
-			stp_free(output_data.black_bufs[i]);
+		    if (output_data.black_data_rows_per_row != 0) {
+			for (i=0; i < output_data.black_data_rows_per_row; i++) {
+			    stp_free(output_data.black_bufs[i]);
+			}
+			stp_free(output_data.black_bufs);
+			output_data.black_bufs = NULL;
 		    }
-		    stp_free(output_data.black_bufs);
-		    output_data.black_bufs = NULL;
-		}
-		if (output_data.cyan_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
-			stp_free(output_data.cyan_bufs[i]);
+		    if (output_data.cyan_data_rows_per_row != 0) {
+			for (i=0; i < output_data.cyan_data_rows_per_row; i++) {
+			    stp_free(output_data.cyan_bufs[i]);
+			}
+			stp_free(output_data.cyan_bufs);
+			output_data.cyan_bufs = NULL;
 		    }
-		    stp_free(output_data.cyan_bufs);
-		    output_data.cyan_bufs = NULL;
-		}
-		if (output_data.magenta_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
-			stp_free(output_data.magenta_bufs[i]);
+		    if (output_data.magenta_data_rows_per_row != 0) {
+			for (i=0; i < output_data.magenta_data_rows_per_row; i++) {
+			    stp_free(output_data.magenta_bufs[i]);
+			}
+			stp_free(output_data.magenta_bufs);
+			output_data.magenta_bufs = NULL;
 		    }
-		    stp_free(output_data.magenta_bufs);
-		    output_data.magenta_bufs = NULL;
-		}
-		if (output_data.yellow_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
-			stp_free(output_data.yellow_bufs[i]);
+		    if (output_data.yellow_data_rows_per_row != 0) {
+			for (i=0; i < output_data.yellow_data_rows_per_row; i++) {
+			    stp_free(output_data.yellow_bufs[i]);
+			}
+			stp_free(output_data.yellow_bufs);
+			output_data.yellow_bufs = NULL;
 		    }
-		    stp_free(output_data.yellow_bufs);
-		    output_data.yellow_bufs = NULL;
-		}
-		if (output_data.lcyan_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
-			stp_free(output_data.lcyan_bufs[i]);
+		    if (output_data.lcyan_data_rows_per_row != 0) {
+			for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
+			    stp_free(output_data.lcyan_bufs[i]);
+			}
+			stp_free(output_data.lcyan_bufs);
+			output_data.lcyan_bufs = NULL;
 		    }
-		    stp_free(output_data.lcyan_bufs);
-		    output_data.lcyan_bufs = NULL;
-		}
-		if (output_data.lmagenta_data_rows_per_row != 0) {
-		    for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
-			stp_free(output_data.lmagenta_bufs[i]);
+		    if (output_data.lmagenta_data_rows_per_row != 0) {
+			for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
+			    stp_free(output_data.lmagenta_bufs[i]);
+			}
+			stp_free(output_data.lmagenta_bufs);
+			output_data.lmagenta_bufs = NULL;
 		    }
-		    stp_free(output_data.lmagenta_bufs);
-		    output_data.lmagenta_bufs = NULL;
+		    stp_free(received_rows);
+		    received_rows = NULL;
 		}
-		stp_free(received_rows);
-		received_rows = NULL;
-
 		break;
 
 	    case PCL_MEDIA_SIZE :
@@ -1250,6 +1259,9 @@ int main(int argc, char *argv[])
 	    case PCL_MEDIA_SOURCE :
 		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
 		switch (numeric_arg) {
+		case -2 :
+		    fprintf(stderr, "FEED CURRENT\n");
+		    break;
 		case 0 :
 		    fprintf(stderr, "EJECT\n");
 		    break;
@@ -1357,27 +1369,48 @@ int main(int argc, char *argv[])
 	    case PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT :
 		fprintf(stderr, "%s: %d\n", pcl_commands[command_index].description, numeric_arg);
 
+		if (skip_output == 0) {
+
 /* Check that we are in raster mode */
 
-		if (expected_data_rows_per_row == -1)
-		    fprintf(stderr, "ERROR: raster data without start raster!\n");
+		    if (expected_data_rows_per_row == -1)
+			fprintf(stderr, "ERROR: raster data without start raster!\n");
 
 /*
   What we need to do now is to write out "N" rows of all-white data to
   simulate the vertical slew
 */
 
-		for (i=0; i<expected_data_rows_per_row; i++)
-		{
-		    memset(received_rows[i], 0, (size_t) output_data.buffer_length * sizeof(char));
+		    for (i=0; i<expected_data_rows_per_row; i++)
+		    {
+			memset(received_rows[i], 0, (size_t) output_data.buffer_length * sizeof(char));
+		    }
+		    for (i=0; i<numeric_arg; i++)
+		    {
+			if (image_data.colour_type == PCL_MONO)
+			    write_grey(&output_data, &image_data);
+			else
+			    write_colour(&output_data, &image_data);
+			image_row_counter++;
+		    }
 		}
-		for (i=0; i<numeric_arg; i++)
-		{
-		    if (image_data.colour_type == PCL_MONO)
-			write_grey(&output_data, &image_data);
-		    else
-			write_colour(&output_data, &image_data);
-		    image_row_counter++;
+		break;
+
+	    case PCL_DUPLEX :
+		fprintf(stderr, "%s: ", pcl_commands[command_index].description);
+		switch (numeric_arg) {
+		case 0 :
+		    fprintf(stderr, "None\n");
+		    break;
+		case 1 :
+		    fprintf(stderr, "Duplex No Tumble (Long Edge)\n");
+		    break;
+		case 2 :
+		    fprintf(stderr, "Duplex Tumble (Short Edge)\n");
+		    break;
+		default :
+		    fprintf(stderr, "Unknown (%d)\n", numeric_arg);
+		    break;
 		}
 		break;
 
@@ -1396,11 +1429,11 @@ int main(int argc, char *argv[])
 	    case PCL_CPI :
 	    case PCL_PAGE_LENGTH :
 	    case PCL_NUM_COPIES :
-	    case PCL_DUPLEX :
 	    case PCL_MEDIA_SIDE :
 	    case RTL_CONFIGURE :
 	    case PCL_ENTER_PCL :
 	    case PCL_NEGATIVE_MOTION :
+	    case PCL_MEDIA_DEST :
 		fprintf(stderr, "%s: %d (ignored)", pcl_commands[command_index].description, numeric_arg);
 		if (pcl_commands[command_index].has_data == 1) {
 		    fprintf(stderr, " Data: ");
@@ -1445,8 +1478,8 @@ int main(int argc, char *argv[])
 		    case PCL_COMPRESSION_NONE :
 			fprintf(stderr, "NONE\n");
 			break;
-		    case PCL_COMPRESSION_RUNHEIGHT :
-			fprintf(stderr, "Runheight\n");
+		    case PCL_COMPRESSION_RUNLENGTH :
+			fprintf(stderr, "Runlength\n");
 			break;
 		    case PCL_COMPRESSION_TIFF :
 			fprintf(stderr, "TIFF\n");
@@ -1580,17 +1613,17 @@ int main(int argc, char *argv[])
 
 	    case PCL_DATA :
 	    case PCL_DATA_LAST :
-#ifdef DEBUG
-		fprintf(stderr, "%s\n", pcl_commands[command_index].description);
-		fprintf(stderr, "Data Height: %d\n", numeric_arg);
-#endif
+		if (skip_output == 1) {
+		    fprintf(stderr, "%s, length: %d\n", pcl_commands[command_index].description, numeric_arg);
+		}
+		else {
 
 /*
  * Make sure that we have enough data to process this command!
  */
 
-		if (expected_data_rows_per_row == -1)
-		    fprintf(stderr, "ERROR: raster data without start raster!\n");
+		    if (expected_data_rows_per_row == -1)
+			fprintf(stderr, "ERROR: raster data without start raster!\n");
 
 /*
  * The last flag indicates that this is the end of the planes for a row
@@ -1598,38 +1631,38 @@ int main(int argc, char *argv[])
  * expecting.
  */
 
-		if (command == PCL_DATA_LAST) {
-		    if (current_data_row != (expected_data_rows_per_row - 1))
-			fprintf(stderr, "ERROR: 'Last Plane' set on plane %d of %d!\n",
-			    current_data_row, expected_data_rows_per_row);
-		}
-		else {
-		    if (current_data_row == (expected_data_rows_per_row - 1))
-			fprintf(stderr, "ERROR: Expected 'last plane', but not set!\n");
-		}
+		    if (command == PCL_DATA_LAST) {
+			if (current_data_row != (expected_data_rows_per_row - 1))
+			    fprintf(stderr, "ERROR: 'Last Plane' set on plane %d of %d!\n",
+				current_data_row, expected_data_rows_per_row);
+		    }
+		    else {
+			if (current_data_row == (expected_data_rows_per_row - 1))
+			    fprintf(stderr, "ERROR: Expected 'last plane', but not set!\n");
+		    }
 
 /*
  * Accumulate the data rows for each output row,then write the image.
  */
 
-		if (image_data.compression_type == PCL_COMPRESSION_NONE) {
-		    memcpy(received_rows[current_data_row], &data_buffer, (size_t) numeric_arg);
-		    output_data.active_height = numeric_arg;
-		}
-		else
-		    output_data.active_height = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], output_data.buffer_length);
-
-		if (command == PCL_DATA_LAST) {
-		    if (image_data.colour_type == PCL_MONO)
-			write_grey(&output_data, &image_data);
+		    if (image_data.compression_type == PCL_COMPRESSION_NONE) {
+			memcpy(received_rows[current_data_row], &data_buffer, (size_t) numeric_arg);
+			output_data.active_length = numeric_arg;
+		    }
 		    else
-			write_colour(&output_data, &image_data);
-		    current_data_row = 0;
-		    image_row_counter++;
-		}
-		else
-		    current_data_row++;
+			output_data.active_length = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], output_data.buffer_length);
 
+		    if (command == PCL_DATA_LAST) {
+			if (image_data.colour_type == PCL_MONO)
+			    write_grey(&output_data, &image_data);
+			else
+			    write_colour(&output_data, &image_data);
+			current_data_row = 0;
+			image_row_counter++;
+		    }
+		    else
+			current_data_row++;
+		}
 		break;
 
 	    case PCL_ENTER_HPGL2 :
