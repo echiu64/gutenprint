@@ -1,3 +1,16 @@
+2000-07-12	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.21) (+265 -0)
+		Ghost/gdevstp.c (1.27) (+34 -19)
+		Ghost/README (1.26) (+21 -5)
+		print_gimp.h (1.22) (+2 -2)
+		print-escp2.c (1.182) (+1 -4)
+		configure.in (1.20) (+1 -1)
+		RELNOTES (1.14) (+52 -1)
+		README (1.19) (+1 -1)
+	
+	Allow choice of ink type in Ghostscript driver
+	
 2000-07-11	<rlk@sourceforge.net>
 
 	Files:	Ghost/gdevstp.c (1.26) (+6 -3)
