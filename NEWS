@@ -41,6 +41,10 @@ Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
    much more stable binary interface.  Currently, this is in an
    interim state.
 
+8) A major print quality problem slipped into many new Epson printers
+   in 4.1.4, resulting in pale (and in some cases distorted) output in
+   many printing resolutions.  That is fixed.
+
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
 
