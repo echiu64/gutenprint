@@ -193,15 +193,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color Pro" driver="escp2-pro">
-<color>
-<model value=1>
-<gamma value=0.597>
-<density value=0.631>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color Pro XL" driver="escp2-proxl">
+<printer name="EPSON Stylus Color Pro/Pro XL/400/500" driver="escp2-pro">
 <color>
 <model value=1>
 <gamma value=0.597>
@@ -217,35 +209,11 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 400" driver="escp2-400">
-<color>
-<model value=1>
-<gamma value=0.585>
-<density value=0.646>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color 440" driver="escp2-440">
+<printer name="EPSON Stylus Color 440/460" driver="escp2-440">
 <color>
 <model value=10>
 <gamma value=0.585>
 <density value=0.646>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color 460" driver="escp2-460">
-<color>
-<model value=10>
-<gamma value=0.585>
-<density value=0.646>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color 500" driver="escp2-500">
-<color>
-<model value=1>
-<gamma value=0.597>
-<density value=0.631>
 <language value=escp2>
 </printer>
 
@@ -265,15 +233,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 660" driver="escp2-660">
-<color>
-<model value=18>
-<gamma value=0.585>
-<density value=0.646>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color 670" driver="escp2-670">
+<printer name="EPSON Stylus Color 660/670" driver="escp2-660">
 <color>
 <model value=18>
 <gamma value=0.585>
@@ -337,15 +297,7 @@
 <language value=escp2>
 </printer>
 
-<printer name="EPSON Stylus Color 1520" driver="escp2-1520">
-<color>
-<model value=6>
-<gamma value=0.585>
-<density value=0.646>
-<language value=escp2>
-</printer>
-
-<printer name="EPSON Stylus Color 3000" driver="escp2-3000">
+<printer name="EPSON Stylus Color 1520/3000" driver="escp2-1520">
 <color>
 <model value=6>
 <gamma value=0.585>
