@@ -1608,7 +1608,7 @@
 
 <printer name="HP DesignJet 3500C" driver="pcl-desnj-3500">
 <color>
-<model value=12500>
+<model value=13500>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
