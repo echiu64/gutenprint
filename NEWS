@@ -61,6 +61,8 @@ Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
 10) The unprinter uses considerably less memory when working on Epson
    output generated at high resolution/quality settings.
 
+11) The banner and help on escputil is friendlier.
+
 Known limitations of this release:
 
 1) The Epson Stylus C40UX (and very likely other printers in the C20
@@ -75,7 +77,7 @@ Known limitations of this release:
    580, and C20SX, C20UX, C40SX, and C40UX).
 
 3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
-   supported.
+   supported.  This will not be fixed for 4.2.
 
 4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are not tested or tuned.  They may not
