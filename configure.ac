@@ -557,7 +557,7 @@ AC_CHECK_LIB(m,pow,
              gimpprint_libdeps="${gimpprint_libdeps} -lm")
 
 PKG_CHECK_MODULES(LIBXML, libxml-2.0)
-GIMPPRINT_CFLAGS="${LIBXML_CFLAGS}"
+GIMPPRINT_CFLAGS="${GIMPPRINT_CFLAGS} ${LIBXML_CFLAGS}"
 GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${LIBXML_LIBS}"
 gimpprint_requires="${gimpprint_requires} libxml-2.0"
 

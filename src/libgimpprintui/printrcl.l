@@ -64,7 +64,7 @@ digit		[0-9]
 boolean		(True)|(False)
 integer		[-+]?{digit}+
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
-string		[\"][^\"\n]*[\"]
+string         ([\"][^\"\n]*[\"])|([\'][^\']*[\'])
 ws		[ \t]+
 printrc_hdr	#PRINTRCv2.*\n
 word		[a-zA-Z][a-zA-Z0-9_]*

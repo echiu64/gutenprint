@@ -222,7 +222,7 @@ compute_intervals(stpi_internal_curve_t *curve)
   curve->recompute_interval = 0;
 }
 
-int
+static int
 stpi_curve_set_points(stpi_internal_curve_t *curve, size_t points)
 {
   size_t real_point_count;
@@ -463,19 +463,30 @@ stp_curve_get_data(const stp_curve_t curve, size_t *count)
 
 /* "Overloaded" functions */
 
-#define DEFINE_DATA_SETTER(t, name)					     \
-int									     \
-stp_curve_set_##name##_data(stp_curve_t curve,                               \
-                            size_t count, const t *data)                     \
-{									     \
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;           \
-  stp_sequence_t seq;                                                        \
-                                                                             \
-  check_curve(icurve);                                                       \
-  seq = stp_curve_get_sequence(curve);                                       \
-									     \
-  return stp_sequence_set_##name##_data(seq, count, data);                   \
-}
+#define DEFINE_DATA_SETTER(t, name)                                        \
+int                                                                        \
+stp_curve_set_##name##_data(stp_curve_t curve, size_t count, const t *data) \
+{                                                                          \
+  double *tmp_data;                                                        \
+  int i;                                                                   \
+  int status;                                                              \
+  int real_count = count;                                                  \
+                                                                           \
+  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;         \
+  check_curve(icurve);                                                     \
+  if (count < 2)                                                           \
+    return 0;                                                              \
+  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)                          \
+    real_count++;                                                          \
+  if (real_count > curve_point_limit)                                      \
+    return 0;                                                              \
+  tmp_data = stpi_malloc(count * sizeof(double));                          \
+  for (i = 0; i < count; i++)                                              \
+    tmp_data[i] = (double) data[i];                                        \
+  status = stp_curve_set_data(curve, count, tmp_data);                     \
+  stpi_free(tmp_data);                                                     \
+  return status;                                                           \
+ }
 
 DEFINE_DATA_SETTER(float, float)
 DEFINE_DATA_SETTER(long, long)
@@ -741,6 +752,10 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
       gamma = -gamma;
     }
   stp_sequence_get_bounds(icurve->seq, &blo, &bhi);
+#ifdef DEBUG
+  fprintf(stderr, "interpolate_gamma %f %f %f %f %f\n", where, gamma,
+	  blo, bhi, pow(where, gamma));
+#endif
   return blo + (bhi - blo) * pow(where, gamma);
 }
 
@@ -788,7 +803,7 @@ interpolate_point_internal(const stp_curve_t curve, double where)
 
       retval = a * ival + b * ip1val + retval / 6;
 
-      stp_sequence_get_bounds(icurve->seq, &bhi, &blo);
+      stp_sequence_get_bounds(icurve->seq, &blo, &bhi);
       if (retval > bhi)
 	retval = bhi;
       if (retval < blo)

@@ -768,9 +768,8 @@ stpi_xml_process_dither_matrix(const char *file,  /* Source file */
   y = xmlstrtol(value);
   xmlFree(value);
 
-#ifdef DEBUG
-  fprintf(stderr, "dither-matrix: x=%d, y=%d\n", x, y);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "dither-matrix: x=%d, y=%d\n", x, y);
 
   stpi_xml_dither_cache_set(x, y, file);
 
@@ -807,9 +806,9 @@ stpi_xml_dither_cache_set(int x, int y, const char *filename)
   cacheval->filename = stpi_strdup(filename);
 
   stpi_list_item_create(dither_matrix_cache, NULL, (void *) cacheval);
-#ifdef DEBUG
-  fprintf(stderr, "xml-dither-cache: added %dx%d\n", x, y);
-#endif
+
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "xml-dither-cache: added %dx%d\n", x, y);
 
   stpi_xml_exit();
 
@@ -823,9 +822,8 @@ stpi_xml_dither_cache_get(int x, int y)
 
   stpi_xml_init();
 
-#ifdef DEBUG
-  fprintf(stderr, "xml-dither-cache: lookup %dx%d... ", x, y);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "xml-dither-cache: lookup %dx%d... ", x, y);
 
   ln = stpi_list_get_start(dither_matrix_cache);
 
@@ -834,17 +832,17 @@ stpi_xml_dither_cache_get(int x, int y)
       if (((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->x == x &&
 	  ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->y == y)
 	{
-#ifdef DEBUG
-	  fprintf(stderr, "found\n");
-#endif
+
+	  if (stpi_debug_level & STPI_DBG_XML)
+	    fprintf(stderr, "found\n");
+
 	  stpi_xml_exit();
 	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->filename;
 	}
       ln = stpi_list_item_next(ln);
     }
-#ifdef DEBUG
-  fprintf(stderr, "missing\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "missing\n");
 
   stpi_xml_exit();
 
@@ -931,6 +929,8 @@ stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
       goto error;
     }
 
+  if (stpi_debug_level & STPI_DBG_XML)
+    stpi_erprintf("stp_sequence_set_size %d\n", point_count + extra_points);
   stp_sequence_set_size(ret, point_count + extra_points);
   stp_sequence_set_bounds(ret, low, high);
 
@@ -1192,9 +1192,8 @@ stpi_dither_array_create_from_file(const char* file)
 
   stpi_xml_init();
 
-#ifdef DEBUG
-  fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
@@ -1284,7 +1283,6 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   ret = stp_curve_create(wrap_mode);
   iret = (stpi_internal_curve_t *) ret;
   stp_curve_set_interpolation_type(ret, curve_type);
-  iret->gamma = gamma;
 
   /* Get the sequence data */
   stp_sequence_destroy(iret->seq); /* Replace with new da */
@@ -1313,10 +1311,11 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
       fprintf(stderr, "stp-curve-create: parameter check failed\n");
       goto error;
     }
-  if (iret->gamma)
+  if (gamma)
     {
-      stpi_curve_set_points(iret, 2);
-      stp_curve_resample(ret, iret->point_count);
+      size_t points = iret->point_count;
+      stp_curve_set_gamma(ret, gamma);
+      stp_curve_resample(ret, points);
     }
   else /* Not a gamma curve */
     if (wrap_mode == STP_CURVE_WRAP_AROUND)
@@ -1384,9 +1383,8 @@ stp_curve_create_from_file(const char* file)
 
   stpi_xml_init();
 
-#ifdef DEBUG
-  fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
@@ -1408,9 +1406,8 @@ stp_curve_create_from_string(const char* string)
 
   stpi_xml_init();
 
-#ifdef DEBUG
-  fprintf(stderr, "stp-xml-parse: reading string...\n");
-#endif
+  if (stpi_debug_level & STPI_DBG_XML)
+    fprintf(stderr, "stp-xml-parse: reading string...\n");
 
   doc = xmlParseMemory(string, strlen(string));
 
