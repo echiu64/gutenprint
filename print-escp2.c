@@ -2848,8 +2848,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 }
 
 static unsigned char *microweave_s = 0;
-static unsigned char *microweave_comp_ptr[6][4];
-static int microweave_setactive[6][4];
+static unsigned char *microweave_comp_ptr[7][4];
+static int microweave_setactive[7][4];
 static int accumulated_spacing = 0;
 static int last_color = -1;
 
