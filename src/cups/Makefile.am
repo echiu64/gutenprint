@@ -40,7 +40,12 @@ pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
-cups_modeldir = $(pkgdatadir)/model/gimp-print/
+if CUPS_PPDS_AT_TOP_LEVEL
+cups_modeldir = $(pkgdatadir)/model/
+DONT_UNINSTALL_PPDS=true
+else
+cups_modeldir = $(pkgdatadir)/model/gimp-print/@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/
+endif
 CUPS_PPD_NICKNAME_STRING=$(empty)\ -\ CUPS+Gimp-Print\ v$(empty)
 
 DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\"
@@ -110,14 +115,14 @@ endif
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@; \
+	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
 	  for language in * ; do \
 	    cd ..; \
-	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/$$language; \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
 	    cd ppd/$$language; \
 	    for ppdfile in * ; do \
-	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@/$$language) ; \
+	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
 	    done; \
 	  cd ..; \
 	  done \
@@ -135,8 +140,10 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 #	  done \
 #	fi
 # Remove PPDs installed in new PPD location
-	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
+	if test -z "DONT_UNINSTALL_PPDS" ; then \
+	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	    $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
+	  fi
 	fi
 
 install-data-hook:
@@ -171,7 +178,7 @@ ppd-stamp-pre:
 	-mkdir ppd
 
 ppd-nonls: cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@
-	for language in en ; do \
+	for language in C ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
 	 ./cups-genppd.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ -p ppd/$$language ; \

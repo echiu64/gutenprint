@@ -31,24 +31,28 @@ sub get_default_types (*); # Source PPD FH
 sub get_defaults (*); # Source PPD FH
 sub get_options (*\%); # Source PPD FH, default_types hash ref
 
+our $opt_d; # Debug mode
 our $opt_h; # Help
 our $opt_n; # No action
 our $opt_q; # Quiet mode
 our $opt_s; # Source PPD location
 our $opt_v; # Verbose mode
 
-my $debug = 0;     # Set to 1 for debug messages
+my $debug = 0;
 my $verbose = 0;   # Verbose output
 if ($debug) {
     $verbose = 1;
 }
 my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
-my $version = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@;
+my $version = "@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@";
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
-my $ppd_base_dir = "@cups_conf_datadir@/model/gimp-print/$version"; # Available PPDs
+my $ppd_root_dir = "@cups_conf_datadir@/model";
+my $ppd_gimpprint_dir = "$ppd_root_dir/gimp-print";
+my $ppd_base_dir = "$ppd_gimpprint_dir/$version"; # Available PPDs
 my $gzext = ".gz";
+my $updated_ppd_count = 0;
 
 my @ppd_files; # A list of in-use Gimp-Print PPD files
 
@@ -109,21 +113,30 @@ if (!@ppd_files) {
 # Update each of the Gimp-Print PPDs, where possible...
 
 foreach (@ppd_files) {
-    update_ppd($_);
+    $updated_ppd_count += update_ppd($_);
 
 }
 
 if (!$quiet || $verbose) {
-    print STDOUT "Restart cupsd for the changes to take effect.\n";
+    if ($updated_ppd_count > 0) {
+	print STDOUT "Updated $updated_ppd_count PPD files.  Restart cupsd for the changes to take effect.\n";
+	exit (0);
+    } else {
+	print STDOUT "Failed to update any PPD files\n";
+	exit (1);
+    }
 }
 
 
 
 sub parse_options () {
-    getopts("hnqs:v");
+    getopts("dhnqs:v");
 
     if ($opt_n) {
 	$no_action = 1;
+    }
+    if ($opt_d) {
+	$debug = 1;
     }
     if ($opt_s) {
 	if (-d $opt_s) {
@@ -144,6 +157,7 @@ sub parse_options () {
     if ($opt_h) {
 	print "Usage: $0 [OPTION]...\n";
 	print "Update CUPS+Gimp-Print PPD files.\n\n";
+        print "  -d          Enable debugging\n";
         print "  -h          Display this help text\n";
 	print "  -n          No-action.  Don't overwrite any PPD files.\n";
 	print "  -q          Quiet mode.  No messages except errors.\n";
@@ -175,7 +189,6 @@ sub update_ppd ($) {
 	print "PCFileName: $filename\n";
 	print "Gimp-Print Filename: $gimpprintfilename\n";
     }
-
     # Get the `LanguageVersion'; the language of the PPD.
     my $locale;
     seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
@@ -214,7 +227,7 @@ sub update_ppd ($) {
         # There wasn't a valid source PPD file, so give up.
         print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
         print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
-	return;
+	return 0;
     }
     if ($debug) {
 	print "Candidate PPD: $source\n";
@@ -334,7 +347,7 @@ default_loop:
     my $tmpnew = "${ppd_source_filename}.new";
     if (! open NEWPPD, "> $tmpnew") {
 	warn "Can't open $tmpnew for writing: $!\n";
-	return;
+	return 0;
     }
     chown(0, 0, $tmpnew);	# Bad idea to hardcode this...
     chmod(0644, $tmpnew);	# Bad idea to hardcode this...
@@ -342,18 +355,19 @@ default_loop:
     if (! close NEWPPD) {
 	warn "Can't close ${tmpnew}.new for writing: $!\n";
 	unlink $tmpnew;
-	return;
+	return 0;
     }
 
     if (! rename $tmpnew, $ppd_source_filename) {
 	warn "Can't rename $tmpnew to $ppd_source_filename: $!\n";
 	unlink $tmpnew;
-	return;
+	return 0;
     }
 
     if (!$quiet || $verbose) {
 	print STDOUT "Updated $ppd_source_filename using $source\n";
     }
+    return 1;
     # All done!
 }
 
@@ -361,39 +375,54 @@ default_loop:
 sub find_ppd ($$$$) {
     my($pcfilename, $gimpprintfilename, $lang, $region) = @_;
     my $file; # filename to return
+    my($gimpprintfilebase) = $gimpprintfilename;
+    my ($key) = '^\\*FileVersion:[ 	]*"@VERSION@"$';
+    my ($lingo, $suffix, $base, $basedir);
+    $gimpprintfilebase =~ s/\.ppd$//;
 
     # All possible candidates, in order of usefulness and gzippedness
-    foreach ("$ppd_base_dir/${lang}_$region/$gimpprintfilename$gzext",
-	     "$ppd_base_dir/${lang}_$region/$pcfilename$gzext",
-	     "$ppd_base_dir/${lang}_$region/$gimpprintfilename",
-	     "$ppd_base_dir/${lang}_$region/$pcfilename",
-	     "$ppd_base_dir/$lang/$gimpprintfilename$gzext",
-	     "$ppd_base_dir/$lang/$pcfilename$gzext",
-	     "$ppd_base_dir/$lang/$gimpprintfilename",
-	     "$ppd_base_dir/$lang/$pcfilename",
-	     "$ppd_base_dir/en/$gimpprintfilename$gzext",
-	     "$ppd_base_dir/en/$pcfilename$gzext",
-	     "$ppd_base_dir/en/$gimpprintfilename",
-	     "$ppd_base_dir/en/$pcfilename",
-	     "$ppd_base_dir/C/$gimpprintfilename$gzext",
-	     "$ppd_base_dir/C/$pcfilename$gzext",
-	     "$ppd_base_dir/C/$gimpprintfilename",
-	     "$ppd_base_dir/C/$pcfilename",
-	     "$ppd_base_dir/$gimpprintfilename$gzext",
-	     "$ppd_base_dir/$pcfilename$gzext",
-	     "$ppd_base_dir/$gimpprintfilename",
-	     "$ppd_base_dir/$pcfilename"
-	     ) {
-        # Check it's a regular file, owned by root.root, not writable
-        # by other, and is readable by root.  i.e. the file is secure.
-	my @sb = stat or next;
-	if (S_ISREG($sb[2]) && ($sb[4] == 0) && ($sb[5] == 0)) {
-#	    !(S_IWOTH & $sb[2]) && (S_IRUSR & $sb[2])) {
-	    return $_;
-	}
-	else {
-	    if (! -d $_ && ! /\/$/) {
-		print STDERR "$_: not a regular file, or insecure ownership and permissions.  Skipped\n";
+    foreach $lingo ("${lang}_${region}/",
+		    "$lang/",
+		    "en/",
+		    "C/",
+		    "") {
+	foreach $suffix ($gzext,
+			"") {
+	    foreach $base ("${gimpprintfilebase}.$version.ppd",
+			   $gimpprintfilename,
+			   $pcfilename) {
+		foreach $basedir ($ppd_base_dir,
+				  $ppd_gimpprint_dir,
+				  $ppd_root_dir) {
+		    my ($fn) = "$basedir/$lingo$base$suffix";
+		    if ($debug) {
+                        print "Trying $fn for $gimpprintfilename, $lang, $region\n";
+                    }
+		    # Check it's a regular file, owned by root.root, not writable
+		    # by other, and is readable by root.  i.e. the file is secure.
+		    my @sb = stat $fn or next;
+		    if (S_ISREG($sb[2]) && ($sb[4] == 0) && ($sb[5] == 0)) {
+#			!(S_IWOTH & $sb[2]) && (S_IRUSR & $sb[2])) {
+			# Check that the file is a valid Gimp-Print PPD file
+			# of the correct version.
+			my $file_version;
+			if ($fn =~ m/\.gz$/) {
+			    $file_version = `gunzip -c $fn | grep '$key'`;
+			} else {
+			    $file_version = `cat $fn | grep '$key'`;
+			}
+			if ($file_version ne "") {
+			    return $fn;
+			} elsif ($debug) {
+			    print "   Format invalid\n";
+			}
+		    }
+		    else {
+			if (! -d $fn && ! /\/$/) {
+			    print STDERR "$fn: not a regular file, or insecure ownership and permissions.  Skipped\n";
+			}
+		    }
+		}
 	    }
 	}
     }

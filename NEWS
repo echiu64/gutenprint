@@ -19,10 +19,10 @@ The Print plugin for the Gimp requires the Gimp 1.2 (later versions of
 the Gimp are not supported).  You may need to install a package named
 "gimp-devel" or the like on many distributions.
 
-The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
-install a package named "cups-devel" or the like on many
-distributions.  We strongly recommend using CUPS with Gimp-Print as a
-general-purpose printing solution.
+The CUPS driver requires CUPS 1.1.9 or higher, but we strongly
+recommend 1.1.15 or higher.  You may need to install a package named
+"cups-devel" or the like on many distributions.  We strongly recommend
+using CUPS with Gimp-Print as a general-purpose printing solution.
 
 We do not currently recommend using Foomatic, as the Foomatic data
 generator included with Gimp-Print offers very limited capabilities.

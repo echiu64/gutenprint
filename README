@@ -119,10 +119,9 @@ CUPS
     Gimp-print may be used as a driver under CUPS (Common UNIX
     Printing System), if your system uses that spooler.  Full
     description of CUPS is beyond the scope of this README file; full
-    information may be found at http://www.cups.org.  Gimp-print 4.3
-    requires CUPS 1.1.9 or higher.  We recommend use of 1.1.14 or
-    above; that release of CUPS features better internationalization
-    and fixes some important bugs.
+    information may be found at http://www.cups.org.  Gimp-print 5.0
+    requires CUPS 1.1.9 or higher.  We recommend use of 1.1.15 or
+    above; that release of CUPS fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
     use of this software for general printing purposes.  To build and
@@ -154,9 +153,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
 
-    If the version number (in this case, 4.3.24) does not match
+    If the version number (in this case, 5.0.0-alpha1) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -187,15 +186,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(sv)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v4.3.24(fr)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(en)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(sv)
+		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-alpha1(fr)
 
     you may wish to turn off the translation of PPD files:
 

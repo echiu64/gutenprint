@@ -35,10 +35,10 @@ dnl
 dnl For more detailed information, see the libtool info documentation.
 dnl
 pushdef([GIMPPRINT_NAME],              [gimp-print])
-pushdef([GIMPPRINT_MAJOR_VERSION],     [4])
-pushdef([GIMPPRINT_MINOR_VERSION],     [3])
-pushdef([GIMPPRINT_MICRO_VERSION],     [25])
-pushdef([GIMPPRINT_EXTRA_VERSION],     [])
+pushdef([GIMPPRINT_MAJOR_VERSION],     [5])
+pushdef([GIMPPRINT_MINOR_VERSION],     [0])
+pushdef([GIMPPRINT_MICRO_VERSION],     [0])
+pushdef([GIMPPRINT_EXTRA_VERSION],     [-alpha1])
 pushdef([GIMPPRINT_CURRENT_INTERFACE], [1])
 pushdef([GIMPPRINT_INTERFACE_AGE],     [0])
 pushdef([GIMPPRINT_BINARY_AGE],        [0])
@@ -209,10 +209,26 @@ STP_ARG_ENABLE([translated-cups-ppds],
                [BUILD_TRANSLATED_CUPS_PPDS],
                [no])
 
+USE_LEVEL3_PS=no
+if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
+  cups_version="`${CUPS_CONFIG} -version`"
+  cups_major="`echo $cups_version | awk -F. '{print $1}'`"
+  cups_minor="`echo $cups_version | awk -F. '{print $2}'`"
+  cups_point="`echo $cups_version | awk -F. '{print $3}'`"
+  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
+    USE_LEVEL3_PS=yes
+  fi
+fi   
+
+STP_ARG_ENABLE([cups-ppds-at-top-level],
+	       [place CUPS PPD files at top level],
+	       [CUPS_PPDS_AT_TOP_LEVEL],
+	       [(no)])
+
 STP_ARG_ENABLE([cups-level3-ppds],
                [generate PostScript level 3 PPD files],
                [USE_LEVEL3_PS],
-               [no])
+               [(automatic)])
 
 AC_PATH_PROG(FOOMATIC_CONFIGURE, foomatic-configure)
 if test -z "${FOOMATIC_CONFIGURE}" ; then
@@ -314,6 +330,12 @@ else
   BUILD_GIMP="yes"
 fi
 
+if test "$BUILD_TEST" = "yes" ; then
+  BUILD_TESTPATTERN="yes"
+else
+  BUILD_TESTPATTERN="no"
+fi
+
 AM_PATH_GTK(1.2.0,
   BUILD_LIBGIMPPRINTUI="yes"
   GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}"
@@ -348,7 +370,7 @@ STP_ARG_ENABLE([escputil],
 STP_ARG_ENABLE([testpattern],
                [build testpattern generator],
                [BUILD_TESTPATTERN],
-               [no])
+               [(automatic)])
 
 STP_ARG_ENABLE([test],
                [build test programs],
@@ -642,12 +664,14 @@ AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
 
+AM_CONDITIONAL(CUPS_PPDS_AT_TOP_LEVEL, test x${CUPS_PPDS_AT_TOP_LEVEL} = xyes)
+
 AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes)
 
-if test x${USE_LEVEL3_PS} = xyes ; then
-  CUPS_PPD_PS_LEVEL=3
-else
+if test x${USE_LEVEL3_PS} = xno ; then
   CUPS_PPD_PS_LEVEL=2
+else
+  CUPS_PPD_PS_LEVEL=3
 fi
 
 AM_CONDITIONAL(USE_LEVEL3_PS, test x${USE_LEVEL3_PS} = xyes)

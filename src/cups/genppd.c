@@ -82,9 +82,7 @@
  * so we can report Level 3 support by default...
  */
 
-#ifndef CUPS_PPD_PS_LEVEL
-#  define CUPS_PPD_PS_LEVEL 3
-#endif
+int cups_ppd_ps_level = CUPS_PPD_PS_LEVEL;
 
 /*
  * File handling stuff...
@@ -231,11 +229,17 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "hvqc:p:l:LMV")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMV")) == -1)
       break;
 
     switch (i)
     {
+    case '2':
+      cups_ppd_ps_level = 2;
+      break;
+    case '3':
+      cups_ppd_ps_level = 3;
+      break;
     case 'h':
       help();
       break;
@@ -270,9 +274,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
       printf("cups-genppd version %s, "
 	     "Copyright (c) 1993-2003 by Easy Software Products and Robert Krawitz.\n\n",
 	     VERSION);
-      printf("CUPS PPD PostScript Level:     %d\n", CUPS_PPD_PS_LEVEL);
-      printf("Default PPD location (prefix): %s\n", GENPPD_PPD_PREFIX);
-      printf("Default base locale directory: %s\n\n", PACKAGE_LOCALE_DIR);
+      printf("Default CUPS PPD PostScript Level: %d\n", cups_ppd_ps_level);
+      printf("Default PPD location (prefix):     %s\n", GENPPD_PPD_PREFIX);
+      printf("Default base locale directory:     %s\n\n", PACKAGE_LOCALE_DIR);
       puts("This program is free software; you can redistribute it and/or\n"
 	   "modify it under the terms of the GNU General Public License,\n"
 	   "version 2, as published by the Free Software Foundation.\n"
@@ -699,8 +703,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  exit (EXIT_FAILURE);
 	}
     }
-  snprintf(filename, sizeof(filename) - 1, "%s/%s%s%s",
-	   prefix, driver, ppdext, gzext);
+  snprintf(filename, sizeof(filename) - 1, "%s/%s.%s%s%s",
+	   prefix, driver, GIMPPRINT_RELEASE_VERSION, ppdext, gzext);
 
  /*
   * Open the PPD file...
@@ -813,12 +817,11 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
    */
   gzprintf(fp, "*NickName:      \"%s%s%s\"\n",
 	   long_name, PPD_NICKNAME_STRING, VERSION);
-#if CUPS_PPD_PS_LEVEL == 2
-  gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
-#else
-  gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
-#endif /* CUPS_PPD_PS_LEVEL == 2 */
-  gzprintf(fp, "*LanguageLevel:	\"%d\"\n", CUPS_PPD_PS_LEVEL);
+  if (cups_ppd_ps_level == 2)
+    gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
+  else
+    gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
+  gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
   /* Assume that color printers are inkjets and should have pages reversed */
   if (stp_get_output_type(printvars) == OUTPUT_COLOR)
