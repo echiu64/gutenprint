@@ -599,6 +599,8 @@ static stp_internal_papersize_t paper_sizes[] =
     4768, 6749, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
   { "w3370h4768",	N_ ("2A"),
     3370, 4768, 0, 0, 0, 0, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
+  { "SuperA0",		N_ ("Super A0"),
+    2590, 3662, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  914mm x 1292mm */
   { "A0",		N_ ("A0"),
     2384, 3370, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
   { "A1",		N_ ("A1"),
@@ -681,6 +683,8 @@ static stp_internal_papersize_t paper_sizes[] =
   { "ISOB10",		N_ ("B10 ISO"),
     87,  124, 0, 0, 0, 0, PAPERSIZE_METRIC },	/*   31mm x   44mm */
 
+  { "SuperB0",		N_ ("Super B0 JIS"),
+    3167, 4478, 0, 0, 0, 0, PAPERSIZE_METRIC },
   { "B0",		N_ ("B0 JIS"),
     2919, 4127, 0, 0, 0, 0, PAPERSIZE_METRIC },
   { "B1",		N_ ("B1 JIS"),
