@@ -245,6 +245,7 @@ main(int argc, char **argv)
 	    }
 	  printer_model = malloc(strlen(optarg) + 1);
 	  strcpy(printer_model, optarg);
+	  break;
 	case 'u':
 	  isUSB = 1;
 	  break;
