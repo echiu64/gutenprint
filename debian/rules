@@ -11,14 +11,20 @@ export DH_COMPAT=2
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*//")
+
 # Set LD_LIBRARY_PATH for dh_shlibdeps
-LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint4.1.5/usr/lib
+LD_LIBRARY_PATH = $(shell pwd)/debian/libgimpprint$(UPSTREAM_VERSION)/usr/lib
 export LD_LIBRARY_PATH
 
 build: build-stamp
 build-stamp: configure
 	dh_testdir
 	
+	cd debian ; \
+	ln -sf libgimpprint.files libgimpprint$(UPSTREAM_VERSION).files ; \
+	ln -sf libgimpprint.postinst libgimpprint$(UPSTREAM_VERSION).postinst ; \
+	cd .. ; \
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
 	BUILD_PACKAGE=true ../../configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --disable-test --disable-nls ; \
@@ -34,6 +40,8 @@ clean:
 
 	# Add here commands to clean up after the build process.
 	rm -rf debian/gimp-print-build debian/gimp-print-install
+	rm -rf debian/libgimpprint$(UPSTREAM_VERSION).files
+	rm -rf debian/libgimpprint$(UPSTREAM_VERSION).postinst
 	-$(MAKE) distclean
 
 	dh_clean
@@ -86,8 +94,8 @@ binary-common:
 	dh_makeshlibs
 	dh_installdeb
 #	dh_perl
-	dh_shlibdeps -l`pwd`/debian/libgimpprint4.1.5/usr/lib
-	dh_gencontrol
+	dh_shlibdeps -l`pwd`/debian/libgimpprint$(UPSTREAM_VERSION)/usr/lib
+	dh_gencontrol -- -VUpstream-Version=$(UPSTREAM_VERSION)
 	dh_md5sums
 	dh_builddeb
 
