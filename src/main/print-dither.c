@@ -2845,17 +2845,26 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
         /* Now compute relative indices into cube of colour we have created */
         /* Ignore amount of black at this stage */
-      
+	
         for (i=1; i < NCOLORS; i++) {
 	  if (CHANNEL(d, i).v > dr[i]->value[1]) {
-	    ri[i] = 65355;
+	    ri[i] = 65535;
 	  } else if (CHANNEL(d, i).v < dr[i]->value[0]) {
 	    ri[i] = 0;
 	  } else if (dr[i]->value_span != 0) {
 	    ri[i] = (65535 * (CHANNEL(d, i).v - dr[i]->value[0])) / dr[i]->value_span;
 	    /* Adjust for Eventone here */
 	    if (dr[i]->value[0] == 0) {
-	      ri[i] += r_sq[i] * et->aspect - et->recip[ri[i]];
+	      int t;
+	      if (CHANNEL(d, i).o > dr[i]->value[1]) {
+	        t = 0;
+	      } else if (CHANNEL(d, i).o < dr[i]->value[0]) {
+	        t = et->recip[0];
+	      } else {
+	        t = et->recip[65535 * (CHANNEL(d, i).o - dr[i]->value[0]) / dr[i]->value_span];
+	      }
+	    
+	      ri[i] += r_sq[i] * et->aspect - t;
 	      if (ri[i] > 65535) ri[i] = 65535;
 	      else if (ri[i] < 0) ri[i] = 0;
 	    }
