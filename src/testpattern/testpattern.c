@@ -336,6 +336,8 @@ main(int argc, char **argv)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
   stp_set_float_parameter(v, "Density", density);
+  stp_set_string_parameter(v, "Quality", "None");
+  stp_set_string_parameter(v, "ImageType", "None");
 
   params = stp_get_parameter_list(v);
   count = stp_parameter_list_count(params);
