@@ -8,8 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2003-09-24 18:53-0400\n"
-"PO-Revision-Date: 2003-06-29 17:44+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-30 19:48+0100\n"
+"PO-Revision-Date: 2003-09-30 20:44+0100\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +72,7 @@ msgstr "%s: option `-W %s' is ambiguous\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: option `-W %s' doesn't allow an argument\n"
 
-#: src/main/dither-main.c:46 src/main/print-color.c:2439
+#: src/main/dither-main.c:46 src/main/print-color.c:2453
 msgid "Default"
 msgstr "Default"
 
@@ -385,7 +386,7 @@ msgstr "Resolution and quality of the print"
 #: src/main/print-lexmark.c:297 src/main/print-lexmark.c:298
 #: src/main/print-pcl.c:1146 src/main/print-pcl.c:1147
 msgid "Ink Channels"
-msgstr ""
+msgstr "Ink Channels"
 
 #: src/main/print-canon.c:1271 src/main/print-escp2.c:267
 #: src/main/print-lexmark.c:320 src/main/print-pcl.c:1169
@@ -480,12 +481,11 @@ msgstr "Photo CcMmYK Colour"
 
 #: src/main/print-color.c:87
 msgid "Color Correction"
-msgstr ""
+msgstr "Colour Correction"
 
 #: src/main/print-color.c:88
-#, fuzzy
 msgid "Color correction to be applied"
-msgstr "Colour conversion module"
+msgstr "Colour correction to be applied"
 
 #: src/main/print-color.c:95
 msgid "Brightness"
@@ -573,13 +573,12 @@ msgstr ""
 "Use zero saturation to produce grayscale output using colour and black inks"
 
 #: src/main/print-color.c:174
-#, fuzzy
 msgid "Ink Limit"
-msgstr "Ink Set"
+msgstr "Ink Limit"
 
 #: src/main/print-color.c:175
 msgid "Limit the total ink printed to the page"
-msgstr ""
+msgstr "Limit the total ink printed to the page"
 
 #: src/main/print-color.c:182
 msgid "GCR Transition"
@@ -677,24 +676,23 @@ msgstr "Gray Component Reduction"
 msgid "Gray component reduction curve"
 msgstr "Gray component reduction curve"
 
-#: src/main/print-color.c:2441
+#: src/main/print-color.c:2455
 msgid "High Accuracy"
-msgstr ""
+msgstr "High Accuracy"
 
-#: src/main/print-color.c:2443
-#, fuzzy
+#: src/main/print-color.c:2457
 msgid "Bright"
-msgstr "Brightness"
+msgstr "Bright"
 
-#: src/main/print-color.c:2445
+#: src/main/print-color.c:2459
 msgid "Threshold"
 msgstr "Threshold"
 
-#: src/main/print-color.c:2447
+#: src/main/print-color.c:2461
 msgid "Uncorrected"
 msgstr "Uncorrected"
 
-#: src/main/print-color.c:2504
+#: src/main/print-color.c:2518
 msgid "Traditional Gimp-Print color conversion"
 msgstr "Traditional Gimp-Print colour conversion"
 
@@ -893,25 +891,23 @@ msgstr "Output Order"
 
 #: src/main/print-escp2.c:185 src/main/print-escp2.c:186
 msgid "Alignment Passes"
-msgstr ""
+msgstr "Alignment Passes"
 
 #: src/main/print-escp2.c:191 src/main/print-escp2.c:192
 msgid "Alignment Choices"
-msgstr ""
+msgstr "Alignment Choices"
 
 #: src/main/print-escp2.c:197 src/main/print-escp2.c:198
-#, fuzzy
 msgid "Ink change command"
-msgstr "Unrecognised command.\n"
+msgstr "Ink change command"
 
 #: src/main/print-escp2.c:203 src/main/print-escp2.c:204
 msgid "Alternate Alignment Passes"
-msgstr ""
+msgstr "Alternate Alignment Passes"
 
 #: src/main/print-escp2.c:209 src/main/print-escp2.c:210
-#, fuzzy
 msgid "Alternate Alignment Choices"
-msgstr "Repeating the alignment process.\n"
+msgstr "Alternate Alignment Choices"
 
 #: src/main/print-escp2.c:315 src/main/print-escp2.c:316
 msgid "Dark Yellow Transition"
@@ -950,9 +946,8 @@ msgid "Manual Control"
 msgstr "Manual Control"
 
 #: src/main/print-escp2.c:1208 src/cups/genppd.c:1119
-#, fuzzy
 msgid "Automatic"
-msgstr "Automatic Paper Size"
+msgstr "Automatic"
 
 #: src/main/print-escp2.c:1210
 msgid "Bidirectional"
@@ -967,7 +962,7 @@ msgstr "Unidirectional"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "This printer does not support raw printer output at depth %d\n"
 
-#: src/main/print-escp2.c:2130 src/main/print-raw.c:188
+#: src/main/print-escp2.c:2134 src/main/print-raw.c:188
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print options not verified; cannot print.\n"
 
@@ -1836,24 +1831,20 @@ msgid "EPSON Stylus C42UX"
 msgstr "EPSON Stylus C42UX"
 
 #: src/main/xmli18n-tmp.h:165
-#, fuzzy
 msgid "EPSON Stylus C43SX"
-msgstr "EPSON Stylus C42SX"
+msgstr "EPSON Stylus C43SX"
 
 #: src/main/xmli18n-tmp.h:166
-#, fuzzy
 msgid "EPSON Stylus C43UX"
-msgstr "EPSON Stylus C42UX"
+msgstr "EPSON Stylus C43UX"
 
 #: src/main/xmli18n-tmp.h:167
-#, fuzzy
 msgid "EPSON Stylus C44SX"
-msgstr "EPSON Stylus C42SX"
+msgstr "EPSON Stylus C44SX"
 
 #: src/main/xmli18n-tmp.h:168
-#, fuzzy
 msgid "EPSON Stylus C44UX"
-msgstr "EPSON Stylus C42UX"
+msgstr "EPSON Stylus C44UX"
 
 #: src/main/xmli18n-tmp.h:169
 msgid "EPSON Stylus C50"
@@ -1872,14 +1863,12 @@ msgid "EPSON Stylus C62"
 msgstr "EPSON Stylus C62"
 
 #: src/main/xmli18n-tmp.h:173
-#, fuzzy
 msgid "EPSON Stylus C63"
-msgstr "EPSON Stylus C60"
+msgstr "EPSON Stylus C63"
 
 #: src/main/xmli18n-tmp.h:174
-#, fuzzy
 msgid "EPSON Stylus C64"
-msgstr "EPSON Stylus C60"
+msgstr "EPSON Stylus C64"
 
 #: src/main/xmli18n-tmp.h:175
 msgid "EPSON Stylus C70"
@@ -1894,14 +1883,12 @@ msgid "EPSON Stylus C82"
 msgstr "EPSON Stylus C82"
 
 #: src/main/xmli18n-tmp.h:178
-#, fuzzy
 msgid "EPSON Stylus C83"
-msgstr "EPSON Stylus C80"
+msgstr "EPSON Stylus C83"
 
 #: src/main/xmli18n-tmp.h:179
-#, fuzzy
 msgid "EPSON Stylus C84"
-msgstr "EPSON Stylus C80"
+msgstr "EPSON Stylus C84"
 
 #: src/main/xmli18n-tmp.h:180
 msgid "EPSON Stylus Color"
@@ -2180,18 +2167,16 @@ msgid "EPSON Stylus Scan 2500"
 msgstr "EPSON Stylus Scan 2500"
 
 #: src/main/xmli18n-tmp.h:249
-#, fuzzy
 msgid "EPSON Stylus CX-3100"
-msgstr "EPSON Stylus CX-3200"
+msgstr "EPSON Stylus CX-3100"
 
 #: src/main/xmli18n-tmp.h:250
 msgid "EPSON Stylus CX-3200"
 msgstr "EPSON Stylus CX-3200"
 
 #: src/main/xmli18n-tmp.h:251
-#, fuzzy
 msgid "EPSON Stylus CX-5100"
-msgstr "EPSON Stylus CX-5200"
+msgstr "EPSON Stylus CX-5100"
 
 #: src/main/xmli18n-tmp.h:252
 msgid "EPSON Stylus CX-5200"
@@ -2366,9 +2351,8 @@ msgid "EPSON PM-10000"
 msgstr "EPSON PM-10000"
 
 #: src/main/xmli18n-tmp.h:295
-#, fuzzy
 msgid "EPSON PX-V500"
-msgstr "EPSON PX-9000"
+msgstr "EPSON PX-V500"
 
 #: src/main/xmli18n-tmp.h:296
 msgid "EPSON PX-7000"
@@ -2612,21 +2596,19 @@ msgstr "LEXMARK Z53"
 
 #: src/main/xmli18n-tmp.h:356
 msgid "OLYMPUS P300"
-msgstr ""
+msgstr "OLYMPUS P300"
 
 #: src/main/xmli18n-tmp.h:357
 msgid "OLYMPUS P400"
-msgstr ""
+msgstr "OLYMPUS P400"
 
 #: src/main/xmli18n-tmp.h:358
-#, fuzzy
 msgid "CANON CP100"
-msgstr "CANON BJC 1000"
+msgstr "CANON CP100"
 
 #: src/main/xmli18n-tmp.h:359
-#, fuzzy
 msgid "SONY UP-DP10"
-msgstr "EPSON PM-10000"
+msgstr "SONY UP-DP10"
 
 #: src/main/xmli18n-tmp.h:360
 msgid "RAW DATA 16 bit"
@@ -2978,7 +2960,6 @@ msgid "Gimp-Print Version "
 msgstr "Gimp-Print Version "
 
 #: src/libgimpprintui/panel.c:1512
-#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -3003,7 +2984,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Copyright © 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
 "and the rest of the Gimp-Print Development Team.\n"
 "\n"
 "Please visit our web site at http://gimp-print.sourceforge.net.\n"
@@ -3132,7 +3113,7 @@ msgstr "Image preview"
 
 #: src/libgimpprintui/panel.c:1817
 msgid "View Output Channels:"
-msgstr ""
+msgstr "View Output Channels:"
 
 #: src/libgimpprintui/panel.c:1875
 msgid "Output"
@@ -3223,9 +3204,8 @@ msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
 #: src/cups/genppd.c:1203 src/cups/genppd.c:1218
-#, fuzzy
 msgid "None"
-msgstr "No"
+msgstr "None"
 
 #: src/cups/genppd.c:1220
 msgid "No"
@@ -3244,14 +3224,13 @@ msgid "Escputil version "
 msgstr "Escputil version "
 
 #: src/escputil/escputil.c:67
-#, fuzzy
 msgid ""
 ", Copyright (C) 2000-2003 Robert Krawitz\n"
 "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n"
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
-", Copyright © 2000-2001 Robert Krawitz\n"
+", Copyright (C) 2000-2003 Robert Krawitz\n"
 "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n"
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; type 'escputil -l' for details.\n"
@@ -3291,7 +3270,6 @@ msgstr ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
 #: src/escputil/escputil.c:112
-#, fuzzy
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
@@ -3330,9 +3308,9 @@ msgid ""
 "    -m|--model         Specify the precise printer model for head "
 "alignment.\n"
 msgstr ""
-"Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P printer | -r device] [-u] [-q] [-m model]\n"
-"Perform maintenance on EPSON Stylus ® printers.\n"
+"Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n"
+"                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
+"Perform maintenance on EPSON Stylus (R) printers.\n"
 "Examples: escputil --clean-head --printer stpex-on-third-floor\n"
 "          escputil --ink-level --new --raw-device /dev/lp0\n"
 "\n"
@@ -3345,18 +3323,13 @@ msgstr ""
 "    -a|--align-head    Align the print head.  CAUTION: Misuse of this\n"
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
-"    -o|--align-color   Align the colour print head (Stylus Color 480 and\n"
-"                       580 only).  CAUTION: Misuse of this utility may\n"
-"                       result in poor print quality and/or damage to the\n"
-"                       printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -d|--identify      Query the printer for make and model information.\n"
 "                       This requires read/write access to the raw printer\n"
 "                       device.\n"
-"    -l|--license       Display the license/warranty terms of this program.\n"
+"    -l|--license       Display the licence/warranty terms of this program.\n"
 "    -M|--list-models   List the available printer models.\n"
 "    -h|--help          Print this help message.\n"
 "  Options:\n"
@@ -3364,14 +3337,13 @@ msgstr ""
 "                       Default is the default system printer.\n"
 "    -r|--raw-device    Specify the name of the device to write to directly\n"
 "                       rather than going through a printer queue.\n"
-"    -u|--new           The printer is a new printer (Stylus Colour 740 or\n"
+"    -u|--new           The printer is a new printer (Stylus Color 740 or\n"
 "                       newer).\n"
 "    -q|--quiet         Suppress the banner.\n"
-"    -m|--model         Specify the precise printer model for head "
-"alignment.\n"
+"    -S|--short-name    Print the short name of the printer with --identify.\n"
+"    -m|--model         Specify the precise printer model for head alignment.\n"
 
 #: src/escputil/escputil.c:148
-#, fuzzy
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n"
@@ -3408,9 +3380,9 @@ msgid ""
 "    -m Specify the precise printer model for head alignment.\n"
 msgstr ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
-"Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P printer | -r device] [-u] [-q] [-m model]\n"
-"Perform maintenance on EPSON Stylus ® printers.\n"
+"Usage: escputil [-c | -n | -a | -i | -s | -d | -l | -M]\n"
+"                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
+"Perform maintenance on EPSON Stylus (R) printers.\n"
 "Examples: escputil -c -P stpex-on-third-floor\n"
 "          escputil -i -u -r /dev/lp0\n"
 "\n"
@@ -3423,15 +3395,12 @@ msgstr ""
 "    -a Align the print head.  CAUTION: Misuse of this\n"
 "          utility may result in poor print quality and/or\n"
 "          damage to the printer.\n"
-"    -o Align the colour print head (Stylus Colour 480 and 580\n"
-"          only).  CAUTION: Misuse of this utility may result in\n"
-"          poor print quality and/or damage to the printer.\n"
 "    -s Retrieve printer status.\n"
 "    -i Obtain the ink level from the printer.  This requires\n"
 "          read/write access to the raw printer device.\n"
 "    -d Query the printer for make and model information.  This\n"
 "          requires read/write access to the raw printer device.\n"
-"    -l Display the license/warranty terms of this program.\n"
+"    -l Display the licence/warranty terms of this program.\n"
 "    -M List the available printer models.\n"
 "    -h Print this help message.\n"
 "  Options:\n"
@@ -3439,8 +3408,9 @@ msgstr ""
 "          Default is the default system printer.\n"
 "    -r Specify the name of the device to write to directly\n"
 "          rather than going through a printer queue.\n"
-"    -u The printer is a new printer (Stylus Colour 740 or newer).\n"
+"    -u The printer is a new printer (Stylus Color 740 or newer).\n"
 "    -q Suppress the banner.\n"
+"    -S Print the short name of the printer with -d.\n"
 "    -m Specify the precise printer model for head alignment.\n"
 
 #: src/escputil/escputil.c:274 src/escputil/escputil.c:283
