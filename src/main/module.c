@@ -284,7 +284,8 @@ stpi_module_open(const char *modulename /* Module filename */)
       return 0;
     }
 
-  DLCLOSE(module);
+  if (module)
+    DLCLOSE(module);
 #endif
   return 1;
 }
