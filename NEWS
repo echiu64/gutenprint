@@ -292,6 +292,9 @@ The following bugs have been fixed in Gimp-Print 4.2.7:
 919226 Incorrect horizontal offset on Epson C64 and C84 printers
 924862 Gimp-print breaks thebuild script of the GIMP 2.0 on Solaris
 929227 Gimp-Print incorrectly attempts to build against GIMP 2.0
+971832 HP DesignJet 2500/3500 have incorrect widths
+971833 CUPS PPD manufacturer names violate spec (4.2)
+972014 eksprx600_610.ppd crashes gimp-print-4.2.6-4
 
 The following bugs are currently open:
 
