@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2003-06-20 21:28-0400\n"
+"POT-Creation-Date: 2003-07-06 21:28-0400\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -2237,431 +2237,441 @@ msgstr "Stylus Scan 2500"
 
 #: src/main/xmli18n-tmp.h:241
 #, fuzzy
-msgid "EPSON Stylus CX-3200"
+msgid "EPSON Stylus CX-3100"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:242
 #, fuzzy
+msgid "EPSON Stylus CX-3200"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:243
+#, fuzzy
+msgid "EPSON Stylus CX-5100"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:244
+#, fuzzy
 msgid "EPSON Stylus CX-5200"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:243
+#: src/main/xmli18n-tmp.h:245
 msgid "EPSON CL-700"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:244
+#: src/main/xmli18n-tmp.h:246
 msgid "EPSON CL-750"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:245
+#: src/main/xmli18n-tmp.h:247
 msgid "EPSON CL-760"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:246
+#: src/main/xmli18n-tmp.h:248
 msgid "EPSON EM-900C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:247
+#: src/main/xmli18n-tmp.h:249
 msgid "EPSON EM-930C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:248
+#: src/main/xmli18n-tmp.h:250
 msgid "EPSON MC-2000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:249
+#: src/main/xmli18n-tmp.h:251
 msgid "EPSON MC-5000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:250
+#: src/main/xmli18n-tmp.h:252
 msgid "EPSON MC-7000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:251
+#: src/main/xmli18n-tmp.h:253
 msgid "EPSON MC-9000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:252
+#: src/main/xmli18n-tmp.h:254
 msgid "EPSON MC-10000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:253
+#: src/main/xmli18n-tmp.h:255
 msgid "EPSON MJ-930C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:254
+#: src/main/xmli18n-tmp.h:256
 msgid "EPSON MJ-5100C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:255
+#: src/main/xmli18n-tmp.h:257
 msgid "EPSON MJ-6000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:256
+#: src/main/xmli18n-tmp.h:258
 msgid "EPSON MJ-8000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:257
+#: src/main/xmli18n-tmp.h:259
 msgid "EPSON PM-700C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:258
+#: src/main/xmli18n-tmp.h:260
 msgid "EPSON PM-730C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:259
+#: src/main/xmli18n-tmp.h:261
 msgid "EPSON PM-740C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:260
+#: src/main/xmli18n-tmp.h:262
 msgid "EPSON PM-750C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:261
+#: src/main/xmli18n-tmp.h:263
 msgid "EPSON PM-760C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:262
+#: src/main/xmli18n-tmp.h:264
 msgid "EPSON PM-770C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:263
+#: src/main/xmli18n-tmp.h:265
 msgid "EPSON PM-780C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:264
+#: src/main/xmli18n-tmp.h:266
 msgid "EPSON PM-790PT"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:265
+#: src/main/xmli18n-tmp.h:267
 msgid "EPSON PM-800C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:266
+#: src/main/xmli18n-tmp.h:268
 msgid "EPSON PM-850PT"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:267
+#: src/main/xmli18n-tmp.h:269
 msgid "EPSON PM-870C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:268
+#: src/main/xmli18n-tmp.h:270
 msgid "EPSON PM-880C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:269
+#: src/main/xmli18n-tmp.h:271
 msgid "EPSON PM-930C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:270
+#: src/main/xmli18n-tmp.h:272
 msgid "EPSON PM-940C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:271
+#: src/main/xmli18n-tmp.h:273
 msgid "EPSON PM-950C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:272
+#: src/main/xmli18n-tmp.h:274
 msgid "EPSON PM-970C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:273
+#: src/main/xmli18n-tmp.h:275
 msgid "EPSON PM-980C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:274
+#: src/main/xmli18n-tmp.h:276
 msgid "EPSON PM-2000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:275
+#: src/main/xmli18n-tmp.h:277
 msgid "EPSON PM-2200C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:276
+#: src/main/xmli18n-tmp.h:278
 msgid "EPSON PM-3000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:277
+#: src/main/xmli18n-tmp.h:279
 msgid "EPSON PM-3300C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:278
+#: src/main/xmli18n-tmp.h:280
 msgid "EPSON PM-3500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:279
+#: src/main/xmli18n-tmp.h:281
 msgid "EPSON PM-3700C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:280
+#: src/main/xmli18n-tmp.h:282
 msgid "EPSON PM-4000PX"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:281
+#: src/main/xmli18n-tmp.h:283
 msgid "EPSON PM-5000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:282
+#: src/main/xmli18n-tmp.h:284
 msgid "EPSON PM-7000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:283
+#: src/main/xmli18n-tmp.h:285
 msgid "EPSON PM-9000C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:284
+#: src/main/xmli18n-tmp.h:286
 msgid "EPSON PM-10000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:285
+#: src/main/xmli18n-tmp.h:287
 msgid "EPSON PX-7000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:286
+#: src/main/xmli18n-tmp.h:288
 msgid "EPSON PX-9000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:287
+#: src/main/xmli18n-tmp.h:289
 msgid "APPLE Color StyleWriter 4100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:288
+#: src/main/xmli18n-tmp.h:290
 msgid "APPLE Color StyleWriter 4500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:289
+#: src/main/xmli18n-tmp.h:291
 msgid "APPLE Color StyleWriter 6500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:290
+#: src/main/xmli18n-tmp.h:292
 msgid "HP DeskJet 340"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:291
+#: src/main/xmli18n-tmp.h:293
 msgid "HP DeskJet 400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:292
+#: src/main/xmli18n-tmp.h:294
 msgid "HP DeskJet 500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:293
+#: src/main/xmli18n-tmp.h:295
 msgid "HP DesignJet 230"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:294
+#: src/main/xmli18n-tmp.h:296
 msgid "HP DesignJet 250C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:295
+#: src/main/xmli18n-tmp.h:297
 msgid "HP DesignJet 700"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:296
+#: src/main/xmli18n-tmp.h:298
 msgid "HP DesignJet 750C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:297
+#: src/main/xmli18n-tmp.h:299
 msgid "HP DesignJet 2500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:298
+#: src/main/xmli18n-tmp.h:300
 msgid "HP DesignJet 3500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:299
+#: src/main/xmli18n-tmp.h:301
 msgid "HP DesignJet 430"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:300
+#: src/main/xmli18n-tmp.h:302
 msgid "HP DesignJet 450C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:301
+#: src/main/xmli18n-tmp.h:303
 msgid "HP DesignJet 455CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:302
+#: src/main/xmli18n-tmp.h:304
 msgid "HP DesignJet 488CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:303
+#: src/main/xmli18n-tmp.h:305
 msgid "HP DeskJet 500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:304
+#: src/main/xmli18n-tmp.h:306
 msgid "HP DeskJet 520"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:305
+#: src/main/xmli18n-tmp.h:307
 msgid "HP DeskJet 540C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:306
+#: src/main/xmli18n-tmp.h:308
 msgid "HP DeskJet 550C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:307
+#: src/main/xmli18n-tmp.h:309
 msgid "HP DeskJet 560C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:308
+#: src/main/xmli18n-tmp.h:310
 msgid "HP DeskJet 600/600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:309
+#: src/main/xmli18n-tmp.h:311
 msgid "HP DeskJet 600 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:310
+#: src/main/xmli18n-tmp.h:312
 msgid "HP DeskJet 690 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:311
+#: src/main/xmli18n-tmp.h:313
 msgid "HP DeskJet 810C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:312
+#: src/main/xmli18n-tmp.h:314
 msgid "HP DeskJet 812C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:313
+#: src/main/xmli18n-tmp.h:315
 msgid "HP DeskJet 840C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:314
+#: src/main/xmli18n-tmp.h:316
 msgid "HP DeskJet 842C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:315
+#: src/main/xmli18n-tmp.h:317
 msgid "HP DeskJet 845C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:316
+#: src/main/xmli18n-tmp.h:318
 msgid "HP DeskJet 850C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:317
+#: src/main/xmli18n-tmp.h:319
 msgid "HP DeskJet 855C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:318
+#: src/main/xmli18n-tmp.h:320
 msgid "HP DeskJet 870C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:319
+#: src/main/xmli18n-tmp.h:321
 msgid "HP DeskJet 890C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:320
+#: src/main/xmli18n-tmp.h:322
 msgid "HP DeskJet 895C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:321
+#: src/main/xmli18n-tmp.h:323
 msgid "HP DeskJet 900 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:322
+#: src/main/xmli18n-tmp.h:324
 msgid "HP DeskJet 1100C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:323
+#: src/main/xmli18n-tmp.h:325
 msgid "HP DeskJet 1120C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:324
+#: src/main/xmli18n-tmp.h:326
 msgid "HP DeskJet 1200C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:325
+#: src/main/xmli18n-tmp.h:327
 msgid "HP DeskJet 1220C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:326
+#: src/main/xmli18n-tmp.h:328
 msgid "HP DeskJet 1600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:327
+#: src/main/xmli18n-tmp.h:329
 msgid "HP DeskJet 2000 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:328
+#: src/main/xmli18n-tmp.h:330
 msgid "HP DeskJet 2500 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:329
+#: src/main/xmli18n-tmp.h:331
 msgid "HP PhotoSmart P1000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:330
+#: src/main/xmli18n-tmp.h:332
 msgid "HP PhotoSmart P1100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:331
+#: src/main/xmli18n-tmp.h:333
 msgid "HP LaserJet II series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:332
+#: src/main/xmli18n-tmp.h:334
 msgid "HP LaserJet IIP series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:333
+#: src/main/xmli18n-tmp.h:335
 msgid "HP LaserJet III series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:334
+#: src/main/xmli18n-tmp.h:336
 msgid "HP LaserJet 4 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:335
+#: src/main/xmli18n-tmp.h:337
 msgid "HP LaserJet 4L"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:336
+#: src/main/xmli18n-tmp.h:338
 msgid "HP LaserJet 4V, 4Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:337
+#: src/main/xmli18n-tmp.h:339
 msgid "HP LaserJet 5 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:338
+#: src/main/xmli18n-tmp.h:340
 msgid "HP LaserJet 5Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:339
+#: src/main/xmli18n-tmp.h:341
 msgid "HP LaserJet 6 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:340
+#: src/main/xmli18n-tmp.h:342
 msgid "LEXMARK 4076"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:341
+#: src/main/xmli18n-tmp.h:343
 msgid "LEXMARK Z42"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:342
+#: src/main/xmli18n-tmp.h:344
 msgid "LEXMARK Z43"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:343
+#: src/main/xmli18n-tmp.h:345
 msgid "LEXMARK Z52"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:344
+#: src/main/xmli18n-tmp.h:346
 msgid "LEXMARK Z53"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:345
+#: src/main/xmli18n-tmp.h:347
 msgid "Olympus P300"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:346
+#: src/main/xmli18n-tmp.h:348
 msgid "RAW DATA 16 bit"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:347
+#: src/main/xmli18n-tmp.h:349
 msgid "RAW DATA 8 bit"
 msgstr ""
 
