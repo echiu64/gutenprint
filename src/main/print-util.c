@@ -246,7 +246,7 @@ stp_allocate_vars(void)
 do						\
 {						\
   if ((x))					\
-    stp_free((char *)(x));				\
+    stp_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
 
@@ -409,25 +409,25 @@ stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
   stp_internal_option_t *popt = NULL;
   if (opt)
     {
-      stp_internal_option_t *nopt = xmalloc(sizeof(stp_internal_option_t));
+      stp_internal_option_t *nopt = stp_malloc(sizeof(stp_internal_option_t));
       stp_set_verified(vd, 0);
       dest->options = nopt;
       memcpy(nopt, opt, sizeof(stp_internal_option_t));
-      nopt->name = xmalloc(strlen(opt->name) + 1);
+      nopt->name = stp_malloc(strlen(opt->name) + 1);
       strcpy(nopt->name, opt->name);
-      nopt->data = xmalloc(opt->length);
+      nopt->data = stp_malloc(opt->length);
       memcpy(nopt->data, opt->data, opt->length);
       opt = opt->next;
       popt = nopt;
       while (opt)
         {
-          nopt = xmalloc(sizeof(stp_internal_option_t));
+          nopt = stp_malloc(sizeof(stp_internal_option_t));
           memcpy(nopt, opt, sizeof(stp_internal_option_t));
           nopt->prev = popt;
           popt->next = nopt;
-          nopt->name = xmalloc(strlen(opt->name) + 1);
+          nopt->name = stp_malloc(strlen(opt->name) + 1);
           strcpy(nopt->name, opt->name);
-          nopt->data = xmalloc(opt->length);
+          nopt->data = stp_malloc(opt->length);
           memcpy(nopt->data, opt->data, opt->length);
           opt = opt->next;
           popt = nopt;
@@ -551,15 +551,15 @@ stp_set_option(stp_vars_t vd, const char *name, const char *data, int bytes)
   else
     {
       stp_internal_option_t *popt = (stp_internal_option_t *) (v->options);
-      opt = xmalloc(sizeof(stp_internal_option_t));
-      opt->name = xmalloc(strlen(name) + 1);
+      opt = stp_malloc(sizeof(stp_internal_option_t));
+      opt->name = stp_malloc(strlen(name) + 1);
       strcpy(opt->name, name);
       opt->next = popt;
       if (popt)
         popt->prev = opt;
       v->options = opt;
     }
-  opt->data = xmalloc(bytes);
+  opt->data = stp_malloc(bytes);
   opt->length = bytes;
   memcpy(opt->data, data, bytes);
 }

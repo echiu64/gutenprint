@@ -31,7 +31,11 @@
 #include "gdevpccm.h"
 #include "gsparam.h"
 
+#ifdef DISABLE_NLS
 #include "gdevstp-print.h"
+#else
+#include <gimp-print/gimp-print.h>
+#endif
 
 /* internal debugging output ? */
 

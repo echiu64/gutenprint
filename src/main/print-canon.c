@@ -1849,9 +1849,9 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 #define PUT(WHAT,VAL,RES) do {} while (0)
 #endif
 
-#define ESC28 "\x1b\x28"
-#define ESC5b "\x1b\x5b"
-#define ESC40 "\x1b\x40"
+#define ESC28 "\033\050"
+#define ESC5b "\033\133"
+#define ESC40 "\033\100"
 
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a,b) (((a)>(b)) ? (a) : (b))
@@ -3027,7 +3027,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 #ifdef DEBUG
     /* stp_erprintf("<%d%c>",*empty,("CMYKcmy"[coloridx])); */
 #endif
-    stp_zfwrite("\x1b\x28\x65\x02\x00", 5, 1, v);
+    stp_zfwrite("\033\050\145\002\000", 5, 1, v);
     stp_putc((*empty) >> 8 , v);
     stp_putc((*empty) & 255, v);
     *empty= 0;
@@ -3035,14 +3035,14 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
  /* Send a line of raster graphics... */
 
-  stp_zfwrite("\x1b\x28\x41", 3, 1, v);
+  stp_zfwrite("\033\050\101", 3, 1, v);
   stp_putc((newlength+1) & 255, v);
   stp_putc((newlength+1) >> 8, v);
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
   stp_putc(color,v);
   stp_zfwrite((const char *)comp_buf, newlength, 1, v);
-  stp_putc('\x0d', v);
+  stp_putc('\015', v);
   return 1;
 }
 
@@ -3089,7 +3089,7 @@ canon_write_line(const stp_vars_t v,	/* I - Print file or command */
     canon_write(v, caps, lc+dlc*l, l, 4, ydpi, empty, width, offset, bits);
 
   if (written||(empty==0))
-    stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
+    stp_zfwrite("\033\050\145\002\000\000\001", 7, 1, v);
   else
     (*empty)+= 1;
 }

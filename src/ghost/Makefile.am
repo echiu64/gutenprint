@@ -104,7 +104,8 @@ EXTRA_DIST = \
 	Makefile.am \
 	README \
 	README.bsd \
-	contrib.mak.addon \
+	contrib.mak.addon.in \
+	contrib.mak.addon.old \
 	debian-patch \
 	debian-patch-stp \
 	devs.mak.addon-5.10 \

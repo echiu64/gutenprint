@@ -59,6 +59,7 @@
 #include <gimp-print.h>
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
+#include <string.h>
 
 #define false 0
 #define true  1
@@ -1104,7 +1105,7 @@ lexmark_limit(const stp_printer_t printer,	/* I - Printer model */
 
 
 
-static void
+static int
 lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 		     int output_type, const char *media_str,
 		     int print_head,
@@ -1142,7 +1143,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 					   0x01,0x1b,0x2a,0x07,0x73,0x30,0x1b,0x2a,
 					   0x6d,0x00,0x14,0x01,0xf4,0x02,0x00,0x01,
 					   0xf0,0x1b,0x2a,0x07,0x63};
-  #define ESC2a "\x1b\x2a"
+  #define ESC2a "\033\052"
 
 
 
@@ -1171,7 +1172,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 
 		default:
 			stp_erprintf("Unknown printer !! %i\n", caps->model);
-			exit(2);
+			return 0;
   }
 
   if (output_type==OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) {
@@ -1190,7 +1191,7 @@ lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
 #endif
   */
-
+  return 1;
 }
 
 static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * caps)
@@ -1566,10 +1567,11 @@ densityDivisor /= 1.2;
   image->progress_init(image);
 
 
-  lexmark_init_printer(nv, caps, output_type, media_type,
-		       printhead, media_source,
-		       xdpi, ydpi, page_width, page_height,
-		       top,left,use_dmt);
+  if (!lexmark_init_printer(nv, caps, output_type, media_type,
+			    printhead, media_source,
+			    xdpi, ydpi, page_width, page_height,
+			    top,left,use_dmt))
+    return;
 
   /*
   * Convert image size to printer resolution...

@@ -540,10 +540,16 @@ AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(RELEASE_DATE)
 AC_SUBST(TEST_BIN)
 
+AC_OUTPUT_COMMANDS([],[
+exec_prefix=`eval echo ${exec_prefix}`
+prefix=${prefix}
+])
+
 dnl Output files
 dnl po/Makefile.in *MUST* be surrounded by spaces to work with buggy
 dnl gettext 0.10.36.  Do not move this file to the beginning or end
 dnl of a line.
+
 AC_OUTPUT([
 Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile
 man/cups-calibrate.8 man/escputil.1 man/gimpprint.3
@@ -552,9 +558,14 @@ src/escputil/Makefile src/foomatic/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/gimp/Makefile
 src/include/Makefile src/include/gimp-print.h src/main/Makefile
 src/main/gimpprint-config src/printdef/Makefile test/Makefile
+src/ghost/contrib.mak.addon
 ],[
 chmod +x src/main/gimpprint-config
 chmod +x src/foomatic/foomatic-generator
+if test -f src/ghost/contrib.mak.addon ; then
+  sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
+  mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
+fi
 echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."

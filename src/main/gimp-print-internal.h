@@ -36,8 +36,6 @@
 
 #ifndef DISABLE_NLS
 #include "../../lib/libprintut.h"
-#else
-#define xmalloc malloc
 #endif
 
 /*

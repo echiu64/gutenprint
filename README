@@ -53,20 +53,11 @@ use of this software for general printing purposes.  Please read
 src/ghost/README for more information, including how to build and
 install it, and available options; the build procedure here merely
 creates the necessary source files that you must add to your
-Ghostscript source.  To build the Ghostscript driver, you must run:
-
-./configure --with-ghost
-make
-cd src/ghost
-
-If you do not wish to build the Gimp Print plugin, you must run
-
-./configure --with-ghost --without-gimp
-
-Again, please be sure to read src/Ghost/README for the available
-options, which may change from release to release.  In particular, the
-source files may well change from release to release; be certain to
-follow the directions PRECISELY for each release!
+Ghostscript source.  The directions vary for different versions of
+Ghostscript.  Only Ghostscript 5.10, 5.50, and 6.51 are currently
+supported.  In particular, versions of Ghostscript that are not
+licensed under the GNU General Public License (GPL) are not supported,
+and this driver may not be distributed with such a version.
 
 
 CUPS
@@ -139,9 +130,10 @@ adjusted as necessary for particular combinations of ink, paper, and
 subject material.
 
 We recommend use of the Adaptive Hybrid dithering algorithm in most
-cases.  Users of four color printers may find that the Ordered
-dithering algorithm is faster and produces nearly as good output.  Use
-of this method is strongly discouraged on six color (photo) printers.
+cases.  Ordered dithering also works very well in many cases, and is
+somewhat faster, but it does not work very well with text and very
+fine details (certain kinds of line art).  Fast dithering is also
+quite usable in many cases.
 
 On most inkjet printers, 720 dpi will produce very high quality;
 1440x720 dpi will produce extremely high quality.
