@@ -601,6 +601,24 @@ check_page_size(const char *paper_size)
 }
 
 static void
+build_page_size_combo(option_t *option)
+{
+  if (stpui_show_all_paper_sizes)
+    plist_build_combo(option->info.list.combo, option->info.list.label,
+		      option->info.list.params, option->is_active,
+		      stp_get_string_parameter(pv->v, option->fast_desc->name),
+		      option->info.list.default_val, combo_callback,
+		      &(option->info.list.callback_id), NULL, option);
+  else
+    plist_build_combo(option->info.list.combo, option->info.list.label,
+		      option->info.list.params, option->is_active,
+		      stp_get_string_parameter(pv->v, option->fast_desc->name),
+		      option->info.list.default_val, combo_callback,
+		      &(option->info.list.callback_id),
+		      check_page_size, option);    
+}
+
+static void
 build_a_combo(option_t *option)
 {
   const gchar *new_value;
@@ -618,17 +636,8 @@ build_a_combo(option_t *option)
 	stp_set_string_parameter(pv->v, option->fast_desc->name,
 				 option->info.list.default_val);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
-	  strcmp(option->fast_desc->name, "PageSize") == 0 &&
-	  !stpui_show_all_paper_sizes)
-	
-	plist_build_combo(option->info.list.combo, option->info.list.label,
-			  option->info.list.params,
-			  option->is_active,
-			  stp_get_string_parameter(pv->v,
-						   option->fast_desc->name),
-			  option->info.list.default_val, combo_callback,
-			  &(option->info.list.callback_id),
-			  check_page_size, option);
+	  strcmp(option->fast_desc->name, "PageSize") == 0)
+	build_page_size_combo(option);
       else
 	plist_build_combo(option->info.list.combo, option->info.list.label,
 			  option->info.list.params,
@@ -2448,8 +2457,11 @@ do_color_updates (void)
 		set_curve_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_INACTIVE))
+	      if (opt->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
+		  strcmp(opt->fast_desc->name, "PageSize") == 0)
+		build_page_size_combo(opt);
+	      else if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
+						  STP_PARAMETER_INACTIVE))
 		plist_build_combo(opt->info.list.combo, opt->info.list.label,
 				  opt->info.list.params, opt->is_active,
 				  (stp_get_string_parameter
