@@ -93,7 +93,7 @@ dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
-ALL_LINGUAS="en_GB sv no fr da pl sk"
+ALL_LINGUAS="en_GB sv no fr da pl sk el"
 AC_SUBST(ALL_LINGUAS)
 
 dnl Compiler options and definitions
@@ -333,32 +333,34 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_YACC
 AM_PROG_LEX
-AC_PATH_PROG(PERL, perl, perl)
-AC_PATH_PROG(CONVERT, convert, convert)
+AC_PATH_PROG(BISON_PROG, bison)
+AC_PATH_PROG(YACC_PROG, yacc)
+AC_PATH_PROG(PERL, perl)
+AC_PATH_PROG(CONVERT, convert)
 if test x${CONVERT} = x ; then
   AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(TEXI2HTML, texi2html, texi2html)
+AC_PATH_PROG(TEXI2HTML, texi2html)
 if test x${TEXI2HTML} = x ; then
   AC_MSG_WARN([HTML documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DVIPS, dvips, dvips)
+AC_PATH_PROG(DVIPS, dvips)
 if test x${DVIPS} = x ; then
   AC_MSG_WARN([PostScript documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2PDF, db2pdf, db2pdf)
+AC_PATH_PROG(DB2PDF, db2pdf)
 if test x${DB2PDF} = x ; then
   AC_MSG_WARN([PDF user's guide cannot be regenerated!])
 fi
-AC_PATH_PROGS(DVIPDF, dvipdf dvipdfm, dvipdf)
+AC_PATH_PROGS(DVIPDF, dvipdf dvipdfm)
 if test x${DVIPDF} = x ; then
   AC_MSG_WARN([PDF documentation cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2PS, db2ps, dbp2s)
+AC_PATH_PROG(DB2PS, db2ps)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([PostScript user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(DB2HTML, db2html, db2html)
+AC_PATH_PROG(DB2HTML, db2html)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([HTML user's guide cannot be regenerated!])
 fi
@@ -481,7 +483,7 @@ if test x${BUILD_CUPS} = xyes ; then
     LIBS="$LIBS -lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
-  AC_PATH_PROG(CUPS_CONFIG, cups-config, cups-config)
+  AC_PATH_PROG(CUPS_CONFIG, cups-config)
   if test "x$CUPS_CONFIG" != x; then
     dnl Use values from CUPS config...
     CUPS_LIBS="`$CUPS_CONFIG --ldflags` `$CUPS_CONFIG --image --libs`"
