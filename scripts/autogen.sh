@@ -278,6 +278,15 @@ do
 	else
 	  echo "Creating $dr/aclocal.m4 ..."
 	  test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
+	  # We've removed po/ChangeLog from the repository.  Version
+	  # 0.10.40 of gettext appends an entry to the ChangeLog every time
+	  # anyone runs autogen.sh.  Since developers do that a lot, and
+	  # then proceed to commit their entire sandbox, we wind up with
+	  # an ever-growing po/ChangeLog that generates CVS conflicts on
+	  # a routine basis.  There's no good reason for this.
+	  echo 'This ChangeLog is redundant. Please see the main ChangeLog for i18n changes.' > po/ChangeLog
+	  echo >> po/ChangeLog
+	  echo 'This file is present only to keep po/Makefile.in.in happy.' >> po/ChangeLog
 	  echo "Running gettextize...  Ignore non-fatal messages."
 	  echo "no" | gettextize --force --copy
 	  echo "Making $dr/aclocal.m4 writable ..."
