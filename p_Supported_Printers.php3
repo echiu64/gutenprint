@@ -43,7 +43,8 @@ they may work incompletely, or they may not actually work at all.</p>
 <table>
 <?
 while ( list( $key, $val ) = each( $GLOBALS['all_known_printers']) ) {
-      echo '<tr><td>' . $key . '</td><td>' . $val . '</td></tr>';
+      echo '<tr><td>' . $key . '</td><td>' . $val . '</td><td>' .
+      $GLOBALS['printer_drivers][$val] . '<td></tr>';
 }
 ?>
 </table>
