@@ -1158,7 +1158,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
 			     vertical_passes, vertical_subsample, colormode,
-			     bits, out_width, out_height, separation_rows,
+			     bits, out_width * escp2_xres(model) / 720,
+			     out_height, separation_rows,
 			     top * 720 / 72, page_height * 720 / 72);
   else
     escp2_init_microweave();
