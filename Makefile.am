@@ -59,17 +59,17 @@ dist-hook:
 
 .PHONY: install-gimp install-cups install-ghost snapshot
 
-install-gimp:
+install-gimp: all
 	$(MAKE) -C src/gimp install
 
-install-cups:
+install-cups: all
 	$(MAKE) -C src/cups install
 
-install-ghost:
+install-ghost: all
 	$(MAKE) -C src/ghost install
 
 snapshot:
-	$(MAKE) dist distdir=$(PACKAGE)`date +"%y%m%d"`
+	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
 
 CLEANSCRIPTS = \
 	config.guess \
