@@ -63,7 +63,7 @@ static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 /* { 0.26, 0x3, 1, 3 }, */
   { 0.25,  0x1, 0, 1 },
   { 0.5,   0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 1.0,   0x3, 0, 4 }
 };
 
 static const escp2_variable_ink_t photo_6pl_ink =
@@ -109,10 +109,10 @@ static const escp2_variable_ink_t photo_pigment_ink =
 
 static const stp_simple_dither_range_t photo_4pl_dither_ranges[] =
 {
-  { 0.17,  0x1, 1, 1 },
-  { 0.26,  0x2, 1, 2 },
-  { 0.661, 0x1, 0, 1 },
-  { 1.00,  0x2, 0, 2 }
+  { 0.17,  0x1, 1, 2 },
+  { 0.26,  0x2, 1, 3 },
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
 };
 
 static const escp2_variable_ink_t photo_4pl_ink =
@@ -124,10 +124,10 @@ static const escp2_variable_ink_t photo_4pl_ink =
 
 static const stp_simple_dither_range_t spro10000_photo_dither_ranges[] =
 {
-  { 0.17,  0x1, 1, 1 },
-  { 0.26,  0x2, 1, 2 },
-  { 0.661, 0x1, 0, 1 },
-  { 1.00,  0x2, 0, 2 }
+  { 0.17,  0x1, 1, 2 },
+  { 0.26,  0x2, 1, 3 },
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
 };
 
 static const escp2_variable_ink_t spro10000_photo_ink =
@@ -139,8 +139,8 @@ static const escp2_variable_ink_t spro10000_photo_ink =
 
 static const stp_simple_dither_range_t spro10000_standard_dither_ranges[] =
 {
-  { 0.661, 0x1, 0, 1 },
-  { 1.00,  0x2, 0, 2 }
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
 };
 
 static const escp2_variable_ink_t spro10000_standard_ink =
@@ -153,7 +153,7 @@ static const escp2_variable_ink_t spro10000_standard_ink =
 static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
   { 0.35,  0x1, 1, 1 },
-  { 1.00,  0x1, 0, 1 },
+  { 1.00,  0x1, 0, 3 },
 };
 
 static const escp2_variable_ink_t photo_4pl_2880_ink =
@@ -168,7 +168,7 @@ static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 1 },
   { 0.5,   0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 1.0,   0x3, 0, 4 }
 };
 
 static const escp2_variable_ink_t standard_6pl_ink =
@@ -181,9 +181,9 @@ static const escp2_variable_ink_t standard_6pl_ink =
 
 static const stp_simple_dither_range_t standard_x80_6pl_dither_ranges[] =
 {
-  { 0.325, 0x1, 0, 1 },
-  { 0.5,   0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.325, 0x1, 0, 2 },
+  { 0.5,   0x2, 0, 3 },
+  { 1.0,   0x3, 0, 6 }
 };
 
 static const escp2_variable_ink_t standard_x80_6pl_ink =
@@ -196,8 +196,8 @@ static const escp2_variable_ink_t standard_x80_6pl_ink =
 static const stp_simple_dither_range_t standard_x80_multishot_dither_ranges[] =
 {
   { 0.163, 0x1, 0, 1 },
-  { 0.5,   0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.5,   0x2, 0, 3 },
+  { 1.0,   0x3, 0, 6 }
 };
 
 static const escp2_variable_ink_t standard_x80_multishot_ink =
@@ -209,8 +209,8 @@ static const escp2_variable_ink_t standard_x80_multishot_ink =
 
 static const stp_simple_dither_range_t standard_x80_1440_6pl_dither_ranges[] =
 {
-  { 0.65,  0x1, 0, 1 },
-  { 1.0,   0x2, 0, 2 },
+  { 0.65,  0x1, 0, 2 },
+  { 1.0,   0x2, 0, 3 },
 };
 
 static const escp2_variable_ink_t standard_x80_1440_6pl_ink =
@@ -223,9 +223,9 @@ static const escp2_variable_ink_t standard_x80_1440_6pl_ink =
 
 static const stp_simple_dither_range_t standard_980_6pl_dither_ranges[] =
 {
-  { 0.40,  0x1, 0, 1 },
-  { 0.675, 0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.40,  0x1, 0, 4 },
+  { 0.675, 0x2, 0, 7 },
+  { 1.0,   0x3, 0, 10 }
 };
 
 static const escp2_variable_ink_t standard_980_6pl_ink =
@@ -266,8 +266,8 @@ static const escp2_variable_ink_t standard_pigment_ink =
 
 static const stp_simple_dither_range_t standard_4pl_dither_ranges[] =
 {
-  { 0.661, 0x1, 0, 1 },
-  { 1.00,  0x2, 0, 2 }
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
 };
 
 static const escp2_variable_ink_t standard_4pl_ink =
@@ -292,9 +292,9 @@ static const escp2_variable_ink_t standard_4pl_2880_ink =
 
 static const stp_simple_dither_range_t standard_3pl_dither_ranges[] =
 {
-  { 0.25,  0x1, 0, 1 },
-  { 0.61,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.25,  0x1, 0, 2 },
+  { 0.61,  0x2, 0, 5 },
+  { 1.0,   0x3, 0, 8 }
 };
 
 static const escp2_variable_ink_t standard_3pl_ink =
@@ -307,8 +307,8 @@ static const escp2_variable_ink_t standard_3pl_ink =
 
 static const stp_simple_dither_range_t standard_3pl_1440_dither_ranges[] =
 {
-  { 0.39, 0x1, 0, 1 },
-  { 1.0,  0x2, 0, 2 }
+  { 0.39, 0x1, 0, 2 },
+  { 1.0,  0x2, 0, 5 }
 };
 
 static const escp2_variable_ink_t standard_3pl_1440_ink =
@@ -346,8 +346,8 @@ static const escp2_variable_ink_t standard_economy_pigment_ink =
 
 static const stp_simple_dither_range_t standard_multishot_pigment_dither_ranges[] =
 {
-  { 0.410, 0x1, 0, 1 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.410, 0x1, 0, 2 },
+  { 1.0,   0x3, 0, 5 }
 };
 
 static const escp2_variable_ink_t standard_multishot_pigment_ink =
@@ -359,8 +359,8 @@ static const escp2_variable_ink_t standard_multishot_pigment_ink =
 
 static const stp_simple_dither_range_t standard_6pl_pigment_dither_ranges[] =
 {
-  { 0.300, 0x1, 0, 1 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.300, 0x1, 0, 3 },
+  { 1.0,   0x3, 0, 10 }
 };
 
 static const escp2_variable_ink_t standard_6pl_pigment_ink =
@@ -372,8 +372,8 @@ static const escp2_variable_ink_t standard_6pl_pigment_ink =
 
 static const stp_simple_dither_range_t standard_3pl_pigment_dither_ranges[] =
 {
-  { 0.650, 0x1, 0, 1 },
-  { 1.000, 0x2, 0, 2 },
+  { 0.650, 0x1, 0, 2 },
+  { 1.000, 0x2, 0, 3 },
 };
 
 static const escp2_variable_ink_t standard_3pl_pigment_ink =
@@ -415,9 +415,9 @@ static const escp2_variable_ink_t photo_multishot_ink =
 
 static const stp_simple_dither_range_t standard_multishot_dither_ranges[] =
 {
-  { 0.28,  0x1, 0, 1 },
-  { 0.58,  0x2, 0, 2 },
-  { 1.0,   0x3, 0, 3 }
+  { 0.28,  0x1, 0, 2 },
+  { 0.58,  0x2, 0, 5 },
+  { 1.0,   0x3, 0, 8 }
 };
 
 static const escp2_variable_ink_t standard_multishot_ink =
