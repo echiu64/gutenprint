@@ -194,11 +194,11 @@ require('standard_html_header.php3');
  </h3>
  <p>
  The Gimp-Print 4.2.2 installer package (and all later versions) contains
- an illustrated set-up guide called "Setting up printers.pdf" located at
- the root level of the installer disk image. This guide will walk you
- through the printer set-up process for USB and TCP/IP printers. If you
- don't have access to this set-up guide the following instructions should
- help:
+ an illustrated set-up guide called <em>How to Print with Gimp-Print</em> 
+ located at the root level of the installer disk image. This guide will
+ walk you through the printer set-up process for USB and TCP/IP printers.
+ If you don't have access to this set-up guide the following instructions
+ should help:
  </p>
  <p>
  Setting up printers using the Gimp-Print driver can be slightly
