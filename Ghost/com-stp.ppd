@@ -1,0 +1,769 @@
+*PPD-Adobe: "4.3"
+*%
+*% WARNING: CUPS-O-MATIC IS ALPHA QUALITY; DO NOT EXPECT IT TO WORK!
+*%
+*% For information on using this, and to obtain the required backend
+*% script, consult http://www.picante.com/~gtaylor/pht/cups-doc.html
+*%
+*% CUPS-O-MATIC generated this PPD file.  It is for use with the CUPS 
+*% printing system and the "cupsomatic" backend filter script.  These
+*% two files work together to support the use of arbitrary free
+*% software drivers with CUPS, replete with basic support for
+*% driver-provided options.
+*%
+*% You may save this file as `com-stp.ppd'
+*%
+*%
+*FormatVersion: "4.3"
+*FileVersion:   "1.1"
+*LanguageVersion: English 
+*LanguageEncoding: ISOLatin1
+*PCFileName:    "COMSTP.PPD"
+*Manufacturer:  "Manufacturer"
+*Product:       "Model"
+*cupsVersion:   1.0
+*cupsManualCopies: True
+*cupsModelNumber:  2
+*cupsFilter:    "application/vnd.cups-postscript 0 cupsomatic"
+*% This is dumb.  We should look up a printer name or something to put here.
+*ModelName:     "Model"
+*ShortNickName: "Model"
+*NickName:      "Model"
+*PSVersion:     "(3010.000) 550"
+*LanguageLevel: "3"
+*ColorDevice:   True
+*DefaultColorSpace: RGB
+*FileSystem:    False
+*Throughput:    "1"
+*LandscapeOrientation: Plus90
+*VariablePaperSize: False
+*TTRasterizer:  Type42
+
+
+*OpenUI *Papersize/Paper Size: PickOne
+*DefaultPapersize: 
+*Papersize letter/US Letter: ""
+*Papersize legal/US Legal: ""
+*Papersize a4/A4: ""
+*Papersize a3/A3: ""
+*CloseUI: *Papersize
+
+*OpenUI *Quality/Driver Resolution: PickOne
+*DefaultQuality: 
+*Quality 0/360 DPI: ""
+*Quality 1/720 DPI Microweave: ""
+*Quality 2/720 DPI Softweave: ""
+*Quality 3/720 DPI High Quality: ""
+*Quality 4/720 DPI Highest Quality: ""
+*Quality 5/1440x720 DPI Microweave: ""
+*Quality 6/1440x720 DPI Softweave: ""
+*Quality 7/1440x720 DPI Highest Quality: ""
+*Quality 8/Emulated 1440 x 1440 DPI: ""
+*Quality 9/Emulated 2880 x 720 DPI: ""
+*CloseUI: *Quality
+
+*OpenUI *Model/Printer Model Selection: PickOne
+*DefaultModel: 
+*Model 17/Stylus Color 1160: ""
+*Model 0/Stylus Color: ""
+*Model 1/Stylus Color Pro/Pro XL/400/500: ""
+*Model 2/Stylus Color 1500: ""
+*Model 3/Stylus Color 600: ""
+*Model 4/Stylus Color 800: ""
+*Model 5/Stylus Color 850: ""
+*Model 6/Stylus Color 1520/3000: ""
+*Model 7/Stylus Photo 700: ""
+*Model 8/Stylus Photo EX: ""
+*Model 9/Stylus Photo: ""
+*Model 10/Stylus Color 440/640: ""
+*Model 11/Stylus Color 640: ""
+*Model 12/Stylus Color 740: ""
+*Model 13/Stylus Color 900: ""
+*Model 14/Stylus Photo 750: ""
+*Model 15/Stylus Photo 1200: ""
+*Model 16/Stylus Photo 860: ""
+*CloseUI: *Model
+
+*OpenUI *Dither/Dithering Algorithm: PickOne
+*DefaultDither: 
+*Dither 0/Hybrid Floyd-Steinberg: ""
+*Dither 1/Ordered: ""
+*Dither 2/Random Floyd-Steinberg: ""
+*Dither 3/Adaptive Hybrid Floyd-Steinberg: ""
+*Dither 4/Adaptive Random Floyd-Steinberg: ""
+*CloseUI: *Dither
+
+*OpenUI *Color/Color: PickOne
+*DefaultColor: 
+*Color 0/Gray: ""
+*Color 1/Color: ""
+*CloseUI: *Color
+
+*OpenUI *ImageType/Image Type: PickOne
+*DefaultImageType: 
+*ImageType 0/Line art (color or greyscale): ""
+*ImageType 1/Solids or gradients (color or gray scale): ""
+*ImageType 2/Photographs (color or gray scale): ""
+*ImageType 3/Pure black and white: ""
+*CloseUI: *ImageType
+
+*OpenUI *gsResolution/Renderer Resolution: PickOne
+*DefaultgsResolution: 
+*gsResolution 360/360 DPI: ""
+*gsResolution 720/720 DPI: ""
+*gsResolution 1440/1440 DPI: ""
+*gsResolution 1440x720/1440 x 720 DPI: ""
+*gsResolution 720x360/720 x 360 DPI: ""
+*CloseUI: *gsResolution
+
+
+*% Generic boilerplate PPD stuff babbling about paper dimensions and
+*% the usual Postscript fonts offered by Ghostscript.  Contributions
+*% to spice this up are welcome! 
+
+*DefaultImageableArea: Letter 
+*ImageableArea Letter:  "8.60 39.60 603.40 766.49"
+*ImageableArea Legal:   "8.60 39.60 603.40 982.49"
+*ImageableArea A4:      "8.60 39.60 586.40 816.49"
+
+*DefaultPaperDimension: Letter
+*PaperDimension Letter: "612 792"
+*PaperDimension Legal:  "612 1008"
+*PaperDimension A4:     "595 842"
+
+*DefaultFont: Courier
+*Font AvantGarde-Book: Standard "(001.006S)" Standard ROM
+*Font AvantGarde-BookOblique: Standard "(001.006S)" Standard ROM
+*Font AvantGarde-Demi: Standard "(001.007S)" Standard ROM
+*Font AvantGarde-DemiOblique: Standard "(001.007S)" Standard ROM
+*Font Bookman-Demi: Standard "(001.004S)" Standard ROM
+*Font Bookman-DemiItalic: Standard "(001.004S)" Standard ROM
+*Font Bookman-Light: Standard "(001.004S)" Standard ROM
+*Font Bookman-LightItalic: Standard "(001.004S)" Standard ROM
+*Font Courier: Standard "(002.004S)" Standard ROM
+*Font Courier-Bold: Standard "(002.004S)" Standard ROM
+*Font Courier-BoldOblique: Standard "(002.004S)" Standard ROM
+*Font Courier-Oblique: Standard "(002.004S)" Standard ROM
+*Font Helvetica: Standard "(001.006S)" Standard ROM
+*Font Helvetica-Bold: Standard "(001.007S)" Standard ROM
+*Font Helvetica-BoldOblique: Standard "(001.007S)" Standard ROM
+*Font Helvetica-Narrow: Standard "(001.006S)" Standard ROM
+*Font Helvetica-Narrow-Bold: Standard "(001.007S)" Standard ROM
+*Font Helvetica-Narrow-BoldOblique: Standard "(001.007S)" Standard ROM
+*Font Helvetica-Narrow-Oblique: Standard "(001.006S)" Standard ROM
+*Font Helvetica-Oblique: Standard "(001.006S)" Standard ROM
+*Font NewCenturySchlbk-Bold: Standard "(001.009S)" Standard ROM
+*Font NewCenturySchlbk-BoldItalic: Standard "(001.007S)" Standard ROM
+*Font NewCenturySchlbk-Italic: Standard "(001.006S)" Standard ROM
+*Font NewCenturySchlbk-Roman: Standard "(001.007S)" Standard ROM
+*Font Palatino-Bold: Standard "(001.005S)" Standard ROM
+*Font Palatino-BoldItalic: Standard "(001.005S)" Standard ROM
+*Font Palatino-Italic: Standard "(001.005S)" Standard ROM
+*Font Palatino-Roman: Standard "(001.005S)" Standard ROM
+*Font Symbol: Special "(001.007S)" Special ROM
+*Font Times-Bold: Standard "(001.007S)" Standard ROM
+*Font Times-BoldItalic: Standard "(001.009S)" Standard ROM
+*Font Times-Italic: Standard "(001.007S)" Standard ROM
+*Font Times-Roman: Standard "(001.007S)" Standard ROM
+*Font ZapfChancery-MediumItalic: Standard "(001.007S)" Standard ROM
+*Font ZapfDingbats: Special "(001.004S)" Standard ROM
+
+*% What follows is a dumped representation of the internal Perl data
+*% structure representing one entry in the Linux Printing Database.
+*% This is used by the backend filter to deal with the options.
+*%
+*% COMDATA #$VAR1 = {
+*% COMDATA #  'type' => 'G',
+*% COMDATA #  'comment' => 'The new Epson Stylus
+*% COMDATA #Ghostscript driver produced by the Gimp print project.
+*% COMDATA #<p>
+*% COMDATA #Stp doesn\'t support alignment (although we\'re making some
+*% COMDATA #progress there).  Also, we don\'t support roll paper for the printers
+*% COMDATA #that do that.  Print quality is generally quite close to Epson\'s;
+*% COMDATA #better in some ways, not quite as good in others.  We support all
+*% COMDATA #print modes on all printers, although slightly differently from
+*% COMDATA #Epson.  Paper type support simply means having profiles for
+*% COMDATA #different papers; the printer itself neither knows nor cares.
+*% COMDATA #<p>
+*% COMDATA #We really do need to solve the alignment problem to get the best
+*% COMDATA #possible output.  On photographs it isn\'t usually that big of a deal,
+*% COMDATA #but it is noticeable on sharp-edged lines and blocks.',
+*% COMDATA #  'url' => 'http://gimp-print.sourceforge.net/',
+*% COMDATA #  'cmd' => 'gs -q -dSAFER -dNOPAUSE -dBATCH -sDEVICE=stp %A -sOutputFile=- -',
+*% COMDATA #  'ct' => 1,
+*% COMDATA #  'args_byname' => {
+*% COMDATA #    'Density' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Density',
+*% COMDATA #      'type' => 'float',
+*% COMDATA #      'comment' => 'Density Level',
+*% COMDATA #      'min' => '0.1',
+*% COMDATA #      'proto' => ' -dDensity=%s',
+*% COMDATA #      'default' => 1,
+*% COMDATA #      'idx' => 2,
+*% COMDATA #      'max' => '0.1',
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Dither' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        '0' => {
+*% COMDATA #          'comment' => 'Hybrid Floyd-Steinberg',
+*% COMDATA #          'value' => '0',
+*% COMDATA #          'idx' => 32
+*% COMDATA #        },
+*% COMDATA #        1 => {
+*% COMDATA #          'comment' => 'Ordered',
+*% COMDATA #          'value' => 1,
+*% COMDATA #          'idx' => 33
+*% COMDATA #        },
+*% COMDATA #        2 => {
+*% COMDATA #          'comment' => 'Random Floyd-Steinberg',
+*% COMDATA #          'value' => 2,
+*% COMDATA #          'idx' => 34
+*% COMDATA #        },
+*% COMDATA #        3 => {
+*% COMDATA #          'comment' => 'Adaptive Hybrid Floyd-Steinberg',
+*% COMDATA #          'value' => 3,
+*% COMDATA #          'idx' => 35
+*% COMDATA #        },
+*% COMDATA #        4 => {
+*% COMDATA #          'comment' => 'Adaptive Random Floyd-Steinberg',
+*% COMDATA #          'value' => 4,
+*% COMDATA #          'idx' => 36
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Dither',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Dithering Algorithm',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -dDither=%s',
+*% COMDATA #      'idx' => 5,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'Green' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Green',
+*% COMDATA #      'type' => 'int',
+*% COMDATA #      'comment' => 'Green Level',
+*% COMDATA #      'min' => '0',
+*% COMDATA #      'proto' => ' -dGreen=%s',
+*% COMDATA #      'default' => 100,
+*% COMDATA #      'idx' => 3,
+*% COMDATA #      'max' => 200,
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Model' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        '0' => {
+*% COMDATA #          'comment' => 'Stylus Color',
+*% COMDATA #          'value' => '0',
+*% COMDATA #          'idx' => 5
+*% COMDATA #        },
+*% COMDATA #        10 => {
+*% COMDATA #          'comment' => 'Stylus Color 440/640',
+*% COMDATA #          'value' => 10,
+*% COMDATA #          'idx' => 15
+*% COMDATA #        },
+*% COMDATA #        1 => {
+*% COMDATA #          'comment' => 'Stylus Color Pro/Pro XL/400/500',
+*% COMDATA #          'value' => 1,
+*% COMDATA #          'idx' => 6
+*% COMDATA #        },
+*% COMDATA #        11 => {
+*% COMDATA #          'comment' => 'Stylus Color 640',
+*% COMDATA #          'value' => 11,
+*% COMDATA #          'idx' => 16
+*% COMDATA #        },
+*% COMDATA #        2 => {
+*% COMDATA #          'comment' => 'Stylus Color 1500',
+*% COMDATA #          'value' => 2,
+*% COMDATA #          'idx' => 7
+*% COMDATA #        },
+*% COMDATA #        12 => {
+*% COMDATA #          'comment' => 'Stylus Color 740',
+*% COMDATA #          'value' => 12,
+*% COMDATA #          'idx' => 17
+*% COMDATA #        },
+*% COMDATA #        3 => {
+*% COMDATA #          'comment' => 'Stylus Color 600',
+*% COMDATA #          'value' => 3,
+*% COMDATA #          'idx' => 8
+*% COMDATA #        },
+*% COMDATA #        13 => {
+*% COMDATA #          'comment' => 'Stylus Color 900',
+*% COMDATA #          'value' => 13,
+*% COMDATA #          'idx' => 18
+*% COMDATA #        },
+*% COMDATA #        4 => {
+*% COMDATA #          'comment' => 'Stylus Color 800',
+*% COMDATA #          'value' => 4,
+*% COMDATA #          'idx' => 9
+*% COMDATA #        },
+*% COMDATA #        14 => {
+*% COMDATA #          'comment' => 'Stylus Photo 750',
+*% COMDATA #          'value' => 14,
+*% COMDATA #          'idx' => 19
+*% COMDATA #        },
+*% COMDATA #        5 => {
+*% COMDATA #          'comment' => 'Stylus Color 850',
+*% COMDATA #          'value' => 5,
+*% COMDATA #          'idx' => 10
+*% COMDATA #        },
+*% COMDATA #        15 => {
+*% COMDATA #          'comment' => 'Stylus Photo 1200',
+*% COMDATA #          'value' => 15,
+*% COMDATA #          'idx' => 20
+*% COMDATA #        },
+*% COMDATA #        6 => {
+*% COMDATA #          'comment' => 'Stylus Color 1520/3000',
+*% COMDATA #          'value' => 6,
+*% COMDATA #          'idx' => 11
+*% COMDATA #        },
+*% COMDATA #        16 => {
+*% COMDATA #          'comment' => 'Stylus Photo 860',
+*% COMDATA #          'value' => 16,
+*% COMDATA #          'idx' => 21
+*% COMDATA #        },
+*% COMDATA #        7 => {
+*% COMDATA #          'comment' => 'Stylus Photo 700',
+*% COMDATA #          'value' => 7,
+*% COMDATA #          'idx' => 12
+*% COMDATA #        },
+*% COMDATA #        8 => {
+*% COMDATA #          'comment' => 'Stylus Photo EX',
+*% COMDATA #          'value' => 8,
+*% COMDATA #          'idx' => 13
+*% COMDATA #        },
+*% COMDATA #        17 => {
+*% COMDATA #          'comment' => 'Stylus Color 1160',
+*% COMDATA #          'value' => 17,
+*% COMDATA #          'idx' => 4
+*% COMDATA #        },
+*% COMDATA #        9 => {
+*% COMDATA #          'comment' => 'Stylus Photo',
+*% COMDATA #          'value' => 9,
+*% COMDATA #          'idx' => 14
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => 1,
+*% COMDATA #      'name' => 'Model',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Printer Model Selection',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -dModel=%s',
+*% COMDATA #      'idx' => 3,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'Gamma' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Gamma',
+*% COMDATA #      'type' => 'float',
+*% COMDATA #      'comment' => 'Gamma Level',
+*% COMDATA #      'min' => '0.1',
+*% COMDATA #      'proto' => ' -dGamma=%s',
+*% COMDATA #      'default' => 1,
+*% COMDATA #      'idx' => 1,
+*% COMDATA #      'max' => '0.1',
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Papersize' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        'letter' => {
+*% COMDATA #          'comment' => 'US Letter',
+*% COMDATA #          'value' => 'letter',
+*% COMDATA #          'idx' => 38
+*% COMDATA #        },
+*% COMDATA #        'a3' => {
+*% COMDATA #          'comment' => 'A3',
+*% COMDATA #          'value' => 'a3',
+*% COMDATA #          'idx' => 41
+*% COMDATA #        },
+*% COMDATA #        'a4' => {
+*% COMDATA #          'comment' => 'A4',
+*% COMDATA #          'value' => 'a4',
+*% COMDATA #          'idx' => 40
+*% COMDATA #        },
+*% COMDATA #        'legal' => {
+*% COMDATA #          'comment' => 'US Legal',
+*% COMDATA #          'value' => 'legal',
+*% COMDATA #          'idx' => 39
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Papersize',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Paper Size',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -sPAPERSIZE=%s',
+*% COMDATA #      'idx' => 6,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'ImageType' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        '0' => {
+*% COMDATA #          'comment' => 'Line art (color or greyscale)',
+*% COMDATA #          'value' => '0',
+*% COMDATA #          'idx' => 44
+*% COMDATA #        },
+*% COMDATA #        1 => {
+*% COMDATA #          'comment' => 'Solids or gradients (color or gray scale)',
+*% COMDATA #          'value' => 1,
+*% COMDATA #          'idx' => 45
+*% COMDATA #        },
+*% COMDATA #        2 => {
+*% COMDATA #          'comment' => 'Photographs (color or gray scale)',
+*% COMDATA #          'value' => 2,
+*% COMDATA #          'idx' => 46
+*% COMDATA #        },
+*% COMDATA #        3 => {
+*% COMDATA #          'comment' => 'Pure black and white',
+*% COMDATA #          'value' => 3,
+*% COMDATA #          'idx' => 47
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'ImageType',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Image Type',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -dImageType=%s',
+*% COMDATA #      'idx' => 8,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'Blue' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Blue',
+*% COMDATA #      'type' => 'int',
+*% COMDATA #      'comment' => 'Blue Level',
+*% COMDATA #      'min' => '0',
+*% COMDATA #      'proto' => ' -dBlue=%s',
+*% COMDATA #      'default' => 100,
+*% COMDATA #      'idx' => 4,
+*% COMDATA #      'max' => 200,
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Quality' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        '0' => {
+*% COMDATA #          'comment' => '360 DPI',
+*% COMDATA #          'value' => '0',
+*% COMDATA #          'idx' => 22
+*% COMDATA #        },
+*% COMDATA #        1 => {
+*% COMDATA #          'comment' => '720 DPI Microweave',
+*% COMDATA #          'value' => 1,
+*% COMDATA #          'idx' => 23
+*% COMDATA #        },
+*% COMDATA #        2 => {
+*% COMDATA #          'comment' => '720 DPI Softweave',
+*% COMDATA #          'value' => 2,
+*% COMDATA #          'idx' => 24
+*% COMDATA #        },
+*% COMDATA #        3 => {
+*% COMDATA #          'comment' => '720 DPI High Quality',
+*% COMDATA #          'value' => 3,
+*% COMDATA #          'idx' => 25
+*% COMDATA #        },
+*% COMDATA #        4 => {
+*% COMDATA #          'comment' => '720 DPI Highest Quality',
+*% COMDATA #          'value' => 4,
+*% COMDATA #          'idx' => 26
+*% COMDATA #        },
+*% COMDATA #        5 => {
+*% COMDATA #          'comment' => '1440x720 DPI Microweave',
+*% COMDATA #          'value' => 5,
+*% COMDATA #          'idx' => 27
+*% COMDATA #        },
+*% COMDATA #        6 => {
+*% COMDATA #          'comment' => '1440x720 DPI Softweave',
+*% COMDATA #          'value' => 6,
+*% COMDATA #          'idx' => 28
+*% COMDATA #        },
+*% COMDATA #        7 => {
+*% COMDATA #          'comment' => '1440x720 DPI Highest Quality',
+*% COMDATA #          'value' => 7,
+*% COMDATA #          'idx' => 29
+*% COMDATA #        },
+*% COMDATA #        8 => {
+*% COMDATA #          'comment' => 'Emulated 1440 x 1440 DPI',
+*% COMDATA #          'value' => 8,
+*% COMDATA #          'idx' => 30
+*% COMDATA #        },
+*% COMDATA #        9 => {
+*% COMDATA #          'comment' => 'Emulated 2880 x 720 DPI',
+*% COMDATA #          'value' => 9,
+*% COMDATA #          'idx' => 31
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Quality',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Driver Resolution',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -dQuality=%s',
+*% COMDATA #      'idx' => 4,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'Brightness' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Brightness',
+*% COMDATA #      'type' => 'int',
+*% COMDATA #      'comment' => 'Brightness Level',
+*% COMDATA #      'min' => '0',
+*% COMDATA #      'proto' => ' -dBrightness=%s',
+*% COMDATA #      'default' => 100,
+*% COMDATA #      'idx' => 5,
+*% COMDATA #      'max' => 400,
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Saturation' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Saturation',
+*% COMDATA #      'type' => 'float',
+*% COMDATA #      'comment' => 'Saturation Level',
+*% COMDATA #      'min' => '0.1',
+*% COMDATA #      'proto' => ' -dSaturation=%s',
+*% COMDATA #      'default' => 1,
+*% COMDATA #      'idx' => 3,
+*% COMDATA #      'max' => '0.1',
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Red' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Red',
+*% COMDATA #      'type' => 'int',
+*% COMDATA #      'comment' => 'Red Level',
+*% COMDATA #      'min' => '0',
+*% COMDATA #      'proto' => ' -dRed=%s',
+*% COMDATA #      'default' => 100,
+*% COMDATA #      'idx' => 2,
+*% COMDATA #      'max' => 200,
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'gsResolution' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        1440 => {
+*% COMDATA #          'comment' => '1440 DPI',
+*% COMDATA #          'value' => 1440,
+*% COMDATA #          'idx' => 50
+*% COMDATA #        },
+*% COMDATA #        720 => {
+*% COMDATA #          'comment' => '720 DPI',
+*% COMDATA #          'value' => 720,
+*% COMDATA #          'idx' => 49
+*% COMDATA #        },
+*% COMDATA #        360 => {
+*% COMDATA #          'comment' => '360 DPI',
+*% COMDATA #          'value' => 360,
+*% COMDATA #          'idx' => 48
+*% COMDATA #        },
+*% COMDATA #        '720x360' => {
+*% COMDATA #          'comment' => '720 x 360 DPI',
+*% COMDATA #          'value' => '720x360',
+*% COMDATA #          'idx' => 52
+*% COMDATA #        },
+*% COMDATA #        '1440x720' => {
+*% COMDATA #          'comment' => '1440 x 720 DPI',
+*% COMDATA #          'value' => '1440x720',
+*% COMDATA #          'idx' => 51
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'gsResolution',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Renderer Resolution',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -r%s',
+*% COMDATA #      'idx' => 9,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    },
+*% COMDATA #    'Contrast' => {
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Contrast',
+*% COMDATA #      'type' => 'int',
+*% COMDATA #      'comment' => 'Contrast Level',
+*% COMDATA #      'min' => 25,
+*% COMDATA #      'proto' => ' -dContrast=%s',
+*% COMDATA #      'default' => 100,
+*% COMDATA #      'idx' => 6,
+*% COMDATA #      'max' => 400,
+*% COMDATA #      'spot' => 'A',
+*% COMDATA #      'order' => 100
+*% COMDATA #    },
+*% COMDATA #    'Color' => {
+*% COMDATA #      'vals_byname' => {
+*% COMDATA #        '0' => {
+*% COMDATA #          'comment' => 'Gray',
+*% COMDATA #          'value' => '0',
+*% COMDATA #          'idx' => 42
+*% COMDATA #        },
+*% COMDATA #        1 => {
+*% COMDATA #          'comment' => 'Color',
+*% COMDATA #          'value' => 1,
+*% COMDATA #          'idx' => 43
+*% COMDATA #        }
+*% COMDATA #      },
+*% COMDATA #      'required' => '0',
+*% COMDATA #      'name' => 'Color',
+*% COMDATA #      'type' => 'enum',
+*% COMDATA #      'comment' => 'Color',
+*% COMDATA #      'order' => 100,
+*% COMDATA #      'proto' => ' -dColor=%s',
+*% COMDATA #      'idx' => 7,
+*% COMDATA #      'vals' => [
+*% COMDATA #        {},
+*% COMDATA #        {}
+*% COMDATA #      ],
+*% COMDATA #      'spot' => 'A'
+*% COMDATA #    }
+*% COMDATA #  },
+*% COMDATA #  'driver' => 'stp',
+*% COMDATA #  'maxspot' => 'A',
+*% COMDATA #  'args' => [
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {},
+*% COMDATA #    {}
+*% COMDATA #  ]
+*% COMDATA #};
+*% COMDATA #$VAR1->{'args_byname'}{'Dither'}{'vals'}[0] = $VAR1->{'args_byname'}{'Dither'}{'vals_byname'}{'0'};
+*% COMDATA #$VAR1->{'args_byname'}{'Dither'}{'vals'}[1] = $VAR1->{'args_byname'}{'Dither'}{'vals_byname'}{1};
+*% COMDATA #$VAR1->{'args_byname'}{'Dither'}{'vals'}[2] = $VAR1->{'args_byname'}{'Dither'}{'vals_byname'}{2};
+*% COMDATA #$VAR1->{'args_byname'}{'Dither'}{'vals'}[3] = $VAR1->{'args_byname'}{'Dither'}{'vals_byname'}{3};
+*% COMDATA #$VAR1->{'args_byname'}{'Dither'}{'vals'}[4] = $VAR1->{'args_byname'}{'Dither'}{'vals_byname'}{4};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[0] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{17};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[1] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{'0'};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[2] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{1};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[3] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{2};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[4] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{3};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[5] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{4};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[6] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{5};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[7] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{6};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[8] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{7};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[9] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{8};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[10] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{9};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[11] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{10};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[12] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{11};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[13] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{12};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[14] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{13};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[15] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{14};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[16] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{15};
+*% COMDATA #$VAR1->{'args_byname'}{'Model'}{'vals'}[17] = $VAR1->{'args_byname'}{'Model'}{'vals_byname'}{16};
+*% COMDATA #$VAR1->{'args_byname'}{'Papersize'}{'vals'}[0] = $VAR1->{'args_byname'}{'Papersize'}{'vals_byname'}{'letter'};
+*% COMDATA #$VAR1->{'args_byname'}{'Papersize'}{'vals'}[1] = $VAR1->{'args_byname'}{'Papersize'}{'vals_byname'}{'legal'};
+*% COMDATA #$VAR1->{'args_byname'}{'Papersize'}{'vals'}[2] = $VAR1->{'args_byname'}{'Papersize'}{'vals_byname'}{'a4'};
+*% COMDATA #$VAR1->{'args_byname'}{'Papersize'}{'vals'}[3] = $VAR1->{'args_byname'}{'Papersize'}{'vals_byname'}{'a3'};
+*% COMDATA #$VAR1->{'args_byname'}{'ImageType'}{'vals'}[0] = $VAR1->{'args_byname'}{'ImageType'}{'vals_byname'}{'0'};
+*% COMDATA #$VAR1->{'args_byname'}{'ImageType'}{'vals'}[1] = $VAR1->{'args_byname'}{'ImageType'}{'vals_byname'}{1};
+*% COMDATA #$VAR1->{'args_byname'}{'ImageType'}{'vals'}[2] = $VAR1->{'args_byname'}{'ImageType'}{'vals_byname'}{2};
+*% COMDATA #$VAR1->{'args_byname'}{'ImageType'}{'vals'}[3] = $VAR1->{'args_byname'}{'ImageType'}{'vals_byname'}{3};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[0] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{'0'};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[1] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{1};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[2] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{2};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[3] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{3};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[4] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{4};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[5] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{5};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[6] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{6};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[7] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{7};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[8] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{8};
+*% COMDATA #$VAR1->{'args_byname'}{'Quality'}{'vals'}[9] = $VAR1->{'args_byname'}{'Quality'}{'vals_byname'}{9};
+*% COMDATA #$VAR1->{'args_byname'}{'gsResolution'}{'vals'}[0] = $VAR1->{'args_byname'}{'gsResolution'}{'vals_byname'}{360};
+*% COMDATA #$VAR1->{'args_byname'}{'gsResolution'}{'vals'}[1] = $VAR1->{'args_byname'}{'gsResolution'}{'vals_byname'}{720};
+*% COMDATA #$VAR1->{'args_byname'}{'gsResolution'}{'vals'}[2] = $VAR1->{'args_byname'}{'gsResolution'}{'vals_byname'}{1440};
+*% COMDATA #$VAR1->{'args_byname'}{'gsResolution'}{'vals'}[3] = $VAR1->{'args_byname'}{'gsResolution'}{'vals_byname'}{'1440x720'};
+*% COMDATA #$VAR1->{'args_byname'}{'gsResolution'}{'vals'}[4] = $VAR1->{'args_byname'}{'gsResolution'}{'vals_byname'}{'720x360'};
+*% COMDATA #$VAR1->{'args_byname'}{'Color'}{'vals'}[0] = $VAR1->{'args_byname'}{'Color'}{'vals_byname'}{'0'};
+*% COMDATA #$VAR1->{'args_byname'}{'Color'}{'vals'}[1] = $VAR1->{'args_byname'}{'Color'}{'vals_byname'}{1};
+*% COMDATA #$VAR1->{'args'}[0] = $VAR1->{'args_byname'}{'Papersize'};
+*% COMDATA #$VAR1->{'args'}[1] = $VAR1->{'args_byname'}{'Quality'};
+*% COMDATA #$VAR1->{'args'}[2] = $VAR1->{'args_byname'}{'Model'};
+*% COMDATA #$VAR1->{'args'}[3] = $VAR1->{'args_byname'}{'Dither'};
+*% COMDATA #$VAR1->{'args'}[4] = $VAR1->{'args_byname'}{'Color'};
+*% COMDATA #$VAR1->{'args'}[5] = $VAR1->{'args_byname'}{'ImageType'};
+*% COMDATA #$VAR1->{'args'}[6] = $VAR1->{'args_byname'}{'gsResolution'};
+*% COMDATA #$VAR1->{'args'}[7] = $VAR1->{'args_byname'}{'Red'};
+*% COMDATA #$VAR1->{'args'}[8] = $VAR1->{'args_byname'}{'Green'};
+*% COMDATA #$VAR1->{'args'}[9] = $VAR1->{'args_byname'}{'Blue'};
+*% COMDATA #$VAR1->{'args'}[10] = $VAR1->{'args_byname'}{'Brightness'};
+*% COMDATA #$VAR1->{'args'}[11] = $VAR1->{'args_byname'}{'Contrast'};
+*% COMDATA #$VAR1->{'args'}[12] = $VAR1->{'args_byname'}{'Gamma'};
+*% COMDATA #$VAR1->{'args'}[13] = $VAR1->{'args_byname'}{'Density'};
+*% COMDATA #$VAR1->{'args'}[14] = $VAR1->{'args_byname'}{'Saturation'};
+
