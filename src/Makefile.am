@@ -23,9 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-## @-@-@-@-@ NO-GIMP @-@-@-@-@
 NONGIMP_SUBDIRS = cups foomatic ghost testpattern
-## @-@-@-@-@ YES-GIMP @-@-@-@-@
 SUBDIRS = printdef main escputil gimp $(NONGIMP_SUBDIRS)
 
 MAINTAINERCLEANFILES = Makefile.in

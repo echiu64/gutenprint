@@ -105,7 +105,6 @@ AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
 BUILD_GIMP=yes
 USE_READLINE=yes
 EXTRA_LIBREADLINE_DEPS=''
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 BUILD_CUPS=no
 BUILD_TRANSLATED_PPDS=yes
 USE_LEVEL3_PS=no
@@ -113,7 +112,6 @@ BUILD_FOOMATIC=no
 BUILD_IJS=no
 BUILD_TEST=no
 BUILD_TESTPATTERN=no
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 BUILD_ESCPUTIL=yes
 BUILD_LIBGIMPPRINT=yes
 INSTALL_SAMPLES=yes
@@ -154,7 +152,6 @@ fi
 AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 dnl Command line options.
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
 [  --with-cups[=PREFIX]    build CUPS driver [default=${BUILD_CUPS}, default PREFIX=/usr]],
@@ -200,7 +197,6 @@ AC_ARG_WITH(foomatic,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([whether to build IJS driver])
 AC_ARG_WITH(ijs,
@@ -211,7 +207,6 @@ AC_ARG_WITH(ijs,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-ijs]) ;;
   esac],[AC_MSG_RESULT([${BUILD_IJS}])])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([whether to turn on debugging in build])
 AC_ARG_ENABLE(debug,
@@ -287,7 +282,6 @@ AC_ARG_ENABLE(libgimpprint,
        AC_MSG_ERROR([bad value ${enableval} for --enable-libgimpprint]) ;;
   esac],[AC_MSG_RESULT([${BUILD_LIBGIMPPRINT}])])
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_MSG_CHECKING([whether to build testpattern generator])
 AC_ARG_WITH(testpattern,
 [  --with-testpattern      build testpattern generator [default=${BUILD_TESTPATTERN}]],
@@ -307,7 +301,6 @@ AC_ARG_ENABLE(test,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${enableval} for --enable-test]) ;;
   esac],[AC_MSG_RESULT([${BUILD_TEST}])])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_MSG_CHECKING([if user install is enabled])
 AC_ARG_ENABLE(user-install,
@@ -364,7 +357,6 @@ AC_PATH_PROG(DB2HTML, db2html)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([HTML user's guide cannot be regenerated!])
 fi
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
   AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload,,$PATH:/usr/sbin:/usr/local/sbin)
@@ -382,7 +374,6 @@ if test x${BUILD_IJS} = xyes ; then
   IJS_CFLAGS=`$IJS_CONFIG --cflags`
   IJS_LIBS=`$IJS_CONFIG --libs`
 fi
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
@@ -469,7 +460,6 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl check for libm, and also add to CUPS LIBS
 AC_CHECK_LIB(m,pow,
   GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} -lm"
@@ -549,7 +539,6 @@ if test x${BUILD_CUPS} = xyes ; then
     fi
   fi
 fi
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl GIMP library checks
 if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
@@ -608,7 +597,6 @@ AC_CHECK_FUNC(getopt_long,
   LIBOBJS="${LIBOBJS} getopt.o getopt1.o")
 
 dnl Define what has to be built
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 if test x${BUILD_FOOMATIC} = xyes ; then
   FOOMATIC_NOINST_BIN='$(FOOMATIC_NOINST_BIN)'
 fi
@@ -655,7 +643,6 @@ if test x${BUILD_TESTPATTERN} = xyes ; then
   TESTPATTERN_BIN='$(TESTPATTERN_BIN)'
 fi
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 if test x${BUILD_GIMP} = xyes ; then
   GIMP_BIN='$(GIMP_BIN)'
@@ -698,7 +685,6 @@ if test x${INSTALL_USER_GUIDE} = xyes ; then
 fi
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 
 dnl CUPS path setup
 dnl Fix "prefix" variable if it hasn't been specified...
@@ -746,20 +732,15 @@ dnl Some logical guessing
   fi
 fi
 
-
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
-
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl Define LTLIBOBJS
 LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 
 dnl Definitions
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "$cups_conf_datadir", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
 XXXRELEASE_DATE=XXX
@@ -769,7 +750,6 @@ dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
 dnl Substitutions
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
@@ -795,7 +775,6 @@ AC_SUBST(IJS_CFLAGS)
 AC_SUBST(IJS_LIBS)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_SUBST(RM)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
@@ -842,22 +821,18 @@ include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h
 intl/Makefile lib/Makefile man/Makefile man/escputil.1
 man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
 src/Makefile src/escputil/Makefile src/gimp/Makefile
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 cups-gimpprint.list man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 src/main/Makefile src/main/gimpprint-config 
 src/main/gimp-print.pc src/printdef/Makefile
 ],[
 chmod +x src/main/gimpprint-config
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 chmod +x src/foomatic/foomatic-generator
 if test -f src/ghost/contrib.mak.addon ; then
   sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
 fi
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."

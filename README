@@ -750,12 +750,8 @@ PACKAGING
 
     * We recommend that you replace the Print plugin bundled with the
       Gimp (1.2.0~1.2.2) with the Gimp Print plugin in this
-      distribution.  There are various ways to do this; you can run
-      'make gimp-dist' from top level and untar the resulting tarball
-      into the Gimp source directory prior to building the Gimp, or
-      you can install the plugin (src/gimp/print) over an existing
-      Gimp Print plugin.  The plugin in the Gimp 1.2 tree is based on
-      the older Gimp-Print 4.0 source base; 4.2 supports more printers
+      distribution.  The plugin in the Gimp 1.2 tree is based on the
+      older Gimp-Print 4.0 source base; 4.2 supports more printers
       with better quality, and has more features than 4.0.
 
     * Please read the release notes carefully!

@@ -208,7 +208,6 @@ fi
 ])dnl
 
 dnl Command line options.
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 pushdef([BUILD_CUPS], [no])
 AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
@@ -311,7 +310,6 @@ AC_STP_ARG_ENABLE([libgimpprint],
                   [BUILD_LIBGIMPPRINT],
                   [yes])
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_STP_ARG_ENABLE([testpattern],
                   [build testpattern generator],
                   [BUILD_TESTPATTERN],
@@ -374,7 +372,6 @@ AC_PATH_PROG(DB2HTML, db2html)
 if test x${DB2PS} = x ; then
   AC_MSG_WARN([HTML user's guide cannot be regenerated!])
 fi
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
   AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
@@ -390,7 +387,6 @@ if test x${BUILD_IJS} = xyes ; then
     AC_MSG_WARN(Cannot find ijs_server.h; attempt to build IJS driver will fail)
   fi
 fi
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl GNU gettext checks.
 AH_TEMPLATE(ENABLE_NLS, [AM_GNU_GETTEXT should provide this])
@@ -470,7 +466,6 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 dnl check for libm, and also add to CUPS LIBS
 AC_CHECK_LIB(m,pow,
   GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} -lm"
@@ -550,7 +545,6 @@ if test x${BUILD_CUPS} = xyes ; then
     fi
   fi
 fi
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl GIMP library checks
 if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
@@ -609,7 +603,6 @@ AC_CHECK_FUNC(getopt_long,
   LIBOBJS="${LIBOBJS} getopt.o getopt1.o")
 
 dnl Define what has to be built
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 if test x${BUILD_FOOMATIC} = xyes ; then
   FOOMATIC_NOINST_BIN='$(FOOMATIC_NOINST_BIN)'
 fi
@@ -656,7 +649,6 @@ if test x${BUILD_TESTPATTERN} = xyes ; then
   TESTPATTERN_BIN='$(TESTPATTERN_BIN)'
 fi
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 if test x${BUILD_GIMP} = xyes ; then
   GIMP_BIN='$(GIMP_BIN)'
@@ -699,7 +691,6 @@ if test x${INSTALL_USER_GUIDE} = xyes ; then
 fi
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 
 dnl CUPS path setup
 dnl Fix "prefix" variable if it hasn't been specified...
@@ -749,17 +740,14 @@ fi
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 dnl Define LTLIBOBJS
 LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 
 dnl Definitions
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
 XXXRELEASE_DATE=XXX
 AC_DEFINE_UNQUOTED(RELEASE_DATE, "${RELEASE_DATE}", [Package release date.])
@@ -768,7 +756,6 @@ dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
 dnl Substitutions
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
@@ -792,7 +779,6 @@ AC_SUBST(IJS_BIN)
 AC_SUBST(IJS_INSTALL)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_SUBST(RM)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
@@ -834,24 +820,20 @@ AC_CONFIG_FILES([include/Makefile include/gimp-print/Makefile include/gimp-print
 AC_CONFIG_FILES([intl/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([man/Makefile man/escputil.1])
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_CONFIG_FILES([man/cups-calibrate.8])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_CONFIG_FILES([man/gimpprint.3 man/gimpprint-config.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 AC_CONFIG_FILES([src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator], [chmod +x src/foomatic/foomatic-generator])
 AC_CONFIG_FILES([src/ghost/Makefile src/ghost/contrib.mak.addon src/ijs/Makefile src/testpattern/Makefile])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint-config], [chmod +x src/main/gimpprint-config])
 AC_CONFIG_FILES([src/main/gimp-print.pc])
 AC_CONFIG_FILES([src/printdef/Makefile])
-dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
+
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_COMMANDS([ghost],[
@@ -860,7 +842,6 @@ if test -f src/ghost/contrib.mak.addon ; then
   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
 fi
 ])
-dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_CONFIG_COMMANDS([default], [
 echo "Finished configuring."
 echo "Type 'make' to build the package"
