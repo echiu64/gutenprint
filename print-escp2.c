@@ -470,8 +470,7 @@ static const res_t escp2_reslist[] = {
   { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 1, 1 },
   { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 2, 1 },
   { "1440 x 720 DPI Enhanced", 1440, 1440, 1, 2, 1, 2 },
-  { "2880 x 720 DPI Two-pass", 2880, 720, 1, 4, 1, 1 },
-  /* { "1440 x 720 DPI Two-pass Microweave", 2880, 720, 0, 1, 1 }, */
+  { "1440 x 2880 DPI Super", 1440, 2880, 1, 2, 1, 4 },
   { "", 0, 0, 0, 0, 0 }
 };
 
@@ -777,8 +776,9 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
   /* Set up print resolution */
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
       use_softweave)
-    fprintf(prn, "\033(U\005%c%c%c%c\240\005", 0, 1440 / ydpi, 1440 / ydpi,
-	    1440 / (ydpi * (horizontal_passes > 2 ? 2 : 1)));
+    fprintf(prn, "\033(U\005%c%c%c%c%c%c", 0, 1440 / ydpi, 1440 / ydpi,
+	    1440 / (ydpi * (horizontal_passes > 2 ? 2 : 1)),
+	    1440 % 256, 1440 / 256);
   else
     fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);
 

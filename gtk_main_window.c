@@ -1337,10 +1337,11 @@ static void gtk_plist_build_combo(GtkWidget*  combo,   /* I - Combo widget */
   for (i = 0; i < num_items; i ++)
       list = g_list_append(list, gettext(items[i]));
 
+  gtk_signal_disconnect_by_func(GTK_OBJECT(entry), (GtkSignalFunc)callback, 0);
+
   gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
 
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-		     (GtkSignalFunc)callback, 0);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed", (GtkSignalFunc)callback, 0);
 
   gtk_entry_set_text(entry, cur_item);
 

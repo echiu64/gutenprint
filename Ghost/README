@@ -173,16 +173,31 @@ Print Resolution Selection:
 
 -dQuality=x
 
-0  360 DPI                               (works on all functioning printers)
-1  720 DPI Microweave                    (works on all functioning printers)
-2  720 DPI Softweave                     (works on most printers)
-3  720 DPI High Quality                  (works on most printers)
-4  720 DPI Highest Quality               (works on most printers)
-5  1440 x 720 DPI Microweave             (works on selected printers)
-6  1440 x 720 DPI Softweave              (works on selected printers)
-7  1440 x 720 DPI Highest Quality        (works on selected printers)
-8  Emulated 1440 x 1440 DPI              (works on selected printers)
-9  Emulated 2880 x 720 DPI               (works on selected printers)
+0  360 DPI                               (works on all printers)
+1  720 DPI Microweave                    (works on all printers)
+2  720 DPI Softweave                     (works on all printers except
+					  for Stylus Color, Stylus
+					  Color 1500, Stylus Color
+					  1520, and Stylus Color 3000)
+3  720 DPI High Quality                  (works on all printers except
+					  above and Epson Stylus Color
+					  440)
+4  720 DPI Highest Quality               (works on all printers except
+					  above and Epson Stylus Color
+					  440)
+5  1440 x 720 DPI Microweave             (works on all 1440x720 dpi printers)
+6  1440 x 720 DPI Softweave              (works on all 1440x720 dpi
+					  printers except for Stylus
+					  Color 1520 and Stylus Color 3000)
+7  1440 x 720 DPI Highest Quality        (works on all 1440x720 dpi
+					  printers except for Stylus
+					  Color 1520 and Stylus Color 3000)
+8  Emulated 1440 x 1440 DPI              (works on all 1440x720 dpi
+					  printers except for Stylus
+					  Color 1520 and Stylus Color 3000)
+9  Emulated 1440 x 2880 DPI              (works on all 1440x720 dpi
+					  printers except for Stylus
+					  Color 1520 and Stylus Color 3000)
 
 Modes 8 and 9 use oversampling to emulate higher resolutions than the
 printers support.  In some cases they may yield improved output
@@ -196,7 +211,7 @@ can do Microweave properly, particularly at 1440x720 DPI.  If
 Microweave is used with these printers, the printing will be done one
 row at a time.  In addition to being extremely slow (but often
 extremely high quality), this may be harmful to the print head and may
-cause clogging.
+cause clogging, due to ink pooling in the print head.
 
 Dithering Algorithms:
 --------- -----------

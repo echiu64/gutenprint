@@ -315,7 +315,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
     for (y = 0; y < mat->y_size; y++)
       {
 	if (transpose)
-	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->x_size];
+	  mat->matrix[x + y * mat->x_size] = array[y + x * mat->y_size];
 	else
 	  mat->matrix[x + y * mat->x_size] = array[x + y * mat->x_size];
 	mat->matrix[x + y * mat->x_size] =
