@@ -1513,7 +1513,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
 	     nv.image_type != IMAGE_MONOCHROME);
   do_cretb = (xdpi >= 600 && ydpi >= 600 && ((caps.color_type & PCL_COLOR_CMYK4b) == PCL_COLOR_CMYK4b) &&
-			nv.image_type != IMAGE_MONOCHROME);
+			nv.image_type != IMAGE_MONOCHROME && output_type != OUTPUT_GRAY);
   if (do_cretb)
     do_cret = 1;
 
@@ -1724,12 +1724,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
       putc(ydpi >> 8, prn);
       putc(ydpi, prn);
       putc(0, prn);
-      if (do_cretb)
-	{
-	  putc(2, prn);
-	}
-      else{
-	  putc(do_cret ? 4 : 2, prn);
+      if (do_cretb){
+	putc(2, prn);
+      }else{
+	putc(do_cret ? 4 : 2, prn);
       }
     }
 
@@ -1809,16 +1807,19 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	  left, caps.left_margin, top, caps.top_margin, out_width, out_height);
 #endif
 
-  fprintf(prn, "\033&a%dH", 10 * left);		/* Set left raster position */
-  fprintf(prn, "\033&a%dV", 10 * (top + caps.top_margin));
+  if (!do_cretb) {
+    fprintf(prn, "\033&a%dH", 10 * left);		/* Set left raster position */
+    fprintf(prn, "\033&a%dV", 10 * (top + caps.top_margin));
 				/* Set top raster position */
+  }
   fprintf(prn, "\033*r%dS", out_width);		/* Set raster width */
   fprintf(prn, "\033*r%dT", out_height);	/* Set raster height */
 
   if (do_cretb)
     {
       /* Move to top left of printed area */
-      fprintf(prn, "\033*p%dY", 0); /* ERROR: Her er der måske et problem */
+      fprintf(prn, "\033*p%dY", (top + caps.top_margin)*4); /* Mesuret in dots. */
+      fprintf(prn, "\033*p%dX", left*4);
     }
   fputs("\033*r1A", prn); 			/* Start GFX */
 
@@ -1883,7 +1884,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
   if (do_cret)				/* 4-level printing for 800/1120 */
     {
       dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
+      if (!do_cretb)
+        dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
 
 /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
    what the heck. variable_dither_ranges copied from print-escp2.c */
@@ -1966,7 +1968,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	
 	if(do_cretb){
 /*	  (*writefunc)(prn, black + length / 2, 0, 0); */
-	  (*writefunc)(prn, black, length, 0);
+	  (*writefunc)(prn, black, length/2, 0);
 	}else{
 	  (*writefunc)(prn, black + length / 2, length / 2, 0);
 	  (*writefunc)(prn, black, length / 2, 0);

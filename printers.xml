@@ -472,7 +472,7 @@
 
 <printer name="HP DeskJet 810C" driver="pcl-810">
 <color>
-<model value=601>	# Uses 6XX driver
+<model value=840>	# Uses 840 driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -480,7 +480,7 @@
 
 <printer name="HP DeskJet 812C" driver="pcl-812">
 <color>
-<model value=601>	# Uses 6XX driver
+<model value=840>	# Uses 840 driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -496,7 +496,7 @@
 
 <printer name="HP DeskJet 842C" driver="pcl-842">
 <color>
-<model value=601>	# Uses 6XX driver
+<model value=840>	# Uses 840 driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
@@ -536,7 +536,7 @@
 
 <printer name="HP DeskJet 895C" driver="pcl-895">
 <color>
-<model value=601>	# Uses 6XX driver
+<model value=840>	# Uses 840 driver
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>
