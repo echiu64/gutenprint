@@ -130,9 +130,7 @@ static void readtestprintline(testdata *td, lexmark_linebufs_t *linebufs);
 #endif
 
 static void
-flush_pass(stp_softweave_t *sw, int passno, int model, int width,
-	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
-	   int vertical_subpass);
+flush_pass(stp_softweave_t *sw, int passno, int vertical_subpass);
 
 /*** resolution specific parameters */
 #define DPI300   0
@@ -697,6 +695,12 @@ typedef struct lexm_privdata_weave {
   const lexmark_inkparam_t *ink_parameter;
   int           bidirectional; /* tells us if we are allowed to print bidirectional */
   int           direction;     /* stores the last direction or print head */
+  int		hoffset;
+  int model;
+  int width;
+  int ydpi;
+  int xdpi;
+  int physical_xdpi;
   unsigned char *outbuf;
 } lexm_privdata_weave;
 
@@ -1874,6 +1878,12 @@ densityDivisor /= 1.2;
   stp_dither_add_channel(nv, cols.p.M, ECOLOR_M, 1);
   stp_dither_add_channel(nv, cols.p.y, ECOLOR_Y, 0);
   stp_dither_add_channel(nv, cols.p.Y, ECOLOR_Y, 1);
+  privdata.hoffset = left;
+  privdata.ydpi = ydpi;
+  privdata.model = model;
+  privdata.width = out_width;
+  privdata.xdpi = xdpi;
+  privdata.physical_xdpi = physical_xdpi;
 
   for (y = 0; y < out_height; y ++)   /* go through every pixle line of image */
     {
@@ -1914,8 +1924,7 @@ densityDivisor /= 1.2;
 	      stp_erprintf("length %d\n", length);
 #endif
 
-      stp_write_weave(weave, length, ydpi, model, out_width, left,
-		      xdpi, physical_xdpi, (unsigned char **)cols.v);
+      stp_write_weave(weave, length, (unsigned char **)cols.v);
 
       errval += errmod;
       errline += errdiv;
@@ -1928,8 +1937,7 @@ densityDivisor /= 1.2;
     }
   stp_image_progress_conclude(image);
 
-  stp_flush_all(weave, model, out_width, left,
-		      ydpi, xdpi, physical_xdpi);
+  stp_flush_all(weave);
 
 
 
@@ -2500,9 +2508,7 @@ const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int lengt
 
 
 static void
-flush_pass(stp_softweave_t *sw, int passno, int model, int width,
-	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
-	   int vertical_subpass)
+flush_pass(stp_softweave_t *sw, int passno, int vertical_subpass)
 {
   const stp_vars_t nv = (sw->v);
   stp_lineoff_t        *lineoffs   = stp_get_lineoffsets_by_pass(sw, passno);
@@ -2510,19 +2516,23 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   const stp_linebufs_t *bufs       = stp_get_linebases_by_pass(sw, passno);
   stp_pass_t           *pass       = stp_get_pass_by_pass(sw, passno);
   stp_linecount_t      *linecount  = stp_get_linecount_by_pass(sw, passno);
+  lexm_privdata_weave *privdata_weave = stp_get_driver_data(nv);
+  int width = privdata_weave->width;
+  int hoffset = privdata_weave->hoffset;
+  int model = privdata_weave->model;
+  int xdpi = privdata_weave->xdpi;
+  int ydpi = privdata_weave->ydpi;
+  int physical_xdpi = privdata_weave->physical_xdpi;
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
   int microoffset = vertical_subpass & (sw->horizontal_weave - 1);
 
   int prn_mode;
   int j; /* color counter */
-  lexm_privdata_weave *privdata_weave = stp_get_driver_data(nv);
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   int paperShift;
   Lexmark_head_colors head_colors[3]={{0, NULL,     0,  64/2, 64},
 				      {0, NULL,  64/2, 128/2, 64},
 				      {0, NULL, 128/2, 192/2, 64}};
-
-
 
 
 #ifdef DEBUG

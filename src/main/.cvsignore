@@ -11,6 +11,7 @@ libgimpprint.la
 pcl.la
 ps.la
 raw.la
+bit-ops.lo
 curve.lo
 dither-ed.lo
 dither-eventone.lo

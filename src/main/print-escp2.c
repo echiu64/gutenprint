@@ -64,9 +64,7 @@
 
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
-static void flush_pass(stp_softweave_t *sw, int passno, int model, int width,
-		       int hoffset, int ydpi, int xdpi, int physical_xdpi,
-		       int vertical_subpass);
+static void flush_pass(stp_softweave_t *sw, int passno, int vertical_subpass);
 
 static const int dotidmap[] =
 { 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
@@ -103,6 +101,12 @@ typedef struct
   int min_nozzles;
   int printed_something;
   int last_color;
+  int hoffset;
+  int model;
+  int width;
+  int ydpi;
+  int xdpi;
+  int physical_xdpi;
   const physical_subchannel_t **channels;
 } escp2_privdata_t;
 
@@ -1596,6 +1600,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 
       privdata.channels =
 	stp_zalloc(sizeof(physical_subchannel_t *) * total_channels);
+
       /*
        * Compute the output size...
        */
@@ -1609,6 +1614,12 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       out_width  = xdpi * out_width / 72;
       out_height = ydpi * out_height / 72;
       length = (out_width + 7) / 8;
+      privdata.hoffset = left;
+      privdata.xdpi = xdpi;
+      privdata.model = model;
+      privdata.physical_xdpi = physical_xdpi;
+      privdata.ydpi = ydpi;
+      privdata.width = out_width;
 
       /*
        * Allocate memory for the raster data...
@@ -1671,8 +1682,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	  stp_dither(nv, y, out, duplicate_line, zero_mask);
 	  QUANT(2);
 
-	  stp_write_weave(weave, length, ydpi, model, out_width, left,
-			  xdpi, physical_xdpi, cols);
+	  stp_write_weave(weave, length, cols);
 	  QUANT(3);
 	  errval += errmod;
 	  errline += errdiv;
@@ -1684,7 +1694,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 	  QUANT(4);
 	}
       stp_image_progress_conclude(image);
-      stp_flush_all(weave, model, out_width, left, ydpi, xdpi, physical_xdpi);
+      stp_flush_all(weave);
       QUANT(5);
 
       /*
@@ -1894,9 +1904,7 @@ send_extra_data(stp_softweave_t *sw, stp_vars_t v, int extralines, int lwidth)
 }
 
 static void
-flush_pass(stp_softweave_t *sw, int passno, int model, int width,
-	   int hoffset, int ydpi, int xdpi, int physical_xdpi,
-	   int vertical_subpass)
+flush_pass(stp_softweave_t *sw, int passno, int vertical_subpass)
 {
   int j;
   const stp_vars_t v = (sw->v);
@@ -1906,7 +1914,13 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
   const stp_linebufs_t *bufs = stp_get_linebases_by_pass(sw, passno);
   stp_pass_t *pass = stp_get_pass_by_pass(sw, passno);
   stp_linecount_t *linecount = stp_get_linecount_by_pass(sw, passno);
+  int width = pd->width;
   int lwidth = (width + (sw->horizontal_weave - 1)) / sw->horizontal_weave;
+  int hoffset = pd->hoffset;
+  int model = pd->model;
+  int xdpi = pd->xdpi;
+  int ydpi = pd->ydpi;
+  int physical_xdpi = pd->physical_xdpi;
 
   ydpi *= pd->undersample;
 

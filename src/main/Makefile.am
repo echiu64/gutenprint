@@ -71,6 +71,7 @@ libgimpprint_modules = $(EXTRA_libgimpprint_la_SOURCES)
 endif
 
 libgimpprint_la_SOURCES = \
+	bit-ops.c \
 	color.h \
 	curve.c \
 	dither.h \

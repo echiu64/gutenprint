@@ -159,9 +159,8 @@ typedef struct stp_softweave
   int rcache;
   int vcache;
   stp_vars_t v;
-  void (*flushfunc)(struct stp_softweave *sw, int passno, int model,
-		    int width, int hoffset, int ydpi, int xdpi,
-		    int physical_xdpi, int vertical_subpass);
+  void (*flushfunc)(struct stp_softweave *sw, int passno,
+		    int vertical_subpass);
   void (*fill_start)(struct stp_softweave *sw, int row, int subpass,
 		     int width, int missingstartrows, int color);
   int (*pack)(const unsigned char *in, int bytes,
@@ -173,6 +172,26 @@ typedef struct stp_softweave
 
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
+
+extern void	stp_split_2(int height, int bits, const unsigned char *in,
+			    unsigned char *outhi, unsigned char *outlo);
+
+extern void	stp_split_4(int height, int bits, const unsigned char *in,
+			    unsigned char *out0, unsigned char *out1,
+			    unsigned char *out2, unsigned char *out3);
+
+extern void	stp_unpack_2(int height, int bits, const unsigned char *in,
+			     unsigned char *outlo, unsigned char *outhi);
+
+extern void	stp_unpack_4(int height, int bits, const unsigned char *in,
+			     unsigned char *out0, unsigned char *out1,
+			     unsigned char *out2, unsigned char *out3);
+
+extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
+			     unsigned char *out0, unsigned char *out1,
+			     unsigned char *out2, unsigned char *out3,
+			     unsigned char *out4, unsigned char *out5,
+			     unsigned char *out6, unsigned char *out7);
 
 extern int	stp_pack_tiff(const unsigned char *line, int height,
 			      unsigned char *comp_buf,
@@ -192,10 +211,7 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
                                   int *head_offset,  /* Get from model - used for 480/580 printers */
 				  stp_vars_t v,
 				  void (*flushfunc)(stp_softweave_t *sw,
-						    int passno, int model,
-						    int width, int hoffset,
-						    int ydpi, int xdpi,
-						    int physical_xdpi,
+						    int passno,
 						    int vertical_subpass),
 				  void (*fill_start)(stp_softweave_t *sw,
 						     int row,
@@ -217,18 +233,11 @@ extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n);
 extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n);
 
-extern void stp_flush_all(void *, int model, int width, int hoffset,
-			  int ydpi, int xdpi, int physical_xdpi);
+extern void stp_flush_all(void *);
 
 extern void
 stp_write_weave(void *        vsw,
 		int           length,	/* I - Length of bitmap data */
-		int           ydpi,	/* I - Vertical resolution */
-		int           model,	/* I - Printer model */
-		int           width,	/* I - Printed width */
-		int           offset,	/* I - Offset from left side of page */
-		int	      xdpi,
-		int	      physical_xdpi,
 		unsigned char *const cols[]);
 
 extern stp_lineoff_t *
