@@ -96,8 +96,8 @@ all:
 #
 
 clean:
+	$(RM) -r ppd
 	$(RM) $(OBJS) $(TARGETS)
-	$(RM) -r ppd/*
 
 
 #
