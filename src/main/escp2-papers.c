@@ -462,7 +462,7 @@ static const paper_adjustment_t photo2_adjustments[] =
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
   { "Inkjet", 0.85, .5, 0.5, .15, .9, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
-  { "Coated", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1.1,
+  { "Coated", 1.2, .5, .25, .15, .999, .89, 1, 1, .9, 1, 1.2,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
   { "Photo", 1.00, .5, 0.25, .2, .999, 1, 1, 1, 1, 1, 1.1,
     photo2_hue_adj, photo2_lum_adj, photo2_sat_adj },
