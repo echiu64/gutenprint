@@ -276,6 +276,7 @@ extern int stp_curve_rescale(stp_curve_t curve, double scale,
 extern int stp_curve_write(FILE *file, stp_const_curve_t curve);
 extern char *stp_curve_write_string(stp_const_curve_t curve);
 
+extern stp_curve_t stp_curve_create_from_stream(FILE* fp);
 extern stp_curve_t stp_curve_create_from_file(const char* file);
 extern stp_curve_t stp_curve_create_from_string(const char* string);
 

@@ -300,7 +300,7 @@ stpi_erprintf(const char *format, ...)
   va_end(args);
 }
 
-unsigned long stpi_debug_level = 0;
+static unsigned long stpi_debug_level = 0;
 
 static void
 stpi_init_debug(void)
@@ -316,6 +316,13 @@ stpi_init_debug(void)
 	  stpi_erprintf("Gimp-Print %s %s\n", VERSION, RELEASE_DATE);
 	}
     }
+}
+
+unsigned long
+stpi_get_debug_level(void)
+{
+  stpi_init_debug();
+  return stpi_debug_level;
 }
 
 void

@@ -383,9 +383,9 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
       goto error;
     }
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
-		  point_count);
+  stpi_deprintf(STPI_DBG_XML,
+		"stpi_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
+		point_count);
   stp_sequence_set_size(ret, point_count);
   stp_sequence_set_bounds(ret, low, high);
 

@@ -211,9 +211,9 @@ stpi_xml_parse_file_named(const char *name)
   item = stpi_list_get_start(file_list);
   while (item)
     {
-      if (stpi_debug_level & STPI_DBG_XML)
-	stpi_erprintf("stp_xml_parse_file_named: source file: %s\n",
-		      (const char *) stpi_list_item_get_data(item));
+      stpi_deprintf(STPI_DBG_XML,
+		    "stp_xml_parse_file_named: source file: %s\n",
+		    (const char *) stpi_list_item_get_data(item));
       stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
       item = stpi_list_item_next(item);
     }
@@ -235,9 +235,8 @@ stpi_xml_init_defaults(void)
   item = stpi_list_get_start(stpi_xml_preloads);
   while (item)
     {
-      if (stpi_debug_level & STPI_DBG_XML)
-	stpi_erprintf("stp_xml_init_defaults: source file: %s\n",
-		      (const char *) stpi_list_item_get_data(item));
+      stpi_deprintf(STPI_DBG_XML, "stp_xml_init_defaults: source file: %s\n",
+		    (const char *) stpi_list_item_get_data(item));
       stpi_xml_parse_file_named((const char *) stpi_list_item_get_data(item));
       item = stpi_list_item_next(item);
     }
@@ -259,8 +258,7 @@ stpi_xml_parse_file(const char *file) /* File to parse */
   mxml_node_t *cur;
   FILE *fp;
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_xml_parse_file: reading  `%s'...\n", file);
+  stpi_deprintf(STPI_DBG_XML, "stp_xml_parse_file: reading  `%s'...\n", file);
 
   fp = fopen(file, "r");
   if (!fp)

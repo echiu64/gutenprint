@@ -361,9 +361,9 @@ stpi_initialize_printer_defaults(void)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      if (stpi_debug_level & STPI_DBG_PRINTERS)
-	stpi_erprintf
-	  ("stpi_family_register(): initialising printer_list...\n");
+      stpi_deprintf
+	(STPI_DBG_PRINTERS,
+	 "stpi_family_register(): initialising printer_list...\n");
     }
   printer_item = stpi_list_get_start(printer_list);
   while (printer_item)
@@ -834,9 +834,9 @@ stpi_family_register(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      if (stpi_debug_level & STPI_DBG_PRINTERS)
-	stpi_erprintf
-	  ("stpi_family_register(): initialising printer_list...\n");
+      stpi_deprintf
+	(STPI_DBG_PRINTERS,
+	 "stpi_family_register(): initialising printer_list...\n");
     }
 
   if (family)
@@ -866,9 +866,9 @@ stpi_family_unregister(stpi_list_t *family)
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      if (stpi_debug_level & STPI_DBG_PRINTERS)
-	stpi_erprintf
-	  ("stpi_family_unregister(): initialising printer_list...\n");
+      stpi_deprintf
+	(STPI_DBG_PRINTERS,
+	 "stpi_family_unregister(): initialising printer_list...\n");
     }
 
   if (family)
@@ -993,7 +993,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
     }
   if (driver && long_name && model && printfuncs)
     {
-      if (stpi_debug_level & STPI_DBG_XML)
+      if (stpi_get_debug_level() & STPI_DBG_XML)
 	{
 	  stmp = stpi_mxmlElementGetAttr(printer, "driver");
 	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
@@ -1032,15 +1032,15 @@ stpi_xml_process_family(mxml_node_t *family)     /* The family node */
 	stpi_list_item_get_data(family_module_item);
       if (!strcmp(family_name, family_module_data->name))
 	{
-	  if (stpi_debug_level & STPI_DBG_XML)
-	    stpi_erprintf("stpi_xml_process_family: family module: %s\n",
-			  family_module_data->name);
+	  stpi_deprintf(STPI_DBG_XML,
+			"stpi_xml_process_family: family module: %s\n",
+			family_module_data->name);
 	  family_data = family_module_data->syms;
 	  if (family_data->printer_list == NULL)
 	    family_data->printer_list = stpi_list_create();
 	  family_valid = 1;
 	}
-	  family_module_item = stpi_list_item_next(family_module_item);
+      family_module_item = stpi_list_item_next(family_module_item);
     }
 
   printer = family->child;

@@ -233,9 +233,8 @@ stpi_color_register(const stpi_internal_color_t *color)
   if (color_list == NULL)
     {
       stpi_init_color_list();
-      if (stpi_debug_level & STPI_DBG_COLORFUNC)
-	stpi_erprintf
-	  ("stpi_color_register(): initialising color_list...\n");
+      stpi_deprintf(STPI_DBG_COLORFUNC,
+		    "stpi_color_register(): initialising color_list...\n");
     }
 
   check_color(color);
@@ -245,9 +244,10 @@ stpi_color_register(const stpi_internal_color_t *color)
       /* Add new color algorithm if it does not already exist */
       if (stp_get_color_by_name(color->short_name) == NULL)
 	{
-	  if (stpi_debug_level & STPI_DBG_COLORFUNC)
-	    stpi_erprintf("stpi_color_register(): registered colour module \"%s\"\n",
-			  color->short_name);
+	  stpi_deprintf
+	    (STPI_DBG_COLORFUNC,
+	     "stpi_color_register(): registered colour module \"%s\"\n",
+	     color->short_name);
 	  stpi_list_item_create(color_list, NULL, color);
 	}
     }
@@ -264,9 +264,9 @@ stpi_color_unregister(const stpi_internal_color_t *color)
   if (color_list == NULL)
     {
       stpi_init_color_list();
-      if (stpi_debug_level & STPI_DBG_COLORFUNC)
-	stpi_erprintf
-	  ("stpi_family_unregister(): initialising color_list...\n");
+      stpi_deprintf
+	(STPI_DBG_COLORFUNC,
+	 "stpi_family_unregister(): initialising color_list...\n");
     }
 
   check_color(color);
@@ -277,9 +277,10 @@ stpi_color_unregister(const stpi_internal_color_t *color)
       color_data = (stpi_internal_color_t *) stpi_list_item_get_data(color_item);
       if (strcmp(color->short_name, color_data->short_name) == 0)
 	{
-	  if (stpi_debug_level & STPI_DBG_COLORFUNC)
-	    stpi_erprintf("stpi_color_unregister(): unregistered colour module \"%s\"\n",
-			  color->short_name);
+	  stpi_deprintf
+	    (STPI_DBG_COLORFUNC,
+	     "stpi_color_unregister(): unregistered colour module \"%s\"\n",
+	     color->short_name);
 	  stpi_list_item_destroy(color_list, color_item);
 	  break;
 	}

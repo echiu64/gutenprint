@@ -68,9 +68,8 @@ stpi_path_search(stpi_list_t *dirlist, /* List of directories to search */
   while (diritem)
     {
       path_check_path = (const char *) stpi_list_item_get_data(diritem);
-      if (stpi_debug_level & STPI_DBG_PATH)
-	stpi_erprintf("stp-path: directory: %s\n",
-		      (const char *) stpi_list_item_get_data(diritem));
+      stpi_deprintf(STPI_DBG_PATH, "stp-path: directory: %s\n",
+		    (const char *) stpi_list_item_get_data(diritem));
       n = scandir ((const char *) stpi_list_item_get_data(diritem),
 		   &module_dir, stpi_path_check, alphasort);
       if (n >= 0)
@@ -127,9 +126,8 @@ stpi_path_check(const struct dirent *module) /* File to check */
 	}
     }
 
-  if (stpi_debug_level & STPI_DBG_PATH)
-    if (status)
-      stpi_erprintf("stp-path: file: `%s'\n", filename);
+  if (status)
+    stpi_deprintf(STPI_DBG_PATH, "stp-path: file: `%s'\n", filename);
 
   stpi_free(filename);
   filename = NULL;

@@ -40,6 +40,7 @@ set_args() {
 	case "$1" in
 	    -h*|--h*) usage ;;
 	    -v|--valgrind) valgrind=`expr $valgrind + 1` ;;
+	    -c|--cachegrind) valopts='--skin=cachegrind'; valgrind=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -p|--parameter) shift; set_opt "$1" ;;
     	    -n|--dontrun) dontrun=1 ;;
@@ -129,6 +130,7 @@ run_testpattern() {
 	1) valgrind $valopts -q --num-callers=100 --leak-check=yes ./testpattern -n ;;
 	2) valgrind $valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern -n ;;
 	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern -n ;;
+	4) valgrind $valopts ./testpattern -n ;;
 	*) ./testpattern -n ;;
     esac
     if [ $? -ne 0 ] ; then
@@ -136,7 +138,7 @@ run_testpattern() {
     fi
 }
 
-set_args `getopt hgvp:n "$@"`
+set_args `getopt hgvp:nc "$@"`
 
 if [ -z "$args" ] ; then
     args=`./printers`

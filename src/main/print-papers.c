@@ -102,8 +102,8 @@ stpi_paper_create(stp_papersize_t *p)
   if (paper_list == NULL)
     {
       stpi_paper_list_init();
-      if (stpi_debug_level & STPI_DBG_PAPER)
-	stpi_erprintf("stpi_paper_create(): initialising paper_list...\n");
+      stpi_deprintf(STPI_DBG_PAPER,
+		    "stpi_paper_create(): initialising paper_list...\n");
     }
 
   /* Check the paper does not already exist */
@@ -285,7 +285,7 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
     top = 0,			/* Check top is present */
     unit = 0;			/* Check unit is present */
 
-  if (stpi_debug_level & STPI_DBG_XML)
+  if (stpi_get_debug_level() & STPI_DBG_XML)
     {
       stmp = stpi_mxmlElementGetAttr(paper, (const char*) "name");
       stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);

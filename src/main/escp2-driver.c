@@ -202,7 +202,7 @@ escp2_set_remote_sequence(stp_vars_t v)
   /* Magic remote mode commands, whatever they do */
   escp2_privdata_t *pd = get_privdata(v);
 
-  if (stpi_debug_level & STPI_DBG_MARK_FILE)
+  if (stpi_get_debug_level() & STPI_DBG_MARK_FILE)
     print_debug_params(v);
   if (pd->advanced_command_set || pd->input_slot)
     {

@@ -124,6 +124,10 @@ and changes from 4.2, as follows:
   9) Valgrind has been run over the package and a number of memory
      issues have been fixed.
 
+  10) This package does not currently work with the GIMP 2.0.  If you
+     have the GIMP 2.0 installed, you will need to use --disable-gimp
+     to build it successfully.
+
   Please see the change log for full information.
 
 

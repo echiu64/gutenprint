@@ -108,8 +108,7 @@ void
 stpi_list_node_free_data (void *item)
 {
   stpi_free((void *) item);
-  if (stpi_debug_level & STPI_DBG_LIST)
-    stpi_erprintf("stpi_list_node_free_data destructor\n");
+  stpi_deprintf(STPI_DBG_LIST, "stpi_list_node_free_data destructor\n");
 }
 
 static void
@@ -192,8 +191,7 @@ stpi_list_create(void)
   lh->long_name_cache = NULL;
   lh->long_name_cache_node = NULL;
 
-  if (stpi_debug_level & STPI_DBG_LIST)
-    stpi_erprintf("stpi_list_head constructor\n");
+  stpi_deprintf(STPI_DBG_LIST, "stpi_list_head constructor\n");
   return (stpi_list_t *) lh;
 }
 
@@ -243,8 +241,7 @@ stpi_list_destroy(stpi_list_t *list)
       stpi_list_item_destroy(list, (stpi_list_item_t *) cur);
       cur = next;
     }
-  if (stpi_debug_level & STPI_DBG_LIST)
-    stpi_erprintf("stpi_list_head destructor\n");
+  stpi_deprintf(STPI_DBG_LIST, "stpi_list_head destructor\n");
   lh->cookie = 0;
   stpi_free(lh);
 
@@ -620,7 +617,13 @@ stpi_list_item_create(stpi_list_t *list,
 	  lnn = lnn->prev;
 	}
     }
-  else if (stpi_debug_level & STPI_DBG_LIST)
+#if 0
+  /*
+   * This code #ifdef'ed out by Robert Krawitz on April 3, 2004.
+   * Setting a debug variable should not result in taking a materially
+   * different code path.
+   */
+  else if (stpi_get_debug_level() & STPI_DBG_LIST)
     {
       if (next)
 	{
@@ -635,6 +638,7 @@ stpi_list_item_create(stpi_list_t *list,
       else
 	lnn = get_list_node(NULL);
     }
+#endif
   else
     lnn = get_list_node(next);
 
@@ -673,8 +677,7 @@ stpi_list_item_create(stpi_list_t *list,
   /* increment reference count */
   lh->length++;
 
-  if (stpi_debug_level & STPI_DBG_LIST)
-    stpi_erprintf("stpi_list_node constructor\n");
+  stpi_deprintf(STPI_DBG_LIST, "stpi_list_node constructor\n");
   return 0;
 }
 
@@ -703,8 +706,7 @@ stpi_list_item_destroy(stpi_list_t *list, stpi_list_item_t *item)
     lh->end = ln->prev;
   stpi_free(ln);
 
-  if (stpi_debug_level & STPI_DBG_LIST)
-    stpi_erprintf("stpi_list_node destructor\n");
+  stpi_deprintf(STPI_DBG_LIST, "stpi_list_node destructor\n");
   return 0;
 }
 

@@ -69,6 +69,7 @@ static color_t color_map[] =
 
 static int current_index = 0;
 static testpattern_t *current_testpattern;
+extern FILE *yyin;
 
 static int
 find_color(const char *name)
@@ -103,6 +104,9 @@ find_color(const char *name)
 %token INK_LIMIT
 %token PRINTER
 %token PARAMETER
+%token PARAMETER_INT
+%token PARAMETER_FLOAT
+%token PARAMETER_CURVE
 %token DENSITY
 %token TOP
 %token LEFT
@@ -271,12 +275,41 @@ page_size_custom: PAGESIZE tINT tINT
 page_size: page_size_name | page_size_custom
 ;
 
-parameter: PARAMETER tSTRING tSTRING
+parameter_string: PARAMETER tSTRING tSTRING
 	{
 	  stp_set_string_parameter(global_vars, $2, $3);
 	  free($2);
 	  free($3);
 	}
+;
+
+parameter_int: PARAMETER_INT tSTRING tINT
+	{
+	  stp_set_int_parameter(global_vars, $2, $3);
+	  free($2);
+	}
+;
+
+parameter_float: PARAMETER_FLOAT tSTRING tDOUBLE
+	{
+	  stp_set_float_parameter(global_vars, $2, $3);
+	  free($2);
+	}
+;
+
+parameter_curve: PARAMETER_CURVE tSTRING
+	{
+	  stp_curve_t curve = stp_curve_create_from_stream(yyin);
+	  if (curve)
+	    {
+	      stp_set_curve_parameter(global_vars, $2, curve);
+	      stp_curve_free(curve);
+	    }
+	  free($2);
+	}
+;
+
+parameter: parameter_string | parameter_int | parameter_float
 ;
 density: DENSITY tDOUBLE
 	{ global_density = $2; }

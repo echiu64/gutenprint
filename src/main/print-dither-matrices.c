@@ -460,12 +460,11 @@ stpi_xml_dither_cache_get(int x, int y)
 {
   stpi_list_item_t *ln;
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
+  stpi_deprintf(STPI_DBG_XML,
+		"stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
   if (!dither_matrix_cache)
     {
-      if (stpi_debug_level & STPI_DBG_XML)
-	stpi_erprintf("cache does not exist\n");
+      stpi_deprintf(STPI_DBG_XML, "cache does not exist\n");
       return NULL;
     }
 
@@ -477,15 +476,13 @@ stpi_xml_dither_cache_get(int x, int y)
 	  ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->y == y)
 	{
 
-	  if (stpi_debug_level & STPI_DBG_XML)
-	    stpi_erprintf("found\n");
+	  stpi_deprintf(STPI_DBG_XML, "found\n");
 
 	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln));
 	}
       ln = stpi_list_item_next(ln);
     }
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("missing\n");
+  stpi_deprintf(STPI_DBG_XML, "missing\n");
 
   return NULL;
 }
@@ -514,8 +511,7 @@ stpi_xml_dither_cache_set(int x, int y, const char *filename)
 
   stpi_list_item_create(dither_matrix_cache, NULL, (void *) cacheval);
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_xml_dither_cache_set: added %dx%d\n", x, y);
+  stpi_deprintf(STPI_DBG_XML, "stpi_xml_dither_cache_set: added %dx%d\n", x, y);
 
   stpi_xml_exit();
 
@@ -540,8 +536,8 @@ stpi_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
   value = stpi_mxmlElementGetAttr(dm, "y-aspect");
   y = stpi_xmlstrtol(value);
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_xml_process_dither_matrix: x=%d, y=%d\n", x, y);
+  stpi_deprintf(STPI_DBG_XML,
+		"stpi_xml_process_dither_matrix: x=%d, y=%d\n", x, y);
 
   stpi_xml_dither_cache_set(x, y, file);
   return 1;
@@ -633,8 +629,8 @@ stpi_dither_array_create_from_file(const char* file)
 
   stpi_xml_init();
 
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_dither_array_create_from_file: reading `%s'...\n", file);
+  stpi_deprintf(STPI_DBG_XML,
+		"stpi_dither_array_create_from_file: reading `%s'...\n", file);
 
   doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
   (void) fclose(fp);

@@ -88,8 +88,8 @@ extern void stpi_catprintf(char **strp, const char *format, ...)
 #define STPI_DBG_XML            0x10000
 #define STPI_DBG_VARS           0x20000
 #define STPI_DBG_OLYMPUS        0x40000
-extern unsigned long stpi_debug_level;
 
+extern unsigned long stpi_get_debug_level(void);
 extern void stpi_dprintf(unsigned long level, stp_const_vars_t v,
 			 const char *format, ...)
        __attribute__((format(__printf__, 3, 4)));

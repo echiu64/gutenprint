@@ -1482,8 +1482,8 @@ stp_curve_create_from_file(const char* file)
 		    file, strerror(errno));
       return NULL;
     }
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
+  stpi_deprintf(STPI_DBG_XML, "stp_curve_create_from_file: reading `%s'...\n",
+		file);
 
   stpi_xml_init();
 
@@ -1501,12 +1501,33 @@ stp_curve_create_from_file(const char* file)
 }
 
 stp_curve_t
+stp_curve_create_from_stream(FILE* fp)
+{
+  stp_curve_t curve = NULL;
+  mxml_node_t *doc;
+  stpi_deprintf(STPI_DBG_XML, "stp_curve_create_from_fp: reading...\n");
+
+  stpi_xml_init();
+
+  doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+
+  curve = xml_doc_get_curve(doc);
+
+  if (doc)
+    stpi_mxmlDelete(doc);
+
+  stpi_xml_exit();
+  return curve;
+
+}
+
+stp_curve_t
 stp_curve_create_from_string(const char* string)
 {
   stp_curve_t curve = NULL;
   mxml_node_t *doc;
-  if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_curve_create_from_string: reading '%s'...\n", string);
+  stpi_deprintf(STPI_DBG_XML,
+		"stp_curve_create_from_string: reading '%s'...\n", string);
   stpi_xml_init();
 
   doc = stpi_mxmlLoadString(NULL, string, MXML_NO_CALLBACK);
