@@ -3001,7 +3001,7 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
       unsigned int pheight = stp_papersize_get_height(pt);
       if (strlen(stp_papersize_get_name(pt)) > 0 &&
 	  pwidth <= width_limit && pheight <= height_limit &&
-	  (pheight >= min_width_limit || pheight == 0) &&
+	  (pheight >= min_height_limit || pheight == 0) &&
 	  (pwidth >= min_width_limit || pwidth == 0) &&
 	  (pwidth == 0 || pheight > 0 ||
 	   escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_YES, v)))
