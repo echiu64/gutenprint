@@ -70,19 +70,17 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "init_sequence",	 	0, 4 },
   { "has_black",	 	4, 1 },
-  { "color",		 	5, 2 },
+  { "microweave_exception",	5, 2 },
   { "graymode",		 	7, 1 },
   { "720dpi_mode",	 	8, 2 },
   { "variable_mode",		10, 2 },
   { "command_mode",		12, 4 },
-  { "ink_types",		16, 1 },
+  { "deinitialize-je",          16, 1 },
   { "rollfeed",			17, 1 },
   { "horizontal_zero_margin",	18, 1 },
   { "vertical_zero_margin",	19, 1 },
   { "microweave",		20, 3 },
   { "vacuum",			23, 1 },
-  { "microweave_exception",	24, 2 },
-  { "deinitialize-je",          26, 1 },
 };
 
 #define INCH(x)		(72 * x)
@@ -194,6 +192,7 @@ DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(paperlist, const paperlist_t *)
 DEF_SIMPLE_ACCESSOR(reslist, const res_t *)
 DEF_SIMPLE_ACCESSOR(inklist, const inklist_t *)
+DEF_SIMPLE_ACCESSOR(input_slots, const input_slot_list_t *)
 
 DEF_MICROWEAVE_ACCESSOR(left_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(right_margin, unsigned)
@@ -284,9 +283,7 @@ c_strdup(const char *s)
 }
 
 static int
-verify_resolution(const res_t *res,
-		  int model,
-		  const stp_vars_t v)
+verify_resolution(const res_t *res, int model, const stp_vars_t v)
 {
   int nozzle_width =
     (escp2_base_separation(model, v) / escp2_nozzle_separation(model, v));
@@ -324,6 +321,27 @@ verify_resolution(const res_t *res,
   return 0;
 }
 
+static int
+verify_papersize(const stp_papersize_t pt, int model, const stp_vars_t v)
+{
+  unsigned int height_limit, width_limit;
+  unsigned int min_height_limit, min_width_limit;
+  unsigned int pwidth = stp_papersize_get_width(pt);
+  unsigned int pheight = stp_papersize_get_height(pt);
+  width_limit = escp2_max_paper_width(model, v);
+  height_limit = escp2_max_paper_height(model, v);
+  min_width_limit = escp2_min_paper_width(model, v);
+  min_height_limit = escp2_min_paper_height(model, v);
+  if (strlen(stp_papersize_get_name(pt)) > 0 &&
+      pwidth <= width_limit && pheight <= height_limit &&
+      (pheight >= min_height_limit || pheight == 0) &&
+      (pwidth >= min_width_limit || pwidth == 0) &&
+      (pwidth == 0 || pheight > 0 ||
+       escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_YES, v)))
+    return 1;
+  else
+    return 0;
+}
 
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
@@ -350,27 +368,14 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
   {
-    unsigned int height_limit, width_limit;
-    unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
     valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
     *count = 0;
-    width_limit = escp2_max_paper_width(model, v);
-    height_limit = escp2_max_paper_height(model, v);
-    min_width_limit = escp2_min_paper_width(model, v);
-    min_height_limit = escp2_min_paper_height(model, v);
 
     for (i = 0; i < papersizes; i++)
     {
       const stp_papersize_t pt = stp_get_papersize_by_index(i);
-      unsigned int pwidth = stp_papersize_get_width(pt);
-      unsigned int pheight = stp_papersize_get_height(pt);
-      if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	  pwidth <= width_limit && pheight <= height_limit &&
-	  (pheight >= min_height_limit || pheight == 0) &&
-	  (pwidth >= min_width_limit || pwidth == 0) &&
-	  (pwidth == 0 || pheight > 0 ||
-	   escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_YES, v)))
+      if (verify_papersize(pt, model, v))
 	{
 	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
 	  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
@@ -400,14 +405,19 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   else if (strcmp(name, "InkType") == 0)
   {
     const inklist_t *inks = escp2_inklist(model, v);
-    valptrs = stp_malloc(sizeof(stp_param_t) * inks->n_inks);
-    *count = 0;
-    for (i = 0; i < inks->n_inks; i++)
+    int ninktypes = inks->n_inks;
+    if (ninktypes == 0)
+      {
+	*count = 0;
+	return NULL;
+      }
+    valptrs = stp_malloc(sizeof(stp_param_t) * ninktypes);
+    for (i = 0; i < ninktypes; i++)
     {
       valptrs[*count].name = c_strdup(inks->inknames[i]->name);
       valptrs[*count].text = c_strdup(_(inks->inknames[i]->text));
-      (*count)++;
     }
+    *count = ninktypes;
     return valptrs;
   }
   else if (strcmp(name, "MediaType") == 0)
@@ -415,6 +425,11 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     const paperlist_t *p = escp2_paperlist(model, v);
     int nmediatypes = p->paper_count;
     valptrs = stp_malloc(sizeof(stp_param_t) * nmediatypes);
+    if (nmediatypes == 0)
+      {
+	*count = 0;
+	return NULL;
+      }
     for (i = 0; i < nmediatypes; i++)
     {
       valptrs[i].name = c_strdup(p->papers[i].name);
@@ -425,18 +440,21 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO, v))
-      return NULL;
-    else
-    {      /* Roll Feed capable printers */
-      valptrs = stp_malloc(sizeof(stp_param_t) * 2);
-      valptrs[0].name = c_strdup("Standard");
-      valptrs[0].text = c_strdup(_("Standard"));
-      valptrs[1].name = c_strdup("Roll");
-      valptrs[1].text = c_strdup(_("Roll Feed"));
-      *count = 2;
-      return valptrs;
+    const input_slot_list_t *slots = escp2_input_slots(model, v);
+    int ninputslots = slots->n_input_slots;
+    valptrs = stp_malloc(sizeof(stp_param_t) * ninputslots);
+    if (ninputslots == 0)
+      {
+	*count = 0;
+	return NULL;
+      }
+    for (i = 0; i < ninputslots; i++)
+    {
+      valptrs[i].name = c_strdup(slots->slots[i].name);
+      valptrs[i].text = c_strdup(_(slots->slots[i].text));
     }
+    *count = ninputslots;
+    return valptrs;
   }
   else
     return (NULL);
@@ -520,21 +538,11 @@ escp2_default_parameters(const stp_printer_t printer,
     return NULL;
   if (strcmp(name, "PageSize") == 0)
     {
-      unsigned int height_limit, width_limit;
-      unsigned int min_height_limit, min_width_limit;
       int papersizes = stp_known_papersizes();
-      width_limit = escp2_max_paper_width(model, v);
-      height_limit = escp2_max_paper_height(model, v);
-      min_width_limit = escp2_min_paper_width(model, v);
-      min_height_limit = escp2_min_paper_height(model, v);
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
-	  unsigned int pwidth = stp_papersize_get_width(pt);
-	  unsigned int pheight = stp_papersize_get_height(pt);
-	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	      pwidth >= min_width_limit && pheight >= min_height_limit &&
-	      pwidth <= width_limit && pheight <= height_limit)
+	  if (verify_papersize(pt, model, v))
 	    return (stp_papersize_get_name(pt));
 	}
       return NULL;
@@ -548,9 +556,7 @@ escp2_default_parameters(const stp_printer_t printer,
 	{
 	  if (res->vres >= 360 && res->hres >= 360 &&
 	      verify_resolution(res, model, v))
-	    {
-	      return (res->name);
-	    }
+	    return (res->name);
 	  res++;
 	}
       return NULL;
@@ -567,14 +573,13 @@ escp2_default_parameters(const stp_printer_t printer,
     }
   else if (strcmp(name, "InputSlot") == 0)
     {
-      if (escp2_has_cap(model, MODEL_ROLLFEED, MODEL_ROLLFEED_NO, v))
-	return NULL;
-      else
-	return "Standard";
+      const input_slot_list_t *slots = escp2_input_slots(model, v);
+      if (slots->n_input_slots)
+	return slots->slots[0].name;
+      return NULL;
     }
   else
     return (NULL);
-
 }
 
 static void
@@ -584,21 +589,10 @@ escp2_describe_resolution(const stp_printer_t printer,
   int model = stp_printer_get_model(printer);
   stp_vars_t v = stp_printer_get_printvars(printer);
   const res_t *res = escp2_reslist(model, v);
-  int nozzle_width =
-    escp2_base_separation(model, v) / escp2_nozzle_separation(model, v);
   while (res->hres)
     {
-      if (escp2_ink_type(model, res->resid, v) != -1 &&
-	  res->vres <= escp2_max_vres(model, v) &&
-	  res->hres <= escp2_max_hres(model, v) &&
-	  (res->microweave == 0 ||
-	   !escp2_has_cap(model, MODEL_MICROWEAVE,
-			  MODEL_MICROWEAVE_NO, v)) &&
-	  (res->microweave <= 1 ||
-	   escp2_has_cap(model, MODEL_MICROWEAVE,
-			 MODEL_MICROWEAVE_ENHANCED, v)) &&
-	  ((res->vres / nozzle_width) * nozzle_width) == res->vres &&
-	  !strcmp(resolution, res->name))
+      if (!strcmp(resolution, res->name) &&
+	  verify_resolution(res, model, v))
 	{
 	  *x = res->hres;
 	  *y = res->vres;
@@ -618,9 +612,9 @@ escp2_reset_printer(const escp2_init_t *init)
    * packet mode.
    */
   if (escp2_has_cap(init->model, MODEL_INIT, MODEL_INIT_NEW, init->v))
-    stp_zprintf(init->v, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
+    stp_zprintf(init->v, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0,0,0);
 
-  stp_puts("\033@", init->v);					/* ESC/P2 reset */
+  stp_puts("\033@", init->v);				/* ESC/P2 reset */
 }
 
 static void
@@ -1164,7 +1158,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		unidirectional = 0;
   const res_t	*res;
   int		bits = 1;
-  int		physical_bits = 1;
   void *	weave = NULL;
   void *	dither;
   int		separation_rows;
@@ -1298,12 +1291,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
 
   separation_rows = escp2_separation_rows(model, nv);
-
-  if (drop_size > 0 && drop_size & 0x10)
-    bits = 2;
-  else
-    bits = 1;
-  physical_bits = escp2_bits(model, resid, nv);
+  bits = escp2_bits(model, resid, nv);
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;
@@ -1404,7 +1392,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   weave = stp_initialize_weave(nozzles, nozzle_separation,
 			       horizontal_passes, vertical_passes,
-			       vertical_oversample, ncolors, physical_bits,
+			       vertical_oversample, ncolors, bits,
 			       out_width, out_height, separation_rows,
 			       top * physical_ydpi / 72,
 			       (page_height * physical_ydpi / 72 +
@@ -1429,12 +1417,12 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     channel_limit = 1;
   current_channel = setup_ink_types(ink_type, &privdata, cols, dt,
-				    channel_limit, length * physical_bits);
+				    channel_limit, length * bits);
   if (current_channel == 0)
     {
       ink_type = &default_black_ink;
       current_channel = setup_ink_types(ink_type, &privdata, cols, dt,
-					channel_limit, length * physical_bits);
+					channel_limit, length * bits);
     }
 
   in  = stp_malloc(image_width * image_bpp);

@@ -156,10 +156,10 @@ typedef struct
 #define MODEL_HASBLACK_YES	0x00ul /* when it is also printing color? */
 #define MODEL_HASBLACK_NO	0x10ul
 
-#define MODEL_COLOR_MASK	0x60ul /* Is this a 6-color printer? */
-#define MODEL_COLOR_4		0x00ul
-#define MODEL_COLOR_6		0x20ul
-#define MODEL_COLOR_7		0x40ul
+#define MODEL_MICROWEAVE_EXCEPTION_MASK   0x60ul
+#define MODEL_MICROWEAVE_EXCEPTION_NORMAL 0x00ul
+#define MODEL_MICROWEAVE_EXCEPTION_360    0x20ul
+#define MODEL_MICROWEAVE_EXCEPTION_BLACK  0x40ul
 
 #define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
@@ -181,9 +181,9 @@ typedef struct
 #define MODEL_COMMAND_2000	0x2000ul /* The 2000 series printers */
 #define MODEL_COMMAND_PRO	0x3000ul /* Stylus Pro printers */
 
-#define MODEL_INK_MASK		0x10000ul /* Does this printer support */
-#define MODEL_INK_NORMAL	0x00000ul /* different types of inks? */
-#define MODEL_INK_SELECTABLE	0x10000ul /* Only the Stylus Pro's do */
+#define MODEL_DEINITIALIZE_JE_MASK      0x10000ul
+#define MODEL_DEINITIALIZE_JE_NO        0x00000ul
+#define MODEL_DEINITIALIZE_JE_YES       0x10000ul
 
 #define MODEL_ROLLFEED_MASK	0x20000ul /* Does this printer support */
 #define MODEL_ROLLFEED_NO	0x00000ul /* a roll feed? */
@@ -191,11 +191,11 @@ typedef struct
 
 #define MODEL_XZEROMARGIN_MASK	0x40000ul /* Does this printer support */
 #define MODEL_XZEROMARGIN_NO	0x00000ul /* zero margin mode? */
-#define MODEL_XZEROMARGIN_YES	0x40000ul /* (print to the edge of the paper) */
+#define MODEL_XZEROMARGIN_YES	0x40000ul /* (print to edge of the paper) */
 
 #define MODEL_YZEROMARGIN_MASK	0x80000ul /* Does this printer support */
 #define MODEL_YZEROMARGIN_NO	0x00000ul /* zero margin mode? */
-#define MODEL_YZEROMARGIN_YES	0x80000ul /* (print to the edge of the paper) */
+#define MODEL_YZEROMARGIN_YES	0x80000ul /* (print to edge of the paper) */
 
 #define MODEL_MICROWEAVE_MASK		0x700000ul
 #define MODEL_MICROWEAVE_NO		0x000000ul
@@ -206,31 +206,20 @@ typedef struct
 #define MODEL_VACUUM_NO			0x000000ul
 #define MODEL_VACUUM_YES		0x800000ul
 
-#define MODEL_MICROWEAVE_EXCEPTION_MASK   0x3000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_NORMAL 0x0000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_360    0x1000000ul
-#define MODEL_MICROWEAVE_EXCEPTION_BLACK  0x2000000ul
-
-#define MODEL_DEINITIALIZE_JE_MASK      0x4000000ul
-#define MODEL_DEINITIALIZE_JE_NO        0x0000000ul
-#define MODEL_DEINITIALIZE_JE_YES       0x4000000ul
-
 #define MODEL_INIT			(0)
 #define MODEL_HASBLACK			(1)
-#define MODEL_COLOR			(2)
+#define MODEL_MICROWEAVE_EXCEPTION	(2)
 #define MODEL_GRAYMODE			(3)
 #define MODEL_720DPI_MODE		(4)
 #define MODEL_VARIABLE_DOT		(5)
 #define MODEL_COMMAND			(6)
-#define MODEL_INK			(7)
+#define MODEL_DEINITIALIZE_JE           (7)
 #define MODEL_ROLLFEED			(8)
 #define MODEL_XZEROMARGIN		(9)
 #define MODEL_YZEROMARGIN		(10)
 #define MODEL_MICROWEAVE		(11)
 #define MODEL_VACUUM			(12)
-#define MODEL_MICROWEAVE_EXCEPTION	(13)
-#define MODEL_DEINITIALIZE_JE           (14)
-#define MODEL_LIMIT			(15)
+#define MODEL_LIMIT			(13)
 
 typedef struct
 {
@@ -283,6 +272,18 @@ typedef struct
   const escp2_inkname_t **inknames;
   int n_inks;
 } inklist_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+} input_slot_t;
+
+typedef struct
+{
+  const input_slot_t *slots;
+  int n_input_slots;
+} input_slot_list_t;
 
 typedef struct escp2_printer
 {
@@ -370,6 +371,7 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const int *bits;
   const int *base_resolutions;
+  const input_slot_list_t *input_slots;
 } escp2_stp_printer_t;
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];
