@@ -491,7 +491,7 @@ if test "$CC" = "gcc" ; then
     GNUCFLAGS="${GNUCFLAGS} -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
   fi
   if test x$ENABLE_PROFILE = xyes ; then
-    GNUCFLAGS="${GNUCFLAGS:=} -pg"
+    CFLAGS="${CFLAGS:=} -pg"
   fi
 else
   if test x$ENABLE_DEBUG = xyes ; then
