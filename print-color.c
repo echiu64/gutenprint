@@ -810,7 +810,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if ((compute_saturation || hue_map || lum_map) &&
+	  if ((compute_saturation) &&
 	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];

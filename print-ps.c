@@ -248,7 +248,6 @@ ps_describe_resolution(const printer_t *printer,
 
 void
 ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
-         int       copies,		/* I - Number of copies */
          FILE      *prn,		/* I - File to print to */
          Image     image,		/* I - Image to print */
 	 const vars_t    *v)

@@ -1567,7 +1567,6 @@ pcl_limit(const printer_t *printer,	/* I - Printer model */
 
 void
 pcl_print(const printer_t *printer,		/* I - Model */
-          int       copies,		/* I - Number of copies */
           FILE      *prn,		/* I - File to print to */
           Image     image,		/* I - Image to print */
 	  const vars_t    *v)

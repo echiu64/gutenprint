@@ -805,7 +805,6 @@ clean_color(unsigned char *line, int len)
 */
 void
 lexmark_print(const printer_t *printer,		/* I - Model */
-            int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
 	    const vars_t    *v)

@@ -237,7 +237,7 @@ typedef escp2_variable_inkset_t *escp2_variable_inklist_t[INKTYPE_N][INKSET_N][R
 
 static simple_dither_range_t photo_cyan_dither_ranges[] =
 {
-  { 0.25, 0x1, 0, 1 },
+  { 0.27, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
 };
 
@@ -245,12 +245,12 @@ static escp2_variable_ink_t photo_cyan_ink =
 {
   photo_cyan_dither_ranges,
   sizeof(photo_cyan_dither_ranges) / sizeof(simple_dither_range_t),
-  .75
+  1.0
 };
 
 static simple_dither_range_t photo_magenta_dither_ranges[] =
 {
-  { 0.26, 0x1, 0, 1 },
+  { 0.35, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
 };
 
@@ -258,7 +258,7 @@ static escp2_variable_ink_t photo_magenta_ink =
 {
   photo_magenta_dither_ranges,
   sizeof(photo_magenta_dither_ranges) / sizeof(simple_dither_range_t),
-  .75
+  1.0
 };
 
 
@@ -1475,19 +1475,19 @@ static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
 static double lum_adjustment[49] =
 {
-  0.57,				/* C */
-  0.67,
-  0.77,
-  0.85,
-  0.85,
-  0.8,
-  0.75,
-  0.667,
-  0.65,				/* B */
+  0.50,				/* C */
+  0.55,
+  0.6,
   0.65,
-  0.714,
-  0.769,
-  0.833,
+  0.65,
+  0.6,
+  0.55,
+  0.53,
+  0.5,				/* B */
+  0.55,
+  0.6,
+  0.7,
+  0.8,
   0.909,
   1.0,
   1.15,
@@ -1522,8 +1522,8 @@ static double lum_adjustment[49] =
   0.48,
   0.48,
   0.51,
-  0.54,
-  0.57				/* C */
+  0.51,
+  0.50				/* C */
 };  
 
 static double hue_adjustment[49] =
@@ -2138,7 +2138,6 @@ escp2_deinit_printer(FILE *prn, escp_init_t *init)
  */
 void
 escp2_print(const printer_t *printer,		/* I - Model */
-            int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
 	    const vars_t    *v)

@@ -2347,7 +2347,10 @@ dither_cmyk_ordered(const unsigned short  *rgb,
 
       if (black)
 	{
-	  int tk = print_color(d, &(d->dither[ECOLOR_K]), bk, bk, k, x, row,
+	  int tk;
+	  if (d->density != d->black_density)
+	    k = k * d->black_density / d->density;
+	  tk = print_color(d, &(d->dither[ECOLOR_K]), bk, bk, k, x, row,
 			       kptr, NULL, bit, length, 0, 0, &ink_budget,
 			       &(d->pick[ECOLOR_K]), &(d->dithermat[ECOLOR_K]),
 			       d->dither_type);
@@ -2355,7 +2358,7 @@ dither_cmyk_ordered(const unsigned short  *rgb,
 	  k = tk;
 	}
       else
-        printed_black = 0;
+	printed_black = 0;
 
       QUANT(10);
       /*
@@ -2637,6 +2640,8 @@ dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
       c = UPDATE_COLOR(c, ndither[ECOLOR_C]);
       m = UPDATE_COLOR(m, ndither[ECOLOR_M]);
       y = UPDATE_COLOR(y, ndither[ECOLOR_Y]);
+      if (d->density != d->black_density)
+	k = k * d->black_density / d->density;
       k = UPDATE_COLOR(k, ndither[ECOLOR_K]);
 
       QUANT(9);

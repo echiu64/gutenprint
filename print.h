@@ -175,6 +175,133 @@ extern void Image_note_progress(Image image, double current, double total);
 extern void Image_progress_conclude(Image image);
 
 
+/*
+ * Definition of a printer.  A printer definition contains some data
+ * about the printer and a set of member functions that operate on it.
+ *
+ * The data members are:
+ *
+ * long_name is a human-readable name.  It is intended to be used by
+ *   a user interface to print the name of the printer.
+ *
+ * driver is the short name of the printer.  This is an alternate name
+ *   that is used internally.  A user interface may use this for input
+ *   purposes, or a client program may use this to generate a filename.
+ *   The driver name should consist of lowercase alphanumerics and hyphens
+ *   only.
+ *
+ * model is a model number used only by the underlying driver.  It is
+ *   treated as an opaque, but static, identifier.  It should not be a
+ *   pointer value, but the exact interpretation of the model number
+ *   is up to the driver implementation (it may be an index into an
+ *   array, for example).
+ *
+ * printvars is the default settings for this printer.
+ *
+ * The member functions are:
+ *
+ * char **(*parameters)(const struct *printer,
+ *                      char *ppd_file,
+ *                      char *name,
+ *                      int *count)
+ *
+ *   returns a list of option values of the specified parameter NAME
+ *   for the specified PRINTER.  If a PPD filename is specified, the driver
+ *   may use that to help generate the valid parameter list.  The number
+ *   of options returned is placed in COUNT.  Both the array and the
+ *   options themselves are allocated on the heap; it is the caller's
+ *   responsibility to free them upon completion of use.  The driver
+ *   must therefore return a copy of data.
+ *
+ *   In all cases, the returned option names should be appropriate for a
+ *   user interface to display.
+ *
+ *   The list of parameters is subject to change.  The currently supported
+ *   parameters are:
+ *
+ *     PageSize returns a list of legal page size names for the printer
+ *       in question.
+ *
+ *     Resolution returns a list of valid resolution settings.  The
+ *       resolutions are to be interpreted as opaque names; the caller
+ *       must not attempt to interpret them except with the
+ *       describe_resolution function described below.  There may be
+ *       multiple resolution names that resolve to the same printing
+ *       resolution; they may correspond to different quality settings,
+ *       for example.
+ *
+ *     InkType returns a list of legal ink types.  The printer driver may
+ *       define these as it sees fit.  If a printer offers a choice of
+ *       ink cartridges, the choices would be enumerated here.
+ *
+ *     MediaType returns a list of legal media types.  The printer driver
+ *       may define these as it sees fit.  This is normally different kinds
+ *       of paper that the printer can handle.
+ *
+ *     InputSlot returns a list of legal input sources for the printer.
+ *       This is typically things like different input trays, manual feed,
+ *       roll feed, and the like.
+ *
+ * void (*media_size)(const struct printer *printer,
+ *                    const vars_t *v,
+ *                    int *width,
+ *                    int *height)
+ *
+ *   returns the physical WIDTH and HEIGHT of the page using the settings
+ *   in V.  The driver will almost always look at the media_size variable
+ *   in V; it may look at other data in V to determine the physical page
+ *   size.  WIDTH and HEIGHT are expressed in units of 1/72".
+ *
+ * void (*imageable_area)(const struct printer *printer,
+ *                        const vars_t *v,
+ *                        int *left,
+ *                        int *right,
+ *                        int *bottom,
+ *                        int *top)
+ *
+ *   returns the width of the LEFT, RIGHT, BOTTOM, and TOP border of the
+ *   page for the given printer and variable settings.  The caller can
+ *   use this, in combination with the media_size member, to determine
+ *   the printable region of the page, and if needed, exactly where to
+ *   place the image to achieve a given physical placement (e. g.
+ *   centering) on the page.  All returned values are in units of
+ *   1/72".
+ *
+ * void (*limit)(const struct printer *printer,
+ *               const vars_t *v,
+ *               int *width,
+ *               int *length)
+ *
+ *   returns the maximum page size the printer can handle, in units of
+ *   1/72".
+ *
+ * void (*print)(const struct printer *printer,
+ *               FILE *prn,
+ *               Image image,
+ *               const vars_t *v)
+ *
+ *   prints a page.  The variable settings provided in V are used to control
+ *   the printing; PRN is a file pointer that the raw printer output
+ *   is to be written to, and IMAGE is an object that sources the input
+ *   data to the driver (the contents of which are opaque to the low level
+ *   driver and are interpreted by the high level program).
+ *
+ * const char *(*default_resolution)(const struct printer *printer)
+ *
+ *   returns the name of the default resolution for the printer.  The
+ *   caller must not attempt to free the returned value.
+ *
+ * void (*describe_resolution)(const struct printer *printer,
+ *                             const char *resolution,
+ *                             int *x,
+ *                             int *y)
+ *
+ *   returns the horizontal (X) and vertical (Y) resolution of the chosen
+ *   RESOLUTION name.  The high level program may choose to use this to
+ *   rasterize at an appropriate resolution.
+ *   
+ */
+
 typedef struct printer
 {
   char	*long_name,			/* Long name for UI */
@@ -182,14 +309,13 @@ typedef struct printer
   int	model;				/* Model number */
   char	**(*parameters)(const struct printer *printer, char *ppd_file,
                         char *name, int *count);
-					/* Parameter names */
   void	(*media_size)(const struct printer *printer, const vars_t *v,
 		      int *width, int *length);
   void	(*imageable_area)(const struct printer *printer, const vars_t *v,
                           int *left, int *right, int *bottom, int *top);
   void	(*limit)(const struct printer *printer, const vars_t *v,
 		 int *width, int *length);
-  void	(*print)(const struct printer *printer, int copies, FILE *prn,
+  void	(*print)(const struct printer *printer, FILE *prn,
 		 Image image, const vars_t *v);
   const char *(*default_resolution)(const struct printer *printer);
   void  (*describe_resolution)(const struct printer *printer,
@@ -333,7 +459,7 @@ extern void	lexmark_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *bottom, int *top);
 extern void	lexmark_limit(const printer_t *printer, const vars_t *v,
 			    int *width, int *length);
-extern void	lexmark_print(const printer_t *printer, int copies, FILE *prn,
+extern void	lexmark_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *lexmark_default_resolution(const printer_t *printer);
 extern void     lexmark_describe_resolution(const struct printer *printer,
@@ -348,7 +474,7 @@ extern void	escp2_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *bottom, int *top);
 extern void	escp2_limit(const printer_t *printer, const vars_t *v,
 			    int *width, int *length);
-extern void	escp2_print(const printer_t *printer, int copies, FILE *prn,
+extern void	escp2_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *escp2_default_resolution(const printer_t *printer);
 extern void     escp2_describe_resolution(const struct printer *printer,
@@ -363,7 +489,7 @@ extern void	canon_imageable_area(const printer_t *printer, const vars_t *v,
 				     int *bottom, int *top);
 extern void	canon_limit(const printer_t *printer, const vars_t *v,
 			    int *width, int *length);
-extern void	canon_print(const printer_t *printer, int copies, FILE *prn,
+extern void	canon_print(const printer_t *printer, FILE *prn,
 			    Image image, const vars_t *v);
 extern const char *canon_default_resolution(const printer_t *printer);
 extern void     canon_describe_resolution(const struct printer *printer,
@@ -378,7 +504,7 @@ extern void	pcl_imageable_area(const printer_t *printer, const vars_t *v,
 				   int *bottom, int *top);
 extern void	pcl_limit(const printer_t *printer, const vars_t *v,
 			  int *width, int *length);
-extern void	pcl_print(const printer_t *printer, int copies, FILE *prn,
+extern void	pcl_print(const printer_t *printer, FILE *prn,
 			  Image image, const vars_t *v);
 extern const char *pcl_default_resolution(const printer_t *printer);
 extern void     pcl_describe_resolution(const struct printer *printer,
@@ -395,7 +521,7 @@ extern void	ps_imageable_area(const printer_t *printer, const vars_t *v,
 		                  int *bottom, int *top);
 extern void	ps_limit(const printer_t *printer, const vars_t *v,
 			 int *width, int *length);
-extern void	ps_print(const printer_t *printer, int copies, FILE *prn,
+extern void	ps_print(const printer_t *printer, FILE *prn,
 			 Image image, const vars_t *v);
 extern const char *ps_default_resolution(const printer_t *printer);
 extern void     ps_describe_resolution(const struct printer *printer,

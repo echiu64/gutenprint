@@ -241,7 +241,6 @@ stp_print_page(gx_device_printer * pdev, FILE * file)
   theImage.raster = stp_raster;
   if (verify_printer_params(printer, &(stp_data.v)))
     (*printer->print)(printer,		/* I - Model */
-		      1,		/* I - Number of copies */
 		      file,		/* I - File to print to */
 		      &theImage,	/* I - Image to print (dummy) */
 		      &stp_data.v);	/* vars_t * */

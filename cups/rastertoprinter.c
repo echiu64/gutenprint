@@ -287,7 +287,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: v.ink_type |%s|\n", v.ink_type);
     fprintf(stderr, "DEBUG: v.dither_algorithm |%s|\n", v.dither_algorithm);
     if (verify_printer_params(printer, &v))
-      (*printer->print)(printer, 1, stdout, &cups, &v);
+      (*printer->print)(printer, stdout, &cups, &v);
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
 

@@ -1759,7 +1759,6 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
  */
 void
 canon_print(const printer_t *printer,		/* I - Model */
-            int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
 	    const vars_t    *v)
