@@ -43,7 +43,8 @@ Thanks to <a href="http://www.linuxprinting.org">linuxprinting.org</a>
 for this data.</p>
 
 <table>
-<tr><td><b>Printer Model</b></td><td span="2"><b>Driver</b></td></tr>
+<tr><td><b>Printer
+Model</b></td><td><b>Driver</b></td><td><b>Compatible Printer</b></td></tr>
 <?
 while ( list( $key, $val ) = each( $GLOBALS['all_known_printers']) ) {
       echo '<tr><td>' . $key . '</td><td>' . $val . '</td><td>' .
