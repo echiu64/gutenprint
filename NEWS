@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.99b2, the second beta release leading
+This is gimp-print version 4.1.99b3, the third beta release leading
 up to the 4.2 stable release.  This release is not 4.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -11,6 +11,27 @@ These release notes primarily describe changes visible to the end
 user.  Detailed descriptions of changes may be found in the ChangeLog.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.99b3 contains the following changes over 4.1.99b2:
+
+1) The Ghostscript stp driver printed incorrectly when the -sPAPERSIZE
+   option was used to specify paper size, and in certain other cases.
+   It is not known when this broke; some of it may have broken a long
+   time ago.  This problem manifested itself in a variety of ways; in
+   some cases, user parameters were ignored, leading to incorrect
+   output, in other cases the program took an error and/or crashed.
+
+2) The Gimp plug-in now uses a notebook for the printer and image
+   options.  There have been other UI improvements as well.  The
+   plug-in now fits much better on smaller screens and is visually
+   cleaner.
+
+3) Page margins for some Epson and Lexmark printers have been fixed.
+
+4) "make uninstall" now works correctly.
+
+5) A Swedish translation has been added.
+
 
 Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
 
