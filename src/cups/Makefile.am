@@ -109,6 +109,39 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	  done \
 	fi
 
+uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
+	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
+	  cd ppd ; \
+	  for language in * ; do \
+	    cd ..; \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
+	    cd ppd/$$language; \
+	    for ppdfile in * ; do \
+	      $(RM) $(DESTDIR)$(cups_modeldir)/$$language/$$ppdfile ; \
+	    done; \
+	    cd ..; \
+	  done \
+	fi
+
+refresh-data-local: ppd
+	cd ppd ; \
+	files=`find . -name '*.ppd*' -exec basename '{}' \; | sort | uniq` ; \
+	for language in . de en es fr it ; do \
+	  for f in $$files ; do \
+	    ff="$(DESTDIR)/$(cups_modeldir)/$$language/$$f" ; \
+	    if [ -f "$$ff" ] ; then \
+	      echo "Removing $$ff" ; \
+	      $(RM) "$$ff" ; \
+	    fi ; \
+	    if [ -f "$$ff" ] ; then \
+	      echo "Unable to remove $$ff" 1>&2 ; \
+	      exit 1 ; \
+	    fi ; \
+	  done; \
+	done
+
+
 install-data-hook:
 # Remove unused directories in install tree
 	-rmdir $(DESTDIR)$(cups_modeldir)
@@ -134,7 +167,7 @@ ppd-stamp: genppd
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
-	$(MAKE) prefix=$${wdir}/catalog install ; \
+	$(MAKE) prefix=$${wdir}/catalog install
 	-rm -rf ppd
 	-mkdir ppd
 	for language in C $(ALL_LINGUAS) ; do \
