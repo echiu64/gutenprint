@@ -15,12 +15,13 @@
 SHELL = /bin/sh
 
 srcdir = .
-top_srcdir = ../..
+top_srcdir = ..
 prefix = /usr/local
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/Tools//
 sbindir = ${exec_prefix}/sbin
+libexecdir = ${exec_prefix}/libexec
 datadir = ${prefix}/Libraries/share
 sysconfdir = ${prefix}/etc
 sharedstatedir = ${prefix}/com
@@ -37,7 +38,7 @@ pkgdatadir = $(datadir)/gimp
 pkglibdir = $(libdir)/gimp
 pkgincludedir = $(includedir)/gimp
 
-top_builddir = ../..
+top_builddir = ..
 
 ACLOCAL = aclocal 
 AUTOCONF = autoconf
@@ -63,7 +64,7 @@ AS = @AS@
 CATALOGS =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
 CATOBJEXT = .gmo
 CC = gcc
-CFLAGS = -O2 -Wall
+CFLAGS = -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall
 CPP = gcc -E
 CPPFLAGS = 
 DATADIRNAME = share
@@ -75,12 +76,12 @@ GIMP =
 GIMPDOCS = 
 GIMPINSTALL = 
 GIMPTOOL = ../../gimptool
-GIMP_CFLAGS = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include -I/usr/X11R6/include -I/usr/lib/glib/include -O2 -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
-GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib  -lgimpui
-GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib 
+GIMP_CFLAGS = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include -O6 -funroll-all-loops -mstack-align-double -march=pentiumpro -Wall -Wno-parentheses -Wno-unused -Wno-uninitialized
+GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib  -lgimpui
+GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/mnt1/gnome.new/lib -lglib 
 GIMP_MAJOR_VERSION = 1
-GIMP_MICRO_VERSION = 9
+GIMP_MICRO_VERSION = 10
 GIMP_MINOR_VERSION = 1
 GIMP_MODULES = modules
 GIMP_MP_FLAGS = 
@@ -89,16 +90,20 @@ GIMP_PERL = perl
 GIMP_PLUGINS = plug-ins
 GIMP_THREAD_FLAGS = 
 GIMP_THREAD_LIBS = 
-GIMP_VERSION = 1.1.9
-GLIB_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
-GLIB_LIBS = -L/usr/lib -lglib
+GIMP_VERSION = 1.1.10
+GLIB_CFLAGS = -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
+GLIB_LIBS = -L/mnt1/gnome.new/lib -lglib
 GMOFILES =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sv.gmo
 GMSGFMT = /usr/bin/msgfmt
-GTK_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
-GTK_CONFIG = /usr/bin/gtk-config
-GTK_LIBS = -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
+GNOME_CONFIG = /mnt1/gnome.new/bin/gnome-config
+GTKXMHTML_CFLAGS = -I/mnt1/gnome.new/include -DNEED_GNOMESUPPORT_H -I/mnt1/gnome.new/lib/gnome-libs/include -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include
+GTKXMHTML_LIBS = -rdynamic -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtkxmhtml -lXpm -ljpeg -lpng -lz -lSM -lICE -lgtk -lgdk -lgmodule -lglib -ldl -lXext -lX11 -lm
+GTK_CFLAGS = -I/usr/X11R6/include -I/mnt1/gnome.new/lib/glib/include -I/mnt1/gnome.new/include
+GTK_CONFIG = /mnt1/gnome.new/bin/gtk-config
+GTK_LIBS = -L/mnt1/gnome.new/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm
 GT_NO = 
 GT_YES = #YES#
+HELPBROWSER = helpbrowser
 INCLUDE_LOCALE_H = #include <locale.h>
 INSTOBJEXT = .mo
 INTLDEPS = 
@@ -106,7 +111,7 @@ INTLLIBS =
 INTLOBJS = 
 IN_GIMP = 1
 JPEG = jpeg
-LD = /usr/i486-linux/bin/ld
+LD = /usr/bin/ld
 LDFLAGS = 
 LIBAA = 
 LIBJPEG = -ljpeg
@@ -128,7 +133,7 @@ LPSTAT_DEF = -DLPSTAT_COMMAND=\"/usr/bin/lpstat\"
 LP_COMMAND = /usr/bin/lp
 LP_DEF = -DLP_COMMAND=\"/usr/bin/lp\"
 LT_AGE = 0
-LT_CURRENT = 9
+LT_CURRENT = 10
 LT_RELEASE = 1.1
 LT_REVISION = 0
 MAILER = -DMAILER=\"/usr/sbin/sendmail\"
@@ -157,7 +162,7 @@ SO =
 TIFF = tiff
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 1.1.9
+VERSION = 1.1.10
 WEBBROWSER = webbrowser
 XJT = xjt
 XPM = xpm
@@ -174,38 +179,16 @@ prefix = /usr/local
 pyexecdir = 
 pythondir = 
 
-libexecdir = $(gimpplugindir)/plug-ins
+EXTRA_DIST =  	makefile.cygwin			makefile.msc			twain/README			twain/tw_dump.c			twain/tw_dump.h			twain/tw_func.c			twain/tw_func.h			twain/tw_sess.c			twain/tw_util.c			twain/tw_util.h			twain/twain.c			twain/twain.h			winsnap/resource.h		winsnap/select.cur		winsnap/small.ico		winsnap/winsnap.c		winsnap/winsnap.h		winsnap/winsnap.ico		winsnap/winsnap.rc
 
-libexec_PROGRAMS = print
+#pygimp = 
+pygimp = 
 
-print_SOURCES =  	print-escp2.c		print-pcl.c		print-ps.c		print-util.c		print.c			print.h   
-
-
-INCLUDES =  	-I$(top_srcdir)				$(GTK_CFLAGS)				-I$(includedir)
-
-
-AM_CPPFLAGS =          -DLOCALEDIR=\""$(localedir)"\"		-DLP_COMMAND=\"/usr/bin/lp\"				-DLPSTAT_COMMAND=\"/usr/bin/lpstat\"				-DLPR_COMMAND=\"/usr/bin/lpr\"				-DLPC_COMMAND=\"/usr/sbin/lpc\"
-
-
-LDADD =  	$(top_builddir)/libgimp/libgimp.la		$(GTK_LIBS)					$(INTLLIBS)
+SUBDIRS =  	libgck				megawidget			gpc				dbbrowser			script-fu			$(GIMP_PERL)			AlienMap			AlienMap2			FractalExplorer			Lighting			MapObject			bmp				borderaverage			faxg3				fits				flame				fp				gap				gdyntext			gfig			        gflare				gfli				gimpressionist			$(HELPBROWSER)			ifscompose			imagemap			maze				mosaic				pagecurl			print				$(pygimp)			rcm				sgi				sel2path			sinus				struc				unsharp				$(WEBBROWSER)			$(XJT)				common
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../../config.h
+CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
-PROGRAMS =  $(libexec_PROGRAMS)
-
-
-DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../..
-LIBS = 
-print_OBJECTS =  print-escp2.o print-pcl.o print-ps.o print-util.o \
-print.o
-print_LDADD = $(LDADD)
-print_DEPENDENCIES =  $(top_builddir)/libgimp/libgimp.la
-print_LDFLAGS = 
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-CCLD = $(CC)
-LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 DIST_COMMON =  Makefile.am Makefile.in
 
 
@@ -213,86 +196,75 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-SOURCES = $(print_SOURCES)
-OBJECTS = $(print_OBJECTS)
-
+DIST_SUBDIRS =  libgck megawidget gpc dbbrowser script-fu perl \
+AlienMap AlienMap2 FractalExplorer Lighting MapObject bmp borderaverage \
+faxg3 fits flame fp gap gdyntext gfig gflare gfli gimpressionist \
+helpbrowser ifscompose imagemap maze mosaic pagecurl print rcm sgi \
+sel2path sinus struc unsharp webbrowser xjt common
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
 $(srcdir)/Makefile.in: # Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps plug-ins/print/Makefile
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps plug-ins/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
 
-mostlyclean-libexecPROGRAMS:
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
 
-clean-libexecPROGRAMS:
-	-test -z "$(libexec_PROGRAMS)" || rm -f $(libexec_PROGRAMS)
 
-distclean-libexecPROGRAMS:
 
-maintainer-clean-libexecPROGRAMS:
+all-recursive install-data-recursive install-exec-recursive \
+installdirs-recursive install-recursive uninstall-recursive  \
+check-recursive installcheck-recursive info-recursive dvi-recursive:
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
 
-install-libexecPROGRAMS: $(libexec_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(libexecdir)
-	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libexecdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(libexecdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
-	  else :; fi; \
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@set fnord $(MAKEFLAGS); amf=$$2; \
+	dot_seen=no; \
+	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
+	  rev="$$subdir $$rev"; \
+	  test "$$subdir" = "." && dot_seen=yes; \
+	done; \
+	test "$$dot_seen" = "no" && rev=". $$rev"; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	   || case "$$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
 	done
-
-uninstall-libexecPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	list='$(libexec_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(libexecdir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
-	done
-
-.c.o:
-	$(COMPILE) -c $<
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
-	$(COMPILE) -c $<
-
-mostlyclean-compile:
-	-rm -f *.o core *.core
-
-clean-compile:
-
-distclean-compile:
-	-rm -f *.tab.c
-
-maintainer-clean-compile:
-
-.c.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-mostlyclean-libtool:
-	-rm -f *.lo
-
-clean-libtool:
-	-rm -rf .libs _libs
-
-distclean-libtool:
-
-maintainer-clean-libtool:
-
-print: $(print_OBJECTS) $(print_DEPENDENCIES)
-	@rm -f print
-	$(LINK) $(print_LDFLAGS) $(print_OBJECTS) $(print_LDADD) $(LIBS)
 
 tags: TAGS
 
@@ -304,9 +276,14 @@ ID: $(HEADERS) $(SOURCES) $(LISP)
 	here=`pwd` && cd $(srcdir) \
 	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+   if test "$$subdir" = .; then :; else \
+	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
+   fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS)'; \
 	unique=`for i in $$list; do echo $$i; done | \
 	  awk '    { files[$$0] = 1; } \
@@ -325,9 +302,10 @@ maintainer-clean-tags:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-subdir = plug-ins/print
+subdir = plug-ins
 
 distdir: $(DISTFILES)
+	$(mkinstalldirs) $(distdir)/twain $(distdir)/winsnap
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
@@ -338,61 +316,41 @@ distdir: $(DISTFILES)
 	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
-print-escp2.o: print-escp2.c print.h ../../config.h ../../libgimp/gimp.h \
-	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
-	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
-print-pcl.o: print-pcl.c print.h ../../config.h ../../libgimp/gimp.h \
-	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
-	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
-print-ps.o: print-ps.c print.h ../../config.h ../../libgimp/gimp.h \
-	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
-	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
-print-util.o: print-util.c print.h ../../config.h ../../libgimp/gimp.h \
-	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
-	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h
-print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
-	../../libgimp/gimpenums.h ../../libgimp/gimpfeatures.h \
-	../../libgimp/gimpenv.h ../../libgimp/gimpmath.h \
-	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
-	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
-	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
-
+	for subdir in $(DIST_SUBDIRS); do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d $(distdir)/$$subdir \
+	    || mkdir $(distdir)/$$subdir \
+	    || exit 1; \
+	    chmod 777 $(distdir)/$$subdir; \
+	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir=../$(top_distdir) distdir=../$(distdir)/$$subdir distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 info-am:
-info: info-am
+info: info-recursive
 dvi-am:
-dvi: dvi-am
+dvi: dvi-recursive
 check-am: all-am
-check: check-am
+check: check-recursive
 installcheck-am:
-installcheck: installcheck-am
-install-exec-am: install-libexecPROGRAMS
-install-exec: install-exec-am
+installcheck: installcheck-recursive
+install-exec-am:
+install-exec: install-exec-recursive
 
 install-data-am:
-install-data: install-data-am
+install-data: install-data-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am: uninstall-libexecPROGRAMS
-uninstall: uninstall-am
-all-am: Makefile $(PROGRAMS)
-all-redirect: all-am
+install: install-recursive
+uninstall-am:
+uninstall: uninstall-recursive
+all-am: Makefile
+all-redirect: all-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
-installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(libexecdir)
+installdirs: installdirs-recursive
+installdirs-am:
 
 
 mostlyclean-generic:
@@ -404,45 +362,38 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-mostlyclean-am:  mostlyclean-libexecPROGRAMS mostlyclean-compile \
-		mostlyclean-libtool mostlyclean-tags \
-		mostlyclean-generic
+mostlyclean-am:  mostlyclean-tags mostlyclean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
-clean-am:  clean-libexecPROGRAMS clean-compile clean-libtool clean-tags \
-		clean-generic mostlyclean-am
+clean-am:  clean-tags clean-generic mostlyclean-am
 
-clean: clean-am
+clean: clean-recursive
 
-distclean-am:  distclean-libexecPROGRAMS distclean-compile \
-		distclean-libtool distclean-tags distclean-generic \
-		clean-am
+distclean-am:  distclean-tags distclean-generic clean-am
 	-rm -f libtool
 
-distclean: distclean-am
+distclean: distclean-recursive
 
-maintainer-clean-am:  maintainer-clean-libexecPROGRAMS \
-		maintainer-clean-compile maintainer-clean-libtool \
-		maintainer-clean-tags maintainer-clean-generic \
+maintainer-clean-am:  maintainer-clean-tags maintainer-clean-generic \
 		distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 
-.PHONY: mostlyclean-libexecPROGRAMS distclean-libexecPROGRAMS \
-clean-libexecPROGRAMS maintainer-clean-libexecPROGRAMS \
-uninstall-libexecPROGRAMS install-libexecPROGRAMS mostlyclean-compile \
-distclean-compile clean-compile maintainer-clean-compile \
-mostlyclean-libtool distclean-libtool clean-libtool \
-maintainer-clean-libtool tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
-check-am installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+.PHONY: install-data-recursive uninstall-data-recursive \
+install-exec-recursive uninstall-exec-recursive installdirs-recursive \
+uninstalldirs-recursive all-recursive check-recursive \
+installcheck-recursive info-recursive dvi-recursive \
+mostlyclean-recursive distclean-recursive clean-recursive \
+maintainer-clean-recursive tags tags-recursive mostlyclean-tags \
+distclean-tags clean-tags maintainer-clean-tags distdir info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs-am \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 .PHONY: files
@@ -450,6 +401,12 @@ mostlyclean distclean maintainer-clean
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
 	  echo $$p; \
+	done
+	@for subdir in $(SUBDIRS); do \
+	  files=`cd $$subdir; $(MAKE) files | grep -v "make\[[1-9]\]"`; \
+	  for file in $$files; do \
+	    echo $$subdir/$$file; \
+	  done; \
 	done
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
