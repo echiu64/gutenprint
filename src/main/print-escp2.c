@@ -247,10 +247,10 @@ static const escp2_variable_ink_t photo_magenta_ink =
 
 static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
-  { 0.0845,  0x1, 0, 1 },
+  { 0.065,  0x1, 0, 1 },
   { 0.13, 0x2, 0, 2 },
 /*  { 0.26, 0x3, 0, 3 }, */
-/*  { 0.325, 0x1, 1, 1 }, */
+  { 0.25,  0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
@@ -265,9 +265,11 @@ static const escp2_variable_ink_t photo_6pl_ink =
 
 static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 {
-  { 0.26,  0x1, 0, 1 },
-  { 0.90,  0x1, 1, 1 },
-  { 1.36,  0x2, 1, 2 }
+  { 0.13,  0x1, 0, 1 },
+  { 0.26,  0x2, 0, 2 },
+/*  { 0.52, 0x3, 0, 3 }, */
+  { 0.5,   0x1, 1, 1 },
+  { 1.0,   0x2, 1, 2 },
 };
 
 static const escp2_variable_ink_t photo_6pl_1440_ink =
@@ -355,7 +357,7 @@ static const escp2_variable_ink_t photo_4pl_1440_ink =
 
 static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
-  { 0.325, 0x1, 1, 1 },
+  { 0.25,  0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
@@ -427,8 +429,8 @@ static escp2_variable_ink_t standard_980_6pl_ink =
 
 static const stp_simple_dither_range_t standard_6pl_1440_dither_ranges[] =
 {
-  { 0.90,  0x1, 1, 1 },
-  { 1.36,  0x2, 1, 2 }
+  { 0.5,   0x1, 1, 1 },
+  { 1.0,   0x2, 1, 2 },
 };
 
 static const escp2_variable_ink_t standard_6pl_1440_ink =
@@ -805,7 +807,7 @@ static const escp2_variable_inklist_t variable_6pl_4color_inks =
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
-      &escp2_6pl_standard_inks,
+      &escp2_6pl_1440_standard_inks,
       &escp2_6pl_1440_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
@@ -876,7 +878,7 @@ static const escp2_variable_inklist_t variable_6pl_6color_inks =
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
-      &escp2_6pl_standard_inks,
+      &escp2_6pl_1440_standard_inks,
       &escp2_6pl_1440_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks
@@ -887,7 +889,7 @@ static const escp2_variable_inklist_t variable_6pl_6color_inks =
       &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks,
-      &escp2_6pl_photo_inks,
+      &escp2_6pl_1440_photo_inks,
       &escp2_6pl_1440_photo_inks,
       &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks
@@ -1381,7 +1383,7 @@ static const double sc440_densities[] =
 { 3.0, 2.0, 2.0, 1.0, 1.0, .900, .900, .45, .45, .45, .45, .225, .225, .113 };
 
 static const double c6pl_densities[] =
-{ 2.0, 1.3, 2.0, .65, 1.0, .646, .710, .323, .365, .323, .365, .1825, .1825, .0913 };
+{ 2.0, 1.3, 2.0, .65, 1.0, .646, .568, .323, .568, .568, .568, .284, .284, .142 };
 
 static const double sc480_densities[] =
 { 2.0, 0, 1.4, 0, .7, 0, .710, 0, .710, 0, .710, 0, .365, .1825 };
@@ -1393,7 +1395,7 @@ static const double sc980_densities[] =
 { 2.0, 1.3, 1.3, .65, .65, .646, .511, .49, .49, 1, 1, .637, .637, .455 };
 
 static const double c4pl_densities[] =
-{ 2.0, 1.3, 1.3, .65, .65, .431, .710, .216, .784, .216, .784, .392, .392, .196 };
+{ 2.0, 1.3, 1.3, .65, .65, .431, .568, .216, .784, .216, .784, .392, .392, .196 };
 
 static const double sc660_densities[] =
 { 3.0, 2.0, 2.0, 1.0, 1.0, .646, .646, .323, .323, .1615, .1615, .1615, .1615, .0808 };
