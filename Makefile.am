@@ -79,12 +79,15 @@ dist-hook:
 	  rm -rf $(distdir)/debian $(distdir)/scripts $(distdir)/test ; \
 	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/stamp-h.in ; \
 	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
+	  cd $(distdir) ; \
+	  patch -p1 < ../scripts/gimp-patch ; \
+	  cd .. ; \
 	  rm -f .gimp-dist ; \
 	fi
 
 gimp-dist:
 	touch .gimp-dist
-	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-GIMP-CVS-DIST
+	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-GIMP-DIST
 
 install-gimp: all
 	$(MAKE) -C src/gimp install

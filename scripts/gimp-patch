@@ -1,0 +1,359 @@
+Only in gimp-print-4.1.99-a3: ABOUT-NLS
+Only in gimp-print-4.1.99-a3: INSTALL
+diff -ur gimp-print-4.1.99-a3/Makefile.am gimp-print-4.1.99-a3-GIMP-CVS-DIST/Makefile.am
+--- gimp-print-4.1.99-a3/Makefile.am	Sun Jul 29 17:50:57 2001
++++ gimp-print-4.1.99-a3-GIMP-CVS-DIST/Makefile.am	Sun Jul 29 17:17:45 2001
+@@ -24,7 +24,7 @@
+ 
+ MAINT_CHARSET = latin1
+ 
+-SUBDIRS = doc intl lib man src test po samples
++SUBDIRS = doc intl lib man src po samples
+ 
+ if MAINTAINER_MODE
+ MAINT_MODE = true
+@@ -34,32 +34,8 @@
+ libtool: $(LIBTOOL_DEPS)
+ 	$(SHELL) ./config.status --recheck
+ 
+-ChangeLog:
+-	@cd $(top_srcdir) ; \
+-	echo `pwd`
+-	if test -f .noupdate ; then \
+-	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
+-	elif test -d CVS ; then \
+-	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
+-	  cvs log -N | perl scripts/mkchlog > ChangeLog.tmp ; \
+-	  if test -s ChangeLog.tmp ; then \
+-	    mv ChangeLog.tmp ChangeLog ; \
+-	  else \
+-	    echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
+-	    rm ChangeLog.tmp ; \
+-	    exit 1 ; \
+-	  fi \
+-	elif test -s ChangeLog ; then \
+-	  echo "ChangeLog: This is not a CVS version of GIMP-Print" ; \
+-	  echo "ChangeLog: Not updating ChangeLog from CVS!" ; \
+-	else \
+-	  echo "ChangeLog: No ChangeLog or ChangeLog of zero size found!" ; \
+-	  echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
+-	  exit 1 ; \
+-	fi
+-
+ dist-hook:
+-	for dir in debian scripts ; do \
++	for dir in scripts ; do \
+ 	  if test -d $(srcdir)/$$dir ; then \
+ 	    mkdir $(distdir)/$$dir; \
+ 	    for dirfile in $(srcdir)/$$dir/*; do \
+@@ -69,35 +45,10 @@
+ 	    done \
+ 	  fi \
+ 	done
+-# Create debian/control
+-	DEBIAN_VERSION=`grep "(" debian/changelog | head -1l | sed "s/^[^(]*(//" | sed "s/).*$$//"` ; \
+-	UPSTREAM_VERSION=`echo $$DEBIAN_VERSION | sed "s/-[^-]*$$//"` ; \
+-	sed -e "s/#UPSTREAM_VERSION#/$${UPSTREAM_VERSION}/g" <debian/control.in >$(distdir)/debian/control
+-# Do some extra magic to make a distribution for GIMP CVS
+-	if test -f .gimp-dist ; then \
+-	  rm -rf $(distdir)/src/cups $(distdir)/src/escputil $(distdir)/src/foomatic $(distdir)/src/ghost ; \
+-	  rm -rf $(distdir)/debian $(distdir)/scripts $(distdir)/test ; \
+-	  rm -rf $(distdir)/ABOUT-NLS $(distdir)/INSTALL $(distdir)/aclocal.m4 $(distdir)/config.h.in $(distdir)/configure $(distdir)/stamp-h.in ; \
+-	  find $(distdir) -name Makefile.in -print | xargs --no-run-if-empty rm ; \
+-	  cd $(distdir) ; \
+-	  patch -p1 < ../scripts/gimp-patch ; \
+-	  cd .. ; \
+-	  rm -f .gimp-dist ; \
+-	fi
+-
+-gimp-dist:
+-	touch .gimp-dist
+-	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-GIMP-DIST
+ 
+ install-gimp: all
+ 	$(MAKE) -C src/gimp install
+ 
+-install-cups: all
+-	$(MAKE) -C src/cups install
+-
+-install-ghost: all
+-	$(MAKE) -C src/ghost install
+-
+ html:
+ 	$(MAKE) -C doc html
+ 
+@@ -119,4 +70,4 @@
+ CLEANFILES = .gimp-dist .noupdate
+ MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
+ 
+-.PHONY: gimp-dist install-gimp install-cups install-ghost html snapshot ChangeLog
++.PHONY: install-gimp html ps
+Only in gimp-print-4.1.99-a3: Makefile.in
+Only in gimp-print-4.1.99-a3: aclocal.m4
+Only in gimp-print-4.1.99-a3: config.h.in
+Only in gimp-print-4.1.99-a3: configure
+diff -ur gimp-print-4.1.99-a3/configure.in gimp-print-4.1.99-a3-GIMP-CVS-DIST/configure.in
+--- gimp-print-4.1.99-a3/configure.in	Sun Jul 29 14:55:03 2001
++++ gimp-print-4.1.99-a3-GIMP-CVS-DIST/configure.in	Sun Jul 29 17:28:17 2001
+@@ -173,21 +173,21 @@
+ AC_DEFINE(OSTYPE,["${OSTYPE}"],[The operating system to build for])
+ 
+ dnl Command line options.
+-AC_MSG_CHECKING([whether to build CUPS driver])
+-AC_ARG_WITH(cups,
+-[  --with-cups[=PREFIX]    build CUPS driver [default=${BUILD_CUPS}, default PREFIX=PREFIX]],
+-  [case "${withval}" in
+-    yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
+-    no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
+-    *) if test -d ${withval} ; then
+-         BUILD_CUPS="yes"
+-	 AC_MSG_RESULT([yes (using specified prefix)])
+-         cups_prefix="${withval}"
+-       else
+-         AC_MSG_RESULT([unknown])
+-         AC_MSG_ERROR([${withval}: no such directory for --with-cups])
+-       fi ;;
+-  esac],[AC_MSG_RESULT([${BUILD_CUPS}]) ; cups_prefix="${prefix}"])
++dnl AC_MSG_CHECKING([whether to build CUPS driver])
++dnl AC_ARG_WITH(cups,
++dnl [  --with-cups[=PREFIX]    build CUPS driver [default=${BUILD_CUPS}, default PREFIX=PREFIX]],
++dnl   [case "${withval}" in
++dnl     yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
++dnl     no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
++dnl     *) if test -d ${withval} ; then
++dnl          BUILD_CUPS="yes"
++dnl 	 AC_MSG_RESULT([yes (using specified prefix)])
++dnl          cups_prefix="${withval}"
++dnl        else
++dnl          AC_MSG_RESULT([unknown])
++dnl          AC_MSG_ERROR([${withval}: no such directory for --with-cups])
++dnl        fi ;;
++dnl   esac],[AC_MSG_RESULT([${BUILD_CUPS}]) ; cups_prefix="${prefix}"])
+ 
+ AC_MSG_CHECKING([whether to build GIMP plugin])
+ AC_ARG_WITH(gimp,
+@@ -199,25 +199,25 @@
+        AC_MSG_ERROR([bad value ${withval} for --with-gimp]) ;;
+   esac],[AC_MSG_RESULT([${BUILD_GIMP}])])
+ 
+-AC_MSG_CHECKING([whether to build ghostscript driver])
+-AC_ARG_WITH(ghost,
+-[  --with-ghost            build ghostscript driver patch [default=${BUILD_GHOST}]],
+-  [case "${withval}" in
+-    yes) BUILD_GHOST="yes" ; AC_MSG_RESULT([yes]) ;;
+-    no) BUILD_GHOST="no" ; AC_MSG_RESULT([no]) ;;
+-    *) AC_MSG_RESULT([unknown])
+-       AC_MSG_ERROR([bad value ${withval} for --with-ghost]) ;;
+-  esac],[AC_MSG_RESULT([${BUILD_GHOST}])])
+-
+-AC_MSG_CHECKING([whether to build foomatic data files])
+-AC_ARG_WITH(foomatic,
+-[  --with-foomatic         build foomatic data files [default=${BUILD_FOOMATIC}]],
+-  [case "${withval}" in
+-    yes) BUILD_FOOMATIC="yes" ; AC_MSG_RESULT([yes]) ;;
+-    no) BUILD_FOOMATIC="no" ; AC_MSG_RESULT([no]) ;;
+-    *) AC_MSG_RESULT([unknown])
+-       AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
+-  esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
++dnl AC_MSG_CHECKING([whether to build ghostscript driver])
++dnl AC_ARG_WITH(ghost,
++dnl [  --with-ghost            build ghostscript driver patch [default=${BUILD_GHOST}]],
++dnl   [case "${withval}" in
++dnl     yes) BUILD_GHOST="yes" ; AC_MSG_RESULT([yes]) ;;
++dnl     no) BUILD_GHOST="no" ; AC_MSG_RESULT([no]) ;;
++dnl     *) AC_MSG_RESULT([unknown])
++dnl        AC_MSG_ERROR([bad value ${withval} for --with-ghost]) ;;
++dnl   esac],[AC_MSG_RESULT([${BUILD_GHOST}])])
++
++dnl AC_MSG_CHECKING([whether to build foomatic data files])
++dnl AC_ARG_WITH(foomatic,
++dnl [  --with-foomatic         build foomatic data files [default=${BUILD_FOOMATIC}]],
++dnl   [case "${withval}" in
++dnl     yes) BUILD_FOOMATIC="yes" ; AC_MSG_RESULT([yes]) ;;
++dnl     no) BUILD_FOOMATIC="no" ; AC_MSG_RESULT([no]) ;;
++dnl     *) AC_MSG_RESULT([unknown])
++dnl        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
++dnl   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
+ 
+ AC_MSG_CHECKING([whether to install sample images])
+ AC_ARG_WITH(samples,
+@@ -229,15 +229,15 @@
+        AC_MSG_ERROR([bad value ${withval} for --with-samples]) ;;
+   esac],[AC_MSG_RESULT([${BUILD_GIMP}])])
+ 
+-AC_MSG_CHECKING([whether to build escputil])
+-AC_ARG_ENABLE(escputil,
+-[  --enable-escputil       build escputil [default=${BUILD_ESCPUTIL}]],
+-  [case "${enableval}" in
+-    yes) BUILD_ESCPUTIL="yes" ; AC_MSG_RESULT([yes]) ;;
+-    no) BUILD_ESCPUTIL="no" ; AC_MSG_RESULT([no]) ;;
+-    *) AC_MSG_RESULT([unknown])
+-       AC_MSG_ERROR([bad value ${enableval} for --enable-escputil]) ;;
+-  esac],[AC_MSG_RESULT([${BUILD_ESCPUTIL}])])
++dnl AC_MSG_CHECKING([whether to build escputil])
++dnl AC_ARG_ENABLE(escputil,
++dnl [  --enable-escputil       build escputil [default=${BUILD_ESCPUTIL}]],
++dnl   [case "${enableval}" in
++dnl     yes) BUILD_ESCPUTIL="yes" ; AC_MSG_RESULT([yes]) ;;
++dnl     no) BUILD_ESCPUTIL="no" ; AC_MSG_RESULT([no]) ;;
++dnl     *) AC_MSG_RESULT([unknown])
++dnl        AC_MSG_ERROR([bad value ${enableval} for --enable-escputil]) ;;
++dnl   esac],[AC_MSG_RESULT([${BUILD_ESCPUTIL}])])
+ 
+ AC_MSG_CHECKING([whether to build libgimpprint])
+ AC_ARG_ENABLE(libgimpprint,
+@@ -249,15 +249,15 @@
+        AC_MSG_ERROR([bad value ${enableval} for --enable-libgimpprint]) ;;
+   esac],[AC_MSG_RESULT([${BUILD_LIBGIMPPRINT}])])
+ 
+-AC_MSG_CHECKING([whether to build test programs])
+-AC_ARG_ENABLE(test,
+-[  --enable-test           build test programs [default=${BUILD_TEST}]],
+-  [case "${enableval}" in
+-    yes) BUILD_TEST="yes" ; AC_MSG_RESULT([yes]) ;;
+-    no) BUILD_TEST="no" ; AC_MSG_RESULT([no]) ;;
+-    *) AC_MSG_RESULT([unknown])
+-       AC_MSG_ERROR([bad value ${enableval} for --enable-test]) ;;
+-  esac],[AC_MSG_RESULT([${BUILD_TEST}])])
++dnl AC_MSG_CHECKING([whether to build test programs])
++dnl AC_ARG_ENABLE(test,
++dnl [  --enable-test           build test programs [default=${BUILD_TEST}]],
++dnl   [case "${enableval}" in
++dnl     yes) BUILD_TEST="yes" ; AC_MSG_RESULT([yes]) ;;
++dnl     no) BUILD_TEST="no" ; AC_MSG_RESULT([no]) ;;
++dnl     *) AC_MSG_RESULT([unknown])
++dnl        AC_MSG_ERROR([bad value ${enableval} for --enable-test]) ;;
++dnl   esac],[AC_MSG_RESULT([${BUILD_TEST}])])
+ 
+ AC_MSG_CHECKING([if user install is enabled])
+ AC_ARG_ENABLE(user-install,
+@@ -514,31 +514,31 @@
+ LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
+ 
+ dnl Definitions
+-AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
++dnl AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups")
+ AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H})
+ RELEASE_DATE="29 Jul 2001"
+ AC_DEFINE_UNQUOTED(RELEASE_DATE, "${RELEASE_DATE}")
+ 
+ dnl Substitutions
+-AC_SUBST(cups_prefix)
+-AC_SUBST(cups_exec_prefix)
+-AC_SUBST(cups_bindir)
+-AC_SUBST(cups_datadir)
+-AC_SUBST(cups_libdir)
+-AC_SUBST(cups_sysconfdir)
+-AC_SUBST(CUPS_BIN)
+-AC_SUBST(CUPS_BACKEND_BIN)
+-AC_SUBST(CUPS_FILTER_BIN)
+-AC_SUBST(CUPS_PKG)
+-AC_SUBST(CUPS_CONF)
+-AC_SUBST(CUPS_INSTALL)
+-AC_SUBST(CUPS_LIBS)
+-AC_SUBST(CUPS_MAN)
+-AC_SUBST(CUPS_NOINST_BIN)
+-AC_SUBST(FOOMATIC_NOINST_BIN)
+-AC_SUBST(FOOMATIC_INSTALL)
+-AC_SUBST(ESCPUTIL_BIN)
+-AC_SUBST(ESCPUTIL_MAN)
++dnl AC_SUBST(cups_prefix)
++dnl AC_SUBST(cups_exec_prefix)
++dnl AC_SUBST(cups_bindir)
++dnl AC_SUBST(cups_datadir)
++dnl AC_SUBST(cups_libdir)
++dnl AC_SUBST(cups_sysconfdir)
++dnl AC_SUBST(CUPS_BIN)
++dnl AC_SUBST(CUPS_BACKEND_BIN)
++dnl AC_SUBST(CUPS_FILTER_BIN)
++dnl AC_SUBST(CUPS_PKG)
++dnl AC_SUBST(CUPS_CONF)
++dnl AC_SUBST(CUPS_INSTALL)
++dnl AC_SUBST(CUPS_LIBS)
++dnl AC_SUBST(CUPS_MAN)
++dnl AC_SUBST(CUPS_NOINST_BIN)
++dnl AC_SUBST(FOOMATIC_NOINST_BIN)
++dnl AC_SUBST(FOOMATIC_INSTALL)
++dnl AC_SUBST(ESCPUTIL_BIN)
++dnl AC_SUBST(ESCPUTIL_MAN)
+ AC_SUBST(GIMP_BIN)
+ AC_SUBST(GIMP_LIBS)
+ AC_SUBST(GIMP_PRINT_H)
+@@ -562,7 +562,7 @@
+ AC_SUBST(PLUG_IN_PATH)
+ AC_SUBST(RELEASE_DATE)
+ AC_SUBST(SAMPLE_IMAGES)
+-AC_SUBST(TEST_BIN)
++dnl AC_SUBST(TEST_BIN)
+ 
+ AC_OUTPUT_COMMANDS([],[
+ exec_prefix=`eval echo ${exec_prefix}`
+@@ -576,20 +576,22 @@
+ 
+ AC_OUTPUT([
+ Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile
+-man/cups-calibrate.8 man/escputil.1 man/gimpprint.3
++man/cups-calibrate.8
++dnl man/escputil.1
++man/gimpprint.3
+ man/gimpprint-config.1 po/Makefile.in samples/Makefile src/Makefile
+-src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile
+-src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon 
++dnl src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile
++dnl src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon 
+ src/gimp/Makefile src/include/Makefile src/include/gimp-print.h
+ src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
+ test/Makefile
+ ],[
+ chmod +x src/main/gimpprint-config
+-chmod +x src/foomatic/foomatic-generator
+-if test -f src/ghost/contrib.mak.addon ; then
+-  sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
+-  mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
+-fi
++dnl chmod +x src/foomatic/foomatic-generator
++dnl if test -f src/ghost/contrib.mak.addon ; then
++dnl   sed -e 's;${exec_prefix};'"${exec_prefix};" -e 's;${prefix};'"${prefix};" src/ghost/contrib.mak.addon > src/ghost/contrib.mak.addon.tmp
++dnl   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
++dnl fi
+ echo "Finished configuring."
+ echo "Type 'make' to build the package"
+ echo "then 'make install' to install it."
+Only in gimp-print-4.1.99-a3: debian
+Only in gimp-print-4.1.99-a3/doc: Makefile.in
+Only in gimp-print-4.1.99-a3: gimp.diff
+Only in gimp-print-4.1.99-a3/intl: Makefile.in
+Only in gimp-print-4.1.99-a3/lib: Makefile.in
+Only in gimp-print-4.1.99-a3/man: Makefile.in
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/man: cups-calibrate.8
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/man: escputil.1
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/man: gimpprint-config.1
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/man: gimpprint.3
+Only in gimp-print-4.1.99-a3/samples: Makefile.in
+Only in gimp-print-4.1.99-a3: scripts
+diff -ur gimp-print-4.1.99-a3/src/Makefile.am gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/Makefile.am
+--- gimp-print-4.1.99-a3/src/Makefile.am	Sun Jul 29 14:51:53 2001
++++ gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/Makefile.am	Sun Jul 29 17:14:25 2001
+@@ -23,6 +23,6 @@
+ 
+ MAINT_CHARSET = latin1
+ 
+-SUBDIRS = include printdef main cups escputil foomatic ghost gimp
++SUBDIRS = include printdef main gimp
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+Only in gimp-print-4.1.99-a3/src: Makefile.in
+Only in gimp-print-4.1.99-a3/src: cups
+Only in gimp-print-4.1.99-a3/src: escputil
+Only in gimp-print-4.1.99-a3/src: foomatic
+Only in gimp-print-4.1.99-a3/src: ghost
+Only in gimp-print-4.1.99-a3/src/gimp: Makefile.in
+Only in gimp-print-4.1.99-a3/src/include: Makefile.in
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/include: gimp-print.h
+Only in gimp-print-4.1.99-a3/src/main: Makefile.in
+Only in gimp-print-4.1.99-a3/src/printdef: Makefile.in
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/printdef: printdefl.c
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/printdef: printdefy.c
+Only in gimp-print-4.1.99-a3-GIMP-CVS-DIST/src/printdef: printdefy.h
+Only in gimp-print-4.1.99-a3: stamp-h.in
+Only in gimp-print-4.1.99-a3: test
