@@ -101,9 +101,6 @@ $(MANUAL).pdf: $(MANUAL).ps
 	$(PS2PDF) $(MANUAL).ps $(MANUAL).pdf
 
 %.pdf:
-	if test ! -d figures ; then \
-	  mkdir figures ; \
-	fi
 	$(CONVERT) $(srcdir)/$(basename $@).png EPDF:$@
 
 ps: $(MANUAL).ps
@@ -114,9 +111,6 @@ $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
 	$(DB2PS) $(srcdir)/$(MANUAL).sgml
 
 %.eps:
-	if test ! -d figures ; then \
-	  mkdir figures ; \
-	fi
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 $(MANUAL).ps.gz: $(MANUAL).ps
