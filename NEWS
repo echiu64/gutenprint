@@ -138,7 +138,8 @@ Gimp-Print 4.3.21 contains the following major changes over Gimp-Print
 
 4) Olympus and Olympus-compatible printers have been color-tuned.
 
-5) Preliminary support for the Epson Stylus C63, C64, C83, and C84.
+5) Preliminary support for the Epson Stylus C63, C64, C83, C84, and
+   PX-V500.
 
 6) Margins for the Epson Stylus C70, C80, and C82 have been
    corrected.
