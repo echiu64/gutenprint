@@ -625,8 +625,18 @@ static void cx400_printer_init_func(stp_vars_t *v)
 {
   const char *p = stp_get_string_parameter(v, "PageSize");
   char pg = '\0';
+  const char *pname = "XXXXXX";		  				
 
-  stp_zfwrite("FUJIFILMNX1000\0", 1, 15, v);
+  stp_deprintf(STP_DBG_OLYMPUS,
+	"olympus: fuji driver %s\n", stp_get_driver(v));
+  if (strcmp(stp_get_driver(v),"fujifilm-cx400") == 0)
+    pname = "NX1000";
+  else if (strcmp(stp_get_driver(v),"fujifilm-cx550") == 0)
+    pname = "QX200\0";
+
+  stp_zfwrite("FUJIFILM", 1, 8, v);
+  stp_zfwrite(pname, 1, 6, v);
+  stp_putc('\0', v);
   stp_put16_le(privdata.xsize, v);
   stp_put16_le(privdata.ysize, v);
   if (strcmp(p,"w288h504") == 0)
@@ -637,8 +647,10 @@ static void cx400_printer_init_func(stp_vars_t *v)
     pg = '\x0b';
   stp_putc(pg, v);
   stp_zfwrite("\x00\x00\x00\x00\x00\x01\x00\x01\x00\x00\x00\x00"
-	      "\x00\x00\x2d\x00\x00\x00\x00", 1, 19, v);
-  stp_zfwrite("FUJIFILMNX1000\1", 1, 15, v);
+		  "\x00\x00\x2d\x00\x00\x00\x00", 1, 19, v);
+  stp_zfwrite("FUJIFILM", 1, 8, v);
+  stp_zfwrite(pname, 1, 6, v);
+  stp_putc('\1', v);
 }
   
 static const olymp_resolution_t all_resolutions[] =
@@ -719,8 +731,24 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL, NULL,
     &updp10_laminate_list,
   },
-  { /* Fujifilm CX-400  */
+  { /* Fujifilm Printpix CX-400  */
     3000,
+    &rgb_ink_list,
+    &cx400_res_list,
+    &cx400_page_list,
+    &cx400_printsize_list,
+    OLYMPUS_INTERLACE_NONE, "CMY",
+    2208,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS,
+    &cx400_printer_init_func, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL,
+  },
+  { /* Fujifilm Printpix CX-550  */
+    3001,
     &rgb_ink_list,
     &cx400_res_list,
     &cx400_page_list,

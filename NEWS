@@ -922,7 +922,7 @@ CANON BJC 6100
 CANON BJC 7000
 CANON BJC 7100
 CANON BJC 8200
-CANON CP-100	(Experimental)
+CANON CP-100 series	(Experimental)
 CANON S400
 CANON S450
 CANON S800
@@ -1074,7 +1074,8 @@ EPSON PM-10000
 EPSON PX-V500
 EPSON PX-7000
 EPSON PX-9000
-FUJIFILM CX-400 (Experimental)
+FUJIFILM Printpix CX-400 (Experimental)
+FUJIFILM Printpix CX-550 (Experimental)
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -1399,7 +1400,8 @@ Epson PM-10000                 escp2-pm10000   EPSON PM-10000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
-Fujifilm CX-400                fujifilm-cx400  Fujifilm CX-400
+Fujifilm Printpix CX-400       fujifilm-cx400  Fujifilm Printpix CX-400
+Fujifilm Printpix CX-550       fujifilm-cx550  Fujifilm Printpix CX-550
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 16DV      pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 20W       pcl-6           HP LaserJet 6 series
