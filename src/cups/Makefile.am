@@ -31,6 +31,7 @@ include $(top_srcdir)/scripts/global.mk
 PACKAGE = cups
 
 bindir = @cups_bindir@
+sbindir = @cups_sbindir@
 
 pkgdatadir = $(cups_conf_datadir)
 pkglibdir = $(cups_conf_serverbin)
@@ -46,15 +47,10 @@ DEFS = @CUPS_CFLAGS@ @DEFS@ -I. -I$(srcdir) -I../.. -DGENPPD_PPD_PREFIX=\"$(cups
 ## Programs
 
 if BUILD_CUPS
-bin_PROGRAMS = cups-calibrate cups-genppd
-endif
-if BUILD_CUPS
-bin_SCRIPTS = cups-genppdconfig cups-genppdupdate
-endif
-if BUILD_CUPS
+bin_PROGRAMS = cups-calibrate
+sbin_PROGRAMS = cups-genppd
+sbin_SCRIPTS = cups-genppdconfig cups-genppdupdate
 cupsexec_backend_PROGRAMS = epson canon
-endif
-if BUILD_CUPS
 cupsexec_filter_PROGRAMS = rastertoprinter commandtoepson commandtocanon
 endif
 

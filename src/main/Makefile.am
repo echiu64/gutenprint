@@ -121,7 +121,7 @@ libgimpprint_version = -release $(GIMPPRINT_VERSION)
 #libgimpprint_version = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libgimpprint_la_LDFLAGS = $(libgimpprint_version) \
 	-rpath $(libdir) \
-	-export-symbols libgimpprint.sym
+	-export-symbols $(srcdir)/libgimpprint.sym
 
 
 ## Data
