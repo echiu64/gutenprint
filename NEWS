@@ -71,8 +71,13 @@ and changes from 4.2, as follows:
 
 * General User-Visible Changes:
 
-  1) Many new options are offered.  These will be described in a
-     separate section below.
+  1) In general, Gimp-Print 5.0 is not compatible with Gimp-Print 4.2.
+     Gimp-Print 5.0 offers many new options (which are described
+     separately below), and many options that are present in both 4.2
+     and 5.0 function differently in the two releases.  In addition,
+     the API is different.  Finally, the color correction is quite
+     different, and profiles created against the 4.2 driver will not
+     function well against the 5.0 driver.
 
   2) In addition to all of the printers supported in 4.2, a variety of
      Olympus and Sony photo printers are supported in this release.
@@ -299,6 +304,11 @@ and changes from 4.2, as follows:
      preview as necessary to display landscape or portrait mode.
 
   2) The positioning controls have been simplified.
+
+  3) The printrc file format is different.  Gimp-Print 5.0 can read
+     printrc files created by Gimp-Print 4.2 and earlier, but it
+     writes out the printrc file in a format that earlier versions of
+     Gimp-Print cannot read.
 
 
 * Changes to the CUPS driver:
@@ -550,7 +560,8 @@ is "Experimental".  It is likely that printers that are supported in
 resolutions and in addition may not function correctly at some
 resolutions.  Experimental Epson printers are most likely to produce
 good output at the highest resolution offered (2880x720, 2880x1440, or
-2880x2880 DPI).
+2880x2880 DPI), since in general these printers will not use multiple
+drop sizes at such high resolutions.
 
 Please see the printer-specific notes section following the list of
 printers for any instructions specific to your printer.
@@ -1454,6 +1465,26 @@ Printer-Specific Notes:
       Note that these resolutions are not officially supported by
       Epson on the C70 and C80, and may not work on all C70 and C80
       printers.
+
+    * The Gimp-Print Epson driver does not support the 5760 DPI
+      resolutions (5760x720 or 5760x1440 DPI) offered by some Epson
+      printers.  We do not believe that these resolutions offer any
+      advantage over 2880x720 or 2880x1440 DPI, and indeed they may
+      not offer any advantage over 1440x720 or 1440x1440 DPI.  No
+      current Epson printer requires a resolution higher than
+      2880x1440 DPI to fill the page with the smallest drop size used,
+      and the effective resolution is generally determined by the
+      lower of the horizontal and vertical resolution.  Raising the
+      horizontal resolution without a corresponding increase in the
+      vertical resolution merely requires more computation and
+      printing time without yielding significantly better quality.
+
+      We do not currently plan to offer resolutions higher than
+      2880x2880 DPI on any Epson Stylus printer with a drop size of 1
+      pl or larger.  At the time of Gimp-Print 5.0 Alpha, the smallest
+      drop size offered by any Epson Stylus printer is 1.5 pl.  If
+      such a printer is offered, we will evaluate whether to offer
+      higher resolutions.
 
     * Many Epson printers (specifically, the Epson Stylus Color 740
       and all newer printers) will not respond to ASCII text without a
