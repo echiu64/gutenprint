@@ -1084,7 +1084,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon CP-220, CP-330 */
+  { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500 */
     1001,
     &ymc_ink_list,
     &res_314dpi_list,

@@ -62,6 +62,8 @@
 #gptofoo canon-cp100 printer/Canon-CP-300
 #gptofoo canon-cp220 printer/Canon-CP-220
 #gptofoo canon-cp220 printer/Canon-CP-330
+#gptofoo canon-cp220 printer/Canon-SELPHY-CP-400
+#gptofoo canon-cp220 printer/Canon-SELPHY-CP-500
 #gptofoo pcl-4 printer/Canon-GP_335
 #gptofoo pcl-3 printer/Canon-LBP-4sx
 #gptofoo pcl-4l printer/Canon-LBP-430
