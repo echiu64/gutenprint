@@ -42,7 +42,7 @@ my $funcs = { 'InputSlot' => { 'OPTCONSTRAINTS' => \&build_cons,
 	  };
 
 my $drivervals = { 'PageSize' => \&optmap_pagesize,
-		   'OutputType' => \&optmap_outputtype
+		   'Color' => \&optmap_color
 	       };
 
 my $debug = 0;
@@ -50,9 +50,9 @@ my $debug = 0;
 # Foomatic name => Gimp-print name
 %argnamemap = ('Quality' => 'Resolution');
 
-%outputtypemap = ('Grayscale' => 0,
-		  'Color' => 1,
-		  'BlackAndWhite' => 2);
+%colormap = ('Grayscale' => 0,
+	     'Color' => 1,
+	     'BlackAndWhite' => 2);
 
 use Data::Dumper;
 
@@ -377,10 +377,10 @@ sub optmap_pagesize {
     return $pagemap->{$value}
 }
 
-sub optmap_outputtype {
+sub optmap_color {
     my ($value) = @_;
-    if (defined $outputtypemap{$value}) {
-	return $outputtypemap{$value};
+    if (defined $colormap{$value}) {
+	return $colormap{$value};
     } else {
 	die "Cannot map output type '$value'\n";
     }
