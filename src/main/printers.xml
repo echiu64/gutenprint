@@ -1448,6 +1448,10 @@
         <color value="true"/>
         <model value="2000"/>
       </printer>
+      <printer name="FUJIFILM CX-400" driver="fujifilm-cx400">
+        <color value="true"/>
+        <model value="3000"/>
+      </printer>
     </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16">
