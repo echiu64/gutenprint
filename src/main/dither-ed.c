@@ -78,7 +78,7 @@ update_dither(stpi_dither_t *d, int channel, int width,
   int i, dist, dist1;
   int delta, delta1;
   int offset;
-  int xs = 65535 / CHANNEL(d, channel).density_adjustment;
+  int xs = 65535 * CHANNEL(d, channel).density_adjustment;
   if (tmp == 0)
     return error0[direction];
   if (tmp > xs)
@@ -512,7 +512,7 @@ stpi_dither_raw_cmyk_ed(stp_vars_t v,
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
-      extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
+      extra_k = CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
 	  CHANNEL(d, i).o = CHANNEL(d, i).v;

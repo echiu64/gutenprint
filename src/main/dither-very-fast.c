@@ -117,12 +117,10 @@ stpi_dither_raw_cmyk_very_fast(stp_vars_t v,
   QUANT(14);
   for (; x != dst_width; x++)
     {
-      int extra_k;
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
-      extra_k = compute_black(d) + CHANNEL(d, ECOLOR_K).v;
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
 	  stpi_dither_channel_t *dc = &(CHANNEL(d, i));
