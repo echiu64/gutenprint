@@ -73,6 +73,12 @@ typedef struct
   cups_raster_t		*ras;		/* Raster stream to read from */
   int			page;		/* Current page number */
   int			row;		/* Current row number */
+  int			left;
+  int			right;
+  int			bottom;
+  int			top;
+  int			width;
+  int			height;
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
@@ -474,6 +480,27 @@ main(int  argc,				/* I - Number of command-line arguments */
     fprintf(stderr, "DEBUG: stp_get_saturation(v) |%.3f|\n", stp_get_saturation(v));
     fprintf(stderr, "DEBUG: stp_get_density(v) |%.3f|\n", stp_get_density(v));
     fprintf(stderr, "DEBUG: stp_get_app_gamma(v) |%.3f|\n", stp_get_app_gamma(v));
+
+    (*stp_printer_get_printfuncs(printer)->media_size)
+      (printer, v, &(cups.width), &(cups.height));
+    (*stp_printer_get_printfuncs(printer)->imageable_area)
+      (printer, v, &(cups.left), &(cups.right), &(cups.bottom), &(cups.top));
+    fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
+	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
+    cups.right = cups.width - cups.right;
+    cups.width = cups.width - cups.left - cups.right;
+    cups.width = cups.header.HWResolution[0] * cups.width / 72;
+    cups.left = cups.header.HWResolution[0] * cups.left / 72;
+    cups.right = cups.header.HWResolution[0] * cups.right / 72;
+
+    cups.top = cups.height - cups.top;
+    cups.height = cups.height - cups.top - cups.bottom;
+    cups.height = cups.header.HWResolution[1] * cups.height / 72;
+    cups.top = cups.header.HWResolution[1] * cups.top / 72;
+    cups.bottom = cups.header.HWResolution[1] * cups.bottom / 72;
+    fprintf(stderr, "DEBUG: GIMP-PRINT %d %d %d  %d %d %d\n",
+	    cups.width, cups.left, cups.right, cups.height, cups.top, cups.bottom);
+
     if (stp_printer_get_printfuncs(printer)->verify(printer, v))
     {
       signal(SIGTERM, cancel_job);
@@ -596,6 +623,21 @@ Image_get_appname(stp_image_t *image)		/* I - Image */
  * 'Image_get_row()' - Get one row of the image.
  */
 
+static void
+throwaway_data(int amount, cups_image_t *cups)
+{
+  unsigned char trash[4096];	/* Throwaway */
+  int block_count = amount / 4096;
+  int leftover = amount % 4096;
+  while (block_count > 0)
+    {
+      cupsRasterReadPixels(cups->ras, trash, 4096);
+      block_count--;
+    }
+  if (leftover)
+    cupsRasterReadPixels(cups->ras, trash, leftover);
+}
+
 stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
@@ -603,26 +645,35 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 {
   cups_image_t	*cups;			/* CUPS image */
   int		i;			/* Looping var */
+  int 		bytes_per_line;
+  int		margin;
 
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return STP_IMAGE_ABORT;
+  bytes_per_line = cups->width * cups->header.cupsBitsPerPixel / CHAR_BIT;
+  margin = cups->header.cupsBytesPerLine - bytes_per_line;
 
   if (cups->row < cups->header.cupsHeight)
   {
-    cupsRasterReadPixels(cups->ras, data, cups->header.cupsBytesPerLine);
+    fprintf(stderr, "DEBUG: GIMP-PRINT reading %d %d\n",
+	    bytes_per_line, cups->row);
+    cupsRasterReadPixels(cups->ras, data, bytes_per_line);
     cups->row ++;
+    fprintf(stderr, "DEBUG: GIMP-PRINT tossing right %d\n", margin);
+    if (margin)
+      throwaway_data(margin, cups);
 
    /*
     * Invert black data for monochrome output...
     */
 
     if (cups->header.cupsColorSpace == CUPS_CSPACE_K)
-      for (i = cups->header.cupsBytesPerLine; i > 0; i --, data ++)
-        *data = 255 - *data;
+      for (i = bytes_per_line; i > 0; i --, data ++)
+        *data = ((1 << CHAR_BIT) - 1) - *data;
   }
   else
-    memset(data, 255, cups->header.cupsBytesPerLine);
+    memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
   return Image_status;
 }
 
@@ -640,7 +691,8 @@ Image_height(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  return (cups->header.cupsHeight);
+  fprintf(stderr, "DEBUG: GIMP-PRINT: Image_height %d\n", cups->height);
+  return (cups->height);
 }
 
 
@@ -755,7 +807,8 @@ Image_width(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  return (cups->header.cupsWidth);
+  fprintf(stderr, "DEBUG: GIMP-PRINT: Image_width %d\n", cups->width);
+  return (cups->width);
 }
 
 
