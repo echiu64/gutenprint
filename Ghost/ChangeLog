@@ -1,0 +1,24 @@
+27-Jan-2000  11:43:00
+  - forgot to set the correct printer_gamma and
+    printer_density constants in gdevstp700.c, fixed
+  - packed 0.1.2 release
+
+25-Jan-2000  13:27:45
+  - included updated escp2 driver backend (1.43)
+  - included updated utility backend (1.54)
+  - free() of memory allocaded by weaving routines
+ 
+24-Jan-2000  11:19:00
+  - packed 0.1.1 release
+
+24-Jan-2000  03:50:00
+  - initialization of all static variables in 
+    gdevstp700-escp2.c at entry of escp2_print
+    to get rid of segfault problem when using
+    the routines more than once per program load
+  - free() of lcyan and lmagenta memory buffers
+  - still memory leaks left in weaving code, cleanup
+    needed
+
+23-Jan-2000
+ - initial release

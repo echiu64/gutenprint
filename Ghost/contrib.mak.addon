@@ -1,0 +1,17 @@
+### --------------- Epson Stylus Photo Driver ---------------------------- ###
+
+stp700_=$(GLOBJ)gdevstp700.$(OBJ) \
+	$(GLOBJ)gdevstp700-util.$(OBJ) \
+	$(GLOBJ)gdevstp700-escp2.$(OBJ)
+
+$(DD)stp700.dev:	$(stp700_) $(DD)page.dev
+	$(SETPDEV) $(DD)stp700 $(stp700_)
+
+$(GLOBJ)gdevstp700.$(OBJ) : $(GLSRC)gdevstp700.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp700.$(OBJ) $(C_) $(GLSRC)gdevstp700.c
+
+$(GLOBJ)gdevstp700-util.$(OBJ) : $(GLSRC)gdevstp700-util.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp700-util.$(OBJ) $(C_) $(GLSRC)gdevstp700-util.c
+
+$(GLOBJ)gdevstp700-escp2.$(OBJ) : $(GLSRC)gdevstp700-escp2.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp700-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp700-escp2.c

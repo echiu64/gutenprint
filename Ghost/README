@@ -1,0 +1,154 @@
+Type of program:
+----------------
+
+ Epson Stylus Photo / Photo EX and Photo 700 colour printer driver for Ghostscript
+ version 5.x/6.x offering CMYKcm 6 colour HQ prints.
+
+
+Author:
+-------
+
+ This Ghostscript frontend is written by 
+ Henryk Richter (buggs@comlab.uni-rostock.de).
+
+ Used Escp2 driver for Epson printers by Michael Sweet (mike@easysw.com) and
+ Robert Krawitz (rlk@alum.mit.edu).
+
+
+License:
+--------
+
+  This program is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the Free
+  Software Foundation; either version 2 of the License, or (at your option)
+  any later version.
+ 
+  This program is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+
+Installation and Compilation:
+-----------------------------
+
+ - Get a recent Ghostscript (5.5 or better) and prepare the sources as
+   described in the documentation (don`t forget zlib, libpng and libjpeg
+   when downloading the source) for compiling
+ - copy "gdevstp-escp2.c", "gdevstp-print.h", "gdevstp-util.c",
+   "gdevstp-dither.c" "gdevstp.c" and "gdevstp.h" to the "src/"
+   subdirectory of ghostscript`s distribution
+ - edit the file "contrib.mak" in the "src/" subdirectory by adding
+   the contents of "contrib.mak.addon"
+ - add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in "unix-gcc.mak"
+
+ Compile and install gs as described in the documentation, after a
+ successful compiler run you got a new driver named "stp700". Check 
+ this by calling "gs -h" with the newly compiled ghostscript.
+
+
+Options:
+--------
+
+
+ Options for Stylus Photo Printer driver are given in normal ghostscript
+ manner. The resolution of the image calculated by ghostscript is not 
+ bound to the resolution of the printer output. It is for example possible
+ to specify "-r360" to gs and print the output in 1440x720 dpi (see below
+ for driver parameter). The result is a somewhat faster operation of the driver.
+
+
+Color Balancing Values: (min,max,default)
+-dRed=xxx        xxx:   0 ... 200  (100)
+-dGreen=xxx      xxx:   0 ... 200  (100)
+-dBlue=xxx       xxx:   0 ... 200  (100)
+-dBrightness=xxx xxx:   0 ... 400  (100)
+-dContrast=xxx   xxx:  25 ... 400  (100)
+-dGamma=xxx      xxx: 0.1 ... 3.0  (1.0)
+-dDensity=xxx    xxx: 0.1 ... 2.0  (0.8)
+-dSaturation=xxx xxx: 0.1 ... 9.0  (1.0)
+-dColor=x          x:   0 ...   1  (1) (0==gray, 1==color) 
+
+
+Printer Model Selection:
+-dModel=xx
+
+xx: 0...15 (6)
+0   Stylus Color
+1   Stylus Color Pro/Pro XL/400/500
+2   Stylus Color 1500
+3   Stylus Color 600
+4   Stylus Color 800
+5   Stylus Color 1520/3000
+6   Stylus Photo 700
+7   Stylus Photo EX
+8   Stylus Photo
+9   Stylus Color 440
+10  Stylus Color 640
+11  Stylus Color 740
+12  Stylus Color 900
+13  Stylus Photo 750
+14  Stylus Photo 1200
+15  Stylus Color 850
+
+
+Print Resolution Selection:
+-dQuality=x
+
+x: 0..7 (0)
+0  360 DPI                               (works, gray+color)
+1  720 DPI Microweave                    (works, gray+color)
+2  720 DPI Softweave                     (works)
+3  720 DPI High Quality                  (works)
+4  720 DPI Highest Quality               (works)
+5  1440 x 720 DPI Softweave              (works)
+6  1440 x 720 DPI Highest Quality        (works)
+7  1440 x 720 DPI Two-pass               (untested)
+
+currently supported Media Selection:
+(important: always use lower case names)
+
+-sPAPERSIZE=letter
+-sPAPERSIZE=legal
+-sPAPERSIZE=a4
+-sPAPERSIZE=a3
+
+
+Examples:
+---------
+
+Example 1 (print to file, color, 360 dpi):
+gs -sDEVICE=stp -sOutputFile=itsyourchoice.prn -dModel=8 -dDensity=0.7 -dGamma=1.5 -dSaturation=0.9 -dBrightness=40 foo.ps
+
+
+Example 2 (print to /dev/lp0, color, 720 dpi HQ Mode):
+gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sOutputFile=- -dModel=6 -dDensity=0.8 -r720 -dQuality=4 >/dev/lp0 foo.ps
+
+
+Settings you might try:
+-----------------------
+
+720dpi, plain paper, original Epson ink:
+-dQuality=3 -dDensity=0.7 -dRed=105 -dGreen=90 -dBrightness=110
+
+
+Bugs and Limitations:
+---------------------
+
+- In softweave modes (2,3,4,5,6,7) there is a bigger top margin (by 0.36 inch = 9.6 mm).
+- I experienced some problems with pure grayscale printing (-dColor=0) with
+  my Photo 700 printer where the escp2 driver didn`t add linefeeds to 
+  the output code in softweave modes.
+  Workaround1: -dSaturation=0.1 and -dColor=1 (side effect: less grainyness due to 6 color
+               prints)
+  Workaround2: -dQuality=0 , 1 or 5 in conjunction with -dColor=0
+  Workaround3: For fast operation with pure b/w or grayscle images such as
+               texts try the "uniprint" driver.
+- All printers except Photo700 and all paper sizes other than DIN A4 are 
+  untested.
+- The escp2 driver isn`t optimized at the moment so be patient when trying
+  the 720 and 1440x720 dpi color modes.
