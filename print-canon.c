@@ -717,9 +717,7 @@ canon_print(const printer_t *printer,		/* I - Model */
                 image_bpp;
   int           use_dmt = 0;
   void *	dither;
-  /*
-  double        the_levels[] = { 0.0, 0.5, 0.75, 1.0 };
-  */
+  double        the_levels[] = { 0.5, 0.75, 1.0 };
 
   canon_cap_t caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
@@ -1010,9 +1008,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"\n");
 
   if (landscape)
-    dither = init_dither(image_height, out_width, 1);
+    dither = init_dither(image_height, out_width);
   else
-    dither = init_dither(image_width, out_width, 1);
+    dither = init_dither(image_width, out_width);
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1028,18 +1026,15 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 14);
       break;
     }	    
+  dither_set_density(dither, v->density);
 
-  /*
-  if (use_dmt) {
-    if (cyan)     dither_set_c_levels(dither,4,the_levels);
-    if (lcyan)    dither_set_lc_levels(dither,4,the_levels);
-    if (magenta)  dither_set_m_levels(dither,4,the_levels);
-    if (lmagenta) dither_set_lm_levels(dither,4,the_levels);
-    if (yellow)   dither_set_y_levels(dither,4,the_levels);
-    if (lyellow)  dither_set_ly_levels(dither,4,the_levels);
-    if (black)    dither_set_k_levels(dither,4,the_levels);
-  }
-  */    
+  if (use_dmt)
+    {
+      dither_set_c_ranges_simple(dither, 3, the_levels, v->density);
+      dither_set_m_ranges_simple(dither, 3, the_levels, v->density);
+      dither_set_y_ranges_simple(dither, 3, the_levels, v->density);
+      dither_set_k_ranges_simple(dither, 3, the_levels, v->density);
+    }
 
   v->density *= printer->printvars.density;
   v->saturation *= printer->printvars.saturation;
@@ -1072,14 +1067,8 @@ canon_print(const printer_t *printer,		/* I - Model */
 	{
 	  if (v->image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, x, dither, black);
-	  else if (use_dmt)
-	    dither_black_n(out, x, dither, black, 1);
 	  else
 	    dither_black(out, x, dither, black);
-	} else if (use_dmt) {
-	  dither_cmyk_n(out, x, dither, cyan, lcyan, magenta, lmagenta,
-			yellow, lyellow, black, 1);
-
 	} else {
 	  dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, lyellow, black);
@@ -1143,14 +1132,8 @@ canon_print(const printer_t *printer,		/* I - Model */
 	{
 	  if (v->image_type == IMAGE_MONOCHROME)
 	    dither_fastblack(out, y, dither, black);
-	  else if (use_dmt)
-	    dither_black_n(out, y, dither, black, 1);
 	  else
 	    dither_black(out, y, dither, black);
-	} else if (use_dmt) {
-	  dither_cmyk_n(out, y, dither, cyan, lcyan, magenta, lmagenta,
-			yellow, lyellow, black, 1);
-
 	} else {
 	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, lyellow, black);
@@ -1538,6 +1521,12 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.36  2000/04/16 02:52:39  rlk
+ *   New dithering code
+ *
+ *   Revision 1.35.4.1  2000/04/11 01:53:06  rlk
+ *   Yet another dither hack
+ *
  *   Revision 1.35  2000/03/13 13:31:26  rlk
  *   Add monochrome mode
  *

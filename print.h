@@ -178,45 +178,83 @@ extern const int printer_count;
 typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
 			     int bpp, unsigned char *cmap, vars_t *vars);
 
+typedef struct
+{
+  double value;
+  unsigned bit_pattern;
+  int is_dark;
+} simple_dither_range_t;
+
+typedef struct
+{
+  double value;
+  double lower;
+  double upper;
+  unsigned bit_pattern;
+  int is_dark;
+} dither_range_t;
+
 /*
  * Prototypes...
  */
 
-extern void *	init_dither(int in_width, int out_width,
-			    int horizontal_overdensity);
+extern void *	init_dither(int in_width, int out_width);
+extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);
 extern void	dither_set_black_levels(void *vd, double, double, double);
 extern void 	dither_set_randomizers(void *vd, int, int, int, int);
 extern void 	dither_set_ink_darkness(void *vd, double, double, double);
-extern void 	dither_set_light_inks(void *vd, double, double, double);
-extern void	dither_set_c_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_lc_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_m_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_lm_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_y_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_ly_levels(void *vd, int nlevels, double *levels);
-extern void	dither_set_k_levels(void *vd, int nlevels, double *levels);
+extern void 	dither_set_light_inks(void *vd, double, double, double,
+				      double);
+extern void	dither_set_c_ranges(void *vd, int nlevels,
+				    const simple_dither_range_t *ranges,
+				    double density);
+extern void	dither_set_m_ranges(void *vd, int nlevels,
+				    const simple_dither_range_t *ranges,
+				    double density);
+extern void	dither_set_y_ranges(void *vd, int nlevels,
+				    const simple_dither_range_t *ranges,
+				    double density);
+extern void	dither_set_k_ranges(void *vd, int nlevels,
+				    const simple_dither_range_t *ranges,
+				    double density);
+extern void	dither_set_c_ranges_simple(void *vd, int nlevels,
+					   const double *levels,
+					   double density);
+extern void	dither_set_m_ranges_simple(void *vd, int nlevels,
+					   const double *levels,
+					   double density);
+extern void	dither_set_y_ranges_simple(void *vd, int nlevels,
+					   const double *levels,
+					   double density);
+extern void	dither_set_k_ranges_simple(void *vd, int nlevels,
+					   const double *levels,
+					   double density);
+extern void	dither_set_c_ranges_complete(void *vd, int nlevels,
+					     const dither_range_t *ranges);
+extern void	dither_set_m_ranges_complete(void *vd, int nlevels,
+					     const dither_range_t *ranges);
+extern void	dither_set_y_ranges_complete(void *vd, int nlevels,
+					     const dither_range_t *ranges);
+extern void	dither_set_k_ranges_complete(void *vd, int nlevels,
+					     const dither_range_t *ranges);
 extern void	dither_set_ink_spread(void *vd, int spread);
+extern void	dither_set_x_oversample(void *vd, int os);
+extern void	dither_set_y_oversample(void *vd, int os);
 
-extern void	scale_dither(void *vd, int scale);
+
 extern void	free_dither(void *);
 
+extern void	dither_fastblack(unsigned short *, int, void *,
+				 unsigned char *);
+
 extern void	dither_black(unsigned short *, int, void *, unsigned char *);
-extern void	dither_fastblack(unsigned short *, int, void *, unsigned char *);
 
 extern void	dither_cmyk(unsigned short *, int, void *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *,
 			    unsigned char *, unsigned char *);
-
-extern void	dither_black_n(unsigned short *, int, void *, unsigned char *,
-			       int);
-
-extern void	dither_cmyk_n(unsigned short *, int, void *, unsigned char *,
-			      unsigned char *, unsigned char *,
-			      unsigned char *, unsigned char *,
-			      unsigned char *, unsigned char *, int);
 
 extern void	gray_to_gray(unsigned char *, unsigned short *, int, int,
 			     unsigned char *, vars_t *);

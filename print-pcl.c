@@ -810,6 +810,8 @@ char * pcl_val_to_string(int code,			/* I: Code */
   return(string);
 }
 
+static double dot_sizes[] = { 0.5, 0.832, 1.0 };
+
 /*
  * pcl_get_model_capabilities() - Return struct of model capabilities
  */
@@ -1547,9 +1549,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
   v->saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width, 1);
+    dither = init_dither(image_height, out_width);
   else
-    dither = init_dither(image_width, out_width, 1);
+    dither = init_dither(image_width, out_width);
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1565,6 +1567,15 @@ pcl_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 14);
       break;
     }	    
+  if (do_cret)
+    {
+      dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
+    }
+
+  dither_set_density(dither, v->density);
 
   if (landscape)
   {
@@ -1603,14 +1614,14 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black_n(out, x, dither, black, 1);
+          dither_black(out, x, dither, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk_n(out, x, dither, cyan, NULL, magenta, NULL,
-		       yellow, NULL, black, 1);
+          dither_cmyk(out, x, dither, cyan, NULL, magenta, NULL,
+		      yellow, NULL, black);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1695,14 +1706,14 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black_n(out, y, dither, black, 1);
+          dither_black(out, y, dither, black);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk_n(out, y, dither, cyan, NULL, magenta, NULL,
-		       yellow, NULL, black, 1);
+          dither_cmyk(out, y, dither, cyan, NULL, magenta, NULL,
+		      yellow, NULL, black);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1902,6 +1913,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.42  2000/04/16 02:52:39  rlk
+ *   New dithering code
+ *
  *   Revision 1.41  2000/04/13 19:08:11  davehill
  *   Added DJ340, DJ400, DJ2000, DJ2500.
  *   Added Quick-dry photo & transparency media.
@@ -1916,6 +1930,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
  *   Fixed coding mistakes in "for" statements.
  *   Removed double-strdup in pcl_parameters (memory leak).
  *   Added more warning messages.
+ *
+ *   Revision 1.40.4.1  2000/04/11 01:53:06  rlk
+ *   Yet another dither hack
  *
  *   Revision 1.40  2000/03/21 19:09:02  davehill
  *   Added Deskjet 9xx series.
