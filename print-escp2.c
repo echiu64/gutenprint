@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.22  1999/11/08 13:10:21  rlk
+ *   Bug fix
+ *
  *   Revision 1.21  1999/11/07 22:18:51  rlk
  *   Support Stylus Photo
  *
@@ -1898,28 +1901,28 @@ escp2_unpack_2(int length,
       if (!(i & 1))
 	{
 	  *outlo =
-	    (inbyte & (1 << 7) << 0) +
-	    (inbyte & (1 << 5) << 1) +
-	    (inbyte & (1 << 3) << 2) +
-	    (inbyte & (1 << 1) << 3);
+	    ((inbyte & (1 << 7)) << 0) +
+	    ((inbyte & (1 << 5)) << 1) +
+	    ((inbyte & (1 << 3)) << 2) +
+	    ((inbyte & (1 << 1)) << 3);
 	  *outhi =
-	    (inbyte & (1 << 6) << 1) +
-	    (inbyte & (1 << 4) << 2) +
-	    (inbyte & (1 << 2) << 3) +
-	    (inbyte & (1 << 0) << 4);
+	    ((inbyte & (1 << 6)) << 1) +
+	    ((inbyte & (1 << 4)) << 2) +
+	    ((inbyte & (1 << 2)) << 3) +
+	    ((inbyte & (1 << 0)) << 4);
 	}
       else
 	{
 	  *outlo +=
-	    (inbyte & (1 << 1) >> 1) +
-	    (inbyte & (1 << 3) >> 2) +
-	    (inbyte & (1 << 5) >> 3) +
-	    (inbyte & (1 << 7) >> 4);
+	    ((inbyte & (1 << 1)) >> 1) +
+	    ((inbyte & (1 << 3)) >> 2) +
+	    ((inbyte & (1 << 5)) >> 3) +
+	    ((inbyte & (1 << 7)) >> 4);
 	  *outhi +=
-	    (inbyte & (1 << 0) >> 0) +
-	    (inbyte & (1 << 2) >> 1) +
-	    (inbyte & (1 << 4) >> 2) +
-	    (inbyte & (1 << 6) >> 3);
+	    ((inbyte & (1 << 0)) >> 0) +
+	    ((inbyte & (1 << 2)) >> 1) +
+	    ((inbyte & (1 << 4)) >> 2) +
+	    ((inbyte & (1 << 6)) >> 3);
 	  outlo++;
 	  outhi++;
 	}
