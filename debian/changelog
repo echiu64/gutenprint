@@ -1,16 +1,20 @@
 gimp-print (4.2.2-1) unstable; urgency=low
 
-  * New stable release
-  * Upgrade to debhelper version 4
+  * New stable release.
+  * Upgrade to debhelper version 4.
   * Automate library versioning to work for stable and unstable series.
-    LIBRARY_VERSION is the library major version or -UPSTREAM_VERSION
-  * Update configure regeneration to work with configure.ac
+    LIBRARY_VERSION is the library major version or -UPSTREAM_VERSION.
+  * Update configure regeneration to work with configure.ac.
   * libgimpprint$(VERSION)-dev provides and conflicts with a virtual
-    package `libgimpprint-dev'
-  * Remove libgimpprint.postinst as ldconfig is called by debhelper
-  * Update package descriptions
+    package `libgimpprint-dev'.
+  * Remove libgimpprint.postinst as ldconfig is called by debhelper.
+  * Update package descriptions.
+  * Fixed doc-base problems in libgimpprint-doc.  The doc-base file is
+    generated with sed to insert the version number.
+  * libgimpprint$(VERSION)-doc provides and conflicts with a virtual
+    package libgimpprint-doc to prevent clashes with gimpprint.info docs.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat, 18 May 2002 18:34:43 +0100
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu,  1 Aug 2002 12:40:26 +0100
 
 gimp-print (4.2.1-2) unstable; urgency=low
 
