@@ -94,6 +94,32 @@ and changes from 4.2, as follows:
      printing tasks.  Both controls offer Manual Control settings for
      users who wish greater control over the output.
 
+  5) Many of the color settings have changed effect.  We recommend
+     starting with no color correction and making appropriate changes
+     only as required.  Specific changes that you should be aware of
+     include:
+
+     * The default operation of the contrast setting has changed to be
+       more in accord with standard practice.  In 4.2, reducing the
+       contrast resulted in changing the black and white setting.  In
+       5.0, reducing the contrast does not change the black and white
+       settings.  As a result, it is possible to use the contrast
+       setting to improve highlight and shadow detail by reducing the
+       contrast.
+
+       The old behavior is available by turning on the "Linear
+       Contrast Adjustment".
+
+     * The Cyan, Magenta, and Yellow settings have been replaced with
+       separate settings for gamma and density for Cyan, Magenta,
+       Yellow, and Black.  The Cyan, Magenta, and Yellow settings in
+       Gimp-Print 4.2 most closely correspond to the gamma settings in
+       5.0.
+
+       The per-channel density settings do not affect the color
+       correction.  They are applied after the color correction to
+       scale the individual channels.
+
 
 * Quality Improvements:
 
