@@ -190,8 +190,7 @@ test -z "$openjadeloc" && openjade_err=1
 # Proper rev?
 test "$openjade_err" -eq 0 && {
 #  echo "Checking for proper revision of openjade..."
-  openjade_version=`openjade -v < /dev/null 2>&1 | grep -i "openjade version" $tmp_file | awk -F\" '{print $2}'`
-
+  openjade_version=`openjade -v < /dev/null 2>&1 | sed 's/"//g' | grep -i "openjade version" $tmp_file | awk -F ' ' '{print $4}'`
   openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
   openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
   openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}'`
@@ -269,7 +268,11 @@ test -z "$convertloc" && {
   echo " "
 }
 
-test -d "/usr/share/sgml/docbook_4" || {
+# Check for docbook version 4
+
+{
+  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0"
+} || {
   echo " "
   echo "***Warning***: You must have "Docbook v4" installed to"
   echo "build the Gimp-Print user's guide."
@@ -314,7 +317,7 @@ do
 	  : do nothing -- we still have an old unmodified configure.ac
 	else
 	  echo "Creating $dr/aclocal.m4 ..."
-	  test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
+	  test -r aclocal.m4 || touch aclocal.m4
 	  # We've removed po/ChangeLog from the repository.  Version
 	  # 0.10.40 of gettext appends an entry to the ChangeLog every time
 	  # anyone runs autogen.sh.  Since developers do that a lot, and
