@@ -1,4 +1,4 @@
-Gimp-Print 4.3.6, released December 22, 2002, is a development release of
+Gimp-Print 4.3.7, released January 4, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -30,11 +30,71 @@ this package.
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.3.6 is considered to be a particularly unstable release,
-as significant API changes have been introduced with relatively
-limited testing.  We recommend that only people who want access to
-these new API features, or who are otherwise willing to accept lesser
-stability, use this release.
+Gimp-Print 4.3.7 is considered to be an unstable release, as more
+significant API changes have been introduced with relatively limited
+testing.  While most of the changes improve the clarity of the code,
+the limited testing and extensive nature of the changes suggests that
+this release is likely to be quite unstable.  We recommend that only
+people who want access to these new API features for development use
+this release.  There are very significant user-visible changes over
+earlier 4.3 releases, and few changes over the 4.2 stable line.
+
+Gimp-Print 4.3.7 contains the following major changes over Gimp-Print
+4.3.6:
+
+1) Further internal API changes.  Please see
+   include/gimp-print/gimp-print.h, and the various header files in
+   src/main, for details.  There will be significant further changes,
+   particularly in the color code.  The API is considerably more
+   consistent than before.
+
+2) Parameters are now stored as variables within stp_vars_t, rather
+   than as fixed fields.  This change is largely transparent at the
+   API level, but it marks an important advance.
+
+3) The Gimp Print plugin has been split into a GTK-based library
+   (libgimpprintui) and the actual Print plugin.  The libgimpprintui
+   code permits creating print panels for other applications, or
+   standalone graphical print utilities, all using the same user
+   interface.
+
+   In addition, the thumbnail preview mechanism has been changed to
+   use the stp_image_t API rather than to make direct calls to the
+   color machinery.  This was done by creating a new family driver
+   (print-raw.c) and by creating a new stp_image_t implementation for
+   thumbnail creation.  This removed the only reason to export the
+   color API, and will permit us to simplify the very complex color
+   API.  This work is currently in progress.
+
+   To simplify coding while avoiding an unnecessary dependency, some
+   widgets have been borrowed from libgimp.
+
+   The two files comprising the Gimp plugin proper total less than 900
+   lines of code, out of about 60,000 lines total in the core library,
+   UI library, and Print plugin.
+
+   This work is not complete; support for multiple pages still needs
+   to be added, for example.  However, there should be a sufficient
+   base to permit interested developers to experiment.
+
+   A very desirable project that someone may wish to undertake is to
+   write a ghostscript front end (or extension to ghostview or gv)
+   that uses this UI library.  This would create a full-featured
+   graphical printing application.
+
+4) Many parameters for Epson printer control, dither matrix control,
+   and HSL adjustment have been exported as settable parameters.
+   While currently no Gimp-print applications provide access to these
+   controls, they are available for developer use.  Please read the
+   code to see where they are made available.  This is a work in
+   progress; expect major changes in the future.
+
+5) A new header file, gimp-print-version.h, has been created to store
+   the autogen-time versioning information.
+
+6) The Gimp Print plugin now uses g_message to deliver error messages
+   to pop-ups rather than to stderr.
+
 
 Gimp-Print 4.3.6 contains the following major changes over Gimp-Print
 4.3.5:
