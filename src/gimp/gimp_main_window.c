@@ -1357,8 +1357,6 @@ gimp_plist_callback (GtkWidget *widget,
   gchar		**ink_types;		/* Ink type strings */
   gint		num_resolutions;	/* Number of resolutions */
   gchar		**resolutions;		/* Resolution strings */
-  const stp_printfuncs_t *printfuncs = NULL;
-  int x, y;
 
   plist_current = (gint) data;
   p             = plist + plist_current;
@@ -1370,7 +1368,6 @@ gimp_plist_callback (GtkWidget *widget,
       current_printer = stp_get_printer_by_driver(stp_get_driver(vars));
     }
 
-  printfuncs = stp_printer_get_printfuncs(current_printer);
   stp_set_ppd_file(vars, stp_get_ppd_file(p->v));
   stp_set_media_size(vars, stp_get_media_size(p->v));
   stp_set_media_type(vars, stp_get_media_type(p->v));
@@ -1392,7 +1389,7 @@ gimp_plist_callback (GtkWidget *widget,
    * Now get option parameters...
    */
 
-  media_sizes = (*(printfuncs->parameters))
+  media_sizes = (*(stp_printer_get_printfuncs(current_printer)->parameters))
     (current_printer, stp_get_ppd_file(p->v), "PageSize", &num_media_sizes);
   if (stp_get_media_size(vars)[0] == '\0')
     stp_set_media_size(vars, media_sizes[0]);
@@ -1407,10 +1404,10 @@ gimp_plist_callback (GtkWidget *widget,
     free (media_sizes[i]);
   free (media_sizes);
 
-  media_types = (*(printfuncs->parameters)) (current_printer,
-					     stp_get_ppd_file(p->v),
-					     "MediaType",
-					     &num_media_types);
+  media_types = (*(stp_printer_get_printfuncs(current_printer)->parameters)) (current_printer,
+						  stp_get_ppd_file(p->v),
+						  "MediaType",
+						  &num_media_types);
   if (stp_get_media_type(vars)[0] == '\0' && media_types != NULL)
     stp_set_media_type(vars, media_types[0]);
   else if (media_types == NULL)
@@ -1429,10 +1426,10 @@ gimp_plist_callback (GtkWidget *widget,
       free (media_types);
     }
 
-  media_sources = (*(printfuncs->parameters)) (current_printer,
-					       stp_get_ppd_file(p->v),
-					       "InputSlot",
-					       &num_media_sources);
+  media_sources = (*(stp_printer_get_printfuncs(current_printer)->parameters)) (current_printer,
+						    stp_get_ppd_file(p->v),
+						    "InputSlot",
+						    &num_media_sources);
   if (stp_get_media_source(vars)[0] == '\0' && media_sources != NULL)
     stp_set_media_source(vars, media_sources[0]);
   else if (media_sources == NULL)
@@ -1451,9 +1448,9 @@ gimp_plist_callback (GtkWidget *widget,
       free (media_sources);
     }
 
-  ink_types = (*(printfuncs->parameters)) (current_printer,
-					   stp_get_ppd_file(p->v),
-					   "InkType", &num_ink_types);
+  ink_types = (*(stp_printer_get_printfuncs(current_printer)->parameters)) (current_printer,
+						stp_get_ppd_file(p->v),
+						"InkType", &num_ink_types);
   if (stp_get_ink_type(vars)[0] == '\0' && ink_types != NULL)
     stp_set_ink_type(vars, ink_types[0]);
   else if (ink_types == NULL)
@@ -1472,22 +1469,18 @@ gimp_plist_callback (GtkWidget *widget,
       free (ink_types);
     }
 
-  resolutions = (*(printfuncs->parameters)) (current_printer,
-					     stp_get_ppd_file(p->v),
-					     "Resolution",
-					     &num_resolutions);
+  resolutions = (*(stp_printer_get_printfuncs(current_printer)->parameters)) (current_printer,
+						  stp_get_ppd_file(p->v),
+						  "Resolution",
+						  &num_resolutions);
   if (stp_get_resolution(vars)[0] == '\0' && resolutions != NULL)
-    stp_set_resolution(vars, printfuncs->default_resolution(current_printer));
+    stp_set_resolution(vars, resolutions[0]);
   else if (resolutions == NULL)
     stp_set_resolution(vars, NULL);
-  printfuncs->describe_resolution(current_printer, stp_get_resolution(vars),
-				  &x, &y);
-  if (x < 0 || y < 0)
-    stp_set_resolution(vars, printfuncs->default_resolution(current_printer));
   gimp_plist_build_combo (resolution_combo,
 			  num_resolutions,
 			  resolutions,
-			  (char *) stp_get_resolution(vars),
+			  (char *) stp_get_resolution(p->v),
 			  gimp_resolution_callback,
 			  &resolution_callback_id);
 
