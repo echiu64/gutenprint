@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.0, the initial development on the 4.1 line.
+This is gimp-print version 4.1.1, a development release on the 4.1 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -10,6 +10,21 @@ This plugin can be compiled against either Gimp 1.1 or 1.0.  After 1.2
 is released, we anticipate dropping support for Gimp 1.0 and older
 versions of Gimp 1.1 (probably 1.20 and earlier, although that is not
 guaranteed).
+
+
+Print 4.1.1 contains the following fixes and improvements over 4.1.0:
+
+1) Further improvements in quality (we believe) in Photograph mode.
+
+2) A problem whereby black letters and other black detail had a hollow
+   appearance under some circumstances is fixed.
+
+3) The Canon S450 is now supported.
+
+4) The Epson Stylus Color 640 and 660 should print correctly.
+
+5) escputil now uses readline when available.
+
 
 Print 4.1.0 contains all fixes through the 4.0.4 release.  In
 addition, it contains the following user-visible differences over

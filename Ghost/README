@@ -192,6 +192,7 @@ bjc-6100		CANON BJC 6100
 bjc-7000		CANON BJC 7000
 bjc-7100		CANON BJC 7100
 bjc-8200		CANON BJC 8200
+bjc-s450		CANON S450
 escp2			EPSON Stylus Color
 escp2-pro		EPSON Stylus Color Pro
 escp2-pro-xl		EPSON Stylus Color Pro XL
@@ -690,15 +691,14 @@ Select the image type most representative of what's being printed.
 2  Continuous-tone photographs (color or gray scale)
 3  Pure black and white or pre-screened (currently black only)
 
-For mixed documents, options 0 or 1 will probably work best.  Option 0
-will dither faster and yield sharper text, but at some possible cost
-to color accuracy and/or smoothness.  Option 1 may yield smoother
-images and/or more accurate color.  Option 2 will yield the best
-natural images, but is quite slow.  Option 3 is very fast and
-accurate, but should not be used if there are any tones other than
-pure black and white (or you want absolute black and white contrast).
-Option 3 combined with Very Fast dithering results in extremely fast
-rendering.
+Option 2 provides greatly improved color quality.  Option 0 will
+dither faster and yield sharper text, but at some possible cost to
+color accuracy and/or smoothness.  Option 1 may yield smoother images
+and/or more accurate color.  Option 2 will yield the best natural
+images, but is quite slow.  Option 3 is very fast and accurate, but
+should not be used if there are any tones other than pure black and
+white (or you want absolute black and white contrast).  Option 3
+combined with Very Fast dithering results in extremely fast rendering.
 
 Note that any of the modes (except monochrome) may be used with either
 color or black & white output.  If black and white output is
