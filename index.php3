@@ -18,8 +18,8 @@ require('standard_html_header.php3');
 including a working download link.</strong>.  We've also added a
 GhostScript driver for Epson Stylus inkjet printers.</p>
 
-<P><strong><em><font color="#ff0000">New as of June 17,
-2000!</font></em></strong> Version 3.1.7 is now released.</p>
+<P><strong><em><font color="#ff0000">New as of July 11,
+2000!</font></em></strong> Version 3.1.8 is now released.</p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
