@@ -17,6 +17,10 @@ gimp package.  The gimp package as supplied in most distributions only
 contains what's needed to run the Gimp.  The gimp-devel package
 contains additional files required to actually build new plugins.
 
+If you have installed the Gimp from source on Linux: after running
+make install, you must run ldconfig as root before attempting to build
+this plugin.
+
 Please report problems to gimp-print-devel@sourceforge.net.
 
 
