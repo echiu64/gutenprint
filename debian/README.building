@@ -80,12 +80,13 @@ $ dpkg-buildpackage -rfakeroot -us -uc
 or
 $ debuild -us -uc -L -i
 
-It should build without problems on Debian 3.0 (woody) and unstable,
-but will no longer build on Debian 2.2 (potato) current testing and
-unstable distributions.
+It should build without problems on Debian 3.0 (woody), but will no
+longer build on Debian 2.2 (potato) and current testing (sarge) and
+unstable distributions (sid).  For sarge or sid, please use the
+official Debian packages, or apply the Debian patch (.diff.gz).
 
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Wed,  9 Oct 2002 21:25:06 +0100
+Roger Leigh <roger@whinlatter.uklinux.net> -- Sat, 06 Dec 2003 16:47:46 +0000
 
