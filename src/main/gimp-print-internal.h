@@ -213,6 +213,7 @@ typedef struct stp_softweave
 		     int width, int missingstartrows, int color);
   int (*pack)(const unsigned char *in, int bytes,
 	      unsigned char *out, unsigned char **optr);
+  int (*compute_linewidth)(const struct stp_softweave *sw, int n);
 } stp_softweave_t;
 
 typedef struct stp_dither_matrix_short
@@ -362,15 +363,16 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int (*pack)(const unsigned char *in,
 					      int bytes, unsigned char *out,
 					      unsigned char **optr),
-				  int (*compute_linewidth)(const stp_softweave_t *sw));
+				  int (*compute_linewidth)(const stp_softweave_t *sw,
+							   int n));
 
 extern void stp_fill_tiff(stp_softweave_t *sw, int row, int subpass,
 			  int width, int missingstartrows, int color);
 extern void stp_fill_uncompressed(stp_softweave_t *sw, int row, int subpass,
 				  int width, int missingstartrows, int color);
 
-extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw);
-extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw);
+extern int stp_compute_tiff_linewidth(const stp_softweave_t *sw, int n);
+extern int stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n);
 
 
 

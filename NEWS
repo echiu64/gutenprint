@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.8, a development release on the 4.1 line.
+This is gimp-print version 4.1.9, a development release on the 4.1 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -7,6 +7,22 @@ they use the identical code base.  Please read src/ghost/README and
 src/cups/README for more information on this.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Gimp-Print 4.1.9 contains the following changes over 4.1.8:
+
+1) A critical bug that in some cases causes a segmentation violation
+   and/or data corruption is fixed.
+
+2) The package will use about 1/3 as much virtual address space when
+   printing very large images.
+
+Gimp-Print 4.1.9 has the following known issues:
+
+1) The Canon driver currently produces incorrect or no output on many
+   printers at many resolutions.  This has been the case since roughly
+   4.1.5.  We are aware of this issue, and will fix it as soon as
+   possible.
+
 
 Gimp-Print 4.1.8 contains the following changes over 4.1.7:
 
