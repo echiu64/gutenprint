@@ -305,10 +305,8 @@ typedef struct {
   int stp_printer_type;		/* Deskjet/Laserjet and quirks */
 /* The paper size, paper type and paper source codes cannot be combined */
   const short *paper_sizes;	/* Paper sizes */
-  const int paper_types[NUM_PRINTER_PAPER_TYPES + 1];
-				/* Paper types */
-  const int paper_sources[NUM_PRINTER_PAPER_SOURCES + 1];
-				/* Paper sources */
+  const short *paper_types;	/* Paper types */
+  const short *paper_sources;	/* Paper sources */
   } pcl_cap_t;
 
 #define PCL_COLOR_NONE		0
@@ -338,6 +336,11 @@ typedef struct {
  * This data comes from the HP documentation "Deskjet 1220C and 1120C
  * PCL reference guide 2.0, Nov 1999".
  */
+
+static const short emptylist[] =
+{
+  -1
+};
 
 static const short standard_papersizes[] =
 {
@@ -571,6 +574,73 @@ static const short ljbig_papersizes[] =
   -1,
 };
 
+static const short basic_papertypes[] =
+{
+  PCL_PAPERTYPE_PLAIN,
+  PCL_PAPERTYPE_BOND,
+  PCL_PAPERTYPE_PREMIUM,
+  PCL_PAPERTYPE_GLOSSY,
+  PCL_PAPERTYPE_TRANS,
+  -1,
+};
+
+static const short new_papertypes[] =
+{
+  PCL_PAPERTYPE_PLAIN,
+  PCL_PAPERTYPE_BOND,
+  PCL_PAPERTYPE_PREMIUM,
+  PCL_PAPERTYPE_GLOSSY,
+  PCL_PAPERTYPE_TRANS,
+  PCL_PAPERTYPE_QPHOTO,
+  PCL_PAPERTYPE_QTRANS,
+  -1,
+};
+
+static const short laserjet_papersources[] =
+{
+  PCL_PAPERSOURCE_STANDARD,
+  PCL_PAPERSOURCE_MANUAL,
+  PCL_PAPERSOURCE_LJ_TRAY1,
+  PCL_PAPERSOURCE_LJ_TRAY2,
+  PCL_PAPERSOURCE_LJ_TRAY3,
+  PCL_PAPERSOURCE_LJ_TRAY4,
+  -1,
+};
+
+static const short dj340_papersources[] =
+{
+  PCL_PAPERSOURCE_STANDARD,
+  PCL_PAPERSOURCE_MANUAL,
+  PCL_PAPERSOURCE_340_PCSF,
+  PCL_PAPERSOURCE_340_DCSF,
+  -1,
+};
+
+static const short dj_papersources[] =
+{
+  PCL_PAPERSOURCE_STANDARD,
+  PCL_PAPERSOURCE_MANUAL,
+  PCL_PAPERSOURCE_DJ_TRAY,
+  -1,
+};
+
+static const short dj2500_papersources[] =
+{
+  PCL_PAPERSOURCE_STANDARD,
+  PCL_PAPERSOURCE_MANUAL,
+  PCL_PAPERSOURCE_DJ_AUTO,
+  PCL_PAPERSOURCE_DJ_TRAY,
+  PCL_PAPERSOURCE_DJ_TRAY2,
+  PCL_PAPERSOURCE_DJ_OPTIONAL,
+  -1,
+};
+
+static const short standard_papersources[] =
+{
+  PCL_PAPERSOURCE_STANDARD,
+  -1
+};
+
 static const pcl_cap_t pcl_model_capabilities[] =
 {
   /* Default/unknown printer - assume laserjet */
@@ -583,10 +653,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
     standard_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    { -1,			/* No selectable paper sources */
-    },
+    emptylist,
+    emptylist,
   },
   /* DesignJet 230/430 (monochrome ) */
   { 10230,
@@ -598,18 +666,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     letter_only_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      -1,
-    },
+    basic_papertypes,
+    standard_papersources,
   },
   /* DesignJet 250C/450C/455CA/488CA */
   /* The "CA" versions have a "software RIP" but are the same hardware */
@@ -622,18 +680,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     letter_only_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      -1,
-    },
+    basic_papertypes,
+    standard_papersources,
   },
   /* DesignJet 700 (monochrome) */
   { 10700,
@@ -645,18 +693,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     letter_only_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      -1,
-    },
+    basic_papertypes,
+    standard_papersources,
   },
   /* DesignJet 750C */
   { 10750,
@@ -668,18 +706,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     letter_only_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      -1,
-    },
+    basic_papertypes,
+    standard_papersources,
   },
   /* DesignJet 2500C/3500C (44" wide) */
   { 12500,	/* Deskjet 2500 already has "2500" */
@@ -691,18 +719,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
     letter_only_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      -1,
-    },
+    basic_papertypes,
+    standard_papersources,
   },
   /* Deskjet 340 */
   { 340,
@@ -714,21 +732,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     dj340_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_340_PCSF,
-      PCL_PAPERSOURCE_340_DCSF,
-      -1,
-    },
+    basic_papertypes,
+    dj340_papersources,
   },
   /* Deskjet 400 */
   { 400,
@@ -740,16 +745,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     dj400_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    { -1,			/* No selectable paper sources */
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 500, 520. Lexmark 4076 */
   { 500,
@@ -761,20 +758,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     dj500_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 500C */
   { 501,
@@ -786,20 +771,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     dj500_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 540C */
   { 540,
@@ -812,20 +785,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj540_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 550C, 560C */
   { 550,
@@ -839,20 +800,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
 /* The 550/560 support COM10 and DL envelope, but the control codes
    are negative, indicating landscape mode. This needs thinking about! */
     dj340_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 600/600C */
   { 600,
@@ -865,16 +814,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    { -1,			/* No selectable paper sources */
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 6xx series */
   { 601,
@@ -887,17 +828,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      -1,
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 69x series (Photo Capable) */
   { 690,
@@ -910,17 +842,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      -1,
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 850/855/870/890 (C-RET) */
   { 800,
@@ -933,17 +856,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      -1,
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 810C, 812C, 840C, 842C, 845C, 895C (C-RET) */
   { 840,
@@ -956,17 +870,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      -1,
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 900 series, 1220C, PhotoSmart P1000/P1100 */
   { 900,
@@ -979,16 +884,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj600_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    { -1,			/* No selectable paper sources */
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 1220C (or other large format 900) */
   { 901,
@@ -1001,16 +898,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj1220_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    { -1,			/* No selectable paper sources */
-    },
+    basic_papertypes,
+    emptylist,
   },
   /* Deskjet 1100C, 1120C */
   { 1100,
@@ -1023,20 +912,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj1100_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 1200C */
   { 1200,
@@ -1049,20 +926,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj1200_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 1600C */
   { 1600,
@@ -1075,20 +940,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj1200_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    basic_papertypes,
+    dj_papersources,
   },
   /* Deskjet 2000 */
   { 2000,
@@ -1101,22 +954,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj2000_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      PCL_PAPERTYPE_QPHOTO,
-      PCL_PAPERTYPE_QTRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      -1,
-    },
+    new_papertypes,
+    dj_papersources,
   },
   /* Deskjet 2500 */
   { 2500,
@@ -1129,25 +968,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
       PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
     dj2500_papersizes,
-    {
-      PCL_PAPERTYPE_PLAIN,
-      PCL_PAPERTYPE_BOND,
-      PCL_PAPERTYPE_PREMIUM,
-      PCL_PAPERTYPE_GLOSSY,
-      PCL_PAPERTYPE_TRANS,
-      PCL_PAPERTYPE_QPHOTO,
-      PCL_PAPERTYPE_QTRANS,
-      -1,
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_DJ_AUTO,
-      PCL_PAPERSOURCE_DJ_TRAY,
-      PCL_PAPERSOURCE_DJ_TRAY2,
-      PCL_PAPERSOURCE_DJ_OPTIONAL,
-      -1,
-    },
+    new_papertypes,
+    dj2500_papersources,
   },
   /* LaserJet II series */
   { 2,
@@ -1159,17 +981,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
     ljsmall_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet IIP (TIFF but no blankline) */
   { 21,
@@ -1181,17 +994,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF,
     ljsmall_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet III series */
   { 3,
@@ -1203,17 +1007,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet 4L */
   { 4,
@@ -1225,17 +1020,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet 4V, 4Si */
   { 5,
@@ -1247,17 +1033,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljbig_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet 4 series (except as above), 5 series, 6 series */
   { 6,
@@ -1269,17 +1046,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
   /* LaserJet 5Si */
   { 7,
@@ -1291,17 +1059,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljbig_papersizes,
-    { -1,			/* No selectable paper types */
-    },
-    {
-      PCL_PAPERSOURCE_STANDARD,
-      PCL_PAPERSOURCE_MANUAL,
-      PCL_PAPERSOURCE_LJ_TRAY1,
-      PCL_PAPERSOURCE_LJ_TRAY2,
-      PCL_PAPERSOURCE_LJ_TRAY3,
-      PCL_PAPERSOURCE_LJ_TRAY4,
-      -1,
-    },
+    emptylist,
+    laserjet_papersources,
   },
 };
 
