@@ -682,13 +682,8 @@ generate_special_channels(const stp_vars_t *v)
 		  /* Now find the two inks bracketing the hue */
 		  for (j = 0; j < cg->angle_count - 1; j++)
 		    {
-		      if (cg->angles[j].hue_angle == hue)
-			{
-			  output[cg->angles[j].channel_id] = max;
-			  break;
-			}
-		      else if (cg->angles[j].hue_angle < hue &&
-			       cg->angles[j + 1].hue_angle > hue)
+		      if (cg->angles[j].hue_angle <= hue &&
+			  cg->angles[j + 1].hue_angle > hue)
 			{
 			  /* Found it! */
 			  double where = ((hue - cg->angles[j].hue_angle) /
