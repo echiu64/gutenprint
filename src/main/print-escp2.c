@@ -644,6 +644,7 @@ static escp2_variable_inklist_t simple_4color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
       &standard_inks
     },
   },
@@ -660,8 +661,10 @@ static escp2_variable_inklist_t simple_6color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
     },
     {
+      &photo_inks,
       &photo_inks,
       &photo_inks,
       &photo_inks,
@@ -684,10 +687,12 @@ static escp2_variable_inklist_t variable_6pl_4color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
     }
   },
   {
     {
+      &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
@@ -709,9 +714,11 @@ static escp2_variable_inklist_t variable_6pl_6color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
       &standard_inks
     },
     {
+      &photo_inks,
       &photo_inks,
       &photo_inks,
       &photo_inks,
@@ -727,11 +734,13 @@ static escp2_variable_inklist_t variable_6pl_6color_inks =
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks,
+      &escp2_6pl_standard_inks,
       &escp2_6pl_1440_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_6pl_standard_inks
     },
     {
+      &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks,
       &escp2_6pl_photo_inks,
@@ -753,9 +762,11 @@ static escp2_variable_inklist_t variable_pigment_6color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
       &standard_inks
     },
     {
+      &photo_inks,
       &photo_inks,
       &photo_inks,
       &photo_inks,
@@ -773,9 +784,11 @@ static escp2_variable_inklist_t variable_pigment_6color_inks =
       &escp2_pigment_standard_inks,
       &escp2_pigment_standard_inks,
       &escp2_pigment_standard_inks,
+      &escp2_pigment_standard_inks,
       &escp2_pigment_standard_inks
     },
     {
+      &escp2_pigment_photo_inks,
       &escp2_pigment_photo_inks,
       &escp2_pigment_photo_inks,
       &escp2_pigment_photo_inks,
@@ -798,10 +811,12 @@ static escp2_variable_inklist_t variable_3pl_4color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
     }
   },
   {
     {
+      &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
@@ -824,10 +839,12 @@ static escp2_variable_inklist_t variable_4pl_4color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
     }
   },
   {
     {
+      &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
@@ -849,9 +866,11 @@ static escp2_variable_inklist_t variable_4pl_6color_inks =
       &standard_inks,
       &standard_inks,
       &standard_inks,
+      &standard_inks,
       &standard_inks
     },
     {
+      &photo_inks,
       &photo_inks,
       &photo_inks,
       &photo_inks,
@@ -865,6 +884,7 @@ static escp2_variable_inklist_t variable_4pl_6color_inks =
     {
       &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_4pl_standard_inks,
       &escp2_4pl_1440_standard_inks,
@@ -872,6 +892,7 @@ static escp2_variable_inklist_t variable_4pl_6color_inks =
       &escp2_4pl_standard_inks,
     },
     {
+      &escp2_multishot_photo_inks,
       &escp2_multishot_photo_inks,
       &escp2_multishot_photo_inks,
       &escp2_6pl_photo_inks,
