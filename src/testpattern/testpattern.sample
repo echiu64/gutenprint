@@ -5,7 +5,11 @@ vsize 0.33
 left 0.66
 blackline 0
 levels 8
-pattern 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0
+#           CYAN      MAGENTA       YELLOW       BLACK        BLACK      BLACK RAMP ENDPOINTS
+#       Min          Min          Min          Min          Cyan         Lower
+#           Max          Max          Max          Max          Magenta      Upper
+#               Gamma        Gamma        Gamma        Gamma        Yellow
+pattern 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 0.0  0.0 0.0
 pattern 0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 1.0 1.0 1.0 1.0 1.0
 pattern 0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 1.0 1.0 1.0 1.0 1.0
 pattern 0.0 0.0 1.0 0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0 1.0 1.0 1.0 1.0 1.0
