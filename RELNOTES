@@ -11,7 +11,17 @@ plugin -- they use the identical code base.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
 
-Print 3.1.1 contains the following user-visible improvements over
+Print 3.1.1 contains the following improvements over Print 3.1.0:
+
+1) Faster dithering speed.
+
+2) Improved support for many Epson Stylus printers.
+
+3) Some UI improvements.
+
+4) Numerous bug fixes.
+
+Print 3.1.0 contains the following user-visible improvements over
 Print 3.0.5, the version distributed with the Gimp 1.1.17:
 
 1) Preliminary support for Canon BubbleJet printers (specifically the
