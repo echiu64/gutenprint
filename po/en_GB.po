@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2001 Roger leigh
+# Roger Leigh <roger@whinlatter.uklinux.net>, 2001.
 #
 #.
 #. *  Color adjust button
@@ -10,13 +10,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-07 17:19-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2001-09-08 16:26+0100\n"
+"PO-Revision-Date: 2001-09-08 11:26+BST\n"
+"Last-Translator: Rog er Leigh <roger@whinlatter.uklinux.net>\n"
+"Language-Team: N/A\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: lib/getopt.c:681
 #, c-format
@@ -147,22 +147,22 @@ msgstr ""
 #: src/main/print-canon.c:1605
 #, fuzzy
 msgid "CMY Color"
-msgstr "Colour"
+msgstr "CMY Colour"
 
 #: src/main/print-canon.c:1610
 #, fuzzy
 msgid "CMYK Color"
-msgstr "Colour"
+msgstr "CMYK Colour"
 
 #: src/main/print-canon.c:1615
 #, fuzzy
 msgid "Photo CcMmY Color"
-msgstr "Photo/Colour"
+msgstr "Photo CcMmY Colour"
 
 #: src/main/print-canon.c:1620
 #, fuzzy
 msgid "Photo CcMmYK Color"
-msgstr "Photo/Colour"
+msgstr "Photo CcMmYK Colour"
 
 #: src/main/print-dither.c:62
 msgid "Adaptive Hybrid"
@@ -499,7 +499,7 @@ msgstr ""
 
 #: src/main/print-escp2.c:2631 src/main/print-lexmark.c:817
 msgid "Premium Luster Photo Paper"
-msgstr ""
+msgstr "Premium Lustre Photo Paper"
 
 #: src/main/print-escp2.c:2634 src/main/print-lexmark.c:820
 msgid "Photo Quality Glossy Paper"
@@ -541,7 +541,7 @@ msgstr "Four Colour Standard"
 #: src/main/print-escp2.c:2662 src/main/print-lexmark.c:557
 #: src/main/print-lexmark.c:632
 msgid "Three Color Composite"
-msgstr ""
+msgstr "Three Colour Composite"
 
 #: src/gimp/gimp_main_window.c:1501 src/main/print-escp2.c:3119
 #: src/main/print-pcl.c:198
@@ -1324,6 +1324,16 @@ msgstr ""
 msgid "44 Inch Roll Paper"
 msgstr ""
 
+#. Specify language of PPD translation
+#: src/cups/genppd.c:415
+msgid "English"
+msgstr ""
+
+#. Specify PPD translation encoding e.g. ISOLatin1
+#: src/cups/genppd.c:417
+msgid "ISOLatin1"
+msgstr ""
+
 #: src/gimp/gimp_color_window.c:192
 msgid "Print Color Adjust"
 msgstr "Print Colour Adjust"
@@ -1391,6 +1401,8 @@ msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
+"Adjust the saturation (colour balance) of the print\n"
+"Use zero saturation to produce grayscale output using colour and black inks"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
@@ -1488,38 +1500,44 @@ msgid ""
 "Center\n"
 "Vertically"
 msgstr ""
+"Centre\n"
+"Vertically"
 
 #: src/gimp/gimp_main_window.c:460
 msgid "Center the image vertically on the paper"
-msgstr ""
+msgstr "Centre the image vertically on the paper"
 
 #: src/gimp/gimp_main_window.c:461 src/gimp/gimp_main_window.c:480
 msgid "Center the image vertically on the paper!"
-msgstr ""
+msgstr "Centre the image vertically on the paper!"
 
 #: src/gimp/gimp_main_window.c:467
 msgid ""
 "Center\n"
 "Image"
 msgstr ""
+"Centre\n"
+"Image"
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Center the image on the paper"
-msgstr ""
+msgstr "Centre the image on the paper"
 
 #: src/gimp/gimp_main_window.c:470
 msgid "Center the image on the paper!"
-msgstr ""
+msgstr "Centre the image on the paper!"
 
 #: src/gimp/gimp_main_window.c:477
 msgid ""
 "Center\n"
 "Horizontally"
 msgstr ""
+"Centre\n"
+"Horizontally"
 
 #: src/gimp/gimp_main_window.c:479
 msgid "Center the image horizontally on the paper"
-msgstr ""
+msgstr "Centre the image horizontally on the paper"
 
 #: src/gimp/gimp_main_window.c:488 src/gimp/gimp_main_window.c:489
 msgid "Distance from the left of the paper to the image"
@@ -1867,7 +1885,7 @@ msgstr ""
 
 #: src/gimp/gimp_main_window.c:1208 src/gimp/gimp_main_window.c:1209
 msgid "Optimize the output for the type of image being printed"
-msgstr ""
+msgstr "Optimise the output for the type of image being printed"
 
 #: src/gimp/gimp_main_window.c:1219
 msgid "Line Art"
@@ -1875,7 +1893,7 @@ msgstr ""
 
 #: src/gimp/gimp_main_window.c:1221 src/gimp/gimp_main_window.c:1222
 msgid "Fastest and brightest color for text and line art"
-msgstr ""
+msgstr "Fastest and brightest colour for text and line art"
 
 #: src/gimp/gimp_main_window.c:1231
 msgid "Solid Colors"
@@ -1883,7 +1901,7 @@ msgstr "Solid Colours"
 
 #: src/gimp/gimp_main_window.c:1233 src/gimp/gimp_main_window.c:1234
 msgid "Best for images dominated by regions of solid color"
-msgstr ""
+msgstr "Best for images dominated by regions of solid colour"
 
 #: src/gimp/gimp_main_window.c:1243
 msgid "Photograph"
@@ -1894,6 +1912,8 @@ msgid ""
 "Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
 msgstr ""
+"Slowest, but most accurate and smoothest colour for continuous tone images "
+"and photographs"
 
 #: src/gimp/gimp_main_window.c:1265
 #, fuzzy
@@ -1904,6 +1924,7 @@ msgstr "Adjust Colour"
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
+"Adjust colour balance, brightness, contrast, saturation, and dither algorithm"
 
 #: src/gimp/gimp_main_window.c:1292
 msgid "Output Type:"
@@ -1919,7 +1940,7 @@ msgstr "Colour"
 
 #: src/gimp/gimp_main_window.c:1303
 msgid "Color output"
-msgstr ""
+msgstr "Colour output"
 
 #: src/gimp/gimp_main_window.c:1312
 msgid "Grayscale"
@@ -1935,18 +1956,18 @@ msgstr ""
 
 #: src/gimp/gimp_main_window.c:1326 src/gimp/gimp_main_window.c:1328
 msgid "Print in black and white (no color, and no shades of gray)"
-msgstr ""
+msgstr "Print in black and white (no colour, and no shades of gray)"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
 msgstr ""
 
-#: src/gimp/print.c:164
+#: src/gimp/print.c:166
 msgid "<Image>/File/Print..."
 msgstr ""
 
-#: src/gimp/print.c:732 src/gimp/print.c:733 src/gimp/print.c:831
-#: src/gimp/print.c:1182
+#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
+#: src/gimp/print.c:1184
 msgid "File"
 msgstr ""
 

@@ -23,6 +23,9 @@ src/main/print-util.c
 src/main/print-weave.c
 #src/main/print-version.c
 
+# CUPS sources
+src/cups/genppd.c
+
 # escputil sources
 src/escputil/escputil.c
 
