@@ -78,7 +78,7 @@ escp2_write_microweave(FILE *, const unsigned char *,
 static void *initialize_weave(int jets, int separation, int oversample,
 			      int horizontal, int vertical,
 			      colormode_t colormode, int width, int linewidth,
-			      int vertical_row_separation);
+			      int lineheight, int vertical_row_separation);
 static void escp2_flush(void *, int model, int width, int hoffset, int ydpi,
 			int xdpi, FILE *prn);
 static void
@@ -353,6 +353,14 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
     32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 8
   },
+  /* 19: Stylus Color 760 */
+  {
+    (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
+    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1, 0
+  },
+
 };
 
 typedef struct {
@@ -1138,7 +1146,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (use_softweave)
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
 			     vertical_passes, vertical_subsample, colormode,
-			     bits, out_width, separation_rows);
+			     bits, out_width, out_height, separation_rows);
   else
     escp2_init_microweave();
       
@@ -2288,8 +2296,9 @@ typedef struct {
   int pass_adjustment;		/* Magical */
   int ncolors;			/* How many colors (1, 4, or 6) */
   int horizontal_width;		/* Line width in output pixels */
+  int vertical_height;		/* Image height in output pixels */
 
-  int bitwidth;		/* Bits per pixel */
+  int bitwidth;			/* Bits per pixel */
   int lineno;
   int vertical_oversample;	/* Vertical oversampling */
   int current_vertical_subpass;
@@ -2315,7 +2324,7 @@ get_color_by_params(int plane, int density)
 static void *
 initialize_weave(int jets, int sep, int osample, int v_subpasses,
 		 int v_subsample, colormode_t colormode, int width,
-		 int linewidth, int separation_rows)
+		 int linewidth, int lineheight, int separation_rows)
 {
   int i;
   int k;
@@ -2335,7 +2344,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
   sw->njets /= sw->oversample;
   sw->vmod = sw->separation * sw->oversample;
   sw->horizontal_weave = osample;
-  sw->pass_adjustment = (osample * sep + jets - 1) / jets;
+  sw->pass_adjustment = (sw->oversample * sep + jets - 1) / jets;
   sw->separation_rows = separation_rows;
 
   sw->weavefactor = (sw->njets + sw->separation - 1) / sw->separation;
@@ -2373,6 +2382,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses,
    */
 
   sw->horizontal_width = (linewidth + 128 + 7) * 129 / 128;
+  sw->vertical_height = lineheight;
   sw->lineoffsets = malloc(sw->vmod * sizeof(lineoff_t) * sw->oversample);
   sw->lineactive = malloc(sw->vmod * sizeof(lineactive_t) * sw->oversample);
   sw->linebases = malloc(sw->vmod * sizeof(linebufs_t) * sw->oversample);
@@ -2489,6 +2499,11 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
     {
       w->jet -= sw->realjets;
       w->pass += sw->vmod;
+    }
+  else if (w->jet < 0)
+    {
+      w->jet += sw->realjets;
+      w->pass -= sw->vmod;
     }
   w->logicalpassstart = w->row - (w->jet * sw->separation);
   if (w->logicalpassstart >= 0)
@@ -2969,6 +2984,13 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.133  2000/04/29 19:44:40  rlk
+ *   Preliminary support for Stylus Color 760
+ *
+ *   Fix one corner case with weave computation (there are lots left!)
+ *
+ *   Prep for 3.1.4
+ *
  *   Revision 1.132  2000/04/26 12:48:26  rlk
  *   Support glossy film
  *

@@ -138,7 +138,7 @@ main(int argc, char **argv)
   memset(physpassstuff, -1, nrows);
 
   sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
-			COLOR_MONOCHROME, 1, 128, 1);
+			COLOR_MONOCHROME, 1, 128, nrows, 1);
   print_header();
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
@@ -208,6 +208,7 @@ main(int argc, char **argv)
 	       i, logpassstarts[i]);
     }
   printf("%d total errors\n", errors);
+  fflush(stdout);
   destroy_weave(sw);
   if (errors > 0)
     return 1;
