@@ -1254,7 +1254,7 @@ create_scaling_frame (void)
                       NULL);
 
   /*
-   * The inch/cm toggles
+   * The units toggles
    */
 
   table = gtk_table_new (2, (unit_count + 1) / 2, FALSE);
