@@ -531,10 +531,10 @@ stpi_xml_process_dither_matrix(mxml_node_t *dm,     /* The dither matrix node */
   int x = -1;
   int y = -1;
 
-  value = mxmlElementGetAttr(dm, "x-aspect");
+  value = stpi_mxmlElementGetAttr(dm, "x-aspect");
   x = stpi_xmlstrtol(value);
 
-  value = mxmlElementGetAttr(dm, "y-aspect");
+  value = stpi_mxmlElementGetAttr(dm, "y-aspect");
   y = stpi_xmlstrtol(value);
 
   if (stpi_debug_level & STPI_DBG_XML)
@@ -552,7 +552,7 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
   int x_aspect, y_aspect; /* Dither matrix size */
 
   /* Get x-size */
-  stmp = mxmlElementGetAttr(dm, "x-aspect");
+  stmp = stpi_mxmlElementGetAttr(dm, "x-aspect");
   if (stmp)
     {
       x_aspect = (int) stpi_xmlstrtoul(stmp);
@@ -563,7 +563,7 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
       goto error;
     }
   /* Get y-size */
-  stmp = mxmlElementGetAttr(dm, "y-aspect");
+  stmp = stpi_mxmlElementGetAttr(dm, "y-aspect");
   if (stmp)
     {
       y_aspect = (int) stpi_xmlstrtoul(stmp);
@@ -575,7 +575,7 @@ stpi_dither_array_create_from_xmltree(mxml_node_t *dm) /* Dither matrix node */
     }
 
   /* Now read in the array */
-  child = mxmlFindElement(dm, dm, "array", NULL, NULL, MXML_DESCEND);
+  child = stpi_mxmlFindElement(dm, dm, "array", NULL, NULL, MXML_DESCEND);
   if (child)
     return stpi_array_create_from_xmltree(child);
   else
@@ -618,7 +618,7 @@ static stp_array_t
 stpi_dither_array_create_from_file(const char* file)
 {
   mxml_node_t *doc;
-  stp_array_t ret;
+  stp_array_t ret = NULL;
 
   FILE *fp = fopen(file, "r");
   if (!fp)
@@ -633,13 +633,13 @@ stpi_dither_array_create_from_file(const char* file)
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_dither_array_create_from_file: reading `%s'...\n", file);
 
-  doc = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
   (void) fclose(fp);
 
   if (doc)
     {
       ret = xml_doc_get_dither_array(doc);
-      mxmlDelete(doc);
+      stpi_mxmlDelete(doc);
     }
 
   stpi_xml_exit();

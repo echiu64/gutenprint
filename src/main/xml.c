@@ -231,7 +231,7 @@ stpi_xml_parse_file(const char *file) /* File to parse */
 
   stpi_xml_init();
 
-  doc = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
+  doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
   fclose(fp);
 
   cur = doc->child;
@@ -243,7 +243,7 @@ stpi_xml_parse_file(const char *file) /* File to parse */
   if (cur == NULL || cur->type != MXML_ELEMENT)
     {
       stpi_erprintf("stp_xml_parse_file: %s: parse error\n", file);
-      mxmlDelete(cur);
+      stpi_mxmlDelete(cur);
       return 1;
     }
 
@@ -252,14 +252,14 @@ stpi_xml_parse_file(const char *file) /* File to parse */
       fprintf(stderr,
 	      "XML file of the wrong type, root node is %s != gimp-print",
 	      cur->value.element.name);
-      mxmlDelete(cur);
+      stpi_mxmlDelete(cur);
       return 1;
     }
 
   /* The XML file was read and is the right format */
 
   stpi_xml_process_gimpprint(cur, file);
-  mxmlDelete(doc);
+  stpi_mxmlDelete(doc);
 
   stpi_xml_exit();
 
@@ -324,7 +324,7 @@ stpi_xml_get_node(mxml_node_t *xmlroot, ...)
 
   while (target && child)
     {
-      child = mxmlFindElement(child, child, target, NULL, NULL, MXML_DESCEND);
+      child = stpi_mxmlFindElement(child, child, target, NULL, NULL, MXML_DESCEND);
       target = va_arg(ap, const char *);
     }
   va_end(ap);
@@ -372,15 +372,15 @@ stpi_xmldoc_create_generic(void)
   mxml_node_t *rootnode;
 
   /* Create the XML tree */
-  doc = mxmlNewElement(NULL, "?xml");
-  mxmlElementSetAttr(doc, "version", "1.0");
+  doc = stpi_mxmlNewElement(NULL, "?xml");
+  stpi_mxmlElementSetAttr(doc, "version", "1.0");
 
-  rootnode = mxmlNewElement(doc, "gimp-print");
-  mxmlElementSetAttr
+  rootnode = stpi_mxmlNewElement(doc, "gimp-print");
+  stpi_mxmlElementSetAttr
     (rootnode, "xmlns", "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0");
-  mxmlElementSetAttr
+  stpi_mxmlElementSetAttr
     (rootnode, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-  mxmlElementSetAttr
+  stpi_mxmlElementSetAttr
     (rootnode, "xsi:schemaLocation",
      "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd");
 

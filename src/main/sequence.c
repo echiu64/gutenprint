@@ -339,46 +339,46 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
   ret = stp_sequence_create();
 
   /* Get curve point count */
-  stmp = mxmlElementGetAttr(da, "count");
+  stmp = stpi_mxmlElementGetAttr(da, "count");
   if (stmp)
     {
       point_count = (size_t) stpi_xmlstrtoul(stmp);
       if ((stpi_xmlstrtol(stmp)) < 0)
 	{
-	  stpi_erprintf("stpi_xmltree_create_from_sequence: \"count\" is less than zero\n");
+	  stpi_erprintf("stpi_sequence_create_from_xmltree: \"count\" is less than zero\n");
 	  goto error;
 	}
     }
   else
     {
-      stpi_erprintf("stpi_xmltree_create_from_sequence: \"count\" missing\n");
+      stpi_erprintf("stpi_sequence_create_from_xmltree: \"count\" missing\n");
       goto error;
     }
   /* Get lower bound */
-  stmp = mxmlElementGetAttr(da, "lower-bound");
+  stmp = stpi_mxmlElementGetAttr(da, "lower-bound");
   if (stmp)
     {
       low = stpi_xmlstrtod(stmp);
     }
   else
     {
-      stpi_erprintf("stpi_xmltree_create_from_sequence: \"lower-bound\" missing\n");
+      stpi_erprintf("stpi_sequence_create_from_xmltree: \"lower-bound\" missing\n");
       goto error;
     }
   /* Get upper bound */
-  stmp = mxmlElementGetAttr(da, "upper-bound");
+  stmp = stpi_mxmlElementGetAttr(da, "upper-bound");
   if (stmp)
     {
       high = stpi_xmlstrtod(stmp);
     }
   else
     {
-      stpi_erprintf("stpi_xmltree_create_from_sequence: \"upper-bound\" missing\n");
+      stpi_erprintf("stpi_sequence_create_from_xmltree: \"upper-bound\" missing\n");
       goto error;
     }
 
   if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stpi_xmltree_create_from_sequence: stp_sequence_set_size: %d\n",
+    stpi_erprintf("stpi_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
 		  point_count);
   stp_sequence_set_size(ret, point_count);
   stp_sequence_set_bounds(ret, low, high);
@@ -397,7 +397,7 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 	      if (endptr == child->value.text.string)
 		{
 		  stpi_erprintf
-		    ("stpi_xmltree_create_from_sequence: bad data %s\n",
+		    ("stpi_sequence_create_from_xmltree: bad data %s\n",
 		     child->value.text.string);
 		  goto error;
 		}
@@ -406,7 +406,7 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 		  || tmpval < low
 		  || tmpval > high)
 		{
-		  stpi_erprintf("stpi_xmltree_create_from_sequence: "
+		  stpi_erprintf("stpi_sequence_create_from_xmltree: "
 				"read aborted: datum out of bounds: "
 				"%g (require %g <= x <= %g), n = %d\n",
 				tmpval, low, high, i);
@@ -420,7 +420,7 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 	}
       if (i < point_count)
 	{
-	  stpi_erprintf("stpi_xmltree_create_from_sequence: "
+	  stpi_erprintf("stpi_sequence_create_from_xmltree: "
 			"read aborted: too little data "
 			"(n=%d, needed %d)\n", i, point_count);
 	  goto error;
@@ -430,7 +430,7 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
   return ret;
 
  error:
-  stpi_erprintf("stpi_xmltree_create_from_sequence: error during sequence read\n");
+  stpi_erprintf("stpi_sequence_create_from_xmltree: error during sequence read\n");
   if (ret)
     stp_sequence_destroy(ret);
   return NULL;
@@ -459,10 +459,10 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
   stpi_asprintf(&lower_bound, "%g", low);
   stpi_asprintf(&upper_bound, "%g", high);
 
-  seqnode = mxmlNewElement(NULL, "sequence");
-  (void) mxmlElementSetAttr(seqnode, "count", count);
-  (void) mxmlElementSetAttr(seqnode, "lower-bound", lower_bound);
-  (void) mxmlElementSetAttr(seqnode, "upper-bound", upper_bound);
+  seqnode = stpi_mxmlNewElement(NULL, "sequence");
+  (void) stpi_mxmlElementSetAttr(seqnode, "count", count);
+  (void) stpi_mxmlElementSetAttr(seqnode, "lower-bound", lower_bound);
+  (void) stpi_mxmlElementSetAttr(seqnode, "upper-bound", upper_bound);
 
   stpi_free(count);
   stpi_free(lower_bound);
@@ -480,7 +480,7 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 	    goto error;
 
 	  stpi_asprintf(&sval, "%g", dval);
-	  mxmlNewText(seqnode, 1, sval);
+	  stpi_mxmlNewText(seqnode, 1, sval);
 	  stpi_free(sval);
       }
     }
@@ -488,7 +488,7 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 
  error:
   if (seqnode)
-    mxmlDelete(seqnode);
+    stpi_mxmlDelete(seqnode);
   return NULL;
 }
 

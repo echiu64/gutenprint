@@ -17,14 +17,14 @@
  *
  * Contents:
  *
- *   mxmlAdd()        - Add a node to a tree.
- *   mxmlDelete()     - Delete a node and all of its children.
- *   mxmlNewElement() - Create a new element node.
- *   mxmlNewInteger() - Create a new integer node.
- *   mxmlNewOpaque()  - Create a new opaque string.
- *   mxmlNewReal()    - Create a new real number node.
- *   mxmlNewText()    - Create a new text fragment node.
- *   mxmlRemove()     - Remove a node from its parent.
+ *   stpi_mxmlAdd()        - Add a node to a tree.
+ *   stpi_mxmlDelete()     - Delete a node and all of its children.
+ *   stpi_mxmlNewElement() - Create a new element node.
+ *   stpi_mxmlNewInteger() - Create a new integer node.
+ *   stpi_mxmlNewOpaque()  - Create a new opaque string.
+ *   stpi_mxmlNewReal()    - Create a new real number node.
+ *   stpi_mxmlNewText()    - Create a new text fragment node.
+ *   stpi_mxmlRemove()     - Remove a node from its parent.
  *   mxml_new()       - Create a new node.
  */
 
@@ -43,7 +43,7 @@ static mxml_node_t	*mxml_new(mxml_node_t *parent, mxml_type_t type);
 
 
 /*
- * 'mxmlAdd()' - Add a node to a tree.
+ * 'stpi_mxmlAdd()' - Add a node to a tree.
  *
  * Adds the specified node to the parent. If the child argument is not
  * NULL, puts the new node before or after the specified child depending
@@ -54,12 +54,12 @@ static mxml_node_t	*mxml_new(mxml_node_t *parent, mxml_type_t type);
  */
 
 void
-mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
+stpi_mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
         int         where,		/* I - Where to add, MXML_ADD_BEFORE or MXML_ADD_AFTER */
         mxml_node_t *child,		/* I - Child node for where or MXML_ADD_TO_PARENT */
 	mxml_node_t *node)		/* I - Node to add */
 {
-/*  fprintf(stderr, "mxmlAdd(parent=%p, where=%d, child=%p, node=%p)\n", parent,
+/*  fprintf(stderr, "stpi_mxmlAdd(parent=%p, where=%d, child=%p, node=%p)\n", parent,
          where, child, node);*/
 
  /*
@@ -74,7 +74,7 @@ mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
   */
 
   if (node->parent)
-    mxmlRemove(node);
+    stpi_mxmlRemove(node);
 
  /*
   * Reset pointers...
@@ -157,19 +157,19 @@ mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
 
 
 /*
- * 'mxmlDelete()' - Delete a node and all of its children.
+ * 'stpi_mxmlDelete()' - Delete a node and all of its children.
  *
  * If the specified node has a parent, this function first removes the
- * node from its parent using the mxmlRemove() function.
+ * node from its parent using the stpi_mxmlRemove() function.
  */
 
 void
-mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
+stpi_mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
 {
   int	i;				/* Looping var */
 
 
-/*  fprintf(stderr, "mxmlDelete(node=%p)\n", node);*/
+/*  fprintf(stderr, "stpi_mxmlDelete(node=%p)\n", node);*/
 
  /*
   * Range check input...
@@ -182,14 +182,14 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
   * Remove the node from its parent, if any...
   */
 
-  mxmlRemove(node);
+  stpi_mxmlRemove(node);
 
  /*
   * Delete children...
   */
 
   while (node->child)
-    mxmlDelete(node->child);
+    stpi_mxmlDelete(node->child);
 
  /*
   * Now delete any node data...
@@ -239,7 +239,7 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
 
 
 /*
- * 'mxmlNewElement()' - Create a new element node.
+ * 'stpi_mxmlNewElement()' - Create a new element node.
  *
  * The new element node is added to the end of the specified parent's child
  * list. The constant MXML_NO_PARENT can be used to specify that the new
@@ -247,7 +247,7 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
  */
 
 mxml_node_t *				/* O - New node */
-mxmlNewElement(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
+stpi_mxmlNewElement(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
                const char  *name)	/* I - Name of element */
 {
   mxml_node_t	*node;			/* New node */
@@ -272,7 +272,7 @@ mxmlNewElement(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
 
 
 /*
- * 'mxmlNewInteger()' - Create a new integer node.
+ * 'stpi_mxmlNewInteger()' - Create a new integer node.
  *
  * The new integer node is added to the end of the specified parent's child
  * list. The constant MXML_NO_PARENT can be used to specify that the new
@@ -280,7 +280,7 @@ mxmlNewElement(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
  */
 
 mxml_node_t *				/* O - New node */
-mxmlNewInteger(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
+stpi_mxmlNewInteger(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
                int         integer)	/* I - Integer value */
 {
   mxml_node_t	*node;			/* New node */
@@ -305,7 +305,7 @@ mxmlNewInteger(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
 
 
 /*
- * 'mxmlNewOpaque()' - Create a new opaque string.
+ * 'stpi_mxmlNewOpaque()' - Create a new opaque string.
  *
  * The new opaque node is added to the end of the specified parent's child
  * list. The constant MXML_NO_PARENT can be used to specify that the new
@@ -314,7 +314,7 @@ mxmlNewInteger(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
  */
 
 mxml_node_t *				/* O - New node */
-mxmlNewOpaque(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
+stpi_mxmlNewOpaque(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
               const char  *opaque)	/* I - Opaque string */
 {
   mxml_node_t	*node;			/* New node */
@@ -339,7 +339,7 @@ mxmlNewOpaque(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
 
 
 /*
- * 'mxmlNewReal()' - Create a new real number node.
+ * 'stpi_mxmlNewReal()' - Create a new real number node.
  *
  * The new real number node is added to the end of the specified parent's
  * child list. The constant MXML_NO_PARENT can be used to specify that
@@ -347,7 +347,7 @@ mxmlNewOpaque(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
  */
 
 mxml_node_t *				/* O - New node */
-mxmlNewReal(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
+stpi_mxmlNewReal(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
             double      real)		/* I - Real number value */
 {
   mxml_node_t	*node;			/* New node */
@@ -372,7 +372,7 @@ mxmlNewReal(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
 
 
 /*
- * 'mxmlNewText()' - Create a new text fragment node.
+ * 'stpi_mxmlNewText()' - Create a new text fragment node.
  *
  * The new text node is added to the end of the specified parent's child
  * list. The constant MXML_NO_PARENT can be used to specify that the new
@@ -382,7 +382,7 @@ mxmlNewReal(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
  */
 
 mxml_node_t *				/* O - New node */
-mxmlNewText(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
+stpi_mxmlNewText(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
             int         whitespace,	/* I - 1 = leading whitespace, 0 = no whitespace */
 	    const char  *string)	/* I - String */
 {
@@ -411,20 +411,20 @@ mxmlNewText(mxml_node_t *parent,	/* I - Parent node or MXML_NO_PARENT */
 
 
 /*
- * 'mxmlRemove()' - Remove a node from its parent.
+ * 'stpi_mxmlRemove()' - Remove a node from its parent.
  *
- * Does not free memory used by the node - use mxmlDelete() for that.
+ * Does not free memory used by the node - use stpi_mxmlDelete() for that.
  * This function does nothing if the node has no parent.
  */
 
 void
-mxmlRemove(mxml_node_t *node)		/* I - Node to remove */
+stpi_mxmlRemove(mxml_node_t *node)		/* I - Node to remove */
 {
  /*
   * Range check input...
   */
 
-/*  fprintf(stderr, "mxmlRemove(node=%p)\n", node);*/
+/*  fprintf(stderr, "stpi_mxmlRemove(node=%p)\n", node);*/
 
   if (!node || !node->parent)
     return;
@@ -478,7 +478,7 @@ mxml_new(mxml_node_t *parent,		/* I - Parent node */
   */
 
   if (parent)
-    mxmlAdd(parent, MXML_ADD_AFTER, MXML_ADD_TO_PARENT, node);
+    stpi_mxmlAdd(parent, MXML_ADD_AFTER, MXML_ADD_TO_PARENT, node);
 
  /*
   * Return the new node...

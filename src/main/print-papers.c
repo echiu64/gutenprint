@@ -280,7 +280,7 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
 
   if (stpi_debug_level & STPI_DBG_XML)
     {
-      stmp = mxmlElementGetAttr(paper, (const char*) "name");
+      stmp = stpi_mxmlElementGetAttr(paper, (const char*) "name");
       stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);
     }
 
@@ -288,7 +288,7 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
   if (!outpaper)
     return NULL;
 
-  outpaper->name = stpi_strdup(mxmlElementGetAttr(paper, "name"));
+  outpaper->name = stpi_strdup(stpi_mxmlElementGetAttr(paper, "name"));
 
   outpaper->top = 0;
   outpaper->left = 0;
@@ -306,14 +306,14 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
       
 	  if (!strcmp(prop_name, "description"))
 	    {
-	      outpaper->text = stpi_strdup(mxmlElementGetAttr(prop, "value"));
+	      outpaper->text = stpi_strdup(stpi_mxmlElementGetAttr(prop, "value"));
 	      name = 1;
 	    }
 	  if (!strcmp(prop_name, "comment"))
-	    outpaper->comment = stpi_strdup(mxmlElementGetAttr(prop, "value"));
+	    outpaper->comment = stpi_strdup(stpi_mxmlElementGetAttr(prop, "value"));
 	  if (!strcmp(prop_name, "width"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  outpaper->width = stpi_xmlstrtoul(stmp);
@@ -322,7 +322,7 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
 	    }
 	  if (!strcmp(prop_name, "height"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  outpaper->height = stpi_xmlstrtoul(stmp);
@@ -331,31 +331,31 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
 	    }
 	  if (!strcmp(prop_name, "left"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      outpaper->left = stpi_xmlstrtoul(stmp);
 	      left = 1;
 	    }
 	  if (!strcmp(prop_name, "right"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      outpaper->right = stpi_xmlstrtoul(stmp);
 	      right = 1;
 	    }
 	  if (!strcmp(prop_name, "bottom"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      outpaper->bottom = stpi_xmlstrtoul(stmp);
 	      bottom = 1;
 	    }
 	  if (!strcmp(prop_name, "top"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      outpaper->top = stpi_xmlstrtoul(stmp);
 	      top = 1;
 	    }
 	  if (!strcmp(prop_name, "unit"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  if (!strcmp(stmp, "english"))

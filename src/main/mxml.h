@@ -38,7 +38,7 @@
  * Constants...
  */
 
-#  define MXML_WRAP		72	/* Wrap XML output at this column position */
+#  define MXML_WRAP		70	/* Wrap XML output at this column position */
 #  define MXML_TAB		8	/* Tabs every N columns */
 
 #  define MXML_NO_CALLBACK	0	/* Don't use a type callback */
@@ -125,29 +125,29 @@ extern "C" {
  * Prototypes...
  */
 
-extern void		mxmlAdd(mxml_node_t *parent, int where,
+extern void		stpi_mxmlAdd(mxml_node_t *parent, int where,
 			        mxml_node_t *child, mxml_node_t *node);
-extern void		mxmlDelete(mxml_node_t *node);
-extern const char	*mxmlElementGetAttr(mxml_node_t *node, const char *name);
-extern void		mxmlElementSetAttr(mxml_node_t *node, const char *name,
+extern void		stpi_mxmlDelete(mxml_node_t *node);
+extern const char	*stpi_mxmlElementGetAttr(mxml_node_t *node, const char *name);
+extern void		stpi_mxmlElementSetAttr(mxml_node_t *node, const char *name,
 			                   const char *value);
-extern mxml_node_t	*mxmlFindElement(mxml_node_t *node, mxml_node_t *top,
+extern mxml_node_t	*stpi_mxmlFindElement(mxml_node_t *node, mxml_node_t *top,
 			                 const char *name, const char *attr,
 					 const char *value, int descend);
-extern mxml_node_t	*mxmlLoadFile(mxml_node_t *top, FILE *fp,
+extern mxml_node_t	*stpi_mxmlLoadFile(mxml_node_t *top, FILE *fp,
 			              mxml_type_t (*cb)(mxml_node_t *));
-extern mxml_node_t	*mxmlNewElement(mxml_node_t *parent, const char *name);
-extern mxml_node_t	*mxmlNewInteger(mxml_node_t *parent, int integer);
-extern mxml_node_t	*mxmlNewOpaque(mxml_node_t *parent, const char *opaque);
-extern mxml_node_t	*mxmlNewReal(mxml_node_t *parent, double real);
-extern mxml_node_t	*mxmlNewText(mxml_node_t *parent, int whitespace,
+extern mxml_node_t	*stpi_mxmlNewElement(mxml_node_t *parent, const char *name);
+extern mxml_node_t	*stpi_mxmlNewInteger(mxml_node_t *parent, int integer);
+extern mxml_node_t	*stpi_mxmlNewOpaque(mxml_node_t *parent, const char *opaque);
+extern mxml_node_t	*stpi_mxmlNewReal(mxml_node_t *parent, double real);
+extern mxml_node_t	*stpi_mxmlNewText(mxml_node_t *parent, int whitespace,
 			             const char *string);
-extern void		mxmlRemove(mxml_node_t *node);
-extern int		mxmlSaveFile(mxml_node_t *node, FILE *fp,
+extern void		stpi_mxmlRemove(mxml_node_t *node);
+extern int		stpi_mxmlSaveFile(mxml_node_t *node, FILE *fp,
 			             int (*cb)(mxml_node_t *, int));
-extern mxml_node_t	*mxmlWalkNext(mxml_node_t *node, mxml_node_t *top,
+extern mxml_node_t	*stpi_mxmlWalkNext(mxml_node_t *node, mxml_node_t *top,
 			              int descend);
-extern mxml_node_t	*mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top,
+extern mxml_node_t	*stpi_mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top,
 			              int descend);
 
 

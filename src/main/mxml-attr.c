@@ -17,8 +17,8 @@
  *
  * Contents:
  *
- *   mxmlElementGetAttr() - Get an attribute.
- *   mxmlElementSetAttr() - Set an attribute.
+ *   stpi_mxmlElementGetAttr() - Get an attribute.
+ *   stpi_mxmlElementSetAttr() - Set an attribute.
  */
 
 /*
@@ -29,14 +29,14 @@
 
 
 /*
- * 'mxmlElementGetAttr()' - Get an attribute.
+ * 'stpi_mxmlElementGetAttr()' - Get an attribute.
  *
  * This function returns NULL if the node is not an element or the
  * named attribute does not exist.
  */
 
 const char *				/* O - Attribute value or NULL */
-mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
+stpi_mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
                    const char  *name)	/* I - Name of attribute */
 {
   int	i;				/* Looping var */
@@ -69,7 +69,7 @@ mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
 
 
 /*
- * 'mxmlElementSetAttr()' - Set an attribute.
+ * 'stpi_mxmlElementSetAttr()' - Set an attribute.
  *
  * If the named attribute already exists, the value of the attribute
  * is replaced by the new string value. The string value is copied
@@ -78,7 +78,7 @@ mxmlElementGetAttr(mxml_node_t *node,	/* I - Element node */
  */
 
 void
-mxmlElementSetAttr(mxml_node_t *node,	/* I - Element node */
+stpi_mxmlElementSetAttr(mxml_node_t *node,	/* I - Element node */
                    const char  *name,	/* I - Name of attribute */
                    const char  *value)	/* I - Attribute value */
 {

@@ -821,10 +821,10 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 
   outprinter->cookie = COOKIE_PRINTER;
 
-  stmp = mxmlElementGetAttr(printer, "driver");
+  stmp = stpi_mxmlElementGetAttr(printer, "driver");
   stp_set_driver(outprinter->printvars, (const char *) stmp);
 
-  outprinter->long_name = stpi_strdup(mxmlElementGetAttr(printer, "name"));
+  outprinter->long_name = stpi_strdup(stpi_mxmlElementGetAttr(printer, "name"));
   outprinter->family = stpi_strdup((const char *) family);
 
   if (stp_get_driver(outprinter->printvars))
@@ -842,7 +842,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 	  const char *prop_name = prop->value.element.name;
 	  if (!strcmp(prop_name, "color"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  if (!strcmp(stmp, "true"))
@@ -854,7 +854,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 	    }
 	  else if (!strcmp(prop_name, "model"))
 	    {
-	      stmp = mxmlElementGetAttr(prop, "value");
+	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
 		  outprinter->model = stpi_xmlstrtol(stmp);
@@ -868,7 +868,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 		{
 		  if (!strcmp(prop_name, stp_prop->property))
 		    {
-		      stmp = mxmlElementGetAttr(prop, "value");
+		      stmp = stpi_mxmlElementGetAttr(prop, "value");
 		      if (stmp)
 			{
 			  stp_set_float_parameter(outprinter->printvars,
@@ -887,7 +887,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
     {
       if (stpi_debug_level & STPI_DBG_XML)
 	{
-	  stmp = mxmlElementGetAttr(printer, "driver");
+	  stmp = stpi_mxmlElementGetAttr(printer, "driver");
 	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
 	}
       outprinter->driver = stp_get_driver(outprinter->printvars);
@@ -916,7 +916,7 @@ stpi_xml_process_family(mxml_node_t *family)     /* The family node */
   if (!family_module_list)
     return;
 
-  family_name = mxmlElementGetAttr(family, "name");
+  family_name = stpi_mxmlElementGetAttr(family, "name");
   family_module_item = stpi_list_get_start(family_module_list);
   while (family_module_item)
     {

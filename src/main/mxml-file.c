@@ -17,8 +17,8 @@
  *
  * Contents:
  *
- *   mxmlLoadFile()       - Load a file into an XML node tree.
- *   mxmlSaveFile()       - Save an XML tree to a file.
+ *   stpi_mxmlLoadFile()       - Load a file into an XML node tree.
+ *   stpi_mxmlSaveFile()       - Save an XML tree to a file.
  *   mxml_parse_element() - Parse an element for any attributes...
  *   mxml_write_node()    - Save an XML node to a file.
  *   mxml_write_string()  - Write a string, escaping & and < as needed.
@@ -45,7 +45,7 @@ static int	mxml_write_ws(mxml_node_t *node, FILE *fp,
 
 
 /*
- * 'mxmlLoadFile()' - Load a file into an XML node tree.
+ * 'stpi_mxmlLoadFile()' - Load a file into an XML node tree.
  *
  * The nodes in the specified file are added to the specified top node.
  * If no top node is provided, the XML file MUST be well-formed with a
@@ -56,7 +56,7 @@ static int	mxml_write_ws(mxml_node_t *node, FILE *fp,
  */
 
 mxml_node_t *				/* O - First node or NULL if the file could not be read. */
-mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
+stpi_mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
              FILE        *fp,		/* I - File to read from */
              mxml_type_t (*cb)(mxml_node_t *))
 					/* I - Callback function or MXML_NO_CALLBACK */
@@ -96,19 +96,19 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
       switch (type)
       {
 	case MXML_INTEGER :
-            node = mxmlNewInteger(parent, strtol(buffer, &bufptr, 0));
+            node = stpi_mxmlNewInteger(parent, strtol(buffer, &bufptr, 0));
 	    break;
 
 	case MXML_OPAQUE :
-            node = mxmlNewOpaque(parent, buffer);
+            node = stpi_mxmlNewOpaque(parent, buffer);
 	    break;
 
 	case MXML_REAL :
-            node = mxmlNewReal(parent, strtod(buffer, &bufptr));
+            node = stpi_mxmlNewReal(parent, strtod(buffer, &bufptr));
 	    break;
 
 	case MXML_TEXT :
-            node = mxmlNewText(parent, whitespace, buffer);
+            node = stpi_mxmlNewText(parent, whitespace, buffer);
 	    break;
 
         default : /* Should never happen... */
@@ -162,7 +162,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
 
       if (ch != '/')
       {
-	mxmlNewText(parent, whitespace, "");
+	stpi_mxmlNewText(parent, whitespace, "");
 	whitespace = 0;
       }
 
@@ -224,7 +224,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
 
 	*bufptr = '\0';
 
-	if (!mxmlNewElement(parent, buffer))
+	if (!stpi_mxmlNewElement(parent, buffer))
 	{
 	 /*
 	  * Just print error for now...
@@ -269,7 +269,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
 
 	*bufptr = '\0';
 
-	node = mxmlNewElement(parent, buffer);
+	node = stpi_mxmlNewElement(parent, buffer);
 	if (!node)
 	{
 	 /*
@@ -329,7 +329,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
         * Handle open tag...
 	*/
 
-        node = mxmlNewElement(parent, buffer);
+        node = stpi_mxmlNewElement(parent, buffer);
 
 	if (!node)
 	{
@@ -515,7 +515,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
 
 
 /*
- * 'mxmlSaveFile()' - Save an XML tree to a file.
+ * 'stpi_mxmlSaveFile()' - Save an XML tree to a file.
  *
  * The callback argument specifies a function that returns a whitespace
  * character or nul (0) before and after each element. If MXML_NO_CALLBACK
@@ -525,7 +525,7 @@ mxmlLoadFile(mxml_node_t *top,		/* I - Top node */
  */
 
 int					/* O - 0 on success, -1 on error. */
-mxmlSaveFile(mxml_node_t *node,		/* I - Node to write */
+stpi_mxmlSaveFile(mxml_node_t *node,		/* I - Node to write */
              FILE        *fp,		/* I - File to write to */
 	     int         (*cb)(mxml_node_t *, int))
 					/* I - Whitespace callback or MXML_NO_CALLBACK */
@@ -699,7 +699,7 @@ mxml_parse_element(mxml_node_t *node,	/* I - Element node */
     * Set the attribute...
     */
 
-    mxmlElementSetAttr(node, name, value);
+    stpi_mxmlElementSetAttr(node, name, value);
   }
 
   return (ch);
