@@ -62,19 +62,19 @@ issue this command and notice the output.
   <![ CDATA [
 # escputil -r /dev/usb/lp0 -i
 
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it
-under certain conditions; type 'escputil -l' for details.
+This is free software, and you are welcome to redistribute it under
+certain conditions; type 'escputil -l' for details. 
 
-      Ink color    Percent remaining
-          Black     24
-           Cyan     73
-        Magenta     72
-         Yellow     69
-     Light Cyan     73
-  Light Magenta     72
+           Ink color    Percent remaining
+               Black     18
+                Cyan     71
+             Magenta     70
+              Yellow     67
+          Light Cyan     71
+       Light Magenta     70
     ]]>
   </programlisting>
 
@@ -101,15 +101,21 @@ response from <emphasis>escputil</emphasis>.
   <![ CDATA [
 # escputil -r /dev/lp0 -i
 
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
-'escputil -l' 
-This is free software, and you are welcome to redistribute it
-under certain conditions; type 'escputil -l' for details.
+'escputil -l'
+This is free software, and you are welcome to redistribute it under
+certain conditions; type 'escputil -l' for details.
 
 Cannot read from /dev/lp0: Invalid argument
     ]]>
   </programlisting>
+
+   <para>
+     Another possibile cause for error is that the raw printer device
+does not have both read and write permission for the user attempting
+to access the device.  
+   </para>
 
    </sect2>
 
@@ -131,11 +137,11 @@ of the desired printer.
   <programlisting>
   <![ CDATA [
 # escputil -n       
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it
-under certain conditions; type 'escputil -l' for details.
+This is free software, and you are welcome to redistribute it under
+certain conditions; type 'escputil -l' for details. 
 
 Running nozzle check, please ensure paper is in the printer.
     ]]>
@@ -167,11 +173,11 @@ of the desired printer.
   <programlisting>
   <![ CDATA [
 # escputil -c
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it
-under certain conditions; type 'escputil -l' for details.
+This is free software, and you are welcome to redistribute it under
+certain conditions; type 'escputil -l' for details. 
 
 Cleaning heads...
     ]]>
@@ -228,9 +234,8 @@ entire risk of using this utility lies with you.
      <para>
        Aligning the print head is an interactive process.  The utility
 will print out a set of instructions and ask you for responses.  Please
-read the instructions carefully and follow them precisely.  Several
-sheets of paper will be needed (or one may choose to use both sides of
-a page by putting a used page back into the input paper tray).
+read the instructions carefully and follow them precisely.  A single
+sheet of paper will be needed (one can print on both sides to save paper).
      </para>
      <para>
 The following example illustrates the alignment process when issued by an
@@ -248,9 +253,9 @@ substituted for the responses shown in the following example.
 *** supported printer models!              ***
 
 linuxpc> escputil -a -m 870
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
-'escputil -l' 
+'escputil -l'
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'escputil -l' for details.
 
@@ -261,7 +266,7 @@ printer.  Misuse of this utility may cause your print quality to
 degrade and possibly damage your printer.  This utility has not been
 reviewed by Seiko Epson for correctness, and is offered with no
 warranty at all.  The entire risk of using this utility lies with
-you. 
+you.
 
 This utility prints 3 test patterns.  Each pattern looks very
 similar.  The patterns consist of a series of pairs of vertical lines
@@ -280,7 +285,7 @@ Each pattern is similar, but later patterns use finer dots for more
 critical alignment.  You must run all of the passes to correctly align
 your printer.  After running all the alignment passes, the alignment
 patterns will be printed once more.  You should find that the
-middle-most pair (#8 out of the 15) is the best for all patterns.
+middle-most pair (#8 out of the 15) is the best for all patterns. 
 
 After the passes are printed once more, you will be offered the
 choices of (s)aving the result in the printer, (r)epeating the
@@ -288,30 +293,26 @@ process, or (q)uitting without saving.  Quitting will not restore the
 previous settings, but powering the printer off and back on will.  If
 you quit, you must repeat the entire process if you wish to later save
 the results.  It is essential that you not turn your printer off
-during this procedure. 
+during this procedure.
 
 This procedure assumes that your printer is an Epson Stylus Photo
-870. If this is not your printer model, please type control-C now and
-choose your actual printer model. 
+870.  If this is not your printer model, please type control-C now and
+choose your actual printer model.
 
 Please place a sheet of paper in your printer to begin the head
 alignment procedure. 
-Press enter to continue >
-Please inspect the print, and choose the best pair of lines in pattern
-#1, and then reinsert the page in the input tray.  Type a pair number,
-'?' for help, or 'r' to retry this pattern. 
-> 8
-Aligning phase 1, and starting phase 2.
-Please inspect the print, and choose the best pair of lines in pattern
-#2, and then reinsert the page in the input tray.  Type a pair number,
-'?' for help, or 'r' to retry this pattern. 
-> 8
-Aligning phase 2, and starting phase 3.
-Please inspect the print, and choose the best pair of lines in pattern
-#3, and then insert a fresh page in the input tray.  Type a pair
-number, '?' for help, or 'r' to retry this pattern. 
-> 8
-Aligning phase 3, and performing final test.
+Press enter to continue > 
+Please inspect the print, and choose the best pair of lines in each
+pattern.  Type a pair number, '?' for help, or 'r' to repeat the
+procedure.
+Pass #1> 8
+Pass #2> 8
+Pass #3> 8
+Attempting to set alignment...succeeded.
+Please verify that the alignment is correct.  After the alignment
+pattern is printed again, please ensure that the best pattern for each
+line is pattern 8.  If it is not, you should repeat the process to get
+the best quality printing. 
 Please insert a fresh sheet of paper.
 Press enter to continue > 
 Please inspect the final output very carefully to ensure that your
@@ -324,12 +325,12 @@ What do you want to do (s, q, r)?
 > s
 This will permanently alter the configuration of your printer.
 WARNING: this procedure has not been approved by Seiko Epson, and it
-may damage your printer. Proceed? Please confirm by typing 's' again
-that you wish to save the settings to your printer:
+may damage your printer. Proceed? 
+Please confirm by typing 's' again that you wish to save the settings
+to your printer: 
 > s
-Please insert your alignment test page in the printer once more for
-the final save of your alignment settings.  When the printer feeds the
-page through, your settings have been saved.
+About to save settings...succeeded!
+Your alignment settings have been saved to the printer.
     ]]>
   </programlisting>
     <para>
@@ -362,9 +363,8 @@ detection output.
   <programlisting>
   <![ CDATA [
 # escputil -a -r /dev/usb/lp0
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
-Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
-'escputil -l'
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'escputil -l' for details.
 
@@ -389,9 +389,8 @@ printer model.
   <programlisting>
   <![ CDATA [
 # escputil -d -r /dev/usb/lp0
-Escputil version 4.2.0, Copyright (C) 2000-2001 Robert Krawitz
-Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
-'escputil -l'
+Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
+Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'escputil -l' for details.
 

@@ -280,6 +280,6 @@ help:
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
 
-EXTRA_DIST = README $(MANUAL).sgml html-stamp
+EXTRA_DIST = README $(MANUAL_SRC_FILES) html-stamp
 
 .PHONY: docs html ps pdf help
