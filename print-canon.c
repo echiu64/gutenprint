@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.20  2000/02/10 00:28:32  rlk
+ *   Fix landscape vs. portrait problem
+ *
  *   Revision 1.19  2000/02/09 02:56:27  rlk
  *   Put lut inside vars
  *
@@ -1058,8 +1061,6 @@ canon_print(int       model,		/* I - Model */
   if (black)    fputc('K',stderr);
   fprintf(stderr,"\n");
 
-  dither = init_dither(image_width, out_width, 1);
-
   if (use_dmt) {
     if (cyan)     dither_set_c_levels(dither,4,the_levels);
     if (lcyan)    dither_set_lc_levels(dither,4,the_levels);
@@ -1075,6 +1076,7 @@ canon_print(int       model,		/* I - Model */
   */
 
   if (landscape) {
+    dither = init_dither(image_height, out_width, 1);
     in  = malloc(image_height * image_bpp);
     out = malloc(image_height * out_bpp * 2);
 
@@ -1141,6 +1143,7 @@ canon_print(int       model,		/* I - Model */
   } 
   else /* portrait */
   {
+    dither = init_dither(image_width, out_width, 1);
     in  = malloc(image_width * image_bpp);
     out = malloc(image_width * out_bpp * 2);
 
