@@ -1413,19 +1413,19 @@ const static papersize_t paper_sizes[] =
    * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
    * size is obtained by doubling or halving another A size.
    */
-  { "4A",       4760, 6736, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
-  { "2A",       3368, 4760, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
-  { "A0",       2380, 3368, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
-  { "A1",       1684, 2380, PAPERSIZE_METRIC },	/*  594mm x  841mm */
-  { "A2",       1190, 1684, PAPERSIZE_METRIC },	/*  420mm x  594mm */
-  { "A3",        842, 1190, PAPERSIZE_METRIC },	/*  297mm x  420mm */
+  { "4A",       4768, 6849, PAPERSIZE_METRIC },	/* 1682mm x 2378mm */
+  { "2A",       3370, 4768, PAPERSIZE_METRIC },	/* 1189mm x 1682mm */
+  { "A0",       2384, 3370, PAPERSIZE_METRIC },	/*  841mm x 1189mm */
+  { "A1",       1684, 2384, PAPERSIZE_METRIC },	/*  594mm x  841mm */
+  { "A2",       1191, 1684, PAPERSIZE_METRIC },	/*  420mm x  594mm */
+  { "A3",        842, 1191, PAPERSIZE_METRIC },	/*  297mm x  420mm */
   { "A4",        595,  842, PAPERSIZE_METRIC },	/*  210mm x  297mm */
-  { "A5",        421,  595, PAPERSIZE_METRIC },	/*  148mm x  210mm */
-  { "A6",        297,  421, PAPERSIZE_METRIC },	/*  105mm x  148mm */
-  { "A7",        209,  297, PAPERSIZE_METRIC },	/*   74mm x  105mm */
-  { "A8",        147,  209, PAPERSIZE_METRIC },	/*   52mm x   74mm */
-  { "A9",        104,  147, PAPERSIZE_METRIC },	/*   37mm x   52mm */
-  { "A10",        73,  104, PAPERSIZE_METRIC },	/*   26mm x   37mm */
+  { "A5",        420,  595, PAPERSIZE_METRIC },	/*  148mm x  210mm */
+  { "A6",        297,  420, PAPERSIZE_METRIC },	/*  105mm x  148mm */
+  { "A7",        210,  297, PAPERSIZE_METRIC },	/*   74mm x  105mm */
+  { "A8",        148,  210, PAPERSIZE_METRIC },	/*   52mm x   74mm */
+  { "A9",        105,  148, PAPERSIZE_METRIC },	/*   37mm x   52mm */
+  { "A10",        73,  105, PAPERSIZE_METRIC },	/*   26mm x   37mm */
 
   /*
    * Stock sizes for normal trims.
