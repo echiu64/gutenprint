@@ -68,7 +68,7 @@ GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 	debian-patch debian-patch-stp $(addprefix gdevstp-, $(GCOPY))
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
-	README.dither quickmatrix257.h make-deb.sh README.escp2 \
+	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST))
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
