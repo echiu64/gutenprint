@@ -44,7 +44,6 @@
 #include <libgimp/gimpui.h>
 
 #include <gimp-print.h>
-#include <gimp-print-internal.h>
 
 /*
  * All Gimp-specific code is in this file.
