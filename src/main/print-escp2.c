@@ -445,8 +445,7 @@ static const escp2_variable_ink_t standard_3pl_1440_ink =
 
 static const stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
 {
-  { 1.0,   0x1, 1, 1 },
-  { 3.0,   0x2, 1, 2 }
+  { 1.0,   0x1, 1, 1 }
 };
 
 static const escp2_variable_ink_t standard_3pl_2880_ink =
