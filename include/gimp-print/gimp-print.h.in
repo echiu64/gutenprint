@@ -570,6 +570,24 @@ extern int stp_curve_set_data(stp_curve_t curve, size_t count,
 			      const double *data);
 
 /*
+ * Return a curve containing a subrange of data from the source curve.
+ * If the start or count is invalid, the returned curve will compare equal
+ * to NULL (i. e. it will be a null pointer).  start + count must not exceed
+ * the number of points in the curve, and count must be at least 2.
+ * The return curve is a non-wrapping curve.
+ */
+extern stp_curve_t stp_curve_get_subrange(const stp_curve_t curve,
+					  size_t start, size_t count);
+
+/*
+ * Set part of a curve to the range in the second curve.  The data in the
+ * range must fit within both the bounds and the number of points in the
+ * first curve.
+ */
+extern int stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
+				  size_t start);
+
+/*
  * Return a pointer to the curve's raw data.
  *
  * This data is not guaranteed to be valid beyond the next non-const
@@ -579,6 +597,28 @@ extern int stp_curve_set_data(stp_curve_t curve, size_t count,
  * a null pointer is returned and the count is 0.
  */
 extern const double *stp_curve_get_data(const stp_curve_t curve, size_t *count);
+
+/*
+ * Convert the curve data to another data type.
+ *
+ * The pointer returned is owned by the curve, and is not guaranteed
+ * to be valid beyond the next non-const curve call;
+ *
+ * If the bounds of the curve exceed the limits of the data type,
+ * NULL is returned.
+ */
+extern const long *stp_curve_get_long_data(const stp_curve_t curve,
+					   size_t *count);
+extern const unsigned long *stp_curve_get_ulong_data(const stp_curve_t curve,
+						     size_t *count);
+extern const int *stp_curve_get_int_data(const stp_curve_t curve,
+					 size_t *count);
+extern const unsigned int *stp_curve_get_uint_data(const stp_curve_t curve,
+						   size_t *count);
+extern const short *stp_curve_get_short_data(const stp_curve_t curve,
+					     size_t *count);
+extern const unsigned short *stp_curve_get_ushort_data(const stp_curve_t curve,
+						       size_t *count);
 
 /*
  * Set the gamma of a curve.  This replaces all existing points along
@@ -678,7 +718,9 @@ extern void stp_curve_print(FILE *f, const stp_curve_t curve);
  * number is -1, the read failed.
  */
 extern int stp_curve_read(FILE *f, stp_curve_t curve);
+extern stp_curve_t stp_curve_allocate_read(FILE *f);
 extern int stp_curve_read_string(const char *text, stp_curve_t curve);
+extern stp_curve_t stp_curve_allocate_read_string(const char *text);
 
 /*
  * Compose two curves, creating a third curve.  Only add and multiply
@@ -882,9 +924,7 @@ extern const char * stp_set_output_codeset(const char *codeset);
  */
 typedef void (*stp_convert_t) (const stp_vars_t vars, const unsigned char *in,
                                unsigned short *out, int *zero_mask,
-                               int width, int bpp, const unsigned char *cmap,
-                               const double *hue_map, const double *lum_map,
-                               const double *sat_map);
+                               int width, int bpp, const unsigned char *cmap);
 
 /*
  * Choose the appropriate color function depending upon choice of input
@@ -901,7 +941,8 @@ extern void stp_set_lut(stp_vars_t v, void * val);
 extern void * stp_get_lut(const stp_vars_t v);
 extern void stp_allocate_lut(stp_vars_t v, size_t steps);
 extern void stp_free_lut(stp_vars_t v);
-extern void stp_compute_lut(stp_vars_t v, size_t steps);
+extern void stp_compute_lut(stp_vars_t v, size_t steps, stp_curve_t hue,
+			    stp_curve_t lum, stp_curve_t sat);
 
 /*
  * For use with indexed color: the LUT should be an array of 256

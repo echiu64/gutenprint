@@ -47,6 +47,7 @@ static const double standard_sat_adjustment[] =
 const char *good_curves[] =
   {
     "STP_CURVE;Wrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE; Wrap  ; Linear  ; 48 ; 0 ; 0 ; 4:0.5 ; 0.6 ; 0.7 ; 0.8 ; 0.9 ; 0.86 ; 0.82 ; 0.79 ; 0.78 ; 0.8 ; 0.83 ; 0.87 ; 0.9 ; 0.95 ; 1.05 ; 1.15 ; 1.3 ; 1.25 ; 1.2 ; 1.15 ; 1.12 ; 1.09 ; 1.06 ; 1.03 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 1 ; 0.9 ; 0.8 ; 0.7 ; 0.65 ; 0.6 ; 0.55 ; 0.52 ; 0.48 ; 0.47 ; 0.47 ; 0.49 ; 0.49 ; 0.49 ; 0.52 ; 0.51 ; ",
     "STP_CURVE;Nowrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
     "STP_CURVE;Nowrap ;Linear ;48;1.0;0;4:",
     "STP_CURVE;Nowrap ;Linear ;2;1.0;0;4:",
@@ -244,15 +245,12 @@ main(int argc, char **argv)
     }
   stp_curve_print(stdout, curve2);
   fprintf(stdout, "\n");
-  printf("compose add\n");
-  if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
+  printf("compose add (should fail)\n");
+  if (stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_MULTIPLY, -1))
     {
-      printf("add compose failed!\n");
+      printf("compose with different wrap mode should fail!\n");
       global_error_count++;
     }
-  else
-    stp_curve_print(stdout, curve3);
-  fprintf(stdout, "\n");
   if (!stp_curve_read_string(linear_curve_1, curve1))
     {
       fprintf(stderr, "stp_curve_read_string failed\n");

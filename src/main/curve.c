@@ -30,6 +30,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #define COOKIE_CURVE 0x1ce0b247
 
@@ -49,6 +50,13 @@ typedef struct
 				   wrap-around value. */
   double *interval;		/* We allocate an extra slot for the
 				   wrap-around value. */
+  long *long_data;		/* Data converted to integer form */
+  unsigned long *ulong_data;
+  int *int_data;
+  unsigned *uint_data;
+  short *short_data;
+  unsigned short *ushort_data;
+
 } stp_internal_curve_t;
 
 static const char *curve_type_names[] =
@@ -104,19 +112,35 @@ scan_curve_range(stp_internal_curve_t *curve)
       }
 }
 
+#define SAFE_FREE(x)				\
+do						\
+{						\
+  if ((x))					\
+    stp_free((char *)(x));			\
+  ((x)) = NULL;					\
+} while (0)
+
+static void
+invalidate_auxiliary_data(stp_internal_curve_t *curve)
+{
+  SAFE_FREE(curve->interval);
+  SAFE_FREE(curve->long_data);
+  SAFE_FREE(curve->ulong_data);
+  SAFE_FREE(curve->int_data);
+  SAFE_FREE(curve->uint_data);
+  SAFE_FREE(curve->short_data);
+  SAFE_FREE(curve->ushort_data);
+}
+
 static void
 clear_curve_data(stp_internal_curve_t *curve)
 {
-  if (curve->data)
-    stp_free(curve->data);
-  if (curve->interval)
-    stp_free(curve->interval);
-  curve->data = NULL;
-  curve->interval = NULL;
+  SAFE_FREE(curve->data);
   curve->point_count = 0;
   curve->real_point_count = 0;
   curve->recompute_interval = 0;
   curve->recompute_range = 0;
+  invalidate_auxiliary_data(curve);
 }
 
 static void
@@ -212,10 +236,7 @@ static void
 compute_intervals(stp_internal_curve_t *curve)
 {
   if (curve->interval)
-    {
-      stp_free(curve->interval);
-      curve->interval = NULL;
-    }
+    SAFE_FREE(curve->interval);
   if (curve->real_point_count > 0)
     {
       switch (curve->curve_type)
@@ -291,8 +312,11 @@ curve_dtor(stp_curve_t curve)
 void
 stp_curve_destroy(stp_curve_t curve)
 {
-  curve_dtor(curve);
-  stp_free(curve);
+  if (curve)
+    {
+      curve_dtor(curve);
+      stp_free(curve);
+    }
 }
 
 void
@@ -303,20 +327,20 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
   check_curve(idest);
   check_curve(isource);
   curve_dtor(dest);
-  (void) memcpy(idest, isource, sizeof(stp_internal_curve_t));
+  idest->cookie = isource->cookie;
+  idest->curve_type = isource->curve_type;
+  idest->point_count = isource->point_count;
+  idest->real_point_count = isource->real_point_count;
+  idest->wrap_mode = isource->wrap_mode;
+  idest->gamma = isource->gamma;
   if (isource->data)
     {
       idest->data = stp_malloc(sizeof(double) * (isource->real_point_count));
       (void) memcpy(idest->data, isource->data,
 		    (sizeof(double) * (isource->real_point_count)));
     }
-  if (isource->interval)
-    {
-      idest->interval =
-	stp_malloc(sizeof(double) * (isource->real_point_count - 1));
-      (void) memcpy(idest->interval, isource->interval,
-		    (sizeof(double) * (isource->real_point_count - 1)));
-    }
+  idest->recompute_interval = 1;
+  idest->recompute_range = 1;
 }
 
 stp_curve_t
@@ -464,6 +488,82 @@ stp_curve_get_data(const stp_curve_t curve, size_t *count)
   return icurve->data;
 }
 
+#define DEFINE_DATA_ACCESSOR(t, ub, lb, name)				 \
+const t *								 \
+stp_curve_get_##name##_data(const stp_curve_t curve, size_t *count)	 \
+{									 \
+  int i;								 \
+  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;	 \
+  check_curve(icurve);							 \
+  if (icurve->blo < (double) lb || icurve->blo > (double) ub)		 \
+    return NULL;							 \
+  if (!icurve->name##_data)						 \
+    {									 \
+      icurve->name##_data = stp_malloc(sizeof(t) * icurve->point_count); \
+      for (i = 0; i < icurve->point_count; i++)				 \
+	icurve->name##_data[i] = (t) rint(icurve->data[i]);		 \
+    }									 \
+  *count = icurve->point_count;						 \
+  return icurve->name##_data;						 \
+}
+
+DEFINE_DATA_ACCESSOR(long, LONG_MAX, LONG_MIN, long)
+DEFINE_DATA_ACCESSOR(unsigned long, ULONG_MAX, 0, ulong)
+DEFINE_DATA_ACCESSOR(int, INT_MAX, INT_MIN, int)
+DEFINE_DATA_ACCESSOR(unsigned int, UINT_MAX, 0, uint)
+DEFINE_DATA_ACCESSOR(short, SHRT_MAX, SHRT_MIN, short)
+DEFINE_DATA_ACCESSOR(unsigned short, USHRT_MAX, 0, ushort)
+
+stp_curve_t
+stp_curve_get_subrange(const stp_curve_t curve, size_t start, size_t count)
+{
+  stp_curve_t retval;
+  size_t ncount;
+  double blo, bhi;
+  const double *data;
+  if (start + count > stp_curve_count_points(curve) || count < 2)
+    return NULL;
+  retval = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  stp_curve_get_bounds(curve, &blo, &bhi);
+  stp_curve_set_bounds(retval, blo, bhi);
+  data = stp_curve_get_data(curve, &ncount);
+  if (! stp_curve_set_data(retval, count, data + start))
+    {
+      stp_curve_destroy(retval);
+      return NULL;
+    }
+  return retval;
+}
+
+int
+stp_curve_set_subrange(stp_curve_t curve, const stp_curve_t range,
+		       size_t start)
+{
+  stp_internal_curve_t *icurve = (stp_internal_curve_t *) curve;
+  double blo, bhi;
+  double rlo, rhi;
+  const double *data;
+  size_t count;
+  double *ndata;
+  size_t ncount;
+  check_curve(icurve);
+  if (start + stp_curve_count_points(range) > stp_curve_count_points(curve))
+    return 0;
+  stp_curve_get_bounds(curve, &blo, &bhi);
+  stp_curve_get_range(range, &rlo, &rhi);
+  if (rlo < blo || rhi > bhi)
+    return 0;
+  data = stp_curve_get_data(range, &count);
+  ndata = (double *) stp_curve_get_data(curve, &ncount);
+  icurve->recompute_interval = 1;
+  icurve->recompute_range = 1;
+  icurve->gamma = 0.0;
+  invalidate_auxiliary_data(icurve);
+  memcpy(ndata + start, data, count * sizeof(double));
+  return 1;
+}
+
+
 int
 stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 {
@@ -481,7 +581,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
   icurve->data[where] = data;
   if (where == 0 && icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
       icurve->data[icurve->point_count] = data;
-  icurve->recompute_interval = 1;
+  invalidate_auxiliary_data(icurve);
   return 1;
 }
 
@@ -582,6 +682,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
       stp_free(tmp);
       icurve->recompute_range = 1;
       icurve->recompute_interval = 1;
+      invalidate_auxiliary_data(icurve);
     }
   return 1;
 }
@@ -710,7 +811,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   int points;
 
   check_curve(icurve);
-  fscanf(f, "STP_CURVE;%31s ;%31s ;%n",
+  fscanf(f, "STP_CURVE ; %31s ; %31s ; %n",
 	 curve_type_name,
 	 wrap_mode_name,
 	 &noffset);
@@ -730,7 +831,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
-  fscanf(f, "%d;%lg;%lg;%lg:%n",
+  fscanf(f, " %d ; %lg ; %lg ; %lg : %n",
 	 &points,
 	 &(iret->gamma),
 	 &(iret->blo),
@@ -751,7 +852,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
       for (i = 0; i < iret->point_count; i++)
 	{
 	  noffset = 0;
-	  fscanf(f, "%lg;%n", &(iret->data[i]), &noffset);
+	  fscanf(f, " %lg ; %n", &(iret->data[i]), &noffset);
 	  if (noffset == 0)
 	    goto bad;
 	  if (! finite(iret->data[i]) || iret->data[i] < iret->blo ||
@@ -774,6 +875,18 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   return 0;
 }
 
+stp_curve_t
+stp_curve_allocate_read(FILE *f)
+{
+  stp_curve_t ret = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  if (! stp_curve_read(f, ret))
+    {
+      stp_curve_destroy(ret);
+      ret = NULL;
+    }
+  return ret;
+}
+
 int
 stp_curve_read_string(const char *text, stp_curve_t curve)
 {
@@ -790,7 +903,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   int points;
 
   check_curve(icurve);
-  sscanf(text, "STP_CURVE;%31s ;%31s ;%n",
+  sscanf(text, "STP_CURVE ; %31s ; %31s ; %n",
 	 wrap_mode_name,
 	 curve_type_name,
 	 &noffset);
@@ -811,7 +924,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
-  sscanf(text + offset, "%d;%lg;%lg;%lg:%n",
+  sscanf(text + offset, " %d ; %lg ; %lg ; %lg : %n",
 	 &points,
 	 &(iret->gamma),
 	 &(iret->blo),
@@ -834,7 +947,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
       for (i = 0; i < iret->point_count; i++)
 	{
 	  noffset = 0;
-	  sscanf(text + offset, "%lg;%n", &(iret->data[i]), &noffset);
+	  sscanf(text + offset, " %lg ; %n", &(iret->data[i]), &noffset);
 	  if (noffset == 0 || ! finite(iret->data[i]) ||
 	      iret->data[i] < iret->blo || iret->data[i] > iret->bhi)
 	    goto bad;
@@ -854,6 +967,18 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   stp_curve_destroy(ret);
   setlocale(LC_ALL, "");
   return 0;
+}
+
+stp_curve_t
+stp_curve_allocate_read_string(const char *text)
+{
+  stp_curve_t ret = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  if (! stp_curve_read_string(text, ret))
+    {
+      stp_curve_destroy(ret);
+      ret = NULL;
+    }
+  return ret;
 }
 
 static double
@@ -976,6 +1101,8 @@ stp_curve_resample(stp_curve_t curve, size_t points)
   set_curve_points(icurve, points);
   icurve->data = new_vec;
   icurve->recompute_interval = 1;
+  icurve->recompute_range = 1;
+  invalidate_auxiliary_data(icurve);
   return 1;
 }
 

@@ -1380,164 +1380,32 @@ static const pcl_cap_t pcl_model_capabilities[] =
 };
 
 
-static const double sat_adjustment[49] =
-{
-  1.0,				/* C */
-  1.1,
-  1.2,
-  1.3,
-  1.4,
-  1.5,
-  1.6,
-  1.7,
-  1.8,				/* B */
-  1.9,
-  1.9,
-  1.9,
-  1.7,
-  1.5,
-  1.3,
-  1.1,
-  1.0,				/* M */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* R */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  1.0,
-  1.0,
-  1.1,
-  1.2,
-  1.3,
-  1.4,
-  1.5,
-  1.5,				/* G */
-  1.4,
-  1.3,
-  1.2,
-  1.1,
-  1.0,
-  1.0,
-  1.0,
-  1.0				/* C */
-};
+static const char standard_sat_adjustment[] =
+"STP_CURVE;Wrap ;Linear ; 48;0;0.0;4.0:"
+"1.00;1.10;1.20;1.30;1.40;1.50;1.60;1.70;"  /* C */
+"1.80;1.90;1.90;1.90;1.70;1.50;1.30;1.10;"  /* B */
+"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* M */
+"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* R */
+"1.00;1.00;1.00;1.10;1.20;1.30;1.40;1.50;"  /* Y */
+"1.50;1.40;1.30;1.20;1.10;1.00;1.00;1.00;"; /* G */
 
-static const double lum_adjustment[49] =
-{
-  0.50,				/* C */
-  0.6,
-  0.7,
-  0.8,
-  0.9,
-  0.86,
-  0.82,
-  0.79,
-  0.78,				/* B */
-  0.8,
-  0.83,
-  0.87,
-  0.9,
-  0.95,
-  1.05,
-  1.15,
-  1.3,				/* M */
-  1.25,
-  1.2,
-  1.15,
-  1.12,
-  1.09,
-  1.06,
-  1.03,
-  1.0,				/* R */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  0.9,
-  0.8,
-  0.7,
-  0.65,
-  0.6,
-  0.55,
-  0.52,
-  0.48,				/* G */
-  0.47,
-  0.47,
-  0.49,
-  0.49,
-  0.49,
-  0.52,
-  0.51,
-  0.50				/* C */
-};
+static const char standard_lum_adjustment[] =
+"STP_CURVE;Wrap ;Linear ; 48;0;0.0;4.0:"
+"0.50;0.60;0.70;0.80;0.90;0.86;0.82;0.79;"  /* C */
+"0.78;0.80;0.83;0.87;0.90;0.95;1.05;1.15;"  /* B */
+"1.30;1.25;1.20;1.15;1.12;1.09;1.06;1.03;"  /* M */
+"1.00;1.00;1.00;1.00;1.00;1.00;1.00;1.00;"  /* R */
+"1.00;0.90;0.80;0.70;0.65;0.60;0.55;0.52;"  /* Y */
+"0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;"; /* G */
 
-static const double hue_adjustment[49] =
-{
-  0.00,				/* C */
-  0.05,
-  0.04,
-  0.01,
-  -0.03,
-  -0.10,
-  -0.18,
-  -0.26,
-  -0.35,			/* B */
-  -0.43,
-  -0.40,
-  -0.32,
-  -0.25,
-  -0.18,
-  -0.10,
-  -0.07,
-  0.00,				/* M */
-  -0.04,
-  -0.09,
-  -0.13,
-  -0.18,
-  -0.23,
-  -0.27,
-  -0.31,
-  -0.35,			/* R */
-  -0.38,
-  -0.30,
-  -0.23,
-  -0.15,
-  -0.08,
-  0.00,
-  -0.02,
-  0.00,				/* Y */
-  0.08,
-  0.10,
-  0.08,
-  0.05,
-  0.03,
-  -0.03,
-  -0.12,
-  -0.20,			/* G */
-  -0.17,
-  -0.20,
-  -0.17,
-  -0.15,
-  -0.12,
-  -0.10,
-  -0.08,
-  0.00,				/* C */
-};
+static const char standard_hue_adjustment[] =
+"STP_CURVE;Wrap ;Linear ; 48;0;-6.0;6.0:"
+"0.00;0.05;0.04;0.01;-.03;-.10;-.18;-.26;"  /* C */
+"-.35;-.43;-.40;-.32;-.25;-.18;-.10;-.07;"  /* B */
+"0.00;-.04;-.09;-.13;-.18;-.23;-.27;-.31;"  /* M */
+"-.35;-.38;-.30;-.23;-.15;-.08;0.00;-.02;"  /* R */
+"0.00;0.08;0.10;0.08;0.05;0.03;-.03;-.12;"  /* Y */
+"-.20;0.17;-.20;-.17;-.15;-.12;-.10;-.08;"; /* G */
 
 /*
  * Convert a name into it's option value
@@ -2028,6 +1896,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   unsigned char *comp_buf;	/* Scratch buffer for pcl_mode2 */
   int		the_top_margin,	/* Corrected top margin */
 		the_left_margin;	/* Corrected left margin */
+  stp_curve_t   lum_adjustment;
+  stp_curve_t   hue_adjustment;
 
   if (!stp_verify(nv))
     {
@@ -2456,7 +2326,14 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   * Output the page, rotating as necessary...
   */
 
-  stp_compute_lut(nv, 256);
+  lum_adjustment = stp_read_and_compose_curves(standard_lum_adjustment, NULL,
+					       STP_CURVE_COMPOSE_MULTIPLY);
+  hue_adjustment = stp_read_and_compose_curves(standard_hue_adjustment, NULL,
+					       STP_CURVE_COMPOSE_ADD);
+
+  stp_compute_lut(nv, 65536, hue_adjustment, lum_adjustment, NULL);
+  stp_curve_destroy(lum_adjustment);
+  stp_curve_destroy(hue_adjustment);
 
   dither = stp_init_dither(image_width, out_width, image_bpp, xdpi, ydpi, nv);
 
@@ -2561,8 +2438,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 	  status = 2;
 	  break;
 	}
-      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
-		   hue_adjustment, lum_adjustment, NULL);
+      (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap);
     }
 
     stp_dither(out, y, dither, dt, duplicate_line, zero_mask);

@@ -142,9 +142,9 @@ typedef struct
   int feed_adjustment;
   int vacuum_intensity;
   int paper_thickness;
-  const double *hue_adjustment;
-  const double *lum_adjustment;
-  const double *sat_adjustment;
+  const char *hue_adjustment;
+  const char *lum_adjustment;
+  const char *sat_adjustment;
 } paper_t;
 
 typedef struct
@@ -253,9 +253,9 @@ typedef struct
   double k_lower;
   double k_upper;
   int channel_limit;
-  const double *lum_adjustment;
-  const double *hue_adjustment;
-  const double *sat_adjustment;
+  const char *lum_adjustment;
+  const char *hue_adjustment;
+  const char *sat_adjustment;
   const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
 } escp2_inkname_t;
 

@@ -96,6 +96,8 @@ extern void stp_free(void *ptr);
 extern size_t stp_strlen(const char *s);
 extern char *stp_strndup(const char *s, int n);
 extern char *stp_strdup(const char *s);
+extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
+					       stp_curve_compose_t comp);
 
 
 /* Uncomment the next line to get performance statistics:

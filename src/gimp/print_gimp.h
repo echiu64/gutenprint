@@ -111,6 +111,7 @@ extern void update_adjusted_thumbnail (void);
 extern const char *Combo_get_name(GtkWidget   *combo,
 				  const stp_string_list_t options);
 extern void plist_build_combo         (GtkWidget     *combo,
+				       GtkWidget     *label,
 				       stp_string_list_t items,
 				       const gchar   *cur_item,
 				       const gchar	  *def_value,
@@ -130,10 +131,10 @@ extern void set_color_sliders_active(int active);
 extern void writefunc (void *file, const char *buf, size_t bytes);
 extern void set_adjustment_tooltip(GtkObject *adjustment, const gchar *tip);
 extern void set_help_data(GtkWidget *widget, const gchar *tooltip);
-extern void table_attach_aligned(GtkTable *table, gint column, gint row,
-				 const gchar *label_text, gfloat xalign,
-				 gfloat yalign, GtkWidget *widget,
-				 gint colspan, gboolean left_align);
+extern GtkWidget *table_attach_aligned(GtkTable *table, gint column, gint row,
+				       const gchar *label_text, gfloat xalign,
+				       gfloat yalign, GtkWidget *widget,
+				       gint colspan, gboolean left_align);
 extern gint compute_orientation(void);
 extern void set_image_dimensions(gint width, gint height);
 extern void set_image_resolution(gdouble xres, gdouble yres);
