@@ -5,7 +5,7 @@ set -e
 DEBVERSION=`cat /etc/debian_version`
 
 case $DEBVERSION in
-       woody)
+       testing/unstable|woody)
             make ghost
             mkdir -p deb
             cd deb
