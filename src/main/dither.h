@@ -41,8 +41,6 @@ extern "C" {
 #include <config.h>
 #endif
 
-#include "array.h"
-
 /*
  * ECOLOR_K must be 0
  */

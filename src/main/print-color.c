@@ -37,7 +37,6 @@
 #include <limits.h>
 #endif
 #include <string.h>
-#include "curve.h"
 #include "xml.h"
 
 #ifdef __GNUC__
