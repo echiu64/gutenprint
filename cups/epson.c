@@ -235,7 +235,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
     do
     {
-      if ((fd = open(resource, O_WRONLY | O_EXCL)) == -1)
+      if ((fd = open(resource, O_RDWR | O_EXCL)) == -1)
       {
 	if (errno == EBUSY)
 	{
@@ -257,6 +257,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
     tcgetattr(fd, &opts);
 
+    opts.c_cflag |= CREAD;			/* Enable reading */
     opts.c_lflag &= ~(ICANON | ECHO | ISIG);	/* Raw mode */
 
     /**** No options supported yet ****/
@@ -306,31 +307,20 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
       tbytes += nbytes;
       bufptr = buffer;
 
-      if (hostname[0])
+      while (nbytes > 0)
       {
-	while (nbytes > 0)
-	{
-	  if ((wbytes = send(fd, bufptr, nbytes, 0)) < 0)
-	  {
-	    perror("ERROR: Unable to send print file to printer");
-	    break;
-	  }
-
-	  nbytes -= wbytes;
-	  bufptr += wbytes;
-	}
-
-	if (nbytes > 0)
-	  break;
-      }
-      else
-      {
-	if (write(fd, buffer, nbytes) < nbytes)
+	if ((wbytes = write(fd, bufptr, nbytes)) < 0)
 	{
 	  perror("ERROR: Unable to send print file to printer");
 	  break;
 	}
+
+	nbytes -= wbytes;
+	bufptr += wbytes;
       }
+
+      if (nbytes > 0)
+	break;
 
      /*
       * Check for possible data coming back from the printer...
@@ -346,9 +336,84 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 	* Grab the data coming back and spit it out to stderr...
 	*/
 
-	if ((nbytes = recv(fd, buffer, sizeof(buffer), 0)) > 0)
-	  fprintf(stderr, "INFO: Received %u bytes of back-channel data!\n",
+	if ((nbytes = read(fd, buffer, sizeof(buffer) - 1)) < 0)
+	{
+	  fprintf(stderr, "ERROR: Back-channel read error - %s!\n",
+	          strerror(errno));
+	  break;
+	}
+
+        buffer[nbytes] = '\0';
+	if (strncmp(buffer, "@BDC ", 5) != 0)
+	  fprintf(stderr, "WARNING: Received %d bytes of unknown back-channel data!\n",
 	          nbytes);
+	else
+	{
+	 /*
+	  * Skip initial report line...
+	  */
+
+	  for (bufptr = buffer; *bufptr && *bufptr != '\n'; bufptr ++);
+
+	  if (*bufptr == '\n')
+	    bufptr ++;
+
+         /*
+	  * Get status data...
+	  */
+
+          strcpy(buffer, bufptr);
+	  for (bufptr = buffer; *bufptr && *bufptr != ';'; bufptr ++);
+	  *bufptr = '\0';
+
+	  if (strncmp(buffer, "IQ:", 3) == 0)
+	  {
+	   /*
+	    * Report ink level...
+	    */
+
+            int i;
+            int levels[6];
+
+            buffer[12] = '\0'; /* Limit to 6 inks */
+	    for (i = 0, bufptr = buffer; i < 6; i ++, bufptr += 2)
+	    {
+	      if (isalpha(bufptr[0]))
+	        levels[i] = (tolower(bufptr[0]) - 'a' + 10) << 16;
+	      else
+	        levels[i] = (bufptr[0] - '0') << 16;
+
+	      if (isalpha(bufptr[1]))
+	        levels[i] |= tolower(bufptr[1]) - 'a' + 10;
+	      else
+	        levels[i] |= bufptr[1] - '0';
+            }
+
+            switch (i)
+	    {
+	      case 1 :
+	      case 2 :
+	          fprintf(stderr, "K=%d\n", levels[0]);
+		  break;
+	      case 3 :
+	          fprintf(stderr, "C=%d M=%d Y=%d\n", levels[0], levels[1],
+		          levels[2]);
+		  break;
+	      case 4 :
+	      case 5 :
+	          fprintf(stderr, "K=%d C=%d M=%d Y=%d\n", levels[0],
+		          levels[1], levels[2], levels[3]);
+		  break;
+	      case 6 :
+	          fprintf(stderr, "K=%d C=%d M=%d Y=%d LC=%d LM=%d\n",
+		          levels[0], levels[1], levels[2], levels[3],
+			  levels[4], levels[5]);
+		  break;
+            }
+	  }
+	  else
+	    fprintf(stderr, "INFO: %s\n", buffer);
+        }
       }
       else if (argc > 6)
 	fprintf(stderr, "INFO: Sending print file, %u bytes...\n", tbytes);

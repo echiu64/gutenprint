@@ -1,0 +1,4 @@
+CHANGES.txt - 06/18/2000 - CUPS Driver Development Kit
+-----------------------------------------------------
+
+No changes yet.
