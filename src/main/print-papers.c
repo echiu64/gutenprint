@@ -46,10 +46,10 @@ static void
 stpi_paper_freefunc(void *item)
 {
   stp_papersize_t *paper = (stp_papersize_t *) (item);
-  stpi_free(paper->name);
-  stpi_free(paper->text);
-  stpi_free(paper->comment);
-  stpi_free(paper);
+  SAFE_FREE(paper->name);
+  SAFE_FREE(paper->text);
+  SAFE_FREE(paper->comment);
+  SAFE_FREE(paper);
 }
 
 static const char *
@@ -113,7 +113,10 @@ stpi_paper_create(stp_papersize_t *p)
       const stp_papersize_t *ep =
 	(const stp_papersize_t *) stpi_list_item_get_data(paper_item);
       if (ep && !strcmp(p->name, ep->name))
-	return 1;
+	{
+	  stpi_paper_freefunc(p);
+	  return 1;
+	}
       paper_item = stpi_list_item_next(paper_item);
     }
 
@@ -288,7 +291,7 @@ stpi_xml_process_paper(mxml_node_t *paper) /* The paper node */
       stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);
     }
 
-  outpaper = stpi_malloc(sizeof(stp_papersize_t));
+  outpaper = stpi_zalloc(sizeof(stp_papersize_t));
   if (!outpaper)
     return NULL;
 
