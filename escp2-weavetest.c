@@ -85,11 +85,11 @@ main(int argc, char **argv)
   int nrows;
   int physjets;
   int physsep;
-  int hpasses, vpasses;
+  int hpasses, vpasses, subpasses;
   void *sw;
-  if (argc != 6)
+  if (argc != 7)
     {
-      fprintf(stderr, "Usage: %s jets separation hpasses vpasses rows\n",
+      fprintf(stderr, "Usage: %s jets separation hpasses vpasses subpasses rows\n",
 	      argv[0]);
       return 2;
     }
@@ -97,7 +97,8 @@ main(int argc, char **argv)
   physsep = atoi(argv[2]);
   hpasses = atoi(argv[3]);
   vpasses = atoi(argv[4]);
-  nrows = atoi(argv[5]);
+  subpasses = atoi(argv[5]);
+  nrows = atoi(argv[6]);
   passstarts = malloc(sizeof(int) * nrows);
   logpassstarts = malloc(sizeof(int) * nrows);
   passends = malloc(sizeof(int) * nrows);
@@ -107,7 +108,7 @@ main(int argc, char **argv)
   memset(rowdetail, 0, nrows * physjets);
   memset(physpassstuff, -1, nrows);
 
-  sw = initialize_weave(physjets, physsep, hpasses, vpasses,
+  sw = initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			COLOR_MONOCHROME, 1, 128);
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
@@ -118,7 +119,7 @@ main(int argc, char **argv)
     }
   for (i = 0; i < nrows; i++)
     {
-      for (j = 0; j < hpasses * vpasses; j++)
+      for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
 	  weave_parameters_by_row((escp2_softweave_t *)sw, i, j, &w);
