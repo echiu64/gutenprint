@@ -2459,7 +2459,6 @@ compute_thumbnail(stp_vars_t v)
   stp_set_page_height(nv, thumbnail_h);
   stp_set_page_width(nv, thumbnail_w);
   stp_set_float_parameter (nv, "Density", 1.0);
-  stp_set_output_color_model(nv, COLOR_MODEL_RGB);
 
   priv.base_addr = adjusted_thumbnail_data;
   priv.offset = 0;

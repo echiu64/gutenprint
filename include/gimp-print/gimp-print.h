@@ -435,9 +435,7 @@ extern int stp_get_output_type(const stp_vars_t v);
  * This is subject to change.
  */
 extern void stp_set_input_color_model(stp_vars_t v, int val);
-extern void stp_set_output_color_model(stp_vars_t v, int val);
 extern int stp_get_input_color_model(const stp_vars_t v);
-extern int stp_get_output_color_model(const stp_vars_t v);
 
 /*
  * These functions are used to print output and diagnostic information
@@ -855,59 +853,6 @@ extern int stp_curve_compose(stp_curve_t *retval,
 			     const stp_curve_t a, const stp_curve_t b,
 			     stp_curve_compose_t mode, int points);
 
-
-/****************************************************************
-*                                                               *
-* LISTS                                                         *
-*                                                               *
-****************************************************************/
-
-typedef void stp_list_item_t;
-typedef void stp_list_t;
-typedef void (*node_freefunc)(stp_list_item_t *);
-typedef void *(*node_copyfunc)(const stp_list_item_t *);
-typedef const char *(*node_namefunc)(const stp_list_item_t *);
-typedef int (*node_sortfunc)(const stp_list_item_t *, const stp_list_item_t *);
-
-extern void stp_list_node_free_data(stp_list_item_t *item);
-extern stp_list_t *stp_list_create(void);
-extern stp_list_t *stp_list_copy(stp_list_t *list);
-extern int stp_list_destroy(stp_list_t *list);
-extern stp_list_item_t *stp_list_get_start(stp_list_t *list);
-extern stp_list_item_t *stp_list_get_end(stp_list_t *list);
-extern stp_list_item_t *stp_list_get_item_by_index(stp_list_t *list,
-						   int index);
-extern stp_list_item_t *stp_list_get_item_by_name(stp_list_t *list,
-						  const char *name);
-extern stp_list_item_t *stp_list_get_item_by_long_name(stp_list_t *list,
-						       const char *long_name);
-extern int stp_list_get_length(stp_list_t *list);
-
-extern void stp_list_set_freefunc(stp_list_t *list, node_freefunc);
-extern node_freefunc stp_list_get_freefunc(stp_list_t *list);
-
-extern void stp_list_set_copyfunc(stp_list_t *list, node_copyfunc);
-extern node_copyfunc stp_list_get_copyfunc(stp_list_t *list);
-
-extern void stp_list_set_namefunc(stp_list_t *list, node_namefunc);
-extern node_namefunc stp_list_get_namefunc(stp_list_t *list);
-
-extern void stp_list_set_long_namefunc(stp_list_t *list, node_namefunc);
-extern node_namefunc stp_list_get_long_namefunc(stp_list_t *list);
-
-extern void stp_list_set_sortfunc(stp_list_t *list, node_sortfunc);
-extern node_sortfunc stp_list_get_sortfunc(stp_list_t *list);
-
-extern int stp_list_item_create(stp_list_t *list,
-				stp_list_item_t *next,
-				void *data);
-extern int stp_list_item_destroy(stp_list_t *list,
-				 stp_list_item_t *item);
-extern stp_list_item_t *stp_list_item_prev(stp_list_item_t *item);
-extern stp_list_item_t *stp_list_item_next(stp_list_item_t *item);
-extern void *stp_list_item_get_data(const stp_list_item_t *item);
-extern int stp_list_item_set_data(stp_list_item_t *item,
-				  void *data);
 
 /****************************************************************
 *                                                               *

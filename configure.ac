@@ -475,7 +475,7 @@ else
   fi
 fi
 if test "$CC" = "gcc" ; then
-  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic"
+  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
 fi
 AC_SUBST(GNUCFLAGS)
 

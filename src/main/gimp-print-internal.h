@@ -39,11 +39,11 @@ extern "C" {
 
 #define COOKIE_PRINTER    0x0722922c
 
+#include "util.h"
 #include "color.h"
 #include "dither.h"
 #include "papers.h"
 #include "printers.h"
-#include "util.h"
 #include "weave.h"
 #include "image.h"
 

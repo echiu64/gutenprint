@@ -41,7 +41,14 @@ extern "C" {
 #include <config.h>
 #endif
 
-extern void stp_zprintf(const stp_vars_t v, const char *format, ...);
+#ifndef __GNUC__
+#ifndef __attribute__
+#define __attribute__(ignore)
+#endif
+#endif
+
+extern void stp_zprintf(const stp_vars_t v, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
 
 extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
 			const stp_vars_t v);
@@ -57,8 +64,10 @@ extern void stp_send_command(const stp_vars_t v, const char *command,
 
 extern void stp_erputc(int ch);
 
-extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
-extern void stp_erprintf(const char *format, ...);
+extern void stp_eprintf(const stp_vars_t v, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+extern void stp_erprintf(const char *format, ...)
+       __attribute__((format(__printf__, 1, 2)));
 
 #define STP_DBG_LUT 		0x1
 #define STP_DBG_COLORFUNC	0x2
@@ -74,8 +83,10 @@ extern void stp_erprintf(const char *format, ...);
 extern unsigned long stp_debug_level;
 
 extern void stp_dprintf(unsigned long level, const stp_vars_t v,
-			const char *format, ...);
-extern void stp_deprintf(unsigned long level, const char *format, ...);
+			const char *format, ...)
+       __attribute__((format(__printf__, 3, 4)));
+extern void stp_deprintf(unsigned long level, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
 extern void stp_init_debug_messages(const stp_vars_t v);
 extern void stp_flush_debug_messages(const stp_vars_t v);
 
@@ -91,6 +102,59 @@ extern char *stp_strdup(const char *s);
 extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
 					       stp_curve_compose_t comp);
 extern void stp_abort(void);
+
+/****************************************************************
+*                                                               *
+* LISTS                                                         *
+*                                                               *
+****************************************************************/
+
+typedef void stp_list_item_t;
+typedef void stp_list_t;
+typedef void (*node_freefunc)(stp_list_item_t *);
+typedef void *(*node_copyfunc)(const stp_list_item_t *);
+typedef const char *(*node_namefunc)(const stp_list_item_t *);
+typedef int (*node_sortfunc)(const stp_list_item_t *, const stp_list_item_t *);
+
+extern void stp_list_node_free_data(stp_list_item_t *item);
+extern stp_list_t *stp_list_create(void);
+extern stp_list_t *stp_list_copy(stp_list_t *list);
+extern int stp_list_destroy(stp_list_t *list);
+extern stp_list_item_t *stp_list_get_start(stp_list_t *list);
+extern stp_list_item_t *stp_list_get_end(stp_list_t *list);
+extern stp_list_item_t *stp_list_get_item_by_index(stp_list_t *list,
+						   int index);
+extern stp_list_item_t *stp_list_get_item_by_name(stp_list_t *list,
+						  const char *name);
+extern stp_list_item_t *stp_list_get_item_by_long_name(stp_list_t *list,
+						       const char *long_name);
+extern int stp_list_get_length(stp_list_t *list);
+
+extern void stp_list_set_freefunc(stp_list_t *list, node_freefunc);
+extern node_freefunc stp_list_get_freefunc(stp_list_t *list);
+
+extern void stp_list_set_copyfunc(stp_list_t *list, node_copyfunc);
+extern node_copyfunc stp_list_get_copyfunc(stp_list_t *list);
+
+extern void stp_list_set_namefunc(stp_list_t *list, node_namefunc);
+extern node_namefunc stp_list_get_namefunc(stp_list_t *list);
+
+extern void stp_list_set_long_namefunc(stp_list_t *list, node_namefunc);
+extern node_namefunc stp_list_get_long_namefunc(stp_list_t *list);
+
+extern void stp_list_set_sortfunc(stp_list_t *list, node_sortfunc);
+extern node_sortfunc stp_list_get_sortfunc(stp_list_t *list);
+
+extern int stp_list_item_create(stp_list_t *list,
+				stp_list_item_t *next,
+				void *data);
+extern int stp_list_item_destroy(stp_list_t *list,
+				 stp_list_item_t *item);
+extern stp_list_item_t *stp_list_item_prev(stp_list_item_t *item);
+extern stp_list_item_t *stp_list_item_next(stp_list_item_t *item);
+extern void *stp_list_item_get_data(const stp_list_item_t *item);
+extern int stp_list_item_set_data(stp_list_item_t *item,
+				  void *data);
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

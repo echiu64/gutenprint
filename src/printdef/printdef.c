@@ -30,8 +30,8 @@
 #include <limits.h>
 #include <libxml/parser.h>
 #include <gimp-print/gimp-print.h>
-#include "../main/papers.h"
 #include "../main/util.h"
+#include "../main/papers.h"
 #include "../main/vars.h"
 
 

@@ -70,6 +70,9 @@ extern void     stp_set_verified(stp_vars_t, int value);
 
 extern void     stp_copy_options(stp_vars_t vd, const stp_vars_t vs);
 
+extern void stp_set_output_color_model(stp_vars_t v, int val);
+extern int stp_get_output_color_model(const stp_vars_t v);
+
 extern const stp_vars_t stp_minimum_settings(void);
 extern const stp_vars_t stp_maximum_settings(void);
 
