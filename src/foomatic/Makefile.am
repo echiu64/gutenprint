@@ -97,7 +97,7 @@ clean-local:
 
 foomatic-data: foomatic-stamp
 
-foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS)
+foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS) mk_printerlist
 	-$(RM) -r foomatic-db
 	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS)
 	touch foomatic-stamp
