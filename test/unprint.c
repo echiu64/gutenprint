@@ -127,7 +127,7 @@ extern void merge_line(line_type *p, unsigned char *l, int startl, int stopl,
 		       int color);
 extern void expand_line (unsigned char *src, unsigned char *dst, int height,
 			 int skip, int left_ignore);
-extern void write_output (FILE *fp_w);
+extern void write_output (FILE *fp_w, int dontwrite);
 extern void find_white (unsigned char *buf,int npix, int *left, int *right);
 extern int update_page (unsigned char *buf, int bufsize, int m, int n,
 			int color, int density);
@@ -136,9 +136,9 @@ extern void reverse_bit_order (unsigned char *buf, int n);
 extern int rle_decode (unsigned char *inbuf, int n, int max);
 extern void parse_canon (FILE *fp_r);
 
-static unsigned get_mask_1[] = { 7, 6, 5, 4, 3, 2, 1, 0 };
-static unsigned get_mask_2[] = { 6, 4, 2, 0 };
-static unsigned get_mask_4[] = { 4, 0 };
+unsigned get_mask_1[] = { 7, 6, 5, 4, 3, 2, 1, 0 };
+unsigned get_mask_2[] = { 6, 4, 2, 0 };
+unsigned get_mask_4[] = { 4, 0 };
 
 static inline int
 get_bits(unsigned char *p, int index)
@@ -350,8 +350,10 @@ expand_line (unsigned char *src, unsigned char *dst, int height, int skip,
     set_bits(dst, i * skip, get_bits(src, i + left_ignore));
 }
 
+int donothing;
+
 void
-write_output(FILE *fp_w)
+write_output(FILE *fp_w, int dontwrite)
 {
   int c, l, p, left, right, first, last, width, height, i;
   unsigned int amount;
@@ -372,6 +374,7 @@ write_output(FILE *fp_w)
 
   fprintf(stderr, "Image from (%d,%d) to (%d,%d).\n",
 	  left, first, right, last);
+
   width = right - left + 1;
   if (width < 0)
     width=0;
@@ -394,16 +397,23 @@ write_output(FILE *fp_w)
 	      float *ink = ink_colors[c];
 	      if (lt->line[c])
 		{
-		  for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
+		  if (dontwrite)
+		    donothing += lt->line[c][0] ^
+		      lt->line[c][lt->stopx[c] - lt->startx[c] + 1];
+		  else
 		    {
-		      amount = get_bits(lt->line[c], p - lt->startx[c]);
-		      mix_ink(out_row[p - left], c, amount, ink);
+		      for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
+			{
+			  amount = get_bits(lt->line[c], p - lt->startx[c]);
+			  mix_ink(out_row[p - left], c, amount, ink);
+			}
 		    }
 		}
 	    }
 	}
-      for (i = 0; i < oversample; i++)
-	fwrite(out_row, sizeof(ppmpixel), width, fp_w);
+      if (!dontwrite)
+	for (i = 0; i < oversample; i++)
+	  fwrite(out_row, sizeof(ppmpixel), width, fp_w);
     }
   free(out_row);
 }
@@ -533,7 +543,8 @@ update_page(unsigned char *buf, /* I - pixel data               */
        * have unpredictable results.  But, that's a pretty acurate statement
        * for a real printer, too!
        */
-      page = (line_type **) xcalloc(pstate.bottom_margin, sizeof(line_type *));
+      page = (line_type **) xcalloc(pstate.bottom_margin - pstate.top_margin,
+				    sizeof(line_type *));
     }
   if (pstate.microweave)
     sep = 1;
@@ -541,7 +552,7 @@ update_page(unsigned char *buf, /* I - pixel data               */
     sep = pstate.nozzle_separation;
   for (y=pstate.yposition; y < pstate.yposition + m * sep; y += sep, mi++)
     {
-      if (y >= pstate.bottom_margin)
+      if (y >= pstate.bottom_margin - pstate.top_margin)
 	{
 	  fprintf(stderr,
 		  "Warning: Unprinter out of unpaper (limit %d, pos %d).\n",
@@ -888,7 +899,8 @@ parse_escp2_extended(FILE *fp_r)
       pstate.yposition = 0;
       if (pstate.top_margin + pstate.bottom_margin > pstate.page_height)
 	pstate.page_height = pstate.top_margin + pstate.bottom_margin;
-      page = (line_type **) xcalloc(pstate.bottom_margin, sizeof(line_type *));
+      page = (line_type **) xcalloc(pstate.bottom_margin - pstate.top_margin,
+				    sizeof(line_type *));
       fprintf(stderr, "Setting top margin to %d (%.3f)\n",
 	      pstate.top_margin,
 	      (double) pstate.top_margin / pstate.page_management_units);
@@ -905,17 +917,19 @@ parse_escp2_extended(FILE *fp_r)
 	  /* FALLTHROUGH */
 	case 2:
 	  i += (buf[0]) + (256 * buf[1]);
-	  if (i * (pstate.relative_vertical_units /
-		   pstate.absolute_vertical_units) >= pstate.yposition)
+	  if (pstate.top_margin + i * (pstate.relative_vertical_units /
+				       pstate.absolute_vertical_units) >=
+	      pstate.yposition)
 	    pstate.yposition = i * (pstate.relative_vertical_units /
-				    pstate.absolute_vertical_units);
+				    pstate.absolute_vertical_units) +
+	      pstate.top_margin;
 	  else
 	    fprintf(stderr, "Warning: Setting Y position in negative direction ignored\n");
 	  break;
 	default:
 	  fprintf(stderr, "Malformed absolute vertical position set.\n");
 	}
-      if (pstate.yposition > pstate.bottom_margin)
+      if (pstate.yposition > pstate.bottom_margin - pstate.top_margin)
 	{
 	  fprintf(stderr,
 		  "Warning! Printer head moved past bottom margin.  Dumping output and exiting.\n");
@@ -938,7 +952,7 @@ parse_escp2_extended(FILE *fp_r)
 	default:
 	  fprintf(stderr,"Malformed relative vertical position set.\n");
 	}
-      if (pstate.yposition > pstate.bottom_margin)
+      if (pstate.yposition > pstate.bottom_margin - pstate.top_margin)
 	{
 	  fprintf(stderr,"Warning! Printer head moved past bottom margin.  Dumping output and exiting.\n");
 	  eject = 1;
@@ -1470,6 +1484,7 @@ main(int argc,char *argv[])
   char *UNPRINT;
   FILE *fp_r, *fp_w;
   int force_extraskip = -1;
+  int no_output = 0;
 
   unweave = 0;
   pstate.nozzle_separation = 6;
@@ -1532,6 +1547,9 @@ main(int argc,char *argv[])
 		  exit(-1);
 		}
 	      break;
+	    case 'q':
+	      no_output = 1;
+	      break;
 	    case 'u':
 	      unweave = 1;
 	      break;
@@ -1587,7 +1605,7 @@ main(int argc,char *argv[])
       parse_escp2(fp_r);
     }
   fprintf(stderr,"Done reading.\n");
-  write_output(fp_w);
+  write_output(fp_w, no_output);
   fclose(fp_w);
   fprintf(stderr,"Image dump complete.\n");
 
