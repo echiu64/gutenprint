@@ -473,6 +473,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 2000P" driver="escp2-2000">
+<color>
+<model value=26>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="CANON BJC 1000" driver="bjc-1000">
 <color>
 <model value=1000>

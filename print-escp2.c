@@ -340,17 +340,6 @@ static escp2_variable_ink_t standard_multishot_ink =
   1.0
 };
 
-static simple_dither_range_t mis_sixtone_ranges[] =
-{
-  { 0.15, 0x01, 1, 1 },	/* LC */
-  { 0.25, 0x02, 1, 1 },	/* C */
-  { 0.45, 0x04, 1, 1 },	/* LM */
-  { 0.50, 0x08, 1, 1 },	/* Y */
-  { 0.75, 0x10, 1, 1 },	/* M */
-  { 1.00, 0x20, 1, 1 }	/* K */
-};
-
-
 static escp2_variable_inkset_t standard_inks =
 {
   NULL,
@@ -929,12 +918,23 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    48, 8, 144, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
+    48, 6, 144, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x12, 3, 0x11, -1, 0x10 },
     { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
   },
-  /* 26: Stylus Pro 5000 */
+  /* 26: Stylus Photo 2000P */
+  {
+    (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
+     | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
+    48, 6, 144, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
+    &variable_6pl_6color_inks
+  },
+  /* 27: Stylus Pro 5000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -945,7 +945,7 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
-  /* 27: Stylus Pro 7000 */
+  /* 28: Stylus Pro 7000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -956,7 +956,7 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
-  /* 28: Stylus Pro 7500 */
+  /* 29: Stylus Pro 7500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -967,7 +967,7 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
-  /* 29: Stylus Pro 9000 */
+  /* 30: Stylus Pro 9000 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -978,7 +978,7 @@ static escp2_printer_t model_capabilities[] =
     { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
-  /* 30: Stylus Pro 9500 */
+  /* 31: Stylus Pro 9500 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_SELECTABLE
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
