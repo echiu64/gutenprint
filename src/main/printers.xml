@@ -238,7 +238,7 @@
       </printer>
       <printer name="EPSON Stylus C43SX" driver="escp2-c43sx">
         <color value="true"/>
-        <model value="59"/>
+        <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
         <gamma value="0.731"/>
@@ -246,7 +246,7 @@
       </printer>
       <printer name="EPSON Stylus C43UX" driver="escp2-c43ux">
         <color value="true"/>
-        <model value="59"/>
+        <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
         <gamma value="0.731"/>
@@ -254,7 +254,7 @@
       </printer>
       <printer name="EPSON Stylus C44SX" driver="escp2-c44sx">
         <color value="true"/>
-        <model value="59"/>
+        <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
         <gamma value="0.731"/>
@@ -262,7 +262,7 @@
       </printer>
       <printer name="EPSON Stylus C44UX" driver="escp2-c44ux">
         <color value="true"/>
-        <model value="59"/>
+        <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
         <gamma value="0.731"/>
