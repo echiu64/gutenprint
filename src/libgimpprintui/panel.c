@@ -307,6 +307,7 @@ build_printer_combo(void)
 	  strcpy(name + 1, stpui_plist[i].name);
 	  name[0] = '*';
 	  stp_string_list_add_param(printer_list, name, name);
+	  free(name);
 	}
     }
   plist_build_combo(printer_combo,
@@ -660,6 +661,7 @@ create_printer_dialog (void)
 
 	  gtk_clist_insert (GTK_CLIST (printer_driver), i, &tmp);
 	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), i, (gpointer) i);
+	  g_free(tmp);
 	}
     }
 
@@ -2206,6 +2208,9 @@ new_printer_ok_callback (void)
 
       if (stpui_plist_add (&key, 1))
 	{
+	  stp_vars_free(key.v);
+	  free(key.name);
+	  free(key.output_to);
 	  stpui_plist_current = stpui_plist_count - 1;
 	  build_printer_combo ();
 	  set_printer();

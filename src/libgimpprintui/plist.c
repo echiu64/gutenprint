@@ -354,8 +354,8 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
    * always first in the list, else call psearch.
    */
   stpui_plist_t *p;
-  if (strcmp(_("File"), key->name) == 0
-      && strcmp(stpui_plist[0].name, _("File")) == 0)
+  if (strcmp(_("File"), key->name) == 0 &&
+      strcmp(stpui_plist[0].name, _("File")) == 0)
     {
       if (add_only)
 	return 0;
@@ -410,7 +410,7 @@ stpui_printrc_load_v0(FILE *fp)
   (void) memset(line, 0, 1024);
   (void) memset(&key, 0, sizeof(stpui_plist_t));
   stpui_printer_initialize(&key);
-  strcpy(key.name, _("File"));
+  key.name = g_strdup(_("File"));
   key.active = 1;
   while (fgets(line, sizeof(line), fp) != NULL)
     {
@@ -463,6 +463,9 @@ stpui_printrc_load_v0(FILE *fp)
       get_optional_string_param(key.v,"DitherAlgorithm",&lineptr,&keepgoing);
       GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
       stpui_plist_add(&key, 0);
+      free(key.name);
+      free(key.output_to);
+      stp_vars_free(key.v);
     }
   stpui_plist_current = 0;
 }
@@ -476,7 +479,7 @@ stpui_printrc_load_v1(FILE *fp)
   (void) memset(line, 0, 1024);
   (void) memset(&key, 0, sizeof(stpui_plist_t));
   stpui_printer_initialize(&key);
-  strcpy(key.name, _("File"));
+  key.name = g_strdup(_("File"));
   key.active = 1;
   while (fgets(line, sizeof(line), fp) != NULL)
     {
@@ -534,6 +537,7 @@ stpui_printrc_load_v1(FILE *fp)
 	  printf("output_to is now %s\n", stp_get_output_to(p->v));
 #endif
 
+	  stp_vars_free(key.v);
 	  stpui_printer_initialize(&key);
 	  key.invalid_mask = 0;
 	  stpui_plist_set_name(&key, value);
@@ -585,6 +589,10 @@ stpui_printrc_load_v1(FILE *fp)
 	  switch (desc.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      stp_set_string_parameter(key.v, keyword, value);
+	      if (desc.bounds.str)
+		stp_string_list_free(desc.bounds.str);
+	      break;
 	    case STP_PARAMETER_TYPE_FILE:
 	      stp_set_string_parameter(key.v, keyword, value);
 	      break;
@@ -604,6 +612,8 @@ stpui_printrc_load_v1(FILE *fp)
 		  stp_set_curve_parameter(key.v, keyword, curve);
 		  stp_curve_destroy(curve);
 		}
+	      if (desc.bounds.curve)
+		stp_string_list_free(desc.bounds.curve);
 	      break;
 	    default:
 	      if (strlen(value))
@@ -617,7 +627,12 @@ stpui_printrc_load_v1(FILE *fp)
 	}
     }
   if (strlen(key.name) > 0)
-    stpui_plist_add(&key, 0);
+    {
+      stpui_plist_add(&key, 0);
+      stp_vars_free(key.v);
+      free(key.name);
+      free(key.output_to);
+    }
   if (current_printer)
     {
       int i;
@@ -827,7 +842,7 @@ stpui_get_system_printers(void)
   check_plist(1);
   stpui_plist_count = 1;
   stpui_printer_initialize(&stpui_plist[0]);
-  strcpy(stpui_plist[0].name, _("File"));
+  stpui_plist[0].name = g_strdup(_("File"));
   stpui_plist[0].active = 1;
   stp_set_driver(stpui_plist[0].v, "ps2");
   stp_set_output_type(stpui_plist[0].v, OUTPUT_COLOR);
