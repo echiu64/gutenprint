@@ -17,6 +17,22 @@
 <language value=ps>
 </printer>
 
+<printer name="HP DeskJet 340" driver="pcl-340">
+<color>
+<model value=340>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 400" driver="pcl-400">
+<color>
+<model value=400>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
 <printer name="HP DeskJet 500, 520" driver="pcl-500">
 <nocolor>
 <model value=500>
@@ -73,7 +89,7 @@
 <language value=pcl>
 </printer>
 
-<printer name="HP DeskJet 1100C, 1120C" driver="pcl-1100">
+<printer name="HP DeskJet 1100C, 1120C, 1220C" driver="pcl-1100">
 <color>
 <model value=1100>
 <gamma value=0.818>
@@ -84,6 +100,22 @@
 <printer name="HP DeskJet 1200C, 1600C" driver="pcl-1200">
 <color>
 <model value=1200>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 2000 series" driver="pcl-2000">
+<color>
+<model value=2000>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
+<printer name="HP DeskJet 2500 series" driver="pcl-2500">
+<color>
+<model value=2500>
 <gamma value=0.818>
 <density value=0.786>
 <language value=pcl>

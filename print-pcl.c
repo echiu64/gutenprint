@@ -47,50 +47,37 @@ static void	pcl_mode0(FILE *, unsigned char *, int, int);
 static void	pcl_mode2(FILE *, unsigned char *, int, int);
 
 /*
- * Media size to PCL media size code table
+ * Generic define for a name/value set
  */
 
 typedef struct
 {
-    char  *pcl_media_size_name;
-    int   pcl_media_size_code;
-} pcl_media_size_t;
+    char  *pcl_name;
+    int   pcl_code;
+} pcl_t;
 
 /*
+ * Media size to PCL media size code table
+ *
  * Note, you can force the list of papersizes given in the GUI to be only those
  * supported by defining PCL_NO_CUSTOM_PAPERSIZES
  */
 
 /* #define PCL_NO_CUSTOM_PAPERSIZES */
 
-#define PCL_PAPER_EXECUTIVE	1
-#define PCL_PAPER_LETTER	2
-#define PCL_PAPER_LEGAL		3
-#define PCL_PAPER_TABLOID	4
-#define PCL_PAPER_STATEMENT	15
-#define PCL_PAPER_SUPER_B	16
-#define PCL_PAPER_A6		24
-#define PCL_PAPER_A5		25
-#define PCL_PAPER_A4		26
-#define PCL_PAPER_A3		27
-#define PCL_PAPER_JIS_B5	45
-#define PCL_PAPER_JIS_B4	46
-#define PCL_PAPER_HAGAKI	71
-#define PCL_PAPER_A6_ENV	73
-#define PCL_PAPER_4x6		74
-#define PCL_PAPER_5x8		75
-#define PCL_PAPER_MONARCH	80
-#define PCL_PAPER_COM10_ENV	81
-#define PCL_PAPER_DL_ENV	90
-#define PCL_PAPER_C5_ENV	91
-#define PCL_PAPER_C6_ENV	92
-#define PCL_PAPER_CUSTOM	101	/* Custom size */
-#define PCL_PAPER_A2_ENV	109
-#define PCL_PAPER_NEC_LONG3_ENV	110
-#define PCL_PAPER_NEC_LONG4_ENV	111
-#define PCL_PAPER_KAKU_ENV	113
+#define PCL_PAPERSIZE_LETTER		2
+#define PCL_PAPERSIZE_LEGAL		3
+#define PCL_PAPERSIZE_TABLOID		4
+#define PCL_PAPERSIZE_A5		25
+#define PCL_PAPERSIZE_A4		26
+#define PCL_PAPERSIZE_A3		27
+#define PCL_PAPERSIZE_JIS_B5		45
+#define PCL_PAPERSIZE_JIS_B4		46
+#define PCL_PAPERSIZE_4x6		74
+#define PCL_PAPERSIZE_5x8		75
+#define PCL_PAPERSIZE_CUSTOM		101	/* Custom size */
 
-#define MAX_PRINTER_PAPER_TYPES	18	/* Max number of paper types supported
+#define MAX_PRINTER_PAPER_SIZES	12	/* Max number of paper types supported
 					   by any printer */
 
 /*
@@ -101,39 +88,91 @@ typedef struct
  * support all sizes! The ones not supported by print are commented out.
  */
 
-const static pcl_media_size_t pcl_media_sizes[] =
+const static pcl_t pcl_media_sizes[] =
 {
-/*  {"Executive", PCL_PAPER_EXECUTIVE}, */		/* US Executive (7.25 x 10.5 in). */
-    {"Letter", PCL_PAPER_LETTER},			/* US Letter (8.5 x 11 in) */
-    {"Legal", PCL_PAPER_LEGAL},				/* US Legal (8.5 x 14 in) */
-    {"Tabloid", PCL_PAPER_TABLOID},			/* US Tabloid (11 x 17 in) */
-/*  {"Statement", PCL_PAPER_STATEMENT}, */		/* US Statement (5.5 x 8.5 in) */
-/*  {"Super B", PCL_PAPER_SUPER_B}, */			/* Super B (305 x 487 mm) */
-    {"A6", PCL_PAPER_A6},				/* ISO/JIS A6 (105 x 148 mm) */
-    {"A5", PCL_PAPER_A5},				/* ISO/JIS A5 (148 x 210 mm) */
-    {"A4", PCL_PAPER_A4},				/* ISO/JIS A4 (210 x 297 mm) */
-    {"A3", PCL_PAPER_A3},				/* ISO/JIS A3 (297 x 420 mm) */
+    {"Letter", PCL_PAPERSIZE_LETTER},			/* US Letter (8.5 x 11 in) */
+    {"Legal", PCL_PAPERSIZE_LEGAL},			/* US Legal (8.5 x 14 in) */
+    {"Tabloid", PCL_PAPERSIZE_TABLOID},			/* US Tabloid (11 x 17 in) */
+    {"A5", PCL_PAPERSIZE_A5},				/* ISO/JIS A5 (148 x 210 mm) */
+    {"A4", PCL_PAPERSIZE_A4},				/* ISO/JIS A4 (210 x 297 mm) */
+    {"A3", PCL_PAPERSIZE_A3},				/* ISO/JIS A3 (297 x 420 mm) */
+    {"B5", PCL_PAPERSIZE_JIS_B5},			/* JIS B5 (182 x 257 mm). */
+    {"B4", PCL_PAPERSIZE_JIS_B4},			/* JIS B4 (257 x 364 mm). */
+    {"4x6", PCL_PAPERSIZE_4x6},				/* US Index card (4 x 6 in) */
+    {"5x8", PCL_PAPERSIZE_5x8},				/* US Index card (5 x 8 in) */
+};
+
 /*
- * The sizes in print-util.c for "B5" and "B4" lead me to believe that they
- * are the JIS paper sizes, not the ISO ones
+ * Media type to code table
  */
 
-    {"B5", PCL_PAPER_JIS_B5},				/* JIS B5 (182 x 257 mm). */
-    {"B4", PCL_PAPER_JIS_B4},				/* JIS B4 (257 x 364 mm). */
+#define PCL_PAPERTYPE_PLAIN	0
+#define PCL_PAPERTYPE_BOND	1
+#define PCL_PAPERTYPE_PREMIUM	2
+#define PCL_PAPERTYPE_GLOSSY	3	/* or photo */
+#define PCL_PAPERTYPE_TRANS	4
+#define PCL_PAPERTYPE_QPHOTO	5	/* Quick dry photo (2000 only) */
+#define PCL_PAPERTYPE_QTRANS	6	/* Quick dry transparency (2000 only) */
+#define MAX_PRINTER_PAPER_TYPES	8	/* Max number of paper types supported */
 
-/*  {"Hagaki", PCL_PAPER_HAGAKI}, */			/* Hagaki card (100 x 148 mm) */
-/*  {"A6 envelope", PCL_PAPER_A6_ENV}, */		/* "ISO A6 Postcard (envelope)" */
-    {"4x6", PCL_PAPER_4x6},				/* US Index card (4 x 6 in) */
-    {"5x8", PCL_PAPER_5x8},				/* US Index card (5 x 8 in) */
-/*  {"Monarch", PCL_PAPER_MONARCH}, */			/* US Monarch (3.875 x 7.5 in) */
-/*  {"Com10 envelope", PCL_PAPER_COM10_ENV}, */		/* US No. 10 envelope (4.125 x 9.5 in). */
-/*  {"DL envelope", PCL_PAPER_DL_END}, */		/* ISO DL (110 x 220 mm) */
-/*  {"C5 envelope", PCL_PAPER_C5_ENV}, */		/* ISO C5 (162 x 229 mm) */
-/*  {"C6 envelope", PCL_PAPER_C6_ENV}, */		/* ISO C6 (114 x 162 mm) */
-/*  {"A2 envelope", PCL_PAPER_A2_ENV}, */		/* US A2 envelope (4.375 x 5.75 in) */
-/*  {"NEC Long 3 envelope", PCL_PAPER_NEC_LONG3_ENV}, */	/* "NEC Long3 Envelope" */
-/*  {"NEC Long 4 envelope", PCL_PAPER_NEC_LOGN4_ENV}, */	/* "NEC Long4 Envelope" */
-/*  {"Kaku envelope", PCL_PAPER_KAKU_ENV}, */		/* "Kaku Envelope" */
+const static pcl_t pcl_media_types[] =
+{
+    {"Plain", PCL_PAPERTYPE_PLAIN},
+    {"Bond", PCL_PAPERTYPE_BOND},
+    {"Premium", PCL_PAPERTYPE_PREMIUM},
+    {"Glossy/Photo", PCL_PAPERTYPE_GLOSSY},
+    {"Transparency", PCL_PAPERTYPE_TRANS},
+    {"Quick-dry Photo", PCL_PAPERTYPE_QPHOTO},
+    {"Quick-dry Transparency", PCL_PAPERTYPE_QTRANS},
+};
+
+/*
+ * Media feed to code table. There are different names for the same code,
+ * so we encode them by adding "lumps" of "PAPERSOURCE_MOD".
+ * This is removed later to get back to the main codes.
+ */
+
+#define PAPERSOURCE_MOD			16
+
+#define PCL_PAPERSOURCE_MANUAL		2
+#define PCL_PAPERSOURCE_ENVELOPE	3	/* Not used */
+
+/* LaserJet types */
+#define PCL_PAPERSOURCE_LJ_TRAY2	1
+#define PCL_PAPERSOURCE_LJ_TRAY3	4
+#define PCL_PAPERSOURCE_LJ_TRAY4	5
+#define PCL_PAPERSOURCE_LJ_TRAY1	8
+
+/* Deskjet 340 types */
+#define PCL_PAPERSOURCE_340_PCSF	1 + PAPERSOURCE_MOD
+						/* Portable sheet feeder for 340 */
+#define PCL_PAPERSOURCE_340_DCSF	4 + PAPERSOURCE_MOD
+						/* Desktop sheet feeder for 340 */
+
+/* Other Deskjet types */
+#define PCL_PAPERSOURCE_DJ_TRAY		1 + PAPERSOURCE_MOD + PAPERSOURCE_MOD
+#define PCL_PAPERSOURCE_DJ_TRAY2	4 + PAPERSOURCE_MOD + PAPERSOURCE_MOD
+						/* Tray 2 for 2500 */
+#define PCL_PAPERSOURCE_DJ_OPTIONAL	5 + PAPERSOURCE_MOD + PAPERSOURCE_MOD
+						/* Optional source for 2500 */
+#define PCL_PAPERSOURCE_DJ_AUTO		7 + PAPERSOURCE_MOD + PAPERSOURCE_MOD
+						/* Autoselect for 2500 */
+#define MAX_PRINTER_PAPER_SOURCES	6	/* Max number of paper sources supported */
+
+const static pcl_t pcl_media_sources[] =
+{
+    {"Manual", PCL_PAPERSOURCE_MANUAL},
+/*  {"Envelope", PCL_PAPERSOURCE_ENVELOPE}, */
+    {"Tray 1", PCL_PAPERSOURCE_LJ_TRAY1},
+    {"Tray 2", PCL_PAPERSOURCE_LJ_TRAY2},
+    {"Tray 3", PCL_PAPERSOURCE_LJ_TRAY3},
+    {"Tray 4", PCL_PAPERSOURCE_LJ_TRAY4},
+    {"Portable Sheet Feeder", PCL_PAPERSOURCE_340_PCSF},
+    {"Desktop Sheet Feeder", PCL_PAPERSOURCE_340_DCSF},
+    {"Tray", PCL_PAPERSOURCE_DJ_TRAY},
+    {"Tray 2", PCL_PAPERSOURCE_DJ_TRAY2},
+    {"Optional Source", PCL_PAPERSOURCE_DJ_OPTIONAL},
+    {"Autoselect", PCL_PAPERSOURCE_DJ_AUTO},
 };
 
 /*
@@ -151,14 +190,18 @@ typedef struct {
   int right_margin;
   int color_type;		/* 2 print head or one, 2 level or 4 */
   int printer_type;		/* Deskjet/Laserjet and quirks */
-  int paper_sizes[MAX_PRINTER_PAPER_TYPES];
+  int paper_sizes[MAX_PRINTER_PAPER_SIZES];
 				/* Paper sizes */
+  int paper_types[MAX_PRINTER_PAPER_TYPES];
+				/* Paper types */
+  int paper_sources[MAX_PRINTER_PAPER_SOURCES];
+				/* Paper sources */
   } pcl_cap_t;
 
 #define PCL_RES_150_150		1
 #define PCL_RES_300_300		2
 #define PCL_RES_600_300		4	/* DJ 600 series */
-#define PCL_RES_600_600_MONO	8	/* DJ 800/1100 b/w only */
+#define PCL_RES_600_600_MONO	8	/* DJ 600/800/1100/2000 b/w only */
 #define PCL_RES_600_600		16	/* DJ 9xx ??*/
 #define PCL_RES_1200_1200	32	/* DJ 9xx ??*/
 #define PCL_RES_2400_1200	64	/* DJ 9xx */
@@ -167,7 +210,7 @@ typedef struct {
 #define PCL_COLOR_NONE		0
 #define PCL_COLOR_CMY		1	/* One print head */
 #define PCL_COLOR_CMYK		2	/* Two print heads */
-#define PCL_COLOR_4		4	/* CRet printing */
+#define PCL_COLOR_CMYK4		4	/* CRet printing */
 
 #define PCL_PRINTER_LJ		1
 #define PCL_PRINTER_DJ		2
@@ -175,6 +218,7 @@ typedef struct {
 					   instead of "\033*rB" */
 #define PCL_PRINTER_TIFF	8	/* Use TIFF compression */
 #define PCL_PRINTER_MEDIATYPE	16	/* Use media type & print quality */
+#define PCL_PRINTER_CUSTOM_SIZE	32	/* Custom sizes supported */
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
@@ -200,24 +244,95 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,			/* Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
       0,
     },
+    { -1,			/* No selectable paper types */
+    },
+    { -1,			/* No selectable paper sources */
+    },
   },
-  /* Deskjet 500 */
+  /* Deskjet 340 */
+  { 340,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    7, 41, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_340_PCSF,
+      PCL_PAPERSOURCE_340_DCSF,
+      -1,
+    },
+  },
+  /* Deskjet 400 */
+  { 400,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300,
+    7, 41, 18, 18,
+    PCL_COLOR_CMY,
+    PCL_PRINTER_DJ,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { -1,			/* No selectable paper sources */
+    },
+  },
+  /* Deskjet 500, 520 */
   { 500,
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300,
     7, 41, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
     },
   },
   /* Deskjet 500C, 540C */
@@ -227,11 +342,24 @@ pcl_cap_t pcl_model_capabilities[] =
     7, 33, 18, 18,
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
     },
   },
   /* Deskjet 550C, 560C */
@@ -241,85 +369,112 @@ pcl_cap_t pcl_model_capabilities[] =
     3, 33, 18, 18,
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
     },
   },
   /* Deskjet 600/600C */
   { 600,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
     PCL_COLOR_CMY,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { -1,			/* No selectable paper sources */
     },
   },
   /* Deskjet 6xx series */
   { 601,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
     PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      -1,
     },
   },
   /* Deskjet 800 series */
   { 800,
     17 * 72 / 2, 14 * 72,
-    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
-    PCL_COLOR_CMYK | PCL_COLOR_4,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      -1,
     },
   },
   /* Deskjet 900 series */
@@ -327,50 +482,63 @@ pcl_cap_t pcl_model_capabilities[] =
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 | PCL_RES_1200_1200 | PCL_RES_2400_1200,
     3, 33, 18, 18,
-    PCL_COLOR_CMYK | PCL_COLOR_4,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 1100C, 1120C */
+  /* Deskjet 1100C, 1120C, 1220C */
   { 1100,
     12 * 72, 18 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
     3, 33, 18, 18,
-    PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_TABLOID,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_A3,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_JIS_B4,		/* Guess */
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYK4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_TABLOID,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_A3,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_JIS_B4,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
     },
   },
   /* Deskjet 1200C, 1600C */
@@ -379,22 +547,102 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_RES_150_150 | PCL_RES_300_300,
     12, 12, 18, 18,
     PCL_COLOR_CMY,
-    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
+    },
+  },
+  /* Deskjet 2000 */
+  { 2000,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    12, 12, 18, 18,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      PCL_PAPERTYPE_QPHOTO,
+      PCL_PAPERTYPE_QTRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      -1,
+    },
+  },
+  /* Deskjet 2500 */
+  { 2500,
+    12 * 72, 18 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    12, 12, 18, 18,
+    PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_A3,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_JIS_B4,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      PCL_PAPERTYPE_QPHOTO,
+      PCL_PAPERTYPE_QTRANS,
+      -1,
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_DJ_AUTO,
+      PCL_PAPERSOURCE_DJ_TRAY,
+      PCL_PAPERSOURCE_DJ_TRAY2,
+      PCL_PAPERSOURCE_DJ_OPTIONAL,
+      -1,
     },
   },
   /* LaserJet II series */
@@ -404,11 +652,21 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { -1,			/* No selectable paper types */
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_LJ_TRAY1,
+      PCL_PAPERSOURCE_LJ_TRAY2,
+      PCL_PAPERSOURCE_LJ_TRAY3,
+      PCL_PAPERSOURCE_LJ_TRAY4,
+      -1,
     },
   },
   /* LaserJet III series */
@@ -418,11 +676,21 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { -1,			/* No selectable paper types */
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_LJ_TRAY1,
+      PCL_PAPERSOURCE_LJ_TRAY2,
+      PCL_PAPERSOURCE_LJ_TRAY3,
+      PCL_PAPERSOURCE_LJ_TRAY4,
+      -1,
     },
   },
   /* LaserJet 4 series, 5 series, 6 series */
@@ -432,11 +700,21 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_A4,
-      PCL_PAPER_COM10_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A4,
+      -1,
+    },
+    { -1,			/* No selectable paper types */
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_LJ_TRAY1,
+      PCL_PAPERSOURCE_LJ_TRAY2,
+      PCL_PAPERSOURCE_LJ_TRAY3,
+      PCL_PAPERSOURCE_LJ_TRAY4,
+      -1,
     },
   },
   /* LaserJet 4V, 4Si, 5Si */
@@ -446,27 +724,91 @@ pcl_cap_t pcl_model_capabilities[] =
     12, 12, 18, 18,
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF,
-    { PCL_PAPER_EXECUTIVE,
-      PCL_PAPER_LETTER,
-      PCL_PAPER_LEGAL,
-      PCL_PAPER_TABLOID,
-      PCL_PAPER_A6,
-      PCL_PAPER_A5,
-      PCL_PAPER_A4,
-      PCL_PAPER_A3,
-      PCL_PAPER_JIS_B5,
-      PCL_PAPER_JIS_B4,		/* Guess */
-      PCL_PAPER_HAGAKI,
-      PCL_PAPER_4x6,
-      PCL_PAPER_5x8,
-      PCL_PAPER_COM10_ENV,
-      PCL_PAPER_DL_ENV,
-      PCL_PAPER_C6_ENV,
-      PCL_PAPER_A2_ENV,
-      0,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_TABLOID,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_A3,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_JIS_B4,		/* Guess */
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { -1,			/* No selectable paper types */
+    },
+    { 
+      PCL_PAPERSOURCE_MANUAL,
+      PCL_PAPERSOURCE_LJ_TRAY1,
+      PCL_PAPERSOURCE_LJ_TRAY2,
+      PCL_PAPERSOURCE_LJ_TRAY3,
+      PCL_PAPERSOURCE_LJ_TRAY4,
+      -1,
     },
   },
 };
+
+/*
+ * Convert a name into it's option value
+ */
+
+int pcl_string_to_val(const char *string,		/* I: String */
+                           const pcl_t *options,	/* I: Options */
+			   int num_options)		/* I: Num options */
+{
+
+  int i;
+  int code = -1;
+
+ /*
+  * Look up the string in the table and convert to the code.
+  */
+
+  for (i=0; i<num_options; i++) {
+    if (!strcmp(string, options[i].pcl_name)) {
+       code=options[i].pcl_code;
+       break;
+       }
+  }
+
+#ifdef DEBUG
+  fprintf(stderr, "String: %s, Code: %d\n", string, code);
+#endif
+
+  return(code);
+}
+
+/*
+ * Convert a value into it's option name
+ */
+
+char * pcl_val_to_string(int code,			/* I: Code */
+                           const pcl_t *options,	/* I: Options */
+			   int num_options)		/* I: Num options */
+{
+
+  int i;
+  char *string = NULL;
+
+ /*
+  * Look up the code in the table and convert to the string.
+  */
+
+  for (i=0; i<num_options; i++) {
+    if (code == options[i].pcl_code) {
+       string=options[i].pcl_name;
+       break;
+       }
+  }
+
+#ifdef DEBUG
+  fprintf(stderr, "Code: %d, String: %s\n", string, code);
+#endif
+
+  return(string);
+}
 
 /*
  * pcl_get_model_capabilities() - Return struct of model capabilities
@@ -503,7 +845,6 @@ int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
 {
 
   int i;
-  int num_entries = sizeof(pcl_media_sizes) / sizeof(pcl_media_size_t);
   int media_code = 0;
   pcl_cap_t caps;
 
@@ -511,12 +852,8 @@ int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
   * First look up the media size in the table and convert to the code.
   */
 
-  for (i=0; i<num_entries; i++) {
-    if (!strcmp(media_size, pcl_media_sizes[i].pcl_media_size_name)) {
-       media_code=pcl_media_sizes[i].pcl_media_size_code;
-       break;
-       }
-  }
+  media_code = pcl_string_to_val(media_size, pcl_media_sizes,
+                                 sizeof(pcl_media_sizes) / sizeof(pcl_t));
 
 #ifdef DEBUG
   fprintf(stderr, "Media Size: %s, Code: %d\n", media_size, media_code);
@@ -526,10 +863,10 @@ int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
   * Now see if the printer supports the code found.
   */
 
-  if (media_code != 0) {
+  if (media_code != -1) {
     caps = pcl_get_model_capabilities(model);
 
-    for (i=0; (i<MAX_PRINTER_PAPER_TYPES) || (caps.paper_sizes[i] == 0); i++) {
+    for (i=0; (i<MAX_PRINTER_PAPER_SIZES) && (caps.paper_sizes[i] != -1); i++) {
       if (media_code == caps.paper_sizes[i])
         return(media_code);		/* Is supported */
     }
@@ -538,10 +875,10 @@ int pcl_convert_media_size(const char *media_size,	/* I: Media size string */
     fprintf(stderr, "Media Code %d not supported by printer model %d.\n",
       media_code, model);
 #endif
-    return(0);				/* Not supported */
+    return(-1);				/* Not supported */
   }
   else
-    return(0);				/* Not supported */
+    return(-1);				/* Not supported */
 }
 
 /*
@@ -555,26 +892,7 @@ pcl_parameters(int  model,	/* I - Printer model */
                int  *count)	/* O - Number of values */
 {
   int		i;
-  char          **p;
   char		**valptrs;
-  static char	*media_types[] =
-		{
-		  ("Plain"),
-		  ("Bond"),
-		  ("Premium"),
-		  ("Glossy"),
-		  ("Transparency"),
-		  ("Photo")
-		};
-  static char	*media_sources[] =
-		{
-		  ("Manual"),
-		  ("Tray 1"),
-		  ("Tray 2"),
-		  ("Tray 3"),
-		  ("Tray 4"),
-		};
-
   pcl_cap_t caps;
 
   if (count == NULL)
@@ -599,16 +917,21 @@ pcl_parameters(int  model,	/* I - Printer model */
   if (strcmp(name, "PageSize") == 0)
     {
       const papersize_t *papersizes = get_papersizes();
+#ifdef PCL_NO_CUSTOM_PAPERSIZES
+      int use_custom = 0;
+#else
+      int use_custom = ((caps.printer_type & PCL_PRINTER_CUSTOM_SIZE)
+                         == PCL_PRINTER_CUSTOM_SIZE);
+#endif
       valptrs = malloc(sizeof(char *) * known_papersizes());
       *count = 0;
       for (i = 0; i < known_papersizes(); i++)
 	{
 	  if (strlen(papersizes[i].name) > 0 &&
 	      papersizes[i].width <= caps.max_width &&
-	      papersizes[i].length <= caps.max_height
-#ifdef PCL_NO_CUSTOM_PAPERSIZES
-              && (pcl_convert_media_size(papersizes[i].name, model) != 0)
-#endif
+	      papersizes[i].length <= caps.max_height &&
+              ((use_custom == 1) || ((use_custom == 0) && 
+              (pcl_convert_media_size(papersizes[i].name, model) != -1)))
              )
 	    {
 	      valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
@@ -620,63 +943,65 @@ pcl_parameters(int  model,	/* I - Printer model */
     }
   else if (strcmp(name, "MediaType") == 0)
   {
-    if ((caps.printer_type & PCL_PRINTER_LJ) == PCL_PRINTER_LJ)
+    if (caps.paper_types[0] == -1)
     {
       *count = 0;
       return (NULL);
     }
     else
     {
-      *count = 6;
-      p = media_types;
+      valptrs = malloc(sizeof(char *) * MAX_PRINTER_PAPER_TYPES);
+      *count = 0;
+      for (i=0; (i < MAX_PRINTER_PAPER_TYPES) && (caps.paper_types[i] != -1); i++) {
+        valptrs[i] = c_strdup(pcl_val_to_string(caps.paper_types[i], pcl_media_types,
+                                        sizeof(pcl_media_types) / sizeof(pcl_t)));
+        (*count)++;
+      }
+      return(valptrs);
     }
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    if ((caps.printer_type & PCL_PRINTER_LJ) == PCL_PRINTER_LJ)
-    {
-      *count = 5;
-      p = media_sources;
-    }
-    else
+    if (caps.paper_sources[0] == -1)
     {
       *count = 0;
       return (NULL);
     }
+    else
+    {
+      valptrs = malloc(sizeof(char *) * MAX_PRINTER_PAPER_SOURCES);
+      *count = 0;
+      for (i=0; (i < MAX_PRINTER_PAPER_SOURCES) && (caps.paper_sources[i] != -1); i++) {
+        valptrs[i] = c_strdup(pcl_val_to_string(caps.paper_sources[i], pcl_media_sources,
+                                        sizeof(pcl_media_sources) / sizeof(pcl_t)));
+        (*count)++;
+      }
+      return(valptrs);
+    }
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    int c= 0;
+    i = 0;
     valptrs = malloc(sizeof(char *) * MAX_RESOLUTIONS);
     if (caps.resolutions & PCL_RES_150_150)
-      valptrs[c++]= c_strdup("150x150 DPI");
+      valptrs[i++]= c_strdup("150x150 DPI");
     if (caps.resolutions & PCL_RES_300_300)
-      valptrs[c++]= c_strdup("300x300 DPI");
+      valptrs[i++]= c_strdup("300x300 DPI");
     if (caps.resolutions & PCL_RES_600_300)
-      valptrs[c++]= c_strdup("600x300 DPI");
+      valptrs[i++]= c_strdup("600x300 DPI");
     if (caps.resolutions & PCL_RES_600_600_MONO)
-      valptrs[c++]= c_strdup("600x600 DPI (mono only)");
+      valptrs[i++]= c_strdup("600x600 DPI (mono only)");
     if (caps.resolutions & PCL_RES_600_600)
-      valptrs[c++]= c_strdup("600x600 DPI");
+      valptrs[i++]= c_strdup("600x600 DPI");
     if (caps.resolutions & PCL_RES_1200_1200)
-      valptrs[c++]= c_strdup("1200x1200 DPI");
+      valptrs[i++]= c_strdup("1200x1200 DPI");
     if (caps.resolutions & PCL_RES_2400_1200)
-      valptrs[c++]= c_strdup("2400x1200 DPI");
-    *count= c;
-    p= valptrs;
+      valptrs[i++]= c_strdup("2400x1200 DPI");
+    *count= i;
+    return(valptrs);
   }
   else
     return (NULL);
-
-  valptrs = malloc(*count * sizeof(char *));
-  for (i = 0; i < *count; i ++)
-    {
-      /* strdup doesn't appear to be POSIX... */
-      valptrs[i] = malloc(strlen(p[i]) + 1);
-      strcpy(valptrs[i], p[i]);
-    }
-
-  return (valptrs);
 }
 
 
@@ -773,7 +1098,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		planes;		/* # of outut planes */
   int           tempwidth,	/* From default_media_size() */
                 templength,	/* From default_media_size() */
-                pcl_media_size; /* PCL media size code */
+                pcl_media_size, /* PCL media size code */
+		pcl_media_type, /* PCL media type code */
+		pcl_media_source;	/* PCL media source code */
 
   caps = pcl_get_model_capabilities(model);
 
@@ -836,12 +1163,13 @@ pcl_print(const printer_t *printer,		/* I - Model */
 #endif
   
   if (((caps.resolutions & PCL_RES_600_600_MONO) == PCL_RES_600_600_MONO) &&
-      output_type != OUTPUT_GRAY && xdpi == 600) {
+      output_type != OUTPUT_GRAY && xdpi == 600 && ydpi == 600) {
+      fprintf(stderr, "600x600 resolution only available in MONO, changed to 300x300\n");
       xdpi = 300;
       ydpi = 300;
   }
 
-  do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4) &&
+  do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_CMYK4) == PCL_COLOR_CMYK4) &&
 	     v->image_type != IMAGE_MONOCHROME);
 
 #ifdef DEBUG
@@ -1004,11 +1332,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
   * Warning: The margins may need to be fixed for this!
   */
 
-  if (pcl_media_size == 0) {
+  if (pcl_media_size == -1) {
     fprintf(stderr, "Paper size %s is not directly supported by printer.\n",
       media_size);
     fprintf(stderr, "Trying as custom pagesize (watch the margins!)\n");
-    pcl_media_size = PCL_PAPER_CUSTOM;			/* Custom */
+    pcl_media_size = PCL_PAPERSIZE_CUSTOM;			/* Custom */
   }
 
   fprintf(prn, "\033&l%dA", pcl_media_size);
@@ -1017,16 +1345,50 @@ pcl_print(const printer_t *printer,		/* I - Model */
   fputs("\033&l0L", prn);			/* Turn off perforation skip */
   fputs("\033&l0E", prn);			/* Reset top margin to 0 */
 
-  if (strcmp(media_source, "Manual") == 0)	/* Set media source */
-    fputs("\033&l2H", prn);
-  else if (strcmp(media_source, "Tray 1") == 0)
-    fputs("\033&l8H", prn);
-  else if (strcmp(media_source, "Tray 2") == 0)
-    fputs("\033&l1H", prn);
-  else if (strcmp(media_source, "Tray 3") == 0)
-    fputs("\033&l4H", prn);
-  else if (strcmp(media_source, "Tray 4") == 0)
-    fputs("\033&l5H", prn);
+ /*
+  * Convert media type string to the code, if specified.
+  */
+
+  if (strlen(media_source) != 0) {
+    pcl_media_source = pcl_string_to_val(media_source, pcl_media_sources,
+                         sizeof(pcl_media_sources) / sizeof(pcl_t));
+
+#ifdef DEBUG
+    printf("pcl_media_source = %d, media_source = %s\n", pcl_media_source,
+           media_source);
+#endif
+
+    if (pcl_media_source == -1)
+      fprintf(stderr, "Unknown media source %s, ignored.\n", media_source);
+    else {
+
+/* Correct the value by taking the modulus */
+
+      pcl_media_source = pcl_media_source % PAPERSOURCE_MOD;
+      fprintf(prn, "\033&l%dH", pcl_media_source);
+    }
+  }
+
+ /*
+  * Convert media type string to the code, if specified.
+  */
+
+  if (strlen(media_type) != 0) {
+    pcl_media_type = pcl_string_to_val(media_type, pcl_media_types,
+                       sizeof(pcl_media_types) / sizeof(pcl_t));
+
+#ifdef DEBUG
+    printf("pcl_media_type = %d, media_type = %s\n", pcl_media_type,
+           media_type);
+#endif
+
+    if (pcl_media_type == -1) {
+      fprintf(stderr, "Unknown media type %s, set to PLAIN.\n", media_type);
+      pcl_media_type = PCL_PAPERTYPE_PLAIN;
+    }
+  }
+  else
+    pcl_media_type = PCL_PAPERTYPE_PLAIN;
 
  /*
   * Set DJ print quality to "best" if resolution >= 300
@@ -1037,18 +1399,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
     if ((caps.printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
     {
       fputs("\033*o1M", prn);			/* Quality = presentation */
-      if (strcmp(media_type, "Plain") == 0)	/* Set media type */
-        fputs("\033&l0M", prn);
-      else if (strcmp(media_type, "Bond") == 0)
-        fputs("\033&l1M", prn);
-      else if (strcmp(media_type, "Premium") == 0)
-        fputs("\033&l2M", prn);
-      else if (strcmp(media_type, "Glossy") == 0)
-        fputs("\033&l3M", prn);
-      else if (strcmp(media_type, "Transparency") == 0)
-        fputs("\033&l4M", prn);
-      else if (strcmp(media_type, "Photo") == 0)
-        fputs("\033&l5M", prn);
+      fprintf(prn, "\033&l%dM", pcl_media_type);
     }
     else
     {
@@ -1057,23 +1408,22 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
  /* Depletion depends on media type and cart type. */
 
-      if ((strcmp(media_type, "Plain") == 0)
-	|| (strcmp(media_type, "Bond") == 0)
-	|| (strcmp(media_type, "Photo") == 0)) {
+      if ((pcl_media_type == PCL_PAPERTYPE_PLAIN)
+	|| (pcl_media_type == PCL_PAPERTYPE_BOND)) {
       if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
           fputs("\033*o2D", prn);			/* Depletion 25% */
         else
           fputs("\033*o5D", prn);			/* Depletion 50% with gamma correction */
       }
 
-      else if ((strcmp(media_type, "Premium") == 0)
-             || (strcmp(media_type, "Glossy") == 0)
-             || (strcmp(media_type, "Transparency") == 0))
+      else if ((pcl_media_type == PCL_PAPERTYPE_PREMIUM)
+             || (pcl_media_type == PCL_PAPERTYPE_GLOSSY)
+             || (pcl_media_type == PCL_PAPERTYPE_TRANS))
         fputs("\033*o1D", prn);			/* Depletion none */
     }
   }
 
-  if ((xdpi != ydpi) || (do_cret == 1))		/* Set resolution for 600 series */
+  if ((xdpi != ydpi) || (do_cret == 1))		/* Set resolution using CRD */
   {
 
    /*
@@ -1090,7 +1440,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       planes = 1;
 
     fprintf(prn, "\033*g%dW", 2 + (planes * 6));
-    putc(2, prn);				/* Format 2 */
+    putc(2, prn);				/* Format 2 (Complex Direct Planar) */
     putc(planes, prn);				/* # output planes */
 
     if (planes != 3) {
@@ -1552,6 +1902,21 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.41  2000/04/13 19:08:11  davehill
+ *   Added DJ340, DJ400, DJ2000, DJ2500.
+ *   Added Quick-dry photo & transparency media.
+ *   Added Media Source selection for Deskjets where supported.
+ *   600x600 mono mode is supported in DJ600/800/1100/2000.
+ *   Some printers don't support "custom" media sizes.
+ *   Added 1220C to 1120C case (A3 paper size).
+ *   Removed A6 paper size, it is not supported directly.
+ *
+ *   Tidy-up:
+ *   Removed all papersizes not mentioned in print-utils.c.
+ *   Fixed coding mistakes in "for" statements.
+ *   Removed double-strdup in pcl_parameters (memory leak).
+ *   Added more warning messages.
+ *
  *   Revision 1.40  2000/03/21 19:09:02  davehill
  *   Added Deskjet 9xx series.
  *
