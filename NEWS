@@ -867,7 +867,16 @@ HP DeskJet 560C
 HP DeskJet 600/600C (Single Cartridge)
 HP DeskJet 600 series (2 Cartridge)
 HP DeskJet 690 series (Photo-Ink capable)
+HP DesignJet 230                (NEW)
+HP DesignJet 250                (NEW)
+HP DesignJet 430                (NEW)
+HP DesignJet 450                (NEW)
+HP DesignJet 455                (NEW)
+HP DesignJet 488                (NEW)
+HP DesignJet 700                (NEW)
 HP DesignJet 750
+HP DesignJet 2500               (NEW)
+HP DesignJet 3500               (NEW)
 HP DeskJet 810C
 HP DeskJet 812C
 HP DeskJet 840C
@@ -1115,8 +1124,17 @@ Fujitsu PrintPartner 20W       pcl-6           HP LaserJet 6 series
 Fujitsu PrintPartner 8000      pcl-3           HP LaserJet III series
 HP Color LaserJet 4550         pcl-4           HP LaserJet 4 series
 HP Color LaserJet 5000         pcl-4           HP LaserJet 4 series
+HP DesignJet 230               pcl-desnj-230   HP DesignJet 230
+HP DesignJet 250               pcl-desnj-250   HP DesignJet 250
+HP DesignJet 430               pcl-desnj-430   HP DesignJet 430
+HP DesignJet 450               pcl-desnj-450   HP DesignJet 450
+HP DesignJet 455               pcl-desnj-455   HP DesignJet 455
+HP DesignJet 488               pcl-desnj-488   HP DesignJet 488
+HP DesignJet 700               pcl-desnj-700   HP DesignJet 700
 HP DesignJet 750C              pcl-750         HP DesignJet 750C
 HP DesignJet 750C Plus         pcl-750         HP DesignJet 750C
+HP DesignJet 2500              pcl-desnj-2500  HP DesignJet 2500
+HP DesignJet 3500              pcl-desnj-3500  HP DesignJet 3500
 HP DeskJet 340C                pcl-340         HP DeskJet 340
 HP DeskJet 400                 pcl-400         HP DeskJet 400
 HP DeskJet 500                 pcl-500         HP DeskJet 500

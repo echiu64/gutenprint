@@ -567,6 +567,16 @@ escp2-pm9000c		EPSON PM-9000C
 escp2-pm950c		EPSON PM-950C
 escp2-px7000		EPSON PX-7000
 escp2-px9000		EPSON PX-9000
+pcl-desnj-230           HP DesignJet 230
+pcl-desnj-250           HP DesignJet 250
+pcl-desnj-430           HP DesignJet 430
+pcl-desnj-450           HP DesignJet 450
+pcl-desnj-455           HP DesignJet 455
+pcl-desnj-488           HP DesignJet 488
+pcl-desnj-700           HP DesignJet 700
+pcl-750                 HP DesignJet 750C
+pcl-desnj-250           HP DesignJet 2500
+pcl-desnj-350           HP DesignJet 3500
 pcl-340                 HP DeskJet 340
 pcl-400                 HP DeskJet 400
 pcl-500                 HP DeskJet 500
@@ -578,7 +588,6 @@ pcl-560                 HP DeskJet 560C
 pcl-600                 HP DeskJet 600/600C (Single Cartridge)
 pcl-601                 HP DeskJet 600 series (2 Cartridge)
 pcl-690                 HP DeskJet 690 series (Photo-Ink capable)
-pcl-750                 HP DesignJet 750
 pcl-810                 HP DeskJet 810C
 pcl-812                 HP DeskJet 812C
 pcl-840                 HP DeskJet 840C
