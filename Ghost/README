@@ -250,7 +250,15 @@ For Epson Stylus printers:
 -sQuality='
 
 '360 DPI'                                (works on all printers)
-'720 DPI Microweave'                     (works on all printers)
+'360 DPI Softweave'                      (works on printers that support
+					  variable dot sizes, such as
+					  the Epson Stylus Color 740
+					  and newer)
+'360 DPI High Quality'                   (works on printers that support
+					  variable dot sizes, such as
+					  the Epson Stylus Color 740
+					  and newer)
+'720 DPI Microweave'                     (works on older printers)
 '720 DPI Softweave'                      (works on all printers except
 					  for Stylus Color, Stylus
 					  Color 1500, Stylus Color
@@ -261,7 +269,7 @@ For Epson Stylus printers:
 '720 DPI Highest Quality'                (works on all printers except
 					  above and Epson Stylus Color
 					  440/460/480)
-'1440 x 720 DPI Microweave'              (works on all 1440x720 dpi printers)
+'1440 x 720 DPI Microweave'              (works on older 1440x720 dpi printers)
 '1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)

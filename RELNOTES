@@ -1,5 +1,5 @@
-This is the Print plugin for the Gimp, version 4.0a1.  This is the
-first pre-release of the 4.0 stable release.  It is not 4.0.
+This is the Print plugin for the Gimp, version 4.0a2.  This is the
+second pre-release of the 4.0 stable release.  It is not 4.0.
 
 This software also comes with a GhostScript driver.  The support for
 printers in the GhostScript driver is identical to the support for
@@ -7,6 +7,28 @@ these printers in the Print plugin -- they use the identical code
 base.  Please read Ghost/README for more information on this.
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
+
+Gimp-Print 4.0a2 contains the following improvements over Gimp-Print
+4.0a1:
+
+1) A serious bug in the handling of landscape mode (in the plugin
+   only) has been fixed.
+
+2) A new 360 dpi softweave mode has been added to the Epson driver for
+   the variable drop size printers, which should yield improved
+   quality.  It is reasonably well tuned on the 870.
+
+3) Improved tonal smoothness in highly saturated red, green, and blue.
+
+4) The Ghostscript driver produces more useful error messages if
+   incorrect parameters are supplied.
+
+5) The top margin of the Epson Stylus Color 850 should be correct now.
+
+6) Ink levels have been fine tuned (not necessarily correctly) for
+   newer Epson printers.
+
+7) Work around some inlining problems with egcs 1.1.2.
 
 
 Gimp-Print 4.0a1 contains the following improvements over Gimp-Print 3.1.9:

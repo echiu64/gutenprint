@@ -1,3 +1,159 @@
+2000-08-15	<mitsch@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.38) (+19 -18)
+	
+	Some minor changes to minimize diffs against the version checked
+	into the GIMP source tree.
+	
+2000-08-14	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.213) (+71 -8)
+	
+	4 pl printers actually use 6 pl dots at 720 dpi mode.
+	
+	Nominally support 180 dpi (never mind that nothing actually uses it yet).
+	
+2000-08-14	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.114) (+8 -1)
+	
+	egcs 1.1.2 and thereabouts have problems with inlining here.
+	
+2000-08-14	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.212) (+513 -149)
+	
+	Make ink type selection even more data driven, rather than logic
+	driven.
+	
+2000-08-14	<rlk@sourceforge.net>
+
+	Files:	cyan-sweep.tif (1.1) ( )
+	
+	cyan sweep pattern for testing
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.34) (+8 -4)
+		Ghost/gdevstp.h (1.4) (+1 -1)
+	
+	No good reason to have a trivial header file for a one file driver
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.79) (+3 -3)
+	
+	Minor syntax correction
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.37) (+9 -9)
+		gtk_main_window.c (1.46) (+3 -3)
+	
+	Ensure that at least a thin line is always displayed in the preview box
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.211) (+10 -7)
+	
+	Fine tune 360 softweave
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	print.c (1.106) (+12 -3)
+	
+	Startup debugability
+	
+2000-08-13	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.210) (+2 -2)
+	
+	Fix top margin on ESC 850
+	
+2000-08-12	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.78) (+14 -5)
+		print.h (1.74) (+3 -2)
+		print-escp2.c (1.209) (+5 -4)
+	
+	Mixing in the error to help determine what to print doesn't work well
+	on ESP EX.  Make it configurable.
+	
+2000-08-12	<rlk@sourceforge.net>
+
+	Files:	run-weavetest (1.18) (+1 -1)
+	
+	Actually test the other required modes!
+	
+2000-08-12	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.36) (+25 -13)
+		Ghost/gdevstp.c (1.33) (+37 -27)
+		Ghost/README (1.33) (+19 -9)
+		run-weavetest (1.17) (+1 -1)
+		print-util.c (1.113) (+5 -5)
+		print-escp2.c (1.208) (+221 -139)
+		print-dither.c (1.77) (+31 -16)
+		gtk_main_window.c (1.45) (+22 -10)
+	
+	Fix PPI rescale when image is changed from portrait to landscape mode.
+	
+	Don't suppress printing of colored ink when black is also printed,
+	when density is high.  That turned out to be the cause of lots of
+	problems at 360 DPI and perhaps even at 720 DPI.
+	
+	Change the density value used for making print decisions to use part
+	of the error diffusion.  This feeds into the dot size computation,
+	and results in smoothing of transition regions.
+	
+	Add 360 DPI softweave modes to Epson driver for variable dot size
+	printers.  It's not clear that there's any good reason to do this
+	for fixed dot size printers, or if it will even work.  It yields
+	substantially improved print quality on variable dot size printers
+	(at least the 870).  This needs more testing and tuning.
+	
+	Change the criteria for using bidirectional vs. unidirectional printing.
+	On the 870, unidirectional printing is actually smoother than
+	bidirectional, at least in some cases.
+	
+	Tune zero-margin mode, and fix it for 360 DPI.
+	
+	Reduce saturation/darkness spike in pure red, pure green, and pure
+	blue vicinity, and increase overall saturation to compensate.
+	
+	Test more weave modes (in particular, ones required for 360 DPI
+	softweave).
+	
+	Update Debian install instructions.
+	
+	Use gs_stderr in Ghostscript driver, and print more useful errors.
+	
+2000-08-11	<rlk@sourceforge.net>
+
+	Files:	print-ps.c (1.39) (+5 -1)
+	
+	Protect against someone removing code that only looks redundant.
+	
+2000-08-11	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.73) (+5 -1)
+		print-pcl.c (1.70) (+5 -1)
+	
+	Protect against someone removing code that only looks redundant.
+	
+2000-08-11	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.207) (+8 -1)
+	
+	It is necessary to recompute the image height and width after
+	compute_page_parameters; these will change if the image is rotated.
+	
+2000-08-09	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.29) (+18 -0)
+	
+	4.0a1 release
+	
 2000-08-09	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.28) (+98 -0)
