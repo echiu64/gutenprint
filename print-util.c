@@ -258,6 +258,9 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       const vars_t   *vars
 	       )
 {
+  double isat = 1.0;
+  if (vars->saturation > 1)
+    isat = 1.0 / vars->saturation;
   while (width > 0)
     {
       double h, s, v;
@@ -283,7 +286,10 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
       if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsl(rgb, &h, &s, &v);
-	  s *= vars->saturation;
+	  if (vars->saturation < 1)
+	    s *= vars->saturation;
+	  else
+	    s = pow(s, isat);
 	  if (s > 1)
 	    s = 1.0;
 	  calc_hsl_to_rgb(rgb, h, s, v);
@@ -362,6 +368,9 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   )
 {
   unsigned ld = vars->density * 65536;
+  double isat = 1.0;
+  if (vars->saturation > 1)
+    isat = 1.0 / vars->saturation;
   while (width > 0)
     {
       double h, s, v;
@@ -386,7 +395,10 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
       if (vars->saturation != 1.0)
 	{
 	  calc_rgb_to_hsl(rgbout, &h, &s, &v);
-	  s *= vars->saturation;
+	  if (vars->saturation < 1)
+	    s *= vars->saturation;
+	  else
+	    s = pow(s, isat);
 	  if (s > 1)
 	    s = 1.0;
 	  calc_hsl_to_rgb(rgbout, h, s, v);
