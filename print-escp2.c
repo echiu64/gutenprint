@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.47  2000/01/28 03:59:53  rlk
+ *   Move printers to print-util; also add top/left/bottom/right boxes to the UI
+ *
  *   Revision 1.46  2000/01/25 19:51:27  rlk
  *   1) Better attempt at supporting newer Epson printers.
  *
@@ -812,7 +815,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
         if (ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
-	fwrite("\033(S\010\000", 5, 1, prn);
         break;
 
     case MODEL_INIT_PHOTO:
