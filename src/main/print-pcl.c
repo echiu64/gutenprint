@@ -55,6 +55,8 @@ typedef struct
   const char	*pcl_name;
   const char	*pcl_text;
   int		pcl_code;
+  int		p0;
+  int		p1;
 } pcl_t;
 
 /*
@@ -219,13 +221,13 @@ static const pcl_t pcl_media_sources[] =
 
 static const pcl_t pcl_resolutions[] =
 {
-    { "150dpi", N_ ("150x150 DPI"), PCL_RES_150_150},
-    { "300dpi", N_ ("300x300 DPI"), PCL_RES_300_300},
-    { "600x300dpi", N_ ("600x300 DPI"), PCL_RES_600_300},
-    { "600mono", N_ ("600x600 DPI monochrome"), PCL_RES_600_600_MONO},
-    { "600dpi", N_ ("600x600 DPI"), PCL_RES_600_600},
-    { "1200x600dpi", N_ ("1200x600 DPI"), PCL_RES_1200_600},
-    { "2400x600dpi", N_ ("2400x600 DPI"), PCL_RES_2400_600},
+    { "150dpi", N_("150x150 DPI"), PCL_RES_150_150, 150, 150},
+    { "300dpi", N_("300x300 DPI"), PCL_RES_300_300, 300, 300},
+    { "600x300dpi", N_("600x300 DPI"), PCL_RES_600_300, 600, 300},
+    { "600mono", N_("600x600 DPI monochrome"), PCL_RES_600_600_MONO, 600, 600},
+    { "600dpi", N_("600x600 DPI"), PCL_RES_600_600, 600, 600},
+    { "1200x600dpi", N_("1200x600 DPI"), PCL_RES_1200_600, 1200, 600},
+    { "2400x600dpi", N_("2400x600 DPI"), PCL_RES_2400_600, 2400, 600},
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
@@ -238,7 +240,8 @@ pcl_describe_resolution(const stp_printer_t printer,
     {
       if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
 	{
-	  sscanf(resolution, "%dx%d", x, y);
+	  *x = pcl_resolutions[i].p0;
+	  *y = pcl_resolutions[i].p1;
 	  return;
 	}
     }
@@ -1932,9 +1935,21 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   * Figure out the output resolution...
   */
 
-  sscanf(resolution,"%dx%d",&xdpi,&ydpi);
+  xdpi = 0;
+  ydpi = 0;
+  for (i = 0; i < NUM_RESOLUTIONS; i++)
+    {
+      if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+	{
+	  xdpi = pcl_resolutions[i].p0;
+	  ydpi = pcl_resolutions[i].p1;
+	  break;
+	}
+    }
 
   stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",xdpi,ydpi);
+  if (xdpi == 0 || ydpi == 0)
+    return;
 
  /*
   * Choose the correct color conversion function...
