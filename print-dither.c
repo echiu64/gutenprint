@@ -2226,7 +2226,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
       dithery = yerror0[0];
       ditherk = kerror0[0];
     }
-
+   QUANT(6);
   /*
    * Main loop starts here!
    */
@@ -2266,6 +2266,8 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	}
 
+      QUANT(7);
+
       k = usmin(c, usmin(m, y));
 
       /*
@@ -2281,6 +2283,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	    update_cmy(d, oc, om, oy, k, &c, &m, &y);
 	}
 
+      QUANT(8);
       /*
        * We've done all of the cmyk separations at this point.
        * Now to do the dithering.
@@ -2312,6 +2315,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	  y = update_color(y, dithery);
 	}
 
+      QUANT(9);
 #if 0
       ocd = oc * d->c_darkness;
       omd = om * d->m_darkness;
@@ -2328,6 +2332,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	  k = tk;
 	}
 
+      QUANT(10);
       /*
        * If the printed density is high, ink reduction loses too much
        * ink.  However, at low densities it seems to be safe.  Of course,
@@ -2373,6 +2378,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	goto ecc;
     out:
 
+      QUANT(11);
       if (!(d->dither_type & D_ORDERED_BASE))
 	{
 	  ditherc = update_dither(c, oc, d->src_width, odb, odb_mask,
@@ -2387,6 +2393,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
        * Advance the loop
        *****************************************************************/
 
+      QUANT(12);
     advance:
       if (direction == 1)
 	{
@@ -2445,6 +2452,7 @@ dither_cmyk(const unsigned short  *rgb,	/* I - RGB pixels */
 	  kerror0 += direction;
 	  kerror1 += direction;
 	}
+      QUANT(13);
   }
   /*
    * Main loop ends here!

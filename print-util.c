@@ -1932,33 +1932,13 @@ print_minimum_settings()
 }
 
 #ifdef QUANTIFY
-#define NUM_QUANTIFY_BUCKETS 1024
 unsigned quantify_counts[NUM_QUANTIFY_BUCKETS] = {0};
-unsigned long quantify_buckets[NUM_QUANTIFY_BUCKETS] = {0};
+struct timeval quantify_buckets[NUM_QUANTIFY_BUCKETS] = {{0,0}};
 int quantify_high_index = 0;
-
-void update_timer(int number) 
-{
-    static int first_time = 1;
-    static struct timeb cur_time;
-    static struct timeb prev_time;
-    static unsigned long time_interval;
-    ftime(&cur_time);
-    quantify_counts[number]++;
-
-    if (first_time) {
-        first_time = 0;
-    } else {
-        assert(number < NUM_QUANTIFY_BUCKETS);
-        if (number > quantify_high_index) quantify_high_index = number;
-        time_interval = 1000 * (cur_time.time - prev_time.time);
-        time_interval += cur_time.millitm - prev_time.millitm;
-        quantify_buckets[number] += time_interval;
-    }
-
-    prev_time.time = cur_time.time;
-    prev_time.millitm = cur_time.millitm;
-}
+int quantify_first_time = 1;
+struct timeval quantify_cur_time;
+struct timeval quantify_prev_time;
+void quantify_calibrate
 
 void print_timers() 
 {
@@ -1966,8 +1946,9 @@ void print_timers()
 
     printf("Quantify timers:\n");
     for (i = 0; i <= quantify_high_index; i++) {
-        printf("Bucket %d:\t%lu ms\thit %u times\n", i, quantify_buckets[i], quantify_counts[i]);
-        quantify_buckets[i] = 0;
+        printf("Bucket %d:\t%ld.%ld s\thit %u times\n", i, quantify_buckets[i].tv_sec, quantify_buckets[i].tv_usec, quantify_counts[i]);
+        quantify_buckets[i].tv_sec = 0;
+        quantify_buckets[i].tv_usec = 0;
     }
 }
 #endif
