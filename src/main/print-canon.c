@@ -2250,7 +2250,10 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 
   if ((printhead == 0 || caps->inks == CANON_INK_K) &&
       output_type != OUTPUT_MONOCHROME)
-    output_type = OUTPUT_GRAY;
+    {
+      output_type = OUTPUT_GRAY;
+      stp_set_output_type(nv, output_type);
+    }
 
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
     colormode = COLOR_MONOCHROME;
@@ -2569,7 +2572,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
     stp_dither(out, y, dither, cyan, lcyan, magenta, lmagenta,
 	       yellow, 0, black, duplicate_line, zero_mask);
 
-    canon_write_line(v, caps, ydpi,
+    canon_write_line(nv, caps, ydpi,
 		     black,    delay_k,
 		     cyan,     delay_c,
 		     magenta,  delay_m,
@@ -2608,7 +2611,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 	    delay_max);
     for (y= 0; y<delay_max; y++) {
 
-      canon_write_line(v, caps, ydpi,
+      canon_write_line(nv, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c,
 		       magenta,  delay_m,
@@ -2644,7 +2647,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   if (lmagenta != NULL) stp_free(lmagenta);
   if (lyellow != NULL)  stp_free(lyellow);
 
-  canon_deinit_printer(v, &init);
+  canon_deinit_printer(nv, &init);
   stp_free_vars(nv);
 }
 
