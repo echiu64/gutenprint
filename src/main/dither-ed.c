@@ -80,11 +80,10 @@ update_dither(stpi_dither_t *d, int channel, int width,
   int i, dist, dist1;
   int delta, delta1;
   int offset;
-  int xs = 65535 * CHANNEL(d, channel).density_adjustment;
   if (tmp == 0)
     return error0[direction];
-  if (tmp > xs)
-    tmp = xs;
+  if (tmp > 65535)
+    tmp = 65535;
   if (d->spread >= 16 || o >= 2048)
     {
       tmp += tmp;
@@ -202,8 +201,6 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	  else if (adjusted <= 0)
 	    return adjusted;
 	}
-      dither_value *= dc->density_adjustment;
-
       /*
        * Where are we within the range.  If we're going to print at
        * all, this determines the probability of printing the darker
@@ -290,8 +287,6 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	    }
 	} /* randomizer != 0 */
 
-      vmatrix *= dc->density_adjustment;
-
       /*
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
@@ -304,7 +299,6 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	    subc = upper;
 	  else
 	    {
-	      rangepoint = rangepoint * upper->range / 65536;
 	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
 		subc = upper;
 	      else
@@ -333,13 +327,11 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	    {
 	      double adj = -(int) v;
 	      adj /= 2.0;
-	      adj /= dc->density_adjustment;
 	      adjusted = adj;
 	    }
 	  else
 	    {
 	      double adj = v;
-	      adj /= dc->density_adjustment;
 	      adjusted -= adj;
 	    }
 	}

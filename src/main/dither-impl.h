@@ -76,7 +76,6 @@ typedef struct ink_defn
 {
   unsigned range;
   unsigned value;
-  unsigned xvalue;
   unsigned bits;
   unsigned dot_size;
   int subchannel;
@@ -132,8 +131,6 @@ typedef struct dither_channel
   unsigned bit_max;
   unsigned signif_bits;
   unsigned density;
-  float sqrt_density_adjustment;
-  float density_adjustment;
 
   int v;
   int o;

@@ -177,9 +177,6 @@ extern void stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
 extern unsigned char *stpi_dither_get_channel(stp_vars_t v,
 					      unsigned channel,
 					      unsigned subchannel);
-extern void stpi_dither_set_density_adjustment(stp_vars_t v,
-					       int color, int subchannel,
-					       double adjustment);
 
 extern void stpi_dither(stp_vars_t v, int row, int duplicate_line,
 			int zero_mask);

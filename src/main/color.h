@@ -59,8 +59,12 @@ extern void stpi_channel_reset(stp_vars_t v);
 extern void stpi_channel_reset_channel(stp_vars_t v, int channel);
 
 extern void stpi_channel_add(stp_vars_t v, unsigned channel,
-			     unsigned subchannel, double value,
-			     double density);
+			     unsigned subchannel, double value);
+
+extern void stpi_channel_set_density_adjustment(stp_vars_t v,
+						int color, int subchannel,
+						double adjustment);
+
 
 extern void stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 				    int input_channel_count);

@@ -118,9 +118,23 @@ stpi_channel_free(void *vc)
   stpi_free(vc);
 }
 
+static stpi_subchannel_t *
+get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
+  if (!cg)
+    return NULL;
+  if (channel >= cg->channel_count)
+    return NULL;
+  if (subchannel >= cg->c[channel].subchannel_count)
+    return NULL;
+  return &(cg->c[channel].sc[subchannel]);
+}
+  
 void
 stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
-		 double value, double density)
+		 double value)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
@@ -151,7 +165,16 @@ stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
 	chan->subchannel_count = subchannel + 1;
     }
   chan->sc[subchannel].value = value;
-  chan->sc[subchannel].density = density;
+  chan->sc[subchannel].density = 1.0;
+}
+
+void
+stpi_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
+				    double adjustment)
+{
+  stpi_subchannel_t *sch = get_channel(v, color, subchannel);
+  if (sch && adjustment >= 0)
+    sch->density = adjustment;
 }
 
 static int
@@ -255,48 +278,112 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
     stpi_malloc(sizeof(unsigned short) * cg->input_channels * width);
 }
 
+static void
+clear_channel(unsigned short *data, unsigned width, unsigned depth)
+{
+  int i;
+  width *= depth;
+  for (i = 0; i < width; i += depth)
+    data[i] = 0;
+}
+
+static int
+scale_channel(unsigned short *data, unsigned width, unsigned depth,
+	      double density)
+{
+  int i;
+  int retval = 0;
+  width *= depth;
+  for (i = 0; i < width; i += depth)
+    {
+      int tval = 0.5 + (data[i] * density);
+      if (tval > 65535)
+	tval = 65535;
+      else if (tval < 0)
+	tval = 0;
+      if (tval)
+	retval = 1;
+      data[i] = (unsigned short) tval;
+    }
+  return retval;
+}
+
+static int
+scan_channel(unsigned short *data, unsigned width, unsigned depth)
+{
+  int i;
+  width *= depth;
+  for (i = 0; i < width; i += depth)
+    {
+      if (data[i])
+	return 1;
+    }
+  return 0;
+}
+
 void
 stpi_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stpi_get_component_data(v, "Channel"));
-  const unsigned short *input;
-  unsigned short *output;
-  int i;
+  int i, j, k;
+  int physical_channel;
   int nz[32];
-  if (!input_needs_splitting(v))
-    return;
-  memset(nz, 0, sizeof(nz));
-  input = cg->input_data;
-  output = cg->data;
-  for (i = 0; i < cg->width; i++)
+  if (input_needs_splitting(v))
     {
-      int zero_ptr = 0;
-      int j;
-      for (j = 0; j < cg->channel_count; j++)
+      const unsigned short *input = cg->input_data;
+      unsigned short *output = cg->data;
+      for (i = 0; i < cg->width; i++)
 	{
-	  stpi_channel_t *c = &(cg->c[j]);
-	  int s_count = c->subchannel_count;
-	  if (s_count == 1)
-	    nz[zero_ptr++] |= *(output++) = *(input);
-	  else if (s_count > 1)
+	  int zero_ptr = 0;
+	  for (j = 0; j < cg->channel_count; j++)
 	    {
-	      int k;
-	      for (k = 0; k < s_count; k++)
-		nz[zero_ptr++] |= (*output++) =
-		  c->lut[((*input) * s_count) + k];
+	      stpi_channel_t *c = &(cg->c[j]);
+	      int s_count = c->subchannel_count;
+	      if (s_count == 1)
+		nz[zero_ptr++] |= *(output++) = *(input);
+	      else if (s_count > 1)
+		{
+		  for (k = 0; k < s_count; k++)
+		    nz[zero_ptr++] |= (*output++) =
+		      c->lut[((*input) * s_count) + k];
+		}
+	      input++;
 	    }
-	  input++;
 	}
     }
   if (zero_mask)
+    *zero_mask = 0;
+  physical_channel = 0;
+  for (i = 0; i < cg->channel_count; i++)
     {
-      *zero_mask = 0;
-      for (i = 0; i < 32; i++)
-	{
-	  if (nz[i] == 0)
-	    *zero_mask |= 1 << i;
-	}
+      stpi_channel_t *ch = &(cg->c[i]);
+      if (ch->subchannel_count > 0)
+	for (j = 0; j < ch->subchannel_count; j++)
+	  {
+	    stpi_subchannel_t *sch = &(ch->sc[j]);
+	    double density = sch->density;
+	    unsigned short *output = cg->data + physical_channel;
+	    if (density == 0.0)
+	      {
+		clear_channel(output, cg->width, cg->total_channels);
+		if (zero_mask)
+		  *zero_mask |= 1 << physical_channel;
+	      }
+	    else if (density != 1)
+	      {
+		if (scale_channel(output, cg->width, cg->total_channels,
+				  density) == 0)
+		  *zero_mask |= 1 << physical_channel;
+	      }
+	    else
+	      {
+		if (scan_channel(output, cg->width, cg->total_channels) == 0)
+		  *zero_mask |= 1 << physical_channel;
+	      }
+	      
+	    physical_channel++;
+	  }
     }
 }
 

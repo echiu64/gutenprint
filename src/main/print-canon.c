@@ -2224,7 +2224,7 @@ set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color,
     return;
   stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades,
 			    ink->density * stp_get_float_parameter(v, "Density"));
-  stpi_dither_set_density_adjustment
+  stpi_channel_set_density_adjustment
     (v, color, 1, (get_double_param(v, channel_param) *
 		   get_double_param(v, subchannel_param) *
 		   get_double_param(v, "Density")));
@@ -2540,16 +2540,16 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 		     "LightYellowTransition");
       set_ink_ranges(v, inks->k, ECOLOR_K, "BlackDensity", NULL);
     }
-  stpi_dither_set_density_adjustment
+  stpi_channel_set_density_adjustment
     (v, ECOLOR_C, 0,
      get_double_param(v, "CyanDensity") * get_double_param(v, "Density"));
-  stpi_dither_set_density_adjustment
+  stpi_channel_set_density_adjustment
     (v, ECOLOR_M, 0,
      get_double_param(v, "MagentaDensity") * get_double_param(v, "Density"));
-  stpi_dither_set_density_adjustment
+  stpi_channel_set_density_adjustment
     (v, ECOLOR_Y, 0,
      get_double_param(v, "YellowDensity") * get_double_param(v, "Density"));
-  stpi_dither_set_density_adjustment
+  stpi_channel_set_density_adjustment
     (v, ECOLOR_K, 0,
      get_double_param(v, "BlackDensity") * get_double_param(v, "Density"));
 

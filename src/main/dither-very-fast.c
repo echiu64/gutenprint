@@ -80,9 +80,7 @@ stpi_dither_very_fast(stp_vars_t v,
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	{
 	  stpi_dither_channel_t *dc = &(CHANNEL(d, i));
-	  if (dc->ptr &&
-	      (input[i] * dc->density_adjustment >
-	       ditherpoint_fast(d, &(dc->dithermat), x)))
+	  if (dc->ptr && (input[i] > ditherpoint_fast(d, &(dc->dithermat), x)))
 	    {
 	      set_row_ends(dc, x);
 	      dc->ptr[d->ptr_offset] |= bit;

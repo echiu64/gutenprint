@@ -1254,7 +1254,7 @@ setup_inks(stp_vars_t v)
 		    channel->subchannels[j].subchannel_scale;
 		  double scale = userval * get_double_param(v, subparam);
 		  scale *= get_double_param(v, "Density");
-		  stpi_dither_set_density_adjustment(v, i, j, scale);
+		  stpi_channel_set_density_adjustment(v, i, j, scale);
 		}
 	    }
 	}

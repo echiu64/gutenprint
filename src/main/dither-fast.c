@@ -50,7 +50,6 @@ print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y
 
   if (density <= 0 || adjusted <= 0)
     return;
-  adjusted *= dc->density_adjustment;
   for (i = levels; i >= 0; i--)
     {
       stpi_dither_segment_t *dd = &(dc->ranges[i]);
@@ -71,7 +70,6 @@ print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y
 	{
 	  rangepoint =
 	    ((unsigned) (xdensity - dd->lower->range)) * 65535 / dd->range_span;
-	  rangepoint = rangepoint * dd->upper->range / 65536;
 	  if (rangepoint >= dpoint)
 	    subc = dd->upper;
 	  else

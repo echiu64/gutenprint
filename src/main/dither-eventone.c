@@ -98,8 +98,6 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
       for (j = 0; j < CHANNEL(d, i).numshades; j++) {
         CHANNEL(d, i).shades[j].errs = stpi_zalloc(size * sizeof(int));
       }
-      /* Use ".b" for the density scaler. */
-      CHANNEL(d, i).b = 65536 * CHANNEL(d, i).density_adjustment;
     }
 
     et = stpi_zalloc(sizeof(eventone_t));
@@ -159,84 +157,18 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 static inline stpi_shade_segment_t *
 split_shades(stpi_dither_channel_t *dc, int x, int *inkp)
 {
-  int i;
-  stpi_shade_segment_t *sp, *sp2;
-  int totalink;
-  int maxv;
-  int orig, nextv;
+  stpi_shade_segment_t *sp;
 
-  if (dc->numshades == 1) {			/* Make single shade more efficient */
-    sp = &dc->shades[0];
-    if (dc->v == 0) {				/* Special case zero */
-      sp->base = 0;
-      *inkp = sp->value += sp->errs[x + MAX_SPREAD];
-      return sp;
-    }
-    sp->base = (dc->v * dc->b) / sp->density;
-    sp->value += 2 * sp->base + sp->errs[x + MAX_SPREAD];
-    *inkp = sp->value - sp->base;
+  sp = &dc->shades[0];		/* Assume only one shade! */
+  if (dc->v == 0) {				/* Special case zero */
+    sp->base = 0;
+    *inkp = sp->value += sp->errs[x + MAX_SPREAD];
     return sp;
   }
-
-  if (dc->v == 0) {				/* Special case zero */
-    sp2 = &dc->shades[0];
-    totalink = 0;
-    maxv = 0;
-    for (i = 0; i < dc->numshades; i++) {
-      int value;
-      sp = &dc->shades[i];
-      sp->base = 0;
-      value = (sp->value += sp->errs[x + MAX_SPREAD]);
-      totalink += value;
-      if (value > maxv) {
-        maxv = value;
-	sp2 = sp;
-      }
-    }
-    *inkp = totalink;
-    return sp2;
-  }
-
-
-  /* General case for many sub-channels follows now */
-
-  totalink = 0;
-  maxv = 0;
-  nextv = 0;
-  orig = dc->o;
-  sp2 = &dc->shades[0];
-
-  for (i = dc->numshades - 1; i >= 0; i--) {
-    int value;
-    sp = &dc->shades[i];
-
-    sp->base = nextv;
-    nextv = 0;
-    if (orig > sp->lower) {
-      if (sp->trans == 0 || orig >= sp->trans) {
-        sp->base = (dc->v * dc->b) / sp->density;
-      } else {
-        sp->base = ((orig - sp->lower) * dc->b) / sp->div1;
-	nextv = ((sp->trans - orig) * dc->b) / sp->div2;
-	if (orig != dc->v) {
-	  sp->base = (sp->base * dc->v) / orig;
-	  nextv = (nextv * dc->v) / orig;
-	}
-      }
-      orig = 0;
-    }
-    sp->value += 2 * sp->base + sp->errs[x + MAX_SPREAD];
-    value = sp->value - sp->base;
-    totalink += value;
-    if (value > maxv) {
-      maxv = value;
-      sp2 = sp;
-    }
-  }
-
-  /* Return the subchannel we will be printing */
-  *inkp = totalink;
-  return sp2;
+  sp->base = dc->v;
+  sp->value += 2 * sp->base + sp->errs[x + MAX_SPREAD];
+  *inkp = sp->value - sp->base;
+  return sp;
 }
 
 static inline void
@@ -312,11 +244,14 @@ eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int dither_point, unsi
 }
 
 static inline int
-find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink, unsigned int baseink, stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
+find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink,
+	     unsigned int baseink, stpi_ink_defn_t *lower,
+	     stpi_ink_defn_t *upper)
 {
   lower->range = 0;
   lower->bits = 0;
-  if (totalink < 0) totalink = 0;
+  if (totalink < 0)
+    totalink = 0;
 
   { int i;
     stpi_ink_defn_t *ip;
