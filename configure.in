@@ -82,7 +82,8 @@ AC_ARG_WITH(cups,
     yes) BUILD_CUPS="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="${prefix}" ;;
     no) BUILD_CUPS="no" ; AC_MSG_RESULT([no]) ; cups_prefix="${prefix}" ;;
     *) if test -d ${withval} ; then
-         AC_MSG_RESULT([yes (using specified prefix)])
+         BUILD_CUPS="yes"
+	 AC_MSG_RESULT([yes (using specified prefix)])
          cups_prefix="${withval}"
        else
          AC_MSG_RESULT([unknown])
