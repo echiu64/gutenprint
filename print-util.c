@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.46  1999/12/25 17:47:17  rlk
+ *   Cleanup
+ *
  *   Revision 1.45  1999/12/25 00:41:01  rlk
  *   some minor improvement
  *
@@ -467,22 +470,11 @@ do {									\
 	  I_RATIO_##R##1);						\
 } while (0)
 
-#define PRINT_D3(r, R, d1, d2)						\
+#define PRINT_D3(n, r, R, d1, d2)					\
 do {									\
-  fprintf(dbg, "Case 2: o" #r " %lld " #r				\
+  fprintf(dbg, "Case %d: o" #r " %lld " #r				\
 	  " %lld ditherbit" #d1 " %d ditherbit" #d2 " %d "		\
-	  "num %lld den %lld test1 %lld test2 %lld\n",			\
-	  o##r, r, ditherbit##d1, ditherbit##d2,			\
-	  o##r, 65536ll,						\
-	  ((32767 + (((long long) ditherbit##d2 / 1) - 32768)) * o##r /	\
-	   65536), cutoff);						\
-} while (0)
-
-#define PRINT_D4(r, R, d1, d2)						\
-do {									\
-  fprintf(dbg, "Case 3: o" #r " %lld " #r				\
-	  " %lld ditherbit" #d1 " %d ditherbit" #d2 " %d "		\
-	  "num %lld den %lld test1 %lld test2 %lld\n",			\
+	  "num %lld den %lld test1 %lld test2 %lld\n", n		\
 	  o##r, r, ditherbit##d1, ditherbit##d2,			\
 	  o##r, 65536ll,						\
 	  ((32767 + (((long long) ditherbit##d2 / 1) - 32768)) * o##r /	\
@@ -494,8 +486,7 @@ do {									\
 #define UPDATE_COLOR_DBG(r) do {} while (0)
 #define PRINT_D1(r, R, d1, d2) do {} while (0)
 #define PRINT_D2(r, R, d1, d2) do {} while (0)
-#define PRINT_D3(r, R, d1, d2) do {} while (0)
-#define PRINT_D4(r, R, d1, d2) do {} while (0)
+#define PRINT_D3(n, r, R, d1, d2) do {} while (0)
 
 #endif
 
@@ -543,14 +534,14 @@ do {									     \
 	    ((65535ll - (65535ll * I_RATIO_##R##1)) * cutoff / 65536);	     \
 	  if (ditherbit##d1 > cutoff)					     \
 	    {								     \
-	      PRINT_D3(r, R, d1, d2);					     \
+	      PRINT_D3(3, r, R, d1, d2);				     \
 	      if (l##r##bits++ % horizontal_overdensity == 0)		     \
 		if (! (*kptr & bit))					     \
 		  *l##r##ptr |= bit;					     \
 	    }								     \
 	  else								     \
 	    {								     \
-	      PRINT_D4(r, R, d1, d2);					     \
+	      PRINT_D3(4, r, R, d1, d2);				     \
 	      if (r##bits++ % horizontal_overdensity == 0)		     \
 		if (! (*kptr & bit))					     \
 		  *r##ptr |= bit;					     \
@@ -844,16 +835,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       ok = k;
       nk = k + (ditherk) / 8;
       kdarkness = MAX((c + c / 3 + m + 2 * y / 3) / 4, ak);
-/*
-      kdarkness = ak;
-*/
       if (kdarkness < KDARKNESS_UPPER)
 	{
 	  int rb;
-/*
-	  ub = KDARKNESS_UPPER - kdarkness;
-	  lb = ub * KDARKNESS_LOWER / KDARKNESS_UPPER;
-*/
 	  ub = KDARKNESS_UPPER;
 	  lb = KDARKNESS_LOWER;
 	  rb = ub - lb;
@@ -899,7 +883,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       if (lmagenta)
 	{
 	  c += ck * 8 / 8 * 3 / 2;
-	  m += ck * 19 / 16 * 3 / 2;
+	  m += ck * 8 / 8 * 3 / 2;
 	  y += ck * 8 / 8 * 3 / 2;
 	}
       else
@@ -930,28 +914,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
 
       UPDATE_DITHER(k, 1, x, src_width);
-#if 0
-      if (ditherbit0 & bit)
-	{
-	  if (x > 0)
-	    kerror1[-direction] += k;
-	  else
-	    kerror1[0] = k;
-	  kerror1[0] += 2 * k;
-	  kerror1[direction] = k;
-	  ditherk    = kerror0[direction] + 3 * k;
-	}
-      else
-	{
-	  if (x > 0)
-	    kerror1[-direction] += k / 2;
-	  else
-	    kerror1[0] = k / 2;
-	  kerror1[0] += k;
-	  kerror1[direction] = k / 2;
-	  ditherk    = kerror0[direction] + 5 * k;
-	}
-#endif
     }
     else
     {
@@ -2036,72 +1998,34 @@ compute_lut(lut_t *lut,
 				 pow(green_pixel, print_gamma));
 	  blue_pixel = 256.0 * (256.0 - 256.0 *
 				pow(blue_pixel, print_gamma));
-#if 0
-	  if (red > 1.0)
-	    red_pixel = 65536.0 + ((pixel - 65536.0) / red);
-	  else
-	    red_pixel = pixel * red;
-	  if (green > 1.0)
-	    green_pixel = 65536.0 + ((pixel - 65536.0) / green);
-	  else
-	    green_pixel = pixel * green;
-	  if (blue > 1.0)
-	    blue_pixel = 65536.0 + ((pixel - 65536.0) / blue);
-	  else
-	    blue_pixel = pixel * blue;
-#endif
 
 	  if (pixel <= 0.0)
-	    {
-	      lut->composite[i] = 0;
-	    }
+	    lut->composite[i] = 0;
 	  else if (pixel >= 65535.0)
-	    {
-	      lut->composite[i] = 65535;
-	    }
+	    lut->composite[i] = 65535;
 	  else
-	    {
-	      lut->composite[i] = (unsigned)(pixel + 0.5);
-	    }
+	    lut->composite[i] = (unsigned)(pixel + 0.5);
 
 	  if (red_pixel <= 0.0)
-	    {
-	      lut->red[i] = 0;
-	    }
+	    lut->red[i] = 0;
 	  else if (red_pixel >= 65535.0)
-	    {
-	      lut->red[i] = 65535;
-	    }
+	    lut->red[i] = 65535;
 	  else
-	    {
-	      lut->red[i] = (unsigned)(red_pixel + 0.5);
-	    }
+	    lut->red[i] = (unsigned)(red_pixel + 0.5);
 
 	  if (green_pixel <= 0.0)
-	    {
-	      lut->green[i] = 0;
-	    }
+	    lut->green[i] = 0;
 	  else if (green_pixel >= 65535.0)
-	    {
-	      lut->green[i] = 65535;
-	    }
+	    lut->green[i] = 65535;
 	  else
-	    {
-	      lut->green[i] = (unsigned)(green_pixel + 0.5);
-	    }
+	    lut->green[i] = (unsigned)(green_pixel + 0.5);
 
 	  if (blue_pixel <= 0.0)
-	    {
-	      lut->blue[i] = 0;
-	    }
+	    lut->blue[i] = 0;
 	  else if (blue_pixel >= 65535.0)
-	    {
-	      lut->blue[i] = 65535;
-	    }
+	    lut->blue[i] = 65535;
 	  else
-	    {
-	      lut->blue[i] = (unsigned)(blue_pixel + 0.5);
-	    }
+	    lut->blue[i] = (unsigned)(blue_pixel + 0.5);
 	}
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
