@@ -30,7 +30,6 @@
 #endif
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
-#include "print-dither.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
