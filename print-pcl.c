@@ -1306,9 +1306,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   int		do_cret,	/* 300 DPI CRet printing */
 		do_6color,	/* CMY + cmK printing */
 		planes;		/* # of output planes */
-  int           tempwidth,	/* From default_media_size() */
-                templength,	/* From default_media_size() */
-                pcl_media_size, /* PCL media size code */
+  int		pcl_media_size, /* PCL media size code */
 		pcl_media_type, /* PCL media type code */
 		pcl_media_source;	/* PCL media source code */
   vars_t	nv;
@@ -1375,6 +1373,15 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
   pcl_imageable_area(printer, ppd_file, media_size, &page_left, &page_right,
                      &page_bottom, &page_top);
+#ifdef DEBUG
+  printf("Before compute_page_parameters()\n");
+  printf("page_left = %d, page_right = %d, page_top = %d, page_bottom = %d\n",
+    page_left, page_right, page_top, page_bottom);
+  printf("top = %d, left = %d\n", top, left);
+  printf("scaling = %f, image_width = %d, image_height = %d\n", scaling,
+    image_width, image_height);
+#endif
+
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
@@ -1384,9 +1391,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
   image_width = Image_width(image);
 
 #ifdef DEBUG
+  printf("After compute_page_parameters()\n");
   printf("page_width = %d, page_height = %d\n", page_width, page_height);
   printf("out_width = %d, out_height = %d\n", out_width, out_height);
-  printf("xdpi = %d, ydpi = %d, landscape = %d\n", xdpi, ydpi, landscape);
+  printf("top = %d, left = %d\n", top, left);
 #endif /* DEBUG */
 
  /*
@@ -1403,18 +1411,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
 
  /*
   * Set media size
-  *
-  * We need to get the length of the page because we need
-  * to correct "top" below.
   */
-
-  default_media_size(printer, ppd_file, media_size, &tempwidth, &templength);
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
 
 #ifdef DEBUG
-  printf("Templength = %d, pcl_media_size = %d, media_size = %s\n",
-    templength, pcl_media_size, media_size);
+  printf("pcl_media_size = %d, media_size = %s\n", pcl_media_size, media_size);
 #endif
 
  /*
@@ -1431,7 +1433,6 @@ pcl_print(const printer_t *printer,		/* I - Model */
   }
 
   fprintf(prn, "\033&l%dA", pcl_media_size);
-  top = templength - top;
 
   fputs("\033&l0L", prn);			/* Turn off perforation skip */
   fputs("\033&l0E", prn);			/* Reset top margin to 0 */
@@ -1618,7 +1619,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   out_width  = xdpi * out_width / 72;
   out_height = ydpi * out_height / 72;
 
-  fprintf(prn, "\033&a%dH", 10 * left - 180);	/* Set left raster position */
+  fprintf(prn, "\033&a%dH", 10 * left);		/* Set left raster position */
   fprintf(prn, "\033&a%dV", 10 * top);		/* Set top raster position */
   fprintf(prn, "\033*r%dS", out_width);		/* Set raster width */
   fprintf(prn, "\033*r%dT", out_height);	/* Set raster height */
