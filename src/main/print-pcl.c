@@ -43,8 +43,10 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(const stp_vars_t, unsigned char *, int, int);
-static void	pcl_mode2(const stp_vars_t, unsigned char *, int, int);
+static void	pcl_mode0(const stp_vars_t, unsigned char *, unsigned char *,
+			  int, int);
+static void	pcl_mode2(const stp_vars_t, unsigned char *, unsigned char *,
+			  int, int);
 
 /*
  * Generic define for a name/value set
@@ -1962,8 +1964,8 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 		errlast;	/* Last raster line loaded */
   stp_convert_t	colorfunc;	/* Color conversion function... */
   int		zero_mask;
-  void		(*writefunc)(const stp_vars_t, unsigned char *, int, int);
-				/* PCL output function */
+  void		(*writefunc)(const stp_vars_t, unsigned char *, unsigned char *,
+		int, int);	/* PCL output function */
   int           image_height,
                 image_width,
                 image_bpp;
@@ -1988,6 +1990,7 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   int		blank_lines,	/* Accumulated blank lines */
 		is_blank,	/* Current line is blank */
 		do_blank;	/* Blank line removal required */
+  unsigned char *comp_buf;	/* Scratch buffer for pcl_mode2 */
 
   if (!stp_get_verified(nv))
     {
@@ -2328,13 +2331,11 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
   if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
   {
     stp_puts("\033*b2M", v);			/* Mode 2 (TIFF) */
-    writefunc = pcl_mode2;
   }
   else
 #endif
   {
     stp_puts("\033*b0M", v);			/* Mode 0 (no compression) */
-    writefunc = pcl_mode0;
   }
 
  /*
@@ -2400,6 +2401,21 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
       lcyan    = NULL;
       lmagenta = NULL;
     }
+  }
+
+/* Allocate buffer for pcl_mode2 tiff compression */
+
+#ifndef PCL_DEBUG_DISABLE_COMPRESSION
+  if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
+  {
+    comp_buf = stp_malloc(height + (height + 126) / 127);
+    writefunc = pcl_mode2;
+  }
+  else
+#endif
+  {
+    comp_buf = NULL;
+    writefunc = pcl_mode0;
   }
 
  /*
@@ -2550,36 +2566,36 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
         */
         if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
         {
-          (*writefunc)(v, black + height / 2, height / 2, 0);
-          (*writefunc)(v, black, height / 2, 1);
+          (*writefunc)(v, comp_buf, black + height / 2, height / 2, 0);
+          (*writefunc)(v, comp_buf, black, height / 2, 1);
         }
         else
         {
 	  if(do_cretb)
 	  {
-/*	    (*writefunc)(v, black + height / 2, 0, 0); */
-	    (*writefunc)(v, black, height/2, 0);
+/*	    (*writefunc)(v, comp_buf, black + height / 2, 0, 0); */
+	    (*writefunc)(v, comp_buf, black, height/2, 0);
 	  }
 	  else
 	  {
-	    (*writefunc)(v, black + height / 2, height / 2, 0);
-	    (*writefunc)(v, black, height / 2, 0);
+	    (*writefunc)(v, comp_buf, black + height / 2, height / 2, 0);
+	    (*writefunc)(v, comp_buf, black, height / 2, 0);
 	  }
-          (*writefunc)(v, cyan + height / 2, height / 2, 0);
-          (*writefunc)(v, cyan, height / 2, 0);
-          (*writefunc)(v, magenta + height / 2, height / 2, 0);
-          (*writefunc)(v, magenta, height / 2, 0);
-          (*writefunc)(v, yellow + height / 2, height / 2, 0);
+          (*writefunc)(v, comp_buf, cyan + height / 2, height / 2, 0);
+          (*writefunc)(v, comp_buf, cyan, height / 2, 0);
+          (*writefunc)(v, comp_buf, magenta + height / 2, height / 2, 0);
+          (*writefunc)(v, comp_buf, magenta, height / 2, 0);
+          (*writefunc)(v, comp_buf, yellow + height / 2, height / 2, 0);
           if (do_6color)
           {
-            (*writefunc)(v, yellow, height / 2, 0);
-            (*writefunc)(v, lcyan + height / 2, height / 2, 0);
-            (*writefunc)(v, lcyan, height / 2, 0);
-            (*writefunc)(v, lmagenta + height / 2, height / 2, 0);
-            (*writefunc)(v, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
+            (*writefunc)(v, comp_buf, yellow, height / 2, 0);
+            (*writefunc)(v, comp_buf, lcyan + height / 2, height / 2, 0);
+            (*writefunc)(v, comp_buf, lcyan, height / 2, 0);
+            (*writefunc)(v, comp_buf, lmagenta + height / 2, height / 2, 0);
+            (*writefunc)(v, comp_buf, lmagenta, height / 2, 1);		/* Last plane set on light magenta */
           }
           else
-            (*writefunc)(v, yellow, height / 2, 1);		/* Last plane set on yellow */
+            (*writefunc)(v, comp_buf, yellow, height / 2, 1);		/* Last plane set on yellow */
         }
       }
       else
@@ -2590,22 +2606,22 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
 
         if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
         {
-          (*writefunc)(v, black, height, 1);
+          (*writefunc)(v, comp_buf, black, height, 1);
         }
         else
         {
           if (black != NULL)
-            (*writefunc)(v, black, height, 0);
-          (*writefunc)(v, cyan, height, 0);
-          (*writefunc)(v, magenta, height, 0);
+            (*writefunc)(v, comp_buf, black, height, 0);
+          (*writefunc)(v, comp_buf, cyan, height, 0);
+          (*writefunc)(v, comp_buf, magenta, height, 0);
           if (do_6color)
           {
-            (*writefunc)(v, yellow, height, 0);
-            (*writefunc)(v, lcyan, height, 0);
-            (*writefunc)(v, lmagenta, height, 1);		/* Last plane set on light magenta */
+            (*writefunc)(v, comp_buf, yellow, height, 0);
+            (*writefunc)(v, comp_buf, lcyan, height, 0);
+            (*writefunc)(v, comp_buf, lmagenta, height, 1);		/* Last plane set on light magenta */
           }
           else
-            (*writefunc)(v, yellow, height, 1);		/* Last plane set on yellow */
+            (*writefunc)(v, comp_buf, yellow, height, 1);		/* Last plane set on yellow */
         }
       }
     }
@@ -2656,6 +2672,9 @@ pcl_print(const stp_printer_t printer,		/* I - Model */
     stp_free(lmagenta);
   }
 
+  if (comp_buf != NULL)
+    stp_free(comp_buf);
+
   if ((caps->stp_printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
     stp_puts("\033*rC", v);
   else
@@ -2689,6 +2708,7 @@ const stp_printfuncs_t stp_pcl_printfuncs =
 
 static void
 pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
+          unsigned char *comp_buf,	/* I - scratch buffer (not used) */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2704,12 +2724,12 @@ pcl_mode0(const stp_vars_t v,		/* I - Print file or command */
 
 static void
 pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
+          unsigned char *comp_buf,	/* I - Scratch Buffer */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
 {
-  unsigned char	comp_buf[1536],		/* Compression buffer */
-		*comp_ptr;		/* Current slot in buffer */
+  unsigned char	*comp_ptr;		/* Current slot in buffer */
 
   stp_pack_tiff(line, height, comp_buf, &comp_ptr);
 
