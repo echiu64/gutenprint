@@ -801,7 +801,8 @@ Image_progress_conclude(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
-  fprintf(stderr, "INFO: Finished page %d...\n", cups->page);
+  fprintf(stderr, "INFO: Finished page %d...\n", cups->page + 1);
+  /* cups->page + 1 because users expect 1-based counting */
 }
 
 
@@ -818,7 +819,8 @@ Image_progress_init(stp_image_t *image)/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
-  fprintf(stderr, "INFO: Starting page %d...\n", cups->page);
+  fprintf(stderr, "INFO: Starting page %d...\n", cups->page + 1);
+  /* cups->page + 1 because users expect 1-based counting */
 }
 
 
