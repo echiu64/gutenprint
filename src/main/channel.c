@@ -76,6 +76,7 @@ typedef struct
   unsigned ink_limit;
   unsigned max_density;
   stpi_channel_t *c;
+  unsigned lower_multi_limit;
   unsigned angle_count;
   stpi_channel_angle_t *angles;
   unsigned short *input_data;
@@ -118,6 +119,7 @@ stpi_channel_clear(void *vc)
   cg->total_channels = 0;
   cg->input_channels = 0;
   cg->angle_count = 0;
+  cg->lower_multi_limit = 0;
   cg->initialized = 0;
 }
 
@@ -230,6 +232,16 @@ stp_channel_set_ink_limit(stp_vars_t *v, double limit)
   stp_dprintf(STP_DBG_INK, v, "ink_limit %f\n", limit);
   if (limit > 0)
     cg->ink_limit = 65535 * limit;
+}
+
+void
+stp_channel_set_multi_channel_lower_limit(stp_vars_t *v, double limit)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stp_dprintf(STP_DBG_INK, v, "multi_lower_limit %f\n", limit);
+  if (limit > 0)
+    cg->lower_multi_limit = 65535 * limit;
 }
 
 void
@@ -477,6 +489,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   width          %d\n", cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
   stp_dprintf(STP_DBG_INK, v, "   max_density    %d\n", cg->max_density);
+  stp_dprintf(STP_DBG_INK, v, "   multi_limit    %d\n", cg->lower_multi_limit);
   stp_dprintf(STP_DBG_INK, v, "   angle_count    %d\n", cg->angle_count);
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
   stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
@@ -639,18 +652,20 @@ generate_special_channels(const stp_vars_t *v)
 	{
 	  memcpy(output, output_cache, outbytes);
 	}
-      else
+      else if (cg->lower_multi_limit < 65535)
 	{
 	  int c = input[STP_ECOLOR_C];
 	  int m = input[STP_ECOLOR_M];
 	  int y = input[STP_ECOLOR_Y];
 	  int min = FMIN(c, FMIN(m, y));
 	  int max = FMAX(c, FMAX(m, y));
-	  input_cache = input;
-	  output_cache = output;
 	  if (max > min)	/* Otherwise it's gray, and we don't care */
 	    {
+	      int cadd = 0;
+	      int madd = 0;
+	      int yadd = 0;
 	      double hue;
+	      min += cg->lower_multi_limit;
 	      /*
 	       * We're only interested in converting color components
 	       * to special inks.  We want to compute the hue and
@@ -659,12 +674,27 @@ generate_special_channels(const stp_vars_t *v)
 	       * computations become simpler.
 	       */
 	      c -= min;
+	      if (c < 0)
+		{
+		  cadd = c;
+		  c = 0;
+		}
 	      m -= min;
+	      if (m < 0)
+		{
+		  madd = m;
+		  m = 0;
+		}
 	      y -= min;
+	      if (y < 0)
+		{
+		  yadd = y;
+		  y = 0;
+		}
 	      max -= min;
 	      output[STP_ECOLOR_K] = input[STP_ECOLOR_K];
 	      /* If only one component is non-zero, we have nothing to do. */
-	      if ((c + m + y) > max)
+	      if (max > 0 && (c + m + y) > max)
 		{
 		  int total = c + m + y;
 		  for (j = 1; j < cg->total_channels; j++)
@@ -724,9 +754,9 @@ generate_special_channels(const stp_vars_t *v)
 			    }
 			  output[cg->angles[j].channel_id] = lower;
 			  output[cg->angles[j + 1].channel_id] = upper;
-			  output[STP_ECOLOR_C] += c + min;
-			  output[STP_ECOLOR_M] += m + min;
-			  output[STP_ECOLOR_Y] += y + min;
+			  output[STP_ECOLOR_C] += c + cadd + min;
+			  output[STP_ECOLOR_M] += m + madd + min;
+			  output[STP_ECOLOR_Y] += y + yadd + min;
 			  break;
 			}
 		    }
@@ -747,6 +777,15 @@ generate_special_channels(const stp_vars_t *v)
 		output[j] = 0;
 	    }
 	}
+      else
+	{
+	  for (j = 0; j < 4; j++)
+	    output[j] = input[j];
+	  for (j = 4; j < cg->channel_count; j++)
+	    output[j] = 0;
+	}
+      input_cache = input;
+      output_cache = output;
     }
 }
 

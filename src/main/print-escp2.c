@@ -478,6 +478,14 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
+  {
+    {
+      "MultiChannelLimit", N_("Red and Blue Ink Usage"), N_("Advanced Ink Adjustment"),
+      N_("Amount of red and blue ink to use"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 1.0, 0.98, 1
+  },
 };
 
 static const int float_parameter_count =
@@ -1626,6 +1634,17 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       if (ninktypes <= 1)
 	description->is_active = 0;
     }
+  else if (strcmp(name, "MultiChannelLimit") == 0)
+    {
+      if (stp_get_string_parameter(v, "PrintingMode") &&
+	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
+	  using_automatic_settings(v, AUTO_MODE_MANUAL))
+	{
+	  const escp2_inkname_t *ink_name = get_inktype(v);
+	  if (ink_name && ink_name->inkset == INKSET_CMYKRB)
+	    description->is_active = 1;
+	}
+    }      
 }
 
 static const res_t *
@@ -2058,9 +2077,15 @@ setup_inks(stp_vars_t *v)
   const escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
   const paper_adjustment_t *paper = pd->paper_adjustment;
+  double multi_channel_limit = 0.98;
 
   drops = escp2_dropsizes(v, pd->ink_resid);
   stp_init_debug_messages(v);
+  if (stp_check_float_parameter(v, "MultiChannelLimit",
+				STP_PARAMETER_DEFAULTED))
+    multi_channel_limit =
+      stp_get_float_parameter(v, "MultiChannelLimit");
+  stp_channel_set_multi_channel_lower_limit(v, 1.0 - multi_channel_limit);
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channel_set->channels[i];

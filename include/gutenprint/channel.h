@@ -53,6 +53,8 @@ extern void stp_channel_set_density_adjustment(stp_vars_t *v,
 					       int color, int subchannel,
 					       double adjustment);
 extern void stp_channel_set_ink_limit(stp_vars_t *v, double limit);
+extern void stp_channel_set_multi_channel_lower_limit(stp_vars_t *v,
+						      double limit);
 extern void stp_channel_set_cutoff_adjustment(stp_vars_t *v,
 					      int color, int subchannel,
 					      double adjustment);
