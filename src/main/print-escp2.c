@@ -1323,8 +1323,9 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	  stp_string_list_add_string
 	    (description->bounds.str, "Staggered", _("Nearest Neighbor Avoidance"));
 	}
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
+      if (description->is_active)
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
       if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
