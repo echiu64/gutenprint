@@ -35,7 +35,9 @@ Users!</font></em></strong></H2>
 
 <p> <a
 href="http://www.allosx.com/1030154694/index_html">This article on All
-OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
+OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2
+"Jaguar".  Keep watching for Gimp-Print 4.2.2, which will fully
+support Jaguar and contain many bug fixes.</p>
 
 <H2><font color="#ff0000">Gimp-Print 4.2.2-rc3 is released!</font></h2>
 
