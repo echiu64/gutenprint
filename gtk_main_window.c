@@ -120,7 +120,8 @@ static char		**resolutions;		/* Resolution strings */
 
 static GtkDrawingArea	*preview;		/* Preview drawing area widget */
 static int		mouse_x,		/* Last mouse X */
-	        	mouse_y;		/* Last mouse Y */
+	        	mouse_y,		/* Last mouse Y */
+			mouse_button;		/* Button being dragged with */
 
 static int 		printable_left;		/* Left pixel column of printable */
 static int		printable_top;		/* Top pixel row of printable */
@@ -2292,6 +2293,7 @@ static void gtk_preview_button_callback(GtkWidget      *w,
 {
   mouse_x = event->x;
   mouse_y = event->y;
+  mouse_button = event->button;
 }
 
 /****************************************************************************
@@ -2309,8 +2311,13 @@ static void gtk_preview_motion_callback(GtkWidget      *w,
     vars.top  = 72 * (printable_height - print_height) / 20;
   }
 
-  vars.left += 72 * (event->x - mouse_x) / PREVIEW_PPI;
-  vars.top  += 72 * (event->y - mouse_y) / PREVIEW_PPI;
+  if (mouse_button == 1) {
+    vars.left += 72 * (event->x - mouse_x) / PREVIEW_PPI;
+    vars.top  += 72 * (event->y - mouse_y) / PREVIEW_PPI;
+  } else {
+    vars.left += event->x - mouse_x;
+    vars.top  += event->y - mouse_y;
+  }
 
   if (vars.left < 0)
     vars.left = 0;
