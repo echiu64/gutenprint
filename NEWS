@@ -30,6 +30,10 @@ Gimp-Print 4.2.2-pre3:
 
   2) Improvements for the Epson Stylus Photo 2200.
 
+The following bug has been fixed in Gimp-Print 4.2.2-pre4:
+
+510185 Incomplete print to Windows-hosted printers
+
 
 Gimp-Print 4.2.2-pre3 has been synced up to the development mainline
 (4.3).  The changes are significant, and as a result this prerelease
