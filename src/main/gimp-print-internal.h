@@ -160,7 +160,7 @@ typedef union {		/* number of rows for a pass */
 
 
 typedef union {			/* Base pointers for each pass */
-  unsigned char *v[6];
+  unsigned char *v[7];
   struct {
     unsigned char *k;
     unsigned char *m;

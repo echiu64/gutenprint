@@ -141,9 +141,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   memset(errors, 0, sizeof(int) * 26);
   if (physjets < hpasses * vpasses * subpasses)
     {
-      if (quiet <= 1)
-	printf("Oversample exceeds jets\n");
-      return 1;
+      return 0;
     }
   passstarts = xmalloc(sizeof(int) * (nrows + physsep));
   logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));

@@ -254,7 +254,7 @@ static escp2_variable_ink_t photo_cyan_ink =
 {
   photo_cyan_dither_ranges,
   sizeof(photo_cyan_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
+  1
 };
 
 static stp_simple_dither_range_t photo_magenta_dither_ranges[] =
@@ -267,7 +267,7 @@ static escp2_variable_ink_t photo_magenta_ink =
 {
   photo_magenta_dither_ranges,
   sizeof(photo_magenta_dither_ranges) / sizeof(stp_simple_dither_range_t),
-  1.0
+  1
 };
 
 
@@ -1366,7 +1366,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES 
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    21, 4, 21, 4, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    21, 4, 21, 4, 720, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
     720, 720,
     { 3, 3, -1, 1, 1, -1, -1, -1, -1, -1, -1 },
@@ -1380,7 +1380,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_4 | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    32, 4, 64, 2, 720, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
+    32, 4, 64, 2, 720, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     COLOR_JET_ARRANGEMENT_DEFAULT,
     1440, 720,
     { 3, 3, -1, 1, 1, -1, 1, -1, 1, -1, -1 },
@@ -1879,12 +1879,12 @@ typedef struct {
 } paper_t;
 
 static const paper_t escp2_paper_list[] = {
-  { N_ ("Plain Paper"), 1, 0, .5, .25, .5 },
-  { N_ ("Plain Paper Fast Load"), 5, 0, .5, .25, .5 },
-  { N_ ("Postcard"), 2, 0, .6, .25, .6 },
+  { N_ ("Plain Paper"), 1, 0, .7, .1, .5 },
+  { N_ ("Plain Paper Fast Load"), 5, 0, .7, .1, .5 },
+  { N_ ("Postcard"), 2, 0, .75, .2, .6 },
   { N_ ("Glossy Film"), 3, 0, 1.0, 1.0, .999 },
   { N_ ("Transparencies"), 3, 0, 1.0, 1.0, .999 },
-  { N_ ("Envelopes"), 4, 0, .5, .25, .5 },
+  { N_ ("Envelopes"), 4, 0, .7, .125, .5 },
   { N_ ("Back Light Film"), 6, 0, 1.0, 1.0, .999 },
   { N_ ("Matte Paper"), 7, 0, .85, 1.0, .999 },
   { N_ ("Inkjet Paper"), 7, 0, .78, .25, .6 },
@@ -1893,7 +1893,7 @@ static const paper_t escp2_paper_list[] = {
   { N_ ("Premium Glossy Photo Paper"), 8, 0, .9, 1.0, .999 },
   { N_ ("Premium Luster Photo Paper"), 8, 0, 1.0, 1.0, .999 },
   { N_ ("Photo Quality Glossy Paper"), 6, 0, 1.0, 1.0, .999 },
-  { N_ ("Other"), 0, 0, .5, .25, .5 },
+  { N_ ("Other"), 0, 0, .7, .125, .5 },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -3002,7 +3002,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     for (i = 0; i < NCOLORS; i++)
       if ((*inks)[i])
 	stp_dither_set_ranges(dither, i, (*inks)[i]->count, (*inks)[i]->range,
-			  (*inks)[i]->density * stp_get_density(nv));
+			  (*inks)[i]->density * pt->k_upper *
+			      stp_get_density(nv));
 
   if (bits == 2)
     {

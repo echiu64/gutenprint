@@ -3,7 +3,7 @@
 modes='15,3 15,6 21,4 21,8 32,4 32,8 48,3 48,6 64,2 64,4 96,2 96,4 128,1 128,2 128,4 128,8 144,1 144,2 192,1 192,2'
 passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 2,2,1 1,4,2 2,2,2 2,4,2 8,1,1'
 
-jets='15 20 21 32 47 48 64 96 128 144 192'
+jets='1 15 20 21 32 47 48 64 96 128 144 192'
 separations='1 2 3 4 6 8'
 arrangements='0 1'
 #rows=2000
@@ -16,6 +16,9 @@ head_limit=512
 		((start = $jet * $sep))
 		if [ $start -le $head_limit ] ; then
 		    ((rows = $start * 10))
+		    if [ $rows -lt 200 ] ; then
+			rows=200
+		    fi
 		    ((s1 = $start - 1))
 		    for f in 0 41 $start $s1 ; do
 			((end = $rows + $f + $start))
