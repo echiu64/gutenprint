@@ -2725,6 +2725,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
         int value;
 	value = cmy[i-1];
 	CHANNEL(d, i).b = value;				/* Original before modifying for density */
+	value *= CHANNEL(d, i).density / 256;
+	value /= 256;
 	value *= d->density / 256;
 	value /= 256;
 	if (d->density != d->black_density) {
@@ -2744,6 +2746,8 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
       /* Adjust black amount based on black density */
       CHANNEL(d, ECOLOR_K).v = (CHANNEL(d, ECOLOR_K).o * (d->black_density/256)) / 256;
+      CHANNEL(d, ECOLOR_K).v *= CHANNEL(d, ECOLOR_K).density / 256;
+      CHANNEL(d, ECOLOR_K).v /= 256;
 
       { int ri[NCOLORS];
 
