@@ -1,4 +1,4 @@
-Gimp-Print 4.2.5, released January 23, 2003, is a stable release in
+Gimp-Print 4.2.5, released January 24, 2003, is a stable release in
 the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -67,7 +67,11 @@ Gimp-Print 4.2.5 contains the following major changes over Gimp-Print
   6) (bug 672846) A problem compiling rastertoprinter on Solaris with
      the gcc compiler has been fixed.
 
-  7) (bug 646158) DESTDIR now works correctly with make install (this
+  7) (bug 672850) The Epson back end in CUPS will no longer hang
+     attempting to read back ink levels under some circumstances, and
+     it will also compute the ink levels correctly.
+
+  8) (bug 646158) DESTDIR now works correctly with make install (this
      is primarily of interest to packagers).
 
 
@@ -1442,7 +1446,6 @@ HP DeskJet 1200C               pcl-1200        HP DeskJet 1200C
 HP DeskJet 1220C               pcl-1220        HP DeskJet 1220C
 HP DeskJet 1600C               pcl-1600        HP DeskJet 1600C
 HP DeskJet 1600CM              pcl-1600        HP DeskJet 1600C
-HP DeskJet 340C                pcl-340         HP DeskJet 340
 HP DeskJet 3810                pcl-900         HP DeskJet 900 series
 HP DeskJet 3816                pcl-900         HP DeskJet 900 series
 HP DeskJet 3820                pcl-900         HP DeskJet 900 series
@@ -1513,6 +1516,7 @@ HP OfficeJet 700               pcl-690         HP DeskJet 690 series
 HP OfficeJet 710               pcl-690         HP DeskJet 690 series
 HP OfficeJet 720               pcl-690         HP DeskJet 690 series
 HP OfficeJet 725               pcl-690         HP DeskJet 690 series
+HP OfficeJet 6110              pcl-900         HP DeskJet 900 series
 HP OfficeJet G55               pcl-900         HP DeskJet 900 series
 HP OfficeJet G85               pcl-900         HP DeskJet 900 series
 HP OfficeJet G95               pcl-900         HP DeskJet 900 series
