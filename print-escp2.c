@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.103  2000/03/01 01:12:46  rlk
+ *   Handle variable dot size correctly
+ *
  *   Revision 1.102  2000/02/29 02:59:14  rlk
  *   1) Should be able to speed up black printing quite a bit for some models.
  *
@@ -2722,12 +2725,12 @@ fillin_start_rows(const escp2_softweave_t *sw, int row, int subpass,
   int i = 0;
   int k = 0;
   int j;
-  width = sw->bitwidth * width;
+  width = sw->bitwidth * width * 8;
   for (k = 0; k < missingstartrows; k++)
     {
       int bytes_to_fill = width;
-      int full_blocks = bytes_to_fill / 1024;
-      int leftover = (7 + (bytes_to_fill % 1024)) / 8;
+      int full_blocks = bytes_to_fill / (128 * 8);
+      int leftover = (7 + (bytes_to_fill % (128 * 8))) / 8;
       int l = 0;
   
       while (l < full_blocks)
@@ -2982,7 +2985,7 @@ escp2_write_weave(void *        vsw,
   cols[4] = M;
   cols[5] = C;
 
-  initialize_row(sw, sw->lineno, xwidth);
+  initialize_row(sw, sw->lineno, xlength);
   
   for (j = 0; j < sw->ncolors; j++)
     {
