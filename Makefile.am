@@ -81,7 +81,10 @@ uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 		else :; fi; \
 	done
 
-.PHONY: files ghost
+.PHONY: files ghost ChangeLog
+
+ChangeLog:
+	cvs log | perl ./mkchlog > ChangeLog
 
 files:
 	@files=`ls $(DISTFILES) 2> /dev/null`; for p in $$files; do \
