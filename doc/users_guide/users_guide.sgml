@@ -3,7 +3,7 @@
 
  <bookinfo>
   <title>The User's Guide to the Gimp-Print Top Quality Printer Drivers</title>
-  <date>October 10, 2001</date>
+  <date>October 26, 2001</date>
   <author>
     <firstname>Andy</firstname>
     <surname>Stewart</surname>
@@ -48,7 +48,7 @@ Foomatic is not covered in this document.  These topics may be covered
 in a future revision of this document.
   </para>
   <para>
-  This document corresponds to version 4.1.99-b4 of the Gimp-Print
+  This document corresponds to version 4.2 of the Gimp-Print
 software. This document will serve as a guide to the user, and as such
 will not explain how to install Gimp-Print, CUPS, GIMP, Ghostscript,
 Foomatic, or any other related software.
@@ -116,8 +116,9 @@ over what the software could do at the Printing Summit.
   </para>
   <para>
 The team started serious work on version 4.1 in December 
-2000. Despite the fact that version 4.2 will be a "minor" release over
-version 4.0, there are vast improvements:
+2000, and version 4.2 was released in November 2001.  Despite the fact
+that version 4.2 is a "minor" release over version 4.0, there are vast
+improvements:
   <itemizedlist>
     <listitem>
       <para>
@@ -155,11 +156,6 @@ The print quality (in particular, color accuracy, a well-known weakness in 4.0) 
 
   </para>
   <para>
-The project team is not finished.  The release of Gimp-Print version 4.2 is
-approaching, and then work will begin on version 4.3 (which will
-ultimately become version 5.0). 
-  </para>
-  <para>
 Releases of Gimp-Print have been historically numbered in
 a fashion similar to that of the Linux kernel, where major releases
 are denoted by the first digit (in this case '4'), while minor
@@ -169,7 +165,8 @@ minor releases are considered development releases (whose stability
 may vary for any given release).
   </para>
   <para>
-In the future, the development team hopes to include the following:
+This project is by no means finished.  In future releases, the development
+team hopes to include the following:
   <itemizedlist>
     <listitem><para>implementation of proper color management</para></listitem>
     <listitem><para>improved dithering</para></listitem>
