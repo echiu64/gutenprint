@@ -103,7 +103,7 @@ ppd:    genppd
 	./genppd
 
 $(GIMPPRINT_LIBS):
-	make -C ../main
+	$(MAKE) -C ../main
 
 dist-hook:
 	for dir in commands ; do \

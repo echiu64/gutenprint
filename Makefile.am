@@ -60,13 +60,13 @@ dist-hook:
 .PHONY: install-gimp install-cups install-ghost
 
 install-gimp:
-	cd $(top_srcdir)/src/gimp ; make install
+	$(MAKE) -C src/gimp install
 
 install-cups:
-	cd $(top_srcdir)/src/cups ; make install
+	$(MAKE) -C src/cups install
 
 install-ghost:
-	cd $(top_srcdir)/src/ghost ; make install
+	$(MAKE) -C src/ghost install
 
 CLEANSCRIPTS = \
 	config.guess \

@@ -51,7 +51,7 @@ testdither_SOURCES = testdither.c
 testdither_LDADD = -lm $(GIMPPRINT_LIBS)
 
 $(GIMPPRINT_LIBS):
-	make -C ../src/main
+	$(MAKE) -C ../src/main
 
 EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
 CLEANFILES = $(EXTRA_PROGRAMS)

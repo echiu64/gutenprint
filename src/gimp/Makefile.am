@@ -50,7 +50,7 @@ print_LDADD = $(GIMP_LIBS) $(GIMPPRINT_LIBS)
 print_DEPENDENCIES = $(GIMPPRINT_LIBS)
 
 $(GIMPPRINT_LIBS):
-	make -C ../main
+	$(MAKE) -C ../main
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
