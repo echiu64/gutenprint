@@ -1141,8 +1141,12 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
 	    {
 	      where = kk / step;
 	      resid = kk % step;
-	      out[3] = black_lookup[where] +
-		(black_lookup[where + 1] - black_lookup[where]) * resid / step;
+	      if (resid)
+		out[3] = black_lookup[where] +
+		  (black_lookup[where + 1] - black_lookup[where]) * resid /
+		  step;
+	      else
+		out[3] = black_lookup[where];
 	    }
 	  for (j = 0; j < 3; j++)
 	    out[j] -= kk;
@@ -1682,7 +1686,7 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   if (black_curve)
     stp_curve_copy(lut->black, black_curve);
   else
-    lut->black = stp_curve_create_copy(color_curve_bounds);
+    stp_curve_copy(lut->black, color_curve_bounds);
   stp_curve_rescale(lut->black, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 		    STP_CURVE_BOUNDS_RESCALE);
   stp_curve_resample(lut->black, steps);
