@@ -207,7 +207,7 @@ create_color_adjust_window (void)
 
 		     NULL);
 
-  table = gtk_table_new (color_option_count + 2, 3, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);

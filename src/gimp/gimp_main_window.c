@@ -548,7 +548,7 @@ create_positioning_frame (void)
   gtk_box_pack_start (GTK_BOX (right_vbox), frame, TRUE, TRUE, 0);
   gtk_widget_show (frame);
 
-  table = gtk_table_new (7, 4, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_col_spacing (GTK_TABLE (table), 1, 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
@@ -648,7 +648,7 @@ create_printer_dialog (void)
    * Top-level table for dialog.
    */
 
-  table = gtk_table_new (5, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
@@ -796,7 +796,7 @@ create_new_printer_dialog (void)
                      NULL, 1, NULL, FALSE, TRUE,
 		     NULL);
 
-  table = gtk_table_new (1, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacings (GTK_TABLE (table), 8);
@@ -871,7 +871,7 @@ create_printer_settings_frame (void)
   create_about_dialog ();
   create_new_printer_dialog ();
 
-  table = gtk_table_new (list_option_count + 4, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 2);
   gtk_container_set_border_width (GTK_CONTAINER (table), 4);
@@ -942,7 +942,7 @@ create_printer_settings_frame (void)
    * Custom media size entries
    */
 
-  media_size_table = gtk_table_new (1, 4, FALSE);
+  media_size_table = gtk_table_new (1, 1, FALSE);
   table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
 		       1.0, 0.5, media_size_table, 2, TRUE);
 
@@ -985,7 +985,7 @@ create_scaling_frame (void)
   gtk_container_add (GTK_CONTAINER (frame), vbox);
   gtk_widget_show (vbox);
 
-  table = gtk_table_new (1, 3, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1016,7 +1016,7 @@ create_scaling_frame (void)
    * The scale by percent/ppi toggles
    */
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1060,7 +1060,7 @@ create_scaling_frame (void)
    * The width/height enries
    */
 
-  table = gtk_table_new (2, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1074,7 +1074,7 @@ create_scaling_frame (void)
    * The units toggles
    */
 
-  table = gtk_table_new (2, (unit_count + 1) / 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1139,7 +1139,7 @@ create_image_settings_frame (void)
                             gtk_label_new (_("Image / Output Settings")));
   gtk_widget_show (vbox);
 
-  table = gtk_table_new (image_type_count, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1169,7 +1169,7 @@ create_image_settings_frame (void)
    * Output type toggles.
    */
 
-  table = gtk_table_new (output_type_count + 1, 2, FALSE);
+  table = gtk_table_new (1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
