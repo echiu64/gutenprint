@@ -134,7 +134,7 @@ stpi_dither_set_generic_ranges(stp_vars_t v, stpi_dither_channel_t *s, int nleve
   s->ink_list = (stpi_ink_defn_t *)
     stpi_zalloc((s->nlevels + 1) * sizeof(stpi_ink_defn_t));
   s->bit_max = 0;
-  density *= sdensity;
+/*  density *= sdensity; */
   s->density = density * 65535;
   stpi_init_debug_messages(v);
   stpi_dprintf(STPI_DBG_INK, v,
@@ -226,7 +226,7 @@ stpi_dither_set_generic_ranges_full(stp_vars_t v, stpi_dither_channel_t *s,
   s->ink_list = (stpi_ink_defn_t *)
     stpi_zalloc((s->nlevels * 2) * sizeof(stpi_ink_defn_t));
   s->bit_max = 0;
-  density *= sdensity;
+/*  density *= sdensity; */
   s->density = density * 65535;
   stpi_init_debug_messages(v);
   stpi_dprintf(STPI_DBG_INK, v,

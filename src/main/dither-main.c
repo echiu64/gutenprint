@@ -427,6 +427,7 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 	  stpi_abort();
 	}
     }
+  stpi_dither_set_transition(v, 0.7);
 
   d->src_width = in_width;
   d->dst_width = out_width;
