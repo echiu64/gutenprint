@@ -66,7 +66,9 @@ static const dither_algo_t dither_algos[] =
   { "Fast",	N_ ("Fast"),                   D_FAST },
   { "VeryFast",	N_ ("Very Fast"),              D_VERY_FAST },
   { "Floyd",	N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
-  { "Even",     N_ ("EvenTone"),               D_EVENTONE }
+  /* Note to translators: "EvenTone" is the proper name, rather than a */
+  /* descriptive name, of this algorithm. */  
+  { "EvenTone", N_ ("EvenTone"),               D_EVENTONE }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(dither_algo_t);
