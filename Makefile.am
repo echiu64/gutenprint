@@ -80,7 +80,7 @@ AM_CPPFLAGS =\
 print_LDADD = $(GIMP_LIBS)
 
 GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
-	gdevstp.c devs.mak.addon-5.10 escputil.c Makefile \
+	gdevstp.c devs.mak.addon-5.10 escputil.c escputil.1 Makefile \
 	debian-patch debian-patch-stp $(GCOPY)
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
@@ -133,6 +133,7 @@ GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
 ghost: $(addprefix Ghost/, $(GCOPY))
 	cp escputil.c Ghost/escputil.c
+	cp escputil.1 Ghost/escputil.1
 
 Ghost/gdevstp-%.h: %.h Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
