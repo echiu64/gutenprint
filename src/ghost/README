@@ -360,10 +360,9 @@ Print Resolution Selection:
 
 -sQuality=quality
 
-The meaning of this is model-specific.  **** Starting with STP
-v4.1.99a3 all quality values are the short, computer-readable
-ones.  The longer strings that have spaces are no longer
-supported. ****
+The meaning of this is model-specific.  Two names are listed for each
+resolution; the first (short) name is the value that must be passed to
+-sQuality, and the second (long) name is descriptive.
 
 For Epson Stylus printers, within each specified resolution, the
 quality is generally listed from worst to best (and generally higher
@@ -458,7 +457,11 @@ Resolutions for those printers are listed in a later section.
                                             and newer)
 360swuni        '360 DPI Softweave Unidirectional'
                                            (see previous)
-360hq           '360 DPI High Quality'     (see previous)
+360hq           '360 DPI High Quality'     (see previous; recommended
+					    only on processors slower
+					    than 100 MHz or if
+					    problems are experienced
+					    at 720x360)
 360hquni        '360 DPI High Quality Unidirectional'
                                            (see previous)
 
@@ -682,6 +685,10 @@ values of any kind.
 Dithering Algorithms:
 --------- -----------
 
+The option names are case sensitive.  Two names are listed for each
+resolution; the first (short) name is the value that must be passed to
+-sDither, and the second (long) name is descriptive.
+
 -sDither=algorithm
 
 Adaptive        'Adaptive Hybrid'
@@ -729,7 +736,10 @@ Ink Types
 --- -----
 
 This is printer type specific.  The option names are case sensitive.
-Not all ink types are supported on all printers.
+The option names are case sensitive.  Two names are listed for each
+resolution; the first (short) name is the value that must be passed to
+-sInkType, and the second (long) name is descriptive.  Not all ink
+types are supported on all printers.
 
 -sInkType=inktype
 
@@ -781,6 +791,9 @@ Media Types
 ----- -----
 
 This is printer type specific.  The option names are case sensitive.
+Two names are listed for each resolution; the first (short) name is
+the value that must be passed to -sMediaType, and the second (long) name
+is descriptive.
 
 -sMediaType=mediatype
 
@@ -871,10 +884,13 @@ Auto            'Autoselect'
 Media Sizes
 ----- -----
 
-This is printer-specific.  The option names are case-sensitive.  This
-option does not set GhostScript up to use a paper size other than the
-default; it only tells the driver to set up the printer for a
-different paper size.  The default paper size is 'Letter'.
+This is printer-specific.  The option names are case-sensitive.  Two
+names are listed for each resolution; the first (short) name is the
+value that must be passed to -sPaperSize, and the second (long) name is
+descriptive.  This option does not set GhostScript up to use a paper
+size other than the default; it only tells the driver to set up the
+printer for a different paper size.  The default paper size is
+'Letter'.
 
 -sPaperSize=papersize
 
@@ -1094,12 +1110,11 @@ gs -sDEVICE=stp -sModel=escp2-ex -dDensity=1.6 -dGamma=1.5 -dSaturation=0.9 \
 
 Example 2 (print color photograph to /dev/lp0 at maximum quality):
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-870 -dDensity=0.8 \
-   -r1440x720 -sQuality='1440 x 720 DPI Highest Quality' -dImageType=2 \
-   -sOutputFile=/dev/lp0 foo.ps
+   -r1440x720 -sQuality=1440x720hq -dImageType=2 -sOutputFile=/dev/lp0 foo.ps
 
 Example 3 (print pure black text to stdout)
 gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
-   -sQuality='720 DPI Softweave' -dOutputType=2 -sOutputFile=- foo.ps
+   -sQuality=720sw -dOutputType=2 -sOutputFile=- foo.ps
 
 
 SPOOLER CONFIGURATION

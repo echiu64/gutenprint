@@ -75,7 +75,7 @@ output_the_printer(void)
   printf("    &stp_%s_printfuncs,\n", printfuncs[thePrinter.printvars.top]);
   printf("    {\n");
   printf("      \"\",\n");	/* output_to */
-  printf("      \"\",\n");	/* driver */
+  printf("      %s,\n", thePrinter.printvars.driver);	/* driver */
   printf("      \"\",\n");	/* ppd_file */
   printf("      \"\",\n");	/* resolution */
   printf("      \"\",\n");	/* media_size */

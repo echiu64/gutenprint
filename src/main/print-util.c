@@ -1261,7 +1261,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p,
   stp_set_media_size(v, ((printfuncs->default_parameters)
 			 (p, ppd_file, "PageSize")));
   stp_set_dither_algorithm(v, stp_default_dither_algorithm());
-  stp_set_driver(v, p);
+  stp_set_driver(v, stp_printer_get_driver(p));
 }
 
 int
