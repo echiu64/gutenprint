@@ -80,7 +80,7 @@ stpi_paper_list_init(void)
   return 0;
 }
 
-static void
+static inline void
 check_paperlist(void)
 {
   if (paper_list == NULL)

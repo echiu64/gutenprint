@@ -48,7 +48,7 @@ typedef struct
 /*
  * We could do more sanity checks here if we want.
  */
-static void
+static inline void
 check_array(const stpi_internal_array_t *v)
 {
   if (v == NULL)

@@ -81,7 +81,7 @@ stp_color_count(void)
 }
 
 
-static void
+static inline void
 check_color(const stpi_internal_color_t *c)
 {
   if (c == NULL)
