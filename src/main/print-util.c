@@ -921,7 +921,7 @@ stp_get_papersize_by_name(const char *name)
     {
       int size_to_try = (i + base) % sizes;
       const stp_internal_papersize_t *val = &(paper_sizes[size_to_try]);
-      if (!strcmp(_(val->name), name))
+      if (!strcmp(val->name, name))
 	{
 	  last_used_papersize = size_to_try;
 	  return (const stp_papersize_t) val;
@@ -936,7 +936,7 @@ stp_get_papersize_by_name(const char *name)
   const stp_internal_papersize_t *val = &(paper_sizes[0]);
   while (strlen(val->name) > 0)
     {
-      if (!strcmp(_(val->name), name))
+      if (!strcmp(val->name, name))
 	return (stp_papersize_t) val;
       val++;
     }
