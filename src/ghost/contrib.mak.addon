@@ -1,4 +1,6 @@
 ### --------------- Gimp-Print/stp Driver ---------------------------- ###
+### Be careful to add the exact contents of this file; cut and paste   ###
+### may corrupt the file and cause mysterious make errors              ###
 
 stp_=$(GLOBJ)gdevstp.$(OBJ) \
 	$(GLOBJ)gdevstp-dither.$(OBJ) \
