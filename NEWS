@@ -14,26 +14,40 @@ Gimp-Print 4.1.99rc1 contains the following changes over 4.1.99b4:
 
 1) Building with VPATH is fixed (this broke in 4.1.99b4).
 
-2) The CUPS PPD files should all be translated on all systems
+2) The CUPS PPD files should all be translated on more systems
    (eliminating the problem of having many English PPD files for each
-   printer).
+   printer).  However, this does not work everywhere; please see below
+   for details.
 
-3) Minor fixes for some old Epson Stylus printers, enabling 360 DPI
+3) There is now a translation for the Polish language.
+
+4) Minor fixes for some old Epson Stylus printers, enabling 360 DPI
    microweave to print correctly.
 
-4) The package should now build correctly on BSD-based systems.
+5) The package should now build correctly on BSD-based systems.
 
-5) Preliminary support for Lexmark Z42.
+6) Preliminary support for Lexmark Z42.
 
-6) escputil uses readline on most systems on which it is available.
+7) escputil uses readline on most systems on which it is available.
 
-7) Further improved print quality on the Epson Stylus C70 and C80 in
+8) Further improved print quality on the Epson Stylus C70 and C80 in
    all print modes, including addition of 1440x1440 and 2880x1440
    modes.
 
+9) The Postscript driver generates correct headers (for single-page
+   files).
+
+10) Repeated invocations of 'make clean' work correctly.
+
 Known limitations of this release:
 
-1) The Epson Stylus C40UX (and very likely other printers in the C20
+1) The CUPS PPD files are not translated on all systems.  BSD systems
+   in particular are known to fail to translate these files.
+
+   On some systems, using --with-included-gettext may work.  It is
+   known not to work on at least certain BSD systems.
+
+2) The Epson Stylus C40UX (and very likely other printers in the C20
    and C40 lines) do not identify themselves.  Therefore,
 
    escputil -u -d
@@ -42,30 +56,35 @@ Known limitations of this release:
    alignment, the printer model must be specified, as autodetection
    will not work.
 
-2) The "align color" (-o) command to escputil does not currently work
+3) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
    580, and C20SX, C20UX, C40SX, and C40UX).  We do not know if this
    is a bug in the software or a limitation of the printers.
 
-3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+4) Changing ink cartridges on the Epson Stylus Color 480/580 is not
    supported.
 
-4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
+5) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are only partially tested and tuned.
    They are known not to work correctly in many modes.
 
-5) The Epson Stylus Photo 2000P is not properly tuned and likely
+6) The Epson Stylus Photo 2000P is not properly tuned and likely
    produces lower output quality than other Epson printers.
 
-6) The Canon BJC-8200 and S800 do not produce optimum quality.
+7) The Canon BJC-8200 and S800 do not produce optimum quality.
 
-7) Many Epson printers (including the Stylus Photo 870/875, 1270,
+8) Many Epson printers (including the Stylus Photo 870/875, 1270,
    780/785/895, 890, 1280/1290, and 810/820) do not produce optimum
    quality on Premium Glossy Photo Paper.  In particular, color
    quality may not be at quite as high a standard as it is on the
    older Photo Paper.  The difference is subtle; for most purposes the
    output quality will be superb.  Tuning the color output may or may
    not improve the quality.
+
+9) The Postscript driver (ps and ps2) does not generate multi-page
+   output correctly.  This should not be a major problem, as there is
+   little reason to use it outside of the GIMP.  This bug will not be
+   fixed.
 
 
 Gimp-Print 4.1.99b4 contains the following changes over 4.1.99b3:

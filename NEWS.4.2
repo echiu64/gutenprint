@@ -67,7 +67,7 @@ General User-Visible Changes:
 
 6) The package is now internationalized.  Full translation is
    available for Swedish; partial translations are currently available
-   for French, Norwegian, Danish, and British English.
+   for French, Norwegian, Danish, Polish, and British English.
 
 
 Quality Improvements:
@@ -218,7 +218,13 @@ Incompatibilities between 4.0 and 4.2:
 
 Known Limitations:
 
-1) The Epson Stylus C40UX (and very likely other printers in the C20
+1) The CUPS PPD files are not translated on all systems.  BSD systems
+   in particular are known to fail to translate these files.
+
+   On some systems, using --with-included-gettext may work.  It is
+   known not to work on at least certain BSD systems.
+
+2) The Epson Stylus C40UX (and very likely other printers in the C20
    and C40 lines) do not identify themselves.  Therefore,
 
    escputil -u -d
@@ -227,29 +233,35 @@ Known Limitations:
    alignment, the printer model must be specified, as autodetection
    will not work.
 
-2) The "align color" (-o) command to escputil does not currently work
+3) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).
+   580, and C20SX, C20UX, C40SX, and C40UX).  We do not know if this
+   is a bug in the software or a limitation of the printers.
 
-3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
+4) Changing ink cartridges on the Epson Stylus Color 480/580 is not
    supported.
 
-4) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
+5) The drivers for the Epson Stylus Pro printers (5000, 5500, 7000,
    7500, 9000, 9500, and 10000) are only partially tested and tuned.
    They are known not to work correctly in many modes.
 
-5) The Epson Stylus Photo 2000P is not properly tuned and likely
+6) The Epson Stylus Photo 2000P is not properly tuned and likely
    produces lower output quality than other Epson printers.
 
-6) The Canon BJC-8200 and S800 do not produce optimum quality.
+7) The Canon BJC-8200 and S800 do not produce optimum quality.
 
-7) Many Epson printers (including the Stylus Photo 870/875, 1270,
+8) Many Epson printers (including the Stylus Photo 870/875, 1270,
    780/785/895, 890, 1280/1290, and 810/820) do not produce optimum
    quality on Premium Glossy Photo Paper.  In particular, color
    quality may not be at quite as high a standard as it is on the
    older Photo Paper.  The difference is subtle; for most purposes the
    output quality will be superb.  Tuning the color output may or may
    not improve the quality.
+
+9) The Postscript driver (ps and ps2) does not generate multi-page
+   output correctly.  This should not be a major problem, as there is
+   little reason to use it outside of the GIMP.  This bug will not be
+   fixed.
 
 
 Internal changes:
