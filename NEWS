@@ -48,10 +48,16 @@ Gimp-Print 4.1.99a2 contains the following changes over 4.1.99a1:
    been some confusion due to the fact that these printers were not
    listed explicitly.
 
-10) Some changes to the Gimp plugin.  In particular, there are new
-   buttons to permit centering in the horizontal or vertical (rather
-   than just centering on the page), and other controls have been
+10) The GIMP plugin has buttons to permit centering horizontally or
+   vertically on the page, in addition to the existing button to
+   center the image both horizontally and vertically.
+
+11) A number of the controls in the GIMP plugin have been
    reorganized.
+
+12) Holding down the shift key while dragging the mouse in the preview
+   window constrains the image to moving horizontally or vertically
+   only on the page.
 
 
 Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:
