@@ -20,10 +20,10 @@ and reporting the results!</p>
 <ul>
 <?
 while ( list( $key, $val ) = each( $GLOBALS['supported_printers']) ) {
-	echo  '<li><P>' . <h3>$key</h3> ;
+	echo  '<li><P>' . <strong>$key</strong> ;
 	echo '<ul>';
 	while ( list( $ke, $va ) = each( $val ) ) {
-		echo  '<li><P>' . <h4>$ke</h4> ;
+		echo  '<li><P>' . <strong>$ke</strong> ;
 		echo '<ul>';
 		while ( list( $k, $v ) = each( $va ) ) {
 			echo  '<li><p>' . <strong>$k</strong> ;
