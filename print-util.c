@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.30  1999/11/16 00:59:00  rlk
+ *   More fine tuning
+ *
  *   Revision 1.29  1999/11/14 21:37:13  rlk
  *   Revamped contrast
  *
@@ -346,11 +349,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 5
+#define DE_C 3
 #define NU_M 1
-#define DE_M 5
+#define DE_M 3
 #define NU_Y 1
-#define DE_Y 5
+#define DE_Y 3
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -619,8 +622,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (lmagenta)
 	{
-	  c += ck * 9 / 8;
-	  m += ck * 5 / 4;
+	  c += ck * 10 / 8;
+	  m += ck * 19 / 16;
 	  y += ck * 3 / 2;
 	}
       else
@@ -709,7 +712,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       }
     else
       {
-	if (oc <= (65536 * I_RATIO_C1 * 2 / 3))
+	if (oc <= (65536 * I_RATIO_C1 * 1 / 2))
 	  {
 	    if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
 			      (32768 / C_RANDOMIZER))) * I_RATIO_C1)
@@ -728,8 +731,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	else if (c > (32767 + (((long long) ditherbit2 / C_RANDOMIZER) -
 			       (32768 / C_RANDOMIZER))) * I_RATIO_C1)
 	  {
-	    int cutoff = ((oc - (65536 * I_RATIO_C1 * 2 / 3)) * 65536 /
-			  (65536 - (65536 * I_RATIO_C1 * 2 / 3)));
+	    int cutoff = ((oc - (65536 * I_RATIO_C1 * 1 / 2)) * 65536 /
+			  (65536 - (65536 * I_RATIO_C1 * 1 / 2)));
 	    long long sub = (65535ll * I_RATIO_C1) +
 	      ((65535ll - (65535ll * I_RATIO_C1)) * cutoff / 65536);
 	    if (ditherbit1 > cutoff)
@@ -803,8 +806,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		    om, 65536ll,
 		    ((32767 + (((long long) ditherbit1 / 1) - 32768)) * om /
 		     65536),
-		    ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
-		     (65536 - (65536 * I_RATIO_M1 * 2 / 3))));
+		    ((om - (65536 * I_RATIO_M1 * 1 / 2)) * 65536 /
+		     (65536 - (65536 * I_RATIO_M1 * 1 / 2))));
 #endif
 	    if (mbits++ % horizontal_overdensity == 0)
 	      if (! (*kptr & bit))
@@ -814,7 +817,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       }
     else
       {
-	if (om <= (65536 * I_RATIO_M1 * 2 / 3))
+	if (om <= (65536 * I_RATIO_M1 * 1 / 2))
 	  {
 	    if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
 			      (32768 / M_RANDOMIZER))) * I_RATIO_M1)
@@ -833,8 +836,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	else if (m > (32767 + (((long long) ditherbit1 / M_RANDOMIZER) -
 			       (32768 / M_RANDOMIZER))) * I_RATIO_M1)
 	  {
-	    int cutoff = ((om - (65536 * I_RATIO_M1 * 2 / 3)) * 65536 /
-			  (65536 - (65536 * I_RATIO_M1 * 2 / 3)));
+	    int cutoff = ((om - (65536 * I_RATIO_M1 * 1 / 2)) * 65536 /
+			  (65536 - (65536 * I_RATIO_M1 * 1 / 2)));
 	    long long sub = (65535ll * I_RATIO_M1) +
 	      ((65535ll - (65535ll * I_RATIO_M1)) * cutoff / 65536);
 	    if (ditherbit3 > cutoff)
@@ -910,8 +913,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		    oy, 65536ll,
 		    ((32767 + (((long long) ditherbit3 / 1) - 32768)) * oy /
 		     65536),
-		    ((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
-		     (65536 - (65536 * I_RATIO_Y1 * 2 / 3))));
+		    ((oy - (65536 * I_RATIO_Y1 * 1 / 2)) * 65536 /
+		     (65536 - (65536 * I_RATIO_Y1 * 1 / 2))));
 #endif
 	    if (lybits++ % horizontal_overdensity == 0)
 	      if (! (*kptr & bit))
@@ -921,7 +924,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       }
     else
       {
-	if (lyellow && oy <= (65536 * I_RATIO_Y1 * 2 / 3))
+	if (lyellow && oy <= (65536 * I_RATIO_Y1 * 1 / 2))
 	  {
 	    if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
 			      (32768 / Y_RANDOMIZER))) * I_RATIO_Y1)
@@ -940,8 +943,8 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	else if (y > (32767 + (((long long) ditherbit3 / Y_RANDOMIZER) -
 			       (32768 / Y_RANDOMIZER))) * I_RATIO_Y1)
 	  {
-	    int cutoff = ((oy - (65536 * I_RATIO_Y1 * 2 / 3)) * 65536 /
-			  (65536 - (65536 * I_RATIO_Y1 * 2 / 3)));
+	    int cutoff = ((oy - (65536 * I_RATIO_Y1 * 1 / 2)) * 65536 /
+			  (65536 - (65536 * I_RATIO_Y1 * 1 / 2)));
 	    long long sub = (65535ll * I_RATIO_Y1) +
 	      ((65535ll - (65535ll * I_RATIO_Y1)) * cutoff / 65536);
 	    if (lyellow && ditherbit1 > cutoff)
