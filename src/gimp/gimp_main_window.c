@@ -1201,6 +1201,8 @@ gimp_do_misc_updates (void)
   stp_set_left(vars, stp_get_left(plist[plist_current].v));
   stp_set_top(vars, stp_get_top(plist[plist_current].v));
   stp_set_unit(vars, stp_get_unit(plist[plist_current].v));
+  stp_set_page_width(vars, stp_get_page_width(plist[plist_current].v));
+  stp_set_page_height(vars, stp_get_page_height(plist[plist_current].v));
 
   suppress_preview_update++;
   gimp_preview_update ();
