@@ -1263,7 +1263,7 @@ gimp_position_callback (GtkWidget *widget)
 	      was_percent = 1;
 	    }
 	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    (image_width - .5) / new_value;
+	    ((gdouble) image_width) / new_value;
 	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
 	  if (was_percent)
 	    {
@@ -1282,7 +1282,7 @@ gimp_position_callback (GtkWidget *widget)
 	      was_percent = 1;
 	    }
 	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    (image_height - .5) / new_value;
+	    ((gdouble) image_height) / new_value;
 	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
 	  if (was_percent)
 	    {
@@ -1843,7 +1843,8 @@ gimp_update_adjusted_thumbnail (void)
   for (y = 0; y < thumbnail_h; y++)
     {
       (*colourfunc) (thumbnail_data + thumbnail_bpp * thumbnail_w * y,
-		     out, thumbnail_w, thumbnail_bpp, NULL, &vars, NULL, NULL);
+		     out, thumbnail_w, thumbnail_bpp, NULL, &vars, NULL, NULL,
+		     NULL);
       for (x = 0; x < adjusted_thumbnail_bpp * thumbnail_w; x++)
 	{
 	  *adjusted_data++ = out[x] / 0x0101U;
@@ -1960,8 +1961,8 @@ gimp_preview_update (void)
       max_ppi_scaling = min_ppi_scaling * 20;
       if (vars.scaling < 0 && vars.scaling > -min_ppi_scaling)
 	vars.scaling = -min_ppi_scaling;
-      twidth = (72.0 * image_width / -vars.scaling) + .5;
-      print_width = twidth;
+      twidth = (72.0 * (gdouble) image_width / -vars.scaling);
+      print_width = twidth + .5;
       print_height = (twidth * (gdouble) image_height / image_width) + .5;
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
@@ -1987,14 +1988,16 @@ gimp_preview_update (void)
 	  gdouble twidth = .5 + printable_width * vars.scaling / 100;
 
 	  print_width = twidth;
-	  print_height = twidth * image_height / image_width;
+	  print_height = twidth * (gdouble) image_height /
+	    (gdouble) image_width;
 	}
       else
 	{
 	  gdouble theight = .5 + printable_height * vars.scaling / 100;
 
 	  print_height = theight;
-	  print_width = theight * image_width / image_height;
+	  print_width = theight * (gdouble) image_width /
+	    (gdouble) image_height;
 	}
     }
 
