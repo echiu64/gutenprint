@@ -474,16 +474,15 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
 
 dnl Compiler flags
 if test "$CC" = "gcc" ; then
-  AC_MSG_CHECKING([GCC version])
-  gccversion="`gcc -dumpversion`"
-  gccmajor="`echo $gccversion | sed 's/\..*//'`"
-  if test "$gccmajor" -ge 3 ; then
-    AC_MSG_RESULT([${gccversion} (gcc $gccmajor), enabling inline limit])
-    GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"
-  else
-    AC_MSG_RESULT([${gccversion} (gcc $gccmajor), not enabling inline limit])
-    GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"
-  fi
+  AC_MSG_CHECKING(if GCC supports -finline-limit=1048576)
+  OLDCFLAGS="$CFLAGS"
+  CFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"
+  AC_TRY_COMPILE(,,
+      [ AC_MSG_RESULT(yes);
+        GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline -finline-limit=1048576"],
+      [ AC_MSG_RESULT(no);
+        GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -pedantic -Werror-implicit-function-declaration -Winline"])
+  CFLAGS="$OLDCFLAGS"
   if test x${USE_MAINTAINER_MODE} = xyes ; then
     GNUCFLAGS="${GNUCFLAGS} -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls"
   fi
