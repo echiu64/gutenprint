@@ -376,7 +376,10 @@ print.o: print.c print.h ../../config.h ../../libgimp/gimp.h \
 	../../libgimp/parasite.h ../../libgimp/parasiteF.h \
 	../../libgimp/parasiteP.h ../../libgimp/gimpunit.h \
 	../../libgimp/gimpcompat.h ../../libgimp/gimpui.h \
-	../../libgimp/gimpmenu.h ../../libgimp/gimpexport.h \
+	../../libgimp/gimpchainbutton.h ../../libgimp/gimpcolorbutton.h \
+	../../libgimp/gimpexport.h ../../libgimp/gimpfileselection.h \
+	../../libgimp/gimpmenu.h ../../libgimp/gimppatheditor.h \
+	../../libgimp/gimpsizeentry.h ../../libgimp/gimpunitmenu.h \
 	../../libgimp/stdplugins-intl.h ../../libgimp/gimpintl.h
 
 info-am:
