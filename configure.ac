@@ -141,20 +141,6 @@ fi
 dnl Compiler options and definitions
 INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
 
-dnl Define if we are a part of the GIMP source tree, or independent
-dnl and adjust defaults accordingly
-m4_define([GIMP_SOURCE_TREE], [no])
-AC_MSG_CHECKING([for the presence of the GIMP source tree])
-STP_GIMP_EXCLUDE([
-  AC_MSG_RESULT([no])
-  GIMP_SOURCE_TREE_SUBDIR="no"
-],[
-  AC_MSG_RESULT([yes])
-  GIMP_SOURCE_TREE_SUBDIR="yes"
-  BUILD_LIBGIMPPRINT="no"
-])
-AM_CONDITIONAL(GIMP_SOURCE, test x${GIMP_SOURCE_TREE_SUBDIR} = xyes)
-
 dnl Set up maintainer mode
 AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
@@ -177,8 +163,6 @@ AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 
 dnl Command line options.
-STP_GIMP_EXCLUDE([
-
 AC_PATH_PROG(CUPS_CONFIG, cups-config)
 if test -z "${CUPS_CONFIG}" ; then
   BUILD_CUPS="no"
@@ -244,7 +228,6 @@ STP_ARG_ENABLE([lexmarkutil],
                [build lexmarkutil],
                [BUILD_LEXMARKUTIL],
                [no])
-])dnl STP_GIMP_EXCLUDE
 
 STP_ARG_ENABLE([debug],
                [turn on debugging in build],
@@ -304,7 +287,6 @@ STP_ARG_ENABLE([libgimpprint],
                [BUILD_LIBGIMPPRINT],
                [yes])
 
-STP_GIMP_EXCLUDE([
 STP_ARG_ENABLE([testpattern],
                [build testpattern generator],
                [BUILD_TESTPATTERN],
@@ -314,7 +296,6 @@ STP_ARG_ENABLE([test],
                [build test programs],
                [BUILD_TEST],
                [no])
-])dnl STP_GIMP_EXCLUDE
 
 STP_ARG_ENABLE([user-install],
                   [install GIMP plugin in home directory],
@@ -368,7 +349,6 @@ if test x${DB2PS} = x ; then
   AC_MSG_WARN([HTML user's guide cannot be regenerated!])
 fi
 
-STP_GIMP_EXCLUDE([
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
   AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , $PATH:/usr/sbin:/usr/local/sbin)
@@ -386,7 +366,6 @@ installed);
   IJS_CFLAGS=`$IJS_CONFIG --cflags`
   IJS_LIBS=`$IJS_CONFIG --libs`
 fi
-])dnl STP_GIMP_EXCLUDE
 
 dnl GNU gettext checks.
 AH_TEMPLATE(ENABLE_NLS, [AM_GNU_GETTEXT should provide this])
@@ -484,13 +463,11 @@ else
   AC_DEFINE(HAVE_LIBREADLINE, [0])
 fi
 
-STP_GIMP_EXCLUDE([
 STP_CUPS_LIBS
 if test x$BUILD_LEXMARKUTIL = xyes ; then
 AM_PATH_GTK(1.2.0, ,
             AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
 fi
-])dnl STP_GIMP_EXCLUDE
 
 STP_GIMP_LIBS
 
@@ -536,7 +513,6 @@ AC_CHECK_FUNC(getopt_long,
   LIBOBJS="${LIBOBJS} getopt.o getopt1.o")
 
 dnl Define what has to be built
-STP_GIMP_EXCLUDE([
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
 AM_CONDITIONAL(BUILD_IJS, test x${BUILD_IJS} = xyes)
@@ -560,7 +536,6 @@ AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
 AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
-])dnl STP_GIMP_EXCLUDE
 
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
@@ -587,9 +562,7 @@ AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
-STP_GIMP_EXCLUDE([
 STP_CUPS_PATH
-])dnl STP_GIMP_EXCLUDE
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
@@ -599,10 +572,8 @@ LTLIBOBJS=`echo "$LIBOBJS" | sed 's/\.o/.lo/g'`
 LTALLOCA=`echo "$ALLOCA" | sed 's/\.o/.lo/g'`
 
 dnl Definitions
-STP_GIMP_EXCLUDE([
 AC_DEFINE_UNQUOTED(CUPS_DATADIR, "${cups_exec_prefix}/share/cups", [CUPS data directory.])
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
-])dnl STP_GIMP_EXCLUDE
 AC_DEFINE_UNQUOTED(INCLUDE_GIMP_PRINT_H, ${INCLUDE_GIMP_PRINT_H}, [GIMP-Print header to include.])
 STP_RELEASE_DATE
 
@@ -610,7 +581,6 @@ dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
 dnl Substitutions
-STP_GIMP_EXCLUDE([
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
@@ -637,7 +607,6 @@ AC_SUBST(IJS_CFLAGS)
 AC_SUBST(IJS_LIBS)
 AC_SUBST(TEST_BIN)
 AC_SUBST(TESTPATTERN_BIN)
-])dnl STP_GIMP_EXCLUDE
 AC_SUBST(RM)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
@@ -683,24 +652,19 @@ AC_CONFIG_FILES([include/Makefile include/gimp-print/Makefile include/gimp-print
 AC_CONFIG_FILES([intl/Makefile])
 AC_CONFIG_FILES([lib/Makefile])
 AC_CONFIG_FILES([man/Makefile man/escputil.1])
-STP_GIMP_EXCLUDE([
 AC_CONFIG_FILES([man/cups-calibrate.8])
-])dnl STP_GIMP_EXCLUDE
 AC_CONFIG_FILES([man/gimpprint.3 man/gimpprint-config.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
-STP_GIMP_EXCLUDE([
 AC_CONFIG_FILES([src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator], [chmod +x src/foomatic/foomatic-generator])
 AC_CONFIG_FILES([src/ghost/Makefile src/ghost/contrib.mak.addon src/testpattern/Makefile])
-])dnl STP_GIMP_EXCLUDE
 AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gimpprint-config], [chmod +x src/main/gimpprint-config])
 AC_CONFIG_FILES([src/main/gimpprint.pc])
 AC_CONFIG_FILES([src/printdef/Makefile])
-STP_GIMP_EXCLUDE([
 AC_CONFIG_FILES([cups-gimpprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_COMMANDS([ghost],[
@@ -709,7 +673,6 @@ if test -f src/ghost/contrib.mak.addon ; then
   mv src/ghost/contrib.mak.addon.tmp src/ghost/contrib.mak.addon
 fi
 ])
-])dnl STP_GIMP_EXCLUDE
 AC_CONFIG_COMMANDS([default], [
 echo "Finished configuring."
 echo "Type 'make' to build the package"
