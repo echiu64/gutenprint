@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.74  2000/02/17 01:09:10  rlk
+ *   Alpha channel problems
+ *
  *   Revision 1.73  2000/02/16 00:59:19  rlk
  *   1) Use correct convert functions (canon, escp2, pcl, ps).
  *
@@ -564,7 +567,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 
     while (width > 0)
     {
-      *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255] + 255 - grayin[1];
+      *grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 + 255 - grayin[1]];
 
       grayin += bpp;
       grayout ++;
@@ -730,7 +733,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
       *gray = vars->lut.composite[((rgb[0] * LUM_RED +
 			       rgb[1] * LUM_GREEN +
 			       rgb[2] * LUM_BLUE) *
-			      rgb[3] / 25500 + 255 - rgb[3])];
+			      rgb[3] / 255 + 255 - rgb[3])];
       gray ++;
       rgb += bpp;
       width --;
