@@ -126,7 +126,9 @@ do
 	libtoolize --force --copy
       fi
       echo "Running aclocal $aclocalinclude ..."
-      aclocal $aclocalinclude
+      if ! aclocal $aclocalinclude -I src/main ; then
+        aclocal $aclocalinclude
+      fi
       if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
 	echo "Running autoheader..."
 	autoheader

@@ -98,9 +98,6 @@ AM_INIT_AUTOMAKE(gimp-print, $GIMPPRINT_VERSION)
 dnl Specify a configuration file.
 AM_CONFIG_HEADER(config.h)
 
-dnl Notice that "dnl AM_ACLOCAL_INCLUDE" is active here!
-dnl AM_ACLOCAL_INCLUDE(src/main)
-
 dnl Available languages (translations)
 ALL_LINGUAS="en_GB en_TEST"
 

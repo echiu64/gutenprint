@@ -19,12 +19,17 @@ o Integration of the autotools
 o Normal use of the tools
 o configure.in.in
 o Makefile.am
+  - Automake basics
+  - Make and subdirectories
+  - Conditional compilation
+  - When automake is not enough...
 o aclocal
 o config.h
 o automake subtleties
 o libtool tricks
 o Testing changes to the build scripts
 o Further information
+o Known problems
 
 I hope you find this useful. If any part was not clear, or there was something
 that you would like covering, please let me know!
@@ -68,9 +73,9 @@ During package setup (from CVS):
 	              Makefile.am ------------> Makefile.in
 	
 	                           autoconf
-	             configure.in ------------> configure
+	aclocal.m4 + configure.in ------------> configure
 	
-Configure:
+Running configure:
 	                           configure
 	              Makefile.in ------------> Makefile
 	              config.h.in ------------> config.h
@@ -81,14 +86,27 @@ Configure:
 2. Normal use of the tools
 --------------------------
 
+Building from CVS:
+$ ./autogen.sh [options]
+$ [configure]
+$ make
+$ make [DESTDIR=... VAR1=val1 VARn=valn] install
+
 If building from CVS, normally one runs 'autogen.sh' to generate all of the
 scripts.  Then the package can be built by running 'configure' and then 'make'.
-The built package can then be installed with 'make install'
+The built package can then be installed with 'make install'. Note that one can
+pass any options to autogen.sh that one would normally pass to configure.
+'./configure --help' will give a complete list of options one can use.
 
 If the build scripts have been modified, it will not normally be necessary to
 re-run autogen.sh: the Makefiles will notice and regenerate themselves, running
-configure again if needed.  If configure.in.in has been modified, you will need
-to re-run autogen.sh to regenerate configure.in.
+autoconf, automake, aclocal and configure again if needed.  If configure.in.in
+has been modified, re-run autogen.sh manually to regenerate configure.in.
+
+The build is only guaranteed to work if make is run from the top level. It
+should be possible to make individual subdirectories, but sometimes this will
+cause problems e.g. if it depends on some other directory that should have
+been built first.
 
 
 3. configure.in.in
@@ -132,7 +150,7 @@ iv.   Build dependencies.  This is further split into a) binaries and b) data.
       Each of these sections has
       1. list of objects to build (if applicable)
       2. EXTRA_ objects (if applicable)
-      3. Dependencies for each object
+      3. Dependencies for each object (e.g. sources)
 v.    Rules
 vi.   Cleaning macros
 vii.  EXTRA_DIST
@@ -140,6 +158,92 @@ vii.  EXTRA_DIST
 Keeping everything in this logical order keeps them neat and readable.  Not
 every Makefile.am will have all these sections, but those that are present
 should be ordered in this way.
+
+4.1 Automake basics
+-------------------
+Automake parses Makefile.am, and generates rules in Makefile.in depending on
+what it finds.  There are `primary' variables, such as PROGRAMS, SCRIPTS,
+MANS, HEADERS and DATA that describe what type of source one is defining.
+These are coupled with a location to install into.  For example, these are a
+few standard locations: bindir, sbindir, mandir, datadir, pkgdatadir.  You can
+define your own quite easily.  They are used together as follows:
+	bin_PROGRAMS = myprog 	[where bindir=$(prefix)/bin]
+	pkgdata_DATA = datafile1 datafile2 
+				[where pkgdatadir=$(prefix)/share/$(PACKAGE)]
+Note! the 'dir' postfix is stripped off the location. I.e. bindir -> bin.
+That is all there is to it! You can use these simple variables to describe
+everything in your source, and where is gets installed to.
+    In the case of PROGRAMS, one also has to specify the SOURCES as well.
+E.g. we just said we were building a binary called 'myprog'.  We could
+therefore do:
+	myprog_SOURCES = myprog.c myprog.h
+automake will create all of the rules needed to build and install everything.
+An extra point is that suppose one doesn't want to install something?  For this
+there is a 'noinst' macro, so that noinst_PROGRAMS will not ever be installed.
+One might also want noinst_HEADERS. If one wanted to install headers, one would
+define
+	includedir=$(prefix)/include
+and then
+	pkgincludedir=$(includedir)/$(PACKAGE).
+Now
+	pkginclude_HEADERS = myheader.h
+will install the header into the correct location.
+    There are also some macros with specific functions.  Any file that is not
+mentioned in a macro, and also DATA and MANS, will have to be put in an
+EXTRA_DIST macro, so that automake knows to distribute them.  Also, some files
+might not be automatically cleaned. There are CLEANFILES, DISTCLEANFILES and
+MAINTAINERCLEANFILES macros for use with the 'clean', 'distclean' and
+'maintainer-clean' make targets respectively. Use with caution!  One does not
+want to clean things that cannot be recreated!  CLEANFILES should be
+regenerated with 'make' as part of the build process, DISTCLEANFILES by
+configure (e.g. Makefiles) and MAINTAINERCLEANFILES should be created by
+'autogen.sh' and the programs it calls (e.g. Makefile.in's which are created by
+automake).
+
+4.2 Make and subdirectories
+---------------------------
+If a Makefile.am has a SUBDIRS macro, make will recurse through these
+subdirectories, running make in each one.  e.g. in the top-level Makefile.am:
+	SUBDIRS = intl lib man src test po
+In this case the order of directories is critical: lib, src and test depend on
+intl being built and src and test depend on lib being built.  Also, test depends
+on libgimpprint in src and po must be run after all the source has been built
+(as it parses all C source, possibly including dynamically generated code).  The
+same applies in src/Makefile.am: most directories require libgimpprint for
+linking with, and libgimpprint requires printdef.
+    Therefore the order of building is critical!  It should be technically
+possible to run make in any subdirectory and have all the dependencies
+satisfied by rules in that Makefile.  Unfortunately, this requires complex rules
+in each directory, and this cannot be done as the source tree gets bigger and
+more complex.  As a result, one should only run make from the top level, as
+only this is certain to satisfy all dependencies.
+
+4.3 Conditional compilation
+---------------------------
+Most of the source is conditionally compiled according to the defaults in
+configure.in.in, which may be overridden by passing options to configure,
+or possibly by the results of configure checks.  Depending on the result,
+configure may substitute what to build into the generated Makefile, e.g.:
+	bin_PROGRAMS = @ESCPUTIL_BIN@
+	EXTRA_PROGRAMS = escputil
+It is important to have the EXTRA_ macro, as otherwise the source will
+not get distributed.
+
+4.4 When automake is not enough...
+----------------------------------
+When one wants to do something that is not within the scope of the facilities
+automake provides, one can write one's own rules, just like in any other
+Makefile. These that the following form:
+	target: prerequisites
+		commands
+where
+	target is the name of a file to create
+	prerequisites are files that are needed to make the target
+	commands are commands to make the target
+The target will only be made if it does not exist or the timestamp on any of the
+prerequisites is newer, indicating that it is out of date.
+    make is a complex program, and this is just the bare basic operation. See
+the GNU make info documentation for a detailed explanation.
 
 
 5. aclocal
@@ -229,8 +333,9 @@ MKINSTALLDIRS being wrongly defined. This is also fixed in CVS.
 
 autoconf: autoconf.info
 automake: automake.info
-libtool:  libtool.info
 gettext:  gettext.info (but it's not very comprehensive)
+libtool:  libtool.info
+make:     make.info
 
 
 11. Known problems
