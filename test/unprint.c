@@ -530,20 +530,64 @@ int update_page(unsigned char *buf, /* I - pixel data               */
   return(0);
 }
 
+#define get1(error)				\
+do						\
+{						\
+  if (!(count=fread(&ch,1,1,fp_r)))		\
+    {						\
+      fprintf(stderr, "%s at %d (%x), read %d",	\
+	      error, counter, counter, count);	\
+      eject=1;					\
+      continue;					\
+    }						\
+  else						\
+    counter+=count;				\
+} while (0)
 
+#define get2(error)				\
+do						\
+{						\
+  if (!(count=fread(minibuf,1,2,fp_r)))		\
+    {						\
+      fprintf(stderr, "%s at %d (%x), read %d",	\
+	      error, counter, counter, count);	\
+      eject=1;					\
+      continue;					\
+    }						\
+  else						\
+    {						\
+      counter+=count;				\
+      sh=minibuf[0]+minibuf[1]*256;		\
+    }						\
+} while (0)
 
-#define get1(error) if (!(count=fread(&ch,1,1,fp_r)))\
-{fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define getn(n,error) 				\
+do						\
+{						\
+  if (!(count=fread(buf,1,n,fp_r)))		\
+    {						\
+      fprintf(stderr, "%s at %d (%x), read %d",	\
+	      error, counter, counter, count);	\
+      eject=1;					\
+      continue;					\
+    }						\
+  else						\
+    counter+=count;				\
+} while (0)
 
-#define get2(error) {if(!(count=fread(minibuf,1,2,fp_r))){\
-fprintf(stderr,error);eject=1;continue;} else counter+=count;\
-sh=minibuf[0]+minibuf[1]*256;}
-
-#define getn(n,error) if (!(count=fread(buf,1,n,fp_r)))\
-{fprintf(stderr,error);eject=1;continue;} else counter+=count;
-
-#define getnoff(n,offset,error) if (!(count=fread(buf+offset,1,n,fp_r))){\
-fprintf(stderr,error);eject=1;continue;} else counter+=count;
+#define getnoff(n,offset,error)			\
+do						\
+{						\
+  if (!(count=fread(buf+offset,1,n,fp_r)))	\
+    {						\
+      fprintf(stderr, "%s at %d (%x), read %d",	\
+	      error, counter, counter, count);	\
+      eject=1;					\
+      continue;					\
+    }						\
+  else						\
+    counter+=count;				\
+} while (0)
 
 void parse_escp2(FILE *fp_r)
 {
@@ -793,6 +837,8 @@ void parse_escp2(FILE *fp_r)
                     pstate.relative_vertical_units=
 		    pstate.horizontal_spacing=
                     pstate.absolute_vertical_units=3600/buf[0];
+		    if (pstate.page_management_units < 720)
+		      pstate.extraskip = 1;
 		    fprintf(stderr, "Setting units to 1/%d\n",
 			    pstate.absolute_horizontal_units);
                     break;
@@ -1001,7 +1047,7 @@ void parse_escp2(FILE *fp_r)
               case 'C': /* set page height */
 		switch (bufsize) {
 		case 2:
-		  i = (buf[1] << 16) | buf[0];
+		  i = (buf[1] << 8) | buf[0];
 		  fprintf(stderr, "Setting page height to %d (%.3f)\n", i,
 			  (double) i / pstate.page_management_units);
 		  break;
