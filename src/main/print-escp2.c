@@ -2857,7 +2857,19 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	    break;
 	  }
       }
-
+  if (ncolors == 0)
+    {
+      ink_type = escp2_default_parameters(printer, NULL, "InkType");
+      for (i = 0; i < escp2_ninktypes; i++)
+	{
+	  if (strcmp(ink_type, _(ink_types[i].name)) == 0)
+	    {
+	      hasblack = ink_types[i].hasblack;
+	      ncolors = ink_types[i].ncolors;
+	      break;
+	    }
+	}
+    }
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
  /*
