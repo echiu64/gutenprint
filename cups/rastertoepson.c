@@ -487,10 +487,16 @@ StartPage(const ppd_file_t         *ppd,	/* I - PPD file */
       density *= 3.3;
     if (BitPlanes == 2 && header->HWResolution[0] == 720)
       density /= 1.5;
-    if (header->cupsMediaType == 1)
-      density *= 0.8;
+
+    fprintf(stderr, "DEBUG: raw density = %.4f\n", density);
+
     if (density > 1.0)
       density = 1.0;
+
+    if (header->cupsMediaType == 1)
+      density *= 0.5;
+
+    fprintf(stderr, "DEBUG: capped density = %.4f\n", density);
 
     Dither = init_dither(header->cupsWidth, header->cupsWidth, 1, 1,
                          header->OutputType);

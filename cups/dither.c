@@ -121,6 +121,7 @@ typedef struct dither
   int dst_width;		/* Output width */
 
   int density;			/* Desired density, 0-1.0 (scaled 0-65536) */
+  unsigned short dlut[256];	/* Density lookup table */
 
   int spread;			/* With Floyd-Steinberg, how widely the */
 				/* error is distributed.  This should be */
@@ -592,6 +593,9 @@ dither_set_transition(void *vd, double exponent)
 void
 dither_set_density(void *vd, double density)
 {
+  int i;
+
+
   dither_t *d = (dither_t *) vd;
   if (density > 1)
     density = 1;
@@ -603,6 +607,9 @@ dither_set_density(void *vd, double density)
   d->d_cutoff = d->density / 16;
   d->adaptive_limit = d->density / d->adaptive_divisor;
   d->adaptive_lower_limit = d->adaptive_limit / 4;
+
+  for (i = 0; i < 256; i ++)
+    d->dlut[i] = 65535.0f * i / 255.0f * density + 0.5f;
 }
 
 static int
@@ -1557,7 +1564,7 @@ dither_black(int           	row,		/* I - Current Y coordinate */
     {
       unsigned ink_budget = d->ink_limit;
 
-      k = (*kptr << 8) | *kptr;
+      k = d->dlut[*kptr];
       ok = k;
       if (d->dither_type & D_ORDERED_BASE)
 	print_color(d, &(d->k_dither), k, k, k, x, row, kptr, NULL,
@@ -1829,16 +1836,16 @@ dither_cmyk(int           row,	/* I - Current Y coordinate */
        * First get the standard CMYK separation color values.
        */
 
-      c = (*cptr << 8) | *cptr;
-      m = (*mptr << 8) | *mptr;
-      y = (*yptr << 8) | *yptr;
+      c = d->dlut[*cptr];
+      m = d->dlut[*mptr];
+      y = d->dlut[*yptr];
       if (kptr)
       {
-        k = (*kptr << 8) | *kptr;
+        k = d->dlut[*kptr];
 
-	oc = c + k;
-	om = m + k;
-	oy = y + k;
+	oc = c;
+	om = m;
+	oy = y;
       }
       else
       {
