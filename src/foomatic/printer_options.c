@@ -79,91 +79,94 @@ main(int argc, char **argv)
 	    continue;
 	  count = 0;
 	  stp_describe_parameter(pv, p->name, &desc);
-	  printf("$longnames{'%s'} = '%s';\n",
-		 p->name, p->text);
-	  printf("$param_classes{'%s'} = %d;\n",
-		 p->name, p->p_class);
-          printf("$param_levels{'%s'} = %d;\n",
-		 p->name, p->p_level);
-	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	  if (desc.is_active)
 	    {
-	      count = stp_string_list_count(desc.bounds.str);
-	      if (count > 0)
+	      printf("$longnames{'%s'} = '%s';\n",
+		     p->name, p->text);
+	      printf("$param_classes{'%s'} = %d;\n",
+		     p->name, p->p_class);
+	      printf("$param_levels{'%s'} = %d;\n",
+		     p->name, p->p_level);
+	      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 		{
-		  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			 driver, p->name, desc.deflt.str);
-		  for (j = 0; j < count; j++)
+		  count = stp_string_list_count(desc.bounds.str);
+		  if (count > 0)
 		    {
-		      const stp_param_string_t *param =
-			stp_string_list_param(desc.bounds.str, j);
-		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-			     driver, p->name, param->name, param->text);
-		      if (strcmp(p->name, "Resolution") == 0)
+		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+			     driver, p->name, desc.deflt.str);
+		      for (j = 0; j < count; j++)
 			{
-			  int x, y;
-			  stp_set_string_parameter(pv, "Resolution",
-						   param->name);
-			  stp_describe_resolution(pv, &x, &y);
-			  if (x > 0 && y > 0)
+			  const stp_param_string_t *param =
+			    stp_string_list_param(desc.bounds.str, j);
+			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+				 driver, p->name, param->name, param->text);
+			  if (strcmp(p->name, "Resolution") == 0)
 			    {
-			      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-				     driver, "x_resolution", param->name, x);
-			      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-				     driver, "y_resolution", param->name, y);
+			      int x, y;
+			      stp_set_string_parameter(pv, "Resolution",
+						       param->name);
+			      stp_describe_resolution(pv, &x, &y);
+			      if (x > 0 && y > 0)
+				{
+				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+					 driver, "x_resolution", param->name, x);
+				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
+					 driver, "y_resolution", param->name, y);
+				}
 			    }
 			}
 		    }
 		}
-	    }
-	  else if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
-	    {
-	      printf("$defaults{'%s'}{'%s'} = '%d';\n",
-		     driver, desc.name, desc.deflt.boolean);
-	      printf("$stpdata{'%s'}{'%s'}{'0'} = 'False';\n",
-		     driver, desc.name);
-	      printf("$stpdata{'%s'}{'%s'}{'1'} = 'True';\n",
-		     driver, desc.name);
-	    }
-	  else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
-	    {
-	      if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
-		  desc.bounds.dbl.upper >= desc.deflt.dbl)
+	      else if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
 		{
-		  printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f;\n",
-			 driver, desc.name, desc.bounds.dbl.lower);
-		  printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f;\n",
-			 driver, desc.name, desc.bounds.dbl.upper);
-		  printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
-			 driver, desc.name, desc.deflt.dbl);
-		  /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-		     driver, desc.name, _(desc.text)); */
-		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.category));
-		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			 driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		  printf("$defaults{'%s'}{'%s'} = '%d';\n",
+			 driver, desc.name, desc.deflt.boolean);
+		  printf("$stpdata{'%s'}{'%s'}{'0'} = 'False';\n",
+			 driver, desc.name);
+		  printf("$stpdata{'%s'}{'%s'}{'1'} = 'True';\n",
+			 driver, desc.name);
 		}
-	    }
-	  else if (desc.p_type == STP_PARAMETER_TYPE_INT)
-	    {
-	      if (desc.bounds.integer.lower <= desc.deflt.integer &&
-		  desc.bounds.integer.upper >= desc.deflt.integer)
+	      else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 		{
-		  printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
-			 driver, desc.name, desc.bounds.integer.lower);
-		  printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
-			 driver, desc.name, desc.bounds.integer.upper);
-		  printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
-			 driver, desc.name, desc.deflt.integer);
-		  /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-		     driver, desc.name, _(desc.text)); */
-		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.category));
-		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			 driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		  if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
+		      desc.bounds.dbl.upper >= desc.deflt.dbl)
+		    {
+		      printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f;\n",
+			     driver, desc.name, desc.bounds.dbl.lower);
+		      printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f;\n",
+			     driver, desc.name, desc.bounds.dbl.upper);
+		      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
+			     driver, desc.name, desc.deflt.dbl);
+		      /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+			 driver, desc.name, _(desc.text)); */
+		      printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+			     driver, desc.name, _(desc.category));
+		      printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		    }
 		}
+	      else if (desc.p_type == STP_PARAMETER_TYPE_INT)
+		{
+		  if (desc.bounds.integer.lower <= desc.deflt.integer &&
+		      desc.bounds.integer.upper >= desc.deflt.integer)
+		    {
+		      printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.bounds.integer.lower);
+		      printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.bounds.integer.upper);
+		      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+			     driver, desc.name, desc.deflt.integer);
+		      /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
+			 driver, desc.name, _(desc.text)); */
+		      printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
+			     driver, desc.name, _(desc.category));
+		      printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
+			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		    }
+		}
+	      tcount += count;
 	    }
 	  stp_parameter_description_free(&desc);
-	  tcount += count;
 	}
       stp_parameter_list_free(params);
       if (tcount > 0)
