@@ -249,7 +249,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.196, 0.098 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.6, 1.3,  0.69, 0.511, 0.765, 0.585, 0.293, 0.147 };
+{ 2.6, 1.3,  0.69, 0.715, 0.441, 0.441, 0.441, 0.221 };
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.650, 0.650, 0.325 };
