@@ -313,7 +313,6 @@ msgstr "Ilford Heavy Paper"
 
 #: src/main/print-escp2-data.c:2735 src/main/print-escp2-data.c:2797
 #: src/main/print-escp2-data.c:2859 src/main/print-escp2-data.c:2921
-#, fuzzy
 msgid "ColorLife Paper"
 msgstr "ColorLife Paper"
 
