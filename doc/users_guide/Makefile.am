@@ -34,19 +34,35 @@ OUTPUTS = \
  $(MANUAL).ps \
  html
 
+STANDARD_TARGETS = $(MANUAL).pdf html-stamp
+
 DISTHOOKDIRS = figures $(HTMLDIR)
-DISTHOOKFILES = $(MANUAL).pdf
+DISTHOOKFILES = $(MANUAL).pdf html-stamp
 
-CATALOG_FILES = /etc/sgml/catalog
+PNG_IMAGES = figures/cups_admin.png			\
+	figures/cups_admin_device.png			\
+	figures/cups_admin_make.png			\
+	figures/cups_admin_model.png			\
+	figures/cups_admin_success.png			\
+	figures/cups_config_printer.png			\
+	figures/cups_my_printer.png			\
+	figures/cups_printers.png			\
+	figures/cups_startup.png			\
+	figures/gimp-print-gui-1.png			\
+	figures/gimp-print-gui.png			\
+	figures/gimp-print-new-printer.png		\
+	figures/gimp-print-print-color-adjust.png	\
+	figures/gimp-print-setup.png			\
+	figures/gimp_image.png				\
+	figures/gimp_startup.png
 
-PNG_IMAGES = $(wildcard figures/*.png)
 EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
 PDF_IMAGES = $(addsuffix .pdf,$(basename $(PNG_IMAGES)))
 
 
 ## Rules
 
-dist-hook: html pdf
+dist-hook: $(STANDARD_TARGETS)
 	for dir in $(DISTHOOKDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -75,7 +91,7 @@ dist-hook: html pdf
 #	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
 #	$(DB2PDF) $(srcdir)/$(MANUAL).sgml
 
-docs: html ps pdf
+docs: html-stamp ps pdf
 
 pdf: $(MANUAL).pdf
 
@@ -93,7 +109,6 @@ ps: $(MANUAL).ps
 ps.gz: $(MANUAL).ps.gz
 
 $(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
-	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
 	$(DB2PS) $(srcdir)/$(MANUAL).sgml
 
 %.eps:
@@ -108,7 +123,6 @@ $(MANUAL).ps.gz: $(MANUAL).ps
 
 html: html-stamp
 html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
-	export SGML_CATALOG_FILES=$(CATALOG_FILES) ; \
 	if test $(srcdir) = '.' ; then \
 	  SOURCE='' ; \
 	else \
@@ -124,10 +138,11 @@ html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	if test ! $(HTMLDIR) = $(MANUAL) ; then \
 	  mv $(MANUAL) $(HTMLDIR) ; \
 	fi ; \
+	chmod a+rx $(HTMLDIR); \
 	touch html-stamp
 
 # Symlink to distributed html manual, if possible
-all-local: html
+all-local: $(STANDARD_TARGETS)
 	if test -d $(srcdir)/$(HTMLDIR) ; then \
 	  if test "$(srcdir)" = "." ; then \
 	    echo "all-local: Not removing $(HTMLDIR)" ; \
@@ -138,6 +153,18 @@ all-local: html
 	  else \
 	    echo "all-local: $(srcdir)/$(HTMLDIR) not found" ; \
 	fi
+
+install-data-local: $(STANDARD_TARGETS)
+	$(mkinstalldirs) $(datadir)/$(PACKAGE)/doc/figures
+	$(INSTALL_DATA) $(MANUAL).pdf $(datadir)/$(PACKAGE)/doc
+	cd users_guide ; \
+	for file in *.html *.css ; do \
+	  $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc ; \
+	done ; \
+	cd figures ; \
+	for file in *.png ; do \
+	  $(INSTALL_DATA) $$file $(datadir)/$(PACKAGE)/doc/figures ; \
+	done ;
 
 clean-local: clean-figures
 	if test $(srcdir) = "." ; then \
@@ -200,17 +227,3 @@ CLEANFILES = $(EPS_IMAGES) $(PDF_IMAGES)
 MAINTAINERCLEANFILES = Makefile.in html-stamp
 
 EXTRA_DIST = README $(MANUAL).sgml
-
-
-
-
-
-
-
-
-
-
-
-
-
-
