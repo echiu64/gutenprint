@@ -714,7 +714,7 @@ void gtk_create_main_window(void)
     scaling_entry = entry = gtk_entry_new();
     sprintf(s, "%.1f", fabs(vars.scaling));
     gtk_entry_set_text(GTK_ENTRY(entry), s);
-    gtk_signal_connect(GTK_OBJECT(entry), "changed",
+    gtk_signal_connect(GTK_OBJECT(entry), "activate",
 		       (GtkSignalFunc)gtk_scaling_callback, NULL);
     gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
     gtk_widget_set_usize(entry, 60, 0);
