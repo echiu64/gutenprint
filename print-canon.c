@@ -711,7 +711,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
   if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC28,0x61, 1, 0x00,0x01);
+    canon_cmd(prn,ESC28,0x61, 1, 0x01);
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
 
@@ -753,7 +753,7 @@ void canon_deinit_printer(FILE *prn, canon_cap_t caps)
   /* say goodbye */
   canon_cmd(prn,ESC28,0x62,1,0);
   if (caps.features & CANON_CAP_CMD61)
-    canon_cmd(prn,ESC28,0x61, 1, 0x00,0x00);
+    canon_cmd(prn,ESC28,0x61, 1, 0x00);
   canon_cmd(prn,ESC40,0,0);
   fflush(prn);
 }
