@@ -179,5 +179,8 @@ main(int argc, char **argv)
     }
   printf("%d total errors\n", errors);
   destroy_weave(sw);
-  return 0;
+  if (errors > 0)
+    return 1;
+  else
+    return 0;
 }
