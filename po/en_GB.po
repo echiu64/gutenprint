@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "POT-Creation-Date: 2003-12-05 22:53-0500\n"
-"PO-Revision-Date: 2001-11-05 21:42+0100\n"
+"PO-Revision-Date: 2003-12-07 12:37+0000\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
 "MIME-Version: 1.0\n"
@@ -889,7 +889,7 @@ msgstr "Super B 13×19"
 
 #: src/main/print-util.c:563
 msgid "Engineering C 17x22"
-msgstr ""
+msgstr "Engineering C 17x22"
 
 #. Other common photographic paper sizes
 #: src/main/print-util.c:567
@@ -1377,7 +1377,7 @@ msgstr "Penguin large paperback"
 #. Miscellaneous sizes
 #: src/main/print-util.c:806
 msgid "10cm x 15cm"
-msgstr ""
+msgstr "10cm x 15cm"
 
 #. 100 x 150 mm
 #: src/main/print-util.c:808
@@ -1523,9 +1523,8 @@ msgid "Resolution"
 msgstr "Resolution"
 
 #: src/cups/genppd.c:844
-#, fuzzy
 msgid "GIMP-print"
-msgstr "Print"
+msgstr "GIMP-print"
 
 #.
 #. * Image types...
@@ -1796,29 +1795,24 @@ msgid "Stylus C42ux"
 msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:209
-#, fuzzy
 msgid "Stylus C43sx"
-msgstr "Stylus C42sx"
+msgstr "Stylus C43sx"
 
 #: src/escputil/escputil.c:210
-#, fuzzy
 msgid "Stylus C43ux"
-msgstr "Stylus C42ux"
+msgstr "Stylus C43ux"
 
 #: src/escputil/escputil.c:211
-#, fuzzy
 msgid "Stylus C44sx"
-msgstr "Stylus C42sx"
+msgstr "Stylus C44sx"
 
 #: src/escputil/escputil.c:212
-#, fuzzy
 msgid "Stylus C44ux"
-msgstr "Stylus C42ux"
+msgstr "Stylus C44ux"
 
 #: src/escputil/escputil.c:213
-#, fuzzy
 msgid "Stylus C50"
-msgstr "Stylus C60"
+msgstr "Stylus C50"
 
 #: src/escputil/escputil.c:214
 msgid "Stylus C60"
@@ -1833,14 +1827,12 @@ msgid "Stylus C62"
 msgstr "Stylus C62"
 
 #: src/escputil/escputil.c:217
-#, fuzzy
 msgid "Stylus C63"
-msgstr "Stylus C60"
+msgstr "Stylus C63"
 
 #: src/escputil/escputil.c:218
-#, fuzzy
 msgid "Stylus C64"
-msgstr "Stylus C60"
+msgstr "Stylus C64"
 
 #: src/escputil/escputil.c:219
 msgid "Stylus C70"
@@ -1855,14 +1847,12 @@ msgid "Stylus C82"
 msgstr "Stylus C82"
 
 #: src/escputil/escputil.c:222
-#, fuzzy
 msgid "Stylus C83"
-msgstr "Stylus C80"
+msgstr "Stylus C83"
 
 #: src/escputil/escputil.c:223
-#, fuzzy
 msgid "Stylus C84"
-msgstr "Stylus C80"
+msgstr "Stylus C84"
 
 #: src/escputil/escputil.c:224
 msgid "Stylus Color"
@@ -2125,44 +2115,36 @@ msgid "Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
 #: src/escputil/escputil.c:289
-#, fuzzy
 msgid "Stylus CX-3100"
-msgstr "Stylus C60"
+msgstr "Stylus CX-3100"
 
 #: src/escputil/escputil.c:290
-#, fuzzy
 msgid "Stylus CX-3200"
-msgstr "Stylus C20sx"
+msgstr "Stylus CX-3200"
 
 #: src/escputil/escputil.c:291
-#, fuzzy
 msgid "Stylus CX-5100"
-msgstr "Stylus C60"
+msgstr "Stylus CX-5100"
 
 #: src/escputil/escputil.c:292
-#, fuzzy
 msgid "Stylus CX-5200"
-msgstr "Stylus C60"
+msgstr "Stylus CX-5200"
 
 #: src/escputil/escputil.c:293
-#, fuzzy
 msgid "Stylus CX-6300"
-msgstr "Stylus C60"
+msgstr "Stylus CX-6300"
 
 #: src/escputil/escputil.c:294
-#, fuzzy
 msgid "Stylus CX-6400"
-msgstr "Stylus C60"
+msgstr "Stylus CX-6400"
 
 #: src/escputil/escputil.c:295
-#, fuzzy
 msgid "Stylus CX-8300"
-msgstr "Stylus C80"
+msgstr "Stylus CX-8300"
 
 #: src/escputil/escputil.c:296
-#, fuzzy
 msgid "Stylus CX-8400"
-msgstr "Stylus C80"
+msgstr "Stylus CX-8400"
 
 #: src/escputil/escputil.c:383 src/escputil/escputil.c:392
 msgid "You may only specify one printer or raw device."
@@ -3506,89 +3488,3 @@ msgstr "Bad parameters; cannot continue!\n"
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Cannot read from %s: %s\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Cannot read from %s: %s\n"
-
-#~ msgid "1440 x 360 DPI"
-#~ msgstr "1440 × 360 DPI"
-
-#~ msgid "1440 x 360 DPI Unidirectional"
-#~ msgstr "1440 × 360 DPI Unidirectional"
-
-#~ msgid "1440 x 360 DPI High Quality"
-#~ msgstr "1440 × 360 DPI High Quality"
-
-#~ msgid "1440 x 360 DPI High Quality Uni"
-#~ msgstr "1440 × 360 DPI High Quality Uni"
-
-#~ msgid "1440 x 360 DPI Highest Quality"
-#~ msgstr "1440 × 360 DPI Highest Quality"
-
-#~ msgid "13x19"
-#~ msgstr "13×19"
-
-#~ msgid "Monarch"
-#~ msgstr "Monarch"
-
-#~ msgid "Long 3"
-#~ msgstr "Long 3"
-
-#~ msgid "Long 4"
-#~ msgstr "Long 4"
-
-#~ msgid "Kaku"
-#~ msgstr "Kaku"
-
-#~ msgid "HP Greeting Card"
-#~ msgstr "HP Greeting Card"
-
-#~ msgid ""
-#~ "Please insert your alignment test page in the printer once more\n"
-#~ "for the final save of your alignment settings.  When the printer\n"
-#~ "feeds the page through, your settings have been saved.\n"
-#~ msgstr ""
-#~ "Please insert your alignment test page in the printer once more\n"
-#~ "for the final save of your alignment settings.  When the printer\n"
-#~ "feeds the page through, your settings have been saved.\n"
-
-#~ msgid ""
-#~ "Please inspect the print, and choose the best pair of lines\n"
-#~ "in pattern #%d, and then insert a fresh page in the input tray.\n"
-#~ "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-#~ msgstr ""
-#~ "Please inspect the print, and choose the best pair of lines\n"
-#~ "in pattern #%d, and then insert a fresh page in the input tray.\n"
-#~ "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"
-
-#~ msgid ""
-#~ "Aligning phase %d, and performing final test.\n"
-#~ "Please insert a fresh sheet of paper.\n"
-#~ msgstr ""
-#~ "Aligning phase %d, and performing final test.\n"
-#~ "Please insert a fresh sheet of paper.\n"
-
-#~ msgid "Aligning phase %d, and starting phase %d.\n"
-#~ msgstr "Aligning phase %d, and starting phase %d.\n"
-
-#~ msgid "Center the image vertically on the paper!"
-#~ msgstr "Centre the image vertically on the paper!"
-
-#~ msgid "Center the image on the paper!"
-#~ msgstr "Centre the image on the paper!"
-
-#~ msgid "Black/Color"
-#~ msgstr "Black/Colour"
-
-#~ msgid "Photo/Color/Black"
-#~ msgstr "Photo/Colour/Black"
-
-#~ msgid "Photo/Color"
-#~ msgstr "Photo/Colour"
-
-#~ msgid "Black/Photo Color"
-#~ msgstr "Black/Photo Colour"
