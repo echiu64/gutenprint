@@ -162,5 +162,4 @@ scripts/install-sh:
 
 configure.in.in:
 
-binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install NEWS

@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-08-03 18:19-0400\n"
+"POT-Creation-Date: 2001-08-08 14:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,70 +77,70 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/main/print-canon.c:1221 src/main/print-canon.c:1552
-#: src/main/print-canon.c:1684 src/main/print-escp2.c:2358
+#: src/main/print-canon.c:1220 src/main/print-canon.c:1533
+#: src/main/print-canon.c:1661 src/main/print-escp2.c:2358
 #: src/main/print-lexmark.c:609 src/main/print-lexmark.c:862
 #: src/main/print-lexmark.c:982
 msgid "Plain Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1222 src/main/print-canon.c:1553
-#: src/main/print-canon.c:1685 src/main/print-escp2.c:2370
+#: src/main/print-canon.c:1221 src/main/print-canon.c:1534
+#: src/main/print-canon.c:1662 src/main/print-escp2.c:2370
 #: src/main/print-lexmark.c:610 src/main/print-lexmark.c:863
 #: src/main/print-lexmark.c:983
 msgid "Transparencies"
 msgstr ""
 
-#: src/main/print-canon.c:1223 src/main/print-canon.c:1554
-#: src/main/print-canon.c:1686 src/main/print-lexmark.c:611
+#: src/main/print-canon.c:1222 src/main/print-canon.c:1535
+#: src/main/print-canon.c:1663 src/main/print-lexmark.c:611
 #: src/main/print-lexmark.c:864 src/main/print-lexmark.c:984
 msgid "Back Print Film"
 msgstr ""
 
-#: src/main/print-canon.c:1224 src/main/print-canon.c:1555
-#: src/main/print-canon.c:1687 src/main/print-lexmark.c:612
+#: src/main/print-canon.c:1223 src/main/print-canon.c:1536
+#: src/main/print-canon.c:1664 src/main/print-lexmark.c:612
 #: src/main/print-lexmark.c:865 src/main/print-lexmark.c:985
 msgid "Fabric Sheets"
 msgstr ""
 
-#: src/main/print-canon.c:1225 src/main/print-canon.c:1556
-#: src/main/print-canon.c:1688 src/main/print-lexmark.c:613
+#: src/main/print-canon.c:1224 src/main/print-canon.c:1537
+#: src/main/print-canon.c:1665 src/main/print-lexmark.c:613
 #: src/main/print-lexmark.c:866 src/main/print-lexmark.c:986
 msgid "Envelope"
 msgstr ""
 
-#: src/main/print-canon.c:1226 src/main/print-canon.c:1557
-#: src/main/print-canon.c:1689 src/main/print-lexmark.c:614
+#: src/main/print-canon.c:1225 src/main/print-canon.c:1538
+#: src/main/print-canon.c:1666 src/main/print-lexmark.c:614
 #: src/main/print-lexmark.c:867 src/main/print-lexmark.c:987
 msgid "High Resolution Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1227 src/main/print-canon.c:1558
-#: src/main/print-canon.c:1690 src/main/print-lexmark.c:615
+#: src/main/print-canon.c:1226 src/main/print-canon.c:1539
+#: src/main/print-canon.c:1667 src/main/print-lexmark.c:615
 #: src/main/print-lexmark.c:868 src/main/print-lexmark.c:988
 msgid "T-Shirt Transfers"
 msgstr ""
 
-#: src/main/print-canon.c:1228 src/main/print-canon.c:1559
-#: src/main/print-canon.c:1691 src/main/print-lexmark.c:616
+#: src/main/print-canon.c:1227 src/main/print-canon.c:1540
+#: src/main/print-canon.c:1668 src/main/print-lexmark.c:616
 #: src/main/print-lexmark.c:869 src/main/print-lexmark.c:989
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1229 src/main/print-canon.c:1560
-#: src/main/print-canon.c:1692 src/main/print-lexmark.c:617
+#: src/main/print-canon.c:1228 src/main/print-canon.c:1541
+#: src/main/print-canon.c:1669 src/main/print-lexmark.c:617
 #: src/main/print-lexmark.c:870 src/main/print-lexmark.c:990
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1230 src/main/print-canon.c:1561
-#: src/main/print-canon.c:1693 src/main/print-lexmark.c:618
+#: src/main/print-canon.c:1229 src/main/print-canon.c:1542
+#: src/main/print-canon.c:1670 src/main/print-lexmark.c:618
 #: src/main/print-lexmark.c:871 src/main/print-lexmark.c:991
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1231 src/main/print-canon.c:1562
-#: src/main/print-canon.c:1694 src/main/print-lexmark.c:619
+#: src/main/print-canon.c:1230 src/main/print-canon.c:1543
+#: src/main/print-canon.c:1671 src/main/print-lexmark.c:619
 #: src/main/print-lexmark.c:872 src/main/print-lexmark.c:992
 msgid "Photo Paper Pro"
 msgstr ""
@@ -160,114 +160,114 @@ msgstr ""
 #. { N_ ("Premium Glossy Photo Paper"), 0x00, 0.90, 1.00, .9 },
 #. { N_ ("Photo Quality Glossy Paper"), 0x00, 1.00, 1.00, .9 },
 #.
-#: src/main/print-canon.c:1247 src/main/print-escp2.c:2405
+#: src/main/print-canon.c:1246 src/main/print-escp2.c:2405
 msgid "Other"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1285 src/main/print-canon.c:1566
-#: src/main/print-canon.c:1698 src/main/print-lexmark.c:630
+#: src/main/print-canon.c:1282 src/main/print-canon.c:1547
+#: src/main/print-canon.c:1675 src/main/print-lexmark.c:630
 #: src/main/print-lexmark.c:876 src/main/print-lexmark.c:996
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1286 src/main/print-canon.c:1567
-#: src/main/print-canon.c:1699 src/main/print-lexmark.c:631
+#: src/main/print-canon.c:1283 src/main/print-canon.c:1548
+#: src/main/print-canon.c:1676 src/main/print-lexmark.c:631
 #: src/main/print-lexmark.c:877 src/main/print-lexmark.c:997
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1287 src/main/print-canon.c:1568
-#: src/main/print-canon.c:1700 src/main/print-lexmark.c:632
+#: src/main/print-canon.c:1284 src/main/print-canon.c:1549
+#: src/main/print-canon.c:1677 src/main/print-lexmark.c:632
 #: src/main/print-lexmark.c:878 src/main/print-lexmark.c:998
 msgid "Manual without Pause"
 msgstr ""
 
 #. used internally: do not translate
-#: src/main/print-canon.c:1299 src/main/print-canon.c:1322
-#: src/main/print-canon.c:1642 src/main/print-canon.c:1755
+#: src/main/print-canon.c:1294 src/main/print-canon.c:1315
+#: src/main/print-canon.c:1619 src/main/print-canon.c:1730
 #: src/main/print-lexmark.c:645 src/main/print-lexmark.c:939
 #: src/main/print-lexmark.c:1045
 msgid "Black"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:978 src/main/print-canon.c:1300
-#: src/main/print-canon.c:1323 src/main/print-canon.c:1644
-#: src/main/print-canon.c:1757 src/main/print-lexmark.c:646
+#: src/gimp/gimp_main_window.c:978 src/main/print-canon.c:1295
+#: src/main/print-canon.c:1316 src/main/print-canon.c:1621
+#: src/main/print-canon.c:1732 src/main/print-lexmark.c:646
 #: src/main/print-lexmark.c:941 src/main/print-lexmark.c:1047
 msgid "Color"
 msgstr "Colour"
 
-#: src/main/print-canon.c:1301 src/main/print-canon.c:1324
-#: src/main/print-canon.c:1646 src/main/print-canon.c:1759
+#: src/main/print-canon.c:1296 src/main/print-canon.c:1317
+#: src/main/print-canon.c:1623 src/main/print-canon.c:1734
 #: src/main/print-lexmark.c:647 src/main/print-lexmark.c:943
 #: src/main/print-lexmark.c:1049
 msgid "Black/Color"
 msgstr "Black/Colour"
 
-#: src/main/print-canon.c:1302 src/main/print-canon.c:1325
-#: src/main/print-canon.c:1648 src/main/print-canon.c:1761
+#: src/main/print-canon.c:1297 src/main/print-canon.c:1318
+#: src/main/print-canon.c:1625 src/main/print-canon.c:1736
 #: src/main/print-lexmark.c:648 src/main/print-lexmark.c:945
 #: src/main/print-lexmark.c:947 src/main/print-lexmark.c:1051
 #: src/main/print-lexmark.c:1053
 msgid "Photo/Color"
 msgstr "Photo/Colour"
 
-#: src/main/print-canon.c:1303 src/main/print-lexmark.c:649
+#: src/main/print-canon.c:1298 src/main/print-lexmark.c:649
 msgid "Photo"
 msgstr ""
 
-#: src/main/print-canon.c:1304 src/main/print-canon.c:1326
-#: src/main/print-canon.c:1650 src/main/print-canon.c:1763
+#: src/main/print-canon.c:1299 src/main/print-canon.c:1319
+#: src/main/print-canon.c:1627 src/main/print-canon.c:1738
 msgid "Black/Photo Color"
 msgstr "Black/Photo Color"
 
 #. used internally: do not translate
 #. built ins:
-#: src/main/print-canon.c:1350 src/main/print-lexmark.c:711
+#: src/main/print-canon.c:1341 src/main/print-lexmark.c:711
 #: src/main/print-pcl.c:111 src/main/print-util.c:586
 msgid "A5"
 msgstr ""
 
 #. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-canon.c:1351 src/main/print-lexmark.c:712
+#: src/main/print-canon.c:1342 src/main/print-lexmark.c:712
 #: src/main/print-pcl.c:112 src/main/print-util.c:585
 msgid "A4"
 msgstr ""
 
-#: src/main/print-canon.c:1352 src/main/print-lexmark.c:713
+#: src/main/print-canon.c:1343 src/main/print-lexmark.c:713
 msgid "B5"
 msgstr ""
 
 #. US Exec (7.25 x 10.5 in)
-#: src/main/print-canon.c:1353 src/main/print-lexmark.c:714
+#: src/main/print-canon.c:1344 src/main/print-lexmark.c:714
 #: src/main/print-pcl.c:106 src/main/print-util.c:540
 msgid "Letter"
 msgstr ""
 
 #. US Letter (8.5 x 11 in)
-#: src/main/print-canon.c:1354 src/main/print-lexmark.c:715
+#: src/main/print-canon.c:1345 src/main/print-lexmark.c:715
 #: src/main/print-pcl.c:107 src/main/print-util.c:541
 msgid "Legal"
 msgstr ""
 
-#: src/main/print-canon.c:1355 src/main/print-lexmark.c:716
+#: src/main/print-canon.c:1346 src/main/print-lexmark.c:716
 msgid "Envelope 10"
 msgstr ""
 
-#: src/main/print-canon.c:1356 src/main/print-lexmark.c:717
+#: src/main/print-canon.c:1347 src/main/print-lexmark.c:717
 msgid "Envelope DL"
 msgstr ""
 
-#: src/main/print-canon.c:1357 src/main/print-lexmark.c:718
+#: src/main/print-canon.c:1348 src/main/print-lexmark.c:718
 msgid "Letter+"
 msgstr ""
 
-#: src/main/print-canon.c:1358 src/main/print-lexmark.c:719
+#: src/main/print-canon.c:1349 src/main/print-lexmark.c:719
 msgid "A4+"
 msgstr ""
 
-#: src/main/print-canon.c:1359
+#: src/main/print-canon.c:1350
 msgid "Canon 4x2"
 msgstr ""
 
@@ -900,12 +900,12 @@ msgstr ""
 msgid "2400x600 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:1504 src/main/print-pcl.c:1639
+#: src/main/print-pcl.c:1496 src/main/print-pcl.c:1629
 msgid "Color + Black Cartridges"
 msgstr "Colour + Black Cartridges"
 
-#: src/main/print-pcl.c:1505 src/main/print-pcl.c:1640
-#: src/main/print-pcl.c:1929
+#: src/main/print-pcl.c:1497 src/main/print-pcl.c:1630
+#: src/main/print-pcl.c:1913
 msgid "Color + Photo Cartridges"
 msgstr "Colour + Photo Cartridges"
 

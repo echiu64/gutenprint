@@ -26,42 +26,14 @@
 /* Package version*/
 #undef VERSION
 
-/* Package release date*/
-#undef RELEASE_DATE
-
-/* CUPS data directory */
-#undef CUPS_DATADIR
-
-/* Define if GNU ld is present */
-#undef HAVE_GNU_LD
-
-/* GIMP-Print header to include */
-#undef INCLUDE_GIMP_PRINT_H
-
-/* Define if libc does no provide */
-#undef HAVE_ASPRINTF
-#undef HAVE_VASPRINTF
-#undef HAVE_GETOPT_LONG
-#undef HAVE_RANDOM
-#undef HAVE_POLL
-#undef HAVE_STPCPY
 /* Define for use of ioctl(2) system call */
 #undef USE_IOCTL
 
-/* Define if libreadline and/or its headers are present */
-#undef HAVE_READLINE_READLINE_H
+/* Define if libreadline is present */
 #undef HAVE_LIBREADLINE
-
-/* Available publib functions */
-#undef HAVE_PUBLIB_XMALLOC
-#undef HAVE_PUBLIB_XREALLOC
-#undef HAVE_PUBLIB_XFREE
 
 /* Define if xmalloc is present */
 #undef HAVE_XMALLOC
-
-/* Define if libz is present */
-#undef HAVE_LIBZ
 
 /* Definitions for GNU gettext (taken from gettext source and gettext.info */
 
@@ -88,9 +60,6 @@
 
 /* Define as 1 if you have the stpcpy function.  */
 #undef HAVE_STPCPY
-
-/* Define if maintainer-mode is used */
-#undef HAVE_MAINTAINER_MODE
 
 /* Package locale directory */
 #undef PACKAGE_LOCALE_DIR

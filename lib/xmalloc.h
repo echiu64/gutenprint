@@ -36,7 +36,7 @@ extern void *xmalloc (size_t);
 extern void *xrealloc (void *, size_t);
 #endif
 #ifndef HAVE_XCALLOC
-extern void*xcalloc (size_t count, size_t size);
+extern void *xcalloc (size_t count, size_t size);
 #endif
 
 
