@@ -369,8 +369,9 @@ KNOWN BUILD ISSUES
 
       We have chosen to explicitly link genppd against the included
       gettext and use the LANGUAGE environment variable.  This
-      requires some rather ugly modifications to genppd.c.
-      Unfortunately, this does not work correctly on all systems, most
+      requires some rather ugly modifications to genppd.c and what are
+      likely some questionably portable Makefile constructs.
+      Unfortunately, this may not work correctly on all systems, most
       likely due to linker quirks.  We would like to know about any
       problems experienced, and any workarounds.
 
@@ -439,8 +440,8 @@ PACKAGING
       /usr/share/locale/*/LC_MESSAGES/gimp-print.mo
 
     * A gimp-print-devel package (for developers) should contain the
-      following.  Again, you may wish to install the user's guide only
-      in certain formats.
+      following.  Again, you may wish to install the programmer's
+      manual only in certain formats.
 
       /usr/include/gimp-print
       /usr/bin/gimpprint-config
@@ -450,10 +451,15 @@ PACKAGING
       /usr/lib/libgimpprint.a
       /usr/lib/libgimpprint.so
 
-      You should also provide 
-
       You may wish to include the test pattern generator source and
-      the sample test pattern in this package.
+      the sample test pattern in this package, and you may wish to
+      include test patterns of your own.  You may also wish to include
+      the various unprint programs and the parse-* scripts from the
+      test directory, although these are typically of more use to
+      developers of the Gimp-Print package per se than developers of
+      applications layered on Gimp-Print.  However, the test programs
+      have received less testing than the others, and are known to
+      have some limitations that are not documented.
 
     * A gimp-print-extras package should contain
 
@@ -472,9 +478,7 @@ PACKAGING
       recompilation.
 
     * CUPS packages should include the Gimp-print PPD's in
-      /usr/share/cups/model (you may wish to select only certain
-      languages due to the volume of the data), and the following
-      utilities:
+      /usr/share/cups/model, and the following utilities:
 
       + "epson" and "canon" belong in /usr/lib/cups/backend.
 
@@ -487,11 +491,20 @@ PACKAGING
 
       + "calibrate.ppm" belongs in /usr/share/cups.
 
+      The PPD's packaged with Gimp-print are rather bulky, about 1 MB
+      for each language installed.  At present, five language
+      translations are installed, in addition to the US English
+      defaults: GB English, Swedish, Danish, Norwegian, and French.
+      You may wish to install these selectively.
+
+      Please see KNOWN BUILD ISSUES above for more discussion about
+      build issues related to the PPD files.
+
     * A gimp-print-foomatic package, containing
       src/foomatic/foomatic-db, should be provided to allow people who
       wish to use foomatic to install the corresponding data files.
-      The packaging should arrange to call "foomatic-kitload" on this
-      tree.
+      The packaging should arrange to call "foomatic-kitload" (or the
+      equivalent) on this tree when it is installed.
 
     * We recommend that you replace the Print plugin bundled with the
       Gimp (1.2.0~1.2.2) with the Gimp Print plugin in this
@@ -502,6 +515,16 @@ PACKAGING
       Gimp Print plugin.  The plugin in the Gimp 1.2 tree is based on
       the older Gimp-Print 4.0 source base; 4.2 supports more printers
       with better quality, and has more features than 4.0.
+
+    * Distributors (UNIX vendors and Linux distributors) should
+      subscribe to the gimp-print-devel@sourceforge.net mailing list
+      to monitor development activities.  When reporting a problem
+      related to building the package for distribution, please
+      identify yourself as such.  The Gimp-Print package is primarily
+      an infrastructure package, rather than an end-user application,
+      and as such we particularly want to fix any problems that
+      interfere with building and distribution of this package on any
+      POSIX-compliant operating system.
 
 
 DEBIAN
