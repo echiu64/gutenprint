@@ -125,6 +125,9 @@ GIMPPRINT_UI_LIBS="-lgimpprintui"
 gimpprint_version=${GIMPPRINT_VERSION}
 gimpprint_ui_version=${GIMPPRINT_VERSION}
 
+GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} \$(GIMPPRINT_LIBS)"
+gimpprint_ui_requires="${gimpprint_ui_requires} gimpprint"
+
 
 dnl Specify a configuration file.
 AM_CONFIG_HEADER([config.h])
