@@ -2440,7 +2440,7 @@ static const escp2_dot_size_t sc600_dotsizes =
 {  4,     -1,    4,   -1,   -1,    3,    2,    2,   -1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t g3_dotsizes =
-{  3,     -1,    3,   -1,   -1,    2,    1,    1,   -1,    4,   -1,   -1,   -1 };
+{  3,     -1,    3,   -1,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t photo_dotsizes =
 {  3,     -1,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
@@ -2593,6 +2593,9 @@ static const escp2_densities_t sc1500_densities =
 { 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.631, 0.631,   0.0,   0.0,   0.0,   0.0,   0.0 };
 
 static const escp2_densities_t g3_densities =
+{ 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.55,  0.55,  0.275, 0.275, 0.138 };
+
+static const escp2_densities_t photo_densities =
 { 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.55,  0.55,  0.275, 0.275, 0.138 };
 
 static const escp2_densities_t sc440_densities =
@@ -3086,7 +3089,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 8,
-    photo_dotsizes, g3_densities, &simple_inks,
+    photo_dotsizes, photo_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list,
     NULL, NULL
@@ -3101,7 +3104,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     INCH(118 / 10), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 8,
-    photo_dotsizes, g3_densities, &simple_inks,
+    photo_dotsizes, photo_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list,
     NULL, NULL
@@ -3116,7 +3119,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, 0, 0, 8,
-    photo_dotsizes, g3_densities, &simple_inks,
+    photo_dotsizes, photo_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list,
     NULL, NULL
