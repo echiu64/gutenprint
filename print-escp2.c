@@ -648,7 +648,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
     { 2, 0, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .568, 0, 0, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .568, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 1: Stylus Color Pro/Pro XL/400/500 */
@@ -659,7 +659,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
     { 2, 0, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 2: Stylus Color 1500 */
@@ -670,7 +670,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
     { 2, 0, -1, 1, -1, -1, -1 },
-    { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 3: Stylus Color 600 */
@@ -681,7 +681,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
     { 4, 3, -1, 2, 2, 2, 2 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
   /* 4: Stylus Color 800 */
@@ -692,7 +692,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4,
     { 3, 2, -1, 1, 1, 1, 1 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
   /* 5: Stylus Color 850 */
@@ -703,7 +703,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 128, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
     { 3, 2, -1, 1, 1, 1, 1 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
   /* 6: Stylus Color 1520 */
@@ -714,7 +714,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { 3, 2, -1, 1, 1, 1, 1 },
-    { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .646, 0, .646, 0, 0, 0 },
     &simple_4color_inks
   },
 
@@ -727,7 +727,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
     { 3, 3, -1, -1, 1, -1, 1 },
-    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_6color_inks
   },
   /* 8: Stylus Photo EX */
@@ -738,7 +738,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
     { 3, 3, -1, -1, 1, -1, 1 },
-    { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
+    { 2.0, 1.3, 1.3, .775, .775, .387, .387, .193, .0966 },
     &simple_6color_inks
   },
   /* 9: Stylus Photo */
@@ -749,7 +749,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
     { 3, 3, -1, -1, 0, -1, -1 },
-    { 1, 1, 1, .646, .646, 0, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .646, .646, 0, 0, 0, 0 },
     &simple_6color_inks
   },
 
@@ -765,7 +765,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 8, 21, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, -1, -1 },
-    { 1, 1, 1, .900, .900, 0, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .900, .900, 0, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 11: Stylus Color 640 */
@@ -776,7 +776,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 1, 1, 1, 1 },
-    { 1, 1, 1, .900, .900, .45, .45, .225, .113 },
+    { 2.0, 1.3, 1.3, .900, .900, .45, .45, .225, .113 },
     &simple_4color_inks
   },
   /* 12: Stylus Color 740 */
@@ -787,7 +787,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(11), INCH(17), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x11, 3, 0x10, 3, 0x10 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
   /* 13: Stylus Color 900 */
@@ -799,7 +799,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     96, 2, 192, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 1, 0x11, 1, 0x10, 1, 0x10 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_3pl_inks
   },
   /* 14: Stylus Photo 750 */
@@ -810,7 +810,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
   /* 15: Stylus Photo 1200 */
@@ -821,7 +821,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
   /* 16: Stylus Color 860 */
@@ -832,7 +832,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
   },
   /* 17: Stylus Color 1160 */
@@ -843,7 +843,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(13), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
   },
   /* 18: Stylus Color 660 */
@@ -854,7 +854,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 64, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, 3, 3, 0, 3, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
   /* 19: Stylus Color 760 */
@@ -865,7 +865,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 0, 0x12, 0, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
   },
   /* 20: Stylus Photo 720 (Australia) */
@@ -876,7 +876,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 48, 360, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_6color_inks
   },
   /* 21: Stylus Color 480 */
@@ -887,7 +887,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     15, 8, 48, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 0x11, 3, 0x10, -1, -1 },
-    { 1, 1, 1, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
     &variable_6pl_4color_inks
   },
   /* 22: Stylus Photo 870 */
@@ -898,7 +898,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 6, 48, 360, INCH(17 / 2), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_6color_inks
   },
   /* 23: Stylus Photo 1270 */
@@ -909,7 +909,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_YES),
     48, 6, 48, 360, INCH(13), INCH(44), 0, 0, 0, 9, 1, 0,
     { -1, 4, 0x12, 2, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_6color_inks
   },
   /* 24: Stylus Color 3000 */
@@ -920,7 +920,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
     { 3, 2, -1, 1, 1, 1, 1 },
-    { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
+    { 2.0, 1.3, 1.3, .646, 0, .646, 0, 0, 0 },
     &simple_4color_inks
   },
   /* 25: Stylus Color 670 */
@@ -931,7 +931,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 8, 144, 720, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 8,
     { -1, 3, 0x12, 3, 0x11, -1, 0x10 },
-    { 1, 1, 1, .431, .710, .216, .533, .2665, .1333 },
+    { 2.0, 1.3, 1.3, .431, .710, .216, .533, .2665, .1333 },
     &variable_4pl_4color_inks
   },
   /* 26: Stylus Pro 5000 */
@@ -942,7 +942,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(13), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
   /* 27: Stylus Pro 7000 */
@@ -953,7 +953,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
   /* 28: Stylus Pro 7500 */
@@ -964,7 +964,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(24), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
   /* 29: Stylus Pro 9000 */
@@ -975,7 +975,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
   /* 30: Stylus Pro 9500 */
@@ -986,7 +986,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 360, INCH(44), INCH(1200), 9, 9, 0, 9, 1, 0,
     { -1, 2, 2, 4, 0, 4, 0 },
-    { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
+    { 2.0, 1.3, 1.3, .646, .646, .323, .323, .1615, .0808 },
     &simple_6color_inks
   },
 
@@ -1051,21 +1051,22 @@ typedef struct {
   const char name[65];
   int paper_feed_sequence;
   int platen_gap;
+  double base_density;
 } paper_t;
 
 static const paper_t escp2_paper_list[] = {
-  { "Plain Paper", 1, 0 },
-  { "Plain Paper Fast Load", 5, 0 },
-  { "Postcard", 2, 0 },
-  { "Glossy Film", 3, 0 },
-  { "Transparencies", 3, 0 },
-  { "Envelopes", 4, 0 },
-  { "Back Light Film", 6, 0 },
-  { "Matte Paper", 7, 0 },
-  { "Inkjet Paper", 7, 0 },
-  { "Photo Quality Inkjet Paper", 7, 0 },
-  { "Photo Paper", 8, 0 },
-  { "Other", 0, 0 },
+  { "Plain Paper", 1, 0, .5 },
+  { "Plain Paper Fast Load", 5, 0, .5 },
+  { "Postcard", 2, 0, .6 },
+  { "Glossy Film", 3, 0, 1.0 },
+  { "Transparencies", 3, 0, 1.0 },
+  { "Envelopes", 4, 0, .5 },
+  { "Back Light Film", 6, 0, 1.0 },
+  { "Matte Paper", 7, 0, .5 },
+  { "Inkjet Paper", 7, 0, .78 },
+  { "Photo Quality Inkjet Paper", 7, 0, 1 },
+  { "Photo Paper", 8, 0, 1 },
+  { "Other", 0, 0, .5 },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
@@ -1780,6 +1781,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   vars_t	nv;
   escp_init_t	init;
   escp2_variable_inkset_t *inks;
+  const paper_t *pt;
 
   memcpy(&nv, v, sizeof(vars_t));
 
@@ -1997,6 +1999,11 @@ escp2_print(const printer_t *printer,		/* I - Model */
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
+  pt = get_media_type(nv.media_type);
+  if (pt)
+    nv.density *= pt->base_density;
+  else
+    nv.density *= .5;		/* Can't find paper type? Assume plain */
   nv.density *= escp2_density(model, xdpi, ydpi, !use_softweave);
   if (nv.density > 1.0)
     nv.density = 1.0;
