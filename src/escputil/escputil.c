@@ -687,11 +687,6 @@ do_ink_level(void)
       printf("%20s    %3d\n", _(colors[i]), val);
       ind += 2;
     }
-  initialize_print_cmd();
-  do_remote_cmd("ST", 2, 0, 0);
-  add_resets(2);
-  (void) write(fd, printer_cmd, bufpos);
-  (void) read_from_printer(fd, buf, 1024);
   (void) close(fd);
   exit(0);
 }
