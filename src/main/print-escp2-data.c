@@ -503,6 +503,14 @@ static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 
 DECLARE_INK(photo_4pl_2880, 1.0);
 
+static const stp_simple_dither_range_t photo_4pl_y_2880_dither_ranges[] =
+{
+  { 0.5,   0x1, 1, 1 },
+  { 1.00,  0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_4pl_y_2880, 1.0);
+
 static const stp_simple_dither_range_t piezo_4pl_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .661, 0x1, 0, 2 },
@@ -1177,6 +1185,14 @@ static const escp2_variable_inkset_t escp2_4pl_2880_photo_inks =
   &photo_4pl_2880_ink,
   &photo_4pl_2880_ink,
   &standard_4pl_2880_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_2880_photoj_inks =
+{
+  &standard_4pl_2880_ink,
+  &photo_4pl_2880_ink,
+  &photo_4pl_2880_ink,
+  &photo_4pl_y_2880_ink
 };
 
 static const escp2_variable_inkset_t piezo_4pl_2880_quadtone_inks =
