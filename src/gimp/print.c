@@ -169,6 +169,7 @@ run (char   *name,		/* I - Name of print program. */
   GimpExportReturnType export = GIMP_EXPORT_CANCEL;    /* return value of gimp_export_image() */
   gdouble xres, yres;
   char *image_filename;
+  char *image_basename;
   stpui_image_t *image;
   gint32 image_ID;
   gint32 base_type;
@@ -213,9 +214,10 @@ run (char   *name,		/* I - Name of print program. */
   drawable_ID = param[2].data.d_int32;
 
   image_filename = gimp_image_get_filename (image_ID);
+  image_basename = image_filename;
   if (strchr(image_filename, '/'))
-    image_filename = strrchr(image_filename, '/') + 1;
-  stpui_set_image_filename(image_filename);
+    image_basename = strrchr(image_filename, '/') + 1;
+  stpui_set_image_filename(image_basename);
   g_free(image_filename);
 
   /*  eventually export the image */
