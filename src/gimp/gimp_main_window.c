@@ -207,6 +207,7 @@ static void position_button_callback    (GtkWidget      *widget,
 static void image_type_callback         (GtkWidget      *widget,
 					 gpointer        data);
 static void set_media_size(const gchar *new_media_size);
+static stp_printer_t tmp_printer = NULL;
 
 static list_option_t the_list_options[] =
   {
@@ -2031,6 +2032,8 @@ setup_update (void)
   idx = stp_get_printer_index_by_driver (stp_get_driver (pv->v));
 
   gtk_clist_select_row (GTK_CLIST (printer_driver), idx, 0);
+  gtk_label_set_text (GTK_LABEL (printer_model_label),
+                      gettext (stp_printer_get_long_name (tmp_printer)));
 
   gtk_entry_set_text (GTK_ENTRY (ppd_file), stp_get_ppd_file (pv->v));
 
@@ -2094,9 +2097,25 @@ new_printer_open_callback (void)
 static void
 set_printer(void)
 {
-  stp_set_driver (pv->v, stp_printer_get_driver (current_printer));
+  stp_vars_t printvars = stp_printer_get_printvars (tmp_printer);
+  stp_set_driver (pv->v, stp_printer_get_driver (tmp_printer));
   plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
   stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
+  gtk_label_set_text (GTK_LABEL (printer_model_label),
+                      gettext (stp_printer_get_long_name (tmp_printer)));
+
+  if (stp_get_output_type (printvars) == OUTPUT_COLOR)
+    {
+      gtk_widget_set_sensitive (output_types[0].button, TRUE);
+    }
+  else
+    {
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_types[1].button),
+				    TRUE);
+      gtk_widget_set_sensitive (output_types[0].button, FALSE);
+    }
+  do_all_updates();
+
   plist_callback (NULL, (gpointer) plist_current);
 }
 
@@ -2150,7 +2169,6 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       gpointer        data)   /* I - Data */
 {
   static int calling_print_driver_callback = 0;
-  stp_vars_t printvars;
   if (calling_print_driver_callback)
     return;
   calling_print_driver_callback++;
@@ -2158,13 +2176,9 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   invalidate_preview_thumbnail ();
   reset_preview ();
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
-  current_printer = stp_get_printer_by_index ((gint) data);
-  printvars = stp_printer_get_printvars (current_printer);
-  gtk_label_set_text (GTK_LABEL (printer_model_label),
-                      gettext (stp_printer_get_long_name (current_printer)));
-  stp_set_driver(pv->v, stp_printer_get_driver(current_printer));
+  tmp_printer = stp_get_printer_by_index ((gint) data);
 
-  if (strncmp (stp_printer_get_driver (current_printer), "ps", 2) == 0)
+  if (strcmp(stp_printer_get_family(tmp_printer), "ps") == 0)
     {
       gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_box);
@@ -2174,21 +2188,6 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
       gtk_widget_hide (ppd_label);
       gtk_widget_hide (ppd_box);
     }
-
-  if (stp_get_output_type (printvars) == OUTPUT_COLOR)
-    {
-      gtk_widget_set_sensitive (output_types[0].button, TRUE);
-    }
-  else
-    {
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_types[1].button),
-				    TRUE);
-      gtk_widget_set_sensitive (output_types[0].button, FALSE);
-    }
-  suppress_preview_update++;
-  do_all_updates();
-  suppress_preview_update--;
-  preview_update ();
   calling_print_driver_callback--;
 }
 
@@ -2274,7 +2273,7 @@ update_adjusted_thumbnail (void)
   stp_vars_t nv;
 
   if (thumbnail_data == 0 || adjusted_thumbnail_data == 0 ||
-      do_update_thumbnail == 0)
+      do_update_thumbnail == 0 || suppress_preview_update > 0)
     return;
   
   im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
