@@ -33,7 +33,10 @@ LOCAL_CFLAGS = $(GNUCFLAGS) @LIBXML_CFLAGS@
 
 ## Programs
 
+if BUILD_XMLDEF
 noinst_PROGRAMS = xmldef
+endif
+
 xmldef_SOURCES = printdef.c
 xmldef_LDADD = @LIBXML_LIBS@
 

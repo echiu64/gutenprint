@@ -342,6 +342,11 @@ STP_ARG_ENABLE([testpattern],
                [BUILD_TESTPATTERN],
                [no])
 
+STP_ARG_ENABLE([xmldef],
+               [build xmldef],
+               [BUILD_XMLDEF],
+               [no])
+
 STP_ARG_ENABLE([test],
                [build test programs],
                [BUILD_TEST],
@@ -630,6 +635,8 @@ fi
 AM_CONDITIONAL(USE_LEVEL3_PS, test x${USE_LEVEL3_PS} = xyes)
 
 AM_CONDITIONAL(BUILD_ESCPUTIL, test x${BUILD_ESCPUTIL} = xyes)
+
+AM_CONDITIONAL(BUILD_XMLDEF, test x${BUILD_XMLDEF} = xyes)
 
 AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
