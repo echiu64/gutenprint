@@ -114,21 +114,24 @@ typedef unsigned long long model_featureset_t;
 
 typedef struct escp2_printer
 {
-  model_cap_t	flags;
-  int 		nozzles;
-  int		nozzle_separation;
-  int		black_nozzles;
-  int		xres;
-  int		softweave_dot_size;
-  int		microweave_dot_size;
-  int		max_paper_width;
-  int		max_paper_height;
-  int		left_margin;
-  int		right_margin;
-  int		top_margin;
-  int		bottom_margin;
-  int		separation_rows;
-  int		pseudo_separation_rows;
+  model_cap_t	flags;		/* Bitmask of flags, see below */
+  int 		nozzles;	/* Number of nozzles per color */
+  int		nozzle_separation; /* Separation between rows, in 1/720" */
+  int		black_nozzles;	/* Number of black nozzles (may be extra) */
+  int		xres;		/* Normal distance between dots in */
+				/* softweave mode (inverse inches) */
+  int		softweave_dot_size;/* Dot size to use in softweave mode */
+  int		microweave_dot_size; /* Dot size to use in microweave mode */
+  int		max_paper_width; /* Maximum paper width, in points*/
+  int		max_paper_height; /* Maximum paper height, in points */
+  int		left_margin;	/* Left margin, points */
+  int		right_margin;	/* Right margin, points */
+  int		top_margin;	/* Absolute top margin, points */
+  int		bottom_margin;	/* Absolute bottom margin, points */
+  int		separation_rows; /* Some printers require funky spacing */
+				/* arguments in microweave mode. */
+  int		pseudo_separation_rows;/* Some printers require funky */
+				/* spacing arguments in softweave mode */
 } escp2_printer_t;
 
 #define MODEL_INIT_MASK		0xf
@@ -203,9 +206,9 @@ static double dot_sizes[] = { 0.333, 0.5, 1.0 };
 
 static simple_dither_range_t variable_dither_ranges[] =
 {
-  { 0.083, 0x1, 0, 1 },
-  { 0.125, 0x2, 0, 2 },
-/*  { 0.25,  0x3, 0, 3 }, */
+  { 0.074, 0x1, 0, 1 },
+  { 0.111, 0x2, 0, 2 },
+  { 0.222, 0x3, 0, 3 },
   { 0.333, 0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
@@ -228,32 +231,6 @@ static simple_dither_range_t mis_sixtone_ranges[] =
   { 1.00, 0x100000, 1, 1 }	/* K */
 };
 
-static full_dither_range_t dualink_c_dither_ranges[] =
-{
-  { 0.0,   0.135,  0x0, 0x1, 0, 0},
-  { 0.135, 0.48,   0x1, 0x1, 0, 1},
-  { 0.135, 0.20,   0x1, 0x2, 0, 0},
-  { 0.20,  0.48,   0x2, 0x1, 0, 1},
-  { 0.20,  0.337,  0x2, 0x3, 0, 0},
-  { 0.337, 0.48,   0x3, 0x1, 0, 1},
-  { 0.48,  0.64,   0x1, 0x2, 1, 1},
-  { 0.64,  0.96,   0x2, 0x3, 1, 1},
-  { 0.96,  1.0,    0x3, 0x3, 1, 1}
-};
-
-static full_dither_range_t dualink_m_dither_ranges[] =
-{
-  { 0.0,   0.12,  0x0, 0x1, 0, 0},
-  { 0.12,  0.45,  0x1, 0x1, 0, 1},
-  { 0.12,  0.18,  0x1, 0x2, 0, 0},
-  { 0.18,  0.45,  0x2, 0x1, 0, 1},
-  { 0.18,  0.30,  0x2, 0x3, 0, 0},
-  { 0.30,  0.45,  0x3, 0x1, 0, 1},
-  { 0.45,  0.60,  0x1, 0x2, 1, 1},
-  { 0.60,  0.90,  0x2, 0x3, 1, 1},
-  { 0.90,  1.0,   0x3, 0x3, 1, 1}
-};
-
 static full_dither_range_t normal_dither_ranges[] =
 {
   { 0.0,   0.5,  0x0, 0x1, 1, 1},
@@ -261,30 +238,7 @@ static full_dither_range_t normal_dither_ranges[] =
   { 0.67,  1.0,  0x2, 0x3, 1, 1}
 };
 
-static full_dither_range_t stp870_c_dither_ranges[] =
-{
-  { 0.0,  0.18,  0x0, 0x1, 0, 0},
-  { 0.18,  0.55, 0x1, 0x1, 0, 1},
-  { 0.18,  0.23, 0x1, 0x2, 0, 0},
-  { 0.23,  0.55, 0x2, 0x1, 0, 1},
-  { 0.23,  0.37, 0x2, 0x3, 0, 0},
-  { 0.37,  0.55, 0x3, 0x1, 0, 1},
-  { 0.55,  0.7,  0x1, 0x2, 1, 1},
-  { 0.7,  0.96,  0x2, 0x3, 1, 1}
-};
-
 static full_dither_range_t stp870_c1_dither_ranges[] =
-{
-  { 0.0,  0.19, 0x0, 0x1, 0, 0},
-  { 0.19, 0.24, 0x1, 0x2, 0, 0},
-  { 0.24, 0.55, 0x2, 0x1, 0, 1},
-  { 0.24, 0.38, 0x2, 0x3, 0, 0},
-  { 0.38, 0.55, 0x3, 0x1, 0, 1},
-  { 0.55, 0.7,  0x1, 0x2, 1, 1},
-  { 0.7,  0.96, 0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_c2_dither_ranges[] =
 {
   { 0.0,  0.18, 0x0, 0x1, 0, 0},
   { 0.18, 0.25, 0x1, 0x2, 0, 0},
@@ -295,7 +249,7 @@ static full_dither_range_t stp870_c2_dither_ranges[] =
   { 0.67, 0.96, 0x2, 0x3, 1, 1}
 };
 
-static full_dither_range_t stp870_c3_dither_ranges[] =
+static full_dither_range_t stp870_c2_dither_ranges[] =
 {
   { 0.0,  0.18, 0x0, 0x1, 0, 0},
   { 0.18, 0.25, 0x1, 0x2, 0, 0},
@@ -304,30 +258,7 @@ static full_dither_range_t stp870_c3_dither_ranges[] =
   { 0.67, 0.96, 0x2, 0x3, 1, 1}
 };
 
-static full_dither_range_t stp870_m_dither_ranges[] =
-{
-  { 0.0,  0.16,  0x0, 0x1, 0, 0},
-  { 0.16,  0.52, 0x1, 0x1, 0, 1},
-  { 0.16,  0.17, 0x1, 0x2, 0, 0},
-  { 0.16,  0.52, 0x2, 0x1, 0, 1},
-  { 0.16,  0.31, 0x2, 0x3, 0, 0},
-  { 0.31,  0.52, 0x3, 0x1, 0, 1},
-  { 0.52,  0.7,  0x1, 0x2, 1, 1},
-  { 0.7,  1.0,   0x2, 0x3, 1, 1}
-};
-
 static full_dither_range_t stp870_m1_dither_ranges[] =
-{
-  { 0.0,  0.17, 0x0, 0x1, 0, 0},
-  { 0.17, 0.21, 0x1, 0x2, 0, 0},
-  { 0.21, 0.52, 0x2, 0x1, 0, 1},
-  { 0.21, 0.31, 0x2, 0x3, 0, 0},
-  { 0.31, 0.52, 0x3, 0x1, 0, 1},
-  { 0.52, 0.7,  0x1, 0x2, 1, 1},
-  { 0.7,  1.0,  0x2, 0x3, 1, 1}
-};
-
-static full_dither_range_t stp870_m2_dither_ranges[] =
 {
   { 0.0,  0.18, 0x0, 0x1, 0, 0},
   { 0.18, 0.24, 0x1, 0x2, 0, 0},
@@ -338,7 +269,7 @@ static full_dither_range_t stp870_m2_dither_ranges[] =
   { 0.67, 1.0,  0x2, 0x3, 1, 1}
 };
 
-static full_dither_range_t stp870_m3_dither_ranges[] =
+static full_dither_range_t stp870_m2_dither_ranges[] =
 {
   { 0.0,  0.18, 0x0, 0x1, 0, 0},
   { 0.18, 0.24, 0x1, 0x2, 0, 0},
@@ -358,8 +289,9 @@ static full_dither_range_t stp870_k_dither_ranges[] =
 {
   { 0.0,  0.55,  0x0, 0x1, 1, 1},
   { 0.55,  0.67, 0x1, 0x2, 1, 1},
-  { 0.77, 1.0,   0x2, 0x3, 1, 1}
+  { 0.67, 1.0,   0x2, 0x3, 1, 1}
 };
+
 
 /*
  * A lot of these are guesses
@@ -380,7 +312,7 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 20, 1, 0
+    48, 6, 48, 720, -1, 1, INCH_8_5, INCH_14, 14, 14, 0, 24, 1, 0
   },
   /* 2: Stylus Color 1500 */
   {
@@ -394,21 +326,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 0
   },
   /* 4: Stylus Color 800 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    64, 4, 64, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 5: Stylus Color 850 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 20, 1, 0
+    64, 4, 128, 720, 0, 2, INCH_8_5, INCH_14, 8, 9, 0, 24, 1, 4
   },
   /* 6: Stylus Color 1520/3000 */
   {
@@ -424,21 +356,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
   /* 8: Stylus Photo EX */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_11, INCH_17, 9, 9, 0, 24, 1, 0
   },
   /* 9: Stylus Photo */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO),
-    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 32, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 24, 1, 0
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -450,21 +382,21 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_600 | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
-    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    21, 8, 64, 720, 2, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 11: Stylus Color 640 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 12: Stylus Color 740 */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 20, 1, 0
+    48, 6, 144, 360, 0, 3, INCH_11, INCH_17, 9, 9, 0, 9, 1, 0
   },
   /* 13: Stylus Color 900 */
   /* Dale Pontius thinks the spacing is 3 jets??? */
@@ -473,49 +405,49 @@ static escp2_printer_t model_capabilities[] =
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    96, 2, 192, 360, 0, 1, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    96, 2, 192, 360, 0, 1, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 14: Stylus Photo 750, 870 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    48, 6, 48, 360, 0, 4, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 15: Stylus Photo 1200, 1270 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES),
-    48, 6, 48, 360, 0, 4, INCH_13, INCH_19, 9, 9, 0, 20, 1, 0
+    48, 6, 48, 360, 0, 4, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
   },
   /* 16: Stylus Color 860 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    48, 6, 144, 360, 0, 2, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
   /* 17: Stylus Color 1160 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 0, 20, 1, 0
+    48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 0, 9, 1, 0
   },
   /* 18: Stylus Color 660 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 8
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 8
   },
   /* 19: Stylus Color 760 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
-    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 20, 1, 0
+    48, 6, 144, 360, 0, 3, INCH_8_5, INCH_14, 9, 9, 0, 9, 1, 0
   },
 
 };
@@ -757,23 +689,27 @@ escp2_parameters(int  model,		/* I - Printer model */
 	return NULL;
       else
 	{
-	  valptrs = malloc(sizeof(char *) * 2);
-	  valptrs[0] = malloc(strlen(ink_types[0]) + 1);
-	  strcpy(valptrs[0], ink_types[0]);
-	  valptrs[1] = malloc(strlen(ink_types[1]) + 1);
-	  strcpy(valptrs[1], ink_types[1]);
-	  *count = 2;
+	  int ninktypes = sizeof(ink_types) / sizeof(char *);
+	  valptrs = malloc(sizeof(char *) * ninktypes);
+	  for (i = 0; i < ninktypes; i++)
+	    {
+	      valptrs[i] = malloc(strlen(ink_types[i]) + 1);
+	      strcpy(valptrs[i], ink_types[i]);
+	    }
+	  *count = ninktypes;
 	  return valptrs;
 	}
     }
   else if (strcmp(name, "MediaType") == 0)
     {
-      valptrs = malloc(sizeof(char *) * 2);
-      valptrs[0] = malloc(strlen(media_types[0]) + 1);
-      strcpy(valptrs[0], media_types[0]);
-      valptrs[1] = malloc(strlen(media_types[1]) + 1);
-      strcpy(valptrs[1], media_types[1]);
-      *count = 2;
+      int nmediatypes = sizeof(media_types) / sizeof(char *);
+      valptrs = malloc(sizeof(char *) * nmediatypes);
+      for (i = 0; i < nmediatypes; i++)
+	{
+	  valptrs[i] = malloc(strlen(media_types[i]) + 1);
+	  strcpy(valptrs[i], media_types[i]);
+	}
+      *count = nmediatypes;
       return valptrs;
     }
   else
@@ -942,7 +878,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
             FILE      *prn,		/* I - File to print to */
 	    Image     image,		/* I - Image to print */
             unsigned char    *cmap,	/* I - Colormap (for indexed images) */
-	    vars_t    *v)
+	    const vars_t    *v)
 {
   int		model = printer->model;
   char 		*ppd_file = v->ppd_file;
@@ -1006,11 +942,14 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		ink_spread;
   int		oversample;
   double	dither_density;
+  vars_t	nv;
+
+  memcpy(&nv, v, sizeof(vars_t));
 
   if (!strcmp(media_type, "Glossy Film"))
     use_glossy_film = 1;
 
-  if (v->image_type == IMAGE_MONOCHROME)
+  if (nv.image_type == IMAGE_MONOCHROME)
     {
       colormode = COLOR_MONOCHROME;
       output_type = OUTPUT_GRAY;
@@ -1100,7 +1039,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
       use_softweave && strcmp(ink_type, "Single Dot Size") != 0 &&
-      v->image_type != IMAGE_MONOCHROME)
+      nv.image_type != IMAGE_MONOCHROME)
     bits = 2;
   else
     bits = 1;
@@ -1290,7 +1229,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
 			     vertical_passes, vertical_subsample, colormode,
-			     bits, out_width, out_height, separation_rows,
+			     bits, out_width * escp2_xres(model) / 720,
+			     out_height, separation_rows,
 			     top * 720 / 72, page_height * 720 / 72);
   else
     escp2_init_microweave();
@@ -1300,58 +1240,78 @@ escp2_print(const printer_t *printer,		/* I - Model */
   * Output the page, rotating as necessary...
   */
 
-  oversample = real_horizontal_passes * vertical_subsample;
-  dither_density = v->density * printer->printvars.density;
-  if(dither_density > 1.0) dither_density=1.0;
-  v->density = v->density * printer->printvars.density / oversample;
-  if (v->density > 1.0)
-    v->density = 1.0;
-  v->saturation *= printer->printvars.saturation;
+   oversample = real_horizontal_passes * vertical_subsample;
+   dither_density = nv.density * printer->printvars.density;
+   nv.density = dither_density / oversample;
+   if(dither_density > 1 )
+	dither_density = 1;
+  if (nv.density > 1.0)
+    nv.density = 1.0;
+  nv.saturation *= printer->printvars.saturation;
 
   if (landscape)
-    dither = init_dither(image_height, out_width, v);
+    dither = init_dither(image_height, out_width, &nv);
   else
-    dither = init_dither(image_width, out_width, v);
+    dither = init_dither(image_width, out_width, &nv);
+
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
-  dither_set_black_lower(dither, .4 / bits);
+  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+    dither_set_black_lower(dither, .5 / bits);
+  else
+    dither_set_black_lower(dither, .25 / bits);
   if (use_glossy_film)
     dither_set_black_upper(dither, .999);
   else
-    dither_set_black_upper(dither, .92);
+    dither_set_black_upper(dither, .6);
+  if (bits == 2)
+    dither_set_adaptive_divisor(dither, 8);
+  else
+    dither_set_adaptive_divisor(dither, 2);
+
+  dither_set_max_ink(dither, 3, 3.0/oversample);
+
   if (bits == 2)
     {
       int dsize = (sizeof(variable_dither_ranges) /
 		   sizeof(simple_dither_range_t));
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
-	  dither_set_max_ink(dither, 3, 3.0/oversample);
+      dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
+      dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
       if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
 	{
-	  dither_set_k_ranges_full(dither, 3, stp870_k_dither_ranges, dither_density);
-	  dither_set_y_ranges_full(dither, 3, stp870_y_dither_ranges, dither_density);
+	  dither_set_k_ranges_full(dither, 3, stp870_k_dither_ranges,
+					  dither_density);
+	  dither_set_y_ranges_full(dither, 3, stp870_y_dither_ranges,
+					  dither_density);
 	  if(oversample > 1) {
-	  	dither_set_c_ranges_full(dither, 7, stp870_c2_dither_ranges, dither_density);
-	  	dither_set_m_ranges_full(dither, 7, stp870_m2_dither_ranges, dither_density);
+	  	dither_set_c_ranges_full(dither, 7, stp870_c1_dither_ranges,
+						dither_density);
+	  	dither_set_m_ranges_full(dither, 7, stp870_m1_dither_ranges,
+						dither_density);
 	  } else {
-	  	dither_set_c_ranges_full(dither, 5, stp870_c3_dither_ranges, dither_density);
-	  	dither_set_m_ranges_full(dither, 5, stp870_m3_dither_ranges, dither_density);
+	  	dither_set_c_ranges_full(dither, 5, stp870_c2_dither_ranges,
+						dither_density);
+	  	dither_set_m_ranges_full(dither, 5, stp870_m2_dither_ranges,
+						dither_density);
 	  }
 	}
       else
 	{	
-	  dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
-	  dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
-	  dither_set_k_ranges_full(dither, 3, normal_dither_ranges, dither_density);
-	  dither_set_c_ranges_full(dither, 3, normal_dither_ranges, dither_density);
-	  dither_set_m_ranges_full(dither, 3, normal_dither_ranges, dither_density);
-	  dither_set_y_ranges_full(dither, 3, normal_dither_ranges, dither_density);
+	/*	dither_set_k_ranges_full(dither, 3, normal_dither_ranges,
+						dither_density);
+		dither_set_c_ranges_full(dither, 3, normal_dither_ranges,
+						dither_density);
+		dither_set_m_ranges_full(dither, 3, normal_dither_ranges,
+						dither_density);
+		dither_set_y_ranges_full(dither, 3, normal_dither_ranges,
+						dither_density);*/
+	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
+	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}
     }
-  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
-    dither_set_light_inks(dither, .25, .25, 0.0, v->density);
-  }
+  else if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+    dither_set_light_inks(dither, .25, .25, 0.0, nv.density);
 
-  switch (v->image_type)
+  switch (nv.image_type)
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
@@ -1368,7 +1328,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, ink_spread);
       break;
     }	    
-  dither_set_density(dither,  real_horizontal_passes * vertical_subsample, dither_density);
+  dither_set_density(dither, oversample, dither_density);
 
   if (landscape)
   {
@@ -1392,9 +1352,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	Image_get_col(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_height, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_height, image_bpp, cmap, &nv);
 
-      if (v->image_type == IMAGE_MONOCHROME)
+      if (nv.image_type == IMAGE_MONOCHROME)
 	dither_fastblack(out, x, dither, black);
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, x, dither, black);
@@ -1445,9 +1405,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	Image_get_row(image, in, errline);
       }
 
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, v);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
 
-      if (v->image_type == IMAGE_MONOCHROME)
+      if (nv.image_type == IMAGE_MONOCHROME)
 	dither_fastblack(out, y, dither, black);
       else if (output_type == OUTPUT_GRAY)
 	dither_black(out, y, dither, black);
