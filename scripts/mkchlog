@@ -113,7 +113,8 @@ while (<>) {
 	# at top level, log it; otherwise if it is not in the current
 	# sandbox, don't log it.
 	# 
-	if (($check == 2 && !($currentfile =~ /\//)) ||
+	if (($check == 2 && !($currentfile =~ /\//)  &&
+	     ($currentfile =~ /\.[chly]$/)) ||
 	    $check == 1) {
 	    $skipme = 0;
 	} else {
