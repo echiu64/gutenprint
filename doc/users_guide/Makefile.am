@@ -161,7 +161,7 @@ install-data-local: $(STANDARD_TARGETS)
 	fi
 
 uninstall-local:
-	$(RM) $(datadir)/$(PACKAGE)/doc
+	$(RM) -r $(datadir)/$(PACKAGE)/doc
 
 clean-local: clean-figures
 	if test $(srcdir) = "." ; then \
