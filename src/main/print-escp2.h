@@ -114,8 +114,10 @@ typedef double escp2_densities_t[13];
 typedef struct escp2_variable_ink
 {
   const stp_dither_range_simple_t *range;
-  int count;
+  int numranges;
   double density;
+  const stp_shade_t *shades;
+  int numshades;
 } escp2_variable_ink_t;
 
 typedef const escp2_variable_ink_t *escp2_variable_inkset_t[PHYSICAL_CHANNEL_LIMIT];

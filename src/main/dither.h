@@ -131,6 +131,19 @@ typedef struct
   stp_dither_channel_t *c;
 } stp_dither_data_t;
 
+typedef struct stp_dotsize
+{
+  unsigned bit_pattern;
+  double value;
+} stp_dotsize_t;
+
+typedef struct stp_shade
+{
+  double value;
+  int subchannel;
+  const stp_dotsize_t *dot_sizes;
+  int numsizes;
+} stp_shade_t;
 
 extern stp_parameter_list_t stp_dither_list_parameters(const stp_vars_t v);
 
@@ -171,7 +184,8 @@ extern void	stp_dither_set_ink_spread(void *vd, int spread);
 extern void	stp_dither_set_adaptive_limit(void *vd, double limit);
 extern int	stp_dither_get_first_position(void *vd, int color,int subchan);
 extern int	stp_dither_get_last_position(void *vd, int color, int subchan);
-
+extern void	stp_dither_set_shades(void *vd, int color, int nshades,
+				      const stp_shade_t *shades, double density);
 
 extern void	stp_dither_free(void *);
 
