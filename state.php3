@@ -111,7 +111,7 @@ $supported_printers = array(
 		'HP LaserJet 6 series' => 'Fully Operational'
 		)
 	),
-'Canon (<strong><em>New!</em></strong>)' => array(
+'Canon' => array(
        'BJC Range' => array(
 	       'BJC 30' => 'Operational',
 	       'BJC 50' => 'Operational',
@@ -136,7 +136,7 @@ $supported_printers = array(
 	       'S4500' => 'Operational'
 	       )
        ),
-'Lexmark (<strong><em>New!</em></strong>)' => array(
+'Lexmark' => array(
        'Ink Jet Printers' => array(
 	       '4076' => 'Operational',
 	       'Z42' => 'Needs Testing',
