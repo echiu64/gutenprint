@@ -133,11 +133,18 @@ typedef struct		/**** Printer List ****/
   vars_t v;
 } plist_t;
 
+typedef enum papersize_unit
+{
+  PAPERSIZE_ENGLISH,
+  PAPERSIZE_METRIC
+} papersize_unit_t;
+
 typedef struct
 {
   char name[32];
   unsigned width;
   unsigned length;
+  papersize_unit_t paper_unit;
 } papersize_t;
 
 /*

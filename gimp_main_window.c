@@ -180,6 +180,7 @@ static void gimp_image_type_callback         (GtkWidget      *widget,
 					      gpointer        data);
 
 extern void gimp_create_color_adjust_window  (void);
+extern void gimp_build_dither_menu    (void);
 
 /*
  *  gimp_create_main_window()
@@ -311,7 +312,7 @@ gimp_create_main_window (void)
                              button, 2, TRUE);
 
   box = gtk_vbox_new (FALSE, 2);
-  gimp_table_attach_aligned (GTK_TABLE (table), 1, 0,
+  gimp_table_attach_aligned (GTK_TABLE (table), 2, 0,
                              _("Units:"), 1.0, 0.15,
                              box, 1, TRUE);
 
@@ -1009,6 +1010,7 @@ gimp_do_misc_updates (void)
   vars.orientation = plist[plist_current].v.orientation;
   vars.left = plist[plist_current].v.left;
   vars.top = plist[plist_current].v.top;
+  vars.unit = plist[plist_current].v.unit;
 
   if (plist[plist_current].v.scaling < 0)
     {
@@ -1205,7 +1207,7 @@ gimp_plist_callback (GtkWidget *widget,
    * Now get option parameters...
    */
 
-  gtk_build_dither_menu();
+  gimp_build_dither_menu();
 
   if (num_media_sizes > 0)
     {
@@ -1417,7 +1419,7 @@ gimp_unit_callback (GtkWidget *widget,
     {
       vars.unit = (gint) data;
       plist[plist_current].v.unit = (gint) data;
-	  gimp_preview_update();
+      gimp_preview_update();
     }
 }
 

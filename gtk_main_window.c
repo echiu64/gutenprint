@@ -185,6 +185,7 @@ extern void gtk_create_color_adjust_window(void);
 
 static GtkWidget* table;      /* Table "container" for controls */
 static GtkWidget* dialog;     /* Dialog window */
+extern void gtk_build_dither_menu(void);
 
 /*****************************************************************************
  *
@@ -1316,7 +1317,7 @@ static void gtk_do_misc_updates(void)
   vars.orientation = plist[plist_current].v.orientation;
   vars.left = plist[plist_current].v.left;
   vars.top = plist[plist_current].v.top;
-
+  vars.unit = plist[plist_current].v.unit;
 
   if (plist[plist_current].v.scaling < 0)
     {
@@ -1750,7 +1751,7 @@ static void gtk_unit_callback(GtkWidget *widget,
   {
     vars.unit = data;
     plist[plist_current].v.unit = data;
-	gtk_preview_update();
+    gtk_preview_update();
   }
 }
 
