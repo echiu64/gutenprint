@@ -35,7 +35,7 @@
 extern vars_t           vars;
 extern gint             plist_count;	   /* Number of system printers */
 extern gint             plist_current;     /* Current system printer */
-extern plist_t          plist[MAX_PLIST];  /* System printers */
+extern plist_t          *plist;		  /* System printers */
 extern gint32           image_ID;
 extern gint             image_width;
 extern gint             image_height;

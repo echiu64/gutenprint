@@ -36,7 +36,7 @@
 extern vars_t vars;
 extern int plist_count;	     /* Number of system printers */
 extern int plist_current;    /* Current system printer */
-extern plist_t  plist[MAX_PLIST];       /* System printers */
+extern plist_t  *plist;       /* System printers */
 
 GtkWidget* gtk_color_adjust_dialog;
 

@@ -216,9 +216,9 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	/*
 	 * No alpha in image...
 	 */
-	*grayout = vars->lut.composite[grayin[0]];
+	*grayout = vars->lut->composite[grayin[0]];
       else
-	*grayout = vars->lut.composite[grayin[0] * grayin[1] / 255 +
+	*grayout = vars->lut->composite[grayin[0] * grayin[1] / 255 +
 				      255 - grayin[1]];
       if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	{
@@ -263,9 +263,9 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	 * No alpha in image...
 	 */
 
-	*gray = vars->lut.composite[gray_cmap[*indexed]];
+	*gray = vars->lut->composite[gray_cmap[*indexed]];
       else
-	*gray = vars->lut.composite[gray_cmap[indexed[0] * indexed[1] / 255]
+	*gray = vars->lut->composite[gray_cmap[indexed[0] * indexed[1] / 255]
 				   + 255 - indexed[1]];
       if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	{
@@ -299,17 +299,17 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	   * No alpha in image...
 	   */
 
-	  rgb[0] = vars->lut.red[cmap[*indexed * 3 + 0]];
-	  rgb[1] = vars->lut.green[cmap[*indexed * 3 + 1]];
-	  rgb[2] = vars->lut.blue[cmap[*indexed * 3 + 2]];
+	  rgb[0] = vars->lut->red[cmap[*indexed * 3 + 0]];
+	  rgb[1] = vars->lut->green[cmap[*indexed * 3 + 1]];
+	  rgb[2] = vars->lut->blue[cmap[*indexed * 3 + 2]];
 	}
       else
 	{
-	  rgb[0] = vars->lut.red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255
+	  rgb[0] = vars->lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255
 				+ 255 - indexed[1]];
-	  rgb[1] = vars->lut.green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255
+	  rgb[1] = vars->lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255
 				  + 255 - indexed[1]];
-	  rgb[2] = vars->lut.blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255
+	  rgb[2] = vars->lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255
 				 + 255 - indexed[1]];
 	}
       if (vars->saturation != 1.0)
@@ -356,11 +356,11 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	/*
 	 * No alpha in image...
 	 */
-	*gray = vars->lut.composite[(rgb[0] * LUM_RED +
+	*gray = vars->lut->composite[(rgb[0] * LUM_RED +
 				     rgb[1] * LUM_GREEN +
 				     rgb[2] * LUM_BLUE) / 100];
       else
-	*gray = vars->lut.composite[((rgb[0] * LUM_RED +
+	*gray = vars->lut->composite[((rgb[0] * LUM_RED +
 				      rgb[1] * LUM_GREEN +
 				      rgb[2] * LUM_BLUE) *
 				     rgb[3] / 25500 + 255 - rgb[3])];
@@ -399,17 +399,17 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	  /*
 	   * No alpha in image...
 	   */
-	  rgbout[0] = vars->lut.red[rgbin[0]];
-	  rgbout[1] = vars->lut.green[rgbin[1]];
-	  rgbout[2] = vars->lut.blue[rgbin[2]];
+	  rgbout[0] = vars->lut->red[rgbin[0]];
+	  rgbout[1] = vars->lut->green[rgbin[1]];
+	  rgbout[2] = vars->lut->blue[rgbin[2]];
 	}
       else
 	{
-	  rgbout[0] = vars->lut.red[rgbin[0] * rgbin[3] / 255 +
+	  rgbout[0] = vars->lut->red[rgbin[0] * rgbin[3] / 255 +
 				   255 - rgbin[3]];
-	  rgbout[1] = vars->lut.green[rgbin[1] * rgbin[3] / 255 +
+	  rgbout[1] = vars->lut->green[rgbin[1] * rgbin[3] / 255 +
 				     255 - rgbin[3]];
-	  rgbout[2] = vars->lut.blue[rgbin[2] * rgbin[3] / 255 +
+	  rgbout[2] = vars->lut->blue[rgbin[2] * rgbin[3] / 255 +
 				    255 - rgbin[3]];
 	}
       if (vars->saturation != 1.0)
@@ -458,17 +458,17 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	   * No alpha in image...
 	   */
 
-	  rgbout[0] = vars->lut.red[grayin[0]];
-	  rgbout[1] = vars->lut.green[grayin[0]];
-	  rgbout[2] = vars->lut.blue[grayin[0]];
+	  rgbout[0] = vars->lut->red[grayin[0]];
+	  rgbout[1] = vars->lut->green[grayin[0]];
+	  rgbout[2] = vars->lut->blue[grayin[0]];
 	}
       else
 	{
 	  int lookup = (grayin[0] * grayin[1] / 255 +
 			255 - grayin[1]);
-	  rgbout[0] = vars->lut.red[lookup];
-	  rgbout[1] = vars->lut.green[lookup];
-	  rgbout[2] = vars->lut.blue[lookup];
+	  rgbout[0] = vars->lut->red[lookup];
+	  rgbout[1] = vars->lut->green[lookup];
+	  rgbout[2] = vars->lut->blue[lookup];
 	}
       if (vars->density != 1.0)
 	{
@@ -534,7 +534,7 @@ compute_lut(const vars_t *pv,
       screen_gamma = app_gamma * brightness / 1.7;
     }
 
-
+  uv->lut = malloc(sizeof(lut_t));
   for (i = 0; i < 256; i ++)
     {
       if (uv->linear)
@@ -558,10 +558,10 @@ compute_lut(const vars_t *pv,
 	  adjusted_pixel *= 65535.0;
 
 	  red_pixel = green_pixel = blue_pixel = adjusted_pixel;
-	  uv->lut.composite[i] = adjusted_pixel;
-	  uv->lut.red[i] = adjusted_pixel;
-	  uv->lut.green[i] = adjusted_pixel;
-	  uv->lut.blue[i] = adjusted_pixel;
+	  uv->lut->composite[i] = adjusted_pixel;
+	  uv->lut->red[i] = adjusted_pixel;
+	  uv->lut->green[i] = adjusted_pixel;
+	  uv->lut->blue[i] = adjusted_pixel;
 	}
       else
 	{
@@ -613,37 +613,37 @@ compute_lut(const vars_t *pv,
 				pow(blue_pixel, print_gamma));
 
 	  if (pixel <= 0.0)
-	    uv->lut.composite[i] = 0;
+	    uv->lut->composite[i] = 0;
 	  else if (pixel >= 65535.0)
-	    uv->lut.composite[i] = 65535;
+	    uv->lut->composite[i] = 65535;
 	  else
-	    uv->lut.composite[i] = (unsigned)(pixel);
+	    uv->lut->composite[i] = (unsigned)(pixel);
 
 	  if (red_pixel <= 0.0)
-	    uv->lut.red[i] = 0;
+	    uv->lut->red[i] = 0;
 	  else if (red_pixel >= 65535.0)
-	    uv->lut.red[i] = 65535;
+	    uv->lut->red[i] = 65535;
 	  else
-	    uv->lut.red[i] = (unsigned)(red_pixel);
+	    uv->lut->red[i] = (unsigned)(red_pixel);
 
 	  if (green_pixel <= 0.0)
-	    uv->lut.green[i] = 0;
+	    uv->lut->green[i] = 0;
 	  else if (green_pixel >= 65535.0)
-	    uv->lut.green[i] = 65535;
+	    uv->lut->green[i] = 65535;
 	  else
-	    uv->lut.green[i] = (unsigned)(green_pixel);
+	    uv->lut->green[i] = (unsigned)(green_pixel);
 
 	  if (blue_pixel <= 0.0)
-	    uv->lut.blue[i] = 0;
+	    uv->lut->blue[i] = 0;
 	  else if (blue_pixel >= 65535.0)
-	    uv->lut.blue[i] = 65535;
+	    uv->lut->blue[i] = 65535;
 	  else
-	    uv->lut.blue[i] = (unsigned)(blue_pixel);
+	    uv->lut->blue[i] = (unsigned)(blue_pixel);
 	}
 #ifdef PRINT_LUT
       fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
-	      i, uv->lut.composite[i], uv->lut.red[i],
-	      uv->lut.green[i], uv->lut.blue[i], pixel, red_pixel,
+	      i, uv->lut->composite[i], uv->lut->red[i],
+	      uv->lut->green[i], uv->lut->blue[i], pixel, red_pixel,
 	      green_pixel, blue_pixel, print_gamma, screen_gamma,
 	      print_gamma, app_gamma);
 #endif
@@ -653,14 +653,6 @@ compute_lut(const vars_t *pv,
   fclose(ltfile);
 #endif
 }
-
-char *dither_algo_names[] =
-{
-  "Modified Floyd-Steinberg",
-  "Ordered",
-};
-
-int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
 
 /*
  * 'default_media_size()' - Return the size of a default page size.
@@ -799,6 +791,11 @@ get_printer_index_by_driver(const char *driver)
 
 /*
  *   $Log$
+ *   Revision 1.89  2000/04/20 02:42:54  rlk
+ *   Reduce initial memory footprint.
+ *
+ *   Add random Floyd-Steinberg dither.
+ *
  *   Revision 1.88  2000/04/16 21:31:32  rlk
  *   Choice of dithering algorithms
  *

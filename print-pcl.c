@@ -1556,12 +1556,13 @@ pcl_print(const printer_t *printer,		/* I - Model */
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
-      dither_set_black_lower(dither, .00001);
-      dither_set_randomizers(dither, 10, 10, 10, 10);
-      dither_set_black_upper(dither, .0005);
+      dither_set_black_lower(dither, .04);
+      dither_set_randomizers(dither, 0, 0, 0, 0);
+      dither_set_black_upper(dither, .1);
       break;
     case IMAGE_SOLID_TONE:
       dither_set_ink_spread(dither, 15);
+      dither_set_randomizers(dither, .1, .1, .1, .01);
       break;
     case IMAGE_CONTINUOUS:
       dither_set_ink_spread(dither, 14);
@@ -1913,6 +1914,11 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.45  2000/04/20 02:42:54  rlk
+ *   Reduce initial memory footprint.
+ *
+ *   Add random Floyd-Steinberg dither.
+ *
  *   Revision 1.44  2000/04/18 12:21:53  rlk
  *   Fix incorrect printing for variable drop sizes
  *

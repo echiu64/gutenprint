@@ -60,15 +60,30 @@
 #define MATRIX_SIZE2 (5 * 5 * 5)
 #define MODOP2(x, y) ((x) % (y))
 
+#define MATRIX_NB3 (3)
+#define MATRIX_SIZE3 (5 * 5 * 5)
+#define MODOP3(x, y) ((x) % (y))
+
 #define MATRIX_SIZE0_2 ((MATRIX_SIZE0) * (MATRIX_SIZE0))
 #define MATRIX_SIZE1_2 ((MATRIX_SIZE1) * (MATRIX_SIZE1))
 #define MATRIX_SIZE2_2 ((MATRIX_SIZE2) * (MATRIX_SIZE2))
+#define MATRIX_SIZE3_2 ((MATRIX_SIZE3) * (MATRIX_SIZE3))
 
 #define DITHERPOINT(x, y, m, d) \
 ((d)->ordered_dither_matrix##m[MODOP##m((x), MATRIX_SIZE##m)][MODOP##m((y), MATRIX_SIZE##m)])
 
-#define D_FLOYD 0
+#define D_FLOYD_HYBRID 0
 #define D_ORDERED 1
+#define D_FLOYD 2
+
+char *dither_algo_names[] =
+{
+  "Hybrid Floyd-Steinberg",
+  "Ordered",
+  "Random Floyd-Steinberg",
+};
+
+int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
 
 typedef struct dither_segment
 {
@@ -98,6 +113,7 @@ typedef struct dither
   unsigned ordered_dither_matrix0[MATRIX_SIZE0][MATRIX_SIZE0];
   unsigned ordered_dither_matrix1[MATRIX_SIZE1][MATRIX_SIZE1];
   unsigned ordered_dither_matrix2[MATRIX_SIZE2][MATRIX_SIZE2];
+  unsigned ordered_dither_matrix3[MATRIX_SIZE3][MATRIX_SIZE3];
   int src_width;
   int dst_width;
   int density;
@@ -232,7 +248,6 @@ calc_ordered_point_5(unsigned x, unsigned y, int steps, int multiplier,
   return retval * multiplier;
 }
 
-  
 
 void *
 init_dither(int in_width, int out_width, vars_t *v)
@@ -273,13 +288,23 @@ init_dither(int in_width, int out_width, vars_t *v)
 	d->ordered_dither_matrix2[x][y] =
 	  d->ordered_dither_matrix2[x][y] * 65536 / (MATRIX_SIZE2_2);
       }
+  for (x = 0; x < MATRIX_SIZE3; x++)
+    for (y = 0; y < MATRIX_SIZE3; y++)
+      {
+	d->ordered_dither_matrix3[x][y] =
+	  calc_ordered_point_5(x, y, MATRIX_NB3, 1, msq1);
+	d->ordered_dither_matrix3[x][y] =
+	  d->ordered_dither_matrix3[x][y] * 65536 / (MATRIX_SIZE3_2);
+      }
 
-  if (!strcmp(v->dither_algorithm, "Modified Floyd-Steinberg"))
+  if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
+    d->dither_type = D_FLOYD_HYBRID;
+  else if (!strcmp(v->dither_algorithm, "Random Floyd-Steinberg"))
     d->dither_type = D_FLOYD;
   else if (!strcmp(v->dither_algorithm, "Ordered"))
     d->dither_type = D_ORDERED;
   else
-    d->dither_type = D_FLOYD;
+    d->dither_type = D_FLOYD_HYBRID;
 
   d->spread = 13;
   d->src_width = in_width;
@@ -290,10 +315,10 @@ init_dither(int in_width, int out_width, vars_t *v)
   d->lc_level = 32768;
   d->lm_level = 32768;
   d->ly_level = 32768;
-  d->c_randomizer = 0;
-  d->m_randomizer = 0;
-  d->y_randomizer = 0;
-  d->k_randomizer = 4;
+  d->c_randomizer = 65536;
+  d->m_randomizer = 65536;
+  d->y_randomizer = 65536;
+  d->k_randomizer = 65536;
   d->k_clevel = 64;
   d->k_mlevel = 64;
   d->k_ylevel = 64;
@@ -363,13 +388,13 @@ dither_set_black_levels(void *vd, double c, double m, double y)
 }
 
 void
-dither_set_randomizers(void *vd, int c, int m, int y, int k)
+dither_set_randomizers(void *vd, double c, double m, double y, double k)
 {
   dither_t *d = (dither_t *) vd;
-  d->c_randomizer = c;
-  d->m_randomizer = m;
-  d->y_randomizer = y;
-  d->k_randomizer = k;
+  d->c_randomizer = c * 65536;
+  d->m_randomizer = m * 65536;
+  d->y_randomizer = y * 65536;
+  d->k_randomizer = k * 65536;
 }
 
 void
@@ -698,7 +723,7 @@ do {						\
 
 #define UPDATE_DITHER(r, x, width)					   \
 do {									   \
-  if (d->dither_type == D_FLOYD)					   \
+  if (d->dither_type != D_ORDERED)					   \
     {									   \
       int tmp##r = r;							   \
       int i, dist;							   \
@@ -795,7 +820,7 @@ do {									  \
 
 #define UPDATE_COLOR(r)				\
 do {						\
-  if (d->dither_type == D_FLOYD)		\
+  if (d->dither_type != D_ORDERED)		\
     {						\
       if (dither##r >= 0)			\
 	r += dither##r >> 3;			\
@@ -807,7 +832,8 @@ do {						\
 static int
 print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
 	    int x, int y, unsigned char *c, unsigned char *lc,
-	    unsigned char bit, int length, int invert_x, int invert_y)
+	    unsigned char bit, int length, int invert_x, int invert_y,
+	    unsigned randomizer)
 {
   static int lastx = 0;
   static int lasty = 0;
@@ -852,11 +878,28 @@ print_color(dither_t *d, dither_color_t *rv, int base, int adjusted,
 	    virtual_value = dd->value_l +
 	      (dd->value_span * rangepoint / 65536);
 
-	  if (d->dither_type == D_FLOYD)
-	    vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d) >> 2;
+	  if (randomizer == 0)
+	    vmatrix = virtual_value / 2;
 	  else
-	    vmatrix = DITHERPOINT((x + y / 3), (y + x / 3), 0, d);
-	  vmatrix = vmatrix * virtual_value / 65536;
+	    {
+	      if (d->dither_type == D_FLOYD)
+		vmatrix = (rand() & 0xffff000) >> 12;
+	      else if (d->dither_type == D_FLOYD_HYBRID)
+		vmatrix = DITHERPOINT(x, y, 1, d) ^ DITHERPOINT(x, y, 2, d)>>2;
+	      else
+		vmatrix = DITHERPOINT((x + y / 3), (y + x / 3), 0, d);
+	      if (vmatrix == 65536 && virtual_value == 65536)
+		vmatrix = 65536;
+	      else
+		vmatrix = vmatrix * virtual_value / 65536;
+	      if (randomizer != 65536)
+		{
+		  unsigned vbase = virtual_value * (65536 - randomizer) /
+		    65536;
+		  vmatrix = (unsigned long long) vmatrix * randomizer / 65536;
+		  vmatrix += vbase;
+		}
+	    }
 
 	  /*
 	   * FIXME we should use a matrix rather than just an error
@@ -1019,16 +1062,16 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 
     k = 65535 - *gray;
     ok = k;
-    if (d->dither_type == D_FLOYD)
+    if (d->dither_type == D_ORDERED)
+      print_color(d, &(d->k_dither), k, k, x, row, kptr, NULL, bit,
+		  length, 0, 0, d->k_randomizer);
+    else
       {
 	UPDATE_COLOR(k);
 	k = print_color(d, &(d->k_dither), ok, k, x, row, kptr, NULL, bit,
-			length, 0, 0);
+			length, 0, 0, d->k_randomizer);
 	UPDATE_DITHER(k, x, d->src_width);
       }
-    else
-      print_color(d, &(d->k_dither), k, k, x, row, kptr, NULL, bit,
-		  length, 0, 0);
 
     INCREMENT_BLACK();
   }
@@ -1260,9 +1303,12 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	    }
 	  else if (kdarkness < ub)
 	    {
-	      ditherbit = DITHERPOINT(x, row, 0, d) ^
-		(DITHERPOINT(x, row, 2, d) >> 3);
-	      if (rb == 0 || (ditherbit % rb) < (kdarkness - lb))
+	      if (d->dither_type == D_FLOYD)
+		ditherbit = ((rand() & 0x7ffff000) >> 12) % rb;
+	      else
+		ditherbit = (DITHERPOINT(row, x, 1, d) ^
+			     (DITHERPOINT(row, x, 3, d) >> 2)) % rb;
+	      if (rb == 0 || (ditherbit < (kdarkness - lb)))
 		bk = ok;
 	      else
 		bk = 0;
@@ -1301,7 +1347,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	y = 65535;
       k = bk;
       tk = print_color(d, &(d->k_dither), bk, k, x, row, kptr, NULL, bit,
-		       length, 0, 0);
+		       length, 0, 0, 65536);
       if (tk != k)
 	printed_black = 1;
       k = tk;
@@ -1336,11 +1382,14 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     if (!printed_black)
       {
 	c = print_color(d, &(d->c_dither), (oc / 3 + density / 4), c,
-			x, row, cptr, lcptr, bit, length, 0, 1);
+			x, row, cptr, lcptr, bit, length, 0, 1,
+			d->c_randomizer);
 	m = print_color(d, &(d->m_dither), (om / 3 + density / 4), m,
-			x, row, mptr, lmptr, bit, length, 1, 0);
+			x, row, mptr, lmptr, bit, length, 1, 0,
+			d->m_randomizer);
 	y = print_color(d, &(d->y_dither), (oy / 3 + density / 4), y,
-			x, row, yptr, lyptr, bit, length, 1, 1);
+			x, row, yptr, lyptr, bit, length, 1, 1,
+			d->y_randomizer);
       }
 
     UPDATE_DITHER(c, x, d->dst_width);
@@ -1360,6 +1409,11 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.25  2000/04/20 02:42:54  rlk
+ *   Reduce initial memory footprint.
+ *
+ *   Add random Floyd-Steinberg dither.
+ *
  *   Revision 1.24  2000/04/18 12:21:52  rlk
  *   Fix incorrect printing for variable drop sizes
  *

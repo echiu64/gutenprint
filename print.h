@@ -97,9 +97,9 @@ typedef struct
 
 typedef struct					/* Plug-in variables */
 {
-  char	output_to[255],		/* Name of file or command to print to */
+  char	output_to[256],		/* Name of file or command to print to */
 	driver[64],		/* Name of printer "driver" */
-	ppd_file[255];		/* PPD file */
+	ppd_file[256];		/* PPD file */
   int	output_type;		/* Color or grayscale output */
   char	resolution[64],		/* Resolution */
 	media_size[64],		/* Media size */
@@ -122,7 +122,7 @@ typedef struct					/* Plug-in variables */
   float	saturation;		/* Output saturation */
   float	density;		/* Maximum output density */
   int	image_type;		/* Image type (line art etc.) */
-  lut_t lut;			/* Look-up table */
+  lut_t *lut;			/* Look-up table */
 } vars_t;
 
 typedef struct		/**** Printer List ****/
@@ -204,7 +204,8 @@ extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);
 extern void	dither_set_black_levels(void *vd, double, double, double);
-extern void 	dither_set_randomizers(void *vd, int, int, int, int);
+extern void 	dither_set_randomizers(void *vd, double, double, double,
+				       double);
 extern void 	dither_set_ink_darkness(void *vd, double, double, double);
 extern void 	dither_set_light_inks(void *vd, double, double, double,
 				      double);

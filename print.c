@@ -144,7 +144,7 @@ vars_t vars =
 
 int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
-plist_t		plist[MAX_PLIST];	/* System printers */
+plist_t		*plist;			/* System printers */
 
 int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
@@ -153,6 +153,26 @@ gint32          image_ID;	        /* image ID */
 
 int image_width;
 int image_height;
+
+static void
+check_plist(int count)
+{
+  static int current_plist_size = 0;
+  if (count <= current_plist_size)
+    return;
+  else if (current_plist_size == 0)
+    {
+      current_plist_size = count;
+      plist = malloc(current_plist_size * sizeof(plist_t));
+    }
+  else
+    {
+      current_plist_size *= 2;
+      if (current_plist_size < count)
+	current_plist_size = count;
+      plist = realloc(plist, current_plist_size * sizeof(plist_t));
+    }
+}
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
@@ -747,6 +767,8 @@ printrc_load(void)
   char		*home;		/* Home dir */
 #endif
 
+  check_plist(1);
+
  /*
   * Get the printer list...
   */
@@ -852,8 +874,9 @@ printrc_load(void)
 	      memcpy(p, &key, sizeof(plist_t));
 	      p->active = 1;
 	    }
-          else if (plist_count < MAX_PLIST - 1)
+          else
     	    {
+	      check_plist(plist_count + 1);
 	      p = plist + plist_count;
 	      memcpy(p, &key, sizeof(plist_t));
 	      p->active = 0;
@@ -980,7 +1003,7 @@ get_system_printers(void)
 
   defname[0] = '\0';
 
-  memset(plist, 0, sizeof(plist));
+  check_plist(1);
   plist_count = 1;
   strcpy(plist[0].name, _("File"));
   plist[0].v.output_to[0] = '\0';
@@ -991,11 +1014,11 @@ get_system_printers(void)
 #ifdef LPC_COMMAND
   if ((pfile = popen(LPC_COMMAND " status < /dev/null", "r")) != NULL)
   {
-    while (fgets(line, sizeof(line), pfile) != NULL &&
-           plist_count < MAX_PLIST)
+    while (fgets(line, sizeof(line), pfile) != NULL)
       if (strchr(line, ':') != NULL && line[0] != ' ' && 
 	  line[0] != '\t' && strncmp(line,"Press RETURN to continue",24))
       {
+	check_plist(plist_count + 1);
         *strchr(line, ':') = '\0';
         strcpy(plist[plist_count].name, line);
         sprintf(plist[plist_count].v.output_to, LPR_COMMAND " -P%s -l", line);
@@ -1011,11 +1034,11 @@ get_system_printers(void)
 #ifdef LPSTAT_COMMAND
   if ((pfile = popen(LPSTAT_COMMAND " -d -p", "r")) != NULL)
   {
-    while (fgets(line, sizeof(line), pfile) != NULL &&
-           plist_count < MAX_PLIST)
+    while (fgets(line, sizeof(line), pfile) != NULL)
     {
       if (sscanf(line, "printer %s", name) == 1)
       {
+	check_plist(plist_count + 1);
 	strcpy(plist[plist_count].name, name);
 	sprintf(plist[plist_count].v.output_to, LP_COMMAND " -s -d%s", name);
         strcpy(plist[plist_count].v.driver, "ps2");
@@ -1035,6 +1058,7 @@ get_system_printers(void)
     {
       for (i = 1; i <= pnum; i++)
 	{
+	  check_plist(plist_count + 1);
 	  sprintf(plist[plist_count].name, "LPT%d:", i);
 	  sprintf(plist[plist_count].v.output_to, "PRINT /D:LPT%d /B ", i);
           strcpy(plist[plist_count].v.driver, "ps2");

@@ -86,6 +86,8 @@ escp2_write_weave(void *, FILE *, int, int, int, int, int, int,
 		  const unsigned char *c, const unsigned char *m,
 		  const unsigned char *y, const unsigned char *k,
 		  const unsigned char *C, const unsigned char *M);
+static void escp2_init_microweave();
+static void escp2_free_microweave();
 
 static void destroy_weave(void *);
 
@@ -804,7 +806,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		vertical_subsample = 1;
   const res_t 	*res;
   int		bits;
-  void *	weave;
+  void *	weave = NULL;
   void *	dither;
   colormode_t colormode = COLOR_CCMMYK;
   int		separation_rows = escp2_separation_rows(model);
@@ -1102,7 +1104,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
 			     vertical_passes, vertical_subsample, colormode,
 			     bits, out_width, separation_rows);
   else
-    weave = NULL;
+    escp2_init_microweave();
+      
 
  /*
   * Output the page, rotating as necessary...
@@ -1144,12 +1147,13 @@ escp2_print(const printer_t *printer,		/* I - Model */
     {
     case IMAGE_LINE_ART:
       dither_set_ink_spread(dither, 19);
-      dither_set_black_lower(dither, .00001);
-      dither_set_randomizers(dither, 10, 10, 10, 10);
-      dither_set_black_upper(dither, .0005);
+      dither_set_black_lower(dither, .04);
+      dither_set_randomizers(dither, 0, 0, 0, 0);
+      dither_set_black_upper(dither, .1);
       break;
     case IMAGE_SOLID_TONE:
       dither_set_ink_spread(dither, 15);
+      dither_set_randomizers(dither, .1, .1, .1, .01);
       break;
     case IMAGE_CONTINUOUS:
       dither_set_ink_spread(dither, 13);
@@ -1210,6 +1214,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
     if (use_softweave)
       escp2_flush(weave, model, out_width, left, ydpi, xdpi, prn);
+    else
+      escp2_free_microweave();
   }
   else
   {
@@ -1263,6 +1269,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
     if (use_softweave)
       escp2_flush(weave, model, out_width, left, ydpi, xdpi, prn);
+    else
+      escp2_free_microweave();
   }
   free_dither(dither);
 
@@ -1875,9 +1883,28 @@ escp2_pack(const unsigned char *line,
   return active;
 }
 
-static unsigned char microweave_s[6][4][COMPBUFWIDTH];
+static unsigned char *microweave_s = 0;
 static unsigned char *microweave_comp_ptr[6][4];
 static int microweave_setactive[6][4];
+
+#define MICRO_S(c, l) (microweave_s + COMPBUFWIDTH * (l) + COMPBUFWIDTH * (c) * 4)
+
+static void
+escp2_init_microweave()
+{
+  if (!microweave_s)
+    microweave_s = malloc(6 * 4 * COMPBUFWIDTH);
+}
+
+static void
+escp2_free_microweave()
+{
+  if (microweave_s)
+    {
+      free(microweave_s);
+      microweave_s = NULL;
+    }
+}
 
 static int
 escp2_do_microweave_pack(const unsigned char *line,
@@ -1886,11 +1913,19 @@ escp2_do_microweave_pack(const unsigned char *line,
 			 int bits,
 			 int color)
 {
-  static unsigned char pack_buf[COMPBUFWIDTH];
-  static unsigned char s[4][COMPBUFWIDTH];
+  static unsigned char *pack_buf = NULL;
+  static unsigned char *s[4] = { NULL, NULL, NULL, NULL };
   const unsigned char *in;
   int i;
   int retval = 0;
+  if (!pack_buf)
+    pack_buf = malloc(COMPBUFWIDTH);
+  for (i = 0; i < oversample; i++)
+    {
+      if (!s[i])
+	s[i] = malloc(COMPBUFWIDTH);
+    }
+
   if (!line ||
       (line[0] == 0 && memcmp(line, line + 1, (bits * length) - 1) == 0))
     {
@@ -1926,7 +1961,7 @@ escp2_do_microweave_pack(const unsigned char *line,
   for (i = 0; i < oversample; i++)
     {
       microweave_setactive[color][i] =
-	escp2_pack(s[i], length * bits, microweave_s[color][i],
+	escp2_pack(s[i], length * bits, MICRO_S(color, i),
 		   &(microweave_comp_ptr[color][i]));
       retval |= microweave_setactive[color][i];
     }
@@ -1954,6 +1989,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
   int gsetactive = 0;
   if (xdpi > 720)
     oversample = xdpi / 720;
+
   gsetactive |= escp2_do_microweave_pack(k, length, oversample, bits, 0);
   gsetactive |= escp2_do_microweave_pack(m, length, oversample, bits, 1);
   gsetactive |= escp2_do_microweave_pack(c, length, oversample, bits, 2);
@@ -2016,8 +2052,7 @@ escp2_write_microweave(FILE          *prn,	/* I - Print file or command */
 	  putc(width & 255, prn);	/* Width of raster line in pixels */
 	  putc(width >> 8, prn);
 
-	  fwrite(microweave_s[j][i],
-		 microweave_comp_ptr[j][i] - microweave_s[j][i],
+	  fwrite(MICRO_S(j, i), microweave_comp_ptr[j][i] - MICRO_S(j, i),
 		 1, prn);
 	  putc('\r', prn);
 	}
@@ -2774,9 +2809,9 @@ escp2_write_weave(void *        vsw,
 		  const unsigned char *M)
 {
   escp2_softweave_t *sw = (escp2_softweave_t *) vsw;
-  static unsigned char s[4][COMPBUFWIDTH];
-  static unsigned char fold_buf[COMPBUFWIDTH];
-  static unsigned char comp_buf[COMPBUFWIDTH];
+  static unsigned char *s[4];
+  static unsigned char *fold_buf;
+  static unsigned char *comp_buf;
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
   unsigned char *comp_ptr;
   int i, j;
@@ -2789,6 +2824,14 @@ escp2_write_weave(void *        vsw,
   cols[3] = y;
   cols[4] = M;
   cols[5] = C;
+  if (!fold_buf)
+    fold_buf = malloc(COMPBUFWIDTH);
+  if (!comp_buf)
+    comp_buf = malloc(COMPBUFWIDTH);
+  for (i = 0; i < sw->horizontal_weave * sw->vertical_subpasses; i++)
+    if (!s[i])
+      s[i] = malloc(COMPBUFWIDTH);
+  
 
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength);
@@ -2890,6 +2933,11 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.126  2000/04/20 02:42:54  rlk
+ *   Reduce initial memory footprint.
+ *
+ *   Add random Floyd-Steinberg dither.
+ *
  *   Revision 1.125  2000/04/19 00:28:14  rlk
  *   Try again for 1440 uweave
  *
