@@ -151,8 +151,11 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
 }
 
 static void
-print_debug_block(cups_image_t *cups)
+print_debug_block(const stp_vars_t v, const cups_image_t *cups)
 {
+  stp_parameter_list_t params;
+  int nparams;
+  int i;
   fprintf(stderr, "DEBUG: Gimp-Print StartPage...\n");
   fprintf(stderr, "DEBUG: Gimp-Print MediaClass = \"%s\"\n", cups->header.MediaClass);
   fprintf(stderr, "DEBUG: Gimp-Print MediaColor = \"%s\"\n", cups->header.MediaColor);
@@ -199,60 +202,13 @@ print_debug_block(cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gimp-Print cupsRowCount = %d\n", cups->header.cupsRowCount);
   fprintf(stderr, "DEBUG: Gimp-Print cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gimp-Print cupsRowStep = %d\n", cups->header.cupsRowStep);
-}
-
-static stp_vars_t
-initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
-{
-  int i;
-  const stp_papersize_t	*size;		/* Paper size */
-  stp_parameter_list_t params;
-  int nparams;
-  stp_vars_t v = stp_vars_create_copy(default_settings);
-
-  stp_set_page_width(v, cups->header.PageSize[0]);
-  stp_set_page_height(v, cups->header.PageSize[1]);
-  stp_set_outfunc(v, cups_writefunc);
-  stp_set_errfunc(v, cups_errfunc);
-  stp_set_outdata(v, stdout);
-  stp_set_errdata(v, stderr);
-
-  switch (cups->header.cupsColorSpace)
-    {
-    case CUPS_CSPACE_W :
-      stp_set_output_type(v, OUTPUT_GRAY);
-      break;
-    case CUPS_CSPACE_K :
-      stp_set_output_type(v, OUTPUT_GRAY);
-      break;
-    case CUPS_CSPACE_RGB :
-      stp_set_output_type(v, OUTPUT_COLOR);
-      break;
-    case CUPS_CSPACE_CMYK :
-      stp_set_output_type(v, OUTPUT_RAW_CMYK);
-      break;
-    default :
-      fprintf(stderr, "ERROR: Gimp-Print Bad colorspace %d!",
-	      cups->header.cupsColorSpace);
-      break;
-    }
-
-  if (cups->header.cupsCompression >= 0)
-    set_special_parameter(v, "Resolution", cups->header.cupsCompression);
-
-  stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
-  stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
-
-  fprintf(stderr, "DEBUG: Gimp-Print PageSize = %dx%d\n", cups->header.PageSize[0],
-	  cups->header.PageSize[1]);
-
-  if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
-					cups->header.PageSize[0])) != NULL)
-    stp_set_string_parameter(v, "PageSize", size->name);
-  else
-    fprintf(stderr, "ERROR: Gimp-Print Unable to get media size!\n");
-
-
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_driver(v) |%s|\n", stp_get_driver(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_left(v) |%d|\n", stp_get_left(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_top(v) |%d|\n", stp_get_top(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
+  fprintf(stderr, "DEBUG: Gimp-Print stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
@@ -289,14 +245,60 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
 	}
     }
   stp_parameter_list_free(params);
+}
+
+static stp_vars_t
+initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
+{
+  const stp_papersize_t	*size;		/* Paper size */
+  stp_vars_t v = stp_vars_create_copy(default_settings);
+
+  stp_set_page_width(v, cups->header.PageSize[0]);
+  stp_set_page_height(v, cups->header.PageSize[1]);
+  stp_set_outfunc(v, cups_writefunc);
+  stp_set_errfunc(v, cups_errfunc);
+  stp_set_outdata(v, stdout);
+  stp_set_errdata(v, stderr);
+
+  switch (cups->header.cupsColorSpace)
+    {
+    case CUPS_CSPACE_W :
+      stp_set_output_type(v, OUTPUT_GRAY);
+      break;
+    case CUPS_CSPACE_K :
+      stp_set_output_type(v, OUTPUT_GRAY);
+      break;
+    case CUPS_CSPACE_RGB :
+      stp_set_output_type(v, OUTPUT_COLOR);
+      break;
+    case CUPS_CSPACE_CMYK :
+      stp_set_output_type(v, OUTPUT_RAW_CMYK);
+      break;
+    default :
+      fprintf(stderr, "ERROR: Gimp-Print Bad colorspace %d!",
+	      cups->header.cupsColorSpace);
+      break;
+    }
+
+  if (cups->header.cupsCompression >= 0)
+    set_special_parameter(v, "Resolution", cups->header.cupsCompression);
+
+  if (cups->header.MediaClass && strlen(cups->header.MediaClass) > 0)
+    stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
+
+  if (cups->header.MediaType && strlen(cups->header.MediaType) > 0)
+    stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
+
+  fprintf(stderr, "DEBUG: Gimp-Print PageSize = %dx%d\n", cups->header.PageSize[0],
+	  cups->header.PageSize[1]);
+
+  if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
+					cups->header.PageSize[0])) != NULL)
+    stp_set_string_parameter(v, "PageSize", size->name);
+  else
+    fprintf(stderr, "ERROR: Gimp-Print Unable to get media size!\n");
+
   stp_set_job_mode(v, STP_JOB_MODE_JOB);
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_driver(v) |%s|\n", stp_get_driver(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_output_type(v) |%d|\n", stp_get_output_type(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_left(v) |%d|\n", stp_get_left(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_top(v) |%d|\n", stp_get_top(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
-  fprintf(stderr, "DEBUG: Gimp-Print stp_get_input_color_model(v) |%d|\n", stp_get_input_color_model(v));
   stp_get_media_size(v, &(cups->width), &(cups->height));
   stp_get_imageable_area(v, &(cups->left), &(cups->right),
 			 &(cups->bottom), &(cups->top));
@@ -367,7 +369,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && strcmp(val, "None") != 0)
+	  if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 	    {
 	      double coarse_val = atof(val) * 0.001;
 	      double fine_val = 0;
@@ -379,7 +381,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 		  if (ppd_option)
 		    val = ppd_option->defchoice;
 		}
-	      if (val && strcmp(val, "None") != 0)
+	      if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 		fine_val = atof(val) * 0.001;
 	      fprintf(stderr, "DEBUG: Gimp-Print set float %s to %f + %f\n",
 		      desc.name, coarse_val, fine_val);
@@ -399,7 +401,7 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && (strcmp(val, "None") != 0 ||
+	  if (val && ((strlen(val) > 0 && strcmp(val, "None") != 0) ||
 		      (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
 		       stp_string_list_is_present(desc.bounds.str, val))))
 	    {
@@ -638,7 +640,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       cups.row = 0;
       fprintf(stderr, "DEBUG: Gimp-Print printing page %d\n", cups.page);
       fprintf(stderr, "PAGE: %d 1\n", cups.page);
-      print_debug_block(&cups);
+      print_debug_block(v, &cups);
       if (!stp_verify(v))
 	{
 	  fprintf(stderr, "ERROR: Gimp-Print: options failed to verify.\n");
@@ -817,7 +819,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
-      fprintf(stderr, "ERROR: Gimp-Print image is null!\n");
+      fprintf(stderr, "ERROR: Gimp-Print image is null!  Please report this bug to gimp-print-devel@lists.sourceforge.net\n");
       return STP_IMAGE_STATUS_ABORT;
     }
   bytes_per_line = cups->width * cups->header.cupsBitsPerPixel / CHAR_BIT;
