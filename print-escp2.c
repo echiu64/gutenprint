@@ -647,7 +647,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(17 / 2), INCH(14), 14, 14, 9, 49, 1, 0,
-    { -1, 1, -1, 1, -1, -1, -1 },
+    { 2, 0, -1, 1, -1, -1, -1 },
     { 1, 1, 1, .568, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -658,7 +658,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 48, 720, INCH(17 / 2), INCH(14), 14, 14, 0, 24, 1, 0,
-    { -1, 1, -1, 1, -1, -1, -1 },
+    { 2, 0, -1, 1, -1, -1, -1 },
     { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -669,7 +669,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 1, 720, INCH(11), INCH(17), 14, 14, 9, 49, 1, 0,
-    { -1, 1, -1, 1, -1, -1, -1 },
+    { 2, 0, -1, 1, -1, -1, -1 },
     { 1, 1, 1, .631, 0, 0, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -680,7 +680,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 0,
-    { -1, 2, -1, 2, 0, 2, 0 },
+    { 4, 3, -1, 2, 2, 2, 2 },
     { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
@@ -691,7 +691,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 64, 720, INCH(17 / 2), INCH(14), 8, 9, 0, 24, 1, 4,
-    { -1, 2, -1, 2, 0, 2, 0 },
+    { 3, 2, -1, 1, 1, 1, 1 },
     { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
@@ -702,7 +702,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     64, 4, 128, 720, INCH(17 / 2), INCH(14), 9, 9, 9, 40, 1, 4,
-    { -1, 2, -1, 0, 0, -1, 0 },
+    { 3, 2, -1, 1, 1, 1, 1 },
     { 1, 1, 1, .646, .646, .323, .323, .1615, .0808 },
     &simple_4color_inks
   },
@@ -713,7 +713,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { -1, 2, -1, 2, -1, 2, -1 },
+    { 3, 2, -1, 1, 1, 1, 1 },
     { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -726,7 +726,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { -1, 3, -1, -1, 1, -1, 1 },
+    { 3, 3, -1, -1, 1, -1, 1 },
     { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
     &simple_6color_inks
   },
@@ -737,7 +737,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { -1, 3, -1, -1, 1, -1, 1 },
+    { 3, 3, -1, -1, 1, -1, 1 },
     { 1, 1, 1, .775, .775, .387, .387, .193, .0966 },
     &simple_6color_inks
   },
@@ -748,7 +748,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { -1, 3, -1, -1, 0, -1, -1 },
+    { 3, 3, -1, -1, 0, -1, -1 },
     { 1, 1, 1, .646, .646, 0, 0, 0, 0 },
     &simple_6color_inks
   },
@@ -919,7 +919,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_YES | MODEL_ZEROMARGIN_NO),
     1, 1, 128, 720, INCH(17), INCH(55), 8, 9, 9, 49, 4, 0,
-    { -1, 2, 2, 2, -1, 2, -1 },
+    { 3, 2, -1, 1, 1, 1, 1 },
     { 1, 1, 1, .646, 0, .646, 0, 0, 0 },
     &simple_4color_inks
   },
@@ -1980,7 +1980,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       lmagenta = NULL;
     }
   }
-  top = 0;
+
   if (use_softweave)
     /* Epson printers are all 720 physical dpi */
     weave = initialize_weave(nozzles, nozzle_separation, horizontal_passes,
