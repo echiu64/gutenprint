@@ -839,8 +839,8 @@ default_media_size(int  model,		/* I - Printer model */
   const papersize_t *papersize = get_papersize_by_name(media_size);
   if (!papersize)
     {
-      *width = 0;
-      *length = 0;
+      *width = 1;
+      *length = 1;
     }
   else
     {

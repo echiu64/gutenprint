@@ -68,6 +68,7 @@ static GtkWidget* bottom_entry;
 static GtkWidget* height_entry;
 static GtkWidget* unit_inch;
 static GtkWidget* unit_cm;
+static int	 ignore_combo_callback = 0;
 static GtkWidget* media_size_combo=NULL;  /* Media size combo box */
 static GtkWidget* media_type;             /* Media type option button */
 static GtkWidget* media_type_menu=NULL;   /* Media type menu */
@@ -96,6 +97,7 @@ static GtkWidget* image_continuous_tone;
 static GtkWidget* image_monochrome;
 static GtkWidget* setup_dialog;           /* Setup dialog window */
 static GtkWidget* printer_driver;         /* Printer driver widget */
+static GtkWidget* printer_crawler;        /* Scrolled Window for menu */
 static GtkWidget* ppd_file;               /* PPD file entry */
 static GtkWidget* ppd_button;             /* PPD file browse button */
 static GtkWidget* output_cmd;             /* Output command text entry */
@@ -206,7 +208,6 @@ void gtk_create_main_window(void)
     GtkWidget* entry;      /* Text entry widget */
     GtkWidget* menu;       /* Menu of sizes */
     GtkWidget* list;       /* List of drivers */
-    GtkWidget* printer_crawler;      /* Scrolled Window for menu */
     GtkWidget* item;       /* Menu item */
     GtkWidget* option;     /* Option menu button */
     GtkWidget* combo;      /* Combo box */
@@ -968,10 +969,11 @@ void gtk_create_main_window(void)
     /*
      * Top-level table for dialog...
      */
-    table = gtk_table_new(3, 2, FALSE);
+    table = gtk_table_new(5, 2, FALSE);
     gtk_container_border_width(GTK_CONTAINER(table), 6);
     gtk_table_set_col_spacings(GTK_TABLE(table), 4);
     gtk_table_set_row_spacings(GTK_TABLE(table), 8);
+    gtk_table_set_row_spacing (GTK_TABLE (table), 0, 100);
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
 		       table,
 		       FALSE,
@@ -987,20 +989,19 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     label,
 		     0, 1,
-		     0, 1,
+		     0, 2,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
 
-	printer_crawler = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (printer_crawler),
-					                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    printer_crawler = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW (printer_crawler),
+				   GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     printer_driver = list = gtk_clist_new(1);
-	gtk_clist_set_selection_mode(GTK_CLIST(list), GTK_SELECTION_SINGLE);
-	gtk_signal_connect(GTK_OBJECT(list), "select_row",
-			   (GtkSignalFunc)gtk_print_driver_callback,
-			   NULL);
-	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (printer_crawler), list);
+    gtk_clist_set_selection_mode(GTK_CLIST(list), GTK_SELECTION_SINGLE);
+    gtk_signal_connect(GTK_OBJECT(list), "select_row",
+		       (GtkSignalFunc)gtk_print_driver_callback, NULL);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW (printer_crawler), list);
     gtk_widget_set_usize(printer_crawler, 200, 0);
 	gtk_widget_show (list);
     for (i = 0; i < known_printers(); i ++)
@@ -1016,7 +1017,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     printer_crawler,
 		     1, 3,
-		     0, 1,
+		     0, 2,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
 	gtk_widget_show (printer_crawler);
@@ -1029,7 +1030,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     label,
 		     0, 1,
-		     1, 2,
+		     2, 3,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -1038,7 +1039,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     box,
 		     1, 2,
-		     1, 2,
+		     2, 3,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(box);
@@ -1061,7 +1062,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     label,
 		     0, 1,
-		     2, 3,
+		     3, 4,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(label);
@@ -1070,7 +1071,7 @@ void gtk_create_main_window(void)
     gtk_table_attach(GTK_TABLE(table),
 		     entry,
 		     1, 2,
-		     2, 3,
+		     3, 4,
 		     GTK_FILL, GTK_FILL,
 		     0, 0);
     gtk_widget_show(entry);
@@ -1337,9 +1338,9 @@ static void gtk_plist_build_combo(GtkWidget*  combo,   /* I - Combo widget */
   for (i = 0; i < num_items; i ++)
       list = g_list_append(list, gettext(items[i]));
 
-  gtk_signal_disconnect_by_func(GTK_OBJECT(entry), (GtkSignalFunc)callback, 0);
-
+  ignore_combo_callback = 1;
   gtk_combo_set_popdown_strings(GTK_COMBO(combo), list);
+  ignore_combo_callback = 0;
 
   gtk_signal_connect(GTK_OBJECT(entry), "changed", (GtkSignalFunc)callback, 0);
 
@@ -1693,7 +1694,8 @@ static void gtk_media_size_callback(GtkWidget *widget, /* I -Media size menu */
 				    gint      data)    /* I - Data */
 {
   const char *new_media_size;
-
+  if (ignore_combo_callback)
+    return;
   new_media_size
     = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(media_size_combo)->entry));
   if (strcmp(vars.media_size, new_media_size) != 0)
@@ -1915,6 +1917,7 @@ static void gtk_close_callback(void)
  ****************************************************************************/
 static void gtk_setup_open_callback(void)
 {
+  GtkAdjustment *adjustment;
   int idx;
 
   current_printer = get_printer_by_driver(plist[plist_current].v.driver);
@@ -1942,6 +1945,19 @@ static void gtk_setup_open_callback(void)
   else
     gtk_widget_show(output_cmd);
 
+  gtk_widget_show (setup_dialog);
+  adjustment =
+    gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler));
+  adjustment->page_increment = adjustment->page_size -
+    (adjustment->step_increment * 2);
+  if (adjustment->page_increment <= 0)
+    adjustment->page_increment = adjustment->step_increment;
+  adjustment->value = (idx - 1) * adjustment->step_increment +
+    adjustment->page_increment;
+  gtk_adjustment_changed(adjustment);
+  
+  gtk_scrolled_window_set_vadjustment(GTK_SCROLLED_WINDOW(printer_crawler),
+				      adjustment);
   gtk_widget_show(setup_dialog);
 }
 
