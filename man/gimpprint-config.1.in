@@ -1,6 +1,5 @@
-'\" t
 .\" $Id$
-.\" Copyright (C) 2000 Roger Leigh <rl117@york.ac.uk>
+.\" Copyright (C) 2000 Roger Leigh <roger@whinlatter.uklinux.net>
 .\"
 .\" This program is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -15,62 +14,68 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.hy 0
-.TH GIMP-PRINT 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
-
+.TH GIMP-PRINT 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP-Print Manual Pages"
 .SH NAME
-gimpprint-config - script to get information about the installed version of gimpprint
-
+gimpprint-config - script to get information about the installed version of
+gimpprint
 .SH SYNOPSIS
 .B gimpprint-config
-[\-\-prefix\fI[=DIR]\fP] [\-\-exec\-prefix\fI[=DIR]\fP] [\-\-version] [\-\-libs] [\-\-cflags]
-
+[\-\-prefix\fI[=dir]\fP] [\-\-exec\-prefix\fI[=dir]\fP] [\-\-version] [\-\-libs] [\-\-cflags]
 .SH DESCRIPTION
 .PP
-\fIgimpprint-config\fP is a tool that is used to determine the compiler and
+\fBgimpprint-config\fP is a tool that is used to determine the compiler and
 linker flags that should be used to compile and link programs that use
-\fIGIMP-PRINT\fP. It is also used internally to the .m4 macros for GNU autoconf
-that are included with \fIGIMP-PRINT\fP.
-
+\fIGIMP-Print\fP. It is also used internally to the .m4 macros for GNU autoconf
+that are included with \fIGIMP-Print\fP (\fIAM_PATH_GIMPPRINT\fP).
+.PP
+.B gimpprint-config is OBSOLETE!
+.B gimpprint-config
+is replaced by \fBpkg-config\fP.  Use
+.IP
+.B pkg-config --cflags gimpprint
+.br
+.B pkg-config --libs gimpprint
+.br
+.B pkg-config --version gimpprint
+.PP
+instead.
 .SH OPTIONS
-\fIgimpprint-config\fP accepts the following options:
+\fBgimpprint-config\fP accepts the following options:
 .TP 8
 .B  \-\-version
-Print the currently installed version of \fIGIMP-PRINT\fP on the standard output.
+Print the currently installed version of \fIGIMP-Print\fP on the standard output.
 .TP 8
 .B  \-\-libs
-Print the linker flags that are necessary to link a \fIGIMP-PRINT\fP program.
+Print the linker flags that are necessary to link a \fIGIMP-Print\fP program.
 .TP 8
 .B  \-\-cflags
-Print the compiler flags that are necessary to compile a \fIGIMP-PRINT\fP program.
+Print the compiler flags that are necessary to compile a \fIGIMP-Print\fP program.
 .TP 8
-.B  \-\-prefix=PREFIX
-If specified, use PREFIX instead of the installation prefix that \fIGIMP-PRINT\fP
-was built with when computing the output for the \-\-cflags and
-\-\-libs options. This option is also used for the exec prefix
-if \-\-exec\-prefix was not specified. This option must be specified
-before any \-\-libs or \-\-cflags options.
+.B  \-\-prefix=\fIprefix\fP
+If specified, use \fIprefix\fP instead of the installation prefix that
+\fIGIMP-Print\fP was built with when computing the output for the \-\-cflags
+and \-\-libs options. This option is also used for the exec prefix if
+\-\-exec\-prefix was not specified. This option must be specified before any
+\-\-libs or \-\-cflags options.
 .TP 8
-.B  \-\-exec\-prefix=PREFIX
-If specified, use PREFIX instead of the installation exec prefix that
-\fIGIMP-PRINT\fP was built with when computing the output for the \-\-cflags
+.B  \-\-exec\-prefix=\fIprefix\fP
+If specified, use \fIprefix\fP instead of the installation exec prefix that
+\fIGIMP-Print\fP was built with when computing the output for the \-\-cflags
 and \-\-libs options.  This option must be specified before any
 \-\-libs or \-\-cflags options.
-
 .SH COPYRIGHT
-Copyright \(co  2001 Roger Leigh
-
+Copyright \(co  2001-2002 Roger Leigh
+.PP
 This manual page is based on the gtk-config(1) manual page by Owen Taylor.
-
+.PP
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation; either version 2 of the License, or (at your option)
 any later version.
-
 .SH SEE ALSO
 .BR autoconf (1),
 .BR gtk-config (1),
-
+.BR pkg-config (1)
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
