@@ -529,6 +529,8 @@ if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
                  [SAVE_GTK_LIBS="$GIMP_LIBS"
                   SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
                   AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root and make sure gimptool is on your PATH.))
+    AM_PATH_GTK
+    GIMP_CFLAGS="${GTK_CFLAGS} ${GIMP_CFLAGS}"
   fi
 fi
 
