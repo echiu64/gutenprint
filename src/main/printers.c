@@ -587,13 +587,13 @@ stpi_verify_printer_params(const stp_vars_t v)
   if (stp_get_top(v) < top)
     {
       answer = 0;
-      stpi_eprintf(v, _("Top margin must not be less than zero\n"));
+      stpi_eprintf(v, _("Top margin must not be less than %d\n"), top);
     }
 
   if (stp_get_left(v) < left)
     {
       answer = 0;
-      stpi_eprintf(v, _("Left margin must not be less than zero\n"));
+      stpi_eprintf(v, _("Left margin must not be less than %d\n"), left);
     }
 
   if (stp_get_height(v) <= 0)
