@@ -14,32 +14,32 @@ stp_=$(GLOBJ)gdevstp.$(OBJ) \
 $(DD)stp.dev:	$(stp_) $(DD)page.dev
 	$(SETPDEV) $(DD)stp $(stp_)
 
-$(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
 
-$(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(GLSRC)gdevstp-printers.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(GLSRC)gdevstp-printers.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
 
-$(GLOBJ)gdevstp-weave.$(OBJ) : $(GLSRC)gdevstp-weave.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-weave.$(OBJ) : $(GLSRC)gdevstp-weave.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-weave.$(OBJ) $(C_) $(GLSRC)gdevstp-weave.c
 
-$(GLOBJ)gdevstp-color.$(OBJ) : $(GLSRC)gdevstp-color.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-color.$(OBJ) : $(GLSRC)gdevstp-color.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-color.$(OBJ) $(C_) $(GLSRC)gdevstp-color.c
 
-$(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
 
-$(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
 
-$(GLOBJ)gdevstp-lexmark.$(OBJ) : $(GLSRC)gdevstp-lexmark.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-lexmark.$(OBJ) : $(GLSRC)gdevstp-lexmark.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-lexmark.$(OBJ) $(C_) $(GLSRC)gdevstp-lexmark.c
 
-$(GLOBJ)gdevstp-pcl.$(OBJ) : $(GLSRC)gdevstp-pcl.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-pcl.$(OBJ) : $(GLSRC)gdevstp-pcl.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-pcl.$(OBJ) $(C_) $(GLSRC)gdevstp-pcl.c
 
-$(GLOBJ)gdevstp-canon.$(OBJ) : $(GLSRC)gdevstp-canon.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-canon.$(OBJ) : $(GLSRC)gdevstp-canon.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-canon.$(OBJ) $(C_) $(GLSRC)gdevstp-canon.c
 
-$(GLOBJ)gdevstp-ps.$(OBJ) : $(GLSRC)gdevstp-ps.c $(PDEVH) gdevstp-print.h
+$(GLOBJ)gdevstp-ps.$(OBJ) : $(GLSRC)gdevstp-ps.c $(PDEVH) $(GLSRC)gdevstp-print.h
 	$(GLCC) $(GLO_)gdevstp-ps.$(OBJ) $(C_) $(GLSRC)gdevstp-ps.c
