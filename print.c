@@ -96,6 +96,8 @@ static void     init_gtk (void);
 static int	do_print_dialog(void);
 static void	brightness_update(GtkAdjustment *);
 static void	brightness_callback(GtkWidget *);
+static void	saturation_update(GtkAdjustment *);
+static void	saturation_callback(GtkWidget *);
 static void	contrast_update(GtkAdjustment *);
 static void	contrast_callback(GtkWidget *);
 static void	red_update(GtkAdjustment *);
@@ -169,6 +171,7 @@ struct					/* Plug-in variables */
 	green,			/* Output green level */
 	blue;			/* Output blue level */
   gint	linear;			/* Linear density (mostly for testing!) */
+  float	saturation;		/* Output saturation */
 }		vars =
 {
 	"",			/* Name of file or command to print to */
@@ -190,7 +193,8 @@ struct					/* Plug-in variables */
 	100,			/* Red */
 	100,			/* Green */
 	100,			/* Blue */
-	0			/* Linear */
+	0,			/* Linear */
+	1.0			/* Output saturation */
 };
 
 GtkWidget	*print_dialog,		/* Print dialog window */
@@ -208,6 +212,8 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 		*scaling_ppi,		/* Scale by pixels-per-inch */
 		*brightness_scale,	/* Scale for brightness */
 		*brightness_entry,	/* Text entry widget for brightness */
+		*saturation_scale,	/* Scale for saturation */
+		*saturation_entry,	/* Text entry widget for saturation */
 		*contrast_scale,	/* Scale for contrast */
 		*contrast_entry,	/* Text entry widget for contrast */
 		*red_scale,		/* Scale for red */
@@ -232,6 +238,7 @@ GtkWidget	*print_dialog,		/* Print dialog window */
 
 GtkObject	*scaling_adjustment,	/* Adjustment object for scaling */
 		*brightness_adjustment,	/* Adjustment object for brightness */
+		*saturation_adjustment,	/* Adjustment object for brightness */
 		*contrast_adjustment,	/* Adjustment object for contrast */
 		*red_adjustment,	/* Adjustment object for red */
 		*green_adjustment,	/* Adjustment object for green */
@@ -372,6 +379,7 @@ query(void)
     { PARAM_INT32,	"green",	"Top offset (points, -1 = centered)" },
     { PARAM_INT32,	"blue",		"Top offset (points, -1 = centered)" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
+    { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
   };
   static int		nargs = sizeof(args) / sizeof(args[0]);
 
@@ -597,6 +605,11 @@ run(char   *name,		/* I - Name of print program. */
             vars.linear = param[21].data.d_int32;
           else
             vars.linear = 0;
+
+          if (nparams > 22)
+            vars.saturation = param[22].data.d_float;
+          else
+            vars.saturation = 100.0;
 	};
 
         for (i = 0; i < (sizeof(printers) / sizeof(printers[0])); i ++)
@@ -882,7 +895,7 @@ run(char   *name,		/* I - Name of print program. */
                         vars.media_size, vars.media_type, vars.media_source,
                         vars.output_type, vars.orientation, vars.scaling,
                         vars.left, vars.top, 1, prn, drawable, &lut, cmap,
-			&lut16);
+			&lut16, vars.saturation);
 
       if (plist_current > 0)
 #ifndef __EMX__
@@ -1451,6 +1464,42 @@ do_print_dialog(void)
   gtk_widget_show(entry);
 
  /*
+  * Saturation slider...
+  */
+
+  label = gtk_label_new(_("Saturation:"));
+  gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(label);
+
+  box = gtk_hbox_new(FALSE, 8);
+  gtk_table_attach(GTK_TABLE(table), box, 1, 4, 14, 15, GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(box);
+
+  saturation_adjustment = scale_data =
+      gtk_adjustment_new((float)vars.saturation, 0.1, 10.0, 0.001, 0.01, 1.0);
+
+  gtk_signal_connect(GTK_OBJECT(scale_data), "value_changed",
+		     (GtkSignalFunc)saturation_update, NULL);
+
+  saturation_scale = scale = gtk_hscale_new(GTK_ADJUSTMENT(scale_data));
+  gtk_box_pack_start(GTK_BOX(box), scale, FALSE, FALSE, 0);
+  gtk_widget_set_usize(scale, 200, 0);
+  gtk_scale_set_draw_value(GTK_SCALE(scale), FALSE);
+  gtk_range_set_update_policy(GTK_RANGE(scale), GTK_UPDATE_CONTINUOUS);
+  gtk_widget_show(scale);
+
+  saturation_entry = entry = gtk_entry_new();
+  sprintf(s, "%5.3f", vars.saturation);
+  gtk_entry_set_text(GTK_ENTRY(entry), s);
+  gtk_signal_connect(GTK_OBJECT(entry), "changed",
+		     (GtkSignalFunc)saturation_callback, NULL);
+  gtk_box_pack_start(GTK_BOX(box), entry, FALSE, FALSE, 0);
+  gtk_widget_set_usize(entry, 40, 0);
+  gtk_widget_show(entry);
+
+
+ /*
   * Printer option menu...
   */
 
@@ -1955,6 +2004,57 @@ gamma_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(gamma_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
+    };
+  };
+}
+
+
+
+/*
+ * 'saturation_update()' - Update the saturation field using the scale.
+ */
+
+static void
+saturation_update(GtkAdjustment *adjustment)	/* I - New value */
+{
+  char	s[255];					/* Text buffer */
+
+
+  if (vars.saturation != adjustment->value)
+  {
+    vars.saturation = adjustment->value;
+
+    sprintf(s, "%5.3f", vars.saturation);
+
+    gtk_signal_handler_block_by_data(GTK_OBJECT(saturation_entry), NULL);
+    gtk_entry_set_text(GTK_ENTRY(saturation_entry), s);
+    gtk_signal_handler_unblock_by_data(GTK_OBJECT(saturation_entry), NULL);
+
+    preview_update();
+  };
+}
+
+
+/*
+ * 'saturation_callback()' - Update the saturation scale using the text entry.
+ */
+
+static void
+saturation_callback(GtkWidget *widget)	/* I - Entry widget */
+{
+  gint		new_value;		/* New scaling value */
+
+
+  new_value = atoi(gtk_entry_get_text(GTK_ENTRY(widget)));
+
+  if (vars.saturation != new_value)
+  {
+    if ((new_value >= GTK_ADJUSTMENT(saturation_adjustment)->lower) &&
+	(new_value < GTK_ADJUSTMENT(saturation_adjustment)->upper))
+    {
+      GTK_ADJUSTMENT(saturation_adjustment)->value = new_value;
+
+      gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
     };
   };
 }

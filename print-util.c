@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.6  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
  *   Revision 1.5  1999/10/03 23:57:20  rlk
  *   Various improvements
  *
@@ -1443,7 +1446,9 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
              int    width,	/* I - Width of row */
              int    bpp,	/* I - Bytes-per-pixel in grayin */
              lut_t  *lut,	/* I - Brightness lookup table */
-             guchar *cmap)	/* I - Colormap (unused) */
+             guchar *cmap,	/* I - Colormap (unused) */
+	     float  saturation		/* I - Saturation */
+	     )
 {
   if (bpp == 1)
   {
@@ -1488,7 +1493,9 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
         	int    width,		/* I - Width of row */
         	int    bpp,		/* I - Bytes-per-pixel in indexed */
                 lut_t  *lut,		/* I - Brightness lookup table */
-                guchar *cmap)		/* I - Colormap */
+                guchar *cmap,		/* I - Colormap */
+		float  saturation	/* I - Saturation */
+		)
 {
   int		i;			/* Looping var */
   unsigned char	gray_cmap[256];		/* Grayscale colormap */
@@ -1538,7 +1545,9 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
                int    width,		/* I - Width of row */
                int    bpp,		/* I - Bytes-per-pixel in indexed */
                lut_t  *lut,		/* I - Brightness lookup table */
-               guchar *cmap)		/* I - Colormap */
+               guchar *cmap,		/* I - Colormap */
+	       float  saturation		/* I - Saturation */
+	       )
 {
   if (bpp == 1)
   {
@@ -1548,9 +1557,16 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgb[0] = lut->red[cmap[*indexed * 3 + 0]];
       rgb[1] = lut->green[cmap[*indexed * 3 + 1]];
       rgb[2] = lut->blue[cmap[*indexed * 3 + 2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgb, h, s, v);
+	}
       rgb += 3;
       indexed ++;
       width --;
@@ -1564,9 +1580,16 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgb[0] = lut->red[cmap[indexed[0] * 3 + 0] * indexed[1] / 255 + 255 - indexed[1]];
       rgb[1] = lut->green[cmap[indexed[0] * 3 + 1] * indexed[1] / 255 + 255 - indexed[1]];
       rgb[2] = lut->blue[cmap[indexed[0] * 3 + 2] * indexed[1] / 255 + 255 - indexed[1]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgb, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgb, h, s, v);
+	}
       rgb += 3;
       indexed += bpp;
       width --;
@@ -1585,7 +1608,9 @@ rgb_to_gray(guchar *rgb,		/* I - RGB pixels */
             int    width,		/* I - Width of row */
             int    bpp,			/* I - Bytes-per-pixel in RGB */
             lut_t  *lut,		/* I - Brightness lookup table */
-            guchar *cmap)		/* I - Colormap (unused) */
+            guchar *cmap,		/* I - Colormap (unused) */
+	    float  saturation		/* I - Saturation */
+	    )
 {
   if (bpp == 3)
   {
@@ -1633,7 +1658,9 @@ rgb_to_rgb(guchar *rgbin,		/* I - RGB pixels */
            int    width,		/* I - Width of row */
            int    bpp,			/* I - Bytes-per-pixel in indexed */
            lut_t  *lut,			/* I - Brightness lookup table */
-           guchar *cmap)		/* I - Colormap */
+           guchar *cmap,		/* I - Colormap */
+	   float  saturation		/* I - Saturation */
+	   )
 {
   if (bpp == 3)
   {
@@ -1643,9 +1670,16 @@ rgb_to_rgb(guchar *rgbin,		/* I - RGB pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgbout[0] = lut->red[rgbin[0]];
       rgbout[1] = lut->green[rgbin[1]];
       rgbout[2] = lut->blue[rgbin[2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
       rgbin += 3;
       rgbout += 3;
       width --;
@@ -1659,9 +1693,16 @@ rgb_to_rgb(guchar *rgbin,		/* I - RGB pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb(rgbout, h, s, v);
+	}
       rgbin += bpp;
       rgbout += 3;
       width --;
@@ -1680,7 +1721,9 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
 	     int    width,		/* I - Width of row */
 	     int    bpp,		/* I - Bytes-per-pixel in indexed */
 	     lut16_t *lut,		/* I - Brightness lookup table */
-	     guchar *cmap)		/* I - Colormap */
+	     guchar *cmap,		/* I - Colormap */
+	     float  saturation		/* I - Saturation */
+	     )
 {
   if (bpp == 3)
   {
@@ -1690,9 +1733,16 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgbout[0] = lut->red[rgbin[0]];
       rgbout[1] = lut->green[rgbin[1]];
       rgbout[2] = lut->blue[rgbin[2]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb16_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb16(rgbout, h, s, v);
+	}
       rgbin += 3;
       rgbout += 3;
       width --;
@@ -1706,9 +1756,16 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
 
     while (width > 0)
     {
+      double h, s, v;
       rgbout[0] = lut->red[rgbin[0] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[1] = lut->green[rgbin[1] * rgbin[3] / 255 + 255 - rgbin[3]];
       rgbout[2] = lut->blue[rgbin[2] * rgbin[3] / 255 + 255 - rgbin[3]];
+      if (saturation != 1.0)
+	{
+	  calc_rgb16_to_hsv(rgbout, &h, &s, &v);
+	  s = pow(s, 1.0 / saturation);
+	  calc_hsv_to_rgb16(rgbout, h, s, v);
+	}
       rgbin += bpp;
       rgbout += 3;
       width --;
@@ -1765,6 +1822,297 @@ default_media_size(int  model,		/* I - Printer model */
   };
 }
 
+/* Taken from common/autostretch_hsv.c */
+
+void
+calc_rgb_to_hsv(guchar *rgb, double *hue, double *sat, double *val)
+{
+  double red, green, blue;
+  double h, s, v;
+  double min, max;
+  double delta;
+
+  red   = rgb[0] / 255.0;
+  green = rgb[1] / 255.0;
+  blue  = rgb[2] / 255.0;
+
+  h = 0.0; /* Shut up -Wall */
+
+  if (red > green)
+    {
+      if (red > blue)
+	max = red;
+      else
+	max = blue;
+
+      if (green < blue)
+	min = green;
+      else
+	min = blue;
+    }
+  else
+    {
+      if (green > blue)
+	max = green;
+      else
+	max = blue;
+
+      if (red < blue)
+	min = red;
+      else
+	min = blue;
+    }
+
+  v = max;
+
+  if (max != 0.0)
+    s = (max - min) / max;
+  else
+    s = 0.0;
+
+  if (s == 0.0)
+    h = 0.0;
+  else
+    {
+      delta = max - min;
+
+      if (red == max)
+	h = (green - blue) / delta;
+      else if (green == max)
+	h = 2 + (blue - red) / delta;
+      else if (blue == max)
+	h = 4 + (red - green) / delta;
+
+      h /= 6.0;
+
+      if (h < 0.0)
+	h += 1.0;
+      else if (h > 1.0)
+	h -= 1.0;
+    }
+
+  *hue = h;
+  *sat = s;
+  *val = v;
+}
+
+void
+calc_hsv_to_rgb(guchar *rgb, double h, double s, double v)
+{
+  double hue, saturation, value;
+  double f, p, q, t;
+
+  if (s == 0.0)
+    {
+      h = v;
+      s = v;
+      v = v; /* heh */
+    }
+  else
+    {
+      hue        = h * 6.0;
+      saturation = s;
+      value      = v;
+
+      if (hue == 6.0)
+	hue = 0.0;
+
+      f = hue - (int) hue;
+      p = value * (1.0 - saturation);
+      q = value * (1.0 - saturation * f);
+      t = value * (1.0 - saturation * (1.0 - f));
+
+      switch ((int) hue)
+	{
+	case 0:
+	  h = value;
+	  s = t;
+	  v = p;
+	  break;
+
+	case 1:
+	  h = q;
+	  s = value;
+	  v = p;
+	  break;
+
+	case 2:
+	  h = p;
+	  s = value;
+	  v = t;
+	  break;
+
+	case 3:
+	  h = p;
+	  s = q;
+	  v = value;
+	  break;
+
+	case 4:
+	  h = t;
+	  s = p;
+	  v = value;
+	  break;
+
+	case 5:
+	  h = value;
+	  s = p;
+	  v = q;
+	  break;
+	}
+    }
+
+  rgb[0] = h*255;
+  rgb[1] = s*255;
+  rgb[2] = v*255;
+  
+}
+
+/* Taken from common/autostretch_hsv.c */
+
+void
+calc_rgb16_to_hsv(gushort *rgb, double *hue, double *sat, double *val)
+{
+  double red, green, blue;
+  double h, s, v;
+  double min, max;
+  double delta;
+
+  red   = rgb[0] / 65535.0;
+  green = rgb[1] / 65535.0;
+  blue  = rgb[2] / 65535.0;
+
+  h = 0.0; /* Shut up -Wall */
+
+  if (red > green)
+    {
+      if (red > blue)
+	max = red;
+      else
+	max = blue;
+
+      if (green < blue)
+	min = green;
+      else
+	min = blue;
+    }
+  else
+    {
+      if (green > blue)
+	max = green;
+      else
+	max = blue;
+
+      if (red < blue)
+	min = red;
+      else
+	min = blue;
+    }
+
+  v = max;
+
+  if (max != 0.0)
+    s = (max - min) / max;
+  else
+    s = 0.0;
+
+  if (s == 0.0)
+    h = 0.0;
+  else
+    {
+      delta = max - min;
+
+      if (red == max)
+	h = (green - blue) / delta;
+      else if (green == max)
+	h = 2 + (blue - red) / delta;
+      else if (blue == max)
+	h = 4 + (red - green) / delta;
+
+      h /= 6.0;
+
+      if (h < 0.0)
+	h += 1.0;
+      else if (h > 1.0)
+	h -= 1.0;
+    }
+
+  *hue = h;
+  *sat = s;
+  *val = v;
+}
+
+void
+calc_hsv_to_rgb16(gushort *rgb, double h, double s, double v)
+{
+  double hue, saturation, value;
+  double f, p, q, t;
+
+  if (s == 0.0)
+    {
+      h = v;
+      s = v;
+      v = v; /* heh */
+    }
+  else
+    {
+      hue        = h * 6.0;
+      saturation = s;
+      value      = v;
+
+      if (hue == 6.0)
+	hue = 0.0;
+
+      f = hue - (int) hue;
+      p = value * (1.0 - saturation);
+      q = value * (1.0 - saturation * f);
+      t = value * (1.0 - saturation * (1.0 - f));
+
+      switch ((int) hue)
+	{
+	case 0:
+	  h = value;
+	  s = t;
+	  v = p;
+	  break;
+
+	case 1:
+	  h = q;
+	  s = value;
+	  v = p;
+	  break;
+
+	case 2:
+	  h = p;
+	  s = value;
+	  v = t;
+	  break;
+
+	case 3:
+	  h = p;
+	  s = q;
+	  v = value;
+	  break;
+
+	case 4:
+	  h = t;
+	  s = p;
+	  v = value;
+	  break;
+
+	case 5:
+	  h = value;
+	  s = p;
+	  v = q;
+	  break;
+	}
+    }
+
+  rgb[0] = h*65535;
+  rgb[1] = s*65535;
+  rgb[2] = v*65535;
+  
+}
 
 /*
  * End of "$Id$".

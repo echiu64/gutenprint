@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
  *
@@ -406,7 +409,9 @@ pcl_print(int       model,		/* I - Model */
           GDrawable *drawable,		/* I - Image to print */
           lut_t     *lut,		/* I - Brightness lookup table */
 	  guchar    *cmap,		/* I - Colormap (for indexed images) */
-	  lut16_t   *lut16)		/* I - Brightness lookup table (16-bit) */
+	  lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	  float     saturation		/* I - Saturation */
+	  )
 {
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
@@ -854,7 +859,8 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
       };
 
-      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap);
+      (*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
+		   saturation);
 
       if (xdpi == 300 && model == 800)
       {
@@ -943,7 +949,8 @@ pcl_print(int       model,		/* I - Model */
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
       };
 
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap);
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+		   saturation);
 
       if (xdpi == 300 && model == 800)
       {

@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
  *
@@ -514,7 +517,9 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
          GDrawable *drawable,		/* I - Image to print */
          lut_t     *lut,		/* I - Brightness lookup table */
 	 guchar    *cmap,		/* I - Colormap (for indexed images) */
-	 lut16_t   *lut16)		/* I - Brightness lookup table (16-bit) */
+	 lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	 float     saturation		/* I - Saturation */
+	 )
 {
   int		i, j;		/* Looping vars */
   int		x, y;		/* Looping vars */
@@ -850,7 +855,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap);
+      (*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+		   saturation);
 
       ps_hex(prn, out, drawable->width * out_bpp);
     };
@@ -893,7 +899,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         gimp_progress_update((double)y / (double)drawable->height);
 
       gimp_pixel_rgn_get_row(&rgn, in, 0, y, drawable->width);
-      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut, cmap);
+      (*colorfunc)(in, out + out_offset, drawable->width, drawable->bpp, lut, cmap,
+		   saturation);
 
       out_length = out_offset + drawable->width * out_bpp;
 

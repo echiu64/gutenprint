@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  1999/10/14 01:59:59  rlk
+ *   Saturation
+ *
  *   Revision 1.4  1999/10/03 23:57:20  rlk
  *   Various improvements
  *
@@ -335,7 +338,9 @@ escp2_print(int       model,		/* I - Model */
             GDrawable *drawable,	/* I - Image to print */
             lut_t     *lut,		/* I - Brightness lookup table */
             guchar    *cmap,		/* I - Colormap (for indexed images) */
-	    lut16_t   *lut16)		/* I - Brightness lookup table (16-bit) */
+	    lut16_t   *lut16,		/* I - Brightness lookup table (16-bit) */
+	    float     saturation	/* I - Saturation */
+	    )
 {
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
@@ -723,9 +728,11 @@ escp2_print(int       model,		/* I - Model */
       };
 
       if (colorfunc)
-	(*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap);
+	(*colorfunc)(in, out, drawable->height, drawable->bpp, lut, cmap,
+		     saturation);
       else if (colorfunc16)
-	(*colorfunc16)(in, out16, drawable->height, drawable->bpp, lut16, cmap);
+	(*colorfunc16)(in, out16, drawable->height, drawable->bpp, lut16, cmap,
+		       saturation);
 
       if (output_type == OUTPUT_GRAY)
       {
@@ -796,9 +803,11 @@ escp2_print(int       model,		/* I - Model */
       };
 
       if (colorfunc)
-	(*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap);
+	(*colorfunc)(in, out, drawable->width, drawable->bpp, lut, cmap,
+		     saturation);
       else if (colorfunc16)
-	(*colorfunc16)(in, out16, drawable->width, drawable->bpp, lut16, cmap);
+	(*colorfunc16)(in, out16, drawable->width, drawable->bpp, lut16, cmap,
+		       saturation);
 
       if (output_type == OUTPUT_GRAY)
       {
