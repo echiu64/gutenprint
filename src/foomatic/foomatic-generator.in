@@ -468,8 +468,8 @@ for $drivertype (@drivertypes) {
 	    $template =~ s!\@\@SHORTNAME\@\@!$shortname!g;
 	    $template =~ s!\@\@ORDER\@\@!$order!g;
 	    #$order += 10;
-	    $template =~ s!\@\@SPOT\@\@!"B"!g;
-	    $template =~ s!\@\@PROTO\@\@!"$stpopt=\%s,"!g;
+	    $template =~ s!\@\@SPOT\@\@!B!g;
+	    $template =~ s!\@\@PROTO\@\@!$stpopt=\%s,!g;
 	}
 
 	# Now do special-purpose substitutions
@@ -483,12 +483,18 @@ for $drivertype (@drivertypes) {
 	if ($template =~ m!\@\@OPTCONSTRAINTS\@\@!) {
 	    my $substitution = ($num_opt ? build_num_cons($fooopt) : 
 				build_cons($stpopt));
+	    # Skip this option if there are no constraints (no printers
+	    # using this option)
+	    next if $substitution !~ m!</constraint>!s;
 	    if (defined($substitution)) {
 		$template =~ s!\@\@OPTCONSTRAINTS\@\@!$substitution!g;
 	    }
 	}
 	if ($template =~ m!\@\@ENUMVALS\@\@!) {
 	    my $substitution = build_ev($stpopt);
+	    # Skip this option if there are no choices (an enum option
+	    # without choices does not make sense)
+	    next if $substitution !~ m!</ev_shortname>!s;
 	    if (defined($substitution)) {
 		$template =~ s!\@\@ENUMVALS\@\@!$substitution!g;
 	    }
@@ -705,8 +711,10 @@ sub build_num_cons {
 	# Add this printer to argument constraints? The printer must provide
 	# this option and a default value for it.
 	my $stpdef;
-	if (($stpdef = $stp_float_values{$stpname}{"DEFVAL"}{$stpopt}) ||
-	    ($stpdef = $stp_int_values{$stpname}{"DEFVAL"}{$stpopt})) {
+	if ((defined($stpdef = 
+		     $stp_float_values{$stpname}{"DEFVAL"}{$stpopt})) ||
+	    (defined($stpdef =
+		     $stp_int_values{$stpname}{"DEFVAL"}{$stpopt}))) {
 	    # Find minimum and maximum
 	    my ($min, $max);
 	    if ($type eq "float") {

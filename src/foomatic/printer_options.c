@@ -128,7 +128,7 @@ main(int argc, char **argv)
 		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
 		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			 driver, desc.name, _(desc.help));
+			 driver, desc.name, (desc.help ? _(desc.help) : "''"));
 		}
 	    }
 	  else if (desc.p_type == STP_PARAMETER_TYPE_INT)
@@ -147,7 +147,7 @@ main(int argc, char **argv)
 		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
 		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			 driver, desc.name, _(desc.help));
+			 driver, desc.name, (desc.help ? _(desc.help) : "''"));
 		}
 	    }
 	  stp_parameter_description_free(&desc);
