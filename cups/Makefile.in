@@ -26,6 +26,8 @@
 # Definitions...
 #
 
+AR	=	ar
+ARFLAGS	=	crvs
 CC	=	@CC@
 CFLAGS	=	@CFLAGS@ @DEFS@
 CHMOD	=	@CHMOD@
@@ -34,6 +36,7 @@ LDFLAGS	=	@LDFLAGS@
 LIBS	=	@LIBS@
 MKDIR	=	@MKDIR@
 PREFIX	=	@prefix@
+RANLIB	=	:
 
 
 #
@@ -53,8 +56,10 @@ PREFIX	=	@prefix@
 #
 
 TARGETS	=	calibrate commandtoepson epson epson.dep genppd \
-		rastertoepson
-OBJS	=	calibrate.o commandtoepson.o epson.o genppd.o rastertoepson.o
+		libutil.a rastertoepson
+LIBOBJS	=	check.o dither.o pack.o
+OBJS	=	$(LIBOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
+		rastertoepson.o
 
 
 #
@@ -145,12 +150,26 @@ genppd:	genppd.o
 
 
 #
+# libutil.a
+#
+
+libutil.a:	$(LIBOBJS)
+	$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(LIBOBJS)
+	$(RANLIB) $@
+
+$(LIBOBJS):	util.h
+
+
+#
 # rastertoepson
 #
 
-rastertoepson:	rastertoepson.o
+rastertoepson:	rastertoepson.o libutil.a
 	echo Linking $@...
-	$(CC) $(LDFLAGS) -o rastertoepson rastertoepson.o $(LIBS)
+	$(CC) $(LDFLAGS) -o rastertoepson rastertoepson.o libutil.a $(LIBS)
+
+rastertoepson.o:	util.h
 
 
 #
