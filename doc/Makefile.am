@@ -23,6 +23,8 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+SUBDIRS = users_guide
+
 
 ## Variables
 
@@ -54,7 +56,7 @@ all-local: html
 	    echo "all-local: Not removing manual-html" ; \
 	  else \
 	    rm -rf manual-html ; \
-	    ln -s $(srcdir)/manual-html manual-html ; \
+	    $(LN_S) $(srcdir)/manual-html manual-html ; \
 	  fi \
 	else \
 	  echo "all-local: $(srcdir)/manual-html not found" ; \

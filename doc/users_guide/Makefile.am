@@ -23,12 +23,13 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
+
 ## Variables
 
 RELEASE_DIR = users_guide
 VERSION = 4.1.99-b3
 MANUAL = gimp-print-users-guide-$(VERSION)
-HTML_DIR = $(srcdir)/$(MANUAL)
+HTML_DIR = $(MANUAL)
 
 OUTPUTS = \
  $(MANUAL).pdf \
@@ -39,10 +40,14 @@ DISTDIRS = figures
 
 CATALOG_FILES = /etc/sgml/catalog
 
+PNG_IMAGES = $(wildcard figures/*.png)
+
+EPS_IMAGES = $(addsuffix .eps,$(basename $(PNG_IMAGES)))
+PDF_IMAGES = $(addsuffix .pdf,$(basename $(PNG_IMAGES)))
 
 ## Rules
 
-all:  $(MANUAL).sgml $(OUTPUTS)
+old-all:  $(MANUAL).sgml $(OUTPUTS)
 
 release: $(RELEASE_DIR).tar.gz
 
@@ -63,29 +68,64 @@ dist-hook:
 # However, the pictures are missing.  I don't know
 # what format to supply to DocBook get the correct output.
 #
-#$(MANUAL).pdf:  $(MANUAL).sgml
+#$(MANUAL).pdf:  $(MANUAL).sgml $(PDF_IMAGES)
 #	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
-#		$(DB2PDF) $(MANUAL).sgml
+#	$(DB2PDF) $(MANUAL).sgml
+
+pdf: $(MANUAL).pdf
 
 $(MANUAL).pdf: $(MANUAL).ps
 	$(PS2PDF) $(MANUAL).ps $(MANUAL).pdf
 
-$(MANUAL).ps:  $(MANUAL).sgml
+%.pdf:
+	if test ! -d figures ; then \
+	  mkdir figures ; \
+	fi
+	$(CONVERT_PROG) $(srcdir)/$(basename $@).png EPDF:$@
+
+ps: $(MANUAL).ps
+
+$(MANUAL).ps:  $(MANUAL).sgml $(EPS_IMAGES)
 	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
 	$(DB2PS) $(MANUAL).sgml
+
+%.eps:
+	if test ! -d figures ; then \
+	  mkdir figures ; \
+	fi
+	$(CONVERT_PROG) $(srcdir)/$(basename $@).png EPS2:$@
 
 $(MANUAL).ps.gz: $(MANUAL).ps
 	rm -f $(MANUAL).ps.gz
 	$(GZIP) -9 $(MANUAL).ps
 
-html: $(MANUAL).sgml
-	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
-	$(DB2HTML) $(MANUAL).sgml
-	if [ ! -L $(MANUAL)/figures ]; then \
-	  cd $(HTML_DIR); \
-	  $(LN_S) ../figures figures; \
+html: html-stamp
+html-stamp: $(MANUAL).sgml
+	if test x$(DB2HTML) = x ; then \
+	  echo "html-stamp: db2html not found: not regenerating HTML manual" ; \
+	else \
+	  export SGML_CATALOG_FILES=$(CATALOG_FILES) ; \
+	  $(DB2HTML) $(MANUAL).sgml ; \
+	  if [ ! -L $(MANUAL)/figures ] ; then \
+	    cd $(HTML_DIR) ; \
+	    $(LN_S) ../figures figures ; \
+	  fi ; \
+	  $(LN_S) $(MANUAL) html ; \
+	fi ; \
+	touch html-stamp
+
+tmp-all-local: html
+	if test -d $(srcdir)/$(HTML_DIR) ; then \
+	  if test "$(srcdir)" = "." ; then \
+	    echo "all-local: Not removing manual-html" ; \
+	  else \
+	    rm -rf $(HTML_DIR) ; \
+	    $(LN_S) $(srcdir)/$(HTML_DIR) $(HTML_DIR) ; \
+	  fi \
+	  else \
+	    echo "all-local: $(srcdir)/$(HTML_DIR) not found" ; \
 	fi
-	$(LN_S) $(MANUAL) html
+
 
 $(RELEASE_DIR).tar.gz: $(OUTPUTS)
 	rm -fr $(RELEASE_DIR)
@@ -101,6 +141,7 @@ clean-local:
 	rm -f $(MANUAL).out
 	rm -fr db2html.*
 	rm -fr $(RELEASE_DIR)
+	rm -rf figures/*.eps figures/*.pdf
 
 #
 # This is my (so far failed) attempt to create an index for this documentation.

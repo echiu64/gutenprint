@@ -305,6 +305,7 @@ fi
 AC_PATH_PROG(DB2PDF, db2pdf)
 AC_PATH_PROG(DB2PS, db2ps)
 AC_PATH_PROG(DB2HTML, db2html)
+AC_PATH_PROG(PS2PDF, ps2pdf)
 AC_PATH_PROG(JADE, jade)
 AC_PATH_PROG(GZIP, gzip)
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
