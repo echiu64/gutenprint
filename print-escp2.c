@@ -31,6 +31,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.56  2000/02/06 11:44:12  sharkey
+ *   Don't cut corners by padding the 32 bit horizontal shifts with 0's in the
+ *   upper 16 bits.  Do the full shifting and masking.  This is important when
+ *   the relative offset is negative.
+ *
  *   Revision 1.55  2000/02/06 03:59:09  rlk
  *   More work on the generalized dithering parameters stuff.  At this point
  *   it really looks like a proper object.  Also dynamically allocate the error
@@ -1644,8 +1649,10 @@ escp2_write(FILE          *prn,		/* I - Print file or command */
       if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK,
 			MODEL_VARIABLE_4))
 	fprintf(prn, "\033(/%c%c%c%c%c%c", 4, 0,
-		(offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8,
-		0, 0);
+		(offset * 1440 / ydpi) & 255,
+		((offset * 1440 / ydpi) >> 8) & 255,
+		((offset * 1440 / ydpi) >> 16) & 255,
+		((offset * 1440 / ydpi) >> 24) & 255);
       else
 	fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		(offset * 1440 / ydpi) & 255, (offset * 1440 / ydpi) >> 8);
@@ -2243,8 +2250,9 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 			    MODEL_VARIABLE_4))
 	    fprintf(prn, "\033(/%c%c%c%c%c%c", 4, 0,
 		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
-		    ((hoffset * 1440 / ydpi) + microoffset) >> 8,
-		    0, 0);
+		    (((hoffset * 1440 / ydpi) + microoffset) >> 8) & 255,
+		    (((hoffset * 1440 / ydpi) + microoffset) >> 16) & 255,
+		    (((hoffset * 1440 / ydpi) + microoffset) >> 24) & 255);
 	  else
 	    fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		    ((hoffset * 1440 / ydpi) + microoffset) & 255,
