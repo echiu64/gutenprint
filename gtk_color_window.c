@@ -230,7 +230,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     contrast_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.contrast, 25.0, 401.0, 1.0, 1.0, 1.0);
+	gtk_adjustment_new((float)vars.contrast, 0.0, 401.0, 1.0, 1.0, 1.0);
 
     gtk_signal_connect(GTK_OBJECT(contrast_adjustment),
 		       "value_changed",

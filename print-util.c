@@ -249,7 +249,7 @@ lookup_value(unsigned short value, int lut_size, unsigned short *lut)
 	unsigned below = lut[subrange];
 	unsigned above;
 	if (subrange == lut_size - 1)
-	  above = 65535;
+	  above = lut[subrange];
 	else
 	  above = lut[subrange + 1];
 	if (above == below)
@@ -267,7 +267,7 @@ lookup_value(unsigned short value, int lut_size, unsigned short *lut)
     if (remainder == 0)
       return below;
     if (subrange == (lut_size - 1))
-      above = 65535;
+      above = lut[subrange];
     else
       above = lut[subrange + 1];
     if (above == below)
@@ -1152,10 +1152,16 @@ compute_lut(size_t steps, vars_t *uv)
 	temp_pixel = 1.0 - pixel;
       else
 	temp_pixel = pixel;
-      if (contrast >= 1)
-	temp_pixel = .5 * pow(2 * temp_pixel, 1.0 / contrast);
+      if (pixel <= .000001 && contrast <= .0001)
+	temp_pixel = .5;
       else
-	temp_pixel = temp_pixel * contrast;
+	temp_pixel = .5 * pow(2 * temp_pixel, contrast * contrast * contrast);
+      if (contrast < 1)
+	temp_pixel = 0.5 - ((0.5 - temp_pixel) * contrast);
+      if (pixel > .5)
+	pixel = .5;
+      else if (pixel < 0)
+	pixel = 0;
       if (pixel < .5)
 	pixel = temp_pixel;
       else

@@ -354,7 +354,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   code = stp_put_param_int(plist, "Brightness", &stp_data.v.brightness,
 			   0, 400, code);
   code = stp_put_param_int(plist, "Contrast", &stp_data.v.contrast,
-			   25, 400, code);
+			   0, 400, code);
   code = stp_put_param_int(plist, "Color", &stp_data.v.output_type,
 			   0, 1, code);
   code = stp_put_param_int(plist, "ImageType", &stp_data.v.image_type,
