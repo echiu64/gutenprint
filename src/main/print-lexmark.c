@@ -1568,7 +1568,7 @@ lexmark_describe_resolution(printer,
   fprintf(stderr,"density is %f\n",stp_get_density(nv));
 #endif
 
-#ifndef DEBUG
+#ifdef DEBUG
   fprintf(stderr,"density is %f and will be changed to %f  (%f)\n",stp_get_density(nv), stp_get_density(nv)/densityDivisor, densityDivisor);
 #endif
   /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
