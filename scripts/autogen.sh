@@ -16,6 +16,13 @@ else
   mkdir m4local
 fi
 
+echo "Making \`configure.in' a symbolic link to \`configure.ac'"
+echo "to work around a bug in libtool < 1.4.2a"
+if test -f configure.in ; then
+  rm -f configure.in
+fi
+ln -s configure.ac configure.in
+
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`autoconf' installed to compile gimp-print."
