@@ -3012,7 +3012,7 @@ canon_write(stp_vars_t v,		/* I - Print file or command */
 
   if (*empty) {
     stpi_zfwrite("\033\050\145\002\000", 5, 1, v);
-    stpi_put16_le(*empty, v);
+    stpi_put16_be(*empty, v);
     *empty= 0;
   }
 
