@@ -1173,9 +1173,8 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "AdjustDotsize") == 0)
     {
-      if (using_automatic_settings(v, AUTO_MODE_MANUAL))
-	description->deflt.boolean = 1;
-      else
+      description->deflt.boolean = 0;
+      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
   else if (strcmp(name, "CyanDensity") == 0)
