@@ -298,7 +298,7 @@ static escp2_printer_t model_capabilities[] =
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
-     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_NO),
+     | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
     32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 1
   },
   /* 12: Stylus Color 740 */
@@ -344,7 +344,14 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
     48, 6, 144, 360, 0, 2, INCH_13, INCH_19, 9, 9, 9, 18, 1
-  }
+  },
+  /* 18: Stylus Color 660 */
+  {
+    (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES
+     | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_YES | MODEL_1440DPI_YES),
+    32, 8, 64, 720, 0, 3, INCH_8_5, INCH_14, 9, 9, 9, 18, 8
+  },
 };
 
 typedef struct {
@@ -1123,8 +1130,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     {
       dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-      dither_set_black_lower(dither, .4);
-      dither_set_black_upper(dither, .7);
+      dither_set_black_lower(dither, .3);
+      dither_set_black_upper(dither, .5);
     }
   if (bits == 2)
     {
@@ -2930,6 +2937,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.130  2000/04/24 23:43:50  rlk
+ *   Try to support Epson 660
+ *
  *   Revision 1.129  2000/04/24 01:04:26  rlk
  *   fix warning in gtk_main_window.c
  *
