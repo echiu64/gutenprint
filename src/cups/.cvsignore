@@ -8,6 +8,7 @@ commandtoepson
 cups-calibrate
 cups-genppd
 cups-genppdconfig
+cups-genppdupdate
 epson
 genppd
 ppd

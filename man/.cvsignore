@@ -4,6 +4,7 @@ gimpprint.3
 cups-calibrate.8
 cups-genppd.8
 cups-genppdconfig.8
+cups-genppdupdate.8
 escputil.1
 gimpprint-config.1
 gimpprint-color.7
@@ -16,4 +17,3 @@ gimpprint-mediatypes.7
 gimpprint-models.7
 gimpprint-resolutions.7
 ijsgimpprint.1
-

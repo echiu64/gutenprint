@@ -22,3 +22,5 @@ m4local
 stamp-h
 stamp-h*
 stamp-h.in
+gimp-print*.tar.gz
+gimp-print*.tar.bz2
