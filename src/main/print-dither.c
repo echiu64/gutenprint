@@ -1592,7 +1592,7 @@ generate_black(dither_t *d,
     }
   else
     {
-      xstep  = 3 * (d->src_width / d->dst_width);
+      xstep  = d->src_width / d->dst_width;
       xmod   = d->src_width % d->dst_width;
       xerror = 0;
       for (x = d->dst_width; x > 0; x--)
