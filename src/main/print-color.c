@@ -1478,6 +1478,75 @@ fast_gray_to_rgb(const stp_vars_t vars,
     }
 }
 
+static void
+cmyk_8_to_cmyk(const stp_vars_t vars,
+	       const unsigned char *cmykin,
+	       unsigned short *cmykout,
+	       int *zero_mask,
+	       int width,
+	       int bpp,
+	       const unsigned char *cmap,
+	       const double *hue_map,
+	       const double *lum_map,
+	       const double *sat_map)
+{
+  int i;
+  int j;
+  int nz[4];
+  for (i = 0; i < width; i++)
+    {
+      for (j = 0; j < 4; j++)
+	{
+	  nz[j] |= cmykin[j];
+	  cmykout[j] = cmykin[j] * 257;
+	}
+      cmykin += 4;
+      cmykout += 4;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
+      *zero_mask |= nz[1] ? 0 : 2;
+      *zero_mask |= nz[2] ? 0 : 4;
+      *zero_mask |= nz[3] ? 0 : 8;
+    }
+}
+
+static void
+cmyk_to_cmyk(const stp_vars_t vars,
+	     const unsigned char *cmykin,
+	     unsigned short *cmykout,
+	     int *zero_mask,
+	     int width,
+	     int bpp,
+	     const unsigned char *cmap,
+	     const double *hue_map,
+	     const double *lum_map,
+	     const double *sat_map)
+{
+  int i;
+  int j;
+  int nz[4];
+  const unsigned short *scmykin = (const unsigned short *) cmykin;
+  for (i = 0; i < width; i++)
+    {
+      for (j = 0; j < 4; j++)
+	{
+	  nz[j] |= cmykin[j];
+	  cmykout[j] = scmykin[j];
+	}
+      scmykin += 4;
+      cmykout += 4;
+    }
+  if (zero_mask)
+    {
+      *zero_mask = nz[0] ? 0 : 1;
+      *zero_mask |= nz[1] ? 0 : 2;
+      *zero_mask |= nz[2] ? 0 : 4;
+      *zero_mask |= nz[3] ? 0 : 8;
+    }
+}
+
 static lut_t *
 allocate_lut(size_t steps)
 {
@@ -1707,6 +1776,19 @@ stp_choose_colorfunc(int output_type,
 	  return rgb_to_monochrome;
 	case 4:
 	  return rgb_alpha_to_monochrome;
+	default:
+	  return NULL;
+	}
+    }
+  else if (output_type == OUTPUT_RAW_CMYK)
+    {
+      *out_bpp = 4;
+      switch (image_bpp)
+	{
+	case 4:
+	  return cmyk_8_to_cmyk;
+	case 8:
+	  return cmyk_to_cmyk;
 	default:
 	  return NULL;
 	}

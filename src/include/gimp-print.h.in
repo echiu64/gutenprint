@@ -81,7 +81,8 @@ const char* stp_check_version (unsigned int required_major,
 
 #define OUTPUT_GRAY		0	/* Grayscale output */
 #define OUTPUT_COLOR		1	/* Color output */
-#define OUTPUT_GRAY_COLOR	2 	/* Grayscale output using color */
+#define OUTPUT_RAW_CMYK		2 	/* Raw CMYK output */
+#define OUTPUT_GRAY_COLOR	3 	/* Grayscale output using color */
 
 #define ORIENT_AUTO		-1	/* Best orientation */
 #define ORIENT_PORTRAIT		0	/* Portrait orientation */
