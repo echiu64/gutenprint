@@ -581,6 +581,7 @@
 #gptofoo pcl-2 printer/NEC-SuperScript_860
 #gptofoo pcl-2 printer/NEC-SuperScript_870
 #gptofoo pcl-2 printer/NEC-SuperScript_1260
+#gptofoo pcl-4 printer/NEC-SuperScript_1400
 #gptofoo pcl-4 printer/NEC-SuperScript_1800
 #gptofoo pcl-2 printer/Okidata-OL400
 #gptofoo pcl-2 printer/Okidata-OL400e
