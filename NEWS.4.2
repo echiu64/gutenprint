@@ -22,7 +22,7 @@ Gimp-Print 4.2 contains the following major changes over Gimp-Print
 4.0:
 
 
-Bugs Fixed from 4.0:
+Major Bugs Fixed from 4.0:
 
 1) A problem with fine black data printing incorrectly in 4.0 has been
    fixed.
@@ -47,7 +47,7 @@ General User-Visible Changes:
 
 1) Many additional printers are supported, including several Lexmark
    printers for the first time.  The list of supported printers is at
-   the bottom of this release note.
+   the bottom of this release memo.
 
 2) Default printing resolutions are 300x300 or 360x360 DPI for all
    printers, rather than the lowest available resolution.  On Epson
@@ -230,7 +230,8 @@ Incompatibilities between 4.0 and 4.2:
 3) The Foomatic data in the 4.2 distribution is generated during the
    build of the package, rather than being distributed statically.  It
    requires the latest version of the Foomatic driver, and is
-   incompatible with the Foomatic data in 4.0.
+   incompatible with the Foomatic data in 4.0.  The 4.2 driver is
+   named "Gimp-print" in Foomatic, as opposed to "stp" in 4.0.
 
 4) Printing pure black and white (not grayscale) images is different.
    The changes will be explained in the sections for each front end.
@@ -335,20 +336,20 @@ EPSON Stylus Photo EX
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790          (NEW)
-EPSON Stylus Photo 810/820              (NEW, not verified)
+EPSON Stylus Photo 810/820              (NEW, not verified, expected to work)
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895              (NEW)
 EPSON Stylus Photo 1200
 EPSON Stylus Photo 1270
 EPSON Stylus Photo 1280/1290            (NEW)
 EPSON Stylus Photo 2000P
-EPSON Stylus Pro 5000                   (NEW, not verified)
-EPSON Stylus Pro 5500                   (NEW, not verified)
-EPSON Stylus Pro 7000                   (NEW, not verified)
-EPSON Stylus Pro 7500                   (NEW, not verified)
-EPSON Stylus Pro 9000                   (NEW, not verified)
-EPSON Stylus Pro 9500                   (NEW, not verified)
-EPSON Stylus Pro 10000                  (NEW, not verified)
+EPSON Stylus Pro 5000                   (NEW, partially functional)
+EPSON Stylus Pro 5500                   (NEW, partially functional)
+EPSON Stylus Pro 7000                   (NEW, partially functional)
+EPSON Stylus Pro 7500                   (NEW, partially functional)
+EPSON Stylus Pro 9000                   (NEW, partially functional)
+EPSON Stylus Pro 9500                   (NEW, partially functional)
+EPSON Stylus Pro 10000                  (NEW, partially functional)
 EPSON Stylus Scan 2000                  (NEW)
 EPSON Stylus Scan 2500                  (NEW)
 HP DeskJet 340
