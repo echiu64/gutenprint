@@ -39,12 +39,25 @@ OS X</a> that answers most questions on how to use Gimp-Print with OS X 10.2
 "Jaguar" and provides direct download links. The final release of Gimp-Print 4.2.4 for Mac OS X Jaguar is available now!</p>
 
 
+<H2><font color="#ff0000">Gimp-Print 4.2.5-pre1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of December 8,
+2002!</strong></em></font> Gimp-Print 4.2.5-pre1 is released.  This is
+a beta pre-release on the Gimp-Print 4.2 release line.  This release
+offers major improvements particularly for users of the Epson Stylus
+Photo 925, 950, 960, 2100, and 2200, and the Stylus Pro 5000.  In
+addition to the source, an installation kit for Macintosh OS X 10.2 is
+available! <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=126890">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gimp-Print 4.2.4 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of November 25,
 2002!</strong></em></font> Gimp-Print 4.2.4 is released.  This is a
 stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 will shortly be
+source, an installation kit for Macintosh OS X 10.2 is
 available! <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=124368">You
 can read the release notes and download it here</a>.  </p>
@@ -55,7 +68,7 @@ can read the release notes and download it here</a>.  </p>
 <P><strong><em><font color="#ff0000">New as of October 19,
 2002!</strong></em></font> Gimp-Print 4.2.3 is released.  This is a
 stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 will shortly be
+source, an installation kit for Macintosh OS X 10.2 is
 available! <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=117216">You
 can read the release notes and download it here</a>.  </p>
@@ -66,7 +79,7 @@ can read the release notes and download it here</a>.  </p>
 <P><strong><em><font color="#ff0000">New as of September 14,
 2002!</strong></em></font> Gimp-Print 4.2.2 is released.  This is a
 stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 will shortly be
+source, an installation kit for Macintosh OS X 10.2 is
 available! <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=110475">You
 can read the release notes and download it here</a>.  </p>
