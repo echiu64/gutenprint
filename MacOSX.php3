@@ -32,6 +32,9 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
+ <a href="MacOSX.php3#4.2.4-pre1"><b>November 07, 2002 -</b></a> Gimp-Print 4.2.4-pre1, a testing pre-release is now available for download.
+ </p>
+ <p>
  <a href="MacOSX.php3#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
  </p>
  <br>
@@ -117,6 +120,29 @@ require('standard_html_header.php3');
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
+ <b>Gimp-Print 4.2.4-pre1</b>
+ </td>
+ </tr>
+ <tr>
+ <td bgcolor="#d0ffff" >
+ <a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-pre1.ppc.dmg?download"
+ >gimp-print-4.2.4-pre1.ppc.dmg</a>&nbsp;(5.1 MB)
+ </td>
+ <td align="right" >
+ (<a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-pre1.tar.gz?download"
+ >source</a>)
+ </td>
+ </tr>
+ <tr>
+ <td colspan="2" >
+ <p>
+ Gimp-Print 4.2.4-pre1 is the newest pre-release for Mac OS X; it includes bug fixes
+ over 4.2.3 but it may contain new bugs. This package requires (but does not include)
+ ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
+ necessary</b>).
+ </p>
  <b>ESP Ghostscript 7.05.5</b>
  </td>
  </tr>
@@ -193,6 +219,47 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.4-pre1"></a>
+ <B>Gimp-Print 4.2.4-pre1</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-11-07</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.4-pre1 is the newest pre-release build in the stable
+ 4.2 series; it contains the following improvements over Gimp-Print 4.2.3:
+ </p>
+ <ul>
+ <li> Serious color errors with Lexmark printers have been fixed.</li>
+ <li>An inability of CUPS to print certain page sizes has been fixed.</li>
+ <li> 6-color HP and Lexmark printers now print correctly.</li>
+ <li>The Epson Stylus Photo 950, 960, and PM-950C now print correctly
+     at 1440x1440 and 2880x720 DPI.  This is not a major fix; these
+     resolutions are actually printed at 2880x1440 DPI (which did not
+     have problems).  This printer (these are all different names for
+     the same printer) is not actually capable of printing at
+     1440x1440 or 2880x720 DPI.</li>
+ <li> Page sizes for some Canon printers have been corrected; A3-format
+     printing is now supported on appropriate printers.</li>
+ <li> Support for the Epson MJ-930C has been added.</li>
+ </ul>
+ <dl>
+ <dt>Bugs fixed in this release:
+ <dd>628698 Lexmark color reversal
+ <dd>630365 Epson Stylus Photo 950: Enlarged image with some 1440/2800
+ <dd>631498 Canon driver does not support A3 page size for large format
+ <dd>633910 Epson 1520 ppd bug gimp-print 4.2.3
+ </dl>
+ <p>For PPD related changes in the driver to take effect it may be
+ necessary to delete and recreate the printer in Print Center.</p>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.3"></a>
