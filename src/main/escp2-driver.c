@@ -172,6 +172,11 @@ print_debug_params(stp_vars_t v)
 	    print_remote_int_param(v, p->name,
 				   stp_get_int_parameter(v, p->name));
 	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  if (stp_check_boolean_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+	    print_remote_int_param(v, p->name,
+				   stp_get_boolean_parameter(v, p->name));
+	  break;
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  if (stp_check_string_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
 	    print_remote_param(v, p->name,
