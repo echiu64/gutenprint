@@ -14,6 +14,7 @@ raw.la
 array.lo
 bit-ops.lo
 channel.lo
+color.lo
 curve.lo
 dither-ed.lo
 dither-eventone.lo
@@ -26,8 +27,13 @@ escp2-driver.lo
 escp2-inks.lo
 escp2-papers.lo
 escp2-resolutions.lo
+generic-options.lo
 image.lo
 module.lo
+mxml-attr.lo
+mxml-file.lo
+mxml-node.lo
+mxml-search.lo
 path.lo
 print-canon.lo
 print-color.lo
