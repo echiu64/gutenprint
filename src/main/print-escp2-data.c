@@ -2897,10 +2897,10 @@ static const escp2_dot_size_t sp2000_dotsizes =
 { -1,   0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_dye_dotsizes =
-{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+{    0,   -1,    0,   -1,    0,   -1,    1,   -1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_pigment_dotsizes =
-{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+{    0,   -1,    0,   -1,    0,   -1,    1,   -1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro10000_dotsizes =
 {    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
@@ -3678,7 +3678,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     32, 1, 4, 32, 1, 4, 4,
     360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    10, 10, 9, 25, 10, 10, 9, 25, 10, 10, 9, 0, 10, 10, 9, 0,
+    9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0,
     0, 1, 8, 0, 0, 0, 8,
     sc660_dotsizes,sc660_densities, &simple_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
@@ -4159,7 +4159,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1, 0, 55, 0, 0, 0,
+    0, 1, 0, 0, 0, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
