@@ -30,6 +30,7 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
+#include <gimp-print/gimp-print-intl.h>
 #include "../../lib/libprintut.h"
 
 int
@@ -94,21 +95,41 @@ main(int argc, char **argv)
 	    }
 	  else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	    {
-	      printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f\n",
-		     driver, desc.name, desc.bounds.dbl.lower);
-	      printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f\n",
-		     driver, desc.name, desc.bounds.dbl.upper);
-	      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f\n",
-		     driver, desc.name, desc.deflt.dbl);
+	      if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
+		  desc.bounds.dbl.upper >= desc.deflt.dbl)
+		{
+		  printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f\n",
+			 driver, desc.name, desc.bounds.dbl.lower);
+		  printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f\n",
+			 driver, desc.name, desc.bounds.dbl.upper);
+		  printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f\n",
+			 driver, desc.name, desc.deflt.dbl);
+		  printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s'\n",
+			 driver, desc.name, _(desc.text));
+		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s'\n",
+			 driver, desc.name, _(desc.category));
+		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s)\n",
+			 driver, desc.name, _(desc.help));
+		}
 	    }
 	  else if (desc.p_type == STP_PARAMETER_TYPE_INT)
 	    {
-	      printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d\n",
-		     driver, desc.name, desc.bounds.integer.lower);
-	      printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d\n",
-		     driver, desc.name, desc.bounds.integer.upper);
-	      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d\n",
-		     driver, desc.name, desc.deflt.integer);
+	      if (desc.bounds.integer.lower <= desc.deflt.integer &&
+		  desc.bounds.integer.upper >= desc.deflt.integer)
+		{
+		  printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d\n",
+			 driver, desc.name, desc.bounds.integer.lower);
+		  printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d\n",
+			 driver, desc.name, desc.bounds.integer.upper);
+		  printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d\n",
+			 driver, desc.name, desc.deflt.integer);
+		  printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s'\n",
+			 driver, desc.name, _(desc.text));
+		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s'\n",
+			 driver, desc.name, _(desc.category));
+		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s)\n",
+			 driver, desc.name, _(desc.help));
+		}
 	    }
 	  stp_parameter_description_free(&desc);
 	  tcount += count;
