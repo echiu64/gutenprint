@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.9  2000/02/03 18:11:18  gandy
+ *   Preparations for some more printer models (to be continued...)
+ *
  *   Revision 1.8  2000/02/03 17:40:34  gandy
  *   Dirty left-border-treatment leaving an uncertainty of -4..+4 dots
  *
@@ -103,6 +106,7 @@ typedef struct {
   int max_ydpi;
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
+  int bjl;            /* special bjl settings */
 } canon_cap_t;
 
 #define CANON_INK_K           1
@@ -125,13 +129,28 @@ typedef struct {
 #define CANON_SLOT_1 (CANON_SLOT_ASF_1)
 #define CANON_SLOT_2 (CANON_SLOT_ASF_1|CANON_SLOT_MAN_1)
 
+#define CANON_BJL_CMD61    1
+
+#define CANON_BJL_0        0
+#define CANON_BJL_1        CANON_BJL_CMD61
+
 canon_cap_t canon_model_capabilities[] =
 {
-  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_1 },
-  { 6000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2 },
-  { 6100, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2 },
-  { 7000, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2 },
-  { 7100, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2 },
+  /* default settings for unkown models */
+  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_1, CANON_BJL_0 },
+
+  /* tested models */
+  { 6000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2, CANON_BJL_0 },
+
+  /* untested models */
+  { 1000, 11*72, 17*72,  720, 360, CANON_INK_4, CANON_SLOT_2, CANON_BJL_1 },
+  { 2000, 11*72, 17*72,  720, 360, CANON_INK_4, CANON_SLOT_2, CANON_BJL_1 },
+  { 3000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2, CANON_BJL_1 },
+  { 6100, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2, CANON_BJL_1 },
+  { 7000, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2, CANON_BJL_0 },
+  { 7100, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2, CANON_BJL_0 },
+
+
 };
 
 static canon_cap_t canon_get_model_capabilities(int model)
@@ -470,6 +489,8 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   /* init printer */
   canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
+  if (caps.bjl & CANON_BJL_CMD61) 
+    canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x01);
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
 
@@ -844,7 +865,7 @@ canon_print(int       model,		/* I - Model */
 	dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
 		    magenta, lmagenta, yellow, lyellow, black,1);
 
-      fprintf(stderr,".");
+      /* fprintf(stderr,"."); */
       canon_write_line(prn,
 		       black,    delay_k,
 		       cyan,     delay_c, 
@@ -902,7 +923,7 @@ canon_print(int       model,		/* I - Model */
 	dither_cmyk(out, y, image_width, out_width, cyan, lcyan,
 		    magenta, lmagenta, yellow, 0, black,1);
 
-      fprintf(stderr,",");
+      /* fprintf(stderr,","); */
 
       canon_write_line(prn,
 		       black,    delay_k,
@@ -985,6 +1006,8 @@ canon_print(int       model,		/* I - Model */
 
   /* say goodbye */
   canon_cmd(prn,ESC28,0x62,1,0);
+  if (caps.bjl & CANON_BJL_CMD61) 
+    canon_cmd(prn,ESC5b,0x61, 1, 0x00,0x00);
   canon_cmd(prn,ESC40,0,0);
 }
 
