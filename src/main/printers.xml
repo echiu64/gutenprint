@@ -177,7 +177,7 @@
         <model value="42"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C20UX" driver="escp2-c20ux">
@@ -185,7 +185,7 @@
         <model value="42"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C40SX" driver="escp2-c40sx">
@@ -193,7 +193,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C40UX" driver="escp2-c40ux">
@@ -201,7 +201,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C41SX" driver="escp2-c41sx">
@@ -209,7 +209,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C41UX" driver="escp2-c41ux">
@@ -217,7 +217,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C42SX" driver="escp2-c42sx">
@@ -225,7 +225,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C42UX" driver="escp2-c42ux">
@@ -233,7 +233,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C43SX" driver="escp2-c43sx">
@@ -241,7 +241,7 @@
         <model value="59"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C43UX" driver="escp2-c43ux">
@@ -249,7 +249,7 @@
         <model value="59"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C44SX" driver="escp2-c44sx">
@@ -257,7 +257,7 @@
         <model value="59"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C44UX" driver="escp2-c44ux">
@@ -265,7 +265,7 @@
         <model value="59"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C50" driver="escp2-c50">
@@ -273,25 +273,25 @@
         <model value="56"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C60" driver="escp2-c60">
         <color value="true"/>
         <model value="33"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C61" driver="escp2-c61">
         <color value="true"/>
         <model value="52"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C62" driver="escp2-c62">
         <color value="true"/>
         <model value="52"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus C70" driver="escp2-c70">
@@ -348,13 +348,13 @@
       <printer name="EPSON Stylus Color 440" driver="escp2-440">
         <color value="true"/>
         <model value="10"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 460" driver="escp2-460">
         <color value="true"/>
         <model value="10"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 480" driver="escp2-480">
@@ -362,7 +362,7 @@
         <model value="21"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 500" driver="escp2-500">
@@ -376,103 +376,103 @@
         <model value="38"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 600" driver="escp2-600">
         <color value="true"/>
         <model value="3"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 640" driver="escp2-640">
         <color value="true"/>
         <model value="11"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 660" driver="escp2-660">
         <color value="true"/>
         <model value="18"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 670" driver="escp2-670">
         <color value="true"/>
         <model value="25"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 680" driver="escp2-680">
         <color value="true"/>
         <model value="32"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 740" driver="escp2-740">
         <color value="true"/>
         <model value="12"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 760" driver="escp2-760">
         <color value="true"/>
         <model value="19"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 777" driver="escp2-777">
         <color value="true"/>
         <model value="32"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 800" driver="escp2-800">
         <color value="true"/>
         <model value="4"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 850" driver="escp2-850">
         <color value="true"/>
         <model value="5"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 860" driver="escp2-860">
         <color value="true"/>
         <model value="16"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 880" driver="escp2-880">
         <color value="true"/>
         <model value="33"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 83" driver="escp2-83">
         <color value="true"/>
         <model value="33"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 900" driver="escp2-900">
         <color value="true"/>
         <model value="13"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 980" driver="escp2-980">
         <color value="true"/>
         <model value="34"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 1160" driver="escp2-1160">
         <color value="true"/>
         <model value="17"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 1500" driver="escp2-1500">
@@ -484,55 +484,55 @@
       <printer name="EPSON Stylus Color 1520" driver="escp2-1520">
         <color value="true"/>
         <model value="6"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Color 3000" driver="escp2-3000">
         <color value="true"/>
         <model value="24"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo" driver="escp2-photo">
         <color value="true"/>
         <model value="9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 700" driver="escp2-700">
         <color value="true"/>
         <model value="7"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo EX" driver="escp2-ex">
         <color value="true"/>
         <model value="8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo EX3" driver="escp2-ex3">
         <color value="true"/>
         <model value="54"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 720" driver="escp2-720">
         <color value="true"/>
         <model value="20"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 750" driver="escp2-750">
         <color value="true"/>
         <model value="14"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 780" driver="escp2-780">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
     <!--
@@ -542,220 +542,220 @@
       <printer name="EPSON Stylus Photo 785EPX" driver="escp2-785">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 790" driver="escp2-790">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 810" driver="escp2-810">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 820" driver="escp2-820">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 825" driver="escp2-825">
         <color value="true"/>
         <model value="50"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 830" driver="escp2-830">
         <color value="true"/>
         <model value="50"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 870" driver="escp2-870">
         <color value="true"/>
         <model value="22"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 875" driver="escp2-875">
         <color value="true"/>
         <model value="22"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 890" driver="escp2-890">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 895" driver="escp2-895">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 900" driver="escp2-ph900">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 915" driver="escp2-915">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 925" driver="escp2-925">
         <color value="true"/>
         <model value="51"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 935" driver="escp2-935">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 950" driver="escp2-950">
         <color value="true"/>
         <model value="46"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 960" driver="escp2-960">
         <color value="true"/>
         <model value="46"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 1200" driver="escp2-1200">
         <color value="true"/>
         <model value="15"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 1270" driver="escp2-1270">
         <color value="true"/>
         <model value="23"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 1280" driver="escp2-1280">
         <color value="true"/>
         <model value="37"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 1290" driver="escp2-1290">
         <color value="true"/>
         <model value="37"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 2000P" driver="escp2-2000">
         <color value="true"/>
         <model value="26"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 2100" driver="escp2-2100">
         <color value="true"/>
         <model value="47"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo 2200" driver="escp2-2200">
         <color value="true"/>
         <model value="47"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 5000" driver="escp2-5000">
         <color value="true"/>
         <model value="27"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 5500" driver="escp2-5500">
         <color value="true"/>
         <model value="40"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 7000" driver="escp2-7000">
         <color value="true"/>
         <model value="28"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 7500" driver="escp2-7500">
         <color value="true"/>
         <model value="29"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 7600" driver="escp2-7600">
         <color value="true"/>
         <model value="48"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 9000" driver="escp2-9000">
         <color value="true"/>
         <model value="30"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 9500" driver="escp2-9500">
         <color value="true"/>
         <model value="31"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 9600" driver="escp2-9600">
         <color value="true"/>
         <model value="49"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Pro 10000" driver="escp2-10000">
         <color value="true"/>
         <model value="41"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Scan 2000" driver="escp2-scan2000">
         <color value="true"/>
         <model value="12"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Scan 2500" driver="escp2-scan2500">
         <color value="true"/>
         <model value="12"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus CX-3100" driver="escp2-cx3100">
         <color value="true"/>
         <model value="52"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus CX-3200" driver="escp2-cx3200">
         <color value="true"/>
         <model value="52"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus CX-5100" driver="escp2-cx5100">
@@ -781,7 +781,7 @@
         <model value="38"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON CL-750" driver="escp2-cl750">
@@ -789,7 +789,7 @@
         <model value="43"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON CL-760" driver="escp2-cl760">
@@ -797,58 +797,58 @@
         <model value="56"/>
         <magenta value="0.95"/>
         <yellow value="0.9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON EM-900C" driver="escp2-em900c">
         <color value="true"/>
         <model value="13"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON EM-930C" driver="escp2-em930c">
         <color value="true"/>
         <model value="34"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MC-2000" driver="escp2-mc2000">
         <color value="true"/>
         <model value="26"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MC-5000" driver="escp2-mc5000">
         <color value="true"/>
         <model value="40"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MC-7000" driver="escp2-mc7000">
         <color value="true"/>
         <model value="29"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MC-9000" driver="escp2-mc9000">
         <color value="true"/>
         <model value="31"/>
         <cyan value="0.8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MC-10000" driver="escp2-mc10000">
         <color value="true"/>
         <model value="41"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MJ-930C" driver="escp2-mj930c">
         <color value="true"/>
         <model value="4"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MJ-5100C" driver="escp2-mj5100c">
@@ -860,193 +860,193 @@
       <printer name="EPSON MJ-6000C" driver="escp2-mj6000c">
         <color value="true"/>
         <model value="6"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON MJ-8000C" driver="escp2-mj8000c">
         <color value="true"/>
         <model value="24"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-700C" driver="escp2-pm700c">
         <color value="true"/>
         <model value="9"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-730C" driver="escp2-pm730c">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-740C" driver="escp2-pm740c">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-750C" driver="escp2-pm750c">
         <color value="true"/>
         <model value="7"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-760C" driver="escp2-pm760c">
         <color value="true"/>
         <model value="20"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-770C" driver="escp2-pm770c">
         <color value="true"/>
         <model value="14"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-780C" driver="escp2-pm780c">
         <color value="true"/>
         <model value="35"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-790PT" driver="escp2-pm790pt">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-800C" driver="escp2-pm800c">
         <color value="true"/>
         <model value="22"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-850PT" driver="escp2-pm850pt">
         <color value="true"/>
         <model value="51"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-870C" driver="escp2-pm870c">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-880C" driver="escp2-pm880c">
         <color value="true"/>
         <model value="36"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-930C" driver="escp2-pm930c">
         <color value="true"/>
         <model value="58"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-940C" driver="escp2-pm940c">
         <color value="true"/>
         <model value="58"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-950C" driver="escp2-pm950c">
         <color value="true"/>
         <model value="53"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-970C" driver="escp2-pm970c">
         <color value="true"/>
         <model value="57"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-980C" driver="escp2-pm980c">
         <color value="true"/>
         <model value="57"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-2000C" driver="escp2-pm2000c">
         <color value="true"/>
         <model value="8"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-2200C" driver="escp2-pm2200c">
         <color value="true"/>
         <model value="54"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-3000C" driver="escp2-pm3000c">
         <color value="true"/>
         <model value="15"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-3300C" driver="escp2-pm3300c">
         <color value="true"/>
         <model value="23"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-3500C" driver="escp2-pm3500c">
         <color value="true"/>
         <model value="37"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-3700C" driver="escp2-pm3700c">
         <color value="true"/>
         <model value="37"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-4000PX" driver="escp2-pm4000px">
         <color value="true"/>
         <model value="47"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-5000C" driver="escp2-pm5000c">
         <color value="true"/>
         <model value="27"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-7000C" driver="escp2-pm7000c">
         <color value="true"/>
         <model value="28"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-9000C" driver="escp2-pm9000c">
         <color value="true"/>
         <model value="30"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PM-10000" driver="escp2-pm10000">
         <color value="true"/>
         <model value="41"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PX-7000" driver="escp2-px7000">
         <color value="true"/>
         <model value="48"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
       <printer name="EPSON PX-9000" driver="escp2-px9000">
         <color value="true"/>
         <model value="49"/>
-        <gamma value="0.585"/>
+        <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
     </family>

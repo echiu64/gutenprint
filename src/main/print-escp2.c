@@ -48,6 +48,13 @@
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+typedef struct
+{
+  const char *attr_name;
+  short bit_shift;
+  short bit_width;
+} escp2_printer_attr_t;
+
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
@@ -858,10 +865,10 @@ static const paper_adjustment_t *
 get_media_adjustment(stp_const_vars_t v)
 {
   const paper_t *pt = get_media_type(v);
-  const escp2_inkname_t *inkname = get_inktype(v);
-  if (pt && inkname && inkname->papers)
+  const inklist_t *ink_list = escp2_inklist(v);
+  if (pt && ink_list && ink_list->paper_adjustments)
     {
-      const paper_adjustment_list_t *adjlist = inkname->papers;
+      const paper_adjustment_list_t *adjlist = ink_list->paper_adjustments;
       const char *paper_name = pt->name;
       int i;
       for (i = 0; i < adjlist->paper_count; i++)
@@ -1560,9 +1567,7 @@ static void
 adjust_print_quality(stp_vars_t v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  stp_curve_t   lum_adjustment = NULL;
-  stp_curve_t   sat_adjustment = NULL;
-  stp_curve_t   hue_adjustment = NULL;
+  stp_curve_t   adjustment = NULL;
   const paper_adjustment_t *pt;
   double k_upper = 1.0;
   double k_lower = 0;
@@ -1590,32 +1595,29 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
   if (!stp_check_float_parameter(v, "GCRUpper", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRUpper", k_upper);
 
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
+      pt->hue_adjustment)
     {
-      hue_adjustment = stpi_read_and_compose_curves
-	(pd->inkname->hue_adjustment, pt ? pt->hue_adjustment : NULL,
-	 STP_CURVE_COMPOSE_ADD);
-      stp_set_curve_parameter(v, "HueMap", hue_adjustment);
+      adjustment = stp_curve_create_from_string(pt->hue_adjustment);
+      stp_set_curve_parameter(v, "HueMap", adjustment);
       stp_set_curve_parameter_active(v, "HueMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(hue_adjustment);
+      stp_curve_free(adjustment);
     }
-  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
+      pt->sat_adjustment)
     {
-      sat_adjustment = stpi_read_and_compose_curves
-	(pd->inkname->sat_adjustment, pt ? pt->sat_adjustment : NULL,
-	 STP_CURVE_COMPOSE_MULTIPLY);
-      stp_set_curve_parameter(v, "SatMap", sat_adjustment);
+      adjustment = stp_curve_create_from_string(pt->sat_adjustment);
+      stp_set_curve_parameter(v, "SatMap", adjustment);
       stp_set_curve_parameter_active(v, "SatMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(sat_adjustment);
+      stp_curve_free(adjustment);
     }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
+  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
+      pt->lum_adjustment)
     {
-      lum_adjustment = stpi_read_and_compose_curves
-	(pd->inkname->lum_adjustment, pt ? pt->lum_adjustment : NULL,
-	 STP_CURVE_COMPOSE_MULTIPLY);
-      stp_set_curve_parameter(v, "LumMap", lum_adjustment);
+      adjustment = stp_curve_create_from_string(pt->lum_adjustment);
+      stp_set_curve_parameter(v, "LumMap", adjustment);
       stp_set_curve_parameter_active(v, "LumMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(lum_adjustment);
+      stp_curve_free(adjustment);
     }
 }
 

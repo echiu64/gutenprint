@@ -467,9 +467,9 @@ update_cmyk(unsigned short *rgb)
    * too dark.
    */
 
-  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 4 + FMAX(m, y) * 0 + k) / 8;
-  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 4 + FMAX(c, y) * 0 + k) / 8;
-  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 4 + FMAX(c, m) * 0 + k) / 8;
+  nc = (c * 7 + FMIN(c, FMAX(m, y)) * 0 + FMAX(m, y) * 0 + k) / 8;
+  nm = (m * 7 + FMIN(m, FMAX(c, y)) * 0 + FMAX(c, y) * 0 + k) / 8;
+  ny = (y * 7 + FMIN(y, FMAX(c, m)) * 0 + FMAX(c, m) * 0 + k) / 8;
 
   /*
    * Make sure we didn't go overboard.  We don't want to go too
@@ -588,61 +588,6 @@ update_saturation_from_rgb(unsigned short *rgb, double adjust, double isat)
   calc_hsl_to_rgb(rgb, h, s, l);
 }
 
-static inline double
-adjust_hue(lut_t *lut, size_t h_points, double h)
-{
-  if (lut->hue_map)
-    {
-      double nh = h * h_points / 6.0;
-      double tmp;
-      if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
-	{
-	  h += tmp;
-	  if (h < 0.0)
-	    h += 6.0;
-	  else if (h >= 6.0)
-	    h -= 6.0;
-	}
-    }
-  return h;
-}
-
-static inline double
-adjust_lum(lut_t *lut, size_t l_points, double l, double s, double h)
-{
-  if (lut->lum_map && l > .0001 && l < .9999)
-    {
-      double nh = h * l_points / 6.0;
-      double tmp;
-      if (stp_curve_interpolate_value(lut->lum_map, nh, &tmp) &&
-	  (tmp < .9999 || tmp > 1.0001))
-	{
-	  double el = tmp;
-	  el = 1.0 + (sqrt(s) * (el - 1.0));
-	  if (l > .5)
-	    el = 1.0 + ((2.0 * (1.0 - l)) * (el - 1.0));
-	  l = 1.0 - pow(1.0 - l, el);
-	}
-    }
-  return l;
-}
-
-static inline double
-adjust_sat(lut_t *lut, size_t s_points, double s, double h)
-{
-  if (lut->sat_map)
-    {
-      double tmp;
-      double nh = h * s_points / 6.0;
-      if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
-	  (tmp < .9999 || tmp > 1.0001))
-	{
-	  s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0);
-	}
-    }
-  return s;
-}
-
 static inline void
 adjust_hsl(unsigned short *rgbout, lut_t *lut, int do_lum, double ssat,
 	   double isat, size_t h_points, size_t s_points, size_t l_points,
@@ -655,12 +600,64 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, int do_lum, double ssat,
       double h, s, l;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
-      if (lut->hue_map || lut->lum_map || lut->sat_map)
+      if (lut->hue_map)
 	{
-	  h = adjust_hue(lut, h_points, h);
-	  if (do_lum)
-	    l = adjust_lum(lut, l_points, l, s, h);
-	  s = adjust_sat(lut, s_points, s, h);
+	  double nh = h * h_points / 6.0;
+	  double tmp;
+	  if (stp_curve_interpolate_value(lut->hue_map, nh, &tmp))
+	    {
+	      h += tmp;
+	      if (h < 0.0)
+		h += 6.0;
+	      else if (h >= 6.0)
+		h -= 6.0;
+	    }
+	}
+      if (l > 0.0001 && l < .9999)
+	{
+	  if (lut->lum_map)
+	    {
+	      double nh = h * l_points / 6.0;
+	      double el;
+	      if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
+		{
+		  double sreflection = 0.6;
+		  double isreflection = 1.0 - sreflection;
+		  double sadj = l - sreflection;
+		  double isadj = 1;
+		  if (sadj > 0)
+		    {
+		      isadj = (1.0 / isreflection) * (isreflection - sadj);
+		      isadj = 1.0 - isadj;
+		      isadj *= isadj * isadj;
+		      isadj = 1.0 - isadj;
+		      s *= isadj;
+		    }
+		  if (el < .9999)
+		    {
+		      double es = s;
+		      es = 1 - es;
+		      es *= es;
+		      es = 1 - es;
+		      el = 1.0 + (es * (el - 1.0));
+		      l *= el;
+		    }
+		  else if (el > 1.0001)
+		    l = 1.0 - pow(1.0 - l, el);
+		  if (sadj > 0)
+		    l = 1.0 - ((1.0 - l) * isadj);
+		}
+	    }
+	}
+      if (lut->sat_map)
+	{
+	  double tmp;
+	  double nh = h * s_points / 6.0;
+	  if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
+	      (tmp < .9999 || tmp > 1.0001))
+	    {
+	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0);
+	    }
 	}
       calc_hsl_to_rgb(rgbout, h, s, l);
     }
@@ -753,11 +750,15 @@ rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
 	  out[2] = i2 | (i2 << 8);
 	  if ((compute_saturation) && (out[0] != out[1] || out[0] != out[2]))
 	    update_saturation_from_rgb(out, ssat, isat);
-	  if (do_update_cmyk)
-	    update_cmyk(out);	/* Fiddle with the INPUT */
-	  lookup_rgb(lut, out, red, green, blue);
+	  out[0] ^= 65535;
+	  out[1] ^= 65535;
+	  out[2] ^= 65535;
 	  adjust_hsl(out, lut, do_adjust_lum, ssat, isat, h_points,
 		     s_points, l_points, split_saturation);
+	  out[0] ^= 65535;
+	  out[1] ^= 65535;
+	  out[2] ^= 65535;
+	  lookup_rgb(lut, out, red, green, blue);
 	  o0 = out[0];
 	  o1 = out[1];
 	  o2 = out[2];

@@ -52,42 +52,12 @@ typedef unsigned long model_featureset_t;
 #define RES_N		 8
 
 /*
- * For each printer, we can select from a variety of dot sizes.
- * For single dot size printers, the available sizes are usually 0,
- * which is the "default", and some subset of 1-4.  For simple variable
- * dot size printers (with only one kind of variable dot size), the
- * variable dot size is specified as 0x10.  For newer printers, there
- * is a choice of variable dot sizes available, 0x10, 0x11, and 0x12 in
- * order of increasing size.
- *
- * Normally, we want to specify the smallest dot size that lets us achieve
- * a density of less than .8 or thereabouts (above that we start to get
- * some dither artifacts).  This needs to be tested for each printer and
- * resolution.
- *
- * An entry of -1 in a slot means that this resolution is not available.
+ ****************************************************************
+ *                                                              *
+ * DROP SIZES                                                   *
+ *                                                              *
+ ****************************************************************
  */
-
-typedef short escp2_dot_size_t[RES_N];
-
-/*
- * Choose the number of bits to use at each resolution.
- */
-
-typedef short escp2_bits_t[RES_N];
-
-/*
- * Choose the base resolution to use at each resolution.
- */
-
-typedef short escp2_base_resolutions_t[RES_N];
-
-/*
- * Specify the base density for each available resolution.
- * This obviously depends upon the dot size.
- */
-
-typedef float escp2_densities_t[RES_N];
 
 typedef struct
 {
@@ -97,6 +67,14 @@ typedef struct
 } escp2_dropsize_t;
 
 typedef const escp2_dropsize_t *const escp2_drop_list_t[RES_N];
+
+/*
+ ****************************************************************
+ *                                                              *
+ * PAPERS                                                       *
+ *                                                              *
+ ****************************************************************
+ */
 
 typedef struct
 {
@@ -151,12 +129,14 @@ typedef struct
   const paper_t *papers;
 } paperlist_t;
 
-typedef struct
-{
-  const char *attr_name;
-  short bit_shift;
-  short bit_width;
-} escp2_printer_attr_t;
+
+/*
+ ****************************************************************
+ *                                                              *
+ * RESOLUTIONS                                                  *
+ *                                                              *
+ ****************************************************************
+ */
 
 typedef struct
 {
@@ -168,6 +148,15 @@ typedef struct
   short microweave;
   short vertical_passes;
 } res_t;
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * INKS                                                         *
+ *                                                              *
+ ****************************************************************
+ */
 
 typedef struct
 {
@@ -207,10 +196,6 @@ typedef struct
   const char *name;
   const char *text;
   inkset_id_t inkset;
-  const paper_adjustment_list_t *papers;
-  const char *lum_adjustment;
-  const char *hue_adjustment;
-  const char *sat_adjustment;
   const channel_set_t *channel_set;
 } escp2_inkname_t;
 
@@ -228,6 +213,7 @@ typedef struct
   const char *text;
   const escp2_inkname_t *const *inknames;
   const paperlist_t *papers;
+  const paper_adjustment_list_t *paper_adjustments;
   const shade_set_t *shades;
   short n_inks;
 } inklist_t;
@@ -239,6 +225,52 @@ typedef struct
   short n_inklists;
 } inkgroup_t;
     
+
+/*
+ ****************************************************************
+ *                                                              *
+ * MISCELLANEOUS                                                *
+ *                                                              *
+ ****************************************************************
+ */
+
+/*
+ * For each printer, we can select from a variety of dot sizes.
+ * For single dot size printers, the available sizes are usually 0,
+ * which is the "default", and some subset of 1-4.  For simple variable
+ * dot size printers (with only one kind of variable dot size), the
+ * variable dot size is specified as 0x10.  For newer printers, there
+ * is a choice of variable dot sizes available, 0x10, 0x11, and 0x12 in
+ * order of increasing size.
+ *
+ * Normally, we want to specify the smallest dot size that lets us achieve
+ * a density of less than .8 or thereabouts (above that we start to get
+ * some dither artifacts).  This needs to be tested for each printer and
+ * resolution.
+ *
+ * An entry of -1 in a slot means that this resolution is not available.
+ */
+
+typedef short escp2_dot_size_t[RES_N];
+
+/*
+ * Choose the number of bits to use at each resolution.
+ */
+
+typedef short escp2_bits_t[RES_N];
+
+/*
+ * Choose the base resolution to use at each resolution.
+ */
+
+typedef short escp2_base_resolutions_t[RES_N];
+
+/*
+ * Specify the base density for each available resolution.
+ * This obviously depends upon the dot size.
+ */
+
+typedef float escp2_densities_t[RES_N];
 
 #define ROLL_FEED_CUT_ALL (1)
 #define ROLL_FEED_CUT_LAST (2)
@@ -280,7 +312,6 @@ typedef struct
 
 typedef enum
 {
-  AUTO_MODE_FULL_AUTO,
   AUTO_MODE_QUALITY,
   AUTO_MODE_MANUAL
 } auto_mode_t;
@@ -453,7 +484,6 @@ extern const paperlist_t stpi_escp2_ultrachrome_paper_list;
 
 extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_sp780_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_matte_paper_adjustment_list;
@@ -478,6 +508,7 @@ extern const inkgroup_t stpi_escp2_c80_inkgroup;
 extern const inkgroup_t stpi_escp2_x80_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen1_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen2_inkgroup;
+extern const inkgroup_t stpi_escp2_photo_photo_gen2_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_pigment_inkgroup;
 extern const inkgroup_t stpi_escp2_photo7_japan_inkgroup;
 extern const inkgroup_t stpi_escp2_ultrachrome_inkgroup;

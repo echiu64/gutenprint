@@ -184,12 +184,12 @@ static const char standard_sat_adjustment[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-"1.00 1.10 1.20 1.30 1.40 1.50 1.60 1.70 "  /* C */
-"1.80 1.90 1.90 1.90 1.70 1.50 1.30 1.10 "  /* B */
-"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
-"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
-"1.00 1.00 1.00 1.10 1.20 1.30 1.40 1.50 "  /* Y */
-"1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* G */
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 0.95 0.90 "  /* M */
+/* M */  "0.90 0.85 0.85 0.80 0.80 0.80 0.80 0.85 "  /* R */
+/* R */  "0.90 0.95 0.95 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.10 1.20 1.30 1.40 1.50 "  /* G */
+/* G */  "1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -199,12 +199,12 @@ static const char standard_lum_adjustment[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-"0.50 0.60 0.70 0.80 0.90 0.86 0.82 0.79 "  /* C */
-"0.78 0.80 0.83 0.87 0.90 0.95 1.05 1.15 "  /* B */
-"1.30 1.25 1.20 1.15 1.12 1.09 1.06 1.03 "  /* M */
-"1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
-"1.00 0.90 0.80 0.70 0.65 0.60 0.55 0.52 "  /* Y */
-"0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51 "  /* G */
+/* C */  "0.49 0.52 0.58 0.65 0.73 0.77 0.77 0.75 "  /* B */
+/* B */  "0.69 0.69 0.72 0.77 0.82 0.87 0.92 0.94 "  /* M */
+/* M */  "0.95 0.97 0.99 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.94 0.87 0.80 0.73 0.66 0.60 0.55 "  /* G */
+/* G */  "0.53 0.52 0.52 0.52 0.52 0.51 0.50 0.49 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -214,27 +214,12 @@ static const char standard_hue_adjustment[] =
 "<gimp-print>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-"0.00 0.05 0.04 0.01 -.03 -.10 -.18 -.26 "  /* C */
-"-.35 -.43 -.40 -.32 -.25 -.18 -.10 -.07 "  /* B */
-"0.00 -.04 -.09 -.13 -.18 -.23 -.27 -.31 "  /* M */
-"-.35 -.38 -.30 -.23 -.15 -.08 0.00 -.02 "  /* R */
-"0.00 0.08 0.10 0.08 0.05 0.03 -.03 -.12 "  /* Y */
-"-.20 0.17 -.20 -.17 -.15 -.12 -.10 -.08 "  /* G */
-"</sequence>\n"
-"</curve>\n"
-"</gimp-print>\n";
-
-static const char plain_paper_lum_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-"1.20 1.22 1.28 1.34 1.39 1.42 1.45 1.48 "  /* C */
-"1.50 1.40 1.30 1.25 1.20 1.10 1.05 1.05 "  /* B */
-"1.05 1.05 1.05 1.05 1.05 1.05 1.05 1.05 "  /* M */
-"1.05 1.05 1.05 1.10 1.10 1.10 1.10 1.10 "  /* R */
-"1.10 1.15 1.30 1.45 1.60 1.75 1.90 2.00 "  /* Y */
-"2.10 2.00 1.80 1.70 1.60 1.50 1.40 1.30 "  /* G */
+/* C */  "0.00 0.00 -.02 -.06 -.10 -.16 -.24 -.32 "  /* B */
+/* B */  "-.35 -.43 -.40 -.38 -.36 -.34 -.34 -.34 "  /* M */
+/* M */  "-.34 -.34 -.36 -.40 -.50 -.40 -.30 -.20 "  /* R */
+/* R */  "-.12 -.10 -.08 -.06 -.04 -.02 0.00 0.00 "  /* Y */
+/* Y */  "0.00 0.04 0.04 0.03 0.02 0.01 0.00 0.00 "  /* G */
+/* G */  "0.00 -.04 -.08 -.08 -.08 -.08 -.08 -.08 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gimp-print>\n";
@@ -876,43 +861,56 @@ static const paper_t lexmark_paper_list[] =
 {
   { "Plain", N_("Plain Paper"),
     1, 0, 0.80, .1, .5, 1.0, 1.0, 1.0, .9, 1.05, 1.15,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "GlossyFilm", N_("Glossy Film"),
     3, 0, 1.00 ,1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6d, 0x00, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+    1, 1.0, 0x6d, 0x00, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Transparency", N_("Transparencies"),
     3, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 0x6d, 0x00, 0x02, NULL, plain_paper_lum_adjustment, NULL},
+    1.0, 1.0, 0x6d, 0x00, 0x02,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Envelope", N_("Envelopes"),
     4, 0, 0.80, .125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Matte", N_("Matte Paper"),
     7, 0, 0.85, 1.0, .999, 1.05, .9, 1.05, .9, 1.0, 1.1,
-    1, 1.0, 0x00, 0x00, 0x02, NULL, NULL, NULL},
+    1, 1.0, 0x00, 0x00, 0x02,
+    standard_hue_adjustment, standard_sat_adjustment, standard_sat_adjustment},
   { "Inkjet", N_("Inkjet Paper"),
     7, 0, 0.85, .25, .6, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Coated", N_("Photo Quality Inkjet Paper"),
     7, 0, 1.00, 1.0, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Photo", N_("Photo Paper"),
     8, 0, 1.00, 1.0, .9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x67, 0x00, 0x02, NULL, NULL, NULL},
+    1, 1.0, 0x67, 0x00, 0x02,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "GlossyPhoto", N_("Premium Glossy Photo Paper"),
     8, 0, 1.10, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.03, 1.0,
-    1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
+    1, 1.0, 0x80, 0x00, 0x02,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Luster", N_("Premium Luster Photo Paper"),
     8, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL},
+    1.0, 1.0, 0x80, 0x00, 0x02,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "GlossyPaper", N_("Photo Quality Glossy Paper"),
     6, 0, 1.00, 1, .999, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1.0, 1.0, 0x6b, 0x1a, 0x01, NULL, NULL, NULL},
+    1.0, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Ilford", N_("Ilford Heavy Paper"),
     8, 0, .85, .5, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x80, 0x00, 0x02, NULL, NULL, NULL },
+    1, 1.0, 0x80, 0x00, 0x02,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
   { "Other", N_("Other"),
     0, 0, 0.80, 0.125, .5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-    1, 1.0, 0x6b, 0x1a, 0x01, NULL, plain_paper_lum_adjustment, NULL},
+    1, 1.0, 0x6b, 0x1a, 0x01,
+    standard_hue_adjustment, standard_lum_adjustment, standard_sat_adjustment},
 };
 
 static const int paper_type_count = sizeof(lexmark_paper_list) / sizeof(paper_t);
