@@ -423,6 +423,22 @@ stp_set_dither_function(dither_t *d, int image_bpp)
 	}
       break;
     case OUTPUT_GRAY:
+      d->n_channels = 1;
+      d->n_input_channels = 1;
+      switch (d->dither_type)
+	{
+	case D_FAST:
+	  RETURN_DITHERFUNC(stp_dither_raw_fast, d->v);
+	case D_VERY_FAST:
+	  RETURN_DITHERFUNC(stp_dither_raw_very_fast, d->v);
+	case D_ORDERED:
+	  RETURN_DITHERFUNC(stp_dither_raw_ordered, d->v);
+	case D_EVENTONE:
+	  RETURN_DITHERFUNC(stp_dither_raw_et, d->v);
+	default:
+	  RETURN_DITHERFUNC(stp_dither_raw_ed, d->v);
+	}
+      break;
     case OUTPUT_RAW_PRINTER:
       d->n_channels = image_bpp / 2;
       d->n_input_channels = image_bpp / 2;
