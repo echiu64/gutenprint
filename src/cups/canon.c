@@ -72,9 +72,9 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 		resource[1024],	/* Resource info (device and options) */
 		*options;	/* Pointer to options */
   int		port;		/* Port number (not used) */
-  FILE		*fp;		/* Print file */
   int		copies;		/* Number of copies to print */
-  int		fd,		/* Parallel/USB device or socket */
+  int		fd_out,		/* Parallel/USB device or socket */
+  		fd_in,		/* Print file */
 		error,		/* Last error */
 		backchannel;	/* Read backchannel data? */
   struct sockaddr_in addr;	/* Socket address */
@@ -110,7 +110,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
   if (argc == 6)
   {
-    fp     = stdin;
+    fd_in  = fileno(stdin);
     copies = 1;
   }
   else
@@ -119,7 +119,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
     * Try to open the print file...
     */
 
-    if ((fp = fopen(argv[6], "rb")) == NULL)
+    if ((fd_in = open(argv[6], O_RDONLY)) < 0)
     {
       perror("ERROR: unable to open print file");
       return (1);
@@ -178,17 +178,17 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
     for (;;)
     {
-      if ((fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+      if ((fd_out = socket(AF_INET, SOCK_STREAM, 0)) < 0)
       {
 	perror("ERROR: Unable to create socket");
 	return (1);
       }
 
-      if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+      if (connect(fd_out, (struct sockaddr *)&addr, sizeof(addr)) < 0)
       {
         error = errno;
-	close(fd);
-	fd = -1;
+	close(fd_out);
+	fd_out = -1;
 
 	if (error == ECONNREFUSED)
 	{
@@ -216,7 +216,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
     do
     {
-      if ((fd = open(resource, O_RDWR | O_EXCL)) == -1)
+      if ((fd_out = open(resource, O_RDWR | O_EXCL)) == -1)
       {
 	if (errno == EBUSY)
 	{
@@ -230,20 +230,20 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 	}
       }
     }
-    while (fd < 0);
+    while (fd_out < 0);
 
    /*
     * Set any options provided...
     */
 
-    tcgetattr(fd, &opts);
+    tcgetattr(fd_out, &opts);
 
     opts.c_cflag |= CREAD;			/* Enable reading */
     opts.c_lflag &= ~(ICANON | ECHO | ISIG);	/* Raw mode */
 
     /**** No options supported yet ****/
 
-    tcsetattr(fd, TCSANOW, &opts);
+    tcsetattr(fd_out, TCSANOW, &opts);
   }
 
  /*
@@ -274,14 +274,14 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
   {
     copies --;
 
-    if (fp != stdin)
+    if (fd_in != fileno(stdin))
     {
       fputs("PAGE: 1 1\n", stderr);
-      rewind(fp);
+      lseek(fd_in, 0, SEEK_SET);
     }
 
     tbytes = 0;
-    while ((nbytes = fread(buffer, 1, sizeof(buffer), fp)) > 0)
+    while ((nbytes = read(fd_in, buffer, sizeof(buffer))) > 0)
     {
      /*
       * Write the print data to the printer...
@@ -292,7 +292,7 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
 
       while (nbytes > 0)
       {
-	if ((wbytes = write(fd, bufptr, nbytes)) < 0)
+	if ((wbytes = write(fd_out, bufptr, nbytes)) < 0)
 	{
 	  perror("ERROR: Unable to send print file to printer");
 	  break;
@@ -315,20 +315,27 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
       timeout.tv_sec = 0;
       timeout.tv_usec = 0;
       FD_ZERO(&input);
-      FD_SET(fd, &input);
-      if (select(fd + 1, &input, NULL, NULL, &timeout) > 0)
+      FD_SET(fd_out, &input);
+      if (select(fd_out + 1, &input, NULL, NULL, &timeout) > 0)
       {
        /*
 	* Grab the data coming back and spit it out to stderr...
 	*/
 
-	if ((nbytes = read(fd, buffer, sizeof(buffer) - 1)) < 0)
+	if ((nbytes = read(fd_out, buffer, sizeof(buffer) - 1)) < 0)
 	{
 	  fprintf(stderr, "ERROR: Back-channel read error - %s!\n",
 	          strerror(errno));
           backchannel = 0;
           continue;
 	}
+
+       /*
+	* Some devices report themselves permanently ready to read...
+	*/
+
+	if (nbytes == 0)
+	  continue;
 
         buffer[nbytes] = '\0';
 	if (strncmp(buffer, "@BDC ", 5) != 0)
@@ -412,9 +419,9 @@ main(int  argc,		/* I - Number of command-line arguments (6 or 7) */
   * return...
   */
 
-  close(fd);
-  if (fp != stdin)
-    fclose(fp);
+  close(fd_out);
+  if (fd_in != fileno(stdin))
+    close(fd_in);
 
   return (0);
 }

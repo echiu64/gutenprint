@@ -476,6 +476,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       signal(SIGTERM, cancel_job);
       stp_printer_get_printfuncs(printer)->print(printer, &theImage, v);
+      fflush(stdout);
     }
     else
       fputs("ERROR: Invalid printer settings!\n", stderr);
