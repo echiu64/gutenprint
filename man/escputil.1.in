@@ -15,14 +15,12 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.hy 0
 .TH ESCPUTIL 1 "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "GIMP Manual Pages"
 .SH NAME
 escputil - maintain Epson Stylus inkjet printers
 .SH SYNOPSIS
 .B escputil [\-P printer | \-r device] [\-m model] [\-u]
 [\-c | \-n | \-a | \-i | \-d | \-o | \-s | \-l | \-M | \-h] [\-q]
-
 .SH DESCRIPTION
 .PP
 \fIescputil\fP is a command line utility to perform various
@@ -32,108 +30,100 @@ identification, and retrieval of ink level from the printer.
 
 .SH OPTIONS
 \fIescputil\fP accepts the following options:
-.TP 8
+.TP
 .B \-P, \-\-printer-name \fI<printer>\fP
 Specify the name of the printer to operate on.
 Default is the default system printer.
-.TP 8
+.TP
 .B \-r, \-\-raw-device \fI<device>\fP
 Specify the name of the device to write to directly
 rather than going through a printer queue. You must use this (rather
 than specifying a printer) when retrieving ink levels or identifying
 the printer, or if you wish to perform head alignment without
 specifying the printer model.
-.TP 8
+.TP
 .B \-m <model>, \-\-model <model>
 Specify the precise printer model for head alignment.
-.TP 8
+.TP
 .B \-u, \-\-new
 The printer is a new printer (Stylus Color 740 or newer).
-.TP 8
+.TP
 .B \-c, \-\-clean-head
 Clean the print head.  This can also be performed from the printer
 front panel.
-.TP 8
+.TP
 .B \-n, \-\-nozzle-check
 Print a nozzle test pattern.  Dirty or clogged nozzles will show as
 gaps in the pattern.  If you see any gaps, you should run a
 head cleaning pass or two.
-.TP 8
+.TP
 .B \-a, \-\-align-head
 Align the print head.  CAUTION: Misuse of this option may result in
 poor print quality and/or damage to the printer.  You must either
 specify the printer model with the \-m option, or use the raw printer
 device to allow escputil to detect the printer model.
-.TP 8
+.TP
 .B \-i, \-\-ink-level
 Obtain the ink level from the printer.  This requires
 read/write access to the raw printer device.
-.TP 8
+.TP
 .B \-d, \-\-identify
 Query the printer for make and model information.
 This requires read/write access to the raw printer
 device.
-.TP 8
+.TP
 .B \-o, \-\-align\-color
 Align the color print head (used by Stylus Color 480 and 580 only).  CAUTION:
 Misuse of this option may result in poor print quality and/or damage to the
 printer.   
-.TP 8
+.TP
 .B \-s, \-\-status
 Retrieve printer status.
-.TP 8
+.TP
 .B \-l, \-\-license
 Display the license/warranty terms of this program.
-.TP 8
+.TP
 .B \-M, \-\-list\-models
 List the supported printer models.
-.TP 8
+.TP
 .B  \-h, \-\-help
 Display a list of all command line options.
-.TP 8
+.TP
 .B \-q, \-\-quiet
 Suppress the banner.
-
 .SH COPYRIGHT
 Copyright \(co  2000 Robert Krawitz (rlk@alum.mit.edu)
-
+.PP
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation; either version 2 of the License, or (at your option)
 any later version.
-
 .SH OTHER INFO
-
 The canonical place to find GIMP info is at http://www.gimp.org/.
 The homepage of the gimp-print project from which this utility was
 contributed is located at http://gimp-print.sourceforge.net/.
-
 .SH AUTHORS
 Robert Krawitz.
-
 .SH BUGS
-
 .PP
 USB-connected printers sometimes fail to identify or return ink
 levels.  You may have to repeat the command.  This is probably a
 timing issue in escputil, not a flaw in the printer.
-
 .PP
-Anything requiring bidirectional communication with the printer
-(identify, ink levels, or head alignment without specifying the
-printer model) requires read/write access to the printer port (for
-example /dev/lp0).  This may require these operations to be performed
-as root.
-
+Anything requiring bidirectional communication with the printer (identify, ink
+levels, or head alignment without specifying the printer model) requires
+read/write access to the printer port (for example /dev/lp0).  This may require
+these operations to be performed as root.  In addition, kernel support is
+required for bidirectional communication.  For Linux version 2.2,
+\fICONFIG_PRINTER_READBACK\fP should be enabled; this is called
+\fICONFIG_PARPORT_1284\fP on 2.4 and later kernels.
 .PP
 If the printer is performing self-test or head cleaning on power
 up, the identify and ink level commands will time out, although the
 printer successfully receives the command.  The command will need to
 be reissued when the printer is quiescent.
-
 .SH "SEE ALSO"
 .BR gimp (1)
-
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
