@@ -32,14 +32,9 @@ INCLUDES = @INCLUDES@
 
 ## Programs
 
-MAIN_BIN = libgimpprint.la
-MAIN_SCR = gimpprint-config
+bin_SCRIPTS = gimpprint-config
 
-bin_SCRIPTS = @MAIN_SCR@
-EXTRA_SCRIPTS = gimpprint-config
-
-lib_LTLIBRARIES = @MAIN_BIN@
-EXTRA_LTLIBRARIES = libgimpprint.la
+lib_LTLIBRARIES = libgimpprint.la
 
 libgimpprint_la_SOURCES = \
 	gimp-print-internal.h \
@@ -71,10 +66,8 @@ libgimpprint_la_LDFLAGS = \
 
 ## Data
 
-MAIN_DAT = gimpprint.m4
-
 m4datadir = $(datadir)/aclocal
-m4data_DATA = @MAIN_DAT@
+m4data_DATA = gimpprint.m4
 
 
 ## Rules

@@ -24,10 +24,8 @@ src/main/print-util.c
 src/main/print-weave.c
 #src/main/print-version.c
 
-## @-@-@-@-@ NO-GIMP @-@-@-@-@
 # CUPS sources
 src/cups/genppd.c
-## @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 # escputil sources
 src/escputil/escputil.c
@@ -38,11 +36,9 @@ src/gimp/gimp_main_window.c
 src/gimp/print-image-gimp.c
 src/gimp/print.c
 
-## @-@-@-@-@ NO-GIMP @-@-@-@-@
 # Foomatic-related sources
 src/foomatic/printer_options.c
 
 # Ghostscript IJS driver
 src/ghost/ijsgimpprint.c
-## @-@-@-@-@ YES-GIMP @-@-@-@-@
 

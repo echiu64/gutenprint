@@ -62,7 +62,7 @@ EXTRA_PROGRAMS = cups-calibrate commandtoepson epson genppd rastertoprinter comm
 CUPS_LIBS = @CUPS_LIBS@
 
 cups_calibrate_SOURCES = cups-calibrate.c
-cups_calibrate_LDADD = $(LIBPRINTUT) -lm
+cups_calibrate_LDADD = $(LIBPRINTUT) $(LIBM)
 
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
