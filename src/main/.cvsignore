@@ -13,3 +13,4 @@ print-printers.c
 print-util.lo
 print-color.lo
 print-weave.lo
+gimpprint-config
