@@ -37,6 +37,11 @@
 #include <limits.h>
 #include <stdio.h>
 
+#ifdef _MSC_VER
+#define strncasecmp(s,t,n) _strnicmp(s,t,n) 
+#define strcasecmp(s,t) _stricmp(s,t) 
+#endif
+
 /*
  * Local variables...
  */
@@ -450,7 +455,6 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", image->get_appname(image));
 #endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
-  stp_puts("%%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
   stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
           left, top - out_height, left + out_width, top);
   stp_puts("%%DocumentData: Clean7Bit\n", v);
@@ -458,6 +462,8 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   stp_puts("%%Pages: 1\n", v);
   stp_puts("%%Orientation: Portrait\n", v);
   stp_puts("%%EndComments\n", v);
+  stp_puts("%Copyright: 1997-2000 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
+  stp_puts("%%EndProlog\n", v);
 
  /*
   * Find any printer-specific commands...
@@ -535,7 +541,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
   * Output the page...
   */
 
-  stp_puts("%%Page: 1\n", v);
+  stp_puts("%%Page: 1 1\n", v);
   stp_puts("gsave\n", v);
 
   stp_zprintf(v, "%d %d translate\n", left, top);
@@ -638,7 +644,7 @@ ps_print(const stp_printer_t printer,		/* I - Model (Level 1 or 2) */
 
   stp_puts("grestore\n", v);
   stp_puts("showpage\n", v);
-  stp_puts("%%EndPage\n", v);
+  stp_puts("%%Trailer\n", v);
   stp_puts("%%EOF\n", v);
   stp_free_vars(nv);
 }
