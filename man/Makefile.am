@@ -48,7 +48,6 @@ endif
 
 MAIN_MAN = \
 	gimpprint.3 \
-	gimpprint-config.1 \
 	gimpprint-color.7 \
 	gimpprint-dithers.7 \
 	gimpprint-imagetypes.7 \
