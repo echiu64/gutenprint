@@ -292,7 +292,7 @@ X     + Elimination of libxml2 dependency.  OS X and at least some
 	This is COMPLETE.  We are embedding Mike Sweet's MXML
 	package.
 
-X     * Update of the Foomatic data to the new data scheme.  The
+X     + Update of the Foomatic data to the new data scheme.  The
         Foomatic data generation currently uses modified 4.2
         technology.
 
@@ -401,7 +401,7 @@ X     + Support for 8 bit linearized, and 16 bit linearized and
 	Needed during BETA.  This may be doable as an upward
 	compatible addition later.
 
-      + Header file reorganization.  The purpose of this project is to
+X     + Header file reorganization.  The purpose of this project is to
         create a supported internal API for modules.
 
 	Needed prior to BETA, as change is pervasive and will break
