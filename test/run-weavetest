@@ -9,6 +9,12 @@ arrangements='0 1'
 #rows=2000
 head_limit=512
 
+if [ $# -eq 0 ] ; then
+    extracmd='grep [a-z]'
+else
+    extracmd=cat
+fi
+
 (for jet in $jets ; do
     for sep in $separations ; do
 	for pass in $passes ; do
@@ -32,4 +38,4 @@ head_limit=512
 	    done
 	done
     done
-done) | sed 's/,/ /g' | ./escp2-weavetest
+done) | sed 's/,/ /g' | ./escp2-weavetest | $extracmd
