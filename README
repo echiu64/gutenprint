@@ -294,7 +294,7 @@ We suggest the following packaging:
 DEBIAN
 
 The Debian packaging has been rewritten from scratch as of 4.1.4.  It
-is compliant with Standards-Version 3.5.2, and is lintian-clean.  It
+is compliant with Standards-Version 3.5.6.0, and is lintian-clean.  It
 should build from source on woody and sid, but will not build on potato.
 There are seven separate packages:
 

@@ -1,6 +1,7 @@
 gimp-print (4.1.99-rc1-1) unstable; urgency=low
 
   * New upstream release
+  * Update to new Standards-Version 3.5.6.0 (no changes)
 
  -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue, 30 Oct 2001 09:18:26 +0000
 
