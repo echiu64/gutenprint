@@ -24,25 +24,30 @@ AUTOMAKE_OPTIONS = 1.4 foreign
 MAINT_CHARSET = latin1
 
 PACKAGE = cups
+
+bindir = @cups_bindir@
 datadir = @cups_datadir@
 libdir = @cups_libdir@
 sysconfdir = @cups_sysconfdir@
-pkglibdir = $(libdir)/$(PACKAGE)
 
-cups_backenddir = $(pkglibdir)/backend
-cups_filterdir = $(pkglibdir)/filter
+pkgdatadir = $(datadir)/$(PACKAGE)
+pkglibdir = $(libdir)/$(PACKAGE)
+pkgsysconfdir = $(sysconfdir)/$(PACKAGE)
+
+cupsexec_backenddir = $(pkglibdir)/backend
+cupsexec_filterdir = $(pkglibdir)/filter
 
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
-DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(cups_exec_prefix)/share/cups\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
+DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@
 
 ## Programs
 
 bin_PROGRAMS = @CUPS_BIN@
 
-cups_backend_PROGRAMS = @CUPS_BACKEND_BIN@
+cupsexec_backend_PROGRAMS = @CUPS_BACKEND_BIN@
 
-cups_filter_PROGRAMS = @CUPS_FILTER_BIN@
+cupsexec_filter_PROGRAMS = @CUPS_FILTER_BIN@
 
 noinst_PROGRAMS = @CUPS_NOINST_BIN@
 
@@ -62,27 +67,27 @@ rastertoprinter_LDADD = $(CUPS_LIBS) $(GIMPPRINT_LIBS)
 
 ## Data
 
+pkgdata_DATA = @CUPS_PKG@
+
+pkgsysconf_DATA = @CUPS_CONF@
+
 if CUPS_INSTALL
 install-data-local: ppd
 endif
-	$(mkinstalldirs) $(DESTDIR)$(libdir)
-	$(mkinstalldirs) $(DESTDIR)$(libdir)/$(PACKAGE)
+	$(mkinstalldirs) $(DESTDIR)$(datadir)
+	$(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)
 	$(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/model
 	cd ppd ; \
 	for ppdfile in * ; do \
 	  $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(datadir)/$(PACKAGE)/model/ ; \
 	done
-	$(INSTALL_DATA) calibrate.ppm $(DESTDIR)/$(datadir)/$(PACKAGE)
-	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)
-	$(mkinstalldirs) $(DESTDIR)/$(sysconfdir)/$(PACKAGE)
-	$(INSTALL_DATA) command.types $(DESTDIR)/$(sysconfdir)/$(PACKAGE)/command.types
 
 ## Rules
 
 .PHONY: ppd
 
 ppd:    genppd
-	-rm -r ppd/*
+	-rm -rf ppd
 	./genppd
 
 $(GIMPPRINT_LIBS):
@@ -99,6 +104,8 @@ dist-hook:
 	    done \
 	  fi \
 	done
+
+install: @CUPS_INSTALL@
 
 clean-local:
 	-rm -rf ppd

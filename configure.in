@@ -43,8 +43,6 @@ AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   MAINTAINER_MODE=true
   BUILD_TEST=yes
-else
-  BUILD_TEST=''
 fi
 
 dnl Check canonical system/host
@@ -87,7 +85,7 @@ AC_ARG_WITH(cups,
          AC_MSG_RESULT([unknown])
          AC_MSG_ERROR([${withval}: no such directory for --with-cups])
        fi ;;
-  esac],[AC_MSG_RESULT([${BUILD_CUPS} ; cups_prefix="${prefix}"])])
+  esac],[AC_MSG_RESULT([${BUILD_CUPS}]) ; cups_prefix="${prefix}"])
 
 AC_MSG_CHECKING([whether to build GIMP plugin])
 AC_ARG_WITH(gimp,
@@ -304,6 +302,11 @@ if test x${BUILD_CUPS} = xyes ; then
   CUPS_BACKEND_BIN="epson canon"
   CUPS_FILTER_BIN="rastertoprinter commandtoepson commandtocanon"
   CUPS_NOINST_BIN="genppd"
+  CUPS_PKG="calibrate.ppm"
+  CUPS_CONF="command.types"
+  CUPS_INSTALL="install-am"
+else
+  CUPS_INSTALL=""
 fi
 AM_CONDITIONAL(CUPS_INSTALL, test x${BUILD_CUPS} = xyes)
 if test x${BUILD_GIMP} = xyes ; then
@@ -319,6 +322,7 @@ fi
 if test x${BUILD_LIBGIMPPRINT} = xyes ; then
   MAIN_BIN="libgimpprint.la"
   GIMPPRINT_LIBS="\$(top_builddir)/src/main/libgimpprint.la"
+  GIMP_PRINT_H="gimp-print.h"
 fi
 if test x${BUILD_TEST} = xyes ; then
   TEST_BIN="escp2-weavetest printer_options unprint escp2-unprint pcl-unprint"
@@ -327,7 +331,7 @@ fi
 dnl CUPS path setup
 dnl Fix "prefix" variable if it hasn't been specified...
 if test x${cups_prefix} = xNONE ; then
-  cups_prefix="/"
+  cups_prefix="/usr"
 fi
 dnl Fix "exec_prefix" variable if it hasn't been specified...
 if test x${exec_prefix} = xNONE ; then
@@ -336,6 +340,12 @@ if test x${exec_prefix} = xNONE ; then
   else
     cups_exec_prefix="${cups_prefix}"
   fi
+fi
+dnl Fix "bindir" variable if it hasn't been specified...
+if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
+  cups_bindir="/usr/bin"
+else
+  cups_bindir="${cups_prefix}/bin"
 fi
 dnl Fix "datadir" variable if it hasn't been specified...
 if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
@@ -365,6 +375,7 @@ AC_DEFINE_UNQUOTED(RELEASE_DATE, "`date '+%d %b %Y'`")
 dnl Substitutions
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
+AC_SUBST(cups_bindir)
 AC_SUBST(cups_datadir)
 AC_SUBST(cups_libdir)
 AC_SUBST(cups_sysconfdir)
@@ -372,11 +383,15 @@ AC_SUBST(CUPS_BIN)
 AC_SUBST(CUPS_BACKEND_BIN)
 AC_SUBST(CUPS_FILTER_BIN)
 AC_SUBST(CUPS_CFLAGS)
+AC_SUBST(CUPS_PKG)
+AC_SUBST(CUPS_CONF)
+AC_SUBST(CUPS_INSTALL)
 AC_SUBST(CUPS_LIBS)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(GIMP_BIN)
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(GIMP_PRINT_H)
 AC_SUBST(GIMPPRINT_LIBS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LIBREADLINE_DEPS)

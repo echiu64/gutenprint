@@ -28,4 +28,4 @@ man_MANS = escputil.1
 DISTCLEANFILES = escputil.1
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = escputil.1.in
+EXTRA_DIST = $(man_MANS)
