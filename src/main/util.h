@@ -72,6 +72,10 @@ extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
 			const stp_vars_t v);
 
 extern void stp_putc(int ch, const stp_vars_t v);
+extern void stp_put16_le(unsigned short sh, const stp_vars_t v);
+extern void stp_put16_be(unsigned short sh, const stp_vars_t v);
+extern void stp_put32_le(unsigned int sh, const stp_vars_t v);
+extern void stp_put32_be(unsigned int sh, const stp_vars_t v);
 extern void stp_erputc(int ch);
 
 extern void stp_puts(const char *s, const stp_vars_t v);

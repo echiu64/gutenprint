@@ -1597,8 +1597,7 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
   if (cmd)
     {
       stp_putc(cmd,v);
-      stp_putc((num & 255),v);
-      stp_putc((num >> 8 ),v);
+      stp_put16_le(num, v);
       if (num)
 	stp_zfwrite((const char *)buffer,num,1,v);
     }
@@ -2736,16 +2735,14 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 
   if (*empty) {
     stp_zfwrite("\033\050\145\002\000", 5, 1, v);
-    stp_putc((*empty) >> 8 , v);
-    stp_putc((*empty) & 255, v);
+    stp_put16_le(*empty, v);
     *empty= 0;
   }
 
  /* Send a line of raster graphics... */
 
   stp_zfwrite("\033\050\101", 3, 1, v);
-  stp_putc((newlength+1) & 255, v);
-  stp_putc((newlength+1) >> 8, v);
+  stp_put16_le(newlength + 1, v);
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
   stp_putc(color,v);
