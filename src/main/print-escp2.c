@@ -1159,7 +1159,7 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
       &escp2_multishot_pigment_standard_inks,
       &escp2_6pl_pigment_standard_inks,
       &escp2_3pl_pigment_standard_inks,
-      &escp2_3pl_pigment_standard_inks,
+      &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
     }
@@ -1840,7 +1840,7 @@ static const escp2_dot_size_t spro10000_dotsizes =
 {    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,   -1 };
+{   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,  0x12 };
 
 /*
  * Densities are for:
@@ -1902,7 +1902,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -2774,7 +2774,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO |
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     60, 60, 2, 180, 180, 2,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 360, 180,
+    360, 360, 360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4), 9, 9, 0, 9, 9, 9, 9, 9,
     0, 1, 0, 0, c80_head_offset, -240, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_4color_inks,
