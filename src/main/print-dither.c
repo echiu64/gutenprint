@@ -2281,7 +2281,7 @@ stp_dither_cmy_ed(const unsigned short  *cmy,
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
   bit = 1 << (7 - (x & 7));
-  xstep  = 4 * (d->src_width / d->dst_width);
+  xstep  = 3 * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
   terminate = (direction == 1) ? d->dst_width : -1;
@@ -2572,7 +2572,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 
   x = (direction == 1) ? 0 : d->dst_width - 1;
   bit = 1 << (7 - (x & 7));
-  xstep  = 4 * (d->src_width / d->dst_width);
+  xstep  = 3 * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = (xmod * x) % d->dst_width;
   terminate = (direction == 1) ? d->dst_width : -1;
