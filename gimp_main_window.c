@@ -1636,7 +1636,7 @@ gimp_preview_update (void)
   else
     min_ppi_scaling = 72.0 * (double) image_height / (double) printable_height;
 
-  if (vars.scaling < -min_ppi_scaling)
+  if (vars.scaling < 0 && vars.scaling > -min_ppi_scaling)
     vars.scaling = -min_ppi_scaling;
 
   if (vars.scaling < 0)
