@@ -23,19 +23,19 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
 
-<H2><p><strong><em><font color=#ff0000">Macintosh OS X
-Users!</font></em></strong></H2>
-
-<p> <a
-href="http://www.allosx.com/1030154694/index_html">This article on All
-OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
-
 <p>Red Hat users may want to check out <a
 href="http://space.tin.it/computer/wvtberti/linux/stp_driver/gs_stp.htm">this
 site</a> for quick and easy setup.</p>
 
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
+
+<H2><strong><em><font color=#ff0000">Macintosh OS X
+Users!</font></em></strong></H2>
+
+<p> <a
+href="http://www.allosx.com/1030154694/index_html">This article on All
+OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
 
 <H2><font color="#ff0000">Gimp-Print 4.3.3 is released!</font></h2>
 
