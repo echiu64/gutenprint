@@ -14,7 +14,6 @@ lib/xmalloc.c
 src/main/curve.c
 src/main/dither-ed.c
 src/main/dither-eventone.c
-src/main/dither-fast.c
 src/main/dither-inks.c
 src/main/dither-main.c
 src/main/dither-ordered.c
