@@ -1406,15 +1406,16 @@ static const paper_t escp2_paper_list[] = {
   { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
   { "Postcard", 2, 0, .6, .25, .6 },
   { "Glossy Film", 3, 0, 1.0, 1.0, .9 },
-  { "Transparencies", 3, 0, 1.0, 1.0, .9 },
+  { "Transparencies", 3, 0, 1.0, 1.0, .999 },
   { "Envelopes", 4, 0, .5, .25, .5 },
-  { "Back Light Film", 6, 0, 1.0, 1.0, .9 },
+  { "Back Light Film", 6, 0, 1.0, 1.0, .999 },
   { "Matte Paper", 7, 0, 1.0, 1.0, .9 },
   { "Inkjet Paper", 7, 0, .78, .25, .6 },
-  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .9 },
+  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
   { "Photo Paper", 8, 0, 1, 1.0, .9 },
-  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .9 },
-  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .9 },
+  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .999 },
+  { "Premium Luster Photo Paper", 8, 0, 1.0, 1.0, .999 },
+  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .999 },
   { "Other", 0, 0, .5, .25, .5 },
 };
 
@@ -1430,7 +1431,7 @@ static double lum_adjustment[49] =
   0.769,
   0.714,
   0.667,
-  0.625,				/* B */
+  0.625,			/* B */
   0.667,
   0.714,
   0.769,
