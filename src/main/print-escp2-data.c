@@ -50,44 +50,53 @@ static const escp2_dot_size_t g1_dotsizes =
 static const escp2_dot_size_t g2_dotsizes =
 {   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1 };
 
-static const escp2_dot_size_t sc600_dotsizes =
-{    4,    4,    3,    2,    1,   -1,   -1,   -1 };
-
 static const escp2_dot_size_t g3_dotsizes =
-{    3,    3,    2,    1,    1,   -1,   -1,   -1 };
-
-static const escp2_dot_size_t photo_dotsizes =
-{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
-
-static const escp2_dot_size_t sp5000_dotsizes =
-{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
-
-static const escp2_dot_size_t sc440_dotsizes =
-{    3,    3,    2,    1,   -1,   -1,   -1,   -1 };
-
-static const escp2_dot_size_t sc640_dotsizes =
 {    3,    3,    2,    1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c6pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
-static const escp2_dot_size_t c3pl_dotsizes =
-{ 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10 };
-
 static const escp2_dot_size_t c4pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x10, 0x10, 0x10, 0x10 };
 
-static const escp2_dot_size_t sp720_dotsizes =
-{ 0x12, 0x12, 0x11, 0x11, 0x11,   -1,   -1,   -1 };
+static const escp2_dot_size_t c4pl_pigment_dotsizes =
+{ 0x12, 0x12, 0x12, 0x11, 0x11,   -1, 0x10, 0x10 };
 
-static const escp2_dot_size_t sc660_dotsizes =
-{    3,    3,    0,    0,    0,   -1,   -1,   -1 };
+static const escp2_dot_size_t c3pl_dotsizes =
+{ 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10 };
+
+static const escp2_dot_size_t c3pl_pigment_dotsizes =
+{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
+
+static const escp2_dot_size_t c2pl_dotsizes =
+{ 0x12, 0x12, 0x12, 0x11, 0x13, 0x13, 0x10, 0x10 };
+
+static const escp2_dot_size_t c1_8pl_dotsizes =
+{ 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13 };
+
+static const escp2_dot_size_t sc440_dotsizes =
+{    3,    3,    2,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
 { 0x13, 0x13, 0x13, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
+static const escp2_dot_size_t sc600_dotsizes =
+{    4,    4,    3,    2,    1,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t sc640_dotsizes =
+{    3,    3,    2,    1,    1,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t sc660_dotsizes =
+{    3,    3,    0,    0,    0,   -1,   -1,   -1 };
+
 static const escp2_dot_size_t sc670_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x11,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t sp700_dotsizes =
+{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t sp720_dotsizes =
+{ 0x12, 0x12, 0x11, 0x11, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sp2000_dotsizes =
 { 0x11, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1 };
@@ -101,17 +110,8 @@ static const escp2_dot_size_t spro_pigment_dotsizes =
 static const escp2_dot_size_t spro10000_dotsizes =
 {    4, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1 };
 
-static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
-
-static const escp2_dot_size_t c2pl_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x13, 0x13, 0x10, 0x10 };
-
-static const escp2_dot_size_t c1_8pl_dotsizes =
-{ 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13 };
-
-static const escp2_dot_size_t c4pl_pigment_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x11,   -1, 0x10, 0x10 };
+static const escp2_dot_size_t spro5000_dotsizes =
+{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
 { 0x11, 0x11, 0x11, 0x10, 0x10,   -1,    5,    5 };
@@ -203,14 +203,32 @@ static const escp2_base_resolutions_t pro_base_res =
 static const escp2_densities_t g1_densities =
 { 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0 };
 
-static const escp2_densities_t sc1500_densities =
-{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0 };
-
 static const escp2_densities_t g3_densities =
 { 2.6, 1.3,  1.3,  0.775, 0.388, 0.194, 0.097, 0.049 };
 
-static const escp2_densities_t photo_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.275, 0.138, 0.069 };
+static const escp2_densities_t c6pl_densities =
+{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.284, 0.142 };
+
+static const escp2_densities_t c4pl_densities =
+{ 2.6, 1.3,  0.65, 0.568, 0.792, 0.792, 0.396, 0.198 };
+
+static const escp2_densities_t c4pl_pigment_densities =
+{ 2.7, 1.35, 0.68, 0.798, 0.798, 0.798, 0.399, 0.200 };
+
+static const escp2_densities_t c3pl_pigment_densities =
+{ 3.2, 1.6,  0.84, 0.865, 0.534, 0.534, 0.534, 0.267 };
+
+static const escp2_densities_t c3pl_densities =
+{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.228 };
+
+static const escp2_densities_t c2pl_densities =
+{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.650, 0.650, 0.325 };
+
+static const escp2_densities_t c1_8pl_densities =
+{ 2.3, 1.15, 0.57, 0.650, 0.650,     0, 0.650, 0.360 };
+
+static const escp2_densities_t sc1500_densities =
+{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0 };
 
 static const escp2_densities_t sc440_densities =
 { 4.0, 2.0,  1.0,  0.900, 0.45,  0.45,  0.113, 0.057 };
@@ -218,23 +236,17 @@ static const escp2_densities_t sc440_densities =
 static const escp2_densities_t sc480_densities =
 { 2.8, 1.4,  0.7,  0.710, 0.710, 0.546, 0.273, 0.137 };
 
-static const escp2_densities_t sc980_densities =
-{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.228 };
-
-static const escp2_densities_t c6pl_densities =
-{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.284, 0.142 };
-
-static const escp2_densities_t c3pl_densities =
-{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.228 };
+static const escp2_densities_t sc660_densities =
+{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.162, 0.081, 0.041 };
 
 static const escp2_densities_t sc680_densities =
 { 2.4, 1.2,  0.60, 0.792, 0.792, 0.792, 0.396, 0.198 };
 
-static const escp2_densities_t c4pl_densities =
-{ 2.6, 1.3,  0.65, 0.568, 0.792, 0.792, 0.396, 0.198 };
+static const escp2_densities_t sc980_densities =
+{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.228 };
 
-static const escp2_densities_t sc660_densities =
-{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.162, 0.081, 0.041 };
+static const escp2_densities_t sp700_densities =
+{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.275, 0.138, 0.069 };
 
 static const escp2_densities_t sp2000_densities =
 { 2.6, 1.3,  0.65, 0.852, 0.438, 0.219, 0.110, 0.055 };
@@ -247,18 +259,6 @@ static const escp2_densities_t spro_pigment_densities =
 
 static const escp2_densities_t spro10000_densities =
 { 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.196, 0.098 };
-
-static const escp2_densities_t c3pl_pigment_densities =
-{ 3.2, 1.6,  0.84, 0.865, 0.534, 0.534, 0.534, 0.267 };
-
-static const escp2_densities_t c2pl_densities =
-{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.650, 0.650, 0.325 };
-
-static const escp2_densities_t c1_8pl_densities =
-{ 2.3, 1.15, 0.57, 0.650, 0.650,     0, 0.650, 0.360 };
-
-static const escp2_densities_t c4pl_pigment_densities =
-{ 2.7, 1.35, 0.68, 0.798, 0.798, 0.798, 0.399, 0.200 };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -347,7 +347,7 @@ static const input_slot_list_t pro_roll_feed_input_slot_list =
   sizeof(pro_roll_feed_input_slots) / sizeof(const input_slot_t)
 };
 
-static const input_slot_t sp5000_input_slots[] =
+static const input_slot_t spro5000_input_slots[] =
 {
   {
     "CutSheet1",
@@ -383,10 +383,10 @@ static const input_slot_t sp5000_input_slots[] =
   }
 };
 
-static const input_slot_list_t sp5000_input_slot_list =
+static const input_slot_list_t spro5000_input_slot_list =
 {
-  sp5000_input_slots,
-  sizeof(sp5000_input_slots) / sizeof(const input_slot_t)
+  spro5000_input_slots,
+  sizeof(spro5000_input_slots) / sizeof(const input_slot_t)
 };
 
 static const input_slot_list_t default_input_slot_list =
@@ -555,7 +555,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 7, 0, 0,
-    photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
+    sp700_dotsizes, sp700_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL
@@ -571,7 +571,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(118 / 10), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 7, 0, 0,
-    photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
+    sp700_dotsizes, sp700_densities, &stpi_escp2_simple_drops,
     stpi_escp2_g3_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL
@@ -587,7 +587,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 7, 0, 0,
-    photo_dotsizes, photo_densities, &stpi_escp2_simple_drops,
+    sp700_dotsizes, sp700_densities, &stpi_escp2_simple_drops,
     stpi_escp2_720dpi_soft_reslist, &stpi_escp2_photo_gen1_inkgroup,
     standard_bits, g3_base_res, &default_input_slot_list,
     &standard_quality_list, NULL, NULL
@@ -877,9 +877,9 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     1, 7, 0, 0,
-    sp5000_dotsizes, photo_densities, &stpi_escp2_simple_drops,
+    spro5000_dotsizes, sp700_densities, &stpi_escp2_simple_drops,
     stpi_escp2_1440dpi_reslist, &stpi_escp2_photo_gen1_inkgroup,
-    standard_bits, g3_base_res, &sp5000_input_slot_list,
+    standard_bits, g3_base_res, &spro5000_input_slot_list,
     &standard_quality_list, NULL, NULL
   },
   /* 28: Stylus Pro 7000 */
@@ -1087,7 +1087,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &stpi_escp2_simple_drops,
     stpi_escp2_pro_reslist, &stpi_escp2_photo_pigment_inkgroup,
-    standard_bits, pro_base_res, &sp5000_input_slot_list,
+    standard_bits, pro_base_res, &spro5000_input_slot_list,
     &standard_quality_list, NULL, NULL
   },
   /* 41: Stylus Pro 10000 */
