@@ -301,14 +301,14 @@ stpi_dither_free(void *vd)
 {
   stpi_dither_t *d = (stpi_dither_t *) vd;
   int j;
+  if (d->aux_freefunc)
+    (d->aux_freefunc)(d);
   for (j = 0; j < CHANNEL_COUNT(d); j++)
     stpi_dither_channel_destroy(&(CHANNEL(d, j)));
   SAFE_FREE(d->offset0_table);
   SAFE_FREE(d->offset1_table);
   stpi_dither_matrix_destroy(&(d->dither_matrix));
   stpi_dither_matrix_destroy(&(d->transition_matrix));
-  if (d->aux_freefunc)
-    (d->aux_freefunc)(d);
   stpi_free(d->channel);
   stpi_free(d->channel_index);
   stpi_free(d->subchannel_count);

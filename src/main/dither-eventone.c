@@ -39,39 +39,27 @@
 
 typedef struct
 {
+  int dx;
+  int dy;
+  int r_sq;
+} distance_t;
+
+typedef struct
+{
   int	d2x;
   int   d2y;
-  stpi_dis_t	d_sq;
+  distance_t	d_sq;
   int	aspect;
+  int	physical_aspect;
+  int	diff_factor;
 } eventone_t;
 
-
-static inline void
-print_ink(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink,
-	  unsigned char bit, int length)
+typedef struct shade_segment
 {
-  int bits;
-  int j;
+  distance_t dis;
+  distance_t *et_dis;
+} shade_distance_t;
 
-  if (tptr != 0)
-    {
-      switch(bits = ink->bits)
-	{
-	case 1:
-	  tptr[d->ptr_offset] |= bit;
-	  return;
-	case 2:
-	  tptr[d->ptr_offset + length] |= bit;
-	  return;
-	default:
-	  tptr = &tptr[d->ptr_offset];
-	  for (j=1; j <= bits; j+=j, tptr += length) {
-	    if (j & bits) *tptr |= bit;
-	  }
-	  return;
-	}
-    }
-}
 
 #define EVEN_C1 256
 #define EVEN_C2 (EVEN_C1 * sqrt(3.0) / 2.0)
@@ -79,63 +67,84 @@ print_ink(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink,
 static void
 free_eventone_data(stpi_dither_t *d)
 {
-  eventone_t *et = (eventone_t *) d->aux_data;
-  if (et)
+  int i;
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      stpi_free(et);
-      d->aux_data = NULL;
+      if (CHANNEL(d, i).aux_data)
+	{
+	  shade_distance_t *shade = (shade_distance_t *) CHANNEL(d,i).aux_data;
+	  SAFE_FREE(shade->et_dis);
+	  SAFE_FREE(CHANNEL(d, i).aux_data);
+	}
     }
+  SAFE_FREE(d->aux_data);
+}
+
+static void
+et_setup(stpi_dither_t *d)
+{
+  static const int diff_factors[] = {1, 10, 16, 23, 32};
+  eventone_t *et = stpi_zalloc(sizeof(eventone_t));
+  int xa, ya;
+  int i;
+  for (i = 0; i < CHANNEL_COUNT(d); i++) {
+    int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
+    CHANNEL(d, i).error_rows = 1;
+    CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
+    CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
+  }
+
+  xa = d->x_aspect / d->y_aspect;
+  if (xa == 0)
+    xa = 1;
+  et->d_sq.dx = xa * xa;
+  et->d2x = 2 * et->d_sq.dx;
+
+  ya = d->y_aspect / d->x_aspect;
+  if (ya == 0)
+    ya = 1;
+  et->d_sq.dy = ya * ya;
+  et->d2y = 2 * et->d_sq.dy;
+
+  et->aspect = EVEN_C2 / (xa * ya);
+  et->d_sq.r_sq = 0;
+
+  for (i = 0; i < CHANNEL_COUNT(d); i++) {
+    int x;
+    shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
+    shade->dis = et->d_sq;
+    shade->et_dis = stpi_malloc(sizeof(distance_t) * d->dst_width);
+    for (x = 0; x < d->dst_width; x++) {
+      shade->et_dis[x] = et->d_sq;
+    }
+    CHANNEL(d, i).aux_data = shade;
+  }
+  et->physical_aspect = d->y_aspect / d->x_aspect;
+  if (et->physical_aspect >= 4)
+    et->physical_aspect = 4;
+  else if (et->physical_aspect >= 2)
+    et->physical_aspect = 2;
+  else et->physical_aspect = 1;
+
+  et->diff_factor = diff_factors[et->physical_aspect];
+
+  d->aux_data = et;
+  d->aux_freefunc = free_eventone_data;
 }
 
 static int
 et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
 {
-  eventone_t *et = (eventone_t *) d->aux_data;
-
-  if (!et) {
-    int i;
-    for (i = 0; i < CHANNEL_COUNT(d); i++) {
-      int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
-      CHANNEL(d, i).error_rows = 1;
-      CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
-      CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
-    }
-
-    et = stpi_zalloc(sizeof(eventone_t));
-
-    { int xa, ya;
-      xa = d->x_aspect / d->y_aspect;
-      if (xa == 0) xa = 1;
-      et->d_sq.dx = xa * xa;
-      et->d2x = 2 * et->d_sq.dx;
-
-      ya = d->y_aspect / d->x_aspect;
-      if (ya == 0) ya = 1;
-      et->d_sq.dy = ya * ya;
-      et->d2y = 2 * et->d_sq.dy;
-
-      et->aspect = EVEN_C2 / (xa * ya);
-      et->d_sq.r_sq = 0;
-    }
-
-    for (i = 0; i < CHANNEL_COUNT(d); i++) {
-      int x;
-      CHANNEL(d, i).shade.dis = et->d_sq;
-      CHANNEL(d, i).shade.et_dis = stpi_malloc(sizeof(stpi_dis_t) * d->dst_width);
-      for (x = 0; x < d->dst_width; x++) {
-	CHANNEL(d, i).shade.et_dis[x] = et->d_sq;
-      }
-    }
-    d->aux_data = et;
-    d->aux_freefunc = free_eventone_data;
-  }
+  int i;
+  if (!d->aux_data)
+    et_setup(d);
 
   if (!duplicate_line) {
     if ((zero_mask & ((1 << CHANNEL_COUNT(d)) - 1)) !=
 	((1 << CHANNEL_COUNT(d)) - 1)) {
-	d->last_line_was_empty = 0;
+      d->last_line_was_empty = 0;
     } else {
-	d->last_line_was_empty++;
+      d->last_line_was_empty++;
     }
   } else if (d->last_line_was_empty) {
     d->last_line_was_empty++;
@@ -144,58 +153,58 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
   if (d->last_line_was_empty >= 5) {
     return 0;
   } else if (d->last_line_was_empty == 4) {
-    int i;
     for (i = 0; i < CHANNEL_COUNT(d); i++)
       memset(&CHANNEL(d, i).errs[0][MAX_SPREAD], 0, d->dst_width * sizeof(int));
     return 0;
   }
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    CHANNEL(d, i).v = 0;
   return 1;
 }
 
 static inline void
-advance_eventone_pre(stpi_shade_segment_t *sp, eventone_t *et, int x)
+advance_eventone_pre(shade_distance_t *sp, eventone_t *et, int x)
 {
-  stpi_dis_t *etd = &sp->et_dis[x];
+  distance_t *etd = &sp->et_dis[x];
   int t = sp->dis.r_sq + sp->dis.dx;
-  if (t <= etd->r_sq) { 				/* Do eventone calculations */
-    sp->dis.r_sq = t;					/* Nearest pixel same as last one */
+  if (t <= etd->r_sq) { 	/* Do eventone calculations */
+    sp->dis.r_sq = t;		/* Nearest pixel same as last one */
     sp->dis.dx += et->d2x;
   } else {
-    sp->dis = *etd;					/* Nearest pixel is from a previous line */
+    sp->dis = *etd;		/* Nearest pixel is from a previous line */
   }
 }
 
 static inline void
-diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int direction)
+eventone_update(stpi_dither_channel_t *dc, eventone_t *et,
+		int x, int direction)
 {
-    /* Eventone updates */
+  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
+  distance_t *etd = &sp->et_dis[x];
+  int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
+  int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
+  if (u < t) {				/* If dot from this line is close */
+    t = u;				/* Use it instead */
+    etd->dx = sp->dis.dx;
+    etd->dy = sp->dis.dy;
+  }
+  etd->dy += et->d2y;
 
-    { stpi_shade_segment_t *sp = &dc->shade;
-      stpi_dis_t *etd = &sp->et_dis[x];
-      int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
-      int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
-      if (u < t) {				/* If dot from this line is close */
-        t = u;					/* Use it instead */
-        etd->dx = sp->dis.dx;
-        etd->dy = sp->dis.dy;
-      }
-      etd->dy += et->d2y;
+  if (t > 65535) {			/* Do some hard limiting */
+    t = 65535;
+  }
+  etd->r_sq = t;
+}
 
-      if (t > 65535) {				/* Do some hard limiting */
-        t = 65535;
-      }
-      etd->r_sq = t;
-    }
-
-    /* Error diffusion updates */
-
-    { int fraction = (dc->v + (diff_factor>>1)) / diff_factor;
-      int frac_2 = fraction + fraction;
-      int frac_3 = frac_2 + fraction;
-      dc->errs[0][x + MAX_SPREAD] = frac_3;
-      dc->errs[0][x + MAX_SPREAD - direction] += frac_2;
-      dc->v -= (frac_2 + frac_3);
-    }
+static inline void
+diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int x, int direction)
+{
+  int fraction = (dc->v + (et->diff_factor>>1)) / et->diff_factor;
+  int frac_2 = fraction + fraction;
+  int frac_3 = frac_2 + fraction;
+  dc->errs[0][x + MAX_SPREAD] = frac_3;
+  dc->errs[0][x + MAX_SPREAD - direction] += frac_2;
+  dc->v -= (frac_2 + frac_3);
 }
 
 static inline int
@@ -209,8 +218,8 @@ eventone_adjust(stpi_dither_channel_t *dc, eventone_t *et, int dither_point,
   if (desired == 0) {
     dither_point = 0;
   } else {
-    dither_point += dc->shade.dis.r_sq * et->aspect -
-      (EVEN_C1 * 65535) / desired;
+    shade_distance_t *shade = (shade_distance_t *) dc->aux_data;
+    dither_point += shade->dis.r_sq * et->aspect - (EVEN_C1 * 65535) / desired;
     if (dither_point > 65535)
       dither_point = 65535;
     else if (dither_point < 0)
@@ -220,7 +229,7 @@ eventone_adjust(stpi_dither_channel_t *dc, eventone_t *et, int dither_point,
 }
 
 static inline void
-find_segment(stpi_dither_channel_t *dc, unsigned base,
+find_segment(stpi_dither_channel_t *dc, unsigned inkval,
 	     stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
 {
   lower->range = 0;
@@ -237,14 +246,10 @@ find_segment(stpi_dither_channel_t *dc, unsigned base,
       stpi_ink_defn_t *ip;
 
       for (i=0, ip = dc->ink_list; i < dc->nlevels - 1; i++, ip++) {
-	if (ip->value <= base) {
-	  lower->bits = ip->bits;
-	  lower->range = ip->value;
-	} else {
-	  upper->bits = ip->bits;
-	  upper->range = ip->value;
-	  return;
-	}
+	if (ip->value > inkval)
+	  break;
+	lower->bits = ip->bits;
+	lower->range = ip->value;
       }
 
       upper->bits = ip->bits;
@@ -253,15 +258,47 @@ find_segment(stpi_dither_channel_t *dc, unsigned base,
 }
 
 static inline int
-find_ditherpoint(stpi_dither_channel_t *dc, int inkval,
-		 stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
+find_segment_and_ditherpoint(stpi_dither_channel_t *dc, unsigned inkval,
+			     stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
 {
+  find_segment(dc, inkval, lower, upper);
   if (inkval <= lower->range)
     return 0;
   else if (inkval >= upper->range)
     return 65535;
   else
-    return (65535 * (inkval - lower->range)) / (upper->range - lower->range);
+    return (65535u * (inkval - lower->range)) / (upper->range - lower->range);
+}
+
+static inline void
+print_ink(stpi_dither_t *d, unsigned char *tptr, const stpi_ink_defn_t *ink,
+	  unsigned char bit, int length)
+{
+  int j;
+
+  if (tptr != 0)
+    {
+      tptr += d->ptr_offset;
+      switch(ink->bits)
+	{
+	case 1:
+	  tptr[0] |= bit;
+	  return;
+	case 2:
+	  tptr[length] |= bit;
+	  return;
+	case 3:
+	  tptr[0] |= bit;
+	  tptr[length] |= bit;
+	  return;
+	default:
+	  for (j=1; j <= ink->bits; j+=j, tptr += length) {
+	    if (j & ink->bits)
+	      *tptr |= bit;
+	  }
+	  return;
+	}
+    }
 }
 
 void
@@ -273,7 +310,6 @@ stpi_dither_et(stp_vars_t v,
 {
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   eventone_t *et;
-  static const int diff_factors[] = {1, 10, 16, 23, 32};
 
   int		x,
 	        length;
@@ -283,20 +319,13 @@ stpi_dither_et(stp_vars_t v,
   int		terminate;
   int		direction;
   int		xerror, xstep, xmod;
-  int		aspect = d->y_aspect / d->x_aspect;
-  int		diff_factor;
-  int		range;
   int		channel_count = CHANNEL_COUNT(d);
 
-  if (!et_initializer(d, duplicate_line, zero_mask)) return;
+  if (!et_initializer(d, duplicate_line, zero_mask))
+    return;
 
   et = (eventone_t *) d->aux_data;
 
-  if (aspect >= 4) { aspect = 4; }
-  else if (aspect >= 2) { aspect = 2; }
-  else aspect = 1;
-
-  diff_factor = diff_factors[aspect];
   length = (d->dst_width + 7) / 8;
 
   if (row & 1) {
@@ -318,42 +347,40 @@ stpi_dither_et(stp_vars_t v,
 
   for (; x != terminate; x += direction) {
 
-    range = 0;
+    int point_error = 0;
 
     for (i=0; i < channel_count; i++) {
       if (CHANNEL(d, i).ptr)
 	{
-	  int inkspot, base;
-	  int place;
+	  int inkspot;
+	  int range_point;
 	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
-	  stpi_shade_segment_t *sp = &dc->shade;
+	  shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
 	  stpi_ink_defn_t *inkp;
 	  stpi_ink_defn_t lower, upper;
 
 	  advance_eventone_pre(sp, et, x);
 
-	  /* Incorporate error data from previous line */
-	  base = raw[i];
-	  find_segment(dc, base, &lower, &upper);
-
 	  /*
+	   * Find which are the two candidate dot sizes.
 	   * Rather than use the absolute value of the point to compute
-	   * the error, use the relative value of the point within
+	   * the error, we will use the relative value of the point within
 	   * the range to find the two candidate dot sizes.
 	   */
-	  place = find_ditherpoint(dc, base, &lower, &upper);
+	  range_point =
+	    find_segment_and_ditherpoint(dc, raw[i], &lower, &upper);
 
-	  dc->v += 2 * place + dc->errs[0][x + MAX_SPREAD];
-	  inkspot = dc->v - place;
+	  /* Incorporate error data from previous line */
+	  dc->v += 2 * range_point + dc->errs[0][x + MAX_SPREAD];
+	  inkspot = dc->v - range_point;
 
-	  /* Find which are the two candidate dot sizes */
-	  range += eventone_adjust(dc, et, inkspot, place);
+	  point_error += eventone_adjust(dc, et, inkspot, range_point);
 
 	  /* Determine whether to print the larger or smaller dot */
 
 	  inkp = &lower;
-	  if (range >= 32768) {
-	    range -= 65535;
+	  if (point_error >= 32768) {
+	    point_error -= 65535;
 	    inkp = &upper;
 	    dc->v -= 131070;
 	    sp->dis = et->d_sq;
@@ -369,7 +396,8 @@ stpi_dither_et(stp_vars_t v,
 	  }
 
 	  /* Spread the error around to the adjacent dots */
-	  diffuse_error(dc, et, diff_factor, x, direction);
+	  eventone_update(dc, et, x, direction);
+	  diffuse_error(dc, et, x, direction);
 	}
     }
     if (direction == 1)

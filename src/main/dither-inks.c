@@ -99,7 +99,6 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
       SAFE_FREE(channel->errs);
     }
   SAFE_FREE(channel->ranges);
-  SAFE_FREE(channel->shade.et_dis);
   stpi_dither_matrix_destroy(&(channel->pick));
   stpi_dither_matrix_destroy(&(channel->dithermat));
 }  

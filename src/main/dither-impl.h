@@ -93,20 +93,6 @@ typedef struct dither_segment
   int is_equal;
 } stpi_dither_segment_t;
 
-typedef struct
-{
-  int dx;
-  int dy;
-  int r_sq;
-} stpi_dis_t;
-
-typedef struct shade_segment
-{
-  stpi_dis_t dis;
-  stpi_dis_t *et_dis;
-
-} stpi_shade_segment_t;
-
 typedef struct dither_channel
 {
   unsigned randomizer;		/* With Floyd-Steinberg dithering, control */
@@ -123,8 +109,6 @@ typedef struct dither_channel
 
   stpi_ink_defn_t *ink_list;
 
-  stpi_shade_segment_t shade;
-
   int nlevels;
   stpi_dither_segment_t *ranges;
 
@@ -135,6 +119,7 @@ typedef struct dither_channel
   dither_matrix_t dithermat;
   int row_ends[2];
   unsigned char *ptr;
+  void *aux_data;		/* aux_freefunc for dither should free this */
 } stpi_dither_channel_t;
 
 typedef struct dither
