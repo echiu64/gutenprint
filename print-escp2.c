@@ -201,7 +201,7 @@ static simple_dither_range_t variable_dither_ranges[] =
 {
   { 0.083, 0x1, 0, 1 },
   { 0.125, 0x2, 0, 2 },
-  { 0.25,  0x3, 0, 3 },
+/*  { 0.25,  0x3, 0, 3 }, */
   { 0.333, 0x1, 1, 1 },
   { 0.5,   0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
@@ -965,22 +965,6 @@ escp2_print(const printer_t *printer,		/* I - Model */
     bits = 2;
   else
     bits = 1;
-#if 0
-  /*
-   * We think we've fixed softweave finally!
-   */
-  if (!use_softweave)
-    {
-      /*
-       * In microweave mode, correct for the loss of page height that
-       * would happen in softweave mode.  The divide by 10 is to convert
-       * lines into points (Epson printers all have 720 ydpi);
-       */
-      int extra_points = (escp2_nozzles(model) *
-			  escp2_nozzle_separation(model) + 5) / 10;
-      top += extra_points;
-    }
-#endif
  /*
   * Compute the output size...
   */
@@ -1187,8 +1171,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
-  dither_set_black_levels(dither, 1.5, 1.5, 1.5);
-  dither_set_black_lower(dither, .4 / bits);
+  dither_set_black_levels(dither, 1.0, 1.0, 1.0);
+  dither_set_black_lower(dither, .4 / ((1 << bits) - 1));
   if (use_glossy_film)
     dither_set_black_upper(dither, .999);
   else
