@@ -733,7 +733,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
     CANON_CAP_STD1 | CANON_CAP_DMT | CANON_CAP_ACKSHORT,
     {-1,0,0,0,-1,-1},
-    {1,1,1,1,1,1},
+    {1,1.8,1,0.5,1,1},
     CANON_INK(canon_ink_standardphoto),
     standard_lum_adjustment,
     standard_hue_adjustment,
