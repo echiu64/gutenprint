@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.9  1999/10/18 01:37:02  rlk
+ *   Remove spurious stuff
+ *
  *   Revision 1.8  1999/10/17 23:44:07  rlk
  *   16-bit everything (untested)
  *
@@ -146,12 +149,6 @@
  */
 
 int	error[2][4][14*720+1];
-
-
-/*
-int	error6[2][7][14*720+1];
-*/
-
 
 /*
  * 'dither_black()' - Dither grayscale pixels to black.
@@ -769,8 +766,6 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
 #define KDARKNESS_LOWER_16 (32 * 256)
 #define KDARKNESS_UPPER_16 (144 * 256)
 
-#define ERROR_DIFFUSION_DIV 8
-
 #define C_RANDOMIZER 4
 #define M_RANDOMIZER 4
 #define Y_RANDOMIZER 4
@@ -964,7 +959,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
       /* Need to do the diffuse-the-black-into-cmyk thing here, too */
       ok = k;
-      nk = k + (ditherk) / ERROR_DIFFUSION_DIV;
+      nk = k + (ditherk) / 8;
       if (kdarkness < KDARKNESS_UPPER_16)
 	{
 	  if (ak < (KDARKNESS_UPPER_16 - kdarkness) * KDARKNESS_LOWER_16 /
@@ -1047,7 +1042,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
      * Cyan
      *****************************************************************/
     oc = c;
-    c += (ditherc) / ERROR_DIFFUSION_DIV;
+    c += (ditherc) / 8;
 #ifdef PRINT_DEBUG
     odc = ditherc;
     dc = c;
@@ -1123,7 +1118,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
      * Magenta
      *****************************************************************/
     om = m;
-    m += (ditherm) / ERROR_DIFFUSION_DIV;
+    m += (ditherm) / 8;
 #ifdef PRINT_DEBUG
     odm = ditherm;
     dm = m;
@@ -1196,7 +1191,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 
 
     oy = y;
-    y += (dithery) / ERROR_DIFFUSION_DIV;
+    y += (dithery) / 8;
 #ifdef PRINT_DEBUG
     ody = dithery;
     dy = y;
