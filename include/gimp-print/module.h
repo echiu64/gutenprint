@@ -27,14 +27,14 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_MODULE_H
-#define GIMP_PRINT_INTERNAL_MODULE_H
+#ifndef GIMP_PRINT_MODULE_H
+#define GIMP_PRINT_MODULE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
+#include <gimp-print/list.h>
 
 #ifdef USE_LTDL
 #include <ltdl.h>
@@ -50,57 +50,57 @@ extern "C" {
 #define DLERROR()              lt_dlerror()
 #elif defined(USE_DLOPEN)
 #define DLOPEN(Filename)       dlopen(Filename, RTLD_LAZY)
-#define DLSYM(Handle, Symbol)  stpi_dlsym(Handle, Symbol, modulename)
+#define DLSYM(Handle, Symbol)  stp_dlsym(Handle, Symbol, modulename)
 #define DLCLOSE(Handle)        dlclose(Handle)
 #define DLERROR()              dlerror()
 #endif
 
-typedef struct stpi_module_version
+typedef struct stp_module_version
 {
   int major;
   int minor;
-} stpi_module_version_t;
+} stp_module_version_t;
 
 
 typedef enum
 {
-  STPI_MODULE_CLASS_INVALID,
-  STPI_MODULE_CLASS_MISC,
-  STPI_MODULE_CLASS_FAMILY,
-  STPI_MODULE_CLASS_COLOR,
-  STPI_MODULE_CLASS_DITHER
-} stpi_module_class_t;
+  STP_MODULE_CLASS_INVALID,
+  STP_MODULE_CLASS_MISC,
+  STP_MODULE_CLASS_FAMILY,
+  STP_MODULE_CLASS_COLOR,
+  STP_MODULE_CLASS_DITHER
+} stp_module_class_t;
 
 
-typedef struct stpi_module
+typedef struct stp_module
 {
   const char *name;         /* module name */
   const char *version;      /* module version number */
   const char *comment;      /* description of module function */
-  stpi_module_class_t class; /* type of module */
+  stp_module_class_t class; /* type of module */
 #ifdef USE_LTDL
   lt_dlhandle handle;       /* ltdl module pointer (set by libgimpprint) */
 #else
   void *handle;             /* dlopen or static module pointer */
 #endif
   int (*init)(void);        /* initialisation function */
-  int (*exit)(void);        /* cleanup and removal function */
+  int (*fini)(void);        /* finalise (cleanup and removal) function */
   void *syms;               /* pointer to e.g. a struct containing
                                internal module symbols (class-specific
                                functions and data) */
-} stpi_module_t;
+} stp_module_t;
 
 
-int stpi_module_load(void);
-int stpi_module_exit(void);
-int stpi_module_open(const char *modulename);
-int stpi_module_init(void);
-int stpi_module_close(stpi_list_item_t *module);
-stpi_list_t *stpi_module_get_class(stpi_module_class_t class);
+int stp_module_load(void);
+int stp_module_exit(void);
+int stp_module_open(const char *modulename);
+int stp_module_init(void);
+int stp_module_close(stp_list_item_t *module);
+stp_list_t *stp_module_get_class(stp_module_class_t class);
 
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_MODULE_H */
+#endif /* GIMP_PRINT_MODULE_H */

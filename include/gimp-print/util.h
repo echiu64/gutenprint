@@ -26,8 +26,8 @@
  * @brief Utility functions.
  */
 
-#ifndef __GIMP_PRINT_UTIL_H__
-#define __GIMP_PRINT_UTIL_H__
+#ifndef GIMP_PRINT_UTIL_H
+#define GIMP_PRINT_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,13 +64,96 @@ extern int stp_init(void);
  */
 extern const char *stp_set_output_codeset(const char *codeset);
 
+extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
+					       stp_curve_compose_t comp);
+extern void stp_abort(void);
+
+/*
+ * Remove inactive and unclaimed options from the list
+ */
+extern void stp_prune_inactive_options(stp_vars_t v);
+
+
+extern void stp_zprintf(stp_const_vars_t v, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+
+extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
+			stp_const_vars_t v);
+
+extern void stp_putc(int ch, stp_const_vars_t v);
+extern void stp_put16_le(unsigned short sh, stp_const_vars_t v);
+extern void stp_put16_be(unsigned short sh, stp_const_vars_t v);
+extern void stp_put32_le(unsigned int sh, stp_const_vars_t v);
+extern void stp_put32_be(unsigned int sh, stp_const_vars_t v);
+extern void stp_puts(const char *s, stp_const_vars_t v);
+extern void stp_send_command(stp_const_vars_t v, const char *command,
+			     const char *format, ...);
+
+extern void stp_erputc(int ch);
+
+extern void stp_eprintf(stp_const_vars_t v, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+extern void stp_erprintf(const char *format, ...)
+       __attribute__((format(__printf__, 1, 2)));
+extern void stp_asprintf(char **strp, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+extern void stp_catprintf(char **strp, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+
+#define STP_DBG_LUT 		0x1
+#define STP_DBG_COLORFUNC	0x2
+#define STP_DBG_INK		0x4
+#define STP_DBG_PS		0x8
+#define STP_DBG_PCL		0x10
+#define STP_DBG_ESCP2		0x20
+#define STP_DBG_CANON		0x40
+#define STP_DBG_LEXMARK	        0x80
+#define STP_DBG_WEAVE_PARAMS	0x100
+#define STP_DBG_ROWS		0x200
+#define STP_DBG_MARK_FILE      0x400
+#define STP_DBG_LIST           0x800
+#define STP_DBG_MODULE         0x1000
+#define STP_DBG_PATH           0x2000
+#define STP_DBG_PAPER          0x4000
+#define STP_DBG_PRINTERS       0x8000
+#define STP_DBG_XML            0x10000
+#define STP_DBG_VARS           0x20000
+#define STP_DBG_OLYMPUS        0x40000
+
+extern unsigned long stp_get_debug_level(void);
+extern void stp_dprintf(unsigned long level, stp_const_vars_t v,
+			const char *format, ...)
+       __attribute__((format(__printf__, 3, 4)));
+extern void stp_deprintf(unsigned long level, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
+extern void stp_init_debug_messages(stp_vars_t v);
+extern void stp_flush_debug_messages(stp_vars_t v);
+
+
+extern void *stp_malloc (size_t);
+extern void *stp_zalloc (size_t);
+extern void *stp_realloc (void *ptr, size_t);
+extern void stp_free(void *ptr);
+
+#define SAFE_FREE(x)				\
+do						\
+{						\
+  if ((x))					\
+    stp_free((char *)(x));			\
+  ((x)) = NULL;					\
+} while (0)
+
+extern size_t stp_strlen(const char *s);
+extern char *stp_strndup(const char *s, int n);
+extern char *stp_strdup(const char *s);
+
 /** @} */
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* __GIMP_PRINT_UTIL_H__ */
+#endif /* GIMP_PRINT_UTIL_H */
 /*
  * End of "$Id$".
  */

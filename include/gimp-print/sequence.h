@@ -30,8 +30,8 @@
  * compile on generic platforms that don't support glib, gimp, gimpprint, etc.
  */
 
-#ifndef __GIMP_PRINT_SEQUENCE_H__
-#define __GIMP_PRINT_SEQUENCE_H__
+#ifndef GIMP_PRINT_SEQUENCE_H
+#define GIMP_PRINT_SEQUENCE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -387,4 +387,4 @@ extern const unsigned short *stp_sequence_get_ushort_data(stp_const_sequence_t s
   }
 #endif
 
-#endif /* __GIMP_PRINT_SEQUENCE_H__ */
+#endif /* GIMP_PRINT_SEQUENCE_H */

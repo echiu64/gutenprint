@@ -32,17 +32,28 @@ noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
 pkginclude_HEADERS = \
 	gimp-print.h \
+	gimp-print-module.h \
 	array.h \
+	bit-ops.h \
+	channel.h \
 	color.h \
+	curve-cache.h \
 	curve.h \
+	dither.h \
 	sequence.h \
 	image.h \
+	list.h \
+	module.h \
+	mxml.h \
 	paper.h \
+	path.h \
 	printers.h \
 	sequence.h \
 	string-list.h \
 	util.h \
-	vars.h
+	vars.h \
+	weave.h \
+	xml.h
 
 nodist_pkginclude_HEADERS = gimp-print-version.h
 

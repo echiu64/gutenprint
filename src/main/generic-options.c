@@ -178,7 +178,7 @@ stpi_get_job_mode_by_name(const char *job_mode)
 }
 
 stp_parameter_list_t
-stpi_list_generic_parameters(stp_const_vars_t v)
+stp_list_generic_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -199,7 +199,7 @@ stpi_describe_generic_parameter(stp_const_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stpi_fill_parameter_settings(description, &(the_parameters[i]));
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
 

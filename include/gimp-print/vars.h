@@ -26,8 +26,8 @@
  * @brief Print job functions.
  */
 
-#ifndef __GIMP_PRINT_VARS_H__
-#define __GIMP_PRINT_VARS_H__
+#ifndef GIMP_PRINT_VARS_H
+#define GIMP_PRINT_VARS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -1256,13 +1256,43 @@ extern int stp_verify(stp_vars_t v);
  */
 extern stp_const_vars_t stp_default_settings(void);
 
+typedef void *(*stp_copy_data_func_t)(void *);
+typedef void (*stp_free_data_func_t)(void *);
+
+typedef enum
+{
+  PARAMETER_BAD,
+  PARAMETER_OK,
+  PARAMETER_INACTIVE
+} stp_parameter_verify_t;
+
+extern void stp_allocate_component_data(stp_vars_t v,
+					const char *name,
+					stp_copy_data_func_t copyfunc,
+					stp_free_data_func_t freefunc,
+					void *data);
+extern void stp_destroy_component_data(stp_vars_t v, const char *name);
+extern void *stp_get_component_data(stp_const_vars_t v, const char *name);
+
+extern stp_parameter_verify_t stp_verify_parameter(stp_const_vars_t v,
+						   const char *parameter,
+						   int quiet);
+extern int stp_get_verified(stp_const_vars_t);
+extern void stp_set_verified(stp_vars_t, int value);
+
+extern void stp_copy_options(stp_vars_t vd, stp_const_vars_t vs);
+
+extern void
+stp_fill_parameter_settings(stp_parameter_t *desc,
+			    const stp_parameter_t *param);
+
   /** @} */
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* __GIMP_PRINT_VARS_H__ */
+#endif /* GIMP_PRINT_VARS_H */
 /*
  * End of "$Id$".
  */

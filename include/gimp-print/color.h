@@ -44,10 +44,50 @@ extern "C" {
  * @{
  */
 
-/** The color opaque data type. */
-typedef void *stp_color_t;
-/** The constant color opaque data type. */
-typedef const void *stp_const_color_t;
+typedef struct
+{
+  int (*init)(stp_vars_t v, stp_image_t *image, size_t steps);
+  int (*get_row)(stp_vars_t v, stp_image_t *image,
+		 int row, unsigned *zero_mask);
+  stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
+  void (*describe_parameter)(stp_const_vars_t v, const char *name,
+			     stp_parameter_t *description);
+} stp_colorfuncs_t;
+
+
+#define COOKIE_COLOR   0x05d892e2
+
+typedef struct stp_color
+{
+  int        cookie;            /* Magic number */
+  const char *short_name;       /* Color module name */
+  const char *long_name;        /* Long name for UI */
+  const stp_colorfuncs_t *colorfuncs;
+} stp_color_t;
+
+/*
+ * Initialize the color machinery.  Return value is the number
+ * of columns of output
+ */
+extern int stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
+
+/*
+ * Acquire input and perform color conversion.  Return value
+ * is status; zero is success.
+ */
+extern int stp_color_get_row(stp_vars_t v, stp_image_t *image,
+			     int row, unsigned *zero_mask);
+
+extern stp_parameter_list_t stp_color_list_parameters(stp_const_vars_t v);
+
+extern void stp_color_describe_parameter(stp_const_vars_t v, const char *name,
+					 stp_parameter_t *description);
+
+extern int
+stp_color_register(const stp_color_t *color);
+
+extern int
+stp_color_unregister(const stp_color_t *color);
 
 /**
  * Get the number of available color modules.
@@ -62,7 +102,7 @@ stp_color_count(void);
  * number of papers - 1).
  * @returns a pointer to the color module, or NULL on failure.
  */
-extern stp_const_color_t
+extern const stp_color_t *
 stp_get_color_by_name(const char *name);
 
 /**
@@ -71,8 +111,11 @@ stp_get_color_by_name(const char *name);
  * number of papers - 1).
  * @returns a pointer to the color module, or NULL on failure.
  */
-extern stp_const_color_t
+extern const stp_color_t *
 stp_get_color_by_index(int idx);
+
+extern const stp_color_t *
+stp_get_color_by_colorfuncs(stp_colorfuncs_t *colorfuncs);
 
 /**
  * Get the short (untranslated) name of a color module.
@@ -80,7 +123,7 @@ stp_get_color_by_index(int idx);
  * @returns the short name.
  */
 extern const char *
-stp_color_get_name(stp_const_color_t c);
+stp_color_get_name(const stp_color_t *c);
 
 /**
  * Get the long (translated) name of a color module.
@@ -88,7 +131,7 @@ stp_color_get_name(stp_const_color_t c);
  * @returns the long name.
  */
 extern const char *
-stp_color_get_long_name(stp_const_color_t c);
+stp_color_get_long_name(const stp_color_t *c);
 
 
 

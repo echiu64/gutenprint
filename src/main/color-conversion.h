@@ -32,6 +32,7 @@ extern "C" {
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
+#include <gimp-print/curve-cache.h>
 
 typedef enum
 {
@@ -145,7 +146,7 @@ typedef struct
   const color_description_t *input_color_description;
   const color_description_t *output_color_description;
   const color_correction_t *color_correction;
-  cached_curve_t channel_curves[STP_CHANNEL_LIMIT];
+  stp_cached_curve_t channel_curves[STP_CHANNEL_LIMIT];
   double gamma_values[STP_CHANNEL_LIMIT];
   double print_gamma;
   double app_gamma;
@@ -154,10 +155,10 @@ typedef struct
   double brightness;
   int linear_contrast_adjustment;
   int printed_colorfunc;
-  cached_curve_t hue_map;
-  cached_curve_t lum_map;
-  cached_curve_t sat_map;
-  cached_curve_t gcr_curve;
+  stp_cached_curve_t hue_map;
+  stp_cached_curve_t lum_map;
+  stp_cached_curve_t sat_map;
+  stp_cached_curve_t gcr_curve;
   unsigned short *gray_tmp;	/* Color -> Gray */
   unsigned short *cmy_tmp;	/* CMY -> CMYK */
   unsigned short *cmyk_tmp;	/* CMYK -> CMYKRB */

@@ -32,7 +32,6 @@
 #include <gimp-print/gimp-print.h>
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "gimp-print-internal.h"
-#include "module.h"
 #include <time.h>
 #include <string.h>
 #ifdef HAVE_LIMITS_H
@@ -157,7 +156,7 @@ ps_parameters_internal(stp_const_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stpi_fill_parameter_settings(description, &(the_parameters[i]));
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
 
@@ -249,16 +248,16 @@ ps_media_size_internal(stp_const_vars_t v,		/* I */
   if (!pagesize)
     pagesize = "";
 
-  stpi_dprintf(STPI_DBG_PS, v,
+  stp_dprintf(STP_DBG_PS, v,
 	      "ps_media_size(%d, \'%s\', \'%s\', %p, %p)\n",
-	      stpi_get_model_id(v), ppd_file_name, pagesize,
-	       (void *) width, (void *) height);
+	      stp_get_model_id(v), ppd_file_name, pagesize,
+	      (void *) width, (void *) height);
 
   if ((dimensions = ppd_find(ppd_file_name, "PaperDimension", pagesize, NULL))
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
-    stpi_default_media_size(v, width, height);
+    stp_default_media_size(v, width, height);
 }
 
 static void
@@ -295,7 +294,7 @@ ps_imageable_area_internal(stp_const_vars_t v,      /* I */
 		       "ImageableArea", pagesize, NULL))
       != NULL)
     {
-      stpi_dprintf(STPI_DBG_PS, v, "area = \'%s\'\n", area);
+      stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
       if (sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop) == 4)
 	{
 	  *left   = (int)fleft;
@@ -380,7 +379,7 @@ static int
 ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 {
   int		status = 1;
-  int		model = stpi_get_model_id(v);
+  int		model = stp_get_model_id(v);
   const char	*ppd_file = stp_get_file_parameter(v, "PPDFile");
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_size = stp_get_string_parameter(v, "PageSize");
@@ -427,14 +426,14 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   if (!media_source)
     media_source = "";
 
-  stpi_prune_inactive_options(nv);
+  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
-      stpi_eprintf(nv, "Print options not verified; cannot print.\n");
+      stp_eprintf(nv, "Print options not verified; cannot print.\n");
       return 0;
     }
 
-  stpi_image_init(image);
+  stp_image_init(image);
 
  /*
   * Compute the output size...
@@ -449,8 +448,8 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = stpi_image_height(image);
-  image_width = stpi_image_width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
  /*
   * Output a standard PostScript header with DSC comments...
@@ -462,29 +461,29 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
   top = page_height - top;
 
-  stpi_dprintf(STPI_DBG_PS, v,
+  stp_dprintf(STP_DBG_PS, v,
 	      "out_width = %d, out_height = %d\n", out_width, out_height);
-  stpi_dprintf(STPI_DBG_PS, v,
+  stp_dprintf(STP_DBG_PS, v,
 	      "page_left = %d, page_right = %d, page_bottom = %d, page_top = %d\n",
 	      page_left, page_right, page_bottom, page_top);
-  stpi_dprintf(STPI_DBG_PS, v, "left = %d, top = %d\n", left, top);
+  stp_dprintf(STP_DBG_PS, v, "left = %d, top = %d\n", left, top);
 
-  stpi_puts("%!PS-Adobe-3.0\n", v);
+  stp_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
-  stpi_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
-	      stpi_image_get_appname(image), VERSION, RELEASE_DATE);
+  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
+	      stp_image_get_appname(image), VERSION, RELEASE_DATE);
 #else
-  stpi_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stpi_image_get_appname(image));
+  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stp_image_get_appname(image));
 #endif
-  stpi_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
-  stpi_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
-  stpi_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
-          left, top - out_height, left + out_width, top);
-  stpi_puts("%%DocumentData: Clean7Bit\n", v);
-  stpi_zprintf(v, "%%%%LanguageLevel: %d\n", model + 1);
-  stpi_puts("%%Pages: 1\n", v);
-  stpi_puts("%%Orientation: Portrait\n", v);
-  stpi_puts("%%EndComments\n", v);
+  stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
+  stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
+  stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
+	      left, top - out_height, left + out_width, top);
+  stp_puts("%%DocumentData: Clean7Bit\n", v);
+  stp_zprintf(v, "%%%%LanguageLevel: %d\n", model + 1);
+  stp_puts("%%Pages: 1\n", v);
+  stp_puts("%%Orientation: Portrait\n", v);
+  stp_puts("%%EndComments\n", v);
 
  /*
   * Find any printer-specific commands...
@@ -496,7 +495,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "PageSize";
     commands[num_commands].choice  = media_size;
-    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -506,7 +505,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "InputSlot";
     commands[num_commands].choice  = media_source;
-    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -516,7 +515,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "MediaType";
     commands[num_commands].choice  = media_type;
-    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -526,7 +525,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   {
     commands[num_commands].keyword = "Resolution";
     commands[num_commands].choice  = resolution;
-    commands[num_commands].command = stpi_malloc(strlen(command) + 1);
+    commands[num_commands].command = stp_malloc(strlen(command) + 1);
     strcpy(commands[num_commands].command, command);
     commands[num_commands].order   = order;
     num_commands ++;
@@ -563,123 +562,123 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 
   if (num_commands > 0)
   {
-    stpi_puts("%%BeginSetup\n", v);
+    stp_puts("%%BeginSetup\n", v);
 
     for (i = 0; i < num_commands; i ++)
     {
-      stpi_puts("[{\n", v);
-      stpi_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
+      stp_puts("[{\n", v);
+      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
                   commands[i].choice);
       if (commands[i].command[0])
       {
-	stpi_puts(commands[i].command, v);
+	stp_puts(commands[i].command, v);
 	if (commands[i].command[strlen(commands[i].command) - 1] != '\n')
-          stpi_puts("\n", v);
+          stp_puts("\n", v);
       }
 
-      stpi_puts("%%EndFeature\n", v);
-      stpi_puts("} stopped cleartomark\n", v);
-      stpi_free(commands[i].command);
+      stp_puts("%%EndFeature\n", v);
+      stp_puts("} stopped cleartomark\n", v);
+      stp_free(commands[i].command);
     }
 
-    stpi_puts("%%EndSetup\n", v);
+    stp_puts("%%EndSetup\n", v);
   }
 
  /*
   * Output the page...
   */
 
-  stpi_puts("%%Page: 1 1\n", v);
-  stpi_puts("gsave\n", v);
+  stp_puts("%%Page: 1 1\n", v);
+  stp_puts("gsave\n", v);
 
-  stpi_zprintf(v, "%d %d translate\n", left, top);
+  stp_zprintf(v, "%d %d translate\n", left, top);
 
   /* Force locale to "C", because decimal numbers in Postscript must
      always be printed with a decimal point rather than the
      locale-specific setting. */
 
   setlocale(LC_ALL, "C");
-  stpi_zprintf(v, "%.3f %.3f scale\n",
-          (double)out_width / ((double)image_width),
-          (double)out_height / ((double)image_height));
+  stp_zprintf(v, "%.3f %.3f scale\n",
+	      (double)out_width / ((double)image_width),
+	      (double)out_height / ((double)image_height));
   setlocale(LC_ALL, "");
 
-  stpi_channel_reset(nv);
-  stpi_channel_add(nv, 0, 0, 1.0);
+  stp_channel_reset(nv);
+  stp_channel_add(nv, 0, 0, 1.0);
   if (strcmp(print_mode, "Color") == 0)
     {
-      stpi_channel_add(nv, 1, 0, 1.0);
-      stpi_channel_add(nv, 2, 0, 1.0);
+      stp_channel_add(nv, 1, 0, 1.0);
+      stp_channel_add(nv, 2, 0, 1.0);
       stp_set_string_parameter(nv, "STPIOutputType", "RGB");
     }
   else
     stp_set_string_parameter(nv, "STPIOutputType", "Whitescale");
 
-  out_channels = stpi_color_init(nv, image, 256);
+  out_channels = stp_color_init(nv, image, 256);
 
   if (model == 0)
   {
-    stpi_zprintf(v, "/picture %d string def\n", image_width * out_channels);
+    stp_zprintf(v, "/picture %d string def\n", image_width * out_channels);
 
-    stpi_zprintf(v, "%d %d 8\n", image_width, image_height);
+    stp_zprintf(v, "%d %d 8\n", image_width, image_height);
 
-    stpi_puts("[ 1 0 0 -1 0 1 ]\n", v);
+    stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
     if (strcmp(print_mode, "Color") == 0)
-      stpi_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
+      stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
     else
-      stpi_puts("{currentfile picture readhexstring pop} image\n", v);
+      stp_puts("{currentfile picture readhexstring pop} image\n", v);
 
     for (y = 0; y < image_height; y ++)
     {
-      if (stpi_color_get_row(nv, image, y, &zero_mask))
+      if (stp_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
 
-      out = stpi_channel_get_input(nv);
+      out = stp_channel_get_input(nv);
       ps_hex(v, out, image_width * out_channels);
     }
   }
   else
   {
     if (strcmp(print_mode, "Color") == 0)
-      stpi_puts("/DeviceRGB setcolorspace\n", v);
+      stp_puts("/DeviceRGB setcolorspace\n", v);
     else
-      stpi_puts("/DeviceGray setcolorspace\n", v);
+      stp_puts("/DeviceGray setcolorspace\n", v);
 
-    stpi_puts("<<\n", v);
-    stpi_puts("\t/ImageType 1\n", v);
+    stp_puts("<<\n", v);
+    stp_puts("\t/ImageType 1\n", v);
 
-    stpi_zprintf(v, "\t/Width %d\n", image_width);
-    stpi_zprintf(v, "\t/Height %d\n", image_height);
-    stpi_puts("\t/BitsPerComponent 8\n", v);
+    stp_zprintf(v, "\t/Width %d\n", image_width);
+    stp_zprintf(v, "\t/Height %d\n", image_height);
+    stp_puts("\t/BitsPerComponent 8\n", v);
 
     if (strcmp(print_mode, "Color") == 0)
-      stpi_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
+      stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
     else
-      stpi_puts("\t/Decode [ 0 1 ]\n", v);
+      stp_puts("\t/Decode [ 0 1 ]\n", v);
 
-    stpi_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
+    stp_puts("\t/DataSource currentfile /ASCII85Decode filter\n", v);
 
     if ((image_width * 72 / out_width) < 100)
-      stpi_puts("\t/Interpolate true\n", v);
+      stp_puts("\t/Interpolate true\n", v);
 
-    stpi_puts("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", v);
+    stp_puts("\t/ImageMatrix [ 1 0 0 -1 0 1 ]\n", v);
 
-    stpi_puts(">>\n", v);
-    stpi_puts("image\n", v);
+    stp_puts(">>\n", v);
+    stp_puts("image\n", v);
 
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
       /* FIXME!!! */
-      if (stpi_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
+      if (stp_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      out = stpi_channel_get_input(nv);
+      out = stp_channel_get_input(nv);
 
       out_ps_height = out_offset + image_width * out_channels;
 
@@ -698,12 +697,12 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
         memcpy(out, out + out_ps_height - out_offset, out_offset);
     }
   }
-  stpi_image_conclude(image);
+  stp_image_conclude(image);
 
-  stpi_puts("grestore\n", v);
-  stpi_puts("showpage\n", v);
-  stpi_puts("%%Trailer\n", v);
-  stpi_puts("%%EOF\n", v);
+  stp_puts("grestore\n", v);
+  stp_puts("showpage\n", v);
+  stp_puts("%%Trailer\n", v);
+  stp_puts("%%EOF\n", v);
   stp_vars_destroy(nv);
   return status;
 }
@@ -737,12 +736,12 @@ ps_hex(stp_const_vars_t v,	/* I - File to print to */
   {
     unsigned char pixel = (*data & 0xff00) >> 8;
    /*
-    * Put the hex chars out to the file; note that we don't use stpi_zprintf()
+    * Put the hex chars out to the file; note that we don't use stp_zprintf()
     * for speed reasons...
     */
 
-    stpi_putc(hex[pixel >> 4], v);
-    stpi_putc(hex[pixel & 15], v);
+    stp_putc(hex[pixel >> 4], v);
+    stp_putc(hex[pixel & 15], v);
 
     data ++;
     length --;
@@ -751,12 +750,12 @@ ps_hex(stp_const_vars_t v,	/* I - File to print to */
     if (col >= 72)
     {
       col = 0;
-      stpi_putc('\n', v);
+      stp_putc('\n', v);
     }
   }
 
   if (col > 0)
-    stpi_putc('\n', v);
+    stp_putc('\n', v);
 }
 
 
@@ -786,7 +785,7 @@ ps_ascii85(stp_const_vars_t v,	/* I - File to print to */
 
     if (b == 0)
     {
-      stpi_putc('z', v);
+      stp_putc('z', v);
       column ++;
     }
     else
@@ -801,13 +800,13 @@ ps_ascii85(stp_const_vars_t v,	/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      stpi_zfwrite((const char *)c, 5, 1, v);
+      stp_zfwrite((const char *)c, 5, 1, v);
       column += 5;
     }
 
     if (column > 72)
     {
-      stpi_putc('\n', v);
+      stp_putc('\n', v);
       column = 0;
     }
 
@@ -831,10 +830,10 @@ ps_ascii85(stp_const_vars_t v,	/* I - File to print to */
       b /= 85;
       c[0] = b + '!';
 
-      stpi_zfwrite((const char *)c, length + 1, 1, v);
+      stp_zfwrite((const char *)c, length + 1, 1, v);
     }
 
-    stpi_puts("~>\n", v);
+    stp_puts("~>\n", v);
     column = 0;
   }
 }
@@ -860,7 +859,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   if (ppd_file == NULL || name == NULL || option == NULL)
     return (NULL);
   if (!value)
-    value = stpi_zalloc(32768);
+    value = stp_zalloc(32768);
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {
@@ -927,7 +926,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-static const stpi_printfuncs_t print_ps_printfuncs =
+static const stp_printfuncs_t print_ps_printfuncs =
 {
   ps_list_parameters,
   ps_parameters,
@@ -937,13 +936,13 @@ static const stpi_printfuncs_t print_ps_printfuncs =
   ps_print,
   ps_describe_resolution,
   ps_describe_output,
-  stpi_verify_printer_params,
+  stp_verify_printer_params,
   NULL,
   NULL
 };
 
 
-static stpi_internal_family_t print_ps_module_data =
+static stp_family_t print_ps_module_data =
   {
     &print_ps_printfuncs,
     NULL
@@ -953,29 +952,29 @@ static stpi_internal_family_t print_ps_module_data =
 static int
 print_ps_module_init(void)
 {
-  return stpi_family_register(print_ps_module_data.printer_list);
+  return stp_family_register(print_ps_module_data.printer_list);
 }
 
 
 static int
 print_ps_module_exit(void)
 {
-  return stpi_family_unregister(print_ps_module_data.printer_list);
+  return stp_family_unregister(print_ps_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version print_ps_LTX_stpi_module_version
-#define stpi_module_data print_ps_LTX_stpi_module_data
+#define stp_module_version print_ps_LTX_stp_module_version
+#define stp_module_data print_ps_LTX_stp_module_data
 
-stpi_module_version_t stpi_module_version = {0, 0};
+stp_module_version_t stp_module_version = {0, 0};
 
-stpi_module_t stpi_module_data =
+stp_module_t stp_module_data =
   {
     "ps",
     VERSION,
     "Postscript family driver",
-    STPI_MODULE_CLASS_FAMILY,
+    STP_MODULE_CLASS_FAMILY,
     NULL,
     print_ps_module_init,
     print_ps_module_exit,

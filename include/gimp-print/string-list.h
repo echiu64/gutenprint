@@ -22,8 +22,8 @@
  */
 
 
-#ifndef __GIMP_PRINT_STRING_LIST_H__
-#define __GIMP_PRINT_STRING_LIST_H__
+#ifndef GIMP_PRINT_STRING_LIST_H
+#define GIMP_PRINT_STRING_LIST_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,7 +61,7 @@ stp_string_list_is_present(stp_const_string_list_t list, const char *value);
   }
 #endif
 
-#endif /* __GIMP_PRINT_STRING_LIST_H__ */
+#endif /* GIMP_PRINT_STRING_LIST_H */
 /*
  * End of "$Id$".
  */

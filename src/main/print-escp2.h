@@ -664,14 +664,14 @@ extern void stpi_escp2_terminate_page(stp_vars_t v);
 
 #ifdef TEST_UNCOMPRESSED
 #define COMPRESSION (0)
-#define FILLFUNC stpi_fill_uncompressed
-#define COMPUTEFUNC stpi_compute_uncompressed_linewidth
-#define PACKFUNC stpi_pack_uncompressed
+#define FILLFUNC stp_fill_uncompressed
+#define COMPUTEFUNC stp_compute_uncompressed_linewidth
+#define PACKFUNC stp_pack_uncompressed
 #else
 #define COMPRESSION (1)
-#define FILLFUNC stpi_fill_tiff
-#define COMPUTEFUNC stpi_compute_tiff_linewidth
-#define PACKFUNC stpi_pack_tiff
+#define FILLFUNC stp_fill_tiff
+#define COMPUTEFUNC stp_compute_tiff_linewidth
+#define PACKFUNC stp_pack_tiff
 #endif
 
 #endif /* GIMP_PRINT_INTERNAL_ESCP2_H */

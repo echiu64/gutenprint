@@ -1,10 +1,10 @@
-/*
- * "$Id$"
+/*		-*- Mode: C -*-
+ *  $Id$
  *
- *   libgimpprint header.
+ *   Gimp-Print module header file
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
- *	Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 1997-2002 Michael Sweet (mike@easysw.com) and
+ *      Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -26,8 +26,9 @@
  */
 
 /**
- * @file src/main/util.h
- * @brief Utility functions (internal).
+ * @file gimp-print-module.h
+ * @brief Gimp-Print module header.
+ * This header includes all of the public headers used by modules.
  */
 
 /*
@@ -35,43 +36,32 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_UTIL_H
-#define GIMP_PRINT_INTERNAL_UTIL_H
+#ifndef GIMP_PRINT_GIMP_PRINT_MODULE_H
+#define GIMP_PRINT_GIMP_PRINT_MODULE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef __GNUC__
-#ifndef __attribute__
-#define __attribute__(ignore)
-#endif
-#endif
+#define STP_MODULE 1
 
-/**
- * Utility functions (internal).
- *
- * @defgroup util_internal util-internal
- * @{
- */
+#include <gimp-print/gimp-print.h>
 
-
-/*
- * FIXME Need somewhere else to put these initialization routines
- * which users shouldn't call.
- */
-
-extern void stpi_init_paper(void);
-extern void stpi_init_dither(void);
-extern void stpi_init_printer(void);
-
-/** @} */
+#include <gimp-print/bit-ops.h>
+#include <gimp-print/channel.h>
+#include <gimp-print/color.h>
+#include <gimp-print/dither.h>
+#include <gimp-print/list.h>
+#include <gimp-print/module.h>
+#include <gimp-print/path.h>
+#include <gimp-print/weave.h>
+#include <gimp-print/xml.h>
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_UTIL_H */
+#endif /* GIMP_PRINT_MODULE_H */
 /*
- * End of "$Id$".
+ * End of $Id$
  */

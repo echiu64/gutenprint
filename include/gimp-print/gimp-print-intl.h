@@ -26,8 +26,8 @@
  * @brief Internationalisation functions.
  */
 
-#ifndef __GIMP_PRINT_INTL_H__
-#define __GIMP_PRINT_INTL_H__
+#ifndef GIMP_PRINT_INTL_H
+#define GIMP_PRINT_INTL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -88,4 +88,4 @@ INCLUDE_LOCALE_H
   }
 #endif
 
-#endif /* __GIMP_PRINT_INTL_H__ */
+#endif /* GIMP_PRINT_INTL_H */

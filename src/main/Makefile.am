@@ -106,26 +106,14 @@ mxml_SOURCES =					\
 	mxml-attr.c				\
 	mxml-file.c				\
 	mxml-node.c				\
-	mxml-search.c				\
-	mxml.h
+	mxml-search.c
 
 libgimpprint_headers =				\
-	bit-ops.h				\
-	color.h					\
-	curve-cache.h				\
 	dither-impl.h				\
 	dither-inlined-functions.h		\
-	dither.h				\
 	generic-options.h			\
 	gimp-print-internal.h			\
-	image.h					\
-	module.h				\
-	path.h					\
-	printers.h				\
-	util.h					\
-	vars.h					\
-	weave.h					\
-	xml.h
+	util.h
 
 libgimpprint_la_SOURCES =			\
 	array.c					\

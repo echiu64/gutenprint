@@ -36,7 +36,6 @@
 #endif
 #include <math.h>
 #include <string.h>
-#include "dither.h"
 #include "dither-impl.h"
 #include "generic-options.h"
 
@@ -98,7 +97,7 @@ static const int dither_parameter_count =
 sizeof(dither_parameters) / sizeof(const stp_parameter_t);
 
 stp_parameter_list_t
-stpi_dither_list_parameters(stp_const_vars_t v)
+stp_dither_list_parameters(stp_const_vars_t v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -108,8 +107,8 @@ stpi_dither_list_parameters(stp_const_vars_t v)
 }
 
 void
-stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
-			       stp_parameter_t *description)
+stp_dither_describe_parameter(stp_const_vars_t v, const char *name,
+			      stp_parameter_t *description)
 {
   int i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -118,14 +117,14 @@ stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
   description->deflt.str = NULL;
   if (strcmp(name, "Density") == 0)
     {
-      stpi_fill_parameter_settings(description, &(dither_parameters[0]));
+      stp_fill_parameter_settings(description, &(dither_parameters[0]));
       description->bounds.dbl.upper = 8.0;
       description->bounds.dbl.lower = 0.1;
       description->deflt.dbl = 1.0;
     }
   else if (strcmp(name, "DitherAlgorithm") == 0)
     {
-      stpi_fill_parameter_settings(description, &(dither_parameters[1]));
+      stp_fill_parameter_settings(description, &(dither_parameters[1]));
       if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
 	  stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
 	description->is_active = 0;
@@ -156,7 +155,7 @@ stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
 #define RETURN_DITHERFUNC(func, v)					\
 do									\
 {									\
-  stpi_dprintf(STPI_DBG_COLORFUNC, v, "ditherfunc %s\n", #func);	\
+  stp_dprintf(STP_DBG_COLORFUNC, v, "ditherfunc %s\n", #func);	\
   return (func);							\
 } while (0)
 
@@ -165,7 +164,7 @@ stpi_set_dither_function(stp_vars_t v)
 {
   const stpi_quality_t *quality = NULL;
   const char *image_type = stp_get_string_parameter(v, "ImageType");
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int i;
   const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
   d->stpi_dither_type = -1;
@@ -267,16 +266,16 @@ stpi_set_dither_function(stp_vars_t v)
 }
 
 void
-stpi_dither_set_adaptive_limit(stp_vars_t v, double limit)
+stp_dither_set_adaptive_limit(stp_vars_t v, double limit)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   d->adaptive_limit = limit;
 }
 
 void
-stpi_dither_set_ink_spread(stp_vars_t v, int spread)
+stp_dither_set_ink_spread(stp_vars_t v, int spread)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   SAFE_FREE(d->offset0_table);
   SAFE_FREE(d->offset1_table);
   if (spread >= 16)
@@ -289,8 +288,8 @@ stpi_dither_set_ink_spread(stp_vars_t v, int spread)
       int i;
       d->spread = spread;
       max_offset = (1 << (16 - spread)) + 1;
-      d->offset0_table = stpi_malloc(sizeof(int) * max_offset);
-      d->offset1_table = stpi_malloc(sizeof(int) * max_offset);
+      d->offset0_table = stp_malloc(sizeof(int) * max_offset);
+      d->offset1_table = stp_malloc(sizeof(int) * max_offset);
       for (i = 0; i < max_offset; i++)
 	{
 	  d->offset0_table[i] = (i + 1) * (i + 1);
@@ -301,9 +300,9 @@ stpi_dither_set_ink_spread(stp_vars_t v, int spread)
 }
 
 void
-stpi_dither_set_randomizer(stp_vars_t v, int i, double val)
+stp_dither_set_randomizer(stp_vars_t v, int i, double val)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   if (i < 0 || i >= CHANNEL_COUNT(d))
     return;
   CHANNEL(d, i).randomizer = val * 65535;
@@ -320,22 +319,22 @@ stpi_dither_free(void *vd)
     stpi_dither_channel_destroy(&(CHANNEL(d, j)));
   SAFE_FREE(d->offset0_table);
   SAFE_FREE(d->offset1_table);
-  stpi_dither_matrix_destroy(&(d->dither_matrix));
-  stpi_dither_matrix_destroy(&(d->transition_matrix));
-  stpi_free(d->channel);
-  stpi_free(d->channel_index);
-  stpi_free(d->subchannel_count);
-  stpi_free(d);
+  stp_dither_matrix_destroy(&(d->dither_matrix));
+  stp_dither_matrix_destroy(&(d->transition_matrix));
+  stp_free(d->channel);
+  stp_free(d->channel_index);
+  stp_free(d->subchannel_count);
+  stp_free(d);
 }
 
 void
-stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
-		 int xdpi, int ydpi)
+stp_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
+		int xdpi, int ydpi)
 {
-  int in_width = stpi_image_width(image);
-  stpi_dither_t *d = stpi_zalloc(sizeof(stpi_dither_t));
+  int in_width = stp_image_width(image);
+  stpi_dither_t *d = stp_zalloc(sizeof(stpi_dither_t));
 
-  stpi_allocate_component_data(v, "Dither", NULL, stpi_dither_free, d);
+  stp_allocate_component_data(v, "Dither", NULL, stpi_dither_free, d);
 
   d->finalized = 0;
   d->error_rows = ERROR_ROWS;
@@ -367,42 +366,42 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
     {
       if (stp_check_int_parameter(v, "DitherVeryFastSteps",
 				  STP_PARAMETER_ACTIVE))
-	stpi_dither_set_iterated_matrix
+	stp_dither_set_iterated_matrix
 	  (v, 2, stp_get_int_parameter(v, "DitherVeryFastSteps"), sq2, 0, 2,4);
       else
-	stpi_dither_set_iterated_matrix(v, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
+	stp_dither_set_iterated_matrix(v, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
     }
   else if (stp_check_array_parameter(v, "DitherMatrix",
 				     STP_PARAMETER_ACTIVE) &&
-	   (stpi_dither_matrix_validate_array
+	   (stp_dither_matrix_validate_array
 	    (stp_get_array_parameter(v, "DitherMatrix"))))
     {
-      stpi_dither_set_matrix_from_dither_array
+      stp_dither_set_matrix_from_dither_array
 	(v, stp_get_array_parameter(v, "DitherMatrix"), 0);
     }
   else
     {
       stp_array_t array;
       int transposed;
-	array = stpi_find_standard_dither_array(d->y_aspect, d->x_aspect);
+	array = stp_find_standard_dither_array(d->y_aspect, d->x_aspect);
       transposed = d->y_aspect < d->x_aspect ? 1 : 0;
       if (array)
 	{
-	  stpi_dither_set_matrix_from_dither_array(v, array, transposed);
+	  stp_dither_set_matrix_from_dither_array(v, array, transposed);
 	  stp_array_destroy(array);
 	}
       else
 	{
-	  stpi_eprintf(v, "Cannot find dither matrix file!  Aborting.\n");
-	  stpi_abort();
+	  stp_eprintf(v, "Cannot find dither matrix file!  Aborting.\n");
+	  stp_abort();
 	}
     }
-  stpi_dither_set_transition(v, 0.7);
+  stp_dither_set_transition(v, 0.7);
 
   d->src_width = in_width;
   d->dst_width = out_width;
 
-  stpi_dither_set_ink_spread(v, 13);
+  stp_dither_set_ink_spread(v, 13);
   d->channel_count = 0;
 }
 
@@ -420,9 +419,9 @@ stpi_dither_reverse_row_ends(stpi_dither_t *d)
 }
 
 int
-stpi_dither_get_first_position(stp_vars_t v, int color, int subchannel)
+stp_dither_get_first_position(stp_vars_t v, int color, int subchannel)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int channel = stpi_dither_translate_channel(v, color, subchannel);
   if (channel < 0)
     return -1;
@@ -430,9 +429,9 @@ stpi_dither_get_first_position(stp_vars_t v, int color, int subchannel)
 }
 
 int
-stpi_dither_get_last_position(stp_vars_t v, int color, int subchannel)
+stp_dither_get_last_position(stp_vars_t v, int color, int subchannel)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int channel = stpi_dither_translate_channel(v, color, subchannel);
   if (channel < 0)
     return -1;
@@ -447,25 +446,25 @@ stpi_dither_get_errline(stpi_dither_t *d, int row, int color)
     return NULL;
   dc = &(CHANNEL(d, color));
   if (!dc->errs)
-    dc->errs = stpi_zalloc(d->error_rows * sizeof(int *));
+    dc->errs = stp_zalloc(d->error_rows * sizeof(int *));
   if (!dc->errs[row % dc->error_rows])
     {
       int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      dc->errs[row % dc->error_rows] = stpi_zalloc(size * sizeof(int));
+      dc->errs[row % dc->error_rows] = stp_zalloc(size * sizeof(int));
     }
   return dc->errs[row % dc->error_rows] + MAX_SPREAD;
 }
 
 void
-stpi_dither_internal(stp_vars_t v, int row, const unsigned short *input,
-		     int duplicate_line, int zero_mask,
-		     const unsigned char *mask)
+stp_dither_internal(stp_vars_t v, int row, const unsigned short *input,
+		    int duplicate_line, int zero_mask,
+		    const unsigned char *mask)
 {
   int i;
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   stpi_dither_finalize(v);
-  stpi_dither_matrix_set_row(&(d->dither_matrix), row);
-  stpi_dither_matrix_set_row(&(d->transition_matrix), row);
+  stp_dither_matrix_set_row(&(d->dither_matrix), row);
+  stp_dither_matrix_set_row(&(d->transition_matrix), row);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       CHANNEL(d, i).ptr = CHANNEL(d, i).ptr;
@@ -475,17 +474,17 @@ stpi_dither_internal(stp_vars_t v, int row, const unsigned short *input,
       CHANNEL(d, i).row_ends[0] = -1;
       CHANNEL(d, i).row_ends[1] = -1;
 
-      stpi_dither_matrix_set_row(&(CHANNEL(d, i).dithermat), row);
-      stpi_dither_matrix_set_row(&(CHANNEL(d, i).pick), row);
+      stp_dither_matrix_set_row(&(CHANNEL(d, i).dithermat), row);
+      stp_dither_matrix_set_row(&(CHANNEL(d, i).pick), row);
     }
   d->ptr_offset = 0;
   (d->ditherfunc)(v, row, input, duplicate_line, zero_mask, mask);
 }
 
 void
-stpi_dither(stp_vars_t v, int row, int duplicate_line, int zero_mask,
-	    const unsigned char *mask)
+stp_dither(stp_vars_t v, int row, int duplicate_line, int zero_mask,
+	   const unsigned char *mask)
 {
-  const unsigned short *input = stpi_channel_get_output(v);
-  stpi_dither_internal(v, row, input, duplicate_line, zero_mask, mask);
+  const unsigned short *input = stp_channel_get_output(v);
+  stp_dither_internal(v, row, input, duplicate_line, zero_mask, mask);
 }

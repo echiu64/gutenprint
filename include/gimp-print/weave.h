@@ -30,8 +30,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_WEAVE_H
-#define GIMP_PRINT_INTERNAL_WEAVE_H
+#ifndef GIMP_PRINT_WEAVE_H
+#define GIMP_PRINT_WEAVE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,7 +63,7 @@ typedef struct			/* Weave parameters for a specific row */
 				/* the last row that will be printed this */
 				/* pass (assuming that we're printing a full */
 				/* pass). */
-} stpi_weave_t;
+} stp_weave_t;
 
 typedef struct			/* Weave parameters for a specific pass */
 {
@@ -73,103 +73,103 @@ typedef struct			/* Weave parameters for a specific pass */
   int physpassstart;
   int physpassend;
   int subpass;
-} stpi_pass_t;
+} stp_pass_t;
 
 typedef struct {		/* Offsets from the start of each line */
   int ncolors;
   unsigned long *v;		/* (really pass) */
-} stpi_lineoff_t;
+} stp_lineoff_t;
 
 typedef struct {		/* Is this line (really pass) active? */
   int ncolors;
   char *v;
-} stpi_lineactive_t;
+} stp_lineactive_t;
 
 typedef struct {		/* number of rows for a pass */
   int ncolors;
   int *v;
-} stpi_linecount_t;
+} stp_linecount_t;
 
 typedef struct {		/* Base pointers for each pass */
   int ncolors;
   unsigned char **v;
-} stpi_linebufs_t;
+} stp_linebufs_t;
 
 typedef struct {		/* Width of data actually printed */
   int ncolors;
   int *start_pos;
   int *end_pos;
-} stpi_linebounds_t;
+} stp_linebounds_t;
 
 typedef enum {
-  STPI_WEAVE_ZIGZAG,
-  STPI_WEAVE_ASCENDING,
-  STPI_WEAVE_DESCENDING,
-  STPI_WEAVE_ASCENDING_2X,
-  STPI_WEAVE_STAGGERED,
-  STPI_WEAVE_ASCENDING_3X
-} stpi_weave_strategy_t;
+  STP_WEAVE_ZIGZAG,
+  STP_WEAVE_ASCENDING,
+  STP_WEAVE_DESCENDING,
+  STP_WEAVE_ASCENDING_2X,
+  STP_WEAVE_STAGGERED,
+  STP_WEAVE_ASCENDING_3X
+} stp_weave_strategy_t;
 
-typedef int stpi_packfunc(stp_vars_t v,
-			  const unsigned char *line, int height,
-			  unsigned char *comp_buf,
-			  unsigned char **comp_ptr,
-			  int *first, int *last);
-typedef void stpi_fillfunc(stp_vars_t v, int row, int subpass,
-			   int width, int missingstartrows, int color);
-typedef void stpi_flushfunc(stp_vars_t v, int passno, int vertical_subpass);
-typedef int stpi_compute_linewidth_func(stp_vars_t v, int n);
+typedef int stp_packfunc(stp_vars_t v,
+			 const unsigned char *line, int height,
+			 unsigned char *comp_buf,
+			 unsigned char **comp_ptr,
+			 int *first, int *last);
+typedef void stp_fillfunc(stp_vars_t v, int row, int subpass,
+			  int width, int missingstartrows, int color);
+typedef void stp_flushfunc(stp_vars_t v, int passno, int vertical_subpass);
+typedef int stp_compute_linewidth_func(stp_vars_t v, int n);
 
-extern void stpi_initialize_weave(stp_vars_t v, int jets, int separation,
-				  int oversample, int horizontal,
-				  int vertical, int ncolors, int bitwidth,
-				  int linewidth, int line_count,
-				  int first_line, int page_height,
-				  const int *head_offset,
-				  stpi_weave_strategy_t,
-				  stpi_flushfunc,
-				  stpi_fillfunc,
-				  stpi_packfunc,
-				  stpi_compute_linewidth_func);
+extern void stp_initialize_weave(stp_vars_t v, int jets, int separation,
+				 int oversample, int horizontal,
+				 int vertical, int ncolors, int bitwidth,
+				 int linewidth, int line_count,
+				 int first_line, int page_height,
+				 const int *head_offset,
+				 stp_weave_strategy_t,
+				 stp_flushfunc,
+				 stp_fillfunc,
+				 stp_packfunc,
+				 stp_compute_linewidth_func);
 
-extern stpi_packfunc stpi_pack_tiff;
-extern stpi_packfunc stpi_pack_uncompressed;
+extern stp_packfunc stp_pack_tiff;
+extern stp_packfunc stp_pack_uncompressed;
 
-extern stpi_fillfunc stpi_fill_tiff;
-extern stpi_fillfunc stpi_fill_uncompressed;
+extern stp_fillfunc stp_fill_tiff;
+extern stp_fillfunc stp_fill_uncompressed;
 
-extern stpi_compute_linewidth_func stpi_compute_tiff_linewidth;
-extern stpi_compute_linewidth_func stpi_compute_uncompressed_linewidth;
+extern stp_compute_linewidth_func stp_compute_tiff_linewidth;
+extern stp_compute_linewidth_func stp_compute_uncompressed_linewidth;
 
-extern void stpi_flush_all(stp_vars_t v);
-
-extern void
-stpi_write_weave(stp_vars_t v, unsigned char *const cols[]);
-
-extern stpi_lineoff_t *
-stpi_get_lineoffsets_by_pass(stp_const_vars_t v, int pass);
-
-extern stpi_lineactive_t *
-stpi_get_lineactive_by_pass(stp_const_vars_t v, int pass);
-
-extern stpi_linecount_t *
-stpi_get_linecount_by_pass(stp_const_vars_t v, int pass);
-
-extern const stpi_linebufs_t *
-stpi_get_linebases_by_pass(stp_const_vars_t v, int pass);
-
-extern stpi_pass_t *
-stpi_get_pass_by_pass(stp_const_vars_t v, int pass);
+extern void stp_flush_all(stp_vars_t v);
 
 extern void
-stpi_weave_parameters_by_row(stp_const_vars_t v, int row,
-			     int vertical_subpass, stpi_weave_t *w);
+stp_write_weave(stp_vars_t v, unsigned char *const cols[]);
+
+extern stp_lineoff_t *
+stp_get_lineoffsets_by_pass(stp_const_vars_t v, int pass);
+
+extern stp_lineactive_t *
+stp_get_lineactive_by_pass(stp_const_vars_t v, int pass);
+
+extern stp_linecount_t *
+stp_get_linecount_by_pass(stp_const_vars_t v, int pass);
+
+extern const stp_linebufs_t *
+stp_get_linebases_by_pass(stp_const_vars_t v, int pass);
+
+extern stp_pass_t *
+stp_get_pass_by_pass(stp_const_vars_t v, int pass);
+
+extern void
+stp_weave_parameters_by_row(stp_const_vars_t v, int row,
+			    int vertical_subpass, stp_weave_t *w);
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_WEAVE_H */
+#endif /* GIMP_PRINT_WEAVE_H */
 /*
  * End of "$Id$".
  */

@@ -102,21 +102,21 @@ et_setup(stpi_dither_t *d)
 {
   int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
   static const int diff_factors[] = {1, 10, 16, 23, 32};
-  eventone_t *et = stpi_zalloc(sizeof(eventone_t));
+  eventone_t *et = stp_zalloc(sizeof(eventone_t));
   int xa, ya;
   int i;
   for (i = 0; i < CHANNEL_COUNT(d); i++) {
     CHANNEL(d, i).error_rows = 1;
-    CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
-    CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
+    CHANNEL(d, i).errs = stp_zalloc(1 * sizeof(int *));
+    CHANNEL(d, i).errs[0] = stp_zalloc(size * sizeof(int));
   }
   if (d->stpi_dither_type & D_UNITONE) {
-    stpi_dither_channel_t *dc = stpi_zalloc(sizeof(stpi_dither_channel_t));
-    stpi_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
-    stpi_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
+    stpi_dither_channel_t *dc = stp_zalloc(sizeof(stpi_dither_channel_t));
+    stp_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
+    stp_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
     dc->error_rows = 1;
-    dc->errs = stpi_zalloc(1 * sizeof(int *));
-    dc->errs[0] = stpi_zalloc(size * sizeof(int));
+    dc->errs = stp_zalloc(1 * sizeof(int *));
+    dc->errs[0] = stp_zalloc(size * sizeof(int));
     et->dummy_channel = dc;
   }
 
@@ -138,9 +138,9 @@ et_setup(stpi_dither_t *d)
 
   for (i = 0; i < CHANNEL_COUNT(d); i++) {
     int x;
-    shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
+    shade_distance_t *shade = stp_zalloc(sizeof(shade_distance_t));
     shade->dis = et->d_sq;
-    shade->et_dis = stpi_malloc(sizeof(distance_t) * d->dst_width);
+    shade->et_dis = stp_malloc(sizeof(distance_t) * d->dst_width);
     if (CHANNEL(d, i).darkness > .1)
       shade->share_this_channel = 1;
     else
@@ -152,9 +152,9 @@ et_setup(stpi_dither_t *d)
   }
   if (et->dummy_channel) {
     int x;
-    shade_distance_t *shade = stpi_zalloc(sizeof(shade_distance_t));
+    shade_distance_t *shade = stp_zalloc(sizeof(shade_distance_t));
     shade->dis = et->d_sq;
-    shade->et_dis = stpi_malloc(sizeof(distance_t) * d->dst_width);
+    shade->et_dis = stp_malloc(sizeof(distance_t) * d->dst_width);
     for (x = 0; x < d->dst_width; x++) {
       shade->et_dis[x] = et->d_sq;
     }
@@ -390,7 +390,7 @@ stpi_dither_et(stp_vars_t v,
 	       int zero_mask,
 	       const unsigned char *mask)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   eventone_t *et;
 
   int		x,
@@ -503,7 +503,7 @@ stpi_dither_ut(stp_vars_t v,
 	       int zero_mask,
 	       const unsigned char *mask)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   eventone_t *et;
 
   int		x,

@@ -55,8 +55,6 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include "module.h"
-#include "weave.h"
 
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */
@@ -174,7 +172,7 @@ typedef struct canon_densities
 typedef struct canon_variable_ink
 {
   double density;
-  const stpi_shade_t *shades;
+  const stp_shade_t *shades;
   int numshades;
 } canon_variable_ink_t;
 
@@ -243,23 +241,23 @@ static const canon_variable_ink_t name##_ink =	\
 {						\
   density,					\
   name##_shades,				\
-  sizeof(name##_shades) / sizeof(stpi_shade_t)	\
+  sizeof(name##_shades) / sizeof(stp_shade_t)	\
 }
 
 #define SHADE(density, name)				\
-{ density, sizeof(name)/sizeof(stpi_dotsize_t), name }
+{ density, sizeof(name)/sizeof(stp_dotsize_t), name }
 
 /*
  * Dither ranges specifically for Cyan/LightCyan (see NOTE above)
  *
  */
 
-static const stpi_dotsize_t single_dotsize[] =
+static const stp_dotsize_t single_dotsize[] =
 {
   { 0x1, 1.0 }
 };
 
-static const stpi_shade_t canon_Cc_1bit_shades[] =
+static const stp_shade_t canon_Cc_1bit_shades[] =
 {
   SHADE(0.25, single_dotsize),
   SHADE(1.0, single_dotsize),
@@ -272,7 +270,7 @@ DECLARE_INK(canon_Cc_1bit, 0.75);
  *
  */
 
-static const stpi_shade_t canon_Mm_1bit_shades[] =
+static const stp_shade_t canon_Mm_1bit_shades[] =
 {
   SHADE(0.26, single_dotsize),
   SHADE(1.0, single_dotsize),
@@ -284,14 +282,14 @@ DECLARE_INK(canon_Mm_1bit, 0.75);
  * Dither ranges specifically for any Color and 2bit/pixel (see NOTE above)
  *
  */
-static const stpi_dotsize_t two_bit_dotsize[] =
+static const stp_dotsize_t two_bit_dotsize[] =
 {
   { 0x1, 0.45 },
   { 0x2, 0.68 },
   { 0x3, 1.0 }
 };
 
-static const stpi_shade_t canon_X_2bit_shades[] =
+static const stp_shade_t canon_X_2bit_shades[] =
 {
   SHADE(1.0, two_bit_dotsize)
 };
@@ -302,7 +300,7 @@ DECLARE_INK(canon_X_2bit, 1.0);
  * Dither ranges specifically for any Color/LightColor and 2bit/pixel
  * (see NOTE above)
  */
-static const stpi_shade_t canon_Xx_2bit_shades[] =
+static const stp_shade_t canon_Xx_2bit_shades[] =
 {
   SHADE(0.33, two_bit_dotsize),
   SHADE(1.0, two_bit_dotsize),
@@ -321,7 +319,7 @@ DECLARE_INK(canon_Xx_2bit, 1.0);
  *
  *
  */
-static const stpi_dotsize_t three_bit_dotsize[] =
+static const stp_dotsize_t three_bit_dotsize[] =
 {
   { 0x1, 0.45 },
   { 0x2, 0.55 },
@@ -331,7 +329,7 @@ static const stpi_dotsize_t three_bit_dotsize[] =
   { 0x6, 1.0 }
 };
 
-static const stpi_shade_t canon_X_3bit_shades[] =
+static const stp_shade_t canon_X_3bit_shades[] =
 {
   SHADE(1.0, three_bit_dotsize)
 };
@@ -342,7 +340,7 @@ DECLARE_INK(canon_X_3bit, 1.0);
  * Dither ranges specifically for any Color/LightColor and 3bit/pixel
  * (see NOTE above)
  */
-static const stpi_shade_t canon_Xx_3bit_shades[] =
+static const stp_shade_t canon_Xx_3bit_shades[] =
 {
   SHADE(0.33, three_bit_dotsize),
   SHADE(1.0, three_bit_dotsize),
@@ -1363,7 +1361,7 @@ static const canon_cap_t * canon_get_model_capabilities(int model)
       return &(canon_model_capabilities[i]);
     }
   }
-  stpi_deprintf(STPI_DBG_CANON,"canon: model %d not found in capabilities list.\n",model);
+  stp_deprintf(STP_DBG_CANON,"canon: model %d not found in capabilities list.\n",model);
   return &(canon_model_capabilities[0]);
 }
 
@@ -1378,7 +1376,7 @@ canon_source_type(const char *name, const canon_cap_t * caps)
       if (!strcmp(name,"ManualNP")) return 1;
     }
 
-  stpi_deprintf(STPI_DBG_CANON,"canon: Unknown source type '%s' - reverting to auto\n",name);
+  stp_deprintf(STP_DBG_CANON,"canon: Unknown source type '%s' - reverting to auto\n",name);
   return 4;
 }
 
@@ -1401,7 +1399,7 @@ canon_printhead_type(const char *name, const canon_cap_t * caps)
     if (caps->inks & CANON_INK_K)    return 0;
   }
 
-  stpi_deprintf(STPI_DBG_CANON,"canon: Unknown head combo '%s' - reverting to black",name);
+  stp_deprintf(STP_DBG_CANON,"canon: Unknown head combo '%s' - reverting to black",name);
   return 0;
 }
 
@@ -1424,7 +1422,7 @@ canon_printhead_colors(const char *name, const canon_cap_t * caps)
     if (caps->inks & CANON_INK_K)    return COLOR_MONOCHROME;
   }
 
-  stpi_deprintf(STPI_DBG_CANON,"canon: Unknown head combo '%s' - reverting to black",name);
+  stp_deprintf(STP_DBG_CANON,"canon: Unknown head combo '%s' - reverting to black",name);
   return COLOR_MONOCHROME;
 }
 
@@ -1450,9 +1448,9 @@ canon_size_type(stp_const_vars_t v, const canon_cap_t * caps)
       if (!strcmp(name,"w288h144"))   return 0x2d;
       /* custom */
 
-      stpi_deprintf(STPI_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
+      stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
     } else {
-      stpi_deprintf(STPI_DBG_CANON,"canon: Couldn't look up paper size %dx%d - "
+      stp_deprintf(STP_DBG_CANON,"canon: Couldn't look up paper size %dx%d - "
 	      "using custom\n",stp_get_page_height(v), stp_get_page_width(v));
     }
   return 0;
@@ -1548,7 +1546,7 @@ canon_density(const canon_cap_t * caps, int res_code)
     case 0x44: return caps->densities.d_r44;
     case 0x55: return caps->densities.d_r55;
     default:
-      stpi_deprintf(STPI_DBG_CANON,"no such res_code 0x%x in density of model %d\n",
+      stp_deprintf(STP_DBG_CANON,"no such res_code 0x%x in density of model %d\n",
 	      res_code,caps->model);
       return 0.2;
     }
@@ -1568,10 +1566,10 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
     return NULL;
 
   for (i=0; i<caps->inxs_cnt; i++) {
-      stpi_deprintf(STPI_DBG_CANON,"hmm, trying ink for resolution code "
+      stp_deprintf(STP_DBG_CANON,"hmm, trying ink for resolution code "
 	      "%x, %d bits, %d colors\n",res_code,inks[i].bits,inks[i].colors);
     if ((inks[i].bits==bits) && (inks[i].colors==colors)) {
-      stpi_deprintf(STPI_DBG_CANON,"wow, found ink for resolution code "
+      stp_deprintf(STP_DBG_CANON,"wow, found ink for resolution code "
 	      "%x, %d bits, %d colors\n",res_code,bits,colors);
       switch (res_code)
 	{
@@ -1584,7 +1582,7 @@ canon_inks(const canon_cap_t * caps, int res_code, int colors, int bits)
 	}
     }
   }
-  stpi_deprintf(STPI_DBG_CANON,"ooo, found no ink for resolution code "
+  stp_deprintf(STP_DBG_CANON,"ooo, found no ink for resolution code "
 	  "%x, %d bits, %d colors in all %d defs!\n",
 	  res_code,bits,colors,caps->inxs_cnt);
   return NULL;
@@ -1616,7 +1614,7 @@ canon_describe_resolution(stp_const_vars_t v, int *x, int *y)
 static const char *
 canon_describe_output(stp_const_vars_t v)
 {
-  int model = stpi_get_model_id(v);
+  int model = stp_get_model_id(v);
   const canon_cap_t *caps = canon_get_model_capabilities(model);
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *ink_type = stp_get_string_parameter(v, "InkType");
@@ -1670,7 +1668,7 @@ canon_parameters(stp_const_vars_t v, const char *name,
   int		i;
 
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stpi_get_model_id(v));
+    canon_get_model_capabilities(stp_get_model_id(v));
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
   if (name == NULL)
@@ -1679,7 +1677,7 @@ canon_parameters(stp_const_vars_t v, const char *name,
   for (i = 0; i < float_parameter_count; i++)
     if (strcmp(name, float_parameters[i].param.name) == 0)
       {
-	stpi_fill_parameter_settings(description,
+	stp_fill_parameter_settings(description,
 				     &(float_parameters[i].param));
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
@@ -1690,7 +1688,7 @@ canon_parameters(stp_const_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stpi_fill_parameter_settings(description, &(the_parameters[i]));
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
   if (strcmp(name, "PageSize") == 0)
@@ -1731,14 +1729,14 @@ canon_parameters(stp_const_vars_t v, const char *name,
 	    if (xx == res->x && yy == res->y) {
 	      stp_string_list_add_string(description->bounds.str,
 					res->name, _(res->text));
-	      stpi_deprintf(STPI_DBG_CANON,"supports mode '%s'\n",
+	      stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			   res->name);
 	      if (xx >= 300 && yy >= 300 && description->deflt.str == NULL)
 		description->deflt.str = res->name;
 	      if (t == 1) {
 		stp_string_list_add_string(description->bounds.str,
 					  res->name_dmt, _(res->text_dmt));
-		stpi_deprintf(STPI_DBG_CANON,"supports mode '%s'\n",
+		stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			     res->name_dmt);
 	      }
 	      break;
@@ -1838,14 +1836,14 @@ internal_imageable_area(stp_const_vars_t v,   /* I */
   int bottom_margin = 0;
   int top_margin = 0;
 
-  const canon_cap_t * caps= canon_get_model_capabilities(stpi_get_model_id(v));
+  const canon_cap_t * caps= canon_get_model_capabilities(stp_get_model_id(v));
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = NULL;
 
   if (media_size && use_paper_margins)
     pt = stp_get_papersize_by_name(media_size);
 
-  stpi_default_media_size(v, &width, &length);
+  stp_default_media_size(v, &width, &length);
   if (pt)
     {
       left_margin = pt->left;
@@ -1882,7 +1880,7 @@ canon_limit(stp_const_vars_t v,  		/* I */
 	    int *min_height)
 {
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stpi_get_model_id(v));
+    canon_get_model_capabilities(stp_get_model_id(v));
   *width =	caps->max_width;
   *height =	caps->max_height;
   *min_width = 1;
@@ -1900,7 +1898,7 @@ canon_cmd(stp_const_vars_t v, /* I - the printer         */
 	  ...        /* I - the args themselves */
 	  )
 {
-  unsigned char *buffer = stpi_zalloc(num + 1);
+  unsigned char *buffer = stp_zalloc(num + 1);
   int i;
   va_list ap;
 
@@ -1912,18 +1910,18 @@ canon_cmd(stp_const_vars_t v, /* I - the printer         */
       va_end(ap);
     }
 
-  stpi_zfwrite(ini,2,1,v);
+  stp_zfwrite(ini,2,1,v);
   if (cmd)
     {
-      stpi_putc(cmd,v);
-      stpi_put16_le(num, v);
+      stp_putc(cmd,v);
+      stp_put16_le(num, v);
       if (num)
-	stpi_zfwrite((const char *)buffer,num,1,v);
+	stp_zfwrite((const char *)buffer,num,1,v);
     }
-  stpi_free(buffer);
+  stp_free(buffer);
 }
 
-#define PUT(WHAT,VAL,RES) stpi_deprintf(STPI_DBG_CANON,"canon: "WHAT\
+#define PUT(WHAT,VAL,RES) stp_deprintf(STP_DBG_CANON,"canon: "WHAT\
 " is %04x =% 5d = %f\" = %f mm\n",(VAL),(VAL),(VAL)/(1.*RES),(VAL)/(RES/25.4))
 
 #define ESC28 "\033\050"
@@ -1939,9 +1937,9 @@ canon_init_resetPrinter(stp_const_vars_t v, canon_init_t *init)
   if (f & (CANON_CAP_ACKSHORT))
     {
       canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x1f);
-      stpi_puts("BJLSTART\nControlMode=Common\n",v);
-      if (f & CANON_CAP_ACKSHORT) stpi_puts("AckTime=Short\n",v);
-      stpi_puts("BJLEND\n",v);
+      stp_puts("BJLSTART\nControlMode=Common\n",v);
+      if (f & CANON_CAP_ACKSHORT) stp_puts("AckTime=Short\n",v);
+      stp_puts("BJLEND\n",v);
     }
   canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x0f);
 }
@@ -2235,7 +2233,7 @@ static void
 canon_deinit_printer(stp_const_vars_t v, canon_init_t *init)
 {
   /* eject page */
-  stpi_putc(0x0c,v);
+  stp_putc(0x0c,v);
 
   /* say goodbye */
   canon_cmd(v,ESC28,0x62,1,0);
@@ -2274,14 +2272,14 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 static void
 setup_column(canon_privdata_t *privdata, int col, int buf_length)
 {
-  privdata->cols[col] = stpi_zalloc(buf_length * (privdata->delay[col] + 1));
+  privdata->cols[col] = stp_zalloc(buf_length * (privdata->delay[col] + 1));
 }
 
 static void
 canon_printfunc(stp_vars_t v)
 {
   int i;
-  canon_privdata_t *pd = (canon_privdata_t *) stpi_get_component_data(v, "Driver");
+  canon_privdata_t *pd = (canon_privdata_t *) stp_get_component_data(v, "Driver");
   canon_write_line(v);
   for (i = 0; i < 7; i++)
     canon_advance_buffer(pd->cols[i], pd->buf_length, pd->delay[i]);
@@ -2303,9 +2301,9 @@ set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color,
 {
   if (!ink)
     return;
-  stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0,
-			    ink_darknesses[color]);
-  stpi_channel_set_density_adjustment
+  stp_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0,
+			   ink_darknesses[color]);
+  stp_channel_set_density_adjustment
     (v, color, 1, (get_double_param(v, channel_param) *
 		   get_double_param(v, subchannel_param) *
 		   get_double_param(v, "Density")));
@@ -2319,7 +2317,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 {
   int i;
   int		status = 1;
-  int		model = stpi_get_model_id(v);
+  int		model = stp_get_model_id(v);
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
@@ -2368,7 +2366,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 
   if (!stp_verify(v))
     {
-      stpi_eprintf(v, "Print options not verified; cannot print.\n");
+      stp_eprintf(v, "Print options not verified; cannot print.\n");
       return 0;
     }
   if (strcmp(print_mode, "Color") == 0)
@@ -2381,7 +2379,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   * Setup a read-only pixel region for the entire image...
   */
 
-  stpi_image_init(image);
+  stp_image_init(image);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -2413,14 +2411,14 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     res++;
   }
 
-  stpi_deprintf(STPI_DBG_CANON,"canon: resolution=%dx%d\n",xdpi,ydpi);
-  stpi_deprintf(STPI_DBG_CANON,"       rescode   =0x%x\n",canon_res_code(caps,xdpi,ydpi));
+  stp_deprintf(STP_DBG_CANON,"canon: resolution=%dx%d\n",xdpi,ydpi);
+  stp_deprintf(STP_DBG_CANON,"       rescode   =0x%x\n",canon_res_code(caps,xdpi,ydpi));
   res_code= canon_res_code(caps,xdpi,ydpi);
 
   if (strcmp(resolution, res->name_dmt) == 0 &&
       (caps->features & CANON_CAP_DMT)) {
     bits= 2;
-    stpi_deprintf(STPI_DBG_CANON,"canon: using drop modulation technology\n");
+    stp_deprintf(STP_DBG_CANON,"canon: using drop modulation technology\n");
   }
 
  /*
@@ -2437,10 +2435,10 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  image_height = stpi_image_height(image);
-  image_width = stpi_image_width(image);
+  image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
-  stpi_default_media_size(v, &n, &page_true_height);
+  stp_default_media_size(v, &n, &page_true_height);
 
   PUT("top        ",top,72);
   PUT("left       ",left,72);
@@ -2502,12 +2500,12 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     privdata.delay[5] = 224;
     privdata.delay[6] = 336;
     privdata.delay_max = 336;
-    stpi_deprintf(STPI_DBG_CANON,"canon: delay on!\n");
+    stp_deprintf(STP_DBG_CANON,"canon: delay on!\n");
   } else {
     for (i = 0; i < 7; i++)
       privdata.delay[i] = 0;
     privdata.delay_max = 0;
-    stpi_deprintf(STPI_DBG_CANON,"canon: delay off!\n");
+    stp_deprintf(STP_DBG_CANON,"canon: delay off!\n");
   }
 
  /*
@@ -2523,7 +2521,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   privdata.caps = caps;
   privdata.ydpi = ydpi;
 
-  stpi_deprintf(STPI_DBG_CANON,"canon: buflength is %d!\n",privdata.buf_length);
+  stp_deprintf(STP_DBG_CANON,"canon: buflength is %d!\n",privdata.buf_length);
 
   if (colormode==COLOR_MONOCHROME) {
     setup_column(&privdata, 0, privdata.buf_length);
@@ -2554,17 +2552,17 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   else
     stp_set_string_parameter(v, "STPIOutputType", "CMY");
 
-  stpi_deprintf(STPI_DBG_CANON,
-		"canon: driver will use colors %s%s%s%s%s%s%s\n",
-		privdata.cols[0] ? "K" : "",
-		privdata.cols[1] ? "C" : "",
-		privdata.cols[2] ? "M" : "",
-		privdata.cols[3] ? "Y" : "",
-		privdata.cols[4] ? "c" : "",
-		privdata.cols[5] ? "m" : "",
-		privdata.cols[6] ? "y" : "");
+  stp_deprintf(STP_DBG_CANON,
+	       "canon: driver will use colors %s%s%s%s%s%s%s\n",
+	       privdata.cols[0] ? "K" : "",
+	       privdata.cols[1] ? "C" : "",
+	       privdata.cols[2] ? "M" : "",
+	       privdata.cols[3] ? "Y" : "",
+	       privdata.cols[4] ? "c" : "",
+	       privdata.cols[5] ? "m" : "",
+	       privdata.cols[6] ? "y" : "");
 
-  stpi_deprintf(STPI_DBG_CANON,"density is %f\n",
+  stp_deprintf(STP_DBG_CANON,"density is %f\n",
 	       stp_get_float_parameter(v, "Density"));
 
   /*
@@ -2587,7 +2585,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   if (colormode == COLOR_MONOCHROME)
     stp_scale_float_parameter(v, "Gamma", 1.25);
 
-  stpi_deprintf(STPI_DBG_CANON,"density is %f\n",
+  stp_deprintf(STP_DBG_CANON,"density is %f\n",
 	       stp_get_float_parameter(v, "Density"));
 
  /*
@@ -2613,13 +2611,13 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
   if (!stp_check_float_parameter(v, "GCRUpper", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRUpper", k_upper);
-  stpi_dither_init(v, image, out_width, xdpi, ydpi);
+  stp_dither_init(v, image, out_width, xdpi, ydpi);
 
   for (i = 0; i < 7; i++)
     {
       if (privdata.cols[i])
-	stpi_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
-				subchannel_color_map[i]);
+	stp_dither_add_channel(v, privdata.cols[i], channel_color_map[i],
+			       subchannel_color_map[i]);
     }
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
@@ -2632,16 +2630,16 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 		     "LightYellowTransition");
       set_ink_ranges(v, inks->k, ECOLOR_K, "BlackDensity", NULL);
     }
-  stpi_channel_set_density_adjustment
+  stp_channel_set_density_adjustment
     (v, ECOLOR_C, 0,
      get_double_param(v, "CyanDensity") * get_double_param(v, "Density"));
-  stpi_channel_set_density_adjustment
+  stp_channel_set_density_adjustment
     (v, ECOLOR_M, 0,
      get_double_param(v, "MagentaDensity") * get_double_param(v, "Density"));
-  stpi_channel_set_density_adjustment
+  stp_channel_set_density_adjustment
     (v, ECOLOR_Y, 0,
      get_double_param(v, "YellowDensity") * get_double_param(v, "Density"));
-  stpi_channel_set_density_adjustment
+  stp_channel_set_density_adjustment
     (v, ECOLOR_K, 0,
      get_double_param(v, "BlackDensity") * get_double_param(v, "Density"));
 
@@ -2654,7 +2652,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
       pt->hue_adjustment)
     {
-      hue_adjustment = stpi_read_and_compose_curves
+      hue_adjustment = stp_read_and_compose_curves
 	(canon_hue_adjustment(model),
 	 pt ? pt->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
@@ -2663,7 +2661,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
       pt->lum_adjustment)
     {
-      lum_adjustment = stpi_read_and_compose_curves
+      lum_adjustment = stp_read_and_compose_curves
 	(canon_lum_adjustment(model),
 	 pt ? pt->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "LumMap", lum_adjustment);
@@ -2672,15 +2670,15 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
       pt->sat_adjustment)
     {
-      sat_adjustment = stpi_read_and_compose_curves
+      sat_adjustment = stp_read_and_compose_curves
 	(canon_sat_adjustment(model),
 	 pt ? pt->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
       stp_curve_destroy(sat_adjustment);
     }
 
-  out_channels = stpi_color_init(v, image, 65536);
-  stpi_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
+  out_channels = stp_color_init(v, image, 65536);
+  stp_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
   for (y = 0; y < out_height; y ++)
@@ -2691,14 +2689,14 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     {
       errlast = errline;
       duplicate_line = 0;
-      if (stpi_color_get_row(v, image, errline, &zero_mask))
+      if (stp_color_get_row(v, image, errline, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
     }
 
-    stpi_dither(v, y, duplicate_line, zero_mask, NULL);
+    stp_dither(v, y, duplicate_line, zero_mask, NULL);
     canon_printfunc(v);
     errval += errmod;
     errline += errdiv;
@@ -2714,8 +2712,8 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
    */
 
   if (privdata.delay_max) {
-    stpi_deprintf(STPI_DBG_CANON,"\ncanon: flushing %d possibly delayed buffers\n",
-		  privdata.delay_max);
+    stp_deprintf(STP_DBG_CANON,"\ncanon: flushing %d possibly delayed buffers\n",
+		 privdata.delay_max);
     for (y= 0; y<privdata.delay_max; y++) {
 
       canon_write_line(v);
@@ -2725,7 +2723,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
     }
   }
 
-  stpi_image_conclude(image);
+  stp_image_conclude(image);
 
  /*
   * Cleanup...
@@ -2733,7 +2731,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 
   for (i = 0; i < 7; i++)
     if (privdata.cols[i])
-      stpi_free(privdata.cols[i]);
+      stp_free(privdata.cols[i]);
 
   canon_deinit_printer(v, &init);
   return status;
@@ -2744,23 +2742,23 @@ canon_print(stp_const_vars_t v, stp_image_t *image)
 {
   int status;
   stp_vars_t nv = stp_vars_create_copy(v);
-  stpi_prune_inactive_options(nv);
+  stp_prune_inactive_options(nv);
   status = canon_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;
 }
 
-static const stpi_printfuncs_t print_canon_printfuncs =
+static const stp_printfuncs_t print_canon_printfuncs =
 {
   canon_list_parameters,
   canon_parameters,
-  stpi_default_media_size,
+  stp_default_media_size,
   canon_imageable_area,
   canon_limit,
   canon_print,
   canon_describe_resolution,
   canon_describe_output,
-  stpi_verify_printer_params,
+  stp_verify_printer_params,
   canon_start_job,
   canon_end_job
 };
@@ -2960,6 +2958,7 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
   }
 }
 
+#if 0
 static void
 canon_shift_buffer2(unsigned char *line,int length,int bits)
 {
@@ -2969,7 +2968,7 @@ canon_shift_buffer2(unsigned char *line,int length,int bits)
   }
   line[0] = line[0] >> bits;
 }
-
+#endif
 
 /*
  * 'canon_write()' - Send graphics using TIFF packbits compression.
@@ -3042,30 +3041,30 @@ canon_write(stp_vars_t v,		/* I - Print file or command */
     if (bitoffset<8)
       canon_shift_buffer(in_ptr,length,bitoffset);
     else
-      stpi_deprintf(STPI_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_write() "
+      stp_deprintf(STP_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_write() "
 	      "bitoffset=%d!!\n",bitoffset);
   }
 
-  stpi_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
+  stp_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */
 
   if (*empty) {
-    stpi_zfwrite("\033\050\145\002\000", 5, 1, v);
-    stpi_put16_be(*empty, v);
+    stp_zfwrite("\033\050\145\002\000", 5, 1, v);
+    stp_put16_be(*empty, v);
     *empty= 0;
   }
 
  /* Send a line of raster graphics... */
 
-  stpi_zfwrite("\033\050\101", 3, 1, v);
-  stpi_put16_le(newlength + 1, v);
+  stp_zfwrite("\033\050\101", 3, 1, v);
+  stp_put16_le(newlength + 1, v);
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
-  stpi_putc(color,v);
-  stpi_zfwrite((const char *)comp_buf, newlength, 1, v);
-  stpi_putc('\015', v);
+  stp_putc(color,v);
+  stp_zfwrite((const char *)comp_buf, newlength, 1, v);
+  stp_putc('\015', v);
   return 1;
 }
 
@@ -3074,7 +3073,7 @@ static void
 canon_write_line(stp_vars_t v)
 {
   canon_privdata_t *pd =
-    (canon_privdata_t *) stpi_get_component_data(v, "Driver");
+    (canon_privdata_t *) stp_get_component_data(v, "Driver");
   static const int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 };
   static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };
   int i;
@@ -3092,13 +3091,13 @@ canon_write_line(stp_vars_t v)
 			       pd->left, pd->bits);
     }
   if (written)
-    stpi_zfwrite("\033\050\145\002\000\000\001", 7, 1, v);
+    stp_zfwrite("\033\050\145\002\000\000\001", 7, 1, v);
   else
     pd->emptylines += 1;
 }
 
 
-static stpi_internal_family_t print_canon_module_data =
+static stp_family_t print_canon_module_data =
   {
     &print_canon_printfuncs,
     NULL
@@ -3108,29 +3107,29 @@ static stpi_internal_family_t print_canon_module_data =
 static int
 print_canon_module_init(void)
 {
-  return stpi_family_register(print_canon_module_data.printer_list);
+  return stp_family_register(print_canon_module_data.printer_list);
 }
 
 
 static int
 print_canon_module_exit(void)
 {
-  return stpi_family_unregister(print_canon_module_data.printer_list);
+  return stp_family_unregister(print_canon_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version print_canon_LTX_stpi_module_version
-#define stpi_module_data print_canon_LTX_stpi_module_data
+#define stp_module_version print_canon_LTX_stp_module_version
+#define stp_module_data print_canon_LTX_stp_module_data
 
-stpi_module_version_t stpi_module_version = {0, 0};
+stp_module_version_t stp_module_version = {0, 0};
 
-stpi_module_t stpi_module_data =
+stp_module_t stp_module_data =
   {
     "canon",
     VERSION,
     "Canon family driver",
-    STPI_MODULE_CLASS_FAMILY,
+    STP_MODULE_CLASS_FAMILY,
     NULL,
     print_canon_module_init,
     print_canon_module_exit,

@@ -26,13 +26,14 @@
  * @brief Printer functions.
  */
 
-#ifndef __GIMP_PRINT_PRINTERS_H__
-#define __GIMP_PRINT_PRINTERS_H__
+#ifndef GIMP_PRINT_PRINTERS_H
+#define GIMP_PRINT_PRINTERS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <gimp-print/list.h>
 #include <gimp-print/vars.h>
 
 /**
@@ -184,13 +185,53 @@ extern int stp_start_job(stp_const_vars_t v, stp_image_t *image);
  */
 extern int stp_end_job(stp_const_vars_t v, stp_image_t *image);
 
+typedef struct
+{
+  stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
+  void  (*parameters)(stp_const_vars_t v, const char *name,
+		      stp_parameter_t *);
+  void  (*media_size)(stp_const_vars_t v, int *width, int *height);
+  void  (*imageable_area)(stp_const_vars_t v,
+			  int *left, int *right, int *bottom, int *top);
+  void  (*limit)(stp_const_vars_t v, int *max_width, int *max_height,
+                 int *min_width, int *min_height);
+  int   (*print)(stp_const_vars_t v, stp_image_t *image);
+  void  (*describe_resolution)(stp_const_vars_t v, int *x, int *y);
+  const char *(*describe_output)(stp_const_vars_t v);
+  int   (*verify)(stp_vars_t v);
+  int   (*start_job)(stp_const_vars_t v, stp_image_t *image);
+  int   (*end_job)(stp_const_vars_t v, stp_image_t *image);
+} stp_printfuncs_t;
+
+typedef struct stp_family
+{
+  const stp_printfuncs_t *printfuncs;   /* printfuncs for the printer */
+  stp_list_t             *printer_list; /* list of printers */
+} stp_family_t;
+
+extern int stp_get_model_id(stp_const_vars_t v);
+
+extern int stp_verify_printer_params(stp_vars_t);
+
+extern int stp_family_register(stp_list_t *family);
+extern int stp_family_unregister(stp_list_t *family);
+extern void stp_initialize_printer_defaults(void);
+
+extern stp_parameter_list_t stp_printer_list_parameters(stp_const_vars_t v);
+
+extern void
+stp_printer_describe_parameter(stp_const_vars_t v, const char *name,
+			       stp_parameter_t *description);
+
+const char *stp_describe_output(stp_const_vars_t v);
+
 /** @} */
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* __GIMP_PRINT_PRINTERS_H__ */
+#endif /* GIMP_PRINT_PRINTERS_H */
 /*
  * End of "$Id$".
  */

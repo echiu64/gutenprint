@@ -32,14 +32,12 @@
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include <gimp-print/curve-cache.h>
 #include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
 #include <string.h>
-#include "module.h"
-#include "xml.h"
-#include "curve-cache.h"
 #include "color-conversion.h"
 
 #ifdef __GNUC__
@@ -604,10 +602,10 @@ get_color_correction_by_tag(color_correction_enum_t correction)
 static void
 initialize_channels(stp_vars_t v, stp_image_t *image)
 {
-  lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
   if (stp_check_float_parameter(v, "InkLimit", STP_PARAMETER_ACTIVE))
-    stpi_channel_set_ink_limit(v, stp_get_float_parameter(v, "InkLimit"));
-  stpi_channel_initialize(v, image, lut->out_channels);
+    stp_channel_set_ink_limit(v, stp_get_float_parameter(v, "InkLimit"));
+  stp_channel_initialize(v, image, lut->out_channels);
   lut->channels_are_initialized = 1;
 }
 
@@ -617,19 +615,19 @@ stpi_color_traditional_get_row(stp_vars_t v,
 			       int row,
 			       unsigned *zero_mask)
 {
-  const lut_t *lut = (const lut_t *)(stpi_get_component_data(v, "Color"));
+  const lut_t *lut = (const lut_t *)(stp_get_component_data(v, "Color"));
   unsigned zero;
-  if (stpi_image_get_row(image, lut->in_data,
-			 lut->image_width * lut->in_channels, row)
+  if (stp_image_get_row(image, lut->in_data,
+			lut->image_width * lut->in_channels, row)
       != STP_IMAGE_STATUS_OK)
     return 2;
   if (!lut->channels_are_initialized)
     initialize_channels(v, image);
   zero = (lut->output_color_description->conversion_function)
-    (v, lut->in_data, stpi_channel_get_input(v));
+    (v, lut->in_data, stp_channel_get_input(v));
   if (zero_mask)
     *zero_mask = zero;
-  stpi_channel_convert(v, zero_mask);
+  stp_channel_convert(v, zero_mask);
   return 0;
 }
 
@@ -638,14 +636,14 @@ free_channels(lut_t *lut)
 {
   int i;
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
-    stpi_curve_free_curve_cache(&(lut->channel_curves[i]));
+    stp_curve_free_curve_cache(&(lut->channel_curves[i]));
 }
 
 static lut_t *
 allocate_lut(void)
 {
   int i;
-  lut_t *ret = stpi_zalloc(sizeof(lut_t));
+  lut_t *ret = stp_zalloc(sizeof(lut_t));
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
     {
       ret->gamma_values[i] = 1.0;
@@ -680,7 +678,7 @@ copy_lut(void *vlut)
   dest->color_correction = src->color_correction;
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
     {
-      stpi_curve_cache_copy(&(dest->channel_curves[i]), &(src->channel_curves[i]));
+      stp_curve_cache_copy(&(dest->channel_curves[i]), &(src->channel_curves[i]));
       dest->gamma_values[i] = src->gamma_values[i];
     }
   dest->print_gamma = src->print_gamma;
@@ -689,16 +687,16 @@ copy_lut(void *vlut)
   dest->contrast = src->contrast;
   dest->brightness = src->brightness;
   dest->linear_contrast_adjustment = src->linear_contrast_adjustment;
-  stpi_curve_cache_copy(&(dest->hue_map), &(src->hue_map));
-  stpi_curve_cache_copy(&(dest->lum_map), &(src->lum_map));
-  stpi_curve_cache_copy(&(dest->sat_map), &(src->sat_map));
-  stpi_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
+  stp_curve_cache_copy(&(dest->hue_map), &(src->hue_map));
+  stp_curve_cache_copy(&(dest->lum_map), &(src->lum_map));
+  stp_curve_cache_copy(&(dest->sat_map), &(src->sat_map));
+  stp_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
   /* Don't copy gray_tmp */
   /* Don't copy cmy_tmp */
   /* Don't copy cmyk_tmp */
   if (src->in_data)
     {
-      dest->in_data = stpi_malloc(src->image_width * src->in_channels);
+      dest->in_data = stp_malloc(src->image_width * src->in_channels);
       memset(dest->in_data, 0, src->image_width * src->in_channels);
     }
   return dest;
@@ -709,28 +707,28 @@ free_lut(void *vlut)
 {
   lut_t *lut = (lut_t *)vlut;
   free_channels(lut);
-  stpi_curve_free_curve_cache(&(lut->hue_map));
-  stpi_curve_free_curve_cache(&(lut->lum_map));
-  stpi_curve_free_curve_cache(&(lut->sat_map));
-  stpi_curve_free_curve_cache(&(lut->gcr_curve));
+  stp_curve_free_curve_cache(&(lut->hue_map));
+  stp_curve_free_curve_cache(&(lut->lum_map));
+  stp_curve_free_curve_cache(&(lut->sat_map));
+  stp_curve_free_curve_cache(&(lut->gcr_curve));
   SAFE_FREE(lut->gray_tmp);
   SAFE_FREE(lut->cmy_tmp);
   SAFE_FREE(lut->cmyk_tmp);
   SAFE_FREE(lut->in_data);
   memset(lut, 0, sizeof(lut_t));
-  stpi_free(lut);
+  stp_free(lut);
 }
 
 static stp_curve_t
 compute_gcr_curve(stp_const_vars_t vars)
 {
   stp_curve_t curve;
-  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
   double k_lower = 0.0;
   double k_upper = 1.0;
   double k_gamma = 1.0;
   double i_k_gamma = 1.0;
-  double *tmp_data = stpi_malloc(sizeof(double) * lut->steps);
+  double *tmp_data = stp_malloc(sizeof(double) * lut->steps);
   int i;
 
   if (stp_check_float_parameter(vars, "GCRUpper", STP_PARAMETER_DEFAULTED))
@@ -778,18 +776,18 @@ compute_gcr_curve(stp_const_vars_t vars)
   stp_curve_set_bounds(curve, 0, 65535);
   if (! stp_curve_set_data(curve, lut->steps, tmp_data))
     {
-      stpi_eprintf(vars, "set curve data failed!\n");
-      stpi_abort();
+      stp_eprintf(vars, "set curve data failed!\n");
+      stp_abort();
     }
-  stpi_free(tmp_data);
+  stp_free(tmp_data);
   return curve;
 }
 
 static void
 initialize_gcr_curve(stp_const_vars_t vars)
 {
-  lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));
-  if (!stpi_curve_cache_get_curve(&(lut->gcr_curve)))
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
+  if (!stp_curve_cache_get_curve(&(lut->gcr_curve)))
     {
       if (stp_check_curve_parameter(vars, "GCRCurve", STP_PARAMETER_DEFAULTED))
 	{
@@ -807,10 +805,10 @@ initialize_gcr_curve(stp_const_vars_t vars)
 	      data = 65535.0 * data * (double) i / (count - 1);
 	      stp_curve_set_point(curve, i, data);
 	    }
-	  stpi_curve_cache_set_curve(&(lut->gcr_curve), curve);
+	  stp_curve_cache_set_curve(&(lut->gcr_curve), curve);
 	}
       else
-	stpi_curve_cache_set_curve(&(lut->gcr_curve), compute_gcr_curve(vars));
+	stp_curve_cache_set_curve(&(lut->gcr_curve), compute_gcr_curve(vars));
     }
 }
 
@@ -872,12 +870,12 @@ compute_a_curve_full(lut_t *lut, int channel)
   double ipivot = 1.0 - pivot;
   double xcontrast = pow(lut->contrast, lut->contrast);
   double xgamma = pow(pivot, lut->screen_gamma);
-  stp_curve_t curve = stpi_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  stp_curve_t curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
-  tmp = stpi_malloc(sizeof(double) * lut->steps);
+  tmp = stp_malloc(sizeof(double) * lut->steps);
   for (i = 0; i < isteps; i ++)
     {
       double temp_pixel, pixel;
@@ -970,19 +968,19 @@ compute_a_curve_full(lut_t *lut, int channel)
   stp_curve_set_data(curve, isteps, tmp);
   if (isteps != lut->steps)
     stp_curve_resample(curve, lut->steps);
-  stpi_free(tmp);
+  stp_free(tmp);
 }
 
 static void
 compute_a_curve_fast(lut_t *lut, int channel)
 {
   double *tmp;
-  stp_curve_t curve = stpi_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  stp_curve_t curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
     isteps = 256;
-  tmp = stpi_malloc(sizeof(double) * lut->steps);
+  tmp = stp_malloc(sizeof(double) * lut->steps);
   for (i = 0; i < isteps; i++)
     {
       double pixel = (double) i / (double) (isteps - 1);
@@ -992,7 +990,7 @@ compute_a_curve_fast(lut_t *lut, int channel)
   stp_curve_set_data(curve, isteps, tmp);
   if (isteps != lut->steps)
     stp_curve_resample(curve, lut->steps);
-  stpi_free(tmp);
+  stp_free(tmp);
 }
 
 /*
@@ -1025,11 +1023,11 @@ invert_curve(stp_curve_t curve, int invert_output)
     stp_curve_set_gamma(curve, -f_gamma);
   else
     {
-      tmp_data = stpi_malloc(sizeof(double) * count);
+      tmp_data = stp_malloc(sizeof(double) * count);
       for (i = 0; i < count; i++)
 	tmp_data[i] = data[count - i - 1];
       stp_curve_set_data(curve, count, tmp_data);
-      stpi_free(tmp_data);
+      stp_free(tmp_data);
     }
   if (!invert_output)
     {
@@ -1044,7 +1042,7 @@ static void
 compute_one_lut(lut_t *lut, int i)
 {
   stp_curve_t curve =
-    stpi_curve_cache_get_curve(&(lut->channel_curves[i]));
+    stp_curve_cache_get_curve(&(lut->channel_curves[i]));
   if (curve)
     {
       int invert_output =
@@ -1059,7 +1057,7 @@ compute_one_lut(lut_t *lut, int i)
       curve = stp_curve_create_copy(color_curve_bounds);
       stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
-      stpi_curve_cache_set_curve(&(lut->channel_curves[i]), curve);
+      stp_curve_cache_set_curve(&(lut->channel_curves[i]), curve);
       compute_a_curve(lut, i);
     }
 }
@@ -1067,7 +1065,7 @@ compute_one_lut(lut_t *lut, int i)
 static void
 setup_channel(stp_vars_t v, int i, const channel_param_t *p)
 {
-  lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
   const char *gamma_name =
     (lut->output_color_description->color_model == COLOR_BLACK ?
      p->gamma_name : p->rgb_gamma_name);
@@ -1080,10 +1078,10 @@ setup_channel(stp_vars_t v, int i, const channel_param_t *p)
   if (stp_get_curve_parameter_active(v, curve_name) > 0 &&
       stp_get_curve_parameter_active(v, curve_name) >=
       stp_get_float_parameter_active(v, gamma_name))
-    stpi_curve_cache_set_curve_copy
+    stp_curve_cache_set_curve_copy
       (&(lut->channel_curves[i]), stp_get_curve_parameter(v, curve_name));
 
-  stpi_dprintf(STPI_DBG_LUT, " %s %.3f\n", gamma_name, lut->gamma_values[i]);
+  stp_dprintf(STP_DBG_LUT, " %s %.3f\n", gamma_name, lut->gamma_values[i]);
   compute_one_lut(lut, i);
 }
 
@@ -1092,8 +1090,8 @@ static void
 stpi_compute_lut(stp_vars_t v)
 {
   int i;
-  lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
-  stpi_dprintf(STPI_DBG_LUT, v, "stpi_compute_lut\n");
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
+  stp_dprintf(STP_DBG_LUT, v, "stpi_compute_lut\n");
 
   if (lut->input_color_description->color_model == COLOR_UNKNOWN ||
       lut->output_color_description->color_model == COLOR_UNKNOWN ||
@@ -1140,10 +1138,10 @@ stpi_compute_lut(stp_vars_t v)
 	  stp_curve_create_copy(stp_get_curve_parameter(v, "SatMap"));
     }
 
-  stpi_dprintf(STPI_DBG_LUT, v, " print_gamma %.3f\n", lut->print_gamma);
-  stpi_dprintf(STPI_DBG_LUT, v, " contrast %.3f\n", lut->contrast);
-  stpi_dprintf(STPI_DBG_LUT, v, " brightness %.3f\n", lut->brightness);
-  stpi_dprintf(STPI_DBG_LUT, v, " screen_gamma %.3f\n", lut->screen_gamma);
+  stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", lut->print_gamma);
+  stp_dprintf(STP_DBG_LUT, v, " contrast %.3f\n", lut->contrast);
+  stp_dprintf(STP_DBG_LUT, v, " brightness %.3f\n", lut->brightness);
+  stp_dprintf(STP_DBG_LUT, v, " screen_gamma %.3f\n", lut->screen_gamma);
 
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
     {
@@ -1193,7 +1191,7 @@ stpi_color_traditional_init(stp_vars_t v,
 
   if (lut->input_color_description->color_id == COLOR_ID_RAW)
     {
-      if (stpi_verify_parameter(v, "STPIRawChannels", 1) != PARAMETER_OK)
+      if (stp_verify_parameter(v, "STPIRawChannels", 1) != PARAMETER_OK)
 	{
 	  free_lut(lut);
 	  return -1;
@@ -1207,7 +1205,7 @@ stpi_color_traditional_init(stp_vars_t v,
       lut->in_channels = lut->input_color_description->channel_count;
     }
 
-  stpi_allocate_component_data(v, "Color", copy_lut, free_lut, lut);
+  stp_allocate_component_data(v, "Color", copy_lut, free_lut, lut);
   lut->steps = steps;
   lut->channel_depth = channel_depth->bits;
 
@@ -1229,9 +1227,9 @@ stpi_color_traditional_init(stp_vars_t v,
 
   stpi_compute_lut(v);
 
-  lut->image_width = stpi_image_width(image);
+  lut->image_width = stp_image_width(image);
   total_channel_bits = lut->in_channels * lut->channel_depth;
-  lut->in_data = stpi_malloc(((lut->image_width * total_channel_bits) + 7)/8);
+  lut->in_data = stp_malloc(((lut->image_width * total_channel_bits) + 7)/8);
   memset(lut->in_data, 0, ((lut->image_width * total_channel_bits) + 7) / 8);
   return lut->out_channels;
 }
@@ -1296,7 +1294,7 @@ initialize_standard_curves(void)
 static stp_parameter_list_t
 stpi_color_traditional_list_parameters(stp_const_vars_t v)
 {
-  stpi_list_t *ret = stp_parameter_list_create();
+  stp_list_t *ret = stp_parameter_list_create();
   int i;
   initialize_standard_curves();
   for (i = 0; i < float_parameter_count; i++)
@@ -1322,11 +1320,11 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
       const float_param_t *param = &(float_parameters[i]);
       if (strcmp(name, param->param.name) == 0)
 	{
-	  stpi_fill_parameter_settings(description, &(param->param));
+	  stp_fill_parameter_settings(description, &(param->param));
 	  if (param->channel_mask != CMASK_EVERY)
 	    {
 	      const color_description_t *color_description =
-		get_color_description(stpi_describe_output(v));
+		get_color_description(stp_describe_output(v));
 	      if (color_description &&
 		  (param->channel_mask & color_description->channels) &&
 		  param->channel_mask != CMASK_RAW)
@@ -1445,11 +1443,11 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
       if (strcmp(name, param->param.name) == 0)
 	{
 	  description->is_active = 1;
-	  stpi_fill_parameter_settings(description, &(param->param));
+	  stp_fill_parameter_settings(description, &(param->param));
 	  if (param->channel_mask != CMASK_EVERY)
 	    {
 	      const color_description_t *color_description =
-		get_color_description(stpi_describe_output(v));
+		get_color_description(stp_describe_output(v));
 	      if (color_description &&
 		  (param->channel_mask & color_description->channels))
 		description->is_active = 1;
@@ -1487,7 +1485,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 }
 
 
-static const stpi_colorfuncs_t stpi_color_traditional_colorfuncs =
+static const stp_colorfuncs_t stpi_color_traditional_colorfuncs =
 {
   &stpi_color_traditional_init,
   &stpi_color_traditional_get_row,
@@ -1495,7 +1493,7 @@ static const stpi_colorfuncs_t stpi_color_traditional_colorfuncs =
   &stpi_color_traditional_describe_parameter
 };
 
-static const stpi_internal_color_t stpi_color_traditional_module_data =
+static const stp_color_t stpi_color_traditional_module_data =
   {
     COOKIE_COLOR,
     "traditional",
@@ -1507,29 +1505,29 @@ static const stpi_internal_color_t stpi_color_traditional_module_data =
 static int
 color_traditional_module_init(void)
 {
-  return stpi_color_register(&stpi_color_traditional_module_data);
+  return stp_color_register(&stpi_color_traditional_module_data);
 }
 
 
 static int
 color_traditional_module_exit(void)
 {
-  return stpi_color_unregister(&stpi_color_traditional_module_data);
+  return stp_color_unregister(&stpi_color_traditional_module_data);
 }
 
 
 /* Module header */
-#define stpi_module_version color_traditional_LTX_stpi_module_version
-#define stpi_module_data color_traditional_LTX_stpi_module_data
+#define stp_module_version color_traditional_LTX_stp_module_version
+#define stp_module_data color_traditional_LTX_stp_module_data
 
-stpi_module_version_t stpi_module_version = {0, 0};
+stp_module_version_t stp_module_version = {0, 0};
 
-stpi_module_t stpi_module_data =
+stp_module_t stp_module_data =
   {
     "traditional",
     VERSION,
     "Traditional Gimp-Print color conversion",
-    STPI_MODULE_CLASS_COLOR,
+    STP_MODULE_CLASS_COLOR,
     NULL,
     color_traditional_module_init,
     color_traditional_module_exit,

@@ -35,7 +35,6 @@
 #include <limits.h>
 #include <errno.h>
 #include <ctype.h>
-#include "xml.h"
 
 #define COOKIE_SEQUENCE 0xbf6a28d2
 
@@ -66,13 +65,13 @@ check_sequence(const stpi_internal_sequence_t *v)
 {
   if (v == NULL)
     {
-      stpi_erprintf("Null stp_sequence_t! Please report this bug.\n");
-      stpi_abort();
+      stp_erprintf("Null stp_sequence_t! Please report this bug.\n");
+      stp_abort();
     }
   if (v->cookie != COOKIE_SEQUENCE)
     {
-      stpi_erprintf("Bad stp_sequence_t! Please report this bug.\n");
-      stpi_abort();
+      stp_erprintf("Bad stp_sequence_t! Please report this bug.\n");
+      stp_abort();
     }
 }
 
@@ -91,7 +90,7 @@ stp_sequence_t
 stp_sequence_create(void)
 {
   stpi_internal_sequence_t *ret;
-  ret = stpi_zalloc(sizeof(stpi_internal_sequence_t));
+  ret = stp_zalloc(sizeof(stpi_internal_sequence_t));
   sequence_ctor(ret);
   return (stp_sequence_t) ret;
 }
@@ -113,7 +112,7 @@ sequence_dtor(stpi_internal_sequence_t *iseq)
 {
   invalidate_auxilliary_data(iseq);
   if (iseq->data)
-    stpi_free(iseq->data);
+    stp_free(iseq->data);
   memset(iseq, 0, sizeof(stpi_internal_sequence_t));
 }
 
@@ -123,7 +122,7 @@ stp_sequence_destroy(stp_sequence_t sequence)
   stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   sequence_dtor(iseq);
-  stpi_free(iseq);
+  stp_free(iseq);
 }
 
 void
@@ -141,7 +140,7 @@ stp_sequence_copy(stp_sequence_t dest, stp_const_sequence_t source)
   idest->rlo = isource->rlo;
   idest->rhi = isource->rhi;
   idest->size = isource->size;
-  idest->data = stpi_zalloc(sizeof(double) * isource->size);
+  idest->data = stp_zalloc(sizeof(double) * isource->size);
   memcpy(idest->data, isource->data, (sizeof(double) * isource->size));
 }
 
@@ -230,7 +229,7 @@ stp_sequence_set_size(stp_sequence_t sequence, size_t size)
   check_sequence(iseq);
   if (iseq->data) /* Free old data */
     {
-      stpi_free(iseq->data);
+      stp_free(iseq->data);
       iseq->data = NULL;
     }
   iseq->size = size;
@@ -238,7 +237,7 @@ stp_sequence_set_size(stp_sequence_t sequence, size_t size)
   if (size == 0)
     return 1;
   invalidate_auxilliary_data(iseq);
-  iseq->data = stpi_zalloc(sizeof(double) * size);
+  iseq->data = stp_zalloc(sizeof(double) * size);
   return 1;
 }
 
@@ -262,8 +261,8 @@ stp_sequence_set_data(stp_sequence_t sequence,
   check_sequence(iseq);
   iseq->size = size;
   if (iseq->data)
-    stpi_free(iseq->data);
-  iseq->data = stpi_zalloc(sizeof(double) * size);
+    stp_free(iseq->data);
+  iseq->data = stp_zalloc(sizeof(double) * size);
   memcpy(iseq->data, data, (sizeof(double) * size));
   invalidate_auxilliary_data(iseq);
   iseq->recompute_range = 1;
@@ -334,7 +333,7 @@ stp_sequence_get_point(stp_const_sequence_t sequence, size_t where,
 }
 
 stp_sequence_t
-stpi_sequence_create_from_xmltree(mxml_node_t *da)
+stp_sequence_create_from_xmltree(mxml_node_t *da)
 {
   const char *stmp;
   stp_sequence_t ret = NULL;
@@ -348,44 +347,44 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
   stmp = stpi_mxmlElementGetAttr(da, "count");
   if (stmp)
     {
-      point_count = (size_t) stpi_xmlstrtoul(stmp);
-      if ((stpi_xmlstrtol(stmp)) < 0)
+      point_count = (size_t) stp_xmlstrtoul(stmp);
+      if ((stp_xmlstrtol(stmp)) < 0)
 	{
-	  stpi_erprintf("stpi_sequence_create_from_xmltree: \"count\" is less than zero\n");
+	  stp_erprintf("stp_sequence_create_from_xmltree: \"count\" is less than zero\n");
 	  goto error;
 	}
     }
   else
     {
-      stpi_erprintf("stpi_sequence_create_from_xmltree: \"count\" missing\n");
+      stp_erprintf("stp_sequence_create_from_xmltree: \"count\" missing\n");
       goto error;
     }
   /* Get lower bound */
   stmp = stpi_mxmlElementGetAttr(da, "lower-bound");
   if (stmp)
     {
-      low = stpi_xmlstrtod(stmp);
+      low = stp_xmlstrtod(stmp);
     }
   else
     {
-      stpi_erprintf("stpi_sequence_create_from_xmltree: \"lower-bound\" missing\n");
+      stp_erprintf("stp_sequence_create_from_xmltree: \"lower-bound\" missing\n");
       goto error;
     }
   /* Get upper bound */
   stmp = stpi_mxmlElementGetAttr(da, "upper-bound");
   if (stmp)
     {
-      high = stpi_xmlstrtod(stmp);
+      high = stp_xmlstrtod(stmp);
     }
   else
     {
-      stpi_erprintf("stpi_sequence_create_from_xmltree: \"upper-bound\" missing\n");
+      stp_erprintf("stp_sequence_create_from_xmltree: \"upper-bound\" missing\n");
       goto error;
     }
 
-  stpi_deprintf(STPI_DBG_XML,
-		"stpi_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
-		point_count);
+  stp_deprintf(STP_DBG_XML,
+	       "stp_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
+	       point_count);
   stp_sequence_set_size(ret, point_count);
   stp_sequence_set_bounds(ret, low, high);
 
@@ -402,8 +401,8 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 	      double tmpval = strtod(child->value.text.string, &endptr);
 	      if (endptr == child->value.text.string)
 		{
-		  stpi_erprintf
-		    ("stpi_sequence_create_from_xmltree: bad data %s\n",
+		  stp_erprintf
+		    ("stp_sequence_create_from_xmltree: bad data %s\n",
 		     child->value.text.string);
 		  goto error;
 		}
@@ -412,10 +411,10 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 		  || tmpval < low
 		  || tmpval > high)
 		{
-		  stpi_erprintf("stpi_sequence_create_from_xmltree: "
-				"read aborted: datum out of bounds: "
-				"%g (require %g <= x <= %g), n = %d\n",
-				tmpval, low, high, i);
+		  stp_erprintf("stp_sequence_create_from_xmltree: "
+			       "read aborted: datum out of bounds: "
+			       "%g (require %g <= x <= %g), n = %d\n",
+			       tmpval, low, high, i);
 		  goto error;
 		}
 	      /* Datum was valid, so now add to the sequence */
@@ -426,24 +425,24 @@ stpi_sequence_create_from_xmltree(mxml_node_t *da)
 	}
       if (i < point_count)
 	{
-	  stpi_erprintf("stpi_sequence_create_from_xmltree: "
-			"read aborted: too little data "
-			"(n=%d, needed %d)\n", i, point_count);
+	  stp_erprintf("stp_sequence_create_from_xmltree: "
+		       "read aborted: too little data "
+		       "(n=%d, needed %d)\n", i, point_count);
 	  goto error;
-	}	
+	}
     }
 
   return ret;
 
  error:
-  stpi_erprintf("stpi_sequence_create_from_xmltree: error during sequence read\n");
+  stp_erprintf("stp_sequence_create_from_xmltree: error during sequence read\n");
   if (ret)
     stp_sequence_destroy(ret);
   return NULL;
 }
 
 mxml_node_t *
-stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
+stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 {
   size_t pointcount;
   double low;
@@ -461,18 +460,18 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
   stp_sequence_get_bounds(seq, &low, &high);
 
   /* should count be of greater precision? */
-  stpi_asprintf(&count, "%lu", (unsigned long) pointcount);
-  stpi_asprintf(&lower_bound, "%g", low);
-  stpi_asprintf(&upper_bound, "%g", high);
+  stp_asprintf(&count, "%lu", (unsigned long) pointcount);
+  stp_asprintf(&lower_bound, "%g", low);
+  stp_asprintf(&upper_bound, "%g", high);
 
   seqnode = stpi_mxmlNewElement(NULL, "sequence");
   (void) stpi_mxmlElementSetAttr(seqnode, "count", count);
   (void) stpi_mxmlElementSetAttr(seqnode, "lower-bound", lower_bound);
   (void) stpi_mxmlElementSetAttr(seqnode, "upper-bound", upper_bound);
 
-  stpi_free(count);
-  stpi_free(lower_bound);
-  stpi_free(upper_bound);
+  stp_free(count);
+  stp_free(lower_bound);
+  stp_free(upper_bound);
 
   /* Write the curve points into the node content */
   if (pointcount) /* Is there any data to write? */
@@ -485,9 +484,9 @@ stpi_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
 	  if ((stp_sequence_get_point(seq, i, &dval)) != 1)
 	    goto error;
 
-	  stpi_asprintf(&sval, "%g", dval);
+	  stp_asprintf(&sval, "%g", dval);
 	  stpi_mxmlNewText(seqnode, 1, sval);
-	  stpi_free(sval);
+	  stp_free(sval);
       }
     }
   return seqnode;
@@ -541,7 +540,7 @@ stp_sequence_get_##name##_data(stp_const_sequence_t sequence, size_t *count) \
     return NULL;							     \
   if (!iseq->name##_data)						     \
     {									     \
-      (iseq)->name##_data = stpi_zalloc(sizeof(t) * iseq->size);	     \
+      (iseq)->name##_data = stp_zalloc(sizeof(t) * iseq->size);	             \
       for (i = 0; i < iseq->size; i++)					     \
 	iseq->name##_data[i] = (t) iseq->data[i];			     \
     }									     \

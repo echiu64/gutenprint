@@ -32,15 +32,15 @@
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#include <gimp-print/curve-cache.h>
 #include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
 #include <string.h>
-#include "curve-cache.h"
 
 void
-stpi_curve_free_curve_cache(cached_curve_t *cache)
+stp_curve_free_curve_cache(stp_cached_curve_t *cache)
 {
   if (cache->curve)
     stp_curve_destroy(cache->curve);
@@ -51,7 +51,7 @@ stpi_curve_free_curve_cache(cached_curve_t *cache)
 }
 
 void
-stpi_curve_cache_curve_data(cached_curve_t *cache)
+stp_curve_cache_curve_data(stp_cached_curve_t *cache)
 {
   if (cache->curve && !cache->d_cache)
     {
@@ -61,13 +61,13 @@ stpi_curve_cache_curve_data(cached_curve_t *cache)
 }
 
 stp_curve_t
-stpi_curve_cache_get_curve(cached_curve_t *cache)
+stp_curve_cache_get_curve(stp_cached_curve_t *cache)
 {
   return cache->curve;
 }
 
 void
-stpi_curve_cache_curve_invalidate(cached_curve_t *cache)
+stp_curve_cache_curve_invalidate(stp_cached_curve_t *cache)
 {
   cache->d_cache = NULL;
   cache->s_cache = NULL;
@@ -75,21 +75,21 @@ stpi_curve_cache_curve_invalidate(cached_curve_t *cache)
 }
 
 void
-stpi_curve_cache_set_curve(cached_curve_t *cache, stp_curve_t curve)
+stp_curve_cache_set_curve(stp_cached_curve_t *cache, stp_curve_t curve)
 {
-  stpi_curve_cache_curve_invalidate(cache);
+  stp_curve_cache_curve_invalidate(cache);
   cache->curve = curve;
 }
 
 void
-stpi_curve_cache_set_curve_copy(cached_curve_t *cache, stp_const_curve_t curve)
+stp_curve_cache_set_curve_copy(stp_cached_curve_t *cache, stp_const_curve_t curve)
 {
-  stpi_curve_cache_curve_invalidate(cache);
+  stp_curve_cache_curve_invalidate(cache);
   cache->curve = stp_curve_create_copy(curve);
 }
 
 const size_t
-stpi_curve_cache_get_count(cached_curve_t *cache)
+stp_curve_cache_get_count(stp_cached_curve_t *cache)
 {
   if (cache->curve)
     {
@@ -102,7 +102,7 @@ stpi_curve_cache_get_count(cached_curve_t *cache)
 }
 
 const unsigned short *
-stpi_curve_cache_get_ushort_data(cached_curve_t *cache)
+stp_curve_cache_get_ushort_data(stp_cached_curve_t *cache)
 {
   if (cache->curve)
     {
@@ -116,7 +116,7 @@ stpi_curve_cache_get_ushort_data(cached_curve_t *cache)
 }
 
 const double *
-stpi_curve_cache_get_double_data(cached_curve_t *cache)
+stp_curve_cache_get_double_data(stp_cached_curve_t *cache)
 {
   if (cache->curve)
     {
@@ -129,13 +129,13 @@ stpi_curve_cache_get_double_data(cached_curve_t *cache)
 }
 
 void
-stpi_curve_cache_copy(cached_curve_t *dest, const cached_curve_t *src)
+stp_curve_cache_copy(stp_cached_curve_t *dest, const stp_cached_curve_t *src)
 {
-  stpi_curve_cache_curve_invalidate(dest);
+  stp_curve_cache_curve_invalidate(dest);
   if (dest != src)
     {
       if (src->curve)
-	stpi_curve_cache_set_curve_copy(dest, src->curve);
+	stp_curve_cache_set_curve_copy(dest, src->curve);
     }
 }
 

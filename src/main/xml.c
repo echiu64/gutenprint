@@ -37,9 +37,6 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include "module.h"
-#include "path.h"
-#include "xml.h"
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
 #else
@@ -49,12 +46,12 @@
 typedef struct
 {
   char *name;
-  stpi_xml_parse_func parse_func;
+  stp_xml_parse_func parse_func;
 } stpi_xml_parse_registry;
 
-static stpi_list_t stpi_xml_registry;
+static stp_list_t stpi_xml_registry;
 
-static stpi_list_t stpi_xml_preloads;
+static stp_list_t stpi_xml_preloads;
 
 static const char *
 xml_registry_namefunc(const void *item)
@@ -67,8 +64,8 @@ static void
 xml_registry_freefunc(void *item)
 {
   stpi_xml_parse_registry *xmlp = (stpi_xml_parse_registry *) item;
-  stpi_free(xmlp->name);
-  stpi_free(xmlp);
+  stp_free(xmlp->name);
+  stp_free(xmlp);
 }
 
 static const char *
@@ -80,50 +77,50 @@ xml_preload_namefunc(const void *item)
 static void
 xml_preload_freefunc(void *item)
 {
-  stpi_free(item);
+  stp_free(item);
 }
 
 void
-stpi_register_xml_parser(const char *name, stpi_xml_parse_func parse_func)
+stp_register_xml_parser(const char *name, stp_xml_parse_func parse_func)
 {
   stpi_xml_parse_registry *xmlp;
-  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_registry, name);
+  stp_list_item_t *item = stp_list_get_item_by_name(stpi_xml_registry, name);
   if (item)
-    xmlp = (stpi_xml_parse_registry *) stpi_list_item_get_data(item);
+    xmlp = (stpi_xml_parse_registry *) stp_list_item_get_data(item);
   else
     {
-      xmlp = stpi_malloc(sizeof(stpi_xml_parse_registry));
-      xmlp->name = stpi_strdup(name);
-      stpi_list_item_create(stpi_xml_registry, NULL, xmlp);
+      xmlp = stp_malloc(sizeof(stpi_xml_parse_registry));
+      xmlp->name = stp_strdup(name);
+      stp_list_item_create(stpi_xml_registry, NULL, xmlp);
     }
   xmlp->parse_func = parse_func;
 }
 
 void
-stpi_unregister_xml_parser(const char *name)
+stp_unregister_xml_parser(const char *name)
 {
-  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_registry, name);
+  stp_list_item_t *item = stp_list_get_item_by_name(stpi_xml_registry, name);
   if (item)
-    stpi_list_item_destroy(stpi_xml_registry, item);
+    stp_list_item_destroy(stpi_xml_registry, item);
 }
 
 void
-stpi_register_xml_preload(const char *filename)
+stp_register_xml_preload(const char *filename)
 {
-  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_preloads, filename);
+  stp_list_item_t *item = stp_list_get_item_by_name(stpi_xml_preloads, filename);
   if (!item)
     {
-      char *the_filename = stpi_strdup(filename);
-      stpi_list_item_create(stpi_xml_preloads, NULL, the_filename);
+      char *the_filename = stp_strdup(filename);
+      stp_list_item_create(stpi_xml_preloads, NULL, the_filename);
     }
 }
 
 void
-stpi_unregister_xml_preload(const char *name)
+stp_unregister_xml_preload(const char *name)
 {
-  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_preloads, name);
+  stp_list_item_t *item = stp_list_get_item_by_name(stpi_xml_preloads, name);
   if (item)
-    stpi_list_item_destroy(stpi_xml_preloads, item);
+    stp_list_item_destroy(stpi_xml_preloads, item);
 }
 
 
@@ -135,17 +132,17 @@ static char *saved_lc_numeric;                 /* Saved LC_NUMERIC */
 static int xml_is_initialised;                 /* Flag for init */
 
 void
-stpi_xml_preinit(void)
+stp_xml_preinit(void)
 {
   static int xml_is_preinitialized = 0;
   if (!xml_is_preinitialized)
     {
-      stpi_xml_registry = stpi_list_create();
-      stpi_list_set_freefunc(stpi_xml_registry, xml_registry_freefunc);
-      stpi_list_set_namefunc(stpi_xml_registry, xml_registry_namefunc);
-      stpi_xml_preloads = stpi_list_create();
-      stpi_list_set_freefunc(stpi_xml_preloads, xml_preload_freefunc);
-      stpi_list_set_namefunc(stpi_xml_preloads, xml_preload_namefunc);
+      stpi_xml_registry = stp_list_create();
+      stp_list_set_freefunc(stpi_xml_registry, xml_registry_freefunc);
+      stp_list_set_namefunc(stpi_xml_registry, xml_registry_namefunc);
+      stpi_xml_preloads = stp_list_create();
+      stp_list_set_freefunc(stpi_xml_preloads, xml_preload_freefunc);
+      stp_list_set_namefunc(stpi_xml_preloads, xml_preload_namefunc);
     }
 }    
 
@@ -155,7 +152,7 @@ stpi_xml_preinit(void)
  * functions.
  */
 void
-stpi_xml_init(void)
+stp_xml_init(void)
 {
   if (xml_is_initialised >= 1)
     {
@@ -176,7 +173,7 @@ stpi_xml_init(void)
  * public functions should call this after using any mxml functions.
  */
 void
-stpi_xml_exit(void)
+stp_xml_exit(void)
 {
   if (xml_is_initialised > 1) /* don't restore original state */
     {
@@ -194,30 +191,30 @@ stpi_xml_exit(void)
 }
 
 void
-stpi_xml_parse_file_named(const char *name)
+stp_xml_parse_file_named(const char *name)
 {
-  stpi_list_t *dir_list;                  /* List of directories to scan */
-  stpi_list_t *file_list;                 /* List of XML files */
-  stpi_list_item_t *item;                 /* Pointer to current list item */
-  if (!(dir_list = stpi_list_create()))
+  stp_list_t *dir_list;                  /* List of directories to scan */
+  stp_list_t *file_list;                 /* List of XML files */
+  stp_list_item_t *item;                 /* Pointer to current list item */
+  if (!(dir_list = stp_list_create()))
     return;
-  stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
+  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
   if (getenv("STP_DATA_PATH"))
-    stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
+    stp_path_split(dir_list, getenv("STP_DATA_PATH"));
   else
-    stpi_path_split(dir_list, PKGXMLDATADIR);
-  file_list = stpi_path_search(dir_list, name);
-  stpi_list_destroy(dir_list);
-  item = stpi_list_get_start(file_list);
+    stp_path_split(dir_list, PKGXMLDATADIR);
+  file_list = stp_path_search(dir_list, name);
+  stp_list_destroy(dir_list);
+  item = stp_list_get_start(file_list);
   while (item)
     {
-      stpi_deprintf(STPI_DBG_XML,
-		    "stp_xml_parse_file_named: source file: %s\n",
-		    (const char *) stpi_list_item_get_data(item));
-      stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
-      item = stpi_list_item_next(item);
+      stp_deprintf(STP_DBG_XML,
+		   "stp_xml_parse_file_named: source file: %s\n",
+		   (const char *) stp_list_item_get_data(item));
+      stp_xml_parse_file((const char *) stp_list_item_get_data(item));
+      item = stp_list_item_next(item);
     }
-  stpi_list_destroy(file_list);
+  stp_list_destroy(file_list);
 }
   
 
@@ -225,24 +222,24 @@ stpi_xml_parse_file_named(const char *name)
  * Read all available XML files.
  */
 int
-stpi_xml_init_defaults(void)
+stp_xml_init_defaults(void)
 {
-  stpi_list_item_t *item;                 /* Pointer to current list item */
+  stp_list_item_t *item;                 /* Pointer to current list item */
 
-  stpi_xml_init();
+  stp_xml_init();
 
   /* Parse each XML file */
-  item = stpi_list_get_start(stpi_xml_preloads);
+  item = stp_list_get_start(stpi_xml_preloads);
   while (item)
     {
-      stpi_deprintf(STPI_DBG_XML, "stp_xml_init_defaults: source file: %s\n",
-		    (const char *) stpi_list_item_get_data(item));
-      stpi_xml_parse_file_named((const char *) stpi_list_item_get_data(item));
-      item = stpi_list_item_next(item);
+      stp_deprintf(STP_DBG_XML, "stp_xml_init_defaults: source file: %s\n",
+		   (const char *) stp_list_item_get_data(item));
+      stp_xml_parse_file_named((const char *) stp_list_item_get_data(item));
+      item = stp_list_item_next(item);
     }
-  stpi_list_destroy(stpi_xml_preloads);
+  stp_list_destroy(stpi_xml_preloads);
 
-  stpi_xml_exit();
+  stp_xml_exit();
 
   return 0;
 }
@@ -252,23 +249,23 @@ stpi_xml_init_defaults(void)
  * Parse a single XML file.
  */
 int
-stpi_xml_parse_file(const char *file) /* File to parse */
+stp_xml_parse_file(const char *file) /* File to parse */
 {
   mxml_node_t *doc;
   mxml_node_t *cur;
   FILE *fp;
 
-  stpi_deprintf(STPI_DBG_XML, "stp_xml_parse_file: reading  `%s'...\n", file);
+  stp_deprintf(STP_DBG_XML, "stp_xml_parse_file: reading  `%s'...\n", file);
 
   fp = fopen(file, "r");
   if (!fp)
     {
-      stpi_erprintf("stp_xml_parse_file: unable to open %s: %s\n", file,
-		    strerror(errno));
+      stp_erprintf("stp_xml_parse_file: unable to open %s: %s\n", file,
+		   strerror(errno));
       return 1;
     }
 
-  stpi_xml_init();
+  stp_xml_init();
 
   doc = stpi_mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK);
   fclose(fp);
@@ -281,14 +278,14 @@ stpi_xml_parse_file(const char *file) /* File to parse */
 
   if (cur == NULL || cur->type != MXML_ELEMENT)
     {
-      stpi_erprintf("stp_xml_parse_file: %s: parse error\n", file);
+      stp_erprintf("stp_xml_parse_file: %s: parse error\n", file);
       stpi_mxmlDelete(doc);
       return 1;
     }
 
   if (strcmp(cur->value.element.name, "gimp-print") != 0)
     {
-      stpi_erprintf
+      stp_erprintf
 	("XML file of the wrong type, root node is %s != gimp-print",
 	 cur->value.element.name);
       stpi_mxmlDelete(doc);
@@ -300,7 +297,7 @@ stpi_xml_parse_file(const char *file) /* File to parse */
   stpi_xml_process_gimpprint(cur, file);
   stpi_mxmlDelete(doc);
 
-  stpi_xml_exit();
+  stp_xml_exit();
 
   return 0;
 }
@@ -309,7 +306,7 @@ stpi_xml_parse_file(const char *file) /* File to parse */
  * Convert a text string into an integer.
  */
 long
-stpi_xmlstrtol(const char *textval)
+stp_xmlstrtol(const char *textval)
 {
   long val; /* The value to return */
   val = strtol(textval, (char **)NULL, 10);
@@ -321,7 +318,7 @@ stpi_xmlstrtol(const char *textval)
  * Convert a text string into an unsigned int.
  */
 unsigned long
-stpi_xmlstrtoul(const char *textval)
+stp_xmlstrtoul(const char *textval)
 {
   unsigned long val; /* The value to return */
   val = strtoul(textval, (char **)NULL, 10);
@@ -333,7 +330,7 @@ stpi_xmlstrtoul(const char *textval)
  * Convert a text string into a double.
  */
 double
-stpi_xmlstrtod(const char *textval)
+stp_xmlstrtod(const char *textval)
 {
   double val; /* The value to return */
   val = strtod(textval, (char **)NULL);
@@ -345,12 +342,12 @@ stpi_xmlstrtod(const char *textval)
 /*
  * Find a node in an XML tree.  This function takes an xmlNodePtr,
  * followed by a NULL-terminated list of nodes which are required.
- * For example stpi_xml_get_node(myroot, "gimp-print", "dither") will
+ * For example stp_xml_get_node(myroot, "gimp-print", "dither") will
  * return the first dither node in the tree.  Additional dither nodes
  * cannot be accessed with this function.
  */
 mxml_node_t *
-stpi_xml_get_node(mxml_node_t *xmlroot, ...)
+stp_xml_get_node(mxml_node_t *xmlroot, ...)
 {
   mxml_node_t *child;
   va_list ap;
@@ -373,12 +370,12 @@ stpi_xml_get_node(mxml_node_t *xmlroot, ...)
 static void
 stpi_xml_process_node(mxml_node_t *node, const char *file)
 {
-  stpi_list_item_t *item =
-    stpi_list_get_item_by_name(stpi_xml_registry, node->value.element.name);
+  stp_list_item_t *item =
+    stp_list_get_item_by_name(stpi_xml_registry, node->value.element.name);
   if (item)
     {
       stpi_xml_parse_registry *xmlp =
-	(stpi_xml_parse_registry *) stpi_list_item_get_data(item);
+	(stpi_xml_parse_registry *) stp_list_item_get_data(item);
       (xmlp->parse_func)(node, file);
     }
 }
@@ -386,7 +383,7 @@ stpi_xml_process_node(mxml_node_t *node, const char *file)
 /*
  * Parse the <gimp-print> root node.
  */
-void
+static void
 stpi_xml_process_gimpprint(mxml_node_t *cur, const char *file) /* The node to parse */
 {
   mxml_node_t *child;                       /* Child node pointer */
@@ -405,7 +402,7 @@ stpi_xml_process_gimpprint(mxml_node_t *cur, const char *file) /* The node to pa
  * Create a basic gimp-print XML document tree root
  */
 mxml_node_t *
-stpi_xmldoc_create_generic(void)
+stp_xmldoc_create_generic(void)
 {
   mxml_node_t *doc;
   mxml_node_t *rootnode;

@@ -74,7 +74,6 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include <gimp-print-internal.h>
-#include "../src/main/weave.h"
 
 const char header[] = "Legend:\n"
 "A  Negative pass number.\n"
@@ -128,7 +127,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 {
   int i;
   int j;
-  stpi_weave_t w;
+  stp_weave_t w;
   stp_vars_t v;
   int errors[26];
   char errcodes[26];
@@ -170,11 +169,11 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       phys_lines += 2*(physjets+1)*physsep;
     }
 
-  stpi_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
-			     7, 1, 128, nrows, first_line,
-			     phys_lines, head_offset, strategy, flush_pass,
-			     stpi_fill_tiff, stpi_pack_tiff,
-			     stpi_compute_tiff_linewidth);
+  stp_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
+		       7, 1, 128, nrows, first_line,
+		       phys_lines, head_offset, strategy, flush_pass,
+		       stp_fill_tiff, stp_pack_tiff,
+		       stp_compute_tiff_linewidth);
 
   passstarts = xmalloc(sizeof(int) * (nrows + physsep));
   logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
@@ -208,7 +207,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       for (j = 0; j < hpasses * vpasses * subpasses; j++)
 	{
 	  int physrow;
-	  stpi_weave_parameters_by_row(v, i+first_line, j, &w);
+	  stp_weave_parameters_by_row(v, i+first_line, j, &w);
 	  physrow = w.logicalpassstart + physsep * w.jet;
 
 	  errcodes[0] = (w.pass < 0 ? (errors[0]++, 'A') : ' ');

@@ -20,8 +20,8 @@
  * Prevent multiple inclusion...
  */
 
-#ifndef _mxml_h_
-#  define _mxml_h_
+#ifndef GIMP_PRINT_MXML_H
+#  define GIMP_PRINT_MXML_H
 
 /*
  * Include necessary headers...
@@ -165,7 +165,7 @@ extern mxml_node_t	*stpi_mxmlWalkPrev(mxml_node_t *node, mxml_node_t *top,
 #  ifdef __cplusplus
 }
 #  endif /* __cplusplus */
-#endif /* !_mxml_h_ */
+#endif /* !GIMP_PRINT_MXML_H */
 
 
 /*

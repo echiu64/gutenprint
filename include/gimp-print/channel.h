@@ -25,53 +25,45 @@
  *   See ChangeLog
  */
 
-/**
- * @file src/main/util.h
- * @brief Utility functions (internal).
- */
-
 /*
  * This file must include only standard C header files.  The core code must
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_UTIL_H
-#define GIMP_PRINT_INTERNAL_UTIL_H
+#ifndef GIMP_PRINT_CHANNEL_H
+#define GIMP_PRINT_CHANNEL_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef __GNUC__
-#ifndef __attribute__
-#define __attribute__(ignore)
-#endif
-#endif
 
-/**
- * Utility functions (internal).
- *
- * @defgroup util_internal util-internal
- * @{
- */
+extern void stp_channel_reset(stp_vars_t v);
+extern void stp_channel_reset_channel(stp_vars_t v, int channel);
 
+extern void stp_channel_add(stp_vars_t v, unsigned channel,
+			    unsigned subchannel, double value);
 
-/*
- * FIXME Need somewhere else to put these initialization routines
- * which users shouldn't call.
- */
+extern void stp_channel_set_density_adjustment(stp_vars_t v,
+					       int color, int subchannel,
+					       double adjustment);
+extern void stp_channel_set_ink_limit(stp_vars_t v, double limit);
+extern void stp_channel_set_cutoff_adjustment(stp_vars_t v,
+					      int color, int subchannel,
+					      double adjustment);
+extern void stp_channel_set_black_channel(stp_vars_t v, int channel);
 
-extern void stpi_init_paper(void);
-extern void stpi_init_dither(void);
-extern void stpi_init_printer(void);
+extern void stp_channel_initialize(stp_vars_t v, stp_image_t *image,
+				   int input_channel_count);
 
-/** @} */
+extern void stp_channel_convert(stp_const_vars_t v, unsigned *zero_mask);
+
+extern unsigned short * stp_channel_get_input(stp_const_vars_t v);
+
+extern unsigned short * stp_channel_get_output(stp_const_vars_t v);
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_UTIL_H */
-/*
- * End of "$Id$".
- */
+#endif /* GIMP_PRINT_CHANNEL_H */

@@ -35,13 +35,11 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include "weave.h"
-#include "bit-ops.h"
 
 void
-stpi_fold(const unsigned char *line,
-	   int single_length,
-	   unsigned char *outbuf)
+stp_fold(const unsigned char *line,
+	 int single_length,
+	 unsigned char *outbuf)
 {
   int i;
   memset(outbuf, 0, single_length * 2);
@@ -77,9 +75,9 @@ stpi_fold(const unsigned char *line,
 
 static void
 stpi_split_2_1(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
+	       const unsigned char *in,
+	       unsigned char *outhi,
+	       unsigned char *outlo)
 {
   unsigned char *outs[2];
   int i;
@@ -139,10 +137,10 @@ stpi_split_2_1(int length,
 }
 
 static void
-stpi_split_2_2(int length,
-		const unsigned char *in,
-		unsigned char *outhi,
-		unsigned char *outlo)
+stp_split_2_2(int length,
+	      const unsigned char *in,
+	      unsigned char *outhi,
+	      unsigned char *outlo)
 {
   unsigned char *outs[2];
   int i;
@@ -182,25 +180,25 @@ stpi_split_2_2(int length,
 }
 
 void
-stpi_split_2(int length,
-	      int bits,
-	      const unsigned char *in,
-	      unsigned char *outhi,
-	      unsigned char *outlo)
+stp_split_2(int length,
+	    int bits,
+	    const unsigned char *in,
+	    unsigned char *outhi,
+	    unsigned char *outlo)
 {
   if (bits == 2)
-    stpi_split_2_2(length, in, outhi, outlo);
+    stp_split_2_2(length, in, outhi, outlo);
   else
     stpi_split_2_1(length, in, outhi, outlo);
 }
 
 static void
 stpi_split_4_1(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3)
 {
   unsigned char *outs[4];
   int i;
@@ -265,11 +263,11 @@ stpi_split_4_1(int length,
 
 static void
 stpi_split_4_2(int length,
-		const unsigned char *in,
-		unsigned char *out0,
-		unsigned char *out1,
-		unsigned char *out2,
-		unsigned char *out3)
+	       const unsigned char *in,
+	       unsigned char *out0,
+	       unsigned char *out1,
+	       unsigned char *out2,
+	       unsigned char *out3)
 {
   unsigned char *outs[4];
   int i;
@@ -313,13 +311,13 @@ stpi_split_4_2(int length,
 }
 
 void
-stpi_split_4(int length,
-	      int bits,
-	      const unsigned char *in,
-	      unsigned char *out0,
-	      unsigned char *out1,
-	      unsigned char *out2,
-	      unsigned char *out3)
+stp_split_4(int length,
+	    int bits,
+	    const unsigned char *in,
+	    unsigned char *out0,
+	    unsigned char *out1,
+	    unsigned char *out2,
+	    unsigned char *out3)
 {
   if (bits == 2)
     stpi_split_4_2(length, in, out0, out1, out2, out3);
@@ -338,9 +336,9 @@ stpi_split_4(int length,
 
 static void
 stpi_unpack_2_1(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1)
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1)
 {
   unsigned char	tempin, bit, temp0, temp1;
 
@@ -420,11 +418,11 @@ stpi_unpack_2_2(int length,
 }
 
 void
-stpi_unpack_2(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *outlo,
-	       unsigned char *outhi)
+stp_unpack_2(int length,
+	     int bits,
+	     const unsigned char *in,
+	     unsigned char *outlo,
+	     unsigned char *outhi)
 {
   if (bits == 1)
     stpi_unpack_2_1(length, in, outlo, outhi);
@@ -570,13 +568,13 @@ stpi_unpack_4_2(int length,
 }
 
 void
-stpi_unpack_4(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3)
+stp_unpack_4(int length,
+	     int bits,
+	     const unsigned char *in,
+	     unsigned char *out0,
+	     unsigned char *out1,
+	     unsigned char *out2,
+	     unsigned char *out3)
 {
   if (bits == 1)
     stpi_unpack_4_1(length, in, out0, out1, out2, out3);
@@ -586,15 +584,15 @@ stpi_unpack_4(int length,
 
 static void
 stpi_unpack_8_1(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3,
-		 unsigned char *out4,
-		 unsigned char *out5,
-		 unsigned char *out6,
-		 unsigned char *out7)
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3,
+		unsigned char *out4,
+		unsigned char *out5,
+		unsigned char *out6,
+		unsigned char *out7)
 {
   unsigned char	tempin, bit, temp0, temp1, temp2, temp3, temp4, temp5, temp6,
     temp7;
@@ -666,15 +664,15 @@ stpi_unpack_8_1(int length,
 
 static void
 stpi_unpack_8_2(int length,
-		 const unsigned char *in,
-		 unsigned char *out0,
-		 unsigned char *out1,
-		 unsigned char *out2,
-		 unsigned char *out3,
-		 unsigned char *out4,
-		 unsigned char *out5,
-		 unsigned char *out6,
-		 unsigned char *out7)
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3,
+		unsigned char *out4,
+		unsigned char *out5,
+		unsigned char *out6,
+		unsigned char *out7)
 {
   unsigned char	tempin,
 		shift,
@@ -759,17 +757,17 @@ stpi_unpack_8_2(int length,
 }
 
 void
-stpi_unpack_8(int length,
-	       int bits,
-	       const unsigned char *in,
-	       unsigned char *out0,
-	       unsigned char *out1,
-	       unsigned char *out2,
-	       unsigned char *out3,
-	       unsigned char *out4,
-	       unsigned char *out5,
-	       unsigned char *out6,
-	       unsigned char *out7)
+stp_unpack_8(int length,
+	     int bits,
+	     const unsigned char *in,
+	     unsigned char *out0,
+	     unsigned char *out1,
+	     unsigned char *out2,
+	     unsigned char *out3,
+	     unsigned char *out4,
+	     unsigned char *out5,
+	     unsigned char *out6,
+	     unsigned char *out7)
 {
   if (bits == 1)
     stpi_unpack_8_1(length, in, out0, out1, out2, out3,
@@ -805,13 +803,13 @@ find_first_and_last(const unsigned char *line, int length,
 }
 
 int
-stpi_pack_uncompressed(stp_vars_t v,
-		       const unsigned char *line,
-		       int length,
-		       unsigned char *comp_buf,
-		       unsigned char **comp_ptr,
-		       int *first,
-		       int *last)
+stp_pack_uncompressed(stp_vars_t v,
+		      const unsigned char *line,
+		      int length,
+		      unsigned char *comp_buf,
+		      unsigned char **comp_ptr,
+		      int *first,
+		      int *last)
 {
   find_first_and_last(line, length, first, last);
   memcpy(comp_buf, line, length);
@@ -823,13 +821,13 @@ stpi_pack_uncompressed(stp_vars_t v,
 }
 
 int
-stpi_pack_tiff(stp_vars_t v,
-	       const unsigned char *line,
-	       int length,
-	       unsigned char *comp_buf,
-	       unsigned char **comp_ptr,
-	       int *first,
-	       int *last)
+stp_pack_tiff(stp_vars_t v,
+	      const unsigned char *line,
+	      int length,
+	      unsigned char *comp_buf,
+	      unsigned char **comp_ptr,
+	      int *first,
+	      int *last)
 {
   const unsigned char *start;		/* Start of compressed data */
   unsigned char repeat;			/* Repeating char */

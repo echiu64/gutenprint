@@ -34,7 +34,6 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
-#include "module.h"
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -117,7 +116,7 @@ raw_parameters(stp_const_vars_t v, const char *name,
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
       {
-	stpi_fill_parameter_settings(description, &(the_parameters[i]));
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
   if (strcmp(name, "InkType") == 0)
@@ -198,7 +197,7 @@ raw_describe_output(stp_const_vars_t v)
 static int
 raw_print(stp_const_vars_t v, stp_image_t *image)
 {
-  int		model = stpi_get_model_id(v);
+  int		model = stp_get_model_id(v);
   int width = stp_get_page_width(v);
   int height = stp_get_page_height(v);
   int		i, j;
@@ -212,16 +211,16 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   int rotate_output = 0;
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
 
-  stpi_prune_inactive_options(nv);
+  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
-      stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));
+      stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
       stp_vars_destroy(nv);
       return 0;
     }
-  if (width != stpi_image_width(image) || height != stpi_image_height(image))
+  if (width != stp_image_width(image) || height != stp_image_height(image))
     {
-      stpi_eprintf(nv, _("Image dimensions must match paper dimensions"));
+      stp_eprintf(nv, _("Image dimensions must match paper dimensions"));
       stp_vars_destroy(nv);
       return 0;
     }
@@ -238,36 +237,36 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
     }
 
   stp_set_float_parameter(nv, "Density", 1.0);
-  stpi_channel_reset(nv);
+  stp_channel_reset(nv);
   for (i = 0; i < ink_channels; i++)
-    stpi_channel_add(nv, i, 0, 1.0);
+    stp_channel_add(nv, i, 0, 1.0);
 
   if (bytes_per_channel == 1)
-    out_channels = stpi_color_init(nv, image, 256);
+    out_channels = stp_color_init(nv, image, 256);
   else
-    out_channels = stpi_color_init(nv, image, 65536);
+    out_channels = stp_color_init(nv, image, 65536);
 
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
-      stpi_eprintf(nv, "Internal error!  Output channels or input channels must be 1\n");
+      stp_eprintf(nv, "Internal error!  Output channels or input channels must be 1\n");
       stp_vars_destroy(nv);
       return 0;
     }
 
   if (out_channels != ink_channels)
-    final_out = stpi_malloc(width * ink_channels * 2);
+    final_out = stp_malloc(width * ink_channels * 2);
 
   for (y = 0; y < height; y++)
     {
       unsigned short *out;
       unsigned short *real_out;
       unsigned zero_mask;
-      if (stpi_color_get_row(nv, image, y, &zero_mask))
+      if (stp_color_get_row(nv, image, y, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      out = stpi_channel_get_input(nv);
+      out = stp_channel_get_input(nv);
       real_out = out;
       if (rotate_output)
 	{
@@ -309,27 +308,27 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
 	  for (i = 0; i < width * ink_channels; i++)
 	    char_out[i] = real_out[i] / 257;
 	}
-      stpi_zfwrite((char *) real_out,
-		   width * ink_channels * bytes_per_channel, 1, nv);
+      stp_zfwrite((char *) real_out,
+		  width * ink_channels * bytes_per_channel, 1, nv);
     }
-  stpi_image_conclude(image);
+  stp_image_conclude(image);
   if (final_out)
-    stpi_free(final_out);
+    stp_free(final_out);
   stp_vars_destroy(nv);
   return status;
 }
 
-static const stpi_printfuncs_t print_raw_printfuncs =
+static const stp_printfuncs_t print_raw_printfuncs =
 {
   raw_list_parameters,
   raw_parameters,
-  stpi_default_media_size,
+  stp_default_media_size,
   raw_imageable_area,
   raw_limit,
   raw_print,
   raw_describe_resolution,
   raw_describe_output,
-  stpi_verify_printer_params,
+  stp_verify_printer_params,
   NULL,
   NULL
 };
@@ -337,7 +336,7 @@ static const stpi_printfuncs_t print_raw_printfuncs =
 
 
 
-static stpi_internal_family_t print_raw_module_data =
+static stp_family_t print_raw_module_data =
   {
     &print_raw_printfuncs,
     NULL
@@ -347,29 +346,29 @@ static stpi_internal_family_t print_raw_module_data =
 static int
 print_raw_module_init(void)
 {
-  return stpi_family_register(print_raw_module_data.printer_list);
+  return stp_family_register(print_raw_module_data.printer_list);
 }
 
 
 static int
 print_raw_module_exit(void)
 {
-  return stpi_family_unregister(print_raw_module_data.printer_list);
+  return stp_family_unregister(print_raw_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stpi_module_version print_raw_LTX_stpi_module_version
-#define stpi_module_data print_raw_LTX_stpi_module_data
+#define stp_module_version print_raw_LTX_stp_module_version
+#define stp_module_data print_raw_LTX_stp_module_data
 
-stpi_module_version_t stpi_module_version = {0, 0};
+stp_module_version_t stp_module_version = {0, 0};
 
-stpi_module_t stpi_module_data =
+stp_module_t stp_module_data =
   {
     "raw",
     VERSION,
     "RAW family driver",
-    STPI_MODULE_CLASS_FAMILY,
+    STP_MODULE_CLASS_FAMILY,
     NULL,
     print_raw_module_init,
     print_raw_module_exit,

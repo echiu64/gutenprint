@@ -41,12 +41,9 @@ extern "C" {
 #include <config.h>
 #endif
 
+#include <gimp-print/gimp-print-module.h>
+
 #include "util.h"
-#include "vars.h"
-#include "color.h"
-#include "dither.h"
-#include "printers.h"
-#include "image.h"
 
 
 #ifdef __cplusplus

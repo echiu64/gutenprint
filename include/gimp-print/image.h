@@ -26,8 +26,8 @@
  * @brief Image functions.
  */
 
-#ifndef __GIMP_PRINT_IMAGE_H__
-#define __GIMP_PRINT_IMAGE_H__
+#ifndef GIMP_PRINT_IMAGE_H
+#define GIMP_PRINT_IMAGE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -124,12 +124,21 @@ typedef struct stp_image
   void *rep;
 } stp_image_t;
 
+extern void stp_image_init(stp_image_t *image);
+extern void stp_image_reset(stp_image_t *image);
+extern int stp_image_width(stp_image_t *image);
+extern int stp_image_height(stp_image_t *image);
+extern stp_image_status_t stp_image_get_row(stp_image_t *image,
+					    unsigned char *data,
+					    size_t limit, int row);
+extern const char *stp_image_get_appname(stp_image_t *image);
+extern void stp_image_conclude(stp_image_t *image);
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* __GIMP_PRINT_IMAGE_H__ */
+#endif /* GIMP_PRINT_IMAGE_H */
 /*
  * End of "$Id$".
  */

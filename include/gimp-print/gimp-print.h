@@ -36,8 +36,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef __GIMP_PRINT_H__
-#define __GIMP_PRINT_H__
+#ifndef GIMP_PRINT_H
+#define GIMP_PRINT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,7 +61,7 @@ extern "C" {
   }
 #endif
 
-#endif /* __GIMP_PRINT_H__ */
+#endif /* GIMP_PRINT_H */
 /*
  * End of $Id$
  */

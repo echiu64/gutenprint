@@ -25,7 +25,7 @@
  * Include necessary headers...
  */
 
-#include "mxml.h"
+#include <gimp-print/mxml.h>
 #include "config.h"
 
 

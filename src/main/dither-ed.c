@@ -366,11 +366,11 @@ shared_ed_initializer(stpi_dither_t *d,
     }
   d->ptr_offset = (direction == 1) ? 0 : length - 1;
 
-  *error = stpi_malloc(CHANNEL_COUNT(d) * sizeof(int **));
-  *ndither = stpi_malloc(CHANNEL_COUNT(d) * sizeof(int));
+  *error = stp_malloc(CHANNEL_COUNT(d) * sizeof(int **));
+  *ndither = stp_malloc(CHANNEL_COUNT(d) * sizeof(int));
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      (*error)[i] = stpi_malloc(d->error_rows * sizeof(int *));
+      (*error)[i] = stp_malloc(d->error_rows * sizeof(int *));
       for (j = 0; j < d->error_rows; j++)
 	{
 	  (*error)[i][j] = stpi_dither_get_errline(d, row + j, i);
@@ -406,7 +406,7 @@ stpi_dither_ed(stp_vars_t v,
 	       int zero_mask,
 	       const unsigned char *mask)
 {
-  stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
+  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int		x,
     		length;
   unsigned char	bit;

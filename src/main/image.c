@@ -28,40 +28,40 @@
 #include "gimp-print-internal.h"
 
 void
-stpi_image_init(stp_image_t *image)
+stp_image_init(stp_image_t *image)
 {
   if (image->init)
     image->init(image);
 }
 
 void
-stpi_image_reset(stp_image_t *image)
+stp_image_reset(stp_image_t *image)
 {
   if (image->reset)
     image->reset(image);
 }
 
 int
-stpi_image_width(stp_image_t *image)
+stp_image_width(stp_image_t *image)
 {
   return image->width(image);
 }
 
 int
-stpi_image_height(stp_image_t *image)
+stp_image_height(stp_image_t *image)
 {
   return image->height(image);
 }
 
 stp_image_status_t
-stpi_image_get_row(stp_image_t *image, unsigned char *data,
+stp_image_get_row(stp_image_t *image, unsigned char *data,
 		  size_t byte_limit, int row)
 {
   return image->get_row(image, data, byte_limit, row);
 }
 
 const char *
-stpi_image_get_appname(stp_image_t *image)
+stp_image_get_appname(stp_image_t *image)
 {
   if (image->get_appname)
     return image->get_appname(image);
@@ -70,7 +70,7 @@ stpi_image_get_appname(stp_image_t *image)
 }
 
 void
-stpi_image_conclude(stp_image_t *image)
+stp_image_conclude(stp_image_t *image)
 {
   if (image->conclude)
     image->conclude(image);

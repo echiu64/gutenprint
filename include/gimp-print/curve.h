@@ -26,8 +26,8 @@
  * @brief Curve functions.
  */
 
-#ifndef __GIMP_PRINT_CURVE_H__
-#define __GIMP_PRINT_CURVE_H__
+#ifndef GIMP_PRINT_CURVE_H
+#define GIMP_PRINT_CURVE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -621,7 +621,7 @@ extern int stp_curve_compose(stp_curve_t *retval,
   }
 #endif
 
-#endif /* __GIMP_PRINT_CURVE_H__ */
+#endif /* GIMP_PRINT_CURVE_H */
 /*
  * End of "$Id$".
  */

@@ -38,8 +38,6 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "xml.h"
-#include "module.h"
 
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -48,7 +46,7 @@ static void stpi_printer_freefunc(void *item);
 static const char* stpi_printer_namefunc(const void *item);
 static const char* stpi_printer_long_namefunc(const void *item);
 
-static stpi_list_t *printer_list = NULL;
+static stp_list_t *printer_list = NULL;
 
 #define COOKIE_PRINTER    0x0722922c
 
@@ -60,7 +58,7 @@ typedef struct stpi_internal_printer
   char       *family;           /* Printer family */
   char	     *manufacturer;	/* Printer manufacturer */
   int        model;             /* Model number */
-  const stpi_printfuncs_t *printfuncs;
+  const stp_printfuncs_t *printfuncs;
   stp_vars_t printvars;
 } stpi_internal_printer_t;
 
@@ -68,12 +66,12 @@ static int
 stpi_init_printer_list(void)
 {
   if(printer_list)
-    stpi_list_destroy(printer_list);
-  printer_list = stpi_list_create();
-  stpi_list_set_freefunc(printer_list, stpi_printer_freefunc);
-  stpi_list_set_namefunc(printer_list, stpi_printer_namefunc);
-  stpi_list_set_long_namefunc(printer_list, stpi_printer_long_namefunc);
-  /* stpi_list_set_sortfunc(printer_list, stpi_printer_sortfunc); */
+    stp_list_destroy(printer_list);
+  printer_list = stp_list_create();
+  stp_list_set_freefunc(printer_list, stpi_printer_freefunc);
+  stp_list_set_namefunc(printer_list, stpi_printer_namefunc);
+  stp_list_set_long_namefunc(printer_list, stpi_printer_long_namefunc);
+  /* stp_list_set_sortfunc(printer_list, stpi_printer_sortfunc); */
 
   return 0;
 }
@@ -83,25 +81,25 @@ stp_printer_model_count(void)
 {
   if (printer_list == NULL)
     {
-      stpi_erprintf("No printer drivers found: "
+      stp_erprintf("No printer drivers found: "
 		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
-  return stpi_list_get_length(printer_list);
+  return stp_list_get_length(printer_list);
 }
 
 static void
 null_printer(void)
 {
-  stpi_erprintf("Null stp_printer_t! Please report this bug.\n");
-  stpi_abort();
+  stp_erprintf("Null stp_printer_t! Please report this bug.\n");
+  stp_abort();
 }
 
 static void
 bad_printer(void)
 {
-  stpi_erprintf("Bad stp_printer_t! Please report this bug.\n");
-  stpi_abort();
+  stp_erprintf("Bad stp_printer_t! Please report this bug.\n");
+  stp_abort();
 }
 
 static inline void
@@ -132,26 +130,26 @@ get_const_printer(stp_const_printer_t printer)
 stp_const_printer_t
 stp_get_printer_by_index(int idx)
 {
-  stpi_list_item_t *printer;
+  stp_list_item_t *printer;
   if (printer_list == NULL)
     {
-      stpi_erprintf("No printer drivers found: "
+      stp_erprintf("No printer drivers found: "
 		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
-  printer = stpi_list_get_item_by_index(printer_list, idx);
+  printer = stp_list_get_item_by_index(printer_list, idx);
   if (printer == NULL)
     return NULL;
-  return (stp_const_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stp_list_item_get_data(printer);
 }
 
 static void
 stpi_printer_freefunc(void *item)
 {
   stpi_internal_printer_t *printer = get_printer(item);
-  stpi_free(printer->long_name);
-  stpi_free(printer->family);
-  stpi_free(printer);
+  stp_free(printer->long_name);
+  stp_free(printer->family);
+  stp_free(printer);
 }
 
 const char *
@@ -203,7 +201,7 @@ stp_printer_get_model(stp_const_printer_t p)
   return val->model;
 }
 
-static inline const stpi_printfuncs_t *
+static inline const stp_printfuncs_t *
 stpi_get_printfuncs(stp_const_printer_t p)
 {
   const stpi_internal_printer_t *val = get_const_printer(p);
@@ -222,33 +220,33 @@ stp_printer_get_defaults(stp_const_printer_t p)
 stp_const_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
-  stpi_list_item_t *printer;
+  stp_list_item_t *printer;
   if (printer_list == NULL)
     {
-      stpi_erprintf("No printer drivers found: "
+      stp_erprintf("No printer drivers found: "
 		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
-  printer = stpi_list_get_item_by_long_name(printer_list, long_name);
+  printer = stp_list_get_item_by_long_name(printer_list, long_name);
   if (!printer)
     return NULL;
-  return (stp_const_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stp_list_item_get_data(printer);
 }
 
 stp_const_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
-  stpi_list_item_t *printer;
+  stp_list_item_t *printer;
   if (printer_list == NULL)
     {
-      stpi_erprintf("No printer drivers found: "
+      stp_erprintf("No printer drivers found: "
 		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
       stpi_init_printer_list();
     }
-  printer = stpi_list_get_item_by_name(printer_list, driver);
+  printer = stp_list_get_item_by_name(printer_list, driver);
   if (!printer)
     return NULL;
-  return (stp_const_printer_t) stpi_list_item_get_data(printer);
+  return (stp_const_printer_t) stp_list_item_get_data(printer);
 }
 
 int
@@ -272,7 +270,7 @@ stp_get_printer(stp_const_vars_t v)
 }
 
 int
-stpi_get_model_id(stp_const_vars_t v)
+stp_get_model_id(stp_const_vars_t v)
 {
   stp_const_printer_t p = stp_get_printer_by_driver(stp_get_driver(v));
   const stpi_internal_printer_t *val = get_const_printer(p);
@@ -280,18 +278,18 @@ stpi_get_model_id(stp_const_vars_t v)
 }
 
 stp_parameter_list_t
-stpi_printer_list_parameters(stp_const_vars_t v)
+stp_printer_list_parameters(stp_const_vars_t v)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   return (printfuncs->list_parameters)(v);
 }
 
 void
-stpi_printer_describe_parameter(stp_const_vars_t v, const char *name,
+stp_printer_describe_parameter(stp_const_vars_t v, const char *name,
 			       stp_parameter_t *description)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->parameters)(v, name, description);
 }
@@ -355,29 +353,29 @@ stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t printer)
 }
 
 void
-stpi_initialize_printer_defaults(void)
+stp_initialize_printer_defaults(void)
 {
-  stpi_list_item_t *printer_item;
+  stp_list_item_t *printer_item;
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      stpi_deprintf
-	(STPI_DBG_PRINTERS,
+      stp_deprintf
+	(STP_DBG_PRINTERS,
 	 "stpi_family_register(): initialising printer_list...\n");
     }
-  printer_item = stpi_list_get_start(printer_list);
+  printer_item = stp_list_get_start(printer_list);
   while (printer_item)
     {
       set_printer_defaults
-	(get_printer(stpi_list_item_get_data(printer_item))->printvars, 1);
-      printer_item = stpi_list_item_next(printer_item);
+	(get_printer(stp_list_item_get_data(printer_item))->printvars, 1);
+      printer_item = stp_list_item_next(printer_item);
     }
 }
 
 void
 stp_get_media_size(stp_const_vars_t v, int *width, int *height)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->media_size)(v, width, height);
 }
@@ -386,7 +384,7 @@ void
 stp_get_imageable_area(stp_const_vars_t v,
 		       int *left, int *right, int *bottom, int *top)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->imageable_area)(v, left, right, bottom, top);
 }
@@ -395,7 +393,7 @@ void
 stp_get_size_limit(stp_const_vars_t v, int *max_width, int *max_height,
 		   int *min_width, int *min_height)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->limit)(v, max_width, max_height, min_width,min_height);
 }
@@ -403,15 +401,15 @@ stp_get_size_limit(stp_const_vars_t v, int *max_width, int *max_height,
 void
 stp_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   (printfuncs->describe_resolution)(v, x, y);
 }
 
 const char *
-stpi_describe_output(stp_const_vars_t v)
+stp_describe_output(stp_const_vars_t v)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   return (printfuncs->describe_output)(v);
 }
@@ -419,13 +417,13 @@ stpi_describe_output(stp_const_vars_t v)
 int
 stp_verify(stp_vars_t v)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   stp_vars_t nv = stp_vars_create_copy(v);
   int status;
-  stpi_prune_inactive_options(nv);
+  stp_prune_inactive_options(nv);
   status = (printfuncs->verify)(nv);
-  stpi_set_verified(v, stpi_get_verified(nv));
+  stp_set_verified(v, stp_get_verified(nv));
   stp_vars_destroy(nv);
   return status;
 }
@@ -433,7 +431,7 @@ stp_verify(stp_vars_t v)
 int
 stp_print(stp_const_vars_t v, stp_image_t *image)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   return (printfuncs->print)(v, image);
 }
@@ -441,7 +439,7 @@ stp_print(stp_const_vars_t v, stp_image_t *image)
 int
 stp_start_job(stp_const_vars_t v, stp_image_t *image)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   if (!stp_get_string_parameter(v, "JobMode") ||
       strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
@@ -455,7 +453,7 @@ stp_start_job(stp_const_vars_t v, stp_image_t *image)
 int
 stp_end_job(stp_const_vars_t v, stp_image_t *image)
 {
-  const stpi_printfuncs_t *printfuncs =
+  const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   if (!stp_get_string_parameter(v, "JobMode") ||
       strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
@@ -470,8 +468,8 @@ static int
 verify_string_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc, int quiet)
 {
-  stpi_parameter_verify_t answer = PARAMETER_OK;
-  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying string %s\n", parameter);
+  stp_parameter_verify_t answer = PARAMETER_OK;
+  stp_dprintf(STP_DBG_VARS, v, "    Verifying string %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_string_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -479,8 +477,8 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
       stp_string_list_t vptr = desc->bounds.str;
       size_t count = 0;
       int i;
-      stpi_dprintf(STPI_DBG_VARS, v, "     value %s\n",
-		   checkval ? checkval : "(null)");
+      stp_dprintf(STP_DBG_VARS, v, "     value %s\n",
+		  checkval ? checkval : "(null)");
       if (vptr)
 	count = stp_string_list_count(vptr);
       answer = PARAMETER_BAD;
@@ -491,7 +489,7 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
 	  else
 	    {
 	      if (!quiet)
-		stpi_eprintf(v, _("Value must be set for %s\n"), parameter);
+		stp_eprintf(v, _("Value must be set for %s\n"), parameter);
 	      answer = PARAMETER_BAD;
 	    }
 	}
@@ -504,12 +502,12 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
 		break;
 	      }
 	  if (!answer && !quiet)
-	    stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
+	    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
 	}
       else if (strlen(checkval) == 0)
 	answer = PARAMETER_OK;
       else if (!quiet)
-	stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
+	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
     }
   stp_parameter_description_destroy(desc);
   return answer;
@@ -519,7 +517,7 @@ static int
 verify_double_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc, int quiet)
 {
-  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying double %s\n", parameter);
+  stp_dprintf(STP_DBG_VARS, v, "    Verifying double %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_float_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -528,9 +526,9 @@ verify_double_param(stp_const_vars_t v, const char *parameter,
 	  checkval > desc->bounds.dbl.upper)
 	{
 	  if (!quiet)
-	    stpi_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
-			 parameter, desc->bounds.dbl.lower,
-			 desc->bounds.dbl.upper, checkval);
+	    stp_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
+			parameter, desc->bounds.dbl.lower,
+			desc->bounds.dbl.upper, checkval);
 	  return PARAMETER_BAD;
 	}
     }
@@ -541,7 +539,7 @@ static int
 verify_int_param(stp_const_vars_t v, const char *parameter,
 		 stp_parameter_t *desc, int quiet)
 {
-  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying int %s\n", parameter);
+  stp_dprintf(STP_DBG_VARS, v, "    Verifying int %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_int_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
@@ -550,9 +548,9 @@ verify_int_param(stp_const_vars_t v, const char *parameter,
 	  checkval > desc->bounds.integer.upper)
 	{
 	  if (!quiet)
-	    stpi_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
-			 parameter, desc->bounds.integer.lower,
-			 desc->bounds.integer.upper, checkval);
+	    stp_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
+			parameter, desc->bounds.integer.lower,
+			desc->bounds.integer.upper, checkval);
 	  stp_parameter_description_destroy(desc);
 	  return PARAMETER_BAD;
 	}
@@ -565,8 +563,8 @@ static int
 verify_curve_param(stp_const_vars_t v, const char *parameter,
 		    stp_parameter_t *desc, int quiet)
 {
-  stpi_parameter_verify_t answer = 1;
-  stpi_dprintf(STPI_DBG_VARS, v, "    Verifying curve %s\n", parameter);
+  stp_parameter_verify_t answer = 1;
+  stp_dprintf(STP_DBG_VARS, v, "    Verifying curve %s\n", parameter);
   if (desc->bounds.curve &&
       (desc->is_mandatory ||
        stp_check_curve_parameter(v, parameter, STP_PARAMETER_ACTIVE)))
@@ -581,19 +579,19 @@ verify_curve_param(stp_const_vars_t v, const char *parameter,
 	  if (u0 > u1 || l0 < l1)
 	    {
 	      if (!quiet)
-		stpi_eprintf(v, _("%s bounds must be between %f and %f\n"),
-			     parameter, l1, u1);
+		stp_eprintf(v, _("%s bounds must be between %f and %f\n"),
+			    parameter, l1, u1);
 	      answer = PARAMETER_BAD;
 	    }
 	  if (stp_curve_get_wrap(checkval) !=
 	      stp_curve_get_wrap(desc->bounds.curve))
 	    {
 	      if (!quiet)
-		stpi_eprintf(v, _("%s wrap mode must be %s\n"),
-			     parameter,
-			     (stp_curve_get_wrap(desc->bounds.curve) ==
-			      STP_CURVE_WRAP_NONE) ?
-			     _("no wrap") : _("wrap around"));
+		stp_eprintf(v, _("%s wrap mode must be %s\n"),
+			    parameter,
+			    (stp_curve_get_wrap(desc->bounds.curve) ==
+			     STP_CURVE_WRAP_NONE) ?
+			    _("no wrap") : _("wrap around"));
 	      answer = PARAMETER_BAD;
 	    }
 	}
@@ -602,15 +600,15 @@ verify_curve_param(stp_const_vars_t v, const char *parameter,
   return answer;
 }
 
-stpi_parameter_verify_t
-stpi_verify_parameter(stp_const_vars_t v, const char *parameter,
-		      int quiet)
+stp_parameter_verify_t
+stp_verify_parameter(stp_const_vars_t v, const char *parameter,
+		     int quiet)
 {
   stp_parameter_t desc;
   quiet = 0;
   stp_describe_parameter(v, parameter, &desc);
-  stpi_dprintf(STPI_DBG_VARS, v, "  Verifying %s %d %d\n", parameter,
-	       desc.is_active, desc.read_only);
+  stp_dprintf(STP_DBG_VARS, v, "  Verifying %s %d %d\n", parameter,
+	      desc.is_active, desc.read_only);
   if (!desc.is_active || desc.read_only)
     {
       stp_parameter_description_destroy(&desc);
@@ -635,8 +633,8 @@ stpi_verify_parameter(stp_const_vars_t v, const char *parameter,
       return PARAMETER_OK;		/* Booleans always OK */
     default:
       if (!quiet)
-	stpi_eprintf(v, _("Unknown type parameter %s (%d)\n"),
-		     parameter, desc.p_type);
+	stp_eprintf(v, _("Unknown type parameter %s (%d)\n"),
+		    parameter, desc.p_type);
       stp_parameter_description_destroy(&desc);
       return 0;
     }
@@ -648,7 +646,7 @@ do									    \
   if (stp_get_##component((v)) < (min) || stp_get_##component((v)) > (max)) \
     {									    \
       answer = 0;							    \
-      stpi_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),    \
+      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),     \
 		  #component, stp_get_##component(v), min, max);	    \
     }									    \
 } while (0)
@@ -659,7 +657,7 @@ do									      \
   if (stpi_get_##component((v)) < (min) || stpi_get_##component((v)) > (max)) \
     {									      \
       answer = 0;							      \
-      stpi_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),      \
+      stp_eprintf(v, _("%s out of range (value %d, min %d, max %d)\n"),       \
 		  #component, stpi_get_##component(v), min, max);	      \
     }									      \
 } while (0)
@@ -675,16 +673,16 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
   errbuf_t *errbuf = (errbuf_t *) priv;
   if (errbuf->bytes == 0)
-    errbuf->data = stpi_malloc(bytes + 1);
+    errbuf->data = stp_malloc(bytes + 1);
   else
-    errbuf->data = stpi_realloc(errbuf->data, errbuf->bytes + bytes + 1);
+    errbuf->data = stp_realloc(errbuf->data, errbuf->bytes + bytes + 1);
   memcpy(errbuf->data + errbuf->bytes, buffer, bytes);
   errbuf->bytes += bytes;
   errbuf->data[errbuf->bytes] = '\0';
 }
 
 int
-stpi_verify_printer_params(stp_vars_t v)
+stp_verify_printer_params(stp_vars_t v)
 {
   errbuf_t errbuf;
   stp_outfunc_t ofunc = stp_get_errfunc(v);
@@ -705,7 +703,7 @@ stpi_verify_printer_params(stp_vars_t v)
 
   if (pagesize && strlen(pagesize) > 0)
     {
-      if (stpi_verify_parameter(v, "PageSize", 0) == 0)
+      if (stp_verify_parameter(v, "PageSize", 0) == 0)
 	answer = 0;
     }
   else
@@ -717,60 +715,60 @@ stpi_verify_printer_params(stp_vars_t v)
 	  stp_get_page_width(v) <= min_width || stp_get_page_width(v) > width)
 	{
 	  answer = 0;
-	  stpi_eprintf(v, _("Page size is not valid\n"));
+	  stp_eprintf(v, _("Page size is not valid\n"));
 	}
-      stpi_dprintf(STPI_DBG_PAPER, v,
-		   "page size max %d %d min %d %d actual %d %d\n",
-		   width, height, min_width, min_height,
-		   stp_get_page_width(v), stp_get_page_height(v));
+      stp_dprintf(STP_DBG_PAPER, v,
+		  "page size max %d %d min %d %d actual %d %d\n",
+		  width, height, min_width, min_height,
+		  stp_get_page_width(v), stp_get_page_height(v));
     }
 
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
 
-  stpi_dprintf(STPI_DBG_PAPER, v,
-	       "page      left %d top %d right %d bottom %d\n",
-	       left, top, right, bottom);
-  stpi_dprintf(STPI_DBG_PAPER, v,
-	       "requested left %d top %d width %d height %d\n",
-	       stp_get_left(v), stp_get_top(v),
-	       stp_get_width(v), stp_get_height(v));
+  stp_dprintf(STP_DBG_PAPER, v,
+	      "page      left %d top %d right %d bottom %d\n",
+	      left, top, right, bottom);
+  stp_dprintf(STP_DBG_PAPER, v,
+	      "requested left %d top %d width %d height %d\n",
+	      stp_get_left(v), stp_get_top(v),
+	      stp_get_width(v), stp_get_height(v));
 
   if (stp_get_top(v) < top)
     {
       answer = 0;
-      stpi_eprintf(v, _("Top margin must not be less than %d\n"), top);
+      stp_eprintf(v, _("Top margin must not be less than %d\n"), top);
     }
 
   if (stp_get_left(v) < left)
     {
       answer = 0;
-      stpi_eprintf(v, _("Left margin must not be less than %d\n"), left);
+      stp_eprintf(v, _("Left margin must not be less than %d\n"), left);
     }
 
   if (stp_get_height(v) <= 0)
     {
       answer = 0;
-      stpi_eprintf(v, _("Height must be greater than zero\n"));
+      stp_eprintf(v, _("Height must be greater than zero\n"));
     }
 
   if (stp_get_width(v) <= 0)
     {
       answer = 0;
-      stpi_eprintf(v, _("Width must be greater than zero\n"));
+      stp_eprintf(v, _("Width must be greater than zero\n"));
     }
 
   if (stp_get_left(v) + stp_get_width(v) > right)
     {
       answer = 0;
-      stpi_eprintf(v, _("Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"),
-		   stp_get_left(v), stp_get_width(v), right);
+      stp_eprintf(v, _("Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"),
+		  stp_get_left(v), stp_get_width(v), right);
     }
 
   if (stp_get_top(v) + stp_get_height(v) > bottom)
     {
       answer = 0;
-      stpi_eprintf(v, _("Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"),
-		   stp_get_left(v), stp_get_width(v), right);
+      stp_eprintf(v, _("Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"),
+		  stp_get_left(v), stp_get_width(v), right);
     }
 
   params = stp_get_parameter_list(v);
@@ -778,22 +776,22 @@ stpi_verify_printer_params(stp_vars_t v)
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
-      stpi_dprintf(STPI_DBG_VARS, v, "Checking %s %d %d\n", param->name,
-		   param->is_active, param->verify_this_parameter);
+      stp_dprintf(STP_DBG_VARS, v, "Checking %s %d %d\n", param->name,
+		  param->is_active, param->verify_this_parameter);
 
       if (strcmp(param->name, "PageSize") != 0 &&
 	  param->is_active && param->verify_this_parameter &&
-	  stpi_verify_parameter(v, param->name, 0) == 0)
+	  stp_verify_parameter(v, param->name, 0) == 0)
 	answer = 0;
     }
   stp_parameter_list_destroy(params);
   stp_set_errfunc((stp_vars_t) v, ofunc);
   stp_set_errdata((stp_vars_t) v, odata);
-  stpi_set_verified((stp_vars_t) v, answer);
+  stp_set_verified((stp_vars_t) v, answer);
   if (errbuf.bytes > 0)
     {
-      stpi_eprintf(v, "%s", errbuf.data);
-      stpi_free(errbuf.data);
+      stp_eprintf(v, "%s", errbuf.data);
+      stp_free(errbuf.data);
     }
   return answer;
 }
@@ -825,30 +823,30 @@ static const stpi_xml_prop_t stpi_xml_props[] =
 };
 
 int
-stpi_family_register(stpi_list_t *family)
+stp_family_register(stp_list_t *family)
 {
-  stpi_list_item_t *printer_item;
+  stp_list_item_t *printer_item;
   const stpi_internal_printer_t *printer;
 
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      stpi_deprintf
-	(STPI_DBG_PRINTERS,
+      stp_deprintf
+	(STP_DBG_PRINTERS,
 	 "stpi_family_register(): initialising printer_list...\n");
     }
 
   if (family)
     {
-      printer_item = stpi_list_get_start(family);
+      printer_item = stp_list_get_start(family);
 
       while(printer_item)
 	{
-	  printer = get_printer(stpi_list_item_get_data(printer_item));
-	  if (!stpi_list_get_item_by_name(printer_list,
+	  printer = get_printer(stp_list_item_get_data(printer_item));
+	  if (!stp_list_get_item_by_name(printer_list,
 					  stp_get_driver(printer->printvars)))
-	    stpi_list_item_create(printer_list, NULL, printer);
-	  printer_item = stpi_list_item_next(printer_item);
+	    stp_list_item_create(printer_list, NULL, printer);
+	  printer_item = stp_list_item_next(printer_item);
 	}
     }
 
@@ -856,34 +854,34 @@ stpi_family_register(stpi_list_t *family)
 }
 
 int
-stpi_family_unregister(stpi_list_t *family)
+stp_family_unregister(stp_list_t *family)
 {
-  stpi_list_item_t *printer_item;
-  stpi_list_item_t *old_printer_item;
+  stp_list_item_t *printer_item;
+  stp_list_item_t *old_printer_item;
   const stpi_internal_printer_t *printer;
 
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
-      stpi_deprintf
-	(STPI_DBG_PRINTERS,
+      stp_deprintf
+	(STP_DBG_PRINTERS,
 	 "stpi_family_unregister(): initialising printer_list...\n");
     }
 
   if (family)
     {
-      printer_item = stpi_list_get_start(family);
+      printer_item = stp_list_get_start(family);
 
       while(printer_item)
 	{
-	  printer = get_printer(stpi_list_item_get_data(printer_item));
+	  printer = get_printer(stp_list_item_get_data(printer_item));
 	  old_printer_item =
-	    stpi_list_get_item_by_name(printer_list,
+	    stp_list_get_item_by_name(printer_list,
 				      stp_get_driver(printer->printvars));
 
 	  if (old_printer_item)
-	    stpi_list_item_destroy(printer_list, old_printer_item);
-	  printer_item = stpi_list_item_next(printer_item);
+	    stp_list_item_destroy(printer_list, old_printer_item);
+	  printer_item = stp_list_item_next(printer_item);
 	}
     }
   return 0;
@@ -896,7 +894,7 @@ stpi_family_unregister(stpi_list_t *family)
 static stpi_internal_printer_t*
 stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 				const char *family,    /* Family name */
-				const stpi_printfuncs_t *printfuncs)
+				const stp_printfuncs_t *printfuncs)
                                                     /* Family printfuncs */
 {
   mxml_node_t *prop;                                  /* Temporary node pointer */
@@ -927,13 +925,13 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
     long_name = 0,                                    /* Check long_name */
     model = 0;                                        /* Check model */
 
-  outprinter = stpi_zalloc(sizeof(stpi_internal_printer_t));
+  outprinter = stp_zalloc(sizeof(stpi_internal_printer_t));
   if (!outprinter)
     return NULL;
   outprinter->printvars = stp_vars_create();
   if (outprinter->printvars == NULL)
     {
-      stpi_free(outprinter);
+      stp_free(outprinter);
       return NULL;
     }
 
@@ -942,9 +940,9 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
   stmp = stpi_mxmlElementGetAttr(printer, "driver");
   stp_set_driver(outprinter->printvars, (const char *) stmp);
 
-  outprinter->long_name = stpi_strdup(stpi_mxmlElementGetAttr(printer, "name"));
-  outprinter->manufacturer = stpi_strdup(stpi_mxmlElementGetAttr(printer, "manufacturer"));
-  outprinter->family = stpi_strdup((const char *) family);
+  outprinter->long_name = stp_strdup(stpi_mxmlElementGetAttr(printer, "name"));
+  outprinter->manufacturer = stp_strdup(stpi_mxmlElementGetAttr(printer, "manufacturer"));
+  outprinter->family = stp_strdup((const char *) family);
 
   if (stp_get_driver(outprinter->printvars))
     driver = 1;
@@ -964,7 +962,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 	      stmp = stpi_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
-		  outprinter->model = stpi_xmlstrtol(stmp);
+		  outprinter->model = stp_xmlstrtol(stmp);
 		  model = 1;
 		}
 	    }
@@ -980,7 +978,7 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 			{
 			  stp_set_float_parameter(outprinter->printvars,
 						  stp_prop->parameter,
-						  (float) stpi_xmlstrtod(stmp));
+						  (float) stp_xmlstrtod(stmp));
 			  break;
 			}
 		    }
@@ -992,15 +990,15 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
     }
   if (driver && long_name && model && printfuncs)
     {
-      if (stpi_get_debug_level() & STPI_DBG_XML)
+      if (stp_get_debug_level() & STP_DBG_XML)
 	{
 	  stmp = stpi_mxmlElementGetAttr(printer, "driver");
-	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
+	  stp_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
 	}
       outprinter->driver = stp_get_driver(outprinter->printvars);
       return outprinter;
     }
-  stpi_free(outprinter);
+  stp_free(outprinter);
   return NULL;
 }
 
@@ -1010,36 +1008,36 @@ stp_printer_create_from_xmltree(mxml_node_t *printer, /* The printer node */
 static void
 stpi_xml_process_family(mxml_node_t *family)     /* The family node */
 {
-  stpi_list_t *family_module_list = NULL;      /* List of valid families */
-  stpi_list_item_t *family_module_item;        /* Current family */
+  stp_list_t *family_module_list = NULL;      /* List of valid families */
+  stp_list_item_t *family_module_item;        /* Current family */
   const char *family_name;                       /* Name of family */
   mxml_node_t *printer;                         /* printer child node */
-  stpi_module_t *family_module_data;           /* Family module data */
-  stpi_internal_family_t *family_data = NULL;  /* Family data */
+  stp_module_t *family_module_data;           /* Family module data */
+  stp_family_t *family_data = NULL;  /* Family data */
   int family_valid = 0;                       /* Is family valid? */
   stpi_internal_printer_t *outprinter;         /* Generated printer */
 
-  family_module_list = stpi_module_get_class(STPI_MODULE_CLASS_FAMILY);
+  family_module_list = stp_module_get_class(STP_MODULE_CLASS_FAMILY);
   if (!family_module_list)
     return;
 
   family_name = stpi_mxmlElementGetAttr(family, "name");
-  family_module_item = stpi_list_get_start(family_module_list);
+  family_module_item = stp_list_get_start(family_module_list);
   while (family_module_item)
     {
-      family_module_data = (stpi_module_t *)
-	stpi_list_item_get_data(family_module_item);
+      family_module_data = (stp_module_t *)
+	stp_list_item_get_data(family_module_item);
       if (!strcmp(family_name, family_module_data->name))
 	{
-	  stpi_deprintf(STPI_DBG_XML,
-			"stpi_xml_process_family: family module: %s\n",
-			family_module_data->name);
+	  stp_deprintf(STP_DBG_XML,
+		       "stpi_xml_process_family: family module: %s\n",
+		       family_module_data->name);
 	  family_data = family_module_data->syms;
 	  if (family_data->printer_list == NULL)
-	    family_data->printer_list = stpi_list_create();
+	    family_data->printer_list = stp_list_create();
 	  family_valid = 1;
 	}
-      family_module_item = stpi_list_item_next(family_module_item);
+      family_module_item = stp_list_item_next(family_module_item);
     }
 
   printer = family->child;
@@ -1054,14 +1052,14 @@ stpi_xml_process_family(mxml_node_t *family)     /* The family node */
 		stp_printer_create_from_xmltree(printer, family_name,
 						family_data->printfuncs);
 	      if (outprinter)
-		stpi_list_item_create(family_data->printer_list, NULL,
+		stp_list_item_create(family_data->printer_list, NULL,
 				      outprinter);
 	    }
 	}
       printer = printer->next;
     }
 
-  stpi_list_destroy(family_module_list);
+  stp_list_destroy(family_module_list);
   return;
 }
 
@@ -1092,6 +1090,6 @@ stpi_xml_process_printdef(mxml_node_t *printdef, const char *file) /* The printd
 void
 stpi_init_printer(void)
 {
-  stpi_register_xml_parser("printdef", stpi_xml_process_printdef);
-  stpi_register_xml_preload("printers.xml");
+  stp_register_xml_parser("printdef", stpi_xml_process_printdef);
+  stp_register_xml_preload("printers.xml");
 }

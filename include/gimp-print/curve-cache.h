@@ -26,8 +26,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_CURVE_CACHE_H
-#define GIMP_PRINT_INTERNAL_CURVE_CACHE_H
+#ifndef GIMP_PRINT_CURVE_CACHE_H
+#define GIMP_PRINT_CURVE_CACHE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,30 +46,30 @@ typedef struct
   const double *d_cache;
   const unsigned short *s_cache;
   size_t count;
-} cached_curve_t;
+} stp_cached_curve_t;
 
-extern void stpi_curve_free_curve_cache(cached_curve_t *cache);
+extern void stp_curve_free_curve_cache(stp_cached_curve_t *cache);
 
-extern void stpi_curve_cache_curve_data(cached_curve_t *cache);
+extern void stp_curve_cache_curve_data(stp_cached_curve_t *cache);
 
-extern stp_curve_t stpi_curve_cache_get_curve(cached_curve_t *cache);
+extern stp_curve_t stp_curve_cache_get_curve(stp_cached_curve_t *cache);
 
-extern void stpi_curve_cache_curve_invalidate(cached_curve_t *cache);
+extern void stp_curve_cache_curve_invalidate(stp_cached_curve_t *cache);
 
-extern void stpi_curve_cache_set_curve(cached_curve_t *cache,
-				       stp_curve_t curve);
+extern void stp_curve_cache_set_curve(stp_cached_curve_t *cache,
+				      stp_curve_t curve);
 
-extern void stpi_curve_cache_set_curve_copy(cached_curve_t *cache,
-					    stp_const_curve_t curve);
+extern void stp_curve_cache_set_curve_copy(stp_cached_curve_t *cache,
+					   stp_const_curve_t curve);
 
-extern const size_t stpi_curve_cache_get_count(cached_curve_t *cache);
+extern const size_t stp_curve_cache_get_count(stp_cached_curve_t *cache);
 
-extern const unsigned short *stpi_curve_cache_get_ushort_data(cached_curve_t *cache);
+extern const unsigned short *stp_curve_cache_get_ushort_data(stp_cached_curve_t *cache);
 
-extern const double *stpi_curve_cache_get_double_data(cached_curve_t *cache);
+extern const double *stp_curve_cache_get_double_data(stp_cached_curve_t *cache);
 
-extern void stpi_curve_cache_copy(cached_curve_t *dest,
-				  const cached_curve_t *src);
+extern void stp_curve_cache_copy(stp_cached_curve_t *dest,
+				 const stp_cached_curve_t *src);
 
 #define CURVE_CACHE_FAST_USHORT(cache) ((cache)->s_cache)
 #define CURVE_CACHE_FAST_DOUBLE(cache) ((cache)->d_cache)
@@ -79,4 +79,4 @@ extern void stpi_curve_cache_copy(cached_curve_t *dest,
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_CURVE_CACHE_H */
+#endif /* GIMP_PRINT_CURVE_CACHE_H */

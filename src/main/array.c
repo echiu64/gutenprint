@@ -32,7 +32,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "xml.h"
 
 
 #define COOKIE_ARRAY 0x58dd1c48
@@ -53,13 +52,13 @@ check_array(const stpi_internal_array_t *v)
 {
   if (v == NULL)
     {
-      stpi_erprintf("Null stp_array_t! Please report this bug.\n");
-      stpi_abort();
+      stp_erprintf("Null stp_array_t! Please report this bug.\n");
+      stp_abort();
     }
   if (v->cookie != COOKIE_ARRAY)
     {
-      stpi_erprintf("Bad stp_array_t! Please report this bug.\n");
-      stpi_abort();
+      stp_erprintf("Bad stp_array_t! Please report this bug.\n");
+      stp_abort();
     }
 }
 
@@ -75,7 +74,7 @@ stp_array_t
 stp_array_create(int x_size, int y_size)
 {
   stpi_internal_array_t *ret;
-  ret = stpi_zalloc(sizeof(stpi_internal_array_t));
+  ret = stp_zalloc(sizeof(stpi_internal_array_t));
   ret->x_size = x_size;
   ret->y_size = y_size;
   ret->data = NULL;
@@ -98,7 +97,7 @@ stp_array_destroy(stp_array_t array)
   stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
   check_array(ia);
   array_dtor(ia);
-  stpi_free(ia);
+  stp_free(ia);
 }
 
 void stp_array_copy(stp_array_t dest, stp_const_array_t source)
@@ -202,7 +201,7 @@ stp_array_get_sequence(stp_const_array_t array)
 }
 
 stp_array_t
-stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
+stp_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
 {
   const char *stmp;                          /* Temporary string */
   mxml_node_t *child;                       /* Child sequence node */
@@ -219,7 +218,7 @@ stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
     }
   else
     {
-      stpi_erprintf("stpi_array_create_from_xmltree: \"x-size\" missing\n");
+      stp_erprintf("stp_array_create_from_xmltree: \"x-size\" missing\n");
       goto error;
     }
   /* Get y-size */
@@ -230,7 +229,7 @@ stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
     }
   else
     {
-      stpi_erprintf("stpi_array_create_from_xmltree: \"y-size\" missing\n");
+      stp_erprintf("stp_array_create_from_xmltree: \"y-size\" missing\n");
       goto error;
     }
 
@@ -238,7 +237,7 @@ stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
 
   child = stpi_mxmlFindElement(array, array, "sequence", NULL, NULL, MXML_DESCEND);
   if (child)
-    seq = stpi_sequence_create_from_xmltree(child);
+    seq = stp_sequence_create_from_xmltree(child);
 
   if (seq == NULL)
     goto error;
@@ -252,14 +251,14 @@ stpi_array_create_from_xmltree(mxml_node_t *array)  /* The array node */
   count = stp_sequence_get_size(seq);
   if (count != (x_size * y_size))
     {
-      stpi_erprintf("stpi_array_create_from_xmltree: size mismatch between array and sequence\n");
+      stp_erprintf("stp_array_create_from_xmltree: size mismatch between array and sequence\n");
       goto error;
     }
 
   return ret;
 
  error:
-  stpi_erprintf("stpi_array_create_from_xmltree: error during array read\n");
+  stp_erprintf("stp_array_create_from_xmltree: error during array read\n");
   if (ret)
     stp_array_destroy(ret);
   return NULL;
