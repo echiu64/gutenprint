@@ -264,15 +264,15 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   gzputs(fp, "*%This PPD file may be freely used and distributed under the terms of\n");
   gzputs(fp, "*%the GNU GPL.\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
-  gzputs(fp, "*FileVersion:	\"4.0\"\n");
+  gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
   gzputs(fp, "*LanguageVersion: English\n");
   gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", p->driver);
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
-  gzputs(fp, "*Product:	\"(GIMP-print v4.0)\"\n");
+  gzputs(fp, "*Product:	\"(GIMP-print v" VERSION ")\"\n");
   gzprintf(fp, "*ModelName:     \"%s\"\n", p->driver);
   gzprintf(fp, "*ShortNickName: \"%s\"\n", p->long_name);
-  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v4.0\"\n", p->long_name);
+  gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", p->long_name);
   gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
   gzputs(fp, "*LanguageLevel:	\"3\"\n");
   gzprintf(fp, "*ColorDevice:	%s\n",

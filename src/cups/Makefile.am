@@ -29,7 +29,7 @@ libdir = @cups_libdir@
 sysconfdir = @cups_sysconfdir@
 
 CFLAGS = @CFLAGS@ $(CUPS_CFLAGS)
-DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(cups_exec_prefix)/share/cups\"
+DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(cups_exec_prefix)/share/cups\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@
 
 ## Programs
