@@ -106,6 +106,7 @@ unsigned short sh;
 int eject = 0;
 int global_counter = 0;
 int global_count = 0;
+unsigned color_mask = 0xffffffff;
 
 pstate_t pstate;
 int unweave;
@@ -276,7 +277,7 @@ mix_ink(ppmpixel p, int color, unsigned int amount, float *ink, int quadtone)
 {
   /* this is pretty crude */
 
-  if (amount)
+  if (((1 << color) & color_mask) && amount)
     {
       int i;
       float size;
@@ -1543,6 +1544,29 @@ main(int argc,char *argv[])
 		fp_w = stdout;
 	      else
 		fp_r = stdin;
+	      break;
+	    case 'm':
+	      if (argv[arg][2])
+		{
+		  s = argv[arg] + 2;
+		}
+	      else
+		{
+		  if (argc <= arg + 1)
+		    {
+		      fprintf(stderr, "Missing color mask\n");
+		      exit(-1);
+		    }
+		  else
+		    {
+		      s = argv[++arg];
+		    }
+		}
+	      if (!sscanf(s, "%x", &color_mask))
+		{
+		  fprintf(stderr,"Error parsing mask\n");
+		  exit(-1);
+		}
 	      break;
 	    case 'n':
 	      if (argv[arg][2])
