@@ -1,4 +1,6 @@
 .deps
+.libs
 Makefile
 Makefile.in
 contrib.mak.addon
+ijsgimpprint
