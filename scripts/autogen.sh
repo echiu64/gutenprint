@@ -57,14 +57,14 @@ gettextize_point=`echo $gettextizev | awk -F. '{print $3}'`
 
 test "$libtool_major" -le 1 && {
   test "$libtool_minor" -lt 4 || {
-    test "$libtool_minor" -eq 4 -a "$libtool_point" -lt 2
+    test "$libtool_minor" -eq 4 -a "$libtool_point" -lt 3
   }
 } && {
   echo
-  echo "**Warning**: You should have \`libtool' 1.4.2 or newer installed to"
+  echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
   echo "create a gimp-print distribution.  Earlier versions of gettext do"
   echo "not generate correct code for all platforms."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.2.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
   echo "(or a newer version if it is available)"
 }
 
