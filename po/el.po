@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2003-12-02 19:49-0500\n"
+"POT-Creation-Date: 2004-01-11 07:55-0500\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -79,7 +79,7 @@ msgstr "%s: η επιλογή `-W %s' είναι ασαφής\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: η επιλογή `-W %s' δεν επιτρέπει όρισμα\n"
 
-#: src/main/dither-main.c:46 src/main/print-color.c:2369
+#: src/main/dither-main.c:46 src/main/print-color.c:2375
 #, fuzzy
 msgid "Default"
 msgstr "Ορισμός Προκαθορισμένων Τιμών"
@@ -419,7 +419,7 @@ msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
 
 #: src/main/print-canon.c:1229 src/main/print-escp2.c:132
 #: src/main/print-lexmark.c:273 src/main/print-pcl.c:1122
-#: src/main/print-ps.c:73 src/cups/genppd.c:1020
+#: src/main/print-ps.c:73 src/cups/genppd.c:1033
 #, fuzzy
 msgid "Media Type"
 msgstr "Είδος MIME"
@@ -432,7 +432,7 @@ msgstr ""
 
 #: src/main/print-canon.c:1235 src/main/print-escp2.c:138
 #: src/main/print-lexmark.c:279 src/main/print-pcl.c:1128
-#: src/main/print-ps.c:79 src/cups/genppd.c:1044
+#: src/main/print-ps.c:79 src/cups/genppd.c:1057
 #, fuzzy
 msgid "Media Source"
 msgstr "Ανοικτό Λογισμικό"
@@ -445,7 +445,7 @@ msgstr ""
 
 #: src/main/print-canon.c:1241 src/main/print-escp2.c:144
 #: src/main/print-lexmark.c:285 src/main/print-pcl.c:1134
-#: src/main/print-ps.c:85 src/cups/genppd.c:1116
+#: src/main/print-ps.c:85 src/cups/genppd.c:1129
 msgid "Resolution"
 msgstr "Ανάλυση"
 
@@ -854,24 +854,24 @@ msgstr ""
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/main/print-color.c:2371
+#: src/main/print-color.c:2377
 msgid "High Accuracy"
 msgstr ""
 
-#: src/main/print-color.c:2373
+#: src/main/print-color.c:2379
 #, fuzzy
 msgid "Bright"
 msgstr "Εργασία"
 
-#: src/main/print-color.c:2375
+#: src/main/print-color.c:2381
 msgid "Threshold"
 msgstr ""
 
-#: src/main/print-color.c:2377
+#: src/main/print-color.c:2383
 msgid "Uncorrected"
 msgstr ""
 
-#: src/main/print-color.c:2434
+#: src/main/print-color.c:2440
 msgid "Traditional Gimp-Print color conversion"
 msgstr ""
 
@@ -1168,7 +1168,7 @@ msgid "Manual Control"
 msgstr "Byte Εξόδου"
 
 #
-#: src/main/print-escp2.c:1278 src/cups/genppd.c:1125
+#: src/main/print-escp2.c:1278 src/cups/genppd.c:1138
 #, fuzzy
 msgid "Automatic"
 msgstr "Μέγεθος"
@@ -3708,28 +3708,28 @@ msgstr ""
 msgid "Gimp-Print"
 msgstr "Σημείο Προσάρτησης: "
 
-#: src/cups/genppd.c:753
+#: src/cups/genppd.c:769
 msgid "English"
 msgstr "Greek"
 
-#: src/cups/genppd.c:755
+#: src/cups/genppd.c:771
 #, fuzzy
 msgid "ISOLatin1"
 msgstr "Λάτιν"
 
-#: src/cups/genppd.c:1209 src/cups/genppd.c:1224
+#: src/cups/genppd.c:1222 src/cups/genppd.c:1237
 msgid "None"
 msgstr ""
 
-#: src/cups/genppd.c:1226
+#: src/cups/genppd.c:1239
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1228
+#: src/cups/genppd.c:1241
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1256
+#: src/cups/genppd.c:1269
 msgid "Fine Adjustment"
 msgstr ""
 
