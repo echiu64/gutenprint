@@ -2,3 +2,7 @@ testpatterny.c
 testpatterny.h
 testpatternl.c
 testpattern
+Makefile.in
+Makefile
+.deps
+.libs
