@@ -61,8 +61,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
 
 #define INCH(x)		(72 * x)
 
-static const res_t *escp2_find_resolution(stp_const_vars_t v,
-					  const char *resolution);
+static const res_t *escp2_find_resolution(stp_const_vars_t v);
 
 #define PARAMETER_INT(s)				\
 {							\
@@ -98,6 +97,12 @@ static const stp_parameter_t the_parameters[] =
   },
 #endif
   {
+    "Quality", N_("Print Quality"),
+    N_("Print Quality"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
+  {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
@@ -117,7 +122,7 @@ static const stp_parameter_t the_parameters[] =
   },
   {
     "Resolution", N_("Resolution"),
-    N_("Resolution and quality of the print"),
+    N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
@@ -360,32 +365,31 @@ escp2_##f(stp_const_vars_t v)				\
   return (stpi_escp2_model_capabilities[model].f);	\
 }
 
-#define DEF_ROLL_ACCESSOR(f, t)						     \
-static inline t								     \
-escp2_##f(stp_const_vars_t v, int rollfeed)				     \
-{									     \
-  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	     \
-    return stp_get_int_parameter(v, "escp2_" #f);			     \
-  else									     \
-    {									     \
-      int model = stpi_get_model_id(v);					     \
-      const res_t *res =						     \
-	escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution")); \
-      if (res && !(res->softweave))					     \
-	{								     \
-	  if (rollfeed)							     \
-	    return (stpi_escp2_model_capabilities[model].m_roll_##f);	     \
-	  else								     \
-	    return (stpi_escp2_model_capabilities[model].m_##f);	     \
-	}								     \
-      else								     \
-	{								     \
-	  if (rollfeed)							     \
-	    return (stpi_escp2_model_capabilities[model].roll_##f);	     \
-	  else								     \
-	    return (stpi_escp2_model_capabilities[model].f);		     \
-	}								     \
-    }									     \
+#define DEF_ROLL_ACCESSOR(f, t)						\
+static inline t								\
+escp2_##f(stp_const_vars_t v, int rollfeed)				\
+{									\
+  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
+    return stp_get_int_parameter(v, "escp2_" #f);			\
+  else									\
+    {									\
+      int model = stpi_get_model_id(v);					\
+      const res_t *res = escp2_find_resolution(v);			\
+      if (res && !(res->softweave))					\
+	{								\
+	  if (rollfeed)							\
+	    return (stpi_escp2_model_capabilities[model].m_roll_##f);	\
+	  else								\
+	    return (stpi_escp2_model_capabilities[model].m_##f);	\
+	}								\
+      else								\
+	{								\
+	  if (rollfeed)							\
+	    return (stpi_escp2_model_capabilities[model].roll_##f);	\
+	  else								\
+	    return (stpi_escp2_model_capabilities[model].f);		\
+	}								\
+    }									\
 }
 
 DEF_SIMPLE_ACCESSOR(max_hres, int)
@@ -428,6 +432,7 @@ DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 DEF_COMPOSITE_ACCESSOR(reslist, const res_t *const *)
 DEF_COMPOSITE_ACCESSOR(inkgroup, const inkgroup_t *)
 DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
+DEF_COMPOSITE_ACCESSOR(quality_list, const quality_list_t *)
 
 static int
 escp2_ink_type(stp_const_vars_t v, int resid)
@@ -524,15 +529,33 @@ escp2_paperlist(stp_const_vars_t v)
 }
 
 static int
-using_automatic_settings(stp_const_vars_t v)
+using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
 {
+  switch (mode)
+    {
+    case AUTO_MODE_QUALITY:
+      if (
+	  stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
+	  strcmp(stp_get_string_parameter(v, "Quality"), "Manual") != 0)
+	return 1;
+      else
+	return 0;
 #if 0
-  if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
-      strcmp(stp_get_string_parameter(v, "AutoMode"), "Manual") != 0)
-    return 1;
-  else
+    case AUTO_MODE_FULL_AUTO:
+      if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
+	  strcmp(stp_get_string_parameter(v, "AutoMode"), "Manual") != 0)
+	return 1;
+      else
+	return 0;
 #endif
-    return 0;
+    case AUTO_MODE_MANUAL:
+      if (!stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) ||
+	  strcmp(stp_get_string_parameter(v, "Quality"), "Manual") == 0)
+	return 1;
+      else
+	return 0;
+    }
+  return 0;
 }    
 
 static int
@@ -606,47 +629,49 @@ get_media_type(stp_const_vars_t v)
 }
 
 static int
+verify_resolution_by_paper_type(stp_const_vars_t v, const res_t *res)
+{
+  const paper_t *paper = get_media_type(v);
+  if (paper)
+    {
+      switch (paper->paper_class)
+	{
+	case PAPER_PLAIN:
+	  if (res->vres > 720 || res->hres > 720)
+	    return 0;
+	  break;
+	case PAPER_GOOD:
+	  if (res->vres < 180 || res->hres < 360 ||
+	      res->vres > 720 || res->hres > 1440)
+	    return 0;
+	  break;
+	case PAPER_PHOTO:
+	  if (res->vres < 360 || 
+	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
+	    return 0;
+	  break;
+	case PAPER_PREMIUM_PHOTO:
+	  if (res->vres < 720 ||
+	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
+	    return 0;
+	  break;
+	case PAPER_TRANSPARENCY:
+	  if (res->vres < 360 || res->hres < 360 ||
+	      res->vres > 720 || res->hres > 720)
+	    return 0;
+	  break;
+	}
+    }
+  return 1;
+}
+
+static int
 verify_resolution(stp_const_vars_t v, const res_t *res)
 {
   int nozzle_width =
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
   int nozzles = escp2_nozzles(v);
   int resid = compute_resid(res);
-  if (using_automatic_settings(v))
-    {
-      const paper_t *paper = get_media_type(v);
-      if (paper)
-	{
-	  switch (paper->paper_class)
-	    {
-	    case PAPER_PLAIN:
-	      if (res->vres > 720 || res->hres > 720)
-		return 0;
-	      break;
-	    case PAPER_GOOD:
-	      if (res->vres < 180 || res->hres < 360 ||
-		  res->vres > 720 || res->hres > 1440)
-		return 0;
-	      break;
-	    case PAPER_PHOTO:
-	      if (res->vres < 720 || 
-		  (res->hres < 720 && res->hres < escp2_max_hres(v)))
-		return 0;
-	      break;
-	    case PAPER_PREMIUM_PHOTO:
-	      if (res->vres < 720 ||
-		  (res->hres < 1440 && res->hres < escp2_max_hres(v)))
-		return 0;
-	      break;
-	    case PAPER_TRANSPARENCY:
-	      if (res->vres < 360 || res->hres < 360 ||
-		  res->vres > 720 || res->hres > 720)
-		return 0;
-	      break;
-	    }
-	}
-    }
-
   if (escp2_ink_type(v, resid) != -1 &&
       res->vres <= escp2_max_vres(v) &&
       res->hres <= escp2_max_hres(v) &&
@@ -714,8 +739,7 @@ get_default_inktype(stp_const_vars_t v)
   else if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
 	   stp_check_string_parameter(v, "Resolution", STP_PARAMETER_ACTIVE))
     {
-      const res_t *res =
-	escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution"));
+      const res_t *res = escp2_find_resolution(v);
       int resid = compute_resid(res);
       if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
 	{
@@ -736,7 +760,8 @@ get_inktype(stp_const_vars_t v)
   const inklist_t *ink_list = escp2_inklist(v);
   int i;
 
-  if (!ink_type || strcmp(ink_type, "DEFAULT") == 0)
+  if (!ink_type || strcmp(ink_type, "DEFAULT") == 0 ||
+      !using_automatic_settings(v, AUTO_MODE_MANUAL))
     ink_type = get_default_inktype(v);
 
   if (ink_type && ink_list)
@@ -824,6 +849,59 @@ set_color_transition_parameter(stp_const_vars_t v,
     }
 }
 
+static const res_t *
+find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres)
+{
+  const res_t *const *res = escp2_reslist(v);
+  int i = 0;
+  if (desired_hres < 0)
+    {
+      const res_t *retval = NULL;
+      while (res[i])
+	i++;
+      i--;
+      while (i >= 0)
+	{
+	  retval = res[i];
+	  if (verify_resolution(v, retval) &&
+	      verify_resolution_by_paper_type(v, retval))
+	    return retval;
+	  i--;
+	}
+    }
+  i = 0;
+  while (res[i])
+    {
+      if (verify_resolution(v, res[i]) &&
+	  verify_resolution_by_paper_type(v, res[i]) &&
+	  res[i]->vres >= desired_vres && res[i]->hres >= desired_hres &&
+	  res[i]->vres <= 2 * desired_vres && res[i]->hres <= 2 * desired_hres)
+	return res[i];
+      i++;
+    }
+  return NULL;
+}
+
+static const res_t *
+find_resolution_from_quality(stp_const_vars_t v, const char *quality)
+{
+  int i;
+  const quality_list_t *quals = escp2_quality_list(v);
+  for (i = 0; i < quals->n_quals; i++)
+    {
+      const quality_t *q = &(quals->qualities[i]);
+      if (strcmp(quality, q->name) == 0 &&
+	  (q->min_vres == 0 || escp2_min_vres(v) <= q->min_vres) &&
+	  (q->min_hres == 0 || escp2_min_hres(v) <= q->min_hres) &&
+	  (q->max_vres == 0 || escp2_max_vres(v) >= q->max_vres) &&
+	  (q->max_hres == 0 || escp2_max_hres(v) >= q->max_hres))
+	{
+	  return find_default_resolution(v, q->desired_hres, q->desired_vres);
+	}
+    }
+  return NULL;
+}
+
 static void
 escp2_parameters(stp_const_vars_t v, const char *name,
 		 stp_parameter_t *description)
@@ -856,7 +934,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     {
       description->bounds.str = stp_string_list_create();
       stp_string_list_add_string(description->bounds.str, "Manual",
-				 _("Manual Control"));
+				 _("Full Manual Control"));
       stp_string_list_add_string(description->bounds.str, "Auto",
 				 _("Automatic Setting Control"));
       description->deflt.str = "Manual"; /* so CUPS and Foomatic don't break */
@@ -875,55 +953,57 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  else if (strcmp(name, "Quality") == 0)
+    {
+      const quality_list_t *quals = escp2_quality_list(v);
+      description->bounds.str = stp_string_list_create();
+      description->deflt.str = "Manual";
+      stp_string_list_add_string(description->bounds.str, "Manual",
+				 _("Manual Control"));
+      for (i = 0; i < quals->n_quals; i++)
+	{
+	  const quality_t *q = &(quals->qualities[i]);
+	  if (((q->min_vres == 0 || escp2_min_vres(v) <= q->min_vres) &&
+	       (q->min_hres == 0 || escp2_min_hres(v) <= q->min_hres) &&
+	       (q->max_vres == 0 || escp2_max_vres(v) >= q->max_vres) &&
+	       (q->max_hres == 0 || escp2_max_hres(v) >= q->max_hres)) &&
+	      (find_resolution_from_quality(v, q->name) ||
+	       (!stp_check_string_parameter(v, "MediaType",
+					    STP_PARAMETER_ACTIVE))))
+	    stp_string_list_add_string(description->bounds.str, q->name,
+				       q->text);
+	}
+    }
   else if (strcmp(name, "Resolution") == 0)
     {
       const res_t *const *res = escp2_reslist(v);
+      const res_t *defval = find_default_resolution(v, 720, 360);
       description->bounds.str = stp_string_list_create();
       i = 0;
-      if (escp2_min_vres(v) < 180)
-	stp_string_list_add_string(description->bounds.str, "FastEconomy",
-				   _("Fast Economy"));
-      if (escp2_min_vres(v) < 360)
-	stp_string_list_add_string(description->bounds.str, "Economy",
-				   _("Economy"));
-      if (escp2_min_vres(v) <= 360 && escp2_min_hres(v) <= 360)
-	stp_string_list_add_string(description->bounds.str, "Draft",
-				   _("Draft"));
-      stp_string_list_add_string(description->bounds.str, "Standard",
-				 _("Standard Quality"));
-      stp_string_list_add_string(description->bounds.str, "High",
-				 _("High Quality"));
-      if (escp2_max_vres(v) >= 720 && escp2_max_hres(v) >= 1440)
-	stp_string_list_add_string(description->bounds.str, "Photo",
-				   _("Photo Quality"));
-      if (escp2_max_vres(v) >= 2880 && escp2_max_hres(v) >= 2880)
-	stp_string_list_add_string(description->bounds.str, "HighPhoto",
-				   _("Super Photo Quality"));
-      if (escp2_max_vres(v) >= 2880 && escp2_max_hres(v) >= 2880)
-	stp_string_list_add_string(description->bounds.str, "Best",
-				   _("Ultra Photo Quality"));
-      else if (escp2_max_vres(v) >= 720 && escp2_max_hres(v) >= 2880)
-	stp_string_list_add_string(description->bounds.str, "Best",
-				   _("Super Photo Quality"));
+      while (res[i])
+	{
+	  if (verify_resolution(v, res[i]) &&
+	      (using_automatic_settings(v, AUTO_MODE_MANUAL) ||
+	       !stp_check_string_parameter(v, "MediaType",
+					   STP_PARAMETER_ACTIVE) ||
+	       verify_resolution_by_paper_type(v, res[i])))
+	    stp_string_list_add_string(description->bounds.str,
+				       res[i]->name, _(res[i]->text));
+	  i++;
+	}
+      if (defval)
+	description->deflt.str = defval->name;
       else
-	stp_string_list_add_string(description->bounds.str, "Best",
-				   _("Best Quality"));
-      description->deflt.str = "Standard";
-      if (!using_automatic_settings(v))
-	while (res[i])
-	  {
-	    if (verify_resolution(v, res[i]))
-	      stp_string_list_add_string(description->bounds.str,
-					 res[i]->name, _(res[i]->text));
-	    i++;
-	  }
+	description->deflt.str = res[0]->name;
+      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
+	description->is_active = 0;
     }
   else if (strcmp(name, "InkType") == 0)
     {
       const inklist_t *inks = escp2_inklist(v);
       int ninktypes = inks->n_inks;
       description->bounds.str = stp_string_list_create();
-      if (ninktypes && !using_automatic_settings(v))
+      if (ninktypes > 1)
 	{
 	  stp_string_list_add_string(description->bounds.str, "DEFAULT",
 				     _("Standard"));
@@ -934,7 +1014,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 					 _(inks->inknames[i]->text));
 	  description->deflt.str = "DEFAULT";
 	}
-      else
+      if (ninktypes <= 1 || !using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
   else if (strcmp(name, "InkSet") == 0)
@@ -942,7 +1022,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       const inkgroup_t *inks = escp2_inkgroup(v);
       int ninklists = inks->n_inklists;
       description->bounds.str = stp_string_list_create();
-      if (ninklists > 1 && !using_automatic_settings(v))
+      if (ninklists > 1)
 	{
 	  for (i = 0; i < ninklists; i++)
 	    stp_string_list_add_string(description->bounds.str,
@@ -951,7 +1031,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
-      else
+      if (ninklists <= 1 || !using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
   else if (strcmp(name, "MediaType") == 0)
@@ -991,18 +1071,15 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "PrintingDirection") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      if (!using_automatic_settings(v))
-	{
-	  stp_string_list_add_string
-	    (description->bounds.str, "Auto", _("Auto"));
-	  stp_string_list_add_string
-	    (description->bounds.str, "Bidirectional", _("Bidirectional"));
-	  stp_string_list_add_string
-	    (description->bounds.str, "Unidirectional", _("Unidirectional"));
-	  description->deflt.str =
-	    stp_string_list_param(description->bounds.str, 0)->name;
-	}
-      else
+      stp_string_list_add_string
+	(description->bounds.str, "Auto", _("Auto"));
+      stp_string_list_add_string
+	(description->bounds.str, "Bidirectional", _("Bidirectional"));
+      stp_string_list_add_string
+	(description->bounds.str, "Unidirectional", _("Unidirectional"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
 	description->is_active = 0;
     }
   else if (strcmp(name, "FullBleed") == 0)
@@ -1014,7 +1091,10 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "AdjustDotsize") == 0)
     {
-      description->deflt.boolean = 1;
+      if (using_automatic_settings(v, AUTO_MODE_MANUAL))
+	description->deflt.boolean = 1;
+      else
+	description->is_active = 0;
     }
   else if (strcmp(name, "GrayTransition") == 0)
     set_gray_transition_parameter(v, description, 2);
@@ -1031,67 +1111,38 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 }
 
 static const res_t *
-find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres)
+escp2_find_resolution(stp_const_vars_t v)
 {
-  const res_t *const *res = escp2_reslist(v);
-  int i = 0;
-  if (desired_hres < 0)
+  const char *resolution;
+  if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
     {
-      const res_t *retval = NULL;
+      const res_t *default_res =
+	find_resolution_from_quality(v,stp_get_string_parameter(v, "Quality"));
+      if (default_res)
+	{
+	  stpi_dprintf(STPI_DBG_ESCP2, v,
+		       "Setting resolution to %s from quality %s\n",
+		       default_res->name,
+		       stp_get_string_parameter(v, "Quality"));
+	  return default_res;
+	}
+      else
+	stpi_dprintf(STPI_DBG_ESCP2, v, "Unable to map quality %s\n",
+		     stp_get_string_parameter(v, "Quality"));
+    }
+  resolution = stp_get_string_parameter(v, "Resolution");
+  if (resolution)
+    {
+      const res_t *const *res = escp2_reslist(v);
+      int i = 0;
       while (res[i])
 	{
-	  retval = res[i];
+	  if (!strcmp(resolution, res[i]->name))
+	    return res[i];
+	  else if (!strcmp(res[i]->name, ""))
+	    return NULL;
 	  i++;
 	}
-      return retval;
-    }
-  while (res[i])
-    {
-      if (verify_resolution(v, res[i]) &&
-	  res[i]->vres >= desired_vres && res[i]->hres >= desired_hres)
-	return res[i];
-      i++;
-    }
-  return NULL;
-}
-
-static const res_t *
-escp2_find_resolution(stp_const_vars_t v, const char *resolution)
-{
-  const res_t *const *res = escp2_reslist(v);
-  const res_t *default_res = NULL;
-  int i = 0;
-  if (!resolution || !strcmp(resolution, ""))
-    return NULL;
-  if (strcmp(resolution, "FastEconomy") == 0)
-    default_res = find_default_resolution(v, 180, 90);
-  else if (strcmp(resolution, "Economy") == 0)
-    default_res = find_default_resolution(v, 180, 180);
-  else if (strcmp(resolution, "Draft") == 0)
-    default_res = find_default_resolution(v, 360, 360);
-  else if (strcmp(resolution, "Standard") == 0)
-    default_res = find_default_resolution(v, 720, 360);
-  else if (strcmp(resolution, "High") == 0)
-    default_res = find_default_resolution(v, 720, 720);
-  else if (strcmp(resolution, "Photo") == 0)
-    default_res = find_default_resolution(v, 1440, 720);
-  else if (strcmp(resolution, "HighPhoto") == 0)
-    default_res = find_default_resolution(v, 2880, 1440);
-  else if (strcmp(resolution, "Best") == 0)
-    default_res = find_default_resolution(v, -1, -1);
-  if (default_res)
-    {
-      stpi_dprintf(STPI_DBG_ESCP2, v, "Changing resolution from %s to %s\n",
-		   resolution, default_res->name);
-      return default_res;
-    }
-  while (res[i])
-    {
-      if (!strcmp(resolution, res[i]->name))
-	return res[i];
-      else if (!strcmp(res[i]->name, ""))
-	return NULL;
-      i++;
     }
   return NULL;
 }
@@ -1191,16 +1242,12 @@ escp2_limit(stp_const_vars_t v,			/* I */
 static void
 escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
-  const char *resolution = stp_get_string_parameter(v, "Resolution");
-  if (resolution)
+  const res_t *res = escp2_find_resolution(v);
+  if (res && verify_resolution(v, res))
     {
-      const res_t *res = escp2_find_resolution(v, resolution);
-      if (res && verify_resolution(v, res))
-	{
-	  *x = res->hres;
-	  *y = res->vres;
-	  return;
-	}
+      *x = res->hres;
+      *y = res->vres;
+      return;
     }
   *x = -1;
   *y = -1;
@@ -1620,8 +1667,7 @@ static void
 setup_resolution(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  const res_t *res =
-    escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution"));
+  const res_t *res = escp2_find_resolution(v);
   int resid = compute_resid(res);
 
   int vertical = adjusted_vertical_resolution(res);
