@@ -2716,7 +2716,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     reverse_row_ends(d);
 }
 
-#define EVEN_C1 128
+#define EVEN_C1 1024
 
 static eventone_t *
 stp_setup_et(dither_t *d)
@@ -2794,6 +2794,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   int		*ndither;
   eventone_t	*et;
   int		dx[NCOLORS], dy[NCOLORS], r_sq[NCOLORS];
+  int		et_lo[NCOLORS], et_hi[NCOLORS];
   int		wetness[NCOLORS];
   int		***error;
 
@@ -2821,6 +2822,8 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
     {
       ndither[i] = 0;
       wetness[i] = 0;
+      et_hi[i] = CHANNEL(d, i).ranges[0].value[1] / 20;
+      et_lo[i] = et_hi[i] / 2;
       dx[i] = et->dx2;
       dy[i] = et->dy2;
       r_sq[i] = 0;
@@ -2872,7 +2875,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       }
 
       for (i = 1; i < d->n_channels; i++)
-	CHANNEL(d, i).b = CHANNEL(d, i).v;
+	CHANNEL(d, i).b = CHANNEL(d, i).o - CHANNEL(d, ECOLOR_K).b;
 
       for (i=0; i < NCOLORS; i++) {
         int value;
@@ -2884,7 +2887,13 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	  wetness[i] = 0;
 	}
 
-	value = ndither[i] + CHANNEL(d, i).b / 2;		/* Only use half of cmy[] to avoid dark->light problems */
+	value = ndither[i] + CHANNEL(d, i).b;
+	if (CHANNEL(d, i).b > et_hi[i]) {
+	  value += ndither[i];
+	} else if (CHANNEL(d, i).b >et_lo[i]) {
+	  value += ndither[i] * (CHANNEL(d, i).b - et_lo[i]) / et_lo[i];
+	}
+	  
 	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
@@ -2969,8 +2978,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	  }
         }
 	
-	/* Channels which we actually print */
-	print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
+	/* Find which channels we actually print */
 
 	/* Adjust colours to print based on black ink */
         if (useblack) {
@@ -2982,12 +2990,15 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	      print_inks |= (1 << i);
 	    }
 	  }
-        }
+        } else {
+	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
+	  point[ECOLOR_K] = 0;
+	}
 
         /* Adjust error values for dither */
 	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).b - printed_black;
         for (i=1; i < NCOLORS; i++) {
-	  ndither[i] += CHANNEL(d, i).v + point[ECOLOR_K] - point[i];
+	  ndither[i] += CHANNEL(d, i).b - (point[i] - point[ECOLOR_K]);
         }
       }
 
@@ -3024,7 +3035,13 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       */
       if ((x & (aspect-1)) == 0) {
 	for (i=0; i < NCOLORS; i++) {
-	  int fraction = (ndither[i] + 5) / 10;
+	  int fraction = 0;
+	  if (CHANNEL(d, i).b > et_lo[i]) {
+	    fraction = (ndither[i] + 5) / 10;
+	    if (CHANNEL(d, i).b < et_hi[i]) {
+	      fraction = fraction * (CHANNEL(d, i).b - et_lo[i]) / et_lo[i];
+	    }
+	  }
 	  error[i][1][0] += 3 * fraction;
 	  error[i][1][-direction*aspect] += 2 * fraction;
 	  ndither[i] -= 5 * fraction;
