@@ -256,12 +256,16 @@ ink_limit: INK_LIMIT tDOUBLE
 	{ global_ink_limit = $2; }
 ;
 printer: PRINTER tSTRING
-	{ global_printer = $2; }
+	{
+	  global_printer = strdup($2);
+	  free($2);
+	}
 ;
 
 page_size_name: PAGESIZE tSTRING
 	{
 	  stp_set_string_parameter(global_vars, "PageSize", $2);
+	  free($2);
 	}
 ;
 
@@ -440,19 +444,44 @@ image: IMAGE tINT tINT
 ;
 
 Message0: MESSAGE tSTRING
-	{ fprintf(stderr, $2); }
+	{
+	  fprintf(stderr, $2);
+	  free($2);
+	}
 ;
 Message1: MESSAGE tSTRING tSTRING
-	{ fprintf(stderr, $2, $3); }
+	{
+	  fprintf(stderr, $2, $3);
+	  free($2);
+	  free($3);
+	}
 ;
 Message2: MESSAGE tSTRING tSTRING tSTRING
-	{ fprintf(stderr, $2, $3, $4); }
+	{
+	  fprintf(stderr, $2, $3, $4);
+	  free($2);
+	  free($3);
+	  free($4);
+	}
 ;
 Message3: MESSAGE tSTRING tSTRING tSTRING tSTRING
-	{ fprintf(stderr, $2, $3, $4, $5); }
+	{
+	  fprintf(stderr, $2, $3, $4, $5);
+	  free($2);
+	  free($3);
+	  free($4);
+	  free($5);
+	}
 ;
 Message4: MESSAGE tSTRING tSTRING tSTRING tSTRING tSTRING
-	{ fprintf(stderr, $2, $3, $4, $5, $6); }
+	{
+	  fprintf(stderr, $2, $3, $4, $5, $6);
+	  free($2);
+	  free($3);
+	  free($4);
+	  free($5);
+	  free($6);
+	}
 ;
 
 A_Message: Message0 | Message1 | Message2 | Message3 | Message4

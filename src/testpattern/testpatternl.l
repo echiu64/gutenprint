@@ -36,7 +36,7 @@
 int mylineno = 1;
 
 static char *
-c_strstrip(const char *s)
+c_strstrip(char *s)
 {
   size_t len = strlen(s);
   if (len >= 2 && s[0] == '"' && s[len - 1] == '"')
@@ -47,7 +47,7 @@ c_strstrip(const char *s)
       return sn;
     }
   else
-    return c_strdup(s);
+    return (char *) s;
 }
 
 #define DBG(x)						\
