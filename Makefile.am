@@ -149,6 +149,27 @@ cups/cups-%: print-% Makefile
 
 FORCE_ACLOCAL=PLEASE\ RUN\ make\ gdist\ rather\ than\ make\ dist
 
+# If you are using a version of the Gimp 1.1.25 or newer, you will need
+# to apply the following patch to your /usr/share/aclocal/gimp.m4
+# before you run make gdist, or the result will blow up!
+# 
+# *** /usr/share/aclocal/gimp.m4~ Sat Sep 23 19:36:20 2000
+# --- /usr/share/aclocal/gimp.m4  Tue Oct 10 21:29:52 2000
+# ***************
+# *** 50,55 ****
+# --- 50,60 ----
+#   
+#       GIMP_DATA_DIR=`$GIMPTOOL $gimptool_args --gimpdatadir`
+#       GIMP_PLUGIN_DIR=`$GIMPTOOL $gimptool_args --gimpplugindir`
+# +     nodatadir_test=`echo $GIMP_DATA_DIR | sed 's/^\(Usage\).*/\1/'`
+# +     if test "$nodatadir_test" = "Usage" ; then
+# +        GIMP_DATA_DIR=""
+# +        GIMP_PLUGIN_DIR=""
+# +     fi
+#   
+#       gimptool_major_version=`$GIMPTOOL $gimptool_args --version | \
+#              sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+
 gdist: force_aclocal
 
 doit:
