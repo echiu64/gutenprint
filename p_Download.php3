@@ -15,7 +15,7 @@ require('standard_html_header.php3');
 href="http://sourceforge.net/project/?group_id=1537">our project page.</a></p>
 
 
-<p>You may view the <a href="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/?cvsroot=gimp-print">CVS web interface</a>.</p>
+<p>You may view the <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/gimp-print">CVS web interface</a>.</p>
 
 <p>If you want to use CVS source code, these are the commands (assuming you have CVS installed.) ;
 
