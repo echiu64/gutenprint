@@ -26,8 +26,6 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-/* #define PRINT_DEBUG */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -1471,11 +1469,46 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
   va_list args;
   int bytes;
   char *result;
-  va_start(args, format);
-  bytes = vasprintf(&result, format, args);
-  va_end(args);
-  (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
-  free(result);
+  if (stp_get_errfunc(v))
+    {
+      va_start(args, format);
+      bytes = vasprintf(&result, format, args);
+      va_end(args);
+      (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
+      free(result);
+    }
+}
+
+static unsigned long stp_debug_level = 0;
+
+static void
+init_stp_debug(void)
+{
+  static int debug_initialized = 0;
+  if (!debug_initialized)
+    {
+      const char *dval = getenv("STP_DEBUG");
+      debug_initialized = 1;
+      if (dval)
+	stp_debug_level = strtoul(dval, 0, 0);
+    }
+}
+
+void
+stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
+{
+  va_list args;
+  int bytes;
+  char *result;
+  init_stp_debug();
+  if ((level & stp_debug_level) && stp_get_errfunc(v))
+    {
+      va_start(args, format);
+      bytes = vasprintf(&result, format, args);
+      va_end(args);
+      (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
+      free(result);
+    }
 }
 
 void *
@@ -1485,7 +1518,7 @@ stp_malloc (size_t size)
 
   if ((memptr = malloc (size)) == NULL)
     {
-      fprintf (stderr, "Virtual memory exhausted.\n");
+      fputs("Virtual memory exhausted.\n", stderr);
       exit (EXIT_FAILURE);
     }
   return (memptr);

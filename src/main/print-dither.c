@@ -217,6 +217,7 @@ typedef struct dither
   dither_channel_t channel[NCOLORS];
 
   unsigned short virtual_dot_scale[65536];
+  stp_vars_t v;
 } dither_t;
 
 /*
@@ -548,6 +549,7 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   dither_t *d = stp_malloc(sizeof(dither_t));
   stp_simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
+  d->v = v;
   r.value = 1.0;
   r.bit_pattern = 1;
   r.is_dark = 1;
@@ -757,7 +759,7 @@ stp_dither_set_max_ink(void *vd, int levels, double max_ink)
   d->ink_limit = imax(max_ink, 1)*levels;
   d->ink_limit = max_ink*levels+0.5;
 #ifdef PRINT_DEBUG
-  fprintf(stderr, "Maxink: %f %d\n", max_ink, d->ink_limit);
+  stp_eprintf(d->v, "Maxink: %f %d\n", max_ink, d->ink_limit);
 #endif
 }
 
@@ -864,7 +866,7 @@ stp_dither_set_light_ink(void *vd, int i, double v, double density)
 }
 
 static void
-stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
+stp_dither_set_generic_ranges(dither_t *d, dither_color_t *s, int nlevels,
 			      const stp_simple_dither_range_t *ranges,
 			      double density)
 {
@@ -877,13 +879,13 @@ stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
     stp_malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
   s->density = density * 65536;
-#ifdef PRINT_DEBUG
-  fprintf(stderr, "stp_dither_set_generic_ranges nlevels %d density %f\n",
-	  nlevels, density);
+  stp_dprintf(STP_DBG_INK, d->v,
+	      "stp_dither_set_generic_ranges nlevels %d density %f\n",
+	      nlevels, density);
   for (i = 0; i < nlevels; i++)
-    fprintf(stderr, "  level %d value %f pattern %x is_dark %d\n", i,
-	    ranges[i].value, ranges[i].bit_pattern, ranges[i].is_dark);
-#endif
+    stp_dprintf(STP_DBG_INK, d->v,
+		"  level %d value %f pattern %x is_dark %d\n", i,
+		ranges[i].value, ranges[i].bit_pattern, ranges[i].is_dark);
   s->ranges[0].range_l = 0;
   s->ranges[0].value_l = ranges[0].value * 65536.0;
   s->ranges[0].bits_l = ranges[0].bit_pattern;
@@ -956,27 +958,27 @@ stp_dither_set_generic_ranges(dither_color_t *s, int nlevels,
       s->signif_bits++;
       lbit >>= 1;
     }
-#ifdef PRINT_DEBUG
   for (i = 0; i < s->nlevels; i++)
     {
-      fprintf(stderr,
-	      "    level %d value_l %d value_h %d range_l %d range_h %d\n",
-	      i, s->ranges[i].value_l, s->ranges[i].value_h,
-	      s->ranges[i].range_l, s->ranges[i].range_h);
-      fprintf(stderr, "       bits_l %d bits_h %d isdark_l %d isdark_h %d\n",
-	      s->ranges[i].bits_l, s->ranges[i].bits_h,
-	      s->ranges[i].isdark_l, s->ranges[i].isdark_h);
-      fprintf(stderr, "       rangespan %d valuespan %d\n",
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "    level %d value_l %d value_h %d range_l %d range_h %d\n",
+		  i, s->ranges[i].value_l, s->ranges[i].value_h,
+		  s->ranges[i].range_l, s->ranges[i].range_h);
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "       bits_l %d bits_h %d isdark_l %d isdark_h %d\n",
+		  s->ranges[i].bits_l, s->ranges[i].bits_h,
+		  s->ranges[i].isdark_l, s->ranges[i].isdark_h);
+      stp_dprintf(STP_DBG_INK, d->v, "       rangespan %d valuespan %d\n",
 	      s->ranges[i].range_span, s->ranges[i].value_span);
     }
-  fprintf(stderr, "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
-#endif
+  stp_dprintf(STP_DBG_INK, d->v,
+	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
 }
 
 static void
-stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
-			       const stp_full_dither_range_t *ranges,
-			       double density, int max_ink)
+stp_dither_set_generic_ranges_full(dither_t *d, dither_color_t *s, int nlevels,
+				   const stp_full_dither_range_t *ranges,
+				   double density, int max_ink)
 {
   int i, j;
   unsigned lbit;
@@ -988,16 +990,16 @@ stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
     stp_malloc(s->nlevels * sizeof(dither_segment_t));
   s->bit_max = 0;
   s->density = density * 65536;
-#ifdef PRINT_DEBUG
-  fprintf(stderr,
-	  "stp_dither_set_ranges nlevels %d density %f\n", nlevels, density);
+  stp_dprintf(STP_DBG_INK, d->v,
+	      "stp_dither_set_ranges nlevels %d density %f\n",
+	      nlevels, density);
   for (i = 0; i < nlevels; i++)
-    fprintf(stderr, "  level %d value: low %f high %f pattern low %x high %x "
-	    "is_dark low %d high %d\n", i,
-	    ranges[i].value_l, ranges[i].value_h,
-	    ranges[i].bits_l, ranges[i].bits_h,ranges[i].isdark_l,
-	    ranges[i].isdark_h);
-#endif
+    stp_dprintf(STP_DBG_INK, d->v,
+		"  level %d value: low %f high %f pattern low %x "
+		"high %x is_dark low %d high %d\n", i,
+		ranges[i].value_l, ranges[i].value_h,
+		ranges[i].bits_l, ranges[i].bits_h,ranges[i].isdark_l,
+		ranges[i].isdark_h);
   for(i=j=0; i < nlevels; i++) {
     if (ranges[i].bits_h > s->bit_max)
       s->bit_max = ranges[i].bits_h;
@@ -1037,37 +1039,37 @@ stp_dither_set_generic_ranges_full(dither_color_t *s, int nlevels,
       s->signif_bits++;
       lbit >>= 1;
     }
-#ifdef PRINT_DEBUG
   for (i = 0; i < s->nlevels; i++)
     {
-      fprintf(stderr,
-	      "    level %d value_l %d value_h %d range_l %d range_h %d\n",
-	      i, s->ranges[i].value_l, s->ranges[i].value_h,
-	      s->ranges[i].range_l, s->ranges[i].range_h);
-      fprintf(stderr, "       bits_l %d bits_h %d isdark_l %d isdark_h %d\n",
-	      s->ranges[i].bits_l, s->ranges[i].bits_h,
-	      s->ranges[i].isdark_l, s->ranges[i].isdark_h);
-      fprintf(stderr, "       rangespan %d valuespan %d\n",
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "    level %d value_l %d value_h %d range_l %d range_h %d\n",
+		  i, s->ranges[i].value_l, s->ranges[i].value_h,
+		  s->ranges[i].range_l, s->ranges[i].range_h);
+      stp_dprintf(STP_DBG_INK, d->v,
+		  "       bits_l %d bits_h %d isdark_l %d isdark_h %d\n",
+		  s->ranges[i].bits_l, s->ranges[i].bits_h,
+		  s->ranges[i].isdark_l, s->ranges[i].isdark_h);
+      stp_dprintf(STP_DBG_INK, d->v, "       rangespan %d valuespan %d\n",
 	      s->ranges[i].range_span, s->ranges[i].value_span);
     }
-  fprintf(stderr, "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
-#endif
+  stp_dprintf(STP_DBG_INK, d->v,
+	      "  bit_max %d signif_bits %d\n", s->bit_max, s->signif_bits);
 }
 
 void
 stp_dither_set_ranges(void *vd, int color, int nlevels,
-		  const stp_simple_dither_range_t *ranges, double density)
+		      const stp_simple_dither_range_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= NCOLORS)
     return;
-  stp_dither_set_generic_ranges(&(d->channel[color].dither), nlevels, ranges,
-				density);
+  stp_dither_set_generic_ranges(d, &(d->channel[color].dither), nlevels,
+				ranges, density);
 }
 
 void
 stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
-			 const double *levels, double density)
+			     const double *levels, double density)
 {
   stp_simple_dither_range_t *r =
     stp_malloc(nlevels * sizeof(stp_simple_dither_range_t));
@@ -1085,10 +1087,11 @@ stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 
 void
 stp_dither_set_ranges_full(void *vd, int color, int nlevels,
-		       const stp_full_dither_range_t *ranges, double density)
+			   const stp_full_dither_range_t *ranges,
+			   double density)
 {
   dither_t *d = (dither_t *) vd;
-  stp_dither_set_generic_ranges_full(&(d->channel[color].dither), nlevels,
+  stp_dither_set_generic_ranges_full(d, &(d->channel[color].dither), nlevels,
 				     ranges, density, d->ink_limit);
 }
 

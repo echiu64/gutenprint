@@ -10,12 +10,17 @@ The Gimp Print plugin requires the Gimp 1.2.
 
 Gimp-Print 4.1.8 contains the following changes over 4.1.7:
 
-1) A bug introduced in 4.1.7 that caused older Epson printers with
-   roll feed capability (such as the 870 and 1270) to fail to print
-   under at least some circumstances is fixed.
+1) A bug introduced in 4.1.7 that caused roll feed printing to fail is
+   fixed.  The symptoms are typically that the ready light on the
+   printer flashes as data is sent, but nothing is printed.
 
 2) Color quality on Epson printers (particularly in the blue range) is
    improved.
+
+3) Tuned Epson Premium Quality Photo Paper for new (870/1270 and
+   newer) Epson Stylus Photo printers.  This paper was specifically
+   designed for these printers, and may not give optimal results with
+   older printers.
 
 
 Gimp-Print 4.1.7 contains the following changes over 4.1.6:

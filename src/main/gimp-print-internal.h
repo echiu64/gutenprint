@@ -407,6 +407,12 @@ extern void stp_puts(const char *s, const stp_vars_t v);
 
 extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
 
+#define STP_DBG_LUT 		0x1
+#define STP_DBG_COLORFUNC	0x2
+#define STP_DBG_INK		0x4
+extern void stp_dprintf(unsigned long level, const stp_vars_t v,
+			const char *format, ...);
+
 extern void *stp_malloc (size_t);
 
 /* Uncomment the next line to get performance statistics:

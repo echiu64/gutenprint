@@ -1589,8 +1589,6 @@ stp_free_lut(stp_vars_t v)
     }
 }
 
-/* #define PRINT_LUT */
-
 void
 stp_compute_lut(stp_vars_t v, size_t steps)
 {
@@ -1599,9 +1597,6 @@ stp_compute_lut(stp_vars_t v, size_t steps)
 		green_pixel,	/* Pixel value */
 		blue_pixel;	/* Pixel value */
   int i;
-#ifdef PRINT_LUT
-  FILE *ltfile = fopen("/mnt1/lut", "w");
-#endif
   /*
    * Got an output file/command, now compute a brightness lookup table...
    */
@@ -1736,31 +1731,23 @@ stp_compute_lut(stp_vars_t v, size_t steps)
 	lut->blue[i] = 65535;
       else
 	lut->blue[i] = (unsigned)(blue_pixel);
-#ifdef PRINT_LUT
-      fprintf(ltfile, "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
-	      i, lut->composite[i], lut->red[i],
-	      lut->green[i], lut->blue[i], pixel, red_pixel,
-	      green_pixel, blue_pixel, print_gamma, screen_gamma,
-	      print_gamma, app_gamma);
-#endif
+      stp_dprintf(STP_DBG_LUT, v,
+		  "%3i  %5d  %5d  %5d  %5d  %f %f %f %f  %f %f %f  %f\n",
+		  i, lut->composite[i], lut->red[i],
+		  lut->green[i], lut->blue[i], pixel, red_pixel,
+		  green_pixel, blue_pixel, print_gamma, screen_gamma,
+		  print_gamma, app_gamma);
     }
-
-#ifdef PRINT_LUT
-  fclose(ltfile);
-#endif
 }
 
-#ifdef DEBUG
-#define RETURN_COLORFUNC(x)						      \
-do									      \
-{									      \
-  stp_eprintf(v, "stp_choose_colorfunc(type %d bpp %d cmap %d) ==> %s, %d\n", \
-	      output_type, image_bpp, cmap, #x, *out_bpp);		      \
-  return (x);								      \
-} while (0)
-#else
-#define RETURN_COLORFUNC(x) return(x)
-#endif
+#define RETURN_COLORFUNC(x)						   \
+do									   \
+{									   \
+  stp_dprintf(STP_DBG_COLORFUNC, v,					   \
+	      "stp_choose_colorfunc(type %d bpp %d cmap %d) ==> %s, %d\n", \
+	      output_type, image_bpp, cmap, #x, *out_bpp);		   \
+  return (x);								   \
+} while (0)								   \
 
 stp_convert_t
 stp_choose_colorfunc(int output_type,

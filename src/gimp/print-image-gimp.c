@@ -292,19 +292,22 @@ Image_get_row(stp_image_t *image, unsigned char *data, int row)
   else
     gimp_pixel_rgn_get_row(&(i->rgn), data,
                            i->ox, i->oy + row * i->increment, i->w);
-  if (i->mirror) {
-    /* Flip row -- probably inefficiently */
-    int f, l, b = i->drawable->bpp;
-    for (f = 0, l = i->w - 1; f < l; f++, l--) {
-      int c;
-      unsigned char tmp;
-      for (c = 0; c < b; c++) {
-        tmp = data[f*b+c];
-        data[f*b+c] = data[l*b+c];
-        data[l*b+c] = tmp;
-      }
+  if (i->mirror)
+    {
+      /* Flip row -- probably inefficiently */
+      int f, l, b = i->drawable->bpp;
+      for (f = 0, l = i->w - 1; f < l; f++, l--)
+	{
+	  int c;
+	  unsigned char tmp;
+	  for (c = 0; c < b; c++)
+	    {
+	      tmp = data[f*b+c];
+	      data[f*b+c] = data[l*b+c];
+	      data[l*b+c] = tmp;
+	    }
+	}
     }
-  }
 }
 
 static void
