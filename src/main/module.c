@@ -388,8 +388,8 @@ static void *stpi_dlsym(void *handle,           /* Module */
   len += strlen(symbol);
   full_symbol[len] = '\0';
 
-#if defined(__APPLE__) || defined(__OpenBSD__)
-/* Darwin and OpenBSD prepend underscores to symbols */
+#if defined(__OpenBSD__)
+/* OpenBSD needs a prepended underscore to match symbols */
  {
    char *prefix_symbol = stpi_malloc(sizeof(char) * (strlen(full_symbol) + 2));
    prefix_symbol[0] = '_';
