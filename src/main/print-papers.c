@@ -39,13 +39,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct
+{
+  const char *name;
+  const char *text;
+  unsigned width;
+  unsigned height;
+  unsigned top;
+  unsigned left;
+  unsigned bottom;
+  unsigned right;
+  stp_papersize_unit_t paper_unit;
+} stp_internal_papersize_t;
 
 /*
  * Sizes are converted to 1/72in, then rounded down so that we don't
  * print off the edge of the paper.
  */
 #include "papers-oldlist.h"
-
 
 int
 stp_known_papersizes(void)

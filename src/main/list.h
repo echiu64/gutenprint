@@ -32,6 +32,7 @@
 extern "C" {
 #endif
 
+#define COOKIE_LIST    0xbfea218e
 
 struct stp_internal_list_node;
 
@@ -45,6 +46,7 @@ typedef struct stp_internal_list_node
 
 typedef struct stp_internal_list_head
 {
+  int cookie;			/* Magic cookie */
   int icache;                               /* index no of cached node */
   int length;                               /* number of nodes */
   struct stp_internal_list_node *start;     /* start node */

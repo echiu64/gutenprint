@@ -41,24 +41,8 @@ extern "C" {
 #include <config.h>
 #endif
 
-
-typedef struct
-{
-  const char *name;
-  const char *text;
-  unsigned width;
-  unsigned height;
-  unsigned top;
-  unsigned left;
-  unsigned bottom;
-  unsigned right;
-  stp_papersize_unit_t paper_unit;
-} stp_internal_papersize_t;
-
-
 extern void stp_default_media_size(const stp_vars_t v,
 				   int *width, int *height);
-
 
 #ifdef __cplusplus
   }

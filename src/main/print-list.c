@@ -39,6 +39,8 @@
 #include "list.h"
 #include <string.h>
 
+#define COOKIE_LIST    0xbfea218e
+
 /*
  * Uncomment to enable debugging and strict list integrity checking.
  * This may have a significant performance impact.
@@ -58,6 +60,15 @@ stp_list_node_free_data (stp_list_item_t *item)
 #endif
 }
 
+static void
+check_list(const stp_internal_list_head_t *v)
+{
+  if (v->cookie != COOKIE_LIST)
+    {
+      stp_erprintf("Bad stp_list_t!\n");
+      stp_abort();
+    }
+}
 
 /* list head functions */
 
@@ -72,6 +83,7 @@ stp_list_create(void)
   lh = (stp_internal_list_head_t *) stp_malloc(sizeof(stp_internal_list_head_t));
 
   /* initialise an empty list */
+  lh->cookie = COOKIE_LIST;
   lh->icache = lh->length = 0;
   lh->start = lh->end = lh->cache = (stp_internal_list_node_t *) NULL;
   lh->freefunc = NULL;
@@ -93,6 +105,7 @@ stp_list_destroy(stp_list_t *list)
   stp_internal_list_node_t *next;
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
 
+  check_list(lh);
   cur = (stp_internal_list_node_t *) stp_list_get_start(list);
   while(cur)
     {
@@ -103,6 +116,7 @@ stp_list_destroy(stp_list_t *list)
 #ifdef STP_LIST_DEBUG
   fprintf(stderr, "stp_list_head destructor\n");
 #endif
+  lh->cookie = 0;
   stp_free(lh);
 
   return 0;
@@ -112,6 +126,7 @@ int
 stp_list_get_length(stp_list_t *list)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   return lh->length;
 }
 
@@ -122,6 +137,7 @@ stp_list_item_t *
 stp_list_get_start(stp_list_t *list)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   return (stp_list_item_t *) lh->start;
 }
 
@@ -130,6 +146,7 @@ stp_list_item_t *
 stp_list_get_end(stp_list_t *list)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   return (stp_list_item_t *) lh->end;
 }
 
@@ -142,6 +159,7 @@ stp_list_get_item_by_index(stp_list_t *list, int index)
   int i; /* current index */
   int d = 0; /* direction of list traversal, 0=forward */
   int c = 0; /* use cache? */
+  check_list(lh);
 
   if (index >= lh->length)
     return NULL;
@@ -218,6 +236,7 @@ stp_list_get_item_by_name(stp_list_t *list, const char *name)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   stp_internal_list_node_t *ln = NULL;
+  check_list(lh);
 
   if (!lh->namefunc)
     return NULL;
@@ -239,6 +258,7 @@ stp_list_get_item_by_long_name(stp_list_t *list, const char *long_name)
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
   stp_internal_list_node_t *ln = NULL;
+  check_list(lh);
 
   if (!lh->long_namefunc)
     return NULL;
@@ -260,6 +280,7 @@ stp_list_set_freefunc(stp_list_t *list,
 		      void (*node_freefunc)(stp_list_item_t *item))
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   lh->freefunc = node_freefunc;
 }
 
@@ -269,6 +290,7 @@ stp_list_set_namefunc(stp_list_t *list,
 		      const char *(*namefunc)(const stp_list_item_t *item))
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   lh->namefunc = namefunc;
 }
 
@@ -278,6 +300,7 @@ stp_list_set_long_namefunc(stp_list_t *list,
 			   const char *(*long_namefunc)(const stp_list_item_t *item))
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   lh->long_namefunc = long_namefunc;
 }
 
@@ -288,6 +311,7 @@ stp_list_set_sortfunc(stp_list_t *list,
 				      const stp_list_item_t *item2))
 {
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   lh->sortfunc = sortfunc;
 }
 
@@ -311,6 +335,7 @@ stp_list_item_create(stp_list_t *list,
   stp_internal_list_node_t *ln; /* list node to add */
   stp_internal_list_node_t *lnp; /* list node previous */
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
 
   ln = stp_malloc(sizeof(stp_internal_list_node_t));
   ln->prev = ln->next = NULL;
@@ -403,6 +428,7 @@ stp_list_item_destroy(stp_list_t *list,
 {
   stp_internal_list_node_t *ln;
   stp_internal_list_head_t *lh = (stp_internal_list_head_t *) list;
+  check_list(lh);
   ln = (stp_internal_list_node_t *) item;
 
   /* decrement reference count */
