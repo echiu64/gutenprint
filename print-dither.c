@@ -89,7 +89,7 @@ int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
 #define MAX_SPREAD 32
 
 /*
- * A segment of the entire 0-65536 intensity range.
+ * A segment of the entire 0-65535 intensity range.
  */
 typedef struct dither_segment
 {
@@ -138,8 +138,8 @@ typedef struct dither
   int src_width;		/* Input width */
   int dst_width;		/* Output width */
 
-  int density;			/* Desired density, 0-1.0 (scaled 0-65536) */
-  int black_density;		/* Desired density, 0-1.0 (scaled 0-65536) */
+  int density;			/* Desired density, 0-1.0 (scaled 0-65535) */
+  int black_density;		/* Desired density, 0-1.0 (scaled 0-65535) */
   int k_lower;			/* Transition range (lower/upper) for CMY */
   int k_upper;			/* vs. K */
   int density2;			/* Density * 2 */
@@ -154,7 +154,7 @@ typedef struct dither
 
   unsigned randomizer[NCOLORS]; /* With Floyd-Steinberg dithering, control */
 				/* how much randomness is applied to the */
-				/* threshold values (0-65536).  With ordered */
+				/* threshold values (0-65535).  With ordered */
 				/* dithering, how much randomness is added */
 				/* to the matrix value. */
 
@@ -650,7 +650,7 @@ dither_set_density(void *vd, double density)
     density = 0;
   d->k_upper = d->k_upper * density;
   d->k_lower = d->k_lower * density;
-  d->density = (int) ((65536 * density) + .5);
+  d->density = (int) ((65535 * density) + .5);
   d->density2 = 2 * d->density;
   d->densityh = d->density / 2;
   d->dlb_range = d->density - d->k_lower;
@@ -669,7 +669,7 @@ dither_set_black_density(void *vd, double density)
     density = 1;
   else if (density < 0)
     density = 0;
-  d->black_density = (int) ((65536 * density) + .5);
+  d->black_density = (int) ((65535 * density) + .5);
 }
 
 static double
@@ -702,14 +702,14 @@ void
 dither_set_black_lower(void *vd, double k_lower)
 {
   dither_t *d = (dither_t *) vd;
-  d->k_lower = (int) (k_lower * 65536);
+  d->k_lower = (int) (k_lower * 65535);
 }
 
 void
 dither_set_black_upper(void *vd, double k_upper)
 {
   dither_t *d = (dither_t *) vd;
-  d->k_upper = (int) (k_upper * 65536);
+  d->k_upper = (int) (k_upper * 65535);
 }
 
 void
@@ -762,10 +762,10 @@ void
 dither_set_randomizers(void *vd, double c, double m, double y, double k)
 {
   dither_t *d = (dither_t *) vd;
-  d->randomizer[ECOLOR_C] = c * 65536;
-  d->randomizer[ECOLOR_M] = m * 65536;
-  d->randomizer[ECOLOR_Y] = y * 65536;
-  d->randomizer[ECOLOR_K] = k * 65536;
+  d->randomizer[ECOLOR_C] = c * 65535;
+  d->randomizer[ECOLOR_M] = m * 65535;
+  d->randomizer[ECOLOR_Y] = y * 65535;
+  d->randomizer[ECOLOR_K] = k * 65535;
 }
 
 void
@@ -1206,8 +1206,8 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   if ((adjusted <= 0 && !(dither_type & D_ADAPTIVE_BASE)) ||
       base <= 0 || density <= 0)
     return adjusted;
-  if (density > 65536)
-    density = 65536;
+  if (density > 65535)
+    density = 65535;
 
   /*
    * Look for the appropriate range into which the input value falls.
@@ -1280,18 +1280,15 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
        * smoother output in the midtones.  Idea suggested by
        * Thomas Tonino.
        */
-      if (!(dither_type & D_ORDERED_BASE))
-	{
-	  if (randomizer > 0)
-	    {
-	      if (base > d->d_cutoff)
-		randomizer = 0;
-	      else if (base > d->d_cutoff / 2)
-		randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
-	    }
-	}
-      else
+      if (dither_type & D_ORDERED_BASE)
 	randomizer = 65536;	/* With ordered dither, we need this */
+      else if (randomizer > 0)
+	{
+	  if (base > d->d_cutoff)
+	    randomizer = 0;
+	  else if (base > d->d_cutoff / 2)
+	    randomizer = randomizer * 2 * (d->d_cutoff - base) / d->d_cutoff;
+	}
 
       /*
        * Compute the comparison value to decide whether to print at
@@ -1325,40 +1322,33 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    default:
 	      vmatrix = ditherpoint(d, dither_matrix, x);
 	    }
+	  /*
+	   * Note that vmatrix cannot be 65536 here, and virtual_value
+	   * cannot exceed 65536, so we cannot overflow.
+	   */
 
-	  if (vmatrix == 65536 && virtual_value == 65536)
-	    /*
-	     * These numbers will break 32-bit unsigned arithmetic!
-	     * Maybe this is so rare that we'd be better off using
-	     * long long arithmetic, but that's likely to be much more
-	     * expensive on 32-bit architectures.
-	     */
-	    vmatrix = 65536;
-	  else
+	  /*
+	   * Now, scale the virtual dot size appropriately.  Note that
+	   * we'll get something evenly distributed between 0 and
+	   * the virtual dot size, centered on the dot size / 2,
+	   * which is the normal threshold value.
+	   */
+	  vmatrix = vmatrix * virtual_value / 65536;
+	  if (randomizer != 65536)
 	    {
 	      /*
-	       * Now, scale the virtual dot size appropriately.  Note that
-	       * we'll get something evenly distributed between 0 and
-	       * the virtual dot size, centered on the dot size / 2,
-	       * which is the normal threshold value.
+	       * We want vmatrix to be scaled between 0 and
+	       * virtual_value when randomizer is 65536 (fully random).
+	       * When it's less, we want it to scale through part of
+	       * that range. In all cases, it should center around
+	       * virtual_value / 2.
+	       *
+	       * vbase is the bottom of the scaling range.
 	       */
-	      vmatrix = vmatrix * virtual_value / 65536;
-	      if (randomizer != 65536)
-		{
-		  /*
-		   * We want vmatrix to be scaled between 0 and
-		   * virtual_value when randomizer is 65536 (fully random).
-		   * When it's less, we want it to scale through part of
-		   * that range. In all cases, it should center around
-		   * virtual_value / 2.
-		   *
-		   * vbase is the bottom of the scaling range.
-		   */
-		  unsigned vbase = virtual_value * (65536u - randomizer) /
-		    131072u;
-		  vmatrix = vmatrix * randomizer / 65536;
-		  vmatrix += vbase;
-		}
+	      unsigned vbase = virtual_value * (65536u - randomizer) /
+		131072u;
+	      vmatrix = vmatrix * randomizer / 65536;
+	      vmatrix += vbase;
 	    }
 	} /* randomizer != 0 */
 
