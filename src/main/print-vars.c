@@ -1027,6 +1027,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
 	  else if (usrval > desc.bounds.dbl.upper)
 	    usrval = desc.bounds.dbl.upper;
 	  stp_set_float_parameter(user, p->name, usrval);
+	  stp_free_parameter_description(&desc);
 	}
     }
   if (stp_get_output_type(print) == OUTPUT_GRAY &&
@@ -1055,7 +1056,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	{
 	  stp_describe_parameter(v, p->name, &desc);
 	  stp_set_string_parameter(v, p->name, desc.deflt.str);
-	  stp_string_list_free(desc.bounds.str);
+	  stp_free_parameter_description(&desc);
 	}
     }
   stp_parameter_list_destroy(params);
@@ -1127,6 +1128,26 @@ stp_describe_parameter(const stp_vars_t v, const char *name,
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     return;
   stp_dither_describe_parameter(v, name, description);
+}
+
+void
+stp_free_parameter_description(stp_parameter_t *desc)
+{
+  switch (desc->p_type)
+    {
+    case STP_PARAMETER_TYPE_CURVE:
+      if (desc->bounds.curve)
+	stp_curve_destroy(desc->bounds.curve);
+      desc->bounds.curve = NULL;
+      break;
+    case STP_PARAMETER_TYPE_STRING_LIST:
+      if (desc->bounds.str)
+	stp_string_list_free(desc->bounds.str);
+      desc->bounds.str = NULL;
+      break;
+    default:
+      break;
+    }
 }
 
 const stp_parameter_t *

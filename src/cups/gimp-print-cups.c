@@ -92,5 +92,6 @@ initialize_stp_options(void)
       opt->high = desc.bounds.dbl.upper * 1000;
       opt->defval = desc.deflt.dbl * 1000;
       opt->step = 50;
+      stp_free_parameter_description(&desc);
     }
 }

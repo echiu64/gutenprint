@@ -602,11 +602,9 @@ stpui_printrc_load_v1(FILE *fp)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      stp_set_string_parameter(key.v, keyword, value);
-	      if (desc.bounds.str)
-		stp_string_list_free(desc.bounds.str);
 	      break;
 	    case STP_PARAMETER_TYPE_FILE:
-	      stp_set_string_parameter(key.v, keyword, value);
+	      stp_set_file_parameter(key.v, keyword, value);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      stp_set_float_parameter(key.v, keyword, atof(value));
@@ -615,7 +613,7 @@ stpui_printrc_load_v1(FILE *fp)
 	      stp_set_int_parameter(key.v, keyword, atoi(value));
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_set_int_parameter(key.v, keyword, atoi(value));
+	      stp_set_boolean_parameter(key.v, keyword, atoi(value));
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      curve = stp_curve_allocate_read_string(value);
@@ -624,8 +622,6 @@ stpui_printrc_load_v1(FILE *fp)
 		  stp_set_curve_parameter(key.v, keyword, curve);
 		  stp_curve_destroy(curve);
 		}
-	      if (desc.bounds.curve)
-		stp_string_list_free(desc.bounds.curve);
 	      break;
 	    default:
 	      if (strlen(value))
@@ -636,6 +632,7 @@ stpui_printrc_load_v1(FILE *fp)
 			   keyword, value, desc.p_type);
 		}
 	    }
+	  stp_free_parameter_description(&desc);
 	}
     }
   if (strlen(key.name) > 0)

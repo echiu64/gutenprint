@@ -501,6 +501,8 @@ extern void
 stp_describe_parameter(const stp_vars_t v, const char *name,
 		       stp_parameter_t *description);
 
+extern void stp_free_parameter_description(stp_parameter_t *description);
+
 extern const stp_parameter_t *
 stp_parameter_find_in_settings(const stp_vars_t v, const char *name);
 

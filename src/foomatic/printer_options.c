@@ -91,7 +91,7 @@ main(int argc, char **argv)
 			}
 		    }
 		}
-	      stp_string_list_free(desc.bounds.str);
+	      stp_free_parameter_description(&desc);
 	    }
 	  tcount += count;
 	}

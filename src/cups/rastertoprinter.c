@@ -131,8 +131,8 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
       else
 	stp_set_string_parameter
 	  (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
-      stp_string_list_free(desc.bounds.str);
     }
+  stp_free_parameter_description(&desc);
 }
 
 /*

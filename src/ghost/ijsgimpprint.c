@@ -117,6 +117,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
       stp_describe_parameter(img->v, "Contrast", &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	stp_set_float_parameter(img->v, "Contrast", desc.bounds.dbl.upper);
+      stp_free_parameter_description(&desc);
       img->monochrome_flag = 1;
       /* 8-bit greyscale */
     }
@@ -539,7 +540,6 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	{
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  stp_set_string_parameter(img->v, key, vbuf);
-	  stp_string_list_free(desc.bounds.str);
 	  break;
 	case STP_PARAMETER_TYPE_FILE:
 	  stp_set_file_parameter(img->v, key, vbuf);
@@ -568,6 +568,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	default:
 	  STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
+      stp_free_parameter_description(&desc);
     }
 
   if (code == 0)

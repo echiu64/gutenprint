@@ -55,6 +55,7 @@ main(int argc, char **argv)
 		 p->name, desc.bounds.dbl.upper);
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %.3f\n",
 		 p->name, desc.deflt.dbl);
+	  stp_free_parameter_description(&desc);
 	}
       else if (p->p_type == STP_PARAMETER_TYPE_INT)
 	{
@@ -66,6 +67,7 @@ main(int argc, char **argv)
 		 p->name, desc.bounds.integer.upper);
 	  printf("$stp_values{'DEFVAL'}{'%s'} = %d\n",
 		 p->name, desc.deflt.integer);
+	  stp_free_parameter_description(&desc);
 	}
     }
   stp_parameter_list_destroy(params);

@@ -312,13 +312,14 @@ static int
 verify_string_param(const stp_vars_t v, const char *parameter,
 		    stp_parameter_t *desc)
 {
+  int answer = 1;
   if (desc->is_mandatory || stp_check_string_parameter(v, parameter))
     {
       const char *checkval = stp_get_string_parameter(v, parameter);
       stp_string_list_t vptr = desc->bounds.str;
       size_t count = stp_string_list_count(vptr);
-      int answer = 0;
       int i;
+      answer = 0;
       if (checkval == NULL)
 	{
 	  if (count == 0)
@@ -344,14 +345,9 @@ verify_string_param(const stp_vars_t v, const char *parameter,
 	answer = 1;
       else
 	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
-      stp_string_list_free(vptr);
-      return answer;
     }
-  else
-    {
-      stp_string_list_free(desc->bounds.str);
-      return 1;
-    }
+  stp_free_parameter_description(desc);
+  return answer;
 }
 
 static int
@@ -386,9 +382,11 @@ verify_int_param(const stp_vars_t v, const char *parameter,
 	  stp_eprintf(v, _("%s must be between %d and %d\n"),
 		      parameter, desc->bounds.integer.lower,
 		      desc->bounds.integer.upper);
+	  stp_free_parameter_description(desc);
 	  return 0;
 	}
     }
+  stp_free_parameter_description(desc);
   return 1;
 }
 
@@ -425,8 +423,7 @@ verify_curve_param(const stp_vars_t v, const char *parameter,
 	    }
 	}
     }
-  if (desc->bounds.curve)
-    stp_curve_destroy(desc->bounds.curve);
+  stp_free_parameter_description(desc);
   return answer;
 }
 
@@ -447,12 +444,15 @@ verify_param(const stp_vars_t v, const char *parameter)
       return verify_curve_param(v, parameter, &desc);
     case STP_PARAMETER_TYPE_RAW:
     case STP_PARAMETER_TYPE_FILE:
+      stp_free_parameter_description(&desc);
       return 1;			/* No way to verify this here */
     case STP_PARAMETER_TYPE_BOOLEAN:
+      stp_free_parameter_description(&desc);
       return 1;			/* Booleans always OK */
     default:
       stp_eprintf(v, _("Unknown type parameter %s (%d)\n"),
 		  parameter, desc.p_type);
+      stp_free_parameter_description(&desc);
       return 0;
     }
 }

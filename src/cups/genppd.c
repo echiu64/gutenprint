@@ -810,7 +810,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n\n");
   }
 
-  stp_string_list_free(desc.bounds.str);
+  stp_free_parameter_description(&desc);
   if (the_papers)
     free(the_papers);
 
@@ -875,7 +875,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*CloseUI: *MediaType\n\n");
   }
-  stp_string_list_free(desc.bounds.str);
+  stp_free_parameter_description(&desc);
 
  /*
   * Input slots...
@@ -899,7 +899,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*CloseUI: *InputSlot\n\n");
   }
-  stp_string_list_free(desc.bounds.str);
+  stp_free_parameter_description(&desc);
 
  /*
   * Resolutions...
@@ -933,7 +933,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
              opt->name, opt->text, xdpi, ydpi, i);
   }
 
-  stp_string_list_free(desc.bounds.str);
+  stp_free_parameter_description(&desc);
 
   gzputs(fp, "*CloseUI: *Resolution\n\n");
 
@@ -977,7 +977,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
       gzprintf(fp, "*stpDither %s/%s: \"<</cupsRowStep %d>>setpagedevice\"\n",
 	       opt->name, opt->text, i);
     }
-    stp_string_list_free(desc.bounds.str);
+    stp_free_parameter_description(&desc);
 
     gzputs(fp, "*CloseUI: *stpDither\n\n");
 
@@ -1006,7 +1006,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
       gzputs(fp, "*CloseUI: *stpInkType\n\n");
     }
-    stp_string_list_free(desc.bounds.str);
+    stp_free_parameter_description(&desc);
 
    /*
     * Advanced STP options...
