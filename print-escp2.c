@@ -2120,6 +2120,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   errlast = -1;
   errline  = 0;
 
+  QUANT(0);
   for (y = 0; y < out_height; y ++)
   {
     if ((y & 255) == 0)
@@ -2131,6 +2132,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       Image_get_row(image, in, errline);
       (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
     }
+    QUANT(1);
 
 
     if (nv.image_type == IMAGE_MONOCHROME)
@@ -2140,6 +2142,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
     else
       dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		  yellow, 0, black);
+    QUANT(2);
 
     if (use_softweave)
       escp2_write_weave(weave, prn, length, ydpi, model, out_width, left,
@@ -2148,6 +2151,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       escp2_write_microweave(prn, black, cyan, magenta, yellow, lcyan,
 			     lmagenta, length, xdpi, ydpi, model,
 			     out_width, left, bits);
+    QUANT(3);
     errval += errmod;
     errline += errdiv;
     if (errval >= out_height)
@@ -2155,12 +2159,14 @@ escp2_print(const printer_t *printer,		/* I - Model */
       errval -= out_height;
       errline ++;
     }
+    QUANT(4);
   }
   Image_progress_conclude(image);
   if (use_softweave)
     escp2_flush_all(weave, model, out_width, left, ydpi, xdpi, prn);
   else
     escp2_free_microweave();
+  QUANT(5);
 
   free_dither(dither);
 
@@ -2189,6 +2195,9 @@ escp2_print(const printer_t *printer,		/* I - Model */
     }
 
   escp2_deinit_printer(prn, &init);
+#ifdef QUANTIFY
+  print_timers();
+#endif
 }
 
 static void
