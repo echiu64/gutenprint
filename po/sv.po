@@ -1,14 +1,14 @@
 # Swedish messages for gimp-print.
-# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-# Christian Rose <menthos@menthos.com>, 2001, 2002.
+# Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2001, 2002, 2003.
 #
 # $Id$
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gimp-print\n"
+"Project-Id-Version: gimp-print-4.2.6-pre1\n"
 "POT-Creation-Date: 2003-04-18 19:10-0400\n"
-"PO-Revision-Date: 2002-11-29 00:19+0100\n"
+"PO-Revision-Date: 2003-04-19 10:37+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -652,11 +652,11 @@ msgstr "Rullmatning"
 
 #: src/main/print-escp2-data.c:3684
 msgid "Roll Feed (cut each page)"
-msgstr ""
+msgstr "Rullmatning (klipp varje sida)"
 
 #: src/main/print-escp2-data.c:3692
 msgid "Roll Feed (do not cut)"
-msgstr ""
+msgstr "Rullmatning (klipp inte)"
 
 # Osäker
 #: src/main/print-escp2-data.c:3736
@@ -1526,9 +1526,8 @@ msgstr "Upplösning"
 #. * STP option group...
 #.
 #: src/cups/genppd.c:802
-#, fuzzy
 msgid "GIMP-print"
-msgstr "Skriv ut"
+msgstr "GIMP-print"
 
 #.
 #. * Image types...
@@ -1647,12 +1646,10 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -o|--align-color   Align the color print head (Stylus Color 480 and 580\n"
-"                       only).  CAUTION: Misuse of this utility may result "
-"in\n"
+"                       only).  CAUTION: Misuse of this utility may result in\n"
 "                       poor print quality and/or damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -d|--identify      Query the printer for make and model information.\n"
 "                       This requires read/write access to the raw printer\n"
@@ -1668,8 +1665,7 @@ msgid ""
 "    -u|--new           The printer is a new printer (Stylus Color 740 or\n"
 "                       newer).\n"
 "    -q|--quiet         Suppress the banner.\n"
-"    -m|--model         Specify the precise printer model for head "
-"alignment.\n"
+"    -m|--model         Specify the precise printer model for head alignment.\n"
 msgstr ""
 "Användning: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                     [-P skrivare | -r enhet] [-u] [-q] [-m modell]\n"
@@ -1819,9 +1815,8 @@ msgid "Stylus C42ux"
 msgstr "Stylus C42ux"
 
 #: src/escputil/escputil.c:207
-#, fuzzy
 msgid "Stylus C50"
-msgstr "Stylus C60"
+msgstr "Stylus C50"
 
 #: src/escputil/escputil.c:208
 msgid "Stylus C60"
@@ -2156,7 +2151,7 @@ msgstr "Ljus magenta"
 
 #: src/escputil/escputil.c:607
 msgid "Black/Dark Yellow"
-msgstr ""
+msgstr "Svart/Mörkgul"
 
 #: src/escputil/escputil.c:621
 msgid "Obtaining ink levels requires using a raw device.\n"
@@ -2312,8 +2307,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -2435,10 +2429,8 @@ msgid "> "
 msgstr "> "
 
 #: src/escputil/escputil.c:969
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Bekräfta att du vill avsluta utan att spara genom att trycka \"q\" igen:\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Bekräfta att du vill avsluta utan att spara genom att trycka \"q\" igen:\n"
 
 #: src/escputil/escputil.c:974
 msgid ""
@@ -2531,13 +2523,11 @@ msgstr "Tryck retur för att fortsätta > "
 
 #: src/escputil/escputil.c:1060
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Granska utskriften och välj det bästa linjeparet i varje mönster.\n"
-"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa "
-"proceduren.\n"
+"Skriv in ett parnummer, \"?\" för hjälp, eller \"r\" för att upprepa proceduren.\n"
 
 #: src/escputil/escputil.c:1066
 #, c-format
@@ -2587,8 +2577,7 @@ msgstr ""
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
 "\n"
-"This utility lets you align the color print head of your Epson Stylus "
-"inkjet\n"
+"This utility lets you align the color print head of your Epson Stylus inkjet\n"
 "printer.  Misuse of this utility may cause your print quality to degrade\n"
 "and possibly damage your printer.  This utility has not been reviewed by\n"
 "Seiko Epson for correctness, and is offered with no warranty at all.  The\n"
@@ -2751,37 +2740,23 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "Justera mättnaden (färgbalansen) på utskriften\n"
-"Använd noll som mättnad för att skapa gråskaleutdata med färgbläck och svart "
-"bläck"
+"Använd noll som mättnad för att skapa gråskaleutdata med färgbläck och svart bläck"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
 msgstr "Intensitet:"
 
 #: src/gimp/gimp_color_window.c:365
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"Justera intensiteten (mängden bläck) på utskriften. Minska intensiteten om "
-"bläcket tränger igenom pappret eller smetar; öka intensiteten om svarta "
-"områden inte är helt svarta."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "Justera intensiteten (mängden bläck) på utskriften. Minska intensiteten om bläcket tränger igenom pappret eller smetar; öka intensiteten om svarta områden inte är helt svarta."
 
 #: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
 msgstr "Gamma:"
 
 #: src/gimp/gimp_color_window.c:387
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-"Black and white will remain the same, unlike with the brightness adjustment."
-msgstr ""
-"Justera gammavärdet på utskriften. Större värden kommer att skapa en i "
-"allmänhet ljusare utskrift, medan mindre värden kommer att skapa en mörkare "
-"utskrift. Svart och vitt kommer att vara samma, till skillnad från då "
-"ljusstyrkeinställningen används."
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. Black and white will remain the same, unlike with the brightness adjustment."
+msgstr "Justera gammavärdet på utskriften. Större värden kommer att skapa en i allmänhet ljusare utskrift, medan mindre värden kommer att skapa en mörkare utskrift. Svart och vitt kommer att vara samma, till skillnad från då ljusstyrkeinställningen används."
 
 #: src/gimp/gimp_color_window.c:403
 msgid "Dither Algorithm:"
@@ -2792,16 +2767,13 @@ msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Välj vilken färgutjämningsalgoritm som ska användas.\n"
 "Adaptiv hybrid producerar normalt bäst kvalitet i de flesta sammanhang.\n"
-"Sorterad är snabbare och producerar nästan lika bra kvalitet på "
-"fotografier.\n"
-"Snabb och Mycket snabb är avsevärt snabbare, och fungerar bra med text och "
-"radgrafik.\n"
+"Sorterad är snabbare och producerar nästan lika bra kvalitet på fotografier.\n"
+"Snabb och Mycket snabb är avsevärt snabbare, och fungerar bra med text och radgrafik.\n"
 "Hybrid Floyd-Steinberg producerar i allmänhet mycket sämre resultat."
 
 #.
@@ -2849,25 +2821,17 @@ msgstr "Förhandsgranskning"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Positionera bilden på sidan.\n"
 "Klicka och dra med huvudknappen för att positionera bilden.\n"
-"Klicka och dra med den andra knappen för att flytta bilden med finare "
-"precision; varje flyttenhet flyttar bilden med en punkt (1/72\")\n"
-"Klicka och dra med den tredje (mittersta) musknappen för att flytta bilden i "
-"enheter av bildstorleken.\n"
-"Att hålla ned skifttangenten vid klickande och dragande begränsar flytten "
-"till rörelse i endast horisontell och vertikal led.\n"
-"Om du klickar någon annan knapp under tiden du drar med musen kommer bilden "
-"att återgå till sin ursprungliga position."
+"Klicka och dra med den andra knappen för att flytta bilden med finare precision; varje flyttenhet flyttar bilden med en punkt (1/72\")\n"
+"Klicka och dra med den tredje (mittersta) musknappen för att flytta bilden i enheter av bildstorleken.\n"
+"Att hålla ned skifttangenten vid klickande och dragande begränsar flytten till rörelse i endast horisontell och vertikal led.\n"
+"Om du klickar någon annan knapp under tiden du drar med musen kommer bilden att återgå till sin ursprungliga position."
 
 #: src/gimp/gimp_main_window.c:434
 msgid "Position"
@@ -2894,11 +2858,8 @@ msgid "Seascape"
 msgstr "Liggande uppochner"
 
 #: src/gimp/gimp_main_window.c:464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Välj orientering: stående, liggande, uppochner eller liggande uppochner"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Välj orientering: stående, liggande, uppochner eller liggande uppochner"
 
 #: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
@@ -3027,14 +2988,8 @@ msgid "Command:"
 msgstr "Kommando:"
 
 #: src/gimp/gimp_main_window.c:746
-msgid ""
-"Enter the correct command to print to your printer. Note: Please do not "
-"remove the `-l' or `-oraw' from the command string, or printing will "
-"probably fail!"
-msgstr ""
-"Ange rätt kommando för atyy skriva ut till din skrivare. Obs: Ta inte bort "
-"\"-l\" eller \"-oraw\" från kommandosträngen. Om du gör detta kommer "
-"utskriften troligtvis att misslyckas!"
+msgid "Enter the correct command to print to your printer. Note: Please do not remove the `-l' or `-oraw' from the command string, or printing will probably fail!"
+msgstr "Ange rätt kommando för atyy skriva ut till din skrivare. Obs: Ta inte bort \"-l\" eller \"-oraw\" från kommandosträngen. Om du gör detta kommer utskriften troligtvis att misslyckas!"
 
 #.
 #. * Output file selection dialog.
@@ -3137,12 +3092,8 @@ msgid "Printer Settings"
 msgstr "Skrivarinställningar"
 
 #: src/gimp/gimp_main_window.c:897
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Välj namnet på skrivaren (inte skrivarens typ eller modell) som du vill "
-"skriva ut till"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Välj namnet på skrivaren (inte skrivarens typ eller modell) som du vill skriva ut till"
 
 #.
 #. * Setup printer button
@@ -3152,12 +3103,8 @@ msgid "Setup Printer..."
 msgstr "Konfigurera skrivare..."
 
 #: src/gimp/gimp_main_window.c:919
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Välj den skrivarmodell, PPD-fil och kommando som används för att skriva ut "
-"till denna skrivare"
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Välj den skrivarmodell, PPD-fil och kommando som används för att skriva ut till denna skrivare"
 
 #.
 #. * New printer button
@@ -3167,12 +3114,8 @@ msgid "New Printer..."
 msgstr "Ny skrivare..."
 
 #: src/gimp/gimp_main_window.c:936
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Ange en ny logisk skrivare. Detta kan användas för att namnge en samling "
-"inställningar som du vill komma ihåg för framtida användning."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Ange en ny logisk skrivare. Detta kan användas för att namnge en samling inställningar som du vill komma ihåg för framtida användning."
 
 #: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
@@ -3247,12 +3190,8 @@ msgid "Set the scale (size) of the image"
 msgstr "Ändra skalningen (storleken) på bilden"
 
 #: src/gimp/gimp_main_window.c:1142
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Välj huruvida skalning mäts i procent av tillgänglig sidstorlek eller antal "
-"utdatapunkter per tum"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Välj huruvida skalning mäts i procent av tillgänglig sidstorlek eller antal utdatapunkter per tum"
 
 #: src/gimp/gimp_main_window.c:1147
 msgid "Percent"
@@ -3338,12 +3277,8 @@ msgid "Best for images dominated by regions of solid color"
 msgstr "Bäst för bilder som domineras av enfärgade områden"
 
 #: src/gimp/gimp_main_window.c:1351
-msgid ""
-"Slowest, but most accurate and smoothest color for continuous tone images "
-"and photographs"
-msgstr ""
-"Långsammast, men noggrannast och mjukast färg för bilder med färgskalor och "
-"fotografier"
+msgid "Slowest, but most accurate and smoothest color for continuous tone images and photographs"
+msgstr "Långsammast, men noggrannast och mjukast färg för bilder med färgskalor och fotografier"
 
 #: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
@@ -3385,10 +3320,8 @@ msgid "Adjust Output..."
 msgstr "Justera utdata..."
 
 #: src/gimp/gimp_main_window.c:1435
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Justera färgbalans, ljusstyrka, kontrast, mättnad och färgutjämningsalgoritm"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Justera färgbalans, ljusstyrka, kontrast, mättnad och färgutjämningsalgoritm"
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
@@ -3485,8 +3418,7 @@ msgstr "Hämtande av nästa rad misslyckades vid %.0f\n"
 #~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 #~ msgstr ""
 #~ "Granska utskriften och välj mönstret i varje par.\n"
-#~ "Skriv in ett mönsternummer, \"?\" för hjälp, eller \"r\" för att upprepa "
-#~ "proceduren.\n"
+#~ "Skriv in ett mönsternummer, \"?\" för hjälp, eller \"r\" för att upprepa proceduren.\n"
 
 #~ msgid "13x19"
 #~ msgstr "13×19"
