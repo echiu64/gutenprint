@@ -113,6 +113,7 @@ USE_LEVEL3_PS='no'
 BUILD_GHOST='no'
 BUILD_FOOMATIC='(automatic)'
 BUILD_FOOMATIC_3='(automatic)'
+BUILD_FOOMATIC_OLDIDS='(automatic)'
 BUILD_IJS='(automatic)'
 BUILD_TEST='no'
 BUILD_TESTPATTERN='no'
@@ -241,6 +242,40 @@ AC_ARG_WITH(foomatic3,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic3]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC_3}])])
+
+if test "${FOOMATIC_CONFIGURE}" ; then
+  AC_MSG_CHECKING([Foomatic printer IDs])
+  libdir=`perl -e 'use Foomatic::Defaults; print "$libdir\n";';`
+  if [[ -d $libdir/db/source/printer/ ]]; then
+    for file in `ls -1 $libdir/db/source/printer/`; do
+      if ( grep -q ^${file%.xml} ./src/foomatic/oldprinterids ); then
+        oldids=1
+	AC_MSG_RESULT([Found entry with old Foomatic printer ID!])
+        break
+      fi
+      echo -en .
+    done
+    if test -z "${oldids}" ; then
+      AC_MSG_RESULT([No entry with old Foomatic printer ID found!])
+    fi
+  else
+    AC_MSG_RESULT([Could't find Foomatic database!])
+  fi
+fi
+if test -z "${oldids}" ; then
+  BUILD_FOOMATIC_OLDIDS="no"
+else
+  BUILD_FOOMATIC_OLDIDS="yes"
+fi
+AC_MSG_CHECKING([whether to use the old numerical Foomatic printer IDs])
+AC_ARG_WITH(foomatic-oldids,
+[  --with-foomatic-oldids  use old Foomatic printer IDs [default=${BUILD_FOOMATIC_OLDIDS}]],
+  [case "${withval}" in
+    yes) BUILD_FOOMATIC="yes" ; BUILD_FOOMATIC_OLDIDS="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_FOOMATIC_OLDIDS="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-foomatic3]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_FOOMATIC_OLDIDS}])])
 
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 if test -z "${IJS_CONFIG}" ; then
@@ -710,6 +745,11 @@ if test x${BUILD_FOOMATIC_3} = xyes ; then
 fi
 AM_CONDITIONAL(BUILD_FOOMATIC_3, test x${BUILD_FOOMATIC_3} = xyes)
 
+if test x${BUILD_FOOMATIC_OLDIDS} = xyes ; then
+  FOOMATIC_OLDIDS_NOINST_BIN='$(FOOMATIC_OLDIDS_NOINST_BIN)'
+fi
+AM_CONDITIONAL(BUILD_FOOMATIC_OLDIDS, test x${BUILD_FOOMATIC_OLDIDS} = xyes)
+
 if test x${BUILD_IJS} = xyes ; then
   IJS_BIN='$(IJS_BIN)'
 fi
@@ -887,6 +927,7 @@ AC_SUBST(CUPS_PPD_PS_LEVEL)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_3_NOINST_BIN)
+AC_SUBST(FOOMATIC_OLDIDS_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(IJS_BIN)
 AC_SUBST(IJS_INSTALL)

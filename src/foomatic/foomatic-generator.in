@@ -6,6 +6,7 @@ Getopt::Long::Configure("no_ignore_case", "pass_through");
 GetOptions("m=s" => \$opt_m,         # Map file
            "t=s" => \$opt_t,         # Template directory
 	   "f=s" => \$opt_f,         # Foomatic version
+	   "o"   => \$opt_o,         # Old Foomatic IDs
            "d=s" => \@opt_d);        # which Drivers?
 
 # Wherever we put it...
@@ -139,6 +140,24 @@ while(<PIPE>) {
 close PIPE or die "Cannot run printers: $!\n";
 print STDERR "done.\n";
 
+my %oldid;
+if ($opt_o) {
+    # Load table to translate the Foomatic IDs to the old (numerical) ones
+    print STDERR
+	"Loading printer ID translation table from ./oldprinterids...";
+    my $translation_table = "./oldprinterids";
+    open TRTAB, "< $translation_table" or
+	die "Cannot read printer ID translation table: $!\n";
+    while (<TRTAB>) {
+        chomp;
+        if (/^\s*(\S+)\s+(\S+)\s*$/) {
+	    $oldid{"printer/$2"} = "printer/$1";
+        }
+    }
+    close TRTAB;
+    print STDERR "done.\n";
+}
+
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
 
 # Invert, to build %bar{$optionname} = [ choice1, choice2 ];
@@ -187,9 +206,17 @@ if ($foomatic3) {
 
 open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
 for (<PRINTERS>) {
-    if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
-	push (@{$mapstp{$1}}, $2);
-	$mapfoo{$2} = $1;	# do we need?
+    if (m!^\#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
+	my $foomaticid = $2;
+	my $deviceclass = $1;
+	if ($opt_o) {
+	    # Translate the Foomatic IDs to the old (numerical) ones
+	    print "##### $foomaticid\n";
+	    $foomaticid = $oldid{$foomaticid} 
+	        if defined($oldid{$foomaticid});
+	}
+	push (@{$mapstp{$deviceclass}}, $foomaticid);
+	$mapfoo{$foomaticid} = $deviceclass;	# do we need?
     }
 }
 
