@@ -50,7 +50,7 @@ Description: Gimp-Print printer drivers for CUPS
 
 Package: libgimpprint#LIBRARY_VERSION#-dev
 Architecture: any
-Section: devel
+Section: libdevel
 Depends: libgimpprint#LIBRARY_VERSION# (= ${Source-Version})
 Provides: libgimpprint-dev
 Conflicts: libgimpprint-dev
@@ -116,7 +116,7 @@ Description: Gimp-Print printer drivers - core library
 
 Package: libgimpprintui#LIBRARY_VERSION#-dev
 Architecture: any
-Section: devel
+Section: libdevel
 Depends: libgimpprintui#LIBRARY_VERSION# (= ${Source-Version})
 Provides: libgimpprintui-dev
 Conflicts: libgimpprintui-dev

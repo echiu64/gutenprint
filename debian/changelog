@@ -1,8 +1,15 @@
-gimp-print (4.3.11-1) unstable; urgency=low
+gimp-print (4.3.14-1) unstable; urgency=low
 
   * New upstream development release.
 
- -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed, 19 Mar 2003 20:22:15 +0000
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Thu,  8 May 2003 23:54:22 +0100
+
+gimp-print (4.3.12-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Move libgimpprint-dev to section libdevel.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Tue,  1 Apr 2003 16:41:08 +0100
 
 gimp-print (4.3.9-1) unstable; urgency=low
 
