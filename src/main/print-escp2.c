@@ -1433,10 +1433,10 @@ static const double standard_hue_adjustment[49] =
 /*   0     1     2     3     4     5     6     7     8     9    10    11    12 */
 
 static const escp2_dot_size_t g1_dotsizes =
-{   -2,   -1,   -2,   -1,   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
-
-static const escp2_dot_size_t sc1500_dotsizes =
 {   -2,   -1,   -2,   -1,   -1,   -2,   -2,   -1,   -1,   -1,   -1,   -1,   -1 };
+
+static const escp2_dot_size_t g2_dotsizes =
+{   -2,   -1,   -2,   -1,   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc600_dotsizes =
 {    4,   -1,    4,   -1,   -1,    3,    2,    2,   -1,    1,   -1,   -1,   -1 };
@@ -1613,6 +1613,8 @@ typedef struct escp2_printer
 				      /* must use color parameters */
 				      /* rather than (faster) black */
 				      /* only parameters*/
+  int           zero_margin_offset;   /* Offset to use to achieve */
+				      /* zero-margin printing */
 
 		 /* The stylus 480 and 580 have an unusual arrangement of
 				  color jets that need special handling */
@@ -1747,7 +1749,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_BLACK),
     15, 1, 4, 15, 1, 4, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    14, 14, 9, 49, 14, 14, 9, 49, 0, 1, 0, 360, 720, 720, 14400, -1,
+    14, 14, 9, 49, 14, 14, 9, 49, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 720, 720, g1_dotsizes, g1_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1760,8 +1762,8 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    14, 14, 0, 40, 14, 14, 0, 40, 0, 1, 0, 360, 720, 720, 14400, -1,
-    default_head_offset, 0, 0, 720, 720, g1_dotsizes, g1_densities,
+    14, 14, 0, 40, 14, 14, 0, 40, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
+    default_head_offset, 0, 0, 720, 720, g2_dotsizes, g1_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
@@ -1773,8 +1775,8 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 720, 720, INCH(17), INCH(44), INCH(2), INCH(4),
-    14, 14, 9, 49, 14, 14, 9, 49, 0, 1, 0, 360, 720, 720, 14400, -1,
-    default_head_offset, 0, 0, 720, 720, sc1500_dotsizes, sc1500_densities,
+    14, 14, 9, 49, 14, 14, 9, 49, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
+    default_head_offset, 0, 0, 720, 720, g1_dotsizes, sc1500_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
@@ -1786,7 +1788,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 720, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    8, 9, 0, 30, 8, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1,
+    8, 9, 0, 30, 8, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sc600_dotsizes, g3_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1799,7 +1801,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     64, 1, 2, 64, 1, 2, 720, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1,
+    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, g3_dotsizes, g3_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1812,7 +1814,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     64, 1, 2, 128, 1, 1, 720, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 9, 40, 9, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1,
+    9, 9, 9, 40, 9, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, g3_dotsizes, g3_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1825,7 +1827,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     64, 1, 2, 64, 1, 2, 720, 360, INCH(17), INCH(44), INCH(2), INCH(4),
-    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1,
+    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, g3_dotsizes, g3_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1840,7 +1842,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 720, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, photo_dotsizes, g3_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1853,7 +1855,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 720, 360, INCH(118 / 10), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, photo_dotsizes, g3_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1866,7 +1868,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 720, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 30, 9, 9, 0, 30, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 720, 720, photo_dotsizes, g3_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1881,7 +1883,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     21, 1, 4, 21, 1, 4, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 720, 720, sc440_dotsizes, sc440_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1894,7 +1896,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 64, 1, 2, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sc640_dotsizes, sc440_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1907,7 +1909,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c6pl_dotsizes, c6pl_densities,
     &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1920,7 +1922,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     96, 1, 2, 192, 1, 1, 360, 180, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c3pl_dotsizes, c3pl_densities,
     &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1933,7 +1935,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c6pl_dotsizes, c6pl_densities,
     &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1946,7 +1948,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(13), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c6pl_dotsizes, c6pl_densities,
     &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1959,7 +1961,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1972,7 +1974,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(13), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1985,7 +1987,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 26, 0, 1, 8, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 26, 0, 1, 8, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sc660_dotsizes,sc660_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -1998,7 +2000,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2011,7 +2013,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 32, 1, 4, 360, 360, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sc720_dotsizes, c6pl_densities,
     &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2024,7 +2026,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     15, 15, 3, 48, 48, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, 360,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, 360, 0,
     x80_head_offset, -99, 0, 720, 720, sc480_dotsizes, sc480_densities,
     &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2037,7 +2039,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    0, 0, 0, 9, 0, 0, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    0, 0, 0, 9, 0, 0, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 97,
     default_head_offset, 0, 0, 1440, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2050,7 +2052,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(13), INCH(1200), INCH(2), INCH(4),
-    0, 0, 0, 9, 0, 0, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    0, 0, 0, 9, 0, 0, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 97,
     default_head_offset, 0, 0, 1440, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2063,7 +2065,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     64, 1, 2, 128, 1, 1, 720, 360, INCH(17), INCH(44), INCH(2), INCH(4),
-    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1,
+    8, 9, 9, 40, 8, 9, 9, 40, 0, 1, 4, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, g3_dotsizes, g3_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2076,7 +2078,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     32, 1, 4, 64, 1, 2, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sc670_dotsizes, c6pl_densities,
     &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2089,7 +2091,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(13), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, sp2000_dotsizes, sp2000_densities,
     &variable_pigment_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2102,7 +2104,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(13), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2115,7 +2117,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(24), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2128,7 +2130,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(24), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2141,7 +2143,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(44), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2154,7 +2156,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(44), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2167,7 +2169,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 2880, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2180,7 +2182,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 144, 1, 1, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 2880, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2193,7 +2195,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     96, 1, 2, 192, 1, 1, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 192, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 192, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 2880, 720, c3pl_dotsizes, sc980_densities,
     &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2206,7 +2208,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_YES
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1, 55,
     default_head_offset, 0, 0, 2880, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2219,7 +2221,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_YES
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1, 55,
     default_head_offset, 0, 0, 2880, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2232,7 +2234,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_YES
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     48, 1, 3, 48, 1, 3, 360, 360, INCH(13), INCH(1200), INCH(2), INCH(4),
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 360, 720, 720, 14400, -1, 55,
     default_head_offset, 0, 0, 2880, 720, c4pl_dotsizes, c4pl_densities,
     &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2245,12 +2247,12 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     15, 15, 3, 48, 48, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, 360,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, 360, 0,
     x80_head_offset, -99, 0, 1440, 720, sc480_dotsizes, sc480_densities,
     &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
-  /* 39: Stylus Color Pro */
+  /* 39: Stylus Color Pro XL */
   {
     (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
@@ -2258,7 +2260,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_360),
     48, 1, 3, 48, 1, 3, 720, 720, INCH(13), INCH(1200), INCH(2), INCH(4),
-    14, 14, 0, 40, 14, 14, 0, 40, 0, 1, 0, 360, 720, 720, 14400, -1,
+    14, 14, 0, 40, 14, 14, 0, 40, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     default_head_offset, 0, 0, 720, 720, g1_dotsizes, g1_densities,
     &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2271,7 +2273,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(13), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro_dotsizes, spro_densities,
     &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2284,7 +2286,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     1, 1, 1, 1, 1, 1, 1440, 1440, INCH(44), INCH(1200), INCH(11), INCH(17),
-    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1,
+    9, 9, 0, 9, 9, 9, 0, 9, 0, 1, 0, 360, 1440, 1440, 14400, -1, 0,
     default_head_offset, 0, 0, 1440, 720, spro10000_dotsizes, spro10000_densities,
     &spro10000_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2297,7 +2299,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     15, 15, 3, 48, 48, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     x80_head_offset, -99, 0, 720, 720, sc480_dotsizes, sc480_densities,
     &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2310,7 +2312,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     15, 15, 3, 48, 48, 3, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     x80_head_offset, -99, 0, 1440, 720, sc480_dotsizes, sc480_densities,
     &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
@@ -2323,9 +2325,22 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     60, 60, 2, 180, 180, 2, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
+    9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
     c80_head_offset, -240, 0, 2880, 720, c3pl_pigment_dotsizes, c3pl_pigment_densities,
     &variable_3pl_pigment_4color_inks,
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
+  },
+  /* 45: Stylus Color Pro */
+  {
+    (MODEL_INIT_STANDARD | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
+     | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL
+     | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_MICROWEAVE_YES
+     | MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO
+     | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
+    48, 1, 3, 48, 1, 3, 720, 720, INCH(17 / 2), INCH(44), INCH(2), INCH(4),
+    14, 14, 0, 40, 14, 14, 0, 40, 0, 1, 0, 360, 720, 720, 14400, -1, 0,
+    default_head_offset, 0, 0, 720, 720, g1_dotsizes, g1_densities,
+    &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
 };
@@ -3118,6 +3133,12 @@ static int
 escp2_max_black_resolution(int model, const stp_vars_t v)
 {
   return (model_capabilities[model].max_black_resolution);
+}
+
+static int
+escp2_zero_margin_offset(int model, const stp_vars_t v)
+{
+  return (model_capabilities[model].zero_margin_offset);
 }
 
 static int
@@ -4142,8 +4163,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       * In zero-margin mode, the origin is about 3/20" to the left of the
       * paper's left edge.
       */
-      left += 92 * physical_ydpi * undersample / max_vres /
-	undersample_denominator;
+      left += escp2_zero_margin_offset(model, nv) * physical_ydpi *
+	undersample / max_vres / undersample_denominator;
     }
 
  /*

@@ -507,7 +507,7 @@ see the notes at the end of this section.
 1440x720mw       1440 x 720 DPI Microweave                (12)
 1440x720mwuni    1440 x 720 DPI Microweave Unidirectional (12)
 1440x720sw       1440 x 720 DPI                           (13)
-1440x720mwuni    1440 x 720 DPI Unidirectional            (13, 14)
+1440x720swuni    1440 x 720 DPI Unidirectional            (13, 14)
 1440x720hq       1440 x 720 DPI Highest Quality           (13)
 
 2880x720sw       2880 x 720 DPI                           (15)
@@ -551,7 +551,7 @@ see the notes at the end of this section.
     experienced at 720x360.
 
 (9) Works on all supported printers except for Stylus Color, Stylus
-    Color 1500, 1520, and 3000.
+    Color Pro, Stylus Color Pro XL, Stylus Color 1500, 1520, and 3000.
 
 (10) On printers that do not support variable drop size (see note (4)),
     this will print as fast as 360 DPI, and faster than 360 DPI High
