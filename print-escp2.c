@@ -86,8 +86,8 @@ escp2_write_weave(void *, FILE *, int, int, int, int, int, int,
 		  const unsigned char *c, const unsigned char *m,
 		  const unsigned char *y, const unsigned char *k,
 		  const unsigned char *C, const unsigned char *M);
-static void escp2_init_microweave();
-static void escp2_free_microweave();
+static void escp2_init_microweave(void);
+static void escp2_free_microweave(void);
 
 static void destroy_weave(void *);
 
@@ -2929,6 +2929,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.128  2000/04/22 23:27:18  rlk
+ *   Code cleanup
+ *
  *   Revision 1.127  2000/04/20 02:49:24  rlk
  *   Clean up the solid color and line art modes a bit.
  *

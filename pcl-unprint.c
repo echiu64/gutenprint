@@ -126,7 +126,7 @@ typedef struct {
 #define PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT 31
 #define PCL_PALETTE_CONFIGURATION 32
 
-typedef struct{
+typedef struct {
     char initial_command[3];		/* First part of command */
     char final_command;			/* Last part of command */
     int has_data;			/* Data follows */
@@ -186,7 +186,8 @@ commands_t pcl_commands[] =
  * pcl_find_command(). Search the commands table for the command.
  */
 
-int pcl_find_command() {
+int pcl_find_command(void)
+{
 
     int num_commands = sizeof(pcl_commands) / sizeof(commands_t);
     int i;
@@ -204,7 +205,8 @@ int pcl_find_command() {
  * fill_buffer() - Read a new chunk from the input file
  */
 
-void fill_buffer() {
+void fill_buffer(void)
+{
 
     if ((read_pointer == -1) || (read_pointer >= read_size)) {
 	read_size = (int) fread(&read_buffer, sizeof(char), 1024, read_fd);
@@ -229,7 +231,8 @@ void fill_buffer() {
  * command.
  */
 
-void pcl_read_command() {
+void pcl_read_command(void)
+{
 
     char c;
     int minus;
@@ -710,7 +713,8 @@ int decode_tiff(char *in_buffer,		/* I: Data buffer */
  * pcl_reset() - Rest image parameters to default
  */
 
-void pcl_reset(image_t *i) {
+void pcl_reset(image_t *i) 
+{
     i->colour_type = PCL_MONO;
     i->black_depth = 2;		/* Assume mono */
     i->cyan_depth = 0;
@@ -727,7 +731,8 @@ void pcl_reset(image_t *i) {
  * of 2, FIXME if not!
  */
 
-int depth_to_rows(int depth){
+int depth_to_rows(int depth)
+{
     int rows;
 
     if (depth == 0)
@@ -746,7 +751,8 @@ int depth_to_rows(int depth){
  * Main
  */
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
 
     int command_index;
     int command;
@@ -1527,6 +1533,9 @@ int main(int argc, char *argv[]) {
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.9  2000/04/22 23:27:18  rlk
+ *   Code cleanup
+ *
  *   Revision 1.8  2000/04/13 19:10:58  davehill
  *   Rewrote the "parser".
  *   Only try to decode Configure Raster Data if format is 2.

@@ -48,12 +48,12 @@ INCLUDES = \
 	$(GIMP_CFLAGS)			\
 	-I$(includedir)
 
-AM_CPPFLAGS = \
-        -DLOCALEDIR=\""$(localedir)"\"	\
-	-Wall				\
-	@LP_DEF@			\
-	@LPSTAT_DEF@			\
-	@LPR_DEF@			\
+AM_CPPFLAGS =					\
+        -DLOCALEDIR=\""$(localedir)"\"		\
+	-Wall -Wcast-align -Wstrict-prototypes	\
+	@LP_DEF@				\
+	@LPSTAT_DEF@				\
+	@LPR_DEF@				\
 	@LPC_DEF@
 
 print_LDADD = $(GIMP_LIBS)

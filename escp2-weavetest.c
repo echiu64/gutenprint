@@ -90,8 +90,8 @@ L  The subpass printed by the current pass is not consistent with an earlier\n\
 M  The same physical row is being printed more than once.\n";
 
 
-void
-print_header()
+static void
+print_header(void)
 {
   printf("%s", header);
 }
