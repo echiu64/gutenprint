@@ -58,6 +58,9 @@ Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
 9) The internationalization code has been reworked in this release.
    Please see the ChangeLog for more details.
 
+10) The unprinter uses considerably less memory when working on Epson
+   output generated at high resolution/quality settings.
+
 Known limitations of this release:
 
 1) The Epson Stylus C40UX (and very likely other printers in the C20
