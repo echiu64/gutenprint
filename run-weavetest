@@ -16,10 +16,15 @@ for jet in $jets ; do
 	    d=`echo $stuff | cut -f4 '-d '`
 	    e=`echo $stuff | cut -f5 '-d '`
 	    if [ $a -ge `expr $b \* $c \* $d \* $e` ] ; then
-		./escp2-weavetest $stuff 1000 > /dev/null 2>&1
+		./escp2-weavetest $stuff 10000 > /dev/null 2>&1
 		if [ $? -ne 0 ] ; then
+		    if [ -n "`echo $modes | grep $jet,$sep`" ] ; then
+			echo -n '*'
+		    else
+			echo -n ' '
+		    fi
 		    echo -n "$stuff  "
-		    ./escp2-weavetest $stuff 1000 | tail -1
+		    ./escp2-weavetest $stuff 10000 | tail -1
 		fi
 	    fi
 	done
