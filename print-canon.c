@@ -1110,7 +1110,7 @@ canon_print(const printer_t *printer,		/* I - Model */
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
-    if ((y & 255) == 0)
+    if ((y & 63) == 0)
       Image_note_progress(image, y, out_height);
 
     if (errline != errlast)
