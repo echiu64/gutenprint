@@ -43,7 +43,8 @@ if test x${BUILD_GIMP} = xyes ; then
     STP_PATH_GIMP(1.2.0,
                   [SAVE_GTK_LIBS="$GIMP_LIBS"
                    SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],
-                   AC_MSG_ERROR(Cannot find GIMP libraries: Please run ldconfig as root, make sure gimptool is on your PATH, and if applicable ensure that you have the GIMP, GTK, and GLIB development packages installed.))
+                  [AC_MSG_ERROR([Cannot find GIMP 1.2 libraries: Please run ldconfig as root, make sure gimptool is on your PATH, and if applicable ensure that you have the GIMP, GTK, and GLIB development packages installed.])
+                  ])
   fi
 fi
 
@@ -74,7 +75,7 @@ fi
 AC_DEFUN([STP_GIMP_PLUG_IN_DIR],
 [dnl Extract directory using --dry-run and sed
 if test x${BUILD_GIMP} = xyes ; then
-  AC_MSG_CHECKING([for GIMP plug-in directory])
+  AC_MSG_CHECKING([for GIMP 1.2 plug-in directory])
 # create temporary "plug-in" to install
   touch print
   chmod 755 print
@@ -85,7 +86,7 @@ if test x${BUILD_GIMP} = xyes ; then
 else
   gimp_plug_indir="$libdir/gimp/1.2/plug-ins"
 fi
-])  
+])
 
 
 # STP_GIMP2_PLUG_IN_DIR
@@ -103,4 +104,4 @@ if test x${BUILD_GIMP2} = xyes ; then
   GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | sed -e 's/.* \(.*\)\/print/\1/'`
   AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
 fi
-])  
+])

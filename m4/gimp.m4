@@ -5,15 +5,15 @@
 dnl STP_PATH_GIMP([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for GIMP, and define GIMP_CFLAGS and GIMP_LIBS
 dnl
-AC_DEFUN(STP_PATH_GIMP,
-[dnl 
+AC_DEFUN([STP_PATH_GIMP],
+[dnl
 dnl Get the cflags and libraries from the gimptool script
 dnl
-AC_ARG_WITH(gimp-prefix,[  --with-gimp-prefix=PFX  Prefix where GIMP is installed (optional)],
+AC_ARG_WITH(gimp-prefix,[  --with-gimp-prefix=PFX  Prefix where GIMP 1.2 is installed (optional)],
             gimptool_prefix="$withval", gimptool_prefix="")
-AC_ARG_WITH(gimp-exec-prefix,[  --with-gimp-exec-prefix=PFX Exec prefix where GIMP is installed (optional)],
+AC_ARG_WITH(gimp-exec-prefix,[  --with-gimp-exec-prefix=PFX Exec prefix where GIMP 1.2 is installed (optional)],
             gimptool_exec_prefix="$withval", gimptool_exec_prefix="")
-AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run a test GIMP program],
+AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run a test GIMP 1.2 program],
 		    , enable_gimptest=yes)
 
   if test x$gimptool_exec_prefix != x ; then
@@ -31,7 +31,7 @@ AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run
 
   AC_PATH_PROGS([GIMPTOOL], [gimptool-1.2 gimptool], no)
   min_gimp_version=ifelse([$1], ,1.0.0,$1)
-  AC_MSG_CHECKING(for GIMP - version >= $min_gimp_version)
+  AC_MSG_CHECKING(for GIMP 1.2 - version >= $min_gimp_version)
   no_gimp=""
   if test "$GIMPTOOL" = "no" ; then
     no_gimp=yes
@@ -68,7 +68,7 @@ AC_ARG_ENABLE(gimptest, [  --disable-gimptest      Do not try to compile and run
       CFLAGS="$CFLAGS $GIMP_CFLAGS"
       LIBS="$LIBS $GIMP_LIBS"
 dnl
-dnl Now check if the installed GIMP is sufficiently new. (Also sanity
+dnl Now check if the installed GIMP 1.2 is sufficiently new. (Also sanity
 dnl checks the results of gimptool to some extent
 dnl
       rm -f conf.gimptest
@@ -80,13 +80,12 @@ dnl
 
 #ifndef GIMP_CHECK_VERSION
 #define GIMP_CHECK_VERSION(major, minor, micro) \
-    (GIMP_MAJOR_VERSION > (major) || \
-     (GIMP_MAJOR_VERSION == (major) && GIMP_MINOR_VERSION > (minor)) || \
-     (GIMP_MAJOR_VERSION == (major) && GIMP_MINOR_VERSION == (minor) && \
-      GIMP_MICRO_VERSION >= (micro)))
+    (GIMP_MAJOR_VERSION == (major) && \
+     GIMP_MINOR_VERSION == (minor) && \
+     GIMP_MICRO_VERSION >= (micro))
 #endif
 
-#if GIMP_CHECK_VERSION(1,1,24)
+#if GIMP_CHECK_VERSION(1,2,0)
 GimpPlugInInfo
 #else
 GPlugInInfo
@@ -113,17 +112,17 @@ int main ()
      exit(1);
    }
 
-    if (($gimptool_major_version > major) ||
-        (($gimptool_major_version == major) && ($gimptool_minor_version > minor)) ||
-        (($gimptool_major_version == major) && ($gimptool_minor_version == minor) && ($gimptool_micro_version >= micro)))
+    if (($gimptool_major_version == major) &&
+        ($gimptool_minor_version == minor) &&
+        ($gimptool_micro_version >= micro))
     {
       return 0;
     }
   else
     {
-      printf("\n*** 'gimptool --version' returned %d.%d.%d, but the minimum version\n", $gimptool_major_version, $gimptool_minor_version, $gimptool_micro_version);
-      printf("*** of GIMP required is %d.%d.%d. If gimptool is correct, then it is\n", major, minor, micro);
-      printf("*** best to upgrade to the required version.\n");
+      printf("\n*** 'gimptool --version' returned %d.%d.%d, but the version\n", $gimptool_major_version, $gimptool_minor_version, $gimptool_micro_version);
+      printf("*** of GIMP 1.2 required is at least %d.%d.%d. If gimptool is\n", major, minor, micro);
+      printf("*** correct, then it is best to upgrade to the required version.\n");
       printf("*** If gimptool was wrong, set the environment variable GIMPTOOL\n");
       printf("*** to point to the correct copy of gimptool, and remove the file\n");
       printf("*** config.cache before re-running configure\n");
@@ -138,19 +137,19 @@ int main ()
   fi
   if test "x$no_gimp" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
      if test "$GIMPTOOL" = "no" ; then
-       echo "*** The gimptool script installed by GIMP could not be found"
-       echo "*** If GIMP was installed in PREFIX, make sure PREFIX/bin is in"
-       echo "*** your path, or set the GIMPTOOL environment variable to the"
-       echo "*** full path to gimptool."
+       echo "*** The gimptool script installed by GIMP 1.2 could not be"
+       echo "*** found.  If GIMP 1.2 was installed in PREFIX, make sure"
+       echo "*** PREFIX/bin is in your path, or set the GIMPTOOL"
+       echo "*** environment variable to the full path to gimptool."
      else
        if test -f conf.gimptest ; then
         :
        else
-          echo "*** Could not run GIMP test program, checking why..."
+          echo "*** Could not run GIMP 1.2 test program, checking why..."
           CFLAGS="$CFLAGS $GIMP_CFLAGS"
           LIBS="$LIBS $GIMP_LIBS"
           AC_TRY_LINK([
@@ -159,13 +158,12 @@ int main ()
 
 #ifndef GIMP_CHECK_VERSION
 #define GIMP_CHECK_VERSION(major, minor, micro) \
-    (GIMP_MAJOR_VERSION > (major) || \
-     (GIMP_MAJOR_VERSION == (major) && GIMP_MINOR_VERSION > (minor)) || \
-     (GIMP_MAJOR_VERSION == (major) && GIMP_MINOR_VERSION == (minor) && \
-      GIMP_MICRO_VERSION >= (micro)))
+    (GIMP_MAJOR_VERSION == (major) && \
+     GIMP_MINOR_VERSION == (minor) && \
+     GIMP_MICRO_VERSION >= (micro))
 #endif
 
-#if GIMP_CHECK_VERSION(1,1,24)
+#if GIMP_CHECK_VERSION(1,2,0)
 GimpPlugInInfo
 #else
 GPlugInInfo
@@ -178,19 +176,21 @@ PLUG_IN_INFO =
   NULL   /* run_proc */
 };
 ],      [ return 0; ],
-        [ echo "*** The test program compiled, but did not run. This usually means"
-          echo "*** that the run-time linker is not finding GIMP or finding the wrong"
-          echo "*** version of GIMP. If it is not finding GIMP, you'll need to set your"
-          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
-          echo "*** to the installed location  Also, make sure you have run ldconfig if that"
-          echo "*** is required on your system"
+        [ echo "*** The test program compiled, but did not run. This usually means that"
+          echo "*** the run-time linker is not finding GIMP 1.2 or is finding the wrong"
+          echo "*** version of GIMP.  If it is not finding GIMP 1.2, you'll need to set"
+          echo "*** your LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf"
+          echo "*** to point to the installed location.  Also, make sure you have run"
+          echo "*** ldconfig if that is required on your system."
 	  echo "***"
-          echo "*** If you have an old version installed, it is best to remove it, although"
-          echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH"],
-        [ echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means GIMP was incorrectly installed"
-          echo "*** or that you have moved GIMP since it was installed. In the latter case, you"
-          echo "*** may want to edit the gimptool script: $GIMPTOOL" ])
+          echo "*** If you have an old version installed, it is best to remove it,"
+          echo "*** although you may also be able to get things to work by modifying"
+          echo "*** LD_LIBRARY_PATH."],
+        [ echo "*** The test program failed to compile or link.  See the file config.log"
+          echo "*** for the exact error that occured.  This usually means GIMP 1.2 was"
+          echo "*** incorrectly installed or that you have moved GIMP 1.2 since it was"
+          echo "*** installed.  In the latter case, you may want to edit the gimptool"
+          echo "*** gimptool script: $GIMPTOOL" ])
           CFLAGS="$ac_save_CFLAGS"
           LIBS="$ac_save_LIBS"
        fi
