@@ -65,7 +65,7 @@ main (int argc, char **argv)
 @cindex character set
 @cindex internationalisation
 @cindex output encoding
-@deftypefun {const char *} stp_set_output_codeset(const char *@var{codeset})
+@deftypefun {const char *} stp_set_output_codeset (const char *@var{codeset})
 
 This function sets the encoding of translated strings returned by
 libgimpprint (if gettext support was enabled).  @var{codeset} is a
