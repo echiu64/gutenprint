@@ -86,6 +86,7 @@ static int horizontal_weave;	/* Number of horizontal passes required */
 				/* This is > 1 for some of the ultra-high */
 				/* resolution modes */
 static int vertical_subpasses;
+static int vmod;
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -111,8 +112,7 @@ get_color_by_params(int plane, int density)
  * Initialize the weave parameters
  */
 static void
-initialize_weave(int jets, int sep, int horizontal_passes,
-		 int v_subpasses)
+initialize_weave(int jets, int sep, int v_subpasses)
 {
   int i;
   int k;
@@ -124,11 +124,12 @@ initialize_weave(int jets, int sep, int horizontal_passes,
   else
     separation = sep;
   njets = jets;
-  if (horizontal_passes <= 0)
-    horizontal_passes = 1;
-  horizontal_weave = horizontal_passes;
+  if (v_subpasses <= 0)
+    v_subpasses = 1;
   vertical_subpasses = v_subpasses;
   njets /= vertical_subpasses;
+  vmod = separation * vertical_subpasses;
+  horizontal_weave = 1;
 
   weavefactor = njets / separation;
   jetsused = ((weavefactor) * separation);
@@ -139,15 +140,15 @@ initialize_weave(int jets, int sep, int horizontal_passes,
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * separation * jetsused * horizontal_passes);
-  lineoffsets = malloc(separation * sizeof(lineoff_t) * horizontal_passes);
-  linebases = malloc(separation * sizeof(linebufs_t) * horizontal_passes);
-  passes = malloc(separation * sizeof(pass_t));
-  linecounts = malloc(separation * sizeof(int));
+  linebufs = malloc(6 * 1536 * vmod * jetsused * horizontal_weave);
+  lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
+  linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
+  passes = malloc(vmod * sizeof(pass_t));
+  linecounts = malloc(vmod * sizeof(int));
 
   bufbase = linebufs;
   
-  for (i = 0; i < separation; i++)
+  for (i = 0; i < vmod; i++)
     {
       int j;
       passes[i].pass = -1;
@@ -155,36 +156,61 @@ initialize_weave(int jets, int sep, int horizontal_passes,
 	{
 	  for (j = 0; j < 6; j++)
 	    {
-	      linebases[i * horizontal_weave + k].v[j] = bufbase;
+	      linebases[k * vmod + i].v[j] = bufbase;
 	      bufbase += 1536 * jetsused;
 	    }
 	}
     }
 }
 
-
 static lineoff_t *
-get_lineoffsets(int row)
+get_lineoffsets(int row, int subpass)
 {
-  return &(lineoffsets[horizontal_weave * (row % separation)]);
+  return &(lineoffsets[horizontal_weave *
+		      ((row + subpass * separation) % vmod)]);
 }
 
 static int *
-get_linecount(int row)
+get_linecount(int row, int subpass)
 {
-  return &(linecounts[row % separation]);
+  return &(linecounts[(row + subpass * separation) % vmod]);
 }
 
 static const linebufs_t *
-get_linebases(int row)
+get_linebases(int row, int subpass)
 {
-  return &(linebases[horizontal_weave * (row % separation)]);
+  return &(linebases[horizontal_weave *
+		    ((row + subpass * separation) % vmod)]);
 }
 
 static pass_t *
-get_pass(int row_or_pass)
+get_pass_by_row(int row, int subpass)
 {
-  return &(passes[row_or_pass % separation]);
+  return &(passes[(row + subpass * separation) % vmod]);
+}
+
+static lineoff_t *
+get_lineoffsets_by_pass(int pass)
+{
+  return &(lineoffsets[pass % vmod]);
+}
+
+static int *
+get_linecount_by_pass(int pass)
+{
+  return &(linecounts[pass % vmod]);
+}
+
+static const linebufs_t *
+get_linebases_by_pass(int pass)
+{
+  return &(linebases[pass % vmod]);
+}
+
+static pass_t *
+get_pass_by_pass(int pass)
+{
+  return &(passes[pass % vmod]);
 }
 
 /*
@@ -198,9 +224,6 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 {
   int passblockstart = (row + initialoffset) / jetsused;
   int internaljetsused = jetsused * vertical_subpasses;
-  int passoffset;
-  int internallogicalpassstart;
-  int old_vertical_subpass = vertical_subpass;
   int subpass_adjustment;
 
   w->row = row;
@@ -234,9 +257,9 @@ weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 }
 
 int nrows = 1000;
-int physjets = 32;
+int physjets = 48;
 int physsep = 8;
-int physpasses = 1;
+int physpasses = 4;
 
 int
 main(int argc, char **argv)
@@ -255,7 +278,7 @@ main(int argc, char **argv)
   char *rowdetail = malloc(nrows * physjets);
   memset(rowdetail, 0, nrows * physjets);
   memset(physpassstuff, -1, nrows);
-  initialize_weave(physjets, physsep, 1, physpasses);
+  initialize_weave(physjets, physsep, physpasses);
   printf("%13s %5s %5s %5s %10s %10s %10s %10s\n", "", "row", "pass", "jet",
 	 "missing", "logical", "physstart", "physend");
   for (i = 0; i < nrows; i++)
