@@ -999,52 +999,75 @@ do {								\
     }								\
 } while(0)
 
-#define PRINT_COLOR(color, r, R, d1, d2)				     \
-do {									     \
-  int comp0 = r##_offset + (ditherbit##d2 >> d->r##_randomizer);	     \
-  if (!l##color)							     \
-    {									     \
-      if (r > comp0)							     \
-	{								     \
-	  DO_PRINT_COLOR(r);						     \
-	  r -= 65536 << d->overdensity_bits;				     \
-	}								     \
-    }									     \
-  else									     \
-    {									     \
-      int compare = (comp0 * d->l##r##_level) >> 16;			     \
-      if (r <= (d->l##r##_level))					     \
-	{								     \
-	  if (r > compare)						     \
-	    {								     \
-	      DO_PRINT_COLOR(l##r);					     \
-	      r -= d->l##r##_level << d->overdensity_bits;		     \
-	    }								     \
-	}								     \
-      else if (r > compare)						     \
-	{								     \
-	  int cutoff = ((density - d->l##r##_level) * 65536 / d->l##r##_level); \
-	  int sub;							     \
-	  if (cutoff >= 0)						     \
-	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
-	  else								     \
-	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
-	  if (ditherbit##d1 > cutoff)					     \
-	    {								     \
-	      DO_PRINT_COLOR(r);					     \
-	    }								     \
-	  else								     \
-	    {								     \
-	      DO_PRINT_COLOR(r);					     \
-	    }								     \
-	  if (sub < d->l##r##_level)					     \
-	    r -= d->l##r##_level << d->overdensity_bits;		     \
-	  else if (sub > 65535)						     \
-	    r -= 65536 << d->overdensity_bits;				     \
-	  else								     \
-	    r -= sub << d->overdensity_bits;				     \
-	}								     \
-    }									     \
+/*
+  offset = 32768 - (32768 >> randomizer);
+  comp0 = offset + (ditherbit##d2 >> randomizer);
+*/
+
+#define PRINT_COLOR(color, r, R, d1, d2)				\
+do {									\
+  int randomizer, offset, comp0;					\
+  int dtmp = 32768 >> d->r##_randomizer;				\
+  if (o##r >= 128 * dtmp)						\
+    {									\
+      offset = 32768;							\
+      comp0 = offset;							\
+    }									\
+  else if (o##r <= 128 || dtmp <= 1)					\
+    {									\
+      offset = 32768 - dtmp;						\
+      comp0 = offset + (ditherbit##d2 >> d->r##_randomizer);		\
+    }									\
+  else									\
+    {									\
+      int scale = dtmp - (o##r / 128);					\
+      offset = 32768 - scale;						\
+      comp0 = offset + (ditherbit##d2 / (65536 / scale));		\
+    }									\
+  if (!l##color)							\
+    {									\
+      if (r > comp0)							\
+	{								\
+	  DO_PRINT_COLOR(r);						\
+	  r -= 65536 << d->overdensity_bits;				\
+	}								\
+    }									\
+  else									\
+    {									\
+      int compare = (comp0 * d->l##r##_level) >> 16;			\
+      if (r <= (d->l##r##_level))					\
+	{								\
+	  if (r > compare)						\
+	    {								\
+	      DO_PRINT_COLOR(l##r);					\
+	      r -= d->l##r##_level << d->overdensity_bits;		\
+	    }								\
+	}								\
+      else if (r > compare)						\
+	{								\
+	  int cutoff = ((density - d->l##r##_level) * 65536 /		\
+			d->l##r##_level);				\
+	  int sub;							\
+	  if (cutoff >= 0)						\
+	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	\
+	  else								\
+	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	\
+	  if (ditherbit##d1 > cutoff)					\
+	    {								\
+	      DO_PRINT_COLOR(r);					\
+	    }								\
+	  else								\
+	    {								\
+	      DO_PRINT_COLOR(r);					\
+	    }								\
+	  if (sub < d->l##r##_level)					\
+	    r -= d->l##r##_level << d->overdensity_bits;		\
+	  else if (sub > 65535)						\
+	    r -= 65536 << d->overdensity_bits;				\
+	  else								\
+	    r -= sub << d->overdensity_bits;				\
+	}								\
+    }									\
 } while (0)
 
 #define UPDATE_DITHER(r, d2, x, width)				\
@@ -1980,6 +2003,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.14  2000/03/16 03:20:20  rlk
+ *   Scale down randomness as ink level increases
+ *
  *   Revision 1.13  2000/03/13 13:31:26  rlk
  *   Add monochrome mode
  *
