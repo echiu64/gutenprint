@@ -317,6 +317,10 @@ AC_PATH_PROG(DB2PDF, db2pdf)
 AC_PATH_PROG(DB2PS, db2ps)
 AC_PATH_PROG(DB2HTML, db2html)
 AC_PATH_PROG(PS2PDF, ps2pdf)
+AC_PATH_PROG(PDFJADETEX, pdfjadetex)
+if test x${PDFJADETEX} = x ; then
+  AC_MSG_WARN([PDF documentation cannot be generated!])
+fi
 AC_PATH_PROG(JADE, jade)
 AC_PATH_PROG(GZIP, gzip)
 AC_PATH_PROG(PS2PDF, ps2pdf)

@@ -3,7 +3,7 @@
 
  <bookinfo>
   <title>The User's Guide to the Gimp-Print Top Quality Printer Drivers</title>
-  <date>September 30, 2001</date>
+  <date>October 10, 2001</date>
   <author>
     <firstname>Andy</firstname>
     <surname>Stewart</surname>
@@ -19,7 +19,7 @@ Stewart</para>
     <para>Permission is granted to copy, distribute and/or modify this
 document under the terms of the GNU Free Documentation License,
 Version 1.1 or any later version published by the Free Software
-Foundation.  A copy of the license is included in <xref linkend="gfdl"></xref>.</para>
+Foundation.  A copy of the license is included in <xref linkend="gfdl">.</para>
 
   </legalnotice>
 
@@ -209,10 +209,10 @@ look something like this:
    <figure><title>The Startup Window for The GIMP</title>
    <mediaobject>
    <imageobject>
-   <imagedata fileref="figures/gimp_startup.eps" FORMAT="EPS"></imagedata>
+   <imagedata fileref="figures/gimp_startup.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata fileref="figures/gimp_startup.png" FORMAT="PNG"></imagedata>
+   <imagedata fileref="figures/gimp_startup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>Startup window for The GIMP</phrase>
@@ -237,10 +237,10 @@ anybody the secret!):
    <figure><title>A Sample Image Displayed by The GIMP</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="50" fileref="figures/gimp_image.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="50" fileref="figures/gimp_image.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="50" fileref="figures/gimp_image.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="50" fileref="figures/gimp_image.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>A Sample Image displayed by The Gimp</phrase>
@@ -262,7 +262,7 @@ Choose the
       <guimenuitem>Print</guimenuitem>
     </menuchoice>
 menu option. This will cause the Gimp-Print GUI window to appear (see
-<xref linkend="fig_gimp_print_gui"></xref>). Move the mouse cursor
+<xref linkend="fig_gimp_print_gui">). Move the mouse cursor
 over the various parts of the Gimp-Print GUI window, and notice that
 if you leave your mouse in one place for a short time without clicking
 any buttons, a small box appears.  This box contains helpful text.
@@ -271,8 +271,8 @@ about the function of each part of the graphical interface.
     </para>
     <para>
 The next several sections will continuously refer to 
-<xref linkend="fig_gimp_print_gui"></xref> and 
-<xref linkend="fig_gimp_print_gui_1"></xref>.  The difference between
+<xref linkend="fig_gimp_print_gui"> and 
+<xref linkend="fig_gimp_print_gui_1">.  The difference between
 the two figures can be seen in the top right corner of the window.
 Notice that there are two tabs, one which reads 
 <guilabel>Printer Settings</guilabel> and another which reads
@@ -304,10 +304,10 @@ the major sections of this document:
    <figure id="fig_gimp_print_gui"><title>The Gimp-Print Graphical User Interface 1 (GUI)</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="40" fileref="figures/gimp-print-gui.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="40" fileref="figures/gimp-print-gui.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The GIMP Print GUI showing printer settings</phrase>
@@ -318,10 +318,10 @@ the major sections of this document:
    <figure id="fig_gimp_print_gui_1"><title>The Gimp-Print Graphical User Interface 2 (GUI)</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui-1.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="40" fileref="figures/gimp-print-gui-1.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="40" fileref="figures/gimp-print-gui-1.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="40" fileref="figures/gimp-print-gui-1.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The GIMP Print GUI showing image/output settings</phrase>
@@ -335,8 +335,8 @@ the major sections of this document:
     <sect3><title>Printer</title>
     <para>
       Click on the <guilabel>Printer Settings</guilabel> tab near the
-top right hand corner of the window (see <xref
-linkend="fig_gimp_print_gui"></xref>).  Then, click on the downward
+top right hand corner of the window (see 
+<xref linkend="fig_gimp_print_gui">).  Then, click on the downward
 facing arrow to the right of the <guilabel>Printer</guilabel> combo
 box to see a list of the system printer queues.  Select the queue to which
 you would like the printed image to be sent.  One may also print the
@@ -369,10 +369,10 @@ following window appears:
    <figure><title>The Setup Printer Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="60" fileref="figures/gimp-print-setup.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="60" fileref="figures/gimp-print-setup.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="60" fileref="figures/gimp-print-setup.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="60" fileref="figures/gimp-print-setup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The Setup Printer Window</phrase>
@@ -420,10 +420,10 @@ appear thus:
    <figure><title>The New Printer Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata fileref="figures/gimp-print-new-printer.eps" FORMAT="EPS"></imagedata>
+   <imagedata fileref="figures/gimp-print-new-printer.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata fileref="figures/gimp-print-new-printer.png" FORMAT="PNG"></imagedata>
+   <imagedata fileref="figures/gimp-print-new-printer.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The New Printer Window</phrase>
@@ -779,7 +779,7 @@ top, bottom, bottom border) and the two size boxes (width and height).
    <para>
    By clicking on the tab labeled <guilabel>Image/Output
 Settings</guilabel>, the Gimp-Print window will appear as shown in 
-<xref linkend="fig_gimp_print_gui_1"></xref>.  Notice that there are
+<xref linkend="fig_gimp_print_gui_1">.  Notice that there are
 two sections to this portion of the window, namely, 
 <guilabel>Image Type</guilabel> and
 <guilabel>Output Type</guilabel>.
@@ -831,7 +831,7 @@ setting can be see in the preview window.
    <sect3><title>Adjust Output</title>
     <para>
       Clicking on this button causes the <guilabel>Print Color Adjust</guilabel> window to
-appear (see <xref linkend="fig_gimp-print-color-adjust"></xref>).  In
+appear (see <xref linkend="fig_gimp-print-color-adjust">).  In
 this window, one will see a representation of the image to be printed
 as well as several slider bars.  These slider bars collectively adjust
 many different aspects of the image.  The values can also be adjusted
@@ -842,10 +842,10 @@ box on the right side of each slider bar.
    <figure id="fig_gimp-print-color-adjust"><title>The Print Color Adjust Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="50" fileref="figures/gimp-print-print-color-adjust.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>>The Print Color Adjust Window</phrase>
@@ -1040,10 +1040,10 @@ following screen should appear within your browser.
    <figure><title>The CUPS Startup Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_startup.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_startup.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_startup.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_startup.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Startup Window</phrase>
@@ -1061,10 +1061,10 @@ have not yet configured any printers.
    <figure><title>The CUPS Printers Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_printers.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_printers.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_printers.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_printers.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Printers Window</phrase>
@@ -1080,10 +1080,10 @@ You will then see the Admin screen (shown below).
    <figure><title>The CUPS Admin Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_admin.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_admin.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_admin.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_admin.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Admin Window</phrase>
@@ -1102,10 +1102,10 @@ the <guibutton>Continue</guibutton> button, and then this screen will appear.
    <figure><title>The CUPS Admin Device Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_device.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="35" fileref="figures/cups_admin_device.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_device.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="35" fileref="figures/cups_admin_device.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Admin Device Window</phrase>
@@ -1125,10 +1125,10 @@ which to choose.  Once the selection is made, click the
    <figure><title>The CUPS Admin Model/Driver Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_make.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="35" fileref="figures/cups_admin_make.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="35" fileref="figures/cups_admin_make.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="35" fileref="figures/cups_admin_make.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Admin Model/Driver Window</phrase>
@@ -1145,10 +1145,10 @@ asks you to select the specific model number for your printer.
    <figure><title>The 2nd CUPS Admin Model/Driver Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_model.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_admin_model.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_model.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_admin_model.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The 2nd CUPS Admin Model/Driver Window</phrase>
@@ -1172,10 +1172,10 @@ Once you have made the proper selection, click on the
    <figure><title>The CUPS Admin Success Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_success.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_admin_success.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_admin_success.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_admin_success.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Admin Success Window</phrase>
@@ -1189,16 +1189,16 @@ your printer was successfully installed.  Notice the sentence which
 reads "Printer your_printer has been added successfully".  Click on
 your_printer, which will be the underlined name for your printer.
 After doing so, your window will appear something 
-<xref linkend="fig_cups_my_printer"></xref>.
+<xref linkend="fig_cups_my_printer">.
    </para>
 
    <figure id="fig_cups_my_printer"><title>The CUPS Window for Your Printer</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_my_printer.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_my_printer.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="45" fileref="figures/cups_my_printer.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="45" fileref="figures/cups_my_printer.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Window for Your Printer</phrase>
@@ -1219,26 +1219,26 @@ revision.
    <sect1><title>Configuring your Printer in CUPS</title>
 
      <para>
-With reference to <xref linkend="fig_cups_my_printer"></xref>, click
+With reference to <xref linkend="fig_cups_my_printer">, click
 on the <guibutton>Configure Printer</guibutton> button.  A partial
 screenshot of the printer configuration window appears in 
-<xref linkend="fig_cups_printer_config_window"></xref>.  
+<xref linkend="fig_cups_printer_config_window">.  
 The contents of this window will vary depending on precisely which
 printer you selected when you configured CUPS for your printer.  The
 screenshot shows the selections made by the author for his printer.
 The individual selections will not be explained in detail here, as
 they are the same selections which are available when using the
 Gimp-Print plugin to the GIMP.  These selections are explained in
-detail in various sections of <xref linkend="ch_gimp_and_gimp-print"></xref>.
+detail in various sections of <xref linkend="ch_gimp_and_gimp-print">.
    </para>
 
    <figure id="fig_cups_printer_config_window"><title>The CUPS Printer Cofiguration Window</title>
    <mediaobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_config_printer.eps" FORMAT="EPS"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_config_printer.eps" FORMAT="EPS">
    </imageobject>
    <imageobject>
-   <imagedata scale="30" fileref="figures/cups_config_printer.png" FORMAT="PNG"></imagedata>
+   <imagedata scale="30" fileref="figures/cups_config_printer.png" FORMAT="PNG">
    </imageobject>
    <textobject>
    <phrase>The CUPS Printer Configuration Window</phrase>
@@ -1307,7 +1307,7 @@ followed by some of the supported choices, are shown below:
    ]]>
    </programlisting>
 
-For more detailed information, consult the appropriate sections of <xref linkend="ch_gimp_and_gimp-print"></xref>.
+For more detailed information, consult the appropriate sections of <xref linkend="ch_gimp_and_gimp-print">.
    </para>
 
    </sect1>

@@ -84,23 +84,30 @@ dist-hook: $(STANDARD_TARGETS)
 	fi ; \
 	done
 
-#
-# This generates nicer PDF than the uncommented method.
-# However, the pictures are missing.  I don't know
-# what format to supply to DocBook get the correct output.
-#
-#$(MANUAL).pdf:  $(MANUAL).sgml $(PDF_IMAGES)
-#	export SGML_CATALOG_FILES=$(CATALOG_FILES); \
-#	$(DB2PDF) $(srcdir)/$(MANUAL).sgml
+$(MANUAL).pdf:  $(MANUAL).sgml
+	$(JADE)	-V tex-backend \
+		-t tex \
+		-c /usr/share/sgml/CATALOG.jade_dsl \
+		-c /usr/share/sgml/CATALOG.docbook-dsssl-stylesheets \
+		-c /usr/share/sgml/CATALOG.gnome \
+		-c /usr/share/sgml/CATALOG.docbook_4 \
+		-c /usr/share/sgml/CATALOG.docbook_3 \
+		-D /usr/share/sgml/docbook/docbook-dsssl-stylesheets-1.64 \
+		-d /usr/share/sgml/docbook-toys/suse-both.dsl \
+		-o ./$(MANUAL).tex \
+		./$(MANUAL).sgml
+
+	cat $(MANUAL).tex | sed -e s/\.eps/\.png/g >> $(MANUAL).tmp.tex
+	$(PDFJADETEX) $(MANUAL).tmp
+	$(PDFJADETEX) $(MANUAL).tmp
+	$(PDFJADETEX) $(MANUAL).tmp
+	mv $(MANUAL).tmp.pdf $(MANUAL).pdf
 
 docs: html-stamp ps pdf
 
 all-local: docs
 
 pdf: $(MANUAL).pdf
-
-$(MANUAL).pdf: $(MANUAL).ps
-	$(PS2PDF) $(MANUAL).ps $(MANUAL).pdf
 
 %.pdf:
 	$(CONVERT) $(srcdir)/$(basename $@).png EPDF:$@
@@ -169,10 +176,8 @@ clean-local: clean-figures
 	else \
 	  $(RM) html-stamp $(HTMLDIR) ; \
 	fi
-	$(RM) -r $(OUTPUTS)
-	$(RM) *.tex *.log *.aux *.dvi *.gz
-	$(RM) -r $(MANUAL).junk
-	$(RM) -r $(MANUAL).out
+	$(RM) -r $(MANUAL).pdf $(MANUAL).ps
+	$(RM) *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out
 	$(RM) -r db2html*
 	$(RM) -r DB2HTML*
 
