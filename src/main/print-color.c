@@ -1542,8 +1542,13 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
   double *tmp = stp_malloc(sizeof(double) * steps);
   double pivot = .25;
   double ipivot = 1.0 - pivot;
+  double xcontrast = pow(contrast, contrast);
+  double xgamma = pow(pivot, screen_gamma);
   int i;
-  for (i = 0; i < steps; i ++)
+  int isteps = steps;
+  if (steps > 256)
+    isteps = 256;
+  for (i = 0; i < isteps; i ++)
     {
       double temp_pixel, pixel;
       pixel = (double) i / (double) (steps - 1);
@@ -1568,7 +1573,7 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
       if (temp_pixel <= .000001 && contrast <= .0001)
 	temp_pixel = .5;
       else if (temp_pixel > 1)
-	temp_pixel = .5 * pow(2 * temp_pixel, pow(contrast, contrast));
+	temp_pixel = .5 * pow(2 * temp_pixel, xcontrast);
       else if (temp_pixel < 1)
 	temp_pixel = 0.5 -
 	  ((0.5 - .5 * pow(2 * temp_pixel, contrast)) * contrast);
@@ -1594,8 +1599,8 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
        */
 
       pixel = 1.0 -
-	(1.0 / (1.0 - pow(pivot, screen_gamma))) *
-	(pow(pivot + ipivot * pixel, screen_gamma) - pow(pivot, screen_gamma));
+	(1.0 / (1.0 - xgamma)) *
+	(pow(pivot + ipivot * pixel, screen_gamma) - xgamma);
 
       /*
        * Third, fix up cyan, magenta, yellow values
@@ -1625,7 +1630,9 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
       else
 	tmp[i] = (pixel);
     }
-  stp_curve_set_data(curve, steps, tmp);
+  stp_curve_set_data(curve, isteps, tmp);
+  if (isteps != steps)
+    stp_curve_resample(curve, steps);
   stp_free(tmp);
 }
 
