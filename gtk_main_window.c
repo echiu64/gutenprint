@@ -52,6 +52,7 @@ extern const printer_t *current_printer;
 extern int runme;
 extern int saveme;
 extern GtkWidget* gtk_color_adjust_dialog;
+extern void gtk_do_color_updates(void);
 
 void  printrc_save(void);
 
@@ -1169,6 +1170,18 @@ static void gtk_scaling_update(GtkAdjustment *adjustment) /* I - New value */
 static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
 {
   gfloat	new_value;		/* New scaling value */
+  double max_ppi_scaling;
+  double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+  double current_scale;
+  min_ppi_scaling1 = 72.0 * (double) image_width /
+    (double) printable_width;
+  min_ppi_scaling2 = 72.0 * (double) image_height /
+    (double) printable_height;
+  if (min_ppi_scaling1 > min_ppi_scaling2)
+    min_ppi_scaling = min_ppi_scaling1;
+  else
+    min_ppi_scaling = min_ppi_scaling2;
+  max_ppi_scaling = min_ppi_scaling * 20;
 
 
   if (widget == scaling_entry)
@@ -1190,20 +1203,35 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
   {
     if (!(GTK_TOGGLE_BUTTON(scaling_ppi)->active))
       return;
-    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-    GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
-    GTK_ADJUSTMENT(scaling_adjustment)->value = 72.0;
+    GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
+    GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling + 1;
+
+    /*
+     * Compute the correct PPI to create an image of the same size
+     * as the one measured in percent
+     */
+    current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
+    GTK_ADJUSTMENT (scaling_adjustment)->value =
+      min_ppi_scaling / (current_scale / 100);
     vars.scaling = 0.0;
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
   else if (widget == scaling_percent)
   {
+    double new_percent;
     if (!(GTK_TOGGLE_BUTTON(scaling_percent)->active))
       return;
+    current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
     GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
     GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
-    GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
+
+    new_percent = 100 * min_ppi_scaling / current_scale;
+    if (new_percent > 100)
+      new_percent = 100;
+    if (new_percent < 5)
+      new_percent = 5;
+    GTK_ADJUSTMENT (scaling_adjustment)->value = new_percent;
     vars.scaling = 0.0;
     plist[plist_current].v.scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
@@ -1213,8 +1241,13 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
   {
     double xres, yres;
     gimp_image_get_resolution(image_ID, &xres, &yres);
-    GTK_ADJUSTMENT(scaling_adjustment)->lower = 36.0;
-    GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
+    GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
+    GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling + 1;
+    if (yres < min_ppi_scaling)
+      yres = min_ppi_scaling;
+    if (yres > max_ppi_scaling)
+      yres = max_ppi_scaling;
+
     GTK_ADJUSTMENT(scaling_adjustment)->value = yres;
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
     vars.scaling = 0.0;
@@ -2054,6 +2087,8 @@ static void gtk_preview_update(void)
   int		temp,		/* Swapping variable */
 		orient;		/* True orientation of printable */
   double	min_ppi_scaling;/* Minimum PPI for current page size */
+  double	min_ppi_scaling1;   /* Minimum PPI for current page size */
+  double	min_ppi_scaling2;   /* Minimum PPI for current page size */
   int           paper_left, paper_top;
   static GdkGC	*gc = NULL,	/* Normal graphics context */
 		*gcinv = NULL;	/* GC for inverted drawing (arrow) */
@@ -2122,10 +2157,12 @@ static void gtk_preview_update(void)
     top               = temp;
   }
 
-  if (orient == ORIENT_PORTRAIT)
-    min_ppi_scaling = 72.0 * (double) image_width / (double) printable_width;
+  min_ppi_scaling1 = 72.0 * (double) image_width / (double) printable_width;
+  min_ppi_scaling2 = 72.0 * (double) image_height / (double) printable_height;
+  if (min_ppi_scaling1 > min_ppi_scaling2)
+    min_ppi_scaling = min_ppi_scaling1;
   else
-    min_ppi_scaling = 72.0 * (double) image_height / (double) printable_height;
+    min_ppi_scaling = min_ppi_scaling2;
 
   if (vars.scaling < 0 && vars.scaling > -min_ppi_scaling)
     vars.scaling = -min_ppi_scaling;

@@ -1,5 +1,15 @@
 2000-07-18	<rlk@sourceforge.net>
 
+	Files:	ChangeLog (1.25) (+18 -0)
+		print_gimp.h (1.23) (+2 -2)
+		configure.in (1.21) (+1 -1)
+		RELNOTES (1.15) (+26 -1)
+		README (1.20) (+34 -5)
+	
+	3.1.9 release
+	
+2000-07-18	<rlk@sourceforge.net>
+
 	Files:	ChangeLog (1.24) (+85 -0)
 		print.c (1.104) (+2 -11)
 		print-dither.c (1.73) (+8 -8)

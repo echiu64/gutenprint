@@ -1450,7 +1450,7 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	  /*
 	   * Lay down all of the bits in the pixel.
 	   */
-	  if (!dontprint && *ink_budget >= dot_size)
+	  if (dontprint < v && *ink_budget >= dot_size)
 	    {
 	      for (j = 1; j <= bits; j += j, tptr += length)
 		{
@@ -2061,7 +2061,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 			       NULL, bit, length, 0, 0, &ink_budget,
 			       &(d->k_pick), &(d->k_dithermat), D_ORDERED);
 	  if (tk != k)
-	    printed_black = 1;
+	    printed_black = k - tk;
 	  k = tk;
 	}
 
