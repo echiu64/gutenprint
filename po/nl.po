@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Gimp-print 4.2.1\n"
-"POT-Creation-Date: 2003-08-08 19:13-0400\n"
+"POT-Creation-Date: 2003-09-01 17:40-0400\n"
 "PO-Revision-Date: 2002-03-15 20:31+0100\n"
 "Last-Translator: Hylke Witjens <hylke@wwd.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -68,7 +68,7 @@ msgstr "%s: optie `-W %s' is dubbelzinnig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: optie `-W %s' staat geen argument toe\n"
 
-#: src/main/dither-main.c:46 src/main/print-color.c:2449
+#: src/main/dither-main.c:46 src/main/print-color.c:2434
 msgid "Default"
 msgstr ""
 
@@ -289,11 +289,11 @@ msgstr "2400x600 DPI"
 msgid "2400x2400 DPI DMT"
 msgstr "2400x600 DPI"
 
-#: src/main/print-canon.c:1199 src/main/print-lexmark.c:877
+#: src/main/print-canon.c:1199 src/main/print-lexmark.c:862
 msgid "Plain Paper"
 msgstr "Blank papier"
 
-#: src/main/print-canon.c:1200 src/main/print-lexmark.c:883
+#: src/main/print-canon.c:1200 src/main/print-lexmark.c:870
 msgid "Transparencies"
 msgstr "Transparanten"
 
@@ -333,136 +333,136 @@ msgstr "Glanzende fotokaarten"
 msgid "Photo Paper Pro"
 msgstr "Professioneel fotopapier"
 
-#: src/main/print-canon.c:1210 src/main/print-lexmark.c:913
+#: src/main/print-canon.c:1210 src/main/print-lexmark.c:910
 msgid "Other"
 msgstr "Overige"
 
-#: src/main/print-canon.c:1218 src/main/print-escp2.c:113
-#: src/main/print-lexmark.c:282 src/main/print-pcl.c:1116
+#: src/main/print-canon.c:1218 src/main/print-escp2.c:120
+#: src/main/print-lexmark.c:267 src/main/print-pcl.c:1116
 #: src/main/print-ps.c:67
 #, fuzzy
 msgid "Page Size"
 msgstr "Grootte"
 
-#: src/main/print-canon.c:1219 src/main/print-escp2.c:114
-#: src/main/print-lexmark.c:283 src/main/print-pcl.c:1117
+#: src/main/print-canon.c:1219 src/main/print-escp2.c:121
+#: src/main/print-lexmark.c:268 src/main/print-pcl.c:1117
 #: src/main/print-ps.c:68
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "Grootte van het papaier waarop je wenst te printen"
 
-#: src/main/print-canon.c:1224 src/main/print-escp2.c:119
-#: src/main/print-lexmark.c:288 src/main/print-pcl.c:1122
+#: src/main/print-canon.c:1224 src/main/print-escp2.c:126
+#: src/main/print-lexmark.c:273 src/main/print-pcl.c:1122
 #: src/main/print-ps.c:73 src/cups/genppd.c:1014
 msgid "Media Type"
 msgstr "Medium Type"
 
-#: src/main/print-canon.c:1225 src/main/print-escp2.c:120
-#: src/main/print-lexmark.c:289 src/main/print-pcl.c:1123
+#: src/main/print-canon.c:1225 src/main/print-escp2.c:127
+#: src/main/print-lexmark.c:274 src/main/print-pcl.c:1123
 #: src/main/print-ps.c:74
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/main/print-canon.c:1230 src/main/print-escp2.c:125
-#: src/main/print-lexmark.c:294 src/main/print-pcl.c:1128
+#: src/main/print-canon.c:1230 src/main/print-escp2.c:132
+#: src/main/print-lexmark.c:279 src/main/print-pcl.c:1128
 #: src/main/print-ps.c:79 src/cups/genppd.c:1038
 msgid "Media Source"
 msgstr "Medium Bron"
 
-#: src/main/print-canon.c:1231 src/main/print-escp2.c:126
-#: src/main/print-lexmark.c:295 src/main/print-pcl.c:1129
+#: src/main/print-canon.c:1231 src/main/print-escp2.c:133
+#: src/main/print-lexmark.c:280 src/main/print-pcl.c:1129
 #: src/main/print-ps.c:80
 msgid "Source (input slot) of the media"
 msgstr ""
 
-#: src/main/print-canon.c:1236 src/main/print-escp2.c:142
-#: src/main/print-lexmark.c:300 src/main/print-pcl.c:1134
+#: src/main/print-canon.c:1236 src/main/print-escp2.c:149
+#: src/main/print-lexmark.c:285 src/main/print-pcl.c:1134
 #: src/main/print-ps.c:85 src/main/print-raw.c:81
 msgid "Ink Type"
 msgstr "Inkt type"
 
-#: src/main/print-canon.c:1237 src/main/print-escp2.c:143
-#: src/main/print-escp2.c:149 src/main/print-lexmark.c:301
+#: src/main/print-canon.c:1237 src/main/print-escp2.c:150
+#: src/main/print-escp2.c:156 src/main/print-lexmark.c:286
 #: src/main/print-pcl.c:1135 src/main/print-ps.c:86 src/main/print-raw.c:82
 msgid "Type of ink in the printer"
 msgstr "Type inkt van de printer"
 
-#: src/main/print-canon.c:1242 src/main/print-escp2.c:131
-#: src/main/print-lexmark.c:306 src/main/print-pcl.c:1140
+#: src/main/print-canon.c:1242 src/main/print-escp2.c:138
+#: src/main/print-lexmark.c:291 src/main/print-pcl.c:1140
 #: src/main/print-ps.c:91 src/cups/genppd.c:1110
 msgid "Resolution"
 msgstr "Resolutie"
 
-#: src/main/print-canon.c:1243 src/main/print-lexmark.c:307
+#: src/main/print-canon.c:1243 src/main/print-lexmark.c:292
 #: src/main/print-pcl.c:1141 src/main/print-ps.c:92
 msgid "Resolution and quality of the print"
 msgstr "Resolutie en kwaliteit van de afdruk"
 
 #: src/main/print-canon.c:1248 src/main/print-canon.c:1249
-#: src/main/print-escp2.c:208 src/main/print-escp2.c:209
-#: src/main/print-lexmark.c:312 src/main/print-lexmark.c:313
+#: src/main/print-escp2.c:215 src/main/print-escp2.c:216
+#: src/main/print-lexmark.c:297 src/main/print-lexmark.c:298
 #: src/main/print-pcl.c:1146 src/main/print-pcl.c:1147
 msgid "Ink Channels"
 msgstr ""
 
-#: src/main/print-canon.c:1271 src/main/print-escp2.c:260
-#: src/main/print-lexmark.c:335 src/main/print-pcl.c:1169
+#: src/main/print-canon.c:1271 src/main/print-escp2.c:267
+#: src/main/print-lexmark.c:320 src/main/print-pcl.c:1169
 msgid "Cyan Balance"
 msgstr ""
 
-#: src/main/print-canon.c:1272 src/main/print-escp2.c:261
-#: src/main/print-lexmark.c:336 src/main/print-pcl.c:1170
+#: src/main/print-canon.c:1272 src/main/print-escp2.c:268
+#: src/main/print-lexmark.c:321 src/main/print-pcl.c:1170
 #, fuzzy
 msgid "Adjust the cyan balance"
 msgstr "Pas de hoeveelheid cyaan aan"
 
-#: src/main/print-canon.c:1279 src/main/print-escp2.c:268
-#: src/main/print-lexmark.c:343 src/main/print-pcl.c:1177
+#: src/main/print-canon.c:1279 src/main/print-escp2.c:275
+#: src/main/print-lexmark.c:328 src/main/print-pcl.c:1177
 #, fuzzy
 msgid "Magenta Balance"
 msgstr "Magenta"
 
-#: src/main/print-canon.c:1280 src/main/print-escp2.c:269
-#: src/main/print-lexmark.c:344 src/main/print-pcl.c:1178
+#: src/main/print-canon.c:1280 src/main/print-escp2.c:276
+#: src/main/print-lexmark.c:329 src/main/print-pcl.c:1178
 #, fuzzy
 msgid "Adjust the magenta balance"
 msgstr "Pas de hoeveelheid magenta aan"
 
-#: src/main/print-canon.c:1287 src/main/print-escp2.c:276
-#: src/main/print-lexmark.c:351 src/main/print-pcl.c:1185
+#: src/main/print-canon.c:1287 src/main/print-escp2.c:283
+#: src/main/print-lexmark.c:336 src/main/print-pcl.c:1185
 #, fuzzy
 msgid "Yellow Balance"
 msgstr "Pas de hoeveelheid geel aan"
 
-#: src/main/print-canon.c:1288 src/main/print-escp2.c:277
-#: src/main/print-lexmark.c:352 src/main/print-pcl.c:1186
+#: src/main/print-canon.c:1288 src/main/print-escp2.c:284
+#: src/main/print-lexmark.c:337 src/main/print-pcl.c:1186
 #, fuzzy
 msgid "Adjust the yellow balance"
 msgstr "Pas de hoeveelheid geel aan"
 
-#: src/main/print-canon.c:1295 src/main/print-escp2.c:284
-#: src/main/print-lexmark.c:359 src/main/print-pcl.c:1193
+#: src/main/print-canon.c:1295 src/main/print-escp2.c:291
+#: src/main/print-lexmark.c:344 src/main/print-pcl.c:1193
 #, fuzzy
 msgid "Black Balance"
 msgstr "Zwart en Wit"
 
-#: src/main/print-canon.c:1296 src/main/print-escp2.c:285
-#: src/main/print-lexmark.c:360 src/main/print-pcl.c:1194
+#: src/main/print-canon.c:1296 src/main/print-escp2.c:292
+#: src/main/print-lexmark.c:345 src/main/print-pcl.c:1194
 #, fuzzy
 msgid "Adjust the black balance"
 msgstr "Pas de hoeveelheid cyaan aan"
 
 #: src/main/print-canon.c:1303 src/main/print-canon.c:1304
-#: src/main/print-escp2.c:292 src/main/print-escp2.c:293
-#: src/main/print-lexmark.c:367 src/main/print-lexmark.c:368
+#: src/main/print-escp2.c:299 src/main/print-escp2.c:300
+#: src/main/print-lexmark.c:352 src/main/print-lexmark.c:353
 #: src/main/print-pcl.c:1201 src/main/print-pcl.c:1202
 #, fuzzy
 msgid "Light Cyan Transition"
 msgstr "Licht Cyaan"
 
 #: src/main/print-canon.c:1311 src/main/print-canon.c:1312
-#: src/main/print-escp2.c:300 src/main/print-escp2.c:301
-#: src/main/print-lexmark.c:375 src/main/print-lexmark.c:376
+#: src/main/print-escp2.c:307 src/main/print-escp2.c:308
+#: src/main/print-lexmark.c:360 src/main/print-lexmark.c:361
 #: src/main/print-pcl.c:1209 src/main/print-pcl.c:1210
 #, fuzzy
 msgid "Light Magenta Transition"
@@ -473,19 +473,19 @@ msgstr "Licht Magenta"
 msgid "Light Yellow Transition"
 msgstr "Licht Cyaan"
 
-#: src/main/print-canon.c:1606 src/main/print-lexmark.c:1128
+#: src/main/print-canon.c:1606 src/main/print-lexmark.c:1126
 msgid "Auto Sheet Feeder"
 msgstr "Automatische papierlader"
 
-#: src/main/print-canon.c:1607 src/main/print-lexmark.c:1129
+#: src/main/print-canon.c:1607 src/main/print-lexmark.c:1127
 msgid "Manual with Pause"
 msgstr "Handmatig met pauze"
 
-#: src/main/print-canon.c:1608 src/main/print-lexmark.c:1130
+#: src/main/print-canon.c:1608 src/main/print-lexmark.c:1128
 msgid "Manual without Pause"
 msgstr "Handmatig zonder pauze"
 
-#: src/main/print-canon.c:1720 src/main/print-lexmark.c:628
+#: src/main/print-canon.c:1720 src/main/print-lexmark.c:613
 #: src/libgimpprintui/panel.c:1842 src/escputil/escputil.c:526
 msgid "Black"
 msgstr "Zwart"
@@ -715,28 +715,24 @@ msgstr ""
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/main/print-color.c:2451
+#: src/main/print-color.c:2436
 msgid "High Accuracy"
 msgstr ""
 
-#: src/main/print-color.c:2453
+#: src/main/print-color.c:2438
 #, fuzzy
 msgid "Bright"
 msgstr "Helderheid:"
 
-#: src/main/print-color.c:2455
+#: src/main/print-color.c:2440
 msgid "Threshold"
 msgstr ""
 
-#: src/main/print-color.c:2457
-msgid "HSL-corrected"
-msgstr ""
-
-#: src/main/print-color.c:2459
+#: src/main/print-color.c:2442
 msgid "Uncorrected"
 msgstr ""
 
-#: src/main/print-color.c:2516
+#: src/main/print-color.c:2499
 msgid "Traditional Gimp-Print color conversion"
 msgstr ""
 
@@ -827,7 +823,7 @@ msgstr ""
 
 #: src/main/print-escp2-data.c:268 src/main/print-escp2-data.c:294
 #: src/main/print-escp2-data.c:328 src/main/print-escp2-data.c:415
-#: src/main/print-escp2.c:1126 src/main/print-pcl.c:227
+#: src/main/print-escp2.c:1133 src/main/print-pcl.c:227
 #: src/libgimpprintui/panel.c:2252
 msgid "Standard"
 msgstr "Standaard"
@@ -897,242 +893,242 @@ msgstr "Zes kleuren foto"
 msgid "Best"
 msgstr ""
 
-#: src/main/print-escp2.c:95
+#: src/main/print-escp2.c:102
 msgid "Automatic Printing Mode"
 msgstr ""
 
-#: src/main/print-escp2.c:96
+#: src/main/print-escp2.c:103
 msgid "Automatic printing mode"
 msgstr ""
 
-#: src/main/print-escp2.c:107 src/main/print-escp2.c:108
+#: src/main/print-escp2.c:114 src/main/print-escp2.c:115
 #, fuzzy
 msgid "Print Quality"
 msgstr "720 DPI Hoogste kwaliteit"
 
-#: src/main/print-escp2.c:132
+#: src/main/print-escp2.c:139
 #, fuzzy
 msgid "Resolution of the print"
 msgstr "Resolutie en kwaliteit van de afdruk"
 
-#: src/main/print-escp2.c:148
+#: src/main/print-escp2.c:155
 #, fuzzy
 msgid "Ink Set"
 msgstr "Inkt type"
 
-#: src/main/print-escp2.c:154
+#: src/main/print-escp2.c:161
 msgid "Printing Direction"
 msgstr ""
 
-#: src/main/print-escp2.c:155
+#: src/main/print-escp2.c:162
 msgid "Printing direction (unidirectional is higher quality, but slower)"
 msgstr ""
 
-#: src/main/print-escp2.c:160 src/main/print-escp2.c:161
+#: src/main/print-escp2.c:167 src/main/print-escp2.c:168
 #, fuzzy
 msgid "Full Bleed"
 msgstr "Rolinvoer"
 
-#: src/main/print-escp2.c:166
+#: src/main/print-escp2.c:173
 msgid "Adjust dot size as necessary"
 msgstr ""
 
-#: src/main/print-escp2.c:167
+#: src/main/print-escp2.c:174
 msgid "Adjust dot size as necessary to achieve desired density"
 msgstr ""
 
-#: src/main/print-escp2.c:172 src/main/print-escp2.c:173
+#: src/main/print-escp2.c:179 src/main/print-escp2.c:180
 msgid "Output Order"
 msgstr ""
 
-#: src/main/print-escp2.c:178 src/main/print-escp2.c:179
+#: src/main/print-escp2.c:185 src/main/print-escp2.c:186
 msgid "Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:184 src/main/print-escp2.c:185
+#: src/main/print-escp2.c:191 src/main/print-escp2.c:192
 msgid "Alignment Choices"
 msgstr ""
 
-#: src/main/print-escp2.c:190 src/main/print-escp2.c:191
+#: src/main/print-escp2.c:197 src/main/print-escp2.c:198
 #, fuzzy
 msgid "Ink change command"
 msgstr "Onbekend commando.\n"
 
-#: src/main/print-escp2.c:196 src/main/print-escp2.c:197
+#: src/main/print-escp2.c:203 src/main/print-escp2.c:204
 msgid "Alternate Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:202 src/main/print-escp2.c:203
+#: src/main/print-escp2.c:209 src/main/print-escp2.c:210
 #, fuzzy
 msgid "Alternate Alignment Choices"
 msgstr "Herhaal de uitlijn procedure.\n"
 
-#: src/main/print-escp2.c:308 src/main/print-escp2.c:309
+#: src/main/print-escp2.c:315 src/main/print-escp2.c:316
 msgid "Dark Yellow Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:316 src/main/print-escp2.c:317
+#: src/main/print-escp2.c:323 src/main/print-escp2.c:324
 msgid "Gray Transition"
 msgstr ""
 
-#: src/main/print-escp2.c:324 src/main/print-escp2.c:325
+#: src/main/print-escp2.c:331 src/main/print-escp2.c:332
 #, fuzzy
 msgid "Dark Gray Transition"
 msgstr "Licht Cyaan"
 
-#: src/main/print-escp2.c:332
+#: src/main/print-escp2.c:339
 #, fuzzy
 msgid "Mid Gray Transition"
 msgstr "Licht Cyaan"
 
-#: src/main/print-escp2.c:333
+#: src/main/print-escp2.c:340
 #, fuzzy
 msgid "Medium Gray Transition"
 msgstr "Licht Cyaan"
 
-#: src/main/print-escp2.c:340 src/main/print-escp2.c:341
+#: src/main/print-escp2.c:347 src/main/print-escp2.c:348
 #, fuzzy
 msgid "Light Gray Transition"
 msgstr "Licht Cyaan"
 
-#: src/main/print-escp2.c:1048
+#: src/main/print-escp2.c:1055
 msgid "Full Manual Control"
 msgstr ""
 
-#: src/main/print-escp2.c:1050
+#: src/main/print-escp2.c:1057
 msgid "Automatic Setting Control"
 msgstr ""
 
-#: src/main/print-escp2.c:1073
+#: src/main/print-escp2.c:1080
 #, fuzzy
 msgid "Manual Control"
 msgstr "Handmatig"
 
-#: src/main/print-escp2.c:1200 src/cups/genppd.c:1119
+#: src/main/print-escp2.c:1207 src/cups/genppd.c:1119
 #, fuzzy
 msgid "Automatic"
 msgstr "Grootte"
 
-#: src/main/print-escp2.c:1202
+#: src/main/print-escp2.c:1209
 #, fuzzy
 msgid "Bidirectional"
 msgstr "600 DPI unidirectioneel"
 
-#: src/main/print-escp2.c:1204
+#: src/main/print-escp2.c:1211
 #, fuzzy
 msgid "Unidirectional"
 msgstr "600 DPI unidirectioneel"
 
-#: src/main/print-escp2.c:1469
+#: src/main/print-escp2.c:1476
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Printer ondersteund geen kleuren\n"
 
-#: src/main/print-escp2.c:2119 src/main/print-raw.c:188
+#: src/main/print-escp2.c:2121 src/main/print-raw.c:188
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
 
-#: src/main/print-lexmark.c:588 src/main/print-lexmark.c:669
+#: src/main/print-lexmark.c:573 src/main/print-lexmark.c:654
 msgid "300 DPI x 600 DPI"
 msgstr "300 DPI x 600 DPI"
 
-#: src/main/print-lexmark.c:589 src/main/print-lexmark.c:670
+#: src/main/print-lexmark.c:574 src/main/print-lexmark.c:655
 msgid "600 DPI"
 msgstr "600 DPI"
 
-#: src/main/print-lexmark.c:590 src/main/print-lexmark.c:671
+#: src/main/print-lexmark.c:575 src/main/print-lexmark.c:656
 msgid "600 DPI high quality"
 msgstr "600 DPI Hoge kwaliteit"
 
-#: src/main/print-lexmark.c:591 src/main/print-lexmark.c:672
+#: src/main/print-lexmark.c:576 src/main/print-lexmark.c:657
 msgid "600 DPI Unidirectional"
 msgstr "600 DPI unidirectioneel"
 
-#: src/main/print-lexmark.c:592 src/main/print-lexmark.c:673
+#: src/main/print-lexmark.c:577 src/main/print-lexmark.c:658
 msgid "1200 DPI"
 msgstr "1200 DPI"
 
-#: src/main/print-lexmark.c:593 src/main/print-lexmark.c:674
+#: src/main/print-lexmark.c:578 src/main/print-lexmark.c:659
 msgid "1200 DPI high quality"
 msgstr "1200 DPI hoge kwaliteit"
 
-#: src/main/print-lexmark.c:594 src/main/print-lexmark.c:675
+#: src/main/print-lexmark.c:579 src/main/print-lexmark.c:660
 msgid "1200 DPI highest quality"
 msgstr "1200 DPI Hoogste kwaliteit"
 
-#: src/main/print-lexmark.c:595 src/main/print-lexmark.c:676
+#: src/main/print-lexmark.c:580 src/main/print-lexmark.c:661
 msgid "1200 DPI  Unidirectional"
 msgstr "1200 DPI Unidirectioneel"
 
-#: src/main/print-lexmark.c:596
+#: src/main/print-lexmark.c:581
 msgid "2400 DPI x 1200 DPI"
 msgstr "2400 DPI x 1200 DPI"
 
-#: src/main/print-lexmark.c:597
+#: src/main/print-lexmark.c:582
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:598
+#: src/main/print-lexmark.c:583
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:600
+#: src/main/print-lexmark.c:585
 msgid "test print"
 msgstr "Test afdruk"
 
-#: src/main/print-lexmark.c:612 src/main/print-lexmark.c:687
+#: src/main/print-lexmark.c:597 src/main/print-lexmark.c:672
 msgid "Four Color Standard"
 msgstr "Vier kleuren standaard"
 
-#: src/main/print-lexmark.c:616 src/main/print-lexmark.c:691
+#: src/main/print-lexmark.c:601 src/main/print-lexmark.c:676
 msgid "Three Color Composite"
 msgstr "Drie kleuren composiet"
 
-#: src/main/print-lexmark.c:620 src/main/print-lexmark.c:695
+#: src/main/print-lexmark.c:605 src/main/print-lexmark.c:680
 msgid "Six Color Photo"
 msgstr "Zes kleuren foto"
 
-#: src/main/print-lexmark.c:624 src/main/print-lexmark.c:699
+#: src/main/print-lexmark.c:609 src/main/print-lexmark.c:684
 msgid "Five Color Photo Composite"
 msgstr "Vijf kleuren foto composiet"
 
-#: src/main/print-lexmark.c:880
+#: src/main/print-lexmark.c:866
 msgid "Glossy Film"
 msgstr "Glanzende laag"
 
-#: src/main/print-lexmark.c:886
+#: src/main/print-lexmark.c:874
 msgid "Envelopes"
 msgstr "Enveloppen"
 
-#: src/main/print-lexmark.c:889
+#: src/main/print-lexmark.c:878
 msgid "Matte Paper"
 msgstr "Mat papier"
 
-#: src/main/print-lexmark.c:892
+#: src/main/print-lexmark.c:882
 msgid "Inkjet Paper"
 msgstr "Inkjet-papier"
 
-#: src/main/print-lexmark.c:895
+#: src/main/print-lexmark.c:886
 msgid "Photo Quality Inkjet Paper"
 msgstr "Fotokwaliteit Inkjet-papier"
 
-#: src/main/print-lexmark.c:898
+#: src/main/print-lexmark.c:890
 msgid "Photo Paper"
 msgstr "Fotopapier"
 
-#: src/main/print-lexmark.c:901
+#: src/main/print-lexmark.c:894
 msgid "Premium Glossy Photo Paper"
 msgstr "Premium glanzend fotopapier"
 
-#: src/main/print-lexmark.c:904
+#: src/main/print-lexmark.c:898
 msgid "Premium Luster Photo Paper"
 msgstr "Premium Luster Photo Papier"
 
-#: src/main/print-lexmark.c:907
+#: src/main/print-lexmark.c:902
 msgid "Photo Quality Glossy Paper"
 msgstr "Fotokwaliteit glanzend papier"
 
-#: src/main/print-lexmark.c:910
+#: src/main/print-lexmark.c:906
 msgid "Ilford Heavy Paper"
 msgstr "Ilford Heavy Paper"
 
@@ -2739,14 +2735,22 @@ msgid "LEXMARK Z53"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:351
-msgid "Olympus P300"
+msgid "OLYMPUS P300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:352
-msgid "RAW DATA 16 bit"
+msgid "OLYMPUS P400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:353
+msgid "CANON CP100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:354
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:355
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -3089,10 +3093,11 @@ msgid "Gimp-Print Version "
 msgstr "Gimp-Print Versie"
 
 #: src/libgimpprintui/panel.c:1512
+#, fuzzy
 msgid ""
 "\n"
 "\n"
-"Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
+"Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
 "and the rest of the Gimp-Print Development Team.\n"
 "\n"
 "Please visit our web site at http://gimp-print.sourceforge.net.\n"
