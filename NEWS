@@ -1,4 +1,4 @@
-Gimp-Print 4.3.6, released November 2, 2002, is a development release of
+Gimp-Print 4.3.6, released December 22, 2002, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -30,6 +30,12 @@ this package.
 Please read the README file for full instructions on installing this
 package.
 
+Gimp-Print 4.3.6 is considered to be a particularly unstable release,
+as significant API changes have been introduced with relatively
+limited testing.  We recommend that only people who want access to
+these new API features, or who are otherwise willing to accept lesser
+stability, use this release.
+
 Gimp-Print 4.3.6 contains the following major changes over Gimp-Print
 4.3.5:
 
@@ -40,34 +46,39 @@ Gimp-Print 4.3.6 contains the following major changes over Gimp-Print
    APFL GhostScript 7.04 or later.
 
 2) There have been significant API changes, such that the development
-   mainline is no longer compatible with the 4.2 stable line.  These
-   changes are primarily internal, with little visible effect.
+   mainline is no longer compatible with the 4.2 stable line.  Please
+   see include/gimp-print/gimp-print.h for more information.
 
    These changes are the first stage of significant new development.
 
-3) The Print plugin now displays the preview in portrait mode at all
+3) The printer definitions have been converted to true XML, and a DTD
+   and schema have been added to validate these.
+
+4) Paper sizes have been converted to XML.
+
+5) The Print plugin now displays the preview in portrait mode at all
    times; the image thumbnail is rotated.  Previously, the image
    thumbnail was always displayed with correct orientation and the
    boundaries of the page were rotated.  This behavior was often
    deemed confusing; the new behavior has been requested by many
    people.
 
-4) The Print plugin's redisplay is smoother in many cases when
+6) The Print plugin's redisplay is smoother in many cases when
    resizing the image.
 
-5) The man page for ijsgimpprint(1) has been split into multiple
+7) The man page for ijsgimpprint(1) has been split into multiple
    pages.
 
-6) The CUPS driver and Foomatic data now support custom page sizes.
+8) The CUPS driver and Foomatic data now support custom page sizes.
 
-7) The Print plugin now allows points and mm as units choices, in
-   addition to inches and cm.
+9) The Print plugin now allows points, mm, and picas (1/12") as units
+   choices, in addition to inches and cm.
 
-8) The unprint test program now allows "unprinting" individual color
+10) The unprint test program now allows "unprinting" individual color
    channels selectively.
 
-9) All accumulated bugs in Gimp-Print up to 4.2.4-pre1 have been
-   fixed.
+11) All accumulated bug fixes and improvements in Gimp-Print up to
+   4.2.5-pre2 have been applied.
 
 
 Gimp-Print 4.3.5 contains the following major changes over Gimp-Print
