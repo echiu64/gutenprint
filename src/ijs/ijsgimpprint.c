@@ -708,6 +708,9 @@ main (int argc, char **argv)
       ijs_server_done(img.ctx);
       return 1;
     }
+  stp_set_top(img.v, 0);
+  stp_set_left(img.v, 0);
+  stp_set_orientation(img.v, ORIENT_PORTRAIT);
 
   /* Error messages to stderr. */
   stp_set_errfunc(img.v, gimp_outfunc);
