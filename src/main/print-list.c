@@ -694,7 +694,7 @@ stpi_list_item_destroy(stpi_list_t *list, stpi_list_item_t *item)
   lh->length--;
 
   if (lh->freefunc)
-    lh->freefunc(((stpi_internal_list_node_t *) item)->data);
+    lh->freefunc((void *)((stpi_internal_list_node_t *) item)->data);
   if (ln->prev)
     ln->prev->next = ln->next;
   else
