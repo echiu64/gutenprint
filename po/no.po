@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-10-12 20:20-0400\n"
+"POT-Creation-Date: 2002-10-13 20:59-0400\n"
 "PO-Revision-Date: 2002-07-01 19:36+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -1431,54 +1431,54 @@ msgstr "%s er ikke en gyldig dither-algoritme\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:438
+#: src/cups/genppd.c:443
 msgid "English"
 msgstr "Norwegian"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:440
+#: src/cups/genppd.c:445
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:616
+#: src/cups/genppd.c:651
 msgid "Media Type"
 msgstr "Medietype"
 
-#: src/cups/genppd.c:642
+#: src/cups/genppd.c:677
 msgid "Media Source"
 msgstr "Mediekilde"
 
-#: src/cups/genppd.c:666
+#: src/cups/genppd.c:701
 msgid "Resolution"
 msgstr "Oppløsning"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:706
+#: src/cups/genppd.c:741
 msgid "Image Type"
 msgstr "Bildetype"
 
-#: src/cups/genppd.c:711 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:746 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Lineær"
 
-#: src/cups/genppd.c:713 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:748 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Farge"
 
-#: src/cups/genppd.c:715 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:750 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografi"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:723
+#: src/cups/genppd.c:758
 msgid "Dither Algorithm"
 msgstr "Dither-algoritme"
 
-#: src/cups/genppd.c:742
+#: src/cups/genppd.c:777
 msgid "Ink Type"
 msgstr "Blekktype"
 
