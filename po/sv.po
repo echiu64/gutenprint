@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2002-07-30 23:22-0400\n"
+"POT-Creation-Date: 2002-08-13 21:34-0400\n"
 "PO-Revision-Date: 2002-07-31 11:24+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -3236,79 +3236,79 @@ msgstr "<Image>/Arkiv/Skriv ut..."
 msgid "File"
 msgstr "Fil"
 
-#: src/ghost/ijsgimpprint.c:139
+#: src/ghost/ijsgimpprint.c:140
 #, c-format
 msgid "Bad color space: bps %d channels %d space %s\n"
 msgstr "Felaktigt färgutrymme: bps %d kanaler %d utrymme %s\n"
 
-#: src/ghost/ijsgimpprint.c:147
+#: src/ghost/ijsgimpprint.c:148
 msgid "No row buffer\n"
 msgstr "Ingen radbuffert\n"
 
-#: src/ghost/ijsgimpprint.c:176
+#: src/ghost/ijsgimpprint.c:181
 #, c-format
 msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
 msgstr "Parametern %s är utanför intervallet (värde %f, min %f, max %f)\n"
 
-#: src/ghost/ijsgimpprint.c:180 src/ghost/ijsgimpprint.c:202
+#: src/ghost/ijsgimpprint.c:187 src/ghost/ijsgimpprint.c:216
 #, c-format
 msgid "Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Kan inte tolka parametern %s=%s (ett tal förväntas)\n"
 
-#: src/ghost/ijsgimpprint.c:198
+#: src/ghost/ijsgimpprint.c:210
 #, c-format
 msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
 msgstr "Parametern %s är utanför intervallet (värde %d, min %d, max %d)\n"
 
-#: src/ghost/ijsgimpprint.c:340
+#: src/ghost/ijsgimpprint.c:363
 msgid "Printer must be specified with -sModel\n"
 msgstr "Skrivaren måste anges med -sModel\n"
 
-#: src/ghost/ijsgimpprint.c:342
+#: src/ghost/ijsgimpprint.c:365
 #, c-format
 msgid "Printer %s is not a known model\n"
 msgstr "Skrivaren %s är inte en känd modell\n"
 
-#: src/ghost/ijsgimpprint.c:596
+#: src/ghost/ijsgimpprint.c:635
 #, c-format
 msgid "Unknown option %s\n"
 msgstr "Okänd flagga %s\n"
 
-#: src/ghost/ijsgimpprint.c:739
+#: src/ghost/ijsgimpprint.c:778
 #, c-format
 msgid "%.0f of %.0f\n"
 msgstr "%.0f av %.0f\n"
 
-#: src/ghost/ijsgimpprint.c:845
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header misslyckades %d\n"
 
-#: src/ghost/ijsgimpprint.c:856
+#: src/ghost/ijsgimpprint.c:895
 #, c-format
 msgid "image_init failed %d\n"
 msgstr "image_init misslyckades %d\n"
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:906
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr "Kan inte öppna fildeskriptor: %s\n"
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:918
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr "Kan inte öppna %s: %s\n"
 
-#: src/ghost/ijsgimpprint.c:891
+#: src/ghost/ijsgimpprint.c:930
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr "Okänd skrivare %s\n"
 
-#: src/ghost/ijsgimpprint.c:922
+#: src/ghost/ijsgimpprint.c:961
 msgid "Bad parameters; cannot continue!\n"
 msgstr "Felaktiga parametrar; kan inte fortsätta!\n"
 
-#: src/ghost/ijsgimpprint.c:932
+#: src/ghost/ijsgimpprint.c:971
 #, c-format
 msgid "Get next row failed at %.0f\n"
 msgstr "Hämtande av nästa rad misslyckades vid %.0f\n"
