@@ -1,5 +1,5 @@
-Gimp-Print 4.2.3-pre3, released October 14, 2002, is a prerelease in
-the Gimp-Print 4.2 series (it is not actually 4.2.3).
+Gimp-Print 4.2.3, released October 19, 2002, is a stable release in
+the Gimp-Print 4.2 series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -40,70 +40,71 @@ available at http://gimp-print.sourceforge.net.
 Please read the README file for full instructions on installing this
 package.
 
-Gimp-Print 4.2.3-pre3 contains the following changes and fixes over
-Gimp-Print 4.2.3-pre2:
-
-1) The CUPS driver now permits printing variable page sizes, using -o
-   CustomPageSize.widthxheight, where width and height are in 1/72 of
-   an inch (e. g. 200x400).
-
-Bugs fixed in this release:
-
-622612 CUPS driver forbids custom page sizes
+Gimp-Print 4.2.3 contains the following major changes over Gimp-Print
+4.2.2:
 
 
-Gimp-Print 4.2.3-pre2 contains the following changes and fixes over
-Gimp-Print 4.2.3-pre1:
+* Major Bugs Fixed:
 
-1) A Japanese translation has been added.
+  1) (bug 604854) The Epson Stylus Color 600, 800, 850, 1520, and 3000
+     did not print correctly at 1440x720 DPI (much too dark).  These
+     printers now print correctly.
 
-2) Two bugs in the IJS driver have been fixed.
+  2) (bugs 620016 and 619992) Two problems with the IJS driver have
+     been fixed.  The first problem is that the IJS driver did not
+     print correctly in grayscale or monochrome; the second is that a
+     spurious fine line was printed at the very top of each page.
 
-3) The change to the Epson Stylus 660 margins in 4.2.3-pre1 has been
-   backed out; retesting demonstrated that the bug was in fact fixed
-   in 4.2.2.
+  3) (bug 613384) The Epson Stylus Pro 7600 and 9600 did not print at
+     all.  While this printer is not fully tuned, it now prints
+     correctly.
 
-4) A reported problem with very large prints (A0 or B0 size) failing
-   to print correctly on Stylus Pro printers is likely fixed.
+  4) (bug 621667) Very large prints (longer than about 40" long) on
+     Epson Stylus Pro printers were not printed correctly; the print
+     is typically chopped into many small pieces.  This bug is not
+     verified; there have been other unconfirmed reports of problems
+     with very large prints.
 
-Bugs fixed in this release:
+  5) (bug 615561) The Epson Stylus Color 480 and 580, and C20, C40,
+     C41, and C42 (all variants) did not print in black and white or
+     grayscale.  This was a regression in 4.2.2.
 
-597964 Epson 660 wrong margins
-619992 IJS driver prints spurious first line
-620016 IJS driver does not print properly in monochrome
-621667 Very large prints on Epson 9500 fail
+  6) (bug 611804) The CUPS driver did not compile correctly on many
+     platforms other than Linux (this was known to be an issue on
+     Solaris and BSD).  This was a regression in 4.2.2.
 
 
-Gimp-Print 4.2.3-pre1 contains the following changes and fixes over
-Gimp-Print 4.2.2:
+* New Functionality:
 
-1) The Epson stylus 600, 800, 850, 1520, and 3000 now print correctly
-   at 1440x720 DPI.
+  1) The native CUPS driver now accepts custom paper sizes with
+     printers that permit this (all Epson printers, and most others).
+     To use this on the lp or lpr command line, use
 
-2) The package will now compile correctly on Solaris and BSD-based
-   systems (Regression in 4.2.2).
+     -o PageSize=Custom.300x400
 
-3) Support for the Epson Stylus Photo EX3 and Stylus Photo 825, in
-   addition to support for the Japanese equivalents of all supported
-   Epson printers.
+     where 300 and 400 should be replaced by the width and height of
+     the page in 1/72" units.
 
-4) The Epson Stylus 660 margins have been corrected.
+     On Macintosh OS X, custom page sizes may be defined and selected
+     through the Print Manager.
 
-5) The Epson Stylus C20/C40/C41/C42 and Stylus Color 480 and 580 now
-   print correctly in grayscale and black and white (Regression in 4.2.2).
+  2) A Japanese translation has been added.
 
-6) The Epson driver positions correctly at 360x240 DPI.
+  3) This release contains an ijsgimpprint package for Debian.
 
-7) The Epson Stylus 7600 may now print correctly (although probably
-   not optimally).  This printer still requires further testing.
 
-Bugs fixed in this release:
+The following bugs have been fixed in 4.2.3:
 
 604854 QUALITY-Epson 1520 and 3000 print too dark at 1440x720 DPI
 611804 rastertoprinter.c fails to compile on Solaris
 613384 Epson 7600 no printing
 615561 Epson C40UX cannot print in B&W and Gray
 615759 360x240 bad horizontal position
+619992 IJS driver prints spurious first line
+620016 IJS driver does not print properly in monochrome
+621667 Very large prints on Epson 9500 fail
+622612 CUPS driver forbids custom page sizes
+
 
 
 Gimp-Print 4.2.2 contains the following major changes over Gimp-Print
