@@ -23,8 +23,10 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
 
-<p><strong><em><font color=#ff0000">Macintosh OS X
-Users!</font></em></strong> <a
+<H2><p><strong><em><font color=#ff0000">Macintosh OS X
+Users!</font></em></strong></H2>
+
+<p> <a
 href="http://www.allosx.com/1030154694/index_html">This article on All
 OS X</a> explains how to use Gimp-Print 4.2.1 with OS X 10.2 "Jaguar".</p>
 
