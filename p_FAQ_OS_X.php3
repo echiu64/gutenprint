@@ -39,6 +39,9 @@ require('standard_html_header.php3');
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </a>
+ <li><a href="p_FAQ_OS_X.php3#HPUSB">
+ My multi-function HP Device is not printing over the USB port.
+ </a>
  <li><a href="p_FAQ_OS_X.php3#escp2-7600">
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </a>
@@ -253,6 +256,25 @@ require('standard_html_header.php3');
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
+ <a name="#HPUSB">
+ <h3>
+ <li>
+ My multi-function HP Device is not printing over the USB port.
+ </h3></a>
+ <p>  
+ Several users have reported USB compatibility issues with certain HP 
+ multi-function devices. While the driver generates the correct device code to 
+ produce printing, the USB connection (the Mac OS X CUPS usb "backend") may
+ not be capable of communicating properly with the device.
+ </p><p>
+ If your device fails to print and you are reasonably sure that you set it up 
+ correctly then you may be experienceing this problem. As a workaround you may 
+ be able to print to your device by using an alternate connection interface 
+ (but this method is not well tested). For devices with a parallel port you can
+ try a compatible USB-to-parallel cable, or a parallel-port print server. 
+ Devices that lack a parallel port may possibly function with a compatible USB
+ print server.
+ </p>  
  <a name="escp2-7600">
  <h3>
  <li>I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
