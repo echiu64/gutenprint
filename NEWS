@@ -1,5 +1,7 @@
-Gimp-Print 4.2.6-pre3, released November 1, 2003, is a prerelease in
-the Gimp-Print 4.2 series.
+Gimp-Print 4.2.6-rc1, released November 15, 2003, is a release
+candidate in the Gimp-Print 4.2 series.  We expect that 4.2.6, when
+the final version is released, to be the last release in the 4.2
+series.
 
 Gimp-Print is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -40,6 +42,22 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package from source code.
+
+Gimp-Print 4.2.6-rc1 contains the following major changes over
+Gimp-Print 4.2.6-pre3:
+
+1) Printing in black and white and grayscale modes on the Epson Stylus
+   Color 600, 800, 850, 1520, and 3000 is fixed.
+
+The following bug has been fixed in Gimp-Print 4.2.6-rc1:
+
+842715 Epson 600/800/850/1520/3000 fail at certain resolutions BW
+
+The following previously reported bugs have been tested and cannot be
+reproduced:
+
+828993 CNR: Epson SC 850 using Microweave prints tall characters
+764041 CNR: Epson 3000 720x360DPI problem
 
 
 Gimp-Print 4.2.6-pre3 contains the following major changes over
