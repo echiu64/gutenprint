@@ -170,7 +170,7 @@ static const int IDX_SEQLEN=3;
 #define LX_Z52_PRINT_DIRECTION_POS  0x8
 
 #define LXM_Z52_HEADERSIZE 34
-static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
+static const char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
   0x1B,0x2A,0x24,0x00,0x00,0xFF,0xFF,         /* number of packets ----     vvvvvvvvv */
   0x01,0x01,0x01,0x1a,0x03,0x01,              /* 0x7-0xc: resolution, direction, head */
   0x03,0x60,                                  /* 0xd-0xe HE */
@@ -183,7 +183,7 @@ static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
 
 #define LXM_3200_HEADERSIZE 24
 
-static char outbufHeader_3200[LXM_3200_HEADERSIZE] =
+static const char outbufHeader_3200[LXM_3200_HEADERSIZE] =
 {
   0x1b, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x1b, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -214,7 +214,7 @@ lexmark_calc_3200_checksum(unsigned char *data)
      5 .. ? like 1
 */
 
-static double lum_adjustment[49] =
+static const double lum_adjustment[49] =
 {
   0.57,				/* C */
   0.67,
@@ -267,7 +267,7 @@ static double lum_adjustment[49] =
   0.57				/* C */
 };
 
-static double hue_adjustment[49] =
+static const double hue_adjustment[49] =
 {
   0,				/* C */
   0.17,
@@ -321,13 +321,13 @@ static double hue_adjustment[49] =
 };
 
 
-static int lr_shift_color[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
-static int lr_shift_black[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+static const int lr_shift_color[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
+static const int lr_shift_black[10] = { 9, 18, 2*18 }; /* vertical distance between ever 2nd  inkjet (related to resolution) */
 
 /* returns the offset of the first jet when printing in the other direction */
 static int get_lr_shift(int mode) {
 
-  int *ptr_lr_shift;
+  const int *ptr_lr_shift;
 
       /* K could only be present if black is printed only. */
   if((mode & COLOR_MODE_K) == (mode & COLOR_MODE_MASK)) {
@@ -370,7 +370,7 @@ static void lexmark_write_line(const stp_vars_t ,
 			       int interlace,
 			       int inkjetLine,       /* num of inks to print */
 			       int pass_shift,
-			       lexmark_cap_t, int,
+			       const lexmark_cap_t *, int,
 			       unsigned char *, int,
 			       unsigned char *, int,
 			       unsigned char *, int,
@@ -414,7 +414,7 @@ static void lexmark_write_line(const stp_vars_t ,
 #define LEXMARK_CAP_CMD72     1<<5    /* uses command #0x72         */
 
 
-static lexmark_cap_t lexmark_model_capabilities[] =
+static const lexmark_cap_t lexmark_model_capabilities[] =
 {
   /* default settings for unkown models */
 
@@ -490,24 +490,24 @@ static lexmark_cap_t lexmark_model_capabilities[] =
 
 
 
-static lexmark_cap_t
+static const lexmark_cap_t *
 lexmark_get_model_capabilities(int model)
 {
   int i;
   int models= sizeof(lexmark_model_capabilities) / sizeof(lexmark_cap_t);
   for (i=0; i<models; i++) {
     if (lexmark_model_capabilities[i].model == model) {
-      return lexmark_model_capabilities[i];
+      return &(lexmark_model_capabilities[i]);
     }
   }
 #ifdef DEBUG
   fprintf(stderr,"lexmark: model %d not found in capabilities list.\n",model);
 #endif
-  return lexmark_model_capabilities[0];
+  return &(lexmark_model_capabilities[0]);
 }
 
 /* base density, k_lower_scale, k_upper */
-static double media_parameters[][3] =
+static const double media_parameters[][3] =
 {
   { 0.90, 0.25, 0.5 },
   { 1.80, 1.00, 0.9 },
@@ -524,7 +524,7 @@ static double media_parameters[][3] =
 
 
 static int
-lexmark_media_type(const char *name, lexmark_cap_t caps)
+lexmark_media_type(const char *name, const lexmark_cap_t * caps)
 {
   if (!strcmp(name,_("Plain Paper")))           return  1;
   if (!strcmp(name,_("Transparencies")))        return  2;
@@ -545,7 +545,7 @@ lexmark_media_type(const char *name, lexmark_cap_t caps)
 }
 
 static int
-lexmark_source_type(const char *name, lexmark_cap_t caps)
+lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 {
   if (!strcmp(name,_("Auto Sheet Feeder")))    return 4;
   if (!strcmp(name,_("Manual with Pause")))    return 0;
@@ -558,7 +558,7 @@ lexmark_source_type(const char *name, lexmark_cap_t caps)
 }
 
 static int
-lexmark_printhead_type(const char *name, lexmark_cap_t caps)
+lexmark_printhead_type(const char *name, const lexmark_cap_t * caps)
 {
 
 
@@ -583,7 +583,7 @@ lexmark_size_type
 /* This method is actually not used.
    Is there a possibility to set such value ???????????? */
 static unsigned char
-lexmark_size_type(const stp_vars_t v, lexmark_cap_t caps)
+lexmark_size_type(const stp_vars_t v, const lexmark_cap_t * caps)
 {
   const stp_papersize_t pp = stp_get_papersize_by_size(stp_get_page_height(v),
 						       stp_get_page_width(v));
@@ -642,8 +642,8 @@ c_strdup(const char *s)
 static const char *
 lexmark_default_resolution(const stp_printer_t printer)
 {
-  lexmark_cap_t caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
-  if (!(caps.max_xdpi%300))
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+  if (!(caps->max_xdpi%300))
     return _("300x300 DPI");
   else
     return _("180x180 DPI");
@@ -677,13 +677,13 @@ static const lexmark_res_t
 *lexmark_get_resolution_para(const stp_printer_t printer,
 			    const char *resolution)
 {
-  lexmark_cap_t caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
   const lexmark_res_t *res = &(lexmark_reslist[0]);
   while (res->hres)
     {
-      if (res->vres <= caps.max_ydpi != -1 &&
-	  res->hres <= caps.max_xdpi != -1 &&
+      if (res->vres <= caps->max_ydpi != -1 &&
+	  res->hres <= caps->max_xdpi != -1 &&
 	  !strcmp(resolution, _(res->name)))
 	{
 	  return res;
@@ -755,7 +755,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
     (N_ ("Manual without Pause")),
   };
 
-  lexmark_cap_t caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
   if (count == NULL)
     return (NULL);
@@ -771,8 +771,8 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
     valptrs = xmalloc(sizeof(char *) * papersizes);
     *count = 0;
 
-    width_limit = caps.max_width;
-    height_limit = caps.max_length;
+    width_limit = caps->max_width;
+    height_limit = caps->max_length;
 
     for (i = 0; i < papersizes; i++)
       {
@@ -790,7 +790,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
   }
   else if (strcmp(name, "Resolution") == 0)
     {
-      unsigned int supported_resolutions = caps.supp_res;
+      unsigned int supported_resolutions = caps->supp_res;
       int c= 0;
       const lexmark_res_t *res;
       valptrs = xmalloc(sizeof(char *) * 10);
@@ -812,15 +812,15 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
     {
       int c= 0;
       valptrs = xmalloc(sizeof(char *) * 5);
-      if ((caps.inks & LEXMARK_INK_K))
+      if ((caps->inks & LEXMARK_INK_K))
 	valptrs[c++]= c_strdup(_("Black"));
-      if ((caps.inks & LEXMARK_INK_CMY))
+      if ((caps->inks & LEXMARK_INK_CMY))
 	valptrs[c++]= c_strdup(_("Color"));
-      if ((caps.inks & LEXMARK_INK_CMYK))
+      if ((caps->inks & LEXMARK_INK_CMYK))
 	valptrs[c++]= c_strdup(_("Black/Color"));
-      if ((caps.inks & LEXMARK_INK_CcMmYK))
+      if ((caps->inks & LEXMARK_INK_CcMmYK))
 	valptrs[c++]= c_strdup(_("Photo/Color"));
-      if ((caps.inks & LEXMARK_INK_CcMmYy))
+      if ((caps->inks & LEXMARK_INK_CcMmYy))
 	valptrs[c++]= c_strdup(_("Photo/Color"));
       valptrs[c++]= c_strdup(_("Photo Test Mode"));
       *count = c;
@@ -862,14 +862,14 @@ lexmark_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
-  lexmark_cap_t caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
   stp_default_media_size(printer, v, &width, &length);
 
-  *left   = caps.border_left;
-  *right  = width - caps.border_right;
-  *top    = length - caps.border_top;
-  *bottom = caps.border_bottom;
+  *left   = caps->border_left;
+  *right  = width - caps->border_right;
+  *top    = length - caps->border_top;
+  *bottom = caps->border_bottom;
 
   lxm3200_linetoeject = (length * 1200) / 72;
 }
@@ -880,15 +880,15 @@ lexmark_limit(const stp_printer_t printer,	/* I - Printer model */
 	    int  *width,		/* O - Left position in points */
 	    int  *length)		/* O - Top position in points */
 {
-  lexmark_cap_t caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
-  *width =	caps.max_width;
-  *length =	caps.max_length;
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
+  *width =	caps->max_width;
+  *length =	caps->max_length;
 }
 
 
 
 static void
-lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
+lexmark_init_printer(const stp_vars_t v, const lexmark_cap_t * caps,
 		     int output_type, const char *media_str,
 		     int print_head,
 		     const char *source_str,
@@ -940,7 +940,7 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 	};
 
   /* write init sequence */
-  switch(caps.model)
+  switch(caps->model)
 	{
 		case m_z52:
 			stp_zfwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,v);
@@ -951,7 +951,7 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 			break;
 
 		default:
-			fprintf(stderr, "Unknown printer !! %i\n", caps.model);
+			fprintf(stderr, "Unknown printer !! %i\n", caps->model);
 			exit(2);
   }
 
@@ -974,10 +974,10 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 
 }
 
-static void lexmark_deinit_printer(const stp_vars_t v, lexmark_cap_t caps)
+static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * caps)
 {
 
-	switch(caps.model)	{
+	switch(caps->model)	{
 		case m_z52:
 		{
 			char buffer[4];
@@ -1025,9 +1025,9 @@ static void lexmark_deinit_printer(const stp_vars_t v, lexmark_cap_t caps)
 
 /* paper_shift() -- shift paper in printer -- units are unknown :-)
  */
-static void paper_shift(const stp_vars_t v, int offset, lexmark_cap_t caps)
+static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * caps)
 {
-	switch(caps.model)	{
+	switch(caps->model)	{
 		case m_z52:
 		{
 			unsigned char buf[5] = {0x1b, 0x2a, 0x3, 0x0, 0x0};
@@ -1207,7 +1207,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   int yi, yl;
   int pass_length=0;  /* count of inkjets for one pass */
   int elinescount=0; /* line pos to move paper */
-  lexmark_cap_t caps= lexmark_get_model_capabilities(model);
+  const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   int printhead= lexmark_printhead_type(ink_type,caps);
   int pass_shift; /* shift after one pass in pixel */
   int interlace=0; /* is one if not interlace. At 2, first every even line is written second every odd is written */
@@ -1243,7 +1243,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
       output_type = OUTPUT_GRAY;
     }
 
-  if (printhead == 0 || caps.inks == LEXMARK_INK_K) {
+  if (printhead == 0 || caps->inks == LEXMARK_INK_K) {
     output_type = OUTPUT_GRAY;
   }
 
@@ -1257,7 +1257,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
   if (output_type == OUTPUT_GRAY) {
     printMode |= COLOR_MODE_K;
     pass_length=208;
-    elinescount =  caps.h_offset_black_color; /* add offset to the first black jet from color jet */
+    elinescount =  caps->h_offset_black_color; /* add offset to the first black jet from color jet */
     lxm_nozzles_used = lexmark_get_black_nozzles(printer);
   } else {
     elinescount = 0; /* we have color where first jet is on position 0 */
@@ -1268,10 +1268,10 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
     printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M;
     pass_length=192/3;
 
-    if (printhead==2 && (caps.inks & LEXMARK_INK_BLACK_MASK)) {
+    if (printhead==2 && (caps->inks & LEXMARK_INK_BLACK_MASK)) {
       printMode |= COLOR_MODE_K;
     }
-    if ((printhead==3 || printhead==5) && (caps.inks & (LEXMARK_INK_PHOTO_MASK))) {
+    if ((printhead==3 || printhead==5) && (caps->inks & (LEXMARK_INK_PHOTO_MASK))) {
       printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_LC | COLOR_MODE_LM | COLOR_MODE_K;
 #ifdef DEBUG
       fprintf(stderr,"lexmark: print in photo mode !!.\n");
@@ -1360,7 +1360,7 @@ lexmark_describe_resolution(printer,
 
 
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") &&
-      (caps.features & LEXMARK_CAP_DMT) &&
+      (caps->features & LEXMARK_CAP_DMT) &&
       stp_get_image_type(nv) != IMAGE_MONOCHROME) {
     use_dmt= 1;
 #ifdef DEBUG
@@ -1414,7 +1414,7 @@ lexmark_describe_resolution(printer,
 #endif
 
 
-  left = ((300 * left) / 72) + caps.offset_left_border;
+  left = ((300 * left) / 72) + caps->offset_left_border;
 
 
   delay_max = (92*d_interlace);
@@ -1597,7 +1597,7 @@ lexmark_describe_resolution(printer,
   */
 
 
-  elinescount += (top*caps.y_multiplicator)+caps.offset_top_border;
+  elinescount += (top*caps->y_multiplicator)+caps->offset_top_border;
   paper_shift(v, elinescount, caps);
   elinescount=0;
 
@@ -1991,7 +1991,7 @@ lexmark_describe_resolution(printer,
   stp_free_vars(nv);
 }
 
-stp_printfuncs_t stp_lexmark_printfuncs =
+const stp_printfuncs_t stp_lexmark_printfuncs =
 {
   lexmark_parameters,
   stp_default_media_size,
@@ -2014,7 +2014,7 @@ stp_printfuncs_t stp_lexmark_printfuncs =
 */
 static unsigned char *
 lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int direction,
-		  lexmark_cap_t   caps	        /* I - Printer model */
+		  const lexmark_cap_t *   caps	        /* I - Printer model */
 		  )
 {
   int  left_margin_multipl;  /* multiplyer for left margin calculation */
@@ -2025,7 +2025,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
 
   /*  printf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/
   /* first, we wirte the line header */
-  switch(caps.model)  {
+  switch(caps->model)  {
   case m_z52:
     memcpy(prnBuf, outbufHeader_z52, LXM_Z52_HEADERSIZE);
 
@@ -2041,7 +2041,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
 
       if (direction) {
       } else {
-	offset += caps.direction_offset_color;
+	offset += caps->direction_offset_color;
       }
     } else {
 #ifdef DEBUG
@@ -2050,10 +2050,10 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_COLOR_PRINT;
 
       if (direction) {
-	offset += caps.v_offset_balck_color;
+	offset += caps->v_offset_balck_color;
       } else {
-	offset += caps.v_offset_balck_color;
-	offset += caps.direction_offset_color;
+	offset += caps->v_offset_balck_color;
+	offset += caps->direction_offset_color;
       }
     }
 
@@ -2210,7 +2210,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	      int *paperShift,
 	      int direction,
 	      int pass_length,       /* num of inks to print */
-	      lexmark_cap_t   caps,	        /* I - Printer model */
+	      const lexmark_cap_t *   caps,	        /* I - Printer model */
 	      int xresolution,
 	      int yCount,
 	      Lexmark_head_colors *head_colors,
@@ -2285,7 +2285,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   for (x=xStart; x != xEnd; x+=xIter) {
     int  anyDots=0; /* tells us if there was any dot to print */
 
-       switch(caps.model)	{
+       switch(caps->model)	{
 	case m_z52:
 	  tbits = p;
 	  *(p++) = 0x3F;
@@ -2328,7 +2328,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	} else {
 	  pixelline = pixelline << 2;
 	}
-	switch(caps.model)		{
+	switch(caps->model)		{
 	case m_z52:
 	  if ((dy%8) == 7) {
 	    anyDots |= pixelline;
@@ -2367,7 +2367,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
       }
     }
 
-    switch(caps.model)	{
+    switch(caps->model)	{
     case m_z52:
       if (pass_length != 208) {
 	valid_bytes = valid_bytes >> 1;
@@ -2405,7 +2405,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     maxclen = clen;
   }
 
-  switch(caps.model)    {
+  switch(caps->model)    {
     case m_z52:
   prnBuf[IDX_SEQLEN]  =(unsigned char)(clen >> 24);
   prnBuf[IDX_SEQLEN+1]  =(unsigned char)(clen >> 16);
@@ -2618,7 +2618,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
 		   int interlace,
 		   int pass_length,       /* num of inks to print */
 		   int pass_shift,       /* if we have to write interlace, this is the sift of lines */
-		   lexmark_cap_t   caps,	/* I - Printer model */
+		   const lexmark_cap_t *   caps,	/* I - Printer model */
 		   int           ydpi,	/* I - Vertical resolution */
 		   unsigned char *k,	/* I - Output bitmap data */
 		   int           dk,	/* I -  */

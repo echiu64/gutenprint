@@ -44,7 +44,7 @@ const unsigned int gimpprint_binary_age = GIMPPRINT_BINARY_AGE;
 const unsigned int gimpprint_interface_age = GIMPPRINT_INTERFACE_AGE;
 
 
-char *
+const char *
 stp_check_version (unsigned int required_major,
 		   unsigned int required_minor, unsigned int required_micro)
 {

@@ -71,6 +71,7 @@ typedef struct					/* Plug-in variables */
   int	page_width;		/* Width of page in points */
   int	page_height;		/* Height of page in points */
   void  *lut;			/* Look-up table */
+  void  *driver_data;		/* Private data of the driver */
   unsigned char *cmap;		/* Color map */
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
   void *outdata;
@@ -95,7 +96,7 @@ typedef struct
   stp_papersize_unit_t paper_unit;
 } stp_internal_papersize_t;
 
-static stp_internal_vars_t default_vars =
+static const stp_internal_vars_t default_vars =
 {
 	"",			/* Name of file or command to print to */
 	N_ ("ps2"),	       	/* Name of printer "driver" */
@@ -127,7 +128,7 @@ static stp_internal_vars_t default_vars =
 	0			/* Page height */
 };
 
-static stp_internal_vars_t min_vars =
+static const stp_internal_vars_t min_vars =
 {
 	"",			/* Name of file or command to print to */
 	N_ ("ps2"),			/* Name of printer "driver" */
@@ -159,7 +160,7 @@ static stp_internal_vars_t min_vars =
 	0			/* Page height */
 };
 
-static stp_internal_vars_t max_vars =
+static const stp_internal_vars_t max_vars =
 {
 	"",			/* Name of file or command to print to */
 	N_ ("ps2"),			/* Name of printer "driver" */
@@ -196,7 +197,7 @@ stp_allocate_vars()
 {
   void *retval = xmalloc(sizeof(stp_internal_vars_t));
   memset(retval, 0, sizeof(stp_internal_vars_t));
-  stp_copy_vars(retval, &default_vars);
+  stp_copy_vars(retval, (const stp_vars_t) &default_vars);
   return (retval);
 }
 
@@ -333,6 +334,7 @@ DEF_FUNCS(app_gamma, float);
 DEF_FUNCS(lut, void *);
 DEF_FUNCS(outdata, void *);
 DEF_FUNCS(errdata, void *);
+DEF_FUNCS(driver_data, void *);
 DEF_FUNCS(cmap, unsigned char *);
 
 void
@@ -451,7 +453,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
  * Sizes are converted to 1/72in, then rounded down so that we don't
  * print off the edge of the paper.
  */
-const static stp_internal_papersize_t paper_sizes[] =
+static const stp_internal_papersize_t paper_sizes[] =
 {
   /* Common imperial page sizes */
   { N_ ("Letter"),   612,  792, PAPERSIZE_ENGLISH },	/* 8.5in x 11in */

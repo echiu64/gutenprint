@@ -570,7 +570,7 @@ ps_hex(const stp_vars_t v,	/* I - File to print to */
        int    length)	/* I - Number of bytes to print */
 {
   int		col;	/* Current column */
-  const static char	*hex = "0123456789ABCDEF";
+  static const char	*hex = "0123456789ABCDEF";
 
 
   col = 0;
@@ -753,7 +753,7 @@ ppd_find(const char *ppd_file,	/* I - Name of PPD file */
   return (NULL);
 }
 
-stp_printfuncs_t stp_ps_printfuncs =
+const stp_printfuncs_t stp_ps_printfuncs =
 {
   ps_parameters,
   ps_media_size,

@@ -212,7 +212,13 @@ typedef struct stp_softweave
 				/* in the vertical direction". */
   int last_color;
   int head_offset[8];		/* offset of printheads */
-  const void *v;
+  unsigned char *s[8];
+  unsigned char *fold_buf;
+  unsigned char *comp_buf;
+  stp_weave_t wcache;
+  int rcache;
+  int vcache;
+  stp_vars_t v;
   void (*flushfunc)(struct stp_softweave *sw,
 		    int passno, int model,
 		    int width, int hoffset,
@@ -225,6 +231,10 @@ typedef struct stp_softweave
  * Prototypes...
  */
 
+extern void	stp_set_driver_data (stp_vars_t vv, void * val);
+extern void * 	stp_get_driver_data (const stp_vars_t vv);
+
+
 extern void	stp_default_media_size(const stp_printer_t printer,
 				       const stp_vars_t v, int *width,
 				       int *height);
@@ -233,14 +243,15 @@ extern void *	stp_init_dither(int in_width, int out_width,
 				int horizontal_aspect,
 				int vertical_aspect, stp_vars_t vars);
 extern void	stp_dither_set_matrix(void *vd, size_t x, size_t y,
-				      unsigned *data, int transpose,
+				      const unsigned *data, int transpose,
 				      int prescaled, int x_shear, int y_shear);
 extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
 					       size_t iterations,
-					       unsigned *data, int prescaled,
+					       const unsigned *data,
+					       int prescaled,
 					       int x_shear, int y_shear);
 extern void	stp_dither_set_matrix_short(void *vd, size_t x, size_t y,
-					    unsigned short *data,
+					    const unsigned short *data,
 					    int transpose, int prescaled,
 					    int x_shear, int y_shear);
 extern void	stp_dither_set_transition(void *vd, double);
@@ -282,11 +293,6 @@ extern void	stp_dither(const unsigned short *, int, void *,
 			   unsigned char *, unsigned char *,
 			   int duplicate_line);
 
-extern void *	stp_initialize_weave_params(int S, int J, int O,
-					    int firstrow, int lastrow,
-					    int pageheight, int strategy);
-extern void	stp_destroy_weave_params(void *vw);
-
 extern void	stp_fold(const unsigned char *line, int single_height,
 			 unsigned char *outbuf);
 
@@ -319,7 +325,7 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int lineheight, int vertical_row_separation,
 				  int first_line, int phys_lines, int strategy,
                                   int *head_offset,  /* Get from model - used for 480/580 printers */
-				  const void *v,
+				  stp_vars_t v,
 				  void (*flushfunc)(stp_softweave_t *sw,
 						    int passno, int model,
 						    int width, int hoffset,

@@ -80,7 +80,7 @@ typedef struct
   int id;
 } dither_algo_t;
 
-static dither_algo_t dither_algos[] =
+static const dither_algo_t dither_algos[] =
 {
   { N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { N_ ("Ordered"),                D_ORDERED },
@@ -91,7 +91,7 @@ static dither_algo_t dither_algos[] =
   { N_ ("Random Floyd-Steinberg"), D_FLOYD }
 };
 
-static int num_dither_algos = sizeof(dither_algos) / sizeof(dither_algo_t);
+static const int num_dither_algos = sizeof(dither_algos) / sizeof(dither_algo_t);
 
 #define ERROR_ROWS 2
 
@@ -218,14 +218,14 @@ typedef struct dither
  * http://www.cs.rit.edu/~sxc7922/Project/CRT.htm
  */
 
-static unsigned sq2[] =
+static const unsigned sq2[] =
 {
   0, 2,
   3, 1
 };
 
 #if 0
-static unsigned sq3[] =
+conat static unsigned sq3[] =
 {
   3, 2, 7,
   8, 4, 0,
@@ -243,7 +243,7 @@ static unsigned sq3[] =
  * Four neighbors at distance of 1 or 2 (diagonal or lateral)
  */
 
-static unsigned msq0[] =
+static const unsigned msq0[] =
 {
   00, 14, 21, 17,  8,
   22, 18,  5,  4, 11,
@@ -252,7 +252,7 @@ static unsigned msq0[] =
   16,  7,  3, 10, 24
 };
 
-static unsigned msq1[] =
+static const unsigned msq1[] =
 {
   03, 11, 20, 17,  9,
   22, 19,  8,  1, 10,
@@ -261,24 +261,24 @@ static unsigned msq1[] =
   15,  7,  4, 13, 21
 };
 
-static unsigned short quic0[] = {
+static const unsigned short quic0[] = {
 #include "quickmatrix199.h"
 };
 
-static unsigned short quic1[] = {
+static const unsigned short quic1[] = {
 #include "quickmatrix199-2.h"
 };
 #endif
 
-static unsigned short quic2[] = {
+static const unsigned short quic2[] = {
 #include "quickmatrix257.h"
 };
 
-static unsigned short rect2x1[] = {
+static const unsigned short rect2x1[] = {
 #include "ran.367.179.h"
 };
 
-static unsigned short rect4x1[] = {
+static const unsigned short rect4x1[] = {
 #include "ran.509.131.h"
 };
 
@@ -298,7 +298,7 @@ stp_dither_algorithm_name(int id)
 
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
-		   int size, int *map)
+		   int size, const int *map)
 {
   int i, j;
   unsigned retval = 0;
@@ -340,7 +340,7 @@ is_po2(size_t i)
 
 static void
 init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
-		     unsigned *array)
+		     const unsigned *array)
 {
   int i;
   int x, y;
@@ -394,7 +394,7 @@ shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear)
 
 static void
 init_matrix(dither_matrix_t *mat, int x_size, int y_size,
-	    unsigned int *array, int transpose, int prescaled)
+	    const unsigned int *array, int transpose, int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -427,7 +427,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 
 static void
 init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
-		  unsigned short *array, int transpose, int prescaled)
+		  const unsigned short *array, int transpose, int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -676,7 +676,7 @@ postinit_matrix(dither_t *d, int x_shear, int y_shear)
 }
 
 void
-stp_dither_set_matrix(void *vd, size_t x, size_t y, unsigned *data,
+stp_dither_set_matrix(void *vd, size_t x, size_t y, const unsigned *data,
 		      int transpose, int prescaled, int x_shear, int y_shear)
 {
   dither_t *d = (dither_t *) vd;
@@ -687,8 +687,8 @@ stp_dither_set_matrix(void *vd, size_t x, size_t y, unsigned *data,
 
 void
 stp_dither_set_iterated_matrix(void *vd, size_t edge, size_t iterations,
-			       unsigned *data, int prescaled, int x_shear,
-			       int y_shear)
+			       const unsigned *data, int prescaled,
+			       int x_shear, int y_shear)
 {
   dither_t *d = (dither_t *) vd;
   preinit_matrix(d);
@@ -697,8 +697,9 @@ stp_dither_set_iterated_matrix(void *vd, size_t edge, size_t iterations,
 }
 
 void
-stp_dither_set_matrix_short(void *vd, size_t x, size_t y, unsigned short *data,
-			    int transpose, int prescaled, int x_shear,
+stp_dither_set_matrix_short(void *vd, size_t x, size_t y,
+			    const unsigned short *data, int transpose,
+			    int prescaled, int x_shear,
 			    int y_shear)
 {
   dither_t *d = (dither_t *) vd;
