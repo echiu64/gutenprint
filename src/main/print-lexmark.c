@@ -244,7 +244,7 @@ lexmark_calc_3200_checksum(unsigned char *data)
 */
 
 
-static const double standard_sat_adjustment[49] =
+static const double sat_adjustment[49] =
 {
   1.0,				/* C */
   1.1,
@@ -297,7 +297,7 @@ static const double standard_sat_adjustment[49] =
   1.0				/* C */
 };
 
-static const double standard_lum_adjustment[49] =
+static const double lum_adjustment[49] =
 {
   0.50,				/* C */
   0.6,
@@ -350,7 +350,7 @@ static const double standard_lum_adjustment[49] =
   0.50				/* C */
 };
 
-static const double standard_hue_adjustment[49] =
+static const double hue_adjustment[49] =
 {
   0,				/* C */
   0.17,
