@@ -28,17 +28,13 @@ set_args() {
     done
 }
 
-set_args `getopt vp: "$@"`
-
-if [ -z "$args" ] ; then
-    args=`./printers`
-fi
-
-for p in $args ; do
-    echo -n "$p"
+run_one_testpattern() {
+    printer=$1
+    shift
+    stuff="$@"
     cat > testpattern.test <<EOF
-printer $p
-$extra
+printer $printer
+$stuff
 hsize 0.1
 vsize 0.1
 left 0.15
@@ -111,6 +107,30 @@ EOF
     if [ $? -ne 0 ] ; then
 	retval=1
     fi
-done
+}
+
+set_args `getopt vp: "$@"`
+
+if [ -z "$args" ] ; then
+    args=`./printers`
+fi
+
+StandardDithers="EvenTone Adaptive Ordered Fast VeryFast Floyd"
+
+if [ -z "`echo $extra |grep DitherAlgorithm`" ] ; then
+    for p in $args ; do
+	echo "$p"
+	for d in $StandardDithers ; do
+	    echo -n "    $d"
+	    run_one_testpattern "$p" "`printf '%s\n' \"parameter DitherAlgorithm $d\"`" "$extra"
+	done
+    done
+else
+    for p in $args ; do
+	echo -n "$p"
+	run_one_testpattern "$p" "$extra"
+    done
+fi
+
 
 exit $retval
