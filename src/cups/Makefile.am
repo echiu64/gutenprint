@@ -167,7 +167,7 @@ ppd-stamp: genppd
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
-	$(MAKE) prefix=$${wdir}/catalog install
+	$(MAKE) prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
 	-$(RM) -r ppd
 	-mkdir ppd
 	for language in C $(ALL_LINGUAS) ; do \

@@ -1,21 +1,16 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2001 Roger leigh
-# Roger Leigh <roger@whinlatter.uklinux.net>, 2001.
+# gimp-print fr.po
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Christophe Merlet (RedFox) <redfox@eikonex.org>, 2000-2001.
 #
-#.
-#. *  Color adjust button
-#.
-#: src/gimp/gimp_main_window.c:1260 src/gimp/gimp_main_window.c:1281
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2001-09-20 17:20-0700\n"
-"PO-Revision-Date: 2001-09-08 11:26+BST\n"
-"Last-Translator: Rog er Leigh <roger@whinlatter.uklinux.net>\n"
-"Language-Team: N/A\n"
+"Project-Id-Version: gimp-print 4.1.99-b2\n"
+"POT-Creation-Date: 2001-10-13 22:48-0400\n"
+"PO-Revision-Date: 2001-10-11 09:19+0200\n"
+"Last-Translator: Christophe Merlet (RedFox) <redfox@eikonex.org>\n"
+"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: lib/getopt.c:681
@@ -42,13 +37,13 @@ msgstr ""
 #: lib/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: unrecognised option `--%s'\n"
+msgstr ""
 
 #. +option or -option
 #: lib/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: unrecognised option `%c%s'\n"
+msgstr ""
 
 #. 1003.2 specifies the format of this message.
 #: lib/getopt.c:788
@@ -77,540 +72,542 @@ msgstr ""
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr ""
 
-#: src/main/print-canon.c:1221 src/main/print-escp2.c:2582
-#: src/main/print-lexmark.c:789
-msgid "Plain Paper"
-msgstr ""
-
-#: src/main/print-canon.c:1222 src/main/print-escp2.c:2594
+#: src/main/print-canon.c:1310 src/main/print-escp2.c:2779
 #: src/main/print-lexmark.c:795
+msgid "Plain Paper"
+msgstr "Papier normal"
+
+#: src/main/print-canon.c:1311 src/main/print-escp2.c:2791
+#: src/main/print-lexmark.c:801
 msgid "Transparencies"
-msgstr ""
+msgstr "Transparents"
 
-#: src/main/print-canon.c:1223
+#: src/main/print-canon.c:1312
+#, fuzzy
 msgid "Back Print Film"
-msgstr ""
+msgstr "Imprimer dans un fichier ?"
 
-#: src/main/print-canon.c:1224
+#: src/main/print-canon.c:1313
 msgid "Fabric Sheets"
 msgstr ""
 
-#: src/main/print-canon.c:1225
+#: src/main/print-canon.c:1314
 msgid "Envelope"
-msgstr ""
+msgstr "Enveloppe"
 
-#: src/main/print-canon.c:1226
+#: src/main/print-canon.c:1315
 msgid "High Resolution Paper"
-msgstr ""
+msgstr "Papier haute résolution"
 
-#: src/main/print-canon.c:1227
+#: src/main/print-canon.c:1316
 msgid "T-Shirt Transfers"
-msgstr ""
+msgstr "Transferts T-Shirt"
 
-#: src/main/print-canon.c:1228
+#: src/main/print-canon.c:1317
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1229
+#: src/main/print-canon.c:1318
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1230
+#: src/main/print-canon.c:1319
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1231
+#: src/main/print-canon.c:1320
 msgid "Photo Paper Pro"
 msgstr ""
 
-#: src/main/print-canon.c:1232 src/main/print-escp2.c:2628
-#: src/main/print-lexmark.c:826
+#: src/main/print-canon.c:1321 src/main/print-escp2.c:2825
+#: src/main/print-lexmark.c:832
 msgid "Other"
-msgstr ""
+msgstr "Autre"
 
-#: src/main/print-canon.c:1505 src/main/print-lexmark.c:1021
+#: src/main/print-canon.c:1594 src/main/print-lexmark.c:1029
 msgid "Auto Sheet Feeder"
 msgstr ""
 
-#: src/main/print-canon.c:1506 src/main/print-lexmark.c:1022
+#: src/main/print-canon.c:1595 src/main/print-lexmark.c:1030
 msgid "Manual with Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1507 src/main/print-lexmark.c:1023
+#: src/main/print-canon.c:1596 src/main/print-lexmark.c:1031
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1600
+#: src/main/print-canon.c:1689 src/main/print-lexmark.c:573
 msgid "Black"
-msgstr ""
+msgstr "Noir"
 
-#: src/main/print-canon.c:1605
-#, fuzzy
+#: src/main/print-canon.c:1694
 msgid "CMY Color"
-msgstr "CMY Colour"
+msgstr "Couleur CMJ"
 
-#: src/main/print-canon.c:1610
-#, fuzzy
+#: src/main/print-canon.c:1699
 msgid "CMYK Color"
-msgstr "CMYK Colour"
+msgstr "Couleur CMJN"
 
-#: src/main/print-canon.c:1615
-#, fuzzy
+#: src/main/print-canon.c:1704
 msgid "Photo CcMmY Color"
-msgstr "Photo CcMmY Colour"
+msgstr "Photo Couleur CcMmJ"
 
-#: src/main/print-canon.c:1620
-#, fuzzy
+#: src/main/print-canon.c:1709
 msgid "Photo CcMmYK Color"
-msgstr "Photo CcMmYK Colour"
+msgstr "Photo Couleur CcMmJN"
 
 #: src/main/print-dither.c:62
 msgid "Adaptive Hybrid"
-msgstr ""
+msgstr "Adaptatif hybride"
 
 #: src/main/print-dither.c:63
 msgid "Ordered"
-msgstr ""
+msgstr "Ordonné"
 
 #: src/main/print-dither.c:64
 msgid "Fast"
-msgstr ""
+msgstr "Rapide"
 
 #: src/main/print-dither.c:65
 msgid "Very Fast"
-msgstr ""
+msgstr "Très rapide"
 
 #: src/main/print-dither.c:66
 msgid "Hybrid Floyd-Steinberg"
-msgstr ""
+msgstr "Floyd-Steinberg hybride"
 
-#: src/main/print-escp2.c:2193
+#: src/main/print-escp2.c:2375 src/main/print-escp2.c:2378
 msgid "360 x 90 DPI Fast Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2.c:2196
-msgid "360 x 120 DPI Fast Economy Draft"
+#: src/main/print-escp2.c:2381 src/main/print-escp2.c:2384
+msgid "360 x 120 DPI Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2.c:2199
+#: src/main/print-escp2.c:2387 src/main/print-escp2.c:2390
 msgid "180 DPI Economy Draft"
 msgstr ""
 
-#: src/main/print-escp2.c:2202
+#: src/main/print-escp2.c:2393 src/main/print-escp2.c:2396
 msgid "360 x 240 DPI Draft"
-msgstr ""
+msgstr "Brouillon 360 x 240 ppp"
 
-#: src/main/print-escp2.c:2205
+#: src/main/print-escp2.c:2399 src/main/print-escp2.c:2402
 msgid "360 x 180 DPI Draft"
-msgstr ""
+msgstr "Brouillon 360 x 180 ppp"
 
-#: src/main/print-escp2.c:2208 src/main/print-escp2.c:2216
+#: src/main/print-escp2.c:2405 src/main/print-escp2.c:2413
 msgid "360 DPI"
-msgstr ""
+msgstr "360 ppp"
 
-#: src/main/print-escp2.c:2210 src/main/print-escp2.c:2218
+#: src/main/print-escp2.c:2407 src/main/print-escp2.c:2415
 msgid "360 DPI Unidirectional"
-msgstr ""
+msgstr "360 ppp unidirectionnel"
 
-#: src/main/print-escp2.c:2212
+#: src/main/print-escp2.c:2409
 msgid "360 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:2214
+#: src/main/print-escp2.c:2411
 msgid "360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2220
+#: src/main/print-escp2.c:2417
 msgid "360 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2222
+#: src/main/print-escp2.c:2419
 msgid "360 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2224
+#: src/main/print-escp2.c:2421
 msgid "360 DPI FOL2"
 msgstr ""
 
-#: src/main/print-escp2.c:2226
+#: src/main/print-escp2.c:2423
 msgid "360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2228
+#: src/main/print-escp2.c:2425
 msgid "360 DPI MW2"
 msgstr ""
 
-#: src/main/print-escp2.c:2230
+#: src/main/print-escp2.c:2427
 msgid "360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2233 src/main/print-escp2.c:2237
+#: src/main/print-escp2.c:2430 src/main/print-escp2.c:2434
 msgid "720 x 360 DPI"
-msgstr ""
+msgstr "720 x 360 ppp"
 
-#: src/main/print-escp2.c:2235 src/main/print-escp2.c:2239
+#: src/main/print-escp2.c:2432 src/main/print-escp2.c:2436
 msgid "720 x 360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2241
+#: src/main/print-escp2.c:2438
 msgid "720 x 360 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:2243
+#: src/main/print-escp2.c:2440
 msgid "720 x 360 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2245
+#: src/main/print-escp2.c:2442
 msgid "720 x 360 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2.c:2247
+#: src/main/print-escp2.c:2444
 msgid "720 x 360 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2249
+#: src/main/print-escp2.c:2446
 msgid "720 x 360 DPI FOL2"
 msgstr ""
 
-#: src/main/print-escp2.c:2251
+#: src/main/print-escp2.c:2448
 msgid "720 x 360 DPI FOL2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2253
+#: src/main/print-escp2.c:2450
 msgid "720 x 360 DPI MW2"
 msgstr ""
 
-#: src/main/print-escp2.c:2255
+#: src/main/print-escp2.c:2452
 msgid "720 x 360 DPI MW2 Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2258 src/main/print-escp2.c:2274
+#: src/main/print-escp2.c:2455 src/main/print-escp2.c:2471
 msgid "720 DPI"
-msgstr ""
+msgstr "720 ppp"
 
-#: src/main/print-escp2.c:2260 src/main/print-escp2.c:2276
+#: src/main/print-escp2.c:2457 src/main/print-escp2.c:2473
 msgid "720 DPI Unidirectional"
-msgstr ""
+msgstr "720 ppp unidirectionnel"
 
-#: src/main/print-escp2.c:2262
+#: src/main/print-escp2.c:2459
 msgid "720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:2264
+#: src/main/print-escp2.c:2461
 msgid "720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2266
+#: src/main/print-escp2.c:2463
 msgid "720 DPI Full Overlap"
 msgstr ""
 
-#: src/main/print-escp2.c:2268
+#: src/main/print-escp2.c:2465
 msgid "720 DPI Full Overlap Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2270
+#: src/main/print-escp2.c:2467
 msgid "720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2.c:2272
+#: src/main/print-escp2.c:2469
 msgid "720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2278
+#: src/main/print-escp2.c:2475
 msgid "720 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:2280
+#: src/main/print-escp2.c:2477
 msgid "720 DPI High Quality Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2282
+#: src/main/print-escp2.c:2479
+#, fuzzy
 msgid "720 DPI Highest Quality"
-msgstr ""
+msgstr "Aperçu de haute qualité"
 
-#: src/main/print-escp2.c:2285 src/main/print-escp2.c:2301
+#: src/main/print-escp2.c:2482 src/main/print-escp2.c:2498
 msgid "1440 x 720 DPI"
-msgstr ""
+msgstr "1440 x 720 ppp"
 
-#: src/main/print-escp2.c:2287 src/main/print-escp2.c:2303
+#: src/main/print-escp2.c:2484 src/main/print-escp2.c:2500
 msgid "1440 x 720 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2289
+#: src/main/print-escp2.c:2486
 msgid "1440 x 720 DPI Microweave"
 msgstr ""
 
-#: src/main/print-escp2.c:2291
+#: src/main/print-escp2.c:2488
 msgid "1440 x 720 DPI Microweave Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2293
+#: src/main/print-escp2.c:2490
 msgid "1440 x 720 DPI FOL"
 msgstr ""
 
-#: src/main/print-escp2.c:2295
+#: src/main/print-escp2.c:2492
 msgid "1440 x 720 DPI FOL Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2297
+#: src/main/print-escp2.c:2494
 msgid "1440 x 720 DPI Four Pass"
 msgstr ""
 
-#: src/main/print-escp2.c:2299
+#: src/main/print-escp2.c:2496
 msgid "1440 x 720 DPI Four Pass Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2305
+#: src/main/print-escp2.c:2502
 msgid "1440 x 720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:2308
+#: src/main/print-escp2.c:2505
 msgid "2880 x 720 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:2310
+#: src/main/print-escp2.c:2507
 msgid "2880 x 720 DPI Unidirectional"
 msgstr ""
 
 #.
 #. * Nothing thus far supports 1440 DPI vertical resolution
 #.
-#: src/main/print-escp2.c:2316
+#: src/main/print-escp2.c:2513
 msgid "1440 x 1440 DPI"
 msgstr ""
 
-#: src/main/print-escp2.c:2318
+#: src/main/print-escp2.c:2515
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:2321
+#: src/main/print-escp2.c:2518
 msgid "2880 x 1440 DPI"
-msgstr ""
+msgstr "2880 x 1440 ppp"
 
 #.
 #. * These resolutions have no practical use; they're neither as good as
 #. * nor any faster than 720x720 DPI.  They exist to permit testing
 #. * 2880x720 (4:1 aspect) on 1440x720 printers.
 #.
-#: src/main/print-escp2.c:2329
+#: src/main/print-escp2.c:2526
 msgid "1440 x 360 DPI"
-msgstr ""
+msgstr "1440 x 360 ppp"
 
-#: src/main/print-escp2.c:2331
+#: src/main/print-escp2.c:2528
 msgid "1440 x 360 DPI Unidirectional"
 msgstr ""
 
-#: src/main/print-escp2.c:2333
+#: src/main/print-escp2.c:2530
 msgid "1440 x 360 DPI High Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:2335
+#: src/main/print-escp2.c:2532
 msgid "1440 x 360 DPI High Quality Uni"
 msgstr ""
 
-#: src/main/print-escp2.c:2337
+#: src/main/print-escp2.c:2534
 msgid "1440 x 360 DPI Highest Quality"
 msgstr ""
 
-#: src/main/print-escp2.c:2585
+#: src/main/print-escp2.c:2782
 msgid "Plain Paper Fast Load"
 msgstr ""
 
 #. 7.25 * 10.5in
-#: src/main/print-escp2.c:2588 src/main/print-util.c:549
+#: src/main/print-escp2.c:2785 src/main/print-util.c:549
 msgid "Postcard"
-msgstr ""
+msgstr "Carte postale"
 
-#: src/main/print-escp2.c:2591 src/main/print-lexmark.c:792
+#: src/main/print-escp2.c:2788 src/main/print-lexmark.c:798
+#, fuzzy
 msgid "Glossy Film"
-msgstr ""
+msgstr "Pavage en verre"
 
-#: src/main/print-escp2.c:2597 src/main/print-lexmark.c:798
+#: src/main/print-escp2.c:2794 src/main/print-lexmark.c:804
 msgid "Envelopes"
-msgstr ""
+msgstr "Enveloppes"
 
-#: src/main/print-escp2.c:2600
+#: src/main/print-escp2.c:2797
 msgid "Back Light Film"
 msgstr ""
 
-#: src/main/print-escp2.c:2603 src/main/print-lexmark.c:801
+#: src/main/print-escp2.c:2800 src/main/print-lexmark.c:807
+#, fuzzy
 msgid "Matte Paper"
-msgstr ""
+msgstr "Coller aprés"
 
-#: src/main/print-escp2.c:2606 src/main/print-lexmark.c:804
+#: src/main/print-escp2.c:2803 src/main/print-lexmark.c:810
 msgid "Inkjet Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2609 src/main/print-lexmark.c:807
+#: src/main/print-escp2.c:2806 src/main/print-lexmark.c:813
 msgid "Photo Quality Inkjet Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2612 src/main/print-lexmark.c:810
+#: src/main/print-escp2.c:2809 src/main/print-lexmark.c:816
 msgid "Photo Paper"
-msgstr ""
+msgstr "Papier photo"
 
-#: src/main/print-escp2.c:2615 src/main/print-lexmark.c:813
+#: src/main/print-escp2.c:2812 src/main/print-lexmark.c:819
 msgid "Premium Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2619 src/main/print-lexmark.c:817
+#: src/main/print-escp2.c:2816 src/main/print-lexmark.c:823
 msgid "Premium Luster Photo Paper"
-msgstr "Premium Lustre Photo Paper"
+msgstr ""
 
-#: src/main/print-escp2.c:2622 src/main/print-lexmark.c:820
+#: src/main/print-escp2.c:2819 src/main/print-lexmark.c:826
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2625 src/main/print-lexmark.c:823
+#: src/main/print-escp2.c:2822 src/main/print-lexmark.c:829
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#: src/main/print-escp2.c:2645
+#: src/main/print-escp2.c:2842
+#, fuzzy
 msgid "Seven Color Enhanced"
-msgstr "Seven Colour Enhanced"
+msgstr "Extension de couleurs..."
 
-#: src/main/print-escp2.c:2646
-#, fuzzy
+#: src/main/print-escp2.c:2843
 msgid "Six Color Enhanced Composite"
-msgstr "Seven Colour Enhanced"
+msgstr ""
 
-#: src/main/print-escp2.c:2647 src/main/print-lexmark.c:562
-#: src/main/print-lexmark.c:637
+#: src/main/print-escp2.c:2844 src/main/print-lexmark.c:563
+#: src/main/print-lexmark.c:643
 msgid "Six Color Photo"
-msgstr "Six Colour Photo"
+msgstr "Photo six couleurs"
 
-#: src/main/print-escp2.c:2648 src/main/print-lexmark.c:567
-#: src/main/print-lexmark.c:642
-#, fuzzy
+#: src/main/print-escp2.c:2845 src/main/print-lexmark.c:568
+#: src/main/print-lexmark.c:648
 msgid "Five Color Photo Composite"
-msgstr "Six Colour Photo"
+msgstr ""
 
 #. output_type   ncolors used_colors   pass_length  v_top_head_offset
 #. *                                                        h_catridge_offset
 #. *                                                           h_direction_offset
 #. *                                                               head_offset
-#: src/main/print-escp2.c:2649 src/main/print-lexmark.c:552
-#: src/main/print-lexmark.c:627
+#: src/main/print-escp2.c:2846 src/main/print-lexmark.c:553
+#: src/main/print-lexmark.c:633
 msgid "Four Color Standard"
-msgstr "Four Colour Standard"
-
-#: src/main/print-escp2.c:2650 src/main/print-lexmark.c:557
-#: src/main/print-lexmark.c:632
-msgid "Three Color Composite"
-msgstr "Three Colour Composite"
-
-#: src/gimp/gimp_main_window.c:1500 src/main/print-escp2.c:3110
-#: src/main/print-pcl.c:198
-msgid "Standard"
 msgstr ""
 
-#: src/main/print-escp2.c:3112
+#: src/main/print-escp2.c:2847 src/main/print-lexmark.c:558
+#: src/main/print-lexmark.c:638
+msgid "Three Color Composite"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:3313
+#: src/main/print-pcl.c:198
+msgid "Standard"
+msgstr "Standard"
+
+#: src/main/print-escp2.c:3315
 msgid "Roll Feed"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
-#: src/main/print-lexmark.c:528 src/main/print-lexmark.c:609
+#: src/main/print-lexmark.c:529 src/main/print-lexmark.c:615
 msgid "300 DPI x 600 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:529 src/main/print-lexmark.c:610
+#: src/main/print-lexmark.c:530 src/main/print-lexmark.c:616
 msgid "600 DPI"
-msgstr ""
+msgstr "600 ppp"
 
-#: src/main/print-lexmark.c:530 src/main/print-lexmark.c:611
+#: src/main/print-lexmark.c:531 src/main/print-lexmark.c:617
 msgid "600 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:531 src/main/print-lexmark.c:612
+#: src/main/print-lexmark.c:532 src/main/print-lexmark.c:618
+#, fuzzy
 msgid "600 DPI Unidirectional"
-msgstr ""
+msgstr "Directionnel"
 
-#: src/main/print-lexmark.c:532 src/main/print-lexmark.c:613
+#: src/main/print-lexmark.c:533 src/main/print-lexmark.c:619
 msgid "1200 DPI"
-msgstr ""
+msgstr "1200 ppp"
 
-#: src/main/print-lexmark.c:533 src/main/print-lexmark.c:614
+#: src/main/print-lexmark.c:534 src/main/print-lexmark.c:620
 msgid "1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:534 src/main/print-lexmark.c:615
+#: src/main/print-lexmark.c:535 src/main/print-lexmark.c:621
 msgid "1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:535 src/main/print-lexmark.c:616
+#: src/main/print-lexmark.c:536 src/main/print-lexmark.c:622
+#, fuzzy
 msgid "1200 DPI  Unidirectional"
-msgstr ""
+msgstr "Directionnel"
 
-#: src/main/print-lexmark.c:536
+#: src/main/print-lexmark.c:537
 msgid "2400 DPI x 1200 DPI"
 msgstr ""
 
-#: src/main/print-lexmark.c:537
+#: src/main/print-lexmark.c:538
 msgid "2400 DPI x 1200 DPI high quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:538
+#: src/main/print-lexmark.c:539
 msgid "2400 DPI x 1200 DPI highest quality"
 msgstr ""
 
-#: src/main/print-lexmark.c:540
+#: src/main/print-lexmark.c:541
+#, fuzzy
 msgid "test print"
-msgstr ""
+msgstr "Papier Journal"
 
 #. 11in x 17in
 #: src/main/print-pcl.c:108 src/main/print-util.c:547
 msgid "Executive"
-msgstr ""
+msgstr "Executive"
 
 #. US Exec (7.25 x 10.5 in)
 #: src/main/print-pcl.c:109 src/main/print-util.c:541
 msgid "Letter"
-msgstr ""
+msgstr "Letter"
 
 #. US Letter (8.5 x 11 in)
 #: src/main/print-pcl.c:110 src/main/print-util.c:543
 msgid "Legal"
-msgstr ""
+msgstr "Legal"
 
 #. US Legal (8.5 x 14 in)
 #: src/main/print-pcl.c:111 src/main/print-util.c:545
 msgid "Tabloid"
-msgstr ""
+msgstr "Tabloid"
 
 #. US Tabloid (11 x 17 in)
 #: src/main/print-pcl.c:112 src/main/print-pcl.c:199 src/main/print-util.c:565
 msgid "Manual"
-msgstr ""
+msgstr "Manuel"
 
 #. US Manual/Statement (5.5 x 8.5 in)
 #: src/main/print-pcl.c:113
 msgid "13x19"
-msgstr ""
+msgstr "13x19"
 
 #. US 13x19/Super B (13 x 19 in)
 #: src/main/print-pcl.c:114 src/main/print-util.c:616
 msgid "A5"
-msgstr ""
+msgstr "A5"
 
 #. ISO/JIS A5 (148 x 210 mm)
 #: src/main/print-pcl.c:115 src/main/print-util.c:614
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #. ISO/JIS A4 (210 x 297 mm)
 #: src/main/print-pcl.c:116 src/main/print-util.c:612
 msgid "A3"
-msgstr ""
+msgstr "A3"
 
 #. ISO/JIS A3 (297 x 420 mm)
 #: src/main/print-pcl.c:117 src/main/print-util.c:698
 msgid "B5 JIS"
-msgstr ""
+msgstr "B5 JIS"
 
 #. JIS B5 (182 x 257 mm).
 #: src/main/print-pcl.c:118 src/main/print-util.c:696
 msgid "B4 JIS"
-msgstr ""
+msgstr "B4 JIS"
 
 #. JIS B4 (257 x 364 mm).
 #: src/main/print-pcl.c:119 src/main/print-util.c:800
@@ -625,67 +622,68 @@ msgstr ""
 #. Japanese Oufuku Card (148 x 200 mm)
 #: src/main/print-pcl.c:121 src/main/print-util.c:618
 msgid "A6"
-msgstr ""
+msgstr "A6"
 
 #. ISO/JIS A6 card
 #: src/main/print-pcl.c:122 src/main/print-util.c:553
 msgid "4x6"
-msgstr ""
+msgstr "4x6"
 
 #. US Index card (4 x 6 in)
 #: src/main/print-pcl.c:123 src/main/print-util.c:559
 msgid "5x8"
-msgstr ""
+msgstr "5x8"
 
 #. US Index card (5 x 8 in)
 #: src/main/print-pcl.c:124 src/main/print-util.c:551
 msgid "3x5"
-msgstr ""
+msgstr "3x5"
 
 #. US Index card (3 x 5 in)
 #: src/main/print-pcl.c:125
+#, fuzzy
 msgid "Monarch"
-msgstr ""
+msgstr "Mosaïque"
 
 #. Monarch Envelope (3 7/8 x 7 1/2 in)
 #: src/main/print-pcl.c:126 src/main/print-util.c:810
 msgid "Commercial 10"
-msgstr ""
+msgstr "Commercial 10"
 
 #. US Commercial 10 Envelope (4.125 x 9.5 in) Portrait
 #: src/main/print-pcl.c:127 src/main/print-util.c:730
 msgid "DL"
-msgstr ""
+msgstr "DL"
 
 #. DL envelope (110 x 220 mm) Portrait
 #: src/main/print-pcl.c:128 src/main/print-util.c:724
 msgid "C5"
-msgstr ""
+msgstr "C5"
 
 #. C5 envelope (162 x 229 mm)
 #: src/main/print-pcl.c:129 src/main/print-util.c:728
 msgid "C6"
-msgstr ""
+msgstr "C6"
 
 #. C6 envelope (114 x 162 mm)
 #: src/main/print-pcl.c:130 src/main/print-util.c:812
 msgid "A2 Invitation"
-msgstr ""
+msgstr "A2 Invitation"
 
 #. US A2 Invitation envelope (4 3/8 x 5 3/4 in)
-#: src/main/print-pcl.c:131 src/main/print-util.c:804
+#: src/main/print-pcl.c:131
 msgid "Long 3"
-msgstr ""
+msgstr "Long 3"
 
 #. Japanese Long Envelope #3 (120 x 235 mm)
-#: src/main/print-pcl.c:132 src/main/print-util.c:806
+#: src/main/print-pcl.c:132
 msgid "Long 4"
-msgstr ""
+msgstr "Long 4"
 
 #. Japanese Long Envelope #4 (90 x 205 mm)
-#: src/main/print-pcl.c:133 src/main/print-util.c:808
+#: src/main/print-pcl.c:133
 msgid "Kaku"
-msgstr ""
+msgstr "Kaku"
 
 #. Japanese Kaku Envelope (240 x 332.1 mm)
 #. *** MRS: this size not supported by print-util funcs! ***
@@ -694,32 +692,37 @@ msgid "HP Greeting Card"
 msgstr ""
 
 #: src/main/print-pcl.c:153
+#, fuzzy
 msgid "Plain"
-msgstr ""
+msgstr "Plan"
 
 #: src/main/print-pcl.c:154
+#, fuzzy
 msgid "Bond"
-msgstr ""
+msgstr "rond"
 
 #: src/main/print-pcl.c:155
 msgid "Premium"
 msgstr ""
 
 #: src/main/print-pcl.c:156
-msgid "Glossy/Photo"
-msgstr ""
+#, fuzzy
+msgid "Glossy Photo"
+msgstr "Pavage en verre"
 
 #: src/main/print-pcl.c:157
+#, fuzzy
 msgid "Transparency"
-msgstr ""
+msgstr "Transparent"
 
 #: src/main/print-pcl.c:158
 msgid "Quick-dry Photo"
 msgstr ""
 
 #: src/main/print-pcl.c:159
+#, fuzzy
 msgid "Quick-dry Transparency"
-msgstr ""
+msgstr "je ne peux gérer la transparence"
 
 #. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
 #: src/main/print-pcl.c:201
@@ -747,28 +750,31 @@ msgid "Desktop Sheet Feeder"
 msgstr ""
 
 #: src/main/print-pcl.c:207
+#, fuzzy
 msgid "Tray"
-msgstr ""
+msgstr "Gris"
 
 #: src/main/print-pcl.c:209
+#, fuzzy
 msgid "Optional Source"
-msgstr ""
+msgstr "Source du support :"
 
 #: src/main/print-pcl.c:210
+#, fuzzy
 msgid "Autoselect"
-msgstr ""
+msgstr "Désélectionner"
 
 #: src/main/print-pcl.c:224
 msgid "150x150 DPI"
-msgstr ""
+msgstr "150x150 ppp"
 
 #: src/main/print-pcl.c:225
 msgid "300x300 DPI"
-msgstr ""
+msgstr "300x300 ppp"
 
 #: src/main/print-pcl.c:226
 msgid "600x300 DPI"
-msgstr ""
+msgstr "600x300 ppp"
 
 #: src/main/print-pcl.c:227
 msgid "600x600 DPI monochrome"
@@ -776,29 +782,30 @@ msgstr ""
 
 #: src/main/print-pcl.c:228
 msgid "600x600 DPI"
-msgstr ""
+msgstr "600x600 ppp"
 
 #: src/main/print-pcl.c:229
 msgid "1200x600 DPI"
-msgstr ""
+msgstr "1200x600 ppp"
 
 #: src/main/print-pcl.c:230
 msgid "2400x600 DPI"
+msgstr "2400x600 ppp"
+
+#: src/main/print-pcl.c:1563
+msgid "Color + Black Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1535
-msgid "Color + Black Cartridges"
-msgstr "Colour + Black Cartridges"
-
-#: src/main/print-pcl.c:1536
+#: src/main/print-pcl.c:1564
 msgid "Color + Photo Cartridges"
-msgstr "Colour + Photo Cartridges"
+msgstr ""
 
 #. Name of file or command to print to
 #: src/main/print-util.c:125 src/main/print-util.c:159
 #: src/main/print-util.c:193
+#, fuzzy
 msgid "ps2"
-msgstr ""
+msgstr "Opérations"
 
 #: src/main/print-util.c:555
 msgid "Epson 4x6 Photo Paper"
@@ -806,7 +813,7 @@ msgstr ""
 
 #: src/main/print-util.c:557
 msgid "5x7"
-msgstr ""
+msgstr "5x7"
 
 #: src/main/print-util.c:561
 msgid "6x8"
@@ -877,47 +884,47 @@ msgstr ""
 #.
 #: src/main/print-util.c:602
 msgid "4A"
-msgstr ""
+msgstr "4A"
 
 #. 1682mm x 2378mm
 #: src/main/print-util.c:604
 msgid "2A"
-msgstr ""
+msgstr "2A"
 
 #. 1189mm x 1682mm
 #: src/main/print-util.c:606
 msgid "A0"
-msgstr ""
+msgstr "A0"
 
 #. 841mm x 1189mm
 #: src/main/print-util.c:608
 msgid "A1"
-msgstr ""
+msgstr "A1"
 
 #. 594mm x  841mm
 #: src/main/print-util.c:610
 msgid "A2"
-msgstr ""
+msgstr "A2"
 
 #. 105mm x  148mm
 #: src/main/print-util.c:620
 msgid "A7"
-msgstr ""
+msgstr "A7"
 
 #. 74mm x  105mm
 #: src/main/print-util.c:622
 msgid "A8"
-msgstr ""
+msgstr "A8"
 
 #. 52mm x   74mm
 #: src/main/print-util.c:624
 msgid "A9"
-msgstr ""
+msgstr "A9"
 
 #. 37mm x   52mm
 #: src/main/print-util.c:626
 msgid "A10"
-msgstr ""
+msgstr "A10"
 
 #. 26mm x   37mm
 #.
@@ -926,27 +933,27 @@ msgstr ""
 #.
 #: src/main/print-util.c:633
 msgid "RA0"
-msgstr ""
+msgstr "RA0"
 
 #. 860mm x 1220mm
 #: src/main/print-util.c:635
 msgid "RA1"
-msgstr ""
+msgstr "RA1"
 
 #. 610mm x  860mm
 #: src/main/print-util.c:637
 msgid "RA2"
-msgstr ""
+msgstr "RA2"
 
 #. 430mm x  610mm
 #: src/main/print-util.c:639
 msgid "RA3"
-msgstr ""
+msgstr "RA3"
 
 #. 305mm x  430mm
 #: src/main/print-util.c:641
 msgid "RA4"
-msgstr ""
+msgstr "RA4"
 
 #. 215mm x  305mm
 #.
@@ -954,7 +961,7 @@ msgstr ""
 #.
 #: src/main/print-util.c:647
 msgid "SRA0"
-msgstr ""
+msgstr "SRA0"
 
 #. 900mm x 1280mm
 #: src/main/print-util.c:649
@@ -1085,8 +1092,9 @@ msgstr ""
 #. * "C" series: Envelopes or folders suitable for A size stationery.
 #.
 #: src/main/print-util.c:714
+#, fuzzy
 msgid "C0"
-msgstr ""
+msgstr "0"
 
 #. 917mm x 1297mm
 #: src/main/print-util.c:716
@@ -1135,8 +1143,9 @@ msgstr ""
 
 #. 40mm x   57mm
 #: src/main/print-util.c:740
+#, fuzzy
 msgid "C10"
-msgstr ""
+msgstr "180"
 
 #. 28mm x   40mm
 #.
@@ -1166,12 +1175,12 @@ msgstr ""
 #. * Foolscap
 #.
 #: src/main/print-util.c:760
-msgid "flsa"
+msgid "American foolscap"
 msgstr ""
 
 #. American foolscap
 #: src/main/print-util.c:762
-msgid "flse"
+msgid "European foolscap"
 msgstr ""
 
 #. European foolscap
@@ -1239,10 +1248,26 @@ msgstr ""
 msgid "Penguin large paperback"
 msgstr ""
 
+#. 148 x 200 mm
+#: src/main/print-util.c:804
+msgid "Japanese long envelope #3"
+msgstr ""
+
+#. Japanese long envelope #3
+#: src/main/print-util.c:806
+msgid "Japanese long envelope #4"
+msgstr ""
+
+#. Japanese long envelope #4
+#: src/main/print-util.c:808
+msgid "Japanese Kaku envelope #4"
+msgstr ""
+
 #. US A2 invitation
 #: src/main/print-util.c:814
+#, fuzzy
 msgid "Custom"
-msgstr ""
+msgstr "Cubisme"
 
 #: src/main/print-util.c:817
 msgid "89 mm Roll Paper"
@@ -1281,108 +1306,163 @@ msgid "44 Inch Roll Paper"
 msgstr ""
 
 #. Specify language of PPD translation
-#: src/cups/genppd.c:415
+#: src/cups/genppd.c:416
 msgid "English"
-msgstr ""
+msgstr "French"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:417
+#: src/cups/genppd.c:418
 msgid "ISOLatin1"
-msgstr ""
+msgstr "ISOLatin1"
 
-#: src/gimp/gimp_color_window.c:192
+#: src/cups/genppd.c:594
+#, fuzzy
+msgid "Media Type"
+msgstr "Type de support :"
+
+#: src/cups/genppd.c:620
+#, fuzzy
+msgid "Media Source"
+msgstr "Source du support :"
+
+#: src/cups/genppd.c:644
+#, fuzzy
+msgid "Resolution"
+msgstr "Résolution :"
+
+#.
+#. * Image types...
+#.
+#: src/cups/genppd.c:684
+#, fuzzy
+msgid "Image Type"
+msgstr "Types d'images :"
+
+#: src/cups/genppd.c:689 src/gimp/gimp_main_window.c:1314
+msgid "Line Art"
+msgstr "Crayon"
+
+#: src/cups/genppd.c:691 src/gimp/gimp_main_window.c:1328
+msgid "Solid Colors"
+msgstr "Tons continus"
+
+#: src/cups/genppd.c:693 src/gimp/gimp_main_window.c:1343
+msgid "Photograph"
+msgstr "Photographie"
+
+#.
+#. * Dithering algorithms...
+#.
+#: src/cups/genppd.c:701
+#, fuzzy
+msgid "Dither Algorithm"
+msgstr "Algorithme de tramage :"
+
+#: src/cups/genppd.c:720
+#, fuzzy
+msgid "Ink Type"
+msgstr "Type d'encre :"
+
+#: src/gimp/gimp_color_window.c:193
 msgid "Print Color Adjust"
-msgstr "Print Colour Adjust"
+msgstr "Ajustez les couleurs d'impression"
 
-#: src/gimp/gimp_color_window.c:196
+#: src/gimp/gimp_color_window.c:197
 msgid "Set Defaults"
-msgstr ""
+msgstr "Valeurs par défaut"
 
-#: src/gimp/gimp_color_window.c:198
+#: src/gimp/gimp_color_window.c:199
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
-#: src/gimp/gimp_color_window.c:221
+#: src/gimp/gimp_color_window.c:230
+#, fuzzy
 msgid "Image preview"
-msgstr ""
+msgstr "Aperçu de l'image"
 
-#: src/gimp/gimp_color_window.c:237
+#: src/gimp/gimp_color_window.c:240
 msgid "Brightness:"
-msgstr ""
+msgstr "Luminosité:"
 
-#: src/gimp/gimp_color_window.c:245 src/gimp/gimp_color_window.c:247
+#: src/gimp/gimp_color_window.c:248
 msgid ""
 "Set the brightness of the print.\n"
 "0 is solid black, 2 is solid white"
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:258
+#: src/gimp/gimp_color_window.c:260
 msgid "Contrast:"
-msgstr ""
+msgstr "Contraste :"
 
-#: src/gimp/gimp_color_window.c:266 src/gimp/gimp_color_window.c:267
+#: src/gimp/gimp_color_window.c:268
+#, fuzzy
 msgid "Set the contrast of the print"
-msgstr ""
+msgstr "Changer l'exposant de la longueur"
 
-#: src/gimp/gimp_color_window.c:277
+#: src/gimp/gimp_color_window.c:279
 msgid "Cyan:"
-msgstr ""
+msgstr "Cyan :"
 
-#: src/gimp/gimp_color_window.c:285 src/gimp/gimp_color_window.c:286
+#: src/gimp/gimp_color_window.c:287
+#, fuzzy
 msgid "Adjust the cyan balance of the print"
-msgstr ""
+msgstr "Réglage de l'opacité des pointes"
 
-#: src/gimp/gimp_color_window.c:296
+#: src/gimp/gimp_color_window.c:298
 msgid "Magenta:"
-msgstr ""
+msgstr "Magenta :"
 
-#: src/gimp/gimp_color_window.c:304 src/gimp/gimp_color_window.c:305
+#: src/gimp/gimp_color_window.c:306
+#, fuzzy
 msgid "Adjust the magenta balance of the print"
-msgstr ""
+msgstr "Réglage de l'opacité des pointes"
 
-#: src/gimp/gimp_color_window.c:315
+#: src/gimp/gimp_color_window.c:317
 msgid "Yellow:"
-msgstr ""
+msgstr "Jaune :"
 
-#: src/gimp/gimp_color_window.c:323 src/gimp/gimp_color_window.c:324
+#: src/gimp/gimp_color_window.c:325
+#, fuzzy
 msgid "Adjust the yellow balance of the print"
-msgstr ""
+msgstr "Réglage de l'opacité des pointes"
 
-#: src/gimp/gimp_color_window.c:334
+#: src/gimp/gimp_color_window.c:336
 msgid "Saturation:"
-msgstr ""
+msgstr "Saturation :"
 
-#: src/gimp/gimp_color_window.c:342 src/gimp/gimp_color_window.c:345
+#: src/gimp/gimp_color_window.c:344
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
-"Adjust the saturation (colour balance) of the print\n"
-"Use zero saturation to produce grayscale output using colour and black inks"
 
 #: src/gimp/gimp_color_window.c:357
 msgid "Density:"
-msgstr ""
+msgstr "Densité :"
 
-#: src/gimp/gimp_color_window.c:365 src/gimp/gimp_color_window.c:369
+#: src/gimp/gimp_color_window.c:365
 msgid ""
 "Adjust the density (amount of ink) of the print. Reduce the density if the "
 "ink bleeds through the paper or smears; increase the density if black "
 "regions are not solid."
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:382
+#: src/gimp/gimp_color_window.c:379
 msgid "Gamma:"
-msgstr ""
+msgstr "Gamma :"
 
-#: src/gimp/gimp_color_window.c:390 src/gimp/gimp_color_window.c:395
+#: src/gimp/gimp_color_window.c:387
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
 "Black and white will remain the same, unlike with the brightness adjustment."
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:412 src/gimp/gimp_color_window.c:421
+#: src/gimp/gimp_color_window.c:403
+msgid "Dither Algorithm:"
+msgstr "Algorithme de tramage :"
+
+#: src/gimp/gimp_color_window.c:411
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
@@ -1392,48 +1472,48 @@ msgid ""
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 
-#: src/gimp/gimp_color_window.c:431
-msgid "Dither Algorithm:"
-msgstr ""
-
 #.
 #. * Create the main dialog
 #.
-#: src/gimp/gimp_main_window.c:325
+#: src/gimp/gimp_main_window.c:327
 #, c-format
 msgid "%s -- Print v%s"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:334
-msgid "About"
-msgstr ""
+msgstr "%s -- Print v%s"
 
 #: src/gimp/gimp_main_window.c:336
+msgid "About"
+msgstr "À propos"
+
+#: src/gimp/gimp_main_window.c:338
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr ""
+"Imprimer et enregistrer\n"
+"les réglages"
 
-#: src/gimp/gimp_main_window.c:338
+#: src/gimp/gimp_main_window.c:340
 msgid ""
 "Save\n"
 "Settings"
 msgstr ""
+"Enregistrer\n"
+"les réglages"
 
-#: src/gimp/gimp_main_window.c:340
+#: src/gimp/gimp_main_window.c:342
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
-#: src/gimp/gimp_main_window.c:342 src/gimp/gimp_main_window.c:588
-#: src/gimp/gimp_main_window.c:735
+#: src/gimp/gimp_main_window.c:344 src/gimp/gimp_main_window.c:626
+#: src/gimp/gimp_main_window.c:795
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
-#: src/gimp/gimp_main_window.c:385
+#: src/gimp/gimp_main_window.c:383
 msgid "Preview"
-msgstr ""
+msgstr "Aperçu"
 
-#: src/gimp/gimp_main_window.c:407 src/gimp/gimp_main_window.c:417
+#: src/gimp/gimp_main_window.c:407
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -1447,187 +1527,180 @@ msgid ""
 "to its original position."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:442
+#: src/gimp/gimp_main_window.c:434
 msgid "Position"
-msgstr ""
+msgstr "Position"
+
+#: src/gimp/gimp_main_window.c:452
+msgid "Auto"
+msgstr "Auto"
+
+#: src/gimp/gimp_main_window.c:454
+msgid "Portrait"
+msgstr "Portrait"
+
+#: src/gimp/gimp_main_window.c:456
+msgid "Landscape"
+msgstr "Paysage"
 
 #: src/gimp/gimp_main_window.c:458
-msgid ""
-"Center\n"
-"Vertically"
-msgstr ""
-"Centre\n"
-"Vertically"
+msgid "Upside down"
+msgstr "Retourner"
 
 #: src/gimp/gimp_main_window.c:460
-msgid "Center the image vertically on the paper"
-msgstr "Centre the image vertically on the paper"
-
-#: src/gimp/gimp_main_window.c:461 src/gimp/gimp_main_window.c:480
-msgid "Center the image vertically on the paper!"
-msgstr "Centre the image vertically on the paper!"
-
-#: src/gimp/gimp_main_window.c:467
-msgid ""
-"Center\n"
-"Image"
-msgstr ""
-"Centre\n"
-"Image"
-
-#: src/gimp/gimp_main_window.c:469
-msgid "Center the image on the paper"
-msgstr "Centre the image on the paper"
-
-#: src/gimp/gimp_main_window.c:470
-msgid "Center the image on the paper!"
-msgstr "Centre the image on the paper!"
-
-#: src/gimp/gimp_main_window.c:477
-msgid ""
-"Center\n"
-"Horizontally"
-msgstr ""
-"Centre\n"
-"Horizontally"
-
-#: src/gimp/gimp_main_window.c:479
-msgid "Center the image horizontally on the paper"
-msgstr "Centre the image horizontally on the paper"
-
-#: src/gimp/gimp_main_window.c:488 src/gimp/gimp_main_window.c:489
-msgid "Distance from the left of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:493
-msgid "Left:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:498 src/gimp/gimp_main_window.c:499
-msgid "Distance from the top of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:503
-msgid "Top:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:508 src/gimp/gimp_main_window.c:509
-msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:513
-msgid "Right:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:519 src/gimp/gimp_main_window.c:520
-msgid "Distance from the right of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:524
-msgid ""
-"Right\n"
-"Border:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:529 src/gimp/gimp_main_window.c:530
-msgid "Distance from the top of the paper to the bottom of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:534
-msgid "Bottom:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:540 src/gimp/gimp_main_window.c:541
-msgid "Distance from the bottom of the paper to the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:545
-msgid ""
-"Bottom\n"
-"Border:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:553
-msgid "Auto"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:555
-msgid "Portrait"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:557
-msgid "Landscape"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:559
-msgid "Upside down"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:561
 msgid "Seascape"
-msgstr ""
+msgstr "Panoramique"
 
-#: src/gimp/gimp_main_window.c:565
-msgid "Select the orientation of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:566
+#: src/gimp/gimp_main_window.c:464
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:569
+#: src/gimp/gimp_main_window.c:469
 msgid "Orientation:"
+msgstr "Orientation :"
+
+#: src/gimp/gimp_main_window.c:483
+msgid "Left:"
+msgstr "Gauche :"
+
+#: src/gimp/gimp_main_window.c:487
+#, fuzzy
+msgid "Distance from the left of the paper to the image"
+msgstr ""
+"La distance au centre de l'image détermine la longueur de la trace de pinceau"
+
+#: src/gimp/gimp_main_window.c:496
+msgid "Top:"
+msgstr "Dessus :"
+
+#: src/gimp/gimp_main_window.c:500
+#, fuzzy
+msgid "Distance from the top of the paper to the image"
+msgstr ""
+"La distance au centre de l'image détermine la longueur de la trace de pinceau"
+
+#: src/gimp/gimp_main_window.c:509
+msgid "Right:"
+msgstr "Droite :"
+
+#: src/gimp/gimp_main_window.c:513
+#, fuzzy
+msgid "Distance from the left of the paper to the right of the image"
+msgstr ""
+"La distance au centre de l'image détermine la longueur de la trace de pinceau"
+
+#: src/gimp/gimp_main_window.c:523
+msgid "Right Border:"
+msgstr "Bordure droite :"
+
+#: src/gimp/gimp_main_window.c:527
+#, fuzzy
+msgid "Distance from the right of the paper to the image"
+msgstr ""
+"La distance au centre de l'image détermine la longueur de la trace de pinceau"
+
+#: src/gimp/gimp_main_window.c:537
+msgid "Bottom:"
+msgstr "Bas :"
+
+#: src/gimp/gimp_main_window.c:541
+#, fuzzy
+msgid "Distance from the top of the paper to the bottom of the image"
+msgstr ""
+"La distance au centre de l'image détermine la direction du coup de pinceau"
+
+#: src/gimp/gimp_main_window.c:551
+msgid "Bottom Border:"
+msgstr "Bordure basse :"
+
+#: src/gimp/gimp_main_window.c:555
+#, fuzzy
+msgid "Distance from the bottom of the paper to the image"
+msgstr ""
+"La distance au centre de l'image détermine la longueur de la trace de pinceau"
+
+#: src/gimp/gimp_main_window.c:572
+#, fuzzy
+msgid "Center:"
+msgstr "Centrer"
+
+#: src/gimp/gimp_main_window.c:576
+#, fuzzy
+msgid "Vertically"
+msgstr "Vertical"
+
+#: src/gimp/gimp_main_window.c:581
+msgid "Center the image vertically on the paper"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:582
-msgid "Setup"
+#: src/gimp/gimp_main_window.c:587
+msgid "Both"
+msgstr "Les deux"
+
+#: src/gimp/gimp_main_window.c:592
+#, fuzzy
+msgid "Center the image on the paper"
+msgstr "Veuillez d'abord convertir l'image en RVB."
+
+#: src/gimp/gimp_main_window.c:599
+#, fuzzy
+msgid "Horizontally"
+msgstr "Horizontal"
+
+#: src/gimp/gimp_main_window.c:604
+msgid "Center the image horizontally on the paper"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:586 src/gimp/gimp_main_window.c:733
-#: src/gimp/gimp_main_window.c:767
+#: src/gimp/gimp_main_window.c:620
+#, fuzzy
+msgid "Setup Printer"
+msgstr "Imprimante :"
+
+#: src/gimp/gimp_main_window.c:624 src/gimp/gimp_main_window.c:793
+#: src/gimp/gimp_main_window.c:830
 msgid "OK"
-msgstr ""
+msgstr "Valider"
 
 #.
 #. * Printer driver option menu.
 #.
-#: src/gimp/gimp_main_window.c:609 src/gimp/gimp_main_window.c:841
+#: src/gimp/gimp_main_window.c:648 src/gimp/gimp_main_window.c:906
 msgid "Printer Model:"
-msgstr ""
+msgstr "Modèle d'imprimante :"
 
-#: src/gimp/gimp_main_window.c:620 src/gimp/gimp_main_window.c:621
+#: src/gimp/gimp_main_window.c:660
 msgid "Select your printer model"
 msgstr ""
 
 #.
 #. * PPD file.
 #.
-#: src/gimp/gimp_main_window.c:650
+#: src/gimp/gimp_main_window.c:698
 msgid "PPD File:"
-msgstr ""
+msgstr "Fichier PPD :"
 
-#: src/gimp/gimp_main_window.c:663 src/gimp/gimp_main_window.c:664
+#: src/gimp/gimp_main_window.c:714
 msgid "Enter the correct PPD filename for your printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:668
+#: src/gimp/gimp_main_window.c:717
 msgid "Browse"
-msgstr ""
+msgstr "Parcourir"
 
-#: src/gimp/gimp_main_window.c:670 src/gimp/gimp_main_window.c:671
+#: src/gimp/gimp_main_window.c:723
 msgid "Choose the correct PPD filename for your printer"
 msgstr ""
 
 #.
 #. * Print command.
 #.
-#: src/gimp/gimp_main_window.c:682
+#: src/gimp/gimp_main_window.c:733
 msgid "Command:"
-msgstr ""
+msgstr "Commande :"
 
-#: src/gimp/gimp_main_window.c:690 src/gimp/gimp_main_window.c:693
+#: src/gimp/gimp_main_window.c:746
 msgid ""
 "Enter the correct command to print to your printer. Note: Please do not "
 "remove the `-l' or `-oraw' from the command string, or printing will "
@@ -1637,305 +1710,300 @@ msgstr ""
 #.
 #. * Output file selection dialog.
 #.
-#: src/gimp/gimp_main_window.c:704
+#: src/gimp/gimp_main_window.c:755
 msgid "Print To File?"
-msgstr ""
+msgstr "Imprimer dans un fichier ?"
 
 #.
 #. * PPD file selection dialog.
 #.
-#: src/gimp/gimp_main_window.c:715
+#: src/gimp/gimp_main_window.c:770
 msgid "PPD File?"
-msgstr ""
+msgstr "Fichier PPD ?"
 
-#: src/gimp/gimp_main_window.c:729
+#: src/gimp/gimp_main_window.c:789
 msgid "Define New Printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:749 src/gimp/gimp_main_window.c:750
+#: src/gimp/gimp_main_window.c:810 src/gimp/gimp_main_window.c:901
+#, fuzzy
+msgid "Printer Name:"
+msgstr "Imprimante :"
+
+#: src/gimp/gimp_main_window.c:814
 msgid "Enter the name you wish to give this logical printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:754 src/gimp/gimp_main_window.c:838
-msgid "Printer Name:"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:763
+#: src/gimp/gimp_main_window.c:826
 msgid "About Gimp-Print "
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:814
+#: src/gimp/gimp_main_window.c:884
 msgid "Printer Settings"
-msgstr ""
+msgstr "Paramètres de l'imprimante"
 
-#: src/gimp/gimp_main_window.c:834 src/gimp/gimp_main_window.c:836
+#: src/gimp/gimp_main_window.c:897
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:852
+#.
+#. * Setup printer button
+#.
+#: src/gimp/gimp_main_window.c:917
 msgid "Setup Printer..."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:857 src/gimp/gimp_main_window.c:859
+#: src/gimp/gimp_main_window.c:919
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
 msgstr ""
 
 #.
-#. * Define new printer dialog
+#. * New printer button
 #.
-#: src/gimp/gimp_main_window.c:871
+#: src/gimp/gimp_main_window.c:934
+#, fuzzy
 msgid "New Printer..."
-msgstr ""
+msgstr "Mise en forme Papier Journal en cours..."
 
-#: src/gimp/gimp_main_window.c:876 src/gimp/gimp_main_window.c:879
+#: src/gimp/gimp_main_window.c:936
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:896 src/gimp/gimp_main_window.c:897
+#: src/gimp/gimp_main_window.c:957
 msgid "Size of paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:898
+#: src/gimp/gimp_main_window.c:960
 msgid "Media Size:"
-msgstr ""
+msgstr "Taille du support (papier) :"
 
-#: src/gimp/gimp_main_window.c:909
+#: src/gimp/gimp_main_window.c:969
+#, fuzzy
 msgid "Dimensions:"
-msgstr ""
+msgstr "Dimension :"
 
-#: src/gimp/gimp_main_window.c:913 src/gimp/gimp_main_window.c:1106
+#: src/gimp/gimp_main_window.c:972 src/gimp/gimp_main_window.c:1188
 msgid "Width:"
-msgstr ""
+msgstr "Largeur :"
 
-#: src/gimp/gimp_main_window.c:919 src/gimp/gimp_main_window.c:920
+#: src/gimp/gimp_main_window.c:983
 msgid "Width of the paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:928 src/gimp/gimp_main_window.c:1124
+#: src/gimp/gimp_main_window.c:989 src/gimp/gimp_main_window.c:1201
 msgid "Height:"
-msgstr ""
+msgstr "Hauteur :"
 
-#: src/gimp/gimp_main_window.c:934 src/gimp/gimp_main_window.c:935
+#: src/gimp/gimp_main_window.c:1000
 msgid "Height of the paper that you wish to print to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:953 src/gimp/gimp_main_window.c:954
+#: src/gimp/gimp_main_window.c:1016
 msgid "Type of media you're printing to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:955
+#: src/gimp/gimp_main_window.c:1019
 msgid "Media Type:"
-msgstr ""
+msgstr "Type de support :"
 
-#: src/gimp/gimp_main_window.c:967 src/gimp/gimp_main_window.c:968
+#: src/gimp/gimp_main_window.c:1032
 msgid "Source (input slot) of media you're printing to"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:969
+#: src/gimp/gimp_main_window.c:1035
 msgid "Media Source:"
-msgstr ""
+msgstr "Source du support :"
 
-#: src/gimp/gimp_main_window.c:981 src/gimp/gimp_main_window.c:982
+#: src/gimp/gimp_main_window.c:1048
 msgid "Type of ink in the printer"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:983
+#: src/gimp/gimp_main_window.c:1051
 msgid "Ink Type:"
-msgstr ""
+msgstr "Type d'encre :"
 
-#: src/gimp/gimp_main_window.c:995 src/gimp/gimp_main_window.c:996
+#: src/gimp/gimp_main_window.c:1064
 msgid "Resolution and quality of the print"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:997
+#: src/gimp/gimp_main_window.c:1067
 msgid "Resolution:"
-msgstr ""
+msgstr "Résolution :"
 
-#: src/gimp/gimp_main_window.c:1013
-msgid "Scaling"
-msgstr ""
+#: src/gimp/gimp_main_window.c:1083
+msgid "Size"
+msgstr "Taille"
 
-#: src/gimp/gimp_main_window.c:1030
+#: src/gimp/gimp_main_window.c:1103
 msgid "Scaling:"
-msgstr ""
+msgstr "Échelle :"
 
-#: src/gimp/gimp_main_window.c:1036 src/gimp/gimp_main_window.c:1037
+#: src/gimp/gimp_main_window.c:1109
+#, fuzzy
 msgid "Set the scale (size) of the image"
-msgstr ""
+msgstr "Utiliser la couleur de l'image"
 
-#: src/gimp/gimp_main_window.c:1050 src/gimp/gimp_main_window.c:1053
+#: src/gimp/gimp_main_window.c:1142
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1062
+#: src/gimp/gimp_main_window.c:1147
 msgid "Percent"
-msgstr ""
+msgstr "Pourcent"
 
-#: src/gimp/gimp_main_window.c:1064 src/gimp/gimp_main_window.c:1065
+#: src/gimp/gimp_main_window.c:1154
+#, fuzzy
 msgid "Scale the print to the size of the page"
-msgstr ""
+msgstr "La teinte de la région détermine la longueur de la trace de pinceau"
 
-#: src/gimp/gimp_main_window.c:1072
+#: src/gimp/gimp_main_window.c:1160
 msgid "PPI"
-msgstr ""
+msgstr "points par pouce"
 
-#: src/gimp/gimp_main_window.c:1074 src/gimp/gimp_main_window.c:1075
+#: src/gimp/gimp_main_window.c:1166
 msgid "Scale the print to the number of dots per inch"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1081
-msgid "Image Size"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1083 src/gimp/gimp_main_window.c:1084
-msgid "Set the print size to the size of the image"
-msgstr ""
-
-#: src/gimp/gimp_main_window.c:1112 src/gimp/gimp_main_window.c:1113
+#: src/gimp/gimp_main_window.c:1192
+#, fuzzy
 msgid "Set the width of the print"
-msgstr ""
+msgstr "Réglage de l'opacité des pointes"
 
-#: src/gimp/gimp_main_window.c:1130 src/gimp/gimp_main_window.c:1131
+#: src/gimp/gimp_main_window.c:1205
+#, fuzzy
 msgid "Set the height of the print"
-msgstr ""
+msgstr "Changer l'exposant de la longueur"
 
-#: src/gimp/gimp_main_window.c:1145
+#: src/gimp/gimp_main_window.c:1225
 msgid "Units:"
-msgstr ""
+msgstr "Unités :"
 
-#: src/gimp/gimp_main_window.c:1151 src/gimp/gimp_main_window.c:1152
+#: src/gimp/gimp_main_window.c:1230
 msgid "Select the base unit of measurement for printing"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1159
+#: src/gimp/gimp_main_window.c:1233
 msgid "Inch"
-msgstr ""
+msgstr "Pouce"
 
-#: src/gimp/gimp_main_window.c:1161 src/gimp/gimp_main_window.c:1162
+#: src/gimp/gimp_main_window.c:1240
 msgid "Set the base unit of measurement to inches"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1169
+#: src/gimp/gimp_main_window.c:1246
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
-#: src/gimp/gimp_main_window.c:1171 src/gimp/gimp_main_window.c:1172
+#: src/gimp/gimp_main_window.c:1252
 msgid "Set the base unit of measurement to centimetres"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1193
-msgid "Image Settings"
-msgstr ""
+#.
+#. * The "image size" button
+#.
+#: src/gimp/gimp_main_window.c:1262
+#, fuzzy
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr "Taille de l'image"
 
-#: src/gimp/gimp_main_window.c:1202
+#: src/gimp/gimp_main_window.c:1268
+#, fuzzy
+msgid "Set the print size to the size of the image"
+msgstr "Enregistre les réglages actuels dans le fichier spécifié"
+
+#: src/gimp/gimp_main_window.c:1292
+#, fuzzy
+msgid "Image / Output Settings"
+msgstr "Paramètres de l'image"
+
+#: src/gimp/gimp_main_window.c:1305
+#, fuzzy
 msgid "Image Type:"
-msgstr ""
+msgstr "Types d'images :"
 
-#: src/gimp/gimp_main_window.c:1207 src/gimp/gimp_main_window.c:1208
+#: src/gimp/gimp_main_window.c:1310
 msgid "Optimize the output for the type of image being printed"
-msgstr "Optimise the output for the type of image being printed"
-
-#: src/gimp/gimp_main_window.c:1218
-msgid "Line Art"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1220 src/gimp/gimp_main_window.c:1221
+#: src/gimp/gimp_main_window.c:1321
 msgid "Fastest and brightest color for text and line art"
-msgstr "Fastest and brightest colour for text and line art"
-
-#: src/gimp/gimp_main_window.c:1230
-msgid "Solid Colors"
-msgstr "Solid Colours"
-
-#: src/gimp/gimp_main_window.c:1232 src/gimp/gimp_main_window.c:1233
-msgid "Best for images dominated by regions of solid color"
-msgstr "Best for images dominated by regions of solid colour"
-
-#: src/gimp/gimp_main_window.c:1242
-msgid "Photograph"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1244 src/gimp/gimp_main_window.c:1246
+#: src/gimp/gimp_main_window.c:1335
+msgid "Best for images dominated by regions of solid color"
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:1351
 msgid ""
 "Slowest, but most accurate and smoothest color for continuous tone images "
 "and photographs"
 msgstr ""
-"Slowest, but most accurate and smoothest colour for continuous tone images "
-"and photographs"
 
-#: src/gimp/gimp_main_window.c:1264
-#, fuzzy
-msgid "Adjust Output..."
-msgstr "Adjust Colour"
-
-#: src/gimp/gimp_main_window.c:1266 src/gimp/gimp_main_window.c:1268
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Adjust colour balance, brightness, contrast, saturation, and dither algorithm"
-
-#: src/gimp/gimp_main_window.c:1291
+#: src/gimp/gimp_main_window.c:1377
 msgid "Output Type:"
-msgstr ""
+msgstr "Type de sortie :"
 
-#: src/gimp/gimp_main_window.c:1296 src/gimp/gimp_main_window.c:1297
+#: src/gimp/gimp_main_window.c:1382
 msgid "Select the desired output type"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1301
+#: src/gimp/gimp_main_window.c:1385
 msgid "Color"
-msgstr "Colour"
+msgstr "Couleur"
 
-#: src/gimp/gimp_main_window.c:1302
+#: src/gimp/gimp_main_window.c:1391
+#, fuzzy
 msgid "Color output"
-msgstr "Colour output"
+msgstr "Mode couleur"
 
-#: src/gimp/gimp_main_window.c:1311
+#: src/gimp/gimp_main_window.c:1396
 msgid "Grayscale"
-msgstr ""
+msgstr "Échelle de gris"
 
-#: src/gimp/gimp_main_window.c:1313 src/gimp/gimp_main_window.c:1314
+#: src/gimp/gimp_main_window.c:1403
 msgid "Print in shades of gray using black ink"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1323
+#: src/gimp/gimp_main_window.c:1410
+#, fuzzy
 msgid "Black and White"
+msgstr "Noir & Blanc"
+
+#: src/gimp/gimp_main_window.c:1417
+msgid "Print in black and white (no color, and no shades of gray)"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1325 src/gimp/gimp_main_window.c:1327
-msgid "Print in black and white (no color, and no shades of gray)"
-msgstr "Print in black and white (no colour, and no shades of gray)"
+#.
+#. *  Color adjust button
+#.
+#: src/gimp/gimp_main_window.c:1428
+msgid "Adjust Output..."
+msgstr ""
+
+#: src/gimp/gimp_main_window.c:1435
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
 
 #: src/gimp/print-image-gimp.c:318
 msgid "Printing..."
-msgstr ""
+msgstr "Impression en cours..."
 
 #: src/gimp/print.c:166
 msgid "<Image>/File/Print..."
-msgstr ""
+msgstr "<Image>/Ficher/Imprimer..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
 #: src/gimp/print.c:1184
 msgid "File"
-msgstr ""
-
-#~ msgid "Black/Color"
-#~ msgstr "Black/Colour"
-
-#, fuzzy
-#~ msgid "Photo/Color/Black"
-#~ msgstr "Photo/Colour"
-
-#~ msgid "Photo/Color"
-#~ msgstr "Photo/Colour"
-
-#~ msgid "Black/Photo Color"
-#~ msgstr "Black/Photo Color"
+msgstr "Fichier"
