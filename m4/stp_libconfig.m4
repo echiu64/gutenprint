@@ -97,28 +97,27 @@ echo '   cat <<EOF' >>$LIBCONFIG_FILE
 m4_if($3, ,
       [echo 'Usage: $1-config [[OPTIONS]]' >>$LIBCONFIG_FILE],
       [echo 'Usage: $1-config [[OPTIONS]] [[LIBRARIES]]' >>$LIBCONFIG_FILE])
+options="prefix exec-prefix eprefix package version cflags libs bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir infodir mandir target host build pkgdatadir pkglibdir pkgincludedir template-version help"
 echo 'Options:' >>$LIBCONFIG_FILE
-echo '        [[--prefix[=DIR]]]' >>$LIBCONFIG_FILE
-echo '        [[--exec-prefix[=DIR]]]' >>$LIBCONFIG_FILE
-echo '        [[--package]]' >>$LIBCONFIG_FILE
-echo '        [[--version]]' >>$LIBCONFIG_FILE
-echo '        [[--cflags]]' >>$LIBCONFIG_FILE
-echo '        [[--libs]]' >>$LIBCONFIG_FILE
-echo '        [[--help]]' >>$LIBCONFIG_FILE
+echo '        [[--prefix=DIR]]' >>$LIBCONFIG_FILE
+echo '        [[--exec-prefix=DIR]]' >>$LIBCONFIG_FILE
+for option in $options ; do
+  echo "        [[--$option]]" >>$LIBCONFIG_FILE
+done
 m4_if($3, , ,
       [echo 'Libraries:' >>$LIBCONFIG_FILE
        for module in $1 $3 ; do
          echo "        $module" >>$LIBCONFIG_FILE ;
        done])
 echo 'EOF' >>$LIBCONFIG_FILE
+echo 'exit 1' >>$LIBCONFIG_FILE
 echo 'fi' >>$LIBCONFIG_FILE
 echo ' ' >>$LIBCONFIG_FILE
 echo '# parse options' >>$LIBCONFIG_FILE
 echo 'o=""' >>$LIBCONFIG_FILE
 echo 'h=""' >>$LIBCONFIG_FILE
-echo 'for i ; do' >>$LIBCONFIG_FILE
+echo 'for i in "$''@" ; do' >>$LIBCONFIG_FILE
 echo '  case $i in' >>$LIBCONFIG_FILE
-options="prefix exec-prefix eprefix package version cflags libs bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir infodir mandir target host build pkgdatadir pkglibdir pkgincludedir template-version help"
 echo '    --prefix=*) prefix=`echo $i | sed -e "s/--prefix=//"` ;;' >>$LIBCONFIG_FILE
 echo '    --exec-prefix=*) exec_prefix=`echo $i | sed -e "s/--exec-prefix=//"` ;;' >>$LIBCONFIG_FILE
 echo '    --eprefix=*) exec_prefix=`echo $i | sed -e "s/--eprefix=//"` ;;' >>$LIBCONFIG_FILE
@@ -289,7 +288,7 @@ STP_CONFIG_LIBCONFIG_IN_MODULES(m4_shift($@))])dnl
 AC_DEFUN([STP_CONFIG_LIBCONFIG_IN_MODULES_VARS], 
 [m4_if(STP_CONFIG_LIBCONFIG_IN_USEPKGCONFIG, [true],
 [
-echo 'if test -x "`which pkg-config`" ; then' >>$LIBCONFIG_FILE 
+echo 'if test -z "`type pkg-config 2>&1 | grep '"'not found'"'`" ; then' >>$LIBCONFIG_FILE 
 echo '  if pkg-config --atleast-pkgconfig-version=0.7 --exists "MODULE_DOWN"; then' >>$LIBCONFIG_FILE
 echo '    $1="@S|@$1 `pkg-config --$3 MODULE_DOWN`"' >>$LIBCONFIG_FILE
 echo '  fi' >>$LIBCONFIG_FILE
