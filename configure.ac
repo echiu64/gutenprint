@@ -192,7 +192,7 @@ STP_ARG_WITH_DETAILED(
   ])
 
 STP_ARG_ENABLE([cups-ppds],
-               [build translated CUPS PPD files],
+               [build CUPS PPD files],
                [BUILD_CUPS_PPDS],
                [yes])
 
