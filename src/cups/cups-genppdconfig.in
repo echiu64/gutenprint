@@ -50,7 +50,7 @@ my @used_printers;                              # printer PPDs on system
 my @used_languages;                             # languages used on system
 my @chosen_printers = ();                       # chosen printers
 my @chosen_languages = ();                      # chosen languages
-my $version = @GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@;
+my $version = "@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@";
 my $chosen_location = "@cups_conf_datadir@/model/gimp-print/$version";
                                                 # chosen PPD prefix
 my $silent = 0;                                 # no dialog
@@ -436,7 +436,7 @@ sub create_ppds {
     $count = 0;
     foreach $language (@chosen_languages) { # loop through languages
 	open GENPPD,
-	"LANGUAGE=$language cups-genppd -v -p $chosen_location/$language $printers 2>&1 |"
+	"LANGUAGE=$language cups-genppd.$version -v -p $chosen_location/$language $printers 2>&1 |"
 	    or die "can't fork cups-genppd: $!";
 	$file = "";
 	while ( defined($file = <GENPPD>)) { # dump genppd stats into guage
