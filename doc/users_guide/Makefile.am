@@ -93,7 +93,7 @@ endif
 DISTHOOKDIRS = figures $(HTMLDIR)
 DISTHOOKFILES = $(STANDARD_TARGETS)
 
-UTIL_PNG_IMAGES = 
+UTIL_PNG_IMAGES =
 
 CUPS_PNG_IMAGES = \
 	figures/cups_admin.png				\
@@ -118,7 +118,7 @@ GIMP_PNG_IMAGES = \
 PNG_IMAGES = \
 	$(CUPS_PNG_IMAGES) 				\
 	$(GIMP_PNG_IMAGES)
-	
+
 UTIL_EPS_IMAGES = $(addsuffix .eps,$(basename $(UTIL_PNG_IMAGES)))
 GIMP_EPS_IMAGES = $(addsuffix .eps,$(basename $(GIMP_PNG_IMAGES)))
 CUPS_EPS_IMAGES = $(addsuffix .eps,$(basename $(CUPS_PNG_IMAGES)))
@@ -256,7 +256,7 @@ $(UTIL_MANUAL).ps:  $(UTIL_MANUAL_SRC_FILES) $(UTIL_EPS_IMAGES)
 		sed -e 's/\.png"/.eps"/g' \
 		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
 	done
-	cat $(UTIL_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(UTIL_MANUAL)-eps.sgml	
+	cat $(UTIL_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(UTIL_MANUAL)-eps.sgml
 	$(DB2PS) $(UTIL_MANUAL)-eps.sgml
 	mv $(UTIL_MANUAL)-eps.ps $(UTIL_MANUAL).ps
 	for i in $(UTIL_MANUAL_SRC_FILES); do \
@@ -270,7 +270,7 @@ $(GIMP_MANUAL).ps:  $(GIMP_MANUAL_SRC_FILES) $(GIMP_EPS_IMAGES)
 		sed -e 's/\.png"/.eps"/g' \
 		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
 	done
-	cat $(GIMP_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(GIMP_MANUAL)-eps.sgml	
+	cat $(GIMP_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(GIMP_MANUAL)-eps.sgml
 	$(DB2PS) $(GIMP_MANUAL)-eps.sgml
 	mv $(GIMP_MANUAL)-eps.ps $(GIMP_MANUAL).ps
 	for i in $(GIMP_MANUAL_SRC_FILES); do \
@@ -284,7 +284,7 @@ $(CUPS_MANUAL).ps:  $(CUPS_MANUAL_SRC_FILES) $(CUPS_EPS_IMAGES)
 		sed -e 's/\.png"/.eps"/g' \
 		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
 	done
-	cat $(CUPS_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(CUPS_MANUAL)-eps.sgml	
+	cat $(CUPS_MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(CUPS_MANUAL)-eps.sgml
 	$(DB2PS) $(CUPS_MANUAL)-eps.sgml
 	mv $(CUPS_MANUAL)-eps.ps $(CUPS_MANUAL).ps
 	for i in $(CUPS_MANUAL_SRC_FILES); do \
@@ -298,7 +298,7 @@ $(MANUAL).ps:  $(MANUAL_SRC_FILES) $(EPS_IMAGES)
 		sed -e 's/\.png"/.eps"/g' \
 		    -e 's/FORMAT="PNG"/FORMAT="EPS"/g' $$i > $$j-eps.sgml; \
 	done
-	cat $(MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(MANUAL)-eps.sgml	
+	cat $(MANUAL).sgml | sed -e 's/\.sgml"/-eps.sgml"/g' > $(MANUAL)-eps.sgml
 	$(DB2PS) $(MANUAL)-eps.sgml
 	mv $(MANUAL)-eps.ps $(MANUAL).ps
 	for i in $(MANUAL_SRC_FILES); do \
@@ -523,9 +523,14 @@ help:
 MAINTAINERCLEANFILES = Makefile.in *html-stamp
 
 
-EXTRA_DIST = README $(MANUAL_SRC_FILES) html-stamp
+EXTRA_DIST = README				\
+	$(MANUAL_SRC_FILES)			\
+	html-stamp				\
+	cups-edition.sgml			\
+	gimp-edition.sgml			\
+	util-edition.sgml
 
-.PHONY: docs cups_docs gimp_docs util_docs 
+.PHONY: docs cups_docs gimp_docs util_docs
 .PHONY: html cups_html gimp_html util_html
 .PHONY: ps cups_ps gimp_ps util_ps
 .PHONY: pdf cups_pdf gimp_pdf util_pdf
