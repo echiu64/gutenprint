@@ -66,7 +66,7 @@ static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 {
   { 0.065, 0x1, 1, 1 },
   { 0.13,  0x2, 1, 2 },
-/* { 0.26, 0x3, 1, 3 }, */
+/* { 0.26, 0x3, 1, 4 }, */
   { 0.25,  0x1, 0, 1 },
   { 0.5,   0x2, 0, 2 },
   { 1.0,   0x3, 0, 4 }
@@ -79,7 +79,7 @@ static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 {
   { 0.13,  0x1, 1, 1 },
   { 0.26,  0x2, 1, 2 },
-/* { 0.52, 0x3, 1, 3 }, */
+/* { 0.52, 0x3, 1, 4 }, */
   { 0.5,   0x1, 0, 1 },
   { 1.0,   0x2, 0, 2 },
 };
@@ -139,7 +139,7 @@ DECLARE_INK(spro10000_standard, 1.0);
 static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
   { 0.35,  0x1, 1, 1 },
-  { 1.00,  0x1, 0, 3 },
+  { 1.00,  0x1, 0, 1 },
 };
 
 DECLARE_INK(photo_4pl_2880, 1.0);
@@ -147,7 +147,7 @@ DECLARE_INK(photo_4pl_2880, 1.0);
 static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
 {
   { 0.235, 0x1, 1, 1 },
-  { 1.00,  0x1, 0, 4 },
+  { 1.00,  0x1, 0, 1 },
 };
 
 DECLARE_INK(photo_2pl_2880, 1.0);
