@@ -34,6 +34,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.3  1999/09/14 21:43:43  rlk
+ *   Some hoped-for improvements
+ *
  *   Revision 1.2  1999/09/12 00:12:24  rlk
  *   Current best stuff
  *
@@ -446,6 +449,14 @@ dither_cmyk(guchar        *rgb,		/* I - RGB pixels */
 #define TURNOVER_K_H 80
 #define KDARKNESS_LIMIT 60
 
+/*
+ * Ratios of dark to light inks.  The darker ink should be DE / NU darker
+ * than the light ink.
+ *
+ * It is essential to be very careful about use of parentheses with these
+ * macros!
+ */
+
 #define NU_C 1
 #define DE_C 3
 #define NU_M 1
@@ -494,15 +505,9 @@ dither_cmyk6(guchar        *rgb,	/* I - RGB pixels */
   int		dithery,	/* Next error value in buffer */
 		*yerror0,	/* Pointer to current error row */
 		*yerror1;	/* Pointer to next error row */
-  int		ditherlc,	/* Next error value in buffer */
-		*lcerror0,	/* Pointer to current error row */
-		*lcerror1;	/* Pointer to next error row */
   int		ditherm,	/* Next error value in buffer */
 		*merror0,	/* Pointer to current error row */
 		*merror1;	/* Pointer to next error row */
-  int		ditherlm,	/* Next error value in buffer */
-		*lmerror0,	/* Pointer to current error row */
-		*lmerror1;	/* Pointer to next error row */
   int		ditherk,	/* Next error value in buffer */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
@@ -523,18 +528,8 @@ dither_cmyk6(guchar        *rgb,	/* I - RGB pixels */
   cerror0 = error[row & 1][0];
   cerror1 = error[1 - (row & 1)][0];
 
-/*
-  lcerror0 = error[row & 1][0];
-  lcerror1 = error[1 - (row & 1)][0];
-*/
-
   merror0 = error[row & 1][1];
   merror1 = error[1 - (row & 1)][1];
-
-/*
-  lmerror0 = error[row & 1][4];
-  lmerror1 = error[1 - (row & 1)][4];
-*/
 
   yerror0 = error[row & 1][5];
   yerror1 = error[1 - (row & 1)][5];
@@ -565,17 +560,15 @@ dither_cmyk6(guchar        *rgb,	/* I - RGB pixels */
    /*
     * First compute the standard CMYK separation color values...
     */
-    int upperdither = (((ditherbit & 0x1e00) >> 9) |
-		       ((ditherbit & 0x1e0000) >> 13));
     int ditherbit0 = ditherbit & 0xff;
     int ditherbit1 = ((ditherbit >> 8) & 0xff);
     int ditherbit2 = ((ditherbit >> 16) & 0xff);
     int ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) ;
 		   
-    int printed_c = 0;
-    int printed_m = 0;
+#if 0
     int cdarkness;
     int mdarkness;
+#endif
     int maxlevel;
     int ak;
     int kdarkness;
@@ -730,10 +723,10 @@ dither_cmyk6(guchar        *rgb,	/* I - RGB pixels */
       y  = (255 - rgb[0] / 4) * (y - k) / 255 + k;
     };
 
-/*
+#if 0
     cdarkness = MAX((oy / 2), MAX ((ok), MAX(om / 2, oc)));
     mdarkness = MAX((oy / 2), MAX ((ok), MAX(om, oc / 2)));
-*/
+#endif
 
     oc = c;
     c += (ditherc + 7) / 8;
@@ -926,7 +919,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   long long	c, m, y, k,	/* CMYK values */
-		lc, lm, oc, om, ok, oy, lastc, lastm,
+		lc, lm, oc, om, ok, oy,
 		divk;		/* Inverse of K */
   long long     diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
@@ -942,15 +935,9 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
   int		dithery,	/* Next error value in buffer */
 		*yerror0,	/* Pointer to current error row */
 		*yerror1;	/* Pointer to next error row */
-  int		ditherlc,	/* Next error value in buffer */
-		*lcerror0,	/* Pointer to current error row */
-		*lcerror1;	/* Pointer to next error row */
   int		ditherm,	/* Next error value in buffer */
 		*merror0,	/* Pointer to current error row */
 		*merror1;	/* Pointer to next error row */
-  int		ditherlm,	/* Next error value in buffer */
-		*lmerror0,	/* Pointer to current error row */
-		*lmerror1;	/* Pointer to next error row */
   int		ditherk,	/* Next error value in buffer */
 		*kerror0,	/* Pointer to current error row */
 		*kerror1;	/* Pointer to next error row */
@@ -959,6 +946,7 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
   int ck;
   int bk;
   int ub, lb;
+  int ditherbit0, ditherbit1, ditherbit2, ditherbit3;
 #ifdef PRINT_DEBUG
   long long odk, odc, odm, ody, dk, dc, dm, dy, xk, xc, xm, xy, yc, ym, yy;
   FILE *dbg;
@@ -971,18 +959,8 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
   cerror0 = error[row & 1][0];
   cerror1 = error[1 - (row & 1)][0];
 
-/*
-  lcerror0 = error[row & 1][0];
-  lcerror1 = error[1 - (row & 1)][0];
-*/
-
   merror0 = error[row & 1][1];
   merror1 = error[1 - (row & 1)][1];
-
-/*
-  lmerror0 = error[row & 1][4];
-  lmerror1 = error[1 - (row & 1)][4];
-*/
 
   yerror0 = error[row & 1][5];
   yerror1 = error[1 - (row & 1)][5];
@@ -1001,10 +979,21 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #ifdef PRINT_DEBUG
   dbg = fopen("/mnt1/dbg", "a");
 #endif
-  for (x = 0, bit = 128, cptr = cyan, mptr = magenta, yptr = yellow,
-	   lcptr = lcyan, lmptr = lmagenta,
-           kptr = black, xerror = 0, ditherbit = rand(), ditherc = cerror0[0],
-           ditherm = merror0[0], dithery = yerror0[0], ditherk = kerror0[0];
+
+  /*
+   * Main loop starts here!
+   */
+  for (x = 0, bit = 128,
+	 cptr = cyan, mptr = magenta, yptr = yellow, lcptr = lcyan, lmptr = lmagenta,
+	 kptr = black, xerror = 0, ditherbit = rand(),
+	 ditherc = cerror0[0], ditherm = merror0[0], dithery = yerror0[0],
+	 ditherk = kerror0[0],
+	 ditherbit0 = ditherbit & 0xffff,
+	 ditherbit1 = ((ditherbit >> 8) & 0xffff),
+	 ditherbit2 = (((ditherbit >> 16) & 0x7fff) +
+		       ((ditherbit & 0x100) << 7)),
+	 ditherbit3 = (((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
+		       ((ditherbit >> 8) & 0xff00));
        x < dst_width;
        x ++, cerror0 ++, cerror1 ++, merror0 ++, merror1 ++, yerror0 ++,
            yerror1 ++, kerror0 ++, kerror1 ++)
@@ -1013,22 +1002,15 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
    /*
     * First compute the standard CMYK separation color values...
     */
-    int ditherbit0 = ditherbit & 0xffff;
-    int ditherbit1 = ((ditherbit >> 8) & 0xffff);
-    int ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
-    int ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
-      ((ditherbit >> 8) & 0xff00);
 		   
-    int printed_c = 0;
-    int printed_m = 0;
+#if 0
     int cdarkness;
     int mdarkness;
+#endif
     int maxlevel;
     int ak;
     int kdarkness;
 
-    lastc = 0;
-    lastm = 0;
     c = 65535 - (unsigned) rgb[0];
     m = 65535 - (unsigned) rgb[1];
     y = 65535 - (unsigned) rgb[2];
@@ -1078,12 +1060,14 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
       * the amount of color in the pixel (colorful pixels get less black)...
       */
 
-      diff = 65535 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
-      diff = diff * diff * diff / (65535ll * 65535ll); /* diff = diff^3 */
-      k    = diff * k / 65535;
+      diff = 65536 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      diff = diff * diff * diff / (65536ll * 65536ll); /* diff = diff^3 */
+      diff--;
+      if (diff < 0)
+	diff = 0;
+      k    = diff * k / 65535ll;
       ak = k;
       divk = 65535 - k;
-      
       if (divk == 0)
         c = m = y = lm = lc = 0;	/* Grayscale */
       else
@@ -1116,10 +1100,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    }
 	  else if (ak < (KDARKNESS_UPPER_16 - kdarkness))
 	    {
-/*
-	      ub = (ak * KDARKNESS_UPPER_16 / KDARKNESS_LOWER_16) - (KDARKNESS_UPPER_16 - kdarkness);
-	      lb = KDARKNESS_UPPER_16 - kdarkness;
-*/
 	      lb = ((KDARKNESS_UPPER_16 - KDARKNESS_LOWER_16) *
 		    (KDARKNESS_UPPER_16 - kdarkness) / KDARKNESS_UPPER_16);
 	      ub = lb - ((KDARKNESS_UPPER_16 - kdarkness) - ak);
@@ -1127,8 +1107,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 		bk = nk;
 	      else
 		bk = 0;
-	      /* bk = nk * ub / lb; */
-	      /* bk = nk * (((ak + kdarkness) * KDARKNESS_UPPER_16 / KDARKNESS_LOWER_16) - KDARKNESS_UPPER_16) / (ak + kdarkness); */
 	    }
 	  else
 	    {
@@ -1186,13 +1164,12 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
       c  = (65535 - rgb[1] / 4) * (c - k) / 65535 + k;
       m  = (65535 - rgb[2] / 4) * (m - k) / 65535 + k;
       y  = (65535 - rgb[0] / 4) * (y - k) / 65535 + k;
-    };
+    }
 
-/*
-    cdarkness = MAX((oy / 2), MAX ((ok), MAX(om / 2, oc)));
-    mdarkness = MAX((oy / 2), MAX ((ok), MAX(om, oc / 2)));
-*/
 
+    /*****************************************************************
+     * Cyan
+     *****************************************************************/
     oc = c;
     c += (ditherc) / 8;
 #ifdef PRINT_DEBUG
@@ -1210,7 +1187,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *lcptr |= bit;
 	    c -= 65535 * I_RATIO_C1;
-	    lastc = c;
 	  }
       }
     else if (c > ((32767 + (((long long) ditherbit2 / 4) - 8192)) * oc / 65536))
@@ -1229,7 +1205,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *lcptr |= bit;
 	    c -= 65535 * I_RATIO_C1;
-	    lastc = c;
 	  }
 	else
 	  {
@@ -1243,7 +1218,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *cptr |= bit;
 	    c -= 65535;
-	    lastc = c;
 	  }
       }
 
@@ -1259,14 +1233,15 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
     };
 
 
-
+    /*****************************************************************
+     * Magenta
+     *****************************************************************/
     om = m;
     m += (ditherm) / 8;
 #ifdef PRINT_DEBUG
     odm = ditherm;
     dm = m;
 #endif
-
 
     if ((om <= (65536 * I_RATIO_M1 * 2 / 3)))
       {
@@ -1278,7 +1253,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *lmptr |= bit;
 	    m -= 65535 * I_RATIO_M1;
-	    lastm = m;
 	  }
       }
     else if (m > ((32767 + (((long long) ditherbit2 / 4) - 8192)) * om / 65536))
@@ -1297,7 +1271,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *lmptr |= bit;
 	    m -= 65535 * I_RATIO_M1;
-	    lastm = m;
 	  }
 	else
 	  {
@@ -1311,7 +1284,6 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 #endif
 	    *mptr |= bit;
 	    m -= 65535;
-	    lastm = m;
 	  }
       }
 
@@ -1334,6 +1306,10 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
     dy = y;
 #endif
 
+
+    /*****************************************************************
+     * Yellow
+     *****************************************************************/
     if (y > (32767 + ((ditherbit3 / 2) - 16384)))
     {
       *yptr |= bit;
@@ -1351,6 +1327,10 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
       dithery    = yerror0[1] + 5 * y;
     };
 
+
+    /*****************************************************************
+     * Advance the loop
+     *****************************************************************/
 #ifdef PRINT_DEBUG
     fprintf(dbg, "   x %d y %d  r %d g %d b %d  xc %lld xm %lld xy %lld yc %lld ym %lld yy %lld xk %lld  diff %lld divk %lld  oc %lld om %lld oy %lld ok %lld  c %lld m %lld y %lld k %lld  %c%c%c%c%c%c  dk %lld dc %lld dm %lld dy %lld  kd %d ck %d bk %d nk %d ub %d lb %d\n",
 	    x, row,
@@ -1368,18 +1348,38 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
 	    kdarkness, ck, bk, nk, ub, lb);
 #endif
 	    
-    ditherbit = rand();
     if (bit == 1)
-    {
-      cptr ++;
-      mptr ++;
-      lcptr ++;
-      lmptr ++;
-      yptr ++;
-      bit       = 128;
-    }
+      {
+	cptr ++;
+	mptr ++;
+	lcptr ++;
+	lmptr ++;
+	yptr ++;
+	ditherbit = rand();
+	ditherbit0 = ditherbit & 0xffff;
+	ditherbit1 = ((ditherbit >> 8) & 0xffff);
+	ditherbit2 = ((ditherbit >> 16) & 0x7fff) + ((ditherbit & 0x100) << 7);
+	ditherbit3 = ((ditherbit >> 24) & 0x7f) + ((ditherbit & 1) << 7) +
+	  ((ditherbit >> 8) & 0xff00);
+	bit       = 128;
+      }
     else
-      bit >>= 1;
+      {
+	/*
+	 * Shuffle the dither information around a bit
+	 * This should be faster than regenerating the random number from
+	 * scratch
+	 */
+	int dithertmp0 = (ditherbit1 >> 14) ^ ((ditherbit3 &0x3fff) << 2);
+	int dithertmp1 = (ditherbit2 >> 14) ^ ((ditherbit2 &0x3fff) << 2);
+	int dithertmp2 = (ditherbit3 >> 14) ^ ((ditherbit1 &0x3fff) << 2);
+	int dithertmp3 = (ditherbit0 >> 14) ^ ((ditherbit0 &0x3fff) << 2);
+	ditherbit0 = dithertmp0;
+	ditherbit1 = dithertmp1;
+	ditherbit2 = dithertmp2;
+	ditherbit3 = dithertmp3;
+	bit >>= 1;
+      }
 
     rgb    += xstep;
     xerror += xmod;
@@ -1389,6 +1389,9 @@ dither_cmyk6_16(gushort       *rgb,	/* I - RGB pixels */
       rgb    += 3;
     };
   };
+  /*
+   * Main loop ends here!
+   */
 #ifdef PRINT_DEBUG
   fprintf(dbg, "\n");
   fclose(dbg);
