@@ -71,6 +71,12 @@ else
 INSTALL_DATA_LOCAL_DEPS =
 endif
 
+if BUILD_FOOMATIC_3
+FOOMATIC_GENERATOR_FOOMATIC_3_OPTS = -f 3
+else
+FOOMATIC_GENERATOR_FOOMATIC_3_OPTS =
+endif
+
 if BUILD_IJS
 FOOMATIC_GENERATOR_EXTRA_OPTS = -d all
 FOOMATIC_IJS = yes
@@ -104,7 +110,7 @@ foomatic-data: foomatic-stamp
 
 foomatic-stamp: foomatic-generator foomatic-printermap $(EXTRA_PROGRAMS)
 	-$(RM) -r foomatic-db
-	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS)
+	./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	touch foomatic-stamp
 
 $(LIBGIMPPRINT_LIBS):

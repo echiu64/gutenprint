@@ -112,6 +112,7 @@ BUILD_TRANSLATED_PPDS='yes'
 USE_LEVEL3_PS='no'
 BUILD_GHOST='no'
 BUILD_FOOMATIC='(automatic)'
+BUILD_FOOMATIC_3='(automatic)'
 BUILD_IJS='(automatic)'
 BUILD_TEST='no'
 BUILD_TESTPATTERN='no'
@@ -224,6 +225,22 @@ AC_ARG_WITH(foomatic,
     *) AC_MSG_RESULT([unknown])
        AC_MSG_ERROR([bad value ${withval} for --with-foomatic]) ;;
   esac],[AC_MSG_RESULT([${BUILD_FOOMATIC}])])
+
+AC_PATH_PROG(FOOMATIC_PPDFILE, foomatic-ppdfile)
+if test -z "${FOOMATIC_PPDFILE}" ; then
+  BUILD_FOOMATIC_3="no"
+else
+  BUILD_FOOMATIC_3="yes"
+fi
+AC_MSG_CHECKING([whether to make use of Foomatic 3.x features])
+AC_ARG_WITH(foomatic3,
+[  --with-foomatic3        make use of Foomatic 3.x features [default=${BUILD_FOOMATIC_3}]],
+  [case "${withval}" in
+    yes) BUILD_FOOMATIC="yes" ; BUILD_FOOMATIC_3="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_FOOMATIC_3="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${withval} for --with-foomatic3]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_FOOMATIC_3}])])
 
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 if test -z "${IJS_CONFIG}" ; then
@@ -684,6 +701,11 @@ if test x${BUILD_FOOMATIC} = xyes ; then
 fi
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
 
+if test x${BUILD_FOOMATIC_3} = xyes ; then
+  FOOMATIC_3_NOINST_BIN='$(FOOMATIC_3_NOINST_BIN)'
+fi
+AM_CONDITIONAL(BUILD_FOOMATIC_3, test x${BUILD_FOOMATIC_3} = xyes)
+
 if test x${BUILD_IJS} = xyes ; then
   IJS_BIN='$(IJS_BIN)'
 fi
@@ -860,6 +882,7 @@ AC_SUBST(CUPS_MAN)
 AC_SUBST(CUPS_PPD_PS_LEVEL)
 AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
+AC_SUBST(FOOMATIC_3_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(IJS_BIN)
 AC_SUBST(IJS_INSTALL)

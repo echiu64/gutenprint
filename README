@@ -293,10 +293,24 @@ FOOMATIC
 
     /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on your PATH).
 
+    Both Foomatic 2.0.x (stable branch) and 2.9.x (development branch,
+    approaching Foomatic 3.0.x) are supported. With Foomatic 2.9.x there
+    are the extra features of heaving an additional "PrintoutMode" option
+    with pre-configurations for common printing tasks and the options
+    being put into different groups ("General", "PrintoutMode",
+    "Adjustment").
+
     If you don't have Foomatic installed, or the version that is
-    installed is too old, please download the Foomatic package from
+    installed is too old, please download the current Foomatic 2.0.x 
+    package from
+
     http://www.linuxprinting.org/download/foomatic/foomatic-current.tar.gz
-    following the instructions in that package.
+
+    and follow the instructions in that package. See
+
+    http://www.linuxprinting.org/foomatic2.9/foomatic.html
+
+    on how to download and install Foomatic 2.9.x.
 
     After Foomatic is installed, build the Foomatic data as follows:
 
@@ -342,7 +356,8 @@ FOOMATIC
     information on Foomatic.
 
     Foomatic provides an alternate interface to CUPS, in addition to
-    an interface to LPD, LPRng, GNUlpr, PDQ, and PPR.
+    an interface to LPD, LPRng, GNUlpr, PDQ, PPR, CPS, and spooler-less
+    printing.
 
 
 GHOSTSCRIPT
