@@ -135,11 +135,8 @@ typedef struct
   void	(*imageable_area)(int model, char *ppd_file, char *media_size,
                           int *left, int *right, int *bottom, int *top);
   /* Print function */
-  void	(*print)(int model, char *ppd_file, char *resolution,
-                 char *media_size, char *media_type, char *media_source,
-                 int output_type, int orientation, float scaling, int left,
-                 int top, int copies, FILE *prn, Image image,
-                 unsigned char *cmap, lut_t *lut, float saturation);
+  void	(*print)(int model, int copies, FILE *prn, Image image,
+		 unsigned char *cmap, lut_t *lut, vars_t *v);
 } printer_t;
 
 typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
@@ -189,13 +186,9 @@ extern char	**escp2_parameters(int model, char *ppd_file, char *name,
 extern void	escp2_imageable_area(int model, char *ppd_file,
 				     char *media_size, int *left, int *right,
 				     int *bottom, int *top);
-extern void	escp2_print(int model, char *ppd_file, char *resolution,
-		            char *media_size, char *media_type,
-			    char *media_source, int output_type,
-			    int orientation, float scaling, int left,
-			    int top, int copies, FILE *prn,
+extern void	escp2_print(int model, int copies, FILE *prn,
 			    Image image, unsigned char *cmap,
-			    lut_t *lut, float saturation);
+			    lut_t *lut, vars_t *v);
 
 
 extern char	**pcl_parameters(int model, char *ppd_file, char *name,
@@ -203,13 +196,9 @@ extern char	**pcl_parameters(int model, char *ppd_file, char *name,
 extern void	pcl_imageable_area(int model, char *ppd_file, char *media_size,
 		                   int *left, int *right, int *bottom,
 				   int *top);
-extern void	pcl_print(int model, char *ppd_file, char *resolution,
-		          char *media_size, char *media_type,
-			  char *media_source, int output_type,
-			  int orientation, float scaling,
-		          int left, int top, int copies, FILE *prn,
-		          Image image, unsigned char *cmap,
-			  lut_t *lut, float saturation);
+extern void	pcl_print(int model, int copies, FILE *prn,
+			  Image image, unsigned char *cmap,
+			  lut_t *lut, vars_t *v);
 
 
 extern char	**ps_parameters(int model, char *ppd_file, char *name,
@@ -219,12 +208,9 @@ extern void	ps_media_size(int model, char *ppd_file, char *media_size,
 extern void	ps_imageable_area(int model, char *ppd_file, char *media_size,
 		                  int *left, int *right, int *bottom,
 				  int *top);
-extern void	ps_print(int model, char *ppd_file, char *resolution,
-		         char *media_size, char *media_type,
-			 char *media_source, int output_type,
-			 int orientation, float scaling, int left, int top,
-			 int copies, FILE *prn, Image image,
-			 unsigned char *cmap, lut_t *lut, float saturation);
+extern void	ps_print(int model, int copies, FILE *prn,
+			 Image image, unsigned char *cmap,
+			 lut_t *lut, vars_t *v);
 
 #ifdef LEFTOVER_8_BIT
 extern void	dither_cmyk4(unsigned char *, int, int, int, unsigned char *,

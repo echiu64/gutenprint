@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.12  1999/11/23 01:45:00  rlk
+ *   Rationalize variables -- pass 2
+ *
  *   Revision 1.11  1999/11/10 01:13:44  rlk
  *   multi-pass
  *
@@ -406,24 +409,24 @@ pcl_imageable_area(int  model,		/* I - Printer model */
 
 void
 pcl_print(int       model,		/* I - Model */
-          char      *ppd_file,		/* I - PPD file (not used) */
-          char      *resolution,	/* I - Resolution */
-          char      *media_size,	/* I - Media size */
-          char      *media_type,	/* I - Media type */
-          char      *media_source,	/* I - Media source */
-          int       output_type,	/* I - Output type (color/grayscale) */
-          int       orientation,	/* I - Orientation of image */
-          float     scaling,		/* I - Scaling of image */
-          int       left,		/* I - Left offset of image (points) */
-          int       top,		/* I - Top offset of image (points) */
           int       copies,		/* I - Number of copies */
           FILE      *prn,		/* I - File to print to */
           Image     image,		/* I - Image to print */
 	  unsigned char    *cmap,	/* I - Colormap (for indexed images) */
 	  lut_t     *lut,		/* I - Brightness lookup table */
-	  float     saturation		/* I - Saturation */
-	  )
+	  vars_t    *v)
 {
+  char 		*ppd_file = v->ppd_file;
+  char 		*resolution = v->resolution;
+  char 		*media_size = v->media_size;
+  char 		*media_type = v->media_type;
+  char 		*media_source = v->media_source;
+  int 		output_type = v->output_type;
+  int		orientation = v->orientation;
+  float 	scaling = v->scaling;
+  float 	saturation = v->saturation;
+  int		top = v->top;
+  int		left = v->left;
   int		x, y;		/* Looping vars */
   int		xdpi, ydpi;	/* Resolution */
   unsigned short *out;
