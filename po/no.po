@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-04-27 22:44-0400\n"
+"POT-Creation-Date: 2002-06-29 10:01-0400\n"
 "PO-Revision-Date: 2001-10-14 20:53+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
@@ -179,15 +179,6 @@ msgstr ""
 msgid "Hybrid Floyd-Steinberg"
 msgstr ""
 
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:200
-msgid "Standard"
-msgstr "Standard"
-
-#: src/main/print-escp2.c:483
-msgid "Roll Feed"
-msgstr ""
-
 #. name                                                    hres vres softw v_pass overs unidir resid
 #: src/main/print-lexmark.c:622 src/main/print-lexmark.c:708
 msgid "300 DPI x 600 DPI"
@@ -297,240 +288,112 @@ msgstr ""
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#. 11in x 17in
-#: src/main/print-pcl.c:110 src/main/print-util.c:529
-msgid "Executive"
-msgstr ""
-
-#. US Exec (7.25 x 10.5 in)
-#: src/main/print-pcl.c:111 src/main/print-util.c:523
-msgid "Letter"
-msgstr "Letter"
-
-#. US Letter (8.5 x 11 in)
-#: src/main/print-pcl.c:112 src/main/print-util.c:525
-msgid "Legal"
-msgstr "Legal"
-
-#. US Legal (8.5 x 14 in)
-#: src/main/print-pcl.c:113 src/main/print-util.c:527
-msgid "Tabloid"
-msgstr ""
-
-#. US Tabloid (11 x 17 in)
-#: src/main/print-pcl.c:114 src/main/print-pcl.c:201 src/main/print-util.c:547
-msgid "Manual"
-msgstr "Manuell"
-
-#. US Manual/Statement (5.5 x 8.5 in)
-#: src/main/print-pcl.c:115
-msgid "13x19"
-msgstr ""
-
-#. US 13x19/Super B (13 x 19 in)
-#: src/main/print-pcl.c:116 src/main/print-util.c:598
-msgid "A5"
-msgstr ""
-
-#. ISO/JIS A5 (148 x 210 mm)
-#: src/main/print-pcl.c:117 src/main/print-util.c:596
-msgid "A4"
-msgstr "A4"
-
-#. ISO/JIS A4 (210 x 297 mm)
-#: src/main/print-pcl.c:118 src/main/print-util.c:594
-msgid "A3"
-msgstr "A3"
-
-#. ISO/JIS A3 (297 x 420 mm)
-#: src/main/print-pcl.c:119 src/main/print-util.c:680
-msgid "B5 JIS"
-msgstr ""
-
-#. JIS B5 (182 x 257 mm).
-#: src/main/print-pcl.c:120 src/main/print-util.c:678
-msgid "B4 JIS"
-msgstr ""
-
-#. JIS B4 (257 x 364 mm).
-#: src/main/print-pcl.c:121 src/main/print-util.c:782
-msgid "Hagaki Card"
-msgstr ""
-
-#. Japanese Hagaki Card (100 x 148 mm)
-#: src/main/print-pcl.c:122 src/main/print-util.c:784
-msgid "Oufuku Card"
-msgstr ""
-
-#. Japanese Oufuku Card (148 x 200 mm)
-#: src/main/print-pcl.c:123 src/main/print-util.c:600
-msgid "A6"
-msgstr ""
-
-#. ISO/JIS A6 card
-#: src/main/print-pcl.c:124 src/main/print-util.c:535
-msgid "4x6"
-msgstr ""
-
-#. US Index card (4 x 6 in)
-#: src/main/print-pcl.c:125 src/main/print-util.c:541
-msgid "5x8"
-msgstr ""
-
-#. US Index card (5 x 8 in)
-#: src/main/print-pcl.c:126 src/main/print-util.c:533
-msgid "3x5"
-msgstr ""
-
-#. US Index card (3 x 5 in)
-#: src/main/print-pcl.c:127
-msgid "Monarch"
-msgstr ""
-
-#. Monarch Envelope (3 7/8 x 7 1/2 in)
-#: src/main/print-pcl.c:128 src/main/print-util.c:792
-msgid "Commercial 10"
-msgstr ""
-
-#. US Commercial 10 Envelope (4.125 x 9.5 in) Portrait
-#: src/main/print-pcl.c:129 src/main/print-util.c:712
-msgid "DL"
-msgstr ""
-
-#. DL envelope (110 x 220 mm) Portrait
-#: src/main/print-pcl.c:130 src/main/print-util.c:706
-msgid "C5"
-msgstr ""
-
-#. C5 envelope (162 x 229 mm)
-#: src/main/print-pcl.c:131 src/main/print-util.c:710
-msgid "C6"
-msgstr ""
-
-#. C6 envelope (114 x 162 mm)
-#: src/main/print-pcl.c:132 src/main/print-util.c:794
-msgid "A2 Invitation"
-msgstr ""
-
-#. US A2 Invitation envelope (4 3/8 x 5 3/4 in)
-#: src/main/print-pcl.c:133
-msgid "Long 3"
-msgstr ""
-
-#. Japanese Long Envelope #3 (120 x 235 mm)
-#: src/main/print-pcl.c:134
-msgid "Long 4"
-msgstr ""
-
-#. Japanese Long Envelope #4 (90 x 205 mm)
-#: src/main/print-pcl.c:135
-msgid "Kaku"
-msgstr ""
-
-#. Japanese Kaku Envelope (240 x 332.1 mm)
-#. *** MRS: this size not supported by print-util funcs! ***
-#: src/main/print-pcl.c:137
-msgid "HP Greeting Card"
-msgstr ""
-
-#: src/main/print-pcl.c:155
+#: src/main/print-pcl.c:157
 msgid "Plain"
 msgstr "Skriv ut"
 
-#: src/main/print-pcl.c:156
+#: src/main/print-pcl.c:158
 msgid "Bond"
 msgstr ""
 
-#: src/main/print-pcl.c:157
+#: src/main/print-pcl.c:159
 msgid "Premium"
 msgstr ""
 
-#: src/main/print-pcl.c:158
+#: src/main/print-pcl.c:160
 msgid "Glossy Photo"
 msgstr ""
 
-#: src/main/print-pcl.c:159
+#: src/main/print-pcl.c:161
 msgid "Transparency"
 msgstr "Gjennomsiktighet"
 
-#: src/main/print-pcl.c:160
+#: src/main/print-pcl.c:162
 msgid "Quick-dry Photo"
 msgstr ""
 
-#: src/main/print-pcl.c:161
+#: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
 msgstr ""
 
+#: src/gimp/gimp_main_window.c:1616 src/main/print-pcl.c:202
+msgid "Standard"
+msgstr "Standard"
+
+#: src/main/print-pcl.c:203 src/main/print-util.c:547
+msgid "Manual"
+msgstr "Manuell"
+
 #. {"Envelope", PCL_PAPERSOURCE_ENVELOPE},
-#: src/main/print-pcl.c:203
+#: src/main/print-pcl.c:205
 msgid "Tray 1"
 msgstr ""
 
-#: src/main/print-pcl.c:204 src/main/print-pcl.c:210
+#: src/main/print-pcl.c:206 src/main/print-pcl.c:212
 msgid "Tray 2"
 msgstr ""
 
-#: src/main/print-pcl.c:205
+#: src/main/print-pcl.c:207
 msgid "Tray 3"
 msgstr ""
 
-#: src/main/print-pcl.c:206
+#: src/main/print-pcl.c:208
 msgid "Tray 4"
 msgstr ""
 
-#: src/main/print-pcl.c:207
+#: src/main/print-pcl.c:209
 msgid "Portable Sheet Feeder"
 msgstr ""
 
-#: src/main/print-pcl.c:208
+#: src/main/print-pcl.c:210
 msgid "Desktop Sheet Feeder"
 msgstr ""
 
-#: src/main/print-pcl.c:209
+#: src/main/print-pcl.c:211
 msgid "Tray"
 msgstr ""
 
-#: src/main/print-pcl.c:211
+#: src/main/print-pcl.c:213
 msgid "Optional Source"
 msgstr ""
 
-#: src/main/print-pcl.c:212
+#: src/main/print-pcl.c:214
 msgid "Autoselect"
 msgstr ""
 
-#: src/main/print-pcl.c:226
+#: src/main/print-pcl.c:228
 msgid "150x150 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:227
+#: src/main/print-pcl.c:229
 msgid "300x300 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:228
+#: src/main/print-pcl.c:230
 msgid "600x300 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:229
+#: src/main/print-pcl.c:231
 msgid "600x600 DPI monochrome"
 msgstr ""
 
-#: src/main/print-pcl.c:230
+#: src/main/print-pcl.c:232
 msgid "600x600 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:231
+#: src/main/print-pcl.c:233
 msgid "1200x600 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:232
+#: src/main/print-pcl.c:234
 msgid "2400x600 DPI"
 msgstr ""
 
-#: src/main/print-pcl.c:1565
+#: src/main/print-pcl.c:1567
 msgid "Color + Black Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1566
+#: src/main/print-pcl.c:1568
 msgid "Color + Photo Cartridges"
 msgstr ""
 
@@ -540,9 +403,38 @@ msgstr ""
 msgid "ps2"
 msgstr ""
 
+#. Common imperial page sizes
+#: src/main/print-util.c:523
+msgid "Letter"
+msgstr "Letter"
+
+#. 8.5in x 11in
+#: src/main/print-util.c:525
+msgid "Legal"
+msgstr "Legal"
+
+#. 8.5in x 14in
+#: src/main/print-util.c:527
+msgid "Tabloid"
+msgstr ""
+
+#. 11in x 17in
+#: src/main/print-util.c:529
+msgid "Executive"
+msgstr ""
+
 #. 7.25 * 10.5in
 #: src/main/print-util.c:531
 msgid "Postcard"
+msgstr ""
+
+#. 100mm x 147mm
+#: src/main/print-util.c:533
+msgid "3x5"
+msgstr ""
+
+#: src/main/print-util.c:535
+msgid "4x6"
 msgstr ""
 
 #: src/main/print-util.c:537
@@ -551,6 +443,10 @@ msgstr ""
 
 #: src/main/print-util.c:539
 msgid "5x7"
+msgstr ""
+
+#: src/main/print-util.c:541
+msgid "5x8"
 msgstr ""
 
 #: src/main/print-util.c:543
@@ -643,6 +539,26 @@ msgstr "A1"
 #: src/main/print-util.c:592
 msgid "A2"
 msgstr "A2"
+
+#. 420mm x  594mm
+#: src/main/print-util.c:594
+msgid "A3"
+msgstr "A3"
+
+#. 297mm x  420mm
+#: src/main/print-util.c:596
+msgid "A4"
+msgstr "A4"
+
+#. 210mm x  297mm
+#: src/main/print-util.c:598
+msgid "A5"
+msgstr ""
+
+#. 148mm x  210mm
+#: src/main/print-util.c:600
+msgid "A6"
+msgstr ""
 
 #. 105mm x  148mm
 #: src/main/print-util.c:602
@@ -806,6 +722,14 @@ msgstr "B2 JIS"
 msgid "B3 JIS"
 msgstr "B3 JIS"
 
+#: src/main/print-util.c:678
+msgid "B4 JIS"
+msgstr ""
+
+#: src/main/print-util.c:680
+msgid "B5 JIS"
+msgstr ""
+
 #: src/main/print-util.c:682
 msgid "B6 JIS"
 msgstr "B6 JIS"
@@ -853,10 +777,25 @@ msgstr "C3"
 msgid "C4"
 msgstr "C4"
 
+#. 229mm x  324mm
+#: src/main/print-util.c:706
+msgid "C5"
+msgstr ""
+
 #. 162mm x  229mm
 #: src/main/print-util.c:708
 msgid "B6-C4"
 msgstr "B6-C4"
+
+#. 125mm x  324mm
+#: src/main/print-util.c:710
+msgid "C6"
+msgstr ""
+
+#. 114mm x  162mm
+#: src/main/print-util.c:712
+msgid "DL"
+msgstr ""
 
 #. 110mm x  220mm
 #: src/main/print-util.c:714
@@ -984,6 +923,17 @@ msgstr ""
 msgid "Penguin large paperback"
 msgstr ""
 
+#. 129mm x 198mm
+#. Miscellaneous sizes
+#: src/main/print-util.c:782
+msgid "Hagaki Card"
+msgstr ""
+
+#. 100 x 148 mm
+#: src/main/print-util.c:784
+msgid "Oufuku Card"
+msgstr ""
+
 #. 148 x 200 mm
 #: src/main/print-util.c:786
 msgid "Japanese long envelope #3"
@@ -999,79 +949,94 @@ msgstr ""
 msgid "Japanese Kaku envelope #4"
 msgstr ""
 
+#. Japanese Kaku envelope #4
+#: src/main/print-util.c:792
+msgid "Commercial 10"
+msgstr ""
+
+#. US Commercial 10 env
+#: src/main/print-util.c:794
+msgid "A2 Invitation"
+msgstr ""
+
 #. US A2 invitation
 #: src/main/print-util.c:796
+msgid "Monarch Envelope"
+msgstr ""
+
+#. Monarch envelope (3.875 * 7.5)
+#: src/main/print-util.c:798
 msgid "Custom"
 msgstr "Egendefinert"
 
-#: src/main/print-util.c:799
+#: src/main/print-util.c:801
 msgid "89 mm Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:801
+#: src/main/print-util.c:803
 msgid "4 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:803
+#: src/main/print-util.c:805
 msgid "5 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:805
+#: src/main/print-util.c:807
 msgid "210 mm Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:807
+#: src/main/print-util.c:809
 msgid "13 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:809
+#: src/main/print-util.c:811
 msgid "22 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:811
+#: src/main/print-util.c:813
 msgid "24 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:813
+#: src/main/print-util.c:815
 msgid "36 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:815
+#: src/main/print-util.c:817
 msgid "44 Inch Roll Paper"
 msgstr ""
 
-#: src/main/print-util.c:1262 src/main/print-util.c:1271
+#: src/main/print-util.c:1274 src/main/print-util.c:1283
 #, c-format
 msgid "%s is not a valid parameter of type %s\n"
 msgstr ""
 
-#: src/main/print-util.c:1287
+#: src/main/print-util.c:1299
 #, c-format
 msgid "%s out of range (value %f, min %f, max %f)\n"
 msgstr ""
 
-#: src/main/print-util.c:1302
+#: src/main/print-util.c:1314
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr ""
 
-#: src/main/print-util.c:1328
+#: src/main/print-util.c:1340
 msgid "Printer does not support color output\n"
 msgstr ""
 
-#: src/main/print-util.c:1346
+#: src/main/print-util.c:1358
 msgid "Image size is not valid\n"
 msgstr ""
 
-#: src/main/print-util.c:1353
+#: src/main/print-util.c:1365
 msgid "Top margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1359
+#: src/main/print-util.c:1371
 msgid "Left margin must not be less than zero\n"
 msgstr ""
 
-#: src/main/print-util.c:1416
+#: src/main/print-util.c:1428
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr ""
@@ -1734,7 +1699,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:946 src/escputil/escputil.c:953
 #: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1183
 msgid "> "
 msgstr ""
 
@@ -1811,7 +1776,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
 #: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1180
+#: src/escputil/escputil.c:1191 src/escputil/escputil.c:1234
 msgid "Press enter to continue > "
 msgstr ""
 
@@ -1822,37 +1787,38 @@ msgid ""
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1048
+#: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
 #, c-format
 msgid "Pass #%d"
 msgstr ""
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
+#: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1207
 msgid "Number out of range!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1212
 msgid "I cannot understand what you typed!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1218
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1091
+#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
 msgid "Attempting to set alignment..."
 msgstr ""
 
-#: src/escputil/escputil.c:1094
+#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
 msgid "succeeded.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1095
+#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -1900,27 +1866,13 @@ msgstr ""
 msgid "Printer %s does not require color head alignment.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1178
+#: src/escputil/escputil.c:1176
 msgid ""
-"Please re-insert the same alignment sheet in the printer when it is\n"
-"finished printing.\n"
+"Please inspect the print, and choose the pattern in each set.\n"
+"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1184
-msgid ""
-"Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
-"This pattern will appear to have the least ``grain''.\n"
-"If you cannot find a smooth pattern, please select the number for the\n"
-"best pattern, and repeat the procedure.\n"
-"Type a pattern number, or '?' for help.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1220
-#, c-format
-msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1264
+#: src/escputil/escputil.c:1275
 msgid "Error in input\n"
 msgstr ""
 
@@ -2601,31 +2553,36 @@ msgstr ""
 msgid "%.0f of %.0f\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:844
+#: src/ghost/ijsgimpprint.c:838
+#, c-format
+msgid "ijs_server_get_page_header failed %d\n"
+msgstr ""
+
+#: src/ghost/ijsgimpprint.c:849
 #, c-format
 msgid "image_init failed %d\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:855
+#: src/ghost/ijsgimpprint.c:860
 #, c-format
 msgid "Unable to open file descriptor: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:867
+#: src/ghost/ijsgimpprint.c:872
 #, c-format
 msgid "Unable to open %s: %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:879
+#: src/ghost/ijsgimpprint.c:884
 #, c-format
 msgid "Unknown printer %s\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:910
+#: src/ghost/ijsgimpprint.c:915
 msgid "Bad parameters; cannot continue!\n"
 msgstr ""
 
-#: src/ghost/ijsgimpprint.c:920
+#: src/ghost/ijsgimpprint.c:925
 #, c-format
-msgid "Get next row failed at %d\n"
+msgid "Get next row failed at %.0f\n"
 msgstr ""
