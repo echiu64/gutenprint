@@ -34,7 +34,7 @@ NONGIMP_SUBDIRS = test
 NONGIMP_DISTDIRS = debian
 ## @-@-@-@-@ YES-GIMP @-@-@-@-@
 SUBDIRS = include intl lib man src samples $(NONGIMP_SUBDIRS) po doc
-DISTDIRS = scripts $(NONGIMP_DISTDIRS)
+DISTDIRS = m4 scripts $(NONGIMP_DISTDIRS)
 
 EXTRA_DIST = configure.in.in autogen.sh
 

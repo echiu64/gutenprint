@@ -4,6 +4,18 @@
 
 DIE=0
 
+if test -d m4local ; then
+  :
+else
+  echo "Directory \`m4local' does not exist.  Creating it."
+  if test -e m4local ; then
+    echo "**Error**: A file \`m4local' exists and is not a directory."
+    echo "Please remove it."
+    DIE=1
+  fi
+  mkdir m4local
+fi
+
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: You must have \`autoconf' installed to compile gimp-print."
