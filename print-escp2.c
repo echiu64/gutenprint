@@ -989,7 +989,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     48, 6, 144, 2, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
     { -1, 2, 0x11, 4, 0x10, -1, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .1825, .0913 },
+    { 2.0, 1.3, 1.3, .775, .852, .388, .438, .219, .110 },
     &variable_pigment_inks
   },
   /* 27: Stylus Pro 5000 */

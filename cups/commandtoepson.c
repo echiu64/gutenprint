@@ -36,10 +36,9 @@
  * Include necessary headers...
  */
 
+#include <cups/cups.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <cups/cups.h>
-#include <cups/ppd.h>
 
 
 /*

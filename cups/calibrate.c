@@ -712,7 +712,9 @@ send_pass4(FILE       *fp,
 
   fprintf(fp, "(%s) 16 22 TEXT\n", profile);
 
-  ppm = fopen("calibrate.ppm", "rb");
+  if ((ppm = fopen(CUPS_DATADIR "/calibrate.ppm", "rb")) == NULL)
+    if ((ppm = fopen("calibrate.ppm", "rb")) == NULL)
+      return;
 
   fgets(line, sizeof(line), ppm);
   while (fgets(line, sizeof(line), ppm))
@@ -761,5 +763,5 @@ send_pass4(FILE       *fp,
 
   fclose(ppm);
 
-  fputs("gsave\n", fp);
+  fputs("grestore\n", fp);
 }

@@ -41,17 +41,30 @@ CP	=	@CP@
 LDFLAGS	=	@LDFLAGS@
 LIBS	=	@LIBS@
 MKDIR	=	@MKDIR@
-PREFIX	=	@prefix@
 RANLIB	=	:
+
+
+#
+# Directories...
+#
+
+bindir		=	@bindir@
+datadir		=	@datadir@
+exec_prefix	=	@exec_prefix@
+libdir		=	@libdir@
+prefix		=	@prefix@
+sysconfdir	=	@sysconfdir@
 
 
 #
 # Rules...
 #
 
+.SILENT:
 .SUFFIXES:	.c .o
 
 .c.o:
+	echo Compiling $<
 	$(CC) $(CFLAGS) -c $<
 
 
@@ -71,16 +84,18 @@ OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
 # Make all targets...
 #
 
-all:	$(TARGETS)
-
+all:
+	echo Using $(CC) for C compiler.
+	echo Using \"$(CFLAGS)\" for compiler options.
+	$(MAKE) $(TARGETS)
 
 #
 # Clean all object files...
 #
 
 clean:
-	$(RM) -r ppd
 	$(RM) $(OBJS) $(TARGETS)
+	$(RM) -r ppd/*
 
 
 #
@@ -88,30 +103,34 @@ clean:
 #
 
 install:
-	-echo Installing calibration utility...
-	-$(MKDIR) $(PREFIX)/bin
-	$(CP) calibrate $(PREFIX)/bin
-	$(CHMOD) 755 $(PREFIX)/bin/calibrate
+	echo Installing calibration utility...
+	-$(MKDIR) $(bindir)
+	$(CP) calibrate $(bindir)
+	$(CHMOD) a+rx $(bindir)/calibrate
+	-$(MKDIR) $(datadir)/cups
+	$(CP) calibrate.ppm $(datadir)/cups
+	$(CHMOD) a+r $(datadir)/cups/calibrate.ppm
 
-	-echo Installing drivers...
-	-$(MKDIR) $(PREFIX)/lib/cups/backend
-	$(CP) epson $(PREFIX)/lib/cups/backend
-	$(CHMOD) 755 $(PREFIX)/lib/cups/backend/epson
+	echo Installing drivers...
+	-$(MKDIR) $(libdir)/cups/backend
+	$(CP) epson $(libdir)/cups/backend
+	$(CHMOD) a+rx $(libdir)/cups/backend/epson
 
-	-$(MKDIR) $(PREFIX)/lib/cups/filter
-	$(CP) rastertoprinter $(PREFIX)/lib/cups/filter
-	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/rastertoprinter
-	$(CP) commandtoepson $(PREFIX)/lib/cups/filter
-	$(CHMOD) 755 $(PREFIX)/lib/cups/filter/commandtoepson
+	-$(MKDIR) $(libdir)/cups/filter
+	$(CP) rastertoprinter $(libdir)/cups/filter
+	$(CHMOD) a+rx $(libdir)/cups/filter/rastertoprinter
+	$(CP) commandtoepson $(libdir)/cups/filter
+	$(CHMOD) a+rx $(libdir)/cups/filter/commandtoepson
 
-	-echo Installing PPD files...
-	-$(MKDIR) $(PREFIX)/share/cups/model
-	$(CP) ppd/* $(PREFIX)/share/cups/model
-	$(CHMOD) a+r $(PREFIX)/share/cups/model/*
+	echo Installing PPD files...
+	-$(MKDIR) $(datadir)/cups/model
+	$(CP) ppd/* $(datadir)/cups/model
+	$(CHMOD) a+r $(datadir)/cups/model/*
 
-	-echo Installing new command MIME type...
-	$(CP) command.types $(PREFIX)/etc/cups
-	$(CHMOD) a+r $(PREFIX)/etc/cups/command.types
+	echo Installing new command MIME type...
+	-$(MKDIR) $(sysconfdir)/cups
+	$(CP) command.types $(sysconfdir)/cups
+	$(CHMOD) a+r $(sysconfdir)/cups/command.types
 
 
 #
@@ -119,6 +138,7 @@ install:
 #
 
 calibrate:	calibrate.o
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o calibrate calibrate.o -lm
 
 
@@ -127,6 +147,7 @@ calibrate:	calibrate.o
 #
 
 commandtoepson:	commandtoepson.o
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o commandtoepson commandtoepson.o $(LIBS)
 
 
@@ -135,6 +156,7 @@ commandtoepson:	commandtoepson.o
 #
 
 epson:	epson.o
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o epson epson.o $(LIBS)
 
 
@@ -143,6 +165,7 @@ epson:	epson.o
 #
 
 genppd:	genppd.o libdrv.a
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o genppd genppd.o libdrv.a $(LIBS)
 
 genppd.o:	cups-print.h cups-printers.c
@@ -153,7 +176,9 @@ genppd.o:	cups-print.h cups-printers.c
 #
 
 ppd:	genppd
-	$(RM) ppd/*
+	echo Cleaning old PPD files...
+	$(RM) -r ppd/*
+	echo Running $@...
 	./genppd
 
 
@@ -162,6 +187,7 @@ ppd:	genppd
 #
 
 libdrv.a:	$(DRVOBJS)
+	echo Archiving $@...
 	$(RM) $@
 	$(AR) $(ARFLAGS) $@ $(DRVOBJS)
 	$(RANLIB) $@
@@ -175,6 +201,7 @@ cups-util.c:	cups-printers.c
 #
 
 rastertoprinter:	rastertoprinter.o libdrv.a
+	echo Linking $@...
 	$(CC) $(LDFLAGS) -o rastertoprinter rastertoprinter.o libdrv.a $(LIBS)
 
 rastertoprinter.o:	cups-print.h cups-quickmatrix257.h cups-ran.367.179.h
