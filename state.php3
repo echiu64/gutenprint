@@ -30,6 +30,10 @@ $supported_printers = array(
 		'EPSON Stylus Photo 2000P' => 'Testing in Progress, untuned'
 		),
 	'Stylus Color Range' => array(
+		'EPSON Stylus C20SX' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C20UX' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C40SX' => 'Fully Operational (4.1 only)',
+		'EPSON Stylus C40UX' => 'Fully Operational (4.1 only)',
 		'EPSON Stylus Color' => 'Fully Operational',
 		'EPSON Stylus Color Pro' => 'Fully Operational',
 		'EPSON Stylus Color Pro XL' => 'Fully Operational',
@@ -87,7 +91,10 @@ $supported_printers = array(
 		'HP DeskJet 2000 series' => 'Operational',
 		'HP DeskJet 2500 series' => 'Operational',
 		),
-	'LaserJet' => array(
+	'DesignJet Range' => array(
+		'HP DesignJet series' => 'Operational',
+		),
+	'LaserJet Range' => array(
 		'HP LaserJet II series' => 'Fully Operational',
 		'HP LaserJet III series' => 'Fully Operational',
 		'HP LaserJet 4 series' => 'Fully Operational',

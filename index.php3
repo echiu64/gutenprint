@@ -25,13 +25,16 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 <p>Red Hat users may want to check out <a href="gs_stp.html">this
 site</a> for quick and easy setup.</p>
 
+<p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
+UNIX Printing System) for the easiest setup.</p>
+
 </p>
-<H2><font color="#ff0000">Gimp-Print 4.1.99-a2 is
+<H2><font color="#ff0000">Gimp-Print 4.1.99-a3 is
 released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of July 26
-2001!</strong></em></font> Gimp-Print 4.1.99-a2, an alpha release in
-the 4.2 line, is out.  This offers many new features and bug fixes.</p>
+<P><strong><em><font color="#ff0000">New as of August 14
+2001!</strong></em></font> Gimp-Print 4.1.99-a3, an alpha release in
+the 4.2 line, is out.  This offers many improvements and bug fixes.</p>
 
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0.5 is
 released!</blink></font></h2>
