@@ -3280,11 +3280,12 @@ get_system_printers(void)
   plist[0].v.output_type = OUTPUT_COLOR;
 
 #ifdef LPC_COMMAND
-  if ((pfile = popen(LPC_COMMAND " status", "r")) != NULL)
+  if ((pfile = popen(LPC_COMMAND " status < /dev/null", "r")) != NULL)
   {
     while (fgets(line, sizeof(line), pfile) != NULL &&
            plist_count < MAX_PLIST)
-      if (strchr(line, ':') != NULL && line[0] != ' ' && line[0] != '\t')
+      if (strchr(line, ':') != NULL && line[0] != ' ' && 
+	  line[0] != '\t' && strncmp(line,"Press RETURN to continue",24))
       {
         *strchr(line, ':') = '\0';
         strcpy(plist[plist_count].name, line);
