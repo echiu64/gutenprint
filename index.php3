@@ -25,33 +25,22 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
 released!</blink></font></h2>
 
-<P><strong><em><font color="#ff0000">New as of December 24,
-2000!</strong></em></font> Gimp-Print 4.1.1, a development release in
-the 4.1 line, is out.  It features further print quality improvements,
-use of readline in escputil, and some bug fixes.  Note that it is
-<strong>not</strong> currently compatible with <a
-href="http://linuxprinting.org/foomatic.html">foomatic</a>, although
-we're working on remedying that state of affairs.  Also note that the
-PPD files used by the native CUPS driver are not forward or backward
-compatible with the PPD files in any of the 4.0 releases.
+<P><strong><em><font color="#ff0000">New as of May 9,
+2001!</strong></em></font> Gimp-Print 4.1.7, a development release in
+the 4.1 line, is out.  This features greatly improved print quality,
+more supported printers, and other major improvements.  Also note that
+the PPD files used by the native CUPS driver are not forward or
+backward compatible with the PPD files in any of the 4.0 releases.</p>
 
 <P><strong><em><font color="#ff0000">New as of December 22,
 2000!</strong></em></font> Daniele Berti has packaged up rpm's of
-GhostScript 5.50 with the Gimp-Print stp driver.  It's available at <a
-href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.
+GhostScript 5.50 with the Gimp-Print stp driver (4.0.4).  It's
+available at <a
+href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.</p>
 
 <P><strong><em><font color="#ff0000">New as of November 27,
-2000!</strong></em></font> Gimp-Print 4.0.4 is out.  All users should
-upgrade.
-
-<P><strong><em><font color="#ff0000">As of October 28, 2000,
-Gimp-Print 4.0.0 is out.</font></em></strong> This is the initial
-stable release of 4.0, following the 3.1 development cycle.  This
-version contains GhostScript and CUPS drivers equal to the Print
-plugin in all respects, including supported printers.  <strong>Please
-read the Ghost/README file very carefully if you use the Ghostscript
-driver, as the usage is completely different from all prior
-releases!</strong></p>
+2000!</strong></em></font> Gimp-Print 4.0.4 is out.  All users of the
+stable 4.0 release should upgrade to 4.0.4.</p>
 
 <P>Please check out <a
 href="http://sourceforge.net/project/?group_id=1537">our
