@@ -59,6 +59,8 @@ typedef struct {
     int cyan_depth;		/* 2 level, 4 level */
     int magenta_depth;		/* 2 level, 4 level */
     int yellow_depth;		/* 2 level, 4 level */
+    int lcyan_depth;		/* 2 level, 4 level */
+    int lmagenta_depth;		/* 2 level, 4 level */
     int image_width;
     int image_height;
     int compression_type;	/* Uncompressed or TIFF */
@@ -77,6 +79,10 @@ typedef struct {
     int magenta_data_rows_per_row;
     char **yellow_bufs;
     int yellow_data_rows_per_row;
+    char **lcyan_bufs;
+    int lcyan_data_rows_per_row;
+    char **lmagenta_bufs;
+    int lmagenta_data_rows_per_row;
     int active_length;			/* Length of output data */
     int output_depth;
 } output_t;
@@ -84,6 +90,7 @@ typedef struct {
 #define PCL_MONO 1
 #define PCL_CMY 3
 #define PCL_CMYK 4
+#define PCL_CMYKcm 6
 
 #define PCL_COMPRESSION_NONE 0
 #define PCL_COMPRESSION_RUNLENGTH 1
@@ -515,7 +522,7 @@ void write_grey(output_t *output,	/* I: data */
  * write_colour() - Write out one row of RGB PNM data.
  */
 
-/* FIXME - multiple levels and CMYK */
+/* FIXME - multiple levels and CMYK/CMYKcm */
 
 void write_colour(output_t *output,		/* I: Data buffers */
 		 image_t *image)		/* I: Image data */
@@ -534,7 +541,7 @@ void write_colour(output_t *output,		/* I: Data buffers */
     cyan_buf = output->cyan_bufs[0];
     magenta_buf = output->magenta_bufs[0];
     yellow_buf = output->yellow_bufs[0];
-    if (image->colour_type == PCL_CMYK)
+    if (image->colour_type != PCL_CMY)
 	black_buf = output->black_bufs[0];
     else
 	black_buf = NULL;
@@ -567,7 +574,7 @@ void write_colour(output_t *output,		/* I: Data buffers */
     }
 #endif
 
-    if (image->colour_type != PCL_CMYK) {
+    if (image->colour_type == PCL_CMY) {
 	for (i=0; i < wholebytes; i++) {
 	    for (j=0,jj=0; j < 8; j++,jj+=3) {
 		tb[jj] = (((cyan_buf[i] >> (7-j)) & 1));
@@ -720,6 +727,8 @@ void pcl_reset(image_t *i)
     i->cyan_depth = 0;
     i->magenta_depth = 0;
     i->yellow_depth = 0;
+    i->lcyan_depth = 0;
+    i->lmagenta_depth = 0;
     i->image_width = -1;
     i->image_height = -1;
     i->compression_type = 0;	/* should this be NONE? */
@@ -786,6 +795,10 @@ int main(int argc, char *argv[])
     output_data.magenta_data_rows_per_row = 0;
     output_data.yellow_bufs = NULL;
     output_data.yellow_data_rows_per_row = 0;
+    output_data.lcyan_bufs = NULL;
+    output_data.lcyan_data_rows_per_row = 0;
+    output_data.lmagenta_bufs = NULL;
+    output_data.lmagenta_data_rows_per_row = 0;
     output_data.active_length = 0;
 
     received_rows = NULL;
@@ -904,29 +917,30 @@ int main(int argc, char *argv[])
 		    i++;
 		}
 		if (image_data.image_height == -1) {
-		    fprintf(stderr, "ERROR: Image height not set!\n");
-/*		    i++; */
+		    fprintf(stderr, "WARNING: Image height not set!\n");
 		}
 
 		if ((image_data.black_depth != 0) &&
 		    (image_data.black_depth != 2)) {
-		    fprintf(stderr, "Sorry, only 2 level black dithers handled.\n");
-/*		    i++; */
+		    fprintf(stderr, "WARNING: Only 2 level black dithers handled.\n");
 		}
 		if ((image_data.cyan_depth != 0) &&
 		    (image_data.cyan_depth != 2)) {
-		    fprintf(stderr, "Sorry, only 2 level cyan dithers handled.\n");
-/*		    i++; */
+		    fprintf(stderr, "WARNING: Only 2 level cyan dithers handled.\n");
 		}
 		if ((image_data.magenta_depth != 0) &&
 		    (image_data.magenta_depth != 2)) {
-		    fprintf(stderr, "Sorry, only 2 level magenta dithers handled.\n");
-/*		    i++; */
+		    fprintf(stderr, "WARNING: Only 2 level magenta dithers handled.\n");
 		}
 		if ((image_data.yellow_depth != 0) &&
 		    (image_data.yellow_depth != 2)) {
-		    fprintf(stderr, "Sorry, only 2 level yellow dithers handled.\n");
-/*		    i++; */
+		    fprintf(stderr, "WARNING: only 2 level yellow dithers handled.\n");
+		}
+		if (image_data.lcyan_depth != 0) {
+		    fprintf(stderr, "WARNING: Light cyan dithers not yet handled.\n");
+		}
+		if (image_data.lmagenta_depth != 0) {
+		    fprintf(stderr, "WARNING: Light magenta dithers not yet handled.\n");
 		}
 
 		if ((image_data.compression_type != PCL_COMPRESSION_NONE) &&
@@ -975,6 +989,8 @@ int main(int argc, char *argv[])
 		output_data.cyan_data_rows_per_row = depth_to_rows(image_data.cyan_depth);
 		output_data.magenta_data_rows_per_row = depth_to_rows(image_data.magenta_depth);
 		output_data.yellow_data_rows_per_row = depth_to_rows(image_data.yellow_depth);
+		output_data.lcyan_data_rows_per_row = depth_to_rows(image_data.lcyan_depth);
+		output_data.lmagenta_data_rows_per_row = depth_to_rows(image_data.lmagenta_depth);
 
 /*
  * Allocate some storage for the expected planes
@@ -1004,6 +1020,18 @@ int main(int argc, char *argv[])
 			output_data.yellow_bufs[i] = malloc(MAX_DATA * sizeof (char));
 		    }
 		}
+		if (output_data.lcyan_data_rows_per_row != 0) {
+		    output_data.lcyan_bufs = malloc(output_data.lcyan_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
+			output_data.lcyan_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
+		if (output_data.lmagenta_data_rows_per_row != 0) {
+		    output_data.lmagenta_bufs = malloc(output_data.lmagenta_data_rows_per_row * sizeof (char *));
+		    for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
+			output_data.lmagenta_bufs[i] = malloc(MAX_DATA * sizeof (char));
+		    }
+		}
 
 /*
  * Now store the pointers in the right order to make life easier in the
@@ -1012,7 +1040,8 @@ int main(int argc, char *argv[])
 
 		expected_data_rows_per_row = output_data.black_data_rows_per_row + 
 		    output_data.cyan_data_rows_per_row + output_data.magenta_data_rows_per_row + 
-		    output_data.yellow_data_rows_per_row;
+		    output_data.yellow_data_rows_per_row + output_data.lcyan_data_rows_per_row +
+		    output_data.lmagenta_data_rows_per_row;
 
 		received_rows = malloc(expected_data_rows_per_row * sizeof(char *));
 		j = 0;
@@ -1024,6 +1053,10 @@ int main(int argc, char *argv[])
 		    received_rows[j++] = output_data.magenta_bufs[i];
 		for (i = 0; i < output_data.yellow_data_rows_per_row; i++)
 		    received_rows[j++] = output_data.yellow_bufs[i];
+		for (i = 0; i < output_data.lcyan_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.lcyan_bufs[i];
+		for (i = 0; i < output_data.lmagenta_data_rows_per_row; i++)
+		    received_rows[j++] = output_data.lmagenta_bufs[i];
 
 		break;
 
@@ -1078,6 +1111,20 @@ int main(int argc, char *argv[])
 		    }
 		    free(output_data.yellow_bufs);
 		    output_data.yellow_bufs = NULL;
+		}
+		if (output_data.lcyan_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.lcyan_data_rows_per_row; i++) {
+			free(output_data.lcyan_bufs[i]);
+		    }
+		    free(output_data.lcyan_bufs);
+		    output_data.lcyan_bufs = NULL;
+		}
+		if (output_data.lmagenta_data_rows_per_row != 0) {
+		    for (i=0; i < output_data.lmagenta_data_rows_per_row; i++) {
+			free(output_data.lmagenta_bufs[i]);
+		    }
+		    free(output_data.lmagenta_bufs);
+		    output_data.lmagenta_bufs = NULL;
 		}
 		free(received_rows);
 		received_rows = NULL;
@@ -1285,6 +1332,7 @@ int main(int argc, char *argv[])
 			break;
 		    case PCL_CMYK :
 			fprintf(stderr, "CMYK (two cart)\n");
+			image_data.black_depth = 2;	/* Black levels */
 			image_data.cyan_depth = 2;	/* Cyan levels */
 			image_data.magenta_depth = 2;	/* Magenta levels */
 			image_data.yellow_depth = 2;	/* Yellow levels */
@@ -1352,9 +1400,6 @@ int main(int argc, char *argv[])
 			    fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char)data_buffer[3],
 				((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
 			    image_data.black_depth = data_buffer[7];	/* Black levels */
-			    image_data.cyan_depth = 0;
-			    image_data.magenta_depth = 0;
-			    image_data.yellow_depth = 0;
 			    break;
 			case PCL_CMY :
 			    fprintf(stderr, "CMY (one cart)\n");
@@ -1395,6 +1440,33 @@ int main(int argc, char *argv[])
 			    image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
 			    image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
 			    image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
+			    break;
+			case PCL_CMYKcm :
+			    fprintf(stderr, "CMYKcm (two cart photo)\n");
+
+/* Size should be 38 */
+
+			    if (numeric_arg != 38)
+				fprintf(stderr, "ERROR: Expected 38 bytes of data, got %d\n", numeric_arg);
+
+			    fprintf(stderr, "\tBlack: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[2]<<8)+(unsigned char) data_buffer[3],
+				((unsigned char) data_buffer[4]<<8)+(unsigned char) data_buffer[5], data_buffer[7]);
+			    fprintf(stderr, "\tCyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[8]<<8)+(unsigned char) data_buffer[9],
+				((unsigned char) data_buffer[10]<<8)+(unsigned char) data_buffer[11], data_buffer[13]);
+			    fprintf(stderr, "\tMagenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[14]<<8)+(unsigned char) data_buffer[15],
+				((unsigned char) data_buffer[16]<<8)+(unsigned char) data_buffer[17], data_buffer[19]);
+			    fprintf(stderr, "\tYellow: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[20]<<8)+(unsigned char) data_buffer[21],
+				((unsigned char) data_buffer[22]<<8)+(unsigned char) data_buffer[23], data_buffer[25]);
+			    fprintf(stderr, "\tLight Cyan: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[26]<<8)+(unsigned char) data_buffer[27],
+				((unsigned char) data_buffer[28]<<8)+(unsigned char) data_buffer[29], data_buffer[31]);
+			    fprintf(stderr, "\tLight Magenta: X dpi: %d, Y dpi: %d, Levels: %d\n", ((unsigned char) data_buffer[32]<<8)+(unsigned char) data_buffer[33],
+				((unsigned char) data_buffer[34]<<8)+(unsigned char) data_buffer[35], data_buffer[37]);
+			    image_data.black_depth = data_buffer[7];	/* Black levels */
+			    image_data.cyan_depth = data_buffer[13];	/* Cyan levels */
+			    image_data.magenta_depth = data_buffer[19];	/* Magenta levels */
+			    image_data.yellow_depth = data_buffer[25];	/* Yellow levels */
+			    image_data.lcyan_depth = data_buffer[31];	/* Cyan levels */
+			    image_data.lmagenta_depth = data_buffer[37];	/* Magenta levels */
 			    break;
 			default :
 			    fprintf(stderr, "Unknown (%d)\n", data_buffer[1]);
@@ -1533,6 +1605,10 @@ int main(int argc, char *argv[])
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.10  2000/05/05 18:31:26  davehill
+ *   Cope with DJ690 photo without crashing. It doesn't actually decode them
+ *   properly (yet).
+ *
  *   Revision 1.9  2000/04/22 23:27:18  rlk
  *   Code cleanup
  *
