@@ -23,8 +23,7 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  href="http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2-0.ppc.dmg?download">Gimp-Print 4.2.2 for Mac OS X Jaguar</a> is now
  available!</font>
  </h2>
- <p>Please note: <em>Mac OS 10.2 Jaguar is required to use
- Gimp-Print!</em></p><p>
+ <p>Please note: <em>Gimp-Print for Mac OS X requires Jaguar (version 10.2) or later!</em></p><p>
  For a quick download of the latest release built specifically for Mac OS
  X users click <a
  href="http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2-0.ppc.dmg?download">here</a>. An easy-to-follow, fully illustrated set-up
