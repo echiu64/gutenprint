@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.2.4-pre1"><b>November 07, 2002 -</b></a> Gimp-Print 4.2.4-pre1, a testing pre-release is now available for download.
+ <a href="MacOSX.php3#4.2.4-rc1"><b>November 20, 2002 -</b></a> Gimp-Print 4.2.4-rc1, a release candidate for 4.2.4 is now available for download.
  </p>
  <p>
  <a href="MacOSX.php3#4.2.3"><b>October 21, 2002 -</b></a> Gimp-Print 4.2.3, the newest stable release, is now available for download.
@@ -123,26 +123,26 @@ require('standard_html_header.php3');
  Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
- <b>Gimp-Print 4.2.4-pre1</b>
+ <b>Gimp-Print 4.2.4-rc1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-pre1.ppc.dmg?download"
- >gimp-print-4.2.4-pre1.ppc.dmg</a>&nbsp;(5.1 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-rc1.ppc.dmg?download"
+ >gimp-print-4.2.4-rc1.ppc.dmg</a>&nbsp;(5.1 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-pre1.tar.gz?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.4-rc1.tar.gz?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.2.4-pre1 is the newest pre-release for Mac OS X; it includes bug fixes
- over 4.2.3 but it may contain new bugs. This package requires (but does not include)
+ Gimp-Print 4.2.4-rc1 is the newest release candidate for Mac OS X; it includes bug fixes
+ over 4.2.3 in preparation for the final release fo 4.2.4. This package requires (but does not include)
  ESP Ghostscript 7.05.5 for Mac OS X (<b>download below and install, if
  necessary</b>).
  </p>
@@ -222,6 +222,43 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.2.4-rc1"></a>
+ <B>Gimp-Print 4.2.4-rc1</B>
+ </TD>
+ <TD align="right" >
+ <B>2002-11-07</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gimp-Print version 4.2.4-rc1 is the newest pre-release build in the stable
+ 4.2 series; it contains the following improvements over Gimp-Print 4.2.4-pre1:
+ </p>
+ <ul>
+ <li>Support for the HP DesignJet 230, 250, 430, 450, 455, 488, 700,
+     2500, and 3500 printers.</li>
+ <li>PCL laser printers (pcl-2, pcl-3, pcl-4, pcl-5, and pcl-6),
+     including HP LaserJet printers and many other models, now print
+     black correctly (previously it was printed as a medium gray).</li>
+ <li>PCL laser printers now have correct margins on A4 paper.</li>
+ <li>Custom pages sizes should now work with all applications
+     supporting them.</li>
+ </ul>
+ <dl>
+ <dt>Bugs fixed in this release:
+ <dd>631936 HP DesignJet Margin Problems
+ <dd>619537 QUALITY - Poor quality w/ Lexmark OprtaE+ and pcl-4
+ <dd>603702 QUALITY-HP LaserJet 5L print is too light
+ <dd>631993 Macintosh OS X: Custom page size problems w/some apps
+ </dl>
+ <p>For PPD related changes in the driver to take effect it will be
+ necessary to delete and recreate the printer in Print Center.</p>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.4-pre1"></a>
