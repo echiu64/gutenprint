@@ -28,7 +28,8 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@
-LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
 
 
 ## Programs
@@ -39,7 +40,7 @@ bin_PROGRAMS = @ESCPUTIL_BIN@
 
 EXTRA_PROGRAMS = escputil
 
-escputil_LDADD = $(LIBREADLINE_DEPS)
+escputil_LDADD = $(LIBPRINTUT) $(LIBREADLINE_DEPS)
 
 
 ## Clean

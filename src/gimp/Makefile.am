@@ -28,7 +28,8 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
-LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+LIBS = $(INTLLIBS) @LIBS@
+LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 
 libexecdir = $(gimptool_prefix)/plug-ins
 
@@ -48,7 +49,7 @@ print_SOURCES = \
 	gimp_color_window.c \
 	gimp_main_window.c \
 	print_gimp.h
-print_LDADD = $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS) ../../lib/libprintut.la
+print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS)
 print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 
