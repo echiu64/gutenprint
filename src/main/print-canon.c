@@ -1605,39 +1605,28 @@ canon_cmd(const stp_vars_t v, /* I - the printer         */
 	  ...        /* I - the args themselves */
 	  )
 {
-  static int bufsize= 0;
-  static unsigned char *buffer;
+  unsigned char *buffer = stp_malloc(num + 1);
   int i;
   va_list ap;
 
-  if (!buffer || (num > bufsize)) {
-    if (buffer)
-      stp_free(buffer);
-    buffer = stp_malloc(num);
-    bufsize= num;
-    if (!buffer) {
-#ifdef DEBUG
-      stp_erprintf("\ncanon: *** buffer allocation failed...\n");
-      stp_erprintf("canon: *** command 0x%02x with %d args dropped\n\n",
-	      cmd,num);
-#endif
-      return;
+  if (num)
+    {
+      va_start(ap, num);
+      for (i=0; i<num; i++)
+	buffer[i]= (unsigned char) va_arg(ap, int);
+      va_end(ap);
     }
-  }
-  if (num) {
-    va_start(ap, num);
-    for (i=0; i<num; i++)
-      buffer[i]= (unsigned char) va_arg(ap, int);
-    va_end(ap);
-  }
 
   stp_zfwrite(ini,2,1,v);
-  if (cmd) {
-    stp_putc(cmd,v);
-    stp_putc((num & 255),v);
-    stp_putc((num >> 8 ),v);
-    stp_zfwrite(buffer,num,1,v);
-  }
+  if (cmd)
+    {
+      stp_putc(cmd,v);
+      stp_putc((num & 255),v);
+      stp_putc((num >> 8 ),v);
+      if (num)
+	stp_zfwrite(buffer,num,1,v);
+    }
+  free(buffer);
 }
 
 #ifdef DEBUG
@@ -1956,7 +1945,8 @@ static unsigned char *
 canon_alloc_buffer(int size)
 {
   unsigned char *buf= stp_malloc(size);
-  if (buf) memset(buf,0,size);
+  if (buf)
+    memset(buf,0,size);
   return buf;
 }
 
@@ -2057,8 +2047,6 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   const paper_t *pt;
   const canon_variable_inkset_t *inks;
 
-
-  memcpy(nv, v, sizeof(stp_vars_t));
   /*
   PUT("top        ",top,72);
   PUT("left       ",left,72);
