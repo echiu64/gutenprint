@@ -311,6 +311,14 @@ input_has_special_channels(const stp_vars_t *v)
 }
 
 static int
+output_has_gloss(const stp_vars_t *v)
+{
+  const stpi_channel_group_t *cg =
+    ((const stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  return (cg->gloss_channel >= 0);
+}
+
+static int
 input_needs_splitting(const stp_vars_t *v)
 {
   const stpi_channel_group_t *cg =
@@ -486,12 +494,18 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   cg->output_data = cg->alloc_data_1;
   if (angle_count == 0)
     {
-      if (input_needs_splitting(v) || cg->gloss_channel != -1)
+      if (input_needs_splitting(v))
 	{
 	  cg->alloc_data_2 =
 	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
 	  cg->input_data = cg->alloc_data_2;
 	  cg->split_input = cg->input_data;
+	}
+      else if (cg->gloss_channel != -1)
+	{
+	  cg->alloc_data_2 =
+	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
+	  cg->input_data = cg->alloc_data_2;
 	}
       else
 	cg->input_data = cg->output_data;
@@ -667,6 +681,31 @@ mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
     if (i1[i] != i2[i])
       return 0;
   return 1;
+}
+
+static void
+copy_channels(const stp_vars_t *v)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  int i, j, k;
+  const unsigned short *input = cg->input_data;
+  unsigned short *output = cg->output_data;
+  for (i = 0; i < cg->width; i++)
+    {
+      for (j = 0; j < cg->channel_count; j++)
+	{
+	  stpi_channel_t *ch = &(cg->c[j]);
+	  for (k = 0; k < ch->subchannel_count; k++)
+	    {
+	      if (cg->gloss_channel != j)
+		{
+		  *output = *input++;
+		}
+	      output++;
+	    }
+	}	  
+    }
 }
 
 static void
@@ -1011,6 +1050,8 @@ stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
 {
   if (input_has_special_channels(v))
     generate_special_channels(v);
+  else if (output_has_gloss(v) && !input_needs_splitting(v))
+    copy_channels(v);
   if (input_needs_splitting(v))
     split_channels(v, zero_mask);
   else
