@@ -559,3 +559,8 @@ gimp.m4 (in /usr/share/aclocal or equivalent) will be incorrect.  You
 should install the version of gimp.m4 from scripts/ prior to use.
 This should only be a problem when building from CVS; the configure
 script included in released versions will not have this problem.
+
+
+13. Updating PO files
+
+wget -r -np -nH --cut-dirs=3 --accept '.po' --cache=off http://www.iro.umontreal.ca/translation/maint/gimp-print/
