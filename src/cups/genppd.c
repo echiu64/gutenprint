@@ -159,6 +159,10 @@ const char *parameter_level_names[] =
 void	usage(void);
 void    help(void);
 char ** getlangs(void);
+static int stpi_scandir (const char *dir,
+			 struct dirent ***namelist,
+			 int (*sel) (const struct dirent *),
+			 int (*cmp) (const void *, const void *));
 int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
@@ -514,7 +518,7 @@ getlangs(void)
   int n;
   char **langs;
 
-  n = scandir (baselocaledir, &langdirs, checkcat, dirent_sort);
+  n = stpi_scandir (baselocaledir, &langdirs, checkcat, dirent_sort);
   if (n >= 0)
     {
       int idx;
@@ -580,9 +584,86 @@ void printmodels(int verbose)
   exit (EXIT_SUCCESS);
 }
 
+/*
+ * 'stpi_scandir()' - BSD scandir() replacement.
+ */
+
+static int
+stpi_scandir (const char *dir,
+	      struct dirent ***namelist,
+	      int (*sel) (const struct dirent *),
+	      int (*cmp) (const void *, const void *))
+{
+  DIR *dp = opendir (dir);
+  struct dirent **v = NULL;
+  size_t vsize = 0, i;
+  struct dirent *d;
+  int save;
+
+  if (dp == NULL)
+    return -1;
+
+  save = errno;
+  errno = 0;
+
+  i = 0;
+  while ((d = readdir (dp)) != NULL)
+    if (sel == NULL || (*sel) (d))
+      {
+	struct dirent *vnew;
+	size_t dsize;
+
+	/* Ignore errors from sel or readdir */
+        errno = 0;
+
+	if (i == vsize)
+	  {
+	    struct dirent **new;
+	    if (vsize == 0)
+	      vsize = 10;
+	    else
+	      vsize *= 2;
+	    new = (struct dirent **) realloc (v, vsize * sizeof (*v));
+	    if (new == NULL)
+	      break;
+	    v = new;
+	  }
+
+	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
+	vnew = (struct dirent *) malloc (dsize);
+	if (vnew == NULL)
+	  break;
+
+	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
+      }
+
+  if (errno != 0)
+    {
+      save = errno;
+
+      while (i > 0)
+	free (v[--i]);
+      free (v);
+
+      i = -1;
+    }
+  else
+    {
+      /* Sort the list if we have a comparison function to sort with.  */
+      if (cmp != NULL)
+	qsort (v, i, sizeof (*v), cmp);
+
+      *namelist = v;
+    }
+
+  (void) closedir (dp);
+  errno = save;
+
+  return i;
+}
 
 /*
- * 'checkcat()' - A callback for scandir() to check
+ * 'checkcat()' - A callback for stpi_scandir() to check
  *                if a message catalogue exists
  */
 
@@ -593,7 +674,7 @@ checkcat (const struct dirent *localedir)
   int catlen, status = 0, savederr;
   struct stat catstat;
 
-  savederr = errno; /* since we are a callback, preserve scandir() state */
+  savederr = errno; /* since we are a callback, preserve stpi_scandir() state */
 
   /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
   /* Add 3, for two '/' separators and '\0'   */

@@ -33,11 +33,16 @@
 #include <unistd.h>
 
 static int stpi_path_check(const struct dirent *module);
-static char *stpi_path_merge(const char *path, const char *file);
+static char *stpi_path_merge(const char *path,
+			     const char *file);
+static int stpi_scandir (const char *dir,
+			 struct dirent ***namelist,
+			 int (*sel) (const struct dirent *),
+			 int (*cmp) (const void *, const void *));
 
 /* WARNING: This is not thread safe! -- rlk 20030721 */
-static const char *path_check_path;   /* Path for scandir() callback */
-static const char *path_check_suffix; /* Suffix for scandir() callback */
+static const char *path_check_path;   /* Path for stpi_scandir() callback */
+static const char *path_check_suffix; /* Suffix for stpi_scandir() callback */
 
 
 static int
@@ -78,8 +83,8 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
       path_check_path = (const char *) stp_list_item_get_data(diritem);
       stp_deprintf(STP_DBG_PATH, "stp-path: directory: %s\n",
 		   (const char *) stp_list_item_get_data(diritem));
-      n = scandir ((const char *) stp_list_item_get_data(diritem),
-		   &module_dir, stpi_path_check, dirent_sort);
+      n = stpi_scandir ((const char *) stp_list_item_get_data(diritem),
+			&module_dir, stpi_path_check, dirent_sort);
       if (n >= 0)
 	{
 	  int idx;
@@ -99,8 +104,8 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
 
 
 /*
- * scandir() callback.  Check the filename is sane, has the correct
- * mode bits and suffix.
+ * stpi_scandir() callback.  Check the filename is sane, has the
+ * correct mode bits and suffix.
  */
 static int
 stpi_path_check(const struct dirent *module) /* File to check */
@@ -111,7 +116,8 @@ stpi_path_check(const struct dirent *module) /* File to check */
   char *filename;                           /* Filename */
   struct stat modstat;                      /* stat() output */
 
-  savederr = errno; /* since we are a callback, preserve scandir() state */
+  savederr = errno; /* since we are a callback, preserve
+		       stpi_scandir() state */
 
   filename = stpi_path_merge(path_check_path, module->d_name);
 
@@ -198,4 +204,81 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 	}
       start = end + 1;
     }
+}
+
+/*
+ * BSD scandir() replacement, from glibc
+ */
+static int
+stpi_scandir (const char *dir,
+	      struct dirent ***namelist,
+	      int (*sel) (const struct dirent *),
+	      int (*cmp) (const void *, const void *))
+{
+  DIR *dp = opendir (dir);
+  struct dirent **v = NULL;
+  size_t vsize = 0, i;
+  struct dirent *d;
+  int save;
+
+  if (dp == NULL)
+    return -1;
+
+  save = errno;
+  errno = 0;
+
+  i = 0;
+  while ((d = readdir (dp)) != NULL)
+    if (sel == NULL || (*sel) (d))
+      {
+	struct dirent *vnew;
+	size_t dsize;
+
+	/* Ignore errors from sel or readdir */
+        errno = 0;
+
+	if (i == vsize)
+	  {
+	    struct dirent **new;
+	    if (vsize == 0)
+	      vsize = 10;
+	    else
+	      vsize *= 2;
+	    new = (struct dirent **) realloc (v, vsize * sizeof (*v));
+	    if (new == NULL)
+	      break;
+	    v = new;
+	  }
+
+	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
+	vnew = (struct dirent *) malloc (dsize);
+	if (vnew == NULL)
+	  break;
+
+	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
+      }
+
+  if (errno != 0)
+    {
+      save = errno;
+
+      while (i > 0)
+	free (v[--i]);
+      free (v);
+
+      i = -1;
+    }
+  else
+    {
+      /* Sort the list if we have a comparison function to sort with.  */
+      if (cmp != NULL)
+	qsort (v, i, sizeof (*v), cmp);
+
+      *namelist = v;
+    }
+
+  (void) closedir (dp);
+  errno = save;
+
+  return i;
 }
