@@ -38,12 +38,41 @@
 #include "print-intl.h"
 #include <string.h>
 
+typedef struct
+{
+  const char *name;
+  const char *text;
+  const char *help;
+  gint count;
+  stp_param_t *params;
+  void (*extra)(const gchar *);
+  gint callback_id;
+  GtkWidget *combo;
+} list_option_t;
+
+typedef struct
+{
+  const char *name;
+  const char *help;
+  gdouble scale;
+  GtkWidget *checkbox;
+  const char *format;
+} unit_t;
+
+typedef struct
+{
+  const char *name;
+  const char *help;
+  gint value;
+  GtkWidget *button;
+} radio_group_t;
+
 /*
  * Constants for GUI.
  */
 #define PREVIEW_SIZE_VERT  360
 #define PREVIEW_SIZE_HORIZ 260
-#define MINIMUM_IMAGE_PERCENT (5)
+#define MINIMUM_IMAGE_PERCENT (5.0)
 #define MOVE_CONSTRAIN	   0
 #define MOVE_HORIZONTAL	   1
 #define MOVE_VERTICAL      2
@@ -59,80 +88,79 @@ static GtkWidget *right_vbox;
 static GtkWidget *notebook;
 
 static GtkWidget *print_dialog;           /* Print dialog window */
+
 static GtkWidget *recenter_button;
 static GtkWidget *recenter_vertical_button;
 static GtkWidget *recenter_horizontal_button;
+
 static GtkWidget *left_entry;
 static GtkWidget *right_entry;
 static GtkWidget *right_border_entry;
-static GtkWidget *width_entry;
 static GtkWidget *top_entry;
 static GtkWidget *bottom_entry;
 static GtkWidget *bottom_border_entry;
+static GtkWidget *width_entry;
 static GtkWidget *height_entry;
-static GtkWidget *custom_size_width        = NULL;
-static GtkWidget *custom_size_height       = NULL;
-static GtkWidget *orientation_menu         = NULL;  /* Orientation menu */
-static GtkWidget *scaling_percent;        /* Scale by percent */
-static GtkWidget *scaling_ppi;            /* Scale by pixels-per-inch */
-static GtkWidget *scaling_image;          /* Scale to the image */
-static GtkWidget *setup_dialog;         /* Setup dialog window */
-static GtkWidget *printer_driver;       /* Printer driver widget */
-static GtkWidget *printer_model_label; /* Printer model name */
-static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
-static GtkWidget *printer_combo;	/* Combo for menu */
-static gint plist_callback_id	   = -1;
-static GtkWidget *ppd_file;             /* PPD file entry */
-static GtkWidget *ppd_label;            /* PPD file entry */
-static GtkWidget *ppd_button;           /* PPD file browse button */
-static GtkWidget *output_cmd;           /* Output command text entry */
-static GtkWidget *ppd_browser;          /* File selection dialog for PPD files */
-static GtkWidget *new_printer_dialog; /* New printer dialog window */
-static GtkWidget *new_printer_entry;  /* New printer text entry */
 
-static GtkWidget *file_browser;         /* FSD for print files */
+static GtkWidget *custom_size_width;
+static GtkWidget *custom_size_height;
+
+static GtkWidget *orientation_menu;    /* Orientation menu */
+
+static GtkWidget *scaling_percent;     /* Scale by percent */
+static GtkWidget *scaling_ppi;         /* Scale by pixels-per-inch */
+static GtkWidget *scaling_image;       /* Scale to the image */
+static GtkObject *scaling_adjustment;  /* Adjustment object for scaling */
+
+static GtkWidget *setup_dialog;        /* Setup dialog window */
+static GtkWidget *printer_driver;      /* Printer driver widget */
+static GtkWidget *printer_model_label; /* Printer model name */
+static GtkWidget *printer_crawler;     /* Scrolled Window for menu */
+static GtkWidget *printer_combo;       /* Combo for menu */
+static gint plist_callback_id = -1;
+static GtkWidget *ppd_file;            /* PPD file entry */
+static GtkWidget *ppd_label;           /* PPD file entry */
+static GtkWidget *ppd_button;          /* PPD file browse button */
+static GtkWidget *output_cmd;          /* Output command text entry */
+static GtkWidget *ppd_browser;         /* File selection dialog for PPDs */
+static GtkWidget *new_printer_dialog;  /* New printer dialog window */
+static GtkWidget *new_printer_entry;   /* New printer text entry */
+static GtkWidget *file_browser;        /* FSD for print files */
+
 static GtkWidget *adjust_color_button;
 static GtkWidget *about_dialog;
 
-static GtkObject *scaling_adjustment;	/* Adjustment object for scaling */
-static gboolean   suppress_scaling_adjustment = FALSE;
-static gboolean   suppress_scaling_callback   = FALSE;
-
-static gint   suppress_preview_update = 0;
-
-static gint preview_valid = 0;
-static gint frame_valid = 0;
-static gint need_exposure = 0;
+static gboolean preview_valid = FALSE;
+static gboolean frame_valid = FALSE;
+static gboolean need_exposure = FALSE;
+static gboolean suppress_scaling_adjustment = FALSE;
+static gboolean suppress_scaling_callback   = FALSE;
+/*
+ * These are semaphores, not true booleans.
+ */
+static gint suppress_preview_update = 0;
+static gint suppress_preview_reset = 0;
 
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
-static gint mouse_x;		/* Last mouse X */
-static gint mouse_y;		/* Last mouse Y */
-static gint orig_top;	/* Previous position */
-static gint orig_left;	/* Previous position */
+static gint mouse_x, mouse_y;		/* Last mouse position */
+static gint orig_top, orig_left;	/* Original mouse position at start */
 static gint buttons_pressed = 0;
 static gint preview_active = 0;
 static gint buttons_mask = 0;
 static gint move_constraint = 0;
 static gint mouse_button = -1;	/* Button being dragged with */
-static gint suppress_preview_reset = 0;
-static gint physical_orientation = -2; /* Actual orientation */
-static gint preview_thumbnail_w = 0;
-static gint preview_thumbnail_h = 0;
+static gint preview_thumbnail_w, preview_thumbnail_h;
 static gint preview_x, preview_y, preview_w, preview_h;
 
-static gint printable_width;	/* Width of page */
-static gint printable_height;	/* Height of page */
-static gint print_width;	/* Printed width of image */
-static gint print_height;	/* Printed height of image */
-static gint left, right;	        /* Imageable area */
-static gint top, bottom;
-static gint paper_width, paper_height;	/* Physical width */
-static gint image_width;
-static gint image_height;
-static gint image_true_width;
-static gint image_true_height;
-static gdouble image_xres;
-static gdouble image_yres;
+static gint physical_orientation = -2; /* Actual orientation */
+
+static gint paper_width, paper_height; /* Physical width */
+static gint printable_width, printable_height;	/* Size of printable area */
+static gint print_width, print_height; /* Printed area of image */
+static gint left, right, top, bottom; /* Imageable region */
+static gint image_width, image_height; /* Image size (possibly rotated) */
+static gint image_true_width, image_true_height; /* Original image */
+static gdouble image_xres, image_yres; /* Original image resolution */
 
 static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
@@ -178,24 +206,6 @@ static void image_type_callback         (GtkWidget      *widget,
 					 gpointer        data);
 static void set_media_size(const gchar *new_media_size);
 
-static gdouble preview_ppi = 10;
-gp_plist_t *pv;
-
-#define Combo_get_text(combo) \
-	(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))
-
-typedef struct
-{
-  const char *name;
-  const char *text;
-  const char *help;
-  gint count;
-  stp_param_t *params;
-  void (*extra)(const gchar *);
-  gint callback_id;
-  GtkWidget *combo;
-} list_option_t;
-
 static list_option_t the_list_options[] =
   {
     { "MediaType", N_("Media Type:"),
@@ -215,16 +225,8 @@ static list_option_t the_list_options[] =
       0, NULL, NULL, -1 },
   };
 
-static const gint list_option_count = sizeof(the_list_options) / sizeof(list_option_t);
-
-typedef struct
-{
-  const char *name;
-  const char *help;
-  gdouble scale;
-  GtkWidget *checkbox;
-  const char *format;
-} unit_t;
+static const gint list_option_count = (sizeof(the_list_options) /
+				       sizeof(list_option_t));
 
 static unit_t units[] =
   {
@@ -239,16 +241,7 @@ static unit_t units[] =
     { N_("Pica"), N_("Set the base unit of measurement to picas"),
       72.0 / 12.0, NULL, "%.1f" },
   };
-
 static const gint unit_count = sizeof(units) / sizeof(unit_t);
-
-typedef struct
-{
-  const char *name;
-  const char *help;
-  gint value;
-  GtkWidget *button;
-} radio_group_t;
 
 static radio_group_t output_types[] =
   {
@@ -260,7 +253,8 @@ static radio_group_t output_types[] =
       OUTPUT_MONOCHROME, NULL }
   };
 
-static const gint output_type_count = sizeof(output_types) / sizeof(radio_group_t);
+static const gint output_type_count = (sizeof(output_types) /
+				       sizeof(radio_group_t));
 
 static radio_group_t image_types[] =
   {
@@ -274,10 +268,15 @@ static radio_group_t image_types[] =
 	 "images and photographs"), IMAGE_CONTINUOUS, NULL }
   };
 
-static const gint image_type_count = sizeof(image_types) / sizeof(radio_group_t);
+static const gint image_type_count = (sizeof(image_types) /
+				      sizeof(radio_group_t));
+
+static gdouble preview_ppi = 10;
 
 static stp_param_t *printer_list = 0;
 static int printer_count = 0;
+gp_plist_t *pv;
+
 
 static list_option_t *
 get_list_option_by_name(const char *name)
@@ -344,7 +343,7 @@ Combo_get_name(GtkWidget   *combo,
   gchar *text;
   gint   i;
 
-  if ((text = Combo_get_text(combo)) == NULL)
+  if ((text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))) ==NULL)
     return (NULL);
 
   if (num_options == 0)
@@ -1014,7 +1013,7 @@ create_scaling_frame (void)
    */
   scaling_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 0, _("Scaling:"), 100, 75,
-			  100.0, (gdouble) MINIMUM_IMAGE_PERCENT, 100.0,
+			  100.0, MINIMUM_IMAGE_PERCENT, 100.0,
 			  1.0, 10.0, 1, TRUE, 0, 0, NULL, NULL);
   set_adjustment_tooltip(scaling_adjustment,
 			 _("Set the scale (size) of the image"));
@@ -1296,7 +1295,7 @@ compute_scaling_limits(gdouble *min_ppi_scaling, gdouble *max_ppi_scaling)
   else
     *min_ppi_scaling = min_ppi_scaling2;
 
-  *max_ppi_scaling = *min_ppi_scaling * 100 / (gdouble) MINIMUM_IMAGE_PERCENT;
+  *max_ppi_scaling = *min_ppi_scaling * 100 / MINIMUM_IMAGE_PERCENT;
 }
 
 /*
@@ -1363,15 +1362,15 @@ scaling_callback (GtkWidget *widget)
 	return;
 
       current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = (gdouble) MINIMUM_IMAGE_PERCENT;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = MINIMUM_IMAGE_PERCENT;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
 
       new_percent = 100 * min_ppi_scaling / current_scale;
 
       if (new_percent > 100)
 	new_percent = 100;
-      if (new_percent < (gdouble) MINIMUM_IMAGE_PERCENT)
-	new_percent = (gdouble) MINIMUM_IMAGE_PERCENT;
+      if (new_percent < MINIMUM_IMAGE_PERCENT)
+	new_percent = MINIMUM_IMAGE_PERCENT;
 
       GTK_ADJUSTMENT (scaling_adjustment)->value = new_percent;
       pv->scaling = 0.0;
@@ -1424,9 +1423,6 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 
   if (*callback_id != -1)
     gtk_signal_disconnect (GTK_OBJECT (entry), *callback_id);
-#if 0
-  gtk_signal_handlers_destroy (GTK_OBJECT (entry));
-#endif
   gtk_entry_set_editable (entry, FALSE);
 
   if (num_items == 0)
@@ -1554,7 +1550,7 @@ do_misc_updates (void)
       gdouble tmp = pv->scaling;
 
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = (gdouble) MINIMUM_IMAGE_PERCENT;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = MINIMUM_IMAGE_PERCENT;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
       gtk_signal_emit_by_name (scaling_adjustment, "changed");
@@ -1602,9 +1598,7 @@ static void
 position_callback (GtkWidget *widget)
 {
   gdouble new_printed_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-  gdouble unit_scaler = units[pv->unit].scale;
-  gint new_value = SCALE(new_printed_value, unit_scaler);
-  gboolean was_percent = 0;
+  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
 
   reset_preview ();
   suppress_preview_update++;
@@ -1623,6 +1617,7 @@ position_callback (GtkWidget *widget)
     stp_set_left (pv->v, paper_width - print_width - new_value);
   else if (widget == width_entry || widget == height_entry)
     {
+      gboolean was_percent = 0;
       if (pv->scaling >= 0)
 	{
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi),
@@ -1666,7 +1661,8 @@ plist_callback (GtkWidget *widget,
 
   if (widget)
     {
-      const gchar *result = Combo_get_text (printer_combo);
+      const gchar *result =
+	gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(printer_combo)->entry));
 
       for (i = 0; i < plist_count; i++)
 	{
@@ -1743,8 +1739,7 @@ custom_media_size_callback(GtkWidget *widget,
   gint width_limit, height_limit;
   gint min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-  gdouble unit_scaler = units[pv->unit].scale;
-  gint new_value = SCALE(new_printed_value, unit_scaler);
+  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
   invalidate_frame ();
   invalidate_preview_thumbnail ();
   reset_preview ();
@@ -1826,8 +1821,8 @@ static void
 combo_callback(GtkWidget *widget, gpointer data)
 {
   list_option_t *option = (list_option_t *)data;
-  const gchar *new_value = Combo_get_name(option->combo, option->count,
-					  option->params);
+  const gchar *new_value =
+    Combo_get_name(option->combo, option->count, option->params);
   reset_preview();
   if (strcmp(stp_get_parameter(pv->v, option->name), new_value) != 0)
     {
@@ -2031,10 +2026,10 @@ setup_update (void)
     gtk_widget_show (output_cmd);
 
   adjustment = GTK_CLIST (printer_driver)->vadjustment;
-  gtk_adjustment_set_value (adjustment,
-                            adjustment->lower +
-                            idx * (adjustment->upper - adjustment->lower) /
-                            GTK_CLIST (printer_driver)->rows);
+  gtk_adjustment_set_value
+    (adjustment,
+     adjustment->lower + idx * (adjustment->upper - adjustment->lower) /
+     GTK_CLIST (printer_driver)->rows);
 }
 
 /*
@@ -2196,8 +2191,8 @@ static void
 file_ok_callback (void)
 {
   gtk_widget_hide (file_browser);
-  plist_set_output_to (pv,
-		       gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_browser)));
+  plist_set_output_to
+    (pv, gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_browser)));
 
   runme = TRUE;
   destroy_dialogs ();
@@ -2290,13 +2285,13 @@ update_adjusted_thumbnail (void)
 void
 invalidate_preview_thumbnail (void)
 {
-  preview_valid = 0;
+  preview_valid = FALSE;
 }
 
 void
 invalidate_frame (void)
 {
-  frame_valid = 0;
+  frame_valid = FALSE;
 }
 
 static void
@@ -2468,7 +2463,7 @@ do_preview_thumbnail (void)
 	      v_cur++;
 	    }
 	}
-      preview_valid = 1;
+      preview_valid = TRUE;
     }
 
   if (need_exposure)
@@ -2482,7 +2477,7 @@ do_preview_thumbnail (void)
       gdk_draw_rectangle (preview->widget.window, gc, 0,
 			  printable_display_left, printable_display_top,
 			  printable_display_width, printable_display_height);
-      need_exposure = 0;
+      need_exposure = FALSE;
     }
   else if (!frame_valid)
     {
@@ -2496,7 +2491,7 @@ do_preview_thumbnail (void)
       gdk_draw_rectangle (preview->widget.window, gc, 0,
 			  printable_display_left, printable_display_top,
 			  printable_display_width, printable_display_height);
-      frame_valid = 1;
+      frame_valid = TRUE;
     }
   else
     {
@@ -2550,7 +2545,7 @@ do_preview_thumbnail (void)
 static void
 preview_expose (void)
 {
-  need_exposure = 1;
+  need_exposure = TRUE;
   preview_update ();
 }
 
