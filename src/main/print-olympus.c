@@ -259,8 +259,8 @@ static const olymp_pagesize_t p400_page[] =
 {
   { "Custom", NULL, -1, -1, 22, 22, 54, 54},
   { "A4", NULL, -1, -1, 22, 22, 54, 54},
-  { "A5", "A5 wide", 595, 503, 22, 22, 22, 22},
-  { "B5", "A4 (2 Postcards)", -1, -1, 39, 38, 60, 362},
+  { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85},
+  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9},
 };
 
 static const olymp_pagesize_list_t p400_page_list =
@@ -272,8 +272,8 @@ static const olymp_printsize_t p400_printsize[] =
 {
   { "314x314", "Custom", 2400, 3200},
   { "314x314", "A4", 2400, 3200},
-  { "314x314", "A5", 2400, 2000},
-  { "314x314", "B5", 1920, 1328},
+  { "314x314", "c8x10", 2000, 2400},
+  { "314x314", "C6", 1328, 1920},
 };
 
 static const olymp_printsize_list_t p400_printsize_list =
@@ -283,12 +283,24 @@ static const olymp_printsize_list_t p400_printsize_list =
 
 static void p400_printer_init_func(stp_vars_t v)
 {
+  const char *p = stp_get_string_parameter(v, "PageSize");
+  int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
+
   stpi_zprintf(v, "\033ZQ"); stpi_zfwrite(zero, 1, 61, v);
   stpi_zprintf(v, "\033FP"); stpi_zfwrite(zero, 1, 61, v);
-  stpi_zprintf(v, "\033ZF"); stpi_zfwrite(zero, 1, 61, v);
+  stpi_zprintf(v, "\033ZF");
+  stpi_putc((wide ? '\x40' : '\x00'), v); stpi_zfwrite(zero, 1, 60, v);
   stpi_zprintf(v, "\033ZS");
-  stpi_put16_be(privdata.xsize, v);
-  stpi_put16_be(privdata.ysize, v);
+  if (wide)
+    {
+      stpi_put16_be(privdata.ysize, v);
+      stpi_put16_be(privdata.xsize, v);
+    }
+  else
+    {
+      stpi_put16_be(privdata.xsize, v);
+      stpi_put16_be(privdata.ysize, v);
+    }
   stpi_zfwrite(zero, 1, 57, v);
   stpi_zprintf(v, "\033ZP"); stpi_zfwrite(zero, 1, 61, v);
 }
@@ -305,11 +317,24 @@ static void p400_plane_end_func(stp_vars_t v)
 
 static void p400_block_init_func(stp_vars_t v)
 {
+  const char *p = stp_get_string_parameter(v, "PageSize");
+  int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
+
   stpi_zprintf(v, "\033Z%c", privdata.plane);
-  stpi_put16_be(privdata.block_min_x, v);
-  stpi_put16_be(privdata.block_min_y, v);
-  stpi_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
-  stpi_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+  if (wide)
+    {
+      stpi_put16_be(privdata.ysize - privdata.block_max_y - 1, v);
+      stpi_put16_be(privdata.xsize - privdata.block_max_x - 1, v);
+      stpi_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+      stpi_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+    }
+  else
+    {
+      stpi_put16_be(privdata.block_min_x, v);
+      stpi_put16_be(privdata.block_min_y, v);
+      stpi_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+      stpi_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+    }
   stpi_zfwrite(zero, 1, 53, v);
 }
 
@@ -357,8 +382,8 @@ static const olymp_pagesize_t cpx00_page[] =
 {
   { "Custom", NULL, -1, -1, 13, 13, 16, 18},
   { "Postcard", "Postcard 148x100mm", -1, -1, 13, 13, 16, 18},
-  { "ISOB7", "CP_L 89x119mm", 253, 334, 13, 13, 15, 15},
-  { "ISOB8", "Card 54x86mm", 155, 239, 13, 13, 15, 15},
+  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15},
+  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15},
 };
 
 static const olymp_pagesize_list_t cpx00_page_list =
@@ -370,8 +395,8 @@ static const olymp_printsize_t cpx00_printsize[] =
 {
   { "314x314", "Custom", 1232, 1808},
   { "314x314", "Postcard", 1232, 1808},
-  { "314x314", "ISOB7", 1100, 1456},
-  { "314x314", "ISOB8", 672, 1040},
+  { "314x314", "w253h337", 1100, 1456},
+  { "314x314", "w155h244", 672, 1040},
 };
 
 static const olymp_printsize_list_t cpx00_printsize_list =
@@ -447,9 +472,9 @@ static const olymp_resolution_list_t updp10_res_list =
 static const olymp_pagesize_t updp10_page[] =
 {
   { "Custom", NULL, -1, -1, 12, 12, 0, 0},
-  { "w288h432", "UPC-10P23", -1, -1, 12, 12, 18, 18},
-  { "Postcard", "UPC-10P34", 288, 384, 12, 12, 16, 16},
-  { "A6", "UPC-10S01", 288, 432, 12, 12, 18, 18},
+  { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18},
+  { "w288h387", "UPC-10P34 (3:4)", -1, -1, 12, 12, 16, 16},
+  { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18},
 };
 
 static const olymp_pagesize_list_t updp10_page_list =
@@ -461,8 +486,7 @@ static const olymp_printsize_t updp10_printsize[] =
 {
   { "300x300", "Custom", 1200, 1800},
   { "300x300", "w288h432", 1200, 1800},
-  { "300x300", "Postcard", 1200, 1600},
-  { "300x300", "A6", 1200, 1800},
+  { "300x300", "w288h387", 1200, 1600},
 };
 
 static const olymp_printsize_list_t updp10_printsize_list =
@@ -901,10 +925,12 @@ olympus_imageable_area(stp_const_vars_t v,
     {
       if (strcmp(p->item[i].name,pt->name) == 0)
         {
+/*
     	  if (p->item[i].width_pt >= 0)
     		  stp_set_page_width(v, p->item[i].width_pt);
     	  if (p->item[i].height_pt >= 0)
     		  stp_set_page_height(v, p->item[i].height_pt);
+*/
 
           stpi_default_media_size(v, &width, &height);
     
