@@ -493,25 +493,16 @@ list_devices(void)
       fclose(probe);
 
       if (strcmp(make, "EPSON") == 0)
-	printf("direct parallel:/dev/lp%d \"%s %s\" \"Parallel Port #%d\"\n",
+	printf("direct epson:/dev/lp%d \"%s %s\" \"Parallel Port #%d\"\n",
 	       i, make, model, i + 1);
     }
     else
     {
       sprintf(device, "/dev/lp%d", i);
-      if ((fd = open(device, O_WRONLY)) >= 0)
+      if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct parallel:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
-      }
-      else
-      {
-	sprintf(device, "/dev/par%d", i);
-	if ((fd = open(device, O_WRONLY)) >= 0)
-	{
-	  close(fd);
-	  printf("direct parallel:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
-	}
+	printf("direct epson:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
       }
     }
   }
@@ -564,7 +555,7 @@ list_devices(void)
 	*/
 
         if (strcmp(make, "EPSON") == 0)
-	  printf("direct usb:/dev/usb/lp%d \"%s %s\" \"USB Printer #%d\"\n",
+	  printf("direct epson:/dev/usb/lp%d \"%s %s\" \"USB Printer #%d\"\n",
 		 i, make, model, i + 1);
 
 	i ++;
@@ -581,17 +572,17 @@ list_devices(void)
     for (i = 0; i < 8; i ++)
     {
       sprintf(device, "/dev/usb/lp%d", i);
-      if ((fd = open(device, O_WRONLY)) >= 0)
+      if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct usb:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
       }
 
       sprintf(device, "/dev/usblp%d", i);
-      if ((fd = open(device, O_WRONLY)) >= 0)
+      if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct usb:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
       }
     }
   }
@@ -609,59 +600,17 @@ list_devices(void)
 
   while ((inv = getinvent()) != NULL)
   {
-    if (inv->inv_class == INV_PARALLEL &&
-        (inv->inv_type == INV_ONBOARD_PLP ||
-         inv->inv_type == INV_EPP_ECP_PLP))
+    if (inv->inv_class == INV_PARALLEL && inv->inv_type == INV_EPP_ECP_PLP)
     {
      /*
       * Standard parallel port...
       */
 
-      puts("direct parallel:/dev/plp \"EPSON\" \"Onboard Parallel Port\"");
-    }
-    else if (inv->inv_class == INV_PARALLEL &&
-             inv->inv_type == INV_EPC_PLP)
-    {
-     /*
-      * EPC parallel port...
-      */
-
-      printf("direct parallel:/dev/plp%d \"EPSON\" \"Integral EPC parallel port, Ebus slot %d\"\n",
-             inv->inv_controller, inv->inv_controller);
+      puts("direct epson:/dev/plpbi \"EPSON\" \"Onboard Parallel Port\"");
     }
   }
 
   endinvent();
-
- /*
-  * Central Data makes serial and parallel "servers" that can be
-  * connected in a number of ways.  Look for ports...
-  */
-
-  for (i = 0; i < 10; i ++)
-    for (j = 0; j < 8; j ++)
-      for (n = 0; n < 32; n ++)
-      {
-        if (i == 8)		/* EtherLite */
-          sprintf(device, "/dev/lpn%d%c", j, funky_hex[n]);
-        else if (i == 9)	/* PCI */
-          sprintf(device, "/dev/lpp%d%c", j, funky_hex[n]);
-        else			/* SCSI */
-          sprintf(device, "/dev/lp%d%d%c", i, j, funky_hex[n]);
-
-	if (access(device, 0) == 0)
-	{
-	  if (i == 8)
-	    printf("direct parallel:%s \"EPSON\" \"Central Data EtherLite Parallel Port, ID %d, port %d\"\n",
-	           device, j, n);
-	  else if (i == 9)
-	    printf("direct parallel:%s \"EPSON\" \"Central Data PCI Parallel Port, ID %d, port %d\"\n",
-	           device, j, n);
-  	  else
-	    printf("direct parallel:%s \"EPSON\" \"Central Data SCSI Parallel Port, logical bus %d, ID %d, port %d\"\n",
-	           device, i, j, n);
-	}
-      }
 #elif defined(__sun)
   int		i, j, n;	/* Looping vars */
   char		device[255];	/* Device filename */
@@ -675,15 +624,7 @@ list_devices(void)
   {
     sprintf(device, "/dev/ecpp%d", i);
     if (access(device, 0) == 0)
-      printf("direct parallel:%s \"EPSON\" \"Sun IEEE-1284 Parallel Port #%d\"\n",
-             device, i + 1);
-  }
-
-  for (i = 0; i < 10; i ++)
-  {
-    sprintf(device, "/dev/bpp%d", i);
-    if (access(device, 0) == 0)
-      printf("direct parallel:%s \"EPSON\" \"Sun Standard Parallel Port #%d\"\n",
+      printf("direct epson:%s \"EPSON\" \"Sun IEEE-1284 Parallel Port #%d\"\n",
              device, i + 1);
   }
 
@@ -692,104 +633,8 @@ list_devices(void)
     sprintf(device, "/dev/lp%d", i);
 
     if (access(device, 0) == 0)
-      printf("direct parallel:%s \"EPSON\" \"PC Parallel Port #%d\"\n",
+      printf("direct epson:%s \"EPSON\" \"PC Parallel Port #%d\"\n",
              device, i + 1);
-  }
-
- /*
-  * MAGMA parallel ports...
-  */
-
-  for (i = 0; i < 40; i ++)
-  {
-    sprintf(device, "/dev/pm%02d", i);
-    if (access(device, 0) == 0)
-      printf("direct parallel:%s \"EPSON\" \"MAGMA Parallel Board #%d Port #%d\"\n",
-             device, (i / 10) + 1, (i % 10) + 1);
-  }
-
- /*
-  * Central Data parallel ports...
-  */
-
-  for (i = 0; i < 9; i ++)
-    for (j = 0; j < 8; j ++)
-      for (n = 0; n < 32; n ++)
-      {
-        if (i == 8)	/* EtherLite */
-          sprintf(device, "/dev/sts/lpN%d%c", j, funky_hex[n]);
-        else
-          sprintf(device, "/dev/sts/lp%c%d%c", i + 'C', j,
-                  funky_hex[n]);
-
-	if (access(device, 0) == 0)
-	{
-	  if (i == 8)
-	    printf("direct parallel:%s \"EPSON\" \"Central Data EtherLite Parallel Port, ID %d, port %d\"\n",
-	           device, j, n);
-  	  else
-	    printf("direct parallel:%s \"EPSON\" \"Central Data SCSI Parallel Port, logical bus %d, ID %d, port %d\"\n",
-	           device, i, j, n);
-	}
-      }
-#elif defined(__hpux)
-  int		i, j, n;	/* Looping vars */
-  char		device[255];	/* Device filename */
-
-
- /*
-  * Standard parallel ports...
-  */
-
-  if (access("/dev/rlp", 0) == 0)
-    puts("direct parallel:/dev/rlp \"EPSON\" \"Standard Parallel Port (/dev/rlp)\"");
-
-  for (i = 0; i < 7; i ++)
-    for (j = 0; j < 7; j ++)
-    {
-      sprintf(device, "/dev/c%dt%dd0_lp", i, j);
-      if (access(device, 0) == 0)
-	printf("direct parallel:%s \"EPSON\" \"Parallel Port #%d,%d\"\n", i, j);
-    }
-
- /*
-  * Central Data parallel ports...
-  */
-
-  for (i = 0; i < 9; i ++)
-    for (j = 0; j < 8; j ++)
-      for (n = 0; n < 32; n ++)
-      {
-        if (i == 8)	/* EtherLite */
-          sprintf(device, "/dev/lpN%d%c", j, funky_hex[n]);
-        else
-          sprintf(device, "/dev/lp%c%d%c", i + 'C', j,
-                  funky_hex[n]);
-
-	if (access(device, 0) == 0)
-	{
-	  if (i == 8)
-	    printf("direct parallel:%s \"EPSON\" \"Central Data EtherLite Parallel Port, ID %d, port %d\"\n",
-	           device, j, n);
-  	  else
-	    printf("direct parallel:%s \"EPSON\" \"Central Data SCSI Parallel Port, logical bus %d, ID %d, port %d\"\n",
-	           device, i, j, n);
-	}
-      }
-#elif defined(__osf__)
-  int	i;			/* Looping var */
-  int	fd;			/* File descriptor */
-  char	device[255];		/* Device filename */
-
-
-  for (i = 0; i < 3; i ++)
-  {
-    sprintf(device, "/dev/lp%d", i);
-    if ((fd = open(device, O_WRONLY)) >= 0)
-    {
-      close(fd);
-      printf("direct parallel:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
-    }
   }
 #elif defined(FreeBSD) || defined(OpenBSD) || defined(NetBSD)
   int	i;			/* Looping var */
@@ -804,10 +649,10 @@ list_devices(void)
   for (i = 0; i < 3; i ++)
   {
     sprintf(device, "/dev/lpt%d", i);
-    if ((fd = open(device, O_WRONLY)) >= 0)
+    if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct parallel:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
     }
   }
 
@@ -818,10 +663,10 @@ list_devices(void)
   for (i = 0; i < 3; i ++)
   {
     sprintf(device, "/dev/ulpt%d", i);
-    if ((fd = open(device, O_WRONLY)) >= 0)
+    if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct usb:%s \"EPSON\" \"USB Port #%d\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"USB Port #%d\"\n", device, i + 1);
     }
   }
 #endif
