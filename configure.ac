@@ -246,7 +246,7 @@ STP_ARG_WITH([ghostscript],
              [BUILD_GHOSTSCRIPT],
              [(automatic)])
 
- STP_ARG_WITH_DETAILED([modules],
+STP_ARG_WITH_DETAILED([modules],
                       [],
                       [enable loadable modules],
 	              [(options: ltdl, dlopen, static)],
