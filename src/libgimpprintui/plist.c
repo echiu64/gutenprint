@@ -948,6 +948,7 @@ stpui_printrc_load(void)
 	  stpui_printrc_load_v1(fp);
 	  break;
 	case 2:
+	case 3:
 	  stpui_printrc_load_v2(fp);
 	  break;
 	}
@@ -982,7 +983,7 @@ stpui_printrc_save(void)
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-      fputs("#PRINTRCv2 written by Gimp-Print " PLUG_IN_VERSION "\n\n", fp);
+      fputs("#PRINTRCv3 written by Gimp-Print " PLUG_IN_VERSION "\n\n", fp);
 
       fprintf(fp, "Global-Settings:\n");
       fprintf(fp, "  Current-Printer: \"%s\"\n",
