@@ -1129,7 +1129,7 @@ static const int ph2_dotsizes[] =
 { 3, 3, -1, -1, 1, -1, 4, -1, -1, -1, -1 };
 
 static const int sc440_dotsizes[] =
-{ 3, 3, -1, 1, 1, -1, -1, -1, -1, -1, -1 };
+{ 3, 3, -1, -1, 1, -1, -1, -1, -1, -1, -1 };
 
 static const int sc640_dotsizes[] =
 { 3, 3, -1, 1, 1, -1, 1, -1, 1, -1, -1 };

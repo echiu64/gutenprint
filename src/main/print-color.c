@@ -57,7 +57,7 @@ typedef struct
 #define LUM_GREEN	61
 #define LUM_BLUE	8
 
-/* rgb/hsv conversions taken from Gimp common/autostretch_hsv.c */
+/* rgb/hsl conversions taken from Gimp common/autostretch_hsv.c */
 
 #define FMAX(a, b) ((a) > (b) ? (a) : (b))
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
@@ -741,7 +741,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     isat = 1.0 / ssat;
   while (width > 0)
     {
-      double h, s, v;
+      double h, s, l;
       switch (bpp)
 	{
 	case 1:
@@ -823,7 +823,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
-	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	      if (ssat < 1)
 		s *= ssat;
 	      else
@@ -834,7 +834,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      calc_hsl_to_rgb(rgbout, h, s, v);
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
@@ -855,7 +855,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
-	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	      if (split_saturation)
 		{
 		  if (ssat < 1)
@@ -884,7 +884,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		      else if (h >= 6.0)
 			h -= 6.0;
 		    }
-		  if (lum_map && v > .0001 && v < .9999)
+		  if (lum_map && l > .0001 && l < .9999)
 		    {
 		      int ih;
 		      double eh;
@@ -893,12 +893,12 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		      eh = nh - (double) ih;
 		      if (lum_map[ih] != 1.0 || lum_map[ih + 1] != 1.0)
 			{
-			  double ev = lum_map[ih] +
+			  double el = lum_map[ih] +
 			    eh * (lum_map[ih + 1] - lum_map[ih]);
-			  ev = 1.0 + (s * (ev - 1.0));
-			  if (v > .5)
-			    ev = 1.0 + ((2.0 * (1.0 - v)) * (ev - 1.0));
-			  v = 1.0 - pow(1.0 - v, ev);
+			  el = 1.0 + (s * (el - 1.0));
+			  if (l > .5)
+			    el = 1.0 + ((2.0 * (1.0 - l)) * (el - 1.0));
+			  l = 1.0 - pow(1.0 - l, el);
 			}
 		    }
 		  if (sat_map)
@@ -916,7 +916,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 			}
 		    }
 		}
-	      calc_hsl_to_rgb(rgbout, h, s, v);
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
@@ -1079,7 +1079,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
     isat = 1.0 / stp_get_saturation(vars);
   while (width > 0)
     {
-      double h, s, v;
+      double h, s, l;
       if (bpp == 1)
 	{
 	  /*
@@ -1120,7 +1120,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	{
 	  if (stp_get_saturation(vars) != 1.0)
 	    {
-	      calc_rgb_to_hsl(rgb, &h, &s, &v);
+	      calc_rgb_to_hsl(rgb, &h, &s, &l);
 	      if (stp_get_saturation(vars) < 1)
 		s *= stp_get_saturation(vars);
 	      else if (stp_get_saturation(vars) > 1)
@@ -1131,7 +1131,7 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      calc_hsl_to_rgb(rgb, h, s, v);
+	      calc_hsl_to_rgb(rgb, h, s, l);
 	    }
 	  if (stp_get_density(vars) != 1.0)
 	    {
@@ -1186,7 +1186,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     isat = 1.0 / stp_get_saturation(vars);
   while (width > 0)
     {
-      double h, s, v;
+      double h, s, l;
       if (bpp == 3)
 	{
 	  /*
@@ -1232,7 +1232,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	{
 	  if (stp_get_saturation(vars) != 1.0)
 	    {
-	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
+	      calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	      if (stp_get_saturation(vars) < 1)
 		s *= stp_get_saturation(vars);
 	      else if (stp_get_saturation(vars) > 1)
@@ -1243,7 +1243,7 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      calc_hsl_to_rgb(rgbout, h, s, v);
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
 	  if (ld < 65536)
 	    {

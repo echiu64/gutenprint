@@ -2166,13 +2166,16 @@ stp_dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 
   height = (d->dst_width + 7) / 8;
 
-  memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+  if (cyan)
+    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
   if (lcyan)
     memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
-  memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+  if (magenta)
+    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
   if (lmagenta)
     memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
-  memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+  if (yellow)
+    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (lyellow)
     memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (black)
@@ -2335,13 +2338,16 @@ stp_dither_cmyk_ordered(const unsigned short  *rgb,
 
   height = (d->dst_width + 7) / 8;
 
-  memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+  if (cyan)
+    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
   if (lcyan)
     memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
-  memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+  if (magenta)
+    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
   if (lmagenta)
     memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
-  memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+  if (yellow)
+    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (lyellow)
     memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (black)
@@ -2584,13 +2590,16 @@ stp_dither_cmyk_ed(const unsigned short  *rgb,	/* I - RGB pixels */
 
   height = (d->dst_width + 7) / 8;
 
-  memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
+  if (cyan)
+    memset(cyan, 0, height * d->dither[ECOLOR_C].signif_bits);
   if (lcyan)
     memset(lcyan, 0, height * d->dither[ECOLOR_C].signif_bits);
-  memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
+  if (magenta)
+    memset(magenta, 0, height * d->dither[ECOLOR_M].signif_bits);
   if (lmagenta)
     memset(lmagenta, 0, height * d->dither[ECOLOR_M].signif_bits);
-  memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
+  if (yellow)
+    memset(yellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (lyellow)
     memset(lyellow, 0, height * d->dither[ECOLOR_Y].signif_bits);
   if (black)

@@ -327,8 +327,12 @@ For Epson Stylus printers:
 					    variable dot sizes, such as
 					    the Epson Stylus Color 740
 					    and newer)
-'720 DPI Microweave'                       (works on most printers)
-'720 DPI Microweave Unidirectional'        (works on most printers)
+'720 DPI Microweave'                       (works on most printers;
+					    not recommended on the
+					    Stylus Color 740 and newer)
+'720 DPI Microweave Unidirectional'        (works on most printers;
+					    not recommended on the
+					    Stylus Color 740 and newer)
 '720 DPI Softweave'                        (works on all printers except
 					    for Stylus Color, Stylus
 					    Color 1500, Stylus Color

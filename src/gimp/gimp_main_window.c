@@ -1516,8 +1516,8 @@ gimp_media_size_callback (GtkWidget *widget,
       if (stp_get_unit(vars))
 	unit_scaler /= 2.54;
       new_value *= unit_scaler;
-      (stp_printer_get_printfuncs(current_printer)->limit)(current_printer, vars,
-					   &width_limit, &height_limit);
+      (stp_printer_get_printfuncs(current_printer)->limit)
+	(current_printer, vars, &width_limit, &height_limit);
       if (new_value < 72)
 	new_value = 72;
       else if (new_value > width_limit)
@@ -1526,12 +1526,12 @@ gimp_media_size_callback (GtkWidget *widget,
       stp_set_page_width(vars, new_value);
       stp_set_left(vars, -1);
       stp_set_left(plist[plist_current].v, stp_get_left(vars));
-      gimp_preview_update ();
       new_value = new_value / 72.0;
       if (stp_get_unit(vars))
 	new_value *= 2.54;
       g_snprintf(s, sizeof(s), "%.2f", new_value);
       gtk_entry_set_text(GTK_ENTRY(custom_size_width), s);
+      gimp_preview_update ();
     }
   else if (widget == custom_size_height)
     {
@@ -1542,8 +1542,8 @@ gimp_media_size_callback (GtkWidget *widget,
       if (stp_get_unit(vars))
 	unit_scaler /= 2.54;
       new_value *= unit_scaler;
-      (stp_printer_get_printfuncs(current_printer)->limit)(current_printer, vars,
-					   &width_limit, &height_limit);
+      (stp_printer_get_printfuncs(current_printer)->limit)
+	(current_printer, vars, &width_limit, &height_limit);
       if (new_value < 144)
 	new_value = 144;
       else if (new_value > height_limit)
@@ -1552,12 +1552,12 @@ gimp_media_size_callback (GtkWidget *widget,
       stp_set_page_height(vars, new_value);
       stp_set_top(vars, -1);
       stp_set_top(plist[plist_current].v, stp_get_top(vars));
-      gimp_preview_update ();
       new_value = new_value / 72.0;
       if (stp_get_unit(vars))
 	new_value *= 2.54;
       g_snprintf(s, sizeof(s), "%.2f", new_value);
       gtk_entry_set_text(GTK_ENTRY(custom_size_height), s);
+      gimp_preview_update ();
     }
   else
     {
