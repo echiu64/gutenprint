@@ -32,7 +32,7 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#4.3.17"><b>June 22, 2003 -</b></a> Gimp-Print 4.3.17 is the first Mac OS X release in the developmental line (4.3.x) of Gimp-Print. At the current point in the development cycle, the 4.3.x line is approaching mainline stability and has many new features over the current mainline (4.2.x).
+ <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">release notes</a> for more details, especially if you ever installed 4.3.17.
  </p>
  <p>
  <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
@@ -155,29 +155,26 @@ require('standard_html_header.php3');
  not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>).
  </p>
- <b>Gimp-Print 4.3.17</b><a name ="4.3.17"></a>
+ <b>Gimp-Print 4.3.18</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.17.ppc.dmg?download"
- >gimp-print-4.3.17.ppc.dmg</a>&nbsp;(5.2 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.18.ppc.dmg?download"
+ >gimp-print-4.3.18.ppc.dmg</a>&nbsp;(5.2 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.17.tar.bz2?download"
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.18.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gimp-Print 4.3.17 is the first Mac OS X release in the 4.3.x developmental line.
- This release represents the state-of-the-art in current Gimp-Print development. As
- such, while it contains many new and exciting features over the mainline branch (4.2.x), 
- it may also provide unexpected behavior.  This package requires (but does
- not include) ESP Ghostscript for Mac OS X (<b>download below and 
+ Gimp-Print 4.3.18 is the latest Mac OS X release in the 4.3.x developmental line.
+ This release represents the state-of-the-art in current Gimp-Print development. As such, while it contains many new and exciting features over the mainline branch (4.2.x), it may also provide unexpected behavior, or it simply may not work at all.  For Mac OS X Jaguar this package requires (but does not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>).
  </p>
  <a name="downloadESPGS"></a>
@@ -257,6 +254,33 @@ require('standard_html_header.php3');
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ <a name ="4.3.18"></a>
+ <B>Gimp-Print 4.3.18</B>
+ </TD>
+ <TD align="right" >
+ <B>2003-07-30</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Curre
+ntly, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all u
+sers should continue to use the 4.2.x line until the current issues with 4.3.x a
+re resolved. Additionally, if you ever installed 4.3.17 and you can answer "yes" to both of the following questions:
+
+ <ol>
+<li>Have you ever previously installed an earlier version of Gimp-Print?</li>
+<li>Did you run the Gimp-Print Uninstaller before running the 4.3.17 installer?</li>
+ </ol>
+<p> then you should either delete all of your Gimp-Print printers in Print Center, or manually update the PPD files to the currently installed version of Gimp-Print, or run the new unistaller avaialable here (soon) before reverting to any other version of Gimp-Print.
+
+ </p>
+ &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
  <a name ="4.2.6-pre1"></a>
