@@ -40,7 +40,7 @@ static const unsigned short mat_1_1[] =
 #include "quickmatrix257.h"
 };
 
-const stp_dither_matrix_short_t stp_1_1_matrix =
+const stp_dither_matrix_short_t stp_dither_matrix_1_1 =
 {
   257, 257, 2, 1, mat_1_1
 };
@@ -50,7 +50,7 @@ static const unsigned short mat_2_1[] =
 #include "ran.367.179.h"
 };
 
-const stp_dither_matrix_short_t stp_2_1_matrix =
+const stp_dither_matrix_short_t stp_dither_matrix_2_1 =
 {
   367, 179, 2, 1, mat_2_1
 };
@@ -60,7 +60,7 @@ static const unsigned short mat_4_1[] =
 #include "ran.509.131.h"
 };
 
-const stp_dither_matrix_short_t stp_4_1_matrix =
+const stp_dither_matrix_short_t stp_dither_matrix_4_1 =
 {
   509, 131, 2, 1, mat_4_1
 };
@@ -97,7 +97,7 @@ is_po2(size_t i)
 }
 
 void
-stp_init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
+stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size, size_t exp,
 			 const unsigned *array)
 {
   int i;
@@ -133,7 +133,7 @@ stp_init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
   ((m)[(((x) + (x_size)) % (x_size)) + ((x_size) * (((y) + (y_size)) % (y_size)))])
 
 void
-stp_shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear)
+stp_dither_matrix_shear(dither_matrix_t *mat, int x_shear, int y_shear)
 {
   int i;
   int j;
@@ -151,8 +151,8 @@ stp_shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear)
 }
 
 void
-stp_init_matrix(dither_matrix_t *mat, int x_size, int y_size,
-		const unsigned int *array, int transpose, int prescaled)
+stp_dither_matrix_init(dither_matrix_t *mat, int x_size, int y_size,
+		       const unsigned int *array, int transpose, int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -184,9 +184,9 @@ stp_init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
-		      const unsigned short *array, int transpose,
-		      int prescaled)
+stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size, int y_size,
+			     const unsigned short *array, int transpose,
+			     int prescaled)
 {
   int x, y;
   mat->base = x_size;
@@ -218,7 +218,7 @@ stp_init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
 }
 
 void
-stp_destroy_matrix(dither_matrix_t *mat)
+stp_dither_matrix_destroy(dither_matrix_t *mat)
 {
   if (mat->i_own && mat->matrix)
     stp_free(mat->matrix);
@@ -232,8 +232,8 @@ stp_destroy_matrix(dither_matrix_t *mat)
 }
 
 void
-stp_clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
-		 int x_offset, int y_offset)
+stp_dither_matrix_clone(const dither_matrix_t *src, dither_matrix_t *dest,
+			int x_offset, int y_offset)
 {
   dest->base = src->base;
   dest->exp = src->exp;
@@ -253,7 +253,7 @@ stp_clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
 }
 
 void
-stp_copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
+stp_dither_matrix_copy(const dither_matrix_t *src, dither_matrix_t *dest)
 {
   int x;
   dest->base = src->base;
@@ -276,7 +276,7 @@ stp_copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
 }
 
 void
-stp_exponential_scale_matrix(dither_matrix_t *mat, double exponent)
+stp_dither_matrix_scale_exponentially(dither_matrix_t *mat, double exponent)
 {
   int i;
   int mat_size = mat->x_size * mat->y_size;
@@ -289,7 +289,7 @@ stp_exponential_scale_matrix(dither_matrix_t *mat, double exponent)
 }
 
 void
-stp_matrix_set_row(dither_matrix_t *mat, int y)
+stp_dither_matrix_set_row(dither_matrix_t *mat, int y)
 {
   mat->last_y = y;
   mat->last_y_mod = mat->x_size * ((y + mat->y_offset) % mat->y_size);

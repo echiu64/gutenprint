@@ -472,7 +472,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   if (cups.page > 0)
     stp_end_job(v, &theImage);
-  stp_free_vars(v);
+  stp_vars_free(v);
 
  /*
   * Close the raster stream...

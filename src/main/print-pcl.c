@@ -1488,7 +1488,7 @@ static const char * pcl_val_to_text(int code,			/* I: Code */
 }
 
 static const double dot_sizes[] = { 0.5, 0.832, 1.0 };
-static const stp_simple_dither_range_t variable_dither_ranges[] =
+static const stp_dither_range_simple_t variable_dither_ranges[] =
 {
   { 0.152, 0x1, 1 },
   { 0.255, 0x2, 1 },
@@ -2334,7 +2334,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   stp_curve_destroy(lum_adjustment);
   stp_curve_destroy(hue_adjustment);
 
-  dither = stp_init_dither(image_width, out_width, image_bpp, xdpi, ydpi, nv);
+  dither = stp_dither_init(image_width, out_width, image_bpp, xdpi, ydpi, nv);
 
 /* Set up dithering for special printers. */
 
@@ -2412,13 +2412,13 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
   do_blank = 0;
 #endif
 
-  dt = stp_create_dither_data();
-  stp_add_channel(dt, black, ECOLOR_K, 0);
-  stp_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+  dt = stp_dither_data_allocate();
+  stp_dither_add_channel(dt, black, ECOLOR_K, 0);
+  stp_dither_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_dither_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_dither_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_dither_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2570,8 +2570,8 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
 
   image->progress_conclude(image);
 
-  stp_free_dither_data(dt);
-  stp_free_dither(dither);
+  stp_dither_data_free(dt);
+  stp_dither_free(dither);
 
 
  /*
@@ -2609,7 +2609,7 @@ pcl_print(const stp_vars_t v, stp_image_t *image)
       stp_zprintf(v, "\033%%-12345X\n");
     }
   stp_puts("\033E", v); 				/* PCL reset */
-  stp_free_vars(nv);
+  stp_vars_free(nv);
   return status;
 }
 

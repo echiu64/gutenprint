@@ -358,7 +358,7 @@ check_vars(const stp_internal_vars_t *v)
 }
 
 void
-stp_free_vars(stp_vars_t vv)
+stp_vars_free(stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
   check_vars(v);

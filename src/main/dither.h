@@ -45,9 +45,9 @@ extern "C" {
 #include "dither-matrices.h"
 
 
-extern const stp_dither_matrix_short_t stp_1_1_matrix;
-extern const stp_dither_matrix_short_t stp_2_1_matrix;
-extern const stp_dither_matrix_short_t stp_4_1_matrix;
+extern const stp_dither_matrix_short_t stp_dither_matrix_1_1;
+extern const stp_dither_matrix_short_t stp_dither_matrix_2_1;
+extern const stp_dither_matrix_short_t stp_dither_matrix_4_1;
 
 typedef struct dither_matrix
 {
@@ -68,21 +68,26 @@ typedef struct dither_matrix
   unsigned *matrix;
 } dither_matrix_t;
 
-extern void stp_init_iterated_matrix(dither_matrix_t *mat, size_t size,
-				     size_t exp, const unsigned *array);
-extern void stp_shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear);
-extern void stp_init_matrix(dither_matrix_t *mat, int x_size, int y_size,
-			    const unsigned int *array, int transpose,
-			    int prescaled);
-extern void stp_init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
-				  const unsigned short *array, int transpose,
-				  int prescaled);
-extern void stp_destroy_matrix(dither_matrix_t *mat);
-extern void stp_clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
-			     int x_offset, int y_offset);
-extern void stp_copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest);
-extern void stp_exponential_scale_matrix(dither_matrix_t *mat,double exponent);
-extern void stp_matrix_set_row(dither_matrix_t *mat, int y);
+extern void stp_dither_matrix_iterated_init(dither_matrix_t *mat, size_t size,
+					    size_t exp, const unsigned *array);
+extern void stp_dither_matrix_shear(dither_matrix_t *mat,
+				    int x_shear, int y_shear);
+extern void stp_dither_matrix_init(dither_matrix_t *mat, int x_size,
+				   int y_size, const unsigned int *array,
+				   int transpose, int prescaled);
+extern void stp_dither_matrix_init_short(dither_matrix_t *mat, int x_size,
+					 int y_size,
+					 const unsigned short *array,
+					 int transpose, int prescaled);
+extern void stp_dither_matrix_destroy(dither_matrix_t *mat);
+extern void stp_dither_matrix_clone(const dither_matrix_t *src,
+				    dither_matrix_t *dest,
+				    int x_offset, int y_offset);
+extern void stp_dither_matrix_copy(const dither_matrix_t *src,
+				   dither_matrix_t *dest);
+extern void stp_dither_matrix_scale_exponentially(dither_matrix_t *mat,
+						  double exponent);
+extern void stp_dither_matrix_set_row(dither_matrix_t *mat, int y);
 
 
 
@@ -92,7 +97,7 @@ typedef struct
   unsigned bit_pattern;
   int subchannel;
   unsigned dot_size;
-} stp_simple_dither_range_t;
+} stp_dither_range_simple_t;
 
 typedef struct
 {
@@ -109,25 +114,25 @@ typedef struct
    double value[2];
    unsigned bits[2];
    int subchannel[2];
-} stp_full_dither_range_t;
+} stp_dither_range_full_t;
 
 typedef struct
 {
   unsigned subchannel_count;
   unsigned char **c;
-} stp_channel_t;
+} stp_dither_channel_t;
 
 typedef struct
 {
   unsigned channel_count;
-  stp_channel_t *c;
+  stp_dither_channel_t *c;
 } stp_dither_data_t;
 
 
 extern void stp_dither_algorithms(stp_string_list_t);
 extern const char *stp_get_default_dither_algorithm(void);
 
-extern void *	stp_init_dither(int in_width, int out_width, int bpp,
+extern void *	stp_dither_init(int in_width, int out_width, int bpp,
 				int xdpi, int ydpi, stp_vars_t vars);
 extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
 					       size_t iterations,
@@ -146,10 +151,10 @@ extern void 	stp_dither_set_randomizer(void *vd, int color, double);
 extern void 	stp_dither_set_ink_darkness(void *vd, int color, double);
 extern void 	stp_dither_set_light_ink(void *vd, int color, double, double);
 extern void	stp_dither_set_ranges(void *vd, int color, int nlevels,
-				      const stp_simple_dither_range_t *ranges,
+				      const stp_dither_range_simple_t *ranges,
 				      double density);
 extern void	stp_dither_set_ranges_full(void *vd, int color, int nlevels,
-					   const stp_full_dither_range_t *ranges,
+					   const stp_dither_range_full_t *ranges,
 					   double density);
 extern void	stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 					     const double *levels,
@@ -160,12 +165,12 @@ extern int	stp_dither_get_first_position(void *vd, int color,int subchan);
 extern int	stp_dither_get_last_position(void *vd, int color, int subchan);
 
 
-extern void	stp_free_dither(void *);
+extern void	stp_dither_free(void *);
 
-extern stp_dither_data_t *stp_create_dither_data(void);
-extern void	stp_add_channel(stp_dither_data_t *d, unsigned char *data,
+extern stp_dither_data_t *stp_dither_data_allocate(void);
+extern void	stp_dither_add_channel(stp_dither_data_t *d, unsigned char *data,
 				unsigned channel, unsigned subchannel);
-extern void	stp_free_dither_data(stp_dither_data_t *d);
+extern void	stp_dither_data_free(stp_dither_data_t *d);
 
 extern void	stp_dither(const unsigned short *, int, void *,
 			   stp_dither_data_t *, int duplicate_line,

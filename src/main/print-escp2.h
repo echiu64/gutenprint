@@ -113,7 +113,7 @@ typedef double escp2_densities_t[13];
 
 typedef struct escp2_variable_ink
 {
-  const stp_simple_dither_range_t *range;
+  const stp_dither_range_simple_t *range;
   int count;
   double density;
 } escp2_variable_ink_t;

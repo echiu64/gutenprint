@@ -2308,16 +2308,16 @@ update_adjusted_thumbnail (void)
   if (stp_verify(nv) != 1)
     {
       stp_erprintf("did not verify!\n");
-      stp_free_vars(nv);
+      stp_vars_free(nv);
       return;
     }
   if (stp_print(nv, im) != 1)
     {
       stp_erprintf("did not print thumbnail!\n");
-      stp_free_vars(nv);
+      stp_vars_free(nv);
       return;
     }
-  stp_free_vars(nv);
+  stp_vars_free(nv);
 
   switch (physical_orientation)
     {

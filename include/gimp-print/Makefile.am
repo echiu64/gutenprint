@@ -28,12 +28,14 @@ MAINT_CHARSET = latin1
 
 noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
-nodist_pkginclude_HEADERS = gimp-print.h
+nodist_pkginclude_HEADERS = gimp-print-version.h
 
 
 ## Clean
 
-DISTCLEANFILES = gimp-print.h
+DISTCLEANFILES = gimp-print-version.h
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = gimp-print.h.in
+EXTRA_DIST = gimp-print-version.h.in
+
+TAGS_FILES = gimp-print-version.h.in

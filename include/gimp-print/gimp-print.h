@@ -1,9 +1,9 @@
 /*		-*- Mode: C -*-
  *  $Id$
  *
- *   Print plug-in header file for the GIMP.
+ *   Gimp-Print header file
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2002 Michael Sweet (mike@easysw.com) and
  *      Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -40,24 +40,20 @@
 #include <stddef.h>     /* For size_t */
 #include <stdio.h>		/* For FILE */
 
+/*
+ * Autogen-time versioning
+ */
+#include <gimp-print/gimp-print-version.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
 /*
  * Library versioning details
+ * Version information is included from gimp-print-version.h
  */
 
-/*
- * compile-time version
- */
-#define GIMPPRINT_MAJOR_VERSION       (@GIMPPRINT_MAJOR_VERSION@)
-#define GIMPPRINT_MINOR_VERSION       (@GIMPPRINT_MINOR_VERSION@)
-#define GIMPPRINT_MICRO_VERSION       (@GIMPPRINT_MICRO_VERSION@)
-#define GIMPPRINT_CURRENT_INTERFACE   (@GIMPPRINT_CURRENT_INTERFACE@)
-#define GIMPPRINT_BINARY_AGE          (@GIMPPRINT_BINARY_AGE@)
-#define GIMPPRINT_INTERFACE_AGE       (@GIMPPRINT_INTERFACE_AGE@)
 #define GIMPPRINT_CHECK_VERSION(major,minor,micro)	\
   (GIMPPRINT_MAJOR_VERSION >  (major) ||		\
   (GIMPPRINT_MAJOR_VERSION == (major) &&		\
@@ -371,7 +367,7 @@ extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
 extern stp_vars_t stp_allocate_vars(void);
 extern void stp_copy_vars(stp_vars_t vd, const stp_vars_t vs);
 extern stp_vars_t stp_allocate_copy(const stp_vars_t vs);
-extern void stp_free_vars(stp_vars_t v);
+extern void stp_vars_free(stp_vars_t v);
 
 extern void stp_set_driver(stp_vars_t v, const char *val);
 extern void stp_set_driver_n(stp_vars_t v, const char *val, int bytes);

@@ -110,7 +110,7 @@ main(int argc, char **argv)
 	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 		 driver, "Color", "BlackAndWhite", "Black and White");
 	}
-      stp_free_vars(pv);
+      stp_vars_free(pv);
     }
   return 0;
 }

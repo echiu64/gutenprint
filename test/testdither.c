@@ -71,25 +71,25 @@ unsigned short	white_line[IMAGE_WIDTH * 4],
 		random_line[IMAGE_WIDTH * 4];
 
 
-stp_simple_dither_range_t normal_1bit_ranges[] =
+stp_dither_range_simple_t normal_1bit_ranges[] =
 {
   { 1.0,  0x1, 0, 1 }
 };
 
-stp_simple_dither_range_t normal_2bit_ranges[] =
+stp_dither_range_simple_t normal_2bit_ranges[] =
 {
   { 0.45,  0x1, 0, 1 },
   { 0.68,  0x2, 0, 2 },
   { 1.0,   0x3, 0, 3 }
 };
 
-stp_simple_dither_range_t photo_1bit_ranges[] =
+stp_dither_range_simple_t photo_1bit_ranges[] =
 {
   { 0.33, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
 };
 
-stp_simple_dither_range_t photo_2bit_ranges[] =
+stp_dither_range_simple_t photo_2bit_ranges[] =
 {
   { 0.15,  0x1, 1, 1 },
   { 0.227, 0x2, 1, 2 },
@@ -270,7 +270,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       break;
     }
 
-  dither = stp_init_dither(IMAGE_WIDTH, IMAGE_WIDTH, bpp, 1, 1, v);
+  dither = stp_dither_init(IMAGE_WIDTH, IMAGE_WIDTH, bpp, 1, 1, v);
 
   for (i = 0; i < NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
@@ -373,23 +373,23 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Now dither the "page"...
   */
 
-  dt = stp_create_dither_data();
+  dt = stp_dither_data_allocate();
   switch (dither_type)
     {
     case DITHER_PHOTO:
     case DITHER_PHOTO_CMYK :
-      stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-      stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
+      stp_dither_add_channel(dt, lcyan, ECOLOR_C, 1);
+      stp_dither_add_channel(dt, lmagenta, ECOLOR_M, 1);
       /* FALLTHROUGH */
     case DITHER_COLOR:
     case DITHER_CMYK :
-      stp_add_channel(dt, cyan, ECOLOR_C, 0);
-      stp_add_channel(dt, magenta, ECOLOR_M, 0);
-      stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+      stp_dither_add_channel(dt, cyan, ECOLOR_C, 0);
+      stp_dither_add_channel(dt, magenta, ECOLOR_M, 0);
+      stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
       /* FALLTHROUGH */
     case DITHER_GRAY:
     case DITHER_MONOCHROME:
-      stp_add_channel(dt, black, ECOLOR_K, 0);
+      stp_dither_add_channel(dt, black, ECOLOR_K, 0);
     }
 
   (void) gettimeofday(&tv1, NULL);
@@ -430,9 +430,9 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   (void) gettimeofday(&tv2, NULL);
 
-  stp_free_dither_data(dt);
-  stp_free_dither(dither);
-  stp_free_vars(v);
+  stp_dither_data_free(dt);
+  stp_dither_free(dither);
+  stp_vars_free(v);
 
   if (fp != NULL)
     fclose(fp);

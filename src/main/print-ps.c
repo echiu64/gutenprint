@@ -591,7 +591,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
   stp_puts("showpage\n", v);
   stp_puts("%%Trailer\n", v);
   stp_puts("%%EOF\n", v);
-  stp_free_vars(nv);
+  stp_vars_free(nv);
   return status;
 }
 

@@ -1081,7 +1081,7 @@ setup_ink_types(const escp2_inkname_t *ink_type,
 	    {
 	      cols[channels_in_use] = stp_zalloc(line_length);
 	      privdata->channels[channels_in_use] = &(channel->channels[j]);
-	      stp_add_channel(dt, cols[channels_in_use], i, j);
+	      stp_dither_add_channel(dt, cols[channels_in_use], i, j);
 	      head_offset[channels_in_use] = channel->channels[j].head_offset;
 	      channels_in_use++;
 	    }
@@ -1292,7 +1292,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   else
     channel_limit = NCOLORS;
 
-  dt = stp_create_dither_data();
+  dt = stp_dither_data_allocate();
 
   channels_in_use = setup_ink_types(ink_type, &privdata, cols, head_offset,
 				    dt, channel_limit, length * bits);
@@ -1468,7 +1468,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
       in  = stp_malloc(image->width(image) * image->bpp(image));
       out = stp_malloc(image->width(image) * out_channels * 2);
 
-      dither = stp_init_dither(image->width(image), out_width,
+      dither = stp_dither_init(image->width(image), out_width,
 			       image->bpp(image), xdpi, ydpi, nv);
 
       adjust_print_quality(&init, dither);
@@ -1530,7 +1530,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
        * Cleanup...
        */
       stp_destroy_weave(weave);
-      stp_free_dither(dither);
+      stp_dither_free(dither);
       stp_free(in);
       stp_free(out);
       if (!privdata.printed_something)
@@ -1540,7 +1540,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
   if (print_op & OP_JOB_END)
     escp2_deinit_printer(&init);
 
-  stp_free_dither_data(dt);
+  stp_dither_data_free(dt);
 
   for (i = 0; i < total_channels; i++)
     if (cols[i])
@@ -1552,7 +1552,7 @@ escp2_do_print(const stp_vars_t v, stp_image_t *image, int print_op)
 #ifdef QUANTIFY
   print_timers(nv);
 #endif
-  stp_free_vars(nv);
+  stp_vars_free(nv);
   return status;
 }
 

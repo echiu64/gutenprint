@@ -1072,7 +1072,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
   gzclose(fp);
 
-  stp_free_vars(v);
+  stp_vars_free(v);
   return (0);
 }
 

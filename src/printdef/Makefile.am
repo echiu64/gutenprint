@@ -33,7 +33,7 @@ INCLUDES = @INCLUDES@
 ## Programs
 
 noinst_PROGRAMS = xmldef
-xmldef_SOURCES = printdef.c printdef.h
+xmldef_SOURCES = printdef.c
 xmldef_LDADD = @LIBXML_LIBS@
 
 

@@ -149,34 +149,45 @@ extern int quantify_first_time;
 extern struct timeval quantify_cur_time;
 extern struct timeval quantify_prev_time;
 
-#define QUANT(number) \
-{\
-    gettimeofday(&quantify_cur_time, NULL);\
-    assert(number < NUM_QUANTIFY_BUCKETS);\
-    quantify_counts[number]++;\
-\
-    if (quantify_first_time) {\
-        quantify_first_time = 0;\
-    } else {\
-        if (number > quantify_high_index) quantify_high_index = number;\
-        if (quantify_prev_time.tv_usec > quantify_cur_time.tv_usec) {\
-           quantify_buckets[number].tv_usec += ((quantify_cur_time.tv_usec + 1000000) - quantify_prev_time.tv_usec);\
-           quantify_buckets[number].tv_sec += (quantify_cur_time.tv_sec - quantify_prev_time.tv_sec - 1);\
-        } else {\
-           quantify_buckets[number].tv_sec += quantify_cur_time.tv_sec - quantify_prev_time.tv_sec;\
-           quantify_buckets[number].tv_usec += quantify_cur_time.tv_usec - quantify_prev_time.tv_usec;\
-        }\
-        if (quantify_buckets[number].tv_usec >= 1000000)\
-        {\
-           quantify_buckets[number].tv_usec -= 1000000;\
-           quantify_buckets[number].tv_sec++;\
-        }\
-    }\
-\
-    gettimeofday(&quantify_prev_time, NULL);\
-}
+#define QUANT(number)							\
+do									\
+{									\
+  gettimeofday(&quantify_cur_time, NULL);				\
+  assert(number < NUM_QUANTIFY_BUCKETS);				\
+  quantify_counts[number]++;						\
+									\
+  if (quantify_first_time)						\
+    {									\
+      quantify_first_time = 0;						\
+    }									\
+  else									\
+    {									\
+      if (number > quantify_high_index) quantify_high_index = number;	\
+      if (quantify_prev_time.tv_usec > quantify_cur_time.tv_usec)	\
+	{								\
+	  quantify_buckets[number].tv_usec +=				\
+	    ((quantify_cur_time.tv_usec + 1000000) -			\
+	     quantify_prev_time.tv_usec);				\
+	  quantify_buckets[number].tv_sec +=				\
+	    (quantify_cur_time.tv_sec - quantify_prev_time.tv_sec - 1);	\
+	}								\
+      else								\
+	{								\
+	  quantify_buckets[number].tv_sec +=				\
+	    quantify_cur_time.tv_sec - quantify_prev_time.tv_sec;	\
+	  quantify_buckets[number].tv_usec +=				\
+	    quantify_cur_time.tv_usec - quantify_prev_time.tv_usec;	\
+	}								\
+      if (quantify_buckets[number].tv_usec >= 1000000)			\
+	{								\
+	  quantify_buckets[number].tv_usec -= 1000000;			\
+	  quantify_buckets[number].tv_sec++;				\
+	}								\
+    }									\
+  gettimeofday(&quantify_prev_time, NULL);				\
+} while (0)
 
-extern void  print_timers(void );
+extern void print_timers(void );
 #endif
 
 

@@ -147,7 +147,7 @@ typedef struct canon_densities
 
 typedef struct canon_variable_ink
 {
-  const stp_simple_dither_range_t *range;
+  const stp_dither_range_simple_t *range;
   int count;
   double density;
 } canon_variable_ink_t;
@@ -216,7 +216,7 @@ typedef struct canon_variable_printmode
  * Dither ranges specifically for Cyan/LightCyan (see NOTE above)
  *
  */
-static const stp_simple_dither_range_t canon_dither_ranges_Cc_1bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_Cc_1bit[] =
 {
   { 0.25, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
@@ -225,7 +225,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_Cc_1bit[] =
 static const canon_variable_ink_t canon_ink_Cc_1bit =
 {
   canon_dither_ranges_Cc_1bit,
-  sizeof(canon_dither_ranges_Cc_1bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_Cc_1bit) / sizeof(stp_dither_range_simple_t),
   .75
 };
 
@@ -233,7 +233,7 @@ static const canon_variable_ink_t canon_ink_Cc_1bit =
  * Dither ranges specifically for Magenta/LightMagenta (see NOTE above)
  *
  */
-static const stp_simple_dither_range_t canon_dither_ranges_Mm_1bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_Mm_1bit[] =
 {
   { 0.26, 0x1, 1, 1 },
   { 1.0,  0x1, 0, 1 }
@@ -242,7 +242,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_Mm_1bit[] =
 static const canon_variable_ink_t canon_ink_Mm_1bit =
 {
   canon_dither_ranges_Mm_1bit,
-  sizeof(canon_dither_ranges_Mm_1bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_Mm_1bit) / sizeof(stp_dither_range_simple_t),
   .75
 };
 
@@ -251,7 +251,7 @@ static const canon_variable_ink_t canon_ink_Mm_1bit =
  * Dither ranges specifically for any Color and 2bit/pixel (see NOTE above)
  *
  */
-static const stp_simple_dither_range_t canon_dither_ranges_X_2bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_X_2bit[] =
 {
   { 0.45,  0x1, 0, 1 },
   { 0.68,  0x2, 0, 2 },
@@ -261,7 +261,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_X_2bit[] =
 static const canon_variable_ink_t canon_ink_X_2bit =
 {
   canon_dither_ranges_X_2bit,
-  sizeof(canon_dither_ranges_X_2bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_X_2bit) / sizeof(stp_dither_range_simple_t),
   1.0
 };
 
@@ -269,7 +269,7 @@ static const canon_variable_ink_t canon_ink_X_2bit =
  * Dither ranges specifically for any Color/LightColor and 2bit/pixel
  * (see NOTE above)
  */
-static const stp_simple_dither_range_t canon_dither_ranges_Xx_2bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_Xx_2bit[] =
 {
   { 0.15,  0x1, 1, 1 },
   { 0.227, 0x2, 1, 2 },
@@ -282,7 +282,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_Xx_2bit[] =
 static const canon_variable_ink_t canon_ink_Xx_2bit =
 {
   canon_dither_ranges_Xx_2bit,
-  sizeof(canon_dither_ranges_Xx_2bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_Xx_2bit) / sizeof(stp_dither_range_simple_t),
   1.0
 };
 
@@ -297,7 +297,7 @@ static const canon_variable_ink_t canon_ink_Xx_2bit =
  *
  *
  */
-static const stp_simple_dither_range_t canon_dither_ranges_X_3bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_X_3bit[] =
 {
   { 0.45,  0x1, 0, 1 },
   { 0.55,  0x2, 0, 2 },
@@ -310,7 +310,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_X_3bit[] =
 static const canon_variable_ink_t canon_ink_X_3bit =
 {
   canon_dither_ranges_X_3bit,
-  sizeof(canon_dither_ranges_X_3bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_X_3bit) / sizeof(stp_dither_range_simple_t),
   1.0
 };
 
@@ -318,7 +318,7 @@ static const canon_variable_ink_t canon_ink_X_3bit =
  * Dither ranges specifically for any Color/LightColor and 3bit/pixel
  * (see NOTE above)
  */
-static const stp_simple_dither_range_t canon_dither_ranges_Xx_3bit[] =
+static const stp_dither_range_simple_t canon_dither_ranges_Xx_3bit[] =
 {
   { 0.15,  0x1, 1, 1 },
   { 0.227, 0x2, 1, 2 },
@@ -335,7 +335,7 @@ static const stp_simple_dither_range_t canon_dither_ranges_Xx_3bit[] =
 static const canon_variable_ink_t canon_ink_Xx_3bit =
 {
   canon_dither_ranges_Xx_3bit,
-  sizeof(canon_dither_ranges_Xx_3bit) / sizeof(stp_simple_dither_range_t),
+  sizeof(canon_dither_ranges_Xx_3bit) / sizeof(stp_dither_range_simple_t),
   1.0
 };
 
@@ -2240,7 +2240,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Output the page...
   */
 
-  dither = stp_init_dither(image_width, out_width, image_bpp, xdpi, ydpi, nv);
+  dither = stp_dither_init(image_width, out_width, image_bpp, xdpi, ydpi, nv);
 
   for (i = 0; i <= NCOLORS; i++)
     stp_dither_set_black_level(dither, i, 1.0);
@@ -2327,13 +2327,13 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   stp_curve_destroy(sat_adjustment);
   stp_curve_destroy(hue_adjustment);
 
-  dt = stp_create_dither_data();
-  stp_add_channel(dt, black, ECOLOR_K, 0);
-  stp_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
+  dt = stp_dither_data_allocate();
+  stp_dither_add_channel(dt, black, ECOLOR_K, 0);
+  stp_dither_add_channel(dt, cyan, ECOLOR_C, 0);
+  stp_dither_add_channel(dt, lcyan, ECOLOR_C, 1);
+  stp_dither_add_channel(dt, magenta, ECOLOR_M, 0);
+  stp_dither_add_channel(dt, lmagenta, ECOLOR_M, 1);
+  stp_dither_add_channel(dt, yellow, ECOLOR_Y, 0);
 
   for (y = 0; y < out_height; y ++)
   {
@@ -2383,8 +2383,8 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   }
   image->progress_conclude(image);
 
-  stp_free_dither_data(dt);
-  stp_free_dither(dither);
+  stp_dither_data_free(dt);
+  stp_dither_free(dither);
 
   /*
    * Flush delayed buffers...
@@ -2431,7 +2431,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   if (lyellow != NULL)  stp_free(lyellow);
 
   canon_deinit_printer(nv, &init);
-  stp_free_vars(nv);
+  stp_vars_free(nv);
   return status;
 }
 

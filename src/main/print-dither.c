@@ -345,7 +345,7 @@ reverse_row_ends(dither_t *d)
 }
 
 stp_dither_data_t *
-stp_create_dither_data(void)
+stp_dither_data_allocate(void)
 {
   stp_dither_data_t *ret = stp_zalloc(sizeof(stp_dither_data_t));
   ret->channel_count = 0;
@@ -354,15 +354,15 @@ stp_create_dither_data(void)
 }
 
 void
-stp_add_channel(stp_dither_data_t *d, unsigned char *data,
+stp_dither_add_channel(stp_dither_data_t *d, unsigned char *data,
 		unsigned channel, unsigned subchannel)
 {
-  stp_channel_t *chan;
+  stp_dither_channel_t *chan;
   if (channel >= d->channel_count)
     {
       unsigned oc = d->channel_count;
-      d->c = stp_realloc(d->c, sizeof(stp_channel_t) * (channel + 1));
-      (void) memset(d->c + oc, 0, sizeof(stp_channel_t) * (channel + 1 - oc));
+      d->c = stp_realloc(d->c, sizeof(stp_dither_channel_t) * (channel + 1));
+      (void) memset(d->c + oc, 0, sizeof(stp_dither_channel_t) * (channel + 1 - oc));
       d->channel_count = channel + 1;
     }
   chan = d->c + channel;
@@ -379,7 +379,7 @@ stp_add_channel(stp_dither_data_t *d, unsigned char *data,
 }
 
 void
-stp_free_dither_data(stp_dither_data_t *d)
+stp_dither_data_free(stp_dither_data_t *d)
 {
   int i;
   for (i = 0; i < d->channel_count; i++)
@@ -495,12 +495,12 @@ stp_set_dither_function(dither_t *d, int image_bpp)
 }
 
 void *
-stp_init_dither(int in_width, int out_width, int image_bpp,
+stp_dither_init(int in_width, int out_width, int image_bpp,
 		int xdpi, int ydpi, stp_vars_t v)
 {
   int i;
   dither_t *d = stp_zalloc(sizeof(dither_t));
-  stp_simple_dither_range_t r;
+  stp_dither_range_simple_t r;
   d->v = v;
   d->dither_class = stp_get_output_type(v);
   d->error_rows = ERROR_ROWS;
@@ -540,30 +540,30 @@ stp_init_dither(int in_width, int out_width, int image_bpp,
       stp_dither_matrix_t *mat;
       int transposed = 0;
       if (d->y_aspect == d->x_aspect)
-	mat = (stp_dither_matrix_t *) &stp_1_1_matrix;
+	mat = (stp_dither_matrix_t *) &stp_dither_matrix_1_1;
       else if (d->y_aspect > d->x_aspect)
 	{
 	  transposed = 0;
 	  if (d->y_aspect / d->x_aspect == 2)
-	    mat = (stp_dither_matrix_t *) &stp_2_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
 	  else if (d->y_aspect / d->x_aspect == 3)
-	    mat = (stp_dither_matrix_t *) &stp_4_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
 	  else if (d->y_aspect / d->x_aspect == 4)
-	    mat = (stp_dither_matrix_t *) &stp_4_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
 	  else
-	    mat = (stp_dither_matrix_t *) &stp_2_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
 	}
       else
 	{
 	  transposed = 1;
 	  if (d->x_aspect / d->y_aspect == 2)
-	    mat = (stp_dither_matrix_t *) &stp_2_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
 	  else if (d->x_aspect / d->y_aspect == 3)
-	    mat = (stp_dither_matrix_t *) &stp_4_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
 	  else if (d->x_aspect / d->y_aspect == 4)
-	    mat = (stp_dither_matrix_t *) &stp_4_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_4_1;
 	  else
-	    mat = (stp_dither_matrix_t *) &stp_2_1_matrix;
+	    mat = (stp_dither_matrix_t *) &stp_dither_matrix_2_1;
 	}
       stp_dither_set_matrix(d, mat, transposed, 0, 0);
     }
@@ -591,8 +591,8 @@ preinit_matrix(dither_t *d)
 {
   int i;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stp_destroy_matrix(&(PHYSICAL_CHANNEL(d, i).dithermat));
-  stp_destroy_matrix(&(d->dither_matrix));
+    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).dithermat));
+  stp_dither_matrix_destroy(&(d->dither_matrix));
 }
 
 static void
@@ -604,13 +604,14 @@ postinit_matrix(dither_t *d, int x_shear, int y_shear)
   unsigned x_n = d->dither_matrix.x_size / rc;
   unsigned y_n = d->dither_matrix.y_size / rc;
   if (x_shear || y_shear)
-    stp_shear_matrix(&(d->dither_matrix), x_shear, y_shear);
+    stp_dither_matrix_shear(&(d->dither_matrix), x_shear, y_shear);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
       if (color < PHYSICAL_CHANNEL_COUNT(d))
 	{
-	  stp_clone_matrix(&(d->dither_matrix), &(PHYSICAL_CHANNEL(d, color).dithermat),
-		       x_n * i, y_n * j);
+	  stp_dither_matrix_clone(&(d->dither_matrix),
+				  &(PHYSICAL_CHANNEL(d, color).dithermat),
+				  x_n * i, y_n * j);
 	  color++;
 	}
   stp_dither_set_transition(d, d->transition);
@@ -623,7 +624,7 @@ stp_dither_set_iterated_matrix(void *vd, size_t edge, size_t iterations,
 {
   dither_t *d = (dither_t *) vd;
   preinit_matrix(d);
-  stp_init_iterated_matrix(&(d->dither_matrix), edge, iterations, data);
+  stp_dither_matrix_iterated_init(&(d->dither_matrix), edge, iterations, data);
   postinit_matrix(d, x_shear, y_shear);
 }
 
@@ -636,12 +637,13 @@ stp_dither_set_matrix(void *vd, const stp_dither_matrix_t *matrix,
   int y = transposed ? matrix->x : matrix->y;
   preinit_matrix(d);
   if (matrix->bytes == 2)
-    stp_init_matrix_short(&(d->dither_matrix), x, y,
-		      (const unsigned short *) matrix->data,
-		      transposed, matrix->prescaled);
+    stp_dither_matrix_init_short(&(d->dither_matrix), x, y,
+				 (const unsigned short *) matrix->data,
+				 transposed, matrix->prescaled);
   else if (matrix->bytes == 4)
-    stp_init_matrix(&(d->dither_matrix), x, y, (const unsigned *)matrix->data,
-		transposed, matrix->prescaled);
+    stp_dither_matrix_init(&(d->dither_matrix), x, y,
+			   (const unsigned *)matrix->data,
+			   transposed, matrix->prescaled);
   postinit_matrix(d, x_shear, y_shear);
 }
 
@@ -655,18 +657,19 @@ stp_dither_set_transition(void *vd, double exponent)
   unsigned x_n = d->dither_matrix.x_size / rc;
   unsigned y_n = d->dither_matrix.y_size / rc;
   for (i = 0; i < PHYSICAL_CHANNEL_COUNT(d); i++)
-    stp_destroy_matrix(&(PHYSICAL_CHANNEL(d, i).pick));
-  stp_destroy_matrix(&(d->transition_matrix));
-  stp_copy_matrix(&(d->dither_matrix), &(d->transition_matrix));
+    stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, i).pick));
+  stp_dither_matrix_destroy(&(d->transition_matrix));
+  stp_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
   d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
-    stp_exponential_scale_matrix(&(d->transition_matrix), exponent);
+    stp_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
       if (color < PHYSICAL_CHANNEL_COUNT(d))
 	{
-	  stp_clone_matrix(&(d->dither_matrix), &(PHYSICAL_CHANNEL(d, color).pick),
-			   x_n * i, y_n * j);
+	  stp_dither_matrix_clone(&(d->dither_matrix),
+				  &(PHYSICAL_CHANNEL(d, color).pick),
+				  x_n * i, y_n * j);
 	  color++;
 	}
   if (exponent < .999 || exponent > 1.001)
@@ -794,7 +797,7 @@ void
 stp_dither_set_light_ink(void *vd, int i, double v, double density)
 {
   dither_t *d = (dither_t *) vd;
-  stp_simple_dither_range_t range[2];
+  stp_dither_range_simple_t range[2];
   if (i < 0 || i >= PHYSICAL_CHANNEL_COUNT(d) || v <= 0 || v > 1)
     return;
   range[0].bit_pattern = 1;
@@ -886,7 +889,7 @@ stp_dither_finalize_ranges(dither_t *d, dither_channel_t *s)
 
 static void
 stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
-			      const stp_simple_dither_range_t *ranges,
+			      const stp_dither_range_simple_t *ranges,
 			      double density)
 {
   int i;
@@ -971,7 +974,7 @@ stp_dither_set_generic_ranges(dither_t *d, dither_channel_t *s, int nlevels,
 static void
 stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
 				   int nlevels,
-				   const stp_full_dither_range_t *ranges,
+				   const stp_dither_range_full_t *ranges,
 				   double density)
 {
   int i, j, k;
@@ -1030,7 +1033,7 @@ stp_dither_set_generic_ranges_full(dither_t *d, dither_channel_t *s,
 
 void
 stp_dither_set_ranges(void *vd, int color, int nlevels,
-		      const stp_simple_dither_range_t *ranges, double density)
+		      const stp_dither_range_simple_t *ranges, double density)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
@@ -1043,8 +1046,8 @@ void
 stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 			     const double *levels, double density)
 {
-  stp_simple_dither_range_t *r =
-    stp_malloc(nlevels * sizeof(stp_simple_dither_range_t));
+  stp_dither_range_simple_t *r =
+    stp_malloc(nlevels * sizeof(stp_dither_range_simple_t));
   int i;
   for (i = 0; i < nlevels; i++)
     {
@@ -1059,7 +1062,7 @@ stp_dither_set_ranges_simple(void *vd, int color, int nlevels,
 
 void
 stp_dither_set_ranges_full(void *vd, int color, int nlevels,
-			   const stp_full_dither_range_t *ranges,
+			   const stp_dither_range_full_t *ranges,
 			   double density)
 {
   dither_t *d = (dither_t *) vd;
@@ -1068,7 +1071,7 @@ stp_dither_set_ranges_full(void *vd, int color, int nlevels,
 }
 
 void
-stp_free_dither(void *vd)
+stp_dither_free(void *vd)
 {
   dither_t *d = (dither_t *) vd;
   int i;
@@ -1087,13 +1090,13 @@ stp_free_dither(void *vd)
 	  SAFE_FREE(PHYSICAL_CHANNEL(d, j).errs);
 	}
       SAFE_FREE(PHYSICAL_CHANNEL(d, j).ranges);
-      stp_destroy_matrix(&(PHYSICAL_CHANNEL(d, j).pick));
-      stp_destroy_matrix(&(PHYSICAL_CHANNEL(d, j).dithermat));
+      stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).pick));
+      stp_dither_matrix_destroy(&(PHYSICAL_CHANNEL(d, j).dithermat));
     }
   SAFE_FREE(d->offset0_table);
   SAFE_FREE(d->offset1_table);
-  stp_destroy_matrix(&(d->dither_matrix));
-  stp_destroy_matrix(&(d->transition_matrix));
+  stp_dither_matrix_destroy(&(d->dither_matrix));
+  stp_dither_matrix_destroy(&(d->transition_matrix));
   if (d->eventone) {
     eventone_t *et = d->eventone;
     stp_free(et->recip);
@@ -3430,8 +3433,8 @@ stp_dither(const unsigned short  *input,
 	  PHYSICAL_CHANNEL(d, i).row_ends[0][j] = -1;
 	  PHYSICAL_CHANNEL(d, i).row_ends[1][j] = -1;
 	}
-      stp_matrix_set_row(&(PHYSICAL_CHANNEL(d, i).dithermat), row);
-      stp_matrix_set_row(&(PHYSICAL_CHANNEL(d, i).pick), row);
+      stp_dither_matrix_set_row(&(PHYSICAL_CHANNEL(d, i).dithermat), row);
+      stp_dither_matrix_set_row(&(PHYSICAL_CHANNEL(d, i).pick), row);
     }
   d->n_ghost_channels = ghost_channels;
   d->ptr_offset = 0;

@@ -390,7 +390,7 @@ main(int argc, char **argv)
   stp_merge_printvars(v, stp_printer_get_printvars(the_printer));
   if (stp_print(v, &theImage) != 1)
     return 1;
-  stp_free_vars(v);
+  stp_vars_free(v);
   return 0;
 }
 
