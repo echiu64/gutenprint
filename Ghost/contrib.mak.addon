@@ -1,17 +1,20 @@
 ### --------------- Epson Stylus Photo Driver ---------------------------- ###
 
-stp700_=$(GLOBJ)gdevstp700.$(OBJ) \
-	$(GLOBJ)gdevstp700-util.$(OBJ) \
-	$(GLOBJ)gdevstp700-escp2.$(OBJ)
+stp_=$(GLOBJ)gdevstp.$(OBJ) \
+	$(GLOBJ)gdevstp-util.$(OBJ) \
+	$(GLOBJ)gdevstp-escp2.$(OBJ)
 
-$(DD)stp700.dev:	$(stp700_) $(DD)page.dev
-	$(SETPDEV) $(DD)stp700 $(stp700_)
+$(DD)stp.dev:	$(stp_) $(DD)page.dev
+	$(SETPDEV) $(DD)stp $(stp_)
 
-$(GLOBJ)gdevstp700.$(OBJ) : $(GLSRC)gdevstp700.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp700.$(OBJ) $(C_) $(GLSRC)gdevstp700.c
+$(GLOBJ)gdevstp.$(OBJ) : $(GLSRC)gdevstp.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp.$(OBJ) $(C_) $(GLSRC)gdevstp.c
 
-$(GLOBJ)gdevstp700-util.$(OBJ) : $(GLSRC)gdevstp700-util.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp700-util.$(OBJ) $(C_) $(GLSRC)gdevstp700-util.c
+$(GLOBJ)gdevstp-util.$(OBJ) : $(GLSRC)gdevstp-util.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-util.$(OBJ) $(C_) $(GLSRC)gdevstp-util.c
 
-$(GLOBJ)gdevstp700-escp2.$(OBJ) : $(GLSRC)gdevstp700-escp2.c $(PDEVH)
-	$(GLCC) $(GLO_)gdevstp700-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp700-escp2.c
+$(GLOBJ)gdevstp-dither.$(OBJ) : $(GLSRC)gdevstp-dither.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-dither.$(OBJ) $(C_) $(GLSRC)gdevstp-dither.c
+
+$(GLOBJ)gdevstp-escp2.$(OBJ) : $(GLSRC)gdevstp-escp2.c $(PDEVH)
+	$(GLCC) $(GLO_)gdevstp-escp2.$(OBJ) $(C_) $(GLSRC)gdevstp-escp2.c
