@@ -499,7 +499,7 @@ escp2_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 		     int  *top)		/* O - Top position in points */
 {
   int	width, height;			/* Size of page */
-  int	rollfeed;			/* Roll feed selected */
+  int	rollfeed = 0;			/* Roll feed selected */
   int model = stp_printer_get_model(printer);
   const char *input_slot = stp_get_media_source(v);
 
@@ -517,6 +517,8 @@ escp2_imageable_area(const stp_printer_t printer,	/* I - Printer model */
 	    }
 	}
     }
+
+  stp_default_media_size(printer, v, &width, &height);
 
   if (rollfeed)
     {
