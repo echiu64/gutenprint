@@ -19,30 +19,32 @@ Gimp-Print 4.1.99b4 contains the following changes over 4.1.99b3:
 
 2) Minor bug fixes for the Canon driver.
 
-3) HTML, PostScript, and PDF versions of the user's guide and
+3) Lexmark printers now print correctly at the bottom of the page.
+
+4) Indexed images now print correctly in color (in the Gimp plugin).
+
+5) HTML, PostScript, and PDF versions of the user's guide and
    programmer's manual are provided.  'make clean' will not remove
    these, as the toolsets required to build them are not standard.
 
-4) The PCL driver enforces minimum, as well as maximum, paper sizes.
+6) The PCL driver enforces minimum, as well as maximum, paper sizes.
    This also works around a problem in CUPS whereby if too many paper
    sizes are supported for a particular printer, the CUPS user
    interfaces (localhost:631, KUPS, etc.) do not display any
    printers.  This problem was found to exist with the HP DesignJet
    750.
 
-5) The CUPS PPD's and escputil are now translated.  The package
+7) The CUPS PPD's and escputil are now translated.  The package
    currently supports Swedish, Danish, Norwegian, French, and British
    English, although all but the Swedish translation are only partial
    translations.
 
-6) Color quality in the Lexmark driver is greatly improved.
+8) Color quality in the Lexmark driver is greatly improved.
 
-7) Support for additional Canon, Epson, and HP printers.
+9) Support for additional Canon, Epson, and HP printers.
 
-8) Substantially improved print quality on the Epson Stylus C80 and
-   C70.  The quality, at least on photo paper, is not as good as many
-   other Epson printers at resolutions less than 2880x720 DPI, but it
-   is usable at all resolutions.
+10) Substantially improved print quality on the Epson Stylus C80 and
+   C70.
 
 Known limitations of this release:
 
