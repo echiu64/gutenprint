@@ -479,7 +479,7 @@ generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 	  nz3 |= o3;
 	}
     }
-  return (nz0 ? 1 : 0) + (nz1 ? 2 : 0) + (nz2 ? 4 : 0) + (nz3 ? 8 : 0);
+  return (nz0 ? 0 : 1) + (nz1 ? 0 : 2) + (nz2 ? 0 : 4) + (nz3 ? 0 : 8);
 }
 
 static unsigned
@@ -629,7 +629,7 @@ color_##bits##_to_color(stp_const_vars_t vars, const unsigned char *in,	      \
       s_in += 3;							      \
       out += 3;								      \
     }									      \
-  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);		      \
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		      \
 }
 
 COLOR_TO_COLOR_FUNC(unsigned char, 8)
@@ -702,7 +702,7 @@ color_##bits##_to_color_fast(stp_const_vars_t vars, const unsigned char *in, \
       s_in += 3;							     \
       out += 3;								     \
     }									     \
-  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);		     \
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		     \
 }
 
 FAST_COLOR_TO_COLOR_FUNC(unsigned char, 8)
@@ -798,7 +798,7 @@ gray_##bits##_to_color(stp_const_vars_t vars, const unsigned char *in,	 \
       s_in += 1;							 \
       out += 3;								 \
     }									 \
-  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);		 \
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		 \
 }
 
 GRAY_TO_COLOR_FUNC(unsigned char, 8)
@@ -811,7 +811,7 @@ gray_##bits##_to_color_raw(stp_const_vars_t vars, const unsigned char *in, \
 			   unsigned short *out)				   \
 {									   \
   int i;								   \
-  int nz = 0;								   \
+  int nz = 7;								   \
   const T *s_in = (const T *) in;					   \
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
   unsigned mask = 0;							   \
@@ -825,7 +825,7 @@ gray_##bits##_to_color_raw(stp_const_vars_t vars, const unsigned char *in, \
       out[1] = outval;							   \
       out[2] = outval;							   \
       if (outval)							   \
-	nz = 7;								   \
+	nz = 0;								   \
       s_in++;								   \
       out += 3;								   \
     }									   \
@@ -1439,7 +1439,7 @@ cmyk_##bits##_to_gray(stp_const_vars_t vars,				    \
       s_in += 4;							    \
       out ++;								    \
     }									    \
-  return nz ? 1 : 0;							    \
+  return nz ? 0 : 1;							    \
 }
 
 CMYK_TO_GRAY_FUNC(unsigned char, 8)
@@ -1496,7 +1496,7 @@ kcmy_##bits##_to_gray(stp_const_vars_t vars,				    \
       s_in += 4;							    \
       out ++;								    \
     }									    \
-  return nz ? 1 : 0;							    \
+  return nz ? 0 : 1;							    \
 }
 
 KCMY_TO_GRAY_FUNC(unsigned char, 8)
@@ -1639,7 +1639,7 @@ cmyk_##bits##_to_gray_##name2(stp_const_vars_t vars,			    \
       s_in += 4;							    \
       out ++;								    \
     }									    \
-  return nz ? 1 : 0;							    \
+  return nz ? 0 : 1;							    \
 }
 
 CMYK_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw)
@@ -1698,7 +1698,7 @@ kcmy_##bits##_to_gray_##name2(stp_const_vars_t vars,			    \
       s_in += 4;							    \
       out ++;								    \
     }									    \
-  return nz ? 1 : 0;							    \
+  return nz ? 0 : 1;							    \
 }
 
 KCMY_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw)

@@ -538,6 +538,7 @@ stp_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
 	}
       if (zero_mask)
 	{
+	  *zero_mask = 0;
 	  for (i = 0; i < cg->total_channels; i++)
 	    if (!nz[i])
 	      *zero_mask |= 1 << i;
