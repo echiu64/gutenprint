@@ -47,13 +47,12 @@ typedef struct
 
 
 static inline void
-print_subc(stpi_dither_t *d, stpi_dither_channel_t *dc, stpi_ink_defn_t *ink, int subchannel, unsigned char bit, int length)
+print_subc(stpi_dither_t *d, unsigned char *tptr, stpi_ink_defn_t *ink, int subchannel, unsigned char bit, int length)
 {
   int bits;
   int j;
-  unsigned char *tptr;
 
-  if ((tptr = dc->ptrs[subchannel]) != 0)
+  if (tptr != 0)
     {
       switch(bits = ink->bits)
 	{
@@ -304,7 +303,7 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 }
 
 static inline int
-eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, int desired, int dotsize)
+eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, unsigned int desired, unsigned int dotsize)
 {
   ditherpoint += sp->dis.r_sq * et->aspect;
   if (desired < dotsize) {
@@ -316,7 +315,7 @@ eventone_adjust(stpi_shade_segment_t *sp, eventone_t *et, int ditherpoint, int d
 }
 
 static inline int
-find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink, int baseink, stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
+find_segment(stpi_shade_segment_t *sp, eventone_t *et, int totalink, unsigned int baseink, stpi_ink_defn_t *lower, stpi_ink_defn_t *upper)
 {
   lower->range = 0;
   lower->bits = 0;
@@ -440,14 +439,14 @@ stpi_dither_raw_et(stpi_dither_t *d,
       /* Adjust the error to reflect the dot choice */
       if (inkp->bits) {
         int subc = sp->subchannel;
-        
-	sp->value -= 2 * inkp->range;
+
+        sp->value -= 2 * inkp->range;
         sp->dis = et->d_sq;
 
         set_row_ends(dc, x, subc);
 
         /* Do the printing */
-        print_subc(d, dc, inkp, subc, bit, length);
+        print_subc(d, dc->ptrs[subc], inkp, subc, bit, length);
       }
 
       /* Spread the error around to the adjacent dots */
@@ -561,7 +560,7 @@ stpi_dither_raw_cmyk_et(stpi_dither_t *d,
         set_row_ends(dc, x, subc);
 
         /* Do the printing */
-        print_subc(d, dc, inkp, subc, bit, length);
+        print_subc(d, dc->ptrs[subc], inkp, subc, bit, length);
       }
 
       /* Spread the error around to the adjacent dots */
