@@ -48,6 +48,7 @@ SRC = 	print-canon.c \
 	print-pcl.c \
 	print-ps.c \
 	print-util.c \
+	print-dither.c \
 	print.c
 
 OBJ = 	print-canon.o \
@@ -55,6 +56,7 @@ OBJ = 	print-canon.o \
 	print-pcl.o \
 	print-ps.o \
 	print-util.o \
+	print-dither.o \
 	print.o
 
 all:	print
