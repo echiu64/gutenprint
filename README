@@ -316,19 +316,21 @@ GHOSTSCRIPT
 
     This package includes a Ghostscript driver that may be built,
     allowing use of this software for general printing purposes.  This
-    package requires Ghostscript 5.10, 5.50, 6.51, and 6.52.  There is
-    a simpler build procedure for GNU Ghostscript 6.53 and 7.05.
+    package requires GNU Ghostscript 5.10, 5.50, 6.51, or 6.52.  There
+    is a simpler build procedure for GNU Ghostscript 6.53 and 7.05,
+    and for ESP Ghostscript 7.05.
 
     Please read src/ghost/README for more information, including how
     to build and install it, and available options; the build
     procedure here merely creates the necessary source files that you
     must add to your Ghostscript source.  The directions vary for
     different versions of Ghostscript.  Only GNU Ghostscript 5.10 and
-    above.  In particular, versions of Ghostscript that are not
-    licensed under the GNU General Public License (GPL) are not
-    supported, and this driver may not be distributed with such a
-    version.  If you wish to use Gimp-Print with AFPL Ghostscript, you
-    may do so via the IJS-based driver, described below.
+    above, and ESP Ghostscript, are supported.  In particular,
+    versions of Ghostscript that are not licensed under the GNU
+    General Public License (GPL) are not supported, and this driver
+    may not be distributed with such a version.  If you wish to use
+    Gimp-Print with AFPL Ghostscript, you may do so via the IJS-based
+    driver, described below.
 
     We *strongly* recommend that end users not attempt to use this
     driver directly.  The available options are very complex, and the

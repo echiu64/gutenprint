@@ -15,10 +15,12 @@ highly recommended, as certain translation-related bugs are fixed and
 it is possible to print true CMYK.
 
 The Ghostscript driver requires GNU Ghostscript 5.10, 5.50, 6.51, or any
-later GNU Ghostscript release based on 6.51 (e. g. 6.52).
+later GNU Ghostscript release based on 6.51 (e. g. 6.52).  It may also
+be used with GNU Ghostscript 7.05, or with ESP Ghostscript 7.05.
 
-The IJS GhostScript plugin driver requires GNU Ghostscript 6.53 or later
-or APFL GhostScript 7.04 or later.
+The IJS GhostScript plugin driver requires GNU Ghostscript 6.53 or
+later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
+later.
 
 Please read the README file for full instructions on building and
 installing this package.

@@ -15,10 +15,10 @@ INTRODUCTION:
   covered by the GPL.  We will not fix bugs reported against
   combinations of this driver with AFPL-only versions of GhostScript.
 
-  GNU Ghostscript 6.53 and 7.05 contains a version of the Gimp-Print
-  driver based on the Gimp-Print 4.2.0 release with a bug fix.
-  Building Gimp-Print is much simpler with Ghostscript 6.53 and 7.05
-  for that reason.
+  GNU Ghostscript 6.53 and 7.05 and ESP Ghostscript 7.05 contain a
+  version of the Gimp-Print driver based on the Gimp-Print 4.2.0
+  release with a bug fix.  Building Gimp-Print is much simpler with
+  Ghostscript 6.53 and 7.05 for that reason.
 
   Gimp-Print includes another driver based on the new IJS protocol.
   IJS is an initiative to improve the quality and ease of use of
@@ -79,12 +79,13 @@ LICENSE:
 BUILD AND INSTALLATION OF THE STP DRIVER:
 ----- --- ------------ -- --- --- -------
 
-For GNU Ghostscript 6.53 and 7.05 (recommended):
+For GNU Ghostscript 6.53 and 7.05, and ESP Ghostscript 7.05
+(recommended):
 
-   Building Gimp-Print for GNU Ghostscript 6.53 and 7.05 is much
-   simpler, as the driver is already in the Ghostscript package.  It
-   is sufficient to build and install the Gimp-Print library and
-   Ghostscript.
+   Building Gimp-Print for GNU Ghostscript 6.53 and 7.05 and ESP
+   Ghostscript 7.05 is much simpler, as the driver is already in the
+   Ghostscript package.  It is sufficient to build and install the
+   Gimp-Print library and Ghostscript.
 
 1) First build and install the core Gimp-Print library.  Run
 
