@@ -33,7 +33,8 @@
 #define ROUNDUP(x, y) (((x) + ((y) - 1)) / (y))
 #define SCALE(x, y) (((x) + (1.0 / (2.0 * (y)))) * (y))
 
-#include "print_gimp.h"
+#include "gimp-print-ui.h"
+#include "gimp-print-ui-internal.h"
 
 #include "print-intl.h"
 #include <string.h>
@@ -164,6 +165,8 @@ static gint image_true_width, image_true_height; /* Original image */
 static gdouble image_xres, image_yres; /* Original image resolution */
 static gint do_update_thumbnail = 0;
 
+static gchar *image_filename;
+
 static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
 static void plist_callback        (GtkWidget *widget, gpointer data);
@@ -208,6 +211,8 @@ static void image_type_callback         (GtkWidget      *widget,
 					 gpointer        data);
 static void set_media_size(const gchar *new_media_size);
 static stp_printer_t tmp_printer = NULL;
+static stp_outfunc_t the_errfunc;
+static void *the_errdata;
 
 static list_option_t the_list_options[] =
   {
@@ -278,6 +283,50 @@ static gdouble preview_ppi = 10;
 
 static stp_string_list_t printer_list = 0;
 gp_plist_t *pv;
+
+void
+set_image_filename(const char *name)
+{
+  if (name && name == image_filename)
+    return;
+  if (image_filename)
+    free(image_filename);
+  if (name)
+    image_filename = g_strdup(name);
+  else
+    image_filename = g_strdup("");
+}
+
+const char *
+get_image_filename(void)
+{
+  set_image_filename(image_filename);
+  return(image_filename);
+}
+
+void
+set_errfunc(stp_outfunc_t wfunc)
+{
+  the_errfunc = wfunc;
+}
+
+stp_outfunc_t
+get_errfunc(void)
+{
+  return the_errfunc;
+}
+
+void
+set_errdata(void *errdata)
+{
+  the_errdata = errdata;
+}
+
+void *
+get_errdata(void)
+{
+  return the_errdata;
+}
 
 
 static GtkWidget *
@@ -459,7 +508,8 @@ create_top_level_structure(void)
    */
 
   plug_in_name = g_strdup_printf (_("%s -- Print v%s"),
-                                  image_filename, PLUG_IN_VERSION);
+                                  get_image_filename(),
+				  VERSION " - " RELEASE_DATE);
 
   print_dialog =
     gimp_dialog_new (plug_in_name, "print",
@@ -2016,7 +2066,7 @@ static void
 save_callback (void)
 {
   reset_preview ();
-  call_printrc_save ();
+  printrc_save ();
 }
 
 /*
@@ -2240,8 +2290,6 @@ file_cancel_callback (void)
   dialogs_set_sensitive (TRUE);
 }
 
-extern void gimp_writefunc(void *file, const char *buf, size_t bytes);
-
 typedef struct
 {
   unsigned char *base_addr;
@@ -2265,96 +2313,93 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 void
 update_adjusted_thumbnail (void)
 {
-  gint           x, y;
-  guchar        *adjusted_data = adjusted_thumbnail_data;
-  gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
-  priv_t priv;
-  stp_image_t *im;
-  stp_vars_t nv;
-
-  if (thumbnail_data == 0 || adjusted_thumbnail_data == 0 ||
-      do_update_thumbnail == 0 || suppress_preview_update > 0)
-    return;
-  
-  im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
-			   thumbnail_h, thumbnail_bpp);
-  nv = stp_allocate_copy(pv->v);
-  stp_set_driver(nv, "raw-data-8");
-  stp_set_top(nv, 0);
-  stp_set_left(nv, 0);
-  stp_set_width(nv, thumbnail_w);
-  stp_set_height(nv, thumbnail_h);
-  stp_set_outfunc(nv, fill_buffer_writefunc);
-  stp_set_outdata(nv, &priv);
-  stp_set_errfunc(nv, gimp_writefunc);
-  stp_set_errdata(nv, stderr);
-  stp_set_string_parameter(nv, "PageSize", "Custom");
-  if (thumbnail_bpp == 1)
-    stp_set_string_parameter(nv, "InkType", "RGBGray");
-  else
-    stp_set_string_parameter(nv, "InkType", "RGB");
-  stp_set_string_parameter(nv, "Resolution", "Standard");
-  stp_set_string_parameter(nv, "MediaType", "Standard");
-  stp_set_string_parameter(nv, "InputSlot", "Standard");
-  stp_set_page_height(nv, thumbnail_h);
-  stp_set_page_width(nv, thumbnail_w);
-
-  priv.base_addr = adjusted_data;
-  priv.offset = 0;
-  priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
-
-  stp_set_float_parameter (nv, "Density", 1.0);
-  if (stp_verify(nv) != 1)
+  if (thumbnail_data && adjusted_thumbnail_data && do_update_thumbnail &&
+      suppress_preview_update == 0)
     {
-      stp_erprintf("did not verify!\n");
+      gint           x, y;
+      guchar        *adjusted_data = adjusted_thumbnail_data;
+      gint preview_limit = (thumbnail_h * thumbnail_w) - 1;
+      priv_t priv;
+      stp_image_t *im = Image_Thumbnail_new(thumbnail_data, thumbnail_w,
+					    thumbnail_h, thumbnail_bpp);
+      stp_vars_t nv = stp_allocate_copy(pv->v);
+      stp_set_driver(nv, "raw-data-8");
+      stp_set_top(nv, 0);
+      stp_set_left(nv, 0);
+      stp_set_width(nv, thumbnail_w);
+      stp_set_height(nv, thumbnail_h);
+      stp_set_outfunc(nv, fill_buffer_writefunc);
+      stp_set_outdata(nv, &priv);
+      stp_set_errfunc(nv, get_errfunc());
+      stp_set_errdata(nv, get_errdata());
+      stp_set_string_parameter(nv, "PageSize", "Custom");
+      if (thumbnail_bpp == 1)
+	stp_set_string_parameter(nv, "InkType", "RGBGray");
+      else
+	stp_set_string_parameter(nv, "InkType", "RGB");
+      stp_set_string_parameter(nv, "Resolution", "Standard");
+      stp_set_string_parameter(nv, "MediaType", "Standard");
+      stp_set_string_parameter(nv, "InputSlot", "Standard");
+      stp_set_page_height(nv, thumbnail_h);
+      stp_set_page_width(nv, thumbnail_w);
+
+      priv.base_addr = adjusted_data;
+      priv.offset = 0;
+      priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
+
+      stp_set_float_parameter (nv, "Density", 1.0);
+      if (stp_verify(nv) != 1)
+	{
+	  stp_erprintf("did not verify!\n");
+	  stp_vars_free(nv);
+	  return;
+	}
+      if (stp_print(nv, im) != 1)
+	{
+	  stp_erprintf("did not print thumbnail!\n");
+	  stp_vars_free(nv);
+	  return;
+	}
       stp_vars_free(nv);
-      return;
-    }
-  if (stp_print(nv, im) != 1)
-    {
-      stp_erprintf("did not print thumbnail!\n");
-      stp_vars_free(nv);
-      return;
-    }
-  stp_vars_free(nv);
 
-  switch (physical_orientation)
-    {
-    case ORIENT_PORTRAIT:
-      memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
-	     thumbnail_bpp * thumbnail_h * thumbnail_w);
-      break;
-    case ORIENT_SEASCAPE:
-      for (x = 0; x < thumbnail_w; x++)
-	for (y = 0; y < thumbnail_h; y++)
-	  memcpy((preview_thumbnail_data +
-		  thumbnail_bpp * (x * thumbnail_h + y)),
-		 (adjusted_thumbnail_data +
-		  thumbnail_bpp * (y * thumbnail_w + x)),
-		 thumbnail_bpp);
-      break;
+      switch (physical_orientation)
+	{
+	case ORIENT_PORTRAIT:
+	  memcpy(preview_thumbnail_data, adjusted_thumbnail_data,
+		 thumbnail_bpp * thumbnail_h * thumbnail_w);
+	  break;
+	case ORIENT_SEASCAPE:
+	  for (x = 0; x < thumbnail_w; x++)
+	    for (y = 0; y < thumbnail_h; y++)
+	      memcpy((preview_thumbnail_data +
+		      thumbnail_bpp * (x * thumbnail_h + y)),
+		     (adjusted_thumbnail_data +
+		      thumbnail_bpp * (y * thumbnail_w + x)),
+		     thumbnail_bpp);
+	  break;
 
-    case ORIENT_UPSIDEDOWN:
-      for (x = 0; x < thumbnail_h * thumbnail_w; x++)
-	memcpy((preview_thumbnail_data +
-		thumbnail_bpp * (preview_limit - x)),
-	       adjusted_thumbnail_data + thumbnail_bpp * x,
-	       thumbnail_bpp);
-      break;
-    case ORIENT_LANDSCAPE:
-      for (x = 0; x < thumbnail_w; x++)
-	for (y = 0; y < thumbnail_h; y++)
-	  memcpy((preview_thumbnail_data +
-		  thumbnail_bpp * (preview_limit -
-					    (x * thumbnail_h + y))),
-		 (adjusted_thumbnail_data +
-		  thumbnail_bpp * (y * thumbnail_w + x)),
-		 thumbnail_bpp);
-      break;
+	case ORIENT_UPSIDEDOWN:
+	  for (x = 0; x < thumbnail_h * thumbnail_w; x++)
+	    memcpy((preview_thumbnail_data +
+		    thumbnail_bpp * (preview_limit - x)),
+		   adjusted_thumbnail_data + thumbnail_bpp * x,
+		   thumbnail_bpp);
+	  break;
+	case ORIENT_LANDSCAPE:
+	  for (x = 0; x < thumbnail_w; x++)
+	    for (y = 0; y < thumbnail_h; y++)
+	      memcpy((preview_thumbnail_data +
+		      thumbnail_bpp * (preview_limit -
+				       (x * thumbnail_h + y))),
+		     (adjusted_thumbnail_data +
+		      thumbnail_bpp * (y * thumbnail_w + x)),
+		     thumbnail_bpp);
+	  break;
+	}
+
+      redraw_color_swatch ();
+      preview_update ();
     }
-
-  redraw_color_swatch ();
-  preview_update ();
 }
 
 void
@@ -2390,74 +2435,78 @@ draw_arrow (GdkWindow *w,
 static void
 create_valid_preview(guchar **preview_data)
 {
-  gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
-  gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
-  gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
-  gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
-  gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
-  gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
-  gint adjusted_preview_width = thumbnail_bpp * preview_w;
-  gint adjusted_thumbnail_width = thumbnail_bpp * preview_thumbnail_w;
-  gint v_cur = 0;
-  gint v_last = -1;
-  gint v_error = v_denominator / 2;
-  gint y;
-  gint i;
-
-  if (*preview_data)
-    free (*preview_data);
-  *preview_data = g_malloc (3 * preview_h * preview_w);
-
-  for (y = 0; y < preview_h; y++)
+  if (adjusted_thumbnail_data)
     {
-      guchar *outbuf = *preview_data + adjusted_preview_width * y;
+      gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
+      gint v_numerator = (preview_thumbnail_h - 1) % v_denominator;
+      gint v_whole = (preview_thumbnail_h - 1) / v_denominator;
+      gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
+      gint h_numerator = (preview_thumbnail_w - 1) % h_denominator;
+      gint h_whole = (preview_thumbnail_w - 1) / h_denominator;
+      gint adjusted_preview_width = thumbnail_bpp * preview_w;
+      gint adjusted_thumbnail_width = thumbnail_bpp * preview_thumbnail_w;
+      gint v_cur = 0;
+      gint v_last = -1;
+      gint v_error = v_denominator / 2;
+      gint y;
+      gint i;
 
-      if (v_cur == v_last)
-	memcpy (outbuf, outbuf-adjusted_preview_width, adjusted_preview_width);
-      else
+      if (*preview_data)
+	free (*preview_data);
+      *preview_data = g_malloc (3 * preview_h * preview_w);
+
+      for (y = 0; y < preview_h; y++)
 	{
-	  guchar *inbuf = preview_thumbnail_data - thumbnail_bpp
-	    + adjusted_thumbnail_width * v_cur;
+	  guchar *outbuf = *preview_data + adjusted_preview_width * y;
 
-	  gint h_cur = 0;
-	  gint h_last = -1;
-	  gint h_error = h_denominator / 2;
-	  gint x;
-
-	  v_last = v_cur;
-	  for (x = 0; x < preview_w; x++)
+	  if (v_cur == v_last)
+	    memcpy (outbuf, outbuf-adjusted_preview_width,
+		    adjusted_preview_width);
+	  else
 	    {
-	      if (h_cur == h_last)
+	      guchar *inbuf = preview_thumbnail_data - thumbnail_bpp
+		+ adjusted_thumbnail_width * v_cur;
+
+	      gint h_cur = 0;
+	      gint h_last = -1;
+	      gint h_error = h_denominator / 2;
+	      gint x;
+
+	      v_last = v_cur;
+	      for (x = 0; x < preview_w; x++)
 		{
-		  for (i = 0; i < thumbnail_bpp; i++)
-		    outbuf[i] = outbuf[i - thumbnail_bpp];
-		}
-	      else
-		{
-		  inbuf += thumbnail_bpp * (h_cur - h_last);
-		  h_last = h_cur;
-		  for (i = 0; i < thumbnail_bpp; i++)
-		    outbuf[i] = inbuf[i];
-		}
-	      outbuf += thumbnail_bpp;
-	      h_cur += h_whole;
-	      h_error += h_numerator;
-	      if (h_error >= h_denominator)
-		{
-		  h_error -= h_denominator;
-		  h_cur++;
+		  if (h_cur == h_last)
+		    {
+		      for (i = 0; i < thumbnail_bpp; i++)
+			outbuf[i] = outbuf[i - thumbnail_bpp];
+		    }
+		  else
+		    {
+		      inbuf += thumbnail_bpp * (h_cur - h_last);
+		      h_last = h_cur;
+		      for (i = 0; i < thumbnail_bpp; i++)
+			outbuf[i] = inbuf[i];
+		    }
+		  outbuf += thumbnail_bpp;
+		  h_cur += h_whole;
+		  h_error += h_numerator;
+		  if (h_error >= h_denominator)
+		    {
+		      h_error -= h_denominator;
+		      h_cur++;
+		    }
 		}
 	    }
+	  v_cur += v_whole;
+	  v_error += v_numerator;
+	  if (v_error >= v_denominator)
+	    {
+	      v_error -= v_denominator;
+	      v_cur++;
+	    }
 	}
-      v_cur += v_whole;
-      v_error += v_numerator;
-      if (v_error >= v_denominator)
-	{
-	  v_error -= v_denominator;
-	  v_cur++;
-	}
+      preview_valid = TRUE;
     }
-  preview_valid = TRUE;
 }
 
 /*
@@ -2597,7 +2646,10 @@ do_preview_thumbnail (void)
   draw_arrow (preview->widget.window, gcset, paper_display_left,
 	      paper_display_top);
 
-  if (thumbnail_bpp == 1)
+  if (!preview_valid)
+    gdk_draw_rectangle (preview->widget.window, gc, 1,
+			preview_x, preview_y, preview_w, preview_h);
+  else if (thumbnail_bpp == 1)
     gdk_draw_gray_image (preview->widget.window, gc,
 			 preview_x, preview_y, preview_w, preview_h,
 			 GDK_RGB_DITHER_NORMAL, preview_data, preview_w);

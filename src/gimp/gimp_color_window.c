@@ -27,16 +27,18 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include "print_gimp.h"
+#include "gimp-print-ui.h"
+#include "gimp-print-ui-internal.h"
 
 #include "print-intl.h"
 #include <string.h>
 
 gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
-static guchar *internal_thumbnail_data;
 guchar *thumbnail_data;
 guchar *adjusted_thumbnail_data;
 guchar *preview_thumbnail_data;
+static get_thumbnail_func_t thumbnail_func;
+static void *thumbnail_private_data;
 
 GtkWidget *color_adjust_dialog;
 
@@ -76,8 +78,32 @@ void build_dither_combo               (void);
 
 static GtkDrawingArea *swatch = NULL;
 
-#define SWATCH_W (128)
-#define SWATCH_H (128)
+#define THUMBNAIL_HINTW	(128)
+#define THUMBNAIL_HINTH	(128)
+
+void
+set_thumbnail_func(get_thumbnail_func_t func)
+{
+  thumbnail_func = func;
+}
+
+get_thumbnail_func_t
+get_thumbnail_func(void)
+{
+  return thumbnail_func;
+}
+
+void
+set_thumbnail_data(void *data)
+{
+  thumbnail_private_data = data;
+}
+
+void *
+get_thumbnail_data(void)
+{
+  return thumbnail_private_data;
+}
 
 static void
 dither_algo_callback (GtkWidget *widget, gpointer data)
@@ -123,23 +149,112 @@ redraw_color_swatch (void)
   static GdkGC *gc = NULL;
   static GdkColormap *cmap;
 
-  if (swatch == NULL || swatch->widget.window == NULL)
-    return;
-
-  if (gc == NULL)
+  if (adjusted_thumbnail_data && swatch && swatch->widget.window)
     {
-      gc = gdk_gc_new (swatch->widget.window);
-      cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
-    }
+      if (gc == NULL)
+	{
+	  gc = gdk_gc_new (swatch->widget.window);
+	  cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
+	}
 
-  (thumbnail_bpp == 1
-   ? gdk_draw_gray_image
-   : gdk_draw_rgb_image) (swatch->widget.window, gc,
-			  (SWATCH_W - thumbnail_w) / 2,
-			  (SWATCH_H - thumbnail_h) / 2,
-			  thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
-			  adjusted_thumbnail_data,
-			  thumbnail_bpp * thumbnail_w);
+      (thumbnail_bpp == 1
+       ? gdk_draw_gray_image
+       : gdk_draw_rgb_image) (swatch->widget.window, gc, 0, 0,
+			      thumbnail_w, thumbnail_h, GDK_RGB_DITHER_NORMAL,
+			      adjusted_thumbnail_data,
+			      thumbnail_bpp * thumbnail_w);
+    }
+}
+
+static void
+initialize_thumbnail(void)
+{
+  int i;
+  if (thumbnail_func)
+    {
+      const guchar *internal_thumbnail_data;
+      /*
+       * Fetch a thumbnail of the image we're to print from the Gimp.
+       */
+
+      thumbnail_w = THUMBNAIL_HINTW;
+      thumbnail_h = THUMBNAIL_HINTH;
+      internal_thumbnail_data =
+	(*thumbnail_func) (thumbnail_private_data, &thumbnail_w,
+			   &thumbnail_h, &thumbnail_bpp, 0);
+      if (adjusted_thumbnail_data)
+	g_free(adjusted_thumbnail_data);
+      if (preview_thumbnail_data)
+	g_free(preview_thumbnail_data);
+      if (thumbnail_data)
+	g_free(thumbnail_data);
+
+      if (internal_thumbnail_data)
+	{
+	  /*
+	   * thumbnail_w and thumbnail_h have now been adjusted to the actual
+	   * thumbnail dimensions.  Now initialize a color-adjusted version of
+	   * the thumbnail.
+	   */
+
+	  adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+	  preview_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+	  thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+
+	  switch (thumbnail_bpp)
+	    {
+	    case 1:
+	      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
+		{
+		  gint val = internal_thumbnail_data[i];
+		  thumbnail_data[(3 * i) + 0] = val;
+		  thumbnail_data[(3 * i) + 1] = val;
+		  thumbnail_data[(3 * i) + 2] = val;
+		}
+	      break;
+	    case 3:
+	      memcpy(thumbnail_data, internal_thumbnail_data,
+		     3 * thumbnail_w * thumbnail_h);
+	      break;
+	    case 2:
+	      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
+		{
+		  gint val = internal_thumbnail_data[2 * i];
+		  gint alpha = internal_thumbnail_data[(2 * i) + 1];
+		  thumbnail_data[(3 * i) +0] = val * alpha / 255 + 255 - alpha;
+		  thumbnail_data[(3 * i) +1] = val * alpha / 255 + 255 - alpha;
+		  thumbnail_data[(3 * i) +2] = val * alpha / 255 + 255 - alpha;
+		}
+	      break;
+	    case 4:
+	      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
+		{
+		  gint r = internal_thumbnail_data[(4 * i)];
+		  gint g = internal_thumbnail_data[(4 * i) + 1];
+		  gint b = internal_thumbnail_data[(4 * i) + 2];
+		  gint alpha = internal_thumbnail_data[(4 * i) + 3];
+		  thumbnail_data[(3 * i) + 0] = r * alpha / 255 + 255 - alpha;
+		  thumbnail_data[(3 * i) + 1] = g * alpha / 255 + 255 - alpha;
+		  thumbnail_data[(3 * i) + 2] = b * alpha / 255 + 255 - alpha;
+		}
+	      break;
+	    default:
+	      break;
+	      /* Whatever */
+	    }
+	  thumbnail_bpp = 3;
+	}
+      else
+	{
+	  thumbnail_h = 0;
+	  thumbnail_w = 0;
+	}
+    }
+  else
+    {
+      thumbnail_h = 0;
+      thumbnail_w = 0;
+    }
 }
 
 /*
@@ -159,60 +274,7 @@ create_color_adjust_window (void)
   GtkWidget *curve;
 #endif
 
-  /*
-   * Fetch a thumbnail of the image we're to print from the Gimp.  This must
-   *
-   */
-
-  thumbnail_w = THUMBNAIL_MAXW;
-  thumbnail_h = THUMBNAIL_MAXH;
-  internal_thumbnail_data =
-    get_thumbnail_data (&thumbnail_w, &thumbnail_h, &thumbnail_bpp);
-
-  /*
-   * thumbnail_w and thumbnail_h have now been adjusted to the actual
-   * thumbnail dimensions.  Now initialize a color-adjusted version of
-   * the thumbnail.
-   */
-
-  adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
-  preview_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
-
-  switch (thumbnail_bpp)
-    {
-    case 1:
-    case 3:
-      thumbnail_data = internal_thumbnail_data;
-      break;
-    case 2:
-      thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
-      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
-	{
-	  gint val = internal_thumbnail_data[2 * i];
-	  gint alpha = internal_thumbnail_data[(2 * i) + 1];
-	  thumbnail_data[(3 * i) + 0] = val * alpha / 255 + 255 - alpha;
-	  thumbnail_data[(3 * i) + 1] = val * alpha / 255 + 255 - alpha;
-	  thumbnail_data[(3 * i) + 2] = val * alpha / 255 + 255 - alpha;
-	}
-      break;
-    case 4:
-      thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
-      for (i = 0; i < thumbnail_w * thumbnail_h; i++)
-	{
-	  gint r = internal_thumbnail_data[(4 * i)];
-	  gint g = internal_thumbnail_data[(4 * i) + 1];
-	  gint b = internal_thumbnail_data[(4 * i) + 2];
-	  gint alpha = internal_thumbnail_data[(4 * i) + 3];
-	  thumbnail_data[(3 * i) + 0] = r * alpha / 255 + 255 - alpha;
-	  thumbnail_data[(3 * i) + 1] = g * alpha / 255 + 255 - alpha;
-	  thumbnail_data[(3 * i) + 2] = b * alpha / 255 + 255 - alpha;
-	}
-      break;
-    default:
-      break;
-      /* Whatever */
-    }
-  thumbnail_bpp = 3;
+  initialize_thumbnail();
 
   color_adjust_dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",
@@ -249,7 +311,7 @@ create_color_adjust_window (void)
 
   swatch = (GtkDrawingArea *) gtk_drawing_area_new ();
   gtk_widget_set_events (GTK_WIDGET (swatch), GDK_EXPOSURE_MASK);
-  gtk_drawing_area_size (swatch, SWATCH_W, SWATCH_H);
+  gtk_drawing_area_size (swatch, thumbnail_w, thumbnail_h);
   gtk_container_add (GTK_CONTAINER (event_box), GTK_WIDGET (swatch));
   gtk_widget_show (GTK_WIDGET (swatch));
 

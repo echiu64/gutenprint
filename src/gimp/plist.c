@@ -26,7 +26,8 @@
 #endif
 #include "../../lib/libprintut.h"
 
-#include "print_gimp.h"
+#include "gimp-print-ui.h"
+#include "gimp-print-ui-internal.h"
 
 #include <unistd.h>
 #include <ctype.h>
@@ -41,6 +42,7 @@ int		plist_current = 0,	/* Current system printer */
 		plist_count = 0;	/* Number of system printers */
 gp_plist_t	*plist;			/* System printers */
 stp_printer_t current_printer = 0;	/* Current printer index */
+static char *printrc_name = NULL;
 
 #define SAFE_FREE(x)				\
 do						\
@@ -49,6 +51,30 @@ do						\
     free((char *)(x));				\
   ((x)) = NULL;					\
 } while (0)
+
+void
+set_printrc_file(const char *name)
+{
+  if (name && name == printrc_name)
+    return;
+  SAFE_FREE(printrc_name);
+  if (name)
+    printrc_name = g_strdup(name);
+  else
+    {
+      const char *where = getenv("HOME");
+      if (where)
+	printrc_name = g_strconcat(where, "/.gimpprintrc");
+    }
+}
+
+const char *
+get_printrc_file(void)
+{
+  if (!printrc_name)
+    set_printrc_file(NULL);
+  return printrc_name;
+}
 
 void
 plist_set_output_to(gp_plist_t *p, const char *val)
@@ -367,7 +393,7 @@ add_printer(const gp_plist_t *key, int add_only)
  * 'printrc_load()' - Load the printer resource configuration file.
  */
 void
-printrc_load(const char *filename)
+printrc_load(void)
 {
   int		i;		/* Looping var */
   FILE		*fp;		/* Printrc file */
@@ -378,6 +404,7 @@ printrc_load(const char *filename)
   int		format = 0;	/* rc file format version */
   int		system_printers; /* printer count before reading printrc */
   char *	current_printer = 0; /* printer to select */
+  const char *filename = get_printrc_file();
 
   check_plist(1);
 
@@ -627,11 +654,12 @@ printrc_load(const char *filename)
  * 'printrc_save()' - Save the current printer resource configuration.
  */
 void
-printrc_save(const char *filename)
+printrc_save(void)
 {
   FILE		*fp;		/* Printrc file */
   int		i;		/* Looping var */
   gp_plist_t	*p;		/* Current printer */
+  const char *filename = get_printrc_file();
 
 
   if ((fp = fopen(filename, "w")) != NULL)
@@ -714,8 +742,7 @@ printrc_save(const char *filename)
  */
 
 static int
-compare_printers(gp_plist_t *p1,	/* I - First printer to compare */
-                 gp_plist_t *p2)	/* I - Second printer to compare */
+compare_printers(gp_plist_t *p1, gp_plist_t *p2)
 {
   return (strcmp(p1->name, p2->name));
 }

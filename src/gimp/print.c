@@ -26,6 +26,7 @@
 #endif
 #include "../../lib/libprintut.h"
 
+#include "gimp-print-ui.h"
 #include "print_gimp.h"
 
 #include <sys/types.h>
@@ -73,15 +74,12 @@ int		saveme = FALSE;		/* True if print should proceed */
 int		runme = FALSE;		/* True if print should proceed */
 static gint32          image_ID;	        /* image ID */
 
-const char *image_filename;
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
  */
 
 MAIN()
-
-static int print_finished = 0;
 
 /*
  * 'query()' - Respond to a plug-in query...
@@ -136,7 +134,7 @@ query (void)
 			  (BAD_CONST_CHAR) help,
 			  (BAD_CONST_CHAR) auth,
 			  (BAD_CONST_CHAR) copy,
-			  (BAD_CONST_CHAR) PLUG_IN_VERSION,
+			  (BAD_CONST_CHAR) VERSION " - " RELEASE_DATE,
 			  (BAD_CONST_CHAR) N_("<Image>/File/Print..."),
 			  (BAD_CONST_CHAR) types,
 			  GIMP_PLUGIN,
@@ -156,17 +154,18 @@ usr1_handler (int signal)
   usr1_interrupt = 1;
 }
 
-void
+static void
 gimp_writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
   fwrite(buf, 1, bytes, prn);
 }
 
-guchar *
-get_thumbnail_data(gint *width, gint *height, gint *bpp)
+static guchar *
+get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
+			    gint *bpp, gint page)
 {
-  return gimp_image_get_thumbnail_data(image_ID, width, height, bpp);
+  return gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
 }
 
 /*
@@ -198,6 +197,7 @@ run (char   *name,		/* I - Name of print program. */
 		pipefd[2];	/* Fds of the pipe connecting all the above */
   int		dummy;
   gdouble xres, yres;
+  const char *image_filename;
 #ifdef DEBUG_STARTUP
   while (SDEBUG)
     ;
@@ -245,6 +245,7 @@ run (char   *name,		/* I - Name of print program. */
   image_filename = gimp_image_get_filename (image_ID);
   if (strchr(image_filename, '/'))
     image_filename = strrchr(image_filename, '/') + 1;
+  set_image_filename(image_filename);
 
   /*  eventually export the image */
   switch (run_mode)
@@ -515,7 +516,6 @@ run (char   *name,		/* I - Name of print program. */
 	  }
 	  else
 	    fclose (prn);
-	  print_finished = 1;
 	}
       else
 	values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
@@ -546,14 +546,6 @@ run (char   *name,		/* I - Name of print program. */
  * 'do_print_dialog()' - Pop up the print dialog...
  */
 
-void
-call_printrc_save(void)
-{
-  char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
-  printrc_save(filename);
-  g_free(filename);
-}
-
 static gint
 do_print_dialog (gchar *proc_name)
 {
@@ -562,11 +554,17 @@ do_print_dialog (gchar *proc_name)
   * Generate the filename for the current user...
   */
   char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
+  set_printrc_file(filename);
+  g_free(filename);
+  set_errfunc(gimp_writefunc);
+  set_errdata(stderr);
+  set_thumbnail_func(get_thumbnail_data_function);
+  set_thumbnail_data((void *) image_ID);
 
   /*
    * Get printrc options...
    */
-  printrc_load (filename);
+  printrc_load ();
 
   /*
    * Print dialog window...
@@ -580,7 +578,7 @@ do_print_dialog (gchar *proc_name)
    * Set printrc options...
    */
   if (saveme)
-    printrc_save (filename);
+    printrc_save ();
   g_free (filename);
 
   /*

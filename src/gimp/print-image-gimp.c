@@ -431,7 +431,7 @@ Image_progress_conclude(stp_image_t *image)
 static const char *
 Image_get_appname(stp_image_t *image)
 {
-  static char pluginname[] = PLUG_IN_NAME " plug-in V" PLUG_IN_VERSION
+  static char pluginname[] = "Print plug-in V" VERSION " - " RELEASE_DATE
     " for GIMP";
   return pluginname;
 }
