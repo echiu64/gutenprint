@@ -41,7 +41,7 @@ printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../../src/main
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+EXTRA_DIST = foomatic-printermap foomatic-templates/*.xml
 CLEANFILES = $(noinst_PROGRAMS)
 MAINTAINERCLEANFILES = Makefile.in
 
