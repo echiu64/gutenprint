@@ -539,9 +539,9 @@ create_positioning_entry(GtkWidget *table, int hpos, int vpos,
 {
   GtkWidget *entry = gtk_entry_new();
   gtk_widget_set_usize(entry, 60, 0);
-  gimp_table_attach_aligned(GTK_TABLE(table), hpos, vpos, _(text),
+  gimp_table_attach_aligned(GTK_TABLE(table), hpos, vpos, text,
 			    1.0, 0.5, entry, 1, TRUE);
-  gimp_help_set_help_data(entry, _(help), NULL);
+  gimp_help_set_help_data(entry, help, NULL);
   gtk_signal_connect(GTK_OBJECT(entry), "activate",
 		     GTK_SIGNAL_FUNC(position_callback), NULL);
   return entry;
@@ -553,7 +553,7 @@ create_positioning_button(GtkWidget *box, const char *text, const char *help)
   GtkWidget *button = gtk_button_new_with_label(_(text));
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
   gtk_widget_show(button);
-  gimp_help_set_help_data(button, _(help), NULL);
+  gimp_help_set_help_data(button, help, NULL);
   gtk_signal_connect(GTK_OBJECT(button), "clicked",
 		     GTK_SIGNAL_FUNC(position_callback), NULL);
   return button;
@@ -614,22 +614,22 @@ create_positioning_frame (void)
    */
 
   left_entry = create_positioning_entry
-    (table, 0, 2, N_("Left:"),
+    (table, 0, 2, _("Left:"),
      _("Distance from the left of the paper to the image"));
   top_entry = create_positioning_entry
-    (table, 2, 2, N_("Top:"),
+    (table, 2, 2, _("Top:"),
      _("Distance from the top of the paper to the image"));
   right_entry = create_positioning_entry
-    (table, 0, 3, N_("Right:"),
+    (table, 0, 3, _("Right:"),
      _("Distance from the left of the paper to the right of the image"));
   right_border_entry = create_positioning_entry
-    (table, 2, 3, N_("Right Border:"),
+    (table, 2, 3, _("Right Border:"),
      _("Distance from the right of the paper to the image"));
   bottom_entry = create_positioning_entry
-    (table, 0, 4, N_("Bottom:"),
+    (table, 0, 4, _("Bottom:"),
      _("Distance from the top of the paper to bottom of the image"));
   bottom_border_entry = create_positioning_entry
-    (table, 2, 4, N_("Bottom Border:"),
+    (table, 2, 4, _("Bottom Border:"),
      _("Distance from the bottom of the paper to the image"));
 
   /*
@@ -642,14 +642,14 @@ create_positioning_frame (void)
                              box, 3, FALSE);
 
   recenter_vertical_button =
-    create_positioning_button(box, N_("Vertically"),
-			      N_("Center the image vertically on the paper"));
+    create_positioning_button(box, _("Vertically"),
+			      _("Center the image vertically on the paper"));
   recenter_button =
-    create_positioning_button(box, N_("Both"),
-			      N_("Center the image on the paper"));
+    create_positioning_button(box, _("Both"),
+			      _("Center the image on the paper"));
   recenter_horizontal_button =
-    create_positioning_button(box, N_("Horizontally"),
-			      N_("Center the image horizontally on the paper"));
+    create_positioning_button(box, _("Horizontally"),
+			      _("Center the image horizontally on the paper"));
 }
 
 static void
@@ -1161,31 +1161,10 @@ create_scaling_frame (void)
   gtk_box_pack_start (GTK_BOX (box), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
-  width_entry = gtk_entry_new ();
-  gtk_widget_set_usize (width_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
-                             _("Width:"), 1.0, 0.5,
-                             width_entry, 1, TRUE);
-
-  gimp_help_set_help_data (width_entry,
-                           _("Set the width of the print"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (width_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
-
-  height_entry = gtk_entry_new ();
-  gtk_widget_set_usize (height_entry, 60, 0);
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
-                             _("Height:"), 1.0, 0.5,
-                             height_entry, 1, TRUE);
-
-  gimp_help_set_help_data (height_entry,
-                           _("Set the height of the print"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (height_entry), "activate",
-                      GTK_SIGNAL_FUNC (position_callback),
-                      NULL);
+  width_entry = create_positioning_entry
+    (table, 0, 0, _("Width:"), _("Set the width of the print"));
+  height_entry = create_positioning_entry
+    (table, 0, 1, _("Height:"), _("Set the height of the print"));
 
   /*
    * The units toggles
