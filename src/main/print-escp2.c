@@ -3734,8 +3734,8 @@ escp2_set_form_factor(const escp2_init_t *init)
 
       if (escp2_has_cap(init->model, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES,
 			init->v))
-	/* Make the page 2/10" wider (probably ignored by the printer) */
-	page_width += 144 * 720 / init->xdpi;
+	/* Make the page 2/10" wider (apparently ignored by the printer) */
+	page_width += 144 * init->xdpi / 720;
 
       stp_zprintf(init->v, "\033(S\010%c%c%c%c%c%c%c%c%c", 0,
 		  ((page_width >> 0) & 0xff), ((page_width >> 8) & 0xff),
