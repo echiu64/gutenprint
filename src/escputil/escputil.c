@@ -850,21 +850,10 @@ printer_error(void)
   exit(1);
 }
 
-/*
- * This is the thorny one.
- */
-void
-do_align(void)
+static stp_printer_t *
+get_printer(void)
 {
-  char *inbuf;
-  long answer;
-  char *endptr;
-  int passes = 0;
-  int choices = 0;
-  int curpass;
-  int notfound = 1;
   stp_printer_t *printer = &printer_list[0];
-  const char *printer_name = NULL;
   if (!printer_model)
     {
       char buf[1024];
@@ -874,8 +863,9 @@ do_align(void)
       char *spos = NULL;
       if (!raw_device)
 	{
-	  printf(_("Printer alignment must be done with a raw device or else\n"));
-	  printf(_("the -m option must be used to specify a printer.\n"));
+	  fprintf(stderr,
+		  _("Printer alignment must be done with a raw device or else\n"
+		   "the -m option must be used to specify a printer.\n"));
 	  do_help(1);
 	}
       printf(_("Attempting to detect printer model..."));
@@ -883,7 +873,7 @@ do_align(void)
       fd = open(raw_device, O_RDWR, 0666);
       if (fd == -1)
 	{
-	  fprintf(stderr, _("\nCannot open %s read/write: %s\n"), raw_device,
+	  printf(_("\nCannot open %s read/write: %s\n"), raw_device,
 		  strerror(errno));
 	  exit(1);
 	}
@@ -891,15 +881,13 @@ do_align(void)
       sprintf(printer_cmd, "\033\001@EJL ID\r\n");
       if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
 	{
-	  fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device,
-		  strerror(errno));
+	  printf(_("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
 	  exit(1);
 	}
       status = read_from_printer(fd, buf, 1024);
       if (status < 0)
 	{
-	  fprintf(stderr, _("\nCannot read from %s: %s\n"), raw_device,
-		  strerror(errno));
+	  printf(_("\nCannot read from %s: %s\n"), raw_device,strerror(errno));
 	  exit(1);
 	}
       (void) close(fd);
@@ -912,7 +900,8 @@ do_align(void)
 	spos = strchr(pos, (int) ';');
       if (!pos)
 	{
-	  fprintf(stderr, _("\nCannot detect printer type.  Please use -m to specify your printer model.\n"));
+	  printf(_("\nCannot detect printer type.\n"
+		   "Please use -m to specify your printer model.\n"));
 	  do_help(1);
 	}
       if (spos)
@@ -920,176 +909,199 @@ do_align(void)
       printer_model = pos + 1;
       printf("%s\n\n", printer_model);
     }
-  while (printer->short_name && notfound)
+  while (printer->short_name)
     {
       if (!strcasecmp(printer_model, printer->short_name) ||
 	  !strcasecmp(printer_model, printer->long_name))
-	{
-	  passes = printer->passes;
-	  choices = printer->choices;
-	  printer_name = printer->long_name;
-	  notfound = 0;
-	}
+	return printer;
       else
 	printer++;
     }
-  if (notfound)
-    {
-      printf(_("Printer model %s is not known.\n"), printer_model);
-      do_help(1);
-    }
+  printf(_("Printer model %s is not known.\n"), printer_model);
+  do_help(1);
+  return 0;
+}
 
- start:
-  do_align_help(passes, choices);
-  printf(_("This procedure assumes that your printer is an Epson %s.\n"),
-	 _(printer_name));
-  printf(_("If this is not your printer model, please type control-C now and\n"));
-  printf(_("choose your actual printer model.\n\n"));
-  printf(_("Please place a sheet of paper in your printer to begin the head\n"));
-  printf(_("alignment procedure.\n"));
-  inbuf = do_get_input(_("Press enter to continue > "));
-  initialize_print_cmd();
-  for (curpass = 1; curpass <= passes; curpass ++)
+static int
+do_final_alignment(void)
+{
+  while (1)
     {
-    top:
-      add_newlines(7 * (curpass - 1));
-      do_remote_cmd("DT", 3, 0, curpass - 1, 0);
-      if (do_print_cmd())
-	printer_error();
-    reread:
-      printf(_("Please inspect the print, and choose the best pair of lines\n"));
-      if (curpass == passes)
-	printf(_("in pattern #%d, and then insert a fresh page in the input tray.\n"),
-	       curpass);
-      else
-	printf(_("in pattern #%d, and then reinsert the page in the input tray.\n"),
-	       curpass);
-      printf(_("Type a pair number, '?' for help, or 'r' to retry this pattern.\n"));
+      char *inbuf;
+      printf(_("Please inspect the final output very carefully to ensure that your\n"
+	       "printer is in proper alignment. You may now:\n"
+	       "  (s)ave the results in the printer,\n"
+	       "  (q)uit without saving the results, or\n"
+	       "  (r)epeat the entire process from the beginning.\n"
+	       "You will then be asked to confirm your choice.\n"
+	       "What do you want to do (s, q, r)?\n"));
       fflush(stdout);
       inbuf = do_get_input(_("> "));
       switch (inbuf[0])
 	{
+	case 'q':
+	case 'Q':
+	  printf(_("Please confirm by typing 'q' again that you wish to quit without saving:\n"));
+	  fflush(stdout);
+	  inbuf = do_get_input (_("> "));
+	  if (inbuf[0] == 'q' || inbuf[0] == 'Q')
+	    {
+	      printf(_("OK, your printer is aligned, but the alignment has not been saved.\n"
+		       "If you wish to save the alignment, you must repeat this process.\n"));
+	      return 1;
+	    }
+	  break;
 	case 'r':
 	case 'R':
-	  printf(_("Please insert a fresh sheet of paper.\n"));
+	  printf(_("Please confirm by typing 'r' again that you wish to repeat the\n"));
+	  printf(_("alignment process:\n"));
 	  fflush(stdout);
-	  initialize_print_cmd();
-	  (void) do_get_input(_("Press enter to continue > "));
-	  /* Ick. Surely there's a cleaner way? */
-	  goto top;
-	case 'h':
-	case '?':
-	  do_align_help(passes, choices);
-	  fflush(stdout);
-	case '\n':
-	case '\000':
-	  goto reread;
-	default:
+	  inbuf = do_get_input(_("> "));
+	  if (inbuf[0] == 'r' || inbuf[0] == 'R')
+	    {
+	      printf(_("Repeating the alignment process.\n"));
+	      return 0;
+	    }
 	  break;
-	}
-      answer = strtol(inbuf, &endptr, 10);
-      if (errno == ERANGE)
-      {
-	printf(_("Number out of range!\n"));
-	goto reread;
-      }
-      if (endptr == inbuf)
-	{
-	  printf(_("I cannot understand what you typed!\n"));
-	  fflush(stdout);
-	  goto reread;
-	}
-      if (answer < 1 || answer > choices)
-	{
-	  printf(_("The best pair of lines should be numbered between 1 and %d.\n"),
-		 choices);
-	  fflush(stdout);
-	  goto reread;
-	}
-      if (curpass == passes)
-	{
-	  printf(_("Aligning phase %d, and performing final test.\n"),curpass);
-	  printf(_("Please insert a fresh sheet of paper.\n"));
-	  (void) do_get_input(_("Press enter to continue > "));
-	}
-      else
-	printf(_("Aligning phase %d, and starting phase %d.\n"), curpass,
-	       curpass + 1);
-      fflush(stdout);
-      initialize_print_cmd();
-      do_remote_cmd("DA", 4, 0, curpass - 1, 0, answer);
-    }
-  for (curpass = 0; curpass < passes; curpass++)
-    do_remote_cmd("DT", 3, 0, curpass, 0);
-  if (do_print_cmd())
-    printer_error();
- read_final:
-  printf(_("Please inspect the final output very carefully to ensure that your\n"));
-  printf(_("printer is in proper alignment. You may now:\n"));
-  printf(_("  (s)ave the results in the printer,\n"));
-  printf(_("  (q)uit without saving the results, or\n"));
-  printf(_("  (r)epeat the entire process from the beginning.\n"));
-  printf(_("You will then be asked to confirm your choice.\n"));
-  printf(_("What do you want to do (s, q, r)?\n"));
-  fflush(stdout);
-  inbuf = do_get_input(_("> "));
-  switch (inbuf[0])
-    {
-    case 'q':
-    case 'Q':
-      printf(_("Please confirm by typing 'q' again that you wish to quit without saving:\n"));
-      fflush(stdout);
-      inbuf = do_get_input (_("> "));
-      if (inbuf[0] == 'q' || inbuf[0] == 'Q')
-	{
-	  printf(_("OK, your printer is aligned, but the alignment has not been saved.\n"));
-	  printf(_("If you wish to save the alignment, you must repeat this process.\n"));
-	  exit(0);
-	}
-      break;
-    case 'r':
-    case 'R':
-      printf(_("Please confirm by typing 'r' again that you wish to repeat the\n"));
-      printf(_("alignment process:\n"));
-      fflush(stdout);
-      inbuf = do_get_input(_("> "));
-      if (inbuf[0] == 'r' || inbuf[0] == 'R')
-	{
-	  printf(_("Repeating the alignment process.\n"));
-	  goto start;
-	}
-      break;
-    case 's':
-    case 'S':
-      printf(_("This will permanently alter the configuration of your printer.\n"));
-      printf(_("WARNING: this procedure has not been approved by Seiko Epson, and\n"));
-      printf(_("it may damage your printer. Proceed?\n"));
-      printf(_("Please confirm by typing 's' again that you wish to save the settings\n"));
-      printf(_("to your printer:\n"));
+	case 's':
+	case 'S':
+	  printf(_("This will permanently alter the configuration of your printer.\n"
+		   "WARNING: this procedure has not been approved by Seiko Epson, and\n"
+		   "it may damage your printer. Proceed?\n"
+		   "Please confirm by typing 's' again that you wish to save the settings\n"
+		   "to your printer:\n"));
 
-      fflush(stdout);
-      inbuf = do_get_input(_("> "));
-      if (inbuf[0] == 's' || inbuf[0] == 'S')
-	{
-	  printf(_("Please insert your alignment test page in the printer once more\n"));
-	  printf(_("for the final save of your alignment settings.  When the printer\n"));
-	  printf(_("feeds the page through, your settings have been saved.\n"));
 	  fflush(stdout);
-	  initialize_print_cmd();
-	  add_newlines(2);
-	  do_remote_cmd("SV", 0);
-	  add_newlines(2);
+	  inbuf = do_get_input(_("> "));
+	  if (inbuf[0] == 's' || inbuf[0] == 'S')
+	    {
+	      printf(_("Please insert your alignment test page in the printer once more\n"
+		       "for the final save of your alignment settings.  When the printer\n"
+		       "feeds the page through, your settings have been saved.\n"));
+	      fflush(stdout);
+	      initialize_print_cmd();
+	      add_newlines(2);
+	      do_remote_cmd("SV", 0);
+	      add_newlines(2);
+	      if (do_print_cmd())
+		printer_error();
+	      return 1;
+	    }
+	  break;
+	default:
+	  printf(_("Unrecognized command.\n"));
+	  continue;
+	}
+      printf(_("Final command was not confirmed.\n"));
+    }
+}
+
+const char *printer_msg =
+N_("This procedure assumes that your printer is an Epson %s.\n"
+   "If this is not your printer model, please type control-C now and\n"
+   "choose your actual printer model.\n\n"
+   "Please place a sheet of paper in your printer to begin the head\n"
+   "alignment procedure.\n");
+
+/*
+ * This is the thorny one.
+ */
+void
+do_align(void)
+{
+  char *inbuf;
+  long answer;
+  char *endptr;
+  int curpass;
+  const stp_printer_t *printer = get_printer();
+  int passes = printer->passes;
+  int choices = printer->choices;
+  const char *printer_name = printer->long_name;
+
+  do
+    {
+      do_align_help(passes, choices);
+      printf(_(printer_msg), _(printer_name));
+      inbuf = do_get_input(_("Press enter to continue > "));
+      initialize_print_cmd();
+      for (curpass = 1; curpass <= passes; curpass ++)
+	{
+	top:
+	  add_newlines(7 * (curpass - 1));
+	  do_remote_cmd("DT", 3, 0, curpass - 1, 0);
 	  if (do_print_cmd())
 	    printer_error();
-	  exit(0);
+	reread:
+	  if (curpass == passes)
+	    printf(_("Please inspect the print, and choose the best pair of lines\n"
+		     "in pattern #%d, and then insert a fresh page in the input tray.\n"
+		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"), 
+		   curpass);
+	  else
+	    printf(_("Please inspect the print, and choose the best pair of lines\n"
+		     "in pattern #%d, and then reinsert the page in the input tray.\n"
+		     "Type a pair number, '?' for help, or 'r' to retry this pattern.\n"), 
+		   curpass);
+	  fflush(stdout);
+	  inbuf = do_get_input(_("> "));
+	  switch (inbuf[0])
+	    {
+	    case 'r':
+	    case 'R':
+	      printf(_("Please insert a fresh sheet of paper.\n"));
+	      fflush(stdout);
+	      initialize_print_cmd();
+	      (void) do_get_input(_("Press enter to continue > "));
+	      /* Ick. Surely there's a cleaner way? */
+	      goto top;
+	    case 'h':
+	    case '?':
+	      do_align_help(passes, choices);
+	      fflush(stdout);
+	    case '\n':
+	    case '\000':
+	      goto reread;
+	    default:
+	      break;
+	    }
+	  answer = strtol(inbuf, &endptr, 10);
+	  if (errno == ERANGE)
+	    {
+	      printf(_("Number out of range!\n"));
+	      goto reread;
+	    }
+	  if (endptr == inbuf)
+	    {
+	      printf(_("I cannot understand what you typed!\n"));
+	      fflush(stdout);
+	      goto reread;
+	    }
+	  if (answer < 1 || answer > choices)
+	    {
+	      printf(_("The best pair of lines should be numbered between 1 and %d.\n"),
+		     choices);
+	      fflush(stdout);
+	      goto reread;
+	    }
+	  if (curpass == passes)
+	    {
+	      printf(_("Aligning phase %d, and performing final test.\n"
+		       "Please insert a fresh sheet of paper.\n"), curpass);
+	      (void) do_get_input(_("Press enter to continue > "));
+	    }
+	  else
+	    printf(_("Aligning phase %d, and starting phase %d.\n"), curpass,
+		   curpass + 1);
+	  fflush(stdout);
+	  initialize_print_cmd();
+	  do_remote_cmd("DA", 4, 0, curpass - 1, 0, answer);
 	}
-      break;
-    default:
-      printf(_("Unrecognized command.\n"));
-      goto read_final;
-    }
-  printf(_("Final command was not confirmed.\n"));
-  goto read_final;
+      for (curpass = 0; curpass < passes; curpass++)
+	do_remote_cmd("DT", 3, 0, curpass, 0);
+      if (do_print_cmd())
+	printer_error();
+    } while (!do_final_alignment());
+  exit(0);
 }
 
 const char *color_align_help = N_("\
@@ -1135,85 +1147,11 @@ do_align_color(void)
   char *inbuf;
   long answer;
   char *endptr;
-  int passes = 0;
-  int choices = 0;
   int curpass;
-  int notfound = 1;
-  stp_printer_t *printer = &printer_list[0];
-  const char *printer_name = NULL;
-  if (!printer_model)
-    {
-      char buf[1024];
-      int fd;
-      int status;
-      char *pos = NULL;
-      char *spos = NULL;
-      if (!raw_device)
-	{
-	  printf(_("Printer alignment must be done with a raw device or else\n"));
-	  printf(_("the -m option must be used to specify a printer.\n"));
-	  do_help(1);
-	}
-      printf(_("Attempting to detect printer model..."));
-      fflush(stdout);
-      fd = open(raw_device, O_RDWR, 0666);
-      if (fd == -1)
-	{
-	  fprintf(stderr, _("\nCannot open %s read/write: %s\n"), raw_device,
-		  strerror(errno));
-	  exit(1);
-	}
-      bufpos = 0;
-      sprintf(printer_cmd, "\033\001@EJL ID\r\n");
-      if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
-	{
-	  fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device,
-		  strerror(errno));
-	  exit(1);
-	}
-      status = read_from_printer(fd, buf, 1024);
-      if (status < 0)
-	{
-	  fprintf(stderr, _("\nCannot read from %s: %s\n"), raw_device,
-		  strerror(errno));
-	  exit(1);
-	}
-      (void) close(fd);
-      pos = strchr(buf, (int) ';');
-      if (pos)
-	pos = strchr(pos + 1, (int) ';');
-      if (pos)
-	pos = strchr(pos, (int) ':');
-      if (pos)
-	spos = strchr(pos, (int) ';');
-      if (!pos)
-	{
-	  fprintf(stderr, _("\nCannot detect printer type.  Please use -m to specify your printer model.\n"));
-	  do_help(1);
-	}
-      if (spos)
-	*spos = '\000';
-      printer_model = pos + 1;
-      printf("%s\n\n", printer_model);
-    }
-  while (printer->short_name && notfound)
-    {
-      if (!strcasecmp(printer_model, printer->short_name) ||
-	  !strcasecmp(printer_model, _(printer->long_name)))
-	{
-	  passes = printer->color_passes;
-	  choices = printer->color_choices;
-	  printer_name = printer->long_name;
-	  notfound = 0;
-	}
-      else
-	printer++;
-    }
-  if (notfound)
-    {
-      printf(_("Printer model %s is not known.\n"), printer_model);
-      do_help(1);
-    }
+  const stp_printer_t *printer = get_printer();
+  int passes = printer->color_passes;
+  int choices = printer->color_choices;
+  const char *printer_name = printer->long_name;
   if (passes == 0)
     {
       printf(_("Printer %s does not require color head alignment.\n"),
@@ -1221,142 +1159,72 @@ do_align_color(void)
       exit(0);
     }
 
- start:
-  do_align_color_help(passes, choices);
-  printf(_("This procedure assumes that your printer is an Epson %s.\n"),
-	_(printer_name));
-  printf(_("If this is not your printer model, please type control-C now and\n"));
-  printf(_("choose your actual printer model.\n"));
-  printf(_("\n"));
-  printf(_("Please place a fresh sheet of paper in your printer to begin the head\n"));
-  printf(_("alignment procedure.\n"));
-  inbuf = do_get_input(_("Press enter to continue > "));
-  for (curpass = 1; curpass <= passes; curpass ++)
+  do
     {
-      initialize_print_cmd();
-      do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
-      if (do_print_cmd())
-	printer_error();
-      if (curpass < passes)
-	{
-	  printf(_("Please re-insert the same alignment sheet in the printer when it is\n"));
-	  printf(_("finished printing.\n"));
-	  (void) do_get_input(_("Press enter to continue > "));
-	}
-    }
- reread:
-  printf(_("Inspect the alignment sheet, and determine which pattern is the smoothest.\n"));
-  printf(_("This pattern will appear to have the least ``grain''.\n"));
-  printf(_("If you cannot find a smooth pattern, please select the number for the\n"));
-  printf(_("best pattern, and repeat the procedure.\n"));
-  printf(_("Type a pattern number, or '?' for help.\n"));
-  fflush(stdout);
-  inbuf = do_get_input(_("> "));
-  if (!inbuf)
-    exit(1);
-  switch (inbuf[0])
-    {
-    case 'h':
-    case '?':
       do_align_color_help(passes, choices);
-      fflush(stdout);
-      /* FALLTHROUGH */
-    case '\n':
-    case '\000':
-      goto reread;
-    default:
-      break;
-    }
-  answer = strtol(inbuf, &endptr, 10);
-  if (errno == ERANGE)
-    {
-      printf(_("Number out of range!\n"));
-      goto reread;
-    }
-  if (endptr == inbuf)
-    {
-      printf(_("I cannot understand what you typed!\n"));
-      fflush(stdout);
-      goto reread;
-    }
-  if (answer < 1 || answer > choices)
-    {
-      printf(_("The best pattern should be numbered between 1 and %d.\n"),
-	     choices);
-      fflush(stdout);
-      goto reread;
-    }
-  initialize_print_cmd();
-  do_remote_cmd("DA", 6, 0, 0, 0, answer, 9, 0);
-  if (do_print_cmd())
-    printer_error();
- read_final:
-  printf(_("Please inspect the final output very carefully to ensure that your\n"));
-  printf(_("printer is in proper alignment. You may now:\n"));
-  printf(_("  (s)ave the results in the printer,\n"));
-  printf(_("  (q)uit without saving the results, or\n"));
-  printf(_("  (r)epeat the entire process from the beginning.\n"));
-  printf(_("You will then be asked to confirm your choice.\n"));
-  printf(_("What do you want to do (s, q, r)?\n"));
-  fflush(stdout);
-  inbuf = do_get_input(_("> "));
-  switch (inbuf[0])
-    {
-    case 'q':
-    case 'Q':
-      printf(_("Please confirm by typing 'q' again that you wish to quit without saving:\n"));
-      fflush(stdout);
-      inbuf = do_get_input (_("> "));
-      if (inbuf[0] == 'q' || inbuf[0] == 'Q')
+      printf(_(printer_msg), _(printer_name));
+      inbuf = do_get_input(_("Press enter to continue > "));
+      for (curpass = 1; curpass <= passes; curpass ++)
 	{
-	  printf(_("OK, your printer is aligned, but the alignment has not been saved.\n"));
-	  printf(_("If you wish to save the alignment, you must repeat this process.\n"));
-	  exit(0);
-	}
-      break;
-    case 'r':
-    case 'R':
-      printf(_("Please confirm by typing 'r' again that you wish to repeat the\n"));
-      printf(_("alignment process:\n"));
-      fflush(stdout);
-      inbuf = do_get_input(_("> "));
-      if (inbuf[0] == 'r' || inbuf[0] == 'R')
-	{
-	  printf(_("Repeating the alignment process.\n"));
-	  goto start;
-	}
-      break;
-    case 's':
-    case 'S':
-      printf(_("This will permanently alter the configuration of your printer.\n"));
-      printf(_("WARNING: this procedure has not been approved by Seiko Epson, and\n"));
-      printf(_("it may damage your printer. Proceed?\n"));
-      printf(_("Please confirm by typing 's' again that you wish to save the settings\n"));
-      printf(_("to your printer:\n"));
-
-      fflush(stdout);
-      inbuf = do_get_input(_("> "));
-      if (inbuf[0] == 's' || inbuf[0] == 'S')
-	{
-	  printf(_("Please insert your alignment test page in the printer once more\n"));
-	  printf(_("for the final save of your alignment settings.  When the printer\n"));
-	  printf(_("feeds the page through, your settings have been saved.\n"));
-	  fflush(stdout);
 	  initialize_print_cmd();
-	  add_newlines(2);
-	  do_remote_cmd("SV", 0);
-	  add_newlines(2);
+	  do_remote_cmd("DU", 6, 0, curpass, 0, 9, 0, curpass - 1);
 	  if (do_print_cmd())
 	    printer_error();
-	  exit(0);
+	  if (curpass < passes)
+	    {
+	      printf(_("Please re-insert the same alignment sheet in the printer when it is\n"
+		       "finished printing.\n"));
+	      (void) do_get_input(_("Press enter to continue > "));
+	    }
 	}
-      break;
-    default:
-      printf(_("Unrecognized command.\n"));
-      goto read_final;
-    }
-  printf(_("Final command was not confirmed.\n"));
-  goto read_final;
+    reread:
+      printf(_("Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
+	       "This pattern will appear to have the least ``grain''.\n"
+	       "If you cannot find a smooth pattern, please select the number for the\n"
+	       "best pattern, and repeat the procedure.\n"
+	       "Type a pattern number, or '?' for help.\n"));
+      fflush(stdout);
+      inbuf = do_get_input(_("> "));
+      if (!inbuf)
+	exit(1);
+      switch (inbuf[0])
+	{
+	case 'h':
+	case '?':
+	  do_align_color_help(passes, choices);
+	  fflush(stdout);
+	  /* FALLTHROUGH */
+	case '\n':
+	case '\000':
+	  goto reread;
+	default:
+	  break;
+	}
+      answer = strtol(inbuf, &endptr, 10);
+      if (errno == ERANGE)
+	{
+	  printf(_("Number out of range!\n"));
+	  goto reread;
+	}
+      if (endptr == inbuf)
+	{
+	  printf(_("I cannot understand what you typed!\n"));
+	  fflush(stdout);
+	  goto reread;
+	}
+      if (answer < 1 || answer > choices)
+	{
+	  printf(_("The best pattern should be numbered between 1 and %d.\n"),
+		 choices);
+	  fflush(stdout);
+	  goto reread;
+	}
+      initialize_print_cmd();
+      do_remote_cmd("DA", 6, 0, 0, 0, answer, 9, 0);
+      if (do_print_cmd())
+	printer_error();
+    } while (!do_final_alignment());
+  exit (0);
 }
 
 char *
