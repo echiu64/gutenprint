@@ -71,6 +71,16 @@ stp_known_printers(void)
   return stp_list_get_length(printer_list);
 }
 
+static void
+check_printer(const stp_internal_printer_t *p)
+{
+  if (p->cookie != COOKIE_PRINTER)
+    {
+      stp_erprintf("Bad stp_printer_t!\n");
+      stp_abort();
+    }
+}
+
 const stp_printer_t
 stp_get_printer_by_index(int idx)
 {
@@ -86,6 +96,7 @@ stp_printer_freefunc(stp_list_item_t *item)
 {
   stp_internal_printer_t *printer =
     (stp_internal_printer_t *) stp_list_item_get_data(item);
+  check_printer(printer);
   stp_free(printer->long_name);
   stp_free(printer->family);
   stp_free(printer);
@@ -109,6 +120,7 @@ const char *
 stp_printer_get_long_name(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  check_printer(val);
   return val->long_name;
 }
 
@@ -122,6 +134,7 @@ const char *
 stp_printer_get_family(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  check_printer(val);
   return val->family;
 }
 
@@ -129,6 +142,7 @@ int
 stp_printer_get_model(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  check_printer(val);
   return val->model;
 }
 
@@ -136,6 +150,7 @@ const stp_printfuncs_t *
 stp_printer_get_printfuncs(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  check_printer(val);
   return val->printfuncs;
 }
 
@@ -143,6 +158,7 @@ const stp_vars_t
 stp_printer_get_printvars(const stp_printer_t p)
 {
   const stp_internal_printer_t *val = (const stp_internal_printer_t *) p;
+  check_printer(val);
   return (stp_vars_t) val->printvars;
 }
 
@@ -594,6 +610,7 @@ stp_family_register(stp_list_t *family)
 	{
 	  printer = (stp_internal_printer_t *)
 	    stp_list_item_get_data(printer_item);
+	  check_printer(printer);
 	  if (!stp_list_get_item_by_name(printer_list,
 					 stp_get_driver(printer->printvars)))
 	    stp_list_item_create(printer_list,
@@ -621,6 +638,7 @@ stp_family_unregister(stp_list_t *family)
 	{
 	  printer = (stp_internal_printer_t *)
 	    stp_list_item_get_data(printer_item);
+	  check_printer(printer);
 	  old_printer_item =
 	    stp_list_get_item_by_name(printer_list,
 				      stp_get_driver(printer->printvars));

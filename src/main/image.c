@@ -25,6 +25,7 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
+#include "gimp-print-internal.h"
 
 void
 stp_image_init(stp_image_t *image)

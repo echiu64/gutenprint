@@ -1152,13 +1152,16 @@ stpui_print(const stpui_plist_t *printer, stp_image_t *image)
 	case ORIENT_PORTRAIT:
 	  break;
 	case ORIENT_LANDSCAPE:
-	  stp_image_rotate_cw(image);
+	  if (image->rotate_cw)
+	    (image->rotate_cw)(image);
 	  break;
 	case ORIENT_UPSIDEDOWN:
-	  stp_image_rotate_180(image);
+	  if (image->rotate_180)
+	    (image->rotate_180)(image);
 	  break;
 	case ORIENT_SEASCAPE:
-	  stp_image_rotate_ccw(image);
+	  if (image->rotate_ccw)
+	    (image->rotate_ccw)(image);
 	  break;
 	}
 

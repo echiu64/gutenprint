@@ -10,6 +10,8 @@ gimpprint.pc
 gimpprint.pc.in
 libgimpprint.la
 papers-oldlist.h
+module.lo
+path.lo
 print-canon.lo
 print-color.lo
 print-dither-matrices.lo
@@ -32,3 +34,4 @@ printers-oldlist.h
 printers.lo
 string-list.lo
 image.lo
+xml.lo

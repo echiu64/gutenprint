@@ -37,11 +37,7 @@
 extern "C" {
 #endif
 
-
-#define COOKIE_OPTION     0x3ab27f93
-#define COOKIE_PARAM_LIST 0x96cf0387
 #define COOKIE_PRINTER    0x0722922c
-
 
 #include "color.h"
 #include "dither.h"
@@ -50,6 +46,7 @@ extern "C" {
 #include "printers.h"
 #include "util.h"
 #include "weave.h"
+#include "image.h"
 
 
 #ifdef __cplusplus
