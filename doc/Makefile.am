@@ -41,6 +41,7 @@ all-local:
 endif
 
 # Rerun doxygen whenever autogen is run
+gutenprint: gutenprint-stamp
 gutenprint-stamp: gutenprint.dox.in $(top_srcdir)/configure
 	$(RM) -rf gutenprint/html
 	$(DOXYGEN) gutenprint.dox
