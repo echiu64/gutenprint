@@ -1449,92 +1449,36 @@ stp_minimum_settings()
   return (stp_vars_t) &min_vars;
 }
 
-static int
-stp_vasprintf (char **result, const char *format, va_list args)
-{
-  const char *p = format;
-  /* Add one to make sure that it is never zero, which might cause malloc
-     to return NULL.  */
-  int total_width = strlen (format) + 1;
-  va_list ap;
-
-  memcpy (&ap, &args, sizeof (va_list));
-
-  while (*p != '\0')
-    {
-      if (*p++ == '%')
-	{
-	  while (strchr ("-+ #0", *p))
-	    ++p;
-	  if (*p == '*')
-	    {
-	      ++p;
-	      total_width += abs (va_arg (ap, int));
-	    }
-	  else
-	    total_width += strtoul (p, (char **) &p, 10);
-	  if (*p == '.')
-	    {
-	      ++p;
-	      if (*p == '*')
-		{
-		  ++p;
-		  total_width += abs (va_arg (ap, int));
-		}
-	      else
-		total_width += strtoul (p, (char **) &p, 10);
-	    }
-	  while (strchr ("hlL", *p))
-	    ++p;
-	  /* Should be big enough for any format specifier except %s.  */
-	  total_width += 30;
-	  switch (*p)
-	    {
-	    case 'd':
-	    case 'i':
-	    case 'o':
-	    case 'u':
-	    case 'x':
-	    case 'X':
-	    case 'c':
-	      (void) va_arg (ap, int);
-	      break;
-	    case 'f':
-	    case 'e':
-	    case 'E':
-	    case 'g':
-	    case 'G':
-	      (void) va_arg (ap, double);
-	      break;
-	    case 's':
-	      total_width += strlen (va_arg (ap, char *));
-	      break;
-	    case 'p':
-	    case 'n':
-	      (void) va_arg (ap, char *);
-	      break;
-	    }
-	}
-    }
-#ifdef TEST
-  global_total_width = total_width;
-#endif
-  *result = malloc (total_width);
-  if (*result != NULL)
-    return vsprintf (*result, format, args);
-  else
-    return 0;
+#define STP_VASPRINTF(result, bytes, format)				\
+{									\
+  int current_allocation = 64;						\
+  result = stp_malloc(current_allocation);				\
+  while (1)								\
+    {									\
+      va_list args;							\
+      va_start(args, format);						\
+      bytes = vsnprintf(result, current_allocation, format, args);	\
+      va_end(args);							\
+      if (bytes >= 0 && bytes < current_allocation)			\
+	break;								\
+      else								\
+	{								\
+	  free (result);						\
+	  if (bytes < 0)						\
+	    current_allocation *= 2;					\
+	  else								\
+	    current_allocation = bytes + 1;				\
+	  result = stp_malloc(current_allocation);			\
+	}								\
+    }									\
 }
 
 void
 stp_zprintf(const stp_vars_t v, const char *format, ...)
 {
-  va_list args;
-  int bytes;
   char *result;
-  va_start(args, format);
-  bytes = stp_vasprintf(&result, format, args);
-  va_end(args);
+  int bytes;
+  STP_VASPRINTF(result, bytes, format);
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), result, bytes);
   free(result);
 }
@@ -1561,14 +1505,11 @@ stp_puts(const char *s, const stp_vars_t v)
 void
 stp_eprintf(const stp_vars_t v, const char *format, ...)
 {
-  va_list args;
   int bytes;
-  char *result;
   if (stp_get_errfunc(v))
     {
-      va_start(args, format);
-      bytes = stp_vasprintf(&result, format, args);
-      va_end(args);
+      char *result;
+      STP_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
     }
@@ -1610,15 +1551,12 @@ init_stp_debug(void)
 void
 stp_dprintf(unsigned long level, const stp_vars_t v, const char *format, ...)
 {
-  va_list args;
   int bytes;
-  char *result;
   init_stp_debug();
   if ((level & stp_debug_level) && stp_get_errfunc(v))
     {
-      va_start(args, format);
-      bytes = stp_vasprintf(&result, format, args);
-      va_end(args);
+      char *result;
+      STP_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
       free(result);
     }
@@ -1628,17 +1566,11 @@ void
 stp_deprintf(unsigned long level, const char *format, ...)
 {
   va_list args;
-  int bytes;
-  char *result;
+  va_start(args, format);
   init_stp_debug();
   if (level & stp_debug_level)
-    {
-      va_start(args, format);
-      bytes = stp_vasprintf(&result, format, args);
-      va_end(args);
-      stp_erprintf("%s", result);
-      free(result);
-    }
+    vfprintf(stderr, format, args);
+  va_end(args);
 }
 
 void *

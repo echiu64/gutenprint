@@ -1608,7 +1608,6 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
                  int  *count)			/* O - Number of values */
 {
   int		i;
-  stp_param_t *p= 0;
   stp_param_t *valptrs= 0;
 
   const canon_cap_t * caps=
@@ -1725,15 +1724,14 @@ canon_parameters(const stp_printer_t printer,	/* I - Printer model */
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    *count = 3;
-    p = media_sources;
+    *count = sizeof(media_sources) / sizeof(media_sources[0]);
 
     valptrs = stp_zalloc(*count * sizeof(stp_param_t));
     for (i = 0; i < *count; i ++)
     {
       /* translate media_sources */
-      valptrs[i].name = c_strdup(p[i].name);
-      valptrs[i].text = c_strdup(_(p[i].text));
+      valptrs[i].name = c_strdup(media_sources[i].name);
+      valptrs[i].text = c_strdup(_(media_sources[i].text));
     }
   }
   else

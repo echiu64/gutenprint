@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-pre1, released May 11, 2002, is a prerelease in
+Gimp-Print 4.2.2-pre2, released June 5, 2002, is a prerelease in
 the Gimp-Print 4.2 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -21,6 +21,23 @@ or APFL GhostScript 7.04 or later.
 Please read the README file for full instructions on building and
 installing this package.
 
+
+Gimp-Print 4.2.2-pre2 contains the following major changes over
+Gimp-Print 4.2.2-pre1:
+
+  1) The IJS driver now handles very large images, such as those that
+     can be produced on professional large format Epson Stylus Pro
+     printers.
+
+  2) A German translation has been added.
+
+  3) An internal problem that caused crashes on some systems (in
+     stp_vasprintf) has been fixed.
+
+The following bugs have been fixed in 4.2.1:
+
+565091 IJS driver fails on very large images
+565092 Crash in stp_vasprintf on some systems
 
 Gimp-Print 4.2.2-pre1 contains the following major changes over
 Gimp-Print 4.2.1:

@@ -44,6 +44,7 @@ YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
 testpattern_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+testpattern_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o

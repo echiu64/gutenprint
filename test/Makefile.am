@@ -42,6 +42,7 @@ endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
 escp2_weavetest_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
 unprint_LDADD = $(LIBPRINTUT)
@@ -54,6 +55,7 @@ bjc_unprint_LDADD = $(LIBPRINTUT)
 
 testdither_SOURCES = testdither.c
 testdither_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
 	cd ../src/main ; \

@@ -153,6 +153,7 @@ bin_PROGRAMS = @IJS_BIN@
 EXTRA_PROGRAMS = ijsgimpprint
 
 ijsgimpprint_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
+ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
 	cd ../main ; \

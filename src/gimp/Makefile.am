@@ -50,6 +50,7 @@ print_SOURCES = \
 	gimp_main_window.c \
 	print_gimp.h
 print_LDADD = $(LIBPRINTUT) $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS)
+print_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 
 ## Rules
