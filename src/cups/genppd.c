@@ -714,7 +714,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*OpenUI *stpImageType/Image Type: PickOne\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *stpImageType\n");
-    gzputs(fp, "*DefaultstpImageType: Continuous\n");
+    gzputs(fp, "*DefaultstpImageType: LineArt\n");
 
     gzprintf(fp, "*stpImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
     gzprintf(fp, "*stpImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");

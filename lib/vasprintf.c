@@ -23,10 +23,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #include <stdio.h>
 #include <string.h>
 
-#if __STDC__
-# include <stdarg.h>
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
 #else
-# include <varargs.h>
+#include <stdarg.h>
 #endif
 
 #ifdef TEST

@@ -100,6 +100,13 @@ Gimp-Print 4.1.99a1 contains the following changes over 4.1.10:
 
 11) There is now texinfo and HTML documentation available.
 
+12) Initial support for changing ink cartridges on the Epson Stylus
+   Color 480/580 with escputil.  In addition to this, there is initial
+   support for aligning the color heads on these printers.  These are
+   not debugged, and there is no guarantee that either option works.
+
+13) Initial support for the Epson Stylus C20 and C40 printers.
+
 
 Gimp-Print 4.1.10 contains the following changes over 4.1.8:
 

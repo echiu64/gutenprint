@@ -47,7 +47,11 @@
 #include <gimp-print-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
+#else
 #include <stdarg.h>
+#endif
 
 #if (0)
 #define DEBUG 1
@@ -1724,6 +1728,9 @@ canon_default_parameters(const stp_printer_t printer,
       char tmp[100];
       int x,y;
       int t;
+      int min_res = caps->base_res;
+      while (min_res < 300)
+	min_res *= 2;
 
       for (x=1; x<6; x++)
 	{
@@ -1731,8 +1738,7 @@ canon_default_parameters(const stp_printer_t printer,
 	    {
 	      if ((t= canon_ink_type(caps,(x<<4)|y)) > -1)
 		{
-		  sprintf(tmp,"%dx%d DPI",
-			   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
+		  sprintf(tmp,"%dx%d DPI", min_res, min_res);
 #ifdef DEBUG
 		  stp_erprintf("supports mode '%s'\n",tmp);
 #endif

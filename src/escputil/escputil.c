@@ -30,7 +30,11 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
+#else
 #include <stdarg.h>
+#endif
 #ifdef HAVE_POLL
 #include <sys/poll.h>
 #endif
@@ -169,6 +173,8 @@ typedef struct
 
 stp_printer_t printer_list[] =
 {
+  { "C20",	"Stylus C20",		3,	15,	0,	2,	9 },
+  { "C40",	"Stylus C40",		3,	15,	0,	2,	9 },
   { "color",	"Stylus Color",		1,	7,	0,	0,	0 },
   { "pro",	"Stylus Color Pro",	1,	7,	0,	0,	0 },
   { "pro-xl",	"Stylus Color Pro XL",	1,	7,	0,	0,	0 },
@@ -1061,7 +1067,10 @@ choices of (s)aving the result in the printer, (r)epeating the process,\n\
 or (q)uitting without saving.  Quitting will not restore the previous\n\
 settings, but powering the printer off and back on will.  If you quit,\n\
 you must repeat the entire process if you wish to later save the results.\n\
-It is essential that you not turn your printer off during this procedure.\n\n";
+It is essential that you not turn your printer off during this procedure.\n\
+\n\
+WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n\
+damage your printer!\n";
 
 static void
 do_align_color_help(int passes, int choices)
@@ -1311,7 +1320,9 @@ cartridge, and then whether you wish to change the color ink cartridge.\n\
 You must start the procedure with your printer connected to the computer\n\
 and turned on.  The printer cover should be left in the normal (down)\n\
 position until you are asked to open it.\n\
-";
+\n\
+WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n\
+damage your printer!\n";
 
 const char *cartridge_change_instructions = "\
 Please open the printer cover.\n\

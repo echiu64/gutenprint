@@ -28,8 +28,11 @@
 #endif
 
 #ifndef HAVE_ASPRINTF
-#include <stdarg.h>
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
+#else
+#include <stdarg.h>
+#endif
 extern int vasprintf (char **result, const char *format, va_list args);
 extern int asprintf (char **result, const char *format, ...);
 #endif

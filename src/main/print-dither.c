@@ -2579,19 +2579,16 @@ stp_dither_raw_cmyk_fast(const unsigned short  *cmyk,
   QUANT(14);
   for (; x != dst_width; x++)
     {
-      int tk = compute_black(d);;
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
-      CHANNEL(d, ECOLOR_C).o = cmyk[0] + cmyk[3] + tk;
-      CHANNEL(d, ECOLOR_M).o = cmyk[1] + cmyk[3] + tk;
-      CHANNEL(d, ECOLOR_Y).o = cmyk[2] + cmyk[3] + tk;
-      CHANNEL(d, ECOLOR_K).o = cmyk[3];
-
       for (i = 0; i < NCOLORS; i++)
-	if (CHANNEL(d, i).ptrs[0])
-	  print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
+	{
+	  CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).v;
+	  if (CHANNEL(d, i).ptrs[0])
+	    print_color_fast(d, &(CHANNEL(d, i)), x, row, bit, length);
+	}
       QUANT(16);
       ADVANCE_UNIDIRECTIONAL(d, bit, cmyk, 4, xerror, xmod);
       QUANT(17);
@@ -2629,18 +2626,15 @@ stp_dither_raw_cmyk_ordered(const unsigned short  *cmyk,
   QUANT(6);
   for (; x != terminate; x ++)
     {
-      int ck;
-
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
-      ck = CHANNEL(d, ECOLOR_K).v + compute_black(d);
-      CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).v;
-      for (i = 1; i < NCOLORS; i++)
-	CHANNEL(d, i).o = CHANNEL(d, i).v + CHANNEL(d, ECOLOR_K).o;
       for (i = 0; i < NCOLORS; i++)
-	print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
+	{
+	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  print_color_ordered(d, &(CHANNEL(d, i)), x, row, bit, length, 0);
+	}
 
       QUANT(11);
       ADVANCE_UNIDIRECTIONAL(d, bit, cmyk, 4, xerror, xmod);
@@ -2719,21 +2713,14 @@ stp_dither_raw_cmyk_ed(const unsigned short  *cmyk,
   QUANT(6);
   for (; x != terminate; x += direction)
     {
-      int ck;
       CHANNEL(d, ECOLOR_K).v = cmyk[3];
       CHANNEL(d, ECOLOR_C).v = cmyk[0];
       CHANNEL(d, ECOLOR_M).v = cmyk[1];
       CHANNEL(d, ECOLOR_Y).v = cmyk[2];
-      ck = CHANNEL(d, ECOLOR_K).v + compute_black(d);
-      CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).v;
-      for (i = 1; i < NCOLORS; i++)
-	{
-	  CHANNEL(d, i).o = CHANNEL(d, i).v + ck;
-	  CHANNEL(d, i).b = CHANNEL(d, i).o;
-	}
-
       for (i = 0; i < NCOLORS; i++)
 	{
+	  CHANNEL(d, i).o = CHANNEL(d, i).v;
+	  CHANNEL(d, i).b = CHANNEL(d, i).v;
 	  CHANNEL(d, i).v = UPDATE_COLOR(CHANNEL(d, i).v, ndither[i]);
 	  CHANNEL(d, i).v = print_color(d, &(CHANNEL(d, i)), x, row, bit,
 					length, 0, d->dither_type);

@@ -34,7 +34,11 @@
 #include <gimp-print-intl-internal.h>
 #include <math.h>
 #include <limits.h>
+#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
+#include <varargs.h>
+#else
 #include <stdarg.h>
+#endif
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

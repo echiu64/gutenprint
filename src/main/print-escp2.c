@@ -3210,6 +3210,8 @@ escp2_set_printhead_resolution(const stp_vars_t v, escp2_init_t *init)
 	xres = escp2_enhanced_xres(init->model, init->v);
       else
 	xres = escp2_xres(init->model, init->v);
+      if (init->xdpi < xres)
+	xres = init->xdpi;
       xres = escp2_resolution_scale(init->model, init->v) / xres;
 
       if (init->output_type == OUTPUT_GRAY)

@@ -364,6 +364,9 @@ if test x${HAVE_READLINE_READLINE_H} = xtrue ; then
   fi
 fi
 
+AC_CHECK_HEADERS(varargs.h)
+AC_CHECK_HEADERS(stdarg.h)
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
