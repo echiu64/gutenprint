@@ -409,7 +409,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 500, 520 */
+  /* Deskjet 500, 520. Lexmark 4076 */
   { 500,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
@@ -579,7 +579,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     { -1,			/* No selectable paper sources */
     },
   },
-  /* Deskjet 6xx series, plus 810/812/842/895 */
+  /* Deskjet 6xx series */
   { 601,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
@@ -690,7 +690,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* Deskjet 840 (C-RET) */
+  /* Deskjet 810C, 812C, 840C, 842C, 845C, 895C (C-RET) */
   { 840,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
@@ -1124,7 +1124,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
       -1,
     },
   },
-  /* LaserJet 4V, 4Si, 5Si */
+  /* LaserJet 4V, 4Si */
   { 5,
     13 * 72, 19 * 72,
     1, 1,				/* Min paper size */
