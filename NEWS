@@ -1,6 +1,6 @@
-Gimp-Print 4.3.19, released August 8, 2003, is a development release of
-this package.  Like all development releases, this version is
-considered unstable and should only be used by those individuals
+Gimp-Print 4.3.20, released September XX, 2003, is a development
+release of this package.  Like all development releases, this version
+is considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
 release of Gimp-Print should use the latest 4.2 release.
 
@@ -37,6 +37,59 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+Gimp-Print 4.3.20 contains the following major changes over Gimp-Print
+4.3.19:
+
+1) This release offers major improvements in color fidelity,
+   particularly for Epson printers.  In particularly, some transition
+   artifacts have been eliminated, the color gamut is improved, and
+   cyan, magenta, red, and green colors are notably better.  There is
+   also considerably better (although not perfect) matching between
+   different Epson printers.
+
+   The HSL-Adjusted color correction mode has been eliminated; its
+   functionality has been completely subsumed under High Accuracy.
+   Previously, the HSL-Adjusted color correction mode simply performed
+   part of the correction in order to offer more gamut.
+
+   The Bright Colors mode now offers considerably more accurate colors
+   and tonality than previously, while still offering maximum color
+   saturation for brilliant colors.
+
+   If you have created profiles for use with Gimp-Print, you will need
+   to create new ones.  It is currently anticipated that the current
+   color correction will be more stable, with fewer changes, but we
+   can't guarantee that there will not be further improvements.  In
+   particular, it is possible that the High Accuracy mode is too
+   saturated (overly vivid colors) on some printers.
+
+   Other printer families have not been tuned and are using generic
+   curves copied from the Epson driver.  It is likely that these
+   printers will show improvements in color, but optimum color
+   fidelity must await tuning of these printers.
+
+2) Support for the Olympus P-400 and P-300 printers, and the Canon
+   CP-100, CP-200, and CP-300 printers has been added.  In addition,
+   certain restrictions on image size have been lifted, enabling
+   printing of images smaller than 4"x6".
+
+3) Ink drop sizes and densities have been recalibrated on many Epson
+   printers, particularly the 4 picolitre drop size printers and the
+   printers using DuraBrite ink (C80 and C82).  There proved to be
+   significant errors in the drop sizes, making resolutions less than
+   2880x720 produce inferior results.  In addition, many printers had
+   incorrect density calibration at certain resolutions, generally
+   producing output that is too light.
+
+4) cups-genppdupdate will correctly update PPD files from Gimp-Print
+   4.3.19.
+
+5) Minor problems with the man pages have been fixed.
+
+6) Matte Paper Heavyweight has been added to the list of supported
+   papers on Epson printers.
+
 
 Gimp-Print 4.3.19 contains the following major changes over Gimp-Print
 4.3.18:
