@@ -453,17 +453,20 @@ stp_open(gx_device *pdev)
   float st[4];
   int left,right,bottom,top,width,length;
   char none[5];
+  printer_t *printer = get_printer_by_index(stp_data.model);
+  if (!printer)
+    return (-1);
 
   stp_print_debug("stp_open", pdev, &stp_data);
   strcpy(none,"");
 
-  default_media_size(stp_data.model,
+  default_media_size(printer,
                      none,
                      stp_data.v.media_size,
                      &width,
                      &length);
 
-  escp2_imageable_area(stp_data.model,	/* I - Printer model */
+  escp2_imageable_area(printer,		/* I - Printer model */
                        none,		/* I - PPD file (not used) */
                        stp_data.v.media_size,	/* I - Media size */
                        &left,		/* O - Left position in points */
