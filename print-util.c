@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.36  1999/12/05 04:33:34  rlk
+ *   Good results for the night.
+ *
  *   Revision 1.35  1999/12/04 19:01:05  rlk
  *   better use of light colors
  *
@@ -364,11 +367,11 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  */
 
 #define NU_C 1
-#define DE_C 2
+#define DE_C 3
 #define NU_M 1
-#define DE_M 2
+#define DE_M 3
 #define NU_Y 1
-#define DE_Y 2
+#define DE_Y 3
 
 #define I_RATIO_C NU_C / DE_C
 #define I_RATIO_C1 NU_C / (DE_C + NU_C)
@@ -392,8 +395,8 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * in more CMY being used in dark tones, which results in less pure black.
  * Decreasing the gap too much results in sharp crossover and stairstepping.
  */
-#define KDARKNESS_LOWER (16 * 256)
-#define KDARKNESS_UPPER (160 * 256)
+#define KDARKNESS_LOWER (32 * 256)
+#define KDARKNESS_UPPER (96 * 256)
 
 /*
  * Randomizing values for deciding when to output a bit.  Normally with the
@@ -403,9 +406,9 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * result in greater randomizing.  We use less randomness for black output
  * to avoid production of black speckles in light regions.
  */
-#define C_RANDOMIZER 1
-#define M_RANDOMIZER 1
-#define Y_RANDOMIZER 1
+#define C_RANDOMIZER 2
+#define M_RANDOMIZER 2
+#define Y_RANDOMIZER 2
 #define K_RANDOMIZER 8
 
 #ifdef PRINT_DEBUG
@@ -474,63 +477,63 @@ do {						\
   UPDATE_COLOR_DBG(r);				\
 } while (0)
 
-#define PRINT_COLOR(color, r, R, d1, d2)				    \
-do {									    \
-  if (!l##color)							    \
-    {									    \
-      if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) -	    \
-			(32768 / R##_RANDOMIZER))))			    \
-	{								    \
-	  PRINT_D1(r, R, d1, d2);					    \
-	  if (r##bits++ % horizontal_overdensity == 0)			    \
-	    if (! (*kptr & bit))					    \
-	      *r##ptr |= bit;						    \
-	  r -= 65535;							    \
-	}								    \
-    }									    \
-  else									    \
-    {									    \
-      if (r <= (65536 * I_RATIO_##R##1 * 3 / 4))			    \
-	{								    \
-	  if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) -  \
-			    (32768 / R##_RANDOMIZER))) * I_RATIO_##R##1)    \
-	    {								    \
-	      PRINT_D2(r, R, d1, d2);					    \
-	      if (l##r##bits++ % horizontal_overdensity == 0)		    \
-		if (! (*kptr & bit))					    \
-		  *l##r##ptr |= bit;					    \
-	      r -= 65535 * I_RATIO_##R##1;				    \
-	    }								    \
-	}								    \
-      else if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) - \
-			     (32768 / R##_RANDOMIZER))) * I_RATIO_##R##1)   \
-	{								    \
-	  int cutoff = ((density - (65536 * I_RATIO_##R##1 * 3 / 4)) * 65536 /    \
-			(65536 - (65536 * I_RATIO_##R##1 * 3 / 4)));	    \
-	  long long sub = (65535ll * I_RATIO_##R##1) +			    \
-	    ((65535ll - (65535ll * I_RATIO_##R##1)) * cutoff / 65536);	    \
-	  if (ditherbit##d1 > cutoff)					    \
-	    {								    \
-	      PRINT_D3(r, R, d1, d2);					    \
-	      if (l##r##bits++ % horizontal_overdensity == 0)		    \
-		if (! (*kptr & bit))					    \
-		  *l##r##ptr |= bit;					    \
-	    }								    \
-	  else								    \
-	    {								    \
-	      PRINT_D4(r, R, d1, d2);					    \
-	      if (r##bits++ % horizontal_overdensity == 0)		    \
-		if (! (*kptr & bit))					    \
-		  *r##ptr |= bit;					    \
-	    }								    \
-	  if (sub < (65535 * I_RATIO_##R##1))				    \
-	    r -= (65535 * I_RATIO_##R##1);				    \
-	  else if (sub > 65535)						    \
-	    r -= 65535;							    \
-	  else								    \
-	    r -= sub;							    \
-	}								    \
-    }									    \
+#define PRINT_COLOR(color, r, R, d1, d2)				     \
+do {									     \
+  if (!l##color)							     \
+    {									     \
+      if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) -	     \
+			(32768 / R##_RANDOMIZER))))			     \
+	{								     \
+	  PRINT_D1(r, R, d1, d2);					     \
+	  if (r##bits++ % horizontal_overdensity == 0)			     \
+	    if (! (*kptr & bit))					     \
+	      *r##ptr |= bit;						     \
+	  r -= 65535;							     \
+	}								     \
+    }									     \
+  else									     \
+    {									     \
+      if (r <= (65536 * I_RATIO_##R##1 * 2 / 3))			     \
+	{								     \
+	  if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) -   \
+			    (32768 / R##_RANDOMIZER))) * I_RATIO_##R##1)     \
+	    {								     \
+	      PRINT_D2(r, R, d1, d2);					     \
+	      if (l##r##bits++ % horizontal_overdensity == 0)		     \
+		if (! (*kptr & bit))					     \
+		  *l##r##ptr |= bit;					     \
+	      r -= 65535 * I_RATIO_##R##1;				     \
+	    }								     \
+	}								     \
+      else if (r > (32767 + (((long long) ditherbit##d2 / R##_RANDOMIZER) -  \
+			     (32768 / R##_RANDOMIZER))) * I_RATIO_##R##1)    \
+	{								     \
+	  int cutoff = ((density - (65536 * I_RATIO_##R##1 * 2 / 3)) *	     \
+			65536 / (65536 - (65536 * I_RATIO_##R##1 * 2 / 3))); \
+	  long long sub = (65535ll * I_RATIO_##R##1) +			     \
+	    ((65535ll - (65535ll * I_RATIO_##R##1)) * cutoff / 65536);	     \
+	  if (ditherbit##d1 > cutoff)					     \
+	    {								     \
+	      PRINT_D3(r, R, d1, d2);					     \
+	      if (l##r##bits++ % horizontal_overdensity == 0)		     \
+		if (! (*kptr & bit))					     \
+		  *l##r##ptr |= bit;					     \
+	    }								     \
+	  else								     \
+	    {								     \
+	      PRINT_D4(r, R, d1, d2);					     \
+	      if (r##bits++ % horizontal_overdensity == 0)		     \
+		if (! (*kptr & bit))					     \
+		  *r##ptr |= bit;					     \
+	    }								     \
+	  if (sub < (65535 * I_RATIO_##R##1))				     \
+	    r -= (65535 * I_RATIO_##R##1);				     \
+	  else if (sub > 65535)						     \
+	    r -= 65535;							     \
+	  else								     \
+	    r -= sub;							     \
+	}								     \
+    }									     \
 } while (0)
 
 #if 1
@@ -764,10 +767,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
-/*
       kdarkness = MAX((c + c / 3 + m + 2 * y / 3) / 4, ak);
-*/
+/*
       kdarkness = ak;
+*/
       if (kdarkness < KDARKNESS_UPPER)
 	{
 	  int rb;
@@ -896,19 +899,22 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
     /*****************************************************************
      * Cyan
      *****************************************************************/
-    PRINT_COLOR(cyan, c, C, 1, 2);
+    if (! (*kptr & bit))
+      PRINT_COLOR(cyan, c, C, 1, 2);
     UPDATE_DITHER(c, 2, x, dst_width);
 
     /*****************************************************************
      * Magenta
      *****************************************************************/
-    PRINT_COLOR(magenta, m, M, 2, 3);
+    if (! (*kptr & bit))
+      PRINT_COLOR(magenta, m, M, 2, 3);
     UPDATE_DITHER(m, 3, x, dst_width);
 
     /*****************************************************************
      * Yellow
      *****************************************************************/
-    PRINT_COLOR(yellow, y, Y, 3, 0);
+    if (! (*kptr & bit))
+      PRINT_COLOR(yellow, y, Y, 3, 0);
     UPDATE_DITHER(y, 0, x, dst_width);
 
     /*****************************************************************
