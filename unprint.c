@@ -723,9 +723,11 @@ counter=0;
 int main(int argc,char *argv[]){
 
   int arg;
+  char *s;
   FILE *fp_r,*fp_w;
 
     unweave=0;
+    pstate.nozzle_separation=6;
     fp_r = fp_w = NULL;
     for (arg=1;arg<argc;arg++) {
       if (argv[arg][0]=='-') {
@@ -735,7 +737,23 @@ int main(int argc,char *argv[]){
                  else
                    fp_r=stdin;
                  break;
+          case 'n':if (argv[arg][2]) {
+                     s=argv[arg]+2;
+                   } else {
+                     if (argc<=arg+1) {
+                       fprintf(stderr,"Missing nozzle separation\n");
+                       exit(-1);
+                     } else {
+                       s=argv[++arg];
+                     }
+                   }
+                   if (!sscanf(s,"%d",&pstate.nozzle_separation)) {
+                     fprintf(stderr,"Error parsing nozzle separation\n");
+                     exit(-1);
+                   }
+                  break;
           case 'u':unweave=1;
+                 break;
         }
       } else {
         if (fp_r) {
@@ -756,13 +774,10 @@ int main(int argc,char *argv[]){
     if (!fp_w)
       fp_w=stdout;
 
-    /* FIXME: need fancy shmancy command line options for the following */
     if (unweave) {
       pstate.nozzle_separation=1;
-    } else {
-      pstate.nozzle_separation=6;
     }
-    pstate.nozzles=48;
+    pstate.nozzles=96;
 
     parse_escp2(fp_r);
     fprintf(stderr,"Done reading.\n");
