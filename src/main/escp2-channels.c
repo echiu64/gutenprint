@@ -1261,7 +1261,7 @@ static const escp2_inkname_t f360_seven_color_extended_inkset =
 
 static const ink_channel_t *const gloss_cmykprb_extended_channels[] =
 {
-  &standard_black_channel, &photo_black_channel,
+  &standard_black_channel, &standard_photo_black_channel,
   &standard_cyan_channel, &standard_magenta_channel,
   &standard_yellow_channel, &standard_red_channel,
   &standard_blue_channel, &standard_gloss_channel
