@@ -53,6 +53,7 @@ typedef struct {
   int max_height;
   int max_xdpi;
   int max_ydpi;
+  int max_quality;
   int border_left;
   int border_right;
   int border_top;
@@ -123,7 +124,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 6000 */
     6000,          
     618, 936,      /* 8.58" x 13 " */
-    1440, 720, 
+    1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1, 
@@ -133,7 +134,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 8200 */
     8200, 
     11*72, 17*72, 
-    1200,1200, 
+    1200,1200, 4,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -145,7 +146,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 1000 */
     1000, 
     11*72, 17*72,  
-    360, 360, 
+    360, 360, 2,
     11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY, 
     CANON_SLOT_ASF1, 
@@ -154,7 +155,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 2000 */
     2000, 
     11*72, 17*72,  
-    720, 360, 
+    720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK, 
     CANON_SLOT_ASF1, 
@@ -163,7 +164,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 3000 */
     3000, 
     11*72, 17*72, 
-    1440, 720, 
+    1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -172,7 +173,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 6100 */
     6100, 
     11*72, 17*72, 
-    1440, 720, 
+    1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -181,7 +182,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 7000 */
     7000, 
     11*72, 17*72, 
-    1200, 600, 
+    1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -190,7 +191,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 7100 */
     7100, 
     11*72, 17*72, 
-    1200, 600, 
+    1200, 600, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK, 
     CANON_SLOT_ASF1, 
@@ -202,7 +203,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 5100 */
     5100, 
     17*72, 22*72, 
-    1440, 720, 
+    1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -211,7 +212,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 5500 */
     5500, 
     22*72, 34*72,  
-    720, 360, 
+    720, 360, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -220,7 +221,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 6500 */
     6500, 
     17*72, 22*72, 
-    1440, 720, 
+    1440, 720, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -229,7 +230,7 @@ static canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 8500 */
     8500, 
     17*72, 22*72, 
-    1200,1200, 
+    1200,1200, 2,
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
@@ -565,7 +566,7 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   unsigned char 
     arg_63_1 = 0x00, 
     arg_63_2 = 0x00, /* plain paper */
-    arg_63_3 = 0x02, /* seems to be ok for most stuff... */
+    arg_63_3 = caps.max_quality, /* output quality  */
     arg_6c_1 = 0x00, 
     arg_6c_2 = 0x01, /* plain paper */
     arg_6d_1 = 0x03, /* color printhead? */
@@ -705,9 +706,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   char 		*media_size = v->media_size;
   char          *media_type = v->media_type;
   char          *media_source = v->media_source;
-  char          *ink_type = v->ink_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
+  char          *ink_type = v->ink_type;
   float 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
@@ -814,7 +815,8 @@ canon_print(const printer_t *printer,		/* I - Model */
   */
 
   canon_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
-                       &page_top, &page_bottom);
+                       &page_bottom, &page_top);
+
   compute_page_parameters(page_right, page_left, page_top, page_bottom,
 			  scaling, image_width, image_height, image,
 			  &orientation, &page_width, &page_height,
@@ -870,8 +872,8 @@ canon_print(const printer_t *printer,		/* I - Model */
     delay_c= 112;
     delay_m= 224;
     delay_y= 336;
-    delay_lc= 0;
-    delay_lm= 0;
+    delay_lc= 112;
+    delay_lm= 224;
     delay_ly= 0;
     delay_max= 336;
     fprintf(stderr,"canon: delay on!\n");
@@ -892,6 +894,8 @@ canon_print(const printer_t *printer,		/* I - Model */
   } else {
     buf_length= length;
   }
+
+  fprintf(stderr,"canon: buflength is %ld!\n",buf_length);
 
   if (output_type == OUTPUT_GRAY) {
     black   = canon_alloc_buffer(buf_length*(delay_k+1));
@@ -954,9 +958,9 @@ canon_print(const printer_t *printer,		/* I - Model */
 
   if (!use_dmt) {
     dither_set_light_inks(dither, 
-			  (lcyan)   ? (.3333) : (0.0), 
-			  (lmagenta)? (.3333) : (0.0), 
-			  (lyellow) ? (.3333) : (0.0), nv.density);
+			  (lcyan)   ? (0.3333) : (0.0), 
+			  (lmagenta)? (0.3333) : (0.0), 
+			  (lyellow) ? (0.3333) : (0.0), nv.density);
   }
 
   if (xdpi > ydpi)
