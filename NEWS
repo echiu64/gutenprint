@@ -1,16 +1,17 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1, released XXX XX, 2002, is the latest stable release
-of this package.  This release offers numerous improvements over the
-previous stable release, 4.0
+Gimp-Print 4.2.1-pre1, released February 16, 2002, is a pre-release of
+Gimp-Print 4.2.1.  This prerelease offers a number of fixes and
+improvements over 4.2.0
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
 
 The Gimp Print plugin requires the Gimp 1.2.
 
-The CUPS driver requires CUPS 1.1.9 or higher (1.1.12 or above is
-highly recommended).
+The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
+highly recommended, as certain translation-related bugs are fixed and
+it is possible to print true CMYK.
 
 The Ghostscript driver requires Ghostscript 5.10, 5.50, 6.51, or any
 later GNU Ghostscript release based on 6.51 (e. g. 6.52).
@@ -26,15 +27,15 @@ Gimp-Print 4.2.0:
   2) The Ghostscript documentation lists resolutions for Canon
      printers correctly.
 
-  3) Problems printing to various late model Epson Stylus Photo
-     printers have been fixed.
+  3) Miscellaneous problems printing to various late model Epson
+     Stylus Photo printers have been fixed.
 
   4) It is now possible to print at all resolutions on large format
      PCL printers.
 
   5) A new IJS-based Ghostscript driver is provided, for Ghostscript
-     6.53 and 7.04.  This driver may be used with both GNU and AFPL
-     Ghostscript.
+     6.53 and above, and 7.04 and above.  This driver may be used with
+     both GNU and AFPL Ghostscript.
 
   6) New Slovak and Greek translations are provided.
 
@@ -51,8 +52,22 @@ Gimp-Print 4.2.0:
 
   10) Miscellaneous fixes for the Lexmark Z42.
 
-  11) Certain paper types and other issues on late model Stylus Photo
-      printers (780, 810/820, and 1280/1290) have been fixed.
+The following bugs are fixed in 4.2.1-pre1:
+
+485156 Debian build broken in 4.2.0
+488865 escputil isn't translated
+493772 360dpi is not a valid resolution
+496813 Z42 issues
+499200 ESP 1280/1290 need special deinit code
+499203 ESP 780/820 have different paper codes
+499299 z42 border
+502713 Restricted resolution on DesignJet
+507767 Parameters not set in CUPS driver
+507770 Unset parameters in Ghostscript driver
+507773 Old-style GS build broken
+516268 Erroneous comparison
+518224 makeinfo fails during build
+
 
 
 Gimp-Print 4.2 contains the following major changes over Gimp-Print
