@@ -53,12 +53,18 @@ INSTALLATION AND COMPILATION:
  - If you are using Ghostscript 5.50 or newer: edit the file
    "contrib.mak" (in either the top level or src/ subdirectoy,
    depending upon your version of Ghostscript) by adding the contents
-   of "contrib.mak.addon".
+   of "contrib.mak.addon".  Be careful to add *exactly* the contents
+   of this file; if you cut and paste it, you may find that the tab
+   characters in contrib.mak.addon get transformed into spaces, and as
+   a result when you run 'make' it will fail.
 
- - If you are using Ghostscript 5.10: edit the file "devs.mak"(in
+ - If you are using Ghostscript 5.10: edit the file "devs.mak" (in
    either the top level or src/ subdirectoy, depending upon your
    version of Ghostscript) by adding the contents of
-   "devs.mak.addon-5.10".
+   "devs.mak.addon-5.10".  Be careful to add *exactly* the contents of
+   this file; if you cut and paste it, you may find that the tab
+   characters in contrib.mak.addon get transformed into spaces, and as
+   a result when you run 'make' it will fail.
 
  - Add "$(DD)stp.dev" to the line "DEVICE_DEVS6=..." in
    "unix-gcc.mak".  If there are multiple lines that start with
@@ -68,25 +74,22 @@ INSTALLATION AND COMPILATION:
 
  - The distribution includes a utility named "escputil" that performs
    many utility functions, such as head cleaning, nozzle alignment,
-   and the like.  To compile this program, type "make".  Type
-   "escputil" for a description of the options and functionality.
+   and the like.
 
  - IF YOU DOWNLOADED A CVS SNAPSHOT OF THIS SOFTWARE, this directory
    will not include many of the source files that are generated from
    the gimp-print source.  To create these files, you must run the
-   following commands from the parent directory:
+   following commands from the parent directory two levels above this:
 
-   aclocal
-   autoconf
-   automake
-   ./configure
-   make ghost
+   ./configure --with-ghost
+   make
+   cd src/ghost (where this file is located)
 
    If this fails (because you do not have the Gimp or any of the
    autoconfigure tools installed on your system), you can use the
    configure script from any release, and run
 
-   configure --disable-gimptest
+   ./configure --with-ghost --without-gimp
    make ghost
 
  Compile and install gs as described in the documentation, after a
@@ -97,7 +100,8 @@ INSTALLATION AND COMPILATION:
 
 Debian users can try the following (contributed by Stuart Miles and
 updated by Dan Christensen <jdc@julian.uwo.ca>): versions are current
-as of 5 October 2000:
+as of 5 October 2000.  The Debian installation procedure is being
+extensively redone as of February 2001.
 
 Download the debianised sources for gs-aladdin and libjpeg to the 
 directory containing the print-x.xxx directory: 
@@ -315,8 +319,8 @@ For Epson Stylus printers:
 					    variable dot sizes, such as
 					    the Epson Stylus Color 740
 					    and newer)
-'720 DPI Microweave'                       (works on older printers)
-'720 DPI Microweave Unidirectional'        (works on older printers)
+'720 DPI Microweave'                       (works on most printers)
+'720 DPI Microweave Unidirectional'        (works on most printers)
 '720 DPI Softweave'                        (works on all printers except
 					    for Stylus Color, Stylus
 					    Color 1500, Stylus Color
@@ -338,9 +342,11 @@ For Epson Stylus printers:
 					    Color 1500, Stylus Color
 					    1520, and Stylus Color 3000)
 '1440 x 720 DPI Microweave'                (works on some older 1440x720 dpi
-					    printers)
+					    printers; not normally
+					    recommended)
 '1440 x 720 DPI Microweave Unidirectional' (works on some older 1440x720 dpi
-					    printers)
+					    printers; not normally
+					    recommended)
 '1440 x 720 DPI Softweave'                 (works on all 1440x720 dpi
 					    printers except for Stylus
 					    Color 1520 and Stylus Color 3000)
@@ -351,22 +357,22 @@ For Epson Stylus printers:
 					    printers except for Stylus
 					    Color 1520 and Stylus Color 3000)
 '2880 x 720 DPI Softweave'                 (works on Stylus Color 680,
-					    Stylus Color 777, Stylus
-					    Color 880, Stylus Color 980,
-					    and Stylus Photo 790)
+					    777, 880, 83, and 980,
+					    Stylus Photo 790, 890, 1290)
 '2880 x 720 DPI Softweave Unidirectional'  (works on Stylus Color 680,
-					    Stylus Color 777, Stylus
-					    Color 880, Stylus Color 980,
-					    and Stylus Photo 790)
+					    777, 880, 83, and 980,
+					    Stylus Photo 790, 890, 1290)
 
 On most printers, unidirectional printing is higher quality than
 bidirectional printing, but somewhat slower.  This is most true on
 older printers.  The current driver offers unidirectional and
 bidirectional printing modes at most supported resolutions and quality
-levels.  Many people will find the 360 DPI Microweave Unidirectional
-mode offers excellent print quality for general use, and 720 DPI
-Softweave Unidirectional offers good enough print quality for more
-demanding applications.
+levels; a few very high quality modes are only offered with
+unidirectional printing, and a few low quality modes are only offered
+with bidirectional printing.  Many people will find the 360 DPI
+Microweave Unidirectional mode offers excellent print quality for
+general use, and 720 DPI Softweave Unidirectional offers good enough
+print quality for more demanding applications.
 
 The Microweave modes at 720 DPI and higher are extremely slow on many
 printers (360 DPI Microweave does not suffer this problem).  Not all
