@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2003-01-03 17:29+0000\n"
+"POT-Creation-Date: 2003-01-22 20:11-0500\n"
 "PO-Revision-Date: 2001-11-05 21:42+0100\n"
 "Last-Translator: Roger Leigh <roger@whinlatter.uklinux.net>\n"
 "Language-Team: British English\n"
@@ -1462,23 +1462,23 @@ msgstr "%s out of range (value %f, min %f, max %f)\n"
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s out of range (value %d, min %d, max %d)\n"
 
-#: src/main/print-util.c:1386
+#: src/main/print-util.c:1414
 msgid "Printer does not support color output\n"
 msgstr "Printer does not support colour output\n"
 
-#: src/main/print-util.c:1404
+#: src/main/print-util.c:1432
 msgid "Image size is not valid\n"
 msgstr "Image size is not valid\n"
 
-#: src/main/print-util.c:1411
+#: src/main/print-util.c:1439
 msgid "Top margin must not be less than zero\n"
 msgstr "Top margin must not be less than zero\n"
 
-#: src/main/print-util.c:1417
+#: src/main/print-util.c:1445
 msgid "Left margin must not be less than zero\n"
 msgstr "Left margin must not be less than zero\n"
 
-#: src/main/print-util.c:1474
+#: src/main/print-util.c:1504
 #, c-format
 msgid "%s is not a valid dither algorithm\n"
 msgstr "%s is not a valid dither algorithm\n"
@@ -3318,12 +3318,12 @@ msgstr ""
 msgid "Printing..."
 msgstr "Printing..."
 
-#: src/gimp/print.c:166
+#: src/gimp/print.c:167
 msgid "<Image>/File/Print..."
 msgstr "<Image>/File/Print..."
 
-#: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
-#: src/gimp/print.c:1182
+#: src/gimp/print.c:784 src/gimp/print.c:785 src/gimp/print.c:882
+#: src/gimp/print.c:1231
 msgid "File"
 msgstr "File"
 
