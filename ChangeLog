@@ -1,3 +1,83 @@
+2000-09-29	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.144) (+41 -25)
+		Ghost/gdevstp.c (1.42) (+8 -1)
+	
+	Fix 115513:
+	
+	1) In Ghostscript driver, attempt to convert from page size back to
+	named size.
+	
+	2) Fix some named sizes to correspond precisely with Ghostscript sizes.
+	
+	3) Use case-insensitive string comparison to match paper size names.
+	
+2000-09-28	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.41) (+9 -2)
+	
+	Accept stpMediaSize as an alias for MediaSize (115450)
+	
+2000-09-28	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.88) (+6 -1)
+		print.h (1.90) (+4 -13)
+		print-weave.c (1.6) (+6 -1)
+		print-util.c (1.143) (+6 -1)
+		print-ps.c (1.44) (+6 -1)
+		print-pcl.c (1.84) (+6 -1)
+		print-escp2.c (1.261) (+6 -5)
+		print-dither.c (1.95) (+6 -1)
+	
+	Remove unnecessary includes and warn that no non-standard files may
+	be included in any of these source files.
+	
+2000-09-27	<rlk@sourceforge.net>
+
+	Files:	print-weave.c (1.5) (+6 -2)
+	
+	115512: print-weave.c uses illegal C construct
+	
+2000-09-27	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.83) (+16 -17)
+	
+	Changed fallback if 600x600 is used on a printer that only supports it
+	in mono: It used to change to 300x300 colour, now it changes to 600x600
+	mono. [BUG #115178]
+	
+2000-09-24	<rlk@sourceforge.net>
+
+	Files:	README (1.32) (+3 -0)
+	
+	Instructions for building the CUPS driver from CVS.
+	
+2000-09-23	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.13) (+24 -11)
+	
+	Improve documentation.
+	
+	In the last alignment pass, request that a fresh sheet of paper be
+	inserted rather than the same sheet.
+	
+2000-09-23	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.46) (+71 -0)
+		print.c (1.125) (+2 -11)
+		gimp_main_window.c (1.63) (+2 -2)
+		configure.in (1.34) (+1 -1)
+		RELNOTES (1.26) (+16 -2)
+		README (1.31) (+4 -2)
+	
+	115171: Plugin does not restore image size correctly in PPI mode.
+	
+2000-09-23	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.12) (+55 -3)
+	
+	Attempt to autodetect printer model for alignment.
+	
 2000-09-23	<rlk@sourceforge.net>
 
 	Files:	escputil.c (1.11) (+191 -225)
