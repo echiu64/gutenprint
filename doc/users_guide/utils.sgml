@@ -65,8 +65,8 @@ issue this command and notice the output.
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it under
-certain conditions; type 'escputil -l' for details. 
+This is free software, and you are welcome to redistribute it 
+under certain conditions; type 'escputil -l' for details. 
 
            Ink color    Percent remaining
                Black     18
@@ -104,8 +104,8 @@ response from <emphasis>escputil</emphasis>.
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it under
-certain conditions; type 'escputil -l' for details.
+This is free software, and you are welcome to redistribute it 
+under certain conditions; type 'escputil -l' for details.
 
 Cannot read from /dev/lp0: Invalid argument
     ]]>
@@ -140,8 +140,8 @@ of the desired printer.
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it under
-certain conditions; type 'escputil -l' for details. 
+This is free software, and you are welcome to redistribute it 
+under certain conditions; type 'escputil -l' for details. 
 
 Running nozzle check, please ensure paper is in the printer.
     ]]>
@@ -176,8 +176,8 @@ of the desired printer.
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
 Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
 'escputil -l'
-This is free software, and you are welcome to redistribute it under
-certain conditions; type 'escputil -l' for details. 
+This is free software, and you are welcome to redistribute it 
+under certain conditions; type 'escputil -l' for details. 
 
 Cleaning heads...
     ]]>
@@ -261,58 +261,61 @@ under certain conditions; type 'escputil -l' for details.
 
 Please read these instructions very carefully before proceeding.
 
-This utility lets you align the print head of your Epson Stylus inkjet
-printer.  Misuse of this utility may cause your print quality to
-degrade and possibly damage your printer.  This utility has not been
-reviewed by Seiko Epson for correctness, and is offered with no
-warranty at all.  The entire risk of using this utility lies with
-you.
+This utility lets you align the print head of your Epson Stylus 
+inkjet printer.  Misuse of this utility may cause your print 
+quality to degrade and possibly damage your printer.  This utility
+has not been reviewed by Seiko Epson for correctness, and is 
+offered with no warranty at all.  The entire risk of using this 
+utility lies with you.
 
 This utility prints 3 test patterns.  Each pattern looks very
-similar.  The patterns consist of a series of pairs of vertical lines
-that overlap.  Below each pair of lines is a number between 1 and 15.
+similar.  The patterns consist of a series of pairs of vertical
+lines that overlap.  Below each pair of lines is a number between 
+1 and 15.
 
-When you inspect the pairs of lines, you should find the pair of lines
-that is best in alignment, that is, that best forms a single vertical
-line.  Inspect the pairs very carefully to find the best match.  Using
-a loupe or magnifying glass is recommended for the most critical
-inspection.  It is also suggested that you use a good quality paper
-for the test, so that the lines are well-formed and do not spread
-through the paper.  After picking the number matching the best pair,
-place the paper back in the paper input tray before typing it in.
+When you inspect the pairs of lines, you should find the pair
+of lines that is best in alignment, that is, that best forms 
+a single vertical line.  Inspect the pairs very carefully to 
+find the best match.  Using a loupe or magnifying glass is 
+recommended for the most critical inspection.  It is also 
+suggested that you use a good quality paper for the test, so 
+that the lines are well-formed and do not spread through the 
+paper.  After picking the number matching the best pair, place 
+the paper back in the paper input tray before typing it in.
 
-Each pattern is similar, but later patterns use finer dots for more
-critical alignment.  You must run all of the passes to correctly align
-your printer.  After running all the alignment passes, the alignment
-patterns will be printed once more.  You should find that the
-middle-most pair (#8 out of the 15) is the best for all patterns. 
+Each pattern is similar, but later patterns use finer dots for
+more critical alignment.  You must run all of the passes to 
+correctly align your printer.  After running all the alignment
+passes, the alignment patterns will be printed once more.  You 
+should find that the middle-most pair (#8 out of the 15) is the
+best for all patterns. 
 
 After the passes are printed once more, you will be offered the
 choices of (s)aving the result in the printer, (r)epeating the
-process, or (q)uitting without saving.  Quitting will not restore the
-previous settings, but powering the printer off and back on will.  If
-you quit, you must repeat the entire process if you wish to later save
-the results.  It is essential that you not turn your printer off
-during this procedure.
+process, or (q)uitting without saving.  Quitting will not restore
+the previous settings, but powering the printer off and back 
+on will.  If you quit, you must repeat the entire process if 
+you wish to later save the results.  It is essential that you 
+not turn your printer off during this procedure.
 
 This procedure assumes that your printer is an Epson Stylus Photo
-870.  If this is not your printer model, please type control-C now and
-choose your actual printer model.
+870.  If this is not your printer model, please type control-C now
+and choose your actual printer model.
 
 Please place a sheet of paper in your printer to begin the head
 alignment procedure. 
 Press enter to continue > 
-Please inspect the print, and choose the best pair of lines in each
-pattern.  Type a pair number, '?' for help, or 'r' to repeat the
-procedure.
+Please inspect the print, and choose the best pair of lines in 
+each pattern.  Type a pair number, '?' for help, or 'r' to repeat
+the procedure.
 Pass #1> 8
 Pass #2> 8
 Pass #3> 8
 Attempting to set alignment...succeeded.
 Please verify that the alignment is correct.  After the alignment
-pattern is printed again, please ensure that the best pattern for each
-line is pattern 8.  If it is not, you should repeat the process to get
-the best quality printing. 
+pattern is printed again, please ensure that the best pattern 
+for each line is pattern 8.  If it is not, you should repeat the 
+process to get the best quality printing. 
 Please insert a fresh sheet of paper.
 Press enter to continue > 
 Please inspect the final output very carefully to ensure that your
@@ -324,10 +327,10 @@ You will then be asked to confirm your choice.
 What do you want to do (s, q, r)?
 > s
 This will permanently alter the configuration of your printer.
-WARNING: this procedure has not been approved by Seiko Epson, and it
-may damage your printer. Proceed? 
-Please confirm by typing 's' again that you wish to save the settings
-to your printer: 
+WARNING: this procedure has not been approved by Seiko Epson, 
+and it may damage your printer. Proceed? 
+Please confirm by typing 's' again that you wish to save the 
+settings to your printer: 
 > s
 About to save settings...succeeded!
 Your alignment settings have been saved to the printer.
@@ -364,7 +367,8 @@ detection output.
   <![ CDATA [
 # escputil -a -r /dev/usb/lp0
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
-Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'
+Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
+'escputil -l'
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'escputil -l' for details.
 
@@ -390,12 +394,14 @@ printer model.
   <![ CDATA [
 # escputil -d -r /dev/usb/lp0
 Escputil version 4.3.0, Copyright (C) 2000-2001 Robert Krawitz
-Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'
+Escputil comes with ABSOLUTELY NO WARRANTY; for details type 
+'escputil -l'
 This is free software, and you are welcome to redistribute it
 under certain conditions; type 'escputil -l' for details.
 
 @EJL ID
-MFG:EPSON;CMD:ESCPL2,BDC;MDL:Stylus Photo 870;CLS:PRINTER;DES:EPSON Stylus Photo 870;
+MFG:EPSON;CMD:ESCPL2,BDC;MDL:Stylus Photo 870;CLS:PRINTER;DES:
+EPSON Stylus Photo 870;
     ]]>
   </programlisting>
 
