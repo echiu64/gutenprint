@@ -1062,39 +1062,40 @@ printer for a different paper size.  The default paper size is
 STP: -sPAPERSIZE=papersize
 IJS: -sPAPERSIZE=papersize (for known Ghostscript paper sizes)
   or
-     -g<x>*<y> where x and y are the width and height of the paper
+     -dDEVICEWIDTHPOINTS=x -dDEVICEHEIGHTPOINTS=y
+               where x and y are the width and height of the paper
                respectively, in points (1/72")
 
 
 
    * Common English paper sizes
 
-Letter          Letter         8.5in x 11in                     -g612x792
-Legal           Legal          8.5in x 14in                     -g612x1008
-Tabloid         Tabloid         11in x 17in                     -g792x1224
-Executive       Executive     7.25in x 10.5in                   -g522x756
-Postcard        Postcard       100mm x 147mm                    -g283x416
-w216h360        3x5                                             -g216x360
-w288h432        4x6                                             -g288x432
-w324h495        Epson 4x6 Photo Paper                           -g324x495
-w360h504        5x7                                             -g360x504
-w360h576        5x8                                             -g360x576
-8x10            8x10                                            -g576x720
-Statement       Manual         5.5in x 8.5in                    -g396x612
-TabloidExtra    12x18                                           -g864x1296
-SuperB          13x19                                           -g936x1368
+Letter          Letter         8.5in x 11in                     x=612, y=792
+Legal           Legal          8.5in x 14in                     x=612, y=1008
+Tabloid         Tabloid         11in x 17in                     x=792, y=1224
+Executive       Executive     7.25in x 10.5in                   x=522, y=756
+Postcard        Postcard       100mm x 147mm                    x=283, y=416
+w216h360        3x5                                             x=216, y=360
+w288h432        4x6                                             x=288, y=432
+w324h495        Epson 4x6 Photo Paper                           x=324, y=495
+w360h504        5x7                                             x=360, y=504
+w360h576        5x8                                             x=360, y=576
+8x10            8x10                                            x=576, y=720
+Statement       Manual         5.5in x 8.5in                    x=396, y=612
+TabloidExtra    12x18                                           x=864, y=1296
+SuperB          13x19                                           x=936, y=1368
 
    * Common photographic paper sizes
 
-w576h864        8x12   Sometimes used for 35 mm                 -g576x864
-w792h1008       11x14                                           -g792x1008
-w1152h1440      16x20                                           -g1152x1440
-w1152h1728      16x24  20x24 for 35 mm                          -g1152x1728
-w1440h1728      20x24                                           -g1440x1728
-w1440h2160      20x30  24x30 for 35 mm                          -g1440x2160
-w1728h2160      24x30                                           -g1728x2160
-w1728h2592      24x36  Sometimes used for 35 mm                 -g1728x2592
-w2160h2880      30x40                                           -g2160x2880
+w576h864        8x12   Sometimes used for 35 mm                 x=576, y=864
+w792h1008       11x14                                           x=792, y=1008
+w1152h1440      16x20                                           x=1152, y=1440
+w1152h1728      16x24  20x24 for 35 mm                          x=1152, y=1728
+w1440h1728      20x24                                           x=1440, y=1728
+w1440h2160      20x30  24x30 for 35 mm                          x=1440, y=2160
+w1728h2160      24x30                                           x=1728, y=2160
+w1728h2592      24x36  Sometimes used for 35 mm                 x=1728, y=2592
+w2160h2880      30x40                                           x=2160, y=2880
 
    International Paper Sizes (mostly taken from BS4000:1968)
 
@@ -1105,123 +1106,123 @@ w2160h2880      30x40                                           -g2160x2880
    * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
    * size is obtained by doubling or halving another A size.
 
-w4768h6749      4A            1682mm x 2378mm                   -g4768x6749
-w3370h4768      2A            1189mm x 1682mm                   -g3370x4768
-A0              A0             841mm x 1189mm                   -g2384x3370
-A1              A1             594mm x  841mm                   -g1684x2384
-A2              A2             420mm x  594mm                   -g1191x1684
-A3              A3             297mm x  420mm                   -g842x1191
-A4              A4             210mm x  297mm                   -g595x842
-A5              A5             148mm x  210mm                   -g420x595
-A6              A6             105mm x  148mm                   -g297x420
-A7              A7              74mm x  105mm                   -g210x297
-A8              A8              52mm x   74mm                   -g148x210
-A9              A9              37mm x   52mm                   -g105x148
-A10             A10             26mm x   37mm                   -g73x105
+w4768h6749      4A            1682mm x 2378mm                   x=4768, y=6749
+w3370h4768      2A            1189mm x 1682mm                   x=3370, y=4768
+A0              A0             841mm x 1189mm                   x=2384, y=3370
+A1              A1             594mm x  841mm                   x=1684, y=2384
+A2              A2             420mm x  594mm                   x=1191, y=1684
+A3              A3             297mm x  420mm                   x=842, y=1191
+A4              A4             210mm x  297mm                   x=595, y=842
+A5              A5             148mm x  210mm                   x=420, y=595
+A6              A6             105mm x  148mm                   x=297, y=420
+A7              A7              74mm x  105mm                   x=210, y=297
+A8              A8              52mm x   74mm                   x=148, y=210
+A9              A9              37mm x   52mm                   x=105, y=148
+A10             A10             26mm x   37mm                   x=73, y=105
 
    * Stock sizes for normal trims.
    * Allowance for trim is 3 millimetres.
 
-w2437h3458      RA0            860mm x 1220mm                   -g2437x3458
-w1729h2437      RA1            610mm x  860mm                   -g1729x2437
-w1218h1729      RA2            430mm x  610mm                   -g1218x1729
-w864h1218       RA3            305mm x  430mm                   -g864x1218
-w609h864        RA4            215mm x  305mm                   -g609x864
+w2437h3458      RA0            860mm x 1220mm                   x=2437, y=3458
+w1729h2437      RA1            610mm x  860mm                   x=1729, y=2437
+w1218h1729      RA2            430mm x  610mm                   x=1218, y=1729
+w864h1218       RA3            305mm x  430mm                   x=864, y=1218
+w609h864        RA4            215mm x  305mm                   x=609, y=864
 
    * Stock sizes for bled work or extra trims.
 
-w2551h3628      SRA0          900mm x 1280mm                    -g2551x3628
-w1814h2551      SRA1          640mm x  900mm                    -g1814x2551
-w1275h1814      SRA2          450mm x  640mm                    -g1275x1814
-w907h1275       SRA3          320mm x  450mm                    -g907x1275
-w637h907        SRA4          225mm x  320mm                    -g637x907
+w2551h3628      SRA0          900mm x 1280mm                    x=2551, y=3628
+w1814h2551      SRA1          640mm x  900mm                    x=1814, y=2551
+w1275h1814      SRA2          450mm x  640mm                    x=1275, y=1814
+w907h1275       SRA3          320mm x  450mm                    x=907, y=1275
+w637h907        SRA4          225mm x  320mm                    x=637, y=907
 
    * "B" series: Posters, wall charts and similar items.
 
-w5669h8016      4B ISO        2000mm x 2828mm                   -g5669x8016
-w4008h5669      2B ISO        1414mm x 2000mm                   -g4008x5669
-ISOB0           B0 ISO        1000mm x 1414mm                   -g2834x4008
-ISOB1           B1 ISO         707mm x 1000mm                   -g2004x2834
-ISOB2           B2 ISO         500mm x  707mm                   -g1417x2004
-ISOB3           B3 ISO         353mm x  500mm                   -g1000x1417
-ISOB4           B4 ISO         250mm x  353mm                   -g708x1000
-ISOB5           B5 ISO         176mm x  250mm                   -g498x708
-ISOB6           B6 ISO         125mm x  176mm                   -g354x498
-ISOB7           B7 ISO          88mm x  125mm                   -g249x354
-ISOB8           B8 ISO          62mm x   88mm                   -g175x249
-ISOB9           B9 ISO          44mm x   62mm                   -g124x175
-ISOB10          B10 ISO         31mm x   44mm                   -g87x124
+w5669h8016      4B ISO        2000mm x 2828mm                   x=5669, y=8016
+w4008h5669      2B ISO        1414mm x 2000mm                   x=4008, y=5669
+ISOB0           B0 ISO        1000mm x 1414mm                   x=2834, y=4008
+ISOB1           B1 ISO         707mm x 1000mm                   x=2004, y=2834
+ISOB2           B2 ISO         500mm x  707mm                   x=1417, y=2004
+ISOB3           B3 ISO         353mm x  500mm                   x=1000, y=1417
+ISOB4           B4 ISO         250mm x  353mm                   x=708, y=1000
+ISOB5           B5 ISO         176mm x  250mm                   x=498, y=708
+ISOB6           B6 ISO         125mm x  176mm                   x=354, y=498
+ISOB7           B7 ISO          88mm x  125mm                   x=249, y=354
+ISOB8           B8 ISO          62mm x   88mm                   x=175, y=249
+ISOB9           B9 ISO          44mm x   62mm                   x=124, y=175
+ISOB10          B10 ISO         31mm x   44mm                   x=87, y=124
 
-B0              B0 JIS                                          -g2919x4127
-B1              B1 JIS                                          -g2063x2919
-B2              B2 JIS                                          -g1459x2063
-B3              B3 JIS                                          -g1029x1459
-B4              B4 JIS                                          -g727x1029
-B5              B5 JIS                                          -g518x727
-B6              B6 JIS                                          -g362x518
-B7              B7 JIS                                          -g257x362
-B8              B8 JIS                                          -g180x257
-B9              B9 JIS                                          -g127x180
-B10             B10 JIS                                         -g90x127
+B0              B0 JIS                                          x=2919, y=4127
+B1              B1 JIS                                          x=2063, y=2919
+B2              B2 JIS                                          x=1459, y=2063
+B3              B3 JIS                                          x=1029, y=1459
+B4              B4 JIS                                          x=727, y=1029
+B5              B5 JIS                                          x=518, y=727
+B6              B6 JIS                                          x=362, y=518
+B7              B7 JIS                                          x=257, y=362
+B8              B8 JIS                                          x=180, y=257
+B9              B9 JIS                                          x=127, y=180
+B10             B10 JIS                                         x=90, y=127
 
    * "C" series: Envelopes or folders suitable for A size stationery.
 
-C0              C0            917mm x 1297mm                    -g2599x3676
-C1              C1            648mm x  917mm                    -g1836x2599
-C2              C2            458mm x  648mm                    -g1298x1836
-C3              C3            324mm x  458mm                    -g918x1298
-C4              C4            229mm x  324mm                    -g649x918
-C5              C5            162mm x  229mm                    -g459x649
-w354h918        B6-C4         125mm x  324mm                    -g354x918
-C6              C6            114mm x  162mm                    -g323x459
-DL              DL            110mm x  220mm                    -g311x623
-w229h459        C7-6           81mm x  162mm                    -g229x459
-C7              C7             81mm x  114mm                    -g229x323
-C8              C8             57mm x   81mm                    -g161x229
-C9              C9             40mm x   57mm                    -g113x161
-C10             C10            28mm x   40mm                    -g79x113
+C0              C0            917mm x 1297mm                    x=2599, y=3676
+C1              C1            648mm x  917mm                    x=1836, y=2599
+C2              C2            458mm x  648mm                    x=1298, y=1836
+C3              C3            324mm x  458mm                    x=918, y=1298
+C4              C4            229mm x  324mm                    x=649, y=918
+C5              C5            162mm x  229mm                    x=459, y=649
+w354h918        B6-C4         125mm x  324mm                    x=354, y=918
+C6              C6            114mm x  162mm                    x=323, y=459
+DL              DL            110mm x  220mm                    x=311, y=623
+w229h459        C7-6           81mm x  162mm                    x=229, y=459
+C7              C7             81mm x  114mm                    x=229, y=323
+C8              C8             57mm x   81mm                    x=161, y=229
+C9              C9             40mm x   57mm                    x=113, y=161
+C10             C10            28mm x   40mm                    x=79, y=113
 
    * US CAD standard paper sizes
 
-ARCHA           ArchA          9x12in                           -g648x864
-ARCHB           ArchB          12x18in                          -g864x1296
-ARCHC           ArchC          18x24in                          -g1296x1728
-ARCHD           ArchD          24x36in                          -g1728x2592
-ARCHE           ArchE          36x48in                          -g2592x3456
+ARCHA           ArchA          9x12in                           x=648, y=864
+ARCHB           ArchB          12x18in                          x=864, y=1296
+ARCHC           ArchC          18x24in                          x=1296, y=1728
+ARCHD           ArchD          24x36in                          x=1728, y=2592
+ARCHE           ArchE          36x48in                          x=2592, y=3456
 
    * Foolscap
 
-w612h936        American foolscap                               -g612x936
-w648h936        European foolscap                               -g648x936
+w612h936        American foolscap                               x=612, y=936
+w648h936        European foolscap                               x=648, y=936
 
    * Sizes for book production
    * The BPIF and the Publishers Association jointly recommend ten
    * standard metric sizes for case-bound titles as follows:
 
-w535h697        Crown Quarto          189mm x 246mm             -g535x697
-w569h731        Large Crown Quarto    201mm x 258mm             -g569x731
-w620h782        Demy Quarto           219mm x 276mm             -g620x782
-w671h884        Royal Quarto          237mm x 312mm             -g671x884
-w348h527        Crown Octavo          123mm x 186mm             -g348x527
-w365h561        Large Crown Octavo    129mm x 198mm             -g365x561
-w391h612        Demy Octavo           138mm x 216mm             -g391x612
-w442h663        Royal Octavo          156mm x 234mm             -g442x663
+w535h697        Crown Quarto          189mm x 246mm             x=535, y=697
+w569h731        Large Crown Quarto    201mm x 258mm             x=569, y=731
+w620h782        Demy Quarto           219mm x 276mm             x=620, y=782
+w671h884        Royal Quarto          237mm x 312mm             x=671, y=884
+w348h527        Crown Octavo          123mm x 186mm             x=348, y=527
+w365h561        Large Crown Octavo    129mm x 198mm             x=365, y=561
+w391h612        Demy Octavo           138mm x 216mm             x=391, y=612
+w442h663        Royal Octavo          156mm x 234mm             x=442, y=663
 
    * Paperback sizes in common usage
 
-w314h504        Small paperback       111mm x 178mm             -g314x504
-w314h513        Penguin small paperback       111mm x 181mm     -g314x513
-w365h561        Penguin large paperback       129mm x 198mm     -g365x561
+w314h504        Small paperback       111mm x 178mm             x=314, y=504
+w314h513        Penguin small paperback       111mm x 181mm     x=314, y=513
+w365h561        Penguin large paperback       129mm x 198mm     x=365, y=561
 
    * Miscellaneous sizes
 
-w283h420        Hagaki Card    100 x 148 mm                     -g283x420
-w420h567        Oufuku Card    148 x 200 mm                     -g420x567
-w340h666        Long 3         Japanese long envelope #3        -g340x666
-w255h581        Long 4         Japanese long envelope #4        -g255x581
-w680h941        Kaku           Japanese Kaku envelope #4        -g680x941
-COM10           Commercial 10  US Commercial 10 env             -g297x684
-w315h414        A2 Invitation  US A2 invitation                 -g315x414
+w283h420        Hagaki Card    100 x 148 mm                     x=283, y=420
+w420h567        Oufuku Card    148 x 200 mm                     x=420, y=567
+w340h666        Long 3         Japanese long envelope #3        x=340, y=666
+w255h581        Long 4         Japanese long envelope #4        x=255, y=581
+w680h941        Kaku           Japanese Kaku envelope #4        x=680, y=941
+COM10           Commercial 10  US Commercial 10 env             x=297, y=684
+w315h414        A2 Invitation  US A2 invitation                 x=315, y=414
 
 
 Color Balancing Values: (min,max,default)
