@@ -2243,8 +2243,7 @@ set_ink_ranges(stp_vars_t v, const canon_variable_ink_t *ink, int color,
 {
   if (!ink)
     return;
-  stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades,
-			    ink->density * stp_get_float_parameter(v, "Density"));
+  stpi_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0);
   stpi_channel_set_density_adjustment
     (v, color, 1, (get_double_param(v, channel_param) *
 		   get_double_param(v, subchannel_param) *
