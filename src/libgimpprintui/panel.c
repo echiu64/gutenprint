@@ -2096,7 +2096,7 @@ setup_update (void)
 {
   GtkAdjustment *adjustment;
   gint           idx;
-  const char *ppd_file_name = stp_get_ppd_file(pv->v);
+  const char *ppd_file_name = stp_get_file_parameter(pv->v, "PPDFile");
 
   idx = stp_get_printer_index_by_driver (stp_get_driver (pv->v));
 
@@ -2109,7 +2109,7 @@ setup_update (void)
   else
     gtk_entry_set_text (GTK_ENTRY (ppd_file), "");
 
-  if (strcmp(stp_printer_get_family(stp_get_printer(pv->v)), "ps") == 0)
+  if (stp_parameter_find_in_settings(pv->v, "PPDFile"))
     {
       gtk_widget_show (ppd_box);
       gtk_widget_show (ppd_label);
@@ -2171,7 +2171,8 @@ set_printer(void)
 {
   stp_set_driver (pv->v, stp_printer_get_driver (tmp_printer));
   stpui_plist_set_output_to (pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
-  stp_set_ppd_file (pv->v, gtk_entry_get_text (GTK_ENTRY (ppd_file)));
+  stp_set_file_parameter (pv->v, "PPDFile",
+			  gtk_entry_get_text (GTK_ENTRY (ppd_file)));
   gtk_label_set_text (GTK_LABEL (printer_model_label),
                       gettext (stp_printer_get_long_name (tmp_printer)));
 
@@ -2231,6 +2232,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       gpointer        data)   /* I - Data */
 {
   static int calling_print_driver_callback = 0;
+  const stp_vars_t v;
   if (calling_print_driver_callback)
     return;
   calling_print_driver_callback++;
@@ -2240,7 +2242,8 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   tmp_printer = stp_get_printer_by_index ((gint) data);
 
-  if (strcmp(stp_printer_get_family(tmp_printer), "ps") == 0)
+  v = stp_printer_get_printvars(tmp_printer);
+  if (stp_parameter_find_in_settings(v, "PPDFile"))
     {
       gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_box);

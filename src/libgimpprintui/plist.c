@@ -224,6 +224,17 @@ get_mandatory_string_param(stp_vars_t v, const char *param, char **lineptr)
   return 1;
 }
 
+static int
+get_mandatory_file_param(stp_vars_t v, const char *param, char **lineptr)
+{
+  char *commaptr = strchr(*lineptr, ',');
+  if (commaptr == NULL)
+    return 0;
+  stp_set_file_parameter_n(v, param, *lineptr, commaptr - *lineptr);
+  *lineptr = commaptr + 1;
+  return 1;
+}
+
 #define GET_MANDATORY_INT_PARAM(param)			\
 do {							\
   if ((commaptr = strchr(lineptr, ',')) == NULL)	\
@@ -434,7 +445,8 @@ stpui_printrc_load_v0(FILE *fp)
       if (! stp_get_printer(key.v))
 	continue;
 
-      GET_MANDATORY_STRING_PARAM(ppd_file);
+      if (!get_mandatory_file_param(key.v, "PPDFile", &lineptr))
+	continue;
       GET_MANDATORY_INT_PARAM(output_type);
       if (!get_mandatory_string_param(key.v, "Resolution", &lineptr))
 	continue;
@@ -547,7 +559,7 @@ stpui_printrc_load_v1(FILE *fp)
       else if (strcasecmp("driver", keyword) == 0)
 	stp_set_driver(key.v, value);
       else if (strcasecmp("ppd-file", keyword) == 0)
-	stp_set_ppd_file(key.v, value);
+	stp_set_file_parameter(key.v, "PPDFile", value);
       else if (strcasecmp("output-type", keyword) == 0)
 	stp_set_output_type(key.v, atoi(value));
       else if (strcasecmp("media-size", keyword) == 0)
@@ -730,7 +742,6 @@ stpui_printrc_save(void)
 	  fprintf(fp, "Unit: %d\n", p->unit);
 
 	  fprintf(fp, "Driver: %s\n", stp_get_driver(p->v));
-	  fprintf(fp, "PPD-File: %s\n", stp_get_ppd_file(p->v));
 
 	  fprintf(fp, "Left: %d\n", stp_get_left(p->v));
 	  fprintf(fp, "Top: %d\n", stp_get_top(p->v));
@@ -747,10 +758,14 @@ stpui_printrc_save(void)
 	      switch (param->p_type)
 		{
 		case STP_PARAMETER_TYPE_STRING_LIST:
-		case STP_PARAMETER_TYPE_FILE:
 		  if (stp_check_string_parameter(p->v, param->name))
 		    fprintf(fp, "%s: %s\n", param->name,
 			    stp_get_string_parameter(p->v, param->name));
+		  break;
+		case STP_PARAMETER_TYPE_FILE:
+		  if (stp_check_file_parameter(p->v, param->name))
+		    fprintf(fp, "%s: %s\n", param->name,
+			    stp_get_file_parameter(p->v, param->name));
 		  break;
 		case STP_PARAMETER_TYPE_DOUBLE:
 		  if (stp_check_float_parameter(p->v, param->name))

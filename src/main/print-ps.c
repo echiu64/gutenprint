@@ -93,6 +93,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1
   },
+  {
+    "PPDFile", N_("PPDFile"),
+    N_("PPD File"),
+    STP_PARAMETER_TYPE_FILE, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1
+  },
 };
 
 static int the_parameter_count =
@@ -135,7 +141,7 @@ ps_parameters(const stp_vars_t v, const char *name,
 		lname[255],
 		loption[255],
 		*ltext;
-  const char *ppd_file = stp_get_ppd_file(v);
+  const char *ppd_file = stp_get_file_parameter(v, "PPDFile");
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   description->deflt.str = 0;
 
@@ -237,15 +243,15 @@ ps_media_size(const stp_vars_t v,		/* I */
 {
   char	*dimensions;			/* Dimensions of media size */
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
+  const char *ppd_file_name = stp_get_file_parameter(v, "PPDFile");
   if (!pagesize)
     pagesize = "";
 
   stp_dprintf(STP_DBG_PS, v,
 	      "ps_media_size(%d, \'%s\', \'%s\', %08x, %08x)\n",
-	      stp_get_model(v), stp_get_ppd_file(v), pagesize, width, height);
+	      stp_get_model(v), ppd_file_name, pagesize, width, height);
 
-  if ((dimensions = ppd_find(stp_get_ppd_file(v), "PaperDimension",
-			     pagesize, NULL))
+  if ((dimensions = ppd_find(ppd_file_name, "PaperDimension", pagesize, NULL))
       != NULL)
     sscanf(dimensions, "%d%d", width, height);
   else
@@ -275,7 +281,8 @@ ps_imageable_area(const stp_vars_t v,      /* I */
     pagesize = "";
   ps_media_size(v, &width, &height);
 
-  if ((area = ppd_find(stp_get_ppd_file(v), "ImageableArea", pagesize, NULL))
+  if ((area = ppd_find(stp_get_file_parameter(v, "PPDFile"),
+		       "ImageableArea", pagesize, NULL))
       != NULL)
     {
       stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
@@ -334,7 +341,7 @@ ps_print(const stp_vars_t v, stp_image_t *image)
 {
   int		status = 1;
   int		model = stp_get_model(v);
-  const char	*ppd_file = stp_get_ppd_file(v);
+  const char	*ppd_file = stp_get_file_parameter(v, "PPDFile");
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_size = stp_get_string_parameter(v, "PageSize");
   const char	*media_type = stp_get_string_parameter(v, "MediaType");

@@ -278,7 +278,7 @@ run (char   *name,		/* I - Name of print program. */
 	{
 	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
 	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
-	  stp_set_ppd_file(gimp_vars.v, param[5].data.d_string);
+	  stp_set_file_parameter(gimp_vars.v, "PPDFile", param[5].data.d_string);
 	  stp_set_output_type(gimp_vars.v, param[6].data.d_int32);
 	  stp_set_string_parameter(gimp_vars.v, "Resolution", param[7].data.d_string);
 	  stp_set_string_parameter(gimp_vars.v, "PageSize", param[8].data.d_string);

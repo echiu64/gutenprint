@@ -330,24 +330,6 @@ DEF_FUNCS(destroy_dither_data_func, destroy_data_func_t, )
 DEF_FUNCS(outfunc, stp_outfunc_t, )
 DEF_FUNCS(errfunc, stp_outfunc_t, )
 
-void
-stp_set_ppd_file(stp_vars_t v, const char *ppd_file)
-{
-  stp_set_file_parameter(v, "PPDFile", ppd_file);
-}
-
-void
-stp_set_ppd_file_n(stp_vars_t v, const char *ppd_file, int bytes)
-{
-  stp_set_file_parameter_n(v, "PPDFile", ppd_file, bytes);
-}
-
-const char *
-stp_get_ppd_file(stp_vars_t v)
-{
-  return stp_get_file_parameter(v, "PPDFile");
-}
-
 
 void
 stp_set_verified(stp_vars_t vv, int val)
@@ -994,7 +976,6 @@ stp_copy_vars(stp_vars_t vd, const stp_vars_t vs)
   stp_set_copy_driver_data_func(vd, stp_get_copy_driver_data_func(vs));
   stp_set_copy_dither_data_func(vd, stp_get_copy_dither_data_func(vs));
   stp_set_copy_color_data_func(vd, stp_get_copy_color_data_func(vs));
-  stp_set_ppd_file(vd, stp_get_ppd_file(vs));
   stp_set_output_type(vd, stp_get_output_type(vs));
   stp_set_left(vd, stp_get_left(vs));
   stp_set_top(vd, stp_get_top(vs));
