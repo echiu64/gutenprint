@@ -4064,8 +4064,6 @@ preview_motion_callback (GtkWidget      *widget,
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_width * pv->scaling / 100 : print_width;
 	  gint x_threshold = MAX (1, (preview_ppi * increment_width) / INCH);
-	  fprintf(stderr, "printablewidth %d print %d increment %d\n",
-		  printable_width, print_width, increment_width);
 	  if (event->x > mouse_x)
 	    steps = MIN((event->x - mouse_x) / x_threshold,
 			((right - orig_left) / increment_width) - 1);
@@ -4080,8 +4078,6 @@ preview_motion_callback (GtkWidget      *widget,
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_height * pv->scaling / 100 : print_height;
 	  gint y_threshold = MAX (1, (preview_ppi * increment_height) / INCH);
-	  fprintf(stderr, "printableheight %d print %d increment %d\n",
-		  printable_height, print_height, increment_height);
 	  if (event->y > mouse_y)
 	    steps = MIN((event->y - mouse_y) / y_threshold,
 			((bottom - orig_top) / increment_height) - 1);
