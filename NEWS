@@ -1196,11 +1196,14 @@ Epson Stylus C62               escp2-c62       EPSON Stylus C62
 Epson Stylus C70               escp2-c70       EPSON Stylus C70
 Epson Stylus C80               escp2-c80       EPSON Stylus C80
 Epson Stylus C82               escp2-c82       EPSON Stylus C82
+Epson Stylus C83               escp2-c83       EPSON Stylus C83
+Epson Stylus C84               escp2-c84       EPSON Stylus C84
 Epson Stylus Color             escp2           EPSON Stylus Color
 Epson Stylus Color I           escp2           EPSON Stylus Color
 Epson Stylus Color II          escp2           EPSON Stylus Color
 Epson Stylus Color IIs         escp2           EPSON Stylus Color
 Epson Stylus Color PRO         escp2-pro       EPSON Stylus Color Pro
+Epson Stylus Color Pro XL      escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Color 400         escp2-400       EPSON Stylus Color 400
 Epson Stylus Color 440         escp2-440       EPSON Stylus Color 440
 Epson Stylus Color 460         escp2-460       EPSON Stylus Color 460
@@ -1265,7 +1268,6 @@ Epson Stylus Pro 9000          escp2-9000      EPSON Stylus Pro 9000
 Epson Stylus Pro 9500          escp2-9500      EPSON Stylus Pro 9500
 Epson Stylus Pro 9600          escp2-9600      EPSON Stylus Pro 9600
 Epson Stylus Pro 10000         escp2-10000     EPSON Stylus Pro 10000
-Epson Stylus Color Pro XL      escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
 Epson Stylus CX3100            escp2-cx3100    EPSON Stylus CX-3100

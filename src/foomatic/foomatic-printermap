@@ -56,6 +56,9 @@
 #gptofoo bjc-7000 printer/Canon-BJC-7000
 #gptofoo bjc-7100 printer/Canon-BJC-7100
 #gptofoo bjc-8200 printer/Canon-BJC-8200
+#gptofoo canon-cp100 printer/Canon-CP-100
+#gptofoo canon-cp100 printer/Canon-CP-200
+#gptofoo canon-cp100 printer/Canon-CP-300
 #gptofoo pcl-4 printer/Canon-GP_335
 #gptofoo pcl-3 printer/Canon-LBP-4sx
 #gptofoo pcl-4l printer/Canon-LBP-430
@@ -113,6 +116,8 @@
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2-c82 printer/Epson-Stylus_C82
+#gptofoo escp2-c83 printer/Epson-Stylus_C83
+#gptofoo escp2-c84 printer/Epson-Stylus_C84
 #gptofoo escp2 printer/Epson-Stylus_Color
 #gptofoo escp2 printer/Epson-Stylus_Color_I
 #gptofoo escp2 printer/Epson-Stylus_Color_II
@@ -504,7 +509,6 @@
 #gptofoo pcl-4l printer/Okidata-Super_6e
 #gptofoo pcl-2 printer/Olivetti-JP350S
 #gptofoo pcl-2 printer/Olivetti-PG_306
-#gptofoo canon-cp100 printer/Canon-CP-100
 #gptofoo olympus-p300 printer/Olympus-P-300E
 #gptofoo olympus-p300 printer/Olympus-P-300U
 #gptofoo olympus-p300 printer/Olympus-P-330NE
