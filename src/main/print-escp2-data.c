@@ -4123,7 +4123,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
      MODEL_FAST_360_NO),
     1, 1, 1, 1, 1, 1, 7,
-    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    360, 2880, 2880, 14400, -1, 2880, 1440, 360, 180,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
@@ -4138,7 +4138,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_YES |
      MODEL_FAST_360_NO),
     1, 1, 1, 1, 1, 1, 7,
-    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    360, 2880, 2880, 14400, -1, 2880, 1440, 360, 180,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, 0, 0, 0,
@@ -4147,7 +4147,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     ultrachrome_bits, pro_base_res, &roll_feed_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 50: Stylus Photo 830 */
+  /* 50: Stylus Photo 825/830 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
