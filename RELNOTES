@@ -37,5 +37,8 @@ Print 3.0.5, the version distributed with the Gimp 1.1.17:
 6) Utilities (in various states of completion) to reconstitute an
    image from a print file.
 
+7) Bug fixes for density in indexed and gray modes, and for excess
+   pseudo-black printing in general.
+
 There are additional improvements over Print 2.0.2 (the version
 distributed with Gimp 1.1.11 and earlier) too numerous to list here.
