@@ -1642,6 +1642,7 @@ typedef struct escp_init
   int unidirectional;
   int resid;
   const char *paper_type;
+  const char *media_source;
 } escp_init_t;
 
 typedef struct {
@@ -1995,6 +1996,19 @@ escp2_parameters(const printer_t *printer,	/* I - Printer model */
       *count = nmediatypes;
       return valptrs;
     }
+  else if (strcmp(name, "InputSlot") == 0)
+    {
+      if (escp2_has_cap(model, MODEL_ROLLFEED_MASK, MODEL_ROLLFEED_NO))
+	return NULL;
+      else
+	{      /* Roll Feed capable printers */
+		valptrs = malloc(sizeof(char *) * 2);
+		valptrs[0] = strdup("Standard");
+		valptrs[1] = strdup("Roll Feed");
+		*count = 2;
+		return valptrs;
+	}
+    }
   else
     return (NULL);
 
@@ -2120,6 +2134,26 @@ escp2_set_remote_sequence(FILE *prn, escp_init_t *init)
                                      MODEL_ZEROMARGIN_YES))
 	fprintf(prn, /* Set zero-margin print mode */
 	             "FP\003%c%c\260\377", 0, 0);
+
+	/* set up Roll-Feed options on appropriate printers 
+		(tested for STP 870, which has no cutter) */
+      if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
+				     MODEL_ROLLFEED_YES))
+	{
+		if(strcmp(init->media_source,"Roll Feed") == 0)
+			fprintf(prn, /* Set Roll Feed mode */
+			     "IR\002%c%c%c"
+			     "EX\006%c%c%c%c%c%c%c", 
+				0, 0, 1,
+				0, 0,0,0,0,5,1);
+		else
+			fprintf(prn, /* Set non-Roll Feed mode */
+			     "IR\002%c%c%c"
+			     "EX\006%c%c%c%c%c%c%c", 
+				0, 0, 3,
+				0, 0, 0, 0, 0, 5, 0);
+	}
+
       fprintf(prn, /* Exit remote mode */
                    "\033%c%c%c", 0, 0, 0);
     }
@@ -2289,11 +2323,26 @@ escp2_deinit_printer(FILE *prn, escp_init_t *init)
         "\033@", prn);
   if (escp2_has_cap(init->model, MODEL_COMMAND_MASK, MODEL_COMMAND_1999)) {
     fprintf(prn, /* Enter remote mode */
-                 "\033(R\010%c%cREMOTE1"
-                 /* Load settings from NVRAM */
+                 "\033(R\010%c%cREMOTE1", 0, 0);
+	/* set up Roll-Feed options on appropriate printers 
+		(tested for STP 870, which has no cutter) */
+      if (escp2_has_cap(init->model, MODEL_ROLLFEED_MASK,
+				     MODEL_ROLLFEED_YES))
+	{
+		if(strcmp(init->media_source,"Roll Feed") == 0)
+			fprintf(prn, /* End Roll Feed mode */
+			     "IR\002%c%c%c",
+				0, 0, 0);
+		else
+			fprintf(prn, /* End non-Roll Feed mode */
+			     "IR\002%c%c%c",
+				0, 0, 2);
+	}
+    fprintf(prn, /* Load settings from NVRAM */
                  "LD%c%c"
                  /* Exit remote mode */
-                 "\033%c%c%c", 0, 0, 0, 0, 0, 0, 0);
+                 "\033%c%c%c",  0, 0, 0, 0, 0);
+
   }
 }
 
@@ -2314,6 +2363,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   int		orientation = v->orientation;
   const char	*ink_type = v->ink_type;
   double	scaling = v->scaling;
+  const char	*media_source = v->media_source;
   int		top = v->top;
   int		left = v->left;
   int		y;		/* Looping vars */
@@ -2526,6 +2576,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   init.resid = resid;
   init.bits = bits;
   init.paper_type = media_type;
+  init.media_source = media_source;
 
   escp2_init_printer(prn, &init);
 
