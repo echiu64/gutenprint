@@ -77,9 +77,9 @@ pkgconfigdata_DATA = gutenprintui2.pc
 # Copied from include/gutenprintui2/Makefile.am
 # This duplication needs fixing somehow
 stpui_public_h_sources = \
-	$(top_srcdir)/include/gutenprintui2/gutenprintui.h	\
-	$(top_srcdir)/include/gutenprintui2/curve.h		\
-	$(top_srcdir)/include/gutenprintui2/gammacurve.h
+	../../include/gutenprintui2/gutenprintui.h	\
+	../../include/gutenprintui2/curve.h		\
+	../../include/gutenprintui2/gammacurve.h
 
 if MAINTAINER_MODE
 typebuiltins_extra_deps = Makefile
