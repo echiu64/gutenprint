@@ -245,6 +245,7 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
   char	*dimensions;			/* Dimensions of media size */
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
   const char *ppd_file_name = stp_get_file_parameter(v, "PPDFile");
+  float fwidth, fheight;
   if (!pagesize)
     pagesize = "";
 
@@ -255,7 +256,13 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 
   if ((dimensions = ppd_find(ppd_file_name, "PaperDimension", pagesize, NULL))
       != NULL)
-    sscanf(dimensions, "%d%d", width, height);
+    {
+      sscanf(dimensions, "%f%f", &fwidth, &fheight);
+      *width = fwidth;
+      *height = fheight;
+      stp_dprintf(STP_DBG_PS, v, "dimensions '%s' %f %f %d %d\n",
+		  dimensions, fwidth, fheight, *width, *height);
+    }
   else
     stp_default_media_size(v, width, height);
 }
@@ -304,6 +311,8 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 	}
       else
 	*left = *right = *bottom = *top = 0;
+      stp_dprintf(STP_DBG_PS, v, "l %d r %d b %d t %d h %d w %d\n",
+		  *left, *right, *bottom, *top, width, height);
     }
   else
     {
