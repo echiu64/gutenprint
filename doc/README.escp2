@@ -340,7 +340,17 @@ This is a list of all remote commands we have seen:
 				     print job after the "ESC @" printer
 				     reset command.
 
-   * CH BC=2 00 00                   perform a head cleaning cycle
+   * CH BC=2 00 xx		     perform a head cleaning cycle.
+				     The heads to clean are determined
+				     by parameter xx:
+
+					00 = clean all heads
+					01 = clean black head
+					02 = clean colour heads
+
+				     While xx = 00 is probably supported
+				     by all printers, xx = 01 and 02
+				     may well not be.
 
    * DT BC=3 00 xx 00                print an alignment pattern.
 				     There are three patterns, which
