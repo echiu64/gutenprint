@@ -1,2 +1,16 @@
 Makefile
 Makefile.in
+gdevstp-canon.c
+gdevstp-color.c
+gdevstp-dither.c
+gdevstp-escp2.c
+gdevstp-lexmark.c
+gdevstp-pcl.c
+gdevstp-printers.c
+gdevstp-ps.c
+gdevstp-util.c
+gdevstp-weave.c
+gdevstp-print.h
+gdevstp-quickmatrix257.h
+gdevstp-ran.367.179.h
+gdevstp-ran.509.131.h

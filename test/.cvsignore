@@ -1,0 +1,10 @@
+.deps
+.libs
+Makefile
+Makefile.in
+escp2-weavetest
+printer_options
+unprint
+escp2-unprint
+pcl-unprint
+testdither
