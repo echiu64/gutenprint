@@ -148,4 +148,4 @@ CLEANFILES = printers-oldlist.h papers-oldlist.h
 DISTCLEANFILES = gimpprint.pc gimpprint.pc.in
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = $(pkgxmldata_DATA)
+EXTRA_DIST = $(pkgxmldata_DATA) libgimpprint.sym

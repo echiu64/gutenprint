@@ -13,24 +13,25 @@ lib/xmalloc.c
 # Main shared object sources
 src/main/curve.c
 src/main/image.c
+src/main/module.c
+src/main/path.c
 src/main/print-canon.c
 src/main/print-color.c
 src/main/print-dither-matrices.c
 src/main/print-dither.c
+src/main/printers.c
 src/main/print-escp2-data.c
 src/main/print-escp2.c
 src/main/print-lexmark.c
 src/main/print-list.c
 src/main/print-papers.c
 src/main/print-pcl.c
-src/main/print-printers.c
 src/main/print-ps.c
 src/main/print-raw.c
 src/main/print-util.c
 src/main/print-vars.c
 #src/main/print-version.c
 src/main/print-weave.c
-src/main/printers.c
 src/main/string-list.c
 
 # UI library sources
