@@ -1120,6 +1120,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (desc.is_active)
 		{
+		  int printed_default_value = 0;
 		  if (strcmp(lparam->name, "Quality") == 0)
 		    has_quality_parameter = 1;
 		  if (!printed_open_group)
@@ -1136,17 +1137,16 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 			   desc.name);
 #endif
 		  if (!desc.is_mandatory)
-		    {
-		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
-		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
-			       "None", _("None"));
-		    }
+		    gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		  switch (desc.p_type)
 		    {
 		    case STP_PARAMETER_TYPE_STRING_LIST:
 		      if (desc.is_mandatory)
 			gzprintf(fp, "*DefaultStp%s: %s\n",
 				 desc.name, desc.deflt.str);
+		      else
+			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				 "None", _("None"));
 		      num_opts = stp_string_list_count(desc.bounds.str);
 		      for (i = 0; i < num_opts; i++)
 			{
@@ -1159,6 +1159,9 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		      if (desc.is_mandatory)
 			gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
 				 desc.deflt.boolean ? "True" : "False");
+		      else
+			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				 "None", _("None"));
 		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			       desc.name, "False", _("No"));
 		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
@@ -1169,17 +1172,27 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 			{
 			  gzprintf(fp, "*DefaultStp%s: %d\n", desc.name,
 				   (int) (desc.deflt.dbl * 1000));
-			  gzprintf(fp, "*Stp%s: None/%.3f: ""\n", desc.name,
-				   desc.deflt.dbl);
 			}
 		      for (i = desc.bounds.dbl.lower * 1000;
 			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
-			gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
-				 desc.name, i, ((double) i) * .001);
+			{
+			  if (desc.deflt.dbl * 1000 == i)
+			    {
+			      gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
+				       desc.name, ((double) i) * .001);
+			      printed_default_value = 1;
+			    }
+			  else
+			    gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
+				     desc.name, i, ((double) i) * .001);
+			}
+		      if (! printed_default_value)
+			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
+				 desc.name, desc.deflt.dbl);
 		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 		      gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 			       desc.name, _(desc.text), _("Fine Adjustment"));
-		      gzprintf(fp, "*DefaultStpFine%s: 0\n", desc.name);
+		      gzprintf(fp, "*DefaultStpFine%s: None\n", desc.name);
 		      gzprintf(fp, "*StpFine%s: None/0.000: ""\n", desc.name);
 		      for (i = 0; i < 100; i += 5)
 			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
