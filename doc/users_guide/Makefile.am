@@ -197,12 +197,14 @@ install-data-local: $(STANDARD_TARGETS)
 	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
 	    fi ; \
 	  done ; \
-	  cd ../stylesheet-images ; \
-	  for file in * ; do \
-	    if test -f $$file ; then \
-	      $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
-	    fi ; \
-	  done ; \
+	  if test -d ../stylesheet-images ; then \
+	    cd ../stylesheet-images ; \
+	    for file in * ; do \
+	      if test -f $$file ; then \
+	        $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
+	      fi ; \
+	    done ; \
+	  fi ; \
 	fi
 
 uninstall-local:
