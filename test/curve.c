@@ -46,28 +46,34 @@ static const double standard_sat_adjustment[] =
 
 const char *good_curves[] =
   {
-    "STP_CURVE;Wrap ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Nowrap ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Nowrap ;Linear ;48;1.0;0;4;",
-    "STP_CURVE;Nowrap ;Linear ;2;1.0;0;4;",
+    "STP_CURVE;Wrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Nowrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Nowrap ;Linear ;48;1.0;0;4:",
+    "STP_CURVE;Nowrap ;Linear ;2;1.0;0;4:",
   };
 
 static const int good_curve_count = sizeof(good_curves) / sizeof(const char *);
 
 const char *bad_curves[] =
   {
-    "STP_CURV;Wrap ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;Linear ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;Lunatic ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Warp ;LunaticLunaticLunaticLunaticLunatic ;48;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;-1;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;0;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;1;0;0;4;0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
-    "STP_CURVE;Wrap ;Linear ;-1;1.0;0;4;",
-    "STP_CURVE;Wrap ;Linear ;1;1.0;0;4;",
-    "STP_CURVE;Wrap ;Linear ;48;1.0;0;4;",
-    "STP_CURVE;Wrap ;Linear ;0;1.0;0;4;",
+    "STP_CURV;Wrap ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Warp ;Linear ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Warp ;Lunatic ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Warp ;LunaticLunaticLunaticLunaticLunatic ;48;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Wrap ;Linear ;-1;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Wrap ;Linear ;0;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Wrap ;Linear ;1;0;0;4:0.5;0.6;0.7;0.8;0.9;0.86;0.82;0.79;0.78;0.8;0.83;0.87;0.9;0.95;1.05;1.15;1.3;1.25;1.2;1.15;1.12;1.09;1.06;1.03;1;1;1;1;1;1;1;1;1;0.9;0.8;0.7;0.65;0.6;0.55;0.52;0.48;0.47;0.47;0.49;0.49;0.49;0.52;0.51;",
+    "STP_CURVE;Wrap ;Linear ;-1;1.0;0;4:",
+    "STP_CURVE;Wrap ;Linear ;1;1.0;0;4:",
+    "STP_CURVE;Wrap ;Linear ;48;1.0;0;4:",
+    "STP_CURVE;Wrap ;Linear ;0;1.0;0;4:",
   };
+
+const char *linear_curve_1 = "STP_CURVE;Nowrap ;Linear ;6;0;0;1:0;0;0;1;1;1;";
+const char *linear_curve_2 = "STP_CURVE;Wrap ;Linear ;6;0;0;1:0;0;0;1;1;1;";
+const char *spline_curve_1 = "STP_CURVE;Nowrap ;Spline ;6;0;0;1:0;0;0;1;1;1;";
+const char *spline_curve_2 = "STP_CURVE;Wrap ;Spline ;6;0;0;1:0;0;0;1;1;1;";
+
 
 static const int bad_curve_count = sizeof(bad_curves) / sizeof(const char *);
 
@@ -91,7 +97,11 @@ main(int argc, char **argv)
       global_error_count++;
     }
   free(tmp1);
-  stp_curve_resample(curve2, 95);
+  if (stp_curve_resample(curve2, 95) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
   stp_curve_print(stdout, curve2);
   stp_curve_destroy(curve1);
   fprintf(stdout, "\n");
@@ -194,6 +204,67 @@ main(int argc, char **argv)
     stp_curve_print(stdout, curve3);
   fprintf(stdout, "\n");
   stp_curve_destroy(curve3);
+  stp_curve_destroy(curve1);
+  stp_curve_destroy(curve2);
+
+  curve1 = stp_curve_allocate(STP_CURVE_WRAP_NONE);
+  curve2 = stp_curve_allocate(STP_CURVE_WRAP_AROUND);
+  if (!stp_curve_read_string(spline_curve_1, curve1))
+    {
+      fprintf(stderr, "stp_curve_read_string failed\n");
+      global_error_count++;
+    }
+  if (!stp_curve_read_string(spline_curve_2, curve2))
+    {
+      fprintf(stderr, "stp_curve_read_string failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve1, 37) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve2, 48) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+  if (!stp_curve_read_string(linear_curve_1, curve1))
+    {
+      fprintf(stderr, "stp_curve_read_string failed\n");
+      global_error_count++;
+    }
+  if (!stp_curve_read_string(linear_curve_2, curve2))
+    {
+      fprintf(stderr, "stp_curve_read_string failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve1, 41) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve1);
+  fprintf(stdout, "\n");
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
+  if (stp_curve_resample(curve2, 48) == 0)
+    {
+      fprintf(stderr, "stp_curve_resample failed\n");
+      global_error_count++;
+    }
+  stp_curve_print(stdout, curve2);
+  fprintf(stdout, "\n");
   stp_curve_destroy(curve1);
   stp_curve_destroy(curve2);
 

@@ -119,6 +119,71 @@ clear_curve_data(stp_internal_curve_t *curve)
   curve->recompute_range = 0;
 }
 
+static void
+compute_linear_deltas(stp_internal_curve_t *curve)
+{
+  int i;
+  curve->interval = stp_malloc(sizeof(double) * (curve->real_point_count - 1));
+  for (i = 0; i < curve->real_point_count - 1; i++)
+    curve->interval[i] = curve->data[i + 1] - curve->data[i];
+}
+
+static void
+compute_spline_deltas(stp_internal_curve_t *curve)
+{
+  int i;
+  int k;
+  double *u = stp_malloc(sizeof(double) * (curve->real_point_count));
+  double *y2 = stp_malloc(sizeof(double) * (curve->real_point_count));
+  double *y = curve->data;
+  double sig;
+  double p;
+
+  y2[0] = 0.0;
+  u[0] = 0.0;
+
+  for (i = 1; i < curve->point_count - 1; i++)
+    {
+      sig = (i - (i - 1)) / ((i + 1) - (i - 1));
+      p = sig * y2[i - 1] + 2.0;
+      y2[i] = (sig - 1.0) / p;
+
+      u[i] = y[i + 1] - 2 * y[i] + y[i - 1];
+      u[i] = 3.0 * u[i] - sig * u[i - 1] / p;
+    }
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    {
+      i = curve->point_count - 1;
+      sig = .5;
+
+      p = sig * y2[i - 1] + 2.0;
+      y2[i] = (sig - 1.0) / p;
+      u[i] = (y[0] - y[i]) - (y[i] - y[i - 1]);
+      u[i] = (6.0 * u[i] / 2) - sig * u[i - 1] / p;
+
+      p = sig * y2[i] + 2.0;
+      y2[0] = (sig - 1.0) / p;
+      u[i] = (y[1] - y[0]) / (y[0] - y[i]);
+      u[i] = (6.0 * u[i] / 2.0) - sig * u[i] / p;
+    }
+  else
+    {
+      y2[curve->real_point_count - 1] = 0.0;
+    }
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    {
+      k = curve->real_point_count - 2;
+      y2[k] = y2[k] * y2[0] + u[k];
+    }
+
+  for (k = curve->point_count - 2; k >= 0; k--)
+    y2[k] = y2[k] * y2[k + 1] + u[k];
+  for (i = 0; i < curve->point_count; i++)
+    stp_erprintf("i %d y %.6f y2 %.6f u %.6f\n", i, y[i], y2[i], u[i]);
+  curve->interval = y2;
+  stp_free(u);
+}
+
 /*
  * Recompute the delta values for interpolation.
  * When we actually do support spline curves, this routine will
@@ -127,7 +192,6 @@ clear_curve_data(stp_internal_curve_t *curve)
 static void
 compute_intervals(stp_internal_curve_t *curve)
 {
-  int i;
   if (curve->interval)
     {
       stp_free(curve->interval);
@@ -135,10 +199,15 @@ compute_intervals(stp_internal_curve_t *curve)
     }
   if (curve->real_point_count > 0)
     {
-      curve->interval =
-	stp_malloc(sizeof(double) * (curve->real_point_count - 1));
-      for (i = 0; i < curve->real_point_count - 1; i++)
-	curve->interval[i] = curve->data[i + 1] - curve->data[i];
+      switch (curve->curve_type)
+	{
+	case STP_CURVE_TYPE_SPLINE:
+	  compute_spline_deltas(curve);
+	  break;
+	case STP_CURVE_TYPE_LINEAR:
+	  compute_linear_deltas(curve);
+	  break;
+	}
     }
   curve->recompute_interval = 0;
 }
@@ -505,7 +574,7 @@ stp_curve_print(FILE *f, const stp_curve_t curve)
   int i;
   check_curve(icurve);
   setlocale(LC_ALL, "C");
-  fprintf(f, "%s;%s ;%s ;%d;%g;%g;%g;",
+  fprintf(f, "%s;%s ;%s ;%d;%g;%g;%g:",
 	  "STP_CURVE",
 	  wrap_mode_names[icurve->wrap_mode],
 	  curve_type_names[icurve->curve_type],
@@ -532,7 +601,7 @@ stp_curve_print_string(const stp_curve_t curve)
   setlocale(LC_ALL, "C");
   while (1)
     {
-      cur_size = snprintf(retval, ret_size - 1, "%s;%s ;%s ;%d;%g;%g;%g;",
+      cur_size = snprintf(retval, ret_size - 1, "%s;%s ;%s ;%d;%g;%g;%g:",
 			  "STP_CURVE",
 			  wrap_mode_names[icurve->wrap_mode],
 			  curve_type_names[icurve->curve_type],
@@ -642,7 +711,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
-  fscanf(f, "%d;%lg;%lg;%lg;%n",
+  fscanf(f, "%d;%lg;%lg;%lg:%n",
 	 &points,
 	 &(iret->gamma),
 	 &(iret->blo),
@@ -723,7 +792,7 @@ stp_curve_read_string(const char *text, stp_curve_t curve)
   iret = (stp_internal_curve_t *) ret;
   iret->curve_type = curve_type;
 
-  sscanf(text + offset, "%d;%lg;%lg;%lg;%n",
+  sscanf(text + offset, "%d;%lg;%lg;%lg:%n",
 	 &points,
 	 &(iret->gamma),
 	 &(iret->blo),
@@ -799,8 +868,23 @@ interpolate_point_internal(const stp_curve_t curve, double where)
   if (icurve->curve_type == STP_CURVE_TYPE_LINEAR)
     return icurve->data[integer] + frac * icurve->interval[integer];
   else
-    /* Placeholder linear interpolation until we write the spline code */
-    return icurve->data[integer] + frac * icurve->interval[integer];
+    {
+      double a = 1.0 - frac;
+      double b = frac;
+      double retval;
+      int i = integer;
+      int ip1 = integer + 1;
+      if (ip1 >= icurve->real_point_count - 1)
+	ip1 -= icurve->real_point_count - 1;
+      retval = a * icurve->data[i] + b * icurve->data[ip1] +
+	((a * a * a - a) * icurve->interval[i] +
+	 (b * b * b - b) * icurve->interval[ip1]) / 6.0;
+      if (retval > icurve->bhi)
+	retval = icurve->bhi;
+      if (retval < icurve->blo)
+	retval = icurve->blo;
+      return retval;
+    }
 }
 
 int
