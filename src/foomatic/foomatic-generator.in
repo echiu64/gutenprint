@@ -207,7 +207,7 @@ for $p1 (keys(%mapstp)) {
     push (@printerlist, "  <!-- gimp-print driver: $p1 -->\n");
     for my $id (@{$mapstp{$p1}}) {
 	if ($foomatic3) {
-	    # Add unprintable margins (only Foonmatic 2.9.x)
+	    # Add unprintable margins (only Foomatic 2.9.x)
 	    push(@printerlist, "  <printer>\n");
 	    push(@printerlist, "    <id>$id</id>\n");
 	    push(@printerlist, "    <margins>\n");
