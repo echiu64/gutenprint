@@ -256,7 +256,7 @@ require('standard_html_header.php3');
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
- <a name="#HPUSB">
+ <a name="HPUSB">
  <h3>
  <li>
  My multi-function HP Device is not printing over the USB port.
