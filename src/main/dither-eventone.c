@@ -95,9 +95,9 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
     int i,j;
     for (i = 0; i < CHANNEL_COUNT(d); i++) {
       int size = 2 * MAX_SPREAD + ((d->dst_width + 7) & ~7);
-      for (j = 0; j < CHANNEL(d, i).numshades; j++) {
-        CHANNEL(d, i).shades[j].errs = stpi_zalloc(size * sizeof(int));
-      }
+      CHANNEL(d, i).error_rows = 1;
+      CHANNEL(d, i).errs = stpi_zalloc(1 * sizeof(int *));
+      CHANNEL(d, i).errs[0] = stpi_zalloc(size * sizeof(int));
     }
 
     et = stpi_zalloc(sizeof(eventone_t));
@@ -148,58 +148,32 @@ et_initializer(stpi_dither_t *d, int duplicate_line, int zero_mask)
       int i,j;
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	for (j = 0; j < CHANNEL(d, i).numshades; j++)
-	  memset(&CHANNEL(d, i).shades[j].errs[MAX_SPREAD], 0, d->dst_width * sizeof(int));
+	  memset(&CHANNEL(d, i).errs[0][MAX_SPREAD], 0, d->dst_width * sizeof(int));
       return 0;
   }
   return 1;
 }
 
-static inline stpi_shade_segment_t *
-split_shades(stpi_dither_channel_t *dc, int x, int *inkp)
-{
-  stpi_shade_segment_t *sp;
-
-  sp = &dc->shades[0];		/* Assume only one shade! */
-  if (dc->v == 0) {				/* Special case zero */
-    sp->base = 0;
-    *inkp = sp->value += sp->errs[x + MAX_SPREAD];
-    return sp;
-  }
-  sp->base = dc->v;
-  sp->value += 2 * sp->base + sp->errs[x + MAX_SPREAD];
-  *inkp = sp->value - sp->base;
-  return sp;
-}
-
 static inline void
-advance_eventone_pre(stpi_dither_channel_t *dc, eventone_t *et, int x)
+advance_eventone_pre(stpi_shade_segment_t *sp, eventone_t *et, int x)
 {
-  int i;
-
-  for (i = 0; i < dc->numshades; i++) {
-    stpi_shade_segment_t *sp = &dc->shades[i];
-    stpi_dis_t *etd = &sp->et_dis[x];
-    int t = sp->dis.r_sq + sp->dis.dx;
-    if (t <= etd->r_sq) { 				/* Do eventone calculations */
-      sp->dis.r_sq = t;					/* Nearest pixel same as last one */
-      sp->dis.dx += et->d2x;
-    } else {
-      sp->dis = *etd;					/* Nearest pixel is from a previous line */
-    }
+  stpi_dis_t *etd = &sp->et_dis[x];
+  int t = sp->dis.r_sq + sp->dis.dx;
+  if (t <= etd->r_sq) { 				/* Do eventone calculations */
+    sp->dis.r_sq = t;					/* Nearest pixel same as last one */
+    sp->dis.dx += et->d2x;
+  } else {
+    sp->dis = *etd;					/* Nearest pixel is from a previous line */
   }
 }
 
 static inline void
 diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x, int direction)
 {
-  int i;
-
-  for (i = 0; i < dc->numshades; i++) {
-    stpi_shade_segment_t *sp = &dc->shades[i];
-
     /* Eventone updates */
 
-    { stpi_dis_t *etd = &sp->et_dis[x];
+    { stpi_shade_segment_t *sp = &dc->shades[0];
+      stpi_dis_t *etd = &sp->et_dis[x];
       int t = etd->r_sq + etd->dy;		/* r^2 from dot above */
       int u = sp->dis.r_sq + sp->dis.dy;	/* r^2 from dot on this line */
       if (u < t) {				/* If dot from this line is close */
@@ -217,14 +191,13 @@ diffuse_error(stpi_dither_channel_t *dc, eventone_t *et, int diff_factor, int x,
 
     /* Error diffusion updates */
 
-    { int fraction = (sp->value + (diff_factor>>1)) / diff_factor;
+    { int fraction = (dc->v + (diff_factor>>1)) / diff_factor;
       int frac_2 = fraction + fraction;
       int frac_3 = frac_2 + fraction;
-      sp->errs[x + MAX_SPREAD] = frac_3;
-      sp->errs[x + MAX_SPREAD - direction] += frac_2;
-      sp->value -= (frac_2 + frac_3);
+      dc->errs[0][x + MAX_SPREAD] = frac_3;
+      dc->errs[0][x + MAX_SPREAD - direction] += frac_2;
+      dc->v -= (frac_2 + frac_3);
     }
-  }
 }
 
 static inline int
@@ -348,22 +321,21 @@ stpi_dither_et(stp_vars_t v,
     for (i=0; i < channel_count; i++) {
       if (CHANNEL(d, i).ptr)
 	{
-	  int inkspot;
-	  stpi_shade_segment_t *sp;
+	  int inkspot, base;
 	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
+	  stpi_shade_segment_t *sp = &dc->shades[0];
 	  stpi_ink_defn_t *inkp;
 	  stpi_ink_defn_t lower, upper;
 
-	  dc->o = dc->v = raw[i];
+	  advance_eventone_pre(sp, et, x);
 
-	  advance_eventone_pre(dc, et, x);
-
-	  /* Split data into sub-channels */
-	  /* And incorporate error data from previous line */
-	  sp =  split_shades(dc, x, &inkspot);
+	  /* Incorporate error data from previous line */
+	  base = raw[i];
+	  inkspot = dc->v + base + dc->errs[x + MAX_SPREAD];
+	  dc->v = inkspot + base;
 
 	  /* Find which are the two candidate dot sizes */
-	  range += find_segment(sp, et, inkspot, sp->base, &lower, &upper);
+	  range += find_segment(sp, et, inkspot, base, &lower, &upper);
 
 	  /* Determine whether to print the larger or smaller dot */
 
@@ -376,7 +348,7 @@ stpi_dither_et(stp_vars_t v,
 	  /* Adjust the error to reflect the dot choice */
 	  if (inkp->bits) {
 
-	    sp->value -= 2 * inkp->range;
+	    dc->v -= 2 * inkp->range;
 	    sp->dis = et->d_sq;
 
 	    set_row_ends(dc, x);

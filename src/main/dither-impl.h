@@ -104,21 +104,12 @@ typedef struct
 
 typedef struct shade_segment
 {
-  int subchannel;
-  unsigned lower;
-  unsigned trans;
-  unsigned density;
-  unsigned div1, div2;
-
   stpi_dis_t dis;
   stpi_dis_t *et_dis;
 
   int numdotsizes;
   stpi_ink_defn_t *dotsizes;
 
-  int *errs;
-  int value;
-  int base;
 } stpi_shade_segment_t;
 
 typedef struct dither_channel
@@ -136,8 +127,6 @@ typedef struct dither_channel
   int o;
   int b;
   int very_fast;
-
-  int maxdot;			/* Maximum dot size */
 
   stpi_ink_defn_t *ink_list;
 

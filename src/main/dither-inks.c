@@ -99,14 +99,12 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
 	SAFE_FREE(channel->errs[i]);
       SAFE_FREE(channel->errs);
     }
-  SAFE_FREE(channel->errs);
   SAFE_FREE(channel->ranges);
   if (channel->shades)
     {
       for (i = 0; i < channel->numshades; i++)
 	{
 	  SAFE_FREE(channel->shades[i].dotsizes);
-	  SAFE_FREE(channel->shades[i].errs);
 	  SAFE_FREE(channel->shades[i].et_dis);
 	}
       SAFE_FREE(channel->shades);
@@ -224,8 +222,6 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
       lbit >>= 1;
     }
 
-  dc->maxdot = 0;
-
   for (i = 0; i < dc->nlevels; i++)
     {
       if (dc->ranges[i].lower->bits == dc->ranges[i].upper->bits)
@@ -236,11 +232,6 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 	dc->ranges[i].is_equal = 0;
       else
 	dc->ranges[i].is_equal = 1;
-
-      if (dc->ranges[i].lower->dot_size > dc->maxdot)
-	dc->maxdot = dc->ranges[i].lower->dot_size;
-      if (dc->ranges[i].upper->dot_size > dc->maxdot)
-	dc->maxdot = dc->ranges[i].upper->dot_size;
 
       stpi_dprintf(STPI_DBG_INK, v,
 		   "    level %d value[0] %d value[1] %d range[0] %d range[1] %d\n",
@@ -384,18 +375,8 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
   int idx;
   stpi_dither_channel_t *dc;
   stpi_shade_segment_t *sp;
-  double k;
   stpi_ink_defn_t *ip;
   const stpi_dotsize_t *dp;
-
-  /* Setting ink_gamma to different values changes the amount
-     of photo ink used (or other lighter inks). Set to 0 it uses
-     the maximum amount of ink possible without soaking the paper.
-     Set to 1.0 it is very conservative.
-     0.5 is probably a good compromise
-  */
-
-  const double ink_gamma = 0.5;
 
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
 
@@ -413,7 +394,6 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 	  for (j = 0; j < dc->numshades; j++)
 	    {
 	      SAFE_FREE(dc->shades[j].dotsizes);
-	      SAFE_FREE(dc->shades[j].errs);
 	    }
 	  SAFE_FREE(dc->shades);
 	}
@@ -422,46 +402,26 @@ stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
       dc->shades = stpi_zalloc(dc->numshades * sizeof(stpi_shade_segment_t));
 
       sp = &dc->shades[0];
-      sp->value = 1.0;
       stpi_channel_add(v, color, subchannel, shades[i].value);
-      sp->density = 65536.0;
-      if (subchannel == 0 || density == 0)
-	{
-	  sp->lower = 0;
-	  sp->trans = 0;
-	}
-      else
-	{
-	  k = 65536.0 * density * pow(shades[i + 1].value, ink_gamma);
-	  sp->lower = k * shades[i + 1].value + 0.5;
-	  sp->trans = k * shades[i].value + 0.5;
-
-	  /* Precompute some values */
-	  sp->div1 = (sp->density * (sp->trans - sp->lower)) / sp->trans;
-	  sp->div2 = (CHANNEL(d, idx - 1).shades[0].density *
-		      (sp->trans - sp->lower)) / sp->lower;
-	}
-
       sp->numdotsizes = shades[subchannel].numsizes;
       sp->dotsizes = stpi_zalloc(sp->numdotsizes * sizeof(stpi_ink_defn_t));
       if (idx >= 0)
 	stpi_dither_set_ranges(v, idx, &shades[i], density);
       stpi_dprintf(STPI_DBG_INK, v,
-		   "  shade %d value %f lower %d trans %d div1 %d div2 %d\n",
-		   i, shades[i].value, sp->lower, sp->trans, sp->div1,
-		   sp->div2);
+		   "  shade %d value %f\n",
+		   i, shades[i].value);
       for (j=0; j < sp->numdotsizes; j++)
 	{
 	  ip = &sp->dotsizes[j];
 	  dp = &shades[i].dot_sizes[j];
-	  ip->value = dp->value * sp->density + 0.5;
+	  ip->value = dp->value * 65536.0 + 0.5;
 	  ip->range = density * ip->value;
 	  ip->bits = dp->bit_pattern;
 	  ip->dot_size = dp->value * 65536.0 + 0.5;
 	  stpi_dprintf(STPI_DBG_INK, v,
 		       "    dotsize %d value %d range %d bits %d size %d\n",
 		       j, ip->value, ip->range, ip->bits, ip->dot_size);
-	  
+
 	}
     }
 }
