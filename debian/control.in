@@ -192,7 +192,7 @@ Description: Inkjet Server - Ghostscript driver for GIMP-Print
  This is Gimp-Print version #UPSTREAM_VERSION#, a stable release in
  the 4.2 line.
  .
- Gimp-print is the print facility for the Gimp, and in addition a
+ Gimp-Print is the print facility for the Gimp, and in addition a
  suite of drivers that may be used with common UNIX spooling systems
  using GhostScript or CUPS.  These drivers provide printing quality
  for UNIX/Linux on a par with proprietary vendor-supplied drivers in

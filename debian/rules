@@ -43,7 +43,7 @@ autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base
 build: build-stamp debian/control
 build-stamp: autoconfigure-stamp
 	dh_testdir
-	
+
 	cd debian/gimp-print-build ; \
 	$(MAKE) ; \
 	cd src/gimp ; \
@@ -78,10 +78,10 @@ install: build debian/control
 
 	cd debian/gimp-print-build ; \
 	$(MAKE) DESTDIR=`pwd`/../gimp-print-install install
-	
+
 	scripts/mkinstalldirs debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins
 	/usr/bin/install -c debian/gimp-print-build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
-	
+
 	dh_movefiles --sourcedir=debian/gimp-print-install
 	rm debian/foomatic-db-gimp-print/usr/share/foomatic/kitload.log
 
@@ -164,7 +164,7 @@ binary: binary-indep binary-arch
 ChangeLog: changelog-stamp
 changelog-stamp: build
 	$(MAKE) ChangeLog
-	
+
 SEDPATTERN = -e "s/\#UPSTREAM_VERSION\#/$(UPSTREAM_VERSION)/g" -e "s/\#LIBRARY_VERSION\#/$(LIBRARY_VERSION)/g"
 
 # Make sure debian/control is up-to-date.
@@ -183,7 +183,7 @@ configure: configure.in scripts/install-sh
 	    /bin/sh autogen.sh ; \
 	  fi \
 	fi
-	
+
 configure.in: configure.in.in
 	if test -f configure.in.in ; then \
 	  if test -f autogen.sh ; then \

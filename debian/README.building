@@ -14,18 +14,15 @@ building from a distributed tarball.  Other tools that might
 potentially be needed are the latest versions of gettext and
 texi2html.
 
-NOTE: Versions >= 4.2.1 requires an up-to-date version of foomatic to
-build (>= 0.20020129), which may not yet be available in Debian
-unstable.  It is available from foomatic CVS or tarball distribution
-(see www.linuxprinting.org).  This is due to the addition of a
-foomatic package.
 
 General
 -------
 
 Please note the Build-Depends line in debian/control, which lists the
 packages needed to be installed in order to build the packages, in
-addition to the standard package building tools.
+addition to the standard package building tools.  In particular,
+libijs is not available in Debian stable; you will need to build or
+install libijs from unstable first.
 
 The simplest way to build the packages is the `deb' target:
 
@@ -90,5 +87,5 @@ unstable distributions.
 
 I hope you like it!
 
-Roger Leigh <roger@whinlatter.uklinux.net> -- Tue, 18 Sep 2001 17:06:40 +0100
+Roger Leigh <roger@whinlatter.uklinux.net> -- Wed,  9 Oct 2002 21:25:06 +0100
 
