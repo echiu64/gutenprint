@@ -95,15 +95,18 @@ These release notes contain the following sections:
      addition to being slower could also cause incorrect results on
      certain types of material.
 
-  5) A minor compliance issue in the CUPS PPD files is fixed.
+  5) The HP DesignJet 2500 and 3500 now support correct maximum page
+     widths of 36" and 54" respectively, rather than 44" for both.
 
-  6) Boolean options are handled correctly in the Foomatic data.
+  6) A minor compliance issue in the CUPS PPD files is fixed.
 
-  7) escputil now returns ink levels correctly on all Epson printers.
+  7) Boolean options are handled correctly in the Foomatic data.
+
+  8) escputil now returns ink levels correctly on all Epson printers.
      In addition, it is more robust on printers that it previously
      worked correctly on.
 
-  8) The header files have been reorganized; all header files intended
+  9) The header files have been reorganized; all header files intended
      for use by either client programs or modules (such as family
      drivers) have been moved to include/gimp-print.  Client programs
      should continue to #include <gimp-print/gimp-print.h> as before.
@@ -112,7 +115,7 @@ These release notes contain the following sections:
      clients are now prefixed "stp_" rather than "stpi_" as was the
      case for routines intended for use by modules.
 
-  9) There are a number of API changes in this release that are
+  10) There are a number of API changes in this release that are
      incompatible with earlier 4.3/5.0 alpha releases.  In particular:
 
      * All data types are forward-declared structs rather than void
@@ -136,10 +139,10 @@ These release notes contain the following sections:
      programs to inspect and test this thoroughly and report issues.
      There may be minor compatible API changes.
 
-  10) The libprintut utility library has been removed.  Its
+  11) The libprintut utility library has been removed.  Its
      functionality has been subsumed into the core Gimp-Print library.
 
-  11) More header files have been documented with Doxygen.
+  12) More header files have been documented with Doxygen.
 
 ================================================================
 
