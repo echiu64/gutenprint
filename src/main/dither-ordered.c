@@ -144,7 +144,7 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, in
 	    subc = upper;
 	  else
 	    {
-	      rangepoint *= dc->density_adjustment;
+	      rangepoint = rangepoint * upper->range / 65536;
 	      if (rangepoint >= ditherpoint(d, pick_matrix, x))
 		subc = upper;
 	      else

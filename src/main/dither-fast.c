@@ -70,8 +70,7 @@ print_color_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y
 	subc = dd->upper;
       else
 	{
-	  rangepoint = ((xdensity - range0) << 16) / dd->range_span *
-	    dc->density_adjustment;
+	  rangepoint = rangepoint * dd->upper->range / 65536;
 	  if (rangepoint >= dpoint)
 	    subc = dd->upper;
 	  else
