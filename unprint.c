@@ -259,7 +259,7 @@ void write_output(FILE *fp_w) {
     }
   }
   fprintf(stderr,"Image from (%d,%d) to (%d,%d).\n",left,first,right,last);
-  width=right-left;
+  width=right-left+1;
   if (width<0) {
     width=0;
   }
