@@ -87,6 +87,8 @@ OBJS	=	$(DRVOBJS) calibrate.o commandtoepson.o epson.o genppd.o \
 all:
 	echo Using $(CC) for C compiler.
 	echo Using \"$(CFLAGS)\" for compiler options.
+	echo Using \"$(LDFLAGS)\" for linker options.
+	echo Using \"$(LIBS)\" for libraries.
 	$(MAKE) $(TARGETS)
 
 #
