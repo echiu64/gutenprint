@@ -338,7 +338,7 @@ curve_dtor(stp_curve_t curve)
 }
 
 void
-stp_curve_free(stp_curve_t curve)
+stp_curve_destroy(stp_curve_t curve)
 {
   curve_dtor(curve);
   stpi_free(curve);
@@ -580,7 +580,7 @@ stp_curve_get_subrange(stp_const_curve_t curve, size_t start, size_t count)
   data = stp_curve_get_data(curve, &ncount);
   if (! stp_curve_set_data(retval, count, data + start))
     {
-      stp_curve_free(retval);
+      stp_curve_destroy(retval);
       return NULL;
     }
   return retval;
@@ -965,7 +965,7 @@ create_gamma_curve(stp_curve_t *retval, double lo, double hi, double fgamma,
       stp_curve_set_gamma(*retval, fgamma) &&
       stp_curve_resample(*retval, points))
     return 1;
-  stp_curve_free(*retval);
+  stp_curve_destroy(*retval);
   *retval = 0;
   return 0;
 }
@@ -1077,7 +1077,7 @@ stp_curve_compose(stp_curve_t *retval,
   stpi_free(tmp_data);
   return 1;
  bad1:
-  stp_curve_free(ret);
+  stp_curve_destroy(ret);
   stpi_free(tmp_data);
   return 0;
 }
@@ -1208,7 +1208,7 @@ stp_curve_create_from_xmltree(mxml_node_t *curve)  /* The curve node */
  error:
   stpi_erprintf("stp_curve_create_from_xmltree: error during curve read\n");
   if (ret)
-    stp_curve_free(ret);
+    stp_curve_destroy(ret);
   stpi_xml_exit();
   return NULL;
 }

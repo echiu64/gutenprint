@@ -2070,7 +2070,7 @@ densityDivisor /= 1.2;
 	(lexmark_hue_adjustment(caps, v),
 	 media ? media->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
-      stp_curve_free(hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
       media->lum_adjustment)
@@ -2079,7 +2079,7 @@ densityDivisor /= 1.2;
 	(lexmark_lum_adjustment(caps, v),
 	 media ? media->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "LumMap", lum_adjustment);
-      stp_curve_free(lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
     }
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
       media->sat_adjustment)
@@ -2088,7 +2088,7 @@ densityDivisor /= 1.2;
 	(lexmark_sat_adjustment(caps, v),
 	 media ? media->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
-      stp_curve_free(sat_adjustment);
+      stp_curve_destroy(sat_adjustment);
     }
 
   out_channels = stpi_color_init(v, image, 65536);
@@ -2181,7 +2181,7 @@ lexmark_print(stp_const_vars_t v, stp_image_t *image)
   stp_vars_t nv = stp_vars_create_copy(v);
   stpi_prune_inactive_options(nv);
   status = lexmark_do_print(nv, image);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

@@ -151,7 +151,7 @@ value_freefunc(void *item)
       break;
     case STP_PARAMETER_TYPE_CURVE:
       if (v->value.cval)
-	stp_curve_free(v->value.cval);
+	stp_curve_destroy(v->value.cval);
       break;
     case STP_PARAMETER_TYPE_ARRAY:
       stp_array_destroy(v->value.cval);
@@ -357,7 +357,7 @@ stp_vars_create(void)
 }
 
 void
-stp_vars_free(stp_vars_t vv)
+stp_vars_destroy(stp_vars_t vv)
 {
   int i;
   stpi_internal_vars_t *v = get_vars(vv);
@@ -709,7 +709,7 @@ stp_set_curve_parameter(stp_vars_t v, const char *parameter,
 	  if (val->active == STP_PARAMETER_DEFAULTED)
 	    val->active = STP_PARAMETER_ACTIVE;
 	  if (val->value.cval)
-	    stp_curve_free(val->value.cval);
+	    stp_curve_destroy(val->value.cval);
 	}
       else
 	{
@@ -921,12 +921,12 @@ stp_get_int_parameter(stp_const_vars_t v, const char *parameter)
       if (desc.p_type == STP_PARAMETER_TYPE_INT)
 	{
 	  int intval = desc.deflt.integer;
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  return intval;
 	}
       else
 	{
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  stpi_erprintf
 	    ("GIMP-PRINT: Attempt to retrieve unset integer parameter %s\n",
 	     parameter);
@@ -1015,12 +1015,12 @@ stp_get_boolean_parameter(stp_const_vars_t v, const char *parameter)
       if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
 	{
 	  int boolean = desc.deflt.boolean;
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  return boolean;
 	}
       else
 	{
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  stpi_erprintf
 	    ("GIMP-PRINT: Attempt to retrieve unset boolean parameter %s\n",
 	     parameter);
@@ -1103,12 +1103,12 @@ stp_get_float_parameter(stp_const_vars_t v, const char *parameter)
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	{
 	  double dbl = desc.deflt.dbl;
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  return dbl;
 	}
       else
 	{
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  stpi_erprintf
 	    ("GIMP-PRINT: Attempt to retrieve unset float parameter %s\n",
 	     parameter);
@@ -1130,11 +1130,11 @@ stp_scale_float_parameter(stp_vars_t v, const char *parameter,
       stp_describe_parameter(v, parameter, &desc);
       if (desc.p_type != STP_PARAMETER_TYPE_DOUBLE)
 	{
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  return;
 	}
       val = desc.deflt.dbl;
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
     }
   stp_set_float_parameter(v, parameter, val * scale);
 }
@@ -1302,7 +1302,7 @@ stpi_prune_inactive_options(stp_vars_t v)
 	  item = next;
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 stp_vars_t
@@ -1365,13 +1365,13 @@ stp_describe_parameter(stp_const_vars_t v, const char *name,
 }
 
 void
-stp_parameter_description_free(stp_parameter_t *desc)
+stp_parameter_description_destroy(stp_parameter_t *desc)
 {
   switch (desc->p_type)
     {
     case STP_PARAMETER_TYPE_CURVE:
       if (desc->bounds.curve)
-	stp_curve_free(desc->bounds.curve);
+	stp_curve_destroy(desc->bounds.curve);
       desc->bounds.curve = NULL;
       break;
     case STP_PARAMETER_TYPE_ARRAY:
@@ -1381,7 +1381,7 @@ stp_parameter_description_free(stp_parameter_t *desc)
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
       if (desc->bounds.str)
-	stp_string_list_free(desc->bounds.str);
+	stp_string_list_destroy(desc->bounds.str);
       desc->bounds.str = NULL;
       break;
     default:
@@ -1394,7 +1394,7 @@ stp_parameter_find_in_settings(stp_const_vars_t v, const char *name)
 {
   stp_parameter_list_t param_list = stp_get_parameter_list(v);
   const stp_parameter_t *param = stp_parameter_find(param_list, name);
-  stp_parameter_list_free(param_list);
+  stp_parameter_list_destroy(param_list);
   return param;
 }
 
@@ -1428,7 +1428,7 @@ stp_parameter_list_param(stp_const_parameter_list_t list, size_t item)
 }
 
 void
-stp_parameter_list_free(stp_parameter_list_t list)
+stp_parameter_list_destroy(stp_parameter_list_t list)
 {
   stpi_list_destroy((stpi_list_t *)list);
 }

@@ -54,7 +54,7 @@ main(int argc, char **argv) {
     stp_describe_parameter(pv, "PrintingMode", &desc);
     if (stp_string_list_is_present(desc.bounds.str, "Color"))
       printer_is_color = 1;
-    stp_parameter_description_free(&desc);
+    stp_parameter_description_destroy(&desc);
     if (printer_is_color)
       stp_set_string_parameter(pv, "PrintingMode", "Color");
     else
@@ -107,8 +107,8 @@ main(int argc, char **argv) {
       printf("  'height' => '%d'\n", height);
       printf("};\n");
     }
-    stp_parameter_description_free(&desc);
-    stp_vars_free(pv);
+    stp_parameter_description_destroy(&desc);
+    stp_vars_destroy(pv);
   }
   return 0;
 }

@@ -243,7 +243,7 @@ Curve_Param: tWORD pCURVE tBOOLEAN tSTRING
 	      else
 		stp_set_curve_parameter_active(current_printer->v, $1,
 					       STP_PARAMETER_ACTIVE);
-	      stp_curve_free(curve);
+	      stp_curve_destroy(curve);
 	    }
 	  g_free($1);
 	  g_free($3);

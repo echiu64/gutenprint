@@ -298,7 +298,7 @@ set_gtk_curve_values(GtkWidget *gcurve, stp_const_curve_t seed)
       stp_curve_resample(copy, 256);
       fdata = stp_curve_get_float_data(copy, &count);
       gtk_curve_set_vector(GTK_CURVE(gcurve), count, (float *) fdata);
-      stp_curve_free(copy);
+      stp_curve_destroy(copy);
     }
 }
 
@@ -330,7 +330,7 @@ set_stp_curve_values(GtkWidget *widget, option_t *opt)
     }
   stp_curve_set_float_data(curve, 256, vector);
   stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
-  stp_curve_free(curve);
+  stp_curve_destroy(curve);
 }
 
 static int
@@ -353,7 +353,7 @@ open_curve_editor(GtkObject *button, gpointer xopt)
       set_gtk_curve_values(gcurve, seed);
       opt->info.curve.is_visible = TRUE;
       if (opt->info.curve.current)
-	stp_curve_free(opt->info.curve.current);
+	stp_curve_destroy(opt->info.curve.current);
       opt->info.curve.current = nseed;
       invalidate_preview_thumbnail();
       update_adjusted_thumbnail();
@@ -403,7 +403,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
   opt->info.curve.is_visible = FALSE;
   set_stp_curve_values(gcurve, opt);
   if (opt->info.curve.current)
-    stp_curve_free(opt->info.curve.current);
+    stp_curve_destroy(opt->info.curve.current);
   opt->info.curve.current = NULL;
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
@@ -445,7 +445,7 @@ cancel_curve_callback(GtkObject *button, gpointer xopt)
     {
       stp_set_curve_parameter(pv->v, opt->fast_desc->name,
 			      opt->info.curve.current);
-      stp_curve_free(opt->info.curve.current);
+      stp_curve_destroy(opt->info.curve.current);
       opt->info.curve.current = NULL;
       gtk_widget_hide(opt->info.curve.dialog);
       gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
@@ -578,7 +578,7 @@ build_printer_combo(void)
 {
   int i;
   if (printer_list)
-    stp_string_list_free(printer_list);
+    stp_string_list_destroy(printer_list);
   printer_list = stp_string_list_create();
   for (i = 0; i < stpui_plist_count; i++)
     {
@@ -700,7 +700,7 @@ populate_options(stp_const_vars_t v)
 		  gtk_widget_destroy(opt->info.list.combo);
 		  gtk_widget_destroy(opt->info.list.label);
 		  if (opt->info.list.params)
-		    stp_string_list_free(opt->info.list.params);
+		    stp_string_list_destroy(opt->info.list.params);
 		  free(opt->info.list.default_val);
 		}
 	      break;
@@ -723,7 +723,7 @@ populate_options(stp_const_vars_t v)
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.button));
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.curve.dialog));
 	      if (opt->info.curve.current)
-		stp_curve_free(opt->info.curve.current);
+		stp_curve_destroy(opt->info.curve.current);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.bool.checkbox));
@@ -796,11 +796,11 @@ populate_options(stp_const_vars_t v)
 	      break;
 	    }
 	  idx++;
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
     }
   current_option_count = idx;
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 static void
@@ -1448,7 +1448,7 @@ create_printer_dialog (void)
       gtk_clist_set_row_data_full(GTK_CLIST(manufacturer_clist), i, xname,
 				  g_free);
     }
-  stp_string_list_free(manufacturer_list);
+  stp_string_list_destroy(manufacturer_list);
   gtk_clist_sort(GTK_CLIST(manufacturer_clist));
   build_printer_driver_clist();
 
@@ -2327,7 +2327,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       if (label)
 	gtk_widget_hide(label);
       if (check_func && items)
-	stp_string_list_free(items);
+	stp_string_list_destroy(items);
       return;
     }
 
@@ -2359,7 +2359,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed", callback,
 				     data);
   if (check_func && items)
-    stp_string_list_free(items);
+    stp_string_list_destroy(items);
 }
 
 void
@@ -2775,7 +2775,7 @@ plist_callback (GtkWidget *widget,
 	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
 	}
     }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   do_all_updates();
 
   setup_update ();
@@ -2867,7 +2867,7 @@ set_media_size(const gchar *new_media_size)
 	  stp_describe_parameter(pv->v, "PageSize", &desc);
 	  stp_set_string_parameter(pv->v, "PageSize", desc.deflt.str);
 	  pap = stp_get_papersize_by_name(desc.deflt.str);
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	  for (i = 0; i < current_option_count; i++)
 	    {
 	      option_t *option = &(current_options[i]);
@@ -3299,7 +3299,7 @@ new_printer_ok_callback (void)
 
       if (stpui_plist_add (&key, 1))
 	{
-	  stp_vars_free(key.v);
+	  stp_vars_destroy(key.v);
 	  free(key.name);
 	  free(key.output_to);
 	  stpui_plist_current = stpui_plist_count - 1;
@@ -3676,7 +3676,7 @@ compute_thumbnail(stp_const_vars_t v)
       answer = 0;
       fprintf(stderr, "Could not print thumbnail!\n");
     }
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return answer;
 }
 
@@ -4324,7 +4324,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
 	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
 				      desc.deflt.dbl);
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	    }
 	  stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
 					 STP_PARAMETER_ACTIVE);
@@ -4337,7 +4337,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
 	      stp_set_curve_parameter(pv->v, opt->fast_desc->name,
 				      desc.deflt.curve);
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	    }
 	  stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
 					 STP_PARAMETER_ACTIVE);
@@ -4350,7 +4350,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
 	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
 				       desc.deflt.str);
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	    }
 	  stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
 					  STP_PARAMETER_ACTIVE);
@@ -4363,7 +4363,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
 	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
 					desc.deflt.boolean);
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	    }
 	  stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
 					   STP_PARAMETER_ACTIVE);

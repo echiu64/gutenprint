@@ -1261,7 +1261,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(caps->adj_cyan);
       stp_set_curve_parameter(v, "CyanCurve", adjustment);
       stp_set_curve_parameter_active(v, "CyanCurve", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
   if (caps->adj_magenta &&
         !stp_check_curve_parameter(v, "MagentaCurve", STP_PARAMETER_ACTIVE))
@@ -1269,7 +1269,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(caps->adj_magenta);
       stp_set_curve_parameter(v, "MagentaCurve", adjustment);
       stp_set_curve_parameter_active(v, "MagentaCurve", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
   if (caps->adj_yellow &&
         !stp_check_curve_parameter(v, "YellowCurve", STP_PARAMETER_ACTIVE))
@@ -1277,7 +1277,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(caps->adj_yellow);
       stp_set_curve_parameter(v, "YellowCurve", adjustment);
       stp_set_curve_parameter_active(v, "YellowCurve", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
 
   if (ink_type)
@@ -1552,7 +1552,7 @@ olympus_print(stp_const_vars_t v, stp_image_t *image)
   stp_vars_t nv = stp_vars_create_copy(v);
   stpi_prune_inactive_options(nv);
   status = olympus_do_print(nv, image);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

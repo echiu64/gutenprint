@@ -836,7 +836,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
       else
 	gzputs(fp, "*DefaultColorSpace:	Gray\n");
     }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   gzputs(fp, "*FileSystem:	False\n");
   gzputs(fp, "*LandscapeOrientation: Plus90\n");
   gzputs(fp, "*TTRasterizer:	Type42\n");
@@ -986,7 +986,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
     gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n\n");
   }
 
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   if (the_papers)
     free(the_papers);
 
@@ -1061,7 +1061,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*CloseUI: *MediaType\n\n");
   }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
  /*
   * Input slots...
@@ -1085,7 +1085,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
     gzputs(fp, "*CloseUI: *InputSlot\n\n");
   }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
  /*
   * Quality settings
@@ -1113,7 +1113,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	}
       gzputs(fp, "*CloseUI: *StpQuality\n\n");
     }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   stp_clear_string_parameter(v, "Quality");
 
  /*
@@ -1135,7 +1135,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	}
       gzputs(fp, "*CloseUI: *StpImageType\n\n");
     }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
  /*
   * Resolutions...
@@ -1175,7 +1175,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
              opt->name, opt->text, xdpi, ydpi, i);
   }
 
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
   gzputs(fp, "*CloseUI: *Resolution\n\n");
 
@@ -1189,7 +1189,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
       gzputs(fp, "*OutputOrder Reverse/Reverse: \"\"\n");
       gzputs(fp, "*CloseUI: *OutputOrder\n\n");
     }
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
   param_list = stp_get_parameter_list(v);
 
@@ -1300,7 +1300,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		  if (print_close_ui)
 		    gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 		}
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	    }
 	  if (printed_open_group)
 	    print_group_close(fp, j, k);
@@ -1339,7 +1339,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  stp_describe_parameter(v, lparam->name, &desc);
 	  if (desc.is_active)
 	    {
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	      stp_set_string_parameter(v, "Quality", tname);
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (!desc.is_active)
@@ -1358,9 +1358,9 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		}
 	    }
 	  stp_clear_string_parameter(v, "Quality");
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
-      stp_parameter_description_free(&qdesc);
+      stp_parameter_description_destroy(&qdesc);
     }
   if (has_image_type_parameter)
     {
@@ -1395,7 +1395,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  stp_describe_parameter(v, lparam->name, &desc);
 	  if (desc.is_active)
 	    {
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	      stp_set_string_parameter(v, "ImageType", tname);
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (!desc.is_active)
@@ -1414,9 +1414,9 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		}
 	    }
 	  stp_clear_string_parameter(v, "ImageType");
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
-      stp_parameter_description_free(&qdesc);
+      stp_parameter_description_destroy(&qdesc);
     }
   if (printer_is_color)
     {
@@ -1436,7 +1436,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  stp_describe_parameter(v, lparam->name, &desc);
 	  if (desc.is_active)
 	    {
-	      stp_parameter_description_free(&desc);
+	      stp_parameter_description_destroy(&desc);
 	      stp_set_string_parameter(v, "PrintingMode", "BW");
 	      stp_describe_parameter(v, lparam->name, &desc);
 	      if (!desc.is_active)
@@ -1462,11 +1462,11 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 		    }
 		}
 	    }
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
       stp_set_string_parameter(v, "PrintingMode", "Color");
     }
-  stp_parameter_list_free(param_list);
+  stp_parameter_list_destroy(param_list);
 
  /*
   * Fonts...
@@ -1516,7 +1516,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   gzclose(fp);
 
-  stp_vars_free(v);
+  stp_vars_destroy(v);
   return (0);
 }
 

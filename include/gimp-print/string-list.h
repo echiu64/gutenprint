@@ -37,7 +37,7 @@ extern "C" {
 ****************************************************************/
 
 extern stp_string_list_t stp_string_list_create(void);
-extern void stp_string_list_free(stp_string_list_t list);
+extern void stp_string_list_destroy(stp_string_list_t list);
 
 extern stp_param_string_t *stp_string_list_param(stp_const_string_list_t,
 						 size_t element);

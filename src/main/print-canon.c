@@ -2658,7 +2658,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 	(canon_hue_adjustment(model),
 	 pt ? pt->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
-      stp_curve_free(hue_adjustment);
+      stp_curve_destroy(hue_adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
       pt->lum_adjustment)
@@ -2667,7 +2667,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 	(canon_lum_adjustment(model),
 	 pt ? pt->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "LumMap", lum_adjustment);
-      stp_curve_free(lum_adjustment);
+      stp_curve_destroy(lum_adjustment);
     }
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
       pt->sat_adjustment)
@@ -2676,7 +2676,7 @@ canon_do_print(stp_vars_t v, stp_image_t *image)
 	(canon_sat_adjustment(model),
 	 pt ? pt->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
-      stp_curve_free(sat_adjustment);
+      stp_curve_destroy(sat_adjustment);
     }
 
   out_channels = stpi_color_init(v, image, 65536);
@@ -2746,7 +2746,7 @@ canon_print(stp_const_vars_t v, stp_image_t *image)
   stp_vars_t nv = stp_vars_create_copy(v);
   stpi_prune_inactive_options(nv);
   status = canon_do_print(nv, image);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

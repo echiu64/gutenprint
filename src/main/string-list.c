@@ -74,7 +74,7 @@ stp_string_list_create(void)
 }
 
 void
-stp_string_list_free(stp_string_list_t list)
+stp_string_list_destroy(stp_string_list_t list)
 {
   stpi_list_destroy((stpi_list_t *) list);
 }

@@ -341,10 +341,10 @@ set_printer_defaults(stp_vars_t v, int core_only)
 	    default:
 	      break;
 	    }
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 void
@@ -426,7 +426,7 @@ stp_verify(stp_vars_t v)
   stpi_prune_inactive_options(nv);
   status = (printfuncs->verify)(nv);
   stpi_set_verified(v, stpi_get_verified(nv));
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 
@@ -511,7 +511,7 @@ verify_string_param(stp_const_vars_t v, const char *parameter,
       else if (!quiet)
 	stpi_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
     }
-  stp_parameter_description_free(desc);
+  stp_parameter_description_destroy(desc);
   return answer;
 }
 
@@ -553,11 +553,11 @@ verify_int_param(stp_const_vars_t v, const char *parameter,
 	    stpi_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
 			 parameter, desc->bounds.integer.lower,
 			 desc->bounds.integer.upper, checkval);
-	  stp_parameter_description_free(desc);
+	  stp_parameter_description_destroy(desc);
 	  return PARAMETER_BAD;
 	}
     }
-  stp_parameter_description_free(desc);
+  stp_parameter_description_destroy(desc);
   return PARAMETER_OK;
 }
 
@@ -598,7 +598,7 @@ verify_curve_param(stp_const_vars_t v, const char *parameter,
 	    }
 	}
     }
-  stp_parameter_description_free(desc);
+  stp_parameter_description_destroy(desc);
   return answer;
 }
 
@@ -613,7 +613,7 @@ stpi_verify_parameter(stp_const_vars_t v, const char *parameter,
 	       desc.is_active, desc.read_only);
   if (!desc.is_active || desc.read_only)
     {
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       return PARAMETER_INACTIVE;
     }
   switch (desc.p_type)
@@ -628,16 +628,16 @@ stpi_verify_parameter(stp_const_vars_t v, const char *parameter,
       return verify_curve_param(v, parameter, &desc, quiet);
     case STP_PARAMETER_TYPE_RAW:
     case STP_PARAMETER_TYPE_FILE:
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       return PARAMETER_OK;		/* No way to verify this here */
     case STP_PARAMETER_TYPE_BOOLEAN:
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       return PARAMETER_OK;		/* Booleans always OK */
     default:
       if (!quiet)
 	stpi_eprintf(v, _("Unknown type parameter %s (%d)\n"),
 		     parameter, desc.p_type);
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       return 0;
     }
 }
@@ -786,7 +786,7 @@ stpi_verify_printer_params(stp_vars_t v)
 	  stpi_verify_parameter(v, param->name, 0) == 0)
 	answer = 0;
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
   stp_set_errfunc((stp_vars_t) v, ofunc);
   stp_set_errdata((stp_vars_t) v, odata);
   stpi_set_verified((stp_vars_t) v, answer);

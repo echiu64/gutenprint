@@ -407,7 +407,7 @@ run (char   *name,		/* I - Name of print program. */
  cleanup:
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
-  stp_vars_free(gimp_vars.v);
+  stp_vars_destroy(gimp_vars.v);
 }
 
 /*

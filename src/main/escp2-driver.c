@@ -192,7 +192,7 @@ print_debug_params(stp_vars_t v)
 	  break;
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
   stpi_send_command(v, "\033", "ccc", 0, 0, 0);
 }
 

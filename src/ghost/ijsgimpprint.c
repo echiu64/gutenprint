@@ -123,7 +123,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
       stp_describe_parameter(img->v, "Contrast", &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	stp_set_float_parameter(img->v, "Contrast", desc.bounds.dbl.upper);
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       img->monochrome_flag = 1;
       /* 8-bit greyscale */
     }
@@ -351,7 +351,7 @@ list_all_parameters(void)
 		  free(tmp);
 		}
 	    }
-	  stp_parameter_list_free(params);
+	  stp_parameter_list_destroy(params);
 	}
       for (i = 0; i < stp_string_list_count(sl); i++)
 	param_length += strlen(stp_string_list_param(sl, i)->name) + 1;
@@ -638,7 +638,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  if (curve)
 	    {
 	      stp_set_curve_parameter(img->v, key, curve);
-	      stp_curve_free(curve);
+	      stp_curve_destroy(curve);
 	    }
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
@@ -667,7 +667,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  else
 	    STP_DEBUG(fprintf(stderr, "Bad parameter %s %d\n", key, desc.p_type));
 	}
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
     }
 
   if (code == 0)
@@ -890,7 +890,7 @@ purge_unused_float_parameters(stp_vars_t v)
 	  free(tmp);
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 int

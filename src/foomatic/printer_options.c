@@ -57,7 +57,7 @@ main(int argc, char **argv)
       stp_describe_parameter(pv, "PrintingMode", &desc);
       if (stp_string_list_is_present(desc.bounds.str, "Color"))
 	printer_is_color = 1;
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       if (printer_is_color)
 	stp_set_string_parameter(pv, "PrintingMode", "Color");
       else
@@ -213,9 +213,9 @@ main(int argc, char **argv)
 		}
 	      tcount += count;
 	    }
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
-      stp_parameter_list_free(params);
+      stp_parameter_list_destroy(params);
       if (tcount > 0)
 	{
 	  if (printer_is_color)
@@ -235,7 +235,7 @@ main(int argc, char **argv)
 	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 		 driver, "Color", "BlackAndWhite", "Black and White");
 	}
-      stp_vars_free(pv);
+      stp_vars_destroy(pv);
     }
   return 0;
 }

@@ -704,7 +704,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   stpi_puts("showpage\n", v);
   stpi_puts("%%Trailer\n", v);
   stpi_puts("%%EOF\n", v);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

@@ -1934,7 +1934,7 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(pt->hue_adjustment);
       stp_set_curve_parameter(v, "HueMap", adjustment);
       stp_set_curve_parameter_active(v, "HueMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
       pt->sat_adjustment)
@@ -1942,7 +1942,7 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(pt->sat_adjustment);
       stp_set_curve_parameter(v, "SatMap", adjustment);
       stp_set_curve_parameter_active(v, "SatMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
       pt->lum_adjustment)
@@ -1950,7 +1950,7 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
       adjustment = stp_curve_create_from_string(pt->lum_adjustment);
       stp_set_curve_parameter(v, "LumMap", adjustment);
       stp_set_curve_parameter_active(v, "LumMap", STP_PARAMETER_ACTIVE);
-      stp_curve_free(adjustment);
+      stp_curve_destroy(adjustment);
     }
 }
 
@@ -2645,7 +2645,7 @@ escp2_print(stp_const_vars_t v, stp_image_t *image)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
   stpi_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 
@@ -2656,7 +2656,7 @@ escp2_job_start(stp_const_vars_t v, stp_image_t *image)
   int status;
   stpi_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_START);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 
@@ -2667,7 +2667,7 @@ escp2_job_end(stp_const_vars_t v, stp_image_t *image)
   int status;
   stpi_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_END);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

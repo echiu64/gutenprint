@@ -136,7 +136,7 @@ extern void stp_curve_copy(stp_curve_t dest, stp_const_curve_t source);
    * It is an error to destroy the curve more than once.
    * @param curve the curve to destroy.
    */
-extern void stp_curve_free(stp_curve_t curve);
+extern void stp_curve_destroy(stp_curve_t curve);
 
 /**
  * Set the lower and upper bounds on a curve.

@@ -43,7 +43,7 @@ void
 stpi_curve_free_curve_cache(cached_curve_t *cache)
 {
   if (cache->curve)
-    stp_curve_free(cache->curve);
+    stp_curve_destroy(cache->curve);
   cache->curve = NULL;
   cache->d_cache = NULL;
   cache->s_cache = NULL;

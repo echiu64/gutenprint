@@ -181,7 +181,7 @@ stpui_plist_destroy(stpui_plist_t *printer)
 {
   SAFE_FREE(printer->name);
   SAFE_FREE(printer->output_to);
-  stp_vars_free(printer->v);
+  stp_vars_destroy(printer->v);
 }
 
 void
@@ -420,7 +420,7 @@ stpui_plist_create(const char *name, const char *driver)
 		     (int (*)(const void *, const void *)) compare_printers);
   free(key.name);
   free(key.output_to);
-  stp_vars_free(key.v);
+  stp_vars_destroy(key.v);
   return answer;
 }
 
@@ -560,7 +560,7 @@ stpui_printrc_load_v0(FILE *fp)
       stpui_plist_add(&key, 0);
       free(key.name);
       free(key.output_to);
-      stp_vars_free(key.v);
+      stp_vars_destroy(key.v);
     }
   stpui_plist_current = 0;
 }
@@ -633,7 +633,7 @@ stpui_printrc_load_v1(FILE *fp)
 		  "output_to is now %s\n", stpui_plist_get_output_to(&key));
 #endif
 
-	  stp_vars_free(key.v);
+	  stp_vars_destroy(key.v);
 	  stpui_printer_initialize(&key);
 	  key.invalid_mask = 0;
 	  stpui_plist_set_name(&key, value);
@@ -715,7 +715,7 @@ stpui_printrc_load_v1(FILE *fp)
 	      if (curve)
 		{
 		  stp_set_curve_parameter(key.v, keyword, curve);
-		  stp_curve_free(curve);
+		  stp_curve_destroy(curve);
 		}
 	      break;
 	    default:
@@ -727,13 +727,13 @@ stpui_printrc_load_v1(FILE *fp)
 			   keyword, value, desc.p_type);
 		}
 	    }
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
     }
   if (strlen(key.name) > 0)
     {
       stpui_plist_add(&key, 0);
-      stp_vars_free(key.v);
+      stp_vars_destroy(key.v);
       free(key.name);
       free(key.output_to);
     }
@@ -951,7 +951,7 @@ stpui_printrc_save(void)
 		  break;
 		}
 	    }
-	  stp_parameter_list_free(params);
+	  stp_parameter_list_destroy(params);
 #ifdef DEBUG
 	  fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
 #endif

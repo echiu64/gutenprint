@@ -1371,7 +1371,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 		      else
 			description->is_active = 0;
 		    }
-		  stp_parameter_description_free(&ink_limit_desc);
+		  stp_parameter_description_destroy(&ink_limit_desc);
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
@@ -1410,7 +1410,7 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 				(description->bounds.str,
 				 color_descriptions[j].name,
 				 color_descriptions[j].name);
-			    stp_parameter_description_free(&desc);
+			    stp_parameter_description_destroy(&desc);
 			  }
 			else
 			  stp_string_list_add_string

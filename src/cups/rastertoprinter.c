@@ -138,7 +138,7 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
   else
     fprintf(stderr, "DEBUG: Gimp-Print unable to set special %s: not a string\n",
 	    name);
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 }
 
 static void
@@ -233,7 +233,7 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
 	  break;
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 static int
@@ -244,7 +244,7 @@ printer_supports_bw(stp_const_vars_t v)
   stp_describe_parameter(v, "PrintingMode", &desc);
   if (stp_string_list_is_present(desc.bounds.str, "BW"))
     status = 1;
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   return status;
 }
 
@@ -452,10 +452,10 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 		}
 	    }	  
 	}
-      stp_parameter_description_free(&desc);
+      stp_parameter_description_destroy(&desc);
       free(ppd_option_name);
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 /*
@@ -648,7 +648,7 @@ main(int  argc,				/* I - Number of command-line arguments */
        * of the loop.
        */
       if (v)
-	stp_vars_free(v);
+	stp_vars_destroy(v);
 
       /*
        * Setup printer driver variables...
@@ -693,7 +693,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       fprintf(stderr, "DEBUG: Gimp-Print ending job\n");
       stp_end_job(v, &theImage);
-      stp_vars_free(v);
+      stp_vars_destroy(v);
     }
   cupsRasterClose(cups.ras);
   fprintf(stderr, "DEBUG: Gimp-Print printed total %.0f bytes\n",
@@ -708,7 +708,7 @@ cups_abort:
 	  total_bytes_printed);
   fputs("ERROR: Gimp-Print Invalid printer settings!\n", stderr);
   stp_end_job(v, &theImage);
-  stp_vars_free(v);
+  stp_vars_destroy(v);
   cupsRasterClose(cups.ras);
   fputs("ERROR: Gimp-Print No pages found!\n", stderr);
   if (fd != 0)

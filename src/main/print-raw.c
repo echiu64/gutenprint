@@ -216,13 +216,13 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   if (!stp_verify(nv))
     {
       stpi_eprintf(nv, _("Print options not verified; cannot print.\n"));
-      stp_vars_free(nv);
+      stp_vars_destroy(nv);
       return 0;
     }
   if (width != stpi_image_width(image) || height != stpi_image_height(image))
     {
       stpi_eprintf(nv, _("Image dimensions must match paper dimensions"));
-      stp_vars_free(nv);
+      stp_vars_destroy(nv);
       return 0;
     }
   if (ink_type)
@@ -250,7 +250,7 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   if (out_channels != ink_channels && out_channels != 1 && ink_channels != 1)
     {
       stpi_eprintf(nv, "Internal error!  Output channels or input channels must be 1\n");
-      stp_vars_free(nv);
+      stp_vars_destroy(nv);
       return 0;
     }
 
@@ -315,7 +315,7 @@ raw_print(stp_const_vars_t v, stp_image_t *image)
   stpi_image_conclude(image);
   if (final_out)
     stpi_free(final_out);
-  stp_vars_free(nv);
+  stp_vars_destroy(nv);
   return status;
 }
 

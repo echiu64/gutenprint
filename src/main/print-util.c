@@ -537,13 +537,13 @@ stpi_read_and_compose_curves(const char *s1, const char *s2,
     stp_curve_compose(&ret, t1, t2, comp, -1);
   if (ret)
     {
-      stp_curve_free(t1);
-      stp_curve_free(t2);
+      stp_curve_destroy(t1);
+      stp_curve_destroy(t2);
       return ret;
     }
   else if (t1)
     {
-      stp_curve_free(t2);
+      stp_curve_destroy(t2);
       return t1;
     }
   else
@@ -580,10 +580,10 @@ stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
 	  else if (usrval > desc.bounds.dbl.upper)
 	    usrval = desc.bounds.dbl.upper;
 	  stp_set_float_parameter(user, p->name, usrval);
-	  stp_parameter_description_free(&desc);
+	  stp_parameter_description_destroy(&desc);
 	}
     }
-  stp_parameter_list_free(params);
+  stp_parameter_list_destroy(params);
 }
 
 stp_parameter_list_t
@@ -594,19 +594,19 @@ stp_get_parameter_list(stp_const_vars_t v)
 
   tmp_list = stpi_printer_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_free(tmp_list);
+  stp_parameter_list_destroy(tmp_list);
 
   tmp_list = stpi_color_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_free(tmp_list);
+  stp_parameter_list_destroy(tmp_list);
 
   tmp_list = stpi_dither_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_free(tmp_list);
+  stp_parameter_list_destroy(tmp_list);
 
   tmp_list = stpi_list_generic_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
-  stp_parameter_list_free(tmp_list);
+  stp_parameter_list_destroy(tmp_list);
 
   return ret;
 }

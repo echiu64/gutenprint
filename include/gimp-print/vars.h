@@ -243,7 +243,7 @@ extern stp_vars_t stp_vars_create_copy(stp_const_vars_t source);
  * It is an error to destroy the vars more than once.
  * @param v the vars to destroy.
  */
-extern void stp_vars_free(stp_vars_t v);
+extern void stp_vars_destroy(stp_vars_t v);
 
 /**
  * Set the name of the printer driver.
@@ -459,7 +459,7 @@ extern void stp_merge_printvars(stp_vars_t user, stp_const_vars_t print);
  * use stp_describe_parameter.
  * @param v the vars to use.
  * @returns a list of available parameters (must be freed with
- * stp_parameter_list_free()).
+ * stp_parameter_list_destroy()).
  */
 extern stp_parameter_list_t stp_get_parameter_list(stp_const_vars_t v);
 
@@ -497,7 +497,7 @@ stp_parameter_list_param(stp_const_parameter_list_t list, size_t item);
  * It is an error to destroy the parameter_list more than once.
  * @param list the parameter_list to destroy.
  */
-extern void stp_parameter_list_free(stp_parameter_list_t list);
+extern void stp_parameter_list_destroy(stp_parameter_list_t list);
 
 /**
  * Create a parameter_list.
@@ -552,7 +552,7 @@ stp_describe_parameter(stp_const_vars_t v, const char *name,
  * with malloc, since some members are dynamically allocated.
  * @param description the parameter description to destroy.
  */
-extern void stp_parameter_description_free(stp_parameter_t *description);
+extern void stp_parameter_description_destroy(stp_parameter_t *description);
 
 /**
  * Find a parameter by its name from a vars object.

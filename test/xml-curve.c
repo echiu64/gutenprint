@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	}
       else
 	fprintf(stderr, "error creating curve string\n");
-      stp_curve_free(curve);
+      stp_curve_destroy(curve);
     }
   else
     printf("curve is NULL!\n");

@@ -320,7 +320,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   free(passstarts);
   if (!quiet || (quiet == 1 && total_errors > 0))
     printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
-  stp_vars_free(v);
+  stp_vars_destroy(v);
   return total_errors;
 }
 

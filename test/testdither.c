@@ -455,7 +455,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   (void) gettimeofday(&tv2, NULL);
 
-  stp_vars_free(v);
+  stp_vars_destroy(v);
 
   if (fp != NULL)
     fclose(fp);

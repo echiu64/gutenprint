@@ -274,7 +274,7 @@ main(int argc, char **argv)
   stp_curve_set_bounds(curve1, 0.0, 4.0);
   stp_curve_set_data(curve1, 48, standard_sat_adjustment);
   tmp = stp_curve_write_string(curve1);
-  stp_curve_free(curve1);
+  stp_curve_destroy(curve1);
   curve1 = NULL;
   if (tmp)
     TEST_PASS();
@@ -304,7 +304,7 @@ main(int argc, char **argv)
     }
   if (curve2)
     {
-      stp_curve_free(curve2);
+      stp_curve_destroy(curve2);
       curve2 = NULL;
     }
 
@@ -322,7 +322,7 @@ main(int argc, char **argv)
 	      stp_curve_write(stdout, bad);
 	      fprintf(stdout, "\n");
 	    }
-	  stp_curve_free(bad);
+	  stp_curve_destroy(bad);
 	  bad = NULL;
 	}
       else
@@ -335,7 +335,7 @@ main(int argc, char **argv)
     {
       if (curve2)
 	{
-	  stp_curve_free(curve2);
+	  stp_curve_destroy(curve2);
 	  curve2 = NULL;
 	}
       TEST("GOOD curve");
@@ -366,7 +366,7 @@ main(int argc, char **argv)
     }
   if (curve2)
     {
-      stp_curve_free(curve2);
+      stp_curve_destroy(curve2);
       curve2 = NULL;
     }
   if (verbose)
@@ -411,7 +411,7 @@ main(int argc, char **argv)
     }
   if (curve3)
     {
-      stp_curve_free(curve3);
+      stp_curve_destroy(curve3);
       curve3 = NULL;
     }
   TEST("compose multiply from gamma curves");
@@ -429,9 +429,9 @@ main(int argc, char **argv)
     }
 
   TEST("compose add from non-gamma curves");
-  stp_curve_free(curve1);
-  stp_curve_free(curve2);
-  stp_curve_free(curve3);
+  stp_curve_destroy(curve1);
+  stp_curve_destroy(curve2);
+  stp_curve_destroy(curve3);
   curve1 = stp_curve_create_from_string(good_curves[0]);
   curve2 = stp_curve_create_from_string(linear_curve_2);
   if (!stp_curve_compose(&curve3, curve1, curve2, STP_CURVE_COMPOSE_ADD, 64))
@@ -454,7 +454,7 @@ main(int argc, char **argv)
     }
   if (curve3)
     {
-      stp_curve_free(curve3);
+      stp_curve_destroy(curve3);
       curve3 = NULL;
     }
   TEST("compose multiply from non-gamma curves");
@@ -472,7 +472,7 @@ main(int argc, char **argv)
     }
   if (curve3)
     {
-      stp_curve_free(curve3);
+      stp_curve_destroy(curve3);
       curve3 = NULL;
     }
 
@@ -498,17 +498,17 @@ main(int argc, char **argv)
 
   if (curve3)
     {
-      stp_curve_free(curve3);
+      stp_curve_destroy(curve3);
       curve3 = NULL;
     }
   if (curve1)
     {
-      stp_curve_free(curve1);
+      stp_curve_destroy(curve1);
       curve1 = NULL;
     }
   if (curve2)
     {
-      stp_curve_free(curve2);
+      stp_curve_destroy(curve2);
       curve2 = NULL;
     }
 
@@ -571,12 +571,12 @@ main(int argc, char **argv)
     TEST_PASS();
   if (curve1)
     {
-      stp_curve_free(curve1);
+      stp_curve_destroy(curve1);
       curve1 = NULL;
     }
   if (curve2)
     {
-      stp_curve_free(curve2);
+      stp_curve_destroy(curve2);
       curve2 = NULL;
     }
 
@@ -603,7 +603,7 @@ main(int argc, char **argv)
 	  if (verbose)
 	    stp_curve_write(stdout, curve1);
 	}
-      stp_curve_free(curve1);
+      stp_curve_destroy(curve1);
       curve1 = NULL;
     }
   if (curve2)
@@ -619,7 +619,7 @@ main(int argc, char **argv)
 	  if (verbose)
 	    stp_curve_write(stdout, curve2);
 	}
-      stp_curve_free(curve2);
+      stp_curve_destroy(curve2);
       curve2 = NULL;
     }
 
@@ -709,19 +709,19 @@ main(int argc, char **argv)
 
       if (curve1)
 	{
-	  stp_curve_free(curve1);
+	  stp_curve_destroy(curve1);
 	  curve1 = NULL;
 	}
 
       if (curve2)
 	{
-	  stp_curve_free(curve2);
+	  stp_curve_destroy(curve2);
 	  curve2 = NULL;
 	}
 
       if (curve3)
 	{
-	  stp_curve_free(curve3);
+	  stp_curve_destroy(curve3);
 	  curve3 = NULL;
 	}
     }

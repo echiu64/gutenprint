@@ -969,7 +969,7 @@ do_align(void)
       return;
     }
   passes = desc.deflt.integer;
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
 
   stp_describe_parameter(v, "AlignmentChoices", &desc);
   if (desc.p_type != STP_PARAMETER_TYPE_INT)
@@ -980,7 +980,7 @@ do_align(void)
       return;
     }
   choices = desc.deflt.integer;
-  stp_parameter_description_free(&desc);
+  stp_parameter_description_destroy(&desc);
   if (passes <= 0 || choices <= 0)
     {
       printf("No alignment required for printer %s\n", printer_name);
