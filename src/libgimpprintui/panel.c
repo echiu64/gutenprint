@@ -604,7 +604,7 @@ static void
 build_a_combo(option_t *option)
 {
   const gchar *new_value;
-  const gchar *old_value;
+  stp_parameter_activity_t active;
   if (option->fast_desc &&
       option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
@@ -647,7 +647,9 @@ build_a_combo(option_t *option)
 		      &(option->info.list.callback_id), NULL, option);
   new_value =
     stpui_combo_get_name(option->info.list.combo, option->info.list.params);
+  active = stp_get_string_parameter_active(pv->v, option->fast_desc->name);
   stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
+  stp_set_string_parameter_active(pv->v, option->fast_desc->name, active);
 }
 
 static void
