@@ -647,7 +647,7 @@ run(char   *name,		/* I - Name of print program. */
 	/*
 	 * Second, correct contrast
 	 */
-	pixel = 1.0 + ((pixel - 1.0) * contrast);
+	pixel = 0.5 + ((pixel - 0.5) * contrast);
 
 	/*
 	 * Third, fix up red, green, blue values
