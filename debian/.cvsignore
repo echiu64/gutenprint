@@ -1,4 +1,5 @@
-yada
+Makefile
+Makefile.in
 tmp*
 files*
 substvars
@@ -17,4 +18,3 @@ libgimpprint-dev
 libgimpprint[0-9].[0-9].[0-9]
 escputil
 gimp-print-install
-

@@ -36,14 +36,14 @@ autoconfigure-stamp: debian/control debian/libgimpprint-doc.doc-base
 	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
 	mkdir debian/gimp-print-build ; \
 	cd debian/gimp-print-build ; \
-	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --without-ijs --with-foomatic --disable-test --disable-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
+	BUILD_PACKAGE=true ../../configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-static --enable-shared --without-gimp --with-cups --with-ijs --with-foomatic --disable-test --disable-translated-ppds --disable-cups-level3-ps --enable-maintainer-mode
 	touch autoconfigure-stamp
 
 
 build: build-stamp debian/control
 build-stamp: autoconfigure-stamp
 	dh_testdir
-	
+
 	cd debian/gimp-print-build ; \
 	$(MAKE) ; \
 	cd src/gimp ; \
@@ -78,10 +78,10 @@ install: build debian/control
 
 	cd debian/gimp-print-build ; \
 	$(MAKE) DESTDIR=`pwd`/../gimp-print-install install
-	
+
 	scripts/mkinstalldirs debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins
 	/usr/bin/install -c debian/gimp-print-build/src/gimp/.libs/print debian/gimp1.2-print/usr/lib/gimp/1.2/plug-ins/print
-	
+
 	dh_movefiles --sourcedir=debian/gimp-print-install
 	rm debian/foomatic-db-gimp-print/usr/share/foomatic/kitload.log
 
