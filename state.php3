@@ -1,6 +1,6 @@
 <?
 
-$plugin_version_number = '4.2.0';
+$plugin_version_number = '5.0.0-alpha1';
 
 $maintainer = '<a href="http://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
