@@ -1,0 +1,10 @@
+Makefile.in
+Makefile
+users_guide.tex
+users_guide.log
+users_guide
+users_guide.aux
+users_guide.dvi
+users_guide.ps
+users_guide.pdf
+html-stamp
