@@ -1060,6 +1060,7 @@ sub getprintoutmode {
 	# best values for the "PrintoutMode" option
 	my $quality;
 	for $quality (keys(%{$stpdata{$stpprn}{'Resolution'}})) {
+	    
 	    my ($xres, $yres, $qualstr);
 	    if ($quality =~ /^(\d+)x(\d+)(\D.*)$/) {
 		$xres = $1;
@@ -1070,7 +1071,9 @@ sub getprintoutmode {
 		$yres = $1;
 		$qualstr = $2;
 	    } else {
-		die "Invalid quality: $quality\n";
+		$xres = $stpdata{$stpprn}{'x_resolution'};
+		$yres = $stpdata{$stpprn}{'y_resolution'};
+		$qualstr = $quality;
 	    }
 	    # Resolution in dots per square inch
 	    my $respersquareinch = $xres * $yres;
