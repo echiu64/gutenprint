@@ -118,14 +118,12 @@ configure: configure.in
           autoconf ; \
 	fi
 
-configure.in: configure.in.in
+configure.in:
 	if test -f configure.in ; then \
 	  if test -f scripts/autogen.sh ; then \
 	    /bin/sh scripts/autogen.sh --version ; \
 	  fi \
 	fi
-
-configure.in.in:
 
 ChangeLog:
 	$(MAKE) -f debian/gimp-print-build/Makefile top_srcdir=`/bin/pwd` ChangeLog
