@@ -1272,7 +1272,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
   if (bits == 2)
     dither_set_adaptive_divisor(dither, 8);
   else
-    dither_set_adaptive_divisor(dither, 2);
+    dither_set_adaptive_divisor(dither, 4);
   if (bits == 2)
     {
       int dsize = (sizeof(variable_dither_ranges) /
@@ -2823,6 +2823,7 @@ roundup(int x, int y)
     return y * divv((x + y - 1), y);
 }
 
+#if 0
 static inline int
 rounddown(int x, int y)
 {
@@ -2831,6 +2832,7 @@ rounddown(int x, int y)
   else
     return y * divv(x, y);
 }
+#endif
 
 static void
 weave_parameters_by_row(const escp2_softweave_t *sw, int row,
@@ -3099,13 +3101,15 @@ initialize_row(const escp2_softweave_t *sw, int row, int width)
 	  for (j = 0; j < sw->ncolors; j++)
 	    {
 	      if (lineoffs[0].v[j] != 0)
-		fprintf(stderr, "WARNING: pass %d subpass %d row %d: lineoffs %d\n",
+		fprintf(stderr,
+			"WARNING: pass %d subpass %d row %d: lineoffs %ld\n",
 			w.pass, i, row, lineoffs[0].v[j]);
 	      lineoffs[0].v[j] = 0;
 	      lineactive[0].v[j] = 0;
 	    }
 	  if (*linecount != 0)
-	    fprintf(stderr, "WARNING: pass %d subpass %d row %d: linecount %d\n",
+	    fprintf(stderr,
+		    "WARNING: pass %d subpass %d row %d: linecount %d\n",
 		    w.pass, i, row, *linecount);
 	  *linecount = 0;
 	  if (w.missingstartrows > 0)
