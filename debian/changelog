@@ -10,7 +10,6 @@ gimp-print (4.2.2-1) unstable; urgency=low
   * Remove libgimpprint.postinst as ldconfig is called by debhelper
   * Update package descriptions
 
-gimp-print (4.3.0-1) unstable; urgency=low
  -- Roger Leigh <roger@whinlatter.uklinux.net>  Sat, 18 May 2002 18:34:43 +0100
 
 gimp-print (4.2.1-2) unstable; urgency=low
