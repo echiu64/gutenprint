@@ -302,9 +302,6 @@ image: IMAGE tINT tINT
 	}
 ;
 
-Empty:
-;
-
 Rule:   gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
 	| vsize | blackline | extended
@@ -313,13 +310,13 @@ Rule:   gamma | channel_gamma | level | channel_level | global_gamma | steps
 A_Pattern: pattern | xpattern | grid
 ;
 
-Patterns: Patterns A_Pattern | Empty
+Patterns: /* empty */ | Patterns A_Pattern
 ;
 
 Image: image
 ;
 
-Rules: Rules Rule | Empty
+Rules: /* empty */ | Rules Rule
 ;
 
 Output: Patterns | Image
@@ -329,7 +326,7 @@ Thing: Rules
 	{
 	  current_testpattern = get_next_testpattern();
 	}
-	Output Empty
+	Output
 ;
 
 %%
