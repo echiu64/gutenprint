@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.6-pre1\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2003-05-03 19:43+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -1499,58 +1499,58 @@ msgstr "%s není platný algoritmus rozkladu barev\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "Czech"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 msgid "ISOLatin1"
 msgstr "UTF-8"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 msgid "Media Type"
 msgstr "Typ média"
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 msgid "Media Source"
 msgstr "Zdroj média"
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "Rozlišení"
 
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 msgid "GIMP-print"
 msgstr "GIMP-print"
 
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 msgid "Image Type"
 msgstr "Typ obrázku"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Čárová grafika"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Jednolité barvy"
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografie"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr "Algoritmus rozkladu barev"
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 msgid "Ink Type"
 msgstr "Typ inkoustu"
 

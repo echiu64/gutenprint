@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print Version 4.2.3\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2002-10-07 19:10+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -1505,28 +1505,28 @@ msgstr "%s は適切なディザ方式ではありません\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "Japanese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 msgid "ISOLatin1"
 msgstr "ISO ラテン１"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 msgid "Media Type"
 msgstr "用紙の種類"
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 msgid "Media Source"
 msgstr "給紙方法"
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "解像度"
 
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 #, fuzzy
 msgid "GIMP-print"
 msgstr "印刷"
@@ -1534,30 +1534,30 @@ msgstr "印刷"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 msgid "Image Type"
 msgstr "画像の種類"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "ライン・アート"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "無地の色"
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "写真"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr "ディザ方式"
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 msgid "Ink Type"
 msgstr "インクの種類"
 

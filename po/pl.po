@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2001-10-18 11:53+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -1534,28 +1534,28 @@ msgstr ""
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "Polish"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 msgid "ISOLatin1"
 msgstr "ISOLatin2"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 msgid "Media Type"
 msgstr ""
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 msgid "Media Source"
 msgstr ""
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "Rozdzielczo¶æ"
 
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 #, fuzzy
 msgid "GIMP-print"
 msgstr "Wydrukuj"
@@ -1563,30 +1563,30 @@ msgstr "Wydrukuj"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 msgid "Image Type"
 msgstr "Typ obrazu"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Rysunek kresk±"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Jednolite p³aszczyzny"
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Fotografia"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr "Algorytm ditherowania"
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 msgid "Ink Type"
 msgstr ""
 

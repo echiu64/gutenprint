@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Gimp-print 4.2.1\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2002-03-15 20:31+0100\n"
 "Last-Translator: Hylke Witjens <hylke@wwd.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -1545,28 +1545,28 @@ msgstr "%s is geen geldige dither algorithme\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "Dutch"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 msgid "Media Type"
 msgstr "Medium Type"
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 msgid "Media Source"
 msgstr "Medium Bron"
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "Resolutie"
 
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 #, fuzzy
 msgid "GIMP-print"
 msgstr "Afdrukken"
@@ -1574,30 +1574,30 @@ msgstr "Afdrukken"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 msgid "Image Type"
 msgstr "Beeldtype"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Lijn tekening"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Ongerasterde kleuren"
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Foto"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr ""
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 msgid "Ink Type"
 msgstr "Inkt type"
 

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2002-09-15 16:07+0200\n"
 "Last-Translator: Raymond Ostertag <r.ostertag@caramail.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -1508,28 +1508,28 @@ msgstr "%s n'est pas un algorithme de tramage valide\n"
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "French"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 msgid "Media Type"
 msgstr "Type de support"
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 msgid "Media Source"
 msgstr "Source du support"
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "Résolution"
 
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 #, fuzzy
 msgid "GIMP-print"
 msgstr "Imprimer"
@@ -1537,30 +1537,30 @@ msgstr "Imprimer"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 msgid "Image Type"
 msgstr "Type d'image"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 msgid "Line Art"
 msgstr "Crayon"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr "Tons continus"
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 msgid "Photograph"
 msgstr "Photographie"
 
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr "Algorithme de tramage"
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 msgid "Ink Type"
 msgstr "Type d'encre"
 

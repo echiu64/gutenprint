@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
-"POT-Creation-Date: 2003-12-05 22:53-0500\n"
+"POT-Creation-Date: 2003-12-17 21:06-0500\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -1619,32 +1619,32 @@ msgstr ""
 #. * Use the English name of your language here, e.g. "Swedish" instead of
 #. * "Svenska".
 #.
-#: src/cups/genppd.c:484
+#: src/cups/genppd.c:482
 msgid "English"
 msgstr "Greek"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
-#: src/cups/genppd.c:486
+#: src/cups/genppd.c:484
 #, fuzzy
 msgid "ISOLatin1"
 msgstr "Λάτιν"
 
-#: src/cups/genppd.c:759
+#: src/cups/genppd.c:745
 #, fuzzy
 msgid "Media Type"
 msgstr "Είδος MIME"
 
-#: src/cups/genppd.c:785
+#: src/cups/genppd.c:771
 #, fuzzy
 msgid "Media Source"
 msgstr "Ανοικτό Λογισμικό"
 
-#: src/cups/genppd.c:809
+#: src/cups/genppd.c:795
 msgid "Resolution"
 msgstr "Ανάλυση"
 
 #
-#: src/cups/genppd.c:844
+#: src/cups/genppd.c:830
 #, fuzzy
 msgid "GIMP-print"
 msgstr "Εκτύπωση"
@@ -1652,21 +1652,21 @@ msgstr "Εκτύπωση"
 #.
 #. * Image types...
 #.
-#: src/cups/genppd.c:851
+#: src/cups/genppd.c:837
 #, fuzzy
 msgid "Image Type"
 msgstr "Είδος MIME"
 
-#: src/cups/genppd.c:856 src/gimp/gimp_main_window.c:1314
+#: src/cups/genppd.c:842 src/gimp/gimp_main_window.c:1314
 #, fuzzy
 msgid "Line Art"
 msgstr "Γραμμή"
 
-#: src/cups/genppd.c:858 src/gimp/gimp_main_window.c:1328
+#: src/cups/genppd.c:844 src/gimp/gimp_main_window.c:1328
 msgid "Solid Colors"
 msgstr ""
 
-#: src/cups/genppd.c:860 src/gimp/gimp_main_window.c:1343
+#: src/cups/genppd.c:846 src/gimp/gimp_main_window.c:1343
 #, fuzzy
 msgid "Photograph"
 msgstr "Κρυπτογραφία"
@@ -1674,11 +1674,11 @@ msgstr "Κρυπτογραφία"
 #.
 #. * Dithering algorithms...
 #.
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:854
 msgid "Dither Algorithm"
 msgstr ""
 
-#: src/cups/genppd.c:887
+#: src/cups/genppd.c:873
 #, fuzzy
 msgid "Ink Type"
 msgstr "Τύπος MIME"
