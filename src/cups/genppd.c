@@ -84,6 +84,8 @@
 
 int cups_ppd_ps_level = CUPS_PPD_PS_LEVEL;
 
+static const char *cups_modeldir = CUPS_MODELDIR;
+
 /*
  * File handling stuff...
  */
@@ -163,7 +165,7 @@ void    printlangs(char** langs);
 void    printmodels(int verbose);
 void *  gp_malloc (size_t size);
 int	write_ppd(stp_const_printer_t p, const char *prefix,
-	          int verbose);
+		  const char *language, int verbose);
 
 
 /*
@@ -229,7 +231,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMV")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:")) == -1)
       break;
 
     switch (i)
@@ -269,6 +271,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'M':
       opt_printmodels = 1;
+      break;
+    case 'd':
+      cups_modeldir = optarg;
       break;
     case 'V':
       printf("cups-genppd version %s, "
@@ -412,7 +417,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
 	  if (printer)
 	    {
-	      if (write_ppd(printer, prefix, verbose))
+	      if (write_ppd(printer, prefix, language, verbose))
 		return 1;
 	    }
 	  else
@@ -429,7 +434,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	{
 	  printer = stp_get_printer_by_index(i);
 
-	  if (printer && write_ppd(printer, prefix, verbose))
+	  if (printer && write_ppd(printer, prefix, language, verbose))
 	    return (1);
 	}
     }
@@ -482,6 +487,7 @@ help(void)
        "  -c localedir  Use localedir as the base directory for locale data.\n"
        "  -l locale     Output PPDs translated with messages for locale.\n"
        "  -p prefix     Output PPDs in directory prefix.\n"
+       "  -d prefix     Embed directory prefix in PPD file.\n"
        "  -q            Quiet mode.\n"
        "  -v            Verbose mode.\n"
        "models:\n"
@@ -639,14 +645,12 @@ gp_malloc (size_t size)
 int					/* O - Exit status */
 write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
+	  const char	      *language,
 	  int                 verbose)
 {
   int		i, j, k, l;		/* Looping vars */
   gzFile	fp;			/* File to write to */
   char		filename[1024];		/* Filename */
-  char		pcfilename[13],		/* PCFileName attribute */
-		*pcptr;			/* Pointer into PCFileName */
-  const char	*driverptr;		/* Pointer into driver name */
   char		manufacturer[64];	/* Manufacturer name */
   int		num_opts;		/* Number of printer options */
   int		xdpi, ydpi;		/* Resolution info */
@@ -703,7 +707,18 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  exit (EXIT_FAILURE);
 	}
     }
-  snprintf(filename, sizeof(filename) - 1, "%s/%s.%s%s%s",
+
+  /*
+   * The files will be named stp-<driver>.<major>.<minor>.ppd, for
+   * example:
+   * 
+   * stp-escp2-ex.5.0.ppd
+   * 
+   * or
+   * 
+   * stp-escp2-ex.5.0.ppd.gz
+   */
+  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s",
 	   prefix, driver, GIMPPRINT_RELEASE_VERSION, ppdext, gzext);
 
  /*
@@ -744,9 +759,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*%along with this program; if not, write to the Free Software\n");
   gzputs(fp, "*%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
   gzputs(fp, "*%\n");
-  gzputs(fp, "*%Magic cookie for cups-genppdupdate\n");
-  gzprintf(fp, "*%%Gimp-Print Filename: %s%s\n", driver, ppdext);
-  gzputs(fp, "*%\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
   /* Specify language of PPD translation */
@@ -765,20 +777,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   * the driver name, and makes the filename all UPPERCASE as well...
   */
 
-  for (driverptr = driver, pcptr = pcfilename;
-       pcptr < (pcfilename + 8) && *driverptr;)
-  {
-    *pcptr++ = toupper(*driverptr);
-
-    if (strchr(driverptr, '-') != NULL)
-      driverptr = strchr(driverptr, '-') + 1;
-    else
-      driverptr ++;
-  }
-
-  strcpy(pcptr, ".PPD");
-    
-  gzprintf(fp, "*PCFileName:	\"%s\"\n", pcfilename);
+  gzprintf(fp, "*PCFileName:	\"STP%05d.PPD\"\n",
+	   stp_get_printer_index_by_driver(driver));
 
  /*
   * The Manufacturer, for now, is the first word of the long driver
@@ -845,6 +845,16 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
+  gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
+  gzprintf(fp, "*StpPPDLocation:	\"%s%s%s/stp-%s.%s%s%s\"\n",
+	   cups_modeldir,
+	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
+	   language ? language : "C",
+	   driver,
+	   GIMPPRINT_RELEASE_VERSION,
+	   ppdext,
+	   gzext);
+  gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");	
 
  /*
   * Get the page sizes from the driver...

@@ -25,7 +25,7 @@ use File::Copy qw(mv);
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
-sub find_ppd ($$$$); # PCFileName, Gimp-Print Filename, language (e.g. en, sv),
+sub find_ppd ($$$$); # Gimp-Print Filename, driver, language (e.g. en, sv),
 		     # region (e.g. GB, DE)
 sub get_default_types (*); # Source PPD FH
 sub get_defaults (*); # Source PPD FH
@@ -49,8 +49,7 @@ my $version = "@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@";
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
 my $ppd_root_dir = "@cups_conf_datadir@/model";
-my $ppd_gimpprint_dir = "$ppd_root_dir/gimp-print";
-my $ppd_base_dir = "$ppd_gimpprint_dir/$version"; # Available PPDs
+my $ppd_base_dir = "$ppd_root_dir/gimp-print/$version"; # Available PPDs
 my $gzext = ".gz";
 my $updated_ppd_count = 0;
 
@@ -91,7 +90,7 @@ umask 0177;
 
 # Find all in-use Gimp-Print PPD files...
 
-my @ppdglob = glob("$ppd_dir/*");
+my @ppdglob = glob("$ppd_dir/*.{ppd,PPD}");
 my $ppdlist = join ' ', @ppdglob;
 if (@ppdglob) {
     open PPDFILES, "grep -i -l Gimp-Print $ppdlist|" or die "can't grep $ppd_dir/*: $!";
@@ -174,55 +173,73 @@ sub update_ppd ($) {
 
     open ORIG, $_ or die "$_: can't open PPD file: $!";
     seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
+    if ($debug) {
+	print "Source Filename: $ppd_source_filename\n";
+    }
     # Get the `PCFileName'; the new source PPD will have the same name.
-    my $filename = "";
-    my $gimpprintfilename = "";
+    my ($filename) = "";
+    my ($driver) = "";
+    my ($gimpprintdriver) = "";
+    my ($locale) = "";
+    my ($lingo) = "";
+    my ($region) = "";
+    my ($valid) = 0;
     while (<ORIG>) {
-	if ( /^\*PCFileName/ ) {
-	    ($filename) = m/^\*PCFileName:\s*"(.*)"/;
+	if (/\*StpLocale:/) {
+	    ($locale) = m/^\*StpLocale:\s\"*(.*)\"$/;
+	    $valid = 1;
 	}
-	if ( /^\*%Gimp-Print Filename:/ ) {
-	    ($gimpprintfilename) = m/^\*%Gimp-Print Filename:\s*(.*)/;
+	if (/\*LanguageVersion/) {
+	    ($lingo) = m/^\*LanguageVersion:\s*(.*)$/;
 	}
+	if (/^\*StpDriverName:/ ) {
+	    ($driver) = m/^\*StpDriverName:\s*\"(.*)\"$/;
+	    $valid = 1;
+	}
+	if (/\*%End of / && $driver eq "") {
+	    ($driver) = m/^\*%End of\s*(.*).ppd$/;
+	}
+	if (/^\*StpPPDLocation:/ ) {
+	    ($filename) = m/^\*StpPPDLocation:\s*\"(.*)\"$/;
+	    $valid = 1;
+	}
+	if (/^\*%Gimp-Print Filename:/) {
+	    $valid = 1;
+	}
+    }
+    if (! $valid) {
+	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gimp-Print 4.3.21 and newer can be)\n";
+	return 0;
     }
     if ($debug) {
-	print "PCFileName: $filename\n";
-	print "Gimp-Print Filename: $gimpprintfilename\n";
+	print "Gimp-Print Filename: $filename\n";
+	print "Locale: $locale\n";
+	print "Language: $lingo\n";
+	print "Driver: $driver\n";
     }
-    # Get the `LanguageVersion'; the language of the PPD.
-    my $locale;
-    seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
-    # Get the `PCFileName'; the new source PPD will have the same name.
-    while (<ORIG>) {
-	if ( /\*LanguageVersion/ ) {
-	    ($locale) = m/^\*LanguageVersion:\s*(.*)$/;
+    if ($locale) {
+	# Split into the language and territory.
+	($locale, $region) = split(/-/, $locale);
+    } else {
+	# Split into the language and territory.
+	($locale, $region) = split(/-/, $lingo);
+	# Convert language into language code.
+	$locale = $languagemappings{"\L$lingo"};
+	if (!defined($locale)) {
+	    $locale = "C"; # Fallback if there isn't one.
 	}
     }
-    if ($debug) {
-	print "LanguageVersion: $locale\n";
-    }
-    # Split into the language and territory.
-    my($langname, $region) = split(/-/, $locale);
-    # Convert language into language code.
-    my $langcode = $languagemappings{"\L$langname"};
-    if (!defined($langcode)) {
-	$langcode = "C"; # Fallback if there isn't one.
-    }
-    if ($debug) {
-	print "Language name: $langcode\n";
-    }
-    # If no territory was specified, make it blank.
-    if (!defined($region)) {
+    if (! defined($region)) {
 	$region = "";
     }
     if ($debug) {
+	print "Locale: $locale\n";
 	print "Region: $region\n";
     }
 
-
     # Search for a PPD matching our criteria...
 
-    my $source = find_ppd($filename, $gimpprintfilename, $langcode, $region);
+    my $source = find_ppd($filename, $driver, $locale, $region);
     if (!defined($source)) {
         # There wasn't a valid source PPD file, so give up.
         print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
@@ -373,12 +390,19 @@ default_loop:
 
 # Find a suitable source PPD file
 sub find_ppd ($$$$) {
-    my($pcfilename, $gimpprintfilename, $lang, $region) = @_;
+    my($gimpprintfilename, $drivername, $lang, $region) = @_;
     my $file; # filename to return
-    my($gimpprintfilebase) = $gimpprintfilename;
     my ($key) = '^\\*FileVersion:[ 	]*"@VERSION@"$';
     my ($lingo, $suffix, $base, $basedir);
-    $gimpprintfilebase =~ s/\.ppd$//;
+    my ($current_best_file, $current_best_time);
+    my ($stored_name, $stored_dir);
+    $stored_name = $gimpprintfilename;
+    $stored_name =~ s,.*/([^/]*)(.gz)?$,$1,;
+    $stored_dir = $gimpprintfilename;
+    $stored_dir =~ s,(.*)/([^/]*)$,$1,;
+
+    $current_best_file = "";
+    $current_best_time = 0;
 
     # All possible candidates, in order of usefulness and gzippedness
     foreach $lingo ("${lang}_${region}/",
@@ -386,20 +410,22 @@ sub find_ppd ($$$$) {
 		    "en/",
 		    "C/",
 		    "") {
-	foreach $suffix ($gzext,
-			"") {
-	    foreach $base ("${gimpprintfilebase}.$version.ppd",
-			   $gimpprintfilename,
-			   $pcfilename) {
+	foreach $suffix (".ppd$gzext",
+			 ".ppd") {
+	    foreach $base ("${drivername}.$version",
+                           "stp-${drivername}.$version",
+			   $stored_name,
+			   $drivername) {
 		foreach $basedir ($ppd_base_dir,
-				  $ppd_gimpprint_dir,
+				  $stored_dir,
 				  $ppd_root_dir) {
+                    if (! $basedir || ! $base) { next; }
 		    my ($fn) = "$basedir/$lingo$base$suffix";
 		    if ($debug) {
                         print "Trying $fn for $gimpprintfilename, $lang, $region\n";
                     }
-		    # Check it's a regular file, owned by root.root, not writable
-		    # by other, and is readable by root.  i.e. the file is secure.
+# Check that it is a regular file, owned by root.root, not writable
+# by other, and is readable by root.  i.e. the file is secure.
 		    my @sb = stat $fn or next;
 		    if (S_ISREG($sb[2]) && ($sb[4] == 0) && ($sb[5] == 0)) {
 #			!(S_IWOTH & $sb[2]) && (S_IRUSR & $sb[2])) {
@@ -412,7 +438,13 @@ sub find_ppd ($$$$) {
 			    $file_version = `cat $fn | grep '$key'`;
 			}
 			if ($file_version ne "") {
-			    return $fn;
+                            if ($debug) {
+			        print "   Format valid: time $sb[9] best $current_best_time prev $current_best_file cur $fn!\n";
+			    }
+			    if ($sb[9] > $current_best_time) {
+				$current_best_time = $sb[9];
+				$current_best_file = $fn;
+			    }
 			} elsif ($debug) {
 			    print "   Format invalid\n";
 			}
@@ -426,7 +458,10 @@ sub find_ppd ($$$$) {
 	    }
 	}
     }
-# Yikes!  Can't find a valid PPD file!
+    if ($current_best_file) {
+        return $current_best_file;
+    }
+# Yikes!  Cannot find a valid PPD file!
     return undef;
 }
 

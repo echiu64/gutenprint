@@ -48,7 +48,7 @@ cups_modeldir = $(pkgdatadir)/model/gimp-print/@GIMPPRINT_MAJOR_VERSION@.@GIMPPR
 endif
 CUPS_PPD_NICKNAME_STRING=$(empty)\ -\ CUPS+Gimp-Print\ v$(empty)
 
-DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\"
+DEFS = -I. -I$(srcdir) -I../.. $(AM_CFLAGS) -DGENPPD_PPD_PREFIX=\"$(cups_modeldir)\" @CUPS_CFLAGS@ @DEFS@ $(GIMPPRINT_CFLAGS) -DPPD_NICKNAME_STRING=\"$(CUPS_PPD_NICKNAME_STRING)\" -DCUPS_MODELDIR=\"$(cups_modeldir)\"
 
 
 ## Programs
