@@ -210,7 +210,7 @@ AC_ARG_WITH(ghost,
 
 AC_MSG_CHECKING([whether to build foomatic data files])
 AC_ARG_WITH(foomatic,
-[  --with-foomatic            build foomatic data files [default=${BUILD_FOOMATIC}]],
+[  --with-foomatic          build foomatic data files [default=${BUILD_FOOMATIC}]],
   [case "${withval}" in
     yes) BUILD_FOOMATIC="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_FOOMATIC="no" ; AC_MSG_RESULT([no]) ;;
@@ -277,6 +277,8 @@ AC_PATH_PROG(PERL_PROG, perl)
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT
+
+dnl Set PACKAGE_LOCALE_DIR in config.h
 if test "x${prefix}" = "xNONE"; then
   AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale")
 else
@@ -396,6 +398,7 @@ fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
+AC_C_INLINE
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_TYPE_SIGNAL

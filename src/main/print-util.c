@@ -214,8 +214,19 @@ static const stp_internal_vars_t max_vars =
 	NCOLOR_MODELS - 1	/* Output color model */
 };
 
+int
+stp_init(void)
+{
+  /* set up gettext */
+#ifdef ENABLE_NLS
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+#endif
+  return (0);
+}
+
 stp_vars_t
-stp_allocate_vars()
+stp_allocate_vars(void)
 {
   void *retval = stp_malloc(sizeof(stp_internal_vars_t));
   memset(retval, 0, sizeof(stp_internal_vars_t));

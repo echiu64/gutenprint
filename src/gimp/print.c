@@ -265,6 +265,12 @@ run (char   *name,		/* I - Name of print program. */
     ;
 #endif
 
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
+
 #ifdef INIT_I18N_UI
   INIT_I18N_UI();
 #else

@@ -27,7 +27,6 @@ INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
 AM_CPPFLAGS =\
- -DLOCALEDIR=\""$(localedir)"\" \
  @MAINTAINER_CFLAGS@
 
 noinst_PROGRAMS = @TEST_BIN@

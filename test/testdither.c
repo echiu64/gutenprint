@@ -146,6 +146,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 		  "random"
 		};
 
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
 
  /*
   * Get command-line args...

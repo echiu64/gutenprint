@@ -335,6 +335,12 @@ main(int argc, char **argv)
   int quiet = 0;
   int status = 0;
 
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
+
   v = stp_allocate_vars();
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);

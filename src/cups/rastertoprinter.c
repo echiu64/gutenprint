@@ -136,6 +136,13 @@ main(int  argc,				/* I - Number of command-line arguments */
   char		**opts;			/* Printer options */
 
   theImage.rep = &cups;
+
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
+
  /*
   * Check for valid arguments...
   */

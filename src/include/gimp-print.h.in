@@ -50,8 +50,9 @@ extern "C" {
  * Library versioning details
  */
 
-/* compile time version
- *  */
+/* 
+ * compile-time version
+ */
 #define GIMPPRINT_MAJOR_VERSION       (@GIMPPRINT_MAJOR_VERSION@)
 #define GIMPPRINT_MINOR_VERSION       (@GIMPPRINT_MINOR_VERSION@)
 #define GIMPPRINT_MICRO_VERSION       (@GIMPPRINT_MICRO_VERSION@)
@@ -70,7 +71,7 @@ extern const unsigned int gimpprint_micro_version;
 extern const unsigned int gimpprint_current_interface;
 extern const unsigned int gimpprint_binary_age;
 extern const unsigned int gimpprint_interface_age;
-const char* stp_check_version (unsigned int required_major,
+extern const char* stp_check_version (unsigned int required_major,
 			       unsigned int required_minor,
 			       unsigned int required_micro);
 
@@ -388,6 +389,8 @@ typedef struct
 			       const char *resolution, int *x, int *y);
   int   (*verify)(const stp_printer_t p, const stp_vars_t v);
 } stp_printfuncs_t;
+
+extern int stp_init(void);
 
 extern const char *stp_printer_get_long_name(const stp_printer_t);
 extern const char *stp_printer_get_driver(const stp_printer_t);

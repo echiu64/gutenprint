@@ -30,7 +30,6 @@ CFLAGS = @CFLAGS@
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS)
 
 AM_CPPFLAGS =\
- -DLOCALEDIR=\""$(localedir)"\"\
  @MAINTAINER_CFLAGS@
 
 libexecdir = $(gimptool_prefix)/plug-ins

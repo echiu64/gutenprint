@@ -116,20 +116,23 @@ debian/control: debian/changelog debian/control.in
 configure: configure.in scripts/install-sh
 	if test -f configure.in ; then \
 	  if test -f autogen.sh ; then \
-	    /bin/sh autogen.sh --version ; \
+	    export NOCONFIGURE=TRUE ; \
+	    /bin/sh autogen.sh ; \
 	  fi \
 	fi
 	
 configure.in: configure.in.in
 	if test -f configure.in.in ; then \
 	  if test -f autogen.sh ; then \
-	    /bin/sh autogen.sh --version ; \
+	    export NOCONFIGURE=TRUE ; \
+	    /bin/sh autogen.sh ; \
 	  fi \
 	fi
 
 scripts/install-sh:
 	if test -f autogen.sh ; then \
-	  /bin/sh autogen.sh --version ; \
+	  export NOCONFIGURE=TRUE ; \
+	  /bin/sh autogen.sh ; \
 	fi
 
 configure.in.in:

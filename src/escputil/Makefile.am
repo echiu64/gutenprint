@@ -27,7 +27,6 @@ INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 LIBS = ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la @LIBS@
 
 AM_CPPFLAGS =\
- -DLOCALEDIR=\""$(localedir)"\"\
  @MAINTAINER_CFLAGS@
 
 bin_PROGRAMS = @ESCPUTIL_BIN@

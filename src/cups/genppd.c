@@ -164,6 +164,12 @@ main(int  argc,			/* I - Number of command-line arguments */
 
   prefix = "ppd";
 
+ /*
+  * Initialise libgimpprint
+  */
+
+  stp_init();
+
   for (i = 1; i < argc; i ++)
     if (strcmp(argv[i], "--help") == 0)
     {
