@@ -289,7 +289,7 @@ static const paper_adjustment_t ultrachrome_photo_adjustments[] =
     NULL, plain_paper_lum_adjustment, NULL },
   { "BackFilm", 1.00, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,
     NULL, NULL, NULL },
-  { "Matte", 0.85, .02, 1.5, 1.05, .9, 1.05, 1, 1.0,
+  { "Matte", 0.85, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,
     NULL, NULL, NULL },
   { "Inkjet", 0.85, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,
     NULL, plain_paper_lum_adjustment, NULL },
@@ -303,6 +303,8 @@ static const paper_adjustment_t ultrachrome_photo_adjustments[] =
     pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment },
   { "Luster", 1.00, .02, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0,
     NULL, NULL, NULL },
+  { "ArchivalMatte", 0.85, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
   { "GlossyPaper", 1.00, .02, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0,
     NULL, NULL, NULL },
   { "Ilford", .85, .02, 1.5, 1.0, 1.0, 1.0, 1, 1.0,
@@ -314,6 +316,50 @@ static const paper_adjustment_t ultrachrome_photo_adjustments[] =
 };
 
 DECLARE_PAPER_ADJUSTMENTS(ultrachrome_photo);
+
+static const paper_adjustment_t ultrachrome_matte_adjustments[] =
+{
+  { "Plain", 0.769, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "PlainFast", 0.769, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Postcard", 0.83, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "GlossyFilm", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Transparency", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Envelope", 0.769, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "BackFilm", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Matte", 0.85, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Inkjet", 0.85, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+  { "Coated", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Photo", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "GlossyPhoto", 0.85, 0, 1.25, 1.0, 1.0, 1.0, 0.9, 1.0,
+    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment },
+  { "Semigloss", 0.85, 0, 1.25, 1.0, 1.0, 1.0, 0.9, 1.0,
+    pgpp_hue_adjustment, pgpp_lum_adjustment, pgpp_sat_adjustment },
+  { "ArchivalMatte", 0.94, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Luster", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
+    NULL, NULL, NULL },
+  { "GlossyPaper", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
+    NULL, NULL, NULL },
+  { "Ilford", .85, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL  },
+  { "ColorLife", 1.00, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, NULL, NULL },
+  { "Other", 0.769, 0, 1.25, 1.0, 1.0, 1.0, 1, 1.0,
+    NULL, plain_paper_lum_adjustment, NULL },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
 
 static const paper_t standard_papers[] =
 {
@@ -362,3 +408,28 @@ static const paper_t c80_papers[] =
 };
 
 DECLARE_PAPERS(c80);
+
+static const paper_t ultrachrome_papers[] =
+{
+  { "Plain", N_("Plain Paper"), 1, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "PlainFast", N_("Plain Paper Fast Load"), 5, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "Postcard", N_("Postcard"), 2, 0, 0x00, 0x00, 0x02, NULL },
+  { "GlossyFilm", N_("Glossy Film"), 3, 0, 0x6d, 0x00, 0x01, NULL },
+  { "Transparency", N_("Transparencies"), 3, 0, 0x6d, 0x00, 0x02, NULL },
+  { "Envelope", N_("Envelopes"), 4, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "BackFilm", N_("Back Light Film"), 6, 0, 0x6d, 0x00, 0x01, NULL },
+  { "Matte", N_("Matte Paper"), 7, 0, 0x00, 0x00, 0x02, NULL },
+  { "Inkjet", N_("Inkjet Paper"), 7, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "Coated", N_("Photo Quality Inkjet Paper"), 7, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "Photo", N_("Photo Paper"), 8, 0, 0x67, 0x00, 0x02, NULL },
+  { "GlossyPhoto", N_("Premium Glossy Photo Paper"), 8, 0, 0x80, 0x00, 0x02, NULL },
+  { "Semigloss", N_("Premium Semigloss Photo Paper"), 8, 0, 0x80, 0x00, 0x02, NULL },
+  { "Luster", N_("Premium Luster Photo Paper"), 8, 0, 0x80, 0x00, 0x02, NULL },
+  { "ArchivalMatte", N_("Archival Matte Paper"), 7, 0, 0x00, 0x00, 0x02, NULL },
+  { "GlossyPaper", N_("Photo Quality Glossy Paper"), 6, 0, 0x6b, 0x1a, 0x01, NULL },
+  { "Ilford", N_("Ilford Heavy Paper"), 8, 0, 0x80, 0x00, 0x02, NULL },
+  { "ColorLife", N_("ColorLife Paper"), 8, 0, 0x67, 0x00, 0x02, NULL },
+  { "Other", N_("Other"), 0, 0, 0x6b, 0x1a, 0x01, NULL },
+};
+
+DECLARE_PAPERS(ultrachrome);

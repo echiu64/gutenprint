@@ -509,6 +509,12 @@ stp_set_string_parameter_n(stp_vars_t v, const char *parameter,
 {
   stpi_internal_vars_t *vv = (stpi_internal_vars_t *)v;
   stpi_list_t *list = vv->params[STP_PARAMETER_TYPE_STRING_LIST];
+  if (value)
+    stpi_dprintf(STPI_DBG_VARS, v, "stp_set_string_parameter(%s, %s)\n",
+		 parameter, value);
+  else
+    stpi_dprintf(STPI_DBG_VARS, v, "stp_set_string_parameter(%s)\n",
+		 parameter);
   set_raw_parameter(list, parameter, value, bytes,
 		    STP_PARAMETER_TYPE_STRING_LIST);
   stpi_set_verified(v, 0);

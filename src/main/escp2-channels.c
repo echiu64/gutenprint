@@ -361,6 +361,26 @@ static const escp2_inkname_t f360_ultra_photo_two_color_grayscale_inkset =
   }
 };
 
+static const escp2_inkname_t ultra_matte_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &photo2_black_channels
+  }
+};
+
+static const escp2_inkname_t f360_ultra_matte_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_photo2_black_channels
+  }
+};
+
 static const escp2_inkname_t f360_two_color_grayscale_inkset =
 {
   "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
@@ -516,6 +536,28 @@ static const escp2_inkname_t ultra_photo_five_color_photo_composite_inkset =
   }
 };
 
+static const escp2_inkname_t ultra_matte_five_color_photo_composite_inkset =
+{
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_five_color_photo_composite_inkset =
+{
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
 static const escp2_inkname_t f360_ultra_photo_five_color_photo_composite_inkset =
 {
   "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
@@ -527,10 +569,10 @@ static const escp2_inkname_t f360_ultra_photo_five_color_photo_composite_inkset 
   }
 };
 
-static const escp2_inkname_t f360_five_color_photo_composite_inkset =
+static const escp2_inkname_t f360_ultra_matte_five_color_photo_composite_inkset =
 {
   "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
-  &stpi_escp2_photo_paper_adjustment_list,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &f360_photo_cyan_channels,
@@ -570,6 +612,17 @@ static const escp2_inkname_t ultra_photo_six_color_photo_inkset =
   }
 };
 
+static const escp2_inkname_t ultra_matte_six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &photo_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
 static const escp2_inkname_t f360_ultra_photo_six_color_photo_inkset =
 {
   "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
@@ -592,6 +645,16 @@ static const escp2_inkname_t f360_six_color_photo_inkset =
   }
 };
 
+static const escp2_inkname_t f360_ultra_matte_six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
 
 
 /*
@@ -677,6 +740,28 @@ static const escp2_inkname_t ultra_photo_seven_color_enhanced_inkset =
   }
 };
 
+static const escp2_inkname_t f360_ultra_matte_seven_color_enhanced_inkset =
+{
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo2_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t ultra_matte_seven_color_enhanced_inkset =
+{
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_matte_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &photo2_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
 /*
  ****************************************************************
  *                                                              *
@@ -737,17 +822,6 @@ static const escp2_inkname_t two_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_ultra_photo_two_color_extended_inkset =
-{
-  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &f360_photo_black_channels, &extended_black_channels,
-  }
-};
-
-
 static const escp2_inkname_t f360_two_color_extended_inkset =
 {
   "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
@@ -755,16 +829,6 @@ static const escp2_inkname_t f360_two_color_extended_inkset =
   NULL, NULL, NULL,
   {
     &f360_photo_black_channels, &extended_black_channels,
-  }
-};
-
-static const escp2_inkname_t ultra_photo_two_color_extended_inkset =
-{
-  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &photo_black_channels, &extended_black_channels,
   }
 };
 
@@ -844,19 +908,6 @@ static const escp2_inkname_t five_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_ultra_photo_five_color_extended_inkset =
-{
-  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &f360_standard_cyan_channels, &extended_cyan_channels,
-    &f360_standard_magenta_channels, &extended_magenta_channels,
-    &f360_photo_yellow_channels
-  }
-};
-
-
 static const escp2_inkname_t f360_five_color_extended_inkset =
 {
   "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
@@ -866,18 +917,6 @@ static const escp2_inkname_t f360_five_color_extended_inkset =
     &f360_standard_cyan_channels, &extended_cyan_channels,
     &f360_standard_magenta_channels, &extended_magenta_channels,
     &f360_photo_yellow_channels
-  }
-};
-
-static const escp2_inkname_t ultra_photo_five_color_extended_inkset =
-{
-  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &standard_cyan_channels, &extended_cyan_channels,
-    &standard_magenta_channels, &extended_magenta_channels,
-    &photo_yellow_channels
   }
 };
 
@@ -894,20 +933,6 @@ static const escp2_inkname_t six_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_ultra_photo_six_color_extended_inkset =
-{
-  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &f360_photo_black_channels,
-    &f360_standard_cyan_channels, &extended_cyan_channels,
-    &f360_standard_magenta_channels, &extended_magenta_channels,
-    &f360_photo_yellow_channels
-  }
-};
-
-
 static const escp2_inkname_t f360_six_color_extended_inkset =
 {
   "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
@@ -918,19 +943,6 @@ static const escp2_inkname_t f360_six_color_extended_inkset =
     &f360_standard_cyan_channels, &extended_cyan_channels,
     &f360_standard_magenta_channels, &extended_magenta_channels,
     &f360_photo_yellow_channels
-  }
-};
-
-static const escp2_inkname_t ultra_photo_six_color_extended_inkset =
-{
-  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &photo_black_channels,
-    &standard_cyan_channels, &extended_cyan_channels,
-    &standard_magenta_channels, &extended_magenta_channels,
-    &photo_yellow_channels
   }
 };
 
@@ -960,20 +972,6 @@ static const escp2_inkname_t seven_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_ultra_photo_seven_color_extended_inkset =
-{
-  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &f360_photo_black_channels, &extended_black_channels,
-    &f360_standard_cyan_channels, &extended_cyan_channels,
-    &f360_standard_magenta_channels, &extended_magenta_channels,
-    &f360_photo_yellow_channels
-  }
-};
-
-
 static const escp2_inkname_t f360_seven_color_extended_inkset =
 {
   "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
@@ -987,20 +985,7 @@ static const escp2_inkname_t f360_seven_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t ultra_photo_seven_color_extended_inkset =
-{
-  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
-  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
-  NULL, NULL, NULL,
-  {
-    &photo_black_channels, &extended_black_channels,
-    &standard_cyan_channels, &extended_cyan_channels,
-    &standard_magenta_channels, &extended_magenta_channels,
-    &photo_yellow_channels
-  }
-};
-
-shade_set_t standard_shades =
+static const shade_set_t standard_shades =
 {
   { 1, { 1.0 }},		/* K */
   { 1, { 1.0 }},		/* C */
@@ -1011,7 +996,7 @@ shade_set_t standard_shades =
   { 1, { 1.0 }}			/* Extended 7 */
 };
 
-shade_set_t gen1_shades =	/* Stylus 750 and older */
+static const shade_set_t gen1_shades =	/* Stylus 750 and older */
 {
   { 1, { 1.0 }},
   { 2, { 1.0, 0.305 }},
@@ -1022,7 +1007,7 @@ shade_set_t gen1_shades =	/* Stylus 750 and older */
   { 1, { 1.0 }},
 };
 
-shade_set_t gen2_shades =	/* Stylus 870 and newer */
+static const shade_set_t gen2_shades =	/* Stylus 870 and newer */
 {
   { 1, { 1.0 }},
   { 2, { 1.0, 0.26 }},
@@ -1033,7 +1018,7 @@ shade_set_t gen2_shades =	/* Stylus 870 and newer */
   { 1, { 1.0 }},
 };
 
-shade_set_t esp960_shades =	/* Epson 950/960/PM-950C/PM-970C */
+static const shade_set_t esp960_shades =	/* Epson 950/960/PM-950C/PM-970C */
 {
   { 1, { 1.0 }},
   { 2, { 1.0, 0.32 }},
@@ -1044,7 +1029,7 @@ shade_set_t esp960_shades =	/* Epson 950/960/PM-950C/PM-970C */
   { 1, { 1.0 }},
 };
 
-shade_set_t stp2200_shades =	/* Stylus Photo 2200 */
+static const shade_set_t stp2200_shades =	/* Stylus Photo 2200 */
 {
   { 1, { 1.0 }},
   { 2, { 1.0, 0.227 }},		/* Just a guess */
@@ -1055,7 +1040,7 @@ shade_set_t stp2200_shades =	/* Stylus Photo 2200 */
   { 1, { 1.0 }},
 };
 
-shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo black ink */
+static const shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo black ink */
 {
   { 2, { 1.0, 0.48 }},
   { 2, { 1.0, 0.32 }},
@@ -1066,7 +1051,18 @@ shade_set_t ultrachrome_photo_shades =	/* Ultrachrome with photo black ink */
   { 1, { 1.0 }},
 };
 
-shade_set_t quadtone_shades =	/* Some kind of quadtone ink */
+static const shade_set_t ultrachrome_matte_shades =	/* Ultrachrome with matte black ink */
+{
+  { 2, { 1.0, 0.33 }},
+  { 2, { 1.0, 0.32 }},
+  { 2, { 1.0, 0.35 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+  { 1, { 1.0 }},
+};
+
+static const shade_set_t quadtone_shades =	/* Some kind of quadtone ink */
 {
   { 4, { 1.0, 0.75, 0.5, 0.25 }},
   { 1, { 1.0 }},
@@ -1204,16 +1200,36 @@ static const escp2_inkname_t *const f360_ultra_photo7_ink_types[] =
   &three_color_composite_inkset,
   &f360_ultra_photo_two_color_grayscale_inkset,
   &one_color_extended_inkset,
-  &f360_ultra_photo_two_color_extended_inkset,
+  &f360_two_color_extended_inkset,
   &three_color_extended_inkset,
   &four_color_extended_inkset,
-  &f360_ultra_photo_five_color_extended_inkset,
-  &f360_ultra_photo_six_color_extended_inkset,
-  &f360_ultra_photo_seven_color_extended_inkset,
+  &f360_five_color_extended_inkset,
+  &f360_six_color_extended_inkset,
+  &f360_seven_color_extended_inkset,
 };
 
 DECLARE_INKLIST(f360_ultra_photo7, f360_ultra_photo7,
-		N_("UltraChrome Photo Black"), standard, ultrachrome_photo);
+		N_("UltraChrome Photo Black"), ultrachrome, ultrachrome_photo);
+
+static const escp2_inkname_t *const f360_ultra_matte7_ink_types[] =
+{
+  &f360_ultra_matte_seven_color_enhanced_inkset,
+  &f360_ultra_matte_six_color_photo_inkset,
+  &f360_ultra_matte_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &f360_ultra_matte_two_color_grayscale_inkset,
+  &one_color_extended_inkset,
+  &f360_two_color_extended_inkset,
+  &three_color_extended_inkset,
+  &four_color_extended_inkset,
+  &f360_five_color_extended_inkset,
+  &f360_six_color_extended_inkset,
+  &f360_seven_color_extended_inkset,
+};
+
+DECLARE_INKLIST(f360_ultra_matte7, f360_ultra_matte7,
+		N_("UltraChrome Matte Black"), ultrachrome, ultrachrome_matte);
 
 static const escp2_inkname_t *const ultra_photo7_ink_types[] =
 {
@@ -1224,16 +1240,36 @@ static const escp2_inkname_t *const ultra_photo7_ink_types[] =
   &three_color_composite_inkset,
   &ultra_photo_two_color_grayscale_inkset,
   &one_color_extended_inkset,
-  &ultra_photo_two_color_extended_inkset,
+  &two_color_extended_inkset,
   &three_color_extended_inkset,
   &four_color_extended_inkset,
-  &ultra_photo_five_color_extended_inkset,
-  &ultra_photo_six_color_extended_inkset,
-  &ultra_photo_seven_color_extended_inkset,
+  &five_color_extended_inkset,
+  &six_color_extended_inkset,
+  &seven_color_extended_inkset,
 };
 
 DECLARE_INKLIST(ultra_photo7, ultra_photo7,
-		N_("UltraChrome Photo Black"), standard, ultrachrome_photo);
+		N_("UltraChrome Photo Black"), ultrachrome, ultrachrome_photo);
+
+static const escp2_inkname_t *const ultra_matte7_ink_types[] =
+{
+  &ultra_matte_seven_color_enhanced_inkset,
+  &ultra_matte_six_color_photo_inkset,
+  &ultra_matte_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &ultra_matte_two_color_grayscale_inkset,
+  &one_color_extended_inkset,
+  &two_color_extended_inkset,
+  &three_color_extended_inkset,
+  &four_color_extended_inkset,
+  &five_color_extended_inkset,
+  &six_color_extended_inkset,
+  &seven_color_extended_inkset,
+};
+
+DECLARE_INKLIST(ultra_matte7, ultra_matte7,
+		N_("UltraChrome Matte Black"), ultrachrome, ultrachrome_matte);
 
 static const inklist_t *cmy_group[] =
 {
@@ -1286,12 +1322,14 @@ static const inklist_t *f360_photo7_japan_group[] =
 
 static const inklist_t *f360_ultrachrome_group[] =
 {
-  &f360_ultra_photo7_inklist
+  &f360_ultra_photo7_inklist,
+  &f360_ultra_matte7_inklist
 };
 
 static const inklist_t *ultrachrome_group[] =
 {
-  &ultra_photo7_inklist
+  &ultra_photo7_inklist,
+  &ultra_matte7_inklist
 };
 
 #define DECLARE_INKGROUP(name)			\
