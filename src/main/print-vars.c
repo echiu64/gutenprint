@@ -365,9 +365,9 @@ stp_vars_free(stp_vars_t vv)
   stpi_free(v);
 }
 
-#define DEF_STRING_FUNCS(s, i)					\
+#define DEF_STRING_FUNCS(s, pre)				\
 void								\
-stp##i##_set_##s(stp_vars_t vv, const char *val)		\
+pre##_set_##s(stp_vars_t vv, const char *val)			\
 {								\
   stpi_internal_vars_t *v = get_vars(vv);			\
   if (val)							\
@@ -382,7 +382,7 @@ stp##i##_set_##s(stp_vars_t vv, const char *val)		\
 }								\
 								\
 void								\
-stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
+pre##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
 {								\
   stpi_internal_vars_t *v = get_vars(vv);			\
   if (v->s == val)						\
@@ -393,51 +393,46 @@ stp##i##_set_##s##_n(stp_vars_t vv, const char *val, int n)	\
 }								\
 								\
 const char *							\
-stp##i##_get_##s(stp_const_vars_t vv)				\
+pre##_get_##s(stp_const_vars_t vv)				\
 {								\
   const stpi_internal_vars_t *v = get_vars(vv);			\
   return v->s;							\
 }
 
-#define DEF_FUNCS(s, t, u, i)			\
-u void						\
-stp##i##_set_##s(stp_vars_t vv, t val)		\
+#define DEF_FUNCS(s, t, pre)			\
+void						\
+pre##_set_##s(stp_vars_t vv, t val)		\
 {						\
   stpi_internal_vars_t *v = get_vars(vv);	\
   v->verified = 0;				\
   v->s = val;					\
 }						\
 						\
-u t						\
-stp##i##_get_##s(stp_const_vars_t vv)		\
+t						\
+pre##_get_##s(stp_const_vars_t vv)		\
 {						\
   const stpi_internal_vars_t *v = get_vars(vv);	\
   return v->s;					\
 }
 
-#define DEF_INTERNAL_STRING_FUNCS(s) DEF_STRING_FUNCS(s, i)
-#define DEF_EXTERNAL_STRING_FUNCS(s) DEF_STRING_FUNCS(s,)
-#define DEF_INTERNAL_FUNCS(s, t, u) DEF_FUNCS(s, t, u, i)
-#define DEF_EXTERNAL_FUNCS(s, t, u) DEF_FUNCS(s, t, u,)
+DEF_STRING_FUNCS(driver, stp)
+DEF_STRING_FUNCS(color_conversion, stp)
+DEF_FUNCS(output_type, int, stp)
+DEF_FUNCS(left, int, stp)
+DEF_FUNCS(top, int, stp)
+DEF_FUNCS(width, int, stp)
+DEF_FUNCS(height, int, stp)
+DEF_FUNCS(page_width, int, stp)
+DEF_FUNCS(page_height, int, stp)
+DEF_FUNCS(input_color_model, int, stp)
+DEF_FUNCS(page_number, int, stp)
+DEF_FUNCS(job_mode, stp_job_mode_t, stp)
+DEF_FUNCS(outdata, void *, stp)
+DEF_FUNCS(errdata, void *, stp)
+DEF_FUNCS(outfunc, stp_outfunc_t, stp)
+DEF_FUNCS(errfunc, stp_outfunc_t, stp)
 
-DEF_EXTERNAL_STRING_FUNCS(driver)
-DEF_EXTERNAL_STRING_FUNCS(color_conversion)
-DEF_EXTERNAL_FUNCS(output_type, int, )
-DEF_EXTERNAL_FUNCS(left, int, )
-DEF_EXTERNAL_FUNCS(top, int, )
-DEF_EXTERNAL_FUNCS(width, int, )
-DEF_EXTERNAL_FUNCS(height, int, )
-DEF_EXTERNAL_FUNCS(page_width, int, )
-DEF_EXTERNAL_FUNCS(page_height, int, )
-DEF_EXTERNAL_FUNCS(input_color_model, int, )
-DEF_EXTERNAL_FUNCS(page_number, int, )
-DEF_EXTERNAL_FUNCS(job_mode, stp_job_mode_t, )
-DEF_EXTERNAL_FUNCS(outdata, void *, )
-DEF_EXTERNAL_FUNCS(errdata, void *, )
-DEF_EXTERNAL_FUNCS(outfunc, stp_outfunc_t, )
-DEF_EXTERNAL_FUNCS(errfunc, stp_outfunc_t, )
-
-DEF_INTERNAL_FUNCS(output_color_model, int, )
+DEF_FUNCS(output_color_model, int, stpi)
 
 void
 stpi_set_verified(stp_vars_t vv, int val)
