@@ -623,6 +623,7 @@ do_ink_level(void)
 {
   int fd;
   int status;
+  int retry = 6;
   char buf[1024];
   char *ind;
   int i;
@@ -631,30 +632,48 @@ do_ink_level(void)
       fprintf(stderr,_("Obtaining ink levels requires using a raw device.\n"));
       exit(1);
     }
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
-    {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-	      strerror(errno));
-      exit(1);
-    }
-  initialize_print_cmd();
-  do_remote_cmd("ST", 2, 0, 1);
-  add_resets(2);
-  if (write(fd, printer_cmd, bufpos) < bufpos)
-    {
-      fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
-	      strerror(errno));
-      exit(1);
-    }
-  status = read_from_printer(fd, buf, 1024);
-  if (status < 0)
-    exit(1);
-  ind = buf;
   do
-    ind = strchr(ind, 'I');
-  while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
-  if (!ind || ind[1] != 'Q' || ind[2] != ':')
+    {
+      fd = open(raw_device, O_RDWR, 0666);
+      if (fd == -1)
+	{
+	  fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      add_resets(2);
+      initialize_print_cmd();
+      /*
+       * Some new printers like IQ and others like ST for retrieving status.
+       * Some printers will take either, but not reliably in either
+       * case.  In some cases, alternating between the two works best.
+       * -- rlk 20040508
+       */
+      if (isnew && !(retry & 1))
+	do_remote_cmd("IQ", 1, 1);
+      else
+	do_remote_cmd("ST", 2, 0, 1);
+      add_resets(2);
+      if (write(fd, printer_cmd, bufpos) < bufpos)
+	{
+	  fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+		  strerror(errno));
+	  exit(1);
+	}
+      status = read_from_printer(fd, buf, 1024);
+      if (status < 0)
+	exit(1);
+      (void) close(fd);
+      ind = buf;
+      do
+	ind = strchr(ind, 'I');
+      while (ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
+      if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
+	{
+	  ind = NULL;
+	}
+    } while (--retry != 0 && !ind);
+  if (!ind)
     {
       fprintf(stderr, _("Cannot parse output from printer\n"));
       exit(1);
@@ -681,7 +700,6 @@ do_ink_level(void)
       printf("%20s    %3d\n", _(colors[i]), val);
       ind += 2;
     }
-  (void) close(fd);
   exit(0);
 }
 
