@@ -44,7 +44,8 @@
 
 #define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #define MAX(a,b)	(((a) > (b)) ? (a) : (b))
-#define ZERO64		"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+
+static const char *zero = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 
 typedef struct
 {
@@ -141,7 +142,6 @@ static const olympus_res_t_array p400_resolution =
 
 static void p400_printer_init_func(stp_vars_t v)
 {
-	char zero[64] = ZERO64;
 	stpi_zprintf(v, "\033ZQ"); stpi_zfwrite(zero, 1, 61, v);
 	stpi_zprintf(v, "\033FP"); stpi_zfwrite(zero, 1, 61, v);
 	stpi_zprintf(v, "\033ZF"); stpi_zfwrite(zero, 1, 61, v);
@@ -154,19 +154,16 @@ static void p400_printer_init_func(stp_vars_t v)
 
 static void p400_layer_init_func(stp_vars_t v)
 {
-	char zero[64] = ZERO64;
 	stpi_zprintf(v, "\033ZC"); stpi_zfwrite(zero, 1, 61, v);
 }
 
 static void p400_layer_end_func(stp_vars_t v)
 {
-	char zero[64] = ZERO64;
 	stpi_zprintf(v, "\033P"); stpi_zfwrite(zero, 1, 62, v);
 }
 
 static void p400_block_init_func(stp_vars_t v)
 {
-	char zero[64] = ZERO64;
 	stpi_zprintf(v, "\033Z%c", privdata.layer);
 	stpi_put16_be(privdata.block_min_x, v);
 	stpi_put16_be(privdata.block_min_y, v);
@@ -175,6 +172,26 @@ static void p400_block_init_func(stp_vars_t v)
 	stpi_zfwrite(zero, 1, 53, v);
 }
 
+static const olympus_res_t_array cpx00_resolution =
+{
+	{"314x314", N_ ("300x300 DPI"), 314, 314, 1232, 1808},
+	{"", "", 0, 0, 0, 0}
+};
+
+static void cpx00_printer_init_func(stp_vars_t v)
+{
+	stpi_put16_be(0x4000, v);
+	stpi_put16_be(0x0001, v);
+	stpi_zfwrite(zero, 1, 8, v);
+}
+
+static void cpx00_layer_init_func(stp_vars_t v)
+{
+	stpi_put16_be(0x4001, v);
+	stpi_put16_le(privdata.layer - '1', v);
+	stpi_put32_le(privdata.xsize * privdata.ysize, v);
+	stpi_zfwrite(zero, 1, 4, v);
+}
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
@@ -201,6 +218,18 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		&p400_printer_init_func,
 		&p400_layer_init_func, &p400_layer_end_func,
 		&p400_block_init_func, &null_func,
+	},
+	{ 1000, 	/* canon CP100 */
+		283, 416, 	/* Postcard */
+		283, 416,	/* Postcard */
+		0, 0, 0, 0,
+		&cpx00_resolution,
+		"123",
+		1808,
+		1, 1,
+		&cpx00_printer_init_func,
+		&cpx00_layer_init_func, &null_func,
+		&null_func, &null_func,
 	},
 };
 
@@ -566,21 +595,6 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   out_px_width  = out_pt_width  * xdpi / 72;
   out_px_height = out_pt_height * ydpi / 72;
 
-#if 0
-  /* skip the job if image is not approximately the same size as output */
-  if (out_px_width - image_px_width < -2
-      || out_px_width - image_px_width > 2
-      || out_px_height - image_px_height < -2
-      || out_px_height - image_px_height > 2)
-    {
-      stpi_eprintf(v, _("This driver is under development.\n\n"
-        "It can't rescale your image at present. \n"
-	"Your print job is canceled now(!).\n"
-	"Please scale your image suitably and try it again.\n"
-	"Thank you."));
-      return 0;
-    }
-#endif
 
   /* if image size is close enough to output size send out original size */
   if (out_px_width - image_px_width > -5

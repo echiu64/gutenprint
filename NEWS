@@ -827,6 +827,7 @@ CANON BJC 6100
 CANON BJC 7000
 CANON BJC 7100
 CANON BJC 8200
+CANON CP-100	(Experimental)
 CANON S400
 CANON S450
 CANON S800
@@ -1081,6 +1082,9 @@ Canon BJC-6500                 bjc-6500        CANON BJC 6500
 Canon BJC-7000                 bjc-7000        CANON BJC 7000
 Canon BJC-7100                 bjc-7100        CANON BJC 7100
 Canon BJC-8200                 bjc-8200        CANON BJC 8200
+Canon CP-100                   canon-cp100     CANON CP100
+Canon CP-200                   canon-cp100     CANON CP100
+Canon CP-300                   canon-cp100     CANON CP100
 Canon GP 335                   pcl-4           HP LaserJet 4 series
 Canon LBP-4sx                  pcl-3           HP LaserJet III series
 Canon LBP-430                  pcl-4l          HP LaserJet 4L

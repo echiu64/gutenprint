@@ -1419,6 +1419,10 @@
         <color value="true"/>
         <model value="1"/>
       </printer>
+      <printer name="CANON CP100" driver="canon-cp100">
+        <color value="true"/>
+        <model value="1000"/>
+      </printer>
     </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16">
