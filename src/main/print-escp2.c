@@ -2263,7 +2263,8 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 
       if (cd_mask)
 	{
-	  int y_distance_from_center = y_center - y;
+	  int y_distance_from_center =
+	    pd->cd_y_offset - (y * pd->micro_units / pd->res->vres);
 	  if (y_distance_from_center < 0)
 	    y_distance_from_center = -y_distance_from_center;
 	  memset(cd_mask, 0, (pd->image_scaled_width + 7) / 8);
