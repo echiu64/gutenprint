@@ -348,6 +348,9 @@ canon_size_type(const vars_t *v, canon_cap_t caps)
 
 #ifdef DEBUG
       fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
+    } else {
+      fprintf(stderr,"canon: Couldn't look up paper size %dx%d - "
+	      "using custom\n",v->page_height, v->page_width);
 #endif
     }
   return 0;
@@ -1035,6 +1038,7 @@ canon_print(const printer_t *printer,		/* I - Model */
       lyellow = NULL;
     }
   }
+
 #ifdef DEBUG
   fprintf(stderr,"canon: driver will use colors ");
   if (cyan)     fputc('C',stderr);
@@ -1047,10 +1051,18 @@ canon_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr,"\n");
 #endif
 
-  nv.density = nv.density * ydpi / xdpi;
+#ifdef DEBUG
+  fprintf(stderr,"density is %f\n",nv.density);
+#endif
+
+  nv.density = (nv.density * ydpi) / (xdpi * 1.0);
   if (nv.density > 1.0)
     nv.density = 1.0;
   compute_lut(256, &nv);
+
+#ifdef DEBUG
+  fprintf(stderr,"density is %f\n",nv.density);
+#endif
 
   if (xdpi > ydpi)
     dither = init_dither(image_width, out_width, 1, xdpi / ydpi, &nv);
