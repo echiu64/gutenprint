@@ -1004,13 +1004,14 @@ get_errline(dither_t *d, int row, int color)
  * to save a division when appropriate.
  */
 
-#define UPDATE_COLOR(r)				\
-do {						\
-  if (dither##r >= 0)				\
-    r += dither##r >> 3;			\
-  else						\
-    r += dither##r / 8;				\
-} while (0)
+static inline int
+update_color(int color, int dither)
+{
+  if (dither >= 0)
+    return color + (dither >> 3);
+  else
+    return color + (dither / 8);
+}
 
 static inline unsigned
 xrand(void)
@@ -1466,7 +1467,7 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
 		    &(d->k_pick), &(d->k_dithermat), d->dither_type);
       else
 	{
-	  UPDATE_COLOR(k);
+	  k = update_color(k, ditherk);
 	  k = print_color(d, &(d->k_dither), ok, ok, k, x, row, kptr, NULL,
 			  bit, length, 0, 0, d->k_randomizer, 0, &ink_budget,
 			  &(d->k_pick), &(d->k_dithermat), d->dither_type);
@@ -1768,13 +1769,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 		  if (y < 0)
 		    y = 0;
 		}
-
-	      tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
-			       NULL, bit, length, 0, 0, 0, 0, &ink_budget,
-			       &(d->k_pick), &(d->k_dithermat), D_ORDERED);
-	      if (tk != k)
-		printed_black = 1;
-	      k = tk;
 	    }
 	  else
 	    {
@@ -1797,20 +1791,30 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
 
       /*
-       * Done handling the black.  Now print the color.
-       * Isn't this easy by comparison?
+       * We've done all of the cmyk separations at this point.
+       * Now to do the dithering.
        */
 
       if (!(d->dither_type & D_ORDERED_BASE))
 	{
-	  UPDATE_COLOR(c);
-	  UPDATE_COLOR(m);
-	  UPDATE_COLOR(y);
+	  c = update_color(c, ditherc);
+	  m = update_color(m, ditherm);
+	  y = update_color(y, dithery);
 	}
 
       ocd = oc * d->c_darkness;
       omd = om * d->m_darkness;
       oyd = oy * d->y_darkness;
+
+      if (black)
+	{
+	  tk = print_color(d, &(d->k_dither), bk, bk, k, x, row, kptr,
+			   NULL, bit, length, 0, 0, 0, 0, &ink_budget,
+			   &(d->k_pick), &(d->k_dithermat), D_ORDERED);
+	  if (tk != k)
+	    printed_black = 1;
+	  k = tk;
+	}
 
       /*
        * Uh oh spaghetti-o!
