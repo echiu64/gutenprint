@@ -42,26 +42,28 @@ Gimp-Print 4.1.99b2 contains the following changes over 4.1.99b1:
 4) "make uninstall" removes the PPD files that are installed as part
    of the CUPS installation.
 
-5) Preliminary support for the Epson Stylus C60.
+5) The Epson Stylus Color 660 should now work correctly in all modes.
 
-6) Under some circumstances, the Ghostscript driver or the test
+6) Preliminary support for the Epson Stylus C60.
+
+7) Under some circumstances, the Ghostscript driver or the test
    pattern generator did not print a useful error message if it
    received incorrect parameters.  This is now fixed.
 
-7) Unprint now handles all Epson printers with all page widths.  It
+8) Unprint now handles all Epson printers with all page widths.  It
    previously seg faulted on certain printers (particularly the
    900/980, or many printers in black and white) with wide pages due
    to buffer overflow.
 
-8) Minor improvements in the Gimp plugin GUI.
+9) Minor improvements in the Gimp plugin GUI.
 
-9) The internationalization code has been reworked in this release.
+10) The internationalization code has been reworked in this release.
    Please see the ChangeLog for more details.
 
-10) The unprinter uses considerably less memory when working on Epson
+11) The unprinter uses considerably less memory when working on Epson
    output generated at high resolution/quality settings.
 
-11) The banner and help on escputil is friendlier.
+12) The banner and help on escputil is friendlier.
 
 Known limitations of this release:
 
@@ -70,11 +72,14 @@ Known limitations of this release:
 
    escputil -u -d
 
-   will not return anything useful.
+   will not return anything useful.  This will not be fixed for 4.2,
+   as these printers do not have a known way of identifying
+   themselves.
 
 2) The "align color" (-o) command to escputil does not currently work
    on the printers that should support it (Epson Stylus Color 480 and
-   580, and C20SX, C20UX, C40SX, and C40UX).
+   580, and C20SX, C20UX, C40SX, and C40UX).  It is not known if this
+   will be fixed for 4.2.
 
 3) Changing ink cartridges on the Epson Stylus Color 480/580 is not
    supported.  This will not be fixed for 4.2.
