@@ -42,6 +42,7 @@ typedef struct
   double lower;
   double upper;
   double density;
+  double cutoff;
 } stpi_subchannel_t;
 
 typedef struct
@@ -166,6 +167,7 @@ stpi_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
     }
   chan->sc[subchannel].value = value;
   chan->sc[subchannel].density = 1.0;
+  chan->sc[subchannel].cutoff = 0.8;
 }
 
 void
@@ -173,8 +175,23 @@ stpi_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
 				    double adjustment)
 {
   stpi_subchannel_t *sch = get_channel(v, color, subchannel);
+  stpi_dprintf(STPI_DBG_INK, v,
+	       "channel_density channel %d subchannel %d adjustment %f\n",
+	       color, subchannel, adjustment);
   if (sch && adjustment >= 0)
     sch->density = adjustment;
+}
+
+void
+stpi_channel_set_cutoff_adjustment(stp_vars_t v, int color, int subchannel,
+				    double adjustment)
+{
+  stpi_subchannel_t *sch = get_channel(v, color, subchannel);
+  stpi_dprintf(STPI_DBG_INK, v,
+	       "channel_cutoff channel %d subchannel %d adjustment %f\n",
+	       color, subchannel, adjustment);
+  if (sch && adjustment >= 0)
+    sch->cutoff = adjustment;
 }
 
 static int
@@ -223,7 +240,7 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	  int val = 0;
 	  int next_breakpoint;
 	  c->lut = stpi_zalloc(sizeof(unsigned short) * sc * 65536);
-	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].density / 2;
+	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].cutoff / 2;
 	  if (next_breakpoint > 65535)
 	    next_breakpoint = 65535;
 	  while (val <= next_breakpoint)
@@ -237,14 +254,14 @@ stpi_channel_initialize(stp_vars_t v, stp_image_t *image,
 	    {
 	      double this_val = c->sc[k].value;
 	      double next_val = c->sc[k + 1].value;
-	      double this_density = c->sc[k].density;
-	      double next_density = c->sc[k + 1].density;
+	      double this_cutoff = c->sc[k].cutoff;
+	      double next_cutoff = c->sc[k + 1].cutoff;
 	      double upper = 1.0;
 	      double lower = 1.0;
 	      int range;
 	      int base = val;
-	      double density = sqrt(this_density * next_density);
-	      next_breakpoint = (this_val + next_val) * 65535 * density / 2;
+	      double cutoff = sqrt(this_cutoff * next_cutoff);
+	      next_breakpoint = (this_val + next_val) * 65535 * cutoff / 2;
 	      if (next_breakpoint > 65535)
 		next_breakpoint = 65535;
 	      range = next_breakpoint - val;
