@@ -968,7 +968,7 @@ char *do_get_input (const char *prompt)
 	memset(input, 0, BUFSIZ);
 	printf ("%s", prompt);
 	fgets_status = fgets (input, BUFSIZ, stdin);
-	if (fgets_stat == NULL)
+	if (fgets_status == NULL)
 	{
 		fprintf (stderr, "Error in input\n");
 		return (NULL);
