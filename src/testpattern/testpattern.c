@@ -321,6 +321,10 @@ main(int argc, char **argv)
   if (dither_algorithm)
     stp_set_dither_algorithm(v, dither_algorithm);
 
+  /*
+   * Most programs will not use OUTPUT_RAW_CMYK; OUTPUT_COLOR or
+   * OUTPUT_GRAYSCALE are more useful for most purposes.
+   */
   stp_set_output_type(v, OUTPUT_RAW_CMYK);
 
   pt = stp_get_papersize_by_name(stp_get_media_size(v));
