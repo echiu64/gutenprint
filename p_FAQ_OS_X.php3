@@ -126,11 +126,11 @@ require('standard_html_header.php3');
  </p>
  <li>
  <h3>
- I cannnot print to my Epson Stylus Pro 7600, but it's supposed to be supported.
+ I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </h3>
  <p>  
  That driver is broken in the 4.2.2 release. Try using the 4.2.3-pre1 release,
- but please note that the driver is not fully tested or optimized, so your
+ but please note that the driver is not fully tested or optimized, so the
  output quality may be less than you expect. Keep checking the Gimp-Print web
  site for newer releases that may offer more improvements for this driver.  
  </p>
