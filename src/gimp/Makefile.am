@@ -21,6 +21,9 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 @SET_MAKE@
 
+## Make DESTDIR available to gimptool
+export DESTDIR
+
 MAINT_CHARSET = latin1
 
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
