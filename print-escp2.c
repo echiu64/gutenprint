@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.94  2000/02/21 23:37:29  rlk
+ *   Try again
+ *
  *   Revision 1.93  2000/02/21 23:33:52  rlk
  *   Try for the 640
  *
@@ -505,6 +508,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_INIT_PHOTO	0x40
 #define MODEL_INIT_440		0x50
 #define MODEL_INIT_PHOTO2	0x60
+#define MODEL_INIT_900		0x70
 
 #define MODEL_HASBLACK_MASK	0x100
 #define MODEL_HASBLACK_YES	0x000
@@ -906,12 +910,12 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
    * Hack that seems to be necessary for these silly things to print.
    * No, I don't know what it means. -- rlk
    */
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_900))
     fprintf(prn, "%c%c%c\033\001@EJL 1284.4\n@EJL     \n\033@", 0, 0, 0);
 
   fputs("\033@", prn); 				/* ESC/P2 reset */
 
-  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4))
+  if (escp2_has_cap(model, MODEL_INIT_MASK, MODEL_INIT_900))
     fprintf(prn,
 	    "\033(R\010%c%cREMOTE1PM\002%c%c%cSN\003%c%c%c\005\033%c%c%c",
 	    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -983,6 +987,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
         break;
 
     case MODEL_INIT_440 : /* ESC 440, 640, 740, 900 */
+    case MODEL_INIT_900:
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
 	if (!use_softweave)
