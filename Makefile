@@ -83,7 +83,7 @@ GIMP_CFLAGS_NOUI = -I$topdir/../.. -I/usr/X11R6/include -I/usr/lib/glib/include 
 GIMP_LIBS = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib  -lgimpui
 GIMP_LIBS_NOUI = -L$topdir/../../libgimp/.libs -L$dirprefix/../../libgimp -lgimp -L/usr/lib -lglib 
 GIMP_MAJOR_VERSION = 1
-GIMP_MICRO_VERSION = 13
+GIMP_MICRO_VERSION = 15
 GIMP_MINOR_VERSION = 1
 GIMP_MODULES = modules
 GIMP_MP_FLAGS = 
@@ -92,7 +92,7 @@ GIMP_PERL = perl
 GIMP_PLUGINS = plug-ins
 GIMP_THREAD_FLAGS = 
 GIMP_THREAD_LIBS = 
-GIMP_VERSION = 1.1.13
+GIMP_VERSION = 1.1.15
 GLIB_CFLAGS = -I/usr/X11R6/include -I/usr/lib/glib/include
 GLIB_LIBS = -L/usr/lib -lglib
 GMOFILES =  cs.gmo da.gmo de.gmo fi.gmo fr.gmo hu.gmo it.gmo ja.gmo ko.gmo nl.gmo no.gmo pl.gmo ru.gmo sk.gmo sv.gmo
@@ -135,7 +135,7 @@ LPSTAT_DEF = -DLPSTAT_COMMAND=\"/usr/bin/lpstat\"
 LP_COMMAND = /usr/bin/lp
 LP_DEF = -DLP_COMMAND=\"/usr/bin/lp\"
 LT_AGE = 0
-LT_CURRENT = 13
+LT_CURRENT = 15
 LT_RELEASE = 1.1
 LT_REVISION = 0
 MAILER = -DMAILER=\"/usr/sbin/sendmail\"
@@ -164,7 +164,7 @@ SO =
 TIFF = tiff
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 1.1.13
+VERSION = 1.1.15
 WEBBROWSER = webbrowser
 XJT = xjt
 XPM = xpm

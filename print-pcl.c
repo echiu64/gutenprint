@@ -32,6 +32,19 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.15  2000/01/17 02:05:47  rlk
+ *   Much stuff:
+ *
+ *   1) Fixes from 3.0.5
+ *
+ *   2) First cut at enhancing monochrome and four-level printing with stuff from
+ *   the color print function.
+ *
+ *   3) Preliminary support (pre-support) for 440/640/740/900/750/1200.
+ *
+ *   Revision 1.14.2.1  2000/01/15 14:33:02  rlk
+ *   PCL and Gimp 1.0 patches from Dave Hill
+ *
  *   Revision 1.14  2000/01/08 23:30:56  rlk
  *   Y2K copyright
  *
@@ -426,6 +439,7 @@ pcl_print(int       model,		/* I - Model */
   char 		*resolution = v->resolution;
   char 		*media_size = v->media_size;
   char 		*media_type = v->media_type;
+  char 		*media_source = v->media_source;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   float 	scaling = v->scaling;
@@ -687,15 +701,15 @@ pcl_print(int       model,		/* I - Model */
   else if (strcmp(media_type, "Transparency") == 0)
     fputs("\033&l4M", prn);
 
-  if (strcmp(media_type, "Manual") == 0)	/* Set media source */
+  if (strcmp(media_source, "Manual") == 0)	/* Set media source */
     fputs("\033&l2H", prn);
-  else if (strcmp(media_type, "Tray 1") == 0)
+  else if (strcmp(media_source, "Tray 1") == 0)
     fputs("\033&l8H", prn);
-  else if (strcmp(media_type, "Tray 2") == 0)
+  else if (strcmp(media_source, "Tray 2") == 0)
     fputs("\033&l1H", prn);
-  else if (strcmp(media_type, "Tray 3") == 0)
+  else if (strcmp(media_source, "Tray 3") == 0)
     fputs("\033&l4H", prn);
-  else if (strcmp(media_type, "Tray 4") == 0)
+  else if (strcmp(media_source, "Tray 4") == 0)
     fputs("\033&l5H", prn);
 
   if (model >= 500 && model < 1200 && xdpi >= 300)
@@ -891,14 +905,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, x, image_height, out_width, black);
+          dither_black4(out, x, image_height, out_width, black, 1);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
           dither_cmyk4(out, x, image_height, out_width, cyan, magenta,
-			  yellow, black);
+			  yellow, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -918,7 +932,7 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, x, image_height, out_width, black);
+          dither_black(out, x, image_height, out_width, black, 1);
           (*writefunc)(prn, black, length, 1);
 	}
 	else
@@ -980,14 +994,14 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black4(out, y, image_width, out_width, black);
+          dither_black4(out, y, image_width, out_width, black, 1);
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 1);
 	}
 	else 
 	{
           dither_cmyk4(out, y, image_width, out_width, cyan, magenta,
-			  yellow, black);
+			  yellow, black, 1);
 
           (*writefunc)(prn, black, length / 2, 0);
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1007,7 +1021,7 @@ pcl_print(int       model,		/* I - Model */
 
 	if (output_type == OUTPUT_GRAY)
 	{
-          dither_black(out, y, image_width, out_width, black);
+          dither_black(out, y, image_width, out_width, black, 1);
           (*writefunc)(prn, black, length, 1);
 	}
 	else

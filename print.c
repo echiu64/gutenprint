@@ -49,7 +49,7 @@
  */
 #include <gtk/gtk.h>
 #include <libgimp/gimp.h>
-#define PLUG_IN_VERSION		"3.0.3 - 25 Dec 1999"
+#define PLUG_IN_VERSION		"3.1 Alpha - 14 Jan 2000"
 #define PLUG_IN_NAME		"Print"
 
 #include <math.h>
@@ -61,6 +61,13 @@
 #endif
 
 #include <libgimp/gimpui.h>
+#ifdef GIMP_1_0
+#define N_(x) x
+#define _(x) x
+#define INIT_I18N()
+#define INIT_I18N_UI()
+#define gettext(x) x
+#else
 #if 0
 #include <libgimp/stdplugins-intl.h>
 #else
@@ -90,6 +97,7 @@
   gtk_set_locale(); \
   setlocale (LC_NUMERIC, "C"); \
   INIT_I18N();
+#endif
 #endif
 #endif
 
@@ -482,7 +490,9 @@ run(char   *name,		/* I - Name of print program. */
 #endif
   gint32         image_ID;      /* image ID */
   gint32         drawable_ID;   /* drawable ID */
+#ifndef GIMP_1_0
   GimpExportReturnType export = EXPORT_CANCEL;    /* return value of gimp_export_image() */
+#endif
 
   INIT_I18N_UI();
 
@@ -503,6 +513,7 @@ run(char   *name,		/* I - Name of print program. */
   image_ID = param[1].data.d_int32;
   drawable_ID = param[2].data.d_int32;
 
+#ifndef GIMP_1_0
   /*  eventually export the image */ 
   switch (run_mode)
     {
@@ -522,6 +533,7 @@ run(char   *name,		/* I - Name of print program. */
     default:
       break;
     }
+#endif
 
 
  /*
@@ -756,8 +768,10 @@ run(char   *name,		/* I - Name of print program. */
 
   gimp_drawable_detach(drawable);
 
+#ifndef GIMP_1_0
   if (export == EXPORT_EXPORT)
     gimp_image_delete (image_ID);
+#endif
 }
 
 static void 
@@ -2806,6 +2820,9 @@ printrc_load(void)
 		*commaptr;	/* Pointer to next comma */
   plist_t	*p,		/* Current printer */
 		key;		/* Search key */
+#ifdef GIMP_1_0
+  char		*home;		/* Home dir */
+#endif
 
   initialize_printer(&key);
 
@@ -2819,7 +2836,16 @@ printrc_load(void)
   * Generate the filename for the current user...
   */
 
+#ifdef GIMP_1_0
+  home = getenv("HOME");
+  if (home == NULL)
+    filename=g_strdup("/.gimp/printrc");
+  else
+    filename = malloc(strlen(home) + 15);
+    sprintf(filename, "%s/.gimp/printrc", home);
+#else
   filename = gimp_personal_rc_file ("printrc");
+#endif
 #ifdef __EMX__
   _fnslashify(filename);
 #endif
@@ -3092,14 +3118,25 @@ printrc_save(void)
   char	       *filename;	/* Printrc filename */
   int		i;		/* Looping var */
   plist_t	*p;		/* Current printer */
+#ifdef GIMP_1_0
+  char		*home;		/* Home dir */
+#endif
 
 
  /*
   * Generate the filename for the current user...
   */
 
-  
+#ifdef GIMP_1_0  
+  home = getenv("HOME");
+  if (home == NULL)
+    filename=g_strdup("/.gimp/printrc");
+  else
+    filename = malloc(strlen(home) + 15);
+    sprintf(filename, "%s/.gimp/printrc", home);
+#else
   filename = gimp_personal_rc_file ("printrc");
+#endif
 #ifdef __EMX__
   _fnslashify(filename);
 #endif
