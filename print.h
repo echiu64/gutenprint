@@ -190,8 +190,14 @@ typedef struct printer
   vars_t printvars;
 } printer_t;
 
+/*
+ * hue_map is an array of 25 doubles representing the mapping of hue
+ * from (0..6) to (0..6) in increments of .25.  The hue_map is in CMY space,
+ * so hue=0 is cyan.
+ */
 typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
-			  int bpp, unsigned char *cmap, const vars_t *vars);
+			  int bpp, unsigned char *cmap, const vars_t *vars,
+			  const double *hue_map);
 
 typedef struct
 {

@@ -293,10 +293,8 @@ update_cmyk(unsigned short *rgb)
   int y = 65535 - rgb[2];
   int nc, nm, ny;
   int k;
-#if 0
   if (c == m && c == y)
     return;
-#endif
   k = FMIN(FMIN(c, m), y);
 
   /*
@@ -308,9 +306,9 @@ update_cmyk(unsigned short *rgb)
    * too dark.
    */
 
-  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 5 + FMAX(m, y) * 0 + k) / 8;
-  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 5 + FMAX(c, y) * 0 + k) / 8;
-  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 5 + FMAX(c, m) * 0 + k) / 8;
+  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 4 + FMAX(m, y) * 0 + k) / 8;
+  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 4 + FMAX(c, y) * 0 + k) / 8;
+  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 4 + FMAX(c, m) * 0 + k) / 8;
 
   /*
    * Make sure we didn't go overboard.  We don't want to go too
@@ -371,7 +369,8 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     int    	width,		/* I - Width of row */
 	     int    	bpp,		/* I - Bytes-per-pixel in grayin */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
-	     const vars_t	*vars
+	     const vars_t	*vars,
+	     const double *hue_map
 	     )
 {
   int i0 = -1;
@@ -435,7 +434,8 @@ gray_to_monochrome(unsigned char *grayin,	/* I - RGB pixels */
 		   int    	width,		/* I - Width of row */
 		   int    	bpp,		/* I - Bytes-per-pixel in grayin */
 		   unsigned char *cmap,		/* I - Colormap (unused) */
-		   const vars_t	*vars
+		   const vars_t	*vars,
+		   const double *hue_map
 		   )
 {
   int i0 = -1;
@@ -500,7 +500,8 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		int    width,			/* I - Width of row */
 		int    bpp,			/* I - bpp in indexed */
 		unsigned char *cmap,		/* I - Colormap */
-		const vars_t   *vars
+		const vars_t   *vars,
+		const double *hue_map
 		)
 {
   int i0 = -1;
@@ -573,7 +574,8 @@ indexed_to_monochrome(unsigned char *indexed,	/* I - Indexed pixels */
 		      int    width,		/* I - Width of row */
 		      int    bpp,		/* I - bpp in indexed */
 		      unsigned char *cmap,	/* I - Colormap */
-		      const vars_t   *vars
+		      const vars_t   *vars,
+		      const double *hue_map
 		      )
 {
   int i0 = -1;
@@ -647,7 +649,8 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    int    width,		/* I - Width of row */
 	    int    bpp,			/* I - Bytes-per-pixel in RGB */
 	    unsigned char *cmap,	/* I - Colormap (unused) */
-	    const vars_t   *vars
+	    const vars_t   *vars,
+	    const double *hue_map
 	    )
 {
   int i0 = -1;
@@ -722,7 +725,8 @@ rgb_to_monochrome(unsigned char *rgb,	/* I - RGB pixels */
 		  int    width,		/* I - Width of row */
 		  int    bpp,		/* I - Bytes-per-pixel in RGB */
 		  unsigned char *cmap,	/* I - Colormap (unused) */
-		  const vars_t   *vars
+		  const vars_t   *vars,
+		  const double *hue_map
 		  )
 {
   int i0 = -1;
@@ -798,7 +802,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   int    		width,		/* I - Width of row */
 	   int    		bpp,		/* I - Bytes/pix in indexed */
 	   unsigned char 	*cmap,		/* I - Colormap */
-	   const vars_t  	*vars
+	   const vars_t  	*vars,
+	   const double *hue_map
 	   )
 {
   unsigned ld = vars->density * 65536;
@@ -900,7 +905,7 @@ printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, co
 	}
       else
 	{
-	  if (compute_saturation &&
+	  if ((compute_saturation || hue_map) &&
 	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
@@ -917,6 +922,19 @@ printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, co
 		}
 	      if (s > 1)
 		s = 1.0;
+	      if (hue_map)
+		{
+		  int ih;
+		  double eh;
+		  h *= 4;
+		  ih = (int) h;
+		  eh = h - (double) ih;
+		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);
+		  if (h < 0.0)
+		    h += 6.0;
+		  else if (h >= 6.0)
+		    h -= 6.0;
+		}
 	      calc_hsl_to_rgb(rgbout, h, s, v);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
@@ -939,13 +957,16 @@ printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, co
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
 	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
-	      if (ssat < 1)
-		s *= ssat;
-	      else
+	      if (split_saturation)
 		{
-		  double s1 = s * ssat;
-		  double s2 = 1.0 - ((1.0 - s) * isat);
-		  s = FMIN(s1, s2);
+		  if (ssat < 1)
+		    s *= ssat;
+		  else
+		    {
+		      double s1 = s * ssat;
+		      double s2 = 1.0 - ((1.0 - s) * isat);
+		      s = FMIN(s1, s2);
+		    }
 		}
 	      if (s > 1)
 		s = 1.0;
@@ -980,10 +1001,11 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       int    width,		/* I - Width of row */
 	       int    bpp,		/* I - Bytes-per-pixel in indexed */
 	       unsigned char *cmap,	/* I - Colormap */
-	       const vars_t   *vars
+	       const vars_t   *vars,
+	       const double *hue_map
 	       )
 {
-  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars);
+  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars, hue_map);
 }
 
 /*
@@ -996,7 +1018,8 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    int    		width,		/* I - Width of row */
 	    int    		bpp,		/* I - Bytes/pix in indexed */
 	    unsigned char 	*cmap,		/* I - Colormap */
-	    const vars_t  	*vars
+	    const vars_t  	*vars,
+	    const double *hue_map
 	    )
 {
   int use_previous = 0;
@@ -1087,7 +1110,8 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		    int    width,		/* I - Width of row */
 		    int    bpp,		/* I - Bytes-per-pixel in indexed */
 		    unsigned char *cmap,	/* I - Colormap */
-		    const vars_t   *vars
+		    const vars_t   *vars,
+		    const double *hue_map
 		    )
 {
   int i0 = -1;
@@ -1141,12 +1165,13 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	}
       else
 	{
-	  if (vars->saturation != 1.0)
+	  if (vars->saturation != 1.0 ||
+	      (hue_map && vars->image_type == IMAGE_SOLID_TONE))
 	    {
 	      calc_rgb_to_hsl(rgb, &h, &s, &v);
 	      if (vars->saturation < 1)
 		s *= vars->saturation;
-	      else
+	      else if (vars->saturation > 1)
 		{
 		  double s1 = s * vars->saturation;
 		  double s2 = 1.0 - ((1.0 - s) * isat);
@@ -1154,6 +1179,19 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
+	      if (hue_map && vars->image_type == IMAGE_SOLID_TONE)
+		{
+		  int ih;
+		  double eh;
+		  h *= 4;
+		  ih = (int) h;
+		  eh = h - (double) ih;
+		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);
+		  if (h < 0.0)
+		    h += 6.0;
+		  else if (h >= 6.0)
+		    h -= 6.0;
+		}
 	      calc_hsl_to_rgb(rgb, h, s, v);
 	    }
 	  if (vars->density != 1.0)
@@ -1188,7 +1226,8 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		int    		width,		/* I - Width of row */
 		int    		bpp,		/* I - Bytes/pix in indexed */
 		unsigned char 	*cmap,		/* I - Colormap */
-		const vars_t  	*vars
+		const vars_t  	*vars,
+		const double *hue_map
 		)
 {
   unsigned ld = vars->density * 65536;
@@ -1250,12 +1289,13 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (vars->saturation != 1.0)
+	  if (vars->saturation != 1.0 ||
+	      (hue_map && vars->image_type == IMAGE_SOLID_TONE))
 	    {
 	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
 	      if (vars->saturation < 1)
 		s *= vars->saturation;
-	      else
+	      else if (vars->saturation > 1)
 		{
 		  double s1 = s * vars->saturation;
 		  double s2 = 1.0 - ((1.0 - s) * isat);
@@ -1263,6 +1303,19 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
+	      if (hue_map && vars->image_type == IMAGE_SOLID_TONE)
+		{
+		  int ih;
+		  double eh;
+		  h *= 4;
+		  ih = (int) h;
+		  eh = h - (double) ih;
+		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);
+		  if (h < 0.0)
+		    h += 6.0;
+		  else if (h >= 6.0)
+		    h -= 6.0;
+		}
 	      calc_hsl_to_rgb(rgbout, h, s, v);
 	    }
 	  if (ld < 65536)
@@ -1295,7 +1348,8 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 		 int    	width,		/* I - Width of row */
 		 int    	bpp,		/* I - Bytes/pix in indexed */
 		 unsigned char 	*cmap,		/* I - Colormap */
-		 const vars_t  	*vars
+		 const vars_t  	*vars,
+		 const double *hue_map
 		 )
 {
   int use_previous = 0;

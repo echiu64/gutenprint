@@ -468,7 +468,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL);
 
       ps_hex(prn, out, image_width * out_bpp);
     }
@@ -508,7 +508,8 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 	Image_note_progress(image, y, image_height);
 
       Image_get_row(image, in, y);
-      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, &nv);
+      (*colorfunc)(in, out + out_offset, image_width, image_bpp, cmap, &nv,
+		   NULL);
 
       out_length = out_offset + image_width * out_bpp;
 

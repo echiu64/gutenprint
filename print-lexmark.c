@@ -1135,7 +1135,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 	  duplicate_line = 0;
 	  Image_get_row(image, in, errline);
 	  /*	  printf("errline %d ,   image height %d\n", errline, image_height);*/
-	  (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+	  (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL);
 	}
       /*      printf("Let's dither   %d    %d  %d\n", ((y%interlace)), buf_length, length);*/
       if (nv.image_type == IMAGE_MONOCHROME)

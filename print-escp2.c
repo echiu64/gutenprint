@@ -1256,6 +1256,35 @@ static const paper_t escp2_paper_list[] = {
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
+static double hue_adjustment[25] =
+{
+  0,				/* C */
+  0.125,
+  0.25,
+  0.4,
+  0.65,				/* B */
+  0.9,
+  1.25,
+  1.625,
+  2.0,				/* M */
+  2.125,
+  2.25,
+  2.45,
+  2.7,				/* R */
+  2.95,
+  3.25,
+  3.625,
+  4.0,				/* Y */
+  4.2,
+  4.4,
+  4.65,
+  4.9,				/* G */
+  5.15,
+  5.4,
+  5.7,
+  6.0				/* C */
+};
+
 
 static const paper_t *
 get_media_type(const char *name)
@@ -2322,7 +2351,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       Image_get_row(image, in, errline);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv,
+		   hue_adjustment);
     }
     QUANT(1);
 

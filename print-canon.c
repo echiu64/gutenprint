@@ -1155,7 +1155,7 @@ canon_print(const printer_t *printer,		/* I - Model */
       errlast = errline;
       duplicate_line = 0;
       Image_get_row(image, in, errline);
-      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv);
+      (*colorfunc)(in, out, image_width, image_bpp, cmap, &nv, NULL);
     }
 
     if (nv.image_type == IMAGE_MONOCHROME)
