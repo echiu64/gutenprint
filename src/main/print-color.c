@@ -1634,6 +1634,7 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
   if (isteps != steps)
     stp_curve_resample(curve, steps);
   stp_free(tmp);
+  return curve;
 }
 
 static void
