@@ -67,9 +67,6 @@ typedef struct		/**** Printer List ****/
 
 #define THUMBNAIL_MAXW	(128)
 #define THUMBNAIL_MAXH	(128)
-#define MIN_CUSTOM_WIDTH (1 * 72)
-#define MIN_CUSTOM_HEIGHT (2 * 72)
-
 
 extern gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
 extern guchar *thumbnail_data;
@@ -112,6 +109,8 @@ extern void gimp_plist_build_combo         (GtkWidget     *combo,
 					    GtkSignalFunc callback,
 					    gint          *callback_id);
 
+extern void gimp_invalidate_frame(void);
+extern void gimp_invalidate_preview_thumbnail(void);
 extern void gimp_do_color_updates    (void);
 extern void gimp_redraw_color_swatch (void);
 extern void gimp_build_dither_combo  (void);

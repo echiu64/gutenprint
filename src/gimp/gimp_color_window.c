@@ -437,6 +437,7 @@ gimp_create_color_adjust_window (void)
 static void
 gimp_brightness_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_brightness(*pv) != adjustment->value)
     {
       stp_set_brightness(*pv, adjustment->value);
@@ -447,6 +448,7 @@ gimp_brightness_update (GtkAdjustment *adjustment)
 static void
 gimp_contrast_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_contrast(*pv) != adjustment->value)
     {
       stp_set_contrast(*pv, adjustment->value);
@@ -457,6 +459,7 @@ gimp_contrast_update (GtkAdjustment *adjustment)
 static void
 gimp_cyan_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_cyan(*pv) != adjustment->value)
     {
       stp_set_cyan(*pv, adjustment->value);
@@ -467,6 +470,7 @@ gimp_cyan_update (GtkAdjustment *adjustment)
 static void
 gimp_magenta_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_magenta(*pv) != adjustment->value)
     {
       stp_set_magenta(*pv, adjustment->value);
@@ -477,6 +481,7 @@ gimp_magenta_update (GtkAdjustment *adjustment)
 static void
 gimp_yellow_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_yellow(*pv) != adjustment->value)
     {
       stp_set_yellow(*pv, adjustment->value);
@@ -487,6 +492,7 @@ gimp_yellow_update (GtkAdjustment *adjustment)
 static void
 gimp_saturation_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_saturation(*pv) != adjustment->value)
     {
       stp_set_saturation(*pv, adjustment->value);
@@ -497,6 +503,7 @@ gimp_saturation_update (GtkAdjustment *adjustment)
 static void
 gimp_density_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_density(*pv) != adjustment->value)
     {
       stp_set_density(*pv, adjustment->value);
@@ -506,6 +513,7 @@ gimp_density_update (GtkAdjustment *adjustment)
 static void
 gimp_gamma_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   if (stp_get_gamma(*pv) != adjustment->value)
     {
       stp_set_gamma(*pv, adjustment->value);

@@ -112,6 +112,10 @@ static gboolean   suppress_scaling_callback   = FALSE;
 
 static gint   suppress_preview_update = 0;
 
+static guchar *preview_data = NULL;
+static gint preview_valid = 0;
+static gint frame_valid = 0;
+
 static GtkDrawingArea *preview = NULL;	/* Preview drawing area widget */
 static gint            mouse_x;		/* Last mouse X */
 static gint            mouse_y;		/* Last mouse Y */
@@ -1370,6 +1374,7 @@ gimp_create_main_window (void)
 static void
 gimp_scaling_update (GtkAdjustment *adjustment)
 {
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   if (stp_get_scaling(*pv) != adjustment->value)
     {
@@ -1445,6 +1450,7 @@ gimp_scaling_callback (GtkWidget *widget)
     {
       gdouble xres, yres;
 
+      gimp_invalidate_preview_thumbnail();
       gimp_image_get_resolution (image_ID, &xres, &yres);
 
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
@@ -1537,6 +1543,7 @@ gimp_do_misc_updates (void)
   const stp_vars_t lower = stp_minimum_settings ();
 
   suppress_preview_update++;
+  gimp_invalidate_preview_thumbnail();
   gimp_preview_update ();
 
   if (stp_get_scaling(*pv) < 0)
@@ -1723,6 +1730,8 @@ gimp_plist_callback (GtkWidget *widget,
   gint     	i;
   const gchar	*default_parameter;
 
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
 
   if (widget)
@@ -1907,6 +1916,8 @@ static void
 gimp_media_size_callback (GtkWidget *widget,
 			  gpointer   data)
 {
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   if (widget == custom_size_width)
     {
@@ -2031,6 +2042,8 @@ gimp_media_type_callback (GtkWidget *widget,
 			  gpointer   data)
 {
   const gchar *new_media_type = Combo_get_name (media_type_combo, num_media_types, media_types);
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   stp_set_media_type(*pv, new_media_type);
   gimp_preview_update ();
@@ -2044,6 +2057,8 @@ gimp_media_source_callback (GtkWidget *widget,
 			    gpointer   data)
 {
   const gchar *new_media_source = Combo_get_name (media_source_combo, num_media_sources, media_sources);
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   stp_set_media_source(*pv, new_media_source);
   gimp_preview_update ();
@@ -2057,6 +2072,8 @@ gimp_ink_type_callback (GtkWidget *widget,
 			gpointer   data)
 {
   const gchar *new_ink_type = Combo_get_name (ink_type_combo, num_ink_types, ink_types);
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   stp_set_ink_type(*pv, new_ink_type);
   gimp_preview_update ();
@@ -2069,7 +2086,10 @@ static void
 gimp_resolution_callback (GtkWidget *widget,
 			  gpointer   data)
 {
-  const gchar *new_resolution = Combo_get_name (resolution_combo, num_resolutions, resolutions);
+  const gchar *new_resolution =
+    Combo_get_name (resolution_combo, num_resolutions, resolutions);
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   stp_set_resolution(*pv, new_resolution);
   gimp_preview_update ();
@@ -2085,6 +2105,8 @@ gimp_orientation_callback (GtkWidget *widget,
   reset_preview();
   if (stp_get_orientation(*pv) != (gint) data)
     {
+      gimp_invalidate_frame();
+      gimp_invalidate_preview_thumbnail();
       stp_set_orientation(*pv, (gint) data);
       stp_set_left(*pv, -1);
       stp_set_top(*pv, -1);
@@ -2103,6 +2125,8 @@ gimp_output_type_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_output_type(*pv, (gint) data);
+      gimp_invalidate_frame();
+      gimp_invalidate_preview_thumbnail();
       gimp_update_adjusted_thumbnail();
     }
   if (widget == output_color)
@@ -2138,6 +2162,8 @@ gimp_image_type_callback (GtkWidget *widget,
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
       stp_set_image_type(*pv, (gint) data);
+      gimp_invalidate_frame();
+      gimp_invalidate_preview_thumbnail();
       gimp_update_adjusted_thumbnail();
     }
   gimp_preview_update ();
@@ -2286,6 +2312,8 @@ static void
 gimp_setup_ok_callback (void)
 {
   reset_preview();
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   stp_set_driver(*pv, stp_printer_get_driver(current_printer));
 
   stp_set_output_to(*pv, gtk_entry_get_text (GTK_ENTRY (output_cmd)));
@@ -2305,6 +2333,8 @@ gimp_new_printer_ok_callback (void)
 {
   const char *data = gtk_entry_get_text(GTK_ENTRY(new_printer_entry));
   gp_plist_t key;
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   initialize_printer(&key);
   (void) strncpy(key.name, data, sizeof(key.name) - 1);
@@ -2341,6 +2371,8 @@ gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 			    gpointer        data)   /* I - Data */
 {
   stp_vars_t printvars;
+  gimp_invalidate_frame();
+  gimp_invalidate_preview_thumbnail();
   reset_preview();
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   current_printer = stp_get_printer_by_index ((gint) data);
@@ -2462,6 +2494,63 @@ gimp_update_adjusted_thumbnail (void)
   gimp_preview_update ();
 }
 
+void
+gimp_invalidate_preview_thumbnail(void)
+{
+  preview_valid = 0;
+}
+
+void
+gimp_invalidate_frame(void)
+{
+  frame_valid = 0;
+}
+
+static void
+draw_arrow(GdkWindow *w, GdkGC *gc,
+	   gint paper_left, gint paper_top, gint orient)
+{
+  int u = preview_ppi/2;
+  int ox = paper_left + preview_ppi * paper_width / 72 / 2;
+  int oy = paper_top + preview_ppi * paper_height / 72 / 2;
+  if (orient == ORIENT_LANDSCAPE)
+    {
+      ox += preview_ppi * paper_width / 72 / 4;
+      if (ox > paper_left + preview_ppi * paper_width / 72 - u)
+	ox = paper_left + preview_ppi * paper_width / 72 - u;
+      gdk_draw_line (w, gc, ox + u, oy, ox, oy - u);
+      gdk_draw_line (w, gc, ox + u, oy, ox, oy + u);
+      gdk_draw_line (w, gc, ox + u, oy, ox - u, oy);
+    }
+  else if (orient == ORIENT_SEASCAPE)
+    {
+      ox -= preview_ppi * paper_width / 72 / 4;
+      if (ox < paper_left + u)
+	ox = paper_left + u;
+      gdk_draw_line (w, gc, ox - u, oy, ox, oy - u);
+      gdk_draw_line (w, gc, ox - u, oy, ox, oy + u);
+      gdk_draw_line (w, gc, ox - u, oy, ox + u, oy);
+    }
+  else if (orient == ORIENT_UPSIDEDOWN)
+    {
+      oy += preview_ppi * paper_height / 72 / 4;
+      if (oy > paper_top + preview_ppi * paper_height / 72 - u)
+	oy = paper_top + preview_ppi * paper_height / 72 - u;
+      gdk_draw_line (w, gc, ox, oy + u, ox - u, oy);
+      gdk_draw_line (w, gc, ox, oy + u, ox + u, oy);
+      gdk_draw_line (w, gc, ox, oy + u, ox, oy - u);
+    }
+  else /* (orient == ORIENT_PORTRAIT) */
+    {
+      oy -= preview_ppi * paper_height / 72 / 4;
+      if (oy < paper_top + u)
+	oy = paper_top + u;
+      gdk_draw_line (w, gc, ox, oy - u, ox - u, oy);
+      gdk_draw_line (w, gc, ox, oy - u, ox + u, oy);
+      gdk_draw_line (w, gc, ox, oy - u, ox, oy + u);
+    }
+}  
+
 /*
  *  gimp_preview_update_callback() -
  */
@@ -2470,117 +2559,142 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 {
   static GdkGC	*gc    = NULL;
   static GdkGC  *gcinv = NULL;
-  gint ox, oy, u;
+  static GdkGC  *gcclear = NULL;
+  static gint opx = 0;
+  static gint opy = 0;
+  gint frame_is_clear = 0;
+  int preview_was_valid = preview_valid;
+  
   gint preview_x = 1 + printable_left + preview_ppi * stp_get_left(*pv) / 72;
   gint preview_y = 1 + printable_top + preview_ppi * stp_get_top(*pv) / 72;
-  gint preview_w = MAX (1, (preview_ppi * print_width) / 72);
-  gint preview_h = MAX (1, (preview_ppi * print_height) / 72);
+  gint preview_w = MAX (1, (preview_ppi * print_width) / 72 - 1);
+  gint preview_h = MAX (1, (preview_ppi * print_height) / 72 - 1);
 
-  guchar *preview_data;
-
-  gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
-  gint v_numerator = (thumbnail_h - 1) % v_denominator;
-  gint v_whole = (thumbnail_h - 1) / v_denominator;
-  gint v_cur = 0;
-  gint v_last = -1;
-  gint v_error = v_denominator / 2;
-  gint y = 0;
-
-  preview_data = g_malloc(3 * preview_h * preview_w);
-  while (y < preview_h)
+  if (!preview_valid)
     {
-      if (v_cur == v_last)
-	{
-	  memcpy (preview_data + adjusted_thumbnail_bpp * preview_w * y,
-		  preview_data + adjusted_thumbnail_bpp * preview_w * (y - 1),
-		  adjusted_thumbnail_bpp * preview_w);
-	}
-      else
-	{
-	  guchar *inbuf = adjusted_thumbnail_data - adjusted_thumbnail_bpp
-	    + adjusted_thumbnail_bpp * thumbnail_w * v_cur;
-	  guchar *outbuf = preview_data
-	    + adjusted_thumbnail_bpp * preview_w * y;
+      gint v_denominator = preview_h > 1 ? preview_h - 1 : 1;
+      gint v_numerator = (thumbnail_h - 1) % v_denominator;
+      gint v_whole = (thumbnail_h - 1) / v_denominator;
+      gint v_cur = 0;
+      gint v_last = -1;
+      gint v_error = v_denominator / 2;
+      gint y = 0;
 
-	  gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
-	  gint h_numerator = (thumbnail_w - 1) % h_denominator;
-	  gint h_whole = (thumbnail_w - 1) / h_denominator;
-	  gint h_cur = 0;
-	  gint h_last = -1;
-	  gint h_error = h_denominator / 2;
-	  gint x = 0;
-
-	  v_last = v_cur;
-	  while (x < preview_w)
+      if (preview_data)
+	free(preview_data);
+      preview_data = g_malloc(3 * preview_h * preview_w);
+      while (y < preview_h)
+	{
+	  if (v_cur == v_last)
 	    {
-	      if (h_cur == h_last)
+	      memcpy(preview_data + adjusted_thumbnail_bpp * preview_w * y,
+		     preview_data + adjusted_thumbnail_bpp * preview_w *(y- 1),
+		     adjusted_thumbnail_bpp * preview_w);
+	    }
+	  else
+	    {
+	      guchar *inbuf = adjusted_thumbnail_data - adjusted_thumbnail_bpp
+		+ adjusted_thumbnail_bpp * thumbnail_w * v_cur;
+	      guchar *outbuf = preview_data
+		+ adjusted_thumbnail_bpp * preview_w * y;
+
+	      gint h_denominator = preview_w > 1 ? preview_w - 1 : 1;
+	      gint h_numerator = (thumbnail_w - 1) % h_denominator;
+	      gint h_whole = (thumbnail_w - 1) / h_denominator;
+	      gint h_cur = 0;
+	      gint h_last = -1;
+	      gint h_error = h_denominator / 2;
+	      gint x = 0;
+
+	      v_last = v_cur;
+	      while (x < preview_w)
 		{
-		  if (adjusted_thumbnail_bpp == 1)
+		  if (h_cur == h_last)
 		    {
-		      outbuf[0] = outbuf[-1];
-		      outbuf++;
+		      if (adjusted_thumbnail_bpp == 1)
+			{
+			  outbuf[0] = outbuf[-1];
+			  outbuf++;
+			}
+		      else
+			{
+			  outbuf[0] = outbuf[-3];
+			  outbuf[1] = outbuf[-2];
+			  outbuf[2] = outbuf[-1];
+			  outbuf += 3;
+			}
 		    }
 		  else
 		    {
-		      outbuf[0] = outbuf[-3];
-		      outbuf[1] = outbuf[-2];
-		      outbuf[2] = outbuf[-1];
-		      outbuf += 3;
+		      inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
+		      h_last = h_cur;
+		      outbuf[0] = inbuf[0];
+		      outbuf++;
+		      if (adjusted_thumbnail_bpp == 3)
+			{
+			  outbuf[0] = inbuf[1];
+			  outbuf[1] = inbuf[2];
+			  outbuf += 2;
+			}
 		    }
-		}
-	      else
-		{
-		  inbuf += adjusted_thumbnail_bpp * (h_cur - h_last);
-		  h_last = h_cur;
-		  outbuf[0] = inbuf[0];
-		  outbuf++;
-		  if (adjusted_thumbnail_bpp == 3)
+		  x++;
+		  h_cur += h_whole;
+		  h_error += h_numerator;
+		  if (h_error >= h_denominator)
 		    {
-		      outbuf[0] = inbuf[1];
-		      outbuf[1] = inbuf[2];
-		      outbuf += 2;
+		      h_error -= h_denominator;
+		      h_cur++;
 		    }
-		}
-	      x++;
-	      h_cur += h_whole;
-	      h_error += h_numerator;
-	      if (h_error >= h_denominator)
-		{
-		  h_error -= h_denominator;
-		  h_cur++;
 		}
 	    }
+	  y++;
+	  v_cur += v_whole;
+	  v_error += v_numerator;
+	  if (v_error >= v_denominator)
+	    {
+	      v_error -= v_denominator;
+	      v_cur++;
+	    }
 	}
-      y++;
-      v_cur += v_whole;
-      v_error += v_numerator;
-      if (v_error >= v_denominator)
-	{
-	  v_error -= v_denominator;
-	  v_cur++;
-	}
+      preview_valid = 1;
     }
-
-  gdk_window_clear (preview->widget.window);
 
   if (gc == NULL)
     {
       gc = gdk_gc_new (preview->widget.window);
       gcinv = gdk_gc_new (preview->widget.window);
       gdk_gc_set_function (gcinv, GDK_INVERT);
+      gcclear = gdk_gc_new (preview->widget.window);
+      gdk_gc_set_function (gcclear, GDK_SET);
     }
 
+  if (!frame_valid)
+    {
+      gdk_window_clear (preview->widget.window);
+      frame_valid = 1;
+      frame_is_clear = 1;
+    }
   /* draw paper frame */
+  /* We shouldn't have to redraw it, but otherwise it seems that we don't */
+  /* handle expose events correctly.  What do I know about gdk???!!! */
   gdk_draw_rectangle (preview->widget.window, gc, 0,
 		      paper_left, paper_top,
-		      preview_ppi * paper_width / 72,
-		      preview_ppi * paper_height / 72);
+		      MAX(2, preview_ppi * paper_width / 72),
+		      MAX(2, preview_ppi * paper_height / 72));
 
   /* draw printable frame */
   gdk_draw_rectangle (preview->widget.window, gc, 0,
 		      printable_left, printable_top,
-		      preview_ppi * printable_width / 72,
-		      preview_ppi * printable_height / 72);
+		      MAX(2, preview_ppi * printable_width / 72),
+		      MAX(2, preview_ppi * printable_height / 72));
+
+  if (! frame_is_clear && !preview_was_valid)
+    gdk_window_clear_area(preview->widget.window,
+			  printable_left + 1, printable_top + 1,
+			  (preview_ppi * printable_width / 72) - 1,
+			  (preview_ppi * printable_height / 72) - 1);
+    
+  draw_arrow(preview->widget.window, gcclear, paper_left, paper_top, orient);
 
   if (adjusted_thumbnail_bpp == 1)
     gdk_draw_gray_image (preview->widget.window, gc,
@@ -2591,47 +2705,59 @@ gimp_do_preview_thumbnail(gint paper_left, gint paper_top, gint orient)
 			preview_x, preview_y, preview_w, preview_h,
 			GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
 
+  if (! frame_is_clear && preview_was_valid)
+    {
+      if (preview_x < opx)
+	{
+	  gdk_window_clear_area(preview->widget.window,
+				preview_x + preview_w, preview_y,
+				opx - preview_x, preview_h);
+	  if (preview_y < opy)
+	    gdk_window_clear_area(preview->widget.window,
+				  preview_x + preview_w,
+				  preview_y + preview_h,
+				  opx - preview_x,
+				  opy - preview_y);
+	  else if (opy < preview_y)
+	    gdk_window_clear_area(preview->widget.window,
+				  preview_x + preview_w,
+				  opy,
+				  opx - preview_x,
+				  preview_y - opy);
+	}
+      else if (preview_x > opx)
+	{
+	  gdk_window_clear_area(preview->widget.window, opx, preview_y,
+				preview_x - opx, preview_h);
+	  if (preview_y < opy)
+	    gdk_window_clear_area(preview->widget.window,
+				  opx,
+				  preview_y + preview_h,
+				  preview_x - opx,
+				  opy - preview_y);
+	  else if (opy < preview_y)
+	    gdk_window_clear_area(preview->widget.window,
+				  opx,
+				  opy,
+				  preview_x - opx,
+				  preview_y - opy);
+	}
+
+      if (preview_y < opy)
+	gdk_window_clear_area(preview->widget.window,
+			      preview_x, preview_y + preview_h,
+			      preview_w, opy - preview_y);
+      else if (preview_y > opy)
+	gdk_window_clear_area(preview->widget.window,
+			      preview_x, opy,
+			      preview_w, preview_y - opy);
+    }      
+
+  opx = preview_x;
+  opy = preview_y;
+
   /* draw orientation arrow pointing to top-of-paper */
-  u = preview_ppi/2;
-  ox = paper_left + preview_ppi * paper_width / 72 / 2;
-  oy = paper_top + preview_ppi * paper_height / 72 / 2;
-  if (orient == ORIENT_LANDSCAPE)
-    {
-      ox += preview_ppi * paper_width / 72 / 4;
-      if (ox > paper_left + preview_ppi * paper_width / 72 - u)
-	ox = paper_left + preview_ppi * paper_width / 72 - u;
-      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy - u);
-      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy + u);
-      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox - u, oy);
-    }
-  else if (orient == ORIENT_SEASCAPE)
-    {
-      ox -= preview_ppi * paper_width / 72 / 4;
-      if (ox < paper_left + u)
-	ox = paper_left + u;
-      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox, oy - u);
-      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox, oy + u);
-      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox + u, oy);
-    }
-  else if (orient == ORIENT_UPSIDEDOWN)
-    {
-      oy += preview_ppi * paper_height / 72 / 4;
-      if (oy > paper_top + preview_ppi * paper_height / 72 - u)
-	oy = paper_top + preview_ppi * paper_height / 72 - u;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox - u, oy);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox + u, oy);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox, oy - u);
-    }
-  else /* (orient == ORIENT_PORTRAIT) */
-    {
-      oy -= preview_ppi * paper_height / 72 / 4;
-      if (oy < paper_top + u)
-	oy = paper_top + u;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox - u, oy);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox + u, oy);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox, oy + u);
-    }
-  g_free(preview_data);
+  draw_arrow(preview->widget.window, gcinv, paper_left, paper_top, orient);
 }
 
 
