@@ -26,11 +26,13 @@
 #include <glib.h>
 #include <gimp-print/gimp-print-intl.h>
 
-#define INIT_LOCALE(domain)   G_STMT_START{ \
-        gtk_set_locale ();                  \
-        setlocale (LC_NUMERIC, "C");        \
-        bindtextdomain (domain, PACKAGE_LOCALE_DIR); \
-        textdomain (domain);                \
-                                }G_STMT_END
+#define INIT_LOCALE(domain)   					\
+do								\
+{								\
+        gtk_set_locale ();					\
+        setlocale (LC_NUMERIC, "C");				\
+        bindtextdomain (domain, PACKAGE_LOCALE_DIR);		\
+        textdomain (domain);					\
+} while (0)
 
 #endif /* __PRINT_INTL_H__ */
