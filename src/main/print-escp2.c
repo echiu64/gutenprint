@@ -1307,10 +1307,10 @@ static const escp2_dot_size_t photo_dotsizes =
 {    3,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc440_dotsizes =
-{    3,   -1,    3,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
+{    3,    3,   -1,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc640_dotsizes =
-{    3,   -1,    3,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
+{    3,    3,   -1,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c6pl_dotsizes =
 { 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
@@ -1325,7 +1325,7 @@ static const escp2_dot_size_t sc720_dotsizes =
 { 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
-{    3,   -1,    3,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
+{    3,    3,   -1,    3,    0,    3,    0,   -1,    0,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
 { 0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
