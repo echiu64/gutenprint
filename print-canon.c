@@ -871,8 +871,6 @@ canon_print(const printer_t *printer,		/* I - Model */
 
   if (printhead == 0 || caps.inks == CANON_INK_K)
     output_type = OUTPUT_GRAY;
-  else if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
-    output_type = OUTPUT_GRAY_COLOR;
 
   /*
    * Choose the correct color conversion function...
