@@ -83,8 +83,8 @@ typedef struct _IMAGE
   int row;		/* row number in buffer */
   int row_width;	/* length of a row */
   char *row_buf;	/* buffer for raster */
-  int total_bytes;	/* total size of raster */
-  int bytes_left;	/* bytes remaining to be read */
+  double total_bytes;	/* total size of raster */
+  double bytes_left;	/* bytes remaining to be read */
   GimpParamList *params;
 } IMAGE;
 
@@ -664,17 +664,17 @@ static int
 image_next_row(IMAGE *img)
 {
   int status = 0;
-  int n_bytes = img->bytes_left;
+  double n_bytes = img->bytes_left;
   if (img->bytes_left)
     {
 
       if (n_bytes > img->row_width)
 	n_bytes = img->row_width;
 #ifdef VERBOSE
-      STP_DEBUG(fprintf(stderr, "%d bytes left, reading %d, on row %d\n", 
-			bytes_left, n_bytes, img->row));
+      STP_DEBUG(fprintf(stderr, "%.0f bytes left, reading %.d, on row %d\n",
+			img->bytes_left, (int) n_bytes, img->row));
 #endif
-      status = ijs_server_get_data(img->ctx, img->row_buf, n_bytes);
+      status = ijs_server_get_data(img->ctx, img->row_buf, (int) n_bytes);
       if (status)
 	{
 	  STP_DEBUG(fprintf(stderr, "page aborted!\n"));
@@ -833,7 +833,10 @@ main (int argc, char **argv)
 
       status = ijs_server_get_page_header(img.ctx, &ph);
       if (status)
-	break;
+	{
+	  fprintf(stderr, _("ijs_server_get_page_header failed %d\n"), status);
+	  break;
+	}
       STP_DEBUG(fprintf(stderr, "got page header, %d x %d\n",
 			ph.width, ph.height));
       STP_DEBUG(stp_dbg("have page header", img.v));
@@ -892,8 +895,8 @@ main (int argc, char **argv)
 
       page++;
 
-      img.total_bytes = ((ph.n_chan * ph.bps * ph.width + 7) >> 3) 
-	* ph.height;
+      img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3) 
+	* (double) ph.height;
       img.bytes_left = img.total_bytes;
 
       stp_set_app_gamma(img.v, (float)1.7);
@@ -917,7 +920,7 @@ main (int argc, char **argv)
 	  status = image_next_row(&img);
 	  if (status)
 	    {
-	      fprintf(stderr, _("Get next row failed at %d\n"),
+	      fprintf(stderr, _("Get next row failed at %.0f\n"),
 		      img.bytes_left);
 	      break;
 	    }
