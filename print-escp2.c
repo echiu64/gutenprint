@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.34  1999/12/11 04:52:35  rlk
+ *   bug fixes
+ *
  *   Revision 1.33  1999/12/11 04:25:23  rlk
  *   various other print modes
  *
@@ -1581,7 +1584,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses)
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * vmod * jetsused * horizontal_weave);
+  linebufs = malloc(6 * 1536 * vmod * jets * horizontal_weave);
   lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
   linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
   passes = malloc(vmod * sizeof(pass_t));
@@ -1598,7 +1601,7 @@ initialize_weave(int jets, int sep, int osample, int v_subpasses)
 	  for (j = 0; j < 6; j++)
 	    {
 	      linebases[k * vmod + i].v[j] = bufbase;
-	      bufbase += 1536 * jetsused;
+	      bufbase += 1536 * jets;
 	    }
 	}
     }
