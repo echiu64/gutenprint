@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.28  2000/02/22 08:18:17  gandy
+ *   Fixed bug introduced with last commit (thou shall never prettify your source...)
+ *
  *   Revision 1.27  2000/02/22 08:08:39  gandy
  *   Some minor cosmethics
  *
@@ -768,7 +771,7 @@ canon_advance_buffer(unsigned char *buf, int len, int num)
 /*
  * 'canon_print()' - Print an image to an CANON printer.
  */
-static void
+void
 canon_print(int       model,		/* I - Model */
             int       copies,		/* I - Number of copies */
             FILE      *prn,		/* I - File to print to */
@@ -1243,6 +1246,7 @@ canon_print(int       model,		/* I - Model */
       } else {
 	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		    yellow, lyellow, black);
+      }
 
       /* fprintf(stderr,","); */
 
