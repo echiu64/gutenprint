@@ -1,6 +1,6 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.1, a stable release in the 4.2
+    This is Gimp-Print version 4.2.2, a stable release in the 4.2
     series.  Gimp-Print is the print facility for the Gimp, and in
     addition a suite of drivers that may be used with common UNIX
     spooling systems using Ghostscript or CUPS.  These drivers provide
@@ -131,9 +131,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
 
-    If the version number (in this case, 4.2.1) does not match
+    If the version number (in this case, 4.2.2) does not match
     the version of Gimp-Print that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -164,15 +164,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(en)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(sv)
-		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.1(fr)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(en)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(sv)
+		    EPSON Stylus Photo EX, CUPS+GIMP-print v4.2.2(fr)
 
     you may wish to turn off the translation of PPD files:
 
@@ -565,11 +565,12 @@ KNOWN BUILD ISSUES
       as KUPS or http://localhost:631 to display many copies of each
       PPD file, all in the English (en) language.  In fact, the PPD
       files should be translated into Swedish, Polish, Norwegian,
-      French, Danish, and British English.  With CUPS 1.1.10 and
-      lower, there should be two copies of the (en) PPD file, and one
-      copy each of (sv), (no), (fr), (pl), (da), (sk), (el), and (nl).
-      With CUPS 1.1.11 and above, there should be (en), (en_GB), (sv),
-      (no), (fr), (pl), (da), (sk), (el), and (nl) PPD files.
+      French, Danish, Spanish, Slovakian, Greek, and British English.
+      With CUPS 1.1.10 and lower, there should be two copies of the
+      (en) PPD file, and one copy each of (sv), (no), (fr), (pl),
+      (da), (sk), (el), (es), and (nl).  With CUPS 1.1.11 and above,
+      there should be (en), (en_GB), (sv), (no), (fr), (pl), (da),
+      (sk), (el), (es), and (nl) PPD files.
 
       The PPD files are created by a program named "genppd" in the
       src/cups directory.  This program is called once for each
@@ -785,8 +786,8 @@ PACKAGING
       for each language installed.  At present, nine language
       translations are installed, in addition to the US English
       defaults: GB English, Swedish, Danish, Norwegian, French,
-      Polish, Slovakian, Greek, and Dutch.  You may wish to install
-      these selectively.
+      Polish, Slovakian, Greek, Spanish, and Dutch.  You may wish to
+      install these selectively.
 
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
