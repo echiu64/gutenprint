@@ -318,6 +318,10 @@ X     + Piecewise linear curves.  This is a more economical storage
 	This is COMPLETE in coding and first pass testing.  It needs
 	to be integrated into the GIMP plugin.
 
+	UPDATE 20040529 GTK does not support piecewise curves.
+	Therefore this would either require a GTK upgrade or a custom
+	widget.
+
 X     + Exposure of printer characteristics to the application level.
         This would allow printers to specify read-only parameters,
         such as the ordering of page output.  This would permit the
@@ -410,11 +414,18 @@ X     + Header file reorganization.  The purpose of this project is to
 	Needed prior to BETA, as change is pervasive and will break
 	programs.
 
+	This is COMPLETE.
+
       + Color management.  This is of strategic importance, but is not
         a release stopper as it can be added modularly after release.
         However, it's a quality perception issue.
 
 	Desirable for BETA.
+
+	As of 20040529 (decision effectively made much earlier) this
+	will not occur in 5.0.  This will either be done as a
+	mandatory RFE in 5.2 or as a compatible enhancement later in
+	5.0.
 
       + Investigation of a native OS X printer application layered on
         Gimp-print.
