@@ -90,15 +90,25 @@ These release notes contain the following sections:
      file names have been changed accordingly.  All programs using
      Gutenprint will need to be changed appropriately.
 
-  2) Color correction has been tweaked to improve tonality and hue.
+  2) The package now compiles on all GIMP 2.x releases.
 
-  3) Shared libraries now build correctly on AIX.
+  3) Color correction has been tweaked to improve tonality and hue.
 
-  4) The Print plugin for the GIMP now handles unnamed images
+  4) Shared libraries now build correctly on AIX.
+
+  5) The Print plugin for the GIMP now handles unnamed images
      correctly.
 
-  5) Various minor compilation problems have been fixed.
+  6) Various minor compilation problems have been fixed.
 
+  7) The Epson Stylus C65 and C66 has been retuned to improve quality
+     at 720x360 DPI.  On these printers, the 720x360 DPI mode produces
+     significantly better output quality than on most other printers.
+
+     At present, we do not know whether the C63 and C64 require the
+     same tunings as the C65 and C66.  We would appreciate people
+     trying both the C64 and C66 drivers with this printer and
+     reporting to us which driver produces better output.
 
 ================================================================
 
