@@ -2988,10 +2988,9 @@ set_media_size(const gchar *new_media_size)
 static gboolean
 refresh_all_options(gpointer data)
 {
-  g_idle_remove_by_data(data);
   do_all_updates();
   do_all_updates();		/* Update twice to pick up cascading changes */
-  return TRUE;
+  return FALSE;
 }
 
 static void
@@ -3010,7 +3009,7 @@ combo_callback(GtkWidget *widget, gpointer data)
       stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
       if (strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size(new_value);
-      g_idle_add(refresh_all_options, (gpointer) &refresh_all_options);
+      g_idle_add(refresh_all_options, NULL);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
 	update_adjusted_thumbnail();
       preview_update();
@@ -4045,10 +4044,9 @@ do_preview_thumbnail (void)
 static gboolean
 idle_preview_thumbnail(gpointer data)
 {
-  g_idle_remove_by_data(data);
   do_preview_thumbnail();
   thumbnail_update_pending = FALSE;
-  return TRUE;
+  return FALSE;
 }
 
 static void
@@ -4164,7 +4162,7 @@ preview_update (void)
   if (! suppress_preview_update && !thumbnail_update_pending)
     {
       thumbnail_update_pending = TRUE;
-      g_idle_add(idle_preview_thumbnail, (gpointer) &idle_preview_thumbnail);
+      g_idle_add(idle_preview_thumbnail, NULL);
     }
 }
 
