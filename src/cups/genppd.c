@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2001 by Easy Software Products.
+ *   Copyright 1993-2002 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -661,6 +661,12 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
   struct stat   dir;                    /* prefix dir status */
+  int		variable_sizes;		/* Does the driver support variable sizes? */
+  int		min_width,		/* Min/max custom size */
+		min_height,
+		max_width,
+		max_height;
+
 
  /*
   * Initialize driver-specific variables...
@@ -741,7 +747,11 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzprintf(fp, "*ModelName:     \"%s\"\n", driver);
   gzprintf(fp, "*ShortNickName: \"%s\"\n", long_name);
   gzprintf(fp, "*NickName:      \"%s, CUPS+GIMP-print v" VERSION "\"\n", long_name);
-  gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
+#if CUPS_PPD_PS_LEVEL == 2
+  gzputs(fp, "*PSVersion:	\"(2017.000) 705\"\n");
+#else
+  gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
+#endif /* CUPS_PPD_PS_LEVEL == 2 */
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", CUPS_PPD_PS_LEVEL);
   gzprintf(fp, "*ColorDevice:	%s\n",
            stp_get_output_type(printvars) == OUTPUT_COLOR ? "True" : "False");
@@ -763,7 +773,7 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   */
 
   v = stp_allocate_copy(printvars);
-
+  variable_sizes = 0;
   opts = (*(printfuncs->parameters))(p, NULL, "PageSize", &num_opts);
   defopt = (*(printfuncs->default_parameters))(p, NULL, "PageSize");
   the_papers = xmalloc(sizeof(paper_t) * num_opts);
@@ -775,6 +785,12 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
     if (!papersize)
     {
       printf("Unable to lookup size %s!\n", opts[i].name);
+      continue;
+    }
+
+    if (strcmp(opts[i].name, "Custom") == 0)
+    {
+      variable_sizes = 1;
       continue;
     }
 
@@ -800,6 +816,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
 
     cur_opt++;
   }
+
+  gzprintf(fp, "*VariableSizes: %s\n", variable_sizes ? "true" : "false");
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
@@ -841,11 +859,51 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*DefaultPaperDimension: ");
   gzputs(fp, defopt);
   gzputs(fp, "\n");
+
+  min_width  = 999999;
+  min_height = 999999;
+  max_width  = 0;
+  max_height = 0;
+
   for (i = 0; i < cur_opt; i ++)
   {
+    if (min_width > the_papers[i].width)
+      min_width = the_papers[i].width;
+    if (min_height > the_papers[i].height)
+      min_height = the_papers[i].height;
+    if (max_width < the_papers[i].width)
+      max_width = the_papers[i].width;
+    if (max_height < the_papers[i].height)
+      max_height = the_papers[i].height;
+
     gzprintf(fp, "*PaperDimension %s", the_papers[i].name);
     gzprintf(fp, "/%s:\t\"%d %d\"\n",
 	     the_papers[i].text, the_papers[i].width, the_papers[i].height);
+  }
+
+  if (variable_sizes)
+  {
+   /*
+    * Currently we can only determine the maximum width and height from
+    * the supported standard media sizes, and use the margins for the
+    * first standard size; eventually we need a driver interface that
+    * returns the values!  -- M Sweet
+    */
+
+    gzprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
+    gzprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
+    gzprintf(fp, "*HWMargins:      %d %d %d %d\n",
+	     the_papers[0].left, the_papers[0].bottom,
+	     the_papers[0].width - the_papers[0].right,
+	     the_papers[0].height - the_papers[0].top);
+    gzputs(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
+    gzprintf(fp, "*ParamCustomPageSize Width:        1 points %d %d\n",
+             min_width, max_width);
+    gzprintf(fp, "*ParamCustomPageSize Height:       2 points %d %d\n",
+             min_height, max_height);
+    gzputs(fp, "*ParamCustomPageSize WidthOffset:  3 points 0 0\n");
+    gzputs(fp, "*ParamCustomPageSize HeightOffset: 4 points 0 0\n");
+    gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n");
   }
 
   if (opts)
