@@ -31,6 +31,11 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.98  2000/02/26 16:09:35  rlk
+ *   1) Clean up (and maybe fix???) positioning.
+ *
+ *   2) Fix packing in multi-level code.
+ *
  *   Revision 1.97  2000/02/26 00:14:44  rlk
  *   Rename dither_{black,cmyk}4 to dither_{black,cmyk}_n, and add argument to specify how levels are to be encoded
  *
@@ -510,8 +515,8 @@ typedef model_cap_t model_class_t;
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
 #define MODEL_IMAGEABLE_PHOTO	0x4
-#define MODEL_IMAGEABLE_NEW	0x4
 #define MODEL_IMAGEABLE_600	0x8
+#define MODEL_IMAGEABLE_NEW	0xc
 
 #define MODEL_INIT_MASK		0xf0
 #define MODEL_INIT_COLOR	0x00
@@ -677,12 +682,12 @@ static model_cap_t model_capabilities[] =
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(96) | MODEL_MAKE_SEPARATION(2)),
   /* 14: Stylus Photo 750, 870 */
-  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
+  (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
   /* 15: Stylus Photo 1200, 1270 */
-  (MODEL_PAPER_1319 | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO2
+  (MODEL_PAPER_1319 | MODEL_IMAGEABLE_NEW | MODEL_INIT_PHOTO2
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
    | MODEL_VARIABLE_4 | MODEL_MAKE_XRES(360) | MODEL_COMMAND_1999
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(48) | MODEL_MAKE_SEPARATION(6)),
@@ -879,33 +884,45 @@ escp2_imageable_area(int  model,	/* I - Printer model */
                      int  *top)		/* O - Top position in points */
 {
   int	width, length;			/* Size of page */
-
+  /* Assuming 720 dpi ydpi hardware! */
+  int softweave_margin = (9 + (escp2_nozzles(model) - 1) *
+			  escp2_nozzle_separation(model)) / 10;
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
   switch (escp2_cap(model, MODEL_IMAGEABLE_MASK))
     {
     case MODEL_IMAGEABLE_PHOTO:
-/*    case MODEL_IMAGEABLE_NEW: */
       *left   = 9;
       *right  = width - 9;
-      *top    = length;
-      *bottom = 64;
+      *top    = length -
+	(((43 * 72) + 359) / 360); /* Softweave handled account later */
+      *bottom = 49 /* + softweave_margin */; /* 200 dots @ 360 dpi */
+      break;
+
+    case MODEL_IMAGEABLE_NEW:
+      *left   = 9;
+      *right  = width - 9;
+      *top    = length -
+	(((43 * 72) + 359) / 360); /* Softweave handled account later */
+      *bottom = 18 /* + softweave_margin */; /* 42 dots @ 360 dpi */
       break;
 
     case MODEL_IMAGEABLE_600:
       *left   = 8;
       *right  = width - 9;
-      *top    = length - 32;
-      *bottom = 40;
+      *top    = length -
+	(((43 * 72) + 359) / 360); /* Softweave handled account later */
+      *bottom = 49 /* + softweave_margin */;
       break;
 
     case MODEL_IMAGEABLE_DEFAULT:
     default:
       *left   = 14;
       *right  = width - 14;
-      *top    = length - 14;
-      *bottom = 40;
+      *top    = length -
+	(((43 * 72) + 359) / 360); /* Softweave handled account later */
+      *bottom = 49 /* + softweave_margin */;
       break;
     }
 }
@@ -1034,7 +1051,10 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
 	  }
 	else
-	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
+	  {
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
+	  }
         break;
     case MODEL_INIT_PHOTO2:
 	if (output_type == OUTPUT_GRAY)
@@ -1070,12 +1090,12 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	{
 	  /* This seems to confuse some printers... */
 	  fwrite("\033(c\010\000", 5, 1, prn);	/* Top/bottom margins */
-	  n = ydpi * (page_length - page_top) / 72;
+	  n = ydpi * (page_top) / 72;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	  putc(0, prn);
 	  putc(0, prn);
-	  n = ydpi * (page_length - page_bottom) / 72;
+	  n = ydpi * (page_length) / 72;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	  putc(0, prn);
@@ -1084,10 +1104,10 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       else
 	{
 	  fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
-	  n = ydpi * (page_length - page_top) / 72;
+	  n = ydpi * (page_top) / 72;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
-	  n = ydpi * (page_length - page_bottom) / 72;
+	  n = ydpi * (page_length) / 72;
 	  putc(n & 255, prn);
 	  putc(n >> 8, prn);
 	}
@@ -1106,7 +1126,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       fwrite("\033(D\004\000\100\070\170\050", 9, 1, prn);
 
       fwrite("\033(v\004\000", 5, 1, prn);     /* Absolute vertical position */
-      n = ydpi * (page_length - top) / 72;
+      n = ydpi * top / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
       putc(0, prn);
@@ -1120,17 +1140,15 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(n >> 8, prn);
 
       fwrite("\033(c\004\000", 5, 1, prn);	/* Top/bottom margins */
-      n = ydpi * (page_length - page_top) / 72;
+      n = ydpi * (page_top) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
-      n = ydpi * (page_length - page_bottom) / 72;
-      if (use_softweave)
-	n += 320 * ydpi / 720;
+      n = ydpi * (page_length) / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
 
       fwrite("\033(V\002\000", 5, 1, prn);    /* Absolute vertical position */
-      n = ydpi * (page_length - top) / 72;
+      n = ydpi * top / 72;
       putc(n & 255, prn);
       putc(n >> 8, prn);
     }
@@ -1403,14 +1421,10 @@ escp2_print(int       model,		/* I - Model */
   }
 
   if (left < 0)
-    left = (page_width - out_width) / 2 + page_left;
-  else
-    left = left + page_left;
+    left = (page_width - out_width) / 2;
 
   if (top < 0)
-    top  = (page_height + out_height) / 2 + page_bottom;
-  else
-    top = page_height - top + page_bottom;
+    top  = (page_height - out_height) / 2;
 
  /*
   * Let the user know what we're doing...
@@ -1421,6 +1435,9 @@ escp2_print(int       model,		/* I - Model */
  /*
   * Send ESC/P2 initialization commands...
   */
+  page_length += (4 + (escp2_nozzles(model) - 1) *
+		  escp2_nozzle_separation(model)) / 5; /* Top and bottom */
+  page_top = 0;
 
   escp2_init_printer(prn, model, output_type, ydpi, use_softweave,
 		     page_length, page_width, page_top, page_bottom,
@@ -1434,7 +1451,7 @@ escp2_print(int       model,		/* I - Model */
   out_width  = xdpi * out_width / 72;
   out_height = ydpi * out_height / 72;
 
-  left = ydpi * (left - page_left) / 72;
+  left = ydpi * left / 72;
 
  /*
   * Allocate memory for the raster data...
@@ -1642,23 +1659,23 @@ escp2_fold(const unsigned char *line,
   for (i = 0; i < single_length; i++)
     {
       outbuf[0] =
-	((line[0] & (1 << 7)) >> 1) +
-	((line[0] & (1 << 6)) >> 2) +
-	((line[0] & (1 << 5)) >> 3) +
-	((line[0] & (1 << 4)) >> 4) +
-	((line[single_length] & (1 << 7)) >> 0) +
-	((line[single_length] & (1 << 6)) >> 1) +
-	((line[single_length] & (1 << 5)) >> 2) +
-	((line[single_length] & (1 << 4)) >> 3);
+	((line[0] & (1 << 7)) >> 0) +
+	((line[0] & (1 << 6)) >> 1) +
+	((line[0] & (1 << 5)) >> 2) +
+	((line[0] & (1 << 4)) >> 3) +
+	((line[single_length] & (1 << 7)) >> 1) +
+	((line[single_length] & (1 << 6)) >> 2) +
+	((line[single_length] & (1 << 5)) >> 3) +
+	((line[single_length] & (1 << 4)) >> 4);
       outbuf[1] =
-	((line[0] & (1 << 3)) << 3) +
-	((line[0] & (1 << 2)) << 2) +
-	((line[0] & (1 << 1)) << 1) +
-	((line[0] & (1 << 0)) << 0) +
-	((line[single_length] & (1 << 3)) << 4) +
-	((line[single_length] & (1 << 2)) << 3) +
-	((line[single_length] & (1 << 1)) << 2) +
-	((line[single_length] & (1 << 0)) << 1);
+	((line[0] & (1 << 3)) << 4) +
+	((line[0] & (1 << 2)) << 3) +
+	((line[0] & (1 << 1)) << 2) +
+	((line[0] & (1 << 0)) << 1) +
+	((line[single_length] & (1 << 3)) << 3) +
+	((line[single_length] & (1 << 2)) << 2) +
+	((line[single_length] & (1 << 1)) << 1) +
+	((line[single_length] & (1 << 0)) << 0);
       line++;
       outbuf += 2;
     }
