@@ -385,7 +385,7 @@ create_new_combo(list_option_t *list_option, GtkWidget *table,
 		       1.0, 0.5, event_box, 1, TRUE);
 }
 
-static const char *
+const char *
 Combo_get_name(GtkWidget   *combo,
 	       const stp_string_list_t options)
 {

@@ -81,9 +81,13 @@ static GtkDrawingArea *swatch = NULL;
 static void
 dither_algo_callback (GtkWidget *widget, gpointer data)
 {
+  stp_string_list_t vec = NULL;
+  stp_parameter_t desc;
+  stp_describe_parameter(pv->v, "DitherAlgorithm", &desc);
   const gchar *new_algo =
-    gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (dither_algo_combo)->entry));
-  stp_set_string_parameter(pv->v, "DitherAlgorithm", new_algo);
+    Combo_get_name(dither_algo_combo, desc.bounds.str);
+  if (strcmp(stp_get_string_parameter(pv->v, "DitherAlgorithm"), new_algo) != 0)
+    stp_set_string_parameter(pv->v, "DitherAlgorithm", new_algo);
 }
 
 void
