@@ -139,46 +139,64 @@ compute_spline_deltas(stp_internal_curve_t *curve)
   double sig;
   double p;
 
-  y2[0] = 0.0;
-  u[0] = 0.0;
-
-  for (i = 1; i < curve->point_count - 1; i++)
-    {
-      sig = (i - (i - 1)) / ((i + 1) - (i - 1));
-      p = sig * y2[i - 1] + 2.0;
-      y2[i] = (sig - 1.0) / p;
-
-      u[i] = y[i + 1] - 2 * y[i] + y[i - 1];
-      u[i] = 3.0 * u[i] - sig * u[i - 1] / p;
-    }
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
     {
-      i = curve->point_count - 1;
-      sig = .5;
+      int reps = 3;
+      int count = reps * curve->real_point_count;
+      double *y2a = stp_malloc(sizeof(double) * count);
+      double *ua = stp_malloc(sizeof(double) * count);
+      y2a[0] = 0.0;
+      ua[0] = 0.0;
+      for (i = 1; i < count - 1; i++)
+	{
+	  int im1 = (i - 1);
+	  int ip1 = (i + 1);
+	  int im1a = im1 % curve->point_count;
+	  int ia = i % curve->point_count;
+	  int ip1a = ip1 % curve->point_count;
 
-      p = sig * y2[i - 1] + 2.0;
-      y2[i] = (sig - 1.0) / p;
-      u[i] = (y[0] - y[i]) - (y[i] - y[i - 1]);
-      u[i] = (6.0 * u[i] / 2) - sig * u[i - 1] / p;
+	  sig = (i - im1) / (ip1 - im1);
+	  p = sig * y2a[im1] + 2.0;
+	  y2a[i] = (sig - 1.0) / p;
 
-      p = sig * y2[i] + 2.0;
-      y2[0] = (sig - 1.0) / p;
-      u[i] = (y[1] - y[0]) / (y[0] - y[i]);
-      u[i] = (6.0 * u[i] / 2.0) - sig * u[i] / p;
+	  ua[i] = y[ip1a] - 2 * y[ia] + y[im1a];
+	  ua[i] = 3.0 * ua[i] - sig * ua[im1] / p;
+	}
+      y2a[count - 1] = 0.0;
+      for (k = count - 2 ; k >= 0; k--)
+	y2a[k] = y2a[k] * y2a[k + 1] + ua[k];
+      memcpy(u, ua + ((reps / 2) * curve->point_count),
+	     sizeof(double) * curve->real_point_count);
+      memcpy(y2, y2a + ((reps / 2) * curve->point_count),
+	     sizeof(double) * curve->real_point_count);
+      stp_free(y2a);
+      stp_free(ua);
     }
   else
     {
+      y2[0] = 0.0;
+      u[0] = 0.0;
+      for (i = 1; i < curve->real_point_count - 1; i++)
+	{
+	  int im1 = (i - 1);
+	  int ip1 = (i + 1);
+
+	  sig = (i - im1) / (ip1 - im1);
+	  p = sig * y2[im1] + 2.0;
+	  y2[i] = (sig - 1.0) / p;
+
+	  u[i] = y[ip1] - 2 * y[i] + y[im1];
+	  u[i] = 3.0 * u[i] - sig * u[im1] / p;
+	}
       y2[curve->real_point_count - 1] = 0.0;
-    }
-  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    {
-      k = curve->real_point_count - 2;
-      y2[k] = y2[k] * y2[0] + u[k];
+      u[curve->real_point_count - 1] = 0.0;
+      for (i = 0; i < curve->real_point_count; i++)
+	stp_erprintf("i %d y %.6f y2 %.6f u %.6f\n", i, y[i], y2[i], u[i]);
+      for (k = curve->real_point_count - 2; k > 0; k--)
+	y2[k] = y2[k] * y2[k + 1] + u[k];
     }
 
-  for (k = curve->point_count - 2; k >= 0; k--)
-    y2[k] = y2[k] * y2[k + 1] + u[k];
-  for (i = 0; i < curve->point_count; i++)
+  for (i = 0; i < curve->real_point_count; i++)
     stp_erprintf("i %d y %.6f y2 %.6f u %.6f\n", i, y[i], y2[i], u[i]);
   curve->interval = y2;
   stp_free(u);
@@ -874,8 +892,9 @@ interpolate_point_internal(const stp_curve_t curve, double where)
       double retval;
       int i = integer;
       int ip1 = integer + 1;
-      if (ip1 >= icurve->real_point_count - 1)
-	ip1 -= icurve->real_point_count - 1;
+
+      if (ip1 >= icurve->point_count)
+	ip1 -= icurve->point_count;
       retval = a * icurve->data[i] + b * icurve->data[ip1] +
 	((a * a * a - a) * icurve->interval[i] +
 	 (b * b * b - b) * icurve->interval[ip1]) / 6.0;
