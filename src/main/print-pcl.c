@@ -649,7 +649,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
     {12, 12, 18, 18},			/* non-A4 Margins */
-    {12, 12, 10, 10},			/* A4 Margins */
+    {12, 12, 18, 18},			/* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
     standard_papersizes,
@@ -977,7 +977,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
     ljsmall_papersizes,
@@ -990,7 +990,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF,
     ljsmall_papersizes,
@@ -1003,7 +1003,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
@@ -1016,7 +1016,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
@@ -1029,7 +1029,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljbig_papersizes,
@@ -1042,7 +1042,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
@@ -1055,7 +1055,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
     {12, 12, 18, 18},
-    {12, 12, 10, 10},	/* Check/Fix */
+    {12, 12, 18, 18},
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljbig_papersizes,
