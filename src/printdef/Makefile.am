@@ -39,6 +39,7 @@ noinst_PROGRAMS = printdef
 printdef_SOURCES = printdefl.l printdefy.y printdef.h
 
 printdefl.o: printdefy.o
+printdef.o: printdefy.o
 
 
 ## Clean

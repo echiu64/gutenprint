@@ -28,42 +28,37 @@ MAINT_CHARSET = latin1
 
 AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
-LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
-
-TESTS = testdither run-weavetest
-
+LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 ## Programs
-TEST_BIN = testdither escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint
+TESTPATTERN_BIN = testpattern
 
-noinst_PROGRAMS = @TEST_BIN@
-EXTRA_PROGRAMS = escp2-weavetest unprint escp2-unprint pcl-unprint bjc-unprint testdither
+bin_PROGRAMS = @TESTPATTERN_BIN@
 
-escp2_weavetest_SOURCES = escp2-weavetest.c
+EXTRA_PROGRAMS = testpattern
 
-escp2_weavetest.o: escp2_weavetest.c 
-escp2_weavetest_LDADD = $(LIBGIMPPRINT_LIBS)
-escp2_weavetest_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+LFLAGS = -i
+YFLAGS = -d
 
-unprint_SOURCES = unprint.c
+testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
+testpattern_LDADD = $(LIBGIMPPRINT_LIBS)
+testpattern_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
-escp2_unprint_SOURCES = escp2-unprint.c
-
-pcl_unprint_SOURCES = pcl-unprint.c
-
-bjc_unprint_SOURCES = bjc-unprint.c
-
-testdither_SOURCES = testdither.c
-testdither_LDADD = $(LIBGIMPPRINT_LIBS)
-testdither_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+testpatternl.o: testpatterny.o
+testpattern.o: testpatterny.o
 
 $(LIBGIMPPRINT_LIBS):
-	$(MAKE) -C ../src/main
+	$(MAKE) -C ../main
 
+SAMPLE_IMAGES = testpattern.sample
+
+pkgdatadir = $(datadir)/$(PACKAGE)/samples
+
+pkgdata_DATA = @SAMPLE_IMAGES@
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest
+DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
+EXTRA_DIST =  testpatterny.h testpattern.sample

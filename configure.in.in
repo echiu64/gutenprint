@@ -120,6 +120,7 @@ BUILD_CUPS=no
 BUILD_GHOST=no
 BUILD_FOOMATIC=no
 BUILD_TEST=no
+BUILD_TESTPATTERN=no
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 BUILD_ESCPUTIL=yes
 BUILD_LIBGIMPPRINT=yes
@@ -239,6 +240,16 @@ AC_ARG_ENABLE(libgimpprint,
   esac],[AC_MSG_RESULT([${BUILD_LIBGIMPPRINT}])])
 
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
+AC_MSG_CHECKING([whether to build testpattern generator])
+AC_ARG_WITH(testpattern,
+[  --with-testpattern       build testpattern generator [default=${BUILD_TESTPATTERN}]],
+  [case "${withval}" in
+    yes) BUILD_TESTPATTERN="yes" ; AC_MSG_RESULT([yes]) ;;
+    no) BUILD_TESTPATTERN="no" ; AC_MSG_RESULT([no]) ;;
+    *) AC_MSG_RESULT([unknown])
+       AC_MSG_ERROR([bad value ${enableval} for --enable-testpattern]) ;;
+  esac],[AC_MSG_RESULT([${BUILD_TESTPATTERN}])])
+
 AC_MSG_CHECKING([whether to build test programs])
 AC_ARG_ENABLE(test,
 [  --enable-test           build test programs [default=${BUILD_TEST}]],
@@ -427,6 +438,11 @@ if test x${BUILD_TEST} = xyes ; then
   TEST_BIN='$(TEST_BIN)'
 fi
 AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
+
+if test x${BUILD_TESTPATTERN} = xyes ; then
+  TESTPATTERN_BIN='$(TESTPATTERN_BIN)'
+fi
+AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
 if test x${BUILD_GIMP} = xyes ; then
@@ -541,6 +557,7 @@ AC_SUBST(CUPS_NOINST_BIN)
 AC_SUBST(FOOMATIC_NOINST_BIN)
 AC_SUBST(FOOMATIC_INSTALL)
 AC_SUBST(TEST_BIN)
+AC_SUBST(TESTPATTERN_BIN)
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 AC_SUBST(ESCPUTIL_BIN)
 AC_SUBST(ESCPUTIL_MAN)
@@ -584,7 +601,7 @@ Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile man/escputil.1
 man/gimpprint.3
 man/gimpprint-config.1 po/Makefile.in samples/Makefile src/Makefile
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
-man/cups-calibrate.8
+man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon 
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
