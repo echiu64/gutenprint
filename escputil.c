@@ -25,10 +25,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <fcntl.h>
 
 struct option optlist[] =
 {
   { "printer-name",	1,	NULL,	(int) 'P' },
+  { "raw-device",	1,	NULL,	(int) 'r' },
+  { "ink-level",	0,	NULL,	(int) 'i' },
   { "clean-head",	0,	NULL,	(int) 'c' },
   { "nozzle-check",	0,	NULL,	(int) 'n' },
   { "align-head",	0,	NULL,	(int) 'a' },
@@ -36,10 +40,12 @@ struct option optlist[] =
   { "help",		0,	NULL,	(int) 'h' },
   { "new-series",	0,	NULL,	(int) 'l' },
   { "old-series",	0,	NULL,	(int) 'o' },
+  { "identify",		0,	NULL,	(int) 'd' },
   { NULL,		0,	NULL,	0 	  }
 };
 
 char *printer = NULL;
+char *raw_device = NULL;
 char printer_cmd[1025];
 int bufpos = 0;
 int isUSB = 0;
@@ -64,9 +70,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n";
 
 
 char *help_msg = "\
-Usage: escputil [-P printer] [-u] [-c | -n | -a]\n\
+Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i]\n\
     -P|--printer-name  Specify the name of the printer to operate on.\n\
                        Default is the default system printer.\n\
+    -r|--raw-device    Specify the name of the device to write to directly\n\
+                       rather than going through a printer queue.\n\
     -c|--clean-head    Clean the print head.\n\
     -n|--nozzle-check  Print a nozzle test pattern.\n\
                        Dirty or clogged nozzles will show as gaps in the\n\
@@ -75,6 +83,8 @@ Usage: escputil [-P printer] [-u] [-c | -n | -a]\n\
     -a|--align-head    Align the print head.  CAUTION: Misuse of this\n\
                        utility may result in poor print quality and/or\n\
                        damage to the printer.\n\
+    -i|--ink-level     Obtain the ink level from the printer.  This requires\n\
+                       read/write access to the raw printer device.\n\
     -l|--new-series    For newer ESCP/2 printers (Epson Stylus Color 440\n\
                        and newer; Epson Stylus Photo 750 and newer).\n\
     -o|--old-series    For older ESCP/2 printers.\n\
@@ -85,6 +95,8 @@ void initialize_print_cmd(void);
 void do_head_clean(void);
 void do_nozzle_check(void);
 void do_align(void);
+void do_ink_level(void);
+void do_identify(void);
 
 void
 do_help(int code)
@@ -96,13 +108,13 @@ do_help(int code)
 int
 main(int argc, char **argv)
 {
-  char operation = 0;
+  int operation = 0;
   int c;
   printf("%s\n", banner);
   while (1)
     {
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:cnauol", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:icnaduol", optlist, &option_index);
       if (c == -1)
 	break;
       switch (c)
@@ -114,23 +126,31 @@ main(int argc, char **argv)
 	  isNew = 0;
 	  break;
 	case 'c':
-	  if (operation)
-	    do_help(1);
-	  operation = 'c';
-	  break;
+	case 'i':
 	case 'n':
-	  if (operation)
-	    do_help(1);
-	  operation = 'n';
-	  break;
 	case 'a':
+	case 'd':
 	  if (operation)
 	    do_help(1);
-	  operation = 'a';
+	  operation = c;
 	  break;
 	case 'P':
+	  if (printer || raw_device)
+	    {
+	      printf("You may only specify one printer or raw device.\n");
+	      do_help(1);
+	    }
 	  printer = malloc(strlen(optarg) + 1);
 	  strcpy(printer, optarg);
+	  break;
+	case 'r':
+	  if (printer || raw_device)
+	    {
+	      printf("You may only specify one printer or raw device.\n");
+	      do_help(1);
+	    }
+	  raw_device = malloc(strlen(optarg) + 1);
+	  strcpy(raw_device, optarg);
 	  break;
 	case 'u':
 	  isUSB = 1;
@@ -154,8 +174,14 @@ main(int argc, char **argv)
     case 'n':
       do_nozzle_check();
       break;
+    case 'i':
+      do_ink_level();
+      break;
     case 'a':
       do_align();
+      break;
+    case 'd':
+      do_identify();
       break;
     default:
       do_help(1);
@@ -172,34 +198,47 @@ do_print_cmd(void)
   char *command;
   memcpy(printer_cmd + bufpos, "\f\033\000\033\000", 5);
   bufpos += 5;
+  if (raw_device)
+    {
+      pfile = fopen(raw_device, "rb");
+      if (!pfile)
+	{
+	  fprintf(stderr, "Cannot open device %s: %s\n", raw_device,
+		  strerror(errno));
+	  return 1;
+	}
+    }
+  else
+    {
 #if defined(LPR_COMMAND)
-  if (printer == NULL)
-    {
-      command = malloc(strlen(LPR_COMMAND) + 32);
-      sprintf(command, "%s -l", LPR_COMMAND);
-    }
-  else
-    {
-      command = malloc(strlen(LPR_COMMAND) + strlen(printer) + 32);
-      sprintf(command, "%s -P%s -l", LPR_COMMAND, printer);
-    }
+      if (printer == NULL)
+	{
+	  command = malloc(strlen(LPR_COMMAND) + 32);
+	  sprintf(command, "%s -l", LPR_COMMAND);
+	}
+      else
+	{
+	  command = malloc(strlen(LPR_COMMAND) + strlen(printer) + 32);
+	  sprintf(command, "%s -P%s -l", LPR_COMMAND, printer);
+	}
 #elif defined(LP_COMMAND)
-  if (printer == NULL)
-    {
-      command = malloc(strlen(LP_COMMAND) + 32);
-      sprintf(command, "%s -s", LPR_COMMAND);
-    }
-  else
-    {
-      command = malloc(strlen(LP_COMMAND) + 32);
-      sprintf(command, "%s -s -d%s", LPR_COMMAND, printer);
-    }
+      if (printer == NULL)
+	{
+	  command = malloc(strlen(LP_COMMAND) + 32);
+	  sprintf(command, "%s -s", LPR_COMMAND);
+	}
+      else
+	{
+	  command = malloc(strlen(LP_COMMAND) + 32);
+	  sprintf(command, "%s -s -d%s", LPR_COMMAND, printer);
+	}
 #endif
-  if ((pfile = popen(command, "w")) == NULL)
-    {
-      fprintf(stderr, "Cannot print to printer %s with %s\n", printer,
-	      command);
-      return 1;
+      if ((pfile = popen(command, "w")) == NULL)
+	{
+	  fprintf(stderr, "Cannot print to printer %s with %s\n", printer,
+		  command);
+	  return 1;
+	}
     }
   while (bytes < bufpos)
     {
@@ -210,14 +249,20 @@ do_print_cmd(void)
 	  if (retries > 2)
 	    {
 	      fprintf(stderr, "Unable to send command to printer\n");
-	      pclose(pfile);
+	      if (raw_device)
+		fclose(pfile);
+	      else
+		pclose(pfile);
 	      return 1;
 	    }
 	}
       else if (status == -1)
 	{
 	  fprintf(stderr, "Unable to send command to printer\n");
-	  pclose(pfile);
+	  if (raw_device)
+	    fclose(pfile);
+	  else
+	    pclose(pfile);
 	  return 1;
 	}
       else
@@ -226,6 +271,10 @@ do_print_cmd(void)
 	  retries = 0;
 	}
     }
+  if (raw_device)
+    fclose(pfile);
+  else
+    pclose(pfile);
   pclose(pfile);
   return 0;
 }
@@ -276,6 +325,127 @@ add_newlines(int count)
       printer_cmd[bufpos++] = '\n';
     }
 }
+
+void
+add_resets(int count)
+{
+  int i;
+  for (i = 0; i < count; i++)
+    {
+      printer_cmd[bufpos++] = '\033';
+      printer_cmd[bufpos++] = '\000';
+    }
+}
+
+char *colors[] = {
+  "Black", "Cyan", "Magenta", "Yellow", "Light Cyan", "Light Magenta", 0
+};
+
+void
+do_ink_level(void)
+{
+  int fd;
+  int status;
+  char buf[1024];
+  char *ind;
+  int i;
+  if (!raw_device)
+    {
+      fprintf(stderr, "Obtaining ink levels requires using a raw device.\n");
+      exit(1);
+    }
+  fd = open(raw_device, O_RDWR, 0666);
+  if (fd == -1)
+    {
+      fprintf(stderr, "Cannot open %s read/write: %s\n", raw_device,
+	      strerror(errno));
+      exit(1);
+    }
+  do_remote_cmd("IQ", 1, 1, 0, 0, 0);
+  add_resets(2);
+  if (write(fd, printer_cmd, bufpos) < bufpos)
+    {
+      fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
+      exit(1);
+    }
+  sleep(1);
+  memset(buf, 0, 1024);
+  status = read(fd, buf, 1023);
+  if (status < 0)
+    {
+      fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
+      exit(1);
+    }
+  ind = index(buf, 'I');
+  if (!ind || ind[1] != 'Q' || ind[2] != ':')
+    {
+      fprintf(stderr, "Cannot parse output from printer\n");
+      exit(1);
+    }
+  ind += 3;
+  printf("%20s    %s\n", "Ink color", "Percent remaining");
+  for (i = 0; i < 6; i++)
+    {
+      int val, j;
+      if (!ind[0] || ind[0] == ';')
+	exit(0);
+      for (j = 0; j < 2; j++)
+	{
+	  if (ind[j] >= '0' && ind[j] <= '9')
+	    ind[j] -= '0';
+	  else if (ind[j] >= 'A' && ind[j] <= 'F')
+	    ind[j] = ind[j] - 'A' + 10;
+	  else if (ind[j] >= 'a' && ind[j] <= 'f')
+	    ind[j] = ind[j] - 'a' + 10;
+	  else
+	    exit(1);
+	}
+      val = (ind[0] << 4) + ind[1];
+      printf("%20s    %3d\n", colors[i], val);
+      ind += 2;
+    }
+  (void) close(fd);
+  exit(0);
+}
+
+void
+do_identify(void)
+{
+  int fd;
+  int status;
+  char buf[1024];
+  if (!raw_device)
+    {
+      fprintf(stderr, "Printer identification requires using a raw device.\n");
+      exit(1);
+    }
+  fd = open(raw_device, O_RDWR, 0666);
+  if (fd == -1)
+    {
+      fprintf(stderr, "Cannot open %s read/write: %s\n", raw_device,
+	      strerror(errno));
+      exit(1);
+    }
+  bufpos = 0;
+  sprintf(printer_cmd, "\033\001@EJL ID\r\n");
+  if (write(fd, printer_cmd, strlen(printer_cmd)) < strlen(printer_cmd))
+    {
+      fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
+      exit(1);
+    }
+  sleep(1);
+  memset(buf, 0, 1024);
+  status = read(fd, buf, 1023);
+  if (status < 0)
+    {
+      fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
+      exit(1);
+    }
+  printf("%s\n", buf);
+  (void) close(fd);
+  exit(0);
+}
+
 
 void
 do_head_clean(void)
