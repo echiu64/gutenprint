@@ -22,22 +22,15 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
 </p>
 
-<P><strong><em><font color="#ff0000">New as of October 4,
-2000!</font></em></strong> Version 4.0b2 is now released.  This is the
-second beta release of 4.0, following the 3.1 development cycle.  We
+<P><strong><em><font color="#ff0000">New as of October 12,
+2000!</font></em></strong> Version 4.0b3 is now released.  This is the
+third beta release of 4.0, following the 3.1 development cycle.  We
 anticipate that this will be the last beta release before 4.0, barring
 unexpected problems.  This version contains GhostScript and CUPS
 drivers equal to the Print plugin in all respects, including supported
 printers.  <strong>Please read the Ghost/README file very carefully if
 you use the Ghostscript driver, as the usage is completely different
 from all prior releases!</strong></p>
-
-<P><strong><em><font color="#ff0000">New as of October 11,
-2000!</font></em></strong> An updated configure script is now
-available for download at
-<a href="http://download.sourceforge.net/gimp-print/configure">http://download.sourceforge.net/gimp-print/configure</a>.  If you've had
-problems with the 4.0b2 configure script, please try this.  We need to
-know if it works prior to the next release.</p>
 
 <P>Please check out <a
 href="https://sourceforge.net/project/?group_id=1537">our
