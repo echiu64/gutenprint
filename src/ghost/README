@@ -1314,6 +1314,7 @@ STP: -sDither=algorithm
 IJS: -sIjsParams=Dither=algorithm
 
 Adaptive        Adaptive Hybrid
+EvenTone        EvenTone screening (experimental)
 Ordered         Ordered
 Fast            Fast
 VeryFast        Very Fast
@@ -1323,6 +1324,17 @@ For highest quality, we recommend use of Adaptive Hybrid dithering.
 For continuous tone images, Ordered works just as well and is somewhat
 faster.  Ordered dithering yields noticeably inferior results with
 text and intricate line art, particularly at high resolutions.
+
+EvenTone dithering is a relatively new screening technology developed
+by Raph Levien.  It offers superior smoothness in highlights and
+midtones, and increased accuracy in shadows, resulting in
+significantly improved results overall.  The version of EvenTone
+dithering that we are using is enhanced with some additional
+improvements we have made.  It currently only operates with CMYK (4,
+6, or 7 color output) with RGB input, and should be considered
+experimental.  Note that it is patented (see US patent 5917614), but
+it is licensed for use with GPL software.  See
+http://www.levien.com/patents.html for more information.
 
 Fast dithering, which is a simplified version of ordered dither, is
 significantly faster, but color accuracy is worse, particularly on six

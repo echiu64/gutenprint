@@ -1,11 +1,7 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1, released April 26, 2002, is a stable release in the
-Gimp-Print 4.2 line.  This release primarily contains bug fixes; the
-one major piece of new functionality is an IJS-based Ghostscript
-plugin driver.  Please check the supported printers list for a
-complete list of supported printers; there have been a few additions
-from 4.2.0.
+Gimp-Print 4.2.2-pre1, released May 11, 2002, is a prerelease in
+the Gimp-Print 4.2 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
@@ -24,6 +20,21 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+
+Gimp-Print 4.2.2-pre1 contains the following major changes over
+Gimp-Print 4.2.1:
+
+  1) A new dither algorithm, EvenTone, has been added.  This algorithm
+     produces superior results for photographs and other
+     continuous-tone images, but in its current form it may not be as
+     well suited for solid color images and line art.  This algorithm
+     should be considered beta.
+
+  2) The default optimization level with gcc is now -O2 rather than
+     -O.  This improves performance somewhat.
+
+  3) Spanish and Portuguese translations have been added.
 
 
 Gimp-Print 4.2.1 contains the following major changes over Gimp-Print
