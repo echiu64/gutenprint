@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.1-pre4, released March 30, 2002, is a pre-release of
+Gimp-Print 4.2.1-pre5, released March 30, 2002, is a pre-release of
 Gimp-Print 4.2.1.  This prerelease offers a number of fixes and
 improvements over 4.2.0
 
@@ -21,6 +21,17 @@ or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
+
+Gimp-Print 4.2.1-pre5 contains the following major changes and fixes
+over Gimp-Print 4.2.1-pre4:
+
+  1) Attempts to print in grayscale with the new IJS driver in
+     Foomatic fail with a rangecheck error.
+
+The following bug is fixed in 4.2.1-pre5:
+
+537293 Wrong parameter for grayscale
+
 
 Gimp-Print 4.2.1-pre4 contains the following major changes and fixes
 over Gimp-Print 4.2.1-pre3:
