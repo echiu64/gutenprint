@@ -340,7 +340,7 @@ dnl Require CUPS 1.1...
 fi
 
 dnl GIMP checks
-if test x${BUILD_GIMP} = xyes -o -n ${BUILD_PACKAGE} ; then
+if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
   AM_PATH_GIMP(1.0.0,
     [SAVE_GTK_LIBS="$GIMP_LIBS"
     SAVE_GTK_CFLAGS="$GIMP_CFLAGS"],

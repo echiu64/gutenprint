@@ -1,9 +1,9 @@
 # Configure paths for gimp-print
-# Roger Leigh (based on gimpprint.m4 by
-# Owen Taylor     97-11-3)
+# Roger Leigh -- Sat, 10 Feb 2001
+# (based on gimpprint.m4 by Owen Taylor     97-11-3)
 
 dnl AM_PATH_GIMPPRINT([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
-dnl Test for GIMPPRINT, and define GIMPPRINT_CFLAGS and GIMPPRINT_LIBS
+dnl Test for GIMP-PRINT, and define GIMPPRINT_CFLAGS and GIMPPRINT_LIBS
 dnl
 AC_DEFUN(AM_PATH_GIMPPRINT,
 [dnl 
@@ -33,7 +33,7 @@ AC_ARG_ENABLE(gimpprinttest, [  --disable-gimpprinttest Do not try to compile an
 
   AC_PATH_PROG(GIMPPRINT_CONFIG, gimpprint-config, no)
   min_gimpprint_version=ifelse([$1], ,4.1.4,$1)
-  AC_MSG_CHECKING(for GIMPPRINT - version >= $min_gimpprint_version)
+  AC_MSG_CHECKING(for GIMP-PRINT - version >= $min_gimpprint_version)
   no_gimpprint=""
   if test "$GIMPPRINT_CONFIG" = "no" ; then
     no_gimpprint=yes
@@ -52,7 +52,7 @@ AC_ARG_ENABLE(gimpprinttest, [  --disable-gimpprinttest Do not try to compile an
       CFLAGS="$CFLAGS $GIMPPRINT_CFLAGS"
       LIBS="$GIMPPRINT_LIBS $LIBS"
 dnl
-dnl Now check if the installed GIMPPRINT is sufficiently new. (Also sanity
+dnl Now check if the installed GIMP-PRINT is sufficiently new. (Also sanity
 dnl checks the results of gimpprint-config to some extent
 dnl
       rm -f conf.gimpprinttest
@@ -83,11 +83,11 @@ main ()
       (gimpprint_minor_version != $gimpprint_config_minor_version) ||
       (gimpprint_micro_version != $gimpprint_config_micro_version))
     {
-      printf("\n*** 'gimpprint-config --version' returned %d.%d.%d, but GIMPPRINT (%d.%d.%d)\n", 
+      printf("\n*** 'gimpprint-config --version' returned %d.%d.%d, but GIMP-PRINT (%d.%d.%d)\n", 
              $gimpprint_config_major_version, $gimpprint_config_minor_version, $gimpprint_config_micro_version,
              gimpprint_major_version, gimpprint_minor_version, gimpprint_micro_version);
       printf ("*** was found! If gimpprint-config was correct, then it is best\n");
-      printf ("*** to remove the old version of GIMPPRINT. You may also be able to fix the\n");
+      printf ("*** to remove the old version of GIMP-PRINT. You may also be able to fix the\n");
       printf("*** error by modifying your LD_LIBRARY_PATH enviroment variable, or by\n");
       printf("*** editing /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
       printf("*** required on your system.\n");
@@ -100,7 +100,7 @@ main ()
 	   (gimpprint_minor_version != GIMPPRINT_MINOR_VERSION) ||
            (gimpprint_micro_version != GIMPPRINT_MICRO_VERSION))
     {
-      printf("*** GIMPPRINT header files (version %d.%d.%d) do not match\n",
+      printf("*** GIMP-PRINT header files (version %d.%d.%d) do not match\n",
 	     GIMPPRINT_MAJOR_VERSION, GIMPPRINT_MINOR_VERSION, GIMPPRINT_MICRO_VERSION);
       printf("*** library (version %d.%d.%d)\n",
 	     gimpprint_major_version, gimpprint_minor_version, gimpprint_micro_version);
@@ -116,18 +116,19 @@ main ()
        }
      else
       {
-        printf("\n*** An old version of GIMPPRINT (%d.%d.%d) was found.\n",
+        printf("\n*** An old version of GIMP-PRINT (%d.%d.%d) was found.\n",
                gimpprint_major_version, gimpprint_minor_version, gimpprint_micro_version);
-        printf("*** You need a version of GIMPPRINT newer than %d.%d.%d. The latest version of\n",
+        printf("*** You need a version of GIMP-PRINT newer than %d.%d.%d. The latest version of\n",
 	       major, minor, micro);
-        printf("*** GIMPPRINT is always available from ftp://ftp.gimpprint.org.\n");
+        printf("*** GIMP-PRINT is always available from\n");
+	printf("*** http://sourceforge.net/project/showfiles.php?group_id=1537.\n");
         printf("***\n");
         printf("*** If you have already installed a sufficiently new version, this error\n");
         printf("*** probably means that the wrong copy of the gimpprint-config shell script is\n");
         printf("*** being found. The easiest way to fix this is to remove the old version\n");
-        printf("*** of GIMPPRINT, but you can also set the GIMPPRINT_CONFIG environment to point to the\n");
-        printf("*** correct copy of gimpprint-config. (In this case, you will have to\n");
-        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
+        printf("*** of GIMP-PRINT, but you can also set the GIMPPRINT_CONFIG environment to\n");
+        printf("*** point to the correct copy of gimpprint-config. (In this case, you will have\n");
+        printf("*** to modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
         printf("*** so that the correct libraries are found at run-time))\n");
       }
     }
@@ -144,15 +145,15 @@ main ()
   else
      AC_MSG_RESULT(no)
      if test "$GIMPPRINT_CONFIG" = "no" ; then
-       echo "*** The gimpprint-config script installed by GIMPPRINT could not be found"
-       echo "*** If GIMPPRINT was installed in PREFIX, make sure PREFIX/bin is in"
+       echo "*** The gimpprint-config script installed by GIMP-PRINT could not be found"
+       echo "*** If GIMP-PRINT was installed in PREFIX, make sure PREFIX/bin is in"
        echo "*** your path, or set the GIMPPRINT_CONFIG environment variable to the"
        echo "*** full path to gimpprint-config."
      else
        if test -f conf.gimpprinttest ; then
         :
        else
-          echo "*** Could not run GIMPPRINT test program, checking why..."
+          echo "*** Could not run GIMP-PRINT test program, checking why..."
           CFLAGS="$CFLAGS $GIMPPRINT_CFLAGS"
           LIBS="$LIBS $GIMPPRINT_LIBS"
           AC_TRY_LINK([
@@ -161,18 +162,19 @@ main ()
 #include <string.h>
 ],      [ return ((gimpprint_major_version) || (gimpprint_minor_version) || (gimpprint_micro_version)); ],
         [ echo "*** The test program compiled, but did not run. This usually means"
-          echo "*** that the run-time linker is not finding GIMPPRINT or finding the wrong"
-          echo "*** version of GIMPPRINT. If it is not finding GIMPPRINT, you'll need to set your"
-          echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
+          echo "*** that the run-time linker is not finding GIMP-PRINT or finding the wrong"
+          echo "*** version of GIMP-PRINT. If it is not finding GIMP-PRINT, you'll need to set"
+          echo "*** your LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
           echo "*** to the installed location  Also, make sure you have run ldconfig if that"
           echo "*** is required on your system"
 	  echo "***"
           echo "*** If you have an old version installed, it is best to remove it, although"
           echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH" ],
         [ echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occured. This usually means GIMPPRINT was incorrectly installed"
-          echo "*** or that you have moved GIMPPRINT since it was installed. In the latter case, you"
-          echo "*** may want to edit the gimpprint-config script: $GIMPPRINT_CONFIG" ])
+          echo "*** exact error that occured. This usually means GIMP-PRINT was incorrectly"
+          echo "*** installed or that you have moved GIMP-PRINT since it was installed. In the"
+          echo "*** latter case, you may want to edit the gimpprint-config script:"
+	  echo "*** $GIMPPRINT_CONFIG" ])
           CFLAGS="$ac_save_CFLAGS"
           LIBS="$ac_save_LIBS"
        fi

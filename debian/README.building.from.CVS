@@ -1,37 +1,34 @@
 Building this package from CVS
 ==============================
 
-If you checked this out of CVS, you'll notice that this supposedly
-Debianised package doesn't have the usual debian/rules or
-debian/control files.  That's because the package uses the automatic
-debian/rules-building tool "yada".
+Building from CVS currently requires a small modification to
+src/main/Makefile.am:
 
-To build the package from a fresh CVS checkout, do this:
+diff src/main/Makefile.am.orig src/main/Makefile.am
+55c55
+< libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
+---
+> ##libgimpprint_la_LDFLAGS = -release $(VERSION) -rpath $(libdir)
+64,68c64,68
+< ##libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
+< ##	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
+< ##	-export-dynamic                                         \
+< ##	-rpath $(libdir)                                        \
+< ##	@STRIP_END@
+---
+> libgimpprint_la_LDFLAGS = @STRIP_BEGIN@ \
+> 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)    \
+> 	-export-dynamic                                         \
+> 	-rpath $(libdir)                                        \
+> 	@STRIP_END@
 
-$ cd $topdir
-...to make sure your CWD is the parent of the "debian" directory
-$ sudo apt-get install yada
-...you need the "yada" package installed
-$ yada yada
-...to install a local copy of yada in the "debian" directory
-$ yada rebuild rules
-...to build debian/rules
-$ debian/rules clean
-...to build debian/control
+To build the packages, do:
+$ dpkg-buildpackage -rfakeroot -us -uc, or
+$ debuild
 
-Then you can build this package as if it were a normal Debian source
-package:
+It should build without problems on Debian stable (2.2/potato) and the current
+testing and unstable distributions.
 
-$ dpkg-buildpackage -rfakeroot
+I hope you like it!
 
-If you modify debian/packages, debian/rules should update itself
-and debian/control to match.  You should probably add an entry to
-debian/changelog before you build the package, too.
-
-If you want to build a plugin package for the Gimp 1.0, see the comments
-in debian/packages.
-
-Have fun!
-
--- 
-Charles Briscoe-Smith <cpbs@debian.org>  Tue, 23 May 2000 23:48:15 +0100
+Roger Leigh <roger@whinlatter.uklinux.net> -- Sat, 10 Feb 2001 21:44:22 +0000
