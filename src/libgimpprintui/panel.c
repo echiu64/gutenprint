@@ -603,6 +603,8 @@ check_page_size(const char *paper_size)
 static void
 build_a_combo(option_t *option)
 {
+  const gchar *new_value;
+  const gchar *old_value;
   if (option->fast_desc &&
       option->fast_desc->p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
@@ -643,6 +645,9 @@ build_a_combo(option_t *option)
     plist_build_combo(option->info.list.combo, option->info.list.label,
 		      NULL, 0, "", "", combo_callback,
 		      &(option->info.list.callback_id), NULL, option);
+  new_value =
+    stpui_combo_get_name(option->info.list.combo, option->info.list.params);
+  stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
 }
 
 static void
@@ -898,7 +903,7 @@ populate_option_table(GtkWidget *table, int p_class)
 }
 
 static void
-set_options_active(void)
+set_options_active(const char *omit)
 {
   int i;
   for (i = 0; i < current_option_count; i++)
@@ -906,6 +911,8 @@ set_options_active(void)
       option_t *opt = &(current_options[i]);
       const stp_parameter_t *desc = opt->fast_desc;
       GtkObject *adj;
+      if (omit && strcmp(omit, opt->fast_desc->name) == 0)
+	continue;
       switch (desc->p_type)
 	{
 	case STP_PARAMETER_TYPE_STRING_LIST:
@@ -2489,7 +2496,7 @@ update_options(void)
   gtk_widget_show(page_size_table);
   gtk_widget_show(printer_features_table);
   gtk_widget_show(color_adjustment_table);
-  set_options_active();
+  set_options_active(NULL);
 }
 
 static void
@@ -2766,6 +2773,14 @@ set_media_size(const gchar *new_media_size)
   setting_media_size--;
 }
 
+static gboolean
+refresh_all_options(gpointer data)
+{
+  g_idle_remove_by_data(data);
+  do_all_updates();
+  do_all_updates();		/* Update twice to pick up cascading changes */
+}
+
 static void
 combo_callback(GtkWidget *widget, gpointer data)
 {
@@ -2782,6 +2797,7 @@ combo_callback(GtkWidget *widget, gpointer data)
       stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
 	set_media_size(new_value);
+      g_idle_add(refresh_all_options, (gpointer) &refresh_all_options);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
 	update_adjusted_thumbnail();
       preview_update();
@@ -2823,7 +2839,7 @@ output_type_callback (GtkWidget *widget,
       stp_set_output_type (pv->v, (gint) data);
       invalidate_preview_thumbnail ();
       update_adjusted_thumbnail ();
-      set_options_active();
+      set_options_active(NULL);
       preview_update ();
       do_all_updates();
     }
