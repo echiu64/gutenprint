@@ -2809,7 +2809,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   eventone_t	*et;
   
   struct	channel_data {
-  	int dx, dy, r_sq, et_lo, et_hi, et_range, wetness, ri, point;
+  	int dx, dy, r_sq, wetness, ri, point;
 	int maxdot_dens;		/* Max dot size * density */
 	int maxdot_wet;			/* Maximum wetness allowed */
 	dither_segment_t dr;
@@ -2854,9 +2854,6 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
   for (i = 0; i < d->n_channels; i++)
   {
       struct channel_data *p = &cd[i];
-      p->et_hi = CHANNEL(d, i).ranges[0].upper->value / 20;
-      p->et_lo = 0;
-      p->et_range = p->et_hi - p->et_lo;
       p->wetness = 0;
       p->maxdot_dens = CHANNEL(d, i).maxdot * d->density;
       p->maxdot_wet = (65536 + d->density) * CHANNEL(d, i).maxdot;
@@ -2928,13 +2925,7 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	}
 
 	base = CHANNEL(d, i).b;
-	value = ndither[i];
-	if (base >= p->et_hi) {
-	  value += value;
-	} else if (base > p->et_lo) {
-	  value += value * (base - p->et_lo) / p->et_range;
-	}
-	value += base;
+	value = 2 * ndither[i] + base;
 
 	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	
@@ -3029,21 +3020,18 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
         if (useblack) {
 	  print_inks = (1 << ECOLOR_K);
 	  for (i=1; i < d->n_channels; i++) {
-	    if (cd[i].point <= adjusted_black) {
-	      cd[i].point = adjusted_black;
-	    } else {
+	    if (cd[i].point > adjusted_black) {
 	      print_inks |= (1 << i);
 	    }
 	  }
         } else {
 	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
-	  adjusted_black = 0;
 	}
 
         /* Adjust error values for dither */
 	ndither[ECOLOR_K] += CHANNEL(d, ECOLOR_K).b - printed_black;
         for (i=1; i < d->n_channels; i++) {
-	  ndither[i] += CHANNEL(d, i).b - (cd[i].point - adjusted_black);
+	  ndither[i] += CHANNEL(d, i).b - cd[i].point;
         }
       }
 
@@ -3078,18 +3066,12 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
       if ((x & (aspect-1)) == 0) {
 	for (i=0; i < d->n_channels; i++) {
-	  int fraction = 0;
+	  int fraction;
 	  int frac_2;
 	  int frac_3;
 	  int base;
 
-	  base = CHANNEL(d, i).b;
-	  if (base > cd[i].et_lo) {
-	    fraction = (ndither[i] + 5) / 10;
-	    if (base < cd[i].et_hi) {
-	      fraction = fraction * (base - cd[i].et_lo) / cd[i].et_range;
-	    }
-	  }
+	  fraction = (ndither[i] + 5) / 10;
 	  
 	  frac_2 = fraction + fraction;
 	  frac_3 = frac_2 + fraction;
