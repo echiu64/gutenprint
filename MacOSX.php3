@@ -14,10 +14,11 @@ require('standard_html_header.php3');
  <h4>
  High quality printer drivers for Canon, Epson, Lexmark, and PCL printers.
 </h4>
+<hr>
 <div align="right">
 September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
 </div>
-<H2>
+<h2>
  <font color="#ff0000"><a
  href="http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.2-0.ppc.dmg?download">Gimp-Print 4.2.2 for Mac OS X Jaguar</a> is now
  available!</font>
@@ -82,7 +83,7 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  href="http://www.cups.org/">CUPS</a>, the open-source print spooler
  built-in to Mac OS X Jaguar.
  </p>
- <P>
+ <p>
  Gimp-Print 4.2.2 is a stable release on the Gimp-Print 4.2 release line.
  We anticipate further releases in the 4.2 line, primarily to support new
  printers and improve functionality in existing printers. Concurrently, we
@@ -100,9 +101,9 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  <i>- The Gimp-Print Project Team</i>
  </p>
  <hr>
- <H3>
- A little History of Gimp-Print
- </H3>
+ <h3>
+ The History of Gimp-Print
+ </h3>
  <p>
  This package was first written by Michael Sweet of <a
  href="http://www.easysw.com">Easy Software Products</a>. In the summer
