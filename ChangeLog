@@ -1,3 +1,12 @@
+2000-10-19	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.55) (+102 -0)
+		configure.in (1.36) (+1 -1)
+		RELNOTES (1.33) (+191 -2)
+		README (1.35) (+24 -5)
+	
+	4.0.0rc1 prep
+	
 2000-10-18	<rlk@sourceforge.net>
 
 	Files:	Ghost/README (1.52) (+35 -26)
