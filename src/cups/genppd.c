@@ -1088,10 +1088,10 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
       for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
 	{
 	  int printed_open_group = 0;
-	  int print_close_ui = 1;
 	  size_t param_count = stp_parameter_list_count(param_list);
 	  for (l = 0; l < param_count; l++)
 	    {
+	      int print_close_ui = 1;
 	      const stp_parameter_t *lparam =
 		stp_parameter_list_param(param_list, l);
 	      if (lparam->p_class != j || lparam->p_level != k ||
