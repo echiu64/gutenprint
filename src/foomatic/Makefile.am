@@ -32,11 +32,19 @@ AM_CPPFLAGS =\
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 
-EXTRA_PROGRAMS = printer_options
+EXTRA_PROGRAMS = printer_options gimp-print-version paper_sizes
 
 printer_options_SOURCES = printer_options.c
 printer_options_LDADD = -lm $(LIBGIMPPRINT_LIBS)
 printer_options_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+gimp_print_version_SOURCES = gimp-print-version.c
+gimp_print_version_LDADD = -lm $(LIBGIMPPRINT_LIBS)
+gimp_print_version_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
+
+paper_sizes_SOURCES = paper_sizes.c
+paper_sizes_LDADD = -lm $(LIBGIMPPRINT_LIBS)
+paper_sizes_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../../src/main
@@ -55,6 +63,6 @@ install: @FOOMATIC_INSTALL@
 clean-local:
 	-rm -rf foomatic-db
 
-foomatic-data: printer_options
+foomatic-data: printer_options gimp-print-version paper_sizes
 	-rm -rf foomatic-db
 	./foomatic-generator

@@ -100,10 +100,10 @@ if ($missing_drivers) {
 }
 
 # Figure out version etc
-my $tmpver = `grep define.VERSION ../../config.h`;
-$tmpver =~ m!VERSION \"([^\"]+)\"!;
-my $stpvers = $1;
-$stpvers =~ s!\.\d+$!!;
+open PIPE, "./gimp-print-version|" or die "Cannot run gimp-print-version: $!\n";
+my $stpvers = <PIPE>;
+close PIPE or die "Cannot run gimp-print-version: $!\n";
+chomp $stpvers;
 print STDERR "Using drivername gimp-print\n";
 
 # Build <printers> clause...
@@ -337,13 +337,13 @@ sub optmap_pagesize {
 
     # Root around in print-util.c for lines in the pagesize struct
     if (!defined $pagemap) {
-	open PUTIL, "../main/print-util.c" or die "Cannot open ../main/print-util.c: $!\n";
+	open PUTIL, "./paper_sizes" or die "Cannot run paper_sizes: $!\n";
 	while (<PUTIL>) {
-	    if (m!\{\s*N_\s*\(\"([^\"]+)\"\)\s*\,\s*(\d+)\s*\,\s*(\d+)\s*\,\s*PAPERSIZE\_!) {
-		if ($2 > 0 and $3 > 0) {
-		    $pagemap->{$1} = "$2 $3";
-#		    print STDERR "PageSize '$1' driverval '$2 $3'\n"; 
-		}
+	    chomp;
+	    my ($name, $width, $height) = split;
+	    if ($width > 0 and $height > 0) {
+		$pagemap->{$name} = "$width $height";
+#		print STDERR "PageSize '$name' driverval '$width $height'\n"; 
 	    }
 	}
 	close PUTIL;
