@@ -396,6 +396,7 @@
 #gptofoo pcl-3 printer/Panasonic-KX-P4450
 #gptofoo pcl-3 printer/Tally-MT908
 #gptofoo pcl-3 printer/HP-LaserJet_3D
+#gptofoo pcl-3 printer/Generic-PCL_5_Printer
 #gptofoo pcl-4 printer/Brother-HL-10h
 #gptofoo pcl-4 printer/Brother-HL-660
 #gptofoo pcl-4 printer/Brother-HL-760
@@ -410,8 +411,6 @@
 #gptofoo pcl-4 printer/Brother-HL-2060
 #gptofoo pcl-4 printer/Canon-GP_335
 #gptofoo pcl-4 printer/DEC-LN17
-#gptofoo pcl-4 printer/Epson-EPL-5700
-#gptofoo pcl-4 printer/Epson-EPL-5800
 #gptofoo pcl-4 printer/Fujitsu-PrintPartner_10V
 #gptofoo pcl-4 printer/Fujitsu-PrintPartner_16DV
 #gptofoo pcl-4 printer/HP-LaserJet_4
@@ -452,7 +451,16 @@
 #gptofoo pcl-4 printer/Epson-AcuLaser_C2000PS
 #gptofoo pcl-4 printer/Epson-AcuLaser_C8500
 #gptofoo pcl-4 printer/Epson-AcuLaser_C8500PS
+#gptofoo pcl-4 printer/Epson-AcuLaser_C8600
+#gptofoo pcl-4 printer/Epson-AcuLaser_C8600PS
+#gptofoo pcl-4 printer/Epson-EPL-5700
+#gptofoo pcl-4 printer/Epson-EPL-5700PS
+#gptofoo pcl-4 printer/Epson-EPL-5800
+#gptofoo pcl-4 printer/Epson-EPL-5800PS
 #gptofoo pcl-4 printer/Epson-EPL-5900
+#gptofoo pcl-4 printer/Epson-EPL-5900PS
+#gptofoo pcl-4 printer/Epson-EPL-6100
+#gptofoo pcl-4 printer/Epson-EPL-6100PS
 #gptofoo pcl-4 printer/HP-Color_LaserJet_4550
 #gptofoo pcl-4 printer/HP-Color_LaserJet_5000
 #gptofoo pcl-4 printer/Ricoh-Aficio_401
@@ -468,7 +476,7 @@
 #gptofoo pcl-4 printer/Kyocera-FS-3800
 #gptofoo pcl-4 printer/Kyocera-FS-9100DN
 #gptofoo pcl-4 printer/Kyocera-FS-9500DN
-#gptofoo pcl-4 printer/Generic-PCL_5_5e_Printer
+#gptofoo pcl-4 printer/Generic-PCL_5e_Printer
 #gptofoo pcl-4 printer/Generic-PCL_5c_Printer
 #gptofoo pcl-4l printer/Canon-LBP-430
 #gptofoo pcl-4l printer/HP-LaserJet_4L
@@ -492,7 +500,7 @@
 #gptofoo pcl-6 printer/Xerox-DocuPrint_P1202
 #gptofoo pcl-6 printer/HP-LaserJet_6
 #gptofoo pcl-4 printer/HP-LaserJet_6P
-#gptofoo pcl-6 printer/HP-LaserJet_6L
+#gptofoo pcl-4 printer/HP-LaserJet_6L
 #gptofoo pcl-6 printer/HP-LaserJet_2100
 #gptofoo pcl-6 printer/HP-LaserJet_3200
 #gptofoo pcl-6 printer/HP-LaserJet_3200se
@@ -503,9 +511,12 @@
 #gptofoo pcl-6 printer/Infotec-4651_MF
 #gptofoo pcl-6 printer/HP-LaserJet_1100
 #gptofoo pcl-6 printer/HP-LaserJet_1100A
+#gptofoo pcl-6 printer/HP-LaserJet_1150
 #gptofoo pcl-6 printer/HP-LaserJet_1200
 #gptofoo pcl-6 printer/HP-LaserJet_1220
+#gptofoo pcl-6 printer/HP-LaserJet_1300
 #gptofoo pcl-6 printer/HP-LaserJet_2200
+#gptofoo pcl-6 printer/HP-LaserJet_2300
 #gptofoo pcl-6 printer/HP-LaserJet_3200m
 #gptofoo pcl-6 printer/HP-LaserJet_4100
 #gptofoo pcl-6 printer/HP-LaserJet_4200
