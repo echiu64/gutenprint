@@ -28,9 +28,9 @@ SUBDIRS = users_guide
 
 ## Variables
 
-MANUAL_L = gimpprint
+MANUAL = gimpprint
 HTMLDIR = manual-html
-DOCS = $(MANUAL_L).pdf $(MANUAL_L).ps $(MANUAL_L).dvi html
+DOCS = $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi html
 
 IMAGES = \
  print-color.png \
@@ -64,6 +64,13 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 all-local: $(DOCS)
 
 docs: $(DOCS)
+	cd users_guide; make docs
+
+ps: $(MANUAL).ps
+	cd users_guide; make ps
+
+pdf: $(MANUAL).pdf
+	cd users_guide; make pdf
 
 gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 
@@ -71,6 +78,7 @@ gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 html: html-stamp
+	cd users_guide; make html
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
@@ -87,16 +95,16 @@ html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	  SOURCE=$(srcdir) ; \
 	fi ; \
 	$(TEXI2HTML) -menu -split_node -number -expandinfo \
-	      -I $(srcdir) $${SOURCE}/$(MANUAL_L).texi 2>&1
+	      -I $(srcdir) $${SOURCE}/$(MANUAL).texi 2>&1
 	$(RM) -r $(HTMLDIR)
 	mv $(HTMLDIR)-tmp $(HTMLDIR)
 	touch html-stamp
 
-$(MANUAL_L).ps: $(MANUAL_L).dvi
-	$(DVIPS) $(MANUAL_L).dvi
+$(MANUAL).ps: $(MANUAL).dvi
+	$(DVIPS) $(MANUAL).dvi
 
-$(MANUAL_L).pdf: $(MANUAL_L).dvi
-	$(DVIPDF) $(MANUAL_L).dvi
+$(MANUAL).pdf: $(MANUAL).dvi
+	$(DVIPDF) $(MANUAL).dvi
 
 dist-hook: html
 	for dir in manual-html ; do \
@@ -112,15 +120,15 @@ dist-hook: html
 
 CLEAN_MANUALS = \
 	$(RM) -r html-stamp manual-html ; \
-	$(RM) $(MANUAL_L).pdf $(MANUAL_L).ps $(MANUAL_L).dvi ; \
+	$(RM) $(MANUAL).pdf $(MANUAL).ps $(MANUAL).dvi ; \
 	$(RM) $(EPS_IMAGES)
 
 clean-local:
 	if test $(srcdir) = '.' -a $(MAINT_MODE) = false ; then \
 	  echo 'clean-local: Not removing manual-html' ; \
-	  echo 'clean-local: Not removing $(MANUAL_L).pdf' ; \
-	  echo 'clean-local: Not removing $(MANUAL_L).ps' ; \
-	  echo 'clean-local: Not removing $(MANUAL_L).dvi' ; \
+	  echo 'clean-local: Not removing $(MANUAL).pdf' ; \
+	  echo 'clean-local: Not removing $(MANUAL).ps' ; \
+	  echo 'clean-local: Not removing $(MANUAL).dvi' ; \
 	  echo 'clean-local: Not removing EPS figures' ; \
 	else \
 	  $(CLEAN_MANUALS) ; \
