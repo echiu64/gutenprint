@@ -57,6 +57,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
 #ifdef INCLUDE_GIMP_PRINT_H
 #include INCLUDE_GIMP_PRINT_H
 #else
