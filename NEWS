@@ -82,6 +82,11 @@ Gimp-Print 4.1.8 contains the following changes over 4.1.7:
    output, grossly wrong output (likely with vertical bands or
    streaks), or crashes.  Please report any problems you may find.
 
+15) The package as a whole is compiled with more warnings enabled
+   (when gcc is used).  While most of the warnings have been cleaned
+   up, some of them cannot easily be removed (they're due to issues
+   with external header files or other tools, for example).
+
 Gimp-Print 4.1.8 has the following known issues:
 
 1) The Canon driver currently produces incorrect or no output on many
