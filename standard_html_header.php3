@@ -37,7 +37,7 @@ H1 {
 
 <TABLE BORDER="0">
 <TR><TD>
-<? includeImage('top_image','Welcome to the gimp-print Website','1') ?>
+<? includeImage('top_image','Welcome to the gimp-print Website','0') ?>
 </TD><TD>
 <P>
 <a
