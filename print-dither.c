@@ -314,7 +314,7 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
 	  array[x + y * mat->x_size];
 	mat->matrix[x + y * mat->x_size] =
 	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	  (long long) (mat->x_size * mat->x_size);
+	  (long long) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
@@ -339,7 +339,7 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
 	  array[x + y * mat->x_size];
 	mat->matrix[x + y * mat->x_size] =
 	  (long long) mat->matrix[x + y * mat->x_size] * 65536ll /
-	  (long long) (mat->x_size * mat->x_size);
+	  (long long) (mat->x_size * mat->y_size);
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
