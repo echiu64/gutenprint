@@ -31,11 +31,11 @@ require('standard_html_header.php3');
  </tr>
  <tr>
  <td>
- <p>
- <a href="MacOSX.php3#4.2.6-pre3"><b>November 3, 2003 -</b></a> Gimp-Print 4.2.6-pre3 is now available for download.
+<p>
+ <a href="MacOSX.php3#uninstall-1.1"><b>November 5, 2003 -</b></a> A Gimp-Print uninstaller is now available for download.
  </p>
  <p>
- <a href="MacOSX.php3#uninstall-1.1"><b>November 3, 2003 -</b></a> A Gimp-Print uninstaller is now available for download.
+ <a href="MacOSX.php3#4.2.6-pre3"><b>November 3, 2003 -</b></a> Gimp-Print 4.2.6-pre3 is now available for download.
  </p>
  <p>
  <a href="MacOSX.php3#4.3.18"><b>July 08, 2003 -</b></a> Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.x) of Gimp-Print. Currently, the 4.3.x line is not entirely functional in Mac OS X Jaguar. Almost all users should continue to use the 4.2.x line until the current issues with 4.3.x are resolved.  See the <a href="MacOSX.php3#4.3.18">news item</a> for more details, especially if you ever installed 4.3.17.
@@ -142,7 +142,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre3.ppc.dmg?download"
- >gimp-print-4.2.6-pre3.ppc.dmg</a>&nbsp;(5.8 MB)
+ >gimp-print-4.2.6-pre3.ppc.dmg</a>&nbsp;(5.5 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -187,7 +187,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-uninstaller-1.1.dmg?download"
- >gimp-print-uninstaller-1.1.dmg</a>&nbsp;(118 KB)
+ >gimp-print-uninstaller-1.1.dmg</a>&nbsp;(120 KB)
  </td>
  <td align="right" >
  </td>
