@@ -181,9 +181,6 @@ DEF_SIMPLE_ACCESSOR(base_separation, int)
 DEF_SIMPLE_ACCESSOR(base_resolution, int)
 DEF_SIMPLE_ACCESSOR(enhanced_resolution, int)
 DEF_SIMPLE_ACCESSOR(resolution_scale, int)
-DEF_SIMPLE_ACCESSOR(lum_adjustment, const double *)
-DEF_SIMPLE_ACCESSOR(hue_adjustment, const double *)
-DEF_SIMPLE_ACCESSOR(sat_adjustment, const double *)
 DEF_SIMPLE_ACCESSOR(head_offset, const int *)
 DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
@@ -991,29 +988,29 @@ adjust_print_quality(const escp2_init_t *init, void *dither,
       break;
     }
   stp_dither_set_density(dither, stp_get_density(nv));
-  if (escp2_lum_adjustment(init->model, nv))
+  if (init->inkname->lum_adjustment)
     {
       for (i = 0; i < 49; i++)
 	{
-	  lum_adjustment[i] = escp2_lum_adjustment(init->model, nv)[i];
+	  lum_adjustment[i] = init->inkname->lum_adjustment[i];
 	  if (pt && pt->lum_adjustment)
 	    lum_adjustment[i] *= pt->lum_adjustment[i];
 	}
     }
-  if (escp2_sat_adjustment(init->model, nv))
+  if (init->inkname->sat_adjustment)
     {
       for (i = 0; i < 49; i++)
 	{
-	  sat_adjustment[i] = escp2_sat_adjustment(init->model, nv)[i];
+	  sat_adjustment[i] = init->inkname->sat_adjustment[i];
 	  if (pt && pt->sat_adjustment)
 	    sat_adjustment[i] *= pt->sat_adjustment[i];
 	}
     }
-  if (escp2_hue_adjustment(init->model, nv))
+  if (init->inkname->hue_adjustment)
     {
       for (i = 0; i < 49; i++)
 	{
-	  hue_adjustment[i] = escp2_hue_adjustment(init->model, nv)[i];
+	  hue_adjustment[i] = init->inkname->hue_adjustment[i];
 	  if (pt && pt->hue_adjustment)
 	    hue_adjustment[i] += pt->hue_adjustment[i];
 	}
@@ -1064,7 +1061,7 @@ static const ink_channel_t default_black_channels =
 
 static const escp2_inkname_t default_black_ink =
 {
-  NULL, NULL, 0, 0, 0, 0,
+  NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL,
   {
     &default_black_channels, NULL, NULL, NULL
   }
@@ -1462,9 +1459,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
 	    break;
 	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
-		       escp2_hue_adjustment(model, nv) ? hue_adjustment : NULL,
-		       escp2_lum_adjustment(model, nv) ? lum_adjustment : NULL,
-		       escp2_sat_adjustment(model, nv) ? sat_adjustment :NULL);
+		       ink_type->hue_adjustment ? hue_adjustment : NULL,
+		       ink_type->lum_adjustment ? lum_adjustment : NULL,
+		       ink_type->sat_adjustment ? sat_adjustment : NULL);
 	}
       QUANT(1);
 

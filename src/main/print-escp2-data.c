@@ -29,6 +29,377 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "print-escp2.h"
 
+static const double standard_sat_adjustment[49] =
+{
+  1.0,				/* C */
+  1.1,
+  1.2,
+  1.3,
+  1.4,
+  1.5,
+  1.6,
+  1.7,
+  1.8,				/* B */
+  1.9,
+  1.9,
+  1.9,
+  1.7,
+  1.5,
+  1.3,
+  1.1,
+  1.0,				/* M */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* R */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  1.0,
+  1.0,
+  1.1,
+  1.2,
+  1.3,
+  1.4,
+  1.5,
+  1.5,				/* G */
+  1.4,
+  1.3,
+  1.2,
+  1.1,
+  1.0,
+  1.0,
+  1.0,
+  1.0				/* C */
+};
+
+static const double standard_lum_adjustment[49] =
+{
+  0.50,				/* C */
+  0.6,
+  0.7,
+  0.8,
+  0.9,
+  0.86,
+  0.82,
+  0.79,
+  0.78,				/* B */
+  0.8,
+  0.83,
+  0.87,
+  0.9,
+  0.95,
+  1.05,
+  1.15,
+  1.3,				/* M */
+  1.25,
+  1.2,
+  1.15,
+  1.12,
+  1.09,
+  1.06,
+  1.03,
+  1.0,				/* R */
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,
+  1.0,				/* Y */
+  0.9,
+  0.8,
+  0.7,
+  0.65,
+  0.6,
+  0.55,
+  0.52,
+  0.48,				/* G */
+  0.47,
+  0.47,
+  0.49,
+  0.49,
+  0.49,
+  0.52,
+  0.51,
+  0.50				/* C */
+};
+
+static const double standard_hue_adjustment[49] =
+{
+  0.00,				/* C */
+  0.05,
+  0.04,
+  0.01,
+  -0.03,
+  -0.10,
+  -0.18,
+  -0.26,
+  -0.35,			/* B */
+  -0.43,
+  -0.40,
+  -0.32,
+  -0.25,
+  -0.18,
+  -0.10,
+  -0.07,
+  0.00,				/* M */
+  -0.04,
+  -0.09,
+  -0.13,
+  -0.18,
+  -0.23,
+  -0.27,
+  -0.31,
+  -0.35,			/* R */
+  -0.38,
+  -0.30,
+  -0.23,
+  -0.15,
+  -0.08,
+  0.00,
+  -0.02,
+  0.00,				/* Y */
+  0.08,
+  0.10,
+  0.08,
+  0.05,
+  0.03,
+  -0.03,
+  -0.12,
+  -0.20,			/* G */
+  -0.17,
+  -0.20,
+  -0.17,
+  -0.15,
+  -0.12,
+  -0.10,
+  -0.08,
+  0.00,				/* C */
+};
+
+static const double plain_paper_lum_adjustment[49] =
+{
+  1.2,				/* C */
+  1.22,
+  1.28,
+  1.34,
+  1.39,
+  1.42,
+  1.45,
+  1.48,
+  1.5,				/* B */
+  1.4,
+  1.3,
+  1.25,
+  1.2,
+  1.1,
+  1.05,
+  1.05,
+  1.05,				/* M */
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,
+  1.05,				/* R */
+  1.05,
+  1.05,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,
+  1.1,				/* Y */
+  1.15,
+  1.3,
+  1.45,
+  1.6,
+  1.75,
+  1.9,
+  2.0,
+  2.1,				/* G */
+  2.0,
+  1.8,
+  1.7,
+  1.6,
+  1.5,
+  1.4,
+  1.3,
+  1.2				/* C */
+};
+
+static const double pgpp_sat_adjustment[49] =
+{
+  1.00,				/* C */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* B */
+  1.00,
+  1.00,
+  1.03,
+  1.05,
+  1.07,
+  1.09,
+  1.11,
+  1.13,				/* M */
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,				/* R */
+  1.10,
+  1.05,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* Y */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* G */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* C */
+};
+
+static const double pgpp_lum_adjustment[49] =
+{
+  1.00,				/* C */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* B */
+  1.00,
+  1.00,
+  1.03,
+  1.05,
+  1.07,
+  1.09,
+  1.11,
+  1.13,				/* M */
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,
+  1.13,				/* R */
+  1.10,
+  1.05,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* Y */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* G */
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,
+  1.00,				/* C */
+};
+
+static const double pgpp_hue_adjustment[49] =
+{
+  0.00,				/* C */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.01,
+  0.02,
+  0.03,
+  0.05,				/* B */
+  0.05,
+  0.05,
+  0.04,
+  0.04,
+  0.03,
+  0.02,
+  0.01,
+  0.00,				/* M */
+  -.03,
+  -.05,
+  -.07,
+  -.09,
+  -.11,
+  -.13,
+  -.14,
+  -.15,				/* R */
+  -.13,
+  -.10,
+  -.06,
+  -.04,
+  -.02,
+  -.01,
+  0.00,
+  0.00,				/* Y */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,				/* G */
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,
+  0.00,				/* C */
+};
+
 #define DECLARE_INK(name, density)					\
 static const escp2_variable_ink_t name##_ink =				\
 {									\
@@ -1584,6 +1955,7 @@ DECLARE_INK_CHANNEL(quadtone);
 static const escp2_inkname_t three_color_composite_inkset = 
 {
   "RGB", N_ ("Three Color Composite"), 1, INKSET_CMYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
@@ -1593,6 +1965,7 @@ static const escp2_inkname_t three_color_composite_inkset =
 static const escp2_inkname_t four_color_standard_inkset =
 {
   "CMYK", N_ ("Four Color Standard"), 1, INKSET_CMYK, .25, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &standard_black_channels, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
@@ -1602,6 +1975,7 @@ static const escp2_inkname_t four_color_standard_inkset =
 static const escp2_inkname_t six_color_photo_inkset =
 {
   "PhotoCMYK", N_ ("Six Color Photo"), 1, INKSET_CcMmYK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
@@ -1611,6 +1985,7 @@ static const escp2_inkname_t six_color_photo_inkset =
 static const escp2_inkname_t five_color_photo_composite_inkset =
 {
   "PhotoCMY", N_ ("Five Color Photo Composite"), 1, INKSET_CcMmYK, 0, 0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
@@ -1620,6 +1995,7 @@ static const escp2_inkname_t five_color_photo_composite_inkset =
 static const escp2_inkname_t j_seven_color_enhanced_inkset =
 {
   "Photo7J", N_ ("Seven Color Enhanced"), 1, INKSET_CcMmYyK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo2_yellow_channels
@@ -1629,6 +2005,7 @@ static const escp2_inkname_t j_seven_color_enhanced_inkset =
 static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 {
   "PhotoEnhanceJ", N_ ("Six Color Enhanced Composite"), 1, INKSET_CcMmYyK, .5, 1.0,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &standard_cyan_channels,
     &standard_magenta_channels, &standard_yellow_channels
@@ -1638,6 +2015,7 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 static const escp2_inkname_t seven_color_photo_inkset =
 {
   "PhotoCMYK", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1, .25,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
     &photo_magenta_channels, &photo_yellow_channels
@@ -1647,6 +2025,7 @@ static const escp2_inkname_t seven_color_photo_inkset =
 static const escp2_inkname_t piezo_quadtone_inkset =
 {
   "PiezoQuadtone", N_ ("Piezography (TM) Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0,
+  NULL, NULL, NULL,
   {
     &quadtone_channels, NULL, NULL, NULL
   }
@@ -1710,377 +2089,6 @@ static const escp2_inkname_t *photo7_ink_types[] =
 
 DECLARE_INKLIST(photo7);
 
-
-static const double standard_sat_adjustment[49] =
-{
-  1.0,				/* C */
-  1.1,
-  1.2,
-  1.3,
-  1.4,
-  1.5,
-  1.6,
-  1.7,
-  1.8,				/* B */
-  1.9,
-  1.9,
-  1.9,
-  1.7,
-  1.5,
-  1.3,
-  1.1,
-  1.0,				/* M */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* R */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  1.0,
-  1.0,
-  1.1,
-  1.2,
-  1.3,
-  1.4,
-  1.5,
-  1.5,				/* G */
-  1.4,
-  1.3,
-  1.2,
-  1.1,
-  1.0,
-  1.0,
-  1.0,
-  1.0				/* C */
-};
-
-static const double standard_lum_adjustment[49] =
-{
-  0.50,				/* C */
-  0.6,
-  0.7,
-  0.8,
-  0.9,
-  0.86,
-  0.82,
-  0.79,
-  0.78,				/* B */
-  0.8,
-  0.83,
-  0.87,
-  0.9,
-  0.95,
-  1.05,
-  1.15,
-  1.3,				/* M */
-  1.25,
-  1.2,
-  1.15,
-  1.12,
-  1.09,
-  1.06,
-  1.03,
-  1.0,				/* R */
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,
-  1.0,				/* Y */
-  0.9,
-  0.8,
-  0.7,
-  0.65,
-  0.6,
-  0.55,
-  0.52,
-  0.48,				/* G */
-  0.47,
-  0.47,
-  0.49,
-  0.49,
-  0.49,
-  0.52,
-  0.51,
-  0.50				/* C */
-};
-
-static const double standard_hue_adjustment[49] =
-{
-  0.00,				/* C */
-  0.05,
-  0.04,
-  0.01,
-  -0.03,
-  -0.10,
-  -0.18,
-  -0.26,
-  -0.35,			/* B */
-  -0.43,
-  -0.40,
-  -0.32,
-  -0.25,
-  -0.18,
-  -0.10,
-  -0.07,
-  0.00,				/* M */
-  -0.04,
-  -0.09,
-  -0.13,
-  -0.18,
-  -0.23,
-  -0.27,
-  -0.31,
-  -0.35,			/* R */
-  -0.38,
-  -0.30,
-  -0.23,
-  -0.15,
-  -0.08,
-  0.00,
-  -0.02,
-  0.00,				/* Y */
-  0.08,
-  0.10,
-  0.08,
-  0.05,
-  0.03,
-  -0.03,
-  -0.12,
-  -0.20,			/* G */
-  -0.17,
-  -0.20,
-  -0.17,
-  -0.15,
-  -0.12,
-  -0.10,
-  -0.08,
-  0.00,				/* C */
-};
-
-static const double plain_paper_lum_adjustment[49] =
-{
-  1.2,				/* C */
-  1.22,
-  1.28,
-  1.34,
-  1.39,
-  1.42,
-  1.45,
-  1.48,
-  1.5,				/* B */
-  1.4,
-  1.3,
-  1.25,
-  1.2,
-  1.1,
-  1.05,
-  1.05,
-  1.05,				/* M */
-  1.05,
-  1.05,
-  1.05,
-  1.05,
-  1.05,
-  1.05,
-  1.05,
-  1.05,				/* R */
-  1.05,
-  1.05,
-  1.1,
-  1.1,
-  1.1,
-  1.1,
-  1.1,
-  1.1,				/* Y */
-  1.15,
-  1.3,
-  1.45,
-  1.6,
-  1.75,
-  1.9,
-  2.0,
-  2.1,				/* G */
-  2.0,
-  1.8,
-  1.7,
-  1.6,
-  1.5,
-  1.4,
-  1.3,
-  1.2				/* C */
-};
-
-static const double pgpp_sat_adjustment[49] =
-{
-  1.00,				/* C */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* B */
-  1.00,
-  1.00,
-  1.03,
-  1.05,
-  1.07,
-  1.09,
-  1.11,
-  1.13,				/* M */
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,				/* R */
-  1.10,
-  1.05,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* Y */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* G */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* C */
-};
-
-static const double pgpp_lum_adjustment[49] =
-{
-  1.00,				/* C */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* B */
-  1.00,
-  1.00,
-  1.03,
-  1.05,
-  1.07,
-  1.09,
-  1.11,
-  1.13,				/* M */
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,
-  1.13,				/* R */
-  1.10,
-  1.05,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* Y */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* G */
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,
-  1.00,				/* C */
-};
-
-static const double pgpp_hue_adjustment[49] =
-{
-  0.00,				/* C */
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.01,
-  0.02,
-  0.03,
-  0.05,				/* B */
-  0.05,
-  0.05,
-  0.04,
-  0.04,
-  0.03,
-  0.02,
-  0.01,
-  0.00,				/* M */
-  -.03,
-  -.05,
-  -.07,
-  -.09,
-  -.11,
-  -.13,
-  -.14,
-  -.15,				/* R */
-  -.13,
-  -.10,
-  -.06,
-  -.04,
-  -.02,
-  -.01,
-  0.00,
-  0.00,				/* Y */
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,				/* G */
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,
-  0.00,				/* C */
-};
 
 
 static const paper_t standard_papers[] =
@@ -2757,7 +2765,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -2774,7 +2781,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g2_dotsizes, g1_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -2791,7 +2797,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, sc1500_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &cmy_inklist,
     standard_bits, standard_base_res, &roll_feed_input_slot_list
   },
@@ -2808,7 +2813,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc600_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2825,7 +2829,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2842,7 +2845,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2859,7 +2861,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &roll_feed_input_slot_list
   },
@@ -2878,7 +2879,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2895,7 +2895,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2912,7 +2911,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     standard_bits, g3_base_res, &default_input_slot_list
   },
@@ -2931,7 +2929,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc440_dotsizes, sc440_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -2948,7 +2945,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc640_dotsizes, sc440_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -2965,7 +2961,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -2982,7 +2977,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, c3pl_densities, &variable_3pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, stc900_base_res, &default_input_slot_list
   },
@@ -2999,7 +2993,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3016,7 +3009,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
   },
@@ -3033,7 +3025,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3050,7 +3041,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3067,7 +3057,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 26, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 8, 0, default_head_offset, 0, 0,
     sc660_dotsizes,sc660_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -3084,7 +3073,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3101,7 +3089,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc720_dotsizes, c6pl_densities, &variable_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3118,7 +3105,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3135,7 +3121,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
   },
@@ -3152,7 +3137,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
   },
@@ -3169,7 +3153,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, g3_base_res, &roll_feed_input_slot_list
   },
@@ -3186,7 +3169,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc670_dotsizes, c6pl_densities, &variable_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3203,7 +3185,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sp2000_dotsizes, sp2000_densities, &variable_pigment_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3220,7 +3201,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3237,7 +3217,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3254,7 +3233,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3271,7 +3249,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3288,7 +3265,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3305,7 +3281,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, sc680_densities, &variable_680_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3322,7 +3297,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3339,7 +3313,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     192, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, sc980_densities, &variable_3pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3356,7 +3329,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3373,7 +3345,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
   },
@@ -3390,7 +3361,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo_inklist,
     variable_bits, variable_base_res, &roll_feed_input_slot_list
   },
@@ -3407,7 +3377,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3424,7 +3393,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -3441,7 +3409,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     standard_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3458,7 +3425,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro10000_dotsizes, spro10000_densities, &spro10000_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3475,7 +3441,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3492,7 +3457,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3509,7 +3473,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, c80_head_offset, -240, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &c80_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list
   },
@@ -3526,7 +3489,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &standard_inklist,
     standard_bits, standard_base_res, &default_input_slot_list
   },
@@ -3543,7 +3505,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 190, default_head_offset, 0, 0,
     c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &sp780_paper_list, standard_reslist, &photo_inklist,
     stp950_bits, stp950_base_res, &default_input_slot_list
   },
@@ -3560,7 +3521,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &default_input_slot_list
   },
@@ -3577,7 +3537,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
   },
@@ -3594,7 +3553,6 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, &variable_4pl_pigment_inks,
-    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, pro_reslist, &photo7_inklist,
     variable_bits, pro_base_res, &roll_feed_input_slot_list
   },

@@ -273,6 +273,9 @@ typedef struct
   inkset_id_t inkset;
   double k_lower;
   double k_upper;
+  const double *lum_adjustment;
+  const double *hue_adjustment;
+  const double *sat_adjustment;
   const ink_channel_t *channels[NCOLORS];
 } escp2_inkname_t;
 
@@ -369,10 +372,6 @@ typedef struct escp2_printer
   const int *dot_sizes;		/* Vector of dot sizes for resolutions */
   const double *densities;	/* List of densities for each printer */
   const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
-/*****************************************************************************/
-  const double *lum_adjustment;
-  const double *hue_adjustment;
-  const double *sat_adjustment;
 /*****************************************************************************/
   const paperlist_t *paperlist;
   const res_t *reslist;
