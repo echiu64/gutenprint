@@ -61,6 +61,10 @@ main(int argc, char **argv)
 	{
 	  const stp_parameter_t *p = stp_parameter_list_param(params, k);
 	  stp_parameter_t desc;
+	  if (p->p_level > STP_PARAMETER_CLASS_OUTPUT ||
+	      (p->p_class != STP_PARAMETER_CLASS_OUTPUT &&
+	       p->p_class != STP_PARAMETER_CLASS_FEATURE))
+	    continue;
 	  count = 0;
 	  stp_describe_parameter(pv, p->name, &desc);
 	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
@@ -93,22 +97,31 @@ main(int argc, char **argv)
 		    }
 		}
 	    }
+	  else if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+	    {
+	      printf("$defaults{'%s'}{'%s'} = '%d';\n",
+		     driver, desc.name, desc.deflt.boolean);
+	      printf("$stpdata{'%s'}{'%s'}{'0'} = 'False';\n",
+		     driver, desc.name);
+	      printf("$stpdata{'%s'}{'%s'}{'1'} = 'True';\n",
+		     driver, desc.name);
+	    }
 	  else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	    {
 	      if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
 		  desc.bounds.dbl.upper >= desc.deflt.dbl)
 		{
-		  printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f\n",
+		  printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f;\n",
 			 driver, desc.name, desc.bounds.dbl.lower);
-		  printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f\n",
+		  printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f;\n",
 			 driver, desc.name, desc.bounds.dbl.upper);
-		  printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f\n",
+		  printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
 			 driver, desc.name, desc.deflt.dbl);
-		  printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s'\n",
+		  printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.text));
-		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s'\n",
+		  printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
-		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s)\n",
+		  printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
 			 driver, desc.name, _(desc.help));
 		}
 	    }
@@ -117,17 +130,17 @@ main(int argc, char **argv)
 	      if (desc.bounds.integer.lower <= desc.deflt.integer &&
 		  desc.bounds.integer.upper >= desc.deflt.integer)
 		{
-		  printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d\n",
+		  printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
 			 driver, desc.name, desc.bounds.integer.lower);
-		  printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d\n",
+		  printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
 			 driver, desc.name, desc.bounds.integer.upper);
-		  printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d\n",
+		  printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
 			 driver, desc.name, desc.deflt.integer);
-		  printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s'\n",
+		  printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.text));
-		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s'\n",
+		  printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
 			 driver, desc.name, _(desc.category));
-		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s)\n",
+		  printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
 			 driver, desc.name, _(desc.help));
 		}
 	    }
