@@ -1,3 +1,4 @@
+/*
  * "$Id$"
  *
  *   Print plug-in EPSON ESC/P2 driver for the GIMP.
@@ -58,6 +59,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
 
 typedef struct			/* Weave parameters for a specific row */
 {
@@ -144,6 +147,7 @@ static int horizontal_weave;	/* Number of horizontal passes required */
 				/* resolution modes */
 static int vertical_subpasses;
 static int vmod;
+static int pass_adjustment;
 
 /*
  * Mapping between color and linear index.  The colors are
@@ -156,6 +160,8 @@ static int color_indices[16] = { 0, 1, 2, -1,
 				 -1, -1, -1, -1 };
 static int colors[6] = { 0, 1, 2, 4, 1, 2 };
 static int densities[6] = { 0, 0, 0, 0, 1, 1 };
+
+#define MIN(x, y) ((x) <= (y) ? (x) : (y))
 
 static int
 get_color_by_params(int plane, int density)
@@ -187,17 +193,18 @@ initialize_weave(int jets, int sep, int v_subpasses)
   njets /= vertical_subpasses;
   vmod = separation * vertical_subpasses;
   horizontal_weave = 1;
+  pass_adjustment = (v_subpasses * sep + jets - 1) / jets;
 
-  weavefactor = njets / separation;
-  jetsused = ((weavefactor) * separation);
+  weavefactor = (njets + separation - 1) / separation;
+  jetsused = MIN(((weavefactor) * separation), njets);
   initialoffset = (jetsused - weavefactor - 1) * separation;
-  jetsleftover = njets - jetsused + 1;
+  jetsleftover = njets - jetsused;
   weavespan = (jetsused - 1) * separation;
 
   last_pass_offset = 0;
   last_pass = -1;
 
-  linebufs = malloc(6 * 1536 * vmod * jetsused * horizontal_weave);
+  linebufs = malloc(6 * 3072 * vmod * jetsused * horizontal_weave);
   lineoffsets = malloc(vmod * sizeof(lineoff_t) * horizontal_weave);
   linebases = malloc(vmod * sizeof(linebufs_t) * horizontal_weave);
   passes = malloc(vmod * sizeof(pass_t));
@@ -214,7 +221,7 @@ initialize_weave(int jets, int sep, int v_subpasses)
 	  for (j = 0; j < 6; j++)
 	    {
 	      linebases[k * vmod + i].v[j] = bufbase;
-	      bufbase += 1536 * jetsused;
+	      bufbase += 3072 * jetsused;
 	    }
 	}
     }
@@ -270,6 +277,32 @@ get_pass_by_pass(int pass)
   return &(passes[pass % vmod]);
 }
 
+/* #define DEBUG */
+#ifdef DEBUG
+static int 
+divv(int x, int y)
+{
+  if (y < 0)
+    kill(getpid(), SIGFPE);
+  else
+    return x / y;
+}
+
+static int 
+modd(int x, int y)
+{
+  if (x < 0 || y < 0)
+    kill(getpid(), SIGFPE);
+  else
+    return x % y;
+}
+#else
+
+#define divv(x, y) ((x) / (y))
+#define modd(x, y) ((x) % (y))
+
+#endif
+
 /*
  * Compute the weave parameters for the given row.  This computation is
  * rather complex, and I need to go back and write down very carefully
@@ -279,44 +312,60 @@ get_pass_by_pass(int pass)
 static void
 weave_parameters_by_row(int row, int vertical_subpass, weave_t *w)
 {
-  int passblockstart = (row + initialoffset) / jetsused;
+  int passblockstart = divv((row + initialoffset), jetsused);
   int internaljetsused = jetsused * vertical_subpasses;
   int subpass_adjustment;
 
   w->row = row;
-  w->pass = (passblockstart - (separation - 1)) +
-    (separation + row - passblockstart - 1) % separation;
-  subpass_adjustment = ((w->pass + 1) / separation) % vertical_subpasses;
+  w->pass = pass_adjustment + (passblockstart - (separation - 1)) +
+    modd((separation + row - passblockstart), separation);
+  subpass_adjustment = modd(divv((separation + w->pass + 1), separation),
+			   vertical_subpasses);
   subpass_adjustment = vertical_subpasses - subpass_adjustment - 1;
-  vertical_subpass = (vertical_subpass + subpass_adjustment) % vertical_subpasses;
+  vertical_subpass = modd((vertical_subpasses + vertical_subpass + subpass_adjustment),
+			 vertical_subpasses);
   w->pass += separation * vertical_subpass;
-  w->logicalpassstart = (w->pass * jetsused) - initialoffset +
-    (w->pass % separation);
-  w->jet = ((row - w->logicalpassstart) / separation);
+  w->logicalpassstart = (w->pass * jetsused) - initialoffset - (weavefactor * separation) +
+    modd((w->pass + separation - 2), separation);
+  printf("%d ", w->logicalpassstart);
+  w->jet = divv((row - w->logicalpassstart), separation);
+  printf("%d ", w->jet);
   w->jet += jetsused * (vertical_subpasses - 1);
+  printf("%d ", w->jet);
   w->logicalpassstart = w->row - (w->jet * separation);
+  printf("%d\n", w->logicalpassstart);
   if (w->logicalpassstart >= 0)
     w->physpassstart = w->logicalpassstart;
   else
     w->physpassstart = w->logicalpassstart +
-      (separation * ((separation - 1 - w->logicalpassstart) / separation));
+      (separation * divv((separation - 1 - w->logicalpassstart), separation));
   w->physpassend = (internaljetsused - 1) * separation +
     w->logicalpassstart;
-  w->missingstartrows = (w->physpassstart - w->logicalpassstart) / separation;
+  w->missingstartrows = divv((w->physpassstart - w->logicalpassstart),
+			    separation);
+#if 0
   if (w->pass < 0)
     {
       w->logicalpassstart -= w->pass * separation;
       w->physpassend -= w->pass * separation;
       w->jet += w->pass;
       w->missingstartrows += w->pass;
+      if (w->jet < 0)
+	{
+	  w->logicalpassstart += w->jet * separation;
+	  w->physpassend += w->jet * separation;
+	  w->missingstartrows -= w->jet;
+	  w->jet = 0;
+	}
     }
-  w->pass++;
+  w->pass += pass_adjustment;
+#endif
 }
 
 int nrows = 1000;
-int physjets = 48;
+int physjets = 32;
 int physsep = 8;
-int physpasses = 4;
+int physpasses = 8;
 
 int
 main(int argc, char **argv)
