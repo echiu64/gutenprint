@@ -12,83 +12,83 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 <H2>Gimp-Print FAQ for Mac OS X Jaguar and Darwin</H2>
  <ol>
- <li><a href="#description">
+ <li><a href="p_FAQ_OS_X.php3#description">
  What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
  </a>
- <li><a href="#getMoreInfo">
+ <li><a href="p_FAQ_OS_X.php3#getMoreInfo">
  How can I find out more information about Gimp-Print? Where can I get
  the newest version?
  </a>
- <li><a href="#contactInfo">
+ <li><a href="p_FAQ_OS_X.php3#contactInfo">
  I've read this entire document but I'm still having problems. How can I
  contact the developers?
  </a>
- <li><a href="#didntReadTheInstructions">
+ <li><a href="p_FAQ_OS_X.php3#didntReadTheInstructions">
  I do not see the "Advanced" option in Print Center. How can I find it?
  </a>
- <li><a href="#espgs">
+ <li><a href="p_FAQ_OS_X.php3#espgs">
  Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
  </a>
- <li><a href="#tellMeMore">
+ <li><a href="p_FAQ_OS_X.php3#tellMeMore">
  I want to know more about the new printing system in Mac OS X Jaguar. How do
  the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
  </a>
- <li><a href="#tcpip">
+ <li><a href="p_FAQ_OS_X.php3#tcpip">
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </a>
- <li><a href="#escp2-7600">
+ <li><a href="p_FAQ_OS_X.php3#escp2-7600">
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </a>
- <li><a href="#installer">
+ <li><a href="p_FAQ_OS_X.php3#installer">
  What files are installed by the Gimp-Print installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
  </a>
- <li><a href="#uninstaller">
+ <li><a href="p_FAQ_OS_X.php3#uninstaller">
  The Gimp-Print installer for Jaguar is very nice, thanks for providing
  it. But, why haven't you provided me with an easy way to remove the
  Gimp-Print files from my system?
  </a>
- <li><a href="#pslevel1">
+ <li><a href="p_FAQ_OS_X.php3#pslevel1">
  The list of supported printers says that PostScript Level 1 printing is
  supported, but I can't use Gimp-Print to print to my Level 1 printer
  (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
  </a>
- <li><a href="#version">
+ <li><a href="p_FAQ_OS_X.php3#version">
  Which versions of Mac OS are compatible with Gimp-Print?
  </a>
- <li><a href="#versionX">
+ <li><a href="p_FAQ_OS_X.php3#versionX">
  I have never heard of version "10.1.x" but I have 10.1.5, does
  Gimp-Print work with that?
  </a>
- <li><a href="#supportedPrinters">
+ <li><a href="p_FAQ_OS_X.php3#supportedPrinters">
  Is my printer supported by Gimp-Print?
  </a>
- <li><a href="#generalSetup">
+ <li><a href="p_FAQ_OS_X.php3#generalSetup">
  OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
  </a>
- <ul>
- <li><a href="#usbSetup">
+ <dl>
+ <dd><a href="p_FAQ_OS_X.php3#usbSetup">
  <h4>
  USB connection
  </h4></a>
- <li><a href="#networkSetup">
+ <dd><a href="p_FAQ_OS_X.php3#networkSetup">
  <h4>
  Network connection
  </h4></a>
- <li><a href="#sambaSetup">
+ <dd><a href="p_FAQ_OS_X.php3#sambaSetup">
  <h4>
  Windows printer via SAMBA
  </h4></a>
- </ul>
- <li><a href="#whereAreTheSettings">
+ </dl>
+ <li><a href="p_FAQ_OS_X.php3#whereAreTheSettings">
  OK, my printer is printing now, but how do I change the print settings
  like paper type and resolution?
  </a>
- <li><a href="#whatSettings">
+ <li><a href="p_FAQ_OS_X.php3#whatSettings">
  Ok, I found all the settings, but what do they do?
  </a>
  </ol>
