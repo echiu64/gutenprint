@@ -328,6 +328,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Color 83" driver="escp2-83">
+<color>
+<model value=33>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Color 900" driver="escp2-900">
 <color>
 <model value=13>

@@ -1621,7 +1621,7 @@ static escp2_stp_printer_t model_capabilities[] =
     &variable_4pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
-  /* 33: Stylus Color 880 */
+  /* 33: Stylus Color 880/83 */
   {
     (MODEL_INIT_900 | MODEL_HASBLACK_YES | MODEL_INK_NORMAL
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI

@@ -69,7 +69,6 @@
 #define D_VERY_FAST (D_FAST_BASE + 1)
 
 #define DITHER_FAST_STEPS (6)
-#define DITHER_FAST_MASK ((1 << DITHER_FAST_STEPS) - 1)
 
 #define DITHER_MONOCHROME (0)
 #define DITHER_BLACK (1)
@@ -140,6 +139,7 @@ typedef struct dither_matrix
   int i_own;
   int x_offset;
   int y_offset;
+  unsigned fast_mask;
   unsigned *matrix;
 } dither_matrix_t;
 
@@ -186,6 +186,8 @@ typedef struct dither
 
   int x_aspect;			/* Aspect ratio numerator */
   int y_aspect;			/* Aspect ratio denominator */
+
+  double transition;		/* Exponential scaling for transition region */
 
   dither_color_t dither[NCOLORS];
 
@@ -317,8 +319,27 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
   return retval * multiplier;
 }
 
+static int
+is_po2(size_t i)
+{
+  int bits = 0;
+  size_t j = 1;
+  int k;
+  for (k = 0; k < CHAR_BIT * sizeof(size_t); k++)
+    {
+      if (j & i)
+	{
+	  bits++;
+	  if (bits > 1)
+	    return 0;
+	}
+      j <<= 1;
+    }
+  return bits;
+}
+  
 static void
-init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
+init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
 		     unsigned *array)
 {
   int i;
@@ -344,13 +365,17 @@ init_iterated_matrix(dither_matrix_t *mat, int size, int exp,
   mat->last_y = mat->last_y_mod = 0;
   mat->index = 0;
   mat->i_own = 1;
+  if (is_po2(mat->x_size))
+    mat->fast_mask = mat->x_size - 1;
+  else
+    mat->fast_mask = 0;
 }
 
 #define DITHERPOINT(m, x, y, x_size, y_size) \
   ((m)[(((x) + (x_size)) % (x_size)) + ((x_size) * (((y) + (y_size)) % (y_size)))])
 
 static void
-shear_matrix(dither_matrix_t *mat)
+shear_matrix(dither_matrix_t *mat, int x_shear, int y_shear)
 {
   int i;
   int j;
@@ -358,11 +383,12 @@ shear_matrix(dither_matrix_t *mat)
   for (i = 0; i < mat->x_size; i++)
     for (j = 0; j < mat->y_size; j++)
       DITHERPOINT(tmp, i, j, mat->x_size, mat->y_size) =
-	DITHERPOINT(mat->matrix, i, j * 3, mat->x_size, mat->y_size);
+	DITHERPOINT(mat->matrix, i, j * (x_shear + 1), mat->x_size,
+		    mat->y_size);
   for (i = 0; i < mat->x_size; i++)
     for (j = 0; j < mat->y_size; j++)
       DITHERPOINT(mat->matrix, i, j, mat->x_size, mat->y_size) =
-	DITHERPOINT(tmp, i * 5, j, mat->x_size, mat->y_size);
+	DITHERPOINT(tmp, i * (y_shear + 1), j, mat->x_size, mat->y_size);
   free(tmp);
 }
 
@@ -393,6 +419,10 @@ init_matrix(dither_matrix_t *mat, int x_size, int y_size,
   mat->last_y = mat->last_y_mod = 0;
   mat->index = 0;
   mat->i_own = 1;
+  if (is_po2(mat->x_size))
+    mat->fast_mask = mat->x_size - 1;
+  else
+    mat->fast_mask = 0;
 }
 
 static void
@@ -422,6 +452,10 @@ init_matrix_short(dither_matrix_t *mat, int x_size, int y_size,
   mat->last_y = mat->last_y_mod = 0;
   mat->index = 0;
   mat->i_own = 1;
+  if (is_po2(mat->x_size))
+    mat->fast_mask = mat->x_size - 1;
+  else
+    mat->fast_mask = 0;
 }
 
 static void
@@ -455,6 +489,7 @@ clone_matrix(const dither_matrix_t *src, dither_matrix_t *dest,
   dest->last_y = 0;
   dest->last_y_mod = dest->x_size * (dest->y_offset % dest->y_size);
   dest->index = dest->last_x_mod + dest->last_y_mod;
+  dest->fast_mask = src->fast_mask;
   dest->i_own = 0;
 }
 
@@ -477,6 +512,7 @@ copy_matrix(const dither_matrix_t *src, dither_matrix_t *dest)
   dest->last_y = 0;
   dest->last_y_mod = 0;
   dest->index = 0;
+  dest->fast_mask = src->fast_mask;
   dest->i_own = 1;
 }
 
@@ -503,6 +539,9 @@ matrix_set_row(const dither_t *d, dither_matrix_t *mat, int y)
 static inline unsigned
 ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
 {
+  if (mat->fast_mask)
+    return mat->matrix[(mat->last_y_mod +
+			((x + mat->x_offset) & mat->fast_mask))];
   /*
    * This rather bizarre code is an attempt to avoid having to compute a lot
    * of modulus and multiplication operations, which are typically slow.
@@ -540,22 +579,11 @@ ditherpoint(const dither_t *d, dither_matrix_t *mat, int x)
   return mat->matrix[mat->index];
 }
 
-static inline unsigned
-ditherpoint_fast(const dither_t *d, dither_matrix_t *mat, int x)
-{
-  if (mat->exp == 1)
-    return ditherpoint(d, mat, x);
-  else
-    return mat->matrix[(mat->last_y_mod +
-			((x + mat->x_offset) & DITHER_FAST_MASK))];
-}
-
 void *
 stp_init_dither(int in_width, int out_width, int horizontal_aspect,
-	    int vertical_aspect, stp_vars_t *v)
+		int vertical_aspect, stp_vars_t *v)
 {
   int i;
-  int x_3, y_3;
   dither_t *d = xmalloc(sizeof(dither_t));
   stp_simple_dither_range_t r;
   memset(d, 0, sizeof(dither_t));
@@ -579,34 +607,28 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 	  break;
 	}
     }
+  d->transition = .6;
 
   if (d->dither_type == D_VERY_FAST)
-    {
-      init_iterated_matrix(&(d->mat6), 2, DITHER_FAST_STEPS, sq2);
-      shear_matrix(&(d->mat6));
-    }
-  else
-    {
-      if (d->y_aspect / d->x_aspect == 2)
-	init_matrix_short(&(d->mat6), 367, 179, rect2x1, 0, 1);
-      else if (d->y_aspect / d->x_aspect == 4)
-	init_matrix_short(&(d->mat6), 509, 131, rect4x1, 0, 1);
-      else if (d->x_aspect / d->y_aspect == 2)
-	init_matrix_short(&(d->mat6), 179, 367, rect2x1, 1, 1);
-      else if (d->x_aspect / d->y_aspect == 4)
-	init_matrix_short(&(d->mat6), 131, 509, rect4x1, 1, 1);
-      else
-	init_matrix_short(&(d->mat6), 257, 257, quic2, 0, 1);
-    }
-
-  x_3 = d->mat6.x_size / 3;
-  y_3 = d->mat6.y_size / 3;
-
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_C]), 2 * x_3, y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_M]), x_3, 2 * y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_Y]), 0, y_3);
-  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_K]), 0, 0);
-  stp_dither_set_transition(d, .6);
+    stp_dither_set_iterated_matrix(d, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
+  else if (d->y_aspect == d->x_aspect)
+    stp_dither_set_matrix_short(d, 257, 257, quic2, 0, 1, 0, 0);
+  else if (d->y_aspect / d->x_aspect == 2)
+    stp_dither_set_matrix_short(d, 367, 179, rect2x1, 0, 1, 0, 0);
+  else if (d->y_aspect / d->x_aspect == 3)
+    stp_dither_set_matrix_short(d, 509, 131, rect4x1, 0, 1, 0, 0);
+  else if (d->y_aspect / d->x_aspect == 4)
+    stp_dither_set_matrix_short(d, 509, 131, rect4x1, 0, 1, 0, 0);
+  else if (d->y_aspect > d->x_aspect)
+    stp_dither_set_matrix_short(d, 367, 179, rect2x1, 0, 1, 0, 0);
+  else if (d->x_aspect / d->y_aspect == 2)
+    stp_dither_set_matrix_short(d, 179, 367, rect2x1, 1, 1, 0, 0);
+  else if (d->x_aspect / d->y_aspect == 3)
+    stp_dither_set_matrix_short(d, 131, 509, rect4x1, 1, 1, 0, 0);
+  else if (d->x_aspect / d->y_aspect == 4)
+    stp_dither_set_matrix_short(d, 131, 509, rect4x1, 1, 1, 0, 0);
+  else if (d->x_aspect > d->y_aspect)
+    stp_dither_set_matrix_short(d, 179, 367, rect2x1, 1, 1, 0, 0);
 
   d->src_width = in_width;
   d->dst_width = out_width;
@@ -629,6 +651,62 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   return d;
 }
 
+static void
+preinit_matrix(dither_t *d)
+{
+  int i;
+  for (i = 0; i < NCOLORS; i++)
+    destroy_matrix(&(d->dithermat[i]));
+  destroy_matrix(&(d->mat6));
+}
+
+static void
+postinit_matrix(dither_t *d, int x_shear, int y_shear)
+{
+  unsigned x_3, y_3;
+  if (x_shear || y_shear)
+    shear_matrix(&(d->mat6), x_shear, y_shear);
+  x_3 = d->mat6.x_size / 3;
+  y_3 = d->mat6.y_size / 3;
+  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_C]), 2 * x_3, y_3);
+  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_M]), x_3, 2 * y_3);
+  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_Y]), 0, y_3);
+  clone_matrix(&(d->mat6), &(d->dithermat[ECOLOR_K]), 0, 0);
+  stp_dither_set_transition(d, d->transition);
+}
+
+void
+stp_dither_set_matrix(void *vd, size_t x, size_t y, unsigned *data,
+		      int transpose, int prescaled, int x_shear, int y_shear)
+{
+  dither_t *d = (dither_t *) vd;
+  preinit_matrix(d);
+  init_matrix(&(d->mat6), x, y, data, transpose, prescaled);
+  postinit_matrix(d, x_shear, y_shear);
+}
+
+void
+stp_dither_set_iterated_matrix(void *vd, size_t edge, size_t iterations,
+			       unsigned *data, int prescaled, int x_shear,
+			       int y_shear)
+{
+  dither_t *d = (dither_t *) vd;
+  preinit_matrix(d);
+  init_iterated_matrix(&(d->mat6), edge, iterations, data);
+  postinit_matrix(d, x_shear, y_shear);
+}
+
+void
+stp_dither_set_matrix_short(void *vd, size_t x, size_t y, unsigned short *data,
+			    int transpose, int prescaled, int x_shear,
+			    int y_shear)
+{
+  dither_t *d = (dither_t *) vd;
+  preinit_matrix(d);
+  init_matrix_short(&(d->mat6), x, y, data, transpose, prescaled);
+  postinit_matrix(d, x_shear, y_shear);
+}
+
 void
 stp_dither_set_transition(void *vd, double exponent)
 {
@@ -636,12 +714,11 @@ stp_dither_set_transition(void *vd, double exponent)
   dither_t *d = (dither_t *) vd;
   int x_3 = d->mat6.x_size / 3;
   int y_3 = d->mat6.y_size / 3;
-  destroy_matrix(&(d->pick[ECOLOR_C]));
-  destroy_matrix(&(d->pick[ECOLOR_M]));
-  destroy_matrix(&(d->pick[ECOLOR_Y]));
-  destroy_matrix(&(d->pick[ECOLOR_K]));
+  for (i = 0; i < NCOLORS; i++)
+    destroy_matrix(&(d->pick[i]));
   destroy_matrix(&(d->mat7));
   copy_matrix(&(d->mat6), &(d->mat7));
+  d->transition = exponent;
   exponential_scale_matrix(&(d->mat7), exponent);
   if (d->dither_type & D_ORDERED_BASE)
     {
@@ -1445,7 +1522,7 @@ print_color_fast(dither_t *d, dither_color_t *rv, int base,
     return;
   if (very_fast)
     {
-      if (adjusted >= ditherpoint_fast(d, dither_matrix, x))
+      if (adjusted >= ditherpoint(d, dither_matrix, x))
 	c[0] |= bit;
       return;
     }
@@ -1464,7 +1541,7 @@ print_color_fast(dither_t *d, dither_color_t *rv, int base,
       if (base <= dd->range_l)
 	continue;
 
-      vmatrix = (dd->value_h * ditherpoint_fast(d, dither_matrix, x)) >> 16;
+      vmatrix = (dd->value_h * ditherpoint(d, dither_matrix, x)) >> 16;
 
       /*
        * After all that, printing is almost an afterthought.
@@ -1556,7 +1633,7 @@ stp_dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
   matrix_set_row(d, kdither, row);
   for (x = 0; x < dst_width; x++)
     {
-      if (gray[0] < 65535 && (d->density >= ditherpoint_fast(d, kdither, x)))
+      if (gray[0] < 65535 && (d->density >= ditherpoint(d, kdither, x)))
 	{
 	  tptr = kptr;
 	  for (j = 0; j < bits; j++, tptr += height)

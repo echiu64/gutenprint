@@ -212,6 +212,17 @@ typedef struct stp_softweave
 extern void *	stp_init_dither(int in_width, int out_width,
 				int horizontal_aspect,
 				int vertical_aspect, stp_vars_t *vars);
+extern void	stp_dither_set_matrix(void *vd, size_t x, size_t y,
+				      unsigned *data, int transpose,
+				      int prescaled, int x_shear, int y_shear);
+extern void	stp_dither_set_iterated_matrix(void *vd, size_t edge,
+					       size_t iterations,
+					       unsigned *data, int prescaled,
+					       int x_shear, int y_shear);
+extern void	stp_dither_set_matrix_short(void *vd, size_t x, size_t y,
+					    unsigned short *data,
+					    int transpose, int prescaled,
+					    int x_shear, int y_shear);
 extern void	stp_dither_set_transition(void *vd, double);
 extern void	stp_dither_set_density(void *vd, double);
 extern void	stp_dither_set_black_density(void *vd, double);
