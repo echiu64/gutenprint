@@ -1212,7 +1212,7 @@ printer.  Notice carefully that there are many different languages
 supported for each printer, as denoted by the initials in
 parenthesis.  (en) would be for English, (de) for German, (it) for
 Italian, (fr) for French, and (es) for Spanish.  Also take note of the
-Gimp-Print revision for the driver, and insure that it is indeed the
+Gimp-Print revision for the driver, and ensure that it is indeed the
 version of Gimp-Print which you have most recently installed.  It
 would appear that the author has some old drivers still installed!
 Once you have made the proper selection, click on the
@@ -1252,7 +1252,7 @@ After doing so, your window will appear something
 
    <para>
 It would probably be a good idea at this point to click on the
-<guibutton>Print Test Page</guibutton> button to insure that
+<guibutton>Print Test Page</guibutton> button to ensure that
 everything is working properly.  Take note of the Gimp-Print revision
 printed on this screen and confirm once again that it is the expected
 revision.
