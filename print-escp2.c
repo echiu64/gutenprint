@@ -31,8 +31,11 @@
  * Revision History:
  *
  *   $Log$
- *   Revision 1.39.2.3  2000/02/22 23:47:20  rlk
- *   3.0.7
+ *   Revision 1.39.2.4  2000/02/24 00:18:27  rlk
+ *   3.0.9 fixes
+ *
+ *   Revision 1.39.2.5  2000/02/21 20:36:20  rlk
+ *   softweave
  *
  *   Revision 1.39.2.4  2000/02/21 14:27:40  rlk
  *   Try to fix softweave
@@ -754,6 +757,17 @@ escp2_print(int       model,		/* I - Model */
 	  return;	  
 	}
     }
+  if (!use_softweave)
+    {
+      /*
+       * In microweave mode, correct for the loss of page height that
+       * would happen in softweave mode.  The divide by 10 is to convert
+       * lines into points (Epson printers all have 720 ydpi);
+       */
+      int extra_points = ((escp2_nozzles(model) - 1) *
+			  escp2_nozzle_separation(model) + 5) / 10;
+      top += extra_points;
+    }
 
  /*
   * Compute the output size...
@@ -865,11 +879,13 @@ escp2_print(int       model,		/* I - Model */
 
     x    = top;
     top  = left;
-    left = x;
+    left = page_width - x - out_width;
   }
 
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
+  else
+    left = left + page_left;
 
   if (top < 0)
     top  = (page_height + out_height) / 2 + page_bottom;
