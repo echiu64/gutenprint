@@ -300,6 +300,7 @@ stp_verify(const stp_vars_t v)
   int status;
   stpi_prune_inactive_options(nv);
   status = (printfuncs->verify)(nv);
+  stpi_set_verified(v, stpi_get_verified(nv));
   stp_vars_free(nv);
   return status;
 }
