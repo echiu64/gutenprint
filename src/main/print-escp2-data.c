@@ -2930,6 +2930,9 @@ static const escp2_dot_size_t g3_dotsizes =
 static const escp2_dot_size_t photo_dotsizes =
 {  3,     -1,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
 
+static const escp2_dot_size_t sp5000_dotsizes =
+{ -1,      3,   -1,    3,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
+
 static const escp2_dot_size_t sc440_dotsizes =
 {  3,     -1,    3,   -1,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
 
@@ -3215,6 +3218,45 @@ static const res_t standard_reslist[] =
 
   { "2880x1440sw",      N_("2880 x 1440 DPI"),
     2880, 1440, 2880, 1440, 1,  0, 1, 1, 1, 1, 1, RES_2880_1440},
+
+  { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 }
+};
+
+static const res_t sp5000_reslist[] =
+{
+  { "180sw",            N_("180 DPI Economy Draft"),
+    180,  180,  180,  180,  1,  0, 1, 1, 0, 4, 1, RES_180 },
+
+  { "360x180sw",        N_("360 x 180 DPI Draft"),
+    360,  180,  360,  180,  1,  0, 1, 1, 0, 4, 1, RES_180 },
+
+  { "360sw",            N_("360 DPI"),
+    360,  360,  360,  360,  1,  0, 1, 1, 0, 2, 1, RES_360 },
+  { "360swuni",         N_("360 DPI Unidirectional"),
+    360,  360,  360,  360,  1,  0, 1, 1, 1, 2, 1, RES_360 },
+
+  { "720x360sw",        N_("720 x 360 DPI"),
+    720,  360,  720,  360,  1,  0, 1, 1, 0, 2, 1, RES_720_360 },
+  { "720x360swuni",     N_("720 x 360 DPI Unidirectional"),
+    720,  360,  720,  360,  1,  0, 1, 1, 1, 2, 1, RES_720_360 },
+
+  { "720sw",            N_("720 DPI"),
+    720,  720,  720,  720,  1,  0, 1, 1, 0, 1, 1, RES_720 },
+  { "720swuni",         N_("720 DPI Unidirectional"),
+    720,  720,  720,  720,  1,  0, 1, 1, 1, 1, 1, RES_720 },
+  { "720hq",            N_("720 DPI High Quality"),
+    720,  720,  720,  720,  1,  0, 2, 1, 0, 1, 1, RES_720 },
+  { "720hquni",         N_("720 DPI High Quality Unidirectional"),
+    720,  720,  720,  720,  1,  0, 2, 1, 1, 1, 1, RES_720 },
+  { "720hq2",           N_("720 DPI Highest Quality"),
+    720,  720,  720,  720,  1,  0, 4, 1, 1, 1, 1, RES_720 },
+
+  { "1440x720sw",       N_("1440 x 720 DPI"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 0, 1, 1, RES_1440_720 },
+  { "1440x720swuni",    N_("1440 x 720 DPI Unidirectional"),
+    1440, 720,  1440, 720,  1,  0, 1, 1, 1, 1, 1, RES_1440_720 },
+  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
+    1440, 720,  1440, 720,  1,  0, 2, 1, 1, 1, 1, RES_1440_720 },
 
   { "", "", 0, 0, 0, 0, 0, 0, 0, 0, 1, -1 }
 };
@@ -3958,17 +4000,17 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 27: Stylus Pro 5000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
+    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
      MODEL_FAST_360_NO),
-    1, 1, 1, 1, 1, 1, 6,
-    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
-    INCH(13), INCH(1200), INCH(2), INCH(4),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
-    0, 1, 0, 0, 0, 0, 0,
-    spro_dye_dotsizes, spro_dye_densities, &simple_inks,
-    &standard_paper_list, pro_reslist, &photo_inklist,
-    standard_bits, pro_base_res, &roll_feed_input_slot_list,
+    64, 1, 2, 64, 1, 2, 6,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    INCH(19), INCH(44), INCH(2), INCH(4),
+    9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
+    0, 1, 0, 0, 0, 0, 4,
+    sp5000_dotsizes, photo_densities, &simple_inks,
+    &standard_paper_list, sp5000_reslist, &photo_inklist,
+    standard_bits, g3_base_res, &default_input_slot_list,
     NULL, NULL
   },
   /* 28: Stylus Pro 7000 */
