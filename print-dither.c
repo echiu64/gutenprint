@@ -937,9 +937,14 @@ free_dither(void *vd)
   dither_t *d = (dither_t *) vd;
   int i;
   int j;
-  for (i = 0; i < ERROR_ROWS; i++)
+  for (j = 0; j < NCOLORS; j++)
     {
-      for (j = 0; j < NCOLORS; j++)
+      if (d->vals[j])
+	{
+	  free(d->vals[j]);
+	  d->vals[j] = NULL;
+	}
+      for (i = 0; i < ERROR_ROWS; i++)
 	{
 	  if (d->errs[i][j])
 	    {
@@ -1540,7 +1545,7 @@ iabs(int a)
     return -a;
 }
 
-static unsigned short
+static inline unsigned short
 usmin(unsigned short a, unsigned short b)
 {
   return (a < b ? a : b);
