@@ -766,11 +766,6 @@ do_align(void)
   printf("\n");
   printf("Please place a sheet of paper in your printer to begin the head\n");
   printf("alignment procedure.\n");
-  /*memset(inbuf, 0, 64);
-  fflush(stdin);
-  fgets(inbuf, 63, stdin);
-  putc('\n', stdout);
-  fflush(stdout);*/
   inbuf = do_get_input("Press enter to continue ");
   initialize_print_cmd();
   for (curpass = 1; curpass <= passes; curpass ++)
@@ -790,10 +785,6 @@ do_align(void)
 	       curpass);
       printf("Type a pair number, '?' for help, or 'r' to retry this pattern.\n");
       fflush(stdout);
-      /*memset(inbuf, 0, 64);
-      fflush(stdin);
-      fgets(inbuf, 63, stdin);
-      putc('\n', stdout);*/
       inbuf = do_get_input("> ");
       switch (inbuf[0])
 	{
@@ -802,10 +793,6 @@ do_align(void)
 	  printf("Please insert a fresh sheet of paper.\n");
 	  fflush(stdout);
 	  initialize_print_cmd();
-	  /*fflush(stdin);
-	  fgets(inbuf, 15, stdin);
-	  putc('\n', stdout);
-	  fflush(stdout);*/
 	  (void) do_get_input("Press enter to continue");
 	  /* Ick. Surely there's a cleaner way? */
 	  goto top;
@@ -864,10 +851,6 @@ do_align(void)
   printf("You will then be asked to confirm your choice.\n");
   printf("What do you want to do (s, q, r)?\n");
   fflush(stdout);
-  /*memset(inbuf, 0, 64);
-  fflush(stdin);
-  fgets(inbuf, 15, stdin);
-  putc('\n', stdout);*/
   inbuf = do_get_input("> ");
   switch (inbuf[0])
     {
@@ -875,10 +858,6 @@ do_align(void)
     case 'Q':
       printf("Please confirm by typing 'q' again that you wish to quit without saving:\n");
       fflush(stdout);
-      /*memset(inbuf, 0, 64);
-      fflush(stdin);
-      putc('\n', stdout);
-      fgets(inbuf, 15, stdin);*/
       inbuf = do_get_input ("> ");
       if (inbuf[0] == 'q' || inbuf[0] == 'Q')
 	{
@@ -892,10 +871,6 @@ do_align(void)
       printf("Please confirm by typing 'r' again that you wish to repeat the\n");
       printf("alignment process:\n");
       fflush(stdout);
-      /*memset(inbuf, 0, 64);
-      fflush(stdin);
-      putc('\n', stdout);
-      fgets(inbuf, 15, stdin);*/
       inbuf = do_get_input("> ");
       if (inbuf[0] == 'r' || inbuf[0] == 'R')
 	{
@@ -912,10 +887,6 @@ do_align(void)
       printf("to your printer:\n");
 	     
       fflush(stdout);
-      /*memset(inbuf, 0, 64);
-      fflush(stdin);
-      putc('\n', stdout);
-      fgets(inbuf, 15, stdin);*/
       inbuf = do_get_input("> ");
       if (inbuf[0] == 's' || inbuf[0] == 'S')
 	{
