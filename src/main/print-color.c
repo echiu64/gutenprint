@@ -1732,12 +1732,16 @@ cmyk_8_to_cmyk(const stp_vars_t vars,
   int i;
   int j;
   int nz[4];
+  double density = 257.0 * stp_get_density(vars);
   for (i = 0; i < width; i++)
     {
       for (j = 0; j < 4; j++)
 	{
 	  nz[j] |= cmykin[j];
-	  cmykout[j] = cmykin[j] * 257;
+	  if (cmykin[j] == 0)
+	    cmykout[j] = 0;
+	  else
+	    cmykout[j] = cmykin[j] * density;
 	}
       cmykin += 4;
       cmykout += 4;
@@ -1767,12 +1771,16 @@ cmyk_to_cmyk(const stp_vars_t vars,
   int j;
   int nz[4];
   const unsigned short *scmykin = (const unsigned short *) cmykin;
+  double density = stp_get_density(vars);
   for (i = 0; i < width; i++)
     {
       for (j = 0; j < 4; j++)
 	{
 	  nz[j] |= cmykin[j];
-	  cmykout[j] = scmykin[j];
+	  if (cmykin[j] == 0)
+	    cmykout[j] = 0;
+	  else
+	    cmykout[j] = scmykin[j] * density;
 	}
       scmykin += 4;
       cmykout += 4;
