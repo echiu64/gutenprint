@@ -172,6 +172,7 @@ static const char p300_adj_yellow[] =
 "</curve>\n"
 "</gimp-print>\n";
 
+
 static const olympus_res_t_array p400_resolution =
 {
 	{"314x314", N_ ("314x314 DPI"), 314, 314, 2400, 3200},
@@ -210,6 +211,46 @@ static void p400_block_init_func(stp_vars_t v)
 	stpi_zfwrite(zero, 1, 53, v);
 }
 
+static const char p400_adj_cyan[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.003922 0.031373 0.058824 0.090196 0.125490 0.156863 0.184314 0.219608\n"
+"0.250980 0.278431 0.309804 0.341176 0.376471 0.403922 0.439216 0.470588\n"
+"0.498039 0.517647 0.533333 0.545098 0.564706 0.576471 0.596078 0.615686\n"
+"0.627451 0.647059 0.658824 0.678431 0.690196 0.705882 0.721569 0.737255\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char p400_adj_magenta[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.003922 0.031373 0.062745 0.098039 0.125490 0.156863 0.188235 0.215686\n"
+"0.250980 0.282353 0.309804 0.345098 0.376471 0.407843 0.439216 0.470588\n"
+"0.501961 0.521569 0.549020 0.572549 0.592157 0.619608 0.643137 0.662745\n"
+"0.682353 0.713725 0.737255 0.756863 0.784314 0.807843 0.827451 0.850980\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char p400_adj_yellow[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.003922 0.027451 0.054902 0.090196 0.121569 0.156863 0.184314 0.215686\n"
+"0.250980 0.282353 0.309804 0.345098 0.372549 0.400000 0.435294 0.466667\n"
+"0.498039 0.525490 0.552941 0.580392 0.607843 0.631373 0.658824 0.678431\n"
+"0.698039 0.725490 0.760784 0.784314 0.811765 0.839216 0.866667 0.890196\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+
 static const olympus_res_t_array cpx00_resolution =
 {
 	{"314x314", N_ ("300x300 DPI"), 314, 314, 1232, 1808},
@@ -230,6 +271,46 @@ static void cpx00_plane_init_func(stp_vars_t v)
 	stpi_put32_le(privdata.xsize * privdata.ysize, v);
 	stpi_zfwrite(zero, 1, 4, v);
 }
+
+static const char cpx00_adj_cyan[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.000000 0.035294 0.070588 0.101961 0.117647 0.168627 0.180392 0.227451\n"
+"0.258824 0.286275 0.317647 0.341176 0.376471 0.411765 0.427451 0.478431\n"
+"0.505882 0.541176 0.576471 0.611765 0.654902 0.678431 0.705882 0.737255\n"
+"0.764706 0.792157 0.811765 0.839216 0.862745 0.894118 0.909804 0.925490\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char cpx00_adj_magenta[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.011765 0.019608 0.035294 0.047059 0.054902 0.101961 0.133333 0.156863\n"
+"0.192157 0.235294 0.274510 0.321569 0.360784 0.403922 0.443137 0.482353\n"
+"0.521569 0.549020 0.584314 0.619608 0.658824 0.705882 0.749020 0.792157\n"
+"0.831373 0.890196 0.933333 0.964706 0.988235 0.992157 0.992157 0.996078\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char cpx00_adj_yellow[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
+"<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
+"0.003922 0.015686 0.015686 0.023529 0.027451 0.054902 0.094118 0.129412\n"
+"0.180392 0.219608 0.250980 0.286275 0.317647 0.341176 0.388235 0.427451\n"
+"0.470588 0.509804 0.552941 0.596078 0.627451 0.682353 0.768627 0.796078\n"
+"0.890196 0.921569 0.949020 0.968627 0.984314 0.992157 0.992157 1.000000\n"
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
@@ -257,7 +338,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		&p400_printer_init_func,
 		&p400_plane_init_func, &p400_plane_end_func,
 		&p400_block_init_func, NULL,
-		NULL, NULL, NULL,
+		p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
 	},
 	{ 1000, 	/* canon CP100 */
 		283, 416, 	/* Postcard */
@@ -270,7 +351,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
 		&cpx00_printer_init_func,
 		&cpx00_plane_init_func, NULL,
 		NULL, NULL,
-		NULL, NULL, NULL,
+		cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
 	},
 };
 
