@@ -31,10 +31,24 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.2  2000/02/02 15:53:09  gandy
+ *   1) reworked printer capabilities handling
+ *   2) initilization sends media type, paper format and printable area
+ *   3) works fine with new dithering stuff
+ *
  *   Revision 1.1  2000/02/01 09:01:40  gandy
  *   Add print-canon.c: Support for the BJC 6000 and possibly others
  *
  *   
+ */
+
+/* Driver Capabilities
+ *---------------------
+ *
+ * BJC 6000: CMYK
+ *
+ *
+ *
  */
 
 /* TODO-LIST 
@@ -54,24 +68,13 @@ static int  canon_write(FILE *, unsigned char *, int, int, int, int, int,
 			int*, int, int);
 
 static void canon_write_line(FILE *,
-			     unsigned char *,
-			     int           ,
-			     unsigned char *,
-			     int           ,
-			     unsigned char *,
-			     int           ,
-			     unsigned char *,
-			     int           ,
-			     unsigned char *,
-			     int           ,
-			     unsigned char *,
-			     int           ,
-			     int           ,
-			     int           ,
-			     int           ,
-			     int           ,
-			     int           );
-
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     int, int, int, int, int);
 
 
 /*
@@ -80,15 +83,7 @@ static void canon_write_line(FILE *,
  * Various classes of printer capabilities are represented by bitmasks.
  */
 
-typedef unsigned long long model_cap_t;
-typedef model_cap_t model_featureset_t;
-typedef model_cap_t model_class_t;
-
-#define MODEL_PAPER_SIZE_MASK	0x3
-#define MODEL_PAPER_SMALL 	0x0
-#define MODEL_PAPER_LARGE 	0x1
-#define MODEL_PAPER_1200	0x2
-
+/*
 #define MODEL_IMAGEABLE_MASK	0xc
 #define MODEL_IMAGEABLE_DEFAULT	0x0
 #define MODEL_IMAGEABLE_PHOTO	0x4
@@ -113,7 +108,7 @@ typedef model_cap_t model_class_t;
 #define MODEL_720DPI_MODE_MASK	0xc00
 #define MODEL_720DPI_DEFAULT	0x000
 #define MODEL_720DPI_600	0x400
-#define MODEL_720DPI_PHOTO	0x400 /* 0x800 for experimental stuff */
+#define MODEL_720DPI_PHOTO	0x400 
 
 #define MODEL_1440DPI_MASK	0x1000
 #define MODEL_1440DPI_NO	0x0000
@@ -130,14 +125,14 @@ typedef model_cap_t model_class_t;
 #define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
 #define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
 
+*/
 
-#define PHYSICAL_BPI 720
+#define PHYSICAL_BPI 1440
 #define MAX_OVERSAMPLED 4
 #define MAX_BPP 2
 #define BITS_PER_BYTE 8
 #define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
 	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
-
 /*
  * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
  * Brightness 127
@@ -169,13 +164,52 @@ typedef model_cap_t model_class_t;
  * A lot of these are guesses
  */
 
+/*
 model_cap_t canon_model_capabilities[] =
 {
-  /* BJC-6000 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
    | MODEL_VARIABLE_NORMAL
    | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
+};
+*/
+
+typedef struct {
+  int model;
+  int max_width;      /* maximum printable paper size */
+  int max_height;
+  int max_xdpi;
+  int max_ydpi;
+  int inks;           /* installable cartridges (CANON_INK_*) */
+  int slots;          /* available paperslots */
+} canon_cap_t;
+
+#define CANON_INK_K           1
+#define CANON_INK_CMY         2
+#define CANON_INK_CMYK        4
+#define CANON_INK_CcMmYK      8
+#define CANON_INK_CcMmYy     16
+#define CANON_INK_1          (CANON_INK_K)
+#define CANON_INK_2          (CANON_INK_CMY)
+#define CANON_INK_3          (CANON_INK_K|CANON_INK_CMY)
+#define CANON_INK_4          (CANON_INK_CMYK|CANON_INK_CcMmYK)
+#define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|CANON_INK_CcMmYK)
+
+#define CANON_SLOT_ASF_1   1
+#define CANON_SLOT_ASF_2   2
+#define CANON_SLOT_MAN_1   4
+#define CANON_SLOT_MAN_2   8
+
+#define CANON_SLOT_1 (CANON_SLOT_ASF_1)
+#define CANON_SLOT_2 (CANON_SLOT_ASF_1|CANON_SLOT_MAN_1)
+
+canon_cap_t canon_model_capabilities[] =
+{
+  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_1 },
+  { 6000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2 },
+  { 6100, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2 },
+  { 7000, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2 },
+  { 7100, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_2 },
 };
 
 typedef struct {
@@ -187,6 +221,20 @@ typedef struct {
   int vertical_passes;
 } canon_res_t;
 
+static canon_cap_t canon_get_model_capabilities(int model)
+{
+  int i;
+  int models= sizeof(canon_model_capabilities) / sizeof(canon_cap_t);
+  for (i=0; i<models; i++) {
+    if (canon_model_capabilities[i].model == model) {
+      return canon_model_capabilities[i];
+    }
+  }
+  fprintf(stderr,"canon: model %d not found in capabilities list.\n",model);
+  return canon_model_capabilities[0];
+}
+
+/*
 static int
 canon_has_cap(int model, model_featureset_t featureset, model_class_t class)
 {
@@ -198,10 +246,10 @@ canon_cap(int model, model_featureset_t featureset)
 {
   return (canon_model_capabilities[model] & featureset);
 }
-
+*/
 
 static int
-canon_media_type(const char *name, int model) 
+canon_media_type(const char *name, canon_cap_t caps) 
 {
   if (!strcmp(name,"Plain Paper"))           return  1;
   if (!strcmp(name,"Transparencies"))        return  2;
@@ -217,12 +265,31 @@ canon_media_type(const char *name, int model)
 }
 
 static int 
-canon_source_type(const char *name, int model)
+canon_source_type(const char *name, canon_cap_t caps)
 {
   if (!strcmp(name,"Auto Sheet Feeder"))    return 4;
   if (!strcmp(name,"Manual with Pause"))    return 0;
   if (!strcmp(name,"Manual without Pause")) return 1;
   return 4;
+}
+
+static unsigned char
+canon_size_type(const char *name, canon_cap_t caps)
+{
+  /* built ins: */
+  if (!strcmp(name,"A5"))          return 0x01;
+  if (!strcmp(name,"A4"))          return 0x03;
+  if (!strcmp(name,"B5"))          return 0x08;
+  if (!strcmp(name,"Letter"))      return 0x0d;
+  if (!strcmp(name,"Legal"))       return 0x0f;
+  if (!strcmp(name,"Envelope 10")) return 0x16;
+  if (!strcmp(name,"Envelope DL")) return 0x17;
+  if (!strcmp(name,"Letter+"))     return 0x2a;
+  if (!strcmp(name,"A4+"))         return 0x2b;
+  if (!strcmp(name,"Canon 4x2"))   return 0x2d;
+
+  /* custom */
+  return 0; 
 }
 
 
@@ -238,21 +305,9 @@ canon_parameters(int  model,		/* I - Printer model */
                  int  *count)		/* O - Number of values */
 {
   int		i;
-  char		**p,
-                **valptrs;
-  static char	*media_sizes[] =
-		{
-		  ("A5"),
-		  ("A4"),
-		  ("B5"),
-		  ("Letter"),
-		  ("Legal"),
-		  ("Envelope 10"),
-		  ("Envelope DL"),
-		  ("Letter+"),
-		  ("A4+"),
-		  ("Canon 4x2")
-		};
+  char		**p= 0,
+                **valptrs= 0;
+
   static char   *media_types[] =
                 {
                   ("Plain Paper"),
@@ -272,27 +327,63 @@ canon_parameters(int  model,		/* I - Printer model */
                   ("Manual with Pause"),
                   ("Manual without Pause"),
                 };
-  static char   *resolutions[] =
-                {
-                  ("90x90 DPI"),
-                  ("180x180 DPI"),
-                  ("360x360 DPI"),
-                  ("720x720 DPI"),
-                  ("1440x720 DPI")
-                };
+
+  canon_cap_t caps= canon_get_model_capabilities(model);
 
   if (count == NULL)
     return (NULL);
 
   *count = 0;
 
+  fprintf(stderr,"canon: options `%s' for model %d\n",name,caps.model);
+
   if (name == NULL)
     return (NULL);
 
-  if (strcmp(name, "PageSize") == 0)
+  if (strcmp(name, "PageSize") == 0) {
+    int length_limit, width_limit;
+    const papersize_t *papersizes = get_papersizes();
+    valptrs = malloc(sizeof(char *) * known_papersizes());
+    *count = 0;
+
+    width_limit = caps.max_width;
+    length_limit = caps.max_height;
+    
+    for (i = 0; i < known_papersizes(); i++) {
+      if (strlen(papersizes[i].name) > 0 &&
+	  papersizes[i].width <= width_limit &&
+	  papersizes[i].length <= length_limit) {
+	valptrs[*count] = malloc(strlen(papersizes[i].name) + 1);
+	strcpy(valptrs[*count], papersizes[i].name);
+	(*count)++;
+      }
+    }
+    fprintf(stderr,"canon: PageSize ok.\n");
+    return (valptrs);
+  }
+  else if (strcmp(name, "Resolution") == 0)
   {
-    *count = 10;
-    p = media_sizes;
+    int x= caps.max_xdpi, y= caps.max_ydpi;
+    int c= 0;
+    valptrs = malloc(sizeof(char *) * 10);
+    if (!(caps.max_xdpi%300)) {
+      if ( 300<=x && 300<=y) valptrs[c++]= strdup("300x300 DPI");
+      if ( 600<=x && 600<=y) valptrs[c++]= strdup("600x600 DPI");
+      if (1200<=x && 600<=y) valptrs[c++]= strdup("1200x600 DPI");
+    } else if (!(caps.max_xdpi%180)) {
+      if ( 180<=x && 180<=y) valptrs[c++]= strdup("180x180 DPI");
+      if ( 360<=x && 360<=y) valptrs[c++]= strdup("360x360 DPI");
+      if ( 720<=x && 360<=y) valptrs[c++]= strdup("720x360 DPI");
+      if ( 720<=x && 720<=y) valptrs[c++]= strdup("720x720 DPI");
+      if (1440<=x && 720<=y) valptrs[c++]= strdup("1440x720 DPI");
+    } else {
+      fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
+	      caps.model);
+      return 0;
+    }
+    fprintf(stderr,"canon: Resolution ok.\n");
+    *count= c;
+    p= valptrs;
   }
   else if (strcmp(name, "MediaType") == 0)
   {
@@ -303,11 +394,6 @@ canon_parameters(int  model,		/* I - Printer model */
   {
     *count = 3;
     p = media_sources;
-  }
-  else if (strcmp(name, "Resolution") == 0)
-  {
-    *count = 5;
-    p = resolutions;
   }
   else
     return (NULL);
@@ -342,10 +428,11 @@ canon_imageable_area(int  model,	/* I - Printer model */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
+  /* true for BJC 6000  8.23 20.44 11.05 7.9*/
   *left   = 9;
   *right  = width - 9;
-  *top    = length;
-  *bottom = 80;
+  *top    = length- 10;
+  *bottom = 18;
 }
 
 /*
@@ -353,19 +440,20 @@ canon_imageable_area(int  model,	/* I - Printer model */
  */
 static void
 canon_cmd(FILE *prn, /* I - the printer         */
-	   char *ini, /* I - 2 bytes start code  */
-	   char cmd,  /* I - command code        */
-	   int  num,  /* I - number of arguments */
-	   ...        /* I - the args themselves */
-	   )
+	  char *ini, /* I - 2 bytes start code  */
+	  char cmd,  /* I - command code        */
+	  int  num,  /* I - number of arguments */
+	  ...        /* I - the args themselves */
+	  )
 {
+  /* hopefully not too small: */
   #define CANON_SEND_BUFF_SIZE 10000
   static unsigned char buffer[CANON_SEND_BUFF_SIZE];
   int i;
   va_list ap;
   
   if (num >= CANON_SEND_BUFF_SIZE) {
-    fprintf(stderr,"\ncanon: command too arge for send buffer!\n");
+    fprintf(stderr,"\ncanon: command too large for send buffer!\n");
     fprintf(stderr,"canon: command 0x%02x with %d args dropped\n\n",
 	    cmd,num);
     return;
@@ -387,12 +475,12 @@ canon_cmd(FILE *prn, /* I - the printer         */
 }
 
 static void
-canon_init_printer(FILE *prn, int model, 
+canon_init_printer(FILE *prn, canon_cap_t caps, 
 		   int output_type, char *media_str, 
-		   char *format_str, int print_head, 
+		   char *size_str, int print_head, 
 		   char *source_str, int xdpi, 
-		   int ydpi, int page_length, int page_top, int page_bottom, 
-		   int top)
+		   int ydpi, int page_width, int page_height,
+		   int page_length, int page_top, int page_bottom, int top)
 {
 #define MEDIACODES 11
   static unsigned char mediacode_63[] = {
@@ -401,7 +489,6 @@ canon_init_printer(FILE *prn, int model,
   static unsigned char mediacode_6c[] = {
     0x00,0x00,0x02,0x03,0x04,0x08,0x07,0x03,0x06,0x05,0x0a
   };
-  
   
   #define ESC28 "\x1b\x28"
   #define ESC5b "\x1b\x5b"
@@ -416,7 +503,9 @@ canon_init_printer(FILE *prn, int model,
     arg_6d_1 = 0x03, /* color printhead? */
     arg_6d_2 = 0x00, /* 00=color  02=b/w */
     arg_6d_3 = 0x00, /* only 01 for bjc8200 */
-    arg_70_1 = 0x02, 
+    arg_6d_a = 0x03, /* A4 paper */
+    arg_6d_b = 0x00, 
+    arg_70_1 = 0x02, /* A4 printable area */
     arg_70_2 = 0xa6, 
     arg_70_3 = 0x01, 
     arg_70_4 = 0xe0, 
@@ -424,33 +513,31 @@ canon_init_printer(FILE *prn, int model,
     arg_74_2 = 0x00, /*  */
     arg_74_3 = 0x01; /* 01 <= 360 dpi    09 >= 720 dpi */
 
-  int media= canon_media_type(media_str,model);
-  int source= canon_source_type(source_str,model);
+  int media= canon_media_type(media_str,caps);
+  int source= canon_source_type(source_str,caps);
 
+  int printable_width=  page_width*10/12;
+  int printable_height= page_height*10/12;
 
-  fprintf(stderr,"canon: output_type=%d\n",output_type);
-  fprintf(stderr,"canon: res: %dx%d = 0x%02x 0x%02x  0x%02x 0x%02x\n",
-	  ydpi,xdpi,(ydpi >> 8 ),(ydpi & 255),(xdpi >> 8 ),(xdpi & 255));
-  fprintf(stderr,"canon: page-top is %04x = %f\" = %f mm\n",
-	  page_top,page_top/(1.*ydpi),page_top/(ydpi/25.4));
+  arg_6d_a= canon_size_type(size_str,caps);
+  if (!arg_6d_a) arg_6d_b= 1;
 
-
-
-  if (model<3000) arg_63_1= arg_6c_1= 0x10; 
+  if (caps.model<3000) arg_63_1= arg_6c_1= 0x10; 
              else arg_63_1= arg_6c_1= 0x30;
   if (output_type==OUTPUT_GRAY) arg_63_1|= 0x01;
   arg_6c_1|= (source & 0x0f);
-
-  fprintf(stderr,"canon: 63_1=0x%02x\n",arg_63_1);
 
   if (print_head==0) arg_6d_1= 0x02;
   else if (print_head<=2) arg_6d_1= 0x03;
   else if (print_head<=4) arg_6d_1= 0x04;
   if (output_type==OUTPUT_GRAY) arg_6d_2= 0x02;
 
-  if (model==3000||model==6100||model==8200) arg_70_1= 0xab;
-  if (model==6000 && media==10) { 
-    arg_70_1= 0x3a; arg_70_2= 0xd9;
+  if (caps.model==3000||caps.model==6100||caps.model==8200) 
+  if (caps.model==6000 && media==10) { 
+    arg_70_1= (printable_height >> 8) & 0xff;
+    arg_70_2= (printable_height) & 0xff;
+    arg_70_3= (printable_width >> 8) & 0xff;
+    arg_70_4= (printable_width) & 0xff;
   }
 
   if (xdpi==1440) arg_74_2= 0x04;
@@ -461,13 +548,19 @@ canon_init_printer(FILE *prn, int model,
     arg_6c_2= mediacode_6c[media];
   }
 
+  fprintf(stderr,"canon: output_type=%d\n",output_type);
+  fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
+	  page_width,page_height,printable_width,printable_height,
+	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
+
   /* init printer */
   canon_cmd(prn,ESC5b,0x4b, 2, 0x00,0x0f);
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
 
   canon_cmd(prn,ESC28,0x6d,12, arg_6d_1,0xff,0xff,0x00,0x00,0x07,
-	                       0x00,0x03,0x00,arg_6d_2,0x00,arg_6d_3);
+	                       0x00,arg_6d_a,arg_6d_b,arg_6d_2,
+	                       0x00,arg_6d_3);
 
   /* set resolution */
   canon_cmd(prn,ESC28,0x64, 4, (ydpi >> 8 ), (ydpi & 255), 
@@ -497,9 +590,10 @@ unsigned char *canon_alloc_buffer(int size)
 
 /*
  * 'advance_buffer()' - Move (num) lines of length (len) down one line
+ *                      and sets first line to 0s 
  *                      accepts NULL pointers as buf 
- *                      !!! buf must contain > num lines !!!
- *                      only clears line if (num <= 1)
+ *                  !!! buf must contain more than (num) lines !!!
+ *                      also sets first line to 0s if num<1
  */
 void
 canon_advance_buffer(unsigned char *buf, int len, int num)
@@ -573,6 +667,8 @@ canon_print(int       model,		/* I - Model */
                 image_width,
                 image_bpp;
 
+  canon_cap_t caps= canon_get_model_capabilities(model);
+
   /*
   * Setup a read-only pixel region for the entire image...
   */
@@ -589,17 +685,14 @@ canon_print(int       model,		/* I - Model */
   if (image_bpp < 3 && cmap == NULL)
     output_type = OUTPUT_GRAY;		/* Force grayscale output */
 
-  if (output_type == OUTPUT_COLOR)
-  {
+  if (output_type == OUTPUT_COLOR) {
     out_bpp = 3;
 
     if (image_bpp >= 3)
       colorfunc = rgb_to_rgb;
     else
       colorfunc = indexed_to_rgb;
-  }
-  else
-  {
+  } else {
     out_bpp = 1;
 
     if (image_bpp >= 3)
@@ -615,7 +708,7 @@ canon_print(int       model,		/* I - Model */
   */
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
 
-  fprintf(stderr,"canon resolution=%dx%d\n",xdpi,ydpi);
+  fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
 
  /*
   * Compute the output size...
@@ -745,16 +838,15 @@ canon_print(int       model,		/* I - Model */
   Image_progress_init(image);
 
 
-
-
  /*
   * Send CANON initialization commands...
   */
 
-  canon_init_printer(prn, model, output_type, media_type, 
+
+  canon_init_printer(prn, caps, output_type, media_type, 
 		     media_size, 2, media_source, 
-		     xdpi, ydpi, page_length,
-		     page_top, page_bottom, top);
+		     xdpi, ydpi, page_width, page_height,
+		     page_length, page_top, page_bottom, top);
 
  /*
   * Convert image size to printer resolution...
@@ -765,10 +857,10 @@ canon_print(int       model,		/* I - Model */
 
   left = ydpi * (left - page_left) / 72;
 
-  fprintf(stderr,"image-top  is %04x = %f\" = %f mm\n",
-          top,top/(1.*ydpi),top/(ydpi/25.4));
-  fprintf(stderr,"image-left is %04x = %f\" = %f mm\n",
-          left,left/(1.*ydpi),left/(ydpi/25.4));
+  fprintf(stderr,"canon: image-top  is %04x = % 4d = %f\" = %f mm\n",
+          top,top,top/(1.*ydpi),top/(ydpi/25.4));
+  fprintf(stderr,"canon: image-left is %04x = % 4d = %f\" = %f mm\n",
+          left,left,left/(1.*ydpi),left/(ydpi/25.4));
 
   if(xdpi==1440){
     delay_k= 0;
@@ -806,11 +898,12 @@ canon_print(int       model,		/* I - Model */
     magenta = canon_alloc_buffer(length*(delay_m+1));
     yellow  = canon_alloc_buffer(length*(delay_y+1));
   
-    if (canon_has_cap(model, MODEL_HASBLACK_MASK, MODEL_HASBLACK_YES))
+    if ((caps.inks & CANON_INK_BLACK_MASK))
       black = canon_alloc_buffer(length*(delay_k+1));
     else
       black = NULL;
-    if (canon_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES)) {
+
+    if (0 && (caps.inks & CANON_INK_CcMmYK)) {
       lcyan = canon_alloc_buffer(length*(delay_lc+1));
       lmagenta = canon_alloc_buffer(length*(delay_lm+1));
     } else {
@@ -818,6 +911,7 @@ canon_print(int       model,		/* I - Model */
       lmagenta = NULL;
     }
   }
+  init_dither();
     
  /*
   * Output the page, rotating as necessary...
@@ -938,7 +1032,8 @@ canon_print(int       model,		/* I - Model */
       }
     }
   }
-  
+  free_dither();
+
   /*
    * Flush delayed buffers...
    */
