@@ -630,7 +630,7 @@ static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
   { 1.00, 0x1, 0, 1 },
 };
 
-DECLARE_INK(photo_2pl_2880, 1.00);
+DECLARE_INK(photo_2pl_2880, 0.5);
 
 static const stp_simple_dither_range_t photo_2pl_2880_c_dither_ranges[] =
 {
@@ -638,7 +638,7 @@ static const stp_simple_dither_range_t photo_2pl_2880_c_dither_ranges[] =
   { 1.00, 0x1, 0, 1 },
 };
 
-DECLARE_INK(photo_2pl_2880_c, 1.00);
+DECLARE_INK(photo_2pl_2880_c, .5);
 
 static const stp_simple_dither_range_t photo_2pl_2880_m_dither_ranges[] =
 {
@@ -646,7 +646,7 @@ static const stp_simple_dither_range_t photo_2pl_2880_m_dither_ranges[] =
   { 1.00, 0x1, 0, 1 },
 };
 
-DECLARE_INK(photo_2pl_2880_m, 1.00);
+DECLARE_INK(photo_2pl_2880_m, .5);
 
 static const stp_simple_dither_range_t photo_2pl_2880_y_dither_ranges[] =
 {
@@ -927,13 +927,153 @@ DECLARE_INK(piezo_pigment_quadtone, PIEZO_DENSITY);
 *                                                               *
 \***************************************************************/
 
+static const stp_simple_dither_range_t standard_4pl_pigment_low_dither_ranges[] =
+{
+  { 0.40,  0x1, 0, 40 },
+  { 0.70,  0x2, 0, 70 },
+  { 1.00,  0x3, 0, 100 }
+};
+
+DECLARE_INK(standard_4pl_pigment_low, 0.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_low_m_dither_ranges[] =
+{
+  { 0.104,  0x1, 1, 40 },
+  { 0.182,  0x2, 1, 70 },
+  { 0.26,   0x3, 1, 100 },
+  { 0.70,   0x2, 0, 70 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_low_m, 0.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_low_c_dither_ranges[] =
+{
+  { 0.16,   0x1, 1, 40 },
+  { 0.28,   0x2, 1, 70 },
+  { 0.40,   0x3, 1, 100 },
+  { 0.70,   0x2, 0, 70 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_low_c, 0.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_low_y_dither_ranges[] =
+{
+  { 0.20,   0x1, 1, 40 },
+  { 0.35,   0x2, 1, 70 },
+  { 0.50,   0x3, 1, 100 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_low_y, 1.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_low_k_dither_ranges[] =
+{
+  { 0.196,  0x1, 1, 40 },
+  { 0.40,   0x1, 0, 40 },
+  { 0.70,   0x2, 0, 70 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_low_k, 0.5);
+
 static const stp_simple_dither_range_t standard_4pl_pigment_dither_ranges[] =
 {
-  { 0.661, 0x1, 0, 2 },
-  { 1.00,  0x2, 0, 3 }
+  { 0.28,  0x1, 0, 28 },
+  { 0.50,  0x2, 0, 50 },
+  { 1.00,  0x3, 0, 100 }
 };
 
 DECLARE_INK(standard_4pl_pigment, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_m_dither_ranges[] =
+{
+  { 0.0728, 0x1, 1, 28 },
+  { 0.13,   0x2, 1, 50 },
+  { 0.26,   0x3, 1, 100 },
+  { 0.50,   0x2, 0, 50 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_m, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_c_dither_ranges[] =
+{
+  { 0.112,  0x1, 1, 28 },
+  { 0.20,  0x2, 1, 50 },
+  { 0.40,   0x3, 1, 100 },
+  { 0.50,   0x2, 0, 50 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_c, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_y_dither_ranges[] =
+{
+  { 0.14,   0x1, 1, 28 },
+  { 0.25,   0x2, 1, 50 },
+  { 0.50,   0x3, 1, 100 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_y, 1.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_k_dither_ranges[] =
+{
+  { 0.1344, 0x1, 1, 28 },
+  { 0.24,   0x2, 1, 50 },
+  { 0.50,   0x2, 0, 50 },
+  { 1.00,   0x3, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_k, 0.75);
+
+static const stp_simple_dither_range_t standard_4pl_pigment_1440_dither_ranges[] =
+{
+  { 0.56,  0x1, 0, 56 },
+  { 1.00,  0x2, 0, 100 },
+};
+
+DECLARE_INK(standard_4pl_pigment_1440, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_1440_m_dither_ranges[] =
+{
+  { 0.1456, 0x1, 1, 56 },
+  { 0.26,   0x2, 1, 100 },
+  { 0.56,   0x1, 0, 56 },
+  { 1.00,   0x2, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_1440_m, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_1440_c_dither_ranges[] =
+{
+  { 0.224,  0x1, 1, 56 },
+  { 0.40,   0x2, 1, 100 },
+  { 0.56,   0x1, 0, 56 },
+  { 1.00,   0x2, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_1440_c, 1.0);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_1440_y_dither_ranges[] =
+{
+  { 0.28,   0x1, 1, 56 },
+  { 0.50,   0x2, 1, 100 },
+  { 1.00,   0x2, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_1440_y, 1.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_1440_k_dither_ranges[] =
+{
+  { 0.2688, 0x1, 1, 56 },
+  { 0.56,   0x1, 0, 56 },
+  { 1.00,   0x2, 0, 100 }
+};
+
+DECLARE_INK(photo_4pl_pigment_1440_k, 0.75);
 
 static const stp_simple_dither_range_t standard_4pl_pigment_2880_dither_ranges[] =
 {
@@ -942,23 +1082,37 @@ static const stp_simple_dither_range_t standard_4pl_pigment_2880_dither_ranges[]
 
 DECLARE_INK(standard_4pl_pigment_2880, 1.0);
 
-static const stp_simple_dither_range_t photo_4pl_pigment_dither_ranges[] =
+static const stp_simple_dither_range_t photo_4pl_pigment_2880_m_dither_ranges[] =
 {
-  { 0.17,  0x1, 1, 2 },
-  { 0.26,  0x2, 1, 3 },
-  { 0.661, 0x1, 0, 2 },
-  { 1.00,  0x2, 0, 3 }
-};
-
-DECLARE_INK(photo_4pl_pigment, 1.0);
-
-static const stp_simple_dither_range_t photo_4pl_pigment_2880_dither_ranges[] =
-{
-  { 0.21, 0x1, 1, 1 },
+  { 0.26,  0x1, 1, 1 },
   { 1.00,  0x1, 0, 1 },
 };
 
-DECLARE_INK(photo_4pl_pigment_2880, 0.75);
+DECLARE_INK(photo_4pl_pigment_2880_m, 0.75);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_2880_c_dither_ranges[] =
+{
+  { 0.40,  0x1, 1, 1 },
+  { 1.00,  0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_4pl_pigment_2880_c, 0.75);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_2880_y_dither_ranges[] =
+{
+  { 0.50,  0x1, 1, 1 },
+  { 1.00,  0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_4pl_pigment_2880_y, 1.5);
+
+static const stp_simple_dither_range_t photo_4pl_pigment_2880_k_dither_ranges[] =
+{
+  { 0.48,  0x1, 1, 1 },
+  { 1.00,  0x1, 0, 1 },
+};
+
+DECLARE_INK(photo_4pl_pigment_2880_k, 0.75);
 
 
 /***************************************************************\
@@ -1590,6 +1744,38 @@ static const escp2_variable_inkset_t piezo_6pl_pigment_quadtone_inks =
 };
 
 
+static const escp2_variable_inkset_t escp2_4pl_pigment_low_standard_inks =
+{
+  &standard_4pl_pigment_low_ink,
+  &standard_4pl_pigment_low_ink,
+  &standard_4pl_pigment_low_ink,
+  &standard_4pl_pigment_low_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_low_photo_inks =
+{
+  &standard_4pl_pigment_low_ink,
+  &photo_4pl_pigment_low_c_ink,
+  &photo_4pl_pigment_low_m_ink,
+  &standard_4pl_pigment_low_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_low_photo2_inks =
+{
+  &photo_4pl_pigment_low_k_ink,
+  &photo_4pl_pigment_low_c_ink,
+  &photo_4pl_pigment_low_m_ink,
+  &standard_4pl_pigment_low_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_low_photoj_inks =
+{
+  &standard_4pl_pigment_low_ink,
+  &photo_4pl_pigment_low_c_ink,
+  &photo_4pl_pigment_low_m_ink,
+  &photo_4pl_pigment_low_y_ink
+};
+
 static const escp2_variable_inkset_t escp2_4pl_pigment_standard_inks =
 {
   &standard_4pl_pigment_ink,
@@ -1601,25 +1787,57 @@ static const escp2_variable_inkset_t escp2_4pl_pigment_standard_inks =
 static const escp2_variable_inkset_t escp2_4pl_pigment_photo_inks =
 {
   &standard_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
+  &photo_4pl_pigment_c_ink,
+  &photo_4pl_pigment_m_ink,
   &standard_4pl_pigment_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_photo2_inks =
 {
-  &photo_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
+  &photo_4pl_pigment_k_ink,
+  &photo_4pl_pigment_c_ink,
+  &photo_4pl_pigment_m_ink,
   &standard_4pl_pigment_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_photoj_inks =
 {
   &standard_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
-  &photo_4pl_pigment_ink,
-  &photo_4pl_pigment_ink
+  &photo_4pl_pigment_c_ink,
+  &photo_4pl_pigment_m_ink,
+  &photo_4pl_pigment_y_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_1440_standard_inks =
+{
+  &standard_4pl_pigment_1440_ink,
+  &standard_4pl_pigment_1440_ink,
+  &standard_4pl_pigment_1440_ink,
+  &standard_4pl_pigment_1440_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_1440_photo_inks =
+{
+  &standard_4pl_pigment_1440_ink,
+  &photo_4pl_pigment_1440_c_ink,
+  &photo_4pl_pigment_1440_m_ink,
+  &standard_4pl_pigment_1440_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_1440_photo2_inks =
+{
+  &photo_4pl_pigment_1440_k_ink,
+  &photo_4pl_pigment_1440_c_ink,
+  &photo_4pl_pigment_1440_m_ink,
+  &standard_4pl_pigment_1440_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_pigment_1440_photoj_inks =
+{
+  &standard_4pl_pigment_1440_ink,
+  &photo_4pl_pigment_1440_c_ink,
+  &photo_4pl_pigment_1440_m_ink,
+  &photo_4pl_pigment_1440_y_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_2880_standard_inks =
@@ -1633,25 +1851,25 @@ static const escp2_variable_inkset_t escp2_4pl_pigment_2880_standard_inks =
 static const escp2_variable_inkset_t escp2_4pl_pigment_2880_photo_inks =
 {
   &standard_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
+  &photo_4pl_pigment_2880_c_ink,
+  &photo_4pl_pigment_2880_m_ink,
   &standard_4pl_pigment_2880_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_2880_photo2_inks =
 {
-  &photo_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
+  &photo_4pl_pigment_2880_k_ink,
+  &photo_4pl_pigment_2880_c_ink,
+  &photo_4pl_pigment_2880_m_ink,
   &standard_4pl_pigment_2880_ink
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_2880_photoj_inks =
 {
   &standard_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink,
-  &photo_4pl_pigment_2880_ink
+  &photo_4pl_pigment_2880_c_ink,
+  &photo_4pl_pigment_2880_m_ink,
+  &photo_4pl_pigment_2880_y_ink
 };
 
 
@@ -2001,35 +2219,35 @@ static const escp2_variable_inklist_t variable_pigment_inks =
 static const escp2_variable_inklist_t variable_4pl_pigment_inks =
 {
   {
-    &escp2_multishot_standard_inks,
-    &escp2_multishot_standard_inks,
-    &escp2_multishot_standard_inks,
-    &escp2_multishot_standard_inks,
-    &escp2_6pl_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
     &escp2_4pl_pigment_standard_inks,
+    &escp2_4pl_pigment_1440_standard_inks,
     &escp2_4pl_pigment_2880_standard_inks,
     &escp2_4pl_pigment_2880_standard_inks,
     &escp2_4pl_pigment_2880_standard_inks,
   },
   {
-    &escp2_multishot_photo_inks,
-    &escp2_multishot_photo_inks,
-    &escp2_multishot_photo_inks,
-    &escp2_multishot_photo_inks,
-    &escp2_6pl_photo_inks,
+    &escp2_4pl_pigment_low_photo_inks,
+    &escp2_4pl_pigment_low_photo_inks,
+    &escp2_4pl_pigment_low_photo_inks,
+    &escp2_4pl_pigment_low_photo_inks,
     &escp2_4pl_pigment_photo_inks,
+    &escp2_4pl_pigment_1440_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks,
     &escp2_4pl_pigment_2880_photo_inks
   },
   { NULL, },
   {
-    &escp2_multishot_photo2_inks,
-    &escp2_multishot_photo2_inks,
-    &escp2_multishot_photo2_inks,
-    &escp2_multishot_photo2_inks,
-    &escp2_6pl_photo2_inks,
+    &escp2_4pl_pigment_low_photo2_inks,
+    &escp2_4pl_pigment_low_photo2_inks,
+    &escp2_4pl_pigment_low_photo2_inks,
+    &escp2_4pl_pigment_low_photo2_inks,
     &escp2_4pl_pigment_photo2_inks,
+    &escp2_4pl_pigment_1440_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks,
     &escp2_4pl_pigment_2880_photo2_inks
@@ -2352,7 +2570,7 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t seven_color_photo_inkset =
 {
-  "PhotoCMYK7", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1, .25,
+  "PhotoCMYK7", N_ ("Seven Color Photo"), 1, INKSET_CcMmYKk, .1 , 1.0,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
@@ -2951,7 +3169,7 @@ static const escp2_densities_t c2pl_densities =
 { 2.0, 2.0, 1.15,1.15,0.57, 0.57, 0.55,  0.55,  0.54,  0.54,  0.416, 0.416, 0.416 };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
+{ 2.0, 2.0, 1.35,1.35,0.68, 0.68, 0.648, 0.648, 0.648, 0.648, 0.648, 0.648, 0.324 };
 
 
 static const res_t standard_reslist[] =
@@ -4012,7 +4230,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
-  /* 36: Stylus Photo 785/890/895 */
+  /* 36: Stylus Photo 785/890/895/915 */
   {
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
@@ -4179,8 +4397,8 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
   },
   /* 47: Stylus Photo 2100/2200 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
-     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_NO | MODEL_VACUUM_NO |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
      MODEL_FAST_360_YES),
     96, 1, 2, 96, 1, 2, 192, 1, 1,
     360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
