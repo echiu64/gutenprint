@@ -1,3 +1,14 @@
-Robert L Krawitz
-Michael Sweet
-Others
+The original version, up to release 2.0, of the Gimp Print plug-in was
+written by Mike Sweet <mike@easysw.com>.
+
+Version 3.0, which is based on version 2, was written by Robert
+Krawitz <rlk@alum.mit.edu>.
+
+Version 3.1 has additional code contributed by
+
+Andy Thaller <thaller@ph.tum.de>
+Eric Sharkey <sharkey@ale.physics.sunysb.edu>
+Henryk "Buggs" Richter <tfa652@cks1.rz.uni-rostock.de>
+Karl Heinz Kremer <khk@khk.net>
+Robert Krawitz <rlk@alum.mit.edu>
+Steve Miller <smiller@rni.net>
