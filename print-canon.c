@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.16  2000/02/08 17:39:48  gandy
+ *   Got support for variable drop sizes ready for testing
+ *
  *   Revision 1.15  2000/02/08 14:12:17  gandy
  *   Next step in supporting variable dot sizes (still experimental)
  *
@@ -98,27 +101,6 @@
  * Local functions...
  */
 
-static void canon_write_line(FILE *, int, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     unsigned char *, int,
-			     int, int, int, int);
-
-static int  canon_write(FILE *, unsigned char *, int, int, int, int,
-			int*, int, int, int);
-
-#define PHYSICAL_BPI 1440
-#define MAX_OVERSAMPLED 4
-#define MAX_BPP 2
-#define BITS_PER_BYTE 8
-#define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
-	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
-
-
 typedef struct {
   int model;
   int max_width;      /* maximum printable paper size */
@@ -129,6 +111,24 @@ typedef struct {
   int slots;          /* available paperslots */
   int features;       /* special bjl settings */
 } canon_cap_t;
+
+static void canon_write_line(FILE *, canon_cap_t, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     unsigned char *, int,
+			     int, int, int, int);
+
+#define PHYSICAL_BPI 1440
+#define MAX_OVERSAMPLED 4
+#define MAX_BPP 2
+#define BITS_PER_BYTE 8
+#define COMPBUFWIDTH (PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
+	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
+
 
 /* Codes for possible ink-tank combinations. 
  * Each combo is represented by the colors that can be used with
@@ -155,9 +155,9 @@ typedef struct {
 #define CANON_SLOT_MAN2    8
 
 /* model peculiarities */
-#define CANON_CAP_CMD61   1    /* uses command #0x61         */
-#define CANON_CAP_DMT     2    /* Drop Modulation Technology */
-
+#define CANON_CAP_CMD61     1    /* uses command #0x61         */
+#define CANON_CAP_DMT       2    /* Drop Modulation Technology */
+#define CANON_CAP_MSB_FIRST 4    /* how to send data */
 
 canon_cap_t canon_model_capabilities[] =
 {
@@ -634,6 +634,12 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
     arg_6c_2= mediacode_6c[media];
   }
 
+  if (use_dmt) {
+    arg_74_1= 0x02;
+    arg_74_2= 0x80;
+    arg_74_3= 0x09;
+  }
+
   /*
   fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_height,
@@ -821,10 +827,15 @@ canon_print(int       model,		/* I - Model */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
+
   if (!strcmp(resolution+(strlen(resolution)-3),"DMT") && 
       (caps.features & CANON_CAP_DMT)) {
-    use_dmt= 1;
-    fprintf(stderr,"canon: using drop modulation technology\n");
+    if (output_type == OUTPUT_GRAY) {
+      use_dmt= 1;
+      fprintf(stderr,"canon: using drop modulation technology\n");
+    } else {
+      fprintf(stderr,"canon: drop modulation only available for B/W\n");
+    }
   }
 
  /*
@@ -1089,7 +1100,7 @@ canon_print(int       model,		/* I - Model */
 		    yellow, lyellow, black);
 
       /* fprintf(stderr,"."); */
-      canon_write_line(prn, model, ydpi,
+      canon_write_line(prn, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1150,7 +1161,7 @@ canon_print(int       model,		/* I - Model */
 
       /* fprintf(stderr,","); */
 
-      canon_write_line(prn, model, ydpi,
+      canon_write_line(prn, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1188,7 +1199,7 @@ canon_print(int       model,		/* I - Model */
     fprintf(stderr,"\ncanon: flushing %d possibly delayed buffers\n",
 	    delay_max);
     for (y= 0; y<delay_max; y++) {
-      canon_write_line(prn, model, ydpi,
+      canon_write_line(prn, caps, ydpi,
 		       black,    delay_k,
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
@@ -1235,6 +1246,73 @@ canon_print(int       model,		/* I - Model */
   fflush(prn);
 }
 
+/*
+ * 'canon_fold_lsb_msb()' fold 2 lines in order lsb/msb
+ */
+
+static void
+canon_fold_lsb_msb(const unsigned char *line,
+		   int single_length,
+		   unsigned char *outbuf)
+{
+  int i;
+  for (i = 0; i < single_length; i++) {
+    outbuf[0] =
+      ((line[0] & (1 << 7)) >> 0) |
+      ((line[0] & (1 << 6)) >> 1) |
+      ((line[0] & (1 << 5)) >> 2) |
+      ((line[0] & (1 << 4)) >> 3) |
+      ((line[single_length] & (1 << 7)) >> 1) |
+      ((line[single_length] & (1 << 6)) >> 2) |
+      ((line[single_length] & (1 << 5)) >> 3) |
+      ((line[single_length] & (1 << 4)) >> 4);
+    outbuf[1] =
+      ((line[0] & (1 << 3)) << 4) |
+      ((line[0] & (1 << 2)) << 3) |
+      ((line[0] & (1 << 1)) << 2) |
+      ((line[0] & (1 << 0)) << 1) |
+      ((line[single_length] & (1 << 3)) << 3) |
+      ((line[single_length] & (1 << 2)) << 2) |
+      ((line[single_length] & (1 << 1)) << 1) |
+      ((line[single_length] & (1 << 0)) << 0);
+    line++;
+    outbuf += 2;
+  }
+}
+
+/*
+ * 'canon_fold_msb_lsb()' fold 2 lines in order msb/lsb
+ */
+
+static void
+canon_fold_msb_lsb(const unsigned char *line,
+		   int single_length,
+		   unsigned char *outbuf)
+{
+  int i;
+  for (i = 0; i < single_length; i++) {
+    outbuf[0] =
+      ((line[0] & (1 << 7)) >> 1) |
+      ((line[0] & (1 << 6)) >> 2) |
+      ((line[0] & (1 << 5)) >> 3) |
+      ((line[0] & (1 << 4)) >> 4) |
+      ((line[single_length] & (1 << 7)) >> 0) |
+      ((line[single_length] & (1 << 6)) >> 1) |
+      ((line[single_length] & (1 << 5)) >> 2) |
+      ((line[single_length] & (1 << 4)) >> 3);
+    outbuf[1] =
+      ((line[0] & (1 << 3)) << 3) |
+      ((line[0] & (1 << 2)) << 2) |
+      ((line[0] & (1 << 1)) << 1) |
+      ((line[0] & (1 << 0)) << 0) |
+      ((line[single_length] & (1 << 3)) << 4) |
+      ((line[single_length] & (1 << 2)) << 3) |
+      ((line[single_length] & (1 << 1)) << 2) |
+      ((line[single_length] & (1 << 0)) << 1);
+    line++;
+    outbuf += 2;
+  }
+}
 
 static void
 canon_pack(unsigned char *line,
@@ -1326,10 +1404,91 @@ canon_pack(unsigned char *line,
     }
 }
 
+	   
+/*
+ * 'canon_write()' - Send graphics using TIFF packbits compression.
+ */
+
+static int
+canon_write(FILE          *prn,		/* I - Print file or command */
+	    canon_cap_t   caps,	        /* I - Printer model */
+	    unsigned char *line,	/* I - Output bitmap data */
+	    int           length,	/* I - Length of bitmap data */
+	    int           coloridx,	/* I - Which color */
+	    int           ydpi,		/* I - Vertical resolution */
+	    int           *empty,       /* IO- Preceeding empty lines */
+	    int           width,	/* I - Printed width */
+	    int           offset, 	/* I - Offset from left side */
+	    int           dmt)        
+{
+  unsigned char	
+    comp_buf[COMPBUFWIDTH],		/* Compression buffer */
+    in_fold[COMPBUFWIDTH],
+    *in_ptr= line,
+    *comp_ptr, *comp_data;
+  int newlength;
+
+ /* Don't send blank lines... */
+
+  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
+    return 0;
+
+  /* fold lsb/msb pairs if drop modulation is active */
+
+  if (dmt) {
+    if (1) {
+      if (1 || caps.features & CANON_CAP_MSB_FIRST) 
+	canon_fold_msb_lsb(line,length,in_fold);
+      else
+	canon_fold_lsb_msb(line,length,in_fold);
+      in_ptr= in_fold;
+    }
+    length*= 2;
+    offset*= 2;
+  } 
+
+  /* pack left border rounded to multiples of 8 dots */
+
+  comp_data= comp_buf;
+  if (offset) {
+    int offset2= (offset+4)/8;
+    while (offset2>0) {
+      unsigned char toffset = offset2 > 128 ? 128 : offset2;
+      comp_data[0] = 1 - toffset;
+      comp_data[1] = 0;
+      comp_data += 2;
+      offset2-= toffset;
+    }
+  }
+
+  canon_pack(in_ptr, length, comp_data, &comp_ptr);
+  newlength= comp_ptr - comp_buf;
+
+  /* send packed empty lines if any */
+
+  if (*empty) {
+    /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
+    fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
+    fputc((*empty) >> 8 , prn);
+    fputc((*empty) & 255, prn);
+    *empty= 0;
+  }
+
+ /* Send a line of raster graphics... */
+
+  fwrite("\x1b\x28\x41", 3, 1, prn);
+  putc((newlength+1) & 255, prn);
+  putc((newlength+1) >> 8, prn);
+  putc("CMYKcm"[coloridx],prn);
+  fwrite(comp_buf, newlength, 1, prn);
+  putc('\x0d', prn);
+  return 1;
+}
+
 
 static void
 canon_write_line(FILE          *prn,	/* I - Print file or command */
-		 int           model,	/* I - Printer model */
+		 canon_cap_t   caps,	/* I - Printer model */
 		 int           ydpi,	/* I - Vertical resolution */
 		 unsigned char *k,	/* I - Output bitmap data */
 		 int           dk,	/* I -  */
@@ -1354,94 +1513,25 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
   int written= 0;
 
   if (k) written+= 
-    canon_write(prn,k+ dk*l, l, 3, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
   if (y) written+= 
-    canon_write(prn,y+ dy*l, l, 2, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, y+ dy*l,  l, 2, ydpi, &empty, width, offset, dmt);
   if (m) written+= 
-    canon_write(prn,m+ dm*l, l, 1, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
   if (c) written+= 
-    canon_write(prn,c+ dc*l, l, 0, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
   if (ly) written+= 
-    canon_write(prn,ly+ dly*l, l, 6, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
   if (lm) written+= 
-    canon_write(prn,lm+ dlm*l, l, 5, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
   if (lc) written+= 
-    canon_write(prn,lc+ dlc*l, l, 4, ydpi, model, &empty, width, offset, dmt);
+    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
   else 
     empty++;
 }
-	   
-/*
- * 'canon_write()' - Send graphics using TIFF packbits compression.
- */
-
-static int
-canon_write(FILE          *prn,		/* I - Print file or command */
-	    unsigned char *line,	/* I - Output bitmap data */
-	    int           length,	/* I - Length of bitmap data */
-	    int           coloridx,	/* I - Which color */
-	    int           ydpi,		/* I - Vertical resolution */
-	    int           model,	/* I - Printer model */
-	    int           *empty,       /* IO- Preceeding empty lines */
-	    int           width,	/* I - Printed width */
-	    int           offset, 	/* I - Offset from left side */
-	    int           dmt)        
-{
-  unsigned char	comp_buf[COMPBUFWIDTH],		/* Compression buffer */
-    *comp_ptr, *comp_data;
-  int newlength;
-
- /* Don't send blank lines... */
-
-  if (dmt) {
-    length*= 2;
-    offset*= 2;
-  }
-
-  if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
-    return 0;
-
-  /* pack left border rounded to multiples of 8 dots */
-
-  comp_data= comp_buf;
-  if (offset) {
-    int offset2= (offset+4)/8;
-    while (offset2>0) {
-      unsigned char toffset = offset2 > 128 ? 128 : offset2;
-      comp_data[0] = 1 - toffset;
-      comp_data[1] = 0;
-      comp_data += 2;
-      offset2-= toffset;
-    }
-  }
-
-  canon_pack(line, length, comp_data, &comp_ptr);
-  newlength= comp_ptr - comp_buf;
-
-  /* send packed empty lines if any */
-
-  if (*empty) {
-    /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
-    fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
-    fputc((*empty) >> 8 , prn);
-    fputc((*empty) & 255, prn);
-    *empty= 0;
-  }
-
- /* Send a line of raster graphics... */
-
-  fwrite("\x1b\x28\x41", 3, 1, prn);
-  putc((newlength+1) & 255, prn);
-  putc((newlength+1) >> 8, prn);
-  putc("CMYKcm"[coloridx],prn);
-  fwrite(comp_buf, newlength, 1, prn);
-  putc('\x0d', prn);
-  return 1;
-}
-
 
 /*
  * End of "$Id$".
