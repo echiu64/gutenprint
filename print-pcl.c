@@ -1916,6 +1916,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
   dither_set_black_upper(dither, .999);
 #endif
 
+/* For the CRET mode of the 840 series, the density has to be corrected */
+
+  if (do_cretb)
+    nv.density /= 2;
+
   if (do_cret)				/* 4-level printing for 800/1120 */
     {
       dither_set_y_ranges_simple(dither, 3, dot_sizes, nv.density);
