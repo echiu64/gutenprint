@@ -716,47 +716,6 @@ do {						\
     }      					\
 } while (0)
 
-#define UPDATE_DITHER_BLACK()					\
-do {								\
-  if (k != 0)							\
-    {								\
-      int i, dist, delta;					\
-      int tmpk = k;						\
-      if (tmpk > 65535)						\
-	tmpk = 65535;						\
-								\
-      if (ditherbit & bit)					\
-	{							\
-	  if (offset == 0)					\
-	    dist = 5 * tmpk;					\
-	  else							\
-	    dist = 5 * tmpk / ((offset + 1) * (offset + 1));	\
-	  if (x > 0 && 0 < xdw1)				\
-	    ditherk    = kerror0[direction] + 3 * tmpk;		\
-	}							\
-      else							\
-	{							\
-	  if (offset == 0)					\
-	    dist = 3 * tmpk;					\
-	  else							\
-	    dist = 3 * tmpk / ((offset + 1) * (offset + 1));	\
-	  if (x > 0 && 0 < xdw1)				\
-	    ditherk    = kerror0[direction] + 5 * tmpk;		\
-	}							\
-      delta = dist;						\
-      for (i = -offset; i <= offset; i++)			\
-	{							\
-	  kerror1[i] += delta;					\
-	  if (i < 0)						\
-	    delta += dist;					\
-	  else							\
-	    delta -= dist;					\
-	}							\
-    }								\
-  else								\
-    ditherk = kerror0[direction];				\
-} while (0)
-
 #define INCREMENT_COLOR()						  \
 do {									  \
   ditherbit = rand();							  \
@@ -820,166 +779,6 @@ do {									  \
     }      								  \
 } while (0)
 
-/*
- * 'dither_fastblack()' - Dither grayscale pixels to black.
- */
-
-void
-dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
-		 int           	    row,	/* I - Current Y coordinate */
-		 void 		    *vd,
-		 unsigned char 	    *black)	/* O - Black bitmap pixels */
-{
-  int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
-		length;		/* Length of output bitmap in bytes */
-  unsigned char	bit,		/* Current bit */
-		*kptr;		/* Current black pixel */
-  int		k;		/* Current black error */
-  dither_t *d = (dither_t *) vd;
-  int terminate;
-  int direction = row & 1 ? 1 : -1;
-
-  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : d->dst_width - 1;
-  terminate = (direction == 1) ? d->dst_width : -1;
-
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
-  length = (d->dst_width + 7) / 8;
-
-  memset(black, 0, length);
-  kptr = black;
-  xerror = 0;
-  if (direction == -1)
-    {
-      kptr = black + length - 1;
-      xstep = -xstep; 
-      gray += d->src_width - 1;
-      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
-      xmod = -xmod;
-    }
-
-  for (; x != terminate; x += direction)
-  {
-    k = 65535 - *gray;
-
-    if (k >= 32768)
-    {
-      if (d->horizontal_overdensity == 1)
-	*kptr |= bit;
-      else if (d->kbits++ == d->horizontal_overdensity)
-	{
-	  *kptr |= bit;
-	  d->kbits = 1;
-	}
-    }
-
-    INCREMENT_BLACK();
-  }
-}
-
-/*
- * 'dither_black()' - Dither grayscale pixels to black.
- */
-
-void
-dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
-	     int           	row,		/* I - Current Y coordinate */
-	     void *vd,
-	     unsigned char 	*black)		/* O - Black bitmap pixels */
-{
-  int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
-		length;		/* Length of output bitmap in bytes */
-  unsigned char	bit,		/* Current bit */
-		*kptr;		/* Current black pixel */
-  int		k,		/* Current black error */
-		ditherk,	/* Next error value in buffer */
-		*kerror0,	/* Pointer to current error row */
-		*kerror1;	/* Pointer to next error row */
-  int		ditherbit;	/* Random dithering bitmask */
-  dither_t *d = (dither_t *) vd;
-  int terminate;
-  int direction = row & 1 ? 1 : -1;
-  int d_offset = 32768 - (32768 >> d->k_randomizer);
-  int odb = d->spread - d->overdensity_bits;
-  int ddw1 = d->dst_width - 1;
-
-  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
-  x = (direction == 1) ? 0 : d->dst_width - 1;
-  terminate = (direction == 1) ? d->dst_width : -1;
-
-  xstep  = d->src_width / d->dst_width;
-  xmod   = d->src_width % d->dst_width;
-  length = (d->dst_width + 7) / 8;
-
-  kerror0 = get_errline(d, row, ECOLOR_K);
-  kerror1 = get_errline(d, row + 1, ECOLOR_K);
-  memset(kerror1, 0, d->dst_width * sizeof(int));
-
-  memset(black, 0, length);
-  kptr = black;
-  xerror = 0;
-  if (direction == -1)
-    {
-      kerror0 += d->dst_width - 1;
-      kerror1 += d->dst_width - 1;
-      kptr = black + length - 1;
-      xstep = -xstep; 
-      gray += d->src_width - 1;
-      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
-      xmod = -xmod;
-    }
-
-  for (ditherbit = rand() & 0xffff, ditherk = kerror0[0];
-       x != terminate;
-       ditherbit = rand() & 0xffff,
-       x += direction,
-	 kerror0 += direction,
-	 kerror1 += direction)
-  {
-    int xdw1 = ddw1 - x;
-    int offset;
-    k = 65535 - *gray;
-    offset = (65535 - (k & 0xffff)) >> odb;
-    if (ditherk >= 0)
-      k += ditherk >> 3;
-    else
-      k += ditherk / 8;
-    if (x < offset)
-      offset = x;
-    else if (offset > xdw1)
-      offset = xdw1;
-
-    if (k > d_offset + (ditherbit >> d->k_randomizer))
-    {
-      if (d->horizontal_overdensity == 1)
-	*kptr |= bit;
-      else if (d->kbits++ == d->horizontal_overdensity)
-	{
-	  *kptr |= bit;
-	  d->kbits = 1;
-	}
-      k -= 65535;
-    }
-
-    UPDATE_DITHER_BLACK();
-    INCREMENT_BLACK();
-  }
-}
-
-/*
- * 'dither_cmyk6()' - Dither RGB pixels to cyan, magenta, light cyan,
- * light magenta, yellow, and black.
- *
- * Added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999.
- */
-
 #define UPDATE_COLOR(r)				\
 do {						\
   if (dither##r >= 0)				\
@@ -1006,7 +805,7 @@ do {								\
 
 #define PRINT_COLOR(color, r, R, d1, d2)				\
 do {									\
-  int randomizer, offset, comp0;					\
+  int offset, comp0;							\
   int dtmp = 32768 >> d->r##_randomizer;				\
   if (o##r >= 128 * dtmp)						\
     {									\
@@ -1079,12 +878,12 @@ do {								\
   if (tmp##r != 0)						\
     {								\
       offset = (65535 - (o##r & 0xffff)) >> odb;		\
-      if (tmp##r > 65535)					\
-	tmp##r = 65535;						\
       if (offset > x)						\
 	offset = x;						\
       else if (offset > xdw1)					\
 	offset = xdw1;						\
+      if (tmp##r > 65535)					\
+	tmp##r = 65535;						\
       if (ditherbit##d2 & bit)					\
 	{							\
 	  if (offset == 0)					\
@@ -1116,6 +915,147 @@ do {								\
   else								\
     dither##r = r##error0[direction];				\
 } while (0)
+
+/*
+ * 'dither_fastblack()' - Dither grayscale pixels to black.
+ */
+
+void
+dither_fastblack(unsigned short     *gray,	/* I - Grayscale pixels */
+		 int           	    row,	/* I - Current Y coordinate */
+		 void 		    *vd,
+		 unsigned char 	    *black)	/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k;		/* Current black error */
+  dither_t *d = (dither_t *) vd;
+  int terminate;
+  int direction = row & 1 ? 1 : -1;
+
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
+
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
+
+  memset(black, 0, length);
+  kptr = black;
+  xerror = 0;
+  if (direction == -1)
+    {
+      kptr = black + length - 1;
+      xstep = -xstep; 
+      gray += d->src_width - 1;
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
+      xmod = -xmod;
+    }
+
+  for (; x != terminate; x += direction)
+    {
+      k = 65535 - *gray;
+
+      if (k >= 32768)
+	{
+	  DO_PRINT_COLOR(k);
+	}
+
+      INCREMENT_BLACK();
+    }
+}
+
+/*
+ * 'dither_black()' - Dither grayscale pixels to black.
+ */
+
+void
+dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
+	     int           	row,		/* I - Current Y coordinate */
+	     void *vd,
+	     unsigned char 	*black)		/* O - Black bitmap pixels */
+{
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k,		/* Current black error */
+		ditherk,	/* Next error value in buffer */
+		*kerror0,	/* Pointer to current error row */
+		*kerror1;	/* Pointer to next error row */
+  int		ditherbit;	/* Random dithering bitmask */
+  dither_t *d = (dither_t *) vd;
+  int terminate;
+  int direction = row & 1 ? 1 : -1;
+  int d_offset = 32768 - (32768 >> d->k_randomizer);
+  int odb = d->spread - d->overdensity_bits;
+  int ddw1 = d->dst_width - 1;
+
+  bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
+  x = (direction == 1) ? 0 : d->dst_width - 1;
+  terminate = (direction == 1) ? d->dst_width : -1;
+
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
+
+  kerror0 = get_errline(d, row, ECOLOR_K);
+  kerror1 = get_errline(d, row + 1, ECOLOR_K);
+  memset(kerror1, 0, d->dst_width * sizeof(int));
+
+  memset(black, 0, length);
+  kptr = black;
+  xerror = 0;
+  if (direction == -1)
+    {
+      kerror0 += d->dst_width - 1;
+      kerror1 += d->dst_width - 1;
+      kptr = black + length - 1;
+      xstep = -xstep; 
+      gray += d->src_width - 1;
+      xerror = ((d->dst_width - 1) * xmod) % d->dst_width;
+      xmod = -xmod;
+    }
+
+  for (ditherbit = rand() & 0xffff, ditherk = kerror0[0];
+       x != terminate;
+       ditherbit = rand() & 0xffff,
+       x += direction,
+	 kerror0 += direction,
+	 kerror1 += direction)
+  {
+    int xdw1 = ddw1 - x;
+    int ok;
+    k = 65535 - *gray;
+    ok = k;
+    UPDATE_COLOR(k);
+
+    if (k > d_offset + (ditherbit >> d->k_randomizer))
+    {
+      DO_PRINT_COLOR(k);
+      k -= 65535;
+    }
+
+    UPDATE_DITHER(k, ,x, width);
+    INCREMENT_BLACK();
+  }
+}
+
+/*
+ * 'dither_cmyk6()' - Dither RGB pixels to cyan, magenta, light cyan,
+ * light magenta, yellow, and black.
+ *
+ * Added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999.
+ */
 
 void
 dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
@@ -1183,9 +1123,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int terminate;
   int direction = row & 1 ? 1 : -1;
   int k_offset = 32768 - (32768 >> d->k_randomizer);
-  int c_offset = 32768 - (32768 >> d->c_randomizer);
-  int m_offset = 32768 - (32768 >> d->m_randomizer);
-  int y_offset = 32768 - (32768 >> d->y_randomizer);
   int lc_level = 65536 - d->lc_level;
   int lm_level = 65536 - d->lm_level;
   int ly_level = 65536 - d->ly_level;
@@ -1451,10 +1388,88 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 }
 
 
-/*
- * Constants for 4-level dithering functions...
- * NOTE that these constants are HP-specific!
- */
+#define DO_PRINT_COLOR_4(base, r, ratio)			\
+do {								\
+  int i;							\
+  if (use_log_encoding)						\
+    {								\
+      for (i = d->n##r##_l - 1; i > 0; i--)			\
+	{							\
+	  if (base > d->r##_transitions[i])			\
+	    {							\
+	      if (d->r##bits++ == d->horizontal_overdensity)	\
+		{						\
+		  int j;					\
+		  unsigned char *tptr = r##ptr;			\
+		  for (j = 1; j <= i; j += j, tptr += length)	\
+		    {						\
+		      if (j & i)				\
+			*t##ptr |= bit;				\
+		    }						\
+		  d->r##bits = 1;				\
+		}						\
+	      base -= d->r##_levels[i] * ratio;			\
+	      break;						\
+	    }							\
+	}							\
+    }								\
+  else								\
+    {								\
+      unsigned char *tptr = r##ptr;				\
+      for (i = d->n##r##_l - 1; i > 0; i--)			\
+	{							\
+	  if (base > d->r##_transitions[i])			\
+	    {							\
+	      if (d->r##bits++ == d->horizontal_overdensity)	\
+		{						\
+		  *t##ptr |= bit;				\
+		  d->r##bits = 1;				\
+		}						\
+	      base -= d->r##_levels[i] * ratio;			\
+	      break;						\
+	    }							\
+	  tptr += length;					\
+	}							\
+    }								\
+} while (0)
+
+#define PRINT_COLOR_4(color, r, R, d1, d2)				     \
+do {									     \
+  int comp0 = (32768 + ((ditherbit##d2 >> d->r##_randomizer) -		     \
+			(32768 >> d->r##_randomizer)));			     \
+  if (!l##color)							     \
+    {									     \
+      DO_PRINT_COLOR_4(r, r, 1);					     \
+    }									     \
+  else									     \
+    {									     \
+      int compare = comp0 * d->l##r##_level >> 16;			     \
+      if (r <= (d->l##r##_level))					     \
+	{								     \
+	  if (r > compare)						     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
+	    }								     \
+	}								     \
+      else if (r > compare)						     \
+	{								     \
+	  int cutoff = ((density - d->l##r##_level) * 65536 / l##r##_level); \
+	  int sub;							     \
+	  if (cutoff >= 0)						     \
+	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
+	  else								     \
+	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
+	  if (ditherbit##d1 > cutoff)					     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
+	    }								     \
+	  else								     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, r, 1);				     \
+	    }								     \
+	}								     \
+    }									     \
+} while (0)
 
 /*
  * 'dither_black_n()' - Dither grayscale pixels to n levels of black.
@@ -1522,61 +1537,12 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
 	 kerror1 += direction)
   {
     int xdw1 = ddw1 - x;
-    int i;
-    int offset;
+    int ok;
     k = 65535 - *gray;
-    offset = (65535 - (k & 0xffff)) >> odb;
-    if (ditherk >= 0)
-      k += ditherk >> 3;
-    else
-      k += ditherk / 8;
-    if (x < offset)
-      offset = x;
-    else if (offset > xdw1)
-      offset = xdw1;
-
-    if (use_log_encoding)
-      {
-	for (i = d->nk_l - 1; i > 0; i--)
-	  {
-	    if (k > d->k_transitions[i])
-	      {
-		if (d->kbits++ == d->horizontal_overdensity)
-		  {
-		    int j;
-		    unsigned char *tptr = kptr;
-		    for (j = 1; j <= i; j += j, tptr += length)
-		      {
-			if (j & i)
-			  *tptr |= bit;
-		      }
-		    d->kbits = 1;
-		  }
-		k -= d->k_levels[i];
-		break;
-	      }
-	  }
-      }
-    else
-      {
-	unsigned char *tptr = kptr;
-	for (i = d->nk_l - 1; i > 0; i--)
-	  {
-	    if (k > d->k_transitions[i])
-	      {
-		if (d->kbits++ == d->horizontal_overdensity)
-		  {
-		    *tptr |= bit;
-		    d->kbits = 1;
-		  }
-		k -= d->k_levels[i];
-		break;
-	      }
-	    tptr += length;
-	  }
-      }
-
-    UPDATE_DITHER_BLACK();
+    ok = k;
+    UPDATE_COLOR(k);
+    DO_PRINT_COLOR_4(k, k, 1);
+    UPDATE_DITHER(k, ,x, width);
     INCREMENT_BLACK();
   }
 }
@@ -1585,89 +1551,6 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
  * 'dither_cmyk_n()' - Dither RGB pixels to n levels of cyan, magenta, yellow,
  *                     and black.
  */
-
-#define DO_PRINT_COLOR_4(base, r, ratio)			\
-do {								\
-  int i;							\
-  if (use_log_encoding)						\
-    {								\
-      for (i = d->n##r##_l - 1; i > 0; i--)			\
-	{							\
-	  if (base > d->r##_transitions[i])			\
-	    {							\
-	      if (d->r##bits++ == d->horizontal_overdensity)	\
-		{						\
-		  int j;					\
-		  unsigned char *tptr = r##ptr;			\
-		  for (j = 1; j <= i; j += j, tptr += length)	\
-		    {						\
-		      if (j & i)				\
-			*t##ptr |= bit;				\
-		    }						\
-		  d->r##bits = 1;				\
-		}						\
-	      base -= d->r##_levels[i];				\
-	      break;						\
-	    }							\
-	}							\
-    }								\
-  else								\
-    {								\
-      unsigned char *tptr = r##ptr;				\
-      for (i = d->n##r##_l - 1; i > 0; i--)			\
-	{							\
-	  if (base > d->r##_transitions[i])			\
-	    {							\
-	      if (d->r##bits++ == d->horizontal_overdensity)	\
-		{						\
-		  *t##ptr |= bit;				\
-		  d->r##bits = 1;				\
-		}						\
-	      base -= d->r##_levels[i];				\
-	      break;						\
-	    }							\
-	  tptr += length;					\
-	}							\
-    }								\
-} while (0)
-
-#define PRINT_COLOR_4(color, r, R, d1, d2)				     \
-do {									     \
-  int comp0 = (32768 + ((ditherbit##d2 >> d->r##_randomizer) -		     \
-			(32768 >> d->r##_randomizer)));			     \
-  if (!l##color)							     \
-    {									     \
-      DO_PRINT_COLOR_4(r, r, 1);					     \
-    }									     \
-  else									     \
-    {									     \
-      int compare = comp0 * d->l##r##_level >> 16;			     \
-      if (r <= (d->l##r##_level))					     \
-	{								     \
-	  if (r > compare)						     \
-	    {								     \
-	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
-	    }								     \
-	}								     \
-      else if (r > compare)						     \
-	{								     \
-	  int cutoff = ((density - d->l##r##_level) * 65536 / l##r##_level); \
-	  int sub;							     \
-	  if (cutoff >= 0)						     \
-	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
-	  else								     \
-	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
-	  if (ditherbit##d1 > cutoff)					     \
-	    {								     \
-	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
-	    }								     \
-	  else								     \
-	    {								     \
-	      DO_PRINT_COLOR_4(r, r, 1);				     \
-	    }								     \
-	}								     \
-    }									     \
-} while (0)
 
 void
 dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
@@ -2003,6 +1886,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.15  2000/03/17 01:04:52  rlk
+ *   Clean things up a bit to prep for possible dither modifications
+ *
  *   Revision 1.14  2000/03/16 03:20:20  rlk
  *   Scale down randomness as ink level increases
  *
