@@ -996,9 +996,9 @@ canon_print(const printer_t *printer,		/* I - Model */
   dither_set_black_levels(dither, 1.0, 1.0, 1.0);
 
   if (printhead>=3 && (caps.inks & (CANON_INK_PHOTO_MASK)))
-    dither_set_black_lower(dither, .5 / bits);
+    dither_set_black_lower(dither, (use_dmt) ? .25 : .5 );
   else
-    dither_set_black_lower(dither, .25 / bits);
+    dither_set_black_lower(dither, (use_dmt) ? .125 : .25 );
 
   /* dither_set_black_lower(dither, .8 / ((1 << (use_dmt+1)) - 1)); */
 
@@ -1039,7 +1039,7 @@ canon_print(const printer_t *printer,		/* I - Model */
       dither_set_c_ranges(dither, dsize, variable_dither_ranges, nv.density);
 
     
-  } else }
+  } else {
     dither_set_light_inks(dither,
 			  (lcyan)   ? (0.3333) : (0.0),
 			  (lmagenta)? (0.3333) : (0.0),
