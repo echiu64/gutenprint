@@ -223,13 +223,13 @@ const static pcl_t pcl_resolutions[] =
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
-const char *
+static const char *
 pcl_default_resolution(const stp_printer_t *printer)
 {
   return pcl_resolutions[0].pcl_name;
 }
 
-void
+static void
 pcl_describe_resolution(const stp_printer_t *printer,
 			const char *resolution, int *x, int *y)
 {
