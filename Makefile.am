@@ -4,7 +4,7 @@ libexecdir = $(gimpplugindir)/plug-ins
 
 libexec_PROGRAMS = print
 
-bin_PROGRAMS = unprint weavetest
+bin_PROGRAMS = unprint weavetest canunprint
 
 print_SOURCES = \
 	print-canon.c   \
@@ -17,6 +17,8 @@ print_SOURCES = \
 	print.h   
 
 unprint_SOURCES = unprint.c
+
+canunprint_SOURCES = canunprint.cpp
 
 weavetest_SOURCES = weavetest.c
 
