@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.12  2000/02/06 22:08:19  rlk
+ *   Remove calls to non-POSIX strdup
+ *
  *   Revision 1.11  2000/02/06 03:59:09  rlk
  *   More work on the generalized dithering parameters stuff.  At this point
  *   it really looks like a proper object.  Also dynamically allocate the error
@@ -241,6 +244,14 @@ canon_size_type(const char *name, canon_cap_t caps)
   return 0; 
 }
 
+static char *
+c_strdup(const char *s)
+{
+  char *ret = malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
 /*
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
@@ -311,15 +322,23 @@ canon_parameters(int  model,		/* I - Printer model */
     int c= 0;
     valptrs = malloc(sizeof(char *) * 10);
     if (!(caps.max_xdpi%300)) {
-      if ( 300<=x && 300<=y) valptrs[c++]= strdup("300x300 DPI");
-      if ( 600<=x && 600<=y) valptrs[c++]= strdup("600x600 DPI");
-      if (1200<=x && 600<=y) valptrs[c++]= strdup("1200x600 DPI");
+      if ( 300<=x && 300<=y)
+	valptrs[c++]= c_strdup("300x300 DPI");
+      if ( 600<=x && 600<=y)
+	valptrs[c++]= c_strdup("600x600 DPI");
+      if (1200<=x && 600<=y)
+	valptrs[c++]= c_strdup("1200x600 DPI");
     } else if (!(caps.max_xdpi%180)) {
-      if ( 180<=x && 180<=y) valptrs[c++]= strdup("180x180 DPI");
-      if ( 360<=x && 360<=y) valptrs[c++]= strdup("360x360 DPI");
-      if ( 720<=x && 360<=y) valptrs[c++]= strdup("720x360 DPI");
-      if ( 720<=x && 720<=y) valptrs[c++]= strdup("720x720 DPI");
-      if (1440<=x && 720<=y) valptrs[c++]= strdup("1440x720 DPI");
+      if ( 180<=x && 180<=y)
+	valptrs[c++]= c_strdup("180x180 DPI");
+      if ( 360<=x && 360<=y)
+	valptrs[c++]= c_strdup("360x360 DPI");
+      if ( 720<=x && 360<=y)
+	valptrs[c++]= c_strdup("720x360 DPI");
+      if ( 720<=x && 720<=y)
+	valptrs[c++]= c_strdup("720x720 DPI");
+      if (1440<=x && 720<=y)
+	valptrs[c++]= c_strdup("1440x720 DPI");
     } else {
       fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
 	      caps.model);
@@ -332,11 +351,16 @@ canon_parameters(int  model,		/* I - Printer model */
   {
     int c= 0;
     valptrs = malloc(sizeof(char *) * 5);
-    if ((caps.inks & CANON_INK_K))      valptrs[c++]= strdup("Black");
-    if ((caps.inks & CANON_INK_CMY))    valptrs[c++]= strdup("Color");
-    if ((caps.inks & CANON_INK_CMYK))   valptrs[c++]= strdup("Black/Color");
-    if ((caps.inks & CANON_INK_CcMmYK)) valptrs[c++]= strdup("Photo/Color");
-    if ((caps.inks & CANON_INK_CcMmYy)) valptrs[c++]= strdup("Photo/Color");
+    if ((caps.inks & CANON_INK_K))
+      valptrs[c++]= c_strdup("Black");
+    if ((caps.inks & CANON_INK_CMY))
+      valptrs[c++]= c_strdup("Color");
+    if ((caps.inks & CANON_INK_CMYK))
+      valptrs[c++]= c_strdup("Black/Color");
+    if ((caps.inks & CANON_INK_CcMmYK))
+      valptrs[c++]= c_strdup("Photo/Color");
+    if ((caps.inks & CANON_INK_CcMmYy))
+      valptrs[c++]= c_strdup("Photo/Color");
     *count = c;
     p = valptrs;
   }
@@ -355,11 +379,7 @@ canon_parameters(int  model,		/* I - Printer model */
 
   valptrs = malloc(*count * sizeof(char *));
   for (i = 0; i < *count; i ++)
-    {
-      /* strdup doesn't appear to be POSIX... */
-      valptrs[i] = malloc(strlen(p[i]) + 1);
-      strcpy(valptrs[i], p[i]);
-    }
+    valptrs[i] = c_strdup(p[i]);
 
   return (valptrs);
 }
