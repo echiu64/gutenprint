@@ -30,6 +30,10 @@
 #include<limits.h>
 #include<string.h>
 
+#ifdef __GNUC__
+#define inline __inline__
+#endif
+
 #undef DEBUG_CANON
 
 typedef struct {
@@ -106,9 +110,6 @@ line_type **page=NULL;
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
 
-int  get_bits (unsigned char *p,int index);
-void set_bits (unsigned char *p,int index,int value);
-void mix_ink (ppmpixel p, int c, unsigned int a);
 void merge_line (line_type *p, unsigned char *l, int startl, int stopl, 
                  int color);
 void expand_line (unsigned char *src, unsigned char *dst, int height,
@@ -123,7 +124,8 @@ int rle_decode (unsigned char *inbuf, int n, int max);
 void parse_canon (FILE *fp_r);
      
 
-int get_bits(unsigned char *p,int index) 
+static inline int 
+get_bits(unsigned char *p,int index) 
 {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Extract the
@@ -132,16 +134,18 @@ int get_bits(unsigned char *p,int index)
    */
 
   int value,b;
+  unsigned addr = (index*pstate.bpp);
 
   value=0;
   for (b=0;b<pstate.bpp;b++) {
     value*=2;
-    value|=(p[(index*pstate.bpp+b)/8]>>(7-((index*pstate.bpp+b)%8)))&1;
+    value|=(p[(addr + b) >> 3] >> (7-((addr + b) & 7)))&1;
   }
   return(value);
 }
 
-void set_bits(unsigned char *p,int index,int value) 
+static inline void 
+set_bits(unsigned char *p,int index,int value) 
 {
 
   /* p is a pointer to a bit stream, ordered MSb first.  Set the
@@ -161,7 +165,8 @@ void set_bits(unsigned char *p,int index,int value)
   }
 }
 
-void mix_ink(ppmpixel p, int c, unsigned int a) 
+static inline void 
+mix_ink(ppmpixel p, int c, unsigned int a) 
 {
 
   /* this is pretty crude */
@@ -189,7 +194,8 @@ void mix_ink(ppmpixel p, int c, unsigned int a)
   }
 }
 
-void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
+void 
+merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 {
 
   int i;
