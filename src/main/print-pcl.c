@@ -359,6 +359,13 @@ static const short letter_only_papersizes[] =
   -1
 };
 
+static const short letter_a4_papersizes[] =
+{
+  PCL_PAPERSIZE_A4,
+  PCL_PAPERSIZE_LETTER,
+  -1
+};
+
 static const short dj340_papersizes[] =
 {
   PCL_PAPERSIZE_EXECUTIVE,
@@ -660,13 +667,13 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* DesignJet 230/430 (monochrome ) */
   { 10230,
     36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600,
     {49, 49, 15, 15},
     {49, 49, 15, 15},
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
@@ -674,65 +681,65 @@ static const pcl_cap_t pcl_model_capabilities[] =
   /* The "CA" versions have a "software RIP" but are the same hardware */
   { 10250,
     36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {49, 49, 15, 15},
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
   /* DesignJet 700 (monochrome) */
   { 10700,
     36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600,
     {30, 30, 15, 15},		/* These margins are for sheet mode FIX */
     {30, 30, 15, 15},
     PCL_COLOR_NONE,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
   /* DesignJet 750C */
   { 10750,
     36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {30, 30, 15, 15},	/* These margins are for roll mode FIX */
     {30, 30, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
   /* DesignJet 2000C/2500C (36" wide) */
   { 12500,	/* Deskjet 2500 already has "2500" */
     36 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {49, 49, 15, 15},		/* Check/Fix */
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
   /* DesignJet 3000C/3500C (54" wide) */
   { 13500,	/* Deskjet 2500 already has "2500" */
     54 * 72, 150 * 12 * 72,		/* 150ft in roll mode, 64" in sheet */
-    830 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
+    826 * 72 / 100, 583 * 72 / 100,	/* 8.3" wide min in sheet mode */
     PCL_RES_300_300 | PCL_RES_600_600_MONO,
     {49, 49, 15, 15},		/* Check/Fix */
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
-    letter_only_papersizes,
+    letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
   },
