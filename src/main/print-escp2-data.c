@@ -2447,7 +2447,7 @@ static const escp2_inkname_t photo_ink_types[] =
     }
   },
   {
-    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
     {
       NULL, &photo_cyan_channels,
       &photo_magenta_channels, &photo_yellow_channels
@@ -2507,7 +2507,7 @@ static const escp2_inkname_t photo7_japan_ink_types[] =
     }
   },
   {
-    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
     {
       NULL, &standard_cyan_channels,
       &standard_magenta_channels, &standard_yellow_channels
@@ -2553,7 +2553,7 @@ static const escp2_inkname_t photo7_ink_types[] =
     }
   },
   {
-    "CMYK", N_ ("Five Color Photo Composite"), 1,
+    "PhotoCMY", N_ ("Five Color Photo Composite"), 1,
     {
       NULL, &standard_cyan_channels,
       &standard_magenta_channels, &standard_yellow_channels
