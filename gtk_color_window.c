@@ -1081,7 +1081,7 @@ void gtk_build_dither_menu()
 
     dither_algo_menu = gtk_menu_new();
 
-    if (num_dither_algos == 0)
+    if (stp_dither_algorithm_count() == 0)
     {
 	item = gtk_menu_item_new_with_label (_("Standard"));
 	gtk_menu_append (GTK_MENU (dither_algo_menu), item);
@@ -1097,9 +1097,9 @@ void gtk_build_dither_menu()
 	gtk_widget_set_sensitive(dither_algo_button, TRUE);
     }
 
-    for (i = 0; i < num_dither_algos; i ++)
+    for (i = 0; i < stp_dither_algorithm_count(); i ++)
     {
-	item = gtk_menu_item_new_with_label(gettext(dither_algo_names[i]));
+	item = gtk_menu_item_new_with_label(gettext(stp_dither_algorithm_name(i)));
 	if (i == 0)
 	    item0 = item;
 	gtk_menu_append(GTK_MENU(dither_algo_menu), item);
@@ -1113,20 +1113,20 @@ void gtk_build_dither_menu()
     gtk_option_menu_set_menu(GTK_OPTION_MENU(dither_algo_button ),
 			     dither_algo_menu);
 
-    for (i = 0; i < num_dither_algos; i ++)
+    for (i = 0; i < stp_dither_algorithm_count(); i ++)
     {
 #ifdef DEBUG
-	printf("item[%d] = \'%s\'\n", i, dither_algo_names[i]);
+	printf("item[%d] = \'%s\'\n", i, stp_dither_algorithm_name(i));
 #endif /* DEBUG */
 
-	if (strcmp(dither_algo_names[i], plist[plist_current].v.dither_algorithm) == 0)
+	if (strcmp(stp_dither_algorithm_name(i), plist[plist_current].v.dither_algorithm) == 0)
 	{
 	    gtk_option_menu_set_history(GTK_OPTION_MENU(dither_algo_button), i);
 	    break;
 	}
     }
 
-    if (i == num_dither_algos)
+    if (i == stp_dither_algorithm_count())
     {
 	gtk_option_menu_set_history(GTK_OPTION_MENU(dither_algo_button), 0);
 	gtk_signal_emit_by_name(GTK_OBJECT(item0), "activate");
@@ -1143,9 +1143,9 @@ static void
 gtk_dither_algo_callback (GtkWidget *widget,
 			  gint   data)
 {
-  strcpy(vars.dither_algorithm, dither_algo_names[data]);
+  strcpy(vars.dither_algorithm, stp_dither_algorithm_name(data));
   strcpy(plist[plist_current].v.dither_algorithm,
-	 dither_algo_names[data]);
+	 stp_dither_algorithm_name(data));
 }
 
 #endif  /* ! NEW_UI_ONLY */

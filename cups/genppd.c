@@ -520,12 +520,12 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
   gzputs(fp, "*OpenUI *Dither: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *Dither\n");
 
-  for (i = 0; i < num_dither_algos; i ++)
+  for (i = 0; i < stp_dither_algorithm_count(); i ++)
   {
     char *s;
-    char *copy = malloc(strlen(dither_algo_names[i]) + 1);
+    char *copy = malloc(strlen(stp_dither_algorithm_name(i)) + 1);
     char *d = copy;
-    s = dither_algo_names[i];
+    s = stp_dither_algorithm_name(i);
     do
     {
       if (*s != ' ' && *s != '\t' && *s != '-')
@@ -535,7 +535,7 @@ write_ppd(const stp_printer_t *p,		/* I - Printer driver */
     if (i == 0)
       gzprintf(fp, "*DefaultDither: %s\n", copy);
     gzprintf(fp, "*Dither %s/%s: \"<</OutputType(%s)>>setpagedevice\"\n",
-             copy, dither_algo_names[i], dither_algo_names[i]);
+             copy, stp_dither_algorithm_name(i), stp_dither_algorithm_name(i));
     free(copy);
   }
 

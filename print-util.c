@@ -510,7 +510,7 @@ stp_get_printer_index_by_driver(const char *driver)
 const char *
 stp_default_dither_algorithm(void)
 {
-  return dither_algo_names[0];
+  return stp_dither_algorithm_name(0);
 }
 
 void
@@ -744,8 +744,8 @@ stp_verify_printer_params(const stp_printer_t *p, const stp_vars_t *v)
       free(vptr);
     }
 
-  for (i = 0; i < num_dither_algos; i++)
-    if (!strcmp(v->dither_algorithm, dither_algo_names[i]))
+  for (i = 0; i < stp_dither_algorithm_count(); i++)
+    if (!strcmp(v->dither_algorithm, stp_dither_algorithm_name(i)))
       return answer;
 
   fprintf(stderr, "%s is not a valid dither algorithm\n", v->dither_algorithm);

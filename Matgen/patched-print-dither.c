@@ -87,7 +87,7 @@ char *dither_algo_names[] =
   "Perturbed Ordered",
 };
 
-int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
+int stp_dither_algorithm_count() = sizeof(dither_algo_names) / sizeof(char *);
 
 
 #define ERROR_ROWS 2

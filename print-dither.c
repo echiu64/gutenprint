@@ -73,18 +73,24 @@
 #define DITHER_FAST_STEPS (6)
 #define DITHER_FAST_MASK ((1 << DITHER_FAST_STEPS) - 1)
 
-char *dither_algo_names[] =
+typedef struct
 {
-  "Adaptive Hybrid",
-  "Ordered",
-  "Fast",
-  "Very Fast",
-  "Adaptive Random",
-  "Hybrid Floyd-Steinberg",
-  "Random Floyd-Steinberg",
+  const char *name;
+  int id;
+} dither_algo_t;
+
+static dither_algo_t dither_algos[] =
+{
+  { "Adaptive Hybrid",        D_ADAPTIVE_HYBRID },
+  { "Ordered",                D_ORDERED },
+  { "Fast",                   D_FAST },
+  { "Very Fast",              D_VERY_FAST },
+  { "Adaptive Random",        D_ADAPTIVE_RANDOM },
+  { "Hybrid Floyd-Steinberg", D_FLOYD_HYBRID },
+  { "Random Floyd-Steinberg", D_FLOYD }
 };
 
-int num_dither_algos = sizeof(dither_algo_names) / sizeof(char *);
+static int num_dither_algos = sizeof(dither_algos) / sizeof(dither_algo_t);
 
 #define ERROR_ROWS 2
 
@@ -269,6 +275,20 @@ static unsigned short rect2x1[] = {
 static unsigned short rect4x1[] = {
 #include "ran.509.131.h"
 };
+
+size_t
+stp_dither_algorithm_count(void)
+{
+  return num_dither_algos;
+}
+
+const char *
+stp_dither_algorithm_name(int id)
+{
+  if (id < 0 || id >= num_dither_algos)
+    return NULL;
+  return dither_algos[id].name;
+}
 
 static inline int
 calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
@@ -546,22 +566,15 @@ stp_init_dither(int in_width, int out_width, int horizontal_aspect,
   d->x_aspect = horizontal_aspect;
   d->y_aspect = vertical_aspect;
 
-  if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
-    d->dither_type = D_FLOYD_HYBRID;
-  else if (!strcmp(v->dither_algorithm, "Random Floyd-Steinberg"))
-    d->dither_type = D_FLOYD;
-  else if (!strcmp(v->dither_algorithm, "Ordered"))
-    d->dither_type = D_ORDERED;
-  else if (!strcmp(v->dither_algorithm, "Adaptive Hybrid"))
-    d->dither_type = D_ADAPTIVE_HYBRID;
-  else if (!strcmp(v->dither_algorithm, "Adaptive Random"))
-    d->dither_type = D_ADAPTIVE_RANDOM;
-  else if (!strcmp(v->dither_algorithm, "Fast"))
-    d->dither_type = D_FAST;
-  else if (!strcmp(v->dither_algorithm, "Very Fast"))
-    d->dither_type = D_VERY_FAST;
-  else
-    d->dither_type = D_FLOYD_HYBRID;
+  d->dither_type = D_FLOYD_HYBRID;
+  for (i = 0; i < num_dither_algos; i++)
+    {
+      if (!strcmp(v->dither_algorithm, dither_algos[i].name))
+	{
+	  d->dither_type = dither_algos[i].id;
+	  break;
+	}
+    }
 
   if (d->dither_type == D_VERY_FAST)
     {

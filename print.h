@@ -534,6 +534,8 @@ extern void     ps_describe_resolution(const struct printer *printer,
 				       const char *resolution,
 				       int *x, int *y);
 
+extern size_t	  stp_dither_algorithm_count(void);
+extern const char *stp_dither_algorithm_name(int);
 extern const char *stp_default_dither_algorithm(void);
 
 extern int	      		stp_known_papersizes(void);
@@ -548,8 +550,6 @@ extern const stp_printer_t	*stp_get_printer_by_long_name(const char *);
 extern const stp_printer_t	*stp_get_printer_by_driver(const char *);
 extern int			stp_get_printer_index_by_driver(const char *);
 
-extern int			num_dither_algos;
-extern char			*dither_algo_names[];
 extern stp_convert_t 	stp_choose_colorfunc(int, int,
 					     const unsigned char *, int *,
 					     const stp_vars_t *);

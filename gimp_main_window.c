@@ -1107,8 +1107,8 @@ gimp_scaling_callback (GtkWidget *widget)
 void 
 gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 			gint            num_items,   /* I - Number of items */
-			gchar         **items,       /* I - Menu items */
-			gchar          *cur_item,    /* I - Current item */
+			const gchar    **items,       /* I - Menu items */
+			const gchar     *cur_item,    /* I - Current item */
 			GtkSignalFunc   callback,    /* I - Callback */
 			gint           *callback_id) /* IO - Callback ID (init to -1) */
 {
