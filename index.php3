@@ -184,7 +184,9 @@ article in LinuxPlanet</a> is one user's take on it.</a>
 become 5.0.  We hope to implement proper color management, improved
 dithering, and improve the performance (which is another known weak
 point, although there are a lot of tradeoffs between performance and
-quality that you can choose from).</p>
+quality that you can choose from).  Meanwhile, we're not abandoning
+4.2: we're fixing bugs, adding support for new printers, and porting
+selected features back from 4.3.</p>
 
 <p>We think you'll really enjoy using gimp-print!</p>
 
