@@ -342,6 +342,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
   gfloat vector[256];
+  int i;
   stp_curve_t curve;
   GtkWidget *gcurve =
     GTK_WIDGET(GTK_GAMMA_CURVE(opt->info.curve.gamma_curve)->curve);
@@ -350,6 +351,13 @@ set_curve_callback(GtkObject *button, gpointer xopt)
   opt->info.curve.is_visible = FALSE;
   curve = stp_curve_create_copy(opt->info.curve.deflt);
   gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+  for (i = 0; i < 256; i++)
+    {
+      if (vector[i] > 1)
+	vector[i] = 1;
+      else if (vector[i] < 0)
+	vector[i] = 0;
+    }
   stp_curve_set_float_data(curve, 256, vector);
   switch (GTK_CURVE(gcurve)->curve_type)
     {
@@ -371,6 +379,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
 static gint
 curve_draw_callback(GtkWidget *widget, GdkEvent *event, gpointer xopt)
 {
+  int i;
   option_t *opt = (option_t *)xopt;
   gfloat vector[256];
   stp_curve_t curve;
@@ -380,6 +389,13 @@ curve_draw_callback(GtkWidget *widget, GdkEvent *event, gpointer xopt)
     case GDK_BUTTON_RELEASE:
       curve = stp_curve_create_copy(opt->info.curve.deflt);
       gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+      for (i = 0; i < 256; i++)
+	{
+	  if (vector[i] > 1)
+	    vector[i] = 1;
+	  else if (vector[i] < 0)
+	    vector[i] = 0;
+	}
       stp_curve_set_float_data(curve, 256, vector);
       stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
       stp_curve_free(curve);
@@ -395,12 +411,20 @@ curve_draw_callback(GtkWidget *widget, GdkEvent *event, gpointer xopt)
 static gint
 curve_type_changed(GtkWidget *widget, gpointer xopt)
 {
+  int i;
   option_t *opt = (option_t *)xopt;
   gfloat vector[256];
   stp_curve_t curve;
   GtkWidget *gcurve = GTK_WIDGET(widget);
   curve = stp_curve_create_copy(opt->info.curve.deflt);
   gtk_curve_get_vector(GTK_CURVE(gcurve), 256, vector);
+  for (i = 0; i < 256; i++)
+    {
+      if (vector[i] > 1)
+	vector[i] = 1;
+      else if (vector[i] < 0)
+	vector[i] = 0;
+    }
   stp_curve_set_float_data(curve, 256, vector);
   stp_set_curve_parameter(pv->v, opt->fast_desc->name, curve);
   stp_curve_free(curve);
@@ -3006,7 +3030,6 @@ compute_thumbnail(const stp_vars_t v)
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
   const stp_vars_t nv = stp_vars_create_copy(v);
-  fprintf(stderr, "thumbnail_bpp %d\n", thumbnail_bpp);
   stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);
