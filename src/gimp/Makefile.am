@@ -53,10 +53,10 @@ $(GIMPPRINT_LIBS):
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
-	  if test -f .libs/$$p; then \
-	    echo $(GIMPTOOL) --install-@PLUG_IN_PATH@ .libs/$$p; \
-	    $(GIMPTOOL) --install-@PLUG_IN_PATH@ .libs/$$p; \
-	  elif test -f $$p; then \
+	  if test -f $$p; then \
+	    if test -f .libs/$$p; then \
+	      cd .libs; \
+	    fi; \
 	    echo $(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
             $(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
 	  else :; fi; \
