@@ -191,8 +191,11 @@ colors2inkset(int colors)
 
 typedef enum {
   COLOR_MONOCHROME,
+  COLOR_CMY,
   COLOR_CMYK,
+  COLOR_CCMMY,
   COLOR_CCMMYK,
+  COLOR_CCMMYY,
   COLOR_CCMMYYK
 } colormode_t;
 
@@ -1950,12 +1953,23 @@ static const paper_t escp2_paper_list[] = {
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
-static const char *ink_types[] =
-{
-  N_ ("Six Color Photo"),
-  N_ ("Four Color Standard")
-};
+typedef struct {
+  const char *name;
+  colormode_t colormode;
+  int use_6color;
+  int use_7color;
+  int hasblack;
+} escp2_inkname_t;
 
+static const escp2_inkname_t ink_types[] =
+{
+  { N_ ("Seven Color Enhanced"), 		COLOR_CCMMYYK, 0, 1, 1 },
+  { N_ ("Six Color Enhanced Composite"), 	COLOR_CCMMYY,  0, 1, 0 },
+  { N_ ("Six Color Photo"),	 		COLOR_CCMMYK,  1, 0, 1 },
+  { N_ ("Five Color Photo Composite"),		COLOR_CCMMY,   1, 0, 0 },
+  { N_ ("Four Color Standard"), 		COLOR_CMYK,    0, 0, 1 },
+  { N_ ("Three Color Composite"),       	COLOR_CMY,     0, 0, 0 }
+};
 
 typedef struct escp2_init
 {
@@ -2256,20 +2270,25 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
-	return NULL;
-      else
+      int ninktypes = sizeof(ink_types) / sizeof(escp2_inkname_t);
+      valptrs = stp_malloc(sizeof(char *) * ninktypes);
+      *count = 0;
+      for (i = 0; i < ninktypes; i++)
 	{
-	  int ninktypes = sizeof(ink_types) / sizeof(char *);
-	  valptrs = stp_malloc(sizeof(char *) * ninktypes);
-	  for (i = 0; i < ninktypes; i++)
-	    {
-	      valptrs[i] = stp_malloc(strlen(_(ink_types[i])) + 1);
-	      strcpy(valptrs[i], _(ink_types[i]));
-	    }
-	  *count = ninktypes;
-	  return valptrs;
+	  if (ink_types[i].hasblack &&
+	      (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_NO, v)))
+	    continue;
+	  if ((ink_types[i].use_6color || ink_types[i].use_7color) &&
+	      (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v)))
+	    continue;
+	  if (ink_types[i].use_7color &&
+	      !(escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, v)))
+	    continue;
+	  valptrs[*count] = stp_malloc(strlen(_(ink_types[i].name)) + 1);
+	  strcpy(valptrs[*count], _(ink_types[i].name));
+	  (*count)++;
 	}
+      return valptrs;
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -2298,7 +2317,6 @@ escp2_parameters(const stp_printer_t printer,	/* I - Printer model */
     }
   else
     return (NULL);
-
 }
 
 /*
@@ -2378,7 +2396,7 @@ escp2_default_parameters(const stp_printer_t printer,
 	    return _(stp_papersize_get_name(pt));
 	}
       return NULL;
-    }    
+    }
   else if (strcmp(name, "Resolution") == 0)
     {
       int model = stp_printer_get_model(printer);
@@ -2402,10 +2420,21 @@ escp2_default_parameters(const stp_printer_t printer,
     }
   else if (strcmp(name, "InkType") == 0)
     {
-      if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v))
-	return NULL;
-      else
-	return _(ink_types[0]);
+      int ninktypes = sizeof(ink_types) / sizeof(escp2_inkname_t);
+      for (i = 0; i < ninktypes; i++)
+	{
+	  if (ink_types[i].hasblack &&
+	      (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_NO, v)))
+	    continue;
+	  if ((ink_types[i].use_6color || ink_types[i].use_7color) &&
+	      (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_4, v)))
+	    continue;
+	  if (ink_types[i].use_7color &&
+	      !(escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, v)))
+	    continue;
+	  return ink_types[i].name;
+	}
+      return NULL;
     }
   else if (strcmp(name, "MediaType") == 0)
     {
@@ -2800,19 +2829,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   separation_rows = escp2_separation_rows(model, nv);
   max_vres = escp2_max_vres(model, nv);
-  if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_6, nv) &&
-      strcmp(ink_type, _("Four Color Standard")) != 0 &&
-      stp_get_image_type(nv) != IMAGE_MONOCHROME)
-    use_6color = 1;
-
-  if (escp2_has_cap(model, MODEL_COLOR, MODEL_COLOR_7, nv) &&
-      stp_get_image_type(nv) != IMAGE_MONOCHROME)
-    {
-      if (strcmp(ink_type, _("Six Color Photo")) == 0)
-	use_6color = 1;
-      else if (strcmp(ink_type, _("Seven Color Enhanced")) == 0)
-	use_7color = 1;
-    }
 
   if (stp_get_image_type(nv) == IMAGE_MONOCHROME)
     {
@@ -2822,12 +2838,21 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
   else if (output_type == OUTPUT_GRAY)
     colormode = COLOR_MONOCHROME;
-  else if (use_7color)
-    colormode = COLOR_CCMMYYK;
-  else if (use_6color)
-    colormode = COLOR_CCMMYK;
   else
-    colormode = COLOR_CMYK;
+    {
+      int ninktypes = sizeof(ink_types) / sizeof(escp2_inkname_t);
+      for (i = 0; i < ninktypes; i++)
+	{
+	  if (strcmp(ink_type, _(ink_types[i].name)) == 0)
+	    {
+	      colormode = ink_types[i].colormode;
+	      use_6color = ink_types[i].use_6color;
+	      use_7color = ink_types[i].use_7color;
+	      break;
+	    }
+	}
+    }
+
   stp_set_output_color_model(nv, COLOR_MODEL_CMY);
 
  /*
@@ -3034,24 +3059,27 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     cyan    = xzmalloc(length * bits);
     magenta = xzmalloc(length * bits);
     yellow  = xzmalloc(length * bits);
+    black = NULL;
 
-    if (escp2_has_cap(model, MODEL_HASBLACK, MODEL_HASBLACK_YES, nv))
-      black = xzmalloc(length * bits);
-    else
-      black = NULL;
     switch (colormode)
       {
       case COLOR_CCMMYYK:
+	black  = xzmalloc(length * bits);
+      case COLOR_CCMMYY:	/* FALLTHROUGH */
 	lcyan = xzmalloc(length * bits);
 	lmagenta = xzmalloc(length * bits);
 	dyellow = xzmalloc(length * bits);
 	break;
       case COLOR_CCMMYK:
+	black  = xzmalloc(length * bits);
+      case COLOR_CCMMY:		/* FALLTHROUGH */
 	lcyan = xzmalloc(length * bits);
 	lmagenta = xzmalloc(length * bits);
 	dyellow = NULL;
 	break;
-      default:
+      case COLOR_CMYK:
+	black  = xzmalloc(length * bits);
+      default:			/* FALLTHROUGH */
 	lcyan = NULL;
 	lmagenta = NULL;
 	dyellow = NULL;
@@ -3071,11 +3099,20 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     case COLOR_MONOCHROME:
       ncolors = 1;
       break;
+    case COLOR_CMY:
+      ncolors = 4;
+      break;
     case COLOR_CMYK:
       ncolors = 4;
       break;
+    case COLOR_CCMMY:
+      ncolors = 6;
+      break;
     case COLOR_CCMMYK:
       ncolors = 6;
+      break;
+    case COLOR_CCMMYY:
+      ncolors = 7;
       break;
     case COLOR_CCMMYYK:
       ncolors = 7;

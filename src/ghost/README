@@ -628,8 +628,24 @@ useful when printing text with embedded graphics to reduce ink
 consumption, or to print higher quality with Ordered, Fast, or Very
 Fast dithering (see below).
 
+The "Composite" modes use only color inks (no black) to produce all
+colors and black.  These ink types are rarely useful, but on certain
+types of paper they may produce a smoother image than that produced by
+mixing black ink in.  The Epson Stylus Color 1500 cannot mix black ink
+with colored inks; on this printer, Three Color Composite must be
+used.
+
+As of this writing (April 2001), no seven color printers are sold in
+North America.  When such a printer is sold, the Seven Color Enhanced
+and Six Color Enhanced Composite modes will utilize all of these
+inks.
+
+'Seven Color Enhanced'
+'Six Color Enhanced Composite'
 'Six Color Photo'
+'Five Color Photo Composite'
 'Four Color Standard'
+'Three Color Composite'
 
 
 For Canon and printers:
