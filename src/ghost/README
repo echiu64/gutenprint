@@ -284,6 +284,7 @@ escp2-c20ux             EPSON Stylus C20UX
 escp2-c40sx             EPSON Stylus C40SX
 escp2-c40ux             EPSON Stylus C40UX
 escp2-c60               EPSON Stylus C60
+escp2-c80               EPSON Stylus C80
 escp2                   EPSON Stylus Color
 escp2-pro               EPSON Stylus Color Pro
 escp2-pro-xl            EPSON Stylus Color Pro XL
@@ -447,58 +448,63 @@ purposes:
 	 be little difference between this and 720x360 on plain paper.
 	 
 1440x720 High quality on photo paper.  Use 1440x720 Highest Quality to
-         reduce microbanding if needed.
+         reduce microbanding if needed.  While this will work on plain
+         paper, it usually offers little improvement over 720 DPI.
 	 
 2880x720 Highest quality on photo paper.  While this may yield
          slightly improved quality, it will generally not be markedly
          superior to 1440x720 Highest Quality, except on the Stylus
-         Color 980, where it may yield a noticeable improvement.  It
-         takes as long to print as 1440x720 highest quality, but twice
-         as long to generate the output.
+         Color 980 and Stylus C80, where it may yield a noticeable
+         improvement.  It takes as long to print as 1440x720 highest
+         quality, but twice as long to generate the output.
 
 The following resolutions are supported on printers other than the
 Stylus Pro (5000, 5500, 7000, 7500, 9000, 9500, and 10000) printers.
 Resolutions for those printers are listed in a later section.  Please
 see the notes at the end of this section.
 
-360x90dpi        '360 x 90 DPI Fast Economy Draft'          (1)
+360x90dpi        360 x 90 DPI Fast Economy Draft          (1)
 
-180dpi           '180 DPI Economy Draft'                    (2)
+180dpi           180 DPI Economy Draft                    (2)
+180sw            180 DPI Economy Draft                    (3)
 
-360x180dpi       '360 x 180 DPI Draft'                      (2)
+360x180dpi       360 x 180 DPI Draft                      (2)
+360x180sw        360 x 180 DPI Draft                      (3)
 
-360x120dpi       '360 x 120 DPI Economy Draft'              (3)
+360x120dpi       360 x 120 DPI Economy Draft              (4)
+360x120sw        360 x 120 DPI Economy Draft              (5)
 
-360x240dpi       '360 x 240 DPI Draft'                      (3)
+360x240dpi       360 x 240 DPI Draft                      (4)
+360x240sw        360 x 240 DPI Draft                      (5)
 
-360dpi           '360 DPI'                                  (4)
-360uni           '360 DPI Unidirectional'                   (4)
-360mw            '360 DPI Microweave'                       (4, *)
-360mwuni         '360 DPI Microweave Unidirectional'        (4)
-360sw            '360 DPI'                                  (5, *)
-360swuni         '360 DPI Unidirectional'                   (5)
-360hq            '360 DPI High Quality'                     (5, 6)
-360hquni         '360 DPI High Quality Unidirectional'      (5, 6)
+360dpi           360 DPI                                  (6)
+360uni           360 DPI Unidirectional                   (6)
+360mw            360 DPI Microweave                       (6, *)
+360mwuni         360 DPI Microweave Unidirectional        (6)
+360sw            360 DPI                                  (7, *)
+360swuni         360 DPI Unidirectional                   (7)
+360hq            360 DPI High Quality                     (7, 8)
+360hquni         360 DPI High Quality Unidirectional      (7, 8)
 
-720x360sw        '720 x 360 DPI'                            (7, 8)
-720x360swuni     '720 x 360 DPI Unidirectional'             (7, 8)
+720x360sw        720 x 360 DPI                            (9, 10)
+720x360swuni     720 x 360 DPI Unidirectional             (9, 10)
 
-720mw            '720 DPI Microweave'                       (9)
-720mwuni         '720 DPI Microweave Unidirectional'        (9)
-720sw            '720 DPI'                                  (7)
-720swuni         '720 DPI Unidirectional'                   (7)
-720hq            '720 DPI High Quality'                     (7)
-720hquni         '720 DPI High Quality Unidirectional'      (7)
-720hq2           '720 DPI Highest Quality'                  (7)
+720mw            720 DPI Microweave                       (11)
+720mwuni         720 DPI Microweave Unidirectional        (11)
+720sw            720 DPI                                  (9)
+720swuni         720 DPI Unidirectional                   (9)
+720hq            720 DPI High Quality                     (9)
+720hquni         720 DPI High Quality Unidirectional      (9)
+720hq2           720 DPI Highest Quality                  (9)
 
-1440x720mw       '1440 x 720 DPI Microweave'                (10)
-1440x720mwuni    '1440 x 720 DPI Microweave Unidirectional' (10)
-1440x720sw       '1440 x 720 DPI'                           (11)
-1440x720mwuni    '1440 x 720 DPI Unidirectional'            (11, 12)
-1440x720hq       '1440 x 720 DPI Highest Quality'           (11)
+1440x720mw       1440 x 720 DPI Microweave                (12)
+1440x720mwuni    1440 x 720 DPI Microweave Unidirectional (12)
+1440x720sw       1440 x 720 DPI                           (13)
+1440x720mwuni    1440 x 720 DPI Unidirectional            (13, 14)
+1440x720hq       1440 x 720 DPI Highest Quality           (13)
 
-2880x720sw       '2880 x 720 DPI'                           (13)
-2880x720swuni    '2880 x 720 DPI Unidirectional'            (13)
+2880x720sw       2880 x 720 DPI                           (15)
+2880x720swuni    2880 x 720 DPI Unidirectional            (15)
 
 (*) This resolution is the default on all printers supporting this
     setting.
@@ -513,51 +519,56 @@ see the notes at the end of this section.
     Stylus Color 440, 460, 600, 640, 660, 670, 800, 850, 900, 980,
     1500, 1520, 3000, and Stylus Photo, Stylus Photo 700, 720 and EX.
 
-(3) Works on printers with dot spacing of 1/120 inch.  This includes
-    the Stylus C20, C40, and C60, the Stylus Color Pro, Pro XL, 400, 480,
-    500, 580, 680, 740, 760, 777, 860, 880, 83, and 1160, and the
-    Stylus Photo 750, 780, 790, 870, 890, 1270, 1280, 1290, and 2000P.
+(3) Works on Stylus C80.
 
-(4) Works on all printers that do not support variable drop sizes.
+(4) Works on older printers with dot spacing of 1/120 inch.  This
+    includes the Stylus Color Pro, Pro XL, 400, and 500.
+
+(5) Works on newer printers with dot spacing of 1/120 inch.  This
+    includes the Stylus C20, C40, and C60, the Stylus Color 480, 580,
+    680, 740, 760, 777, 860, 880, 83, and 1160, and the Stylus Photo
+    750, 780, 790, 870, 890, 1270, 1280, 1290, and 2000P.
+
+(6) Works on all printers that do not support variable drop sizes.
     This includes the Stylus Color, Stylus Color 400, 440, 460, 500,
     600, 640, 660, 800, 850, 1500, 1520, and 3000, and Stylus Color
     Pro, and Stylus Photo, Stylus Photo 700, and EX.
 
-(5) Works on all printers that do support variable drop sizes.  This
+(7) Works on all printers that do support variable drop sizes.  This
     includes all supported Epson Stylus printers except for those
-    listed in note (1).
+    listed in note (6).
 
-(6) Recommended only on processors slower than 200 MHz, the system is
+(8) Recommended only on processors slower than 200 MHz, the system is
     heavily loaded with a faster processor, or if problems are
     experienced at 720x360.
 
-(7) Works on all supported printers except for Stylus Color, Stylus
+(9) Works on all supported printers except for Stylus Color, Stylus
     Color 1500, 1520, and 3000.
 
-(8) On printers that do not support variable drop size (see note (4)),
+(10) On printers that do not support variable drop size (see note (4)),
     this will print as fast as 360 DPI, and faster than 360 DPI High
     Quality.  It will take twice as long to generate output, which may
     be important on a heavily loaded system or a processor slower than
     200 MHz.
 
-(9) Works on some older printers, including the Stylus Color, Stylus
-    Color 400, 500, 600, 800, 850, 1500, 1520, and 3000, and Stylus
-    Color Pro.  Not recommended except for the Stylus Color, Stylus
-    Color 1500, 1520, and 3000.
+(11) Works on some older printers, including the Stylus Color, Stylus
+    Color 400, 500, 600, 800, 850, 1500, 1520, and 3000, Stylus Color
+    Pro, and Stylus Color Pro XL.  Not recommended except for the
+    Stylus Color, Stylus Color 1500, 1520, and 3000.
 
-(10) Works on Stylus Color 600, 800, 850, 1520, and 3000.  Not
+(12) Works on Stylus Color 600, 800, 850, 1520, and 3000.  Not
     recommended unless other 1440x720 modes do not work.
 
-(11) Works on all printers that support 1440x720 DPI.  This includes
+(13) Works on all printers that support 1440x720 DPI.  This includes
     all supported printers except for the Stylus Color, Stylus Color
     Pro, Pro XL, 400, 440, 460, 480, 500, and 1500, and Stylus Photo.
     In addition, this may not work correctly on Stylus Color 1520 and
     Stylus Color 3000.
 
-(12) This is identical to 1440 x 720 Highest Quality (1440x720hq) on
+(14) This is identical to 1440 x 720 Highest Quality (1440x720hq) on
     the Stylus Color 900.
 
-(13) Works on all printers that support 2880x720 DPI.  This includes
+(15) Works on all printers that support 2880x720 DPI.  This includes
     the Stylus C60, the Stylus Color 680, 777, 880, 83, and 980, and
     Stylus Photo 780, 790, 890, 1280, and 1290.
 
@@ -569,56 +580,56 @@ and 10000 additionally have a mode called MW2.  These modes can only
 be used at certain resolutions.  Stylus Pro printers support the
 following resolutions:
 
-180dpi           '180 DPI'
+180dpi           180 DPI
 
-360dpi           '360 DPI'
-360uni           '360 DPI Unidirectional'
-360mw            '360 DPI Microweave'
-360mwuni         '360 DPI Microweave Unidirectional'
-360fol           '360 DPI Full Overlap'
-360foluni        '360 DPI Full Overlap Unidirectional'
-360fol2          '360 DPI FOL2'
-360fol2uni       '360 DPI FOL2 Unidirectional'
-360mw2           '360 DPI MW2'
-360mw2uni        '360 DPI MW2 Unidirectional'
+360dpi           360 DPI
+360uni           360 DPI Unidirectional
+360mw            360 DPI Microweave
+360mwuni         360 DPI Microweave Unidirectional
+360fol           360 DPI Full Overlap
+360foluni        360 DPI Full Overlap Unidirectional
+360fol2          360 DPI FOL2
+360fol2uni       360 DPI FOL2 Unidirectional
+360mw2           360 DPI MW2
+360mw2uni        360 DPI MW2 Unidirectional
 
-720x360dpi       '720 x 360 DPI'
-720x360uni       '720 x 360 DPI Unidirectional'
-720x360fol       '720 x 360 DPI FOL'
-720x360foluni    '720 x 360 DPI FOL Unidirectional'
-720x360fol2      '720 x 360 DPI FOL2'
-720x360fol2uni   '720 x 360 DPI FOL2 Unidirectional'
-720x360mw2       '720 x 360 DPI MW2'
-720x360mw2uni    '720 x 360 DPI MW2 Unidirectional'
+720x360dpi       720 x 360 DPI
+720x360uni       720 x 360 DPI Unidirectional
+720x360fol       720 x 360 DPI FOL
+720x360foluni    720 x 360 DPI FOL Unidirectional
+720x360fol2      720 x 360 DPI FOL2
+720x360fol2uni   720 x 360 DPI FOL2 Unidirectional
+720x360mw2       720 x 360 DPI MW2
+720x360mw2uni    720 x 360 DPI MW2 Unidirectional
 
-720dpi           '720 DPI'
-720uni           '720 DPI Unidirectional'
-720mw            '720 DPI Microweave'
-720mwuni         '720 DPI Microweave Unidirectional'
-720fol           '720 DPI Full Overlap'
-720foluni        '720 DPI Full Overlap Unidirectional'
-720fourp         '720 DPI Four Pass'
-720fourpuni      '720 DPI Four Pass Unidirectional'
+720dpi           720 DPI
+720uni           720 DPI Unidirectional
+720mw            720 DPI Microweave
+720mwuni         720 DPI Microweave Unidirectional
+720fol           720 DPI Full Overlap
+720foluni        720 DPI Full Overlap Unidirectional
+720fourp         720 DPI Four Pass
+720fourpuni      720 DPI Four Pass Unidirectional
 
-1440x720dpi      '1440 x 720 DPI'
-1440x720uni      '1440 x 720 DPI Unidirectional'
-1440x720mw       '1440 x 720 DPI Microweave'
-1440x720mwuni    '1440 x 720 DPI Microweave Unidirectional'
-1440x720fol      '1440 x 720 DPI FOL'
-1440x720foluni   '1440 x 720 DPI FOL Unidirectional'
-1440x720fourp    '1440 x 720 DPI Four Pass'
-1440x720fourpuni '1440 x 720 DPI Four Pass Unidirectional'
+1440x720dpi      1440 x 720 DPI
+1440x720uni      1440 x 720 DPI Unidirectional
+1440x720mw       1440 x 720 DPI Microweave
+1440x720mwuni    1440 x 720 DPI Microweave Unidirectional
+1440x720fol      1440 x 720 DPI FOL
+1440x720foluni   1440 x 720 DPI FOL Unidirectional
+1440x720fourp    1440 x 720 DPI Four Pass
+1440x720fourpuni 1440 x 720 DPI Four Pass Unidirectional
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
 
-150dpi           '150x150 DPI'   (should work on all printers)
-300dpi           '300x300 DPI'   (should work on all printers, C-RET on
+150dpi           150x150 DPI   (should work on all printers)
+300dpi           300x300 DPI   (should work on all printers, C-RET on
                                  DJ 850/855/870/890)
-600x300dpi       '600x300 DPI'   (DJ 6xx/810/812/840/842/895)
-600mono          '600x600 DPI monochrome'
+600x300dpi       600x300 DPI   (DJ 6xx/810/812/840/842/895)
+600mono          600x600 DPI monochrome
                                 (DJ 6xx (except 69x) /8xx/1100/1120)
-600dpi           '600x600 DPI'   (DJ 69x/840/9xx/1220/2000/2500,
+600dpi           600x600 DPI   (DJ 69x/840/9xx/1220/2000/2500,
                                  PhotoSmart P1000/P1100, LJ5/5Si/6)
 
 Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
@@ -627,39 +638,39 @@ not yet supported.
 
 For Lexmark printers other than the 4076:
 
-300x600dpi       '300 DPI x 600 DPI'
-600dpi           '600 DPI'
-600hq            '600 DPI high quality'
-600uni           '600 DPI Unidirectional'
-1200dpi          '1200 DPI'
-1200hq           '1200 DPI high quality'
-1200hq2          '1200 DPI highest quality'
-1200uni          '1200 DPI  Unidirectional'
-2400x1200dpi     '2400 DPI x 1200 DPI'                   (Z52)
-2400x1200hq      '2400 DPI x 1200 DPI high quality'      (Z52)
-2400x1200hq2     '2400 DPI x 1200 DPI highest quality'   (Z52)
+300x600dpi       300 DPI x 600 DPI
+600dpi           600 DPI
+600hq            600 DPI high quality
+600uni           600 DPI Unidirectional
+1200dpi          1200 DPI
+1200hq           1200 DPI high quality
+1200hq2          1200 DPI highest quality
+1200uni          1200 DPI  Unidirectional
+2400x1200dpi     2400 DPI x 1200 DPI                   (Z52)
+2400x1200hq      2400 DPI x 1200 DPI high quality      (Z52)
+2400x1200hq2     2400 DPI x 1200 DPI highest quality   (Z52)
 
 
 For Canon printers:
 
 1200 DPI printers (BJC 7000, BJC 7100, BJC 8200, BJC 8500):
 
-300dpi           '300x300 DPI'
-300dmt           '300x300 DPI DMT'
-600dpi           '600x600 DPI'
-600dmt           '600x600 DPI DMT'
-1200x600dpi      '1200x600 DPI'
-1200dpi          '1200x1200 DPI'
+300dpi           300x300 DPI
+300dmt           300x300 DPI DMT
+600dpi           600x600 DPI
+600dmt           600x600 DPI DMT
+1200x600dpi      1200x600 DPI
+1200dpi          1200x1200 DPI
 
 1440 DPI printers (BJC 1000, BJC 2000, BJC 3000, BJC 4300, BJC 4400,
     BJC 5100, BJC 5500, BJC 6000, BJC 6100, BJC 6500, BJC 8200):
 
-360dpi           '360x360 DPI'
-360dmt           '360x360 DPI DMT'
-720x360dpi       '720x360 DPI'
-720dpi           '720x720 DPI'
-1440x720dpi      '1440x720 DPI'
-1440dpi          '1440x1440 DPI'
+360dpi           360x360 DPI
+360dmt           360x360 DPI DMT
+720x360dpi       720x360 DPI
+720dpi           720x720 DPI
+1440x720dpi      1440x720 DPI
+1440dpi          1440x1440 DPI
 
 
 Ink Types
@@ -694,27 +705,27 @@ in North America.  When such a printer is sold, the Seven Color
 Enhanced and Six Color Enhanced Composite modes will utilize all of
 these inks.
 
-Photo7          'Seven Color Enhanced'
-PhotoEnhance    'Six Color Enhanced Composite'
-PhotoCMYK       'Six Color Photo'
-PhotoCMY        'Five Color Photo Composite'
-CMYK            'Four Color Standard'
-RGB             'Three Color Composite'
+Photo7          Seven Color Enhanced
+PhotoEnhance    Six Color Enhanced Composite
+PhotoCMYK       Six Color Photo
+PhotoCMY        Five Color Photo Composite
+CMYK            Four Color Standard
+RGB             Three Color Composite
 
 
 For Canon printers:
 
-Gray            'Black'
-RGB             'Color'
-CMYK            'Black/Color'
-PhotoCMY        'Photo/Color'
-PhotoCMYK       'Photo'
+Gray            Black
+RGB             Color
+CMYK            Black/Color
+PhotoCMY        Photo/Color
+PhotoCMYK       Photo
 
 
 For PCL (Hewlett-Packard and Lexmark 4076) color printers:
 
-CMYK            'Color + Black Cartridges'
-Photo           'Color + Photo Cartridges' (For Deskjet 69x only)
+CMYK            Color + Black Cartridges
+Photo           Color + Photo Cartridges (For Deskjet 69x only)
 
 Black and white PCL printers (laser printers, in particular) do not
 allow any value to be specified for the ink type.
@@ -733,22 +744,22 @@ is descriptive.
 
 For Epson and Lexmark (other than the 4076) inkjet printers:
 
-Plain           'Plain Paper'
-PlainFast       'Plain Paper Fast Load'
-Postcard        'Postcard'
-GlossyFilm      'Glossy Film'
-Transparency    'Transparencies'
-Envelope        'Envelopes'
-BackFilm        'Back Light Film'
-Matte           'Matte Paper'
-Inkjet          'Inkjet Paper'
-Coated          'Photo Quality Inkjet Paper'
-GlossyPhoto     'Premium Glossy Photo Paper'
-Luster          'Premium Luster Photo Paper'
-Photo           'Photo Paper'
-Glossy          'Photo Quality Glossy Paper'
-Ilford          'Ilford Heavy Paper'
-Other           'Other'
+Plain           Plain Paper
+PlainFast       Plain Paper Fast Load
+Postcard        Postcard
+GlossyFilm      Glossy Film
+Transparency    Transparencies
+Envelope        Envelopes
+BackFilm        Back Light Film
+Matte           Matte Paper
+Inkjet          Inkjet Paper
+Coated          Photo Quality Inkjet Paper
+GlossyPhoto     Premium Glossy Photo Paper
+Luster          Premium Luster Photo Paper
+Photo           Photo Paper
+Glossy          Photo Quality Glossy Paper
+Ilford          Ilford Heavy Paper
+Other           Other
 
 We have found that glossy photo papers not specifically designed for
 Epson printers generally perform poorly in Epson printers.  The ink
@@ -761,28 +772,28 @@ there is more time for the ink to dry.
 
 For Canon printers:
 
-Plain           'Plain Paper'
-Transparency    'Transparencies'
-BackFilm        'Back Print Film'
-Fabric          'Fabric Sheets'
-Envelope        'Envelope'
-Coated          'High Resolution Paper'
-TShirt          'T-Shirt Transfers'
-GlossyFilm      'High Gloss Film'
-GlossyPaper     'Glossy Photo Paper'
-GlossyCards     'Glossy Photo Cards'
-GlossyPro       'Photo Paper Pro'
+Plain           Plain Paper
+Transparency    Transparencies
+BackFilm        Back Print Film
+Fabric          Fabric Sheets
+Envelope        Envelope
+Coated          High Resolution Paper
+TShirt          T-Shirt Transfers
+GlossyFilm      High Gloss Film
+GlossyPaper     Glossy Photo Paper
+GlossyCards     Glossy Photo Cards
+GlossyPro       Photo Paper Pro
 
 
 For PCL (Hewlett-Packard and Lexmark 4076) inkjet printers:
 
-Plain           'Plain'
-Bond            'Bond'
-Premium         'Premium'
-Glossy          'Glossy/Photo'
-Transparency    'Transparency'
-GlossyQD        'Quick-dry Photo'
-TransparencyQD  'Quick-dry Transparency'
+Plain           Plain
+Bond            Bond
+Premium         Premium
+Glossy          Glossy/Photo
+Transparency    Transparency
+GlossyQD        Quick-dry Photo
+TransparencyQD  Quick-dry Transparency
 
 PCL laser printers do not allow specification of any media type.
 
@@ -796,40 +807,40 @@ This is printer type specific.  The option names are case sensitive.
 
 For Epson printers:
 
-Standard        'Standard'
-Roll            'Roll Feed'     (for certain Stylus Photo and Stylus
+Standard        Standard
+Roll            Roll Feed     (for certain Stylus Photo and Stylus
                                 Pro models only)
 
 
 For Canon printers:
 
-Auto            'Auto Sheet Feeder'
-Manual          'Manual with Pause'
-ManualNP        'Manual without Pause'
+Auto            Auto Sheet Feeder
+Manual          Manual with Pause
+ManualNP        Manual without Pause
 
 
 For PCL (Hewlett-Packard and Lexmark 4076) printers.  Different
 printers allow different choices out of this set.
 
-Standard        'Standard'      (Feed from printer defined source)
-Manual          'Manual'
-MultiPurpose    'Tray 1'
-Upper           'Tray 2'
-Lower           'Tray 3'
-LargeCapacity   'Tray 4'
-Portable        'Portable Sheet Feeder'
-Desktop         'Desktop Sheet Feeder'
-Tray            'Tray'
-Tray2           'Tray 2'
-Optional        'Optional Source'
-Auto            'Autoselect'
+Standard        Standard      (Feed from printer defined source)
+Manual          Manual
+MultiPurpose    Tray 1
+Upper           Tray 2
+Lower           Tray 3
+LargeCapacity   Tray 4
+Portable        Portable Sheet Feeder
+Desktop         Desktop Sheet Feeder
+Tray            Tray
+Tray2           Tray 2
+Optional        Optional Source
+Auto            Autoselect
 
 
 For Lexmark printers other than the 4076:
 
-Auto            'Auto Sheet Feeder'
-Manual          'Manual with Pause'
-ManualNP        'Manual without Pause'
+Auto            Auto Sheet Feeder
+Manual          Manual with Pause
+ManualNP        Manual without Pause
 
 
 Media Sizes
@@ -849,32 +860,32 @@ printer for a different paper size.  The default paper size is
 
    * Common English paper sizes
 
-Letter          'Letter'         8.5in x 11in
-Legal           'Legal'          8.5in x 14in
-Tabloid         'Tabloid'         11in x 17in
-Executive       'Executive'     7.25in x 10.5in
-Postcard        'Postcard'       100mm x 147mm
-w216h360        '3x5'
-w288h432        '4x6'
-w324h495        'Epson 4x6 Photo Paper'
-w360h504        '5x7'
-w360h576        '5x8'
-8x10            '8x10'
-Statement       'Manual'         5.5in x 8.5in
-TabloidExtra    '12x18'
-SuperB          '13x19'
+Letter          Letter         8.5in x 11in
+Legal           Legal          8.5in x 14in
+Tabloid         Tabloid         11in x 17in
+Executive       Executive     7.25in x 10.5in
+Postcard        Postcard       100mm x 147mm
+w216h360        3x5
+w288h432        4x6
+w324h495        Epson 4x6 Photo Paper
+w360h504        5x7
+w360h576        5x8
+8x10            8x10
+Statement       Manual         5.5in x 8.5in
+TabloidExtra    12x18
+SuperB          13x19
 
    * Common photographic paper sizes
 
-w576h864        '8x12'  Sometimes used for 35 mm
-w792h1008       '11x14'
-w1152h1440      '16x20'
-w1152h1728      '16x24'  20x24 for 35 mm
-w1440h1728      '20x24'
-w1440h2160      '20x30'  24x30 for 35 mm
-w1728h2160      '24x30'
-w1728h2592      '24x36'  Sometimes used for 35 mm
-w2160h2880      '30x40'
+w576h864        8x12  Sometimes used for 35 mm
+w792h1008       11x14
+w1152h1440      16x20
+w1152h1728      16x24  20x24 for 35 mm
+w1440h1728      20x24
+w1440h2160      20x30  24x30 for 35 mm
+w1728h2160      24x30
+w1728h2592      24x36  Sometimes used for 35 mm
+w2160h2880      30x40
 
    International Paper Sizes (mostly taken from BS4000:1968)
 
@@ -885,123 +896,123 @@ w2160h2880      '30x40'
    * millimetre.  Thus, A0 is 841mm x 1189mm.  Every other A
    * size is obtained by doubling or halving another A size.
 
-w4768h6749      '4A'            1682mm x 2378mm
-w3370h4768      '2A'            1189mm x 1682mm
-A0              'A0'             841mm x 1189mm
-A1              'A1'             594mm x  841mm
-A2              'A2'             420mm x  594mm
-A3              'A3'             297mm x  420mm
-A4              'A4'             210mm x  297mm
-A5              'A5'             148mm x  210mm
-A6              'A6'             105mm x  148mm
-A7              'A7'              74mm x  105mm
-A8              'A8'              52mm x   74mm
-A9              'A9'              37mm x   52mm
-A10             'A10'             26mm x   37mm
+w4768h6749      4A            1682mm x 2378mm
+w3370h4768      2A            1189mm x 1682mm
+A0              A0             841mm x 1189mm
+A1              A1             594mm x  841mm
+A2              A2             420mm x  594mm
+A3              A3             297mm x  420mm
+A4              A4             210mm x  297mm
+A5              A5             148mm x  210mm
+A6              A6             105mm x  148mm
+A7              A7              74mm x  105mm
+A8              A8              52mm x   74mm
+A9              A9              37mm x   52mm
+A10             A10             26mm x   37mm
 
    * Stock sizes for normal trims.
    * Allowance for trim is 3 millimetres.
 
-w2437h3458      'RA0'            860mm x 1220mm
-w1729h2437      'RA1'            610mm x  860mm
-w1218h1729      'RA2'            430mm x  610mm
-w864h1218       'RA3'            305mm x  430mm
-w609h864        'RA4'            215mm x  305mm
+w2437h3458      RA0            860mm x 1220mm
+w1729h2437      RA1            610mm x  860mm
+w1218h1729      RA2            430mm x  610mm
+w864h1218       RA3            305mm x  430mm
+w609h864        RA4            215mm x  305mm
 
    * Stock sizes for bled work or extra trims.
 
-w2551h3628      'SRA0'          900mm x 1280mm
-w1814h2551      'SRA1'          640mm x  900mm
-w1275h1814      'SRA2'          450mm x  640mm
-w907h1275       'SRA3'          320mm x  450mm
-w637h907        'SRA4'          225mm x  320mm
+w2551h3628      SRA0          900mm x 1280mm
+w1814h2551      SRA1          640mm x  900mm
+w1275h1814      SRA2          450mm x  640mm
+w907h1275       SRA3          320mm x  450mm
+w637h907        SRA4          225mm x  320mm
 
    * "B" series: Posters, wall charts and similar items.
 
-w5669h8016      '4B ISO'        2000mm x 2828mm
-w4008h5669      '2B ISO'        1414mm x 2000mm
-ISOB0           'B0 ISO'        1000mm x 1414mm
-ISOB1           'B1 ISO'         707mm x 1000mm
-ISOB2           'B2 ISO'         500mm x  707mm
-ISOB3           'B3 ISO'         353mm x  500mm
-ISOB4           'B4 ISO'         250mm x  353mm
-ISOB5           'B5 ISO'         176mm x  250mm
-ISOB6           'B6 ISO'         125mm x  176mm
-ISOB7           'B7 ISO'          88mm x  125mm
-ISOB8           'B8 ISO'          62mm x   88mm
-ISOB9           'B9 ISO'          44mm x   62mm
-ISOB10          'B10 ISO'         31mm x   44mm
+w5669h8016      4B ISO        2000mm x 2828mm
+w4008h5669      2B ISO        1414mm x 2000mm
+ISOB0           B0 ISO        1000mm x 1414mm
+ISOB1           B1 ISO         707mm x 1000mm
+ISOB2           B2 ISO         500mm x  707mm
+ISOB3           B3 ISO         353mm x  500mm
+ISOB4           B4 ISO         250mm x  353mm
+ISOB5           B5 ISO         176mm x  250mm
+ISOB6           B6 ISO         125mm x  176mm
+ISOB7           B7 ISO          88mm x  125mm
+ISOB8           B8 ISO          62mm x   88mm
+ISOB9           B9 ISO          44mm x   62mm
+ISOB10          B10 ISO         31mm x   44mm
 
-B0              'B0 JIS'
-B1              'B1 JIS'
-B2              'B2 JIS'
-B3              'B3 JIS'
-B4              'B4 JIS'
-B5              'B5 JIS'
-B6              'B6 JIS'
-B7              'B7 JIS'
-B8              'B8 JIS'
-B9              'B9 JIS'
-B10             'B10 JIS'
+B0              B0 JIS
+B1              B1 JIS
+B2              B2 JIS
+B3              B3 JIS
+B4              B4 JIS
+B5              B5 JIS
+B6              B6 JIS
+B7              B7 JIS
+B8              B8 JIS
+B9              B9 JIS
+B10             B10 JIS
 
    * "C" series: Envelopes or folders suitable for A size stationery.
 
-C0              'C0'            917mm x 1297mm
-C1              'C1'            648mm x  917mm
-C2              'C2'            458mm x  648mm
-C3              'C3'            324mm x  458mm
-C4              'C4'            229mm x  324mm
-C5              'C5'            162mm x  229mm
-w354h918        'B6-C4'         125mm x  324mm
-C6              'C6'            114mm x  162mm
-DL              'DL'            110mm x  220mm
-w229h459        'C7-6'           81mm x  162mm
-C7              'C7'             81mm x  114mm
-C8              'C8'             57mm x   81mm
-C9              'C9'             40mm x   57mm
-C10             'C10'            28mm x   40mm
+C0              C0            917mm x 1297mm
+C1              C1            648mm x  917mm
+C2              C2            458mm x  648mm
+C3              C3            324mm x  458mm
+C4              C4            229mm x  324mm
+C5              C5            162mm x  229mm
+w354h918        B6-C4         125mm x  324mm
+C6              C6            114mm x  162mm
+DL              DL            110mm x  220mm
+w229h459        C7-6           81mm x  162mm
+C7              C7             81mm x  114mm
+C8              C8             57mm x   81mm
+C9              C9             40mm x   57mm
+C10             C10            28mm x   40mm
 
    * US CAD standard paper sizes
 
-ARCHA           'ArchA'          9x12in
-ARCHB           'ArchB'          12x18in
-ARCHC           'ArchC'          18x24in
-ARCHD           'ArchD'          24x36in
-ARCHE           'ArchE'          36x48in
+ARCHA           ArchA          9x12in
+ARCHB           ArchB          12x18in
+ARCHC           ArchC          18x24in
+ARCHD           ArchD          24x36in
+ARCHE           ArchE          36x48in
 
    * Foolscap
 
-w612h936        'flsa'  American foolscap
-w648h936        'flse'  European foolscap
+w612h936        American foolscap
+w648h936        European foolscap
 
    * Sizes for book production
    * The BPIF and the Publishers Association jointly recommend ten
    * standard metric sizes for case-bound titles as follows:
 
-w535h697        'Crown Quarto'          189mm x 246mm
-w569h731        'Large Crown Quarto'    201mm x 258mm
-w620h782        'Demy Quarto'           219mm x 276mm
-w671h884        'Royal Quarto'          237mm x 312mm
-w348h527        'Crown Octavo'          123mm x 186mm
-w365h561        'Large Crown Octavo'    129mm x 198mm
-w391h612        'Demy Octavo'           138mm x 216mm
-w442h663        'Royal Octavo'          156mm x 234mm
+w535h697        Crown Quarto          189mm x 246mm
+w569h731        Large Crown Quarto    201mm x 258mm
+w620h782        Demy Quarto           219mm x 276mm
+w671h884        Royal Quarto          237mm x 312mm
+w348h527        Crown Octavo          123mm x 186mm
+w365h561        Large Crown Octavo    129mm x 198mm
+w391h612        Demy Octavo           138mm x 216mm
+w442h663        Royal Octavo          156mm x 234mm
 
    * Paperback sizes in common usage
 
-w314h504        'Small paperback'               111mm x 178mm
-w314h513        'Penguin small paperback'       111mm x 181mm
-w365h561        'Penguin large paperback'       129mm x 198mm
+w314h504        Small paperback               111mm x 178mm
+w314h513        Penguin small paperback       111mm x 181mm
+w365h561        Penguin large paperback       129mm x 198mm
 
    * Miscellaneous sizes
 
-w283h420        'Hagaki Card'                   100 x 148 mm
-w420h567        'Oufuku Card'                   148 x 200 mm
-w340h666        'Long 3'                        Japanese long envelope #3
-w255h581        'Long 4'                        Japanese long envelope #4
-w680h941        'Kaku'                          Japanese Kaku envelope #4
-COM10           'Commercial 10'                 US Commercial 10 env
-w315h414        'A2 Invitation'                 US A2 invitation
+w283h420        Hagaki Card                   100 x 148 mm
+w420h567        Oufuku Card                   148 x 200 mm
+w340h666        Long 3                        Japanese long envelope #3
+w255h581        Long 4                        Japanese long envelope #4
+w680h941        Kaku                          Japanese Kaku envelope #4
+COM10           Commercial 10                 US Commercial 10 env
+w315h414        A2 Invitation                 US A2 invitation
 
 
 Color Balancing Values: (min,max,default)
@@ -1077,11 +1088,11 @@ resolution; the first (short) name is the value that must be passed to
 
 -sDither=algorithm
 
-Adaptive        'Adaptive Hybrid'
-Ordered         'Ordered'
-Fast            'Fast'
-VeryFast        'Very Fast'
-Floyd           'Hybrid Floyd-Steinberg'
+Adaptive        Adaptive Hybrid
+Ordered         Ordered
+Fast            Fast
+VeryFast        Very Fast
+Floyd           Hybrid Floyd-Steinberg
 
 For highest quality, we recommend use of Adaptive Hybrid dithering.
 For continuous tone images, Ordered works just as well and is somewhat

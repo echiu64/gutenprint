@@ -81,14 +81,14 @@ typedef unsigned long model_featureset_t;
  * An entry of -1 in a slot means that this resolution is not available.
  */
 
-typedef int escp2_dot_size_t[12];
+typedef int escp2_dot_size_t[13];
 
 /*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
 
-typedef double escp2_densities_t[12];
+typedef double escp2_densities_t[13];
 
 /*
  * Definition of the multi-level inks available to a given printer.
@@ -145,7 +145,7 @@ typedef const escp2_variable_ink_t *escp2_variable_inkset_t[NCOLORS];
 #define RES_N		 18
 
 static const int dotidmap[] =
-{ 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 10, 11, 11 };
+{ 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
 
 static int
 resid2dotid(int resid)
@@ -156,7 +156,7 @@ resid2dotid(int resid)
 }
 
 static const int densidmap[] =
-{ 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 10, 11, 11 };
+{ 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
 
 static int
 resid2densid(int resid)
@@ -1415,137 +1415,142 @@ static const double standard_hue_adjustment[49] =
 /*
  * Dot sizes are for:
  *
- *  0: 120/180 DPI
- *  1: 360 micro
- *  2: 360 soft
- *  3: 720x360 micro
- *  4: 720x360 soft
- *  5: 720 micro
- *  6: 720 soft
- *  7: 1440x720 micro
- *  8: 1440x720 soft
- *  9: 2880x720 micro
- * 10: 2880x720 soft
- * 11: 2880x1440
+ *  0: 120/180 DPI micro
+ *  1: 120/180 DPI soft
+ *  2: 360 micro
+ *  3: 360 soft
+ *  4: 720x360 micro
+ *  5: 720x360 soft
+ *  6: 720 micro
+ *  7: 720 soft
+ *  8: 1440x720 micro
+ *  9: 1440x720 soft
+ * 10: 2880x720 micro
+ * 11: 2880x720 soft
+ * 12: 2880x1440
  */
 
-/*   0     1     2     3     4     5     6     7     8     9    10    11 */
+/*   0     1     2     3     4     5     6     7     8     9    10    11    12 */
 
 static const escp2_dot_size_t g1_dotsizes =
-{   -2,   -2,   -1,   -1,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
+{   -2,   -1,   -2,   -1,   -1,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc1500_dotsizes =
-{   -2,   -2,   -1,   -1,   -2,   -2,   -1,   -1,   -1,   -1,   -1,   -1 };
+{   -2,   -1,   -2,   -1,   -1,   -2,   -2,   -1,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc600_dotsizes =
-{    4,    4,   -1,   -1,    3,    2,    2,   -1,    1,   -1,   -1,   -1 };
+{    4,   -1,    4,   -1,   -1,    3,    2,    2,   -1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t g3_dotsizes =
-{    3,    3,   -1,   -1,    2,    1,    1,   -1,    4,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,   -1,    2,    1,    1,   -1,    4,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t photo_dotsizes =
-{    3,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,   -1,    2,   -1,    1,   -1,    4,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc440_dotsizes =
-{    3,    3,   -1,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,   -1,    2,   -1,    1,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc640_dotsizes =
-{    3,    3,   -1,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
+{    3,   -1,    3,   -1,   -1,    2,    1,    1,   -1,    1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c6pl_dotsizes =
-{ 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
+{ -1,   0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c3pl_dotsizes =
-{ 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1, 0x10, 0x10 };
+{ -1,   0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1, 0x10, 0x10 };
 
 static const escp2_dot_size_t c4pl_dotsizes =
-{ 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x10,   -1, 0x10, 0x10 };
+{ -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x10,   -1, 0x10, 0x10 };
 
 static const escp2_dot_size_t sc720_dotsizes =
-{ 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
+{ -1,   0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
-{    3,    3,   -1,    3,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
+{ -1,      3,    3,   -1,    3,    0,   -1,    0,   -1,    0,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
-{ 0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
+{ -1,   0x13,   -1, 0x13,   -1, 0x13,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc670_dotsizes =
-{ 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
+{ -1,   0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x11,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sp2000_dotsizes =
-{ 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
+{ -1,   0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_dotsizes =
-{    0,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
+{    0,   -1,    0,   -1,    0,   -1,    0,   -1,    0,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro10000_dotsizes =
-{    4, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
+{    4,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{ 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1,   -1,   -1 };
-
+#if 0
+{ 0x11,   -1, 0x11, 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,   -1 };
+#else
+{   -1, 0x11,   -1, 0x11,   -1, 0x11,   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1 };
+#endif
 
 /*
  * Densities are for:
  *
- *  0: 120/180 DPI
- *  1: 360 micro
- *  2: 360 soft
- *  3: 720x360 micro
- *  4: 720x360 soft
- *  5: 720 micro
- *  6: 720 soft
- *  7: 1440x720 micro
- *  8: 1440x720 soft
- *  9: 2880x720 micro
- * 10: 2880x720 soft
- * 11: 2880x1440
+ *  0: 120/180 DPI micro
+ *  1: 120/180 DPI soft
+ *  2: 360 micro
+ *  3: 360 soft
+ *  4: 720x360 micro
+ *  5: 720x360 soft
+ *  6: 720 micro
+ *  7: 720 soft
+ *  8: 1440x720 micro
+ *  9: 1440x720 soft
+ * 10: 2880x720 micro
+ * 11: 2880x720 soft
+ * 12: 2880x1440
  */
 
-/*  0    1    2    3     4      5     6      7      8      9     10     11   */
+/*  0    1    2    3    4     5      6     7      8      9     10     11     12   */
 
 static const escp2_densities_t g1_densities =
-{ 2.0, 1.3, 0.0, 1.3,  0.0,  0.568, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0   };
+{ 2.0, 2.0, 1.3, 0.0, 1.3,  0.0,  0.568, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc1500_densities =
-{ 2.0, 1.3, 0.0, 1.3,  0.0,  0.631, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0   };
+{ 2.0, 2.0, 1.3, 0.0, 1.3,  0.0,  0.631, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t g3_densities =
-{ 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.55,  0.55,  0.275, 0.275, 0.138 };
+{ 2.0, 2.0, 1.3, 1.3, 1.3,  1.3,  0.775, 0.775, 0.55,  0.55,  0.275, 0.275, 0.138 };
 
 static const escp2_densities_t sc440_densities =
-{ 3.0, 2.0, 2.0, 1.0,  1.0,  0.900, 0.900, 0.45,  0.45,  0.45,  0.45,  0.113 };
+{ 3.0, 3.0, 2.0, 2.0, 1.0,  1.0,  0.900, 0.900, 0.45,  0.45,  0.45,  0.45,  0.113 };
 
 static const escp2_densities_t sc480_densities =
-{ 2.0, 0.0, 1.4, 0.0,  0.7,  0.0,   0.710, 0.0,   0.710, 0.0,   0.355, 0.0   };
+{ 2.0, 2.0, 0.0, 1.4, 0.0,  0.7,  0.0,   0.710, 0.0,   0.710, 0.0,   0.355, 0.0   };
 
 static const escp2_densities_t sc980_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.511, 0.49,  0.49,  0.637, 0.637, 0.455 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.511, 0.49,  0.49,  0.637, 0.637, 0.455 };
 
 static const escp2_densities_t c6pl_densities =
-{ 2.0, 1.3, 2.0, 0.65, 1.0,  0.646, 0.568, 0.323, 0.568, 0.284, 0.284, 0.142 };
+{ 2.0, 2.0, 1.3, 2.0, 0.65, 1.0,  0.646, 0.568, 0.323, 0.568, 0.284, 0.284, 0.142 };
 
 static const escp2_densities_t c3pl_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.73,  0.7,   0.7,   0.91,  0.91,  0.455 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.73,  0.7,   0.7,   0.91,  0.91,  0.455 };
 
 static const escp2_densities_t c4pl_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.216, 0.784, 0.392, 0.392, 0.196 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t sc660_densities =
-{ 3.0, 2.0, 2.0, 1.0,  1.0,  0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
+{ 3.0, 3.0, 2.0, 2.0, 1.0,  1.0,  0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
 
 static const escp2_densities_t sp2000_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.775, 0.852, 0.388, 0.438, 0.219, 0.219, 0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.775, 0.852, 0.388, 0.438, 0.219, 0.219, 0.110 };
 
 static const escp2_densities_t spro_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.646, 0.323, 0.323, 0.162, 0.162, 0.081 };
 
 static const escp2_densities_t spro10000_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.0, 1.3, 1.3, 0.65, 0.65, 0.775, 0.852, 0.388, 0.438, 0.219, 0.219, 0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.852, 0.852, 0.438, 0.438, 0.219, 0.219, 0.110 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -1559,7 +1564,7 @@ static const int x80_head_offset[] =
 {48, 48, 96, 0, 0, 0, 0};
 
 static const int c80_head_offset[] =
-{120, 120, 240, 0, 0, 0, 0};
+{0, 120, 0, 240, 0, 0, 0};
 
 
 typedef struct escp2_printer
@@ -2319,7 +2324,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      | MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     60, 60, 2, 180, 180, 2, 360, 360, INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 0, 1, 0, 360, 720, 720, 14400, -1,
-    x80_head_offset, -99, 0, 2880, 720, c3pl_pigment_dotsizes, c3pl_pigment_densities,
+    c80_head_offset, -240, 0, 2880, 720, c3pl_pigment_dotsizes, c3pl_pigment_densities,
     &variable_3pl_pigment_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment
   },
@@ -2353,19 +2358,34 @@ typedef struct
 static const res_t escp2_reslist[] =
 {
   { "360x90dpi", N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,  0,0,1,1,0,1,1,0 },
+    360,  90,   0,0,1,1,0,1,1,0 },
 
-  { "360x120dpi", N_("360 x 120 DPI Fast Economy Draft"),
-    360,  120,  1,0,1,1,0,3,1,0 },
+  { "360x90sw", N_("360 x 90 DPI Fast Economy Draft"),
+    360,  90,   1,0,1,1,0,1,1,1 },
+
+  { "360x120dpi", N_("360 x 120 DPI Economy Draft"),
+    360,  120,  0,0,1,1,0,3,1,0 },
+
+  { "360x120sw", N_("360 x 120 DPI Economy Draft"),
+    360,  120,  1,0,1,1,0,3,1,1 },
 
   { "180dpi", N_("180 DPI Economy Draft"),
     180,  180,  0,0,1,1,0,1,1,2 },
 
+  { "180sw", N_("180 DPI Economy Draft"),
+    180,  180,  1,0,1,1,0,1,1,3 },
+
   { "360x240dpi", N_("360 x 240 DPI Draft"),
-    360,  240,  1,0,1,1,0,3,2,0 },
+    360,  240,  0,0,1,1,0,3,2,2 },
+
+  { "360x240sw", N_("360 x 240 DPI Draft"),
+    360,  240,  1,0,1,1,0,3,2,3 },
 
   { "360x180dpi", N_("360 x 180 DPI Draft"),
     360,  180,  0,0,1,1,0,1,1,2 },
+
+  { "360x180sw", N_("360 x 180 DPI Draft"),
+    360,  180,  1,0,1,1,0,1,1,3 },
 
   { "360sw", N_("360 DPI"),
     360,  360,  1,0,1,1,0,1,1,5 },
@@ -4475,7 +4495,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	   * Issue print command
 	   */
 	  if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO,v) &&
-	      sw->jets == 1)
+	      sw->bitwidth == 1)
 	    {
 	      int ygap = 3600 / ydpi;
 	      int xgap = 3600 / xdpi;

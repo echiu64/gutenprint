@@ -757,9 +757,9 @@ static stp_internal_papersize_t paper_sizes[] =
   /*
    * Foolscap
    */
-  { "w612h936",		N_ ("flsa"),
+  { "w612h936",		N_ ("American foolscap"),
     612,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* American foolscap */
-  { "w648h936",		N_ ("flse"),
+  { "w648h936",		N_ ("European foolscap"),
     648,  936, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* European foolscap */
 
   /*
@@ -801,11 +801,11 @@ static stp_internal_papersize_t paper_sizes[] =
     283, 420, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 100 x 148 mm */
   { "w420h567",		N_ ("Oufuku Card"),
     420, 567, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* 148 x 200 mm */
-  { "w340h666",		N_ ("Long 3"),
+  { "w340h666",		N_ ("Japanese long envelope #3"),
     340, 666, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #3 */
-  { "w255h581",		N_ ("Long 4"),
+  { "w255h581",		N_ ("Japanese long envelope #4"),
     255, 581, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #4 */
-  { "w680h941",		N_ ("Kaku"),
+  { "w680h941",		N_ ("Japanese Kaku envelope #4"),
     680, 941, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese Kaku envelope #4 */
   { "COM10",		N_ ("Commercial 10"),
     297, 684, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
