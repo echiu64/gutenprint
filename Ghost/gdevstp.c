@@ -490,7 +490,27 @@ stp_open(gx_device *pdev)
 /* get one row of the image */
 void Image_get_row(Image image, unsigned char *data, int row)
 {
-  gdev_prn_copy_scan_lines(stp_pdev, stp_data.topoffset+row, data, stp_raster);
+  if (stp_pdev->x_pixels_per_inch == stp_pdev->y_pixels_per_inch)
+    gdev_prn_copy_scan_lines(stp_pdev, stp_data.topoffset+row,
+			     data, stp_raster);
+  else if (stp_pdev->x_pixels_per_inch > stp_pdev->y_pixels_per_inch)
+    {
+      /*
+       * If xres > yres, duplicate rows
+       */
+      int ratio = (stp_pdev->x_pixels_per_inch / stp_pdev->y_pixels_per_inch);
+      gdev_prn_copy_scan_lines(stp_pdev, (stp_data.topoffset + row) / ratio,
+			       data, stp_raster);
+    }
+  else
+    {
+      /*
+       * If xres < yres, skip rows
+       */
+      int ratio = (stp_pdev->y_pixels_per_inch / stp_pdev->x_pixels_per_inch);
+      gdev_prn_copy_scan_lines(stp_pdev, (stp_data.topoffset + row) * ratio),
+			       data, stp_raster);
+    }
 }
 
 /* return bpp of picture (24 here) */
