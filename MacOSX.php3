@@ -48,16 +48,16 @@ September 17, 2002 - <a href="http://sourceforge.net/users/tylerb/">tb</a>
  OS X 10.2 Jaguar.
  </p>
  <p>
- If you can't find a solution to your problem in the <a
+ If you can't find an answer to your question in the <a
  href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">FAQ</a> or in
  the documentation included on the installer disk your next stop should
  be the Gimp-Print project <a
  href="http://sourceforge.net/forum/?group_id=1537">forums</a>.
  </p>
  <p>
- If you believe you are experiencing a definite driver bug please check
- the <a
- href="http://sourceforge.net/tracker/?group_id=1537&atid=101537">bug
+ If you are experiencing a problem and you believe it may be a driver
+ bug please check the <a
+ href="http://sourceforge.net/tracker/?group_id=1537&atid=101537" >bug
  tracker</a>. If the problem you are facing is not listed in the
  installer disk documentation, the <a
  href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">FAQ</a>, the <a
