@@ -322,7 +322,7 @@ build_printer_combo(void)
 }
 
 static void
-populate_options(stp_vars_t v)
+populate_options(const stp_vars_t v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int i;
@@ -549,17 +549,17 @@ create_positioning_frame (void)
   left_entry = create_positioning_entry
     (table, 0, 2, _("Left:"),
      _("Distance from the left of the paper to the image"));
-  top_entry = create_positioning_entry
-    (table, 2, 2, _("Top:"),
-     _("Distance from the top of the paper to the image"));
   right_entry = create_positioning_entry
     (table, 0, 3, _("Right:"),
      _("Distance from the left of the paper to the right of the image"));
   right_border_entry = create_positioning_entry
-    (table, 2, 3, _("Right Border:"),
+    (table, 0, 4, _("Right Border:"),
      _("Distance from the right of the paper to the image"));
+  top_entry = create_positioning_entry
+    (table, 2, 2, _("Top:"),
+     _("Distance from the top of the paper to the image"));
   bottom_entry = create_positioning_entry
-    (table, 0, 4, _("Bottom:"),
+    (table, 2, 3, _("Bottom:"),
      _("Distance from the top of the paper to bottom of the image"));
   bottom_border_entry = create_positioning_entry
     (table, 2, 4, _("Bottom Border:"),
@@ -2234,7 +2234,6 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       gpointer        data)   /* I - Data */
 {
   static int calling_print_driver_callback = 0;
-  const stp_vars_t v;
   if (calling_print_driver_callback)
     return;
   calling_print_driver_callback++;
@@ -2244,17 +2243,15 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
   tmp_printer = stp_get_printer_by_index ((gint) data);
 
-  v = stp_printer_get_defaults(tmp_printer);
-  if (stp_parameter_find_in_settings(v, "PPDFile"))
-    {
+  { const stp_vars_t v = stp_printer_get_defaults(tmp_printer);
+    if (stp_parameter_find_in_settings(v, "PPDFile")) {
       gtk_widget_show (ppd_label);
       gtk_widget_show (ppd_box);
-    }
-  else
-    {
+    } else {
       gtk_widget_hide (ppd_label);
       gtk_widget_hide (ppd_box);
     }
+  }
   calling_print_driver_callback--;
 }
 
@@ -2436,13 +2433,13 @@ initialize_thumbnail(void)
 }
 
 static int
-compute_thumbnail(stp_vars_t v)
+compute_thumbnail(const stp_vars_t v)
 {
   priv_t priv;
   int answer = 1;
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
-  stp_vars_t nv = stp_vars_create_copy(v);
+  const stp_vars_t nv = stp_vars_create_copy(v);
   stp_set_printer_defaults(nv, stp_get_printer_by_driver("raw-data-8"));
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);
