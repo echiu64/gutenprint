@@ -2462,7 +2462,8 @@ stp_dither_black_et(const unsigned short  *gray,
 	value = *ndither + base;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
-        maxwet = cd->maxdot_wet + (CHANNEL(d, ECOLOR_K).b * CHANNEL(d, ECOLOR_K).maxdot >> 1);
+        maxwet = (CHANNEL(d, ECOLOR_K).b * CHANNEL(d,ECOLOR_K).maxdot >> 1)
+	 + cd->maxdot_wet - cd->wetness;
 	
         find_segment(d, &CHANNEL(d, ECOLOR_K), maxwet, value, &cd->dr);
 	
@@ -2780,7 +2781,8 @@ stp_dither_cmy_et(const unsigned short  *cmy,
 	value = ndither[i] + base;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
-        maxwet = p->maxdot_wet + (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1);
+        maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
+	 + p->maxdot_wet - p->wetness;
 	
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
@@ -3278,9 +3280,10 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	value = ndither[i] + base;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 
-        maxwet = p->maxdot_wet + (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1);
+        maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
+	 + p->maxdot_wet - p->wetness;
 	
-        find_segment(d, &CHANNEL(d, i), maxwet - p->wetness, value, &p->dr);
+        find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
 	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
       }
@@ -3660,7 +3663,8 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	value = ndither[i] + base;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
-        maxwet = p->maxdot_wet + (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1);
+        maxwet = (CHANNEL(d, i).b * CHANNEL(d, i).maxdot >> 1)
+	 + p->maxdot_wet - p->wetness;
 	
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
