@@ -26,11 +26,7 @@
 #endif
 #include <stdio.h>
 #include <string.h>
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
+#include <gutenprint/gutenprint.h>
 
 int
 main(int argc, char **argv) {

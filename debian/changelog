@@ -1,3 +1,25 @@
+gutenprint (5.0.0-beta2-1) unstable; urgency=low
+
+  * New upstream beta release.
+  * Renamed package to gutenprint.  The following packages were
+    renamed in consequence:
+    - cupsys-driver-gimpprint renamed to cupsys-driver-gutenprint
+    - foomatic-db-gimp-print renamed to foomatic-db-gutenprint
+    - gimpprint-doc renamed to gutenprint-doc
+    - gimpprint-locales renamed to gutenprint-locales
+    - ijsgimpprint renamed to ijsgutenprint
+    - libgimpprint renamed to libgutenprint
+    - libgimpprint-dev renamed to libgutenprint-dev
+    - libgimpprint-doc renamed to libgutenprint-doc
+  * New packages:
+    - libgimpprintui (GTK+ 1.2 UI library)
+    - libgimpprintui-dev (GTK+ 1.2 UI library headers)
+    - libgimpprintui2 (GTK+ 2.0 UI library)
+    - libgimpprintui2-dev (GTK+ 2.0 UI library headers)
+  * libgutenprint-dev: drop static libgutenprint.a
+
+ -- Roger Leigh <rleigh@debian.org>  Sun, 12 Sep 2004 15:29:49 +0100
+
 gimp-print (5.0.0-alpha3-1) unstable; urgency=low
 
   * New upstream alpha release.

@@ -1,0 +1,14 @@
+Document: libgutenprint#LIBRARY_VERSION#-doc-reference
+Title: The libgutenprint API Reference Manual
+Author: The Gutenprint Project
+Abstract: The gutenprint library routines give programmers an interface to
+ print high quality bitmap images on most modern printers.  It includes drivers
+ which provide printing quality for UNIX/Linux on a par with proprietary
+ vendor-supplied drivers in many cases, and can be used for many of the most
+ demanding printing tasks. This manual is a reference to the libgutenprint
+ library.
+Section: Apps/Programming
+
+Format: HTML
+Index: /usr/share/doc/libgutenprint#LIBRARY_VERSION#-doc/reference/html/index.html
+Files: /usr/share/doc/libgutenprint#LIBRARY_VERSION#-doc/reference/html/*.html

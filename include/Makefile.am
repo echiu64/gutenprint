@@ -1,5 +1,5 @@
 ## $Id$
-## Copyright (C) 2000 Roger Leigh
+## Copyright (C) 2000,2004 Roger Leigh
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = gimp-print gimp-print-ui gimp-print-ui2
+SUBDIRS = gutenprint gutenprintui gutenprintui2
 
 include $(top_srcdir)/scripts/global.mk
 

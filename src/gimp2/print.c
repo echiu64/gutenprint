@@ -25,7 +25,7 @@
 #include <config.h>
 #endif
 
-#include <gimp-print-ui/gimp-print-ui.h>
+#include <gutenprintui/gutenprintui.h>
 #include "print_gimp.h"
 
 #include <sys/types.h>
@@ -181,7 +181,7 @@ run (const char        *name,		/* I - Name of print program. */
       ;
 
  /*
-  * Initialise libgimpprint
+  * Initialise libgutenprint
   */
 
   stp_init();

@@ -1,0 +1,12 @@
+.deps
+.libs
+*.lo
+*.la
+Makefile
+Makefile.in
+libgutenprintui.la
+gutenprintui2.pc
+printrcl.c
+printrcy.c
+printrcy.h
+typebuiltins.c

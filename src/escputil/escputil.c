@@ -23,7 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
+#include <gutenprint/gutenprint.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -49,7 +49,7 @@
 #ifdef HAVE_READLINE_HISTORY_H
 #include <readline/history.h>
 #endif
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint-intl-internal.h>
 
 void do_align(void);
 char *do_get_input (const char *prompt);

@@ -30,8 +30,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_DITHER_IMPL_H
-#define GIMP_PRINT_INTERNAL_DITHER_IMPL_H
+#ifndef GUTENPRINT_INTERNAL_DITHER_IMPL_H
+#define GUTENPRINT_INTERNAL_DITHER_IMPL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -254,7 +254,7 @@ do									\
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_DITHER_IMPL_H */
+#endif /* GUTENPRINT_INTERNAL_DITHER_IMPL_H */
 /*
  * End of "$Id$".
  */

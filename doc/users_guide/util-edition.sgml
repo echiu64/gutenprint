@@ -9,7 +9,7 @@
 <book>
 
  <bookinfo>
-  <title>The User's Guide to the Gimp-Print - UTIL Edition</title>
+  <title>The User's Guide to the Gutenprint - UTIL Edition</title>
   <date>April 7, 2002</date>
   <pubdate>April 7, 2002</pubdate>
   <author>
@@ -21,7 +21,7 @@
     <holder>Andy Stewart</holder>
   </copyright>
   <legalnotice>
-    <para>The User's Guide to the Gimp-Print - UTIL Edition, Copyright
+    <para>The User's Guide to the Gutenprint - UTIL Edition, Copyright
 2002, Andy Stewart.
     </para>
 
@@ -33,15 +33,15 @@
 
     <para>
     This manual includes a subset of chapters from a more complete
-manual entitled <emphasis>The User's Guide to the Gimp-Print Top
+manual entitled <emphasis>The User's Guide to the Gutenprint Top
 Quality Printer Drivers</emphasis>.  To obtain the complete manual, go
-to the <ulink url="http://gimp-print.sourceforge.net">Gimp-Print
+to the <ulink url="http://gimp-print.sourceforge.net">Gutenprint
 Project</ulink> home page.
     </para>
     <para>
     This version of the manual has been specifically packaged in this
 way in an attempt to better suit the needs of people interested only
-in utility programs packaged with the Gimp-Print software.
+in utility programs packaged with the Gutenprint software.
     </para>
 
   </caution>

@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   libgimpprint path functions - split and search paths.
+ *   Gutenprint path functions - split and search paths.
  *
  *   Copyright 2002 Roger Leigh (rleigh@debian.org)
  *
@@ -20,9 +20,9 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

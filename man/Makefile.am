@@ -43,20 +43,20 @@ ESCPUTIL_MAN = escputil.1
 endif
 
 if BUILD_GHOSTSCRIPT
-GHOSTSCRIPT_MAN = ijsgimpprint.1
+GHOSTSCRIPT_MAN = ijsgutenprint.1
 endif
 
 MAIN_MAN = \
-	gimpprint.3 \
-	gimpprint-color.7 \
-	gimpprint-dithers.7 \
-	gimpprint-imagetypes.7 \
-	gimpprint-inktypes.7 \
-	gimpprint-mediasizes.7 \
-	gimpprint-mediasources.7 \
-	gimpprint-mediatypes.7 \
-	gimpprint-models.7 \
-	gimpprint-resolutions.7
+	gutenprint.3 \
+	gutenprint-color.7 \
+	gutenprint-dithers.7 \
+	gutenprint-imagetypes.7 \
+	gutenprint-inktypes.7 \
+	gutenprint-mediasizes.7 \
+	gutenprint-mediasources.7 \
+	gutenprint-mediatypes.7 \
+	gutenprint-models.7 \
+	gutenprint-resolutions.7
 
 man_MANS = $(CUPS_MAN) $(ESCPUTIL_MAN) $(GHOSTSCRIPT_MAN) $(MAIN_MAN)
 
@@ -66,7 +66,7 @@ EXTRA_man_MANS = \
 	cups-genppdconfig.8 \
 	cups-genppdupdate.8 \
 	escputil.1 \
-	ijsgimpprint.1
+	ijsgutenprint.1
 
 
 ## Clean

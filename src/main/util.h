@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   libgimpprint header.
+ *   Gutenprint header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -35,8 +35,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_UTIL_H
-#define GIMP_PRINT_INTERNAL_UTIL_H
+#ifndef GUTENPRINT_INTERNAL_UTIL_H
+#define GUTENPRINT_INTERNAL_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -71,7 +71,7 @@ extern void stpi_init_printer(void);
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_UTIL_H */
+#endif /* GUTENPRINT_INTERNAL_UTIL_H */
 /*
  * End of "$Id$".
  */

@@ -34,27 +34,31 @@ EXTRA_DIST = \
 	compat \
 	control.in \
 	copyright \
-	cupsys-driver-gimpprint.docs \
-	cupsys-driver-gimpprint.install \
-	cupsys-driver-gimpprint.postinst \
-	cupsys-driver-gimpprint.postrm \
+	cupsys-driver-gutenprint.docs \
+	cupsys-driver-gutenprint.install \
+	cupsys-driver-gutenprint.postinst \
+	cupsys-driver-gutenprint.postrm \
 	escputil.docs \
 	escputil.install \
-	foomatic-db-gimp-print.install \
+	foomatic-db-gutenprint.install \
 	gimp-print.docs \
 	gimp-print.install \
 	gimp-print.postrm \
 	gimp-print.preinst \
-	gimpprint-doc.doc-base \
-	gimpprint-doc.install \
-	gimpprint-locales.install \
-	ijsgimpprint.install \
-	libgimpprint-dev.docs \
-	libgimpprint-dev.install \
-	libgimpprint-doc.doc-base.developer.in \
-	libgimpprint-doc.doc-base.reference.in \
-	libgimpprint-doc.install.in \
-	libgimpprint.install.in \
+	gutenprint-doc.doc-base \
+	gutenprint-doc.install \
+	gutenprint-locales.install \
+	ijsgutenprint.install \
+	libgutenprint-dev.docs \
+	libgutenprint-dev.install \
+	libgutenprint-doc.doc-base.developer.in \
+	libgutenprint-doc.doc-base.reference.in \
+	libgutenprint-doc.install.in \
+	libgutenprint.install.in \
+	libgutenprintui2-dev.install \
+	libgutenprintui2.install.in \
+	libgutenprintui-dev.install \
+	libgutenprintui.install.in \
 	README.building \
 	README.Debian \
 	rules

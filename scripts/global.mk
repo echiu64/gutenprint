@@ -12,20 +12,20 @@ LIBS = $(INTLLIBS) @LIBS@
 
 # Libraries
 
-GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
-GIMPPRINTUI_LIBS = $(top_builddir)/src/libgimpprintui/libgimpprintui.la
-GIMPPRINTUI2_LIBS = $(top_builddir)/src/libgimpprintui2/libgimpprintui2.la
+GUTENPRINT_LIBS = $(top_builddir)/src/main/libgutenprint.la
+GUTENPRINTUI_LIBS = $(top_builddir)/src/gutenprintui/libgutenprintui.la
+GUTENPRINTUI2_LIBS = $(top_builddir)/src/gutenprintui2/libgutenprintui2.la
 
 # Rules
 
-$(top_builddir)/src/main/libgimpprint.la:
+$(top_builddir)/src/main/libgutenprint.la:
 	cd $(top_builddir)/src/main; \
 	$(MAKE)
 
-$(top_builddir)/src/libgimpprintui/libgimpprintui.la:
-	cd $(top_builddir)/src/libgimpprintui; \
+$(top_builddir)/src/gutenprintui/libgutenprintui.la:
+	cd $(top_builddir)/src/gutenprintui; \
 	$(MAKE)
 
-$(top_builddir)/src/libgimpprintui2/libgimpprintui2.la:
-	cd $(top_builddir)/src/libgimpprintui2; \
+$(top_builddir)/src/gutenprintui2/libgutenprintui2.la:
+	cd $(top_builddir)/src/gutenprintui2; \
 	$(MAKE)

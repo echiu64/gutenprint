@@ -1,6 +1,6 @@
 #! @PERL@ -w
 # $Id$
-# Update CUPS PPDs for Gimp-Print queues.
+# Update CUPS PPDs for Gutenprint queues.
 # Copyright (C) 2002-2003 Roger Leigh (rleigh@debian.org)
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@ use File::Copy qw(mv);
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
-sub find_ppd ($$$$); # Gimp-Print Filename, driver, language (e.g. en, sv),
+sub find_ppd ($$$$); # Gutenprint Filename, driver, language (e.g. en, sv),
 		     # region (e.g. GB, DE)
 sub get_default_types (*); # Source PPD FH
 sub get_defaults (*); # Source PPD FH
@@ -45,7 +45,7 @@ if ($debug) {
 }
 my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
-my $version = "@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@";
+my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
 my $ppd_root_dir = "@cups_conf_datadir@/model";
@@ -53,7 +53,7 @@ my $ppd_base_dir = "$ppd_root_dir/gimp-print/$version"; # Available PPDs
 my $gzext = ".gz";
 my $updated_ppd_count = 0;
 
-my @ppd_files; # A list of in-use Gimp-Print PPD files
+my @ppd_files; # A list of in-use Gutenprint PPD files
 
 # Used to convert a language name to its two letter code
 my %languagemappings = (
@@ -88,12 +88,12 @@ parse_options();
 umask 0177;
 
 
-# Find all in-use Gimp-Print PPD files...
+# Find all in-use Gutenprint PPD files...
 
 my @ppdglob = glob("$ppd_dir/*.{ppd,PPD}");
 my $ppdlist = join ' ', @ppdglob;
 if (@ppdglob) {
-    open PPDFILES, "grep -i -l Gimp-Print $ppdlist|" or die "can't grep $ppd_dir/*: $!";
+    open PPDFILES, "grep -i -l Gutenprint $ppdlist|" or die "can't grep $ppd_dir/*: $!";
     while (<PPDFILES>) {
 	chomp;
 	push @ppd_files,  $_;
@@ -105,11 +105,11 @@ if (@ppdglob) {
 # Exit if there are not files to update...
 
 if (!@ppd_files) {
-    print STDOUT "No Gimp-Print PPD files to update.\n";
+    print STDOUT "No Gutenprint PPD files to update.\n";
     exit (0);
 }
 
-# Update each of the Gimp-Print PPDs, where possible...
+# Update each of the Gutenprint PPDs, where possible...
 
 foreach (@ppd_files) {
     $updated_ppd_count += update_ppd($_);
@@ -155,7 +155,7 @@ sub parse_options () {
     }
     if ($opt_h) {
 	print "Usage: $0 [OPTION]...\n";
-	print "Update CUPS+Gimp-Print PPD files.\n\n";
+	print "Update CUPS+Gutenprint PPD files.\n\n";
         print "  -d          Enable debugging\n";
         print "  -h          Display this help text\n";
 	print "  -n          No-action.  Don't overwrite any PPD files.\n";
@@ -179,7 +179,7 @@ sub update_ppd ($) {
     # Get the `PCFileName'; the new source PPD will have the same name.
     my ($filename) = "";
     my ($driver) = "";
-    my ($gimpprintdriver) = "";
+    my ($gutenprintdriver) = "";
     my ($locale) = "";
     my ($lingo) = "";
     my ($region) = "";
@@ -203,16 +203,16 @@ sub update_ppd ($) {
 	    ($filename) = m/^\*StpPPDLocation:\s*\"(.*)\"$/;
 	    $valid = 1;
 	}
-	if (/^\*%Gimp-Print Filename:/) {
+	if (/^\*%Gutenprint Filename:/) {
 	    $valid = 1;
 	}
     }
     if (! $valid) {
-	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gimp-Print 4.3.21 and newer can be)\n";
+	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gutenprint 4.3.21 and newer can be)\n";
 	return 0;
     }
     if ($debug) {
-	print "Gimp-Print Filename: $filename\n";
+	print "Gutenprint Filename: $filename\n";
 	print "Locale: $locale\n";
 	print "Language: $lingo\n";
 	print "Driver: $driver\n";
@@ -390,15 +390,15 @@ default_loop:
 
 # Find a suitable source PPD file
 sub find_ppd ($$$$) {
-    my($gimpprintfilename, $drivername, $lang, $region) = @_;
+    my($gutenprintfilename, $drivername, $lang, $region) = @_;
     my $file; # filename to return
     my ($key) = '^\\*FileVersion:[ 	]*"@VERSION@"$';
     my ($lingo, $suffix, $base, $basedir);
     my ($current_best_file, $current_best_time);
     my ($stored_name, $stored_dir);
-    $stored_name = $gimpprintfilename;
+    $stored_name = $gutenprintfilename;
     $stored_name =~ s,.*/([^/]*)(.gz)?$,$1,;
-    $stored_dir = $gimpprintfilename;
+    $stored_dir = $gutenprintfilename;
     $stored_dir =~ s,(.*)/([^/]*)$,$1,;
 
     $current_best_file = "";
@@ -422,14 +422,14 @@ sub find_ppd ($$$$) {
                     if (! $basedir || ! $base) { next; }
 		    my ($fn) = "$basedir/$lingo$base$suffix";
 		    if ($debug) {
-                        print "Trying $fn for $gimpprintfilename, $lang, $region\n";
+                        print "Trying $fn for $gutenprintfilename, $lang, $region\n";
                     }
 # Check that it is a regular file, owned by root.root, not writable
 # by other, and is readable by root.  i.e. the file is secure.
 		    my @sb = stat $fn or next;
 		    if (S_ISREG($sb[2]) && ($sb[4] == 0) && ($sb[5] == 0)) {
 #			!(S_IWOTH & $sb[2]) && (S_IRUSR & $sb[2])) {
-			# Check that the file is a valid Gimp-Print PPD file
+			# Check that the file is a valid Gutenprint PPD file
 			# of the correct version.
 			my $file_version;
 			if ($fn =~ m/\.gz$/) {

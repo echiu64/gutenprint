@@ -3,9 +3,6 @@ Makefile
 .libs
 *.la
 *.lo
-gimpprint-config
 Makefile.in
-gimpprint-config.in
-gimpprint.m4
-gimpprint.pc
+gutenprint.pc
 xmli18n-tmp.h

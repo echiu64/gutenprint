@@ -31,9 +31,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -312,7 +312,7 @@ static void p200_printer_end_func(stp_vars_t *v)
 
 static const char p200_adj_any[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.000000 0.039216 0.078431 0.117647 0.152941 0.192157 0.231373 0.266667\n"
@@ -322,7 +322,7 @@ static const char p200_adj_any[] =
   "1.000000\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 
 /* Olympus P-300 series */
@@ -393,7 +393,7 @@ static void p300_block_init_func(stp_vars_t *v)
 
 static const char p300_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.078431 0.211765 0.250980 0.282353 0.309804 0.333333 0.352941 0.368627\n"
@@ -402,11 +402,11 @@ static const char p300_adj_cyan[] =
   "0.666667 0.682353 0.701961 0.713725 0.725490 0.729412 0.733333 0.737255\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 static const char p300_adj_magenta[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.047059 0.211765 0.250980 0.278431 0.305882 0.333333 0.349020 0.364706\n"
@@ -415,11 +415,11 @@ static const char p300_adj_magenta[] =
   "0.650980 0.670588 0.694118 0.705882 0.721569 0.741176 0.745098 0.756863\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 static const char p300_adj_yellow[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.047059 0.117647 0.203922 0.250980 0.274510 0.301961 0.321569 0.337255\n"
@@ -428,7 +428,7 @@ static const char p300_adj_yellow[] =
   "0.615686 0.635294 0.650980 0.666667 0.682353 0.690196 0.701961 0.713725\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 
 /* Olympus P-400 series */
@@ -527,7 +527,7 @@ static void p400_block_init_func(stp_vars_t *v)
 
 static const char p400_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.003922 0.031373 0.058824 0.090196 0.125490 0.156863 0.184314 0.219608\n"
@@ -536,11 +536,11 @@ static const char p400_adj_cyan[] =
   "0.627451 0.647059 0.658824 0.678431 0.690196 0.705882 0.721569 0.737255\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char p400_adj_magenta[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.003922 0.031373 0.062745 0.098039 0.125490 0.156863 0.188235 0.215686\n"
@@ -549,11 +549,11 @@ static const char p400_adj_magenta[] =
   "0.682353 0.713725 0.737255 0.756863 0.784314 0.807843 0.827451 0.850980\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char p400_adj_yellow[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.003922 0.027451 0.054902 0.090196 0.121569 0.156863 0.184314 0.215686\n"
@@ -562,7 +562,7 @@ static const char p400_adj_yellow[] =
   "0.698039 0.725490 0.760784 0.784314 0.811765 0.839216 0.866667 0.890196\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 
 /* Olympus P-440 series */
@@ -718,7 +718,7 @@ static void cpx00_plane_init_func(stp_vars_t *v)
 
 static const char cpx00_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.000000 0.035294 0.070588 0.101961 0.117647 0.168627 0.180392 0.227451\n"
@@ -727,11 +727,11 @@ static const char cpx00_adj_cyan[] =
   "0.764706 0.792157 0.811765 0.839216 0.862745 0.894118 0.909804 0.925490\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char cpx00_adj_magenta[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.011765 0.019608 0.035294 0.047059 0.054902 0.101961 0.133333 0.156863\n"
@@ -740,11 +740,11 @@ static const char cpx00_adj_magenta[] =
   "0.831373 0.890196 0.933333 0.964706 0.988235 0.992157 0.992157 0.996078\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char cpx00_adj_yellow[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.003922 0.015686 0.015686 0.023529 0.027451 0.054902 0.094118 0.129412\n"
@@ -753,7 +753,7 @@ static const char cpx00_adj_yellow[] =
   "0.890196 0.921569 0.949020 0.968627 0.984314 0.992157 0.992157 1.000000\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 
 /* Canon CP-220 series */
@@ -867,7 +867,7 @@ static const laminate_list_t updp10_laminate_list =
 
 static const char updp10_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.113725 0.188235 0.247059 0.286275 0.317647 0.345098 0.368627 0.384314\n"
@@ -877,11 +877,11 @@ static const char updp10_adj_cyan[] =
   "1.000000\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char updp10_adj_magenta[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.105882 0.211765 0.286275 0.333333 0.364706 0.388235 0.403922 0.415686\n"
@@ -891,11 +891,11 @@ static const char updp10_adj_magenta[] =
   "1.000000\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
   
 static const char updp10_adj_yellow[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gimp-print>\n"
+  "<gutenprint>\n"
   "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
   "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
   "0.101961 0.160784 0.196078 0.227451 0.243137 0.254902 0.266667 0.286275\n"
@@ -905,7 +905,7 @@ static const char updp10_adj_yellow[] =
   "1.000000\n"
   "</sequence>\n"
   "</curve>\n"
-  "</gimp-print>\n";
+  "</gutenprint>\n";
 
 
 /* Fujifilm CX-400 */

@@ -28,7 +28,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GIMPPRINT_CFLAGS)
+LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 
 TESTS = curve run-testdither run-weavetest
 
@@ -40,25 +40,25 @@ noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint cur
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
-escp2_weavetest_LDADD = $(GIMPPRINT_LIBS)
+escp2_weavetest_LDADD = $(GUTENPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
-unprint_LDADD = $(GIMPPRINT_LIBS)
+unprint_LDADD = $(GUTENPRINT_LIBS)
 
 curve_SOURCES = curve.c
-curve_LDADD = $(GIMPPRINT_LIBS)
+curve_LDADD = $(GUTENPRINT_LIBS)
 
 pcl_unprint_SOURCES = pcl-unprint.c
-pcl_unprint_LDADD = $(GIMPPRINT_LIBS)
+pcl_unprint_LDADD = $(GUTENPRINT_LIBS)
 
 bjc_unprint_SOURCES = bjc-unprint.c
-bjc_unprint_LDADD = $(GIMPPRINT_LIBS)
+bjc_unprint_LDADD = $(GUTENPRINT_LIBS)
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = $(GIMPPRINT_LIBS)
+testdither_LDADD = $(GUTENPRINT_LIBS)
 
 xml_curve_SOURCES = xml-curve.c
-xml_curve_LDADD = $(GIMPPRINT_LIBS)
+xml_curve_LDADD = $(GUTENPRINT_LIBS)
 
 ## Rules
 

@@ -44,12 +44,12 @@ AM_LFLAGS = -i
 AM_YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
-testpattern_LDADD = $(GIMPPRINT_LIBS)
+testpattern_LDADD = $(GUTENPRINT_LIBS)
 
 testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o
 
-printers_LDADD = $(GIMPPRINT_LIBS)
+printers_LDADD = $(GUTENPRINT_LIBS)
 
 
 ## Data

@@ -1,13 +1,13 @@
-README.txt - 11/21/2001 - CUPS Drivers based on Gimp-Print
+README.txt - 11/21/2001 - CUPS Drivers based on Gutenprint
 ----------------------------------------------------------
 
-This file describes the CUPS drivers based on the Gimp-Print project.
+This file describes the CUPS drivers based on the Gutenprint project.
 
 Note: to use these drivers you must have CUPS 1.1.9 or higher.  We
 recommend use of CUPS 1.1.12 or higher.
 
 All code is Copyright 1997-2001 by Easy Software Products and/or the
-Gimp-Print project and is provided under the terms of the GNU General
+Gutenprint project and is provided under the terms of the GNU General
 Public License.  The licensing details are provided in the file
 "LICENSE.txt".
 
@@ -15,7 +15,7 @@ Public License.  The licensing details are provided in the file
 INTRODUCTION
 
 The CUPS drivers contain all of the files needed to support
-photo-quality printing on any printer supported by the Gimp-Print
+photo-quality printing on any printer supported by the Gutenprint
 project. You can find out more about the Common UNIX Printing System
 ("CUPS"), an IPP-based printing system for UNIX/Linux, at:
 
@@ -51,14 +51,14 @@ your driver until a final profile is produced.
 
 The second is called "genppd" which generates PPD files.  These PPD
 files are created in several languages.  The program reads printer
-driver information from the Gimp-Print driver database and produces a
+driver information from the Gutenprint driver database and produces a
 PPD file for each driver.  Normally, users do not have to use this
 tool directly; it is run automatically in the build process.
 
 
 WHAT DRIVERS ARE INCLUDED?
 
-We support all of the Gimp-Print drivers supported by the project. The
+We support all of the Gutenprint drivers supported by the project. The
 Canon and EPSON drivers also support simple printer commands to do head
 cleaning, test prints, and alignment, as well as an EPSON-specific
 backend that provides ink level information to the user.
@@ -91,7 +91,7 @@ WHO DO I CONTACT TO GET HELP?
 
 For support issues, you should contact
 gimp-print-devel@sourceforge.net, the developer mailing list for the
-Gimp-Print project in general.
+Gutenprint project in general.
 
 The primary author of this driver is Michael Sweet of Easy Software
 Products (mike@easysw.com).  Mike is also the main developer for CUPS.

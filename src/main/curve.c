@@ -24,9 +24,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <math.h>
 #ifdef sun
 #include <ieeefp.h>
@@ -1698,7 +1698,7 @@ curve_whitespace_callback(stp_mxml_node_t *node, int where)
 {
   if (node->type != STP_MXML_ELEMENT)
     return 0;
-  if (strcasecmp(node->value.element.name, "gimp-print") == 0)
+  if (strcasecmp(node->value.element.name, "gutenprint") == 0)
     {
       switch (where)
 	{
@@ -1820,7 +1820,7 @@ xml_doc_get_curve(stp_mxml_node_t *doc)
       return NULL;
     }
 
-  xmlcurve = stp_xml_get_node(cur, "gimp-print", "curve", NULL);
+  xmlcurve = stp_xml_get_node(cur, "gutenprint", "curve", NULL);
 
   if (xmlcurve)
     curve = stp_curve_create_from_xmltree(xmlcurve);

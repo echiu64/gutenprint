@@ -1,11 +1,11 @@
-Building the gimp-print Debian packages	                 -*- mode: text -*-
+Building the gutenprint Debian packages	                 -*- mode: text -*-
 =======================================
 
 
 Prerequisites
 -------------
 
-The packages that must be installed to build the gimp-print packages
+The packages that must be installed to build the gutenprint packages
 are listed in the Build-Depends field of the control file
 debian/control[.in].  However, these are the prerequisites to build
 the Debianised source.  Other packages may be needed if building
@@ -57,12 +57,12 @@ Now proceed as for building from a tarball, below.
 Building this package from a tarball
 ------------------------------------
 
-Take the tarball gimp-print-VERSION.tar.gz, and copy it to an empty
-build directory.  Rename it to gimp-print_VERSION.orig.tar.gz.  This
+Take the tarball gutenprint-VERSION.tar.gz, and copy it to an empty
+build directory.  Rename it to gutenprint_VERSION.orig.tar.gz.  This
 is the `upstream' source.  Then extract this with:
 
-$ tar xfvz gimp-print_VERSION.orig.tar.gz
-$ cd gimp-print-VERSION
+$ tar xfvz gutenprint_VERSION.orig.tar.gz
+$ cd gutenprint-VERSION
 
 If needed, modify debian/changelog to change the version
 numbering. The version number should be the same as the package
@@ -88,4 +88,4 @@ unstable distributions.
 
 I hope you like it!
 
-Roger Leigh <rleigh@debian.org> -- Thu, 29 May 2003 16:09:48 +0100
+Roger Leigh <rleigh@debian.org> -- Sun, 12 Sep 2004 10:51:39 +0100

@@ -27,8 +27,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -601,7 +601,7 @@ xml_doc_get_dither_array(stp_mxml_node_t *doc)
       return NULL;
     }
 
-  xmlseq = stp_xml_get_node(cur, "gimp-print", "dither-matrix", NULL);
+  xmlseq = stp_xml_get_node(cur, "gutenprint", "dither-matrix", NULL);
   if (xmlseq == NULL )
     {
       fprintf(stderr,"xml-doc-get-dither-array: XML file is not a dither matrix.\n");

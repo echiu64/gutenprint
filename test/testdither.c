@@ -23,14 +23,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
+#include <gutenprint/gutenprint.h>
 #define STPI_TESTDITHER
 
-#include "../src/main/gimp-print-internal.h"
+#include "../src/main/gutenprint-internal.h"
 #include <stdio.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -193,7 +189,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   int quiet = 0;
 
  /*
-  * Initialise libgimpprint
+  * Initialise libgutenprint
   */
 
   stp_init();

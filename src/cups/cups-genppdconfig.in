@@ -43,14 +43,14 @@ sub perl_menu_mult ($$@);
 
 my $DIALOG = "@DIALOG@";                        # version of dialog to call
 my $use_dialog = 0;                             # whether to use dialog
-my $BACKTITLE = "Gimp-Print CUPS PPD creation"; # dialog screen title
+my $BACKTITLE = "Gutenprint CUPS PPD creation"; # dialog screen title
 my %printers;                                   # master list of printers
 my %languages;                                  # master list of languages
 my @used_printers;                              # printer PPDs on system
 my @used_languages;                             # languages used on system
 my @chosen_printers = ();                       # chosen printers
 my @chosen_languages = ();                      # chosen languages
-my $version = "@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@";
+my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 my $chosen_location = "@cups_conf_datadir@/model/gimp-print/$version";
                                                 # chosen PPD prefix
 my $silent = 0;                                 # no dialog
@@ -201,7 +201,7 @@ sub main_menu() {
     my $option;
     my @menu_options;
     my $menu_desc = << "END";
-Generate Gimp-Print PPD files for use with CUPS.  This program is a user-friendly interface for cups-genppd(8).
+Generate Gutenprint PPD files for use with CUPS.  This program is a user-friendly interface for cups-genppd(8).
 
 Current PPD directory: $chosen_location
 
@@ -241,7 +241,7 @@ END
 sub display_help {
     my $help_text = <<"END";
 cups-genppdconfig is a program to generate PPD files which enable the
-Gimp-Print printer drivers to be used with CUPS, the Common UNIX
+Gutenprint printer drivers to be used with CUPS, the Common UNIX
 Printing System.  A PPD file is a PostScript Printer Description,
 which describes the capabilities of a printer.  For each printer model
 that you wish to use, you will have to generate the corresponding PPD
@@ -262,7 +262,7 @@ unless you know what you are doing.
 1. Printers
 
 Choose the "Printers" menu option.  The dialog box shows a complete
-list of all the printers supported by Gimp-Print.  Use the up and down
+list of all the printers supported by Gutenprint.  Use the up and down
 cursor keys to move between the printers and SPACE to select the
 models you want.  Next, press ENTER to confirm the selections.
 

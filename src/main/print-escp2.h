@@ -21,8 +21,8 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_ESCP2_H
-#define GIMP_PRINT_INTERNAL_ESCP2_H
+#ifndef GUTENPRINT_INTERNAL_ESCP2_H
+#define GUTENPRINT_INTERNAL_ESCP2_H
 
 /*
  * Maximum number of channels in a printer.  If Epson comes out with an
@@ -684,7 +684,7 @@ extern void stpi_escp2_terminate_page(stp_vars_t *v);
 #define PACKFUNC stp_pack_tiff
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_ESCP2_H */
+#endif /* GUTENPRINT_INTERNAL_ESCP2_H */
 /*
  * End of "$Id$".
  */

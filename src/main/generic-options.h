@@ -18,8 +18,8 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_GENERIC_OPTIONS_H
-#define GIMP_PRINT_INTERNAL_GENERIC_OPTIONS_H
+#ifndef GUTENPRINT_INTERNAL_GENERIC_OPTIONS_H
+#define GUTENPRINT_INTERNAL_GENERIC_OPTIONS_H
 
 typedef struct
 {
@@ -64,4 +64,4 @@ extern void stpi_describe_generic_parameter(const stp_vars_t *v,
 					   const char *name,
 					   stp_parameter_t *description);
 
-#endif /* GIMP_PRINT_INTERNAL_GENERIC_OPTIONS_H */
+#endif /* GUTENPRINT_INTERNAL_GENERIC_OPTIONS_H */

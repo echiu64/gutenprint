@@ -29,7 +29,7 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 DISTDIRS = foomatic-templates-ijs
-LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS)
+LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS)
 
 if BUILD_FOOMATIC_3
 BUILD_FOOMATIC = 1
@@ -39,24 +39,24 @@ endif
 ## Programs
 
 if BUILD_FOOMATIC
-noinst_PROGRAMS = printer_options printer_margins paper_sizes gimp-print-version \
+noinst_PROGRAMS = printer_options printer_margins paper_sizes gutenprint-version \
 	printers
 endif
 
 printer_options_SOURCES = printer_options.c
-printer_options_LDADD = $(GIMPPRINT_LIBS)
+printer_options_LDADD = $(GUTENPRINT_LIBS)
 
 printer_margins_SOURCES = printer_margins.c
-printer_margins_LDADD = $(GIMPPRINT_LIBS)
+printer_margins_LDADD = $(GUTENPRINT_LIBS)
 
-gimp_print_version_SOURCES = gimp-print-version.c
-gimp_print_version_LDADD = $(GIMPPRINT_LIBS)
+gutenprint_version_SOURCES = gutenprint-version.c
+gutenprint_version_LDADD = $(GUTENPRINT_LIBS)
 
 paper_sizes_SOURCES = paper_sizes.c
-paper_sizes_LDADD = $(GIMPPRINT_LIBS)
+paper_sizes_LDADD = $(GUTENPRINT_LIBS)
 
 printers_SOURCES = printers.c
-printers_LDADD = $(GIMPPRINT_LIBS)
+printers_LDADD = $(GUTENPRINT_LIBS)
 
 
 ## Rules
@@ -77,7 +77,7 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gimp-print-ijs ; \
+	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gutenprint-ijs ; \
 	fi
 
 install-kit:

@@ -24,7 +24,7 @@
 #include <config.h>
 #endif
 
-#include <gimp-print/gimp-print.h>
+#include <gutenprint/gutenprint.h>
 
 typedef struct
 {

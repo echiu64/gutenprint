@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   XML parser - process gimp-print XML data with mxml.
+ *   XML parser - process Gutenprint XML data with mxml.
  *
  *   Copyright 2002-2003 Roger Leigh (rleigh@debian.org)
  *
@@ -24,9 +24,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -124,7 +124,7 @@ stp_unregister_xml_preload(const char *name)
 }
 
 
-static void stpi_xml_process_gimpprint(stp_mxml_node_t *gimpprint, const char *file);
+static void stpi_xml_process_gutenprint(stp_mxml_node_t *gutenprint, const char *file);
 
 static char *saved_lc_collate;                 /* Saved LC_COLLATE */
 static char *saved_lc_ctype;                   /* Saved LC_CTYPE */
@@ -273,7 +273,8 @@ stp_xml_parse_file(const char *file) /* File to parse */
   cur = doc->child;
   while (cur &&
 	 (cur->type != STP_MXML_ELEMENT ||
-	  strcmp(cur->value.element.name, "gimp-print") != 0))
+	  (strcmp(cur->value.element.name, "gutenprint") != 0 &&
+	   strcmp(cur->value.element.name, "gimp-print") != 0)))
     cur = cur->next;
 
   if (cur == NULL || cur->type != STP_MXML_ELEMENT)
@@ -283,10 +284,11 @@ stp_xml_parse_file(const char *file) /* File to parse */
       return 1;
     }
 
-  if (strcmp(cur->value.element.name, "gimp-print") != 0)
+  if (strcmp(cur->value.element.name, "gutenprint") != 0 &&
+      strcmp(cur->value.element.name, "gimp-print") != 0)
     {
       stp_erprintf
-	("XML file of the wrong type, root node is %s != gimp-print",
+	("XML file of the wrong type, root node is %s != (gutenprint || gimp-print)",
 	 cur->value.element.name);
       stp_mxmlDelete(doc);
       return 1;
@@ -294,7 +296,7 @@ stp_xml_parse_file(const char *file) /* File to parse */
 
   /* The XML file was read and is the right format */
 
-  stpi_xml_process_gimpprint(cur, file);
+  stpi_xml_process_gutenprint(cur, file);
   stp_mxmlDelete(doc);
 
   stp_xml_exit();
@@ -342,7 +344,7 @@ stp_xmlstrtod(const char *textval)
 /*
  * Find a node in an XML tree.  This function takes an xmlNodePtr,
  * followed by a NULL-terminated list of nodes which are required.
- * For example stp_xml_get_node(myroot, "gimp-print", "dither") will
+ * For example stp_xml_get_node(myroot, "gutenprint", "dither") will
  * return the first dither node in the tree.  Additional dither nodes
  * cannot be accessed with this function.
  */
@@ -381,10 +383,10 @@ stpi_xml_process_node(stp_mxml_node_t *node, const char *file)
 }
 
 /*
- * Parse the <gimp-print> root node.
+ * Parse the <gutenprint> root node.
  */
 static void
-stpi_xml_process_gimpprint(stp_mxml_node_t *cur, const char *file) /* The node to parse */
+stpi_xml_process_gutenprint(stp_mxml_node_t *cur, const char *file) /* The node to parse */
 {
   stp_mxml_node_t *child;                       /* Child node pointer */
 
@@ -399,7 +401,7 @@ stpi_xml_process_gimpprint(stp_mxml_node_t *cur, const char *file) /* The node t
 }
 
 /*
- * Create a basic gimp-print XML document tree root
+ * Create a basic gutenprint XML document tree root
  */
 stp_mxml_node_t *
 stp_xmldoc_create_generic(void)
@@ -411,14 +413,14 @@ stp_xmldoc_create_generic(void)
   doc = stp_mxmlNewElement(NULL, "?xml");
   stp_mxmlElementSetAttr(doc, "version", "1.0");
 
-  rootnode = stp_mxmlNewElement(doc, "gimp-print");
+  rootnode = stp_mxmlNewElement(doc, "gutenprint");
   stp_mxmlElementSetAttr
     (rootnode, "xmlns", "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0");
   stp_mxmlElementSetAttr
     (rootnode, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
   stp_mxmlElementSetAttr
     (rootnode, "xsi:schemaLocation",
-     "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd");
+     "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd");
 
   return doc;
 }

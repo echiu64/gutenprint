@@ -34,9 +34,9 @@
 #include <limits.h>
 #endif
 #include <string.h>
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include "generic-options.h"
 
 typedef struct
@@ -877,7 +877,7 @@ stp_get_int_parameter(const stp_vars_t *v, const char *parameter)
 	{
 	  stp_parameter_description_destroy(&desc);
 	  stp_erprintf
-	    ("GIMP-PRINT: Attempt to retrieve unset integer parameter %s\n",
+	    ("Gutenprint: Attempt to retrieve unset integer parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -967,7 +967,7 @@ stp_get_boolean_parameter(const stp_vars_t *v, const char *parameter)
 	{
 	  stp_parameter_description_destroy(&desc);
 	  stp_erprintf
-	    ("GIMP-PRINT: Attempt to retrieve unset boolean parameter %s\n",
+	    ("Gutenprint: Attempt to retrieve unset boolean parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -1050,7 +1050,7 @@ stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
 	{
 	  stp_parameter_description_destroy(&desc);
 	  stp_erprintf
-	    ("GIMP-PRINT: Attempt to retrieve unset dimension parameter %s\n",
+	    ("Gutenprint: Attempt to retrieve unset dimension parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -1134,7 +1134,7 @@ stp_get_float_parameter(const stp_vars_t *v, const char *parameter)
 	{
 	  stp_parameter_description_destroy(&desc);
 	  stp_erprintf
-	    ("GIMP-PRINT: Attempt to retrieve unset float parameter %s\n",
+	    ("Gutenprint: Attempt to retrieve unset float parameter %s\n",
 	     parameter);
 	  return 1.0;
 	}

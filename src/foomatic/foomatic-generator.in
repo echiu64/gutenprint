@@ -25,7 +25,7 @@ my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (ie '4.1.5')
-# @@DRVNAME@@        - driver name (ie gimp-print)
+# @@DRVNAME@@        - driver name (ie gutenprint)
 # @@STPRINTERS@@     - <printers>...</printers> clause for the driver
 # @@OPTCONSTRAINTS@@ - <constraints>...</constraints> object for the option
 # @@ENUMVALS@@       - <enum_vals>...</enum_vals> section for the enum option
@@ -42,9 +42,9 @@ my $funcs = { 'Model' => { 'OPTCONSTRAINTS' => \&build_model_cons,
 			   'ENUMVALS' => \&build_model_ev },
 	      'RenderResolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
 				  'ENUMVALS' => \&build_resolution_ev },
-	      'PrintoutMode' => { 'OPTCONSTRAINTS' => 
+	      'PrintoutMode' => { 'OPTCONSTRAINTS' =>
 				      \&build_printoutmode_cons,
-				  'ENUMVALS' => 
+				  'ENUMVALS' =>
 				      \&build_printoutmode_ev },
 	  };
 
@@ -61,7 +61,7 @@ $colormap = { 'ijs' => { 'Grayscale' => 'DeviceGray',
 			 'RawCMYK' => 'DeviceCMYK' }
 	    };
 
-my $groupname_prefix = "Gimp-Print";
+my $groupname_prefix = "Gutenprint";
 
 my @parameter_class_names = (
 			     "Printer Features",
@@ -127,7 +127,7 @@ for $a (keys(%stpdata)) {
 #print Dumper(%ev_choices);
 
 if ($foomatic3) {
-    # Generate data for "PrintoutMode" option, only needed for 
+    # Generate data for "PrintoutMode" option, only needed for
     # Foomatic 2.9.x or newer
     print STDERR "Generating data for \"PrintoutMode\" option...";
     ($printoutmode, $printoutmodechoices) = getprintoutmode();
@@ -248,14 +248,14 @@ $missing_drivers = 0;
 for (keys(%stpdata)) {
     if (!defined($mapstp{$_})) {
 	$missing_drivers = 1;
-	warn "No foomatic printer IDs for gimp-print printer $_.\n";
+	warn "No foomatic printer IDs for gutenprint printer $_.\n";
     }
 }
 
 for (keys(%mapstp)) {
     if (!defined($stpdata{$_})) {
 	$missing_drivers = 1;
-	warn "No gimp-print printer for foomatic ID $_.\n";
+	warn "No gutenprint printer for foomatic ID $_.\n";
     }
 }
 
@@ -264,9 +264,9 @@ if ($missing_drivers) {
 }
 
 # Figure out version etc
-open PIPE, "./gimp-print-version|" or die "Cannot run gimp-print-version: $!\n";
+open PIPE, "./gutenprint-version|" or die "Cannot run gutenprint-version: $!\n";
 my $stpvers = <PIPE>;
-close PIPE or die "Cannot run gimp-print-version: $!\n";
+close PIPE or die "Cannot run gutenprint-version: $!\n";
 chomp $stpvers;
 
 # Build <printers> clause...
@@ -274,14 +274,14 @@ my @printerlist = ();
 push (@printerlist, " <printers>\n");
 my $p1;
 for $p1 (keys(%mapstp)) {
-    push (@printerlist, "  <!-- gimp-print driver: $p1 -->\n");
+    push (@printerlist, "  <!-- gutenprint driver: $p1 -->\n");
     for my $id (@{$mapstp{$p1}}) {
 	if ($foomatic3) {
 	    # Add unprintable margins (only Foomatic 2.9.x)
 	    push(@printerlist, "  <printer>\n");
 	    push(@printerlist, "    <id>$id</id>\n");
 	    push(@printerlist, "    <margins>\n");
-	    my ($cleft, $cright, $ctop, $cbottom) = 
+	    my ($cleft, $cright, $ctop, $cbottom) =
 		(undef, undef, undef, undef);
 	    if (defined($imageableareas{$p1}{'Custom'})) {
 		$cleft = $imageableareas{$p1}{'Custom'}{'left'};
@@ -339,7 +339,7 @@ for $p1 (keys(%mapstp)) {
 }
 push (@printerlist, " </printers>\n");
 
-$drivernameprefix = "gimp-print";
+$drivernameprefix = "gutenprint";
 print STDERR "Using driver name prefix \"$drivernameprefix\"\n";
 
 my $generalsubs = { 'STPVER' => $stpvers,
@@ -378,7 +378,7 @@ for $drivertype (@drivertypes) {
     mkdir "foomatic-db/$drvname", 0755 or
 	die "Cannot create directory foomatic-db/$drvname: $!\n"
      	    unless -d "foomatic-db/$drvname";
-    mkdir "foomatic-db/$drvname/opt", 0755 or 
+    mkdir "foomatic-db/$drvname/opt", 0755 or
 	die "Cannot create directory foomatic-db/$drvname/opt: $!\n"
 	    unless -d "foomatic-db/$drvname/opt";
     mkdir "foomatic-db/$drvname/driver", 0755 or
@@ -393,10 +393,10 @@ for $drivertype (@drivertypes) {
     for $fooopt (sort (keys(%ev_choices), @floatnumopts_list,
 		 @dimensionnumopts_list,
 		 @intnumopts_list), "PrintoutMode", "Model",
-		 "RenderResolution", "gimp-print") {
+		 "RenderResolution", "gutenprint") {
 
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
-	# newer (preliminary skipped always, do not remove the 
+	# newer (preliminary skipped always, do not remove the
 	# infrastructure for "PrintoutMode", it will be re-activated later
 	# on)
 	next if ((!$foomatic3) && ($fooopt eq "PrintoutMode"));
@@ -422,7 +422,7 @@ for $drivertype (@drivertypes) {
 	    $num_opt = 0;
 	    $type = "enum";
 	    $tmpl = "${fooopt}.xml";
-	    $tmpl = "OtherOptions.xml" 
+	    $tmpl = "OtherOptions.xml"
 		if ! -r "$templatedir-$drivertype/$tmpl";
 	}
 
@@ -465,7 +465,7 @@ for $drivertype (@drivertypes) {
 		     defined($param_levels{$shortname}) &&
 		     $parameter_class_names[$param_classes{$shortname}] &&
 		     $parameter_level_names[$param_levels{$shortname}]) {
-		# Group names given by libgimpprint
+		# Group names given by libgutenprint
 		$group = $groupname_prefix . " " .
 		    $parameter_class_names[$param_classes{$shortname}] . " " .
 		    $parameter_level_names[$param_levels{$shortname}];
@@ -473,11 +473,11 @@ for $drivertype (@drivertypes) {
 		# generate automatically)
 		$group =~ s! !!g;
 	    } else {
-		# All the above did not assign a group name? Use 
+		# All the above did not assign a group name? Use
 		# "Miscellaneous" (Should usually not happen)
 		$group = "Miscellaneous";
 	    }
-	    my $substitution = "\n   <arg_group>" . 
+	    my $substitution = "\n   <arg_group>" .
 		$group . "</arg_group>";
 	    $template =~ s!\@\@GROUP\@\@!$substitution!g;
 	} else {
@@ -516,7 +516,7 @@ for $drivertype (@drivertypes) {
 	}
 
 	if ($template =~ m!\@\@OPTCONSTRAINTS\@\@!) {
-	    my $substitution = ($num_opt ? build_num_cons($fooopt) : 
+	    my $substitution = ($num_opt ? build_num_cons($fooopt) :
 				build_cons($stpopt));
 	    # Skip this option if there are no constraints (no printers
 	    # using this option)
@@ -555,7 +555,7 @@ for $drivertype (@drivertypes) {
 
 	# Special case the actual driver file under driver/
 	$dbfilename = "foomatic-db/$drvname/driver/$drvname.xml"
-	    if ($tmpl eq 'gimp-print.xml');
+	    if ($tmpl eq 'gutenprint.xml');
 
 	open NEWF, "> $dbfilename" or die "Cannot create $dbfilename: $!";
 	print STDERR "writing $dbfilename...";
@@ -568,7 +568,7 @@ for $drivertype (@drivertypes) {
     closedir TDIR;
 
     # The paper size and resolution maps must be regenerated for the next
-    # driver, because the "driverval"s are different for the different 
+    # driver, because the "driverval"s are different for the different
     # drivers. So delete the caches.
     undef $pagemap;
     undef %rescache;
@@ -671,7 +671,7 @@ sub build_cons {
     for $stpname (keys(%stpdata)) {
 
 	if (0) {
-	    print STDERR "    Processing gimp-print printer $stpname...\n";
+	    print STDERR "    Processing gutenprint printer $stpname...\n";
 	    print STDERR
 		"      There are no foomatic printers mapped to $stpname!?\n"
 		    if !$mapstp{$stpname};
@@ -706,7 +706,7 @@ sub build_cons {
 		    push (@PNCONS,
 			  "    <constraint sense='true'>\n",
 			  "      <driver>$drvname</driver>\n",
-			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
+			  "      <printer>$fooname</printer><!-- gutenprint name: $stpname -->\n",
 			  "      <arg_defval>$foodefval</arg_defval>\n",
 			  "    </constraint>\n");
 		}
@@ -748,7 +748,7 @@ sub build_num_cons {
     for $stpname (keys(%stpdata)) {
 
 	if (0) {
-	    print STDERR "    Processing gimp-print printer $stpname...\n";
+	    print STDERR "    Processing gutenprint printer $stpname...\n";
 	    print STDERR
 		"      There are no foomatic printers mapped to $stpname!?\n"
 		    if !$mapstp{$stpname};
@@ -757,7 +757,7 @@ sub build_num_cons {
 	# Add this printer to argument constraints? The printer must provide
 	# this option and a default value for it.
 	my $stpdef;
-	if ((defined($stpdef = 
+	if ((defined($stpdef =
 		     $stp_float_values{$stpname}{"DEFVAL"}{$stpopt})) ||
 	    (defined($stpdef =
 		     $stp_int_values{$stpname}{"DEFVAL"}{$stpopt})) ||
@@ -798,7 +798,7 @@ sub build_num_cons {
 		    push (@PNCONS,
 			  "    <constraint sense='true'>\n",
 			  "      <driver>$drvname</driver>\n",
-			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
+			  "      <printer>$fooname</printer><!-- gutenprint name: $stpname -->\n",
 			  "      <arg_defval>$stpdef</arg_defval>\n",
 			  "    </constraint>\n");
 		}
@@ -826,7 +826,7 @@ sub optmap_pagesize {
 		($name eq "Custom")) {
 		$pagemap->{$name} = "-dDEVICEWIDTHPOINTS=$width -dDEVICEHEIGHTPOINTS=$height";
 #		print STDERR "PageSize '$name' driverval '$width $height'\n";
-	    }	
+	    }
 	}
 	close PUTIL;
     }
@@ -1051,7 +1051,7 @@ sub build_resolution_ev {
 		    push (@vals,
 			  "        <constraint sense='true'>\n",
 			  "          <driver>$drvname</driver>\n",
-			  "          <printer>$fooprn</printer><!-- gimp-print name: $stpprn -->\n",
+			  "          <printer>$fooprn</printer><!-- gutenprint name: $stpprn -->\n",
 			  "        </constraint>\n");
 		}
 	    }
@@ -1092,7 +1092,7 @@ sub build_resolution_cons {
 	    push (@PNCONS,
 		  "    <constraint sense='true'>\n",
 		  "      <driver>$drvname</driver>\n",
-		  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
+		  "      <printer>$fooname</printer><!-- gutenprint name: $stpname -->\n",
 		  "      <arg_defval>$foodefval</arg_defval>\n",
 		  "    </constraint>\n");
 	}
@@ -1120,7 +1120,7 @@ sub build_printoutmode_ev {
 	    my $ev_longname = $printoutmodechoices->{$choice};
 	    my $ev_shortname = $choice;
 
-	    my $ev_id = 
+	    my $ev_id =
 		get_ev_key($modes{$choice}{$ev_driverval}, $drvname);
 
 	    push (@vals,
@@ -1139,7 +1139,7 @@ sub build_printoutmode_ev {
 	    for $stpprn (keys(%stpdata)) {
 		my $fooprn;
 		for $fooprn (@{$mapstp{$stpprn}}) {
-		    if ($printoutmode->{$stpprn}{$choice} eq 
+		    if ($printoutmode->{$stpprn}{$choice} eq
 			$ev_driverval) {
 			# OK, this choice applies to this printer
 			push (@vals,
@@ -1180,7 +1180,7 @@ sub build_printoutmode_cons {
 
 	    # What's the default value (always the "Normal" mode)?
 	    my $normalmode = $printoutmode->{$stpname}{'Normal'};
-	    my $foodefval = get_ev_key($modes{'Normal'}{$normalmode}, 
+	    my $foodefval = get_ev_key($modes{'Normal'}{$normalmode},
 				       $drvname);
 
 	    push (@PNCONS,
@@ -1289,22 +1289,22 @@ sub getprintoutmode {
     my $stpprn;
     for $stpprn (keys(%stpdata)) {
 	my $modeinfo = {};
-	my ($draftminres, $draftbestsymmetry, $draftlowestqualstr) = 
+	my ($draftminres, $draftbestsymmetry, $draftlowestqualstr) =
 	    (99999999, 99999999, "xxx");
-	my ($normalminres, $normalbestsymmetry, $normaluni, 
-	    $normallowestqualstr) = 
+	my ($normalminres, $normalbestsymmetry, $normaluni,
+	    $normallowestqualstr) =
 	    (99999999, 99999999, 0, "xxx");
-	my ($highmaxres, $highbestsymmetry, $highbestqualstr) = 
+	my ($highmaxres, $highbestsymmetry, $highbestqualstr) =
 	    (0, 99999999, "");
-	my ($veryhighmaxres, $veryhighbestsymmetry, $veryhighbestqualstr) = 
+	my ($veryhighmaxres, $veryhighbestsymmetry, $veryhighbestqualstr) =
 	    (0, 99999999, "");
-	my ($photomaxres, $photobestsymmetry, $photobestqualstr) = 
+	my ($photomaxres, $photobestsymmetry, $photobestqualstr) =
 	    (0, 99999999, "");
 	# Go through all choices of the "Quality" option and find the
 	# best values for the "PrintoutMode" option
 	my $quality;
 	for $quality (keys(%{$stpdata{$stpprn}{'Resolution'}})) {
-	    
+
 	    my ($xres, $yres, $qualstr);
 	    if ($quality =~ /^(\d+)x(\d+)(\D.*)$/) {
 		$xres = $1;
@@ -1328,7 +1328,7 @@ sub getprintoutmode {
 
 	    ### Mode: DRAFT
 
-	    # Use always the lowest available resolution/quality, 
+	    # Use always the lowest available resolution/quality,
 	    # preferrably symmetric resolutions,
 
 	    # Do not use resolutions with less than 150 dpi in both
@@ -1336,38 +1336,38 @@ sub getprintoutmode {
 
 	    # ImageType Text
 
-	    my $qualitysetting = 
+	    my $qualitysetting =
 		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
-		  'Draft' : 
+		  'Draft' :
 		  (defined($stpdata{$stpprn}{'Quality'}{'Economy'}) ?
-		   'Economy' : 
+		   'Economy' :
 		   (defined($stpdata{$stpprn}{'Quality'}{'FastEconomy'}) ?
-		    'FastEconomy' : 
+		    'FastEconomy' :
 		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
 	    die ("\n\n'Quality' option without 'Draft', 'Economy', " .
 		 "'FastEconomy', and 'Standard' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
-	    my $imagesetting = 
+	    my $imagesetting =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 (defined($stpdata{$stpprn}{'ImageType'}{'Text'}) ?
-		  'Text' : 
+		  'Text' :
 		  (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
-		   'TextGraphics' : 
+		   'TextGraphics' :
 		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
-		    'LineArt' : 
+		    'LineArt' :
 		    (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
 		     'Graphics' : 'ERROR' )))) : '');
 	    die ("\n\n'ImageType' option without 'Text', 'TextGraphics', " .
 		 "'LineArt', and 'Graphics' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch < $draftminres) ||
-		(($respersquareinch == $draftminres) && 
+		(($respersquareinch == $draftminres) &&
 		 ($symmetry < $draftbestsymmetry)) ||
 		(($respersquareinch == $draftminres) &&
 		 ($symmetry == $draftbestsymmetry) &&
@@ -1390,39 +1390,39 @@ sub getprintoutmode {
 
 	    # Lowest resolution which is at least 300x300 dpi (600x600 dpi
 	    # for Lexmark Z..), low quality level, unidirectional if
-	    # possible, 
+	    # possible,
 
 	    # ImageType TextGraphics
 
-	    $qualitysetting = 
+	    $qualitysetting =
 		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
-		  'Standard' : 
+		  'Standard' :
 		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
-		   'High' : 
+		   'High' :
 		   (defined($stpdata{$stpprn}{'Quality'}{'Draft'}) ?
 		    'Draft' : 'ERROR' ))) : '');
 	    die ("\n\n'Quality' option without 'Draft', 'Standard', and " .
-		 "'High' choices for the '$stpprn' device class!\n") 
+		 "'High' choices for the '$stpprn' device class!\n")
 		if $qualitysetting eq 'ERROR';
 
-	    $imagesetting = 
+	    $imagesetting =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
-		  'TextGraphics' : 
+		  'TextGraphics' :
 		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
-		   'Graphics' : 
+		   'Graphics' :
 		   (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
-		    'LineArt' : 
+		    'LineArt' :
 		    (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
 		     'Photo' : 'ERROR' )))) : '');
 	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch < $normalminres) ||
-		(($respersquareinch == $normalminres) && 
+		(($respersquareinch == $normalminres) &&
 		 ($symmetry < $normalbestsymmetry)) ||
 		(($respersquareinch == $normalminres) &&
 		 ($symmetry == $normalbestsymmetry) &&
@@ -1453,48 +1453,48 @@ sub getprintoutmode {
 
 	    # High: The highest resolution which is not higher than
 	    # 720x720 dpi (Lexmark Z..: 1200x1200 dpi),
-	    # unidirectional if possible, 
+	    # unidirectional if possible,
 	    # not "fol", "fourp", "hq", "hq2"
 
 	    # ImageType TextGraphics
 
-	    $qualitysetting = 
+	    $qualitysetting =
 		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
-		  'High' : 
+		  'High' :
 		  (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
-		   'Best' : 
+		   'Best' :
 		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
-		    'Photo' : 
+		    'Photo' :
 		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
 	    die ("\n\n'Quality' option without 'High', 'Best', " .
 		 "'Photo', and 'Standard' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
-	    $imagesetting = 
+	    $imagesetting =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
-		  'TextGraphics' : 
+		  'TextGraphics' :
 		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
-		   'Graphics' : 
+		   'Graphics' :
 		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
-		    'Photo' : 
+		    'Photo' :
 		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
 	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $highmaxres) ||
-		(($respersquareinch == $highmaxres) && 
+		(($respersquareinch == $highmaxres) &&
 		 ($symmetry < $highbestsymmetry)) ||
 		(($respersquareinch == $highmaxres) &&
 		 ($symmetry == $highbestsymmetry) &&
 		 (qualityorder($qualstr, $highbestqualstr) > 0))) {
-		unless ((($stpprn !~ /^lexmark\-z/) && 
+		unless ((($stpprn !~ /^lexmark\-z/) &&
 			 (($xres > 720) || # Resolution not higher than
 			  ($yres > 720))) || # 720x720 for non Lexmark
 			($xres > 1200) || # not bigger than 1200x1200
@@ -1515,45 +1515,45 @@ sub getprintoutmode {
 
 	    ### Mode: VERY HIGH
 
-	    # Use always the highest available resolution/quality, 
+	    # Use always the highest available resolution/quality,
 	    # preferrably symmetric resolutions,
 
 	    # On Epsons: Maximum 1440x720, not "hq2".
 
 	    # ImageType TextGraphics
 
-	    $qualitysetting = 
+	    $qualitysetting =
 		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
-		  'Best' : 
+		  'Best' :
 		  (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
-		   'High' : 
+		   'High' :
 		   (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
-		    'Photo' : 
+		    'Photo' :
 		    (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
 		     'Standard' : 'ERROR' )))) : '');
 	    die ("\n\n'Quality' option without 'High', 'Best', " .
 		 "'Photo', and 'Standard' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $qualitysetting eq 'ERROR';
 
-	    $imagesetting = 
+	    $imagesetting =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
-		  'TextGraphics' : 
+		  'TextGraphics' :
 		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
-		   'Graphics' : 
+		   'Graphics' :
 		   (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
-		    'Photo' : 
+		    'Photo' :
 		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
 	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $veryhighmaxres) ||
-		(($respersquareinch == $veryhighmaxres) && 
+		(($respersquareinch == $veryhighmaxres) &&
 		 ($symmetry < $veryhighbestsymmetry)) ||
 		(($respersquareinch == $veryhighmaxres) &&
 		 ($symmetry == $veryhighbestsymmetry) &&
@@ -1578,51 +1578,51 @@ sub getprintoutmode {
 
 	    # High: The highest resolution which is not higher than
 	    # 720x720 dpi (Lexmark Z..: 1200x1200 dpi),
-	    # unidirectional if possible, 
+	    # unidirectional if possible,
 
 	    # ImageType Photographs
 
-	    $qualitysetting = 
+	    $qualitysetting =
 		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 (defined($stpdata{$stpprn}{'Quality'}{'HighPhoto'}) ?
-		  'HighPhoto' : 
+		  'HighPhoto' :
 		  (defined($stpdata{$stpprn}{'Quality'}{'Photo'}) ?
-		   'Photo' : 
+		   'Photo' :
 		   (defined($stpdata{$stpprn}{'Quality'}{'UltraPhoto'}) ?
-		    'UltraPhoto' : 
+		    'UltraPhoto' :
 		    (defined($stpdata{$stpprn}{'Quality'}{'Best'}) ?
-		     'Best' : 
+		     'Best' :
 		     (defined($stpdata{$stpprn}{'Quality'}{'High'}) ?
-		      'High' : 
+		      'High' :
 		      (defined($stpdata{$stpprn}{'Quality'}{'Standard'}) ?
 		       'Standard' : 'ERROR' )))))) : '');
 	    die ("\n\n'Quality' option without 'HighPhoto', 'Photo', " .
 		 "'UltraPhoto', 'Best', 'High', and 'Standard' choices " .
-		 "for the '$stpprn' device class!\n") 
+		 "for the '$stpprn' device class!\n")
 		if $qualitysetting eq 'ERROR';
 
-	    $imagesetting = 
+	    $imagesetting =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 (defined($stpdata{$stpprn}{'ImageType'}{'Photo'}) ?
-		  'Photo' : 
+		  'Photo' :
 		  (defined($stpdata{$stpprn}{'ImageType'}{'Graphics'}) ?
-		   'Graphics' : 
+		   'Graphics' :
 		   (defined($stpdata{$stpprn}{'ImageType'}{'TextGraphics'}) ?
-		    'TextGraphics' : 
+		    'TextGraphics' :
 		    (defined($stpdata{$stpprn}{'ImageType'}{'LineArt'}) ?
 		     'LineArt' : 'ERROR' )))) : '');
 	    die ("\n\n'ImageType' option without 'TextGraphics', 'Graphics', " .
 		 "'LineArt', and 'Photo' choices for the '$stpprn' " .
-		 "device class!\n") 
+		 "device class!\n")
 		if $imagesetting eq 'ERROR';
 
 	    if (($respersquareinch > $photomaxres) ||
-		(($respersquareinch == $photomaxres) && 
+		(($respersquareinch == $photomaxres) &&
 		 ($symmetry < $photobestsymmetry)) ||
 		(($respersquareinch == $photomaxres) &&
 		 ($symmetry == $photobestsymmetry) &&
 		 (qualityorder($qualstr, $photobestqualstr) > 0))) {
-		unless ((($stpprn !~ /^lexmark\-z/) && 
+		unless ((($stpprn !~ /^lexmark\-z/) &&
 			 (($xres > 720) || # Resolution not higher than
 			  ($yres > 720))) || # 720x720 for non Lexmark
 			($xres > 1200) || # not bigger than 1200x1200
@@ -1655,18 +1655,18 @@ sub getprintoutmode {
 	    my $modestr =
 		(defined($stpdata{$stpprn}{'ImageType'}) ?
 		 "ImageType=$modeinfo->{$m}{'image'} " : "") .
-		(defined($stpdata{$stpprn}{'Quality'}) ? 
+		(defined($stpdata{$stpprn}{'Quality'}) ?
 		 "Quality=$modeinfo->{$m}{'quality'} " : "") .
 		"Resolution=$modeinfo->{$m}{'xres'}x" .
 		"$modeinfo->{$m}{'yres'}dpi";
-	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
+	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) {
 		# Color printer
 		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
 		if (defined($stpdata{$stpprn}{'Color'}{'Grayscale'})) {
-		    $modes->{$stpprn}{"$m.Gray"} = 
+		    $modes->{$stpprn}{"$m.Gray"} =
 			$modestr . " OutputType=Grayscale";
 		} elsif (defined($stpdata{$stpprn}{'Color'}{'BlackAndWhite'})) {
-		    $modes->{$stpprn}{"$m.Gray"} = 
+		    $modes->{$stpprn}{"$m.Gray"} =
 			$modestr . " OutputType=BlackAndWhite";
 		}
 		# Some HP inkjets have a "600mono" quality mode which
@@ -1692,21 +1692,21 @@ sub getprintoutmode {
 	}
 	# Remove 'VeryHigh' and 'High' if they are identical to lower
 	# quality modes
-	if ($modes->{$stpprn}{'VeryHigh'} eq 
+	if ($modes->{$stpprn}{'VeryHigh'} eq
 	    $modes->{$stpprn}{'High'}) {
 	    delete($modes->{$stpprn}{'VeryHigh'});
 	}
-	if ($modes->{$stpprn}{'High'} eq 
+	if ($modes->{$stpprn}{'High'} eq
 	    $modes->{$stpprn}{'Normal'}) {
 	    delete($modes->{$stpprn}{'High'});
 	}
-	if (defined($stpdata{$stpprn}{'Color'}{'Color'})) { 
+	if (defined($stpdata{$stpprn}{'Color'}{'Color'})) {
 	    # Color printer
-	    if ($modes->{$stpprn}{'VeryHigh.Gray'} eq 
+	    if ($modes->{$stpprn}{'VeryHigh.Gray'} eq
 		$modes->{$stpprn}{'High.Gray'}) {
 		delete($modes->{$stpprn}{'VeryHigh.Gray'});
 	    }
-	    if ($modes->{$stpprn}{'High.Gray'} eq 
+	    if ($modes->{$stpprn}{'High.Gray'} eq
 		$modes->{$stpprn}{'Normal.Gray'}) {
 		delete($modes->{$stpprn}{'High.Gray'});
 	    }

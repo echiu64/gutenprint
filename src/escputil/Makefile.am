@@ -32,7 +32,7 @@ if BUILD_ESCPUTIL
 bin_PROGRAMS = escputil
 endif
 
-escputil_LDADD = $(GIMPPRINT_LIBS) $(LIBREADLINE_DEPS)
+escputil_LDADD = $(GUTENPRINT_LIBS) $(LIBREADLINE_DEPS)
 
 
 ## Clean

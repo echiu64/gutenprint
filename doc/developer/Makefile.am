@@ -32,7 +32,7 @@ MANUAL_SRC_FILES = \
 	copying.xml \
 	dither.xml \
 	escp2.xml \
-	gimpprint.xml \
+	gutenprint.xml \
 	gpl-appendix.xml \
 	introduction.xml \
 	new-printer.xml \
@@ -88,9 +88,9 @@ dist-hook: html-stamp
 
 docs: html pdf
 
-pdf: gimpprint.pdf
+pdf: gutenprint.pdf
 
-gimpprint.pdf:  $(MANUAL_SRC_FILES)
+gutenprint.pdf:  $(MANUAL_SRC_FILES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
@@ -101,7 +101,7 @@ gimpprint.pdf:  $(MANUAL_SRC_FILES)
 	    $(LN_S) $(srcdir)/$$file $$file ; \
 	  done ; \
 	fi ; \
-	$(DB2PDF) gimpprint.xml
+	$(DB2PDF) gutenprint.xml
 
 html: html-stamp
 
@@ -120,19 +120,19 @@ html-stamp: $(MANUAL_SRC_FILES)
 	    $(LN_S) $(srcdir)/$$file $$file ; \
 	  done ; \
 	fi
-	$(DB2HTML) gimpprint.xml
+	$(DB2HTML) gutenprint.xml
 	-$(RM) -rf $(HTMLDIR)
-	mv gimpprint $(HTMLDIR)
+	mv gutenprint $(HTMLDIR)
 	chmod a+rx $(HTMLDIR)
 	touch html-stamp
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/$(HTMLDIR) ; \
-	  if test -f gimpprint.pdf ; then \
-	    $(INSTALL_DATA) gimpprint.pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
-	  elif test -f $(srcdir)/gimpprint.pdf ; then \
-	    $(INSTALL_DATA) $(srcdir)/gimpprint.pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  if test -f gutenprint.pdf ; then \
+	    $(INSTALL_DATA) gutenprint.pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  elif test -f $(srcdir)/gutenprint.pdf ; then \
+	    $(INSTALL_DATA) $(srcdir)/gutenprint.pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  fi ; \
 	  if test -d $(HTMLDIR) ; then \
 	  HTMLGENDIR="$(HTMLDIR)" ; \
@@ -152,14 +152,14 @@ uninstall-local:
 	-$(RM) -r $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
 CLEAN_MANUALS = \
-	$(RM) -f gimpprint.pdf gimpprint.ps;	\
+	$(RM) -f gutenprint.pdf gutenprint.ps;	\
 	$(RM) -rf *html-stamp $(HTMLDIR)
 
 clean-local:
 	if test $(srcdir) = "." -a $(MAINT_MODE) = false ; then \
 	  echo "clean-local: Not removing $(HTMLDIR)" ; \
-	  echo 'clean-local: Not removing gimpprint.pdf' ; \
-	  echo 'clean-local: Not removing gimpprint.ps' ; \
+	  echo 'clean-local: Not removing gutenprint.pdf' ; \
+	  echo 'clean-local: Not removing gutenprint.ps' ; \
 	else \
 	  $(CLEAN_MANUALS) ; \
 	fi
@@ -185,7 +185,7 @@ MAINTAINERCLEANFILES = Makefile.in *html-stamp
 
 EXTRA_DIST = \
 	$(MANUAL_SRC_FILES) \
-	gimpprint.pdf \
+	gutenprint.pdf \
 	html-stamp
 
 .PHONY: docs html ps pdf

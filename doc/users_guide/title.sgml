@@ -10,19 +10,19 @@ Back-Cover texts.  A copy of the license is included in <xref linkend="gfdl">.
 
   <abstract>
   <para>
-    The Gimp-Print Top Quality Printer Drivers (hereafter
-called Gimp-Print) are a set of printer drivers written to
+    The Gutenprint Top Quality Printer Drivers (hereafter
+called Gutenprint) are a set of printer drivers written to
 take advantage of the full capabilities of a wide range of
 printers. These drivers should work on any POSIX compliant operating
 system (e.g. Linux, Solaris, IRIX, etc).  This document will explain how to
-use the Gimp-Print software to achieve high quality printouts from the
+use the Gutenprint software to achieve high quality printouts from the
 <ulink url="http://www.gimp.org">GIMP</ulink> (GNU Image
 Manipulation Program) and
 <ulink url="http://www.cups.org">CUPS</ulink> (Common Unix Printing
 System).
   </para>
   <para>
-    Please note that in addition to using the Gimp-Print software as a
+    Please note that in addition to using the Gutenprint software as a
 print plugin for the GIMP, and as a set of printer drivers for CUPS, this
 software can also be compiled and used with the 
 <ulink url="http://www.ghostscript.com">Ghostscript</ulink> software
@@ -32,16 +32,16 @@ url="http://www.linuxprinting.org/foomatic.html">Foomatic</ulink>
 software.
    </para>
    <para>
-Regardless of whether the Gimp-Print software is used with the GIMP,
+Regardless of whether the Gutenprint software is used with the GIMP,
 CUPS, Ghostscript, or Foomatic, the print quality and printer settings
-remain the same.  However, use of the Gimp-Print with Ghostscript and
+remain the same.  However, use of the Gutenprint with Ghostscript and
 Foomatic is not covered in this document.  These topics may be covered
 in a future revision of this document.
   </para>
   <para>
-  This document corresponds to version 4.2.0 and later of the Gimp-Print
+  This document corresponds to version 4.2.0 and later of the Gutenprint
 software. This document will serve as a guide to the user, and as such
-will not explain how to install Gimp-Print, CUPS, GIMP, Ghostscript,
+will not explain how to install Gutenprint, CUPS, GIMP, Ghostscript,
 Foomatic, or any other related software.
   </para>
 

@@ -30,9 +30,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include <gimp-print/gimp-print-intl-internal.h>
-#include "gimp-print-internal.h"
+#include <gutenprint/gutenprint.h>
+#include <gutenprint/gutenprint-intl-internal.h>
+#include "gutenprint-internal.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1097,7 +1097,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
 
 static const char standard_sat_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -1108,11 +1108,11 @@ static const char standard_sat_adjustment[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.50 0.52 0.56 0.60 0.66 0.71 0.74 0.77 "  /* B */
@@ -1123,11 +1123,11 @@ static const char standard_lum_adjustment[] =
 /* G */  "0.69 0.64 0.58 0.54 0.54 0.54 0.53 0.51 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_hue_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
@@ -1138,7 +1138,7 @@ static const char standard_hue_adjustment[] =
 /* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const stp_parameter_t the_parameters[] =
 {

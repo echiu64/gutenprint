@@ -66,12 +66,8 @@
 #include <cups/cups.h>
 #include <cups/raster.h>
 
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
-#include <gimp-print/gimp-print-intl.h>
+#include <gutenprint/gutenprint.h>
+#include <gutenprint/gutenprint-intl.h>
 
 /*
  * Note:
@@ -108,7 +104,7 @@ static const char *gzext = "";
 
 #define DEFAULT_SIZE	"Letter"
 /*#define DEFAULT_SIZE	"A4"*/
-#define CATALOG       "LC_MESSAGES/gimp-print.mo"
+#define CATALOG       "LC_MESSAGES/gutenprint.mo"
 
 typedef struct				/**** Media size values ****/
 {
@@ -192,8 +188,8 @@ static void
 print_group_open(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  /* TRANSLATORS: "Gimp-Print" is a proper name, not a description */
-  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gimp-Print"),
+  /* TRANSLATORS: "Gutenprint" is a proper name, not a description */
+  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gutenprint"),
 	   _(parameter_class_names[p_class]),
 	   _(parameter_level_names[p_level]));
 }
@@ -202,7 +198,7 @@ static void
 print_group_close(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gimp-Print"),
+  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gutenprint"),
 	   _(parameter_class_names[p_class]),
 	   _(parameter_level_names[p_level]));
 }
@@ -331,7 +327,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 #endif
 
 /*
- * Initialise libgimpprint
+ * Initialise libgutenprint
  */
 
   stp_init();
@@ -474,7 +470,7 @@ usage(void)
 void
 help(void)
 {
-  puts("Generate gimp-print PPD files for use with CUPS\n\n");
+  puts("Generate Gutenprint PPD files for use with CUPS\n\n");
   usage();
   puts("\nExamples: LANG=de_DE cups-genppd -p ppd -c /usr/share/locale\n"
        "          cups-genppd -L -c /usr/share/locale\n"
@@ -826,7 +822,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
    * stp-escp2-ex.5.0.ppd.gz
    */
   snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s",
-	   prefix, driver, GIMPPRINT_RELEASE_VERSION, ppdext, gzext);
+	   prefix, driver, GUTENPRINT_RELEASE_VERSION, ppdext, gzext);
 
  /*
   * Open the PPD file...
@@ -849,7 +845,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     fprintf(stderr, ".");
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
-  gzputs(fp, "*%PPD file for CUPS/Gimp-Print.\n");
+  gzputs(fp, "*%PPD file for CUPS/Gutenprint.\n");
   gzputs(fp, "*%Copyright 1993-2003 by Easy Software Products and Robert Krawitz.\n");
   gzputs(fp, "*%This program is free software; you can redistribute it and/or\n");
   gzputs(fp, "*%modify it under the terms of the GNU General Public License,\n");
@@ -953,7 +949,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzputs(fp, "*cupsVersion:	1.1\n");
   gzprintf(fp, "*cupsModelNumber: \"0\"\n");
   gzputs(fp, "*cupsManualCopies: True\n");
-  gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogimpprint.%s\"\n", GIMPPRINT_RELEASE_VERSION);
+  gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
@@ -963,7 +959,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
 	   language ? language : "C",
 	   driver,
-	   GIMPPRINT_RELEASE_VERSION,
+	   GUTENPRINT_RELEASE_VERSION,
 	   ppdext,
 	   gzext);
   gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");	
@@ -1676,7 +1672,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 
   gzprintf(fp, "\n*%%End of stp-%s.%s%s\n",
            driver,
-           GIMPPRINT_RELEASE_VERSION,
+           GUTENPRINT_RELEASE_VERSION,
            ppdext);
 
   gzclose(fp);

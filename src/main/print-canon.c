@@ -42,9 +42,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <string.h>
 #include <stdio.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
@@ -499,7 +499,7 @@ static const canon_variable_inklist_t canon_ink_superphoto[] =
 
 static const char standard_sat_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -510,11 +510,11 @@ static const char standard_sat_adjustment[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.50 0.52 0.56 0.60 0.66 0.71 0.74 0.77 "  /* B */
@@ -525,11 +525,11 @@ static const char standard_lum_adjustment[] =
 /* G */  "0.69 0.64 0.58 0.54 0.54 0.54 0.53 0.51 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_hue_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
@@ -540,7 +540,7 @@ static const char standard_hue_adjustment[] =
 /* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 typedef enum {
   COLOR_MONOCHROME = 1,
@@ -1157,7 +1157,7 @@ static const canon_res_t canon_resolutions[] = {
 
 static const char plain_paper_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 "1.20 1.22 1.28 1.34 1.39 1.42 1.45 1.48 "  /* C */
@@ -1168,7 +1168,7 @@ static const char plain_paper_lum_adjustment[] =
 "2.10 2.00 1.80 1.70 1.60 1.50 1.40 1.30 "  /* G */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 typedef struct {
   const char *name;

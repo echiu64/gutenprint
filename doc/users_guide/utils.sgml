@@ -1,5 +1,5 @@
 
- <chapter><title>Gimp-Print Utilities</title>
+ <chapter><title>Gutenprint Utilities</title>
    <sect1><title>escputil</title>
      <para>
        <emphasis>escputil</emphasis> is a command line utility which
@@ -21,7 +21,7 @@ assume the former.
      <title>Caution</title>
      <para>
        The <emphasis>escputil</emphasis> utility was designed for use
-ONLY with Epson Stylus inkjet printers supported by the Gimp-Print
+ONLY with Epson Stylus inkjet printers supported by the Gutenprint
 software.  It is possible that damage MIGHT occur to your printer if
 this utility is misused or if it is used with a printer other than an
 Epson Stylus inkjet printer.  It is the sole responsibility of the
@@ -409,7 +409,7 @@ EPSON Stylus Photo 870;
      <para>
        For more detailed information about the command line switches
 accepted by the <emphasis>escputil</emphasis> utility, please consult
-the man page which is supplied with the Gimp-Print software.  The user
+the man page which is supplied with the Gutenprint software.  The user
 may also issue the "escputil --help" command to get a listing of supported
 command line switches.  The command requires no special privileges to execute.
      </para>

@@ -29,9 +29,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include <gimp-print/gimp-print-intl-internal.h>
-#include "gimp-print-internal.h"
+#include <gutenprint/gutenprint.h>
+#include <gutenprint/gutenprint-intl-internal.h>
+#include "gutenprint-internal.h"
 #include <string.h>
 #include <assert.h>
 #include <math.h>

@@ -1,4 +1,4 @@
-# This file is part of Gimp-Print.                     -*- Autoconf -*-
+# This file is part of Gutenprint.                     -*- Autoconf -*-
 # Convenience macros.
 # Copyright 2001-2002 Roger Leigh
 #

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gimp-print xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0
-  gimpprint.xsd">
+  gutenprint.xsd">
   <dither-matrix x-aspect="4" y-aspect="1">
     <array x-size="509" y-size="131">
       <sequence count="66679" lower-bound="0" upper-bound="65535">
@@ -5566,4 +5566,4 @@
       </sequence>
     </array>
   </dither-matrix>
-</gimp-print>
+</gutenprint>

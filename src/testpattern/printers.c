@@ -24,11 +24,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
+#include <gutenprint/gutenprint.h>
 #include <string.h>
 
 int

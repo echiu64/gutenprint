@@ -15,8 +15,8 @@ case "$1" in
     install|upgrade)
         if [ install = "$1" ]; then
            dpkg-divert --package gimp-print --add --rename \
-	      --divert /usr/lib/gimp/1.2/print.orig \
-	      /usr/lib/gimp/1.2/plug-ins/print
+	      --divert /usr/lib/gimp/2.0/print.orig \
+	      /usr/lib/gimp/2.0/plug-ins/print
 	fi
     ;;
 

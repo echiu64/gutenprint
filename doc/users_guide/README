@@ -1,6 +1,6 @@
 
 The files contained in this directory are all of the source files necessary
-to build "The User's Guide to the Gimp-Print Top Quality Printer Drivers".
+to build "The User's Guide to the Gutenprint Top Quality Printer Drivers".
 
 Type:  make pdf   - to build the PDF documentation file
        make ps    - to build the Postscript documentation file

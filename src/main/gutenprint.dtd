@@ -1,0 +1,224 @@
+<!-- ============================================================= -->
+<!--                    Gutenprint DTD                             -->
+<!-- ============================================================= -->
+<!-- Version $Id$
+-->
+<!--
+Copyright (C) 2002 Roger Leigh (rleigh@debian.org)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+-->
+<!--
+    Typical usage:
+
+    <!DOCTYPE printdef SYSTEM "gutenprint.dtd">
+    <gutenprint>
+      <printdef>
+        <family name="ps">
+          <printer name="PostScript Level 2" driver="ps2">
+            <color/>
+            <model value=1/>
+            <gamma value=1.000/>
+            <density value=1.000/>
+          </printer>
+        </family>
+      </printdef>
+    </gutenprint>
+-->
+
+
+
+<!--                    Gutenprint                                 -->
+<!--                    Root element                               -->
+<!ELEMENT  gutenprint   (paperdef*, printdef*)                       >
+<!--         xmlns      XML default namespace
+             xmlns:xsi  XML Schema Instance namespace
+             xsi:schemaLocation
+                        XML Schema Location                        -->
+<!ATTLIST  gutenprint
+             xmlns      CDATA                              #REQUIRED
+             xmlns:xsi  CDATA                              #REQUIRED
+             xsi:schemaLocation
+                        CDATA                              #REQUIRED >
+
+
+<!--                    Paperdef                                   -->
+<!--                    Paper definitions                          -->
+<!ELEMENT  paperdef     (paper*)                                     >
+
+
+<!--                    Paper                                      -->
+<!--                    Paper definitions                          -->
+<!ELEMENT  paper            (description, comment?,
+                             width, height, unit,
+                             top?, left?, bottom?, right?)           >
+<!--         name       Paper identification string                -->
+<!ATTLIST  paper
+             name       ID                                 #REQUIRED >
+
+<!--                    Description                                -->
+<!--                    Paper long name                            -->
+<!ELEMENT  description  EMPTY                                        >
+<!--         value      Paper long name                            -->
+<!ATTLIST  description
+             value      CDATA                              #REQUIRED >
+
+<!--                    Comment                                    -->
+<!--                    Paper comments or extra description        -->
+<!ELEMENT  comment      EMPTY                                        >
+<!--         value      Paper comments                             -->
+<!ATTLIST  comment
+             value      CDATA                              #REQUIRED >
+
+<!--                    Width                                      -->
+<!--                    Paper width                                -->
+<!ELEMENT  width        EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  width
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Height                                     -->
+<!--                    Paper height                               -->
+<!ELEMENT  height       EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  height
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Top margin                                 -->
+<!--                    Paper top margin                           -->
+<!ELEMENT  top          EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  top
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Left margin                                -->
+<!--                    Paper left margin                          -->
+<!ELEMENT  left         EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  left
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Bottom margin                              -->
+<!--                    Paper bottom margin                        -->
+<!ELEMENT  bottom       EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  bottom
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Right margin                               -->
+<!--                    Paper right margin                         -->
+<!ELEMENT  right        EMPTY                                        >
+<!--         value      Paper dimension                            -->
+<!ATTLIST  right
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Unit                                       -->
+<!--                    Unit of Measurement                        -->
+<!ELEMENT  unit         EMPTY                                        >
+<!--         value      Unit Name                                  -->
+<!ATTLIST  unit
+             value      NMTOKEN                            #REQUIRED >
+
+
+<!--                    Printdef                                   -->
+<!--                    Printer definitions                        -->
+<!ELEMENT  printdef     (family*)                                    >
+<!--         name       Family name                                -->
+
+
+<!--                    Family                                     -->
+<!--                    Printer Family Driver                      -->
+<!ELEMENT  family       (printer*)                                   >
+<!ATTLIST  family
+             name       NMTOKEN                            #REQUIRED >
+
+
+<!--                    Printer                                    -->
+<!--                    Printer definition                         -->
+<!ELEMENT  printer          (color?, model, black?, cyan?,
+                             magenta?, yellow?, brightness?,
+                             gamma?, density?, saturation?,
+                             blackgamma?, cyangamma?, magentagamma?,
+                             yellowgamma?, gcrlower?, gcrupper?)     >
+<!--         name       Model name
+             driver     Family driver                              -->
+<!ATTLIST  printer
+             name       CDATA                              #REQUIRED
+             driver     NMTOKEN                            #REQUIRED >
+
+<!--                    Color                                      -->
+<!ELEMENT  color        EMPTY                                        >
+<!ATTLIST  color
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    model                                      -->
+<!ELEMENT  model        EMPTY                                        >
+<!--         value      Calibration value                          -->
+<!ATTLIST  model
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    Cyan                                       -->
+<!--                    Calibration value                          -->
+<!ELEMENT  cyan         EMPTY                                        >
+
+<!--         value      Calibration value                          -->
+<!ATTLIST  cyan
+             value      NMTOKEN                            #IMPLIED  >
+
+<!--                    Magenta                                    -->
+<!--                    Calibration value                          -->
+<!ELEMENT  magenta      EMPTY                                        >
+
+<!--         value      Calibration value                          -->
+<!ATTLIST  magenta
+             value      NMTOKEN                            #IMPLIED  >
+<!--                    Yellow                                     -->
+
+<!--                    Calibration value                          -->
+<!ELEMENT  yellow       EMPTY                                        >
+
+<!--         value      Calibration value                          -->
+<!ATTLIST  yellow
+             value      NMTOKEN                            #IMPLIED  >
+
+<!--                    brightness                                 -->
+<!ELEMENT  brightness   EMPTY                                        >
+<!--         value      Calibration value                          -->
+<!ATTLIST  brightness
+             value      NMTOKEN                             #IMPLIED >
+
+<!--                    gamma                                      -->
+<!ELEMENT  gamma        EMPTY                                        >
+<!--         value      Calibration value                          -->
+<!ATTLIST  gamma
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    density                                    -->
+<!ELEMENT  density      EMPTY                                        >
+<!--         value      Calibration value                          -->
+<!ATTLIST  density
+             value      NMTOKEN                            #REQUIRED >
+
+<!--                    saturation                                 -->
+<!ELEMENT  saturation   EMPTY                                        >
+<!--         value      Calibration value                          -->
+<!ATTLIST  saturation
+             value      NMTOKEN                            #REQUIRED >
+
+
+
+<!-- ============================================================= -->
+<!--                    End of Gutenprint Printers DTD             -->
+<!-- ============================================================= -->

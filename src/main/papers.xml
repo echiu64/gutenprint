@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--
-   XML description of papers known to libgimpprint.
+   XML description of papers known to libgutenprint.
    It should be edited by hand.
 
    "$Id$"
@@ -14,9 +14,9 @@
 
 
 
-<gimp-print xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd">
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
   <paperdef>
 <!-- GROUP: Imperial -->
     <paper name="Letter">
@@ -1027,4 +1027,4 @@
       <unit value="english"/>
     </paper>
   </paperdef>
-</gimp-print>
+</gutenprint>

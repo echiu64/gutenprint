@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Gimp-Print color management module - traditional Gimp-Print algorithm.
+ *   Gutenprint color management module - traditional Gimp-Print algorithm.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -21,8 +21,8 @@
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef GIMP_PRINT_INTERNAL_COLOR_CONVERSION_H
-#define GIMP_PRINT_INTERNAL_COLOR_CONVERSION_H
+#ifndef GUTENPRINT_INTERNAL_COLOR_CONVERSION_H
+#define GUTENPRINT_INTERNAL_COLOR_CONVERSION_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,8 +31,8 @@ extern "C" {
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include <gimp-print/curve-cache.h>
+#include <gutenprint/gutenprint.h>
+#include <gutenprint/curve-cache.h>
 
 typedef enum
 {
@@ -189,4 +189,4 @@ extern unsigned stpi_color_convert_raw(const stp_vars_t *v,
   }
 #endif
 
-#endif /* GIMP_PRINT_INTERNAL_COLOR_CONVERSION_H */
+#endif /* GUTENPRINT_INTERNAL_COLOR_CONVERSION_H */

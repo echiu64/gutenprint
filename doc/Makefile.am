@@ -35,18 +35,18 @@ docdir = $(datadir)/doc/$(PACKAGE)
 ## Rules
 
 if MAINTAINER_MODE
-all-local: gimpprint-stamp
+all-local: gutenprint-stamp
 else
 all-local:
 endif
 
 # Rerun doxygen whenever autogen is run
-gimpprint-stamp: gimpprint.dox.in $(top_srcdir)/configure
-	$(RM) -rf gimpprint/html
-	$(DOXYGEN) gimpprint.dox
+gutenprint-stamp: gutenprint.dox.in $(top_srcdir)/configure
+	$(RM) -rf gutenprint/html
+	$(DOXYGEN) gutenprint.dox
 	touch $@
 
-docs: gimpprint-stamp
+docs: gutenprint-stamp
 	cd developer; $(MAKE)
 	cd users_guide; $(MAKE)
 
@@ -66,17 +66,17 @@ html:
 ## Clean
 
 maintainer-clean-local:
-	$(RM) -r gimpprint
+	$(RM) -r gutenprint
 
 MAINTAINERCLEANFILES = \
 	Makefile.in \
-	gimpprint-stamp
+	gutenprint-stamp
 
 EXTRA_DIST = \
 	FAQ.html \
 	README.maintaining \
-	gimpprint.dox.in \
-	gimpprint \
-	gimpprint-stamp
+	gutenprint.dox.in \
+	gutenprint \
+	gutenprint-stamp
 
 .PHONY: html ps pdf docs

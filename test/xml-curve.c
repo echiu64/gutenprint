@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <gimp-print/gimp-print.h>
+#include <gutenprint/gutenprint.h>
 
 int main(int argc, char *argv[])
 {

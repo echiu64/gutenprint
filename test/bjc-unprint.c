@@ -23,7 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/util.h>
+#include <gutenprint/util.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>

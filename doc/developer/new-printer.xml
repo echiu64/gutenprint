@@ -39,7 +39,7 @@
     <para>
       <filename>printers.xml</filename> is an XML file that contains
       very simple printer definitions.  A schema may be used to
-      validate the XML (<filename>src/main/gimpprint.xsd</filename>).
+      validate the XML (<filename>src/main/gutenprint.xsd</filename>).
       This is an example definition:
     </para>
     <informalexample>

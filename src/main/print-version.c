@@ -23,40 +23,40 @@
 
 /*
  * This file must include only standard C header files.  The core code must
- * compile on generic platforms that don't support glib, gimp, gimpprint, etc.
+ * compile on generic platforms that don't support glib, gimp, etc.
  */
 
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 
-const unsigned int gimpprint_major_version = GIMPPRINT_MAJOR_VERSION;
-const unsigned int gimpprint_minor_version = GIMPPRINT_MINOR_VERSION;
-const unsigned int gimpprint_micro_version = GIMPPRINT_MICRO_VERSION;
-const unsigned int gimpprint_current_interface = GIMPPRINT_CURRENT_INTERFACE;
-const unsigned int gimpprint_binary_age = GIMPPRINT_BINARY_AGE;
-const unsigned int gimpprint_interface_age = GIMPPRINT_INTERFACE_AGE;
+const unsigned int stp_major_version = STP_MAJOR_VERSION;
+const unsigned int stp_minor_version = STP_MINOR_VERSION;
+const unsigned int stp_micro_version = STP_MICRO_VERSION;
+const unsigned int stp_current_interface = STP_CURRENT_INTERFACE;
+const unsigned int stp_binary_age = STP_BINARY_AGE;
+const unsigned int stp_interface_age = STP_INTERFACE_AGE;
 
 
 const char *
 stp_check_version (unsigned int required_major,
 		   unsigned int required_minor, unsigned int required_micro)
 {
-  if (required_major > GIMPPRINT_MAJOR_VERSION)
-    return "gimpprint version too old (major mismatch)";
-  if (required_major < GIMPPRINT_MAJOR_VERSION)
-    return "gimpprint version too new (major mismatch)";
-  if (required_minor > GIMPPRINT_MINOR_VERSION)
-    return "gimpprint version too old (minor mismatch)";
-  if (required_minor < GIMPPRINT_MINOR_VERSION)
-    return "gimpprint version too new (minor mismatch)";
-  if (required_micro < GIMPPRINT_MICRO_VERSION - GIMPPRINT_BINARY_AGE)
-    return "gimpprint version too new (micro mismatch)";
-  if (required_micro > GIMPPRINT_MICRO_VERSION)
-    return "gimpprint version too old (micro mismatch)";
+  if (required_major > STP_MAJOR_VERSION)
+    return "Gutenprint version too old (major mismatch)";
+  if (required_major < STP_MAJOR_VERSION)
+    return "Gutenprint version too new (major mismatch)";
+  if (required_minor > STP_MINOR_VERSION)
+    return "Gutenprint version too old (minor mismatch)";
+  if (required_minor < STP_MINOR_VERSION)
+    return "Gutenprint version too new (minor mismatch)";
+  if (required_micro < STP_MICRO_VERSION - STP_BINARY_AGE)
+    return "Gutenprint version too new (micro mismatch)";
+  if (required_micro > STP_MICRO_VERSION)
+    return "Gutenprint version too old (micro mismatch)";
   return NULL;
 }

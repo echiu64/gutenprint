@@ -22,29 +22,29 @@ dnl ===============
 dnl
 dnl Since the last release:
 dnl 1. if only source code (not the interface) has changed, set
-dnl      GIMPPRINT_MICRO_VERSION += 1;
-dnl      GIMPPRINT_INTERFACE_AGE += 1;
+dnl      GUTENPRINT_MICRO_VERSION += 1;
+dnl      GUTENPRINT_INTERFACE_AGE += 1;
 dnl 2. if any functions have been added, removed, or changed, set
-dnl      GIMPPRINT_INTERFACE_AGE = 0;
-dnl      GIMPPRINT_CURRENT_INTERFACE += 1;
+dnl      GUTENPRINT_INTERFACE_AGE = 0;
+dnl      GUTENPRINT_CURRENT_INTERFACE += 1;
 dnl 3. if interfaces have been added, set
-dnl      GIMPPRINT_BINARY_AGE += 1;
+dnl      GUTENPRINT_BINARY_AGE += 1;
 dnl 4. if interfaces have been removed, set
-dnl      GIMPPRINT_BINARY_AGE = 0;
+dnl      GUTENPRINT_BINARY_AGE = 0;
 dnl
 dnl For more detailed information, see the libtool info documentation.
 dnl
-pushdef([GIMPPRINT_NAME],              [gimp-print])
-pushdef([GIMPPRINT_MAJOR_VERSION],     [5])
-pushdef([GIMPPRINT_MINOR_VERSION],     [0])
-pushdef([GIMPPRINT_MICRO_VERSION],     [0])
-pushdef([GIMPPRINT_EXTRA_VERSION],     [-beta2])
-pushdef([GIMPPRINT_CURRENT_INTERFACE], [7])
-pushdef([GIMPPRINT_INTERFACE_AGE],     [0])
-pushdef([GIMPPRINT_BINARY_AGE],        [0])
-pushdef([GIMPPRINT_VERSION], GIMPPRINT_MAJOR_VERSION.GIMPPRINT_MINOR_VERSION.GIMPPRINT_MICRO_VERSION[]GIMPPRINT_EXTRA_VERSION)
+pushdef([GUTENPRINT_NAME],              [gutenprint])
+pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
+pushdef([GUTENPRINT_MINOR_VERSION],     [0])
+pushdef([GUTENPRINT_MICRO_VERSION],     [0])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [-beta2])
+pushdef([GUTENPRINT_CURRENT_INTERFACE], [7])
+pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
+pushdef([GUTENPRINT_BINARY_AGE],        [0])
+pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
 
-AC_INIT(GIMPPRINT_NAME, GIMPPRINT_VERSION, [gimp-print-devel@lists.sourceforge.net])
+AC_INIT(GUTENPRINT_NAME, GUTENPRINT_VERSION, [gimp-print-devel@lists.sourceforge.net])
 AC_PREREQ(2.53)
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src/main/print-vars.c)
@@ -68,44 +68,44 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ])
 
-[GIMPPRINT_MAJOR_VERSION]=GIMPPRINT_MAJOR_VERSION
-[GIMPPRINT_MINOR_VERSION]=GIMPPRINT_MINOR_VERSION
-[GIMPPRINT_MICRO_VERSION]=GIMPPRINT_MICRO_VERSION
-[GIMPPRINT_EXTRA_VERSION]=GIMPPRINT_EXTRA_VERSION
-[GIMPPRINT_CURRENT_INTERFACE]=GIMPPRINT_CURRENT_INTERFACE
-[GIMPPRINT_INTERFACE_AGE]=GIMPPRINT_INTERFACE_AGE
-[GIMPPRINT_BINARY_AGE]=GIMPPRINT_BINARY_AGE
-[GIMPPRINT_VERSION]=GIMPPRINT_VERSION
-popdef([GIMPPRINT_MAJOR_VERSION])
-popdef([GIMPPRINT_MINOR_VERSION])
-popdef([GIMPPRINT_MICRO_VERSION])
-popdef([GIMPPRINT_EXTRA_VERSION])
-popdef([GIMPPRINT_CURRENT_INTERFACE])
-popdef([GIMPPRINT_INTERFACE_AGE])
-popdef([GIMPPRINT_BINARY_AGE])
+[GUTENPRINT_MAJOR_VERSION]=GUTENPRINT_MAJOR_VERSION
+[GUTENPRINT_MINOR_VERSION]=GUTENPRINT_MINOR_VERSION
+[GUTENPRINT_MICRO_VERSION]=GUTENPRINT_MICRO_VERSION
+[GUTENPRINT_EXTRA_VERSION]=GUTENPRINT_EXTRA_VERSION
+[GUTENPRINT_CURRENT_INTERFACE]=GUTENPRINT_CURRENT_INTERFACE
+[GUTENPRINT_INTERFACE_AGE]=GUTENPRINT_INTERFACE_AGE
+[GUTENPRINT_BINARY_AGE]=GUTENPRINT_BINARY_AGE
+[GUTENPRINT_VERSION]=GUTENPRINT_VERSION
+popdef([GUTENPRINT_MAJOR_VERSION])
+popdef([GUTENPRINT_MINOR_VERSION])
+popdef([GUTENPRINT_MICRO_VERSION])
+popdef([GUTENPRINT_EXTRA_VERSION])
+popdef([GUTENPRINT_CURRENT_INTERFACE])
+popdef([GUTENPRINT_INTERFACE_AGE])
+popdef([GUTENPRINT_BINARY_AGE])
 
-AC_SUBST(GIMPPRINT_MAJOR_VERSION)
-AC_SUBST(GIMPPRINT_MINOR_VERSION)
-AC_SUBST(GIMPPRINT_MICRO_VERSION)
-AC_SUBST(GIMPPRINT_CURRENT_INTERFACE)
-AC_SUBST(GIMPPRINT_INTERFACE_AGE)
-AC_SUBST(GIMPPRINT_BINARY_AGE)
-AC_SUBST(GIMPPRINT_VERSION)
+AC_SUBST(GUTENPRINT_MAJOR_VERSION)
+AC_SUBST(GUTENPRINT_MINOR_VERSION)
+AC_SUBST(GUTENPRINT_MICRO_VERSION)
+AC_SUBST(GUTENPRINT_CURRENT_INTERFACE)
+AC_SUBST(GUTENPRINT_INTERFACE_AGE)
+AC_SUBST(GUTENPRINT_BINARY_AGE)
+AC_SUBST(GUTENPRINT_VERSION)
 
 dnl libtool versioning
-LT_RELEASE=$GIMPPRINT_MAJOR_VERSION.$GIMPPRINT_MINOR_VERSION
-LT_CURRENT=$GIMPPRINT_CURRENT_INTERFACE
-LT_REVISION=$GIMPPRINT_INTERFACE_AGE
-LT_AGE=$GIMPPRINT_BINARY_AGE
+LT_RELEASE=$GUTENPRINT_MAJOR_VERSION.$GUTENPRINT_MINOR_VERSION
+LT_CURRENT=$GUTENPRINT_CURRENT_INTERFACE
+LT_REVISION=$GUTENPRINT_INTERFACE_AGE
+LT_AGE=$GUTENPRINT_BINARY_AGE
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(GIMPPRINT_NAME, GIMPPRINT_VERSION)
-popdef([GIMPPRINT_NAME])
-popdef([GIMPPRINT_VERSION])
+AM_INIT_AUTOMAKE(GUTENPRINT_NAME, GUTENPRINT_VERSION)
+popdef([GUTENPRINT_NAME])
+popdef([GUTENPRINT_VERSION])
 
 
 dnl In the following script, there are a the following variants
@@ -113,21 +113,21 @@ dnl of cflags and variables
 dnl
 dnl *_CFLAGS:   cflags for compiling libraries and example progs
 dnl *_LIBS:     libraries for linking programs. ONLY to be used
-dnl             to generate ${gimpprint_libs}
+dnl             to generate ${gutenprint_libs}
 dnl *_LIBDEPS:  libraries for linking libraries against
 dnl *_libdeps:  library dependencies for pkg-config
 dnl *_cflags:   cflags for pkg-config
 dnl *_libs:     libs for pkg-config
 
-GIMPPRINT_LIBS="-lgimpprint"
-GIMPPRINT_UI_LIBS="-lgimpprintui"
-GIMPPRINTUI2_LIBS="-lgimpprintui2"
-gimpprint_version=${GIMPPRINT_VERSION}
-gimpprint_ui_version=${GIMPPRINT_VERSION}
-gimpprintui2_version=${GIMPPRINT_VERSION}
+GUTENPRINT_LIBS="-lgutenprint"
+GUTENPRINTUI_LIBS="-lgutenprintui"
+GUTENPRINTUI2_LIBS="-lgutenprintui2"
+gutenprint_version=${GUTENPRINT_VERSION}
+gutenprintui_version=${GUTENPRINT_VERSION}
+gutenprintui2_version=${GUTENPRINT_VERSION}
 
-GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} \$(GIMPPRINT_LIBS)"
-GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} \$(GIMPPRINT_LIBS)"
+GUTENPRINTUI_LIBDEPS="${GUTENPRINTUI_LIBDEPS} \$(GUTENPRINT_LIBS)"
+GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} \$(GUTENPRINT_LIBS)"
 
 dnl Specify a configuration file.
 AM_CONFIG_HEADER([config.h])
@@ -236,7 +236,7 @@ STP_ARG_ENABLE([cups-level3-ppds],
 
 STATIC_GENPPD="$enable_static"
 STP_ARG_ENABLE([static-genppd],
-               [build a statically-linked cups-genppd and rastertogimpprint],
+               [build a statically-linked cups-genppd and rastertogutenprint],
 	       [STATIC_GENPPD],
 	       [(automatic)])
 
@@ -351,18 +351,18 @@ dnl Quote to protect sed regexes
 fi
 
 AM_PATH_GTK(1.2.0,
-  BUILD_LIBGIMPPRINTUI="yes"
-  GIMPPRINT_UI_LIBDEPS="${GIMPPRINT_UI_LIBDEPS} ${GTK_LIBS}",
-  BUILD_LIBGIMPPRINTUI="no")
+  BUILD_LIBGUTENPRINTUI="yes"
+  GUTENPRINTUI_LIBDEPS="${GUTENPRINTUI_LIBDEPS} ${GTK_LIBS}",
+  BUILD_LIBGUTENPRINTUI="no")
 
 STP_ARG_WITH([gimp],
              [build GIMP 1.2 Print plugin],
              [BUILD_GIMP],
              [(automatic)])
 
-STP_ARG_ENABLE([libgimpprintui],
-               [build Gimp-Print GTK+-1.2 user interface library],
-               [BUILD_LIBGIMPPRINTUI],
+STP_ARG_ENABLE([libgutenprintui],
+               [build Gutenprint GTK+-1.2 user interface library],
+               [BUILD_LIBGUTENPRINTUI],
                [(automatic)])
 
 AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
@@ -383,10 +383,10 @@ fi
 
 PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
                   [HAVE_GTK2=yes
-                   BUILD_LIBGIMPPRINTUI2=yes
-                   GIMPPRINTUI2_LIBDEPS="${GIMPPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
+                   BUILD_LIBGUTENPRINTUI2=yes
+                   GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} ${GTK2_LIBS}"],
                   [HAVE_GTK2=no
-	           BUILD_LIBGIMPPRINTUI2=no])
+	           BUILD_LIBGUTENPRINTUI2=no])
 PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [HAVE_GTK2=yes], [HAVE_GTK2=no])
 
 STP_ARG_WITH([gimp2],
@@ -394,9 +394,9 @@ STP_ARG_WITH([gimp2],
              [BUILD_GIMP2],
              [(automatic)])
 
-STP_ARG_ENABLE([libgimpprintui2],
-               [build Gimp-Print GTK+-2.0 user interface library],
-               [BUILD_LIBGIMPPRINTUI2],
+STP_ARG_ENABLE([libgutenprintui2],
+               [build Gutenprint GTK+-2.0 user interface library],
+               [BUILD_LIBGUTENPRINTUI2],
                [(automatic)])
 
 STP_ARG_ENABLE([samples],
@@ -529,9 +529,9 @@ dnl GNU gettext checks.
 AM_GNU_GETTEXT_VERSION([0.11.5])
 AM_GNU_GETTEXT([external])
 
-GIMPPRINT_RELEASE_VERSION=${GIMPPRINT_MAJOR_VERSION}.${GIMPPRINT_MINOR_VERSION}
-AH_TEMPLATE(GIMPPRINT_RELEASE_VERSION,, [Gimp-Print release version])
-AC_DEFINE_UNQUOTED(GIMPPRINT_RELEASE_VERSION, "${GIMPPRINT_RELEASE_VERSION}")
+GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}
+AH_TEMPLATE(GUTENPRINT_RELEASE_VERSION,, [Gutenprint release version])
+AC_DEFINE_UNQUOTED(GUTENPRINT_RELEASE_VERSION, "${GUTENPRINT_RELEASE_VERSION}")
 
 dnl Set PACKAGE_LOCALE_DIR in config.h
 AH_TEMPLATE(PACKAGE_LOCALE_DIR,, [Package locale directory])
@@ -663,12 +663,12 @@ AC_CHECK_LIB(ltdl, lt_dlopen, [LTDL_LIBS="-lltdl"])
 AC_CHECK_LIB(dl, dlopen, [DLOPEN_LIBS="-ldl"])
 
 AC_CHECK_LIB(m,pow,
-             GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} -lm"
-             gimpprint_libdeps="${gimpprint_libdeps} -lm")
+             GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
+             gutenprint_libdeps="${gutenprint_libdeps} -lm")
 
 STP_CUPS_LIBS
 
-if test x$BUILD_LEXMARKUTIL = xyes -o x$BUILD_GIMPPRINTUI = xyes ; then
+if test x$BUILD_LEXMARKUTIL = xyes -o x$BUILD_GUTENPRINTUI = xyes ; then
 AM_PATH_GTK(1.2.0, ,
             AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
 fi
@@ -741,9 +741,9 @@ AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 
-AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI, test x${BUILD_LIBGIMPPRINTUI} = xyes)
+AM_CONDITIONAL(BUILD_LIBGUTENPRINTUI, test x${BUILD_LIBGUTENPRINTUI} = xyes)
 
-AM_CONDITIONAL(BUILD_LIBGIMPPRINTUI2, test x${BUILD_LIBGIMPPRINTUI2} = xyes)
+AM_CONDITIONAL(BUILD_LIBGUTENPRINTUI2, test x${BUILD_LIBGUTENPRINTUI2} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
@@ -790,17 +790,17 @@ fi
 AC_MSG_CHECKING([which module system will be used])
 if test x$USE_LTDL = xtrue; then
   MODULE="true"
-  AC_DEFINE(MODULE, "1", [Build a modular libgimpprint])
+  AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
   AC_DEFINE(USE_LTDL, "1", [Use GNU libltdl as module loader])
-  GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${LTDL_LIBS}"
-  gimpprint_libdeps="${gimpprint_libdeps} ${LTDL_LIBS}"
+  GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${LTDL_LIBS}"
+  gutenprint_libdeps="${gutenprint_libdeps} ${LTDL_LIBS}"
   AC_MSG_RESULT([ltdl])
 elif test x$USE_DLOPEN = xtrue; then
   MODULE="true"
-  AC_DEFINE(MODULE, "1", [Build a modular libgimpprint])
+  AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
   AC_DEFINE(USE_DLOPEN, "1", [Use libdl/dlopen as module loader])
-  GIMPPRINT_LIBDEPS="${GIMPPRINT_LIBDEPS} ${DLOPEN_LIBS}"
-  gimpprint_libdeps="${gimpprint_libdeps} ${DLOPEN_LIBS}"
+  GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${DLOPEN_LIBS}"
+  gutenprint_libdeps="${gutenprint_libdeps} ${DLOPEN_LIBS}"
   AC_MSG_RESULT([dlopen])
 else
   MODULE="false"
@@ -830,11 +830,11 @@ AH_TEMPLATE(CUPS_MODELDIR,, [CUPS PPD file directory])
 if test "${CUPS_PPDS_AT_TOP_LEVEL}" = yes ; then
   AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/")
 else
-  AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GIMPPRINT_RELEASE_VERSION}/")
+  AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GUTENPRINT_RELEASE_VERSION}/")
 fi
 
 AH_TEMPLATE(CUPS_PPD_NICKNAME_STRING,, [CUPS PPD Nickname string])
-AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, [" - CUPS+Gimp-Print v"])
+AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, [" - CUPS+Gutenprint v"])
 
 
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
@@ -865,27 +865,27 @@ AC_SUBST(GIMP2_CFLAGS)
 AC_SUBST(GIMP2_LIBS)
 AC_SUBST(gimp_plug_indir)
 AC_SUBST(gimp2_plug_indir)
-AC_SUBST(GIMPPRINT_CFLAGS)
-AC_SUBST(GIMPPRINT_LIBS)
-AC_SUBST(GIMPPRINT_LIBDEPS)
-AC_SUBST(GIMPPRINT_VERSION)
-AC_SUBST(GIMPPRINT_UI_CFLAGS)
-AC_SUBST(GIMPPRINT_UI_LIBS)
-AC_SUBST(GIMPPRINT_UI_LIBDEPS)
-AC_SUBST(GIMPPRINT_UI_VERSION)
-AC_SUBST(GIMPPRINTUI2_CFLAGS)
-AC_SUBST(GIMPPRINTUI2_LIBS)
-AC_SUBST(GIMPPRINTUI2_LIBDEPS)
-AC_SUBST(GIMPPRINTUI2_VERSION)
-AC_SUBST(gimpprint_cflags)
-gimpprint_libs="${GIMPPRINT_LIBS} ${gimpprint_libdeps}"
-AC_SUBST(gimpprint_libs)
-AC_SUBST(gimpprint_ui_cflags)
-gimpprint_ui_libs="${GIMPPRINT_UI_LIBS} ${gimpprint_ui_libdeps}"
-AC_SUBST(gimpprint_ui_libs)
-AC_SUBST(gimpprintui2_cflags)
-gimpprintui2_libs="${GIMPPRINTUI2_LIBS} ${gimpprintui2_libdeps}"
-AC_SUBST(gimpprintui2_libs)
+AC_SUBST(GUTENPRINT_CFLAGS)
+AC_SUBST(GUTENPRINT_LIBS)
+AC_SUBST(GUTENPRINT_LIBDEPS)
+AC_SUBST(GUTENPRINT_VERSION)
+AC_SUBST(GUTENPRINTUI_CFLAGS)
+AC_SUBST(GUTENPRINTUI_LIBS)
+AC_SUBST(GUTENPRINTUI_LIBDEPS)
+AC_SUBST(GUTENPRINTUI_VERSION)
+AC_SUBST(GUTENPRINTUI2_CFLAGS)
+AC_SUBST(GUTENPRINTUI2_LIBS)
+AC_SUBST(GUTENPRINTUI2_LIBDEPS)
+AC_SUBST(GUTENPRINTUI2_VERSION)
+AC_SUBST(gutenprint_cflags)
+gutenprint_libs="${GUTENPRINT_LIBS} ${gutenprint_libdeps}"
+AC_SUBST(gutenprint_libs)
+AC_SUBST(gutenprintui_cflags)
+gutenprintui_libs="${GUTENPRINTUI_LIBS} ${gutenprintui_libdeps}"
+AC_SUBST(gutenprintui_libs)
+AC_SUBST(gutenprintui2_cflags)
+gutenprintui2_libs="${GUTENPRINTUI2_LIBS} ${gutenprintui2_libdeps}"
+AC_SUBST(gutenprintui2_libs)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
@@ -895,41 +895,41 @@ dnl Output files
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([debian/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
-AC_CONFIG_FILES([doc/gimpprint.dox])
+AC_CONFIG_FILES([doc/gutenprint.dox])
 AC_CONFIG_FILES([doc/developer/Makefile])
 AC_CONFIG_FILES([doc/users_guide/Makefile])
 AC_CONFIG_FILES([include/Makefile])
-AC_CONFIG_FILES([include/gimp-print/Makefile])
-AC_CONFIG_FILES([include/gimp-print-ui/Makefile])
-AC_CONFIG_FILES([include/gimp-print-ui2/Makefile])
-AC_CONFIG_FILES([include/gimp-print/gimp-print-version.h])
+AC_CONFIG_FILES([include/gutenprint/Makefile])
+AC_CONFIG_FILES([include/gutenprintui/Makefile])
+AC_CONFIG_FILES([include/gutenprintui2/Makefile])
+AC_CONFIG_FILES([include/gutenprint/gutenprint-version.h])
 AC_CONFIG_FILES([man/Makefile])
 AC_CONFIG_FILES([man/cups-calibrate.8])
 AC_CONFIG_FILES([man/cups-genppd.8])
 AC_CONFIG_FILES([man/cups-genppdconfig.8])
 AC_CONFIG_FILES([man/cups-genppdupdate.8])
 AC_CONFIG_FILES([man/escputil.1])
-AC_CONFIG_FILES([man/gimpprint.3])
-AC_CONFIG_FILES([man/gimpprint-color.7])
-AC_CONFIG_FILES([man/gimpprint-dithers.7])
-AC_CONFIG_FILES([man/gimpprint-imagetypes.7])
-AC_CONFIG_FILES([man/gimpprint-inktypes.7])
-AC_CONFIG_FILES([man/gimpprint-mediasizes.7])
-AC_CONFIG_FILES([man/gimpprint-mediasources.7])
-AC_CONFIG_FILES([man/gimpprint-mediatypes.7])
-AC_CONFIG_FILES([man/gimpprint-models.7])
-AC_CONFIG_FILES([man/gimpprint-resolutions.7])
-AC_CONFIG_FILES([man/ijsgimpprint.1])
+AC_CONFIG_FILES([man/gutenprint.3])
+AC_CONFIG_FILES([man/gutenprint-color.7])
+AC_CONFIG_FILES([man/gutenprint-dithers.7])
+AC_CONFIG_FILES([man/gutenprint-imagetypes.7])
+AC_CONFIG_FILES([man/gutenprint-inktypes.7])
+AC_CONFIG_FILES([man/gutenprint-mediasizes.7])
+AC_CONFIG_FILES([man/gutenprint-mediasources.7])
+AC_CONFIG_FILES([man/gutenprint-mediatypes.7])
+AC_CONFIG_FILES([man/gutenprint-models.7])
+AC_CONFIG_FILES([man/gutenprint-resolutions.7])
+AC_CONFIG_FILES([man/ijsgutenprint.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
                 [chmod +x src/cups/cups-genppdconfig;
-		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GIMPPRINT_RELEASE_VERSION}])
+		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate;
-		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GIMPPRINT_RELEASE_VERSION}])
+		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
@@ -941,12 +941,12 @@ AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
-AC_CONFIG_FILES([src/main/gimpprint.pc])
-AC_CONFIG_FILES([src/libgimpprintui/Makefile])
-AC_CONFIG_FILES([src/libgimpprintui/gimpprintui.pc])
-AC_CONFIG_FILES([src/libgimpprintui2/Makefile])
-AC_CONFIG_FILES([src/libgimpprintui2/gimpprintui2.pc])
-AC_CONFIG_FILES([cups-gimpprint.list])
+AC_CONFIG_FILES([src/main/gutenprint.pc])
+AC_CONFIG_FILES([src/gutenprintui/Makefile])
+AC_CONFIG_FILES([src/gutenprintui/gutenprintui.pc])
+AC_CONFIG_FILES([src/gutenprintui2/Makefile])
+AC_CONFIG_FILES([src/gutenprintui2/gutenprintui2.pc])
+AC_CONFIG_FILES([cups-gutenprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
 AC_CONFIG_COMMANDS([default], [
@@ -954,7 +954,7 @@ echo "Finished configuring."
 echo "Type 'make' to build the package"
 echo "then 'make install' to install it."
 ],
-[GIMPPRINT_RELEASE_VERSION=${GIMPPRINT_RELEASE_VERSION}]
+[GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_RELEASE_VERSION}]
 )
 
 AC_OUTPUT

@@ -24,14 +24,14 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include "print-escp2.h"
 
 static const char standard_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -42,11 +42,11 @@ static const char standard_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.39 0.42 0.47 0.54 0.61 0.67 0.73 0.77 "  /* B */
@@ -57,11 +57,11 @@ static const char standard_lum_adj[] =
 /* G */  "0.85 0.65 0.50 0.41 0.41 0.40 0.39 0.39 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char standard_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.00 0.00 -.02 -.06 -.12 -.18 -.24 "  /* B */
@@ -72,12 +72,12 @@ static const char standard_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 
 static const char photo2_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -88,11 +88,11 @@ static const char photo2_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char photo2_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.39 0.42 0.47 0.54 0.61 0.67 0.73 0.77 "  /* B */
@@ -103,11 +103,11 @@ static const char photo2_lum_adj[] =
 /* G */  "0.85 0.65 0.50 0.41 0.41 0.40 0.39 0.39 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char photo2_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.00 0.00 -.02 -.06 -.12 -.18 -.24 "  /* B */
@@ -118,12 +118,12 @@ static const char photo2_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 
 static const char sp960_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -134,11 +134,11 @@ static const char sp960_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char sp960_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.42 0.44 0.50 0.55 0.62 0.68 0.73 0.76 "  /* B */
@@ -149,11 +149,11 @@ static const char sp960_lum_adj[] =
 /* G */  "0.78 0.61 0.50 0.42 0.43 0.43 0.42 0.42 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char sp960_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
@@ -164,11 +164,11 @@ static const char sp960_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char sp960_matte_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -179,11 +179,11 @@ static const char sp960_matte_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char sp960_matte_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.42 0.48 0.56 0.63 0.71 0.78 0.83 0.86 "  /* B */
@@ -194,11 +194,11 @@ static const char sp960_matte_lum_adj[] =
 /* G */  "0.78 0.61 0.50 0.42 0.43 0.43 0.42 0.42 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char sp960_matte_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 -.02 -.04 -.06 -.12 -.18 -.25 -.30 "  /* B */
@@ -209,12 +209,12 @@ static const char sp960_matte_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 
 static const char ultra_matte_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -225,11 +225,11 @@ static const char ultra_matte_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char ultra_matte_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.31 0.34 0.38 0.45 0.52 0.58 0.65 0.70 "  /* B */
@@ -240,11 +240,11 @@ static const char ultra_matte_lum_adj[] =
 /* G */  "0.74 0.55 0.44 0.37 0.35 0.34 0.32 0.31 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char ultra_matte_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
@@ -255,11 +255,11 @@ static const char ultra_matte_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char ultra_glossy_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
@@ -270,11 +270,11 @@ static const char ultra_glossy_sat_adj[] =
 /* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char ultra_glossy_lum_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.31 0.35 0.43 0.48 0.55 0.60 0.65 0.70 "  /* B */
@@ -285,11 +285,11 @@ static const char ultra_glossy_lum_adj[] =
 /* G */  "0.74 0.55 0.44 0.37 0.35 0.34 0.32 0.31 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 static const char ultra_glossy_hue_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print>\n"
+"<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
@@ -300,7 +300,7 @@ static const char ultra_glossy_hue_adj[] =
 /* G */  "-.50 -.44 -.38 -.31 -.25 -.20 -.13 -.06 "  /* C */
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 #define DECLARE_PAPERS(name)				\
 const paperlist_t stpi_escp2_##name##_paper_list =	\

@@ -34,13 +34,13 @@ EXTRA_DIST = README
 
 ## Variables
 
-LOCAL_CPPFLAGS = $(GIMPPRINT_CFLAGS) @IJS_CFLAGS@
+LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) @IJS_CFLAGS@
 
 
 ## Programs
 
 if BUILD_GHOSTSCRIPT
-bin_PROGRAMS = ijsgimpprint
+bin_PROGRAMS = ijsgutenprint
 endif
 
-ijsgimpprint_LDADD = $(GIMPPRINT_LIBS) $(IJS_LIBS)
+ijsgutenprint_LDADD = $(GUTENPRINT_LIBS) $(IJS_LIBS)

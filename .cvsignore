@@ -17,7 +17,7 @@ config.sub
 config.guess
 configure
 configure.in
-cups-gimpprint.list
+cups-gutenprint.list
 debian-build
 intl
 ltmain.sh
@@ -26,7 +26,7 @@ m4local
 stamp-h
 stamp-h*
 stamp-h.in
-gimp-print*.tar.gz
-gimp-print*.tar.bz2
+gutenprint*.tar.gz
+gutenprint*.tar.bz2
 Makefile
 Makefile.in

@@ -1,8 +1,8 @@
-Gimp-Print for Debian
+Gutenprint for Debian
 ---------------------
 
-This is Gimp-Print version 5.0.0-alpha3, an alpha release in the 5.0
-series.  Gimp-print is the print facility for the Gimp, and in
+This is Gutenprint version 5.0.0-beta2, a beta release in the 5.0
+series.  Gutenprint is the print facility for the GIMP, and in
 addition a suite of drivers that may be used with common UNIX spooling
 systems using Ghostscript or CUPS.  These drivers provide printing
 quality for UNIX/Linux on a par with proprietary vendor-supplied
@@ -12,8 +12,12 @@ printing tasks.
 A complete list of supported printers may be found in the NEWS file.
 On Debian GNU/Linux, the NEWS file is called `changelog.gz'.
 
-Documentation can be found in the gimpprint-doc package, which covers
-the use of libgimpprint-based programs, and the libgimpprint-doc
-package, which covers developing programs using libgimpprint.
+Documentation can be found in the gutenprint-doc package, which covers
+the use of libgutenprint-based programs, and the libgutenprint-doc
+package, which covers developing programs using libgutenprint.
 
- -- Roger Leigh <rleigh@debian.org>,  Sun, 08 Feb 2004 19:41:38 +0000
+Gutenprint was previously knows as Gimp-Print.  The name was changed
+for the 5.0 release.
+
+
+ -- Roger Leigh <rleigh@debian.org>,  Sun, 12 Sep 2004 10:50:34 +0100

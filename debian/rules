@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# rules to package Gimp-Print
+# rules to package gutenprint
 # $Id$
 #
 # Uncomment this to turn on verbose mode. 
@@ -21,34 +21,33 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
 
-# Get upstream version, and define libgimpprint suffix
+# Get upstream version, and define libgutenprint suffix
 UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*$$//")
 UPSTREAM_VERSION_COMPACT = $(shell echo '$(UPSTREAM_VERSION)' | sed "s/\(.*\..*\)\..*/\1/"
 LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
 #LIBRARY_VERSION = 1
 
 autoconfigure: autoconfigure-stamp
-autoconfigure-stamp: debian/control debian/libgimpprint.install debian/libgimpprint-doc.doc-base.developer debian/libgimpprint-doc.doc-base.reference debian/libgimpprint-doc.install
+autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install debian/libgutenprintui.install debian/libgutenprintui2.install
 	dh_testdir
 # Create versioned symlinks
 	cd debian; \
-	for file in libgimpprint*; do \
-	ln -sfv $$file `echo $$file | sed -e 's/\(libgimpprint[[:alpha:]]*\)\(.*\)/\1$(LIBRARY_VERSION)\2/'`; \
+	for file in libgutenprint*; do \
+	ln -sfv $$file `echo $$file | sed -e 's/\(libgutenprint[[:alnum:]]*\)\(.*\)/\1$(LIBRARY_VERSION)\2/'`; \
 	done
-	rm debian/libgimpprint$(LIBRARY_VERSION)*.in
+	rm debian/libgutenprint$(LIBRARY_VERSION)*.in
 	mkdir debian/build; \
 	cd debian/build; \
 	../../configure --host=$(DEB_HOST_GNU_TYPE) \
 	  --build=$(DEB_BUILD_GNU_TYPE) \
 	  --prefix=/usr --mandir=\$${prefix}/share/man \
-	  --enable-static --enable-shared --disable-rpath \
+	  --disable-static --enable-shared --disable-rpath \
 	  --with-modules=dlopen \
-	  --with-gimp --with-cups --with-ijs \
+	  --without-gimp --with-gimp2 --with-cups --with-ijs \
 	  --with-foomatic --with-foomatic3 \
 	  --disable-test \
 	  --enable-cups-level3-ppds --disable-translated-ppds \
-	  --disable-cups-level3-ps --disable-static-genppd \
-	  --enable-maintainer-mode 
+	  --disable-cups-level3-ps --disable-static-genppd
 	touch autoconfigure-stamp
 
 
@@ -72,12 +71,13 @@ clean: debian/control
 	  cp -f /usr/share/misc/config.guess scripts/config.guess
 
 	rm -rf debian/build debian/install
-	rm -rf debian/libgimpprint.install debian/libgimpprint-doc.doc-base.developer debian/libgimpprint-doc.doc-base.reference debian/libgimpprint-doc.install
-	rm -rf debian/libgimpprint$(LIBRARY_VERSION).files
-	rm -rf debian/libgimpprint$(LIBRARY_VERSION).postinst
+	rm -rf debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install
+	rm -rf debian/libgutenprint$(LIBRARY_VERSION).files
+	rm -rf debian/libgutenprint$(LIBRARY_VERSION).postinst
+	rm -rf debian/libgutenprintui.install debian/libgutenprintui2.install
 	-$(MAKE) distclean
 
-	rm -rf $(CURDIR)/debian/libgimpprint*$(LIBRARY_VERSION)*
+	rm -rf $(CURDIR)/debian/libgutenprint*$(LIBRARY_VERSION)*
 	dh_clean
 
 install: DH_OPTIONS=
@@ -94,7 +94,7 @@ install: build debian/control
 
 
 # Build architecture-independent files here.
-binary-indep: build install ChangeLog
+binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
 	dh_installdocs -i
@@ -109,14 +109,14 @@ binary-indep: build install ChangeLog
 	dh_builddeb -i
 
 # Build architecture-dependent files here.
-binary-arch: build install ChangeLog
+binary-arch: build install
 	dh_testdir -a
 	dh_testroot -a
 	dh_installdocs -a
-	  cp src/cups/README debian/cupsys-driver-gimpprint/usr/share/doc/cupsys-driver-gimpprint/README.cups
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppd.5.0.8
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdconfig.5.0.8
-	  mv debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gimpprint/usr/share/man/man8/cups-genppdupdate.5.0.8
+	  cp src/cups/README debian/cupsys-driver-gutenprint/usr/share/doc/cupsys-driver-gutenprint/README.cups
+	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppd.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppd.5.0.8
+	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.5.0.8
+	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.5.0.8
 	dh_installexamples -a
 	dh_installchangelogs -a NEWS
 	dh_strip -a
@@ -124,11 +124,11 @@ binary-arch: build install ChangeLog
 	dh_compress -a
 	dh_fixperms -a
 # Strip DT_RPATH from CUPS binaries.
-	find debian/cupsys-driver-gimpprint/usr/lib -type f -perm +0111 -print0 | xargs -0 chrpath --delete
-	chrpath --delete debian/cupsys-driver-gimpprint/usr/sbin/cups-genppd.5.0
-	dh_makeshlibs -a -V -X usr/lib/gimp-print
+	find debian/cupsys-driver-gutenprint/usr/lib -type f -perm +0111 -print0 | xargs -0 chrpath --delete
+	chrpath --delete debian/cupsys-driver-gutenprint/usr/sbin/cups-genppd.5.0
+	dh_makeshlibs -a -V -X usr/lib/gutenprint
 	dh_installdeb -a
-	dh_shlibdeps -a -X usr/lib/gimp-print -l`pwd`/debian/libgimpprint$(LIBRARY_VERSION)/usr/lib
+	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2$(LIBRARY_VERSION)/usr/lib
 	dh_perl -a
 	dh_gencontrol -a
 	dh_md5sums -a
@@ -136,32 +136,36 @@ binary-arch: build install ChangeLog
 
 binary: binary-indep binary-arch
 
-# Make sure ChangeLog is up-to-date.
-ChangeLog: changelog-stamp
-changelog-stamp: build
-	$(MAKE) ChangeLog
-
 SEDPATTERN = -e "s/\#UPSTREAM_VERSION\#/$(UPSTREAM_VERSION)/g" -e "s/\#LIBRARY_VERSION\#/$(LIBRARY_VERSION)/g"
 
 # Make sure debian/control is up-to-date.
 debian/control: debian/control.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
-# Make sure debian/libgimpprint-doc.doc-base is up-to-date.
-debian/libgimpprint-doc.doc-base.developer: debian/libgimpprint-doc.doc-base.developer.in debian/changelog
+# Make sure debian/libgutenprint-doc.doc-base is up-to-date.
+debian/libgutenprint-doc.doc-base.developer: debian/libgutenprint-doc.doc-base.developer.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
-# Make sure debian/libgimpprint-doc.doc-base is up-to-date.
-debian/libgimpprint-doc.doc-base.reference: debian/libgimpprint-doc.doc-base.reference.in debian/changelog
+# Make sure debian/libgutenprint-doc.doc-base is up-to-date.
+debian/libgutenprint-doc.doc-base.reference: debian/libgutenprint-doc.doc-base.reference.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
-# Make sure debian/libgimpprint-doc.install is up-to-date.
-debian/libgimpprint.install: debian/libgimpprint.install.in debian/changelog
+# Make sure debian/libgutenprint-doc.install is up-to-date.
+debian/libgutenprint.install: debian/libgutenprint.install.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
-# Make sure debian/libgimpprint-doc.install is up-to-date.
-debian/libgimpprint-doc.install: debian/libgimpprint-doc.install.in debian/changelog
+# Make sure debian/libgutenprint-doc.install is up-to-date.
+debian/libgutenprint-doc.install: debian/libgutenprint-doc.install.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
+
+# Make sure debian/libgutenprintui.install is up-to-date.
+debian/libgutenprintui.install: debian/libgutenprintui.install.in debian/changelog
+	sed $(SEDPATTERN) <$< >$@
+
+# Make sure debian/libgutenprintui2.install is up-to-date.
+debian/libgutenprintui2.install: debian/libgutenprintui2.install.in debian/changelog
+	sed $(SEDPATTERN) <$< >$@
+
 
 
 # Make sure that configure is up-to-date.

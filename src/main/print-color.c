@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Gimp-Print color management module - traditional Gimp-Print algorithm.
+ *   Gutenprint color management module - traditional Gutenprint algorithm.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
@@ -29,10 +29,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
-#include <gimp-print/curve-cache.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
+#include <gutenprint/curve-cache.h>
 #include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
@@ -1345,48 +1345,48 @@ initialize_standard_curves(void)
       int i;
       hue_map_bounds = stp_curve_create_from_string
 	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 "<gimp-print>\n"
+	 "<gutenprint>\n"
 	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 	 "<sequence count=\"2\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 	 "0 0\n"
 	 "</sequence>\n"
 	 "</curve>\n"
-	 "</gimp-print>");
+	 "</gutenprint>");
       lum_map_bounds = stp_curve_create_from_string
 	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 "<gimp-print>\n"
+	 "<gutenprint>\n"
 	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
 	 "1 1\n"
 	 "</sequence>\n"
 	 "</curve>\n"
-	 "</gimp-print>");
+	 "</gutenprint>");
       sat_map_bounds = stp_curve_create_from_string
 	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 "<gimp-print>\n"
+	 "<gutenprint>\n"
 	 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
 	 "1 1\n"
 	 "</sequence>\n"
 	 "</curve>\n"
-	 "</gimp-print>");
+	 "</gutenprint>");
       color_curve_bounds = stp_curve_create_from_string
 	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 "<gimp-print>\n"
+	 "<gutenprint>\n"
 	 "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1.0\">\n"
 	 "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"1\">\n"
 	 "</sequence>\n"
 	 "</curve>\n"
-	 "</gimp-print>");
+	 "</gutenprint>");
       gcr_curve_bounds = stp_curve_create_from_string
 	("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	 "<gimp-print>\n"
+	 "<gutenprint>\n"
 	 "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0.0\">\n"
 	 "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"1\">\n"
 	 "1 1\n"
 	 "</sequence>\n"
 	 "</curve>\n"
-	 "</gimp-print>");
+	 "</gutenprint>");
       for (i = 0; i < curve_parameter_count; i++)
 	curve_parameters[i].param.deflt.curve =
 	 *(curve_parameters[i].defval);
@@ -1599,7 +1599,7 @@ static const stp_colorfuncs_t stpi_color_traditional_colorfuncs =
 static const stp_color_t stpi_color_traditional_module_data =
   {
     "traditional",
-    N_("Traditional Gimp-Print color conversion"),
+    N_("Traditional Gutenprint color conversion"),
     &stpi_color_traditional_colorfuncs
   };
 
@@ -1628,7 +1628,7 @@ stp_module_t stp_module_data =
   {
     "traditional",
     VERSION,
-    "Traditional Gimp-Print color conversion",
+    "Traditional Gutenprint color conversion",
     STP_MODULE_CLASS_COLOR,
     NULL,
     color_traditional_module_init,

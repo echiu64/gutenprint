@@ -67,12 +67,8 @@
 
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
-#include <gimp-print-internal.h>
+#include <gutenprint/gutenprint.h>
+#include <gutenprint-internal.h>
 
 const char header[] = "Legend:\n"
 "A  Negative pass number.\n"

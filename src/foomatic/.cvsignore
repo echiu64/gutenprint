@@ -6,7 +6,7 @@ printer_options
 foomatic-db
 foomatic-generator
 paper_sizes
-gimp-print-version
+gutenprint-version
 foomatic-stamp
 mk_printerlist
 printers

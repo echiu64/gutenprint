@@ -1,5 +1,5 @@
 .\" $Id$
-.\" Copyright (C) 2000 Roger Leigh <rleigh@debian.org>
+.\" Copyright (C) 2000-2004 Roger Leigh <rleigh@debian.org>
 .\"
 .\" This program is free software; you can redistribute it and/or modify
 .\" it under the terms of the GNU General Public License as published by
@@ -14,21 +14,21 @@
 .\" You should have received a copy of the GNU General Public License
 .\" along with this program; if not, write to the Free Software
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-.TH CUPS\-CALIBRATE "8" "@RELEASE_DATE@" "Version @GIMPPRINT_VERSION@" "Gimp-Print Manual Pages"
+.TH CUPS\-CALIBRATE "8" "@RELEASE_DATE@" "Version @GUTENPRINT_VERSION@" "Gutenprint Manual Pages"
 .SH NAME
 cups\-calibrate \- ESP CUPS Printer Calibration Tool
 .SH SYNOPSIS
 .B cups\-calibrate
 .SH DESCRIPTION
 This program allows you to calibrate the color output of printers using the
-\fBGimp-Print\fR \fICUPS\fR or \fIESP Print Pro\fR drivers.
+\fBGutenprint\fR \fICUPS\fR or \fIESP Print Pro\fR drivers.
 .PP
-Please note that this program \fBonly\fP works with the \fBGimp-Print\fR
-\fICUPS\fR or \fIESP Print Pro\fR drivers. If you are using the Gimp-Print
+Please note that this program \fBonly\fP works with the \fBGutenprint\fR
+\fICUPS\fR or \fIESP Print Pro\fR drivers. If you are using the Gutenprint
 \fIstp\fR or \fIijsgimmprint\fR driver for GhostScript or the drivers for the
-Gimp-Print plug-in for \fIThe GIMP\fR, the calibration will not work.
+Gutenprint Print plug-in for \fIThe GIMP\fR, the calibration will not work.
 .PP
-These drivers are identified by the text \fICUPS+GIMP\-print\fR or \fIESP Print
+These drivers are identified by the text \fICUPS+Gutenprint\fR or \fIESP Print
 Pro\fR in the model description displayed by the CUPS web interface, KUPS, the
 ESP Print Pro Printer Manager, or printerdrake.
 .PP

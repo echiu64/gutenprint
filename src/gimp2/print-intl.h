@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   I18N header file for the gimp-print plugin.
+ *   I18N header file for the GIMP2 Print plugin.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
@@ -20,11 +20,11 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-#ifndef __PRINT_INTL_H__
-#define __PRINT_INTL_H__
+#ifndef GIMP2_PRINT_INTL_H
+#define GIMP2_PRINT_INTL_H
 
 #include <glib.h>
-#include <gimp-print/gimp-print-intl.h>
+#include <gutenprint/gutenprint-intl.h>
 
 #define INIT_LOCALE(domain)   					\
 do								\
@@ -35,4 +35,4 @@ do								\
         textdomain (domain);					\
 } while (0)
 
-#endif /* __PRINT_INTL_H__ */
+#endif /* GIMP2_PRINT_INTL_H */

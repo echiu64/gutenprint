@@ -1,14 +1,14 @@
 
- <chapter><title>CUPS and Gimp-Print</title>
+ <chapter><title>CUPS and Gutenprint</title>
    <sect1><title>Introduction</title>
      <para>
        CUPS is an acronym which stands for <emphasis>C</emphasis>ommon
 <emphasis>U</emphasis>nix <emphasis>P</emphasis>rinting
 <emphasis>S</emphasis>ystem.  It is assumed that the reader has
-properly installed the CUPS software and the Gimp-Print software.
+properly installed the CUPS software and the Gutenprint software.
 This section will discuss adding a printer to CUPS that uses a
-Gimp-Print printer driver, as well as how to modify the various
-settings supplied by Gimp-Print. This will be a rather quick
+Gutenprint printer driver, as well as how to modify the various
+settings supplied by Gutenprint. This will be a rather quick
 explanation, as the CUPS software is quite well documented, and it is
 not my intention to attempt to duplicate the CUPS documentation here.
      </para>
@@ -162,8 +162,8 @@ supported for each printer, as denoted by the initials in parenthesis.
 (en) would be for English, (da) for Danish, (sv) for Swedish, (fr) for
 French, (no) for Norwegian, (pl) for Polish, and (en_GB) for British
 English (see <xref linkend="fig-cups-admin-model">).  Also take note
-of the Gimp-Print revision for the driver, and ensure that it is
-indeed the version of Gimp-Print which you have most recently
+of the Gutenprint revision for the driver, and ensure that it is
+indeed the version of Gutenprint which you have most recently
 installed.  Once you have made the proper selection, click on the
 <guibutton>Continue</guibutton> button. 
    </para>
@@ -213,7 +213,7 @@ After clicking on your_printer (epson_870 in this example), a window
 will appear similar to that shown in <xref linkend="fig-cups-my-printer">.
 It would probably be a good idea at this point to click on the
 <guibutton>Print Test Page</guibutton> button to ensure that
-everything is working properly.  Take note of the Gimp-Print revision
+everything is working properly.  Take note of the Gutenprint revision
 printed on this screen and confirm once again that it is the expected
 revision.
    </para>
@@ -232,10 +232,10 @@ printer you selected when you configured CUPS for your printer.  The
 screenshot shows the selections made by the author for his printer.
 The individual selections will not be explained in detail here, as
 they are the same selections which are available when using the
-Gimp-Print plugin to the GIMP.  These selections are explained in
+Gutenprint plugin to the GIMP.  These selections are explained in
 detail in various sections of the <emphasis>GIMP and
-Gimp-Print</emphasis> chapter of <emphasis>The User's Guide to the
-Gimp-Print Top Quality Printer Drivers</emphasis>.
+Gutenprint</emphasis> chapter of <emphasis>The User's Guide to the
+Gutenprint Top Quality Printer Drivers</emphasis>.
    </para>
 
    <figure id="fig-cups-printer-config-window"><title>The CUPS Printer Cofiguration Window</title>
@@ -258,7 +258,7 @@ Gimp-Print Top Quality Printer Drivers</emphasis>.
     It is possible to use the CUPS printing system from the command
 line.  While this document will not delve into all of the specifics of
 the CUPS command line interface, there are portions of this interface
-which are specific to the Gimp-Print software.
+which are specific to the Gutenprint software.
    </para>
 
    <para>
@@ -267,7 +267,7 @@ printed output (e.g. when printing from a script).  However, most
 people (including the author) cannot easily predict what a command
 line option of "-o stpCyan=1350" will do to the output.  It is
 therefore a good idea to use the GIMP to view the image and the
-Gimp-Print plugin to preview these settings before relying on the
+Gutenprint plugin to preview these settings before relying on the
 command line.
    </para>
 
@@ -286,7 +286,7 @@ general format:
 
 When typing the command directly onto the command line, put all of the
 command line options on one line, and do not type the "\" characters.
-The list of possible options which are specific to Gimp-Print,
+The list of possible options which are specific to Gutenprint,
 followed by some of the supported choices, are shown below:
 
    <programlisting>
@@ -311,8 +311,8 @@ followed by some of the supported choices, are shown below:
    </programlisting>
 
 For more detailed information, consult the appropriate sections of the <emphasis>GIMP and
-Gimp-Print</emphasis> chapter of <emphasis>The User's Guide to the
-Gimp-Print Top Quality Printer Drivers</emphasis>.
+Gutenprint</emphasis> chapter of <emphasis>The User's Guide to the
+Gutenprint Top Quality Printer Drivers</emphasis>.
    </para>
 
    </sect1>

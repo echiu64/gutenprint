@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 
 <!--
-   XML description of printers known to libgimpprint
+   XML description of printers known to libgutenprint
    This file was originally generated.  It should be edited by hand.
 
    "$Id$"
 -->
 
-<gimp-print xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd">
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
   <printdef>
     <family name="ps">
       <printer name="PostScript Level 1" driver="ps" manufacturer="Adobe" model="0">
@@ -1127,4 +1127,4 @@
       </printer>
     </family>
   </printdef>
-</gimp-print>
+</gutenprint>

@@ -26,6 +26,8 @@
  *   See ChangeLog
  */
 
+#ifndef GUTENPRINT_INTERNAL_DITHER_INLINED_FUNCTIONS_H
+#define GUTENPRINT_INTERNAL_DITHER_INLINED_FUNCTIONS_H
 
 /*
  * Inlining has yielded significant (measured) speedup, even with the
@@ -79,3 +81,5 @@ set_row_ends(stpi_dither_channel_t *dc, int x)
     dc->row_ends[0] = x;
   dc->row_ends[1] = x;
 }
+
+#endif /* GUTENPRINT_INTERNAL_DITHER_INLINED_FUNCTIONS_H */

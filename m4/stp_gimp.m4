@@ -1,4 +1,4 @@
-# This file is part of Gimp-Print.                     -*- Autoconf -*-
+# This file is part of Gutenprint.                     -*- Autoconf -*-
 # GIMP support.
 # Copyright 2000-2002 Roger Leigh
 #

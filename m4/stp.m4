@@ -1,5 +1,5 @@
-# This file is part of Gimp-Print.                     -*- Autoconf -*-
-# Gimp-Print Autoconf support.
+# This file is part of Gutenprint.                     -*- Autoconf -*-
+# Gutenprint Autoconf support.
 # Copyright 2001-2002 Roger Leigh
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 
 # STP_INIT
 # --------
-# Initialise Gimp-Print autoconf macros.  Turn on error detection of
+# Initialise Gutenprint autoconf macros.  Turn on error detection of
 # STP_* macros
 AC_DEFUN([STP_INIT],
 [m4_pattern_forbid([STP_])])

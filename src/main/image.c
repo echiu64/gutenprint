@@ -24,8 +24,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
 
 void
 stp_image_init(stp_image_t *image)

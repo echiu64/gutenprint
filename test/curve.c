@@ -31,11 +31,7 @@
 
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
-#ifdef INCLUDE_GIMP_PRINT_H
-#include INCLUDE_GIMP_PRINT_H
-#else
-#include <gimp-print/gimp-print.h>
-#endif
+#include <gutenprint/gutenprint.h>
 
 int global_test_count = 0;
 int global_error_count = 0;
@@ -174,23 +170,23 @@ static const stp_curve_point_t standard_piecewise_sat_adjustment[] =
 
 const char *small_piecewise_curve = 
 "<?xml version=\"1.0\"?>\n"
-"<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+"<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
 "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-"xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+"xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
 "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"4\">\n"
 "0 0.5 0.1 0.6 1.00 0.51\n"
 "</sequence>\n"
 "</curve>\n"
-"</gimp-print>\n";
+"</gutenprint>\n";
 
 const char *good_curves[] =
   {
     /* Space separated, in same layout as output for comparison */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87 0.9 0.95 1.05 1.15\n"
@@ -198,13 +194,13 @@ const char *good_curves[] =
     "0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Space separated, in same layout as output for comparison */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87 0.9 0.95 1.05 1.15\n"
@@ -212,13 +208,13 @@ const char *good_curves[] =
     "0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Space separated, in same layout as output for comparison */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"wrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87 0.9 0.95 1.05 1.15\n"
@@ -226,13 +222,13 @@ const char *good_curves[] =
     "0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Space separated, in same layout as output for comparison */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8 0.83 0.87 0.9 0.95 1.05 1.15\n"
@@ -240,12 +236,12 @@ const char *good_curves[] =
     "0.6 0.55 0.52 0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
     "<sequence count=\"96\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0 0.5 0.02 0.6 0.04 0.7 0.06 0.8 0.08 0.9 0.1 0.86 0.12 0.82 0.14 0.79 0.16\n"
@@ -256,38 +252,38 @@ const char *good_curves[] =
     "0.47 0.86 0.49 0.88 0.49 0.9 0.49 0.93 0.52 0.96 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
     "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0 0.5 0.02 0.6 0.96 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Gamma curve 1 */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\" piecewise=\"false\">\n"
     "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Gamma curve 2 */
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\" piecewise=\"false\">\n"
     "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
     "</curve>\n"
-    "</gimp-print>\n"
+    "</gutenprint>\n"
   };
 
 static const int good_curve_count = sizeof(good_curves) / sizeof(const char *);
@@ -296,125 +292,125 @@ const char *bad_curves[] =
   {
     /* Bad point count */
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"-1\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8\n"
     "0.83 0.87 0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15\n"
     "1.12 1.09 1.06 1.03 1 1 1 1 1 1\n"
     "1 1 1 0.9 0.8 0.7 0.65 0.6 0.55 0.52\n"
     "0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
-    "</sequence></curve></gimp-print>\n",
+    "</sequence></curve></gutenprint>\n",
 
     /* Bad point count */
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
     "<sequence count=\"200\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.5 0.6 0.7 0.8 0.9 0.86 0.82 0.79 0.78 0.8\n"
     "0.83 0.87 0.9 0.95 1.05 1.15 1.3 1.25 1.2 1.15\n"
     "1.12 1.09 1.06 1.03 1 1 1 1 1 1\n"
     "1 1 1 0.9 0.8 0.7 0.65 0.6 0.55 0.52\n"
     "0.48 0.47 0.47 0.49 0.49 0.49 0.52 0.51\n"
-    "</sequence></curve></gimp-print>\n",
+    "</sequence></curve></gutenprint>\n",
 
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
     "<sequence count=\"5\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0 0.5 0.02 0.6 0.96\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
     "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0 0.5 0.02 0.6 0.96 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     "<?xml version=\"1.0\"?>\n"
-    "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
+    "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
     "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
+    "xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"true\">\n"
     "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"4\">\n"
     "0.01 0.5 0.02 0.6 1.0 0.51\n"
     "</sequence>\n"
     "</curve>\n"
-    "</gimp-print>\n",
+    "</gutenprint>\n",
 
     /* Gamma curves */
     /* Incorrect wrap mode */
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
     "<sequence count=\"-1\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "</sequence></curve></gimp-print>\n",
+    "</sequence></curve></gutenprint>\n",
 
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
     "<sequence count=\"1\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "</sequence></curve></gimp-print>\n",
+    "</sequence></curve></gutenprint>\n",
 
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
     "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "</sequence></curve></gimp-print>\n",
+    "</sequence></curve></gutenprint>\n",
 
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    "<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
+    "<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"1.0\" piecewise=\"false\">\n"
     "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "</sequence></curve></gimp-print>\n"
+    "</sequence></curve></gutenprint>\n"
   };
 
 static const int bad_curve_count = sizeof(bad_curves) / sizeof(const char *);
 
 const char *linear_curve_1 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 const char *linear_curve_2 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 const char *linear_curve_3 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"nowrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 const char *linear_curve_4 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"wrap\" type=\"linear\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 const char *spline_curve_1 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 const char *spline_curve_2 =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gimp-print><curve wrap=\"wrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
+"<gutenprint><curve wrap=\"wrap\" type=\"spline\" gamma=\"0\" piecewise=\"false\">\n"
 "<sequence count=\"6\" lower-bound=\"0\" upper-bound=\"1\">\n"
 "0 0 0 1 1 1"
-"</sequence></curve></gimp-print>";
+"</sequence></curve></gutenprint>";
 
 static void
 piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)

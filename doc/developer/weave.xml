@@ -119,7 +119,7 @@
       The information about how to do this is apparently available
       under non-disclosure agreement (NDA).  It's actually easy enough
       to reverse engineer what's inside a print file with a simple
-      Perl script, which is supplied with the Gimp-Print distribution
+      Perl script, which is supplied with the Gutenprint distribution
       as tests/parse-escp2.  In any event, we weren't particularly
       interested in the weaving patterns Epson used.  There are many
       factors that go into choosing a good weaving pattern; we're

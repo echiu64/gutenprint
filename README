@@ -1,7 +1,7 @@
 INTRODUCTION
 
-    This is Gimp-Print version 5.0.0 Beta 2, the second beta
-    prerelease of Gimp-Print 5.0.  Gimp-Print is a suite of printer
+    This is Gutenprint version 5.0.0 Beta 2, the second beta
+    prerelease of Gutenprint 5.0.  Gutenprint is a suite of printer
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
     provide high quality printing for UNIX (including Macintosh OS X
@@ -10,8 +10,11 @@ INTRODUCTION
     of the most demanding printing tasks.  A complete list of
     supported printers may be found in the NEWS file.
 
-    Gimp-Print also includes a plug-in for the GIMP image editor.
+    Gutenprint also includes a plug-in for the GIMP image editor.
     This plug-in is also distributed with the GIMP.
+
+    Gutenprint was previously known as Gimp-Print.  The name was
+    changed prior to the 5.0.0 release.
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite
@@ -30,7 +33,7 @@ INTRODUCTION
 
 BASIC INSTALLATION
 
-    Gimp-Print includes the following primary components:
+    Gutenprint includes the following primary components:
 
       - The core driver, libgimpprint.so
       - A user's manual
@@ -40,7 +43,7 @@ BASIC INSTALLATION
       - Support for the Foomatic spooler configuration system
       - A utility to administer Epson printers, escputil
 
-    By default, Gimp-Print builds the Print plugin for the GIMP, the
+    By default, Gutenprint builds the Print plugin for the GIMP, the
     user's manual, and a utility to perform head cleaning, nozzle
     alignment, and other tasks on EPSON Stylus inkjet printers, named
     "escputil".  Directions for building other components are listed
@@ -51,7 +54,7 @@ BASIC INSTALLATION
 
     Please report any problems to gimp-print-devel@sourceforge.net.
 
-    In general, to build Gimp-Print, you run the following commands:
+    In general, to build Gutenprint, you run the following commands:
 
     ./configure [options]
     make
@@ -79,7 +82,7 @@ BASIC INSTALLATION
 
 THE GIMP
 
-    Gimp-Print may be used as a plug-in for the GIMP, providing the
+    Gutenprint may be used as a plug-in for the GIMP, providing the
     ability to print images.  If you wish to do so, you must use the
     GIMP 1.2.3 or above on the 1.2 line, or the GIMP 2.0 or 2.1.
     Please read the release notes in addition to this README, as there
@@ -119,13 +122,13 @@ THE GIMP
     make install, you must run ldconfig as root before attempting to
     build this plugin.
 
-    The GIMP 1.2 will not be supported in Gimp-Print 5.1 and beyond.
-    However, all Gimp-Print 5.0 releases will support The GIMP 1.2.
+    The GIMP 1.2 will not be supported in Gutenprint 5.1 and beyond.
+    However, all Gutenprint 5.0 releases will support The GIMP 1.2.
 
     The GIMP 2.0 plugin will eventually be migrated to The GIMP
     project for The GIMP 2.2 release.  It may be removed from the
-    Gimp-Print distribution following Gimp-Print 5.0, and it may not
-    support releases of The GIMP other than 2.0 in the Gimp-Print 5.0
+    Gutenprint distribution following Gutenprint 5.0, and it may not
+    support releases of The GIMP other than 2.0 in the Gutenprint 5.0
     release.
 
 
@@ -164,14 +167,14 @@ CUPS
     printer), as described below.
 
     Following this, you must reinstall any printers that you are using
-    Gimp-Print PPD's with.  Such printers may be identified in any
+    Gutenprint PPD's with.  Such printers may be identified in any
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
 
     If the version number (in this case, 5.0.0-beta2) does not match
-    the version of Gimp-Print that you are installing, you must use
+    the version of Gutenprint that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
 
@@ -201,15 +204,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(en)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(sv)
-		    EPSON Stylus Photo EX - CUPS+Gimp-Print v5.0.0-beta2(fr)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(sv)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta2(fr)
 
     you may wish to turn off the translation of PPD files:
 
@@ -257,12 +260,12 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
 
 FOOMATIC
 
-    Gimp-Print includes support for the Foomatic meta-driver package.
+    Gutenprint includes support for the Foomatic meta-driver package.
     This requires the foomatic-xml distribution.  Foomatic is
     available from http://www.linuxprinting.org/foomatic.html.  It is
     also available in Debian unstable.  For best results, use the
     version in cvs.  The first version of Foomatic (the one used with
-    Gimp-Print 4.0) is not compatible with Gimp-Print 5.0.  Note that
+    Gimp-Print 4.0) is not compatible with Gutenprint 5.0.  Note that
     the Foomatic driver is named `stp' in Gimp-Print 4.0; in
     Gimp-Print 4.2 (and early 4.3) it is named `gimp-print' for the
     Ghostscript ("stp") driver and "gimp-print-ijs" for the IJS
@@ -336,7 +339,7 @@ FOOMATIC
 
 GHOSTSCRIPT
 
-    Gimp-Print includes an IJS-based Ghostscript driver.  As
+    Gutenprint includes an IJS-based Ghostscript driver.  As
     paraphrased from the Ghostscript documentation, IJS is a
     relatively new initiative to improve the quality and ease of use
     of inkjet printing with Ghostscript.  Using IJS, one can add new
@@ -369,7 +372,7 @@ GHOSTSCRIPT
     Foomatic to configure printer queues.  CUPS is very easy to
     install, configure, and use, and is the recommended solution.
 
-    Gimp-Print 5.0 no longer provides the monolithic "stp" driver
+    Gutenprint 5.0 no longer provides the monolithic "stp" driver
     present in 4.2.  This driver, which was linked directly into
     Ghostscript, was very difficult to maintain and required a complex
     integration procedure.
@@ -566,7 +569,7 @@ KNOWN BUILD ISSUES
       variable, LANGUAGE, which unconditionally looks up translations
       according to the language, ignoring LANG and the LC_*
       environment variables that are normally used for translation.
-      This library is no longer included with Gimp-Print
+      This library is no longer included with Gutenprint
       (--with-included-gettext will not work).  Install the GNU
       gettext package first if you need libintl.a.  Many systems
       provide translation machinery in their standard libraries, and
@@ -645,7 +648,7 @@ PACKAGING
 
       /usr/lib/libgimpprint.so.1.0 (the core shared library)
       /usr/bin/escputil (Epson Stylus utility)
-      /usr/bin/ijsgimpprint (Gimp-Print Ghostscript IJS plug-in driver)
+      /usr/bin/ijsgimpprint (Gutenprint Ghostscript IJS plug-in driver)
       /usr/share/gimp-print/doc/html (HTML documentation)
       /usr/share/gimp-print/doc/users-guide.pdf
       /usr/share/gimp-print/doc/users-guide.ps
@@ -668,8 +671,8 @@ PACKAGING
       include test patterns of your own.  You may also wish to include
       the various unprint programs and the parse-* scripts from the
       test directory, although these are typically of more use to
-      developers of the Gimp-Print package per se than developers of
-      applications layered on Gimp-Print.  However, the test programs
+      developers of the Gutenprint package per se than developers of
+      applications layered on Gutenprint.  However, the test programs
       have received less testing than the others, and are known to
       have some limitations that are not documented.
 
@@ -740,7 +743,7 @@ PACKAGING
       subscribe to the gimp-print-devel@sourceforge.net mailing list
       to monitor development activities.  When reporting a problem
       related to building the package for distribution, please
-      identify yourself as such.  The Gimp-Print package is primarily
+      identify yourself as such.  The Gutenprint package is primarily
       an infrastructure package, rather than an end-user application,
       and as such we particularly want to fix any problems that
       interfere with building and distribution of this package on any
@@ -760,7 +763,7 @@ DEBIAN
     cupsys-driver-gimpprint The CUPS driver and PPD files.
     ijsgimpprint	    Ghostscript IJS server.
     foomatic-db-gimpprint   Foomatic data files for gimp-print drivers.
-    libgimpprint1	    The libgimpprint library (Gimp-Print core).
+    libgimpprint1	    The libgimpprint library (Gutenprint core).
     libgimpprint1-dev	    Headers, symlinks, m4 macro
 			    (AM_PATH_GIMPPRINT) and gimpprint-config
 			    needed to develop programs that link with

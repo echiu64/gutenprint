@@ -29,9 +29,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
+#include <gutenprint/gutenprint.h>
+#include "gutenprint-internal.h"
+#include <gutenprint/gutenprint-intl-internal.h>
 #include <math.h>
 #include <limits.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
@@ -311,7 +311,7 @@ stpi_init_debug(void)
       if (dval)
 	{
 	  stpi_debug_level = strtoul(dval, 0, 0);
-	  stp_erprintf("Gimp-Print %s %s\n", VERSION, RELEASE_DATE);
+	  stp_erprintf("Gutenprint %s %s\n", VERSION, RELEASE_DATE);
 	}
     }
 }

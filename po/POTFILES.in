@@ -33,10 +33,15 @@ src/main/string-list.c
 src/main/xmli18n-tmp.h
 
 # UI library sources
-src/libgimpprintui/panel.c
-src/libgimpprintui/plist.c
-src/libgimpprintui/print-image-thumbnail.c
-src/libgimpprintui/ui-utils.c
+src/gutenprintui/panel.c
+src/gutenprintui/plist.c
+src/gutenprintui/print-image-thumbnail.c
+src/gutenprintui/ui-utils.c
+
+src/gutenprintui2/panel.c
+src/gutenprintui2/plist.c
+src/gutenprintui2/print-image-thumbnail.c
+src/gutenprintui2/ui-utils.c
 
 # CUPS sources
 src/cups/genppd.c
@@ -52,5 +57,5 @@ src/gimp/print.c
 src/foomatic/printer_options.c
 
 # Ghostscript IJS driver
-src/ghost/ijsgimpprint.c
+src/ghost/ijsgutenprint.c
 

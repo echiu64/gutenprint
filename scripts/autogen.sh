@@ -30,7 +30,7 @@ test "$libtool_major" -le 1 && {
 } && {
   echo
   echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
-  echo "create a gimp-print distribution.  Earlier versions of gettext do"
+  echo "create a gutenprint distribution.  Earlier versions of gettext do"
   echo "not generate correct code for all platforms."
   echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
   echo "(or a newer version if it is available)"
@@ -39,7 +39,7 @@ test "$libtool_major" -le 1 && {
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autoconf' installed to compile gimp-print."
+  echo "**Error**: You must have \`autoconf' installed to compile gutenprint."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
   DIE=1
@@ -52,7 +52,7 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
 (grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   (libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`libtool' installed to compile gimp-print."
+    echo "**Error**: You must have \`libtool' installed to compile gutenprint."
     echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.4.3.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -63,7 +63,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   grep "sed.*POTFILES" $srcdir/configure.ac >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`gettext' installed to compile gimp-print."
+    echo "**Error**: You must have \`gettext' installed to compile gutenprint."
     echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -72,7 +72,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
 
 (pkg-config --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`pkg-config' installed to compile gimp-print."
+  echo "**Error**: You must have \`pkg-config' installed to compile gutenprint."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at http://www.freedesktop.org/"
   DIE=1
@@ -95,7 +95,7 @@ test "$gettext_major" -eq 0 && {
 } && {
   echo
   echo "**Warning**: You must have \`gettext' 0.11.5 or newer installed to"
-  echo "create a gimp-print distribution.  Earlier versions of gettext do"
+  echo "create a gutenprint distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
   echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.10.40.tar.gz"
   echo "(or a newer version if it is available)"
@@ -103,7 +103,7 @@ test "$gettext_major" -eq 0 && {
 
 (autopoint --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autopoint' installed to compile gimp-print."
+  echo "**Error**: You must have \`autopoint' installed to compile gutenprint."
   echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
@@ -112,7 +112,7 @@ test "$gettext_major" -eq 0 && {
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`automake' installed to compile gimp-print."
+  echo "**Error**: You must have \`automake' installed to compile gutenprint."
   echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.7.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
@@ -156,7 +156,7 @@ test "$jade_err" -eq 0 && {
   test "$jade_err" -eq 1 && {
     echo " "
     echo "***Warning***: You must have \"Jade\" version 1.2.1 or"
-    echo "newer installed to build the Gimp-Print user's guide."
+    echo "newer installed to build the Gutenprint user's guide."
     echo "Get ftp://ftp.jclark.com/pub/jade/jade-1.2.1.tar.gz"
     echo "(or a newer version if available)"
     echo " "
@@ -170,7 +170,7 @@ dvipsloc=`type -p dvips`
 test -z "$dvipsloc" && {
   echo " "
   echo "***Warning***: You must have \"dvips\" installed to"
-  echo "build the Gimp-Print user's guide."
+  echo "build the Gutenprint user's guide."
   echo " "
 }
 
@@ -181,7 +181,7 @@ jadetexloc=`type -p jadetex`
 test -z "$jadetexloc" && {
   echo " "
   echo "***Warning***: You must have \"jadetex\" version 3.5 or"
-  echo "newer installed to build the Gimp-Print user's guide."
+  echo "newer installed to build the Gutenprint user's guide."
   echo "Get ftp://prdownloads.sourceforge.net/jadetex/jadetex-3.5.tar.gz"
   echo "(or a newer version if available)"
   echo " "
@@ -210,7 +210,7 @@ test "$openjade_err" -eq 0 && {
   test "$openjade_err" -eq 1 && {
     echo " "
     echo "***Warning***: You must have \"OpenJade\" version 1.3 or"
-    echo "newer installed to build the Gimp-Print user's guide."
+    echo "newer installed to build the Gutenprint user's guide."
     echo "Get http://download.sourceforge.net/openjade/openjade-1.3.tar.gz"
     echo "(or a newer version if available)"
     echo " "
@@ -224,7 +224,7 @@ ps2pdfloc=`type -p ps2pdf`
 test -z "ps2pdfloc" && {
   echo " "
   echo "***Warning***: You must have \"ps2pdf\" installed to"
-  echo "build the Gimp-Print user's guide."
+  echo "build the Gutenprint user's guide."
   echo "\"ps2pdf\" comes from the GNU Ghostscript software package."
   echo "Get ftp://ftp.gnu.org/gnu/ghostscript/ghostscript-6.5.1.tar.gz"
   echo "(or a newer version if available)"
@@ -256,7 +256,7 @@ test "$sgmltools_err" -eq 0 && {
   test "$sgmltools_err" -eq 1 && {
     echo " "
     echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
-    echo "or newer installed to build the Gimp-Print user's guide."
+    echo "or newer installed to build the Gutenprint user's guide."
     echo "Get http://prdownloads.sourceforge.net/projects/sgmltools-lite/sgmltools-lite-3.0.2.tar.gz"
     echo "(or a newer version if available)"
     echo " "
@@ -269,7 +269,7 @@ convertloc=`type -p convert`
 test -z "$convertloc" && {
   echo " "
   echo "***Warning***: You must have \"convert\" installed to"
-  echo "build the Gimp-Print user's guide."
+  echo "build the Gutenprint user's guide."
   echo "\"convert\" comes from the ImageMagick software package."
   echo "Go to http://imagemagick.sourceforge.net/http and get"
   echo "the file ImageMagick-5.3.1.tar.gz"
@@ -284,7 +284,7 @@ test -z "$convertloc" && {
 } || {
   echo " "
   echo "***Warning***: You must have "Docbook v4" installed to"
-  echo "build the Gimp-Print user's guide."
+  echo "build the Gutenprint user's guide."
   echo " "
 }
 

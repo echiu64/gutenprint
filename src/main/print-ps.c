@@ -29,9 +29,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include <gimp-print/gimp-print-intl-internal.h>
-#include "gimp-print-internal.h"
+#include <gutenprint/gutenprint.h>
+#include <gutenprint/gutenprint-intl-internal.h>
+#include "gutenprint-internal.h"
 #include <time.h>
 #include <string.h>
 #ifdef HAVE_LIMITS_H
@@ -479,10 +479,10 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 
   stp_puts("%!PS-Adobe-3.0\n", v);
 #ifdef HAVE_CONFIG_H
-  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print %s (%s)\n",
+  stp_zprintf(v, "%%%%Creator: %s/Gutenprint %s (%s)\n",
 	      stp_image_get_appname(image), VERSION, RELEASE_DATE);
 #else
-  stp_zprintf(v, "%%%%Creator: %s/Gimp-Print\n", stp_image_get_appname(image));
+  stp_zprintf(v, "%%%%Creator: %s/Gutenprint\n", stp_image_get_appname(image));
 #endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
   stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
