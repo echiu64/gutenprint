@@ -433,7 +433,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (fp != NULL)
     fclose(fp);
 
-  printf("\r%s Total dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
+  printf("\r%-40s Total dither time for %d pixels is %.3f seconds, or %.2f pixels/sec.\n",
          filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
 	 (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
   return 0;
