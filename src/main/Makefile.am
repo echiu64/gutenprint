@@ -39,7 +39,7 @@ pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
 ## Programs
 
 if BUILD_MODULES
-pkgmodule_LTLIBRARIES = canon.la escp2.la lexmark.la pcl.la ps.la raw.la
+pkgmodule_LTLIBRARIES = canon.la escp2.la lexmark.la pcl.la ps.la olympus.la raw.la
 endif
 
 canon_la_SOURCES = print-canon.c
@@ -65,6 +65,9 @@ pcl_la_LDFLAGS = -module -avoid-version
 ps_la_SOURCES = print-ps.c
 ps_la_LDFLAGS = -module -avoid-version
 
+olympus_la_SOURCES = print-olympus.c
+olympus_la_LDFLAGS = -module -avoid-version
+
 raw_la_SOURCES = print-raw.c
 raw_la_LDFLAGS = -module -avoid-version
 
@@ -76,6 +79,7 @@ module_SOURCES = \
 	$(lexmark_la_SOURCES) \
 	$(pcl_la_SOURCES) \
 	$(ps_la_SOURCES) \
+	$(olympus_la_SOURCES) \
 	$(raw_la_SOURCES)
 
 if !BUILD_MODULES

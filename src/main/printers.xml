@@ -1345,6 +1345,12 @@
         <density value="2.0"/>
       </printer>
     </family>
+    <family name="olympus">
+      <printer name="Olympus P300" driver="olympus-p300">
+        <color value="true"/>
+        <model value="0"/>
+      </printer>
+    </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16">
         <color value="true"/>

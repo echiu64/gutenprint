@@ -63,6 +63,7 @@ extern stpi_module_t escp2_LTX_stpi_module_data;
 extern stpi_module_t lexmark_LTX_stpi_module_data;
 extern stpi_module_t pcl_LTX_stpi_module_data;
 extern stpi_module_t ps_LTX_stpi_module_data;
+extern stpi_module_t olympus_LTX_stpi_module_data;
 extern stpi_module_t raw_LTX_stpi_module_data;
 
 /*
