@@ -222,7 +222,7 @@ run (const char        *name,		/* I - Name of print program. */
   if (strchr(image_filename, '/'))
     image_filename = strrchr(image_filename, '/') + 1;
   stpui_set_image_filename(image_filename);
-  //  g_free(image_filename);
+  /* g_free(image_filename); */
 
   /*  eventually export the image */
   switch (run_mode)
