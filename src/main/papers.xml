@@ -947,12 +947,19 @@
       <height value="337"/>
       <unit value="metric-extended"/>
     </paper>
-    <paper name="w155h244">
+    <paper name="w244h155">
       <description value="Card"/>
-      <comment value="54mm x 86mm"/>
-      <width value="155"/>
-      <height value="244"/>
+      <comment value="86mm x 54mm"/>
+      <width value="244"/>
+      <height value="155"/>
       <unit value="metric-extended"/>
+    </paper>
+    <paper name="w283h566">
+      <description value="Wide Postcard"/>
+      <comment value="100mm x 200mm"/>
+      <width value="283"/>
+      <height value="566"/>
+      <unit value="english-extended"/>
     </paper>
 <!--
     Custom
