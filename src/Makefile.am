@@ -23,6 +23,6 @@ AUTOMAKE_OPTIONS = 1.4 gnu
 
 MAINT_CHARSET = latin1
 
-SUBDIRS = printdef main cups escputil foomatic ghost gimp include
+SUBDIRS = include printdef main cups escputil foomatic ghost gimp
 
 MAINTAINERCLEANFILES = Makefile.in
