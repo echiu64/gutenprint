@@ -1,6 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD><TITLE><? echo ($title) ?></TITLE></HEAD>
+<META NAME="CLASSIFICATION" CONTENT="General HTML">
+<META NAME="Author" CONTENT="The Gimp Print Project">
+<META NAME="KEYWORDS" CONTENT="The Gimp, Gimp, Print, Printers, Linux,
+Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
+<META NAME="ABSTRACT" CONTENT="The Gimp Print Project"> 
 <BODY BGCOLOR="#FFFFFF">
 <STYLE TYPE="text/css">
 <!-- /* Hide content from old browsers */
