@@ -29,11 +29,11 @@
  *
  * Contents:
  *
- *   main()                  - Process files on the command-line...
- *  initialize_stp_options() - Initialize the min/max values for
- *                             each STP numeric option.
- *   usage()                 - Show program usage...
- *   write_ppd()             - Write a PPD file.
+ *   main()                   - Process files on the command-line...
+ *   initialize_stp_options() - Initialize the min/max values for
+ *                              each STP numeric option.
+ *   usage()                  - Show program usage...
+ *   write_ppd()              - Write a PPD file.
  */
 
 /*
@@ -146,9 +146,20 @@ main(int  argc,			/* I - Number of command-line arguments */
      char *argv[])		/* I - Command-line arguments */
 {
   int		i;		/* Looping var */
+  int		option_index;	/* Option index */
   const char	*prefix;	/* Directory prefix for output */
   const char	*language;	/* Language */
+  const char    *catalog = NULL;/* Catalog location */
   stp_printer_t	printer;	/* Pointer to printer driver */
+  static struct option long_options[] =
+		{		/* Command-line options */
+		  /* name,	has_arg,		flag	val */
+		  {"help",	no_argument,		0,	0},
+		  {"catalog",	required_argument,	0,	0},
+		  {"language",	required_argument,	0,	0},
+		  {"prefix",	required_argument,	0,	0},
+		  {0,		0,			0,	0}
+		};
 
 
  /*
@@ -161,51 +172,76 @@ main(int  argc,			/* I - Number of command-line arguments */
   * Parse command-line args...
   */
 
-  prefix = "ppd";
-  language = "en";
+  prefix   = "ppd";
+  language = "C";
 
   initialize_stp_options();
-  for (i = 1; i < argc; i ++)
-    if (strcmp(argv[i], "--help") == 0)
-    {
-     /*
-      * Show help...
-      */
 
-      usage();
-    }
-    else if (strcmp(argv[i], "--language") == 0)
-    {
-     /*
-      * Set PPD language...
-      */
+  option_index = 0;
 
-      i ++;
-      if (i < argc)
-        language = argv[i];
-      else
-        usage();
-    }
-    else if (strcmp(argv[i], "--prefix") == 0)
-    {
-     /*
-      * Set "installation prefix"...
-      */
+  for (;;)
+  {
+    if ((i = getopt_long_only(argc, argv, "", long_options,
+                              &option_index)) == -1)
+      break;
 
-      i ++;
-      if (i < argc)
-        prefix = argv[i];
-      else
-        usage();
+    switch (i)
+    {
+      case 0:
+	  /* option already dealt with, so skip to next argv entry */
+          if (long_options[option_index].flag != 0)
+            break;
+
+	  if (strncmp(long_options[option_index].name, "help", 4) == 0)
+          {
+	    usage();
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "language", 8) == 0)
+          {
+	    language = optarg;
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "catalog", 7) == 0)
+          {
+	    catalog = optarg;
+	    break;
+          }
+
+	  if (strncmp(long_options[option_index].name, "prefix", 6) == 0)
+          {
+	    prefix = optarg;
+	    break;
+	  }
+
+      default:
+          usage();
+	  break;
     }
-    else
-      usage();
+  }
+  
 
  /*
   * Set the language...
   */
 
   setlocale(LC_MESSAGES, language);
+
+ /*
+  * Set up the catalog
+  */
+
+  if (catalog)
+  {
+    if ((bindtextdomain(PACKAGE, catalog)) == NULL)
+    {
+      fprintf(stderr, "genppd: cannot load message catalog %s: %s\n", catalog,
+              strerror(errno));
+      exit(1);
+    }
+  }
 
  /*
   * Write PPD files...
@@ -285,8 +321,10 @@ initialize_stp_options(void)
 void
 usage(void)
 {
-  puts("Usage: genppd [--help] [--language locale] [--prefix dir]");
-  exit(1);
+  fputs("Usage: genppd [--help] [--catalog=domain] "
+        "[--language=locale] [--prefix=dir]\n", stderr);
+
+  exit(EXIT_FAILURE);
 }
 
 
@@ -373,17 +411,8 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*%the GNU GPL.\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
-  if (strncmp(language, "de", 2) == 0)
-    gzputs(fp, "*LanguageVersion: German\n");
-  else if (strncmp(language, "es", 2) == 0)
-    gzputs(fp, "*LanguageVersion: Spanish\n");
-  else if (strncmp(language, "fr", 2) == 0)
-    gzputs(fp, "*LanguageVersion: French\n");
-  else if (strncmp(language, "it", 2) == 0)
-    gzputs(fp, "*LanguageVersion: Italian\n");
-  else
-    gzputs(fp, "*LanguageVersion: English\n");
-  gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
+  gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
+  gzprintf(fp, "*LanguageEncoding: %s\n", _("ISOLatin1"));
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", driver);
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
   gzputs(fp, "*Product:	\"(GIMP-print v" VERSION ")\"\n");

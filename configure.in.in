@@ -20,6 +20,16 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(src/main/print-dither.c)
 AC_CONFIG_AUX_DIR(scripts)
 
+dnl Compiler options and definitions
+INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
+
+AC_ARG_ENABLE(debug, [  --enable-debug          turn on debugging [default=no]],
+[if eval "test x$enable_debug = xyes"; then
+    CFLAGS="${CFLAGS:=} -g"
+else
+    CFLAGS="${CFLAGS:=-O}"
+fi])
+
 PACKAGE="gimp-print"
 
 dnl In the following, there are a the following variants
@@ -60,7 +70,7 @@ dnl
 GIMPPRINT_MAJOR_VERSION=4
 GIMPPRINT_MINOR_VERSION=1
 GIMPPRINT_MICRO_VERSION=99
-GIMPPRINT_EXTRA_VERSION=-b1
+GIMPPRINT_EXTRA_VERSION=b1
 GIMPPRINT_CURRENT_INTERFACE=1
 GIMPPRINT_INTERFACE_AGE=0
 GIMPPRINT_BINARY_AGE=0
@@ -95,21 +105,18 @@ AM_CONFIG_HEADER(config.h)
 
 dnl Available languages (translations)
 ALL_LINGUAS="en_GB en_TEST"
+AC_SUBST(ALL_LINGUAS)
 
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
-AC_DISABLE_STATIC
+dnl MRS: This causes problems with --disable-shared
+# AC_DISABLE_STATIC
 AM_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
   AC_DEFINE(HAVE_GNU_LD,, [Define if GNU ld is present.])
 fi
-
-dnl Compiler options and definitions
-CFLAGS="${CFLAGS:=}"
-INCLUDES="${INCLUDES} -I\$(top_srcdir)/include -I\$(top_builddir)/include -I\$(top_srcdir)/intl"
-OPTIM=""
 
 dnl Defaults
 dnl figure defaults, prior to $ac_help setup
@@ -334,28 +341,64 @@ AC_CHECK_LIB(m,pow,
   CUPS_LIBS="${CUPS_LIBS} -lm")
 dnl CUPS library checks
 if test x${BUILD_CUPS} = xyes ; then
+dnl Save current library list...
+  SAVELIBS="$LIBS"
+  LIBS="$LIBS ${CUPS_LIBS}"
   AC_CHECK_LIB(socket,socket,
     if test x${OSTYPE} != xirix ; then
     CUPS_LIBS="${CUPS_LIBS} -lsocket"
+    LIBS="$LIBS -lsocket"
   fi)
   AC_CHECK_LIB(nsl,gethostbyaddr,
     if test x${OSTYPE} != xirix ; then
     CUPS_LIBS="${CUPS_LIBS} -lnsl"
+    LIBS="$LIBS -lnsl"
   fi)
   AC_CHECK_LIB(z,gzgets,
     HAVE_LIBZ=true, HAVE_LIBZ=false)
   if test x${HAVE_LIBZ} = xtrue ; then
     CUPS_LIBS="${CUPS_LIBS} -lz"
+    LIBS="$LIBS -lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
+
+dnl Some OS's need to link against crypto stuff too if CUPS is compiled
+dnl with crypto support... :(
+  AC_CHECK_HEADER(openssl/ssl.h,
+    dnl Some ELF systems can't resolve all the symbols in libcrypto
+    dnl if libcrypto was linked against RSAREF, and fail to link the
+    dnl test program correctly, even though a correct installation
+    dnl of OpenSSL exists.  So we test the linking three times in
+    dnl case the RSAREF libraries are needed.
+
+    SSL="no"
+
+    for libcrypto in \
+	"-lcrypto" \
+	"-lcrypto -lrsaref" \
+	"-lcrypto -lRSAglue -lrsaref"
+    do
+	AC_CHECK_LIB(ssl,SSL_new,
+	    [CUPS_LIBS="${CUPS_LIBS} -lssl $libcrypto"
+	     SSL="yes"],,
+	    $libcrypto)
+
+	if test x$SSL = xyes; then
+	    break
+	fi
+    done)
+
 dnl Require CUPS 1.1...
   AC_CHECK_LIB(cups,cupsPrintFiles,
     CUPS_LIBS="${CUPS_LIBS} -lcups",
+    LIBS="$LIBS -lcups"
     AC_MSG_ERROR([Cannot find CUPS libraries (libcups)]))
   AC_CHECK_LIB(cupsimage,cupsRasterOpen,
     CUPS_LIBS="${CUPS_LIBS} -lcupsimage",
     AC_MSG_ERROR([Cannot find CUPS libraries (libcupsimage)]),
     -lcups)
+dnl Restore old library list...
+  LIBS="$SAVELIBS"
 fi
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
 
@@ -599,7 +642,7 @@ dnl of a line.
 AC_OUTPUT([
 Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile man/escputil.1
 man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
-src/Makefile src/gimp/Makefile
+src/Makefile src/gimp/Makefile cups-gimpprint.list
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
 man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile test/Makefile
