@@ -125,12 +125,12 @@ stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "DitherAlgorithm") == 0)
     {
+      stpi_fill_parameter_settings(description, &(dither_parameters[1]));
       if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
 	  stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
 	description->is_active = 0;
       else
 	{
-	  stpi_fill_parameter_settings(description, &(dither_parameters[1]));
 	  description->bounds.str = stp_string_list_create();
 	  for (i = 0; i < num_dither_algos; i++)
 	    {
