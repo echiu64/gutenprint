@@ -28,6 +28,8 @@ MAINT_CHARSET = latin1
 
 noinst_HEADERS = gimp-print-intl.h gimp-print-intl-internal.h
 
+pkginclude_HEADERS = gimp-print.h
+
 nodist_pkginclude_HEADERS = gimp-print-version.h
 
 
