@@ -155,5 +155,4 @@ CLEANSCRIPTS = \
 CLEANFILES = .noupdate
 MAINTAINERCLEANFILES = ABOUT-NLS INSTALL aclocal.m4 config.h.in configure Makefile.in stamp-h.in $(addprefix scripts/, $(CLEANSCRIPTS))
 
-.PHONY: deb install-cups install-ghost snapshot ChangeLog
-.PHONY: install-gimp html
+.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLog
