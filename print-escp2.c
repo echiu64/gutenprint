@@ -3,7 +3,7 @@
  *
  *   Print plug-in EPSON ESC/P2 driver for the GIMP.
  *
- *   Copyright 1997-1999 Michael Sweet (mike@easysw.com) and
+ *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.38  2000/01/08 23:27:54  rlk
+ *   Rearrange setup code; more printers to support softweave
+ *
  *   Revision 1.37  1999/12/19 14:36:18  rlk
  *   Make 'em big enough
  *
@@ -327,11 +330,9 @@ escp2_write_weave(FILE *, int, int, int, int, int, int,
  * Various classes of printer capabilities are represented by bitmasks.
  */
 
-typedef unsigned int model_cap_t;
+typedef unsigned long long model_cap_t;
 typedef model_cap_t model_featureset_t;
 typedef model_cap_t model_class_t;
-
-#define MODEL_NOZZLES_MASK	0xff
 
 #define MODEL_PAPER_SIZE_MASK	0x300
 #define MODEL_PAPER_SMALL 	0x000
@@ -367,6 +368,13 @@ typedef model_cap_t model_class_t;
 #define MODEL_1440DPI_NO	0x000000
 #define MODEL_1440DPI_YES	0x100000
 
+#define MODEL_NOZZLES_MASK	0xff000000
+#define MODEL_MAKE_NOZZLES(x) 	((long long) ((x)) << 24)
+#define MODEL_GET_NOZZLES(x) 	(((x) & MODEL_NOZZLES_MASK) >> 24)
+#define MODEL_SEPARATION_MASK	0xf00000000l
+#define MODEL_MAKE_SEPARATION(x) 	(((long long) (x)) << 32)
+#define MODEL_GET_SEPARATION(x)	(((x) & MODEL_SEPARATION_MASK) >> 32)
+
 /*
  * SUGGESTED SETTINGS FOR STYLUS PHOTO EX:
  * Brightness 127
@@ -393,65 +401,68 @@ typedef model_cap_t model_class_t;
  * The green and blue will vary somewhat with different inks
  */
 
+
 model_cap_t model_capabilities[] =
 {
   /* Stylus Color */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_COLOR
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* Stylus Color Pro/Pro XL/400/500 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_PRO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* Stylus Color 1500 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_DEFAULT | MODEL_INIT_1500
    | MODEL_HASBLACK_NO | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* Stylus Color 600 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_600
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(1) | MODEL_MAKE_SEPARATION(1)),
   /* Stylus Color 800 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Color 1520/3000 */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_600 | MODEL_INIT_600
    | MODEL_HASBLACK_YES | MODEL_6COLOR_NO | MODEL_720DPI_DEFAULT
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(64) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo 700 */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_1440DPI_YES),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo EX */
   (MODEL_PAPER_LARGE | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_1440DPI_YES),
+   | MODEL_1440DPI_YES | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
   /* Stylus Photo */
   (MODEL_PAPER_SMALL | MODEL_IMAGEABLE_PHOTO | MODEL_INIT_PHOTO
    | MODEL_HASBLACK_YES | MODEL_6COLOR_YES | MODEL_720DPI_PHOTO
-   | MODEL_1440DPI_NO),
+   | MODEL_1440DPI_NO | MODEL_MAKE_NOZZLES(32) | MODEL_MAKE_SEPARATION(8)),
 };
 
 typedef struct {
   const char name[65];
+  int hres;
+  int vres;
   int softweave;
   int horizontal_passes;
   int vertical_passes;
 } res_t;
 
 res_t reslist[] = {
-  { "360 DPI", 0, 1, 1 },
-  { "720 DPI Microweave", 0, 1, 1 },
-  { "720 DPI Softweave", 1, 1, 1 },
-  { "720 DPI High Quality", 1, 1, 2 },
-  { "720 DPI Highest Quality", 1, 1, 4 },
-  { "1440 x 720 DPI Microweave", 2, 1, 1 },
-  { "1440 x 720 DPI Softweave", 1, 2, 2 },
-  { "1440 x 720 DPI Highest Quality", 1, 2, 4 },
-  { "1440 x 720 DPI Two-pass", 1, 2, 4 },
-  { "1440 x 720 DPI Two-pass Microweave", 2, 1, 1 },
-  { "", 0, 0, 0 }
+  { "360 DPI", 360, 360, 0, 1, 1 },
+  { "720 DPI Microweave", 720, 720, 0, 1, 1 },
+  { "720 DPI Softweave", 720, 720, 1, 1, 1 },
+  { "720 DPI High Quality", 720, 720, 1, 1, 2 },
+  { "720 DPI Highest Quality", 720, 720, 1, 1, 4 },
+  { "1440 x 720 DPI Microweave", 1440, 720, 0, 1, 1 },
+  { "1440 x 720 DPI Softweave", 1440, 720, 1, 2, 2 },
+  { "1440 x 720 DPI Highest Quality", 1440, 720, 1, 2, 4 },
+  { "1440 x 720 DPI Two-pass", 2880, 720, 1, 2, 4 },
+  { "1440 x 720 DPI Two-pass Microweave", 2880, 720, 0, 1, 1 },
+  { "", 0, 0, 0, 0, 0 }
 };
 
 static int
@@ -466,6 +477,18 @@ escp2_cap(int model, model_featureset_t featureset)
   return (model_capabilities[model] & featureset);
 }
 
+static int
+escp2_nozzles(int model)
+{
+  return MODEL_GET_NOZZLES(model_capabilities[model]);
+}
+
+static int
+escp2_nozzle_separation(int model)
+{
+  return MODEL_GET_SEPARATION(model_capabilities[model]);
+}
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -477,8 +500,7 @@ escp2_parameters(int  model,		/* I - Printer model */
                  int  *count)		/* O - Number of values */
 {
   int		i;
-  char		**p,
-		**valptrs;
+  char		**valptrs;
   static char	*media_sizes[] =
 		{
 		  ("Letter"),
@@ -488,20 +510,6 @@ escp2_parameters(int  model,		/* I - Printer model */
 		  ("A3"),
 		  ("12x18")
 		};
-  static char	*resolutions[] =
-		{
-		  ("360 DPI"),
-		  ("720 DPI Microweave"),
-		  ("720 DPI Softweave"),
-		  ("720 DPI High Quality"),
-		  ("720 DPI Highest Quality"),
-		  ("1440 x 720 DPI Microweave"),
-		  ("1440 x 720 DPI Softweave"),
-		  ("1440 x 720 DPI Highest Quality"),
-		  ("1440 x 720 DPI Two-pass"),
-		  ("1440 x 720 DPI Two-pass Microweave")
-		};
-
 
   if (count == NULL)
     return (NULL);
@@ -518,28 +526,43 @@ escp2_parameters(int  model,		/* I - Printer model */
     else
       *count = 3;
 
-    p = media_sizes;
+    valptrs = malloc(*count * sizeof(char *));
+    for (i = 0; i < *count; i ++)
+      {
+	/* strdup doesn't appear to be POSIX... */
+	valptrs[i] = malloc(strlen(media_sizes[i]) + 1);
+	strcpy(valptrs[i], media_sizes[i]);
+      }
+    return (valptrs);
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
-      *count = 10;
-    else
-      *count = 3;
-    p = resolutions;
+    res_t *res = &(reslist[0]);
+    valptrs = malloc(sizeof(char *) * sizeof(reslist) / sizeof(res_t));
+    *count = 0;
+    while(res->hres)
+      {
+	if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES) ||
+	    (res->hres <= 720 && res->vres <= 720))
+	  {
+	    int nozzles = escp2_nozzles(model);
+	    int separation = escp2_nozzle_separation(model);
+	    int max_weave = nozzles / separation;
+	    if (! res->softweave ||
+		(nozzles > 1 && res->vertical_passes <= max_weave))
+	      {
+		valptrs[*count] = malloc(strlen(res->name) + 1);
+		strcpy(valptrs[*count], res->name);
+		(*count)++;
+	      }
+	  }
+	res++;
+      }
+    return (valptrs);
   }
   else
     return (NULL);
 
-  valptrs = malloc(*count * sizeof(char *));
-  for (i = 0; i < *count; i ++)
-    {
-      /* strdup doesn't appear to be POSIX... */
-      valptrs[i] = malloc(strlen(p[i]) + 1);
-      strcpy(valptrs[i], p[i]);
-    }
-
-  return (valptrs);
 }
 
 
@@ -647,6 +670,7 @@ escp2_print(int       model,		/* I - Model */
   int		nozzle_separation = 1;
   int		horizontal_passes = 1;
   int		vertical_passes = 1;
+  res_t 	*res;
 
  /*
   * Setup a read-only pixel region for the entire image...
@@ -688,45 +712,23 @@ escp2_print(int       model,		/* I - Model */
  /*
   * Figure out the output resolution...
   */
-
-  xdpi = ydpi = atoi(resolution);
-  if (xdpi >= 720 &&
-      escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
+  for (res = &reslist[0];;res++)
     {
-      res_t *res = &reslist[0];
-      use_softweave = 0;
-      horizontal_passes = 1;
-      vertical_passes = 1;
-      for (;;)
+      if (!strcmp(resolution, res->name))
 	{
-	  if (!strcmp(resolution, res->name))
-	    {
-	      use_softweave = res->softweave;
-	      horizontal_passes = res->horizontal_passes;
-	      vertical_passes = res->vertical_passes;
-	      if (use_softweave == 1)
-		{
-		  nozzles = 32;
-		  nozzle_separation = 8;
-		}
-	      else
-		{
-		  nozzles = 1;
-		  nozzle_separation = 1;
-		}
-	      break;
-	    }
-	  else if (!strcmp(resolution, ""))
-	    break;
-	  res++;
+	  use_softweave = res->softweave;
+	  horizontal_passes = res->horizontal_passes;
+	  vertical_passes = res->vertical_passes;
+	  xdpi = res->hres;
+	  ydpi = res->vres;
+	  nozzles = escp2_nozzles(model);
+	  nozzle_separation = escp2_nozzle_separation(model);
+	  break;
 	}
-      ydpi = 720;
-      xdpi = 720 * horizontal_passes;
-    }
-  else if (ydpi == 1440)
-    {
-      ydpi = 720;
-      xdpi = 720;
+      else if (!strcmp(resolution, ""))
+	{
+	  return;	  
+	}
     }
 
  /*
@@ -885,24 +887,27 @@ escp2_print(int       model,		/* I - Model */
         break;
   }
 
+  if (use_softweave)
+    initialize_weave(nozzles, nozzle_separation, horizontal_passes,
+		     vertical_passes);
   switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
     case MODEL_INIT_COLOR : /* ESC */
-        if (output_type == OUTPUT_COLOR && ydpi > 360)
+        if (output_type == OUTPUT_COLOR && ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
     case MODEL_INIT_PRO : /* ESC Pro, Pro XL, 400, 500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
-        if (ydpi > 360)
+        if (ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
     case MODEL_INIT_1500 : /* ESC 1500 */
         fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Small dots */
 
-        if (ydpi > 360)
+        if (ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
@@ -914,44 +919,25 @@ escp2_print(int       model,		/* I - Model */
 
         fwrite("\033(e\002\000\000\002", 7, 1, prn);	/* Small dots */
 
-        if (ydpi > 360)
+        if (ydpi > 360 && !use_softweave)
       	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
         break;
 
     case MODEL_INIT_PHOTO:
-        if (ydpi > 360)
-	  {
-	    if (use_softweave)
-	      {
-		if (horizontal_passes > 1)
-		  fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-		else
-		  fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-		fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off! */
-		initialize_weave(nozzles, nozzle_separation, horizontal_passes,
-				 vertical_passes);
-		fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
-	      }
-	    else
-	      {
-		fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
-		fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
-		fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
-	      }
-#if 0
-	    fwrite("\033\0311", 3, 1, prn); /* ??? */
-#endif
-	  }
-	else
-	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
-        break;
-
-#if 0
 	if (output_type == OUTPUT_GRAY)
 	  fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black printing */
 	else
 	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
-#endif
+        if (ydpi > 360)
+	  {
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    if (!use_softweave)
+	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	    fwrite("\033(e\002\000\000\004", 7, 1, prn);	/* Microdots */
+	  }
+	else
+	  fwrite("\033(e\002\000\000\003", 7, 1, prn);	/* Whatever dots */
+        break;
   }
 
   fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
@@ -1078,12 +1064,21 @@ escp2_print(int       model,		/* I - Model */
       {
         dither_cmyk(out, x, image_height, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black, horizontal_passes);
-
-        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        if (black != NULL)
-          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+	if (use_softweave)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
+			    cyan, magenta, yellow, black, NULL, NULL);
+	else
+	  {
+	    escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width,
+			left);
+	    if (black != NULL)
+	      escp2_write(prn, black, length, 0, 0, ydpi, model, out_width,
+			  left);
+	  }
       }
 
       if (!use_softweave)
@@ -1156,12 +1151,21 @@ escp2_print(int       model,		/* I - Model */
       {
         dither_cmyk(out, y, image_width, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black, horizontal_passes);
-
-        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
-        if (black != NULL)
-          escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
+	if (use_softweave)
+	  escp2_write_weave(prn, length, ydpi, model, out_width, left, xdpi,
+			    cyan, magenta, yellow, black, NULL, NULL);
+	else
+	  {
+	    escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width,
+			left);
+	    escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width,
+			left);
+	    if (black != NULL)
+	      escp2_write(prn, black, length, 0, 0, ydpi, model, out_width,
+			  left);
+	  }
       }
 
       if (!use_softweave)
