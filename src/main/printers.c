@@ -663,7 +663,8 @@ stpi_verify_printer_params(stp_vars_t v)
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
-      if (param->p_class != STP_PARAMETER_CLASS_PAGE_SIZE && param->is_active)
+      if (param->p_class != STP_PARAMETER_CLASS_PAGE_SIZE &&
+	  param->is_active && param->verify_this_parameter)
 	answer &= verify_param(v, param->name);
     }
   stp_parameter_list_free(params);

@@ -1075,6 +1075,7 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
       for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
 	{
 	  int printed_open_group = 0;
+	  int print_close_ui = 1;
 	  size_t param_count = stp_parameter_list_count(param_list);
 	  for (l = 0; l < param_count; l++)
 	    {
@@ -1136,14 +1137,25 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 			gzprintf(fp, "*DefaultStp%s: %d\n", desc.name,
 				 (int) (desc.deflt.dbl * 1000));
 		      for (i = desc.bounds.dbl.lower * 1000;
-			   i <= desc.bounds.dbl.upper * 1000 ; i += 50)
+			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
 				 desc.name, i, ((double) i) * .001);
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
+		      gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
+			       desc.name, _(desc.text), _("Fine Adjustment"));
+		      gzprintf(fp, "*DefaultStpFine%s: 0\n", desc.name);
+		      for (i = 0; i < 100; i += 5)
+			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
+				 desc.name, i, ((double) i) * .001);
+		      gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
+		      print_close_ui = 0;
+		      
 		      break;
 		    default:
 		      break;
 		    }
-		  gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
+		  if (print_close_ui)
+		    gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 		}
 	      stp_parameter_description_free(&desc);
 	    }

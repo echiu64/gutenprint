@@ -324,39 +324,6 @@ purge_excess_data(cups_image_t *cups)
 }
 
 static void
-set_one_option(stp_vars_t v, const char *name, const char *value)
-{
-  stp_parameter_t desc;
-  stp_describe_parameter(v, name, &desc);
-  switch (desc.p_type)
-    {
-    case STP_PARAMETER_TYPE_STRING_LIST:
-      fprintf(stderr, "DEBUG: Gimp-Print set string %s to %s\n", name, value);
-      stp_set_string_parameter(v, name, value);
-      break;
-    case STP_PARAMETER_TYPE_INT:
-      fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n", name, value);
-      stp_set_int_parameter(v, name, atoi(value));
-      break;
-    case STP_PARAMETER_TYPE_BOOLEAN:
-      fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n", name, value);
-      stp_set_boolean_parameter(v, name, strcmp(value, "True") == 0 ? 1 : 0);
-      break;
-    case STP_PARAMETER_TYPE_DOUBLE:
-      fprintf(stderr, "DEBUG: Gimp-Print set float %s to %s\n", name, value);
-      stp_set_float_parameter(v, name, atof(value) * 0.001);
-      break;
-    case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
-    case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole! */
-    case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
-      break;
-    default:
-      break;
-    }
-  stp_parameter_description_free(&desc);
-}
-
-static void
 set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
 		ppd_file_t *ppd)
 {
@@ -366,21 +333,85 @@ set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
-      char *ppd_option_name = xmalloc(strlen(param->name) + 4);	/* StpFOO\0 */
+      stp_parameter_t desc;
+      char *ppd_option_name = xmalloc(strlen(param->name) + 8);	/* StpFineFOO\0 */
 
       const char *val;		/* CUPS option value */
       ppd_option_t *ppd_option;
-
-      sprintf(ppd_option_name, "Stp%s", param->name);
-      val = cupsGetOption(ppd_option_name, num_options, options);
-      if (!val)
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	{
-	  ppd_option = ppdFindOption(ppd, ppd_option_name);
-	  if (ppd_option)
-	    val = ppd_option->defchoice;
+	  sprintf(ppd_option_name, "Stp%s", desc.name);
+	  val = cupsGetOption(ppd_option_name, num_options, options);
+	  if (!val)
+	    {
+	      ppd_option = ppdFindOption(ppd, ppd_option_name);
+	      if (ppd_option)
+		val = ppd_option->defchoice;
+	    }
+	  if (val && strcmp(val, "DEFAULT") != 0)
+	    {
+	      double coarse_val = atof(val) * 0.001;
+	      double fine_val = 0;
+	      sprintf(ppd_option_name, "StpFine%s", desc.name);
+	      val = cupsGetOption(ppd_option_name, num_options, options);
+	      if (!val)
+		{
+		  ppd_option = ppdFindOption(ppd, ppd_option_name);
+		  if (ppd_option)
+		    val = ppd_option->defchoice;
+		}
+	      if (val && strcmp(val, "DEFAULT") != 0)
+		fine_val = atof(val) * 0.001;
+	      fprintf(stderr, "DEBUG: Gimp-Print set float %s to %f + %f\n",
+		      desc.name, coarse_val, fine_val);
+	      break;
+	      fine_val += coarse_val;
+	      if (fine_val > desc.bounds.dbl.upper)
+		fine_val = desc.bounds.dbl.upper;
+	      stp_set_float_parameter(v, desc.name, coarse_val + fine_val);
+	    }
 	}
-      if (val && strcmp(val, "DEFAULT") != 0)
-	set_one_option(v, param->name, val);
+      else
+	{
+	  sprintf(ppd_option_name, "Stp%s", desc.name);
+	  val = cupsGetOption(ppd_option_name, num_options, options);
+	  if (!val)
+	    {
+	      ppd_option = ppdFindOption(ppd, ppd_option_name);
+	      if (ppd_option)
+		val = ppd_option->defchoice;
+	    }
+	  if (val && strcmp(val, "DEFAULT") != 0)
+	    {
+	      switch (desc.p_type)
+		{
+		case STP_PARAMETER_TYPE_STRING_LIST:
+		  fprintf(stderr, "DEBUG: Gimp-Print set string %s to %s\n",
+			  desc.name, val);
+		  stp_set_string_parameter(v, desc.name, val);
+		  break;
+		case STP_PARAMETER_TYPE_INT:
+		  fprintf(stderr, "DEBUG: Gimp-Print set int %s to %s\n",
+			  desc.name, val);
+		  stp_set_int_parameter(v, desc.name, atoi(val));
+		  break;
+		case STP_PARAMETER_TYPE_BOOLEAN:
+		  fprintf(stderr, "DEBUG: Gimp-Print set bool %s to %s\n",
+			  desc.name, val);
+		  stp_set_boolean_parameter
+		    (v, desc.name, strcmp(val, "True") == 0 ? 1 : 0);
+		  break;
+		case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
+		case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole */
+		case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
+		  break;
+		default:
+		  break;
+		}
+	    }	  
+	}
+      stp_parameter_description_free(&desc);
       free(ppd_option_name);
     }
   stp_parameter_list_free(params);

@@ -67,14 +67,14 @@ static const res_t *escp2_find_resolution(stp_const_vars_t v);
 {							\
   "escp2_" #s, "escp2_" #s, NULL,			\
   STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,	\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1		\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1		\
 }
 
 #define PARAMETER_RAW(s)				\
 {							\
   "escp2_" #s, "escp2_" #s, NULL,			\
   STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,	\
-  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1		\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1		\
 }
 
 typedef struct
@@ -93,68 +93,78 @@ static const stp_parameter_t the_parameters[] =
     "AutoMode", N_("Automatic Printing Mode"),
     N_("Automatic printing mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
 #endif
+  /*
+   * Don't check this parameter.  We may offer different settings for
+   * different papers, but we need to be able to handle settings from PPD
+   * files that don't have constraints set up.
+   */
   {
     "Quality", N_("Print Quality"),
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
   {
     "PageSize", N_("Page Size"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_PAGE_SIZE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "MediaType", N_("Media Type"),
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "InputSlot", N_("Media Source"),
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "Resolution", N_("Resolution"),
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
+  /*
+   * Don't check this parameter.  We may offer different settings for
+   * different ink sets, but we need to be able to handle settings from PPD
+   * files that don't have constraints set up.
+   */
   {
     "InkType", N_("Ink Type"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
   },
   {
     "InkSet", N_("Ink Set"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "PrintingDirection", N_("Printing Direction"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "FullBleed", N_("Full Bleed"),
     N_("Full Bleed"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
   {
     "AdjustDotsize", N_("Adjust dot size as necessary"),
     N_("Adjust dot size as necessary to achieve desired density"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1
+    STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1, 1
   },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
@@ -202,7 +212,7 @@ static const float_param_t float_parameters[] =
       "CyanDensity", N_("Cyan Balance"),
       N_("Adjust the cyan balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -210,7 +220,7 @@ static const float_param_t float_parameters[] =
       "MagentaDensity", N_("Magenta Balance"),
       N_("Adjust the magenta balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -218,7 +228,7 @@ static const float_param_t float_parameters[] =
       "YellowDensity", N_("Yellow Balance"),
       N_("Adjust the yellow balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -226,7 +236,7 @@ static const float_param_t float_parameters[] =
       "BlackDensity", N_("Black Balance"),
       N_("Adjust the black balance"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1
     }, 0.0, 2.0, 1.0, 1
   },
   {
@@ -234,7 +244,7 @@ static const float_param_t float_parameters[] =
       "LightCyanTransition", N_("Light Cyan Transition"),
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -242,7 +252,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaTransition", N_("Light Magenta Transition"),
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -250,7 +260,7 @@ static const float_param_t float_parameters[] =
       "DarkYellowTransition", N_("Dark Yellow Transition"),
       N_("Dark Yellow Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -258,7 +268,7 @@ static const float_param_t float_parameters[] =
       "GrayTransition", N_("Gray Transition"),
       N_("Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -266,7 +276,7 @@ static const float_param_t float_parameters[] =
       "Gray3Transition", N_("Dark Gray Transition"),
       N_("Dark Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -274,7 +284,7 @@ static const float_param_t float_parameters[] =
       "Gray2Transition", N_("Mid Gray Transition"),
       N_("Medium Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -282,7 +292,7 @@ static const float_param_t float_parameters[] =
       "Gray1Transition", N_("Light Gray Transition"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
 };

@@ -312,6 +312,7 @@ typedef struct
   int is_mandatory;
   int is_active;
   int channel;
+  int verify_this_parameter;	/* Should the verify system check this? */
   union				/* Limits on the values */
   {				/* the parameter may take */
     stp_curve_t curve;
