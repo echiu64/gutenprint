@@ -66,4 +66,5 @@ endif
 
 MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 
-EXTRA_DIST =  testpatterny.h $(pkgdata_DATA)
+EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern
+
