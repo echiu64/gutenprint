@@ -63,7 +63,7 @@ extern "C" {
   (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION > (minor)) || \
   (GIMPPRINT_MAJOR_VERSION == (major) && GIMPPRINT_MINOR_VERSION == (minor) && \
    GIMPPRINT_MICRO_VERSION >= (micro)))
-	
+
 extern const unsigned int gimpprint_major_version;
 extern const unsigned int gimpprint_minor_version;
 extern const unsigned int gimpprint_micro_version;
@@ -256,7 +256,7 @@ typedef struct stp_image
  *   returns the horizontal (X) and vertical (Y) resolution of the chosen
  *   RESOLUTION name.  The high level program may choose to use this to
  *   rasterize at an appropriate resolution.
- *   
+ *
  */
 
 typedef void *stp_printer_t;

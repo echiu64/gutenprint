@@ -196,7 +196,7 @@ stp_init_vars(void)
       stp_set_media_size(stp_data.v, "Letter");
     }
 }
-	
+
 
 private void
 stp_writefunc(void *file, const char *buf, size_t bytes)

@@ -602,7 +602,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	      i1 = rgb[1];
 	      i2 = rgb[2];
 	      i3 = rgb[3];
-	  
+
 	      gray[0] = lut->composite[((rgb[0] * LUM_RED +
 					 rgb[1] * LUM_GREEN +
 					 rgb[2] * LUM_BLUE) *
@@ -680,7 +680,7 @@ rgb_to_monochrome(unsigned char *rgb,	/* I - RGB pixels */
 	      i1 = rgb[1];
 	      i2 = rgb[2];
 	      i3 = rgb[3];
-	  
+
 	      gray[0] = lut->composite[((rgb[0] * LUM_RED +
 					 rgb[1] * LUM_GREEN +
 					 rgb[2] * LUM_BLUE) *

@@ -898,7 +898,7 @@ do_align(void)
       printf("it may damage your printer. Proceed?\n");
       printf("Please confirm by typing 's' again that you wish to save the settings\n");
       printf("to your printer:\n");
-	     
+
       fflush(stdout);
       inbuf = do_get_input("> ");
       if (inbuf[0] == 's' || inbuf[0] == 'S')

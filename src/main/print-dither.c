@@ -52,7 +52,7 @@
 #  define rand random
 #endif /* HAVE_RANDOM */
 
-/* If you don't want detailed performance numbers in this file, 
+/* If you don't want detailed performance numbers in this file,
  * uncomment this:
  */
 /*#define QUANT(x) */
@@ -337,7 +337,7 @@ is_po2(size_t i)
     }
   return bits;
 }
-  
+
 static void
 init_iterated_matrix(dither_matrix_t *mat, size_t size, size_t exp,
 		     unsigned *array)

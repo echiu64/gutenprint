@@ -789,7 +789,7 @@ gimp_create_main_window (void)
   label = gtk_label_new (_("Output Type:"));
   gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
   gtk_widget_show (label);
-  
+
   vbox = gtk_vbox_new (FALSE, 1);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
   gtk_box_pack_end (GTK_BOX (box), vbox, TRUE, TRUE, 0);
@@ -1109,7 +1109,7 @@ gimp_scaling_callback (GtkWidget *widget)
  * gimp_plist_build_combo
  *
  ****************************************************************************/
-void 
+void
 gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 			gint            num_items,   /* I - Number of items */
 			gchar    **items,       /* I - Menu items */
@@ -1884,7 +1884,7 @@ gimp_setup_ok_callback (void)
 /*
  *  gimp_print_driver_callback() - Update the current printer driver...
  */
-static void 
+static void
 gimp_print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 			    gint            row,
 			    gint            column,

@@ -157,14 +157,14 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 
   for(i=0; i<8; i++)
     head_offset[i] = 0;
-  
+
   if(color_jet_arrangement != 0)
     {
     head_offset[0] = (physjets+1)*physsep;
     head_offset[1] = (physjets+1)*physsep;
-    head_offset[2] = 2*(physjets+1)*physsep;    
+    head_offset[2] = 2*(physjets+1)*physsep;
     }
-  
+
   sw = stp_initialize_weave(physjets, physsep, hpasses, vpasses, subpasses,
 			    1, 1, 128, nrows, 1, first_line,
 			    phys_lines, strategy, head_offset,

@@ -43,7 +43,7 @@ const char *printfuncs[] =
   "lexmark"
 };
 
-const size_t nprintfuncs = sizeof(printfuncs) / sizeof(const char *); 
+const size_t nprintfuncs = sizeof(printfuncs) / sizeof(const char *);
 
 void
 initialize_the_printer(const char *name, const char *driver)
@@ -128,7 +128,7 @@ printerstartalt: tBEGIN PRINTER DRIVER ASSIGN tSTRING NAME ASSIGN tSTRING tEND
 printerend: 		tBEGIN ENDPRINTER tEND
 	{ output_the_printer(); }
 ;
-color:			tBEGIN COLOR tEND 
+color:			tBEGIN COLOR tEND
 	{ thePrinter.printvars.output_type = OUTPUT_COLOR; }
 ;
 nocolor:		tBEGIN NOCOLOR tEND

@@ -226,7 +226,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_dither_set_adaptive_divisor(dither, 8);
     else
       stp_dither_set_adaptive_divisor(dither, 16);
-  }  
+  }
   else
     stp_dither_set_adaptive_divisor(dither, 4);
 

@@ -3,11 +3,11 @@
  *
  *   Print plug-in Lexmark driver for the GIMP.
  *
- *   Copyright 2000 Richard Wisenoecker (richard.wisenoecker@gmx.at) 
+ *   Copyright 2000 Richard Wisenoecker (richard.wisenoecker@gmx.at)
  *
  *   The plug-in is based on the code of the CANON BJL plugin for the GIMP
  *   of Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu).
- *   
+ *
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -171,7 +171,7 @@ static const int IDX_SEQLEN=3;
 
 #define LXM_Z52_HEADERSIZE 34
 static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
-  0x1B,0x2A,0x24,0x00,0x00,0xFF,0xFF,         /* number of packets ----     vvvvvvvvv */ 
+  0x1B,0x2A,0x24,0x00,0x00,0xFF,0xFF,         /* number of packets ----     vvvvvvvvv */
   0x01,0x01,0x01,0x1a,0x03,0x01,              /* 0x7-0xc: resolution, direction, head */
   0x03,0x60,                                  /* 0xd-0xe HE */
   0x04,0xe0,                                  /* 0xf-0x10  HS vertical pos */
@@ -183,27 +183,27 @@ static char outbufHeader_z52[LXM_Z52_HEADERSIZE]={
 
 #define LXM_3200_HEADERSIZE 24
 
-static char outbufHeader_3200[LXM_3200_HEADERSIZE] = 
+static char outbufHeader_3200[LXM_3200_HEADERSIZE] =
 {
   0x1b, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x1b, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  0x1b, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	
+  0x1b, 0x43, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 static inline int
 lexmark_calc_3200_checksum(unsigned char *data)
 {
   int ck, i;
-	
+
   ck = 0;
   for(i=1; i<7; i++)ck += data[i];
-	
+
   return(ck & 255);
 }
 
-/*  
-   head: 
-     1 .. black, 
+/*
+   head:
+     1 .. black,
      0 .. color
 
    resolution:
@@ -265,7 +265,7 @@ static double lum_adjustment[49] =
   0.51,
   0.54,
   0.57				/* C */
-};  
+};
 
 static double hue_adjustment[49] =
 {
@@ -614,18 +614,18 @@ lexmark_size_type(const stp_vars_t v, lexmark_cap_t caps)
 }
 
 
-static int lexmark_get_color_nozzles(const stp_printer_t printer) 
+static int lexmark_get_color_nozzles(const stp_printer_t printer)
 {
   return 192;
 }
 
-static int lexmark_get_black_nozzles(const stp_printer_t printer) 
+static int lexmark_get_black_nozzles(const stp_printer_t printer)
 {
   return 208;
 }
 
 /*
-static int lexmark_get_nozzle_resolution(const stp_printer_t printer) 
+static int lexmark_get_nozzle_resolution(const stp_printer_t printer)
 {
   return 1200;
 }
@@ -673,7 +673,7 @@ static const lexmark_res_t lexmark_reslist[] = {
 };
 
 
-static const lexmark_res_t 
+static const lexmark_res_t
 *lexmark_get_resolution_para(const stp_printer_t printer,
 			    const char *resolution)
 {
@@ -691,7 +691,7 @@ static const lexmark_res_t
       res++;
     }
   return NULL;
-}	  
+}
 
 static int
 lexmark_print_bidirectional(const stp_printer_t printer,
@@ -706,7 +706,7 @@ lexmark_describe_resolution(const stp_printer_t printer,
 			    const char *resolution, int *x, int *y)
 {
   const lexmark_res_t *res = lexmark_get_resolution_para(printer, resolution);
-  
+
   if (res)
     {
       *x = res->hres;
@@ -915,7 +915,7 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 					   0x08,0x00,0x08,0x00,0x1b,0x2a,0x07,0x73,
 					   0x30,0x1b,0x2a,0x6d,0x00,0x14,0x01,0xf4,
 					   0x02,0x00,0x01,0xf0,0x1b,0x2a,0x07,0x63 };*/
-  
+
 #define LXM_Z52_STARTSIZE 0x35
   /* 300 dpi */
   char startHeader_z52[LXM_Z52_STARTSIZE]={0x1b,0x2a,0x81,0x00,0x1c,0x56,0x49,0x00,
@@ -940,7 +940,7 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 	};
 
   /* write init sequence */
-  switch(caps.model) 
+  switch(caps.model)
 	{
 		case m_z52:
 			stp_zfwrite(startHeader_z52,LXM_Z52_STARTSIZE,1,v);
@@ -952,7 +952,7 @@ lexmark_init_printer(const stp_vars_t v, lexmark_cap_t caps,
 
 		default:
 			fprintf(stderr, "Unknown printer !! %i\n", caps.model);
-			exit(2); 
+			exit(2);
   }
 
   if (output_type==OUTPUT_GRAY) {
@@ -999,7 +999,7 @@ static void lexmark_deinit_printer(const stp_vars_t v, lexmark_cap_t caps)
 				0x1b, 0x31, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00,
 				0x1b, 0x33, 0x10, 0x00, 0x00, 0x00, 0x00, 0x33
 			};
-				
+
 #ifdef DEBUG
 			printf("Headpos: %d\n", lxm3200_headpos);
 #endif
@@ -1011,7 +1011,7 @@ static void lexmark_deinit_printer(const stp_vars_t v, lexmark_cap_t caps)
 			buffer[11] = lxm3200_headpos >> 8;
 			buffer[12] = lxm3200_headpos & 0xff;
 			buffer[15] = lexmark_calc_3200_checksum(&buffer[8]);
-			
+
 			stp_zfwrite(buffer, 24, 1, v);
 		}
 		break;
@@ -1037,7 +1037,7 @@ static void paper_shift(const stp_vars_t v, int offset, lexmark_cap_t caps)
 			stp_zfwrite(buf, 1, 5, v);
 		}
 		break;
-			
+
 		case m_3200:
 		{
 			unsigned char buf[8] = {0x1b, 0x23, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -1088,36 +1088,36 @@ lexmark_advance_buffer(unsigned char *buf, int len, int num)
 
 
 static int
-clean_color(unsigned char *line, int len) 
+clean_color(unsigned char *line, int len)
 {
   return 0;
 }
 
 
 
-static void setcol0(char *a, int al) 
+static void setcol0(char *a, int al)
 {
   int i;
-  
+
   for (i=0; i < al; i++) {
     a[i] = 0;
   }
 }
 
-static void setcol1(char *a, int al) 
+static void setcol1(char *a, int al)
 {
   int i;
-  
+
   for (i=0; i < al; i++) {
     a[i] = 0x89;
     a[i] = 0xFF;
   }
 }
 
-static void setcol2(char *a, int al) 
+static void setcol2(char *a, int al)
 {
   int i;
-  
+
   for (i=0; i < al; i++) {
     a[i] = 0x89;
     a[i] = 0xFF;
@@ -1129,16 +1129,16 @@ static void setcol2(char *a, int al)
  * lexmark_print() - Print an image to a LEXMARK printer.
  **********************************************************/
 /* This method should not be printer dependent (mybe it is because of nozzle count and other things) */
-/* The method will set the printing method depending on the selected printer. 
+/* The method will set the printing method depending on the selected printer.
    It will define the colors to be used and the resolution.
-   Additionally the "interlace" and pass_length will be defined. 
-   Interlace defines how many lines are prepaird related to one printer pass. 
-   A value of 2 tells that we prepair the double number of lines which could be 
-   printed with a single printer pass. This will be done because in this method we 
+   Additionally the "interlace" and pass_length will be defined.
+   Interlace defines how many lines are prepaird related to one printer pass.
+   A value of 2 tells that we prepair the double number of lines which could be
+   printed with a single printer pass. This will be done because in this method we
    only prepair continouse lines (it will be going to be complicated if we don't work like this).
-   The methods lexmark_getNextMode() & lexmark_write() are responsible to handle the received lines 
-   in a correct way. (Maybe, this is not very well from the design point of view, but 
-   lexmark_getNextMode() & lexmark_write() are doing some other "special" things like 
+   The methods lexmark_getNextMode() & lexmark_write() are responsible to handle the received lines
+   in a correct way. (Maybe, this is not very well from the design point of view, but
+   lexmark_getNextMode() & lexmark_write() are doing some other "special" things like
    printing every second pixel, which is not so simpe to handle in this method).
 */
 static void
@@ -1267,7 +1267,7 @@ lexmark_print(const stp_printer_t printer,		/* I - Model */
     /* color mode */
     printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M;
     pass_length=192/3;
-    
+
     if (printhead==2 && (caps.inks & LEXMARK_INK_BLACK_MASK)) {
       printMode |= COLOR_MODE_K;
     }
@@ -1330,7 +1330,7 @@ lexmark_describe_resolution(printer,
     /* in case of photo mode we have to go a bit ligther */
     densityDivisor *= 2;
   }
- 
+
   switch (ydpi) {
   case 300:
     pass_shift = 0;
@@ -1381,7 +1381,7 @@ lexmark_describe_resolution(printer,
 			  &out_width, &out_length, &left, &top);
 
 #ifdef DEBUG
-  printf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top); 
+  printf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 #endif
 
   /*
@@ -1416,7 +1416,7 @@ lexmark_describe_resolution(printer,
 
   left = ((300 * left) / 72) + caps.offset_left_border;
 
-  
+
   delay_max = (92*d_interlace);
   delay_k=(delay_max-((23+19)*d_interlace)); ;/*22; */
   delay_c=((64+12+12+4)*d_interlace);/*0;*/
@@ -1429,7 +1429,7 @@ lexmark_describe_resolution(printer,
     delay_k=(delay_max-((92)*d_interlace));
   }
   delay_max += pass_shift*interlace;
-  
+
 
  /*
   * Allocate memory for the raster data...
@@ -1457,7 +1457,7 @@ lexmark_describe_resolution(printer,
   lcyan   = NULL;
   lmagenta= NULL;
   lyellow = NULL;
- 
+
   if ((printMode & COLOR_MODE_C) == COLOR_MODE_C) {
     cyan    = lexmark_alloc_buffer(buf_length*interlace*(delay_c+1+pass_length+pass_shift));
   }
@@ -1527,7 +1527,7 @@ lexmark_describe_resolution(printer,
 
   stp_dither_set_black_levels(dither, 1.0, 1.0, 1.0);
 
- 
+
 
   /*
   if(printMode & (COLOR_MODE_LM | COLOR_MODE_LC | COLOR_MODE_LY))
@@ -1557,7 +1557,7 @@ lexmark_describe_resolution(printer,
         stp_dither_set_adaptive_divisor(dither, 8);
       else
         stp_dither_set_adaptive_divisor(dither, 4);
-    }  
+    }
   else
     stp_dither_set_adaptive_divisor(dither, 4);
 	*/
@@ -1633,7 +1633,7 @@ lexmark_describe_resolution(printer,
 		       lyellow,  delay_ly, \
 		       length, out_width, left, use_dmt, \
 		       1);
- 
+
 
   if (printhead == 5) {
     /* we are in test mode !!! */
@@ -1646,45 +1646,45 @@ lexmark_describe_resolution(printer,
     setcol0(yellow,   buf_length*((delay_y+ pass_length+pass_shift)*interlace));
     setcol0(lcyan,    buf_length*((delay_lc+pass_length+pass_shift)*interlace));
     setcol0(lmagenta, buf_length*((delay_lm+pass_length+pass_shift)*interlace));
-    
+
     setcol1(black,    buf_length*((delay_k+ pass_length+pass_shift)*interlace));
 
     WLINE;
-    
+
     setcol0(black,    buf_length*((delay_k+ pass_length+pass_shift)*interlace));
 
     WLINE;
     WLINE;
     WLINE;
-   
+
     setcol1(lmagenta, buf_length*((delay_lm+pass_length+pass_shift)*interlace));
     WLINE;
     setcol0(lmagenta,  buf_length*((delay_lm+ pass_length+pass_shift)*interlace));
     WLINE;
     WLINE;
     WLINE;
-   
+
     setcol1(lcyan,    buf_length*((delay_lc+pass_length+pass_shift)*interlace));
     WLINE;
     setcol0(lcyan,  buf_length*((delay_lc+ pass_length+pass_shift)*interlace));
     WLINE;
     WLINE;
     WLINE;
-   
+
     setcol1(cyan,    buf_length*((delay_c+pass_length+pass_shift)*interlace));
     WLINE;
     setcol0(cyan,  buf_length*((delay_c+ pass_length+pass_shift)*interlace));
     WLINE;
     WLINE;
     WLINE;
-   
+
     setcol1(magenta,    buf_length*((delay_m+pass_length+pass_shift)*interlace));
     WLINE;
     setcol0(magenta,  buf_length*((delay_m+ pass_length+pass_shift)*interlace));
     WLINE;
     WLINE;
     WLINE;
-   
+
     setcol1(yellow,    buf_length*((delay_y+pass_length+pass_shift)*interlace));
     WLINE;
     setcol0(yellow,  buf_length*((delay_y+ pass_length+pass_shift)*interlace));
@@ -1707,7 +1707,7 @@ lexmark_describe_resolution(printer,
 	} else {
 	  actPassHeight = (out_length-((yl) * interlace*pass_length));
 	}
-          
+
 	for (yi = 0; yi < actPassHeight; yi ++)  {
 	  y = (yl*interlace*pass_length) + yi;
 	  lexmark_advance_buffer(black,    buf_length,(delay_k+pass_length+pass_shift)*interlace);
@@ -1740,7 +1740,7 @@ lexmark_describe_resolution(printer,
 	    if (lyellow)   setcol2(lyellow,     buf_length);
 	    if (lmagenta)  setcol2(lmagenta,    buf_length);
 	    if (lcyan)     setcol2(lcyan,       buf_length);
-	 
+
 	    if (black)	 setcol2(black,    buf_length);
 	  }
 
@@ -1774,7 +1774,7 @@ lexmark_describe_resolution(printer,
 	  lexmark_advance_buffer(yellow,   buf_length,(delay_y+pass_length+pass_shift)*interlace);
 	  lexmark_advance_buffer(lcyan,    buf_length,(delay_lc+pass_length+pass_shift)*interlace);
 	  lexmark_advance_buffer(lmagenta, buf_length,(delay_lm+pass_length+pass_shift)*interlace);
-	  lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);	 
+	  lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);
 	}
 
 	lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
@@ -1787,14 +1787,14 @@ lexmark_describe_resolution(printer,
 			   lyellow,  delay_ly,
 			   length, out_width, left, use_dmt,
 			   lexmark_print_bidirectional(printer, resolution));
-     
+
 
       }
 
 
 
 
-    
+
     image->progress_conclude(image);
 
 
@@ -1826,7 +1826,7 @@ lexmark_describe_resolution(printer,
       int duplicate_line = 1;
 
 #ifdef DEBUG
-      fprintf(stderr,"print yl %i of %i\n", yl, out_length/pass_length); 
+      fprintf(stderr,"print yl %i of %i\n", yl, out_length/pass_length);
 #endif
 
       if (((yl+1) * interlace*pass_length) < out_length) {
@@ -1837,7 +1837,7 @@ lexmark_describe_resolution(printer,
 #ifdef DEBUG
       printf(">>> yl %d, actPassHeight %d, out_length %d\n", yl, actPassHeight, out_length);
 #endif
-          
+
       for (yi = 0; yi < actPassHeight; yi ++)  {
 	y = (yl*interlace*pass_length) + yi;
 	lexmark_advance_buffer(black,    buf_length,(delay_k+pass_length+pass_shift)*interlace);
@@ -1896,7 +1896,7 @@ lexmark_describe_resolution(printer,
 	lexmark_advance_buffer(yellow,   buf_length,(delay_y+pass_length+pass_shift)*interlace);
 	lexmark_advance_buffer(lcyan,    buf_length,(delay_lc+pass_length+pass_shift)*interlace);
 	lexmark_advance_buffer(lmagenta, buf_length,(delay_lm+pass_length+pass_shift)*interlace);
-	lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);	 
+	lexmark_advance_buffer(lyellow,  buf_length,(delay_ly+pass_length+pass_shift)*interlace);
       }
 
       lexmark_write_line(v, outbuf, printMode, &direction, &elinescount, xresolution,  yresolution, interlace, pass_length, pass_shift, caps, ydpi,
@@ -1909,7 +1909,7 @@ lexmark_describe_resolution(printer,
 			 lyellow,  delay_ly,
 			 length, out_width, left, use_dmt,
 			 lexmark_print_bidirectional(printer, resolution));
-     
+
 
       /* we have to collect the lines for the inkjets */
 
@@ -1925,7 +1925,7 @@ lexmark_describe_resolution(printer,
 	    errval -= out_length;
 	    errline ++;
 	    }*/
-    } 
+    }
   image->progress_conclude(image);
 
   stp_free_dither(dither);
@@ -1963,7 +1963,7 @@ lexmark_describe_resolution(printer,
 			   lyellow,  delay_ly,
 			   length, out_width, left, use_dmt,
 			   lexmark_print_bidirectional(printer, resolution));
-     
+
       } /* for yl */
   } /* if delay_max */
 
@@ -2005,12 +2005,12 @@ stp_printfuncs_t stp_lexmark_printfuncs =
 
 
 
-/* lexmark_init_line 
+/* lexmark_init_line
    This method is printer type dependent code.
 
-   This method initializes the line to be printed. It will set 
-   the printer specific initialization which has to be done bofor 
-   the pixels of the image could be printed. 
+   This method initializes the line to be printed. It will set
+   the printer specific initialization which has to be done bofor
+   the pixels of the image could be printed.
 */
 static unsigned char *
 lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int direction,
@@ -2035,7 +2035,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
     /* K could only be present if black is printed only. */
     if ((mode & COLOR_MODE_K) || (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) {
 #ifdef DEBUG
-      fprintf(stderr,"set  photo/black catridge \n"); 
+      fprintf(stderr,"set  photo/black catridge \n");
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_BLACK_PRINT;
 
@@ -2045,10 +2045,10 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
       }
     } else {
 #ifdef DEBUG
-      fprintf(stderr,"set color catridge \n"); 
+      fprintf(stderr,"set color catridge \n");
 #endif
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_COLOR_PRINT;
-      
+
       if (direction) {
 	offset += caps.v_offset_balck_color;
       } else {
@@ -2056,7 +2056,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
 	offset += caps.direction_offset_color;
       }
     }
-    
+
     switch (mode & PRINT_MODE_MASK) {
     case PRINT_MODE_300:
       prnBuf[LX_Z52_RESOLUTION_POS] = LX_Z52_300_DPI;
@@ -2071,16 +2071,16 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
       prnBuf[LX_Z52_RESOLUTION_POS] = LX_Z52_2400_DPI;
       break;
     }
-    
+
 
     if (direction) {
       prnBuf[LX_Z52_PRINT_DIRECTION_POS] = 1;
     } else {
       prnBuf[LX_Z52_PRINT_DIRECTION_POS] = 2;
     }
-    
 
-    /* set package count */    
+
+    /* set package count */
     prnBuf[13] =(unsigned char)((width) >> 8);
     prnBuf[14] =(unsigned char)((width) & 0xFF);
     /* set horizotal offset */
@@ -2099,7 +2099,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
     /*   prnBuf[LX_PSHIFT] = (paperShift) >> 8;
 	 prnBuf[LX_PSHIFT+1] = (paperShift) & 0xff;*/
 
- 
+
     return prnBuf+LXM_Z52_HEADERSIZE;  /* return the position where the pixels have to be written */
     break;
     case m_3200:
@@ -2108,13 +2108,13 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
       offset = (offset - 60) * 4;
 
       /* K could only be present if black is printed only. */
-      if((mode & COLOR_MODE_K) || 
-	 (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) 
+      if((mode & COLOR_MODE_K) ||
+	 (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM)))
 	{
 	  disp = LXM3200_LEFTOFFS;
 	  prnBuf[2] = 0x00;
 	}
-      else 
+      else
 	{
 	  disp = LXM3200_RIGHTOFFS;
 	  prnBuf[2] = 0x80;
@@ -2144,13 +2144,13 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
 	  pos2 = (offset + width) + disp;
 	  break;
 	}
-    
-      if(direction) 
+
+      if(direction)
 	prnBuf[2] |= 0x01;
-      else 
+      else
 	prnBuf[2] |= 0x00;
-    
-      /* set package count */    
+
+      /* set package count */
       prnBuf[3] = (unsigned char)((width) >> 8);
       prnBuf[4] = (unsigned char)((width) & 0xff);
 
@@ -2161,13 +2161,13 @@ lexmark_init_line(int mode, unsigned char *prnBuf, int offset, int width, int di
       abspos = ((((pos2 - 3600) >> 3) & 0xfff0) + 9);
       prnBuf[5] = (abspos-lxm3200_headpos) >> 8;
       prnBuf[6] = (abspos-lxm3200_headpos) & 0xff;
-			
-      lxm3200_headpos = abspos;			
+
+      lxm3200_headpos = abspos;
 
       if(LXM3200_RIGHTOFFS > 4816)
 	abspos = (((LXM3200_RIGHTOFFS - 4800) >> 3) & 0xfff0);
       else
-	abspos = (((LXM3200_RIGHTOFFS - 3600) >> 3) & 0xfff0);			
+	abspos = (((LXM3200_RIGHTOFFS - 3600) >> 3) & 0xfff0);
 
       prnBuf[11] = (lxm3200_headpos-abspos) >> 8;
       prnBuf[12] = (lxm3200_headpos-abspos) & 0xff;
@@ -2201,8 +2201,8 @@ typedef struct Lexmark_head_colors {
 
 /* lexmark_write
    This method is has NO printer type dependent code.
-   This method writes a single line of the print. The line consits of "pass_length" 
-   pixel lines (pixels, which could be printed with one pass by the printer. 
+   This method writes a single line of the print. The line consits of "pass_length"
+   pixel lines (pixels, which could be printed with one pass by the printer.
 */
 static int
 lexmark_write(const stp_vars_t v,		/* I - Print file or command */
@@ -2211,7 +2211,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	      int direction,
 	      int pass_length,       /* num of inks to print */
 	      lexmark_cap_t   caps,	        /* I - Printer model */
-	      int xresolution, 
+	      int xresolution,
 	      int yCount,
 	      Lexmark_head_colors *head_colors,
 	      int           length,	/* I - Length of bitmap data */
@@ -2240,10 +2240,10 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 #ifdef DEBUG
   /* fprintf(stderr,"<%d%c>",*empty,("CMYKcmy"[coloridx])); */
 #endif
-  
-  
+
+
   /* first we have to write the initial sequence for a line */
-  
+
 #ifdef DEBUG
   fprintf(stderr,"lexmark: printer line initialized.\n");
 #endif
@@ -2266,7 +2266,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 			direction,  /* direction */
 			caps);
 
-  
+
 #ifdef DEBUG
   fprintf(stderr,"lexmark: xStart %d, xEnd %d, xIter %d.\n", xStart, xEnd, xIter);
 #endif
@@ -2281,7 +2281,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   fprintf(stderr,"lexmark: calc_length %d.\n",calc_length);
 #endif
 
- 
+
   for (x=xStart; x != xEnd; x+=xIter) {
     int  anyDots=0; /* tells us if there was any dot to print */
 
@@ -2301,7 +2301,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	case m_lex7500:
 	  break;
 	}
-   
+
 
     pixelline =0;     /* here we store 16 pixels */
     valid_bytes = 0;  /* for every valid word (16 bits) a corresponding bit will be set to 1. */
@@ -2310,11 +2310,11 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     x1 = x+get_lr_shift(mode);
 
     for (colIndex=0; colIndex < 3; colIndex++) {
-      for (dy=head_colors[colIndex].head_nozzle_start,y=head_colors[colIndex].v_start*yCount; 
-	   (dy < head_colors[colIndex].head_nozzle_end); 
+      for (dy=head_colors[colIndex].head_nozzle_start,y=head_colors[colIndex].v_start*yCount;
+	   (dy < head_colors[colIndex].head_nozzle_end);
 	   y+=yCount, dy++) { /* we start counting with 1 !!!! */
 	if ((head_colors[colIndex].line != NULL) &&
-	    ((((x%2)==0) && (mode & EVEN_NOZZLES_H)) || 
+	    ((((x%2)==0) && (mode & EVEN_NOZZLES_H)) ||
 	     (((x%2)==1) && (mode & ODD_NOZZLES_H)))) {
 	  pixelline = pixelline << 1;
 	  if (x >= 0)
@@ -2324,7 +2324,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	  if (x1 < width)
 	    if (mode & EVEN_NOZZLES_V)
 	      pixelline = pixelline | ((head_colors[colIndex].line[(((calc_length-(yCount>>1))-(y))*length)+ (x1/8)] >> (7-(x1%8))) & 0x1);
-	  
+
 	} else {
 	  pixelline = pixelline << 2;
 	}
@@ -2345,22 +2345,22 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 	    pixelline =0;
 	  }
 	  break;
-	  
+
 	case m_3200:
-	  if((dy % 4) == 3) 
+	  if((dy % 4) == 3)
 	    {
 	      anyDots |= pixelline;
 	      valid_bytes <<= 1;
-	      
+
 	      if(pixelline)
 		*(p++) = (unsigned char)(pixelline & 0xff);
 	      else
 		valid_bytes |= 0x01;
-	      
+
 	      pixelline = 0;
 	    }
 	  break;
-	  
+
 	case m_lex7500:
 	  break;
 	}
@@ -2376,19 +2376,19 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
       tbits[0] = 0x20 | ((unsigned char)((valid_bytes >> 8) & 0x1f));
       tbits[1] = (unsigned char)(valid_bytes & 0xff);
       break;
-      
+
     case m_3200:
       tbits[0] = 0x80 | ((unsigned char)((valid_bytes >> 24) & 0x1f));
       tbits[1] = (unsigned char)((valid_bytes >> 16) & 0xff);
       tbits[2] = (unsigned char)((valid_bytes >> 8) & 0xff);
       tbits[3] = (unsigned char)(valid_bytes & 0xff);
       break;
-      
+
     case m_lex7500:
       break;
-    }						
-    
-    
+    }
+
+
     if (anyDots) {
       anyCol = 1;
     } else {
@@ -2398,9 +2398,9 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 #endif
     }
   }
-    
-    
-  clen=((unsigned char *)p)-prnBuf; 
+
+
+  clen=((unsigned char *)p)-prnBuf;
   if (maxclen < clen) {
     maxclen = clen;
   }
@@ -2412,21 +2412,21 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
   prnBuf[IDX_SEQLEN+2]  =(unsigned char)(clen >> 8);
   prnBuf[IDX_SEQLEN+3]=(unsigned char)(clen & 0xFF);
   break;
-  
+
   case m_3200:
     prnBuf[18] = (unsigned char)((clen - LXM_3200_HEADERSIZE) >> 16);
     prnBuf[19] = (unsigned char)((clen - LXM_3200_HEADERSIZE) >> 8);
     prnBuf[20] = (unsigned char)((clen - LXM_3200_HEADERSIZE) & 0xff);
     prnBuf[23] = (unsigned char)lexmark_calc_3200_checksum(&prnBuf[16]);
     break;
-    
+
   default:
     break;
   }
-  
+
   if (anyCol) {
     /* fist, move the paper */
-    paper_shift(v, (*paperShift), caps);   
+    paper_shift(v, (*paperShift), caps);
     *paperShift=0;
 
     /* now we write the image line */
@@ -2437,7 +2437,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
     return 1;
   } else {
 #ifdef DEBUG
-    fprintf(stderr,"-- empty line\n"); 
+    fprintf(stderr,"-- empty line\n");
 #endif
     return 0;
   }
@@ -2449,7 +2449,7 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
 static int
-lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, int *pass_shift, int *interlace) 
+lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, int *pass_shift, int *interlace)
 {
   /* This method should be printer independent */
   /* The method calculates, dependent from the resolution, the line step size. Additionally it sets the mode
@@ -2469,7 +2469,7 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
   */
 
   int full_pass_step = pass_length *2;
-  int overprint_step1, overprint_step2; 
+  int overprint_step1, overprint_step2;
 
 
   switch (*mode & PRINT_MODE_MASK) {
@@ -2601,7 +2601,7 @@ lexmark_getNextMode(int *mode, int *direction, int pass_length, int *lineStep, i
       *mode = (*mode & (~NOZZLE_MASK)) | (ODD_NOZZLES_V | ODD_NOZZLES_H);
       return true;
     }
-    break;  
+    break;
   }
   return false;
 }
@@ -2648,15 +2648,15 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
 				      {0, NULL,  64/2, 128/2},
 				      {0, NULL, 128/2, 192/2}};
 
-  
-  /*  paper_shift(v, *elinescount, caps);   
+
+  /*  paper_shift(v, *elinescount, caps);
    *elinescount=0;*/
   pass_shift = 0;
-  
+
   while (lexmark_getNextMode(&printMode, direction, pass_length, elinescount, &pass_shift, &interlace)) {
     if ((printMode & (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M)) == (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M)) {
 #ifdef DEBUG
-      fprintf(stderr,"print with color catridge (%x %x %x\n", (int)c, (int)m, (int)y); 
+      fprintf(stderr,"print with color catridge (%x %x %x\n", (int)c, (int)m, (int)y);
 #endif
       /*      if ((printMode & (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) != (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM))*/ if (1) {
 	/* print CMY at CMYK */
@@ -2687,7 +2687,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       head_colors[0].line = 0;
       head_colors[2].line = 0;
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
-			head_colors, 
+			head_colors,
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), /* we print black only */
 			ydpi, &empty, width, offset, dmt))
 	if (bidirectional_printing)
@@ -2696,7 +2696,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
     if ((printMode & (COLOR_MODE_MASK)) == COLOR_MODE_K) {
       /* print K at K mode */
 #ifdef DEBUG
-      fprintf(stderr,"print with black catridge (%x\n",(int)k); 
+      fprintf(stderr,"print with black catridge (%x\n",(int)k);
 #endif
       head_colors[0].head_nozzle_start = 0;
       head_colors[0].head_nozzle_end = pass_length/2;
@@ -2711,7 +2711,7 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       head_colors[2].line = NULL;
 
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution,  interlace,
-			head_colors, 
+			head_colors,
 			l, printMode, /* we print black only */
 			ydpi, &empty, width, offset, dmt))
 	if (bidirectional_printing)
@@ -2721,20 +2721,20 @@ lexmark_write_line(const stp_vars_t v,	/* I - Print file or command */
       /* print lClMK at CMYlClMK mode */
       /* photo cartridge has dark colors ! */
 #ifdef DEBUG
-      fprintf(stderr,"print with photo catridge (%x %x %x\n", (int)lc, (int)lm, (int)k); 
+      fprintf(stderr,"print with photo catridge (%x %x %x\n", (int)lc, (int)lm, (int)k);
 #endif
       head_colors[0].line = lc+(l*dlc)+(l*i*pass_shift);
       head_colors[1].line = lm+(l*dlm)+(l*i*pass_shift);
       head_colors[2].line = k +(l*dk) +(l*i*pass_shift);
       if (lexmark_write(v, prnBuf, elinescount, *direction, pass_length, caps, xresolution, interlace,
-			head_colors,   
-			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), 
+			head_colors,
+			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y),
 			ydpi, &empty, width, offset, dmt))
 	if (bidirectional_printing)
 	  *direction = (*direction +1) & 1;
     }
   }
-  
+
 
 
   if (written)
@@ -2749,7 +2749,7 @@ const stp_vars_t lex_show_init(int x, int y) {
   const stp_vars_t ofile;
 
   ofile = fopen("/tmp/xx.ppm", "wb");
-  if (ofile == NULL) 
+  if (ofile == NULL)
 	{
     printf("Can't create file !\n");
     exit(2);
@@ -2793,19 +2793,19 @@ void lex_show_dither(const stp_vars_t file, unsigned char *y, unsigned char *c, 
       }
       if ((m!=NULL) && (((m[i/8] >> (7-(i%8))) & 0x1) == 1)) {
 	col[1] -= DCOL;
-      } 
+      }
       if ((y!=NULL) && (((y[i/8] >> (7-(i%8))) & 0x1) == 1)) {
 	col[2] -= DCOL;
-      } 
+      }
       if ((lc!=NULL) && (((lc[i/8] >> (7-(i%8))) & 0x1) == 1)) {
 	col[0] -= LCOL;
       }
       if ((lm!=NULL) && (((lm[i/8] >> (7-(i%8))) & 0x1) == 1)) {
 	col[1] -= LCOL;
-      } 
+      }
       if ((ly!=NULL) && (((ly[i/8] >> (7-(i%8))) & 0x1) == 1)) {
 	col[2] -= LCOL;
-      } 
+      }
     } else {
       col[0] = 0;
       col[1] = 0;

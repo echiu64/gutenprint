@@ -1072,11 +1072,11 @@ void parse_canon(FILE *fp_r){
    Cyan     2       2        2 C
    Yellow   4       4        3 Y
    L.Mag.   17      257      4 m
-   L.Cyan   18      258      5 c 
+   L.Cyan   18      258      5 c
    L.Yellow NA      NA       6 y
  */
      case 'A': /* 0x41 - transfer graphics data */
-       switch (*buf) { 
+       switch (*buf) {
        case 'K': currentcolor= 0; currentdelay= delay_K; break;
        case 'M': currentcolor= 1; currentdelay= delay_M; break;
        case 'C': currentcolor= 2; currentdelay= delay_C; break;

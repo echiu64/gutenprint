@@ -295,7 +295,7 @@ typedef struct {
  * The rest use Media Type and Print Quality.
  *
  * This data comes from the HP documentation "Deskjet 1220C and 1120C
- * PCL reference guide 2.0, Nov 1999". 
+ * PCL reference guide 2.0, Nov 1999".
  */
 
 static pcl_cap_t pcl_model_capabilities[] =
@@ -1191,7 +1191,7 @@ static double lum_adjustment[49] =
   0.51,
   0.54,
   0.57				/* C */
-};  
+};
 
 static double hue_adjustment[49] =
 {

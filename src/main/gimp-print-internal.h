@@ -378,7 +378,7 @@ extern void stp_eprintf(const stp_vars_t v, const char *format, ...);
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print
- * run, it will print out how long and how many time did 
+ * run, it will print out how long and how many time did
  * certain pieces of code take. Of course, don't forget about
  * overhead of call to gettimeofday - it's not zero.
  * If you need more detailed performance stats, just put

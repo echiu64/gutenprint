@@ -390,7 +390,7 @@ stp_set_outfunc(stp_vars_t vv, stp_outfunc_t outfunc)
   v->outfunc = outfunc;
 }
 
-stp_outfunc_t 
+stp_outfunc_t
 stp_get_outfunc(const stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
@@ -404,7 +404,7 @@ stp_set_errfunc(stp_vars_t vv, stp_outfunc_t errfunc)
   v->errfunc = errfunc;
 }
 
-stp_outfunc_t 
+stp_outfunc_t
 stp_get_errfunc(const stp_vars_t vv)
 {
   stp_internal_vars_t *v = (stp_internal_vars_t *) vv;
@@ -542,7 +542,7 @@ const static stp_internal_papersize_t paper_sizes[] =
   { N_ ("B8 ISO"),    175,  249, PAPERSIZE_METRIC },	/*   62mm x   88mm */
   { N_ ("B9 ISO"),    124,  175, PAPERSIZE_METRIC },	/*   44mm x   62mm */
   { N_ ("B10 ISO"),    87,  124, PAPERSIZE_METRIC },	/*   31mm x   44mm */
-  
+
   { N_ ("B0 JIS"),   2919, 4127, PAPERSIZE_METRIC },
   { N_ ("B1 JIS"),   2063, 2919, PAPERSIZE_METRIC },
   { N_ ("B2 JIS"),   1459, 2063, PAPERSIZE_METRIC },
@@ -756,7 +756,7 @@ stp_known_printers(void)
   return printer_count;
 }
 
-const stp_printer_t 
+const stp_printer_t
 stp_get_printer_by_index(int idx)
 {
   if (idx < 0 || idx >= printer_count)
@@ -764,7 +764,7 @@ stp_get_printer_by_index(int idx)
   return (const stp_printer_t) &(printers[idx]);
 }
 
-const stp_printer_t 
+const stp_printer_t
 stp_get_printer_by_long_name(const char *long_name)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -778,7 +778,7 @@ stp_get_printer_by_long_name(const char *long_name)
   return NULL;
 }
 
-const stp_printer_t 
+const stp_printer_t
 stp_get_printer_by_driver(const char *driver)
 {
   const stp_internal_printer_t *val = &(printers[0]);
@@ -1253,7 +1253,7 @@ stp_eprintf(const stp_vars_t v, const char *format, ...)
   (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
   free(result);
 }
-  
+
 
 
 #ifdef QUANTIFY
