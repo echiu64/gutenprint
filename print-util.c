@@ -1247,13 +1247,6 @@ compute_lut(size_t steps, vars_t *uv)
   float brightness = uv->brightness;
   float screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
 
-  if (cyan < 0.01)
-    cyan = 0.01;
-  if (magenta < 0.01)
-    magenta = 0.01;
-  if (yellow < 0.01)
-    yellow = 0.01;
-
   uv->lut = allocate_lut(steps);
   for (i = 0; i < steps; i ++)
     {
@@ -1304,9 +1297,18 @@ compute_lut(size_t steps, vars_t *uv)
       else if (pixel > 1.0)
 	pixel = 1.0;
 
-      red_pixel = 1 - pow(1 - pixel, cyan);
-      green_pixel = 1 - pow(1 - pixel, magenta);
-      blue_pixel = 1 - pow(1 - pixel, yellow);
+      if (pixel > .9999 && cyan < .00001)
+	red_pixel = 0;
+      else
+	red_pixel = 1 - pow(1 - pixel, cyan);
+      if (pixel > .9999 && magenta < .00001)
+	green_pixel = 0;
+      else
+	green_pixel = 1 - pow(1 - pixel, magenta);
+      if (pixel > .9999 && yellow < .00001)
+	blue_pixel = 0;
+      else
+	blue_pixel = 1 - pow(1 - pixel, yellow);
 
       /*
        * Finally, fix up print gamma and scale
