@@ -633,11 +633,12 @@ EPSON Stylus Color 3000
 EPSON Stylus Photo
 EPSON Stylus Photo 700
 EPSON Stylus Photo EX
+EPSON Stylus Photo EX3          (NEW)
 EPSON Stylus Photo 720
 EPSON Stylus Photo 750
 EPSON Stylus Photo 780/785/790
 EPSON Stylus Photo 810/820
-EPSON Stylus Photo 830          (NEW)
+EPSON Stylus Photo 825/830      (NEW)
 EPSON Stylus Photo 870/875
 EPSON Stylus Photo 890/895
 EPSON Stylus Photo 915          (NEW)
@@ -661,6 +662,42 @@ EPSON Stylus Pro 9600           (NEW, experimental)
 EPSON Stylus Pro 10000
 EPSON Stylus Scan 2000
 EPSON Stylus Scan 2500
+EPSON CL-700                    (NEW)
+EPSON CL-750                    (NEW)
+EPSON EM-900C                   (NEW)
+EPSON EM-930C                   (NEW)
+EPSON MC-10000                  (NEW)
+EPSON MC-2000                   (NEW)
+EPSON MC-5000                   (NEW)
+EPSON MC-7000                   (NEW)
+EPSON MC-9000                   (NEW)
+EPSON MJ-5100C                  (NEW)
+EPSON MJ-520C                   (NEW)
+EPSON MJ-6000C                  (NEW)
+EPSON MJ-8000C                  (NEW)
+EPSON PM-10000                  (NEW)
+EPSON PM-2000C                  (NEW)
+EPSON PM-2200C                  (NEW)
+EPSON PM-3000C                  (NEW)
+EPSON PM-3300C                  (NEW)
+EPSON PM-3500C                  (NEW)
+EPSON PM-4000PX                 (NEW)
+EPSON PM-5000C                  (NEW)
+EPSON PM-7000C                  (NEW)
+EPSON PM-700C                   (NEW)
+EPSON PM-730C                   (NEW)
+EPSON PM-750C                   (NEW)
+EPSON PM-760C                   (NEW)
+EPSON PM-770C                   (NEW)
+EPSON PM-780C                   (NEW)
+EPSON PM-790PT                  (NEW)
+EPSON PM-800C                   (NEW)
+EPSON PM-850PT                  (NEW)
+EPSON PM-880C                   (NEW)
+EPSON PM-9000C                  (NEW)
+EPSON PM-950C                   (NEW)
+EPSON PX-7000                   (NEW)
+EPSON PX-9000                   (NEW)
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -851,6 +888,7 @@ Epson Stylus Photo 785         escp2-785       EPSON Stylus Photo 785EPX
 Epson Stylus Photo 790         escp2-790       EPSON Stylus Photo 790
 Epson Stylus Photo 810         escp2-810       EPSON Stylus Photo 810
 Epson Stylus Photo 820         escp2-820       EPSON Stylus Photo 820
+Epson Stylus Photo 825         escp2-825       EPSON Stylus Photo 825
 Epson Stylus Photo 830         escp2-830       EPSON Stylus Photo 830
 Epson Stylus Photo 870         escp2-870       EPSON Stylus Photo 870
 Epson Stylus Photo 875         escp2-875       EPSON Stylus Photo 875
@@ -861,6 +899,7 @@ Epson Stylus Photo 925         escp2-925       EPSON Stylus Photo 925
 Epson Stylus Photo 950         escp2-950       EPSON Stylus Photo 950
 Epson Stylus Photo 960         escp2-960       EPSON Stylus Photo 960
 Epson Stylus Photo EX          escp2-ex        EPSON Stylus Photo EX
+Epson Stylus Photo EX3         escp2-ex3       EPSON Stylus Photo EX3
 Epson Stylus Pro 10000         escp2-10000     EPSON Stylus Pro 10000
 Epson Stylus Pro 5000          escp2-5000      EPSON Stylus Pro 5000
 Epson Stylus Pro 5500          escp2-5500      EPSON Stylus Pro 5500
@@ -873,23 +912,42 @@ Epson Stylus Pro 9600          escp2-9600      EPSON Stylus Pro 9600
 Epson Stylus Pro XL            escp2-pro-xl    EPSON Stylus Color Pro XL
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
-Epson PM-700C		       escp2-photo     EPSON Stylus Photo
-Epson PM-730C		       escp2-780       EPSON Stylus Photo 780
-Epson PM-750C		       escp2-700       EPSON Stylus Photo 700
-Epson PM-770C		       escp2-750       EPSON Stylus Photo 750
-Epson PM-780C		       escp2-780       EPSON Stylus Photo 780
-Epson PM-790PT		       escp2-785       EPSON Stylus Photo 785
-Epson PM-880C		       escp2-890       EPSON Stylus Photo 890
-Epson PM-950C		       escp2-950       EPSON Stylus Photo 950
-Epson PM-2000C		       escp2-ex	       EPSON Stylus Photo EX
-Epson PM-3000C		       escp2-1200      EPSON Stylus Photo 1200
-Epson PM-3500C		       escp2-1280      EPSON Stylus Photo 1280
-Epson PM-4000PX		       escp2-2100      EPSON Stylus Photo 2100/2200
-Epson MC-5000		       escp2-5000      EPSON Stylus Pro 5000
-Epson PM-7000C		       escp2-7000      EPSON Stylus Pro 7000
-Epson PM-9000C		       escp2-9000      EPSON Stylus Pro 9000
-Epson PM-10000		       escp2-10000     EPSON Stylus Pro 10000
-Epson MC-10000		       escp2-10000     EPSON Stylus Pro 10000
+Epson CL-700		       escp2-cl700     EPSON CL-700
+Epson CL-750		       escp2-cl750     EPSON CL-750
+Epson EM-900C		       escp2-em900c    EPSON EM-900C
+Epson EM-930C		       escp2-em930c    EPSON EM-930C
+Epson MC-10000		       escp2-mc10000   EPSON MC-10000
+Epson MC-2000		       escp2-mc2000    EPSON MC-2000
+Epson MC-5000		       escp2-mc5000    EPSON MC-5000
+Epson MC-7000		       escp2-mc7000    EPSON MC-7000
+Epson MC-9000		       escp2-mc9000    EPSON MC-9000
+Epson MJ-5100C		       escp2-mj5100c   EPSON MJ-5100C
+Epson MJ-520C		       escp2-mj520c    EPSON MJ-520C
+Epson MJ-6000C		       escp2-mj6000c   EPSON MJ-6000C
+Epson MJ-8000C		       escp2-mj8000c   EPSON MJ-8000C
+Epson PM-10000		       escp2-pm10000   EPSON PM-10000
+Epson PM-2000C		       escp2-pm2000c   EPSON PM-2000C
+Epson PM-2200C		       escp2-pm2200c   EPSON PM-2200C
+Epson PM-3000C		       escp2-pm3000c   EPSON PM-3000C
+Epson PM-3300C		       escp2-pm3300c   EPSON PM-3300C
+Epson PM-3500C		       escp2-pm3500c   EPSON PM-3500C
+Epson PM-4000PX		       escp2-pm4000px  EPSON PM-4000PX
+Epson PM-5000C		       escp2-pm5000c   EPSON PM-5000C
+Epson PM-7000C		       escp2-pm7000c   EPSON PM-7000C
+Epson PM-700C		       escp2-pm700c    EPSON PM-700C
+Epson PM-730C		       escp2-pm730c    EPSON PM-730C
+Epson PM-750C		       escp2-pm750c    EPSON PM-750C
+Epson PM-760C		       escp2-pm760c    EPSON PM-760C
+Epson PM-770C		       escp2-pm770c    EPSON PM-770C
+Epson PM-780C		       escp2-pm780c    EPSON PM-780C
+Epson PM-790PT		       escp2-pm790pt   EPSON PM-790PT
+Epson PM-800C		       escp2-pm800c    EPSON PM-800C
+Epson PM-850PT		       escp2-pm850pt   EPSON PM-850PT
+Epson PM-880C		       escp2-pm880c    EPSON PM-880C
+Epson PM-9000C		       escp2-pm9000c   EPSON PM-9000C
+Epson PM-950C		       escp2-pm950c    EPSON PM-950C
+Epson PX-7000		       escp2-px7000    EPSON PX-7000
+Epson PX-9000		       escp2-px9000    EPSON PX-9000
 Fujitsu PrintPartner 10V       pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 16DV      pcl-4           HP LaserJet 4 series
 Fujitsu PrintPartner 20W       pcl-6           HP LaserJet 6 series

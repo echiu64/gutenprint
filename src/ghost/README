@@ -496,6 +496,7 @@ escp2-3000              EPSON Stylus Color 3000
 escp2-photo             EPSON Stylus Photo
 escp2-700               EPSON Stylus Photo 700
 escp2-ex                EPSON Stylus Photo EX
+escp2-ex3               EPSON Stylus Photo EX3
 escp2-720               EPSON Stylus Photo 720
 escp2-750               EPSON Stylus Photo 750
 escp2-780               EPSON Stylus Photo 780
@@ -530,6 +531,42 @@ escp2-9600              EPSON Stylus Pro 9600
 escp2-10000             EPSON Stylus Pro 10000
 escp2-scan2000          EPSON Stylus Scan 2000
 escp2-scan2500          EPSON Stylus Scan 2500
+escp2-cl700		EPSON CL-700
+escp2-cl750		EPSON CL-750
+escp2-em900c		EPSON EM-900C
+escp2-em930c		EPSON EM-930C
+escp2-mc10000		EPSON MC-10000
+escp2-mc2000		EPSON MC-2000
+escp2-mc5000		EPSON MC-5000
+escp2-mc7000		EPSON MC-7000
+escp2-mc9000		EPSON MC-9000
+escp2-mj5100c		EPSON MJ-5100C
+escp2-mj520c		EPSON MJ-520C
+escp2-mj6000c		EPSON MJ-6000C
+escp2-mj8000c		EPSON MJ-8000C
+escp2-pm10000		EPSON PM-10000
+escp2-pm2000c		EPSON PM-2000C
+escp2-pm2200c		EPSON PM-2200C
+escp2-pm3000c		EPSON PM-3000C
+escp2-pm3300c		EPSON PM-3300C
+escp2-pm3500c		EPSON PM-3500C
+escp2-pm4000px		EPSON PM-4000PX
+escp2-pm5000c		EPSON PM-5000C
+escp2-pm7000c		EPSON PM-7000C
+escp2-pm700c		EPSON PM-700C
+escp2-pm730c		EPSON PM-730C
+escp2-pm750c		EPSON PM-750C
+escp2-pm760c		EPSON PM-760C
+escp2-pm770c		EPSON PM-770C
+escp2-pm780c		EPSON PM-780C
+escp2-pm790pt		EPSON PM-790PT
+escp2-pm800c		EPSON PM-800C
+escp2-pm850pt		EPSON PM-850PT
+escp2-pm880c		EPSON PM-880C
+escp2-pm9000c		EPSON PM-9000C
+escp2-pm950c		EPSON PM-950C
+escp2-px7000		EPSON PX-7000
+escp2-px9000		EPSON PX-9000
 pcl-340                 HP DeskJet 340
 pcl-400                 HP DeskJet 400
 pcl-500                 HP DeskJet 500
