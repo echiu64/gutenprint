@@ -37,7 +37,7 @@
 
 int global_test_count = 0;
 int global_error_count = 0;
-int verbose = 0;
+int verbose = 1;
 
 static void
 TEST(const char *name)
@@ -87,18 +87,14 @@ const char *good_curves[] =
     "<?xml version=\"1.0\"?>\n"
     "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
-    "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "0 0\n"
-    "</sequence>\n"
+    "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
     "</curve>\n"
     "</gimp-print>\n",
     /* Gamma curve 2 */
     "<?xml version=\"1.0\"?>\n"
     "<gimp-print xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gimpprint.xsd\">\n"
     "<curve wrap=\"nowrap\" type=\"linear\" gamma=\"1\">\n"
-    "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"4\">\n"
-    "0 0\n"
-    "</sequence>\n"
+    "<sequence count=\"0\" lower-bound=\"0\" upper-bound=\"4\"/>\n"
     "</curve>\n"
     "</gimp-print>\n"
   };
@@ -229,6 +225,7 @@ main(int argc, char **argv)
       curve2 = NULL;
     }
 
+  printf("Testing known bad curves...\n");
   for (i = 0; i < bad_curve_count; i++)
     {
       stp_curve_t bad = NULL;
@@ -242,11 +239,10 @@ main(int argc, char **argv)
 	  bad = NULL;
 	}
       else
-	{
-	  TEST_PASS();
-	}
+	TEST_PASS();
     }
 
+  printf("Testing known good curves...\n");
   for (i = 0; i < good_curve_count; i++)
     {
       if (curve2)
@@ -266,7 +262,11 @@ main(int argc, char **argv)
 	      printf("%s", tmp);
 	    }
 	  else
-	    TEST_PASS();
+	    {
+	      TEST_PASS();
+	      if (verbose)
+		printf("%s", tmp);
+	    }
 	  xmlFree(tmp);
 	}
       else
@@ -290,7 +290,7 @@ main(int argc, char **argv)
     TEST_PASS();
   if (verbose)
     stp_curve_write(stdout, curve1);
-  TEST("set curve 1 gamma");
+  TEST("set curve 2 gamma");
   if (!stp_curve_set_gamma(curve2, -1.2))
     TEST_FAIL();
   else
@@ -332,8 +332,6 @@ main(int argc, char **argv)
   /*  if (curve3)
       stp_curve_free(curve3);
       curve3 = NULL; */
-  if (verbose)
-    stp_curve_write(stdout, curve2);
 
   TEST("multiply rescale");
   if (!stp_curve_rescale(curve2, -1, STP_CURVE_COMPOSE_MULTIPLY,

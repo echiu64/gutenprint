@@ -118,7 +118,7 @@ void stp_sequence_copy(stp_sequence_t dest,
   idest->rlo = isource->rlo;
   idest->rhi = isource->rhi;
   idest->size = isource->size;
-  idest->data = stpi_malloc(sizeof(double) * isource->size);
+  idest->data = stpi_zalloc(sizeof(double) * isource->size);
   memcpy(idest->data, isource->data, (sizeof(double) * isource->size));
 }
 
@@ -206,8 +206,7 @@ stp_sequence_set_size(stp_sequence_t sequence, size_t size)
   if (size == 0)
     return 1;
   invalidate_auxilliary_data(iseq);
-  iseq->data = stpi_malloc(sizeof(double) * size);
-  memset(iseq->data, 0, sizeof(double) * size);
+  iseq->data = stpi_zalloc(sizeof(double) * size);
   return 1;
 }
 
@@ -229,11 +228,9 @@ stp_sequence_set_data(stp_sequence_t sequence,
   stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;
   check_sequence(iseq);
   iseq->size = size;
-  if (iseq->data && iseq->size < size)
-    {
-      stpi_free(iseq->data);
-      iseq->data = stpi_malloc(sizeof(double) * size);
-    }
+  if (iseq->data)
+    stpi_free(iseq->data);
+  iseq->data = stpi_zalloc(sizeof(double) * size);
   memcpy(iseq->data, data, (sizeof(double) * size));
   invalidate_auxilliary_data(iseq);
   iseq->recompute_range = 1;
@@ -346,7 +343,7 @@ stp_sequence_get_##name##_data(const stp_sequence_t sequence,            \
     return NULL;							 \
   if (!iseq->name##_data)						 \
     {									 \
-      iseq->name##_data = stpi_malloc(sizeof(t) * iseq->size);           \
+      iseq->name##_data = stpi_zalloc(sizeof(t) * iseq->size);           \
       for (i = 0; i < iseq->size; i++)				         \
         {                                                                \
 	  double val;                                                    \

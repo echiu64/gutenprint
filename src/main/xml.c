@@ -183,7 +183,7 @@ int stpi_xml_init_defaults(void)
   while (item)
     {
       if (stpi_debug_level & STPI_DBG_XML)
-	stpi_erprintf("stp-xml: source file: %s\n",
+	stpi_erprintf("stp_xml_init_defaults: source file: %s\n",
 		      (const char *) stpi_list_item_get_data(item));
       stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
       item = stpi_list_item_next(item);
@@ -208,13 +208,13 @@ stpi_xml_parse_file(const char *file) /* File to parse */
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp-xml-parse: reading  `%s'...\n", file);
+    stpi_erprintf("stp_xml_parse_file: reading  `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
   if (doc == NULL )
     {
-      fprintf(stderr,"XML file not parsed successfully. \n");
+      stpi_erprintf("stp_xml_parse_file: %s: parse error\n", file);
       xmlFreeDoc(doc);
       return 1;
     }
@@ -393,7 +393,7 @@ stpi_xml_process_family(xmlNodePtr family)     /* The family node */
 		     family_module_data->name))
 	{
 	  if (stpi_debug_level & STPI_DBG_XML)
-	    stpi_erprintf("xml-family: family module: %s\n",
+	    stpi_erprintf("stpi_xml_process_family: family module: %s\n",
 			  family_module_data->name);
 	  family_data = family_module_data->syms;
 	  if (family_data->printer_list == NULL)
@@ -502,7 +502,7 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
   stmp = xmlGetProp(printer, (const xmlChar *) "driver");
   stp_set_driver(outprinter->printvars, (const char *) stmp);
   xmlFree(stmp);
-    
+
   outprinter->long_name =
     (char *) xmlGetProp(printer, (const xmlChar *) "name");
   outprinter->family = stpi_strdup((const char *) family);
@@ -567,7 +567,7 @@ stp_printer_create_from_xmltree(xmlNodePtr printer, /* The printer node */
       if (stpi_debug_level & STPI_DBG_XML)
 	{
 	  stmp = xmlGetProp(printer, (const xmlChar*) "driver");
-	  stpi_erprintf("xml-family: printer: %s\n", stmp);
+	  stpi_erprintf("stp_printer_create_from_xmltree: printer: %s\n", stmp);
 	  xmlFree(stmp);
 	}
       return outprinter;
@@ -637,7 +637,7 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
   if (stpi_debug_level & STPI_DBG_XML)
     {
       stmp = xmlGetProp(paper, (const xmlChar*) "name");
-      stpi_erprintf("xml-paper: name: %s\n", stmp);
+      stpi_erprintf("stpi_xml_process_paper: name: %s\n", stmp);
       xmlFree(stmp);
     }
 
@@ -769,7 +769,7 @@ stpi_xml_process_dither_matrix(const char *file,  /* Source file */
   xmlFree(value);
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "dither-matrix: x=%d, y=%d\n", x, y);
+    stpi_erprintf("stpi_xml_process_dither_matrix: x=%d, y=%d\n", x, y);
 
   stpi_xml_dither_cache_set(x, y, file);
 
@@ -808,7 +808,7 @@ stpi_xml_dither_cache_set(int x, int y, const char *filename)
   stpi_list_item_create(dither_matrix_cache, NULL, (void *) cacheval);
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "xml-dither-cache: added %dx%d\n", x, y);
+    stpi_erprintf("stpi_xml_dither_cache_set: added %dx%d\n", x, y);
 
   stpi_xml_exit();
 
@@ -823,7 +823,7 @@ stpi_xml_dither_cache_get(int x, int y)
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "xml-dither-cache: lookup %dx%d... ", x, y);
+    stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
 
   ln = stpi_list_get_start(dither_matrix_cache);
 
@@ -834,7 +834,7 @@ stpi_xml_dither_cache_get(int x, int y)
 	{
 
 	  if (stpi_debug_level & STPI_DBG_XML)
-	    fprintf(stderr, "found\n");
+	    stpi_erprintf("found\n");
 
 	  stpi_xml_exit();
 	  return ((stpi_xml_dither_cache_t *) stpi_list_item_get_data(ln))->filename;
@@ -842,7 +842,7 @@ stpi_xml_dither_cache_get(int x, int y)
       ln = stpi_list_item_next(ln);
     }
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "missing\n");
+    stpi_erprintf("missing\n");
 
   stpi_xml_exit();
 
@@ -871,7 +871,7 @@ stpi_xml_get_dither_array(int x, int y)
 }
 
 static stp_sequence_t
-stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
+stp_sequence_create_from_xmltree(xmlNodePtr da)
 {
   xmlChar *stmp;
   stp_sequence_t ret = NULL;
@@ -892,16 +892,16 @@ stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
   if (stmp)
     {
       point_count = (size_t) xmlstrtoul(stmp);
-      /*      if ((xmlstrtol(stmp)) < 0)
+      if ((xmlstrtol(stmp)) < 0)
 	{
-	  fprintf(stderr, "stp-sequence-create: \"count\" is less than zero\n");
+	  stpi_erprintf("stp_sequence_create_from_xmltree: \"count\" is less than zero\n");
 	  goto error;
-	  }*/
+	}
       xmlFree(stmp);
     }
   else
     {
-      fprintf(stderr, "stp-sequence-create: \"count\" missing\n");
+      stpi_erprintf("stp_sequence_create_from_xmltree: \"count\" missing\n");
       goto error;
     }
   /* Get lower bound */
@@ -913,7 +913,7 @@ stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
     }
   else
     {
-      fprintf(stderr, "stp-sequence-create: \"lower-bound\" missing\n");
+      stpi_erprintf("stp_sequence_create_from_xmltree: \"lower-bound\" missing\n");
       goto error;
     }
   /* Get upper bound */
@@ -925,75 +925,81 @@ stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
     }
   else
     {
-      fprintf(stderr, "stp-sequence-create: \"upper-bound\" missing\n");
+      stpi_erprintf("stp_sequence_create_from_xmltree: \"upper-bound\" missing\n");
       goto error;
     }
 
   if (stpi_debug_level & STPI_DBG_XML)
-    stpi_erprintf("stp_sequence_set_size %d\n", point_count + extra_points);
-  stp_sequence_set_size(ret, point_count + extra_points);
+    stpi_erprintf("stp_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
+		  point_count);
+  stp_sequence_set_size(ret, point_count);
   stp_sequence_set_bounds(ret, low, high);
 
   /* Now read in the data points */
-  stmp = xmlNodeGetContent(da);
-  if (stmp)
+  if (point_count)
     {
-      double tmpval;
-      maxlen = strlen((const char *) stmp);
-      for (i = 0; i < point_count; i++)
+      stmp = xmlNodeGetContent(da);
+      if (stmp)
 	{
-	  memset(bufptr, 0, 100);
-	  *(bufptr + 99) = '\0';
-	  for (j = 0, found = 0; j < 99; j++)
+	  double tmpval;
+	  maxlen = strlen((const char *) stmp);
+	  for (i = 0; i < point_count; i++)
 	    {
-	      if (offset + j > maxlen)
+	      memset(bufptr, 0, 100);
+	      *(bufptr + 99) = '\0';
+	      for (j = 0, found = 0; j < 99; j++)
 		{
-		  if (found == 0)
+		  if (offset + j > maxlen)
 		    {
-		      xmlFree(stmp);
-		      fprintf(stderr,
-			      "stp-sequence-create: read aborted: too little data "
-			      "(n=%d, needed %d)\n", i, point_count);
-		      goto error;
+		      if (found == 0)
+			{
+			  xmlFree(stmp);
+			  fprintf(stderr,
+				  "stp_sequence_create_from_xmltree: "
+				  "read aborted: too little data "
+				  "(n=%d, needed %d)\n", i, point_count);
+			  goto error;
+			}
+		      else /* Hit end, but we have some data */
+			{
+			  *(bufptr + j) = '\0';
+			  break;
+			}
 		    }
-		  else /* Hit end, but we have some data */
+		  if (!isspace((const char) *(stmp + offset + j)))
+		    found = 1; /* found a printing character */
+		  else if (found) /* space found, and we've seen chars */
 		    {
 		      *(bufptr + j) = '\0';
 		      break;
 		    }
+		  *(bufptr + j) = *(stmp + offset + j);
 		}
-	      if (!isspace((const char) *(stmp + offset + j)))
-		found = 1; /* found a printing character */
-	      else if (found) /* space found, and we've seen chars */
+	      offset += j;
+	      tmpval = xmlstrtod(buf);
+	      if (! finite(tmpval)
+		  || ( tmpval == 0 && errno == ERANGE )
+		  || tmpval < low
+		  || tmpval > high)
 		{
-		  *(bufptr + j) = '\0';
-		  break;
+		  xmlFree(stmp);
+		  stpi_erprintf("stp_sequence_create_from_xmltree: "
+				"read aborted: datum out of bounds: "
+				"%g (require %g <= x <= %g), n = %d\n",
+				tmpval, low, high, i);
+		  goto error;
 		}
-	      *(bufptr + j) = *(stmp + offset + j);
+	      /* Datum was valid, so now add to the sequence */
+	      stp_sequence_set_point(ret, i, tmpval);
 	    }
-	  offset += j;
-	  tmpval = xmlstrtod(buf);
-	  if (! finite(tmpval)
-	      || ( tmpval == 0 && errno == ERANGE )
-	      || tmpval < low
-	      || tmpval > high)
-	    {
-	      xmlFree(stmp);
-	      fprintf(stderr, "stp-sequence-create: read aborted: "
-		      "datum out of bounds: "
-		      "%g (require %g <= n <= %g), n=%d\n",
-		      tmpval, low, high, i);
-	      goto error;
-	    }
-	  /* Datum was valid, so now add to the array */
-	  stp_sequence_set_point(ret, i, tmpval);
+	  xmlFree(stmp);
 	}
-      xmlFree(stmp);
     }
+
   return ret;
 
  error:
-  fprintf(stderr, "stp-sequence-create: error during array read\n");
+  stpi_erprintf("stp_sequence_create_from_xmltree: error during sequence read\n");
   if (ret)
     stp_sequence_destroy(ret);
   return NULL;
@@ -1002,8 +1008,8 @@ stp_sequence_create_from_xmltree(xmlNodePtr da, size_t extra_points)
 
 
 static xmlNodePtr
-stp_xmltree_create_from_sequence(stp_sequence_t seq,   /* The sequence */
-				     size_t extra_points)
+stp_xmltree_create_from_sequence(stp_sequence_t seq)   /* The sequence */
+
 {
   size_t pointcount;
   double low;
@@ -1018,7 +1024,6 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq,   /* The sequence */
   int i;                 /* loop counter */
 
   pointcount = stp_sequence_get_size(seq);
-  pointcount -= extra_points;
   stp_sequence_get_bounds(seq, &low, &high);
 
   /* should count be of greater precision? */
@@ -1039,58 +1044,59 @@ stp_xmltree_create_from_sequence(stp_sequence_t seq,   /* The sequence */
   stpi_free(upper_bound);
 
   /* Write the curve points into the node content */
-  {
-    /* Calculate total size */
-    int datasize = 0;
-    xmlChar *data;
-    xmlChar *offset;
+  if (pointcount) /* Is there any data to write? */
+    {
+      /* Calculate total size */
+      int datasize = 0;
+      xmlChar *data;
+      xmlChar *offset;
 
-    for (i = 0; i < pointcount; i++)
-      {
-	double dval;
-	char *sval;
+      for (i = 0; i < pointcount; i++)
+	{
+	  double dval;
+	  char *sval;
 
-	if ((stp_sequence_get_point(seq, i, &dval)) != 1)
-	  goto error;
+	  if ((stp_sequence_get_point(seq, i, &dval)) != 1)
+	    goto error;
 
-	stpi_asprintf(&sval, "%g", dval);
+	  stpi_asprintf(&sval, "%g", dval);
 
-	datasize += strlen(sval) + 1; /* Add 1 for space separator and
-					 NUL termination */
-	stpi_free(sval);
+	  datasize += strlen(sval) + 1; /* Add 1 for space separator and
+					   NUL termination */
+	  stpi_free(sval);
       }
-    datasize += 2; /* Add leading and trailing newlines */
-    /* Allocate a big enough string */
-    data = (xmlChar *) stpi_malloc(sizeof(xmlChar) * datasize);
-    offset = data;
-    *(offset) = '\n'; /* Add leading newline */
-    offset++;
-    /* Populate the string */
-    for (i = 0; i < pointcount; i++)
-      {
-	double dval;
-	char *sval;
+      datasize += 2; /* Add leading and trailing newlines */
+      /* Allocate a big enough string */
+      data = (xmlChar *) stpi_malloc(sizeof(xmlChar) * datasize);
+      offset = data;
+      *(offset) = '\n'; /* Add leading newline */
+      offset++;
+      /* Populate the string */
+      for (i = 0; i < pointcount; i++)
+	{
+	  double dval;
+	  char *sval;
 
-	if ((stp_sequence_get_point(seq, i, &dval)) == 0)
-	  goto error;
+	  if ((stp_sequence_get_point(seq, i, &dval)) == 0)
+	    goto error;
 
-	stpi_asprintf(&sval, "%g", dval);
+	  stpi_asprintf(&sval, "%g", dval);
 
-	strcpy((char *) offset, sval); /* Add value */
-	offset += strlen (sval);
-	if ((i + 1) % 12)
-	  *offset = ' '; /* Add space */
-	else
-	  *offset = '\n'; /* Add newline every 12 points */
-	offset++;
+	  strcpy((char *) offset, sval); /* Add value */
+	  offset += strlen (sval);
+	  if ((i + 1) % 12)
+	    *offset = ' '; /* Add space */
+	  else
+	    *offset = '\n'; /* Add newline every 12 points */
+	  offset++;
 
-	stpi_free(sval);
-      }
-    *(offset -1) = '\n'; /* Add trailing newline */
-    *(offset) = '\0'; /* Add NUL terminator */
-    xmlNodeAddContent(seqnode, (xmlChar *) data);
-    stpi_free(data);
-  }
+	  stpi_free(sval);
+	}
+      *(offset -1) = '\n'; /* Add trailing newline */
+      *(offset) = '\0'; /* Add NUL terminator */
+      xmlNodeAddContent(seqnode, (xmlChar *) data);
+      stpi_free(data);
+    }
   return seqnode;
 
  error:
@@ -1116,7 +1122,7 @@ stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
     }
   else
     {
-      fprintf(stderr, "stp-dither-matrix-create: \"x-aspect\" missing\n");
+      stpi_erprintf("stpi_dither_array_create_from_xmltree: \"x-aspect\" missing\n");
       goto error;
     }
   /* Get y-size */
@@ -1128,7 +1134,7 @@ stpi_dither_array_create_from_xmltree(xmlNodePtr dm) /* Dither matrix node */
     }
   else
     {
-      fprintf(stderr, "stp-dither-matrix-create: \"y-aspect\" missing\n");
+      stpi_erprintf("stpi_dither_array_create_from_xmltree: \"y-aspect\" missing\n");
       goto error;
     }
 
@@ -1160,7 +1166,7 @@ xml_doc_get_dither_array(xmlDocPtr doc)
 
   if (doc == NULL )
     {
-      fprintf(stderr,"xml-doc-get-dither-array: XML file not parsed successfully.\n");
+      fprintf(stderr,"xml_doc_get_dither_array: XML file not parsed successfully.\n");
       return NULL;
     }
 
@@ -1168,7 +1174,7 @@ xml_doc_get_dither_array(xmlDocPtr doc)
 
   if (cur == NULL)
     {
-      fprintf(stderr,"xml-doc-get-dither-array: empty document\n");
+      fprintf(stderr,"xml_doc_get_dither_array: empty document\n");
       xmlFreeDoc(doc);
       return NULL;
     }
@@ -1193,7 +1199,7 @@ stpi_dither_array_create_from_file(const char* file)
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
+    stpi_erprintf("stpi_dither_array_create_from_file: reading `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
@@ -1217,8 +1223,8 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   stp_curve_type_t curve_type;            /* Type of curve */
   stp_curve_wrap_mode_t wrap_mode;        /* Curve wrap mode */
   double gamma;                           /* Gamma value */
-  size_t extra_points = 0;                /* real point count - point count */
   stp_sequence_t seq = NULL;              /* Sequence data */
+  double low, high;                       /* Sequence bounds */
 
   stpi_xml_init();
 
@@ -1232,7 +1238,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
 	  curve_type = STP_CURVE_TYPE_SPLINE;
       else
 	{
-	  fprintf(stderr, "stp-curve-create: %s: \"type\" invalid\n", stmp);
+	  stpi_erprintf("stp_curve_create_from_xmltree: %s: \"type\" invalid\n", stmp);
 	  xmlFree (stmp);
 	  goto error;
 	}
@@ -1240,7 +1246,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
     }
   else
     {
-      fprintf(stderr, "stp-curve-create: \"type\" missing\n");
+      stpi_erprintf("stp_curve_create_from_xmltree: \"type\" missing\n");
       goto error;
     }
   /* Get curve wrap mode */
@@ -1252,11 +1258,10 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
       else if (!xmlStrcmp(stmp, (const xmlChar *) "wrap"))
 	{
 	  wrap_mode = STP_CURVE_WRAP_AROUND;
-	  extra_points++;
 	}
       else
 	{
-	  fprintf(stderr, "stp-curve-create: %s: \"wrap\" invalid\n", stmp);
+	  stpi_erprintf("stp_curve_create_from_xmltree: %s: \"wrap\" invalid\n", stmp);
 	  xmlFree (stmp);
 	  goto error;
 	}
@@ -1264,21 +1269,29 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
     }
   else
     {
-      fprintf(stderr, "stp-curve-create: \"wrap\" missing\n");
+      stpi_erprintf("stp_curve_create_from_xmltree: \"wrap\" missing\n");
       goto error;
     }
   /* Get curve gamma */
   stmp = xmlGetProp(curve, (const xmlChar *) "gamma");
   if (stmp)
     {
-      gamma = (size_t) xmlstrtod(stmp);
+      gamma = xmlstrtod(stmp);
       xmlFree(stmp);
     }
   else
     {
-      fprintf(stderr, "stp-curve-create: \"gamma\" missing\n");
+      stpi_erprintf("stp_curve_create_from_xmltree: \"gamma\" missing\n");
       goto error;
     }
+  /* If gamma is set, wrap_mode must be STP_CURVE_WRAP_NONE */
+  if (gamma && wrap_mode != STP_CURVE_WRAP_NONE)
+    {
+      stpi_erprintf("stp_curve_create_from_xmltree: "
+		    "gamma set and \"wrap\" is not STP_CURVE_WRAP_NONE\n");
+      goto error;
+    }
+
   /* Set up the curve */
   ret = stp_curve_create(wrap_mode);
   stp_curve_set_interpolation_type(ret, curve_type);
@@ -1288,34 +1301,47 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
     {
       if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
 	{
-	  seq = stp_sequence_create_from_xmltree(child, extra_points);
+	  seq = stp_sequence_create_from_xmltree(child);
 	  break;
 	}
       child = child->next;
     }
 
   if (seq == NULL)
-    goto error;
+    {
+      stpi_erprintf("stp_curve_create_from_xmltree: sequence read failed\n");
+      goto error;
+    }
+
+  /* Set curve bounds */
+  stp_sequence_get_bounds(seq, &low, &high);
+  stp_curve_set_bounds(ret, low, high);
 
   if (gamma)
-    {
-      size_t points = stp_curve_count_points(ret);
-      stp_curve_set_gamma(ret, gamma);
-      stp_curve_resample(ret, points);
-    }
+    stp_curve_set_gamma(ret, gamma);
   else /* Not a gamma curve, so set points */
     {
       size_t seq_count;
       const double* data;
 
       stp_sequence_get_data(seq, &seq_count, &data);
-      stp_curve_set_data(ret, seq_count, data);
+      if (stp_curve_set_data(ret, seq_count, data) == 0)
+	{
+	  stpi_erprintf("stp_curve_create_from_xmltree: failed to set curve data\n");
+	  goto error;
+	}
+    }
+
+  if (seq)
+    {
+      stp_sequence_destroy(seq);
+      seq = NULL;
     }
 
     /* Validate curve */
   if (stpi_curve_check_parameters(ret, stp_curve_count_points(ret)) == 0)
     {
-      fprintf(stderr, "stp-curve-create: parameter check failed\n");
+      stpi_erprintf("stp_curve_create_from_xmltree: parameter check failed\n");
       goto error;
     }
 
@@ -1324,7 +1350,7 @@ stp_curve_create_from_xmltree(xmlNodePtr curve)  /* The curve node */
   return ret;
 
  error:
-  fprintf(stderr, "stp-curve-create: error during curve read\n");
+  stpi_erprintf("stp_curve_create_from_xmltree: error during curve read\n");
   if (ret)
     stp_curve_free(ret);
   stpi_xml_exit();
@@ -1341,7 +1367,7 @@ xml_doc_get_curve(xmlDocPtr doc)
 
   if (doc == NULL )
     {
-      fprintf(stderr,"xml-doc-get-curve: XML file not parsed successfully.\n");
+      fprintf(stderr,"xml_doc_get_curve: XML file not parsed successfully.\n");
       return NULL;
     }
 
@@ -1349,7 +1375,7 @@ xml_doc_get_curve(xmlDocPtr doc)
 
   if (cur == NULL)
     {
-      fprintf(stderr,"xml-doc-get-curve: empty document\n");
+      fprintf(stderr,"xml_doc_get_curve: empty document\n");
       xmlFreeDoc(doc);
       return NULL;
     }
@@ -1372,7 +1398,7 @@ stp_curve_create_from_file(const char* file)
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "stp-xml-parse: reading `%s'...\n", file);
+    stpi_erprintf("stp_curve_create_from_file: reading `%s'...\n", file);
 
   doc = xmlParseFile(file);
 
@@ -1395,7 +1421,7 @@ stp_curve_create_from_string(const char* string)
   stpi_xml_init();
 
   if (stpi_debug_level & STPI_DBG_XML)
-    fprintf(stderr, "stp-xml-parse: reading string...\n");
+    stpi_erprintf("stp_curve_create_from_string: reading string...\n");
 
   doc = xmlParseMemory(string, strlen(string));
 
@@ -1439,27 +1465,31 @@ stpi_xmldoc_create_generic(void)
 xmlNodePtr
 stp_xmltree_create_from_curve(stp_curve_t curve)  /* The curve */
 {
-  stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   stp_curve_wrap_mode_t wrapmode;
   stp_curve_type_t interptype;
-  double gammaval;
+  double gammaval, low, high;
+  stp_sequence_t seq;
 
   char *wrap;
-  size_t extra_points = 0;
   char *type;
   char *gamma;
 
-  xmlNodePtr curvenode;
-  xmlNodePtr child;
+  xmlNodePtr curvenode = NULL;
+  xmlNodePtr child = NULL;
 
   stpi_xml_init();
 
   /* Get curve details */
   wrapmode = stp_curve_get_wrap(curve);
-  if (wrapmode == STP_CURVE_WRAP_AROUND)
-    extra_points++;
   interptype = stp_curve_get_interpolation_type(curve);
   gammaval = stp_curve_get_gamma(curve);
+
+  if (gammaval && wrapmode != STP_CURVE_WRAP_NONE)
+    {
+      stpi_erprintf("stp_xmltree_create_from_curve: "
+		    "curve sets gamma and wrap_mode is not STP_CURVE_WRAP_NONE\n");
+      goto error;
+    }
 
   /* Construct the allocated strings required */
   stpi_asprintf(&wrap, "%s", stpi_wrap_mode_names[wrapmode]);
@@ -1475,9 +1505,34 @@ stp_xmltree_create_from_curve(stp_curve_t curve)  /* The curve */
   stpi_free(type);
   stpi_free(gamma);
 
-  child = stp_xmltree_create_from_sequence(icurve->seq, extra_points);
+  seq = stp_sequence_create();
+  stp_curve_get_bounds(curve, &low, &high);
+  stp_sequence_set_bounds(seq, low, high);
+  if (gammaval != 0) /* A gamma curve does not require sequence data */
+    {
+      stp_sequence_set_size(seq, 0);
+    }
+  else
+    {
+      const double *data;
+      size_t count;
+      data = stp_curve_get_data(curve, &count);
+      stp_sequence_set_data(seq, count, data);
+    }
+
+  child = stp_xmltree_create_from_sequence(seq);
+
+  if (seq)
+    {
+      stp_sequence_destroy(seq);
+      seq = NULL;
+    }
+
   if (child == NULL)
-    goto error;
+    {
+      stpi_erprintf("stp_xmltree_create_from_curve: sequence node is NULL\n");
+      goto error;
+    }
   xmlAddChild(curvenode, child);
 
   stpi_xml_exit();
@@ -1485,6 +1540,7 @@ stp_xmltree_create_from_curve(stp_curve_t curve)  /* The curve */
   return curvenode;
 
  error:
+  stpi_erprintf("stp_xmltree_create_from_curve: error during xmltree creation\n");
   if (curvenode)
     xmlFreeNode(curvenode);
   if (child)
@@ -1504,16 +1560,22 @@ xmldoc_create_from_curve(stp_curve_t curve)
   /* Get curve details */
   curvenode = stp_xmltree_create_from_curve(curve);
   if (curvenode == NULL)
-    return NULL;
-
+    {
+      stpi_erprintf("xmldoc_create_from_curve: error creating curve node\n");
+      return NULL;
+    }
   /* Create the XML tree */
   xmldoc = stpi_xmldoc_create_generic();
   if (xmldoc == NULL)
-    return NULL;
+    {
+      stpi_erprintf("xmldoc_create_from_curve: error creating XML document\n");
+      return NULL;
+    }
   rootnode = xmlDocGetRootElement(xmldoc);
   if (rootnode == NULL)
     {
       xmlFreeDoc(xmldoc);
+      stpi_erprintf("xmldoc_create_from_curve: error getting XML document root node\n");
       return NULL;
     }
 
@@ -1525,14 +1587,14 @@ xmldoc_create_from_curve(stp_curve_t curve)
 int
 stp_curve_write(FILE *file, stp_curve_t curve)  /* The curve */
 {
-  xmlDocPtr xmldoc;
+  xmlDocPtr xmldoc = NULL;
   xmlCharEncodingHandlerPtr xmlenc;
   xmlOutputBufferPtr xmlbuf;
 
   stpi_xml_init();
 
   xmldoc = xmldoc_create_from_curve(curve);
-  if (curve == NULL)
+  if (xmldoc == NULL)
     {
       stpi_xml_exit();
       return 1;
@@ -1546,7 +1608,8 @@ stp_curve_write(FILE *file, stp_curve_t curve)  /* The curve */
   /* xmlOutputBufferFlush(xmlbuf); */
   /* xmlOutputBufferClose(xmlbuf); */
 
-  xmlFreeDoc(xmldoc);
+  if (xmldoc)
+    xmlFreeDoc(xmldoc);
 
   stpi_xml_exit();
 
@@ -1556,14 +1619,14 @@ stp_curve_write(FILE *file, stp_curve_t curve)  /* The curve */
 xmlChar *
 stp_curve_write_string(stp_curve_t curve)  /* The curve */
 {
-  xmlDocPtr xmldoc;
+  xmlDocPtr xmldoc = NULL;
   xmlChar *output = NULL;
   int size;
 
   stpi_xml_init();
 
   xmldoc = xmldoc_create_from_curve(curve);
-  if (curve == NULL)
+  if (xmldoc == NULL)
     {
       stpi_xml_exit();
       return NULL;
@@ -1573,14 +1636,13 @@ stp_curve_write_string(stp_curve_t curve)  /* The curve */
 
   xmlDocDumpFormatMemory(xmldoc, &output, &size, 1);
 
-  xmlFreeDoc(xmldoc);
+  if (xmldoc)
+    xmlFreeDoc(xmldoc);
 
   stpi_xml_exit();
 
   return output;
 }
-
-
 
 
 static stp_array_t
@@ -1602,7 +1664,7 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
     }
   else
     {
-      fprintf(stderr, "stp-array-create: \"x-size\" missing\n");
+      stpi_erprintf("stpi_array_create_from_xmltree: \"x-size\" missing\n");
       goto error;
     }
   /* Get y-size */
@@ -1614,7 +1676,7 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
     }
   else
     {
-      fprintf(stderr, "stp-array-create: \"y-size\" missing\n");
+      stpi_erprintf("stpi_array_create_from_xmltree: \"y-size\" missing\n");
       goto error;
     }
 
@@ -1625,7 +1687,7 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
     {
       if (!xmlStrcmp(child->name, (const xmlChar *) "sequence"))
 	{
-	  seq = stp_sequence_create_from_xmltree(child, 0);
+	  seq = stp_sequence_create_from_xmltree(child);
 	  break;
 	}
       child = child->next;
@@ -1643,14 +1705,14 @@ stpi_array_create_from_xmltree(xmlNodePtr array)  /* The array node */
   count = stp_sequence_get_size(seq);
   if (count != (x_size * y_size))
     {
-      fprintf(stderr, "stp-array-create: size mismatch between array and sequence\n");
+      stpi_erprintf("stpi_array_create_from_xmltree: size mismatch between array and sequence\n");
       goto error;
     }
 
   return ret;
 
  error:
-  fprintf(stderr, "stp-array-create: error during curve read\n");
+  stpi_erprintf("stpi_array_create_from_xmltree: error during curve read\n");
   if (ret)
     stp_array_destroy(ret);
   return NULL;

@@ -45,12 +45,10 @@ typedef struct
 {
   int cookie;
   stp_curve_type_t curve_type;
-  size_t point_count;           /* Number of points.  The real point
-				   count is stored in the sequence */
   stp_curve_wrap_mode_t wrap_mode;
   int recompute_interval;	/* Do we need to recompute the deltas? */
   double gamma;			/* 0.0 means that the curve is not a gamma */
-  stp_sequence_t seq;           /* Double array (contains the curve data) */
+  stp_sequence_t seq;           /* Sequence (contains the curve data) */
   double *interval;		/* We allocate an extra slot for the
 				   wrap-around value. */
 

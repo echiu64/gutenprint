@@ -72,6 +72,37 @@ check_curve(const stpi_internal_curve_t *v)
       stpi_erprintf("Bad curve! Please report this bug.\n");
       stpi_abort();
     }
+  if (v->seq == NULL)
+    {
+      stpi_erprintf("Bad curve (seq == NULL)! Please report this bug.\n");
+      stpi_abort();
+    }
+}
+
+/*
+ * Get the total number of points in the base sequence class
+ */
+static size_t
+get_real_point_count(const stpi_internal_curve_t *curve)
+{
+  return stp_sequence_get_size(curve->seq);
+}
+
+/*
+ * Get the number of points used by the curve (that are visible to the
+ * user).  This is the real point count, but is decreased by 1 if the
+ * curve wraps around.
+ */
+static size_t
+get_point_count(const stpi_internal_curve_t *curve)
+{
+  size_t count;
+
+  count = stp_sequence_get_size(curve->seq);
+  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
+    count -= 1;
+
+  return count;
 }
 
 static void
@@ -89,7 +120,6 @@ clear_curve_data(stpi_internal_curve_t *curve)
 {
   if (curve->seq)
     stp_sequence_set_size(curve->seq, 0);
-  curve->point_count = 0;
   curve->recompute_interval = 0;
   invalidate_auxiliary_data(curve);
 }
@@ -106,9 +136,7 @@ compute_linear_deltas(stpi_internal_curve_t *curve)
   if (data == NULL)
     return;
 
-  delta_count = curve->point_count;
-  if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    delta_count++;
+  delta_count = get_real_point_count(curve);
 
   if (delta_count <= 1) /* No intervals can be computed */
     return;
@@ -128,9 +156,12 @@ compute_spline_deltas(stpi_internal_curve_t *curve)
   double *u;
   double *y2;
   const double *y;
+  size_t point_count;
   size_t real_point_count;
   double sig;
   double p;
+
+  point_count = get_point_count(curve);
 
   stp_sequence_get_data(curve->seq, &real_point_count, &y);
   u = stpi_malloc(sizeof(double) * real_point_count);
@@ -148,9 +179,9 @@ compute_spline_deltas(stpi_internal_curve_t *curve)
 	{
 	  int im1 = (i - 1);
 	  int ip1 = (i + 1);
-	  int im1a = im1 % curve->point_count;
-	  int ia = i % curve->point_count;
-	  int ip1a = ip1 % curve->point_count;
+	  int im1a = im1 % point_count;
+	  int ia = i % point_count;
+	  int ip1a = ip1 % point_count;
 
 	  sig = (i - im1) / (ip1 - im1);
 	  p = sig * y2a[im1] + 2.0;
@@ -162,9 +193,9 @@ compute_spline_deltas(stpi_internal_curve_t *curve)
       y2a[count - 1] = 0.0;
       for (k = count - 2 ; k >= 0; k--)
 	y2a[k] = y2a[k] * y2a[k + 1] + ua[k];
-      memcpy(u, ua + ((reps / 2) * curve->point_count),
+      memcpy(u, ua + ((reps / 2) * point_count),
 	     sizeof(double) * real_point_count);
-      memcpy(y2, y2a + ((reps / 2) * curve->point_count),
+      memcpy(y2, y2a + ((reps / 2) * point_count),
 	     sizeof(double) * real_point_count);
       stpi_free(y2a);
       stpi_free(ua);
@@ -231,7 +262,6 @@ compute_intervals(stpi_internal_curve_t *curve)
 static int
 stpi_curve_set_points(stpi_internal_curve_t *curve, size_t points)
 {
-  size_t real_point_count;
   if (points < 2)
     return 0;
   if (points > curve_point_limit ||
@@ -239,10 +269,9 @@ stpi_curve_set_points(stpi_internal_curve_t *curve, size_t points)
        points > curve_point_limit - 1))
     return 0;
   clear_curve_data(curve);
-  real_point_count = curve->point_count = points;
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    real_point_count++;
-  if ((stp_sequence_set_size(curve->seq, real_point_count)) == 0)
+    points++;
+  if ((stp_sequence_set_size(curve->seq, points)) == 0)
     return 0;
   return 1;
 }
@@ -309,13 +338,9 @@ stp_curve_copy(stp_curve_t dest, const stp_curve_t source)
   curve_dtor(dest);
   idest->cookie = isource->cookie;
   idest->curve_type = isource->curve_type;
-  idest->point_count = isource->point_count;
   idest->wrap_mode = isource->wrap_mode;
   idest->gamma = isource->gamma;
-  if (isource->seq)
-    idest->seq = stp_sequence_create_copy(isource->seq);
-  else
-    idest->seq = NULL;
+  idest->seq = stp_sequence_create_copy(isource->seq);
   idest->recompute_interval = 1;
 }
 
@@ -365,7 +390,7 @@ stp_curve_count_points(const stp_curve_t curve)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
-  return icurve->point_count;
+  return get_point_count(icurve);
 }
 
 stp_curve_wrap_mode_t
@@ -402,8 +427,7 @@ stp_curve_set_gamma(stp_curve_t curve, double gamma)
   check_curve(icurve);
   if (icurve->wrap_mode || ! finite(gamma) || gamma == 0.0)
     return 0;
-  if (icurve->seq)
-    clear_curve_data(icurve);
+  clear_curve_data(icurve);
   icurve->gamma = gamma;
   stp_curve_resample(curve, 2);
   return 1;
@@ -436,15 +460,21 @@ stp_curve_set_data(stp_curve_t curve, size_t count, const double *data)
   stp_sequence_get_bounds(icurve->seq, &low, &high);
   for (i = 0; i < count; i++)
     if (! finite(data[i]) || data[i] < low || data[i] > high)
-      return 0;
-  stpi_curve_set_points(icurve, count); /* Now allocates sequence, too */
+      {
+	stpi_erprintf("stp_curve_set_data: datum out of bounds: "
+		      "%g (require %g <= x <= %g), n = %d\n",
+		      data[i], low, high, i);
+	return 0;
+      }
+  /* Allocate sequence; also accounts for WRAP_MODE */
+  stpi_curve_set_points(icurve, count);
   icurve->gamma = 0.0;
-  /* This will free the data, if the current seq size is less than
-     count, but this was already set above */
-  stp_sequence_set_data(icurve->seq, count, data);
+  stp_sequence_set_subrange(icurve->seq, 0, count, data);
+
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
     stp_sequence_set_point(icurve->seq, count, data[0]);
   icurve->recompute_interval = 1;
+
   return 1;
 }
 
@@ -461,7 +491,7 @@ stp_curve_get_data(const stp_curve_t curve, size_t *count)
   const double *ret;
   check_curve(icurve);
   stp_sequence_get_data(icurve->seq, count, &ret);
-  *count = icurve->point_count;
+  *count = get_point_count(icurve);
   return ret;
 }
 
@@ -574,7 +604,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
-  if (where >= icurve->point_count)
+  if (where >= get_point_count(icurve))
     return 0;
   icurve->gamma = 0.0;
 
@@ -582,7 +612,7 @@ stp_curve_set_point(stp_curve_t curve, size_t where, double data)
     return 0;
   if (where == 0 && icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
     if ((stp_sequence_set_point(icurve->seq,
-				icurve->point_count, data)) == 0)
+				get_point_count(icurve), data)) == 0)
       return 0;
   invalidate_auxiliary_data(icurve);
   return 1;
@@ -593,7 +623,7 @@ stp_curve_get_point(const stp_curve_t curve, size_t where, double *data)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
   check_curve(icurve);
-  if (where >= icurve->point_count)
+  if (where >= get_point_count(icurve))
     return 0;
   return stp_sequence_get_point(icurve->seq, where, data);
 }
@@ -618,9 +648,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 
   check_curve(icurve);
 
-  real_point_count = icurve->point_count;
-  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    real_point_count++;
+  real_point_count = get_real_point_count(icurve);
 
   stp_sequence_get_bounds(icurve->seq, &nblo, &nbhi);
   if (bounds_mode == STP_CURVE_BOUNDS_RESCALE)
@@ -660,7 +688,7 @@ stp_curve_rescale(stp_curve_t curve, double scale,
   if (! finite(nbhi) || ! finite(nblo))
     return 0;
 
-  if (icurve->point_count)
+  if (get_point_count(icurve))
     {
       double *tmp = stpi_malloc(sizeof(double) * real_point_count);
       size_t count;
@@ -695,7 +723,8 @@ stp_curve_rescale(stp_curve_t curve, double scale,
 	}
       stp_sequence_set_bounds(icurve->seq, nbhi, nblo);
       icurve->gamma = 0.0;
-      stp_sequence_set_data(icurve->seq, real_point_count, tmp);
+      stpi_curve_set_points(icurve, real_point_count);
+      stp_sequence_set_subrange(icurve->seq, 0, real_point_count, tmp);
       stpi_free(tmp);
       icurve->recompute_interval = 1;
       invalidate_auxiliary_data(icurve);
@@ -708,7 +737,6 @@ int
 stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;  double blo, bhi;
-  size_t seq_point_count;
   if (icurve->gamma && icurve->wrap_mode)
     {
 #ifdef DEBUG
@@ -724,19 +752,6 @@ stpi_curve_check_parameters(stp_curve_t *curve, size_t points)
 #endif
       return 0;
     }
-  seq_point_count = stp_sequence_get_size(icurve->seq);
-  if (points != seq_point_count &&
-      (points != (seq_point_count - 1) &&
-       icurve->wrap_mode == STP_CURVE_WRAP_AROUND))
-    {
-#ifdef DEBUG
-      fprintf(stderr,
-	      "curve point count (%lu) and double array size (%lu) do not match\n",
-	      (unsigned long) points,
-	      (unsigned long) stp_sequence_get_size(icurve->seq));
-#endif
-      return 0;
-    }
   return 1;
 }
 
@@ -749,9 +764,7 @@ interpolate_gamma_internal(const stp_curve_t curve, double where)
   double blo, bhi;
   size_t real_point_count;
 
-  real_point_count = icurve->point_count;
-  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    real_point_count++;
+  real_point_count = get_real_point_count(icurve);;
 
   if (real_point_count)
     where /= (real_point_count - 1);
@@ -794,6 +807,7 @@ interpolate_point_internal(const stp_curve_t curve, double where)
     }
   else
     {
+      size_t point_count;
       double a = 1.0 - frac;
       double b = frac;
       double ival, ip1val;
@@ -801,8 +815,10 @@ interpolate_point_internal(const stp_curve_t curve, double where)
       int i = integer;
       int ip1 = integer + 1;
 
-      if (ip1 >= icurve->point_count)
-	ip1 -= icurve->point_count;
+      point_count = get_point_count(icurve);
+
+      if (ip1 >= point_count)
+	ip1 -= point_count;
       retval = ((a * a * a - a) * icurve->interval[i] +
 		(b * b * b - b) * icurve->interval[ip1]);
 
@@ -826,11 +842,10 @@ stp_curve_interpolate_value(const stp_curve_t curve, double where,
 			    double *result)
 {
   stpi_internal_curve_t *icurve = (stpi_internal_curve_t *) curve;
-  int limit;
+  size_t limit;
   check_curve(icurve);
-  limit = icurve->point_count;
-  if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    limit += 1;
+
+  limit = get_real_point_count(icurve);
 
   if (where < 0 || where > limit)
     return 0;
@@ -852,22 +867,21 @@ stp_curve_resample(stp_curve_t curve, size_t points)
 
   check_curve(icurve);
 
-  if (points == icurve->point_count && icurve->seq)
+  if (points == get_point_count(icurve) && icurve->seq)
     return 1;
 
   if (points < 2)
     return 1;
 
-  old = icurve->point_count - 1;
   if (icurve->wrap_mode == STP_CURVE_WRAP_AROUND)
-    {
       limit++;
-      old++;
-    }
   if (limit > curve_point_limit)
     return 0;
-  /* if (old < 0)
-     old = 1; */ /* This should be an impossible situation */
+  old = get_real_point_count(icurve);
+  if (old)
+    old--;
+  if (!old)
+    old = 1;
 
   new_vec = stpi_malloc(sizeof(double) * limit);
 
@@ -885,8 +899,8 @@ stp_curve_resample(stp_curve_t curve, size_t points)
       new_vec[i] =
 	interpolate_point_internal(curve, ((double) i * (double) old /
 					   (double) (limit - 1)));
-  stpi_curve_set_points(icurve, points);
-  stp_sequence_set_data(icurve->seq, limit, new_vec);
+  stpi_curve_set_points(icurve, limit);
+  stp_sequence_set_subrange(icurve->seq, 0, limit, new_vec);
   icurve->recompute_interval = 1;
   stpi_free(new_vec);
   return 1;
@@ -950,22 +964,32 @@ interpolate_points(const stp_curve_t a, const stp_curve_t b,
 {
   double pa, pb;
   int i;
-  unsigned points_a = stp_curve_count_points(a);
-  unsigned points_b = stp_curve_count_points(b);
+  size_t points_a = stp_curve_count_points(a);
+  size_t points_b = stp_curve_count_points(b);
   for (i = 0; i < points; i++)
     {
       if (!stp_curve_interpolate_value
 	  (a, (double) i * (points_a - 1) / (points - 1), &pa))
-	return 0;
+	{
+	  stpi_erprintf("interpolate_points: interpolate curve a value failed\n");
+	  return 0;
+	}
       if (!stp_curve_interpolate_value
 	  (b, (double) i * (points_b - 1) / (points - 1), &pb))
-	return 0;
+	{
+	  stpi_erprintf("interpolate_points: interpolate curve b value failed\n");
+	  return 0;
+	}
       if (mode == STP_CURVE_COMPOSE_ADD)
 	pa += pb;
       else
 	pa *= pb;
       if (! finite(pa))
-	return 0;
+	{
+	  stpi_erprintf("interpolate_points: interpolated point %lu is invalid\n",
+			(unsigned long) i);
+	  return 0;
+	}
       tmp_data[i] = pa;
     }
   return 1;
