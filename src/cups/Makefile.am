@@ -17,7 +17,7 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.4 foreign
+AUTOMAKE_OPTIONS = 1.4 gnu
 
 @SET_MAKE@
 
@@ -157,10 +157,4 @@ EXTRA_DIST = \
 	calibrate.ppm \
 	command.txt \
 	command.types
-
-
-
-
-
-
 
