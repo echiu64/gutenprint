@@ -807,7 +807,15 @@ do {									\
       if (tmp##r != 0)							\
 	{								\
 	  int myspread;							\
-	  offset = (65535 - (o##r & 0xffff)) >> odb;			\
+	  if (odb >= 16 || o##r >= 2048)				\
+	    offset = 0;							\
+	  else								\
+	    {								\
+	      int tmpo##r = o##r * 32;					\
+	      offset = (65535 - (tmpo##r & 0xffff)) >> odb;		\
+	      if ((rand() & odb_mask) > (tmpo##r & odb_mask))		\
+		offset++;						\
+	    }								\
 	  if (offset > x)						\
 	    offset = x;							\
 	  else if (offset > xdw1)					\
@@ -896,10 +904,11 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	   */
 	  if (dither_type & D_ADAPTIVE_BASE)
 	    {
+	      int divisor = 128 << ((16 - d->spread) >> 1);
 	      dither_type -= D_ADAPTIVE_BASE;
-	      if (base < d->density / 128)
+	      if (base < d->density / divisor)
 		{
-		  unsigned dtmp = base * 128 * 65536 / d->density;
+		  unsigned dtmp = base * divisor * 65536 / d->density;
 		  if (((rand() & 0xffff000) >> 12) > dtmp)
 		    {
 		      dither_type = D_ORDERED;
@@ -1228,6 +1237,7 @@ dither_black(unsigned short   *gray,		/* I - Grayscale pixels */
   int terminate;
   int direction = row & 1 ? 1 : -1;
   int odb = d->spread;
+  int odb_mask = (1 << odb) - 1;
   int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -1337,6 +1347,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		terminate;
   int		direction = row & 1 ? 1 : -1;
   int		odb = d->spread;
+  int		odb_mask = (1 << odb) - 1;
   int		ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
@@ -1627,6 +1638,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.34  2000/04/29 01:14:19  rlk
+ *   Improve photo and line art mode
+ *
  *   Revision 1.33  2000/04/27 02:07:53  rlk
  *   Comments
  *
