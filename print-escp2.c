@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.36  1999/12/18 23:08:28  rlk
+ *   comments, mostly
+ *
  *   Revision 1.35  1999/12/11 15:26:27  rlk
  *   hopefully get borders right
  *
@@ -1441,6 +1444,19 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
  * lets me use all of the nozzles, except near the top and bottom of the
  * page.
  *
+ * This still produces some banding, though.  Even better quality can be
+ * achieved by using multiple nozzles on the same line.  How do we do this?
+ * In 1440x720 mode, we're printing two output lines at the same vertical
+ * position.  However, if we want four passes, we have to effectively print
+ * each line twice.  Actually doing this would increase the density, so
+ * what we do is print half the dots on each pass.  This produces near-perfect
+ * output, and it's far faster than using "MicroWeave".
+ *
+ * The current algorithm is not completely general.  The number of passes
+ * is limited to (nozzles / gap).  On the Photo EX class printers, that limits
+ * it to 4 -- 32 nozzles, an inter-nozzle gap of 8 lines.  Furthermore, there
+ * are a number of routines that are only coded up to 4 passes.
+ *
  * The routine initialize_weave calculates the basic parameters, given
  * the number of jets and separation between jets, in rows.
  *
@@ -1840,20 +1856,22 @@ flush_pass(int passno, int model, int width, int hoffset, int ydpi,
 	{
 	  if (lineoffs[k].v[j] == 0)
 	    continue;
+	  if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
+	    fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
+	  else if (densities[j] > 0)
+	    continue;
+	  else
+	    fprintf(prn, "\033r%c", colors[j]);
 	  if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
 	    {
-	      fprintf(prn, "\033(r\002%c%c%c", 0, densities[j], colors[j]);
 	      /* FIXME need a more general way of specifying column */
 	      /* separation */
 	      fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
 		      ((hoffset * 1440 / ydpi) + (k & oversample)) & 255,
 		      ((hoffset * 1440 / ydpi) + (k & oversample)) >> 8);
 	    }
-	  else if (densities[j] > 0)
-	    continue;
 	  else
 	    {
-	      fprintf(prn, "\033r%c", colors[j]);
 	      fprintf(prn, "\033\\%c%c", hoffset & 255, hoffset >> 8);
 	    }
 	  switch (ydpi)				/* Raster graphics header */
