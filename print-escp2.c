@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.58  2000/02/06 21:33:33  rlk
+ *   Try to fix softweave mode on new printers
+ *
  *   Revision 1.57  2000/02/06 21:18:12  rlk
  *   Try to fix microweave on newer printers...?
  *
@@ -864,8 +867,14 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 
         fwrite("\033(e\002\000\000\000", 7, 1, prn);	/* Default dots */
 
-        if (ydpi > 360 && !use_softweave)
-      	  fwrite("\033(i\001\000\001", 6, 1, prn);	/* Microweave mode on */
+        if (ydpi > 360)
+	  {
+	    fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
+	    if (!use_softweave)
+	      fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave on */
+	    else
+	      fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off */
+	  }
         break;
 
     case MODEL_INIT_PHOTO:
@@ -940,13 +949,6 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
       putc(n >> 8, prn);
 #endif
 
-      fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
-      n = ydpi * (page_length - top) / 72;
-      putc(n & 255, prn);
-      putc(n >> 8, prn);
-      putc(0, prn);
-      putc(0, prn);
-
       fwrite("\033(S\010\000", 5, 1, prn);
       fprintf(prn, "%c%c%c%c%c%c%c%c",
 	      (((page_width * 720 / 72) >> 0) & 0xff),
@@ -957,6 +959,13 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
 	      (((page_length * 720 / 72) >> 8) & 0xff),
 	      (((page_length * 720 / 72) >> 16) & 0xff),
 	      (((page_length * 720 / 72) >> 24) & 0xff));
+
+      fwrite("\033(V\004\000", 5, 1, prn);     /* Absolute vertical position */
+      n = ydpi * (page_length - top) / 72;
+      putc(n & 255, prn);
+      putc(n >> 8, prn);
+      putc(0, prn);
+      putc(0, prn);
     }
   else
     {
