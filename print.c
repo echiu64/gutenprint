@@ -611,7 +611,7 @@ run(char   *name,		/* I - Name of print program. */
             vars.saturation = param[22].data.d_float;
           else
             vars.saturation = 100.0;
-	};
+	}
 
         for (i = 0; i < (sizeof(printers) / sizeof(printers[0])); i ++)
           if (strcmp(printers[i].short_name, vars.short_name) == 0)
@@ -633,7 +633,7 @@ run(char   *name,		/* I - Name of print program. */
     default :
         values[0].data.d_status = STATUS_CALLING_ERROR;
         break;;
-  };
+  }
 
  /*
   * Print the image...
@@ -864,7 +864,7 @@ run(char   *name,		/* I - Name of print program. */
 		pixel, red_pixel, green_pixel, blue_pixel, print_gamma,
 		screen_gamma, printer->gamma);
 #endif
-      };
+      }
 
 #ifdef PRINT_LUT
       fclose(ltfile);
@@ -879,7 +879,7 @@ run(char   *name,		/* I - Name of print program. */
       {
         cmap    = NULL;
         ncolors = 0;
-      };
+      }
 
      /*
       * Finally, call the print driver to send the image to the printer and
@@ -919,7 +919,7 @@ run(char   *name,		/* I - Name of print program. */
 
     if (run_mode == RUN_INTERACTIVE)
       gimp_set_data(PLUG_IN_NAME, &vars, sizeof(vars));
-  };
+  }
 
  /*
   * Detach from the drawable...
@@ -1110,7 +1110,7 @@ do_print_dialog(void)
 		       (GtkSignalFunc)orientation_callback,
 		       (gpointer)(i - 1));
     gtk_widget_show(item);
-  };
+  }
 
   box = gtk_hbox_new(FALSE, 0);
   gtk_table_attach(GTK_TABLE(table), box, 3, 4, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
@@ -1510,7 +1510,7 @@ do_print_dialog(void)
 		       (GtkSignalFunc)plist_callback,
 		       (gpointer)i);
     gtk_widget_show(item);
-  };
+  }
 
   box = gtk_hbox_new(FALSE, 8);
   gtk_table_attach(GTK_TABLE(table), box, 3, 4, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
@@ -1591,7 +1591,7 @@ do_print_dialog(void)
 		       (GtkSignalFunc)print_driver_callback,
 		       (gpointer)i);
     gtk_widget_show(item);
-  };
+  }
 
   printer_driver = option = gtk_option_menu_new();
   gtk_table_attach(GTK_TABLE(table), option, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
@@ -1723,7 +1723,7 @@ brightness_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(brightness_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1747,8 +1747,8 @@ brightness_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(brightness_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -1773,7 +1773,7 @@ contrast_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(contrast_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1797,8 +1797,8 @@ contrast_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(contrast_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -1823,7 +1823,7 @@ red_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(red_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1847,8 +1847,8 @@ red_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(red_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(red_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -1873,7 +1873,7 @@ green_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(green_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1897,8 +1897,8 @@ green_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(green_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(green_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -1923,7 +1923,7 @@ blue_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(blue_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1947,8 +1947,8 @@ blue_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(blue_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(blue_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -1973,7 +1973,7 @@ gamma_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(gamma_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -1997,8 +1997,8 @@ gamma_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(gamma_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -2024,7 +2024,7 @@ saturation_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(saturation_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -2048,8 +2048,8 @@ saturation_callback(GtkWidget *widget)	/* I - Entry widget */
       GTK_ADJUSTMENT(saturation_adjustment)->value = new_value;
 
       gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
-    };
-  };
+    }
+  }
 }
 
 
@@ -2077,7 +2077,7 @@ scaling_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(scaling_entry), NULL);
 
     preview_update();
-  };
+  }
 }
 
 
@@ -2103,8 +2103,8 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
 	GTK_ADJUSTMENT(scaling_adjustment)->value = new_value;
 
 	gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-      };
-    };
+      }
+    }
   }
   else if (widget == scaling_ppi)
   {
@@ -2121,7 +2121,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
     vars.scaling = 0.0;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
-  };
+  }
 }
 
 
@@ -2146,13 +2146,13 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
   {
     gtk_widget_destroy(*menu);
     *menu = NULL;
-  };
+  }
 
   if (num_items == 0)
   {
     gtk_widget_hide(option);
     return;
-  };
+  }
 
   *menu = gtk_menu_new();
 
@@ -2165,7 +2165,7 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
     gtk_signal_connect(GTK_OBJECT(item), "activate",
 		       (GtkSignalFunc)callback, (gpointer)i);
     gtk_widget_show(item);
-  };
+  }
 
   gtk_option_menu_set_menu(GTK_OPTION_MENU(option), *menu);
 
@@ -2183,14 +2183,14 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
     {
       gtk_option_menu_set_history(GTK_OPTION_MENU(option), i);
       break;
-    };
-  };
+    }
+  }
 
   if (i == num_items)
   {
     gtk_option_menu_set_history(GTK_OPTION_MENU(option), 0);
     gtk_signal_emit_by_name(GTK_OBJECT(item0), "activate");
-  };
+  }
 
   gtk_widget_show(option);
 }
@@ -2221,8 +2221,8 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
       {
         current_printer = i;
         break;
-      };
-  };
+      }
+  }
 
   strcpy(vars.ppd_file, p->ppd_file);
   strcpy(vars.media_size, p->media_size);
@@ -2247,7 +2247,7 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
     for (i = 0; i < num_media_sizes; i ++)
       g_free(media_sizes[i]);
     g_free(media_sizes);
-  };
+  }
 
   media_sizes = (*(printer->parameters))(printer->model,
                                          p->ppd_file,
@@ -2262,7 +2262,7 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
     for (i = 0; i < num_media_types; i ++)
       g_free(media_types[i]);
     g_free(media_types);
-  };
+  }
 
   media_types = (*(printer->parameters))(printer->model,
                                          p->ppd_file,
@@ -2277,7 +2277,7 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
     for (i = 0; i < num_media_sources; i ++)
       g_free(media_sources[i]);
     g_free(media_sources);
-  };
+  }
 
   media_sources = (*(printer->parameters))(printer->model,
                                            p->ppd_file,
@@ -2292,7 +2292,7 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
     for (i = 0; i < num_resolutions; i ++)
       g_free(resolutions[i]);
     g_free(resolutions);
-  };
+  }
 
   resolutions = (*(printer->parameters))(printer->model,
                                          p->ppd_file,
@@ -2388,7 +2388,7 @@ output_type_callback(GtkWidget *widget,	/* I - Output type button */
   {
     vars.output_type = data;
     plist[plist_current].output_type = data;
-  };
+  }
 }
 
 /*
@@ -2402,7 +2402,7 @@ linear_callback(GtkWidget *widget,	/* I - Output type button */
   if (GTK_TOGGLE_BUTTON(widget)->active)
   {
     vars.linear = data;
-  };
+  }
 }
 
 
@@ -2457,7 +2457,7 @@ setup_open_callback(void)
     {
       current_printer = i;
       break;
-    };
+    }
 
   gtk_option_menu_set_history(GTK_OPTION_MENU(printer_driver), current_printer);
 
@@ -2523,7 +2523,7 @@ print_driver_callback(GtkWidget *widget,	/* I - Driver option menu */
   {
     gtk_widget_hide(ppd_file);
     gtk_widget_hide(ppd_button);
-  };
+  }
 }
 
 
@@ -2625,7 +2625,7 @@ preview_update(void)
     {
       th0 = page_height;
       tw0 = th0 * image_width / image_height;
-    };
+    }
     ta0 = tw0 * th0;
 
     tw1 = page_height * vars.scaling / 100;
@@ -2634,9 +2634,9 @@ preview_update(void)
     {
       th1 = page_width;
       tw1 = th1 * image_width / image_height;
-    };
+    }
     ta1 = tw1 * th1;
-  };
+  }
 
   if (vars.orientation == ORIENT_AUTO)
   {
@@ -2654,7 +2654,7 @@ preview_update(void)
 	orient = ORIENT_PORTRAIT;
       else
 	orient = ORIENT_LANDSCAPE;
-    };
+    }
   }
   else
     orient = vars.orientation;
@@ -2674,7 +2674,7 @@ preview_update(void)
   {
     print_width  = tw0;
     print_height = th0;
-  };
+  }
 
   page_left = (PREVIEW_SIZE - page_width) / 2;
   page_top  = (PREVIEW_SIZE - page_height) / 2;
@@ -2695,8 +2695,8 @@ preview_update(void)
     {
       left      = page_width - print_width;
       vars.left = 72 * left / 10;
-    };
-  };
+    }
+  }
 
   if (vars.top < 0)
     top = (page_height - print_height) / 2;
@@ -2708,8 +2708,8 @@ preview_update(void)
     {
       top      = page_height - print_height;
       vars.top = 72 * top / 10;
-    };
-  };
+    }
+  }
 
   gdk_draw_rectangle(preview->widget.window, gc, 1,
                      page_left + left, page_top + top,
@@ -2736,7 +2736,7 @@ preview_motion_callback(GtkWidget      *w,
   {
     vars.left = 72 * (page_width - print_width) / 20;
     vars.top  = 72 * (page_height - print_height) / 20;
-  };
+  }
 
   vars.left += 72 * (event->x - mouse_x) / 10;
   vars.top  += 72 * (event->y - mouse_y) / 10;
@@ -2867,7 +2867,7 @@ printrc_load(void)
       if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
                        (int (*)(const void *, const void *))compare_printers)) != NULL)
         memcpy(p, &key, sizeof(plist_t));
-    };
+    }
 
     fclose(fp);
   }
@@ -2886,7 +2886,7 @@ printrc_load(void)
 
     if (i < plist_count)
       plist_current = i;
-  };
+  }
 }
 
 
@@ -2987,10 +2987,10 @@ get_printers(void)
         strcpy(plist[plist_count].driver, "ps2");
         plist[plist_count].output_type = OUTPUT_COLOR;
         plist_count ++;
-      };
+      }
 
     pclose(pfile);
-  };
+  }
 #endif /* LPC_COMMAND */
 
 #ifdef LPSTAT_COMMAND
@@ -3009,10 +3009,10 @@ get_printers(void)
       }
       else
         sscanf(line, "system default destination: %s", defname);
-    };
+    }
 
     pclose(pfile);
-  };
+  }
 #endif /* LPSTAT_COMMAND */
 
 #ifdef __EMX__
@@ -3041,7 +3041,7 @@ get_printers(void)
 
     if (i < plist_count)
       plist_current = i;
-  };
+  }
 }
 
 

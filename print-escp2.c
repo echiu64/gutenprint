@@ -30,6 +30,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.9  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
  *   Revision 1.8  1999/10/19 02:04:59  rlk
  *   Merge all of the single-level print_cmyk functions
  *
@@ -388,7 +391,7 @@ escp2_imageable_area(int  model,	/* I - Printer model */
         *top    = length - 14;
         *bottom = 40;
         break;
-  };
+  }
 }
 
 
@@ -484,7 +487,7 @@ escp2_print(int       model,		/* I - Model */
       colorfunc = gray_to_gray16;
     else
       colorfunc = indexed_to_gray16;
-  };
+  }
 
  /*
   * Figure out the output resolution...
@@ -530,8 +533,8 @@ escp2_print(int       model,		/* I - Model */
     {
       out_height = page_height * scaling / 100.0;
       out_width  = out_height * drawable->width / drawable->height;
-    };
-  };
+    }
+  }
 
  /*
   * Landscape width/height...
@@ -558,8 +561,8 @@ escp2_print(int       model,		/* I - Model */
     {
       temp_height = page_height;
       temp_width  = temp_height * drawable->height / drawable->width;
-    };
-  };
+    }
+  }
 
  /*
   * See which orientation has the greatest area (or if we need to rotate the
@@ -582,8 +585,8 @@ escp2_print(int       model,		/* I - Model */
 	orientation = ORIENT_LANDSCAPE;
       else
 	orientation = ORIENT_PORTRAIT;
-    };
-  };
+    }
+  }
 
   if (orientation == ORIENT_LANDSCAPE)
   {
@@ -598,7 +601,7 @@ escp2_print(int       model,		/* I - Model */
     x    = top;
     top  = left;
     left = x;
-  };
+  }
 
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
@@ -641,7 +644,7 @@ escp2_print(int       model,		/* I - Model */
     case 720 :
         fwrite("\033(U\001\000\005", 6, 1, prn);
         break;
-  };
+  }
 
   switch (escp2_cap(model, MODEL_INIT_MASK)) /* Printer specific initialization */
   {
@@ -699,7 +702,7 @@ escp2_print(int       model,		/* I - Model */
 	else
 	  fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color printing */
 #endif
-  };
+  }
 
   fwrite("\033(C\002\000", 5, 1, prn);		/* Page length */
   n = ydpi * page_length / 72;
@@ -760,7 +763,7 @@ escp2_print(int       model,		/* I - Model */
       lcyan = NULL;
       lmagenta = NULL;
     }
-  };
+  }
     
  /*
   * Output the page, rotating as necessary...
@@ -791,7 +794,7 @@ escp2_print(int       model,		/* I - Model */
       {
         errlast = errline;
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
-      };
+      }
 
       (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
 		   saturation);
@@ -818,12 +821,12 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk16(out, x, drawable->height, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black);
 
-        escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 4, 0, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
         if (black != NULL)
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
-      };
+      }
 
       fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
@@ -833,8 +836,8 @@ escp2_print(int       model,		/* I - Model */
       {
         errval -= out_height;
         errline --;
-      };
-    };
+      }
+    }
   }
   else
   {
@@ -861,7 +864,7 @@ escp2_print(int       model,		/* I - Model */
       {
         errlast = errline;
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
-      };
+      }
 
       (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
 		   saturation);
@@ -888,12 +891,12 @@ escp2_print(int       model,		/* I - Model */
         dither_cmyk16(out, y, drawable->width, out_width, cyan, 0, magenta, 0,
 		      yellow, 0, black);
 
-        escp2_write(prn, cyan, length, 2, 0, ydpi, model, out_width, left);
-        escp2_write(prn, magenta, length, 1, 0, ydpi, model, out_width, left);
-        escp2_write(prn, yellow, length, 4, 0, ydpi, model, out_width, left);
+        escp2_write(prn, cyan, length, 0, 2, ydpi, model, out_width, left);
+        escp2_write(prn, magenta, length, 0, 1, ydpi, model, out_width, left);
+        escp2_write(prn, yellow, length, 0, 4, ydpi, model, out_width, left);
         if (black != NULL)
           escp2_write(prn, black, length, 0, 0, ydpi, model, out_width, left);
-      };
+      }
 
       fwrite("\033(v\002\000\001\000", 7, 1, prn);	/* Feed one line */
 
@@ -903,9 +906,9 @@ escp2_print(int       model,		/* I - Model */
       {
         errval -= out_height;
         errline ++;
-      };
-    };
-  };
+      }
+    }
+  }
 
  /*
   * Cleanup...
@@ -921,7 +924,7 @@ escp2_print(int       model,		/* I - Model */
     g_free(cyan);
     g_free(magenta);
     g_free(yellow);
-  };
+  }
 
   putc('\014', prn);			/* Eject page */
   fputs("\033@", prn);			/* ESC/P2 reset */
@@ -980,7 +983,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
     {
       line ++;
       length --;
-    };
+    }
 
     line   -= 2;
     length += 2;
@@ -1000,7 +1003,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
       comp_ptr += tcount + 1;
       start    += tcount;
       count    -= tcount;
-    };
+    }
 
     if (length <= 0)
       break;
@@ -1019,7 +1022,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
     {
       line ++;
       length --;
-    };
+    }
 
    /*
     * Output the repeated sequences (max 128 at a time).
@@ -1035,8 +1038,8 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 
       comp_ptr += 2;
       count    -= tcount;
-    };
-  };
+    }
+  }
 
  /*
   * Set the print head position.
@@ -1055,7 +1058,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
       fprintf(prn, "\033(r\002%c%c%c", 0, density, plane);
     else
       fprintf(prn, "\033r%c", plane);
-  };
+  }
 
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     fprintf(prn, "\033(\\%c%c%c%c%c%c", 4, 0, 160, 5,
@@ -1085,7 +1088,7 @@ escp2_write(FILE          *prn,	/* I - Print file or command */
 	else
           fwrite("\033.\001\005\005\001", 6, 1, prn);
         break;
-  };
+  }
 
   putc(width & 255, prn);		/* Width of raster line in pixels */
   putc(width >> 8, prn);

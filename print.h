@@ -114,11 +114,8 @@ typedef void (*convert16_t)(guchar *in, gushort *out, int width, int bpp,
  * Prototypes...
  */
 
-extern void	dither_black(guchar *, int, int, int, unsigned char *);
 extern void	dither_black16(gushort *, int, int, int, unsigned char *);
 
-extern void	dither_cmyk(guchar *, int, int, int, unsigned char *,
-		            unsigned char *, unsigned char *, unsigned char *);
 extern void	dither_cmyk16(gushort *, int, int, int, unsigned char *,
 			      unsigned char *, unsigned char *,
 			      unsigned char *, unsigned char *,

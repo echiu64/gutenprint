@@ -37,6 +37,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.11  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
  *   Revision 1.10  1999/10/19 02:04:59  rlk
  *   Merge all of the single-level print_cmyk functions
  *
@@ -161,79 +164,6 @@ int	error[2][4][14*720+1];
  */
 
 void
-dither_black(guchar        *gray,	/* I - Grayscale pixels */
-             int           row,		/* I - Current Y coordinate */
-             int           src_width,	/* I - Width of input row */
-             int           dst_width,	/* I - Width of output row */
-             unsigned char *black)	/* O - Black bitmap pixels */
-{
-  int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
-		length;		/* Length of output bitmap in bytes */
-  unsigned char	bit,		/* Current bit */
-		*kptr;		/* Current black pixel */
-  int		k,		/* Current black error */
-		ditherk,	/* Next error value in buffer */
-		*kerror0,	/* Pointer to current error row */
-		*kerror1;	/* Pointer to next error row */
-  int		ditherbit;	/* Random dithering bitmask */
-
-
-  xstep  = src_width / dst_width;
-  xmod   = src_width % dst_width;
-  length = (dst_width) / 8;
-
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
-
-  memset(black, 0, length);
-
-  for (x = 0, bit = 128, kptr = black, xerror = 0,
-           ditherbit = rand(), ditherk = *kerror0;
-       x < dst_width;
-       x ++, kerror0 ++, kerror1 ++)
-  {
-    k = 255 - *gray + ditherk / 8;
-
-    if (k > 127)
-    {
-      *kptr |= bit;
-      k -= 255;
-    };
-
-    if (ditherbit & bit)
-    {
-      kerror1[0] = 5 * k;
-      ditherk    = kerror0[1] + 3 * k;
-    }
-    else
-    {
-      kerror1[0] = 3 * k;
-      ditherk    = kerror0[1] + 5 * k;
-    };
-
-    if (bit == 1)
-    {
-      kptr ++;
-      bit       = 128;
-      ditherbit = rand();
-    }
-    else
-      bit >>= 1;
-
-    gray   += xstep;
-    xerror += xmod;
-    if (xerror >= dst_width)
-    {
-      xerror -= dst_width;
-      gray   ++;
-    };
-  };
-}
-
-void
 dither_black16(gushort       *gray,	/* I - Grayscale pixels */
 	       int           row,	/* I - Current Y coordinate */
 	       int           src_width,	/* I - Width of input row */
@@ -274,7 +204,7 @@ dither_black16(gushort       *gray,	/* I - Grayscale pixels */
     {
       *kptr |= bit;
       k -= 65535;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -285,7 +215,7 @@ dither_black16(gushort       *gray,	/* I - Grayscale pixels */
     {
       kerror1[0] = 3 * k;
       ditherk    = kerror0[1] + 5 * k;
-    };
+    }
 
     if (bit == 1)
     {
@@ -302,223 +232,8 @@ dither_black16(gushort       *gray,	/* I - Grayscale pixels */
     {
       xerror -= dst_width;
       gray   ++;
-    };
-  };
-}
-
-
-/*
- * 'dither_cmyk()' - Dither RGB pixels to cyan, magenta, yellow, and black.
- */
-
-void
-dither_cmyk(guchar        *rgb,		/* I - RGB pixels */
-            int           row,		/* I - Current Y coordinate */
-            int           src_width,	/* I - Width of input row */
-            int           dst_width,	/* I - Width of output rows */
-            unsigned char *cyan,	/* O - Cyan bitmap pixels */
-            unsigned char *magenta,	/* O - Magenta bitmap pixels */
-            unsigned char *yellow,	/* O - Yellow bitmap pixels */
-            unsigned char *black)	/* O - Black bitmap pixels */
-{
-  int		x,		/* Current X coordinate */
-		xerror,		/* X error count */
-		xstep,		/* X step */
-		xmod,		/* X error modulus */
-		length;		/* Length of output bitmap in bytes */
-  int		c, m, y, k,	/* CMYK values */
-		divk,		/* Inverse of K */
-		diff;		/* Average color difference */
-  unsigned char	bit,		/* Current bit */
-		*cptr,		/* Current cyan pixel */
-		*mptr,		/* Current magenta pixel */
-		*yptr,		/* Current yellow pixel */
-		*kptr;		/* Current black pixel */
-  int		ditherc,	/* Next error value in buffer */
-		*cerror0,	/* Pointer to current error row */
-		*cerror1;	/* Pointer to next error row */
-  int		dithery,	/* Next error value in buffer */
-		*yerror0,	/* Pointer to current error row */
-		*yerror1;	/* Pointer to next error row */
-  int		ditherm,	/* Next error value in buffer */
-		*merror0,	/* Pointer to current error row */
-		*merror1;	/* Pointer to next error row */
-  int		ditherk,	/* Next error value in buffer */
-		*kerror0,	/* Pointer to current error row */
-		*kerror1;	/* Pointer to next error row */
-  int		ditherbit;	/* Random dither bitmask */
-
-  xstep  = 3 * (src_width / dst_width);
-  xmod   = src_width % dst_width;
-  length = (dst_width) / 8;
-
-  cerror0 = error[row & 1][0];
-  cerror1 = error[1 - (row & 1)][0];
-
-  merror0 = error[row & 1][1];
-  merror1 = error[1 - (row & 1)][1];
-
-  yerror0 = error[row & 1][2];
-  yerror1 = error[1 - (row & 1)][2];
-
-  kerror0 = error[row & 1][3];
-  kerror1 = error[1 - (row & 1)][3];
-
-  memset(cyan, 0, length);
-  memset(magenta, 0, length);
-  memset(yellow, 0, length);
-  if (black != NULL)
-    memset(black, 0, length);
-
-  for (x = 0, bit = 128, cptr = cyan, mptr = magenta, yptr = yellow,
-           kptr = black, xerror = 0, ditherbit = rand(), ditherc = cerror0[0],
-           ditherm = merror0[0], dithery = yerror0[0], ditherk = kerror0[0];
-       x < dst_width;
-       x ++, cerror0 ++, cerror1 ++, merror0 ++, merror1 ++, yerror0 ++,
-           yerror1 ++, kerror0 ++, kerror1 ++)
-  {
-   /*
-    * First compute the standard CMYK separation color values...
-    */
-
-    c = 255 - rgb[0];
-    m = 255 - rgb[1];
-    y = 255 - rgb[2];
-    k = MIN(c, MIN(m, y));
-
-    if (black != NULL)
-    {
-     /*
-      * Since we're printing black, adjust the black level based upon
-      * the amount of color in the pixel (colorful pixels get less black)...
-      */
-
-      diff = 255 - (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
-      diff = diff * diff * diff / 65025; /* diff = diff^3 */
-      k    = diff * k / 255;
-      divk = 255 - k;
-      
-      if (divk == 0)
-        c = m = y = 0;	/* Grayscale */
-      else
-      {
-       /*
-        * Full color; update the CMY values for the black value and reduce
-        * CMY as necessary to give better blues, greens, and reds... :)
-        */
-
-        c  = (255 - rgb[1] / 4) * (c - k) / divk;
-        m  = (255 - rgb[2] / 4) * (m - k) / divk;
-        y  = (255 - rgb[0] / 4) * (y - k) / divk;
-      };
-
-      k += ditherk / 8;
-      if (k > 127)
-      {
-	*kptr |= bit;
-	k -= 255;
-      };
-
-      if (ditherbit & bit)
-      {
-	kerror1[0] = 5 * k;
-	ditherk    = kerror0[1] + 3 * k;
-      }
-      else
-      {
-	kerror1[0] = 3 * k;
-	ditherk    = kerror0[1] + 5 * k;
-      };
-
-      if (bit == 1)
-        kptr ++;
     }
-    else
-    {
-     /*
-      * We're not printing black, but let's adjust the CMY levels to produce
-      * better reds, greens, and blues...
-      */
-
-      c  = (255 - rgb[1] / 4) * (c - k) / 255 + k;
-      m  = (255 - rgb[2] / 4) * (m - k) / 255 + k;
-      y  = (255 - rgb[0] / 4) * (y - k) / 255 + k;
-    };
-
-    c += ditherc / 8;
-    if (c > 127)
-    {
-      *cptr |= bit;
-      c -= 255;
-    };
-
-
-    if (ditherbit & bit)
-    {
-      cerror1[0] = 5 * c;
-      ditherc    = cerror0[1] + 3 * c;
-    }
-    else
-    {
-      cerror1[0] = 3 * c;
-      ditherc    = cerror0[1] + 5 * c;
-    };
-
-    m += ditherm / 8;
-    if (m > 127)
-    {
-      *mptr |= bit;
-      m -= 255;
-    };
-
-    if (ditherbit & bit)
-    {
-      merror1[0] = 5 * m;
-      ditherm    = merror0[1] + 3 * m;
-    }
-    else
-    {
-      merror1[0] = 3 * m;
-      ditherm    = merror0[1] + 5 * m;
-    };
-
-    y += dithery / 8;
-    if (y > 127)
-    {
-      *yptr |= bit;
-      y -= 255;
-    };
-
-    if (ditherbit & bit)
-    {
-      yerror1[0] = 5 * y;
-      dithery    = yerror0[1] + 3 * y;
-    }
-    else
-    {
-      yerror1[0] = 3 * y;
-      dithery    = yerror0[1] + 5 * y;
-    };
-
-    if (bit == 1)
-    {
-      cptr ++;
-      mptr ++;
-      yptr ++;
-      bit       = 128;
-      ditherbit = rand();
-    }
-    else
-      bit >>= 1;
-
-    rgb    += xstep;
-    xerror += xmod;
-    if (xerror >= dst_width)
-    {
-      xerror -= dst_width;
-      rgb    += 3;
-    };
-  };
+  }
 }
 
 /*
@@ -580,12 +295,12 @@ dither_cmyk(guchar        *rgb,		/* I - RGB pixels */
 void
 dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
 	      int           row,	/* I - Current Y coordinate */
-	      int           src_width,/* I - Width of input row */
-	      int           dst_width,/* I - Width of output rows */
+	      int           src_width,	/* I - Width of input row */
+	      int           dst_width,	/* I - Width of output rows */
 	      unsigned char *cyan,	/* O - Cyan bitmap pixels */
 	      unsigned char *lcyan,	/* O - Light cyan bitmap pixels */
 	      unsigned char *magenta,	/* O - Magenta bitmap pixels */
-	      unsigned char *lmagenta,/* O - Light magenta bitmap pixels */
+	      unsigned char *lmagenta,	/* O - Light magenta bitmap pixels */
 	      unsigned char *yellow,	/* O - Yellow bitmap pixels */
 	      unsigned char *lyellow,	/* O - Light yellow bitmap pixels */
 	      unsigned char *black)	/* O - Black bitmap pixels */
@@ -596,7 +311,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
 		xmod,		/* X error modulus */
 		length;		/* Length of output bitmap in bytes */
   long long	c, m, y, k,	/* CMYK values */
-		lc, lm, ly, oc, om, ok, oy,
+		oc, om, ok, oy,
 		divk;		/* Inverse of K */
   long long     diff;		/* Average color difference */
   unsigned char	bit,		/* Current bit */
@@ -655,7 +370,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
   memset(yellow, 0, length);
   if (lyellow)
     memset(lyellow, 0, length);
-  if (black != NULL)
+  if (black)
     memset(black, 0, length);
 
 #ifdef PRINT_DEBUG
@@ -700,9 +415,6 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
     oc = c;
     om = m;
     oy = y;
-    lc = 0;
-    lm = 0;
-    ly = 0;
     k = MIN(c, MIN(m, y));
 #ifdef PRINT_DEBUG
     xc = c;
@@ -753,7 +465,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
       ak = k;
       divk = 65535 - k;
       if (divk == 0)
-        c = m = y = lm = lc = 0;	/* Grayscale */
+        c = m = y = 0;	/* Grayscale */
       else
       {
        /*
@@ -764,7 +476,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
         c  = (65535 - (unsigned) rgb[1] / 4) * (c - k) / divk;
         m  = (65535 - (unsigned) rgb[2] / 4) * (m - k) / divk;
         y  = (65535 - (unsigned) rgb[0] / 4) * (y - k) / divk;
-      };
+      }
       kdarkness = (c + m + c) / 3;
 #ifdef PRINT_DEBUG
       yc = c;
@@ -805,14 +517,22 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
       ck = nk - bk;
     
       c += ck ;
-      m += ck * 9 / 8;
-      y += ck * 3 / 2;
+      if (lmagenta)
+	{
+	  m += ck * 9 / 8;
+	  y += ck * 3 / 2;
+	}
+      else
+	{
+	  m += ck;
+	  y += ck;
+	}
       if (c > 65535)
-	c = 65536;
+	c = 65535;
       if (m > 65535)
-	m = 65536;
+	m = 65535;
       if (y > 65535)
-	y = 65536;
+	y = 65535;
       k = bk;
 #ifdef PRINT_DEBUG
       odk = ditherk;
@@ -822,7 +542,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
 	{
 	  *kptr |= bit;
 	  k -= 65535;
-	};
+	}
 
       if (ditherbit0 & bit)
 	{
@@ -833,7 +553,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
 	{
 	  kerror1[0] = 3 * k;
 	  ditherk    = kerror0[1] + 5 * k;
-	};
+	}
 
     }
     else
@@ -923,7 +643,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
     {
       cerror1[0] = 3 * c;
       ditherc    = cerror0[1] + 5 * c;
-    };
+    }
 
 
     /*****************************************************************
@@ -999,7 +719,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
     {
       merror1[0] = 3 * m;
       ditherm    = merror0[1] + 5 * m;
-    };
+    }
 
 
     oy = y;
@@ -1077,7 +797,7 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
     {
       yerror1[0] = 3 * y;
       dithery    = yerror0[1] + 5 * y;
-    };
+    }
 
 
     /*****************************************************************
@@ -1158,8 +878,8 @@ dither_cmyk16(gushort       *rgb,	/* I - RGB pixels */
     {
       xerror -= dst_width;
       rgb    += 3;
-    };
-  };
+    }
+  }
   /*
    * Main loop ends here!
    */
@@ -1242,7 +962,7 @@ dither_black4(guchar        *gray,	/* I - Grayscale pixels */
     {
       kptr[0] |= bit;
       k -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1253,7 +973,7 @@ dither_black4(guchar        *gray,	/* I - Grayscale pixels */
     {
       kerror1[0] = 3 * k;
       ditherk    = kerror0[1] + 5 * k;
-    };
+    }
 
     if (bit == 1)
     {
@@ -1271,8 +991,8 @@ dither_black4(guchar        *gray,	/* I - Grayscale pixels */
     {
       xerror -= dst_width;
       gray ++;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -1327,7 +1047,7 @@ dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
     {
       kptr[0] |= bit;
       k -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1338,7 +1058,7 @@ dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
     {
       kerror1[0] = 3 * k;
       ditherk    = kerror0[1] + 5 * k;
-    };
+    }
 
     if (bit == 1)
     {
@@ -1356,8 +1076,8 @@ dither_black4_16(gushort       *gray,	/* I - Grayscale pixels */
     {
       xerror -= dst_width;
       gray ++;
-    };
-  };
+    }
+  }
 }
 
 
@@ -1463,7 +1183,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
       c  = (255 - rgb[1] / 4) * (c - k) / divk;
       m  = (255 - rgb[2] / 4) * (m - k) / divk;
       y  = (255 - rgb[0] / 4) * (y - k) / divk;
-    };
+    }
 
     k += ditherk / 8;
     if (k > ((LEVEL_2 + LEVEL_3) / 2))
@@ -1481,7 +1201,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       kptr[0] |= bit;
       k -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1492,7 +1212,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       kerror1[0] = 3 * k;
       ditherk    = kerror0[1] + 5 * k;
-    };
+    }
 
     c += ditherc / 8;
     if (c > ((LEVEL_2 + LEVEL_3) / 2))
@@ -1510,7 +1230,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       cptr[0] |= bit;
       c -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1521,7 +1241,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       cerror1[0] = 3 * c;
       ditherc    = cerror0[1] + 5 * c;
-    };
+    }
 
     m += ditherm / 8;
     if (m > ((LEVEL_2 + LEVEL_3) / 2))
@@ -1539,7 +1259,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       mptr[0] |= bit;
       m -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1550,7 +1270,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       merror1[0] = 3 * m;
       ditherm    = merror0[1] + 5 * m;
-    };
+    }
 
     y += dithery / 8;
     if (y > ((LEVEL_2 + LEVEL_3) / 2))
@@ -1568,7 +1288,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       yptr[0] |= bit;
       y -= LEVEL_1;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1579,7 +1299,7 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       yerror1[0] = 3 * y;
       dithery    = yerror0[1] + 5 * y;
-    };
+    }
 
     if (bit == 1)
     {
@@ -1600,8 +1320,8 @@ dither_cmyk4(guchar        *rgb,	/* I - RGB pixels */
     {
       xerror -= dst_width;
       rgb    += 3;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -1702,7 +1422,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
       c  = (65535 - rgb[1] / 4) * (c - k) / divk;
       m  = (65535 - rgb[2] / 4) * (m - k) / divk;
       y  = (65535 - rgb[0] / 4) * (y - k) / divk;
-    };
+    }
 
     k += ditherk / 8;
     if (k > ((LEVEL_2_16 + LEVEL_3_16) / 2))
@@ -1720,7 +1440,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       kptr[0] |= bit;
       k -= LEVEL_1_16;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1731,7 +1451,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       kerror1[0] = 3 * k;
       ditherk    = kerror0[1] + 5 * k;
-    };
+    }
 
     c += ditherc / 8;
     if (c > ((LEVEL_2_16 + LEVEL_3_16) / 2))
@@ -1749,7 +1469,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       cptr[0] |= bit;
       c -= LEVEL_1_16;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1760,7 +1480,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       cerror1[0] = 3 * c;
       ditherc    = cerror0[1] + 5 * c;
-    };
+    }
 
     m += ditherm / 8;
     if (m > ((LEVEL_2_16 + LEVEL_3_16) / 2))
@@ -1778,7 +1498,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       mptr[0] |= bit;
       m -= LEVEL_1_16;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1789,7 +1509,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       merror1[0] = 3 * m;
       ditherm    = merror0[1] + 5 * m;
-    };
+    }
 
     y += dithery / 8;
     if (y > ((LEVEL_2_16 + LEVEL_3_16) / 2))
@@ -1807,7 +1527,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       yptr[0] |= bit;
       y -= LEVEL_1_16;
-    };
+    }
 
     if (ditherbit & bit)
     {
@@ -1818,7 +1538,7 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       yerror1[0] = 3 * y;
       dithery    = yerror0[1] + 5 * y;
-    };
+    }
 
     if (bit == 1)
     {
@@ -1839,8 +1559,8 @@ dither_cmyk4_16(gushort       *rgb,		/* I - RGB pixels */
     {
       xerror -= dst_width;
       rgb    += 3;
-    };
-  };
+    }
+  }
 }
 
 
@@ -1872,7 +1592,7 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
       grayin ++;
       grayout ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -1887,8 +1607,8 @@ gray_to_gray(guchar *grayin,	/* I - RGB pixels */
       grayin += bpp;
       grayout ++;
       width --;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -1914,7 +1634,7 @@ gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
       grayin ++;
       grayout ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -1929,8 +1649,8 @@ gray_to_gray16(guchar *grayin,		/* I - RGB pixels */
       grayin += bpp;
       grayout ++;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -1967,7 +1687,7 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
       indexed ++;
       gray ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -1981,8 +1701,8 @@ indexed_to_gray(guchar *indexed,	/* I - Indexed pixels */
       indexed += bpp;
       gray ++;
       width --;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -2014,7 +1734,7 @@ indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
       indexed ++;
       gray ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -2028,8 +1748,8 @@ indexed_to_gray16(guchar *indexed,	/* I - Indexed pixels */
       indexed += bpp;
       gray ++;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -2068,7 +1788,7 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
       rgb += 3;
       indexed ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -2091,8 +1811,8 @@ indexed_to_rgb(guchar *indexed,		/* I - Indexed pixels */
       rgb += 3;
       indexed += bpp;
       width --;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -2126,7 +1846,7 @@ indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
       rgb += 3;
       indexed ++;
       width --;
-    };
+    }
   }
   else
   {
@@ -2149,8 +1869,8 @@ indexed_to_rgb16(guchar *indexed,	/* I - Indexed pixels */
       rgb += 3;
       indexed += bpp;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -2183,7 +1903,7 @@ rgb_to_gray(guchar *rgb,		/* I - RGB pixels */
       gray ++;
       rgb += 3;
       width --;
-    };
+    }
   }
   else
   {
@@ -2200,8 +1920,8 @@ rgb_to_gray(guchar *rgb,		/* I - RGB pixels */
       gray ++;
       rgb += bpp;
       width --;
-    };
-  };
+    }
+  }
 }
 
 void
@@ -2228,7 +1948,7 @@ rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
       gray ++;
       rgb += 3;
       width --;
-    };
+    }
   }
   else
   {
@@ -2245,8 +1965,8 @@ rgb_to_gray16(guchar *rgb,		/* I - RGB pixels */
       gray ++;
       rgb += bpp;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -2285,7 +2005,7 @@ rgb_to_rgb(guchar *rgbin,		/* I - RGB pixels */
       rgbin += 3;
       rgbout += 3;
       width --;
-    };
+    }
   }
   else
   {
@@ -2308,8 +2028,8 @@ rgb_to_rgb(guchar *rgbin,		/* I - RGB pixels */
       rgbin += bpp;
       rgbout += 3;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -2348,7 +2068,7 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
       rgbin += 3;
       rgbout += 3;
       width --;
-    };
+    }
   }
   else
   {
@@ -2371,8 +2091,8 @@ rgb_to_rgb16(guchar *rgbin,		/* I - RGB pixels */
       rgbin += bpp;
       rgbout += 3;
       width --;
-    };
-  };
+    }
+  }
 }
 
 
@@ -2421,7 +2141,7 @@ default_media_size(int  model,		/* I - Printer model */
   {
     *width  = 0;
     *length = 0;
-  };
+  }
 }
 
 /* Taken from common/autostretch_hsv.c */

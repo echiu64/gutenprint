@@ -32,6 +32,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.5  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
  *   Revision 1.4  1999/10/17 23:44:07  rlk
  *   16-bit everything (untested)
  *
@@ -379,7 +382,7 @@ ps_parameters(int  model,	/* I - Printer model */
       ps_ppd_file = NULL;
     else
       ps_ppd_file = ppd_file;
-  };
+  }
 
   if (ps_ppd == NULL)
   {
@@ -395,7 +398,7 @@ ps_parameters(int  model,	/* I - Printer model */
     }
     else
       return (NULL);
-  };
+  }
 
   rewind(ps_ppd);
   *count = 0;
@@ -414,8 +417,8 @@ ps_parameters(int  model,	/* I - Printer model */
     {
       valptrs[*count] = g_strdup(loption);
       (*count) ++;
-    };
-  };
+    }
+  }
 
   if (*count == 0)
   {
@@ -495,7 +498,7 @@ ps_imageable_area(int  model,		/* I - Printer model */
     *right  -= 18;
     *top    -= 36;
     *bottom = 36;
-  };
+  }
 }
 
 
@@ -588,7 +591,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
       colorfunc = gray_to_gray16;
     else
       colorfunc = indexed_to_gray16;
-  };
+  }
 
  /*
   * Compute the output size...
@@ -632,8 +635,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     {
       out_height = page_height * scaling / 100.0;
       out_width  = out_height * drawable->width / drawable->height;
-    };
-  };
+    }
+  }
 
  /*
   * Landscape width/height...
@@ -660,8 +663,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     {
       temp_height = page_height;
       temp_width  = temp_height * drawable->height / drawable->width;
-    };
-  };
+    }
+  }
 
  /*
   * See which orientation has the greatest area (or if we need to rotate the
@@ -684,8 +687,8 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 	orientation = ORIENT_LANDSCAPE;
       else
 	orientation = ORIENT_PORTRAIT;
-    };
-  };
+    }
+  }
 
   if (orientation == ORIENT_LANDSCAPE)
   {
@@ -700,7 +703,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     x    = top;
     top  = left;
     left = x;
-  };
+  }
 
  /*
   * Let the user know what we're doing...
@@ -755,28 +758,28 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     commands[num_commands].command = g_strdup(command);
     commands[num_commands].order   = order;
     num_commands ++;
-  };
+  }
 
   if ((command = ppd_find(ppd_file, "InputSlot", media_source, &order)) != NULL)
   {
     commands[num_commands].command = g_strdup(command);
     commands[num_commands].order   = order;
     num_commands ++;
-  };
+  }
 
   if ((command = ppd_find(ppd_file, "MediaType", media_type, &order)) != NULL)
   {
     commands[num_commands].command = g_strdup(command);
     commands[num_commands].order   = order;
     num_commands ++;
-  };
+  }
 
   if ((command = ppd_find(ppd_file, "Resolution", resolution, &order)) != NULL)
   {
     commands[num_commands].command = g_strdup(command);
     commands[num_commands].order   = order;
     num_commands ++;
-  };
+  }
 
  /*
   * Sort the commands using the OrderDependency value...
@@ -792,7 +795,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
         commands[i].order   = commands[j].order;
         commands[j].command = command;
         commands[j].order   = order;
-      };
+      }
 
  /*
   * Send the commands...
@@ -806,10 +809,10 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     {
       fputs(commands[i].command, prn);
       g_free(commands[i].command);
-    };
+    }
 
     fputs("%%EndProlog\n", prn);
-  };
+  }
 
  /*
   * Output the page, rotating as necessary...
@@ -831,7 +834,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
     fprintf(prn, "%.3f %.3f scale\n",
             (float)out_width / ((float)drawable->width),
             (float)out_height / ((float)drawable->height));
-  };
+  }
 
   in  = g_malloc(drawable->width * drawable->bpp);
   out = g_malloc((drawable->width * out_bpp + 3) * 2);
@@ -862,7 +865,7 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
 		   saturation);
 
       ps_hex(prn, out, drawable->width * out_bpp);
-    };
+    }
   }
   else
   {
@@ -916,12 +919,12 @@ ps_print(int       model,		/* I - Model (Level 1 or 2) */
       {
         ps_ascii85(prn, out, out_length, 1);
         out_offset = 0;
-      };
+      }
 
       if (out_offset > 0)
         memcpy(out, out + out_length - out_offset, out_offset);
-    };
-  };
+    }
+  }
 
   g_free(in);
   g_free(out);
@@ -964,7 +967,7 @@ ps_hex(FILE   *prn,	/* I - File to print to */
     col = (col + 1) & 31;
     if (col == 0)
       putc('\n', prn);
-  };
+  }
 
   if (col > 0)
     putc('\n', prn);
@@ -1009,11 +1012,11 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
       c[0] = b + '!';
 
       fwrite(c, 5, 1, prn);
-    };
+    }
 
     data += 4;
     length -= 4;
-  };
+  }
 
   if (last_line)
   {
@@ -1032,10 +1035,10 @@ ps_ascii85(FILE   *prn,		/* I - File to print to */
       c[0] = b + '!';
 
       fwrite(c, length + 1, 1, prn);
-    };
+    }
 
     fputs("~>\n", prn);
-  };
+  }
 }
 
 
@@ -1070,7 +1073,7 @@ ppd_find(char *ppd_file,	/* I - Name of PPD file */
       ps_ppd_file = NULL;
     else
       ps_ppd_file = ppd_file;
-  };
+  }
 
   if (ps_ppd == NULL)
     return (NULL);
@@ -1111,15 +1114,15 @@ ppd_find(char *ppd_file,	/* I - Name of PPD file */
           {
             strcpy(strchr(value, '\"'), "\n");
             break;
-          };
-        };
+          }
+        }
       }
       else
         *opt = '\0';
 
       return (value);
-    };
-  };
+    }
+  }
 
   return (NULL);
 }

@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  1999/10/21 01:27:37  rlk
+ *   More progress toward full 16-bit rendering
+ *
  *   Revision 1.6  1999/10/19 02:04:59  rlk
  *   Merge all of the single-level print_cmyk functions
  *
@@ -285,7 +288,7 @@ pcl_parameters(int  model,	/* I - Printer model */
     {
       *count = 4;
       p = media_types;
-    };
+    }
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
@@ -298,7 +301,7 @@ pcl_parameters(int  model,	/* I - Printer model */
     {
       *count = 0;
       return (NULL);
-    };
+    }
   }
   else if (strcmp(name, "Resolution") == 0)
   {
@@ -376,7 +379,7 @@ pcl_imageable_area(int  model,		/* I - Printer model */
         *top    = length - 0;
         *bottom = 33;
         break;
-  };
+  }
 }
 
 
@@ -470,7 +473,7 @@ pcl_print(int       model,		/* I - Model */
       colorfunc = gray_to_gray16;
     else
       colorfunc = indexed_to_gray16;
-  };
+  }
 
  /*
   * Figure out the output resolution...
@@ -523,8 +526,8 @@ pcl_print(int       model,		/* I - Model */
     {
       out_height = page_height * scaling / 100.0;
       out_width  = out_height * drawable->width / drawable->height;
-    };
-  };
+    }
+  }
 
  /*
   * Landscape width/height...
@@ -551,8 +554,8 @@ pcl_print(int       model,		/* I - Model */
     {
       temp_height = page_height;
       temp_width  = temp_height * drawable->height / drawable->width;
-    };
-  };
+    }
+  }
 
  /*
   * See which orientation has the greatest area (or if we need to rotate the
@@ -575,8 +578,8 @@ pcl_print(int       model,		/* I - Model */
 	orientation = ORIENT_LANDSCAPE;
       else
 	orientation = ORIENT_PORTRAIT;
-    };
-  };
+    }
+  }
 
   if (orientation == ORIENT_LANDSCAPE)
   {
@@ -591,7 +594,7 @@ pcl_print(int       model,		/* I - Model */
     x    = top;
     top  = left;
     left = x;
-  };
+  }
 
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
@@ -643,7 +646,7 @@ pcl_print(int       model,		/* I - Model */
   {
     fputs("\033&l27A", prn);
     top = 1191 - top;
-  };
+  }
 
   fputs("\033&l0L", prn);			/* Turn off perforation skip */
   fputs("\033&l0E", prn);			/* Reset top margin to 0 */
@@ -766,8 +769,8 @@ pcl_print(int       model,		/* I - Model */
         fputs("\033*r-3U", prn);		/* Simple CMY color */
       else
         fputs("\033*r-4U", prn);		/* Simple KCMY color */
-    };
-  };
+    }
+  }
 
   if (model < 3 || model == 500)
     fputs("\033*b0M", prn);			/* Mode 0 (no compression) */
@@ -813,7 +816,7 @@ pcl_print(int       model,		/* I - Model */
       black = g_malloc(length);
     else
       black = NULL;
-  };
+  }
     
  /*
   * Output the page, rotating as necessary...
@@ -849,7 +852,7 @@ pcl_print(int       model,		/* I - Model */
       {
         errlast = errline;
         gimp_pixel_rgn_get_col(&rgn, in, errline, 0, drawable->height);
-      };
+      }
 
       (*colorfunc)(in, out, drawable->height, drawable->bpp, lut16, cmap,
 		   saturation);
@@ -879,7 +882,7 @@ pcl_print(int       model,		/* I - Model */
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
           (*writefunc)(prn, yellow, length / 2, 0);
           (*writefunc)(prn, yellow + length / 2, length / 2, 1);
-	};
+	}
       }
       else
       {
@@ -902,8 +905,8 @@ pcl_print(int       model,		/* I - Model */
           (*writefunc)(prn, cyan, length, 0);
           (*writefunc)(prn, magenta, length, 0);
           (*writefunc)(prn, yellow, length, 1);
-	};
-      };
+	}
+      }
 
       errval += errmod;
       errline -= errdiv;
@@ -911,8 +914,8 @@ pcl_print(int       model,		/* I - Model */
       {
         errval -= out_height;
         errline --;
-      };
-    };
+      }
+    }
   }
   else
   {
@@ -939,7 +942,7 @@ pcl_print(int       model,		/* I - Model */
       {
         errlast = errline;
         gimp_pixel_rgn_get_row(&rgn, in, 0, errline, drawable->width);
-      };
+      }
 
       (*colorfunc)(in, out, drawable->width, drawable->bpp, lut16, cmap,
 		   saturation);
@@ -969,7 +972,7 @@ pcl_print(int       model,		/* I - Model */
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
           (*writefunc)(prn, yellow, length / 2, 0);
           (*writefunc)(prn, yellow + length / 2, length / 2, 1);
-	};
+	}
       }
       else
       {
@@ -992,8 +995,8 @@ pcl_print(int       model,		/* I - Model */
           (*writefunc)(prn, cyan, length, 0);
           (*writefunc)(prn, magenta, length, 0);
           (*writefunc)(prn, yellow, length, 1);
-	};
-      };
+	}
+      }
 
       errval += errmod;
       errline += errdiv;
@@ -1001,9 +1004,9 @@ pcl_print(int       model,		/* I - Model */
       {
         errval -= out_height;
         errline ++;
-      };
-    };
-  };
+      }
+    }
+  }
 
  /*
   * Cleanup...
@@ -1019,7 +1022,7 @@ pcl_print(int       model,		/* I - Model */
     g_free(cyan);
     g_free(magenta);
     g_free(yellow);
-  };
+  }
 
   switch (model)			/* End raster graphics */
   {
@@ -1032,7 +1035,7 @@ pcl_print(int       model,		/* I - Model */
     default :
         fputs("\033*rbC", prn);
         break;
-  };
+  }
 
   fputs("\033&l0H", prn);		/* Eject page */
   fputs("\033E", prn);			/* PCL reset */
@@ -1093,7 +1096,7 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
     {
       line ++;
       length --;
-    };
+    }
 
     line   -= 2;
     length += 2;
@@ -1113,7 +1116,7 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
       comp_ptr += tcount + 1;
       start    += tcount;
       count    -= tcount;
-    };
+    }
 
     if (length <= 0)
       break;
@@ -1132,7 +1135,7 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
     {
       line ++;
       length --;
-    };
+    }
 
    /*
     * Output the repeated sequences (max 128 at a time).
@@ -1148,8 +1151,8 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
       comp_ptr += 2;
       count    -= tcount;
-    };
-  };
+    }
+  }
 
  /*
   * Send a line of raster graphics...
