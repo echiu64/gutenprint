@@ -28,8 +28,6 @@ src/escputil/escputil.c
 # GIMP sources
 src/gimp/gimp_color_window.c
 src/gimp/gimp_main_window.c
-src/gimp/gtk_color_window.c
-src/gimp/gtk_main_window.c
 src/gimp/print-image-gimp.c
 src/gimp/print.c
 

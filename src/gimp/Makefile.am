@@ -45,8 +45,6 @@ print_SOURCES = \
 	print.c \
 	gimp_color_window.c \
 	gimp_main_window.c \
-	gtk_color_window.c \
-	gtk_main_window.c \
 	print_gimp.h
 
 print_LDADD = $(GIMP_LIBS) $(LIBGIMPPRINT_LIBS) ../../lib/libprintut.la

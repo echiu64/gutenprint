@@ -28,10 +28,6 @@
 
 #include "print_gimp.h"
 
-#ifdef GIMP_1_0
-#include <math.h>
-#endif
-
 #include <signal.h>
 #include <ctype.h>
 #include <sys/wait.h>
@@ -58,12 +54,7 @@ static void	query (void);
 static void	run (char *, int, GParam *, int *, GParam **);
 static int	do_print_dialog (char *proc_name);
 
-#ifndef GIMP_1_0
 extern void     gimp_create_main_window (void);
-#endif
-#ifndef NEW_UI_ONLY
-extern void     gtk_create_main_window (void);
-#endif
 
 #if 0
 static void	cleanupfunc(void);
@@ -186,33 +177,6 @@ query (void)
   static gchar *copy  = "Copyright 1997-2000 by Michael Sweet and Robert Krawitz";
   static gchar *types = "RGB*,GRAY*,INDEXED*";
 
-#ifdef NEW_UI_ONLY
-  gimp_install_procedure ("file_print_gimp",
-			  blurb, help, auth, copy,
-			  PLUG_IN_VERSION,
-			  N_("<Image>/File/Print..."),
-			  types,
-			  PROC_PLUG_IN,
-			  nargs, 0,
-			  args, NULL);
-#elif defined(GIMP_1_0)
-  gimp_install_procedure ("file_print",
-			  blurb, help, auth, copy,
-			  PLUG_IN_VERSION,
-			  N_("<Image>/File/Print..."),
-			  types,
-			  PROC_PLUG_IN,
-			  nargs, 0,
-			  args, NULL);
-#else
-  gimp_install_procedure ("file_print_gtk",
-			  blurb, help, auth, copy,
-			  PLUG_IN_VERSION,
-			  N_("<Image>/File/Print (Gtk)..."),
-			  types,
-			  PROC_PLUG_IN,
-			  nargs, 0,
-			  args, NULL);
   gimp_install_procedure ("file_print_gimp",
 			  blurb, help, auth, copy,
 			  PLUG_IN_VERSION,
@@ -221,7 +185,6 @@ query (void)
 			  PROC_PLUG_IN,
 			  nargs, 0,
 			  args, NULL);
-#endif
 }
 
 
@@ -291,9 +254,7 @@ run (char   *name,		/* I - Name of print program. */
   char		*tmpfile;	/* temp filename */
 #endif
   gint32         drawable_ID;   /* drawable ID */
-#ifndef GIMP_1_0
   GimpExportReturnType export = EXPORT_CANCEL;    /* return value of gimp_export_image() */
-#endif
   int		ppid = getpid (), /* PID of plugin */
 		opid,		/* PID of output process */
 		cpid = 0,	/* PID of control/monitor process */
@@ -335,7 +296,6 @@ run (char   *name,		/* I - Name of print program. */
   if (strchr(image_filename, '/'))
     image_filename = strrchr(image_filename, '/') + 1;
 
-#ifndef GIMP_1_0
   /*  eventually export the image */
   switch (run_mode)
     {
@@ -357,7 +317,6 @@ run (char   *name,		/* I - Name of print program. */
     default:
       break;
     }
-#endif
 
   /*
    * Get drawable...
@@ -631,12 +590,8 @@ run (char   *name,		/* I - Name of print program. */
 
 
  cleanup:
-#ifndef GIMP_1_0
   if (export == EXPORT_EXPORT)
     gimp_image_delete (image_ID);
-#else
-  ; /* MRS: empty statement to suppress compiler warning */
-#endif
   stp_free_vars(vars);
 }
 
@@ -647,19 +602,6 @@ run (char   *name,		/* I - Name of print program. */
 static gint
 do_print_dialog (gchar *proc_name)
 {
-#ifdef GIMP_1_0
-  gchar **argv;
-  gint    argc;
-
-  argc    = 1;
-  argv    = g_new (gchar *, 1);
-  argv[0] = g_strdup ("print");
-
-  gtk_init (&argc, &argv);
-  gtk_rc_parse (gimp_gtkrc ());
-
-  gdk_set_use_xshm (gimp_use_xshm());
-#endif
 
   /*
    * Get printrc options...
@@ -669,16 +611,7 @@ do_print_dialog (gchar *proc_name)
   /*
    * Print dialog window...
    */
-#ifdef NEW_UI_ONLY
   gimp_create_main_window();
-#elif defined(GIMP_1_0)
-  gtk_create_main_window ();
-#else
-  if (!strcmp (proc_name, "file_print_gimp"))
-    gimp_create_main_window ();
-  else
-    gtk_create_main_window ();
-#endif
 
   gtk_main ();
   gdk_flush ();
