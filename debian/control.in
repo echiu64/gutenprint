@@ -82,7 +82,7 @@ Description: library necessary to use gimp-print programs
 Package: gimpprint-locales
 Architecture: all
 Section: libs
-Replaces: libgimpprint1
+Replaces: libgimpprint1 (<= 4.2.0-1)
 Description: Locales files for gimp-print
  This package contains the i18n files of gimp-print, used by libgimpprint,
  gimp1.2-print, cupsys-driver-gimpprint and escputil.  It will be used by
