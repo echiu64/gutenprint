@@ -76,6 +76,8 @@
 #define IMAGE_SOLID_TONE	1
 #define IMAGE_CONTINUOUS	2
 #define IMAGE_MONOCHROME	3
+#define IMAGE_FAST_COLOR	4
+#define NIMAGE_TYPES		5
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print

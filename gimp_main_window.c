@@ -86,6 +86,7 @@ static GtkWidget *image_line_art;
 static GtkWidget *image_solid_tone;
 static GtkWidget *image_continuous_tone;
 static GtkWidget *image_monochrome;
+static GtkWidget *image_fast_color;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
 static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
@@ -668,6 +669,17 @@ gimp_create_main_window (void)
   gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
+  image_fast_color= button =
+    gtk_radio_button_new_with_label (image_type_group, _("Fast Color"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_FAST_COLOR)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_FAST_COLOR);
+  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
   /*
    *  Color adjust button
    */
@@ -1207,6 +1219,9 @@ gimp_do_misc_updates (void)
       break;
     case IMAGE_MONOCHROME:
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_monochrome), TRUE);
+      break;
+    case IMAGE_FAST_COLOR:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_fast_color), TRUE);
       break;
     default:
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_continuous_tone), TRUE);

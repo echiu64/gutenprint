@@ -490,13 +490,14 @@ For PCL (Hewlett-Packard and Lexmark) printers:
 Image type (to optimize the dither):
 ----- ---- --- -------- --- --------
 
--dImageType=x x:   0 ...   3  (0)
+-dImageType=x x:   0 ...   4  (0)
 Select the image type most representative of what's being printed.  
 
 0  Line art (color or gray scale)
 1  Primarily solid colors or smooth gradients (color or gray scale)
 2  Continuous-tone photographs (color or gray scale)
 3  Pure black and white or pre-screened (currently black only)
+4  Faster color mode (less accuracy and/or detail)
 
 For mixed documents, options 0 or 1 will probably work best.  Option 0
 will dither faster and yield sharper text, but images will be
@@ -504,7 +505,7 @@ grainier.  Option 1 will yield smoother images, but text will not be
 as sharp and the dither process will be slower.  Option 2 will yield
 the best natural images, but is quite slow.  Option 3 is very fast and
 accurate, but should not be used if there are any tones other than
-pure black and white.
+pure black and white.  Option 4 is the fastest color option.
 
 
 EXAMPLES:

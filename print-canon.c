@@ -1128,8 +1128,12 @@ canon_print(const printer_t *printer,		/* I - Model */
 	else
 	  dither_black(out, y, dither, black);
       } else {
-	dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		    yellow, lyellow, black);
+	if (nv.image_type == IMAGE_FAST_COLOR)
+	  dither_cmyk_fast(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			   yellow, lyellow, black);
+	else
+	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, lyellow, black);
       }
 
 #ifdef DEBUG

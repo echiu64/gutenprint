@@ -363,7 +363,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   code = stp_put_param_int(plist, "Color", &stp_data.v.output_type,
 			   0, 1, code);
   code = stp_put_param_int(plist, "ImageType", &stp_data.v.image_type,
-			   0, 3, code);
+			   0, NIMAGE_TYPES, code);
   code = stp_put_param_float(plist, "Gamma", &stp_data.v.gamma,
 			     lower->gamma, upper->gamma, code);
   code = stp_put_param_float(plist, "Saturation", &stp_data.v.saturation,

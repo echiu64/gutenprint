@@ -1787,8 +1787,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
       }
       else
       {
-        dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		    yellow, NULL, black);
+	if (nv.image_type == IMAGE_FAST_COLOR)
+	  dither_cmyk_fast(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			   yellow, NULL, black);
+	else
+	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, NULL, black);
 
         (*writefunc)(prn, black + length / 2, length / 2, 0);
         (*writefunc)(prn, black, length / 2, 0);
@@ -1825,8 +1829,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
       }
       else
       {
-        dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
-		    yellow, NULL, black);
+	if (nv.image_type == IMAGE_FAST_COLOR)
+	  dither_cmyk_fast(out, y, dither, cyan, lcyan, magenta, lmagenta,
+			   yellow, NULL, black);
+	else
+	  dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
+		      yellow, NULL, black);
 
         if (black != NULL)
           (*writefunc)(prn, black, length, 0);
