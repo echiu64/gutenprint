@@ -265,30 +265,32 @@ calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
 static inline void
 update_cmyk(unsigned short *rgb)
 {
-  unsigned c = 65535 - rgb[0];
-  unsigned m = 65535 - rgb[1];
-  unsigned y = 65535 - rgb[2];
-  unsigned nc, nm, ny;
-  unsigned k;
+  int c = 65535 - rgb[0];
+  int m = 65535 - rgb[1];
+  int y = 65535 - rgb[2];
+  int nc, nm, ny;
+  int k = FMIN(FMIN(c, m), y);
   if (c == m && c == y)
     return;
-  k = FMIN(FMIN(c, m), y);
 
-  /*
-   * Soften up the CMY primaries
-   */
-
-  nc = (c * 4 + FMIN(c, FMAX(m, y)) * 3 + k) / 8;
-  nm = (m * 4 + FMIN(m, FMAX(c, y)) * 3 + k) / 8;
-  ny = (y * 4 + FMIN(y, FMAX(c, m)) * 3 + k) / 8;
+  nc = (c * 3 + FMIN(c, FMAX(m, y)) * 2 + FMAX(m, y) * 2 + k) / 8;
+  nm = (m * 3 + FMIN(m, FMAX(c, y)) * 2 + FMAX(c, y) * 2 + k) / 8;
+  ny = (y * 3 + FMIN(y, FMAX(c, m)) * 2 + FMAX(c, m) * 2 + k) / 8;
 
   /*
    * Make sure we didn't go overboard.  We don't want to go too
    * close to white unnecessarily.
    */
-  nc = c + (nc - c) / 2;
-  nm = m + (nm - m) / 2;
-  ny = y + (ny - y) / 2;
+  nc = c + (nc - c) / 3;
+  nm = m + (nm - m) / 3;
+  ny = y + (ny - y) / 3;
+
+  if (nc > 65535)
+    nc = 65535;
+  if (nm > 65535)
+    nm = 65535;
+  if (ny > 65535)
+    ny = 65535;
 
   rgb[0] = 65535 - nc;
   rgb[1] = 65535 - nm;
@@ -299,10 +301,16 @@ static inline unsigned short
 lookup_value(unsigned short value, int lut_size, unsigned short *lut)
 {
   unsigned shiftval;
+  unsigned bin_size;
+  unsigned bin_shift;
+  unsigned subrange;
+  unsigned remainder;
+  unsigned below;
+  unsigned above;
   switch (lut_size)
     {
     case 65536:
-      return value;
+      return lut[value];
       break;
     case 16:
       shiftval = 4;
@@ -341,38 +349,24 @@ lookup_value(unsigned short value, int lut_size, unsigned short *lut)
       shiftval = 15;
       break;
     default:
-      {
-	unsigned subrange = value / lut_size;
-	unsigned remainder = value % lut_size;
-	unsigned below = lut[subrange];
-	unsigned above;
-	if (subrange == lut_size - 1)
-	  above = lut[subrange];
-	else
-	  above = lut[subrange + 1];
-	if (above == below)
-	  return above;
-	else
-	  return below + ((above - below) * remainder) / (65536 / lut_size);
-      }
+      shiftval = 8;
       break;
     }
-  {
-    unsigned subrange = value >> shiftval;
-    unsigned remainder = value & (lut_size - 1);
-    unsigned below = lut[subrange];
-    unsigned above;
-    if (remainder == 0)
-      return below;
-    if (subrange == (lut_size - 1))
-      above = lut[subrange];
-    else
-      above = lut[subrange + 1];
-    if (above == below)
-      return above;
-    else
-      return below + (((above - below) * remainder) >> (16 - shiftval));
-  }
+  bin_size = 65536 / lut_size;
+  bin_shift = 16 - shiftval;
+  subrange = value >> bin_shift;
+  remainder = value & (bin_size - 1);
+  below = lut[subrange];
+  if (remainder == 0)
+    return below;
+  if (subrange == (bin_size - 1))
+    above = lut[subrange];
+  else
+    above = lut[subrange + 1];
+  if (above == below)
+    return above;
+  else
+    return below + (((above - below) * remainder) >> bin_shift);
 }
 
 /*
@@ -615,7 +609,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = sqrt(vars->saturation * 2);
+  double ssat = sqrt(vars->saturation * 1.6);
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -704,22 +698,23 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (ssat != 1.0)
+	  if (ssat != 1.0 && rgbout[0] != rgbout[1] && rgbout[0] != rgbout[2])
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
 	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
-	      if (s > .000001)
+	      if (ssat < 1)
+		s *= ssat;
+	      else
 		{
-		  if (ssat < 1)
-		    s *= ssat;
-		  else
-		    s = pow(s, isat);
-		  if (s > 1)
-		    s = 1.0;
-		  calc_hsl_to_rgb(rgbout, h, s, v);
+		  double s1 = s * ssat;
+		  double s2 = 1.0 - ((1.0 - s) * isat);
+		  s = FMIN(s1, s2);
 		}
+	      if (s > 1)
+		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, v);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
@@ -731,22 +726,23 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 				   vars->lut->green);
 	  rgbout[2] = lookup_value(rgbout[2], vars->lut->steps,
 				   vars->lut->blue);
-	  if (ssat != 1.0)
+	  if (ssat != 1.0 && rgbout[0] != rgbout[1] && rgbout[0] != rgbout[2])
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
 	      calc_rgb_to_hsl(rgbout, &h, &s, &v);
-	      if (s > .000001)
+	      if (ssat < 1)
+		s *= ssat;
+	      else
 		{
-		  if (ssat < 1)
-		    s *= ssat;
-		  else
-		    s = pow(s, isat);
-		  if (s > 1)
-		    s = 1.0;
-		  calc_hsl_to_rgb(rgbout, h, s, v);
+		  double s1 = s * ssat;
+		  double s2 = 1.0 - ((1.0 - s) * isat);
+		  s = FMIN(s1, s2);
 		}
+	      if (s > 1)
+		s = 1.0;
+	      calc_hsl_to_rgb(rgbout, h, s, v);
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
 	      rgbout[2] = 65535 - rgbout[2];
@@ -940,7 +936,11 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	      if (vars->saturation < 1)
 		s *= vars->saturation;
 	      else
-		s = pow(s, isat);
+		{
+		  double s1 = s * vars->saturation;
+		  double s2 = 1.0 - ((1.0 - s) * isat);
+		  s = FMIN(s1, s2);
+		}
 	      if (s > 1)
 		s = 1.0;
 	      calc_hsl_to_rgb(rgb, h, s, v);
