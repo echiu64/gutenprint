@@ -91,7 +91,7 @@ extern const stp_printer_t *stp_get_printer(const stp_vars_t *v);
 
 /**
  * Get the printer index number from the printer model short (driver) name.
- * @deprecated there should never be any need to use this function.
+ * @deprecated There should never be any need to use this function.
  * @param driver the printer model's short (driver) name.
  * @returns the index number, or -1 on failure.
  */

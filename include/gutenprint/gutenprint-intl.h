@@ -22,7 +22,7 @@
  */
 
 /**
- * @file gutenprint/gimp-print-intl.h
+ * @file gutenprint/gutenprint-intl.h
  * @brief Internationalisation functions.
  */
 
