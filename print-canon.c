@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.7  2000/02/03 08:53:07  gandy
+ *   Honours the new ink-type setting
+ *
  *   Revision 1.6  2000/02/03 01:12:27  rlk
  *   Ink type
  *
@@ -229,14 +232,6 @@ canon_parameters(int  model,		/* I - Printer model */
                   ("Manual with Pause"),
                   ("Manual without Pause"),
                 };
-  static char   *ink_types[] =
-  {
-    "Black",
-    "Color",
-    "Black/Color",
-    "Photo/Color",
-    "Photo"
-  };
 
   canon_cap_t caps= canon_get_model_capabilities(model);
 
@@ -244,8 +239,6 @@ canon_parameters(int  model,		/* I - Printer model */
     return (NULL);
 
   *count = 0;
-
-  fprintf(stderr,"canon: options `%s' for model %d\n",name,caps.model);
 
   if (name == NULL)
     return (NULL);
@@ -297,7 +290,7 @@ canon_parameters(int  model,		/* I - Printer model */
   {
     int c= 0;
     valptrs = malloc(sizeof(char *) * 5);
-    if ((caps.inks & CANON_INK_K))       valptrs[c++]= strdup("Black");
+    if ((caps.inks & CANON_INK_K))      valptrs[c++]= strdup("Black");
     if ((caps.inks & CANON_INK_CMY))    valptrs[c++]= strdup("Color");
     if ((caps.inks & CANON_INK_CMYK))   valptrs[c++]= strdup("Black/Color");
     if ((caps.inks & CANON_INK_CcMmYK)) valptrs[c++]= strdup("Photo/Color");
@@ -538,6 +531,7 @@ canon_print(int       model,		/* I - Model */
   char 		*media_size = v->media_size;
   char          *media_type = v->media_type;
   char          *media_source = v->media_source;
+  char          *ink_type = v->ink_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   float 	scaling = v->scaling;
@@ -588,7 +582,7 @@ canon_print(int       model,		/* I - Model */
                 image_bpp;
 
   canon_cap_t caps= canon_get_model_capabilities(model);
-  int printhead= canon_printhead_type("Black/Color",caps);
+  int printhead= canon_printhead_type(ink_type,caps);
 
   /*
   * Setup a read-only pixel region for the entire image...
