@@ -32,6 +32,8 @@ printer_t thePrinter;
 char *quotestrip(const char *i);
 char *endstrip(const char *i);
 
+extern int yylex(void);
+
 #define ENONE 0
 #define ECANON 1
 #define EESCP2 2
