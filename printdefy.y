@@ -188,22 +188,22 @@ language:		tBEGIN LANGUAGE VALUE ASSIGN tCLASS tEND
 	    thePrinter.printvars.linear = EPS;
 	}
 ;
-brightness:		tBEGIN BRIGHTNESS VALUE ASSIGN tINT tEND
+brightness:		tBEGIN BRIGHTNESS VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.brightness = $5; }
 ;
 gamma:			tBEGIN GAMMA VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.gamma = $5; }
 ;
-contrast:		tBEGIN CONTRAST VALUE ASSIGN tINT tEND
+contrast:		tBEGIN CONTRAST VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.contrast = $5; }
 ;
-cyan:			tBEGIN CYAN VALUE ASSIGN tINT tEND
+cyan:			tBEGIN CYAN VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.cyan = $5; }
 ;
-magenta:			tBEGIN MAGENTA VALUE ASSIGN tINT tEND
+magenta:			tBEGIN MAGENTA VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.magenta = $5; }
 ;
-yellow:			tBEGIN YELLOW VALUE ASSIGN tINT tEND
+yellow:			tBEGIN YELLOW VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.yellow = $5; }
 ;
 saturation:		tBEGIN SATURATION VALUE ASSIGN tDOUBLE tEND

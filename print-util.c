@@ -19,19 +19,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- * Contents:
- *
- *   gray_to_gray()       - Convert grayscale image data to grayscale.
- *   indexed_to_gray()    - Convert indexed image data to grayscale.
- *   indexed_to_rgb()     - Convert indexed image data to RGB.
- *   rgb_to_gray()        - Convert RGB image data to grayscale.
- *   rgb_to_rgb()         - Convert RGB image data to RGB.
- *   default_media_size() - Return the size of a default page size.
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
 /* #define PRINT_DEBUG */
@@ -273,6 +260,15 @@ update_cmyk(unsigned short *rgb)
   if (c == m && c == y)
     return;
 
+  /*
+   * This is an attempt to achieve better color balance.  The goal
+   * is to weaken the pure cyan, magenta, and yellow and strengthen
+   * pure red, green, and blue.
+   *
+   * We also don't want S=1 V=1 cyan to be 100% cyan; it's simply
+   * too dark.
+   */
+
   nc = (c * 3 + FMIN(c, FMAX(m, y)) * 2 + FMAX(m, y) * 2 + k) / 8;
   nm = (m * 3 + FMIN(m, FMAX(c, y)) * 2 + FMAX(c, y) * 2 + k) / 8;
   ny = (y * 3 + FMIN(y, FMAX(c, m)) * 2 + FMAX(c, m) * 2 + k) / 8;
@@ -349,7 +345,8 @@ lookup_value(unsigned short value, int lut_size, unsigned short *lut)
       shiftval = 15;
       break;
     default:
-      shiftval = 8;
+      fprintf(stderr, "FATAL ERROR: lookup table not a power of 2!\n");
+      return 0;
       break;
     }
   bin_size = 65536 / lut_size;
@@ -424,7 +421,7 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      float t = ((float) grayout[0]) / 65536.0;
+	      double t = ((double) grayout[0]) / 65536.0;
 	      t = (1.0 + ((t - 1.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
@@ -501,7 +498,7 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      float t = ((float) gray[0]) / 65536.0;
+	      double t = ((double) gray[0]) / 65536.0;
 	      t = (1.0 + ((t - 1.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
@@ -580,7 +577,7 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	{
 	  if (vars->density != 1.0 && vars->image_type != IMAGE_MONOCHROME)
 	    {
-	      float t = ((float) gray[0]) / 65536.0;
+	      double t = ((double) gray[0]) / 65536.0;
 	      t = (1.0 + ((t - 1.0) * vars->density));
 	      if (t < 0.0)
 		t = 0.0;
@@ -698,7 +695,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	}
       else
 	{
-	  if (ssat != 1.0 && rgbout[0] != rgbout[1] && rgbout[0] != rgbout[2])
+	  if (ssat != 1.0 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
@@ -726,7 +723,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 				   vars->lut->green);
 	  rgbout[2] = lookup_value(rgbout[2], vars->lut->steps,
 				   vars->lut->blue);
-	  if (ssat != 1.0 && rgbout[0] != rgbout[1] && rgbout[0] != rgbout[2])
+	  if (ssat > 1.4 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
 	      rgbout[1] = 65535 - rgbout[1];
@@ -850,11 +847,11 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 				   vars->lut->blue);
 	  if (vars->density != 1.0)
 	    {
-	      float t;
+	      double t;
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((float) rgbout[i]) / 65536.0;
+		  t = ((double) rgbout[i]) / 65536.0;
 		  t = (1.0 + ((t - 1.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
@@ -947,11 +944,11 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	    }
 	  if (vars->density != 1.0)
 	    {
-	      float t;
+	      double t;
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((float) rgb[i]) / 65536.0;
+		  t = ((double) rgb[i]) / 65536.0;
 		  t = (1.0 + ((t - 1.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
@@ -1045,7 +1042,11 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	      if (vars->saturation < 1)
 		s *= vars->saturation;
 	      else
-		s = pow(s, isat);
+		{
+		  double s1 = s * vars->saturation;
+		  double s2 = 1.0 - ((1.0 - s) * isat);
+		  s = FMIN(s1, s2);
+		}
 	      if (s > 1)
 		s = 1.0;
 	      calc_hsl_to_rgb(rgbout, h, s, v);
@@ -1133,11 +1134,11 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	{
 	  if (vars->density != 1.0)
 	    {
-	      float t;
+	      double t;
 	      int i;
 	      for (i = 0; i < 3; i++)
 		{
-		  t = ((float) rgbout[i]) / 65536.0;
+		  t = ((double) rgbout[i]) / 65536.0;
 		  t = (1.0 + ((t - 1.0) * vars->density));
 		  if (t < 0.0)
 		    t = 0.0;
@@ -1226,7 +1227,7 @@ free_lut(vars_t *v)
 void
 compute_lut(size_t steps, vars_t *uv)
 {
-  float		pixel,		/* Pixel value */
+  double	pixel,		/* Pixel value */
 		red_pixel,	/* Pixel value */
 		green_pixel,	/* Pixel value */
 		blue_pixel;	/* Pixel value */
@@ -1238,21 +1239,20 @@ compute_lut(size_t steps, vars_t *uv)
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  float cyan = uv->cyan;
-  float magenta = uv->magenta;
-  float yellow = uv->yellow;
-  float print_gamma = uv->gamma;
-  float contrast = uv->contrast;
-  float app_gamma = uv->app_gamma;
-  float brightness = uv->brightness;
-  float screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
+  double cyan = uv->cyan;
+  double magenta = uv->magenta;
+  double yellow = uv->yellow;
+  double print_gamma = uv->gamma;
+  double contrast = uv->contrast;
+  double app_gamma = uv->app_gamma;
+  double brightness = uv->brightness;
+  double screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
 
   uv->lut = allocate_lut(steps);
   for (i = 0; i < steps; i ++)
     {
-      float temp_pixel;
-      float fsteps = steps;
-      pixel = (float) i / (float) (steps - 1);
+      double temp_pixel;
+      pixel = (double) i / (double) (steps - 1);
 
       /*
        * First, correct contrast
@@ -1314,14 +1314,10 @@ compute_lut(size_t steps, vars_t *uv)
        * Finally, fix up print gamma and scale
        */
 
-      pixel = fsteps * (fsteps - fsteps *
-		       pow(pixel, print_gamma));
-      red_pixel = fsteps * (fsteps - fsteps *
-			   pow(red_pixel, print_gamma));
-      green_pixel = fsteps * (fsteps - fsteps *
-			     pow(green_pixel, print_gamma));
-      blue_pixel = fsteps * (fsteps - fsteps *
-			    pow(blue_pixel, print_gamma));
+      pixel = 65535 * (1 - pow(pixel, print_gamma));
+      red_pixel = 65535 * (1 - pow(red_pixel, print_gamma));
+      green_pixel = 65535 * (1 - pow(green_pixel, print_gamma));
+      blue_pixel = 65535 * (1 - pow(blue_pixel, print_gamma));
 
       if (pixel <= 0.0)
 	uv->lut->composite[i] = 0;

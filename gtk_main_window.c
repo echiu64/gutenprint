@@ -19,14 +19,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- * Contents:
- *
- * create_main_window()                   - Create main window for pug-in
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
 #include "print_gimp.h"
@@ -769,12 +761,12 @@ void gtk_create_main_window(void)
 
     if (vars.scaling < 0.0)
       {
-	double max_ppi_scaling;
-	double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
-	min_ppi_scaling1 = 72.0 * (double) image_width /
-	  (double) printable_width;
-	min_ppi_scaling2 = 72.0 * (double) image_height /
-	  (double) printable_height;
+	gdouble max_ppi_scaling;
+	gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+	min_ppi_scaling1 = 72.0 * (gdouble) image_width /
+	  (gdouble) printable_width;
+	min_ppi_scaling2 = 72.0 * (gdouble) image_height /
+	  (gdouble) printable_height;
 	if (min_ppi_scaling1 > min_ppi_scaling2)
 	  min_ppi_scaling = min_ppi_scaling1;
 	else
@@ -1186,14 +1178,14 @@ static void gtk_scaling_update(GtkAdjustment *adjustment) /* I - New value */
  ****************************************************************************/
 static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
 {
-  gfloat	new_value;		/* New scaling value */
-  double max_ppi_scaling;
-  double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
-  double current_scale;
-  min_ppi_scaling1 = 72.0 * (double) image_width /
-    (double) printable_width;
-  min_ppi_scaling2 = 72.0 * (double) image_height /
-    (double) printable_height;
+  gdouble	new_value;		/* New scaling value */
+  gdouble max_ppi_scaling;
+  gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+  gdouble current_scale;
+  min_ppi_scaling1 = 72.0 * (gdouble) image_width /
+    (gdouble) printable_width;
+  min_ppi_scaling2 = 72.0 * (gdouble) image_height /
+    (gdouble) printable_height;
   if (min_ppi_scaling1 > min_ppi_scaling2)
     min_ppi_scaling = min_ppi_scaling1;
   else
@@ -1236,7 +1228,7 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
   }
   else if (widget == scaling_percent)
   {
-    double new_percent;
+    gdouble new_percent;
     if (!(GTK_TOGGLE_BUTTON(scaling_percent)->active))
       return;
     current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
@@ -1256,7 +1248,7 @@ static void gtk_scaling_callback(GtkWidget* widget) /* I - New value */
 #ifndef GIMP_1_0
   else if (widget == scaling_image)
   {
-    double xres, yres;
+    gdouble xres, yres;
     gimp_image_get_resolution(image_ID, &xres, &yres);
     GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
     GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling + 1;
@@ -1421,13 +1413,13 @@ static void gtk_do_misc_updates(void)
 
   if (plist[plist_current].v.scaling < 0)
     {
-      float tmp = -plist[plist_current].v.scaling;
-      double max_ppi_scaling;
-      double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
-      min_ppi_scaling1 = 72.0 * (double) image_width /
-	(double) printable_width;
-      min_ppi_scaling2 = 72.0 * (double) image_height /
-	(double) printable_height;
+      gdouble tmp = -plist[plist_current].v.scaling;
+      gdouble max_ppi_scaling;
+      gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
+      min_ppi_scaling1 = 72.0 * (gdouble) image_width /
+	(gdouble) printable_width;
+      min_ppi_scaling2 = 72.0 * (gdouble) image_height /
+	(gdouble) printable_height;
       if (min_ppi_scaling1 > min_ppi_scaling2)
 	min_ppi_scaling = min_ppi_scaling1;
       else
@@ -1457,7 +1449,7 @@ static void gtk_do_misc_updates(void)
     }
   else
     {
-      float tmp = plist[plist_current].v.scaling;
+      gdouble tmp = plist[plist_current].v.scaling;
       gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_percent), TRUE);
       GTK_ADJUSTMENT(scaling_adjustment)->lower = 5.0;
       GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
@@ -1519,35 +1511,36 @@ static void gtk_do_misc_updates(void)
 static void gtk_position_callback(GtkWidget *widget)
 {
   int dontcheck = 0;
-  double unit_scaler = 1.0;
+  gdouble unit_scaler = 1.0;
 
   if(vars.unit) unit_scaler = 1.0 / 2.54;
   if (widget == top_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
       vars.top = ((new_value * unit_scaler + 1.0 / 144) * 72) - top;
     }
   else if (widget == left_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
       vars.left = ((new_value * unit_scaler + 1.0 / 144) * 72) - left;
     }
   else if (widget == bottom_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
       vars.top = ((new_value * unit_scaler + 1.0 / 144) * 72) -
 			  (top + print_height);
     }
   else if (widget == right_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
       vars.left = ((new_value * unit_scaler + 1.0 / 144) * 72) -
 			  (left + print_width);
     }
   else if (widget == width_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
 			  unit_scaler;
+      new_value += 1.0 / 144.0;
       if (vars.scaling >= 0) {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
 	gtk_scaling_callback (scaling_ppi);
@@ -1557,8 +1550,9 @@ static void gtk_position_callback(GtkWidget *widget)
     }
   else if (widget == height_entry)
     {
-      gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
+      gdouble new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget))) *
 			  unit_scaler;
+      new_value += 1.0 / 144.0;
       if (vars.scaling >= 0) {
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(scaling_ppi), TRUE);
 	gtk_scaling_callback (scaling_ppi);
@@ -2127,15 +2121,15 @@ static void gtk_preview_update(void)
 {
   int		temp,		/* Swapping variable */
 		orient;		/* True orientation of printable */
-  double	max_ppi_scaling;   /* Maximum PPI for current page size */
-  double	min_ppi_scaling;/* Minimum PPI for current page size */
-  double	min_ppi_scaling1;   /* Minimum PPI for current page size */
-  double	min_ppi_scaling2;   /* Minimum PPI for current page size */
+  gdouble	max_ppi_scaling;   /* Maximum PPI for current page size */
+  gdouble	min_ppi_scaling;/* Minimum PPI for current page size */
+  gdouble	min_ppi_scaling1;   /* Minimum PPI for current page size */
+  gdouble	min_ppi_scaling2;   /* Minimum PPI for current page size */
   int           paper_left, paper_top;
   static GdkGC	*gc = NULL,	/* Normal graphics context */
 		*gcinv = NULL;	/* GC for inverted drawing (arrow) */
   char s[255];
-  double unit_scaler;
+  gdouble unit_scaler;
 
 
   (*current_printer->media_size)(current_printer, &vars, &paper_width,
@@ -2189,8 +2183,8 @@ static void gtk_preview_update(void)
 
   if (vars.scaling < 0)
   {
-    min_ppi_scaling1 = 72.0 * (double) image_width / (double) printable_width;
-    min_ppi_scaling2 = 72.0 * (double) image_height / (double) printable_height;
+    min_ppi_scaling1 = 72.0 * (gdouble) image_width / (gdouble) printable_width;
+    min_ppi_scaling2 = 72.0 * (gdouble) image_height / (gdouble) printable_height;
     if (min_ppi_scaling1 > min_ppi_scaling2)
       min_ppi_scaling = min_ppi_scaling1;
     else

@@ -19,23 +19,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- * Contents:
- *
- *   pcl_parameters()     - Return the parameter values for the given
- *                          parameter.
- *   pcl_imageable_area() - Return the imageable area of the page.
- *   pcl_get_model_capabilities()
- *                        - Return the capabilities of the printer.
- *   pcl_convert_media_size()
- *                        - Convert media size name into PCL code.
- *   pcl_print()          - Print an image to an HP printer.
- *   pcl_mode0()          - Send PCL graphics using mode 0 (no) compression.
- *   pcl_mode2()          - Send PCL graphics using mode 2 (TIFF) compression.
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
 #include "print.h"
@@ -1295,7 +1278,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   char 		*ink_type = v->ink_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
-  float 	scaling = v->scaling;
+  double 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
   int		y;		/* Looping vars */

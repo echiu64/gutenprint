@@ -195,7 +195,9 @@ escp2-760		EPSON Stylus Color 760
 escp2-800		EPSON Stylus Color 800
 escp2-850		EPSON Stylus Color 850
 escp2-860		EPSON Stylus Color 860
+escp2-880		EPSON Stylus Color 880
 escp2-900		EPSON Stylus Color 900
+escp2-980		EPSON Stylus Color 980
 escp2-1160		EPSON Stylus Color 1160
 escp2-1500		EPSON Stylus Color 1500
 escp2-1520		EPSON Stylus Color 1520
@@ -456,7 +458,7 @@ Media Sources
 
 This is printer type specific.  The option names are case sensitive.
 
--sMediaSource='media source'
+-sInputSlot='media source'
 
 No media sources are currently defined for Epson printers.  At
 present, only the single sheet feeder can be used.

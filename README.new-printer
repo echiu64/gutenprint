@@ -327,6 +327,10 @@ you're using variable dots, use the second largest dot size of the
 dark ink rather than the largest dot size of the light ink.  This will
 give you two inks.
 
+When you recompile the plugin, you simply need to copy the new
+executable into the correct place.  You do not need to exit and
+restart the Gimp.
+
 Print another bar adjacent to the first one.  Your goal is to match
 the bar using a single dot size as closely as possible.  You'll find
 that the dark region of the bar shouldn't change to any great degree,

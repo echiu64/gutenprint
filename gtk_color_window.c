@@ -19,14 +19,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- * Contents:
- *
- * createcolor_window()                   - Create color adjust window
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
 #include "print_gimp.h"
@@ -168,7 +160,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     brightness_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.brightness, lower->brightness,
+	gtk_adjustment_new(vars.brightness, lower->brightness,
 			   upper->brightness, defvars->brightness / 100,
 			   defvars->brightness / 100,
 			   defvars->brightness / 100);
@@ -236,7 +228,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     contrast_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.contrast, lower->contrast,
+	gtk_adjustment_new(vars.contrast, lower->contrast,
 			   upper->contrast, defvars->contrast / 100,
 			   defvars->contrast / 100,
 			   defvars->contrast / 100);
@@ -289,7 +281,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     cyan_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.cyan, lower->cyan,
+	gtk_adjustment_new(vars.cyan, lower->cyan,
 			   upper->cyan, defvars->cyan / 100,
 			   defvars->cyan / 100,
 			   defvars->cyan / 100);
@@ -343,7 +335,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     magenta_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.magenta, lower->magenta,
+	gtk_adjustment_new(vars.magenta, lower->magenta,
 			   upper->magenta, defvars->magenta / 100,
 			   defvars->magenta / 100,
 			   defvars->magenta / 100);
@@ -398,7 +390,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     yellow_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.yellow, lower->yellow,
+	gtk_adjustment_new(vars.yellow, lower->yellow,
 			   upper->yellow, defvars->yellow / 100,
 			   defvars->yellow / 100,
 			   defvars->yellow / 100);
@@ -457,7 +449,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     saturation_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.saturation, lower->saturation,
+	gtk_adjustment_new(vars.saturation, lower->saturation,
 			   upper->saturation, defvars->saturation / 100,
 			   defvars->saturation / 100,
 			   defvars->saturation / 100);
@@ -515,7 +507,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     density_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.density, lower->density,
+	gtk_adjustment_new(vars.density, lower->density,
 			   upper->density, defvars->density / 100,
 			   defvars->density / 100,
 			   defvars->density / 100);
@@ -572,7 +564,7 @@ void gtk_create_color_adjust_window(void)
     gtk_widget_show(box);
 
     gamma_adjustment = scale_data =
-	gtk_adjustment_new((float)vars.gamma, lower->gamma,
+	gtk_adjustment_new(vars.gamma, lower->gamma,
 			   upper->gamma, defvars->gamma / 100,
 			   defvars->gamma / 100,
 			   defvars->gamma / 100);

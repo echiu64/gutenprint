@@ -166,11 +166,11 @@ void mix_ink(ppmpixel p, int c, unsigned int a) {
 
   /* this is pretty crude */
 
-  float ink[3];
-  float size;
+  double ink[3];
+  double size;
 
   if (pstate.dotsize&0x10) {
-    size=(float)a/3.0;
+    size=(double)a/3.0;
   } else {
     size=1.0;
   }

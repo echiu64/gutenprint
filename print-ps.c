@@ -19,20 +19,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- * Contents:
- *
- *   ps_parameters()     - Return the parameter values for the given
- *                            parameter.
- *   ps_media_size()     - Return the size of the page.
- *   ps_imageable_area() - Return the imageable area of the page.
- *   ps_print()          - Print an image to a PostScript printer.
- *   ps_hex()            - Print binary data as a series of hexadecimal numbers.
- *   ps_ascii85()        - Print binary data as a series of base-85 numbers.
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
 #include "print.h"
@@ -190,7 +176,7 @@ ps_imageable_area(const printer_t *printer,	/* I - Printer model */
                   int  *top)		/* O - Top position in points */
 {
   char	*area;				/* Imageable area of media */
-  float	fleft,				/* Floating point versions */
+  double	fleft,				/* Doubleing point versions */
 	fright,
 	fbottom,
 	ftop;
@@ -258,7 +244,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   char 		*media_source = v->media_source;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
-  float 	scaling = v->scaling;
+  double 	scaling = v->scaling;
   int		top = v->top;
   int		left = v->left;
   int		i, j;		/* Looping vars */
@@ -453,8 +439,8 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 
   fprintf(prn, "%d %d translate\n", left, top);
   fprintf(prn, "%.3f %.3f scale\n",
-          (float)out_width / ((float)image_width),
-          (float)out_height / ((float)image_height));
+          (double)out_width / ((double)image_width),
+          (double)out_height / ((double)image_height));
 
   in  = malloc(image_width * image_bpp);
   out = malloc((image_width * out_bpp + 3) * 2);

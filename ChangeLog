@@ -1,3 +1,339 @@
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.230) (+2 -2)
+	
+	Update the STP 720.
+	
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.52) (+5 -1)
+		printer_options.c (1.1) ( )
+		README.new-printer (1.2) (+10 -8)
+	
+	Add printer_options program to generate *-omatic database.
+	
+	Update printer tweaking instructions.
+	
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.229) (+12 -12)
+	
+	Fix up 360 dpi mode for first generation variable dot size printers.
+	This is surely wrong for the 2000P at 360 DPI.
+	
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	print.c (1.109) (+7 -3)
+	
+	Try to make this compile for some older versions of Gimp 1.1.
+	
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.39) (+1 -0)
+	
+	Note support for the ESP 2000P
+	
+2000-08-29	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.44) (+3 -3)
+	
+	Permit scaling down to lower scale limit, not necessarily just 5%.
+	
+2000-08-28	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.122) (+4 -4)
+	
+	Allow more CMY boost
+	
+2000-08-28	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.38) (+3 -3)
+	
+	Allow more CMY boost
+	
+2000-08-28	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.228) (+10 -10)
+	
+	Single dot size printers should not support 360 softweave
+	
+2000-08-28	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.121) (+4 -9)
+	
+	Do CMY adjustments correctly (in CMY space, not RGB!)
+	
+2000-08-28	<anikin@sourceforge.net>
+
+	Files:	print-util.c (1.120) (+42 -1)
+		print.h (1.77) (+24 -2)
+	
+	Performance profiling code.
+	
+2000-08-28	<anikin@sourceforge.net>
+
+	Files:	print-escp2.c (1.227) (+10 -1)
+	
+	Performance profiling code.
+	
+2000-08-28	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.15) (+82 -59)
+		Ghost/gdevstp.c (1.37) (+29 -24)
+		Ghost/README (1.37) (+6 -6)
+		printdefy.y (1.8) (+20 -20)
+		printdefl.l (1.4) (+5 -5)
+		print.h (1.76) (+10 -7)
+		print.c (1.108) (+26 -26)
+		print-util.c (1.119) (+167 -25)
+		gtk_color_window.c (1.17) (+134 -112)
+		gimp_main_window.c (1.43) (+12 -8)
+	
+	Make all color options based on 1.0 rather than on 1.0 or 100.  This
+	simplifies things considerably, and allows more precise specification
+	of colors.  Also, fix how brightness works.
+	
+2000-08-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.226) (+4 -4)
+	
+	STC 440/460 (and probably 480) don't have different spacing for the
+	black nozzles.
+	
+2000-08-26	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.225) (+65 -46)
+	
+	Some printers apparently have different spacing between black and
+	color nozzles.
+	
+2000-08-25	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.14) (+2 -2)
+		Ghost/gdevstp.c (1.36) (+2 -2)
+		Ghost/README (1.36) (+1 -1)
+		print-util.c (1.118) (+12 -6)
+		gtk_color_window.c (1.16) (+2 -2)
+	
+	Fix contrast control to do something a lot more reasonable.
+	
+2000-08-25	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.72) (+17 -3)
+	
+	If the printer supports multiple media sources (trays), the default
+	source is now "Standard", which means "use the printer's default"
+	as if there were no support. This stops the default being "manual
+	feed." Helps in support request 104138.
+	
+2000-08-25	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.13) (+17 -1)
+	
+	Button to reset all color defaults
+	
+2000-08-24	<rlk@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.12) (+2 -2)
+		print.c (1.107) (+60 -3)
+	
+	Update to the new libgimp names.  Back compatible in print.c;
+	back compatibility not needed in gimp_color_window.c.
+	
+2000-08-24	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.224) (+18 -18)
+		printers.xml (1.21) (+8 -0)
+	
+	Fix definition of 670 (from visual inspection).
+	
+	Add preliminary definition of SP 2000P.
+	
+2000-08-24	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.42) (+53 -4)
+	
+	Add right and bottom border entries.
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.223) (+2 -2)
+	
+	Tune matte paper settings
+	
+2000-08-23	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.78) (+14 -2)
+	
+	Added some debugging messages
+	
+2000-08-23	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.77) (+3 -3)
+	
+	Another fix to the 0x61 command - final version.
+	
+2000-08-23	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.76) (+17 -11)
+	
+	Moved deinitialization code from end of canon_print to canon_deinit_printer()
+	
+	Fixed typo in 0x61 command (printers with deactivated 0x61 command should
+	give it another try)
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.81) (+10 -3)
+	
+	Print all bits in fast black mode, not just the high order bit on
+	variable dot sizes.
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.75) (+2 -3)
+		print.h (1.75) (+8 -5)
+		print-util.c (1.117) (+497 -200)
+		print-pcl.c (1.71) (+2 -3)
+		print-escp2.c (1.222) (+2 -2)
+		print-dither.c (1.80) (+5 -5)
+	
+	Improve color generation performance.  Don't recompute color at all if
+	we're reusing a row, and also don't recompute it if the point we're
+	looking at has identical input values to the previous point.
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.35) (+3 -3)
+	
+	Fix page positioning, from Wolfgang Fritz
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.41) (+103 -103)
+	
+	Tweak the UI a bit more
+	
+2000-08-23	<rlk@sourceforge.net>
+
+	Files:	print_gimp.h (1.26) (+3 -3)
+	
+	Tweak the print window size again
+	
+2000-08-22	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.40) (+50 -31)
+		print_gimp.h (1.25) (+6 -1)
+	
+	Rearrange main window further.
+	
+2000-08-22	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.39) (+79 -97)
+	
+	Reorganize the interface a bit more logically
+	
+2000-08-21	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.221) (+6 -6)
+	
+	More printers that 1440x720 microweave doesn't work on.
+	
+2000-08-21	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.220) (+9 -9)
+	
+	Take a stab at density for the 600
+	
+2000-08-21	<rlk@sourceforge.net>
+
+	Files:	Makefile.am (1.51) (+1 -1)
+	
+	The PDQ and CUPS descriptor files are now completely useless.  No
+	sense in distributing them.
+	
+2000-08-21	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.219) (+11 -11)
+	
+	Take a stab at optimizing the 800/850/1520/3000 dot sizes
+	
+2000-08-21	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.218) (+2 -2)
+	
+	Stylus Color 1520 was incorrectly not set up for 1440x720 mode.
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.217) (+34 -19)
+	
+	Tune black lower & upper constants for various papers.
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.116) (+1 -8)
+	
+	Eugene Anikin has verified that this now works with inlining in egcs 1.1.2.
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.216) (+51 -44)
+	
+	Set default densities more appropriate for different kinds of paper.
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.35) (+13 -9)
+	
+	Minor cleanup
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.215) (+13 -13)
+	
+	Enable 180 DPI mode for some Epson printers.  This mode is useless on
+	good paper, but on cheapo stock it has its uses.
+	
+2000-08-20	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.115) (+4 -5)
+	
+	Floating point equality comparisons are pure poison.  Thanks to Eugene
+	Anikin <eugene@anikin.com> for spotting this.
+	
+2000-08-19	<rlk@sourceforge.net>
+
+	Files:	print-escp2.c (1.214) (+50 -37)
+	
+	Fix positioning on STC 850.
+	
+	Remove workaround for setting page length on our old weave code in general.
+	This workaround is very confusing and shouldn't be necessary any more.
+	
+	Tweak a few parameters on the 440 and 660.
+	
+2000-08-19	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.74) (+5 -5)
+	
+	Fix density computation for 1440x720 (suggested by
+	suamor@sourceforge.net)
+	
+	Fix debug code (likewise)
+	
+2000-08-19	<rlk@sourceforge.net>
+
+	Files:	README.new-printer (1.1) ( )
+	
+	Instructions for adding/tuning printers.
+	
+2000-08-15	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.31) (+17 -0)
+	
+	4.0a2
+	
 2000-08-15	<rlk@sourceforge.net>
 
 	Files:	RELNOTES (1.19) (+14 -1)

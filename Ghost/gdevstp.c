@@ -149,7 +149,7 @@ stp_dbg(const char *msg, const privdata_t *stp_data)
 	  stp_data->v.gamma, stp_data->v.saturation, stp_data->v.density);
   fprintf(gs_stderr, "Settings: Quality %s\n", stp_data->v.resolution);
   fprintf(gs_stderr, "Settings: Dither %s\n", stp_data->v.dither_algorithm);
-  fprintf(gs_stderr, "Settings: MediaSource %s\n", stp_data->v.media_source);
+  fprintf(gs_stderr, "Settings: InputSlot %s\n", stp_data->v.media_source);
   fprintf(gs_stderr, "Settings: MediaType %s\n", stp_data->v.media_type);
   fprintf(gs_stderr, "Settings: Model %s\n", stp_data->v.driver);
   fprintf(gs_stderr, "Settings: InkType %s\n", stp_data->v.ink_type);
@@ -276,7 +276,7 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   gs_param_string pinktype;
   gs_param_string pmodel;
   gs_param_string pmediatype;
-  gs_param_string pmediasource;
+  gs_param_string pInputSlot;
   gs_param_string palgorithm;
   gs_param_string pquality;
 
@@ -288,7 +288,7 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   stp_print_debug("stp_get_params(1)", pdev, &stp_data);
 #endif
   param_string_from_string(pmediatype, stp_data.v.media_type);
-  param_string_from_string(pmediasource, stp_data.v.media_source);
+  param_string_from_string(pInputSlot, stp_data.v.media_source);
   param_string_from_string(pinktype, stp_data.v.ink_type);
   param_string_from_string(pmodel, stp_data.v.driver);
   param_string_from_string(palgorithm, stp_data.v.dither_algorithm);
@@ -310,7 +310,7 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
       (code = param_write_string(plist, "Quality", &pquality)) < 0 ||
       (code = param_write_string(plist, "InkType", &pinktype) < 0) ||
       (code = param_write_string(plist, "MediaType", &pmediatype)) < 0 ||
-      (code = param_write_string(plist, "MediaSource", &pmediasource)) < 0
+      (code = param_write_string(plist, "InputSlot", &pInputSlot)) < 0
       )
     return code;
 
@@ -334,7 +334,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   const vars_t *lower = print_minimum_settings();
   const vars_t *upper = print_maximum_settings();
   gs_param_string pmediatype;
-  gs_param_string pmediasource;
+  gs_param_string pInputSlot;
   gs_param_string pinktype;
   gs_param_string pmodel;
   gs_param_string palgorithm;
@@ -344,7 +344,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   stp_print_debug("stp_put_params(0)", pdev, &stp_data);
 
   param_string_from_string(pmodel, stp_data.v.driver);
-  param_string_from_string(pmediasource, stp_data.v.media_source);
+  param_string_from_string(pInputSlot, stp_data.v.media_source);
   param_string_from_string(pmediatype, stp_data.v.media_type);
   param_string_from_string(pinktype, stp_data.v.ink_type);
   param_string_from_string(palgorithm, stp_data.v.dither_algorithm);
@@ -372,7 +372,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
 			     lower->density, upper->density, code);
   param_read_string(plist, "Quality", &pquality);
   param_read_string(plist, "Dither", &palgorithm);
-  param_read_string(plist, "MediaSource", &pmediasource);
+  param_read_string(plist, "InputSlot", &pInputSlot);
   param_read_string(plist, "MediaType", &pmediatype);
   param_read_string(plist, "Model", &pmodel);
   param_read_string(plist, "InkType", &pinktype);
@@ -383,7 +383,7 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   gsncpy(stp_data.v.driver, &pmodel, sizeof(stp_data.v.driver) - 1);
   gsncpy(stp_data.v.media_type, &pmediatype,
 	 sizeof(stp_data.v.media_type) - 1);
-  gsncpy(stp_data.v.media_source, &pmediasource,
+  gsncpy(stp_data.v.media_source, &pInputSlot,
 	 sizeof(stp_data.v.media_source) - 1);
   gsncpy(stp_data.v.ink_type, &pinktype,
 	 sizeof(stp_data.v.ink_type) - 1);
