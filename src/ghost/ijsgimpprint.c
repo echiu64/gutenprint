@@ -834,7 +834,9 @@ main (int argc, char **argv)
       status = ijs_server_get_page_header(img.ctx, &ph);
       if (status)
 	{
-	  fprintf(stderr, _("ijs_server_get_page_header failed %d\n"), status);
+	  if (status < 0)
+	    fprintf(stderr, _("ijs_server_get_page_header failed %d\n"),
+		    status);
 	  break;
 	}
       STP_DEBUG(fprintf(stderr, "got page header, %d x %d\n",
