@@ -2108,7 +2108,7 @@ static const escp2_stp_printer_t model_capabilities[] =
      MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_NORMAL |
      MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES | MODEL_MICROWEAVE_YES |
      MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_NO | MODEL_YZEROMARGIN_NO |
-     MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_BLACK),
+     MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL),
     15, 1, 4, 15, 1, 4,
     720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4), 14, 14, 9, 49, 14, 14, 9, 49,
@@ -4005,8 +4005,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   drop_size = escp2_ink_type(model, resid, nv);
 
   if (use_microweave &&
-      !(escp2_has_cap(model, MODEL_MICROWEAVE_EXCEPTION,
-		      MODEL_MICROWEAVE_EXCEPTION_NORMAL, nv)))
+      (escp2_has_cap(model, MODEL_MICROWEAVE_EXCEPTION,
+		     MODEL_MICROWEAVE_EXCEPTION_360, nv)))
     {
       if (ydpi == 360)
 	use_microweave = 0;
