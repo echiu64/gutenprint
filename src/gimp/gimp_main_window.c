@@ -76,12 +76,6 @@ static GtkWidget *orientation_menu         = NULL;  /* Orientation menu */
 static GtkWidget *scaling_percent;        /* Scale by percent */
 static GtkWidget *scaling_ppi;            /* Scale by pixels-per-inch */
 static GtkWidget *scaling_image;          /* Scale to the image */
-static GtkWidget *output_gray;            /* Output type toggle, black */
-static GtkWidget *output_color;           /* Output type toggle, color */
-static GtkWidget *output_monochrome;
-static GtkWidget *image_line_art;
-static GtkWidget *image_solid_tone;
-static GtkWidget *image_continuous_tone;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
 static GtkWidget *printer_model_label; /* Printer model name */
@@ -246,6 +240,40 @@ static unit_t units[] =
   };
 
 static const gint unit_count = sizeof(units) / sizeof(unit_t);    
+
+typedef struct
+{
+  const char *name;
+  const char *help;
+  gint value;
+  GtkWidget *button;
+} radio_group_t;
+
+static radio_group_t output_types[] =
+  {
+    { N_("Color"), N_("Color output"), OUTPUT_COLOR, NULL },
+    { N_("Grayscale"),
+      N_("Print in shades of gray using black ink"), OUTPUT_GRAY, NULL },
+    { N_("Black and White"),
+      N_("Print in black and white (no color, and no shades of gray)"),
+      OUTPUT_MONOCHROME, NULL }
+  };
+
+static const gint output_type_count = sizeof(output_types) / sizeof(radio_group_t);
+
+static radio_group_t image_types[] =
+  {
+    { N_("Line Art"), N_("Fastest and brightest color for text and line art"),
+      IMAGE_LINE_ART, NULL },
+    { N_("Solid Colors"),
+      N_("Best for images dominated by regions of solid color"),
+      IMAGE_SOLID_TONE, NULL },
+    { N_("Photograph"),
+      N_("Slowest, but most accurate and smoothest color for continuous tone "
+	 "images and photographs"), IMAGE_CONTINUOUS, NULL }
+  };
+
+static const gint image_type_count = sizeof(image_types) / sizeof(radio_group_t);
 
 static list_option_t *
 get_list_option_by_name(const char *name)
@@ -1213,6 +1241,7 @@ create_image_settings_frame (void)
   GtkWidget *event_box;
   GtkWidget *sep;
   GSList    *group;
+  gint i;
 
   create_color_adjust_window ();
 
@@ -1223,7 +1252,7 @@ create_image_settings_frame (void)
                             gtk_label_new (_("Image / Output Settings")));
   gtk_widget_show (vbox);
 
-  table = gtk_table_new (3, 2, FALSE);
+  table = gtk_table_new (image_type_count, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
   gtk_widget_show (table);
@@ -1242,49 +1271,20 @@ create_image_settings_frame (void)
                              "being printed"),
                            NULL);
 
-  image_line_art = gtk_radio_button_new_with_label (NULL, _("Line Art"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (image_line_art));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
-                             NULL, 0.5, 0.5,
-                             image_line_art, 1, FALSE);
-
-  gimp_help_set_help_data (image_line_art,
-                           _("Fastest and brightest color for text and "
-                             "line art"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (image_line_art), "toggled",
-		      GTK_SIGNAL_FUNC (image_type_callback),
-		      (gpointer) IMAGE_LINE_ART);
-
-  image_solid_tone = gtk_radio_button_new_with_label (group, _("Solid Colors"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (image_solid_tone));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
-                             NULL, 0.5, 0.5,
-                             image_solid_tone, 1, FALSE);
-
-  gimp_help_set_help_data (image_solid_tone,
-                           _("Best for images dominated by regions of "
-                             "solid color"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (image_solid_tone), "toggled",
-		      GTK_SIGNAL_FUNC (image_type_callback),
-		      (gpointer) IMAGE_SOLID_TONE);
-
-  image_continuous_tone = gtk_radio_button_new_with_label (group,
-                                                           _("Photograph"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (image_continuous_tone));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 2,
-                             NULL, 0.5, 0.5,
-                             image_continuous_tone, 1, FALSE);
-  gtk_widget_show (image_continuous_tone);
-
-  gimp_help_set_help_data (image_continuous_tone,
-                           _("Slowest, but most accurate and smoothest color "
-                             "for continuous tone images and photographs"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (image_continuous_tone), "toggled",
-		      GTK_SIGNAL_FUNC (image_type_callback),
-		      (gpointer) IMAGE_CONTINUOUS);
+  group = NULL;
+  for (i = 0; i < image_type_count; i++)
+    {
+      image_types[i].button =
+	gtk_radio_button_new_with_label(group, _(image_types[i].name));
+      group = gtk_radio_button_group(GTK_RADIO_BUTTON(image_types[i].button));
+      gimp_table_attach_aligned(GTK_TABLE(table), 0, i, NULL, 0.5, 0.5,
+				image_types[i].button, 1, FALSE);
+      gimp_help_set_help_data(image_types[i].button, _(image_types[i].help),
+			      NULL);
+      gtk_signal_connect(GTK_OBJECT(image_types[i].button), "toggled",
+			 GTK_SIGNAL_FUNC(image_type_callback),
+			 (gpointer) image_types[i].value);
+    }
 
   sep = gtk_hseparator_new ();
   gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
@@ -1294,7 +1294,7 @@ create_image_settings_frame (void)
    * Output type toggles.
    */
 
-  table = gtk_table_new (4, 2, FALSE);
+  table = gtk_table_new (output_type_count + 1, 2, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (table), 4);
   gtk_table_set_row_spacing (GTK_TABLE (table), 2, 4);
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -1313,44 +1313,20 @@ create_image_settings_frame (void)
                            _("Select the desired output type"),
                            NULL);
 
-  output_color = gtk_radio_button_new_with_label (NULL, _("Color"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (output_color));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
-                             NULL, 0.5, 0.5,
-                             output_color, 1, FALSE);
-
-  gimp_help_set_help_data (output_color, _("Color output"), NULL);
-  gtk_signal_connect (GTK_OBJECT (output_color), "toggled",
-                      GTK_SIGNAL_FUNC (output_type_callback),
-                      (gpointer) OUTPUT_COLOR);
-
-  output_gray = gtk_radio_button_new_with_label (group, _("Grayscale"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (output_gray));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
-                             NULL, 0.5, 0.5,
-                             output_gray, 1, FALSE);
-
-  gimp_help_set_help_data (output_gray,
-                           _("Print in shades of gray using black ink"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (output_gray), "toggled",
-                      GTK_SIGNAL_FUNC (output_type_callback),
-                      (gpointer) OUTPUT_GRAY);
-
-  output_monochrome = gtk_radio_button_new_with_label (group,
-                                                       _("Black and White"));
-  group = gtk_radio_button_group (GTK_RADIO_BUTTON (output_monochrome));
-  gimp_table_attach_aligned (GTK_TABLE (table), 0, 2,
-                             NULL, 0.5, 0.5,
-                             output_monochrome, 1, FALSE);
-
-  gimp_help_set_help_data (output_monochrome,
-                           _("Print in black and white (no color, and no shades "
-                             "of gray)"),
-                           NULL);
-  gtk_signal_connect (GTK_OBJECT (output_monochrome), "toggled",
-                      GTK_SIGNAL_FUNC (output_type_callback),
-                      (gpointer) OUTPUT_MONOCHROME);
+  group = NULL;
+  for (i = 0; i < output_type_count; i++)
+    {
+      output_types[i].button =
+	gtk_radio_button_new_with_label(group, _(output_types[i].name));
+      group = gtk_radio_button_group(GTK_RADIO_BUTTON(output_types[i].button));
+      gimp_table_attach_aligned(GTK_TABLE(table), 0, i, NULL, 0.5, 0.5,
+				output_types[i].button, 1, FALSE);
+      gimp_help_set_help_data(output_types[i].button, _(output_types[i].help),
+			      NULL);
+      gtk_signal_connect(GTK_OBJECT(output_types[i].button), "toggled",
+			 GTK_SIGNAL_FUNC(output_type_callback),
+			 (gpointer) output_types[i].value);
+    }
 
   /*
    *  Color adjust button
@@ -1593,6 +1569,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 static void
 do_misc_updates (void)
 {
+  gint i;
   suppress_preview_update++;
   set_orientation(pv->orientation);
   invalidate_preview_thumbnail ();
@@ -1625,17 +1602,11 @@ do_misc_updates (void)
       gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
     }
 
-  switch (stp_get_output_type (pv->v))
+  for (i = 0; i < output_type_count; i++)
     {
-    case OUTPUT_GRAY:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_gray), TRUE);
-      break;
-    case OUTPUT_COLOR:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_color), TRUE);
-      break;
-    case OUTPUT_MONOCHROME:
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_monochrome), TRUE);
-      break;
+      if (output_types[i].value == stp_get_output_type(pv->v))
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_types[i].button),
+				     TRUE);
     }
 
   do_color_updates ();
@@ -1646,23 +1617,11 @@ do_misc_updates (void)
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(units[pv->unit].checkbox),
 			       TRUE);
 
-  switch (stp_get_image_type (pv->v))
+  for (i = 0; i < image_type_count; i++)
     {
-    case IMAGE_LINE_ART:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_line_art), TRUE);
-      break;
-    case IMAGE_SOLID_TONE:
-      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (image_solid_tone), TRUE);
-      break;
-    case IMAGE_CONTINUOUS:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_continuous_tone),
-                                    TRUE);
-      break;
-    default:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_continuous_tone),
-                                    TRUE);
-      stp_set_image_type (pv->v, IMAGE_CONTINUOUS);
-      break;
+      if (image_types[i].value == stp_get_image_type(pv->v))
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(image_types[i].button),
+				     TRUE);
     }
 
   suppress_preview_update--;
@@ -1961,7 +1920,7 @@ output_type_callback (GtkWidget *widget,
       update_adjusted_thumbnail ();
     }
 
-  if (widget == output_color)
+  if (widget == output_types[0].button)
     set_color_sliders_active (TRUE);
   else
     set_color_sliders_active (FALSE);
@@ -2239,12 +2198,13 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 
   if (stp_get_output_type (printvars) == OUTPUT_COLOR)
     {
-      gtk_widget_set_sensitive (output_color, TRUE);
+      gtk_widget_set_sensitive (output_types[0].button, TRUE);
     }
   else
     {
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_gray), TRUE);
-      gtk_widget_set_sensitive (output_color, FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_types[1].button),
+				    TRUE);
+      gtk_widget_set_sensitive (output_types[0].button, FALSE);
     }
 }
 
