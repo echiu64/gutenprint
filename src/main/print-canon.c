@@ -1025,7 +1025,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_MODES(canon_nomodes),
 #ifndef EXPERIMENTAL_STUFF
     {-1,0,0,0,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
-    {1,1,1.8,1,1,1},  /*------- 300x300 600x600 1200x600 --------- ---------*/
+    {1,3.5,1.8,1,1,1},/*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
     standard_lum_adjustment,
