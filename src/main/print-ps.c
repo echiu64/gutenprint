@@ -408,7 +408,7 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
 
   left += page_left;
 
-  top = page_height - top + page_bottom;
+  top = page_height - top;
 
   stpi_dprintf(STPI_DBG_PS, v,
 	      "out_width = %d, out_height = %d\n", out_width, out_height);
