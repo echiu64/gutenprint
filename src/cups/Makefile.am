@@ -61,6 +61,9 @@ cupsexec_backend_PROGRAMS = epson canon
 cupsexec_filter_PROGRAMS = rastertogimpprint.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 endif
 
+if BUILD_GENPPD_STATIC
+STATIC_LDOPTS=-static
+endif
 
 cups_calibrate_SOURCES = cups-calibrate.c
 cups_calibrate_LDADD = $(LIBPRINTUT) -lm
@@ -76,9 +79,11 @@ epson_LDADD = $(LIBPRINTUT) $(CUPS_LIBS)
 
 cups_genppd_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_SOURCES = genppd.c
 cups_genppd_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GENPPD_LIBS) $(GIMPPRINT_LIBS)
+cups_genppd_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
 rastertogimpprint_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c
 rastertogimpprint_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDADD = $(LIBPRINTUT) $(CUPS_LIBS) $(GIMPPRINT_LIBS)
+rastertogimpprint_@GIMPPRINT_MAJOR_VERSION@_@GIMPPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
 cups-genppdconfig.@GIMPPRINT_MAJOR_VERSION@.@GIMPPRINT_MINOR_VERSION@: $(top_builddir)/config.status cups-genppdconfig.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/cups-genppdconfig
