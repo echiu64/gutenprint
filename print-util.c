@@ -45,13 +45,6 @@
 #endif /* !__GNUC__ */
 
 /*
- * EGCS 1.1.2/gcc 2.91 seems to have some particularly nasty inlining bugs
- */
-#if (__GNUC__ == 2 && __GNUC_MINOR__ == 91)
-#define inline
-#endif
-
-/*
  * RGB to grayscale luminance constants...
  */
 
