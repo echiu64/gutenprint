@@ -1150,7 +1150,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	}
     }
   if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4)
-      && use_softweave)
+      && use_softweave && xdpi > 720)
     bits = 2;
   else
     bits = 1;
@@ -1244,7 +1244,10 @@ escp2_print(const printer_t *printer,		/* I - Model */
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
-  nv.density = nv.density / (horizontal_passes * vertical_oversample);
+  nv.density = nv.density * 720.0 / xdpi;
+  nv.density = nv.density * 720.0 / ydpi;
+  if (use_softweave)
+    nv.density = nv.density * escp2_xres(model) / 720.0;
   if (bits == 2)
     nv.density *= 3.3;
   if (nv.density > 1.0)
@@ -1281,6 +1284,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
       dither_set_k_ranges_simple(dither, 3, dot_sizes, nv.density);
       if (use_6color)
 	{
+	  dither_set_transition(dither, .7);
 	  dither_set_c_ranges(dither, dsize, variable_dither_ranges,
 			      nv.density);
 	  dither_set_m_ranges(dither, dsize, variable_dither_ranges,
@@ -1288,6 +1292,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	}
       else
 	{
+	  dither_set_transition(dither, .5);
 	  dither_set_c_ranges_simple(dither, 3, dot_sizes, nv.density);
 	  dither_set_m_ranges_simple(dither, 3, dot_sizes, nv.density);
 	}

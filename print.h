@@ -229,6 +229,7 @@ typedef struct
 
 extern void *	init_dither(int in_width, int out_width, int horizontal_aspect,
 			    int vertical_aspect, vars_t *vars);
+extern void	dither_set_transition(void *vd, double);
 extern void	dither_set_density(void *vd, double);
 extern void 	dither_set_black_lower(void *vd, double);
 extern void 	dither_set_black_upper(void *vd, double);

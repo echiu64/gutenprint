@@ -70,7 +70,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n";
 
 
 char *help_msg = "\
-Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i]\n\
+Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i] [-q]\n\
     -P|--printer-name  Specify the name of the printer to operate on.\n\
                        Default is the default system printer.\n\
     -r|--raw-device    Specify the name of the device to write to directly\n\
@@ -89,7 +89,8 @@ Usage: escputil [-P printer | -r device] [-u] [-c | -n | -a | -i]\n\
                        and newer; Epson Stylus Photo 750 and newer).\n\
     -o|--old-series    For older ESCP/2 printers.\n\
     -u|--usb           The printer is connected via USB.\n\
-    -h|--help          Print this help message.\n";
+    -h|--help          Print this help message.\n
+    -q|--quiet         Suppress the banner.\n";
 
 void initialize_print_cmd(void);
 void do_head_clean(void);
@@ -108,13 +109,13 @@ do_help(int code)
 int
 main(int argc, char **argv)
 {
+  int quiet = 0;
   int operation = 0;
   int c;
-  printf("%s\n", banner);
   while (1)
     {
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:icnaduol", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:icnaduolq", optlist, &option_index);
       if (c == -1)
 	break;
       switch (c)
@@ -124,6 +125,9 @@ main(int argc, char **argv)
 	  break;
 	case 'o':
 	  isNew = 0;
+	  break;
+	case 'q':
+	  quiet = 1;
 	  break;
 	case 'c':
 	case 'i':
@@ -159,10 +163,13 @@ main(int argc, char **argv)
 	  do_help(0);
 	  break;
 	default:
+	  printf("%s\n", banner);
 	  fprintf(stderr, "Unknown option %c\n", c);
 	  do_help(1);
 	}
     }
+  if (!quiet)
+    printf("%s\n", banner);
   if (operation == 0)
     do_help(1);
   initialize_print_cmd();

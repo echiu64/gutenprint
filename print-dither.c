@@ -529,8 +529,6 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   else
     init_matrix(&(d->mat6), 257, 257, quic2, 0);
 
-  copy_matrix(&(d->mat6), &(d->mat7));
-  exponential_scale_matrix(&(d->mat7), .7);
   x_3 = d->mat6.x_size / 3;
   y_3 = d->mat6.y_size / 3;
 
@@ -538,11 +536,7 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   clone_matrix(&(d->mat6), &(d->m_dithermat), x_3, 2 * y_3);
   clone_matrix(&(d->mat6), &(d->y_dithermat), 0, y_3);
   clone_matrix(&(d->mat6), &(d->k_dithermat), 0, 0);
-
-  clone_matrix(&(d->mat7), &(d->c_pick), x_3, 0);
-  clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
-  clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
-  clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
+  dither_set_transition(d, .6);
 
   if (!strcmp(v->dither_algorithm, "Hybrid Floyd-Steinberg"))
     d->dither_type = D_FLOYD_HYBRID;
@@ -570,6 +564,25 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
   dither_set_ink_darkness(d, .4, .3, .2);
   dither_set_density(d, 1.0);
   return d;
+}
+
+void
+dither_set_transition(void *vd, double exponent)
+{
+  dither_t *d = (dither_t *) vd;
+  int x_3 = d->mat6.x_size / 3;
+  int y_3 = d->mat6.y_size / 3;
+  destroy_matrix(&(d->c_pick));
+  destroy_matrix(&(d->m_pick));
+  destroy_matrix(&(d->y_pick));
+  destroy_matrix(&(d->k_pick));
+  destroy_matrix(&(d->mat7));
+  copy_matrix(&(d->mat6), &(d->mat7));
+  exponential_scale_matrix(&(d->mat7), exponent);
+  clone_matrix(&(d->mat7), &(d->c_pick), x_3, 0);
+  clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
+  clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
+  clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
 }
 
 void
@@ -1091,14 +1104,6 @@ free_dither(void *vd)
   destroy_matrix(&(d->y_dithermat));
   destroy_matrix(&(d->k_pick));
   destroy_matrix(&(d->k_dithermat));
-#if 0
-  destroy_matrix(&(d->mat0));
-  destroy_matrix(&(d->mat1));
-  destroy_matrix(&(d->mat2));
-  destroy_matrix(&(d->mat3));
-  destroy_matrix(&(d->mat4));
-  destroy_matrix(&(d->mat5));
-#endif
   destroy_matrix(&(d->mat6));
   destroy_matrix(&(d->mat7));
   free(d);
