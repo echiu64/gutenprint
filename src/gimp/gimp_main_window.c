@@ -2169,6 +2169,26 @@ gimp_image_type_callback (GtkWidget *widget,
   gimp_preview_update ();
 }
 
+static void
+gimp_destroy_dialogs(void)
+{
+  gtk_widget_destroy (gimp_color_adjust_dialog);
+  gtk_widget_destroy (setup_dialog);
+  gtk_widget_destroy (print_dialog);
+  gtk_widget_destroy (new_printer_dialog);
+  gtk_widget_destroy (about_dialog);
+}
+
+static void
+gimp_dialogs_set_sensitive(gboolean sensitive)
+{
+  gtk_widget_set_sensitive (gimp_color_adjust_dialog, sensitive);
+  gtk_widget_set_sensitive (setup_dialog, sensitive);
+  gtk_widget_set_sensitive (print_dialog, sensitive);
+  gtk_widget_set_sensitive (new_printer_dialog, sensitive);
+  gtk_widget_set_sensitive (about_dialog, sensitive);
+}
+
 /*
  * 'print_callback()' - Start the print.
  */
@@ -2178,15 +2198,11 @@ gimp_print_callback (void)
   if (plist_current > 0)
     {
       runme = TRUE;
-      gtk_widget_destroy (gimp_color_adjust_dialog);
-      gtk_widget_destroy (setup_dialog);
-      gtk_widget_destroy (print_dialog);
+      gimp_destroy_dialogs();
     }
   else
     {
-      gtk_widget_set_sensitive (gimp_color_adjust_dialog, FALSE);
-      gtk_widget_set_sensitive (setup_dialog, FALSE);
-      gtk_widget_set_sensitive (print_dialog, FALSE);
+      gimp_dialogs_set_sensitive(FALSE);
       gtk_widget_show (file_browser);
     }
 }
@@ -2198,21 +2214,7 @@ static void
 gimp_printandsave_callback (void)
 {
   saveme = TRUE;
-
-  if (plist_current > 0)
-    {
-      runme = TRUE;
-      gtk_widget_destroy (gimp_color_adjust_dialog);
-      gtk_widget_destroy (setup_dialog);
-      gtk_widget_destroy (print_dialog);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (gimp_color_adjust_dialog, FALSE);
-      gtk_widget_set_sensitive (setup_dialog, FALSE);
-      gtk_widget_set_sensitive (print_dialog, FALSE);
-      gtk_widget_show (file_browser);
-    }
+  gimp_print_callback();
 }
 
 static void
@@ -2437,9 +2439,7 @@ gimp_file_ok_callback (void)
 	  gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_browser)));
 
   runme = TRUE;
-  gtk_widget_destroy (gimp_color_adjust_dialog);
-  gtk_widget_destroy (setup_dialog);
-  gtk_widget_destroy (print_dialog);
+  gimp_destroy_dialogs();
 }
 
 /*
@@ -2449,9 +2449,7 @@ static void
 gimp_file_cancel_callback (void)
 {
   gtk_widget_hide (file_browser);
-  gtk_widget_set_sensitive (gimp_color_adjust_dialog, TRUE);
-  gtk_widget_set_sensitive (print_dialog, TRUE);
-  gtk_widget_set_sensitive (print_dialog, TRUE);
+  gimp_dialogs_set_sensitive(TRUE);
 }
 
 /*
