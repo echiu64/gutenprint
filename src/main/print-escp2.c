@@ -705,8 +705,10 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	      stp_zprintf(init->v, "PH%c%c%c%c", 2, 0, 0, p->paper_thickness);
 	      if (escp2_has_cap(init->model, MODEL_VACUUM, MODEL_VACUUM_YES,
 				init->v))
-		stp_zprintf(init->v, "SN%c%c%c%c%c", 3, 0, 0, 5,p->vacuum_intensity);
-	      stp_zprintf(init->v, "SN%c%c%c%c%c", 3, 0, 0, 4, p->feed_adjustment);
+		stp_zprintf(init->v, "SN%c%c%c%c%c",
+			    3, 0, 0, 5, p->vacuum_intensity);
+	      stp_zprintf(init->v, "SN%c%c%c%c%c",
+			  3, 0, 0, 4, p->feed_adjustment);
 	    }
 	}
       else
@@ -748,7 +750,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 static void
 escp2_set_graphics_mode(const escp2_init_t *init)
 {
-  stp_zfwrite("\033(G\001\000\001", 6, 1, init->v);	/* Enter graphics mode */
+  stp_zfwrite("\033(G\001\000\001", 6, 1, init->v);
 }
 
 static void
@@ -1144,14 +1146,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		i;
   int		n;		/* Output number */
   unsigned short *out;	/* Output pixels (16-bit) */
-  unsigned char	*in,		/* Input pixels */
-		*black = NULL,		/* Black bitmap data */
-		*cyan = NULL,		/* Cyan bitmap data */
-		*magenta = NULL,	/* Magenta bitmap data */
-		*yellow = NULL,		/* Yellow bitmap data */
-		*lcyan = NULL,		/* Light cyan bitmap data */
-		*lmagenta = NULL,	/* Light magenta bitmap data */
-		*dyellow = NULL;	/* Dark yellow bitmap data */
+  unsigned char	*in;		/* Input pixels */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -1190,7 +1185,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   stp_vars_t	nv = stp_allocate_copy(v);
   escp2_init_t	init;
   int max_vres;
-  const unsigned char *cols[7];
+  unsigned char *cols[7];
   int head_offset[8];
   const int *offset_ptr;
   int max_head_offset;
@@ -1352,9 +1347,9 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	  escp2_black_initial_vertical_offset(init.model, init.v) * init.ydpi /
 	  escp2_base_separation(model, nv);
       else
-    init.initial_vertical_offset =
-      (escp2_initial_vertical_offset(init.model, init.v) + offset_ptr[0]) *
-      init.ydpi / escp2_base_separation(model, nv);
+	init.initial_vertical_offset =
+	  (escp2_initial_vertical_offset(init.model, init.v) + offset_ptr[0]) *
+	  init.ydpi / escp2_base_separation(model, nv);
     }
   else
     init.initial_vertical_offset =
@@ -1420,41 +1415,35 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   */
 
   length = (out_width + 7) / 8;
+  memset(cols, 0, 7 * sizeof(unsigned char *));
 
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    black = stp_zalloc(length * bits);
+    cols[0] = stp_zalloc(length * bits);
   else
     {
-      cyan = stp_zalloc(length * bits);
-      magenta = stp_zalloc(length * bits);
-      yellow = stp_zalloc(length * bits);
+      cols[1] = stp_zalloc(length * bits);
+      cols[2] = stp_zalloc(length * bits);
+      cols[3] = stp_zalloc(length * bits);
 
       if (ncolors == 7)
-	dyellow = stp_zalloc(length * bits);
+	cols[6] = stp_zalloc(length * bits);
       if (ncolors >= 5)
 	{
-	  lcyan = stp_zalloc(length * bits);
-	  lmagenta = stp_zalloc(length * bits);
+	  cols[4] = stp_zalloc(length * bits);
+	  cols[5] = stp_zalloc(length * bits);
 	}
       if (hasblack)
-	black = stp_zalloc(length * bits);
+	cols[0] = stp_zalloc(length * bits);
     }
-  cols[0] = black;
-  cols[1] = magenta;
-  cols[2] = cyan;
-  cols[3] = yellow;
-  cols[4] = lmagenta;
-  cols[5] = lcyan;
-  cols[6] = dyellow;
 
   dt = stp_create_dither_data();
-  stp_add_channel(dt, black, ECOLOR_K, 0);
-  stp_add_channel(dt, cyan, ECOLOR_C, 0);
-  stp_add_channel(dt, lcyan, ECOLOR_C, 1);
-  stp_add_channel(dt, magenta, ECOLOR_M, 0);
-  stp_add_channel(dt, lmagenta, ECOLOR_M, 1);
-  stp_add_channel(dt, yellow, ECOLOR_Y, 0);
-  stp_add_channel(dt, dyellow, ECOLOR_Y, 1);
+  stp_add_channel(dt, cols[0], ECOLOR_K, 0);
+  stp_add_channel(dt, cols[2], ECOLOR_C, 0);
+  stp_add_channel(dt, cols[5], ECOLOR_C, 1);
+  stp_add_channel(dt, cols[1], ECOLOR_M, 0);
+  stp_add_channel(dt, cols[4], ECOLOR_M, 1);
+  stp_add_channel(dt, cols[3], ECOLOR_Y, 0);
+  stp_add_channel(dt, cols[6], ECOLOR_Y, 1);
 
   in  = stp_malloc(image_width * image_bpp);
   out = stp_malloc(image_width * out_bpp * 2);

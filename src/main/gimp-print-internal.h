@@ -37,16 +37,6 @@
 #include <config.h>
 #endif
 
-#ifndef HAVE_ASPRINTF
-#if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
-#include <varargs.h>
-#else
-#include <stdarg.h>
-#endif
-extern int vasprintf (char **result, const char *format, va_list args);
-extern int asprintf (char **result, const char *format, ...);
-#endif
-
 /*
  * ECOLOR_K must be 0
  */
@@ -378,7 +368,7 @@ stp_write_weave(void *        vsw,
 		int           offset,	/* I - Offset from left side of page */
 		int		xdpi,
 		int		physical_xdpi,
-		const unsigned char *cols[]);
+		unsigned char *const cols[]);
 
 extern stp_lineoff_t *
 stp_get_lineoffsets_by_pass(const stp_softweave_t *sw, int pass);

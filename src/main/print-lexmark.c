@@ -2176,7 +2176,7 @@ densityDivisor /= 1.2;
 #endif
 
       stp_write_weave(weave, length, ydpi, model, out_width, left,
-		      xdpi, physical_xdpi, (const unsigned char **)cols.v);
+		      xdpi, physical_xdpi, (unsigned char **)cols.v);
 
       errval += errmod;
       errline += errdiv;

@@ -2172,7 +2172,7 @@ stp_compute_uncompressed_linewidth(const stp_softweave_t *sw, int n)
 
 static void
 initialize_row(stp_softweave_t *sw, int row, int width,
-	       const unsigned char *cols[])
+	       unsigned char *const cols[])
 {
   stp_weave_t w;
   int i, j, jj;
@@ -2327,7 +2327,7 @@ stp_write_weave(void *        vsw,
 		int           offset,	/* I - Offset from left side of page */
 		int		xdpi,
 		int		physical_xdpi,
-		const unsigned char *cols[])
+		unsigned char *const cols[])
 {
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
   stp_lineoff_t *lineoffs[8];

@@ -1440,7 +1440,7 @@ stp_minimum_settings()
 }
 
 static int
-stp_int_vasprintf (char **result, const char *format, va_list *args)
+stp_vasprintf (char **result, const char *format, va_list args)
 {
   const char *p = format;
   /* Add one to make sure that it is never zero, which might cause malloc
@@ -1448,7 +1448,7 @@ stp_int_vasprintf (char **result, const char *format, va_list *args)
   int total_width = strlen (format) + 1;
   va_list ap;
 
-  memcpy (&ap, args, sizeof (va_list));
+  memcpy (&ap, &args, sizeof (va_list));
 
   while (*p != '\0')
     {
@@ -1511,15 +1511,9 @@ stp_int_vasprintf (char **result, const char *format, va_list *args)
 #endif
   *result = malloc (total_width);
   if (*result != NULL)
-    return vsprintf (*result, format, *args);
+    return vsprintf (*result, format, args);
   else
     return 0;
-}
-
-static int
-stp_vasprintf (char **result, const char *format, va_list args)
-{
-  return stp_int_vasprintf (result, format, &args);
 }
 
 void
