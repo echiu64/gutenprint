@@ -330,7 +330,8 @@ typedef struct printer
  */
 typedef void (*convert_t)(unsigned char *in, unsigned short *out, int width,
 			  int bpp, unsigned char *cmap, const vars_t *vars,
-			  const double *hue_map, const double *lum_map);
+			  const double *hue_map, const double *lum_map,
+			  const double *sat_map);
 
 typedef struct
 {

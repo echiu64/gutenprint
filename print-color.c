@@ -272,7 +272,8 @@ gray_to_gray(unsigned char *grayin,	/* I - RGB pixels */
 	     unsigned char *cmap,	/* I - Colormap (unused) */
 	     const vars_t	*vars,
 	     const double *hue_map,
-	     const double *lum_map
+	     const double *lum_map,
+	     const double *sat_map
 	     )
 {
   int i0 = -1;
@@ -338,7 +339,8 @@ gray_to_monochrome(unsigned char *grayin,	/* I - RGB pixels */
 		   unsigned char *cmap,		/* I - Colormap (unused) */
 		   const vars_t	*vars,
 		   const double *hue_map,
-		   const double *lum_map
+		   const double *lum_map,
+		   const double *sat_map
 		   )
 {
   int i0 = -1;
@@ -405,7 +407,8 @@ indexed_to_gray(unsigned char *indexed,		/* I - Indexed pixels */
 		unsigned char *cmap,		/* I - Colormap */
 		const vars_t   *vars,
 		const double *hue_map,
-		const double *lum_map
+		const double *lum_map,
+		const double *sat_map
 		)
 {
   int i0 = -1;
@@ -480,7 +483,8 @@ indexed_to_monochrome(unsigned char *indexed,	/* I - Indexed pixels */
 		      unsigned char *cmap,	/* I - Colormap */
 		      const vars_t   *vars,
 		      const double *hue_map,
-		      const double *lum_map
+		      const double *lum_map,
+		      const double *sat_map
 		      )
 {
   int i0 = -1;
@@ -556,7 +560,8 @@ rgb_to_gray(unsigned char *rgb,		/* I - RGB pixels */
 	    unsigned char *cmap,	/* I - Colormap (unused) */
 	    const vars_t   *vars,
 	    const double *hue_map,
-	    const double *lum_map
+	    const double *lum_map,
+	    const double *sat_map
 	    )
 {
   int i0 = -1;
@@ -633,7 +638,8 @@ rgb_to_monochrome(unsigned char *rgb,	/* I - RGB pixels */
 		  unsigned char *cmap,	/* I - Colormap (unused) */
 		  const vars_t   *vars,
 		  const double *hue_map,
-		  const double *lum_map
+		  const double *lum_map,
+		  const double *sat_map
 		  )
 {
   int i0 = -1;
@@ -711,7 +717,8 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	   unsigned char 	*cmap,		/* I - Colormap */
 	   const vars_t  	*vars,
 	   const double *hue_map,
-	   const double *lum_map
+	   const double *lum_map,
+	   const double *sat_map
 	   )
 {
   unsigned ld = vars->density * 65536;
@@ -842,7 +849,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
 				   lut->blue, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
-	  if ((split_saturation || hue_map || lum_map) &&
+	  if ((split_saturation || hue_map || lum_map || sat_map) &&
 	      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
 	      rgbout[0] = 65535 - rgbout[0];
@@ -862,7 +869,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		}
 	      if (s > 1)
 		s = 1.0;
-	      if (hue_map || lum_map)
+	      if (hue_map || lum_map || sat_map)
 		{
 		  if (hue_map)
 		    {
@@ -892,6 +899,20 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 			  if (v > .5)
 			    ev = 1.0 + ((2.0 * (1.0 - v)) * (ev - 1.0));
 			  v = 1.0 - pow(1.0 - v, ev);
+			}
+		    }
+		  if (sat_map)
+		    {
+		      int ih;
+		      double eh;
+		      double nh = h * 8;
+		      ih = (int) nh;
+		      eh = nh - (double) ih;
+		      if (sat_map[ih] != 1.0 || sat_map[ih + 1] != 1.0)
+			{
+			  double es = sat_map[ih] +
+			    eh * (sat_map[ih + 1] - sat_map[ih]);
+			  s = 1.0 - pow(1.0 - s, es);
 			}
 		    }
 		}
@@ -928,10 +949,12 @@ indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 	       unsigned char *cmap,	/* I - Colormap */
 	       const vars_t   *vars,
 	       const double *hue_map,
-	       const double *lum_map
+	       const double *lum_map,
+	       const double *sat_map
 	       )
 {
-  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars, hue_map, lum_map);
+  rgb_to_rgb(indexed, rgb, width, bpp, cmap, vars, hue_map, lum_map,
+	     sat_map);
 }
 
 /*
@@ -946,7 +969,8 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 	    unsigned char 	*cmap,		/* I - Colormap */
 	    const vars_t  	*vars,
 	    const double *hue_map,
-	    const double *lum_map
+	    const double *lum_map,
+	    const double *sat_map
 	    )
 {
   int use_previous = 0;
@@ -1039,7 +1063,8 @@ fast_indexed_to_rgb(unsigned char *indexed,	/* I - Indexed pixels */
 		    unsigned char *cmap,	/* I - Colormap */
 		    const vars_t   *vars,
 		    const double *hue_map,
-		    const double *lum_map
+		    const double *lum_map,
+		    const double *sat_map
 		    )
 {
   int i0 = -1;
@@ -1142,7 +1167,8 @@ fast_rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 		unsigned char 	*cmap,		/* I - Colormap */
 		const vars_t  	*vars,
 		const double *hue_map,
-		const double *lum_map
+		const double *lum_map,
+		const double *sat_map
 		)
 {
   unsigned ld = vars->density * 65536;
@@ -1251,7 +1277,8 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 		 unsigned char 	*cmap,		/* I - Colormap */
 		 const vars_t  	*vars,
 		 const double *hue_map,
-		 const double *lum_map
+		 const double *lum_map,
+		 const double *sat_map
 		 )
 {
   int use_previous = 0;
