@@ -110,7 +110,7 @@ static float_param_t float_parameters[] =
       "AppGamma", N_("AppGamma"),
       N_("Gamma value assumed by application"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED5, 1, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, -1
     }, 0.1, 4.0, 1.0, 0
   },
   {
@@ -190,9 +190,9 @@ static float_param_t float_parameters[] =
   {
     {
       "Black", N_("GCR Transition"),
-      N_("Adjust the black gamma"),
+      N_("Adjust the gray component transition rate"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, 0
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -200,7 +200,7 @@ static float_param_t float_parameters[] =
       "GCRLower", N_("GCR Lower Bound"),
       N_("Lower bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, 0
     }, 0.0, 1.0, 0.2, 1
   },
   {
@@ -208,7 +208,7 @@ static float_param_t float_parameters[] =
       "GCRUpper", N_("GCR Upper Bound"),
       N_("Upper bound of gray component reduction"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED5, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, 0
     }, 0.0, 5.0, 0.5, 1
   },
 };
@@ -279,7 +279,7 @@ static curve_param_t curve_parameters[] =
       "HueMap", N_("Hue Map"),
       N_("Hue adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, -1
     }, &hue_map_bounds, 1, 1
   },
   {
@@ -287,7 +287,7 @@ static curve_param_t curve_parameters[] =
       "SatMap", N_("Saturation Map"),
       N_("Saturation adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, -1
     }, &sat_map_bounds, 1, 1
   },
   {
@@ -295,7 +295,7 @@ static curve_param_t curve_parameters[] =
       "LumMap", N_("Luminosity Map"),
       N_("Luminosity adjustment curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, -1
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, -1
     }, &lum_map_bounds, 1, 1
   },
   {
@@ -303,7 +303,7 @@ static curve_param_t curve_parameters[] =
       "GCRCurve", N_("Gray Component Reduction"),
       N_("Gray component reduction curve"),
       STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, 0
     }, &gcr_curve_bounds, 1, 0
   },
 };
@@ -1616,13 +1616,16 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   double yellow = stp_get_float_parameter(v, "Yellow");
   double print_gamma = stp_get_float_parameter(v, "Gamma");
   double contrast = stp_get_float_parameter(v, "Contrast");
-  double app_gamma = stp_get_float_parameter(v, "AppGamma");
   double brightness = stp_get_float_parameter(v, "Brightness");
-  double screen_gamma = app_gamma / 4.0; /* "Empirical" */
+  double app_gamma = 1.0;
+  double screen_gamma;
   lut_t *lut;
   int input_color_model = stp_get_input_color_model(v);
   int output_color_model = stpi_get_output_color_model(v);
 
+  if (stp_check_float_parameter(v, "AppGamma", STP_PARAMETER_ACTIVE))
+    app_gamma = stp_get_float_parameter(v, "AppGamma");
+  screen_gamma = app_gamma / 4.0; /* "Empirical" */
   lut = allocate_lut();
 
   if (stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_DEFAULTED))
