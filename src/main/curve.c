@@ -622,7 +622,7 @@ stp_curve_read(FILE *f, stp_curve_t curve)
   int points;
 
   check_curve(icurve);
-  fscanf(f, "STP_CURVE;%31s;%31s;%n",
+  fscanf(f, "STP_CURVE;%31s ;%31s ;%n",
 	 curve_type_name,
 	 wrap_mode_name,
 	 &noffset);
