@@ -875,16 +875,14 @@ find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres)
   int i = 0;
   if (desired_hres < 0)
     {
-      const res_t *retval = NULL;
       while (res[i])
 	i++;
       i--;
       while (i >= 0)
 	{
-	  retval = res[i];
-	  if (verify_resolution(v, retval) &&
-	      verify_resolution_by_paper_type(v, retval))
-	    return retval;
+	  if (verify_resolution(v, res[i]) &&
+	      verify_resolution_by_paper_type(v, res[i]))
+	    return res[i];
 	  i--;
 	}
     }

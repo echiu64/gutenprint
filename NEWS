@@ -1,4 +1,4 @@
-Gimp-Print 4.3.16, released June 7, 2003, is a development release of
+Gimp-Print 4.3.17, released June 7, 2003, is a development release of
 this package.  Like all development releases, this version is
 considered unstable and should only be used by those individuals
 tolerant of the likelihood of problems.  Individuals desiring a stable
@@ -40,6 +40,59 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.17 contains the following major changes over Gimp-Print
+4.3.16:
+
+1) The libxml2 package is no longer required for building Gimp-Print.
+   It has been replaced with a very light weight XML package called
+   mxml, which is compiled into the library.
+
+2) The glib package is no longer required for building the GhostScript
+   IJS driver (ijsgimpprint).
+
+3) The libgimpprintui library is now correctly built or not depending
+   upon whether --enable-libgimpprintui is passed or not.
+
+4) White output is now truly white.  In 4.3.16, a very small number of
+   dots was printed even for white output, which in some cases made
+   printing take much longer than required.
+
+5) Roll feed should now work correctly on Epson printers that do not
+   have a paper cutter.
+
+6) Default values for dither algorithm and image optimization have
+   been added; this allows the user to not specify these options.
+
+7) A new Quality setting has been added for the Epson driver.  This
+   enables the user to choose from a set of named qualities
+   (e. g. economy, draft, standard, photo, etc.), simplifying the
+   choices for the user.  When the user selects a Quality setting, the
+   Resolution, Ink Type, Ink Set, and Printing Direction controls are
+   disabled.
+
+   Different Quality settings are available depending upon the
+   printer's capabilities and the choice of media type; e. g. the
+   higher quality photo settings are not available on plain paper,
+   while draft and economy settings are not available with high
+   quality photo papers.  The CUPS driver does not currently enforce
+   these limitations, as the PPD files do not currently support
+   constraints on option values.
+
+   In the future, the Quality setting may control other settings as
+   well, such as dither algorithm, image optimization, etc.
+
+8) A new auto-size option for roll paper has been added (currently in
+   the GIMP plug-in only).
+
+9) Preliminary support for the Epson Stylus Photo 935, and the PM-940C
+   and PM-980C.
+
+10) The numeric options now offer increased precision in the CUPS
+   driver, by way of coarse and fine adjustments for each option.  The
+   coarse adjustment offers adjustment in units of 0.1; the fine
+   adjustment offers additional increments of 0.005.
 
 
 Gimp-Print 4.3.16 contains the following major changes over Gimp-Print
