@@ -40,6 +40,9 @@
 
 #include "print.h"
 
+/* #define DEBUG */
+/* #define PCL_DEBUG_DISABLE_COMPRESSION */
+
 /*
  * Local functions...
  */
@@ -211,6 +214,7 @@ typedef struct {
 #define PCL_COLOR_CMY		1	/* One print head */
 #define PCL_COLOR_CMYK		2	/* Two print heads */
 #define PCL_COLOR_CMYK4		4	/* CRet printing */
+#define PCL_COLOR_CMYKcm	8	/* CMY + Photo Cart */
 
 #define PCL_PRINTER_LJ		1
 #define PCL_PRINTER_DJ		2
@@ -423,6 +427,36 @@ pcl_cap_t pcl_model_capabilities[] =
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600_MONO,
     0, 33, 18, 18,
     PCL_COLOR_CMYK,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
+    PCL_PRINTER_CUSTOM_SIZE,
+    { 
+      PCL_PAPERSIZE_LETTER,
+      PCL_PAPERSIZE_LEGAL,
+      PCL_PAPERSIZE_A5,
+      PCL_PAPERSIZE_A4,
+      PCL_PAPERSIZE_JIS_B5,
+      PCL_PAPERSIZE_4x6,
+      PCL_PAPERSIZE_5x8,
+      -1,
+    },
+    { 
+      PCL_PAPERTYPE_PLAIN,
+      PCL_PAPERTYPE_BOND,
+      PCL_PAPERTYPE_PREMIUM,
+      PCL_PAPERTYPE_GLOSSY,
+      PCL_PAPERTYPE_TRANS,
+      -1,
+    },
+    { 
+      -1,
+    },
+  },
+  /* Deskjet 69x series */
+  { 690,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_300 | PCL_RES_600_600,
+    0, 33, 18, 18,
+    PCL_COLOR_CMYK | PCL_COLOR_CMYKcm,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
     PCL_PRINTER_CUSTOM_SIZE,
     { 
@@ -804,13 +838,22 @@ char * pcl_val_to_string(int code,			/* I: Code */
   }
 
 #ifdef DEBUG
-  fprintf(stderr, "Code: %d, String: %s\n", string, code);
+  fprintf(stderr, "Code: %d, String: %s\n", code, string);
 #endif
 
   return(string);
 }
 
 static double dot_sizes[] = { 0.5, 0.832, 1.0 };
+static simple_dither_range_t variable_dither_ranges[] =
+{
+  { 0.152, 0x1, 0 },
+  { 0.255, 0x2, 0 },
+  { 0.38,  0x3, 0 },
+  { 0.5,   0x1, 1 },
+  { 0.67,  0x2, 1 },
+  { 1.0,   0x3, 1 }
+};
 
 /*
  * pcl_get_model_capabilities() - Return struct of model capabilities
@@ -896,6 +939,12 @@ pcl_parameters(int  model,	/* I - Printer model */
   int		i;
   char		**valptrs;
   pcl_cap_t caps;
+
+  static char *ink_types[] =
+  {
+    "Color + Black Cartridges",
+    "Color + Photo Cartridges"
+  };
 
   if (count == NULL)
     return (NULL);
@@ -1002,6 +1051,19 @@ pcl_parameters(int  model,	/* I - Printer model */
     *count= i;
     return(valptrs);
   }
+  else if (strcmp(name, "InkType") == 0)
+  {
+    if (caps.color_type & PCL_COLOR_CMYKcm)
+    {
+      valptrs = malloc(sizeof(char *) * 2);
+      valptrs[0] = c_strdup(ink_types[0]);
+      valptrs[1] = c_strdup(ink_types[1]);
+      *count = 2;
+      return(valptrs);
+    }
+    else
+      return(NULL);      
+  }
   else
     return (NULL);
 }
@@ -1057,6 +1119,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
   char 		*media_size = v->media_size;
   char 		*media_type = v->media_type;
   char 		*media_source = v->media_source;
+  char 		*ink_type = v->ink_type;
   int 		output_type = v->output_type;
   int		orientation = v->orientation;
   float 	scaling = v->scaling;
@@ -1069,7 +1132,9 @@ pcl_print(const printer_t *printer,		/* I - Model */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
-		*yellow;	/* Yellow bitmap data */
+		*yellow,	/* Yellow bitmap data */
+		*lcyan,		/* Light Cyan bitmap data */
+		*lmagenta;	/* Light Magenta bitmap data */
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
 		page_top,	/* Top of page */
@@ -1097,7 +1162,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
   void *	dither;
   pcl_cap_t	caps;		/* Printer capabilities */
   int		do_cret,	/* 300 DPI CRet printing */
-		planes;		/* # of outut planes */
+		do_6color,	/* CMY + cmK printing */
+		planes;		/* # of output planes */
   int           tempwidth,	/* From default_media_size() */
                 templength,	/* From default_media_size() */
                 pcl_media_size, /* PCL media size code */
@@ -1178,6 +1244,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
   fprintf(stderr, "do_cret = %d\n", do_cret);
 #endif
   
+  do_6color = (strcmp(ink_type, "Color + Photo Cartridges") == 0);
+#ifdef DEBUG
+  fprintf(stderr, "do_6color = %d\n", do_6color);
+#endif
+
  /*
   * Compute the output size...
   */
@@ -1425,7 +1496,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
     }
   }
 
-  if ((xdpi != ydpi) || (do_cret == 1))		/* Set resolution using CRD */
+  if ((xdpi != ydpi) || (do_cret) || (do_6color))
+						/* Set resolution using CRD */
   {
 
    /*
@@ -1437,7 +1509,10 @@ pcl_print(const printer_t *printer,		/* I - Model */
       if ((caps.color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         planes = 3;
       else
-        planes = 4;
+        if (do_6color)
+          planes = 6;
+        else
+          planes = 4;
     else
       planes = 1;
 
@@ -1476,6 +1551,22 @@ pcl_print(const printer_t *printer,		/* I - Model */
       putc(0, prn);
       putc(do_cret ? 4 : 2, prn);
     }
+    if (planes == 6)
+    {
+      putc(xdpi >> 8, prn);			/* Light Cyan resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
+
+      putc(xdpi >> 8, prn);			/* Light Magenta resolution */
+      putc(xdpi, prn);
+      putc(ydpi >> 8, prn);
+      putc(ydpi, prn);
+      putc(0, prn);
+      putc(do_cret ? 4 : 2, prn);
+    }
   }
   else
   {
@@ -1489,12 +1580,14 @@ pcl_print(const printer_t *printer,		/* I - Model */
     }
   }
 
+#ifndef PCL_DEBUG_DISABLE_COMPRESSION
   if ((caps.printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
   {
     fputs("\033*b2M", prn);			/* Mode 2 (TIFF) */
     writefunc = pcl_mode2;
   }
   else
+#endif
   {
     fputs("\033*b0M", prn);			/* Mode 0 (no compression) */
     writefunc = pcl_mode0;
@@ -1528,6 +1621,8 @@ pcl_print(const printer_t *printer,		/* I - Model */
     cyan    = NULL;
     magenta = NULL;
     yellow  = NULL;
+    lcyan    = NULL;
+    lmagenta = NULL;
   }
   else
   {
@@ -1539,6 +1634,16 @@ pcl_print(const printer_t *printer,		/* I - Model */
       black = NULL;
     else
       black = malloc(length);
+    if (do_6color)
+    {
+      lcyan    = malloc(length);
+      lmagenta = malloc(length);
+    }
+    else
+    {
+      lcyan    = NULL;
+      lmagenta = NULL;
+    }
   }
     
  /*
@@ -1554,6 +1659,41 @@ pcl_print(const printer_t *printer,		/* I - Model */
     dither = init_dither(image_height, out_width, v);
   else
     dither = init_dither(image_width, out_width, v);
+
+/* Set up dithering for special printers. */
+
+#if 0		/* Leave alone for now */
+  dither_set_black_levels(dither, 1.5, 1.5, 1.5);
+  dither_set_black_lower(dither, .4);
+  dither_set_black_upper(dither, .999);
+#endif
+
+  if (do_cret)				/* 4-level printing for 800/1120 */
+    {
+      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
+      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
+
+/* Note: no printer I know of does both CRet (4-level) and 6 colour, but
+   what the heck. variable_dither_ranges copied from print-escp2.c */
+
+      if (do_6color)			/* Photo for 69x */
+	{
+	  dither_set_c_ranges(dither, 6, variable_dither_ranges, v->density);
+	  dither_set_m_ranges(dither, 6, variable_dither_ranges, v->density);
+	}
+      else
+	{	
+	  dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
+	  dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
+	}
+    }
+  else 
+
+/* Set light inks for 6 colour printers. Numbers copied from print-escp2.c */
+
+    if (do_6color)
+      dither_set_light_inks(dither, .25, .25, 0.0, v->density);
+
   switch (v->image_type)
     {
     case IMAGE_LINE_ART:
@@ -1566,14 +1706,6 @@ pcl_print(const printer_t *printer,		/* I - Model */
       dither_set_ink_spread(dither, 14);
       break;
     }	    
-  if (do_cret)
-    {
-      dither_set_c_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_m_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_y_ranges_simple(dither, 3, dot_sizes, v->density);
-      dither_set_k_ranges_simple(dither, 3, dot_sizes, v->density);
-    }
-
   dither_set_density(dither, v->density);
 
   if (landscape)
@@ -1614,12 +1746,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	if (output_type == OUTPUT_GRAY)
 	{
           dither_black(out, x, dither, black);
-          (*writefunc)(prn, black + length / 2, length / 2, 1);
-          (*writefunc)(prn, black, length / 2, 0);
+          (*writefunc)(prn, black + length / 2, length / 2, 0);
+          (*writefunc)(prn, black, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk(out, x, dither, cyan, NULL, magenta, NULL,
+          dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, NULL, black);
 
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1628,8 +1760,17 @@ pcl_print(const printer_t *printer,		/* I - Model */
           (*writefunc)(prn, cyan, length / 2, 0);
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
           (*writefunc)(prn, magenta, length / 2, 0);
-          (*writefunc)(prn, yellow + length / 2, length / 2, 1);
-          (*writefunc)(prn, yellow, length / 2, 0);
+          (*writefunc)(prn, yellow + length / 2, length / 2, 0);
+          if (do_6color)
+          {
+            (*writefunc)(prn, yellow, length / 2, 0);
+            (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
+            (*writefunc)(prn, lcyan, length / 2, 0);
+            (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
+            (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
 	}
       }
       else
@@ -1648,14 +1789,21 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	}
 	else
 	{
-          dither_cmyk(out, x, dither, cyan, NULL, magenta, NULL,
+          dither_cmyk(out, x, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, NULL, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);
           (*writefunc)(prn, cyan, length, 0);
           (*writefunc)(prn, magenta, length, 0);
-          (*writefunc)(prn, yellow, length, 1);
+          if (do_6color)
+          {
+            (*writefunc)(prn, yellow, length, 0);
+            (*writefunc)(prn, lcyan, length, 0);
+            (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
 	}
       }
 
@@ -1706,12 +1854,12 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	if (output_type == OUTPUT_GRAY)
 	{
           dither_black(out, y, dither, black);
-          (*writefunc)(prn, black + length / 2, length / 2, 1);
-          (*writefunc)(prn, black, length / 2, 0);
+          (*writefunc)(prn, black + length / 2, length / 2, 0);
+          (*writefunc)(prn, black, length / 2, 1);
 	}
 	else 
 	{
-          dither_cmyk(out, y, dither, cyan, NULL, magenta, NULL,
+          dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, NULL, black);
 
           (*writefunc)(prn, black + length / 2, length / 2, 0);
@@ -1720,8 +1868,17 @@ pcl_print(const printer_t *printer,		/* I - Model */
           (*writefunc)(prn, cyan, length / 2, 0);
           (*writefunc)(prn, magenta + length / 2, length / 2, 0);
           (*writefunc)(prn, magenta, length / 2, 0);
-          (*writefunc)(prn, yellow + length / 2, length / 2, 1);
-          (*writefunc)(prn, yellow, length / 2, 0);
+          (*writefunc)(prn, yellow + length / 2, length / 2, 0);
+          if (do_6color)
+          {
+            (*writefunc)(prn, yellow, length / 2, 0);
+            (*writefunc)(prn, lcyan + length / 2, length / 2, 0);
+            (*writefunc)(prn, lcyan, length / 2, 0);
+            (*writefunc)(prn, lmagenta + length / 2, length / 2, 0);
+            (*writefunc)(prn, lmagenta, length / 2, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(prn, yellow, length / 2, 1);		/* Last plane set on yellow */
 	}
       }
       else
@@ -1740,14 +1897,21 @@ pcl_print(const printer_t *printer,		/* I - Model */
 	}
 	else
 	{
-          dither_cmyk(out, y, dither, cyan, NULL, magenta, NULL,
+          dither_cmyk(out, y, dither, cyan, lcyan, magenta, lmagenta,
 		      yellow, NULL, black);
 
           if (black != NULL)
             (*writefunc)(prn, black, length, 0);
           (*writefunc)(prn, cyan, length, 0);
           (*writefunc)(prn, magenta, length, 0);
-          (*writefunc)(prn, yellow, length, 1);
+          if (do_6color)
+          {
+            (*writefunc)(prn, yellow, length, 0);
+            (*writefunc)(prn, lcyan, length, 0);
+            (*writefunc)(prn, lmagenta, length, 1);		/* Last plane set on light magenta */
+          }
+          else
+            (*writefunc)(prn, yellow, length, 1);		/* Last plane set on yellow */
 	}
       }
 
@@ -1777,6 +1941,11 @@ pcl_print(const printer_t *printer,		/* I - Model */
     free(cyan);
     free(magenta);
     free(yellow);
+  }
+  if (lcyan != NULL)
+  {
+    free(lcyan);
+    free(lmagenta);
   }
 
   if ((caps.printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
@@ -1912,6 +2081,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.48  2000/05/05 18:29:13  davehill
+ *   Added DJ690 Photo mode (thanks to Henk Verleye).
+ *
  *   Revision 1.47  2000/05/04 01:09:05  rlk
  *   Improve use of black ink to reduce sharp grain.
  *
