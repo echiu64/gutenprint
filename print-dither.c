@@ -1618,6 +1618,20 @@ dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
   kptr = black;
   xerror = 0;
   matrix_set_row(d, kdither, row);
+  if (!duplicate_line)
+    {
+      d->last_line_was_empty = 1;
+      for (x = 0; x < d->src_width; x ++)
+	{
+	  if (gray[x] != 65535)
+	    {
+	      d->last_line_was_empty = 0;
+	      break;
+	    }
+	}
+    }
+  if (d->last_line_was_empty)
+    return;
   for (x = 0; x < dst_width; x++)
     {
       if (!gray[0])
@@ -1659,7 +1673,6 @@ dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
 		  unsigned char *black,		/* O - Black bitmap pixels */
 		  int		duplicate_line)
 {
-
   int		x,		/* Current X coordinate */
 		xerror,		/* X error count */
 		xstep,		/* X step */
@@ -1683,6 +1696,20 @@ dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
   length = (d->dst_width + 7) / 8;
 
   memset(black, 0, length * d->k_dither.signif_bits);
+  if (!duplicate_line)
+    {
+      d->last_line_was_empty = 1;
+      for (x = 0; x < d->src_width; x ++)
+	{
+	  if (gray[x] != 65535)
+	    {
+	      d->last_line_was_empty = 0;
+	      break;
+	    }
+	}
+    }
+  if (d->last_line_was_empty)
+    return;
   kptr = black;
   xerror = 0;
   matrix_set_row(d, &(d->k_dithermat), row);
@@ -1743,6 +1770,22 @@ dither_black_ordered(const unsigned short   *gray,
   xerror = 0;
   matrix_set_row(d, &(d->k_dithermat), row);
   matrix_set_row(d, &(d->k_pick), row);
+
+  if (!duplicate_line)
+    {
+      int nonempty = 0;
+      for (x = 0; x < d->src_width; x ++)
+	{
+	  if (gray[x] != 65535)
+	    {
+	      nonempty = 1;
+	      break;
+	    }
+	}
+      d->last_line_was_empty = !nonempty;
+    }
+  if (d->last_line_was_empty)
+    return;
 
   for (x = 0; x < terminate; x ++)
     {
@@ -1816,9 +1859,38 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 
   kerror0 = get_errline(d, row, ECOLOR_K);
   kerror1 = get_errline(d, row + 1, ECOLOR_K);
-  memset(kerror1, 0, d->dst_width * sizeof(int));
 
   memset(black, 0, length * d->k_dither.signif_bits);
+  if (!duplicate_line)
+    {
+      int nonempty = 0;
+      for (x = 0; x < d->src_width; x ++)
+	{
+	  if (gray[x] != 65535)
+	    {
+	      nonempty = 1;
+	      break;
+	    }
+	}
+      if (nonempty)
+	d->last_line_was_empty = 0;
+      else
+	d->last_line_was_empty++;
+    }
+  else if (d->last_line_was_empty)
+    d->last_line_was_empty++;
+  if (d->last_line_was_empty >= 5)
+    return;
+
+  memset(kerror1, 0, d->dst_width * sizeof(int));
+
+  if (d->last_line_was_empty >= 4)
+    {
+      if (d->last_line_was_empty == 4)
+	memset(kerror0, 0, d->dst_width * sizeof(int));
+      return;
+    }
+
   kptr = black;
   xerror = 0;
   if (direction == -1)
@@ -2338,9 +2410,10 @@ dither_cmyk_ordered(const unsigned short  *rgb,
   if (!duplicate_line)
     {
       generate_cmy(d, rgb, &nonzero, row);
-      if (!nonzero)
-	return;
+      d->last_line_was_empty = !nonzero;
     }
+  if (d->last_line_was_empty)
+    return;
 
   /*
    * Boilerplate
