@@ -260,16 +260,30 @@ do_help(int code)
   exit(code);
 }
 
+#if 0
+static void
+enter_packet_mode(void)
+{
+  static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL\n@EJL\n\033@";
+  memcpy(printer_cmd + bufpos, hdr, sizeof(hdr) - 1); /* DON'T include null! */
+  bufpos += sizeof(hdr) - 1;
+}
+#endif
+
+static void
+exit_packet_mode(void)
+{
+  static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL     \n\033@";
+  memcpy(printer_cmd + bufpos, hdr, sizeof(hdr) - 1); /* DON'T include null! */
+  bufpos += sizeof(hdr) - 1;
+}
+
 static void
 initialize_print_cmd(void)
 {
   bufpos = 0;
   if (isUSB)
-    {
-      static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL     \n\033@";
-      memcpy(printer_cmd, hdr, sizeof(hdr) - 1); /* Do NOT include the null! */
-      bufpos = sizeof(hdr) - 1;
-    }
+    exit_packet_mode();
 }
 
 int
@@ -536,6 +550,30 @@ do_remote_cmd(const char *cmd, int nargs, ...)
   memcpy(printer_cmd + bufpos, remote_trailer, sizeof(remote_trailer) - 1);
   bufpos += sizeof(remote_trailer) - 1;
 }
+
+#if 0
+static void
+do_packet_cmd(const char *cmd, int nargs, ...)
+{
+  int i;
+  unsigned char *sptr = (unsigned char *) printer_cmd + bufpos + 3;
+  va_list args;
+  va_start(args, nargs);
+
+  memcpy(printer_cmd + bufpos, "pcp", 3);
+  bufpos += 5;
+  sptr[0] = ((nargs + 4) >> 8) % 256;
+  sptr[1] = (nargs + 4) % 256;
+  memcpy(printer_cmd + bufpos, cmd, 2);
+  bufpos += 2;
+  printer_cmd[bufpos] = nargs % 256;
+  printer_cmd[bufpos + 1] = (nargs >> 8) % 256;
+  if (nargs > 0)
+    for (i = 0; i < nargs; i++)
+      printer_cmd[bufpos + 2 + i] = va_arg(args, int);
+  bufpos += 2 + nargs;
+}
+#endif
 
 static void
 add_newlines(int count)
