@@ -1604,33 +1604,24 @@ static stp_param_t media_sources[] =
  * 'canon_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *
+static stp_param_list_t
 canon_parameters(const stp_printer_t printer,
                  const stp_vars_t v,
-                 const char *name,
-                 int  *count)
+                 const char *name)
 {
   int		i;
-  stp_param_t *p= 0;
-  stp_param_t *valptrs= 0;
+  stp_param_list_t valptrs = stp_param_list_allocate();
 
   const canon_cap_t * caps=
     canon_get_model_capabilities(stp_printer_get_model(printer));
 
-  if (count == NULL)
-    return (NULL);
-
-  *count = 0;
-
   if (name == NULL)
-    return (NULL);
+    return valptrs;
 
   if (strcmp(name, "PageSize") == 0)
   {
     int height_limit, width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
-    *count = 0;
 
     width_limit = caps->max_width;
     height_limit = caps->max_height;
@@ -1641,109 +1632,70 @@ canon_parameters(const stp_printer_t printer,
 	  stp_papersize_get_width(pt) <= width_limit &&
 	  stp_papersize_get_height(pt) <= height_limit)
 	{
-	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
-	  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
-	  (*count)++;
+	  stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+				   stp_papersize_get_text(pt));
 	}
     }
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    char tmp[100];
+    char tmp1[100], tmp2[100];
     int x,y;
-    int c= 0;
     int t;
-    valptrs = stp_zalloc(sizeof(stp_param_t) * 10);
 
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
 	if ((t= canon_ink_type(caps,(x<<4)|y)) > -1) {
-	  sprintf(tmp,"%dx%ddpi",
+	  sprintf(tmp1,"%dx%ddpi",
+		  (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
+	  sprintf(tmp2,"%dx%d DPI",
 		   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	  valptrs[c].name= c_strdup(tmp);
-
-	  sprintf(tmp,"%dx%d DPI",
-		   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	  stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp);
-	  valptrs[c++].text= c_strdup(tmp);
+	  stp_param_list_add_param(valptrs, tmp1, tmp2);
+	  stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
 
 	  if (t==1) {
-	    sprintf(tmp,"%dx%ddmt",
+	    sprintf(tmp1,"%dx%ddmt",
 		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	    valptrs[c].name= c_strdup(tmp);
-	    sprintf(tmp,"%dx%d DPI DMT",
+	    sprintf(tmp2,"%dx%d DPI DMT",
 		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	    stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp);
-	    valptrs[c++].text = c_strdup(tmp);
+	    stp_param_list_add_param(valptrs, tmp1, tmp2);
+	    stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
 	  }
 	}
       }
     }
-    *count= c;
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    int c= 0;
-    valptrs = stp_zalloc(sizeof(stp_param_t) * 5);
     /* used internally: do not translate */
     if ((caps->inks & CANON_INK_K))
-    {
-      valptrs[c].name   = c_strdup("Gray");
-      valptrs[c++].text = c_strdup(_("Black"));
-    }
+      stp_param_list_add_param(valptrs, "Gray", _("Black"));
     if ((caps->inks & CANON_INK_CMY))
-    {
-      valptrs[c].name   = c_strdup("RGB");
-      valptrs[c++].text = c_strdup(_("CMY Color"));
-    }
+      stp_param_list_add_param(valptrs, "RGB", _("CMY Color"));
     if ((caps->inks & CANON_INK_CMYK))
-    {
-      valptrs[c].name   = c_strdup("CMYK");
-      valptrs[c++].text = c_strdup(_("CMYK Color"));
-    }
+      stp_param_list_add_param(valptrs, "CMYK", _("CMYK Color"));
     if ((caps->inks & CANON_INK_CcMmYK))
-    {
-      valptrs[c].name   = c_strdup("PhotoCMY");
-      valptrs[c++].text = c_strdup(_("Photo CcMmY Color"));
-    }
+      stp_param_list_add_param(valptrs, "PhotoCMY", _("Photo CcMmY Color"));
     if ((caps->inks & CANON_INK_CcMmYyK))
-    {
-      valptrs[c].name   = c_strdup("PhotoCMYK");
-      valptrs[c++].text = c_strdup(_("Photo CcMmYK Color"));
-    }
-
-    *count = c;
+      stp_param_list_add_param(valptrs, "PhotoCMYK", _("Photo CcMmYK Color"));
   }
   else if (strcmp(name, "MediaType") == 0)
   {
-    *count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
+    int count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
 
-    valptrs = stp_zalloc(*count * sizeof(stp_param_t));
-
-    for (i = 0; i < *count; i ++)
-    {
-      valptrs[i].name = c_strdup(canon_paper_list[i].name);
-      valptrs[i].text = c_strdup(_(canon_paper_list[i].text));
-    }
+    for (i = 0; i < count; i ++)
+      stp_param_list_add_param(valptrs, canon_paper_list[i].name,
+			       _(canon_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    *count = 3;
-    p = media_sources;
-
-    valptrs = stp_zalloc(*count * sizeof(stp_param_t));
-    for (i = 0; i < *count; i ++)
-    {
-      /* translate media_sources */
-      valptrs[i].name = c_strdup(p[i].name);
-      valptrs[i].text = c_strdup(_(p[i].text));
-    }
+    int count = 3;
+    for (i = 0; i < count; i ++)
+      stp_param_list_add_param(valptrs, media_sources[i].name,
+			       _(media_sources[i].text));
   }
   else if (strcmp(name, "DitherAlgorithm") == 0)
-    return stp_dither_algorithms(count);
-  else
-    return (NULL);
-
+    stp_dither_algorithms(valptrs);
   return (valptrs);
 }
 

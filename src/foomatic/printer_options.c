@@ -51,46 +51,44 @@ main(int argc, char **argv)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
       stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
-      stp_param_t *retval;
-      const char *retval1;
-      int count;
       int tcount = 0;
       printf("# Printer model %s, long name `%s'\n",
 	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
       for (k = 0; k < nparams; k++)
 	{
-	  retval1 = stp_printer_get_default_parameter(p, pv, params[k]);
-	  if (retval1)
-	    printf("$defaults{'%s'}{'%s'} = '%s';\n",
-		   stp_printer_get_driver(p), params[k], retval1);
-	  retval = stp_printer_get_parameters(p, pv, params[k], &count);
+	  stp_param_list_t *retval =
+	    stp_printer_get_parameters(p, pv, params[k]);
+	  const char *retval1 =
+	    stp_printer_get_default_parameter(p, pv, params[k]);
+	  size_t count = stp_param_list_count(retval);
 	  if (count > 0)
 	    {
+	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+		     stp_printer_get_driver(p), params[k], retval1);
 	      for (j = 0; j < count; j++)
 		{
+		  const stp_param_t *param = stp_param_list_param(retval, j);
 		  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-			 stp_printer_get_driver(p), params[k], retval[j].name,
-			 retval[j].text);
+			 stp_printer_get_driver(p), params[k],
+			 param->name, param->text);
 		  if (strcmp(params[k], "Resolution") == 0)
 		    {
 		      int x, y;
-		      stp_set_parameter(pv, "Resolution", retval[j].name);
+		      stp_set_parameter(pv, "Resolution", param->name);
 		      stp_printer_describe_resolution(p, pv, &x, &y);
 		      if (x > 0 && y > 0)
 			{
 			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
 				 stp_printer_get_driver(p), "x_resolution",
-				 retval[j].name, x);
+				 param->name, x);
 			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
 				 stp_printer_get_driver(p), "y_resolution",
-				 retval[j].name, y);
+				 param->name, y);
 			}
 		    }
-		  free((void *)retval[j].name);
-		  free((void *)retval[j].text);
 		}
-	      free(retval);
 	    }
+	  stp_param_list_free(retval);
 	  tcount += count;
 	}
       if (tcount > 0)

@@ -201,18 +201,6 @@ DEF_MICROWEAVE_ACCESSOR(roll_top_margin, unsigned)
 DEF_MICROWEAVE_ACCESSOR(roll_bottom_margin, unsigned)
 
 static int
-reslist_count(const res_t *rt)
-{
-  int i = 0;
-  while (rt->hres)
-    {
-      i++;
-      rt++;
-    }
-  return i;
-}
-
-static int
 escp2_ink_type(int model, int resid, const stp_vars_t v)
 {
   int dotid = resid2dotid(resid);
@@ -277,15 +265,6 @@ escp2_use_extended_commands(int model, const stp_vars_t v, int use_softweave)
   return (escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) ||
 	  (escp2_has_cap(model, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES, v) &&
 	   use_softweave));
-}
-	  
-
-static char *
-c_strdup(const char *s)
-{
-  char *ret = stp_malloc(strlen(s) + 1);
-  strcpy(ret, s);
-  return ret;
 }
 
 static int
@@ -352,26 +331,17 @@ verify_inktype(const escp2_inkname_t *inks, int model, const stp_vars_t v)
     return 1;
 }
 
-static void
-add_param(stp_param_t *valptrs, const char *name, const char *text, int *count)
-{
-  valptrs[*count].name = c_strdup(name);
-  valptrs[*count].text = c_strdup(text);
-  (*count)++;
-}
-
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *
+static stp_param_list_t
 escp2_parameters(const stp_printer_t printer,
 		 const stp_vars_t v,
-		 const char *name,
-		 int  *count)
+		 const char *name)
 {
   int		i;
-  stp_param_t	*valptrs = NULL;
+  stp_param_list_t valptrs = stp_param_list_allocate();
   int		model = stp_printer_get_model(printer);
   if (model < 0 || model >= stp_escp2_model_limit)
     {
@@ -379,35 +349,27 @@ escp2_parameters(const stp_printer_t printer,
       return NULL;
     }
 
-  if (count == NULL)
-    return (NULL);
-
-  *count = 0;
-
   if (name == NULL)
-    return (NULL);
+    return (valptrs);
 
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	  if (verify_papersize(pt, model, v))
-	    add_param(valptrs, stp_papersize_get_name(pt),
-		      stp_papersize_get_text(pt), count);
+	    stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+			       stp_papersize_get_text(pt));
 	}
     }
   else if (strcmp(name, "Resolution") == 0)
     {
       const res_t *res = escp2_reslist(model, v);
-      int reslists = reslist_count(res);
-      valptrs = stp_malloc(sizeof(stp_param_t) * reslists);
       while (res->hres)
 	{
 	  if (verify_resolution(res, model, v))
-	    add_param(valptrs, res->name, _(res->text), count);
+	    stp_param_list_add_param(valptrs, res->name, _(res->text));
 	  res++;
 	}
     }
@@ -416,44 +378,31 @@ escp2_parameters(const stp_printer_t printer,
       const inklist_t *inks = escp2_inklist(model, v);
       int ninktypes = inks->n_inks;
       if (ninktypes)
-	{
-	  valptrs = stp_malloc(sizeof(stp_param_t) * ninktypes);
-	  for (i = 0; i < ninktypes; i++)
-	    if (verify_inktype(inks->inknames[i], model, v))
-	      add_param(valptrs, inks->inknames[i]->name,
-			_(inks->inknames[i]->text), count);
-	}
+	for (i = 0; i < ninktypes; i++)
+	  if (verify_inktype(inks->inknames[i], model, v))
+	    stp_param_list_add_param(valptrs, inks->inknames[i]->name,
+			       _(inks->inknames[i]->text));
     }
   else if (strcmp(name, "MediaType") == 0)
     {
       const paperlist_t *p = escp2_paperlist(model, v);
       int nmediatypes = p->paper_count;
       if (nmediatypes)
-	{
-	  valptrs = stp_malloc(sizeof(stp_param_t) * nmediatypes);
-	  for (i = 0; i < nmediatypes; i++)
-	    add_param(valptrs, p->papers[i].name, _(p->papers[i].text), count);
-	}
+	for (i = 0; i < nmediatypes; i++)
+	  stp_param_list_add_param(valptrs, p->papers[i].name,
+				   _(p->papers[i].text));
     }
   else if (strcmp(name, "InputSlot") == 0)
     {
       const input_slot_list_t *slots = escp2_input_slots(model, v);
       int ninputslots = slots->n_input_slots;
       if (ninputslots)
-	{
-	  valptrs = stp_malloc(sizeof(stp_param_t) * ninputslots);
-	  for (i = 0; i < ninputslots; i++)
-	    add_param(valptrs, slots->slots[i].name,
-		      _(slots->slots[i].text), count);
-	}
+	for (i = 0; i < ninputslots; i++)
+	  stp_param_list_add_param(valptrs, slots->slots[i].name,
+			     _(slots->slots[i].text));
     }
   else if (strcmp(name, "DitherAlgorithm") == 0)
-    return stp_dither_algorithms(count);
-  if (*count == 0 && valptrs)
-    {
-      stp_free(valptrs);
-      valptrs = NULL;
-    }
+    stp_dither_algorithms(valptrs);
   return valptrs;
 }
 

@@ -136,7 +136,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   const char		*val;		/* CUPS option value */
   int			num_res;	/* Number of printer resolutions */
   stp_param_t		*res;		/* Printer resolutions */
-  int			i;
   float			stp_gamma,	/* STP options */
 			stp_brightness,
 			stp_cyan,
@@ -405,18 +404,16 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  break;
     }
 
-    res = stp_printer_get_parameters(printer, v, "DitherAlgorithm", &num_res);
+    res = stp_printer_get_parameters(printer, v, "DitherAlgorithm");
+    num_res = stp_param_list_count(res);
 
     if (cups.header.cupsRowStep >= num_res)
       fprintf(stderr, "ERROR: Unable to set dither algorithm!\n");
     else
-      stp_set_parameter(v,"DitherAlgorithm",res[cups.header.cupsRowStep].name);
-    for (i = 0; i < num_res; i++)
-      {
-	free((void *)res[i].name);
-	free((void *)res[i].text);
-      }
-    free(res);
+      stp_set_parameter
+	(v, "DitherAlgorithm",
+	 stp_param_list_param(res, cups.header.cupsRowStep)->name);
+    stp_param_list_free(res);
 
     stp_set_parameter(v, "InputSlot", cups.header.MediaClass);
     stp_set_parameter(v, "MediaType", cups.header.MediaType);
@@ -431,11 +428,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     else
       fprintf(stderr, "ERROR: Unable to get media size!\n");
 
-    res = stp_printer_get_parameters(printer, v, "Resolution", &num_res);
+    res = stp_printer_get_parameters(printer, v, "Resolution");
+    num_res = stp_param_list_count(res);
     if (cups.header.cupsCompression >= num_res)
       fprintf(stderr, "ERROR: Unable to set printer resolution!\n");
     else
-      stp_set_parameter(v, "Resolution",res[cups.header.cupsCompression].name);
+      stp_set_parameter
+	(v, "Resolution",
+	 stp_param_list_param(res, cups.header.cupsRowStep)->name);
+    stp_param_list_free(res);
 
    /*
     * Print the page...

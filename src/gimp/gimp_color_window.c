@@ -110,33 +110,24 @@ dither_algo_callback (GtkWidget *widget, gpointer data)
 void
 build_dither_combo (void)
 {
-  int i;
-  int count;
-  stp_param_t *vec = stp_printer_get_parameters(current_printer, pv->v,
-						"DitherAlgorithm", &count);
+  stp_param_list_t vec = stp_printer_get_parameters
+    (current_printer, pv->v, "DitherAlgorithm");
   const char *default_parameter =
     stp_printer_get_default_parameter(current_printer, pv->v,
 				      "DitherAlgorithm");
   if (stp_get_parameter(pv->v, "DitherAlgorithm")[0] == '\0')
     stp_set_parameter(pv->v, "DitherAlgorithm", default_parameter);
-  else if (count == 0)
+  else if (stp_param_list_count(vec) == 0)
     stp_set_parameter(pv->v, "DitherAlgorithm", NULL);
 
   plist_build_combo (dither_algo_combo,
-		     count,
 		     vec,
 		     stp_get_parameter (pv->v, "DitherAlgorithm"),
 		     default_parameter,
 		     &dither_algo_callback,
 		     &dither_algo_callback_id,
 		     NULL);
-
-  for (i = 0; i < count; i++)
-    {
-      free ((void *) vec[i].name);
-      free ((void *) vec[i].text);
-    }
-  free (vec);
+  stp_param_list_free(vec);
 }
 
 void
@@ -285,8 +276,6 @@ create_color_adjust_window (void)
 		  "work well for text and line art.\n"
 		  "Hybrid Floyd-Steinberg generally produces "
 		  "inferior output."));
-
-  build_dither_combo ();
 }
 
 static void

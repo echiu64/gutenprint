@@ -200,11 +200,15 @@ typedef struct stp_image
 typedef void *stp_printer_t;
 typedef void *stp_vars_t;
 typedef void *stp_papersize_t;
+  
+
 typedef struct
 {
   const char	*name,	/* Option name */
 		*text;	/* Human-readable (translated) text */
 } stp_param_t;
+
+typedef void *stp_param_list_t;
 
 typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
@@ -247,11 +251,10 @@ typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
  *       roll feed, and the like.
  */
 
-extern stp_param_t *
+extern stp_param_list_t
 stp_printer_get_parameters(const stp_printer_t printer,
 			   const stp_vars_t v,
-			   const char *name,
-			   int *count);
+			   const char *name);
 
 /*
  * Return the default value for the specified parameter.
@@ -354,6 +357,17 @@ extern const char * stp_printer_get_driver(const stp_printer_t p);
 extern int stp_printer_get_model(const stp_printer_t p);
 extern const stp_vars_t stp_printer_get_printvars(const stp_printer_t p);
 extern void stp_set_printer_defaults(stp_vars_t, const stp_printer_t);
+
+extern stp_param_list_t stp_param_list_allocate(void);
+extern void stp_param_list_free(stp_param_list_t list);
+extern stp_param_t *stp_param_list_param(const stp_param_list_t list,
+					 size_t element);
+extern size_t stp_param_list_count(const stp_param_list_t list);
+extern stp_param_list_t stp_param_list_duplicate(const stp_param_list_t list);
+extern stp_param_list_t stp_param_list_duplicate_params(const stp_param_t *list,
+							size_t count);
+extern void stp_param_list_add_param(stp_param_list_t list,
+				     const char *name, const char *text);
 
 extern stp_vars_t stp_allocate_vars(void);
 extern void stp_copy_vars(stp_vars_t vd, const stp_vars_t vs);

@@ -73,27 +73,21 @@ c_strdup(const char *s)
  * 'ps_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *
+static stp_param_list_t
 ps_parameters(const stp_printer_t printer,
 	      const stp_vars_t v,
-              const char *name,
-              int  *count)
+              const char *name)
 {
   int		i;
   char		line[1024],
 		lname[255],
 		loption[255],
 		*ltext;
-  stp_param_t	*valptrs;
+  stp_param_list_t valptrs = stp_param_list_allocate();
   const char *ppd_file = stp_get_ppd_file(v);
 
-  if (count == NULL)
-    return (NULL);
-
-  *count = 0;
-
   if (ppd_file == NULL || strlen(ppd_file) == 0 || name == NULL)
-    return (NULL);
+    return valptrs;
 
   if (ps_ppd_file == NULL || strcmp(ps_ppd_file, ppd_file) != 0)
   {
@@ -113,29 +107,18 @@ ps_parameters(const stp_printer_t printer,
       if (strcmp(name, "PageSize") == 0)
 	{
 	  int papersizes = stp_known_papersizes();
-	  valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
-	  *count = 0;
 	  for (i = 0; i < papersizes; i++)
 	    {
 	      const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	      if (strlen(stp_papersize_get_name(pt)) > 0)
-		{
-		  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
-		  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
-		  (*count)++;
-		}
+		stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+					 stp_papersize_get_text(pt));
 	    }
-	  return (valptrs);
 	}
-      else
-	return (NULL);
+      return valptrs;
     }
 
   rewind(ps_ppd);
-  *count = 0;
-
-  /* FIXME -- need to use realloc */
-  valptrs = stp_zalloc(100 * sizeof(stp_param_t));
 
   while (fgets(line, sizeof(line), ps_ppd) != NULL)
   {
@@ -152,19 +135,11 @@ ps_parameters(const stp_printer_t printer,
       else
         ltext = loption;
 
-      valptrs[(*count)].name = c_strdup(loption);
-      valptrs[(*count)].text = c_strdup(ltext);
-      (*count) ++;
+      stp_param_list_add_param(valptrs, loption, ltext);
     }
   }
 
-  if (*count == 0)
-  {
-    stp_free(valptrs);
-    return (NULL);
-  }
-  else
-    return (valptrs);
+  return (valptrs);
 }
 
 static const char *

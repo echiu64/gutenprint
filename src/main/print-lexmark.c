@@ -1077,15 +1077,6 @@ static int lexmark_get_phys_resolution_horizontal(const stp_printer_t printer)
 }
 #endif
 
-static char *
-c_strdup(const char *s)
-{
-  char *ret = stp_malloc(strlen(s) + 1);
-  strcpy(ret, s);
-  return ret;
-}
-
-
 static const lexmark_res_t
 *lexmark_get_resolution_para(const stp_printer_t printer,
 			    const char *resolution)
@@ -1168,33 +1159,24 @@ static stp_param_t media_sources[] =
  * 'lexmark_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *
+static stp_param_list_t
 lexmark_parameters(const stp_printer_t printer,
 		   const stp_vars_t v,
-		   const char *name,
-		   int  *count)
+		   const char *name)
 {
   int		i;
-  stp_param_t	*p= 0;
-  stp_param_t	*valptrs= 0;
+  stp_param_list_t valptrs= stp_param_list_allocate();
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
-  if (count == NULL)
-    return (NULL);
-
-  *count = 0;
-
   if (name == NULL)
-    return (NULL);
+    return (valptrs);
 
   if (strcmp(name, "PageSize") == 0)
   {
     unsigned int height_limit, width_limit;
     unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
-    valptrs = stp_zalloc(sizeof(stp_param_t) * papersizes);
-    *count = 0;
 
     width_limit  = caps->max_paper_width;
     height_limit = caps->max_paper_height;
@@ -1209,77 +1191,43 @@ lexmark_parameters(const stp_printer_t printer,
 	  pwidth <= width_limit && pheight <= height_limit &&
 	  (pheight >= min_height_limit || pheight == 0) &&
 	  (pwidth >= min_width_limit || pwidth == 0))
-	{
-	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
-	  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
-	  (*count)++;
-	}
+	stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+				 stp_papersize_get_text(pt));
     }
-    return (valptrs);
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    int c= 0;
     const lexmark_res_t *res;
 
     res =  *(caps->res_parameters); /* get resolution specific parameters of printer */
-    for (i=0; res[i].hres; i++); /* get number of entries */
-    valptrs = stp_zalloc(sizeof(stp_param_t) * i);
 
     /* check for allowed resolutions */
     while (res->hres)
       {
-	valptrs[c].name   = c_strdup(res->name);
-	valptrs[c++].text = c_strdup(_(res->text));
+	stp_param_list_add_param(valptrs, res->name, _(res->text));
 	res++;
       }
-    *count= c;
-    return (valptrs);
   }
   else if (strcmp(name, "InkType") == 0)
   {
-    for (i = 0; caps->ink_types[i].name != NULL; i++); /* get number of entries */
-    valptrs = stp_zalloc(sizeof(stp_param_t) * i);
-
-    *count = 0;
     for (i = 0; caps->ink_types[i].name != NULL; i++)
-    {
-      valptrs[*count].name = c_strdup(caps->ink_types[i].name);
-      valptrs[*count].text = c_strdup(_(caps->ink_types[i].text));
-      (*count)++;
-    }
-    return valptrs;
+      stp_param_list_add_param(valptrs, caps->ink_types[i].name,
+			       _(caps->ink_types[i].text));
   }
   else if (strcmp(name, "MediaType") == 0)
   {
-    int nmediatypes = paper_type_count;
-    valptrs = stp_zalloc(sizeof(stp_param_t) * nmediatypes);
-    for (i = 0; i < nmediatypes; i++)
-    {
-      valptrs[i].name = c_strdup(lexmark_paper_list[i].name);
-      valptrs[i].text = c_strdup(_(lexmark_paper_list[i].text));
-    }
-    *count = nmediatypes;
-    return valptrs;
+    for (i = 0; i < paper_type_count; i++)
+      stp_param_list_add_param(valptrs, lexmark_paper_list[i].name,
+			       _(lexmark_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    *count = 3;
-    p = media_sources;
+    for (i = 0; i < sizeof(media_sources) / sizeof(stp_param_t); i++)
+      stp_param_list_add_param(valptrs, media_sources[i].name,
+			       _(media_sources[i].name));
   }
   else if (strcmp(name, "DitherAlgorithm") == 0)
-    return stp_dither_algorithms(count);
-  else
-    return (NULL);
-
-  valptrs = stp_zalloc(*count * sizeof(stp_param_t));
-  for (i = 0; i < *count; i ++)
-  {
-    /* translate media_types and media_sources */
-    valptrs[i].name = c_strdup(p[i].name);
-    valptrs[i].text = c_strdup(_(p[i].text));
-  }
-
+    stp_dither_algorithms(valptrs);
   return (valptrs);
 }
 

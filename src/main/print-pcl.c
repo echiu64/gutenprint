@@ -1513,14 +1513,6 @@ pcl_get_model_capabilities(int model)	/* I: Model */
   return &(pcl_model_capabilities[0]);
 }
 
-static char *
-c_strdup(const char *s)
-{
-  char *ret = stp_malloc(strlen(s) + 1);
-  strcpy(ret, s);
-  return ret;
-}
-
 /*
  * Convert Media size name into PCL media code for printer
  */
@@ -1639,24 +1631,18 @@ pcl_papersize_valid(const stp_papersize_t pt,
  * 'pcl_parameters()' - Return the parameter values for the given parameter.
  */
 
-static stp_param_t *
+static stp_param_list_t
 pcl_parameters(const stp_printer_t printer,
 	       const stp_vars_t v,
-               const char *name,
-               int  *count)
+               const char *name)
 {
   int		model = stp_printer_get_model(printer);
   int		i;
-  stp_param_t	*valptrs;
+  stp_param_list_t valptrs = stp_param_list_allocate();
   const pcl_cap_t *caps;
 
-  if (count == NULL)
-    return (NULL);
-
-  *count = 0;
-
   if (name == NULL)
-    return (NULL);
+    return valptrs;
 
   stp_deprintf(STP_DBG_PCL, "pcl_parameters(): Name = %s\n", name);
 
@@ -1673,107 +1659,61 @@ pcl_parameters(const stp_printer_t printer,
   if (strcmp(name, "PageSize") == 0)
     {
       int papersizes = stp_known_papersizes();
-      valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
-      *count = 0;
       for (i = 0; i < papersizes; i++)
 	{
 	  const stp_papersize_t pt = stp_get_papersize_by_index(i);
-	  if (strlen(stp_papersize_get_name(pt)) > 0)
-	    {
-	      if (pcl_papersize_valid(pt, model))
-		{
-		  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
-		  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
-		  (*count)++;
-		}
-	    }
+	  if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	      pcl_papersize_valid(pt, model))
+	    stp_param_list_add_param(valptrs, stp_papersize_get_name(pt),
+				     stp_papersize_get_text(pt));
 	}
-      return (valptrs);
     }
   else if (strcmp(name, "MediaType") == 0)
   {
-    if (caps->paper_types[0] == -1)
-    {
-      *count = 0;
-      return (NULL);
-    }
-    else
-    {
-      valptrs = stp_malloc(sizeof(stp_param_t) * NUM_PRINTER_PAPER_TYPES);
-      *count = 0;
+    if (caps->paper_types[0] != -1)
       for (i=0; (i < NUM_PRINTER_PAPER_TYPES) && (caps->paper_types[i] != -1); i++)
-      {
-        valptrs[i].name = c_strdup(pcl_val_to_string(caps->paper_types[i],
-	                                             pcl_media_types,
-                                                     NUM_PRINTER_PAPER_TYPES));
-        valptrs[i].text = c_strdup(pcl_val_to_text(caps->paper_types[i],
-	                                           pcl_media_types,
-                                                   NUM_PRINTER_PAPER_TYPES));
-        (*count)++;
-      }
-      return(valptrs);
-    }
+	stp_param_list_add_param(valptrs,
+				 pcl_val_to_string(caps->paper_types[i],
+						   pcl_media_types,
+						   NUM_PRINTER_PAPER_TYPES),
+				 pcl_val_to_text(caps->paper_types[i],
+						 pcl_media_types,
+						 NUM_PRINTER_PAPER_TYPES));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    if (caps->paper_sources[0] == -1)
-    {
-      *count = 0;
-      return (NULL);
-    }
-    else
-    {
-      valptrs = stp_malloc(sizeof(stp_param_t) * NUM_PRINTER_PAPER_SOURCES);
-      *count = 0;
+    if (caps->paper_sources[0] != -1)
       for (i=0; (i < NUM_PRINTER_PAPER_SOURCES) && (caps->paper_sources[i] != -1); i++)
-      {
-        valptrs[i].name = c_strdup(pcl_val_to_string(caps->paper_sources[i],
-	                                             pcl_media_sources,
-                                                     NUM_PRINTER_PAPER_SOURCES));
-        valptrs[i].text = c_strdup(pcl_val_to_text(caps->paper_sources[i],
-	                                           pcl_media_sources,
-                                                   NUM_PRINTER_PAPER_SOURCES));
-        (*count)++;
-      }
-      return(valptrs);
-    }
+	stp_param_list_add_param(valptrs,
+				 pcl_val_to_string(caps->paper_sources[i],
+						   pcl_media_sources,
+						   NUM_PRINTER_PAPER_SOURCES),
+				 pcl_val_to_text(caps->paper_sources[i],
+						 pcl_media_sources,
+						 NUM_PRINTER_PAPER_SOURCES));
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    *count = 0;
-    valptrs = stp_malloc(sizeof(stp_param_t) * NUM_RESOLUTIONS);
     for (i = 0; i < NUM_RESOLUTIONS; i++)
-    {
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
-      {
-         valptrs[*count].name = c_strdup(pcl_val_to_string(pcl_resolutions[i].pcl_code,
-					                   pcl_resolutions, NUM_RESOLUTIONS));
-         valptrs[*count].text = c_strdup(pcl_val_to_text(pcl_resolutions[i].pcl_code,
-					                 pcl_resolutions, NUM_RESOLUTIONS));
-         (*count)++;
-      }
-    }
-    return(valptrs);
+	stp_param_list_add_param
+	  (valptrs,
+	   pcl_val_to_string(pcl_resolutions[i].pcl_code,
+			     pcl_resolutions, NUM_RESOLUTIONS),
+	   pcl_val_to_text(pcl_resolutions[i].pcl_code,
+			   pcl_resolutions, NUM_RESOLUTIONS));
   }
   else if (strcmp(name, "InkType") == 0)
   {
     if (caps->color_type & PCL_COLOR_CMYKcm)
     {
-      valptrs = stp_malloc(sizeof(stp_param_t) * 2);
-      valptrs[0].name = c_strdup(ink_types[0].name);
-      valptrs[0].text = c_strdup(_(ink_types[0].text));
-      valptrs[1].name = c_strdup(ink_types[1].name);
-      valptrs[1].text = c_strdup(_(ink_types[1].text));
-      *count = 2;
-      return(valptrs);
+      stp_param_list_add_param(valptrs,ink_types[0].name,_(ink_types[0].text));
+      stp_param_list_add_param(valptrs,ink_types[1].name,_(ink_types[1].text));
     }
-    else
-      return(NULL);
   }
   else if (strcmp(name, "DitherAlgorithm") == 0)
-    return stp_dither_algorithms(count);
-  else
-    return (NULL);
+    stp_dither_algorithms(valptrs);
+  return valptrs;
 }
 
 static const char *

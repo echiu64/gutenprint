@@ -95,14 +95,13 @@ stp_get_printer_index_by_driver(const char *driver)
   return -1;
 }
 
-stp_param_t *
+stp_param_list_t
 stp_printer_get_parameters(const stp_printer_t printer,
 			   const stp_vars_t v,
-			   const char *name,
-			   int *count)
+			   const char *name)
 {
   const stp_printfuncs_t *printfuncs = stp_printer_get_printfuncs(printer);
-  return (printfuncs->parameters)(printer, v, name, count);
+  return (printfuncs->parameters)(printer, v, name);
 }
 
 const char *
@@ -229,9 +228,9 @@ stp_printer_parameter_class(const stp_printer_t printer,
 static int
 verify_param(const stp_printer_t p, const stp_vars_t v, const char *parameter)
 {
-  int count;
   const char *checkval = stp_get_parameter(v, parameter);
-  stp_param_t *vptr = stp_printer_get_parameters(p, v, parameter, &count);
+  stp_param_list_t vptr = stp_printer_get_parameters(p, v, parameter);
+  size_t count = stp_param_list_count(vptr);
   int answer = 0;
   int i;
   if (checkval == NULL)
@@ -244,25 +243,19 @@ verify_param(const stp_printer_t p, const stp_vars_t v, const char *parameter)
   if (count > 0)
     {
       for (i = 0; i < count; i++)
-	if (!strcmp(checkval, vptr[i].name))
+	if (!strcmp(checkval, stp_param_list_param(vptr, i)->name))
 	  {
 	    answer = 1;
 	    break;
 	  }
       if (!answer)
 	stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
-      for (i = 0; i < count; i++)
-	{
-	  stp_free((void *)vptr[i].name);
-	  stp_free((void *)vptr[i].text);
-	}
     }
   else if (strlen(checkval) == 0)
     answer = 1;
   else
     stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
-  if (vptr)
-    stp_free(vptr);
+  stp_param_list_free(vptr);
   return answer;
 }
 

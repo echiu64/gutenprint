@@ -43,8 +43,7 @@ typedef struct
   const char *name;
   const char *text;
   const char *help;
-  gint count;
-  stp_param_t *params;
+  stp_param_list_t params;
   void (*extra)(const gchar *);
   gint callback_id;
   GtkWidget *combo;
@@ -210,19 +209,19 @@ static list_option_t the_list_options[] =
   {
     { "MediaType", N_("Media Type:"),
       N_("Type of media you're printing to"),
-      0, NULL, NULL, -1 },
+      NULL, NULL, -1 },
     { "PageSize", N_("Media Size:"),
       N_("Size of paper that you wish to print to"),
-      0, NULL, set_media_size, -1 },
+      NULL, set_media_size, -1 },
     { "InputSlot", N_("Media Source:"),
       N_("Source (input slot) of media you're printing to"),
-      0, NULL, NULL, -1 },
+      NULL, NULL, -1 },
     { "InkType", N_("Ink Type:"),
       N_("Type of ink in the printer"),
-      0, NULL, NULL, -1 },
+      NULL, NULL, -1 },
     { "Resolution", N_("Resolution:"),
       N_("Resolution and quality of the print"),
-      0, NULL, NULL, -1 },
+      NULL, NULL, -1 },
   };
 
 static const gint list_option_count = (sizeof(the_list_options) /
@@ -273,8 +272,7 @@ static const gint image_type_count = (sizeof(image_types) /
 
 static gdouble preview_ppi = 10;
 
-static stp_param_t *printer_list = 0;
-static int printer_count = 0;
+static stp_param_list_t printer_list = 0;
 gp_plist_t *pv;
 
 
@@ -337,11 +335,11 @@ create_new_combo(list_option_t *list_option, GtkWidget *table,
 
 static const char *
 Combo_get_name(GtkWidget   *combo,
-               gint         num_options,
-	       stp_param_t *options)
+	       const stp_param_list_t options)
 {
   gchar *text;
   gint   i;
+  gint num_options = stp_param_list_count(options);
 
   if ((text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)))) ==NULL)
     return (NULL);
@@ -350,8 +348,8 @@ Combo_get_name(GtkWidget   *combo,
     return ((const char *)text);
 
   for (i = 0; i < num_options; i ++)
-    if (strcasecmp(options[i].text, text) == 0)
-      return (options[i].name);
+    if (strcmp(stp_param_list_param(options, i)->text, text) == 0)
+      return (stp_param_list_param(options, i)->name);
 
   return (NULL);
 }
@@ -361,37 +359,23 @@ build_printer_combo(void)
 {
   int i;
   if (printer_list)
-    {
-      for (i = 0; i < printer_count; i++)
-	{
-	  free((void *)printer_list[i].name);
-	  free((void *)printer_list[i].text);
-	}
-      free(printer_list);
-    }
-  printer_list = malloc(sizeof(stp_param_t) * plist_count);
+    stp_param_list_free(printer_list);
+  printer_list = stp_param_list_allocate();
   for (i = 0; i < plist_count; i++)
     {
       if (plist[i].active)
-	{
-	  printer_list[i].name = g_strdup(plist[i].name);
-	  printer_list[i].text = g_strdup(plist[i].name);
-	}
+	stp_param_list_add_param(printer_list, plist[i].name, plist[i].name);
       else
 	{
-	  printer_list[i].name = malloc(strlen(plist[i].name) + 2);
-	  printer_list[i].text = malloc(strlen(plist[i].name) + 2);
-	  strcpy((char *)printer_list[i].name + 1, plist[i].name);
-	  ((char *)printer_list[i].name)[0] = '*';
-	  strcpy((char *)printer_list[i].text + 1, plist[i].name);
-	  ((char *)printer_list[i].text)[0] = '*';
+	  gchar *name = malloc(strlen(plist[i].name) + 2);
+	  strcpy(name + 1, plist[i].name);
+	  name[0] = '*';
+	  stp_param_list_add_param(printer_list, name, name);
 	}
     }
-  printer_count = plist_count;
   plist_build_combo(printer_combo,
-		    printer_count,
 		    printer_list,
-		    printer_list[plist_current].text,
+		    stp_param_list_param(printer_list, plist_current)->name,
 		    NULL,
 		    plist_callback,
 		    &plist_callback_id,
@@ -1409,8 +1393,7 @@ scaling_callback (GtkWidget *widget)
  ****************************************************************************/
 void
 plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
-		   gint            num_items,   /* I - Number of items */
-		   stp_param_t    *items,       /* I - Menu items */
+		   stp_param_list_t items,      /* I - Menu items */
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
 		   GtkSignalFunc   callback,    /* I - Callback */
@@ -1419,6 +1402,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 {
   gint      i; /* Looping var */
   GList    *list = 0;
+  gint num_items = stp_param_list_count(items);
   GtkEntry *entry = GTK_ENTRY (GTK_COMBO (combo)->entry);
 
   if (*callback_id != -1)
@@ -1436,7 +1420,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
     }
 
   for (i = 0; i < num_items; i ++)
-    list = g_list_append (list, g_strdup(items[i].text));
+    list = g_list_append(list, g_strdup(stp_param_list_param(items, i)->text));
 
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
 
@@ -1444,21 +1428,21 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 				     data);
 
   for (i = 0; i < num_items; i ++)
-    if (strcmp(items[i].name, cur_item) == 0)
+    if (strcmp(stp_param_list_param(items, i)->name, cur_item) == 0)
       break;
 
   if (i >= num_items)
     {
       if (def_value)
         for (i = 0; i < num_items; i ++)
-          if (strcmp(items[i].name, def_value) == 0)
+          if (strcmp(stp_param_list_param(items, i)->name, def_value) == 0)
             break;
 
       if (i >= num_items)
         i = 0;
     }
 
-  gtk_entry_set_text (entry, g_strdup (items[i].text));
+  gtk_entry_set_text (entry, g_strdup (stp_param_list_param(items, i)->text));
 
   gtk_combo_set_value_in_list (GTK_COMBO (combo), TRUE, FALSE);
   gtk_widget_set_sensitive (combo, TRUE);
@@ -1666,7 +1650,7 @@ plist_callback (GtkWidget *widget,
 
       for (i = 0; i < plist_count; i++)
 	{
-	  if (! strcmp (result, printer_list[i].text))
+	  if (! strcmp (result, stp_param_list_param(printer_list, i)->text))
 	    {
 	      plist_current = i;
 	      break;
@@ -1698,26 +1682,17 @@ plist_callback (GtkWidget *widget,
   for (i = 0; i < list_option_count; i++)
     {
       list_option_t *option = &(the_list_options[i]);
-      if (option->count > 0)
-	{
-	  int j;
-	  for (j = 0; j < option->count; j++)
-	    {
-	      free ((void *)(option->params[j].name));
-	      free ((void *)(option->params[j].text));
-	    }
-	  free(option->params);
-	  option->count = 0;
-	}
+      if (option->params)
+	stp_param_list_free(option->params);
       option->params = stp_printer_get_parameters
-	(current_printer, pv->v, option->name, &(option->count));
+	(current_printer, pv->v, option->name);
       default_parameter =
 	stp_printer_get_default_parameter(current_printer, pv->v,option->name);
       if (stp_get_parameter(pv->v, option->name)[0] == '\0')
 	stp_set_parameter(pv->v, option->name, default_parameter);
       else if (option->params == NULL)
 	stp_set_parameter(pv->v, option->name, NULL);
-      plist_build_combo(option->combo, option->count, option->params,
+      plist_build_combo(option->combo, option->params,
 			stp_get_parameter(pv->v, option->name),
 			default_parameter, combo_callback,
 			&(option->callback_id), option);
@@ -1725,8 +1700,7 @@ plist_callback (GtkWidget *widget,
 	(option->extra)(stp_get_parameter(pv->v, option->name));
     }
 
-  if (dither_algo_combo)
-    build_dither_combo ();
+  build_dither_combo ();
 
   suppress_preview_update--;
   preview_update ();
@@ -1822,7 +1796,7 @@ combo_callback(GtkWidget *widget, gpointer data)
 {
   list_option_t *option = (list_option_t *)data;
   const gchar *new_value =
-    Combo_get_name(option->combo, option->count, option->params);
+    Combo_get_name(option->combo, option->params);
   reset_preview();
   if (strcmp(stp_get_parameter(pv->v, option->name), new_value) != 0)
     {

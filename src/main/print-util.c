@@ -221,6 +221,108 @@ stp_free(void *ptr)
   free(ptr);
 }
 
+typedef struct
+{
+  size_t count;
+  size_t active_count;
+  stp_param_t *list;
+} stp_internal_param_list_t;
+
+static char *
+c_strdup(const char *s)
+{
+  char *ret = stp_malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
+
+stp_param_list_t
+stp_param_list_allocate(void)
+{
+  return (stp_param_list_t) stp_zalloc(sizeof(stp_internal_param_list_t));
+}
+
+void
+stp_param_list_free(stp_param_list_t list)
+{
+  stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
+  size_t i = 0;
+  while (i < ilist->active_count)
+    {
+      stp_free((void *) (ilist->list[i].name));
+      stp_free((void *) (ilist->list[i].text));
+      i++;
+    }
+  if (ilist->list)
+    stp_free(ilist->list);
+  stp_free(ilist);
+}
+
+stp_param_t *
+stp_param_list_param(const stp_param_list_t list, size_t element)
+{
+  const stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
+  if (element >= ilist->active_count)
+    return NULL;
+  else
+    return &(ilist->list[element]);
+}
+
+size_t
+stp_param_list_count(const stp_param_list_t list)
+{
+  const stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
+  return ilist->active_count;
+}
+
+stp_param_list_t
+stp_param_list_duplicate(const stp_param_list_t list)
+{
+  size_t i = 0;
+  stp_param_list_t retval = stp_param_list_allocate();
+  while (i < stp_param_list_count(list))
+    {
+      const stp_param_t *param = stp_param_list_param(list, i);
+      stp_param_list_add_param(retval, param->name, param->text);
+      i++;
+    }
+  return retval;
+}
+
+stp_param_list_t
+stp_param_list_duplicate_params(const stp_param_t *list, size_t count)
+{
+  size_t i = 0;
+  stp_param_list_t retval = stp_param_list_allocate();
+  while (i < count)
+    {
+      stp_param_list_add_param(retval, list[i].name, list[i].text);
+      i++;
+    }
+  return retval;
+}
+
+void
+stp_param_list_add_param(stp_param_list_t list,
+			 const char *name, const char *text)
+{
+  stp_internal_param_list_t *ilist = (stp_internal_param_list_t *) list;
+  if (ilist->count == 0)
+    {
+      ilist->list = stp_zalloc(sizeof(stp_param_t));
+      ilist->count = 1;
+    }
+  else if (ilist->active_count == ilist->count)
+    {
+      ilist->list =
+	stp_realloc(ilist->list, 2 * ilist->count * sizeof(stp_param_t));
+      ilist->count *= 2;
+    }
+  ilist->list[ilist->active_count].name = c_strdup(name);
+  ilist->list[ilist->active_count].text = c_strdup(text);
+  ilist->active_count++;
+}
+
 int
 stp_init(void)
 {
