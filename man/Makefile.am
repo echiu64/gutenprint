@@ -78,4 +78,3 @@ uninstall-local:
 DISTCLEANFILES = $(MAIN_MAN) $(EXTRA_man_MANS)
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = $(man_MANS)
