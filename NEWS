@@ -13,8 +13,11 @@ The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
 highly recommended, as certain translation-related bugs are fixed and
 it is possible to print true CMYK.
 
-The Ghostscript driver requires Ghostscript 5.10, 5.50, 6.51, or any
+The Ghostscript driver requires GNU Ghostscript 5.10, 5.50, 6.51, or any
 later GNU Ghostscript release based on 6.51 (e. g. 6.52).
+
+The IJS GhostScript plugin driver requires GNU GhostScript 6.53 or later
+or APFL GhostScript 7.04 or later.
 
 Please read the README file for full instructions on building and
 installing this package.
