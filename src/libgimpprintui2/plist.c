@@ -1206,6 +1206,218 @@ stpui_errfunc(void *file, const char *buf, size_t bytes)
   g_message(buf);
 }
 
+/*
+ *
+ * Process control for actually printing.  Documented 20040821
+ * by Robert Krawitz.
+ *
+ * In addition to the print command itself and the output generator,
+ * we spawn two additional processes to monitor the print job and clean
+ * up.  We do this because the GIMP is very unfriendly about how it
+ * terminates plugins when the user cancels an operation: it sends a
+ * SIGKILL, which prevents the plugin from cleaning up.  Since the
+ * plugin is sending data to an lpr process, this SIGKILL closes off
+ * the input to lpr.  lpr doesn't know that its parent has died
+ * inappropriately, and happily proceeds to print the partial job.
+ *
+ * (The child may not actually be lpr, of course, but we'll just use
+ * that nomenclature for convenience.)
+ *
+ * The first such process is the "lpr monitor".  Its job is to
+ * watch the parent (the actual data generator).  If its parent dies,
+ * it kills the print command.  Notice that it must keep the file
+ * descriptor used to write to the lpr process open, since as soon as
+ * the last writer to this pipe is closed, the lpr process sees its
+ * input close.  Therefore, it first kills the child with SIGTERM and
+ * then closes the pipe.  Perhaps a more robust method would be to
+ * send a SIGTERM followed by a SIGKILL, but we can worry about that
+ * later.  The lpr monitor process is killed with SIGUSR1 by the
+ * master upon successful completion, at which point it exits.  The lpr
+ * monitor itself detects that the master has finished by periodically
+ * sending it a kill 0 (a null signal).  When the parent exits, this
+ * attempt to signal will return failure.  This has a potential race
+ * condition if another process is created with the same PID between
+ * checks.  A more robust (but more complicated) solution would involve
+ * IPC of some kind.
+ *
+ * The second such process (the "error monitor") monitors the stderr
+ * (and stdout) of the lpr process, to send any error messages back
+ * to the user.  Since the GIMP is normally not launched from a
+ * terminal window, any errors would get lost.  The error monitor
+ * captures this output and reports it back.  It stays around until
+ * its input is closed (normally by the lpr process exiting), at
+ * which point it reports to the master that it has finished, and the
+ * master can clean up and return.
+ *
+ * The actual master process spawns the lpr monitor, which spawns
+ * the process that will later run the lpr command, which itself
+ * spawns the error monitor.
+ *
+ * This architecture is perhaps unnecessarily complex; the lpr monitor
+ * and error monitor could perhaps be combined into a single process
+ * that watches both for the parent to go away and for the error messages.
+ *
+ * The following diagrams illustrate the control flow during the normal
+ * case and also when the print job is cancelled.  The notation for file
+ * descriptors is a number prefixed with < for an input file descriptor
+ * and suffixed > for an output file descriptor.  For example, <0 means
+ * input file descriptor 0 and 1> means output file descriptor 1.  The
+ * key to the file descriptors is given below.  A file descriptor named
+ * x,y refers to file descriptor y duplicated onto file descriptor x.
+ * So "<0,3" means input file descriptor 3 (pipefd[0]) dup2'ed onto
+ * file descriptor 0.
+ * 
+ * fd0 = fd 0
+ * fd1 = fd 1
+ * fd2 = fd 2
+ * fd3 = pipefd[0]
+ * fd4 = pipefd[1]
+ * fd5 = syncfd[0]
+ * fd6 = syncfd[1]
+ * fd7 = errfd[0]
+ * fd8 = errfd[1]
+ *
+ * 
+ *                            NORMAL CASE
+ * 
+ * PARENT             CHILD 1              CHILD 2          CHILD 3
+ * (print generator)  (lpr monitor)        (print command)  (error monitor)
+ * |
+ * stpui_print
+ * |
+ * | <0 1> 2>
+ * |
+ * | pipe(syncfd)
+ * |
+ * | <0 1> 2> <5 6>
+ * |
+ * | pipe(pipefd)
+ * |
+ * | <0 1> 2> <3 4>
+ * |    <5 6>
+ * |
+ * | fork =============|
+ * |                   |
+ * | close(63)         | close(syncfd[0])
+ * |                   | <0 1> 2> <3 4>
+ * | <0 1> 2> 4> <5    | 6>
+ * |                   |
+ * |                   | fork =============|
+ * |                   |                   |
+ * |                   | close(01263)      | dup2(pipefd[0], 0)
+ * |                   |                   | close(pipefd[0]
+ * |                   | 4>                | close(pipefd[1]
+ * |                   |                   |
+ * |                   |                   | 1> 2> <0,3 6>
+ * |                   |                   |
+ * |                   |                   | pipe(errfd)
+ * |                   |                   | 1> 2> <0,3 6>
+ * |                   |                   | <7 8>
+ * |                   |                   |
+ * |                   |                   | fork =============|
+ * |                   |                   |                   | close(012348)
+ * |                   |                   | close(12)         | 6> <7
+ * |                   |                   |                   |
+ * |                   |                   | <0,3 6> <7 8>     |
+ * |                   |                   |                   |
+ * |                   |                   | dup2(errfd[1],1)  |
+ * |                   |                   | dup2(errfd[1],2)  |
+ * |                   |                   | close(errfd[1])   |
+ * |                   |                   | close(pipefd[0])  |
+ * |                   |                   | close(pipefd[1])  |
+ * |                   |                   | close(syncfd[1])  |
+ * |<<<<<<<<<<<<<<<<<<<|kill(0,0)          * EXEC lpr          |
+ * |>>>>>>>>>>>>>>>>>>>|OK                 | <0,3 1,8> 2,8>    |
+ * |                   |                   |                   |
+ * | write>>>>>>>>>>>>>+>>>>>>>>>>>>>>>>>>>|                   |
+ * |                   |                   | write(2,8)??>>>>>>|read(<7)->warn
+ * |                   |                   |                   |
+ * | close(4)>>>>>>>>>>+>>>>>>>>>>>>>>>>>>>|                   |
+ * | <0 1> 2> <5       |                   |                   |
+ * | kill>>>>>>>>>>>>>>|                   |                   |
+ * |                   | close(4)>>>>>>>>>>| eof(<0,3)         |
+ * |                   |                   |                   |
+ * |                   | *no open fd*      | 1,8> 2,8>         |
+ * |                   | exit              |                   |
+ * |                   |                   | exit>>>>>>>>>>>>>>| eof(<7)
+ * | wait<<<<<<<<<<<<<<X                   X                   | 6>
+ * |                                                           |
+ * | read(<5)<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<| write(6>)
+ * |                                                           |
+ * | close(5)                                                  | exit
+ * |                                                           X
+ * | 0< 1> 2>
+ * |
+ * | return
+ * X
+ *
+ * 
+ *                            ERROR CASE (job cancelled)
+ * 
+ * PARENT             CHILD 1              CHILD 2          CHILD 3
+ * (print generator)  (lpr monitor)        (print command)  (error monitor)
+ * |
+ * stpui_print
+ * |
+ * | <0 1> 2>
+ * |
+ * | pipe(syncfd)
+ * |
+ * | <0 1> 2> <5 6>
+ * |
+ * | pipe(pipefd)
+ * |
+ * | <0 1> 2> <3 4>
+ * |    <5 6>
+ * |
+ * | fork =============|
+ * |                   |
+ * | close(63)         | close(syncfd[0]
+ * |                   | <0 1> 2> <3 4>
+ * | <0 1> 2> 4> <5    | 6>
+ * |                   |
+ * |                   | fork =============|
+ * |                   |                   |
+ * |                   | close(01263)      | dup2(pipefd[0], 0)
+ * |                   |                   | close(pipefd[0]
+ * |                   | 4>                | close(pipefd[1]
+ * |                   |                   |
+ * |                   |                   | 1> 2> <3,0 6>
+ * |                   |                   |
+ * |                   |                   | pipe(errfd)
+ * |                   |                   | 1> 2> <3,0 6>
+ * |                   |                   | <7 8>
+ * |                   |                   |
+ * |                   |                   | fork =============|
+ * |                   |                   |                   | close(012348)
+ * |                   |                   | close(12)         | 6> <7
+ * |                   |                   |                   |
+ * |                   |                   | <3,0 6> <7 8>     |
+ * |                   |                   |                   |
+ * |                   |                   | dup2(errfd[1],1)  |
+ * |                   |                   | dup2(errfd[1],2)  |
+ * |                   |                   | close(3468)       |
+ * |<<<<<<<<<<<<<<<<<<<|kill(0,0)          * EXEC lpr          |
+ * |>>>>>>>>>>>>>>>>>>>|OK                 | <0,3 1,8> 2,8>    |
+ * |                   |                   |                   |
+ * | write>>>>>>>>>>>>>+>>>>>>>>>>>>>>>>>>>|                   |
+ * |                   |                   | write(2,8)??>>>>>>|read(<7)->warn
+ * | KILLED            |                   |                   |
+ * | close(01245)>>>>>>+>>>>>>>>>>>>>>>>>>>|                   |
+ * X                   |                   |                   |
+ *  <<<<<<<<<<<<<<<<<<<|kill(0,0)          |                   |
+ *  >>>>>>>>>>>>>>>>>>>|DEAD!              |                   |
+ *                     |kill(2)>>>>>>>>>>>>|Terminated         |
+ *                     |close(4>)>>>>>>>>>>|eof(0,3)           |
+ *                     |                   | 1,8> 2,8>         |
+ *                     | *no open fd*      |exit>>>>>>>>>>>>>>>|eof(7)
+ *                     | exit              X                   |
+ *                     X                                       | 6>
+ *                                                            <| write(6)
+ *                                                             | exit/SIGPIPE
+ *                                                             X
+ */
+
 int
 stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 {
@@ -1217,6 +1429,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 		syncfd[2];	/* Sync the logger */
   FILE		*prn = NULL;	/* Print file/command */
   int		do_sync = 0;
+  int		print_status = 0;
   int		dummy;
 
   /*
@@ -1250,7 +1463,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 	      do_sync = 0;
 	      prn = NULL;
 	    }
-	  else if (cpid == 0)	/* Child 1 (lpr monitor) */
+	  else if (cpid == 0)	/* Child 1 (lpr monitor and printer command) */
 	    {
 	      /* LPR monitor process.  Printer output is piped to us. */
 	      close(syncfd[0]);
@@ -1279,6 +1492,10 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 
 			  close (pipefd[0]);
 			  close (pipefd[1]);
+			  close (0);
+			  close (1);
+			  close (2);
+			  close (errfd[1]);
 			  while (1)
 			    {
 			      ssize_t bytes = read(errfd[0], buf, 4095);
@@ -1341,6 +1558,12 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 		   * in turn.  If the plugin signals us with SIGUSR1 that it's
 		   * finished printing normally, we close our end of the pipe,
 		   * and go away.
+		   *
+		   * Note that we keep pipefd[1] -- which is the pipe from
+		   * the print plugin to the lpr process -- open during this.
+		   * If we don't, and the parent gets killed, lpr will notice
+		   * its stdin getting closed off and start printing.
+		   * This way its stdin stays open until we kill it.
 		   */
 		  close (0);
 		  close (1);
@@ -1349,9 +1572,20 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 		  close (pipefd[0]);
 		  while (usr1_interrupt == 0)
 		    {
+		      /*
+		       * Note potential race condition, if some other process
+		       * happens to get the same pid!
+		       */
 		      if (kill (ppid, 0) < 0)
 			{
-			  /* The print plugin has been killed!  */
+			  /*
+			   * The print plugin has been killed!
+			   * Note that there is no possibility of the print
+			   * job sending us a SIGUSR1 and then exiting;
+			   * the parent (print plugin) stays around after
+			   * sending us the SIGUSR1, and then waits
+			   * for us to die.
+			   */
 			  kill (opid, SIGTERM);
 			  waitpid (opid, &dummy, 0);
 			  close (pipefd[1]);
@@ -1439,26 +1673,36 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
       stp_set_errfunc(np->v, stpui_get_errfunc());
       stp_set_outdata(np->v, prn);
       stp_set_errdata(np->v, stpui_get_errdata());
-      if (stp_print(np->v, &(image->im)) != 1)
-	{
-	  stpui_plist_destroy(np);
-	  g_free(np);
-	  return 0;
-	}
+      print_status = stp_print(np->v, &(image->im));
 
+      /*
+       * Note that we do not use popen() to create the output, therefore
+       * we do not use pclose() to close it.  See bug 1013565.
+       */
+      (void) fclose(prn);
       if (stpui_plist_get_command_type(printer) == COMMAND_TYPE_DEFAULT ||
 	  stpui_plist_get_command_type(printer) == COMMAND_TYPE_CUSTOM)
 	{
-	  pclose (prn);
+	  /*
+	   * It is important for us to first close off the lpr process,
+	   * then kill the lpr monitor (child 1), and then wait for it
+	   * to die before exiting.
+	   */
 	  kill (cpid, SIGUSR1);
 	  waitpid (cpid, &dummy, 0);
 	}
-      else
-	fclose (prn);
+
+      /*
+       * Make sure that any errors have been reported back to the user
+       * prior to completion.  In addition, explicitly close off the
+       * synchronization file descriptor since we're merely returning,
+       * not exiting, and don't want to leave any pollution around.
+       */
       if (do_sync)
 	{
 	  char buf[8];
 	  (void) read(syncfd[0], buf, 8);
+	  (void) close(syncfd[0]);
 	}
       stpui_plist_destroy(np);
       g_free(np);
