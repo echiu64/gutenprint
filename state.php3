@@ -1,6 +1,6 @@
 <?
 
-$plugin_version_number = '4.1.7';
+$plugin_version_number = '4.1.9';
 
 $maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
 
@@ -62,6 +62,13 @@ $supported_printers = array(
 		'EPSON Stylus Color 1520' => 'Fully Operational',
 		'EPSON Stylus Color 3000' => 'Fully Operational'
 		)
+	'Stylus Pro Range' => array(
+		'EPSON Stylus Pro 5000' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 5500' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 7000' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 7500' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 9000' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Pro 9500' => 'Needs Testing (4.1 only)'
 	),
 'HP' => array(
 	'DeskJet Range' => array(
