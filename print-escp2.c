@@ -312,7 +312,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { -1, 3, 3, -1, 1, -1, 1 },
+    { -1, 3, -1, -1, 1, -1, 1 },
     { 1, 1, 1, .775, .775, .387, .387, .193, .0966 }
   },
   /* 8: Stylus Photo EX */
@@ -322,7 +322,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { -1, 3, 3, -1, 1, -1, 1 },
+    { 3, 3, -1, -1, 1, -1, 1 },
     { 1, 1, 1, .775, .775, .387, .387, .193, .0966 }
   },
   /* 9: Stylus Photo */
@@ -332,7 +332,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO | MODEL_1440DPI_NO
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { -1, 3, 3, -1, 0, -1, -1 },
+    { 3, 3, -1, -1, 0, -1, -1 },
     { 1, 1, 1, .646, .646, 0, 0, 0, 0 }
   },
 
@@ -1538,6 +1538,7 @@ escp2_print(const printer_t *printer,		/* I - Model */
 	dither_set_adaptive_divisor(dither, 8);
       else
 	dither_set_adaptive_divisor(dither, 16);
+      dither_set_error_mix(dither, .5);
     }  
   else
     dither_set_adaptive_divisor(dither, 4);
