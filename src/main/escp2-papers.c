@@ -74,6 +74,51 @@ static const char standard_hue_adj[] =
 "</curve>\n"
 "</gimp-print>\n";
 
+static const char pgpp_960_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.10 1.20 "  /* M */
+/* M */  "1.20 1.20 1.20 1.20 1.20 1.20 1.20 1.20 "  /* R */
+/* R */  "1.20 1.20 1.15 1.10 1.05 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.10 1.20 1.30 1.40 1.50 "  /* G */
+/* G */  "1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char pgpp_960_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.49 0.52 0.58 0.65 0.73 0.77 0.77 0.75 "  /* B */
+/* B */  "0.69 0.69 0.72 0.80 0.88 0.97 1.10 1.25 "  /* M */
+/* M */  "1.25 1.25 1.22 1.18 1.15 1.15 1.15 1.15 "  /* R */
+/* R */  "1.15 1.15 1.12 1.09 1.06 1.03 1.02 1.01 "  /* Y */
+/* Y */  "1.00 0.95 0.89 0.83 0.77 0.72 0.63 0.55 "  /* G */
+/* G */  "0.53 0.52 0.52 0.52 0.52 0.51 0.50 0.49 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
+static const char pgpp_960_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gimp-print>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.00 -.02 -.06 -.10 -.16 -.24 -.32 "  /* B */
+/* B */  "-.35 -.43 -.40 -.38 -.36 -.34 -.34 -.34 "  /* M */
+/* M */  "-.34 -.34 -.36 -.40 -.50 -.40 -.33 -.25 "  /* R */
+/* R */  "-.18 -.15 -.13 -.10 -.07 -.03 0.00 0.00 "  /* Y */
+/* Y */  "0.00 0.04 0.04 0.03 0.00 -.01 -.02 -.03 "  /* G */
+/* G */  "-.04 -.08 -.12 -.16 -.16 -.14 -.12 -.08 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gimp-print>\n";
+
 #define DECLARE_PAPERS(name)				\
 const paperlist_t stpi_escp2_##name##_paper_list =	\
 {							\
@@ -107,6 +152,8 @@ static const paper_adjustment_t standard_adjustments[] =
   { "BackFilm", 1.00, .25, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Matte", 0.85, .25, .999, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.85, .25, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.85, .15, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
@@ -150,6 +197,8 @@ static const paper_adjustment_t photo_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Matte", 0.85, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.85, .5, .999, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.85, .3, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Coated", 1.10, .5, .999, 1, 1, 1, 1, 1,
@@ -168,7 +217,7 @@ static const paper_adjustment_t photo_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj  },
   { "ColorLife", 1.00, .4, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Other", 0.615, .25, .9, 1, 1, 1, 1, 1,
+  { "Other", 0.615, .1, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
 };
 
@@ -180,31 +229,33 @@ static const paper_adjustment_t sp960_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "PlainFast", 0.615, .1, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Postcard", 0.83, .1, .9, .9, 1, 1, 1, 1,
+  { "Postcard", 0.83, .2, .9, .9, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "GlossyFilm", 1.00, .25, .999, 1, 1, 1, 1, 1,
+  { "GlossyFilm", 1.00, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Transparency", 1.00, .25, .999, 1, 1, 1, 1, 1,
+  { "Transparency", 1.00, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Envelope", 0.615, .1, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "BackFilm", 1.00, .25, .999, 1, 1, 1, 1, 1,
+  { "BackFilm", 1.00, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Matte", 0.85, .25, .999, .9, 1, 1.1, 1, 1,
+  { "Matte", 0.85, .5, .999, .9, 1, 1.1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Inkjet", 0.85, .15, .9, 1, 1, 1, 1, 1,
+  { "MatteHeavy", 0.85, .5, .999, .9, 1, 1.1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Coated", 1.10, .25, .999, 1, 1, 1, 1, 1,
+  { "Inkjet", 0.85, .3, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Photo", 1.00, .25, .9, 1, 1, 1, 1, 1,
+  { "Coated", 1.10, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "GlossyPhoto", 0.9, .4, 1.3, 1, 1, 1, 1, 1,
+  { "Photo", 1.10, .5, .9, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Semigloss", 0.9, .1, 1, 1, 1, 1, 1, 1,
+  { "GlossyPhoto", 0.9, .2, 1.3, 1, 1, 1, 1, 1,
+    pgpp_960_hue_adj, pgpp_960_lum_adj, pgpp_960_sat_adj },
+  { "Semigloss", 1.0, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "Luster", 0.825, .1, 1, 1, 1, 1, 1, 1,
+  { "Luster", 1.0, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
-  { "GlossyPaper", 1.00, .25, .999, 1, 1, 1, 1, 1,
+  { "GlossyPaper", 1.00, .5, .999, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Ilford", .85, .4, 1.35, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj  },
@@ -233,6 +284,8 @@ static const paper_adjustment_t ultrachrome_photo_adjustments[] =
   { "BackFilm", 1.00, .02, 1.5, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Matte", 0.85, .02, 1.5, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.85, .02, 1.5, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.85, .02, 1.5, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
@@ -280,6 +333,8 @@ static const paper_adjustment_t ultrachrome_matte_adjustments[] =
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Matte", 0.85, 0, 1.25, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.85, 0, 1.25, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Inkjet", 0.85, 0, 1.25, 1, 1, 1, 1, 1,
     standard_hue_adj, standard_lum_adj, standard_sat_adj },
   { "Coated", 1.10, 0, 1.25, 1, 1, 1, 1, 1,
@@ -326,6 +381,8 @@ static const paper_t standard_papers[] =
     6, 0, 0x6d, 0x00, 0x01, NULL, NULL },
   { "Matte", N_("Matte Paper"), PAPER_GOOD,
     7, 0, 0x00, 0x00, 0x02, NULL, NULL },
+  { "MatteHeavy", N_("Matte Paper Heavyweight"), PAPER_GOOD,
+    7, 0, 0x00, 0x00, 0x02, NULL, NULL },
   { "Inkjet", N_("Inkjet Paper"), PAPER_GOOD,
     7, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
   { "Coated", N_("Photo Quality Inkjet Paper"), PAPER_GOOD,
@@ -368,6 +425,8 @@ static const paper_t c80_papers[] =
     6, 0, 0x6d, 0x00, 0x01, NULL, NULL },
   { "Matte", N_("Matte Paper"), PAPER_GOOD,
     7, 0, 0x00, 0x00, 0x02, NULL, NULL },
+  { "MatteHeavy", N_("Matte Paper Heavyweight"), PAPER_GOOD,
+    7, 0, 0x00, 0x00, 0x02, NULL, NULL },
   { "Inkjet", N_("Inkjet Paper"), PAPER_GOOD,
     7, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
   { "Coated", N_("Photo Quality Inkjet Paper"), PAPER_GOOD,
@@ -409,6 +468,8 @@ static const paper_t ultrachrome_papers[] =
   { "BackFilm", N_("Back Light Film"), PAPER_TRANSPARENCY,
     6, 0, 0x6d, 0x00, 0x01, NULL, "UltraPhoto" },
   { "Matte", N_("Matte Paper"), PAPER_GOOD,
+    7, 0, 0x00, 0x00, 0x02, NULL, "UltraMatte" },
+  { "MatteHeavy", N_("Matte Paper Heavyweight"), PAPER_GOOD,
     7, 0, 0x00, 0x00, 0x02, NULL, "UltraMatte" },
   { "Inkjet", N_("Inkjet Paper"), PAPER_GOOD,
     7, 0, 0x6b, 0x1a, 0x01, NULL, "UltraMatte" },
