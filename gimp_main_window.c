@@ -512,6 +512,7 @@ gimp_create_main_window (void)
 
   if (vars.scaling < 0.0)
     {
+      const vars_t *lower = print_minimum_settings();
       double max_ppi_scaling;
       double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
       min_ppi_scaling1 = 72.0 * (double) image_width /
@@ -522,7 +523,7 @@ gimp_create_main_window (void)
 	min_ppi_scaling = min_ppi_scaling1;
       else
 	min_ppi_scaling = min_ppi_scaling2;
-      max_ppi_scaling = min_ppi_scaling * 20;
+      max_ppi_scaling = min_ppi_scaling * 100 / lower->scaling;
       scaling_adjustment =
         gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Scaling:"), 200, 0,
@@ -531,11 +532,12 @@ gimp_create_main_window (void)
     }
   else
     {
+      const vars_t *lower = print_minimum_settings();
       scaling_adjustment =
         gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                               _("Scaling:"), 200, 75,
-                              vars.scaling, 5.0, 100.0, 1.0, 10.0, 1,
-                              TRUE, 0, 0,
+                              vars.scaling, lower->scaling, 100.0,
+			      1.0, 10.0, 1, TRUE, 0, 0,
                               NULL, NULL);
     }
   gtk_signal_connect (GTK_OBJECT (scaling_adjustment), "value_changed",
@@ -926,6 +928,7 @@ gimp_scaling_update (GtkAdjustment *adjustment)
 static void
 gimp_scaling_callback (GtkWidget *widget)
 {
+  const vars_t *lower = print_minimum_settings();
   double max_ppi_scaling;
   double min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
   double current_scale;
@@ -937,7 +940,7 @@ gimp_scaling_callback (GtkWidget *widget)
     min_ppi_scaling = min_ppi_scaling1;
   else
     min_ppi_scaling = min_ppi_scaling2;
-  max_ppi_scaling = min_ppi_scaling * 20;
+  max_ppi_scaling = min_ppi_scaling * 100 / lower->scaling;
   if (widget == scaling_ppi)
     {
       if (!(GTK_TOGGLE_BUTTON(scaling_ppi)->active))
@@ -961,7 +964,7 @@ gimp_scaling_callback (GtkWidget *widget)
       if (!(GTK_TOGGLE_BUTTON(scaling_percent)->active))
 	return;
       current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = lower->scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
 
       new_percent = 100 * min_ppi_scaling / current_scale;
@@ -1130,6 +1133,7 @@ gimp_plist_build_combo(GtkWidget*  combo,     /* I - Combo widget */
 static void
 gimp_do_misc_updates (void)
 {
+  const vars_t *lower = print_minimum_settings();
   vars.scaling = plist[plist_current].v.scaling;
   vars.orientation = plist[plist_current].v.orientation;
   vars.left = plist[plist_current].v.left;
@@ -1151,7 +1155,7 @@ gimp_do_misc_updates (void)
 	min_ppi_scaling = min_ppi_scaling1;
       else
 	min_ppi_scaling = min_ppi_scaling2;
-      max_ppi_scaling = min_ppi_scaling * 20;
+      max_ppi_scaling = min_ppi_scaling * 100 / lower->scaling;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
@@ -1164,7 +1168,7 @@ gimp_do_misc_updates (void)
     {
       float tmp = plist[plist_current].v.scaling;
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
-      GTK_ADJUSTMENT (scaling_adjustment)->lower = 5.0;
+      GTK_ADJUSTMENT (scaling_adjustment)->lower = lower->scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
       GTK_ADJUSTMENT (scaling_adjustment)->value = tmp;
       gtk_signal_emit_by_name (scaling_adjustment, "changed");

@@ -97,16 +97,16 @@ private privdata_t stp_data =
     "",				/* Media source */
     "",				/* Ink type */
     "",				/* Dither algorithm */
-    100,			/* bright     */
+    1.0,			/* bright     */
     100.0,			/* Scaling */
     ORIENT_PORTRAIT,		/* Orientation */
     0,				/* Left */
     0,				/* Top */
     1,				/* gamma      */
-    100,			/* cont       */
-    100,			/* r          */
-    100,			/* g          */
-    100,			/* b          */
+    1.0,			/* cont       */
+    1.0,			/* c          */
+    1.0,			/* m          */
+    1.0,			/* y          */
     0,				/* lin        */
     1.0,			/* saturation */
     1.0,			/* density */
@@ -138,11 +138,11 @@ typedef struct
 private void
 stp_dbg(const char *msg, const privdata_t *stp_data)
 {
-  fprintf(gs_stderr,"%s Settings: r: %d  g: %d  b: %d\n",
-	  msg, stp_data->v.red, stp_data->v.green, stp_data->v.blue);
+  fprintf(gs_stderr,"%s Settings: r: %f  g: %f  b: %f\n",
+	  msg, stp_data->v.cyan, stp_data->v.magenta, stp_data->v.yellow);
   fprintf(gs_stderr, "Ink type %s\n", stp_data->v.ink_type);
 
-  fprintf(gs_stderr,"Settings: bright: %d  contrast: %d\n",
+  fprintf(gs_stderr,"Settings: bright: %f  contrast: %f\n",
 	  stp_data->v.brightness, stp_data->v.contrast);
 
   fprintf(gs_stderr,"Settings: Gamma: %f  Saturation: %f  Density: %f\n",
@@ -295,11 +295,11 @@ stp_get_params(gx_device *pdev, gs_param_list *plist)
   param_string_from_string(pquality, stp_data.v.resolution);
 
   if (code < 0 ||
-      (code = param_write_int(plist, "Red", &stp_data.v.red)) < 0 ||
-      (code = param_write_int(plist, "Green", &stp_data.v.green)) < 0 ||
-      (code = param_write_int(plist, "Blue", &stp_data.v.blue)) < 0 ||
-      (code = param_write_int(plist, "Brightness", &stp_data.v.brightness)) < 0 ||
-      (code = param_write_int(plist, "Contrast", &stp_data.v.contrast)) < 0 ||
+      (code = param_write_float(plist, "Cyan", &stp_data.v.cyan)) < 0 ||
+      (code = param_write_float(plist, "Magenta", &stp_data.v.magenta)) < 0 ||
+      (code = param_write_float(plist, "Yellow", &stp_data.v.yellow)) < 0 ||
+      (code = param_write_float(plist, "Brightness", &stp_data.v.brightness)) < 0 ||
+      (code = param_write_float(plist, "Contrast", &stp_data.v.contrast)) < 0 ||
       (code = param_write_int(plist, "Color", &stp_data.v.output_type)) < 0 ||
       (code = param_write_int(plist, "ImageType", &stp_data.v.image_type)) < 0 ||
       (code = param_write_float(plist, "Gamma", &stp_data.v.gamma)) < 0 ||
@@ -331,6 +331,8 @@ gsncpy(char *d, const gs_param_string *s, int limit)
 private int
 stp_put_params(gx_device *pdev, gs_param_list *plist)
 {
+  const vars_t *lower = print_minimum_settings();
+  const vars_t *upper = print_maximum_settings();
   gs_param_string pmediatype;
   gs_param_string pmediasource;
   gs_param_string pinktype;
@@ -348,23 +350,26 @@ stp_put_params(gx_device *pdev, gs_param_list *plist)
   param_string_from_string(palgorithm, stp_data.v.dither_algorithm);
   param_string_from_string(pquality, stp_data.v.resolution);
 
-  code = stp_put_param_int(plist, "Red", &stp_data.v.red, 0, 200, code);
-  code = stp_put_param_int(plist, "Green", &stp_data.v.green, 0, 200, code);
-  code = stp_put_param_int(plist, "Blue", &stp_data.v.blue, 0, 200, code);
-  code = stp_put_param_int(plist, "Brightness", &stp_data.v.brightness,
-			   0, 400, code);
-  code = stp_put_param_int(plist, "Contrast", &stp_data.v.contrast,
-			   0, 400, code);
+  code = stp_put_param_float(plist, "Cyan", &stp_data.v.cyan,
+			     lower->cyan, upper->cyan, code);
+  code = stp_put_param_float(plist, "Magenta", &stp_data.v.magenta,
+			     lower->magenta, upper->magenta, code);
+  code = stp_put_param_float(plist, "Yellow", &stp_data.v.yellow,
+			     lower->yellow, upper->yellow, code);
+  code = stp_put_param_float(plist, "Brightness", &stp_data.v.brightness,
+			     lower->brightness, upper->brightness, code);
+  code = stp_put_param_float(plist, "Contrast", &stp_data.v.contrast,
+			     lower->contrast, upper->contrast, code);
   code = stp_put_param_int(plist, "Color", &stp_data.v.output_type,
 			   0, 1, code);
   code = stp_put_param_int(plist, "ImageType", &stp_data.v.image_type,
 			   0, 3, code);
   code = stp_put_param_float(plist, "Gamma", &stp_data.v.gamma,
-			     0.1, 3., code);
+			     lower->gamma, upper->gamma, code);
   code = stp_put_param_float(plist, "Saturation", &stp_data.v.saturation,
-			     0.0, 9., code);
+			     lower->saturation, upper->saturation, code);
   code = stp_put_param_float(plist, "Density", &stp_data.v.density,
-			     0.1, 2., code);
+			     lower->density, upper->density, code);
   param_read_string(plist, "Quality", &pquality);
   param_read_string(plist, "Dither", &palgorithm);
   param_read_string(plist, "MediaSource", &pmediasource);

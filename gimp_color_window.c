@@ -39,9 +39,9 @@ static GtkObject *brightness_adjustment;
 static GtkObject *saturation_adjustment;
 static GtkObject *density_adjustment;
 static GtkObject *contrast_adjustment;
-static GtkObject *red_adjustment;
-static GtkObject *green_adjustment;
-static GtkObject *blue_adjustment;
+static GtkObject *cyan_adjustment;
+static GtkObject *magenta_adjustment;
+static GtkObject *yellow_adjustment;
 static GtkObject *gamma_adjustment;
 
 static GtkWidget *dither_algo_button = NULL;
@@ -51,9 +51,9 @@ static void gimp_brightness_update (GtkAdjustment *adjustment);
 static void gimp_saturation_update (GtkAdjustment *adjustment);
 static void gimp_density_update    (GtkAdjustment *adjustment);
 static void gimp_contrast_update   (GtkAdjustment *adjustment);
-static void gimp_red_update        (GtkAdjustment *adjustment);
-static void gimp_green_update      (GtkAdjustment *adjustment);
-static void gimp_blue_update       (GtkAdjustment *adjustment);
+static void gimp_cyan_update        (GtkAdjustment *adjustment);
+static void gimp_magenta_update      (GtkAdjustment *adjustment);
+static void gimp_yellow_update       (GtkAdjustment *adjustment);
 static void gimp_gamma_update      (GtkAdjustment *adjustment);
 static void gimp_set_color_defaults(void);
 
@@ -74,6 +74,9 @@ gimp_create_color_adjust_window (void)
 {
   GtkWidget *dialog;
   GtkWidget *table;
+  const vars_t *lower = print_minimum_settings();
+  const vars_t *upper = print_maximum_settings();
+  const vars_t *defvars = print_default_settings();
 
   gimp_color_adjust_dialog = dialog =
     gimp_dialog_new (_("Print Color Adjust"), "print",
@@ -106,8 +109,9 @@ gimp_create_color_adjust_window (void)
   brightness_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 0,
                           _("Brightness:"), 200, 0,
-                          vars.brightness, 0.0, 400.0, 1.0, 10.0, 0,
-                          TRUE, 0, 0,
+                          vars.brightness, lower->brightness,
+			  upper->brightness, defvars->brightness / 100,
+			  defvars->brightness / 10, 3, TRUE, 0, 0,
                           NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (brightness_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_brightness_update),
@@ -120,53 +124,57 @@ gimp_create_color_adjust_window (void)
   contrast_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 1,
                           _("Contrast:"), 200, 0,
-                          vars.contrast, 0.0, 400.0, 1.0, 10.0, 0,
-                          TRUE, 0, 0,
-                          NULL, NULL);
+                          vars.contrast, lower->contrast, upper->contrast,
+			  defvars->contrast / 100, defvars->contrast / 10,
+			  3, TRUE, 0, 0,
+			  NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (contrast_adjustment), "value_changed",
                       GTK_SIGNAL_FUNC (gimp_contrast_update),
                       NULL);
 
   /*
-   * Red slider...
+   * Cyan slider...
    */
 
-  red_adjustment =
+  cyan_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 2,
-                          _("Red:"), 200, 0,
-                          vars.red, 0.0, 200.0, 1.0, 10.0, 0,
+                          _("Cyan:"), 200, 0,
+                          vars.cyan, lower->cyan, upper->cyan,
+			  defvars->cyan / 100, defvars->cyan / 10, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
-  gtk_signal_connect (GTK_OBJECT (red_adjustment), "value_changed",
-                      GTK_SIGNAL_FUNC (gimp_red_update),
+  gtk_signal_connect (GTK_OBJECT (cyan_adjustment), "value_changed",
+                      GTK_SIGNAL_FUNC (gimp_cyan_update),
                       NULL);
 
   /*
-   * Green slider...
+   * Magenta slider...
    */
 
-  green_adjustment =
+  magenta_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 3,
-                          _("Green:"), 200, 0,
-                          vars.green, 0.0, 200.0, 1.0, 10.0, 0,
+                          _("Magenta:"), 200, 0,
+                          vars.magenta, lower->magenta, upper->magenta,
+			  defvars->magenta / 100, defvars->magenta / 10, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
-  gtk_signal_connect (GTK_OBJECT (green_adjustment), "value_changed",
-                      GTK_SIGNAL_FUNC (gimp_green_update),
+  gtk_signal_connect (GTK_OBJECT (magenta_adjustment), "value_changed",
+                      GTK_SIGNAL_FUNC (gimp_magenta_update),
                       NULL);
 
   /*
-   * Blue slider...
+   * Yellow slider...
    */
 
-  blue_adjustment =
+  yellow_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 4,
-                          _("Blue:"), 200, 0,
-                          vars.blue, 0.0, 200.0, 1.0, 10.0, 0,
+                          _("Yellow:"), 200, 0,
+                          vars.yellow, lower->yellow, upper->yellow,
+			  defvars->yellow / 100, defvars->yellow / 10, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
-  gtk_signal_connect (GTK_OBJECT (blue_adjustment), "value_changed",
-                      GTK_SIGNAL_FUNC (gimp_blue_update),
+  gtk_signal_connect (GTK_OBJECT (yellow_adjustment), "value_changed",
+                      GTK_SIGNAL_FUNC (gimp_yellow_update),
                       NULL);
 
   /*
@@ -176,7 +184,9 @@ gimp_create_color_adjust_window (void)
   saturation_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 5,
                           _("Saturation:"), 200, 0,
-                          vars.saturation, 0, 10.0, 0.001, 0.01, 3,
+                          vars.saturation, lower->saturation,
+			  upper->saturation, defvars->saturation / 1000,
+			  defvars->saturation / 100, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (saturation_adjustment), "value_changed",
@@ -190,7 +200,9 @@ gimp_create_color_adjust_window (void)
   density_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 6,
                           _("Density:"), 200, 0,
-                          vars.density, 0.1, 3.0, 0.001, 0.01, 3,
+                          vars.density, lower->density,
+			  upper->density, defvars->density / 1000,
+			  defvars->density / 100, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (density_adjustment), "value_changed",
@@ -204,7 +216,9 @@ gimp_create_color_adjust_window (void)
   gamma_adjustment =
     gimp_scale_entry_new (GTK_TABLE (table), 0, 7,
                           _("Gamma:"), 200, 0,
-                          vars.gamma, 0.1, 4.0, 0.001, 0.01, 3,
+                          vars.gamma, lower->gamma,
+			  upper->gamma, defvars->gamma / 1000,
+			  defvars->gamma / 100, 3,
                           TRUE, 0, 0,
                           NULL, NULL);
   gtk_signal_connect (GTK_OBJECT (gamma_adjustment), "value_changed",
@@ -243,32 +257,32 @@ gimp_contrast_update (GtkAdjustment *adjustment)
 }
 
 static void
-gimp_red_update (GtkAdjustment *adjustment)
+gimp_cyan_update (GtkAdjustment *adjustment)
 {
-  if (vars.red != adjustment->value)
+  if (vars.cyan != adjustment->value)
     {
-      vars.red = adjustment->value;
-      plist[plist_current].v.red = adjustment->value;
+      vars.cyan = adjustment->value;
+      plist[plist_current].v.cyan = adjustment->value;
     }
 }
 
 static void
-gimp_green_update (GtkAdjustment *adjustment)
+gimp_magenta_update (GtkAdjustment *adjustment)
 {
-  if (vars.green != adjustment->value)
+  if (vars.magenta != adjustment->value)
     {
-      vars.green = adjustment->value;
-      plist[plist_current].v.green = adjustment->value;
+      vars.magenta = adjustment->value;
+      plist[plist_current].v.magenta = adjustment->value;
     }
 }
 
 static void
-gimp_blue_update (GtkAdjustment *adjustment)
+gimp_yellow_update (GtkAdjustment *adjustment)
 {
-  if (vars.blue != adjustment->value)
+  if (vars.yellow != adjustment->value)
     {
-      vars.blue = adjustment->value;
-      plist[plist_current].v.blue = adjustment->value;
+      vars.yellow = adjustment->value;
+      plist[plist_current].v.yellow = adjustment->value;
     }
 }
 
@@ -314,14 +328,14 @@ gimp_do_color_updates(void)
   gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
 			    plist[plist_current].v.contrast);
 
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (red_adjustment),
-			    plist[plist_current].v.red);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (cyan_adjustment),
+			    plist[plist_current].v.cyan);
 
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (green_adjustment),
-			    plist[plist_current].v.green);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (magenta_adjustment),
+			    plist[plist_current].v.magenta);
 
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (blue_adjustment),
-			    plist[plist_current].v.blue);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (yellow_adjustment),
+			    plist[plist_current].v.yellow);
 
   gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
 			    plist[plist_current].v.saturation);
@@ -333,14 +347,23 @@ gimp_do_color_updates(void)
 void
 gimp_set_color_defaults(void)
 {
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment), 100);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment), 1.0);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment), 100);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (red_adjustment), 100);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (green_adjustment), 100);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (blue_adjustment), 100);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment), 1.0);
-  gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment), 1.0);
+  const vars_t *defvars = print_default_settings();
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (brightness_adjustment),
+			    defvars->brightness);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (gamma_adjustment),
+			    defvars->gamma);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (contrast_adjustment),
+			    defvars->contrast);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (cyan_adjustment),
+			    defvars->cyan);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (magenta_adjustment),
+			    defvars->magenta);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (yellow_adjustment),
+			    defvars->yellow);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (saturation_adjustment),
+			    defvars->saturation);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (density_adjustment),
+			    defvars->density);
 }
 
 void

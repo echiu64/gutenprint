@@ -162,17 +162,17 @@ vars_t vars =
 	"",			/* Source of output media */
 	"",			/* Ink type */
 	"",			/* Dither algorithm */
-	100,			/* Output brightness */
+	1.0,			/* Output brightness */
 	100.0,			/* Scaling (100% means entire printable area, */
 				/*          -XXX means scale by PPI) */
 	-1,			/* Orientation (-1 = automatic) */
 	-1,			/* X offset (-1 = center) */
 	-1,			/* Y offset (-1 = center) */
 	1.0,			/* Screen gamma */
-	100,			/* Contrast */
-	100,			/* Red */
-	100,			/* Green */
-	100,			/* Blue */
+	1.0,			/* Contrast */
+	1.0,			/* Cyan */
+	1.0,			/* Magenta */
+	1.0,			/* Yellow */
 	0,			/* Linear */
 	1.0,			/* Output saturation */
 	1.0,			/* Density */
@@ -260,16 +260,16 @@ query (void)
     { PARAM_STRING,	"media_size",	"Media size (\"Letter\", \"A4\", etc.)" },
     { PARAM_STRING,	"media_type",	"Media type (\"Plain\", \"Glossy\", etc.)" },
     { PARAM_STRING,	"media_source",	"Media source (\"Tray1\", \"Manual\", etc.)" },
-    { PARAM_INT32,	"brightness",	"Brightness (0-400%)" },
+    { PARAM_FLOAT,	"brightness",	"Brightness (0-400%)" },
     { PARAM_FLOAT,	"scaling",	"Output scaling (0-100%, -PPI)" },
     { PARAM_INT32,	"orientation",	"Output orientation (-1 = auto, 0 = portrait, 1 = landscape)" },
     { PARAM_INT32,	"left",		"Left offset (points, -1 = centered)" },
     { PARAM_INT32,	"top",		"Top offset (points, -1 = centered)" },
     { PARAM_FLOAT,	"gamma",	"Output gamma (0.1 - 3.0)" },
-    { PARAM_INT32,	"contrast",	"Contrast" },
-    { PARAM_INT32,	"red",		"Red level" },
-    { PARAM_INT32,	"green",	"Green level" },
-    { PARAM_INT32,	"blue",		"Blue level" },
+    { PARAM_FLOAT,	"contrast",	"Contrast" },
+    { PARAM_FLOAT,	"cyan",		"Cyan level" },
+    { PARAM_FLOAT,	"magenta",	"Magenta level" },
+    { PARAM_FLOAT,	"yellow",		"Yellow level" },
     { PARAM_INT32,	"linear",	"Linear output (0 = normal, 1 = linear)" },
     { PARAM_INT32,	"image_type",	"Image type (0 = line art, 1 = solid tones, 2 = continuous tone, 3 = monochrome)"},
     { PARAM_FLOAT,	"saturation",	"Saturation (0-1000%)" },
@@ -522,19 +522,19 @@ run (char   *name,		/* I - Name of print program. */
 	    vars.contrast = 100;
 
           if (nparams > 18)
-	    vars.red = param[18].data.d_int32;
+	    vars.cyan = param[18].data.d_int32;
 	  else
-	    vars.red = 100;
+	    vars.cyan = 100;
 
           if (nparams > 19)
-	    vars.green = param[19].data.d_int32;
+	    vars.magenta = param[19].data.d_int32;
 	  else
-	    vars.green = 100;
+	    vars.magenta = 100;
 
           if (nparams > 20)
-	    vars.blue = param[20].data.d_int32;
+	    vars.yellow = param[20].data.d_int32;
 	  else
-	    vars.blue = 100;
+	    vars.yellow = 100;
 
           if (nparams > 21)
             vars.linear = param[21].data.d_int32;
@@ -963,16 +963,16 @@ printrc_load(void)
       GET_MANDATORY_STRING_PARAM(v.media_type);
 
       GET_OPTIONAL_STRING_PARAM(media_source);
-      GET_OPTIONAL_INT_PARAM(brightness);
+      GET_OPTIONAL_FLOAT_PARAM(brightness);
       GET_OPTIONAL_FLOAT_PARAM(scaling);
       GET_OPTIONAL_INT_PARAM(orientation);
       GET_OPTIONAL_INT_PARAM(left);
       GET_OPTIONAL_INT_PARAM(top);
       GET_OPTIONAL_FLOAT_PARAM(gamma);
-      GET_OPTIONAL_INT_PARAM(contrast);
-      GET_OPTIONAL_INT_PARAM(red);
-      GET_OPTIONAL_INT_PARAM(green);
-      GET_OPTIONAL_INT_PARAM(blue);
+      GET_OPTIONAL_FLOAT_PARAM(contrast);
+      GET_OPTIONAL_FLOAT_PARAM(cyan);
+      GET_OPTIONAL_FLOAT_PARAM(magenta);
+      GET_OPTIONAL_FLOAT_PARAM(yellow);
       GET_OPTIONAL_INT_PARAM(linear);
       GET_OPTIONAL_INT_PARAM(image_type);
       GET_OPTIONAL_FLOAT_PARAM(saturation);
@@ -1100,11 +1100,11 @@ printrc_save(void)
 		p->name, p->v.output_to, p->v.driver, p->v.ppd_file,
 		p->v.output_type, p->v.resolution, p->v.media_size,
 		p->v.media_type, p->v.media_source);
-	fprintf(fp, "%d,%.3f,%d,%d,%d,%.3f,",
+	fprintf(fp, "%.3f,%.3f,%d,%d,%d,%.3f,",
 		p->v.brightness, p->v.scaling, p->v.orientation, p->v.left,
 		p->v.top, p->v.gamma);
-	fprintf(fp, "%d,%d,%d,%d,%d,%d,%.3f,%.3f,%s,%s,%d,\n",
-		p->v.contrast, p->v.red, p->v.green, p->v.blue,
+	fprintf(fp, "%.3f,%.3f,%.3f,%.3f,%d,%d,%.3f,%.3f,%s,%s,%d,\n",
+		p->v.contrast, p->v.cyan, p->v.magenta, p->v.yellow,
 		p->v.linear, p->v.image_type, p->v.saturation, p->v.density,
 		p->v.ink_type, p->v.dither_algorithm, p->v.unit);
 

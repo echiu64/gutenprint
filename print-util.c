@@ -6,7 +6,7 @@
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
  *	Robert Krawitz (rlk@alum.mit.edu)
  *
- *   This program is free software; you can redistribute it and/or modify it
+ *   This program is free software; you can cyanistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
@@ -54,6 +54,104 @@
 
 /* rgb/hsv conversions taken from Gimp common/autostretch_hsv.c */
 
+static vars_t default_vars =
+{
+	"",			/* Name of file or command to print to */
+	"ps2",			/* Name of printer "driver" */
+	"",			/* Name of PPD file */
+	OUTPUT_COLOR,		/* Color or grayscale output */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	1.0,			/* Output brightness */
+	100.0,			/* Scaling (100% means entire printable area, */
+				/*          -XXX means scale by PPI) */
+	-1,			/* Orientation (-1 = automatic) */
+	-1,			/* X offset (-1 = center) */
+	-1,			/* Y offset (-1 = center) */
+	1.0,			/* Screen gamma */
+	1.0,			/* Contrast */
+	1.0,			/* Cyan */
+	1.0,			/* Magenta */
+	1.0,			/* Yellow */
+	0,			/* Linear */
+	1.0,			/* Output saturation */
+	1.0,			/* Density */
+	IMAGE_CONTINUOUS,	/* Image type */
+	0,			/* Unit 0=Inch */
+	1.0,			/* Application gamma placeholder */
+	0,			/* Page width */
+	0			/* Page height */
+};
+
+static vars_t min_vars =
+{
+	"",			/* Name of file or command to print to */
+	"ps2",			/* Name of printer "driver" */
+	"",			/* Name of PPD file */
+	OUTPUT_COLOR,		/* Color or grayscale output */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	0,			/* Output brightness */
+	5.0,			/* Scaling (100% means entire printable area, */
+				/*          -XXX means scale by PPI) */
+	-1,			/* Orientation (-1 = automatic) */
+	-1,			/* X offset (-1 = center) */
+	-1,			/* Y offset (-1 = center) */
+	0.1,			/* Screen gamma */
+	0,			/* Contrast */
+	0,			/* Cyan */
+	0,			/* Magenta */
+	0,			/* Yellow */
+	0,			/* Linear */
+	0,			/* Output saturation */
+	.1,			/* Density */
+	IMAGE_CONTINUOUS,	/* Image type */
+	0,			/* Unit 0=Inch */
+	1.0,			/* Application gamma placeholder */
+	0,			/* Page width */
+	0			/* Page height */
+};
+
+static vars_t max_vars =
+{
+	"",			/* Name of file or command to print to */
+	"ps2",			/* Name of printer "driver" */
+	"",			/* Name of PPD file */
+	OUTPUT_COLOR,		/* Color or grayscale output */
+	"",			/* Output resolution */
+	"",			/* Size of output media */
+	"",			/* Type of output media */
+	"",			/* Source of output media */
+	"",			/* Ink type */
+	"",			/* Dither algorithm */
+	2.0,			/* Output brightness */
+	100.0,			/* Scaling (100% means entire printable area, */
+				/*          -XXX means scale by PPI) */
+	-1,			/* Orientation (-1 = automatic) */
+	-1,			/* X offset (-1 = center) */
+	-1,			/* Y offset (-1 = center) */
+	4.0,			/* Screen gamma */
+	4.0,			/* Contrast */
+	2.0,			/* Cyan */
+	2.0,			/* Magenta */
+	2.0,			/* Yellow */
+	0,			/* Linear */
+	9.0,			/* Output saturation */
+	2.0,			/* Density */
+	IMAGE_CONTINUOUS,	/* Image type */
+	0,			/* Unit 0=Inch */
+	1.0,			/* Application gamma placeholder */
+	0,			/* Page width */
+	0			/* Page height */
+};
 
 #define FMAX(a, b) ((a) > (b) ? (a) : (b))
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
@@ -1056,18 +1154,36 @@ fast_gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
     }
 }
 
+#define ICLAMP(value)				\
+do						\
+{						\
+  if (user->value < min->value)			\
+    user->value = min->value;			\
+  else if (user->value > max->value)		\
+    user->value = max->value;			\
+} while (0)
+
 void
 merge_printvars(vars_t *user, const vars_t *print)
 {
-  user->red = (user->red * print->red) / 100.0;
-  user->green = (user->green * print->green) / 100.0;
-  user->blue = (user->blue * print->blue) / 100.0;
-  user->contrast = (user->contrast * print->contrast) / 100.0;
-  user->brightness = (user->brightness * print->brightness) / 100.0;
+  const vars_t *max = print_maximum_settings();
+  const vars_t *min = print_minimum_settings();
+  user->cyan = (user->cyan * print->cyan);
+  ICLAMP(cyan);
+  user->magenta = (user->magenta * print->magenta);
+  ICLAMP(magenta);
+  user->yellow = (user->yellow * print->yellow);
+  ICLAMP(yellow);
+  user->contrast = (user->contrast * print->contrast);
+  ICLAMP(contrast);
+  user->brightness = (user->brightness * print->brightness);
+  ICLAMP(brightness);
   user->gamma /= print->gamma;
+  ICLAMP(gamma);
   user->saturation *= print->saturation;
+  ICLAMP(saturation);
   user->density *= print->density;
-  /* Application gamma comes from the user variables */
+  ICLAMP(density);
 }
 
 static lut_t *
@@ -1122,21 +1238,21 @@ compute_lut(size_t steps, vars_t *uv)
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  float red = 100.0 / uv->red;
-  float green = 100.0 / uv->green;
-  float blue = 100.0 / uv->blue;
+  float cyan = uv->cyan;
+  float magenta = uv->magenta;
+  float yellow = uv->yellow;
   float print_gamma = uv->gamma;
-  float contrast = uv->contrast / 100.0;
+  float contrast = uv->contrast;
   float app_gamma = uv->app_gamma;
-  float brightness = 100.0 / uv->brightness;
-  float screen_gamma = app_gamma * brightness / 1.7;
+  float brightness = uv->brightness;
+  float screen_gamma = app_gamma / 1.7;	/* Why 1.7??? */
 
-  if (red < 0.01)
-    red = 0.01;
-  if (green < 0.01)
-    green = 0.01;
-  if (blue < 0.01)
-    blue = 0.01;
+  if (cyan < 0.01)
+    cyan = 0.01;
+  if (magenta < 0.01)
+    magenta = 0.01;
+  if (yellow < 0.01)
+    yellow = 0.01;
 
   uv->lut = allocate_lut(steps);
   for (i = 0; i < steps; i ++)
@@ -1168,12 +1284,20 @@ compute_lut(size_t steps, vars_t *uv)
 	pixel = 1 - temp_pixel;
 
       /*
-       * Second, perform screen gamma correction
+       * Second, do brightness
+       */
+      if (brightness < 1)
+	pixel = pixel * brightness;
+      else
+	pixel = 1 - ((1 - pixel) * (2 - brightness));
+
+      /*
+       * Third, correct for the screen gamma
        */
       pixel = 1.0 - pow(pixel, screen_gamma);
 
       /*
-       * Third, fix up red, green, blue values
+       * Third, fix up cyan, magenta, yellow values
        *
        * I don't know how to do this correctly.  I think that what I'll do
        * is if the correction is less than 1 to multiply it by the
@@ -1185,9 +1309,9 @@ compute_lut(size_t steps, vars_t *uv)
       else if (pixel > 1.0)
 	pixel = 1.0;
 
-      red_pixel = pow(pixel, 1.0 / (red * red));
-      green_pixel = pow(pixel, 1.0 / (green * green));
-      blue_pixel = pow(pixel, 1.0 / (blue * blue));
+      red_pixel = pow(pixel, 1.0 / cyan);
+      green_pixel = pow(pixel, 1.0 / magenta);
+      blue_pixel = pow(pixel, 1.0 / yellow);
 
       /*
        * Finally, fix up print gamma and scale
@@ -1794,4 +1918,22 @@ verify_printer_params(const printer_t *p, const vars_t *v)
 
   fprintf(stderr, "%s is not a valid dither algorithm\n", v->dither_algorithm);
   return 0;
+}
+
+const vars_t *
+print_default_settings()
+{
+  return &default_vars;
+}
+
+const vars_t *
+print_maximum_settings()
+{
+  return &max_vars;
+}
+
+const vars_t *
+print_minimum_settings()
+{
+  return &min_vars;
 }

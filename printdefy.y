@@ -5,7 +5,7 @@
  *
  *   Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)
  *
- *   This program is free software; you can redistribute it and/or modify it
+ *   This program is free software; you can cyanistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
@@ -47,12 +47,12 @@ initialize_the_printer(const char *name, const char *driver)
   strncpy(thePrinter.printvars.driver, driver, 63);
   thePrinter.printvars.linear = ENONE;
   thePrinter.model = -1;
-  thePrinter.printvars.brightness = 100;
+  thePrinter.printvars.brightness = 1.0;
   thePrinter.printvars.gamma = 1.0;
-  thePrinter.printvars.contrast = 100;
-  thePrinter.printvars.red = 100;
-  thePrinter.printvars.green = 100;
-  thePrinter.printvars.blue = 100;
+  thePrinter.printvars.contrast = 1.0;
+  thePrinter.printvars.cyan = 1.0;
+  thePrinter.printvars.magenta = 1.0;
+  thePrinter.printvars.yellow = 1.0;
   thePrinter.printvars.saturation = 1.0;
   thePrinter.printvars.density = 1.0;
 }
@@ -119,16 +119,16 @@ output_the_printer(void)
   printf("      \"\",\n");	/* media_source */
   printf("      \"\",\n");	/* ink_type */
   printf("      \"\",\n");	/* dither_algorithm */
-  printf("      %d,\n", thePrinter.printvars.brightness);
+  printf("      %.3f,\n", thePrinter.printvars.brightness);
   printf("      1.0,\n");	/* scaling */
   printf("      -1,\n");	/* orientation */
   printf("      0,\n");		/* top */
   printf("      0,\n");		/* left */
   printf("      %.3f,\n", thePrinter.printvars.gamma);
-  printf("      %d,\n", thePrinter.printvars.contrast);
-  printf("      %d,\n", thePrinter.printvars.red);
-  printf("      %d,\n", thePrinter.printvars.green);
-  printf("      %d,\n", thePrinter.printvars.blue);
+  printf("      %.3f,\n", thePrinter.printvars.contrast);
+  printf("      %.3f,\n", thePrinter.printvars.cyan);
+  printf("      %.3f,\n", thePrinter.printvars.magenta);
+  printf("      %.3f,\n", thePrinter.printvars.yellow);
   printf("      0,\n");		/* linear */
   printf("      %.3f,\n", thePrinter.printvars.saturation);
   printf("      %.3f,\n", thePrinter.printvars.density);
@@ -152,7 +152,7 @@ int yyerror( const char *s )
 %token <sval> tSTRING tCLASS
 %token tBEGIN tEND ASSIGN PRINTER NAME DRIVER COLOR NOCOLOR MODEL
 %token LANGUAGE BRIGHTNESS GAMMA CONTRAST
-%token RED GREEN BLUE SATURATION DENSITY ENDPRINTER VALUE
+%token CYAN MAGENTA YELLOW SATURATION DENSITY ENDPRINTER VALUE
 
 %start Printers
 
@@ -197,14 +197,14 @@ gamma:			tBEGIN GAMMA VALUE ASSIGN tDOUBLE tEND
 contrast:		tBEGIN CONTRAST VALUE ASSIGN tINT tEND
 	{ thePrinter.printvars.contrast = $5; }
 ;
-red:			tBEGIN RED VALUE ASSIGN tINT tEND
-	{ thePrinter.printvars.red = $5; }
+cyan:			tBEGIN CYAN VALUE ASSIGN tINT tEND
+	{ thePrinter.printvars.cyan = $5; }
 ;
-green:			tBEGIN GREEN VALUE ASSIGN tINT tEND
-	{ thePrinter.printvars.green = $5; }
+magenta:			tBEGIN MAGENTA VALUE ASSIGN tINT tEND
+	{ thePrinter.printvars.magenta = $5; }
 ;
-blue:			tBEGIN BLUE VALUE ASSIGN tINT tEND
-	{ thePrinter.printvars.blue = $5; }
+yellow:			tBEGIN YELLOW VALUE ASSIGN tINT tEND
+	{ thePrinter.printvars.yellow = $5; }
 ;
 saturation:		tBEGIN SATURATION VALUE ASSIGN tDOUBLE tEND
 	{ thePrinter.printvars.saturation = $5; }
@@ -219,7 +219,7 @@ pstart: printerstart | printerstartalt
 ;
 
 parg: color | nocolor | model | language | brightness | gamma | contrast
-	| red | green | blue | saturation | density
+	| cyan | magenta | yellow | saturation | density
 
 pargs: pargs parg | parg
 
