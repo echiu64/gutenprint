@@ -1,4 +1,4 @@
-Gimp-Print 4.2.6-rc1, released November 15, 2003, is a release
+Gimp-Print 4.2.6-rc2, released December 5, 2003, is a release
 candidate in the Gimp-Print 4.2 series.  We expect that 4.2.6, when
 the final version is released, to be the last release in the 4.2
 series.
@@ -13,7 +13,8 @@ can be used for many of the most demanding printing tasks.
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers, including Foomatic data.
 
-The Print plug-in for the GIMP requires the Gimp 1.2.
+The Print plug-in for the GIMP requires the Gimp 1.2.  The Gimp 1.3
+is not supported at this time.
 
 The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
 highly recommended, as certain translation-related bugs are fixed and
@@ -42,6 +43,29 @@ http://gimp-print.sourceforge.net/MacOSX.php3.
 
 Please read the README file for full instructions on installing this
 package from source code.
+
+Gimp-Print 4.2.6-rc2 contains the following major changes over
+Gimp-Print 4.2.6-pre3:
+
+1) The definitions of the Epson Stylus CX-6300 and CX-6400 have been
+   fixed.
+
+2) The European 10x15 cm paper size has been added.
+
+3) A problem with builds using VPATH introduced in 4.2.6-rc1 has been
+   fixed.
+
+4) The CUPS driver does not attempt to set empty values of media
+   source, media type, and ink type.  This resolves bug 627266 by
+   treating the Autoselect option correctly.
+
+5) Some Epson printer resolution names have been changed.  This change
+   does not introduce an incompatibility.
+
+The following bug has been fixed in Gimp-Print 4.2.6-rc2:
+
+627266 Mac OS X: Autoselect option incorrectly offered
+
 
 Gimp-Print 4.2.6-rc1 contains the following major changes over
 Gimp-Print 4.2.6-pre3:
