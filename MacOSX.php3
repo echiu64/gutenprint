@@ -32,6 +32,9 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
+ <a href="MacOSX.php3#4.3.17"><b>June 22, 2003 -</b></a> Gimp-Print 4.3.17 is the first Mac OS X release in the developmental line (4.3.x) of Gimp-Print. At the current point in the development cycle the 4.3.x line is approaching mainline stability and has many new features over the current mainline (4.2.x).
+ </p>
+ <p>
  <a href="MacOSX.php3#4.2.6-pre1"><b>April 30, 2003 -</b></a> Gimp-Print 4.2.6-pre1 is the newest testing release of Gimp-Print.
  </p>
  <p>
@@ -149,6 +152,31 @@ require('standard_html_header.php3');
  <p>
  Gimp-Print 4.2.6-pre1 is the newest pre-release for Mac OS X; it includes bug 
  fixes over 4.2.5, but it may contain new bugs. This package requires (but does
+ not include) ESP Ghostscript for Mac OS X (<b>download below and 
+ install, if necessary</b>).
+ </p>
+ <b>Gimp-Print 4.3.17</b><a name ="4.3.17"></a>
+ </td>
+ </tr>
+ <tr>
+ <td bgcolor="#d0ffff" >
+ <a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.17.ppc.dmg?download"
+ >gimp-print-4.3.17.ppc.dmg</a>&nbsp;(5.2 MB)
+ </td>
+ <td align="right" >
+ (<a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.3.17.tar.gz?download"
+ >source</a>)
+ </td>
+ </tr>
+ <tr>
+ <td colspan="2" >
+ <p>
+ Gimp-Print 4.3.17 is the first Mac OS X release in the 4.3.x develeopmental line.
+ This release represents the state of the art in current Gimp-Print development. As
+ such, while it contains many new and exciting features over the mainline (4.2.x) branch
+ it may also provide unexpected behavior.  This package requires (but does
  not include) ESP Ghostscript for Mac OS X (<b>download below and 
  install, if necessary</b>).
  </p>
