@@ -141,10 +141,10 @@ stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
   if (channel >= d->channel_count)
     {
       unsigned oc = d->channel_count;
-      d->c = stpi_realloc(d->c,
-			 sizeof(stpi_dither_channel_data_t) * (channel + 1));
-      (void) memset(d->c + oc, 0,
-		    sizeof(stpi_dither_channel_data_t) * (channel + 1 - oc));
+      d->c = stpi_realloc
+	(d->c, sizeof(stpi_dither_channel_data_t) * (channel + 1));
+      (void) memset
+	(d->c + oc, 0, sizeof(stpi_dither_channel_data_t) * (channel + 1- oc));
       d->channel_count = channel + 1;
     }
   chan = d->c + channel;
@@ -153,8 +153,8 @@ stpi_dither_add_channel(stp_vars_t v, unsigned char *data,
       unsigned oc = chan->subchannel_count;
       chan->c =
 	stpi_realloc(chan->c, sizeof(unsigned char *) * (subchannel + 1));
-      (void) memset(chan->c + oc, 0,
-		    sizeof(unsigned char *) * (subchannel + 1 - oc));
+      (void) memset
+	(chan->c + oc, 0, sizeof(unsigned char *) * (subchannel + 1 - oc));
       chan->subchannel_count = subchannel + 1;
     }
   chan->c[subchannel] = data;
@@ -266,22 +266,26 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
       switch (i)
 	{
 	case 0:
-	  if (stp_check_float_parameter(v, "BlackDensity", STP_PARAMETER_ACTIVE))
+	  if (stp_check_float_parameter(v, "BlackDensity",
+					STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "BlackDensity");
 	  break;
 	case 1:
-	  if (stp_check_float_parameter(v, "CyanDensity", STP_PARAMETER_ACTIVE))
+	  if (stp_check_float_parameter(v, "CyanDensity",
+					STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "CyanDensity");
 	  break;
 	case 2:
-	  if (stp_check_float_parameter(v, "MagentaDensity", STP_PARAMETER_ACTIVE))
+	  if (stp_check_float_parameter(v, "MagentaDensity",
+					STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "MagentaDensity");
 	  break;
 	case 3:
-	  if (stp_check_float_parameter(v, "YellowDensity", STP_PARAMETER_ACTIVE))
+	  if (stp_check_float_parameter(v, "YellowDensity",
+					STP_PARAMETER_ACTIVE))
 	    PHYSICAL_CHANNEL(d, i).density_adjustment =
 	      stp_get_float_parameter(v, "YellowDensity");
 	  break;
@@ -308,13 +312,15 @@ stpi_dither_init(stp_vars_t v, stp_image_t *image, int out_width,
 
   if (d->stpi_dither_type == D_VERY_FAST)
     {
-      if (stp_check_int_parameter(v, "DitherVeryFastSteps", STP_PARAMETER_ACTIVE))
+      if (stp_check_int_parameter(v, "DitherVeryFastSteps",
+				  STP_PARAMETER_ACTIVE))
 	stpi_dither_set_iterated_matrix
 	  (v, 2, stp_get_int_parameter(v, "DitherVeryFastSteps"), sq2, 0, 2,4);
       else
 	stpi_dither_set_iterated_matrix(v, 2, DITHER_FAST_STEPS, sq2, 0, 2, 4);
     }
-  else if (stp_check_curve_parameter(v, "DitherMatrix", STP_PARAMETER_ACTIVE) &&
+  else if (stp_check_curve_parameter(v, "DitherMatrix",
+				     STP_PARAMETER_ACTIVE) &&
 	   (stpi_dither_matrix_validate_curve
 	    (stp_get_curve_parameter(v, "DitherMatrix"))))
     {

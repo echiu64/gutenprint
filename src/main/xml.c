@@ -597,15 +597,17 @@ stpi_xml_process_paper(xmlNodePtr paper) /* The paper node */
       if (!xmlStrcmp(prop->name, (const xmlChar *) "unit"))
 	{
 	  stmp = xmlGetProp(prop, (const xmlChar *) "value");
-	  if (!xmlStrcmp(stmp,
-			 (const xmlChar *) "english"))
-	    outpaper->paper_unit = PAPERSIZE_ENGLISH;
-	  else if (!xmlStrcmp(stmp,
-			      (const xmlChar *) "metric"))
-	    outpaper->paper_unit = PAPERSIZE_METRIC;
+	  if (!xmlStrcmp(stmp, (const xmlChar *) "english"))
+	    outpaper->paper_unit = PAPERSIZE_ENGLISH_STANDARD;
+	  else if (!xmlStrcmp(stmp, (const xmlChar *) "english-extended"))
+	    outpaper->paper_unit = PAPERSIZE_ENGLISH_EXTENDED;
+	  else if (!xmlStrcmp(stmp, (const xmlChar *) "metric"))
+	    outpaper->paper_unit = PAPERSIZE_METRIC_STANDARD;
+	  else if (!xmlStrcmp(stmp, (const xmlChar *) "metric-extended"))
+	    outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
 	  /* Default unit */
 	  else
-	    outpaper->paper_unit = PAPERSIZE_METRIC;
+	    outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
 	  xmlFree(stmp);
 	  unit = 1;
 	}

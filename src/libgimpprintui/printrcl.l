@@ -72,6 +72,7 @@ word		[a-zA-Z][a-zA-Z0-9_]*
 %%
 
 Current-Printer:	DBG(CURRENT_PRINTER); return CURRENT_PRINTER;
+Show-All-Paper-Sizes:	DBG(SHOW_ALL_PAPER_SIZES); return SHOW_ALL_PAPER_SIZES;
 Printer:		DBG(PRINTER); return PRINTER;
 Destination:		DBG(DESTINATION); return DESTINATION;
 Scaling:		DBG(SCALING); return SCALING;

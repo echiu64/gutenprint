@@ -88,6 +88,7 @@ static GtkWidget *height_entry;
 
 static GtkWidget *custom_size_width;
 static GtkWidget *custom_size_height;
+static GtkWidget *show_all_paper_sizes_button;
 
 static GtkWidget *orientation_menu;    /* Orientation menu */
 
@@ -161,6 +162,7 @@ static void scaling_update        (GtkAdjustment *adjustment);
 static void scaling_callback      (GtkWidget *widget);
 static void plist_callback        (GtkWidget *widget, gpointer data);
 static void custom_media_size_callback(GtkWidget *widget, gpointer data);
+static void show_all_paper_sizes_callback(GtkWidget *widget, gpointer data);
 static void combo_callback        (GtkWidget *widget, gpointer data);
 static void output_type_callback  (GtkWidget *widget, gpointer data);
 static void unit_callback         (GtkWidget *widget, gpointer data);
@@ -210,6 +212,7 @@ static void plist_build_combo(GtkWidget *combo,
 			      const gchar *def_value,
 			      GtkSignalFunc callback,
 			      gint *callback_id,
+			      int (*check_func)(const char *string),
 			      gpointer data);
 static void initialize_thumbnail(void);
 static void set_color_defaults (void);
@@ -567,7 +570,19 @@ build_printer_combo(void)
 		    NULL,
 		    plist_callback,
 		    &plist_callback_id,
+		    NULL,
 		    NULL);
+}
+
+static int
+check_page_size(const char *paper_size)
+{
+  const stp_papersize_t *ps = stp_get_papersize_by_name(paper_size);
+  if (ps && (ps->paper_unit == PAPERSIZE_ENGLISH_STANDARD ||
+	     ps->paper_unit == PAPERSIZE_METRIC_STANDARD))
+    return 1;
+  else
+    return 0;
 }
 
 static void
@@ -585,13 +600,26 @@ build_a_combo(option_t *option)
 	       ! stp_string_list_is_present(option->info.list.params, val))
 	stp_set_string_parameter(pv->v, option->fast_desc->name,
 				 option->info.list.default_val);
-      plist_build_combo(option->info.list.combo, option->info.list.label,
-			option->info.list.params,
-			option->is_active,
-			stp_get_string_parameter(pv->v,
-						 option->fast_desc->name),
-			option->info.list.default_val, combo_callback,
-			&(option->info.list.callback_id), option);
+      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE &&
+	  strcmp(option->fast_desc->name, "PageSize") == 0 &&
+	  !stpui_show_all_paper_sizes)
+	
+	plist_build_combo(option->info.list.combo, option->info.list.label,
+			  option->info.list.params,
+			  option->is_active,
+			  stp_get_string_parameter(pv->v,
+						   option->fast_desc->name),
+			  option->info.list.default_val, combo_callback,
+			  &(option->info.list.callback_id),
+			  check_page_size, option);
+      else
+	plist_build_combo(option->info.list.combo, option->info.list.label,
+			  option->info.list.params,
+			  option->is_active,
+			  stp_get_string_parameter(pv->v,
+						   option->fast_desc->name),
+			  option->info.list.default_val, combo_callback,
+			  &(option->info.list.callback_id), NULL, option);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
 	set_media_size
 	  (stp_get_string_parameter(pv->v, option->fast_desc->name));
@@ -599,7 +627,7 @@ build_a_combo(option_t *option)
   else
     plist_build_combo(option->info.list.combo, option->info.list.label,
 		      NULL, 0, "", "", combo_callback,
-		      &(option->info.list.callback_id), option);
+		      &(option->info.list.callback_id), NULL, option);
 }
 
 static void
@@ -816,8 +844,6 @@ populate_option_table(GtkWidget *table, int p_class)
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      opt->info.bool.current =
 		stp_get_boolean_parameter(pv->v, opt->fast_desc->name);
-	      fprintf(stderr, "boolean %d default %d\n",
-		      opt->info.bool.current, opt->info.bool.deflt);
 	      stpui_create_boolean(opt, GTK_TABLE(table), 0,
 				   vpos[desc->p_level][desc->p_type]++,
 				   _(desc->text), opt->info.bool.deflt,
@@ -1475,6 +1501,18 @@ create_printer_settings_frame (void)
   gtk_table_attach_defaults(GTK_TABLE(table), page_size_table,
 			    0, 5, vpos, vpos + 1);
   vpos++;
+  show_all_paper_sizes_button =
+    gtk_toggle_button_new_with_label(_("Show All Paper Sizes"));
+  gtk_table_attach_defaults
+    (GTK_TABLE(table), show_all_paper_sizes_button, 1, 2, vpos, vpos + 1);
+  fprintf(stderr, "show_all %d\n", stpui_show_all_paper_sizes);
+  gtk_toggle_button_set_active
+    (GTK_TOGGLE_BUTTON(show_all_paper_sizes_button),
+     stpui_show_all_paper_sizes);
+  gtk_signal_connect(GTK_OBJECT(show_all_paper_sizes_button), "toggled",
+		     GTK_SIGNAL_FUNC(show_all_paper_sizes_callback), NULL);
+  gtk_widget_show(show_all_paper_sizes_button);
+  vpos++;
   /*
    * Custom media size entries
    */
@@ -1482,13 +1520,14 @@ create_printer_settings_frame (void)
   media_size_table = gtk_table_new (1, 1, FALSE);
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Dimensions:"),
 			     0.0, 0.5, media_size_table, 4, TRUE);
+
   custom_size_width = stpui_create_entry
-    (media_size_table, 0, 2, _("Width:"),
+    (media_size_table, 0, 3, _("Width:"),
      _("Width of the paper that you wish to print to"),
      custom_media_size_callback);
 
   custom_size_height = stpui_create_entry
-    (media_size_table, 2, 2, _("Height:"),
+    (media_size_table, 2, 3, _("Height:"),
      _("Height of the paper that you wish to print to"),
      custom_media_size_callback);
 
@@ -2056,12 +2095,26 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 		   const gchar    *def_value,   /* I - default item */
 		   GtkSignalFunc   callback,    /* I - Callback */
 		   gint           *callback_id, /* IO - Callback ID (init to -1) */
+		   int (*check_func)(const char *string),
 		   gpointer        data)
 {
   gint      i; /* Looping var */
   GList    *list = 0;
   gint num_items = 0;
   GtkEntry *entry = GTK_ENTRY (GTK_COMBO (combo)->entry);
+
+  if (check_func && items)
+    {
+      stp_string_list_t new_items = stp_string_list_create();
+      num_items = stp_string_list_count(items);
+      for (i = 0; i < num_items; i++)
+	{
+	  stp_param_string_t *param = stp_string_list_param(items, i);
+	  if ((*check_func)(param->name))
+	    stp_string_list_add_string(new_items, param->name, param->text);
+	}
+      items = new_items;
+    }
 
   if (items)
     num_items = stp_string_list_count(items);
@@ -2079,6 +2132,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
       gtk_widget_hide (combo);
       if (label)
 	gtk_widget_hide(label);
+      if (check_func && items)
+	stp_string_list_free(items);
       return;
     }
 
@@ -2109,6 +2164,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 
   *callback_id = gtk_signal_connect (GTK_OBJECT (entry), "changed", callback,
 				     data);
+  if (check_func && items)
+    stp_string_list_free(items);
 }
 
 void
@@ -2285,28 +2342,32 @@ do_color_updates (void)
 		(GTK_ADJUSTMENT(opt->info.flt.adjustment),
 		 stp_get_float_parameter(pv->v, opt->fast_desc->name));
 	      if (stp_check_float_parameter(pv->v, opt->fast_desc->name,
-					    STP_PARAMETER_ACTIVE))
+					    STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
 		set_adjustment_active(opt, TRUE, TRUE);
 	      else
 		set_adjustment_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      if (stp_check_curve_parameter(pv->v, opt->fast_desc->name,
-					    STP_PARAMETER_ACTIVE))
+					    STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
 		set_curve_active(opt, TRUE, TRUE);
 	      else
 		set_curve_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
-					     STP_PARAMETER_ACTIVE))
+					     STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
 		set_combo_active(opt, TRUE, TRUE);
 	      else
 		set_combo_active(opt, FALSE, TRUE);
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      if (stp_check_boolean_parameter(pv->v, opt->fast_desc->name,
-					      STP_PARAMETER_ACTIVE))
+					      STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
 		set_bool_active(opt, TRUE, TRUE);
 	      else
 		set_bool_active(opt, FALSE, TRUE);
@@ -2455,6 +2516,24 @@ plist_callback (GtkWidget *widget,
 }
 
 static void
+show_all_paper_sizes_callback(GtkWidget *widget, gpointer data)
+{
+  int i;
+  stpui_show_all_paper_sizes =
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+  for (i = 0; i < current_option_count; i++)
+    {
+      option_t *option = &(current_options[i]);
+      if (option->fast_desc &&
+	  strcmp(option->fast_desc->name, "PageSize") == 0)
+	{
+	  build_a_combo(option);
+	  break;
+	}
+    }
+}
+
+static void
 custom_media_size_callback(GtkWidget *widget,
 			   gpointer data)
 {
@@ -2495,12 +2574,40 @@ custom_media_size_callback(GtkWidget *widget,
 static void
 set_media_size(const gchar *new_media_size)
 {
+  static int setting_media_size = 0;
   const stp_papersize_t *pap = stp_get_papersize_by_name (new_media_size);
+
+  if (setting_media_size)
+    return;
+  setting_media_size++;
 
   if (pap)
     {
       gint default_width, default_height;
       gint size;
+
+      if (! stpui_show_all_paper_sizes &&
+	  (pap->paper_unit == PAPERSIZE_METRIC_EXTENDED ||
+	   pap->paper_unit == PAPERSIZE_ENGLISH_EXTENDED))
+	{
+	  int i;
+	  stp_parameter_t desc;
+	  stp_describe_parameter(pv->v, "PageSize", &desc);
+	  stp_set_string_parameter(pv->v, "PageSize", desc.deflt.str);
+	  pap = stp_get_papersize_by_name(desc.deflt.str);
+	  stp_parameter_description_free(&desc);
+	  for (i = 0; i < current_option_count; i++)
+	    {
+	      option_t *option = &(current_options[i]);
+	      if (option->fast_desc &&
+		  strcmp(option->fast_desc->name, "PageSize") == 0)
+		{
+		  build_a_combo(option);
+		  break;
+		}
+	    }
+	}
+	  
 
       if (pap->width == 0)
 	{
@@ -2533,8 +2640,11 @@ set_media_size(const gchar *new_media_size)
 	}
       set_entry_value (custom_size_height, size, 0);
       stp_set_page_height (pv->v, size);
+      invalidate_preview_thumbnail();
+      invalidate_frame();
       preview_update();
     }
+  setting_media_size--;
 }
 
 static void

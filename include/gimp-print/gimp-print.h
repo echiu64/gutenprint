@@ -358,8 +358,10 @@ typedef void *stp_parameter_list_t;
  */
 typedef enum stp_papersize_unit
 {
-  PAPERSIZE_ENGLISH,
-  PAPERSIZE_METRIC
+  PAPERSIZE_ENGLISH_STANDARD,
+  PAPERSIZE_METRIC_STANDARD,
+  PAPERSIZE_ENGLISH_EXTENDED,
+  PAPERSIZE_METRIC_EXTENDED
 } stp_papersize_unit_t;
 
 typedef struct

@@ -138,6 +138,12 @@ typedef struct
         gtk_spin_button_get_adjustment \
         (GTK_SPIN_BUTTON (gtk_object_get_data (GTK_OBJECT (adj), "spinbutton")))
 
+extern gint stpui_plist_count;	   /* Number of system printers */
+extern gint stpui_plist_current;     /* Current system printer */
+extern stpui_plist_t *stpui_plist;		  /* System printers */
+extern const char *stpui_printrc_current_printer;
+extern int stpui_show_all_paper_sizes;
+
 /*
  * Function prototypes
  */
@@ -148,10 +154,6 @@ extern void stpui_plist_set_name(stpui_plist_t *p, const char *val);
 extern void stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n);
 extern const char *stpui_plist_get_name(const stpui_plist_t *p);
 extern void stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs);
-extern gint stpui_plist_count;	   /* Number of system printers */
-extern gint stpui_plist_current;     /* Current system printer */
-extern stpui_plist_t *stpui_plist;		  /* System printers */
-extern const char *stpui_printrc_current_printer;
 
 extern int stpui_plist_add(const stpui_plist_t *key, int add_only);
 extern stpui_plist_t *stpui_plist_create(const char *name, const char *driver);

@@ -1132,12 +1132,30 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST &&
-	  (p->p_class == STP_PARAMETER_CLASS_FEATURE ||
-	   p->p_class == STP_PARAMETER_CLASS_PAGE_SIZE))
+      if (p->p_class == STP_PARAMETER_CLASS_FEATURE ||
+	  p->p_class == STP_PARAMETER_CLASS_PAGE_SIZE)
 	{
 	  stp_describe_parameter(v, p->name, &desc);
-	  stp_set_string_parameter(v, p->name, desc.deflt.str);
+	  switch (p->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      stp_set_string_parameter(v, p->name, desc.deflt.str);
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      stp_set_float_parameter(v, p->name, desc.deflt.dbl);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      stp_set_int_parameter(v, p->name, desc.deflt.integer);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
+	      break;
+	    case STP_PARAMETER_TYPE_CURVE:
+	      stp_set_curve_parameter(v, p->name, desc.deflt.curve);
+	      break;
+	    default:
+	      break;
+	    }
 	  stp_parameter_description_free(&desc);
 	}
     }
