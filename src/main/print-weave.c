@@ -35,10 +35,6 @@
 #include <gimp-print-internal.h>
 #include <gimp-print-intl-internal.h>
 
-#ifndef __GNUC__
-#  define inline
-#endif /* !__GNUC__ */
-
 #if 0
 #define TEST_RAW
 #endif

@@ -27,6 +27,13 @@
 #include <config.h>
 #endif
 
+#ifndef HAVE_ASPRINTF
+#include <stdarg.h>
+#include <varargs.h>
+extern int vasprintf (char **result, const char *format, va_list args)
+extern int asprintf (char **result, const char *format, ...)
+#endif
+
 #ifndef HAVE_XMALLOC
 #include "xmalloc.h"
 #endif

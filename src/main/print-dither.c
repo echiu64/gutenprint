@@ -52,10 +52,6 @@
 #  define rand random
 #endif /* HAVE_RANDOM */
 
-#if !defined(__GNUC__) && !(defined(_sgi) && _COMPILER_VERSION >= 210)
-#  define inline
-#endif /* not GNU C or SGI C */
-
 /* If you don't want detailed performance numbers in this file, 
  * uncomment this:
  */

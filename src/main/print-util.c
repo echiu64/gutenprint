@@ -38,10 +38,6 @@
 #include <limits.h>
 #include <stdarg.h>
 
-#ifndef __GNUC__
-#  define inline
-#endif /* !__GNUC__ */
-
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
 static stp_vars_t default_vars =

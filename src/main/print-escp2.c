@@ -35,10 +35,6 @@
 #include <gimp-print-intl-internal.h>
 #endif
 
-#ifndef __GNUC__
-#  define inline
-#endif /* !__GNUC__ */
-
 static void
 escp2_write_microweave(const unsigned char *,
 		       const unsigned char *, const unsigned char *,
