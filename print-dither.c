@@ -31,7 +31,7 @@
 
 #include "print.h"
 
-
+#define IABS(a) ((a) >= 0 ? (a) : -(a))
 
 /*
  * Error buffer for dither functions.  This needs to be at least 14xMAXDPI
@@ -622,16 +622,16 @@ scale_dither(void *vd, int scale)
     {
     case 0:
     case 1:
-      d->overdensity_bits = 0;
+      d->overdensity_bits += 0;
       break;
     case 2:
-      d->overdensity_bits = 1;
+      d->overdensity_bits += 1;
       break;
     case 4:
-      d->overdensity_bits = 2;
+      d->overdensity_bits += 2;
       break;
     case 8:
-      d->overdensity_bits = 3;
+      d->overdensity_bits += 3;
       break;
     }
 }
@@ -656,150 +656,7 @@ get_errline(dither_t *d, int row, int color)
 /*
  * Dithering functions!
  *
- * We currently have four dithering functions:
- *
- * 1) dither_black produces a single level of black from grayscale input.
- *    This is used by most printers when printing grayscale.
- *
- * 2) dither_cmyk produces 3, 4, 6, or 7 color output (actually, it can
- *    deal with any combination of dark and light colored inks, but not a
- *    "light black" ink, although that would be nice :-) ).
- *
- * 3) dither_black_n produces n levels of black.  This was originally
- *    written by Mike Sweet for various HP printers, but it's useful for
- *    some of the newer Epson Stylus printers, too.  Used for variable dot
- *    size or multi-level inks such as the MIS archival inks.
- *
- * 4) dither_cmyk_n does likewise for color output.
- *
- * Many of these routines (in particular dither_cmyk and the 4-level functions)
- * have constants hard coded that are tuned for particular printers.  Needless
- * to say, this must go.
- *
- * The dithering algorithm is a basic error diffusion, with a few tweaks of
- * my own.  Error diffusion works by taking the output error at a given pixel
- * and "diffusing" it into surrounding pixels.  Output error is the difference
- * between the amount of ink output and the input level at each pixel.  For
- * simple printers, with one or four ink colors and only one dot size, the
- * amount of ink output is either 65536 (i. e. full output) or 0 (no output).
- * The difference between this and the input level is the error.  Normal
- * error diffusion adds part of this error to the adjoining pixels in the
- * next column and the next row (the algorithm simply scans each row in turn,
- * never backing up).  The error adds up until it reaches a threshold (half of
- * the full output level, or 32768), at which point a dot is output, the
- * output is subtracted from the current value, and the (now negative) error
- * is diffused similarly.
- *
- * Handling multiple output levels makes life a bit more complicated.  In
- * principle, it shouldn't be much harder: simply figure out what the ratio
- * between the available output levels is and have multiple thresholds.
- * In practice, getting these right involves a lot of trial and error.  The
- * other thing that's important is to maximize the number of dots that have
- * some ink.  This will reduce the amount of speckling.  More on this later.
- *
- * The next question: how do we handle black when printing in color?  Black
- * ink is much darker than colored inks.  It's possible to produce black by
- * adding some mixture of cyan, magenta, and yellow -- in principle.  In
- * practice, the black really isn't very black, and different inks and
- * different papers will produce different color casts.  However, by using
- * CMY to produce gray, we can output a lot more dots!  This makes for a much
- * smoother image.  What's more, one cyan, one magenta, and one yellow dot
- * produce less darkness than one black dot, so we're outputting that many
- * more dots.  Better yet, with 6 or 7 color printers, we have to output even
- * more light ink dots.  So Epson Stylus Photo printers can produce really
- * smooth grays -- if we do everything right.  The right idea is to use
- * CMY at lower black levels, and gradually mix in black as the overall
- * amount of ink increases, so the black dots don't really become visible
- * within the ink mass.
- *
- * I stated earlier that I've tweaked the basic error diffusion algorithm.
- * Here's what I've done to improve it:
- *
- * 1) We use a randomized threshold to decide when to print.  This does
- *    two things for us: it reduces the slightly squiggly diagonal lines
- *    that are the mark of error diffusion; and it allows us to lay down
- *    some ink even in very light areas near the edge of the image.
- *    The squiggly lines that error diffusion algorithms tend to generate
- *    are caused by the gradual accumulation of error.  This error is
- *    partially added horizontally and partially vertically.  The horizontal
- *    accumulation results in a dot eventually being printed.  The vertical
- *    accumulation results in a dot getting laid down in roughly the same
- *    horizontal position in the next row.  The diagonal squigglies result
- *    from the error being added to pixels one forward and one below the
- *    current pixel; these lines slope from the top right to the bottom left
- *    of the image.
- *
- *    Error diffusion also results in pale areas being completely white near
- *    the top left of the image (the origin of the printing coordinates).
- *    This is because enough error has to accumulate for anything at all to
- *    get printed.
- *
- *    Randomizing the threshold somewhat breaks up the diagonals to some
- *    degree by randomizing the exact location that the accumulated output
- *    crosses the threshold.  It reduces the false white areas by allowing
- *    some dots to be printed even when the accumulated output level is very
- *    low.  It doesn't result in excess ink because the full output level
- *    is still subtracted and diffused.
- *
- * 2) Alternating scan direction between rows (first row is scanned left to
- *    right, second is scanned right to left, and so on).  This also helps
- *    break up white areas, and it also seems to break up squigglies a bit.
- *    Furthermore, it eliminates directional biases in the horizontal
- *    direction.
- *
- * 3) Diffusing the error into more pixels.  Instead of diffusing the entire
- *    error into (X+1, Y) and (X, Y+1), we diffuse it into (X+1, Y),
- *    (X+K, Y+1), (X, Y+1), (X-K, Y+1) where K depends upon the output level
- *    (it never exceeds about 5 dots, and is greater at higher output
- *    levels).  This really reduces squigglies and graininess.
- *
- * 4) Don't lay down any colored ink if we're laying down black ink.  There's
- *    no point; the colored ink won't show.  We still pretend that we did
- *    for purposes of error diffusion (otherwise excessive error will build
- *    up, and will take a long time to clear, resulting in heavy bleeding of
- *    ink into surrounding areas, which is very ugly indeed), but we don't
- *    bother wasting the ink.
- *
- * 5) Oversampling.  This is how to print 1440x720 with Epson Stylus printers.
- *    Printing full density at 1440x720 will result in excess ink being laid
- *    down.  The trick is to print only every other dot.  We still compute
- *    the error as though we printed every dot.  It turns out that
- *    randomizing which dots are printed results in very speckled output.
- *
- * What about multiple output levels?  For 6 and 7 color printers, simply
- * using different threshold levels has a problem: the pale inks have trouble
- * being seen when a lot of darker ink is being printed.  So rather than
- * just using the output level of the particular color to decide which ink
- * to print, we look at the total density (sum of all output levels).
- * If the density's high enough, we prefer to use the dark ink.  Speckling
- * is less visible when there's a lot of ink, anyway.  I haven't yet figured
- * out what to do for multiple levels of one color.
- *
- * Speaking of 6 colors a bit more, I also determined (empirically!) that
- * simply subtracting the appropriate output level (full for the dark ink,
- * partial for the light ink) results in speckling.  Why?  Well, after printing
- * a dark dot, it takes longer to "recharge" the output level than after
- * printing a light dot.  What I do instead is compute a probability of
- * printing either a light or a dark dot when I exceed the threshold.  Picking
- * a random number decides which color ink to lay down.  However, rather than
- * subtracting the level appropriate for what I printed, I subtract a scaled
- * amount between the two levels.  The amount is scaled by the probability:
- * (L + P * (D - L)) where L is the light level, P is the probability of
- * printing dark, D is the dark level.  This also results in smoother output.
- *
- * You'll note that I haven't quoted a single source on color or printing
- * theory.  I simply did all of this empirically.
- *
- * There are various other tricks to reduce speckling.  One that I've seen
- * is to reduce the amount of ink printed in regions where one color
- * (particularly cyan, which is perceived as the darkest) is very pale.
- * This does reduce speckling all right, but it also results in strange
- * tonal curves and weird (to my eye) colors.
- *
- * Another, better trick is to print fixed patterns corresponding to given
- * output levels (basically a patterned screen).  This is probably much
- * better, but it's harder to get right in areas of rapidly varying color
- * and probably requires more lookup tables.  But it might be worth a shot.
+ * Documentation moved to README.dither
  */
 
 /*
@@ -827,6 +684,9 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
   dither_t *d = (dither_t *) vd;
   int terminate;
   int direction = row & 1 ? 1 : -1;
+  int d_offset = 32768 - (32768 >> d->k_randomizer);
+  int odb = 13 - d->overdensity_bits;
+  int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -861,19 +721,24 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
+    int xdw1 = ddw1 - x;
     int offset;
     k = 65535 - *gray;
-    offset = ((15 - (((k & 0xf000) >> 12))) * d->horizontal_overdensity) >> 1;
-    k += ditherk / 8;
+    offset = (65535 - (k & 0xffff)) >> odb;
+    if (ditherk >= 0)
+      k += ditherk >> 3;
+    else
+      k += ditherk / 8;
     if (x < offset)
       offset = x;
-    else if (x > d->dst_width - offset - 1)
-      offset = d->dst_width - x - 1;
+    else if (offset > xdw1)
+      offset = xdw1;
 
-    if (k > 32768 + ((ditherbit >> d->k_randomizer) -
-		     (32768 >> d->k_randomizer)))
+    if (k > d_offset + (ditherbit >> d->k_randomizer))
     {
-      if (d->kbits++ == d->horizontal_overdensity)
+      if (d->horizontal_overdensity == 1)
+	*kptr |= bit;
+      else if (d->kbits++ == d->horizontal_overdensity)
 	{
 	  *kptr |= bit;
 	  d->kbits = 1;
@@ -889,7 +754,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       kerror1[-offset] += tmpk;
       kerror1[0] += 3 * tmpk;
       kerror1[offset] += tmpk;
-      if (x > 0 && x < (d->dst_width - 1))
+      if (x > 0 && 0 < xdw1)
 	ditherk    = kerror0[direction] + 3 * tmpk;
     }
     else
@@ -900,7 +765,7 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
       kerror1[-offset] += tmpk;
       kerror1[0] += tmpk;
       kerror1[offset] += tmpk;
-      if (x > 0 && x < (d->dst_width - 1))
+      if (x > 0 && 0 < xdw1)
 	ditherk    = kerror0[direction] + 5 * tmpk;
     }
 
@@ -945,137 +810,102 @@ dither_black(unsigned short     *gray,		/* I - Grayscale pixels */
  * light magenta, yellow, and black.
  *
  * Added by Robert Krawitz <rlk@alum.mit.edu> August 30, 1999.
- *
- * Let's be really aggressive and use a single routine for ALL cmyk dithering,
- * including 6 and 7 color.
- *
- * Note that this is heavily tuned for Epson Stylus Photo printers.
- * This should be generalized for other CMYK and CcMmYK printers.  All
- * of these constants were empirically determined, and are subject to review.
- */
-
-/*
- * Ratios of dark to light inks.  The darker ink should be DE / NU darker
- * than the light ink.
- *
- * It is essential to be very careful about use of parentheses with these
- * macros!
- *
- * Increasing the denominators results in use of more dark ink.  This creates
- * more saturated colors.
- */
-
-/*
- * Lower and upper bounds for mixing CMY with K to produce gray scale.
- * Reducing KDARKNESS_LOWER results in more black being used with relatively
- * light grays, which causes speckling.  Increasing KDARKNESS_UPPER results
- * in more CMY being used in dark tones, which results in less pure black.
- * Decreasing the gap too much results in sharp crossover and stairstepping.
- */
-
-/*
- * Randomizing values for deciding when to output a bit.  Normally with the
- * error diffusion algorithm a bit is not output until the accumulated value
- * of the pixel crosses a threshold.  This randomizes the threshold, which
- * results in fewer obnoxious diagonal jaggies in pale regions.  Smaller values
- * result in greater randomizing.  We use less randomness for black output
- * to avoid production of black speckles in light regions.
  */
 
 #define UPDATE_COLOR(r)				\
 do {						\
   o##r = r;					\
-  r += dither##r / 8;				\
+  if (dither##r >= 0)				\
+    r += dither##r >> 3;			\
+  else						\
+    r += dither##r / 8;				\
 } while (0)
 
-#define DO_PRINT_COLOR(color)				\
-do {							\
-  if (d->color##bits++ == d->horizontal_overdensity)	\
-    {							\
-      *color##ptr |= bit;				\
-      d->color##bits = 1;				\
-    }							\
+#define DO_PRINT_COLOR(color)					\
+do {								\
+  if (d->horizontal_overdensity == 1)				\
+    *color##ptr |= bit;						\
+  else if (d->color##bits++ == d->horizontal_overdensity)	\
+    {								\
+      *color##ptr |= bit;					\
+      d->color##bits = 1;					\
+    }								\
 } while(0)
 
-#define PRINT_COLOR(color, r, R, d1, d2)			\
+#define PRINT_COLOR(color, r, R, d1, d2)				     \
+do {									     \
+  int comp0 = r##_offset + (ditherbit##d2 >> d->r##_randomizer);	     \
+  if (!l##color)							     \
+    {									     \
+      if (r > comp0)							     \
+	{								     \
+	  DO_PRINT_COLOR(r);						     \
+	  r -= 65536;							     \
+	}								     \
+    }									     \
+  else									     \
+    {									     \
+      int compare = (comp0 * d->l##r##_level) >> 16;			     \
+      if (r <= (d->l##r##_level))					     \
+	{								     \
+	  if (r > compare)						     \
+	    {								     \
+	      DO_PRINT_COLOR(l##r);					     \
+	      r -= d->l##r##_level << d->overdensity_bits;		     \
+	    }								     \
+	}								     \
+      else if (r > compare)						     \
+	{								     \
+	  int cutoff = ((density - d->l##r##_level) * 65536 / l##r##_level); \
+	  int sub;							     \
+	  if (cutoff >= 0)						     \
+	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
+	  else								     \
+	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
+	  if (ditherbit##d1 > cutoff)					     \
+	    {								     \
+	      DO_PRINT_COLOR(l##r);					     \
+	    }								     \
+	  else								     \
+	    {								     \
+	      DO_PRINT_COLOR(r);					     \
+	    }								     \
+	  if (sub < d->l##r##_level)					     \
+	    r -= d->l##r##_level << d->overdensity_bits;		     \
+	  else if (sub > 65535)						     \
+	    r -= 65536;							     \
+	  else								     \
+	    r -= sub;							     \
+	}								     \
+    }									     \
+} while (0)
+
+#define UPDATE_DITHER(r, d2, x, width)				\
 do {								\
-  int comp0 = (32768 + ((ditherbit##d2 >> d->r##_randomizer) -	\
-			(32768 >> d->r##_randomizer)));		\
-  if (!l##color)						\
+  int offset = (65535 - (o##r & 0xffff)) >> odb;		\
+  int tmp##r = r;						\
+  if (tmp##r > 65535)						\
+    tmp##r = 65535;						\
+  if (offset > x)						\
+    offset = x;							\
+  else if (offset > xdw1)					\
+    offset = xdw1;						\
+  if (ditherbit##d2 & bit)					\
     {								\
-      if (r > comp0)						\
-	{							\
-	  DO_PRINT_COLOR(r);					\
-	  r -= 65536;						\
-	}							\
+      r##error1[-offset] += tmp##r;				\
+      r##error1[0] += 3 * tmp##r;				\
+      r##error1[offset] += tmp##r;				\
+      if (x > 0 && 0 < xdw1)					\
+	dither##r    = r##error0[direction] + 3 * tmp##r;	\
     }								\
   else								\
     {								\
-      int compare = (comp0 * d->l##r##_level) >> 16;		\
-      if (r <= (d->l##r##_level))				\
-	{							\
-	  if (r > compare)					\
-	    {							\
-	      DO_PRINT_COLOR(l##r);				\
-	      r -= d->l##r##_level << d->overdensity_bits;	\
-	    }							\
-	}							\
-      else if (r > compare)					\
-	{							\
-	  int cutoff = ((density - d->l##r##_level) * 65536 /	\
-			(65536 - d->l##r##_level));		\
-	  int sub;						\
-	  if (cutoff >= 0)					\
-	    sub = d->l##r##_level +				\
-	      (((65535ll - d->l##r##_level) * cutoff) >> 16);	\
-	  else							\
-	    sub = d->l##r##_level +				\
-	      ((65535ll - d->l##r##_level) * cutoff / 65536);	\
-	  if (ditherbit##d1 > cutoff)				\
-	    {							\
-	      DO_PRINT_COLOR(l##r);				\
-	    }							\
-	  else							\
-	    {							\
-	      DO_PRINT_COLOR(r);				\
-	    }							\
-	  if (sub < d->l##r##_level)				\
-	    r -= d->l##r##_level << d->overdensity_bits;	\
-	  else if (sub > 65535)					\
-	    r -= 65536;						\
-	  else							\
-	    r -= sub;						\
-	}							\
+      r##error1[-offset] += tmp##r;				\
+      r##error1[0] +=  tmp##r;					\
+      r##error1[offset] += tmp##r;				\
+      if (x > 0 && 0 < xdw1)					\
+	dither##r    = r##error0[direction] + 5 * tmp##r;	\
     }								\
-} while (0)
-
-#define UPDATE_DITHER(r, d2, x, width)					\
-do {									\
-  int offset = (255 - (((o##r & 0xff00) >> 8)))				\
-					>> (5 - d->overdensity_bits);	\
-  int tmp##r = r;							\
-  if (tmp##r > 65535)							\
-    tmp##r = 65535;							\
-  if (offset > x)							\
-    offset = x;								\
-  else if (offset > d->dst_width - x - 1)				\
-    offset = d->dst_width - x - 1;					\
-  if (ditherbit##d2 & bit)						\
-    {									\
-      r##error1[-offset] += tmp##r;					\
-      r##error1[0] += 3 * tmp##r;					\
-      r##error1[offset] += tmp##r;					\
-      if (x > 0 && x < (d->dst_width - 1))				\
-	dither##r    = r##error0[direction] + 3 * tmp##r;		\
-    }									\
-  else									\
-    {									\
-      r##error1[-offset] += tmp##r;					\
-      r##error1[0] +=  tmp##r;						\
-      r##error1[offset] += tmp##r;					\
-      if (x > 0 && x < (d->dst_width - 1))				\
-	dither##r    = r##error0[direction] + 5 * tmp##r;		\
-    }									\
 } while (0)
 
 void
@@ -1143,6 +973,15 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 
   int terminate;
   int direction = row & 1 ? 1 : -1;
+  int k_offset = 32768 - (32768 >> d->k_randomizer);
+  int c_offset = 32768 - (32768 >> d->c_randomizer);
+  int m_offset = 32768 - (32768 >> d->m_randomizer);
+  int y_offset = 32768 - (32768 >> d->y_randomizer);
+  int lc_level = 65536 - d->lc_level;
+  int lm_level = 65536 - d->lm_level;
+  int ly_level = 65536 - d->ly_level;
+  int odb = 13 - d->overdensity_bits;
+  int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1241,7 +1080,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
-
+    int xdw1 = ddw1 - x;
    /*
     * First compute the standard CMYK separation color values...
     */
@@ -1274,7 +1113,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       * Since we're printing black, adjust the black level based upon
       * the amount of color in the pixel (colorful pixels get less black)...
       */
-      int xdiff = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      int xdiff = (IABS(c - m) + IABS(c - y) + IABS(m - y)) / 3;
       int tk;
 
       diff = 65536 - xdiff;
@@ -1377,8 +1216,7 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       odk = ditherk;
       dk = k;
 #endif
-      if (k > (32767 + ((ditherbit0 >> d->k_randomizer) -
-			(32768 >> d->k_randomizer))))
+      if (k > k_offset + (ditherbit0 >> d->k_randomizer))
 	{
 	  DO_PRINT_COLOR(k);
 	  k -= 65535;
@@ -1550,6 +1388,11 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
   dither_t *d = (dither_t *) vd;
   int terminate;
   int direction = row & 1 ? 1 : -1;
+#ifdef RANDOMIZE_VARIABLE_DOT_SIZE
+  int d_offset = 32768 - (32768 >> d->k_randomizer);
+#endif
+  int odb = 13 - d->overdensity_bits;
+  int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1584,17 +1427,19 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
-    int ok;
+    int xdw1 = ddw1 - x;
     int i;
     int offset;
     k = 65535 - *gray;
-    offset = ((15 - (((k & 0xf000) >> 12))) * d->horizontal_overdensity) >> 1;
-    ok = k;
-    k += ditherk / 8;
+    offset = (65535 - (k & 0xffff)) >> odb;
+    if (ditherk >= 0)
+      k += ditherk >> 3;
+    else
+      k += ditherk / 8;
     if (x < offset)
       offset = x;
-    else if (x > d->dst_width - offset - 1)
-      offset = d->dst_width - x - 1;
+    else if (offset > xdw1)
+      offset = xdw1;
 
     if (use_log_encoding)
       {
@@ -1645,7 +1490,7 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
       kerror1[-offset] += tmpk;
       kerror1[0] += 3 * tmpk;
       kerror1[offset] += tmpk;
-      if (x > 0 && x < (d->dst_width - 1))
+      if (x > 0 && 0 < xdw1)
 	ditherk    = kerror0[direction] + 3 * tmpk;
     }
     else
@@ -1656,7 +1501,7 @@ dither_black_n(unsigned short   *gray,		/* I - Grayscale pixels */
       kerror1[-offset] += tmpk;
       kerror1[0] += tmpk;
       kerror1[offset] += tmpk;
-      if (x > 0 && x < (d->dst_width - 1))
+      if (x > 0 && 0 < xdw1)
 	ditherk    = kerror0[direction] + 5 * tmpk;
     }
 
@@ -1746,45 +1591,42 @@ do {								\
     }								\
 } while (0)
 
-#define PRINT_COLOR_4(color, r, R, d1, d2)				\
-do {									\
-  int comp0 = (32768 + ((ditherbit##d2 >> d->r##_randomizer) -		\
-			(32768 >> d->r##_randomizer)));			\
-  if (!l##color)							\
-    {									\
-      DO_PRINT_COLOR_4(r, r, 1);					\
-    }									\
-  else									\
-    {									\
-      int compare = comp0 * d->l##r##_level >> 16;			\
-      if (r <= (d->l##r##_level))					\
-	{								\
-	  if (r > compare)						\
-	    {								\
-	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	\
-	    }								\
-	}								\
-      else if (r > compare)						\
-	{								\
-	  int cutoff = ((density - d->l##r##_level) * 65536 /		\
-			(65536 - d->l##r##_level));			\
-	  int sub;							\
-	  if (cutoff >= 0)						\
-	    sub = d->l##r##_level +					\
-	      (((65535ll - d->l##r##_level) * cutoff) >> 16);		\
-	  else								\
-	    sub = d->l##r##_level +					\
-	      ((65535ll - d->l##r##_level) * cutoff / 65536);		\
-	  if (ditherbit##d1 > cutoff)					\
-	    {								\
-	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	\
-	    }								\
-	  else								\
-	    {								\
-	      DO_PRINT_COLOR_4(r, r, 1);				\
-	    }								\
-	}								\
-    }									\
+#define PRINT_COLOR_4(color, r, R, d1, d2)				     \
+do {									     \
+  int comp0 = (32768 + ((ditherbit##d2 >> d->r##_randomizer) -		     \
+			(32768 >> d->r##_randomizer)));			     \
+  if (!l##color)							     \
+    {									     \
+      DO_PRINT_COLOR_4(r, r, 1);					     \
+    }									     \
+  else									     \
+    {									     \
+      int compare = comp0 * d->l##r##_level >> 16;			     \
+      if (r <= (d->l##r##_level))					     \
+	{								     \
+	  if (r > compare)						     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
+	    }								     \
+	}								     \
+      else if (r > compare)						     \
+	{								     \
+	  int cutoff = ((density - d->l##r##_level) * 65536 / l##r##_level); \
+	  int sub;							     \
+	  if (cutoff >= 0)						     \
+	    sub = d->l##r##_level + ((l##r##_level * cutoff) >> 16);	     \
+	  else								     \
+	    sub = d->l##r##_level + (l##r##_level * cutoff / 65536);	     \
+	  if (ditherbit##d1 > cutoff)					     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, l##r, d->l##r##_level / 65536);	     \
+	    }								     \
+	  else								     \
+	    {								     \
+	      DO_PRINT_COLOR_4(r, r, 1);				     \
+	    }								     \
+	}								     \
+    }									     \
 } while (0)
 
 void
@@ -1847,6 +1689,17 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
    */
   int terminate;
   int direction = row & 1 ? 1 : -1;
+#ifdef RANDOMIZE_VARIABLE_DOT_SIZE
+  int k_offset = 32768 - (32768 >> d->k_randomizer);
+  int c_offset = 32768 - (32768 >> d->c_randomizer);
+  int m_offset = 32768 - (32768 >> d->m_randomizer);
+  int y_offset = 32768 - (32768 >> d->y_randomizer);
+#endif
+  int lc_level = 65536 - d->lc_level;
+  int lm_level = 65536 - d->lm_level;
+  int ly_level = 65536 - d->ly_level;
+  int odb = 13 - d->overdensity_bits;
+  int ddw1 = d->dst_width - 1;
 
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
@@ -1941,6 +1794,7 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 	 kerror0 += direction,
 	 kerror1 += direction)
   {
+    int xdw1 = ddw1 - x;
 
    /*
     * First compute the standard CMYK separation color values...
@@ -1966,7 +1820,7 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
       * the amount of color in the pixel (colorful pixels get less black)...
       */
       int tk;
-      int xdiff = (abs(c - m) + abs(c - y) + abs(m - y)) / 3;
+      int xdiff = (IABS(c - m) + IABS(c - y) + IABS(m - y)) / 3;
 
       diff = 65536 - xdiff;
       diff = ((long long) diff * (long long) diff * (long long) diff) >> 32;
@@ -2167,6 +2021,9 @@ dither_cmyk_n(unsigned short  *rgb,	/* I - RGB pixels */
 
 /*
  *   $Log$
+ *   Revision 1.10  2000/03/09 02:50:17  rlk
+ *   Performance optimizations, documentation
+ *
  *   Revision 1.9  2000/03/07 02:54:05  rlk
  *   Move CVS history logs to the end of the file
  *
