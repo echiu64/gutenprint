@@ -1942,7 +1942,8 @@ stp_color_describe_parameter(const stp_vars_t v, const char *name,
 	    {
 	    case STP_PARAMETER_TYPE_CURVE:
 	      description->deflt.curve = *(param->defval);
-	      description->bounds.curve = *(param->defval);
+	      description->bounds.curve =
+		stp_curve_allocate_copy(*(param->defval));
 	      break;
 	    default:
 	      break;

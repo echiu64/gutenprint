@@ -1096,6 +1096,33 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 };
 
+typedef struct {
+  int x;
+  int y;
+  const char *name;
+  const char *text;
+  const char *name_dmt;
+  const char *text_dmt;
+} canon_res_t;
+
+static const canon_res_t canon_resolutions[] = {
+  { 90, 90, "90x90dpi", N_("90x90 DPI"), "90x90dmt", N_("90x90 DPI DMT") },
+  { 180, 180, "180x180dpi", N_("180x180 DPI"), "180x180dmt", N_("180x180 DPI DMT") },
+  { 360, 360, "360x360dpi", N_("360x360 DPI"), "360x360dmt", N_("360x360 DPI DMT") },
+  { 720, 360, "720x360dpi", N_("720x360 DPI"), "720x360dmt", N_("720x360 DPI DMT") },
+  { 720, 720, "720x720dpi", N_("720x720 DPI"), "720x720dmt", N_("720x720 DPI DMT") },
+  { 1440, 720, "1440x720dpi", N_("1440x720 DPI"), "1440x720dmt", N_("1440x720 DPI DMT") },
+  { 1440, 1440, "1440x1440dpi", N_("1440x1440 DPI"), "1440x1440dmt", N_("1440x1440 DPI DMT") },
+  { 2880, 2880, "2880x2880dpi", N_("2880x2880 DPI"), "2880x2880dmt", N_("2880x2880 DPI DMT") },
+  { 150, 150, "150x150dpi", N_("150x150 DPI"), "150x150dmt", N_("150x150 DPI DMT") },
+  { 300, 300, "300x300dpi", N_("300x300 DPI"), "300x300dmt", N_("300x300 DPI DMT") },
+  { 600, 300, "600x300dpi", N_("600x300 DPI"), "600x300dmt", N_("600x300 DPI DMT") },
+  { 600, 600, "600x600dpi", N_("600x600 DPI"), "600x600dmt", N_("600x600 DPI DMT") },
+  { 1200, 600, "1200x600dpi", N_("1200x600 DPI"), "1200x600dmt", N_("1200x600 DPI DMT") },
+  { 1200, 1200, "1200x1200dpi", N_("1200x1200 DPI"), "1200x1200dmt", N_("1200x1200 DPI DMT") },
+  { 2400, 2400, "2400x2400dpi", N_("2400x2400 DPI"), "2400x2400dmt", N_("2400x2400 DPI DMT") },
+  { 0, 0, NULL, NULL, NULL, NULL }
+};
 
 static const char *plain_paper_lum_adjustment =
 "STP_CURVE;Wrap ;Linear ; 48;0;0.0;4.0:"
@@ -1446,11 +1473,20 @@ static void
 canon_describe_resolution(const stp_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const canon_res_t *res = canon_resolutions;
+  while (res->x > 0)
+    {
+      if (strcmp(resolution, res->name) == 0 ||
+	  strcmp(resolution, res->name_dmt) == 0)
+	{
+	  *x = res->x;
+	  *y = res->y;
+	  return;
+	}
+      res++;
+    }
   *x = -1;
   *y = -1;
-  if (resolution)
-    sscanf(resolution, "%dx%d", x, y);
-  return;
 }
 
 static stp_param_string_t media_sources[] =
@@ -1519,30 +1555,34 @@ canon_parameters(const stp_vars_t v, const char *name,
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    char tmp1[100], tmp2[100];
     int x,y;
     int t;
     description->bounds.str= stp_string_list_allocate();
+    description->deflt.str = NULL;
 
     for (x=1; x<6; x++) {
       for (y=x-1; y<x+1; y++) {
 	if ((t= canon_ink_type(caps,(x<<4)|y)) > -1) {
-	  sprintf(tmp1,"%dx%ddpi",
-		  (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	  sprintf(tmp2,"%dx%d DPI",
-		   (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	  if (stp_string_list_count(description->bounds.str) == 0)
-	    description->deflt.str = stp_strdup(tmp1);
-	  stp_string_list_add_param(description->bounds.str, tmp1, tmp2);
-	  stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
-
-	  if (t==1) {
-	    sprintf(tmp1,"%dx%ddmt",
-		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	    sprintf(tmp2,"%dx%d DPI DMT",
-		     (1<<x)/2*caps->base_res,(1<<y)/2*caps->base_res);
-	    stp_string_list_add_param(description->bounds.str, tmp1, tmp2);
-	    stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",tmp2);
+	  int xx = (1<<x)/2*caps->base_res;
+	  int yy = (1<<y)/2*caps->base_res;
+	  const canon_res_t *res = canon_resolutions;
+	  while (res->x > 0) {
+	    if (xx == res->x && yy == res->y) {
+	      stp_string_list_add_param(description->bounds.str,
+					res->name, _(res->text));
+	      stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
+			   res->name);
+	      if (xx >= 300 && yy >= 300 && description->deflt.str == NULL)
+		description->deflt.str = res->name;
+	      if (t == 1) {
+		stp_string_list_add_param(description->bounds.str,
+					  res->name_dmt, _(res->text_dmt));
+		stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
+			     res->name_dmt);
+	      }
+	      break;
+	    }
+	    res++;
 	  }
 	}
       }
@@ -2079,6 +2119,7 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   const paper_t *pt;
   const canon_variable_inkset_t *inks;
   stp_dither_data_t *dt;
+  const canon_res_t *res = canon_resolutions;
 
   if (!stp_verify(nv))
     {
@@ -2115,19 +2156,26 @@ canon_print(const stp_vars_t v, stp_image_t *image)
   * Figure out the output resolution...
   */
 
-  switch (sscanf(resolution,"%dx%d",&xdpi,&ydpi)) {
-  case 1: ydpi= xdpi; if (ydpi>caps->max_ydpi) ydpi/= 2; break;
-  case 0: xdpi= caps->max_xdpi; ydpi= caps->max_ydpi; break;
+  xdpi = -1;
+  ydpi = -1;
+  while (res->x > 0) {
+    if (strcmp(resolution, res->name) == 0 ||
+	strcmp(resolution, res->name_dmt) == 0)
+      {
+	xdpi = res->x;
+	ydpi = res->y;
+	break;
+      }
+    res++;
   }
 
   stp_deprintf(STP_DBG_CANON,"canon: resolution=%dx%d\n",xdpi,ydpi);
   stp_deprintf(STP_DBG_CANON,"       rescode   =0x%x\n",canon_res_code(caps,xdpi,ydpi));
   res_code= canon_res_code(caps,xdpi,ydpi);
 
-  if (((!strcmp(resolution+(strlen(resolution)-3),"DMT")) ||
-       (!strcmp(resolution+(strlen(resolution)-3),"dmt"))) &&
-       (caps->features & CANON_CAP_DMT) &&
-       output_type != OUTPUT_MONOCHROME) {
+  if (strcmp(resolution, res->name_dmt) == 0 &&
+      (caps->features & CANON_CAP_DMT) &&
+      output_type != OUTPUT_MONOCHROME) {
     bits= 2;
     stp_deprintf(STP_DBG_CANON,"canon: using drop modulation technology\n");
   }

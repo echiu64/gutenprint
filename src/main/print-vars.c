@@ -717,9 +717,9 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->p_level = param->p_level;
       desc->p_class = param->p_class;
       desc->is_mandatory = param->is_mandatory;
-      desc->name = stp_strdup(param->name);
-      desc->text = stp_strdup(param->text);
-      desc->help = stp_strdup(param->help);
+      desc->name = param->name;
+      desc->text = param->text;
+      desc->help = param->help;
       return;
     }
 }
@@ -808,6 +808,7 @@ stp_merge_printvars(stp_vars_t user, const stp_vars_t print)
       (stp_get_output_type(user) == OUTPUT_COLOR ||
        stp_get_output_type(user) == OUTPUT_RAW_CMYK))
     stp_set_output_type(user, OUTPUT_GRAY);
+  stp_parameter_list_destroy(params);
 }
 
 void
@@ -832,6 +833,7 @@ stp_set_printer_defaults(stp_vars_t v, const stp_printer_t p)
 	  stp_string_list_free(desc.bounds.str);
 	}
     }
+  stp_parameter_list_destroy(params);
 }
 
 static const char *
