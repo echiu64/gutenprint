@@ -87,7 +87,7 @@ typedef struct
 }
 
 void
-stp_zprintf(stp_const_vars_t v, const char *format, ...)
+stp_zprintf(const stp_vars_t *v, const char *format, ...)
 {
   char *result;
   int bytes;
@@ -119,13 +119,13 @@ stp_catprintf(char **strp, const char *format, ...)
 
 
 void
-stp_zfwrite(const char *buf, size_t bytes, size_t nitems, stp_const_vars_t v)
+stp_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t *v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), buf, bytes * nitems);
 }
 
 void
-stp_putc(int ch, stp_const_vars_t v)
+stp_putc(int ch, const stp_vars_t *v)
 {
   unsigned char a = (unsigned char) ch;
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), (char *) &a, 1);
@@ -134,21 +134,21 @@ stp_putc(int ch, stp_const_vars_t v)
 #define BYTE(expr, byteno) (((expr) >> (8 * byteno)) & 0xff)
 
 void
-stp_put16_le(unsigned short sh, stp_const_vars_t v)
+stp_put16_le(unsigned short sh, const stp_vars_t *v)
 {
   stp_putc(BYTE(sh, 0), v);
   stp_putc(BYTE(sh, 1), v);
 }
 
 void
-stp_put16_be(unsigned short sh, stp_const_vars_t v)
+stp_put16_be(unsigned short sh, const stp_vars_t *v)
 {
   stp_putc(BYTE(sh, 1), v);
   stp_putc(BYTE(sh, 0), v);
 }
 
 void
-stp_put32_le(unsigned int in, stp_const_vars_t v)
+stp_put32_le(unsigned int in, const stp_vars_t *v)
 {
   stp_putc(BYTE(in, 0), v);
   stp_putc(BYTE(in, 1), v);
@@ -157,7 +157,7 @@ stp_put32_le(unsigned int in, stp_const_vars_t v)
 }
 
 void
-stp_put32_be(unsigned int in, stp_const_vars_t v)
+stp_put32_be(unsigned int in, const stp_vars_t *v)
 {
   stp_putc(BYTE(in, 3), v);
   stp_putc(BYTE(in, 2), v);
@@ -166,13 +166,13 @@ stp_put32_be(unsigned int in, stp_const_vars_t v)
 }
 
 void
-stp_puts(const char *s, stp_const_vars_t v)
+stp_puts(const char *s, const stp_vars_t *v)
 {
   (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), s, strlen(s));
 }
 
 void
-stp_send_command(stp_const_vars_t v, const char *command,
+stp_send_command(const stp_vars_t *v, const char *command,
 		 const char *format, ...)
 {
   int i = 0;
@@ -264,7 +264,7 @@ stp_send_command(stp_const_vars_t v, const char *command,
 }
 
 void
-stp_eprintf(stp_const_vars_t v, const char *format, ...)
+stp_eprintf(const stp_vars_t *v, const char *format, ...)
 {
   int bytes;
   if (stp_get_errfunc(v))
@@ -324,7 +324,7 @@ stp_get_debug_level(void)
 }
 
 void
-stp_dprintf(unsigned long level, stp_const_vars_t v, const char *format, ...)
+stp_dprintf(unsigned long level, const stp_vars_t *v, const char *format, ...)
 {
   int bytes;
   stpi_init_debug();
@@ -362,7 +362,7 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 }
 
 void
-stp_init_debug_messages(stp_vars_t v)
+stp_init_debug_messages(stp_vars_t *v)
 {
   int verified_flag = stp_get_verified(v);
   debug_msgbuf_t *msgbuf = stp_malloc(sizeof(debug_msgbuf_t));
@@ -370,19 +370,19 @@ stp_init_debug_messages(stp_vars_t v)
   msgbuf->odata = stp_get_errdata(v);
   msgbuf->data = NULL;
   msgbuf->bytes = 0;
-  stp_set_errfunc((stp_vars_t) v, fill_buffer_writefunc);
-  stp_set_errdata((stp_vars_t) v, msgbuf);
-  stp_set_verified((stp_vars_t) v, verified_flag);
+  stp_set_errfunc((stp_vars_t *) v, fill_buffer_writefunc);
+  stp_set_errdata((stp_vars_t *) v, msgbuf);
+  stp_set_verified((stp_vars_t *) v, verified_flag);
 }
 
 void
-stp_flush_debug_messages(stp_vars_t v)
+stp_flush_debug_messages(stp_vars_t *v)
 {
   int verified_flag = stp_get_verified(v);
   debug_msgbuf_t *msgbuf = (debug_msgbuf_t *)stp_get_errdata(v);
-  stp_set_errfunc((stp_vars_t) v, msgbuf->ofunc);
-  stp_set_errdata((stp_vars_t) v, msgbuf->odata);
-  stp_set_verified((stp_vars_t) v, verified_flag);
+  stp_set_errfunc((stp_vars_t *) v, msgbuf->ofunc);
+  stp_set_errdata((stp_vars_t *) v, msgbuf->odata);
+  stp_set_verified((stp_vars_t *) v, verified_flag);
   if (msgbuf->bytes > 0)
     {
       stp_eprintf(v, "%s", msgbuf->data);
@@ -520,13 +520,13 @@ stp_set_output_codeset(const char *codeset)
 #endif
 }
 
-stp_curve_t
+stp_curve_t *
 stp_read_and_compose_curves(const char *s1, const char *s2,
 			    stp_curve_compose_t comp)
 {
-  stp_curve_t ret = NULL;
-  stp_curve_t t1 = NULL;
-  stp_curve_t t2 = NULL;
+  stp_curve_t *ret = NULL;
+  stp_curve_t *t1 = NULL;
+  stp_curve_t *t2 = NULL;
   if (s1)
     t1 = stp_curve_create_from_string(s1);
   if (s2)
@@ -549,7 +549,7 @@ stp_read_and_compose_curves(const char *s1, const char *s2,
 }
 
 void
-stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
+stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print)
 {
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(print);
@@ -585,7 +585,7 @@ stp_merge_printvars(stp_vars_t user, stp_const_vars_t print)
 }
 
 stp_parameter_list_t
-stp_get_parameter_list(stp_const_vars_t v)
+stp_get_parameter_list(const stp_vars_t *v)
 {
   stp_parameter_list_t ret = stp_parameter_list_create();
   stp_parameter_list_t tmp_list;

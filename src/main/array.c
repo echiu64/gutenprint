@@ -34,93 +34,79 @@
 #include <limits.h>
 
 
-#define COOKIE_ARRAY 0x58dd1c48
-
-typedef struct
+struct stp_array
 {
-  int cookie;
+  stp_sequence_t *data; /* First member, to allow typecasting to sequence. */
   int x_size;
   int y_size;
-  stp_sequence_t data;
-} stpi_internal_array_t;
+};
 
 /*
  * We could do more sanity checks here if we want.
  */
 static inline void
-check_array(const stpi_internal_array_t *v)
+check_array(const stp_array_t *array)
 {
-  if (v == NULL)
+  if (array == NULL)
     {
       stp_erprintf("Null stp_array_t! Please report this bug.\n");
       stp_abort();
     }
-  if (v->cookie != COOKIE_ARRAY)
-    {
-      stp_erprintf("Bad stp_array_t! Please report this bug.\n");
-      stp_abort();
-    }
 }
 
 
-static void array_ctor(stpi_internal_array_t *ia)
+static void array_ctor(stp_array_t *array)
 {
-  ia->cookie = COOKIE_ARRAY;
-  ia->data = stp_sequence_create();
-  stp_sequence_set_size(ia->data, ia->x_size * ia->y_size);
+  array->data = stp_sequence_create();
+  stp_sequence_set_size(array->data, array->x_size * array->y_size);
 }
 
-stp_array_t
+stp_array_t *
 stp_array_create(int x_size, int y_size)
 {
-  stpi_internal_array_t *ret;
-  ret = stp_zalloc(sizeof(stpi_internal_array_t));
+  stp_array_t *ret;
+  ret = stp_zalloc(sizeof(stp_array_t));
   ret->x_size = x_size;
   ret->y_size = y_size;
   ret->data = NULL;
   array_ctor(ret);
-  return (stp_array_t) ret;
+  return ret;
 }
 
 
 static void
-array_dtor(stpi_internal_array_t *ia)
+array_dtor(stp_array_t *array)
 {
-  if (ia->data)
-    stp_sequence_destroy(ia->data);
-  memset(ia, 0, sizeof(stpi_internal_array_t));
+  if (array->data)
+    stp_sequence_destroy(array->data);
+  memset(array, 0, sizeof(stp_array_t));
 }
 
 void
-stp_array_destroy(stp_array_t array)
+stp_array_destroy(stp_array_t *array)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
-  check_array(ia);
-  array_dtor(ia);
-  stp_free(ia);
+  check_array(array);
+  array_dtor(array);
+  stp_free(array);
 }
 
-void stp_array_copy(stp_array_t dest, stp_const_array_t source)
+void stp_array_copy(stp_array_t *dest, const stp_array_t *source)
 {
-  stpi_internal_array_t *idest = (stpi_internal_array_t *) dest;
-  const stpi_internal_array_t *isource =
-    (const stpi_internal_array_t *) source;
-  check_array(idest);
-  check_array(isource);
+  check_array(dest);
+  check_array(source);
 
-  idest->x_size = isource->x_size;
-  idest->y_size = isource->y_size;
-  if (idest->data)
-    stp_sequence_destroy(idest->data);
-  idest->data = stp_sequence_create_copy(isource->data);
+  dest->x_size = source->x_size;
+  dest->y_size = source->y_size;
+  if (dest->data)
+    stp_sequence_destroy(dest->data);
+  dest->data = stp_sequence_create_copy(source->data);
 }
 
-stp_array_t
-stp_array_create_copy(stp_const_array_t array)
+stp_array_t *
+stp_array_create_copy(const stp_array_t *array)
 {
-  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
-  stp_array_t ret;
-  check_array(ia);
+  stp_array_t *ret;
+  check_array(array);
   ret = stp_array_create(0, 0); /* gets freed next */
   stp_array_copy(ret, array);
   return ret;
@@ -128,88 +114,79 @@ stp_array_create_copy(stp_const_array_t array)
 
 
 void
-stp_array_set_size(stp_array_t array, int x_size, int y_size)
+stp_array_set_size(stp_array_t *array, int x_size, int y_size)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
-  check_array(ia);
-  if (ia->data) /* Free old data */
-    stp_sequence_destroy(ia->data);
-  ia->x_size = x_size;
-  ia->y_size = y_size;
-  ia->data = stp_sequence_create();
-  stp_sequence_set_size(ia->data, ia->x_size * ia->y_size);
+  check_array(array);
+  if (array->data) /* Free old data */
+    stp_sequence_destroy(array->data);
+  array->x_size = x_size;
+  array->y_size = y_size;
+  array->data = stp_sequence_create();
+  stp_sequence_set_size(array->data, array->x_size * array->y_size);
 }
 
 void
-stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size)
+stp_array_get_size(const stp_array_t *array, int *x_size, int *y_size)
 {
-  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
-  check_array(ia);
-  *x_size = ia->x_size;
-  *y_size = ia->y_size;
+  check_array(array);
+  *x_size = array->x_size;
+  *y_size = array->y_size;
   return;
 }
 
 void
-stp_array_set_data(stp_array_t array, const double *data)
+stp_array_set_data(stp_array_t *array, const double *data)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
-  check_array(ia);
-  stp_sequence_set_data(ia->data, ia->x_size * ia->y_size,
+  check_array(array);
+  stp_sequence_set_data(array->data, array->x_size * array->y_size,
 			data);
 }
 
 void
-stp_array_get_data(stp_const_array_t array, size_t *size, const double **data)
+stp_array_get_data(const stp_array_t *array, size_t *size, const double **data)
 {
-  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
-  check_array(ia);
-  stp_sequence_get_data(ia->data, size, data);
+  check_array(array);
+  stp_sequence_get_data(array->data, size, data);
 }
 
 int
-stp_array_set_point(stp_array_t array, int x, int y, double data)
+stp_array_set_point(stp_array_t *array, int x, int y, double data)
 {
-  stpi_internal_array_t *ia = (stpi_internal_array_t *) array;
-  check_array(ia);
+  check_array(array);
 
-  if (((ia->x_size * x) + y) >= (ia->x_size * ia->y_size))
+  if (((array->x_size * x) + y) >= (array->x_size * array->y_size))
     return 0;
 
-  return stp_sequence_set_point(ia->data, (ia->x_size * x) + y, data);
-}
+  return stp_sequence_set_point(array->data, (array->x_size * x) + y, data);}
 
 int
-stp_array_get_point(stp_const_array_t array, int x, int y, double *data)
+stp_array_get_point(const stp_array_t *array, int x, int y, double *data)
 {
-  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
-  check_array(ia);
+  check_array(array);
 
-  if (((ia->x_size * x) + y) >= ia->x_size * ia->y_size)
+  if (((array->x_size * x) + y) >= array->x_size * array->y_size)
     return 0;
-  return stp_sequence_get_point(ia->data,
-				(ia->x_size * x) + y, data);
+  return stp_sequence_get_point(array->data,
+				(array->x_size * x) + y, data);
 }
 
-stp_const_sequence_t
-stp_array_get_sequence(stp_const_array_t array)
+const stp_sequence_t *
+stp_array_get_sequence(const stp_array_t *array)
 {
-  const stpi_internal_array_t *ia = (const stpi_internal_array_t *) array;
-  check_array(ia);
+  check_array(array);
 
-  return ia->data;
+  return array->data;
 }
 
-stp_array_t
+stp_array_t *
 stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
 {
   const char *stmp;                          /* Temporary string */
   stp_mxml_node_t *child;                       /* Child sequence node */
   int x_size, y_size;
   size_t count;
-  stp_sequence_t seq = NULL;
-  stp_array_t ret = NULL;
-  stpi_internal_array_t *iret;
+  stp_sequence_t *seq = NULL;
+  stp_array_t *ret = NULL;
 
   stmp = stp_mxmlElementGetAttr(array, "x-size");
   if (stmp)
@@ -243,10 +220,9 @@ stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
     goto error;
 
   ret = stp_array_create(x_size, y_size);
-  iret = (stpi_internal_array_t *) ret;
-  if (iret->data)
-    stp_sequence_destroy(iret->data);
-  iret->data = seq;
+  if (ret->data)
+    stp_sequence_destroy(ret->data);
+  ret->data = seq;
 
   count = stp_sequence_get_size(seq);
   if (count != (x_size * y_size))

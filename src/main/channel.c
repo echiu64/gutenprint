@@ -102,7 +102,7 @@ stpi_channel_clear(void *vc)
 }
 
 void
-stp_channel_reset(stp_vars_t v)
+stp_channel_reset(stp_vars_t *v)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -111,7 +111,7 @@ stp_channel_reset(stp_vars_t v)
 }
 
 void
-stp_channel_reset_channel(stp_vars_t v, int channel)
+stp_channel_reset_channel(stp_vars_t *v, int channel)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -127,7 +127,7 @@ stpi_channel_free(void *vc)
 }
 
 static stpi_subchannel_t *
-get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
+get_channel(stp_vars_t *v, unsigned channel, unsigned subchannel)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -139,9 +139,9 @@ get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
     return NULL;
   return &(cg->c[channel].sc[subchannel]);
 }
-  
+
 void
-stp_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
+stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
 		double value)
 {
   stpi_channel_group_t *cg =
@@ -179,7 +179,7 @@ stp_channel_add(stp_vars_t v, unsigned channel, unsigned subchannel,
 }
 
 void
-stp_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
+stp_channel_set_density_adjustment(stp_vars_t *v, int color, int subchannel,
 				   double adjustment)
 {
   stpi_subchannel_t *sch = get_channel(v, color, subchannel);
@@ -202,7 +202,7 @@ stp_channel_set_density_adjustment(stp_vars_t v, int color, int subchannel,
 }
 
 void
-stp_channel_set_ink_limit(stp_vars_t v, double limit)
+stp_channel_set_ink_limit(stp_vars_t *v, double limit)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -212,7 +212,7 @@ stp_channel_set_ink_limit(stp_vars_t v, double limit)
 }
 
 void
-stp_channel_set_black_channel(stp_vars_t v, int channel)
+stp_channel_set_black_channel(stp_vars_t *v, int channel)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -221,7 +221,7 @@ stp_channel_set_black_channel(stp_vars_t v, int channel)
 }
 
 void
-stp_channel_set_cutoff_adjustment(stp_vars_t v, int color, int subchannel,
+stp_channel_set_cutoff_adjustment(stp_vars_t *v, int color, int subchannel,
 				  double adjustment)
 {
   stpi_subchannel_t *sch = get_channel(v, color, subchannel);
@@ -233,7 +233,7 @@ stp_channel_set_cutoff_adjustment(stp_vars_t v, int color, int subchannel,
 }
 
 static int
-input_needs_splitting(stp_const_vars_t v)
+input_needs_splitting(const stp_vars_t *v)
 {
   const stpi_channel_group_t *cg =
     ((const stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -253,7 +253,7 @@ input_needs_splitting(stp_const_vars_t v)
 }
 
 void
-stp_channel_initialize(stp_vars_t v, stp_image_t *image,
+stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 		       int input_channel_count)
 {
   stpi_channel_group_t *cg =
@@ -403,7 +403,7 @@ ink_sum(const unsigned short *data, int total_channels)
 }
 
 static int
-limit_ink(stp_const_vars_t v)
+limit_ink(const stp_vars_t *v)
 {
   int i;
   int retval = 0;
@@ -442,7 +442,7 @@ mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
 }
 
 void
-stp_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
+stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -584,7 +584,7 @@ stp_channel_convert(stp_const_vars_t v, unsigned *zero_mask)
 }
 
 unsigned short *
-stp_channel_get_input(stp_const_vars_t v)
+stp_channel_get_input(const stp_vars_t *v)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
@@ -592,7 +592,7 @@ stp_channel_get_input(stp_const_vars_t v)
 }
 
 unsigned short *
-stp_channel_get_output(stp_const_vars_t v)
+stp_channel_get_output(const stp_vars_t *v)
 {
   stpi_channel_group_t *cg =
     ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));

@@ -383,7 +383,7 @@ short_copy(unsigned short *out, const unsigned short *in, size_t count)
 }
 
 static unsigned
-generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
+generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 		    unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
@@ -483,7 +483,7 @@ generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 }
 
 static unsigned
-raw_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
+raw_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 		unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
@@ -533,7 +533,7 @@ raw_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 
 #define GENERIC_COLOR_FUNC(fromname, toname)				\
 static unsigned								\
-fromname##_to_##toname(stp_const_vars_t vars, const unsigned char *in,	\
+fromname##_to_##toname(const stp_vars_t *vars, const unsigned char *in,	\
 		       unsigned short *out)				\
 {									\
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
@@ -555,7 +555,7 @@ fromname##_to_##toname(stp_const_vars_t vars, const unsigned char *in,	\
 
 #define COLOR_TO_COLOR_FUNC(T, bits)					      \
 static unsigned								      \
-color_##bits##_to_color(stp_const_vars_t vars, const unsigned char *in,	      \
+color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,      \
 			unsigned short *out)				      \
 {									      \
   int i;								      \
@@ -642,8 +642,8 @@ GENERIC_COLOR_FUNC(color, color)
 
 #define FAST_COLOR_TO_COLOR_FUNC(T, bits)				     \
 static unsigned								     \
-color_##bits##_to_color_fast(stp_const_vars_t vars, const unsigned char *in, \
-			   unsigned short *out)				     \
+color_##bits##_to_color_fast(const stp_vars_t *vars, const unsigned char *in,\
+			     unsigned short *out)			     \
 {									     \
   int i;								     \
   int i0 = -1;								     \
@@ -711,7 +711,7 @@ GENERIC_COLOR_FUNC(color, color_fast)
 
 #define RAW_COLOR_TO_COLOR_FUNC(T, bits)				    \
 static unsigned								    \
-color_##bits##_to_color_raw(stp_const_vars_t vars, const unsigned char *in, \
+color_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
 			    unsigned short *out)			    \
 {									    \
   int i;								    \
@@ -748,7 +748,7 @@ GENERIC_COLOR_FUNC(color, color_raw)
 
 #define GRAY_TO_COLOR_FUNC(T, bits)					 \
 static unsigned								 \
-gray_##bits##_to_color(stp_const_vars_t vars, const unsigned char *in,	 \
+gray_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,	 \
 		   unsigned short *out)					 \
 {									 \
   int i;								 \
@@ -807,7 +807,7 @@ GENERIC_COLOR_FUNC(gray, color)
 
 #define GRAY_TO_COLOR_RAW_FUNC(T, bits)					   \
 static unsigned								   \
-gray_##bits##_to_color_raw(stp_const_vars_t vars, const unsigned char *in, \
+gray_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
 			   unsigned short *out)				   \
 {									   \
   int i;								   \
@@ -838,7 +838,7 @@ GENERIC_COLOR_FUNC(gray, color_raw)
 
 #define COLOR_TO_KCMY_FUNC(name, name2, name3, name4, bits)		   \
 static unsigned								   \
-name##_##bits##_to_##name2(stp_const_vars_t vars, const unsigned char *in, \
+name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
 			   unsigned short *out)				   \
 {									   \
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
@@ -871,7 +871,7 @@ GENERIC_COLOR_FUNC(color, kcmy_raw)
 
 #define COLOR_TO_KCMY_THRESHOLD_FUNC(T, name)				\
 static unsigned								\
-name##_to_kcmy_threshold(stp_const_vars_t vars,				\
+name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			const unsigned char *in,			\
 			unsigned short *out)				\
 {									\
@@ -928,7 +928,7 @@ GENERIC_COLOR_FUNC(color, kcmy_threshold)
 
 #define CMYK_TO_KCMY_THRESHOLD_FUNC(T, name)				\
 static unsigned								\
-name##_to_kcmy_threshold(stp_const_vars_t vars,				\
+name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			const unsigned char *in,			\
 			unsigned short *out)				\
 {									\
@@ -975,7 +975,7 @@ GENERIC_COLOR_FUNC(cmyk, kcmy_threshold)
 
 #define KCMY_TO_KCMY_THRESHOLD_FUNC(T, name)				\
 static unsigned								\
-name##_to_kcmy_threshold(stp_const_vars_t vars,				\
+name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
 {									\
@@ -1015,7 +1015,7 @@ GENERIC_COLOR_FUNC(kcmy, kcmy_threshold)
 
 #define GRAY_TO_COLOR_THRESHOLD_FUNC(T, name, bits, channels)		\
 static unsigned								\
-gray_##bits##_to_##name##_threshold(stp_const_vars_t vars,		\
+gray_##bits##_to_##name##_threshold(const stp_vars_t *vars,		\
 				    const unsigned char *in,		\
 				    unsigned short *out)		\
 {									\
@@ -1054,7 +1054,7 @@ GENERIC_COLOR_FUNC(gray, kcmy_threshold)
 
 #define COLOR_TO_COLOR_THRESHOLD_FUNC(T, name)				\
 static unsigned								\
-name##_to_color_threshold(stp_const_vars_t vars,			\
+name##_to_color_threshold(const stp_vars_t *vars,			\
 		       const unsigned char *in,				\
 		       unsigned short *out)				\
 {									\
@@ -1096,7 +1096,7 @@ GENERIC_COLOR_FUNC(color, color_threshold)
 
 #define COLOR_TO_GRAY_THRESHOLD_FUNC(T, name, channels, max_channels)	\
 static unsigned								\
-name##_to_gray_threshold(stp_const_vars_t vars,				\
+name##_to_gray_threshold(const stp_vars_t *vars,		       	\
 			const unsigned char *in,			\
 			unsigned short *out)				\
 {									\
@@ -1145,7 +1145,7 @@ GENERIC_COLOR_FUNC(gray, gray_threshold)
 
 #define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		     \
 static unsigned								     \
-namein##_##bits##_to_##name2(stp_const_vars_t vars, const unsigned char *in, \
+namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
 			   unsigned short *out)				     \
 {									     \
   int i;								     \
@@ -1210,7 +1210,7 @@ GENERIC_COLOR_FUNC(kcmy, color_raw)
 
 #define CMYK_TO_KCMY_FUNC(T, size)					  \
 static unsigned								  \
-cmyk_##size##_to_kcmy(stp_const_vars_t vars,				  \
+cmyk_##size##_to_kcmy(const stp_vars_t *vars,				  \
 		      const unsigned char *in,				  \
 		      unsigned short *out)				  \
 {									  \
@@ -1253,7 +1253,7 @@ GENERIC_COLOR_FUNC(cmyk, kcmy)
 
 #define KCMY_TO_KCMY_FUNC(T, size)					    \
 static unsigned								    \
-kcmy_##size##_to_kcmy(stp_const_vars_t vars,				    \
+kcmy_##size##_to_kcmy(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
 {									    \
@@ -1295,7 +1295,7 @@ GENERIC_COLOR_FUNC(kcmy, kcmy)
 
 #define GRAY_TO_GRAY_FUNC(T, bits)					 \
 static unsigned								 \
-gray_##bits##_to_gray(stp_const_vars_t vars,				 \
+gray_##bits##_to_gray(const stp_vars_t *vars,				 \
 		      const unsigned char *in,				 \
 		      unsigned short *out)				 \
 {									 \
@@ -1337,7 +1337,7 @@ GENERIC_COLOR_FUNC(gray, gray)
 
 #define COLOR_TO_GRAY_FUNC(T, bits)					   \
 static unsigned								   \
-color_##bits##_to_gray(stp_const_vars_t vars,				   \
+color_##bits##_to_gray(const stp_vars_t *vars,				   \
 		       const unsigned char *in,				   \
 		       unsigned short *out)				   \
 {									   \
@@ -1391,7 +1391,7 @@ GENERIC_COLOR_FUNC(color, gray)
 
 #define CMYK_TO_GRAY_FUNC(T, bits)					    \
 static unsigned								    \
-cmyk_##bits##_to_gray(stp_const_vars_t vars,				    \
+cmyk_##bits##_to_gray(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
 {									    \
@@ -1448,7 +1448,7 @@ GENERIC_COLOR_FUNC(cmyk, gray)
 
 #define KCMY_TO_GRAY_FUNC(T, bits)					    \
 static unsigned								    \
-kcmy_##bits##_to_gray(stp_const_vars_t vars,				    \
+kcmy_##bits##_to_gray(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
 {									    \
@@ -1505,7 +1505,7 @@ GENERIC_COLOR_FUNC(kcmy, gray)
 
 #define GRAY_TO_GRAY_RAW_FUNC(T, bits)					\
 static unsigned								\
-gray_##bits##_to_gray_raw(stp_const_vars_t vars,			\
+gray_##bits##_to_gray_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
 {									\
@@ -1536,7 +1536,7 @@ GENERIC_COLOR_FUNC(gray, gray_raw)
 
 #define COLOR_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		\
 static unsigned								\
-color_##bits##_to_gray_##name2(stp_const_vars_t vars,			\
+color_##bits##_to_gray_##name2(const stp_vars_t *vars,			\
 			       const unsigned char *in,			\
 			       unsigned short *out)			\
 {									\
@@ -1591,7 +1591,7 @@ COLOR_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
 
 #define CMYK_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		    \
 static unsigned								    \
-cmyk_##bits##_to_gray_##name2(stp_const_vars_t vars,			    \
+cmyk_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
 			      const unsigned char *in,			    \
 			      unsigned short *out)			    \
 {									    \
@@ -1650,7 +1650,7 @@ CMYK_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
 
 #define KCMY_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		    \
 static unsigned								    \
-kcmy_##bits##_to_gray_##name2(stp_const_vars_t vars,			    \
+kcmy_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
 			      const unsigned char *in,			    \
 			      unsigned short *out)			    \
 {									    \
@@ -1709,7 +1709,7 @@ KCMY_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
 
 #define CMYK_TO_KCMY_RAW_FUNC(T, bits)					\
 static unsigned								\
-cmyk_##bits##_to_kcmy_raw(stp_const_vars_t vars,			\
+cmyk_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
 {									\
@@ -1744,7 +1744,7 @@ GENERIC_COLOR_FUNC(cmyk, kcmy_raw)
 
 #define KCMY_TO_KCMY_RAW_FUNC(T, bits)					\
 static unsigned								\
-kcmy_##bits##_to_kcmy_raw(stp_const_vars_t vars,			\
+kcmy_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
 {									\
@@ -1777,7 +1777,7 @@ KCMY_TO_KCMY_RAW_FUNC(unsigned short, 16)
 GENERIC_COLOR_FUNC(kcmy, kcmy_raw)
 
 static unsigned
-generic_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
+generic_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
 		       unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
@@ -1839,8 +1839,8 @@ generic_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
 }
 
 static unsigned
-raw_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
-		       unsigned short *out)
+raw_kcmy_to_cmykrb(const stp_vars_t *vars, const unsigned short *in,
+		   unsigned short *out)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
   unsigned short nz[6];
@@ -1902,7 +1902,7 @@ raw_kcmy_to_cmykrb(stp_const_vars_t vars, const unsigned short *in,
 
 #define COLOR_TO_CMYKRB_FUNC(name, name2, name3, name4, bits)		   \
 static unsigned								   \
-name##_##bits##_to_##name2(stp_const_vars_t vars, const unsigned char *in, \
+name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in,\
 			  unsigned short *out)				   \
 {									   \
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	   \
@@ -1963,7 +1963,7 @@ GENERIC_COLOR_FUNC(kcmy, cmykrb_raw)
 
 #define DESATURATED_FUNC(name, name2, bits)				 \
 static unsigned								 \
-name##_##bits##_to_##name2##_desaturated(stp_const_vars_t vars,		 \
+name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	 \
 				         const unsigned char *in,	 \
 				         unsigned short *out)		 \
 {									 \
@@ -2006,7 +2006,7 @@ GENERIC_COLOR_FUNC(kcmy, cmykrb_desaturated)
 
 #define CMYK_DISPATCH(name)						\
 static unsigned								\
-CMYK_to_##name(stp_const_vars_t vars, const unsigned char *in,		\
+CMYK_to_##name(const stp_vars_t *vars, const unsigned char *in,		\
 	       unsigned short *out)					\
 {									\
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
@@ -2042,7 +2042,7 @@ CMYK_DISPATCH(gray_threshold)
 
 #define RAW_TO_RAW_THRESHOLD_FUNC(T, name)				\
 static unsigned								\
-name##_to_raw_threshold(stp_const_vars_t vars,				\
+name##_to_raw_threshold(const stp_vars_t *vars,				\
 			const unsigned char *in,			\
 			unsigned short *out)				\
 {									\
@@ -2082,7 +2082,7 @@ GENERIC_COLOR_FUNC(raw, raw_threshold)
 
 #define RAW_TO_RAW_FUNC(T, size)					  \
 static unsigned								  \
-raw_##size##_to_raw(stp_const_vars_t vars,				  \
+raw_##size##_to_raw(const stp_vars_t *vars,				  \
 		    const unsigned char *in,				  \
 		    unsigned short *out)				  \
 {									  \
@@ -2124,7 +2124,7 @@ GENERIC_COLOR_FUNC(raw, raw)
 
 #define RAW_TO_RAW_RAW_FUNC(T, bits)					\
 static unsigned								\
-raw_##bits##_to_raw_raw(stp_const_vars_t vars,				\
+raw_##bits##_to_raw_raw(const stp_vars_t *vars,				\
 		        const unsigned char *in,			\
 		        unsigned short *out)				\
 {									\
@@ -2160,7 +2160,7 @@ GENERIC_COLOR_FUNC(raw, raw_raw)
 
 #define CONVERSION_FUNCTION_WITH_FAST(from, to, from2)		\
 static unsigned							\
-generic_##from##_to_##to(stp_const_vars_t v,			\
+generic_##from##_to_##to(const stp_vars_t *v,			\
 			 const unsigned char *in,		\
 			 unsigned short *out)			\
 {								\
@@ -2186,7 +2186,7 @@ generic_##from##_to_##to(stp_const_vars_t v,			\
 
 #define CONVERSION_FUNCTION_WITHOUT_FAST(from, to, from2)	\
 static unsigned							\
-generic_##from##_to_##to(stp_const_vars_t v,			\
+generic_##from##_to_##to(const stp_vars_t *v,			\
 			 const unsigned char *in,		\
 			 unsigned short *out)			\
 {								\
@@ -2211,7 +2211,7 @@ generic_##from##_to_##to(stp_const_vars_t v,			\
 
 #define CONVERSION_FUNCTION_WITHOUT_DESATURATED(from, to, from2)	\
 static unsigned								\
-generic_##from##_to_##to(stp_const_vars_t v,				\
+generic_##from##_to_##to(const stp_vars_t *v,				\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
 {									\
@@ -2247,7 +2247,7 @@ CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, kcmy, gray)
 CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, cmykrb, gray)
 
 unsigned
-stpi_color_convert_to_gray(stp_const_vars_t v,
+stpi_color_convert_to_gray(const stp_vars_t *v,
 			   const unsigned char *in,
 			   unsigned short *out)
 {
@@ -2269,7 +2269,7 @@ stpi_color_convert_to_gray(stp_const_vars_t v,
 }
 
 unsigned
-stpi_color_convert_to_color(stp_const_vars_t v,
+stpi_color_convert_to_color(const stp_vars_t *v,
 			    const unsigned char *in,
 			    unsigned short *out)
 {
@@ -2291,7 +2291,7 @@ stpi_color_convert_to_color(stp_const_vars_t v,
 }
 
 unsigned
-stpi_color_convert_to_kcmy(stp_const_vars_t v,
+stpi_color_convert_to_kcmy(const stp_vars_t *v,
 			   const unsigned char *in,
 			   unsigned short *out)
 {
@@ -2313,7 +2313,7 @@ stpi_color_convert_to_kcmy(stp_const_vars_t v,
 }
 
 unsigned
-stpi_color_convert_to_cmykrb(stp_const_vars_t v,
+stpi_color_convert_to_cmykrb(const stp_vars_t *v,
 			     const unsigned char *in,
 			     unsigned short *out)
 {
@@ -2335,7 +2335,7 @@ stpi_color_convert_to_cmykrb(stp_const_vars_t v,
 }
 
 unsigned
-stpi_color_convert_raw(stp_const_vars_t v,
+stpi_color_convert_raw(const stp_vars_t *v,
 		       const unsigned char *in,
 		       unsigned short *out)
 {

@@ -44,10 +44,10 @@ main(int argc, char **argv)
       stp_parameter_list_t params;
       int nparams;
       stp_parameter_t desc;
-      stp_const_printer_t printer = stp_get_printer_by_index(i);
+      const stp_printer_t *printer = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(printer);
       const char *family = stp_printer_get_family(printer);
-      stp_vars_t pv = stp_vars_create_copy(stp_printer_get_defaults(printer));
+      stp_vars_t *pv = stp_vars_create_copy(stp_printer_get_defaults(printer));
       int tcount = 0;
       size_t count;
       int printer_is_color = 0;

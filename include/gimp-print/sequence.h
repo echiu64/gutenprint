@@ -45,23 +45,22 @@ extern "C" {
    * @{
    */
 
+struct stp_sequence;
   /** The sequence opaque data type. */
-typedef void *stp_sequence_t;
-  /** The constant sequence opaque data type. */
-typedef const void *stp_const_sequence_t;
+typedef struct stp_sequence stp_sequence_t;
 
   /**
    * Create a new sequence.
    * @returns the newly created sequence.
    */
-extern stp_sequence_t stp_sequence_create(void);
+extern stp_sequence_t *stp_sequence_create(void);
 
   /**
    * Destroy a sequence.
    * It is an error to destroy the sequence more than once.
    * @param sequence the sequence to destroy.
    */
-extern void stp_sequence_destroy(stp_sequence_t sequence);
+extern void stp_sequence_destroy(stp_sequence_t *sequence);
 
   /**
    * Copy an sequence.
@@ -70,8 +69,8 @@ extern void stp_sequence_destroy(stp_sequence_t sequence);
    * @param dest the destination sequence.
    * @param source the source sequence.
    */
-extern void stp_sequence_copy(stp_sequence_t dest,
-			      stp_const_sequence_t source);
+extern void stp_sequence_copy(stp_sequence_t *dest,
+			      const stp_sequence_t *source);
 
   /**
    * Copy and allocate an sequence.
@@ -81,7 +80,7 @@ extern void stp_sequence_copy(stp_sequence_t dest,
    * @param sequence the source sequence.
    * @returns the new copy of the sequence.
    */
-extern stp_sequence_t stp_sequence_create_copy(stp_const_sequence_t sequence);
+extern stp_sequence_t *stp_sequence_create_copy(const stp_sequence_t *sequence);
 
   /**
    * Set the lower and upper bounds.
@@ -93,7 +92,7 @@ extern stp_sequence_t stp_sequence_create_copy(stp_const_sequence_t sequence);
    * @returns 1 on success, or 0 if the lower bound is greater than
    * the upper bound.
    */
-extern int stp_sequence_set_bounds(stp_sequence_t sequence,
+extern int stp_sequence_set_bounds(stp_sequence_t *sequence,
 				   double low, double high);
 
   /**
@@ -104,7 +103,7 @@ extern int stp_sequence_set_bounds(stp_sequence_t sequence,
    * @param low a pointer to a double to store the low bound in.
    * @param high a pointer to a double to store the high bound in.
    */
-extern void stp_sequence_get_bounds(stp_const_sequence_t sequence,
+extern void stp_sequence_get_bounds(const stp_sequence_t *sequence,
 				    double *low, double *high);
 
 
@@ -116,7 +115,7 @@ extern void stp_sequence_get_bounds(stp_const_sequence_t sequence,
    * @param low a pointer to a double to store the low bound in.
    * @param high a pointer to a double to store the high bound in.
    */
-extern void stp_sequence_get_range(stp_const_sequence_t sequence,
+extern void stp_sequence_get_range(const stp_sequence_t *sequence,
 				   double *low, double *high);
 
   /**
@@ -127,13 +126,13 @@ extern void stp_sequence_get_range(stp_const_sequence_t sequence,
    * @param size the size to set the sequence to.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_size(stp_sequence_t sequence, size_t size);
+extern int stp_sequence_set_size(stp_sequence_t *sequence, size_t size);
 
   /**
    * Get the sequence size.
    * @returns the sequence size.
    */
-extern size_t stp_sequence_get_size(stp_const_sequence_t sequence);
+extern size_t stp_sequence_get_size(const stp_sequence_t *sequence);
 
   /**
    * Set the data in a sequence.
@@ -143,7 +142,7 @@ extern size_t stp_sequence_get_size(stp_const_sequence_t sequence);
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_data(stp_sequence_t sequence,
+extern int stp_sequence_set_data(stp_sequence_t *sequence,
 				 size_t count,
 				 const double *data);
 
@@ -157,7 +156,7 @@ extern int stp_sequence_set_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_subrange(stp_sequence_t sequence,
+extern int stp_sequence_set_subrange(stp_sequence_t *sequence,
 				     size_t where, size_t size,
 				     const double *data);
 
@@ -169,13 +168,13 @@ extern int stp_sequence_set_subrange(stp_sequence_t sequence,
    * @param data a pointer to the first element of an sequence of doubles
    * is stored in a pointer to double*.
    * @code
-   * stp_sequence_t sequence;
+   * stp_sequence_t *sequence;
    * size_t size;
    * double *data;
    * stp_sequence_get_data(sequence, &size, &data);
    * @endcode
    */
-extern void stp_sequence_get_data(stp_const_sequence_t sequence,
+extern void stp_sequence_get_data(const stp_sequence_t *sequence,
 				  size_t *size, const double **data);
 
   /**
@@ -185,7 +184,7 @@ extern void stp_sequence_get_data(stp_const_sequence_t sequence,
    * @param data the datum to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_point(stp_sequence_t sequence,
+extern int stp_sequence_set_point(stp_sequence_t *sequence,
 				  size_t where, double data);
 
   /**
@@ -195,7 +194,7 @@ extern int stp_sequence_set_point(stp_sequence_t sequence,
    * @param data the datum is stored in the double pointed to.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_get_point(stp_const_sequence_t sequence,
+extern int stp_sequence_get_point(const stp_sequence_t *sequence,
 				  size_t where, double *data);
 
 
@@ -207,7 +206,7 @@ extern int stp_sequence_get_point(stp_const_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_float_data(stp_sequence_t sequence,
+extern int stp_sequence_set_float_data(stp_sequence_t *sequence,
 				       size_t count, const float *data);
 
   /**
@@ -218,7 +217,7 @@ extern int stp_sequence_set_float_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_long_data(stp_sequence_t sequence,
+extern int stp_sequence_set_long_data(stp_sequence_t *sequence,
 				      size_t count, const long *data);
 
   /**
@@ -229,7 +228,7 @@ extern int stp_sequence_set_long_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_ulong_data(stp_sequence_t sequence,
+extern int stp_sequence_set_ulong_data(stp_sequence_t *sequence,
 				       size_t count, const unsigned long *data);
 
   /**
@@ -240,7 +239,7 @@ extern int stp_sequence_set_ulong_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_int_data(stp_sequence_t sequence,
+extern int stp_sequence_set_int_data(stp_sequence_t *sequence,
 				     size_t count, const int *data);
 
   /**
@@ -251,7 +250,7 @@ extern int stp_sequence_set_int_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_uint_data(stp_sequence_t sequence,
+extern int stp_sequence_set_uint_data(stp_sequence_t *sequence,
 				      size_t count, const unsigned int *data);
 
   /**
@@ -262,7 +261,7 @@ extern int stp_sequence_set_uint_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_short_data(stp_sequence_t sequence,
+extern int stp_sequence_set_short_data(stp_sequence_t *sequence,
 				       size_t count, const short *data);
 
   /**
@@ -273,7 +272,7 @@ extern int stp_sequence_set_short_data(stp_sequence_t sequence,
    * containing the data to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_sequence_set_ushort_data(stp_sequence_t sequence,
+extern int stp_sequence_set_ushort_data(stp_sequence_t *sequence,
 					size_t count, const unsigned short *data);
 
   /**
@@ -288,7 +287,7 @@ extern int stp_sequence_set_ushort_data(stp_sequence_t sequence,
    * @returns a pointer to the first element of an sequence of floats
    * is stored in a pointer to float*.
    */
-extern const float *stp_sequence_get_float_data(stp_const_sequence_t sequence,
+extern const float *stp_sequence_get_float_data(const stp_sequence_t *sequence,
 						size_t *count);
 
   /**
@@ -303,7 +302,7 @@ extern const float *stp_sequence_get_float_data(stp_const_sequence_t sequence,
    * @returns a pointer to the first element of an sequence of longs
    * is stored in a pointer to long*.
    */
-extern const long *stp_sequence_get_long_data(stp_const_sequence_t sequence,
+extern const long *stp_sequence_get_long_data(const stp_sequence_t *sequence,
 					      size_t *count);
 
   /**
@@ -318,7 +317,7 @@ extern const long *stp_sequence_get_long_data(stp_const_sequence_t sequence,
    * @returns a pointer to the first element of an sequence of
    * unsigned longs is stored in a pointer to unsigned long*.
    */
-extern const unsigned long *stp_sequence_get_ulong_data(stp_const_sequence_t sequence,
+extern const unsigned long *stp_sequence_get_ulong_data(const stp_sequence_t *sequence,
 							size_t *count);
 
   /**
@@ -333,7 +332,7 @@ extern const unsigned long *stp_sequence_get_ulong_data(stp_const_sequence_t seq
    * @returns a pointer to the first element of an sequence of ints
    * is stored in a pointer to int*.
    */
-extern const int *stp_sequence_get_int_data(stp_const_sequence_t sequence,
+extern const int *stp_sequence_get_int_data(const stp_sequence_t *sequence,
 					    size_t *count);
 
   /**
@@ -348,7 +347,7 @@ extern const int *stp_sequence_get_int_data(stp_const_sequence_t sequence,
    * @returns a pointer to the first element of an sequence of
    * unsigned ints is stored in a pointer to unsigned int*.
    */
-extern const unsigned int *stp_sequence_get_uint_data(stp_const_sequence_t sequence,
+extern const unsigned int *stp_sequence_get_uint_data(const stp_sequence_t *sequence,
 						      size_t *count);
 
   /**
@@ -363,7 +362,7 @@ extern const unsigned int *stp_sequence_get_uint_data(stp_const_sequence_t seque
    * @returns a pointer to the first element of an sequence of shorts
    * is stored in a pointer to short*.
    */
-extern const short *stp_sequence_get_short_data(stp_const_sequence_t sequence,
+extern const short *stp_sequence_get_short_data(const stp_sequence_t *sequence,
 						size_t *count);
 
   /**
@@ -378,7 +377,7 @@ extern const short *stp_sequence_get_short_data(stp_const_sequence_t sequence,
    * @returns a pointer to the first element of an sequence of
    * unsigned shorts is stored in a pointer to unsigned short*.
    */
-extern const unsigned short *stp_sequence_get_ushort_data(stp_const_sequence_t sequence,
+extern const unsigned short *stp_sequence_get_ushort_data(const stp_sequence_t *sequence,
 							  size_t *count);
 
   /** @} */

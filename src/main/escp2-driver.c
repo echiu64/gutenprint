@@ -40,13 +40,13 @@
 #endif
 
 static escp2_privdata_t *
-get_privdata(stp_vars_t v)
+get_privdata(stp_vars_t *v)
 {
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
 static void
-escp2_reset_printer(stp_vars_t v)
+escp2_reset_printer(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   /*
@@ -60,7 +60,7 @@ escp2_reset_printer(stp_vars_t v)
 }
 
 static void
-print_remote_param(stp_vars_t v, const char *param, const char *value)
+print_remote_param(stp_vars_t *v, const char *param, const char *value)
 {
   stp_send_command(v, "\033(R", "bcscs", '\0', param, ':',
 		    value ? value : "NULL");
@@ -68,7 +68,7 @@ print_remote_param(stp_vars_t v, const char *param, const char *value)
 }
 
 static void
-print_remote_int_param(stp_vars_t v, const char *param, int value)
+print_remote_int_param(stp_vars_t *v, const char *param, int value)
 {
   char buf[64];
   (void) snprintf(buf, 64, "%d", value);
@@ -76,7 +76,7 @@ print_remote_int_param(stp_vars_t v, const char *param, int value)
 }
 
 static void
-print_remote_float_param(stp_vars_t v, const char *param, double value)
+print_remote_float_param(stp_vars_t *v, const char *param, double value)
 {
   char buf[64];
   (void) snprintf(buf, 64, "%f", value);
@@ -84,7 +84,7 @@ print_remote_float_param(stp_vars_t v, const char *param, double value)
 }
 
 static void
-print_debug_params(stp_vars_t v)
+print_debug_params(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   stp_parameter_list_t params = stp_get_parameter_list(v);
@@ -196,7 +196,7 @@ print_debug_params(stp_vars_t v)
 }
 
 static void
-escp2_set_remote_sequence(stp_vars_t v)
+escp2_set_remote_sequence(stp_vars_t *v)
 {
   /* Magic remote mode commands, whatever they do */
   escp2_privdata_t *pd = get_privdata(v);
@@ -262,13 +262,13 @@ escp2_set_remote_sequence(stp_vars_t v)
 }
 
 static void
-escp2_set_graphics_mode(stp_vars_t v)
+escp2_set_graphics_mode(stp_vars_t *v)
 {
   stp_send_command(v, "\033(G", "bc", 1);
 }
 
 static void
-escp2_set_resolution(stp_vars_t v)
+escp2_set_resolution(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->use_extended_commands)
@@ -283,7 +283,7 @@ escp2_set_resolution(stp_vars_t v)
 }
 
 static void
-escp2_set_color(stp_vars_t v)
+escp2_set_color(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->use_fast_360)
@@ -294,7 +294,7 @@ escp2_set_color(stp_vars_t v)
 }
 
 static void
-escp2_set_printer_weave(stp_vars_t v)
+escp2_set_printer_weave(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int printer_weave_parm = 0;
@@ -306,7 +306,7 @@ escp2_set_printer_weave(stp_vars_t v)
 }
 
 static void
-escp2_set_printhead_speed(stp_vars_t v)
+escp2_set_printhead_speed(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const char *direction = stp_get_string_parameter(v, "PrintingDirection");
@@ -330,7 +330,7 @@ escp2_set_printhead_speed(stp_vars_t v)
 }
 
 static void
-escp2_set_dot_size(stp_vars_t v)
+escp2_set_dot_size(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   /* Dot size */
@@ -339,7 +339,7 @@ escp2_set_dot_size(stp_vars_t v)
 }
 
 static void
-escp2_set_page_height(stp_vars_t v)
+escp2_set_page_height(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int l = pd->page_management_units * pd->page_true_height / 72;
@@ -350,7 +350,7 @@ escp2_set_page_height(stp_vars_t v)
 }
 
 static void
-escp2_set_margins(stp_vars_t v)
+escp2_set_margins(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int bot = pd->page_management_units * pd->page_bottom / 72;
@@ -366,7 +366,7 @@ escp2_set_margins(stp_vars_t v)
 }
 
 static void
-escp2_set_form_factor(stp_vars_t v)
+escp2_set_form_factor(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->advanced_command_set)
@@ -385,7 +385,7 @@ escp2_set_form_factor(stp_vars_t v)
 }
 
 static void
-escp2_set_printhead_resolution(stp_vars_t v)
+escp2_set_printhead_resolution(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->use_extended_commands)
@@ -406,7 +406,7 @@ escp2_set_printhead_resolution(stp_vars_t v)
 }
 
 static void
-set_vertical_position(stp_vars_t v, stp_pass_t *pass)
+set_vertical_position(stp_vars_t *v, stp_pass_t *pass)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int advance = pass->logicalpassstart - pd->last_pass_offset -
@@ -428,7 +428,7 @@ set_vertical_position(stp_vars_t v, stp_pass_t *pass)
 }
 
 static void
-set_color(stp_vars_t v, stp_pass_t *pass, int color)
+set_color(stp_vars_t *v, stp_pass_t *pass, int color)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->last_color != color && ! pd->use_extended_commands)
@@ -444,7 +444,7 @@ set_color(stp_vars_t v, stp_pass_t *pass, int color)
 }
 
 static void
-set_horizontal_position(stp_vars_t v, stp_pass_t *pass, int vertical_subpass)
+set_horizontal_position(stp_vars_t *v, stp_pass_t *pass, int vertical_subpass)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int microoffset = (vertical_subpass & (pd->horizontal_passes - 1)) *
@@ -464,7 +464,7 @@ set_horizontal_position(stp_vars_t v, stp_pass_t *pass, int vertical_subpass)
 }
 
 static void
-send_print_command(stp_vars_t v, stp_pass_t *pass, int color, int nlines)
+send_print_command(stp_vars_t *v, stp_pass_t *pass, int color, int nlines)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
@@ -500,7 +500,7 @@ send_print_command(stp_vars_t v, stp_pass_t *pass, int color, int nlines)
 }
 
 static void
-send_extra_data(stp_vars_t v, int extralines)
+send_extra_data(stp_vars_t *v, int extralines)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
@@ -541,7 +541,7 @@ send_extra_data(stp_vars_t v, int extralines)
 }
 
 void
-stpi_escp2_init_printer(stp_vars_t v)
+stpi_escp2_init_printer(stp_vars_t *v)
 {
   escp2_reset_printer(v);
   escp2_set_remote_sequence(v);
@@ -558,7 +558,7 @@ stpi_escp2_init_printer(stp_vars_t v)
 }
 
 void
-stpi_escp2_deinit_printer(stp_vars_t v)
+stpi_escp2_deinit_printer(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   stp_puts("\033@", v);	/* ESC/P2 reset */
@@ -581,7 +581,7 @@ stpi_escp2_deinit_printer(stp_vars_t v)
 }
 
 void
-stpi_escp2_flush_pass(stp_vars_t v, int passno, int vertical_subpass)
+stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 {
   int j;
   escp2_privdata_t *pd = get_privdata(v);
@@ -623,7 +623,7 @@ stpi_escp2_flush_pass(stp_vars_t v, int passno, int vertical_subpass)
 }
 
 void
-stpi_escp2_terminate_page(stp_vars_t v)
+stpi_escp2_terminate_page(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (!pd->input_slot ||

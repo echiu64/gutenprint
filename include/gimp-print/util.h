@@ -64,34 +64,34 @@ extern int stp_init(void);
  */
 extern const char *stp_set_output_codeset(const char *codeset);
 
-extern stp_curve_t stp_read_and_compose_curves(const char *s1, const char *s2,
-					       stp_curve_compose_t comp);
+extern stp_curve_t *stp_read_and_compose_curves(const char *s1, const char *s2,
+						stp_curve_compose_t comp);
 extern void stp_abort(void);
 
 /*
  * Remove inactive and unclaimed options from the list
  */
-extern void stp_prune_inactive_options(stp_vars_t v);
+extern void stp_prune_inactive_options(stp_vars_t *v);
 
 
-extern void stp_zprintf(stp_const_vars_t v, const char *format, ...)
+extern void stp_zprintf(const stp_vars_t *v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 
 extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
-			stp_const_vars_t v);
+			const stp_vars_t *v);
 
-extern void stp_putc(int ch, stp_const_vars_t v);
-extern void stp_put16_le(unsigned short sh, stp_const_vars_t v);
-extern void stp_put16_be(unsigned short sh, stp_const_vars_t v);
-extern void stp_put32_le(unsigned int sh, stp_const_vars_t v);
-extern void stp_put32_be(unsigned int sh, stp_const_vars_t v);
-extern void stp_puts(const char *s, stp_const_vars_t v);
-extern void stp_send_command(stp_const_vars_t v, const char *command,
+extern void stp_putc(int ch, const stp_vars_t *v);
+extern void stp_put16_le(unsigned short sh, const stp_vars_t *v);
+extern void stp_put16_be(unsigned short sh, const stp_vars_t *v);
+extern void stp_put32_le(unsigned int sh, const stp_vars_t *v);
+extern void stp_put32_be(unsigned int sh, const stp_vars_t *v);
+extern void stp_puts(const char *s, const stp_vars_t *v);
+extern void stp_send_command(const stp_vars_t *v, const char *command,
 			     const char *format, ...);
 
 extern void stp_erputc(int ch);
 
-extern void stp_eprintf(stp_const_vars_t v, const char *format, ...)
+extern void stp_eprintf(const stp_vars_t *v, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
 extern void stp_erprintf(const char *format, ...)
        __attribute__((format(__printf__, 1, 2)));
@@ -121,13 +121,13 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_OLYMPUS        0x40000
 
 extern unsigned long stp_get_debug_level(void);
-extern void stp_dprintf(unsigned long level, stp_const_vars_t v,
+extern void stp_dprintf(unsigned long level, const stp_vars_t *v,
 			const char *format, ...)
        __attribute__((format(__printf__, 3, 4)));
 extern void stp_deprintf(unsigned long level, const char *format, ...)
        __attribute__((format(__printf__, 2, 3)));
-extern void stp_init_debug_messages(stp_vars_t v);
-extern void stp_flush_debug_messages(stp_vars_t v);
+extern void stp_init_debug_messages(stp_vars_t *v);
+extern void stp_flush_debug_messages(stp_vars_t *v);
 
 
 extern void *stp_malloc (size_t);

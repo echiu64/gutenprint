@@ -118,7 +118,7 @@ extern const stp_papersize_t *stp_get_papersize_by_size(int length,
  */
 extern const stp_papersize_t *stp_get_papersize_by_index(int idx);
 
-extern void stp_default_media_size(stp_const_vars_t v,
+extern void stp_default_media_size(const stp_vars_t *v,
 				   int *width, int *height);
 
 /** @} */

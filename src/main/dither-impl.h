@@ -69,7 +69,7 @@ typedef struct
 
 #define MAX_SPREAD 32
 
-typedef void stpi_ditherfunc_t(stp_vars_t, int, const unsigned short *, int,
+typedef void stpi_ditherfunc_t(stp_vars_t *, int, const unsigned short *, int,
 			       int, const unsigned char *);
 
 /*
@@ -184,10 +184,10 @@ extern stpi_ditherfunc_t stpi_dither_et;
 extern stpi_ditherfunc_t stpi_dither_ut;
 
 extern void stpi_dither_reverse_row_ends(stpi_dither_t *d);
-extern int stpi_dither_translate_channel(stp_vars_t v, unsigned channel,
+extern int stpi_dither_translate_channel(stp_vars_t *v, unsigned channel,
 					 unsigned subchannel);
 extern void stpi_dither_channel_destroy(stpi_dither_channel_t *channel);
-extern void stpi_dither_finalize(stp_vars_t v);
+extern void stpi_dither_finalize(stp_vars_t *v);
 extern int *stpi_dither_get_errline(stpi_dither_t *d, int row, int color);
 
 

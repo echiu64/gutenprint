@@ -74,8 +74,8 @@ typedef struct
   GtkWidget *dialog;
   GtkWidget *gamma_curve;
   const char *help_text;
-  stp_curve_t current;
-  stp_const_curve_t deflt;
+  stp_curve_t *current;
+  const stp_curve_t *deflt;
   gboolean is_visible;
 } curve_option_t;
 

@@ -196,7 +196,7 @@ print_models(void)
   int i;
   for (i = 0; i < printer_count; i++)
     {
-      stp_const_printer_t printer = stp_get_printer_by_index(i);
+      const stp_printer_t *printer = stp_get_printer_by_index(i);
       if (strcmp(stp_printer_get_family(printer), "escp2") == 0)
 	{
 	  printf("%-15s %s\n", stp_printer_get_driver(printer),
@@ -534,7 +534,7 @@ const char *colors[] =
   0
 };
 
-static stp_const_printer_t
+static const stp_printer_t *
 get_printer(int quiet)
 {
   int printer_count = stp_printer_model_count();
@@ -597,7 +597,7 @@ get_printer(int quiet)
     }
   for (i = 0; i < printer_count; i++)
     {
-      stp_const_printer_t printer = stp_get_printer_by_index(i);
+      const stp_printer_t *printer = stp_get_printer_by_index(i);
 
       if (strcmp(stp_printer_get_family(printer), "escp2") == 0)
 	{
@@ -688,7 +688,7 @@ do_ink_level(void)
 void
 do_identify(void)
 {
-  stp_const_printer_t printer;
+  const stp_printer_t *printer;
   if (!raw_device)
     {
       fprintf(stderr,
@@ -947,12 +947,12 @@ do_align(void)
   long answer;
   char *endptr;
   int curpass;
-  stp_const_printer_t printer = get_printer(0);
+  const stp_printer_t *printer = get_printer(0);
   stp_parameter_t desc;
   int passes = 0;
   int choices = 0;
   const char *printer_name;
-  stp_vars_t v = stp_vars_create();
+  stp_vars_t *v = stp_vars_create();
 
   if (!printer)
     return;
@@ -1081,7 +1081,7 @@ do_get_input (const char *prompt)
 	}
 #if (HAVE_LIBREADLINE > 0 && defined HAVE_READLINE_READLINE_H)
 	/* get input with libreadline, if present */
-	input = readline ((char *) prompt);
+	input = readline (prompt);
 	/* if input, add to history list */
 #ifdef HAVE_READLINE_HISTORY_H
 	if (input && *input)

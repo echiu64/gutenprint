@@ -91,7 +91,7 @@ typedef struct
 } channel_param_t;
 
 /* Color conversion function */
-typedef unsigned (*stp_convert_t)(stp_const_vars_t vars,
+typedef unsigned (*stp_convert_t)(const stp_vars_t *vars,
 				  const unsigned char *in,
 				  unsigned short *out);
 
@@ -165,19 +165,19 @@ typedef struct
   unsigned char *in_data;
 } lut_t;
 
-extern unsigned stpi_color_convert_to_gray(stp_const_vars_t,
+extern unsigned stpi_color_convert_to_gray(const stp_vars_t *v,
 					   const unsigned char *,
 					   unsigned short *);
-extern unsigned stpi_color_convert_to_color(stp_const_vars_t,
+extern unsigned stpi_color_convert_to_color(const stp_vars_t *v,
 					    const unsigned char *,
 					    unsigned short *);
-extern unsigned stpi_color_convert_to_kcmy(stp_const_vars_t,
+extern unsigned stpi_color_convert_to_kcmy(const stp_vars_t *v,
 					   const unsigned char *,
 					   unsigned short *);
-extern unsigned stpi_color_convert_to_cmykrb(stp_const_vars_t,
+extern unsigned stpi_color_convert_to_cmykrb(const stp_vars_t *v,
 					     const unsigned char *,
 					     unsigned short *);
-extern unsigned stpi_color_convert_raw(stp_const_vars_t,
+extern unsigned stpi_color_convert_raw(const stp_vars_t *v,
 				       const unsigned char *,
 				       unsigned short *);
 

@@ -803,7 +803,7 @@ find_first_and_last(const unsigned char *line, int length,
 }
 
 int
-stp_pack_uncompressed(stp_vars_t v,
+stp_pack_uncompressed(stp_vars_t *v,
 		      const unsigned char *line,
 		      int length,
 		      unsigned char *comp_buf,
@@ -821,7 +821,7 @@ stp_pack_uncompressed(stp_vars_t v,
 }
 
 int
-stp_pack_tiff(stp_vars_t v,
+stp_pack_tiff(stp_vars_t *v,
 	      const unsigned char *line,
 	      int length,
 	      unsigned char *comp_buf,

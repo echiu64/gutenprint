@@ -259,7 +259,7 @@ do {							\
 } while (0)
 
 static int
-get_mandatory_string_param(stp_vars_t v, const char *param, char **lineptr)
+get_mandatory_string_param(stp_vars_t *v, const char *param, char **lineptr)
 {
   char *commaptr = strchr(*lineptr, ',');
   if (commaptr == NULL)
@@ -270,7 +270,7 @@ get_mandatory_string_param(stp_vars_t v, const char *param, char **lineptr)
 }
 
 static int
-get_mandatory_file_param(stp_vars_t v, const char *param, char **lineptr)
+get_mandatory_file_param(stp_vars_t *v, const char *param, char **lineptr)
 {
   char *commaptr = strchr(*lineptr, ',');
   if (commaptr == NULL)
@@ -297,7 +297,7 @@ do {							\
 } while (0)
 
 static void
-get_optional_string_param(stp_vars_t v, const char *param,
+get_optional_string_param(stp_vars_t *v, const char *param,
 			  char **lineptr, int *keepgoing)
 {
   if (*keepgoing)
@@ -355,7 +355,7 @@ do {									\
 } while (0)
 
 static void
-get_optional_float_param(stp_vars_t v, const char *param,
+get_optional_float_param(stp_vars_t *v, const char *param,
 			 char **lineptr, int *keepgoing)
 {
   if (*keepgoing)
@@ -691,7 +691,7 @@ stpui_printrc_load_v1(FILE *fp)
       else
 	{
 	  stp_parameter_t desc;
-	  stp_curve_t curve;
+	  stp_curve_t *curve;
 	  stp_describe_parameter(key.v, keyword, &desc);
 	  switch (desc.p_type)
 	    {
@@ -932,7 +932,7 @@ stpui_printrc_save(void)
 		  if (stp_check_curve_parameter(p->v, param->name,
 						 STP_PARAMETER_INACTIVE))
 		    {
-		      stp_const_curve_t curve =
+		      const stp_curve_t *curve =
 			stp_get_curve_parameter(p->v, param->name);
 		      if (curve)
 			{
@@ -1360,7 +1360,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
     {
       char tmp[32];
       stpui_plist_t *np = allocate_stpui_plist_copy(printer);
-      stp_const_vars_t current_vars =
+      const stp_vars_t *current_vars =
 	stp_printer_get_defaults(stp_get_printer(np->v));
       int orientation;
       stp_merge_printvars(np->v, current_vars);

@@ -58,9 +58,9 @@ extern const stpi_job_mode_t *stpi_get_job_mode_by_index(int idx);
 
 extern const stpi_job_mode_t *stpi_get_job_mode_by_name(const char *job_mode);
 
-extern stp_parameter_list_t stp_list_generic_parameters(stp_const_vars_t v);
+extern stp_parameter_list_t stp_list_generic_parameters(const stp_vars_t *v);
 
-extern void stpi_describe_generic_parameter(stp_const_vars_t v,
+extern void stpi_describe_generic_parameter(const stp_vars_t *v,
 					   const char *name,
 					   stp_parameter_t *description);
 

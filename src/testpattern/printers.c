@@ -40,7 +40,7 @@ main(int argc, char **argv)
   stp_init();
   for (i = 0; i < stp_printer_model_count(); i++)
     {
-      stp_const_printer_t p = stp_get_printer_by_index(i);
+      const stp_printer_t *p = stp_get_printer_by_index(i);
       if (strcmp(stp_printer_get_family(p), "ps") &&
 	  strcmp(stp_printer_get_family(p), "raw"))
 	printf("%s\n", stp_printer_get_driver(p));

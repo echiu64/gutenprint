@@ -183,7 +183,7 @@ stp_get_color_by_colorfuncs(stp_colorfuncs_t *colorfuncs)
 
 
 int
-stp_color_init(stp_vars_t v,
+stp_color_init(stp_vars_t *v,
 	       stp_image_t *image,
 	       size_t steps)
 {
@@ -193,7 +193,7 @@ stp_color_init(stp_vars_t v,
 }
 
 int
-stp_color_get_row(stp_vars_t v,
+stp_color_get_row(stp_vars_t *v,
 		  stp_image_t *image,
 		  int row,
 		  unsigned *zero_mask)
@@ -204,7 +204,7 @@ stp_color_get_row(stp_vars_t v,
 }
 
 stp_parameter_list_t
-stp_color_list_parameters(stp_const_vars_t v)
+stp_color_list_parameters(const stp_vars_t *v)
 {
   const stp_colorfuncs_t *colorfuncs =
     stpi_get_colorfuncs(stp_get_color_by_name(stp_get_color_conversion(v)));
@@ -212,7 +212,7 @@ stp_color_list_parameters(stp_const_vars_t v)
 }
 
 void
-stp_color_describe_parameter(stp_const_vars_t v, const char *name,
+stp_color_describe_parameter(const stp_vars_t *v, const char *name,
 			     stp_parameter_t *description)
 {
   const stp_colorfuncs_t *colorfuncs =

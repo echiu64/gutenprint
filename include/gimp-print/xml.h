@@ -55,10 +55,10 @@ extern stp_mxml_node_t *stp_xml_get_node(stp_mxml_node_t *xmlroot, ...);
 extern stp_mxml_node_t *stp_xmldoc_create_generic(void);
 extern void stp_xml_preinit(void);
 
-extern stp_sequence_t stp_sequence_create_from_xmltree(stp_mxml_node_t *da);
-extern stp_mxml_node_t *stp_xmltree_create_from_sequence(stp_sequence_t seq);
+extern stp_sequence_t *stp_sequence_create_from_xmltree(stp_mxml_node_t *da);
+extern stp_mxml_node_t *stp_xmltree_create_from_sequence(stp_sequence_t *seq);
 
-extern stp_array_t stp_array_create_from_xmltree(stp_mxml_node_t *array);
+extern stp_array_t *stp_array_create_from_xmltree(stp_mxml_node_t *array);
 extern void stp_xml_parse_file_named(const char *name);
 
 #endif /* GIMP_PRINT_XML_H */

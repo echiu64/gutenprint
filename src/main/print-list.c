@@ -38,68 +38,62 @@
 #include <stdio.h>
 #include <string.h>
 
-#define COOKIE_LIST    0xbfea218e
-
-struct stpi_internal_list_node;
-
-typedef struct stpi_internal_list_node
+struct stp_list_item
 {
-  const void *data;                          /* data */
-  struct stpi_internal_list_node *prev; /* previous node */
-  struct stpi_internal_list_node *next; /* next node */
-} stpi_internal_list_node_t;
+  void *data;                 /* data */
+  struct stp_list_item *prev; /* previous node */
+  struct stp_list_item *next; /* next node */
+};
 
-
-typedef struct stpi_internal_list_head
+struct stp_list
 {
-  int cookie;			/* Magic cookie */
   int icache;                               /* index no of cached node */
   int length;                               /* number of nodes */
-  struct stpi_internal_list_node *start;     /* start node */
-  struct stpi_internal_list_node *end;       /* end node */
-  struct stpi_internal_list_node *cache;     /* cached node */
+  struct stp_list_item *start;     /* start node */
+  struct stp_list_item *end;       /* end node */
+  struct stp_list_item *cache;     /* cached node */
   stp_node_freefunc freefunc;	/* callback: free node data */
   stp_node_copyfunc copyfunc;	/* callback: copy node */
   stp_node_namefunc namefunc;	/* callback: get node name */
   stp_node_namefunc long_namefunc;	/* callback: get node long name */
   stp_node_sortfunc sortfunc;	/* callback: compare (sort) nodes */
   char *name_cache;
-  struct stpi_internal_list_node *name_cache_node;
+  struct stp_list_item *name_cache_node;
   char *long_name_cache;
-  struct stpi_internal_list_node *long_name_cache_node;
-} stpi_internal_list_head_t;
-  
+  struct stp_list_item *long_name_cache_node;
+};
+
 static void
-set_name_cache(stpi_internal_list_head_t *lh,
+set_name_cache(stp_list_t *list,
 	       const char *name,
-	       struct stpi_internal_list_node *cache)
+	       stp_list_item_t *cache)
 {
-  if (lh->name_cache)
-    stp_free(lh->name_cache);
-  lh->name_cache = NULL;
+  if (list->name_cache)
+    stp_free(list->name_cache);
+  list->name_cache = NULL;
   if (name)
-    lh->name_cache = stp_strdup(name);
-  lh->name_cache_node = cache;
+    list->name_cache = stp_strdup(name);
+  list->name_cache_node = cache;
 }
-  
+
 static void
-set_long_name_cache(stpi_internal_list_head_t *lh,
+set_long_name_cache(stp_list_t *list,
 		    const char *long_name,
-		    struct stpi_internal_list_node *cache)
+		    stp_list_item_t *cache)
 {
-  if (lh->long_name_cache)
-    stp_free(lh->long_name_cache);
-  lh->long_name_cache = NULL;
+  if (list->long_name_cache)
+    stp_free(list->long_name_cache);
+  list->long_name_cache = NULL;
   if (long_name)
-    lh->long_name_cache = stp_strdup(long_name);
-  lh->long_name_cache_node = cache;
+    list->long_name_cache = stp_strdup(long_name);
+  list->long_name_cache_node = cache;
 }
 
 static inline void
-clear_cache(stpi_internal_list_head_t *lh)
+clear_cache(stp_list_t *list)
 {
-  set_name_cache(lh, NULL, NULL);
-  set_long_name_cache(lh, NULL, NULL);
+  set_name_cache(list, NULL, NULL);
+  set_long_name_cache(list, NULL, NULL);
 }
 
 /* node free callback for node data allocated with stp_malloc() (not
@@ -107,7 +101,7 @@ clear_cache(stpi_internal_list_head_t *lh)
 void
 stp_list_node_free_data (void *item)
 {
-  stp_free((void *) item);
+  stp_free(item);
   stp_deprintf(STP_DBG_LIST, "stp_list_node_free_data destructor\n");
 }
 
@@ -116,50 +110,27 @@ null_list(void)
 {
   stp_erprintf("Null stp_list_t! Please report this bug.\n");
   stp_abort();
-}  
-
-static void
-bad_list(void)
-{
-  stp_erprintf("Bad stp_list_t! Please report this bug.\n");
-  stp_abort();
-}
-
-static stpi_internal_list_head_t *
-get_list_head(const stp_list_t *list)
-{
-  return (stpi_internal_list_head_t *) list;
-}
-
-static stpi_internal_list_node_t *
-get_list_node(const stp_list_item_t *list)
-{
-  return (stpi_internal_list_node_t *) list;
 }
 
 static inline void
-check_list(const stpi_internal_list_head_t *v)
+check_list(const stp_list_t *list)
 {
-  if (v == NULL)
+  if (list == NULL)
     null_list();
-  if (v->cookie != COOKIE_LIST)
-    bad_list();
 }
 
 static inline stp_list_item_t *
 get_start_internal(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return (stp_list_item_t *) lh->start;
+  check_list(list);
+  return list->start;
 }
 
 static inline stp_list_item_t *
 get_end_internal(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return (stp_list_item_t *) lh->end;
+  check_list(list);
+  return list->end;
 }
 
 /* list head functions */
@@ -171,28 +142,27 @@ get_end_internal(const stp_list_t *list)
 stp_list_t *
 stp_list_create(void)
 {
-  stpi_internal_list_head_t *lh =
-    stp_malloc(sizeof(stpi_internal_list_head_t));
+  stp_list_t *list =
+    stp_malloc(sizeof(stp_list_t));
 
   /* initialise an empty list */
-  lh->cookie = COOKIE_LIST;
-  lh->icache = 0;
-  lh->length = 0;
-  lh->start = NULL;
-  lh->end = NULL;
-  lh->cache = NULL;
-  lh->freefunc = NULL;
-  lh->namefunc = NULL;
-  lh->long_namefunc = NULL;
-  lh->sortfunc = NULL;
-  lh->copyfunc = NULL;
-  lh->name_cache = NULL;
-  lh->name_cache_node = NULL;
-  lh->long_name_cache = NULL;
-  lh->long_name_cache_node = NULL;
+  list->icache = 0;
+  list->length = 0;
+  list->start = NULL;
+  list->end = NULL;
+  list->cache = NULL;
+  list->freefunc = NULL;
+  list->namefunc = NULL;
+  list->long_namefunc = NULL;
+  list->sortfunc = NULL;
+  list->copyfunc = NULL;
+  list->name_cache = NULL;
+  list->name_cache_node = NULL;
+  list->long_name_cache = NULL;
+  list->long_name_cache_node = NULL;
 
   stp_deprintf(STP_DBG_LIST, "stp_list_head constructor\n");
-  return (stp_list_t *) lh;
+  return list;
 }
 
 stp_list_t *
@@ -202,7 +172,7 @@ stp_list_copy(const stp_list_t *list)
   stp_node_copyfunc copyfunc = stp_list_get_copyfunc(list);
   stp_list_item_t *item = get_start_internal(list);
 
-  check_list(get_list_head(list));
+  check_list(list);
 
   ret = stp_list_create();
   stp_list_set_copyfunc(ret, stp_list_get_copyfunc(list));
@@ -214,7 +184,7 @@ stp_list_copy(const stp_list_t *list)
   stp_list_set_sortfunc(ret, stp_list_get_sortfunc(list));
   while (item)
     {
-      const void *data = (get_list_node(item))->data;
+      void *data = item->data;
       if (copyfunc)
 	stp_list_item_create (ret, NULL, (*copyfunc)(data));
       else
@@ -228,22 +198,20 @@ stp_list_copy(const stp_list_t *list)
 int
 stp_list_destroy(stp_list_t *list)
 {
-  stpi_internal_list_node_t *cur;
-  stpi_internal_list_node_t *next;
-  stpi_internal_list_head_t *lh = get_list_head(list);
+  stp_list_item_t *cur;
+  stp_list_item_t *next;
 
-  check_list(lh);
-  clear_cache(lh);
-  cur = get_list_node(get_start_internal(list));
+  check_list(list);
+  clear_cache(list);
+  cur = get_start_internal(list);
   while(cur)
     {
       next = cur->next;
-      stp_list_item_destroy(list, (stp_list_item_t *) cur);
+      stp_list_item_destroy(list, cur);
       cur = next;
     }
   stp_deprintf(STP_DBG_LIST, "stp_list_head destructor\n");
-  lh->cookie = 0;
-  stp_free(lh);
+  stp_free(list);
 
   return 0;
 }
@@ -251,9 +219,8 @@ stp_list_destroy(stp_list_t *list)
 int
 stp_list_get_length(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->length;
+  check_list(list);
+  return list->length;
 }
 
 /* find a node */
@@ -278,29 +245,29 @@ stp_list_get_end(const stp_list_t *list)
 stp_list_item_t *
 stp_list_get_item_by_index(const stp_list_t *list, int idx)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  stpi_internal_list_node_t *ln = NULL;
+  stp_list_item_t *node = NULL;
   int i; /* current index */
   int d = 0; /* direction of list traversal, 0=forward */
   int c = 0; /* use cache? */
-  check_list(lh);
+  check_list(list);
 
-  if (idx >= lh->length)
+  if (idx >= list->length)
     return NULL;
 
   /* see if using the cache is worthwhile */
-  if (lh->icache)
+  if (list->icache)
     {
-      if (idx < (lh->length/2))
+      if (idx < (list->length/2))
 	{
-	  if (idx > abs(idx - lh->icache))
+	  if (idx > abs(idx - list->icache))
 	    c = 1;
 	  else
 	    d = 0;
 	}
       else
 	{
-	  if (lh->length - 1 - idx > abs (lh->length - 1 - idx - lh->icache))
+	  if (list->length - 1 - idx >
+	      abs (list->length - 1 - idx - list->icache))
 	    c = 1;
 	  else
 	    d = 1;
@@ -310,58 +277,57 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
 
   if (c) /* use the cached index and node */
     {
-      if (idx > lh->icache) /* forward */
+      if (idx > list->icache) /* forward */
 	d = 0;
       else /* backward */
 	d = 1;
-      i = lh->icache;
-      ln = lh->cache;
+      i = list->icache;
+      node = list->cache;
     }
   else /* start from one end of the list */
     {
       if (d)
 	{
-	  i = lh->length - 1;
-	  ln = get_list_node(get_end_internal(list));
+	  i = list->length - 1;
+	  node = get_end_internal(list);
 	}
       else
 	{
 	  i = 0;
-	  ln = get_list_node(get_start_internal(list));
+	  node = get_start_internal(list);
 	}
     }
 
-  while (ln && i != idx)
+  while (node && i != idx)
     {
       if (d)
 	{
 	  i--;
-	  ln = ln->prev;
+	  node = node->prev;
 	}
       else
 	{
 	  i++;
-	  ln = ln->next;
+	  node = node->next;
 	}
     }
 
   /* update cache */
-  lh->icache = i;
-  lh->cache = ln;
+  ((stp_list_t *)list)->icache = i;
+  ((stp_list_t *)list)->cache = node;
 
-  return (stp_list_item_t *) ln;
+  return node;
 }
 
-static stpi_internal_list_node_t *
+static stp_list_item_t *
 stp_list_get_item_by_name_internal(const stp_list_t *list, const char *name)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  stpi_internal_list_node_t *ln = get_list_node(get_start_internal(list));
-  while (ln && strcmp(name, lh->namefunc(ln->data)))
+  stp_list_item_t *node = get_start_internal(list);
+  while (node && strcmp(name, list->namefunc(node->data)))
     {
-      ln = ln->next;
+      node = node->next;
     }
-  return ln;
+  return node;
 }
 
 /* get the first node with name; requires a callback function to
@@ -369,67 +335,64 @@ stp_list_get_item_by_name_internal(const stp_list_t *list, const char *name)
 stp_list_item_t *
 stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  stpi_internal_list_node_t *ln = NULL;
-  check_list(lh);
+  stp_list_item_t *node = NULL;
+  check_list(list);
 
-  if (!lh->namefunc)
+  if (!list->namefunc)
     return NULL;
 
-  if (lh->name_cache && name && lh->name_cache_node)
+  if (list->name_cache && name && list->name_cache_node)
     {
       const char *new_name;
-      ln = lh->name_cache_node;
+      node = list->name_cache_node;
       /* Is this the item we've cached? */
-      if (strcmp(name, lh->name_cache) == 0 &&
-	  strcmp(name, lh->namefunc(ln->data)) == 0)
-	return (stp_list_item_t *) ln;
-      
+      if (strcmp(name, list->name_cache) == 0 &&
+	  strcmp(name, list->namefunc(node->data)) == 0)
+	return node;
+
       /* If not, check the next item in case we're searching the list */
-      ln = ln->next;
-      if (ln)
+      node = node->next;
+      if (node)
 	{
-	  new_name = lh->namefunc((const stp_list_item_t *) ln->data);
+	  new_name = list->namefunc(node->data);
 	  if (strcmp(name, new_name) == 0)
 	    {
-	      set_name_cache(lh, new_name, ln);
-	      return (stp_list_item_t *) ln;
+	      set_name_cache((stp_list_t *) list, new_name, node);
+	      return node;
 	    }
 	}
       /* If not, check the index cache */
-      ln = lh->cache;
-      if (ln)
+      node = list->cache;
+      if (node)
 	{
-	  new_name = lh->namefunc((const stp_list_item_t *) ln->data);
+	  new_name = list->namefunc(node->data);
 	  if (strcmp(name, new_name) == 0)
 	    {
-	      set_name_cache(lh, new_name, ln);
-	      return (stp_list_item_t *) ln;
+	      set_name_cache((stp_list_t *) list, new_name, node);
+	      return node;
 	    }
 	}
     }
 
-  ln = stp_list_get_item_by_name_internal(list, name);
+  node = stp_list_get_item_by_name_internal(list, name);
 
-  if (ln)
-    set_name_cache(lh, name, ln);
+  if (node)
+    set_name_cache((stp_list_t *) list, name, node);
 
-  return (stp_list_item_t *) ln;
+  return node;
 }
 
 
-static stpi_internal_list_node_t *
+static stp_list_item_t *
 stp_list_get_item_by_long_name_internal(const stp_list_t *list,
 					 const char *long_name)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  stpi_internal_list_node_t *ln =
-    (stpi_internal_list_node_t *) get_start_internal(list);
-  while (ln && strcmp(long_name, lh->long_namefunc(ln->data)))
+  stp_list_item_t *node = get_start_internal(list);
+  while (node && strcmp(long_name, list->long_namefunc(node->data)))
     {
-      ln = ln->next;
+      node = node->next;
     }
-  return ln;
+  return node;
 }
 
 /* get the first node with long_name; requires a callack function to
@@ -437,52 +400,51 @@ stp_list_get_item_by_long_name_internal(const stp_list_t *list,
 stp_list_item_t *
 stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  stpi_internal_list_node_t *ln = NULL;
-  check_list(lh);
+  stp_list_item_t *node = NULL;
+  check_list(list);
 
-  if (!lh->long_namefunc)
+  if (!list->long_namefunc)
     return NULL;
 
-  if (lh->long_name_cache && long_name && lh->long_name_cache_node)
+  if (list->long_name_cache && long_name && list->long_name_cache_node)
     {
       const char *new_long_name;
-      ln = lh->long_name_cache_node;
+      node = list->long_name_cache_node;
       /* Is this the item we've cached? */
-      if (strcmp(long_name, lh->long_name_cache) == 0 &&
-	  strcmp(long_name, lh->long_namefunc(ln->data)) == 0)
-	return (stp_list_item_t *) ln;
-      
+      if (strcmp(long_name, list->long_name_cache) == 0 &&
+	  strcmp(long_name, list->long_namefunc(node->data)) == 0)
+	return node;
+
       /* If not, check the next item in case we're searching the list */
-      ln = ln->next;
-      if (ln)
+      node = node->next;
+      if (node)
 	{
-	  new_long_name = lh->long_namefunc((const stp_list_item_t *) ln->data);
+	  new_long_name = list->long_namefunc(node->data);
 	  if (strcmp(long_name, new_long_name) == 0)
 	    {
-	      set_long_name_cache(lh, new_long_name, ln);
-	      return (stp_list_item_t *) ln;
+	      set_long_name_cache((stp_list_t*) list, new_long_name, node);
+	      return node;
 	    }
 	}
       /* If not, check the index cache */
-      ln = lh->cache;
-      if (ln)
+      node = list->cache;
+      if (node)
 	{
-	  new_long_name = lh->long_namefunc((const stp_list_item_t *) ln->data);
+	  new_long_name = list->long_namefunc(node->data);
 	  if (strcmp(long_name, new_long_name) == 0)
 	    {
-	      set_long_name_cache(lh, new_long_name, ln);
-	      return (stp_list_item_t *) ln;
+	      set_long_name_cache((stp_list_t *) list, new_long_name, node);
+	      return node;
 	    }
 	}
     }
 
-  ln = stp_list_get_item_by_long_name_internal(list, long_name);
+  node = stp_list_get_item_by_long_name_internal(list, long_name);
 
-  if (ln)
-    set_long_name_cache(lh, long_name, ln);
+  if (node)
+    set_long_name_cache((stp_list_t *) list, long_name, node);
 
-  return (stp_list_item_t *) ln;
+  return node;
 }
 
 
@@ -490,85 +452,75 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 void
 stp_list_set_freefunc(stp_list_t *list, stp_node_freefunc freefunc)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  lh->freefunc = freefunc;
+  check_list(list);
+  list->freefunc = freefunc;
 }
 
 stp_node_freefunc
 stp_list_get_freefunc(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->freefunc;
+  check_list(list);
+  return list->freefunc;
 }
 
 /* callback for copying data */
 void
 stp_list_set_copyfunc(stp_list_t *list, stp_node_copyfunc copyfunc)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  lh->copyfunc = copyfunc;
+  check_list(list);
+  list->copyfunc = copyfunc;
 }
 
 stp_node_copyfunc
 stp_list_get_copyfunc(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->copyfunc;
+  check_list(list);
+  return list->copyfunc;
 }
 
 /* callback for getting data name */
 void
 stp_list_set_namefunc(stp_list_t *list, stp_node_namefunc namefunc)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  lh->namefunc = namefunc;
+  check_list(list);
+  list->namefunc = namefunc;
 }
 
 stp_node_namefunc
 stp_list_get_namefunc(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->namefunc;
+  check_list(list);
+  return list->namefunc;
 }
 
 /* callback for getting data long_name */
 void
 stp_list_set_long_namefunc(stp_list_t *list, stp_node_namefunc long_namefunc)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  lh->long_namefunc = long_namefunc;
+  check_list(list);
+  list->long_namefunc = long_namefunc;
 }
 
 stp_node_namefunc
 stp_list_get_long_namefunc(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->long_namefunc;
+  check_list(list);
+  return list->long_namefunc;
 }
 
 /* callback for sorting nodes */
 void
 stp_list_set_sortfunc(stp_list_t *list, stp_node_sortfunc sortfunc)
 {
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  lh->sortfunc = sortfunc;
+  check_list(list);
+  list->sortfunc = sortfunc;
 }
 
 stp_node_sortfunc
 stp_list_get_sortfunc(const stp_list_t *list)
 {
-  const stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  return lh->sortfunc;
+  check_list(list);
+  return list->sortfunc;
 }
 
 
@@ -585,34 +537,34 @@ stp_list_get_sortfunc(const stp_list_t *list)
  */
 int
 stp_list_item_create(stp_list_t *list,
-		      const stp_list_item_t *next,
-		      const void *data)
+		     stp_list_item_t *next,
+		     const void *data)
 {
-  stpi_internal_list_node_t *ln; /* list node to add */
-  stpi_internal_list_node_t *lnn; /* list node next */
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
+  stp_list_item_t *ln; /* list node to add */
+  stp_list_item_t *lnn; /* list node next */
 
-  clear_cache(lh);
+  check_list(list);
 
-  ln = stp_malloc(sizeof(stpi_internal_list_node_t));
+  clear_cache(list);
+
+  ln = stp_malloc(sizeof(stp_list_item_t));
   ln->prev = ln->next = NULL;
 
   if (data)
-    ln->data = data;
+    ln->data = (void *) data;
   else
     {
       stp_free(ln);
       return 1;
     }
 
-  if (lh->sortfunc)
+  if (list->sortfunc)
     {
       /* set np to the previous node (before the insertion */
-      lnn = get_list_node(get_end_internal(list));
+      lnn = get_end_internal(list);
       while (lnn)
 	{
-	  if (lh->sortfunc(lnn->data, ln->data) <= 0)
+	  if (list->sortfunc(lnn->data, ln->data) <= 0)
 	    break;
 	  lnn = lnn->prev;
 	}
@@ -627,20 +579,20 @@ stp_list_item_create(stp_list_t *list,
     {
       if (next)
 	{
-	  lnn = get_list_node(get_start_internal(list));
+	  lnn = get_start_internal(list);
 	  while (lnn)
 	    {
-	      if (lnn == get_list_node(next))
+	      if (lnn == next)
 		break;
 	      lnn = lnn->prev;
 	    }
 	}
       else
-	lnn = get_list_node(NULL);
+	lnn = NULL;
     }
 #endif
   else
-    lnn = get_list_node(next);
+    lnn = next;
 
   /* got lnp; now insert the new ln */
 
@@ -649,11 +601,11 @@ stp_list_item_create(stp_list_t *list,
 
   if (!ln->prev) /* insert at start of list */
     {
-      if (lh->start) /* list not empty */
-	ln->prev = lh->end;
+      if (list->start) /* list not empty */
+	ln->prev = list->end;
       else
-	lh->start = ln;
-      lh->end = ln;
+	list->start = ln;
+      list->end = ln;
     }
 
   /* set prev (already set if at start of list) */
@@ -661,9 +613,9 @@ stp_list_item_create(stp_list_t *list,
   if (!ln->prev && ln->next) /* insert at end of list */
     ln->prev = ln->next->prev;
 
-  if (lh->start == ln->next) /* prev was old end */
+  if (list->start == ln->next) /* prev was old end */
     {
-      lh->start = ln;
+      list->start = ln;
     }
 
   /* set next->prev */
@@ -675,7 +627,7 @@ stp_list_item_create(stp_list_t *list,
     ln->prev->next = ln;
 
   /* increment reference count */
-  lh->length++;
+  list->length++;
 
   stp_deprintf(STP_DBG_LIST, "stp_list_node constructor\n");
   return 0;
@@ -685,26 +637,23 @@ stp_list_item_create(stp_list_t *list,
 int
 stp_list_item_destroy(stp_list_t *list, stp_list_item_t *item)
 {
-  stpi_internal_list_node_t *ln;
-  stpi_internal_list_head_t *lh = get_list_head(list);
-  check_list(lh);
-  ln = get_list_node(item);
+  check_list(list);
 
-  clear_cache(lh);
+  clear_cache(list);
   /* decrement reference count */
-  lh->length--;
+  list->length--;
 
-  if (lh->freefunc)
-    lh->freefunc((void *)(get_list_node(item))->data);
-  if (ln->prev)
-    ln->prev->next = ln->next;
+  if (list->freefunc)
+    list->freefunc((void *) item->data);
+  if (item->prev)
+    item->prev->next = item->next;
   else
-    lh->start = ln->next;
-  if (ln->next)
-    ln->next->prev = ln->prev;
+    list->start = item->next;
+  if (item->next)
+    item->next->prev = item->prev;
   else
-    lh->end = ln->prev;
-  stp_free(ln);
+    list->end = item->prev;
+  stp_free(item);
 
   stp_deprintf(STP_DBG_LIST, "stp_list_node destructor\n");
   return 0;
@@ -714,34 +663,30 @@ stp_list_item_destroy(stp_list_t *list, stp_list_item_t *item)
 stp_list_item_t *
 stp_list_item_prev(const stp_list_item_t *item)
 {
-  const stpi_internal_list_node_t *ln = get_list_node(item);
-  return (stp_list_item_t *) ln->prev;
+  return item->prev;
 }
 
 /* get next node */
 stp_list_item_t *
 stp_list_item_next(const stp_list_item_t *item)
 {
-  const stpi_internal_list_node_t *ln = get_list_node(item);
-  return (stp_list_item_t *) ln->next;
+  return item->next;
 }
 
 /* get data for node */
 void *
 stp_list_item_get_data(const stp_list_item_t *item)
 {
-  const stpi_internal_list_node_t *ln = get_list_node(item);
-  return (void *) (ln->data);
+  return item->data;
 }
 
 /* set data for node */
 int
 stp_list_item_set_data(stp_list_item_t *item, void *data)
 {
-  stpi_internal_list_node_t *ln = get_list_node(item);
   if (data)
     {
-      ln->data = data;
+      item->data = data;
       return 0;
     }
   return 1; /* return error if data was NULL */

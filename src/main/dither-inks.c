@@ -40,7 +40,7 @@
 #include "dither-impl.h"
 
 int
-stpi_dither_translate_channel(stp_vars_t v, unsigned channel,
+stpi_dither_translate_channel(stp_vars_t *v, unsigned channel,
 			      unsigned subchannel)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -56,7 +56,7 @@ stpi_dither_translate_channel(stp_vars_t v, unsigned channel,
 }
 
 unsigned char *
-stp_dither_get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
+stp_dither_get_channel(stp_vars_t *v, unsigned channel, unsigned subchannel)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int place = stpi_dither_translate_channel(v, channel, subchannel);
@@ -67,7 +67,7 @@ stp_dither_get_channel(stp_vars_t v, unsigned channel, unsigned subchannel)
 }
 
 static void
-insert_channel(stp_vars_t v, stpi_dither_t *d, int channel)
+insert_channel(stp_vars_t *v, stpi_dither_t *d, int channel)
 {
   unsigned oc = d->channel_count;
   int i;
@@ -104,7 +104,7 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
 }  
 
 static void
-initialize_channel(stp_vars_t v, int channel, int subchannel)
+initialize_channel(stp_vars_t *v, int channel, int subchannel)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int idx = stpi_dither_translate_channel(v, channel, subchannel);
@@ -124,7 +124,7 @@ initialize_channel(stp_vars_t v, int channel, int subchannel)
 }
 
 static void
-insert_subchannel(stp_vars_t v, stpi_dither_t *d, int channel, int subchannel)
+insert_subchannel(stp_vars_t *v, stpi_dither_t *d, int channel, int subchannel)
 {
   int i;
   unsigned oc = d->subchannel_count[channel];
@@ -163,7 +163,7 @@ insert_subchannel(stp_vars_t v, stpi_dither_t *d, int channel, int subchannel)
 }
 
 void
-stpi_dither_finalize(stp_vars_t v)
+stpi_dither_finalize(stp_vars_t *v)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   if (!d->finalized)
@@ -185,7 +185,7 @@ stpi_dither_finalize(stp_vars_t v)
 }
 
 void
-stp_dither_add_channel(stp_vars_t v, unsigned char *data,
+stp_dither_add_channel(stp_vars_t *v, unsigned char *data,
 		       unsigned channel, unsigned subchannel)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -200,7 +200,7 @@ stp_dither_add_channel(stp_vars_t v, unsigned char *data,
 }
 
 static void
-stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
+stpi_dither_finalize_ranges(stp_vars_t *v, stpi_dither_channel_t *dc)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int i;
@@ -258,7 +258,7 @@ stpi_dither_finalize_ranges(stp_vars_t v, stpi_dither_channel_t *dc)
 }
 
 static void
-stpi_dither_set_ranges(stp_vars_t v, int color, const stp_shade_t *shade,
+stpi_dither_set_ranges(stp_vars_t *v, int color, const stp_shade_t *shade,
 		       double density, double darkness)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -342,7 +342,7 @@ stpi_dither_set_ranges(stp_vars_t v, int color, const stp_shade_t *shade,
 }
 
 void
-stp_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
+stp_dither_set_inks_simple(stp_vars_t *v, int color, int nlevels,
 			   const double *levels, double density,
 			   double darkness)
 {
@@ -363,7 +363,7 @@ stp_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
 }
 
 void
-stp_dither_set_inks_full(stp_vars_t v, int color, int nshades,
+stp_dither_set_inks_full(stp_vars_t *v, int color, int nshades,
 			 const stp_shade_t *shades, double density,
 			 double darkness)
 {
@@ -393,7 +393,7 @@ stp_dither_set_inks_full(stp_vars_t v, int color, int nshades,
 }
 
 void
-stp_dither_set_inks(stp_vars_t v, int color, double density, double darkness,
+stp_dither_set_inks(stp_vars_t *v, int color, double density, double darkness,
 		    int nshades, const double *svalues,
 		    int ndotsizes, const double *dvalues)
 {

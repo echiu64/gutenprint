@@ -172,7 +172,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
-  stp_vars_t	v; 		        /* Dither variables */
+  stp_vars_t	*v; 		        /* Dither variables */
   stp_parameter_t desc;
   static const char	*stpi_dither_types[] =	/* Different dithering modes */
 		{

@@ -61,7 +61,7 @@ typedef struct
  */
 #define YY_ALWAYS_INTERACTIVE 1
 
-extern stp_vars_t global_vars;
+extern stp_vars_t *global_vars;
 extern double global_levels[];
 extern double global_gammas[];
 extern double global_gamma;

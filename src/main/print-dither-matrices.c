@@ -147,10 +147,10 @@ stp_dither_matrix_shear(stp_dither_matrix_impl_t *mat, int x_shear, int y_shear)
 }
 
 int
-stp_dither_matrix_validate_array(stp_const_array_t array)
+stp_dither_matrix_validate_array(const stp_array_t *array)
 {
   double low, high;
-  stp_const_sequence_t seq = stp_array_get_sequence(array);
+  const stp_sequence_t *seq = stp_array_get_sequence(array);
   stp_sequence_get_bounds(seq, &low, &high);
   if (low < 0 || high > 65535)
     return 0;
@@ -160,14 +160,14 @@ stp_dither_matrix_validate_array(stp_const_array_t array)
 
 void
 stp_dither_matrix_init_from_dither_array(stp_dither_matrix_impl_t *mat,
-					 stp_const_array_t array,
+					 const stp_array_t *array,
 					 int transpose)
 {
   int x, y;
   size_t count;
   const unsigned short *vec;
   int x_size, y_size;
-  stp_const_sequence_t seq = stp_array_get_sequence(array);
+  const stp_sequence_t *seq = stp_array_get_sequence(array);
   stp_array_get_size(array, &x_size, &y_size);
 
   vec = stp_sequence_get_ushort_data(seq, &count);
@@ -343,7 +343,7 @@ stp_dither_matrix_set_row(stp_dither_matrix_impl_t *mat, int y)
 }
 
 static void
-preinit_matrix(stp_vars_t v)
+preinit_matrix(stp_vars_t *v)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int i;
@@ -353,7 +353,7 @@ preinit_matrix(stp_vars_t v)
 }
 
 static void
-postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
+postinit_matrix(stp_vars_t *v, int x_shear, int y_shear)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   unsigned rc = 1 + (unsigned) ceil(sqrt(CHANNEL_COUNT(d)));
@@ -376,7 +376,7 @@ postinit_matrix(stp_vars_t v, int x_shear, int y_shear)
 }
 
 void
-stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
+stp_dither_set_iterated_matrix(stp_vars_t *v, size_t edge, size_t iterations,
 			       const unsigned *data, int prescaled,
 			       int x_shear, int y_shear)
 {
@@ -387,7 +387,7 @@ stp_dither_set_iterated_matrix(stp_vars_t v, size_t edge, size_t iterations,
 }
 
 void
-stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_generic_t *matrix,
+stp_dither_set_matrix(stp_vars_t *v, const stp_dither_matrix_generic_t *matrix,
 		      int transposed, int x_shear, int y_shear)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -406,8 +406,8 @@ stp_dither_set_matrix(stp_vars_t v, const stp_dither_matrix_generic_t *matrix,
 }
 
 void
-stp_dither_set_matrix_from_dither_array(stp_vars_t v,
-					stp_const_array_t array,
+stp_dither_set_matrix_from_dither_array(stp_vars_t *v,
+					const stp_array_t *array,
 					int transpose)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
@@ -417,7 +417,7 @@ stp_dither_set_matrix_from_dither_array(stp_vars_t v,
 }
 
 void
-stp_dither_set_transition(stp_vars_t v, double exponent)
+stp_dither_set_transition(stp_vars_t *v, double exponent)
 {
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   unsigned rc = 1 + (unsigned) ceil(sqrt(CHANNEL_COUNT(d)));
@@ -450,7 +450,7 @@ typedef struct
   int x;
   int y;
   const char *filename;
-  stp_const_array_t dither_array;
+  const stp_array_t *dither_array;
 } stp_xml_dither_cache_t;
 
 static stp_xml_dither_cache_t *
@@ -541,7 +541,7 @@ stp_xml_process_dither_matrix(stp_mxml_node_t *dm,     /* The dither matrix node
   return 1;
 }
 
-static stp_array_t
+static stp_array_t *
 stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node */
 {
   const char *stmp;
@@ -581,7 +581,7 @@ stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node
   return NULL;
 }
 
-static stp_array_t
+static stp_array_t *
 xml_doc_get_dither_array(stp_mxml_node_t *doc)
 {
   stp_mxml_node_t *cur;
@@ -611,11 +611,11 @@ xml_doc_get_dither_array(stp_mxml_node_t *doc)
   return stpi_dither_array_create_from_xmltree(xmlseq);
 }
 
-static stp_array_t
+static stp_array_t *
 stpi_dither_array_create_from_file(const char* file)
 {
   stp_mxml_node_t *doc;
-  stp_array_t ret = NULL;
+  stp_array_t *ret = NULL;
 
   FILE *fp = fopen(file, "r");
   if (!fp)
@@ -644,11 +644,11 @@ stpi_dither_array_create_from_file(const char* file)
   return ret;
 }
 
-static stp_array_t
+static stp_array_t *
 stp_xml_get_dither_array(int x, int y)
 {
   stp_xml_dither_cache_t *cachedval;
-  stp_array_t ret;
+  stp_array_t *ret;
 
   cachedval = stp_xml_dither_cache_get(x, y);
 
@@ -679,10 +679,10 @@ stpi_init_dither(void)
   stp_register_xml_parser("dither-matrix", stp_xml_process_dither_matrix);
 }
 
-stp_array_t
+stp_array_t *
 stp_find_standard_dither_array(int x_aspect, int y_aspect)
 {
-  stp_array_t answer;
+  stp_array_t *answer;
   int divisor = gcd(x_aspect, y_aspect);
 
   x_aspect /= divisor;

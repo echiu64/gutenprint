@@ -92,7 +92,7 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
 
 
 void
-stpi_dither_ordered(stp_vars_t v,
+stpi_dither_ordered(stp_vars_t *v,
 		    int row,
 		    const unsigned short *raw,
 		    int duplicate_line,

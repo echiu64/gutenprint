@@ -119,7 +119,7 @@ static const double ink_darknesses[] =
 
 #define INCH(x)		(72 * x)
 
-static const res_t *escp2_find_resolution(stp_const_vars_t v);
+static const res_t *escp2_find_resolution(const stp_vars_t *v);
 
 #define PARAMETER_INT(s)						\
 {									\
@@ -459,13 +459,13 @@ sizeof(float_parameters) / sizeof(const float_param_t);
 
 
 static escp2_privdata_t *
-get_privdata(stp_vars_t v)
+get_privdata(stp_vars_t *v)
 {
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
 static model_featureset_t
-escp2_get_cap(stp_const_vars_t v, escp2_model_option_t feature)
+escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
 {
   int model = stp_get_model_id(v);
   if (feature < 0 || feature >= MODEL_LIMIT)
@@ -480,7 +480,7 @@ escp2_get_cap(stp_const_vars_t v, escp2_model_option_t feature)
 }
 
 static int
-escp2_has_cap(stp_const_vars_t v, escp2_model_option_t feature,
+escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
 	      model_featureset_t class)
 {
   int model = stp_get_model_id(v);
@@ -500,7 +500,7 @@ escp2_has_cap(stp_const_vars_t v, escp2_model_option_t feature,
 
 #define DEF_SIMPLE_ACCESSOR(f, t)					\
 static inline t								\
-escp2_##f(stp_const_vars_t v)						\
+escp2_##f(const stp_vars_t *v)						\
 {									\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_int_parameter(v, "escp2_" #f);			\
@@ -513,7 +513,7 @@ escp2_##f(stp_const_vars_t v)						\
 
 #define DEF_RAW_ACCESSOR(f, t)						\
 static inline t								\
-escp2_##f(stp_const_vars_t v)						\
+escp2_##f(const stp_vars_t *v)						\
 {									\
   if (stp_check_raw_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_raw_parameter(v, "escp2_" #f);			\
@@ -526,7 +526,7 @@ escp2_##f(stp_const_vars_t v)						\
 
 #define DEF_COMPOSITE_ACCESSOR(f, t)			\
 static inline t						\
-escp2_##f(stp_const_vars_t v)				\
+escp2_##f(const stp_vars_t *v)				\
 {							\
   int model = stp_get_model_id(v);			\
   return (stpi_escp2_model_capabilities[model].f);	\
@@ -534,7 +534,7 @@ escp2_##f(stp_const_vars_t v)				\
 
 #define DEF_ROLL_ACCESSOR(f, t)						\
 static inline t								\
-escp2_##f(stp_const_vars_t v, int rollfeed)				\
+escp2_##f(const stp_vars_t *v, int rollfeed)				\
 {									\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
     return stp_get_int_parameter(v, "escp2_" #f);			\
@@ -631,7 +631,7 @@ get_channel_count_by_number(unsigned count)
 }
 
 static int
-escp2_ink_type(stp_const_vars_t v, int resid)
+escp2_ink_type(const stp_vars_t *v, int resid)
 {
   if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_ink_type");
@@ -643,7 +643,7 @@ escp2_ink_type(stp_const_vars_t v, int resid)
 }
 
 static double
-escp2_density(stp_const_vars_t v, int resid)
+escp2_density(const stp_vars_t *v, int resid)
 {
   if (stp_check_float_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_density");
@@ -655,7 +655,7 @@ escp2_density(stp_const_vars_t v, int resid)
 }
 
 static int
-escp2_bits(stp_const_vars_t v, int resid)
+escp2_bits(const stp_vars_t *v, int resid)
 {
   if (stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
     return stp_get_int_parameter(v, "escp2_bits");
@@ -667,7 +667,7 @@ escp2_bits(stp_const_vars_t v, int resid)
 }
 
 static double
-escp2_base_res(stp_const_vars_t v, int resid)
+escp2_base_res(const stp_vars_t *v, int resid)
 {
   if (stp_check_float_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_base_res");
@@ -679,7 +679,7 @@ escp2_base_res(stp_const_vars_t v, int resid)
 }
 
 static const escp2_dropsize_t *
-escp2_dropsizes(stp_const_vars_t v, int resid)
+escp2_dropsizes(const stp_vars_t *v, int resid)
 {
   int model = stp_get_model_id(v);
   const escp2_drop_list_t *drops = stpi_escp2_model_capabilities[model].drops;
@@ -687,7 +687,7 @@ escp2_dropsizes(stp_const_vars_t v, int resid)
 }
 
 static const inklist_t *
-escp2_inklist(stp_const_vars_t v)
+escp2_inklist(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
   int i;
@@ -708,14 +708,14 @@ escp2_inklist(stp_const_vars_t v)
 }
 
 static const shade_t *
-escp2_shades(stp_const_vars_t v, int channel)
+escp2_shades(const stp_vars_t *v, int channel)
 {
   const inklist_t *inklist = escp2_inklist(v);
   return &((*inklist->shades)[channel]);
 }
 
 static const paperlist_t *
-escp2_paperlist(stp_const_vars_t v)
+escp2_paperlist(const stp_vars_t *v)
 {
   const inklist_t *inklist = escp2_inklist(v);
   if (inklist)
@@ -725,7 +725,7 @@ escp2_paperlist(stp_const_vars_t v)
 }
 
 static int
-using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
+using_automatic_settings(const stp_vars_t *v, auto_mode_t mode)
 {
   int is_raw = 0;
   if (stp_get_string_parameter(v, "InputImageType") &&
@@ -798,7 +798,7 @@ compute_printed_resid(const res_t *res)
 
 
 static const input_slot_t *
-get_input_slot(stp_const_vars_t v)
+get_input_slot(const stp_vars_t *v)
 {
   int i;
   const char *input_slot = stp_get_string_parameter(v, "InputSlot");
@@ -822,7 +822,7 @@ get_input_slot(stp_const_vars_t v)
 }
 
 static const printer_weave_t *
-get_printer_weave(stp_const_vars_t v)
+get_printer_weave(const stp_vars_t *v)
 {
   int i;
   const printer_weave_list_t *p = escp2_printer_weaves(v);
@@ -843,7 +843,7 @@ get_printer_weave(stp_const_vars_t v)
 }
 
 static int
-use_printer_weave(stp_const_vars_t v)
+use_printer_weave(const stp_vars_t *v)
 {
   const res_t *res = escp2_find_resolution(v);
   if (!res)
@@ -858,7 +858,7 @@ use_printer_weave(stp_const_vars_t v)
   
 
 static const paper_t *
-get_media_type(stp_const_vars_t v)
+get_media_type(const stp_vars_t *v)
 {
   int i;
   const paperlist_t *p = escp2_paperlist(v);
@@ -879,7 +879,7 @@ get_media_type(stp_const_vars_t v)
 }
 
 static int
-verify_resolution_by_paper_type(stp_const_vars_t v, const res_t *res)
+verify_resolution_by_paper_type(const stp_vars_t *v, const res_t *res)
 {
   const paper_t *paper = get_media_type(v);
   if (paper)
@@ -916,7 +916,7 @@ verify_resolution_by_paper_type(stp_const_vars_t v, const res_t *res)
 }
 
 static int
-verify_resolution(stp_const_vars_t v, const res_t *res)
+verify_resolution(const stp_vars_t *v, const res_t *res)
 {
   int nozzle_width =
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
@@ -948,7 +948,7 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
 }
 
 static int
-verify_papersize(stp_const_vars_t v, const stp_papersize_t *pt)
+verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
 {
   unsigned int height_limit, width_limit;
   unsigned int min_height_limit, min_width_limit;
@@ -968,7 +968,7 @@ verify_papersize(stp_const_vars_t v, const stp_papersize_t *pt)
 }
 
 static int
-verify_inktype(stp_const_vars_t v, const escp2_inkname_t *inks)
+verify_inktype(const stp_vars_t *v, const escp2_inkname_t *inks)
 {
   if (inks->inkset == INKSET_EXTENDED)
     return 0;
@@ -977,7 +977,7 @@ verify_inktype(stp_const_vars_t v, const escp2_inkname_t *inks)
 }
 
 static const char *
-get_default_inktype(stp_const_vars_t v)
+get_default_inktype(const stp_vars_t *v)
 {
   const inklist_t *ink_list = escp2_inklist(v);
   const paper_t *paper_type = get_media_type(v);
@@ -1012,7 +1012,7 @@ get_default_inktype(stp_const_vars_t v)
 
 
 static const escp2_inkname_t *
-get_inktype(stp_const_vars_t v)
+get_inktype(const stp_vars_t *v)
 {
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
   const inklist_t *ink_list = escp2_inklist(v);
@@ -1045,7 +1045,7 @@ get_inktype(stp_const_vars_t v)
 }
 
 static const paper_adjustment_t *
-get_media_adjustment(stp_const_vars_t v)
+get_media_adjustment(const stp_vars_t *v)
 {
   const paper_t *pt = get_media_type(v);
   const inklist_t *ink_list = escp2_inklist(v);
@@ -1069,7 +1069,7 @@ get_media_adjustment(stp_const_vars_t v)
  */
 
 static stp_parameter_list_t
-escp2_list_parameters(stp_const_vars_t v)
+escp2_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1090,7 +1090,7 @@ fill_transition_parameters(stp_parameter_t *description)
 }
 
 static void
-set_density_parameter(stp_const_vars_t v,
+set_density_parameter(const stp_vars_t *v,
 		      stp_parameter_t *description,
 		      int color)
 {
@@ -1108,7 +1108,7 @@ set_density_parameter(stp_const_vars_t v,
 }  
 
 static void
-set_gray_transition_parameter(stp_const_vars_t v,
+set_gray_transition_parameter(const stp_vars_t *v,
 			      stp_parameter_t *description,
 			      int expected_channels)
 {
@@ -1122,7 +1122,7 @@ set_gray_transition_parameter(stp_const_vars_t v,
 }
 
 static void
-set_color_transition_parameter(stp_const_vars_t v,
+set_color_transition_parameter(const stp_vars_t *v,
 			       stp_parameter_t *description,
 			       int color)
 {
@@ -1141,7 +1141,7 @@ set_color_transition_parameter(stp_const_vars_t v,
 }
 
 static const res_t *
-find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres,
+find_default_resolution(const stp_vars_t *v, int desired_hres, int desired_vres,
 			int strict)
 {
   const res_t *const *res = escp2_reslist(v);
@@ -1189,7 +1189,7 @@ find_default_resolution(stp_const_vars_t v, int desired_hres, int desired_vres,
 }
 
 static const res_t *
-find_resolution_from_quality(stp_const_vars_t v, const char *quality,
+find_resolution_from_quality(const stp_vars_t *v, const char *quality,
 			     int strict)
 {
   int i;
@@ -1211,7 +1211,7 @@ find_resolution_from_quality(stp_const_vars_t v, const char *quality,
 }
 
 static void
-escp2_parameters(stp_const_vars_t v, const char *name,
+escp2_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
 {
   int		i;
@@ -1564,7 +1564,7 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 }
 
 static const res_t *
-escp2_find_resolution(stp_const_vars_t v)
+escp2_find_resolution(const stp_vars_t *v)
 {
   const char *resolution;
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
@@ -1611,7 +1611,7 @@ imax(int a, int b)
 }
 
 static void
-internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
+internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 			int *left, int *right, int *bottom, int *top)
 {
   int	width, height;			/* Size of page */
@@ -1678,7 +1678,7 @@ internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
  */
 
 static void
-escp2_imageable_area(stp_const_vars_t v,   /* I */
+escp2_imageable_area(const stp_vars_t *v,   /* I */
 		     int  *left,	/* O - Left position in points */
 		     int  *right,	/* O - Right position in points */
 		     int  *bottom,	/* O - Bottom position in points */
@@ -1688,7 +1688,7 @@ escp2_imageable_area(stp_const_vars_t v,   /* I */
 }
 
 static void
-escp2_limit(stp_const_vars_t v,			/* I */
+escp2_limit(const stp_vars_t *v,			/* I */
 	    int *width, int *height,
 	    int *min_width, int *min_height)
 {
@@ -1699,7 +1699,7 @@ escp2_limit(stp_const_vars_t v,			/* I */
 }
 
 static void
-escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
+escp2_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   const res_t *res = escp2_find_resolution(v);
   if (res && verify_resolution(v, res))
@@ -1713,7 +1713,7 @@ escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
 }
 
 static const char *
-escp2_describe_output(stp_const_vars_t v)
+escp2_describe_output(const stp_vars_t *v)
 {
   const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
@@ -1748,7 +1748,7 @@ escp2_describe_output(stp_const_vars_t v)
 }
 
 static int
-escp2_has_advanced_command_set(stp_const_vars_t v)
+escp2_has_advanced_command_set(const stp_vars_t *v)
 {
   return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
 	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
@@ -1756,7 +1756,7 @@ escp2_has_advanced_command_set(stp_const_vars_t v)
 }
 
 static int
-escp2_use_extended_commands(stp_const_vars_t v, int use_softweave)
+escp2_use_extended_commands(const stp_vars_t *v, int use_softweave)
 {
   return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
 	  (escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES) &&
@@ -1764,7 +1764,7 @@ escp2_use_extended_commands(stp_const_vars_t v, int use_softweave)
 }
 
 static int
-set_raw_ink_type(stp_vars_t v)
+set_raw_ink_type(stp_vars_t *v)
 {
   const inklist_t *inks = escp2_inklist(v);
   int ninktypes = inks->n_inks;
@@ -1799,7 +1799,7 @@ set_raw_ink_type(stp_vars_t v)
 }
 
 static void
-adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
+adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const paper_adjustment_t *pt = pd->paper_adjustment;
@@ -1883,10 +1883,10 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
 }
 
 static void
-adjust_print_quality(stp_vars_t v, stp_image_t *image)
+adjust_print_quality(stp_vars_t *v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  stp_curve_t   adjustment = NULL;
+  stp_curve_t *adjustment = NULL;
   const paper_adjustment_t *pt;
   double k_upper = 1.0;
   double k_lower = 0;
@@ -1978,7 +1978,7 @@ compute_channel_count(const escp2_inkname_t *ink_type, int channel_limit)
 }
 
 static double
-get_double_param(stp_const_vars_t v, const char *param)
+get_double_param(const stp_vars_t *v, const char *param)
 {
   if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, param);
@@ -1987,7 +1987,7 @@ get_double_param(stp_const_vars_t v, const char *param)
 }
 
 static void
-setup_inks(stp_vars_t v)
+setup_inks(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int i, j;
@@ -2031,7 +2031,7 @@ setup_inks(stp_vars_t v)
 }
 
 static void
-setup_head_offset(stp_vars_t v)
+setup_head_offset(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int i;
@@ -2069,7 +2069,7 @@ setup_head_offset(stp_vars_t v)
 }
 
 static void
-setup_misc(stp_vars_t v)
+setup_misc(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->input_slot = get_input_slot(v);
@@ -2090,7 +2090,7 @@ setup_misc(stp_vars_t v)
 }
 
 static void
-allocate_channels(stp_vars_t v, int line_length)
+allocate_channels(stp_vars_t *v, int line_length)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const escp2_inkname_t *ink_type = pd->inkname;
@@ -2171,7 +2171,7 @@ adjusted_horizontal_resolution(const res_t *res)
 }
 
 static void
-setup_resolution(stp_vars_t v)
+setup_resolution(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const res_t *res = escp2_find_resolution(v);
@@ -2209,7 +2209,7 @@ setup_resolution(stp_vars_t v)
 }
 
 static void
-setup_softweave_parameters(stp_vars_t v)
+setup_softweave_parameters(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->horizontal_passes = pd->res->printed_hres / pd->physical_xdpi;
@@ -2243,7 +2243,7 @@ setup_softweave_parameters(stp_vars_t v)
 }
 
 static void
-setup_printer_weave_parameters(stp_vars_t v)
+setup_printer_weave_parameters(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->horizontal_passes = 1;
@@ -2254,7 +2254,7 @@ setup_printer_weave_parameters(stp_vars_t v)
 }
 
 static void
-setup_head_parameters(stp_vars_t v)
+setup_head_parameters(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   /*
@@ -2328,7 +2328,7 @@ setup_head_parameters(stp_vars_t v)
 }
 
 static void
-setup_page(stp_vars_t v)
+setup_page(stp_vars_t *v)
 {
   int n;
   escp2_privdata_t *pd = get_privdata(v);
@@ -2436,7 +2436,7 @@ set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
 }  
 
 static int
-escp2_print_data(stp_vars_t v, stp_image_t *image)
+escp2_print_data(stp_vars_t *v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int errdiv  = stp_image_height(image) / pd->image_printed_height;
@@ -2511,7 +2511,7 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 }
 
 static int
-escp2_print_page(stp_vars_t v, stp_image_t *image)
+escp2_print_page(stp_vars_t *v, stp_image_t *image)
 {
   int status;
   int i;
@@ -2584,7 +2584,7 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
  * 'escp2_print()' - Print an image to an EPSON printer.
  */
 static int
-escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
+escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
 {
   int status = 1;
 
@@ -2633,9 +2633,9 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
 }
 
 static int
-escp2_print(stp_const_vars_t v, stp_image_t *image)
+escp2_print(const stp_vars_t *v, stp_image_t *image)
 {
-  stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t *nv = stp_vars_create_copy(v);
   int op = OP_JOB_PRINT;
   int status;
   if (!stp_get_string_parameter(v, "JobMode") ||
@@ -2648,9 +2648,9 @@ escp2_print(stp_const_vars_t v, stp_image_t *image)
 }
 
 static int
-escp2_job_start(stp_const_vars_t v, stp_image_t *image)
+escp2_job_start(const stp_vars_t *v, stp_image_t *image)
 {
-  stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
   stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_START);
@@ -2659,9 +2659,9 @@ escp2_job_start(stp_const_vars_t v, stp_image_t *image)
 }
 
 static int
-escp2_job_end(stp_const_vars_t v, stp_image_t *image)
+escp2_job_end(const stp_vars_t *v, stp_image_t *image)
 {
-  stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
   stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_END);

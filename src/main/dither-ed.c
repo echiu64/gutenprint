@@ -399,7 +399,7 @@ shared_ed_deinitializer(stpi_dither_t *d,
 }
 
 void
-stpi_dither_ed(stp_vars_t v,
+stpi_dither_ed(stp_vars_t *v,
 	       int row,
 	       const unsigned short *raw,
 	       int duplicate_line,

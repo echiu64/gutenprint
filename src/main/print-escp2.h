@@ -656,11 +656,11 @@ typedef struct
 
 } escp2_privdata_t;
 
-extern void stpi_escp2_init_printer(stp_vars_t v);
-extern void stpi_escp2_deinit_printer(stp_vars_t v);
-extern void stpi_escp2_flush_pass(stp_vars_t v, int passno,
+extern void stpi_escp2_init_printer(stp_vars_t *v);
+extern void stpi_escp2_deinit_printer(stp_vars_t *v);
+extern void stpi_escp2_flush_pass(stp_vars_t *v, int passno,
 				  int vertical_subpass);
-extern void stpi_escp2_terminate_page(stp_vars_t v);
+extern void stpi_escp2_terminate_page(stp_vars_t *v);
 
 #ifdef TEST_UNCOMPRESSED
 #define COMPRESSION (0)

@@ -29,7 +29,7 @@
 
 int main(int argc, char *argv[])
 {
-  stp_curve_t curve;
+  stp_curve_t *curve;
 
   if (argc != 2)
     {

@@ -164,7 +164,7 @@ int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
 void *  gp_malloc (size_t size);
-int	write_ppd(stp_const_printer_t p, const char *prefix,
+int	write_ppd(const stp_printer_t *p, const char *prefix,
 		  const char *language, int verbose);
 
 
@@ -216,7 +216,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   int		i;		    /* Looping var */
   const char	*prefix;	    /* Directory prefix for output */
   const char	*language = NULL;   /* Language */
-  stp_const_printer_t	printer;	    /* Pointer to printer driver */
+  const stp_printer_t *printer;	    /* Pointer to printer driver */
   int           verbose = 0;        /* Verbose messages */
   char          **langs = NULL;     /* Available translations */
   char          **models = NULL;    /* Models to output, all if NULL */
@@ -552,7 +552,7 @@ void printlangs(char **langs)
 
 void printmodels(int verbose)
 {
-  stp_const_printer_t p;
+  const stp_printer_t *p;
   int i;
 
   for (i = 0; i < stp_printer_model_count(); i++)
@@ -643,7 +643,7 @@ gp_malloc (size_t size)
  */
 
 int					/* O - Exit status */
-write_ppd(stp_const_printer_t p,	/* I - Printer driver */
+write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
 	  const char	      *language,
 	  int                 verbose)
@@ -653,14 +653,14 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   char		filename[1024];		/* Filename */
   int		num_opts;		/* Number of printer options */
   int		xdpi, ydpi;		/* Resolution info */
-  stp_vars_t	v;			/* Variable info */
+  stp_vars_t	*v;			/* Variable info */
   int		width, height,		/* Page information */
 		bottom, left,
 		top, right;
   const char	*driver;		/* Driver name */
   const char	*long_name;		/* Driver long name */
   const char	*manufacturer;		/* Manufacturer of printer */
-  stp_const_vars_t	printvars;		/* Printer option names */
+  const stp_vars_t	*printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
   struct stat   dir;                    /* prefix dir status */

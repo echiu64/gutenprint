@@ -43,8 +43,8 @@
 /*
  * Local functions...
  */
-static void	pcl_mode0(stp_vars_t, unsigned char *, int, int);
-static void	pcl_mode2(stp_vars_t, unsigned char *, int, int);
+static void	pcl_mode0(stp_vars_t *, unsigned char *, int, int);
+static void	pcl_mode2(stp_vars_t *, unsigned char *, int, int);
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct
@@ -52,7 +52,7 @@ typedef struct
   int do_blank;
   int blank_lines;
   unsigned char *comp_buf;
-  void (*writefunc)(stp_vars_t, unsigned char *, int, int);	/* PCL output function */
+  void (*writefunc)(stp_vars_t *, unsigned char *, int, int);	/* PCL output function */
   int do_cret;
   int do_cretb;
   int do_6color;
@@ -258,7 +258,7 @@ static const pcl_t pcl_resolutions[] =
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
 static void
-pcl_describe_resolution(stp_const_vars_t v, int *x, int *y)
+pcl_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   int i;
   const char *resolution = stp_get_string_parameter(v, "Resolution");
@@ -1453,7 +1453,7 @@ pcl_papersize_valid(const stp_papersize_t *pt,
  */
 
 static stp_parameter_list_t
-pcl_list_parameters(stp_const_vars_t v)
+pcl_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1465,7 +1465,7 @@ pcl_list_parameters(stp_const_vars_t v)
 }
 
 static void
-pcl_parameters(stp_const_vars_t v, const char *name,
+pcl_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int		model = stp_get_model_id(v);
@@ -1649,7 +1649,7 @@ pcl_parameters(stp_const_vars_t v, const char *name,
  * 'pcl_imageable_area()' - Return the imageable area of the page.
  */
 static void
-internal_imageable_area(stp_const_vars_t v,     /* I */
+internal_imageable_area(const stp_vars_t *v,     /* I */
 			int  use_paper_margins,
 			int  *left,	/* O - Left position in points */
 			int  *right,	/* O - Right position in points */
@@ -1717,7 +1717,7 @@ internal_imageable_area(stp_const_vars_t v,     /* I */
 }
 
 static void
-pcl_imageable_area(stp_const_vars_t v,     /* I */
+pcl_imageable_area(const stp_vars_t *v,     /* I */
                    int  *left,		/* O - Left position in points */
                    int  *right,		/* O - Right position in points */
                    int  *bottom,	/* O - Bottom position in points */
@@ -1727,7 +1727,7 @@ pcl_imageable_area(stp_const_vars_t v,     /* I */
 }
 
 static void
-pcl_limit(stp_const_vars_t v,  		/* I */
+pcl_limit(const stp_vars_t *v,  		/* I */
 	  int *width,
 	  int *height,
 	  int *min_width,
@@ -1741,7 +1741,7 @@ pcl_limit(stp_const_vars_t v,  		/* I */
 }
 
 static const char *
-pcl_describe_output(stp_const_vars_t v)
+pcl_describe_output(const stp_vars_t *v)
 {
   int printing_color = 0;
   int model = stp_get_model_id(v);
@@ -1771,7 +1771,7 @@ pcl_describe_output(stp_const_vars_t v)
  */
 
 static void
-pcl_printfunc(stp_vars_t v)
+pcl_printfunc(stp_vars_t *v)
 {
   pcl_privdata_t *pd = (pcl_privdata_t *) stp_get_component_data(v, "Driver");
   int do_blank = pd->do_blank;
@@ -1884,7 +1884,7 @@ pcl_printfunc(stp_vars_t v)
 }
 
 static double
-get_double_param(stp_vars_t v, const char *param)
+get_double_param(stp_vars_t *v, const char *param)
 {
   if (param && stp_check_float_parameter(v, param, STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, param);
@@ -1893,7 +1893,7 @@ get_double_param(stp_vars_t v, const char *param)
 }
 
 static int
-pcl_do_print(stp_vars_t v, stp_image_t *image)
+pcl_do_print(stp_vars_t *v, stp_image_t *image)
 {
   int i;
   pcl_privdata_t privdata;
@@ -1942,8 +1942,8 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
   const stp_papersize_t *pp;
   int		the_top_margin,	/* Corrected top margin */
 		the_left_margin;	/* Corrected left margin */
-  stp_curve_t   lum_adjustment;
-  stp_curve_t   hue_adjustment;
+  stp_curve_t   *lum_adjustment;
+  stp_curve_t   *hue_adjustment;
   double density;
 
   if (!stp_verify(v))
@@ -2531,10 +2531,10 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
 }
 
 static int
-pcl_print(stp_const_vars_t v, stp_image_t *image)
+pcl_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
-  stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t *nv = stp_vars_create_copy(v);
   stp_prune_inactive_options(nv);
   status = pcl_do_print(nv, image);
   stp_vars_destroy(nv);
@@ -2562,7 +2562,7 @@ static const stp_printfuncs_t print_pcl_printfuncs =
  */
 
 static void
-pcl_mode0(stp_vars_t v,		/* I - Print file or command */
+pcl_mode0(stp_vars_t *v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */
@@ -2577,7 +2577,7 @@ pcl_mode0(stp_vars_t v,		/* I - Print file or command */
  */
 
 static void
-pcl_mode2(stp_vars_t v,		/* I - Print file or command */
+pcl_mode2(stp_vars_t *v,		/* I - Print file or command */
           unsigned char *line,		/* I - Output bitmap data */
           int           height,		/* I - Height of bitmap data */
           int           last_plane)	/* I - True if this is the last plane */

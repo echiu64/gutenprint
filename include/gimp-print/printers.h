@@ -46,10 +46,9 @@ extern "C" {
  * @{
  */
 
+struct stp_printer;
 /** The printer opaque data type (representation of printer model). */
-typedef void *stp_printer_t;
-/** The constant printer opaque data type (representation of printer model). */
-typedef const void *stp_const_printer_t;
+typedef struct stp_printer stp_printer_t;
 
 /**
  * Get the number of available printer models.
@@ -64,7 +63,7 @@ extern int stp_printer_model_count(void);
  * @returns a pointer to the printer model, or NULL on failure.  The
  * pointer should not be freed.
  */
-extern stp_const_printer_t stp_get_printer_by_index(int idx);
+extern const stp_printer_t *stp_get_printer_by_index(int idx);
 
 /**
  * Get a printer model by its long (translated) name.
@@ -72,7 +71,7 @@ extern stp_const_printer_t stp_get_printer_by_index(int idx);
  * @returns a pointer to the printer model, or NULL on failure.  The
  * pointer should not be freed.
  */
-extern stp_const_printer_t stp_get_printer_by_long_name(const char *long_name);
+extern const stp_printer_t *stp_get_printer_by_long_name(const char *long_name);
 
 /**
  * Get a printer model by its short name.
@@ -80,7 +79,7 @@ extern stp_const_printer_t stp_get_printer_by_long_name(const char *long_name);
  * @returns a pointer to the printer model, or NULL on failure.  The
  * pointer should not be freed.
  */
-extern stp_const_printer_t stp_get_printer_by_driver(const char *driver);
+extern const stp_printer_t *stp_get_printer_by_driver(const char *driver);
 
 /**
  * Get the printer model from a vars object.
@@ -88,7 +87,7 @@ extern stp_const_printer_t stp_get_printer_by_driver(const char *driver);
  * @returns a pointer to the printer model, or NULL on failure.  The
  * pointer should not be freed.
  */
-extern stp_const_printer_t stp_get_printer(stp_const_vars_t v);
+extern const stp_printer_t *stp_get_printer(const stp_vars_t *v);
 
 /**
  * Get the printer index number from the printer model short (driver) name.
@@ -103,14 +102,14 @@ extern int stp_get_printer_index_by_driver(const char *driver);
  * @param p the printer model to use.
  * @returns the long name (should never be freed).
  */
-extern const char *stp_printer_get_long_name(stp_const_printer_t p);
+extern const char *stp_printer_get_long_name(const stp_printer_t * p);
 
 /**
  * Get a printer model's short (driver) name.
  * @param p the printer model to use.
  * @returns the short name (should never be freed).
  */
-extern const char *stp_printer_get_driver(stp_const_printer_t p);
+extern const char *stp_printer_get_driver(const stp_printer_t *p);
 
 /**
  * Get a printer model's family name.
@@ -119,14 +118,14 @@ extern const char *stp_printer_get_driver(stp_const_printer_t p);
  * @param p the printer model to use.
  * @returns the family name (should never be freed).
  */
-extern const char *stp_printer_get_family(stp_const_printer_t p);
+extern const char *stp_printer_get_family(const stp_printer_t *p);
 
 /**
  * Get a printer model's manufacturer's name.
  * @param p the printer model to use.
  * @returns the manufacturer's name (should never be freed).
  */
-extern const char *stp_printer_get_manufacturer(stp_const_printer_t p);
+extern const char *stp_printer_get_manufacturer(const stp_printer_t *p);
 
 /**
  * Get a printer model's model number.
@@ -136,7 +135,7 @@ extern const char *stp_printer_get_manufacturer(stp_const_printer_t p);
  * @param p the printer model to use.
  * @returns the model number.
  */
-extern int stp_printer_get_model(stp_const_printer_t p);
+extern int stp_printer_get_model(const stp_printer_t *p);
 
 /**
  * Get the default vars for a particular printer model.
@@ -145,7 +144,7 @@ extern int stp_printer_get_model(stp_const_printer_t p);
  * @param p the printer model to use.
  * @returns the printer model's default vars.
  */
-extern stp_const_vars_t stp_printer_get_defaults(stp_const_printer_t p);
+extern const stp_vars_t *stp_printer_get_defaults(const stp_printer_t *p);
 
 /**
  * Set a vars object to use a particular driver, and set the parameter
@@ -153,7 +152,7 @@ extern stp_const_vars_t stp_printer_get_defaults(stp_const_printer_t p);
  * @param v the vars to use.
  * @param p the printer model to use.
  */
-extern void stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t p);
+extern void stp_set_printer_defaults(stp_vars_t *v, const stp_printer_t *p);
 
 
 /**
@@ -165,7 +164,7 @@ extern void stp_set_printer_defaults(stp_vars_t v, stp_const_printer_t p);
  * @returns 0 on failure, 1 on success, 2 on abort requested by the
  * driver.
  */
-extern int stp_print(stp_const_vars_t v, stp_image_t *image);
+extern int stp_print(const stp_vars_t *v, stp_image_t *image);
 
 /**
  * Start a print job.
@@ -175,7 +174,7 @@ extern int stp_print(stp_const_vars_t v, stp_image_t *image);
  * @param image the image to print.
  * @returns 1 on success, 0 on failure.
  */
-extern int stp_start_job(stp_const_vars_t v, stp_image_t *image);
+extern int stp_start_job(const stp_vars_t *v, stp_image_t *image);
 
 /**
  * End a print job.
@@ -183,24 +182,24 @@ extern int stp_start_job(stp_const_vars_t v, stp_image_t *image);
  * @param image the image to print.
  * @returns 1 on success, 0 on failure.
  */
-extern int stp_end_job(stp_const_vars_t v, stp_image_t *image);
+extern int stp_end_job(const stp_vars_t *v, stp_image_t *image);
 
 typedef struct
 {
-  stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
-  void  (*parameters)(stp_const_vars_t v, const char *name,
+  stp_parameter_list_t (*list_parameters)(const stp_vars_t *v);
+  void  (*parameters)(const stp_vars_t *v, const char *name,
 		      stp_parameter_t *);
-  void  (*media_size)(stp_const_vars_t v, int *width, int *height);
-  void  (*imageable_area)(stp_const_vars_t v,
+  void  (*media_size)(const stp_vars_t *v, int *width, int *height);
+  void  (*imageable_area)(const stp_vars_t *v,
 			  int *left, int *right, int *bottom, int *top);
-  void  (*limit)(stp_const_vars_t v, int *max_width, int *max_height,
+  void  (*limit)(const stp_vars_t *v, int *max_width, int *max_height,
                  int *min_width, int *min_height);
-  int   (*print)(stp_const_vars_t v, stp_image_t *image);
-  void  (*describe_resolution)(stp_const_vars_t v, int *x, int *y);
-  const char *(*describe_output)(stp_const_vars_t v);
-  int   (*verify)(stp_vars_t v);
-  int   (*start_job)(stp_const_vars_t v, stp_image_t *image);
-  int   (*end_job)(stp_const_vars_t v, stp_image_t *image);
+  int   (*print)(const stp_vars_t *v, stp_image_t *image);
+  void  (*describe_resolution)(const stp_vars_t *v, int *x, int *y);
+  const char *(*describe_output)(const stp_vars_t *v);
+  int   (*verify)(stp_vars_t *v);
+  int   (*start_job)(const stp_vars_t *v, stp_image_t *image);
+  int   (*end_job)(const stp_vars_t *v, stp_image_t *image);
 } stp_printfuncs_t;
 
 typedef struct stp_family
@@ -209,21 +208,21 @@ typedef struct stp_family
   stp_list_t             *printer_list; /* list of printers */
 } stp_family_t;
 
-extern int stp_get_model_id(stp_const_vars_t v);
+extern int stp_get_model_id(const stp_vars_t *v);
 
-extern int stp_verify_printer_params(stp_vars_t);
+extern int stp_verify_printer_params(stp_vars_t *v);
 
 extern int stp_family_register(stp_list_t *family);
 extern int stp_family_unregister(stp_list_t *family);
 extern void stp_initialize_printer_defaults(void);
 
-extern stp_parameter_list_t stp_printer_list_parameters(stp_const_vars_t v);
+extern stp_parameter_list_t stp_printer_list_parameters(const stp_vars_t *v);
 
 extern void
-stp_printer_describe_parameter(stp_const_vars_t v, const char *name,
+stp_printer_describe_parameter(const stp_vars_t *v, const char *name,
 			       stp_parameter_t *description);
 
-const char *stp_describe_output(stp_const_vars_t v);
+const char *stp_describe_output(const stp_vars_t *v);
 
 /** @} */
 

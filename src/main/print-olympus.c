@@ -141,12 +141,12 @@ typedef struct /* printer specific parameters */
   const char *planes;	/* name and order of ribbons */
   int block_size;
   int features;		
-  void (*printer_init_func)(stp_vars_t);
-  void (*printer_end_func)(stp_vars_t);
-  void (*plane_init_func)(stp_vars_t);
-  void (*plane_end_func)(stp_vars_t);
-  void (*block_init_func)(stp_vars_t);
-  void (*block_end_func)(stp_vars_t);
+  void (*printer_init_func)(stp_vars_t *);
+  void (*printer_end_func)(stp_vars_t *);
+  void (*plane_init_func)(stp_vars_t *);
+  void (*plane_end_func)(stp_vars_t *);
+  void (*block_init_func)(stp_vars_t *);
+  void (*block_end_func)(stp_vars_t *);
   const char *adj_cyan;		/* default color adjustment */
   const char *adj_magenta;
   const char *adj_yellow;
@@ -214,7 +214,7 @@ static const olymp_printsize_list_t p300_printsize_list =
   p300_printsize, sizeof(p300_printsize) / sizeof(olymp_printsize_t)
 };
 
-static void p300_printer_init_func(stp_vars_t v)
+static void p300_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("\033\033\033C\033N\1\033F\0\1\033MS\xff\xff\xff"
 	      "\033Z", 1, 19, v);
@@ -222,12 +222,12 @@ static void p300_printer_init_func(stp_vars_t v)
   stp_put16_be(privdata.ydpi, v);
 }
 
-static void p300_plane_end_func(stp_vars_t v)
+static void p300_plane_end_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033\033\033P%cS", privdata.plane);
 }
 
-static void p300_block_init_func(stp_vars_t v)
+static void p300_block_init_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033\033\033W%c", privdata.plane);
   stp_put16_be(privdata.block_min_y, v);
@@ -313,7 +313,7 @@ static const olymp_printsize_list_t p400_printsize_list =
   p400_printsize, sizeof(p400_printsize) / sizeof(olymp_printsize_t)
 };
 
-static void p400_printer_init_func(stp_vars_t v)
+static void p400_printer_init_func(stp_vars_t *v)
 {
   const char *p = stp_get_string_parameter(v, "PageSize");
   int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
@@ -337,17 +337,17 @@ static void p400_printer_init_func(stp_vars_t v)
   stp_zprintf(v, "\033ZP"); stp_zfwrite(zero, 1, 61, v);
 }
 
-static void p400_plane_init_func(stp_vars_t v)
+static void p400_plane_init_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033ZC"); stp_zfwrite(zero, 1, 61, v);
 }
 
-static void p400_plane_end_func(stp_vars_t v)
+static void p400_plane_end_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033P"); stp_zfwrite(zero, 1, 62, v);
 }
 
-static void p400_block_init_func(stp_vars_t v)
+static void p400_block_init_func(stp_vars_t *v)
 {
   const char *p = stp_get_string_parameter(v, "PageSize");
   int wide = (strcmp(p, "c8x10") == 0 || strcmp(p, "C6") == 0);
@@ -437,14 +437,14 @@ static const olymp_printsize_list_t cpx00_printsize_list =
   cpx00_printsize, sizeof(cpx00_printsize) / sizeof(olymp_printsize_t)
 };
 
-static void cpx00_printer_init_func(stp_vars_t v)
+static void cpx00_printer_init_func(stp_vars_t *v)
 {
   stp_put16_be(0x4000, v);
   stp_put16_be(0x0001, v);
   stp_zfwrite(zero, 1, 8, v);
 }
 
-static void cpx00_plane_init_func(stp_vars_t v)
+static void cpx00_plane_init_func(stp_vars_t *v)
 {
   stp_put16_be(0x4001, v);
   stp_put16_le(privdata.plane - '1', v);
@@ -528,7 +528,7 @@ static const olymp_printsize_list_t updp10_printsize_list =
   updp10_printsize, sizeof(updp10_printsize) / sizeof(olymp_printsize_t)
 };
 
-static void updp10_printer_init_func(stp_vars_t v)
+static void updp10_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("\x98\xff\xff\xff\xff\xff\xff\xff"
 	      "\x14\x00\x00\x00\x1b\x15\x00\x00"
@@ -542,7 +542,7 @@ static void updp10_printer_init_func(stp_vars_t v)
   stp_zfwrite("\x00", 1, 1, v);
 }
 
-static void updp10_printer_end_func(stp_vars_t v)
+static void updp10_printer_end_func(stp_vars_t *v)
 {
   const char *lpar = stp_get_string_parameter(v, "Laminate");
   const olympus_cap_t *caps = olympus_get_model_capabilities(
@@ -621,7 +621,7 @@ static const olymp_printsize_list_t cx400_printsize_list =
   cx400_printsize, sizeof(cx400_printsize) / sizeof(olymp_printsize_t)
 };
 
-static void cx400_printer_init_func(stp_vars_t v)
+static void cx400_printer_init_func(stp_vars_t *v)
 {
   const char *p = stp_get_string_parameter(v, "PageSize");
   char pg = '\0';
@@ -856,7 +856,7 @@ static const olympus_cap_t* olympus_get_model_capabilities(int model)
 }
 
 static void
-olympus_printsize(stp_const_vars_t v,
+olympus_printsize(const stp_vars_t *v,
 		   int  *width,
 		   int  *height)
 {
@@ -888,7 +888,7 @@ olympus_feature(const olympus_cap_t *caps, int feature)
 }
 
 static stp_parameter_list_t
-olympus_list_parameters(stp_const_vars_t v)
+olympus_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -901,7 +901,7 @@ olympus_list_parameters(stp_const_vars_t v)
 }
 
 static void
-olympus_parameters(stp_const_vars_t v, const char *name,
+olympus_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int	i;
@@ -1029,7 +1029,7 @@ olympus_parameters(stp_const_vars_t v, const char *name,
 
 
 static void
-olympus_imageable_area(stp_const_vars_t v,
+olympus_imageable_area(const stp_vars_t *v,
 		   int  *left,
 		   int  *right,
 		   int  *bottom,
@@ -1078,7 +1078,7 @@ olympus_imageable_area(stp_const_vars_t v,
 }
 
 static void
-olympus_limit(stp_const_vars_t v,			/* I */
+olympus_limit(const stp_vars_t *v,			/* I */
 	    int *width, int *height,
 	    int *min_width, int *min_height)
 {
@@ -1089,7 +1089,7 @@ olympus_limit(stp_const_vars_t v,			/* I */
 }
 
 static void
-olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
+olympus_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   int i;
@@ -1111,7 +1111,7 @@ olympus_describe_resolution(stp_const_vars_t v, int *x, int *y)
 }
 
 static const char *
-olympus_describe_output(stp_const_vars_t v)
+olympus_describe_output(const stp_vars_t *v)
 {
   return "CMY";
 }
@@ -1120,7 +1120,7 @@ olympus_describe_output(stp_const_vars_t v)
  * olympus_print()
  */
 static int
-olympus_do_print(stp_vars_t v, stp_image_t *image)
+olympus_do_print(stp_vars_t *v, stp_image_t *image)
 {
   int i, j;
   int y, min_y, max_y;			/* Looping vars */
@@ -1133,7 +1133,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int char_out_width;
   int status = 1;
   int ink_channels = 1;
-  stp_curve_t   adjustment = NULL;
+  stp_curve_t   *adjustment = NULL;
 
   int r_errdiv, r_errmod;
   int r_errval  = 0;
@@ -1545,10 +1545,10 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 }
 
 static int
-olympus_print(stp_const_vars_t v, stp_image_t *image)
+olympus_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
-  stp_vars_t nv = stp_vars_create_copy(v);
+  stp_vars_t *nv = stp_vars_create_copy(v);
   stp_prune_inactive_options(nv);
   status = olympus_do_print(nv, image);
   stp_vars_destroy(nv);

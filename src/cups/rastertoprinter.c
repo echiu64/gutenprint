@@ -120,7 +120,7 @@ static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
 static double total_bytes_printed = 0;
 
 static void
-set_special_parameter(stp_vars_t v, const char *name, int choice)
+set_special_parameter(stp_vars_t *v, const char *name, int choice)
 {
   stp_parameter_t desc;
   stp_describe_parameter(v, name, &desc);
@@ -144,7 +144,7 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
 }
 
 static void
-print_debug_block(const stp_vars_t v, const cups_image_t *cups)
+print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
 {
   stp_parameter_list_t params;
   int nparams;
@@ -243,7 +243,7 @@ print_debug_block(const stp_vars_t v, const cups_image_t *cups)
 }
 
 static int
-printer_supports_bw(stp_const_vars_t v)
+printer_supports_bw(const stp_vars_t *v)
 {
   stp_parameter_t desc;
   int status = 0;
@@ -254,11 +254,11 @@ printer_supports_bw(stp_const_vars_t v)
   return status;
 }
 
-static stp_vars_t
-initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
+static stp_vars_t *
+initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 {
   const stp_papersize_t	*size;		/* Paper size */
-  stp_vars_t v = stp_vars_create_copy(default_settings);
+  stp_vars_t *v = stp_vars_create_copy(default_settings);
 
   stp_set_page_width(v, cups->header.PageSize[0]);
   stp_set_page_height(v, cups->header.PageSize[1]);
@@ -375,7 +375,7 @@ purge_excess_data(cups_image_t *cups)
 }
 
 static void
-set_all_options(stp_vars_t v, cups_option_t *options, int num_options,
+set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		ppd_file_t *ppd)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);
@@ -483,11 +483,11 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
-  stp_const_printer_t	printer;	/* Printer driver */
+  const stp_printer_t	*printer;	/* Printer driver */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
-  stp_vars_t		v = NULL;
-  stp_vars_t		default_settings;
+  stp_vars_t		*v = NULL;
+  stp_vars_t		*default_settings;
   int			initialized_job = 0;
 
  /*

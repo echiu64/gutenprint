@@ -47,10 +47,9 @@ extern "C" {
    * @{
    */
 
+struct stp_array;
   /** The array opaque data type. */
-typedef void *stp_array_t;
-  /** The constant array opaque data type. */
-typedef const void *stp_const_array_t;
+typedef struct stp_array stp_array_t;
 
   /**
    * Create a new array.
@@ -59,14 +58,14 @@ typedef const void *stp_const_array_t;
    * @param y_size the number of "rows".
    * @returns the newly created array.
    */
-extern stp_array_t stp_array_create(int x_size, int y_size);
+extern stp_array_t *stp_array_create(int x_size, int y_size);
 
   /**
    * Destroy an array.
    * It is an error to destroy the array more than once.
    * @param array the array to destroy.
    */
-extern void stp_array_destroy(stp_array_t array);
+extern void stp_array_destroy(stp_array_t *array);
 
   /**
    * Copy an array.
@@ -75,7 +74,7 @@ extern void stp_array_destroy(stp_array_t array);
    * @param dest the destination array.
    * @param source the source array.
    */
-extern void stp_array_copy(stp_array_t dest, stp_const_array_t source);
+extern void stp_array_copy(stp_array_t *dest, const stp_array_t *source);
 
   /**
    * Copy and allocate an array.
@@ -85,7 +84,7 @@ extern void stp_array_copy(stp_array_t dest, stp_const_array_t source);
    * @param array the source array.
    * @returns the new copy of the array.
    */
-extern stp_array_t stp_array_create_copy(stp_const_array_t array);
+extern stp_array_t *stp_array_create_copy(const stp_array_t *array);
 
   /**
    * Resize an array.
@@ -94,7 +93,7 @@ extern stp_array_t stp_array_create_copy(stp_const_array_t array);
    * @param x_size the new number of "columns".
    * @param y_size the new number of "rows".
    */
-extern void stp_array_set_size(stp_array_t array, int x_size, int y_size);
+extern void stp_array_set_size(stp_array_t *array, int x_size, int y_size);
 
   /**
    * Get the size of an array.
@@ -104,7 +103,7 @@ extern void stp_array_set_size(stp_array_t array, int x_size, int y_size);
    * @param x_size a pointer to an integer to store the x size in.
    * @param y_size a pointer to an integer to store the y size in.
    */
-extern void stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size);
+extern void stp_array_get_size(const stp_array_t *array, int *x_size, int *y_size);
 
   /**
    * Set the data in an array.
@@ -113,7 +112,7 @@ extern void stp_array_get_size(stp_const_array_t array, int *x_size, int *y_size
    * the data to set.  This array must be at least as long as (x_size
    * * y_size).
    */
-extern void stp_array_set_data(stp_array_t array, const double *data);
+extern void stp_array_set_data(stp_array_t *array, const double *data);
 
   /**
    * Get the data in an array.
@@ -123,13 +122,13 @@ extern void stp_array_set_data(stp_array_t array, const double *data);
    * @param data a pointer to the first element of an array of doubles
    * is stored in a pointer to double*.
    * @code
-   * stp_array_t array;
+   * stp_array_t *array;
    * size_t size;
    * double *data;
    * stp_array_get_data(array, &size, &data);
    * @endcode
    */
-extern void stp_array_get_data(stp_const_array_t array, size_t *size,
+extern void stp_array_get_data(const stp_array_t *array, size_t *size,
 			       const double **data);
 
   /**
@@ -140,7 +139,7 @@ extern void stp_array_get_data(stp_const_array_t array, size_t *size,
    * @param data the datum to set.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_array_set_point(stp_array_t array, int x, int y,
+extern int stp_array_set_point(stp_array_t *array, int x, int y,
 			       double data);
 
   /**
@@ -151,7 +150,7 @@ extern int stp_array_set_point(stp_array_t array, int x, int y,
    * @param data the datum is stored in the double pointed to.
    * @returns 1 on success, 0 on failure.
    */
-extern int stp_array_get_point(stp_const_array_t array, int x, int y,
+extern int stp_array_get_point(const stp_array_t *array, int x, int y,
 			       double *data);
 
   /**
@@ -159,7 +158,7 @@ extern int stp_array_get_point(stp_const_array_t array, int x, int y,
    * @param array the array to use.
    * @returns the (constant) stp_sequence_t.
    */
-extern stp_const_sequence_t stp_array_get_sequence(stp_const_array_t array);
+extern const stp_sequence_t *stp_array_get_sequence(const stp_array_t *array);
 
   /** @} */
 

@@ -46,11 +46,11 @@ extern "C" {
 
 typedef struct
 {
-  int (*init)(stp_vars_t v, stp_image_t *image, size_t steps);
-  int (*get_row)(stp_vars_t v, stp_image_t *image,
+  int (*init)(stp_vars_t *v, stp_image_t *image, size_t steps);
+  int (*get_row)(stp_vars_t *v, stp_image_t *image,
 		 int row, unsigned *zero_mask);
-  stp_parameter_list_t (*list_parameters)(stp_const_vars_t v);
-  void (*describe_parameter)(stp_const_vars_t v, const char *name,
+  stp_parameter_list_t (*list_parameters)(const stp_vars_t *v);
+  void (*describe_parameter)(const stp_vars_t *v, const char *name,
 			     stp_parameter_t *description);
 } stp_colorfuncs_t;
 
@@ -66,18 +66,18 @@ typedef struct stp_color
  * Initialize the color machinery.  Return value is the number
  * of columns of output
  */
-extern int stp_color_init(stp_vars_t v, stp_image_t *image, size_t steps);
+extern int stp_color_init(stp_vars_t *v, stp_image_t *image, size_t steps);
 
 /*
  * Acquire input and perform color conversion.  Return value
  * is status; zero is success.
  */
-extern int stp_color_get_row(stp_vars_t v, stp_image_t *image,
+extern int stp_color_get_row(stp_vars_t *v, stp_image_t *image,
 			     int row, unsigned *zero_mask);
 
-extern stp_parameter_list_t stp_color_list_parameters(stp_const_vars_t v);
+extern stp_parameter_list_t stp_color_list_parameters(const stp_vars_t *v);
 
-extern void stp_color_describe_parameter(stp_const_vars_t v, const char *name,
+extern void stp_color_describe_parameter(const stp_vars_t *v, const char *name,
 					 stp_parameter_t *description);
 
 extern int

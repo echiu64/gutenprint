@@ -35,10 +35,10 @@ extern "C" {
 #endif
 
 
-typedef void *stp_list_item_t;
-typedef const void *stp_const_list_item_t;
-typedef void *stp_list_t;
-typedef const void *stp_const_list_t;
+struct stp_list_item;
+typedef struct stp_list_item stp_list_item_t;
+struct stp_list;
+typedef struct stp_list stp_list_t;
 typedef void (*stp_node_freefunc)(void *);
 typedef void *(*stp_node_copyfunc)(const void *);
 typedef const char *(*stp_node_namefunc)(const void *);
@@ -51,11 +51,11 @@ extern int stp_list_destroy(stp_list_t *list);
 extern stp_list_item_t *stp_list_get_start(const stp_list_t *list);
 extern stp_list_item_t *stp_list_get_end(const stp_list_t *list);
 extern stp_list_item_t *stp_list_get_item_by_index(const stp_list_t *list,
-						     int idx);
+						   int idx);
 extern stp_list_item_t *stp_list_get_item_by_name(const stp_list_t *list,
-						    const char *name);
+						  const char *name);
 extern stp_list_item_t *stp_list_get_item_by_long_name(const stp_list_t *list,
-							 const char *long_name);
+						       const char *long_name);
 extern int stp_list_get_length(const stp_list_t *list);
 
 extern void stp_list_set_freefunc(stp_list_t *list, stp_node_freefunc);
@@ -74,8 +74,8 @@ extern void stp_list_set_sortfunc(stp_list_t *list, stp_node_sortfunc);
 extern stp_node_sortfunc stp_list_get_sortfunc(const stp_list_t *list);
 
 extern int stp_list_item_create(stp_list_t *list,
-				 const stp_list_item_t *next,
-				 const void *data);
+				stp_list_item_t *next,
+				const void *data);
 extern int stp_list_item_destroy(stp_list_t *list,
 				 stp_list_item_t *item);
 extern stp_list_item_t *stp_list_item_prev(const stp_list_item_t *item);

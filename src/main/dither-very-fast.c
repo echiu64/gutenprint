@@ -57,7 +57,7 @@ print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 }
 
 void
-stpi_dither_very_fast(stp_vars_t v,
+stpi_dither_very_fast(stp_vars_t *v,
 		      int row,
 		      const unsigned short *raw,
 		      int duplicate_line,

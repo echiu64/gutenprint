@@ -49,9 +49,9 @@ typedef struct
   stp_xml_parse_func parse_func;
 } stpi_xml_parse_registry;
 
-static stp_list_t stpi_xml_registry;
+static stp_list_t *stpi_xml_registry;
 
-static stp_list_t stpi_xml_preloads;
+static stp_list_t *stpi_xml_preloads;
 
 static const char *
 xml_registry_namefunc(const void *item)

@@ -110,17 +110,17 @@ typedef enum {
   STP_WEAVE_ASCENDING_3X
 } stp_weave_strategy_t;
 
-typedef int stp_packfunc(stp_vars_t v,
+typedef int stp_packfunc(stp_vars_t *v,
 			 const unsigned char *line, int height,
 			 unsigned char *comp_buf,
 			 unsigned char **comp_ptr,
 			 int *first, int *last);
-typedef void stp_fillfunc(stp_vars_t v, int row, int subpass,
+typedef void stp_fillfunc(stp_vars_t *v, int row, int subpass,
 			  int width, int missingstartrows, int color);
-typedef void stp_flushfunc(stp_vars_t v, int passno, int vertical_subpass);
-typedef int stp_compute_linewidth_func(stp_vars_t v, int n);
+typedef void stp_flushfunc(stp_vars_t *v, int passno, int vertical_subpass);
+typedef int stp_compute_linewidth_func(stp_vars_t *v, int n);
 
-extern void stp_initialize_weave(stp_vars_t v, int jets, int separation,
+extern void stp_initialize_weave(stp_vars_t *v, int jets, int separation,
 				 int oversample, int horizontal,
 				 int vertical, int ncolors, int bitwidth,
 				 int linewidth, int line_count,
@@ -141,28 +141,28 @@ extern stp_fillfunc stp_fill_uncompressed;
 extern stp_compute_linewidth_func stp_compute_tiff_linewidth;
 extern stp_compute_linewidth_func stp_compute_uncompressed_linewidth;
 
-extern void stp_flush_all(stp_vars_t v);
+extern void stp_flush_all(stp_vars_t *v);
 
 extern void
-stp_write_weave(stp_vars_t v, unsigned char *const cols[]);
+stp_write_weave(stp_vars_t *v, unsigned char *const cols[]);
 
 extern stp_lineoff_t *
-stp_get_lineoffsets_by_pass(stp_const_vars_t v, int pass);
+stp_get_lineoffsets_by_pass(const stp_vars_t *v, int pass);
 
 extern stp_lineactive_t *
-stp_get_lineactive_by_pass(stp_const_vars_t v, int pass);
+stp_get_lineactive_by_pass(const stp_vars_t *v, int pass);
 
 extern stp_linecount_t *
-stp_get_linecount_by_pass(stp_const_vars_t v, int pass);
+stp_get_linecount_by_pass(const stp_vars_t *v, int pass);
 
 extern const stp_linebufs_t *
-stp_get_linebases_by_pass(stp_const_vars_t v, int pass);
+stp_get_linebases_by_pass(const stp_vars_t *v, int pass);
 
 extern stp_pass_t *
-stp_get_pass_by_pass(stp_const_vars_t v, int pass);
+stp_get_pass_by_pass(const stp_vars_t *v, int pass);
 
 extern void
-stp_weave_parameters_by_row(stp_const_vars_t v, int row,
+stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 			    int vertical_subpass, stp_weave_t *w);
 
 #ifdef __cplusplus

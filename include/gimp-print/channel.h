@@ -38,29 +38,29 @@ extern "C" {
 #endif
 
 
-extern void stp_channel_reset(stp_vars_t v);
-extern void stp_channel_reset_channel(stp_vars_t v, int channel);
+extern void stp_channel_reset(stp_vars_t *v);
+extern void stp_channel_reset_channel(stp_vars_t *v, int channel);
 
-extern void stp_channel_add(stp_vars_t v, unsigned channel,
+extern void stp_channel_add(stp_vars_t *v, unsigned channel,
 			    unsigned subchannel, double value);
 
-extern void stp_channel_set_density_adjustment(stp_vars_t v,
+extern void stp_channel_set_density_adjustment(stp_vars_t *v,
 					       int color, int subchannel,
 					       double adjustment);
-extern void stp_channel_set_ink_limit(stp_vars_t v, double limit);
-extern void stp_channel_set_cutoff_adjustment(stp_vars_t v,
+extern void stp_channel_set_ink_limit(stp_vars_t *v, double limit);
+extern void stp_channel_set_cutoff_adjustment(stp_vars_t *v,
 					      int color, int subchannel,
 					      double adjustment);
-extern void stp_channel_set_black_channel(stp_vars_t v, int channel);
+extern void stp_channel_set_black_channel(stp_vars_t *v, int channel);
 
-extern void stp_channel_initialize(stp_vars_t v, stp_image_t *image,
+extern void stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 				   int input_channel_count);
 
-extern void stp_channel_convert(stp_const_vars_t v, unsigned *zero_mask);
+extern void stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask);
 
-extern unsigned short * stp_channel_get_input(stp_const_vars_t v);
+extern unsigned short * stp_channel_get_input(const stp_vars_t *v);
 
-extern unsigned short * stp_channel_get_output(stp_const_vars_t v);
+extern unsigned short * stp_channel_get_output(const stp_vars_t *v);
 
 #ifdef __cplusplus
   }

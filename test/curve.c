@@ -238,9 +238,9 @@ main(int argc, char **argv)
   int i;
   double low, high;
 
-  stp_curve_t curve1;
-  stp_curve_t curve2;
-  stp_curve_t curve3;
+  stp_curve_t *curve1;
+  stp_curve_t *curve2;
+  stp_curve_t *curve3;
 
   while (1)
     {
@@ -312,7 +312,7 @@ main(int argc, char **argv)
     printf("Testing known bad curves...\n");
   for (i = 0; i < bad_curve_count; i++)
     {
-      stp_curve_t bad = NULL;
+      stp_curve_t *bad = NULL;
       TEST("BAD curve (PASS is an expected failure)");
       if ((bad = stp_curve_create_from_string(bad_curves[i])) != NULL)
 	{

@@ -109,7 +109,7 @@ print_header(void)
 }
 
 static void
-flush_pass(stp_vars_t v, int passno, int vertical_subpass)
+flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 {
 }
 
@@ -128,7 +128,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   int i;
   int j;
   stp_weave_t w;
-  stp_vars_t v;
+  stp_vars_t *v;
   int errors[26];
   char errcodes[26];
   int total_errors = 0;

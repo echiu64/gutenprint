@@ -60,7 +60,7 @@ struct _GimpParamList {
 typedef struct _IMAGE
 {
   IjsServerCtx *ctx;
-  stp_vars_t v;
+  stp_vars_t *v;
   char *filename;	/* OutputFile */
   int fd;		/* OutputFD + 1 (so that 0 is invalid) */
   int width;		/* pixels */
@@ -320,7 +320,7 @@ list_all_parameters(void)
       stp_string_list_add_string(sl, "MediaName", NULL);
       for (i = 0; i < printer_count; i++)
 	{
-	  stp_const_printer_t printer = stp_get_printer_by_index(i);
+	  const stp_printer_t *printer = stp_get_printer_by_index(i);
 	  stp_parameter_list_t params =
 	    stp_get_parameter_list(stp_printer_get_defaults(printer));
 	  size_t count = stp_parameter_list_count(params);
@@ -433,8 +433,8 @@ gimp_get_cb (void *get_cb_data,
 	     int val_size)
 {
   IMAGE *img = (IMAGE *)get_cb_data;
-  stp_vars_t v = img->v;
-  stp_const_printer_t printer = stp_get_printer(v);
+  stp_vars_t *v = img->v;
+  const stp_printer_t *printer = stp_get_printer(v);
   GimpParamList *pl = img->params;
   GimpParamList *curs;
   const char *val = NULL;
@@ -555,7 +555,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     ;				/* We don't care who makes it */
   else if (strcmp(key, "DeviceModel") == 0)
     {
-      stp_const_printer_t printer = stp_get_printer_by_driver(vbuf);
+      const stp_printer_t *printer = stp_get_printer_by_driver(vbuf);
       stp_set_driver(img->v, vbuf);
       if (printer &&
 	  strcmp(stp_printer_get_family(printer), "ps") != 0 &&
@@ -622,7 +622,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else
     {
-      stp_curve_t curve;
+      stp_curve_t *curve;
       stp_parameter_t desc;
       stp_describe_parameter(img->v, key, &desc);
       switch (desc.p_type)
@@ -815,7 +815,7 @@ gimp_image_get_appname(stp_image_t *image)
 /**********************************************************/
 
 static const char *
-safe_get_string_parameter(stp_const_vars_t v, const char *param)
+safe_get_string_parameter(const stp_vars_t *v, const char *param)
 {
   const char *val = stp_get_string_parameter(v, param);
   if (val)
@@ -825,7 +825,7 @@ safe_get_string_parameter(stp_const_vars_t v, const char *param)
 }
 
 static void
-stp_dbg(const char *msg, stp_const_vars_t v)
+stp_dbg(const char *msg, const stp_vars_t *v)
 {
   fprintf(stderr, "Settings: Model %s\n", stp_get_driver(v));
   fprintf(stderr,"%s Settings: c: %f  m: %f  y: %f\n", msg,
@@ -860,7 +860,7 @@ stp_dbg(const char *msg, stp_const_vars_t v)
 }
 
 static void
-purge_unused_float_parameters(stp_vars_t v)
+purge_unused_float_parameters(stp_vars_t *v)
 {
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(v);
@@ -901,7 +901,7 @@ main (int argc, char **argv)
   int page = 0;
   IMAGE img;
   stp_image_t si;
-  stp_const_printer_t printer = NULL;
+  const stp_printer_t *printer = NULL;
   FILE *f = NULL;
   int l, t, r, b, w, h;
   int width, height;

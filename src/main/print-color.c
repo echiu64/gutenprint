@@ -386,7 +386,7 @@ sizeof(float_parameters) / sizeof(float_param_t);
 typedef struct
 {
   stp_parameter_t param;
-  stp_curve_t *defval;
+  stp_curve_t **defval;
   unsigned channel_mask;
   int hsl_only;
   int color_only;
@@ -394,11 +394,11 @@ typedef struct
 
 static int standard_curves_initialized = 0;
 
-static stp_curve_t hue_map_bounds = NULL;
-static stp_curve_t lum_map_bounds = NULL;
-static stp_curve_t sat_map_bounds = NULL;
-static stp_curve_t color_curve_bounds = NULL;
-static stp_curve_t gcr_curve_bounds = NULL;
+static stp_curve_t *hue_map_bounds = NULL;
+static stp_curve_t *lum_map_bounds = NULL;
+static stp_curve_t *sat_map_bounds = NULL;
+static stp_curve_t *color_curve_bounds = NULL;
+static stp_curve_t *gcr_curve_bounds = NULL;
 
 
 #define RAW_CURVE_CHANNEL(channel)					\
@@ -600,7 +600,7 @@ get_color_correction_by_tag(color_correction_enum_t correction)
 
 
 static void
-initialize_channels(stp_vars_t v, stp_image_t *image)
+initialize_channels(stp_vars_t *v, stp_image_t *image)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
   if (stp_check_float_parameter(v, "InkLimit", STP_PARAMETER_ACTIVE))
@@ -610,7 +610,7 @@ initialize_channels(stp_vars_t v, stp_image_t *image)
 }
 
 static int
-stpi_color_traditional_get_row(stp_vars_t v,
+stpi_color_traditional_get_row(stp_vars_t *v,
 			       stp_image_t *image,
 			       int row,
 			       unsigned *zero_mask)
@@ -719,10 +719,10 @@ free_lut(void *vlut)
   stp_free(lut);
 }
 
-static stp_curve_t
-compute_gcr_curve(stp_const_vars_t vars)
+static stp_curve_t *
+compute_gcr_curve(const stp_vars_t *vars)
 {
-  stp_curve_t curve;
+  stp_curve_t *curve;
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
   double k_lower = 0.0;
   double k_upper = 1.0;
@@ -784,7 +784,7 @@ compute_gcr_curve(stp_const_vars_t vars)
 }
 
 static void
-initialize_gcr_curve(stp_const_vars_t vars)
+initialize_gcr_curve(const stp_vars_t *vars)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
   if (!stp_curve_cache_get_curve(&(lut->gcr_curve)))
@@ -794,7 +794,7 @@ initialize_gcr_curve(stp_const_vars_t vars)
 	  double data;
 	  size_t count;
 	  int i;
-	  stp_curve_t curve =
+	  stp_curve_t *curve =
 	    stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
 	  stp_curve_resample(curve, lut->steps);
 	  count = stp_curve_count_points(curve);
@@ -870,7 +870,7 @@ compute_a_curve_full(lut_t *lut, int channel)
   double ipivot = 1.0 - pivot;
   double xcontrast = pow(lut->contrast, lut->contrast);
   double xgamma = pow(pivot, lut->screen_gamma);
-  stp_curve_t curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
@@ -975,7 +975,7 @@ static void
 compute_a_curve_fast(lut_t *lut, int channel)
 {
   double *tmp;
-  stp_curve_t curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
+  stp_curve_t *curve = stp_curve_cache_get_curve(&(lut->channel_curves[channel]));
   int i;
   int isteps = lut->steps;
   if (isteps > 256)
@@ -1008,7 +1008,7 @@ compute_a_curve(lut_t *lut, int channel)
 }
 
 static void
-invert_curve(stp_curve_t curve, int invert_output)
+invert_curve(stp_curve_t *curve, int invert_output)
 {
   double lo, hi;
   int i;
@@ -1041,7 +1041,7 @@ invert_curve(stp_curve_t curve, int invert_output)
 static void
 compute_one_lut(lut_t *lut, int i)
 {
-  stp_curve_t curve =
+  stp_curve_t *curve =
     stp_curve_cache_get_curve(&(lut->channel_curves[i]));
   if (curve)
     {
@@ -1063,7 +1063,7 @@ compute_one_lut(lut_t *lut, int i)
 }
 
 static void
-setup_channel(stp_vars_t v, int i, const channel_param_t *p)
+setup_channel(stp_vars_t *v, int i, const channel_param_t *p)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
   const char *gamma_name =
@@ -1081,13 +1081,13 @@ setup_channel(stp_vars_t v, int i, const channel_param_t *p)
     stp_curve_cache_set_curve_copy
       (&(lut->channel_curves[i]), stp_get_curve_parameter(v, curve_name));
 
-  stp_dprintf(STP_DBG_LUT, " %s %.3f\n", gamma_name, lut->gamma_values[i]);
+  stp_dprintf(STP_DBG_LUT, v, " %s %.3f\n", gamma_name, lut->gamma_values[i]);
   compute_one_lut(lut, i);
 }
 
 
 static void
-stpi_compute_lut(stp_vars_t v)
+stpi_compute_lut(stp_vars_t *v)
 {
   int i;
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
@@ -1161,7 +1161,7 @@ stpi_compute_lut(stp_vars_t v)
 }
 
 static int
-stpi_color_traditional_init(stp_vars_t v,
+stpi_color_traditional_init(stp_vars_t *v,
 			    stp_image_t *image,
 			    size_t steps)
 {
@@ -1292,7 +1292,7 @@ initialize_standard_curves(void)
 }
 
 static stp_parameter_list_t
-stpi_color_traditional_list_parameters(stp_const_vars_t v)
+stpi_color_traditional_list_parameters(const stp_vars_t *v)
 {
   stp_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1305,7 +1305,7 @@ stpi_color_traditional_list_parameters(stp_const_vars_t v)
 }
 
 static void
-stpi_color_traditional_describe_parameter(stp_const_vars_t v,
+stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 					  const char *name,
 					  stp_parameter_t *description)
 {

@@ -56,8 +56,8 @@ static const char	*ps_ppd_file = NULL;
  * Local functions...
  */
 
-static void	ps_hex(stp_const_vars_t, unsigned short *, int);
-static void	ps_ascii85(stp_const_vars_t, unsigned short *, int, int);
+static void	ps_hex(const stp_vars_t *, unsigned short *, int);
+static void	ps_ascii85(const stp_vars_t *, unsigned short *, int, int);
 static char	*ppd_find(const char *, const char *, const char *, int *);
 
 static const stp_parameter_t the_parameters[] =
@@ -114,7 +114,7 @@ sizeof(the_parameters) / sizeof(const stp_parameter_t);
  */
 
 static stp_parameter_list_t
-ps_list_parameters(stp_const_vars_t v)
+ps_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -124,7 +124,7 @@ ps_list_parameters(stp_const_vars_t v)
 }
 
 static void
-ps_parameters_internal(stp_const_vars_t v, const char *name,
+ps_parameters_internal(const stp_vars_t *v, const char *name,
 		       stp_parameter_t *description)
 {
   int		i;
@@ -225,7 +225,7 @@ ps_parameters_internal(stp_const_vars_t v, const char *name,
 }
 
 static void
-ps_parameters(stp_const_vars_t v, const char *name,
+ps_parameters(const stp_vars_t *v, const char *name,
 	      stp_parameter_t *description)
 {
   setlocale(LC_ALL, "C");
@@ -238,7 +238,7 @@ ps_parameters(stp_const_vars_t v, const char *name,
  */
 
 static void
-ps_media_size_internal(stp_const_vars_t v,		/* I */
+ps_media_size_internal(const stp_vars_t *v,		/* I */
 		       int  *width,		/* O - Width in points */
 		       int  *height)		/* O - Height in points */
 {
@@ -261,7 +261,7 @@ ps_media_size_internal(stp_const_vars_t v,		/* I */
 }
 
 static void
-ps_media_size(stp_const_vars_t v, int *width, int *height)
+ps_media_size(const stp_vars_t *v, int *width, int *height)
 {
   setlocale(LC_ALL, "C");
   ps_media_size_internal(v, width, height);
@@ -273,7 +273,7 @@ ps_media_size(stp_const_vars_t v, int *width, int *height)
  */
 
 static void
-ps_imageable_area_internal(stp_const_vars_t v,      /* I */
+ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 			   int  *left,	/* O - Left position in points */
 			   int  *right,	/* O - Right position in points */
 			   int  *bottom, /* O - Bottom position in points */
@@ -315,7 +315,7 @@ ps_imageable_area_internal(stp_const_vars_t v,      /* I */
 }
 
 static void
-ps_imageable_area(stp_const_vars_t v,      /* I */
+ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *left,		/* O - Left position in points */
                   int  *right,		/* O - Right position in points */
                   int  *bottom,		/* O - Bottom position in points */
@@ -327,7 +327,7 @@ ps_imageable_area(stp_const_vars_t v,      /* I */
 }
 
 static void
-ps_limit(stp_const_vars_t v,  		/* I */
+ps_limit(const stp_vars_t *v,  		/* I */
 	 int *width,
 	 int *height,
 	 int *min_width,
@@ -343,7 +343,7 @@ ps_limit(stp_const_vars_t v,  		/* I */
  * This is really bogus...
  */
 static void
-ps_describe_resolution_internal(stp_const_vars_t v, int *x, int *y)
+ps_describe_resolution_internal(const stp_vars_t *v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   *x = -1;
@@ -354,7 +354,7 @@ ps_describe_resolution_internal(stp_const_vars_t v, int *x, int *y)
 }
 
 static void
-ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
+ps_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   setlocale(LC_ALL, "C");
   ps_describe_resolution_internal(v, x, y);
@@ -362,7 +362,7 @@ ps_describe_resolution(stp_const_vars_t v, int *x, int *y)
 }
 
 static const char *
-ps_describe_output(stp_const_vars_t v)
+ps_describe_output(const stp_vars_t *v)
 {
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   if (print_mode && strcmp(print_mode, "Color") == 0)
@@ -376,7 +376,7 @@ ps_describe_output(stp_const_vars_t v)
  */
 
 static int
-ps_print_internal(stp_const_vars_t v, stp_image_t *image)
+ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 {
   int		status = 1;
   int		model = stp_get_model_id(v);
@@ -416,7 +416,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
   }		commands[4];
   int           image_height,
 		image_width;
-  stp_vars_t	nv = stp_vars_create_copy(v);
+  stp_vars_t	*nv = stp_vars_create_copy(v);
   if (!resolution)
     resolution = "";
   if (!media_size)
@@ -708,7 +708,7 @@ ps_print_internal(stp_const_vars_t v, stp_image_t *image)
 }
 
 static int
-ps_print(stp_const_vars_t v, stp_image_t *image)
+ps_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   setlocale(LC_ALL, "C");
@@ -723,7 +723,7 @@ ps_print(stp_const_vars_t v, stp_image_t *image)
  */
 
 static void
-ps_hex(stp_const_vars_t v,	/* I - File to print to */
+ps_hex(const stp_vars_t *v,	/* I - File to print to */
        unsigned short   *data,	/* I - Data to print */
        int              length)	/* I - Number of bytes to print */
 {
@@ -764,7 +764,7 @@ ps_hex(stp_const_vars_t v,	/* I - File to print to */
  */
 
 static void
-ps_ascii85(stp_const_vars_t v,	/* I - File to print to */
+ps_ascii85(const stp_vars_t *v,	/* I - File to print to */
 	   unsigned short *data,	/* I - Data to print */
 	   int            length,	/* I - Number of bytes to print */
 	   int            last_line)	/* I - Last line of raster data? */
