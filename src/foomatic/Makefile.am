@@ -38,12 +38,12 @@ endif
 ## Programs
 
 if BUILD_FOOMATIC
-noinst_PROGRAMS = printer_options paper_sizes gimp-print-version \
+noinst_PROGRAMS = printer_options printer_margins paper_sizes gimp-print-version \
 	stp_limits printers
 endif
 
-printer_options_SOURCES = printer_options.c
-printer_options_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+printer_margins_SOURCES = printer_margins.c
+printer_margins_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
 gimp_print_version_SOURCES = gimp-print-version.c
 gimp_print_version_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)

@@ -3,7 +3,8 @@
  *
  *   Dump the per-printer margins for Grant Taylor's *-omatic database
  *
- *   Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 2000, 2003 Robert Krawitz (rlk@alum.mit.edu) and
+ *                        Till Kamppeter (till.kamppeter@gmx.net)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -24,84 +25,75 @@
 #include <config.h>
 #endif
 #include <stdio.h>
+#include <string.h>
 #ifdef INCLUDE_GIMP_PRINT_H
 #include INCLUDE_GIMP_PRINT_H
 #else
 #include <gimp-print/gimp-print.h>
 #endif
 #include "../../lib/libprintut.h"
-#include <string.h>
 
 int
-main(int argc, char **argv)
-{
+main(int argc, char **argv) {
   int i, k;
-  for (i = 0; i < stp_known_printers(); i++)
-    {
-      stp_vars_t v;
-      const stp_printer_t p = stp_get_printer_by_index(i);
-      stp_vars_t pv = stp_allocate_copy(stp_printer_get_printvars(p));
-      const stp_vars_t printvars = stp_printer_get_printvars(p);
-      const char *driver = stp_printer_get_driver(p);
-      const char *family = stp_printer_get_family(p);
-      stp_parameter_t desc;
-      int count;
 
-
-      int		width, height,
-	                bottom, left,
-	                top, right;
-      if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
+  stp_init();
+  for (i = 0; i < stp_known_printers(); i++) {
+    const stp_printer_t p = stp_get_printer_by_index(i);
+    const char *driver = stp_printer_get_driver(p);
+    const char *family = stp_printer_get_family(p);
+    stp_vars_t pv = 
+      stp_allocate_copy(stp_printer_get_printvars(p));
+    stp_parameter_t desc;
+    int num_opts;
+    const stp_param_string_t *opt;
+    int width, height, bottom, left, top, right;
+    if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
+      continue;
+    printf("# Printer model %s, long name `%s'\n", driver,
+	   stp_printer_get_long_name(p));
+    stp_describe_parameter(pv, "PageSize", &desc);
+    num_opts = stp_string_list_count(desc.bounds.str);
+    
+    for (k = 0; k < num_opts; k++) {
+      stp_papersize_t papersize;
+      opt = stp_string_list_param(desc.bounds.str, k);
+      papersize = stp_get_papersize_by_name(opt->name);
+      
+      if (!papersize) {
+	printf("Unable to lookup size %s!\n", opt->name);
 	continue;
-      stp_describe_parameter(pv, "PageSize", &desc);
+      }
+      
+      width  = stp_papersize_get_width(papersize);
+      height = stp_papersize_get_height(papersize);
+      
+      stp_set_string_parameter(pv, "PageSize", opt->name);
+      
+      stp_get_media_size(pv, &width, &height);
+      stp_get_imageable_area(pv, &left, &right, &bottom, &top);
+      bottom = height - bottom;
+      top    = height - top;
 
-      printf("# Printer model %s, long name `%s'\n",
-	     stp_printer_get_driver(p), stp_printer_get_long_name(p));
+      if (strcmp(opt->name, "Custom") == 0) {
+	/* Use relative values for the custom size */
+	right = width - right;
+	top = height - top;
+	width = 0;
+	height = 0;
+      }
 
-      if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
-	continue;
-
-      count = stp_string_list_count(desc.bounds.str);
-
-      for (k = 0; k < count; k++)
-	{
-	  int owidth, oheight;
-	  const char *name = stp_string_list_param(desc.bounds.str, k)->name;
-	  const stp_papersize_t papersize = stp_get_papersize_by_name(name);
-	
-	  if (!papersize)
-	    {
-	      printf("Unable to look up size %s!\n", name);
-	      continue;
-	    }
-	  
-	  width  = stp_papersize_get_width(papersize);
-	  height = stp_papersize_get_height(papersize);
-	  
-	  owidth = width;
-	  oheight = height;
-	  
-	  stp_set_media_size(v, opts[k].name);
-	  
-	  (*(printfuncs->media_size))(p, v, &width, &height);
-	  (*(printfuncs->imageable_area))(p, v, &left, &right, &bottom, &top);
-	  
-	  /* FIXME */
-	  if (owidth == 0)
-	    right = width - right;
-	  if (oheight == 0)
-	    top = height - top;
-	  
-	  printf("$imageableareas{'%s'}{'%s'} = {\n",
-		 stp_printer_get_driver(p), opts[k].name);
-	  printf("  'left' => '%d',\n", left);
-	  printf("  'right' => '%d',\n", right);
-	  printf("  'top' => '%d',\n", top);
-	  printf("  'bottom' => '%d',\n", bottom);
-	  printf("  'width' => '%d',\n", width);
-	  printf("  'height' => '%d'\n", height);
-	  printf("};\n");
-	}
+      printf("$imageableareas{'%s'}{'%s'} = {\n",
+	     driver, opt->name);
+      printf("  'left' => '%d',\n", left);
+      printf("  'right' => '%d',\n", right);
+      printf("  'top' => '%d',\n", top);
+      printf("  'bottom' => '%d',\n", bottom);
+      printf("  'width' => '%d',\n", width);
+      printf("  'height' => '%d'\n", height);
+      printf("};\n");
     }
+    stp_vars_free(pv);
+  }
   return 0;
 }

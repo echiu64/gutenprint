@@ -955,6 +955,8 @@ sub build_printoutmode_cons {
 sub qualityorder {
     # List of suffixes of the Quality choices
     my @suffixes = (
+		    # HP
+		    "mono",
 		    # General
 		    "",
 		    "dpi",
@@ -978,8 +980,6 @@ sub qualityorder {
 		    "hq2uni",
 		    # Canon
 		    "dmt",
-		    # HP
-		    "mono",
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case
@@ -995,7 +995,7 @@ sub qualityorder {
 	if (($firstinlist) && ($secondinlist)) {return 0};
     }
 
-    # Equal quality
+    # Unknown qualities
     die "The quality choice suffixes $a and $b are unknown!\n";
     return 0;
 
@@ -1045,7 +1045,9 @@ sub getprintoutmode {
 	my $modeinfo = {};
 	my ($draftminres, $draftbestsymmetry, $draftlowestqualstr) = 
 	    (99999999, 99999999, "xxx");
-	my $normaldefaultqual = $defaults{$stpprn}{'Resolution'};
+	my ($normalminres, $normalbestsymmetry, $normaluni, 
+	    $normallowestqualstr) = 
+	    (99999999, 99999999, 0, "xxx");
 	my ($highmaxres, $highbestsymmetry, $highbestqualstr) = 
 	    (0, 99999999, "");
 	my ($veryhighmaxres, $veryhighbestsymmetry, $veryhighbestqualstr) = 
@@ -1091,40 +1093,55 @@ sub getprintoutmode {
 		(($respersquareinch == $draftminres) &&
 		 ($symmetry == $draftbestsymmetry) &&
 		 (qualityorder($qualstr, $draftlowestqualstr) < 0))) {
-		$draftbestsymmetry = $symmetry;
-		$draftminres = $respersquareinch;
-		$draftlowestqualstr = $qualstr;
-		next if (($xres < 150) && # Resolution not lower than
-			 ($yres < 150));  # 150x150, 360x120 allowed
-		$modeinfo->{'Draft'} = {
-		    'quality' => $quality,
-		    'xres' => $xres,
-		    'yres' => $yres,
-		    'dither' => 'VeryFast',
-		    'image' => 'LineArt'
+		unless (($xres < 150) && # Resolution not lower than
+			($yres < 150)) {  # 150x150, 360x120 allowed
+		    $draftbestsymmetry = $symmetry;
+		    $draftminres = $respersquareinch;
+		    $draftlowestqualstr = $qualstr;
+		    $modeinfo->{'Draft'} = {
+			'quality' => $quality,
+			'xres' => $xres,
+			'yres' => $yres,
+			'dither' => 'VeryFast',
+			'image' => 'LineArt'
+		    }
 		}
 	    }
 
 	    ### Mode: NORMAL
 
-	    # Default resolution/quality of GIMP-Print, upgrade to 
-	    # unidirectional if possible, use 600x600 dpi for
-	    # Lexmark Z..
+	    # Lowest resolution which is at least 300x300 dpi (600x600 dpi
+	    # for Lexmark Z..), low quality level, unidirectional if
+	    # possible, 
 
 	    # Adaptive Hybrid dithering, ImageOptimization Photographs
 
-	    if ((($stpprn =~ /^lexmark\-z/) &&
-		 ($xres == 600) && ($yres == 600) && ($qualstr eq "uni")) ||
-		(($stpprn !~ /^lexmark\-z/) &&
-		 (($quality eq "${normaldefaultqual}uni") ||
-		  (($quality eq $normaldefaultqual) &&
-		   (!defined($normal->{'quality'})))))) {
-		$modeinfo->{'Normal'} = {
-		    'quality' => $quality,
-		    'xres' => $xres,
-		    'yres' => $yres,
-		    'dither' => 'Adaptive',
-		    'image' => 'Photographs'
+	    if (($respersquareinch < $normalminres) ||
+		(($respersquareinch == $normalminres) && 
+		 ($symmetry < $normalbestsymmetry)) ||
+		(($respersquareinch == $normalminres) &&
+		 ($symmetry == $normalbestsymmetry) &&
+		 (($qualstr =~ /uni/) > $normaluni)) ||
+		(($respersquareinch == $normalminres) &&
+		 ($symmetry == $normalbestsymmetry) &&
+		 (($qualstr =~ /uni/) == $normaluni) &&
+		 (qualityorder($qualstr, $normallowestqualstr) < 0))) {
+		unless ((($xres < 300) ||  # Resolution not lower than
+			 ($yres < 300)) || # 300x300, (600x600 on Lexmark)
+			(($stpprn =~ /^lexmark\-z/) &&
+			 (($xres < 600) ||
+			  ($yres < 600)))) {
+		    $normalbestsymmetry = $symmetry;
+		    $normalminres = $respersquareinch;
+		    $normaluni = ($qualstr =~ /uni/);
+		    $normallowestqualstr = $qualstr;
+		    $modeinfo->{'Normal'} = {
+			'quality' => $quality,
+			'xres' => $xres,
+			'yres' => $yres,
+			'dither' => 'Adaptive',
+			'image' => 'Photographs'
+		    }
 		}
 	    }
 
