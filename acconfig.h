@@ -61,5 +61,8 @@
 /* Define as 1 if you have the stpcpy function.  */
 #undef HAVE_STPCPY
 
+/* Define as 1 if you have the mempcpy function.  */
+#undef HAVE_MEMPCPY
+
 /* Package locale directory */
 #undef PACKAGE_LOCALE_DIR
