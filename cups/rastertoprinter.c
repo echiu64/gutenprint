@@ -77,6 +77,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   ppd_file_t		*ppd;		/* PPD file */
   const printer_t	*printer;	/* Printer driver */  
   vars_t		v;		/* Printer driver variables */
+  const papersize_t	*size;		/* Paper size */
   static char		*qualities[] =	/* Quality strings for resolution */
 			{
 			  "",
@@ -85,6 +86,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 			  " High Quality",
 			  " Highest Quality",
 			  " Emulated"
+			  " DMT"
 			};
 
 
@@ -225,7 +227,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Setup printer driver variables...
     */
 
-    memset(&v, 0, sizeof(v));
+    memcpy(&v, &(printer->printvars), sizeof(v));
 
     v.app_gamma   = 1.0;
     v.scaling     = -cups.header.HWResolution[0]; /* No scaling */
@@ -233,7 +235,18 @@ main(int  argc,				/* I - Number of command-line arguments */
     v.page_width  = cups.header.PageSize[0];
     v.page_height = cups.header.PageSize[1];
 
+    if (cups.header.cupsColorSpace == CUPS_CSPACE_W)
+      v.output_type = OUTPUT_GRAY;
+    else
+      v.output_type = OUTPUT_COLOR;
+
     strcpy(v.dither_algorithm, cups.header.OutputType);
+    strcpy(v.media_source, cups.header.MediaClass);
+    strcpy(v.media_type, cups.header.MediaType);
+
+    if ((size = get_papersize_by_size(cups.header.PageSize[0],
+                                      cups.header.PageSize[1])) != NULL)
+      strcpy(v.media_size, size->name);
 
    /*
     * The resolution variable needs a big overhaul...
@@ -253,7 +266,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     * Print the page...
     */
 
-    (*printer->print)(printer, cups.header.NumCopies, stdout, &cups, &v);
+    (*printer->print)(printer, 1, stdout, &cups, &v);
   }
 
  /*
