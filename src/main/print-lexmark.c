@@ -469,8 +469,10 @@ typedef struct
 /* main structure which describes all printer specific parameters */
 typedef struct {
   Lex_model model;    /* printer model */
-  int max_width;      /* maximum printable paper size in 1/72 inch */
-  int max_length;
+  int max_paper_width;  /* maximum printable paper size in 1/72 inch */
+  int max_paper_height;
+  int min_paper_width;  /* Maximum paper width, in points */
+  int min_paper_height; /* Maximum paper height, in points */
   int max_xdpi;
   int max_ydpi;
   int max_quality;
@@ -549,6 +551,9 @@ static const lexmark_inkname_t ink_types_generic[] =
 };
 
 
+#define INCH(x)		(72 * x)
+
+
 /* main structure */
 static const lexmark_cap_t lexmark_model_capabilities[] =
 {
@@ -560,7 +565,8 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
 
   { /* Lexmark z52 */
     m_z52,
-    618, 936,      /* max paper size *//* 8.58" x 13 " */
+    618, 936,         /* max paper size *//* 8.58" x 13 " */
+    INCH(2), INCH(4), /* min paper size */
     2400, 1200, 2, /* max resolution */
     0, 0, 5, 36, /* border l,r,t,b    unit is 1/72 DPI */
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -581,6 +587,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
   { /* Lexmark 3200 */
     m_3200,
     618, 936,      /* 8.58" x 13 " */
+    INCH(2), INCH(4), /* min paper size */
     1200, 1200, 2,
     11, 9, 10, 18,
     LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -601,6 +608,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
   { /*  */
     m_lex7500,
     618, 936,      /* 8.58" x 13 " */
+    INCH(2), INCH(4), /* min paper size */
     2400, 1200, 2,
     11, 9, 10, 18,
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
@@ -948,19 +956,25 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
 
   if (strcmp(name, "PageSize") == 0)
   {
-    int height_limit, width_limit;
+    unsigned int height_limit, width_limit;
+    unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
     valptrs = stp_malloc(sizeof(stp_param_t) * papersizes);
     *count = 0;
 
-    width_limit  = caps->max_width;
-    height_limit = caps->max_length;
+    width_limit  = caps->max_paper_width;
+    height_limit = caps->max_paper_height;
+    min_width_limit  = caps->min_paper_width;
+    min_height_limit = caps->min_paper_height;
 
     for (i = 0; i < papersizes; i++) {
       const stp_papersize_t pt = stp_get_papersize_by_index(i);
+      unsigned int pwidth = stp_papersize_get_width(pt);
+      unsigned int pheight = stp_papersize_get_height(pt);
       if (strlen(stp_papersize_get_name(pt)) > 0 &&
-	  stp_papersize_get_width(pt) <= width_limit &&
-	  stp_papersize_get_height(pt) <= height_limit)
+	  pwidth <= width_limit && pheight <= height_limit &&
+	  (pheight >= min_width_limit || pheight == 0) &&
+	  (pwidth >= min_width_limit || pwidth == 0))
 	{
 	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
 	  valptrs[*count].text = c_strdup(stp_papersize_get_text(pt));
@@ -1047,16 +1061,21 @@ lexmark_default_parameters(const stp_printer_t printer,
 
   if (strcmp(name, "PageSize") == 0)
   {
-    int height_limit, width_limit;
+    unsigned int height_limit, width_limit;
+    unsigned int min_height_limit, min_width_limit;
     int papersizes = stp_known_papersizes();
 
-    width_limit = caps->max_width;
-    height_limit = caps->max_length;
+    width_limit = caps->max_paper_width;
+    height_limit = caps->max_paper_height;
+    min_width_limit = caps->min_paper_width;
+    min_height_limit = caps->min_paper_height;
 
     for (i = 0; i < papersizes; i++)
       {
 	const stp_papersize_t pt = stp_get_papersize_by_index(i);
 	if (strlen(stp_papersize_get_name(pt)) > 0 &&
+	    stp_papersize_get_width(pt) >= min_width_limit &&
+	    stp_papersize_get_height(pt) >= min_height_limit &&
 	    stp_papersize_get_width(pt) <= width_limit &&
 	    stp_papersize_get_height(pt) <= height_limit)
 	  {
@@ -1129,10 +1148,10 @@ lexmark_limit(const stp_printer_t printer,	/* I - Printer model */
 	    int *min_height)
 {
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
-  *width =	caps->max_width;
-  *height =	caps->max_length;
-  *min_width = 1;
-  *min_height = 1;
+  *width =	caps->max_paper_width;
+  *height =	caps->max_paper_height;
+  *min_width =  caps->min_paper_width;
+  *min_height = caps->min_paper_height;
 }
 
 
@@ -2182,12 +2201,12 @@ lexmark_write(const stp_vars_t v,		/* I - Print file or command */
 
 
   /* first, we check the length of the line an cut it if necessary. */
-  if ((((width*caps->x_raster_res)/xdpi)+offset) > ((caps->max_width*caps->x_raster_res)/72)) {
+  if ((((width*caps->x_raster_res)/xdpi)+offset) > ((caps->max_paper_width*caps->x_raster_res)/72)) {
     /* line too long !! Cut the line */
 #ifdef DEBUG
    stp_erprintf("!! Line too long !! reduce it from %d", width);
 #endif
-    width = ((((caps->max_width*caps->x_raster_res)/72) - offset)*xdpi)/caps->x_raster_res;
+    width = ((((caps->max_paper_width*caps->x_raster_res)/72) - offset)*xdpi)/caps->x_raster_res;
 #ifdef DEBUG
    stp_erprintf(" down to %d\n", width);
 #endif
