@@ -725,7 +725,7 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi, int xdpi,
     }
   else if (bits > 1)
     fwrite("\033(e\002\000\000\020", 7, 1, prn); /* Variable dots */
-  else if (escp2_soft_ink(model) > 0)
+  else if (escp2_soft_ink(model) >= 0)
     fprintf(prn, "\033(e\002%c%c%c", 0, 0, escp2_soft_ink(model));
 
   /* Set up page */
@@ -2931,6 +2931,9 @@ escp2_write_weave(void *        vsw,
 
 /*
  *   $Log$
+ *   Revision 1.138  2000/05/05 12:25:16  rlk
+ *   Set ink size
+ *
  *   Revision 1.137  2000/05/05 02:41:41  rlk
  *   Minor cleanup
  *
