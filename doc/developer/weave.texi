@@ -44,7 +44,7 @@ good for the print head, though, since no ink is flowing through the
 other nozzles.  This leads to drying of ink and possible permanent
 damage to the print head.
 
-By the way, although the Epson manual says that microweave mode should be
+By the way, although the Epson manual says that MicroWeave mode should be
 used at 720 dpi, 360 dpi continues to work in much the same way.  At 360
 dpi, data is fed to the printer one row at a time on all Epson printers.
 The pattern that the printer uses to print is very prone to banding.
@@ -52,18 +52,18 @@ However, 360 dpi is inherently a low quality mode; if you're using it,
 presumably you don't much care about quality.  It is possible to do
 microweave at 360 DPI, with significantly improved quality.
 
-Except for the Stylus Pro printers (5000, 5500, 7000, 7500, 9000,
-9500, and when it's released the 10000), which can do microweave at
-any resolution, printers from roughly the Stylus Color 600 and later
-do not have the capability to do MicroWeave correctly in many cases
-(some printers can do MicroWeave correctly at 720 DPI).  Instead, the
-host must arrange the output in the order that it will be sent to the
-print head.  This is a very complex process; the jets in the print
-head are spaced more than one row (1/720") apart, so we can't simply
-send consecutive rows of dots to the printer.  Instead, we have to
-pass e. g. the first, ninth, 17th, 25th... rows in order for them to
-print in the correct position on the paper.  This interleaving process
-is called "soft" weaving.
+Except for the Stylus Pro printers (5000, 5500, 7000, 7500, 7600,
+9000, 9500, 9600, 10000, and 10600), which can do MicroWeave at any
+resolution, printers from roughly the Stylus Color 600 and later do
+not have the capability to do MicroWeave correctly in many cases (some
+printers can do MicroWeave correctly at 720 DPI).  Instead, the host
+must arrange the output in the order that it will be sent to the print
+head.  This is a very complex process; the jets in the print head are
+spaced more than one row (1/720") apart, so we can't simply send
+consecutive rows of dots to the printer.  Instead, we have to pass
+e. g. the first, ninth, 17th, 25th... rows in order for them to print
+in the correct position on the paper.  This interleaving process is
+called "soft" weaving.
 
 This decision was probably made to save money on memory in the
 printer.  It certainly makes the driver code far more complicated than
@@ -74,10 +74,10 @@ e.g. to reduce banding.  Conceivably, we could even use this ability
 to map out bad jets.
 
 Interestingly, apparently the Windows (and presumably Macintosh) drivers
-for most or all Epson printers still list a ``microweave'' mode.
+for most or all Epson printers still list a ``Microweave'' mode.
 Experiments have demonstrated that this does not in fact use the
-``microweave'' mode of the printer.  Possibly it does nothing, or it
-uses a different weave pattern from what the non-``microweave'' mode
+``Microweave'' mode of the printer.  Possibly it does nothing, or it
+uses a different weave pattern from what the non-``Microweave'' mode
 does.  This is unnecessarily confusing, at least for people who write
 drivers who try to explain them to people who don't.
 
@@ -99,12 +99,12 @@ So we have to do something to break up this patterning.
 Epson does not publish the weaving algorithms that they use in their
 bundled drivers.  Indeed, their developer web site
 (http://www.ercipd.com/isv/edr_docs.htm) does not even describe how to
-do this weaving at all; it says that the only way to achieve 720 dpi is
-to use MicroWeave.  It does note (correctly) that 1440 dpi horizontal
-can only be achieved by the driver (i. e. in software).  The manual
-actually makes it fairly clear how to do this (it requires two passes
-with horizontal head movement between passes), and it is presumably
-possible to do this with MicroWeave.
+do this weaving at all; it says that the only way to achieve 720 dpi
+is to use the command to turn on printer MicroWeave.  It does note
+(correctly) that 1440 dpi horizontal can only be achieved by the
+driver (i. e. in software).  The manual actually makes it fairly clear
+how to do this (it requires two passes with horizontal head movement
+between passes).
 
 The information about how to do this is apparently available under
 non-disclosure agreement (NDA).  It's actually easy enough to reverse

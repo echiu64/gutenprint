@@ -78,12 +78,17 @@ faster printing.  @var{GRAYMODE} should be @samp{0} or @samp{2} for
 color, @samp{1} for grayscale.  @var{ZERO} should always be @samp{0}.
 @end deffn
 
-@deffn {ESC/P2 command} @code{ESC (i @var{BC}=1 @var{PRINTERWEAVE}} If
-@var{PRINTERWEAVE} is @samp{1}, use firmwware-based printer weaving.
-On older printers, this is used to turn on microweave; on newer
-printers, it prints one row at a time.  All printers support this
-mode.  It should only be used at 720 (or 1440x720) DPI.  The Epson
-Stylus Pro series indicates additional modes:
+@deffn {ESC/P2 command} @code{ESC (i @var{BC}=1 @var{PRINTERWEAVE}}
+Enable a specified weave pattern embedded in the printer firmware.  A
+value of @samp{1} indicates that the MicroWeave (tm) pattern should be
+used; a value of @samp{0} indicates that a standard pattern should be
+used.  This setting should only be used at resolutions of 360, 720, or
+1440x720 DPI.  On printers capable of variable drop sizes (the Epson
+Stylus Color 740 and newer), this setting should not be used; the
+weaving should always be done in software.  On many older printers,
+this setting does nothing useful at resolutions other than 360 DPI.
+
+The Epson Stylus Pro series indicates additional modes:
 
 @table @samp
 @item 2
@@ -92,6 +97,10 @@ Stylus Pro series indicates additional modes:
 ``Four-pass''
 @item 4
 ``Full-overlap 2''
+@item 5
+``MW2''
+@item 6
+``Eight-pass''
 @end table
 
 Any of these commands can be used with the high four bits set to either
@@ -225,9 +234,9 @@ always @samp{10}.  At 720 DPI, it is normally @samp{5}5.  On the ESC
 (1440 DPI cannot be printed in one pass; it is printed in two passes,
 with the dots separated in each pass by 1/720").
 
-@var{LINES} is the number of lines to be printed.  It should be @samp{1}
-in microweave and 360 DPI.  At 720 DPI softweave, it should be the
-number of lines to be actually printed.
+@var{LINES} is the number of lines to be printed.  It should be
+@samp{1} when firmware-based weaving is used.  At 720 DPI softweave,
+it should be the number of lines to be actually printed.
 
 @var{WIDTH} is the number of pixels to be printed in each row.
 Following this command, a carriage return (@samp{13} decimal, @samp{0A}
