@@ -692,6 +692,12 @@
         <gamma value="0.731"/>
         <density value="1.0"/>
       </printer>
+      <printer name="EPSON Stylus Photo R200" driver="escp2-r200" manufacturer="EPSON">
+        <color value="true"/>
+        <model value="63"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
       <printer name="EPSON Stylus Photo R300" driver="escp2-r300" manufacturer="EPSON">
         <color value="true"/>
         <model value="63"/>
@@ -699,6 +705,12 @@
         <density value="1.0"/>
       </printer>
       <printer name="EPSON Stylus Photo RX500" driver="escp2-rx500" manufacturer="EPSON">
+        <color value="true"/>
+        <model value="63"/>
+        <gamma value="0.731"/>
+        <density value="1.0"/>
+      </printer>
+      <printer name="EPSON Stylus Photo RX600" driver="escp2-rx600" manufacturer="EPSON">
         <color value="true"/>
         <model value="63"/>
         <gamma value="0.731"/>

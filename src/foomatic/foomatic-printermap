@@ -181,8 +181,10 @@
 #gptofoo escp2-2200 printer/Epson-Stylus_Photo_2200
 #gptofoo escp2-ex printer/Epson-Stylus_Photo_EX
 #gptofoo escp2-ex3 printer/Epson-Stylus_Photo_EX3
+#gptofoo escp2-r200 printer/Epson-Stylus_Photo_R200
 #gptofoo escp2-r300 printer/Epson-Stylus_Photo_R300
 #gptofoo escp2-rx500 printer/Epson-Stylus_Photo_RX500
+#gptofoo escp2-rx600 printer/Epson-Stylus_Photo_RX600
 #gptofoo escp2-r800 printer/Epson-Stylus_Photo_R800
 #gptofoo escp2-5000 printer/Epson-Stylus_Pro_5000
 #gptofoo escp2-5500 printer/Epson-Stylus_Pro_5500
