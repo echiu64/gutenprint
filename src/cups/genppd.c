@@ -976,6 +976,17 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
 
+  gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
+  gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
+  /* Assume that color printers are inkjets and should have pages reversed */
+  if (stp_get_output_type(printvars) == OUTPUT_COLOR)
+    gzputs(fp, "*DefaultOutputOrder: Reverse\n");
+  else
+    gzputs(fp, "*DefaultOutputOrder: Normal\n");
+  gzputs(fp, "*OutputOrder Normal/Normal: Normal\n");
+  gzputs(fp, "*OutputOrder Reverse/Reverse: Reverse\n");
+  gzputs(fp, "*CloseUI: *OutputOrder\n\n");
+
  /*
   * Media types...
   */
