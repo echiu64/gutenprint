@@ -25,6 +25,11 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0 is
 released!</blink></font></h2>
 
+<P><strong><em><font color="#ff0000">New as of December 22,
+2000!</strong></em></font> Daniele Berti has packaged up rpm's of
+GhostScript 5.50 with the Gimp-Print stp driver.  It's available at <a
+href="http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm">http://space.tin.it/computer/livbe/linux/stp_driver/gs_stp.htm</a>.
+
 <P><strong><em><font color="#ff0000">New as of December 17,
 2000!</strong></em></font> Gimp-Print 4.1.0, the first development
 release in the 4.1 line, is out.  It features greatly improved print
