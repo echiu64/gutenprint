@@ -94,6 +94,7 @@ endif
 
 if BUILD_TRANSLATED_PPDS
 PPD_NLS = $(PPD_NLS_1)
+LINGUAS = ALL_LINGUAS
 endif
 
 if USE_NLS
@@ -103,7 +104,7 @@ endif
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
-	  for language in C $(ALL_LINGUAS) ; do \
+	  for language in C $(LINGUAS) ; do \
 	    echo "Installing $$language locale PPD files..." ; \
 	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language ; \
 	    for ppdfile in ppd/$$language/* ; do \
@@ -114,7 +115,7 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  for language in C $(ALL_LINGUAS) ; do \
+	  for language in C $(LINGUAS) ; do \
 	    echo "Removing $$language locale PPD files..." ; \
 	    for ppdfile in ppd/$$language/* ; do \
 	      if test -f "$(DESTDIR)$(cups_modeldir)/$$language/`basename $$ppdfile`" ; then \
@@ -188,7 +189,7 @@ ppd-nls: genppd
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	for language in $(ALL_LINGUAS) ; do \
+	for language in $(LINGUAS) ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
 	  LANGUAGE=$$language ./genppd --prefix=ppd/$$language --catalog=`pwd`/catalog/share/locale ; \
