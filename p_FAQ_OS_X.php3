@@ -413,12 +413,18 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  said, if you are really fired up about saving the 8.2MB of disk space you can
 use a tip provided by Wil Shipley to get rid of those pesky files.
 </p><p>
-In a Terminal window type the following command to remove Gimp-Print 4.2.3
+To remove Gimp-Print 4.2.3 open a Terminal window and type the following command 
 </p>
 <pre>lsbom -f -l -s /Library/Receipts/Gimp-Print-4.2.3.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
 <p>
- To remove a different version of Gimp-Print simply change the version in the
- command to the appropriate value.  
+ To remove version 4.2.4 of Gimp-Print use this command:
+</p>
+<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print-4.2.4.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
+<p>
+ To remove version 4.2.5 (and all later versions) of Gimp-Print use this command:
+</p>
+<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
+<p>
  You will need to enter an admin password (yours if you're the only user on
  your system) to use sudo.
  </p>
