@@ -33,6 +33,7 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <string.h>
+#include <stdio.h>
 #include "print-escp2.h"
 
 #ifdef __GNUC__
@@ -615,20 +616,96 @@ escp2_reset_printer(const escp2_init_t *init)
 }
 
 static void
+print_remote_param(const stp_vars_t v, const char *param, const char *value)
+{
+  unsigned bytes = 2 + strlen(param) + strlen(value);
+  stp_zprintf(v, "\033(R%c%c%c%s:%s", BYTE(bytes, 0), BYTE(bytes, 1), 0,
+	      param, value);
+  stp_zprintf(v, "\033%c%c%c", 0, 0, 0);
+}
+
+static void
+print_remote_int_param(const stp_vars_t v, const char *param, int value)
+{
+  char buf[64];
+  (void) snprintf(buf, 64, "%d", value);
+  print_remote_param(v, param, buf);
+}
+
+static void
+print_remote_float_param(const stp_vars_t v, const char *param, double value)
+{
+  char buf[64];
+  (void) snprintf(buf, 64, "%f", value);
+  print_remote_param(v, param, buf);
+}
+
+static void
 escp2_set_remote_sequence(const escp2_init_t *init)
 {
   /* Magic remote mode commands, whatever they do */
 
-#if 0
-  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(PACKAGE), 0, 0, PACKAGE);
-  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
-  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(VERSION), 0, 0, VERSION);
-  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
-  stp_zprintf(init->v, "\033(R%c%c%c%s", 1 + strlen(stp_get_driver(init->v)),
-	      0, 0, stp_get_driver(init->v));
-  stp_zprintf(init->v, "\033%c%c%c", 0, 0, 0);
-  stp_puts("\033@", init->v);
-#endif
+  if (stp_debug_level & STP_DBG_MARK_FILE)
+    {
+      print_remote_param(init->v, "Package", PACKAGE);
+      print_remote_param(init->v, "Version", VERSION);
+      print_remote_param(init->v, "Release Date", RELEASE_DATE);
+      print_remote_param(init->v, "Driver", stp_get_driver(init->v));
+      print_remote_param(init->v, "Resolution", stp_get_resolution(init->v));
+      print_remote_param(init->v, "Media Size", stp_get_media_size(init->v));
+      print_remote_param(init->v, "Media Type", stp_get_media_type(init->v));
+      print_remote_param(init->v, "Media Source", stp_get_media_source(init->v));
+      print_remote_param(init->v, "Ink Type", stp_get_ink_type(init->v));
+      print_remote_param(init->v, "Dither", stp_get_dither_algorithm(init->v));
+      print_remote_int_param(init->v, "Output Type", stp_get_output_type(init->v));
+      print_remote_int_param(init->v, "Orientation", stp_get_orientation(init->v));
+      print_remote_int_param(init->v, "Left", stp_get_left(init->v));
+      print_remote_int_param(init->v, "Top", stp_get_top(init->v));
+      print_remote_int_param(init->v, "Image Type", stp_get_image_type(init->v));
+      print_remote_int_param(init->v, "Page Width", stp_get_page_width(init->v));
+      print_remote_int_param(init->v, "Page Height", stp_get_page_height(init->v));
+      print_remote_int_param(init->v, "Input Model", stp_get_input_color_model(init->v));
+      print_remote_int_param(init->v, "Output Model", stp_get_output_color_model(init->v));
+      print_remote_float_param(init->v, "Brightness", stp_get_brightness(init->v));
+      print_remote_float_param(init->v, "Scaling", stp_get_scaling(init->v));
+      print_remote_float_param(init->v, "Gamma", stp_get_gamma(init->v));
+      print_remote_float_param(init->v, "App Gamma", stp_get_app_gamma(init->v));
+      print_remote_float_param(init->v, "Contrast", stp_get_contrast(init->v));
+      print_remote_float_param(init->v, "Cyan", stp_get_cyan(init->v));
+      print_remote_float_param(init->v, "Magenta", stp_get_magenta(init->v));
+      print_remote_float_param(init->v, "Yellow", stp_get_yellow(init->v));
+      print_remote_float_param(init->v, "Saturation", stp_get_saturation(init->v));
+      print_remote_float_param(init->v, "Density", stp_get_density(init->v));
+      print_remote_int_param(init->v, "Model", init->model);
+      print_remote_int_param(init->v, "Output_type", init->output_type);
+      print_remote_int_param(init->v, "Ydpi", init->ydpi);
+      print_remote_int_param(init->v, "Xdpi", init->xdpi);
+      print_remote_int_param(init->v, "Physical_xdpi", init->physical_xdpi);
+      print_remote_int_param(init->v, "Use_softweave", init->use_softweave);
+      print_remote_int_param(init->v, "Use_microweave", init->use_microweave);
+      print_remote_int_param(init->v, "Page_true_height", init->page_true_height);
+      print_remote_int_param(init->v, "Page_width", init->page_width);
+      print_remote_int_param(init->v, "Page_top", init->page_top);
+      print_remote_int_param(init->v, "Page_bottom", init->page_bottom);
+      print_remote_int_param(init->v, "Nozzles", init->nozzles);
+      print_remote_int_param(init->v, "Nozzle_separation", init->nozzle_separation);
+      print_remote_int_param(init->v, "Horizontal_passes", init->horizontal_passes);
+      print_remote_int_param(init->v, "Vertical_passes", init->vertical_passes);
+      print_remote_int_param(init->v, "Vertical_oversample", init->vertical_oversample);
+      print_remote_int_param(init->v, "Bits", init->bits);
+      print_remote_int_param(init->v, "Unidirectional", init->unidirectional);
+      print_remote_int_param(init->v, "Resid", init->resid);
+      print_remote_int_param(init->v, "Initial_vertical_offset", init->initial_vertical_offset);
+      print_remote_int_param(init->v, "Total_channels", init->total_channels);
+      print_remote_int_param(init->v, "Use_black_parameters", init->use_black_parameters);
+      print_remote_int_param(init->v, "Channel_limit", init->channel_limit);
+      print_remote_int_param(init->v, "Use_fast_360", init->use_fast_360);
+      print_remote_param(init->v, "Ink name", init->inkname->name);
+      print_remote_int_param(init->v, "  is_color", init->inkname->is_color);
+      print_remote_int_param(init->v, "  channels", init->inkname->channel_limit);
+      print_remote_int_param(init->v, "  inkset", init->inkname->inkset);
+      stp_puts("\033@", init->v);
+    }
   if (escp2_has_advanced_command_set(init->model, init->v))
     {
       int feed_sequence = 0;
