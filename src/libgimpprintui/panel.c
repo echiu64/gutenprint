@@ -989,8 +989,8 @@ set_options_active(const char *omit)
     }
 }
 
-static int
-color_button_callback(GtkObject *button)
+static void
+color_button_callback(GtkWidget *widget, gpointer data)
 {
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail();
