@@ -1,4 +1,4 @@
-Gimp-Print 4.3.14, released May XX, 2003, is a development release of
+Gimp-Print 4.3.14, released May 11, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -47,43 +47,42 @@ Gimp-Print 4.3.14 contains the following major changes over Gimp-Print
 3) A glitch in Even Tone dithering in certain very pale regions has
    been fixed.  This problem was introduced in 4.3.12.
 
-4) The PCL, Canon, and Lexmark drivers now print correctly in
-   three-color mode.
+4) Significant improvements in the quality of Adaptive Hybrid,
+   Ordered, and Fast dithering.
 
-5) The CUPS driver now offers normal and reversed paper order,
-   permitting printing documents in the correct order on inkjet
-   printers.
+5) The PCL, Canon, and Lexmark drivers now print correctly in
+   three-color mode.
 
 6) The Postscript driver in the GIMP plug-in now works correctly in
    non-US locales.
 
 7) A Czech translation has been added.
 
-8) Engineering C paper size has been added.
+8) The tests have been improved in coverage and capability.
 
-9) Additional printers have been added to the compatibility list.
+9) Engineering C paper size has been added.
 
-10) "Set defaults" in the output adjustment window now sets default
+10) Additional printers have been added to the compatibility list.
+
+11) "Set defaults" in the output adjustment window now sets default
    values of all options (boolean and choice in addition to floating
    point).
 
-11) A problem with ordered and adaptive hybrid dithering at low
+12) A problem with ordered and adaptive hybrid dithering at low
    densities has been fixed.  The typical symptom is sharp transitions
    at high resolutions.
 
-12) 1440x1440 Highest Quality has been removed from the resolution
+13) 1440x1440 Highest Quality has been removed from the resolution
    choice for Epson printers capable of printing at 2880x1440.
 
-13) The Epson family driver has been significantly restructured.
+14) The Epson family driver has been significantly restructured.
 
-14) Additional "const" corrections have been made in the code.
+15) Additional "const" corrections have been made in the code.
     Additional (probably too many) warnings have been enabled in
     maintainer mode.
 
-15) The printdef program, which has long been obsolete, has been
+16) The printdef program, which has long been obsolete, has been
    removed.  This has caused some spurious build problems.
-
-16) The tests have been improved in coverage and capability.
 
 
 Gimp-Print 4.3.13 contains the following major changes over Gimp-Print
