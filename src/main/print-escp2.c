@@ -1159,7 +1159,7 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
     {
       &escp2_multishot_pigment_standard_inks,
       &escp2_multishot_pigment_standard_inks,
-      &escp2_6pl_pigment_standard_inks,
+      &escp2_multishot_pigment_standard_inks,
       &escp2_6pl_pigment_standard_inks,
       &escp2_3pl_pigment_standard_inks,
       &escp2_3pl_pigment_1440_standard_inks,
