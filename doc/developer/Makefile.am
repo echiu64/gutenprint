@@ -66,7 +66,7 @@ all-local: $(ALL_LOCAL_TARGETS)
 
 ## Rules
 
-dist-hook: $(DEVELOPER_REFERENCE)
+dist-hook: html-stamp
 	for dir in $(DISTHOOKDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -94,10 +94,12 @@ gimpprint.pdf:  $(MANUAL_SRC_FILES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
-	  if test -L $(notdir $<) ; then \
-	    $(RM) $(notdir $<) ; \
-	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  for file in $(MANUAL_SRC_FILES) ; do \
+	    if test -L $$file ; then \
+	      $(RM) -f $$file ; \
+	    fi ; \
+	    $(LN_S) $(srcdir)/$$file $$file ; \
+	  done ; \
 	fi ; \
 	$(DB2PDF) gimpprint.xml
 
@@ -111,10 +113,12 @@ html-stamp: $(MANUAL_SRC_FILES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
-	  if test -L $(notdir $<) ; then \
-	    $(RM) $(notdir $<) ; \
-	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  for file in $(MANUAL_SRC_FILES) ; do \
+	    if test -L $$file ; then \
+	      $(RM) -f $$file ; \
+	    fi ; \
+	    $(LN_S) $(srcdir)/$$file $file ; \
+	  done ; \
 	fi
 	$(DB2HTML) gimpprint.xml
 	-$(RM) -rf $(HTMLDIR)
@@ -181,6 +185,7 @@ MAINTAINERCLEANFILES = Makefile.in *html-stamp
 
 EXTRA_DIST = \
 	$(MANUAL_SRC_FILES) \
+	gimpprint.pdf \
 	html-stamp
 
 .PHONY: docs html ps pdf
