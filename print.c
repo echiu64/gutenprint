@@ -842,6 +842,7 @@ printrc_load(void)
 #if (GIMP_MINOR_VERSION == 0)
   char		*home;		/* Home dir */
 #endif
+  int		system_printers; /* printer count before reading printrc */
 
   check_plist(1);
 
@@ -850,6 +851,8 @@ printrc_load(void)
   */
 
   get_system_printers();
+
+  system_printers = plist_count - 1;
 
  /*
   * Generate the filename for the current user...
@@ -942,7 +945,7 @@ printrc_load(void)
 	}
       else
 	{
-          if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
+          if ((p = bsearch(&key, plist + 1, system_printers, sizeof(plist_t),
                        (int (*)(const void *, const void *))compare_printers))
 	      != NULL)
 	    {
