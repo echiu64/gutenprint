@@ -987,4 +987,5 @@ void
 stpi_init_printer(void)
 {
   stpi_register_xml_parser("printdef", stpi_xml_process_printdef);
+  stpi_register_xml_preload("printers.xml");
 }

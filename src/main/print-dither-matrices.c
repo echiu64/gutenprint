@@ -462,6 +462,8 @@ stpi_xml_dither_cache_get(int x, int y)
 
   if (stpi_debug_level & STPI_DBG_XML)
     stpi_erprintf("stpi_xml_dither_cache_get: lookup %dx%d... ", x, y);
+  if (!dither_matrix_cache)
+    return NULL;
 
   ln = stpi_list_get_start(dither_matrix_cache);
 
@@ -659,7 +661,16 @@ stpi_xml_get_dither_array(int x, int y)
     return stp_array_create_copy(cachedval->dither_array);
 
   if (cachedval->filename == NULL)
-    return NULL;
+    {
+      char buf[1024];
+      (void) sprintf(buf, "dither-matrix-%dx%d.xml", x, y);
+      stpi_xml_parse_file_named(buf);
+      cachedval = stpi_xml_dither_cache_get(x, y);
+      if (cachedval == NULL)
+	{
+	  return NULL;
+	}
+    }
 
   ret = stpi_dither_array_create_from_file(cachedval->filename);
 

@@ -85,8 +85,12 @@ check_paperlist(void)
 {
   if (paper_list == NULL)
     {
-      stpi_erprintf("No papers found: is STP_MODULE_PATH correct?\n");
-      stpi_paper_list_init();
+      stpi_xml_parse_file_named("papers.xml");
+      if (paper_list == NULL)
+	{
+	  stpi_erprintf("No papers found: is STP_MODULE_PATH correct?\n");
+	  stpi_paper_list_init();
+	}
     }
 }
 

@@ -54,6 +54,8 @@ typedef struct
 
 static stpi_list_t stpi_xml_registry;
 
+static stpi_list_t stpi_xml_preloads;
+
 static const char *
 xml_registry_namefunc(const void *item)
 {
@@ -67,6 +69,18 @@ xml_registry_freefunc(void *item)
   stpi_xml_parse_registry *xmlp = (stpi_xml_parse_registry *) item;
   stpi_free(xmlp->name);
   stpi_free(xmlp);
+}
+
+static const char *
+xml_preload_namefunc(const void *item)
+{
+  return (const char *) item;
+}
+
+static void
+xml_preload_freefunc(void *item)
+{
+  stpi_free(item);
 }
 
 void
@@ -93,6 +107,26 @@ stpi_unregister_xml_parser(const char *name)
     stpi_list_item_destroy(stpi_xml_registry, item);
 }
 
+void
+stpi_register_xml_preload(const char *filename)
+{
+  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_preloads, filename);
+  if (!item)
+    {
+      char *the_filename = stpi_strdup(filename);
+      stpi_list_item_create(stpi_xml_preloads, NULL, the_filename);
+    }
+}
+
+void
+stpi_unregister_xml_preload(const char *name)
+{
+  stpi_list_item_t *item = stpi_list_get_item_by_name(stpi_xml_preloads, name);
+  if (item)
+    stpi_list_item_destroy(stpi_xml_preloads, item);
+}
+
+
 static void stpi_xml_process_gimpprint(mxml_node_t *gimpprint, const char *file);
 
 static char *saved_lc_collate;                 /* Saved LC_COLLATE */
@@ -109,6 +143,9 @@ stpi_xml_preinit(void)
       stpi_xml_registry = stpi_list_create();
       stpi_list_set_freefunc(stpi_xml_registry, xml_registry_freefunc);
       stpi_list_set_namefunc(stpi_xml_registry, xml_registry_namefunc);
+      stpi_xml_preloads = stpi_list_create();
+      stpi_list_set_freefunc(stpi_xml_preloads, xml_preload_freefunc);
+      stpi_list_set_namefunc(stpi_xml_preloads, xml_preload_namefunc);
     }
 }    
 
@@ -156,26 +193,31 @@ stpi_xml_exit(void)
   xml_is_initialised = 0;
 }
 
-/*
- * Make a list of available XML file names.
- */
-static stpi_list_t *
-stp_xml_file_list(void)
+void
+stpi_xml_parse_file_named(const char *name)
 {
   stpi_list_t *dir_list;                  /* List of directories to scan */
   stpi_list_t *file_list;                 /* List of XML files */
-
-  /* Make a list of all the available XML files */
+  stpi_list_item_t *item;                 /* Pointer to current list item */
   if (!(dir_list = stpi_list_create()))
-    return NULL;
+    return;
   stpi_list_set_freefunc(dir_list, stpi_list_node_free_data);
   stpi_path_split(dir_list, getenv("STP_DATA_PATH"));
   stpi_path_split(dir_list, PKGXMLDATADIR);
-  file_list = stpi_path_search(dir_list, ".xml");
+  file_list = stpi_path_search(dir_list, name);
   stpi_list_destroy(dir_list);
-
-  return file_list;
+  item = stpi_list_get_start(file_list);
+  while (item)
+    {
+      if (stpi_debug_level & STPI_DBG_XML)
+	stpi_erprintf("stp_xml_parse_file_named: source file: %s\n",
+		      (const char *) stpi_list_item_get_data(item));
+      stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
+      item = stpi_list_item_next(item);
+    }
+  stpi_list_destroy(file_list);
 }
+  
 
 /*
  * Read all available XML files.
@@ -183,24 +225,21 @@ stp_xml_file_list(void)
 int
 stpi_xml_init_defaults(void)
 {
-  stpi_list_t *file_list;                 /* List of files to load */
   stpi_list_item_t *item;                 /* Pointer to current list item */
 
   stpi_xml_init();
 
-  file_list = stp_xml_file_list();
-
   /* Parse each XML file */
-  item = stpi_list_get_start(file_list);
+  item = stpi_list_get_start(stpi_xml_preloads);
   while (item)
     {
       if (stpi_debug_level & STPI_DBG_XML)
 	stpi_erprintf("stp_xml_init_defaults: source file: %s\n",
 		      (const char *) stpi_list_item_get_data(item));
-      stpi_xml_parse_file((const char *) stpi_list_item_get_data(item));
+      stpi_xml_parse_file_named((const char *) stpi_list_item_get_data(item));
       item = stpi_list_item_next(item);
     }
-  stpi_list_destroy(file_list);
+  stpi_list_destroy(stpi_xml_preloads);
 
   stpi_xml_exit();
 
