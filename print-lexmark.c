@@ -225,7 +225,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
 
   /* tested models */
 
-  { /* Canon BJC 4300 */
+  { /* Lexmark */
     m_z52,
     618, 936,      /* 8.58" x 13 " */
     2400, 1200, 2,
@@ -234,7 +234,7 @@ static lexmark_cap_t lexmark_model_capabilities[] =
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT
   },
-  { /* Canon BJC 4300 */
+  { /*  */
     m_lex7500,
     618, 936,      /* 8.58" x 13 " */
     2400, 1200, 2,
@@ -258,7 +258,7 @@ static lexmark_cap_t lexmark_get_model_capabilities(int model)
     }
   }
 #ifdef DEBUG
-  fprintf(stderr,"canon: model %d not found in capabilities list.\n",model);
+  fprintf(stderr,"lexmark: model %d not found in capabilities list.\n",model);
 #endif
   return lexmark_model_capabilities[0];
 }
@@ -279,7 +279,7 @@ lexmark_media_type(const char *name, lexmark_cap_t caps)
   if (!strcmp(name,"Photo Paper Pro"))       return 11;
 
 #ifdef DEBUG
-  fprintf(stderr,"canon: Unknown media type '%s' - reverting to plain\n",name);
+  fprintf(stderr,"lexmark: Unknown media type '%s' - reverting to plain\n",name);
 #endif
   return 1;
 }
@@ -292,7 +292,7 @@ lexmark_source_type(const char *name, lexmark_cap_t caps)
   if (!strcmp(name,"Manual without Pause")) return 1;
 
 #ifdef DEBUG
-  fprintf(stderr,"canon: Unknown source type '%s' - reverting to auto\n",name);
+  fprintf(stderr,"lexmark: Unknown source type '%s' - reverting to auto\n",name);
 #endif
   return 4;
 }
@@ -307,7 +307,7 @@ lexmark_printhead_type(const char *name, lexmark_cap_t caps)
   if (!strcmp(name,"Photo"))       return 4;
 
 #ifdef DEBUG
-  fprintf(stderr,"canon: Unknown head combo '%s' - reverting to black\n",name);
+  fprintf(stderr,"lexmark: Unknown head combo '%s' - reverting to black\n",name);
 #endif
   return 0;
 }
@@ -335,13 +335,13 @@ lexmark_size_type(const vars_t *v, lexmark_cap_t caps)
       if (!strcmp(name,"Envelope DL")) return 0x17;
       if (!strcmp(name,"Letter+"))     return 0x2a;
       if (!strcmp(name,"A4+"))         return 0x2b;
-      if (!strcmp(name,"Canon 4x2"))   return 0x2d;
+      if (!strcmp(name,"Lexmark 4x2"))   return 0x2d;
       /* custom */
 
 #ifdef DEBUG
-      fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
+      fprintf(stderr,"lexmark: Unknown paper size '%s' - using custom\n",name);
     } else {
-      fprintf(stderr,"canon: Couldn't look up paper size %dx%d - "
+      fprintf(stderr,"lexmark: Couldn't look up paper size %dx%d - "
 	      "using custom\n",v->page_height, v->page_width);
 #endif
     }
@@ -456,7 +456,7 @@ lexmark_parameters(const printer_t *printer,	/* I - Printer model */
 
     } else {
 #ifdef DEBUG
-      fprintf(stderr,"canon: unknown resolution multiplier for model %d\n",
+      fprintf(stderr,"lexmark: unknown resolution multiplier for model %d\n",
 	      caps.model);
 #endif
       return 0;
@@ -601,7 +601,7 @@ lexmark_init_printer(FILE *prn, lexmark_cap_t caps,
 
   /*
 #ifdef DEBUG
-  fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
+  fprintf(stderr,"lexmark: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_height,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
 #endif
@@ -817,6 +817,10 @@ lexmark_print(const printer_t *printer,		/* I - Model */
     }
     if (printhead==3 && (caps.inks & (LEXMARK_INK_PHOTO_MASK))) {
       printMode |= COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_LC | COLOR_MODE_LM | COLOR_MODE_K;
+#ifdef DEBUG
+  fprintf(stderr,"lexmark: print in photo mode !!.\n");
+#endif
+
     }
   }
 
@@ -828,7 +832,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 
   sscanf(resolution,"%dx%d",&xdpi,&ydpi);
 #ifdef DEBUG
-  fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
+  fprintf(stderr,"lexmark: resolution=%dx%d\n",xdpi,ydpi);
 #endif
 
   switch (xdpi) {
@@ -838,7 +842,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
       printMode |= PRINT_MODE_300;
       break;
     case 600:
-      myNv = 0.7;
+      myNv = 0.5;
       xresolution = DPI600;
       printMode |= PRINT_MODE_600;
       break;
@@ -890,7 +894,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
       nv.image_type != IMAGE_MONOCHROME) {
     use_dmt= 1;
 #ifdef DEBUG
-    fprintf(stderr,"canon: using drop modulation technology\n");
+    fprintf(stderr,"lexmark: using drop modulation technology\n");
 #endif
   }
 
@@ -974,7 +978,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
   lcyan   = NULL;
   lmagenta= NULL;
   lyellow = NULL;
-  
+ 
   if ((printMode & COLOR_MODE_C) == COLOR_MODE_C) {
     cyan    = lexmark_alloc_buffer(buf_length*interlace*(delay_c+1+pass_height+pass_shift));
   }
@@ -983,7 +987,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
   }
   if ((printMode & COLOR_MODE_M) == COLOR_MODE_M) {
     magenta = lexmark_alloc_buffer(buf_length*interlace*(delay_m+1+pass_height+pass_shift));
-  }
+    }
   if ((printMode & COLOR_MODE_K) == COLOR_MODE_K) {
     black   = lexmark_alloc_buffer(buf_length*interlace*(delay_k+1+pass_height+pass_shift));
   }
@@ -1211,7 +1215,7 @@ lexmark_print(const printer_t *printer,		/* I - Model */
 
   if (delay_max) {
 #ifdef DEBUG
-    printf("\ncanon: flushing %d possibly delayed buffers\n",
+    printf("\nlexmark: flushing %d possibly delayed buffers\n",
 	    delay_max);
 #endif
 
@@ -1738,6 +1742,9 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
   
   while (lexmark_getNextMode(&printMode, direction, pass_height, elinescount, &pass_shift, &interlace)) {
     if ((printMode & (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M)) == (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M)) {
+#ifdef DEBUG
+     fprintf(stderr,"print with color catridge (%x %x %x\n", c, m, y); 
+#endif
       head_colors[0].line = c+(l*dc)+(l*i*pass_shift);
       head_colors[1].line = m+(l*dm)+(l*i*pass_shift);
       head_colors[2].line = y+(l*dy)+(l*i*pass_shift);
@@ -1748,6 +1755,9 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 	*direction = (*direction +1) & 1;
     }
     if ((printMode & COLOR_MODE_MASK) == (COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M | COLOR_MODE_K)) {
+#ifdef DEBUG
+      fprintf(stderr,"print with black catridge (%x %x %x\n", k);
+#endif
       head_colors[1].line = k+(l*dk)+(l*i*pass_shift);
       head_colors[0].line = 0;
       head_colors[2].line = 0;
@@ -1757,7 +1767,10 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			ydpi, &empty, width, offset, dmt))
 	  *direction = (*direction +1) & 1;
     }
-    if ((printMode & COLOR_MODE_MASK) == COLOR_MODE_K) {
+    if ((printMode & (COLOR_MODE_MASK)) == COLOR_MODE_K) {
+#ifdef DEBUG
+     fprintf(stderr,"print with black catridge (%x\n",k); 
+#endif
       head_colors[0].head_nozzle_start = 0;
       head_colors[0].head_nozzle_end = pass_height/2;
       head_colors[0].line = k+(l*dk)+(l*i*pass_shift);
@@ -1776,10 +1789,13 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
 			ydpi, &empty, width, offset, dmt))
 	  *direction = (*direction +1) & 1;
     }
-    if ((printMode & COLOR_MODE_MASK) == (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) {
+    if ((printMode & (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) == (COLOR_MODE_LC | COLOR_MODE_K | COLOR_MODE_LM)) {
+#ifdef DEBUG
+     fprintf(stderr,"print with photo catridge (%x %x %x\n", lc, lm, k); 
+#endif
       head_colors[0].line = lc+(l*dlc)+(l*i*pass_shift);
       head_colors[1].line = lm+(l*dlm)+(l*i*pass_shift);
-      head_colors[2].line = k +(l*dk)  +(l*i*pass_shift);
+      head_colors[2].line = k +(l*dk) +(l*i*pass_shift);
       if (lexmark_write(prn, prnBuf, elinescount, *direction, pass_height, caps, xresolution, interlace,
 		    head_colors,   
 			l, printMode & ~(COLOR_MODE_C | COLOR_MODE_M | COLOR_MODE_Y), 
@@ -1789,27 +1805,6 @@ lexmark_write_line(FILE *prn,	/* I - Print file or command */
   }
   
 
-       if (ly) {
-	 paper_shift(prn, *elinescount);
-	 *elinescount=0;
-	 head_colors[0].line = ly+(dly*l);
-	 written+=
-	   lexmark_write(prn, prnBuf, 0, *direction, pass_height, caps, xresolution, interlace,head_colors, l, 6, ydpi, &empty, width, offset, dmt);
-       }
-       if (lm) {
-	 paper_shift(prn, *elinescount);
-	 *elinescount=0;
-	 head_colors[0].line = lm+(dlm*l);
-	 written+=
-	   lexmark_write(prn, prnBuf, 0, *direction, pass_height, caps, xresolution, interlace,head_colors, l, 5, ydpi, &empty, width, offset, dmt);
-       }
-       if (lc) {
-	 paper_shift(prn, *elinescount);
-	 *elinescount=0;
-	 head_colors[0].line = lc+(dlc*l);
-	 written+=
-	   lexmark_write(prn, prnBuf, 0, *direction, pass_height, caps, xresolution, interlace,head_colors, l, 4, ydpi, &empty, width, offset, dmt);
-       }
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
