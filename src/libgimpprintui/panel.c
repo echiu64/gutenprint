@@ -55,6 +55,7 @@ static const int thumbnail_hinth = 128;
 #define MOVE_HORIZONTAL	   1
 #define MOVE_VERTICAL      2
 #define MOVE_ANY           (MOVE_HORIZONTAL | MOVE_VERTICAL)
+#define MOVE_GRID	   4
 
 /*
  *  Main window widgets
@@ -3985,6 +3986,8 @@ preview_button_callback (GtkWidget      *widget,
 	  stpui_disable_help();
 	  move_constraint =
 	    (event->state & GDK_SHIFT_MASK) ? MOVE_CONSTRAIN : MOVE_ANY;
+	  if (event->state & GDK_CONTROL_MASK)
+	    move_constraint |= MOVE_GRID;
 	}
       else if ((buttons_mask & (1 << event->button)) == 0)
 	{
@@ -4057,25 +4060,35 @@ preview_motion_callback (GtkWidget      *widget,
     case 2:
       if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  gint x_threshold = MAX (1, (preview_ppi * print_width) / INCH);
+	  gint increment_width =
+	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
+	    printable_width * pv->scaling / 100 : print_width;
+	  gint x_threshold = MAX (1, (preview_ppi * increment_width) / INCH);
+	  fprintf(stderr, "printablewidth %d print %d increment %d\n",
+		  printable_width, print_width, increment_width);
 	  if (event->x > mouse_x)
 	    steps = MIN((event->x - mouse_x) / x_threshold,
-			((right - orig_left) / print_width) - 1);
+			((right - orig_left) / increment_width) - 1);
 	  else
 	    steps = -(MIN((mouse_x - event->x) / x_threshold,
-			  (orig_left - left) / print_width));
-	  new_left = orig_left + steps * print_width;
+			  (orig_left - left) / increment_width));
+	  new_left = orig_left + steps * increment_width;
 	}
       if (move_constraint & MOVE_VERTICAL)
 	{
-	  gint y_threshold = MAX (1, (preview_ppi * print_height) / INCH);
+	  gint increment_height =
+	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
+	    printable_height * pv->scaling / 100 : print_height;
+	  gint y_threshold = MAX (1, (preview_ppi * increment_height) / INCH);
+	  fprintf(stderr, "printableheight %d print %d increment %d\n",
+		  printable_height, print_height, increment_height);
 	  if (event->y > mouse_y)
 	    steps = MIN((event->y - mouse_y) / y_threshold,
-			((bottom - orig_top) / print_height) - 1);
+			((bottom - orig_top) / increment_height) - 1);
 	  else
 	    steps = -(MIN((mouse_y - event->y) / y_threshold,
-			  (orig_top - top) / print_height));
-	  new_top = orig_top + steps * print_height;
+			  (orig_top - top) / increment_height));
+	  new_top = orig_top + steps * increment_height;
 	}
       break;
     }
