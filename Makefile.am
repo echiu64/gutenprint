@@ -62,7 +62,7 @@ AM_CPPFLAGS =					\
 
 print_LDADD = $(GIMP_LIBS)
 
-GCOPY=  dither.c escp2.c util.c printers.c \
+GCOPY=  dither.c escp2.c util.c printers.c weave.c \
 	print.h quickmatrix257.h ran.367.179.h
 GHOST_DIST= COPYING ChangeLog README contrib.mak.addon \
 	gdevstp.c gdevstp.h gs-stp.pdq com-stp.ppd devs.mak.addon-5.10 \
