@@ -491,6 +491,16 @@ help(void)
        "  A list of printer models, either the driver or quoted full name.\n");
 }
 
+/*
+ * 'dirent_sort()' - sort directory entries
+ */
+static int
+dirent_sort(const void *a,
+	    const void *b)
+{
+  return strcoll ((*(const struct dirent **) a)->d_name,
+		  (*(const struct dirent **) b)->d_name);
+}
 
 /*
  * 'getlangs()' - Get a list of available translations
@@ -503,7 +513,7 @@ getlangs(void)
   int n;
   char **langs;
 
-  n = scandir (baselocaledir, &langdirs, checkcat, alphasort);
+  n = scandir (baselocaledir, &langdirs, checkcat, dirent_sort);
   if (n >= 0)
     {
       int idx;
