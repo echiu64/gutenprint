@@ -30,6 +30,9 @@
  */
 
 #include "print_gimp.h"
+#undef PREVIEW_PPI
+#define PREVIEW_PPI preview_ppi
+#define MAX_PREVIEW_PPI        (20)
 
 #include "print-intl.h"
 #include <math.h>
@@ -186,6 +189,8 @@ extern void gtk_create_color_adjust_window(void);
 static GtkWidget* table;      /* Table "container" for controls */
 static GtkWidget* dialog;     /* Dialog window */
 extern void gtk_build_dither_menu(void);
+
+static int preview_ppi = 10;
 
 /*****************************************************************************
  *
@@ -2119,6 +2124,12 @@ static void gtk_preview_update(void)
   }
 
 
+  preview_ppi = PREVIEW_SIZE_HORIZ * 72 / paper_width;
+  if (PREVIEW_SIZE_VERT * 72 / paper_height < preview_ppi)
+    preview_ppi = PREVIEW_SIZE_VERT * 72 / paper_height;
+  if (preview_ppi > MAX_PREVIEW_PPI)
+    preview_ppi = MAX_PREVIEW_PPI;
+
   paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
   paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
   printable_left = paper_left +  PREVIEW_PPI * left / 72;
@@ -2191,32 +2202,31 @@ static void gtk_preview_update(void)
 
   /* draw image  */
   gdk_draw_rectangle(preview->widget.window, gc, 1,
-		     1 + printable_left + PREVIEW_PPI * vars.left / 72,
-		     1 + printable_top + PREVIEW_PPI * vars.top / 72,
+                     1 + printable_left + PREVIEW_PPI * vars.left / 72,
+                     1 + printable_top + PREVIEW_PPI * vars.top / 72,
                      PREVIEW_PPI * print_width / 72,
                      PREVIEW_PPI * print_height / 72);
 
   /* draw orientation arrow pointing to top-of-paper */
   {
     int ox, oy, u;
-    if (paper_width < paper_height)
-      u = PREVIEW_PPI * paper_width / 72 / 4;
-    else
-      u = PREVIEW_PPI * paper_height / 72 / 4;
-    ox = paper_left + PREVIEW_PPI * paper_width / 72;
-    oy = paper_top;
+    u = PREVIEW_PPI/2;
+    ox = paper_left + PREVIEW_PPI * paper_width / 72 / 2;
+    oy = paper_top + PREVIEW_PPI * paper_height / 72 / 2;
     if (orient == ORIENT_LANDSCAPE) {
-      ox -= u;
-      oy += PREVIEW_PPI * paper_height / 72 / 2;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy-u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-2*u, oy);
+      ox += PREVIEW_PPI * paper_width / 72 / 4;
+      if (ox > paper_left + PREVIEW_PPI * paper_width / 72 - u)
+        ox = paper_left + PREVIEW_PPI * paper_width / 72 - u;
+      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy - u);
+      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy + u);
+      gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox - u, oy);
     } else {
-      ox -= PREVIEW_PPI * paper_width / 72 / 2;
-      oy += u;
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox-u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox+u, oy+u);
-      gdk_draw_line (preview->widget.window, gcinv, ox, oy, ox, oy+2*u);
+      oy -= PREVIEW_PPI * paper_height / 72 / 4;
+      if (oy < paper_top + u)
+        oy = paper_top + u;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox - u, oy);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox + u, oy);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy - u, ox, oy + u);
     }
   }
 
