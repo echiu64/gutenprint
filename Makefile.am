@@ -25,6 +25,8 @@ print-printers.c: printdef printers.xml
 
 printdef_SOURCES = printdefl.l printdefy.y printdef.h
 
+printdefl.o: printdefy.o
+
 LFLAGS = -i
 YFLAGS = -d
 

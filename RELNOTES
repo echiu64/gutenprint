@@ -1,4 +1,4 @@
-This is the Print plugin for the Gimp, version 3.1.1.  This is a
+This is the Print plugin for the Gimp, version 3.1.2.  This is a
 development release, the first on the 3.1 branch.  If this software
 causes your print head to zoom off the end of your printer, spilling
 ink all over your 1000 year old Persian rug, don't blame us.
@@ -8,6 +8,19 @@ This software also comes with a GhostScript driver for Epson Stylus
 printers.  The support for Epson Stylus printers in the GhostScript
 driver is identical to the support for these printers in the Print
 plugin -- they use the identical code base.
+
+Print 3.1.2 contains the following improvements over Print 3.1.1:
+
+1) Better dither quality.
+
+2) Dither is optimized for several different types of images
+   (photographs, continuous-tone images such as charts, line art, and
+   very fast pure black/white rendering).
+
+3) Tweaking of the GhostScript driver
+
+4) Some improvements for some Epson printers.
+
 
 This plugin can be compiled against either Gimp 1.1 or 1.0.
 
