@@ -1520,7 +1520,7 @@ static escp2_stp_printer_t model_capabilities[] =
      | MODEL_COLOR_4 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_4
      | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
-    15, 3, 47, 3, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 9, 1, 0,
+    15, 3, 47, 3, 360, 360, INCH(17 / 2), INCH(44), 9, 9, 0, 30, 1, 0,
     COLOR_JET_ARRANGEMENT_NEW_X80,
     720, 720,
     { -1, -1, 0x13, -1, 0x11, -1, -1, -1, -1, -1, -1 },
@@ -2653,6 +2653,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int max_vres;
   const unsigned char *cols[7];
   int head_offset[8], *offsetPtr;
+  int maxHeadOffset;
 
   separation_rows = escp2_separation_rows(model, nv);
   max_vres = escp2_max_vres(model, nv);
@@ -2767,12 +2768,15 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	      escp2_base_separation;
 	  
 	  offsetPtr = escp2_head_offset(model);
+	  maxHeadOffset = 0;
 	  for(i=0; i<8; i++)
 	    {
 	    if (ydpi > escp2_base_separation)
 	      head_offset[i] = offsetPtr[i] * ydpi / escp2_base_separation;
 	    else
 	      head_offset[i] = offsetPtr[i];
+	    if(head_offset[i] > maxHeadOffset)
+	      maxHeadOffset = head_offset[i];
 	    }
 	  
 	  break;
@@ -2808,7 +2812,14 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.page_height = page_true_height;
   init.page_width = page_width;
   init.page_top = page_top;
-  init.page_bottom = page_bottom;
+  
+   /* adjust bottom margin for a 480 like head configuration */
+  init.page_bottom = page_bottom - maxHeadOffset*72/ydpi;
+  if((maxHeadOffset*72 % ydpi) != 0)
+    init.page_bottom -= 1;
+  if(init.page_bottom < 0)
+    init.page_bottom = 0;
+    
   init.horizontal_passes = horizontal_passes;
   init.vertical_passes = vertical_passes;
   init.vertical_oversample = vertical_oversample;
