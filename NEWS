@@ -1,4 +1,4 @@
-Gimp-Print 4.3.11, released February 15, 2003, is a development release of
+Gimp-Print 4.3.11, released February 28, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -31,16 +31,33 @@ Please read the README file for full instructions on installing this
 package.
 
 
-Gimp-Print 4.3.9 is considered to be an unstable release, as more
-significant changes have been introduced with relatively limited
-testing.
+Gimp-Print 4.3.11 contains the following major changes over Gimp-Print
+4.3.10:
 
-The overall focus of this release is a greatly enhanced Print plugin
-for the GIMP.  This now offers experimental features for color
-control, such as separate balance (density) and gamma controls for
-each channel, the opportunity to edit curves for each channel
-independently, and so forth.  This offers opportunities for people to
-experiment with the color controls to improve color matching accuracy.
+1) A significant bug fix in the EvenTone dither algorithm
+   significantly improves quality with this option.
+
+2) Paper sizes with tearoff margins (such as Epson 4x6 photo paper)
+   now use the correct margin.  This corresponds to bug 409612.
+
+3) The IJS driver can now (in principle) handle all options supported
+   by Gimp-print, rather than a specific subset.  This is not tested
+   and not propagated to Foomatic at this time.  The src/ghost/README
+   file has not been updated at this time; finding all of the
+   available options will require studying the source code.
+
+4) The number of resolution/quality settings in the Epson driver has
+   been reduced by means of adding a new option for unidirectional,
+   bidirectional, or auto printing.  This new option is not available
+   in the CUPS driver; automatic choice of print head direction is
+   always used at this time.
+
+5) The number of paper size choices in the GIMP plugin has been
+   greatly reduced; there is a new global option to show all available
+   paper sizes or just the most common sizes.
+
+6) The LaserJet IIP driver now supports TIFF compression for faster
+   printing speed.
 
 
 Gimp-Print 4.3.10 contains the following major changes over Gimp-Print
