@@ -1055,17 +1055,17 @@ typedef struct {
 } canon_init_t;
 
 static const paper_t canon_paper_list[] = {
-  { N_ ("Plain Paper"),                0x00, 0.50, 0.25, 0.5, 0, 0, 0 },
-  { N_ ("Transparencies"),             0x02, 1.00, 1.00, 0.9, 0, 0, 0 },
-  { N_ ("Back Print Film"),            0x03, 1.00, 1.00, 0.9, 0, 0, 0 },
-  { N_ ("Fabric Sheets"),              0x04, 0.50, 0.25, 0.5, 0, 0, 0 },
-  { N_ ("Envelope"),                   0x08, 0.50, 0.25, 0.5, 0, 0, 0 },
-  { N_ ("High Resolution Paper"),      0x07, 0.78, 0.25, 0.5, 0, 0, 0 },
-  { N_ ("T-Shirt Transfers"),          0x03, 0.50, 0.25, 0.5, 0, 0, 0 },
-  { N_ ("High Gloss Film"),            0x06, 1.00, 1.00, 0.9, 0, 0, 0 },
-  { N_ ("Glossy Photo Paper"),         0x05, 1.00, 1.00, 0.9, 0, 0, 0 },
-  { N_ ("Glossy Photo Cards"),         0x0a, 1.00, 1.00, 0.9, 0, 0, 0 },
-  { N_ ("Photo Paper Pro"),            0x09, 1.00, 1.00, 0.9, 0, 0, 0 },
+  { N_ ("Plain Paper"),                0x00, 0.50, 0.25, 0.500, 0, 0, 0 },
+  { N_ ("Transparencies"),             0x02, 1.00, 1.00, 0.900, 0, 0, 0 },
+  { N_ ("Back Print Film"),            0x03, 1.00, 1.00, 0.900, 0, 0, 0 },
+  { N_ ("Fabric Sheets"),              0x04, 0.50, 0.25, 0.500, 0, 0, 0 },
+  { N_ ("Envelope"),                   0x08, 0.50, 0.25, 0.500, 0, 0, 0 },
+  { N_ ("High Resolution Paper"),      0x07, 0.78, 0.25, 0.500, 0, 0, 0 },
+  { N_ ("T-Shirt Transfers"),          0x03, 0.50, 0.25, 0.500, 0, 0, 0 },
+  { N_ ("High Gloss Film"),            0x06, 1.00, 1.00, 0.999, 0, 0, 0 },
+  { N_ ("Glossy Photo Paper"),         0x05, 1.00, 1.00, 0.999, 0, 0, 0 },
+  { N_ ("Glossy Photo Cards"),         0x0a, 1.00, 1.00, 0.999, 0, 0, 0 },
+  { N_ ("Photo Paper Pro"),            0x09, 1.00, 1.00, 0.999, 0, 0, 0 },
   /* escp2 paper:
   { N_ ("Plain Paper"),                0x00, 0.50, 0.25, .5 },
   { N_ ("Plain Paper Fast Load"),      0x00, 0.50, 0.25, .5 },
