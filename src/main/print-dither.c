@@ -1718,6 +1718,7 @@ clear_lower:
 	dd->range[0] = 0; dd->range_span = dd->range[1];
 	dd->value[0] = 0; dd->value_span = dd->value[1];
 	dd->bits[0] = 0;
+	dd->subchannel[0] = 0;
 	return dd;
 }
 
@@ -2830,12 +2831,12 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 
   QUANT(6);
   for (; x != terminate; x += direction)
-    { int pick, print_inks, kc = 0;
+    { int pick, print_inks;
       dither_segment_t *dr[NCOLORS];
       int ri[NCOLORS];
       
       for (i=0; i < NCOLORS; i++) {
-	if (r_sq[i] + dx[i] < et->r_sq[i][x]) {			/* Do our eventone calculations */
+	if (r_sq[i] + dx[i] <= et->r_sq[i][x]) {			/* Do our eventone calculations */
 	  r_sq[i] += dx[i];					/* Nearest pixel same as last one */
 	  dx[i] += et->d2x;
 	} else {
@@ -2857,9 +2858,9 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	CHANNEL(d, ECOLOR_K).o = 0;				/* Use CMY for black instead */
       } else {
 	if (CHANNEL(d, ECOLOR_K).o < d->k_upper) {
-	  int k_frac =  CHANNEL(d, ECOLOR_K).o - d->k_lower;	/* Quadratic in this region */
+	  unsigned k_frac =  CHANNEL(d, ECOLOR_K).o - d->k_lower;	/* Quadratic in this region */
 	  CHANNEL(d, ECOLOR_K).o = d->k_upper * k_frac / d->bound_range;
-	  CHANNEL(d, ECOLOR_K).o = CHANNEL(d, ECOLOR_K).o * k_frac / d->bound_range;
+	  CHANNEL(d, ECOLOR_K).o = (CHANNEL(d, ECOLOR_K).o * k_frac) / d->bound_range;
 	}
 	for (i=1; i < NCOLORS; i++) {
 	  CHANNEL(d, i).o -= CHANNEL(d, ECOLOR_K).o;
@@ -2874,26 +2875,26 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
       for (i=0; i < NCOLORS; i++) {
         int value;
 	int dark_only;
-	int dark_density;
-	int photoh;
 
         ndither[i] += error[i][0][0];
 
 	value = ndither[i] + CHANNEL(d, i).o / 2;		/* Only use half of cmy[] to avoid dark->light problems */
-//	value += kc;						/* If black is present, this dot needs to be bigger to show */
 	
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	CHANNEL(d, i).v = value;				/* Colour to print at this pixel location */
 
-        photoh = CHANNEL(d, i).photomax / 2;
-	dark_density = d->densityh;
-	if (CHANNEL(d, i).o < CHANNEL(d, i).darkmin) {
-	  if (CHANNEL(d, i).o > photoh) {
-	    dark_density += d->densityh * (CHANNEL(d, i).o - photoh) / (CHANNEL(d, i).darkmin - photoh);
-	  }
-	} else dark_density = d->density;
+        dark_only = 0;
+        if (CHANNEL(d, i).photomax != 0) {
+	  int photoh = CHANNEL(d, i).photomax / 2;
+	  int dark_density = d->densityh;
+	  if (CHANNEL(d, i).o < CHANNEL(d, i).darkmin) {
+	    if (CHANNEL(d, i).o > photoh) {
+	      dark_density += d->densityh * (CHANNEL(d, i).o - photoh) / (CHANNEL(d, i).darkmin - photoh);
+	    }
+	  } else dark_density = d->density;
 
-        dark_only = (r_sq[i] * et->aspect < et->recip[dark_density]) ? 1 : 0;
+          dark_only = (r_sq[i] * et->aspect < et->recip[dark_density]) ? 1 : 0;
+	}
 
         dr[i] = find_segment(d, &CHANNEL(d, i), dark_only, CHANNEL(d, i).v);
 	
@@ -2923,14 +2924,10 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	}
 
 	if (i == ECOLOR_K) {
-	  kc = dr[ECOLOR_K]->value[0];
+	  CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[0];
 	  if (ri[ECOLOR_K] >= 32768) {
-	    kc = dr[ECOLOR_K]->value[1];
-	    dr[ECOLOR_K] = find_segment(d, &CHANNEL(d, i), i, kc);
-	  }
-	  CHANNEL(d, ECOLOR_K).b = kc;
-	  if (d->black_density != d->density) {
-	    kc = kc * (unsigned)d->density / d->black_density;
+	    dr[ECOLOR_K]++;
+	    CHANNEL(d, ECOLOR_K).b = dr[ECOLOR_K]->value[0];
 	  }
 	}
       }
@@ -2963,7 +2960,7 @@ stp_dither_cmyk_ed2(const unsigned short  *cmy,
 	  }
 	}
 
-        if (blacksize == 0) {
+	if (blacksize == 0) {
 	  point[ECOLOR_K] = dr[ECOLOR_K]->value[blacksize];
 	  if (d->black_density != d->density) {
 	    point[ECOLOR_K] = (unsigned)point[ECOLOR_K] * (unsigned)d->density / d->black_density;
