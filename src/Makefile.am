@@ -33,8 +33,7 @@ SUBDIRS = 					\
 	cups					\
 	foomatic				\
 	ghost					\
-	testpattern				\
-	printdef
+	testpattern
 
 
 ## Clean
