@@ -385,7 +385,7 @@ void
 stp_copy_options(stp_vars_t vd, const stp_vars_t vs)
 {
   const stp_internal_vars_t *src = (const stp_internal_vars_t *)vs;
-  stp_internal_vars_t *dest = (stp_internal_vars_t *)dest;
+  stp_internal_vars_t *dest = (stp_internal_vars_t *)vd;
   stp_internal_option_t *opt = (stp_internal_option_t *) src->options;
   stp_internal_option_t *popt = NULL;
   if (opt)
