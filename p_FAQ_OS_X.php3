@@ -45,11 +45,14 @@ require('standard_html_header.php3');
  <li><a href="p_FAQ_OS_X.php3#pap">
  How can I print using AppleTalk?
  </a>
+ <li><a href="p_FAQ_OS_X.php3#USB-to-parallel">
+ I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
+ </a>
  <li><a href="p_FAQ_OS_X.php3#InDesign">
- I am having trouble printing with Gimp-Print from Adobe InDesign.
+ How can I print correctly from Adobe InDesign using Gimp-Print?
  </a>
  <li><a href="p_FAQ_OS_X.php3#HPUSB">
- My multi-function HP Device is not printing over the USB port.
+ My multi-function HP Device is not printing over the USB port. What's wrong?
  </a>
  <li><a href="p_FAQ_OS_X.php3#escp2-7600">
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
@@ -321,11 +324,10 @@ require('standard_html_header.php3');
  <p>
  In a nutshell, you can't. Not yet.  CUPS uses "backends" to transfer the driver code to the printer. On Mac OS X Gimp-Print uses CUPS and since there is not yet a FireWire backend available for Mac OS X you can't print with Gimp-Print over Firewire.  You <em>can</em> print to a printer that has a FireWire port, you simply need to use a <em>different</em> port, such as the USB port, an ethernet port, or the parallel port via a converter.
  </p>
-  <a name="pap">
+  <a name="pap"></a>
  <li><h3>
- 
  How can I print using AppleTalk?
- </h3></a>
+ </h3>
  <p>
 To set up Appletalk (PAP) printing you first need to open the terminal and type "atlookup" at the command line. After a delay you should get a (possibly long) list of appletalk devices on your network. You want to find the entry for your printer and use that info to form a PAP URI that you will enter in Print Center when you set up the printer.
 </p><p>
@@ -347,11 +349,31 @@ Here it is more generically:
 </p><pre>
 	pap://zone/Appletalk_Device_Name/protocol
 </pre>
- <a name="InDesign">
+ <a name="USB-to-parallel"></a>
  <li><h3>
- 
- I am having trouble printing with Gimp-Print from Adobe InDesign.
- </h3></a>
+ I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
+ </h3>
+ <p>  
+While the Gimp-Print drivers are not partial about any particular brand or model
+of USB-to-parallel converter cable, when used with Mac OS X certain brands of 
+cable appear to work better than others. Some cables which work fine in Mac OS 9
+(such as the Keyspan USB-to-parallel cable) do not appear to work at all in Mac 
+OS X. If you are researching the purchase of a USB-to-parallel converter, or if 
+you are experiencing printing problems while using a USB-to-parallel cable with
+an otherwise supported printer please check with the cable manufacturer to 
+confirm that the cable is supported on Mac OS X. Additionally, there is a 
+<a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&gro
+up_id=1537"
+>user feedback forum</a> dedicated to this subject where many Gimp-Print OS X 
+users have entered compatibility reports for a wide variety of cable brands and 
+models. If you have experience using a particular brand and model of cable 
+please consider helping out your fellow users by adding your report to the 
+<a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537" >list</a>.
+ </p>  
+ <a name="InDesign"></a>
+ <li><h3>
+ How can I print correctly from Adobe InDesign using Gimp-Print?
+ </h3>
  <p>  
 The InDesign application uses a somewhat non-standard printing procedure. The 
  following workaround procedure may help you achieve the desired printer output:
@@ -370,7 +392,7 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  </p>
  <a name="HPUSB">
  <li><h3>
- My multi-function HP Device is not printing over the USB port.
+ My multi-function HP Device is not printing over the USB port. What's wrong?
  </h3></a>
  <p>  
  Several users have reported USB compatibility issues with certain HP 
