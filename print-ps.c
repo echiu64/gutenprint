@@ -245,7 +245,7 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   int		top = v->top;
   int		left = v->left;
   int		i, j;		/* Looping vars */
-  int		x, y;		/* Looping vars */
+  int		y;		/* Looping vars */
   unsigned char	*in;		/* Input pixels from image */
   unsigned short	*out;		/* Output pixels for printer */
   int		page_left,	/* Left margin of page */
@@ -259,8 +259,6 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
 		out_bpp,	/* Output bytes per pixel */
 		out_length,	/* Output length (Level 2 output) */
 		out_offset,	/* Output offset (Level 2 output) */
-		temp_width,	/* Temporary width of image on page */
-		temp_height,	/* Temporary height of image on page */
 		landscape;	/* True if we rotate the output 90 degrees */
   time_t	curtime;	/* Current time of day */
   convert_t	colorfunc;	/* Color conversion function... */
@@ -294,143 +292,23 @@ ps_print(const printer_t *printer,		/* I - Model (Level 1 or 2) */
   if (image_bpp < 3 && cmap == NULL && output_type == OUTPUT_COLOR)
     output_type = OUTPUT_GRAY_COLOR;		/* Force grayscale output */
 
-  if (output_type == OUTPUT_COLOR)
-  {
-    out_bpp = 3;
-
-    if (image_bpp >= 3)
-      colorfunc = rgb_to_rgb;
-    else
-      colorfunc = indexed_to_rgb;
-  }
-  else if (output_type == OUTPUT_GRAY_COLOR)
-  {
-    out_bpp = 3;
-    colorfunc = gray_to_rgb;
-  }
-  else
-  {
-    out_bpp = 1;
-
-    if (image_bpp >= 3)
-      colorfunc = rgb_to_gray;
-    else if (cmap == NULL)
-      colorfunc = gray_to_gray;
-    else
-      colorfunc = indexed_to_gray;
-  }
+  colorfunc = choose_colorfunc(output_type, image_bpp, cmap, &out_bpp);
 
  /*
   * Compute the output size...
   */
 
-  landscape = 0;
   ps_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
                     &page_bottom, &page_top);
-
-  page_width  = page_right - page_left;
-  page_height = page_top - page_bottom;
-
-#ifdef DEBUG
-  printf("page_width = %d, page_height = %d\n", page_width, page_height);
-  printf("image_width = %d, image_height = %d\n", image_width, image_height);
-  printf("scaling = %.1f\n", scaling);
-#endif /* DEBUG */
-
- /*
-  * Portrait width/height...
-  */
-
-  if (scaling < 0.0)
-  {
-   /*
-    * Scale to pixels per inch...
-    */
-
-    out_width  = image_width * -72.0 / scaling;
-    out_height = image_height * -72.0 / scaling;
-  }
-  else
-  {
-   /*
-    * Scale by percent...
-    */
-
-    out_width  = page_width * scaling / 100.0;
-    out_height = out_width * image_height / image_width;
-    if (out_height > page_height)
-    {
-      out_height = page_height * scaling / 100.0;
-      out_width  = out_height * image_width / image_height;
-    }
-  }
-
- /*
-  * Landscape width/height...
-  */
-
-  if (scaling < 0.0)
-  {
-   /*
-    * Scale to pixels per inch...
-    */
-
-    temp_width  = image_height * -72.0 / scaling;
-    temp_height = image_width * -72.0 / scaling;
-  }
-  else
-  {
-   /*
-    * Scale by percent...
-    */
-
-    temp_width  = page_width * scaling / 100.0;
-    temp_height = temp_width * image_width / image_height;
-    if (temp_height > page_height)
-    {
-      temp_height = page_height;
-      temp_width  = temp_height * image_height / image_width;
-    }
-  }
-
- /*
-  * See which orientation has the greatest area (or if we need to rotate the
-  * image to fit it on the page...)
-  */
-
-  if (orientation == ORIENT_AUTO)
-  {
-    if (scaling < 0.0)
-    {
-      if ((out_width > page_width && out_height < page_width) ||
-          (out_height > page_height && out_width < page_height))
-	orientation = ORIENT_LANDSCAPE;
-      else
-	orientation = ORIENT_PORTRAIT;
-    }
-    else
-    {
-      if ((temp_width * temp_height) > (out_width * out_height))
-	orientation = ORIENT_LANDSCAPE;
-      else
-	orientation = ORIENT_PORTRAIT;
-    }
-  }
+  compute_page_parameters(page_right, page_left, page_top, page_bottom,
+			  scaling, image_width, image_height, &orientation,
+			  &page_width, &page_height, &out_width, &out_height,
+			  &left, &top);
 
   if (orientation == ORIENT_LANDSCAPE)
-  {
-    out_width  = temp_width;
-    out_height = temp_height;
-    landscape  = 1;
-
-   /*
-    * Swap left/top offsets...
-    */
-
-    x    = left;
-    left = top;
-    top  = page_height - x - out_height;
-  }
+    landscape = 1;
+  else
+    landscape = 0;
 
  /*
   * Let the user know what we're doing...
