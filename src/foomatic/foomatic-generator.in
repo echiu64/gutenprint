@@ -38,24 +38,8 @@ my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 #
 # function arguments are: ('StpDriverOptionName')
 
-my $funcs = { 'InputSlot' => { 'OPTCONSTRAINTS' => \&build_cons,
-			       'ENUMVALS' => \&build_ev, },
-	      'InkType' => { 'OPTCONSTRAINTS' => \&build_cons,
-			     'ENUMVALS' => \&build_ev },
-	      'MediaType' => { 'OPTCONSTRAINTS' => \&build_cons,
-			       'ENUMVALS' => \&build_ev },
-	      'Model' => { 'OPTCONSTRAINTS' => \&build_model_cons,
+my $funcs = { 'Model' => { 'OPTCONSTRAINTS' => \&build_model_cons,
 			   'ENUMVALS' => \&build_model_ev },
-	      'PageSize' => { 'OPTCONSTRAINTS' => \&build_cons,
-			      'ENUMVALS' => \&build_ev },
-	      'Quality' => { 'OPTCONSTRAINTS' => \&build_cons,
-			     'ENUMVALS' => \&build_ev },
-	      'DitherAlgorithm' => { 'OPTCONSTRAINTS' => \&build_cons,
-			     'ENUMVALS' => \&build_ev },
-	      'ImageOptimization' => { 'OPTCONSTRAINTS' => \&build_cons,
-			     'ENUMVALS' => \&build_ev },
-	      'Color' => { 'OPTCONSTRAINTS' => \&build_cons,
-			     'ENUMVALS' => \&build_ev },
 	      'Resolution' => { 'OPTCONSTRAINTS' => \&build_resolution_cons,
 				'ENUMVALS' => \&build_resolution_ev },
 	      'PrintoutMode' => { 'OPTCONSTRAINTS' => 
@@ -69,9 +53,6 @@ my $drivervals = { 'PageSize' => \&optmap_pagesize,
 	       };
 
 my $debug = 0;
-
-# Foomatic name => Gimp-print name
-%argnamemap = ('Quality' => 'Resolution');
 
 $colormap = { 'ijs' => { 'Grayscale' => 'DeviceGray',
 			 'Color' => 'DeviceRGB',
@@ -126,26 +107,6 @@ for $a (keys(%stpdata)) {
     }
 }
 
-# Lists of numerical options
-for $a (keys(%stp_float_values)) {
-    for $b (keys %{$stp_float_values{$a}}) {
-	for $otmp (keys (%{$stp_float_values{$a}{$b}})) {
-	    if (!$seen_floatnumopt{$otmp}++) {
-		push (@floatnumopts_list, $otmp);
-	    }
-	}
-    }
-}
-for $a (keys(%stp_int_values)) {
-    for $b (keys %{$stp_int_values{$a}}) {
-	for $otmp (keys (%{$stp_int_values{$a}{$b}})) {
-	    if (!$seen_intnumopt{$otmp}++) {
-		push (@intnumopts_list, $otmp);
-	    }
-	}
-    }
-}
-
 #print Dumper(%ev_choices);
 
 if ($foomatic3) {
@@ -173,6 +134,59 @@ if ($foomatic3) {
 	}
     }
 }
+
+# Make list of needed Foomatic entries for the numerical options. If
+# for one and the same numerical option there are printers with
+# different value ranges, there must be made an extra Foomatic entry
+# for each value range. Therefore the filenames of numerical options
+# are numbered (eg. Contrast-1.xml).
+for $a (keys(%stp_float_values)) {
+    for $vtmp (keys %{$stp_float_values{$a}}) {
+	for $otmp (keys %{$stp_float_values{$a}{$vtmp}}) {
+	    my $min = $stp_float_values{$a}{'MINVAL'}{$otmp};
+	    my $max = $stp_float_values{$a}{'MAXVAL'}{$otmp};
+	    my $def = $stp_float_values{$a}{'DEFVAL'}{$otmp};
+	    # Skip options with invalid values, the library contains such
+	    # options in the case when only one constant value is allowed
+	    next if (($min >= $max) || ($def < $min) || ($def > $max));
+	    my $minmax = "${min}_${max}";
+	    if (!$seen_fnumopt{$otmp}{$minmax}++) {
+		if (!defined($fnums{$otmp})) {
+		    $fnums{$otmp} = 0;
+		}
+		$fnums{$otmp} ++;
+		push (@floatnumopts_list, "${otmp}-$fnums{$otmp}");
+		$numopt_ranges{"${otmp}-$fnums{$otmp}"}{'MINVAL'} = $min;
+		$numopt_ranges{"${otmp}-$fnums{$otmp}"}{'MAXVAL'} = $max;
+	    }
+	}
+    }
+}
+for $a (keys(%stp_int_values)) {
+    for $vtmp (keys %{$stp_int_values{$a}}) {
+	for $otmp (keys %{$stp_int_values{$a}{$vtmp}}) {
+	    my $min = $stp_int_values{$a}{'MINVAL'}{$otmp};
+	    my $max = $stp_int_values{$a}{'MAXVAL'}{$otmp};
+	    my $def = $stp_int_values{$a}{'DEFVAL'}{$otmp};
+	    # Skip options with invalid values, the library contains such
+	    # options in the case when only one constant value is allowed
+	    next if (($min >= $max) || ($def < $min) || ($def > $max));
+	    my $minmax = "${min}_${max}";
+	    if (!$seen_inumopt{$otmp}{$minmax}++) {
+		if (!defined($inums{$otmp})) {
+		    $inums{$otmp} = 0;
+		}
+		$inums{$otmp} ++;
+		push (@intnumopts_list, "${otmp}-$inums{$otmp}");
+		$numopt_ranges{"${otmp}-$inums{$otmp}"}{'MINVAL'} = $min;
+		$numopt_ranges{"${otmp}-$inums{$otmp}"}{'MAXVAL'} = $max;
+	    }
+	}
+    }
+}
+
+#print join("\n", @floatnumopts_list);
+#print join("\n", @intnumopts_list);
 
 # Step 1: construct a map from Model= values to Foomatic model id's
 # this map is %mapstp.  The inverse from model to Model is %mapdb
@@ -296,21 +310,13 @@ my $optiongroups = { 'PageSize' => 'General',
 		     'MediaType' => 'General',
 		     'InkType' => 'General',
 		     'PrintoutMode' => 'General',
-		     'Resolution' => 'PrintoutMode',
-		     'Quality' => 'PrintoutMode',
-		     'Color' => 'PrintoutMode',
-		     'ImageOptimization' => 'PrintoutMode',
-		     'DitherAlgorithm' => 'PrintoutMode',
-		     'Gamma' => 'Adjustment',
-		     'Density' => 'Adjustment',
-		     'Brightness' => 'Adjustment',
-		     'Contrast' => 'Adjustment',
-		     'Saturation' => 'Adjustment',
-		     'Cyan' => 'Adjustment',
-		     'Magenta' => 'Adjustment',
-		     'Yellow' => 'Adjustment' };
+		     'Resolution' => 'General',
+		     'Quality' => 'General',
+		     'Color' => 'General',
+		     'ImageOptimization' => 'General',
+		     'DitherAlgorithm' => 'General' };
 
-my @numericsubs = ('MINVAL', 'MAXVAL', 'DEFVAL');
+my @numericsubs = ('MINVAL', 'MAXVAL');
 
 # OK, make the db directory...
 mkdir "foomatic-db", 0755 or
@@ -343,11 +349,13 @@ for $drivertype (@drivertypes) {
 #	die "Cannot open templates directory: $!\n";
 
     for $fooopt (keys(%ev_choices), @floatnumopts_list,
-		 @intnumopts_list, "PrintoutMode") {
+		 @intnumopts_list, "PrintoutMode", "gimp-print") {
 
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
-	# newer
-	next if ((!$foomatic3) && ($fooopt eq "PrintoutMode"));
+	# newer (preliminary skipped always, do not remove the 
+	# infrastructure for "PrintoutMode", it will be re-activated later
+	# on)
+	next if ((1 || !$foomatic3) && ($fooopt eq "PrintoutMode"));
 
 	# "x_resolution" and "y_resolution" appear in %ev_choices but are
 	# not option names, so skip them
@@ -369,9 +377,15 @@ for $drivertype (@drivertypes) {
 	    $tmpl = "OtherOptions.xml" 
 		if ! -r "$templatedir-$drivertype/$tmpl";
 	}
-	#my $stpopt = $argnamemap{$fooopt};
-	#$stpopt = $fooopt if ! defined ($stpopt);
-	my $stpopt = $fooopt;
+
+	# Remove number appended to the end of the file name of
+	# numerical options
+	my $shortname = $fooopt;
+	$shortname =~ s!-\d+$!!;
+
+	#my $stpopt = $argnamemap{$shortname};
+	#$stpopt = $shortname if ! defined ($stpopt);
+	my $stpopt = $shortname;
 
 #	print STDERR "Argnamemap '$fooopt' => '$stpopt'\n";
 
@@ -414,11 +428,7 @@ for $drivertype (@drivertypes) {
 	$template =~ s!\@\@TYPE\@\@!$type!g;
 	for $substr (@numericsubs) {
 	    my $substitution;
-	    if ($type eq "float") {
-		my $substitution = $stp_float_values{$substr}{$stpopt};
-	    } else {
-		my $substitution = $stp_int_values{$substr}{$stpopt};
-	    }
+	    my $substitution = $numopt_ranges{$fooopt}{$substr};
 	    $template =~ s!\@\@$substr\@\@!$substitution!g;
 	}
 
@@ -426,8 +436,8 @@ for $drivertype (@drivertypes) {
 	my $lowercaseshortname = lc($fooopt);
 	if ($tmpl !~ /^$fooopt/) {
 	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
-	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$fooopt}!g;
-	    $template =~ s!\@\@SHORTNAME\@\@!$fooopt!g;
+	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$shortname}!g;
+	    $template =~ s!\@\@SHORTNAME\@\@!$shortname!g;
 	    $template =~ s!\@\@ORDER\@\@!$order!g;
 	    $order += 10;
 	    $template =~ s!\@\@SPOT\@\@!"B"!g;
@@ -443,7 +453,8 @@ for $drivertype (@drivertypes) {
 	    }
 	}
 	if ($template =~ m!\@\@OPTCONSTRAINTS\@\@!) {
-	    my $substitution = build_cons($stpopt);
+	    my $substitution = ($num_opt ? build_num_cons($fooopt) : 
+				build_cons($stpopt));
 	    if (defined($substitution)) {
 		$template =~ s!\@\@OPTCONSTRAINTS\@\@!$substitution!g;
 	    }
@@ -594,7 +605,7 @@ sub build_cons {
 	    print STDERR "      \%stpdata key is {$stpname}{$stpopt}\n";
 	}
 
-	# Add to this printer to argument constraints?
+	# Add this printer to argument constraints?
 	if ($stpdata{$stpname}{$stpopt}) {
 
 	    # What's the default value?
@@ -624,6 +635,84 @@ sub build_cons {
 			  "      <driver>$drvname</driver>\n",
 			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
 			  "      <arg_defval>$foodefval</arg_defval>\n",
+			  "    </constraint>\n");
+		}
+	    }
+	}
+
+    }
+
+    return join('',
+		"<constraints>\n",
+		@PNCONS,
+		"  </constraints>\n");
+}
+
+sub build_num_cons {
+
+    my ($foooptfile) = @_;
+
+    my $drvname = "$drivernameprefix$drivertypesuffix";
+
+    my @PNCONS = ();
+
+    # Do we have a float or an int option?
+    my $type = (member($foooptfile, @floatnumopts_list) ? "float" : "int");
+
+    # Name of the actual option
+    my $stpopt = $foooptfile;
+    $stpopt =~ s!-\d+$!!;
+
+    # For each stp printer...
+    my $stpname;
+    for $stpname (keys(%stpdata)) {
+
+	if (0) {
+	    print STDERR "    Processing gimp-print printer $stpname...\n";
+	    print STDERR
+		"      There are no foomatic printers mapped to $stpname!?\n"
+		    if !$mapstp{$stpname};
+	}
+
+	# Add this printer to argument constraints? The printer must provide
+	# this option and a default value for it.
+	my $stpdef;
+	if (($stpdef = $stp_float_values{$stpname}{"DEFVAL"}{$stpopt}) ||
+	    ($stpdef = $stp_int_values{$stpname}{"DEFVAL"}{$stpopt})) {
+	    # Find minimum and maximum
+	    my ($min, $max);
+	    if ($type eq "float") {
+		$min = $stp_float_values{$stpname}{"MINVAL"}{$stpopt};
+		$max = $stp_float_values{$stpname}{"MAXVAL"}{$stpopt};
+	    } else {
+		$min = $stp_int_values{$stpname}{"MINVAL"}{$stpopt};
+		$max = $stp_int_values{$stpname}{"MAXVAL"}{$stpopt};
+	    }
+	    # Does the range of this option with this printer match
+	    # the Foomatic option entry we are building currently?
+	    if (defined($numopt_ranges{$foooptfile}{'MINVAL'}) &&
+		defined($numopt_ranges{$foooptfile}{'MAXVAL'}) &&
+		($min == $numopt_ranges{$foooptfile}{'MINVAL'}) &&
+		($max == $numopt_ranges{$foooptfile}{'MAXVAL'})) {
+
+		if (0) {
+		    print STDERR
+			"      Default for $stpname/$stpopt is $stpdef\n";
+		}
+
+		my $fooname;
+		for $fooname (@{$mapstp{$stpname}}) {
+
+		    if (0) {
+			print STDERR
+			    "      Printer $fooname takes option $stpopt.\n";
+		    }
+
+		    push (@PNCONS,
+			  "    <constraint sense='true'>\n",
+			  "      <driver>$drvname</driver>\n",
+			  "      <printer>$fooname</printer><!-- gimp-print name: $stpname -->\n",
+			  "      <arg_defval>$stpdef</arg_defval>\n",
 			  "    </constraint>\n");
 		}
 	    }

@@ -67,6 +67,8 @@ main(int argc, char **argv)
 	    continue;
 	  count = 0;
 	  stp_describe_parameter(pv, p->name, &desc);
+	  printf("$longnames{'%s'} = '%s';\n",
+		 p->name, p->text);
 	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	    {
 	      count = stp_string_list_count(desc.bounds.str);
@@ -74,8 +76,6 @@ main(int argc, char **argv)
 		{
 		  printf("$defaults{'%s'}{'%s'} = '%s';\n",
 			 driver, p->name, desc.deflt.str);
-		  printf("$longnames{'%s'} = '%s';\n",
-			 p->name, p->text);
 		  for (j = 0; j < count; j++)
 		    {
 		      const stp_param_string_t *param =
