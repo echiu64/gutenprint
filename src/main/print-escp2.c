@@ -524,6 +524,18 @@ static const escp2_variable_ink_t standard_3pl_2880_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_economy_pigment_dither_ranges[] =
+{
+  { 1.0,   0x3, 1, 3 }
+};
+
+static const escp2_variable_ink_t standard_economy_pigment_ink =
+{
+  standard_economy_pigment_dither_ranges,
+  sizeof(standard_economy_pigment_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
 static const stp_simple_dither_range_t standard_multishot_pigment_dither_ranges[] =
 {
   { 0.410, 0x1, 1, 1 },
@@ -568,8 +580,7 @@ static const escp2_variable_ink_t standard_3pl_pigment_ink =
 
 static const stp_simple_dither_range_t standard_3pl_pigment_2880_dither_ranges[] =
 {
-  { 1.0,   0x1, 1, 1 },
-  { 1.5,   0x2, 1, 2 }
+  { 1.0,   0x1, 1, 1 }
 };
 
 static const escp2_variable_ink_t standard_3pl_pigment_2880_ink =
@@ -793,6 +804,14 @@ static const escp2_variable_inkset_t escp2_multishot_photo_inks =
   &photo_multishot_ink,
   &photo_multishot_ink,
   &standard_multishot_ink
+};
+
+static const escp2_variable_inkset_t escp2_economy_pigment_standard_inks =
+{
+  &standard_economy_pigment_ink,
+  &standard_economy_pigment_ink,
+  &standard_economy_pigment_ink,
+  &standard_economy_pigment_ink
 };
 
 static const escp2_variable_inkset_t escp2_multishot_pigment_standard_inks =
@@ -1136,8 +1155,8 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
   },
   {
     {
-      &escp2_multishot_pigment_standard_inks,
-      &escp2_multishot_pigment_standard_inks,
+      &escp2_economy_pigment_standard_inks,
+      &escp2_economy_pigment_standard_inks,
       &escp2_multishot_pigment_standard_inks,
       &escp2_multishot_pigment_standard_inks,
       &escp2_6pl_pigment_standard_inks,
@@ -1885,7 +1904,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.710, 0.216, 0.784, 0.392, 0.392, 0.196 };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.0, 2.0, 1.3, 1.3, 0.98, 0.98, 0.65,  0.65,  0.487, 0.487, 0.78,  0.78,  0.110 };
+{ 2.0, 2.0, 1.3, 1.3, 0.98, 0.98, 0.65,  0.65,  0.487, 0.487, 0.9,   0.9,   0.110 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -4449,7 +4468,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	  /*
 	   * Set horizontal position
 	   */
-	  if (!escp2_has_cap(model, MODEL_COMMAND, MODEL_COMMAND_PRO, v) &&
+	  if (!escp2_has_advanced_command_set(model, v) &&
 	      (xdpi <= escp2_base_resolution(model, v) ||
 	       escp2_max_hres(model, v) < 1440))
 	    {
