@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.4  2000/02/02 18:25:27  gandy
+ *   Prepared the driver for one of K/CMY/CMYK/CcMmYK/CcMmYy printing
+ *
  *   Revision 1.3  2000/02/02 16:00:31  gandy
  *   Removed remnants from the original escp/2 source not needed for BJL
  *
@@ -77,6 +80,7 @@ static void canon_write_line(FILE *,
 			     unsigned char *, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
+			     unsigned char *, int,
 			     int, int, int, int, int);
 
 #define PHYSICAL_BPI 1440
@@ -107,6 +111,7 @@ typedef struct {
 #define CANON_INK_3          (CANON_INK_K|CANON_INK_CMY)
 #define CANON_INK_4          (CANON_INK_CMYK|CANON_INK_CcMmYK)
 #define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|CANON_INK_CcMmYK)
+#define CANON_INK_PHOTO_MASK (CANON_INK_CcMmYy|CANON_INK_CcMmYK)
 
 #define CANON_SLOT_ASF_1   1
 #define CANON_SLOT_ASF_2   2
@@ -161,6 +166,17 @@ canon_source_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Manual with Pause"))    return 0;
   if (!strcmp(name,"Manual without Pause")) return 1;
   return 4;
+}
+
+static int 
+canon_printhead_type(const char *name, canon_cap_t caps)
+{
+  if (!strcmp(name,"Black"))       return 0;
+  if (!strcmp(name,"Color"))       return 1;
+  if (!strcmp(name,"Black/Color")) return 2;
+  if (!strcmp(name,"Photo/Color")) return 3;
+  if (!strcmp(name,"Photo"))       return 4;
+  return 0;
 }
 
 static unsigned char
@@ -272,6 +288,18 @@ canon_parameters(int  model,		/* I - Printer model */
     fprintf(stderr,"canon: Resolution ok.\n");
     *count= c;
     p= valptrs;
+  }
+  else if (strcmp(name, "PrintHead") == 0)
+  {
+    int c= 0;
+    valptrs = malloc(sizeof(char *) * 5);
+    if ((caps.inks & CANON_INK_K))       valptrs[c++]= strdup("Black");
+    if ((caps.inks == CANON_INK_CMY))    valptrs[c++]= strdup("Color");
+    if ((caps.inks == CANON_INK_CMYK))   valptrs[c++]= strdup("Black/Color");
+    if ((caps.inks == CANON_INK_CcMmYK)) valptrs[c++]= strdup("Photo/Color");
+    if ((caps.inks == CANON_INK_CcMmYy)) valptrs[c++]= strdup("Photo/Color");
+    *count = c;
+    p = media_sources;
   }
   else if (strcmp(name, "MediaType") == 0)
   {
@@ -519,15 +547,17 @@ canon_print(int       model,		/* I - Model */
 		*black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
+		*yellow,	/* Yellow bitmap data */
 		*lcyan,		/* Light cyan bitmap data */
 		*lmagenta,	/* Light magenta bitmap data */
-		*yellow;	/* Yellow bitmap data */
+		*lyellow;	/* Light yellow bitmap data */
   int           delay_k,
                 delay_c,
                 delay_m,
                 delay_y,
                 delay_lc,
                 delay_lm,
+                delay_ly,
                 delay_max;
   int		page_left,	/* Left margin of page */
 		page_right,	/* Right margin of page */
@@ -554,6 +584,7 @@ canon_print(int       model,		/* I - Model */
                 image_bpp;
 
   canon_cap_t caps= canon_get_model_capabilities(model);
+  int printhead= canon_printhead_type("Black/Color",caps);
 
   /*
   * Setup a read-only pixel region for the entire image...
@@ -563,13 +594,19 @@ canon_print(int       model,		/* I - Model */
   image_height = Image_height(image);
   image_width = Image_width(image);
   image_bpp = Image_bpp(image);
+  
+  /* force grayscale if image is grayscale 
+   *                 or single black cartridge installed
+   */
 
- /*
-  * Choose the correct color conversion function...
-  */
+  if ((image_bpp < 3 && cmap == NULL) || 
+      (printhead==0) || 
+      (caps.inks==CANON_INK_K))
+    output_type = OUTPUT_GRAY;
 
-  if (image_bpp < 3 && cmap == NULL)
-    output_type = OUTPUT_GRAY;		/* Force grayscale output */
+  /*
+   * Choose the correct color conversion function...
+   */
 
   if (output_type == OUTPUT_COLOR) {
     out_bpp = 3;
@@ -592,8 +629,8 @@ canon_print(int       model,		/* I - Model */
  /*
   * Figure out the output resolution...
   */
-  sscanf(resolution,"%dx%d",&xdpi,&ydpi);
 
+  sscanf(resolution,"%dx%d",&xdpi,&ydpi);
   fprintf(stderr,"canon: resolution=%dx%d\n",xdpi,ydpi);
 
  /*
@@ -730,7 +767,7 @@ canon_print(int       model,		/* I - Model */
 
 
   canon_init_printer(prn, caps, output_type, media_type, 
-		     media_size, 2, media_source, 
+		     media_size, printhead, media_source, 
 		     xdpi, ydpi, page_width, page_height,
 		     page_length, page_top, page_bottom, top);
 
@@ -755,10 +792,11 @@ canon_print(int       model,		/* I - Model */
     delay_y= 330;
     delay_lc= 0;
     delay_lm= 0;
+    delay_ly= 0;
     delay_max= 330;
     fprintf(stderr,"delay on!\n");
   } else {
-    delay_k= delay_c= delay_m= delay_y= delay_lc= delay_lm=0;
+    delay_k= delay_c= delay_m= delay_y= delay_lc= delay_lm= delay_ly=0;
     delay_max=0;
     fprintf(stderr,"delay off!\n");
   }
@@ -769,6 +807,7 @@ canon_print(int       model,		/* I - Model */
 
   length = (out_width + 7) / 8;
 
+
   if (output_type == OUTPUT_GRAY)
   {
     black   = canon_alloc_buffer(length*(delay_k+1));
@@ -777,6 +816,7 @@ canon_print(int       model,		/* I - Model */
     lcyan   = NULL;
     lmagenta= NULL;
     yellow  = NULL;
+    lyellow = NULL;
   }
   else
   {
@@ -789,14 +829,29 @@ canon_print(int       model,		/* I - Model */
     else
       black = NULL;
 
-    if (0 && (caps.inks & CANON_INK_CcMmYK)) {
+    if (printhead==3 && (caps.inks & (CANON_INK_PHOTO_MASK))) {
       lcyan = canon_alloc_buffer(length*(delay_lc+1));
       lmagenta = canon_alloc_buffer(length*(delay_lm+1));
+      if ((caps.inks & CANON_INK_CcMmYy)) 
+	lyellow = canon_alloc_buffer(length*(delay_lc+1));
+      else 
+	lyellow = NULL;
     } else {
       lcyan = NULL;
       lmagenta = NULL;
+      lyellow = NULL;
     }
   }
+  fprintf(stderr,"canon: driver will use colors ");
+  if (cyan)     fputc('C',stderr);
+  if (lcyan)    fputc('c',stderr);
+  if (magenta)  fputc('M',stderr);
+  if (lmagenta) fputc('m',stderr);
+  if (yellow)   fputc('Y',stderr);
+  if (lyellow)  fputc('y',stderr);
+  if (black)    fputc('K',stderr);
+  fprintf(stderr,"\n");
+
   init_dither();
     
  /*
@@ -831,7 +886,7 @@ canon_print(int       model,		/* I - Model */
 	dither_black(out, x, image_height, out_width, black,1);
       else
 	dither_cmyk(out, x, image_height, out_width, cyan, lcyan,
-		    magenta, lmagenta, yellow, 0, black,1);
+		    magenta, lmagenta, yellow, lyellow, black,1);
 
       fprintf(stderr,".");
       canon_write_line(prn,
@@ -841,6 +896,7 @@ canon_print(int       model,		/* I - Model */
 		       yellow,   delay_y, 
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
+		       lyellow,  delay_ly, 
 		       length, ydpi, model, out_width, left);
       fprintf(stderr,"!");
 
@@ -850,6 +906,7 @@ canon_print(int       model,		/* I - Model */
       canon_advance_buffer(yellow,  length,delay_y);
       canon_advance_buffer(lcyan,   length,delay_lc);
       canon_advance_buffer(lmagenta,length,delay_lm);
+      canon_advance_buffer(lyellow, length,delay_ly);
 
       errval += errmod;
       errline -= errdiv;
@@ -897,6 +954,7 @@ canon_print(int       model,		/* I - Model */
 		       cyan,     delay_c, 
 		       magenta,  delay_m, 
 		       yellow,   delay_y, 
+		       lyellow,  delay_ly, 
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
 		       length, ydpi, model, out_width, left);
@@ -908,6 +966,7 @@ canon_print(int       model,		/* I - Model */
       canon_advance_buffer(yellow,  length,delay_y);
       canon_advance_buffer(lcyan,   length,delay_lc);
       canon_advance_buffer(lmagenta,length,delay_lm);
+      canon_advance_buffer(lyellow, length,delay_ly);
 
       errval += errmod;
       errline += errdiv;
@@ -934,6 +993,7 @@ canon_print(int       model,		/* I - Model */
 		       yellow,   delay_y, 
 		       lcyan,    delay_lc, 
 		       lmagenta, delay_lm,
+		       lyellow,  delay_ly, 
 		       length, ydpi, model, out_width, left);
       fprintf(stderr,"-");
 
@@ -943,6 +1003,7 @@ canon_print(int       model,		/* I - Model */
       canon_advance_buffer(yellow,  length,delay_y);
       canon_advance_buffer(lcyan,   length,delay_lc);
       canon_advance_buffer(lmagenta,length,delay_lm);
+      canon_advance_buffer(lyellow, length,delay_ly);
     }
   }
 
@@ -1083,6 +1144,8 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 		int           dlc,	/* I -  */
 		unsigned char *lm,	/* I - Output bitmap data */
 		int           dlm,	/* I -  */
+		unsigned char *ly,	/* I - Output bitmap data */
+		int           dly,	/* I -  */
 		int           l,	/* I - Length of bitmap data */
 		int           ydpi,	/* I - Vertical resolution */
 		int           model,	/* I - Printer model */
@@ -1100,12 +1163,13 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
     canon_write(prn,y+ dy*l, l, 0, 2, ydpi, model, &empty, width, offset);
   if (k) written+= 
     canon_write(prn,k+ dk*l, l, 0, 3, ydpi, model, &empty, width, offset);
-  /*
   if (lc) written+= 
     canon_write(prn,lc+ dlc*l, l, 1, 4, ydpi, model, &empty, width, offset);
   if (lm) written+= 
     canon_write(prn,lm+ dlm*l, l, 1, 5, ydpi, model, &empty, width, offset);
-  */
+  if (ly) written+= 
+    canon_write(prn,ly+ dly*l, l, 1, 6, ydpi, model, &empty, width, offset);
+  
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
@@ -1146,7 +1210,7 @@ canon_write(FILE          *prn,		/* I - Print file or command */
   /* send packed empty lines if any */
   if (*empty) {
     fprintf(stderr,"<%d%c>",
-	    *empty,("CMYKcm"[coloridx]));
+	    *empty,("CMYKcmy"[coloridx]));
     fwrite("\x1b\x28\x65\x02\x00", 5, 1, prn);
     fputc((*empty) >> 8 , prn);
     fputc((*empty) & 255, prn);
