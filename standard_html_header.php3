@@ -37,6 +37,7 @@ H1 {
 <a
 href="http://sourceforge.net/project/memberlist.php?group_id=1537">Meet
 the Developers!</a>
+<br>
 <A href="http://sourceforge.net/project/?group_id=1537">SourceForge Interface</a>
 </P>
 </TD></TR>
