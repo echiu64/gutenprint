@@ -240,7 +240,7 @@ if test "${FOOMATIC_CONFIGURE}" ; then
   foomatic_libdir=`perl -e 'use Foomatic::Defaults; print "$libdir\n";';`
   if [[ -d $foomatic_libdir/db/source/printer/ ]]; then
     for file in `ls -1 $foomatic_libdir/db/source/printer/`; do
-      if ( grep -q ^${file%.xml} ./src/foomatic/oldprinterids ); then
+      if ( grep -q ^${file%.xml} ${srcdir}/src/foomatic/oldprinterids ); then
         oldids=1
 	AC_MSG_RESULT([Found entry with old Foomatic printer ID!])
         break
