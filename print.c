@@ -78,6 +78,20 @@ typedef struct		/**** Printer List ****/
 	media_size[33],		/* Media size */
 	media_type[33],		/* Media type */
 	media_source[33];	/* Media source */
+  int	active;			/* Do we know about this printer? */
+  int	brightness;
+  float	scaling;
+  int	orientation,
+	left,
+	top;
+  float	gamma;
+  int	contrast,
+	red,
+	green,
+	blue;
+  int	linear;
+  float	saturation;
+  float	density;
 } plist_t;
 
 
@@ -152,7 +166,7 @@ GPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
   run,     /* run_proc */
 };
 
-struct					/* Plug-in variables */
+typedef struct					/* Plug-in variables */
 {
   char	output_to[255],		/* Name of file or command to print to */
 	short_name[33],		/* Name of printer "driver" */
@@ -175,7 +189,9 @@ struct					/* Plug-in variables */
   gint	linear;			/* Linear density (mostly for testing!) */
   float	saturation;		/* Output saturation */
   float	density;		/* Maximum output density */
-}		vars =
+} plugin_vars_t;
+
+plugin_vars_t vars =
 {
 	"",			/* Name of file or command to print to */
 	"ps2",			/* Name of printer "driver" */
@@ -200,6 +216,8 @@ struct					/* Plug-in variables */
 	1.0,			/* Output saturation */
 	1.0			/* Density */
 };
+
+plugin_vars_t vars;
 
 GtkWidget	*print_dialog,		/* Print dialog window */
 		*media_size,		/* Media size option button */
@@ -1350,7 +1368,15 @@ do_print_dialog(void)
   menu = gtk_menu_new();
   for (i = 0; i < plist_count; i ++)
   {
-    item = gtk_menu_item_new_with_label(gettext(plist[i].name));
+    if (plist[i].active)
+      item = gtk_menu_item_new_with_label(gettext(plist[i].name));
+    else
+      {
+	char buf[18];
+	buf[0] = '*';
+	memcpy(buf + 1, plist[i].name, 17);
+	item = gtk_menu_item_new_with_label(gettext(buf));
+      }
     gtk_menu_append(GTK_MENU(menu), item);
     gtk_signal_connect(GTK_OBJECT(item), "activate",
 		       (GtkSignalFunc)plist_callback,
@@ -1561,14 +1587,13 @@ brightness_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.brightness != adjustment->value)
   {
     vars.brightness = adjustment->value;
+    plist[plist_current].brightness = adjustment->value;
 
     sprintf(s, "%d", vars.brightness);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(brightness_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(brightness_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(brightness_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1611,14 +1636,13 @@ contrast_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.contrast != adjustment->value)
   {
     vars.contrast = adjustment->value;
+    plist[plist_current].contrast = adjustment->value;
 
     sprintf(s, "%d", vars.contrast);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(contrast_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(contrast_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(contrast_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1661,14 +1685,13 @@ red_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.red != adjustment->value)
   {
     vars.red = adjustment->value;
+    plist[plist_current].red = adjustment->value;
 
     sprintf(s, "%d", vars.red);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(red_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(red_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(red_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1711,14 +1734,13 @@ green_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.green != adjustment->value)
   {
     vars.green = adjustment->value;
+    plist[plist_current].green = adjustment->value;
 
     sprintf(s, "%d", vars.green);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(green_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(green_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(green_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1761,14 +1783,13 @@ blue_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.blue != adjustment->value)
   {
     vars.blue = adjustment->value;
+    plist[plist_current].blue = adjustment->value;
 
     sprintf(s, "%d", vars.blue);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(blue_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(blue_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(blue_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1811,6 +1832,7 @@ gamma_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.gamma != adjustment->value)
   {
     vars.gamma = adjustment->value;
+    plist[plist_current].gamma = adjustment->value;
 
     sprintf(s, "%5.3f", vars.gamma);
 
@@ -1818,7 +1840,6 @@ gamma_update(GtkAdjustment *adjustment)	/* I - New value */
     gtk_entry_set_text(GTK_ENTRY(gamma_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(gamma_entry), NULL);
 
-    preview_update();
   }
 }
 
@@ -1862,14 +1883,13 @@ saturation_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.saturation != adjustment->value)
   {
     vars.saturation = adjustment->value;
+    plist[plist_current].saturation = adjustment->value;
 
     sprintf(s, "%5.3f", vars.saturation);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(saturation_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(saturation_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(saturation_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1911,14 +1931,13 @@ density_update(GtkAdjustment *adjustment)	/* I - New value */
   if (vars.density != adjustment->value)
   {
     vars.density = adjustment->value;
+    plist[plist_current].density = adjustment->value;
 
     sprintf(s, "%4.3f", vars.density);
 
     gtk_signal_handler_block_by_data(GTK_OBJECT(density_entry), NULL);
     gtk_entry_set_text(GTK_ENTRY(density_entry), s);
     gtk_signal_handler_unblock_by_data(GTK_OBJECT(density_entry), NULL);
-
-    preview_update();
   }
 }
 
@@ -1964,6 +1983,7 @@ scaling_update(GtkAdjustment *adjustment)	/* I - New value */
       vars.scaling = -adjustment->value;
     else
       vars.scaling = adjustment->value;
+    plist[plist_current].scaling = vars.scaling;
 
     sprintf(s, "%.1f", adjustment->value);
 
@@ -2007,6 +2027,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     GTK_ADJUSTMENT(scaling_adjustment)->upper = 1201.0;
     GTK_ADJUSTMENT(scaling_adjustment)->value = 72.0;
     vars.scaling = 0.0;
+    plist[plist_current].scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
   else if (widget == scaling_percent)
@@ -2015,6 +2036,7 @@ scaling_callback(GtkWidget *widget)	/* I - Entry widget */
     GTK_ADJUSTMENT(scaling_adjustment)->upper = 101.0;
     GTK_ADJUSTMENT(scaling_adjustment)->value = 100.0;
     vars.scaling = 0.0;
+    plist[plist_current].scaling = vars.scaling;
     gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
   }
 }
@@ -2091,6 +2113,89 @@ plist_build_menu(GtkWidget *option,				/* I - Option button */
 }
 
 
+static void
+do_misc_updates()
+{
+  GtkAdjustment adj;
+
+  vars.scaling = plist[plist_current].scaling;
+  vars.orientation = plist[plist_current].orientation;
+  vars.left = plist[plist_current].left;
+  vars.top = plist[plist_current].top;
+  preview_update();
+#if 0
+  vars.brightness = -1;
+  vars.gamma = -1;
+  vars.contrast = -1;
+  vars.red = -1;
+  vars.green = -1;
+  vars.blue = -1;
+  vars.linear = plist[plist_current].linear;
+  vars.saturation = -1;
+  vars.density = -1;
+#endif
+
+  GTK_ADJUSTMENT(brightness_adjustment)->value = plist[plist_current].brightness;
+  gtk_signal_emit_by_name(brightness_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(scaling_adjustment)->value = plist[plist_current].scaling;
+  gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(scaling_adjustment)->value = plist[plist_current].scaling;
+  gtk_signal_emit_by_name(scaling_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(gamma_adjustment)->value = plist[plist_current].gamma;
+  gtk_signal_emit_by_name(gamma_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(contrast_adjustment)->value = plist[plist_current].contrast;
+  gtk_signal_emit_by_name(contrast_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(red_adjustment)->value = plist[plist_current].red;
+  gtk_signal_emit_by_name(red_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(green_adjustment)->value = plist[plist_current].green;
+  gtk_signal_emit_by_name(green_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(blue_adjustment)->value = plist[plist_current].blue;
+  gtk_signal_emit_by_name(blue_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(saturation_adjustment)->value = plist[plist_current].saturation;
+  gtk_signal_emit_by_name(saturation_adjustment, "value_changed");
+
+  GTK_ADJUSTMENT(density_adjustment)->value = plist[plist_current].density;
+  gtk_signal_emit_by_name(density_adjustment, "value_changed");
+
+
+#if 0
+  adj.value = plist[plist_current].brightness;
+  brightness_update(&adj);
+
+  adj.value = plist[plist_current].scaling;
+  scaling_update(&adj);
+
+  adj.value = plist[plist_current].gamma;
+  gamma_update(&adj);
+
+  adj.value = plist[plist_current].contrast;
+  contrast_update(&adj);
+
+  adj.value = plist[plist_current].red;
+  red_update(&adj);
+
+  adj.value = plist[plist_current].green;
+  green_update(&adj);
+
+  adj.value = plist[plist_current].blue;
+  blue_update(&adj);
+
+  adj.value = plist[plist_current].saturation;
+  saturation_update(&adj);
+
+  adj.value = plist[plist_current].density;
+  density_update(&adj);
+#endif
+}
+
 /*
  * 'plist_callback()' - Update the current system printer...
  */
@@ -2125,11 +2230,17 @@ plist_callback(GtkWidget *widget,	/* I - Driver option menu */
   strcpy(vars.media_source, p->media_source);
   strcpy(vars.resolution, p->resolution);
   strcpy(vars.output_to, p->command);
+  do_misc_updates();
 
   if (p->output_type == OUTPUT_GRAY)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_gray), TRUE);
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_color), TRUE);
+
+  if (p->linear == 0)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linear_off), TRUE);
 
  /*
   * Now get option parameters...
@@ -2211,6 +2322,8 @@ media_size_callback(GtkWidget *widget,		/* I - Media size option menu */
   strcpy(plist[plist_current].media_size, media_sizes[data]);
   vars.left       = -1;
   vars.top        = -1;
+  plist[plist_current].left = vars.left;
+  plist[plist_current].top = vars.top;
 
   preview_update();
 }
@@ -2266,6 +2379,9 @@ orientation_callback(GtkWidget *widget,		/* I - Orientation option menu */
   vars.orientation = data;
   vars.left        = -1;
   vars.top         = -1;
+  plist[plist_current].orientation = vars.orientation;
+  plist[plist_current].left = vars.left;
+  plist[plist_current].top = vars.top;
 
   preview_update();
 }
@@ -2297,6 +2413,7 @@ linear_callback(GtkWidget *widget,	/* I - Output type button */
   if (GTK_TOGGLE_BUTTON(widget)->active)
   {
     vars.linear = data;
+    plist[plist_current].linear = data;
   }
 }
 
@@ -2590,6 +2707,7 @@ preview_update(void)
     {
       left      = page_width - print_width;
       vars.left = 72 * left / 10;
+      plist[plist_current].left = vars.left;
     }
   }
 
@@ -2603,6 +2721,7 @@ preview_update(void)
     {
       top      = page_height - print_height;
       vars.top = 72 * top / 10;
+      plist[plist_current].top = vars.top;
     }
   }
 
@@ -2641,6 +2760,8 @@ preview_motion_callback(GtkWidget      *w,
 
   if (vars.top < 0)
     vars.top = 0;
+  plist[plist_current].left = vars.left;
+  plist[plist_current].top = vars.top;
 
   preview_update();
 
@@ -2691,8 +2812,10 @@ printrc_load(void)
     * File exists - read the contents and update the printer list...
     */
 
+    (void) memset(line, 0, 1024);
     while (fgets(line, sizeof(line), fp) != NULL)
     {
+      int keepgoing = 1;
       if (line[0] == '#')
         continue;	/* Comment */
 
@@ -2756,12 +2879,175 @@ printrc_load(void)
       key.media_type[commaptr - lineptr] = '\0';
       lineptr = commaptr + 1;
 
-      strcpy(key.media_source, lineptr);
-      key.media_source[strlen(key.media_source) - 1] = '\0';	/* Drop NL */
+      if ((commaptr = strchr(lineptr, ',')) == NULL)
+	{
+	  strcpy(key.media_source, lineptr);
+	  keepgoing = 0;
+	  key.media_source[strlen(key.media_source) - 1] = '\0';  /* Drop NL */
+	}
+      else
+	{
+	  strncpy(key.media_source, lineptr, commaptr - lineptr);
+	  lineptr = commaptr + 1;
+	}
 
+
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.brightness = vars.brightness;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.brightness = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.scaling = vars.scaling;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.scaling = atof(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.orientation = vars.orientation;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.orientation = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.left = vars.left;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.left = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.top = vars.top;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.top = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.gamma = vars.gamma;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.gamma = atof(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  keepgoing = 0;
+	  key.contrast = vars.contrast;
+	}
+      else
+	{
+	  key.contrast = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.red = vars.red;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.red = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.green = vars.green;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.green = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.blue = vars.blue;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.blue = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.linear = vars.linear;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.linear = atoi(lineptr);
+	  lineptr = commaptr + 1;
+	}
+
+      if ((keepgoing == 0) || ((commaptr = strchr(lineptr, ',')) == NULL))
+	{
+	  key.saturation = vars.saturation;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.saturation = atof(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
+      if ((keepgoing == 0))
+	{
+	  key.density = vars.density;
+	  keepgoing = 0;
+	}
+      else
+	{
+	  key.density = atof(lineptr);
+	  lineptr = commaptr + 1;
+	}
+	  
       if ((p = bsearch(&key, plist + 1, plist_count - 1, sizeof(plist_t),
                        (int (*)(const void *, const void *))compare_printers)) != NULL)
-        memcpy(p, &key, sizeof(plist_t));
+	{
+	  memcpy(p, &key, sizeof(plist_t));
+	  p->active = 1;
+	}
+      else if (plist_count < MAX_PLIST - 1)
+	{
+	  p = plist + plist_count;
+	  memcpy(p, &key, sizeof(plist_t));
+	  p->active = 0;
+	  plist_count++;
+	}
     }
 
     fclose(fp);
@@ -2821,9 +3107,12 @@ printrc_save(void)
     fputs("#PRINTRC " PLUG_IN_VERSION "\n", fp);
 
     for (i = 1, p = plist + 1; i < plist_count; i ++, p ++)
-      fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s\n",
+      fprintf(fp, "%s,%s,%s,%s,%d,%s,%s,%s,%s,%d,%.3f,%d,%d,%d,%.3f,%d,%d,%d,%d,%d,%.3f,%.3f\n",
               p->name, p->command, p->driver, p->ppd_file, p->output_type,
-              p->resolution, p->media_size, p->media_type, p->media_source);
+              p->resolution, p->media_size, p->media_type, p->media_source,
+	      p->brightness, p->scaling, p->orientation, p->left, p->top,
+	      p->gamma, p->contrast, p->red, p->green, p->blue, p->linear,
+	      p->saturation, p->density);
 
     fclose(fp);
   }
