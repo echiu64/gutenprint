@@ -7,6 +7,6 @@ for mode in $modes ; do
     for pass in $passes ; do
 	stuff=`echo "$mode,$pass" | awk -F, '{printf "%d %d %d %d\n", $1, $2, $3, $4}'`
 	echo -n "$stuff  "
-	./weavetest $stuff 1000 | tail -1
+	./escp2-weavetest $stuff 1000 | tail -1
     done
 done

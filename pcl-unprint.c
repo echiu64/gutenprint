@@ -584,6 +584,9 @@ int main(int argc,char *argv[]){
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.1  2000/02/17 01:02:13  rlk
+ *   Rename various programs
+ *
  *   Revision 1.1  2000/02/15 22:06:38  davehill
  *   Initial version. Only works for mono 2 level uncompressed output
  *   (i.e. Deskjet 500)
