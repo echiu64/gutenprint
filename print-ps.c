@@ -26,6 +26,9 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "print.h"
 #include <time.h>
 #include <string.h>

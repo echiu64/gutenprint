@@ -57,6 +57,9 @@
  * 1) No pass starts (logically) at a later row than an earlier pass.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>

@@ -110,16 +110,16 @@ man_MANS = escputil.1
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
 		if test -f $$p; then \
-			echo $(GIMPTOOL) --install-admin-bin $$p; \
-			$(GIMPTOOL) --install-admin-bin $$p; \
+			echo $(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
+			$(GIMPTOOL) --install-@PLUG_IN_PATH@ $$p; \
 		else :; fi; \
 	done
 
 uninstall-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
 		if test -f "$$p"; then \
-			echo $(GIMPTOOL) --uninstall-admin-bin "$$p"; \
-			$(GIMPTOOL) --uninstall-admin-bin "$$p"; \
+			echo $(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
+			$(GIMPTOOL) --uninstall-@PLUG_IN_PATH@ "$$p"; \
 		else :; fi; \
 	done
 

@@ -26,6 +26,9 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #ifndef WEAVETEST
 #include "print.h"
 #endif

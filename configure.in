@@ -1,20 +1,48 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(print.c)
 AM_INIT_AUTOMAKE(print,4.1.2)
+AM_CONFIG_HEADER(config.h)
 
 dnl Compiler options...
 CFLAGS="${CFLAGS:=}"
 OPTIM=""
 
-AC_ARG_ENABLE(debug, [  --enable-debug        turn on debugging [default=no]],[if eval "test x$enable_debug = xyes"; then
-        OPTIM="-g "
-fi])
+AC_MSG_CHECKING([whether to enable debugging])
+AC_ARG_ENABLE(debug,
+[  --enable-debug          turn on debugging [default=no]],[
+if eval "test x$enable_debug = xyes"; then
+  AC_MSG_RESULT([yes])
+  OPTIM="-g "
+else
+  AC_MSG_RESULT([no])
+fi],[AC_MSG_RESULT([no])])
 
-AC_ARG_ENABLE(gimptest, [  --enable-gimptest        check for the gimp [default=yes]],[if eval "test x$enable_gimptest = xno"; then
-        DISABLE_GIMP="disabled"
-fi])
+AC_MSG_CHECKING([if GIMP checks are enabled])
+AC_ARG_ENABLE(gimptest,
+[  --enable-gimptest       check for the gimp [default=yes]],[
+if eval "test x$enable_gimptest = xno"; then
+  AC_MSG_RESULT([no])
+  DISABLE_GIMP="disabled"
+else
+  AC_MSG_RESULT([yes])
+fi],[AC_MSG_RESULT([yes])])
 
+AC_MSG_CHECKING([if user install is enabled])
+AC_ARG_ENABLE(user-install,
+[  --enable-user-install   install GIMP plugin in home directory [default=no]],[
+if eval "test x$enableval = xyes"; then
+  AC_MSG_RESULT([yes])
+  PLUG_IN_PATH="bin"
+else
+  AC_MSG_RESULT([no])
+  PLUG_IN_PATH="admin-bin"
+fi],[
+AC_MSG_RESULT([no])
+PLUG_IN_PATH="admin-bin"
+])
+ 	
 dnl Checks for programs.
+AC_ISC_POSIX
 AC_PROG_AWK
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -112,6 +140,7 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNC(random, AC_DEFINE(HAVE_RANDOM))
 
 AC_SUBST(GIMP_LIBS)
+AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(RELDATE_DEF)
 AC_SUBST(MAINTAINER_PROGRAMS)
@@ -121,5 +150,8 @@ AC_SUBST(RELDATE)
 AC_OUTPUT([
 Makefile
 escputil.1
-]
-)
+],[
+echo "Finished configuring."
+echo "Type 'make' to build the package"
+echo "then 'make install' to install it."
+])
