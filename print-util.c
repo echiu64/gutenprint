@@ -715,7 +715,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 				   lut->green, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
 	  rgbout[2] = lookup_value(rgbout[2], lut->steps,
-				   lut->green, lut->shiftval,
+				   lut->blue, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
 	  if (ssat > 1.4 &&(rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
 	    {
@@ -841,7 +841,7 @@ gray_to_rgb(unsigned char	*grayin,	/* I - grayscale pixels */
 				   lut->green, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
 	  rgbout[2] = lookup_value(trgb[2], lut->steps,
-				   lut->green, lut->shiftval,
+				   lut->blue, lut->shiftval,
 				   lut->bin_size, lut->bin_shift);
 	  if (vars->saturation != 1.0)
 	    {
@@ -1268,16 +1268,23 @@ compute_lut(size_t steps, vars_t *uv)
 	temp_pixel = 1.0 - pixel;
       else
 	temp_pixel = pixel;
+#if 1
+      if (contrast <= .000001)
+	temp_pixel = .5;
+      else
+	temp_pixel = .5 * pow(2 * temp_pixel, contrast);
+#else
       if (temp_pixel <= .000001 && contrast <= .0001)
 	temp_pixel = .5;
       else
 	temp_pixel = .5 * pow(2 * temp_pixel, contrast * contrast * contrast);
       if (contrast < 1)
 	temp_pixel = 0.5 - ((0.5 - temp_pixel) * contrast);
-      if (pixel > .5)
-	pixel = .5;
-      else if (pixel < 0)
-	pixel = 0;
+#endif
+      if (temp_pixel > .5)
+	temp_pixel = .5;
+      else if (temp_pixel < 0)
+	temp_pixel = 0;
       if (pixel < .5)
 	pixel = temp_pixel;
       else
