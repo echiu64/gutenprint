@@ -926,6 +926,8 @@ void parse_escp2(FILE *fp_r)
                     pstate.monomode=buf[1];
                 }
                 break;
+	      case 's':		/* Set print speed */
+		break;
               case 'S': /* set paper dimensions */
                 break;
 	      case 'D':
