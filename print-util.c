@@ -1298,20 +1298,15 @@ compute_lut(size_t steps, vars_t *uv)
 
       /*
        * Third, fix up cyan, magenta, yellow values
-       *
-       * I don't know how to do this correctly.  I think that what I'll do
-       * is if the correction is less than 1 to multiply it by the
-       * correction; if it's greater than 1, hinge it around 64K.
-       * Doubtless we can do better.  Oh well.
        */
       if (pixel < 0.0)
 	pixel = 0.0;
       else if (pixel > 1.0)
 	pixel = 1.0;
 
-      red_pixel = pow(pixel, 1.0 / cyan);
-      green_pixel = pow(pixel, 1.0 / magenta);
-      blue_pixel = pow(pixel, 1.0 / yellow);
+      red_pixel = 1 - pow(1 - pixel, cyan);
+      green_pixel = 1 - pow(1 - pixel, magenta);
+      blue_pixel = 1 - pow(1 - pixel, yellow);
 
       /*
        * Finally, fix up print gamma and scale
