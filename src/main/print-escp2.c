@@ -65,6 +65,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "fast_360",			9, 1 },
   { "send_zero_advance",       10, 1 },
   { "supports_ink_change",     11, 1 },
+  { "packet_mode",             12, 1 },
 };
 
 typedef struct
@@ -271,6 +272,12 @@ static const stp_parameter_t the_parameters[] =
     "AlternateAlignmentChoices", N_("Alternate Alignment Choices"), N_("Advanced Printer Functionality"),
     N_("Alternate Alignment Choices"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+  },
+  {
+    "SupportsPacketMode", N_("Supports Packet Mode"), N_("Advanced Printer Functionality"),
+    N_("Alternate Alignment Choices"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
   },
   {
@@ -1527,6 +1534,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InkChannels") == 0)
     {
       description->deflt.integer = escp2_physical_channels(v);
+    }
+  else if (strcmp(name, "SupportsPacketMode") == 0)
+    {
+      description->deflt.integer =
+	escp2_has_cap(v, MODEL_PACKET_MODE, MODEL_PACKET_MODE_YES);
     }
   else if (strcmp(name, "PrintingMode") == 0)
     {
