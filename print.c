@@ -574,6 +574,7 @@ run (char   *name,		/* I - Name of print program. */
 	      close (pipefd[0]);
 	      close (pipefd[1]);
 	      execl("/bin/sh", "/bin/sh", "-c", vars.output_to, NULL);
+	      /* NOTREACHED */
 	      exit (1);
 	    } else {
 	      /*
@@ -589,13 +590,25 @@ run (char   *name,		/* I - Name of print program. */
 		  kill (opid, SIGTERM);
 		  waitpid (opid, &dummy, 0);
 		  close (pipefd[1]);
-		  exit (0);
+		  /*
+		   * We do not want to allow cleanup before exiting.
+		   * The exiting parent has already closed the connection
+		   * to the X server; if we try to clean up, we'll notice
+		   * that fact and complain.
+		   */
+		  _exit (0);
 	        }
 	        sleep (5);
 	      }
 	      /* We got SIGUSR1.  */
 	      close (pipefd[1]);
-	      exit (0);
+	      /*
+	       * We do not want to allow cleanup before exiting.
+	       * The exiting parent has already closed the connection
+	       * to the X server; if we try to clean up, we'll notice
+	       * that fact and complain.
+	       */
+	      _exit (0);
 	    }
 	  } else {
 	    close (pipefd[0]);
