@@ -94,9 +94,12 @@ There are four principal ways of requesting support for this package:
 USE OF THE CVS REPOSITORY
 
 If you have a copy of the source from the CVS repository, then prior
-to running configure, you must
+to running configure, you must run
 
-aclocal;autoconf;autoheader;automake
+./autogen.sh
+
+Any options given to autogen.sh will be passed to configure when it is
+automatically run after all the extra files have been created.
 
 If you do run aclocal, beware that versions of the Gimp from 1.1.17
 and earlier have a version of gimp.m4 that will create an incorrect
