@@ -1616,7 +1616,6 @@ const static papersize_t paper_sizes[] =
   { "HalfLetter", 396, 612, PAPERSIZE_ENGLISH },
   { "6x8",      432,  576, PAPERSIZE_ENGLISH },
   { "8x10",     576,  720, PAPERSIZE_ENGLISH },
-  { "8x12",     576,  864, PAPERSIZE_ENGLISH },
   { "Manual",   396,  612, PAPERSIZE_ENGLISH },	/* 5.5in x 8.5in */
   { "12x18",    864, 1296, PAPERSIZE_ENGLISH },
   { "13x19",    936, 1368, PAPERSIZE_ENGLISH },
@@ -1713,10 +1712,10 @@ const static papersize_t paper_sizes[] =
   { "C3",        918, 1298, PAPERSIZE_METRIC },	/*  324mm x  458mm */
   { "C4",        649,  918, PAPERSIZE_METRIC },	/*  229mm x  324mm */
   { "C5",        459,  649, PAPERSIZE_METRIC },	/*  162mm x  229mm */
-  { "B6/C4",     354,  918, PAPERSIZE_METRIC },	/*  125mm x  324mm */
+  { "B6-C4",     354,  918, PAPERSIZE_METRIC },	/*  125mm x  324mm */
   { "C6",        323,  459, PAPERSIZE_METRIC },	/*  114mm x  162mm */
   { "DL",        311,  623, PAPERSIZE_METRIC },	/*  110mm x  220mm */
-  { "C7/6",      229,  459, PAPERSIZE_METRIC },	/*   81mm x  162mm */
+  { "C7-6",      229,  459, PAPERSIZE_METRIC },	/*   81mm x  162mm */
   { "C7",        229,  323, PAPERSIZE_METRIC },	/*   81mm x  114mm */
   { "C8",        161,  229, PAPERSIZE_METRIC },	/*   57mm x   81mm */
   { "C9",        113,  161, PAPERSIZE_METRIC },	/*   40mm x   57mm */

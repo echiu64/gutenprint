@@ -473,6 +473,21 @@ write_ppd(const printer_t *p,		/* I - Printer driver */
   gzputs(fp, "*CloseUI: *ColorModel\n");
 
  /*
+  * Image types...
+  */
+
+  gzputs(fp, "*OpenUI *ImageType/Image Type: PickOne\n");
+  gzputs(fp, "*OrderDependency: 10 AnySetup *ImageType\n");
+  gzputs(fp, "*DefaultImageType: Continuous\n");
+
+  gzprintf(fp, "*ImageType LineArt/Line Art:\t\"<</cupsRowCount 0>>setpagedevice\"\n");
+  gzprintf(fp, "*ImageType SolidTone/Solid Tone:\t\"<</cupsRowCount 1>>setpagedevice\"\n");
+  gzprintf(fp, "*ImageType Continuous/Photograph:\t\"<</cupsRowCount 2>>setpagedevice\"\n");
+  gzprintf(fp, "*ImageType Monochrome/Monochrome:\t\"<</cupsRowCount 3>>setpagedevice\"\n");
+
+  gzputs(fp, "*CloseUI: *ImageType\n");
+
+ /*
   * Media types...
   */
 
