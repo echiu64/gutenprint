@@ -96,7 +96,7 @@ for (keys(%stpdata)) {
 }
 
 if ($missing_drivers) {
-   warn "Cannot continue\n";
+   die "Cannot continue\n";
 }
 
 # Figure out version etc
