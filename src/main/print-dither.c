@@ -2771,7 +2771,6 @@ stp_dither_cmy_et(const unsigned short  *cmy,
 
 	base = CHANNEL(d, i).b;
 	value = ndither[i] + base;
-	if (i != ECOLOR_K) value += CHANNEL(d, ECOLOR_K).v;
 	if (value < 0) value = 0;				/* Dither can make this value negative */
 	
         find_segment(d, &CHANNEL(d, i), p->maxdot_wet - p->wetness, value, &p->dr);
