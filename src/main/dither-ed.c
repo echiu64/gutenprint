@@ -290,6 +290,8 @@ print_color(const stpi_dither_t *d, stpi_dither_channel_t *dc, int x, int y,
 	    }
 	} /* randomizer != 0 */
 
+      vmatrix *= dc->density_adjustment;
+
       /*
        * After all that, printing is almost an afterthought.
        * Pick the actual dot size (using a matrix here) and print it.
@@ -465,7 +467,7 @@ stpi_dither_ed(stp_vars_t v,
 	}
       QUANT(12);
       ADVANCE_BIDIRECTIONAL(d, bit, raw, direction, CHANNEL_COUNT(d), xerror,
-			    xstep, xmod, error, CHANNEL_COUNT(d), d->error_rows);
+			    xstep, xmod, error, d->error_rows);
       QUANT(13);
     }
   shared_ed_deinitializer(d, error, ndither);

@@ -132,7 +132,7 @@ value_freefunc(stpi_list_item_t *item)
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
     case STP_PARAMETER_TYPE_RAW:
-      stpi_free(v->value.rval.data);
+      stpi_free((char *) v->value.rval.data);
       break;
     case STP_PARAMETER_TYPE_CURVE:
       stp_curve_free(v->value.cval);
@@ -177,7 +177,8 @@ value_copy(const stpi_list_item_t *item)
     case STP_PARAMETER_TYPE_RAW:
       ret->value.rval.bytes = v->value.rval.bytes;
       ret->value.rval.data = stpi_malloc(ret->value.rval.bytes + 1);
-      memcpy(ret->value.rval.data, v->value.rval.data, v->value.rval.bytes);
+      memcpy((char *) ret->value.rval.data, v->value.rval.data,
+	     v->value.rval.bytes);
       ((char *) (ret->value.rval.data))[v->value.rval.bytes] = '\0';
       break;
     case STP_PARAMETER_TYPE_INT:
@@ -451,7 +452,7 @@ set_default_raw_parameter(stpi_list_t *list, const char *parameter,
       val->active = STP_PARAMETER_DEFAULTED;
       stpi_list_item_create(list, NULL, val);
       val->value.rval.data = stpi_malloc(bytes + 1);
-      memcpy(val->value.rval.data, value, bytes);
+      memcpy((char *) val->value.rval.data, value, bytes);
       ((char *) val->value.rval.data)[bytes] = '\0';
       val->value.rval.bytes = bytes;
     }
@@ -470,7 +471,7 @@ set_raw_parameter(stpi_list_t *list, const char *parameter, const char *value,
 	  val = (value_t *) stpi_list_item_get_data(item);
 	  if (val->active == STP_PARAMETER_DEFAULTED)
 	    val->active = STP_PARAMETER_ACTIVE;
-	  stpi_free(val->value.rval.data);
+	  stpi_free((char *) val->value.rval.data);
 	}
       else
 	{
@@ -481,7 +482,7 @@ set_raw_parameter(stpi_list_t *list, const char *parameter, const char *value,
 	  stpi_list_item_create(list, NULL, val);
 	}
       val->value.rval.data = stpi_malloc(bytes + 1);
-      memcpy(val->value.rval.data, value, bytes);
+      memcpy((char *) val->value.rval.data, value, bytes);
       ((char *) val->value.rval.data)[bytes] = '\0';
       val->value.rval.bytes = bytes;
     }

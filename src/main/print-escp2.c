@@ -411,7 +411,7 @@ DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
 DEF_COMPOSITE_ACCESSOR(paperlist, const paperlist_t *)
-DEF_COMPOSITE_ACCESSOR(reslist, const res_t *)
+DEF_COMPOSITE_ACCESSOR(reslist, const res_t *const *)
 DEF_COMPOSITE_ACCESSOR(inklist, const inklist_t *)
 DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 
@@ -472,6 +472,31 @@ escp2_inks(stp_const_vars_t v, int resid, int inkset)
   return (*inks)[inkset][resid];
 }
 
+static int
+compute_resid(const res_t *res)
+{
+  static int resolutions[RES_N] =
+    {
+      0,
+      360 * 360,
+      720 * 360,
+      720 * 720,
+      1440 * 720,
+      1440 * 1440,
+      2880 * 1440,
+      2880 * 2880,
+    };
+  int total_resolution = res->hres * res->vres;
+  int i;
+  for (i = 0; i < RES_N; i++)
+    {
+      if (total_resolution < resolutions[i])
+	return i - 1;
+    }
+  return RES_N - 1;
+}
+      
+
 static const input_slot_t *
 get_input_slot(stp_vars_t v)
 {
@@ -517,7 +542,8 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
   int nozzle_width =
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
   int nozzles = escp2_nozzles(v);
-  if (escp2_ink_type(v, res->resid) != -1 &&
+  int resid = compute_resid(res);
+  if (escp2_ink_type(v, resid) != -1 &&
       res->vres <= escp2_max_vres(v) &&
       res->hres <= escp2_max_hres(v) &&
       res->vres >= escp2_min_vres(v) &&
@@ -526,13 +552,12 @@ verify_resolution(stp_const_vars_t v, const res_t *res)
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi = escp2_base_res(v, res->resid);
+      int physical_xdpi = escp2_base_res(v, resid);
       int horizontal_passes, oversample;
       if (physical_xdpi > xdpi)
 	physical_xdpi = xdpi;
       horizontal_passes = xdpi / physical_xdpi;
-      oversample = horizontal_passes * res->vertical_passes
-	* res->vertical_oversample;
+      oversample = horizontal_passes * res->vertical_passes;
       if (horizontal_passes < 1)
 	horizontal_passes = 1;
       if (oversample < 1)
@@ -587,7 +612,8 @@ get_default_inktype(stp_vars_t v)
     {
       const res_t *res =
 	escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution"));
-      if (res->vres == 360 && res->hres == escp2_base_res(v, res->resid))
+      int resid = compute_resid(res);
+      if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
 	{
 	  int i;
 	  for (i = 0; i < ink_list->n_inks; i++)
@@ -680,19 +706,20 @@ escp2_parameters(stp_const_vars_t v, const char *name,
     }
   else if (strcmp(name, "Resolution") == 0)
     {
-      const res_t *res = escp2_reslist(v);
+      const res_t *const *res = escp2_reslist(v);
       description->bounds.str = stp_string_list_create();
-      while (res->hres)
+      i = 0;
+      while (res[i])
 	{
-	  if (verify_resolution(v, res))
+	  if (verify_resolution(v, res[i]))
 	    {
 	      stp_string_list_add_string(description->bounds.str,
-					 res->name, _(res->text));
-	      if (res->vres >= 360 && res->hres >= 360 &&
+					 res[i]->name, _(res[i]->text));
+	      if (res[i]->vres >= 360 && res[i]->hres >= 360 &&
 		  description->deflt.str == NULL)
-		description->deflt.str = res->name;
+		description->deflt.str = res[i]->name;
 	    }
-	  res++;
+	  i++;
 	}
     }
   else if (strcmp(name, "InkType") == 0)
@@ -820,16 +847,19 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 static const res_t *
 escp2_find_resolution(stp_const_vars_t v, const char *resolution)
 {
-  const res_t *res;
+  const res_t *const *res = escp2_reslist(v);
+  int i = 0;
   if (!resolution || !strcmp(resolution, ""))
     return NULL;
-  for (res = escp2_reslist(v);;res++)
+  while (res[i])
     {
-      if (!strcmp(resolution, res->name))
-	return res;
-      else if (!strcmp(res->name, ""))
+      if (!strcmp(resolution, res[i]->name))
+	return res[i];
+      else if (!strcmp(res[i]->name, ""))
 	return NULL;
+      i++;
     }
+  return NULL;
 }
 
 static void
@@ -919,19 +949,19 @@ static void
 escp2_describe_resolution(stp_const_vars_t v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const res_t *res;
-  res = escp2_reslist(v);
+  const res_t *const *res = escp2_reslist(v);
+  int i = 0;
 
-  while (res->hres)
+  while (res[i])
     {
-      if (resolution && strcmp(resolution, res->name) == 0 &&
-	  verify_resolution(v, res))
+      if (resolution && strcmp(resolution, res[i]->name) == 0 &&
+	  verify_resolution(v, res[i]))
 	{
-	  *x = res->hres;
-	  *y = res->vres;
+	  *x = res[i]->hres;
+	  *y = res[i]->vres;
 	  return;
 	}
-      res++;
+      i++;
     }
   *x = -1;
   *y = -1;
@@ -985,15 +1015,16 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const paper_t *pt = pd->paper_type;
   double paper_density = .8;
+  int o_resid = compute_resid(pd->res);
 
   if (pt)
     paper_density = pt->base_density;
 
   if (pd->rescale_density)
     stp_scale_float_parameter
-      (v, "Density", paper_density * escp2_density(v, pd->res->resid));
-  pd->drop_size = escp2_ink_type(v, pd->res->resid);
-  pd->ink_resid = pd->res->resid;
+      (v, "Density", paper_density * escp2_density(v, o_resid));
+  pd->drop_size = escp2_ink_type(v, o_resid);
+  pd->ink_resid = o_resid;
 
   /*
    * If density is greater than 1, try to find the dot size from a lower
@@ -1014,7 +1045,7 @@ adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
       else
 	{
 	  double density = stp_get_float_parameter(v, "Density");
-	  int resid = pd->res->resid;
+	  int resid = o_resid;
 	  int xresid = resid;
 	  double xdensity = density;
 	  while (density > 1.0 && resid >= RES_360)
@@ -1161,7 +1192,7 @@ static const escp2_inkname_t default_black_ink =
 {
   NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, NULL,
   {
-    &default_black_channels, NULL, NULL, NULL
+    &default_black_channels
   }
 };
 
@@ -1213,8 +1244,10 @@ setup_inks(stp_vars_t v)
 	    {
 	      const char *param = channel->subchannels[0].channel_density;
 	      double userval = get_double_param(v, param);
-	      stpi_dither_set_inks(v, i, ink->numshades, ink->shades,
-				   ink->darkness * paper_k_upper * userval);
+	      stpi_dither_set_inks(v, i,
+				   ink->darkness * paper_k_upper * userval,
+				   ink->numshades, ink->shades,
+				   ink->numdotsizes, ink->dotsizes);
 	      for (j = 0; j < channel->n_subchannels; j++)
 		{
 		  const char *subparam =
@@ -1313,18 +1346,70 @@ allocate_channels(stp_vars_t v, int line_length)
     }
 }
 
+static unsigned
+gcd(unsigned a, unsigned b)
+{
+  unsigned tmp;
+  if (b > a)
+    {
+      tmp = a;
+      a = b;
+      b = tmp;
+    }
+  while (1)
+    {
+      tmp = a % b;
+      if (tmp == 0)
+	return b;
+      a = b;
+      b = tmp;
+    }
+}
+
+static unsigned
+lcm(unsigned a, unsigned b)
+{
+  if (a == b)
+    return a;
+  else
+    return a * b / gcd(a, b);
+}
+
+static int
+adjusted_vertical_resolution(const res_t *res)
+{
+  if (res->vres >= 720)
+    return res->vres;
+  else if (res->hres >= 720)	/* Special case 720x360 */
+    return 720;
+  else if (res->vres % 90 == 0)
+    return res->vres;
+  else
+    return lcm(res->hres, res->vres);
+}
+
+static int
+adjusted_horizontal_resolution(const res_t *res)
+{
+  if (res->vres % 90 == 0)
+    return res->hres;
+  else
+    return lcm(res->hres, res->vres);
+}
+
 static void
 setup_resolution(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int vertical;
-  int horizontal;
-  pd->res =
+  const res_t *res =
     escp2_find_resolution(v, stp_get_string_parameter(v, "Resolution"));
-  vertical = pd->res->vres * pd->res->vertical_undersample;
-  horizontal = pd->res->hres * pd->res->vertical_denominator;
+  int resid = compute_resid(res);
 
-  pd->physical_xdpi = escp2_base_res(v, pd->res->resid);
+  int vertical = adjusted_vertical_resolution(res);
+  int horizontal = adjusted_horizontal_resolution(res);
+
+  pd->res = res;
+  pd->physical_xdpi = escp2_base_res(v, resid);
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
 
@@ -1345,7 +1430,7 @@ setup_resolution(stp_vars_t v)
     }
   pd->vertical_units = vertical;
   pd->page_management_units = vertical;
-  pd->printing_resolution = escp2_base_res(v, pd->res->resid);
+  pd->printing_resolution = escp2_base_res(v, resid);
 }  
 
 static void
@@ -1386,7 +1471,8 @@ static void
 setup_microweave_parameters(stp_vars_t v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  pd->horizontal_passes = pd->res->hres / escp2_base_res(v, pd->res->resid);
+  pd->horizontal_passes =
+    pd->res->hres / escp2_base_res(v, compute_resid(pd->res));
   pd->nozzles = 1;
   pd->nozzle_separation = 1;
   pd->min_nozzles = 1;
@@ -1456,7 +1542,7 @@ setup_head_parameters(stp_vars_t v)
       escp2_base_separation(v);
 
   pd->printing_initial_vertical_offset = 0;
-  pd->bitwidth = escp2_bits(v, pd->res->resid);
+  pd->bitwidth = escp2_bits(v, compute_resid(pd->res));
 }
 
 static void
@@ -1557,7 +1643,7 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
      pd->nozzle_separation * pd->res->vres / escp2_base_separation(v),
      pd->horizontal_passes,
      pd->res->vertical_passes,
-     pd->res->vertical_oversample,
+     1, 
      pd->channels_in_use,
      pd->bitwidth,
      pd->image_scaled_width,

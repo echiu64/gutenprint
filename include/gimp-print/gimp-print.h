@@ -283,7 +283,7 @@ typedef const void *stp_const_string_list_t;
 typedef struct
 {
   size_t bytes;
-  void *data;
+  const void *data;
 } stp_raw_t;
 
 typedef struct

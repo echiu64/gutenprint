@@ -125,9 +125,6 @@ print_debug_params(stp_vars_t v)
   print_remote_int_param(v, "Nozzle_separation", pd->nozzle_separation);
   print_remote_int_param(v, "Horizontal_passes", pd->horizontal_passes);
   print_remote_int_param(v, "Vertical_passes", pd->res->vertical_passes);
-  print_remote_int_param(v, "Vertical_oversample", pd->res->vertical_oversample);
-  print_remote_int_param(v, "Vertical_undersample", pd->res->vertical_undersample);
-  print_remote_int_param(v, "Vertical_denominator", pd->res->vertical_denominator);
   print_remote_int_param(v, "Physical_xdpi", pd->physical_xdpi);
   print_remote_int_param(v, "Page_management_units", pd->page_management_units);
   print_remote_int_param(v, "Vertical_units", pd->vertical_units);
@@ -419,7 +416,7 @@ set_vertical_position(stp_vars_t v, stpi_pass_t *pass)
   escp2_privdata_t *pd = get_privdata(v);
   int advance = pass->logicalpassstart - pd->last_pass_offset -
     (pd->separation_rows - 1);
-  advance *= pd->res->vertical_undersample;
+  advance = advance * pd->vertical_units / pd->res->vres;
   if (pass->logicalpassstart > pd->last_pass_offset ||
       pd->printing_initial_vertical_offset != 0)
     {

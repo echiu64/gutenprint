@@ -597,25 +597,23 @@ const t *								     \
 stp_sequence_get_##name##_data(stp_const_sequence_t sequence, size_t *count) \
 {									     \
   int i;								     \
-  const stpi_internal_sequence_t *iseq =				     \
-    (const stpi_internal_sequence_t *) sequence;			     \
+  stpi_internal_sequence_t *iseq = (stpi_internal_sequence_t *) sequence;    \
   check_sequence(iseq);							     \
   if (iseq->blo < (double) lb || iseq->bhi > (double) ub)		     \
     return NULL;							     \
   if (!iseq->name##_data)						     \
     {									     \
-      ((stpi_internal_sequence_t *)iseq)->name##_data =			     \
-	stpi_zalloc(sizeof(t) * iseq->size);				     \
+      (iseq)->name##_data = stpi_zalloc(sizeof(t) * iseq->size);	     \
       for (i = 0; i < iseq->size; i++)					     \
         {								     \
 	  double val;							     \
 	  if ((stp_sequence_get_point(sequence, i, &val)) == 0)		     \
 	    {								     \
-	      stpi_free(((stpi_internal_sequence_t *)iseq)->name##_data);    \
-	      ((stpi_internal_sequence_t *)iseq)->name##_data = NULL;	     \
+	      stpi_free(iseq->name##_data);				     \
+	      iseq->name##_data = NULL;					     \
 	      return NULL;						     \
 	    }								     \
-	  ((stpi_internal_sequence_t *)iseq)->name##_data[i] = (t) val;	     \
+	  iseq->name##_data[i] = (t) val;				     \
         }								     \
     }									     \
   *count = iseq->size;							     \

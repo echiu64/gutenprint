@@ -272,18 +272,18 @@ do									\
     }									\
 } while (0)
 
-#define ADVANCE_BIDIRECTIONAL(d,bit,in,dir,width,xer,xstep,xmod,err,N,S) \
-do									 \
-{									 \
-  int ii;								 \
-  int jj;								 \
-  for (ii = 0; ii < N; ii++)						 \
-    for (jj = 0; jj < S; jj++)						 \
-      err[ii][jj] += dir;						 \
-  if (dir == 1)								 \
-    ADVANCE_UNIDIRECTIONAL(d, bit, in, width, xer, xstep, xmod);	 \
-  else									 \
-    ADVANCE_REVERSE(d, bit, in, width, xer, xstep, xmod);		 \
+#define ADVANCE_BIDIRECTIONAL(d,bit,in,dir,width,xer,xstep,xmod,err,S)	\
+do									\
+{									\
+  int ii;								\
+  int jj;								\
+  for (ii = 0; ii < width; ii++)					\
+    for (jj = 0; jj < S; jj++)						\
+      err[ii][jj] += dir;						\
+  if (dir == 1)								\
+    ADVANCE_UNIDIRECTIONAL(d, bit, in, width, xer, xstep, xmod);	\
+  else									\
+    ADVANCE_REVERSE(d, bit, in, width, xer, xstep, xmod);		\
 } while (0)
 
 #ifdef __cplusplus

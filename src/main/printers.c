@@ -547,7 +547,7 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 }
 
 int
-stpi_verify_printer_params(stp_const_vars_t v)
+stpi_verify_printer_params(stp_vars_t v)
 {
   errbuf_t errbuf;
   stp_outfunc_t ofunc = stp_get_errfunc(v);

@@ -29,383 +29,421 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "print-escp2.h"
 
-const res_t stpi_escp2_720dpi_reslist[] =
+static const res_t r_360x90dpi =
+{ "360x90dpi",     N_("360 x 90 DPI Fast Economy"),
+  360,  90,   0, 0, 1 };
+static const res_t r_360x90sw =
+{ "360x90sw",      N_("360 x 90 DPI Fast Economy"),
+  360,  90,   1, 0, 1 };
+
+static const res_t r_360x120dpi =
+{ "360x120dpi",    N_("360 x 120 DPI Economy"),
+  360,  120,  0, 0, 1 };
+static const res_t r_360x120sw =
+{ "360x120sw",     N_("360 x 120 DPI Economy"),
+  360,  120,  1, 0, 1 };
+
+static const res_t r_180dpi =
+{ "180dpi",        N_("180 DPI Economy"),
+  180,  180,  0, 0, 1 };
+static const res_t r_180sw =
+{ "180sw",         N_("180 DPI Economy"),
+  180,  180,  1, 0, 1 };
+
+static const res_t r_360x180dpi =
+{ "360x180dpi",    N_("360 x 180 DPI Draft"),
+  360,  180,  0, 0, 1 };
+static const res_t r_360x180sw =
+{ "360x180sw",     N_("360 x 180 DPI Draft"),
+  360,  180,  1, 0, 1 };
+
+static const res_t r_360x240dpi =
+{ "360x240dpi",    N_("360 x 240 DPI Draft"),
+  360,  240,  0, 0, 1 };
+static const res_t r_360x240sw =
+{ "360x240sw",     N_("360 x 240 DPI Draft"),
+  360,  240,  1, 0, 1 };
+
+static const res_t r_360mw =
+{ "360mw",         N_("360 DPI Microweave"),
+  360,  360,  0, 1, 1 };
+static const res_t r_360dpi =
+{ "360dpi",        N_("360 DPI"),
+  360,  360,  0, 0, 1 };
+static const res_t r_360sw =
+{ "360sw",         N_("360 DPI"),
+  360,  360,  1, 0, 1 };
+
+static const res_t r_720x360sw =
+{ "720x360sw",     N_("720 x 360 DPI"),
+  720,  360,  1, 0, 1 };
+
+static const res_t r_720mw =
+{ "720mw",         N_("720 DPI Microweave"),
+  720,  720,  0, 1, 1 };
+static const res_t r_720sw =
+{ "720sw",         N_("720 DPI"),
+  720,  720,  1, 0, 1 };
+static const res_t r_720hq =
+{ "720hq",         N_("720 DPI High Quality"),
+  720,  720,  1, 0, 2 };
+static const res_t r_720hq2 =
+{ "720hq2",        N_("720 DPI Highest Quality"),
+  720,  720,  1, 0, 4 };
+
+static const res_t r_1440x720sw =
+{ "1440x720sw",    N_("1440 x 720 DPI"),
+  1440, 720,  1, 0, 1 };
+static const res_t r_1440x720hq2 =
+{ "1440x720hq2",   N_("1440 x 720 DPI Highest Quality"),
+  1440, 720,  1, 0, 2 };
+
+static const res_t r_2880x720sw =
+{ "2880x720sw",    N_("2880 x 720 DPI"),
+  2880, 720,  1, 0, 1};
+
+static const res_t r_1440x1440sw =
+{ "1440x1440sw",   N_("1440 x 1440 DPI"),
+  1440, 1440, 1, 0, 1};
+
+static const res_t r_2880x1440sw =
+{ "2880x1440sw",   N_("2880 x 1440 DPI"),
+  2880, 1440, 1, 0, 1};
+
+static const res_t r_2880x2880sw =
+{ "2880x1440sw",   N_("2880 x 1440 DPI"),
+  2880, 2880, 1, 0, 1};
+
+
+
+const res_t *const stpi_escp2_720dpi_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "360x120dpi",       N_("360 x 120 DPI Economy Draft"),
-    360,  120,  0,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120dpi,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x240dpi",       N_("360 x 240 DPI Draft"),
-    360,  240,  0,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240dpi,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720mw",            N_("720 DPI Microweave"),
-    720,  720,  0,  1, 1, 1, 1, 1, RES_720 },
+  &r_720mw,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_1440dpi_reslist[] =
+const res_t *const stpi_escp2_1440dpi_reslist[] =
 {
-  { "360x90sw",         N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90sw,
 
-  { "360x120sw",        N_("360 x 120 DPI Economy Draft"),
-    360,  120,  1,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120sw,
 
-  { "180sw",            N_("180 DPI Economy Draft"),
-    180,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180sw,
 
-  { "360x240sw",        N_("360 x 240 DPI Draft"),
-    360,  240,  1,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240sw,
 
-  { "360x180sw",        N_("360 x 180 DPI Draft"),
-    360,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180sw,
 
-  { "360sw",            N_("360 DPI"),
-    360,  360,  1,  0, 1, 1, 1, 1, RES_360 },
+  &r_360sw,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
+  &r_720sw,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
-    1440, 720,  1,  0, 2, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
+  &r_1440x720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_standard_reslist[] =
+const res_t *const stpi_escp2_standard_reslist[] =
 {
-  { "360x90sw",         N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90sw,
 
-  { "360x120sw",        N_("360 x 120 DPI Economy Draft"),
-    360,  120,  1,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120sw,
 
-  { "180sw",            N_("180 DPI Economy Draft"),
-    180,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180sw,
 
-  { "360x240sw",        N_("360 x 240 DPI Draft"),
-    360,  240,  1,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240sw,
 
-  { "360x180sw",        N_("360 x 180 DPI Draft"),
-    360,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180sw,
 
-  { "360sw",            N_("360 DPI"),
-    360,  360,  1,  0, 1, 1, 1, 1, RES_360 },
+  &r_360sw,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
+  &r_720sw,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
 
-  { "2880x720sw",       N_("2880 x 720 DPI"),
-    2880, 720,  1,  0, 1, 1, 1, 1, RES_2880_720},
+  &r_2880x720sw,
 
-  { "1440x1440sw",      N_("1440 x 1440 DPI"),
-    1440, 1440, 1,  0, 1, 1, 1, 1, RES_2880_720},
+  &r_1440x1440sw,
 
-  { "2880x1440sw",      N_("2880 x 1440 DPI"),
-    2880, 1440, 1,  0, 1, 1, 1, 1, RES_2880_1440},
+  &r_2880x1440sw,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_g3_reslist[] =
+const res_t *const stpi_escp2_g3_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "360x120dpi",       N_("360 x 120 DPI Economy Draft"),
-    360,  120,  0,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120dpi,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x240dpi",       N_("360 x 240 DPI Draft"),
-    360,  240,  0,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240dpi,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
-  { "720hq",            N_("720 DPI High Quality"),
-    720,  720,  1,  0, 2, 1, 1, 1, RES_720 },
+  &r_720sw,
+  &r_720hq,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
-    1440, 720,  1,  0, 2, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
+  &r_1440x720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_superfine_reslist[] =
+const res_t *const stpi_escp2_superfine_reslist[] =
 {
-  { "360x180sw",        N_("360 x 180 DPI Draft"),
-    360,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180sw,
 
-  { "360sw",            N_("360 DPI"),
-    360,  360,  1,  0, 1, 1, 1, 1, RES_360 },
+  &r_360sw,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
+  &r_720sw,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
 
-  { "2880x1440sw",      N_("2880 x 1440 DPI"),
-    2880, 1440, 1,  0, 1, 1, 1, 1, RES_2880_1440},
+  &r_2880x1440sw,
 
-  { "2880x2880sw",      N_("2880 x 2880 DPI"),
-    2880, 2880, 1,  0, 1, 1, 1, 1, RES_2880_2880},
+  &r_2880x2880sw,
 
-  { "", "", 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_720dpi_soft_reslist[] =
+const res_t *const stpi_escp2_720dpi_soft_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "360x120sw",        N_("360 x 120 DPI Economy Draft"),
-    360,  120,  0,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120sw,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x240sw",        N_("360 x 240 DPI Draft"),
-    360,  240,  0,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240sw,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
-  { "720hq",            N_("720 DPI High Quality"),
-    720,  720,  1,  0, 2, 1, 1, 1, RES_720 },
-  { "720hq2",           N_("720 DPI Highest Quality"),
-    720,  720,  1,  0, 4, 1, 1, 1, RES_720 },
+  &r_720sw,
+  &r_720hq,
+  &r_720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_sc500_reslist[] =
+const res_t *const stpi_escp2_sc500_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "360x120dpi",       N_("360 x 120 DPI Economy Draft"),
-    360,  120,  0,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120dpi,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x240dpi",       N_("360 x 240 DPI Draft"),
-    360,  240,  0,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240dpi,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720mw",            N_("720 DPI Microweave"),
-    720,  720,  0,  1, 1, 1, 1, 1, RES_720 },
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
-  { "720hq",            N_("720 DPI High Quality"),
-    720,  720,  1,  0, 2, 1, 1, 1, RES_720 },
-  { "720hq2",           N_("720 DPI Highest Quality"),
-    720,  720,  1,  0, 4, 1, 1, 1, RES_720 },
+  &r_720mw,
+  &r_720sw,
+  &r_720hq,
+  &r_720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_sc640_reslist[] =
+const res_t *const stpi_escp2_sc640_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720mw",            N_("720 DPI Microweave"),
-    720,  720,  0,  1, 1, 1, 1, 1, RES_720 },
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
+  &r_720mw,
+  &r_720sw,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
-    1440, 720,  1,  0, 2, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
+  &r_1440x720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_sc660_reslist[] =
+const res_t *const stpi_escp2_sc660_reslist[] =
 {
-  { "360x90sw",         N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90sw,
 
-  { "180sw",            N_("180 DPI Economy Draft"),
-    180,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180sw,
 
-  { "360x180sw",        N_("360 x 180 DPI Draft"),
-    360,  180,  1,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180sw,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
 
-  { "720x360sw",        N_("720 x 360 DPI"),
-    720,  360,  1,  0, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360sw,
 
-  { "720sw",            N_("720 DPI"),
-    720,  720,  1,  0, 1, 1, 1, 1, RES_720 },
+  &r_720sw,
 
-  { "1440x720sw",       N_("1440 x 720 DPI"),
-    1440, 720,  1,  0, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720hq2",      N_("1440 x 720 DPI Highest Quality"),
-    1440, 720,  1,  0, 2, 1, 1, 1, RES_1440_720 },
+  &r_1440x720sw,
+  &r_1440x720hq2,
 
-  { "", "", 0, 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };
 
-const res_t stpi_escp2_pro_reslist[] =
+static const res_t r_360fol =
+{ "360fol",        N_("360 DPI Full Overlap"),
+  360,  360,  0, 2, 1 };
+static const res_t r_360fol2 =
+{ "360fol2",       N_("360 DPI FOL2"),
+  360,  360,  0, 4, 1 };
+static const res_t r_360mw2 =
+{ "360mw2",        N_("360 DPI MW2"),
+  360,  360,  0, 5, 1 };
+
+static const res_t r_720x360dpi =
+{ "720x360dpi",    N_("720 x 360 DPI"),
+  720,  360,  0, 0, 1 };
+static const res_t r_720x360mw =
+{ "720x360mw",     N_("720 x 360 DPI Microweave"),
+  720,  360,  0, 1, 1 };
+static const res_t r_720x360fol =
+{ "720x360fol",    N_("720 x 360 DPI FOL"),
+  720,  360,  0, 2, 1 };
+static const res_t r_720x360fol2 =
+{ "720x360fol2",   N_("720 x 360 DPI FOL2"),
+  720,  360,  0, 4, 1 };
+static const res_t r_720x360mw2 =
+{ "720x360mw2",    N_("720 x 360 DPI MW2"),
+  720,  360,  0, 5, 1 };
+
+static const res_t r_720fol =
+{ "720fol",        N_("720 DPI Full Overlap"),
+  720,  720,  0, 2, 1 };
+static const res_t r_720fourp =
+{ "720fourp",      N_("720 DPI Four Pass"),
+  720,  720,  0, 3, 1 };
+
+static const res_t r_1440x720mw =
+{ "1440x720mw",    N_("1440 x 720 DPI Microweave"),
+  1440, 720,  0, 1, 1 };
+static const res_t r_1440x720fol =
+{ "1440x720fol",   N_("1440 x 720 DPI FOL"),
+  1440, 720,  0, 2, 1 };
+static const res_t r_1440x720fourp =
+{ "1440x720fourp", N_("1440 x 720 DPI Four Pass"),
+  1440, 720,  0, 3, 1 };
+
+static const res_t r_2880x720mw =
+{ "2880x720mw",    N_("2880 x 720 DPI Microweave"),
+  2880, 720,  0, 1, 1 };
+static const res_t r_2880x720fol =
+{ "2880x720fol",   N_("2880 x 720 DPI FOL"),
+  2880, 720,  0, 2, 1 };
+static const res_t r_2880x720fourp =
+{ "2880x720fourp", N_("2880 x 720 DPI Four Pass"),
+  2880, 720,  0, 3, 1 };
+
+static const res_t r_1440x1440mw =
+{ "1440x1440mw",    N_("1440 x 1440 DPI Microweave"),
+  1440, 1440, 0, 1, 1 };
+static const res_t r_1440x1440fol =
+{ "1440x1440fol",   N_("1440 x 1440 DPI FOL"),
+  1440, 1440, 0, 2, 1 };
+static const res_t r_1440x1440fourp =
+{ "1440x1440fourp", N_("1440 x 1440 DPI Four Pass"),
+  1440, 1440, 0, 3, 1 };
+
+static const res_t r_2880x1440mw =
+{ "2880x1440mw",    N_("2880 x 1440 DPI Microweave"),
+  2880, 1440, 0, 1, 1 };
+static const res_t r_2880x1440fol =
+{ "2880x1440fol",   N_("2880 x 1440 DPI FOL"),
+  2880, 1440, 0, 2, 1 };
+static const res_t r_2880x1440fourp =
+{ "2880x1440fourp", N_("2880 x 1440 DPI Four Pass"),
+  2880, 1440, 0, 3, 1 };
+
+const res_t *const stpi_escp2_pro_reslist[] =
 {
-  { "360x90dpi",        N_("360 x 90 DPI Fast Economy Draft"),
-    360,  90,   0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x90dpi,
 
-  { "360x120dpi",       N_("360 x 120 DPI Economy Draft"),
-    360,  120,  0,  0, 1, 1, 3, 1, RES_LOW },
+  &r_360x120dpi,
 
-  { "180dpi",           N_("180 DPI Economy Draft"),
-    180,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_180dpi,
 
-  { "360x240dpi",       N_("360 x 240 DPI Draft"),
-    360,  240,  0,  0, 1, 1, 3, 2, RES_LOW },
+  &r_360x240dpi,
 
-  { "360x180dpi",       N_("360 x 180 DPI Draft"),
-    360,  180,  0,  0, 1, 1, 1, 1, RES_LOW },
+  &r_360x180dpi,
 
-  { "360mw",            N_("360 DPI Microweave"),
-    360,  360,  0,  1, 1, 1, 1, 1, RES_360 },
-  { "360dpi",           N_("360 DPI"),
-    360,  360,  0,  0, 1, 1, 1, 1, RES_360 },
-  { "360fol",           N_("360 DPI Full Overlap"),
-    360,  360,  0,  2, 1, 1, 1, 1, RES_360 },
-  { "360fol2",          N_("360 DPI FOL2"),
-    360,  360,  0,  4, 1, 1, 1, 1, RES_360 },
-  { "360mw2",           N_("360 DPI MW2"),
-    360,  360,  0,  5, 1, 1, 1, 1, RES_360 },
+  &r_360mw,
+  &r_360dpi,
+  &r_360fol,
+  &r_360fol2,
+  &r_360mw2,
 
-  { "720x360dpi",       N_("720 x 360 DPI"),
-    720,  360,  0,  0, 1, 1, 2, 1, RES_720_360 },
-  { "720x360mw",        N_("720 x 360 DPI Microweave"),
-    720,  360,  0,  1, 1, 1, 2, 1, RES_720_360 },
-  { "720x360fol",       N_("720 x 360 DPI FOL"),
-    720,  360,  0,  2, 1, 1, 2, 1, RES_720_360 },
-  { "720x360fol2",      N_("720 x 360 DPI FOL2"),
-    720,  360,  0,  4, 1, 1, 2, 1, RES_720_360 },
-  { "720x360mw2",       N_("720 x 360 DPI MW2"),
-    720,  360,  0,  5, 1, 1, 2, 1, RES_720_360 },
+  &r_720x360dpi,
+  &r_720x360mw,
+  &r_720x360fol,
+  &r_720x360fol2,
+  &r_720x360mw2,
 
-  { "720mw",            N_("720 DPI Microweave"),
-    720,  720,  0,  1, 1, 1, 1, 1, RES_720 },
-  { "720fol",           N_("720 DPI Full Overlap"),
-    720,  720,  0,  2, 1, 1, 1, 1, RES_720 },
-  { "720fourp",         N_("720 DPI Four Pass"),
-    720,  720,  0,  3, 1, 1, 1, 1, RES_720 },
+  &r_720mw,
+  &r_720fol,
+  &r_720fourp,
 
-  { "1440x720mw",       N_("1440 x 720 DPI Microweave"),
-    1440, 720,  0,  1, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720fol",      N_("1440 x 720 DPI FOL"),
-    1440, 720,  0,  2, 1, 1, 1, 1, RES_1440_720 },
-  { "1440x720fourp",    N_("1440 x 720 DPI Four Pass"),
-    1440, 720,  0,  3, 1, 1, 1, 1, RES_1440_720 },
+  &r_1440x720mw,
+  &r_1440x720fol,
+  &r_1440x720fourp,
 
-  { "2880x720mw",       N_("2880 x 720 DPI Microweave"),
-    2880, 720,  0,  1, 1, 1, 1, 1, RES_2880_720 },
-  { "2880x720fol",      N_("2880 x 720 DPI FOL"),
-    2880, 720,  0,  2, 1, 1, 1, 1, RES_2880_720 },
-  { "2880x720fourp",    N_("2880 x 720 DPI Four Pass"),
-    2880, 720,  0,  3, 1, 1, 1, 1, RES_2880_720 },
+  &r_2880x720mw,
+  &r_2880x720fol,
+  &r_2880x720fourp,
 
-  { "1440x1440mw",       N_("1440 x 1440 DPI Microweave"),
-    1440, 1440,  0,  1, 1, 1, 1, 1, RES_2880_720 },
-  { "1440x1440fol",      N_("1440 x 1440 DPI FOL"),
-    1440, 1440,  0,  2, 1, 1, 1, 1, RES_2880_720 },
-  { "1440x1440fourp",    N_("1440 x 1440 DPI Four Pass"),
-    1440, 1440,  0,  3, 1, 1, 1, 1, RES_2880_720 },
+  &r_1440x1440mw,
+  &r_1440x1440fol,
+  &r_1440x1440fourp,
 
-  { "2880x1440mw",       N_("2880 x 1440 DPI Microweave"),
-    2880, 1440,  0,  1, 1, 1, 1, 1, RES_2880_1440 },
-  { "2880x1440fol",      N_("2880 x 1440 DPI FOL"),
-    2880, 1440,  0,  2, 1, 1, 1, 1, RES_2880_1440 },
-  { "2880x1440fourp",    N_("2880 x 1440 DPI Four Pass"),
-    2880, 1440,  0,  3, 1, 1, 1, 1, RES_2880_1440 },
+  &r_2880x1440mw,
+  &r_2880x1440fol,
+  &r_2880x1440fourp,
 
-  { "", "", 0, 0, 0, 0, 0, 1, -1 }
+  NULL
 };

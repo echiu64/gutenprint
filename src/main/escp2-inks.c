@@ -41,1137 +41,258 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include "print-escp2.h"
 
-#define DECLARE_INK(name, density)					\
-static const escp2_variable_ink_t name##_ink =				\
-{									\
-  density,								\
-  name##_shades,							\
-  sizeof(name##_shades) / sizeof(stpi_shade_t)				\
+#define DECLARE_INK(name, shades, dotsizes, density)	\
+static const escp2_variable_ink_t name##_ink =		\
+{							\
+  density,						\
+  shades##_shades,					\
+  sizeof(shades##_shades) / sizeof(double),		\
+  dotsizes##_dotsizes,					\
+  sizeof(dotsizes##_dotsizes) / sizeof(double)		\
 }
 
-#define SHADE(density, name)					\
-{  density, sizeof(name)/sizeof(stpi_dotsize_t), name  }
-
-
-#define PIEZO_0  .25
-#define PIEZO_1  .5
-#define PIEZO_2  .75
-#define PIEZO_3 1.0
-
-#define PIEZO_DENSITY 1.0
-
-/***************************************************************\
-*                                                               *
-*                        SINGLE DOT SIZE                        *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t single_dotsize[] =
-{
-  { 0x1, 1.0 }
-};
-
-static const stpi_shade_t standard_shades[] =
-{
-  SHADE(1.0, single_dotsize)
-};
-
-DECLARE_INK(standard, 1.0);
-
-static const stpi_shade_t photo_cyan_shades[] =
-{
-  SHADE(0.27, single_dotsize),
-  SHADE(1.0, single_dotsize)
-};
-
-DECLARE_INK(photo_cyan, 1.0);
-
-static const stpi_shade_t photo_magenta_shades[] =
-{
-  SHADE(0.35, single_dotsize),
-  SHADE(1.0, single_dotsize)
-};
-
-DECLARE_INK(photo_magenta, 1.0);
-
-static const stpi_shade_t photo2_yellow_shades[] =
-{
-  SHADE(0.35, single_dotsize),
-  SHADE(1.0, single_dotsize)
-};
-
-DECLARE_INK(photo2_yellow, 1.0);
-
-static const stpi_shade_t photo2_black_shades[] =
-{
-  SHADE(0.27, single_dotsize),
-  SHADE(1.0, single_dotsize)
-};
-
-DECLARE_INK(photo2_black, 1.0);
-
-static const stpi_shade_t piezo_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, single_dotsize),
-  SHADE(PIEZO_1, single_dotsize),
-  SHADE(PIEZO_2, single_dotsize),
-  SHADE(PIEZO_3, single_dotsize)
-};
-  
-
-DECLARE_INK(piezo_quadtone, PIEZO_DENSITY);
-
-/***************************************************************\
-*                                                               *
-*       LOW RESOLUTION, 4 AND 6 PICOLITRE PRINTERS              *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_multishot_dotsizes[] =
-{
-  { 0x1, 0.28 },
-  { 0x2, 0.58 },
-  { 0x3, 1.0  }
-};
-
-static const stpi_shade_t standard_multishot_shades[] =
-{
-  SHADE(1.0, standard_multishot_dotsizes)
-};
-
-DECLARE_INK(standard_multishot, 1.0);
-
-static const stpi_shade_t photo_multishot_shades[] =
-{
-  SHADE(0.26, standard_multishot_dotsizes),
-  SHADE(1.0, standard_multishot_dotsizes)
-};
-
-DECLARE_INK(photo_multishot, 1.0);
-
-static const stpi_shade_t photo_multishot_y_shades[] =
-{
-  SHADE(0.5, standard_multishot_dotsizes),
-  SHADE(1.0, standard_multishot_dotsizes)
-};
-
-DECLARE_INK(photo_multishot_y, 1.0);
-
-static const stpi_shade_t piezo_multishot_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_multishot_dotsizes),
-  SHADE(PIEZO_1, standard_multishot_dotsizes),
-  SHADE(PIEZO_2, standard_multishot_dotsizes),
-  SHADE(PIEZO_3, standard_multishot_dotsizes)
-};
-
-DECLARE_INK(piezo_multishot_quadtone, PIEZO_DENSITY);
-
-/***************************************************************\
-*                                                               *
-*       4 AND 6 PICOLITRE PRINTERS, 6 PICOLITRE DOTS            *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_6pl_dotsizes[] =
-{
-  { 0x1, 0.25},
-  { 0x2, 0.5 },
-  { 0x3, 1.0 }
-};
-
-static const stpi_dotsize_t standard_6pl_1440_dotsizes[] =
-{
-  { 0x1, 0.5},
-  { 0x2, 1.0}
-};
-
-static const stpi_dotsize_t standard_6pl_2880_dotsizes[] =
-{
-  { 0x1, 1.0}
-};
-
-static const stpi_shade_t standard_6pl_shades[] =
-{
-  SHADE(1.0, standard_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_6pl, 1.0);
-
-static const stpi_shade_t standard_6pl_1440_shades[] =
-{
-  SHADE(1.0, standard_6pl_1440_dotsizes)
-};
-
-DECLARE_INK(standard_6pl_1440, 1.0);
-
-static const stpi_shade_t standard_6pl_2880_shades[] =
-{
-  SHADE(1.0, standard_6pl_2880_dotsizes)
-};
-
-DECLARE_INK(standard_6pl_2880, 1.0);
-
-static const stpi_shade_t photo_6pl_shades[] =
-{
-  SHADE(0.26, standard_6pl_dotsizes),
-  SHADE(1.0, standard_6pl_dotsizes)
-};
-
-DECLARE_INK(photo_6pl, 1.0);
-
-static const stpi_shade_t photo_6pl_y_shades[] =
-{
-  SHADE(0.25, standard_6pl_dotsizes),
-  SHADE(1.0, standard_6pl_dotsizes)
-};
-
-DECLARE_INK(photo_6pl_y, 1.0);
-
-static const stpi_shade_t photo_6pl_1440_shades[] =
-{
-  SHADE(0.26, standard_6pl_1440_dotsizes),
-  SHADE(1.0, standard_6pl_1440_dotsizes)
-};
-
-DECLARE_INK(photo_6pl_1440, 1.0);
-
-static const stpi_shade_t photo_6pl_2880_shades[] =
-{
-  SHADE(0.26, standard_6pl_2880_dotsizes),
-  SHADE(1.0, standard_6pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_6pl_2880, 1.0);
-
-static const stpi_shade_t piezo_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_6pl_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_6pl_1440_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_6pl_1440_dotsizes),
-  SHADE(PIEZO_1, standard_6pl_1440_dotsizes),
-  SHADE(PIEZO_2, standard_6pl_1440_dotsizes),
-  SHADE(PIEZO_3, standard_6pl_1440_dotsizes)
-};
-
-DECLARE_INK(piezo_6pl_1440_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_6pl_2880_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_6pl_2880_dotsizes),
-  SHADE(PIEZO_1, standard_6pl_2880_dotsizes),
-  SHADE(PIEZO_2, standard_6pl_2880_dotsizes),
-  SHADE(PIEZO_3, standard_6pl_2880_dotsizes)
-};
-
-DECLARE_INK(piezo_6pl_2880_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                      STYLUS COLOR 480/580                     *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_x80_multishot_dotsizes[] =
-{
-  { 0x1, 0.163},
-  { 0x2, 0.5  },
-  { 0x3, 1.0  }
-};
-
-static const stpi_dotsize_t standard_x80_6pl_dotsizes[] =
-{
-  { 0x1, 0.325},
-  { 0x2, 0.5  },
-  { 0x3, 1.0  }
-};
-
-static const stpi_dotsize_t standard_x80_1440_6pl_dotsizes[] =
-{
-  { 0x1, 0.65 },
-  { 0x2, 1.0  }
-};
-
-static const stpi_dotsize_t standard_x80_2880_6pl_dotsizes[] =
-{
-  { 0x1, 1.0 }
-};
-
-static const stpi_shade_t standard_x80_multishot_shades[] =
-{
-  SHADE(1.0, standard_x80_multishot_dotsizes)
-};
-
-DECLARE_INK(standard_x80_multishot, 1.0);
-
-static const stpi_shade_t standard_x80_6pl_shades[] =
-{
-  SHADE(1.0, standard_x80_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_x80_6pl, 1.0);
-
-static const stpi_shade_t standard_x80_1440_6pl_shades[] =
-{
-  SHADE(1.0, standard_x80_1440_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_x80_1440_6pl, 1.0);
-
-static const stpi_shade_t standard_x80_2880_6pl_shades[] =
-{
-  SHADE(1.0, standard_x80_2880_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_x80_2880_6pl, 1.0);
-
-static const stpi_shade_t piezo_x80_multishot_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_x80_multishot_dotsizes),
-  SHADE(PIEZO_1, standard_x80_multishot_dotsizes),
-  SHADE(PIEZO_2, standard_x80_multishot_dotsizes),
-  SHADE(PIEZO_3, standard_x80_multishot_dotsizes)
-};
-
-DECLARE_INK(piezo_x80_multishot_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_x80_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_x80_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_x80_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_x80_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_x80_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_x80_6pl_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_x80_1440_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_x80_1440_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_x80_1440_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_x80_1440_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_x80_1440_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_x80_1440_6pl_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_x80_2880_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_x80_2880_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_x80_2880_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_x80_2880_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_x80_2880_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_x80_2880_6pl_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                      STYLUS COLOR 680/777
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_680_multishot_dotsizes[] =
-{
-  { 0x1, 0.375 },
-  { 0x2, 0.75  },
-  { 0x3, 1.0   }
-};
-
-static const stpi_dotsize_t standard_680_6pl_dotsizes[] =
-{
-  { 0x1, 0.50  },
-  { 0x2, 0.66  },
-  { 0x3, 1.0   }
-};
-
-static const stpi_shade_t standard_680_multishot_shades[] =
-{
-  SHADE(1.0, standard_680_multishot_dotsizes)
-};
-
-DECLARE_INK(standard_680_multishot, 1.0);
-
-static const stpi_shade_t standard_680_6pl_shades[] =
-{
-  SHADE(1.0, standard_680_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_680_6pl, 1.0);
-
-static const stpi_shade_t piezo_680_multishot_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_680_multishot_dotsizes),
-  SHADE(PIEZO_1, standard_680_multishot_dotsizes),
-  SHADE(PIEZO_2, standard_680_multishot_dotsizes),
-  SHADE(PIEZO_3, standard_680_multishot_dotsizes)
-};
-
-DECLARE_INK(piezo_680_multishot_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_680_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_680_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_680_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_680_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_680_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_680_6pl_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                   4 PICOLITRE DOTS                            *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_4pl_dotsizes[] =
-{
-  { 0x1, 0.661},
-  { 0x2, 1.0  }
-};
-
-static const stpi_dotsize_t standard_4pl_2880_dotsizes[] =
-{
-  { 0x1, 1.0 }
-};
-
-static const stpi_shade_t standard_4pl_shades[] =
-{
-  SHADE(1.0, standard_4pl_dotsizes)
-};
-
-DECLARE_INK(standard_4pl, 1.0);
-
-static const stpi_shade_t standard_4pl_2880_shades[] =
-{
-  SHADE(1.0, standard_4pl_2880_dotsizes)
-};
-
-DECLARE_INK(standard_4pl_2880, 1.0);
-
-static const stpi_shade_t photo_4pl_shades[] =
-{
-  SHADE(0.26, standard_4pl_dotsizes),
-  SHADE(1.0, standard_4pl_dotsizes)
-};
-
-DECLARE_INK(photo_4pl, 1.0);
-
-static const stpi_shade_t photo_4pl_y_shades[] =
-{
-  SHADE(0.50, standard_4pl_dotsizes),
-  SHADE(1.00, standard_4pl_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_y, 1.0);
-
-static const stpi_shade_t photo_4pl_2880_shades[] =
-{
-  SHADE(0.26, standard_4pl_2880_dotsizes),
-  SHADE(1.00, standard_4pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_2880, 1.0);
-
-static const stpi_shade_t photo_4pl_y_2880_shades[] =
-{
-  SHADE(0.5, standard_4pl_2880_dotsizes),
-  SHADE(1.0, standard_4pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_y_2880, 1.0);
-
-static const stpi_shade_t piezo_4pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_4pl_dotsizes),
-  SHADE(PIEZO_1, standard_4pl_dotsizes),
-  SHADE(PIEZO_2, standard_4pl_dotsizes),
-  SHADE(PIEZO_3, standard_4pl_dotsizes)
-};
-
-DECLARE_INK(piezo_4pl_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_4pl_2880_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_4pl_2880_dotsizes),
-  SHADE(PIEZO_1, standard_4pl_2880_dotsizes),
-  SHADE(PIEZO_2, standard_4pl_2880_dotsizes),
-  SHADE(PIEZO_3, standard_4pl_2880_dotsizes)
-};
-
-DECLARE_INK(piezo_4pl_2880_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                 3 PICOLITRE DOTS (900 AND 980)                *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_3pl_dotsizes[] =
-{
-  { 0x1, 0.25 },
-  { 0x2, 0.61 },
-  { 0x3, 1.0  }
-};
-
-static const stpi_dotsize_t standard_3pl_1440_dotsizes[] =
-{
-  { 0x1, 0.39 },
-  { 0x2, 1.0  }
-};
-
-static const stpi_dotsize_t standard_3pl_2880_dotsizes[] =
-{
-  { 0x1, 1.0 }
-};
-
-static const stpi_dotsize_t standard_980_6pl_dotsizes[] =
-{
-  { 0x1, 0.40  },
-  { 0x2, 0.675 },
-  { 0x3, 1.0   }
-};
-
-static const stpi_shade_t standard_3pl_shades[] =
-{
-  SHADE(1.0, standard_3pl_dotsizes)
-};
-
-DECLARE_INK(standard_3pl, 1.0);
-
-
-static const stpi_shade_t standard_3pl_1440_shades[] =
-{
-  SHADE(1.0, standard_3pl_1440_dotsizes)
-};
-
-DECLARE_INK(standard_3pl_1440, 1.0);
-
-
-static const stpi_shade_t standard_3pl_2880_shades[] =
-{
-  SHADE(1.0, standard_3pl_2880_dotsizes)
-};
-
-DECLARE_INK(standard_3pl_2880, 1.0);
-
-static const stpi_shade_t standard_980_6pl_shades[] =
-{
-  SHADE(1.0, standard_980_6pl_dotsizes)
-};
-
-DECLARE_INK(standard_980_6pl, 1.0);
-
-static const stpi_shade_t piezo_3pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_3pl_dotsizes),
-  SHADE(PIEZO_1, standard_3pl_dotsizes),
-  SHADE(PIEZO_2, standard_3pl_dotsizes),
-  SHADE(PIEZO_3, standard_3pl_dotsizes)
-};
-
-DECLARE_INK(piezo_3pl_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_3pl_1440_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_3pl_1440_dotsizes),
-  SHADE(PIEZO_1, standard_3pl_1440_dotsizes),
-  SHADE(PIEZO_2, standard_3pl_1440_dotsizes),
-  SHADE(PIEZO_3, standard_3pl_1440_dotsizes)
-};
-
-DECLARE_INK(piezo_3pl_1440_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_3pl_2880_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_3pl_2880_dotsizes),
-  SHADE(PIEZO_1, standard_3pl_2880_dotsizes),
-  SHADE(PIEZO_2, standard_3pl_2880_dotsizes),
-  SHADE(PIEZO_3, standard_3pl_2880_dotsizes)
-};
-
-DECLARE_INK(piezo_3pl_2880_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_980_6pl_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_980_6pl_dotsizes),
-  SHADE(PIEZO_1, standard_980_6pl_dotsizes),
-  SHADE(PIEZO_2, standard_980_6pl_dotsizes),
-  SHADE(PIEZO_3, standard_980_6pl_dotsizes)
-};
-
-DECLARE_INK(piezo_980_6pl_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                  2 PICOLITRE DOTS (950)                       *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_2pl_2880_dotsizes[] =
-{
-  { 0x1, 1.00 }
-};
-
-static const stpi_dotsize_t standard_2pl_1440_dotsizes[] =
-{
-  { 0x1, 0.50 },
-  { 0x2, 1.00 }
-};
-
-static const stpi_dotsize_t standard_2pl_720_dotsizes[] =
-{
-  { 0x1, 0.25 },
-  { 0x2, 0.50 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_dotsize_t standard_2pl_360_dotsizes[] =
-{
-  { 0x1, 0.25 },
-  { 0x2, 0.50 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_shade_t standard_2pl_2880_shades[] =
-{
-  SHADE(1.0, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(standard_2pl_2880, 1.0);
-
-static const stpi_shade_t photo_2pl_2880_shades[] =
-{
-  SHADE(0.26, standard_2pl_2880_dotsizes),
-  SHADE(1.0, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_2880, 0.5);
-
-static const stpi_shade_t photo_2pl_2880_c_shades[] =
-{
-  SHADE(0.26, standard_2pl_2880_dotsizes),
-  SHADE(1.0, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_2880_c, 0.5);
-
-static const stpi_shade_t photo_2pl_2880_m_shades[] =
-{
-  SHADE(0.31, standard_2pl_2880_dotsizes),
-  SHADE(1.0, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_2880_m, 0.5);
-
-static const stpi_shade_t photo_2pl_2880_y_shades[] =
-{
-  SHADE(0.5, standard_2pl_2880_dotsizes),
-  SHADE(1.0, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_2880_y, 1.00);
-
-static const stpi_shade_t piezo_2pl_2880_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_2pl_2880_dotsizes),
-  SHADE(PIEZO_1, standard_2pl_2880_dotsizes),
-  SHADE(PIEZO_2, standard_2pl_2880_dotsizes),
-  SHADE(PIEZO_3, standard_2pl_2880_dotsizes)
-};
-
-DECLARE_INK(piezo_2pl_2880_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t standard_2pl_1440_shades[] =
-{
-  SHADE(1.0, standard_2pl_1440_dotsizes)
-};
-
-DECLARE_INK(standard_2pl_1440, 1.0);
-
-static const stpi_shade_t piezo_2pl_1440_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_2pl_1440_dotsizes),
-  SHADE(PIEZO_1, standard_2pl_1440_dotsizes),
-  SHADE(PIEZO_2, standard_2pl_1440_dotsizes),
-  SHADE(PIEZO_3, standard_2pl_1440_dotsizes)
-};
-
-DECLARE_INK(piezo_2pl_1440_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t photo_2pl_1440_shades[] =
-{
-  SHADE(0.26, standard_2pl_1440_dotsizes),
-  SHADE(1.00, standard_2pl_1440_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_1440, 1.0);
-
-static const stpi_shade_t photo_2pl_1440_y_shades[] =
-{
-  SHADE(0.50, standard_2pl_1440_dotsizes),
-  SHADE(1.00, standard_2pl_1440_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_1440_y, 1.0);
-
-static const stpi_shade_t standard_2pl_720_shades[] =
-{
-  SHADE(1.0, standard_2pl_720_dotsizes)
-};
-
-DECLARE_INK(standard_2pl_720, 1.0);
-
-static const stpi_shade_t photo_2pl_720_shades[] =
-{
-  SHADE(0.26, standard_2pl_720_dotsizes),
-  SHADE(1.00, standard_2pl_720_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_720, 1.0);
-
-static const stpi_shade_t photo_2pl_720_y_shades[] =
-{
-  SHADE(0.5, standard_2pl_720_dotsizes),
-  SHADE(1.0, standard_2pl_720_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_720_y, 1.0);
-
-static const stpi_shade_t piezo_2pl_720_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_2pl_720_dotsizes),
-  SHADE(PIEZO_1, standard_2pl_720_dotsizes),
-  SHADE(PIEZO_2, standard_2pl_720_dotsizes),
-  SHADE(PIEZO_3, standard_2pl_720_dotsizes)
-};
-
-DECLARE_INK(piezo_2pl_720_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t standard_2pl_360_shades[] =
-{
-  SHADE(1.0, standard_2pl_360_dotsizes)
-};
-
-DECLARE_INK(standard_2pl_360, 1.0);
-
-static const stpi_shade_t photo_2pl_360_shades[] =
-{
-  SHADE(0.26, standard_2pl_360_dotsizes),
-  SHADE(1.0, standard_2pl_360_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_360, 1.0);
-
-static const stpi_shade_t photo_2pl_360_y_shades[] =
-{
-  SHADE(0.5, standard_2pl_360_dotsizes),
-  SHADE(1.0, standard_2pl_360_dotsizes)
-};
-
-DECLARE_INK(photo_2pl_360_y, 1.0);
-
-static const stpi_shade_t piezo_2pl_360_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_2pl_360_dotsizes),
-  SHADE(PIEZO_1, standard_2pl_360_dotsizes),
-  SHADE(PIEZO_2, standard_2pl_360_dotsizes),
-  SHADE(PIEZO_3, standard_2pl_360_dotsizes)
-};
-
-DECLARE_INK(piezo_2pl_360_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                     STYLUS C70/C80 (PIGMENT)                  *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_economy_pigment_dotsizes[] =
-{
-  { 0x3, 1.0 }
-};
-
-static const stpi_dotsize_t standard_multishot_pigment_dotsizes[] =
-{
-  { 0x1, 0.41 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_dotsize_t standard_6pl_pigment_dotsizes[] =
-{
-  { 0x1, 0.30 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_dotsize_t standard_3pl_pigment_dotsizes[] =
-{
-  { 0x1, 0.65 },
-  { 0x2, 1.00 }
-};
-
-static const stpi_dotsize_t standard_3pl_pigment_2880_dotsizes[] =
-{
-  { 0x1, 1.00 }
-};
-
-static const stpi_shade_t standard_economy_pigment_shades[] =
-{
-  SHADE(1.0, standard_economy_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_economy_pigment, 1.0);
-
-static const stpi_shade_t standard_multishot_pigment_shades[] =
-{
-  SHADE(1.0, standard_multishot_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_multishot_pigment, 1.0);
-
-static const stpi_shade_t standard_6pl_pigment_shades[] =
-{
-  SHADE(1.0, standard_6pl_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_6pl_pigment, 1.0);
-
-static const stpi_shade_t standard_3pl_pigment_shades[] =
-{
-  SHADE(1.0, standard_3pl_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_3pl_pigment, 1.0);
-
-static const stpi_shade_t standard_3pl_pigment_2880_shades[] =
-{
-  SHADE(1.0, standard_3pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(standard_3pl_pigment_2880, 1.0);
-
-static const stpi_shade_t piezo_economy_pigment_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_economy_pigment_dotsizes),
-  SHADE(PIEZO_1, standard_economy_pigment_dotsizes),
-  SHADE(PIEZO_2, standard_economy_pigment_dotsizes),
-  SHADE(PIEZO_3, standard_economy_pigment_dotsizes)
-};
-
-DECLARE_INK(piezo_economy_pigment_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_multishot_pigment_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_multishot_pigment_dotsizes),
-  SHADE(PIEZO_1, standard_multishot_pigment_dotsizes),
-  SHADE(PIEZO_2, standard_multishot_pigment_dotsizes),
-  SHADE(PIEZO_3, standard_multishot_pigment_dotsizes)
-};
-
-DECLARE_INK(piezo_multishot_pigment_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_6pl_pigment_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_6pl_pigment_dotsizes),
-  SHADE(PIEZO_1, standard_6pl_pigment_dotsizes),
-  SHADE(PIEZO_2, standard_6pl_pigment_dotsizes),
-  SHADE(PIEZO_3, standard_6pl_pigment_dotsizes)
-};
-
-DECLARE_INK(piezo_6pl_pigment_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_3pl_pigment_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_3pl_pigment_dotsizes),
-  SHADE(PIEZO_1, standard_3pl_pigment_dotsizes),
-  SHADE(PIEZO_2, standard_3pl_pigment_dotsizes),
-  SHADE(PIEZO_3, standard_3pl_pigment_dotsizes)
-};
-
-DECLARE_INK(piezo_3pl_pigment_quadtone, PIEZO_DENSITY);
-
-static const stpi_shade_t piezo_3pl_pigment_2880_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_3pl_pigment_2880_dotsizes),
-  SHADE(PIEZO_1, standard_3pl_pigment_2880_dotsizes),
-  SHADE(PIEZO_2, standard_3pl_pigment_2880_dotsizes),
-  SHADE(PIEZO_3, standard_3pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(piezo_3pl_pigment_2880_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*                   STYLUS PHOTO 2000P                          *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_pigment_dotsizes[] =
-{
-  { 0x1, 0.55 },
-  { 0x2, 1.00 }
-};
-
-static const stpi_shade_t standard_pigment_shades[] =
-{
-  SHADE(1.0, standard_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_pigment, 1.0);
-
-static const stpi_shade_t photo_pigment_shades[] =
-{
-  SHADE(0.227, standard_pigment_dotsizes),
-  SHADE(1.0, standard_pigment_dotsizes)
-};
-
-DECLARE_INK(photo_pigment, 1.0);
-
-static const stpi_shade_t piezo_pigment_quadtone_shades[] =
-{
-  SHADE(PIEZO_0, standard_pigment_dotsizes),
-  SHADE(PIEZO_1, standard_pigment_dotsizes),
-  SHADE(PIEZO_2, standard_pigment_dotsizes),
-  SHADE(PIEZO_3, standard_pigment_dotsizes)
-};
-
-DECLARE_INK(piezo_pigment_quadtone, PIEZO_DENSITY);
-
-
-/***************************************************************\
-*                                                               *
-*            ULTRACHROME (2100/2200, 7600, 9600)                *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t standard_4pl_pigment_low_dotsizes[] =
-{
-  { 0x1, 0.40 },
-  { 0x2, 0.70 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_shade_t standard_4pl_pigment_low_shades[] =
-{
-  SHADE(1.0, standard_4pl_pigment_low_dotsizes)
-};
-
-DECLARE_INK(standard_4pl_pigment_low, 0.5);
-
-static const stpi_shade_t photo_4pl_pigment_low_m_shades[] =
-{
-  SHADE(0.26, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_low_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_low_m, 0.5);
-
-static const stpi_shade_t photo_4pl_pigment_low_c_shades[] =
-{
-  SHADE(0.40, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_low_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_low_c, 0.5);
-
-static const stpi_shade_t photo_4pl_pigment_low_y_shades[] =
-{
-  SHADE(0.50, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_low_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_low_y, 1.5);
-
-static const stpi_shade_t photo_4pl_pigment_low_k_shades[] =
-{
-  SHADE(0.49, standard_4pl_pigment_low_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_low_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_low_k, 0.5);
-
-static const stpi_dotsize_t standard_4pl_pigment_dotsizes[] =
-{
-  { 0x1, 0.28 },
-  { 0x2, 0.50 },
-  { 0x3, 1.00 }
-};
-
-static const stpi_shade_t standard_4pl_pigment_shades[] =
-{
-  SHADE(1.0, standard_4pl_pigment_dotsizes)
-};
-
-DECLARE_INK(standard_4pl_pigment, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_m_shades[] =
-{
-  SHADE(0.26, standard_4pl_pigment_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_m, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_c_shades[] =
-{
-  SHADE(0.40, standard_4pl_pigment_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_c, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_y_shades[] =
-{
-  SHADE(0.50, standard_4pl_pigment_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_y, 1.5);
-
-static const stpi_shade_t photo_4pl_pigment_k_shades[] =
-{
-  SHADE(0.48, standard_4pl_pigment_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_k, 0.75);
-
-static const stpi_dotsize_t standard_4pl_pigment_1440_dotsizes[] =
-{
-  { 0x1, 0.56 },
-  { 0x2, 1.00 },
-};
-
-static const stpi_shade_t standard_4pl_pigment_1440_shades[] =
-{
-  SHADE(1.0, standard_4pl_pigment_1440_dotsizes)
-};
-
-DECLARE_INK(standard_4pl_pigment_1440, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_1440_m_shades[] =
-{
-  SHADE(0.26, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_1440_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_1440_m, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_1440_c_shades[] =
-{
-  SHADE(0.40, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_1440_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_1440_c, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_1440_y_shades[] =
-{
-  SHADE(0.50, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_1440_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_1440_y, 1.5);
-
-static const stpi_shade_t photo_4pl_pigment_1440_k_shades[] =
-{
-  SHADE(0.56, standard_4pl_pigment_1440_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_1440_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_1440_k, 0.75);
-
-static const stpi_dotsize_t standard_4pl_pigment_2880_dotsizes[] =
-{
-  { 0x1, 1.0 },
-};
-
-static const stpi_shade_t standard_4pl_pigment_2880_shades[] =
-{
-  SHADE(1.0, standard_4pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(standard_4pl_pigment_2880, 1.0);
-
-static const stpi_shade_t photo_4pl_pigment_2880_m_shades[] =
-{
-  SHADE(0.26, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_2880_m, 0.75);
-
-static const stpi_shade_t photo_4pl_pigment_2880_c_shades[] =
-{
-  SHADE(0.40, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_2880_c, 0.75);
-
-static const stpi_shade_t photo_4pl_pigment_2880_y_shades[] =
-{
-  SHADE(0.50, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_2880_y, 1.5);
-
-static const stpi_shade_t photo_4pl_pigment_2880_k_shades[] =
-{
-  SHADE(0.48, standard_4pl_pigment_2880_dotsizes),
-  SHADE(1.0, standard_4pl_pigment_2880_dotsizes)
-};
-
-DECLARE_INK(photo_4pl_pigment_2880_k, 0.75);
-
-
-/***************************************************************\
-*                                                               *
-*                      STYLUS PRO 10000                         *
-*                                                               *
-\***************************************************************/
-
-static const stpi_dotsize_t spro10000_standard_dotsizes[] =
-{
-  { 0x1, 0.661 },
-  { 0x2, 1.00 },
-};
-
-static const stpi_shade_t spro10000_standard_shades[] =
-{
-  SHADE(1.0, spro10000_standard_dotsizes)
-};
-
-DECLARE_INK(spro10000_standard, 1.0);
-
-static const stpi_shade_t spro10000_photo_shades[] =
-{
-  SHADE(0.26, spro10000_standard_dotsizes),
-  SHADE(1.0, spro10000_standard_dotsizes),
-};
-
-DECLARE_INK(spro10000_photo, 1.0);
+#define DOTSIZE(name) static const double name##_dotsizes[]
+
+#define SHADES(name) static const double name##_shades[]
+
+
+/* Single dot size printers */
+DOTSIZE(single) = { 1.0 };
+
+/* 6 pl printers */
+DOTSIZE(standard_multishot) = { 0.28, 0.58, 1.0 };
+DOTSIZE(standard_6pl) = { 0.25, 0.5, 1.0 };
+DOTSIZE(standard_6pl_1440) = { 0.5, 1.0 };
+DOTSIZE(standard_6pl_2880) = { 1.0 };
+
+/* Stylus Color 480/580/C40/C50 */
+DOTSIZE(standard_x80_multishot) = { 0.163, 0.5, 1.0 };
+DOTSIZE(standard_x80_6pl) = { 0.325, 0.5, 1.0 };
+DOTSIZE(standard_x80_1440_6pl) = { 0.65, 1.0 };
+DOTSIZE(standard_x80_2880_6pl) = { 1.0 };
+
+/* Stylus Color 777 */
+DOTSIZE(standard_680_multishot) = { 0.375, 0.75, 1.0 };
+DOTSIZE(standard_680_6pl) = { 0.50, 0.66, 1.0 };
+
+/* All other 4 picolitre printers */
+DOTSIZE(standard_4pl) = { 0.661, 1.0 };
+DOTSIZE(standard_4pl_2880) = { 1.0 };
+
+/* Stylus Color 900/980 */
+DOTSIZE(standard_3pl) = { 0.25, 0.61, 1.0 };
+DOTSIZE(standard_3pl_1440) = { 0.39, 1.0 };
+DOTSIZE(standard_3pl_2880) = { 1.0 };
+DOTSIZE(standard_980_6pl) = { 0.40, 0.675, 1.0 };
+
+/* Stylus Photo 960 */
+DOTSIZE(standard_2pl_360) = { 0.25, 0.5, 1.0 };
+DOTSIZE(standard_2pl_720) = { 0.25, 0.5, 1.0 };
+DOTSIZE(standard_2pl_1440) = { 0.5, 1.0 };
+DOTSIZE(standard_2pl_2880) = { 1.0 };
+
+/* Stylus C80 */
+DOTSIZE(standard_economy_pigment) = { 0, 0, 1.0 };
+DOTSIZE(standard_multishot_pigment) = { 0.41, 0, 1.0 };
+DOTSIZE(standard_6pl_pigment) = { 0.30, 0, 1.0 };
+DOTSIZE(standard_3pl_pigment) = { 0.65, 1.0 };
+DOTSIZE(standard_3pl_pigment_2880) = { 1.0 };
+
+/* Stylus Photo 2000P */
+DOTSIZE(standard_pigment) = { 0.55, 1.0 };
+
+/* Stylus Photo 2200, Stylus Pro 7600 */
+DOTSIZE(standard_4pl_pigment_low) = { 0.4, 0.7, 1.0 };
+DOTSIZE(standard_4pl_pigment) = { 0.28, 0.5, 1.0 };
+DOTSIZE(standard_4pl_pigment_1440) = { 0.56, 1.0 };
+DOTSIZE(standard_4pl_pigment_2880) = { 1.0 };
+
+/* Stylus Pro 10000 */
+DOTSIZE(spro10000_standard) = { 0.661, 1.0 };
+
+
+SHADES(standard) = { 1.0 };
+SHADES(photo_cyan) = { 0.27, 1.0 };
+SHADES(photo_magenta) = { 0.35, 1.0 };
+SHADES(photo2_yellow) = { 0.35, 1.0 };
+SHADES(photo2_black) = { 0.27, 1.0 };
+SHADES(piezo_quadtone) = { 0.25, 0.5, 0.75, 1.0 };
+
+SHADES(photo) = { 0.26, 1.0 };
+SHADES(photo_c) = { 0.26, 1.0 };
+SHADES(photo_m) = { 0.31, 1.0 };
+SHADES(photo_y) = { 0.5, 1.0 };
+
+SHADES(photo_pigment_k) = { 0.49, 1.0 };
+SHADES(photo_pigment_c) = { 0.40, 1.0 };
+SHADES(photo_pigment_m) = { 0.26, 1.0 };
+SHADES(photo_pigment_y) = { 0.5, 1.0 };
+
+SHADES(photo_yellow) = { 0.5, 1.0 };
+
+SHADES(photo_pigment) = { 0.227, 1.0 };
+
+/* Single dot size */
+
+DECLARE_INK(standard, standard, single, 1.0);
+DECLARE_INK(photo_cyan, photo_cyan, single, 1.0);
+DECLARE_INK(photo_magenta, photo_magenta, single, 1.0);
+DECLARE_INK(photo2_yellow, photo2_yellow, single, 1.0);
+DECLARE_INK(photo2_black, photo2_black, single, 1.0);
+DECLARE_INK(piezo_quadtone, piezo_quadtone, single, 1.0);
+
+/* Low resolution 4-6 pl printers */
+
+DECLARE_INK(standard_multishot, standard, standard_multishot, 1.0);
+DECLARE_INK(photo_multishot, photo, standard_multishot, 1.0);
+DECLARE_INK(photo_multishot_y, photo_yellow, standard_multishot, 1.0);
+DECLARE_INK(piezo_multishot_quadtone, piezo_quadtone, standard_multishot, 1.0);
+
+/* 4-6 pl printers, 6 pl dots */
+
+DECLARE_INK(standard_6pl, standard, standard_6pl, 1.0);
+DECLARE_INK(standard_6pl_1440, standard, standard_6pl_1440, 1.0);
+DECLARE_INK(standard_6pl_2880, standard, standard_6pl_2880, 1.0);
+DECLARE_INK(photo_6pl, photo, standard_6pl, 1.0);
+DECLARE_INK(photo_6pl_y, photo_yellow, standard_6pl, 1.0);
+DECLARE_INK(photo_6pl_1440, photo, standard_6pl_1440, 1.0);
+DECLARE_INK(photo_6pl_1440_y, photo_yellow, standard_6pl_1440, 1.0);
+DECLARE_INK(photo_6pl_2880, photo, standard_6pl_2880, 1.0);
+DECLARE_INK(photo_6pl_2880_y, photo_yellow, standard_6pl_2880, 1.0);
+DECLARE_INK(piezo_6pl_quadtone, piezo_quadtone, standard_6pl, 1.0);
+DECLARE_INK(piezo_6pl_1440_quadtone, piezo_quadtone, standard_6pl_1440, 1.0);
+DECLARE_INK(piezo_6pl_2880_quadtone, piezo_quadtone, standard_6pl_2880, 1.0);
+
+/* Stylus Color 480/580/C40/C50 */
+
+DECLARE_INK(standard_x80_multishot, standard, standard_x80_multishot, 1.0);
+DECLARE_INK(standard_x80_6pl, standard, standard_x80_6pl, 1.0);
+DECLARE_INK(standard_x80_1440_6pl, standard, standard_x80_1440_6pl, 1.0);
+DECLARE_INK(standard_x80_2880_6pl, standard, standard_x80_2880_6pl, 1.0);
+DECLARE_INK(piezo_x80_multishot_quadtone, standard, standard_x80_multishot, 1.0);
+DECLARE_INK(piezo_x80_6pl_quadtone, standard, standard_x80_6pl, 1.0);
+DECLARE_INK(piezo_x80_1440_6pl_quadtone, standard, standard_x80_1440_6pl, 1.0);
+DECLARE_INK(piezo_x80_2880_6pl_quadtone, standard, standard_x80_2880_6pl, 1.0);
+
+/* Stylus Color 777 */
+
+DECLARE_INK(standard_680_multishot, standard, standard_680_multishot, 1.0);
+DECLARE_INK(standard_680_6pl, standard, standard_680_6pl, 1.0);
+DECLARE_INK(piezo_680_multishot_quadtone, standard, standard_680_multishot, 1.0);
+DECLARE_INK(piezo_680_6pl_quadtone, standard, standard_680_6pl, 1.0);
+
+
+/* All other 4 picolitre printers */
+
+DECLARE_INK(standard_4pl, standard, standard_4pl, 1.0);
+DECLARE_INK(standard_4pl_2880, standard, standard_4pl_2880, 1.0);
+DECLARE_INK(photo_4pl, photo, standard_4pl, 1.0);
+DECLARE_INK(photo_4pl_y, photo_yellow, standard_4pl, 1.0);
+DECLARE_INK(photo_4pl_2880, photo, standard_4pl_2880, 1.0);
+DECLARE_INK(photo_4pl_y_2880, photo_yellow, standard_4pl_2880, 1.0);
+DECLARE_INK(piezo_4pl_quadtone, piezo_quadtone, standard_4pl, 1.0);
+DECLARE_INK(piezo_4pl_2880_quadtone, piezo_quadtone, standard_4pl_2880, 1.0);
+
+
+/* Stylus Color 900/980 */
+
+DECLARE_INK(standard_3pl, standard, standard_3pl, 1.0);
+DECLARE_INK(standard_3pl_1440, standard, standard_3pl_1440, 1.0);
+DECLARE_INK(standard_3pl_2880, standard, standard_3pl_2880, 1.0);
+DECLARE_INK(piezo_3pl_quadtone, piezo_quadtone, standard_3pl, 1.0);
+DECLARE_INK(piezo_3pl_1440_quadtone, piezo_quadtone, standard_3pl_1440, 1.0);
+DECLARE_INK(piezo_3pl_2880_quadtone, piezo_quadtone, standard_3pl_2880, 1.0);
+DECLARE_INK(standard_980_6pl, standard, standard_980_6pl, 1.0);
+DECLARE_INK(piezo_980_6pl_quadtone, standard, standard_980_6pl, 1.0);
+
+
+/* Stylus Photo 960, PM-970C */
+
+DECLARE_INK(standard_2pl_2880, standard, standard_2pl_2880, 1.0);
+DECLARE_INK(photo_2pl_2880, photo, standard_2pl_2880, 0.5);
+DECLARE_INK(photo_2pl_2880_c, photo_c, standard_2pl_2880, 0.5);
+DECLARE_INK(photo_2pl_2880_m, photo_m, standard_2pl_2880, 0.5);
+DECLARE_INK(photo_2pl_2880_y, photo_y, standard_2pl_2880, 0.5);
+DECLARE_INK(piezo_2pl_2880_quadtone, piezo_quadtone, standard_2pl_2880, 1.0);
+DECLARE_INK(standard_2pl_1440, standard, standard_2pl_1440, 1.0);
+DECLARE_INK(photo_2pl_1440, photo, standard_2pl_1440, 1.0);
+DECLARE_INK(photo_2pl_1440_c, photo_c, standard_2pl_1440, 1.0);
+DECLARE_INK(photo_2pl_1440_m, photo_m, standard_2pl_1440, 1.0);
+DECLARE_INK(photo_2pl_1440_y, photo_y, standard_2pl_1440, 1.0);
+DECLARE_INK(piezo_2pl_1440_quadtone, piezo_quadtone, standard_2pl_1440, 1.0);
+DECLARE_INK(standard_2pl_720, standard, standard_2pl_720, 1.0);
+DECLARE_INK(photo_2pl_720, photo, standard_2pl_720, 1.0);
+DECLARE_INK(photo_2pl_720_c, photo_c, standard_2pl_720, 1.0);
+DECLARE_INK(photo_2pl_720_m, photo_m, standard_2pl_720, 1.0);
+DECLARE_INK(photo_2pl_720_y, photo_y, standard_2pl_720, 1.0);
+DECLARE_INK(piezo_2pl_720_quadtone, piezo_quadtone, standard_2pl_720, 1.0);
+DECLARE_INK(standard_2pl_360, standard, standard_2pl_360, 1.0);
+DECLARE_INK(photo_2pl_360, photo, standard_2pl_360, 1.0);
+DECLARE_INK(photo_2pl_360_c, photo_c, standard_2pl_360, 1.0);
+DECLARE_INK(photo_2pl_360_m, photo_m, standard_2pl_360, 1.0);
+DECLARE_INK(photo_2pl_360_y, photo_y, standard_2pl_360, 1.0);
+DECLARE_INK(piezo_2pl_360_quadtone, piezo_quadtone, standard_2pl_360, 1.0);
+
+
+/* Stylus C80 */
+
+DECLARE_INK(standard_economy_pigment, standard, standard_economy_pigment, 1.0);
+DECLARE_INK(standard_multishot_pigment, standard, standard_multishot_pigment, 1.0);
+DECLARE_INK(standard_6pl_pigment, standard, standard_6pl_pigment, 1.0);
+DECLARE_INK(standard_3pl_pigment, standard, standard_3pl_pigment, 1.0);
+DECLARE_INK(standard_3pl_pigment_2880, standard, standard_3pl_pigment_2880, 1.0);
+DECLARE_INK(piezo_economy_pigment_quadtone, piezo_quadtone, standard_economy_pigment, 1.0);
+DECLARE_INK(piezo_multishot_pigment_quadtone, piezo_quadtone, standard_multishot_pigment, 1.0);
+DECLARE_INK(piezo_6pl_pigment_quadtone, piezo_quadtone, standard_6pl_pigment, 1.0);
+DECLARE_INK(piezo_3pl_pigment_quadtone, piezo_quadtone, standard_3pl_pigment, 1.0);
+DECLARE_INK(piezo_3pl_pigment_2880_quadtone, piezo_quadtone, standard_3pl_pigment_2880, 1.0);
+
+
+/* Stylus Photo 2000P */
+
+DECLARE_INK(standard_pigment, standard, standard_pigment, 1.0);
+DECLARE_INK(photo_pigment, photo_pigment, standard_pigment, 1.0);
+DECLARE_INK(piezo_pigment_quadtone, piezo_quadtone, standard_pigment, 1.0);
+
+
+/* Ultrachrome (Stylus Photo 2200, Stylus Pro 7600/9600) */
+
+DECLARE_INK(standard_4pl_pigment_low, standard, standard_4pl_pigment_low, 0.5);
+DECLARE_INK(photo_4pl_pigment_low_m, photo_pigment_m, standard_4pl_pigment_low, 0.5);
+DECLARE_INK(photo_4pl_pigment_low_c, photo_pigment_c, standard_4pl_pigment_low, 0.5);
+DECLARE_INK(photo_4pl_pigment_low_y, photo_pigment_y, standard_4pl_pigment_low, 1.5);
+DECLARE_INK(photo_4pl_pigment_low_k, photo_pigment_k, standard_4pl_pigment_low, 0.5);
+
+DECLARE_INK(standard_4pl_pigment, standard, standard_4pl_pigment, 1.0);
+DECLARE_INK(photo_4pl_pigment_m, photo_pigment_m, standard_4pl_pigment, 1.0);
+DECLARE_INK(photo_4pl_pigment_c, photo_pigment_c, standard_4pl_pigment, 1.0);
+DECLARE_INK(photo_4pl_pigment_y, photo_pigment_y, standard_4pl_pigment, 1.5);
+DECLARE_INK(photo_4pl_pigment_k, photo_pigment_k, standard_4pl_pigment, 0.75);
+
+DECLARE_INK(standard_4pl_pigment_1440, standard, standard_4pl_pigment_1440, 1.0);
+DECLARE_INK(photo_4pl_pigment_1440_m, photo_pigment_m, standard_4pl_pigment_1440, 1.0);
+DECLARE_INK(photo_4pl_pigment_1440_c, photo_pigment_c, standard_4pl_pigment_1440, 1.0);
+DECLARE_INK(photo_4pl_pigment_1440_y, photo_pigment_y, standard_4pl_pigment_1440, 1.5);
+DECLARE_INK(photo_4pl_pigment_1440_k, photo_pigment_k, standard_4pl_pigment_1440, 0.75);
+
+DECLARE_INK(standard_4pl_pigment_2880, standard, standard_4pl_pigment_2880, 1.0);
+DECLARE_INK(photo_4pl_pigment_2880_m, photo_pigment_m, standard_4pl_pigment_2880, 0.75);
+DECLARE_INK(photo_4pl_pigment_2880_c, photo_pigment_c, standard_4pl_pigment_2880, 0.75);
+DECLARE_INK(photo_4pl_pigment_2880_y, photo_pigment_y, standard_4pl_pigment_2880, 1.5);
+DECLARE_INK(photo_4pl_pigment_2880_k, photo_pigment_k, standard_4pl_pigment_2880, 0.75);
+
+
+/* Stylus Pro 10000 */
+
+DECLARE_INK(spro10000_standard, standard, spro10000_standard, 1.0);
+DECLARE_INK(spro10000_photo, photo, spro10000_standard, 1.0);
 
 
 static const escp2_variable_inkset_t standard_inks =
 {
+  &standard_ink,
+  &standard_ink,
+  &standard_ink,
   &standard_ink,
   &standard_ink,
   &standard_ink,
@@ -1186,17 +307,6 @@ static const escp2_variable_inkset_t photo_inks =
   &standard_ink
 };
 
-static const escp2_variable_inkset_t extended_inks =
-{
-  &standard_ink,
-  &standard_ink,
-  &standard_ink,
-  &standard_ink,
-  &standard_ink,
-  &standard_ink,
-  &standard_ink
-};
-
 
 static const escp2_variable_inkset_t piezo_quadtone_inks =
 {
@@ -1204,14 +314,6 @@ static const escp2_variable_inkset_t piezo_quadtone_inks =
 };
 
 static const escp2_variable_inkset_t escp2_multishot_standard_inks =
-{
-  &standard_multishot_ink,
-  &standard_multishot_ink,
-  &standard_multishot_ink,
-  &standard_multishot_ink
-};
-
-static const escp2_variable_inkset_t escp2_multishot_extended_inks =
 {
   &standard_multishot_ink,
   &standard_multishot_ink,
@@ -1257,14 +359,6 @@ static const escp2_variable_inkset_t escp2_6pl_standard_inks =
   &standard_6pl_ink,
   &standard_6pl_ink,
   &standard_6pl_ink,
-  &standard_6pl_ink
-};
-
-static const escp2_variable_inkset_t escp2_6pl_extended_inks =
-{
-  &standard_6pl_ink,
-  &standard_6pl_ink,
-  &standard_6pl_ink,
   &standard_6pl_ink,
   &standard_6pl_ink,
   &standard_6pl_ink,
@@ -1306,14 +400,6 @@ static const escp2_variable_inkset_t escp2_6pl_1440_standard_inks =
   &standard_6pl_1440_ink,
   &standard_6pl_1440_ink,
   &standard_6pl_1440_ink,
-  &standard_6pl_1440_ink
-};
-
-static const escp2_variable_inkset_t escp2_6pl_1440_extended_inks =
-{
-  &standard_6pl_1440_ink,
-  &standard_6pl_1440_ink,
-  &standard_6pl_1440_ink,
   &standard_6pl_1440_ink,
   &standard_6pl_1440_ink,
   &standard_6pl_1440_ink,
@@ -1335,14 +421,6 @@ static const escp2_variable_inkset_t piezo_6pl_1440_quadtone_inks =
 
 
 static const escp2_variable_inkset_t escp2_6pl_2880_standard_inks =
-{
-  &standard_6pl_2880_ink,
-  &standard_6pl_2880_ink,
-  &standard_6pl_2880_ink,
-  &standard_6pl_2880_ink
-};
-
-static const escp2_variable_inkset_t escp2_6pl_2880_extended_inks =
 {
   &standard_6pl_2880_ink,
   &standard_6pl_2880_ink,
@@ -1399,14 +477,6 @@ static const escp2_variable_inkset_t escp2_4pl_standard_inks =
   &standard_4pl_ink,
   &standard_4pl_ink,
   &standard_4pl_ink,
-  &standard_4pl_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_extended_inks =
-{
-  &standard_4pl_ink,
-  &standard_4pl_ink,
-  &standard_4pl_ink,
   &standard_4pl_ink,
   &standard_4pl_ink,
   &standard_4pl_ink,
@@ -1435,14 +505,6 @@ static const escp2_variable_inkset_t piezo_4pl_quadtone_inks =
 };
 
 static const escp2_variable_inkset_t escp2_4pl_2880_standard_inks =
-{
-  &standard_4pl_2880_ink,
-  &standard_4pl_2880_ink,
-  &standard_4pl_2880_ink,
-  &standard_4pl_2880_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_2880_extended_inks =
 {
   &standard_4pl_2880_ink,
   &standard_4pl_2880_ink,
@@ -1533,14 +595,6 @@ static const escp2_variable_inkset_t escp2_2pl_2880_standard_inks =
   &standard_2pl_2880_ink,
   &standard_2pl_2880_ink,
   &standard_2pl_2880_ink,
-  &standard_2pl_2880_ink
-};
-
-static const escp2_variable_inkset_t escp2_2pl_2880_extended_inks =
-{
-  &standard_2pl_2880_ink,
-  &standard_2pl_2880_ink,
-  &standard_2pl_2880_ink,
   &standard_2pl_2880_ink,
   &standard_2pl_2880_ink,
   &standard_2pl_2880_ink,
@@ -1581,14 +635,6 @@ static const escp2_variable_inkset_t escp2_2pl_1440_standard_inks =
   &standard_2pl_1440_ink,
   &standard_2pl_1440_ink,
   &standard_2pl_1440_ink,
-  &standard_2pl_1440_ink
-};
-
-static const escp2_variable_inkset_t escp2_2pl_1440_extended_inks =
-{
-  &standard_2pl_1440_ink,
-  &standard_2pl_1440_ink,
-  &standard_2pl_1440_ink,
   &standard_2pl_1440_ink,
   &standard_2pl_1440_ink,
   &standard_2pl_1440_ink,
@@ -1617,14 +663,6 @@ static const escp2_variable_inkset_t piezo_2pl_1440_quadtone_inks =
 };
 
 static const escp2_variable_inkset_t escp2_2pl_720_standard_inks =
-{
-  &standard_2pl_720_ink,
-  &standard_2pl_720_ink,
-  &standard_2pl_720_ink,
-  &standard_2pl_720_ink
-};
-
-static const escp2_variable_inkset_t escp2_2pl_720_extended_inks =
 {
   &standard_2pl_720_ink,
   &standard_2pl_720_ink,
@@ -1665,14 +703,6 @@ static const escp2_variable_inkset_t piezo_2pl_720_quadtone_inks =
 };
 
 static const escp2_variable_inkset_t escp2_2pl_360_standard_inks =
-{
-  &standard_2pl_360_ink,
-  &standard_2pl_360_ink,
-  &standard_2pl_360_ink,
-  &standard_2pl_360_ink
-};
-
-static const escp2_variable_inkset_t escp2_2pl_360_extended_inks =
 {
   &standard_2pl_360_ink,
   &standard_2pl_360_ink,
@@ -1820,14 +850,6 @@ static const escp2_variable_inkset_t escp2_6pl_pigment_standard_inks =
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
-  &standard_6pl_pigment_ink
-};
-
-static const escp2_variable_inkset_t escp2_6pl_pigment_extended_inks =
-{
-  &standard_6pl_pigment_ink,
-  &standard_6pl_pigment_ink,
-  &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
   &standard_6pl_pigment_ink,
@@ -1841,14 +863,6 @@ static const escp2_variable_inkset_t piezo_6pl_pigment_quadtone_inks =
 
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_low_standard_inks =
-{
-  &standard_4pl_pigment_low_ink,
-  &standard_4pl_pigment_low_ink,
-  &standard_4pl_pigment_low_ink,
-  &standard_4pl_pigment_low_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_pigment_low_extended_inks =
 {
   &standard_4pl_pigment_low_ink,
   &standard_4pl_pigment_low_ink,
@@ -1888,14 +902,6 @@ static const escp2_variable_inkset_t escp2_4pl_pigment_standard_inks =
   &standard_4pl_pigment_ink,
   &standard_4pl_pigment_ink,
   &standard_4pl_pigment_ink,
-  &standard_4pl_pigment_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_pigment_extended_inks =
-{
-  &standard_4pl_pigment_ink,
-  &standard_4pl_pigment_ink,
-  &standard_4pl_pigment_ink,
   &standard_4pl_pigment_ink,
   &standard_4pl_pigment_ink,
   &standard_4pl_pigment_ink,
@@ -1931,14 +937,6 @@ static const escp2_variable_inkset_t escp2_4pl_pigment_1440_standard_inks =
   &standard_4pl_pigment_1440_ink,
   &standard_4pl_pigment_1440_ink,
   &standard_4pl_pigment_1440_ink,
-  &standard_4pl_pigment_1440_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_pigment_1440_extended_inks =
-{
-  &standard_4pl_pigment_1440_ink,
-  &standard_4pl_pigment_1440_ink,
-  &standard_4pl_pigment_1440_ink,
   &standard_4pl_pigment_1440_ink,
   &standard_4pl_pigment_1440_ink,
   &standard_4pl_pigment_1440_ink,
@@ -1970,14 +968,6 @@ static const escp2_variable_inkset_t escp2_4pl_pigment_1440_photoj_inks =
 };
 
 static const escp2_variable_inkset_t escp2_4pl_pigment_2880_standard_inks =
-{
-  &standard_4pl_pigment_2880_ink,
-  &standard_4pl_pigment_2880_ink,
-  &standard_4pl_pigment_2880_ink,
-  &standard_4pl_pigment_2880_ink
-};
-
-static const escp2_variable_inkset_t escp2_4pl_pigment_2880_extended_inks =
 {
   &standard_4pl_pigment_2880_ink,
   &standard_4pl_pigment_2880_ink,
@@ -2045,13 +1035,6 @@ static const escp2_variable_inkset_t spro10000_standard_inks =
   &spro10000_standard_ink,
   &spro10000_standard_ink,
   &spro10000_standard_ink,
-  &spro10000_standard_ink
-};
-
-static const escp2_variable_inkset_t spro10000_extended_inks =
-{
-  &spro10000_standard_ink,
-  &spro10000_standard_ink,
   &spro10000_standard_ink,
   &spro10000_standard_ink,
   &spro10000_standard_ink,
@@ -2101,14 +1084,14 @@ const escp2_variable_inklist_t stpi_escp2_simple_inks =
     &piezo_quadtone_inks,
   },
   {
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
-    &extended_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
+    &standard_inks,
   },
 };
 
@@ -2147,14 +1130,14 @@ const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks =
     &piezo_6pl_2880_quadtone_inks
   },
   {
-    &escp2_6pl_extended_inks,
-    &escp2_6pl_extended_inks,
-    &escp2_6pl_extended_inks,
-    &escp2_6pl_extended_inks,
-    &escp2_6pl_1440_extended_inks,
-    &escp2_6pl_2880_extended_inks,
-    &escp2_6pl_2880_extended_inks,
-    &escp2_6pl_2880_extended_inks
+    &escp2_6pl_standard_inks,
+    &escp2_6pl_standard_inks,
+    &escp2_6pl_standard_inks,
+    &escp2_6pl_standard_inks,
+    &escp2_6pl_1440_standard_inks,
+    &escp2_6pl_2880_standard_inks,
+    &escp2_6pl_2880_standard_inks,
+    &escp2_6pl_2880_standard_inks
   },
 };
 
@@ -2221,14 +1204,14 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_inks =
     &piezo_4pl_2880_quadtone_inks,
   },
  {
-    &escp2_multishot_extended_inks,
-    &escp2_multishot_extended_inks,
-    &escp2_multishot_extended_inks,
-    &escp2_6pl_extended_inks,
-    &escp2_4pl_extended_inks,
-    &escp2_4pl_2880_extended_inks,
-    &escp2_4pl_2880_extended_inks,
-    &escp2_4pl_2880_extended_inks,
+    &escp2_multishot_standard_inks,
+    &escp2_multishot_standard_inks,
+    &escp2_multishot_standard_inks,
+    &escp2_6pl_standard_inks,
+    &escp2_4pl_standard_inks,
+    &escp2_4pl_2880_standard_inks,
+    &escp2_4pl_2880_standard_inks,
+    &escp2_4pl_2880_standard_inks,
   },
 };
 
@@ -2350,14 +1333,14 @@ const escp2_variable_inklist_t stpi_escp2_variable_2pl_inks =
     &piezo_2pl_2880_quadtone_inks,
   },
   {
-    &escp2_2pl_360_extended_inks,
-    &escp2_2pl_360_extended_inks,
-    &escp2_2pl_360_extended_inks,
-    &escp2_2pl_720_extended_inks,
-    &escp2_2pl_1440_extended_inks,
-    &escp2_2pl_2880_extended_inks,
-    &escp2_2pl_2880_extended_inks,
-    &escp2_2pl_2880_extended_inks,
+    &escp2_2pl_360_standard_inks,
+    &escp2_2pl_360_standard_inks,
+    &escp2_2pl_360_standard_inks,
+    &escp2_2pl_720_standard_inks,
+    &escp2_2pl_1440_standard_inks,
+    &escp2_2pl_2880_standard_inks,
+    &escp2_2pl_2880_standard_inks,
+    &escp2_2pl_2880_standard_inks,
   },
 };
 
@@ -2442,14 +1425,14 @@ const escp2_variable_inklist_t stpi_escp2_variable_4pl_pigment_inks =
   },
   { NULL, },
   {
-    &escp2_4pl_pigment_low_extended_inks,
-    &escp2_4pl_pigment_low_extended_inks,
-    &escp2_4pl_pigment_low_extended_inks,
-    &escp2_4pl_pigment_extended_inks,
-    &escp2_4pl_pigment_1440_extended_inks,
-    &escp2_4pl_pigment_2880_extended_inks,
-    &escp2_4pl_pigment_2880_extended_inks,
-    &escp2_4pl_pigment_2880_extended_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_low_standard_inks,
+    &escp2_4pl_pigment_standard_inks,
+    &escp2_4pl_pigment_1440_standard_inks,
+    &escp2_4pl_pigment_2880_standard_inks,
+    &escp2_4pl_pigment_2880_standard_inks,
+    &escp2_4pl_pigment_2880_standard_inks,
   },
 };
 
@@ -2516,13 +1499,13 @@ const escp2_variable_inklist_t stpi_escp2_spro10000_inks =
   { NULL, },
   { NULL, },
   {
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks,
-    &spro10000_extended_inks
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks,
+    &spro10000_standard_inks
   },
 };

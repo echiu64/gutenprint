@@ -1957,18 +1957,18 @@ densityDivisor /= 1.2;
   if (!use_dmt) {
     if (cols.p.C)
       {
-	stpi_dither_set_inks(v, ECOLOR_C, 2, photo_dither_shades,
-			     stp_get_float_parameter(v, "Density"));
+	stpi_dither_set_inks_full(v, ECOLOR_C, 2, photo_dither_shades,
+				  stp_get_float_parameter(v, "Density"));
       }
     if (cols.p.M)
       {
-	stpi_dither_set_inks(v, ECOLOR_M, 2, photo_dither_shades,
-			     stp_get_float_parameter(v, "Density"));
+	stpi_dither_set_inks_full(v, ECOLOR_M, 2, photo_dither_shades,
+				  stp_get_float_parameter(v, "Density"));
       }
     if (cols.p.Y)
       {
-	stpi_dither_set_inks(v, ECOLOR_Y, 2, photo_dither_shades,
-			     stp_get_float_parameter(v, "Density"));
+	stpi_dither_set_inks_full(v, ECOLOR_Y, 2, photo_dither_shades,
+				  stp_get_float_parameter(v, "Density"));
       }
   }
 

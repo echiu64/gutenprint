@@ -130,7 +130,7 @@ initialize_channel(stp_vars_t v, int channel, int subchannel)
   shade.numsizes = 1;
   dot.bit_pattern = 1;
   dot.value = 1.0;
-  stpi_dither_set_inks(v, channel, 1, &shade, 1.0);
+  stpi_dither_set_inks_full(v, channel, 1, &shade, 1.0);
 }
 
 static void
@@ -377,7 +377,7 @@ stpi_dither_set_inks_simple(stp_vars_t v, int color, int nlevels,
       d[i].bit_pattern = i + 1;
       d[i].value = levels[i];
     }
-  stpi_dither_set_inks(v, color, 1, &s, density);
+  stpi_dither_set_inks_full(v, color, 1, &s, density);
   stpi_free(d);
 }
 
@@ -397,8 +397,8 @@ stpi_dither_set_density_adjustment(stp_vars_t v, int color, int subchannel,
 }
 
 void
-stpi_dither_set_inks(stp_vars_t v, int color, int nshades,
-		     const stpi_shade_t *shades, double density)
+stpi_dither_set_inks_full(stp_vars_t v, int color, int nshades,
+			  const stpi_shade_t *shades, double density)
 {
   int i, j;
   int idx;
@@ -476,4 +476,34 @@ stpi_dither_set_inks(stp_vars_t v, int color, int nshades,
 	  ip->dot_size = dp->value * 65536.0 + 0.5;
 	}
     }
+}
+
+void
+stpi_dither_set_inks(stp_vars_t v, int color, double density,
+		     int nshades, const double *svalues,
+		     int ndotsizes, const double *dvalues)
+{
+  int i, j;
+  stpi_shade_t *shades = stpi_malloc(sizeof(stpi_shade_t) * nshades);
+  stpi_dotsize_t *dotsizes = stpi_malloc(sizeof(stpi_dotsize_t) * ndotsizes);
+  j = 0;
+  for (i = 0; i < ndotsizes; i++)
+    {
+      /* Skip over any zero-valued dot sizes */
+      if (dvalues[i] > 0)
+	{
+	  dotsizes[j].value = dvalues[i];
+	  dotsizes[j].bit_pattern = i + 1;
+	  j++;
+	}
+    }
+  for (i = 0; i < nshades; i++)
+    {
+      shades[i].value = svalues[i];
+      shades[i].numsizes = j;
+      shades[i].dot_sizes = dotsizes;
+    }
+  stpi_dither_set_inks_full(v, color, nshades, shades, density);
+  stpi_free(dotsizes);
+  stpi_free(shades);
 }

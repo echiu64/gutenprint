@@ -46,7 +46,7 @@
 
 static void	query (void);
 static void	run (char *, int, GimpParam *, int *, GimpParam **);
-static int	do_print_dialog (char *proc_name);
+static int	do_print_dialog (char *proc_name, gint32 image_ID);
 
 /*
  * Work around GIMP library not being const-safe.  This is a very ugly
@@ -69,9 +69,6 @@ GimpPlugInInfo	PLUG_IN_INFO =		/* Plug-in information */
 };
 
 static stpui_plist_t gimp_vars;
-
-static gint32          image_ID;	        /* image ID */
-
 
 /*
  * 'main()' - Main entry - just call gimp_main()...
@@ -174,6 +171,7 @@ run (char   *name,		/* I - Name of print program. */
   gdouble xres, yres;
   char *image_filename;
   stp_image_t *image;
+  gint32 image_ID;
   if (getenv("STP_DEBUG_STARTUP"))
     while (SDEBUG)
       ;
@@ -264,7 +262,7 @@ run (char   *name,		/* I - Name of print program. */
        * Get information from the dialog...
        */
 
-      if (!do_print_dialog (name))
+      if (!do_print_dialog (name, image_ID))
 	goto cleanup;
       stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
       break;
@@ -411,7 +409,7 @@ gimp_errfunc(void *file, const char *buf, size_t bytes)
 }
 
 static gint
-do_print_dialog (gchar *proc_name)
+do_print_dialog (gchar *proc_name, gint32 image_ID)
 {
  /*
   * Generate the filename for the current user...

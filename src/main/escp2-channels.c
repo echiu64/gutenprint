@@ -376,7 +376,7 @@ static const escp2_inkname_t two_color_grayscale_inkset =
   "Gray2", N_("Two Level Grayscale"), 0, INKSET_CcMmYKk, 0, 0, 1,
   NULL, NULL, NULL,
   {
-    &photo2_black_channels, NULL, NULL, NULL
+    &photo2_black_channels
   }
 };
 
@@ -494,7 +494,7 @@ static const escp2_inkname_t piezo_quadtone_inkset =
   "Quadtone", N_("Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0, 1,
   NULL, NULL, NULL,
   {
-    &quadtone_channels, NULL, NULL, NULL
+    &quadtone_channels
   }
 };
 
@@ -503,7 +503,7 @@ static const escp2_inkname_t c80_piezo_quadtone_inkset =
   "Quadtone", N_("Quadtone"), 0, INKSET_PIEZO_QUADTONE, 0, 0, 1,
   NULL, NULL, NULL,
   {
-    &c80_quadtone_channels, NULL, NULL, NULL
+    &c80_quadtone_channels
   }
 };
 

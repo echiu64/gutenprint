@@ -49,7 +49,7 @@ typedef struct
                  int *min_width, int *min_height);
   int   (*print)(stp_const_vars_t v, stp_image_t *image);
   void  (*describe_resolution)(stp_const_vars_t v, int *x, int *y);
-  int   (*verify)(stp_const_vars_t v);
+  int   (*verify)(stp_vars_t v);
   int   (*start_job)(stp_const_vars_t v, stp_image_t *image);
   int   (*end_job)(stp_const_vars_t v, stp_image_t *image);
 } stpi_printfuncs_t;
@@ -62,7 +62,7 @@ typedef struct stpi_internal_family
 
 extern int stpi_get_model_id(stp_const_vars_t v);
 
-extern int stpi_verify_printer_params(stp_const_vars_t);
+extern int stpi_verify_printer_params(stp_vars_t);
 
 extern int stpi_family_register(stpi_list_t *family);
 extern int stpi_family_unregister(stpi_list_t *family);

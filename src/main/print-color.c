@@ -504,7 +504,7 @@ gray_to_gray(stp_const_vars_t vars, const unsigned char *in,
       in ++;
       out ++;
     }
-  return nz != 0;
+  return nz == 0;
 }
 
 /*
@@ -542,7 +542,7 @@ rgb_to_gray(stp_const_vars_t vars, const unsigned char *in,
       in += 3;
       out ++;
     }
-  return nz != 0;
+  return nz == 0;
 }
 
 static inline double
@@ -750,7 +750,7 @@ rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
       in += lut->image_bpp;
       out += 3;
     }
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
+  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);
 }
 
 /*
@@ -808,7 +808,7 @@ gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
       in += lut->image_bpp;
       out += 3;
     }
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
+  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);
 }
 
 
@@ -875,7 +875,7 @@ fast_rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in,
       in += lut->image_bpp;
       out += 3;
     }
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
+  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);
 }
 
 /*
@@ -931,7 +931,7 @@ fast_gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
       in += lut->image_bpp;
       out += 3;
     }
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);
+  return (nz0 ? 1 : 0) +  (nz1 ? 2 : 0) +  (nz2 ? 4 : 0);
 }
 
 static stp_curve_t
@@ -1144,8 +1144,9 @@ cmyk_8_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
 
       out += 4;
     }
-  for (i = 0; i < 4; i++)
-    retval += nz[i] ? 0 : 1 << i;
+  for (j = 0; j < 4; j++)
+    if (nz[j] == 0)
+      retval |= (1 << j);
   return retval;
 }
 
@@ -1175,7 +1176,7 @@ cmyk_8_to_gray(stp_const_vars_t vars, const unsigned char *in,
       nz[0] |= j;
       *out++ = vlut[j];
     }
-  return nz[0] ? 0 : 1;
+  return nz[0] ? 1 : 0;
 }
 
 static unsigned
@@ -1202,8 +1203,9 @@ raw_to_raw(stp_const_vars_t vars, const unsigned char *in,
       usin += colors;
       out += colors;
     }
-  for (i = 0; i < colors; i++)
-    retval += nz[i] ? 0 : 1 << i;
+  for (j = 0; j < colors; j++)
+    if (nz[j] == 0)
+      retval |= (1 << j);
   return retval;
 }
 
@@ -1230,8 +1232,9 @@ cmyk_to_kcmy(stp_const_vars_t vars, const unsigned char *in,
       usin += 4;
       out += 4;
     }
-  for (i = 0; i < 4; i++)
-    retval += nz[i] ? 0 : 1 << i;
+  for (j = 0; j < 4; j++)
+    if (nz[j] == 0)
+      retval |= (1 << j);
   return retval;
 }
 
@@ -1252,7 +1255,7 @@ cmyk_to_gray(stp_const_vars_t vars, const unsigned char *in,
       usin += 4;
       out += 1;
     }
-  return nz[0] ? 0 : 1;
+  return nz[0] ? 1 : 0;
 }
 
 static void
