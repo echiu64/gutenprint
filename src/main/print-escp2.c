@@ -3527,7 +3527,11 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 	max_head_offset = head_offset[i];
     }
 
-  top += max_head_offset * nozzle_separation * 72 / ydpi;
+  /*
+   * Factor of 2 divisor determined by Jason Pearce.  Need to understand
+   * why theoretically.
+   */
+  top += max_head_offset * nozzle_separation * (72 / 2) / ydpi;
 
  /*
   * Let the user know what we're doing...
