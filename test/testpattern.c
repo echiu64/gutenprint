@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <math.h>
 
 static char *
 c_strdup(const char *s)
@@ -35,8 +36,13 @@ c_strdup(const char *s)
 }
 
 double global_c_level = 1.0;
+double global_c_gamma = 1.0;
 double global_m_level = 1.0;
+double global_m_gamma = 1.0;
 double global_y_level = 1.0;
+double global_y_gamma = 1.0;
+double global_k_gamma = 1.0;
+double global_gamma = 1.0;
 int levels = 256;
 double ink_limit = 1.0;
 int width, height, bandheight;
@@ -85,12 +91,16 @@ typedef struct
 {
   double c_min;
   double c;
+  double c_gamma;
   double m_min;
   double m;
+  double m_gamma;
   double y_min;
   double y;
+  double y_gamma;
   double k_min;
   double k;
+  double k_gamma;
   double c_level;
   double m_level;
   double y_level;
@@ -102,10 +112,12 @@ static void
 do_help(void)
 {
   fprintf(stderr, "%s", "\
-Usage: testpattern -p printer [-n ramp_levels] [-l ink_limit] [-I ink_type]\n\
+Usage: testpattern -p printer [-n ramp_levels] [-I ink_limit] [-i ink_type]\n\
                    [-r resolution] [-s media_source] [-t media_type]\n\
                    [-z media_size] [-d dither_algorithm] [-e density]\n\
-                   [-C cyan_level] [-M magenta_level] [-Y yellow_level]\n\
+                   [-c cyan_level] [-m magenta_level] [-y yellow_level]\n\
+                   [-C cyan_gamma] [-M magenta_gamma] [-Y yellow_gamma]\n\
+                   [-K black_gamma] [-G gamma]\n\
                    [-H width] [-V height] [-T top] [-L left]\n\
        -H, -V, -T, -L expressed as fractions of the printable paper size\n\
        0.0 < ink_limit <= 1.0\n\
@@ -141,7 +153,7 @@ main(int argc, char **argv)
   int left, right, top, bottom;
   const stp_printfuncs_t *printfuncs;
   defparm_t defparms;
-  int x, y, oheight, owidth;
+  int x, y, owidth;
   double xtop = 0;
   double xleft = 0;
   double hsize = 1.0;
@@ -149,25 +161,31 @@ main(int argc, char **argv)
 
   while (1)
     {
-      c = getopt(argc, argv, "p:n:l:I:r:s:t:z:d:hC:M:Y:e::T:L:H:V:");
+      c = getopt(argc, argv, "p:n:l:I:r:s:t:z:d:hC:M:Y:K:e:T:L:H:V:c:m:y:G:");
       if (c == -1)
 	break;
       switch (c)
 	{
 	case 'C':
-	  global_c_level = strtod(optarg, 0);
+	  global_c_gamma = strtod(optarg, 0);
 	  break;
 	case 'I':
 	  ink_limit = strtod(optarg, 0);
 	  break;
+	case 'G':
+	  global_gamma = strtod(optarg, 0);
+	  break;
 	case 'H':
 	  hsize = strtod(optarg, 0);
+	  break;
+	case 'K':
+	  global_k_gamma = strtod(optarg, 0);
 	  break;
 	case 'L':
 	  xleft = strtod(optarg, 0);
 	  break;
 	case 'M':
-	  global_m_level = strtod(optarg, 0);
+	  global_m_gamma = strtod(optarg, 0);
 	  break;
 	case 'T':
 	  xtop = strtod(optarg, 0);
@@ -176,7 +194,10 @@ main(int argc, char **argv)
 	  vsize = strtod(optarg, 0);
 	  break;
 	case 'Y':
-	  global_y_level = strtod(optarg, 0);
+	  global_y_gamma = strtod(optarg, 0);
+	  break;
+	case 'c':
+	  global_c_level = strtod(optarg, 0);
 	  break;
 	case 'd':
 	  dither_algorithm = c_strdup(optarg);
@@ -189,6 +210,9 @@ main(int argc, char **argv)
 	  break;
 	case 'i':
 	  ink_type = c_strdup(optarg);
+	  break;
+	case 'm':
+	  global_m_level = strtod(optarg, 0);
 	  break;
 	case 'n':
 	  levels = atoi(optarg);
@@ -204,6 +228,9 @@ main(int argc, char **argv)
 	  break;
 	case 't':
 	  media_type = c_strdup(optarg);
+	  break;
+	case 'y':
+	  global_y_level = strtod(optarg, 0);
 	  break;
 	case 'z':
 	  media_size = c_strdup(optarg);
@@ -297,7 +324,6 @@ main(int argc, char **argv)
   top = top + height * xtop;
   left = width * xleft;
   owidth = width;
-  oheight = height;
   (printfuncs->describe_resolution)(the_printer, stp_get_resolution(v),&x, &y);
   if (levels > width)
     levels = width;
@@ -318,8 +344,6 @@ main(int argc, char **argv)
     }
 
   bandheight = printer_height / n_testpatterns;
-  stp_set_page_width(v, owidth);
-  stp_set_page_height(v, oheight);
   stp_set_left(v, left + (hsize * (owidth - width) / 2));
   stp_set_top(v, top);
   stp_set_orientation(v, ORIENT_PORTRAIT);
@@ -403,6 +427,10 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
   double c = p->c == -2 ? global_c_level : p->c;
   double m = p->m == -2 ? global_m_level : p->m;
   double y = p->y == -2 ? global_y_level : p->y;
+  double c_gamma = p->c_gamma * global_gamma * global_c_gamma;
+  double m_gamma = p->m_gamma * global_gamma * global_m_gamma;
+  double y_gamma = p->y_gamma * global_gamma * global_y_gamma;
+  double k_gamma = p->k_gamma * global_gamma * global_k_gamma;
   double k = p->k;
   double c_level = p->c_level == -2 ? global_c_level : p->c_level;
   double m_level = p->m_level == -2 ? global_m_level : p->m_level;
@@ -424,11 +452,15 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
       double where = (double) i / ((double) scount - 1);
       double cmyv;
       double kv;
-      double val = ink_limit * where;
+      double val = where;
       double cc = c_min + val * c;
       double mm = m_min + val * m;
       double yy = y_min + val * y;
-      double kk = k_min + ink_limit * k;
+      double kk = k_min + k;
+      cc = pow(cc, c_gamma);
+      mm = pow(mm, m_gamma);
+      yy = pow(yy, y_gamma);
+      kk = pow(kk, k_gamma);
       if (where <= lower)
 	kv = 0;
       else if (where > upper)
@@ -437,9 +469,9 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 	kv = (where - lower) * upper / (upper - lower);
       cmyv = k * (where - kv);
       kk *= kv;
-      cc += cmyv * ink_limit * c_level;
-      mm += cmyv * ink_limit * m_level;
-      yy += cmyv * ink_limit * y_level;
+      cc += cmyv * c_level;
+      mm += cmyv * m_level;
+      yy += cmyv * y_level;
       if (cc > 1.0)
 	cc = 1.0;
       if (mm > 1.0)
@@ -448,10 +480,10 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 	yy = 1.0;
       if (kk > 1.0)
 	kk = 1.0;
-      cc *= 65535;
-      mm *= 65535;
-      yy *= 65535;
-      kk *= 65535;
+      cc *= ink_limit * 65535;
+      mm *= ink_limit * 65535;
+      yy *= ink_limit * 65535;
+      kk *= ink_limit * 65535;
       for (j = 0; j < pixels; j++)
 	{
 	  data[0] = cc;
@@ -465,52 +497,52 @@ fill_colors(unsigned short *data, size_t len, size_t scount, testpattern_t *p)
 
 testpattern_t the_testpatterns[] =
 {
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-  { 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0 },
-  { 0, -2, 0, -2, 0, -2, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, 1, 1 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, .1, .3 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, .3, .7 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, .1, .999 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, .3, .999 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, .5, .999 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, .1, .3 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, .3, .7 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, .1, .999 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, .3, .999 },
-  { 0, 0, 0, 0, 0, 0, 0, 1, -2, -2, -2, .5, .999 },
-  { 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, .75, 0, .75, 0, .25, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, .75, 0, .75, 0, .25, 1, 1, 1, 0, 0 },
-  { 0, 0, 0, .5, 0, .5, 0, .5, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, .5, 0, .5, 0, .5, 1, 1, 1, 0, 0 },
-  { 0, 0, 0, .25, 0, .25, 0, .75, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, .25, 0, .25, 0, .75, 1, 1, 1, 0, 0 },
-  { 0, 0, 0, .1, 0, .1, 0, .9, 1, 1, 1, 1, 1 },
-  { 0, 0, 0, .1, 0, .1, 0, .9, 1, 1, 1, 0, 0 },
-  { 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, .75, 0, .0, 0, .75, 0, .25, 1, 1, 1, 1, 1 },
-  { 0, .75, 0, .0, 0, .75, 0, .25, 1, 1, 1, 0, 0 },
-  { 0, .5, 0, .0, 0, .5, 0, .5, 1, 1, 1, 1, 1 },
-  { 0, .5, 0, .0, 0, .5, 0, .5, 1, 1, 1, 0, 0 },
-  { 0, .25, 0, .0, 0, .25, 0, .75, 1, 1, 1, 1, 1 },
-  { 0, .25, 0, .0, 0, .25, 0, .75, 1, 1, 1, 0, 0 },
-  { 0, .1, 0, .0, 0, .1, 0, .9, 1, 1, 1, 1, 1 },
-  { 0, .1, 0, .0, 0, .1, 0, .9, 1, 1, 1, 0, 0 },
-  { 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1 },
-  { 0, .75, 0, .75, 0, 0, 0, .25, 1, 1, 1, 1, 1 },
-  { 0, .75, 0, .75, 0, 0, 0, .25, 1, 1, 1, 0, 0 },
-  { 0, .5, 0, .5, 0, 0, 0, .5, 1, 1, 1, 1, 1 },
-  { 0, .5, 0, .5, 0, 0, 0, .5, 1, 1, 1, 0, 0 },
-  { 0, .25, 0, .25, 0, 0, 0, .75, 1, 1, 1, 1, 1 },
-  { 0, .25, 0, .25, 0, 0, 0, .75, 1, 1, 1, 0, 0 },
-  { 0, .1, 0, .1, 0, 0, 0, .9, 1, 1, 1, 1, 1 },
-  { 0, .1, 0, .1, 0, 0, 0, .9, 1, 1, 1, 0, 0 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0 },
+  { 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0 },
+  { 0, -2, 1, 0, -2, 1, 0, -2, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, 1, 1 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .1, .3 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .3, .7 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .1, .999 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .3, .999 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .5, .999 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .1, .3 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, .3, .7 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .1, .999 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .3, .999 },
+  { 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, -2, -2, -2, .5, .999 },
+  { 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, .75, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, .75, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
+  { 0, 0, 1, 0, .5, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, .5, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
+  { 0, 0, 1, 0, .25, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, .25, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
+  { 0, 0, 1, 0, .1, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
+  { 0, 0, 1, 0, .1, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
+  { 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, .75, 1, 0, .0, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
+  { 0, .75, 1, 0, .0, 1, 0, .75, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
+  { 0, .5, 1, 0, .0, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
+  { 0, .5, 1, 0, .0, 1, 0, .5, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
+  { 0, .25, 1, 0, .0, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
+  { 0, .25, 1, 0, .0, 1, 0, .25, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
+  { 0, .1, 1, 0, .0, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
+  { 0, .1, 1, 0, .0, 1, 0, .1, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
+  { 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1 },
+  { 0, .75, 1, 0, .75, 1, 0, 0, 1, 0, .25, 1, 1, 1, 1, 1, 1 },
+  { 0, .75, 1, 0, .75, 1, 0, 0, 1, 0, .25, 1, 1, 1, 1, 0, 0 },
+  { 0, .5, 1, 0, .5, 1, 0, 0, 1, 0, .5, 1, 1, 1, 1, 1, 1 },
+  { 0, .5, 1, 0, .5, 1, 0, 0, 1, 0, .5, 1, 1, 1, 1, 0, 0 },
+  { 0, .25, 1, 0, .25, 1, 0, 0, 1, 0, .75, 1, 1, 1, 1, 1, 1 },
+  { 0, .25, 1, 0, .25, 1, 0, 0, 1, 0, .75, 1, 1, 1, 1, 0, 0 },
+  { 0, .1, 1, 0, .1, 1, 0, 0, 1, 0, .9, 1, 1, 1, 1, 1, 1 },
+  { 0, .1, 1, 0, .1, 1, 0, 0, 1, 0, .9, 1, 1, 1, 1, 0, 0 },
 };
 
 const int n_testpatterns = sizeof(the_testpatterns) / sizeof(testpattern_t);
