@@ -1,5 +1,24 @@
 2001-01-24	<rlk@sourceforge.net>
 
+	Files:	src/cups/Makefile.am (1.4) (+2 -2)
+		src/cups/genppd.c (1.6) (+5 -5)
+	
+	Set the version number on PPD files to match the gimp-print version.
+	
+2001-01-24	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.76) (+83 -0)
+	
+	Update the change log
+	
+2001-01-24	<rlk@sourceforge.net>
+
+	Files:	AUTHORS (1.7) (+23 -13)
+	
+	Update the list of authors.
+	
+2001-01-24	<rlk@sourceforge.net>
+
 	Files:	acconfig.h (1.3) (+3 -1)
 		src/ghost/devs.mak.addon-5.10 (1.2) (+9 -9)
 		src/ghost/contrib.mak.addon (1.2) (+9 -9)

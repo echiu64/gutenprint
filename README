@@ -1,4 +1,4 @@
-This is Gimp-Print version 4.1.2, a development release in the 4.1
+This is Gimp-Print version 4.1.3, a development release in the 4.1
 line.  Gimp-print is the print facility for the Gimp, and in addition
 a suite of drivers that may be used with common UNIX spooling systems
 using GhostScript or CUPS.  These drivers provide printing quality for
@@ -45,15 +45,35 @@ GHOSTSCRIPT
 
 This package includes a Ghostscript driver that may be built, allowing
 use of this software for general printing purposes.  Please read
-Ghost/README for more information, including how to build and install
-it.
+src/ghost/README for more information, including how to build and install
+it.  To build the Ghostscript driver, you must run:
+
+./configure --with-ghost
+make
+cd src/ghost
+
+If you do not wish to build the Gimp Print plugin, you must run
+
+./configure --with-ghost --without-gimp
 
 
 CUPS
 
 This package includes a CUPS driver that may be built, allowing use of
-this software for general printing purposes.  Please read cups/README
-for more information, including how to build and install it.
+this software for general printing purposes.  To build the CUPS
+driver, you must run:
+
+./configure --with-cups
+make
+make install
+/etc/software/init.d/cups restart
+
+The last command varies with OS.  It may be /etc/init.d/cups,
+/etc/rc.d/cups, or even /etc/rc.d/init.d/cups.
+
+If you do not wish to build the Gimp Print plugin, you must run
+
+./configure --with-cups --without-gimp
 
 
 RECOMMENDED SETTINGS
@@ -99,7 +119,13 @@ to running configure, you must run
 ./autogen.sh
 
 Any options given to autogen.sh will be passed to configure when it is
-automatically run after all the extra files have been created.
+automatically run after all the extra files have been created.  So you
+may run
+
+./autogen.sh --with-ghost --with-cups --without-gimp
+
+if you wish to build the GhostScript sources and the CUPS driver, but
+not the Gimp Print plugin.
 
 If you do run aclocal, beware that versions of the Gimp from 1.1.17
 and earlier have a version of gimp.m4 that will create an incorrect

@@ -27,8 +27,7 @@ INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\"\
- @MAINTAINER_CFLAGS@\
- @RELDATE_DEF@
+ @MAINTAINER_CFLAGS@
 
 libexecdir = $(gimptool_prefix)/plug-ins
 

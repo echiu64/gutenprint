@@ -26,6 +26,9 @@
 /* Package version*/
 #undef VERSION
 
+/* Package release date*/
+#undef RELEASE_DATE
+
 /* CUPS data directory */
 #undef CUPS_DATADIR
 

@@ -87,35 +87,7 @@ number of vendor compilers and should be fairly portable.
 
 HOW DO I START USING THESE DRIVERS?
 
-For the impatient:
-
-    ./configure
-    make
-    make install
-    /etc/software/init.d/cups restart (location varies on OS)
-
-and then use the web interface to add your printer.
-
-
-COMPILING FROM THE CVS SOURCES
-
-If you downloaded a CVS snapshot of this software, this
-directory will not include many of the source files that are
-generated from the gimp-print source.  To create these files,
-you must run the following commands from the parent directory:
-
-   aclocal
-   autoconf
-   automake
-   ./configure
-   make cups
-
-If this fails (because you do not have the GIMP or any of the
-autoconfigure tools installed on your system), you can use the
-configure script from any release, and run
-
-   ./configure --disable-gimptest
-   make cups
+Please read the README file at top level.
 
 
 WHO DO I CONTACT TO GET HELP?

@@ -1,4 +1,4 @@
-This is gimp-print version 4.1.2, a development release on the 4.1 line.
+This is gimp-print version 4.1.3, a development release on the 4.1 line.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
 and CUPS drivers.  The support for printers in GhostScript and CUPS is
@@ -7,6 +7,12 @@ they use the identical code base.  Please read Ghost/README and
 CUPS/README.txt for more information on this.
 
 The Gimp Print plugin requires the Gimp 1.2.
+
+Print 4.1.3 contains the following fixes and improvements over 4.1.2:
+
+1) The source has been completely reorganized.  Please read the README
+   file for more information!
+
 
 Print 4.1.2 contains the following fixes and improvements over 4.1.1:
 

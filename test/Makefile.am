@@ -27,8 +27,7 @@ INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) -I$(top_srcdir)/src/main
 
 AM_CPPFLAGS =\
  -DLOCALEDIR=\""$(localedir)"\" \
- @MAINTAINER_CFLAGS@ \
- @RELDATE_DEF@
+ @MAINTAINER_CFLAGS@
 
 noinst_PROGRAMS = @TEST_BIN@
 
