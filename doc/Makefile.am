@@ -34,7 +34,8 @@ DOCS = \
  print-main.png \
  print-setup.png \
  print.html \
- print.sgml
+ print.sgml \
+ html-stamp
 
 
 ## Data
