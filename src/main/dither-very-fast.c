@@ -93,7 +93,6 @@ stpi_dither_very_fast(stp_vars_t v,
       if (bit_patterns[i] != 1)
 	one_bit_only = 0;
     }
-  QUANT(6);
   if (one_bit_only)
     {
       for (x = 0; x < d->dst_width; x ++)
@@ -119,10 +118,8 @@ stpi_dither_very_fast(stp_vars_t v,
 				      bit, bit_patterns[i], length);
 	    }
 
-	  QUANT(11);
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
 				 xerror, xstep, xmod);
-	  QUANT(13);
 	}
     }
   stpi_free(bit_patterns);

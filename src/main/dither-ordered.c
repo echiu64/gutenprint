@@ -150,10 +150,8 @@ stpi_dither_ordered(stp_vars_t v,
 				    bit, length);
 	    }
 
-	  QUANT(11);
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror,
 				 xstep, xmod);
-	  QUANT(13);
 	}
     }
 }

@@ -272,7 +272,7 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1
     }, 0.0, 5.0, 1.0, 1
   },
-};    
+};
 
 static int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
@@ -297,7 +297,7 @@ escp2_get_cap(stp_const_vars_t v, escp2_model_option_t feature)
 	 escp2_printer_attrs[feature].bit_shift);
       return stpi_escp2_model_capabilities[model].flags & featureset;
     }
-}  
+}
 
 static int
 escp2_has_cap(stp_const_vars_t v, escp2_model_option_t feature,
@@ -538,7 +538,7 @@ compute_resid(const res_t *res)
     }
   return RES_N - 1;
 }
-      
+
 
 static const input_slot_t *
 get_input_slot(stp_const_vars_t v)
@@ -559,7 +559,7 @@ get_input_slot(stp_const_vars_t v)
 	}
     }
   return NULL;
-}  
+}
 
 static const paper_t *
 get_media_type(stp_const_vars_t v)
@@ -707,7 +707,7 @@ get_media_adjustment(stp_const_vars_t v)
     }
   return NULL;
 }
-      
+
 
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
@@ -723,6 +723,44 @@ escp2_list_parameters(stp_const_vars_t v)
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
   return ret;
+}
+
+static void
+fill_transition_parameters(stp_parameter_t *description)
+{
+  description->is_active = 1;
+  description->bounds.dbl.lower = 0;
+  description->bounds.dbl.upper = 5.0;
+  description->deflt.dbl = 1.0;
+}
+
+static void
+set_gray_transition_parameter(stp_const_vars_t v,
+			      stp_parameter_t *description,
+			      int expected_channels)
+{
+  const escp2_inkname_t *ink_name = get_inktype(v);
+  description->is_active = 0;
+  if (ink_name && ink_name->channels[ECOLOR_K] &&
+      ink_name->channels[ECOLOR_K]->n_subchannels == expected_channels)
+    fill_transition_parameters(description);
+}
+
+static void
+set_color_transition_parameter(stp_const_vars_t v,
+			       stp_parameter_t *description,
+			       int color)
+{
+  description->is_active = 0;
+  if (stp_get_output_type(v) != OUTPUT_GRAY)
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      if (ink_name &&
+	  ink_name->channel_limit == 4 &&
+	  ink_name->channels[color] &&
+	  ink_name->channels[color]->n_subchannels == 2)
+	fill_transition_parameters(description);
+    }
 }
 
 static void
@@ -879,99 +917,17 @@ escp2_parameters(stp_const_vars_t v, const char *name,
       description->deflt.boolean = 1;
     }
   else if (strcmp(name, "GrayTransition") == 0)
-    {
-      const escp2_inkname_t *ink_name = get_inktype(v);
-      description->is_active = 0;
-      if (ink_name)
-	{
-	  if (ink_name->channels[ECOLOR_K] && 
-	      ink_name->channels[ECOLOR_K]->n_subchannels == 2)
-	    {
-	      description->is_active = 1;
-	      description->bounds.dbl.lower = 0;
-	      description->bounds.dbl.upper = 5.0;
-	      description->deflt.dbl = 1.0;
-	    }
-	}
-    }
+    set_gray_transition_parameter(v, description, 2);
   else if (strcmp(name, "Gray1Transition") == 0 ||
 	   strcmp(name, "Gray2Transition") == 0 ||
 	   strcmp(name, "Gray3Transition") == 0)
-    {
-      const escp2_inkname_t *ink_name = get_inktype(v);
-      description->is_active = 0;
-      if (ink_name)
-	{
-	  if (ink_name->channels[ECOLOR_K] && 
-	      ink_name->channels[ECOLOR_K]->n_subchannels == 4)
-	    {
-	      description->is_active = 1;
-	      description->bounds.dbl.lower = 0;
-	      description->bounds.dbl.upper = 5.0;
-	      description->deflt.dbl = 1.0;
-	    }
-	}
-    }
+    set_gray_transition_parameter(v, description, 4);
   else if (strcmp(name, "LightCyanTransition") == 0)
-    {
-      description->is_active = 0;
-      if (stp_get_output_type(v) != OUTPUT_GRAY)
-	{
-	  const escp2_inkname_t *ink_name = get_inktype(v);
-	  if (ink_name)
-	    {
-	      if (ink_name->channel_limit == 4 &&
-		  ink_name->channels[ECOLOR_C] && 
-		  ink_name->channels[ECOLOR_C]->n_subchannels == 2)
-		{
-		  description->is_active = 1;
-		  description->bounds.dbl.lower = 0;
-		  description->bounds.dbl.upper = 5.0;
-		  description->deflt.dbl = 1.0;
-		}		
-	    }
-	}
-    }
+    set_color_transition_parameter(v, description, ECOLOR_C);
   else if (strcmp(name, "LightMagentaTransition") == 0)
-    {
-      description->is_active = 0;
-      if (stp_get_output_type(v) != OUTPUT_GRAY)
-	{
-	  const escp2_inkname_t *ink_name = get_inktype(v);
-	  if (ink_name)
-	    {
-	      if (ink_name->channel_limit == 4 &&
-		  ink_name->channels[ECOLOR_M] && 
-		  ink_name->channels[ECOLOR_M]->n_subchannels == 2)
-		{
-		  description->is_active = 1;
-		  description->bounds.dbl.lower = 0;
-		  description->bounds.dbl.upper = 5.0;
-		  description->deflt.dbl = 1.0;
-		}		
-	    }
-	}
-    }
+    set_color_transition_parameter(v, description, ECOLOR_M);
   else if (strcmp(name, "DarkYellowTransition") == 0)
-    {
-      description->is_active = 0;
-      if (stp_get_output_type(v) != OUTPUT_GRAY)
-	{
-	  const escp2_inkname_t *ink_name = get_inktype(v);
-	  if (ink_name)
-	    {
-	      if (ink_name->channel_limit == 4 &&
-		  ink_name->channels[ECOLOR_Y] && 
-		  ink_name->channels[ECOLOR_Y]->n_subchannels == 2)
-		{
-		  description->is_active = 1;
-		  description->bounds.dbl.lower = 0;
-		  description->bounds.dbl.upper = 5.0;
-		  description->deflt.dbl = 1.0;
-		}		
-	    }
-	}
-    }
+    set_color_transition_parameter(v, description, ECOLOR_Y);
 }
 
 static const res_t *
@@ -1056,7 +1012,7 @@ internal_imageable_area(stp_const_vars_t v, int use_paper_margins,
     {
       *left -= 80 / (360 / 72);	/* 80 per the Epson manual */
       *right += 80 / (360 / 72);	/* 80 per the Epson manual */
-    }  
+    }
 }
 
 /*
@@ -1363,7 +1319,7 @@ setup_inks(stp_vars_t v)
 	  if (shades->n_shades < channel->n_subchannels)
 	    {
 	      stpi_erprintf("Not enough shades!\n");
-	    }      
+	    }
 	  stpi_dither_set_inks(v, i, userval,
 			       channel->n_subchannels, shades->shades,
 			       drops->numdropsizes, drops->dropsizes);
@@ -1550,7 +1506,7 @@ setup_resolution(stp_vars_t v)
   pd->vertical_units = vertical;
   pd->page_management_units = vertical;
   pd->printing_resolution = escp2_base_res(v, resid);
-}  
+}
 
 static void
 setup_softweave_parameters(stp_vars_t v)
@@ -1710,7 +1666,6 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 
   stpi_image_progress_init(image);
 
-  QUANT(0);
   for (y = 0; y < pd->image_scaled_height; y ++)
     {
       int duplicate_line = 1;
@@ -1725,13 +1680,10 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	  if (stpi_color_get_row(v, image, errline, &zero_mask))
 	    return 2;
 	}
-      QUANT(1);
 
       stpi_dither(v, y, duplicate_line, zero_mask);
-      QUANT(2);
 
       stpi_write_weave(v, pd->cols);
-      QUANT(3);
       errval += errmod;
       errline += errdiv;
       if (errval >= pd->image_scaled_height)
@@ -1739,13 +1691,11 @@ escp2_print_data(stp_vars_t v, stp_image_t *image)
 	  errval -= pd->image_scaled_height;
 	  errline ++;
 	}
-      QUANT(4);
     }
   stpi_image_progress_conclude(image);
   stpi_flush_all(v);
-  QUANT(5);
   return 1;
-}  
+}
 
 static int
 escp2_print_page(stp_vars_t v, stp_image_t *image)
@@ -1762,7 +1712,7 @@ escp2_print_page(stp_vars_t v, stp_image_t *image)
      pd->nozzle_separation * pd->res->vres / escp2_base_separation(v),
      pd->horizontal_passes,
      pd->res->vertical_passes,
-     1, 
+     1,
      pd->channels_in_use,
      pd->bitwidth,
      pd->image_scaled_width,
@@ -1859,9 +1809,6 @@ escp2_do_print(stp_vars_t v, stp_image_t *image, int print_op)
   stpi_free(pd->head_offset);
   stpi_free(pd);
 
-#ifdef QUANTIFY
-  print_timers(v);
-#endif
   return status;
 }
 
