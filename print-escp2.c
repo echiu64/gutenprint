@@ -1064,7 +1064,7 @@ static const paper_t escp2_paper_list[] = {
   { "Transparencies", 3, 0, 1.0, 1.0, .999 },
   { "Envelopes", 4, 0, .5, .25, .5 },
   { "Back Light Film", 6, 0, 1.0, 1.0, .999 },
-  { "Matte Paper", 7, 0, .5, .25, .5 },
+  { "Matte Paper", 7, 0, 1.0, 1.0, .999 },
   { "Inkjet Paper", 7, 0, .78, .25, .6 },
   { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
   { "Photo Paper", 8, 0, 1, 1.0, .999 },
