@@ -79,6 +79,14 @@ static float_param_t float_parameters[] =
 {
   {
     {
+      "ImageOptimization", N_("Image Type"),
+      N_("Optimize the settings for the type of image to be printed"),
+      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+    }, 0.0, 0.0, 0.0, 0
+  },
+  {
+    {
       "Brightness", N_("Brightness"),
       N_("Brightness of the print (0 is solid black, 2 is solid white)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
@@ -186,14 +194,6 @@ static float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
     }, 0.0, 9.0, 1.0, 1
-  },
-  {
-    {
-      "ImageOptimization", N_("Image Type"),
-      N_("Optimize the settings for the type of image to be printed"),
-      STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
-    }, 0.0, 0.0, 0.0, 0
   },
   {
     {
