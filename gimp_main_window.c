@@ -35,6 +35,8 @@
 /*
  * Constants for GUI...
  */
+#define PREVIEW_SIZE_VERT  320 /* Assuming max media size of 24" A2 */
+#define PREVIEW_SIZE_HORIZ 280 /* Assuming max media size of 24" A2 */
 
 extern vars_t           vars;
 extern gint             plist_count;	   /* Number of system printers */
@@ -87,6 +89,7 @@ static GtkWidget *image_solid_tone;
 static GtkWidget *image_continuous_tone;
 static GtkWidget *image_monochrome;
 static GtkWidget *image_fast_color;
+static GtkWidget *image_fast_grayscale;
 static GtkWidget *setup_dialog;         /* Setup dialog window */
 static GtkWidget *printer_driver;       /* Printer driver widget */
 static GtkWidget *printer_crawler;      /* Scrolled Window for menu */
@@ -207,6 +210,9 @@ gimp_create_main_window (void)
   GtkWidget *option;
   GtkWidget *combo;      /* Combo box */
   GtkWidget *box;
+  GtkWidget *box0;
+  GtkWidget *box1;
+  GtkWidget *box2;
   GSList    *group;
 #ifdef DO_LINEAR
   GSList    *linear_group;
@@ -625,6 +631,21 @@ gimp_create_main_window (void)
   gtk_container_add (GTK_CONTAINER (frame), box);
   gtk_widget_show (box);
 
+  box0 = gtk_vbox_new(FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (box0), 0);
+  gtk_container_add (GTK_CONTAINER (box), box0);
+  gtk_widget_show (box0);
+
+  box1 = gtk_vbox_new(FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (box1), 0);
+  gtk_container_add (GTK_CONTAINER (box), box1);
+  gtk_widget_show (box1);
+
+  box2 = gtk_vbox_new(FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (box2), 0);
+  gtk_container_add (GTK_CONTAINER (box), box2);
+  gtk_widget_show (box2);
+
   image_line_art = button =
     gtk_radio_button_new_with_label (NULL, _("Line Art"));
   image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
@@ -633,7 +654,7 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
 		      (gpointer) IMAGE_LINE_ART);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box0), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   image_solid_tone= button =
@@ -644,7 +665,7 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
 		      (gpointer) IMAGE_SOLID_TONE);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box1), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   image_continuous_tone = button =
@@ -655,7 +676,7 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
 		      (gpointer) IMAGE_CONTINUOUS);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box2), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   image_monochrome= button =
@@ -666,7 +687,7 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
 		      (gpointer) IMAGE_MONOCHROME);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box0), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   image_fast_color= button =
@@ -677,7 +698,18 @@ gimp_create_main_window (void)
   gtk_signal_connect (GTK_OBJECT (button), "toggled",
 		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
 		      (gpointer) IMAGE_FAST_COLOR);
-  gtk_box_pack_start (GTK_BOX (box), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box1), button, FALSE, FALSE, 0);
+  gtk_widget_show (button);
+
+  image_fast_grayscale= button =
+    gtk_radio_button_new_with_label (image_type_group, _("Fast Grayscale"));
+  image_type_group = gtk_radio_button_group (GTK_RADIO_BUTTON (button));
+  if (vars.image_type == IMAGE_FAST_GRAYSCALE)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_signal_connect (GTK_OBJECT (button), "toggled",
+		      GTK_SIGNAL_FUNC (gimp_image_type_callback),
+		      (gpointer) IMAGE_FAST_GRAYSCALE);
+  gtk_box_pack_start (GTK_BOX (box2), button, FALSE, FALSE, 0);
   gtk_widget_show (button);
 
   /*
@@ -702,7 +734,6 @@ gimp_create_main_window (void)
   gtk_widget_show(label);
   
   vbox = gtk_vbox_new (FALSE, 1);
-  gtk_box_set_spacing (GTK_BOX (vbox), -2);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
   gtk_box_pack_end (GTK_BOX (box), vbox, TRUE, TRUE, 0);
   gtk_widget_show (vbox);
@@ -1222,6 +1253,9 @@ gimp_do_misc_updates (void)
       break;
     case IMAGE_FAST_COLOR:
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_fast_color), TRUE);
+      break;
+    case IMAGE_FAST_GRAYSCALE:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_fast_grayscale), TRUE);
       break;
     default:
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_continuous_tone), TRUE);

@@ -77,7 +77,8 @@
 #define IMAGE_CONTINUOUS	2
 #define IMAGE_MONOCHROME	3
 #define IMAGE_FAST_COLOR	4
-#define NIMAGE_TYPES		5
+#define IMAGE_FAST_GRAYSCALE	5
+#define NIMAGE_TYPES		6
 
 /* Uncomment the next line to get performance statistics:
  * look for QUANT(#) in the code. At the end of escp2-print
@@ -309,11 +310,14 @@ extern void	calculate_row_parameters(void *w, int row, int subpass,
 extern void	destroy_weave_params(void *vw);
 
 
-extern void	dither_fastblack(const unsigned short *, int, void *,
+extern void	dither_monochrome(const unsigned short *, int, void *,
 				 unsigned char *, int duplicate_line);
 
 extern void	dither_black(const unsigned short *, int, void *,
 			     unsigned char *, int duplicate_line);
+
+extern void	dither_black_fast(const unsigned short *, int, void *,
+				  unsigned char *, int duplicate_line);
 
 extern void	dither_cmyk(const unsigned short *, int, void *,
 			    unsigned char *,

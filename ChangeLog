@@ -1,3 +1,81 @@
+2000-09-04	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.81) (+13 -15)
+		print.h (1.81) (+14 -16)
+		print-util.c (1.130) (+168 -161)
+		print-pcl.c (1.75) (+10 -9)
+		print-escp2.c (1.236) (+7 -6)
+		print-dither.c (1.85) (+84 -21)
+	
+	Do a better job of duplicate line elimination in the dither code.  We
+	now get notified by the driver if there are known duplicate lines.
+	This would allow us to put something in the Image layer to optimize
+	out blank lines very early on and save a lot of computation.
+	
+	A few point optimizations in the dither code.
+	
+	Move the lut_t into the private data of print_util; it isn't actually
+	needed anywhere else.  Also hang some stuff off it to optimize the
+	lookup for the photo case.
+	
+	Get rid of some potentially dangerous FP equality comparisons in
+	the HSL code.  Also avoid the scaling to 1 that both endangers
+	the computation and wastes time.
+	
+2000-09-03	<anikin@sourceforge.net>
+
+	Files:	print-dither.c (1.84) (+10 -2)
+		print.h (1.80) (+41 -7)
+		print-util.c (1.129) (+9 -28)
+	
+	Modified performance instrumentation to use gettimeofday; inlined time sensitive code
+	
+2000-09-03	<rlk@sourceforge.net>
+
+	Files:	AUTHORS (1.4) (+64 -10)
+		Ghost/gdevstp.c (1.39) (+2 -2)
+		Ghost/README (1.41) (+3 -2)
+		print.h (1.79) (+4 -2)
+		print-pcl.c (1.74) (+13 -5)
+		print-escp2.c (1.235) (+4 -1)
+		print-dither.c (1.83) (+251 -11)
+		print-canon.c (1.80) (+7 -3)
+		gtk_main_window.c (1.49) (+16 -1)
+		gimp_main_window.c (1.48) (+16 -1)
+	
+	Faster color mode
+	
+2000-09-03	<rlk@sourceforge.net>
+
+	Files:	print-util.c (1.128) (+2 -2)
+	
+	Arithmetic problem
+	
+2000-09-03	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.47) (+72 -76)
+		print-util.c (1.127) (+4 -4)
+		gtk_main_window.c (1.48) (+71 -64)
+	
+	Don't mix colors in that don't actually exist in the output.
+	
+	Improve accuracy of height/width entry, and don't force these entries
+	into PPI mode.
+	
+2000-09-03	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.33) (+93 -0)
+		print.h (1.78) (+3 -3)
+		print-weave.c (1.2) (+2 -1)
+		print-util.c (1.126) (+2 -2)
+		print-escp2.c (1.234) (+48 -48)
+		print-dither.c (1.82) (+7 -7)
+	
+	Get rid of some warnings.
+	
+	Always print to the exact dimensions specified by the user; don't
+	round the scaling down to the nearest percent in compute_page_parameters.
+	
 2000-09-02	<rlk@sourceforge.net>
 
 	Files:	README (1.25) (+1 -1)

@@ -1474,8 +1474,6 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
 	    {
 	      for (j = 1; j <= bits; j += j, tptr += length)
 		{
-		  if (j > 2)
-		    fprintf(stderr, ".\n");
 		  if (j & bits)
 		    tptr[0] |= bit;
 		}
@@ -1492,6 +1490,72 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
   return adjusted;
 }
 
+static inline int
+print_color_fast(dither_t *d, dither_color_t *rv, int base, int density,
+		 int adjusted, int x, int y, unsigned char *c,
+		 unsigned char *lc, unsigned char bit, int length,
+		 unsigned randomizer, int dontprint, unsigned *ink_budget,
+		 dither_matrix_t *pick_matrix, dither_matrix_t *dither_matrix,
+		 int dither_type)
+{
+  int i;
+  int levels = rv->nlevels - 1;
+  int dither_value = adjusted;
+  if (adjusted <= 0 || base <= 0 || density <= 0)
+    return adjusted;
+  if (density > 65536)
+    density = 65536;
+
+  /*
+   * Look for the appropriate range into which the input value falls.
+   * Notice that we use the input, not the error, to decide what dot type
+   * to print (if any).  We actually use the "density" input to permit
+   * the caller to use something other that simply the input value, if it's
+   * desired to use some function of overall density, rather than just
+   * this color's input, for this purpose.
+   */
+  for (i = levels; i >= 0; i--)
+    {
+      dither_segment_t *dd = &(rv->ranges[i]);
+      unsigned vmatrix;
+      if (density <= dd->range_l)
+	continue;
+
+      vmatrix = (dd->value_h * ditherpoint(d, dither_matrix, x, y)) >> 16;
+
+      /*
+       * After all that, printing is almost an afterthought.
+       * Pick the actual dot size (using a matrix here) and print it.
+       */
+      if (dither_value >= vmatrix)
+	{
+	  int j;
+	  int isdark;
+	  unsigned char *tptr;
+	  unsigned bits;
+	  unsigned v;
+	  unsigned dot_size;
+
+	  isdark = dd->isdark_h;
+	  bits = dd->bits_h;
+	  v = dd->value_h;
+	  dot_size = dd->dot_size_h;
+	  tptr = isdark ? c : lc;
+
+	  /*
+	   * Lay down all of the bits in the pixel.
+	   */
+	  for (j = 1; j <= bits; j += j, tptr += length)
+	    {
+	      if (j & bits)
+		tptr[0] |= bit;
+	    }
+	}
+      return adjusted;
+    }
+  return adjusted;
+}
+
 /*
  * Dithering functions!
  *
@@ -1499,13 +1563,13 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
  */
 
 /*
- * 'dither_fastblack()' - Dither grayscale pixels to black using a hard
+ * 'dither_monochrome()' - Dither grayscale pixels to black using a hard
  * threshold.  This is for use with predithered output, or for text
  * or other pure black and white only.
  */
 
 void
-dither_fastblack(const unsigned short  *gray,	/* I - Grayscale pixels */
+dither_monochrome(const unsigned short  *gray,	/* I - Grayscale pixels */
 		 int           	    row,	/* I - Current Y coordinate */
 		 void 		    *vd,
 		 unsigned char 	    *black,	/* O - Black bitmap pixels */
@@ -1674,6 +1738,60 @@ dither_black(const unsigned short   *gray,	/* I - Grayscale pixels */
 	      xerror += d->dst_width;
 	      gray--;
 	    }
+	}
+    }
+}
+
+void
+dither_black_fast(const unsigned short   *gray,	/* I - Grayscale pixels */
+		  int           row,		/* I - Current Y coordinate */
+		  void 		*vd,
+		  unsigned char *black,		/* O - Black bitmap pixels */
+		  int		duplicate_line)
+{
+
+  int		x,		/* Current X coordinate */
+		xerror,		/* X error count */
+		xstep,		/* X step */
+		xmod,		/* X error modulus */
+		length;		/* Length of output bitmap in bytes */
+  unsigned char	bit,		/* Current bit */
+		*kptr;		/* Current black pixel */
+  int		k;
+  dither_t *d = (dither_t *) vd;
+
+  bit = 128;
+
+  xstep  = d->src_width / d->dst_width;
+  xmod   = d->src_width % d->dst_width;
+  length = (d->dst_width + 7) / 8;
+
+  memset(black, 0, length * d->k_dither.signif_bits);
+  kptr = black;
+  xerror = 0;
+
+  for (x = 0; x < d->dst_width; x++)
+    {
+      unsigned ink_budget = d->ink_limit;
+
+      k = 65535 - *gray;
+      print_color_fast(d, &(d->k_dither), k, k, k, x, row, kptr, NULL, bit,
+		       length, d->k_randomizer, 0, &ink_budget,
+		       &(d->k_pick), &(d->k_dithermat), d->dither_type);
+
+      gray   += xstep;
+      xerror += xmod;
+      if (bit == 1)
+	{
+	  kptr ++;
+	  bit = 128;
+	}
+      else
+	bit >>= 1;
+      if (xerror >= d->dst_width)
+	{
+	  xerror -= d->dst_width;
+	  gray++;
 	}
     }
 }
@@ -1887,18 +2005,6 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
     		*lcptr,		/* Current light cyan pixel */
     		*lyptr,		/* Current light yellow pixel */
     		*kptr;		/* Current black pixel */
-  int		ditherc = 0,	/* Next error value in buffer */
-    		*cerror0 = 0,	/* Pointer to current error row */
-    		*cerror1 = 0;	/* Pointer to next error row */
-  int		dithery = 0,	/* Next error value in buffer */
-    		*yerror0 = 0,	/* Pointer to current error row */
-    		*yerror1 = 0;	/* Pointer to next error row */
-  int		ditherm = 0,	/* Next error value in buffer */
-    		*merror0 = 0,	/* Pointer to current error row */
-    		*merror1 = 0;	/* Pointer to next error row */
-  int		ditherk = 0,	/* Next error value in buffer */
-    		*kerror0 = 0,	/* Pointer to current error row */
-    		*kerror1 = 0;	/* Pointer to next error row */
   dither_t	*d = (dither_t *) vd;
   const unsigned short *cline = get_valueline(d, ECOLOR_C);
   const unsigned short *mline = get_valueline(d, ECOLOR_M);
@@ -1940,8 +2046,7 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
    * this row, and we're using an ordered dither, there's no reason
    * to do anything at all.
    */
-  if ((d->last_line_was_empty && (d->dither_type & D_ORDERED_BASE)) ||
-      d->last_line_was_empty >= 5)
+  if (d->last_line_was_empty)
     return;
 
   /*
@@ -1951,36 +2056,6 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
   bit = 128;
   x = 0;
   terminate = d->dst_width;
-
-  if (! (d->dither_type & D_ORDERED_BASE))
-    {
-      cerror0 = get_errline(d, row, ECOLOR_C);
-      cerror1 = get_errline(d, row + 1, ECOLOR_C);
-
-      merror0 = get_errline(d, row, ECOLOR_M);
-      merror1 = get_errline(d, row + 1, ECOLOR_M);
-
-      yerror0 = get_errline(d, row, ECOLOR_Y);
-      yerror1 = get_errline(d, row + 1, ECOLOR_Y);
-
-      kerror0 = get_errline(d, row, ECOLOR_K);
-      kerror1 = get_errline(d, row + 1, ECOLOR_K);
-      memset(kerror1, 0, d->dst_width * sizeof(int));
-      memset(cerror1, 0, d->dst_width * sizeof(int));
-      memset(merror1, 0, d->dst_width * sizeof(int));
-      memset(yerror1, 0, d->dst_width * sizeof(int));
-      if (d->last_line_was_empty >= 4)
-	{
-	  if (d->last_line_was_empty == 4)
-	    {
-	      memset(kerror0, 0, d->dst_width * sizeof(int));
-	      memset(cerror0, 0, d->dst_width * sizeof(int));
-	      memset(merror0, 0, d->dst_width * sizeof(int));
-	      memset(yerror0, 0, d->dst_width * sizeof(int));
-	    }
-	  return;
-	}
-    }
   cptr = cyan;
   mptr = magenta;
   yptr = yellow;
@@ -1988,14 +2063,6 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
   lmptr = lmagenta;
   lyptr = lyellow;
   kptr = black;
-
-  if (! (d->dither_type & D_ORDERED_BASE))
-    {
-      ditherc = cerror0[0];
-      ditherm = merror0[0];
-      dithery = yerror0[0];
-      ditherk = kerror0[0];
-    }
 
   k = 0;			/* Shut up the compiler */
   ok = 0;
@@ -2022,13 +2089,6 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
        */
       if (c == 0 && m == 0 && y == 0)
 	{
-	  if (!(d->dither_type & D_ORDERED_BASE))
-	    {
-	      cerror0[0] = 0;
-	      merror0[0] = 0;
-	      yerror0[0] = 0;
-	      kerror0[0] = 0;
-	    }
 	  goto advance;
 	}
 
@@ -2045,47 +2105,23 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 	  ok = k;
 	}
 
-      if (!(d->dither_type & D_ORDERED_BASE))
-	{
-	  c = update_color(c, ditherc);
-	  m = update_color(m, ditherm);
-	  y = update_color(y, dithery);
-	  if (black)
-	    k = update_color(k, ditherk);
-	}
-
       if (black)
-	k = print_color(d, &(d->k_dither), ok, ok,
-			k, x, row, kptr, NULL, bit, length,
-			0, 0, NULL,
-			&(d->k_pick), &(d->k_dithermat), d->dither_type);
-      c = print_color(d, &(d->c_dither), oc, oc,
-		      c, x, row, cptr, lcptr, bit, length,
-		      0, 0, NULL,
-		      &(d->c_pick), &(d->c_dithermat), d->dither_type);
-      m = print_color(d, &(d->m_dither), om, om,
-		      m, x, row, mptr, lmptr, bit, length,
-		      0, 0, NULL,
-		      &(d->m_pick), &(d->m_dithermat), d->dither_type);
-      y = print_color(d, &(d->y_dither), oy, oy,
-		      y, x, row, yptr, lyptr, bit, length,
-		      0, 0, NULL,
-		      &(d->y_pick), &(d->y_dithermat), d->dither_type);
-
-      if (!(d->dither_type & D_ORDERED_BASE))
-	{
-	  ditherc = cerror0[1] + c * 4;
-	  cerror1[0] += c * 4;
-	  ditherm = merror0[1] + m * 4;
-	  merror1[0] += m * 4;
-	  dithery = yerror0[1] + y * 4;
-	  yerror1[0] += y * 4;
-	  if (black)
-	    {
-	      ditherk = kerror0[1] + k * 4;
-	      kerror1[0] += k * 4;
-	    }
-	}
+	k = print_color_fast(d, &(d->k_dither), ok, ok,
+			     k, x, row, kptr, NULL, bit, length,
+			     0, 0, NULL,
+			     &(d->k_pick), &(d->k_dithermat), d->dither_type);
+      c = print_color_fast(d, &(d->c_dither), oc, oc,
+			   c, x, row, cptr, lcptr, bit, length,
+			   0, 0, NULL,
+			   &(d->c_pick), &(d->c_dithermat), d->dither_type);
+      m = print_color_fast(d, &(d->m_dither), om, om,
+			   m, x, row, mptr, lmptr, bit, length,
+			   0, 0, NULL,
+			   &(d->m_pick), &(d->m_dithermat), d->dither_type);
+      y = print_color_fast(d, &(d->y_dither), oy, oy,
+			   y, x, row, yptr, lyptr, bit, length,
+			   0, 0, NULL,
+			   &(d->y_pick), &(d->y_dithermat), d->dither_type);
 
       /*****************************************************************
        * Advance the loop
@@ -2109,17 +2145,6 @@ dither_cmyk_fast(const unsigned short  *rgb,	/* I - RGB pixels */
 	}
       else
 	bit >>= 1;
-      if (!(d->dither_type & D_ORDERED_BASE))
-	{
-	  cerror0++;
-	  cerror1++;
-	  merror0++;
-	  merror1++;
-	  yerror0++;
-	  yerror1++;
-	  kerror0++;
-	  kerror1++;
-	}
     }
   /*
    * Main loop ends here!
