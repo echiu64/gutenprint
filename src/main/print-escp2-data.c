@@ -164,6 +164,21 @@ static const escp2_variable_ink_t photo_4pl_2880_ink =
 };
 
 
+static const stp_simple_dither_range_t standard_680_6pl_dither_ranges[] =
+{
+  { 0.50,  0x1, 0, 3 },
+  { 0.66,  0x2, 0, 4 },
+  { 1.0,   0x3, 0, 6 }
+};
+
+static const escp2_variable_ink_t standard_680_6pl_ink =
+{
+  standard_680_6pl_dither_ranges,
+  sizeof(standard_680_6pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
 static const stp_simple_dither_range_t standard_6pl_dither_ranges[] =
 {
   { 0.25,  0x1, 0, 1 },
@@ -442,6 +457,14 @@ static const escp2_variable_inkset_t photo_inks =
   &photo_cyan_ink,
   &photo_magenta_ink,
   NULL
+};
+
+static const escp2_variable_inkset_t escp2_680_6pl_standard_inks =
+{
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink,
+  &standard_680_6pl_ink
 };
 
 static const escp2_variable_inkset_t escp2_6pl_standard_inks =
@@ -970,6 +993,36 @@ static const escp2_variable_inklist_t variable_3pl_pigment_4color_inks =
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
       &escp2_3pl_pigment_2880_standard_inks,
+    }
+  }
+};
+
+static const escp2_variable_inklist_t variable_680_4pl_4color_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_680_6pl_standard_inks,
+      &escp2_4pl_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
+      &escp2_4pl_2880_standard_inks,
     }
   }
 };
@@ -1722,6 +1775,9 @@ static const escp2_densities_t c6pl_densities =
 static const escp2_densities_t c3pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.646, 0.73,  0.7,   0.7,   0.91,  0.91,  0.455 };
 
+static const escp2_densities_t sc680_densities =
+{ 2.0, 2.0, 1.2, 1.2, 0.60, 0.60, 0.792, 0.792, 0.792, 0.792, 0.594, 0.594, 0.297 };
+
 static const escp2_densities_t c4pl_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
 
@@ -2462,7 +2518,7 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4), 9, 9, 0, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
-    c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
+    c4pl_dotsizes, sc680_densities, &variable_680_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
     &standard_paper_list, standard_reslist
   },
