@@ -674,13 +674,13 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
   if (cups->row < cups->header.cupsHeight)
   {
-    fprintf(stderr, "DEBUG: GIMP-PRINT reading %d %d\n",
+    fprintf(stderr, "DEBUG2: GIMP-PRINT reading %d %d\n",
 	    bytes_per_line, cups->row);
     cupsRasterReadPixels(cups->ras, data, bytes_per_line);
     cups->row ++;
     if (margin)
       {
-	fprintf(stderr, "DEBUG: GIMP-PRINT tossing right %d\n", margin);
+	fprintf(stderr, "DEBUG2: GIMP-PRINT tossing right %d\n", margin);
 	throwaway_data(margin, cups);
       }
 

@@ -168,16 +168,16 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
-    "InkType", N_("Ink Type"),
-    N_("Type of ink in the printer"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
-  },
-  {
     "Resolution", N_("Resolution"),
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
+  {
+    "InkType", N_("Ink Type"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, -1
   },
   {
     "PrintingDirection", N_("Printing Direction"),
@@ -525,7 +525,16 @@ get_inktype(const stp_vars_t v)
   const inklist_t *ink_list = escp2_inklist(v);
   int i;
 
-  if (ink_type)
+  if (!ink_type)
+    {
+      const paper_t *pt = get_media_type(v);
+      if (pt && pt->preferred_ink_type)
+	ink_type = pt->preferred_ink_type;
+      else if (ink_list)
+	ink_type = ink_list->inknames[0]->name;
+    }
+
+  if (ink_type && ink_list)
     {
       for (i = 0; i < ink_list->n_inks; i++)
 	{

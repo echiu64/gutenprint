@@ -149,6 +149,7 @@ typedef struct
   const char *hue_adjustment;
   const char *lum_adjustment;
   const char *sat_adjustment;
+  const char *preferred_ink_type;
 } paper_t;
 
 typedef struct
