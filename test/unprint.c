@@ -24,7 +24,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../lib/libprintut.h"
+#include <gimp-print/util.h>
 #include<stdio.h>
 #include<stdlib.h>
 #ifdef HAVE_LIMITS_H
@@ -349,7 +349,7 @@ merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
     {
       width = ((p->stopx[color] - p->startx[color] + 1) * pstate.bpp + 7) / 8;
       owidth = ((oldstop - p->startx[color] + 1) * pstate.bpp + 7) / 8;
-      p->line[color] = xrealloc(p->line[color], width);
+      p->line[color] = stp_realloc(p->line[color], width);
       memset((p->line[color] + owidth), 0, (width - owidth));
     }
   /*
@@ -367,7 +367,7 @@ merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color)
 	  set_bits(p->line[color], i + shift, pvalue);
 	}
     }
-  free(l);
+  stp_free(l);
 }
 
 void
@@ -434,7 +434,7 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
   if (width < 0)
     width=0;
 
-  out_row = malloc(sizeof(ppmpixel) * width);
+  out_row = stp_malloc(sizeof(ppmpixel) * width);
   fprintf(stderr, "Writing output...\n");
 
   /* write out the PPM header */
@@ -472,7 +472,7 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
 	for (i = 0; i < oversample; i++)
 	  fwrite(out_row, sizeof(ppmpixel), width, fp_w);
     }
-  free(out_row);
+  stp_free(out_row);
 }
 
 void
@@ -600,8 +600,9 @@ update_page(unsigned char *buff, /* I - pixel data               */
        * have unpredictable results.  But, that's a pretty acurate statement
        * for a real printer, too!
        */
-      page = (line_type **) xcalloc(pstate.bottom_margin - pstate.top_margin,
-				    sizeof(line_type *));
+      page = (line_type **)
+	stp_zalloc((pstate.bottom_margin - pstate.top_margin) *
+		   sizeof(line_type *));
     }
   if (pstate.printer_weave)
     sep = 1;
@@ -622,7 +623,7 @@ update_page(unsigned char *buff, /* I - pixel data               */
 	continue; /* ignore blank lines */
       if (!(page[y]))
 	{
-	  page[y] = (line_type *) xcalloc(sizeof(line_type), 1);
+	  page[y] = (line_type *) stp_zalloc(sizeof(line_type));
 	  if (y < pstate.top_edge)
 	    pstate.top_edge = y;
 	  if (y > pstate.bottom_edge)
@@ -652,7 +653,7 @@ update_page(unsigned char *buff, /* I - pixel data               */
 	pstate.right_edge = page[y]->stopx[color];
       width = page[y]->stopx[color] - page[y]->startx[color];
       page[y]->line[color] =
-	xcalloc(((width * skip + 1) * pstate.bpp + 7) / 8, 1);
+	stp_zalloc(((width * skip + 1) * pstate.bpp + 7) / 8);
       expand_line(buff + mi * ((n * pstate.bpp + 7) / 8), page[y]->line[color],
 		  width+1, skip, left_white);
       if (oldline)
@@ -774,7 +775,7 @@ parse_escp2_data(FILE *fp_r)
   bandsize = m * ((n * pstate.bpp + 7) / 8);
   if (valid_bufsize < bandsize)
     {
-      buf = realloc(buf, bandsize);
+      buf = stp_realloc(buf, bandsize);
       valid_bufsize = bandsize;
     }
   switch (c)
@@ -966,8 +967,9 @@ parse_escp2_extended(FILE *fp_r)
       fprintf(stderr, "Setting bottom margin to %d (%.3f)\n",
 	      pstate.bottom_margin,
 	      (double) pstate.bottom_margin / pstate.page_management_units);
-      page = (line_type **) xcalloc(pstate.bottom_margin - pstate.top_margin,
-				    sizeof(line_type *));
+      page = (line_type **)
+	stp_zalloc((pstate.bottom_margin - pstate.top_margin) *
+		   sizeof(line_type *));
       break;
     case 'V': /* set absolute vertical position */
       i = 0;
@@ -1495,7 +1497,8 @@ parse_canon(FILE *fp_r)
 	       pstate.relative_horizontal_units,
 	       pstate.relative_vertical_units);
 
-       page=(line_type **)xcalloc(pstate.bottom_margin,sizeof(line_type *));
+       page= (line_type **) stp_zalloc(pstate.bottom_margin *
+				       sizeof(line_type *));
        break;
      case 'e': /* 0x65 - vertical head movement */
        pstate.yposition+= (buf[1]+256*buf[0]);
@@ -1678,7 +1681,7 @@ main(int argc,char *argv[])
     pstate.nozzle_separation = 1;
   }
   pstate.nozzles = 96;
-  buf = malloc(256 * 256);
+  buf = stp_malloc(256 * 256);
   valid_bufsize = 256 * 256;
 
   UNPRINT = getenv("UNPRINT");

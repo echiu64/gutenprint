@@ -79,9 +79,9 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
 	      module_name = stpi_path_merge((const char *) stp_list_item_get_data(diritem),
 					   module_dir[idx]->d_name);
 	      stp_list_item_create(findlist, NULL, module_name);
-	      stp_free (module_dir[idx]);
+	      free (module_dir[idx]); /* Must use plain free() */
 	    }
-	  free (module_dir);
+	  free (module_dir); /* Must use plain free() */
 	}
       diritem = stp_list_item_next(diritem);
     }

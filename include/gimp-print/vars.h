@@ -29,6 +29,9 @@
 #ifndef GIMP_PRINT_VARS_H
 #define GIMP_PRINT_VARS_H
 
+#include <gimp-print/array.h>
+#include <gimp-print/curve.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

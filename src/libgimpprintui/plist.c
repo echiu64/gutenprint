@@ -24,7 +24,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../../lib/libprintut.h"
 
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <gimp-print-ui/gimp-print-ui.h>
@@ -52,11 +51,11 @@ static char *image_type;
 static gint image_raw_channels = 0;
 static gint image_channel_depth = 8;
 
-#define STP_SAFE_FREE(x)			\
+#define SAFE_FREE(x)			\
 do						\
 {						\
   if ((x))					\
-    free((char *)(x));				\
+    g_free((char *)(x));			\
   ((x)) = NULL;					\
 } while (0)
 
@@ -65,7 +64,7 @@ stpui_set_printrc_file(const char *name)
 {
   if (name && name == printrc_name)
     return;
-  STP_SAFE_FREE(printrc_name);
+  SAFE_FREE(printrc_name);
   if (name)
     printrc_name = g_strdup(name);
   else
@@ -89,7 +88,7 @@ stpui_plist_set_output_to(stpui_plist_t *p, const char *val)
 {
   if (p->output_to == val)
     return;
-  STP_SAFE_FREE(p->output_to);
+  SAFE_FREE(p->output_to);
   p->output_to = g_strdup(val);
 }
 
@@ -98,7 +97,7 @@ stpui_plist_set_output_to_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->output_to == val)
     return;
-  STP_SAFE_FREE(p->output_to);
+  SAFE_FREE(p->output_to);
   p->output_to = g_strndup(val, n);
 }
 
@@ -113,7 +112,7 @@ stpui_plist_set_name(stpui_plist_t *p, const char *val)
 {
   if (p->name == val)
     return;
-  STP_SAFE_FREE(p->name);
+  SAFE_FREE(p->name);
   p->name = g_strdup(val);
 }
 
@@ -122,7 +121,7 @@ stpui_plist_set_name_n(stpui_plist_t *p, const char *val, int n)
 {
   if (p->name == val)
     return;
-  STP_SAFE_FREE(p->name);
+  SAFE_FREE(p->name);
   p->name = g_strndup(val, n);
 }
 
@@ -179,8 +178,8 @@ stpui_printer_initialize(stpui_plist_t *printer)
 static void
 stpui_plist_destroy(stpui_plist_t *printer)
 {
-  STP_SAFE_FREE(printer->name);
-  STP_SAFE_FREE(printer->output_to);
+  SAFE_FREE(printer->name);
+  SAFE_FREE(printer->output_to);
   stp_vars_destroy(printer->v);
 }
 
@@ -203,7 +202,7 @@ stpui_plist_copy(stpui_plist_t *vd, const stpui_plist_t *vs)
 static stpui_plist_t *
 allocate_stpui_plist_copy(const stpui_plist_t *vs)
 {
-  stpui_plist_t *rep = xmalloc(sizeof(stpui_plist_t));
+  stpui_plist_t *rep = g_malloc(sizeof(stpui_plist_t));
   memset(rep, 0, sizeof(stpui_plist_t));
   rep->v = stp_vars_create();
   stpui_plist_copy(rep, vs);
@@ -220,7 +219,7 @@ check_plist(int count)
   else if (current_plist_size == 0)
     {
       current_plist_size = count;
-      stpui_plist = xmalloc(current_plist_size * sizeof(stpui_plist_t));
+      stpui_plist = g_malloc(current_plist_size * sizeof(stpui_plist_t));
       for (i = 0; i < current_plist_size; i++)
 	{
 	  memset(&(stpui_plist[i]), 0, sizeof(stpui_plist_t));
@@ -233,7 +232,7 @@ check_plist(int count)
       current_plist_size *= 2;
       if (current_plist_size < count)
 	current_plist_size = count;
-      stpui_plist = realloc(stpui_plist, current_plist_size * sizeof(stpui_plist_t));
+      stpui_plist = g_realloc(stpui_plist, current_plist_size * sizeof(stpui_plist_t));
       for (i = old_plist_size; i < current_plist_size; i++)
 	{
 	  memset(&(stpui_plist[i]), 0, sizeof(stpui_plist_t));
@@ -418,8 +417,8 @@ stpui_plist_create(const char *name, const char *driver)
     answer = psearch(&key, stpui_plist, stpui_plist_count,
 		     sizeof(stpui_plist_t),
 		     (int (*)(const void *, const void *)) compare_printers);
-  free(key.name);
-  free(key.output_to);
+  g_free(key.name);
+  g_free(key.output_to);
   stp_vars_destroy(key.v);
   return answer;
 }
@@ -558,8 +557,8 @@ stpui_printrc_load_v0(FILE *fp)
       get_optional_string_param(key.v,"DitherAlgorithm",&lineptr,&keepgoing);
       GET_OPTIONAL_INTERNAL_INT_PARAM(unit);
       stpui_plist_add(&key, 0);
-      free(key.name);
-      free(key.output_to);
+      g_free(key.name);
+      g_free(key.output_to);
       stp_vars_destroy(key.v);
     }
   stpui_plist_current = 0;
@@ -621,7 +620,7 @@ stpui_printrc_load_v1(FILE *fp)
       if (strcasecmp("current-printer", keyword) == 0)
 	{
 	  if (current_printer)
-	    free (current_printer);
+	    g_free (current_printer);
 	  current_printer = g_strdup(value);
 	}
       else if (strcasecmp("printer", keyword) == 0)
@@ -734,8 +733,8 @@ stpui_printrc_load_v1(FILE *fp)
     {
       stpui_plist_add(&key, 0);
       stp_vars_destroy(key.v);
-      free(key.name);
-      free(key.output_to);
+      g_free(key.name);
+      g_free(key.output_to);
     }
   if (current_printer)
     {
@@ -770,7 +769,7 @@ stpui_printrc_load_v2(FILE *fp)
 					   STP_PARAMETER_ACTIVE))
 	    stp_set_boolean_parameter(stpui_plist[i].v, "PageSizeExtended", 0);
 	}
-      STP_SAFE_FREE(stpui_printrc_current_printer);
+      SAFE_FREE(stpui_printrc_current_printer);
     }
 }
 
@@ -1090,7 +1089,7 @@ stpui_get_system_printers(void)
 #endif
 		result = g_strdup_printf("lpr -l -P%s", line);
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
-		free(result);
+		g_free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
 		stpui_plist[stpui_plist_count].active = 1;
 		stpui_plist_count ++;
@@ -1121,7 +1120,7 @@ stpui_get_system_printers(void)
 #endif
 		result = g_strdup_printf("lp -oraw -s -d%s", name);
 		stpui_plist_set_output_to(&(stpui_plist[stpui_plist_count]), result);
-		free(result);
+		g_free(result);
 		stp_set_driver(stpui_plist[stpui_plist_count].v, "ps2");
 		stpui_plist[stpui_plist_count].active = 1;
         	stpui_plist_count ++;

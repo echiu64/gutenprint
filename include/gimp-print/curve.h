@@ -29,6 +29,11 @@
 #ifndef GIMP_PRINT_CURVE_H
 #define GIMP_PRINT_CURVE_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <gimp-print/sequence.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

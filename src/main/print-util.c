@@ -76,7 +76,7 @@ typedef struct
 	break;								\
       else								\
 	{								\
-	  free (result);						\
+	  stp_free (result);						\
 	  if (bytes < 0)						\
 	    current_allocation *= 2;					\
 	  else								\
@@ -272,7 +272,7 @@ stp_eprintf(const stp_vars_t *v, const char *format, ...)
       char *result;
       STPI_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
-      free(result);
+      stp_free(result);
     }
   else
     {
@@ -333,7 +333,7 @@ stp_dprintf(unsigned long level, const stp_vars_t *v, const char *format, ...)
       char *result;
       STPI_VASPRINTF(result, bytes, format);
       (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
-      free(result);
+      stp_free(result);
     }
 }
 

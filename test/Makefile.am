@@ -40,25 +40,25 @@ noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint cur
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
-escp2_weavetest_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+escp2_weavetest_LDADD = $(GIMPPRINT_LIBS)
 
 unprint_SOURCES = unprint.c
-unprint_LDADD = $(LIBPRINTUT)
+unprint_LDADD = $(GIMPPRINT_LIBS)
 
 curve_SOURCES = curve.c
 curve_LDADD = $(GIMPPRINT_LIBS)
 
 pcl_unprint_SOURCES = pcl-unprint.c
-pcl_unprint_LDADD = $(LIBPRINTUT)
+pcl_unprint_LDADD = $(GIMPPRINT_LIBS)
 
 bjc_unprint_SOURCES = bjc-unprint.c
-bjc_unprint_LDADD = $(LIBPRINTUT)
+bjc_unprint_LDADD = $(GIMPPRINT_LIBS)
 
 testdither_SOURCES = testdither.c
-testdither_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+testdither_LDADD = $(GIMPPRINT_LIBS)
 
 xml_curve_SOURCES = xml-curve.c
-xml_curve_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+xml_curve_LDADD = $(GIMPPRINT_LIBS)
 
 ## Rules
 

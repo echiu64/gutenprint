@@ -44,19 +44,19 @@ noinst_PROGRAMS = printer_options printer_margins paper_sizes gimp-print-version
 endif
 
 printer_options_SOURCES = printer_options.c
-printer_options_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+printer_options_LDADD = $(GIMPPRINT_LIBS)
 
 printer_margins_SOURCES = printer_margins.c
-printer_margins_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+printer_margins_LDADD = $(GIMPPRINT_LIBS)
 
 gimp_print_version_SOURCES = gimp-print-version.c
-gimp_print_version_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+gimp_print_version_LDADD = $(GIMPPRINT_LIBS)
 
 paper_sizes_SOURCES = paper_sizes.c
-paper_sizes_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+paper_sizes_LDADD = $(GIMPPRINT_LIBS)
 
 printers_SOURCES = printers.c
-printers_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+printers_LDADD = $(GIMPPRINT_LIBS)
 
 
 ## Rules

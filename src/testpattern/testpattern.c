@@ -101,13 +101,13 @@ c_strndup(const char *s, int n)
   char *ret;
   if (!s || n < 0)
     {
-      ret = malloc(1);
+      ret = stp_malloc(1);
       ret[0] = 0;
       return ret;
     }
   else
     {
-      ret = malloc(n + 1);
+      ret = stp_malloc(n + 1);
       memcpy(ret, s, n);
       ret[n] = 0;
       return ret;
@@ -120,7 +120,7 @@ c_strdup(const char *s)
   char *ret;
   if (!s)
     {
-      ret = malloc(1);
+      ret = stp_malloc(1);
       ret[0] = 0;
       return ret;
     }
@@ -148,7 +148,7 @@ get_next_testpattern(void)
   static int internal_n_testpatterns = 0;
   if (global_n_testpatterns == -1)
     {
-      static_testpatterns = malloc(sizeof(testpattern_t));
+      static_testpatterns = stp_malloc(sizeof(testpattern_t));
       global_n_testpatterns = 0;
       internal_n_testpatterns = 1;
       clear_testpattern(&(static_testpatterns[0]));
@@ -158,8 +158,8 @@ get_next_testpattern(void)
     {
       internal_n_testpatterns *= 2;
       static_testpatterns =
-	realloc(static_testpatterns,
-		internal_n_testpatterns * sizeof(testpattern_t));
+	stp_realloc(static_testpatterns,
+		    internal_n_testpatterns * sizeof(testpattern_t));
     }
   global_n_testpatterns++;
   clear_testpattern(&(static_testpatterns[global_n_testpatterns]));
@@ -194,7 +194,7 @@ initialize_global_parameters(void)
   global_band_height = 0;
   global_n_testpatterns = -1;
   if (global_printer)
-    free(global_printer);
+    free(global_printer); /* Allocated with strdup() */
   global_printer = NULL;
   global_density = 1.0;
   global_xtop = 0;
@@ -208,13 +208,13 @@ initialize_global_parameters(void)
   global_did_something = 0;
   global_invert_data = 0;
   if (static_testpatterns)
-    free(static_testpatterns);
+    stp_free(static_testpatterns);
   static_testpatterns = NULL;
   if (global_vars)
     stp_vars_destroy(global_vars);
   global_vars = NULL;
   if (global_printer)
-    free(global_printer);
+    free(global_printer); /* Allocated with strdup() */
   global_printer = NULL;
 }
 
@@ -318,7 +318,7 @@ do_print(void)
   if (stp_print(v, &theImage) != 1)
     return 2;
   stp_vars_destroy(v);
-  free(static_testpatterns);
+  stp_free(static_testpatterns);
   static_testpatterns = NULL;
   return 0;
 }
@@ -360,7 +360,7 @@ invert_data(unsigned char *data, size_t byte_depth)
   total_bytes = global_printer_width * global_channel_depth * byte_depth;
   for (i = 0; i < total_bytes; i++)
     data[i] = 0xff ^ data[i];
-}  
+}
 
 /*
  * Emulate templates with macros -- rlk 20031014

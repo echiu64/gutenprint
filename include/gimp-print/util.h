@@ -29,10 +29,12 @@
 #ifndef GIMP_PRINT_UTIL_H
 #define GIMP_PRINT_UTIL_H
 
+#include <gimp-print/curve.h>
+#include <gimp-print/vars.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /**
  * Utility functions.
@@ -49,7 +51,6 @@ extern "C" {
  * @returns 0 on success, 1 on failure.
  */
 extern int stp_init(void);
-
 
 /**
  * Set the output encoding.  This function sets the encoding that all

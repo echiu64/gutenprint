@@ -38,7 +38,6 @@
  *   printlangs()             - Show available translations.
  *   printmodels()            - Show available printer models.
  *   checkcat()               - Check message catalogue exists.
- *   gp_malloc()                - Die gracefully if malloc fails.
  *   write_ppd()              - Write a PPD file.
  */
 
@@ -73,7 +72,6 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include <gimp-print/gimp-print-intl.h>
-#include "../../lib/libprintut.h"
 
 /*
  * Note:
@@ -163,7 +161,6 @@ char ** getlangs(void);
 int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
-void *  gp_malloc (size_t size);
 int	write_ppd(const stp_printer_t *p, const char *prefix,
 		  const char *language, int verbose);
 
@@ -314,7 +311,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   if (optind < argc) {
     int n, numargs;
     numargs = argc-optind;
-    models = gp_malloc((numargs+1) * sizeof(char*));
+    models = stp_malloc((numargs+1) * sizeof(char*));
     for (n=0; n<numargs; n++)
       {
 	models[n] = argv[optind+n];
@@ -426,7 +423,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	      return (1);
 	    }
 	}
-      free(models);
+      stp_free(models);
     }
   else
     {
@@ -445,10 +442,10 @@ main(int  argc,			    /* I - Number of command-line arguments */
       char **langs_tmp = langs;
       while (*langs_tmp)
 	{
-	  free(*langs_tmp);
+	  stp_free(*langs_tmp);
 	  langs_tmp++;
 	}
-      free(langs);
+      stp_free(langs);
     }
 
   return (0);
@@ -510,15 +507,15 @@ getlangs(void)
   if (n >= 0)
     {
       int idx;
-      langs = gp_malloc((n+1) * sizeof(char*));
+      langs = stp_malloc((n+1) * sizeof(char*));
       for (idx = 0; idx < n; ++idx)
 	{
-	  langs[idx] = (char*) gp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
+	  langs[idx] = (char*) stp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
 	  strcpy(langs[idx], langdirs[idx]->d_name);
-	  free (langdirs[idx]);
+	  free (langdirs[idx]); /* Must use plain free() */
 	}
       langs[n] = NULL;
-      free (langdirs);
+      free (langdirs); /* Must use plain free() */
     }
   else
     return NULL;
@@ -590,7 +587,7 @@ checkcat (const struct dirent *localedir)
   /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
   /* Add 3, for two '/' separators and '\0'   */
   catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
-  catpath = (char*) gp_malloc(catlen * sizeof(char));
+  catpath = (char*) stp_malloc(catlen * sizeof(char));
 
   strncpy (catpath, baselocaledir, strlen(baselocaledir));
   catlen = strlen(baselocaledir);
@@ -612,31 +609,11 @@ checkcat (const struct dirent *localedir)
 	}
      }
 
-  free (catpath);
+  stp_free (catpath);
 
   errno = savederr;
   return status;
 }
-
-
-/*
- * 'gp_malloc() - die gracefully if malloc() fails
- */
-
-void *
-gp_malloc (size_t size)
-{
-  register void *p = NULL;
-
-  if ((p = malloc (size)) == NULL)
-    {
-      fprintf (stderr, "cups-genppd: Memory allocation failed: %s.\n",
-	       strerror(errno));
-      exit (EXIT_FAILURE);
-    }
-  return (p);
-}
-
 
 /*
  * 'write_ppd()' - Write a PPD file.
@@ -872,7 +849,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   variable_sizes = 0;
   stp_describe_parameter(v, "PageSize", &desc);
   num_opts = stp_string_list_count(desc.bounds.str);
-  the_papers = gp_malloc(sizeof(paper_t) * num_opts);
+  the_papers = stp_malloc(sizeof(paper_t) * num_opts);
 
   for (i = 0; i < num_opts; i++)
   {
@@ -988,7 +965,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 
   stp_parameter_description_destroy(&desc);
   if (the_papers)
-    free(the_papers);
+    stp_free(the_papers);
 
  /*
   * Do we support color?

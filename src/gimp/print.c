@@ -24,7 +24,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../../lib/libprintut.h"
 
 #include <gimp-print-ui/gimp-print-ui.h>
 #include "print_gimp.h"
@@ -144,7 +143,7 @@ stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
 				  gint *bpp, gint page)
 {
   if (gimp_thumbnail_data)
-    free(gimp_thumbnail_data);
+    g_free(gimp_thumbnail_data);
   gimp_thumbnail_data =
     gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
   return gimp_thumbnail_data;
@@ -367,7 +366,7 @@ run (char   *name,		/* I - Name of print program. */
     }
 
   if (gimp_thumbnail_data)
-    free(gimp_thumbnail_data);
+    g_free(gimp_thumbnail_data);
 
   /*
    * Print the image...

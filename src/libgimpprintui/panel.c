@@ -25,7 +25,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../../lib/libprintut.h"
 
 #define MAX_PREVIEW_PPI        (400)
 #define INCH 72
@@ -618,11 +617,11 @@ build_printer_combo(void)
 	stp_string_list_add_string(printer_list, stpui_plist[i].name, stpui_plist[i].name);
       else
 	{
-	  gchar *name = malloc(strlen(stpui_plist[i].name) + 2);
+	  gchar *name = g_malloc(strlen(stpui_plist[i].name) + 2);
 	  strcpy(name + 1, stpui_plist[i].name);
 	  name[0] = '*';
 	  stp_string_list_add_string(printer_list, name, name);
-	  free(name);
+	  g_free(name);
 	}
     }
   plist_build_combo(printer_combo,
@@ -733,7 +732,7 @@ populate_options(const stp_vars_t *v)
 		  gtk_widget_destroy(opt->info.list.label);
 		  if (opt->info.list.params)
 		    stp_string_list_destroy(opt->info.list.params);
-		  free(opt->info.list.default_val);
+		  g_free(opt->info.list.default_val);
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
@@ -766,10 +765,10 @@ populate_options(const stp_vars_t *v)
 	  if (opt->checkbox)
 	    gtk_widget_destroy(GTK_WIDGET(opt->checkbox));
 	}
-      free(current_options);
+      g_free(current_options);
     }
   current_option_count = stp_parameter_list_count(params);
-  current_options = malloc(sizeof(option_t) * current_option_count);
+  current_options = g_malloc(sizeof(option_t) * current_option_count);
 
   for (idx = 0, i = 0; i < current_option_count; i++)
     {
@@ -3331,8 +3330,8 @@ new_printer_ok_callback (void)
       if (stpui_plist_add (&key, 1))
 	{
 	  stp_vars_destroy(key.v);
-	  free(key.name);
-	  free(key.output_to);
+	  g_free(key.name);
+	  g_free(key.output_to);
 	  stpui_plist_current = stpui_plist_count - 1;
 	  set_current_printer();
 	  build_printer_combo ();
@@ -3805,7 +3804,7 @@ create_valid_preview(guchar **preview_data)
       gint i;
 
       if (*preview_data)
-	free (*preview_data);
+	g_free (*preview_data);
       *preview_data = g_malloc (bpp * preview_h * preview_w);
 
       for (y = 0; y < preview_h; y++)

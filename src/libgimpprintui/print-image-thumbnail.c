@@ -26,7 +26,6 @@
 #include <config.h>
 #endif
 #include <sys/types.h>
-#include "../../lib/libprintut.h"
 #include <string.h>
 
 #include <gimp-print-ui/gimp-print-ui.h>
@@ -67,7 +66,7 @@ stpui_image_thumbnail_new(const guchar *data, gint w, gint h, gint bpp)
 {
   thumbnail_image_t *im;
   if (! theImage.rep)
-    theImage.rep = xmalloc(sizeof(thumbnail_image_t));
+    theImage.rep = stp_malloc(sizeof(thumbnail_image_t));
   im = (thumbnail_image_t *) (theImage.rep);
   memset(im, 0, sizeof(thumbnail_image_t));
   im->data = data;

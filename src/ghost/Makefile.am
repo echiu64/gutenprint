@@ -43,4 +43,4 @@ if BUILD_GHOSTSCRIPT
 bin_PROGRAMS = ijsgimpprint
 endif
 
-ijsgimpprint_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS) $(IJS_LIBS)
+ijsgimpprint_LDADD = $(GIMPPRINT_LIBS) $(IJS_LIBS)

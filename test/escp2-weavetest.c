@@ -60,7 +60,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../lib/libprintut.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -175,16 +174,16 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 		       stp_fill_tiff, stp_pack_tiff,
 		       stp_compute_tiff_linewidth);
 
-  passstarts = xmalloc(sizeof(int) * (nrows + physsep));
-  logpassstarts = xmalloc(sizeof(int) * (nrows + physsep));
-  passends = xmalloc(sizeof(int) * (nrows + physsep));
-  passcounts = xmalloc(sizeof(int) * (nrows + physsep));
+  passstarts = stp_malloc(sizeof(int) * (nrows + physsep));
+  logpassstarts = stp_malloc(sizeof(int) * (nrows + physsep));
+  passends = stp_malloc(sizeof(int) * (nrows + physsep));
+  passcounts = stp_malloc(sizeof(int) * (nrows + physsep));
   vmod = 2 * physsep * hpasses * vpasses * subpasses;
   if (vmod == 0)
     vmod = 1;
-  current_slot = xmalloc(sizeof(int) * vmod);
-  physpassstuff = xmalloc((nrows + physsep));
-  rowdetail = xmalloc((nrows + physsep) * physjets);
+  current_slot = stp_malloc(sizeof(int) * vmod);
+  physpassstuff = stp_malloc((nrows + physsep));
+  rowdetail = stp_malloc((nrows + physsep) * physjets);
   memset(rowdetail, 0, (nrows + physsep) * physjets);
   memset(physpassstuff, -1, (nrows + physsep));
   memset(current_slot, 0, (sizeof(int) * vmod));
@@ -310,13 +309,13 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
     }
   for (i = 0; i < 26; i++)
     total_errors += errors[i];
-  free(rowdetail);
-  free(physpassstuff);
-  free(current_slot);
-  free(passcounts);
-  free(passends);
-  free(logpassstarts);
-  free(passstarts);
+  stp_free(rowdetail);
+  stp_free(physpassstuff);
+  stp_free(current_slot);
+  stp_free(passcounts);
+  stp_free(passends);
+  stp_free(logpassstarts);
+  stp_free(passstarts);
   if (!quiet || (quiet == 1 && total_errors > 0))
     printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
   stp_vars_destroy(v);

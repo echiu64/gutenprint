@@ -2983,7 +2983,7 @@ static void testprint(testdata *td)
     /* find "{" */
     fscanf(td->ifile, "%[^{]{%[^\"]\"%d %d %d %d\",", dummy1, dummy2, &(td->x), &(td->y), &(td->cols), &(td->deep));
     td->cols -= 1; /* we reduce it by one because fist color will be ignored */
-    td->input_line = (char *)malloc(td->x+10);
+    td->input_line = (char *)stp_malloc(td->x+10);
     stp_erprintf("<%s> <%s>\n", dummy1, dummy2);
     stp_erprintf("%d %d %d %d\n", td->x, td->y, td->cols, td->deep);
     if (td->cols > 16) {
@@ -3002,16 +3002,16 @@ static void testprint(testdata *td)
     if (td->cols > 5) {
       td->cols = 7;
       for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
-	linebufs.v[icol] = (char *)malloc((td->x+7)/8); /* allocate the color */
+	linebufs.v[icol] = (char *)stp_malloc((td->x+7)/8); /* allocate the color */
       }
     } else if (td->cols > 4) {
       td->cols = 5;
       for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
-	linebufs.v[icol] = (char *)malloc((td->x+7)/8); /* allocate the color */
+	linebufs.v[icol] = (char *)stp_malloc((td->x+7)/8); /* allocate the color */
       }
     } else {
       td->cols = 1;
-      linebufs.v[0] = (char *)malloc((td->x+7)/8); /* allocate the color */
+      linebufs.v[0] = (char *)stp_malloc((td->x+7)/8); /* allocate the color */
     }
   } else {
     stp_erprintf("can't open file !\n");

@@ -29,7 +29,6 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
-#include "../../lib/libprintut.h"
 #include <string.h>
 
 int

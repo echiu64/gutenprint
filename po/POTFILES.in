@@ -1,15 +1,6 @@
 # List of source files containing translatable strings.
 # Copyright (C) 2000 Roger Leigh
 
-# Library files
-lib/alloca.c
-lib/getopt.c
-lib/getopt1.c
-lib/strcspn.c
-lib/vasprintf.c
-lib/xgetcwd.c
-lib/xmalloc.c
-
 # Main shared object sources
 src/main/curve.c
 src/main/dither-ed.c

@@ -31,7 +31,6 @@
 #include <gimp-print/gimp-print.h>
 #endif
 #include <gimp-print/gimp-print-intl.h>
-#include "../../lib/libprintut.h"
 
 int
 main(int argc, char **argv)

@@ -38,9 +38,6 @@ TESTS = run-testpattern
 
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
-endif
-
-if BUILD_TESTPATTERN
 noinst_PROGRAMS = printers
 endif
 
@@ -48,12 +45,12 @@ AM_LFLAGS = -i
 AM_YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
-testpattern_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+testpattern_LDADD = $(GIMPPRINT_LIBS)
 
 testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o
 
-printers_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+printers_LDADD = $(GIMPPRINT_LIBS)
 
 
 ## Data

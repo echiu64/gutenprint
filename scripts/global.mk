@@ -14,7 +14,6 @@ LIBS = $(INTLLIBS) @LIBS@
 
 GIMPPRINT_LIBS = $(top_builddir)/src/main/libgimpprint.la
 GIMPPRINTUI_LIBS = $(top_builddir)/src/libgimpprintui/libgimpprintui.la
-LIBPRINTUT = $(top_builddir)/lib/libprintut.la
 
 # Rules
 

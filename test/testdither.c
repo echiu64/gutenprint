@@ -30,7 +30,6 @@
 #endif
 #define STPI_TESTDITHER
 
-#include "../lib/libprintut.h"
 #include "../src/main/gimp-print-internal.h"
 #include <stdio.h>
 #include <sys/time.h>

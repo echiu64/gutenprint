@@ -24,7 +24,6 @@
 #include <config.h>
 #endif
 #include <gimp-print/gimp-print.h>
-#include "../../lib/libprintut.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -41,7 +40,7 @@
 #ifdef HAVE_POLL
 #include <sys/poll.h>
 #endif
-#ifdef __GNU_LIBRARY__
+#ifdef HAVE_GETOPT_H
 #include <getopt.h>
 #endif
 #ifdef HAVE_READLINE_READLINE_H
@@ -87,7 +86,7 @@ along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
 
 
-#ifdef __GNU_LIBRARY__
+#ifdef HAVE_GETOPT_H
 
 struct option optlist[] =
 {
@@ -244,7 +243,7 @@ main(int argc, char **argv)
   stp_init();
   while (1)
     {
-#ifdef __GNU_LIBRARY__
+#if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
       int option_index = 0;
       c = getopt_long(argc, argv, "P:r:icnasduqm:hlMS", optlist, &option_index);
 #else
@@ -274,7 +273,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
 	    }
-	  the_printer = xmalloc(strlen(optarg) + 1);
+	  the_printer = stp_malloc(strlen(optarg) + 1);
 	  strcpy(the_printer, optarg);
 	  break;
 	case 'r':
@@ -283,7 +282,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
 	    }
-	  raw_device = xmalloc(strlen(optarg) + 1);
+	  raw_device = stp_malloc(strlen(optarg) + 1);
 	  strcpy(raw_device, optarg);
 	  break;
 	case 'm':
@@ -292,7 +291,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer model."));
 	      do_help(1);
 	    }
-	  printer_model = xmalloc(strlen(optarg) + 1);
+	  printer_model = stp_malloc(strlen(optarg) + 1);
 	  strcpy(printer_model, optarg);
 	  break;
 	case 'u':
@@ -1094,7 +1093,7 @@ do_get_input (const char *prompt)
 	/* free only if previously allocated */
 	if (input)
 	{
-		free (input);
+		stp_free (input);
 		input = NULL;
 	}
 #if (HAVE_LIBREADLINE > 0 && defined HAVE_READLINE_READLINE_H)
@@ -1109,7 +1108,7 @@ do_get_input (const char *prompt)
 #endif
 #else
 	/* no libreadline; use fgets instead */
-	input = xmalloc (sizeof (char) * BUFSIZ);
+	input = stp_malloc (sizeof (char) * BUFSIZ);
 	memset(input, 0, BUFSIZ);
 	printf ("%s", prompt);
 	fgets_status = fgets (input, BUFSIZ, stdin);

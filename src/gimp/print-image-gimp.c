@@ -26,7 +26,6 @@
 #include <config.h>
 #endif
 #include <string.h>
-#include "../../lib/libprintut.h"
 
 #include "print_gimp.h"
 
@@ -137,7 +136,7 @@ static void
 compute_alpha_table(Gimp_Image_t *image)
 {
   unsigned val, alpha;
-  image->alpha_table = xmalloc(65536 * sizeof(unsigned char));
+  image->alpha_table = stp_malloc(65536 * sizeof(unsigned char));
   for (val = 0; val < 256; val++)
     for (alpha = 0; alpha < 256; alpha++)
       image->alpha_table[(val * 256) + alpha] =
@@ -153,7 +152,7 @@ alpha_lookup(Gimp_Image_t *image, int val, int alpha)
 stpui_image_t *
 Image_GimpDrawable_new(GimpDrawable *drawable, gint32 image_ID)
 {
-  Gimp_Image_t *im = xmalloc(sizeof(Gimp_Image_t));
+  Gimp_Image_t *im = stp_malloc(sizeof(Gimp_Image_t));
   memset(im, 0, sizeof(Gimp_Image_t));
   im->drawable = drawable;
   gimp_pixel_rgn_init(&(im->rgn), drawable, 0, 0,
@@ -227,15 +226,15 @@ Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
       switch (im->base_type)
 	{
 	case GIMP_INDEXED:
-	  im->tmp = xmalloc(im->drawable->bpp * im->w);
+	  im->tmp = stp_malloc(im->drawable->bpp * im->w);
 	  break;
 	case GIMP_GRAY:
 	  if (im->drawable->bpp == 2)
-	    im->tmp = xmalloc(im->drawable->bpp * im->w);
+	    im->tmp = stp_malloc(im->drawable->bpp * im->w);
 	  break;
 	case GIMP_RGB:
 	  if (im->drawable->bpp == 4)
-	    im->tmp = xmalloc(im->drawable->bpp * im->w);
+	    im->tmp = stp_malloc(im->drawable->bpp * im->w);
 	  break;
 	}
       im->initialized = 1;
@@ -430,9 +429,9 @@ Image_conclude(stp_image_t *image)
   Gimp_Image_t *im = (Gimp_Image_t *) (image->rep);
   gimp_progress_update(1);
   if (im->alpha_table)
-    free(im->alpha_table);
+    stp_free(im->alpha_table);
   if (im->tmp)
-    free(im->tmp);
+    stp_free(im->tmp);
 }
 
 static const char *

@@ -37,7 +37,7 @@ This file is split into the following sections:
             + Correctly referencing files
         o aclocal
         o config.h
-        o libgimpprint and libprintut
+        o libgimpprint
         o automake subtleties
         o libtool tricks
         o Testing changes to the build scripts
@@ -517,8 +517,8 @@ source files in the distribution.  It is created from config.h.in by
 'autoheader'.
 
 
-8. libgimpprint and libprintut
-------------------------------
+8. libgimpprint
+---------------
 
 Any source that is to link with libgimpprint should include the gimp-print.h
 header. The right way to do this is as follows:
@@ -540,19 +540,7 @@ The Makefile.am should also include any necessary CFLAGS with:
         INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 
 It is used with INCLUDES and not CFLAGS because is usually is used to
-specify header locations.  If a program uses the utility library
-libprintut, it must include libprintut.h:
-
-        #include "../../lib/libprintut.h"
-
-To link, the library must be specified in the same way as for libgimpprint:
-
-        program_LDADD = ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
-
-Note that if it is using gettext, then you have to specify it
-_twice_. If every binary is to link with it, then use LIBS instead:
-
-        LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
+specify header locations.
 
 
 9. automake subtleties

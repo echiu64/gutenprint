@@ -63,7 +63,6 @@
 #else
 #include <gimp-print/gimp-print.h>
 #endif
-#include "../../lib/libprintut.h"
 
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */
@@ -359,7 +358,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 static void
 purge_excess_data(cups_image_t *cups)
 {
-  char *buffer = xmalloc(cups->header.cupsBytesPerLine);
+  char *buffer = stp_malloc(cups->header.cupsBytesPerLine);
   if (buffer)
     {
       fprintf(stderr, "DEBUG: Gimp-Print purging %d rows\n",
@@ -371,7 +370,7 @@ purge_excess_data(cups_image_t *cups)
 	  cups->row ++;
 	}
     }
-  free(buffer);
+  stp_free(buffer);
 }
 
 static void
@@ -385,7 +384,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
       stp_parameter_t desc;
-      char *ppd_option_name = xmalloc(strlen(param->name) + 8);	/* StpFineFOO\0 */
+      char *ppd_option_name = stp_malloc(strlen(param->name) + 8);	/* StpFineFOO\0 */
 
       const char *val;		/* CUPS option value */
       ppd_option_t *ppd_option;
@@ -466,7 +465,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	    }	  
 	}
       stp_parameter_description_destroy(&desc);
-      free(ppd_option_name);
+      stp_free(ppd_option_name);
     }
   stp_parameter_list_destroy(params);
 }

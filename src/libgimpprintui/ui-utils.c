@@ -25,7 +25,6 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "../../lib/libprintut.h"
 
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <gimp-print-ui/gimp-print-ui.h>
@@ -675,7 +674,7 @@ stpui_set_image_filename(const char *name)
   if (name && name == image_filename)
     return;
   if (image_filename)
-    free(image_filename);
+    g_free(image_filename);
   if (name)
     image_filename = g_strdup(name);
   else

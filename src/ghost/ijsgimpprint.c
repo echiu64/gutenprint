@@ -86,7 +86,7 @@ static const char DeviceCMYK[] = "DeviceCMYK";
 static char *
 c_strdup(const char *s)
 {
-  char *ret = malloc(strlen(s) + 1);
+  char *ret = stp_malloc(strlen(s) + 1);
   strcpy(ret, s);
   return ret;
 }
@@ -104,8 +104,8 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   img->row = -1;
   img->row_width = (ph->n_chan * ph->bps * ph->width + 7) >> 3;
   if (img->row_buf)
-    free(img->row_buf);
-  img->row_buf = (char *)malloc(img->row_width);
+    stp_free(img->row_buf);
+  img->row_buf = (char *)stp_malloc(img->row_width);
   STP_DEBUG(fprintf(stderr, "image_init\n"));
   STP_DEBUG(fprintf(stderr,
 		    "ph width %d height %d bps %d n_chan %d xres %f yres %f\n",
@@ -175,7 +175,7 @@ static void
 image_finish(IMAGE *img)
 {
   if (img->row_buf)
-    free(img->row_buf);
+    stp_free(img->row_buf);
   img->row_buf = NULL;
 }
 
@@ -345,17 +345,17 @@ list_all_parameters(void)
 		  !param->is_mandatory)
 		{
 		  char *tmp =
-		    malloc(strlen(param->name) + strlen("Enable") + 1);
+		    stp_malloc(strlen(param->name) + strlen("Enable") + 1);
 		  sprintf(tmp, "Enable%s", param->name);
 		  stp_string_list_add_string(sl, tmp, NULL);
-		  free(tmp);
+		  stp_free(tmp);
 		}
 	    }
 	  stp_parameter_list_destroy(params);
 	}
       for (i = 0; i < stp_string_list_count(sl); i++)
 	param_length += strlen(stp_string_list_param(sl, i)->name) + 1;
-      param_string = malloc(param_length);
+      param_string = stp_malloc(param_length);
       for (i = 0; i < stp_string_list_count(sl); i++)
 	{
 	  stp_param_string_t *param = stp_string_list_param(sl, i);
@@ -540,7 +540,7 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
   if (strcmp(key, "OutputFile") == 0)
     {
       if (img->filename)
-	free(img->filename);
+	stp_free(img->filename);
       img->filename = c_strdup(vbuf);
     }
   else if (strcmp(key, "OutputFD") == 0)
@@ -676,17 +676,17 @@ gimp_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 
       if (pl == NULL)
 	{
-	  pl = (GimpParamList *)malloc (sizeof (GimpParamList));
+	  pl = (GimpParamList *)stp_malloc (sizeof (GimpParamList));
 	  pl->next = img->params;
-	  pl->key = malloc (strlen(key) + 1);
+	  pl->key = stp_malloc (strlen(key) + 1);
 	  memcpy (pl->key, key, strlen(key) + 1);
 	  img->params = pl;
 	}
       else
 	{
-	  free (pl->value);
+	  stp_free (pl->value);
 	}
-      pl->value = malloc (value_size);
+      pl->value = stp_malloc (value_size);
       memcpy (pl->value, value, value_size);
       pl->value_size = value_size;
     }
@@ -873,7 +873,7 @@ purge_unused_float_parameters(stp_vars_t *v)
 	  !param->read_only && param->is_active && !param->is_mandatory)
 	{
 	  size_t bytes = strlen(param->name) + strlen("Enable") + 1;
-	  char *tmp = malloc(bytes);
+	  char *tmp = stp_malloc(bytes);
 	  const char *value;
 	  sprintf(tmp, "Enable%s", param->name);
 	  STP_DEBUG(fprintf(stderr, "  Looking for parameter %s\n", tmp));
@@ -887,7 +887,7 @@ purge_unused_float_parameters(stp_vars_t *v)
 		  stp_clear_float_parameter(v, param->name);
 		}
 	    }
-	  free(tmp);
+	  stp_free(tmp);
 	}
     }
   stp_parameter_list_destroy(params);
