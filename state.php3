@@ -88,7 +88,7 @@ $supported_printers = array(
 		'EPSON Stylus Pro 7600' => 'In testing, needs tuning',
 		'EPSON Stylus Pro 9000' => 'Operational',
 		'EPSON Stylus Pro 9500' => 'Operational',
-		'EPSON Stylus Pro 9600' => 'In testing, needs tuning'
+		'EPSON Stylus Pro 9600' => 'In testing, needs tuning',
 		'EPSON Stylus Pro 10000' => 'Operational'
 		),
 	'Stylus Scan Range' => array(
