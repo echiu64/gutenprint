@@ -169,7 +169,7 @@ $(UTIL_MANUAL).pdf:  $(UTIL_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(UTIL_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -185,7 +185,7 @@ $(GIMP_MANUAL).pdf:  $(GIMP_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(GIMP_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -204,7 +204,7 @@ $(CUPS_MANUAL).pdf:  $(CUPS_MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(CUPS_MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -223,7 +223,7 @@ $(MANUAL).pdf:  $(MANUAL_SRC_FILES)
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(MANUAL_SRC_FILES) . ; \
 	  if test -d figures ; then \
 	    : ; \
 	  else \
@@ -328,14 +328,14 @@ html: html-stamp
 # "./users-guide.sgml".  Note that db2ps does not have the same limitation.
 # html-stamp should *only* be called by html--it's just a timestamp!
 
-util-html-stamp: $(srcdir)/$(UTIL_MANUAL).sgml $(UTIL_PNG_IMAGES)
+util-html-stamp: $(UTIL_MANUAL_SRC_FILES) $(UTIL_PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(UTIL_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(UTIL_MANUAL).sgml
 	-$(RM) -rf $(UTIL_HTMLDIR)
@@ -343,14 +343,14 @@ util-html-stamp: $(srcdir)/$(UTIL_MANUAL).sgml $(UTIL_PNG_IMAGES)
 	chmod a+rx $(UTIL_HTMLDIR)
 	touch util-html-stamp
 
-gimp-html-stamp: $(srcdir)/$(GIMP_MANUAL).sgml $(GIMP_PNG_IMAGES)
+gimp-html-stamp: $(GIMP_MANUAL_SRC_FILES) $(GIMP_PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(GIMP_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(GIMP_MANUAL).sgml
 	-mkdir $(GIMP_MANUAL)/figures
@@ -362,14 +362,14 @@ gimp-html-stamp: $(srcdir)/$(GIMP_MANUAL).sgml $(GIMP_PNG_IMAGES)
 	chmod a+rx $(GIMP_HTMLDIR)
 	touch gimp-html-stamp
 
-cups-html-stamp: $(srcdir)/$(CUPS_MANUAL).sgml $(CUPS_PNG_IMAGES)
+cups-html-stamp: $(CUPS_MANUAL_SRC_FILES) $(CUPS_PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(CUPS_MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(CUPS_MANUAL).sgml
 	-mkdir $(CUPS_MANUAL)/figures
@@ -381,14 +381,14 @@ cups-html-stamp: $(srcdir)/$(CUPS_MANUAL).sgml $(CUPS_PNG_IMAGES)
 	chmod a+rx $(CUPS_HTMLDIR)
 	touch cups-html-stamp
 
-html-stamp: $(srcdir)/$(MANUAL).sgml $(PNG_IMAGES)
+html-stamp: $(MANUAL_SRC_FILES) $(PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  : ; \
 	else \
 	  if test -L $(notdir $<) ; then \
 	    $(RM) $(notdir $<) ; \
 	  fi ; \
-	  $(LN_S) $< $(notdir $<) ; \
+	  $(LN_S) $(MANUAL_SRC_FILES) . ; \
 	fi
 	$(DB2HTML) $(MANUAL).sgml
 	-mkdir $(MANUAL)/figures
