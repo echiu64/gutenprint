@@ -92,8 +92,18 @@ main(int argc, char **argv)
 		  count = stp_string_list_count(desc.bounds.str);
 		  if (count > 0)
 		    {
-		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			     driver, p->name, desc.deflt.str);
+		      if (desc.is_mandatory)
+			{
+			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
+				 driver, p->name, desc.deflt.str);
+			}
+		      else
+			{
+			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
+				 driver, p->name, "None");
+			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+				 driver, p->name, "None", "None");
+			}
 		      for (j = 0; j < count; j++)
 			{
 			  const stp_param_string_t *param =
@@ -119,8 +129,19 @@ main(int argc, char **argv)
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
 		{
-		  printf("$defaults{'%s'}{'%s'} = '%d';\n",
-			 driver, desc.name, desc.deflt.boolean);
+		  if (desc.is_mandatory)
+		    {
+		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+			     driver, p->name, desc.deflt.str);
+		    }
+		  else
+		    {
+		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
+			     driver, p->name, "None");
+		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
+			     driver, p->name, "None", "None");
+		    }
+		    
 		  printf("$stpdata{'%s'}{'%s'}{'0'} = 'False';\n",
 			 driver, desc.name);
 		  printf("$stpdata{'%s'}{'%s'}{'1'} = 'True';\n",
@@ -143,6 +164,8 @@ main(int argc, char **argv)
 			     driver, desc.name, _(desc.category));
 		      printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
 			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		      printf("$stp_float_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_INT)
@@ -162,6 +185,8 @@ main(int argc, char **argv)
 			     driver, desc.name, _(desc.category));
 		      printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
 			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+		      printf("$stp_int_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
+			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
 	      tcount += count;
