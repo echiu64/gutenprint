@@ -90,7 +90,9 @@ These release notes contain the following sections:
   2) Printing direct to CD on Epson printers that support it now
      works.  In addition, a choice of center hole size (16 mm or 43
      mm) is now offered.  A fine adjustment is provided to permit
-     control over positioning of the image on the CD.
+     control over positioning of the image on the CD.  This fine
+     adjustment setting is not available in the Foomatic interface at
+     present.
 
      It is likely that this support will be further enhanced prior to
      final release of 5.0.
