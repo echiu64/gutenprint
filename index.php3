@@ -37,7 +37,7 @@ project page</a>, which contains a lot more information about us!</p>
 href="http://www.easysw.com">Easy Software</a>.  In the summer of
 1999, I (Robert Krawitz) purchased an <a
 href="http://www.epson.com">Epson Stylus Photo EX</a> printer to feed
-his photography hobby.  Finding no existing drivers, I adapted Mike's
+my photography hobby.  Finding no existing drivers, I adapted Mike's
 Print plugin to the six-color printer, and by the end of the year
 released 3.0, which went into the Gimp 1.1.  The intention was for
 this to be the stable plugin in the Gimp 1.2, while development of the
