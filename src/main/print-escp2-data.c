@@ -194,6 +194,16 @@ static const stp_simple_dither_range_t photo_multishot_dither_ranges[] =
 
 DECLARE_INK(photo_multishot, 1.0);
 
+static const stp_simple_dither_range_t photo_multishot_y_dither_ranges[] =
+{
+  { 0.140, 0x1, 0, 1 },
+  { 0.290, 0x2, 0, 2 },
+  { 0.5,   0x3, 0, 3 },
+  { 1.0,   0x3, 1, 3 }
+};
+
+DECLARE_INK(photo_multishot_y, 1.0);
+
 static const stp_simple_dither_range_t piezo_multishot_quadtone_dither_ranges[] =
 {
   { PIEZO_0 * .28, 0x1, 0, 2 },
@@ -247,6 +257,16 @@ static const stp_simple_dither_range_t photo_6pl_dither_ranges[] =
 };
 
 DECLARE_INK(photo_6pl, 1.0);
+
+static const stp_simple_dither_range_t photo_6pl_y_dither_ranges[] =
+{
+  { 0.125, 0x1, 0, 1 },
+  { 0.25,  0x2, 0, 2 },
+  { 0.5,   0x2, 1, 2 },
+  { 1.0,   0x3, 1, 4 }
+};
+
+DECLARE_INK(photo_6pl_y, 1.0);
 
 static const stp_simple_dither_range_t photo_6pl_1440_dither_ranges[] =
 {
@@ -465,6 +485,16 @@ static const stp_simple_dither_range_t photo_4pl_dither_ranges[] =
 
 DECLARE_INK(photo_4pl, 1.0);
 
+static const stp_simple_dither_range_t photo_4pl_y_dither_ranges[] =
+{
+  { 0.330, 0x1, 0, 2 },
+  { 0.50,  0x2, 0, 3 },
+  { 0.661, 0x1, 1, 2 },
+  { 1.00,  0x2, 1, 3 }
+};
+
+DECLARE_INK(photo_4pl_y, 1.0);
+
 static const stp_simple_dither_range_t photo_4pl_2880_dither_ranges[] =
 {
   { 0.26,  0x1, 1, 1 },
@@ -617,6 +647,14 @@ static const stp_simple_dither_range_t photo_2pl_2880_m_dither_ranges[] =
 };
 
 DECLARE_INK(photo_2pl_2880_m, 0.75);
+
+static const stp_simple_dither_range_t photo_2pl_2880_y_dither_ranges[] =
+{
+  { 0.5,  0x1, 0, 1 },
+  { 1.00, 0x1, 1, 1 },
+};
+
+DECLARE_INK(photo_2pl_2880_y, 0.75);
 
 static const stp_simple_dither_range_t piezo_2pl_2880_quadtone_dither_ranges[]=
 {
@@ -902,7 +940,7 @@ static const escp2_variable_inkset_t escp2_multishot_photoj_inks =
   &standard_multishot_ink,
   &photo_multishot_ink,
   &photo_multishot_ink,
-  &photo_multishot_ink
+  &photo_multishot_y_ink
 };
 
 static const escp2_variable_inkset_t piezo_multishot_quadtone_inks =
@@ -954,7 +992,7 @@ static const escp2_variable_inkset_t escp2_6pl_photoj_inks =
   &standard_6pl_ink,
   &photo_6pl_ink,
   &photo_6pl_ink,
-  &photo_6pl_ink
+  &photo_6pl_y_ink
 };
 
 static const escp2_variable_inkset_t piezo_6pl_quadtone_inks =
@@ -1096,6 +1134,14 @@ static const escp2_variable_inkset_t escp2_4pl_photo_inks =
   &photo_4pl_ink,
   &photo_4pl_ink,
   &standard_4pl_ink
+};
+
+static const escp2_variable_inkset_t escp2_4pl_photoj_inks =
+{
+  &standard_4pl_ink,
+  &photo_4pl_ink,
+  &photo_4pl_ink,
+  &photo_4pl_y_ink,
 };
 
 static const escp2_variable_inkset_t piezo_4pl_quadtone_inks =
@@ -1247,7 +1293,7 @@ static const escp2_variable_inkset_t escp2_2pl_2880_photoj_inks =
   &standard_2pl_2880_ink,
   &photo_2pl_2880_ink,
   &photo_2pl_2880_ink,
-  &photo_2pl_2880_ink
+  &photo_2pl_2880_y_ink
 };
 
 static const escp2_variable_inkset_t piezo_2pl_2880_quadtone_inks =
@@ -1842,7 +1888,17 @@ static const escp2_variable_inklist_t variable_2pl_inks =
     &escp2_4pl_photo_inks,
     &escp2_2pl_2880_photo_inks
   },
-  { NULL, },
+  {
+    &escp2_multishot_photoj_inks,
+    &escp2_multishot_photoj_inks,
+    &escp2_multishot_photoj_inks,
+    &escp2_multishot_photoj_inks,
+    &escp2_6pl_photoj_inks,
+    &escp2_4pl_photoj_inks,
+    &escp2_4pl_photoj_inks,
+    &escp2_4pl_photoj_inks,
+    &escp2_2pl_2880_photoj_inks
+  },
   { NULL, },
   {
     &piezo_multishot_quadtone_inks,
@@ -2202,7 +2258,7 @@ DECLARE_INK_CHANNEL(extended_yellow);
 static const physical_subchannel_t photo2_yellow_subchannels[] =
 {
   { 4, 0, 0 },
-  { 4, 1, 0 }
+  { 4, 2, 0 }
 };
 
 DECLARE_INK_CHANNEL(photo2_yellow);
@@ -2507,6 +2563,8 @@ static const escp2_inkname_t *const photo7_japan_ink_types[] =
 {
   &j_seven_color_enhanced_inkset,
   &j_six_color_enhanced_composite_inkset,
+  &six_color_photo_inkset,
+  &five_color_photo_composite_inkset,
   &four_color_standard_inkset,
   &three_color_composite_inkset,
   &piezo_quadtone_inkset,
@@ -4129,6 +4187,21 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
     c4pl_dotsizes, c4pl_densities, &variable_4pl_inks,
     &standard_paper_list, standard_reslist, &standard_inklist,
     variable_bits, variable_base_res, &default_input_slot_list,
+    &new_init_sequence, &je_deinit_sequence
+  },
+  /* 53: Japanese PM-950C */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+     MODEL_ROLLFEED_YES | MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO |
+     MODEL_FAST_360_NO),
+    96, 1, 2, 96, 1, 2, 6,
+    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 190, 0, 0, 0,
+    c2pl_dotsizes, c2pl_densities, &variable_2pl_inks,
+    &sp950_paper_list, standard_reslist, &photo7_japan_inklist,
+    stp950_bits, stp950_base_res, &default_input_slot_list,
     &new_init_sequence, &je_deinit_sequence
   },
 };

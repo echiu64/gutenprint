@@ -119,7 +119,7 @@ line_type **page=NULL;
    L.Mag.   17      257      4
    L.Cyan   18      258      5
    L.Black  16      256      6
-   D.Yellow 20      260      7
+   D.Yellow 36      516      7
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
@@ -145,8 +145,8 @@ seqcolor(int c)
     case 16:
     case 256:
       return 6;
-    case 20:
-    case 260:
+    case 36:
+    case 516:
       return 7;
     default:
       return 0;
@@ -262,7 +262,7 @@ static float ink_colors[8][4] =
  { 1,  .7,  1,  1 },		/* m */
  { .7,  1,  1,  1 },		/* c */
  { .7, .7, .7,  1 },		/* k */
- { 1,   1,  0,  1 },		/* dY */
+ { .7, .7,  0,  1 },		/* dY */
 };
 
 static float quadtone_inks[] = { 0.0, .5, .25, .75 };
