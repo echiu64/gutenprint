@@ -34,7 +34,7 @@ OUTPUTS = \
  $(MANUAL).ps \
  html
 
-USER_GUIDE = $(MANUAL).pdf html-stamp $(MANUAL).ps
+USER_GUIDE = $(MANUAL).pdf html $(MANUAL).ps
 
 STANDARD_TARGETS=@USER_GUIDE@
 
@@ -97,7 +97,7 @@ dist-hook: $(USER_GUIDE)
 $(MANUAL).pdf:  $(MANUAL).sgml
 	$(DB2PDF) $(srcdir)/$(MANUAL).sgml
 
-docs: html-stamp ps pdf
+docs: html ps pdf
 
 all-local: $(ALL_LOCAL_TARGETS)
 
@@ -119,6 +119,7 @@ html: html-stamp
 
 # This ugly workaround with SOURCE is because db2html doesn't seem to like
 # "./users-guide.sgml".  Note that db2ps does not have the same limitation.
+# html-stamp should *only* be called by html--it's just a timestamp!
 html-stamp: $(MANUAL).sgml $(PNG_IMAGES)
 	if test $(srcdir) = '.' ; then \
 	  SOURCE='' ; \
