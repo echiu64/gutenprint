@@ -1047,7 +1047,8 @@ get_valueline(dither_t *d, int color)
     return d->vals[color];
   else
     {
-      d->vals[color] = malloc(d->dst_width * sizeof(unsigned short));
+      int size = (8 * ((d->dst_width + 7) / 8));
+      d->vals[color] = malloc(size * sizeof(unsigned short));
       return d->vals[color];
     }
 }
@@ -1572,28 +1573,35 @@ usmin(unsigned short a, unsigned short b)
 }
 
 static void
-generate_cmyk(dither_t *d,
-	      unsigned short *rgb,
-	      int *nonzero,
-	      int row)
+generate_cmy(dither_t *d,
+	     unsigned short *rgb,
+	     int *nonzero,
+	     int row)
 {
   int x, xerror, xstep, xmod;
+  int lnonzero = 0;
   unsigned short *c = get_valueline(d, ECOLOR_C);
   unsigned short *m = get_valueline(d, ECOLOR_M);
   unsigned short *y = get_valueline(d, ECOLOR_Y);
-  unsigned short *k = get_valueline(d, ECOLOR_K);
+  unsigned short cc, mm, yy;
   xstep  = 3 * (d->src_width / d->dst_width);
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
-  *nonzero = 0;
+  memset(c, 0, d->dst_width * sizeof(unsigned short));
+  memset(m, 0, d->dst_width * sizeof(unsigned short));
+  memset(y, 0, d->dst_width * sizeof(unsigned short));
   for (x = 0; x < d->dst_width; x++)
     {
-      c[x] = 65535 - rgb[0];
-      m[x] = 65535 - rgb[1];
-      y[x] = 65535 - rgb[2];
-      k[x] = usmin(c[x], usmin(m[x], y[x]));
-      if (! *nonzero && (c[x] > 0 || m[x] > 0 || y[x] > 0))
-	*nonzero = 1;
+      cc = 65535 - rgb[0];
+      mm = 65535 - rgb[1];
+      yy = 65535 - rgb[2];
+      if (cc > 0 || mm > 0 || yy > 0)
+	{
+	  lnonzero = 1;
+	  c[x] = cc;
+	  m[x] = mm;
+	  y[x] = yy;
+	}
       rgb += xstep;
       xerror += xmod;
       if (xerror >= d->dst_width)
@@ -1602,7 +1610,8 @@ generate_cmyk(dither_t *d,
 	  rgb += 3;
 	}
     }
-}	     
+  *nonzero = lnonzero;
+}
 
 static inline void
 update_cmy(const dither_t *d, int c, int m, int y, int k,
@@ -1761,7 +1770,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   unsigned short *cline = get_valueline(d, ECOLOR_C);
   unsigned short *mline = get_valueline(d, ECOLOR_M);
   unsigned short *yline = get_valueline(d, ECOLOR_Y);
-  unsigned short *kline = get_valueline(d, ECOLOR_K);
   int nonzero;
 
   int		terminate;
@@ -1770,12 +1778,25 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   int		odb_mask = (1 << odb) - 1;
   int		first_color = row % 3;
 
+  length = (d->dst_width + 7) / 8;
+  generate_cmy(d, rgb, &nonzero, row);
+
+  memset(cyan, 0, length * d->c_dither.signif_bits);
+  if (lcyan)
+    memset(lcyan, 0, length * d->c_dither.signif_bits);
+  memset(magenta, 0, length * d->m_dither.signif_bits);
+  if (lmagenta)
+    memset(lmagenta, 0, length * d->m_dither.signif_bits);
+  memset(yellow, 0, length * d->y_dither.signif_bits);
+  if (lyellow)
+    memset(lyellow, 0, length * d->y_dither.signif_bits);
+  if (black)
+    memset(black, 0, length * d->k_dither.signif_bits);
   /*
    * First, generate the CMYK separation.  If there's nothing in
    * this row, and we're using an ordered dither, there's no reason
    * to do anything at all.
    */
-  generate_cmyk(d, rgb, &nonzero, row);
   if (!nonzero && (d->dither_type & D_ORDERED_BASE))
     return;
 
@@ -1789,8 +1810,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
   bit = (direction == 1) ? 128 : 1 << (7 - ((d->dst_width - 1) & 7));
   x = (direction == 1) ? 0 : d->dst_width - 1;
   terminate = (direction == 1) ? d->dst_width : -1;
-
-  length = (d->dst_width + 7) / 8;
 
   if (! (d->dither_type & D_ORDERED_BASE))
     {
@@ -1844,18 +1863,6 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       first_color = (first_color + d->dst_width - 1) % 3;
     }
 
-  memset(cyan, 0, length * d->c_dither.signif_bits);
-  if (lcyan)
-    memset(lcyan, 0, length * d->c_dither.signif_bits);
-  memset(magenta, 0, length * d->m_dither.signif_bits);
-  if (lmagenta)
-    memset(lmagenta, 0, length * d->m_dither.signif_bits);
-  memset(yellow, 0, length * d->y_dither.signif_bits);
-  if (lyellow)
-    memset(lyellow, 0, length * d->y_dither.signif_bits);
-  if (black)
-    memset(black, 0, length * d->k_dither.signif_bits);
-
   if (! (d->dither_type & D_ORDERED_BASE))
     {
       ditherc = cerror0[0];
@@ -1880,23 +1887,34 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
       c = cline[x];
       m = mline[x];
       y = yline[x];
-      k = kline[x];
+      oc = c;
+      om = m;
+      oy = y;
 
       /*
        * If we're doing ordered dither, and there's no ink, we aren't
        * going to print anything.
        */
-      if (c == 0 && m == 0 && y == 0 && (d->dither_type & D_ORDERED_BASE))
-	goto advance;
+      if (c == 0 && m == 0 && y == 0)
+	{
+	  if (d->dither_type & D_ORDERED_BASE)
+	    goto advance;
+	  else
+	    {
+	      c = update_color(c, ditherc);
+	      m = update_color(m, ditherm);
+	      y = update_color(y, dithery);
+	      goto out;
+	    }
+	}
+
+      k = usmin(c, usmin(m, y));
 
       /*
        * At this point we've computed the basic CMYK separations.
        * Now we adjust the levels of each to improve the print quality.
        */
 
-      oc = c;
-      om = m;
-      oy = y;
       if (k > 0)
 	{
 	  if (black != NULL)

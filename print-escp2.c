@@ -45,6 +45,8 @@
 #include <signal.h>
 #endif
 
+#include <endian.h>
+
 typedef enum {
   COLOR_MONOCHROME,
   COLOR_CMYK,
@@ -1257,26 +1259,32 @@ escp2_fold(const unsigned char *line,
 	   unsigned char *outbuf)
 {
   int i;
+  memset(outbuf, 0, single_length * 2);
   for (i = 0; i < single_length; i++)
     {
-      outbuf[0] =
-	((line[0] & (1 << 7)) >> 1) +
-	((line[0] & (1 << 6)) >> 2) +
-	((line[0] & (1 << 5)) >> 3) +
-	((line[0] & (1 << 4)) >> 4) +
-	((line[single_length] & (1 << 7)) >> 0) +
-	((line[single_length] & (1 << 6)) >> 1) +
-	((line[single_length] & (1 << 5)) >> 2) +
-	((line[single_length] & (1 << 4)) >> 3);
-      outbuf[1] =
-	((line[0] & (1 << 3)) << 3) +
-	((line[0] & (1 << 2)) << 2) +
-	((line[0] & (1 << 1)) << 1) +
-	((line[0] & (1 << 0)) << 0) +
-	((line[single_length] & (1 << 3)) << 4) +
-	((line[single_length] & (1 << 2)) << 3) +
-	((line[single_length] & (1 << 1)) << 2) +
-	((line[single_length] & (1 << 0)) << 1);
+      unsigned char l0 = line[0];
+      unsigned char l1 = line[single_length];
+      if (l0 || l1)
+	{
+	  outbuf[0] =
+	    ((l0 & (1 << 7)) >> 1) +
+	    ((l0 & (1 << 6)) >> 2) +
+	    ((l0 & (1 << 5)) >> 3) +
+	    ((l0 & (1 << 4)) >> 4) +
+	    ((l1 & (1 << 7)) >> 0) +
+	    ((l1 & (1 << 6)) >> 1) +
+	    ((l1 & (1 << 5)) >> 2) +
+	    ((l1 & (1 << 4)) >> 3);
+	  outbuf[1] =
+	    ((l0 & (1 << 3)) << 3) +
+	    ((l0 & (1 << 2)) << 2) +
+	    ((l0 & (1 << 1)) << 1) +
+	    ((l0 & (1 << 0)) << 0) +
+	    ((l1 & (1 << 3)) << 4) +
+	    ((l1 & (1 << 2)) << 3) +
+	    ((l1 & (1 << 1)) << 2) +
+	    ((l1 & (1 << 0)) << 1);
+	}
       line++;
       outbuf += 2;
     }
@@ -1288,29 +1296,59 @@ escp2_split_2_1(int length,
 		unsigned char *outhi,
 		unsigned char *outlo)
 {
-  int i, j;
+  unsigned char *outs[2];
+  int i;
   int row = 0;
   int limit = length * 2;
+  outs[0] = outhi;
+  outs[1] = outlo;
+  memset(outs[1], 0, limit);
   for (i = 0; i < limit; i++)
     {
       unsigned char inbyte = in[i];
-      outlo[i] = 0;
-      outhi[i] = 0;
-      for (j = 1; j < 256; j += j)
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 1)
 	{
-	  if (inbyte & j)
-	    {
-	      if (row == 0)
-		{
-		  outlo[i] |= j;
-		  row = 1;
-		}
-	      else
-		{
-		  outhi[i] |= j;
-		  row = 0;
-		}
-	    }
+	  outs[row][i] |= 1 & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 1))
+	{
+	  outs[row][i] |= (1 << 1) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 2))
+	{
+	  outs[row][i] |= (1 << 2) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 3))
+	{
+	  outs[row][i] |= (1 << 3) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 4))
+	{
+	  outs[row][i] |= (1 << 4) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 5))
+	{
+	  outs[row][i] |= (1 << 5) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 6))
+	{
+	  outs[row][i] |= (1 << 6) & inbyte;
+	  row = row ^ 1;
+	}
+      if (inbyte & (1 << 7))
+	{
+	  outs[row][i] |= (1 << 7) & inbyte;
+	  row = row ^ 1;
 	}
     }
 }
@@ -1321,29 +1359,39 @@ escp2_split_2_2(int length,
 		unsigned char *outhi,
 		unsigned char *outlo)
 {
-  int i, j;
-  int row = 0;
+  unsigned char *outs[2];
+  int i;
+  unsigned row = 0;
   int limit = length * 2;
+  outs[0] = outhi;
+  outs[1] = outlo;
+  memset(outs[1], 0, limit);
   for (i = 0; i < limit; i++)
     {
       unsigned char inbyte = in[i];
-      outlo[i] = 0;
-      outhi[i] = 0;
-      for (j = 3; j < 256; j *= 4)
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 3)
 	{
-	  if (inbyte & j)
-	    {
-	      if (row == 0)
-		{
-		  outlo[i] |= j & inbyte;
-		  row = 1;
-		}
-	      else
-		{
-		  outhi[i] |= j & inbyte;
-		  row = 0;
-		}
-	    }
+	  outs[row][i] |= (3 & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 2))
+	{
+	  outs[row][i] |= ((3 << 2) & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 4))
+	{
+	  outs[row][i] |= ((3 << 4) & inbyte);
+	  row = row ^ 1;
+	}
+      if (inbyte & (3 << 6))
+	{
+	  outs[row][i] |= ((3 << 6) & inbyte);
+	  row = row ^ 1;
 	}
     }
 }
@@ -1362,6 +1410,124 @@ escp2_split_2(int length,
 }
 
 static void
+escp2_split_4_1(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  unsigned char *outs[4];
+  int i;
+  int row = 0;
+  int limit = length * 2;
+  outs[0] = out0;
+  outs[1] = out1;
+  outs[2] = out2;
+  outs[3] = out3;
+  memset(outs[1], 0, limit);
+  memset(outs[2], 0, limit);
+  memset(outs[3], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 1)
+	{
+	  outs[row][i] |= 1 & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 1))
+	{
+	  outs[row][i] |= (1 << 1) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 2))
+	{
+	  outs[row][i] |= (1 << 2) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 3))
+	{
+	  outs[row][i] |= (1 << 3) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 4))
+	{
+	  outs[row][i] |= (1 << 4) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 5))
+	{
+	  outs[row][i] |= (1 << 5) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 6))
+	{
+	  outs[row][i] |= (1 << 6) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (1 << 7))
+	{
+	  outs[row][i] |= (1 << 7) & inbyte;
+	  row = (row + 1) & 3;
+	}
+    }
+}
+
+static void
+escp2_split_4_2(int length,
+		const unsigned char *in,
+		unsigned char *out0,
+		unsigned char *out1,
+		unsigned char *out2,
+		unsigned char *out3)
+{
+  unsigned char *outs[4];
+  int i;
+  int row = 0;
+  int limit = length * 2;
+  outs[0] = out0;
+  outs[1] = out1;
+  outs[2] = out2;
+  outs[3] = out3;
+  memset(outs[1], 0, limit);
+  memset(outs[2], 0, limit);
+  memset(outs[3], 0, limit);
+  for (i = 0; i < limit; i++)
+    {
+      unsigned char inbyte = in[i];
+      outs[0][i] = 0;
+      if (inbyte == 0)
+	continue;
+      /* For some reason gcc isn't unrolling this, even with -funroll-loops */
+      if (inbyte & 3)
+	{
+	  outs[row][i] |= 3 & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 2))
+	{
+	  outs[row][i] |= (3 << 2) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 4))
+	{
+	  outs[row][i] |= (3 << 4) & inbyte;
+	  row = (row + 1) & 3;
+	}
+      if (inbyte & (3 << 6))
+	{
+	  outs[row][i] |= (3 << 6) & inbyte;
+	  row = (row + 1) & 3;
+	}
+    }
+}
+
+static void
 escp2_split_4(int length,
 	      int bits,
 	      const unsigned char *in,
@@ -1370,41 +1536,20 @@ escp2_split_4(int length,
 	      unsigned char *out2,
 	      unsigned char *out3)
 {
-  int i, j;
-  int row = 0;
-  int base = (1 << bits) - 1;
-  for (i = 0; i < length; i++)
-    {
-      unsigned char inbyte = in[i];
-      out0[i] = 0;
-      out1[i] = 0;
-      out2[i] = 0;
-      out3[i] = 0;
-      for (j = base; j < 256; j <<= bits)
-	{
-	  if (inbyte & j)
-	    {
-	      switch (row)
-		{
-		case 0:
-		  out0[i] |= j & inbyte;
-		  break;
-		case 1:
-		  out1[i] |= j & inbyte;
-		  break;
-		case 2:
-		  out2[i] |= j & inbyte;
-		  break;
-		case 3:
-		  out3[i] |= j & inbyte;
-		  break;
-		}
-	      row = (row + 1) & 3;
-	    }
-	}
-    }
+  if (bits == 2)
+    escp2_split_4_2(length, in, out0, out1, out2, out3);
+  else
+    escp2_split_4_1(length, in, out0, out1, out2, out3);
 }
 
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define SH20 0
+#define SH21 8
+#else
+#define SH20 8
+#define SH21 0
+#endif
 
 static void
 escp2_unpack_2_1(int length,
@@ -1413,38 +1558,42 @@ escp2_unpack_2_1(int length,
 		 unsigned char *outhi)
 {
   int i;
-  for (i = 0; i < length; i++)
+  int limit = (length + 1) / 2;
+  memset(outlo, 0, limit);
+  memset(outhi, 0, limit);
+  for (i = 0; i < limit; i++)
     {
-      unsigned char inbyte = *in;
-      if (!(i & 1))
+      unsigned short inint = ((unsigned short *) in)[0];
+      if (inint > 0)
 	{
-	  *outlo =
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  unsigned char inbyte = (inint >> SH20) & 0xff;
+	  ob0 =
 	    ((inbyte & (1 << 7)) << 0) +
 	    ((inbyte & (1 << 5)) << 1) +
 	    ((inbyte & (1 << 3)) << 2) +
 	    ((inbyte & (1 << 1)) << 3);
-	  *outhi =
+	  ob1 =
 	    ((inbyte & (1 << 6)) << 1) +
 	    ((inbyte & (1 << 4)) << 2) +
 	    ((inbyte & (1 << 2)) << 3) +
 	    ((inbyte & (1 << 0)) << 4);
-	}
-      else
-	{
-	  *outlo +=
+	  inbyte = (inint >> SH21) & 0xff;
+	  ob0 +=
 	    ((inbyte & (1 << 1)) >> 1) +
 	    ((inbyte & (1 << 3)) >> 2) +
 	    ((inbyte & (1 << 5)) >> 3) +
 	    ((inbyte & (1 << 7)) >> 4);
-	  *outhi +=
+	  ob1 +=
 	    ((inbyte & (1 << 0)) >> 0) +
 	    ((inbyte & (1 << 2)) >> 1) +
 	    ((inbyte & (1 << 4)) >> 2) +
 	    ((inbyte & (1 << 6)) >> 3);
-	  outlo++;
-	  outhi++;
+	  outlo[i] = ob0;
+	  outhi[i] = ob1;
 	}
-      in++;
+      in += 2;
     }
 }
 
@@ -1455,30 +1604,33 @@ escp2_unpack_2_2(int length,
 		 unsigned char *outhi)
 {
   int i;
-  for (i = 0; i < length * 2; i++)
+  memset(outlo, 0, length);
+  memset(outhi, 0, length);
+  for (i = 0; i < length; i++)
     {
-      unsigned char inbyte = *in;
-      if (!(i & 1))
+      unsigned short inint = ((unsigned short *) in)[0];
+      if (inint > 0)
 	{
-	  *outlo =
+	  unsigned char inbyte = (inint >> SH20) & 0xff;
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  ob0 =
 	    ((inbyte & (3 << 6)) << 0) +
 	    ((inbyte & (3 << 2)) << 2);
-	  *outhi =
+	  ob1 =
 	    ((inbyte & (3 << 4)) << 2) +
 	    ((inbyte & (3 << 0)) << 4);
-	}
-      else
-	{
-	  *outlo +=
+	  inbyte = (inint >> SH21) & 0xff;
+	  ob0 +=
 	    ((inbyte & (3 << 6)) >> 4) +
 	    ((inbyte & (3 << 2)) >> 2);
-	  *outhi +=
+	  ob1 +=
 	    ((inbyte & (3 << 4)) >> 2) +
 	    ((inbyte & (3 << 0)) >> 0);
-	  outlo++;
-	  outhi++;
+	  outlo[i] = ob0;
+	  outhi[i] = ob1;
 	}
-      in++;
+      in += 2;
     }
 }
 
@@ -1495,6 +1647,18 @@ escp2_unpack_2(int length,
     escp2_unpack_2_2(length, in, outlo, outhi);
 }
 
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#define SH40 0
+#define SH41 8
+#define SH42 16
+#define SH43 24
+#else
+#define SH40 24
+#define SH41 16
+#define SH42 8
+#define SH43 0
+#endif
+
 static void
 escp2_unpack_4_1(int length,
 		 const unsigned char *in,
@@ -1504,73 +1668,78 @@ escp2_unpack_4_1(int length,
 		 unsigned char *out3)
 {
   int i;
-  for (i = 0; i < length; i++)
+  int limit = (length + 3) / 4;
+  memset(out0, 0, limit);
+  memset(out1, 0, limit);
+  memset(out2, 0, limit);
+  memset(out3, 0, limit);
+  for (i = 0; i < limit; i++)
     {
-      unsigned char inbyte = *in;
-      switch (i & 3)
+      unsigned inint = ((int *) in)[0];
+      if (inint > 0)
 	{
-	case 0:
-	  *out0 =
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  unsigned char ob2 = 0;
+	  unsigned char ob3 = 0;
+	  unsigned char inbyte = (inint >> SH40) & 0xff;
+	  ob0 =
 	    ((inbyte & (1 << 7)) << 0) +
 	    ((inbyte & (1 << 3)) << 3);
-	  *out1 =
+	  ob1 =
 	    ((inbyte & (1 << 6)) << 1) +
 	    ((inbyte & (1 << 2)) << 4);
-	  *out2 =
+	  ob2 =
 	    ((inbyte & (1 << 5)) << 2) +
 	    ((inbyte & (1 << 1)) << 5);
-	  *out3 =
+	  ob3 =
 	    ((inbyte & (1 << 4)) << 3) +
 	    ((inbyte & (1 << 0)) << 6);
-	  break;
-	case 1:
-	  *out0 +=
+	  inbyte = (inint >> SH41) & 0xff;
+	  ob0 +=
 	    ((inbyte & (1 << 7)) >> 2) +
 	    ((inbyte & (1 << 3)) << 1);
-	  *out1 +=
+	  ob1 +=
 	    ((inbyte & (1 << 6)) >> 1) +
 	    ((inbyte & (1 << 2)) << 2);
-	  *out2 +=
+	  ob2 +=
 	    ((inbyte & (1 << 5)) >> 0) +
 	    ((inbyte & (1 << 1)) << 3);
-	  *out3 +=
+	  ob3 +=
 	    ((inbyte & (1 << 4)) << 1) +
 	    ((inbyte & (1 << 0)) << 4);
-	  break;
-	case 2:
-	  *out0 +=
+	  inbyte = (inint >> SH42) & 0xff;
+	  ob0 +=
 	    ((inbyte & (1 << 7)) >> 4) +
 	    ((inbyte & (1 << 3)) >> 1);
-	  *out1 +=
+	  ob1 +=
 	    ((inbyte & (1 << 6)) >> 3) +
 	    ((inbyte & (1 << 2)) << 0);
-	  *out2 +=
+	  ob2 +=
 	    ((inbyte & (1 << 5)) >> 2) +
 	    ((inbyte & (1 << 1)) << 1);
-	  *out3 +=
+	  ob3 +=
 	    ((inbyte & (1 << 4)) >> 1) +
 	    ((inbyte & (1 << 0)) << 2);
-	  break;
-	case 3:
-	  *out0 +=
+	  inbyte = (inint >> SH43) & 0xff;
+	  ob0 +=
 	    ((inbyte & (1 << 7)) >> 6) +
 	    ((inbyte & (1 << 3)) >> 3);
-	  *out1 +=
+	  ob1 +=
 	    ((inbyte & (1 << 6)) >> 5) +
 	    ((inbyte & (1 << 2)) >> 2);
-	  *out2 +=
+	  ob2 +=
 	    ((inbyte & (1 << 5)) >> 4) +
 	    ((inbyte & (1 << 1)) >> 1);
-	  *out3 +=
+	  ob3 +=
 	    ((inbyte & (1 << 4)) >> 3) +
 	    ((inbyte & (1 << 0)) >> 0);
-	  out0++;
-	  out1++;
-	  out2++;
-	  out3++;
-	  break;
+	  out0[i] = ob0;
+	  out1[i] = ob1;
+	  out2[i] = ob2;
+	  out3[i] = ob3;
 	}
-      in++;
+      in += 4;
     }
 }
 
@@ -1583,41 +1752,46 @@ escp2_unpack_4_2(int length,
 		 unsigned char *out3)
 {
   int i;
-  for (i = 0; i < length * 2; i++)
+  int limit = (length + 1) / 2;
+  memset(out0, 0, limit);
+  memset(out1, 0, limit);
+  memset(out2, 0, limit);
+  memset(out3, 0, limit);
+  for (i = 0; i < limit; i++)
     {
-      unsigned char inbyte = *in;
-      switch (i & 3)
+      unsigned inint = ((int *) in)[0];
+      if (inint != 0)
 	{
-	case 0:
-	  *out0 = ((inbyte & (3 << 6)) << 0);
-	  *out1 = ((inbyte & (3 << 4)) << 2);
-	  *out2 = ((inbyte & (3 << 2)) << 4);
-	  *out3 = ((inbyte & (3 << 0)) << 6);
-	  break;
-	case 1:
-	  *out0 += ((inbyte & (3 << 6)) >> 2);
-	  *out1 += ((inbyte & (3 << 4)) << 0);
-	  *out2 += ((inbyte & (3 << 2)) << 2);
-	  *out3 += ((inbyte & (3 << 0)) << 4);
-	  break;
-	case 2:
-	  *out0 += ((inbyte & (3 << 6)) >> 4);
-	  *out1 += ((inbyte & (3 << 4)) >> 2);
-	  *out2 += ((inbyte & (3 << 2)) << 0);
-	  *out3 += ((inbyte & (3 << 0)) << 2);
-	  break;
-	case 3:
-	  *out0 += ((inbyte & (3 << 6)) >> 6);
-	  *out1 += ((inbyte & (3 << 4)) >> 4);
-	  *out2 += ((inbyte & (3 << 2)) >> 2);
-	  *out3 += ((inbyte & (3 << 0)) >> 0);
-	  out0++;
-	  out1++;
-	  out2++;
-	  out3++;
-	  break;
+	  unsigned char ob0 = 0;
+	  unsigned char ob1 = 0;
+	  unsigned char ob2 = 0;
+	  unsigned char ob3 = 0;
+	  unsigned char inbyte = (inint >> SH40) & 0xff;
+	  ob0 = ((inbyte & (3 << 6)) << 0);
+	  ob1 = ((inbyte & (3 << 4)) << 2);
+	  ob2 = ((inbyte & (3 << 2)) << 4);
+	  ob3 = ((inbyte & (3 << 0)) << 6);
+	  inbyte = (inint >> SH41) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 2);
+	  ob1 += ((inbyte & (3 << 4)) << 0);
+	  ob2 += ((inbyte & (3 << 2)) << 2);
+	  ob3 += ((inbyte & (3 << 0)) << 4);
+	  inbyte = (inint >> SH42) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 4);
+	  ob1 += ((inbyte & (3 << 4)) >> 2);
+	  ob2 += ((inbyte & (3 << 2)) << 0);
+	  ob3 += ((inbyte & (3 << 0)) << 2);
+	  inbyte = (inint >> SH43) & 0xff;
+	  ob0 += ((inbyte & (3 << 6)) >> 6);
+	  ob1 += ((inbyte & (3 << 4)) >> 4);
+	  ob2 += ((inbyte & (3 << 2)) >> 2);
+	  ob3 += ((inbyte & (3 << 0)) >> 0);
+	  out0[i] = ob0;
+	  out1[i] = ob1;
+	  out2[i] = ob2;
+	  out3[i] = ob3;
 	}
-      in++;
+      in += 4;
     }
 }
 
@@ -2262,7 +2436,7 @@ typedef struct {
 } escp2_softweave_t;
 
 #ifndef WEAVETEST
-static int
+static inline int
 get_color_by_params(int plane, int density)
 {
   if (plane > 4 || plane < 0 || density > 1 || density < 0)
@@ -2512,6 +2686,19 @@ static void
 weave_parameters_by_row(const escp2_softweave_t *sw, int row,
 			int vertical_subpass, weave_t *w)
 {
+  static const escp2_softweave_t *scache = 0;
+  static weave_t wcache;
+  static int rcache = -2;
+  static int vcache = -2;
+  if (scache == sw && rcache == row && vcache == vertical_subpass)
+    {
+      memcpy(w, &wcache, sizeof(weave_t));
+      return;
+    }
+  scache = sw;
+  rcache = row;
+  vcache = vertical_subpass;
+
   w->row = row;
   if (row < sw->header)
     {
@@ -2603,6 +2790,7 @@ weave_parameters_by_row(const escp2_softweave_t *sw, int row,
       if (w->pass > sw->last_real_pass)
 	((escp2_softweave_t *) sw)->last_real_pass = w->pass;
     }
+  memcpy(&wcache, w, sizeof(weave_t));
 }
 
 #ifndef WEAVETEST
@@ -2898,14 +3086,11 @@ flush_pass(escp2_softweave_t *sw, int passno, int model, int width,
 
 static void
 add_to_row(escp2_softweave_t *sw, int row, unsigned char *buf, size_t nbytes,
-	   int plane, int density, int subpass, int setactive)
+	   int plane, int density, int setactive,
+	   lineoff_t *lineoffs, lineactive_t *lineactive,
+	   const linebufs_t *bufs)
 {
-  weave_t w;
   int color = get_color_by_params(plane, density);
-  lineoff_t *lineoffs = get_lineoffsets(sw, row, subpass);
-  lineactive_t *lineactive = get_lineactive(sw, row, subpass);
-  const linebufs_t *bufs = get_linebases(sw, row, subpass);
-  weave_parameters_by_row(sw, row, subpass, &w);
   memcpy(bufs[0].v[color] + lineoffs[0].v[color], buf, nbytes);
   lineoffs[0].v[color] += nbytes;
   if (setactive)
@@ -2968,6 +3153,9 @@ escp2_write_weave(void *        vsw,
   static unsigned char *s[8];
   static unsigned char *fold_buf;
   static unsigned char *comp_buf;
+  lineoff_t *lineoffs[8];
+  lineactive_t *lineactives[8];
+  const linebufs_t *bufs[8];
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
   unsigned char *comp_ptr;
   int i, j;
@@ -2984,13 +3172,18 @@ escp2_write_weave(void *        vsw,
     fold_buf = malloc(COMPBUFWIDTH);
   if (!comp_buf)
     comp_buf = malloc(COMPBUFWIDTH);
-  for (i = 0; i < sw->horizontal_weave * sw->vertical_subpasses; i++)
-    if (!s[i])
-      s[i] = malloc(COMPBUFWIDTH);
-  
-
   if (sw->current_vertical_subpass == 0)
     initialize_row(sw, sw->lineno, xlength);
+  
+  for (i = 0; i < h_passes; i++)
+    {
+      int cpass = sw->current_vertical_subpass * h_passes;
+      if (!s[i])
+	s[i] = malloc(COMPBUFWIDTH);
+      lineoffs[i] = get_lineoffsets(sw, sw->lineno, cpass + i);
+      lineactives[i] = get_lineactive(sw, sw->lineno, cpass + i);
+      bufs[i] = get_linebases(sw, sw->lineno, cpass + i);
+    }    
   
   for (j = 0; j < sw->ncolors; j++)
     {
@@ -3056,20 +3249,20 @@ escp2_write_weave(void *        vsw,
 		}
 	      for (i = 0; i < h_passes; i++)
 		{
-		  int k = sw->current_vertical_subpass * h_passes;
 		  setactive = escp2_pack(s[i], sw->bitwidth * xlength,
 					 comp_buf, &comp_ptr);
 		  add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
-			     colors[j], densities[j], k + i, setactive);
+			     colors[j], densities[j], setactive,
+			     lineoffs[i], lineactives[i], bufs[i]);
 		}
 	    }
 	  else
 	    {
-	      int k = sw->current_vertical_subpass * h_passes;
 	      setactive = escp2_pack(in, length * sw->bitwidth,
 				     comp_buf, &comp_ptr);
 	      add_to_row(sw, sw->lineno, comp_buf, comp_ptr - comp_buf,
-			 colors[j], densities[j], k, setactive);
+			 colors[j], densities[j], setactive,
+			 lineoffs[0], lineactives[0], bufs[0]);
 	    }
 	}
     }
