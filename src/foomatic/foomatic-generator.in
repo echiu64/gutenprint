@@ -1192,9 +1192,12 @@ sub getprintoutmode {
 		}
 	    } else {
 		# bw printer
-		# No 'Photo' mode on laser printers
-		next if (($m eq 'Photo') && 
-			 ($stpprn =~ /^pcl\-[2-6][vls]?i?$/));
+		if ($stpprn =~ /^pcl\-[2-6][vls]?i?$/) { # Laser printer
+		    # No 'Photo' mode on laser printers
+		    next if ($m eq 'Photo');
+		    # Always "VeryFast" dithering on laser printers
+		    $modestr =~ s/(Dither=)\S+/$1VeryFast/;
+		}
 		$modes->{$stpprn}{$m} = $modestr . " OutputType=Grayscale";
 	    }
 	}
