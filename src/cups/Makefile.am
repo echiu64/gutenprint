@@ -73,7 +73,7 @@ epson_SOURCES = epson.c
 epson_LDADD = $(CUPS_LIBS)
 
 genppd_SOURCES = genppd.c
-genppd_LDADD = $(CUPS_LIBS) $(LIBGIMPPRINT_LIBS)
+genppd_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(LIBGIMPPRINT_LIBS)
 genppd_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 rastertoprinter_SOURCES = rastertoprinter.c

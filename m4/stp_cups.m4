@@ -37,8 +37,7 @@ if test x${BUILD_CUPS} = xyes ; then
   AC_CHECK_LIB(z,gzgets,
     HAVE_LIBZ=true, HAVE_LIBZ=false)
   if test x${HAVE_LIBZ} = xtrue ; then
-    CUPS_LIBS="${CUPS_LIBS} -lz"
-    LIBS="$LIBS -lz"
+    GENPPD_LIBS="-lz"
     AC_DEFINE(HAVE_LIBZ,, [Define if libz is present.])
   fi
   AC_PATH_PROG(CUPS_CONFIG, cups-config, cups-config)
