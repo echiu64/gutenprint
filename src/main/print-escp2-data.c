@@ -114,7 +114,7 @@ static const escp2_variable_ink_t name##_ink =				\
 
 #define SHADE(density, subchannel, name)				\
 {  density, subchannel,							\
-   name, sizeof(name)/sizeof(stpi_dotsize_t) }
+   sizeof(name)/sizeof(stpi_dotsize_t), name  }
 
 
 #define PIEZO_0  .25

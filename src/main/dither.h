@@ -150,8 +150,8 @@ typedef struct stpi_shade
 {
   double value;
   int subchannel;
-  const stpi_dotsize_t *dot_sizes;
   int numsizes;
+  const stpi_dotsize_t *dot_sizes;
 } stpi_shade_t;
 
 extern stp_parameter_list_t stpi_dither_list_parameters(const stp_vars_t v);
