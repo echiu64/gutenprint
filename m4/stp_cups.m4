@@ -105,6 +105,7 @@ if test x${BUILD_CUPS} = xyes ; then
       CUPS_CFLAGS=""
     fi
   fi
+  AC_PATH_PROG(DIALOG, dialog)
 fi
 ])
 
