@@ -25,4 +25,7 @@ MAINT_CHARSET = latin1
 
 SUBDIRS = gimp-print
 
+
+## Clean
+
 MAINTAINERCLEANFILES = Makefile.in
