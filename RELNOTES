@@ -6,4 +6,48 @@ identical to the support for these printers in the Print plugin --
 they use the identical code base.  Please read Ghost/README and
 CUPS/README.txt for more information on this.
 
-This plugin can be compiled against either Gimp 1.1 or 1.0.
+This plugin can be compiled against either Gimp 1.1 or 1.0.  After 1.2
+is released, we anticipate dropping support for Gimp 1.0 and older
+versions of Gimp 1.1 (probably 1.20 and earlier, although that is not
+guaranteed).
+
+Print 4.1.0 contains all fixes through the 4.0.4 release.  In
+addition, it contains the following user-visible differences over
+Print 4.0.4:
+
+1) Greatly improved color quality in Photograph mode.  In particular,
+   red, green, blue, and violet colors are much more accurate.  This
+   is done by means of hue and luminosity adjustments based on input
+   hue and saturation.  This only works in Photograph mode; Line Art
+   and Solid Colors have not changed.
+
+2) Preliminary support for the Lexmark Z52 inkjet printer.
+
+3) Support for 2880x720 on Epson Stylus printers that support that
+   resolution.  The visible quality difference will probably be little
+   if any.
+
+4) Fine black detail in color mode is greatly improved.
+
+5) Many new resolutions have been added for Epson Stylus printers,
+   mostly supporting better print quality at 180, 360, and 720 DPI.
+
+6) There is preliminary support for 600x600 C-RET mode on the HP 840.
+
+7) The foomatic package is not currently being distributed with
+   gimp-print.  The main issue is synchronizing the foomatic database
+   with the rapidly evolving state of gimp-print.  We have not
+   determined yet whether it will be practical to continue
+   distributing foomatic with gimp-print.
+
+8) The PPD's generated as part of the native CUPS driver are
+   incompatible with the PPD's in the 4.0 version of the native CUPS
+   driver.  This requires reinstalling your printers after running
+   'make install' in the cups subdirectory.
+
+9) The defaults with the native CUPS driver are now identical to the
+   defaults with the Ghostscript stp driver and the Gimp Print
+   plugin.
+
+10) Ordered dithering is now smoother on 6 color printers, at some
+   loss of color fidelity.

@@ -46,18 +46,12 @@ use of this software for general printing purposes.  Please read
 Ghost/README for more information, including how to build and install
 it.
 
-The Ghostscript driver also includes everything necessary to configure
-use with Grant Taylor's Foomatic printing package (see
-http://www.linuxprinting.org for a description of this package).
-
 
 CUPS
 
 This package includes a CUPS driver that may be built, allowing use of
 this software for general printing purposes.  Please read cups/README
 for more information, including how to build and install it.
-
-If you prefer Cups-o-matic, instructions may be found in Ghost/README.
 
 
 RECOMMENDED SETTINGS

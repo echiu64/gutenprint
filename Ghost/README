@@ -281,9 +281,10 @@ The meaning of this is model-specific.
 
 For Epson Stylus printers:
 
--sQuality='
+-sQuality='quality'
 
 '180 DPI'				 (works on older printers)
+'180 DPI Unidirectional'		 (works on older printers)
 '360 DPI'                                (works on all printers)
 '360 DPI Unidirectional'                 (works on all printers)
 '360 DPI Microweave'                     (works on all printers)
@@ -301,6 +302,7 @@ For Epson Stylus printers:
 					  the Epson Stylus Color 740
 					  and newer)
 '720 DPI Microweave'                     (works on older printers)
+'720 DPI Microweave Unidirectional'      (works on older printers)
 '720 DPI Softweave'                      (works on all printers except
 					  for Stylus Color, Stylus
 					  Color 1500, Stylus Color
@@ -321,7 +323,10 @@ For Epson Stylus printers:
 					  for Stylus Color, Stylus
 					  Color 1500, Stylus Color
 					  1520, and Stylus Color 3000)
-'1440 x 720 DPI Microweave'              (works on older 1440x720 dpi printers)
+'1440 x 720 DPI Microweave'              (works on some older 1440x720 dpi
+					  printers)
+'1440 x 720 DPI Microweave Unidirectional'(works on some older 1440x720 dpi
+					   printers)
 '1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
 					  printers except for Stylus
 					  Color 1520 and Stylus Color 3000)
@@ -340,14 +345,17 @@ For Epson Stylus printers:
 					  Color 880, Stylus Color 980,
 					  and Stylus Photo 790)
 
-The last two modes use oversampling to emulate higher resolutions than
-the printers actually support.  In some cases they may yield improved
-output quality, but they are slower than the lower resolution modes.
-The other 1440x720 modes use the printer in different ways to to
-achieve different tradeoffs of quality vs. performance; likewise with
-the 720 DPI modes.
+On most printers, unidirectional printing is higher quality than
+bidirectional printing, but somewhat slower.  This is most true on
+older printers.  The current driver offers unidirectional and
+bidirectional printing modes at most supported resolutions and quality
+levels.  Many people will find the 360 DPI Microweave Unidirectional
+mode offers excellent print quality for general use, and 720 DPI
+Softweave Unidirectional offers good enough print quality for more
+demanding applications.
 
-The Microweave modes are extremely slow on many printers.  Not all
+The Microweave modes at 720 DPI and higher are extremely slow on many
+printers (360 DPI Microweave does not suffer this problem).  Not all
 printers can do Microweave properly, particularly at 1440x720 DPI.  If
 Microweave is used with these printers, the printing will be done one
 row at a time.  In addition to being extremely slow (but often
@@ -357,7 +365,11 @@ is capable of non-Microweave modes, there is seldom any advantage to
 be had from using Microweave.
 
 In general, using resolutions lower than 720 DPI on coated paper will
-yield unsatisfactory results.
+yield less than ideal results, although for many purposes the quality
+will be sufficient.  It may not be possible to get really solid black
+at 360 DPI on coated photo paper.
+
+180 DPI is only useful as an economy mode on plain paper.
 
 
 For PCL printers (including Hewlett-Packard and Lexmark 4076):
@@ -367,8 +379,8 @@ For PCL printers (including Hewlett-Packard and Lexmark 4076):
 				DJ 850/855/870/890)
 '600x300 DPI'			(DJ 6xx/810/812/840/842/895)
 '600x600 DPI monochrome'	(DJ 6xx (except 69x) /8xx/1100/1120)
-'600x600 DPI'			(DJ 69x/9xx/1220/2000/2500, PhotoSmart P1000
-				P1100, LJ5/5Si/6)
+'600x600 DPI'			(DJ 69x/840/9xx/1220/2000/2500,
+				PhotoSmart P1000/P1100, LJ5/5Si/6)
 
 Note: the higher resolutions of newer PCL printers using "Photo-Ret" are
 not yet supported.
@@ -483,17 +495,16 @@ Dithering Algorithms:
 'Hybrid Floyd-Steinberg'
 'Random Floyd-Steinberg'
 
-Hybrid algorithms use error diffusion, but a matrix is used when a
-random number is required.  Adaptive algorithms use error diffusion
-except in very light regions, where ordered dithering is used.
+We recommend using Adaptive Hybrid (which is the default) in most
+cases.  
 
 Ordered dithering typically works best in solid-color graphics on four
 color printers, and in very pale regions.  The results on six color
-and variable dot size printers tend to be poor, with considerable
-clumping.  It uses an array lookup to decide whether to print, and if
-it is decided to print, what sub-color (in 6 color printers) and dot
-size (in variable dot size) to use.  Ordered dither performs poorly on
-certain kinds of very fine detail, such as fine lines.
+and variable dot size printers tend to be poor.  It uses an array
+lookup to decide whether to print, and if it is decided to print, what
+sub-color (in 6 color printers) and dot size (in variable dot size) to
+use.  Ordered dither performs poorly on certain kinds of very fine
+detail, such as fine lines.
 
 Error diffusion algorithms (Hybrid Floyd-Steinberg and Random
 Floyd-Steinberg, both of which are modifications on pure
@@ -502,10 +513,10 @@ of rendering very fine detail well, but they tend to exhibit artifacts
 in the form of "waves" or "worms" of dots which results in noticeable
 texturing in pale areas.  Furthermore, pale areas immediately adjacent
 to white take a while to "build up" sufficient error to print at all.
-The only difference between the algorithms is that Hybrid
-Floyd-Steinberg uses an array lookup where Random Floyd-Steinberg uses
-a random number generator.  Hybrid Floyd-Steinberg is faster, and
-probably slightly better.
+This is sometimes called "tearing".  The only difference between the
+algorithms is that Hybrid Floyd-Steinberg uses an array lookup where
+Random Floyd-Steinberg uses a random number generator.  Hybrid
+Floyd-Steinberg is faster, and probably slightly better.
 
 Adaptive dithering usually gives the best results overall.  It uses
 pure ordered dither at low densities, and Floyd-Steinberg at high
@@ -526,7 +537,9 @@ printers (CMY only) the results should be identical to ordered dither.
 
 Very Fast is even faster than Fast, with even more loss of quality.
 It uses a power of 2 matrix that can be looked up more quickly and
-performs certain other optimizations.
+performs certain other optimizations.  On laser printers, and possibly
+on certain kinds of text and line art, Very Fast dithering may
+actually yield the best quality.
 
 
 Ink Types
@@ -543,7 +556,8 @@ For Epson printers:
 Six color printers can print using four color inks or all six colors.
 Six color mode is recommended for photographs.  Four color mode may be
 useful when printing text with embedded graphics to reduce ink
-consumption.
+consumption, or to print higher quality with Ordered, Fast, or Very
+Fast dithering (see below).
 
 'Six Color Photo'
 'Four Color Standard'
@@ -584,6 +598,8 @@ For Epson printers:
 'Matte Paper'
 'Inkjet Paper'
 'Photo Quality Inkjet Paper'
+'Premium Glossy Photo Paper'
+'Premium Luster Photo Paper'
 'Photo Paper'
 'Other'
 
@@ -713,12 +729,10 @@ gs -q -dSAFER -dNOPAUSE -sDEVICE=stp -sModel=escp2-660 -dDensity=0.8 -r720 \
 SPOOLER CONFIGURATION
 ------- -------------
 
-Since the options to this driver are extremely complex, we recommend
-use of the foomatic package developed by Grant Taylor
-<gtaylor@picante.com>.  Please read stp-interfaces/README for more
-information.  The stp-interfaces directory contains all of the
-necessary files to configure an lpd, PDQ, or CUPS-based printing
-system.
+The options to this driver are very complex.  Unfortunately, the
+foomatic package is currently out of sync with the development version
+of the stp driver.  We hope to remedy that in the relatively near
+future.
 
 CUPS users may also use the CUPS driver in ../cups.  This is a more
 traditional CUPS driver written by Mike Sweet that may be more
