@@ -1,5 +1,62 @@
 2001-01-20	<rlk@sourceforge.net>
 
+	Files:	gimp_main_window.c (1.79) (+41 -32)
+		cups/rastertoprinter.c (1.16) (+5 -4)
+		cups/genppd.c (1.22) (+13 -13)
+		Ghost/gdevstp.c (1.51) (+5 -5)
+		Ghost/devs.mak.addon-5.10 (1.7) (+11 -11)
+		Ghost/contrib.mak.addon (1.12) (+11 -11)
+		printers.xml (1.48) (+3 -3)
+		printer_options.c (1.7) (+2 -2)
+		printdefy.y (1.18) (+27 -76)
+		print.h (1.105) (+15 -91)
+		print.c (1.136) (+4 -3)
+		print-util.c (1.161) (+7 -7)
+		print-ps.c (1.55) (+21 -10)
+		print-pcl.c (1.112) (+22 -12)
+		print-lexmark.c (1.21) (+37 -23)
+		print-escp2.c (1.305) (+20 -9)
+		print-canon.c (1.113) (+29 -18)
+		gtk_main_window.c (1.63) (+24 -15)
+	
+	Create printfuncs_t that encapsulates all of the printer-specific
+	functions.
+	
+	Clean up const everywhere.  Everything now compiles without warnings
+	(except for a few strays that aren't related to const-ness).
+	
+	Add gdevstp-print.h to the mak.addon files.
+	
+2001-01-20	<ttonino@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.78) (+6 -5)
+	
+	Fixed custom paper size setting in metric mode. Values were divided
+	instead of multiplied by 2.54, and a multiply was missing for width.
+	
+2001-01-20	<rlk@sourceforge.net>
+
+	Files:	printers.xml (1.47) (+21 -5)
+		Ghost/README (1.64) (+2 -0)
+	
+	More Canon stuff
+	
+2001-01-20	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.72) (+75 -0)
+		cups/genppd.c (1.21) (+6 -6)
+		Matgen/patched-print-dither.c (1.7) (+2 -2)
+		print.h (1.104) (+4 -4)
+		print-util.c (1.160) (+4 -4)
+		print-dither.c (1.118) (+39 -26)
+		gtk_color_window.c (1.25) (+10 -10)
+		gimp_main_window.c (1.77) (+3 -3)
+		gimp_color_window.c (1.24) (+11 -5)
+	
+	Change stp_dither_algo_names to function interface.
+	
+2001-01-20	<rlk@sourceforge.net>
+
 	Files:	print-canon.c (1.112) (+3 -3)
 	
 	Make a few more things static.
