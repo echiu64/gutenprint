@@ -48,7 +48,6 @@ bin_PROGRAMS = ijsgimpprint
 endif
 
 ijsgimpprint_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
-ijsgimpprint_DEPENDENCIES = $(LIBGIMPPRINT_LIBS)
 
 $(LIBGIMPPRINT_LIBS):
 	cd ../main ; \
