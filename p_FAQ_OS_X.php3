@@ -39,6 +39,9 @@ require('standard_html_header.php3');
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </a>
+ <li><a href="p_FAQ_OS_X.php3#InDesign">
+ I am having trouble printing with Gimp-Print from Adobe InDesign.
+ </a>
  <li><a href="p_FAQ_OS_X.php3#HPUSB">
  My multi-function HP Device is not printing over the USB port.
  </a>
@@ -304,6 +307,22 @@ require('standard_html_header.php3');
  to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
+ <a name="InDesign">
+ <h3>
+ <li>
+ I am having trouble printing with Gimp-Print from Adobe InDesign.
+ </h3></a>
+ <p>  
+The InDesign application uses a somewhat non-standard printing procedure. The following
+ workaround procedure may help you achieve the desired printer output: 
+ <dd>Within the InDesign print dialog, click "Print..."
+ <dd>Dismiss the warning dialog by clicking "OK"
+ <dd>Click "Print" in the system print dialog (the Indesign print dialog will remain).
+ <dd>Click "Print" in the InDesign dialog.
+ <br>
+ This procedure may be necessary for each document you wish to print. On subsequent
+ prints of the same document the regular "Print" button should work as expected.
+ </p>
  <a name="HPUSB">
  <h3>
  <li>
@@ -319,7 +338,8 @@ require('standard_html_header.php3');
  correctly then you may be experienceing this problem. As a workaround you may 
  be able to print to your device by using an alternate connection interface 
  (but this method is not well tested). For devices with a parallel port you can
- try a compatible USB-to-parallel cable, or a parallel-port print server. 
+ try a <a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537"
+ >compatible USB-to-parallel cable</a>, or a parallel-port print server. 
  Devices that lack a parallel port may possibly function with a compatible USB
  print server.
  </p>  
@@ -328,10 +348,11 @@ require('standard_html_header.php3');
  <li>I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </h3></a>
  <p>  
- That driver is broken in the 4.2.2 release. Try using the 4.2.3-pre1 release,
- but please note that the driver is not fully tested or optimized, so the
- output quality may be less than you expect. Keep checking the Gimp-Print web
- site for newer releases that may offer more improvements for this driver.  
+ That driver has been fixed since the the 4.2.3 release.  You will likely get much
+ better quality output if you use 4.2.5-pre1 or later, as this printer was not tuned
+ before the 4.2.5 release. If you still cannot print and you are trying to print on
+ roll-feed paper make sure that you have selected the "Roll Feed" option in the 
+ "Paper Feed" print dialog (the "Auto Select" option is currently non-functional).
  </p>
  <a name="installer">
  <h3>
