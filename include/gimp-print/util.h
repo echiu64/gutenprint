@@ -66,7 +66,8 @@ extern int stp_init(void);
 extern const char *stp_set_output_codeset(const char *codeset);
 
 extern stp_curve_t *stp_read_and_compose_curves(const char *s1, const char *s2,
-						stp_curve_compose_t comp);
+						stp_curve_compose_t comp,
+						size_t piecewise_point_count);
 extern void stp_abort(void);
 
 /*

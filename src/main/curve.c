@@ -583,6 +583,7 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
     stp_sequence_set_point(curve->seq, count, data[0]);
   curve->recompute_interval = 1;
+  curve->piecewise = 0;
 
   return 1;
 }
@@ -877,9 +878,6 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
 
   check_curve(curve);
 
-  if (curve->piecewise)
-    return 0;
-
   real_point_count = get_real_point_count(curve);
 
   stp_sequence_get_bounds(curve->seq, &nblo, &nbhi);
@@ -925,21 +923,29 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
     {
       double *tmp;
       size_t scount;
+      int stride = 1;
+      int offset = 0;
       const double *data;
+      if (curve->piecewise)
+	{
+	  stride = 2;
+	  offset = 1;
+	}
       stp_sequence_get_data(curve->seq, &scount, &data);
       tmp = stp_malloc(sizeof(double) * scount);
-      for (i = 0; i < scount; i++)
+      memcpy(tmp, data, scount * sizeof(double));
+      for (i = offset; i < scount; i += stride)
 	{
 	  switch (mode)
 	    {
 	    case STP_CURVE_COMPOSE_ADD:
-	      tmp[i] = *(data+i) + scale;
+	      tmp[i] = tmp[i] + scale;
 	      break;
 	    case STP_CURVE_COMPOSE_MULTIPLY:
-	      tmp[i] = *(data+i) * scale;
+	      tmp[i] = tmp[i] * scale;
 	      break;
 	    case STP_CURVE_COMPOSE_EXPONENTIATE:
-	      tmp[i] = pow(*(data+i), scale);
+	      tmp[i] = pow(tmp[i], scale);
 	      break;
 	    }
 	  if (tmp[i] > nbhi || tmp[i] < nblo)
@@ -958,7 +964,7 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
       stp_sequence_set_bounds(curve->seq, nblo, nbhi);
       curve->gamma = 0.0;
       stpi_curve_set_points(curve, count);
-      stp_sequence_set_subrange(curve->seq, 0, real_point_count, tmp);
+      stp_sequence_set_subrange(curve->seq, 0, scount, tmp);
       stp_free(tmp);
       curve->recompute_interval = 1;
       invalidate_auxiliary_data(curve);
@@ -1011,13 +1017,15 @@ interpolate_gamma_internal(const stp_curve_t *curve, double where)
 
 static inline double
 do_interpolate_spline(double low, double high, double frac,
-		      double interval_low, double interval_high)
+		      double interval_low, double interval_high,
+		      double x_interval)
 {
   double a = 1.0 - frac;
   double b = frac;
-  double retval =
+  double retval = 
     ((a * a * a - a) * interval_low) + ((b * b * b - b) * interval_high);
-  retval = (a * low) + (b * high) + (retval / 6);
+  retval = retval * x_interval * x_interval / 6;
+  retval += (a * low) + (b * high);
   return retval;
 }
 
@@ -1061,8 +1069,8 @@ interpolate_point_internal(stp_curve_t *curve, double where)
 	  (stp_sequence_get_point(curve->seq, ip1, &ip1val)) == 0)
 	return HUGE_VAL; /* Infinity */
 
-      retval = do_interpolate_spline(ival, ip1val, frac,
-				     curve->interval[i], curve->interval[ip1]);
+      retval = do_interpolate_spline(ival, ip1val, frac, curve->interval[i],
+				     curve->interval[ip1], 1.0);
 
       stp_sequence_get_bounds(curve->seq, &blo, &bhi);
       if (retval > bhi)
@@ -1129,7 +1137,9 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
    */
   if (curve->piecewise)
     {
+      double blo, bhi;
       int curpos = 0;
+      stp_sequence_get_bounds(curve->seq, &blo, &bhi);
       if (curve->recompute_interval)
 	compute_intervals(curve);
       for (i = 0; i < old; i++)
@@ -1138,6 +1148,7 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
 	  double high;
 	  double low_y;
 	  double high_y;
+	  double x_delta;
 	  if (!stp_sequence_get_point(curve->seq, i * 2, &low))
 	    {
 	      stp_free(new_vec);
@@ -1163,6 +1174,7 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
 	  stp_deprintf(STP_DBG_CURVE,
 		       "Filling slots at %d %d: %f %f  %f %f  %d\n",
 		       i,curpos, high, low, high_y, low_y, limit);
+	  x_delta = high - low;
 	  high *= (limit - 1);
 	  low *= (limit - 1);
 	  while (curpos <= high)
@@ -1174,7 +1186,12 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
 		new_vec[curpos] =
 		  do_interpolate_spline(low_y, high_y, frac,
 					curve->interval[i],
-					curve->interval[i + 1]);
+					curve->interval[i + 1],
+					x_delta);
+	      if (new_vec[curpos] < blo)
+		new_vec[curpos] = blo;
+	      if (new_vec[curpos] > bhi)
+		new_vec[curpos] = bhi;
 	      stp_deprintf(STP_DBG_CURVE,
 			   "  Filling slot %d %f %f\n",
 			   curpos, frac, new_vec[curpos]);
@@ -1307,8 +1324,21 @@ stp_curve_compose(stp_curve_t **retval,
   unsigned points_b = stp_curve_count_points(b);
   double alo, ahi, blo, bhi;
 
-  if (a->piecewise || b->piecewise)
+  if (a->piecewise && b->piecewise)
     return 0;
+  if (a->piecewise)
+    {
+      stp_curve_t *a_save = a;
+      a = stp_curve_create_copy(a_save);
+      stp_curve_resample(a, stp_curve_count_points(b));
+    }
+  if (b->piecewise)
+    {
+      stp_curve_t *b_save = b;
+      b = stp_curve_create_copy(b_save);
+      stp_curve_resample(b, stp_curve_count_points(a));
+    }
+
   if (mode != STP_CURVE_COMPOSE_ADD && mode != STP_CURVE_COMPOSE_MULTIPLY)
     return 0;
   if (stp_curve_get_wrap(a) != stp_curve_get_wrap(b))

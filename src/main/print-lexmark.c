@@ -2066,7 +2066,7 @@ densityDivisor /= 1.2;
     {
       hue_adjustment = stp_read_and_compose_curves
 	(lexmark_hue_adjustment(caps, v),
-	 media ? media->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD);
+	 media ? media->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD, 384);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_destroy(hue_adjustment);
     }
@@ -2075,7 +2075,7 @@ densityDivisor /= 1.2;
     {
       lum_adjustment = stp_read_and_compose_curves
 	(lexmark_lum_adjustment(caps, v),
-	 media ? media->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+	 media ? media->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY, 384);
       stp_set_curve_parameter(v, "LumMap", lum_adjustment);
       stp_curve_destroy(lum_adjustment);
     }
@@ -2084,7 +2084,7 @@ densityDivisor /= 1.2;
     {
       sat_adjustment = stp_read_and_compose_curves
 	(lexmark_sat_adjustment(caps, v),
-	 media ? media->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY);
+	 media ? media->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY, 384);
       stp_set_curve_parameter(v, "SatMap", sat_adjustment);
       stp_curve_destroy(sat_adjustment);
     }

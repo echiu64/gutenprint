@@ -522,7 +522,8 @@ stp_set_output_codeset(const char *codeset)
 
 stp_curve_t *
 stp_read_and_compose_curves(const char *s1, const char *s2,
-			    stp_curve_compose_t comp)
+			    stp_curve_compose_t comp,
+			    size_t piecewise_point_count)
 {
   stp_curve_t *ret = NULL;
   stp_curve_t *t1 = NULL;
@@ -532,7 +533,14 @@ stp_read_and_compose_curves(const char *s1, const char *s2,
   if (s2)
     t2 = stp_curve_create_from_string(s2);
   if (t1 && t2)
-    stp_curve_compose(&ret, t1, t2, comp, -1);
+    {
+      if (stp_curve_is_piecewise(t1) && stp_curve_is_piecewise(t2))
+	{
+	  stp_curve_resample(t1, piecewise_point_count);
+	  stp_curve_resample(t2, piecewise_point_count);
+	}
+      stp_curve_compose(&ret, t1, t2, comp, -1);
+    }
   if (ret)
     {
       stp_curve_destroy(t1);

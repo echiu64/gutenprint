@@ -444,11 +444,15 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
       for (i = 0; i < count; i++)
 	{
 	  if (curve_points[i].x != standard_piecewise_sat_adjustment[i].x ||
-	      curve_points[i].y != standard_piecewise_sat_adjustment[i].y)
+	      curve_points[i].y - .0000001 > standard_piecewise_sat_adjustment[i].y ||
+	      curve_points[i].y + .0000001 < standard_piecewise_sat_adjustment[i].y)
 	    {
 	      bad_compare = 1;
 	      if (!quiet)
-		printf("Miscompare at element %d\n", i);
+		printf("Miscompare at element %d: (%f, %f) (%f, %f)\n", i,
+		       standard_piecewise_sat_adjustment[i].x,
+		       standard_piecewise_sat_adjustment[i].y,
+		       curve_points[i].x, curve_points[i].y);
 	    }
 	}
       SIMPLE_TEST_CHECK(!bad_compare);
@@ -471,8 +475,8 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
   TEST("interpolate piecewise curve (PASS is an expected failure)");
   SIMPLE_TEST_CHECK(!stp_curve_interpolate_value(curve1, .5, &low));
 
-  TEST("rescale piecewise curve (PASS is an expected failure)");
-  SIMPLE_TEST_CHECK(!stp_curve_rescale(curve1, .5, STP_CURVE_COMPOSE_ADD,
+  TEST("rescale piecewise curve");
+  SIMPLE_TEST_CHECK(stp_curve_rescale(curve1, .5, STP_CURVE_COMPOSE_ADD,
 				      STP_CURVE_BOUNDS_RESCALE));
 
   TEST("get float data of piecewise curve (PASS is an expected failure)");
@@ -514,7 +518,7 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
       SIMPLE_TEST_CHECK(stp_curve_get_data(curve1, &count));
 
       TEST("set data point of piecewise copy");
-      SIMPLE_TEST_CHECK(stp_curve_set_point(curve1, 2, 0.01));
+      SIMPLE_TEST_CHECK(stp_curve_set_point(curve1, 2, 0.51));
 
       TEST("get data point of piecewise copy");
       SIMPLE_TEST_CHECK(stp_curve_get_point(curve1, 2, &low));
@@ -972,10 +976,13 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve2));
 
   piecewise_curve_checks(curve1, 0, 48);
+  stp_curve_rescale(curve1, -.5, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
   piecewise_curve_checks(curve2, 3, 48);
 
   TEST("Copy in place piecewise curve");
   stp_curve_copy(curve2, curve1);
+  SIMPLE_TEST_CHECK(curve1);
   piecewise_curve_checks(curve2, 10, 48);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 15, 48);
@@ -1017,6 +1024,8 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve2));
 
   piecewise_curve_checks(curve1, 0, 49);
+  stp_curve_rescale(curve1, -.5, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
   piecewise_curve_checks(curve2, 3, 49);
 
   TEST("Copy in place piecewise curve");
@@ -1060,6 +1069,8 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve2));
 
   piecewise_curve_checks(curve1, 0, 48);
+  stp_curve_rescale(curve1, -.5, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
   piecewise_curve_checks(curve2, 3, 48);
 
   TEST("Copy in place piecewise curve");
@@ -1103,6 +1114,8 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve2));
 
   piecewise_curve_checks(curve1, 0, 49);
+  stp_curve_rescale(curve1, -.5, STP_CURVE_COMPOSE_ADD,
+		    STP_CURVE_BOUNDS_RESCALE);
   piecewise_curve_checks(curve2, 3, 49);
 
   TEST("Copy in place piecewise curve");

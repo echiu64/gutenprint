@@ -580,8 +580,7 @@ extern int stp_curve_resample(stp_curve_t *curve, size_t points);
  * @param scale the scaling factor.
  * @param mode the composition mode.
  * @param bounds_mode the bounds exceeding mode.
- * @returns FALSE if this would exceed floating point limits or if the
- * curve is a piecewise curve.
+ * @returns FALSE if this would exceed floating point limits
  */
 extern int stp_curve_rescale(stp_curve_t *curve, double scale,
 			     stp_curve_compose_t mode,

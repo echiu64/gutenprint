@@ -1049,6 +1049,8 @@ compute_one_lut(lut_t *lut, int i)
 	!channel_is_synthesized(lut, i) && lut->invert_output;
       stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 			STP_CURVE_BOUNDS_RESCALE);
+      if (stp_curve_is_piecewise(curve))
+	stp_curve_resample(curve, lut->steps);
       invert_curve(curve, invert_output);
       stp_curve_resample(curve, lut->steps);
     }
@@ -1128,14 +1130,26 @@ stpi_compute_lut(stp_vars_t *v)
   if (lut->color_correction->correct_hsl)
     {
       if (stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_DEFAULTED))
-	lut->hue_map.curve =
-	  stp_curve_create_copy(stp_get_curve_parameter(v, "HueMap"));
+	{
+	  lut->hue_map.curve =
+	    stp_curve_create_copy(stp_get_curve_parameter(v, "HueMap"));
+	  if (stp_curve_is_piecewise(lut->hue_map.curve))
+	    stp_curve_resample(lut->hue_map.curve, 384);
+	}
       if (stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_DEFAULTED))
-	lut->lum_map.curve =
-	  stp_curve_create_copy(stp_get_curve_parameter(v, "LumMap"));
+	{
+	  lut->lum_map.curve =
+	    stp_curve_create_copy(stp_get_curve_parameter(v, "LumMap"));
+	  if (stp_curve_is_piecewise(lut->lum_map.curve))
+	    stp_curve_resample(lut->lum_map.curve, 384);
+	}
       if (stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_DEFAULTED))
-	lut->sat_map.curve =
-	  stp_curve_create_copy(stp_get_curve_parameter(v, "SatMap"));
+	{
+	  lut->sat_map.curve =
+	    stp_curve_create_copy(stp_get_curve_parameter(v, "SatMap"));
+	  if (stp_curve_is_piecewise(lut->sat_map.curve))
+	    stp_curve_resample(lut->sat_map.curve, 384);
+	}
     }
 
   stp_dprintf(STP_DBG_LUT, v, " print_gamma %.3f\n", lut->print_gamma);
