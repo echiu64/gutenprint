@@ -47,7 +47,7 @@
  *
  */
 
-/* #define DEBUG 1*/
+/*#define DEBUG 1*/
 #define USEEPSEWAVE 1
 
 #ifdef __GNUC__
@@ -88,14 +88,10 @@ typedef struct testdata {
 } testdata;
 
 const stp_vars_t  *dbgfileprn;
-const stp_vars_t  *dbgfile;
 int  lex_show_lcount, lex_show_length;
 
-void lex_show_dither(const stp_vars_t file, unsigned char *y, unsigned char *c, unsigned char *m, unsigned char *ly, unsigned char *lc, unsigned char *lm, unsigned char *k, int length);
 const stp_vars_t lex_open_tmp_file();
 const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int length);
-const stp_vars_t lex_show_init(int x, int y);
-void lex_show_deinit(const stp_vars_t file);
 static void testprint(testdata *td);
 static void readtestprintline(testdata *td, stp_linebufs_t *linebufs);
 #endif
@@ -1848,8 +1844,6 @@ densityDivisor /= 1.2;
   out_height = ydpi * out_height / 72;
 
 #ifdef DEBUG
-  /*  dbgfile = lex_show_init(out_width, out_height);*/
-  dbgfile = lex_show_init(out_width, out_height-100);
 
   stp_erprintf("border: left %ld, x_raster_res %d, offser_left %ld\n", left, caps->x_raster_res, caps->offset_left_border);
 #endif
@@ -2152,10 +2146,6 @@ densityDivisor /= 1.2;
       clean_color(cols.p.m, length);
       clean_color(cols.p.y, length);
 
-#ifdef DEBUG
-      stp_erprintf("Let's go lex_show_dither\n");
-      lex_show_dither(dbgfile, cols.p.y, cols.p.c, cols.p.m, cols.p.Y, cols.p.C, cols.p.M, cols.p.k, out_width);
-#endif
 
 #ifdef DEBUGyy
             stp_erprintf("Let's go stp_write_weave\n");
@@ -2212,7 +2202,6 @@ densityDivisor /= 1.2;
 
 
 #ifdef DEBUG
-  lex_show_deinit(dbgfile);
   lex_tmp_file_deinit(dbgfileprn);
 #endif
 
@@ -2744,116 +2733,6 @@ const stp_vars_t lex_write_tmp_file(const stp_vars_t ofile, void *data,int lengt
 }
 
 
-const stp_vars_t lex_show_init(int x, int y)
-{
-  const stp_vars_t ofile;
-
-  ofile = fopen("/tmp/xx.ppm", "wb");
-  if (ofile == NULL)
-	{
-    stp_erprintf("Can't create file !\n");
-    exit(2);
-  }
-
-  stp_erprintf("x %d, y %d\n", x, y);
-
-  fprintf(ofile, "P6\n");
-  fprintf(ofile, "# CREATOR: \n");
-  fprintf(ofile, "# Created with\n");
-  fprintf(ofile, "%d %d\n255\n", x, y);
-
-  return ofile;
-}
-
-void lex_show_dither(const stp_vars_t file, unsigned char *y,
-		     unsigned char *c, unsigned char *m, unsigned char *ly,
-		     unsigned char *lc, unsigned char *lm, unsigned char *k,
-		     int length)
-{
-  int i;
-  unsigned char col[3];
-  unsigned char col1[3];
-  unsigned char col2[3];
-#define DCOL  155
-#define LCOL  100
-  /*
-    y=NULL;
-    c=NULL;
-    m=NULL;
-  */
-  /* we have ly only !! specific for lexmark !! */
-  /*  if (lm != NULL) {
-      ly = y;
-      y = NULL;
-      }*/
-
-  lex_show_lcount++;
-  lex_show_length = length;
-
-  for (i=0; i < length; i++) {
-    col[0] = 255;
-    col[1] = 255;
-    col[2] = 255;
-    if ((k==NULL) || (((k[i/8] >> (7-(i%8))) & 0x1) == 0)) {
-      if ((c!=NULL) && (((c[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[0] -= DCOL;
-      }
-      if ((m!=NULL) && (((m[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[1] -= DCOL;
-      }
-      if ((y!=NULL) && (((y[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[2] -= DCOL;
-      }
-      if ((lc!=NULL) && (((lc[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[0] -= LCOL;
-      }
-      if ((lm!=NULL) && (((lm[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[1] -= LCOL;
-      }
-      if ((ly!=NULL) && (((ly[i/8] >> (7-(i%8))) & 0x1) == 1)) {
-	col[2] -= LCOL;
-      }
-    } else {
-      col[0] = 0;
-      col[1] = 0;
-      col[2] = 0;
-    }
-    col1[0] = col[0];
-    col1[1] = col[1];
-    col1[2] = col[2];
-
-#if 1
-#if 0
-    if (col[0] > col2[0])
-      col[0] -= col2[0];
-    if (col[1] > col2[1])
-      col[1] -= col2[1];
-    if (col[2] > col2[2])
-      col[2] -= col2[2];
-#else
-    if (col[0] > col2[0])
-      col[0] = col2[0];
-    if (col[1] > col2[1])
-      col[1] = col2[1];
-    if (col[2] > col2[2])
-      col[2] = col2[2];
-#endif
-
-    col2[0] = col1[0];
-    col2[1] = col1[1];
-    col2[2] = col1[2];
-#endif
-
-    fwrite(&col, 1, 3, file);
-  }
-}
-
-void lex_show_deinit(const stp_vars_t file) {
-  stp_erprintf("lex_show_lcount %d,   lex_show_length %d\n", lex_show_lcount, lex_show_length);
-  fclose(file);
-}
-
-
 #endif
 
 
@@ -2961,26 +2840,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
 	}
 
 
-#ifdef DEBUGxx
-#define lineoffcalc(n) ((((lwidth+7)/8)*i))
-    /*#define lineoffcalc(n) (lineoffs[0].v[n]*i)*/
-      {
-	int i;
-	stp_erprintf("Let's go lex_show_dither (sw->jets %d,  paperShift %d)\n", sw->jets, paperShift);
-	for (i=0; i < sw->jets; i++) {
-	  int mywidth=lwidth;
-	  lex_show_dither(dbgfile,
-			  bufs[0].p.y+lineoffcalc(1), /* yellow, */
-			  bufs[0].p.c+lineoffcalc(2), /* cyan,  */
-			  bufs[0].p.m+lineoffcalc(3), /* magenta,  */
-			  NULL, /* lyellow,   */
-			  NULL, /* lcyan,   */
-			  NULL, /* lmagenta,   */
-			  bufs[0].p.k+lineoffcalc(0), /* black,   */
-			  mywidth); /*out_width*/
-	}
-      }
-#endif
+
 
 #ifdef DEBUG
       stp_erprintf("lexmark_write: lwidth %d\n", lwidth);
