@@ -256,6 +256,8 @@ extern void * 	stp_get_driver_data (const stp_vars_t vv);
 extern void	stp_set_verified(stp_vars_t vv, int value);
 extern int	stp_get_verified(stp_vars_t vv);
 
+extern void     stp_copy_options(stp_vars_t vd, const stp_vars_t vs);
+
 extern void	stp_default_media_size(const stp_printer_t printer,
 				       const stp_vars_t v, int *width,
 				       int *height);
@@ -406,6 +408,8 @@ stp_weave_parameters_by_row(const stp_softweave_t *sw, int row,
 			    int vertical_subpass, stp_weave_t *w);
 
 extern void stp_destroy_weave(void *);
+
+extern void stp_destroy_weave_params(void *vw);
 
 extern int
 stp_verify_printer_params(const stp_printer_t, const stp_vars_t);

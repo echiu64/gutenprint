@@ -100,15 +100,15 @@ stp_simple_dither_range_t photo_2bit_ranges[] =
 };
 
 
-
-void image_init(void);
-void image_get_row(unsigned short *data, int row);
-void write_gray(FILE *fp, unsigned char *black);
-void write_color(FILE *fp, unsigned char *cyan, unsigned char *magenta,
-                 unsigned char *yellow, unsigned char *black);
-void write_photo(FILE *fp, unsigned char *cyan, unsigned char *lcyan,
-                 unsigned char *magenta, unsigned char *lmagenta,
-                 unsigned char *yellow, unsigned char *black);
+double compute_interval(struct timeval *tv1, struct timeval *tv2);
+void   image_init(void);
+void   image_get_row(unsigned short *data, int row);
+void   write_gray(FILE *fp, unsigned char *black);
+void   write_color(FILE *fp, unsigned char *cyan, unsigned char *magenta,
+                   unsigned char *yellow, unsigned char *black);
+void   write_photo(FILE *fp, unsigned char *cyan, unsigned char *lcyan,
+                   unsigned char *magenta, unsigned char *lmagenta,
+                   unsigned char *yellow, unsigned char *black);
 
 
 double

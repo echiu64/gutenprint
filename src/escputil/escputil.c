@@ -190,13 +190,21 @@ stp_printer_t printer_list[] =
   { NULL,	NULL,			0,	0 }
 };
 
-void initialize_print_cmd(void);
-void do_head_clean(void);
-void do_nozzle_check(void);
+void add_newlines(int count);
+void add_resets(int count);
+void align_error(void);
 void do_align(void);
-void do_ink_level(void);
-void do_identify(void);
+void do_align_help(int passes, int choices);
 char *do_get_input (const char *prompt);
+void do_head_clean(void);
+void do_help(int code);
+void do_identify(void);
+void do_ink_level(void);
+void do_nozzle_check(void);
+int do_print_cmd(void);
+void do_remote_cmd(char *cmd, int nargs, int a0, int a1, int a2, int a3);
+void initialize_print_cmd(void);
+int read_from_printer(int fd, char *buf, int bufsize);
 
 char *printer = NULL;
 char *raw_device = NULL;

@@ -105,6 +105,22 @@ line_type **page=NULL;
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
 
+int  get_bits (unsigned char *p,int index);
+void set_bits (unsigned char *p,int index,int value);
+void mix_ink (ppmpixel p, int c, unsigned int a);
+void merge_line (line_type *p, unsigned char *l, int startl, int stopl, 
+                 int color);
+void expand_line (unsigned char *src, unsigned char *dst, int height,
+                  int skip, int left_ignore);
+void write_output (FILE *fp_w);
+void find_white (unsigned char *buf,int npix, int *left, int *right);
+int update_page (unsigned char *buf, int bufsize, int m, int n, int color,
+                 int density);
+void parse_escp2 (FILE *fp_r);
+void reverse_bit_order (unsigned char *buf, int n);
+int rle_decode (unsigned char *inbuf, int n, int max);
+void parse_canon (FILE *fp_r);
+     
 
 int get_bits(unsigned char *p,int index) {
 

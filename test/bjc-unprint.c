@@ -66,6 +66,24 @@ typedef struct bitimage_t_ {
   int xmax;
 } bitimage_t;
 
+bitimage_t *bitimage_new (void);
+int last_bit (unsigned char i);
+int first_bit (unsigned char i);
+void rle_info (const unsigned char *inbuf, int n, int *first, int *last,
+               int *width, int *length);
+int rle_decode (unsigned char *inbuf, int n, unsigned char *outbuf, int max);
+scanline_t* scanline_new (void);
+scanline_t *scanline_store (scanline_t *line, int y, unsigned char *buf,
+                            int size);
+bitimage_t *scanlines2bitimage (scanline_t *slimg);
+char conv (char i);
+void save2xbm (const char *filename,char col, bitimage_t *img,
+               int xmin, int ymin, int xmax, int ymax);
+int nextcmd (FILE *infile, unsigned char *inbuff, int *cnt);
+int process(FILE *infile, scanline_t *sf[7], int *xmin_, int *xmax_,
+            int *ymin_, int *ymax_);
+
+
 bitimage_t *bitimage_new(void)
 {
   bitimage_t *tmp= (bitimage_t*) xmalloc (sizeof(bitimage_t));

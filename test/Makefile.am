@@ -26,7 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-AM_CFLAGS = @MAINTAINER_CFLAGS@
+AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../lib/libprintut.la $(INTLLIBS) ../lib/libprintut.la
 
@@ -61,7 +61,7 @@ $(LIBGIMPPRINT_LIBS):
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS)
+CLEANFILES = $(EXTRA_PROGRAMS) mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest

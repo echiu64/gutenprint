@@ -123,7 +123,7 @@ writefunc(void *file, const char *buf, size_t bytes)
   fwrite(buf, 1, bytes, prn);
 }
 
-int
+static int
 run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
 		  int subpasses, int nrows, int first_line, int phys_lines,
 		  int color_jet_arrangement, int strategy, int quiet)

@@ -98,6 +98,17 @@ line_type **page=NULL;
 /* sequential to Epson2 */
 #define ep2color(c)  ({0,1,2,4,257,258}[c])
 
+int get_bits (unsigned char *p,int index,int bpp);
+void set_bits (unsigned char *p,int index,int bpp,int value);
+void mix_ink (ppmpixel p, int c, unsigned int a);
+void merge_line (line_type *p, unsigned char *l, int startl, int stopl,
+                 int color, int bpp);
+void expand_line (unsigned char *src, unsigned char *dst, int height,
+                  int bpp, int skip);
+void write_output (FILE *fp_w,int bpp);
+void update_page (unsigned char *buf, int bufsize, int m, int n, int color,
+                  int bpp, int density);
+
 
 int get_bits(unsigned char *p,int index,int bpp) {
 

@@ -26,7 +26,7 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-AM_CFLAGS = @MAINTAINER_CFLAGS@
+AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 

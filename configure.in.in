@@ -171,16 +171,6 @@ fi
 AC_DEFINE(OSTYPE,["${OSTYPE}"],[The operating system to build for])
 
 dnl Command line options.
-AC_MSG_CHECKING([whether to enable debugging])
-AC_ARG_ENABLE(debug,
-[  --enable-debug          turn on debugging [default=no]],
-  [case "${enableval}" in
-    yes) OPTIM="-g " ; AC_MSG_RESULT([yes]) ;;
-    no) AC_MSG_RESULT([no]) ;;
-    *) AC_MSG_RESULT([unknown])
-       AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
-  esac],[AC_MSG_RESULT([no])])
-
 AC_MSG_CHECKING([whether to build CUPS driver])
 AC_ARG_WITH(cups,
 [  --with-cups[=PREFIX]    build CUPS driver [default=${BUILD_CUPS}, default PREFIX=PREFIX]],
@@ -219,7 +209,7 @@ AC_ARG_WITH(ghost,
 
 AC_MSG_CHECKING([whether to build foomatic data files])
 AC_ARG_WITH(foomatic,
-[  --with-foomatic          build foomatic data files [default=${BUILD_FOOMATIC}]],
+[  --with-foomatic         build foomatic data files [default=${BUILD_FOOMATIC}]],
   [case "${withval}" in
     yes) BUILD_FOOMATIC="yes" ; AC_MSG_RESULT([yes]) ;;
     no) BUILD_FOOMATIC="no" ; AC_MSG_RESULT([no]) ;;
@@ -286,6 +276,14 @@ AC_PATH_PROG(TEXI2HTML_PROG, texi2html)
 if test x${TEXI2HTML_PROG} = x ; then
   AC_MSG_WARN([html documentation will not be regenerated!])
 fi
+dnl foomatic checks
+if test x${BUILD_FOOMATIC} = xyes ; then
+  AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
+  if test -z "$FOOMATIC_KITLOAD" ; then
+    AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
+  fi
+fi
+
 
 dnl GNU gettext checks.
 AM_GNU_GETTEXT
@@ -298,47 +296,25 @@ else
 fi
 
 dnl Compiler flags
-if test -n "${GCC}" ; then
-  # Only GCC supports -Wall and other GCC options...
-  if test x${USE_MAINTAINER_MODE} = xtrue ; then
-    MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes -DGIMP_PRINT_MAINT'
-  else
-    MAINTAINER_CFLAGS='-Wall -Wcast-align -Wstrict-prototypes'
-  fi
-  if test -z "${CFLAGS}" ; then
-    if test x${OPTIM} = x ; then
-      CFLAGS="${CFLAGS} -O2"
-    else
-      CFLAGS="${CFLAGS} -g"
-    fi
-  fi
-  if test x${BUILD_CUPS} = xyes ; then
-    # See if GCC supports -fno-exceptions...
-      AC_MSG_CHECKING([if GCC supports -fno-exceptions])
-      OLDCFLAGS="$CFLAGS"
-      CFLAGS="$CFLAGS -fno-exceptions"
-      AC_TRY_COMPILE(,,
-        AC_MSG_RESULT([yes (disabling for CUPS)])
-        CUPS_CFLAGS="-fno-exceptions",
-        AC_MSG_RESULT([no]))
-      CFLAGS="$OLDCFLAGS"
-  fi
-else
-  if test x${USE_MAINTAINER_MODE} = xyes ; then
-    MAINTAINER_CFLAGS='-DGIMP_PRINT_MAINT'
-  else
-    MAINTAINER_CFLAGS=''
-  fi
-  if test -z "${CFLAGS}" ; then
-    if test x${OPTIM} = x ; then
-      case ${OSTYPE} in
-        irix) CFLAGS="${CFLAGS} -O3" ;;
-        *)    CFLAGS="${CFLAGS} -O" ;;
-      esac
-    else
-      CFLAGS="${CFLAGS} -g"
-    fi
-  fi
+if test "$CC" = "gcc" ; then
+  GNUCFLAGS="-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs"
+fi
+AC_SUBST(GNUCFLAGS)
+
+if test x${USE_MAINTAINER_MODE} = xtrue ; then
+  AC_DEFINE(GIMP_PRINT_MAINT)
+fi
+
+if test x${BUILD_CUPS} = xyes ; then
+dnl See if GCC supports -fno-exceptions...
+  AC_MSG_CHECKING([if GCC supports -fno-exceptions])
+  OLDCFLAGS="$CFLAGS"
+  CFLAGS="$CFLAGS -fno-exceptions"
+  AC_TRY_COMPILE(,,
+  AC_MSG_RESULT([yes (disabling for CUPS)])
+  CUPS_CFLAGS="-fno-exceptions",
+  AC_MSG_RESULT([no]))
+  CFLAGS="$OLDCFLAGS"
 fi
 
 dnl Checks for libraries.
@@ -352,7 +328,7 @@ dnl check for libm, and also add to CUPS LIBS
 AC_CHECK_LIB(m,pow,
   GIMPPRINT_DEPLIBS="${GIMPPRINT_DEPLIBS} -lm"
   CUPS_LIBS="${CUPS_LIBS} -lm")
-dnl CUPS checks
+dnl CUPS library checks
 if test x${BUILD_CUPS} = xyes ; then
   AC_CHECK_LIB(socket,socket,
     if test x${OSTYPE} != xirix ; then
@@ -378,16 +354,7 @@ dnl Require CUPS 1.1...
     -lcups)
 
 fi
-
-dnl foomatic checks
-if test x${BUILD_FOOMATIC} = xyes ; then
-  AC_CHECK_PROG(FOOMATIC_KITLOAD, foomatic-kitload, foomatic-kitload)
-  if test -z "$FOOMATIC_KITLOAD" ; then
-    AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
-  fi
-fi
-
-dnl GIMP checks
+dnl GIMP library checks
 if test x${BUILD_GIMP} = xyes -o -n "${BUILD_PACKAGE}" ; then
   AM_PATH_GIMP(1.1.21,
     [SAVE_GTK_LIBS="$GIMP_LIBS"

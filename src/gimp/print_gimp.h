@@ -102,6 +102,7 @@ extern void gimp_plist_build_combo         (GtkWidget      *combo,
 extern void gimp_do_color_updates    (void);
 extern void gimp_redraw_color_swatch (void);
 extern void gimp_build_dither_combo  (void);
+extern void gimp_build_printer_combo (void);
 extern void gimp_create_color_adjust_window  (void);
 extern void gimp_update_adjusted_thumbnail   (void);
 extern void
@@ -113,6 +114,6 @@ gimp_plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 			gint           *callback_id); /* IO - Callback ID (init to -1) */
 extern void gimp_create_main_window (void);
 extern void gimp_set_color_sliders_active(int active);
-
+extern void gimp_writefunc (void *file, const char *buf, size_t bytes);
 
 #endif  /* __PRINT_GIMP_H__ */

@@ -47,10 +47,10 @@
  * Local functions...
  */
 
-static void	printrc_load(void);
-void	        printrc_save(void);
-static int	compare_printers(gp_plist_t *p1, gp_plist_t *p2);
-static void	get_system_printers(void);
+static void	printrc_load (void);
+void		printrc_save (void);
+static int	compare_printers (gp_plist_t *p1, gp_plist_t *p2);
+static void	get_system_printers (void);
 
 static void	query (void);
 static void	run (char *, int, GimpParam *, int *, GimpParam **);

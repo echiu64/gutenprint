@@ -41,7 +41,7 @@ cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model
 
-AM_CFLAGS = @MAINTAINER_CFLAGS@ $(CUPS_CFLAGS)
+AM_CFLAGS = $(GNUCFLAGS) $(CUPS_CFLAGS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
@@ -121,9 +121,11 @@ install-data-hook:
 
 .PHONY: ppd
 
-ppd:    genppd
+ppd: ppd-stamp
+ppd-stamp: genppd
 	-rm -rf ppd
 	./genppd
+	touch ppd-stamp
 
 $(LIBGIMPPRINT_LIBS):
 	$(MAKE) -C ../main
@@ -146,7 +148,7 @@ clean-local:
 
 ## Clean
 
-CLEANFILES = $(EXTRA_PROGRAMS)
+CLEANFILES = $(EXTRA_PROGRAMS) ppd-stamp
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
@@ -155,3 +157,10 @@ EXTRA_DIST = \
 	calibrate.ppm \
 	command.txt \
 	command.types
+
+
+
+
+
+
+

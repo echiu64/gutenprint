@@ -26,14 +26,14 @@ MAINT_CHARSET = latin1
 
 ## Variables
 
-AM_CFLAGS = @MAINTAINER_CFLAGS@
+AM_CFLAGS = $(GNUCFLAGS)
 INCLUDES = @INCLUDES@ $(GIMP_CFLAGS) $(LIBGIMPPRINT_CFLAGS) -I$(top_srcdir)/src/main
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la
 
 
 ## Programs
 
-FOOMATIC_NOINST_BIN=printer_options paper_sizes gimp-print-version
+FOOMATIC_NOINST_BIN = printer_options paper_sizes gimp-print-version
 
 noinst_PROGRAMS = @FOOMATIC_NOINST_BIN@
 

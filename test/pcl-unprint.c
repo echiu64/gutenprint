@@ -194,6 +194,17 @@ commands_t pcl_commands[] =
 	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
    };
 
+int pcl_find_command (void);
+void fill_buffer (void);
+void pcl_read_command (void);
+void write_grey (output_t *output, image_t *image);
+void write_colour (output_t *output, image_t *image);
+int decode_tiff (char *in_buffer, int data_height, char *decode_buf,
+                 int maxlen);
+void pcl_reset (image_t *i);
+int depth_to_rows (int depth);
+
+
 /*
  * pcl_find_command(). Search the commands table for the command.
  */
