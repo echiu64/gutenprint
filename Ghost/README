@@ -152,7 +152,7 @@ Printer Model Selection:
 3   Stylus Color 600
 4   Stylus Color 800
 5   Stylus Color 850
-6   Stylus Color 1520/3000
+6   Stylus Color 1520
 7   Stylus Photo 700
 8   Stylus Photo EX
 9   Stylus Photo
@@ -160,14 +160,17 @@ Printer Model Selection:
 11  Stylus Color 640
 12  Stylus Color 740
 13  Stylus Color 900
-14  Stylus Photo 750/870
-15  Stylus Photo 1200/1270
-16  Stylus Photo 860
+14  Stylus Photo 750
+15  Stylus Photo 1200
+16  Stylus Color 860
 17  Stylus Color 1160
-18  Stylus Color 660
+18  Stylus Color 660/670
 19  Stylus Color 760
 20  Stylus Photo 720
 21  Stylus Color 480
+22  Stylus Photo 870
+23  Stylus Photo 1270
+24  Stylus Color 3000
 
 Most or all of these printers are fully functional.
 
@@ -185,10 +188,10 @@ Print Resolution Selection:
 					  1520, and Stylus Color 3000)
 3  720 DPI High Quality                  (works on all printers except
 					  above and Epson Stylus Color
-					  440)
+					  440/460/480)
 4  720 DPI Highest Quality               (works on all printers except
 					  above and Epson Stylus Color
-					  440)
+					  440/460/480)
 5  1440 x 720 DPI Microweave             (works on all 1440x720 dpi printers)
 6  1440 x 720 DPI Softweave              (works on all 1440x720 dpi
 					  printers except for Stylus
@@ -215,7 +218,9 @@ can do Microweave properly, particularly at 1440x720 DPI.  If
 Microweave is used with these printers, the printing will be done one
 row at a time.  In addition to being extremely slow (but often
 extremely high quality), this may be harmful to the print head and may
-cause clogging, due to ink pooling in the print head.
+cause clogging, due to ink pooling in the print head.  If your printer
+is capable of non-Microweave modes, there is seldom any advantage to
+be had from using Microweave.
 
 Dithering Algorithms:
 --------- -----------

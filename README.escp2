@@ -61,9 +61,9 @@ ESC (i BC=1 MICROWEAVE1
 	this is used to turn on microweave; on newer printers, it
 	prints one row at a time.  All printers support this mode.  It
 	should only be used at 720 (or 1440x720) DPI.  The Epson
-	Stylus Pro indicates additional modes: 2= Full-overlap, 3=
-	four-pass, 4="Full-overlap 2".  Any of these commands can be
-	used with the high four bits set to either 3 or 0.
+	Stylus Pro series indicates additional modes: 2= Full-overlap,
+	3= four-pass, 4="Full-overlap 2".  Any of these commands can
+	be used with the high four bits set to either 3 or 0.
 
 ESC U DIRECTION1
 	If DIRECTION is 1, print unidirectionally; if 0, print

@@ -339,7 +339,7 @@ private int stp_put_params(gx_device *pdev, gs_param_list *plist)
   code = stp_put_param_int(plist, "Brightness", &bright, 0, 400, code);
   code = stp_put_param_int(plist, "Contrast", &cont, 25, 400, code);
   code = stp_put_param_int(plist, "Color", &color, 0, 1, code);
-  code = stp_put_param_int(plist, "Model", &model, 0, 21, code);
+  code = stp_put_param_int(plist, "Model", &model, 0, 24, code);
   code = stp_put_param_int(plist, "Quality", &qual, 0, 9, code);
   code = stp_put_param_int(plist, "ImageType", &itype, 0, 3, code);
   code = stp_put_param_int(plist, "Dither", &algo, 0, num_dither_algos, code);
