@@ -10,6 +10,7 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<limits.h>
 
 typedef struct {
   unsigned char unidirectional;
@@ -26,6 +27,7 @@ typedef struct {
   int current_color;
   int xposition; /* dots */
   int yposition; /* dots */
+  int monomode;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -45,6 +47,8 @@ typedef struct {
    int startx[MAX_INKS];
    int stopx[MAX_INKS];
 } line_type;
+
+typedef unsigned char ppmpixel[3];
 
 unsigned char buf[256*256];
 unsigned char minibuf[256];
@@ -92,6 +96,63 @@ void *mymalloc(size_t size){
 
   fprintf(stderr,"Buy some RAM, dude!");
   exit(-1);
+}
+
+void mix_ink(ppmpixel p, int c, unsigned int a) {
+
+}
+
+void write_output(FILE *fp_w) {
+  int l,p,left,right,first,last,width,height;
+  unsigned int amount;
+  ppmpixel white,pixel;
+
+  for (first=0;(first<pstate.bottom_margin-pstate.top_margin)&&(!page[first]);
+       first++);
+  for (last=pstate.bottom_margin-pstate.top_margin-1;(last>first)&&
+       (!page[last]);last--);
+  if (page[first]) {
+    height = last-first+1;
+  } else {
+    height = 0;
+  }
+  left=INT_MAX;
+  right=0;
+  for (l=first;l<=last;l++) {
+    if (page[l]) {
+      for (c=0;c<MAX_INKS;c++) {
+        left=(page[l]->startx[c]<left)?page[l]->startx[c]:left;
+        right=(page[l]->stopx[c]>right)?page[l]->startx[c]:right;
+      }
+    }
+  }
+  width=right-left;
+  if (width<0) {
+    width=0;
+  }
+  fprintf(stderr,"Writing output...\n");
+  /* write out the PPM header */
+  fprintf(fp_w,"P6\n");
+  fprintf(fp_w,"%d %d\n",width,height);
+  fprintf(fp_w,"255\n");
+  for (l=first;l<=last;l++) {
+    for (p=left;p<=right;p++) {
+      memset(pixel,255,3);
+      for (c=0;c<MAX_INKS;c++) {
+        if ((page[l])&&(page[l]->startx[c]<=p)&&(page[l]->stopx[c]>=p)) {
+          if (pstate.dotsize==0x10) {
+            amount=(page[l]->line[c][(p-page[l]->startx[c])/4]>>
+                          ((p-page[l]->startx[c])%4))&0x3;
+          } else {
+            amount=(page[l]->line[c][(p-page[l]->startx[c])/8]>>
+                          ((p-page[l]->startx[c])%8))&0x1;
+          }
+          mix_ink(pixel,c,amount);
+        }
+      }
+      fwrite(pixel,sizeof(pixel),1,fp_w);
+    }
+  }
 }
 
 void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,int density) {
@@ -179,6 +240,7 @@ int currentcolor,currentbpp,density;
             pstate.top_margin=120;
             pstate.bottom_margin=
               pstate.page_length=22*360; /* 22 inches is default ??? */
+            pstate.monomode=0;
             break;
         case 'U': /* turn unidirectional mode on/off */
             get1("Error reading unidirectionality.\n");
@@ -331,9 +393,20 @@ int currentcolor,currentbpp,density;
                   fprintf(stderr,"Setting the page format in the middle of printing a page is not supported.\n");
                   exit(-1);
                 }
-                if (bufsize==4) {
-                  pstate.top_margin=buf[1]*256+buf[0];
-                  pstate.bottom_margin=buf[3]*256+buf[2];
+                switch (bufsize) {
+                  case 4:
+                    pstate.top_margin=buf[1]*256+buf[0];
+                    pstate.bottom_margin=buf[3]*256+buf[2];
+                    break;
+                  case 8:
+                    fprintf(stderr,"Warning!  Using undocumented 8 byte page format command.\n");
+                    pstate.top_margin=buf[3]<<24|buf[2]<<16|buf[1]<<8|buf[0];
+                    pstate.bottom_margin=buf[7]<<24|buf[6]<<16|buf[5]<<8|buf[4];
+                    break;
+                  default:
+                    fprintf(stderr,"Malformed page format.  Ignored.\n");
+                }
+                if ((bufsize==4)||(bufsize==8)) {
                   pstate.yposition=0;
                   if (pstate.top_margin+pstate.bottom_margin>
                        pstate.page_length) {
@@ -342,8 +415,6 @@ int currentcolor,currentbpp,density;
                   page=(line_type **)mycalloc(pstate.bottom_margin-
                                   pstate.top_margin,sizeof(line_type *));
                   /* FIXME: what is cut sheet paper??? */
-                } else {
-                  fprintf(stderr,"Malformed page format.  Ignored.\n");
                 }
                 break;
               case 'V': /* set absolute vertical position */
@@ -352,7 +423,7 @@ int currentcolor,currentbpp,density;
                     case 4:i=buf[2]<<16+buf[3]<<24;
                     case 2:i+=buf[0]+256*buf[1];
                     if (i*(pstate.relative_vertical_units/
-                            pstate.absolute_vertical_units)<pstate.yposition) {
+                            pstate.absolute_vertical_units)>=pstate.yposition) {
                       pstate.yposition=i*(pstate.relative_vertical_units/
                             pstate.absolute_vertical_units);
                       /* FIXME: handle page ejection? */
@@ -374,6 +445,18 @@ int currentcolor,currentbpp,density;
                     break;
                   default:
                     fprintf(stderr,"Malformed relative vertical position set.\n");
+                }
+                break;
+              case 'K':
+                if (bufsize!=2) {
+                  fprintf(stderr,"Malformed monochrome/color mode selection.\n");
+                } else {
+                  if (buf[0]) {
+                    fprintf(stderr,"Non-zero first byte in monochrome selection command. Ignored.\n");
+                  } else if (buf[0]>0x02) {
+                    fprintf(stderr,"Unknown color mode 0x%X.\n",buf[1]);
+                  } else
+                    pstate.monomode=buf[1];
                 }
                 break;
               case 'S': /* set paper dimensions */
@@ -414,5 +497,8 @@ int currentcolor,currentbpp,density;
             fprintf(stderr,"Warning: Unknown command ESC 0x%X.\n",ch);
       }
     }
+  fprintf(stderr,"Done reading.\n");
+  write_output(fp_w);
+  fclose(fp_w);
 
 }
