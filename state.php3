@@ -1,22 +1,8 @@
 <?
 
-$plugin_version_number = '4.0';
+$plugin_version_number = '4.1.3';
 
 $maintainer = '<a href="https://sourceforge.net/developer/index.php?form_dev=5436">Robert Krawitz</a>';
-
-$dev_team = array(
-'Andy Thaller' => 'https://sourceforge.net/sendmessage.php?touser=2228',
-'Karl Heinz Kremer' => 'https://sourceforge.net/sendmessage.php?touser=2818',
-'Eric Sharkey' => 'https://sourceforge.net/sendmessage.php?touser=8749',
-'Nicholas Piper' => 'https://sourceforge.net/sendmessage.php?touser=8275',
-'Dave Hill' => 'https://sourceforge.net/sendmessage.php?touser=8211',
-'Michael Natterer' => 'https://sourceforge.net/sendmessage.php?touser=34554',
-'Steve Miller' => 'https://sourceforge.net/sendmessage.php?touser=9570',
-'Thomas Tonino' => 'https://sourceforge.net/sendmessage.php?touser=20090',
-'Jean Marc Verbavatz' => 'https://sourceforge.net/sendmessage.php?touser=29508',
-'Charles Briscoe-Smith' => 'https://sourceforge.net/sendmessage.php?touser=32646',
-'Michael Sweet' => 'https://sourceforge.net/sendmessage.php?touser=9233'
-);
 
 $navbar_text = 'Welcome to Gimp-Print.';
 
@@ -28,10 +14,14 @@ $supported_printers = array(
 		'EPSON Stylus Photo EX' => 'Fully Operational',
 		'EPSON Stylus Photo 720' => 'Needs Testing',
 		'EPSON Stylus Photo 750' => 'Fully Operational',
-		'EPSON Stylus Photo 1200' => 'Fully Operational',
+		'EPSON Stylus Photo 790' => 'Needs Testing (4.1 only)',
 		'EPSON Stylus Photo 870' => 'Fully Operational',
+		'EPSON Stylus Photo 890' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 1200' => 'Fully Operational',
 		'EPSON Stylus Photo 1270' => 'Fully Operational',
-		'EPSON Stylus Photo 2000P' => 'Testing in Progress'
+		'EPSON Stylus Photo 1280' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 1290' => 'Needs Testing (4.1 only)',
+		'EPSON Stylus Photo 2000P' => 'Testing in Progress, untuned'
 		),
 	'Stylus Color Range' => array(
 		'EPSON Stylus Color' => 'Fully Operational',
@@ -40,19 +30,24 @@ $supported_printers = array(
 		'EPSON Stylus Color 400' => 'Fully Operational',
 		'EPSON Stylus Color 440' => 'Fully Operational',
 		'EPSON Stylus Color 460' => 'Needs Testing',
+		'EPSON Stylus Color 480' => 'Operational, cannot change cartridge (4.1 only),
 		'EPSON Stylus Color 500' => 'Fully Operational',
+		'EPSON Stylus Color 580' => 'Operational, cannot change cartridge (4.1 only),
 		'EPSON Stylus Color 600' => 'Fully Operational',
 		'EPSON Stylus Color 640' => 'Fully Operational',
 		'EPSON Stylus Color 660' => 'Fully Operational',
 		'EPSON Stylus Color 670' => 'Fully Operational',
+		'EPSON Stylus Color 680' => 'Needs Testing (4.1 only),
 		'EPSON Stylus Color 740' => 'Fully Operational',
 		'EPSON Stylus Color 760' => 'Fully Operational',
+		'EPSON Stylus Color 777' => 'Needs Testing (4.1 only),
 		'EPSON Stylus Color 800' => 'Fully Operational',
 		'EPSON Stylus Color 850' => 'Fully Operational',
 		'EPSON Stylus Color 860' => 'Fully Operational',
-		'EPSON Stylus Color 880' => 'Testing in Progress',
-		'EPSON Stylus Color 900' => 'Fully Operational',
-		'EPSON Stylus Color 980' => 'Testing in Progress',
+		'EPSON Stylus Color 880' => 'Testing in Progress (4.1 only)',
+		'EPSON Stylus Color 83' => 'Testing in Progress (4.1 only)',
+		'EPSON Stylus Color 900' => 'Fully Operational, needs tuning',
+		'EPSON Stylus Color 980' => 'Testing in Progress, needs tuning (4.1 only)',
 		'EPSON Stylus Color 1160' => 'Fully Operational',
 		'EPSON Stylus Color 1500' => 'Fully Operational',
 		'EPSON Stylus Color 1520' => 'Fully Operational',
@@ -61,13 +56,19 @@ $supported_printers = array(
 	),
 'HP' => array(
 	'DeskJet Range' => array(
+		'HP DeskJet 340' => 'Fully Operational',
+		'HP DeskJet 400' => 'Fully Operational',
 		'HP DeskJet 500, 520' => 'Fully Operational',
 		'HP DeskJet 500C, 540C' => 'Fully Operational',
 		'HP DeskJet 550C, 560C' => 'Fully Operational',
 		'HP DeskJet 600 series' => 'Operational',
 		'HP DeskJet 800 series' => 'Operational',
+		'HP DeskJet 900 series' => 'Operational',
+		'HP PhotoSmart P1000, P1100' => 'Operational',
 		'HP DeskJet 1100C, 1120C' => 'Operational',
-		'HP DeskJet 1200C, 1600C' => 'Operational'
+		'HP DeskJet 1200C, 1220C, 1600C' => 'Operational'
+		'HP DeskJet 2000 series' => 'Operational',
+		'HP DeskJet 2500 series' => 'Operational',
 		),
 	'LaserJet' => array(
 		'HP LaserJet II series' => 'Fully Operational',
@@ -81,7 +82,11 @@ $supported_printers = array(
 	),
 'Canon (<strong><em>New!</em></strong>)' => array(
        'BJC Range' => array(
-	       'BJC 30'   => 'Operational',
+	       'BJC 30' => 'Operational (4.1 only)',
+	       'BJC 50' => 'Operational (4.1 only)',
+	       'BJC 55' => 'Operational (4.1 only)',
+	       'BJC 80' => 'Operational (4.1 only)',
+	       'BJC 85' => 'Operational (4.1 only)',
 	       'BJC 1000' => 'Untested',
 	       'BJC 2000' => 'Untested',
 	       'BJC 3000' => 'Untested',
@@ -91,7 +96,20 @@ $supported_printers = array(
                'BJC 6200' => 'Operational',
 	       'BJC 7000' => 'Untested',
 	       'BJC 7100' => 'Untested',
-	       'BJC 8200' => 'Operational'
+	       'BJC 8200' => 'Operational',
+	       'S450' => 'Operational (4.1 only)'
+	       )
+       ),
+'Lexmark (<strong><em>New!</em></strong>)' => array(
+       'Ink Jet Printers' => array(
+	       '3200' => 'Operational (4.1 only)'
+	       '4076' => 'Operational'
+	       'Z52' => 'Operational (4.1 only)'
+	       )
+       ),
+'Compaq (<strong><em>New!</em></strong>)' => array(
+       'Ink Jet Printers' => array(
+	       'IJ750' => 'Operational (4.1 only)'
 	       )
        ),
 'Postscript' => array(

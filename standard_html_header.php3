@@ -34,17 +34,10 @@ H1 {
 <? includeImage('top_image','Welcome to the gimp-print Website') ?>
 </TD><TD>
 <P>
-<? echo($maintainer) ?> 
-<?
-while ( list( $key, $val ) = each( $GLOBALS['dev_team']) ) {
-   echo '<a href="' . $val . '">' . $key . '</a> ';
-}
-?>
-
-<br>
-based on version 2.0 by <a href="mailto:mike@easysw.com">Michael Sweet</a><br>
-<br>
-<A href="https://sourceforge.net/project/?group_id=1537">SourceForge Interface</a>
+<a
+href="http://sourceforge.net/project/memberlist.php?group_id=1537">Meet
+the Developers!</a>
+<A href="http://sourceforge.net/project/?group_id=1537">SourceForge Interface</a>
 </P>
 </TD></TR>
 </TABLE>
