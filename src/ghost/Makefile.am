@@ -33,7 +33,7 @@ EXTRA_DIST = \
 	contrib.mak.addon.in \
 	debian-patch \
 	debian-patch-stp \
-	gdevstp.c \
+	gdevstp.c
 
 ## Variables
 
