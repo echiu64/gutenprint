@@ -640,7 +640,9 @@ dnl gettext 0.10.36.  Do not move this file to the beginning or end
 dnl of a line.
 
 AC_OUTPUT([
-Makefile doc/Makefile intl/Makefile lib/Makefile man/Makefile man/escputil.1
+Makefile doc/Makefile 
+include/Makefile include/gimp-print/Makefile include/gimp-print/gimp-print.h
+intl/Makefile lib/Makefile man/Makefile man/escputil.1
 man/gimpprint.3 man/gimpprint-config.1 po/Makefile.in samples/Makefile
 src/Makefile src/gimp/Makefile cups-gimpprint.list
 dnl @-@-@-@-@ NO-GIMP @-@-@-@-@
@@ -648,7 +650,6 @@ man/cups-calibrate.8 src/testpattern/Makefile
 src/cups/Makefile src/escputil/Makefile src/foomatic/Makefile test/Makefile
 src/foomatic/foomatic-generator src/ghost/Makefile src/ghost/contrib.mak.addon
 dnl @-@-@-@-@ YES-GIMP @-@-@-@-@
-include/gimp-print/Makefile include/gimp-print/gimp-print.h include/Makefile
 src/main/Makefile src/main/gimpprint-config src/printdef/Makefile
 ],[
 chmod +x src/main/gimpprint-config
