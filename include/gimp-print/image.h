@@ -22,7 +22,7 @@
  */
 
 /**
- * @file image.h
+ * @file gimp-print/image.h
  * @brief Image functions.
  */
 

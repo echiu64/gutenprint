@@ -22,7 +22,7 @@
  */
 
 /**
- * @file printers.h
+ * @file gimp-print/printers.h
  * @brief Printer functions.
  */
 
