@@ -391,7 +391,6 @@ extern void stp_set_ppd_file_n(stp_vars_t v, const char *val, int bytes);
  */
 
 extern void stp_set_output_type(stp_vars_t v, int val);
-extern void stp_set_orientation(stp_vars_t v, int val);
 extern void stp_set_left(stp_vars_t v, int val);
 extern void stp_set_top(stp_vars_t v, int val);
 extern void stp_set_width(stp_vars_t v, int val);
