@@ -43,8 +43,8 @@ if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
 endif
 
-LFLAGS = -i
-YFLAGS = -d
+AM_LFLAGS = -i
+AM_YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
 testpattern_LDADD = $(LIBPRINTUT) $(LIBGIMPPRINT_LIBS)
@@ -62,7 +62,6 @@ endif
 
 ## Clean
 
-DISTCLEANFILES = testpatternl.c testpatterny.c testpatterny.h
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 
 EXTRA_DIST =  testpatterny.h $(pkgdata_DATA)
