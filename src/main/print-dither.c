@@ -31,7 +31,7 @@
  */
 
 
-#define PRINT_DEBUG
+/* #define PRINT_DEBUG */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -701,24 +701,10 @@ stp_dither_set_transition(void *vd, double exponent)
   d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
     exponential_scale_matrix(&(d->mat7), exponent);
-#if 0
-  if (d->dither_type & D_ORDERED_BASE)
-    {
-#endif
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), 2 * x_3, y_3);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), x_3, 2 * y_3);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 0, y_3);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), 0, 0);
-#if 0
-    }
-  else
-    {
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), x_3, 0);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), 0, 2 * y_3);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 2 * x_3, 0);
-      clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), x_3, 2 * y_3);
-    }
-#endif
+  clone_matrix(&(d->mat7), &(d->channel[ECOLOR_C].pick), 2 * x_3, y_3);
+  clone_matrix(&(d->mat7), &(d->channel[ECOLOR_M].pick), x_3, 2 * y_3);
+  clone_matrix(&(d->mat7), &(d->channel[ECOLOR_Y].pick), 0, y_3);
+  clone_matrix(&(d->mat7), &(d->channel[ECOLOR_K].pick), 0, 0);
   if (exponent < .999 || exponent > 1.001)
     for (i = 0; i < 65536; i++)
       {
@@ -1338,9 +1324,7 @@ print_color(const dither_t *d, dither_channel_t *dc, int base, int density,
       /*
        * If we're using an adaptive dithering method, decide whether
        * to use the Floyd-Steinberg or the ordered method based on the
-       * input value.  The choice of 1/128 is somewhat arbitrary and
-       * could stand to be parameterized.  Another possibility would be
-       * to scale to something less than pure ordered at 0 input value.
+       * input value.
        */
       if (dither_type & D_ADAPTIVE_BASE)
 	{
@@ -3214,6 +3198,7 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
     {
       int c, m, y, k;
       int oc, om, oy;
+      int bc, bm, by;
       int tk;
       /*
        * First get the standard CMYK separation color values.
@@ -3251,6 +3236,10 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
 
       if (k > 0)
 	update_cmyk(d, oc, om, oy, k, &c, &m, &y, &bk, &k);
+
+      bc = c;
+      bm = m;
+      by = y;
 
       QUANT(8);
       /*
@@ -3318,19 +3307,19 @@ stp_dither_cmyk_ed(const unsigned short  *cmy,
       else if (first_color == ECOLOR_Y)
 	goto ecy;
     ecc:
-      c = print_color(d, &(d->channel[ECOLOR_C]), oc, oc, c, x, row, cptr,
+      c = print_color(d, &(d->channel[ECOLOR_C]), bc, oc, c, x, row, cptr,
 		      lcptr, bit, length, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color == ECOLOR_M)
 	goto out;
     ecm:
-      m = print_color(d, &(d->channel[ECOLOR_M]), om, om, m, x, row, mptr,
+      m = print_color(d, &(d->channel[ECOLOR_M]), bm, om, m, x, row, mptr,
 		      lmptr, bit, length, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color == ECOLOR_Y)
 	goto out;
     ecy:
-      y = print_color(d, &(d->channel[ECOLOR_Y]), oy, oy, y, x, row, yptr,
+      y = print_color(d, &(d->channel[ECOLOR_Y]), by, oy, y, x, row, yptr,
 		      lyptr, bit, length, printed_black, &ink_budget,
 		      d->dither_type);
       if (first_color != ECOLOR_C)
