@@ -174,7 +174,7 @@ be installed on your system to build correctly.  These include:  autoconf,
 automake, libtool, gtk, gdk, gimp 1.2, cups, foomatic, makeinfo, readline
 texi2html.  Not all these need to be installed, depending on the configure
 options used.  It might be necessary to get the latest releases of some of
-these packages, as critical bugs present in easrlier releases have been fixed.
+these packages, as critical bugs present in earlier releases have been fixed.
 The latest gettext and texi2html are strongly suggested.
 
 2.4 Extra make targets

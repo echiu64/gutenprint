@@ -49,6 +49,6 @@ html:
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = FAQ.html README.maintaining
+EXTRA_DIST = FAQ.html
 
 .PHONY: html ps pdf docs
