@@ -16,8 +16,8 @@ require('standard_html_header.php3');
 <p>The source for release 3.0.3 may be found <a
 href="http://www.tiac.net/users/rlk/print-3.0.3.tar.gz">here</a>.
 
-<p>The source for <b>experimental</b> release 3.0.5 may be found <a
-href="http://www.tiac.net/users/rlk/print-3.0.5.tar.gz">here</a>.  This has some performance
+<p>The source for <b>experimental</b> release 3.0.5 may be found <a href="http://download.sourceforge.net/gimp-print/print-3.0.5.tar.gz">here</a>.
+This has some performance
 improvements, bug fixes, and other minor improvements, but my printer
 head is currently partially clogged, so I can't test everything
 comprehensively!
