@@ -1,3 +1,20 @@
+2000-10-29	<davehill@sourceforge.net>
+
+	Files:	print-pcl.c (1.91) (+15 -13)
+		printers.xml (1.32) (+4 -4)
+	
+	Latest version of Tommy's CRET patch.
+	Changed 810/812/842 and 895 printers to the 840 CRET driver.
+	
+2000-10-29	<rlk@sourceforge.net>
+
+	Files:	INSTALL (1.6) (+1 -15)
+		print-pcl.c (1.90) (+2 -2)
+		escputil.c (1.17) (+2 -2)
+		Makefile.am (1.71) (+1 -1)
+	
+	Bring over a few fixes from 4.0+
+	
 2000-10-23	<davehill@sourceforge.net>
 
 	Files:	print-pcl.c (1.89) (+45 -6)
@@ -5190,6 +5207,7 @@
 		README (1.12) (+1 -1)
 		Makefile.am (1.24) (+2 -0)
 	
+	branches:  1.5.6;  1.5.12;
 	Try to maintain dependency order of lex on yacc stuff
 	
 2000-03-17	<rlk@sourceforge.net>

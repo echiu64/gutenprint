@@ -80,7 +80,7 @@ AM_CPPFLAGS =\
 print_LDADD = $(GIMP_LIBS)
 
 GHOST_DIST= COPYING ChangeLog README README.bsd contrib.mak.addon \
-	gdevstp.c devs.mak.addon-5.10 escputil.c Makefile \
+	gdevstp.c devs.mak.addon-5.10 escputil.c escputil.1 Makefile \
 	debian-patch debian-patch-stp $(GCOPY)
 
 CUPS_DIST = CHANGES.txt LICENSE.txt Makefile.in README.txt configure \
@@ -93,11 +93,14 @@ DOC_DIST = print-color.png docbook.css print-main.png print.html \
 
 EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
+	escputil.1 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
 	$(addprefix Documentation/, $(DOC_DIST)) \
 	$(shell if test -d Ghost/stp-interfaces ; then find Ghost/stp-interfaces -type f -print ; fi) \
 	$(FORCE_ACLOCAL)
+
+man_MANS = escputil.1
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
 	@list='$(libexec_PROGRAMS)'; for p in $$list; do \
@@ -130,6 +133,7 @@ GHCODE=-e 's/^\\\#include "\(.*\)\.h"$$/\\\#include "gdevstp-\1.h"/'
 
 ghost: $(addprefix Ghost/, $(GCOPY))
 	cp escputil.c Ghost/escputil.c
+	cp escputil.1 Ghost/escputil.1
 
 Ghost/gdevstp-%.h: %.h Makefile
 	sed -e 's/print-printers.c/gdevstp-printers.c/' $(GHCODE) $< > $@
