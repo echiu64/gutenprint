@@ -199,13 +199,13 @@ maintainer-clean-local:
 help:
 	@echo "  "
 	@echo "Supported targets in this Makefile:"
-	@echo "    docs    - creates PS, PDF, and HTML documentation files"
-	@echo "    ps      - creates PostScript documentation"
-	@echo "    pdf     - creates PDF documentation"
-	@echo "    html    - creates HTML documentation"
-	@echo "    clean   - deletes machine generated files, but not outputs"
+	@echo "    docs      - creates PS, PDF, and HTML documentation files"
+	@echo "    ps        - creates PostScript documentation"
+	@echo "    pdf       - creates PDF documentation"
+	@echo "    html      - creates HTML documentation"
+	@echo "    clean     - deletes machine generated files, but not outputs"
 	@echo "    veryclean - deletes output files in addition"
-	@echo "    help    - prints this help text"
+	@echo "    help      - prints this help text"
 	@echo "  "
 
 
