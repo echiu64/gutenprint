@@ -2544,7 +2544,7 @@ escp2_set_remote_sequence(const stp_vars_t v, escp2_init_t *init)
 	    stp_zprintf(v, /* Set Roll Feed mode */
 			"IR%c%c%c%c"
 			"EX%c%c%c%c%c%c%c%c",
-			3, 0, 0, 1,
+			2, 0, 0, 1,
 			6, 0, 0, 0, 0, 0, 5, 1);
 	  else
 	    stp_zprintf(v, /* Set non-Roll Feed mode */
