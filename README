@@ -26,11 +26,11 @@ BASIC INSTALLATION
       - The core driver, libgimpprint.so
       - A user's manual
       - A Print plug-in for the GIMP
-      - A standard Ghostscript driver, stp
-      - A utility to administer Epson printers, escputil
-      - An IJS-based Ghostscript driver
       - A CUPS (Common UNIX Printing System) driver
+      - A standard Ghostscript driver, `stp'
+      - An IJS-based Ghostscript driver
       - Support for the Foomatic spooler configuration system
+      - A utility to administer Epson printers, escputil
 
     By default, Gimp-Print builds the Print plugin for the GIMP, the
     user's manual, and a utility to perform head cleaning, nozzle
@@ -57,7 +57,9 @@ BASIC INSTALLATION
 
 THE GIMP
 
-    Gimp-print 4.3 requires the Gimp 1.2.
+    Gimp-Print may be used as a plug-in for the GIMP, providing the
+    ability to print images.  Gimp-print 4.3 requires the GIMP 1.2; it
+    is not currently compatible with the GIMP 1.3.
 
     To build and install the Gimp Print plug-in:
 
@@ -66,8 +68,9 @@ THE GIMP
     make install
 
     You may optionally specify --with-gimp if you wish to be explicit
-    about building the Gimp Print plugin; --with-gimp is implied, so
-    you do not actually need to specify it.
+    about building the Gimp Print plugin; --with-gimp is implied if
+    `configure' detects that the GIMP is installed, so you do not
+    actually need to specify it.
 
     This installs the GIMP Print plugin in your system plug-in
     directory.  If you wish to install it in your personal plugin
@@ -91,8 +94,12 @@ THE GIMP
 
 CUPS
 
-    Gimp-print 4.2 requires CUPS 1.1.9 or higher.  We recommend use of
-    1.1.14; that release of CUPS features better internationalization
+    Gimp-print may be used as a driver under CUPS (Common UNIX
+    Printing System), if your system uses that spooler.  Full
+    description of CUPS is beyond the scope of this README file; full
+    information may be found at http://www.cups.org.  Gimp-print 4.3
+    requires CUPS 1.1.9 or higher.  We recommend use of 1.1.14 or
+    above; that release of CUPS features better internationalization
     and fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
@@ -211,33 +218,20 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     http://www.cups.org for information on downloading and installing
     CUPS.
 
-    PRINTING TO A WINDOWS-HOSTED PRINTER: There have been numerous
-    reports of incomplete printing to Windows-hosted printers.  The
-    symptoms are that the bottom of the last page is incomplete.  The
-    lower the printing resolution, the more of the page is cut off.
-    This does not happen in all configurations; it appears to be more
-    common printing to a Windows 95/98/ME-hosted printer.  This is not
-    thought to be a Gimp-print bug.  This is listed as bug 510185.
-
-    One user has reported success by disabling bidirectional support
-    in the printer's setting on the Windows box (this is NOT the same
-    thing as using a unidirectional mode such as 720 DPI
-    Unidirectional; this refers to the printer port).  This will
-    disable the ink monitor utility.
-
 
 FOOMATIC
 
-    This package includes support for the Foomatic meta-driver package.
-    This requires the foomatic-xml distribution.  Foomatic is available
-    from http://www.linuxprinting.org/foomatic.html.  It is also available
-    in Debian unstable.  For best results, use the version in cvs.  The
-    first version of Foomatic (the one used with Gimp-Print 4.0) is not
-    compatible with Gimp-Print 4.2.  Note that the Foomatic driver is
-    named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 it is named
-    `gimp-print' for the Ghostscript ("stp") driver and "gimp-print-ijs"
-    for the IJS driver. The data for the Gimp-Print 4.0 driver is not
-    compatible with the 4.2 driver.
+    Gimp-Print includes support for the Foomatic meta-driver package.
+    This requires the foomatic-xml distribution.  Foomatic is
+    available from http://www.linuxprinting.org/foomatic.html.  It is
+    also available in Debian unstable.  For best results, use the
+    version in cvs.  The first version of Foomatic (the one used with
+    Gimp-Print 4.0) is not compatible with Gimp-Print 4.3.  Note that
+    the Foomatic driver is named `stp' in Gimp-Print 4.0; in
+    Gimp-Print 4.3 it is named `gimp-print' for the Ghostscript
+    ("stp") driver and "gimp-print-ijs" for the IJS driver. The data
+    for the Gimp-Print 4.0 driver is not compatible with the 4.3
+    driver.
 
     To verify that you have an appropriate version of Foomatic, please
     run
@@ -302,23 +296,21 @@ FOOMATIC
 
 GHOSTSCRIPT
 
-    This package includes a Ghostscript driver that may be built,
+    Gimp-Print 4.3 includes a Ghostscript driver that may be built,
     allowing use of this software for general printing purposes.  This
-    package requires Ghostscript 5.50 or 6.51.  Later releases in the
-    6.5x GNU Ghostscript branch (e. g. 6.52) should also work.  There is
-    a simpler build procedure for GNU Ghostscript 6.53 and 7.05.
+    package requires GNU Ghostscript 5.50, 6.51, or 6.52.  There is a
+    simpler build procedure for GNU Ghostscript 6.53 and 7.05, and for
+    ESP Ghostscript 7.05.  In particular, versions of Ghostscript that
+    are not licensed under the GNU General Public License (GPL) are
+    not supported, and this driver may not be distributed with such a
+    version.  If you wish to use Gimp-Print with AFPL Ghostscript, you
+    may do so via the IJS-based driver, described below.
 
     Please read src/ghost/README for more information, including how
     to build and install it, and available options; the build
     procedure here merely creates the necessary source files that you
     must add to your Ghostscript source.  The directions vary for
-    different versions of Ghostscript.  Only Ghostscript 5.50 and 6.51
-    (and its successors in the 6.5x line) are currently supported.  In
-    particular, versions of Ghostscript that are not licensed under
-    the GNU General Public License (GPL) are not supported, and this
-    driver may not be distributed with such a version.  If you wish to
-    use Gimp-Print with AFPL Ghostscript, you may do so via the
-    IJS-based driver, described below.
+    different versions of Ghostscript.
 
     We *strongly* recommend that end users not attempt to use this
     driver directly.  The available options are very complex, and the
@@ -331,8 +323,9 @@ GHOSTSCRIPT
     recommended solution.
 
     Note that many of the options to the Ghostscript driver are
-    incompatible with the options used prior to release 4.2.  Please
-    read src/ghost/README for information on the current options.
+    incompatible with the options used prior to release 4.2.0.
+    Please read src/ghost/README for information on the current
+    options.
 
     This driver will not be developed beyond the 4.2 release series.
     It will be replaced by the IJS driver, described below.
@@ -340,7 +333,7 @@ GHOSTSCRIPT
 
 IJS
 
-    This package includes an IJS-based Ghostscript driver.  As
+    Gimp-Print includes an IJS-based Ghostscript driver.  As
     paraphrased from the Ghostscript documentation, IJS is a
     relatively new initiative to improve the quality and ease of use
     of inkjet printing with Ghostscript.  Using IJS, one can add new
