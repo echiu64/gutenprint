@@ -67,6 +67,7 @@ binary-indep: build install ChangeLog
 #	dh_installdebconf -i
 	dh_installdocs -i
 	  cp debian/gimp-print-build/doc/*.dvi debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc
+	  cp -r debian/gimp-print-build/doc/manual-html debian/libgimpprint-doc/usr/share/doc/libgimpprint-doc/html
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i

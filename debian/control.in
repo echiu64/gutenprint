@@ -54,6 +54,7 @@ Description: header files for compiling programs with libgimpprint
 
 Package: libgimpprint-doc
 Architecture: all
+Section: doc
 Depends: libgimpprint#UPSTREAM_VERSION# (= ${Source-Version})
 Description: Documentation and example code for the gimpprint library
  This package contains lots of info-files, DVI docs and other

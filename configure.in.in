@@ -274,7 +274,7 @@ AC_PATH_PROG(BISON_PROG, bison)
 AC_PATH_PROG(YACC_PROG, yacc)
 AC_PATH_PROG(PERL_PROG, perl)
 AC_PATH_PROG(TEXI2HTML_PROG, texi2html)
-if test x${TEXT2HTML} = x ; then
+if test x${TEXI2HTML_PROG} = x ; then
   AC_MSG_WARN([html documentation will not be regenerated!])
 fi
 

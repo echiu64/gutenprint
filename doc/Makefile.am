@@ -49,9 +49,10 @@ html-stamp: gimpprint.texi version.texi gpl.texi
 	  rm -rf manual-html ; \
 	  mkdir manual-html ; \
 	  cd manual-html ; \
-	    $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo -I .. \
-	    ../gimpprint.texi ; \
+	    $(TEXI2HTML_PROG) -menu -split_node -number -expandinfo \
+	    -I ../$(srcdir) ../$(srcdir)/gimpprint.texi ; \
 	fi
+	
 	touch html-stamp
 
 dist-hook: html
