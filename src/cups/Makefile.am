@@ -41,7 +41,7 @@ cupsexec_backenddir = $(pkglibdir)/backend
 cupsexec_filterdir = $(pkglibdir)/filter
 cups_modeldir = $(pkgdatadir)/model
 
-AM_CFLAGS = $(GNUCFLAGS) $(CUPS_CFLAGS)
+AM_CFLAGS = $(GNUCFLAGS)
 DEFS = @DEFS@ -I. -I$(srcdir) -I../.. -DCUPS_DATADIR=\"$(pkgdatadir)\" -DGIMP_PRINT_VERSION=\"$(VERSION)\"
 INCLUDES = @INCLUDES@ $(LIBGIMPPRINT_CFLAGS)
 LIBS = @LIBS@ ../../lib/libprintut.la $(INTLLIBS) ../../lib/libprintut.la

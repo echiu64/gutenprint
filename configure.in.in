@@ -305,18 +305,6 @@ if test x${USE_MAINTAINER_MODE} = xtrue ; then
   AC_DEFINE(GIMP_PRINT_MAINT)
 fi
 
-if test x${BUILD_CUPS} = xyes ; then
-dnl See if GCC supports -fno-exceptions...
-  AC_MSG_CHECKING([if GCC supports -fno-exceptions])
-  OLDCFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS -fno-exceptions"
-  AC_TRY_COMPILE(,,
-  AC_MSG_RESULT([yes (disabling for CUPS)])
-  CUPS_CFLAGS="-fno-exceptions",
-  AC_MSG_RESULT([no]))
-  CFLAGS="$OLDCFLAGS"
-fi
-
 dnl Checks for libraries.
 AC_CHECK_LIB(readline, readline, HAVE_LIBREADLINE=true, HAVE_LIBREADLINE=false)
 if test x${HAVE_LIBREADLINE} = xtrue ; then
@@ -521,7 +509,6 @@ AC_SUBST(cups_sysconfdir)
 AC_SUBST(CUPS_BIN)
 AC_SUBST(CUPS_BACKEND_BIN)
 AC_SUBST(CUPS_FILTER_BIN)
-AC_SUBST(CUPS_CFLAGS)
 AC_SUBST(CUPS_PKG)
 AC_SUBST(CUPS_CONF)
 AC_SUBST(CUPS_INSTALL)
