@@ -62,10 +62,10 @@ Gimp-Print 4.2 contains the following major changes over Gimp-Print
      describes how to use the library interface, how to tune printers,
      and other topics.
 
-  6) The package is now internationalized.  Full translation is
-     available for Swedish; partial translations are currently
-     available for French, Norwegian, Danish, Polish, and British
-     English.
+  6) The package is now internationalized.  Full translations are
+     available for Swedish and British English; partial translations
+     are currently available for French, Norwegian, Danish, and
+     Polish.
 
 
 * Quality Improvements:

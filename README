@@ -482,12 +482,12 @@ KNOWN BUILD ISSUES
       files are in the English language.  This causes CUPS tools, such
       as KUPS or http://localhost:631 to display many copies of each
       PPD file, all in the English (en) language.  In fact, the PPD
-      files should be translated into Swedish, Norwegian, French,
-      Danish, and British English.  With CUPS 1.1.10 and lower, there
-      should be two copies of the (en) PPD file, and one copy each of
-      (sv), (no), (fr), (po) and (da).  With CUPS 1.1.11 and above,
-      there should be (en), (en_GB), (sv), (no), (fr), (po), and (da)
-      PPD files.
+      files should be translated into Swedish, Polish, Norwegian,
+      French, Danish, and British English.  With CUPS 1.1.10 and
+      lower, there should be two copies of the (en) PPD file, and one
+      copy each of (sv), (no), (fr), (pl) and (da).  With CUPS 1.1.11
+      and above, there should be (en), (en_GB), (sv), (no), (fr),
+      (pl), and (da) PPD files.
 
       The PPD files are created by a program named "genppd" in the
       src/cups directory.  This program is called once for each
@@ -503,6 +503,7 @@ KNOWN BUILD ISSUES
 	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
 	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: French
 	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: Norwegian
+	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: Polish
 	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: Swedish
 
       If the PPD file for each language has a different language
@@ -514,6 +515,7 @@ KNOWN BUILD ISSUES
 	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/fr/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/no/pcl-4.ppd.gz:*LanguageVersion: English
 	  ppd/sv/pcl-4.ppd.gz:*LanguageVersion: English
 
@@ -703,10 +705,10 @@ PACKAGING
       + "calibrate.ppm" belongs in /usr/share/cups.
 
       The PPD's packaged with Gimp-print are rather bulky, about 1 MB
-      for each language installed.  At present, five language
+      for each language installed.  At present, six language
       translations are installed, in addition to the US English
-      defaults: GB English, Swedish, Danish, Norwegian, and French.
-      You may wish to install these selectively.
+      defaults: GB English, Swedish, Danish, Norwegian, French, and
+      Polish.  You may wish to install these selectively.
 
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
