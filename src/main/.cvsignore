@@ -8,6 +8,7 @@ print-canon.lo
 print-dither.lo
 print-dither-matrices.lo
 print-escp2.lo
+print-escp2-data.lo
 print-pcl.lo
 print-ps.lo
 print-printers.c
