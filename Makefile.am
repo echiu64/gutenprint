@@ -89,7 +89,7 @@ EXTRA_DIST=print-printers.c printers.xml printdefy.h parse-escp2 RELNOTES \
 	README.dither quickmatrix257.h ran.367.179.h make-deb.sh README.escp2 \
 	$(addprefix Ghost/, $(GHOST_DIST)) \
 	$(addprefix cups/, $(CUPS_DIST)) \
-	$(shell find Ghost/stp-interfaces -type f -print 2>/dev/null) \
+	$(shell if test -d Ghost/stp-interfaces ; then find Ghost/stp-interfaces -type f -print ; fi) \
 	$(FORCE_ACLOCAL)
 
 install-libexecPROGRAMS: $(libexec_PROGRAMS)
