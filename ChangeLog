@@ -1,3 +1,336 @@
+2000-06-22	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.26) (+5 -4)
+		Ghost/README (1.21) (+26 -11)
+		run-weavetest (1.15) (+1 -1)
+		print-escp2.c (1.170) (+5 -5)
+		print-dither.c (1.67) (+2 -2)
+		gtk_main_window.c (1.34) (+4 -3)
+	
+	New emulated 1440x2880 oversampled mode -- very slow, extremely smooth,
+	no visible banding at all.
+	
+	Don't reset paper size when changing printer.  This still isn't entirely
+	correct, since it generates a GTK warning at startup, but it's a cut at
+	it.
+	
+2000-06-22	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.4) (+2 -2)
+		gtk_main_window.c (1.33) (+19 -16)
+		gimp_main_window.c (1.25) (+20 -16)
+	
+	Do not recenter the image every time the plugin is started up.  This
+	happens because the image is recentered every time the media size
+	callback is called, which always happens at startup.  We will only
+	recenter if the media size (or orientation) changes from its previous
+	setting.
+	
+2000-06-21	<rlk@sourceforge.net>
+
+	Files:	Ghost/README (1.20) (+55 -42)
+	
+	Update
+	
+2000-06-21	<rlk@sourceforge.net>
+
+	Files:	Ghost/gdevstp.c (1.21) (+3 -2)
+	
+	New application gamma
+	
+2000-06-21	<khk@sourceforge.net>
+
+	Files:	Ghost/README (1.19) (+3 -3)
+	
+	Corrected examples in README: The PostScript file has to be the last
+	parameter on the command line.
+	
+2000-06-21	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.24) (+122 -51)
+		print_gimp.h (1.21) (+1 -2)
+		gtk_main_window.c (1.32) (+22 -24)
+	
+	Merge Charles' UI changes into the Gimp version of the plugin
+	
+2000-06-21	<rlk@sourceforge.net>
+
+	Files:	print-canon.c (1.61) (+4 -3)
+		Ghost/gdevstp.c (1.20) (+2 -2)
+		print.h (1.66) (+13 -10)
+		print.c (1.101) (+7 -4)
+		print-util.c (1.100) (+137 -128)
+		print-ps.c (1.34) (+3 -3)
+		print-pcl.c (1.61) (+3 -5)
+		print-escp2.c (1.169) (+12 -10)
+	
+	First stage of moving all color lookup into the print functions.
+	Eventually we will feed the dither routines CMY or CMYK rather than
+	RGB.
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	print-image-gimp.c (1.3) (+16 -42)
+		Ghost/gdevstp.c (1.19) (+1 -7)
+		print.h (1.65) (+3 -3)
+	
+	Remove Image_get_col() which is no longer used.  Split out Image_reset()
+	from Image_GDrawable_new().
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	gtk_main_window.c (1.31) (+11 -4)
+	
+	Drag the preview around in postscript points instead of screen pixels
+	if a button other than the first is used.
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	pcl-unprint.c (1.14) (+4 -3)
+		print-util.c (1.99) (+2 -2)
+		print-ps.c (1.33) (+2 -2)
+		print-pcl.c (1.60) (+2 -2)
+		print-escp2.c (1.168) (+2 -2)
+		print-dither.c (1.66) (+2 -2)
+		print-canon.c (1.60) (+2 -2)
+	
+	Replace comments indicating revision histories at the end of source
+	files to refer to the ChangeLog instead.
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	gtk_main_window.c (1.30) (+74 -26)
+	
+	To better handle the myriad of paper sizes, change the media size
+	selection into a combo box.
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	gtk_main_window.c (1.29) (+29 -19)
+	
+	Make the preview arrow always be 1 inch long.  Double the size of
+	the preview, but scale preview to fit the preview area if it wouldn't
+	otherwise; the constant size arrow gives a visual clue as to the actual
+	scaling of the preview.
+	
+2000-06-20	<cpbs@sourceforge.net>
+
+	Files:	print-util.c (1.98) (+130 -62)
+	
+	Added some more paper sizes and corrected some of the existing ones.
+	
+2000-06-20	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.23) (+2 -2)
+		Ghost/gdevstp.c (1.18) (+6 -3)
+		print.h (1.64) (+8 -11)
+		print.c (1.100) (+7 -12)
+		print-ps.c (1.32) (+2 -2)
+		print-pcl.c (1.59) (+2 -2)
+		print-escp2.c (1.167) (+2 -2)
+		print-canon.c (1.59) (+2 -2)
+		gtk_main_window.c (1.28) (+2 -2)
+	
+	Move color map into vars structure to simplify calling sequence
+	
+2000-06-20	<rlk@sourceforge.net>
+
+	Files:	printdefy.y (1.5) (+2 -2)
+	
+	Declare main() properly.
+	
+2000-06-20	<rlk@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.22) (+6 -4)
+		print.h (1.63) (+9 -2)
+		print-util.c (1.97) (+62 -62)
+		gtk_main_window.c (1.27) (+4 -3)
+	
+	Handle paper size unit correctly for both gimp and gtk.
+	
+	Add unit type to paper size (we don't use it yet for anything).
+	
+2000-06-19	<rlk@sourceforge.net>
+
+	Files:	Ghost/.cvsignore (1.3) (+2 -3)
+	
+	Add rectangular dither matrix.
+	
+2000-06-19	<rlk@sourceforge.net>
+
+	Files:	.cvsignore (1.8) (+1 -0)
+	
+	Add escputil
+	
+2000-06-19	<cpbs@sourceforge.net>
+
+	Files:	Makefile.am (1.41) (+4 -2)
+	
+	Make "make clean" and "make maintainerclean" clean up more.
+	
+2000-06-19	<jmv@sourceforge.net>
+
+	Files:	gimp_main_window.c (1.21) (+6 -6)
+	
+	Stupid bug fix in adding Unit to gim_main_window
+	
+2000-06-19	<jmv@sourceforge.net>
+
+	Files:	gimp_color_window.c (1.8) (+3 -3)
+		print.h (1.62) (+3 -2)
+		print.c (1.99) (+20 -11)
+		gtk_main_window.c (1.26) (+13 -7)
+		gtk_color_window.c (1.11) (+3 -3)
+		gimp_main_window.c (1.20) (+66 -7)
+	
+	added unit for preview in gimp_main_window.c (blindly). Moved unit to printer settings
+	Improved handling of printrc settings.
+	
+2000-06-19	<rlk@sourceforge.net>
+
+	Files:	gtk_main_window.c (1.25) (+2 -2)
+	
+	make vars_unit static
+	
+2000-06-19	<rlk@sourceforge.net>
+
+	Files:	escputil.c (1.3) (+1 -2)
+		print-util.c (1.96) (+53 -8)
+	
+	Remove duplicate pclose
+	
+2000-06-19	<gandy@sourceforge.net>
+
+	Files:	print-canon.c (1.58) (+12 -2)
+		printers.xml (1.13) (+8 -0)
+	
+	Added Canon BJC-4300
+	
+2000-06-19	<gandy@sourceforge.net>
+
+	Files:	unprint.c (1.40) (+20 -16)
+	
+	small canon update
+	
+2000-06-19	<jmv@sourceforge.net>
+
+	Files:	gtk_main_window.c (1.24) (+73 -14)
+	
+	Included Unit (Inch/Cm) checkboxes
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/commandtoepson.c (1.4) (+31 -4)
+	
+	Eject page after test commands...
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/Makefile.in (1.2) (+3 -3)
+		cups/commandtoepson.c (1.3) (+3 -3)
+	
+	Makefile error and typo in commandtoepson.
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/commands/CleanAll.cmd (1.1) ( )
+		cups/commands/SetAlignment.cmd (1.1) ( )
+		cups/commands/ReportLevels.cmd (1.1) ( )
+		cups/commands/PrintSelfTestPage.cmd (1.1) ( )
+		cups/commands/PrintAligmentPage.cmd (1.1) ( )
+	
+	Added sample command files.
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/epson.c (1.3) (+18 -173)
+	
+	Only report bidirectional parallel ports, to avoid potential port lockup
+	problems.
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/CHANGES.txt (1.1) ( )
+		cups/epson.c (1.2) (+89 -24)
+		cups/commandtoepson.c (1.2) (+108 -4)
+		cups/command.types (1.1) ( )
+		cups/command.txt (1.1) ( )
+	
+	EPSON command filter.
+	
+	First specification for command files.
+	
+	EPSON backend now reads back Ink Quantity levels.
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/README.txt (1.1) ( )
+	
+	Added README file...
+	
+2000-06-18	<easysw@sourceforge.net>
+
+	Files:	cups/LICENSE.txt (1.1) ( )
+		cups/rastertoepson.c (1.1) ( )
+		cups/genppd.c (1.1) ( )
+		cups/epson.drv (1.1) ( )
+		cups/epson.c (1.1) ( )
+		cups/configure.in (1.1) ( )
+		cups/configure (1.1) ( )
+		cups/commandtoepson.c (1.1) ( )
+		cups/calibrate.ppm (1.1) ( )
+		cups/calibrate.c (1.1) ( )
+		cups/Makefile.in (1.1) ( )
+	
+	Initial commit of CUPS driver files.
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	ChangeLog (1.19) (+28 -0)
+		ran.367.179.h (1.1) ( )
+		print.h (1.61) (+4 -5)
+		print-pcl.c (1.58) (+5 -7)
+		print-escp2.c (1.166) (+5 -6)
+		print-dither.c (1.65) (+70 -41)
+		print-canon.c (1.57) (+5 -7)
+		gtk_main_window.c (1.23) (+31 -20)
+		gimp_main_window.c (1.19) (+36 -22)
+		Makefile.am (1.40) (+5 -7)
+	
+	Incorporate Thomas Tonino's 367x192 matrix.
+	
+	Incorporate Jean-Marc Verbavatz's scrolling viewport code for printer
+	drivers.  This finally solves the problem of the overflowing printer
+	list!
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	print-dither.c (1.64) (+3 -3)
+	
+	Minor bug fix
+	
+2000-06-18	<ttonino@sourceforge.net>
+
+	Files:	Matgen/ran.367.179.h (1.1) ( )
+	
+	Test matrix for 2:1 resolutions
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	Matgen/quickmatrix199-2.i (1.2) (+0 -0)
+		Matgen/quickmatrix257.i (1.2) (+0 -0)
+		Matgen/quickmatrix199.i (1.2) (+0 -0)
+	
+	These files already exist at top level; no reason to have duplicates
+	in every sandbox.
+	
+2000-06-18	<rlk@sourceforge.net>
+
+	Files:	printers.xml (1.12) (+4 -52)
+	
+	Reduce the number of printers to slightly mitigate the excessive menu
+	length.
+	
 2000-06-18	<rlk@sourceforge.net>
 
 	Files:	ChangeLog (1.18) (+12 -0)

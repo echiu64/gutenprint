@@ -111,6 +111,7 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_CAP_CMD61     1<<2    /* uses command #0x61         */
 #define CANON_CAP_CMD6d     1<<3    /* uses command #0x6d         */
 #define CANON_CAP_CMD70     1<<4    /* uses command #0x70         */
+#define CANON_CAP_CMD72     1<<5    /* uses command #0x72         */
 
 
 static canon_cap_t canon_model_capabilities[] =
@@ -148,7 +149,7 @@ static canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK,
     CANON_SLOT_ASF1,
-    0
+    CANON_CAP_DMT | CANON_CAP_CMD72
   },
 
   /* untested models */
@@ -410,8 +411,12 @@ canon_parameters(int  model,		/* I - Printer model */
 
       if ( 300<=x && 300<=y)
 	valptrs[c++]= c_strdup("300x300 DPI");
+      if ( 300<=x && 300<=y && (caps.features&CANON_CAP_DMT))
+	valptrs[c++]= c_strdup("300x300 DPI w/ DMT");
       if ( 600<=x && 600<=y)
 	valptrs[c++]= c_strdup("600x600 DPI");
+      if ( 600<=x && 600<=y && (caps.features&CANON_CAP_DMT))
+	valptrs[c++]= c_strdup("600x600 DPI w/ DMT");
       if (1200==x && 600==y)
 	valptrs[c++]= c_strdup("1200x600 DPI");
       if (1200<=x && 1200<=y)
@@ -633,6 +638,13 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
     arg_74_3= 0x09;
   }
 
+  /* workaround for the bjc8200 - not really understood */
+  if (caps.model==8200 && use_dmt) {
+    arg_74_1= 0xff;
+    arg_74_2= 0x90;
+    arg_74_3= 0x04;
+  }
+
   /*
   fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_height,
@@ -666,6 +678,9 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 	                         arg_70_3, arg_70_4, 0x00, 0x00);
 
   canon_cmd(prn,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
+
+  if (caps.features & CANON_CAP_CMD72)
+    canon_cmd(prn,ESC28,0x72, 1, 0x61); /* whatever for - 8200 might need it */
 
   /* some linefeeds */
 
@@ -1394,12 +1409,6 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
   static int empty= 0;
   int written= 0;
 
-  if (ly) written+=
-    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
-  if (lm) written+=
-    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
-  if (lc) written+=
-    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
   if (k) written+=
     canon_write(prn, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
   if (y) written+=
@@ -1408,6 +1417,12 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
     canon_write(prn, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
   if (c) written+=
     canon_write(prn, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
+  if (ly) written+=
+    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
+  if (lm) written+=
+    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
+  if (lc) written+=
+    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
