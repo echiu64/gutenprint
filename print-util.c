@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.60  2000/02/02 13:17:10  rlk
+ *   Add a few more parameters to the dither_t struct.
+ *
  *   Revision 1.59  2000/02/02 03:03:55  rlk
  *   Move all the constants into members of a struct.  This will eventually permit
  *   us to use different dithering constants for each printer, or even vary them
@@ -355,50 +358,70 @@ error_t *nerror = 0;
 typedef struct dither
 {
   int error[ERROR_ROWS][NCOLORS][MAX_CARRIAGE_WIDTH*MAX_BPI+1];
-  int cbits;
+
+  int cbits;			/* Oversample counters for the various inks */
   int lcbits;
   int mbits;
   int lmbits;
   int ybits;
   int lybits;
   int kbits;
-  int k_lower;
-  int k_upper;
-  int lc_level;
-  int lm_level;
+
+  int k_lower;			/* Transition range (lower/upper) for CMY */
+  int k_upper;			/* vs. K */
+
+  int lc_level;			/* Relative levels (0-65536) for light */
+  int lm_level;			/* inks vs. full-strength inks */
   int ly_level;
-  int c_randomizer;
+
+  int c_randomizer;		/* Randomizers.  MORE EXPLANATION */
   int m_randomizer;
   int y_randomizer;
   int k_randomizer;
-  int nc_l;
-  int nc_log;
-  int *c_transitions;
-  int *c_levels;
+
+  int k_clevel;			/* Amount of each ink (in 16ths) required */
+  int k_mlevel;			/* to create equivalent black */
+  int k_ylevel;
+
+  int c_darkness;		/* Perceived "darkness" of each ink, */
+  int m_darkness;		/* in 64ths, to calculate CMY-K transitions */
+  int y_darkness;
+
+  int nc_l;			/* Number of levels of each color available */
+  int nc_log;			/* Log of number of levels (how many bits) */
+  int *c_transitions;		/* Vector of transition points between */
+  int *c_levels;		/* Vector of actual levels */
+
   int nlc_l;
   int nlc_log;
   int *lc_transitions;
   int *lc_levels;
+
   int nm_l;
   int nm_log;
   int *m_transitions;
   int *m_levels;
+
   int nlm_l;
   int nlm_log;
   int *lm_transitions;
   int *lm_levels;
+
   int ny_l;
   int ny_log;
   int *y_transitions;
   int *y_levels;
+
   int nly_l;
   int nly_log;
   int *ly_transitions;
   int *ly_levels;
+
   int nk_l;
   int nk_log;
   int *k_transitions;
   int *k_levels;
+
 } dither_t;
 
 
@@ -587,6 +610,12 @@ init_dither(void)
   dither_info.m_randomizer = 0;
   dither_info.y_randomizer = 0;
   dither_info.k_randomizer = 4;
+  dither_info.k_clevel = 32;
+  dither_info.k_mlevel = 32;
+  dither_info.k_ylevel = 32;
+  dither_info.c_darkness = 22;
+  dither_info.m_darkness = 16;
+  dither_info.y_darkness = 10;
   dither_info.nc_l = 4;
   dither_info.c_transitions = malloc(4 * sizeof(int));
   dither_info.c_levels = malloc(4 * sizeof(int));
@@ -1230,8 +1259,9 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
-      kdarkness = MAX((c + ((c + c + c) >> 3) + m +
-		       ((y + y + y + y + y) >> 3)) >> 2, ak);
+      kdarkness = MAX((((c * d->c_darkness) +
+			(m * d->m_darkness) +
+			(y * d->y_darkness)) >> 6), ak);
       if (kdarkness < d->k_upper)
 	{
 	  int rb;
@@ -1271,25 +1301,10 @@ dither_cmyk(unsigned short  *rgb,	/* I - RGB pixels */
 	}
       ck = nk - bk;
     
-      /*
-       * These constants are empirically determined to produce a CMY value
-       * that looks reasonably gray and is reasonably well balanced tonally
-       * with black.  As usual, this is very ad hoc and needs to be
-       * generalized.
-       */
-      if (lmagenta)
-	{
-	  int addon = 2 * ck;
-	  c += addon;
-	  m += addon;
-	  y += addon;
-	}
-      else
-	{
-	  c += ck;
-	  m += ck;
-	  y += ck;
-	}
+      c += (d->k_clevel * ck) >> 4;
+      m += (d->k_mlevel * ck) >> 4;
+      y += (d->k_ylevel * ck) >> 4;
+
       /*
        * Don't allow cmy to grow without bound.
        */
@@ -1904,8 +1919,9 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
        */
       ok = k;
       nk = k + (ditherk) / 8;
-      kdarkness = MAX((c + ((c + c + c) >> 3) + m +
-		       ((y + y + y + y + y) >> 3)) >> 2, ak);
+      kdarkness = MAX((((c * d->c_darkness) +
+			(m * d->m_darkness) +
+			(y * d->y_darkness)) >> 6), ak);
       if (kdarkness < d->k_upper)
 	{
 	  int rb;
@@ -1944,19 +1960,10 @@ dither_cmyk4(unsigned short  *rgb,	/* I - RGB pixels */
        * with black.  As usual, this is very ad hoc and needs to be
        * generalized.
        */
-      if (lmagenta)
-	{
-	  int addon = 2 * ck;
-	  c += addon;
-	  m += addon;
-	  y += addon;
-	}
-      else
-	{
-	  c += ck;
-	  m += ck;
-	  y += ck;
-	}
+      c += (d->k_clevel * ck) >> 4;
+      m += (d->k_mlevel * ck) >> 4;
+      y += (d->k_ylevel * ck) >> 4;
+
       /*
        * Don't allow cmy to grow without bound.
        */
