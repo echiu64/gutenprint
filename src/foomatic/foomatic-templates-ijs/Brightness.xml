@@ -2,10 +2,10 @@
   <!-- A multilingual <comments> block can appear here, too;
        it should be treated as documentation for the user. -->
   <arg_longname>
-   <en>StpBrightness</en>
+   <en>stpBrightness</en>
   </arg_longname>
   <arg_shortname>
-   <en>StpBrightness</en><!-- backends only know <en> shortnames! -->
+   <en>stpBrightness</en><!-- backends only know <en> shortnames! -->
   </arg_shortname>
   <arg_execution>
    <arg_order>170</arg_order>
