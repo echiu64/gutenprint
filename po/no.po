@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 0.3\n"
-"POT-Creation-Date: 2002-06-05 19:56-0400\n"
-"PO-Revision-Date: 2002-02-23 12:53+0100\n"
+"POT-Creation-Date: 2002-06-30 22:06+0200\n"
+"PO-Revision-Date: 2002-07-01 19:36+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -132,61 +132,51 @@ msgstr "Manuell med pause"
 msgid "Manual without Pause"
 msgstr "Manuell uten pause"
 
-#: src/escputil/escputil.c:584 src/main/print-canon.c:1688
+#: src/escputil/escputil.c:584 src/main/print-canon.c:1689
 #: src/main/print-lexmark.c:666
 msgid "Black"
 msgstr "Sort"
 
-#: src/main/print-canon.c:1693
+#: src/main/print-canon.c:1694
 msgid "CMY Color"
 msgstr "CMY-farge"
 
-#: src/main/print-canon.c:1698
+#: src/main/print-canon.c:1699
 msgid "CMYK Color"
 msgstr "CMYK-farge"
 
-#: src/main/print-canon.c:1703
+#: src/main/print-canon.c:1704
 msgid "Photo CcMmY Color"
 msgstr "Foto CcMmY-farge"
 
-#: src/main/print-canon.c:1708
+#: src/main/print-canon.c:1709
 msgid "Photo CcMmYK Color"
 msgstr "Foto CcMmYK-farge"
 
-#: src/main/print-dither.c:64
+#. Note to translators: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/print-dither.c:66
+msgid "EvenTone"
+msgstr ""
+
+#: src/main/print-dither.c:67
 msgid "Adaptive Hybrid"
 msgstr ""
 
-#: src/main/print-dither.c:65
+#: src/main/print-dither.c:68
 msgid "Ordered"
 msgstr "Ordnet"
 
-#: src/main/print-dither.c:66
+#: src/main/print-dither.c:69
 msgid "Fast"
 msgstr "Rask"
 
-#: src/main/print-dither.c:67
+#: src/main/print-dither.c:70
 msgid "Very Fast"
 msgstr "Meget rask"
 
-#: src/main/print-dither.c:68
-msgid "Hybrid Floyd-Steinberg"
-msgstr ""
-
-#. Note to translators: "EvenTone" is the proper name, rather than a
-#. descriptive name, of this algorithm.
 #: src/main/print-dither.c:71
-#, fuzzy
-msgid "EvenTone"
-msgstr "Konvolutt"
-
-#: src/gimp/gimp_main_window.c:1616 src/main/print-escp2.c:481
-#: src/main/print-pcl.c:202
-msgid "Standard"
-msgstr "Standard"
-
-#: src/main/print-escp2.c:483
-msgid "Roll Feed"
+msgid "Hybrid Floyd-Steinberg"
 msgstr ""
 
 #. name                                                    hres vres softw v_pass overs unidir resid
@@ -325,6 +315,10 @@ msgstr ""
 #: src/main/print-pcl.c:163
 msgid "Quick-dry Transparency"
 msgstr ""
+
+#: src/gimp/gimp_main_window.c:1616 src/main/print-pcl.c:202
+msgid "Standard"
+msgstr "Standard"
 
 #: src/main/print-pcl.c:203 src/main/print-util.c:547
 msgid "Manual"
@@ -967,9 +961,8 @@ msgstr "A2 invitasjon"
 
 #. US A2 invitation
 #: src/main/print-util.c:796
-#, fuzzy
 msgid "Monarch Envelope"
-msgstr "Konvolutt"
+msgstr ""
 
 #. Monarch envelope (3.875 * 7.5)
 #: src/main/print-util.c:798
@@ -1710,7 +1703,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:946 src/escputil/escputil.c:953
 #: src/escputil/escputil.c:966 src/escputil/escputil.c:982
-#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1190
+#: src/escputil/escputil.c:1049 src/escputil/escputil.c:1183
 msgid "> "
 msgstr ">"
 
@@ -1751,11 +1744,11 @@ msgstr ""
 
 #: src/escputil/escputil.c:985
 msgid "About to save settings..."
-msgstr ""
+msgstr "I ferd med å lagre innstillinger..."
 
 #: src/escputil/escputil.c:991
 msgid "failed!\n"
-msgstr ""
+msgstr "feilet!\n"
 
 #: src/escputil/escputil.c:992
 msgid ""
@@ -1765,11 +1758,11 @@ msgstr ""
 
 #: src/escputil/escputil.c:996
 msgid "succeeded!\n"
-msgstr ""
+msgstr "fullført!\n"
 
 #: src/escputil/escputil.c:997
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr ""
+msgstr "Innstillingene for justering er lagret til skriveren.\n"
 
 #: src/escputil/escputil.c:1002
 msgid "Unrecognized command.\n"
@@ -1792,7 +1785,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:1035 src/escputil/escputil.c:1057
 #: src/escputil/escputil.c:1100 src/escputil/escputil.c:1169
-#: src/escputil/escputil.c:1180
+#: src/escputil/escputil.c:1191 src/escputil/escputil.c:1234
 msgid "Press enter to continue > "
 msgstr "Trykk linjeskift for å fortsette > "
 
@@ -1803,38 +1796,38 @@ msgid ""
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1048
+#: src/escputil/escputil.c:1048 src/escputil/escputil.c:1182
 #, c-format
 msgid "Pass #%d"
-msgstr ""
+msgstr "Gjennomgang #%d"
 
 #: src/escputil/escputil.c:1054 src/escputil/escputil.c:1099
+#: src/escputil/escputil.c:1188 src/escputil/escputil.c:1233
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vennligst sett inn et nytt ark.\n"
 
-#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1209
+#: src/escputil/escputil.c:1073 src/escputil/escputil.c:1207
 msgid "Number out of range!\n"
 msgstr "Tallet er utenfor gyldig område!\n"
 
-#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1214
+#: src/escputil/escputil.c:1078 src/escputil/escputil.c:1212
 msgid "I cannot understand what you typed!\n"
 msgstr "Kan ikke forstå det du skrev inn!\n"
 
-#: src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1084 src/escputil/escputil.c:1218
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1091
-#, fuzzy
+#: src/escputil/escputil.c:1091 src/escputil/escputil.c:1225
 msgid "Attempting to set alignment..."
-msgstr "Prøver å finne identifisere skrivermodell..."
+msgstr "Prøver å sette justering..."
 
-#: src/escputil/escputil.c:1094
+#: src/escputil/escputil.c:1094 src/escputil/escputil.c:1228
 msgid "succeeded.\n"
-msgstr ""
+msgstr "fullført.\n"
 
-#: src/escputil/escputil.c:1095
+#: src/escputil/escputil.c:1095 src/escputil/escputil.c:1229
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -1882,27 +1875,13 @@ msgstr ""
 msgid "Printer %s does not require color head alignment.\n"
 msgstr "Skriver %s krever ikke justering av fargehode.\n"
 
-#: src/escputil/escputil.c:1178
+#: src/escputil/escputil.c:1176
 msgid ""
-"Please re-insert the same alignment sheet in the printer when it is\n"
-"finished printing.\n"
+"Please inspect the print, and choose the pattern in each set.\n"
+"Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1184
-msgid ""
-"Inspect the alignment sheet, and determine which pattern is the smoothest.\n"
-"This pattern will appear to have the least ``grain''.\n"
-"If you cannot find a smooth pattern, please select the number for the\n"
-"best pattern, and repeat the procedure.\n"
-"Type a pattern number, or '?' for help.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1220
-#, c-format
-msgid "The best pattern should be numbered between 1 and %d.\n"
-msgstr ""
-
-#: src/escputil/escputil.c:1264
+#: src/escputil/escputil.c:1275
 msgid "Error in input\n"
 msgstr "Feil i inndata\n"
 
@@ -2026,13 +2005,17 @@ msgstr "Om"
 msgid ""
 "Print and\n"
 "Save Settings"
-msgstr "Instillinger for glød"
+msgstr ""
+"Skriv ut og\n"
+"lagre innstillinger"
 
 #: src/gimp/gimp_main_window.c:340
 msgid ""
 "Save\n"
 "Settings"
-msgstr "Instillinger for glød"
+msgstr ""
+"Lagre\n"
+"innstillinger"
 
 #: src/gimp/gimp_main_window.c:342
 msgid "Print"
@@ -2522,7 +2505,7 @@ msgstr ""
 #.
 #: src/gimp/gimp_main_window.c:1428
 msgid "Adjust Output..."
-msgstr ""
+msgstr "Juster utskrift..."
 
 #: src/gimp/gimp_main_window.c:1435
 msgid ""
@@ -2535,7 +2518,7 @@ msgstr "Skriver ut..."
 
 #: src/gimp/print.c:166
 msgid "<Image>/File/Print..."
-msgstr "<Image>/Filter/Farger/Alien Map"
+msgstr "<Image>/Fil/Skriv ut..."
 
 #: src/gimp/print.c:734 src/gimp/print.c:735 src/gimp/print.c:833
 #: src/gimp/print.c:1184
@@ -2549,7 +2532,7 @@ msgstr ""
 
 #: src/ghost/ijsgimpprint.c:152
 msgid "No row buffer\n"
-msgstr ""
+msgstr "Ingen rad for buffer\n"
 
 #: src/ghost/ijsgimpprint.c:181
 #, c-format
@@ -2615,27 +2598,6 @@ msgid "Bad parameters; cannot continue!\n"
 msgstr "Ugyldige parametere; kan ikke fortsette!\n"
 
 #: src/ghost/ijsgimpprint.c:925
-#, fuzzy, c-format
+#, c-format
 msgid "Get next row failed at %.0f\n"
-msgstr "Henting av neste rad feilet ved %d\n"
-
-#~ msgid "360 DPI"
-#~ msgstr "360 DPI"
-
-#~ msgid "720 DPI"
-#~ msgstr "720 DPI"
-
-#~ msgid "2880 x 1440 DPI"
-#~ msgstr "2880 x 1440 DPI"
-
-#~ msgid "13x19"
-#~ msgstr "13x19"
-
-#~ msgid "Monarch"
-#~ msgstr "Monark"
-
-#~ msgid "Kaku"
-#~ msgstr "Kaku"
-
-#~ msgid "Aligning phase %d, and starting phase %d.\n"
-#~ msgstr "Justerer fase %d, og starter fase %d.\n"
+msgstr "Henting av neste rad feilet ved %.0f\n"
