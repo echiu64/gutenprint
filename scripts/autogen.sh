@@ -70,6 +70,15 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   }
 }
 
+(pkg-config --version) < /dev/null > /dev/null 2>&1 || {
+  echo
+  echo "**Error**: You must have \`pkg-config' installed to compile gimp-print."
+  echo "Download the appropriate package for your distribution,"
+  echo "or get the source tarball at http://www.freedesktop.org/"
+  DIE=1
+}
+
+
 #### MRS: The following now only generates a warning, since earlier
 ####      versions of gettext *do* work, they just don't create the
 ####      right uninstall code.
