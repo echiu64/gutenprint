@@ -807,7 +807,7 @@ static stp_internal_papersize_t paper_sizes[] =
     255, 581, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese long envelope #4 */
   { "w680h941",		N_ ("Kaku"),
     680, 941, 0, 0, 0, 0, PAPERSIZE_METRIC }, /* Japanese Kaku envelope #4 */
-  { "w297h684",		N_ ("Commercial 10"),
+  { "COM10",		N_ ("Commercial 10"),
     297, 684, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US Commercial 10 env */
   { "w315h414",		N_ ("A2 Invitation"),
     315, 414, 0, 0, 0, 0, PAPERSIZE_ENGLISH }, /* US A2 invitation */

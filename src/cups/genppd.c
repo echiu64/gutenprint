@@ -29,9 +29,11 @@
  *
  * Contents:
  *
- *   main()      - Process files on the command-line...
- *   usage()     - Show program usage...
- *   write_ppd() - Write a PPD file.
+ *   main()                  - Process files on the command-line...
+ *  initialize_stp_options() - Initialize the min/max values for
+ *                             each STP numeric option.
+ *   usage()                 - Show program usage...
+ *   write_ppd()             - Write a PPD file.
  */
 
 /*
@@ -125,54 +127,14 @@ static struct				/**** STP numeric options ****/
 };
 
 
-static void
-initialize_stp_options(void)
-{
-  const stp_vars_t lower = stp_minimum_settings();
-  const stp_vars_t upper = stp_maximum_settings();
-  const stp_vars_t defvars = stp_default_settings();
-
-
-  stp_options[0].low = 1000 * stp_get_brightness(lower);
-  stp_options[0].high = 1000 * stp_get_brightness(upper);
-  stp_options[0].defval = 1000 * stp_get_brightness(defvars);
-  stp_options[0].step = 50;
-  stp_options[1].low = 1000 * stp_get_contrast(lower);
-  stp_options[1].high = 1000 * stp_get_contrast(upper);
-  stp_options[1].defval = 1000 * stp_get_contrast(defvars);
-  stp_options[1].step = 50;
-  stp_options[2].low = 1000 * stp_get_gamma(lower);
-  stp_options[2].high = 1000 * stp_get_gamma(upper);
-  stp_options[2].defval = 1000 * stp_get_gamma(defvars);
-  stp_options[2].step = 50;
-  stp_options[3].low = 1000 * stp_get_density(lower);
-  stp_options[3].high = 1000 * stp_get_density(upper);
-  stp_options[3].defval = 1000 * stp_get_density(defvars);
-  stp_options[3].step = 50;
-  stp_options[4].low = 1000 * stp_get_cyan(lower);
-  stp_options[4].high = 1000 * stp_get_cyan(upper);
-  stp_options[4].defval = 1000 * stp_get_cyan(defvars);
-  stp_options[4].step = 50;
-  stp_options[5].low = 1000 * stp_get_magenta(lower);
-  stp_options[5].high = 1000 * stp_get_magenta(upper);
-  stp_options[5].defval = 1000 * stp_get_magenta(defvars);
-  stp_options[5].step = 50;
-  stp_options[6].low = 1000 * stp_get_yellow(lower);
-  stp_options[6].high = 1000 * stp_get_yellow(upper);
-  stp_options[6].defval = 1000 * stp_get_yellow(defvars);
-  stp_options[6].step = 50;
-  stp_options[7].low = 1000 * stp_get_saturation(lower);
-  stp_options[7].high = 1000 * stp_get_saturation(upper);
-  stp_options[7].defval = 1000 * stp_get_saturation(defvars);
-  stp_options[7].step = 50;
-}
-
 /*
  * Local functions...
  */
 
+void	initialize_stp_options(void);
 void	usage(void);
-int	write_ppd(const stp_printer_t p, const char *prefix);
+int	write_ppd(const stp_printer_t p, const char *prefix,
+	          const char *language);
 
 
 /*
@@ -185,6 +147,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 {
   int		i;		/* Looping var */
   const char	*prefix;	/* Directory prefix for output */
+  const char	*language;	/* Language */
   stp_printer_t	printer;	/* Pointer to printer driver */
 
 
@@ -199,6 +162,7 @@ main(int  argc,			/* I - Number of command-line arguments */
   */
 
   prefix = "ppd";
+  language = "en";
 
   initialize_stp_options();
   for (i = 1; i < argc; i ++)
@@ -209,6 +173,18 @@ main(int  argc,			/* I - Number of command-line arguments */
       */
 
       usage();
+    }
+    else if (strcmp(argv[i], "--language") == 0)
+    {
+     /*
+      * Set PPD language...
+      */
+
+      i ++;
+      if (i < argc)
+        language = argv[i];
+      else
+        usage();
     }
     else if (strcmp(argv[i], "--prefix") == 0)
     {
@@ -226,6 +202,12 @@ main(int  argc,			/* I - Number of command-line arguments */
       usage();
 
  /*
+  * Set the language...
+  */
+
+  setlocale(LC_MESSAGES, language);
+
+ /*
   * Write PPD files...
   */
 
@@ -233,11 +215,66 @@ main(int  argc,			/* I - Number of command-line arguments */
   {
     printer = stp_get_printer_by_index(i);
 
-    if (printer && write_ppd(printer, prefix))
+    if (printer && write_ppd(printer, prefix, language))
       return (1);
   }
 
   return (0);
+}
+
+
+/*
+ * 'initialize_stp_options()' - Initialize the min/max values for
+ *                              each STP numeric option.
+ */
+
+void
+initialize_stp_options(void)
+{
+  const stp_vars_t lower = stp_minimum_settings();
+  const stp_vars_t upper = stp_maximum_settings();
+  const stp_vars_t defvars = stp_default_settings();
+
+
+  stp_options[0].low = 1000 * stp_get_brightness(lower);
+  stp_options[0].high = 1000 * stp_get_brightness(upper);
+  stp_options[0].defval = 1000 * stp_get_brightness(defvars);
+  stp_options[0].step = 50;
+
+  stp_options[1].low = 1000 * stp_get_contrast(lower);
+  stp_options[1].high = 1000 * stp_get_contrast(upper);
+  stp_options[1].defval = 1000 * stp_get_contrast(defvars);
+  stp_options[1].step = 50;
+
+  stp_options[2].low = 1000 * stp_get_gamma(lower);
+  stp_options[2].high = 1000 * stp_get_gamma(upper);
+  stp_options[2].defval = 1000 * stp_get_gamma(defvars);
+  stp_options[2].step = 50;
+
+  stp_options[3].low = 1000 * stp_get_density(lower);
+  stp_options[3].high = 1000 * stp_get_density(upper);
+  stp_options[3].defval = 1000 * stp_get_density(defvars);
+  stp_options[3].step = 50;
+
+  stp_options[4].low = 1000 * stp_get_cyan(lower);
+  stp_options[4].high = 1000 * stp_get_cyan(upper);
+  stp_options[4].defval = 1000 * stp_get_cyan(defvars);
+  stp_options[4].step = 50;
+
+  stp_options[5].low = 1000 * stp_get_magenta(lower);
+  stp_options[5].high = 1000 * stp_get_magenta(upper);
+  stp_options[5].defval = 1000 * stp_get_magenta(defvars);
+  stp_options[5].step = 50;
+
+  stp_options[6].low = 1000 * stp_get_yellow(lower);
+  stp_options[6].high = 1000 * stp_get_yellow(upper);
+  stp_options[6].defval = 1000 * stp_get_yellow(defvars);
+  stp_options[6].step = 50;
+
+  stp_options[7].low = 1000 * stp_get_saturation(lower);
+  stp_options[7].high = 1000 * stp_get_saturation(upper);
+  stp_options[7].defval = 1000 * stp_get_saturation(defvars);
+  stp_options[7].step = 50;
 }
 
 
@@ -248,7 +285,7 @@ main(int  argc,			/* I - Number of command-line arguments */
 void
 usage(void)
 {
-  puts("Usage: genppd [--help] [--prefix dir]");
+  puts("Usage: genppd [--help] [--language locale] [--prefix dir]");
   exit(1);
 }
 
@@ -259,7 +296,8 @@ usage(void)
 
 int					/* O - Exit status */
 write_ppd(const stp_printer_t p,	/* I - Printer driver */
-	  const char          *prefix)	/* I - Prefix (directory) for PPD files */
+	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
+	  const char          *language)/* I - Language/locale */
 {
   int		i, j;			/* Looping vars */
   gzFile	fp;			/* File to write to */
@@ -335,7 +373,16 @@ write_ppd(const stp_printer_t p,	/* I - Printer driver */
   gzputs(fp, "*%the GNU GPL.\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
-  gzputs(fp, "*LanguageVersion: English\n");
+  if (strncmp(language, "de", 2) == 0)
+    gzputs(fp, "*LanguageVersion: German\n");
+  else if (strncmp(language, "es", 2) == 0)
+    gzputs(fp, "*LanguageVersion: Spanish\n");
+  else if (strncmp(language, "fr", 2) == 0)
+    gzputs(fp, "*LanguageVersion: French\n");
+  else if (strncmp(language, "it", 2) == 0)
+    gzputs(fp, "*LanguageVersion: Italian\n");
+  else
+    gzputs(fp, "*LanguageVersion: English\n");
   gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
   gzprintf(fp, "*PCFileName:	\"%s.ppd\"\n", driver);
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);

@@ -98,8 +98,13 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkinstalldirs) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
-	  for ppdfile in * ; do \
-	    $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir) ; \
+	  for language in * ; do \
+	    $(mkinstalldirs) $(DESTDIR)$(cups_modeldir)/$$language; \
+	    cd $$language; \
+	    for ppdfile in * ; do \
+	      $(INSTALL_DATA) $$ppdfile $(DESTDIR)$(cups_modeldir)/$$language ; \
+	    done \
+	    cd ..; \
 	  done \
 	fi
 
@@ -126,7 +131,17 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 ppd: ppd-stamp
 ppd-stamp: genppd
 	-rm -rf ppd
-	./genppd
+	-mkdir ppd
+	-mkdir ppd/de
+	./genppd --prefix ppd/de --language de
+	-mkdir ppd/en
+	./genppd --prefix ppd/en --language en
+	-mkdir ppd/es
+	./genppd --prefix ppd/es --language es
+	-mkdir ppd/fr
+	./genppd --prefix ppd/fr --language fr
+	-mkdir ppd/it
+	./genppd --prefix ppd/it --language it
 	touch ppd-stamp
 
 $(LIBGIMPPRINT_LIBS):
