@@ -28,6 +28,17 @@ typedef struct {
   int yposition; /* dots */
 } pstate_t;
 
+/* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
+ * 1440 x 720 dpi page.  That's more than I have in my laptop, so, let's
+ * play some games to reduce memory.  Allocate each scan line separately,
+ * and don't require that the allocated length be full page width.  This
+ * way, if we only want to print a 2x2 image, we only need to allocate the
+ * ram that we need.  We'll build up the printed image in ram at low
+ * color depth, KCMYcm color basis, and then write out the RGB ppm file
+ * as output.  This way we never need to have the full data in RAM at any
+ * time.  2 bits per color of KCMYcm is half the size of 8 bits per color
+ * of RBG.
+ */
 #define MAX_INKS 6
 typedef struct {
    unsigned char *line[MAX_INKS];
@@ -85,7 +96,7 @@ void update_page(unsigned char *buf,int bufsize,int m,int n,int color,int bpp,in
   skip=pstate.relative_horizontal_units/density;
 
   if (skip==0) {
-    fprintf(stderr,"Warning!  Attempting to print at density higher than units.\n");
+    fprintf(stderr,"Warning!  Attempting to print at %d DPI but units are set to %d DPI.\n",density,pstate.relative_horizontal_units);
   }
  
   if (!page) {
@@ -148,11 +159,12 @@ int currentcolor,currentbpp,density;
         continue;
       }
       get1("Corrupt file.  No command found.\n");
-      fprintf(stderr,"Got a %X.\n",ch);
+      /* fprintf(stderr,"Got a %X.\n",ch); */
       switch (ch) {
         case '@': /* initialize printer */
             pstate.unidirectional=0;
             pstate.microweave=0;
+            pstate.dotsize=0;
             pstate.page_management_units=360;
             pstate.relative_horizontal_units=180;
             pstate.absolute_horizontal_units=60;
@@ -180,7 +192,7 @@ int currentcolor,currentbpp,density;
             get2("Error reading number of vertical dots!\n");
             m=sh;
             density=pstate.relative_horizontal_units;
-            ch='!'; /* make sure ch!='.' and fall through */
+            ch=0; /* make sure ch!='.' and fall through */
         case '.': /* transfer raster image */
             if (ch=='.') {
               get1("Error reading compression mode!\n");
@@ -259,12 +271,13 @@ int currentcolor,currentbpp,density;
             get1("Corrupt file.  Incomplete extended command.\n");
             get2("Corrupt file.  Error reading buffer size.\n");
             bufsize=sh;
-            fprintf(stderr,"Command %X bufsize %d.\n",ch,bufsize);
+            /* fprintf(stderr,"Command %X bufsize %d.\n",ch,bufsize); */
             getn(bufsize,"Corrupt file.  Error reading data buffer.\n");
             switch (ch) {
               case 'G': /* select graphics mode */
                 /* FIXME: this is supposed to have more side effects */
                 pstate.microweave=0;
+                pstate.dotsize=0;
                 break;
               case 'U': /* set page units */
                 switch (bufsize) {
@@ -285,14 +298,14 @@ int currentcolor,currentbpp,density;
                 break;
               case 'i': /* set MicroWeave mode */
                 if (bufsize!=1) {
-                  fprintf(stferr,"Malformed microweave setting command.\n");
+                  fprintf(stderr,"Malformed microweave setting command.\n");
                 } else {
                   switch (buf[0]) {
-                    0x00:
-                    0x30:pstate.microweave=0;
+                    case 0x00:
+                    case 0x30:pstate.microweave=0;
                         break;
-                    0x01:
-                    0x31:pstate.microweave=1;
+                    case 0x01:
+                    case 0x31:pstate.microweave=1;
                          break;
                     default:fprintf(stderr,"Unknown Microweave mode 0x%X.\n",
                                     buf[0]);
@@ -301,6 +314,11 @@ int currentcolor,currentbpp,density;
                 }
                 break;
               case 'e': /* set dot size */
+                if ((bufsize!=2)||(buf[0]!=0)||((buf[1]>4)&&(buf[1]!=0x10))) {
+                  fprintf(stderr,"Malformed dotsize setting command.\n");
+                } else {
+                  pstate.dotsize=buf[1];
+                }
                 break;
               case 'c': /* set page format */
                 if (page) {
@@ -323,8 +341,34 @@ int currentcolor,currentbpp,density;
                 }
                 break;
               case 'V': /* set absolute vertical position */
+                i=0;
+                switch (bufsize) {
+                    case 4:i=buf[2]<<16+buf[3]<<24;
+                    case 2:i+=buf[0]+256*buf[1];
+                    if (i*(pstate.relative_vertical_units/
+                            pstate.absolute_vertical_units)<pstate.yposition) {
+                      pstate.yposition=i*(pstate.relative_vertical_units/
+                            pstate.absolute_vertical_units);
+                      /* FIXME: handle page ejection? */
+                    } else {
+                       fprintf(stderr,"Warning: Setting Y position in negative direction ignored\n");
+                    }
+                    break;
+                  default:
+                    fprintf(stderr,"Malformed absolute vertical position set.\n");
+                }
                 break;
               case 'v': /* set relative vertical position */
+                i=0;
+                switch (bufsize) {
+                    case 4:i=buf[2]<<16+buf[3]<<24;
+                    case 2:i+=buf[0]+256*buf[1];
+                      pstate.yposition=i;
+                      /* FIXME: handle page ejection? negatives? */
+                    break;
+                  default:
+                    fprintf(stderr,"Malformed relative vertical position set.\n");
+                }
                 break;
               case 'S': /* set paper dimensions */
                 break;
