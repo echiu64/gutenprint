@@ -272,20 +272,9 @@ calc_ordered_point(unsigned x, unsigned y, int steps, int multiplier,
 static int
 is_po2(size_t i)
 {
-  int bits = 0;
-  size_t j = 1;
-  int k;
-  for (k = 0; k < CHAR_BIT * sizeof(size_t); k++)
-    {
-      if (j & i)
-	{
-	  bits++;
-	  if (bits > 1)
-	    return 0;
-	}
-      j <<= 1;
-    }
-  return bits;
+  if (i == 0)
+    return 0;
+  return (((i & (i - 1)) == 0) ? 1 : 0);
 }
 
 static void
@@ -544,7 +533,7 @@ reverse_row_ends(dither_t *d)
       }
 }
 
-stp_dither_data_t *
+static stp_dither_data_t *
 stp_create_dither_data(void)
 {
   stp_dither_data_t *ret = stp_malloc(sizeof(stp_dither_data_t));
@@ -553,7 +542,7 @@ stp_create_dither_data(void)
   return ret;
 }
 
-void
+static void
 stp_add_channel(stp_dither_data_t *d, unsigned char *data,
 		unsigned channel, unsigned subchannel)
 {
@@ -578,7 +567,7 @@ stp_add_channel(stp_dither_data_t *d, unsigned char *data,
   chan->c[subchannel] = data;
 }
 
-void
+static void
 stp_free_dither_data(stp_dither_data_t *d)
 {
   int i;
@@ -594,7 +583,7 @@ do								\
   d->ditherfunc = func;						\
 } while (0)
 
-void *
+static void *
 stp_init_dither(int in_width, int out_width, int horizontal_aspect,
 		int vertical_aspect, stp_vars_t v)
 {
