@@ -474,19 +474,22 @@ canon_cmd(FILE *prn, /* I - the printer         */
 	  ...        /* I - the args themselves */
 	  )
 {
-  /* hopefully not too small: */
-  #define CANON_SEND_BUFF_SIZE 10000
+  static int bufsize= 0;
   static unsigned char *buffer;
   int i;
   va_list ap;
-  if (!buffer)
-    buffer = malloc(CANON_SEND_BUFF_SIZE);
-  
-  if (num >= CANON_SEND_BUFF_SIZE) {
-    fprintf(stderr,"\ncanon: command too large for send buffer!\n");
-    fprintf(stderr,"canon: command 0x%02x with %d args dropped\n\n",
-	    cmd,num);
-    return;
+
+  if (!buffer || (num > bufsize)) {
+    if (buffer) 
+      free(buffer);
+    buffer = malloc(num);
+    bufsize= num;
+    if (!buffer) {
+      fprintf(stderr,"\ncanon: *** buffer allocation failed...\n");
+      fprintf(stderr,"canon: *** command 0x%02x with %d args dropped\n\n",
+	      cmd,num);    
+      return;
+    }
   }
   if (num) {
     va_start(ap, num);
@@ -1523,6 +1526,9 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.42  2000/05/05 11:12:36  gandy
+ *   Better handling of canon send buffer
+ *
  *   Revision 1.41  2000/05/04 01:09:04  rlk
  *   Improve use of black ink to reduce sharp grain.
  *
