@@ -369,8 +369,9 @@ list_all_parameters(void)
       g_hash_table_foreach(hash, add_param_to_string, &cs);
       if (cs.offset != param_length)
 	{
-	  fprintf(stderr, "Bad string length %ud != %ud!\n", cs.offset,
-		  (unsigned int) param_length);
+	  fprintf(stderr, "Bad string length %lud != %lud!\n",
+		  (unsigned long) cs.offset,
+		  (unsigned long) param_length);
 	  exit(1);
 	}
       param_string[param_length - 1] = '\0';
