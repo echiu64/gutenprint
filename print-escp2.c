@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.25  1999/11/14 03:13:36  rlk
+ *   Pseudo-hi-res microweave options
+ *
  *   Revision 1.24  1999/11/13 02:32:58  rlk
  *   Comments on some good settings!
  *
@@ -401,7 +404,9 @@ escp2_parameters(int  model,		/* I - Printer model */
 		  ("720 DPI Microweave"),
 		  ("720 DPI Softweave"),
 		  ("1440 x 720 DPI"),
-		  ("1440 x 720 DPI Two-pass")
+		  ("1440 x 720 DPI Microweave"),
+		  ("1440 x 720 DPI Two-pass"),
+		  ("1440 x 720 DPI Two-pass Microweave")
 		};
 
 
@@ -425,7 +430,7 @@ escp2_parameters(int  model,		/* I - Printer model */
   else if (strcmp(name, "Resolution") == 0)
   {
     if (escp2_has_cap(model, MODEL_1440DPI_MASK, MODEL_1440DPI_YES))
-      *count = 5;
+      *count = 7;
     else
       *count = 3;
     p = resolutions;
@@ -548,6 +553,8 @@ escp2_print(int       model,		/* I - Model */
                 image_width,
                 image_bpp;
   int		use_softweave = 0;
+  int		nozzles = 1;
+  int		nozzle_separation = 1;
   int		horizontal_passes = 1;
 
  /*
@@ -596,14 +603,38 @@ escp2_print(int       model,		/* I - Model */
     {
       if (xdpi == 1440)
 	{
+	  use_softweave = 1;
 	  ydpi = 720;
-	  if (!strcmp(resolution, "1440 x 720 DPI Two-pass"))
+	  if (!strcmp(resolution, "1440 x 720 DPI Two-pass") ||
+	      !strcmp(resolution, "1440 x 720 DPI Two-pass Microweave"))
 	    {
 	      xdpi = 2880;
 	      horizontal_passes = 4;
+	      if (!strcmp(resolution, "1440 x 720 DPI Two-pass"))
+		{
+		  nozzles = 32;
+		  nozzle_separation = 8;
+		}
+	      else
+		{
+		  nozzles = 1;
+		  nozzle_separation = 1;
+		}
 	    }
 	  else
-	    horizontal_passes = 2;
+	    {
+	      horizontal_passes = 2;
+	      if (!strcmp(resolution, "1440 x 720 DPI"))
+		{
+		  nozzles = 32;
+		  nozzle_separation = 8;
+		}
+	      else
+		{
+		  nozzles = 1;
+		  nozzle_separation = 1;
+		}
+	    }
 	}
     }
   else if (ydpi == 1440)
@@ -614,7 +645,14 @@ escp2_print(int       model,		/* I - Model */
   if (escp2_has_cap(model, MODEL_6COLOR_MASK, MODEL_6COLOR_YES))
     {
       if (!strcmp(resolution, "720 DPI Softweave") || xdpi > 720)
-	use_softweave = 1;
+	{
+	  if (!strcmp(resolution, "720 DPI Softweave"))
+	    {
+	      nozzles = 32;
+	      nozzle_separation = 8;
+	    }
+	  use_softweave = 1;
+	}
     }
 
  /*
@@ -811,7 +849,7 @@ escp2_print(int       model,		/* I - Model */
 		else
 		  fwrite("\033U\000", 3, 1, prn); /* Unidirectional */
 		fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave off! */
-		initialize_weave(32, 8, horizontal_passes);
+		initialize_weave(nozzles, nozzle_separation, horizontal_passes);
 		fwrite("\033(e\002\000\000\001", 7, 1, prn);	/* Microdots */
 	      }
 	    else
