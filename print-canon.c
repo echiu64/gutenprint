@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.13  2000/02/07 17:03:19  gandy
+ *   Major code-cleanups, prettified model capabilities
+ *
  *   Revision 1.12  2000/02/06 22:08:19  rlk
  *   Remove calls to non-POSIX strdup
  *
@@ -89,7 +92,7 @@
  * Local functions...
  */
 
-static int  canon_write(FILE *, unsigned char *, int, int, int, int, int,
+static int  canon_write(FILE *, unsigned char *, int, int, int, int,
 			int*, int, int);
 
 static void canon_write_line(FILE *,
@@ -121,60 +124,149 @@ typedef struct {
   int bjl;            /* special bjl settings */
 } canon_cap_t;
 
-#define CANON_INK_K           1     /* single black           */
-#define CANON_INK_CMY         2     /* single 3-color         */
-#define CANON_INK_CMYK        4     /* single or dual 4-color */
+/* Codes for possible ink-tank combinations. 
+ * Each combo is represented by the colors that can be used with
+ * the installed ink-tank(s)
+ * Combinations of the codes represent the combinations allowed for a model
+ */
+#define CANON_INK_K           1     
+#define CANON_INK_CMY         2     
+#define CANON_INK_CMYK        4     
 #define CANON_INK_CcMmYK      8     
 #define CANON_INK_CcMmYy     16
 #define CANON_INK_CcMmYyK    32
-#define CANON_INK_1          (CANON_INK_K)
-#define CANON_INK_2          (CANON_INK_CMY)
-#define CANON_INK_3          (CANON_INK_K|CANON_INK_CMY)
-#define CANON_INK_4          (CANON_INK_CMYK|CANON_INK_CcMmYK)
-#define CANON_INK_5          (CANON_INK_CMYK)
-#define CANON_INK_6          (CANON_INK_CMYK|CANON_INK_CcMmYyK)
-#define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|CANON_INK_CcMmYK|CANON_INK_CcMmYyK)
-#define CANON_INK_PHOTO_MASK (CANON_INK_CcMmYy|CANON_INK_CcMmYK|CANON_INK_CcMmYyK)
 
-#define CANON_SLOT_ASF_1   1
-#define CANON_SLOT_ASF_2   2
-#define CANON_SLOT_MAN_1   4
-#define CANON_SLOT_MAN_2   8
+#define CANON_INK_BLACK_MASK (CANON_INK_K|CANON_INK_CMYK|\
+                              CANON_INK_CcMmYK|CANON_INK_CcMmYyK)
 
-#define CANON_SLOT_1 (CANON_SLOT_ASF_1)
-#define CANON_SLOT_2 (CANON_SLOT_ASF_1|CANON_SLOT_MAN_1)
+#define CANON_INK_PHOTO_MASK (CANON_INK_CcMmYy|CANON_INK_CcMmYK|\
+                              CANON_INK_CcMmYyK)
 
-#define CANON_CAP_CMD61   1  
+/* document feeding */
+#define CANON_SLOT_ASF1    1
+#define CANON_SLOT_ASF2    2
+#define CANON_SLOT_MAN1    4
+#define CANON_SLOT_MAN2    8
+
+/* model peculiarities */
+#define CANON_CAP_CMD61   1    /* uses command #0x61         */
 #define CANON_CAP_DMT     2    /* Drop Modulation Technology */
 
-#define CANON_CAP_0        0
-#define CANON_CAP_1        CANON_CAP_CMD61
-#define CANON_CAP_2        CANON_CAP_DMT
-#define CANON_CAP_3        (CANON_CAP_CMD61|CANON_CAP_DMT)
 
 canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
-  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_1, CANON_CAP_0 },
+
+  {   -1, 11*72, 17*72,  180, 180, CANON_INK_K, CANON_SLOT_ASF1, 0 },
 
   /* tested models */
-  { 6000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_2, CANON_CAP_2 },
+
+  { /* Canon BJC 6000 */
+    6000,          
+    11*72, 17*72, 
+    1440, 720, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1 | CANON_SLOT_MAN1, 
+    CANON_CAP_DMT
+  },
 
   /* untested models */
-  { 1000, 11*72, 17*72,  360, 360, CANON_INK_3, CANON_SLOT_1, CANON_CAP_1 },
-  { 2000, 11*72, 17*72,  720, 360, CANON_INK_5, CANON_SLOT_1, CANON_CAP_1 },
-  { 3000, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_1, CANON_CAP_3 },
-  { 6100, 11*72, 17*72, 1440, 720, CANON_INK_4, CANON_SLOT_1, CANON_CAP_1 },
-  { 7000, 11*72, 17*72, 1200, 600, CANON_INK_4, CANON_SLOT_1, CANON_CAP_0 },
-  { 7100, 11*72, 17*72, 1200, 600, CANON_INK_6, CANON_SLOT_1, CANON_CAP_0 },
 
+  { /* Canon BJC 1000 */
+    1000, 
+    11*72, 17*72,  
+    360, 360, 
+    CANON_INK_K | CANON_INK_CMY, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 
+  },
+  { /* Canon BJC 2000 */
+    2000, 
+    11*72, 17*72,  
+    720, 360, 
+    CANON_INK_CMYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 
+  },
+  { /* Canon BJC 3000 */
+    3000, 
+    11*72, 17*72, 
+    1440, 720, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 | CANON_CAP_DMT 
+  },
+  { /* Canon BJC 6100 */
+    6100, 
+    11*72, 17*72, 
+    1440, 720, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 
+  },
+  { /* Canon BJC 7000 */
+    7000, 
+    11*72, 17*72, 
+    1200, 600, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
+  { /* Canon BJC 7100 */
+    7100, 
+    11*72, 17*72, 
+    1200, 600, 
+    CANON_INK_CMYK | CANON_INK_CcMmYyK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
+  
   /* extremely fuzzy models */
-  { 5100, 17*72, 22*72, 1440, 720, CANON_INK_4, CANON_SLOT_1, CANON_CAP_2 },
-  { 5500, 22*72, 34*72,  720, 360, CANON_INK_4, CANON_SLOT_1, CANON_CAP_1 },
-  { 6500, 17*72, 22*72, 1440, 720, CANON_INK_4, CANON_SLOT_1, CANON_CAP_3 },
-  { 8200, 11*72, 17*72, 1200,1200, CANON_INK_4, CANON_SLOT_1, CANON_CAP_0 },
-  { 8500, 17*72, 22*72, 1200,1200, CANON_INK_4, CANON_SLOT_1, CANON_CAP_0 },
- };
+
+  { /* Canon BJC 5100 */
+    5100, 
+    17*72, 22*72, 
+    1440, 720, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_DMT 
+  },
+  { /* Canon BJC 5500 */
+    5500, 
+    22*72, 34*72,  
+    720, 360, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 
+  },
+  { /* Canon BJC 6500 */
+    6500, 
+    17*72, 22*72, 
+    1440, 720, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    CANON_CAP_CMD61 | CANON_CAP_DMT 
+  },
+  { /* Canon BJC 8200 */
+    8200, 
+    11*72, 17*72, 
+    1200,1200, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
+  { /* Canon BJC 8500 */
+    8500, 
+    17*72, 22*72, 
+    1200,1200, 
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
+};
+
+
+
 
 static canon_cap_t canon_get_model_capabilities(int model)
 {
@@ -202,6 +294,8 @@ canon_media_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"High Gloss Film"))       return  8;
   if (!strcmp(name,"Glossy Photo Paper"))    return  9;
   if (!strcmp(name,"Glossy Photo Cards"))    return 10;
+
+  fprintf(stderr,"canon: Unknown media type '%s' - reverting to plain\n",name);
   return 1;
 }
 
@@ -211,6 +305,8 @@ canon_source_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Auto Sheet Feeder"))    return 4;
   if (!strcmp(name,"Manual with Pause"))    return 0;
   if (!strcmp(name,"Manual without Pause")) return 1;
+
+  fprintf(stderr,"canon: Unknown source type '%s' - reverting to auto\n",name);
   return 4;
 }
 
@@ -222,6 +318,8 @@ canon_printhead_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Black/Color")) return 2;
   if (!strcmp(name,"Photo/Color")) return 3;
   if (!strcmp(name,"Photo"))       return 4;
+
+  fprintf(stderr,"canon: Unknown head combo '%s' - reverting to black\n",name);
   return 0;
 }
 
@@ -241,6 +339,8 @@ canon_size_type(const char *name, canon_cap_t caps)
   if (!strcmp(name,"Canon 4x2"))   return 0x2d;
 
   /* custom */
+  
+  fprintf(stderr,"canon: Unknown paper size '%s' - using custom\n",name);
   return 0; 
 }
 
@@ -402,7 +502,7 @@ canon_imageable_area(int  model,	/* I - Printer model */
 
   default_media_size(model, ppd_file, media_size, &width, &length);
 
-  /* true for BJC 6000  8.23 20.44 11.05 7.9*/
+  /* ok for BJC 6000 */
   *left   = 9;
   *right  = width - 9;
   *top    = length- 10;
@@ -447,6 +547,8 @@ canon_cmd(FILE *prn, /* I - the printer         */
     fwrite(buffer,num,1,prn);
   }
 }
+
+#define PUT(WHAT,VAL,RES) fprintf(stderr,"canon: "WHAT" is %04x =% 5d = %f\" = %f mm\n",(VAL),(VAL),(VAL)/(1.*RES),(VAL)/(RES/25.4))
 
 static void
 canon_init_printer(FILE *prn, canon_cap_t caps, 
@@ -522,10 +624,11 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
     arg_6c_2= mediacode_6c[media];
   }
 
-  fprintf(stderr,"canon: output_type=%d\n",output_type);
+  /*
   fprintf(stderr,"canon: printable size = %dx%d (%dx%d) %02x%02x %02x%02x\n",
 	  page_width,page_height,printable_width,printable_height,
 	  arg_70_1,arg_70_2,arg_70_3,arg_70_4);
+  */
 
   /* init printer */
 
@@ -553,6 +656,8 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
 
   /* some linefeeds */
 
+  top= (top*ydpi)/72; 
+  PUT("topskip ",top,ydpi);
   canon_cmd(prn,ESC28,0x65, 2, (top >> 8 ),(top & 255));
 }
 
@@ -653,6 +758,11 @@ canon_print(int       model,		/* I - Model */
   int printhead= canon_printhead_type(ink_type,caps);
 
   /*
+  PUT("top        ",top,72);
+  PUT("left       ",left,72);
+  */
+
+  /*
   * Setup a read-only pixel region for the entire image...
   */
 
@@ -705,12 +815,26 @@ canon_print(int       model,		/* I - Model */
 
   landscape   = 0;
   canon_imageable_area(model, ppd_file, media_size, &page_left, &page_right,
-                       &page_bottom, &page_top);
+                       &page_top, &page_bottom);
 
   page_width  = page_right - page_left;
   page_height = page_top - page_bottom;
+  if (page_width<0) page_width= -page_width;
+  if (page_height<0) page_height= -page_height;
 
   default_media_size(model, ppd_file, media_size, &n, &page_length);
+
+  /*
+  PUT("top        ",top,72);
+  PUT("left       ",left,72);
+  PUT("page_top   ",page_top,72);
+  PUT("page_bottom",page_bottom,72);
+  PUT("page_left  ",page_left,72);
+  PUT("page_right ",page_right,72);
+  PUT("page_width ",page_width,72);
+  PUT("page_height",page_height,72);
+  PUT("page_length",page_length,72);
+  */
 
  /*
   * Portrait width/height...
@@ -784,14 +908,32 @@ canon_print(int       model,		/* I - Model */
 
   if (left < 0)
     left = (page_width - out_width) / 2 + page_left;
+  else
+    left = left + page_left;
 
   if (top < 0)
-    top  = (page_height + out_height) / 2 + page_bottom;
+    top  = (page_height + out_height) / 2 + page_top;
   else
-    top = page_height - top + page_bottom;
+    top = top + page_top;
 
+  /*
+  PUT("top        ",top,72);
+  PUT("left       ",left,72);
+  PUT("page_top   ",page_top,72);
+  PUT("page_bottom",page_bottom,72);
+  PUT("page_left  ",page_left,72);
+  PUT("page_right ",page_right,72);
+  PUT("page_width ",page_width,72);
+  PUT("page_height",page_height,72);
+  PUT("page_length",page_length,72);
+  PUT("out_width ", out_width,xdpi);
+  PUT("out_height", out_height,ydpi);
+  */
 
   Image_progress_init(image);
+
+  PUT("top     ",top,72);
+  PUT("left    ",left,72);
 
   canon_init_printer(prn, caps, output_type, media_type, 
 		     media_size, printhead, media_source, 
@@ -805,12 +947,14 @@ canon_print(int       model,		/* I - Model */
   out_width  = xdpi * out_width / 72;
   out_height = ydpi * out_height / 72;
 
-  left = ydpi * (left - page_left) / 72;
+  /*
+  PUT("out_width ", out_width,xdpi);
+  PUT("out_height", out_height,ydpi);
+  */
 
-  fprintf(stderr,"canon: image-top  is %04x =% 5d = %f\" = %f mm\n",
-          top,top,top/(1.*ydpi),top/(ydpi/25.4));
-  fprintf(stderr,"canon: image-left is %04x =% 5d = %f\" = %f mm\n",
-          left,left,left/(1.*ydpi),left/(ydpi/25.4));
+  left = ydpi * left / 72;
+
+  PUT("leftskip",left,xdpi);
 
   if(xdpi==1440){
     delay_k= 0;
@@ -1173,19 +1317,19 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
   int written= 0;
 
   if (k) written+= 
-    canon_write(prn,k+ dk*l, l, 0, 3, ydpi, model, &empty, width, offset);
+    canon_write(prn,k+ dk*l, l, 3, ydpi, model, &empty, width, offset);
   if (y) written+= 
-    canon_write(prn,y+ dy*l, l, 0, 2, ydpi, model, &empty, width, offset);
+    canon_write(prn,y+ dy*l, l, 2, ydpi, model, &empty, width, offset);
   if (m) written+= 
-    canon_write(prn,m+ dm*l, l, 0, 1, ydpi, model, &empty, width, offset);
+    canon_write(prn,m+ dm*l, l, 1, ydpi, model, &empty, width, offset);
   if (c) written+= 
-    canon_write(prn,c+ dc*l, l, 0, 0, ydpi, model, &empty, width, offset);
+    canon_write(prn,c+ dc*l, l, 0, ydpi, model, &empty, width, offset);
   if (ly) written+= 
-    canon_write(prn,ly+ dly*l, l, 1, 6, ydpi, model, &empty, width, offset);
+    canon_write(prn,ly+ dly*l, l, 6, ydpi, model, &empty, width, offset);
   if (lm) written+= 
-    canon_write(prn,lm+ dlm*l, l, 1, 5, ydpi, model, &empty, width, offset);
+    canon_write(prn,lm+ dlm*l, l, 5, ydpi, model, &empty, width, offset);
   if (lc) written+= 
-    canon_write(prn,lc+ dlc*l, l, 1, 4, ydpi, model, &empty, width, offset);
+    canon_write(prn,lc+ dlc*l, l, 4, ydpi, model, &empty, width, offset);
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);
@@ -1201,7 +1345,6 @@ static int
 canon_write(FILE          *prn,		/* I - Print file or command */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
-	    int	   	  density,      /* I - 0 for dark, 1 for light */
 	    int           coloridx,	/* I - Which color */
 	    int           ydpi,		/* I - Vertical resolution */
 	    int           model,	/* I - Printer model */
