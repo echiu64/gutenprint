@@ -413,8 +413,8 @@ static const escp2_variable_ink_t standard_4pl_1440_ink =
 
 static const stp_simple_dither_range_t standard_3pl_dither_ranges[] =
 {
-  { 0.29,  0x1, 1, 1 },
-  { 0.68,  0x2, 1, 2 },
+  { 0.25,  0x1, 1, 1 },
+  { 0.61,  0x2, 1, 2 },
   { 1.0,   0x3, 1, 3 }
 };
 
@@ -443,7 +443,7 @@ static const escp2_variable_ink_t standard_3pl_1440_ink =
 static const stp_simple_dither_range_t standard_3pl_2880_dither_ranges[] =
 {
   { 1.0,   0x1, 1, 1 },
-  { 3.0, 0x2, 1, 2 }
+  { 3.0,   0x2, 1, 2 }
 };
 
 static const escp2_variable_ink_t standard_3pl_2880_ink =
@@ -810,9 +810,9 @@ static const escp2_variable_inklist_t variable_3pl_4color_inks =
     {
       &escp2_multishot_standard_inks,
       &escp2_multishot_standard_inks,
-      &escp2_multishot_standard_inks,
       &escp2_6pl_standard_inks,
       &escp2_3pl_standard_inks,
+      &escp2_3pl_1440_standard_inks,
       &escp2_3pl_1440_standard_inks,
       &escp2_3pl_2880_standard_inks,
       &escp2_3pl_2880_standard_inks,
@@ -1425,7 +1425,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     COLOR_JET_ARRANGEMENT_DEFAULT,
     1440, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, -1 },
-    { 2.0, 1.3, 1.3, .646, .710, .323, .365, .323, .365, .91, .91, .455 },
+    { 2.0, 1.3, 1.3, .646, .73, .7, .7, 1, 1, .91, .91, .455 },
     &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },
@@ -1719,7 +1719,7 @@ static const escp2_stp_printer_t model_capabilities[] =
     COLOR_JET_ARRANGEMENT_DEFAULT,
     2880, 720,
     { -1, 1, 0x11, 1, 0x10, -1, 0x10, -1, -1, -1, 0x10 },
-    { 2.0, 1.3, 1.3, .646, .73, .6, .6, 1, 1, .91, .91, .455 },
+    { 2.0, 1.3, 1.3, .646, .73, .7, .7, 1, 1, .91, .91, .455 },
     &variable_3pl_4color_inks, standard_lum_adjustment, standard_hue_adjustment,
     standard_sat_adjustment
   },

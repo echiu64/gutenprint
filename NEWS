@@ -19,7 +19,8 @@ Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
    now print 13" wide, and the Stylus Photo EX can print A3-sized
    paper.
 
-3) Clean up the Debian packaging a bit more.
+3) Clean up the Debian packaging a bit more.  In particular, the
+   Debian installation files are included in the release.
 
 4) Bug fixes for the Epson 480/580.
 
@@ -44,6 +45,8 @@ Gimp-Print 4.1.5 contains the following fixes and improvements over 4.1.4:
 8) A major print quality problem slipped into many new Epson printers
    in 4.1.4, resulting in pale (and in some cases distorted) output in
    many printing resolutions.  That is fixed.
+
+9) Provisional quality fixes for the Canon BJC-8200.
 
 
 Gimp-Print 4.1.4 contains the following fixes and improvements over 4.1.3:
