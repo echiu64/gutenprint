@@ -19,7 +19,7 @@ including a working download link.</strong>.  We've also added a
 GhostScript driver for Epson Stylus inkjet printers.</p>
 
 <P><strong><em><font color="#ff0000">New as of April 30,
-2000!</font></em></strong> Updated list or printers.</p>
+2000!</font></em></strong> Updated list of printers.</p>
 
 <P><strong><em><font color="#ff0000">New as of April 22,
 2000!</font></em></strong> Version 3.1.3 is now released.</p>
