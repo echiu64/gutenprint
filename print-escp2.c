@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.105  2000/03/02 03:07:27  rlk
+ *   Clean up options a bit
+ *
  *   Revision 1.104  2000/03/01 01:38:08  rlk
  *   Some ditsy little things
  *
@@ -1038,57 +1041,21 @@ escp2_init_printer(FILE *prn,int model, int output_type, int ydpi,
   fwrite("\033(G\001\000\001", 6, 1, prn);	/* Enter graphics mode */
 
   /* Set up print resolution */
-  switch (ydpi)					/* Set line feed increment */
-    {
-
-    case 180 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-	  use_softweave)
-	fwrite("\033(U\005\000\008\008\008\240\005", 10, 1, prn);
-      else
-	fwrite("\033(U\001\000\024", 6, 1, prn);
-      break;
-
-    case 360 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-	  use_softweave)
-	fwrite("\033(U\005\000\004\004\004\240\005", 10, 1, prn);
-      else
-	fwrite("\033(U\001\000\012", 6, 1, prn);
-      break;
-
-    case 720 :
-      if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
-	  use_softweave)
-	{
-	  if (horizontal_passes <= 2)
-	    fwrite("\033(U\005\000\002\002\002\240\005", 10, 1, prn);
-	  else
-	    fwrite("\033(U\005\000\002\002\001\240\005", 10, 1, prn);
-	}
-      else
-	fwrite("\033(U\001\000\005", 6, 1, prn);
-      break;
-    }
+  if (escp2_has_cap(model, MODEL_VARIABLE_DOT_MASK, MODEL_VARIABLE_4) &&
+      use_softweave)
+    fprintf(prn, "\033(U\005%c%c%c%c\240\005", 0, 1440 / ydpi, 1440 / ydpi,
+	    1440 / (ydpi * (horizontal_passes > 2 ? 2 : 1)));
+  else
+    fprintf(prn, "\033(U\001%c%c", 0, 3600 / ydpi);	    
 
   /* Printer capabilities */
   if (escp2_has_cap(model, MODEL_GRAYMODE_MASK, MODEL_GRAYMODE_YES))
-    {
-      if (output_type == OUTPUT_GRAY)
-	fwrite("\033(K\002\000\000\001", 7, 1, prn);	/* Fast black */
-      else
-	fwrite("\033(K\002\000\000\002", 7, 1, prn);	/* Color */
-    }
+    fprintf(prn, "\033(K\002%c%c%c", 0, 0,
+	    (output_type == OUTPUT_GRAY ? 1 : 2));
 
-  if (use_softweave)
-    fwrite("\033(i\001\000\000", 6, 1, prn); /* Microweave on */
-  else
-    fwrite("\033(i\001\000\001", 6, 1, prn); /* Microweave off */
+  fprintf(prn, "\033(i\001%c%c", 0, use_softweave ? 0 : 1);
 
-  if (horizontal_passes * vertical_passes > 2)
-    fwrite("\033U\001", 3, 1, prn); /* Unidirectional */
-  else
-    fwrite("\033U\000", 3, 1, prn); /* Bidirectional */
+  fprintf(prn, "\033U%c", (horizontal_passes * vertical_passes > 2) ? 1 : 0);
 
   if (!use_softweave)
     {
