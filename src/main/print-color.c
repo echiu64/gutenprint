@@ -204,6 +204,13 @@ typedef struct
   int hsl_only;
 } curve_param_t;
 
+typedef struct {
+	int input_color_model, output_color_model;
+	int steps, linear_contrast_adjustment;
+	double print_gamma, app_gamma, screen_gamma;
+	double brightness, contrast;
+} lut_params_t;
+
 static int standard_curves_initialized = 0;
 
 static stp_curve_t hue_map_bounds = NULL;
@@ -1663,7 +1670,7 @@ static void
 initialize_channels(stp_vars_t v, stp_image_t *image)
 {
   lut_t *lut = (lut_t *)(stpi_get_component_data(v, "Color"));
-  stpi_channel_initialize((stp_vars_t) v, image, lut->out_channels);
+  stpi_channel_initialize(v, image, lut->out_channels);
   lut->channels_are_initialized = 1;
 }
 
@@ -1680,7 +1687,7 @@ stpi_color_traditional_get_row(stp_const_vars_t v,
       != STP_IMAGE_STATUS_OK)
     return 2;
   if (!lut->channels_are_initialized)
-    initialize_channels((stp_vars_t) v, image);
+    initialize_channels((stp_vars_t)v, image);
   zero = (lut->colorfunc)(v, lut->in_data, stpi_channel_get_input(v));
   if (zero_mask)
     *zero_mask = zero;
@@ -1779,26 +1786,23 @@ free_lut(void *vlut)
 }
 
 static stp_curve_t
-compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
-		double print_gamma, double contrast, double app_gamma,
-		double brightness, double screen_gamma, int input_color_model,
-		int output_color_model, int linear_contrast_adjustment)
+compute_a_curve(stp_curve_t curve, double c_gamma, lut_params_t *l)
 {
-  double *tmp = stpi_malloc(sizeof(double) * steps);
+  double *tmp = stpi_malloc(sizeof(double) * l->steps);
   double pivot = .25;
   double ipivot = 1.0 - pivot;
-  double xcontrast = pow(contrast, contrast);
-  double xgamma = pow(pivot, screen_gamma);
+  double xcontrast = pow(l->contrast, l->contrast);
+  double xgamma = pow(pivot, l->screen_gamma);
   int i;
-  int isteps = steps;
-  if (steps > 256)
+  int isteps = l->steps;
+  if (isteps > 256)
     isteps = 256;
   for (i = 0; i < isteps; i ++)
     {
       double temp_pixel, pixel;
       pixel = (double) i / (double) (isteps - 1);
 
-      if (input_color_model == COLOR_MODEL_CMY)
+      if (l->input_color_model == COLOR_MODEL_CMY)
 	pixel = 1.0 - pixel;
 
       /*
@@ -1808,25 +1812,25 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 	temp_pixel = 1.0 - pixel;
       else
 	temp_pixel = pixel;
-      if (contrast > 3.99999)
+      if (l->contrast > 3.99999)
 	{
 	  if (temp_pixel < .5)
 	    temp_pixel = 0;
 	  else
 	    temp_pixel = 1;
 	}
-      if (temp_pixel <= .000001 && contrast <= .0001)
+      if (temp_pixel <= .000001 && l->contrast <= .0001)
 	temp_pixel = .5;
       else if (temp_pixel > 1)
 	temp_pixel = .5 * pow(2 * temp_pixel, xcontrast);
       else if (temp_pixel < 1)
 	{
-	  if (linear_contrast_adjustment)
+	  if (l->linear_contrast_adjustment)
 	    temp_pixel = 0.5 -
-	      ((0.5 - .5 * pow(2 * temp_pixel, contrast)) * contrast);
+	      ((0.5 - .5 * pow(2 * temp_pixel, l->contrast)) * l->contrast);
 	  else
 	    temp_pixel = 0.5 -
-	      ((0.5 - .5 * pow(2 * temp_pixel, contrast)));
+	      ((0.5 - .5 * pow(2 * temp_pixel, l->contrast)));
 	}
       if (temp_pixel > .5)
 	temp_pixel = .5;
@@ -1840,10 +1844,10 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
       /*
        * Second, do brightness
        */
-      if (brightness < 1)
-	pixel = pixel * brightness;
+      if (l->brightness < 1)
+	pixel = pixel * l->brightness;
       else
-	pixel = 1 - ((1 - pixel) * (2 - brightness));
+	pixel = 1 - ((1 - pixel) * (2 - l->brightness));
 
       /*
        * Third, correct for the screen gamma
@@ -1851,7 +1855,7 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 
       pixel = 1.0 -
 	(1.0 / (1.0 - xgamma)) *
-	(pow(pivot + ipivot * pixel, screen_gamma) - xgamma);
+	(pow(pivot + ipivot * pixel, l->screen_gamma) - xgamma);
 
       /*
        * Third, fix up cyan, magenta, yellow values
@@ -1870,8 +1874,8 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
        * Finally, fix up print gamma and scale
        */
 
-      pixel = 65535 * pow(pixel, print_gamma) + .5;
-      if (output_color_model == COLOR_MODEL_RGB)
+      pixel = 65535 * pow(pixel, l->print_gamma);	/* was + 0.5 here */
+      if (l->output_color_model == COLOR_MODEL_RGB)
 	pixel = 65535 - pixel;
 
       if (pixel <= 0.0)
@@ -1880,11 +1884,11 @@ compute_a_curve(stp_curve_t curve, size_t steps, double c_gamma,
 	tmp[i] = 65535;
       else
 	tmp[i] = (pixel);
-      tmp[i] = floor(tmp[i] + 0.5);
+      tmp[i] = floor(tmp[i] + 0.5);			/* rounding is done here */
     }
   stp_curve_set_data(curve, isteps, tmp);
-  if (isteps != steps)
-    stp_curve_resample(curve, steps);
+  if (isteps != l->steps)
+    stp_curve_resample(curve, l->steps);
   stpi_free(tmp);
   return curve;
 }
@@ -1920,6 +1924,20 @@ invert_curve(stp_curve_t curve, int in_model, int out_model)
     }
 }
 
+static inline void
+compute_one_lut(stp_curve_t lut_curve, stp_const_curve_t curve,
+	double density, lut_params_t *l)
+{
+  if (curve) {
+    stp_curve_copy(lut_curve, curve);
+    invert_curve(lut_curve, l->input_color_model, l->output_color_model);
+    stp_curve_rescale(lut_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
+			STP_CURVE_BOUNDS_RESCALE);
+    stp_curve_resample(lut_curve, l->steps);
+  } else {
+    compute_a_curve(lut_curve, density, l);
+  }
+}
 
 static void
 stpi_compute_lut(stp_vars_t v, size_t steps)
@@ -1936,23 +1954,26 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
    * Got an output file/command, now compute a brightness lookup table...
    */
 
-  int linear_contrast_adjustment =
-    stp_get_boolean_parameter(v, "LinearContrast");
   double cyan = stp_get_float_parameter(v, "Cyan");
   double magenta = stp_get_float_parameter(v, "Magenta");
   double yellow = stp_get_float_parameter(v, "Yellow");
-  double print_gamma = stp_get_float_parameter(v, "Gamma");
-  double contrast = stp_get_float_parameter(v, "Contrast");
-  double brightness = stp_get_float_parameter(v, "Brightness");
-  double app_gamma = 1.0;
-  double screen_gamma;
+
   lut_t *lut;
-  int input_color_model = stp_get_input_color_model(v);
-  int output_color_model = stpi_get_output_color_model(v);
+  lut_params_t l;
+
+  l.input_color_model = stp_get_input_color_model(v);
+  l.output_color_model = stpi_get_output_color_model(v);
+  l.steps = steps;
+  l.linear_contrast_adjustment =
+    stp_get_boolean_parameter(v, "LinearContrast");
+  l.print_gamma = stp_get_float_parameter(v, "Gamma");
+  l.contrast = stp_get_float_parameter(v, "Contrast");
+  l.brightness = stp_get_float_parameter(v, "Brightness");
+  l.app_gamma = 1.0;
 
   if (stp_check_float_parameter(v, "AppGamma", STP_PARAMETER_ACTIVE))
-    app_gamma = stp_get_float_parameter(v, "AppGamma");
-  screen_gamma = app_gamma / 4.0; /* "Empirical" */
+    l.app_gamma = stp_get_float_parameter(v, "AppGamma");
+  l.screen_gamma = l.app_gamma / 4.0; /* "Empirical" */
   lut = allocate_lut();
 
   if (stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_DEFAULTED))
@@ -1993,25 +2014,13 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   stpi_dprintf(STPI_DBG_LUT, v, " cyan %.3f\n", cyan);
   stpi_dprintf(STPI_DBG_LUT, v, " magenta %.3f\n", magenta);
   stpi_dprintf(STPI_DBG_LUT, v, " yellow %.3f\n", yellow);
-  stpi_dprintf(STPI_DBG_LUT, v, " print_gamma %.3f\n", print_gamma);
-  stpi_dprintf(STPI_DBG_LUT, v, " contrast %.3f\n", contrast);
-  stpi_dprintf(STPI_DBG_LUT, v, " brightness %.3f\n", brightness);
-  stpi_dprintf(STPI_DBG_LUT, v, " screen_gamma %.3f\n", screen_gamma);
-  if (composite_curve)
-    {
-      stp_curve_copy(lut->composite, composite_curve);
-      invert_curve(lut->composite, input_color_model, output_color_model);
-      stp_curve_rescale(lut->composite, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->composite, steps);
-    }
-  else
-    {
-      compute_a_curve(lut->composite, steps, 1.0, print_gamma, contrast,
-		      app_gamma, brightness, screen_gamma,
-		      input_color_model, output_color_model,
-		      linear_contrast_adjustment);
-    }
+  stpi_dprintf(STPI_DBG_LUT, v, " print_gamma %.3f\n", l.print_gamma);
+  stpi_dprintf(STPI_DBG_LUT, v, " contrast %.3f\n", l.contrast);
+  stpi_dprintf(STPI_DBG_LUT, v, " brightness %.3f\n", l.brightness);
+  stpi_dprintf(STPI_DBG_LUT, v, " screen_gamma %.3f\n", l.screen_gamma);
+
+  compute_one_lut(lut->composite, composite_curve, 1.0, &l);
+
   if (black_curve)
     stp_curve_copy(lut->black, black_curve);
   else
@@ -2019,46 +2028,14 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   stp_curve_rescale(lut->black, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 		    STP_CURVE_BOUNDS_RESCALE);
   stp_curve_resample(lut->black, steps);
-  if (cyan_curve)
-    {
-      stp_curve_copy(lut->cyan, cyan_curve);
-      invert_curve(lut->cyan, input_color_model, output_color_model);
-      stp_curve_rescale(lut->cyan, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->cyan, steps);
-    }
-  else
-    compute_a_curve(lut->cyan, steps, cyan, print_gamma, contrast,
-		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model,
-		    linear_contrast_adjustment);
-  if (magenta_curve)
-    {
-      stp_curve_copy(lut->magenta, magenta_curve);
-      invert_curve(lut->magenta, input_color_model, output_color_model);
-      stp_curve_rescale(lut->magenta, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->magenta, steps);
-    }
-  else
-    compute_a_curve(lut->magenta, steps, magenta, print_gamma, contrast,
-		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model,
-		    linear_contrast_adjustment);
-  if (yellow_curve)
-    {
-      stp_curve_copy(lut->yellow, yellow_curve);
-      invert_curve(lut->yellow, input_color_model, output_color_model);
-      stp_curve_rescale(lut->yellow, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
-      stp_curve_resample(lut->yellow, steps);
-    }
-  else
-    compute_a_curve(lut->yellow, steps, yellow, print_gamma, contrast,
-		    app_gamma, brightness, screen_gamma,
-		    input_color_model, output_color_model,
-		    linear_contrast_adjustment);
+
+  compute_one_lut(lut->cyan, cyan_curve, cyan, &l);
+
+  compute_one_lut(lut->magenta, magenta_curve, magenta, &l);
+
+  compute_one_lut(lut->yellow, yellow_curve, yellow, &l);
 }
+
 
 #define SET_NULL_COLORFUNC						     \
   stpi_erprintf								     \
