@@ -53,6 +53,10 @@ typedef struct {
   int max_height;
   int max_xdpi;
   int max_ydpi;
+  int border_left;
+  int border_right;
+  int border_top;
+  int border_bottom;
   int inks;           /* installable cartridges (CANON_INK_*) */
   int slots;          /* available paperslots */
   int features;       /* special bjl settings */
@@ -101,15 +105,18 @@ static void canon_write_line(FILE *, canon_cap_t, int,
 #define CANON_SLOT_MAN2    8
 
 /* model peculiarities */
-#define CANON_CAP_CMD61     1    /* uses command #0x61         */
-#define CANON_CAP_DMT       2    /* Drop Modulation Technology */
-#define CANON_CAP_MSB_FIRST 4    /* how to send data */
+#define CANON_CAP_DMT       1<<0    /* Drop Modulation Technology */
+#define CANON_CAP_MSB_FIRST 1<<1    /* how to send data           */
+#define CANON_CAP_CMD61     1<<2    /* uses command #0x61         */
+#define CANON_CAP_CMD6d     1<<3    /* uses command #0x6d         */
+#define CANON_CAP_CMD70     1<<4    /* uses command #0x70         */
+
 
 static canon_cap_t canon_model_capabilities[] =
 {
   /* default settings for unkown models */
 
-  {   -1, 8*72, 11*72,  180, 180, CANON_INK_K, CANON_SLOT_ASF1, 0 },
+  {   -1, 8*72,11*72,180,180,20,20,20,20, CANON_INK_K, CANON_SLOT_ASF1, 0 },
 
   /* tested models */
 
@@ -117,17 +124,29 @@ static canon_cap_t canon_model_capabilities[] =
     6000,          
     618, 936,      /* 8.58" x 13 " */
     1440, 720, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1 | CANON_SLOT_MAN1, 
     CANON_CAP_DMT
   },
 
+  { /* Canon BJC 8200 */
+    8200, 
+    11*72, 17*72, 
+    1200,1200, 
+    11, 9, 10, 18,
+    CANON_INK_CMYK | CANON_INK_CcMmYK, 
+    CANON_SLOT_ASF1, 
+    0 
+  },
+  
   /* untested models */
 
   { /* Canon BJC 1000 */
     1000, 
     11*72, 17*72,  
     360, 360, 
+    11, 9, 10, 18,
     CANON_INK_K | CANON_INK_CMY, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 
@@ -136,6 +155,7 @@ static canon_cap_t canon_model_capabilities[] =
     2000, 
     11*72, 17*72,  
     720, 360, 
+    11, 9, 10, 18,
     CANON_INK_CMYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 
@@ -144,6 +164,7 @@ static canon_cap_t canon_model_capabilities[] =
     3000, 
     11*72, 17*72, 
     1440, 720, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 | CANON_CAP_DMT 
@@ -152,6 +173,7 @@ static canon_cap_t canon_model_capabilities[] =
     6100, 
     11*72, 17*72, 
     1440, 720, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 
@@ -160,6 +182,7 @@ static canon_cap_t canon_model_capabilities[] =
     7000, 
     11*72, 17*72, 
     1200, 600, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     0 
@@ -168,25 +191,19 @@ static canon_cap_t canon_model_capabilities[] =
     7100, 
     11*72, 17*72, 
     1200, 600, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYyK, 
     CANON_SLOT_ASF1, 
     0 
   },
-  { /* Canon BJC 8200 */
-    8200, 
-    11*72, 17*72, 
-    1200,1200, 
-    CANON_INK_CMYK | CANON_INK_CcMmYK, 
-    CANON_SLOT_ASF1, 
-    0 
-  },
-  
+
   /* extremely fuzzy models */
 
   { /* Canon BJC 5100 */
     5100, 
     17*72, 22*72, 
     1440, 720, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_DMT 
@@ -195,6 +212,7 @@ static canon_cap_t canon_model_capabilities[] =
     5500, 
     22*72, 34*72,  
     720, 360, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 
@@ -203,6 +221,7 @@ static canon_cap_t canon_model_capabilities[] =
     6500, 
     17*72, 22*72, 
     1440, 720, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     CANON_CAP_CMD61 | CANON_CAP_DMT 
@@ -211,6 +230,7 @@ static canon_cap_t canon_model_capabilities[] =
     8500, 
     17*72, 22*72, 
     1200,1200, 
+    11, 9, 10, 18,
     CANON_INK_CMYK | CANON_INK_CcMmYK, 
     CANON_SLOT_ASF1, 
     0 
@@ -464,13 +484,14 @@ canon_imageable_area(int  model,	/* I - Printer model */
 {
   int	width, length;			/* Size of page */
 
+  canon_cap_t caps= canon_get_model_capabilities(model);
+
   default_media_size(model, ppd_file, media_size, &width, &length);
 
-  /* ok for BJC 6000 */
-  *left   = 11;
-  *right  = width - 9;
-  *top    = length- 10;
-  *bottom = 18;
+  *left   = caps.border_left;
+  *right  = width - caps.border_right;
+  *top    = length - caps.border_top;
+  *bottom = caps.border_bottom;
 }
 
 /*
@@ -615,9 +636,10 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   canon_cmd(prn,ESC28,0x62, 1, 0x01);
   canon_cmd(prn,ESC28,0x71, 1, 0x01);
 
-  canon_cmd(prn,ESC28,0x6d,12, arg_6d_1,0xff,0xff,0x00,0x00,0x07,
-	                       0x00,arg_6d_a,arg_6d_b,arg_6d_2,
-	                       0x00,arg_6d_3);
+  if (caps.features & CANON_CAP_CMD6d)
+    canon_cmd(prn,ESC28,0x6d,12, arg_6d_1,
+	      0xff,0xff,0x00,0x00,0x07,0x00,
+	      arg_6d_a,arg_6d_b,arg_6d_2,0x00,arg_6d_3);
 
   /* set resolution */
 
@@ -627,8 +649,11 @@ canon_init_printer(FILE *prn, canon_cap_t caps,
   canon_cmd(prn,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
 
   canon_cmd(prn,ESC28,0x63, 3, arg_63_1, arg_63_2, arg_63_3);
-  canon_cmd(prn,ESC28,0x70, 8, arg_70_1, arg_70_2, 0x00, 0x00, 
-                               arg_70_3, arg_70_4, 0x00, 0x00);
+
+  if (caps.features & CANON_CAP_CMD70)
+    canon_cmd(prn,ESC28,0x70, 8, arg_70_1, arg_70_2, 0x00, 0x00, 
+	                         arg_70_3, arg_70_4, 0x00, 0x00);
+
   canon_cmd(prn,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 
   /* some linefeeds */
