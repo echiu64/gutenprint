@@ -737,7 +737,24 @@ stp_get_int_parameter(const stp_vars_t v, const char *parameter)
       return val->value.ival;
     }
   else
-    return 0;
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, parameter, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_INT)
+	{
+	  int intval = desc.deflt.integer;
+	  stp_parameter_description_free(&desc);
+	  return intval;
+	}
+      else
+	{
+	  stp_parameter_description_free(&desc);
+	  stpi_erprintf
+	    ("GIMP-PRINT: Attempt to retrieve unset integer parameter %s\n",
+	     parameter);
+	  return 0;
+	}
+    }
 }
 
 void
@@ -815,7 +832,24 @@ stp_get_boolean_parameter(const stp_vars_t v, const char *parameter)
       return val->value.ival;
     }
   else
-    return 0;
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, parameter, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+	{
+	  int boolean = desc.deflt.boolean;
+	  stp_parameter_description_free(&desc);
+	  return boolean;
+	}
+      else
+	{
+	  stp_parameter_description_free(&desc);
+	  stpi_erprintf
+	    ("GIMP-PRINT: Attempt to retrieve unset boolean parameter %s\n",
+	     parameter);
+	  return 0;
+	}
+    }
 }
 
 void
@@ -887,7 +921,24 @@ stp_get_float_parameter(const stp_vars_t v, const char *parameter)
       return val->value.dval;
     }
   else
-    return 1.0;
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, parameter, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+	{
+	  double dbl = desc.deflt.dbl;
+	  stp_parameter_description_free(&desc);
+	  return dbl;
+	}
+      else
+	{
+	  stp_parameter_description_free(&desc);
+	  stpi_erprintf
+	    ("GIMP-PRINT: Attempt to retrieve unset float parameter %s\n",
+	     parameter);
+	  return 1.0;
+	}
+    }
 }
 
 void
