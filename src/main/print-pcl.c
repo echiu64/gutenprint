@@ -2231,6 +2231,9 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
 
   if (ink_type)
     privdata.do_6color = (strcmp(ink_type, "Photo") == 0);
+  else
+    privdata.do_6color = 0;
+
   stpi_deprintf(STPI_DBG_PCL, "privdata.do_6color = %d\n", privdata.do_6color);
 
  /*
@@ -2625,14 +2628,12 @@ pcl_do_print(const stp_vars_t v, stp_image_t *image)
   errlast = -1;
   errline  = 0;
   privdata.blank_lines = 0;
-  privdata.do_blank = 0;
 #ifndef PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL
   privdata.do_blank = ((caps->stp_printer_type & PCL_PRINTER_BLANKLINE) ==
 		       PCL_PRINTER_BLANKLINE);
 #else
   privdata.do_blank = 0;
 #endif
-  privdata.blank_lines = 0;
 
   stpi_dither_add_channel(v, black, ECOLOR_K, 0);
   stpi_dither_add_channel(v, cyan, ECOLOR_C, 0);
