@@ -61,6 +61,12 @@ int do_print_cmd(void);
 
 
 const char *banner = "\
+Escputil version " VERSION ", Copyright (C) 2000-2001 Robert Krawitz\n\
+Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n\
+This is free software, and you are welcome to redistribute it\n\
+under certain conditions; type 'escputil -l' for details.\n";
+
+const char *license = "\
 Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
@@ -95,21 +101,24 @@ struct option optlist[] =
   { "identify",		0,	NULL,	(int) 'd' },
   { "model",		1,	NULL,	(int) 'm' },
   { "quiet",		0,	NULL,	(int) 'q' },
+  { "license",		0,	NULL,	(int) 'l' },
+  { "list-models",	0,	NULL,	(int) 'M' },
   { NULL,		0,	NULL,	0 	  }
 };
 
 const char *help_msg = "\
-Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
+Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
-    -P|--printer-name  Specify the name of the printer to operate on.\n\
-                       Default is the default system printer.\n\
-    -r|--raw-device    Specify the name of the device to write to directly\n\
-                       rather than going through a printer queue.\n\
+Perform maintenance on Epson (R) Stylus printers.\n\
+Examples: escputil --clean-head --printer stpex-on-third-floor\n\
+          escputil --ink-level --raw-device --new /dev/lp0\n\
+\n\
+  Commands:\n\
     -c|--clean-head    Clean the print head.\n\
     -n|--nozzle-check  Print a nozzle test pattern.\n\
                        Dirty or clogged nozzles will show as gaps in the\n\
-                       pattern.  If you see any gaps, you should run a\n\
-                       head cleaning pass.\n\
+                       pattern.  If you see any gaps, you should clean\n\
+                       the print head.\n\
     -a|--align-head    Align the print head.  CAUTION: Misuse of this\n\
                        utility may result in poor print quality and/or\n\
                        damage to the printer.\n\
@@ -122,24 +131,33 @@ Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
     -d|--identify      Query the printer for make and model information.\n\
                        This requires read/write access to the raw printer\n\
                        device.\n\
+    -l|--license       Display the license/warranty terms of this program.\n\
+    -M|--list-models   List the available printer models.\n\
+    -h|--help          Print this help message.\n\
+  Options:\n\
+    -P|--printer-name  Specify the name of the printer queue to operate on.\n\
+                       Default is the default system printer.\n\
+    -r|--raw-device    Specify the name of the device to write to directly\n\
+                       rather than going through a printer queue.\n\
     -u|--new           The printer is a new printer (Stylus Color 740 or\n\
                        newer).\n\
-    -h|--help          Print this help message.\n\
     -q|--quiet         Suppress the banner.\n\
     -m|--model         Specify the precise printer model for head alignment.\n";
 #else
 const char *help_msg = "\
-Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
+Usage: escputil [OPTIONS] [COMMAND]\n\
+Usage: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model]\n\
-    -P Specify the name of the printer to operate on.\n\
-          Default is the default system printer.\n\
-    -r Specify the name of the device to write to directly\n\
-          rather than going through a printer queue.\n\
+Perform maintenance on Epson (R) Stylus printers.\n\
+Examples: escputil -c -P stpex-on-third-floor\n\
+          escputil -i -r -u /dev/lp0\n\
+\n\
+  Commands:\n\
     -c Clean the print head.\n\
     -n Print a nozzle test pattern.\n\
           Dirty or clogged nozzles will show as gaps in the\n\
-          pattern.  If you see any gaps, you should run a\n\
-          head cleaning pass.\n\
+          pattern.  If you see any gaps, you should clean\n\
+          the print head.\n\
     -a Align the print head.  CAUTION: Misuse of this\n\
           utility may result in poor print quality and/or\n\
           damage to the printer.\n\
@@ -151,8 +169,15 @@ Usage: escputil [-c | -n | -a | -i | -o | -s | -d]\n\
           read/write access to the raw printer device.\n\
     -d Query the printer for make and model information.  This\n\
           requires read/write access to the raw printer device.\n\
-    -u The printer is a new printer (Stylus Color 740 or newer).\n\
+    -l Display the license/warranty terms of this program.\n\
+    -M List the available printer models.\n\
     -h Print this help message.\n\
+  Options:\n\
+    -P Specify the name of the printer queue to operate on.\n\
+          Default is the default system printer.\n\
+    -r Specify the name of the device to write to directly\n\
+          rather than going through a printer queue.\n\
+    -u The printer is a new printer (Stylus Color 740 or newer).\n\
     -q Suppress the banner.\n\
     -m Specify the precise printer model for head alignment.\n";
 #endif
@@ -237,17 +262,21 @@ char printer_cmd[1025];
 int bufpos = 0;
 int isnew = 0;
 
-void
-do_help(int code)
+static void
+print_models(void)
 {
   stp_printer_t *printer = &printer_list[0];
-  printf("%s", help_msg);
-  printf("Available models are:\n");
   while (printer->short_name)
     {
       printf("%10s      %s\n", printer->short_name, printer->long_name);
       printer++;
     }
+}
+
+void
+do_help(int code)
+{
+  printf("%s", help_msg);
   exit(code);
 }
 
@@ -277,9 +306,9 @@ main(int argc, char **argv)
     {
 #ifdef __GNU_LIBRARY__
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:icnaosduqm:", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:icnaosduqm:hlM", optlist, &option_index);
 #else
-      c = getopt(argc, argv, "P:r:icnaosduqm:");
+      c = getopt(argc, argv, "P:r:icnaosduqm:hlM");
 #endif
       if (c == -1)
 	break;
@@ -332,6 +361,12 @@ main(int argc, char **argv)
 	case 'h':
 	  do_help(0);
 	  break;
+	case 'l':
+	  printf("%s\n", license);
+	  exit(0);
+	case 'M':
+	  print_models();
+	  exit(0);
 	default:
 	  printf("%s\n", banner);
 	  fprintf(stderr, "Unknown option %c\n", c);
@@ -341,7 +376,15 @@ main(int argc, char **argv)
   if (!quiet)
     printf("%s\n", banner);
   if (operation == 0)
-    do_help(1);
+    {
+      fprintf(stderr, "Usage: %s [OPTIONS] command\n", argv[0]);
+#ifdef __GNU_LIBRARY__
+      fprintf(stderr, "Type `%s --help' for more information.\n", argv[0]);
+#else
+      fprintf(stderr, "Type `%s -h' for more information.\n", argv[0]);
+#endif
+      exit(1);
+    }
   initialize_print_cmd();
   switch(operation)
     {
