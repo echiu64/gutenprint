@@ -26,6 +26,16 @@ if [ -z "$print_image" ] ; then
     image='no-image'
 fi
 
+if [ -z "$STP_DATA_PATH" ] ; then
+    STP_DATA_PATH=`pwd`/../src/main
+    export STP_DATA_PATH
+fi
+
+if [ -z "$STP_MODULE_PATH" ] ; then
+    STP_MODULE_PATH=`pwd`/../src/main:`pwd`/../src/main/.libs
+    export STP_MODULE_PATH
+fi
+
 for algo in $algos ; do
     echo -n "Testing $algo:"
     for bit in $bits ; do
