@@ -122,6 +122,21 @@ static const escp2_variable_ink_t photo_4pl_ink =
   1.0
 };
 
+static const stp_simple_dither_range_t photo_2pl_dither_ranges[] =
+{
+  { 0.17,  0x1, 1, 2 },
+  { 0.26,  0x2, 1, 3 },
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
+};
+
+static const escp2_variable_ink_t photo_2pl_ink =
+{
+  photo_2pl_dither_ranges,
+  sizeof(photo_2pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
 static const stp_simple_dither_range_t spro10000_photo_dither_ranges[] =
 {
   { 0.17,  0x1, 1, 2 },
@@ -160,6 +175,19 @@ static const escp2_variable_ink_t photo_4pl_2880_ink =
 {
   photo_4pl_2880_dither_ranges,
   sizeof(photo_4pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+static const stp_simple_dither_range_t photo_2pl_2880_dither_ranges[] =
+{
+  { 0.35,  0x1, 1, 1 },
+  { 1.00,  0x1, 0, 3 },
+};
+
+static const escp2_variable_ink_t photo_2pl_2880_ink =
+{
+  photo_2pl_2880_dither_ranges,
+  sizeof(photo_2pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -343,6 +371,32 @@ static const escp2_variable_ink_t standard_3pl_2880_ink =
 {
   standard_3pl_2880_dither_ranges,
   sizeof(standard_3pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+
+static const stp_simple_dither_range_t standard_2pl_dither_ranges[] =
+{
+  { 0.661, 0x1, 0, 2 },
+  { 1.00,  0x2, 0, 3 }
+};
+
+static const escp2_variable_ink_t standard_2pl_ink =
+{
+  standard_2pl_dither_ranges,
+  sizeof(standard_2pl_dither_ranges) / sizeof(stp_simple_dither_range_t),
+  1.0
+};
+
+static const stp_simple_dither_range_t standard_2pl_2880_dither_ranges[] =
+{
+  { 1.00,  0x1, 0, 1 },
+};
+
+static const escp2_variable_ink_t standard_2pl_2880_ink =
+{
+  standard_2pl_2880_dither_ranges,
+  sizeof(standard_2pl_2880_dither_ranges) / sizeof(stp_simple_dither_range_t),
   1.0
 };
 
@@ -578,6 +632,22 @@ static const escp2_variable_inkset_t escp2_4pl_photo_inks =
   &standard_4pl_ink
 };
 
+static const escp2_variable_inkset_t escp2_2pl_standard_inks =
+{
+  &standard_2pl_ink,
+  &standard_2pl_ink,
+  &standard_2pl_ink,
+  &standard_2pl_ink
+};
+
+static const escp2_variable_inkset_t escp2_2pl_photo_inks =
+{
+  &standard_2pl_ink,
+  &photo_2pl_ink,
+  &photo_2pl_ink,
+  &standard_2pl_ink
+};
+
 static const escp2_variable_inkset_t spro10000_standard_inks =
 {
   &spro10000_standard_ink,
@@ -608,6 +678,22 @@ static const escp2_variable_inkset_t escp2_4pl_2880_photo_inks =
   &photo_4pl_2880_ink,
   &photo_4pl_2880_ink,
   &standard_4pl_2880_ink
+};
+
+static const escp2_variable_inkset_t escp2_2pl_2880_standard_inks =
+{
+  &standard_2pl_2880_ink,
+  &standard_2pl_2880_ink,
+  &standard_2pl_2880_ink,
+  &standard_2pl_2880_ink
+};
+
+static const escp2_variable_inkset_t escp2_2pl_2880_photo_inks =
+{
+  &standard_2pl_2880_ink,
+  &photo_2pl_2880_ink,
+  &photo_2pl_2880_ink,
+  &standard_2pl_2880_ink
 };
 
 static const escp2_variable_inkset_t escp2_3pl_standard_inks =
@@ -1128,6 +1214,88 @@ static const escp2_variable_inklist_t variable_4pl_6color_inks =
       &escp2_4pl_2880_photo_inks,
       &escp2_4pl_2880_photo_inks,
       &escp2_4pl_2880_photo_inks
+    }
+  }
+};
+
+static const escp2_variable_inklist_t variable_2pl_4color_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_2pl_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+    }
+  }
+};
+
+static const escp2_variable_inklist_t variable_2pl_6color_inks =
+{
+  {
+    {
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks,
+      &standard_inks
+    },
+    {
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks,
+      &photo_inks
+    }
+  },
+  {
+    {
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_multishot_standard_inks,
+      &escp2_6pl_standard_inks,
+      &escp2_2pl_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+      &escp2_2pl_2880_standard_inks,
+    },
+    {
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_multishot_photo_inks,
+      &escp2_6pl_photo_inks,
+      &escp2_2pl_photo_inks,
+      &escp2_2pl_2880_photo_inks,
+      &escp2_2pl_2880_photo_inks,
+      &escp2_2pl_2880_photo_inks
     }
   }
 };
@@ -1757,6 +1925,76 @@ static const escp2_dot_size_t spro10000_dotsizes =
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
 {   -1, 0x10,   -1, 0x10,   -1, 0x10,   -1, 0x11,   -1, 0x12,   -1, 0x12,  0x12 };
 
+static const escp2_dot_size_t c2pl_dotsizes =
+{   -1, 0x12,   -1, 0x12,   -1, 0x12,   -1, 0x11,   -1, 0x13,   -1, 0x10,  0x10 };
+
+/*
+ * Bits are for:
+ *
+ *  0: 120/180 DPI micro
+ *  1: 120/180 DPI soft
+ *  2: 360 micro
+ *  3: 360 soft
+ *  4: 720x360 micro
+ *  5: 720x360 soft
+ *  6: 720 micro
+ *  7: 720 soft
+ *  8: 1440x720 micro
+ *  9: 1440x720 soft
+ * 10: 2880x720 micro
+ * 11: 2880x720 soft
+ * 12: 2880x1440
+ */
+
+/*   0     1     2     3     4     5     6     7     8     9    10    11    12 */
+
+static const escp2_bits_t variable_bits =
+{    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    2 };
+
+static const escp2_bits_t stp950_bits =
+{    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,    1,    1,    1 };
+
+static const escp2_bits_t standard_bits =
+{    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1 };
+
+/*
+ * Base resolutions are for:
+ *
+ *  0: 120/180 DPI micro
+ *  1: 120/180 DPI soft
+ *  2: 360 micro
+ *  3: 360 soft
+ *  4: 720x360 micro
+ *  5: 720x360 soft
+ *  6: 720 micro
+ *  7: 720 soft
+ *  8: 1440x720 micro
+ *  9: 1440x720 soft
+ * 10: 2880x720 micro
+ * 11: 2880x720 soft
+ * 12: 2880x1440
+ */
+
+/*   0     1     2     3     4     5     6     7     8     9    10    11    12 */
+
+static const escp2_base_resolutions_t standard_base_res =
+{  720,  720,  720,  720,  720,  720,  720,  720,  720,  720,  720,  720,  720 };
+
+static const escp2_base_resolutions_t g3_base_res =
+{  720,  720,  720,  720,  720,  720,  720,  720,  360,  360,  360,  360,  360 };
+
+static const escp2_base_resolutions_t variable_base_res =
+{  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  360 };
+
+static const escp2_base_resolutions_t stp950_base_res =
+{  360,  360,  360,  360,  360,  360,  360,  360,  360,  360,  720,  720,  720 };
+
+static const escp2_base_resolutions_t stc900_base_res =
+{  360,  360,  360,  360,  360,  360,  180,  180,  180,  180,  180,  180,  180 };
+
+static const escp2_base_resolutions_t pro_base_res =
+{ 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880 };
+
 /*
  * Densities are for:
  *
@@ -1824,6 +2062,9 @@ static const escp2_densities_t spro10000_densities =
 
 static const escp2_densities_t c3pl_pigment_densities =
 { 2.0, 2.0, 1.3, 1.3, 0.69, 0.69, 0.511, 0.511, 0.765, 0.765, 0.585, 0.585, 0.293 };
+
+static const escp2_densities_t c2pl_densities =
+{ 2.0, 2.0, 1.3, 1.3, 0.65, 0.65, 0.431, 0.568, 0.784, 0.784, 0.593, 0.593, 0.297 };
 
 /*
  For each printhead (=color), the offset in escp2_base_separation (1/360")
@@ -2081,13 +2322,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     15, 1, 4, 15, 1, 4,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 1: Stylus Color 400/500 */
   {
@@ -2098,13 +2340,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g2_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 2: Stylus Color 1500 */
   {
@@ -2115,13 +2358,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, sc1500_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &cmy_inklist
+    &standard_paper_list, standard_reslist, &cmy_inklist,
+    standard_bits, standard_base_res
   },
   /* 3: Stylus Color 600 */
   {
@@ -2132,13 +2376,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc600_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, g3_base_res
   },
   /* 4: Stylus Color 800 */
   {
@@ -2149,13 +2394,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     64, 1, 2, 64, 1, 2,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, g3_base_res
   },
   /* 5: Stylus Color 850 */
   {
@@ -2166,13 +2412,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     64, 1, 2, 128, 1, 1,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, g3_base_res
   },
   /* 6: Stylus Color 1520 */
   {
@@ -2183,13 +2430,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     64, 1, 2, 64, 1, 2,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, g3_base_res
   },
 
   /* SECOND GENERATION PRINTERS */
@@ -2202,13 +2450,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    standard_bits, g3_base_res
   },
   /* 8: Stylus Photo EX */
   {
@@ -2219,13 +2468,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(118 / 10), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    standard_bits, g3_base_res
   },
   /* 9: Stylus Photo */
   {
@@ -2236,13 +2486,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    720, 360, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     photo_dotsizes, g3_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    standard_bits, g3_base_res
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -2255,13 +2506,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     21, 1, 4, 21, 1, 4,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc440_dotsizes, sc440_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 11: Stylus Color 640 */
   {
@@ -2272,13 +2524,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 64, 1, 2,
-    720, 720, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc640_dotsizes, sc440_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 12: Stylus Color 740 */
   {
@@ -2289,13 +2542,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 13: Stylus Color 900 */
   {
@@ -2306,13 +2560,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     96, 1, 2, 192, 1, 1,
-    360, 180, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, c3pl_densities, &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, stc900_base_res
   },
   /* 14: Stylus Photo 750 */
   {
@@ -2323,13 +2578,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 15: Stylus Photo 1200 */
   {
@@ -2340,13 +2596,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c6pl_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 16: Stylus Color 860 */
   {
@@ -2357,13 +2614,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 17: Stylus Color 1160 */
   {
@@ -2374,13 +2632,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 18: Stylus Color 660 */
   {
@@ -2391,13 +2650,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    720, 720, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 26, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 8, 0, default_head_offset, 0, 0,
     sc660_dotsizes,sc660_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 19: Stylus Color 760 */
   {
@@ -2408,13 +2668,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
@@ -2425,13 +2686,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 32, 1, 4,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc720_dotsizes, c6pl_densities, &variable_6pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 21: Stylus Color 480 */
   {
@@ -2442,13 +2704,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     15, 15, 3, 48, 48, 3,
-    360, 360, 360, 720, 720, 14400, 360, 720, 720, 90, 90,
+    360, 720, 720, 14400, 360, 720, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 22: Stylus Photo 870 */
   {
@@ -2459,13 +2722,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 23: Stylus Photo 1270 */
   {
@@ -2476,13 +2740,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 9, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 97, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 24: Stylus Color 3000 */
   {
@@ -2493,13 +2758,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     64, 1, 2, 128, 1, 1,
-    720, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17), INCH(44), INCH(2), INCH(4),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0,
     0, 1, 4, 0, default_head_offset, 0, 0,
     g3_dotsizes, g3_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, g3_base_res
   },
   /* 25: Stylus Color 670 */
   {
@@ -2510,13 +2776,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     32, 1, 4, 64, 1, 2,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sc670_dotsizes, c6pl_densities, &variable_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 26: Stylus Photo 2000P */
   {
@@ -2527,13 +2794,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     sp2000_dotsizes, sp2000_densities, &variable_pigment_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 27: Stylus Pro 5000 */
   {
@@ -2544,13 +2812,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 28: Stylus Pro 7000 */
   {
@@ -2561,13 +2830,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 29: Stylus Pro 7500 */
   {
@@ -2578,13 +2848,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 30: Stylus Pro 9000 */
   {
@@ -2595,13 +2866,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 31: Stylus Pro 9500 */
   {
@@ -2612,13 +2884,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 32: Stylus Color 777/680 */
   {
@@ -2629,13 +2902,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, sc680_densities, &variable_680_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 33: Stylus Color 880/83/C60 */
   {
@@ -2646,13 +2920,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 144, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 34: Stylus Color 980 */
   {
@@ -2663,13 +2938,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     96, 1, 2, 192, 1, 1,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     192, 1, 0, 0, default_head_offset, 0, 0,
     c3pl_dotsizes, sc980_densities, &variable_3pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 35: Stylus Photo 780/790/785/810/820 */
   {
@@ -2680,13 +2956,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &sp780_paper_list, standard_reslist, &photo_inklist
+    &sp780_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 36: Stylus Photo 890/895 */
   {
@@ -2697,13 +2974,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_YES),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 37: Stylus Photo 1280/1290 */
   {
@@ -2714,13 +2992,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_YES),
     48, 1, 3, 48, 1, 3,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 720, 90, 90,
+    360, 720, 720, 14400, -1, 2880, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 0, 55, default_head_offset, 0, 0,
     c4pl_dotsizes, c4pl_densities, &variable_4pl_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &photo_inklist
+    &standard_paper_list, standard_reslist, &photo_inklist,
+    variable_bits, variable_base_res
   },
   /* 38: Stylus Color 580 */
   {
@@ -2731,13 +3010,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     15, 15, 3, 48, 48, 3,
-    360, 360, 360, 720, 720, 14400, 360, 1440, 720, 90, 90,
+    360, 720, 720, 14400, 360, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 39: Stylus Color Pro XL */
   {
@@ -2748,13 +3028,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_360 |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
   },
   /* 40: Stylus Pro 5500 */
   {
@@ -2765,13 +3046,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(13), INCH(1200), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, &simple_6color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    standard_bits, pro_base_res
   },
   /* 41: Stylus Pro 10000 */
   {
@@ -2782,13 +3064,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_YES | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     1, 1, 1, 1, 1, 1,
-    1440, 1440, 360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
+    360, 1440, 1440, 14400, -1, 1440, 720, 90, 90,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9,
     0, 1, 0, 0, default_head_offset, 0, 0,
     spro10000_dotsizes, spro10000_densities, &spro10000_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, pro_reslist, &photo_inklist
+    &standard_paper_list, pro_reslist, &photo_inklist,
+    variable_bits, pro_base_res
   },
   /* 42: Stylus C20SX/C20UX */
   {
@@ -2799,13 +3082,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     15, 15, 3, 48, 48, 3,
-    360, 360, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 43: Stylus C40SX/C40UX */
   {
@@ -2816,13 +3100,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     15, 15, 3, 48, 48, 3,
-    360, 360, 360, 720, 720, 14400, -1, 1440, 720, 90, 90,
+    360, 720, 720, 14400, -1, 1440, 720, 90, 90,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, x80_head_offset, -99, 0,
     sc480_dotsizes, sc480_densities, &variable_x80_6pl_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 44: Stylus C80 */
   {
@@ -2833,13 +3118,14 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     60, 60, 2, 180, 180, 2,
-    360, 360, 360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
+    360, 720, 720, 14400, -1, 2880, 1440, 360, 180,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, c80_head_offset, -240, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &variable_3pl_pigment_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &c80_paper_list, standard_reslist, &standard_inklist
+    &c80_paper_list, standard_reslist, &standard_inklist,
+    variable_bits, variable_base_res
   },
   /* 45: Stylus Color Pro */
   {
@@ -2850,12 +3136,31 @@ const escp2_stp_printer_t stp_escp2_model_capabilities[] =
      MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
      MODEL_DEINITIALIZE_JE_NO),
     48, 1, 3, 48, 1, 3,
-    720, 720, 360, 720, 720, 14400, -1, 720, 720, 90, 90,
+    360, 720, 720, 14400, -1, 720, 720, 90, 90,
     INCH(17 / 2), INCH(44), INCH(2), INCH(4),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0,
     0, 1, 0, 0, default_head_offset, 0, 0,
     g1_dotsizes, g1_densities, &simple_4color_inks,
     standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-    &standard_paper_list, standard_reslist, &standard_inklist
+    &standard_paper_list, standard_reslist, &standard_inklist,
+    standard_bits, standard_base_res
+  },
+  /* 46: Stylus Photo 950 */
+  {
+    (MODEL_INIT_NEW | MODEL_HASBLACK_YES | MODEL_INK_NORMAL |
+     MODEL_COLOR_6 | MODEL_720DPI_DEFAULT | MODEL_VARIABLE_MULTI |
+     MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES | MODEL_MICROWEAVE_YES |
+     MODEL_ROLLFEED_NO | MODEL_XZEROMARGIN_YES | MODEL_YZEROMARGIN_YES |
+     MODEL_VACUUM_NO | MODEL_MICROWEAVE_EXCEPTION_NORMAL |
+     MODEL_DEINITIALIZE_JE_NO),
+    96, 96, 2, 192, 192, 2,
+    360, 720, 720, 14400, -1, 2880, 1440, 90, 90,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(4),
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 0, 55, default_head_offset, 0, 0,
+    c2pl_dotsizes, c2pl_densities, &variable_2pl_6color_inks,
+    standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+    &sp780_paper_list, standard_reslist, &photo_inklist,
+    stp950_bits, stp950_base_res
   },
 };

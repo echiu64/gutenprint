@@ -66,17 +66,6 @@ resid2dotid(int resid)
   return dotidmap[resid];
 }
 
-static const int densidmap[] =
-{ 0, 1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 10, 11, 12, 12 };
-
-static int
-resid2densid(int resid)
-{
-  if (resid < 0 || resid >= RES_N)
-    return -1;
-  return densidmap[resid];
-}
-
 static int
 bits2inktype(int bits)
 {
@@ -164,6 +153,7 @@ typedef struct escp2_init
   int output_type;
   int ydpi;
   int xdpi;
+  int physical_xdpi;
   int use_softweave;
   int use_microweave;
   int page_height;
@@ -230,8 +220,6 @@ DEF_SIMPLE_ACCESSOR(min_black_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(black_nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(separation_rows, unsigned)
-DEF_SIMPLE_ACCESSOR(xres, unsigned)
-DEF_SIMPLE_ACCESSOR(enhanced_xres, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_height, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_width, unsigned)
@@ -285,8 +273,22 @@ escp2_ink_type(int model, int resid, const stp_vars_t v)
 static double
 escp2_density(int model, int resid, const stp_vars_t v)
 {
-  int densid = resid2densid(resid);
-  return stp_escp2_model_capabilities[model].densities[densid];
+  int dotid = resid2dotid(resid);
+  return stp_escp2_model_capabilities[model].densities[dotid];
+}
+
+static double
+escp2_bits(int model, int resid, const stp_vars_t v)
+{
+  int dotid = resid2dotid(resid);
+  return stp_escp2_model_capabilities[model].bits[dotid];
+}
+
+static double
+escp2_base_res(int model, int resid, const stp_vars_t v)
+{
+  int dotid = resid2dotid(resid);
+  return stp_escp2_model_capabilities[model].base_resolutions[dotid];
 }
 
 static const escp2_variable_inkset_t *
@@ -353,12 +355,12 @@ verify_resolution(const res_t *res,
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi =
-	xdpi > escp2_enhanced_resolution(model, v) ?
-	escp2_enhanced_xres(model, v) :
-	escp2_xres(model, v);
-      int horizontal_passes = xdpi / physical_xdpi;
-      int oversample = horizontal_passes * res->vertical_passes
+      int physical_xdpi = escp2_base_res(model, res->resid, v);
+      int horizontal_passes, oversample;
+      if (physical_xdpi > xdpi)
+	physical_xdpi = xdpi;
+      horizontal_passes = xdpi / physical_xdpi;
+      oversample = horizontal_passes * res->vertical_passes
 	* res->vertical_oversample;
       if (horizontal_passes < 1)
 	horizontal_passes = 1;
@@ -721,7 +723,7 @@ escp2_set_remote_sequence(const escp2_init_t *init)
 	  stp_zprintf(init->v, "SN%c%c%c%c%c", 3, 0, 0, 0, feed_sequence);
 	  if (escp2_has_cap(init->model, MODEL_XZEROMARGIN,
 			    MODEL_XZEROMARGIN_YES, init->v))
-	    stp_zprintf(init->v, "FP%c%c%c\260\377", 3, 0, 0);
+	    stp_zprintf(init->v, "FP%c%c%c%c%c", 3, 0, 0, 0260, 0xff);
 
 	  /* set up Roll-Feed options on appropriate printers
 	     (tested for STP 870, which has no cutter) */
@@ -879,14 +881,7 @@ escp2_set_printhead_resolution(const escp2_init_t *init)
       int yres;
       int nozzle_separation;
 
-      if (escp2_has_cap(init->model, MODEL_COMMAND, MODEL_COMMAND_PRO,init->v))
-	xres = init->xdpi;
-      else if (init->xdpi > escp2_enhanced_resolution(init->model, init->v))
-	xres = escp2_enhanced_xres(init->model, init->v);
-      else
-	xres = escp2_xres(init->model, init->v);
-      if (init->xdpi < xres)
-	xres = init->xdpi;
+      xres = init->physical_xdpi;
       xres = escp2_resolution_scale(init->model, init->v) / xres;
 
       if (init->output_type == OUTPUT_GRAY &&
@@ -1179,6 +1174,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   int		hasblack = 0;
   const res_t	*res;
   int		bits = 1;
+  int		physical_bits = 1;
   void *	weave = NULL;
   void *	dither;
   int		separation_rows;
@@ -1265,10 +1261,11 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       if (ydpi == 360)
 	use_microweave = 0;
     }
+  physical_xdpi = escp2_base_res(model, resid, nv);
+  if (physical_xdpi > xdpi)
+    physical_xdpi = xdpi;
   if (use_softweave)
     {
-      physical_xdpi = (xdpi > escp2_enhanced_resolution(model, nv)) ?
-	escp2_enhanced_xres(model, nv) : escp2_xres(model, nv);
       horizontal_passes = xdpi / physical_xdpi;
       if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
 	  (escp2_max_black_resolution(model, nv) < 0 ||
@@ -1290,8 +1287,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     }
   else
     {
-      physical_xdpi = (xdpi <= escp2_base_resolution(model, nv)) ?
-	xdpi : escp2_base_resolution(model, nv);
       horizontal_passes = xdpi / escp2_base_resolution(model, nv);
       nozzles = 1;
       min_nozzles = 1;
@@ -1304,6 +1299,8 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
     bits = 2;
   else
     bits = 1;
+  physical_bits = escp2_bits(model, resid, nv);
+
   if (horizontal_passes == 0)
     horizontal_passes = 1;
   privdata.min_nozzles = min_nozzles;
@@ -1334,6 +1331,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   if (init.ydpi > escp2_max_vres(init.model, init.v))
     init.ydpi = escp2_max_vres(init.model, init.v);
   init.xdpi = xdpi;
+  init.physical_xdpi = physical_xdpi;
   init.use_softweave = use_softweave;
   init.use_microweave = use_microweave;
   init.page_height = page_true_height;
@@ -1401,7 +1399,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
 
   weave = stp_initialize_weave(nozzles, nozzle_separation,
 			       horizontal_passes, vertical_passes,
-			       vertical_oversample, ncolors, bits,
+			       vertical_oversample, ncolors, physical_bits,
 			       out_width, out_height, separation_rows,
 			       top * physical_ydpi / 72,
 			       (page_height * physical_ydpi / 72 +
@@ -1418,22 +1416,22 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   memset(cols, 0, 7 * sizeof(unsigned char *));
 
   if (output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME)
-    cols[0] = stp_zalloc(length * bits);
+    cols[0] = stp_zalloc(length * physical_bits);
   else
     {
-      cols[1] = stp_zalloc(length * bits);
-      cols[2] = stp_zalloc(length * bits);
-      cols[3] = stp_zalloc(length * bits);
+      cols[1] = stp_zalloc(length * physical_bits);
+      cols[2] = stp_zalloc(length * physical_bits);
+      cols[3] = stp_zalloc(length * physical_bits);
 
       if (ncolors == 7)
-	cols[6] = stp_zalloc(length * bits);
+	cols[6] = stp_zalloc(length * physical_bits);
       if (ncolors >= 5)
 	{
-	  cols[4] = stp_zalloc(length * bits);
-	  cols[5] = stp_zalloc(length * bits);
+	  cols[4] = stp_zalloc(length * physical_bits);
+	  cols[5] = stp_zalloc(length * physical_bits);
 	}
       if (hasblack)
-	cols[0] = stp_zalloc(length * bits);
+	cols[0] = stp_zalloc(length * physical_bits);
     }
 
   dt = stp_create_dither_data();

@@ -51,6 +51,18 @@ typedef unsigned long model_featureset_t;
 typedef int escp2_dot_size_t[13];
 
 /*
+ * Choose the number of bits to use at each resolution.
+ */
+
+typedef int escp2_bits_t[13];
+
+/*
+ * Choose the base resolution to use at each resolution.
+ */
+
+typedef int escp2_base_resolutions_t[13];
+
+/*
  * Specify the base density for each available resolution.
  * This obviously depends upon the dot size.
  */
@@ -277,12 +289,8 @@ typedef struct escp2_printer
   int		min_black_nozzles;	/* # of black nozzles (may be extra) */
   int		black_nozzle_separation; /* Separation between rows */
 /*****************************************************************************/
-  int		xres;		/* Normal distance between dots in */
-				/* softweave mode (inverse inches) */
-  int		enhanced_xres;	/* Distance between dots in highest */
-				/* quality modes */
   int		base_separation; /* Basic unit of row separation */
-  int		base_resolution; /* Base hardware spacing (above this */
+  int		base_resolution; /* Base hardware line spacing (above this */
 				/* always requires multiple passes) */
   int		enhanced_resolution;/* Above this we use the */
 				    /* enhanced_xres rather than xres */
@@ -353,6 +361,9 @@ typedef struct escp2_printer
   const paperlist_t *paperlist;
   const res_t *reslist;
   const inklist_t *inklist;
+/*****************************************************************************/
+  const int *bits;
+  const int *base_resolutions;
 } escp2_stp_printer_t;
 
 extern const escp2_stp_printer_t stp_escp2_model_capabilities[];

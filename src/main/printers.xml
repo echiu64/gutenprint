@@ -623,6 +623,14 @@
 <language value=escp2>
 </printer>
 
+<printer name="EPSON Stylus Photo 950" driver="escp2-950">
+<color>
+<model value=46>
+<gamma value=0.585>
+<density value=1.0>
+<language value=escp2>
+</printer>
+
 <printer name="EPSON Stylus Photo 1200" driver="escp2-1200">
 <color>
 <model value=15>
