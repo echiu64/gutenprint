@@ -141,6 +141,7 @@ typedef struct
   short vacuum_intensity;
   short paper_thickness;
   const char *preferred_ink_type;
+  const char *preferred_ink_set;
 } paper_t;
 
 typedef struct

@@ -178,31 +178,37 @@ static const stp_parameter_t the_parameters[] =
     "AlignmentPasses", N_("Alignment Passes"),
     N_("Alignment Passes"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
   },
   {
     "AlignmentChoices", N_("Alignment Choices"),
     N_("Alignment Choices"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
   },
   {
     "InkChange", N_("Ink change command"),
     N_("Ink change command"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
   },
   {
-    "AlternateAlignmentPasses", N_("Alignment Passes"),
+    "AlternateAlignmentPasses", N_("Alternate Alignment Passes"),
     N_("Alternate Alignment Passes"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
   },
   {
-    "AlternateAlignmentChoices", N_("Alignment Choices"),
+    "AlternateAlignmentChoices", N_("Alternate Alignment Choices"),
     N_("Alternate Alignment Choices"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
+  },
+  {
+    "InkChannels", N_("Ink Channels"),
+    N_("Ink Channels"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
   },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
@@ -590,23 +596,25 @@ using_automatic_settings(stp_const_vars_t v, auto_mode_t mode)
   switch (mode)
     {
     case AUTO_MODE_QUALITY:
-      if (
-	  stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
-	  strcmp(stp_get_string_parameter(v, "Quality"), "None") != 0)
+      if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
+	  strcmp(stp_get_string_parameter(v, "Quality"), "None") != 0 &&
+	  stp_get_output_type(v) != OUTPUT_RAW_PRINTER)
 	return 1;
       else
 	return 0;
 #if 0
     case AUTO_MODE_FULL_AUTO:
       if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
-	  strcmp(stp_get_string_parameter(v, "AutoMode"), "None") != 0)
+	  strcmp(stp_get_string_parameter(v, "AutoMode"), "None") != 0 &&
+	  stp_get_output_type(v) != OUTPUT_RAW_PRINTER)
 	return 1;
       else
 	return 0;
 #endif
     case AUTO_MODE_MANUAL:
       if (!stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) ||
-	  strcmp(stp_get_string_parameter(v, "Quality"), "None") == 0)
+	  strcmp(stp_get_string_parameter(v, "Quality"), "None") == 0 ||
+	  stp_get_output_type(v) == OUTPUT_RAW_PRINTER)
 	return 1;
       else
 	return 0;
@@ -1266,6 +1274,12 @@ escp2_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "AlternateAlignmentChoices") == 0)
     {
       description->deflt.integer = escp2_alternate_alignment_choices(v);
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -2;
+    }
+  else if (strcmp(name, "InkChannels") == 0)
+    {
+      description->deflt.integer = escp2_physical_channels(v);
       description->bounds.integer.lower = -1;
       description->bounds.integer.upper = -2;
     }

@@ -1142,6 +1142,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
   },
+  {
+    "InkChannels", N_("Ink Channels"),
+    N_("Ink Channels"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED5, 0, 0, -1, 0
+  },
 };
 
 static const int the_parameter_count =
@@ -1206,7 +1212,7 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1
     }, 0.0, 5.0, 1.0, 1
   },
-};    
+};
 
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
@@ -1609,6 +1615,17 @@ pcl_parameters(stp_const_vars_t v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "InkChannels") == 0)
+    {
+      if (caps->color_type & PCL_COLOR_CMYKcm)
+	description->deflt.integer = 6;
+      else if (caps->color_type == PCL_COLOR_NONE)
+	description->deflt.integer = 1;
+      else
+	description->deflt.integer = 4;
+      description->bounds.integer.lower = -1;
+      description->bounds.integer.upper = -1;
+    }
 }
 
 
@@ -1822,7 +1839,7 @@ pcl_printfunc(stp_vars_t v)
 	    }
 	}
     }
-}  
+}
 
 static double
 get_double_param(stp_vars_t v, const char *param)
@@ -2366,7 +2383,7 @@ pcl_do_print(stp_vars_t v, stp_image_t *image)
       (v, ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
 			get_double_param(v, "LightMagentaTransition") *
 			get_double_param(v, "Density")));
-    
+
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {

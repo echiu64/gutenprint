@@ -168,7 +168,6 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
     }, 0.0, 9.0, 1.0, 1
   },
-#if 0
   /* Need to think this through a bit more -- rlk 20030712 */
   {
     {
@@ -178,7 +177,6 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 0
     }, 0.0, 32.0, 32.0, 1
   },
-#endif
   {
     {
       "BlackGamma", N_("GCR Transition"),
@@ -2424,6 +2422,24 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 	      description->bounds.dbl.upper = param->max;
 	      description->bounds.dbl.lower = param->min;
 	      description->deflt.dbl = param->defval;
+	      if (strcmp(name, "InkLimit") == 0)
+		{
+		  stp_parameter_t ink_limit_desc;
+		  stp_describe_parameter(v, "InkChannels", &ink_limit_desc);
+		  if (ink_limit_desc.p_type == STP_PARAMETER_TYPE_INT)
+		    {
+		      if (ink_limit_desc.deflt.integer > 1)
+			{
+			  description->bounds.dbl.upper =
+			    ink_limit_desc.deflt.integer;
+			  description->deflt.dbl =
+			    ink_limit_desc.deflt.integer;
+			}
+		      else
+			description->is_active = 0;
+		    }
+		  stp_parameter_description_free(&ink_limit_desc);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (!strcmp(param->param.name, "ColorCorrection"))
