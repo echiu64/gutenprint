@@ -1732,12 +1732,14 @@ compute_page_parameters(int page_right,	/* I */
     }
 
   if (*orientation == ORIENT_LANDSCAPE)
-    {
       Image_rotate_ccw(image);
+  else if (*orientation == ORIENT_UPSIDEDOWN)
+      Image_rotate_180(image);
+  else if (*orientation == ORIENT_SEASCAPE)
+      Image_rotate_cw(image);
 
-      image_width  = Image_width(image);
-      image_height = Image_height(image);
-    }
+  image_width  = Image_width(image);
+  image_height = Image_height(image);
 
   /*
    * Calculate width/height...
@@ -1771,12 +1773,6 @@ compute_page_parameters(int page_right,	/* I */
 
       *out_width = FMIN(twidth0, twidth1);
       *out_height = FMIN(theight0, theight1);
-
-      if (*out_height > *page_height)
-	{
-	  *out_height = *page_height * scaling / 100.0;
-	  *out_width  = *out_height * image_width / image_height;
-	}
     }
 
   if (*out_width == 0)
@@ -1784,17 +1780,35 @@ compute_page_parameters(int page_right,	/* I */
   if (*out_height == 0)
     *out_height = 1;
 
-  if (*orientation == ORIENT_LANDSCAPE)
+  /*
+   * Adjust offsets depending on the page orientation...
+   */
+
+  if (*orientation == ORIENT_LANDSCAPE || *orientation == ORIENT_SEASCAPE)
     {
       int x;
 
-      /*
-       * Swap left/top offsets...
-       */
-
       x     = *left;
       *left = *top;
-      *top  = *page_height - x - *out_height;
+      *top  = x;
+    }
+
+  if ((*orientation == ORIENT_UPSIDEDOWN || *orientation == ORIENT_SEASCAPE)
+      && *left >= 0)
+    {
+      *left = *page_width - *left - *out_width;
+      if (*left < 0) {
+	*left = 0;
+      }
+    }
+
+  if ((*orientation == ORIENT_UPSIDEDOWN || *orientation == ORIENT_LANDSCAPE)
+      && *top >= 0)
+    {
+      *top = *page_height - *top - *out_height;
+      if (*top < 0) {
+	*top = 0;
+      }
     }
 
   if (*left < 0)

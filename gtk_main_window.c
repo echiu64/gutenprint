@@ -207,7 +207,9 @@ void gtk_create_main_window(void)
     {
 	N_("Auto"),
 	N_("Portrait"),
-	N_("Landscape")
+	N_("Landscape"),
+	N_("Upside down"),
+	N_("Seascape")
     };
     gchar *plug_in_name;
 
@@ -2132,28 +2134,50 @@ static void gtk_preview_update(void)
   else
     orient = vars.orientation;
 
-  if (orient == ORIENT_LANDSCAPE)
+  /*
+   * Adjust page dimensions depending on the page orientation...
+   */
+
+  bottom = paper_height - bottom;
+  right = paper_width - right;
+
+  if (orient == ORIENT_LANDSCAPE || orient == ORIENT_SEASCAPE)
   {
-    /*
-     * In landscape mode, we print the right-hand side of the logical
-     * page at the top of the physical paper.  So, left-to-right on the
-     * paper corresponds to top-to-bottom on the image, so we don't have
-     * to flip the columns of the image end-for-end while forming rows
-     * for printing.
-     */
     temp              = printable_width;
     printable_width   = printable_height;
     printable_height  = temp;
     temp              = paper_width;
     paper_width       = paper_height;
     paper_height      = temp;
+  }
+  if (orient == ORIENT_LANDSCAPE)
+  {
     temp              = left;
-    left              = paper_width - bottom;
+    left              = bottom;
     bottom            = right;
-    right             = paper_width - top;
+    right             = top;
     top               = temp;
   }
+  if (orient == ORIENT_SEASCAPE)
+  {
+    temp              = left;
+    left              = top;
+    top               = right;
+    right             = bottom;
+    bottom            = temp;
+  }
+  else if (orient == ORIENT_UPSIDEDOWN)
+  {
+    temp              = left;
+    left              = right;
+    right             = temp;
+    temp              = top;
+    top               = bottom;
+    bottom            = temp;
+  }
 
+  bottom = paper_height - bottom;
+  right = paper_width - right;
 
   if (vars.scaling < 0)
   {
@@ -2313,7 +2337,21 @@ static void gtk_preview_update(void)
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy - u);
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox, oy + u);
       gdk_draw_line (preview->widget.window, gcinv, ox + u, oy, ox - u, oy);
-    } else {
+    } else if (orient == ORIENT_SEASCAPE) {
+      ox -= preview_ppi * paper_width / 72 / 4;
+      if (ox < paper_left + u)
+        ox = paper_left + u;
+      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox, oy - u);
+      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox, oy + u);
+      gdk_draw_line (preview->widget.window, gcinv, ox - u, oy, ox + u, oy);
+    } else if (orient == ORIENT_UPSIDEDOWN) {
+      oy += preview_ppi * paper_height / 72 / 4;
+      if (oy > paper_top + preview_ppi * paper_height / 72 - u)
+        oy = paper_top + preview_ppi * paper_height / 72 - u;
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox - u, oy);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox + u, oy);
+      gdk_draw_line (preview->widget.window, gcinv, ox, oy + u, ox, oy - u);
+    } else /* (orient == ORIENT_PORTRAIT) */ {
       oy -= preview_ppi * paper_height / 72 / 4;
       if (oy < paper_top + u)
         oy = paper_top + u;

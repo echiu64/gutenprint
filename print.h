@@ -68,6 +68,8 @@
 #define ORIENT_AUTO		-1	/* Best orientation */
 #define ORIENT_PORTRAIT		0	/* Portrait orientation */
 #define ORIENT_LANDSCAPE	1	/* Landscape orientation */
+#define ORIENT_UPSIDEDOWN	2	/* Reverse portrait orientation */
+#define ORIENT_SEASCAPE		3	/* Reverse landscape orientation */
 
 #define MAX_CARRIAGE_WIDTH	80 /* This really needs to go away */
 				/* For now, this is wide enough for 4B ISO */
