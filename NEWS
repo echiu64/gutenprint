@@ -129,6 +129,7 @@ The following bugs have been fixed in Gimp-Print 4.2.3:
 620016 IJS driver does not print properly in monochrome
 621667 Very large prints on Epson 9500 fail
 622612 CUPS driver forbids custom page sizes
+625602 QUALITY Pale output on Stylus Pro 7500
 
 
 The following bugs are open against Gimp-Print 4.2.3:
@@ -146,7 +147,6 @@ The following bugs are open against Gimp-Print 4.2.3:
 619299 QUALITY - brightness adjustment problem
 619537 QUALITY - Poor quality w/ Lexmark OprtaE+ & pcl-4
 621668 Full bleed prints have slight margin
-625602 QUALITY Pale output on Stylus Pro 7500
 
 
 
