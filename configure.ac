@@ -430,7 +430,7 @@ if test "$USE_READLINE" = yes ; then
       else
 	unset ac_cv_lib_readline_readline
 	AC_CHECK_LIB(readline, readline, HAVE_LIBREADLINE=true,
-		     HAVE_LIBREADLINE=false, -lcurses)
+		     HAVE_LIBREADLINE=false, -ltermcap)
 	if test x${HAVE_LIBREADLINE} = xtrue ; then
 	  echo "  Using -lreadline -ltermcap"
 	  EXTRA_LIBREADLINE_DEPS=-ltermcap
