@@ -32,7 +32,9 @@
 #include "gimp-print-internal.h"
 #include "print-dither.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
 #include <math.h>
 #include <string.h>
 
@@ -1106,6 +1108,8 @@ stp_dither_get_first_position(void *vd, int color, int subchannel)
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
     return -1;
+  if (subchannel < 0 || subchannel >= PHYSICAL_CHANNEL(d, color).subchannels)
+    return -1;
   return PHYSICAL_CHANNEL(d, color).row_ends[0][subchannel];
 }
 
@@ -1114,6 +1118,8 @@ stp_dither_get_last_position(void *vd, int color, int subchannel)
 {
   dither_t *d = (dither_t *) vd;
   if (color < 0 || color >= PHYSICAL_CHANNEL_COUNT(d))
+    return -1;
+  if (subchannel < 0 || subchannel >= PHYSICAL_CHANNEL(d, color).subchannels)
     return -1;
   return PHYSICAL_CHANNEL(d, color).row_ends[0][subchannel];
 }

@@ -34,6 +34,9 @@
 #include <gimp-print/gimp-print.h>
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
 
 #if 0
 #define TEST_RAW
@@ -1389,34 +1392,63 @@ stp_unpack_8(int length,
 		     out4, out5, out6, out7);
 }
 
+static void
+find_first_and_last(const unsigned char *line, int length,
+		    int *first, int *last)
+{
+  int i;
+  int found_first = 0;
+  if (!first || !last)
+    return;
+  *first = 0;
+  *last = 0;
+  for (i = 0; i < length; i++)
+    {
+      if (line[i] == 0)
+	{
+	  if (!found_first)
+	    *first++;
+	}
+      else
+	{
+	  *last = i;
+	  found_first = 1;
+	}
+    }
+}
+
 int
 stp_pack_uncompressed(const unsigned char *line,
 		      int length,
 		      unsigned char *comp_buf,
-		      unsigned char **comp_ptr)
+		      unsigned char **comp_ptr,
+		      int *first,
+		      int *last)
 {
-  int i;
+  find_first_and_last(line, length, first, last);
   memcpy(comp_buf, line, length);
   *comp_ptr = comp_buf + length;
-  for (i = 0; i < length; i++)
-    if (line[i])
-      return 1;
-  return 0;
+  if (first > last)
+    return 0;
+  else
+    return 1;
 }
 
 int
 stp_pack_tiff(const unsigned char *line,
 	      int length,
 	      unsigned char *comp_buf,
-	      unsigned char **comp_ptr)
+	      unsigned char **comp_ptr,
+	      int *first,
+	      int *last)
 {
   const unsigned char *start;		/* Start of compressed data */
   unsigned char repeat;			/* Repeating char */
   int count;			/* Count of compressed bytes */
   int tcount;			/* Temporary count < 128 */
-  int active = 0;		/* Have we found data? */
   register const unsigned char *xline = line;
   register int xlength = length;
+  find_first_and_last(line, length, first, last);
 
   /*
    * Compress using TIFF "packbits" run-length encoding...
@@ -1436,8 +1468,6 @@ stp_pack_tiff(const unsigned char *line,
 
       while (xlength > 0 && (xline[-2] != xline[-1] || xline[-1] != xline[0]))
 	{
-	  if (! active && (xline[-2] || xline[-1] || xline[0]))
-	    active = 1;
 	  xline ++;
 	  xlength --;
 	}
@@ -1471,8 +1501,6 @@ stp_pack_tiff(const unsigned char *line,
 
       start  = xline;
       repeat = xline[0];
-      if (repeat)
-	active = 1;
 
       xline ++;
       xlength --;
@@ -1504,7 +1532,10 @@ stp_pack_tiff(const unsigned char *line,
 	  count    -= tcount;
 	}
     }
-  return active;
+  if (first && last && *first > *last)
+    return 0;
+  else
+    return 1;
 }
 
 /*
@@ -1751,6 +1782,20 @@ allocate_linecount(int count, int ncolors)
   return (retval);
 }
 
+static stp_linebounds_t *
+allocate_linebounds(int count, int ncolors)
+{
+  int i;
+  stp_linebounds_t *retval = stp_malloc(count * sizeof(stp_linebounds_t));
+  for (i = 0; i < count; i++)
+    {
+      retval[i].ncolors = ncolors;
+      retval[i].start_pos = stp_zalloc(ncolors * sizeof(int));
+      retval[i].end_pos = stp_zalloc(ncolors * sizeof(int));
+    }
+  return (retval);
+}
+
 static stp_linebufs_t *
 allocate_linebuf(int count, int ncolors)
 {
@@ -1802,7 +1847,8 @@ stp_initialize_weave(int jets,	/* Width of print head */
 					int missingstartrows,
 					int vertical_subpass),
 		     int (*pack)(const unsigned char *in, int bytes,
-				 unsigned char *out, unsigned char **optr),
+				 unsigned char *out, unsigned char **optr,
+				 int *first, int *last),
 		     int (*compute_linewidth)(const stp_softweave_t *sw,
 					      int n))
 {
@@ -1906,6 +1952,7 @@ stp_initialize_weave(int jets,	/* Width of print head */
   sw->lineoffsets = allocate_lineoff(sw->vmod, ncolors);
   sw->lineactive = allocate_lineactive(sw->vmod, ncolors);
   sw->linebases = allocate_linebuf(sw->vmod, ncolors);
+  sw->linebounds = allocate_linebounds(sw->vmod, ncolors);
   sw->passes = stp_zalloc(sw->vmod * sizeof(stp_pass_t));
   sw->linecounts = allocate_linecount(sw->vmod, ncolors);
   sw->rcache = -2;
@@ -1954,11 +2001,14 @@ stp_destroy_weave(void *vsw)
       stp_free(sw->linebases[i].v);
       stp_free(sw->lineactive[i].v);
       stp_free(sw->lineoffsets[i].v);
+      stp_free(sw->linebounds[i].start_pos);
+      stp_free(sw->linebounds[i].end_pos);
     }
   stp_free(sw->linecounts);
   stp_free(sw->lineactive);
   stp_free(sw->lineoffsets);
   stp_free(sw->linebases);
+  stp_free(sw->linebounds);
   stp_free(sw->head_offset);
   stp_destroy_weave_params(sw->weaveparm);
   stp_free(vsw);
@@ -2040,6 +2090,14 @@ stp_get_linebases(const stp_softweave_t *sw, int row, int subpass, int offset)
   stp_weave_t w;
   weave_parameters_by_row(sw, row + offset, subpass, &w);
   return &(sw->linebases[w.pass % sw->vmod]);
+}
+
+static stp_linebounds_t *
+stp_get_linebounds(const stp_softweave_t *sw, int row, int subpass, int offset)
+{
+  stp_weave_t w;
+  weave_parameters_by_row(sw, row + offset, subpass, &w);
+  return &(sw->linebounds[w.pass % sw->vmod]);
 }
 
 static stp_pass_t *
@@ -2200,6 +2258,8 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 		stp_get_lineactive(sw, row, i, sw->head_offset[j]);
 	      stp_linecount_t *linecount =
 		stp_get_linecount(sw, row, i, sw->head_offset[j]);
+	      stp_linebounds_t *linebounds =
+		stp_get_linebounds(sw, row, i, sw->head_offset[j]);
 	      check_linebases(sw, row, i, sw->head_offset[j], j);
 	      weave_parameters_by_row(sw, row+sw->head_offset[j], i, &w);
 	      pass = stp_get_pass_by_row(sw, row, i, sw->head_offset[j]);
@@ -2229,6 +2289,8 @@ initialize_row(stp_softweave_t *sw, int row, int width,
 				    "linecount %d should be zero!\n",
 				    w.pass, i, row, linecount[0].v[jj]);
 		      linecount[0].v[jj] = 0;
+		      linebounds[0].start_pos[jj] = INT_MAX;
+		      linebounds[0].end_pos[jj] = -1;
 		    }
 		}
 
@@ -2335,14 +2397,15 @@ stp_write_weave(void *        vsw,
 		int           model,	/* I - Printer model */
 		int           width,	/* I - Printed width */
 		int           offset,	/* I - Offset from left side of page */
-		int		xdpi,
-		int		physical_xdpi,
+		int	      xdpi,
+		int	      physical_xdpi,
 		unsigned char *const cols[])
 {
   stp_softweave_t *sw = (stp_softweave_t *) vsw;
   stp_lineoff_t *lineoffs[8];
   stp_lineactive_t *lineactives[8];
   stp_linecount_t *linecounts[8];
+  stp_linebounds_t *linebounds[8];
   const stp_linebufs_t *bufs[8];
   int xlength = (length + sw->horizontal_weave - 1) / sw->horizontal_weave;
   int ylength = xlength * sw->horizontal_weave;
@@ -2363,22 +2426,25 @@ stp_write_weave(void *        vsw,
     {
       if (cols[j])
 	{
-        const unsigned char *in;
+	  const unsigned char *in;
+	  int idx;
 
-        for (i = 0; i < h_passes; i++)
-	  {
-	    if (!sw->s[i])
-	      sw->s[i] = stp_zalloc(sw->bitwidth *
-				    (sw->compute_linewidth)(sw, ylength));
-	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i,
-					      sw->head_offset[j]);
-	    linecounts[i] = stp_get_linecount(sw, sw->lineno, cpass + i,
-					      sw->head_offset[j]);
-	    lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i,
+	  for (i = 0; i < h_passes; i++)
+	    {
+	      if (!sw->s[i])
+		sw->s[i] = stp_zalloc(sw->bitwidth *
+				      (sw->compute_linewidth)(sw, ylength));
+	      lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i,
 						sw->head_offset[j]);
-	    bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i,
-					sw->head_offset[j]);
-	  }
+	      linecounts[i] = stp_get_linecount(sw, sw->lineno, cpass + i,
+						sw->head_offset[j]);
+	      lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i,
+						  sw->head_offset[j]);
+	      linebounds[i] = stp_get_linebounds(sw, sw->lineno, cpass + i,
+						 sw->head_offset[j]);
+	      bufs[i] = stp_get_linebases(sw, sw->lineno, cpass + i,
+					  sw->head_offset[j]);
+	    }
 
 	  if (sw->bitwidth == 2)
 	    {
@@ -2387,76 +2453,53 @@ stp_write_weave(void *        vsw,
 	    }
 	  else
 	    in = cols[j];
-	  if (h_passes > 1)
+	  switch (sw->horizontal_weave)
 	    {
-	      switch (sw->horizontal_weave)
-		{
-		case 2:
-		  stp_unpack_2(length, sw->bitwidth, in, sw->s[0], sw->s[1]);
-		  break;
-		case 4:
-		  stp_unpack_4(length, sw->bitwidth, in,
-			       sw->s[0], sw->s[1], sw->s[2], sw->s[3]);
-		  break;
-		case 8:
-		  stp_unpack_8(length, sw->bitwidth, in,
-			       sw->s[0], sw->s[1], sw->s[2], sw->s[3],
-			       sw->s[4], sw->s[5], sw->s[6], sw->s[7]);
-		  break;
-		}
-	      switch (sw->vertical_subpasses)
-		{
-		case 4:
-		  switch (sw->horizontal_weave)
-		    {
-		    case 1:
-		      stp_split_4(length, sw->bitwidth, in,
-				  sw->s[0], sw->s[1], sw->s[2], sw->s[3]);
-		      break;
-		    case 2:
-		      stp_split_4(length, sw->bitwidth, sw->s[0],
-				  sw->s[0], sw->s[2], sw->s[4], sw->s[6]);
-		      stp_split_4(length, sw->bitwidth, sw->s[1],
-				  sw->s[1], sw->s[3], sw->s[5], sw->s[7]);
-		      break;
-		    }
-		  break;
-		case 2:
-		  switch (sw->horizontal_weave)
-		    {
-		    case 1:
-		      stp_split_2(xlength, sw->bitwidth, in, sw->s[0], sw->s[1]);
-		      break;
-		    case 2:
-		      stp_split_2(xlength, sw->bitwidth, sw->s[0], sw->s[0], sw->s[2]);
-		      stp_split_2(xlength, sw->bitwidth, sw->s[1], sw->s[1], sw->s[3]);
-		      break;
-		    case 4:
-		      stp_split_2(xlength, sw->bitwidth, sw->s[0], sw->s[0], sw->s[4]);
-		      stp_split_2(xlength, sw->bitwidth, sw->s[1], sw->s[1], sw->s[5]);
-		      stp_split_2(xlength, sw->bitwidth, sw->s[2], sw->s[2], sw->s[6]);
-		      stp_split_2(xlength, sw->bitwidth, sw->s[3], sw->s[3], sw->s[7]);
-		      break;
-		    }
-		  break;
-		  /* case 1 is taken care of because the various unpack */
-		  /* functions will do the trick themselves */
-		}
-	      for (i = 0; i < h_passes; i++)
-		{
-		  setactive = (sw->pack)(sw->s[i], sw->bitwidth * xlength,
-					 sw->comp_buf, &comp_ptr);
-		  add_to_row(sw, sw->lineno, sw->comp_buf,
-			     comp_ptr - sw->comp_buf, j, setactive,
-			     lineoffs[i], lineactives[i], linecounts[i], bufs[i]);
-		}
+	    case 1:
+	      memcpy(sw->s[0], in, length * sw->bitwidth);
+	      break;
+	    case 2:
+	      stp_unpack_2(length, sw->bitwidth, in, sw->s[0], sw->s[1]);
+	      break;
+	    case 4:
+	      stp_unpack_4(length, sw->bitwidth, in,
+			   sw->s[0], sw->s[1], sw->s[2], sw->s[3]);
+	      break;
+	    case 8:
+	      stp_unpack_8(length, sw->bitwidth, in,
+			   sw->s[0], sw->s[1], sw->s[2], sw->s[3],
+			   sw->s[4], sw->s[5], sw->s[6], sw->s[7]);
+	      break;
 	    }
-	  else
+	  switch (sw->vertical_subpasses)
 	    {
-	      setactive = (sw->pack)(in, length * sw->bitwidth,
-				   sw->comp_buf, &comp_ptr);
-	      add_to_row(sw, sw->lineno, sw->comp_buf, comp_ptr - sw->comp_buf,
-			 j, setactive, lineoffs[0], lineactives[0], linecounts[0], bufs[0]);
+	    case 4:
+	      for (idx = 0; idx < sw->horizontal_weave; idx++)
+		stp_split_4(length, sw->bitwidth, sw->s[idx], sw->s[idx],
+			    sw->s[idx + sw->horizontal_weave],
+			    sw->s[idx + sw->horizontal_weave * 2],
+			    sw->s[idx + sw->horizontal_weave * 3]);
+	      break;
+	    case 2:
+	      for (idx = 0; idx < sw->horizontal_weave; idx++)
+		stp_split_2(length, sw->bitwidth, sw->s[idx], sw->s[idx],
+			    sw->s[idx + sw->horizontal_weave]);
+	      break;
+	      /* case 1 is taken care of because the various unpack */
+	      /* functions will do the trick themselves */
+	    }
+	  for (i = 0; i < h_passes; i++)
+	    {
+	      int first, last;
+	      setactive = (sw->pack)(sw->s[i], sw->bitwidth * xlength,
+				     sw->comp_buf, &comp_ptr, &first, &last);
+	      if (first < linebounds[i]->start_pos[j])
+		linebounds[i]->start_pos[j] = first;
+	      if (last > linebounds[i]->end_pos[j])
+		linebounds[i]->end_pos[j] = last;
+	      add_to_row(sw, sw->lineno, sw->comp_buf,
+			 comp_ptr - sw->comp_buf, j, setactive,
+			 lineoffs[i], lineactives[i], linecounts[i], bufs[i]);
 	    }
 	}
     }

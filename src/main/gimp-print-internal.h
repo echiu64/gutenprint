@@ -139,12 +139,19 @@ typedef struct {		/* Base pointers for each pass */
   unsigned char **v;
 } stp_linebufs_t;
 
+typedef struct {		/* Width of data actually printed */
+  int ncolors;
+  int *start_pos;
+  int *end_pos;
+} stp_linebounds_t;
+
 typedef struct stp_softweave
 {
   stp_linebufs_t *linebases;	/* Base address of each row buffer */
   stp_lineoff_t *lineoffsets;	/* Offsets within each row buffer */
   stp_lineactive_t *lineactive;	/* Does this line have anything printed? */
   stp_linecount_t *linecounts;	/* How many rows we've printed this pass */
+  stp_linebounds_t *linebounds;	/* Starting and ending print column */
   stp_pass_t *passes;		/* Circular list of pass numbers */
   int last_pass_offset;		/* Starting row (offset from the start of */
 				/* the page) of the most recently printed */
@@ -190,7 +197,8 @@ typedef struct stp_softweave
   void (*fill_start)(struct stp_softweave *sw, int row, int subpass,
 		     int width, int missingstartrows, int color);
   int (*pack)(const unsigned char *in, int bytes,
-	      unsigned char *out, unsigned char **optr);
+	      unsigned char *out, unsigned char **optr,
+	      int *first, int *last);
   int (*compute_linewidth)(const struct stp_softweave *sw, int n);
 } stp_softweave_t;
 
@@ -270,8 +278,8 @@ extern void	stp_dither_set_ink_spread(void *vd, int spread);
 extern void	stp_dither_set_x_oversample(void *vd, int os);
 extern void	stp_dither_set_y_oversample(void *vd, int os);
 extern void	stp_dither_set_adaptive_limit(void *vd, double limit);
-extern int	stp_dither_get_first_position(void *vd, int color, int dark);
-extern int	stp_dither_get_last_position(void *vd, int color, int dark);
+extern int	stp_dither_get_first_position(void *vd, int color,int subchan);
+extern int	stp_dither_get_last_position(void *vd, int color, int subchan);
 
 
 extern void	stp_free_dither(void *);
@@ -310,11 +318,13 @@ extern void	stp_unpack_8(int height, int bits, const unsigned char *in,
 
 extern int	stp_pack_tiff(const unsigned char *line, int height,
 			      unsigned char *comp_buf,
-			      unsigned char **comp_ptr);
+			      unsigned char **comp_ptr,
+			      int *first, int *last);
 
 extern int	stp_pack_uncompressed(const unsigned char *line, int height,
 				      unsigned char *comp_buf,
-				      unsigned char **comp_ptr);
+				      unsigned char **comp_ptr,
+				      int *first, int *last);
 
 extern void *stp_initialize_weave(int jets, int separation, int oversample,
 				  int horizontal, int vertical,
@@ -336,7 +346,8 @@ extern void *stp_initialize_weave(int jets, int separation, int oversample,
 						     int vertical_subpass),
 				  int (*pack)(const unsigned char *in,
 					      int bytes, unsigned char *out,
-					      unsigned char **optr),
+					      unsigned char **optr,
+					      int *first, int *last),
 				  int (*compute_linewidth)(const stp_softweave_t *sw,
 							   int n));
 
@@ -374,8 +385,8 @@ stp_write_weave(void *        vsw,
 		int           model,	/* I - Printer model */
 		int           width,	/* I - Printed width */
 		int           offset,	/* I - Offset from left side of page */
-		int		xdpi,
-		int		physical_xdpi,
+		int	      xdpi,
+		int	      physical_xdpi,
 		unsigned char *const cols[]);
 
 extern stp_lineoff_t *

@@ -34,7 +34,9 @@
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <time.h>
 #include <string.h>
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
 #include <stdio.h>
 
 #ifdef _MSC_VER

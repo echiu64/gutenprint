@@ -33,7 +33,9 @@
 #include "gimp-print-internal.h"
 #include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 

@@ -52,6 +52,9 @@
 #else
 #include <stdarg.h>
 #endif
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
 
 #if (0)
 #define EXPERIMENTAL_STUFF 0
@@ -65,9 +68,8 @@
 #define MAX_PHYSICAL_BPI 1440
 #define MAX_OVERSAMPLED 8
 #define MAX_BPP 4
-#define BITS_PER_BYTE 8
 #define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
-	MAX_CARRIAGE_WIDTH / BITS_PER_BYTE)
+	MAX_CARRIAGE_WIDTH / CHAR_BIT)
 
 #define USE_3BIT_FOLD_TYPE 323
 
@@ -3035,7 +3037,7 @@ canon_write(const stp_vars_t v,		/* I - Print file or command */
 	      "bitoffset=%d!!\n",bitoffset);
   }
 
-  stp_pack_tiff(in_ptr, length, comp_data, &comp_ptr);
+  stp_pack_tiff(in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
   newlength= comp_ptr - comp_buf;
 
   /* send packed empty lines if any */

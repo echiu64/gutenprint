@@ -2725,7 +2725,7 @@ pcl_mode2(const stp_vars_t v,		/* I - Print file or command */
 {
   unsigned char	*comp_ptr;		/* Current slot in buffer */
 
-  stp_pack_tiff(line, height, comp_buf, &comp_ptr);
+  stp_pack_tiff(line, height, comp_buf, &comp_ptr, NULL, NULL);
 
  /*
   * Send a line of raster graphics...
