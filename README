@@ -10,3 +10,29 @@ For developers, prior to running configure, you must
 
 aclocal;autoconf;automake
 
+If you do run aclocal, beware that versions of the Gimp from 1.1.17
+and earlier have a version of gimp.m4 that will create an incorrect
+configure script.  The patch is as follows:
+
+diff -u /usr/local/share/aclocal/gimp.m4~ /usr/local/share/aclocal/gimp.m4
+--- /usr/local/share/aclocal/gimp.m4~   Tue Mar 30 13:49:58 1999
++++ /usr/local/share/aclocal/gimp.m4    Fri Feb 11 22:34:47 2000
+@@ -134,6 +134,13 @@
+           AC_TRY_LINK([
+ #include <stdio.h>
+ #include <libgimp/gimp.h>
++GPlugInInfo    PLUG_IN_INFO =          /* Plug-in information */
++{
++  NULL,    /* init_proc */
++  NULL,    /* quit_proc */
++  NULL,   /* query_proc */
++  NULL,     /* run_proc */
++};
+ ],      [ return 0; ],
+         [ echo "*** The test program compiled, but did not run. This usually means"
+           echo "*** that the run-time linker is not finding GIMP or finding the wrong"
+
+If you are building this from a release, you should not have any
+trouble because the configure script will already exist.
+
+Enjoy!
