@@ -18,6 +18,7 @@ at the top of each file.
 
 @menu
 * Main functions::              Essential functions every program must call.
+* List functions::              Doubly-linked list implementation.
 * stp_vars_t functions::        Using stp_vars_t.
 * Dither functions::            Dither algorithms.
 * Options functions::           Options.
@@ -27,7 +28,7 @@ at the top of each file.
 * Version functions::           Getting libgimpprint version information.
 @end menu
 
-@node Main functions, stp_vars_t functions, , Functions
+@node Main functions, List functions, , Functions
 @section Main functions
 @cindex main functions
 
@@ -108,7 +109,189 @@ allocated memory. It will not return on failure.
 It returns a pointer to the allocated memory.
 @end deftypefun
 
-@node stp_vars_t functions, Dither functions, Main functions, Functions
+@node List functions, stp_vars_t functions, Main functions, Functions
+@section List functions
+@cindex List functions
+
+A simple doubly-linked list implementation is included in
+libgimpprint.  A doubly-linked list differs from the static arrays of
+structures that have been used previously in that entries in the lists
+may be added and removed at will.  ``Items'' are often referred to as
+``nodes'' elsewhere, but one generally has items in a list in real
+life, not nodes.
+
+Each item in the list contains pointers to the previous and next items
+in the list.  This means that you can easily access all the items in
+the list in a forward or backward direction.
+
+Callbacks (functions) may be registered with each list to control list
+sorting, freeing of item data, and searching for individual items by
+their name or long name (if any).  These are all optional, but can
+make things much simpler when used correctly.
+
+@deftypevr {Data type} void stp_list_t
+This is an opaque data type, whose structure is not visible to the
+user.  This object is the ``head'' of a doubly-linked list, i.e. it
+contains the list, but is not the list itself.  It contains
+information about the size of the list, and function pointers to
+various callbacks that may be registered.  It also contains pointers
+to the start and end of the list.
+@end deftypevr
+
+@deftypevr {Data type} void stp_list_item_t
+This is an opaque data type, whose structure is not visible to the
+user.  This object contains the information about an individual item
+in the list: the data (which you define), and pointers to the next and
+previous items in the list.  The list is a collection of
+@code{stp_list_item_t} structures.
+
+@end deftypevr
+
+The @code{stp_list_t} and @code{stp_list_item_t} data types are never
+used directly.  They are accessed by a collection of accessor
+functions, described below.
+
+
+@deftypefun {stp_list_t *} stp_list_create (void)
+Allocate a new list.  A new list is created and returned.  The list is
+completely empty and no callbacks are registered.
+@end deftypefun
+
+@deftypefun {int} stp_list_destroy (stp_list_t *@var{list})
+Destroy the list.  All memory allocated by @var{list} is freed.
+@var{list} may not be used again without calling
+@code{stp_list_create}.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_get_start (stp_list_t *@var{list})
+Get the first item in the list.  The first item in @var{list} is
+returned.  If the list is empty, the return value will be @code{NULL}.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_get_end (stp_list_t *@var{list})
+Get the last item in the list.  The last item in @var{list} is
+returned.  If the list is empty, the return value will be @code{NULL}.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_get_item_by_index (stp_list_t *@var{list}, int @var{index})
+Get the item at a particular location in the list.  The item at
+position @var{index} in @var{list} is returned.  If the list is empty,
+or @var{index} is not a valid position in the list, the return value
+will be @code{NULL}.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_get_item_by_name (stp_list_t *@var{list}, const char *@var{name})
+Get the item with a particular name in the list.  The item named with
+@var{name} in @var{list} is returned.  If the list is empty, or
+@var{name} is not a valid name in the list, the return value will be
+@code{NULL}.  If the name is repeated in the list, the first occurrence
+of @var{name} will be returned.
+
+This function requires a callback registering with
+@code{stp_list_set_namefunc}.  If no function is registered, the
+return value will be @code{NULL}.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_get_item_by_long_name (stp_list_t *@var{list}, const char *@var{long_name})
+Get the item with a particular long name in the list.  The item named
+with @var{long_name} in @var{list} is returned.  If the list is empty,
+or @var{long_name} is not a valid name in the list, the return value
+will be @code{NULL}.  If the long name is repeated in the list, the
+first occurrence of @var{long_name} will be returned.
+
+This function requires a callback registering with
+@code{stp_list_set_long_namefunc}.  If no function is registered, the
+return value will be @code{NULL}.
+@end deftypefun
+
+@deftypefun int stp_list_get_length (stp_list_t *@var{list})
+Get the total number of items in the list.
+@end deftypefun
+
+The list functions know nothing about the data associated with each
+item in this list.  Therefore callbacks may be registered to add any
+special functionality required.
+
+@deftypefun void stp_list_set_freefunc (stp_list_t *@var{list}, void (*@var{node_freefunc})(stp_list_item_t *item))
+Register a callback for freeing item data.  By default, the data
+associated with each item is not freed.  However, when you remove a
+node, it can be useful to automatically free the memory used by the
+data associated with that node.  By registering your own callback
+(@var{node_freefunc}), when a node is removed from @var{list}, your
+function will be called to free the data.
+@end deftypefun
+
+@deftypefun void stp_list_set_namefunc (stp_list_t *@var{list}, const char *(*@var{namefunc})(const stp_list_item_t *item))
+Register a callback for getting an item name.  If the data you are
+storing in each item has a name associated with it, then by
+registering this callback (@var{namefunc}) with @var{list} you can
+then easily retrieve items from the list with
+@code{stp_list_get_item_by_name}.
+@end deftypefun
+
+@deftypefun void stp_list_set_long_namefunc (stp_list_t *@var{list}, const char *(*@var{long_namefunc})(const stp_list_item_t *item))
+Register a callback for getting an item long name.  If the data you
+are storing in each item has a long name associated with it, then by
+registering this callback (@var{long_namefunc}) with @var{list} you
+can then easily retrieve items from the list with
+@code{stp_list_get_item_by_long_name}.
+@end deftypefun
+
+@deftypefun void stp_list_set_sortfunc (stp_list_t *@var{list}, int (*@var{sortfunc})(const stp_list_item_t *item1, const stp_list_item_t *item2))
+Register a callback for sorting items in the list.  When items are
+added to the list, rather than selecting a point in @var{list} to
+insert the item, the items may be sorted by the callback
+@var{sortfunc}.  The function takes two @code{stp_list_item_t} objects
+as arguments; the first is the item in the list, while the second is
+the item to insert.  Comparion takes place from the start to the end
+of the list, taking each item in turn.  @var{sortfunc} should return
+an @code{int} > 1 when insertion is valid, otherwise an value < 1.
+@end deftypefun
+
+@deftypefun int stp_list_item_create (stp_list_t *@var{list}, stp_list_item_t *@var{prev}, void *@var{data})
+Create a new list item.  A new item is inserted into @var{list}, with
+the data from @var{data} associated with it.  @var{data} must be cast
+to @code{void *}, but any data type may be contained in the list.  If
+@var{prev} is specified, the new node will be inserted @emph{after}
+this node.  If @var{prev} is @code{NULL}, the new item will be
+inserted at the start of the list.  However, if @var{prev} is
+@code{NULL} and a sorting callback has been registered with
+@code{stp_list_set_sortfunc}, the item will be inserted according to
+its sorted position in the list.
+@end deftypefun
+
+@deftypefun int stp_list_item_destroy (stp_list_t *@var{list}, stp_list_item_t *@var{item})
+Remove an item from the list.  @var{item} is removed from @var{list},
+and if a free callback has been registered with
+@code{stp_list_set_freefunc}, the data associated with the item will
+also be freed.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_item_prev (stp_list_item_t *@var{item})
+Get the item in the list following @var{item}.  The next item in the
+list will be returned. If @var{item} is the last node in the list,
+then @code{NULL} is returned.
+@end deftypefun
+
+@deftypefun {stp_list_item_t *} stp_list_item_next (stp_list_item_t *@var{item})
+Get the item in the list before @var{item}.  The previous item in the
+list will be returned. If @var{item} is the first node in the list,
+then @code{NULL} is returned.
+@end deftypefun
+
+@deftypefun {void *} stp_list_item_get_data (const stp_list_item_t *@var{item})
+Get the data associated with a list item.  The data set when the node
+was created with @code{stp_list_item_create} or with
+@code{stp_list_item_set_data} is returned.
+@end deftypefun
+
+@deftypefun int stp_list_item_set_data (stp_list_item_t *@var{item}, void *@var{data})
+Set the data associated with a list item.  @var{item} is associated
+with @var{data}.  As with @code{stp_list_node_create}, @var{data} may
+be any data type cast to @code{void *}.
+@end deftypefun
+
+@node stp_vars_t functions, Dither functions, List functions, Functions
 @section @code{stp_vars_t} functions
 @cindex @code{stp_vars_t} functions
 
