@@ -1093,3 +1093,12 @@
 <language value=lexmark>
 </printer>
 
+<printer name="LEXMARK Z53" driver="lexmark-z53">
+<color>
+<model value=10052>
+<gamma value=0.5>
+<density value=2.0>
+<magenta value=0.95>
+<yellow value=1.0>
+<language value=lexmark>
+</printer>
