@@ -22,25 +22,26 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 
+<p>Red Hat users may want to check out <a href="gs_stp.html">this
+site</a> for quick and easy setup.</p>
+
 </p>
+<H2><font color="#ff0000">Gimp-Print 4.1.9 is
+released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of June 8
+2001!</strong></em></font> Gimp-Print 4.1.9, a development release in
+the 4.1 line, is out.  This offers a number of improvements in the
+print plugin, untested (thus far) support for the high-end Epson
+Stylus Pro printers, and much more.</p>
 
 <H2><font color="#ff0000"><blink>Gimp-Print 4.0.5 is
 released!</blink></font></h2>
 <P><strong><em><font color="#ff0000">New as of May 26,
 2001!</strong></em></font> Gimp-Print 4.0.5, expected to be the final
 stable release of 4.0, has been released.  This features support for
-the Epson Stylus Color 680/777 and Stylus Pro 7500, and a few bug fixes</p>
-
-<H2><font color="#ff0000">Gimp-Print 4.1.7 is
-released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of May 9,
-2001!</strong></em></font> Gimp-Print 4.1.7, a development release in
-the 4.1 line, is out.  This features greatly improved print quality
-(most notably in color fidelity), more supported printers, and other
-major improvements.  Also note that the PPD files used by the native
-CUPS driver are not forward or backward compatible with the PPD files
-in any of the 4.0 releases.</p>
+the Epson Stylus Color 680/777 and Stylus Pro 7500, and a few bug
+fixes.</p>
 
 <P><strong><em><font color="#ff0000">New as of December 22,
 2000!</strong></em></font> Daniele Berti has packaged up rpm's of
