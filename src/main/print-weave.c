@@ -679,7 +679,7 @@ stp_split_2_1(int length,
   unsigned char *outs[2];
   int i;
   int row = 0;
-  int limit = length * 2;
+  int limit = length;
   outs[0] = outhi;
   outs[1] = outlo;
   memset(outs[1], 0, limit);
@@ -800,7 +800,7 @@ stp_split_4_1(int length,
   unsigned char *outs[4];
   int i;
   int row = 0;
-  int limit = length * 2;
+  int limit = length;
   outs[0] = out0;
   outs[1] = out1;
   outs[2] = out2;
@@ -943,6 +943,8 @@ stp_unpack_2_1(int length,
   if (length <= 0)
     return;
 
+  length = (length + 1) / 2;
+
   for (;length; length --)
     {
       ti0 = *in++;
@@ -1035,6 +1037,8 @@ stp_unpack_4_1(int length,
   if (length <= 0)
     return;
 
+  length = (length + 3) / 4;
+
   for (;length; length --)
     {
       ti0 = *in++;
@@ -1099,7 +1103,6 @@ stp_unpack_4_2(int length,
 		temp1,
 		temp2,
 		temp3;
-
 
   length *= 2;
 
@@ -2256,7 +2259,7 @@ stp_write_weave(void *        vsw,
 	  {
 	    if (!sw->s[i])
 	      sw->s[i] = stp_malloc(sw->bitwidth *
-			      (sw->compute_linewidth)(sw, length));
+				    (sw->compute_linewidth)(sw, length));
 	    lineoffs[i] = stp_get_lineoffsets(sw, sw->lineno, cpass + i,
 					      sw->head_offset[j]);
 	    lineactives[i] = stp_get_lineactive(sw, sw->lineno, cpass + i,
