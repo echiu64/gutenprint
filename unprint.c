@@ -107,7 +107,7 @@ void *mycalloc(size_t count,size_t size){
     return(p);
   }
 
-  fprintf(stderr,"Buy some RAM, dude!");
+  fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
 }
 
@@ -117,7 +117,7 @@ void *mymalloc(size_t size){
     return(p);
   }
 
-  fprintf(stderr,"Buy some RAM, dude!");
+  fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
 }
 
@@ -128,7 +128,7 @@ void *myrealloc(void *ptr, size_t size){
     return(p);
   }
 
-  fprintf(stderr,"Buy some RAM, dude!");
+  fprintf(stderr,"Buy some RAM, dude!\n");
   exit(-1);
 }
 
@@ -238,7 +238,8 @@ void merge_line(line_type *p, unsigned char *l, int startl, int stopl, int color
   }
 }
 
-void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) {
+void expand_line (unsigned char *src, unsigned char *dst, int length, int skip,
+                  int left_ignore) {
 
   /* src is a pointer to a bit stream which is composed of fields of length
    * bpp starting with the most significant bit of the first byte and
@@ -250,24 +251,26 @@ void expand_line (unsigned char *src, unsigned char *dst, int length, int skip) 
    * the general case of arbitrary bpp.
    *
    * We want to copy each field from the src to the dst, spacing the fields
-   * out every skip fields.
+   * out every skip fields.  We should ignore the first left_ignore fields
+   * pointed to by src, though.
    */
 
   int i;
 
-  if (skip==1) { /* the trivial case, this should be faster */
-    memcpy(dst,src,(length*pstate.bpp+7)/8);
+  if ((skip==1)&&!(left_ignore*pstate.bpp%8)) {
+    /* the trivial case, this should be faster */
+    memcpy(dst,src+left_ignore*pstate.bpp/8,(length*pstate.bpp+7)/8);
     return;
   }
 
   for (i=0;i<length;i++) {
-    set_bits(dst,i*skip,get_bits(src,i));
+    set_bits(dst,i*skip,get_bits(src,i+left_ignore));
   }
 
 }
 
 void write_output(FILE *fp_w) {
-  int c,l,p,left,right,first,last,width,height,sp,sl;
+  int c,l,p,left,right,first,last,width,height;
   unsigned int amount;
   ppmpixel pixel;
 
@@ -287,16 +290,10 @@ void write_output(FILE *fp_w) {
   for (l=first;l<=last;l++) {
     if (page[l]) {
       for (c=0;c<MAX_INKS;c++) {
-	/* try to cut left and right border: */
-	sl= page[l]->stopx[c]-page[l]->startx[c];
-	for (sp= 0; sp<sl && !get_bits(page[l]->line[c],sp); sp++);
-	if (sp<sl && page[l]->startx[c]+sp<left) 
-	  left= page[l]->startx[c]+sp;
-  
-	for (sp= 0; sp<sl && !get_bits(page[l]->line[c],sl-sp); sp++);
-	if (sp<sl && page[l]->stopx[c]-sp>right)
-	  right= page[l]->stopx[c]-sp;
-	
+        if (page[l]->line[c]) {
+          left=(page[l]->startx[c]<left)?page[l]->startx[c]:left;
+          right=(page[l]->stopx[c]>right)?page[l]->stopx[c]:right;
+        }
       }
     }
   }
@@ -326,6 +323,91 @@ void write_output(FILE *fp_w) {
   }
 }
 
+#if 0
+int num_bits_zero_lsb(int i,int max) {
+
+  int n;
+
+  for (n=0;(n<max)&&!(i&1);n++,i>>1);
+  return n;
+
+}
+
+int num_bits_zero_msb(int i, int max) {
+
+  int n;
+
+  for (n=0;(n<max)&&i;n++,i>>1);
+  return(max-n);
+  
+}
+#endif
+
+void find_white(unsigned char *buf,int npix, int *left, int *right) {
+
+/* If a line has white borders on either side, count the number of
+ * pixels and fill that info into left and right.
+ */
+
+ int i,j,max;
+ int words,bytes,bits;
+
+ *left=*right=0;
+ bits=npix*pstate.bpp;
+ bytes=bits/8;
+ words=bytes/sizeof(long);
+
+  /* left side */
+  max=words;
+  for(i=0;(i<max)&&(((long *)buf)[i]==0);i++);
+  max=(i<words)?(i+1)*sizeof(long):bytes;
+  for(i*=sizeof(long);(i<max)&&(buf[i]==0);i++);
+  max=(i<bytes)?8:bits%8;
+  for(j=0;(j<max)&&!(buf[i]&(1<<(7-j)));j++);
+  *left=(i*8+j)/pstate.bpp;
+  *right=0;
+
+  /* if left is everything, then right is nothing */
+  if (*left==npix) {
+    return;
+  }
+
+  /* right side, this is a little trickier */ 
+  for (i=0;(i<bits%8)&&!(buf[bytes]&(1<<(i+8-bits%8)));i++);
+  if (i<bits%8) {
+    *right=i/pstate.bpp;
+    return;
+  }
+  *right=bits%8; /*temporarily store right in bits to avoid rounding error*/
+
+  for (i=0;(i<bytes%sizeof(long))&&!(buf[bytes-1-i]);i++);
+  if (i<bytes%sizeof(long)) {
+    for (j=0;(j<8)&&!(buf[bytes-1-i]&(1<<j));j++);
+    *right=(*right+i*8+j)/pstate.bpp;
+    return;
+  }
+  *right+=i*8;
+
+  for (i=0;(i<words)&&!(((int *)buf)[words-1-i]);i++);
+
+  if (i<words) {
+    *right+=i*sizeof(long)*8;
+    for(j=0;(j<sizeof(long))&&!(buf[(words-i)*sizeof(long)-1-j]);j++);
+    if (j<sizeof(long)) {
+      *right+=j*8;
+      max=(words-i)*sizeof(long)-1-j;
+      for (j=0;(j<8)&&!(buf[max]&(1<<j));j++);
+      if (j<8) {
+        *right=(*right+j)/pstate.bpp;
+        return;
+      }
+    }
+  }
+
+  fprintf(stderr,"Warning: Reality failure.  The impossible happened.\n");
+
+}
+
 /* 'update_page' 
  *
  * 
@@ -341,6 +423,7 @@ int update_page(unsigned char *buf, /* I - pixel data               */
 		) {
 
   int y,skip,oldstart,oldstop,mi;
+  int left_white,right_white;
   unsigned char *oldline;
 
   if ((n==0)||(m==0)) {
@@ -371,9 +454,15 @@ int update_page(unsigned char *buf, /* I - pixel data               */
       fprintf(stderr,"Warning. Unprinter out of unpaper.\n");
       return(1);
     }
+    find_white(buf+mi*((n*pstate.bpp+7)/8),n,&left_white,&right_white);
+    if (left_white==n)
+      continue; /* ignore blank lines */
     if (!(page[y])) {
       page[y]=(line_type *) mycalloc(sizeof(line_type),1);
     }
+    if ((left_white*pstate.bpp<8)&&(skip==1)) {
+      left_white=0; /* if it's just a few bits, don't bother cropping */
+    }               /* unless we need to expand the line anyway       */
     if (page[y]->line[color]) {
        oldline=page[y]->line[color];
        oldstart=page[y]->startx[color];
@@ -383,13 +472,12 @@ int update_page(unsigned char *buf, /* I - pixel data               */
       oldstart = -1;
       oldstop = -1;
     }
-    page[y]->line[color]=
-      (unsigned char *) mycalloc(sizeof(unsigned char),
-				 (((n-1)*skip+1)*pstate.bpp+7)/8);
-    page[y]->startx[color]=pstate.xposition;
-    page[y]->stopx[color]=pstate.xposition+((n-1)*skip);
-    expand_line(buf+mi*((n*pstate.bpp+7)/8),
-                   page[y]->line[color],n,skip);
+    page[y]->startx[color]=pstate.xposition+left_white*skip;
+    page[y]->stopx[color]=pstate.xposition+((n-1-right_white)*skip);
+    page[y]->line[color]=(unsigned char *) mycalloc(sizeof(unsigned char),
+     (((page[y]->stopx[color]-page[y]->startx[color])*skip+1)*pstate.bpp+7)/8);
+    expand_line(buf+mi*((n*pstate.bpp+7)/8),page[y]->line[color],
+                page[y]->stopx[color]-page[y]->startx[color]+1,skip,left_white);
     if (oldline) {
       merge_line(page[y],oldline,oldstart,oldstop,color);
     }
@@ -1112,7 +1200,7 @@ int main(int argc,char *argv[]){
     pstate.nozzles=96;
 
     UNPRINT= getenv("UNPRINT");
-    if (!strcmp(UNPRINT,"canon")) {
+    if ((UNPRINT)&&(!strcmp(UNPRINT,"canon"))) {
       pstate.extraskip=1;
       parse_canon(fp_r);
     } else {
