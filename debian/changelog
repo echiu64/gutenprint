@@ -1,3 +1,15 @@
+gimp-print (4.3.11-1) unstable; urgency=low
+
+  * New upstream development release.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Wed, 19 Mar 2003 20:22:15 +0000
+
+gimp-print (4.3.9-1) unstable; urgency=low
+
+  * New upstream development release.
+
+ -- Roger Leigh <roger@whinlatter.uklinux.net>  Fri, 14 Feb 2003 20:46:05 +0000
+
 gimp-print (4.3.8-1) unstable; urgency=low
 
   * New upstream development release (4.3.8).
