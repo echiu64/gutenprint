@@ -141,7 +141,7 @@ main(int  argc,		/* I - Number of command-line arguments */
 
       pwrite("DT\003\000\000", 5);
       putchar(phase & 255);
-      purchar(phase >> 8);
+      putchar(phase >> 8);
     }
     else if (strncasecmp(lineptr, "PrintSelfTestPrint", 18) == 0)
     {

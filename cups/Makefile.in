@@ -52,7 +52,7 @@ PREFIX	=	@prefix@
 # Files...
 #
 
-TARGETS	=	calibrate commandtoepson.o epson epson.dep genppd \
+TARGETS	=	calibrate commandtoepson epson epson.dep genppd \
 		rastertoepson
 OBJS	=	calibrate.o commandtoepson.o epson.o genppd.o rastertoepson.o
 
