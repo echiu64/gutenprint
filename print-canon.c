@@ -31,6 +31,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.29  2000/02/23 17:43:22  gandy
+ *   Fixed a bug in canon_write
+ *
  *   Revision 1.28  2000/02/22 08:18:17  gandy
  *   Fixed bug introduced with last commit (thou shall never prettify your source...)
  *
@@ -1519,6 +1522,7 @@ canon_write(FILE          *prn,		/* I - Print file or command */
     *in_ptr= line,
     *comp_ptr, *comp_data;
   int newlength;
+  unsigned char color;
 
  /* Don't send blank lines... */
 
@@ -1571,7 +1575,9 @@ canon_write(FILE          *prn,		/* I - Print file or command */
   fwrite("\x1b\x28\x41", 3, 1, prn);
   putc((newlength+1) & 255, prn);
   putc((newlength+1) >> 8, prn);
-  putc("CMYKcm"[coloridx],prn);
+  color= "CMYKcmy"[coloridx];
+  if (!color) color= 'K';
+  putc(color,prn);
   fwrite(comp_buf, newlength, 1, prn);
   putc('\x0d', prn);
   return 1;
@@ -1604,6 +1610,12 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
   static int empty= 0;
   int written= 0;
 
+  if (ly) written+= 
+    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
+  if (lm) written+= 
+    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
+  if (lc) written+= 
+    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
   if (k) written+= 
     canon_write(prn, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
   if (y) written+= 
@@ -1612,12 +1624,6 @@ canon_write_line(FILE          *prn,	/* I - Print file or command */
     canon_write(prn, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
   if (c) written+= 
     canon_write(prn, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
-  if (ly) written+= 
-    canon_write(prn, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
-  if (lm) written+= 
-    canon_write(prn, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
-  if (lc) written+= 
-    canon_write(prn, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
 
   if (written)
     fwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, prn);

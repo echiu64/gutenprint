@@ -914,7 +914,7 @@ void parse_canon(FILE *fp_r){
 	 break;
        default:
 	 fprintf(stderr,"Error: unsupported color type 0x%02x.\n",*buf);
-	 exit(-1);
+	 /* exit(-1); */
        }
        pstate.current_color= currentcolor;
        m= rle_decode(buf+1,sh-1,256*256-1);
