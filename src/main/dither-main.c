@@ -37,6 +37,7 @@
 #include <math.h>
 #include <string.h>
 #include "dither-impl.h"
+#include "generic-options.h"
 
 static const stpi_dither_algorithm_t dither_algos[] =
 {
@@ -74,7 +75,7 @@ static const stp_parameter_t dither_parameters[] =
        "paper or smears; increase the density if black "
        "regions are not solid."),
     STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_ADVANCED2, 1, 1, -1, 1
+    STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, -1, 1
   },
   {
     "DitherAlgorithm", N_("Dither Algorithm"),
@@ -111,26 +112,39 @@ stpi_dither_describe_parameter(stp_const_vars_t v, const char *name,
   if (name == NULL)
     return;
   description->deflt.str = NULL;
-  if (strcmp(name, "DitherAlgorithm") == 0)
-    {
-      stpi_fill_parameter_settings(description, &(dither_parameters[1]));
-      description->bounds.str = stp_string_list_create();
-      for (i = 0; i < num_dither_algos; i++)
-	{
-	  const stpi_dither_algorithm_t *dt = &dither_algos[i];
-	  stp_string_list_add_string(description->bounds.str,
-				    dt->name, dt->text);
-	}
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
-    }
-  else if (strcmp(name, "Density") == 0)
+  if (strcmp(name, "Density") == 0)
     {
       stpi_fill_parameter_settings(description, &(dither_parameters[0]));
       description->bounds.dbl.upper = 8.0;
       description->bounds.dbl.lower = 0.1;
       description->deflt.dbl = 1.0;
     }
+  else if (strcmp(name, "DitherAlgorithm") == 0)
+    {
+      if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
+	  stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
+	description->is_active = 0;
+      else
+	{
+	  stpi_fill_parameter_settings(description, &(dither_parameters[1]));
+	  description->bounds.str = stp_string_list_create();
+	  for (i = 0; i < num_dither_algos; i++)
+	    {
+	      const stpi_dither_algorithm_t *dt = &dither_algos[i];
+	      stp_string_list_add_string(description->bounds.str,
+					 dt->name, dt->text);
+	    }
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
+    }
+  if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
+      stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
+    description->is_active = 0;
+  else if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
+	   strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
+	   description->p_level > STP_PARAMETER_LEVEL_BASIC)
+    description->is_active = 0;
 }
 
 #define RETURN_DITHERFUNC(func, v)					\
@@ -143,11 +157,64 @@ do									\
 static stpi_ditherfunc_t *
 stpi_set_dither_function(stp_vars_t v, int image_bpp)
 {
+  const stpi_quality_t *quality = NULL;
+  const char *image_type = stp_get_string_parameter(v, "ImageType");
   stpi_dither_t *d = (stpi_dither_t *) stpi_get_component_data(v, "Dither");
   int i;
   const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
-  d->stpi_dither_type = D_EVENTONE;
-  if (algorithm)
+  d->stpi_dither_type = -1;
+  if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
+    quality = stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality"));
+  
+  if (image_type)
+    {
+      if (strcmp(image_type, "Text") == 0)
+	d->stpi_dither_type = D_VERY_FAST;
+    }
+  if (quality && d->stpi_dither_type == -1)
+    {
+      switch (quality->quality_level)
+	{
+	case 0:
+	case 1:
+	  d->stpi_dither_type = D_VERY_FAST;
+	  break;
+	case 2:
+	case 3:
+	  if (image_type && strcmp(image_type, "LineArt") == 0)
+	    d->stpi_dither_type = D_VERY_FAST;
+	  else
+	    d->stpi_dither_type = D_FAST;
+	  break;
+	case 4:
+	  if (image_type &&
+	      (strcmp(image_type, "LineArt") == 0 ||
+	       strcmp(image_type, "TextGraphics") == 0))
+	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
+	  else
+	    d->stpi_dither_type = D_ORDERED;
+	  break;
+	case 5:
+	  if (image_type &&
+	      (strcmp(image_type, "LineArt") == 0 ||
+	       strcmp(image_type, "TextGraphics") == 0))
+	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
+	  else if (image_type && (strcmp(image_type, "Photo") == 0))
+	    d->stpi_dither_type = D_EVENTONE;
+	  else
+	    d->stpi_dither_type = D_ORDERED;
+	  break;
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+	default:
+	  d->stpi_dither_type = D_EVENTONE;
+	  break;
+	}
+    }
+  else if (algorithm)
     {
       for (i = 0; i < num_dither_algos; i++)
 	{

@@ -83,10 +83,10 @@ static const float_param_t float_parameters[] =
 {
   {
     {
-      "ImageOptimization", N_("Image Type"),
-      N_("Optimize the settings for the type of image to be printed"),
+      "ColorCorrection", N_("Color Correction"),
+      N_("Color correction to be applied"),
       STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
     }, 0.0, 0.0, 0.0, 0
   },
   {
@@ -122,7 +122,7 @@ static const float_param_t float_parameters[] =
 	 "Black and white will remain the same, unlike with "
 	 "the brightness adjustment."),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
+      STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
     }, 0.1, 4.0, 1.0, 0
   },
   {
@@ -718,11 +718,11 @@ rgb_to_rgb(stp_const_vars_t vars, const unsigned char *in, unsigned short *out)
   int do_update_cmyk = 1;
   int do_adjust_lum = 1;
 
-  if (strcmp(stp_get_string_parameter(vars, "ImageOptimization"),
+  if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
 	     "HSLAdjust") == 0)
     do_update_cmyk = 0;
-  if (strcmp(stp_get_string_parameter(vars, "ImageOptimization"),
-	     "Solid") == 0)
+  if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
+	     "Bright") == 0)
     do_adjust_lum = 0;
 
   if (lut->hue_map)
@@ -794,7 +794,7 @@ gray_to_rgb(stp_const_vars_t vars, const unsigned char *in,
   const unsigned short *green;
   const unsigned short *blue;
   int do_update_cmyk = 1;
-  if (strcmp(stp_get_string_parameter(vars, "ImageOptimization"),
+  if (strcmp(stp_get_string_parameter(vars, "ColorCorrection"),
 	     "HSLAdjust") == 0)
     do_update_cmyk = 0;
 
@@ -1963,25 +1963,39 @@ stpi_compute_lut(stp_vars_t v, size_t steps)
   stp_const_curve_t magenta_curve = NULL;
   stp_const_curve_t yellow_curve = NULL;
   stp_const_curve_t black_curve = NULL;
-  /*
-   * Got an output file/command, now compute a brightness lookup table...
-   */
-
-  double cyan = stp_get_float_parameter(v, "Cyan");
-  double magenta = stp_get_float_parameter(v, "Magenta");
-  double yellow = stp_get_float_parameter(v, "Yellow");
-
+  double cyan = 1.0;
+  double magenta = 1.0;
+  double yellow = 1.0;
   lut_t *lut;
   lut_params_t l;
+
+  if (stp_check_float_parameter(v, "CyanGamma", STP_PARAMETER_DEFAULTED))
+    cyan = stp_get_float_parameter(v, "CyanGamma");
+  if (stp_check_float_parameter(v, "MagentaGamma", STP_PARAMETER_DEFAULTED))
+    magenta = stp_get_float_parameter(v, "MagentaGamma");
+  if (stp_check_float_parameter(v, "YellowGamma", STP_PARAMETER_DEFAULTED))
+    yellow = stp_get_float_parameter(v, "YellowGamma");
 
   l.input_color_model = stp_get_input_color_model(v);
   l.output_color_model = stpi_get_output_color_model(v);
   l.steps = steps;
-  l.linear_contrast_adjustment =
-    stp_get_boolean_parameter(v, "LinearContrast");
-  l.print_gamma = stp_get_float_parameter(v, "Gamma");
-  l.contrast = stp_get_float_parameter(v, "Contrast");
-  l.brightness = stp_get_float_parameter(v, "Brightness");
+  if (stp_check_boolean_parameter(v, "LinearContrast", STP_PARAMETER_DEFAULTED))
+    l.linear_contrast_adjustment =
+      stp_get_boolean_parameter(v, "LinearContrast");
+  else
+    l.linear_contrast_adjustment = 0;
+  if (stp_check_float_parameter(v, "Gamma", STP_PARAMETER_DEFAULTED))
+    l.print_gamma = stp_get_float_parameter(v, "Gamma");
+  else
+    l.print_gamma = 1.0;
+  if (stp_check_float_parameter(v, "Contrast", STP_PARAMETER_DEFAULTED))
+    l.contrast = stp_get_float_parameter(v, "Contrast");
+  else
+    l.contrast = 1.0;
+  if (stp_check_float_parameter(v, "Brightness", STP_PARAMETER_DEFAULTED))
+    l.brightness = stp_get_float_parameter(v, "Brightness");
+  else
+    l.brightness = 1.0;
   l.app_gamma = 1.0;
 
   if (stp_check_float_parameter(v, "AppGamma", STP_PARAMETER_ACTIVE))
@@ -2069,7 +2083,8 @@ stpi_color_traditional_init(stp_vars_t v,
 			    stp_image_t *image,
 			    size_t steps)
 {
-  const char *image_type = stp_get_string_parameter(v, "ImageOptimization");
+  const char *image_type = stp_get_string_parameter(v, "ImageType");
+  const char *color_correction = stp_get_string_parameter(v, "ColorCorrection");
   int itype = 0;
   int image_bpp = stpi_image_bpp(image);
   lut_t *lut;
@@ -2082,17 +2097,24 @@ stpi_color_traditional_init(stp_vars_t v,
   lut->image_width = stpi_image_width(image);
   if (image_type)
     {
-      if (strcmp(image_type, "Uncorrected") == 0)
+      if (strcmp(image_type, "Text") == 0)
+	itype = 4;
+      else
+	itype = 2;
+    }
+  if (color_correction)
+    {
+      if (strcmp(color_correction, "Uncorrected") == 0)
 	itype = 0;
-      else if (strcmp(image_type, "Solid") == 0)
+      else if (strcmp(color_correction, "Bright") == 0)
 	itype = 1;
-      else if (strcmp(image_type, "Photograph") == 0)
+      else if (strcmp(color_correction, "Accurate") == 0)
 	itype = 2;
-      else if (strcmp(image_type, "Default") == 0)
+      else if (strcmp(color_correction, "Default") == 0)
 	itype = 2;
-      else if (strcmp(image_type, "HSLAdjust") == 0)
+      else if (strcmp(color_correction, "HSLAdjust") == 0)
 	itype = 3;
-      else if (strcmp(image_type, "Threshold") == 0)
+      else if (strcmp(color_correction, "Threshold") == 0)
 	itype = 4;
     }
   switch (stp_get_output_type(v))
@@ -2388,8 +2410,10 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 	  stpi_fill_parameter_settings(description, &(param->param));
 	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
-	  else
-	    description->is_active = 1;
+	  if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
+	      strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
+	      description->p_level > STP_PARAMETER_LEVEL_BASIC)
+	    description->is_active = 0;
 	  switch (param->param.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -2400,22 +2424,22 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 	      description->deflt.dbl = param->defval;
 	      break;
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      if (!strcmp(param->param.name, "ImageOptimization"))
+	      if (!strcmp(param->param.name, "ColorCorrection"))
 		{
 		  description->bounds.str = stp_string_list_create();
 		  stp_string_list_add_string
 		    (description->bounds.str, "Default", _("Default"));
 		  stp_string_list_add_string
-		    (description->bounds.str, "Photograph", _("Photographs"));
+		    (description->bounds.str, "Accurate", _("High Accuracy"));
 		  stp_string_list_add_string
-		    (description->bounds.str, "Solid", _("Solid Colors"));
+		    (description->bounds.str, "Bright", _("Bright"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Threshold", _("Threshold"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "HSLAdjust", _("HSL-corrected"));
 		  stp_string_list_add_string
 		    (description->bounds.str, "Uncorrected", _("Uncorrected"));
-		  description->deflt.str = "Photograph";
+		  description->deflt.str = "Accurate";
 		}
 	      break;
 	    default:
@@ -2433,10 +2457,14 @@ stpi_color_traditional_describe_parameter(stp_const_vars_t v,
 	  stpi_fill_parameter_settings(description, &(param->param));
 	  if (param->color_only && stp_get_output_type(v) == OUTPUT_GRAY)
 	    description->is_active = 0;
+	  if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
+	      strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
+	      description->p_level > STP_PARAMETER_LEVEL_BASIC)
+	    description->is_active = 0;
 	  if (param->hsl_only &&
-	      stp_check_string_parameter(v, "ImageOptimization",
+	      stp_check_string_parameter(v, "ColorCorrection",
 					 STP_PARAMETER_DEFAULTED) &&
-	      strcmp(stp_get_string_parameter(v, "ImageOptimization"),
+	      strcmp(stp_get_string_parameter(v, "ColorCorrection"),
 		     "Uncorrected") == 0)
 	    description->is_active = 0;
 	  switch (param->param.p_type)

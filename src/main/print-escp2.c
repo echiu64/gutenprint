@@ -136,7 +136,7 @@ static const stp_parameter_t the_parameters[] =
     "Resolution", N_("Resolution"),
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1
   },
   /*
    * Don't check this parameter.  We may offer different settings for
@@ -147,7 +147,7 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0
+    STP_PARAMETER_LEVEL_ADVANCED2, 1, 1, -1, 0
   },
   {
     "InkSet", N_("Ink Set"),
@@ -159,7 +159,7 @@ static const stp_parameter_t the_parameters[] =
     "PrintingDirection", N_("Printing Direction"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1
+    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1
   },
   {
     "FullBleed", N_("Full Bleed"),

@@ -29,15 +29,16 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gimp-print/gimp-print.h>
-#include "gimp-print-internal.h"
-#include <gimp-print/gimp-print-intl-internal.h>
 #include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include "vars.h"
 #include <string.h>
+#include <gimp-print/gimp-print.h>
+#include "gimp-print-internal.h"
+#include <gimp-print/gimp-print-intl-internal.h>
+#include "vars.h"
+#include "generic-options.h"
 
 #define COOKIE_VARS      0x1a18376c
 
@@ -1450,6 +1451,10 @@ stp_get_parameter_list(stp_const_vars_t v)
   stp_parameter_list_append(ret, tmp_list);
   stp_parameter_list_free(tmp_list);
 
+  tmp_list = stpi_list_generic_parameters(v);
+  stp_parameter_list_append(ret, tmp_list);
+  stp_parameter_list_free(tmp_list);
+
   return ret;
 }
 
@@ -1468,6 +1473,9 @@ stp_describe_parameter(stp_const_vars_t v, const char *name,
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     return;
   stpi_dither_describe_parameter(v, name, description);
+  if (description->p_type != STP_PARAMETER_TYPE_INVALID)
+    return;
+  stpi_describe_generic_parameter(v, name, description);
 }
 
 void
@@ -1558,5 +1566,9 @@ stp_parameter_list_append(stp_parameter_list_t list,
   stpi_list_t *ilist = (stpi_list_t *)list;
   size_t count = stp_parameter_list_count(append);
   for (i = 0; i < count; i++)
-    stpi_list_item_create(ilist, NULL, stp_parameter_list_param(append, i));
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(append, i);
+      if (!stpi_list_get_item_by_name(ilist, param->name))
+	stpi_list_item_create(ilist, NULL, param);
+    }
 }

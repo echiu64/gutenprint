@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2003 by Easy Software Products.
+ *   Copyright 1993-2003 by Easy Software Products and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -131,6 +131,7 @@ const char *special_options[] =
   "InputSlot",
   "Resolution",
   "OutputOrder",
+  "Quality",
   NULL
 };
 
@@ -185,21 +186,17 @@ is_special_option(const char *name)
 }
 
 static void
-print_group_open(FILE *fp, stp_parameter_class_t p_class,
-		 stp_parameter_level_t p_level)
+print_group_open(FILE *fp, stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gimp-Print"),
-	   _(parameter_level_names[p_level]),
-	   _(parameter_class_names[p_class]));
+  gzprintf(fp, "*OpenSubGroup: %s %s\n\n", _("Gimp-Print"),
+	   _(parameter_level_names[p_level]));
 }
 
 static void
-print_group_close(FILE *fp, stp_parameter_class_t p_class,
-		 stp_parameter_level_t p_level)
+print_group_close(FILE *fp, stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gimp-Print"),
-	   _(parameter_level_names[p_level]),
-	   _(parameter_class_names[p_class]));
+  gzprintf(fp, "*CloseSubGroup: %s %s\n\n", _("Gimp-Print"),
+	   _(parameter_level_names[p_level]));
 }
 
 /*
@@ -1048,6 +1045,34 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
   stp_parameter_description_free(&desc);
 
  /*
+  * Quality settings
+  */
+
+  stp_describe_parameter(v, "Quality", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      stp_clear_string_parameter(v, "Resolution");
+      has_quality_parameter = 1;
+      gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", _(desc.text));
+      gzputs(fp, "*OrderDependency: 20 AnySetup *StpQuality\n");
+      gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
+      num_opts = stp_string_list_count(desc.bounds.str);
+      for (i = 0; i < num_opts; i++)
+	{
+	  opt = stp_string_list_param(desc.bounds.str, i);
+	  stp_set_string_parameter(v, "Quality", opt->name);
+	  stp_describe_resolution(v, &xdpi, &ydpi);
+	  if (xdpi == -1 || ydpi == -1)
+	    gzprintf(fp, "*StpQuality %s/%s: \"\"\n", opt->name, opt->text);
+	  else
+	    gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
+		     opt->name, opt->text, xdpi, ydpi);
+	}
+      gzputs(fp, "*CloseUI: *Quality\n\n");
+    }
+  stp_parameter_description_free(&desc);
+
+ /*
   * Resolutions...
   */
 
@@ -1056,8 +1081,14 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
   gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
-  gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
+  if (has_quality_parameter)
+    gzprintf(fp, "*DefaultResolution: None\n");
+  else
+    gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
 
+  stp_clear_string_parameter(v, "Quality");
+  if (has_quality_parameter)
+    gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
   for (i = 0; i < num_opts; i ++)
   {
    /*
@@ -1099,6 +1130,8 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 
   for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
     {
+      gzprintf(fp, "*OpenGroup: %s %s\n\n", _("Gimp-Print"),
+	       _(parameter_class_names[j]));
       for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
 	{
 	  int printed_open_group = 0;
@@ -1118,11 +1151,9 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      if (desc.is_active)
 		{
 		  int printed_default_value = 0;
-		  if (strcmp(lparam->name, "Quality") == 0)
-		    has_quality_parameter = 1;
 		  if (!printed_open_group)
 		    {
-		      print_group_open(fp, j, k);
+		      print_group_open(fp, k);
 		      printed_open_group = 1;
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
@@ -1209,8 +1240,10 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	      stp_parameter_description_free(&desc);
 	    }
 	  if (printed_open_group)
-	    print_group_close(fp, j, k);
+	    print_group_close(fp, k);
 	}
+      gzprintf(fp, "*CloseGroup: %s %s\n\n", _("Gimp-Print"),
+	       _(parameter_class_names[j]));
     }
   if (has_quality_parameter)
     {
@@ -1237,7 +1270,6 @@ write_ppd(stp_const_printer_t p,	/* I - Printer driver */
 	  if (lparam->p_class > STP_PARAMETER_CLASS_OUTPUT ||
 	      lparam->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
 	      strcmp(lparam->name, "Quality") == 0 ||
-	      is_special_option(lparam->name) ||
 	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
 	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))

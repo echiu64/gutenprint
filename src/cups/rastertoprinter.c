@@ -134,9 +134,17 @@ set_special_parameter(stp_vars_t v, const char *name, int choice)
       if (choice >= stp_string_list_count(desc.bounds.str))
 	fprintf(stderr, "ERROR: Gimp-Print unable to set %s!\n", name);
       else
-	stp_set_string_parameter
-	  (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
+	{
+	  stp_set_string_parameter
+	    (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
+	  fprintf(stderr, "DEBUG: Gimp-Print set special parameter %s to choice %d (%s)\n",
+		  name, choice,
+		  stp_string_list_param(desc.bounds.str, choice)->name);
+	}
     }
+  else
+    fprintf(stderr, "DEBUG: Gimp-Print unable to set special %s: not a string\n",
+	    name);
   stp_parameter_description_free(&desc);
 }
 
@@ -227,7 +235,8 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
       break;
     }
 
-  set_special_parameter(v, "Resolution", cups->header.cupsCompression);
+  if (cups->header.cupsCompression >= 0)
+    set_special_parameter(v, "Resolution", cups->header.cupsCompression);
 
   stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
   stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
@@ -289,7 +298,7 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   stp_get_media_size(v, &(cups->width), &(cups->height));
   stp_get_imageable_area(v, &(cups->left), &(cups->right),
 			 &(cups->bottom), &(cups->top));
-  fprintf(stderr, "DEBUG: Gimp-Print %d %d %d  %d %d %d\n",
+  fprintf(stderr, "DEBUG: Gimp-Print limits w %d l %d r %d  h %d t %d b %d\n",
 	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
   stp_set_width(v, cups->right - cups->left);
   stp_set_height(v, cups->bottom - cups->top);
@@ -306,7 +315,7 @@ initialize_page(cups_image_t *cups, stp_const_vars_t default_settings)
   cups->height = cups->header.HWResolution[1] * cups->height / 72;
   cups->top = cups->header.HWResolution[1] * cups->top / 72;
   cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
-  fprintf(stderr, "DEBUG: Gimp-Print %d %d %d  %d %d %d\n",
+  fprintf(stderr, "DEBUG: Gimp-Print CUPS settings w %d l %d r %d  h %d t %d b %d\n",
 	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
 
   return v;
@@ -478,6 +487,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     fputs("ERROR: Gimp-Print Fatal error: PPD environment variable not set!\n", stderr);
     return (1);
   }
+  fprintf(stderr, "DEBUG: Gimp-Print using PPD file %s\n", ppdfile);
 
   if ((ppd = ppdOpenFile(ppdfile)) == NULL)
   {
@@ -515,14 +525,18 @@ main(int  argc,				/* I - Number of command-line arguments */
   * Figure out which driver to use...
   */
 
-  if ((printer = stp_get_printer_by_long_name(ppd->modelname)) == NULL)
-    if ((printer = stp_get_printer_by_driver(ppd->modelname)) == NULL)
+  printer = stp_get_printer_by_driver(ppd->modelname);
+  if (!printer)
+    printer = stp_get_printer_by_long_name(ppd->modelname);
+  
+  if (printer == NULL)
     {
       fprintf(stderr, "ERROR: Gimp-Print Fatal error: Unable to find driver named \"%s\"!\n",
               ppd->modelname);
       ppdClose(ppd);
       return (1);
     }
+  fprintf(stderr, "DEBUG: Gimp-Print driver %s\n", ppd->modelname);
 
  /*
   * Open the page stream...
@@ -539,6 +553,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   }
   else
     fd = 0;
+  fprintf(stderr, "DEBUG: Gimp-Print using fd %d\n", fd);
 
   stp_set_printer_defaults(default_settings, printer);
   stp_set_float_parameter(default_settings, "AppGamma", 1.0);
@@ -729,10 +744,14 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   int		i;			/* Looping var */
   int 		bytes_per_line;
   int		margin;
+  stp_image_status_t tmp_image_status = Image_status;
 
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
-    return STP_IMAGE_STATUS_ABORT;
+    {
+      fprintf(stderr, "ERROR: Gimp-Print image is null!\n");
+      return STP_IMAGE_STATUS_ABORT;
+    }
   bytes_per_line = cups->width * cups->header.cupsBitsPerPixel / CHAR_BIT;
   margin = cups->header.cupsBytesPerLine - bytes_per_line;
 
@@ -768,7 +787,9 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       else
 	memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
     }
-  return Image_status;
+  if (tmp_image_status != STP_IMAGE_STATUS_OK)
+    fprintf(stderr, "DEBUG: Gimp-Print image status %d\n", tmp_image_status);
+      return tmp_image_status;
 }
 
 

@@ -434,11 +434,7 @@ const res_t *const stpi_escp2_pro_reslist[] =
 {
   &r_360x90dpi,
 
-  &r_360x120dpi,
-
   &r_180dpi,
-
-  &r_360x240dpi,
 
   &r_360x180dpi,
 
