@@ -136,7 +136,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
  "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-pre1.ppc.dmg?download"
- >gimp-print-4.2.6-pre1.ppc.dmg</a>&nbsp;(3.2 MB)
+ >gimp-print-4.2.6-pre1.ppc.dmg</a>&nbsp;(3.9 MB)
  </td>
  <td align="right" >
  (<a href=
@@ -159,7 +159,7 @@ require('standard_html_header.php3');
  <td bgcolor="#d0ffff" >
  <a href=
 "http://prdownloads.sourceforge.net/gimp-print/espgs-7.05.6.ppc.dmg?download"
- >espgs-7.05.6-0.ppc.dmg</a>&nbsp;(5.5 MB)
+ >espgs-7.05.6-0.ppc.dmg</a>&nbsp;(5.3 MB)
  </td>
  <td align="right" >
  (<a href=
