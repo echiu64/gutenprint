@@ -211,16 +211,29 @@ typedef struct escp2_variable_inklist
   escp2_variable_inkset_t *v_2880_6;
 } escp2_variable_inklist_t;
 
-static simple_dither_range_t photo_dither_ranges[] =
+static simple_dither_range_t photo_cyan_dither_ranges[] =
 {
-  { 0.33, 0x1, 0, 1 },
+  { 0.25, 0x1, 0, 1 },
   { 1.0,  0x1, 1, 1 }
 };
 
-static escp2_variable_ink_t photo_ink =
+static escp2_variable_ink_t photo_cyan_ink =
 {
-  photo_dither_ranges,
-  sizeof(photo_dither_ranges) / sizeof(simple_dither_range_t),
+  photo_cyan_dither_ranges,
+  sizeof(photo_cyan_dither_ranges) / sizeof(simple_dither_range_t),
+  .75
+};
+
+static simple_dither_range_t photo_magenta_dither_ranges[] =
+{
+  { 0.26, 0x1, 0, 1 },
+  { 1.0,  0x1, 1, 1 }
+};
+
+static escp2_variable_ink_t photo_magenta_ink =
+{
+  photo_magenta_dither_ranges,
+  sizeof(photo_magenta_dither_ranges) / sizeof(simple_dither_range_t),
   .75
 };
 
@@ -381,8 +394,8 @@ static escp2_variable_inkset_t standard_inks =
 
 static escp2_variable_inkset_t photo_inks =
 {
-  &photo_ink,
-  &photo_ink,
+  &photo_cyan_ink,
+  &photo_magenta_ink,
   NULL,
   NULL
 };
@@ -1239,50 +1252,73 @@ static const paper_t escp2_paper_list[] = {
   { "Plain Paper", 1, 0, .5, .25, .5 },
   { "Plain Paper Fast Load", 5, 0, .5, .25, .5 },
   { "Postcard", 2, 0, .6, .25, .6 },
-  { "Glossy Film", 3, 0, 1.0, 1.0, .999 },
-  { "Transparencies", 3, 0, 1.0, 1.0, .999 },
+  { "Glossy Film", 3, 0, 1.0, 1.0, .9 },
+  { "Transparencies", 3, 0, 1.0, 1.0, .9 },
   { "Envelopes", 4, 0, .5, .25, .5 },
-  { "Back Light Film", 6, 0, 1.0, 1.0, .999 },
-  { "Matte Paper", 7, 0, 1.0, 1.0, .999 },
+  { "Back Light Film", 6, 0, 1.0, 1.0, .9 },
+  { "Matte Paper", 7, 0, 1.0, 1.0, .9 },
   { "Inkjet Paper", 7, 0, .78, .25, .6 },
-  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .999 },
-  { "Photo Paper", 8, 0, 1, 1.0, .999 },
-  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .999 },
-  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .999 },
+  { "Photo Quality Inkjet Paper", 7, 0, 1, 1.0, .9 },
+  { "Photo Paper", 8, 0, 1, 1.0, .9 },
+  { "Premium Glossy Photo Paper", 8, 0, .9, 1.0, .9 },
+  { "Photo Quality Glossy Paper", 6, 0, 1.0, 1.0, .9 },
   { "Other", 0, 0, .5, .25, .5 },
 };
 
 static const int paper_type_count = sizeof(escp2_paper_list) / sizeof(paper_t);
 
-static double hue_adjustment[25] =
+static double hue_adjustment[49] =
 {
   0,				/* C */
-  0.125,
-  0.25,
+  0.1,
+  0.2,
+  0.3,
   0.4,
+  0.5,
+  0.55,
+  0.6,
   0.65,				/* B */
-  1.0,
-  1.4,
-  1.7,
+  0.88,
+  0.9,
+  1.08,
+  1.25,
+  1.44,
+  1.625,
+  1.81,
   2.0,				/* M */
+  2.05,
+  2.1,
   2.2,
+  2.25,
+  2.37,
   2.4,
-  2.55,
-  2.7,				/* R */
-  2.95,
-  3.25,
+  2.52,
+  2.65,				/* R */
+  3.05,
+  3.2,
+  3.375,
+  3.5,
   3.625,
+  3.75,
+  3.875,
   4.0,				/* Y */
-  4.4,
+  4.1,
+  4.2,
+  4.35,
+  4.5,
   4.65,
   4.8,
+  4.85,
   4.9,				/* G */
+  4.95,
   5.0,
+  5.15,
   5.3,
+  5.45,
   5.6,
+  5.8,
   6.0				/* C */
 };
-
 
 static const paper_t *
 get_media_type(const char *name)
@@ -2250,6 +2286,8 @@ escp2_print(const printer_t *printer,		/* I - Model */
   nv.density *= escp2_density(model, xdpi, ydpi, !use_softweave);
   if (nv.density > 1.0)
     nv.density = 1.0;
+  if (colormode == COLOR_MONOCHROME)
+    nv.gamma /= .8;
   compute_lut(256, &nv);
 
  /*

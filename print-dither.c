@@ -209,6 +209,7 @@ typedef struct dither
   dither_matrix_t y_dithermat;
   dither_matrix_t k_pick;
   dither_matrix_t k_dithermat;
+  unsigned short virtual_dot_scale[65536];
 } dither_t;
 
 /*
@@ -599,6 +600,7 @@ init_dither(int in_width, int out_width, int horizontal_aspect,
 void
 dither_set_transition(void *vd, double exponent)
 {
+  int i;
   dither_t *d = (dither_t *) vd;
   int x_3 = d->mat6.x_size / 3;
   int y_3 = d->mat6.y_size / 3;
@@ -613,6 +615,12 @@ dither_set_transition(void *vd, double exponent)
   clone_matrix(&(d->mat7), &(d->m_pick), 0, 2 * y_3);
   clone_matrix(&(d->mat7), &(d->y_pick), 2 * x_3, 0);
   clone_matrix(&(d->mat7), &(d->k_pick), x_3, 2 * y_3);
+  for (i = 0; i < 65536; i++)
+    {
+      double dd = i / 65535.0;
+      dd = pow(dd, 1.0 / exponent);
+      d->virtual_dot_scale[i] = dd * 65535;
+    }
 }
 
 void
@@ -1342,7 +1350,8 @@ print_color(dither_t *d, dither_color_t *rv, int base, int density,
       else if (dd->value_h == 65536 && rangepoint == 65536)
 	virtual_value = 65536;
       else
-	virtual_value = dd->value_l + (dd->value_span * rangepoint / 65536);
+	virtual_value = dd->value_l +
+	  (dd->value_span * d->virtual_dot_scale[rangepoint] / 65536);
 
       /*
        * Reduce the randomness as the base value increases, to get

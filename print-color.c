@@ -709,7 +709,7 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
 {
   unsigned ld = vars->density * 65536;
   double isat = 1.0;
-  double ssat = vars->saturation;
+  double ssat = vars->saturation * 1.2;
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
@@ -725,9 +725,6 @@ rgb_to_rgb(unsigned char	*rgbin,		/* I - RGB pixels */
     ssat = sqrt(ssat);
   if (ssat > 1)
     isat = 1.0 / ssat;
-#if 0
-printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, compute_saturation, split_saturation);
-#endif
   while (width > 0)
     {
       double h, s, v;
@@ -827,7 +824,7 @@ printf("rgb-to-rgb: ssat=%f, isat=%f, do-sat=%d, split-sat=%d\n", ssat, isat, co
 		{
 		  int ih;
 		  double eh;
-		  h *= 4;
+		  h *= 8;
 		  ih = (int) h;
 		  eh = h - (double) ih;
 		  h = hue_map[ih] + eh * (hue_map[ih + 1] - hue_map[ih]);

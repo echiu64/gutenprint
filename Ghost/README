@@ -301,10 +301,10 @@ For Epson Stylus printers:
 					  1520, and Stylus Color 3000)
 '720 DPI High Quality'                   (works on all printers except
 					  above and Epson Stylus Color
-					  440/460/480)
+					  440/460)
 '720 DPI Highest Quality'                (works on all printers except
 					  above and Epson Stylus Color
-					  440/460/480)
+					  440/460)
 '1440 x 720 DPI Microweave'              (works on older 1440x720 dpi printers)
 '1440 x 720 DPI Softweave'               (works on all 1440x720 dpi
 					  printers except for Stylus
