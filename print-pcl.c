@@ -32,6 +32,12 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.19  2000/02/02 03:03:55  rlk
+ *   Move all the constants into members of a struct.  This will eventually permit
+ *   us to use different dithering constants for each printer, or even vary them
+ *   on the fly.  Currently there's a static dither_t that contains constants,
+ *   but that's the easy part to fix...
+ *
  *   Revision 1.18  2000/01/29 02:34:30  rlk
  *   1) Remove globals from everything except print.c.
  *
@@ -1069,6 +1075,8 @@ pcl_print(int       model,		/* I - Model */
       }
     }
   }
+  free_dither();
+
 
  /*
   * Cleanup...

@@ -172,6 +172,7 @@ typedef void 	(*convert_t)(unsigned char *in, unsigned short *out, int width,
  */
 
 extern void	init_dither(void);
+extern void	free_dither(void);
 extern void	dither_black(unsigned short *, int, int, int, unsigned char *,
 			     int);
 
