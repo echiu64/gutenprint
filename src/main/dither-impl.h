@@ -182,6 +182,7 @@ extern int stpi_dither_translate_channel(stp_vars_t v, unsigned channel,
 					 unsigned subchannel);
 extern void stpi_dither_channel_destroy(stpi_dither_channel_t *channel);
 extern void stpi_dither_finalize(stp_vars_t v);
+extern int *stpi_dither_get_errline(stpi_dither_t *d, int row, int color);
 
 
 #define ADVANCE_UNIDIRECTIONAL(d, bit, input, width, xerror, xstep, xmod) \

@@ -44,23 +44,6 @@
 #define UPDATE_COLOR(color, dither) (					   \
 ((dither) >= 0)? (color) + ((dither) >> 3) : (color) - ((-(dither)) >> 3))
 
-static int *
-get_errline(stpi_dither_t *d, int row, int color)
-{
-  stpi_dither_channel_t *dc;
-  if (row < 0 || color < 0 || color >= CHANNEL_COUNT(d))
-    return NULL;
-  dc = &(CHANNEL(d, color));
-  if (!dc->errs)
-    dc->errs = stpi_zalloc(d->error_rows * sizeof(int *));
-  if (!dc->errs[row % dc->error_rows])
-    {
-      int size = 2 * MAX_SPREAD + (16 * ((d->dst_width + 7) / 8));
-      dc->errs[row % dc->error_rows] = stpi_zalloc(size * sizeof(int));
-    }
-  return dc->errs[row % dc->error_rows] + MAX_SPREAD;
-}
-
 /*
  * For Floyd-Steinberg, distribute the error residual.  We spread the
  * error to nearby points, spreading more broadly in lighter regions to
@@ -373,7 +356,8 @@ shared_ed_initializer(stpi_dither_t *d,
     {
       for (i = 0; i < CHANNEL_COUNT(d); i++)
 	for (j = 0; j < d->error_rows; j++)
-	  memset(get_errline(d, row + j, i), 0, d->dst_width * sizeof(int));
+	  memset(stpi_dither_get_errline(d, row + j, i), 0,
+		 d->dst_width * sizeof(int));
       return 0;
     }
   d->ptr_offset = (direction == 1) ? 0 : length - 1;
@@ -385,7 +369,7 @@ shared_ed_initializer(stpi_dither_t *d,
       (*error)[i] = stpi_malloc(d->error_rows * sizeof(int *));
       for (j = 0; j < d->error_rows; j++)
 	{
-	  (*error)[i][j] = get_errline(d, row + j, i);
+	  (*error)[i][j] = stpi_dither_get_errline(d, row + j, i);
 	  if (j == d->error_rows - 1)
 	    memset((*error)[i][j], 0, d->dst_width * sizeof(int));
 	  if (direction == -1)
