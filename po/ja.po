@@ -1746,7 +1746,7 @@ msgstr "ファイル"
 #.
 #: src/cups/genppd.c:654
 msgid "English"
-msgstr "英語"
+msgstr "Japanese"
 
 #. Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:656
