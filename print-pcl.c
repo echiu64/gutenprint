@@ -159,6 +159,10 @@ typedef struct {
 #define PCL_RES_300_300		2
 #define PCL_RES_600_300		4	/* DJ 600 series */
 #define PCL_RES_600_600_MONO	8	/* DJ 800/1100 b/w only */
+#define PCL_RES_600_600		16	/* DJ 9xx ??*/
+#define PCL_RES_1200_1200	32	/* DJ 9xx ??*/
+#define PCL_RES_2400_1200	64	/* DJ 9xx */
+#define MAX_RESOLUTIONS		7	/* for malloc() */
 
 #define PCL_COLOR_NONE		0
 #define PCL_COLOR_CMY		1	/* One print head */
@@ -298,6 +302,30 @@ pcl_cap_t pcl_model_capabilities[] =
   { 800,
     17 * 72 / 2, 14 * 72,
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600_MONO,
+    3, 33, 18, 18,
+    PCL_COLOR_CMYK | PCL_COLOR_4,
+    PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
+    { PCL_PAPER_EXECUTIVE,
+      PCL_PAPER_LETTER,
+      PCL_PAPER_LEGAL,
+      PCL_PAPER_A6,
+      PCL_PAPER_A5,
+      PCL_PAPER_A4,
+      PCL_PAPER_JIS_B5,
+      PCL_PAPER_HAGAKI,
+      PCL_PAPER_4x6,
+      PCL_PAPER_5x8,
+      PCL_PAPER_COM10_ENV,
+      PCL_PAPER_DL_ENV,
+      PCL_PAPER_C6_ENV,
+      PCL_PAPER_A2_ENV,
+      0,
+    },
+  },
+  /* Deskjet 900 series */
+  { 900,
+    17 * 72 / 2, 14 * 72,
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600 | PCL_RES_1200_1200 | PCL_RES_2400_1200,
     3, 33, 18, 18,
     PCL_COLOR_CMYK | PCL_COLOR_4,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE,
@@ -619,7 +647,7 @@ pcl_parameters(int  model,	/* I - Printer model */
   else if (strcmp(name, "Resolution") == 0)
   {
     int c= 0;
-    valptrs = malloc(sizeof(char *) * 4);
+    valptrs = malloc(sizeof(char *) * MAX_RESOLUTIONS);
     if (caps.resolutions & PCL_RES_150_150)
       valptrs[c++]= c_strdup("150x150 DPI");
     if (caps.resolutions & PCL_RES_300_300)
@@ -628,6 +656,12 @@ pcl_parameters(int  model,	/* I - Printer model */
       valptrs[c++]= c_strdup("600x300 DPI");
     if (caps.resolutions & PCL_RES_600_600_MONO)
       valptrs[c++]= c_strdup("600x600 DPI (mono only)");
+    if (caps.resolutions & PCL_RES_600_600)
+      valptrs[c++]= c_strdup("600x600 DPI");
+    if (caps.resolutions & PCL_RES_1200_1200)
+      valptrs[c++]= c_strdup("1200x1200 DPI");
+    if (caps.resolutions & PCL_RES_2400_1200)
+      valptrs[c++]= c_strdup("2400x1200 DPI");
     *count= c;
     p= valptrs;
   }
@@ -807,7 +841,7 @@ pcl_print(const printer_t *printer,		/* I - Model */
       ydpi = 300;
   }
 
-  do_cret = (xdpi == 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4) &&
+  do_cret = (xdpi >= 300 && ((caps.color_type & PCL_COLOR_4) == PCL_COLOR_4) &&
 	     v->image_type != IMAGE_MONOCHROME);
 
 #ifdef DEBUG
@@ -1518,6 +1552,9 @@ pcl_mode2(FILE          *prn,		/* I - Print file or command */
 
 /*
  *   $Log$
+ *   Revision 1.40  2000/03/21 19:09:02  davehill
+ *   Added Deskjet 9xx series.
+ *
  *   Revision 1.39  2000/03/20 21:03:31  davehill
  *   Added "Bond" and "Photo" paper types to pcl-unprint and print-pcl.
  *   Corrected Depletion output for old Deskjets in print-pcl.

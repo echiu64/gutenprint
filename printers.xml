@@ -65,6 +65,14 @@
 <language value=pcl>
 </printer>
 
+<printer name="HP DeskJet 900 series" driver="pcl-900">
+<color>
+<model value=900>
+<gamma value=0.818>
+<density value=0.786>
+<language value=pcl>
+</printer>
+
 <printer name="HP DeskJet 1100C, 1120C" driver="pcl-1100">
 <color>
 <model value=1100>
