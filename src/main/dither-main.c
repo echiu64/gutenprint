@@ -42,6 +42,7 @@ static const stpi_dither_algorithm_t dither_algos[] =
 {
   /* Note to translators: "EvenTone" is the proper name, rather than a */
   /* descriptive name, of this algorithm. */
+  { "Default",  N_ ("Default"),                D_EVENTONE },
   { "EvenTone", N_ ("EvenTone"),               D_EVENTONE },
   { "Adaptive",	N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	N_ ("Ordered"),                D_ORDERED },
