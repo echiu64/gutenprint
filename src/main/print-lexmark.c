@@ -64,6 +64,7 @@
 #include <stdio.h>
 #endif
 
+
 #define false 0
 #define true  1
 
@@ -665,7 +666,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     618, 936,         /* max paper size *//* 8.58" x 13 " */
     INCH(2), INCH(4), /* min paper size */
     2400, 1200, 2, /* max resolution */
-    0, 0, 5, 36, /* border l,r,t,b    unit is 1/72 DPI */
+    0, 0, 5, 10, /* 36 border l,r,t,b    unit is 1/72 DPI */
     LEXMARK_INK_CMY | LEXMARK_INK_CMYK | LEXMARK_INK_CcMmYK,
     LEXMARK_SLOT_ASF1 | LEXMARK_SLOT_MAN1,
     LEXMARK_CAP_DMT,
@@ -974,6 +975,8 @@ static const lexmark_res_t
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_printer_get_model(printer));
 
   const lexmark_res_t *res = *(caps->res_parameters); /* get the resolution specific parameters of printer */
+
+
   while (res->hres)
     {
       if (res->vres <= caps->max_ydpi != -1 &&
@@ -1067,7 +1070,7 @@ lexmark_parameters(const stp_printer_t printer,	/* I - Printer model */
       unsigned int pheight = stp_papersize_get_height(pt);
       if (strlen(stp_papersize_get_name(pt)) > 0 &&
 	  pwidth <= width_limit && pheight <= height_limit &&
-	  (pheight >= min_width_limit || pheight == 0) &&
+	  (pheight >= min_height_limit || pheight == 0) &&
 	  (pwidth >= min_width_limit || pwidth == 0))
 	{
 	  valptrs[*count].name = c_strdup(stp_papersize_get_name(pt));
@@ -1184,7 +1187,7 @@ lexmark_default_parameters(const stp_printer_t printer,
 
     res =  *(caps->res_parameters); /* get resolution specific parameters of printer */
     /* check for allowed resolutions */
-    while (res->hres)
+    if (res->hres)
       {
 	return (res->name);
       }
@@ -1358,7 +1361,7 @@ static void lexmark_deinit_printer(const stp_vars_t v, const lexmark_cap_t * cap
 		  };
 
 #ifdef DEBUG
-			printf("Headpos: %d\n", lxm3200_headpos);
+			stp_erprintf("Headpos: %d\n", lxm3200_headpos);
 #endif
 
 			lxm3200_linetoeject += 2400;
@@ -1412,7 +1415,7 @@ static void paper_shift(const stp_vars_t v, int offset, const lexmark_cap_t * ca
 	}
 
 #ifdef DEBUG
-	printf("Lines to eject: %d\n", lxm3200_linetoeject);
+	stp_erprintf("Lines to eject: %d\n", lxm3200_linetoeject);
 #endif
 }
 
@@ -1664,7 +1667,7 @@ densityDivisor /= 1.2;
 			  &out_width, &out_height, &left, &top);
 
 #ifdef DEBUG
-  printf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
+  stp_erprintf("page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 #endif
 
   /*
@@ -1943,7 +1946,7 @@ densityDivisor /= 1.2;
 	  duplicate_line = 0;
 	  if (image->get_row(image, in, errline) != STP_IMAGE_OK)
 	    break;
-	  /*	  printf("errline %d ,   image height %d\n", errline, image_height);*/
+	  /*	  stp_erprintf("errline %d ,   image height %d\n", errline, image_height);*/
 #if 1
 	  (*colorfunc)(nv, in, out, &zero_mask, image_width, image_bpp, cmap,
 		       media->hue_adjustment, media->lum_adjustment, media->sat_adjustment);
@@ -1952,7 +1955,7 @@ densityDivisor /= 1.2;
 		       NULL, NULL, NULL);
 #endif
 	}
-      /*      printf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/
+      /*      stp_erprintf("Let's dither   %d    %d  %d\n", ((y)), buf_length, length);*/
       if (doTestPrint == 0) {
 	stp_dither(out, y, dither, cols.p.c, cols.p.C, cols.p.m, cols.p.M,
 		   cols.p.y, cols.p.Y, cols.p.k, duplicate_line, zero_mask);
@@ -1966,7 +1969,7 @@ densityDivisor /= 1.2;
       clean_color(cols.p.y, length);
 
 #ifdef DEBUGxx
-      printf("Let's go lex_show_dither\n");
+      stp_erprintf("Let's go lex_show_dither\n");
       lex_show_dither(dbgfile, cols.p.y, cols.p.c, cols.p.m, cols.p.Y, cols.p.C, cols.p.M, , out_width);
 #endif
 
@@ -2016,6 +2019,8 @@ densityDivisor /= 1.2;
   if (cols.p.M != NULL) stp_free(cols.p.M);
   if (cols.p.Y != NULL) stp_free(cols.p.Y);
 
+
+
 #ifdef DEBUG
   lex_show_deinit(dbgfile);
 #endif
@@ -2059,7 +2064,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
   int abspos, disp;
 
 
-  /*  printf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/
+  /*  stp_erprintf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/
   /* first, we wirte the line header */
   switch(caps->model)  {
   case m_z52:
@@ -2485,11 +2490,11 @@ const stp_vars_t lex_show_init(int x, int y)
   ofile = fopen("/tmp/xx.ppm", "wb");
   if (ofile == NULL)
 	{
-    printf("Can't create file !\n");
+    stp_erprintf("Can't create file !\n");
     exit(2);
   }
 
-  printf("x %d, y %d\n", x, y);
+  stp_erprintf("x %d, y %d\n", x, y);
 
   fprintf(ofile, "P6\n");
   fprintf(ofile, "# CREATOR: \n");
@@ -2699,7 +2704,7 @@ flush_pass(stp_softweave_t *sw, int passno, int model, int width,
     /*#define lineoffcalc(n) (lineoffs[0].v[n]*i)*/
       {
 	int i;
-	printf("Let's go lex_show_dither (sw->jets %d,  paperShift %d)\n", sw->jets, paperShift);
+	stp_erprintf("Let's go lex_show_dither (sw->jets %d,  paperShift %d)\n", sw->jets, paperShift);
 	for (i=0; i < sw->jets; i++) {
 	  int mywidth=lwidth;
 	  lex_show_dither(dbgfile,
@@ -2859,10 +2864,10 @@ static void testprint(testdata *td)
     fscanf(td->ifile, "%[^{]{%[^\"]\"%d %d %d %d\",", dummy1, dummy2, &(td->x), &(td->y), &(td->cols), &(td->deep));
     td->cols -= 1; /* we reduce it by one because fist color will be ignored */
     td->input_line = (char *)malloc(td->x+10);
-    printf("<%s> <%s>\n", dummy1, dummy2);
-    printf("%d %d %d %d\n", td->x, td->y, td->cols, td->deep);
+    stp_erprintf("<%s> <%s>\n", dummy1, dummy2);
+    stp_erprintf("%d %d %d %d\n", td->x, td->y, td->cols, td->deep);
     if (td->cols > 16) {
-      printf("too many colors !!\n");
+      stp_erprintf("too many colors !!\n");
       return;
     }
 
@@ -2870,7 +2875,7 @@ static void testprint(testdata *td)
     fscanf(td->ifile, "%[^\"]\"%c	c %[^\"]\",", dummy1, dummy2, dummy2); /* jump over first color */
     for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
       fscanf(td->ifile, "%[^\"]\"%c	c %[^\"]\",", dummy1, &(td->colchar[icol]), dummy2);
-      printf("colchar %d <%c>\n", i, td->colchar[icol]);
+      stp_erprintf("colchar %d <%c>\n", i, td->colchar[icol]);
     }
 
 
@@ -2889,7 +2894,7 @@ static void testprint(testdata *td)
       linebufs.v[0] = (char *)malloc((td->x+7)/8); /* allocate the color */
     }
   } else {
-    printf("can't open file !\n");
+    stp_erprintf("can't open file !\n");
   }
 }
 
@@ -2924,7 +2929,7 @@ static void readtestprintline(testdata *td, stp_linebufs_t *linebufs)
       }
     }
   }
-  /* printf("pixchar  <%s><%s>\n",dummy1, td->input_line);*/
+  /* stp_erprintf("pixchar  <%s><%s>\n",dummy1, td->input_line);*/
 }
 
 #endif
