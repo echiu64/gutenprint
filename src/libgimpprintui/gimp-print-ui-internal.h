@@ -33,6 +33,7 @@
 #define inline __inline__
 #endif
 
+#include <sys/types.h>
 #include <gtk/gtk.h>
 
 #ifdef INCLUDE_GIMP_PRINT_H
