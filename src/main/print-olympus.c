@@ -393,8 +393,18 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   unsigned short *final_out = NULL;
   unsigned char  *char_out;
   unsigned short *real_out;
+  unsigned short *err_out;
   int status = 1;
   int ink_channels = 1;
+
+  int r_errdiv, r_errmod;
+  int r_errval  = 0;
+  int r_errlast = -1;
+  int r_errline = 0;
+  int c_errdiv, c_errmod;
+  int c_errval  = 0;
+  int c_errlast = -1;
+  int c_errcol = 0;
 
   const int model           = stpi_get_model_id(v); 
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
@@ -445,6 +455,32 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   out_px_width  = out_pt_width  * xdpi / 72;
   out_px_height = out_pt_height * ydpi / 72;
 
+#if 0
+  /* skip the job if image is not approximately the same size as output */
+  if (out_px_width - image_px_width < -2
+      || out_px_width - image_px_width > 2
+      || out_px_height - image_px_height < -2
+      || out_px_height - image_px_height > 2)
+    {
+      stpi_eprintf(v, _("This driver is under development.\n\n"
+        "It can't rescale your image at present. \n"
+	"Your print job is canceled now(!).\n"
+	"Please scale your image suitably and try it again.\n"
+	"Thank you."));
+      return 0;
+    }
+#endif
+
+  /* if image size is close enough to output size send out original size */
+  if (out_px_width - image_px_width > -5
+      && out_px_width - image_px_width < 5
+      && out_px_height - image_px_height > -5
+      && out_px_height - image_px_height < 5)
+    {
+    out_px_width  = image_px_width;
+    out_px_height = image_px_height;
+    }
+
   out_px_width  = (out_px_width > print_px_width ?
 		  print_px_width : out_px_width);
   out_px_height = (out_px_height > print_px_height ?
@@ -460,7 +496,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   out_px_right  = out_px_left + out_px_width;
   out_px_bottom = out_px_top  + out_px_height;
   
-/*
+#if 0
   stpi_eprintf(v, "paper (pt)   %d x %d\n"
 		"image (px)   %d x %d\n"
 		"image (pt)   %d x %d\n"
@@ -483,21 +519,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 		print_px_width, print_px_height,
 		xdpi, ydpi
 		);	
-*/
-
-  /* skip the job if image is not approximately the same size as output */
-  if (out_px_width - image_px_width < -2
-      || out_px_width - image_px_width > 2
-      || out_px_height - image_px_height < -2
-      || out_px_height - image_px_height > 2)
-    {
-      stpi_eprintf(v, _("This driver is under development.\n\n"
-        "It can't rescale your image at present. \n"
-	"Your print job is canceled now(!).\n"
-	"Please scale your image suitably and try it again.\n"
-	"Thank you."));
-      return 0;
-    }
+#endif
 
   
   stpi_set_output_color_model(v, COLOR_MODEL_CMY);
@@ -525,6 +547,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       return 0;
     }
 
+  err_out = stpi_malloc(print_px_width * ink_channels * 2);
   if (out_channels != ink_channels)
     final_out = stpi_malloc(print_px_width * ink_channels * 2);
 
@@ -559,10 +582,16 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
     }
     
     max_progress = max_y - min_y;
+    r_errdiv  = image_px_height / out_px_height;
+    r_errmod  = image_px_height % out_px_height; 
+    r_errval  = 0;
+    r_errlast = -1;
+    r_errline = 0;
 
     for (y = min_y; y <= max_y; y++)
       {
       unsigned short *out;
+      int duplicate_line = 1;
       unsigned zero_mask;
 
       if ((y % 16) == 0)
@@ -603,13 +632,43 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 /* stpi_erprintf("left %d ", out_px_left); */
 	  }
 
-        if (stpi_color_get_row(v, image, y - out_px_top, &zero_mask))
-          {
-  	  status = 2;
-  	  break;
-          }
-	out = stpi_channel_get_input(v);
-        real_out = out;
+	if (r_errline != r_errlast)
+	  {
+	  r_errlast = r_errline;
+	  duplicate_line = 0;
+
+/* stpi_erprintf("r_errline %d, ", r_errline); */
+          if (stpi_color_get_row(v, image, r_errline, &zero_mask))
+            {
+  	    status = 2;
+  	    break;
+            }
+  	  }
+	
+	out = stpi_channel_get_output(v);
+
+	c_errdiv = image_px_width / out_px_width;
+	c_errmod = image_px_width % out_px_width;
+	c_errval  = 0;
+	c_errlast = -1;
+	c_errcol  = 0;
+	for (i = 0; i < out_px_width; i++) {
+	  if (c_errcol != c_errlast) {
+	    c_errlast = c_errcol;
+	  }
+	  for (j = 0; j < ink_channels; j++) {
+  	    err_out[i * ink_channels + j] = out[c_errcol * ink_channels + j];
+	  }
+
+	  c_errval += c_errmod;
+	  c_errcol += c_errdiv;
+	  if (c_errval >= out_px_width) {
+	    c_errval -= out_px_width;
+	    c_errcol ++;
+	  }
+	}
+
+	real_out = err_out;
         if (out_channels != ink_channels)
   	{
   	  real_out = final_out;
@@ -618,7 +677,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   	      for (i = 0; i < out_px_width; i++)
   		{
   		  for (j = 0; j < ink_channels; j++)
-  		    final_out[i * ink_channels + j] = out[i];
+  		    final_out[i * ink_channels + j] = err_out[i];
   		}
   	    }
   	  else
@@ -627,7 +686,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   		{
   		  int avg = 0;
   		  for (j = 0; j < out_channels; j++)
-  		    avg += out[i * out_channels + j];
+  		    avg += err_out[i * out_channels + j];
   		  final_out[i] = avg / out_channels;
   		}
   	    }
@@ -644,6 +703,14 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 /* stpi_erprintf("right %d ", print_px_width - out_px_right); */
 	  }
 /* stpi_erprintf("\n"); */
+
+	r_errval += r_errmod;
+	r_errline += r_errdiv;
+	if (r_errval >= out_px_height)
+	  {
+	    r_errval -= out_px_height;
+	    r_errline ++;
+	  }
 	}
       }
       /* layer end */
