@@ -314,8 +314,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
-    { -1, 3, -1, 0, -1, 0 },
-    { 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { -1, 3, -1, 1, -1, 1 },
+    { 1, 1, .775, .775, .387, .387, .193, .0966 }
   },
   /* 8: Stylus Photo EX */
   {
@@ -324,8 +324,8 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_COMMAND_GENERIC | MODEL_GRAYMODE_NO | MODEL_1440DPI_YES
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(11), INCH(17), 9, 9, 0, 24, 1, 0,
-    { -1, 3, -1, 0, -1, 0 },
-    { 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { -1, 3, -1, 1, -1, 1 },
+    { 1, 1, .775, .775, .387, .387, .193, .0966 }
   },
   /* 9: Stylus Photo */
   {
@@ -335,7 +335,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     32, 8, 32, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 24, 1, 0,
     { -1, 3, -1, 0, -1, -1 },
-    { 1, 1, .646, .646, .323, .323, .1615, .0808 }
+    { 1, 1, .646, .646, 0, 0, 0, 0 }
   },
 
   /* THIRD GENERATION PRINTERS */
@@ -350,7 +350,7 @@ static escp2_printer_t model_capabilities[] =
      | MODEL_ROLLFEED_NO | MODEL_ZEROMARGIN_NO),
     21, 8, 64, 720, INCH(17 / 2), INCH(14), 9, 9, 0, 9, 1, 0,
     { -1, 3, 3, 2, -1, -1 },
-    { 1, 1, .646, .646, .0, .0, .0, .0 }
+    { 1, 1, .646, .646, 0, 0, 0, 0 }
   },
   /* 11: Stylus Color 640 */
   {
