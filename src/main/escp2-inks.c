@@ -44,6 +44,7 @@
 #define DECLARE_INK(name, shades, dotsizes, density)	\
 static const escp2_variable_ink_t name##_ink =		\
 {							\
+  #name,						\
   density,						\
   sizeof(shades##_shades) / sizeof(double),		\
   sizeof(dotsizes##_dotsizes) / sizeof(double),		\

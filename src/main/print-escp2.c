@@ -119,6 +119,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
   },
   {
+    "InkSet", N_("Ink Set"),
+    N_("Type of ink in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1
+  },
+  {
     "PrintingDirection", N_("Printing Direction"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -410,9 +416,8 @@ DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
-DEF_COMPOSITE_ACCESSOR(paperlist, const paperlist_t *)
 DEF_COMPOSITE_ACCESSOR(reslist, const res_t *const *)
-DEF_COMPOSITE_ACCESSOR(inklist, const inklist_t *)
+DEF_COMPOSITE_ACCESSOR(inkgroup, const inkgroup_t *)
 DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
 
 static int
@@ -470,6 +475,37 @@ escp2_inks(stp_const_vars_t v, int resid, int inkset)
   const escp2_variable_inklist_t *inks =
     stpi_escp2_model_capabilities[model].inks;
   return (*inks)[inkset][resid];
+}
+
+static const inklist_t *
+escp2_inklist(stp_const_vars_t v)
+{
+  int model = stpi_get_model_id(v);
+  int i;
+  const char *ink_list_name = NULL;
+  const inkgroup_t *inkgroup = stpi_escp2_model_capabilities[model].inkgroup;
+
+  if (stp_check_string_parameter(v, "InkSet", STP_PARAMETER_ACTIVE))
+    ink_list_name = stp_get_string_parameter(v, "InkSet");
+  if (ink_list_name)
+    {
+      for (i = 0; i < inkgroup->n_inklists; i++)
+	{
+	  if (strcmp(ink_list_name, inkgroup->inklists[i]->name) == 0)
+	    return inkgroup->inklists[i];
+	}
+    }
+  return inkgroup->inklists[0];
+}
+
+static const paperlist_t *
+escp2_paperlist(stp_const_vars_t v)
+{
+  const inklist_t *inklist = escp2_inklist(v);
+  if (inklist)
+    return inklist->papers;
+  else
+    return NULL;
 }
 
 static int
@@ -646,6 +682,26 @@ get_inktype(stp_vars_t v)
   return NULL;
 }
 
+static const paper_adjustment_t *
+get_media_adjustment(stp_vars_t v)
+{
+  const paper_t *pt = get_media_type(v);
+  const escp2_inkname_t *inkname = get_inktype(v);
+  if (pt && inkname && inkname->papers)
+    {
+      const paper_adjustment_list_t *adjlist = inkname->papers;
+      const char *paper_name = pt->name;
+      int i;
+      for (i = 0; i < adjlist->paper_count; i++)
+	{
+	  if (strcmp(paper_name, adjlist->papers[i].name) == 0)
+	    return &(adjlist->papers[i]);
+	}
+    }
+  return NULL;
+}
+      
+
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
  */
@@ -736,6 +792,24 @@ escp2_parameters(stp_const_vars_t v, const char *name,
 	      stp_string_list_add_string(description->bounds.str,
 					 inks->inknames[i]->name,
 					 _(inks->inknames[i]->text));
+	  description->deflt.str = "DEFAULT";
+	}
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "InkSet") == 0)
+    {
+      const inkgroup_t *inks = escp2_inkgroup(v);
+      int ninklists = inks->n_inklists;
+      description->bounds.str = stp_string_list_create();
+      if (ninklists > 1)
+	{
+	  stp_string_list_add_string(description->bounds.str, "DEFAULT",
+				     _("Standard"));
+	  for (i = 0; i < ninklists; i++)
+	    stp_string_list_add_string(description->bounds.str,
+				       inks->inklists[i]->name,
+				       _(inks->inklists[i]->text));
 	  description->deflt.str = "DEFAULT";
 	}
       else
@@ -1022,7 +1096,7 @@ static void
 adjust_density_and_ink_type(stp_vars_t v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  const paper_t *pt = pd->paper_type;
+  const paper_adjustment_t *pt = pd->paper_adjustment;
   double paper_density = .8;
   int o_resid = compute_resid(pd->res);
 
@@ -1104,43 +1178,27 @@ adjust_print_quality(stp_vars_t v, stp_image_t *image)
   stp_curve_t   lum_adjustment = NULL;
   stp_curve_t   sat_adjustment = NULL;
   stp_curve_t   hue_adjustment = NULL;
-  const paper_t *pt;
-  double k_upper, k_lower;
-  double paper_k_upper;
+  const paper_adjustment_t *pt;
+  double k_upper = 1.0;
+  double k_lower = 0;
+
   /*
    * Compute the LUT.  For now, it's 8 bit, but that may eventually
    * sometimes change.
    */
-  k_lower = pd->inkname->k_lower;
-  k_upper = pd->inkname->k_upper;
 
-  pt = pd->paper_type;
+  pt = pd->paper_adjustment;
   if (pt)
     {
-      k_lower *= pt->k_lower_scale;
-      paper_k_upper = pt->k_upper;
-      k_upper *= pt->k_upper;
-      if (pd->channels_in_use >= 5)
-	{
-	  stp_scale_float_parameter(v, "Cyan", pt->p_cyan);
-	  stp_scale_float_parameter(v, "Magenta", pt->p_magenta);
-	  stp_scale_float_parameter(v, "Yellow", pt->p_yellow);
-	}
-      else
-	{
-	  stp_scale_float_parameter(v, "Cyan", pt->cyan);
-	  stp_scale_float_parameter(v, "Magenta", pt->magenta);
-	  stp_scale_float_parameter(v, "Yellow", pt->yellow);
-	}
+      k_lower = pt->k_lower;
+      k_upper = pt->k_upper;
+      stp_scale_float_parameter(v, "Cyan", pt->cyan);
+      stp_scale_float_parameter(v, "Magenta", pt->magenta);
+      stp_scale_float_parameter(v, "Yellow", pt->yellow);
       stp_scale_float_parameter(v, "Saturation", pt->saturation);
       stp_scale_float_parameter(v, "Gamma", pt->gamma);
     }
-  else				/* Assume some kind of plain paper */
-    {
-      k_lower *= .1;
-      paper_k_upper = .5;
-      k_upper *= .5;
-    }
+
 
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
@@ -1194,12 +1252,12 @@ static const physical_subchannel_t default_black_subchannels[] =
 
 static const ink_channel_t default_black_channels =
 {
-  default_black_subchannels, 1
+  "Empty", default_black_subchannels, 1
 };
 
 static const escp2_inkname_t default_black_ink =
 {
-  NULL, NULL, 0, 1, 0, 0, 0, NULL, NULL, NULL,
+  NULL, NULL, 0, 1, 0, NULL, NULL, NULL, NULL,
   {
     &default_black_channels
   }
@@ -1234,13 +1292,8 @@ setup_inks(stp_vars_t v)
   escp2_privdata_t *pd = get_privdata(v);
   int i, j;
   const escp2_variable_inkset_t *inks;
-  const paper_t *pt;
-  double paper_k_upper = 0.5;
   const escp2_inkname_t *ink_type = pd->inkname;
 
-  pt = pd->paper_type;
-  if (pt)
-    paper_k_upper = pt->k_upper;
   inks = escp2_inks(v, pd->ink_resid, ink_type->inkset);
   if (inks)
     {
@@ -1253,8 +1306,7 @@ setup_inks(stp_vars_t v)
 	    {
 	      const char *param = channel->subchannels[0].channel_density;
 	      double userval = get_double_param(v, param);
-	      stpi_dither_set_inks(v, i,
-				   ink->darkness * paper_k_upper * userval,
+	      stpi_dither_set_inks(v, i, ink->darkness * userval,
 				   ink->numshades, ink->shades,
 				   ink->numdotsizes, ink->dotsizes);
 	      for (j = 0; j < channel->n_subchannels; j++)
@@ -1312,6 +1364,8 @@ setup_misc(stp_vars_t v)
   escp2_privdata_t *pd = get_privdata(v);
   pd->input_slot = get_input_slot(v);
   pd->paper_type = get_media_type(v);
+  pd->paper_adjustment = get_media_adjustment(v);
+  pd->ink_group = escp2_inkgroup(v);
   pd->init_sequence = escp2_preinit_sequence(v);
   pd->deinit_sequence = escp2_postinit_remote_sequence(v);
   pd->advanced_command_set = escp2_has_advanced_command_set(v);

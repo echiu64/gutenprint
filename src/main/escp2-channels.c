@@ -78,6 +78,7 @@ static const char standard_hue_adjustment[] =
 #define DECLARE_INK_CHANNEL(name)				\
 static const ink_channel_t name##_channels =			\
 {								\
+  #name,							\
   name##_subchannels,						\
   sizeof(name##_subchannels) / sizeof(physical_subchannel_t),	\
 }
@@ -321,9 +322,98 @@ static const physical_subchannel_t f360_photo_magenta_subchannels[] =
 
 DECLARE_INK_CHANNEL(f360_photo_magenta);
 
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Two shade gray                                               *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const escp2_inkname_t two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &photo2_black_channels
+  }
+};
+
+static const escp2_inkname_t ultra_photo_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &photo2_black_channels
+  }
+};
+
+static const escp2_inkname_t f360_ultra_photo_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_photo2_black_channels
+  }
+};
+
+static const escp2_inkname_t f360_two_color_grayscale_inkset =
+{
+  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_photo2_black_channels
+  }
+};
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Quadtone gray                                                *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const escp2_inkname_t piezo_quadtone_inkset =
+{
+  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &quadtone_channels
+  }
+};
+
+static const escp2_inkname_t c80_piezo_quadtone_inkset =
+{
+  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &c80_quadtone_channels
+  }
+};
+
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Three color CMY                                              *
+ *                                                              *
+ ****************************************************************
+ */
+
 static const escp2_inkname_t three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &standard_cyan_channels,
@@ -333,7 +423,8 @@ static const escp2_inkname_t three_color_composite_inkset =
 
 static const escp2_inkname_t x80_three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &x80_cyan_channels,
@@ -343,7 +434,8 @@ static const escp2_inkname_t x80_three_color_composite_inkset =
 
 static const escp2_inkname_t c80_three_color_composite_inkset =
 {
-  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK, 0, 0,
+  "RGB", N_("Three Color Composite"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &c80_cyan_channels,
@@ -351,9 +443,19 @@ static const escp2_inkname_t c80_three_color_composite_inkset =
   }
 };
 
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Four color CMYK                                              *
+ *                                                              *
+ ****************************************************************
+ */
+
 static const escp2_inkname_t four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &standard_black_channels, &standard_cyan_channels,
@@ -363,7 +465,8 @@ static const escp2_inkname_t four_color_standard_inkset =
 
 static const escp2_inkname_t x80_four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &x80_black_channels, &x80_cyan_channels,
@@ -373,7 +476,8 @@ static const escp2_inkname_t x80_four_color_standard_inkset =
 
 static const escp2_inkname_t c80_four_color_standard_inkset =
 {
-  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK, .25, 1.0,
+  "CMYK", N_("Four Color Standard"), 1, 4, INKSET_CMYK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &c80_black_channels, &c80_cyan_channels,
@@ -381,29 +485,19 @@ static const escp2_inkname_t c80_four_color_standard_inkset =
   }
 };
 
-static const escp2_inkname_t six_color_photo_inkset =
-{
-  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK, .5, 1.0,
-  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-  {
-    &photo_black_channels, &photo_cyan_channels,
-    &photo_magenta_channels, &photo_yellow_channels
-  }
-};
 
-static const escp2_inkname_t f360_six_color_photo_inkset =
-{
-  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK, .5, 1.0,
-  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
-  {
-    &f360_photo_black_channels, &f360_photo_cyan_channels,
-    &f360_photo_magenta_channels, &f360_photo_yellow_channels
-  }
-};
+/*
+ ****************************************************************
+ *                                                              *
+ * Five color CcMmY                                             *
+ *                                                              *
+ ****************************************************************
+ */
 
 static const escp2_inkname_t five_color_photo_composite_inkset =
 {
-  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK, 0, 0,
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &photo_cyan_channels,
@@ -411,9 +505,21 @@ static const escp2_inkname_t five_color_photo_composite_inkset =
   }
 };
 
-static const escp2_inkname_t f360_five_color_photo_composite_inkset =
+static const escp2_inkname_t ultra_photo_five_color_photo_composite_inkset =
 {
-  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK, 0, 0,
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_ultra_photo_five_color_photo_composite_inkset =
+{
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &f360_photo_cyan_channels,
@@ -421,29 +527,85 @@ static const escp2_inkname_t f360_five_color_photo_composite_inkset =
   }
 };
 
-static const escp2_inkname_t j_seven_color_enhanced_inkset =
+static const escp2_inkname_t f360_five_color_photo_composite_inkset =
 {
-  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "PhotoCMY", N_("Five Color Photo Composite"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    NULL, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Six color CcMmYK                                             *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const escp2_inkname_t six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo_black_channels, &photo_cyan_channels,
-    &photo_magenta_channels, &photo2_yellow_channels
+    &photo_magenta_channels, &photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
+static const escp2_inkname_t ultra_photo_six_color_photo_inkset =
 {
-  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &photo_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_ultra_photo_six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo_black_channels, &f360_photo_cyan_channels,
-    &f360_photo_magenta_channels, &f360_photo2_yellow_channels
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
   }
 };
 
+static const escp2_inkname_t f360_six_color_photo_inkset =
+{
+  "PhotoCMYK", N_("Six Color Photo"), 1, 4, INKSET_CcMmYK,
+  &stpi_escp2_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
+  }
+};
+
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Six color CcMmYy (Japan)                                     *
+ *                                                              *
+ ****************************************************************
+ */
+
 static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 {
-  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &photo_cyan_channels,
@@ -453,7 +615,8 @@ static const escp2_inkname_t j_six_color_enhanced_composite_inkset =
 
 static const escp2_inkname_t f360_j_six_color_enhanced_composite_inkset =
 {
-  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK, .5, 1.0,
+  "PhotoEnhanceJ", N_("Six Color Enhanced Composite"), 1, 4, INKSET_CcMmYyK,
+  &stpi_escp2_standard_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     NULL, &f360_photo_cyan_channels,
@@ -461,9 +624,19 @@ static const escp2_inkname_t f360_j_six_color_enhanced_composite_inkset =
   }
 };
 
-static const escp2_inkname_t seven_color_photo_inkset =
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Seven color CcMmYKk                                          *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const escp2_inkname_t seven_color_enhanced_inkset =
 {
-  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk, .05 , 1.0,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &photo2_black_channels, &photo_cyan_channels,
@@ -471,9 +644,10 @@ static const escp2_inkname_t seven_color_photo_inkset =
   }
 };
 
-static const escp2_inkname_t f360_seven_color_photo_inkset =
+static const escp2_inkname_t f360_seven_color_enhanced_inkset =
 {
-  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk, .05 , 1.0,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_photo_paper_adjustment_list,
   standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
     &f360_photo2_black_channels, &f360_photo_cyan_channels,
@@ -481,27 +655,72 @@ static const escp2_inkname_t f360_seven_color_photo_inkset =
   }
 };
 
-static const escp2_inkname_t two_color_grayscale_inkset =
+static const escp2_inkname_t f360_ultra_photo_seven_color_enhanced_inkset =
 {
-  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk, 0, 0,
-  NULL, NULL, NULL,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
-    &photo2_black_channels
+    &f360_photo2_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t f360_two_color_grayscale_inkset =
+static const escp2_inkname_t ultra_photo_seven_color_enhanced_inkset =
 {
-  "Gray2", N_("Two Level Grayscale"), 0, 1, INKSET_CcMmYKk, 0, 0,
-  NULL, NULL, NULL,
+  "PhotoCMYK7", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
   {
-    &f360_photo2_black_channels
+    &photo2_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo_yellow_channels
   }
 };
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Seven color CcMmYyK (Japan)                                  *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const escp2_inkname_t j_seven_color_enhanced_inkset =
+{
+  "Photo7J", N_("Seven Color Enhanced"), 1, 4, INKSET_CcMmYyK,
+  &stpi_escp2_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &photo_black_channels, &photo_cyan_channels,
+    &photo_magenta_channels, &photo2_yellow_channels
+  }
+};
+
+static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
+{
+  "Photo7J", N_("Seven Color Photo"), 1, 4, INKSET_CcMmYKk,
+  &stpi_escp2_photo_paper_adjustment_list,
+  standard_lum_adjustment, standard_hue_adjustment, standard_sat_adjustment,
+  {
+    &f360_photo_black_channels, &f360_photo_cyan_channels,
+    &f360_photo_magenta_channels, &f360_photo2_yellow_channels
+  }
+};
+
+
+
+/*
+ ****************************************************************
+ *                                                              *
+ * Extended (raw)                                               *
+ *                                                              *
+ ****************************************************************
+ */
 
 static const escp2_inkname_t one_color_extended_inkset =
 {
-  "PhysicalBlack", N_("One Color Raw"), 0, 1, INKSET_EXTENDED, 0, 0,
+  "PhysicalBlack", N_("One Color Raw"), 0, 1, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &standard_black_channels
@@ -510,25 +729,49 @@ static const escp2_inkname_t one_color_extended_inkset =
 
 static const escp2_inkname_t two_color_extended_inkset =
 {
-  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED, 0, 0,
+  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &photo_black_channels, &extended_black_channels,
   }
 };
 
-static const escp2_inkname_t f360_two_color_extended_inkset =
+static const escp2_inkname_t f360_ultra_photo_two_color_extended_inkset =
 {
-  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED, 0, 0,
+  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &f360_photo_black_channels, &extended_black_channels,
   }
 };
 
+
+static const escp2_inkname_t f360_two_color_extended_inkset =
+{
+  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_photo_black_channels, &extended_black_channels,
+  }
+};
+
+static const escp2_inkname_t ultra_photo_two_color_extended_inkset =
+{
+  "PhysicalBlack2", N_("Two Color Raw"), 1, 2, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &photo_black_channels, &extended_black_channels,
+  }
+};
+
 static const escp2_inkname_t three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &standard_cyan_channels, &standard_magenta_channels,
@@ -538,7 +781,8 @@ static const escp2_inkname_t three_color_extended_inkset =
 
 static const escp2_inkname_t x80_three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &x80_cyan_channels, &x80_magenta_channels, &x80_yellow_channels
@@ -547,7 +791,8 @@ static const escp2_inkname_t x80_three_color_extended_inkset =
 
 static const escp2_inkname_t c80_three_color_extended_inkset =
 {
-  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMY", N_("Three Color Raw"), 1, 3, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &c80_cyan_channels, &c80_magenta_channels, &c80_yellow_channels
@@ -556,7 +801,8 @@ static const escp2_inkname_t c80_three_color_extended_inkset =
 
 static const escp2_inkname_t four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &standard_black_channels, &standard_cyan_channels,
@@ -566,7 +812,8 @@ static const escp2_inkname_t four_color_extended_inkset =
 
 static const escp2_inkname_t x80_four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &x80_black_channels, &x80_cyan_channels,
@@ -576,7 +823,8 @@ static const escp2_inkname_t x80_four_color_extended_inkset =
 
 static const escp2_inkname_t c80_four_color_extended_inkset =
 {
-  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED, 0, 0,
+  "PhysicalCMYK", N_("Four Color Raw"), 1, 4, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &c80_black_channels, &c80_cyan_channels,
@@ -586,7 +834,8 @@ static const escp2_inkname_t c80_four_color_extended_inkset =
 
 static const escp2_inkname_t five_color_extended_inkset =
 {
-  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &standard_cyan_channels, &extended_cyan_channels,
@@ -595,9 +844,10 @@ static const escp2_inkname_t five_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_five_color_extended_inkset =
+static const escp2_inkname_t f360_ultra_photo_five_color_extended_inkset =
 {
-  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &f360_standard_cyan_channels, &extended_cyan_channels,
@@ -606,9 +856,35 @@ static const escp2_inkname_t f360_five_color_extended_inkset =
   }
 };
 
+
+static const escp2_inkname_t f360_five_color_extended_inkset =
+{
+  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_standard_cyan_channels, &extended_cyan_channels,
+    &f360_standard_magenta_channels, &extended_magenta_channels,
+    &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t ultra_photo_five_color_extended_inkset =
+{
+  "PhysicalCcMmY", N_("Five Color Raw"), 1, 5, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &standard_cyan_channels, &extended_cyan_channels,
+    &standard_magenta_channels, &extended_magenta_channels,
+    &photo_yellow_channels
+  }
+};
+
 static const escp2_inkname_t six_color_extended_inkset =
 {
-  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &photo_black_channels,
@@ -618,9 +894,10 @@ static const escp2_inkname_t six_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_six_color_extended_inkset =
+static const escp2_inkname_t f360_ultra_photo_six_color_extended_inkset =
 {
-  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &f360_photo_black_channels,
@@ -630,9 +907,37 @@ static const escp2_inkname_t f360_six_color_extended_inkset =
   }
 };
 
+
+static const escp2_inkname_t f360_six_color_extended_inkset =
+{
+  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &f360_photo_black_channels,
+    &f360_standard_cyan_channels, &extended_cyan_channels,
+    &f360_standard_magenta_channels, &extended_magenta_channels,
+    &f360_photo_yellow_channels
+  }
+};
+
+static const escp2_inkname_t ultra_photo_six_color_extended_inkset =
+{
+  "PhysicalCcMmYK", N_("Six Color Raw"), 1, 6, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
+  NULL, NULL, NULL,
+  {
+    &photo_black_channels,
+    &standard_cyan_channels, &extended_cyan_channels,
+    &standard_magenta_channels, &extended_magenta_channels,
+    &photo_yellow_channels
+  }
+};
+
 static const escp2_inkname_t j_seven_color_extended_inkset =
 {
-  "PhysicalCcMmYyK", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmYyK", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &photo_black_channels, 
@@ -642,21 +947,10 @@ static const escp2_inkname_t j_seven_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_j_seven_color_extended_inkset =
-{
-  "PhysicalCcMmYyK", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED, 0, 0,
-  NULL, NULL, NULL,
-  {
-    &f360_photo_black_channels,
-    &f360_standard_cyan_channels, &extended_cyan_channels,
-    &f360_standard_magenta_channels, &extended_magenta_channels,
-    &f360_photo_yellow_channels, &j_extended_yellow_channels,
-  }
-};
-
 static const escp2_inkname_t seven_color_extended_inkset =
 {
-  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &photo_black_channels, &extended_black_channels,
@@ -666,9 +960,10 @@ static const escp2_inkname_t seven_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t f360_seven_color_extended_inkset =
+static const escp2_inkname_t f360_ultra_photo_seven_color_extended_inkset =
 {
-  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED, 0, 0,
+  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   NULL, NULL, NULL,
   {
     &f360_photo_black_channels, &extended_black_channels,
@@ -678,30 +973,42 @@ static const escp2_inkname_t f360_seven_color_extended_inkset =
   }
 };
 
-static const escp2_inkname_t piezo_quadtone_inkset =
+
+static const escp2_inkname_t f360_seven_color_extended_inkset =
 {
-  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE, 0, 0,
+  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
+  &stpi_escp2_standard_paper_adjustment_list,
   NULL, NULL, NULL,
   {
-    &quadtone_channels
+    &f360_photo_black_channels, &extended_black_channels,
+    &f360_standard_cyan_channels, &extended_cyan_channels,
+    &f360_standard_magenta_channels, &extended_magenta_channels,
+    &f360_photo_yellow_channels
   }
 };
 
-static const escp2_inkname_t c80_piezo_quadtone_inkset =
+static const escp2_inkname_t ultra_photo_seven_color_extended_inkset =
 {
-  "Quadtone", N_("Quadtone"), 0, 1, INKSET_PIEZO_QUADTONE, 0, 0,
+  "PhysicalCcMmYKk", N_("Seven Color Raw"), 1, 7, INKSET_EXTENDED,
+  &stpi_escp2_ultrachrome_photo_paper_adjustment_list,
   NULL, NULL, NULL,
   {
-    &c80_quadtone_channels
+    &photo_black_channels, &extended_black_channels,
+    &standard_cyan_channels, &extended_cyan_channels,
+    &standard_magenta_channels, &extended_magenta_channels,
+    &photo_yellow_channels
   }
 };
 
-#define DECLARE_INKLIST(name)				\
-const inklist_t stpi_escp2_##name##_inklist =		\
+#define DECLARE_INKLIST(name, text, papers)		\
+static const inklist_t name##_inklist =			\
 {							\
+  #name,						\
+  text,							\
   name##_ink_types,					\
+  &stpi_escp2_##papers##_paper_list,			\
   sizeof(name##_ink_types) / sizeof(escp2_inkname_t *),	\
-}							\
+}
 
 
 static const escp2_inkname_t *const cmy_ink_types[] =
@@ -709,7 +1016,8 @@ static const escp2_inkname_t *const cmy_ink_types[] =
   &three_color_composite_inkset
 };
 
-DECLARE_INKLIST(cmy);
+DECLARE_INKLIST(cmy, N_("Standard"), standard);
+
 
 static const escp2_inkname_t *const standard_ink_types[] =
 {
@@ -721,7 +1029,7 @@ static const escp2_inkname_t *const standard_ink_types[] =
   &four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(standard);
+DECLARE_INKLIST(standard, N_("Standard"), standard);
 
 static const escp2_inkname_t *const c80_ink_types[] =
 {
@@ -733,7 +1041,7 @@ static const escp2_inkname_t *const c80_ink_types[] =
   &c80_four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(c80);
+DECLARE_INKLIST(c80, N_("Standard"), c80);
 
 static const escp2_inkname_t *const x80_ink_types[] =
 {
@@ -744,7 +1052,7 @@ static const escp2_inkname_t *const x80_ink_types[] =
   &x80_four_color_extended_inkset,
 };
 
-DECLARE_INKLIST(x80);
+DECLARE_INKLIST(x80, N_("Standard"), standard);
 
 static const escp2_inkname_t *const photo_ink_types[] =
 {
@@ -760,23 +1068,26 @@ static const escp2_inkname_t *const photo_ink_types[] =
   &six_color_extended_inkset,
 };
 
-DECLARE_INKLIST(photo);
+DECLARE_INKLIST(photo, N_("Standard"), standard);
 
-static const escp2_inkname_t *const f360_photo_ink_types[] =
+static const escp2_inkname_t *const photo7_ink_types[] =
 {
-  &f360_six_color_photo_inkset,
-  &f360_five_color_photo_composite_inkset,
+  &seven_color_enhanced_inkset,
+  &six_color_photo_inkset,
+  &five_color_photo_composite_inkset,
   &four_color_standard_inkset,
   &three_color_composite_inkset,
-  &piezo_quadtone_inkset,
+  &two_color_grayscale_inkset,
   &one_color_extended_inkset,
+  &two_color_extended_inkset,
   &three_color_extended_inkset,
   &four_color_extended_inkset,
-  &f360_five_color_extended_inkset,
-  &f360_six_color_extended_inkset,
+  &five_color_extended_inkset,
+  &six_color_extended_inkset,
+  &seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_photo);
+DECLARE_INKLIST(photo7, N_("Standard"), standard);
 
 static const escp2_inkname_t *const photo7_japan_ink_types[] =
 {
@@ -795,7 +1106,41 @@ static const escp2_inkname_t *const photo7_japan_ink_types[] =
   &seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(photo7_japan);
+DECLARE_INKLIST(photo7_japan, N_("Standard"), standard);
+
+static const escp2_inkname_t *const f360_photo_ink_types[] =
+{
+  &f360_six_color_photo_inkset,
+  &f360_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset,
+  &one_color_extended_inkset,
+  &three_color_extended_inkset,
+  &four_color_extended_inkset,
+  &f360_five_color_extended_inkset,
+  &f360_six_color_extended_inkset,
+};
+
+DECLARE_INKLIST(f360_photo, N_("Standard"), standard);
+
+static const escp2_inkname_t *const f360_photo7_ink_types[] =
+{
+  &f360_seven_color_enhanced_inkset,
+  &f360_six_color_photo_inkset,
+  &f360_five_color_photo_composite_inkset,
+  &four_color_standard_inkset,
+  &three_color_composite_inkset,
+  &piezo_quadtone_inkset,
+  &one_color_extended_inkset,
+  &three_color_extended_inkset,
+  &four_color_extended_inkset,
+  &f360_five_color_extended_inkset,
+  &f360_six_color_extended_inkset,
+  &f360_seven_color_extended_inkset,
+};
+
+DECLARE_INKLIST(f360_photo7, N_("Standard"), standard);
 
 static const escp2_inkname_t *const f360_photo7_japan_ink_types[] =
 {
@@ -814,42 +1159,124 @@ static const escp2_inkname_t *const f360_photo7_japan_ink_types[] =
   &f360_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_photo7_japan);
+DECLARE_INKLIST(f360_photo7_japan, N_("Standard"), standard);
 
-static const escp2_inkname_t *const photo7_ink_types[] =
+static const escp2_inkname_t *const f360_ultra_photo7_ink_types[] =
 {
-  &seven_color_photo_inkset,
-  &six_color_photo_inkset,
-  &five_color_photo_composite_inkset,
+  &f360_ultra_photo_seven_color_enhanced_inkset,
+  &f360_ultra_photo_six_color_photo_inkset,
+  &f360_ultra_photo_five_color_photo_composite_inkset,
   &four_color_standard_inkset,
   &three_color_composite_inkset,
-  &two_color_grayscale_inkset,
+  &f360_ultra_photo_two_color_grayscale_inkset,
   &one_color_extended_inkset,
-  &two_color_extended_inkset,
+  &f360_ultra_photo_two_color_extended_inkset,
   &three_color_extended_inkset,
   &four_color_extended_inkset,
-  &five_color_extended_inkset,
-  &six_color_extended_inkset,
-  &seven_color_extended_inkset,
+  &f360_ultra_photo_five_color_extended_inkset,
+  &f360_ultra_photo_six_color_extended_inkset,
+  &f360_ultra_photo_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(photo7);
+DECLARE_INKLIST(f360_ultra_photo7, N_("UltraChrome Photo Black"), standard);
 
-static const escp2_inkname_t *const f360_photo7_ink_types[] =
+static const escp2_inkname_t *const ultra_photo7_ink_types[] =
 {
-  &f360_seven_color_photo_inkset,
-  &f360_six_color_photo_inkset,
-  &f360_five_color_photo_composite_inkset,
+  &ultra_photo_seven_color_enhanced_inkset,
+  &ultra_photo_six_color_photo_inkset,
+  &ultra_photo_five_color_photo_composite_inkset,
   &four_color_standard_inkset,
   &three_color_composite_inkset,
-  &f360_two_color_grayscale_inkset,
+  &ultra_photo_two_color_grayscale_inkset,
   &one_color_extended_inkset,
-  &f360_two_color_extended_inkset,
+  &ultra_photo_two_color_extended_inkset,
   &three_color_extended_inkset,
   &four_color_extended_inkset,
-  &f360_five_color_extended_inkset,
-  &f360_six_color_extended_inkset,
-  &f360_seven_color_extended_inkset,
+  &ultra_photo_five_color_extended_inkset,
+  &ultra_photo_six_color_extended_inkset,
+  &ultra_photo_seven_color_extended_inkset,
 };
 
-DECLARE_INKLIST(f360_photo7);
+DECLARE_INKLIST(ultra_photo7, N_("UltraChrome Photo Black"), standard);
+
+
+static const inklist_t *cmy_group[] =
+{
+  &cmy_inklist
+};
+
+static const inklist_t *standard_group[] =
+{
+  &standard_inklist
+};
+
+static const inklist_t *c80_group[] =
+{
+  &c80_inklist
+};
+
+static const inklist_t *x80_group[] =
+{
+  &x80_inklist
+};
+
+static const inklist_t *photo_group[] =
+{
+  &photo_inklist
+};
+
+static const inklist_t *photo7_group[] =
+{
+  &photo7_inklist
+};
+
+static const inklist_t *photo7_japan_group[] =
+{
+  &photo7_japan_inklist
+};
+
+static const inklist_t *f360_photo_group[] =
+{
+  &f360_photo_inklist
+};
+
+static const inklist_t *f360_photo7_group[] =
+{
+  &f360_photo7_inklist
+};
+
+static const inklist_t *f360_photo7_japan_group[] =
+{
+  &f360_photo7_japan_inklist
+};
+
+static const inklist_t *f360_ultrachrome_group[] =
+{
+  &f360_ultra_photo7_inklist
+};
+
+static const inklist_t *ultrachrome_group[] =
+{
+  &ultra_photo7_inklist
+};
+
+#define DECLARE_INKGROUP(name)			\
+const inkgroup_t stpi_escp2_##name##_inkgroup =	\
+{						\
+  #name,					\
+  name##_group,					\
+  sizeof(name##_group) / sizeof(inklist_t *),	\
+}
+
+DECLARE_INKGROUP(cmy);
+DECLARE_INKGROUP(standard);
+DECLARE_INKGROUP(c80);
+DECLARE_INKGROUP(x80);
+DECLARE_INKGROUP(photo);
+DECLARE_INKGROUP(photo7);
+DECLARE_INKGROUP(photo7_japan);
+DECLARE_INKGROUP(ultrachrome);
+DECLARE_INKGROUP(f360_photo);
+DECLARE_INKGROUP(f360_photo7);
+DECLARE_INKGROUP(f360_photo7_japan);
+DECLARE_INKGROUP(f360_ultrachrome);

@@ -87,6 +87,7 @@ typedef float escp2_densities_t[RES_N];
 
 typedef struct escp2_variable_ink
 {
+  const char *listname;
   float darkness;
   short numshades;
   short numdotsizes;
@@ -101,35 +102,138 @@ typedef const escp2_variable_inkset_t *escp2_variable_inklist_t[][RES_N];
 typedef struct
 {
   const char *name;
-  const char *text;
-  short paper_feed_sequence;
-  short platen_gap;
   float base_density;
-  float k_lower_scale;
+  float k_lower;
   float k_upper;
   float cyan;
   float magenta;
   float yellow;
-  float p_cyan;
-  float p_magenta;
-  float p_yellow;
   float saturation;
   float gamma;
-  short feed_adjustment;
-  short vacuum_intensity;
-  short paper_thickness;
   const char *hue_adjustment;
   const char *lum_adjustment;
   const char *sat_adjustment;
+} paper_adjustment_t;
+
+typedef struct
+{
+  const char *listname;
+  short paper_count;
+  const paper_adjustment_t *papers;
+} paper_adjustment_list_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  short paper_feed_sequence;
+  short platen_gap;
+  short feed_adjustment;
+  short vacuum_intensity;
+  short paper_thickness;
   const char *preferred_ink_type;
 } paper_t;
 
 typedef struct
 {
+  const char *listname;
   short paper_count;
   const paper_t *papers;
 } paperlist_t;
 
+typedef struct
+{
+  const char *attr_name;
+  short bit_shift;
+  short bit_width;
+} escp2_printer_attr_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  short hres;
+  short vres;
+  short softweave;
+  short microweave;
+  short vertical_passes;
+} res_t;
+
+typedef struct
+{
+  short color;
+  short subchannel;
+  short head_offset;
+  const char *channel_density;
+  const char *subchannel_scale;
+} physical_subchannel_t;
+
+typedef struct
+{
+  const char *listname;
+  const physical_subchannel_t *subchannels;
+  short n_subchannels;
+} ink_channel_t;
+
+typedef enum
+{
+  INKSET_CMYK           = 0,
+  INKSET_CcMmYK         = 1,
+  INKSET_CcMmYyK        = 2,
+  INKSET_CcMmYKk        = 3,
+  INKSET_PIEZO_QUADTONE = 4,
+  INKSET_EXTENDED	= 5
+} inkset_id_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  short is_color;
+  short channel_limit;
+  inkset_id_t inkset;
+  const paper_adjustment_list_t *papers;
+  const char *lum_adjustment;
+  const char *hue_adjustment;
+  const char *sat_adjustment;
+  const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
+} escp2_inkname_t;
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  const escp2_inkname_t *const *inknames;
+  const paperlist_t *papers;
+  short n_inks;
+} inklist_t;
+
+typedef struct
+{
+  const char *listname;
+  const inklist_t *const *inklists;
+  short n_inklists;
+} inkgroup_t;
+    
+
+#define ROLL_FEED_CUT_ALL (1)
+#define ROLL_FEED_CUT_LAST (2)
+
+typedef struct
+{
+  const char *name;
+  const char *text;
+  short is_roll_feed;
+  unsigned roll_feed_cut_flags;
+  const stp_raw_t init_sequence;
+  const stp_raw_t deinit_sequence;
+} input_slot_t;
+
+typedef struct
+{
+  const input_slot_t *slots;
+  size_t n_input_slots;
+} input_slot_list_t;
 
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
 #define MODEL_COMMAND_1998	0x0ul
@@ -172,89 +276,6 @@ typedef enum
   MODEL_FAST_360,
   MODEL_LIMIT
 } escp2_model_option_t;
-
-typedef struct
-{
-  const char *attr_name;
-  short bit_shift;
-  short bit_width;
-} escp2_printer_attr_t;
-
-typedef struct
-{
-  const char *name;
-  const char *text;
-  short hres;
-  short vres;
-  short softweave;
-  short microweave;
-  short vertical_passes;
-} res_t;
-
-typedef struct
-{
-  short color;
-  short subchannel;
-  short head_offset;
-  const char *channel_density;
-  const char *subchannel_scale;
-} physical_subchannel_t;
-
-typedef struct
-{
-  const physical_subchannel_t *subchannels;
-  short n_subchannels;
-} ink_channel_t;
-
-typedef enum
-{
-  INKSET_CMYK           = 0,
-  INKSET_CcMmYK         = 1,
-  INKSET_CcMmYyK        = 2,
-  INKSET_CcMmYKk        = 3,
-  INKSET_PIEZO_QUADTONE = 4,
-  INKSET_EXTENDED	= 5
-} inkset_id_t;
-
-typedef struct
-{
-  const char *name;
-  const char *text;
-  short is_color;
-  short channel_limit;
-  inkset_id_t inkset;
-  float k_lower;
-  float  k_upper;
-  const char *lum_adjustment;
-  const char *hue_adjustment;
-  const char *sat_adjustment;
-  const ink_channel_t *channels[PHYSICAL_CHANNEL_LIMIT];
-} escp2_inkname_t;
-
-typedef struct
-{
-  const escp2_inkname_t *const *inknames;
-  short n_inks;
-} inklist_t;
-
-#define ROLL_FEED_CUT_ALL (1)
-#define ROLL_FEED_CUT_LAST (2)
-
-typedef struct
-{
-  const char *name;
-  const char *text;
-  short is_roll_feed;
-  unsigned roll_feed_cut_flags;
-  const stp_raw_t init_sequence;
-  const stp_raw_t deinit_sequence;
-} input_slot_t;
-
-typedef struct
-{
-  const input_slot_t *slots;
-  size_t n_input_slots;
-} input_slot_list_t;
 
 typedef struct escp2_printer
 {
@@ -331,12 +352,10 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const short *dot_sizes;	/* Vector of dot sizes for resolutions */
   const float *densities;	/* List of densities for each printer */
-/*****************************************************************************/
   const escp2_variable_inklist_t *inks; /* Choices of inks for this printer */
-  const paperlist_t *paperlist;
 /*****************************************************************************/
   const res_t *const *reslist;
-  const inklist_t *inklist;
+  const inkgroup_t *inkgroup;
 /*****************************************************************************/
   const short *bits;
   const short *base_resolutions;
@@ -361,21 +380,13 @@ extern const escp2_variable_inklist_t stpi_escp2_variable_6pl_inks;
 extern const escp2_variable_inklist_t stpi_escp2_variable_pigment_inks;
 extern const escp2_variable_inklist_t stpi_escp2_variable_x80_6pl_inks;
 
-extern const inklist_t stpi_escp2_c80_inklist;
-extern const inklist_t stpi_escp2_cmy_inklist;
-extern const inklist_t stpi_escp2_photo7_inklist;
-extern const inklist_t stpi_escp2_f360_photo7_inklist;
-extern const inklist_t stpi_escp2_photo7_japan_inklist;
-extern const inklist_t stpi_escp2_f360_photo7_japan_inklist;
-extern const inklist_t stpi_escp2_photo_inklist;
-extern const inklist_t stpi_escp2_f360_photo_inklist;
-extern const inklist_t stpi_escp2_standard_inklist;
-extern const inklist_t stpi_escp2_x80_inklist;
-
-extern const paperlist_t stpi_escp2_c80_paper_list;
-extern const paperlist_t stpi_escp2_sp780_paper_list;
-extern const paperlist_t stpi_escp2_sp950_paper_list;
 extern const paperlist_t stpi_escp2_standard_paper_list;
+extern const paperlist_t stpi_escp2_c80_paper_list;
+
+extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_sp780_photo_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
 
 extern const res_t *const stpi_escp2_superfine_reslist[];
 extern const res_t *const stpi_escp2_no_microweave_reslist[];
@@ -389,6 +400,19 @@ extern const res_t *const stpi_escp2_g3_reslist[];
 extern const res_t *const stpi_escp2_sc500_reslist[];
 extern const res_t *const stpi_escp2_sc640_reslist[];
 extern const res_t *const stpi_escp2_sc660_reslist[];
+
+extern const inkgroup_t stpi_escp2_cmy_inkgroup;
+extern const inkgroup_t stpi_escp2_standard_inkgroup;
+extern const inkgroup_t stpi_escp2_c80_inkgroup;
+extern const inkgroup_t stpi_escp2_x80_inkgroup;
+extern const inkgroup_t stpi_escp2_photo_inkgroup;
+extern const inkgroup_t stpi_escp2_photo7_inkgroup;
+extern const inkgroup_t stpi_escp2_photo7_japan_inkgroup;
+extern const inkgroup_t stpi_escp2_ultrachrome_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_photo_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_photo7_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_photo7_japan_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
 
 typedef struct
 {
@@ -426,6 +450,8 @@ typedef struct
   int use_extended_commands;	/* Do we use the extended commands? */
   const input_slot_t *input_slot; /* Input slot description */
   const paper_t *paper_type;	/* Paper type */
+  const paper_adjustment_t *paper_adjustment;	/* Paper adjustments */
+  const inkgroup_t *ink_group;	/* Which set of inks */
   const stp_raw_t *init_sequence; /* Initialization sequence */
   const stp_raw_t *deinit_sequence; /* De-initialization sequence */
   model_featureset_t command_set; /* Which command set this printer supports */
