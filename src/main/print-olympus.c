@@ -64,6 +64,11 @@ typedef struct
   const char *name;
 } ink_t;
 
+typedef struct {
+  const ink_t *item;
+  size_t n_items;
+} ink_list_t;
+
 typedef struct
 {
   int xdpi, ydpi;
@@ -127,6 +132,7 @@ typedef struct {
 typedef struct /* printer specific parameters */
 {
   int model;		/* printer model number from printers.xml*/
+  const ink_list_t *inks;
   const olymp_resolution_list_t *resolution;
   const olymp_pagesize_list_t *pages;
   const olymp_printsize_list_t *printsize;
@@ -146,8 +152,32 @@ typedef struct /* printer specific parameters */
   const laminate_list_t *laminate;
 } olympus_cap_t;
 
+
 static const olympus_cap_t* olympus_get_model_capabilities(int model);
 
+
+static const ink_t cmy_inks[] =
+{
+  { COLOR_MODEL_CMY, 3, "CMY" },
+};
+
+static const ink_list_t cmy_ink_list =
+{
+  cmy_inks, sizeof(cmy_inks) / sizeof(ink_t)
+};
+
+static const ink_t rgb_inks[] =
+{
+  { COLOR_MODEL_RGB, 3, "RGB" },
+};
+
+static const ink_list_t rgb_ink_list =
+{
+  rgb_inks, sizeof(rgb_inks) / sizeof(ink_t)
+};
+
+
+/* Olympus P-300 series */
 static const olymp_resolution_t p300_res[] =
 {
   { "306x306"},
@@ -245,6 +275,7 @@ static const char p300_adj_yellow[] =
   "</gimp-print>\n";
 
 
+/* Olympus P-400 series */
 static const olymp_resolution_t res_314dpi[] =
 {
   { "314x314"},
@@ -378,6 +409,7 @@ static const char p400_adj_yellow[] =
   "</gimp-print>\n";
 
 
+/* Canon CP-100 series */
 static const olymp_pagesize_t cpx00_page[] =
 {
   { "Custom", NULL, -1, -1, 13, 13, 16, 18},
@@ -459,6 +491,7 @@ static const char cpx00_adj_yellow[] =
   "</gimp-print>\n";
 
 
+/* Sony UP-DP10 */
 static const olymp_resolution_t updp10_res[] =
 {
   { "300x300"},
@@ -550,11 +583,68 @@ static const laminate_list_t updp10_laminate_list =
 };
 
 
+/* Fujifilm CX-400 */
+static const olymp_resolution_t cx400_res[] =
+{
+  { "317x316"},
+};
+
+static const olymp_resolution_list_t cx400_res_list =
+{
+  cx400_res, sizeof(cx400_res) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t cx400_page[] =
+{
+  { "Custom", NULL, -1, -1, 0, 0, 0, 0},
+  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26},
+  { "w288h432", NULL, -1, -1, 23, 23, 28, 28},
+  { "w288h504", NULL, -1, -1, 23, 23, 23, 22},
+};
+
+static const olymp_pagesize_list_t cx400_page_list =
+{
+  cx400_page, sizeof(cx400_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t cx400_printsize[] =
+{
+  { "317x316", "Custom", 1268, 1842},
+  { "317x316", "w288h387", 1268, 1658},
+  { "317x316", "w288h432", 1268, 1842},
+  { "317x316", "w288h504", 1268, 2208},
+};
+
+static const olymp_printsize_list_t cx400_printsize_list =
+{
+  cx400_printsize, sizeof(cx400_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void cx400_printer_init_func(stp_vars_t v)
+{
+  const char *p = stp_get_string_parameter(v, "PageSize");
+  char pg = '\0';
+
+  stpi_zfwrite("FUJIFILMNX1000\0", 1, 15, v);
+  stpi_put16_le(privdata.xsize, v);
+  stpi_put16_le(privdata.ysize, v);
+  if (strcmp(p,"w288h504") == 0)
+    pg = '\x0d';
+  else if (strcmp(p,"w288h432") == 0)
+    pg = '\x0c';
+  else if (strcmp(p,"w288h387") == 0)
+    pg = '\x0b';
+  stpi_putc(pg, v);
+  stpi_zfwrite("\x00\x00\x00\x00\x00\x01\x00\x01\x00\x00\x00\x00"
+		  "\x00\x00\x2d\x00\x00\x00\x00", 1, 19, v);
+  stpi_zfwrite("FUJIFILMNX1000\1", 1, 15, v);
+}
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
   { /* Olympus P300 */
     0, 		
+    &cmy_ink_list,
     &p300_res_list,
     &p300_page_list,
     &p300_printsize_list,
@@ -569,6 +659,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Olympus P400 */
     1,
+    &cmy_ink_list,
     &res_314dpi_list,
     &p400_page_list,
     &p400_printsize_list,
@@ -583,6 +674,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Canon CP100 */
     1000,
+    &cmy_ink_list,
     &res_314dpi_list,
     &cpx00_page_list,
     &cpx00_printsize_list,
@@ -598,6 +690,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
   },
   { /* Sony UP-DP10  */
     2000,
+    &cmy_ink_list,
     &updp10_res_list,
     &updp10_page_list,
     &updp10_printsize_list,
@@ -611,14 +704,23 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL, NULL,
     &updp10_laminate_list,
   },
+  { /* Fujifilm CX-400  */
+    3000,
+    &rgb_ink_list,
+    &cx400_res_list,
+    &cx400_page_list,
+    &cx400_printsize_list,
+    OLYMPUS_INTERLACE_NONE, "CMY",
+    2208,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS,
+    &cx400_printer_init_func, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL,
+  },
 };
-
-static const ink_t inks[] =
-{
-  { COLOR_MODEL_CMY, 3, "CMY" },
-};
-
-static const int ink_count = sizeof(inks) / sizeof(ink_t);
 
 static const stp_parameter_t the_parameters[] =
 {
@@ -870,12 +972,12 @@ olympus_parameters(stp_const_vars_t v, const char *name,
   else if (strcmp(name, "InkType") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      for (i = 0; i < ink_count; i++)
+      for (i = 0; i < caps->inks->n_items; i++)
 	stp_string_list_add_string(description->bounds.str,
-				  inks[i].name, inks[i].name);
+			  caps->inks->item[i].name, caps->inks->item[i].name);
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
-      if (ink_count < 2)
+      if (caps->inks->n_items < 2)
         description->is_active = 0;
     }
   else if (strcmp(name, "Laminate") == 0)
@@ -1143,11 +1245,11 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
   if (ink_type)
     {
-      for (i = 0; i < ink_count; i++)
-	if (strcmp(ink_type, inks[i].name) == 0)
+      for (i = 0; i < caps->inks->n_items; i++)
+	if (strcmp(ink_type, caps->inks->item[i].name) == 0)
 	  {
-	    stpi_set_output_color_model(v, inks[i].color_model);
-	    ink_channels = inks[i].output_channels;
+	    stpi_set_output_color_model(v, caps->inks->item[i].color_model);
+	    ink_channels = caps->inks->item[i].output_channels;
 	    break;
 	  }
     }
@@ -1174,7 +1276,13 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 
   stpi_image_progress_init(image);
 
-  zeros = stpi_zalloc(ink_channels * print_px_width + 1);
+  if (ink_type && strcmp(ink_type, "RGB") == 0)
+    {
+      zeros = stpi_malloc(ink_channels * print_px_width + 1);
+      (void) memset(zeros, '\xff', ink_channels * print_px_width + 1);
+    }
+  else
+    zeros = stpi_zalloc(ink_channels * print_px_width + 1);
   
   out_bytes = (caps->interlacing == OLYMPUS_INTERLACE_PLANE ? 1 : ink_channels);
 

@@ -241,6 +241,7 @@
 #gptofoo escp2-pxv500 printer/Epson-PX_V500
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
+#gptofoo fujifilm-cx400 printer/Fujifilm-CX-400
 #gptofoo pcl-4 printer/Fujitsu-PrintPartner_10V
 #gptofoo pcl-4 printer/Fujitsu-PrintPartner_16DV
 #gptofoo pcl-6 printer/Fujitsu-PrintPartner_20W

@@ -662,6 +662,8 @@ sub build_model_ev {
 	    $make = "OLYMPUS";
 	} elsif ($ev =~ /^sony/) {
 	    $make = "SONY";
+	} elsif ($ev =~ /^fujifilm/) {
+	    $make = "FUJIFILM";
 	} else {
 	    die "Could not determine printer manufacturer from \"$ev\"!\n";
 	}
