@@ -98,8 +98,8 @@ require('standard_html_header.php3');
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-0.ppc.dmg?download"
- >gimp-print-4.2.3-0.ppc.dmg</a>&nbsp;(5.3 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.3-1.ppc.dmg?download"
+ >gimp-print-4.2.3-1.ppc.dmg</a>&nbsp;(5.2 MB)
  </td>
  <td align="right" >
  (<a href=
