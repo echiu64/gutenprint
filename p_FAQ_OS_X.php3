@@ -72,11 +72,10 @@ Preview application (this work-around may not work if you
 use an application other than "Preview" for viewing print
 previews). The solution is to install a PostScript
 interpreter that has a plugin filter for the <a
-href="http://www.cups.org/">CUPS</a> print spooler. <a
-href="http://sourceforge.net/projects/espgs/">ESP
-Ghostscript</a> is a good choice, and there is now a
-pre-built OS X installer available at <a href=
-"http://www.allosx.com/1031773924/index_html">All OS X</a>.
+href="http://www.cups.org/" >CUPS</a> print spooler. <a href=
+"http://sourceforge.net/project/showfiles.php?group_id=18073&release_id=109322"
+>ESP Ghostscript 7.05.5</a> (or later) is a good choice, and there is now a
+pre-built OS X installer available.
 <p>
 <li>
 <h3>
