@@ -121,6 +121,7 @@ typedef struct escp2_init
   int initial_vertical_offset;
   int ncolors;
   int channel_count;
+  int use_black_parameters;
   const char *paper_type;
   const char *media_source;
   const escp2_inkname_t *inkname;
@@ -716,8 +717,7 @@ escp2_set_color(const escp2_init_t *init)
 {
   if (escp2_has_cap(init->model, MODEL_GRAYMODE, MODEL_GRAYMODE_YES, init->v))
     stp_zprintf(init->v, "\033(K\002%c%c%c", 0, 0,
-		(init->output_type == OUTPUT_GRAY && init->channel_count == 1 ?
-		 1 : 2));
+		(init->use_black_parameters ? 1 : 2));
 }
 
 static void
@@ -823,9 +823,7 @@ escp2_set_printhead_resolution(const escp2_init_t *init)
       xres = init->physical_xdpi;
       xres = escp2_resolution_scale(init->model, init->v) / xres;
 
-      if (init->output_type == OUTPUT_GRAY &&
-	  (escp2_max_black_resolution(init->model, init->v) < 0 ||
-	   init->ydpi <= escp2_max_black_resolution(init->model, init->v)))
+      if (init->use_black_parameters)
 	nozzle_separation = escp2_black_nozzle_separation(init->model,
 							  init->v);
       else
@@ -1259,35 +1257,6 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   physical_xdpi = escp2_base_res(model, resid, nv);
   if (physical_xdpi > xdpi)
     physical_xdpi = xdpi;
-  if (use_softweave)
-    {
-      horizontal_passes = xdpi / physical_xdpi;
-      if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
-	  channel_count == 1 &&
-	  (escp2_max_black_resolution(model, nv) < 0 ||
-	   ydpi <= escp2_max_black_resolution(model, nv)) &&
-	  escp2_black_nozzles(model, nv))
-	{
-	  nozzles = escp2_black_nozzles(model, nv);
-	  nozzle_separation = escp2_black_nozzle_separation(model, nv);
-	  min_nozzles = escp2_min_black_nozzles(model, nv);
-	}
-      else
-	{
-	  nozzles = escp2_nozzles(model, nv);
-	  nozzle_separation = escp2_nozzle_separation(model, nv);
-	  min_nozzles = escp2_min_nozzles(model, nv);
-	}
-      nozzle_separation =
-	nozzle_separation * ydpi / escp2_base_separation(model, nv);
-    }
-  else
-    {
-      horizontal_passes = xdpi / escp2_base_resolution(model, nv);
-      nozzles = 1;
-      min_nozzles = 1;
-      nozzle_separation = 1;
-    }
 
   bits = escp2_bits(model, resid, nv);
 
@@ -1340,13 +1309,49 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
       current_channel = setup_ink_types(ink_type, &privdata, cols, head_offset,
 					dt, channel_limit, length * bits);
     }
+  if (use_softweave)
+    {
+      horizontal_passes = xdpi / physical_xdpi;
+      if ((output_type == OUTPUT_GRAY || output_type == OUTPUT_MONOCHROME) &&
+	  channel_limit == 1 &&
+	  (ydpi >= (escp2_base_separation(model, nv) /
+		    escp2_black_nozzle_separation(model, nv))) &&
+	  (escp2_max_black_resolution(model, nv) < 0 ||
+	   ydpi <= escp2_max_black_resolution(model, nv)) &&
+	  escp2_black_nozzles(model, nv))
+	init.use_black_parameters = 1;
+      else
+	init.use_black_parameters = 0;
+      if (init.use_black_parameters)
+	{
+	  nozzles = escp2_black_nozzles(model, nv);
+	  nozzle_separation = escp2_black_nozzle_separation(model, nv);
+	  min_nozzles = escp2_min_black_nozzles(model, nv);
+	}
+      else
+	{
+	  nozzles = escp2_nozzles(model, nv);
+	  nozzle_separation = escp2_nozzle_separation(model, nv);
+	  min_nozzles = escp2_min_nozzles(model, nv);
+	}
+      nozzle_separation =
+	nozzle_separation * ydpi / escp2_base_separation(model, nv);
+    }
+  else
+    {
+      horizontal_passes = xdpi / escp2_base_resolution(model, nv);
+      nozzles = 1;
+      min_nozzles = 1;
+      nozzle_separation = 1;
+      init.use_black_parameters = 0;
+    }
 
   if (horizontal_passes == 0)
     horizontal_passes = 1;
   privdata.min_nozzles = min_nozzles;
 
   max_head_offset = 0;
-  if (channel_count > 1)
+  if (channel_limit > 1)
     for (i = 0; i < channel_count; i++)
       {
 	head_offset[i] = head_offset[i] * ydpi/escp2_base_separation(model,nv);
@@ -1373,8 +1378,7 @@ escp2_print(const stp_printer_t printer,		/* I - Model */
   init.page_top = page_top;
   if (init.output_type == OUTPUT_GRAY && channel_count == 1)
     {
-      if (escp2_max_black_resolution(model, nv) < 0 ||
-	  ydpi <= escp2_max_black_resolution(init.model, init.v))
+      if (init.use_black_parameters)
 	init.initial_vertical_offset =
 	  escp2_black_initial_vertical_offset(init.model, init.v) * init.ydpi /
 	  escp2_base_separation(model, nv);
