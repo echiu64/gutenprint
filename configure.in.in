@@ -350,7 +350,7 @@ AC_PATH_PROG(DB2PDF, db2pdf)
 if test x${DB2PDF} = x ; then
   AC_MSG_WARN([PDF user's guide cannot be regenerated!])
 fi
-AC_PATH_PROG(DVIPDF, dvipdf)
+AC_PATH_PROGS(DVIPDF, dvipdf dvipdfm)
 if test x${DVIPDF} = x ; then
   AC_MSG_WARN([PDF documentation cannot be regenerated!])
 fi
