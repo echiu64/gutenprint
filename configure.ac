@@ -52,7 +52,7 @@ AC_CONFIG_AUX_DIR(scripts)
 STP_INIT
 AC_COPYRIGHT(
 [
-Parts of this configure script come from the `configure.ac' file, and
+Parts of this configure script come from the 'configure.ac' file, and
 are not based on freely-redistributable m4 macros; you can redistribute
 them and/or modify them under the terms of the GNU General Public
 as published by the Free Software Foundation; either version 2, or (at
@@ -496,11 +496,6 @@ else
   AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${datadir}/${PACKAGE}")
 fi
 
-dnl Set PACKAGE_SOURCE_DIR in config.h.
-AH_TEMPLATE(PACKAGE_SOURCE_DIR,, [Package source directory])
-packagesrcdir=`cd $srcdir && pwd`
-AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}")
-
 dnl Compiler flags
 if test "$CC" = "gcc" ; then
   AC_MSG_CHECKING(if GCC supports -finline-limit=1048576)
@@ -643,17 +638,16 @@ dnl GNU libc memcmp.c is too glibc-dependent to include.
 AC_CHECK_FUNCS(nanosleep poll usleep)
 dnl The following is used to build a "utility library" in lib/
 AC_REPLACE_FUNCS(xgetcwd xmalloc)
-AC_CHECK_FUNC(asprintf,
-  AC_DEFINE(HAVE_ASPRINTF,, [Define if you have the `asprintf' function.]),
-  AC_LIBOBJ(vasprintf))
-AC_CHECK_FUNC(vasprintf,
-  AC_DEFINE(HAVE_VASPRINTF,, [Define if you have the `vasprintf' function.]),
-  AC_LIBOBJ(vasprintf))
-AC_SUBST(PRINT_VASPRINTF)
-AC_CHECK_FUNC(getopt_long,
-  AC_DEFINE(HAVE_GETOPT_LONG,, [Define if you have the `getopt_long' function.]),
-  AC_LIBOBJ(getopt)
-  AC_LIBOBJ(getopt1))
+AC_CHECK_FUNC([asprintf],
+  [AC_DEFINE([HAVE_ASPRINTF],, [Define if you have the 'asprintf' function.])],
+  [AC_LIBOBJ([vasprintf])])
+AC_CHECK_FUNC([vasprintf],
+  [AC_DEFINE([HAVE_VASPRINTF],, [Define if you have the 'vasprintf' function.])],
+  [AC_LIBOBJ([vasprintf])])
+AC_CHECK_FUNC([getopt_long],
+  [AC_DEFINE([HAVE_GETOPT_LONG],, [Define if you have the 'getopt_long' function.])],
+  [AC_LIBOBJ([getopt])
+   AC_LIBOBJ([getopt1])])
 
 
 dnl Define what has to be built
