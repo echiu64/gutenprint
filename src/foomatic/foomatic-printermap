@@ -280,6 +280,13 @@
 #gptofoo pcl-4 printer/Canon-imageRunner_330s
 #gptofoo pcl-4 printer/Okidata-Okipage_14ex
 #gptofoo pcl-4 printer/Xerox-Able_1406
+#gptofoo pcl-4 printer/Kyocera-FS-1000plus
+#gptofoo pcl-4 printer/Kyocera-FS-1010
+#gptofoo pcl-4 printer/Kyocera-FS-1800
+#gptofoo pcl-4 printer/Kyocera-FS-1900
+#gptofoo pcl-4 printer/Kyocera-FS-3800
+#gptofoo pcl-4 printer/Kyocera-FS-9100DN
+#gptofoo pcl-4 printer/Kyocera-FS-9500DN
 #gptofoo pcl-4l printer/257577
 #gptofoo pcl-4l printer/59776
 #gptofoo pcl-4l printer/82496
