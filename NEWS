@@ -1,6 +1,6 @@
                           -*- Mode: Text -*-
 
-Gimp-Print 4.2.2-rc3, released September 2, 2002, is the third release
+Gimp-Print 4.2.2-rc3, released September 3, 2002, is the third release
 candidate for Gimp-Print 4.2.2.
 
 This software includes the Print plug-in for the Gimp, and GhostScript
@@ -25,8 +25,8 @@ Gimp-Print 4.2.2-rc3 contains the following major changes over
 Gimp-Print 4.2.2-rc2:
 
   1) A problem introduced in Gimp-Print 4.2.2-rc2 whereby printing to
-     Epson printers failed or produced otherwise incorrect results is
-     fixed.
+     Epson printers failed or produced otherwise incorrect results at
+     resolutions other than 360 DPI is fixed.
 
   2) A problem printing to a CUPS-spooled printer using the PS2 driver
      in the Gimp plug-in is fixed.
@@ -34,6 +34,10 @@ Gimp-Print 4.2.2-rc2:
   3) When using the native CUPS driver with a printer requiring
      margins to the left and right, the right margin was previously
      too wide.  The margin is now correct.
+
+  4) Margins have been corrected on Epson Stylus Color 660.  All users
+     of this printer with any CUPS or Foomatic driver will need to
+     reinstall the printer queue after upgrading.
 
 The following bugs have been fixed in Gimp-Print 4.2.2-rc3:
 
