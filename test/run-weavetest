@@ -21,17 +21,17 @@ fi
     for sep in $separations ; do
 	for pass in $passes ; do
 	    for arrangement in $arrangements; do
-		((start = $jet * $sep))
+		start=`expr $jet \* $sep`
 		if [ $start -le $head_limit ] ; then
-		    ((rows = $start * 10))
+		    rows=`expr $start \* 10`
 		    if [ $rows -lt 200 ] ; then
 			rows=200
 		    fi
-		    ((s1 = $start - 1))
+		    s1=`expr $start - 1`
 		    for f in 0 41 $start $s1 ; do
-			((end = $rows + $f + $start))
-			((end1 = $rows + $f))
-			((end2 = $rows + $f + 35))
+			end=`expr $rows + $f + $start`
+			end1=`expr $rows + $f`
+			end2=`expr $rows + $f + 35`
 			for g in $end $end1 $end2 ; do
 			    echo "$jet $sep $pass $rows $f $g $arrangement"
 			done
