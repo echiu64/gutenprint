@@ -66,8 +66,14 @@ typedef struct
   stp_curve_t magenta;
   stp_curve_t yellow;
   stp_curve_t hue_map;
+  const double *hue_cache;
+  size_t hue_count;
   stp_curve_t lum_map;
+  const double *lum_cache;
+  size_t lum_count;
   stp_curve_t sat_map;
+  const double *sat_cache;
+  size_t sat_count;
   stp_curve_t gcr_curve;
   unsigned short *cmy_tmp;
   unsigned short *cmyk_lut;
@@ -515,6 +521,18 @@ update_saturation(double sat, double adjust, double isat)
   return sat;
 }
 
+static inline double
+interpolate_value(const double *vec, double val)
+{
+  double base = floor(val);
+  double frac = val - base;
+  int ibase = (int) base;
+  double lval = vec[ibase];
+  if (frac > 0)
+    lval += (vec[ibase + 1] - lval) * frac;
+  return lval;
+}
+
 static inline void
 update_saturation_from_rgb(unsigned short *rgb, double adjust, double isat)
 {
@@ -525,19 +543,15 @@ update_saturation_from_rgb(unsigned short *rgb, double adjust, double isat)
 }
 
 static inline double
-adjust_hue(stp_curve_t hue_map, double hue, size_t points)
+adjust_hue(const double *hue_map, double hue, size_t points)
 {
   if (hue_map)
     {
-      double adjust;
-      if (stp_curve_interpolate_value(hue_map, hue * points / 6.0, &adjust))
-	{
-	  hue += adjust;
-	  if (hue < 0.0)
-	    hue += 6.0;
-	  else if (hue >= 6.0)
-	    hue -= 6.0;
-	}
+      hue += interpolate_value(hue_map, hue * points / 6.0);
+      if (hue < 0.0)
+	hue += 6.0;
+      else if (hue >= 6.0)
+	hue -= 6.0;
     }
   return hue;
 }
@@ -559,51 +573,47 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat,
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
       oh = h;
-      h = adjust_hue(lut->hue_map, h, h_points);
+      h = adjust_hue(lut->hue_cache, h, h_points);
       if (lut->lum_map && l > 0.0001 && l < .9999)
 	{
 	  double nh = oh * l_points / 6.0;
-	  double el;
-	  if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
+	  double el = interpolate_value(lut->lum_cache, nh);
+	  double sreflection = .8 - ((1.0 - el) / 1.3) ;
+	  double isreflection = 1.0 - sreflection;
+	  double sadj = l - sreflection;
+	  double isadj = 1;
+	  double sisadj = 1;
+	  if (sadj > 0)
 	    {
-	      double sreflection = .8 - ((1.0 - el) / 1.3) ;
-	      double isreflection = 1.0 - sreflection;
-	      double sadj = l - sreflection;
-	      double isadj = 1;
-	      double sisadj = 1;
-	      if (sadj > 0)
-		{
-		  isadj = (1.0 / isreflection) * (isreflection - sadj);
-		  sisadj = sqrt(isadj);
-/*
-		  s *= isadj * sisadj;
-*/
-		  s *= sqrt(isadj * sisadj);
-		}
-	      if (el < .9999)
-		{
-		  double es = s;
-		  es = 1 - es;
-		  es *= es * es;
-		  es = 1 - es;
-		  el = 1.0 + (es * (el - 1.0));
-		  l *= el;
-		}
-	      else if (el > 1.0001)
-		l = 1.0 - pow(1.0 - l, el);
-	      if (sadj > 0)
-		{
-/*	          s *= sqrt(isadj); */
-		  l = 1.0 - ((1.0 - l) * sqrt(sqrt(sisadj)));
-		}
+	      isadj = (1.0 / isreflection) * (isreflection - sadj);
+	      sisadj = sqrt(isadj);
+	      /*
+		s *= isadj * sisadj;
+	      */
+	      s *= sqrt(isadj * sisadj);
+	    }
+	  if (el < .9999)
+	    {
+	      double es = s;
+	      es = 1 - es;
+	      es *= es * es;
+	      es = 1 - es;
+	      el = 1.0 + (es * (el - 1.0));
+	      l *= el;
+	    }
+	  else if (el > 1.0001)
+	    l = 1.0 - pow(1.0 - l, el);
+	  if (sadj > 0)
+	    {
+	      /*	          s *= sqrt(isadj); */
+	      l = 1.0 - ((1.0 - l) * sqrt(sqrt(sisadj)));
 	    }
 	}
       if (lut->sat_map)
 	{
-	  double tmp;
 	  double nh = oh * s_points / 6.0;
-	  if (stp_curve_interpolate_value(lut->sat_map, nh, &tmp) &&
-	      (tmp < .9999 || tmp > 1.0001))
+	  double tmp = interpolate_value(lut->sat_cache, nh);
+	  if (tmp < .9999 || tmp > 1.0001)
 	    {
 	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0);
 	    }
@@ -633,12 +643,9 @@ adjust_hsl_bright(unsigned short *rgbout, lut_t *lut, double ssat,
       if (lut->lum_map && l > 0.0001 && l < .9999)
 	{
 	  double nh = h * l_points / 6.0;
-	  double el;
-	  if (stp_curve_interpolate_value(lut->lum_map, nh, &el))
-	    {
-	      el = 1.0 + (s * (el - 1.0));
-	      l = 1.0 - pow(1.0 - l, el);
-	    }
+	  double el = interpolate_value(lut->lum_cache, nh);
+	  el = 1.0 + (s * (el - 1.0));
+	  l = 1.0 - pow(1.0 - l, el);
 	}
       calc_hsl_to_rgb(rgbout, h, s, l);
       rgbout[0] ^= 65535;
@@ -666,6 +673,16 @@ lookup_rgb(lut_t *lut, unsigned short *rgbout,
     }
 }
 
+static inline int
+mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
+{
+  int i;
+  for (i = 0; i < count; i++)
+    if (i1[i] != i2[i])
+      return 0;
+  return 1;
+}
+
 static unsigned
 generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 		    unsigned short *out)
@@ -679,8 +696,10 @@ generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
   size_t points;
   int i;
   int j;
-  int nz[4];
+  unsigned short nz[4];
   unsigned retval = 0;
+  const unsigned short *input_cache = NULL;
+  const unsigned short *output_cache = NULL;
 
   initialize_gcr_curve(vars);
   gcr_lookup = stp_curve_get_ushort_data(lut->gcr_curve, &points);
@@ -690,50 +709,64 @@ generic_cmy_to_kcmy(stp_const_vars_t vars, const unsigned short *in,
 
   for (i = 0; i < width; i++, out += 4, in += 3)
     {
-      int c = in[0];
-      int m = in[1];
-      int y = in[2];
-      int k = FMIN(c, FMIN(m, y));
-      for (j = 0; j < 3; j++)
-	out[j + 1] = in[j];
-      if (k == 0)
-	out[0] = 0;
+      if (input_cache && mem_eq(input_cache, in, 3))
+	{
+	  for (j = 0; j < 4; j++)
+	    out[j] = output_cache[j];
+	}
       else
 	{
-	  int where, resid;
-	  int kk;
-	  if (lut->steps == 65536)
-	    kk = gcr_lookup[k];
-	  else
+	  int c = in[0];
+	  int m = in[1];
+	  int y = in[2];
+	  int k = FMIN(c, FMIN(m, y));
+	  input_cache = in;
+	  out[0] = 0;
+	  for (j = 0; j < 3; j++)
+	    out[j + 1] = in[j];
+	  if (k > 0)
 	    {
-	      where = k / step;
-	      resid = k % step;
-	      if (resid == 0)
-		kk = gcr_lookup[where];
+	      int where, resid;
+	      int kk;
+	      if (lut->steps == 65536)
+		kk = gcr_lookup[k];
 	      else
-		kk = gcr_lookup[where] +
-		  (gcr_lookup[where + 1] - gcr_lookup[where]) * resid / step;
+		{
+		  where = k / step;
+		  resid = k % step;
+		  kk = gcr_lookup[where];
+		  if (resid > 0)
+		    kk += (gcr_lookup[where + 1] - gcr_lookup[where]) * resid /
+		      step;
+		}
+	      if (kk > k)
+		kk = k;
+	      if (kk > 0)
+		{
+		  if (lut->steps == 65536)
+		    out[0] = black_lookup[kk];
+		  else
+		    {
+		      int k_out;
+		      where = kk / step;
+		      resid = kk % step;
+		      k_out = black_lookup[where];
+		      if (resid > 0)
+			k_out +=
+			  (black_lookup[where + 1] - black_lookup[where]) * resid /
+			  step;
+		      out[0] = k_out;
+		    }
+		  out[1] -= kk;
+		  out[2] -= kk;
+		  out[3] -= kk;
+		}
 	    }
-	  if (kk > k)
-	    kk = k;
-	  if (lut->steps == 65536)
-	    out[0] = black_lookup[kk];
-	  else
-	    {
-	      where = kk / step;
-	      resid = kk % step;
-	      if (resid)
-		out[0] = black_lookup[where] +
-		  (black_lookup[where + 1] - black_lookup[where]) * resid /
-		  step;
-	      else
-		out[0] = black_lookup[where];
-	    }
-	  for (j = 1; j < 4; j++)
-	    out[j] -= kk;
+	  output_cache = out;
+	  for (j = 0; j < 4; j++)
+	    if (out[j])
+	      nz[j] = 1;
 	}
-      for (j = 0; j < 4; j++)
-	nz[j] |= out[j];
     }
   for (j = 0; j < 4; j++)
     if (nz[j] == 0)
@@ -757,12 +790,12 @@ rgb_##bits##_to_rgb(stp_const_vars_t vars, const unsigned char *in,	      \
   int i0 = -1;								      \
   int i1 = -1;								      \
   int i2 = -1;								      \
-  int o0 = 0;								      \
-  int o1 = 0;								      \
-  int o2 = 0;								      \
-  int nz0 = 0;								      \
-  int nz1 = 0;								      \
-  int nz2 = 0;								      \
+  unsigned short o0 = 0;						      \
+  unsigned short o1 = 0;						      \
+  unsigned short o2 = 0;						      \
+  unsigned short nz0 = 0;						      \
+  unsigned short nz1 = 0;						      \
+  unsigned short nz2 = 0;						      \
   const T *s_in = (const T *) in;					      \
   lut_t *lut = (lut_t *)(stpi_get_component_data(vars, "Color"));	      \
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;		      \
@@ -788,6 +821,12 @@ rgb_##bits##_to_rgb(stp_const_vars_t vars, const unsigned char *in,	      \
     l_points = stp_curve_count_points(lut->lum_map);			      \
   if (lut->sat_map)							      \
     s_points = stp_curve_count_points(lut->sat_map);			      \
+  if (lut->hue_map)							      \
+    lut->hue_cache = stp_curve_get_data(lut->hue_map, &(lut->hue_count));     \
+  if (lut->lum_map)							      \
+    lut->lum_cache = stp_curve_get_data(lut->lum_map, &(lut->lum_count));     \
+  if (lut->sat_map)							      \
+    lut->sat_cache = stp_curve_get_data(lut->sat_map, &(lut->sat_count));     \
 									      \
   if (split_saturation)							      \
     ssat = sqrt(ssat);							      \
