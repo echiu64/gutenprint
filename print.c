@@ -574,7 +574,7 @@ run(char   *name,		/* I - Name of print program. */
           if (nparams > 16)
             vars.gamma = param[16].data.d_float;
           else
-            vars.gamma = 0.0;
+            vars.gamma = 1.0;
 
           if (nparams > 17)
 	    vars.contrast = param[17].data.d_int32;
@@ -3485,8 +3485,8 @@ get_system_printers(void)
       for (i = 1; i <= pnum; i++)
 	{
 	  sprintf(plist[plist_count].name, "LPT%d:", i);
-	  sprintf(plist[plist_count].output_to, "PRINT /D:LPT%d /B ", i);
-          strcpy(plist[plist_count].driver, "ps2");
+	  sprintf(plist[plist_count].v.output_to, "PRINT /D:LPT%d /B ", i);
+          strcpy(plist[plist_count].v.driver, "ps2");
 	  initialize_printer(&plist[plist_count]);
           plist_count ++;
 	}
