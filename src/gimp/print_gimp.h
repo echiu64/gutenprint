@@ -64,6 +64,11 @@
 #define ORIENT_UPSIDEDOWN       2       /* Reverse portrait orientation */
 #define ORIENT_SEASCAPE         3       /* Reverse landscape orientation */
 
+#define UNIT_INCH		0
+#define UNIT_CM			1
+#define UNIT_POINT		2
+#define UNIT_MM			3
+
 typedef struct		/**** Printer List ****/
 {
   int	active;			/* Do we know about this printer? */

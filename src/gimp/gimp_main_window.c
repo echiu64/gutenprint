@@ -28,6 +28,10 @@
 #include "../../lib/libprintut.h"
 
 #define MAX_PREVIEW_PPI        (40)
+#define INCH 72
+#define FINCH ((gdouble) INCH)
+#define ROUNDUP(x, y) (((x) + ((y) - 1)) / (y))
+#define SCALE(x, y) (((x) + (1.0 / (2.0 * (y)))) * (y))
 
 #include "print_gimp.h"
 
@@ -43,6 +47,14 @@
 #define MOVE_HORIZONTAL	   1
 #define MOVE_VERTICAL      2
 #define MOVE_ANY           (MOVE_HORIZONTAL | MOVE_VERTICAL)
+
+static const double unit_scale[] =
+  {
+    72.0,
+    72.0 / 2.54,
+    1.0,
+    72.0 / 25.4,
+  };
 
 /*
  *  Main window widgets
@@ -67,6 +79,8 @@ static GtkWidget *bottom_border_entry;
 static GtkWidget *height_entry;
 static GtkWidget *unit_inch;
 static GtkWidget *unit_cm;
+static GtkWidget *unit_point;
+static GtkWidget *unit_mm;
 static GtkWidget *media_size_combo         = NULL;  /* Media size combo box */
 static GtkWidget *custom_size_width        = NULL;
 static GtkWidget *custom_size_height       = NULL;
@@ -1010,7 +1024,7 @@ create_printer_settings_frame (void)
   gtk_widget_show (label);
 
   custom_size_width = gtk_entry_new ();
-  gtk_widget_set_usize (custom_size_width, 40, 0);
+  gtk_widget_set_usize (custom_size_width, 60, 0);
   gtk_box_pack_start (GTK_BOX (media_size_hbox), custom_size_width,
                       FALSE, FALSE, 0);
   gtk_widget_show (custom_size_width);
@@ -1027,7 +1041,7 @@ create_printer_settings_frame (void)
   gtk_widget_show (label);
 
   custom_size_height = gtk_entry_new ();
-  gtk_widget_set_usize (custom_size_height, 50, 0);
+  gtk_widget_set_usize (custom_size_height, 60, 0);
   gtk_box_pack_start (GTK_BOX (media_size_hbox), custom_size_height,
                       FALSE, FALSE, 0);
   gtk_widget_show (custom_size_height);
@@ -1271,25 +1285,48 @@ create_scaling_frame (void)
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 0,
                              NULL, 0.5, 0.5,
                              unit_inch, 1, TRUE);
-
   gimp_help_set_help_data (unit_inch,
                            _("Set the base unit of measurement to inches"),
                            NULL);
   gtk_signal_connect (GTK_OBJECT (unit_inch), "toggled",
                       GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) 0);
+                      (gpointer) UNIT_INCH);
 
   unit_cm = gtk_radio_button_new_with_label (group, _("cm"));
+  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_cm));
   gimp_table_attach_aligned (GTK_TABLE (table), 0, 1,
                              NULL, 0.5, 0.5,
                              unit_cm, 1, TRUE);
-
   gimp_help_set_help_data (unit_cm,
                            _("Set the base unit of measurement to centimetres"),
                            NULL);
   gtk_signal_connect (GTK_OBJECT (unit_cm), "toggled",
                       GTK_SIGNAL_FUNC (unit_callback),
-                      (gpointer) 1);
+                      (gpointer) UNIT_CM);
+
+  unit_point = gtk_radio_button_new_with_label (group, _("Point"));
+  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_point));
+  gimp_table_attach_aligned (GTK_TABLE (table), 1, 0,
+                             NULL, 0.5, 0.5,
+                             unit_point, 1, TRUE);
+  gimp_help_set_help_data (unit_point,
+                           _("Set the base unit of measurement to points"),
+                           NULL);
+  gtk_signal_connect (GTK_OBJECT (unit_point), "toggled",
+                      GTK_SIGNAL_FUNC (unit_callback),
+                      (gpointer) UNIT_POINT);
+
+  unit_mm = gtk_radio_button_new_with_label (group, _("mm"));
+  group = gtk_radio_button_group (GTK_RADIO_BUTTON (unit_mm));
+  gimp_table_attach_aligned (GTK_TABLE (table), 1, 1,
+                             NULL, 0.5, 0.5,
+                             unit_mm, 1, TRUE);
+  gimp_help_set_help_data (unit_mm,
+                           _("Set the base unit of measurement to millimetres"),
+                           NULL);
+  gtk_signal_connect (GTK_OBJECT (unit_mm), "toggled",
+                      GTK_SIGNAL_FUNC (unit_callback),
+                      (gpointer) UNIT_MM);
 
   /*
    * The "image size" button
@@ -1547,10 +1584,8 @@ scaling_callback (GtkWidget *widget)
   if (suppress_scaling_callback)
     return;
 
-  min_ppi_scaling1 = 72.0 * (gdouble) image_width /
-    (gdouble) printable_width;
-  min_ppi_scaling2 = 72.0 * (gdouble) image_height /
-    (gdouble) printable_height;
+  min_ppi_scaling1 = FINCH * (gdouble) image_width / (gdouble) printable_width;
+  min_ppi_scaling2 = FINCH * (gdouble)image_height / (gdouble)printable_height;
 
   if (min_ppi_scaling1 > min_ppi_scaling2)
     min_ppi_scaling = min_ppi_scaling1;
@@ -1703,9 +1738,9 @@ do_misc_updates (void)
       gdouble max_ppi_scaling;
       gdouble min_ppi_scaling, min_ppi_scaling1, min_ppi_scaling2;
 
-      min_ppi_scaling1 = 72.0 * (gdouble) image_width /
+      min_ppi_scaling1 = FINCH * (gdouble) image_width /
 	(gdouble) printable_width;
-      min_ppi_scaling2 = 72.0 * (gdouble) image_height /
+      min_ppi_scaling2 = FINCH * (gdouble) image_height /
 	(gdouble) printable_height;
 
       if (min_ppi_scaling1 > min_ppi_scaling2)
@@ -1742,7 +1777,7 @@ do_misc_updates (void)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_color), TRUE);
       break;
     case OUTPUT_MONOCHROME:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (output_monochrome), TRUE);
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(output_monochrome), TRUE);
       break;
     }
 
@@ -1751,10 +1786,21 @@ do_misc_updates (void)
   gtk_option_menu_set_history (GTK_OPTION_MENU (orientation_menu),
 			       pv->orientation + 1);
 
-  if (pv->unit == 0)
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_inch), TRUE);
-  else
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_cm), TRUE);
+  switch (pv->unit)
+    {
+    case 0:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_inch), TRUE);
+      break;
+    case 1:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_cm), TRUE);
+      break;
+    case 2:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_point), TRUE);
+      break;
+    case 3:
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (unit_mm), TRUE);
+      break;
+    }
 
   switch (stp_get_image_type (pv->v))
     {
@@ -1762,7 +1808,7 @@ do_misc_updates (void)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_line_art), TRUE);
       break;
     case IMAGE_SOLID_TONE:
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_solid_tone), TRUE);
+      gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON (image_solid_tone), TRUE);
       break;
     case IMAGE_CONTINUOUS:
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (image_continuous_tone),
@@ -1803,26 +1849,26 @@ position_callback (GtkWidget *widget)
     }
   else
     {
-      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-      gdouble unit_scaler = 1.0;
+      gdouble new_printed_value =
+	atof (gtk_entry_get_text (GTK_ENTRY (widget)));
+      gdouble unit_scaler = unit_scale[pv->unit];
+      gint new_value = SCALE(new_printed_value, unit_scaler);
       gboolean was_percent = 0;
 
-      if (pv->unit)
-	unit_scaler /= 2.54;
       new_value *= unit_scaler;
 
       if (widget == top_entry)
-	stp_set_top (pv->v, ((new_value + (1.0 / 144.0)) * 72));
+	stp_set_top(pv->v, new_value);
       else if (widget == bottom_entry)
-	stp_set_top (pv->v, ((new_value + (1.0 / 144.0)) * 72) - print_height);
+	stp_set_top(pv->v, new_value - print_height);
       else if (widget == bottom_border_entry)
-	stp_set_top (pv->v, paper_height - print_height - (new_value * 72));
+	stp_set_top (pv->v, paper_height - print_height - new_value);
       else if (widget == left_entry)
-	stp_set_left (pv->v, ((new_value + (1.0 / 144.0)) * 72));
+	stp_set_left (pv->v, new_value);
       else if (widget == right_entry)
-	stp_set_left (pv->v, ((new_value + (1.0 / 144.0)) * 72) - print_width);
+	stp_set_left(pv->v, new_value - print_width);
       else if (widget == right_border_entry)
-	stp_set_left (pv->v, paper_width - print_width - (new_value * 72));
+	stp_set_left (pv->v, paper_width - print_width - new_value);
       else if (widget == width_entry)
 	{
 	  if (pv->scaling >= 0)
@@ -1833,13 +1879,14 @@ position_callback (GtkWidget *widget)
 	      was_percent = 1;
 	    }
 	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    ((gdouble) image_width) / new_value;
+	    ((gdouble) image_width) / (new_value * unit_scaler / FINCH);
 	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
 	  if (was_percent)
 	    {
-	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent),
-                                            TRUE);
-	      gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+	      gtk_toggle_button_set_active
+		(GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
+	      gtk_adjustment_value_changed
+		(GTK_ADJUSTMENT (scaling_adjustment));
 	    }
 	}
       else if (widget == height_entry)
@@ -1852,13 +1899,14 @@ position_callback (GtkWidget *widget)
 	      was_percent = 1;
 	    }
 	  GTK_ADJUSTMENT (scaling_adjustment)->value =
-	    ((gdouble) image_height) / new_value;
+	    ((gdouble) image_height) / (new_value * unit_scaler / FINCH);
 	  gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
 	  if (was_percent)
 	    {
-	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_percent),
-                                            TRUE);
-	      gtk_adjustment_value_changed (GTK_ADJUSTMENT (scaling_adjustment));
+	      gtk_toggle_button_set_active
+		(GTK_TOGGLE_BUTTON (scaling_percent), TRUE);
+	      gtk_adjustment_value_changed
+		(GTK_ADJUSTMENT (scaling_adjustment));
 	    }
 	}
     }
@@ -1986,7 +2034,8 @@ plist_callback (GtkWidget *widget,
     }
 
   media_sources = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "InputSlot", &num_media_sources);
+    (current_printer, stp_get_ppd_file (pv->v), "InputSlot",
+     &num_media_sources);
   default_parameter =
     ((stp_printer_get_printfuncs (current_printer)->default_parameters)
      (current_printer, stp_get_ppd_file (pv->v), "InputSlot"));
@@ -2046,7 +2095,8 @@ plist_callback (GtkWidget *widget,
     }
 
   resolutions = (*(stp_printer_get_printfuncs (current_printer)->parameters))
-    (current_printer, stp_get_ppd_file (pv->v), "Resolution", &num_resolutions);
+    (current_printer, stp_get_ppd_file (pv->v), "Resolution",
+     &num_resolutions);
   default_parameter =
     ((stp_printer_get_printfuncs (current_printer)->default_parameters)
      (current_printer, stp_get_ppd_file (pv->v), "Resolution"));
@@ -2082,56 +2132,34 @@ media_size_callback (GtkWidget *widget,
   invalidate_preview_thumbnail ();
   reset_preview ();
 
-  if (widget == custom_size_width)
+  if (widget == custom_size_width || widget == custom_size_height)
     {
       gint width_limit, height_limit;
       gint min_width_limit, min_height_limit;
-      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-      gdouble unit_scaler = 1.0;
+      gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
+      gdouble unit_scaler = unit_scale[pv->unit];
+      gint new_value = SCALE(new_printed_value, unit_scaler);
 
-      new_value *= 72;
-      if (pv->unit)
-	unit_scaler /= 2.54;
-      new_value *= unit_scaler;
       (stp_printer_get_printfuncs (current_printer)->limit)
 	(current_printer, pv->v, &width_limit, &height_limit,
 	 &min_width_limit, &min_height_limit);
-      if (new_value < min_width_limit)
-	new_value = min_width_limit;
-      else if (new_value > width_limit)
-	new_value = width_limit;
-      stp_set_page_width (pv->v, new_value);
-      pv->left_is_valid = 0;
-      new_value = new_value / 72.0;
-      if (pv->unit)
-	new_value *= 2.54;
-      set_entry_value (custom_size_width, new_value, 0);
-      preview_update ();
-    }
-  else if (widget == custom_size_height)
-    {
-      gint width_limit, height_limit;
-      gint min_width_limit, min_height_limit;
-      gdouble new_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-      gdouble unit_scaler = 1.0;
-
-      new_value *= 72;
-      if (pv->unit)
-	unit_scaler /= 2.54;
-      new_value *= unit_scaler;
-      (stp_printer_get_printfuncs (current_printer)->limit)
-	(current_printer, pv->v, &width_limit, &height_limit,
-	 &min_width_limit, &min_height_limit);
-      if (new_value < min_height_limit)
-	new_value = min_height_limit;
-      else if (new_value > height_limit)
-	new_value = height_limit;
-      stp_set_page_height (pv->v, new_value);
-      pv->top_is_valid = 0;
-      new_value = new_value / 72.0;
-      if (pv->unit)
-	new_value *= 2.54;
-      set_entry_value (custom_size_height, new_value, 0);
+      if (widget == custom_size_width)
+	{
+	  if (new_value < min_width_limit)
+	    new_value = min_width_limit;
+	  else if (new_value > width_limit)
+	    new_value = width_limit;
+	  stp_set_page_width (pv->v, new_value);
+	}
+      else
+	{
+	  if (new_value < min_height_limit)
+	    new_value = min_height_limit;
+	  else if (new_value > height_limit)
+	    new_value = height_limit;
+	  stp_set_page_height (pv->v, new_value);
+	}
+      set_entry_value (widget, new_value / unit_scaler, 0);
       preview_update ();
     }
   else
@@ -2144,60 +2172,48 @@ media_size_callback (GtkWidget *widget,
       if (pap)
 	{
 	  gint default_width, default_height;
-	  gdouble size;
+	  gint size;
 
 	  if (stp_papersize_get_width (pap) == 0)
 	    {
 	      (stp_printer_get_printfuncs (current_printer)->media_size)
 		(current_printer, pv->v, &default_width, &default_height);
-	      size = default_width / 72.0;
-	      if (pv->unit)
-		size *= 2.54;
-	      set_entry_value (custom_size_width, size, 0);
 	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), TRUE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_width), TRUE);
-	      stp_set_page_width (pv->v, default_width);
+	      size = default_width;
 	    }
 	  else
 	    {
-	      size = stp_papersize_get_width (pap) / 72.0;
-	      if (pv->unit)
-		size *= 2.54;
-	      set_entry_value (custom_size_width, size, 0);
+	      size = stp_papersize_get_width (pap);
 	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_width), FALSE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_width), FALSE);
-	      stp_set_page_width (pv->v, stp_papersize_get_width (pap));
 	    }
+	  set_entry_value (custom_size_width,
+			   size / unit_scale[pv->unit], 0);
+	  stp_set_page_width (pv->v, size);
 
 	  if (stp_papersize_get_height (pap) == 0)
 	    {
 	      (stp_printer_get_printfuncs (current_printer)->media_size)
-		(current_printer, pv->v, &default_width, &default_height);
-	      size = default_height / 72.0;
-	      if (pv->unit)
-		size *= 2.54;
-	      set_entry_value (custom_size_height, size, 0);
+		(current_printer, pv->v, &default_height, &default_height);
 	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), TRUE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), TRUE);
-	      stp_set_page_height (pv->v, default_height);
+	      size = default_height;
 	    }
 	  else
 	    {
-	      size = stp_papersize_get_height (pap) / 72.0;
-	      if (pv->unit)
-		size *= 2.54;
-	      set_entry_value (custom_size_height, size, 0);
-	      gtk_widget_set_sensitive (GTK_WIDGET (custom_size_height), FALSE);
+	      size = stp_papersize_get_height (pap);
+	      gtk_widget_set_sensitive(GTK_WIDGET (custom_size_height), FALSE);
 	      gtk_entry_set_editable (GTK_ENTRY (custom_size_height), FALSE);
-	      stp_set_page_height (pv->v, stp_papersize_get_height (pap));
 	    }
+	  set_entry_value (custom_size_height,
+			   size / unit_scale[pv->unit], 0);
+	  stp_set_page_height (pv->v, size);
 	}
 
       if (strcmp (stp_get_media_size (pv->v), new_media_size) != 0)
 	{
 	  stp_set_media_size (pv->v, new_media_size);
-	  pv->left_is_valid = 0;
-	  pv->top_is_valid = 0;
 	  preview_update ();
 	}
     }
@@ -2285,8 +2301,6 @@ orientation_callback (GtkWidget *widget,
       invalidate_frame ();
       invalidate_preview_thumbnail ();
       set_orientation((gint) data);
-      pv->left_is_valid = 0;
-      pv->top_is_valid = 0;
     }
   preview_update ();
 }
@@ -2697,7 +2711,8 @@ update_adjusted_thumbnail (void)
 
     case ORIENT_UPSIDEDOWN:
       for (x = 0; x < thumbnail_h * thumbnail_w; x++)
-	memcpy(preview_thumbnail_data + adjusted_thumbnail_bpp * (preview_limit - x),
+	memcpy((preview_thumbnail_data +
+		adjusted_thumbnail_bpp * (preview_limit - x)),
 	       adjusted_thumbnail_data + adjusted_thumbnail_bpp * x,
 	       adjusted_thumbnail_bpp);
       break;
@@ -2705,7 +2720,8 @@ update_adjusted_thumbnail (void)
       for (x = 0; x < thumbnail_w; x++)
 	for (y = 0; y < thumbnail_h; y++)
 	  memcpy((preview_thumbnail_data +
-		  adjusted_thumbnail_bpp * (preview_limit - (x * thumbnail_h + y))),
+		  adjusted_thumbnail_bpp * (preview_limit -
+					    (x * thumbnail_h + y))),
 		 (adjusted_thumbnail_data +
 		  adjusted_thumbnail_bpp * (y * thumbnail_w + x)),
 		 adjusted_thumbnail_bpp);
@@ -2735,10 +2751,10 @@ draw_arrow (GdkWindow *w,
             gint       paper_top)
 {
   gint u  = preview_ppi/2;
-  gint ox = paper_left + preview_ppi * paper_width / 72 / 2;
-  gint oy = paper_top + preview_ppi * paper_height / 72 / 2;
+  gint ox = paper_left + preview_ppi * paper_width / INCH / 2;
+  gint oy = paper_top + preview_ppi * paper_height / INCH / 2;
 
-  oy -= preview_ppi * paper_height / 72 / 4;
+  oy -= preview_ppi * paper_height / INCH / 4;
   if (oy < paper_top + u)
     oy = paper_top + u;
   gdk_draw_line (w, gc, ox, oy - u, ox - u, oy);
@@ -2767,10 +2783,10 @@ do_preview_thumbnail (void)
   gint paper_display_width, paper_display_height;
   gint printable_display_width, printable_display_height;
 
-  preview_ppi = PREVIEW_SIZE_HORIZ * 72.0 / (gdouble) paper_width;
+  preview_ppi = PREVIEW_SIZE_HORIZ * FINCH / (gdouble) paper_width;
 
-  if (preview_ppi > PREVIEW_SIZE_VERT * 72.0 / (gdouble) paper_height)
-    preview_ppi = PREVIEW_SIZE_VERT * 72.0 / (gdouble) paper_height;
+  if (preview_ppi > PREVIEW_SIZE_VERT * FINCH / (gdouble) paper_height)
+    preview_ppi = PREVIEW_SIZE_VERT * FINCH / (gdouble) paper_height;
   if (preview_ppi > MAX_PREVIEW_PPI)
     preview_ppi = MAX_PREVIEW_PPI;
 
@@ -2779,25 +2795,29 @@ do_preview_thumbnail (void)
   /*
    * Center the page on the preview
    */
-  paper_display_width = MAX(3, (preview_ppi * paper_width + 71) / 72);
-  paper_display_height = MAX(3, (preview_ppi * paper_height + 71) / 72);
+  paper_display_width = MAX(3, ROUNDUP(preview_ppi * paper_width, INCH));
+  paper_display_height = MAX(3, ROUNDUP(preview_ppi * paper_height, INCH));
 
   paper_display_left = (PREVIEW_SIZE_HORIZ - paper_display_width) / 2;
   paper_display_top = (PREVIEW_SIZE_VERT - paper_display_height) / 2;
 
-  printable_display_width = MAX(3, (preview_ppi * printable_width + 71) / 72);
-  printable_display_height = MAX(3, (preview_ppi * printable_height + 71) /72);
+  printable_display_width =
+    MAX(3, ROUNDUP(preview_ppi * printable_width, INCH));
+  printable_display_height =
+    MAX(3, ROUNDUP(preview_ppi * printable_height, INCH));
 
-  printable_display_left = paper_display_left + preview_ppi * left / 72;
-  printable_display_top  = paper_display_top + preview_ppi * top / 72 ;
+  printable_display_left = paper_display_left + preview_ppi * left / INCH;
+  printable_display_top  = paper_display_top + preview_ppi * top / INCH ;
 
-  preview_x = 1 + paper_display_left + preview_ppi * stp_get_left (pv->v) / 72;
-  preview_y = 1 + (paper_display_top + preview_ppi * stp_get_top (pv->v) / 72);
+  preview_x =
+    1 + paper_display_left + preview_ppi * stp_get_left (pv->v) / INCH;
+  preview_y =
+    1 + paper_display_top + preview_ppi * stp_get_top (pv->v) / INCH;
 
   preview_w = MIN(printable_display_width - 1,
-		  MAX(3, (preview_ppi * print_width) / 72));
+		  MAX(3, (preview_ppi * print_width) / INCH));
   preview_h = MIN(printable_display_height - 1,
-		  MAX(3, (preview_ppi * print_height) / 72));
+		  MAX(3, (preview_ppi * print_height) / INCH));
 
   if (preview_w + preview_x > printable_display_left + printable_display_width)
     preview_x--;
@@ -2942,7 +2962,8 @@ do_preview_thumbnail (void)
 	}
     }
 
-  draw_arrow (preview->widget.window, gcset, paper_display_left, paper_display_top);
+  draw_arrow (preview->widget.window, gcset, paper_display_left,
+	      paper_display_top);
 
   if (adjusted_thumbnail_bpp == 1)
     gdk_draw_gray_image (preview->widget.window, gc,
@@ -2954,7 +2975,8 @@ do_preview_thumbnail (void)
 			GDK_RGB_DITHER_NORMAL, preview_data, 3 * preview_w);
 
   /* draw orientation arrow pointing to top-of-paper */
-  draw_arrow (preview->widget.window, gcinv, paper_display_left, paper_display_top);
+  draw_arrow (preview->widget.window, gcinv, paper_display_left,
+	      paper_display_top);
 
   opx = preview_x;
   opy = preview_y;
@@ -2976,7 +2998,7 @@ preview_update (void)
   gdouble min_ppi_scaling;   /* Minimum PPI for current page size */
   gdouble min_ppi_scaling1;  /* Minimum PPI for current page size */
   gdouble min_ppi_scaling2;  /* Minimum PPI for current page size */
-  gdouble unit_scaler = 72.0;
+  gdouble unit_scaler = unit_scale[pv->unit];
 
   (stp_printer_get_printfuncs (current_printer)->media_size)
     (current_printer, pv->v, &paper_width, &paper_height);
@@ -2991,8 +3013,8 @@ preview_update (void)
     {
       gdouble twidth;
 
-      min_ppi_scaling1 = 72.0 * (gdouble) image_width / printable_width;
-      min_ppi_scaling2 = 72.0 * (gdouble) image_height / printable_height;
+      min_ppi_scaling1 = FINCH * (gdouble) image_width / printable_width;
+      min_ppi_scaling2 = FINCH * (gdouble) image_height / printable_height;
 
       if (min_ppi_scaling1 > min_ppi_scaling2)
 	min_ppi_scaling = min_ppi_scaling1;
@@ -3003,7 +3025,7 @@ preview_update (void)
       if (pv->scaling < 0 && pv->scaling > -min_ppi_scaling)
 	pv->scaling = -min_ppi_scaling;
 
-      twidth = (72.0 * (gdouble) image_width / -pv->scaling);
+      twidth = (FINCH * (gdouble) image_width / -pv->scaling);
       print_width = twidth + .5;
       print_height = (twidth * (gdouble) image_height / image_width) + .5;
       stp_set_width(pv->v, print_width);
@@ -3053,27 +3075,28 @@ preview_update (void)
     }
 
 
-  if (!pv->left_is_valid || stp_get_left(pv->v) < left)
+  if (!pv->left_is_valid)
     {
       stp_set_left (pv->v, (paper_width - print_width) / 2);
       pv->left_is_valid = 1;
     }
+  if (stp_get_left(pv->v) < left)
+    stp_set_left(pv->v, left);
 
   /* we leave stp_get_left(pv->v) etc. relative to printable area */
   if (stp_get_left (pv->v) > right - print_width)
     stp_set_left (pv->v, right - print_width);
 
-  if (!pv->top_is_valid || stp_get_top(pv->v) < top)
+  if (!pv->top_is_valid)
     {
       stp_set_top (pv->v, ((paper_height - print_height) / 2));
       pv->top_is_valid = 1;
     }
+  if (stp_get_top(pv->v) < top)
+    stp_set_top(pv->v, top);
 
   if (stp_get_top (pv->v) > bottom - print_height)
     stp_set_top (pv->v, bottom - print_height);
-
-  if(pv->unit)
-    unit_scaler /= 2.54;
 
   set_entry_value (top_entry, (stp_get_top (pv->v)) / unit_scaler, 1);
   set_entry_value (left_entry, (stp_get_left (pv->v)) / unit_scaler, 1);
@@ -3089,8 +3112,10 @@ preview_update (void)
                    unit_scaler, 1);
   set_entry_value (width_entry, print_width / unit_scaler, 1);
   set_entry_value (height_entry, print_height / unit_scaler, 1);
-  set_entry_value (custom_size_width, stp_get_page_width (pv->v)/unit_scaler, 1);
-  set_entry_value (custom_size_height, stp_get_page_height (pv->v)/unit_scaler, 1);
+  set_entry_value (custom_size_width,
+		   stp_get_page_width (pv->v)/unit_scaler, 1);
+  set_entry_value (custom_size_height,
+		   stp_get_page_height (pv->v)/unit_scaler, 1);
 
   /* draw image */
   if (! suppress_preview_update)
@@ -3172,13 +3197,6 @@ preview_motion_callback (GtkWidget      *widget,
     return;
   if (preview_active != 1)
     return;
-#if 0
-  if (stp_get_left(pv->v) < 0 || stp_get_top(pv->v) < 0)
-    {
-      stp_set_left(pv->v, 72 * (printable_width - print_width) / 20);
-      stp_set_top(pv->v, 72 * (printable_height - print_height) / 20);
-    }
-#endif
   if (move_constraint == MOVE_CONSTRAIN)
     {
       int dx = abs(event->x - mouse_x);
@@ -3194,11 +3212,11 @@ preview_motion_callback (GtkWidget      *widget,
   if (mouse_button == 2)
     {
       int changes = 0;
-      int y_threshold = MAX (1, (preview_ppi * print_height) / 72);
+      int y_threshold = MAX (1, (preview_ppi * print_height) / INCH);
 
       if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  int x_threshold = MAX (1, (preview_ppi * print_width) / 72);
+	  int x_threshold = MAX (1, (preview_ppi * print_width) / INCH);
 	  while (event->x - mouse_x >= x_threshold)
 	    {
 	      if (stp_get_left (pv->v) + (print_width * 2) <= right)
@@ -3262,9 +3280,9 @@ preview_motion_callback (GtkWidget      *widget,
       if (mouse_button == 1)
 	{
 	  if (move_constraint & MOVE_VERTICAL)
-	    new_top += 72 * (event->y - mouse_y) / preview_ppi;
+	    new_top += INCH * (event->y - mouse_y) / preview_ppi;
 	  if (move_constraint & MOVE_HORIZONTAL)
-	    new_left += 72 * (event->x - mouse_x) / preview_ppi;
+	    new_left += INCH * (event->x - mouse_x) / preview_ppi;
 	}
       else
 	{
