@@ -142,6 +142,8 @@ COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
 
 cmykspec: CMYK tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>cmykspec %d\n", $2);
 	  global_image_type = "CMYK";
 	  global_channel_depth = 4;
 	  global_invert_data = 0;
@@ -152,6 +154,8 @@ cmykspec: CMYK tINT
 
 kcmyspec: KCMY tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>kcmyspec %d\n", $2);
 	  global_image_type = "KCMY";
 	  global_channel_depth = 4;
 	  global_invert_data = 0;
@@ -162,6 +166,8 @@ kcmyspec: KCMY tINT
 
 rgbspec: RGB tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>rgbspec %d\n", $2);
 	  global_image_type = "RGB";
 	  global_channel_depth = 3;
 	  global_invert_data = 1;
@@ -172,6 +178,8 @@ rgbspec: RGB tINT
 
 cmyspec: CMY tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>cmyspec %d\n", $2);
 	  global_image_type = "CMY";
 	  global_channel_depth = 3;
 	  global_invert_data = 0;
@@ -182,6 +190,8 @@ cmyspec: CMY tINT
 
 grayspec: GRAY tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>grayspec %d\n", $2);
 	  global_image_type = "Grayscale";
 	  global_channel_depth = 1;
 	  global_invert_data = 0;
@@ -192,6 +202,8 @@ grayspec: GRAY tINT
 
 whitespec: WHITE tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>whitespec %d\n", $2);
 	  global_image_type = "Whitescale";
 	  global_channel_depth = 1;
 	  global_invert_data = 1;
@@ -202,6 +214,8 @@ whitespec: WHITE tINT
 
 extendedspec: EXTENDED tINT tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>extendedspec %d\n", $2);
 	  global_image_type = "Raw";
 	  global_invert_data = 0;
 	  global_channel_depth = $2;
@@ -219,6 +233,8 @@ inputspec: MODE modespec
 level: LEVEL COLOR tDOUBLE
 	{
 	  int channel = find_color($2.sval);
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>level %s %f\n", $2.sval, $3);
 	  if (channel >= 0)
 	    global_levels[channel] = $3;
 	}
@@ -226,6 +242,8 @@ level: LEVEL COLOR tDOUBLE
 
 channel_level: LEVEL tINT tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>channel_level %d %f\n", $2, $3);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
 	    global_levels[$2] = $3;
 	}
@@ -234,6 +252,8 @@ channel_level: LEVEL tINT tDOUBLE
 gamma: GAMMA COLOR tDOUBLE
 	{
 	  int channel = find_color($2.sval);
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>gamma %s %f\n", $2.sval, $3);
 	  if (channel >= 0)
 	    global_gammas[channel] = $3;
 	}
@@ -241,22 +261,38 @@ gamma: GAMMA COLOR tDOUBLE
 
 channel_gamma: GAMMA tINT tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>channel_gamma %d %f\n", $2, $3);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
 	    global_gammas[$2] = $3;
 	}
 ;
 
 global_gamma: GAMMA tDOUBLE
-	{ global_gamma = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>global_gamma %f\n", $2);
+	  global_gamma = $2;
+	}
 ;
 steps: STEPS tINT
-	{ global_steps = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>steps %d\n", $2);
+	  global_steps = $2;
+	}
 ;
 ink_limit: INK_LIMIT tDOUBLE
-	{ global_ink_limit = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>ink_limit %f\n", $2);
+	  global_ink_limit = $2;
+	}
 ;
 printer: PRINTER tSTRING
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>printer %s\n", $2);
 	  global_printer = strdup($2);
 	  free($2);
 	}
@@ -264,6 +300,8 @@ printer: PRINTER tSTRING
 
 page_size_name: PAGESIZE tSTRING
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>page_size_name %s\n", $2);
 	  stp_set_string_parameter(global_vars, "PageSize", $2);
 	  free($2);
 	}
@@ -271,6 +309,8 @@ page_size_name: PAGESIZE tSTRING
 
 page_size_custom: PAGESIZE tINT tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>page_size_custom %d %d\n", $2, $3);
 	  stp_set_page_width(global_vars, $2);
 	  stp_set_page_height(global_vars, $3);
 	}
@@ -281,6 +321,8 @@ page_size: page_size_name | page_size_custom
 
 parameter_string: PARAMETER tSTRING tSTRING
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>parameter_string %s %s\n", $2, $3);
 	  stp_set_string_parameter(global_vars, $2, $3);
 	  free($2);
 	  free($3);
@@ -289,6 +331,8 @@ parameter_string: PARAMETER tSTRING tSTRING
 
 parameter_int: PARAMETER_INT tSTRING tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>parameter_int %s %d\n", $2, $3);
 	  stp_set_int_parameter(global_vars, $2, $3);
 	  free($2);
 	}
@@ -296,6 +340,8 @@ parameter_int: PARAMETER_INT tSTRING tINT
 
 parameter_float: PARAMETER_FLOAT tSTRING tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>parameter_float %s %f\n", $2, $3);
 	  stp_set_float_parameter(global_vars, $2, $3);
 	  free($2);
 	}
@@ -304,6 +350,8 @@ parameter_float: PARAMETER_FLOAT tSTRING tDOUBLE
 parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 	{
 	  stp_curve_t *curve = stp_curve_create_from_string($3);
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>parameter_curve %s %s\n", $2, $3);
 	  if (curve)
 	    {
 	      stp_set_curve_parameter(global_vars, $2, curve);
@@ -316,26 +364,53 @@ parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 parameter: parameter_string | parameter_int | parameter_float
 ;
 density: DENSITY tDOUBLE
-	{ global_density = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>density %f\n", $2);
+	  global_density = $2;
+	}
 ;
 top: TOP tDOUBLE
-	{ global_xtop = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>top %f\n", $2);
+	  global_xtop = $2;
+	}
 ;
 left: LEFT tDOUBLE
-	{ global_xleft = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>left %f\n", $2);
+	  global_xleft = $2;
+	}
 ;
 hsize: HSIZE tDOUBLE
-	{ global_hsize = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>hsize %f\n", $2);
+	  global_hsize = $2;
+	}
 ;
 vsize: VSIZE tDOUBLE
-	{ global_vsize = $2; }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>vsize %f\n", $2);
+	  global_vsize = $2;
+	}
 ;
 blackline: BLACKLINE tINT
-	{ global_noblackline = !($2); }
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>blackline %d\n", $2);
+	  global_noblackline = !($2);
+	}
 ;
 
 color_block1: tDOUBLE tDOUBLE tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>color_block1 %f %f %f (%d)\n", $1, $2, $3,
+		    current_index);
 	  if (current_index < STP_CHANNEL_LIMIT)
 	    {
 	      current_testpattern->d.p.mins[current_index] = $1;
@@ -358,6 +433,8 @@ color_blocks1: color_block1 color_blocks1b
 color_block2a: COLOR tDOUBLE tDOUBLE tDOUBLE
 	{
 	  int channel = find_color($1.sval);
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>color_block2a %s %f %f %f\n", $1.sval, $2, $3, $4);
 	  if (channel >= 0 && channel < STP_CHANNEL_LIMIT)
 	    {
 	      current_testpattern->d.p.mins[channel] = $2;
@@ -369,6 +446,8 @@ color_block2a: COLOR tDOUBLE tDOUBLE tDOUBLE
 
 color_block2b: CHANNEL tINT tDOUBLE tDOUBLE tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>color_block2b %d %f %f %f\n", $2, $3, $4, $5);
 	  if ($2 >= 0 && $2 < STP_CHANNEL_LIMIT)
 	    {
 	      current_testpattern->d.p.mins[$2] = $3;
@@ -392,6 +471,8 @@ color_blocks: color_blocks1 | color_blocks2
 
 patvars: tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>patvars %f %f %f %f %f\n", $1, $2, $3, $4, $5);
 	  current_testpattern->t = E_PATTERN;
 	  current_testpattern->d.p.lower = $1;
 	  current_testpattern->d.p.upper = $2;
@@ -408,6 +489,8 @@ pattern: PATTERN patvars color_blocks
 
 xpattern: XPATTERN color_blocks
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>xpattern\n");
 	  if (global_channel_depth == 0)
 	    {
 	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
@@ -421,6 +504,8 @@ xpattern: XPATTERN color_blocks
 
 grid: GRID tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>grid %d\n", $2);
 	  current_testpattern->t = E_GRID;
 	  current_testpattern->d.g.ticks = $2;
 	  current_testpattern = get_next_testpattern();
@@ -430,6 +515,8 @@ grid: GRID tINT
 
 image: IMAGE tINT tINT
 	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>image %d %d\n", $2, $3);
 	  current_testpattern->t = E_IMAGE;
 	  current_testpattern->d.i.x = $2;
 	  current_testpattern->d.i.y = $3;
