@@ -407,7 +407,7 @@ static void canon_write_line(const stp_vars_t, const canon_cap_t *, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
 			     unsigned char *, int,
-			     int, int, int, int);
+			     int, int, int, int *,int);
 
 
 /* Codes for possible ink-tank combinations.
@@ -1495,7 +1495,8 @@ canon_init_printer(const stp_vars_t v, canon_init_t *init)
   canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
 }
 
-static void canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
+static void 
+canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
 {
   /* eject page */
   stp_putc(0x0c,v);
@@ -1511,7 +1512,8 @@ static void canon_deinit_printer(const stp_vars_t v, canon_init_t *init)
 /*
  *  'alloc_buffer()' allocates buffer and fills it with 0
  */
-static unsigned char *canon_alloc_buffer(int size)
+static unsigned char *
+canon_alloc_buffer(int size)
 {
   unsigned char *buf= xmalloc(size);
   if (buf) memset(buf,0,size);
@@ -1597,7 +1599,8 @@ canon_print(const stp_printer_t printer,		/* I - Model */
   void *	dither;
   int           res_code;
   int           use_6color= 0;
-  double k_upper, k_lower;
+  double        k_upper, k_lower;
+  int           emptylines= 0;
   stp_vars_t	nv = stp_allocate_copy(v);
 
   canon_init_t  init;
@@ -1966,7 +1969,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		     lcyan,    delay_lc,
 		     lmagenta, delay_lm,
 		     lyellow,  delay_ly,
-		     length, out_width, left, (bits==2));
+		     length, out_width, left, &emptylines, (bits==2));
 
 #ifdef DEBUG
     /* fprintf(stderr,"!"); */
@@ -2011,7 +2014,7 @@ canon_print(const stp_printer_t printer,		/* I - Model */
 		       lcyan,    delay_lc,
 		       lmagenta, delay_lm,
 		       lyellow,  delay_ly,
-		       length, out_width, left, (bits==2));
+		       length, out_width, left, &emptylines, (bits==2));
 
 #ifdef DEBUG
       /* fprintf(stderr,"-"); */
@@ -2234,28 +2237,28 @@ canon_write_line(const stp_vars_t v,	/* I - Print file or command */
 		 int           l,	/* I - Length of bitmap data */
 		 int           width,	/* I - Printed width */
 		 int           offset,  /* I - horizontal offset */
+		 int           *empty,  /* IO- unflushed preceeding empty lines */
 		 int           dmt)
 {
-  static int empty= 0;
   int written= 0;
 
   if (k) written+=
-    canon_write(v, caps, k+ dk*l,  l, 3, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, k+ dk*l,  l, 3, ydpi, empty, width, offset, dmt);
   if (y) written+=
-    canon_write(v, caps, y+ dy*l,  l, 2, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, y+ dy*l,  l, 2, ydpi, empty, width, offset, dmt);
   if (m) written+=
-    canon_write(v, caps, m+ dm*l,  l, 1, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, m+ dm*l,  l, 1, ydpi, empty, width, offset, dmt);
   if (c) written+=
-    canon_write(v, caps, c+ dc*l,  l, 0, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, c+ dc*l,  l, 0, ydpi, empty, width, offset, dmt);
   if (ly) written+=
-    canon_write(v, caps, ly+dly*l, l, 6, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, ly+dly*l, l, 6, ydpi, empty, width, offset, dmt);
   if (lm) written+=
-    canon_write(v, caps, lm+dlm*l, l, 5, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, lm+dlm*l, l, 5, ydpi, empty, width, offset, dmt);
   if (lc) written+=
-    canon_write(v, caps, lc+dlc*l, l, 4, ydpi, &empty, width, offset, dmt);
+    canon_write(v, caps, lc+dlc*l, l, 4, ydpi, empty, width, offset, dmt);
 
-  if (written)
+  if (written||(empty==0))
     stp_zfwrite("\x1b\x28\x65\x02\x00\x00\x01", 7, 1, v);
   else
-    empty++;
+    *empty++;
 }
