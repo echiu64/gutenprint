@@ -19,3 +19,5 @@ printdefy.c
 printdefy.h
 unprint
 weavetest
+printer_options
+print-weave
