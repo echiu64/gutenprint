@@ -1374,7 +1374,7 @@ static void gtk_position_callback(GtkWidget *widget)
   if (widget == top_entry)
     {
       gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.top = ((new_value + 1.0 / 144) * 72) -  (paper_height - top);
+      vars.top = ((new_value + 1.0 / 144) * 72) - top;
     }
   else if (widget == left_entry)
     {
@@ -1384,8 +1384,7 @@ static void gtk_position_callback(GtkWidget *widget)
   else if (widget == bottom_entry)
     {
       gfloat new_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-      vars.top = ((new_value + 1.0 / 144) * 72) -
-	(print_height + paper_height - top); 
+      vars.top = ((new_value + 1.0 / 144) * 72) - (top + print_height); 
     }
   else if (widget == right_entry)
     {
@@ -1949,9 +1948,6 @@ static void gtk_preview_update(void)
   static GdkGC	*gc = NULL;	/* Graphics context */
   char s[255];
 
-  /* a lot of this gets very confusing 'cause we measure position from */
-  /* top left, but, but paper from bottom left                         */
-
   if (preview->widget.window == NULL)
     return;
 
@@ -1965,9 +1961,13 @@ static void gtk_preview_update(void)
 				     vars.media_size, &left, &right,
 				     &bottom, &top);
 
+  /* Rationalise things a bit by measuring everything from the top left */
+  top = paper_height - top;
+  bottom = paper_height - bottom;
+
 
   printable_width  = right - left;
-  printable_height = top - bottom;
+  printable_height = bottom - top;
 
   (*current_printer->media_size)(current_printer->model, vars.ppd_file,
 				 vars.media_size, &paper_width, &paper_height);
@@ -2054,6 +2054,13 @@ static void gtk_preview_update(void)
   
   if (orient == ORIENT_LANDSCAPE)
   {
+    /*
+     * In landscape mode, we print the right-hand side of the logical
+     * page at the top of the physical paper.  So, left-to-right on the
+     * paper corresponds to top-to-bottom on the image, so we don't have
+     * to flip the columns of the image end-for-end while forming rows
+     * for printing.
+     */
     temp              = printable_width;
     printable_width   = printable_height;
     printable_height  = temp;
@@ -2061,10 +2068,9 @@ static void gtk_preview_update(void)
     paper_width       = paper_height;
     paper_height      = temp;
     temp              = left;
-    left              = bottom;
-    bottom            = temp;
-    temp              = right;
-    right             = top;
+    left              = paper_width - bottom;
+    bottom            = right;
+    right             = paper_width - top;
     top               = temp;
 
     print_width       = tw1;
@@ -2079,7 +2085,7 @@ static void gtk_preview_update(void)
   paper_left = (PREVIEW_SIZE_HORIZ - PREVIEW_PPI * paper_width / 72) / 2;
   paper_top  = (PREVIEW_SIZE_VERT - PREVIEW_PPI * paper_height / 72) / 2;
   printable_left = paper_left +  PREVIEW_PPI * left / 72;
-  printable_top  = paper_top + PREVIEW_PPI * (paper_height - top) / 72 ;
+  printable_top  = paper_top + PREVIEW_PPI * top / 72 ;
 
   /* draw paper frame */
 
@@ -2105,7 +2111,7 @@ static void gtk_preview_update(void)
       vars.left = printable_width - print_width;
 
   if (vars.top < 0)
-    vars.top  = ((paper_height - print_height) / 2) - (paper_height - top);
+    vars.top  = ((paper_height - print_height) / 2) - top;
  
   if (vars.top > (printable_height - print_height))
       vars.top = printable_height - print_height; 
@@ -2114,7 +2120,7 @@ static void gtk_preview_update(void)
   plist[plist_current].v.top = vars.top;
       
 
-  sprintf(s, "%.2f", ((paper_height - top) + vars.top) / 72.0);
+  sprintf(s, "%.2f", (top + vars.top) / 72.0);
   gtk_signal_handler_block_by_data(GTK_OBJECT(top_entry), NULL);
   gtk_entry_set_text(GTK_ENTRY(top_entry), s);
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(top_entry), NULL);
@@ -2125,7 +2131,7 @@ static void gtk_preview_update(void)
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(left_entry), NULL);
 
   gtk_signal_handler_block_by_data(GTK_OBJECT(bottom_entry), NULL);
-  sprintf(s, "%.2f", (((paper_height - top) + vars.top) + print_height) / 72.0);
+  sprintf(s, "%.2f", ((top + vars.top) + print_height) / 72.0);
   gtk_entry_set_text(GTK_ENTRY(bottom_entry), s);
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(bottom_entry), NULL);
 
