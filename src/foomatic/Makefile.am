@@ -42,6 +42,9 @@ noinst_PROGRAMS = printer_options printer_margins paper_sizes gimp-print-version
 	stp_limits printers
 endif
 
+printer_options_SOURCES = printer_options.c
+printer_options_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
+
 printer_margins_SOURCES = printer_margins.c
 printer_margins_LDADD = $(LIBPRINTUT) $(GIMPPRINT_LIBS)
 
