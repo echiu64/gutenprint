@@ -1,4 +1,4 @@
-Gimp-Print 4.3.11, released February 28, 2003, is a development release of
+Gimp-Print 4.3.12, released February 28, 2003, is a development release of
 this package.
 
 Gimp-Print is a suite of printer drivers that may be used with most
@@ -14,9 +14,7 @@ and CUPS drivers, including Foomatic data.
 The print plugin for the Gimp requires the Gimp 1.2 (later versions of
 the Gimp are not supported).
 
-The CUPS driver requires CUPS 1.1.9 or higher.  1.1.14 or above is
-highly recommended, as certain translation-related bugs are fixed and
-it is possible to print true CMYK.
+The CUPS driver requires CUPS 1.1.15 or higher.
 
 The IJS-based GhostScript plugin driver requires GNU Ghostscript 6.53
 or later, ESP Ghostscript 7.05 or later, or APFL GhostScript 7.04 or
@@ -29,6 +27,32 @@ this package.
 
 Please read the README file for full instructions on installing this
 package.
+
+
+Gimp-Print 4.3.12 contains the following major changes over Gimp-Print
+4.3.11:
+
+1) It is now possible to use all supported floating point and string
+   options with the CUPS driver.  At present, the CUPS driver supports
+   all options other than curves.
+
+2) The ink type setting is now optional for the Epson driver.  If the
+   default setting is chosen in the CUPS driver, or the check box for
+   this is left unchecked in the GIMP plugin, an appropriate ink type
+   will be selected for the paper and printer chosen.
+
+3) Full bleed is now offered as an option on Epson printers that
+   support it.  The full bleed now correctly overprints the edge of
+   the paper.
+
+4) The contrast adjustment now has an option to use either linear
+   contrast adjustment (which is what Gimp-print has traditionally
+   used) or fixed endpoint (which is what most applications use).
+
+5) All printers will now work correctly with EvenTone dithering.
+
+6) Problems with the Epson Stylus Photo 2100/2200 and Epson Stylus Pro
+   10000 have been fixed.
 
 
 Gimp-Print 4.3.11 contains the following major changes over Gimp-Print
