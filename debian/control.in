@@ -8,7 +8,7 @@ Build-Depends: libcupsys2-dev, libgimp1.2-dev, libglib1.2-dev, libgtk1.2-dev, li
 Package: gimp1.2-print
 Architecture: any
 Depends: ${shlibs:Depends}, gimp1.2
-Suggests: libgimpprint-doc (= ${Source-Version})
+Suggests: libgimpprint-doc (= ${Source-Version}), gimpprint-doc (= ${Source-Version})
 Description: print plugin for the GIMP
  This is Gimp-Print version #UPSTREAM_VERSION#, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition
@@ -22,6 +22,7 @@ Description: print plugin for the GIMP
 Package: cupsys-driver-gimpprint
 Architecture: any
 Depends: ${shlibs:Depends}, cupsys (>= 1.1.4) | cups (>= 1.1.4)
+Suggests: gimpprint-doc (= ${Source-Version})
 Description: gimp-print printer driver for CUPS
  This is Gimp-Print version #UPSTREAM_VERSION#, a development release in the 4.1
  line.  Gimp-print is the print facility for the Gimp, and in addition
@@ -75,6 +76,18 @@ Description: library necessary to use gimp-print programs
  .
  It has been split off from the main gimp-print package in order to facilitate
  easy development for other packages that require it.
+
+Package: gimpprint-doc
+Architecture: all
+Section: doc
+Description: User Guide for GIMP-Print and CUPS
+ This package contains a user guide for programs using the
+ libgimpprint library for photographic quality printing.  Currently
+ this covers using the Print plugin for the GIMP and the Common
+ Unix Printing System (CUPS).
+ .
+ The documentation is available in both HTML and PDF formats for on-line
+ viewing and hardcopy.
 
 Package: escputil
 Architecture: any

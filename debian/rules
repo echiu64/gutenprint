@@ -75,6 +75,8 @@ binary-indep: build install ChangeLog
 	  if test ! -f gimpprint.html ; then \
 	    ln -s gimpprint_toc.html gimpprint.html ; \
 	  fi
+	cp doc/users_guide/*.pdf debian/gimpprint-doc/usr/share/doc/gimpprint-doc
+	cp -r doc/users_guide/html debian/gimpprint-doc/usr/share/doc/gimpprint-doc/html
 	dh_installexamples -i
 #	dh_installmenu -i
 #	dh_installlogrotate -i
