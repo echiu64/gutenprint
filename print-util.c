@@ -38,6 +38,9 @@
  * Revision History:
  *
  *   $Log$
+ *   Revision 1.34  1999/12/02 02:09:45  rlk
+ *   .
+ *
  *   Revision 1.33  1999/11/25 00:02:03  rlk
  *   Revamped many controls
  *
@@ -191,7 +194,7 @@
  *
  *   Revision 1.5  1997/07/26  18:43:04  mike
  *   Fixed dither_black and dither_cmyk - wasn't clearing extra bits
-   *   (caused problems with A3/A4 size output).
+ *   (caused problems with A3/A4 size output).
  *
  *   Revision 1.4  1997/07/02  18:46:26  mike
  *   Fixed stupid bug in dither_black() - wasn't comparing against gray
