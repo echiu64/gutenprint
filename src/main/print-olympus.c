@@ -44,6 +44,7 @@
 
 #define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #define MAX(a,b)	(((a) > (b)) ? (a) : (b))
+#define ZERO64		"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
 
 typedef struct
 {
@@ -51,6 +52,17 @@ typedef struct
   int output_channels;
   const char *name;
 } ink_t;
+
+typedef struct
+{
+	int xdpi, ydpi;
+	int xsize, ysize;
+	char layer;
+	int block_min_x, block_min_y;
+	int block_max_x, block_max_y;
+} olympus_privdata_t;
+
+static olympus_privdata_t privdata;
 
 typedef struct {
   const char *name;
@@ -76,27 +88,119 @@ typedef struct /* printer specific parameters */
   int border_top;
   int border_bottom;
   const olympus_res_t_array *res;	/* list of possible resolutions */
+  char *layers;
   int block_size;
   int need_empty_cols;	/* must we print empty columns? */
   int need_empty_rows;	/* must we print empty rows? */
+  void (*printer_init_func)(stp_vars_t);
+  void (*layer_init_func)(stp_vars_t);
+  void (*layer_end_func)(stp_vars_t);
+  void (*block_init_func)(stp_vars_t);
+  void (*block_end_func)(stp_vars_t);
 } olympus_cap_t;
 
-static const olympus_res_t_array resolution_p300 = 
+static void null_func(stp_vars_t v)
+{
+	return;
+}
+
+static const olympus_res_t_array p300_resolution = 
 {
 	{ "306x306", N_ ("306x306 DPI"), 306, 306, 1024, 1376 },
 	{ "153x153", N_ ("153x153 DPI"), 153, 153, 512, 688 },
 	{ "", "", 0, 0, 0, 0 }
+}; 
+
+static void p300_printer_init_func(stp_vars_t v)
+{
+	stpi_zfwrite("\033\033\033C\033N\1\033F\0\1\033MS\xff\xff\xff"
+			"\033Z", 1, 19, v);
+	stpi_put16_be(privdata.xdpi, v);
+	stpi_put16_be(privdata.ydpi, v);
+}
+
+static void p300_layer_end_func(stp_vars_t v)
+{
+	stpi_zprintf(v, "\033\033\033P%cS", privdata.layer);
+}
+
+static void p300_block_init_func(stp_vars_t v)
+{
+	stpi_zprintf(v, "\033\033\033W%c", privdata.layer);
+	stpi_put16_be(privdata.block_min_y, v);
+	stpi_put16_be(privdata.block_min_x, v);
+	stpi_put16_be(privdata.block_max_y, v);
+	stpi_put16_be(privdata.block_max_x, v);
+}
+
+static const olympus_res_t_array p400_resolution =
+{
+	{"314x314", N_ ("314x314 DPI"), 314, 314, 2400, 3200},
+	{"", "", 0, 0, 0, 0}
 };
+
+static void p400_printer_init_func(stp_vars_t v)
+{
+	char zero[64] = ZERO64;
+	stpi_zprintf(v, "\033ZQ"); stpi_zfwrite(zero, 1, 61, v);
+	stpi_zprintf(v, "\033FP"); stpi_zfwrite(zero, 1, 61, v);
+	stpi_zprintf(v, "\033ZF"); stpi_zfwrite(zero, 1, 61, v);
+	stpi_zprintf(v, "\033ZS");
+	stpi_put16_be(privdata.xsize, v);
+	stpi_put16_be(privdata.ysize, v);
+	stpi_zfwrite(zero, 1, 57, v);
+	stpi_zprintf(v, "\033ZP"); stpi_zfwrite(zero, 1, 61, v);
+}
+
+static void p400_layer_init_func(stp_vars_t v)
+{
+	char zero[64] = ZERO64;
+	stpi_zprintf(v, "\033ZC"); stpi_zfwrite(zero, 1, 61, v);
+}
+
+static void p400_layer_end_func(stp_vars_t v)
+{
+	char zero[64] = ZERO64;
+	stpi_zprintf(v, "\033P"); stpi_zfwrite(zero, 1, 62, v);
+}
+
+static void p400_block_init_func(stp_vars_t v)
+{
+	char zero[64] = ZERO64;
+	stpi_zprintf(v, "\033Z%c", privdata.layer);
+	stpi_put16_be(privdata.block_min_x, v);
+	stpi_put16_be(privdata.block_min_y, v);
+	stpi_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+	stpi_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+	stpi_zfwrite(zero, 1, 53, v);
+}
+
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
 	{ 0, 		/* model P300 */
-		297, 432,	/* "A6", "4x6" */
-		288, 420,	
+		297, 420,	/* A6 */
+		283, 416,	/* Postcard */
 		28, 28, 48, 48,
-		&resolution_p300,
+		&p300_resolution,
+		"YMC",
 		16,
 		1, 0,
+		&p300_printer_init_func,
+		&null_func, &p300_layer_end_func,
+		&p300_block_init_func, &null_func,
+	},
+	{ 1, 		/* model P400 */
+		595, 842,	/* A4 */
+		283, 416,	/* Postcard */
+		22, 22, 54, 54,
+		&p400_resolution,
+		"123",
+		180,
+		1, 1,
+		&p400_printer_init_func,
+		&p400_layer_init_func, &p400_layer_end_func,
+		&p400_block_init_func, &null_func,
 	},
 };
 
@@ -442,9 +546,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int print_px_width;
   int print_px_height;
   
-  unsigned char  copies = 1;
-  unsigned short hi_speed = 1;
-  char *l, layers[] = "YMC";
+  char *l;
   unsigned char *zeros;
 
   if (!stp_verify(v))
@@ -523,8 +625,11 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 		xdpi, ydpi
 		);	
 #endif
+  privdata.xdpi = xdpi;
+  privdata.ydpi = ydpi;
+  privdata.xsize = print_px_width;
+  privdata.ysize = print_px_height;
 
-  
   stpi_set_output_color_model(v, COLOR_MODEL_CMY);
   
   if (ink_type)
@@ -563,14 +668,8 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   zeros = stpi_zalloc(print_px_width+1);
   
   /* printer init */
-  stpi_zfwrite("\033\033\033C\033N", 1, 6, v);
-  stpi_putc(copies, v);
-  stpi_zfwrite("\033F", 1, 2, v);
-  stpi_put16_be(hi_speed, v);
-  stpi_zfwrite("\033MS\xff\xff\xff\033Z", 1, 8, v);
-  stpi_put16_be(xdpi, v);
-  stpi_put16_be(ydpi, v);
-  
+  stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->printer_init\n");
+  (*(caps->printer_init_func))(v);
   
   min_y = (caps->need_empty_rows ? 0 : out_px_top 
        - (out_px_top % caps->block_size)); /* floor to multiple of block_size */
@@ -587,12 +686,17 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   c_errdiv = image_px_width / out_px_width;
   c_errmod = image_px_width % out_px_width;
 
-  l = layers;
+  l = caps->layers;
   while (*l)
     {
     r_errval  = 0;
     r_errlast = -1;
     r_errline = 0;
+
+    privdata.layer = *l;
+    /* layer init */
+    stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->layer_init\n");
+    (*(caps->layer_init_func))(v);
 
     for (y = min_y; y <= max_y; y++)
       {
@@ -603,18 +707,19 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
       if (((y - min_y) % caps->block_size) == 0)
         {
         /* block init */
-	stpi_zfwrite("\033\033\033W", 1, 4, v);
-	stpi_putc(*l, v);
-	stpi_put16_be(y, v);
-	stpi_put16_be(min_x, v);
-	stpi_put16_be(MIN(y + caps->block_size - 1, print_px_height), v);
-	stpi_put16_be(max_x, v);
+        privdata.block_min_y = y;
+        privdata.block_min_x = min_x;
+        privdata.block_max_y = MIN(y + caps->block_size, print_px_height) - 1;
+        privdata.block_max_x = max_x;
+
+        stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_init\n");
+        (*(caps->block_init_func))(v);
 	}
       
 
       if ((y & 63) == 0)
         {
-        stpi_image_note_progress(image, max_progress/3 * (l - layers) + y / 3,
+        stpi_image_note_progress(image, max_progress/3 * (l - caps->layers) + y / 3,
             max_progress);
         }
       if (y < out_px_top || y >= out_px_bottom)
@@ -688,7 +793,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   	}
   	char_out = (unsigned char *) real_out;
   	for (i = 0; i < out_px_width; i++)
-  	  char_out[i] = real_out[i * ink_channels + (layers - l + 2)] / 257;
+  	  char_out[i] = real_out[i * ink_channels + (caps->layers - l + 2)] / 257;
   
 	stpi_zfwrite((char *) real_out, 1, out_px_width, v);
 /* stpi_erprintf("data %d ", out_px_width); */
@@ -707,11 +812,18 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
 	    r_errline ++;
 	  }
 	}
+      
+      if (y == privdata.block_max_y)
+        {
+        /* block end */
+        stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->block_end\n");
+        (*(caps->block_end_func))(v);
+	}
+      
       }
       /* layer end */
-      stpi_zfwrite("\033\033\033P", 1, 4, v);
-      stpi_putc(*l, v);
-      stpi_zfwrite("S", 1, 1, v);
+      stpi_deprintf(STPI_DBG_OLYMPUS, "olympus: caps->layer_end\n");
+      (*(caps->layer_end_func))(v);
 
       l++;
     }
