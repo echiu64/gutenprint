@@ -99,7 +99,7 @@
       <description value="8x10"/>
       <width value="576"/>
       <height value="720"/>
-      <unit value="english"/>
+      <unit value="english-extended"/>
     </paper>
     <paper name="Statement">
       <description value="Manual"/>
@@ -113,7 +113,7 @@
       <comment value="Tabloid Extra"/>
       <width value="864"/>
       <height value="1296"/>
-      <unit value="english"/>
+      <unit value="english-extended"/>
     </paper>
     <paper name="SuperB">
       <description value="Super B 13x19"/>
@@ -880,7 +880,7 @@
       <comment value="3.875in x 7.5in"/>
       <width value="279"/>
       <height value="540"/>
-      <unit value="english"/>
+      <unit value="english-extended"/>
     </paper>
 <!--
     Custom
