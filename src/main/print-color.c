@@ -1156,19 +1156,21 @@ compute_gcr_curve(const stp_vars_t vars)
       for (i = ceil(k_lower); i < k_upper; i ++)
 	{
 	  double where = (i - k_lower) / (k_upper - k_lower);
-	  tmp_data[i] = k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
-	    lut->steps;
+	  tmp_data[i] = 65535 *  k_upper * (1.0 - pow(1.0 - where, k_gamma)) /
+	    (lut->steps - 1);
 	}
       for (i = ceil(k_upper); i < lut->steps; i ++)
-	tmp_data[i] = i / (double) lut->steps;
+	tmp_data[i] = 65535 * i / (double) (lut->steps - 1);
     }
   else if (k_lower < lut->steps)
     for (i = ceil(k_lower); i < lut->steps; i ++)
       {
 	double where = (i - k_lower) / (k_upper - k_lower);
-	tmp_data[i] = k_upper * pow(where, k_gamma) / lut->steps;
+	tmp_data[i] = 65535 * k_upper * pow(where, k_gamma) /
+	  (lut->steps - 1);
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
+  stp_curve_set_bounds(curve, 0, 65535);
   if (! stp_curve_set_data(curve, lut->steps, tmp_data))
     {
       stpi_eprintf(vars, "set curve data failed!\n");
@@ -1197,15 +1199,26 @@ generic_rgb_to_cmyk(const stp_vars_t vars,
   if (!lut->gcr_curve)
     {
       if (stp_check_curve_parameter(vars, "GCRCurve", STP_PARAMETER_ACTIVE))
-	lut->gcr_curve =
-	  stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
+	{
+	  int i;
+	  double data;
+	  size_t count;
+	  lut->gcr_curve =
+	    stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
+	  stp_curve_resample(lut->gcr_curve, lut->steps);
+	  count = stp_curve_count_points(lut->gcr_curve);
+	  stp_curve_set_bounds(lut->gcr_curve, 0.0, 65535.0);
+	  for (i = 0; i < count; i++)
+	    {
+	      stp_curve_get_point(lut->gcr_curve, i, &data);
+	      data = 65535.0 * data * (double) i / (count - 1);
+	      stp_curve_set_point(lut->gcr_curve, i, data);
+	    }
+	}
       else
 	lut->gcr_curve = compute_gcr_curve(vars);
-      stp_curve_rescale(lut->gcr_curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
-			STP_CURVE_BOUNDS_RESCALE);
     }
 
-  stp_curve_resample(lut->gcr_curve, lut->steps);
   gcr_lookup = stp_curve_get_ushort_data(lut->gcr_curve, &points);
   stp_curve_resample(lut->black, lut->steps);
   black_lookup = stp_curve_get_ushort_data(lut->black, &points);
@@ -1990,7 +2003,7 @@ initialize_standard_curves(void)
       color_curve_bounds = stp_curve_create_read_string
 	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
       gcr_curve_bounds = stp_curve_create_read_string
-	("STP_CURVE;Nowrap ;Linear ;2;1.0;0.0;1.0:");
+	("STP_CURVE;Nowrap ;Linear ;2;0.0;0.0;1.0:1;1;");
       for (i = 0; i < curve_parameter_count; i++)
 	curve_parameters[i].param.deflt.curve =
 	 *(curve_parameters[i].defval);
