@@ -102,8 +102,8 @@ $supported_printers = array(
        ),
 'Lexmark (<strong><em>New!</em></strong>)' => array(
        'Ink Jet Printers' => array(
-	       '3200' => 'Operational (4.1 only)'
-	       '4076' => 'Operational'
+	       '3200' => 'Operational (4.1 only)',
+	       '4076' => 'Operational',
 	       'Z52' => 'Operational (4.1 only)'
 	       )
        ),
