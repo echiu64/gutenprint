@@ -175,6 +175,7 @@ int					/* O - Exit status */
 main(int  argc,				/* I - Number of command-line arguments */
      char *argv[])			/* I - Command-line arguments */
 {
+  int print_progress = 0;
   int		i, j;			/* Looping vars */
   unsigned char	black[BUFFER_SIZE],	/* Black bitmap data */
 		cyan[BUFFER_SIZE],	/* Cyan bitmap data */
@@ -409,7 +410,10 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  dither_name ? dither_name : desc.deflt.str, dither_bits,
 	  (stpi_dither_type == DITHER_GRAY) ? "pgm" : "ppm");
 
-  if (!quiet)
+  if (isatty(1))
+    print_progress = 1;
+
+  if (print_progress && !quiet)
     printf("%s ", filename);
 
   if (write_image)
@@ -431,7 +435,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   for (i = 0; i < IMAGE_HEIGHT; i ++)
   {
-    if (!quiet && (i & 63) == 0)
+    if (print_progress && !quiet && (i & 63) == 0)
     {
       printf("\rProcessing row %d...", i);
       fflush(stdout);
@@ -472,9 +476,14 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (quiet)
     fputc('.', stdout);
   else
-    printf("\r%-30s %d pix %.3f sec %.2f pix/sec\n",
-	   filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
-	   (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
+    {
+      if (print_progress)
+	fputc('\r', stdout);
+      printf("%-30s %d pix %.3f sec %.2f pix/sec\n",
+	     filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
+	     (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
+      fflush(stdout);
+    }
   return 0;
 }
 
