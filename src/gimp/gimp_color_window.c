@@ -32,6 +32,11 @@
 #include "print-intl.h"
 #include <string.h>
 
+gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
+guchar *thumbnail_data;
+gint    adjusted_thumbnail_bpp;
+guchar *adjusted_thumbnail_data;
+
 GtkWidget *gimp_color_adjust_dialog;
 
 static GtkObject *brightness_adjustment;
@@ -146,23 +151,38 @@ gimp_redraw_color_swatch (void)
 void
 gimp_create_color_adjust_window (void)
 {
-  GtkWidget *dialog;
   GtkWidget *table;
   const stp_vars_t lower   = stp_minimum_settings ();
   const stp_vars_t upper   = stp_maximum_settings ();
   const stp_vars_t defvars = stp_default_settings ();
 
-  gimp_color_adjust_dialog = dialog =
-    gimp_dialog_new (_("Print Color Adjust"), "print",
+  /*
+   * Fetch a thumbnail of the image we're to print from the Gimp.  This must
+   * 
+   */
+
+  thumbnail_w = THUMBNAIL_MAXW;
+  thumbnail_h = THUMBNAIL_MAXH;
+  thumbnail_data =
+    gimp_image_get_thumbnail_data (image_ID, &thumbnail_w,
+				   &thumbnail_h, &thumbnail_bpp);
+
+  /*
+   * thumbnail_w and thumbnail_h have now been adjusted to the actual
+   * thumbnail dimensions.  Now initialize a color-adjusted version of
+   * the thumbnail.
+   */
+
+  adjusted_thumbnail_data = g_malloc (3 * thumbnail_w * thumbnail_h);
+
+  gimp_color_adjust_dialog = gimp_dialog_new (_("Print Color Adjust"), "print",
 		     gimp_standard_help_func, "filters/print.html",
 		     GTK_WIN_POS_MOUSE,
 		     FALSE, TRUE, FALSE,
-
 		     _("Set Defaults"), gimp_set_color_defaults,
 		     NULL, NULL, NULL, FALSE, FALSE,
 		     _("Close"), gtk_widget_hide,
 		     NULL, 1, NULL, TRUE, TRUE,
-
 		     NULL);
 
   table = gtk_table_new (10, 3, FALSE);
@@ -172,8 +192,8 @@ gimp_create_color_adjust_window (void)
   gtk_table_set_row_spacing (GTK_TABLE (table), 2, 6);
   gtk_table_set_row_spacing (GTK_TABLE (table), 5, 6);
   gtk_table_set_row_spacing (GTK_TABLE (table), 8, 6);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), table,
-		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (gimp_color_adjust_dialog)->vbox),
+		      table, FALSE, FALSE, 0);
   gtk_widget_show (table);
 
   /*

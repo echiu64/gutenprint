@@ -65,6 +65,9 @@ typedef struct		/**** Printer List ****/
   stp_vars_t v;
 } gp_plist_t;
 
+#define THUMBNAIL_MAXW	(128)
+#define THUMBNAIL_MAXH	(128)
+
 extern gint    thumbnail_w, thumbnail_h, thumbnail_bpp;
 extern guchar *thumbnail_data;
 extern gint    adjusted_thumbnail_bpp;
