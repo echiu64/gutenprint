@@ -1,13 +1,14 @@
 INTRODUCTION
 
-    This is Gimp-Print version 4.2.2-rc3, a release candidate for
-    Gimp-Print 4.2.2 in the 4.2 stable series.  Gimp-Print is the
-    print facility for the Gimp, and in addition a suite of drivers
-    that may be used with common UNIX spooling systems using
-    Ghostscript or CUPS.  These drivers provide printing quality for
-    UNIX/Linux in many cases equal to or better than proprietary
-    vendor-supplied drivers, and can be used for many of the most
-    demanding printing tasks.
+    This is Gimp-Print version 4.2.2, a stable release in the 4.2
+    series.  Gimp-Print is a suite of printer drivers that may be used
+    common UNIX spooling systems using Ghostscript or CUPS.  These
+    drivers provide printing quality for UNIX/Linux in many cases
+    equal to or better than proprietary vendor-supplied drivers, and
+    can be used for many of the most demanding printing tasks.  A
+    complete list of supported printers may be found in the NEWS file.
+
+    Gimp-Print also includes the printing facility for the GIMP.
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite
