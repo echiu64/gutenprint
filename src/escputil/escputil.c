@@ -30,7 +30,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#ifdef HAVE_POLL
 #include <sys/poll.h>
+#endif
 #ifdef __GNU_LIBRARY__
 #include <getopt.h>
 #endif
@@ -384,6 +386,33 @@ do_print_cmd(void)
   return 0;
 }
 
+int
+read_from_printer(int fd, char *buf, int bufsize)
+{
+#ifdef HAVE_POLL
+  struct pollfd ufds;
+#endif
+  int status;
+  int retry = 5;
+  memset(buf, 0, bufsize);
+  do
+    {
+#ifdef HAVE_POLL
+      ufds.fd = fd;
+      ufds.events = POLLIN;
+      ufds.revents = 0;
+      (void) poll(&ufds, 1, 1000);
+#endif
+      status = read(fd, buf, bufsize - 1);
+#ifndef HAVE_POLL
+      if (status <= 0)
+	sleep(1);
+#endif
+    }
+  while ((status == 0) && (--retry != 0));
+  return status;
+}
+
 void
 initialize_print_cmd(void)
 {
@@ -454,10 +483,6 @@ do_ink_level(void)
   char buf[1024];
   char *ind;
   int i;
-  int retry;
-#ifdef HAVE_POLL
-  struct pollfd ufds;
-#endif
   if (!raw_device)
     {
       fprintf(stderr, "Obtaining ink levels requires using a raw device.\n");
@@ -477,23 +502,7 @@ do_ink_level(void)
       fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
       exit(1);
     }
-  memset(buf, 0, 1024);
-  retry = 5;
-  do
-    {
-#ifdef HAVE_POLL
-      ufds.fd = fd;
-      ufds.events = POLLIN;
-      ufds.revents = 0;
-      (void) poll(&ufds, 1, 1000);
-#endif
-      status = read(fd, buf, 1023);
-#ifndef HAVE_POLL
-      if (status <= 0)
-	sleep(1);
-#endif
-    }
-  while ((status == 0) && (--retry != 0));
+  status = read_from_printer(fd, buf, 1024);
   if (status < 0)
     {
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
@@ -537,10 +546,6 @@ do_identify(void)
   int fd;
   int status;
   char buf[1024];
-  int retry;
-#ifdef HAVE_POLL
-  struct pollfd ufds;
-#endif
   if (!raw_device)
     {
       fprintf(stderr, "Printer identification requires using a raw device.\n");
@@ -560,24 +565,7 @@ do_identify(void)
       fprintf(stderr, "Cannot write to %s: %s\n", raw_device, strerror(errno));
       exit(1);
     }
-  memset(buf, 0, 1024);
-  retry = 5;
-  do
-    {
-#ifdef HAVE_POLL
-      ufds.fd = fd;
-      ufds.events = POLLIN;
-      ufds.revents = 0;
-      (void) poll(&ufds, 1, 1000);
-#endif
-      status = read(fd, buf, 1023);
-#ifndef HAVE_POLL
-      if (status <= 0)
-	sleep(1);
-#endif
-    }
-  while ((status == 0) && (--retry != 0));
-  status = read(fd, buf, 1023);
+  status = read_from_printer(fd, buf, 1024);
   if (status < 0)
     {
       fprintf(stderr, "Cannot read from %s: %s\n", raw_device,strerror(errno));
@@ -704,10 +692,6 @@ do_align(void)
   int notfound = 1;
   stp_printer_t *printer = &printer_list[0];
   char *printer_name = NULL;
-  int retry;
-#ifdef HAVE_POLL
-  struct pollfd ufds;
-#endif
   if (!printer_model)
     {
       char buf[1024];
@@ -738,23 +722,7 @@ do_align(void)
 		  strerror(errno));
 	  exit(1);
 	}
-      memset(buf, 0, 1024);
-      retry = 5;
-      do
-	{
-#ifdef HAVE_POLL
-	  ufds.fd = fd;
-	  ufds.events = POLLIN;
-	  ufds.revents = 0;
-	  (void) poll(&ufds, 1, 1000);
-#endif
-	  status = read(fd, buf, 1023);
-#ifndef HAVE_POLL
-	  if (status <= 0)
-	    sleep(1);
-#endif
-	}
-      while ((status == 0) && (--retry != 0));
+      status = read_from_printer(fd, buf, 1024);
       if (status < 0)
 	{
 	  fprintf(stderr, "\nCannot read from %s: %s\n", raw_device,
