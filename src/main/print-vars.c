@@ -361,6 +361,7 @@ stp_vars_free(stp_vars_t vv)
     stpi_list_destroy(v->params[i]);
   stpi_list_destroy(v->internal_data);
   SAFE_FREE(v->driver);
+  SAFE_FREE(v->color_conversion);
   stpi_free(v);
 }
 
