@@ -89,7 +89,7 @@ typedef struct /* printer specific parameters */
   int border_top;
   int border_bottom;
   const olympus_res_t_array *res;	/* list of possible resolutions */
-  char *layers;
+  const char *layers;
   int block_size;
   int need_empty_cols;	/* must we print empty columns? */
   int need_empty_rows;	/* must we print empty rows? */
@@ -575,7 +575,7 @@ olympus_do_print(stp_vars_t v, stp_image_t *image)
   int print_px_width;
   int print_px_height;
   
-  char *l;
+  const char *l;
   unsigned char *zeros;
 
   if (!stp_verify(v))
