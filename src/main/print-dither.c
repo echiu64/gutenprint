@@ -143,14 +143,20 @@ typedef struct dither_channel
 } dither_channel_t;
 
 typedef struct {
-	int	d2x, d2y, dx2, dy2;
+	int dx, dy, r_sq;
+} dis_t;
+
+typedef struct {
+	int	d2x, d2y;
+	dis_t	d_sq;
 	int	aspect;
-	int	**dx, **dy, **r_sq;
+	dis_t	**dis;
 	int	*recip;
 } eventone_t;
 
 typedef struct {
-	int dx, dy, r_sq, wetness, ri, point;
+	dis_t dis;
+	int wetness, point;
 	int maxdot_dens;		/* Max dot size * density */
 	int maxdot_wet;			/* Maximum wetness allowed */
 	dither_segment_t dr;
@@ -1089,13 +1095,9 @@ stp_free_dither(void *vd)
     eventone_t *et = d->eventone;
     stp_free(et->recip);
     for (i=0; i<PHYSICAL_CHANNEL_COUNT(d); i++) {
-      stp_free(et->dx[i]);
-      stp_free(et->dy[i]);
-      stp_free(et->r_sq[i]);
+      stp_free(et->dis[i]);
     }
-    stp_free(et->r_sq);
-    stp_free(et->dx);
-    stp_free(et->dy);
+    stp_free(et->dis);
     stp_free(d->eventone);
   }
   stp_free(d->channel);
@@ -1882,121 +1884,6 @@ shared_ed_deinitializer(dither_t *d,
   SAFE_FREE(ndither);
 }
 
-#define V_WHITE		0
-#define V_CYAN		(1<<ECOLOR_C)
-#define V_MAGENTA	(1<<ECOLOR_M)
-#define V_YELLOW	(1<<ECOLOR_Y)
-#define V_BLUE		(V_CYAN|V_MAGENTA)
-#define V_GREEN		(V_CYAN|V_YELLOW)
-#define V_RED		(V_MAGENTA|V_YELLOW)
-#define V_BLACK		(V_CYAN|V_MAGENTA|V_YELLOW)
-
-static inline int
-pick_vertex_general(const dither_t *d,
-		    int x,
-		    et_chdata_t *cd,
-		    int *temp_values)
-{
-  int sum = 0;
-  int best = 0;
-  int i;
-  int desired_points;
-  int channels = CHANNEL_COUNT(d);
-
-  for (i = 0; i < channels; i++)
-    {
-      sum += cd[i].ri;
-      temp_values[i] = cd[i].ri;
-    }
-  if (sum == 0)
-    return 0;
-
-  desired_points = (sum + 65534) / 65535;
-  if (sum % 65535 > ditherpoint(d, &(CHANNEL(d, 0).dithermat), x))
-    desired_points++;
-
-  /* FIXME!!!  This is quadratic in the number of channels! */
-  /* --rlk 20021012 */
-  do
-    {
-      int positive_values = 0;
-      int best_this_pass = 0;
-      int vmax = 1;
-      for (i = 0; i < channels; i++)
-	{
-	  if (temp_values[i] > 0)
-	    positive_values++;
-	  if (temp_values[i] == vmax)
-	    {
-	      best_this_pass |= 1 << i;
-	    }
-	  else if (temp_values[i] > vmax)
-	    {
-	      best_this_pass = 1 << i;
-	      vmax = temp_values[i];
-	    }
-	}
-      for (i = 0; i < channels; i++)
-	if (best_this_pass & (1 << i))
-	  {
-	    temp_values[i] = -1;
-	    desired_points--;
-	  }
-      best |= best_this_pass;
-      if (positive_values < desired_points)
-	desired_points = positive_values;
-    } while (desired_points > 0);
-  return best;
-}
-
-static inline int
-pick_vertex(int c, int m, int y, int k)
-{
-	int best;
-	int tmax, vmax;
-	
-	if (c+m+y <= 65535) {
-		best = V_WHITE; vmax = 65535-c-m-y;					/* White */
-		if (c > vmax) { best = V_CYAN; vmax = c; }				/* Cyan */
-		if (m > vmax) { best = V_MAGENTA; vmax = m; }				/* Magenta */
-		if (y > vmax) { best = V_YELLOW; vmax = y; }				/* Yellow */
-	} else if (c+m+y >= 2*65535) {
-		best = V_BLACK; vmax = c+m+y-2*65535; 					/* Black */
-		if ((tmax = 65535-y) > vmax) {best = V_BLUE; vmax = tmax; }		/* Blue */
-		if ((tmax = 65535-m) > vmax) {best = V_GREEN; vmax = tmax; }		/* Green */
-		if ((tmax = 65535-c) > vmax) {best = V_RED; vmax = tmax; }		/* Red */
-	} else if (m+c <= 65535) {
-		if (m+y <= 65535) {
-			best = V_GREEN; vmax = c+m+y-65535;				/* Green */
-			if (m > vmax) {best = V_MAGENTA; vmax = m;}			/* Magenta */
-			if ((tmax = 65535-m-y) > vmax) {best = V_CYAN; vmax = tmax;}	/* Cyan */
-			if ((tmax = 65535-c-m) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
-		} else {
-			best = V_RED; vmax = m+y-65535;					/* Red */
-			if (c > vmax) { best = V_GREEN; vmax = c;}			/* Green */
-			if ((tmax = 65535-y) > vmax) {best = V_MAGENTA; vmax = tmax;}	/* Magenta */
-			if ((tmax = 65535-m-c) > vmax) {best = V_YELLOW; vmax = tmax;}	/* Yellow */
-		}
-	} else {
-		if (m+y > 65535) {
-			best = V_MAGENTA; vmax = 2*65535-m-c-y;				/* Magenta */
-			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
-			if ((tmax = y+m-65535) > vmax) { best = V_RED; vmax = tmax; }	/* Red */
-			if ((tmax = 65535-m) > vmax) { best = V_GREEN; vmax = tmax; }	/* Green */
-		} else {
-			best = V_CYAN; vmax = 65535-y-m; 				/* Cyan */
-			if ((tmax = c+m-65535) > vmax) { best = V_BLUE; vmax = tmax; }	/* Blue */
-			if ((tmax = 65535-c) > vmax) { best = V_MAGENTA; vmax = tmax; }	/* Magenta */
-			if (y > vmax) { best = V_GREEN; vmax = y;}			/* Green */
-		}
-	}
-
-	if (k >= 32768) {
-		best |= (1 << ECOLOR_K);
-	}
-	return best;
-}
-
 static inline void find_segment(dither_t *d, dither_channel_t *dc, int wetness, int density, dither_segment_t *range)
 {
 	int i;
@@ -2041,30 +1928,26 @@ eventone_init(dither_t *d, et_chdata_t **cd)
     { int xa, ya;
       xa = d->x_aspect / d->y_aspect;
       if (xa == 0) xa = 1;
-      et->dx2 = xa * xa;
-      et->d2x = 2 * et->dx2;
+      et->d_sq.dx = xa * xa;
+      et->d2x = 2 * et->d_sq.dx;
   
       ya = d->y_aspect / d->x_aspect;
       if (ya == 0) ya = 1;
-      et->dy2 = ya * ya;
-      et->d2y = 2 * et->dy2;
+      et->d_sq.dy = ya * ya;
+      et->d2y = 2 * et->d_sq.dy;
     
       et->aspect = EVEN_C2 / (xa * ya);
+      et->d_sq.r_sq = 0;
     }
   
     et->recip = stp_malloc(65536 * sizeof(int));
-    et->dx = stp_malloc(sizeof(int *) * PHYSICAL_CHANNEL_COUNT(d));
-    et->dy = stp_malloc(sizeof(int *) * PHYSICAL_CHANNEL_COUNT(d));
-    et->r_sq = stp_malloc(sizeof(int *) * PHYSICAL_CHANNEL_COUNT(d));
+    et->dis = stp_malloc(sizeof(dis_t *) * PHYSICAL_CHANNEL_COUNT(d));
   
     for (i=0; i < PHYSICAL_CHANNEL_COUNT(d); i++) {
       int x;
-      et->dx[i] = stp_malloc(sizeof(int) * d->dst_width);
-      et->dy[i] = stp_malloc(sizeof(int) * d->dst_width);
-      et->r_sq[i] = stp_zalloc(sizeof(int) * d->dst_width);
+      et->dis[i] = stp_malloc(sizeof(dis_t) * d->dst_width);
       for (x = 0; x < d->dst_width; x++) {
-	et->dx[i][x] = et->dx2;
-	et->dy[i][x] = et->dy2;
+	et->dis[i][x] = et->d_sq;
       }
     }
 
@@ -2094,54 +1977,46 @@ eventone_init(dither_t *d, et_chdata_t **cd)
       p->wetness = 0;
       p->maxdot_dens = PHYSICAL_CHANNEL(d, i).maxdot * d->density;
       p->maxdot_wet = (65536 + d->density / 2) * PHYSICAL_CHANNEL(d, i).maxdot;
-      p->dx = et->dx2;
-      p->dy = et->dy2;
-      p->r_sq = 0;
+      p->dis = et->d_sq;
     }
   }
 }
 
 static inline void
-advance_eventone_pre(dither_t *d, et_chdata_t *cd, eventone_t *et, int x)
+advance_eventone_pre(dis_t *cdd, eventone_t *et, dis_t *etd)
 {
-  int i;
-
-  for (i=0; i < CHANNEL_COUNT(d); cd++, i++) {
-    if (cd->r_sq + cd->dx <= et->r_sq[i][x]) {			/* Do our eventone calculations */
-      cd->r_sq += cd->dx;					/* Nearest pixel same as last one */
-      cd->dx += et->d2x;
-    } else {
-      cd->dx = et->dx[i][x];					/* Nearest pixel is from a previous line */
-      cd->dy = et->dy[i][x];
-      cd->r_sq = et->r_sq[i][x];
-    }
+  int t = cdd->r_sq + cdd->dx;
+  if (t <= etd->r_sq) { 				/* Do eventone calculations */
+    cdd->r_sq = t;					/* Nearest pixel same as last one */
+    cdd->dx += et->d2x;
+  } else {
+    *cdd = *etd;					/* Nearest pixel is from a previous line */
   }
 }
+		
 
 static inline void
-advance_eventone_post(dither_t *d, et_chdata_t *cd, eventone_t *et, int x)
+advance_eventone_post(et_chdata_t *cd, eventone_t *et, dis_t *etd)
 {
-  int i;
-  int t;
+  int t, u;
 
-  for (i=0; i < CHANNEL_COUNT(d); cd++, i++) {
-    if (cd->point > 0) {
-      cd->r_sq = 0;
-      cd->dx = et->dx2;
-      cd->dy = et->dy2;
-    }
-    t = et->r_sq[i][x] + et->dy[i][x];
-    et->dy[i][x] += et->d2y;
-    if (cd->r_sq + cd->dy < t) {
-      t = cd->r_sq + cd->dy;
-      et->dx[i][x] = cd->dx;
-      et->dy[i][x] = cd->dy + et->d2y;
-    }
-    if (t > 65535) {
-      t = 65535;
-    }
-    et->r_sq[i][x] = t;
+  if (cd->point > 0) {				/* If something was printed, */
+    cd->dis = et->d_sq;				/* Reset dx, dy counters (structure copy) */
   }
+
+  t = etd->r_sq + etd->dy;			/* r^2 from dot above */
+  u = cd->dis.r_sq + cd->dis.dy;		/* r^2 from dot on this line */
+  if (u < t) {					/* If dot from this line is closer */
+    t = u;					/* Use it instead */
+    etd->dx = cd->dis.dx;
+    etd->dy = cd->dis.dy;
+  }
+  etd->dy += et->d2y;
+
+  if (t > 65535) {				/* Do some hard limiting */
+    t = 65535;
+  }
+  etd->r_sq = t;
 }
 
 static inline int
@@ -2198,8 +2073,12 @@ print_all_inks(dither_t *d, et_chdata_t *cd, int print_inks, unsigned pick, unsi
     tptr = CHANNEL(d, i).ptrs[subc->subchannel] + d->ptr_offset;
     cd->wetness += subc->dot_size << 16;
     
-    for (j=1; j <= bits; j+=j, tptr += length) {
-      if (j & bits) *tptr |= bit;
+    if (bits == 1) {
+      *tptr |= bit;
+    } else {
+      for (j=1; j <= bits; j+=j, tptr += length) {
+        if (j & bits) *tptr |= bit;
+      }
     }
   }
 }
@@ -2739,10 +2618,11 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 
   QUANT(6);
   for (; x != terminate; x += direction)
-    { unsigned pick, print_inks;
+    { unsigned pick = 0, print_inks;
+      int range = 0;
+      unsigned channel_mask;
+      et_chdata_t *p;
       
-      advance_eventone_pre(d, cd, et, x);
-
       CHANNEL(d, ECOLOR_K).b = 0;
 
       for (i=1; i < CHANNEL_COUNT(d); i++) {
@@ -2762,11 +2642,13 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
       for (i = 1; i < CHANNEL_COUNT(d); i++)
 	CHANNEL(d, i).b = CHANNEL(d, i).v;
 
-      for (i=0; i < CHANNEL_COUNT(d); i++) {
+      for (i=0, channel_mask = 1, p = cd; i < CHANNEL_COUNT(d); i++, channel_mask <<= 1, p++) {
         int base;
         int value;
 	int maxwet;
-	et_chdata_t *p = &cd[i];
+	dis_t *etd = &et->dis[i][x];
+
+	advance_eventone_pre(&p->dis, et, etd);
 
 	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
 
@@ -2779,61 +2661,47 @@ stp_dither_cmyk_et(const unsigned short  *cmy,
 	
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
-	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
+	range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
+	if (range >= 32768) {
+	  pick |= channel_mask;
+	  range -= 65536;
+	  value = p->dr.upper->value;
+	} else {
+	  value = p->dr.lower->value;
+	}
+        /* Adjust error values for dither */
+	ndither[i] += 2 * (base - value);
+	p->point = value;
+	advance_eventone_post(p, et, etd);
       }
-	
-      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, cd[ECOLOR_K].ri);
 
-      { int useblack = 0;		/* Do we print black at all? */
-	int printed_black;
+      { int printed_black;
 	int adjusted_black;
 
-        for (i=0; i < CHANNEL_COUNT(d); i++) {
-	  if (pick & (1 << i)) {
-	    cd[i].point = cd[i].dr.upper->value;
-	  } else {
-	    cd[i].point = cd[i].dr.lower->value;
-	  }
-	}
+	print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
 
         printed_black = cd[ECOLOR_K].point;
 	adjusted_black = printed_black;
-	if (printed_black > 0 && d->black_density != d->density) {
-	  adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
-	}
+	if (printed_black > 0 ) {
+	  if (d->black_density != d->density) {
+	    adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
+	  }
 
-	advance_eventone_post(d, cd, et, x);
+          /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
 
-        /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
-
-        if (printed_black > 0) {
 	  for (i=1; i < CHANNEL_COUNT(d); i++) {
             if (cd[i].point <= adjusted_black) {
-	      useblack = 1;
+	      print_inks = (1 << ECOLOR_K);
+	      for (i=1; i < d->n_channels; i++) {
+	        if (cd[i].point > adjusted_black) {
+		  /* Find which channels we actually print */
+	          print_inks |= (1 << i);
+	        }
+	      }
 	      break;
 	    }
           }
 	}
-	
-	/* Find which channels we actually print */
-
-	/* Adjust colours to print based on black ink */
-        if (useblack) {
-	  print_inks = (1 << ECOLOR_K);
-	  for (i=1; i < CHANNEL_COUNT(d); i++) {
-	    if (cd[i].point > adjusted_black) {
-	      print_inks |= (1 << i);
-	    }
-	  }
-        } else {
-	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
-	}
-
-        /* Adjust error values for dither */
-	ndither[ECOLOR_K] += 2 * (CHANNEL(d, ECOLOR_K).b - printed_black);
-        for (i=1; i < CHANNEL_COUNT(d); i++) {
-	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
-        }
       }
 
       /* Now we can finally print it! */
@@ -3122,10 +2990,11 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 
   QUANT(6);
   for (; x != terminate; x += direction)
-    { unsigned pick, print_inks;
+    { unsigned pick = 0, print_inks;
+      int range = 0;
+      unsigned channel_mask;
+      et_chdata_t *p;
       
-      advance_eventone_pre(d, cd, et, x);
-
       { int value = cmyk[3];		/* Order of input is C,M,Y,K */
 	CHANNEL(d, ECOLOR_K).o = value;				/* Remember value we want printed here */
 	CHANNEL(d, ECOLOR_K).v = value;
@@ -3139,11 +3008,13 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	CHANNEL(d, i).b = value;
       }
 
-      for (i=0; i < CHANNEL_COUNT(d); i++) {
+      for (i=0, channel_mask = 1, p = cd; i < CHANNEL_COUNT(d); i++, channel_mask <<= 1, p++) {
         int value;
 	int base;
 	int maxwet;
-	et_chdata_t *p = &cd[i];
+	dis_t *etd = &et->dis[i][x];
+
+	advance_eventone_pre(&p->dis, et, etd);
 
 	if ((p->wetness -= p->maxdot_dens) < 0) p->wetness = 0;
 
@@ -3156,30 +3027,29 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
 	
         find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
-	p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
+	range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
+	if (range >= 32768) {
+	  pick |= channel_mask;
+	  range -= 65536;
+	  value = p->dr.upper->value;
+	} else {
+	  value = p->dr.lower->value;
+	}
+        /* Adjust error values for dither */
+	ndither[i] += 2 * (base - value);
+	p->point = value;
+	advance_eventone_post(p, et, etd);
       }
 	
-      pick = pick_vertex(cd[ECOLOR_C].ri, cd[ECOLOR_M].ri, cd[ECOLOR_Y].ri, cd[ECOLOR_K].ri);
-
       { int useblack = 0;		/* Do we print black at all? */
 	int printed_black;
 	int adjusted_black;
-
-        for (i=0; i < CHANNEL_COUNT(d); i++) {
-	  if (pick & (1 << i)) {
-	    cd[i].point = cd[i].dr.upper->value;
-	  } else {
-	    cd[i].point = cd[i].dr.lower->value;
-	  }
-	}
 
         printed_black = cd[ECOLOR_K].point;
 	adjusted_black = printed_black;
 	if (printed_black > 0 && d->black_density != d->density) {
 	  adjusted_black = (unsigned)printed_black * (unsigned)d->density / d->black_density;
 	}
-
-	advance_eventone_post(d, cd, et, x);
 
         /* Only print the black ink if it means we can avoid printing another ink, otherwise we're just wasting ink */
 
@@ -3205,12 +3075,6 @@ stp_dither_raw_cmyk_et(const unsigned short  *cmyk,
         } else {
 	  print_inks = (1 << ECOLOR_C)|(1 << ECOLOR_M)|(1<<ECOLOR_Y);
 	}
-
-        /* Adjust error values for dither */
-	ndither[ECOLOR_K] += 2 * (CHANNEL(d, ECOLOR_K).b - printed_black);
-        for (i=1; i < CHANNEL_COUNT(d); i++) {
-	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
-        }
       }
 
       /* Now we can finally print it! */
@@ -3436,7 +3300,6 @@ stp_dither_raw_et(const unsigned short  *raw,
   int		*ndither;
   eventone_t	*et;
   et_chdata_t	*cd;
-  int           *temp_values;
 
   int		***error;
   int		terminate;
@@ -3456,7 +3319,6 @@ stp_dither_raw_et(const unsigned short  *raw,
 			     direction, &error, &ndither))
     return;
 
-  temp_values = stp_malloc(CHANNEL_COUNT(d) * sizeof(int));
   eventone_init(d, &cd);
   et = d->eventone;
 
@@ -3474,20 +3336,23 @@ stp_dither_raw_et(const unsigned short  *raw,
   for (; x != terminate; x += direction)
     {
       unsigned pick = 0;
+      unsigned channel_mask;
       int i;
+      int range = 0;
+      et_chdata_t *p;
       
-      advance_eventone_pre(d, cd, et, x);
-
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
+      for (i = 0, channel_mask = 1, p = cd; i < CHANNEL_COUNT(d); i++, channel_mask <<= 1, p++)
 	{
 	  int value = raw[i];
 	  int base = value;
 	  int maxwet;
-	  et_chdata_t *p = &cd[i];
+	  dis_t *etd = &et->dis[i][x];
 
 	  CHANNEL(d, i).b = value;
 	  CHANNEL(d, i).v = value;
 	  CHANNEL(d, i).o = value;
+	  
+	  advance_eventone_pre(&p->dis, et, etd);
 
 	  if ((p->wetness -= p->maxdot_dens) < 0)
 	    p->wetness = 0;
@@ -3501,22 +3366,19 @@ stp_dither_raw_et(const unsigned short  *raw,
 	
 	  find_segment(d, &CHANNEL(d, i), maxwet, value, &p->dr);
 	
-	  p->ri = eventone_adjust(&p->dr, et, p->r_sq, base, value);
-	}
-
-      pick = pick_vertex_general(d, x, cd, temp_values);
-
-      for (i = 0; i < CHANNEL_COUNT(d); i++)
-	{
-	  if (pick & (1 << i))
-	    cd[i].point = cd[i].dr.upper->value;
-	  else
-	    cd[i].point = cd[i].dr.lower->value;
+	  range += eventone_adjust(&p->dr, et, p->dis.r_sq, base, value);
+	  if (range >= 32768) {
+	    pick |= channel_mask;
+	    range -= 32768;
+	    value = p->dr.upper->value;
+	  } else {
+	    value = p->dr.lower->value;
+	  }
 	  /* Adjust error values for dither */
-	  ndither[i] += 2 * (CHANNEL(d, i).b - cd[i].point);
-	}	    
-
-      advance_eventone_post(d, cd, et, x);
+	  ndither[i] += 2 * (base - value);
+	  p->point = value;
+          advance_eventone_post(p, et, etd);
+	}
 
       /* Now we can finally print it! */
       
@@ -3535,7 +3397,6 @@ stp_dither_raw_et(const unsigned short  *raw,
     }
   stp_free(cd);
   shared_ed_deinitializer(d, error, ndither);
-  stp_free(temp_values);
 }
 
 void
