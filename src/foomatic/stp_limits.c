@@ -38,6 +38,7 @@ main(int argc, char **argv)
   const stp_vars_t maximum = stp_maximum_settings();
   const stp_vars_t defvars = stp_default_settings();
 
+  stp_init();
   printf("$stp_values{'MINVAL'}{'Brightness'} = %.3f\n",
 	 stp_get_brightness(minimum));
   printf("$stp_values{'MAXVAL'}{'Brightness'} = %.3f\n",

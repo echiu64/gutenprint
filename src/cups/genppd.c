@@ -281,27 +281,12 @@ main(int  argc,			    /* I - Number of command-line arguments */
   langs = getlangs();
 #endif
 
-  /*
-   * Print lists
-   */
-
-  if (opt_printlangs)
-    {
-      printlangs(langs);
-      exit (EXIT_SUCCESS);
-    }
-
-  if (opt_printmodels)
-    {
-      printmodels(verbose);
-      exit (EXIT_SUCCESS);
-    }
-
 /*
  * Initialise libgimpprint
  */
 
   stp_init();
+
 
  /*
   * Set the language...
@@ -350,6 +335,22 @@ main(int  argc,			    /* I - Number of command-line arguments */
 #endif
   }
 #endif
+
+  /*
+   * Print lists
+   */
+
+  if (opt_printlangs)
+    {
+      printlangs(langs);
+      exit (EXIT_SUCCESS);
+    }
+
+  if (opt_printmodels)
+    {
+      printmodels(verbose);
+      exit (EXIT_SUCCESS);
+    }
 
 
  /*

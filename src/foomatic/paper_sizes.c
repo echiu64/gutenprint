@@ -35,6 +35,8 @@ int
 main(int argc, char **argv)
 {
   int i;
+
+  stp_init();
   for (i = 0; i < stp_known_papersizes(); i++)
     {
       const stp_papersize_t p = stp_get_papersize_by_index(i);

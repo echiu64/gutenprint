@@ -47,6 +47,8 @@ int
 main(int argc, char **argv)
 {
   int i, j, k;
+
+  stp_init();
   for (i = 0; i < stp_known_printers(); i++)
     {
       const stp_printer_t p = stp_get_printer_by_index(i);
