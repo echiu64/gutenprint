@@ -64,13 +64,13 @@ gimpprint_TEXINFOS = overview.texi copying.texi gpl.texi introduction.texi using
 all-local: $(DOCS)
 
 docs: $(DOCS)
-	cd users_guide; make docs
+	cd users_guide; $(MAKE) docs
 
 ps: $(MANUAL).ps
-	cd users_guide; make ps
+	cd users_guide; $(MAKE) ps
 
 pdf: $(MANUAL).pdf
-	cd users_guide; make pdf
+	cd users_guide; $(MAKE) pdf
 
 gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 
@@ -78,7 +78,7 @@ gimpprint.dvi: $(EPS_IMAGES) $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info
 	$(CONVERT) $(srcdir)/$(basename $@).png EPS2:$@
 
 html: html-stamp
-	cd users_guide; make html
+	cd users_guide; $(MAKE) html
 
 ## Note the rather weird way of setting the exit status; this is because
 ## texi2html doesn't set the exit status.
@@ -101,7 +101,7 @@ html-stamp: $(addprefix $(srcdir)/,$(gimpprint_TEXINFOS) $(info_TEXINFOS))
 	touch html-stamp
 
 $(MANUAL).ps: $(MANUAL).dvi
-	$(DVIPS) $(MANUAL).dvi
+	$(DVIPS) -o $(MANUAL).ps $(MANUAL).dvi
 
 $(MANUAL).pdf: $(MANUAL).dvi
 	$(DVIPDF) $(MANUAL).dvi
