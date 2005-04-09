@@ -138,7 +138,7 @@ typedef struct
 extern gint stpui_plist_count;	   /* Number of system printers */
 extern gint stpui_plist_current;     /* Current system printer */
 extern stpui_plist_t *stpui_plist;		  /* System printers */
-extern const char *stpui_printrc_current_printer;
+extern char *stpui_printrc_current_printer;
 extern int stpui_show_all_paper_sizes;
 extern stp_string_list_t *stpui_system_print_queues;
 
@@ -157,10 +157,10 @@ extern void stpui_table_attach_aligned(GtkTable *table, gint column,
 
 extern GtkWidget *stpui_create_entry(GtkWidget *table, int hpos, int vpos,
 				     const char *text, const char *help,
-				     GtkSignalFunc callback);
+				     GCallback callback);
 extern GSList *stpui_create_radio_button(radio_group_t *radio, GSList *group,
 					 GtkWidget *table, int hpos, int vpos,
-					 GtkSignalFunc callback);
+					 GCallback callback);
 extern void stpui_set_adjustment_tooltip (GtkObject *adj, const gchar *tip);
 extern void stpui_create_new_combo(option_t *option, GtkWidget *table,
 				   int hpos, int vpos, gboolean is_optional);

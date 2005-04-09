@@ -870,7 +870,7 @@ stpui_curve_set_range (StpuiCurve *curve,
 }
 
 void
-stpui_curve_set_vector (StpuiCurve *c, int veclen, gfloat vector[])
+stpui_curve_set_vector (StpuiCurve *c, int veclen, const gfloat vector[])
 {
   StpuiCurveType old_type;
   gfloat rx, dx, ry;

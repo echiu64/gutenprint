@@ -115,7 +115,7 @@ void		stpui_curve_set_range	(StpuiCurve *curve,
 void		stpui_curve_get_vector	(StpuiCurve *curve,
 					 int veclen, gfloat vector[]);
 void		stpui_curve_set_vector	(StpuiCurve *curve,
-					 int veclen, gfloat vector[]);
+					 int veclen, const gfloat vector[]);
 void		stpui_curve_set_curve_type (StpuiCurve *curve, StpuiCurveType type);
 
 

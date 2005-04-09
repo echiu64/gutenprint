@@ -243,7 +243,7 @@ static void plist_build_combo(GtkWidget *combo,
 			      int active,
 			      const gchar *cur_item,
 			      const gchar *def_value,
-			      GtkSignalFunc callback,
+			      GCallback callback,
 			      gint *callback_id,
 			      int (*check_func)(const char *string),
 			      gpointer data);
@@ -325,7 +325,7 @@ set_stpui_curve_values(GtkWidget *gcurve, const stp_curve_t *seed)
       size_t count;
       stp_curve_resample(copy, 256);
       fdata = stp_curve_get_float_data(copy, &count);
-      stpui_curve_set_vector(STPUI_CURVE(gcurve), count, (float *) fdata);
+      stpui_curve_set_vector(STPUI_CURVE(gcurve), count, fdata);
       stp_curve_destroy(copy);
     }
 }
@@ -645,7 +645,7 @@ build_queue_combo(void)
 		    1,
 		    stpui_plist_get_queue_name(pv),
 		    NULL,
-		    queue_callback,
+		    G_CALLBACK(queue_callback),
 		    &queue_callback_id,
 		    NULL,
 		    NULL);
@@ -667,7 +667,7 @@ build_printer_combo(void)
 		    1,
 		    stp_string_list_param(printer_list, stpui_plist_current)->name,
 		    NULL,
-		    plist_callback,
+		    G_CALLBACK(plist_callback),
 		    &plist_callback_id,
 		    NULL,
 		    NULL);
@@ -696,13 +696,13 @@ build_page_size_combo(option_t *option)
     plist_build_combo(option->info.list.combo, option->info.list.label,
 		      option->info.list.params, option->is_active,
 		      stp_get_string_parameter(pv->v, option->fast_desc->name),
-		      option->info.list.default_val, combo_callback,
+		      option->info.list.default_val,G_CALLBACK(combo_callback),
 		      &(option->info.list.callback_id), NULL, option);
   else
     plist_build_combo(option->info.list.combo, option->info.list.label,
 		      option->info.list.params, option->is_active,
 		      stp_get_string_parameter(pv->v, option->fast_desc->name),
-		      option->info.list.default_val, combo_callback,
+		      option->info.list.default_val,G_CALLBACK(combo_callback),
 		      &(option->info.list.callback_id),
 		      check_page_size, option);
 }
@@ -732,7 +732,7 @@ build_a_combo(option_t *option)
 			  option->is_active,
 			  stp_get_string_parameter(pv->v,
 						   option->fast_desc->name),
-			  option->info.list.default_val, combo_callback,
+			  option->info.list.default_val, G_CALLBACK(combo_callback),
 			  &(option->info.list.callback_id), NULL, option);
       if (strcmp(option->fast_desc->name, "PageSize") == 0)
 	set_media_size
@@ -740,7 +740,7 @@ build_a_combo(option_t *option)
     }
   else
     plist_build_combo(option->info.list.combo, option->info.list.label,
-		      NULL, 0, "", "", combo_callback,
+		      NULL, 0, "", "", G_CALLBACK(combo_callback),
 		      &(option->info.list.callback_id), NULL, option);
   new_value =
     stpui_combo_get_name(option->info.list.combo, option->info.list.params);
@@ -1344,12 +1344,12 @@ create_paper_size_frame(void)
   custom_size_width = stpui_create_entry
     (media_size_table, 0, 3, _("Width:"),
      _("Width of the paper that you wish to print to"),
-     custom_media_size_callback);
+     G_CALLBACK(custom_media_size_callback));
 
   custom_size_height = stpui_create_entry
     (media_size_table, 2, 3, _("Height:"),
      _("Height of the paper that you wish to print to"),
-     custom_media_size_callback);
+     G_CALLBACK(custom_media_size_callback));
 
   vpos++;
   auto_paper_size_button =
@@ -1656,7 +1656,7 @@ create_printer_dialog (void)
   for (i = 0; i < command_options_count; i++)
     group = stpui_create_radio_button(&(command_options[i]), group, table,
 				      0, i > 0 ? i + 5 : i + 4,
-				      command_type_callback);
+				      G_CALLBACK(command_type_callback));
 
   standard_cmd_entry = gtk_entry_new();
   gtk_table_attach (GTK_TABLE (table), standard_cmd_entry, 2, 7, 5, 6,
@@ -2208,7 +2208,7 @@ create_image_settings_frame (void)
   group = NULL;
   for (i = 0; i < output_type_count; i++)
     group = stpui_create_radio_button(&(output_types[i]), group, table, 0, i,
-				      output_type_callback);
+				      G_CALLBACK(output_type_callback));
 
   sep = gtk_hseparator_new ();
   gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
@@ -2538,7 +2538,7 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 		   int		  active,
 		   const gchar    *cur_item,    /* I - Current item */
 		   const gchar    *def_value,   /* I - default item */
-		   GtkSignalFunc   callback,    /* I - Callback */
+		   GCallback      callback,    /* I - Callback */
 		   gint           *callback_id, /* IO - Callback ID (init to -1) */
 		   int (*check_func)(const char *string),
 		   gpointer        data)
@@ -2834,7 +2834,8 @@ do_color_updates (void)
 				  opt->info.list.params, opt->is_active,
 				  (stp_get_string_parameter
 				   (pv->v, opt->fast_desc->name)),
-				  opt->info.list.default_val, combo_callback,
+				  opt->info.list.default_val,
+				  G_CALLBACK(combo_callback),
 				  &(opt->info.list.callback_id),
 				  NULL, opt);
 	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
@@ -3028,7 +3029,7 @@ queue_callback (GtkWidget *widget,
 static void
 setup_callback (GtkWidget *widget)
 {
-  gchar *new_value = gtk_entry_get_text (GTK_ENTRY (widget));
+  const gchar *new_value = gtk_entry_get_text (GTK_ENTRY (widget));
 
   if (widget == custom_command_entry)
     stpui_plist_set_custom_command(pv, new_value);

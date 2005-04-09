@@ -151,10 +151,10 @@ dialog_create_action_areav (GtkDialog *dialog,
 
       if (connect_delete && callback && !delete_connected)
 	{
-	  gtk_object_set_data (G_OBJECT (dialog),
+	  gtk_object_set_data (GTK_OBJECT (dialog),
 			       "dialog_cancel_callback",
 			       (gpointer) callback);
-	  gtk_object_set_data (G_OBJECT (dialog),
+	  gtk_object_set_data (GTK_OBJECT (dialog),
 			       "dialog_cancel_widget",
 			       slot_object ? slot_object : G_OBJECT (button));
 
@@ -298,7 +298,7 @@ stpui_option_menu_new(gboolean            menu_only,
 			    data);
 
 	  if (user_data)
-	    gtk_object_set_user_data (G_OBJECT (menuitem), user_data);
+	    gtk_object_set_user_data (GTK_OBJECT (menuitem), user_data);
 	}
       else
 	{
@@ -531,9 +531,9 @@ stpui_scale_entry_new(GtkTable    *table,
       stpui_set_help_data (spinbutton, tooltip);
     }
 
-  gtk_object_set_data (G_OBJECT (return_adj), "label", label);
-  gtk_object_set_data (G_OBJECT (return_adj), "scale", scale);
-  gtk_object_set_data (G_OBJECT (return_adj), "spinbutton", spinbutton);
+  gtk_object_set_data (GTK_OBJECT (return_adj), "label", label);
+  gtk_object_set_data (GTK_OBJECT (return_adj), "scale", scale);
+  gtk_object_set_data (GTK_OBJECT (return_adj), "spinbutton", spinbutton);
 
   return return_adj;
 }
@@ -748,7 +748,7 @@ stpui_get_thumbnail_data(void)
 
 GtkWidget *
 stpui_create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
-		   const char *help, GtkSignalFunc callback)
+		   const char *help, GCallback callback)
 {
   GtkWidget *entry = gtk_entry_new();
   gtk_widget_set_usize(entry, 60, 0);
@@ -763,7 +763,7 @@ stpui_create_entry(GtkWidget *table, int hpos, int vpos, const char *text,
 GSList *
 stpui_create_radio_button(radio_group_t *radio, GSList *group,
 			  GtkWidget *table, int hpos, int vpos,
-			  GtkSignalFunc callback)
+			  GCallback callback)
 {
   radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
   group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
@@ -827,7 +827,7 @@ stpui_combo_get_name(GtkWidget   *combo,
     {
       gint   i;
       gint num_options = stp_string_list_count(options);
-      gchar *text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)));
+      const gchar *text = (gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry)));
 
       if (text == NULL)
 	return (NULL);
