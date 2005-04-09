@@ -170,11 +170,11 @@ typedef struct
   union
   {
     stp_curve_t *curve; /*!< Default curve parameter value. */
-    double dbl;         /*!< Default double_bound parameter value. */
-    int dimension;        /*!< Default int_bound parameter value. */
-    int integer;        /*!< Default int_bound parameter value. */
-    int boolean;        /*!< Default string_list parameter value. */
-    const char *str;    /*!< Default string_list parameter value. */
+    double dbl;         /*!< Default double parameter value. */
+    int dimension;      /*!< Default dimension parameter value. */
+    int integer;        /*!< Default int parameter value. */
+    int boolean;        /*!< Default boolean parameter value. */
+    const char *str;    /*!< Default string parameter value. */
     stp_array_t *array; /*!< Default array parameter value. */
   } deflt; /*!< Default value of the parameter. */
 } stp_parameter_t;
