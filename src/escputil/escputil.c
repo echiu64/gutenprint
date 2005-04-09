@@ -637,6 +637,7 @@ initialize_printer(int quiet)
   int i;
   int credit;
   int retry = 4;
+  int tries = 0;
   int status;
   int forced_packet_mode = 0;
   char* pos;
@@ -674,7 +675,7 @@ initialize_printer(int quiet)
                   strerror(errno));
           exit(1);
         }
-      if (alarm_interrupt)
+      if (alarm_interrupt || tries > 2)
 	{
 	  forced_packet_mode = !init_packet(fd, 1);
 	  status = 1;
@@ -685,6 +686,7 @@ initialize_printer(int quiet)
 			    "Reading response of old init command ....\n"));
 	  status = read_from_printer(fd, (char*)buf, 1024, 0);
 	}
+      tries++;
     } while (status <= 0);
 
   if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
