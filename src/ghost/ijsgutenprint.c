@@ -81,6 +81,17 @@ static const char DeviceGray[] = "DeviceGray";
 static const char DeviceRGB[] = "DeviceRGB";
 static const char DeviceCMYK[] = "DeviceCMYK";
 
+static int version_is_ok = 1;
+static const char version_mismatch[] = N_("\
+ijsgutenprint: the version of Gutenprint software installed (%s)\n\
+  does not match the PPD file (%s).  If you have upgraded your version\n\
+  of Gutenprint recently, you must reinstall all printer queues.\n\
+  Please refer to your vendor's documentation or the ``foomatic-ppdfile''\n\
+  command for instructions.\n\
+ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n");
+
+const char *gutenprint_ppd_version = NULL;
+
 static char *
 c_strdup(const char *s)
 {
@@ -317,6 +328,7 @@ list_all_parameters(void)
       stp_string_list_add_string(sl, "OutputFd", NULL);
       stp_string_list_add_string(sl, "PaperSize", NULL);
       stp_string_list_add_string(sl, "MediaName", NULL);
+      stp_string_list_add_string(sl, "STP_VERSION", NULL);
       for (i = 0; i < printer_count; i++)
 	{
 	  const stp_printer_t *printer = stp_get_printer_by_index(i);
@@ -655,6 +667,16 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
        stp_set_string_parameter(img->v, "x_Tumble", vbuf);
     }
+  else if (strcmp(key, "STP_VERSION") == 0)
+    {
+      if (strcmp(vbuf, VERSION) != 0)
+	{
+	  fprintf(stderr, _(version_mismatch), VERSION, vbuf, VERSION, vbuf);
+	  version_is_ok = 0;
+	  gutenprint_ppd_version = c_strdup(vbuf);
+	  code = IJS_ERANGE;
+	}
+    } 
   else if (strncmp(key, "STP_", 4) == 0)
     {
       stp_curve_t *curve;
@@ -1158,7 +1180,14 @@ main (int argc, char **argv)
 
       purge_unused_float_parameters(img.v);
       STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
-      if (stp_verify(img.v))
+      if (!version_is_ok)
+	{
+	  fprintf(stderr, _(version_mismatch), VERSION, gutenprint_ppd_version,
+		  VERSION, gutenprint_ppd_version);
+	  status = IJS_ERANGE;
+	  break;
+	}
+      else if (stp_verify(img.v))
 	{
 	  if (page == 0)
 	    stp_start_job(img.v, &si);
@@ -1166,8 +1195,8 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  fprintf(stderr, _("ijsgutenprint: Bad parameters; cannot continue!\n"));
-	  status = -1;
+	  fprintf(stderr, _("ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"));
+	  status = IJS_ERANGE;
 	  break;
 	}
 
@@ -1176,7 +1205,7 @@ main (int argc, char **argv)
 	  status = image_next_row(&img);
 	  if (status)
 	    {
-	      fprintf(stderr, _("ijsgutenprint: Get next row failed at %.0f\n"),
+	      fprintf(stderr, _("ERROR: ijsgutenprint: Get next row failed at %.0f\n"),
 		      img.bytes_left);
 	      break;
 	    }
