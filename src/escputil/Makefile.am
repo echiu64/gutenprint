@@ -32,6 +32,8 @@ if BUILD_ESCPUTIL
 bin_PROGRAMS = escputil
 endif
 
+escputil_SOURCES = d4lib.c escputil.c
+
 escputil_LDADD = $(GUTENPRINT_LIBS) $(LIBREADLINE_DEPS)
 
 
