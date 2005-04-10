@@ -216,10 +216,17 @@ DECLARE_INK_CHANNEL(f360_gloss, -1.0);
 
 static const physical_subchannel_t standard_photo_black_subchannels[] =
 {
-  { 0, 4, 0, "PhotoBlackDensity", NULL }
+  { 0, 4, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_photo_black, -1.0);
+
+static const physical_subchannel_t f360_r800_photo_black_subchannels[] =
+{
+  { 0, 4, 1, "BlackDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(f360_r800_photo_black, -1.0);
 
 static const physical_subchannel_t r800_matte_black_subchannels[] =
 {
@@ -955,8 +962,8 @@ static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 static const ink_channel_t *const standard_cmykrb_channels[] =
 {
   &standard_black_channel, &f360_standard_cyan_channel,
-  &f360_standard_magenta_channel, &f360_standard_yellow_channel,
-  &f360_red_channel, &f360_blue_channel
+  &standard_magenta_channel, &f360_standard_yellow_channel,
+  &standard_red_channel, &f360_blue_channel
 };
 
 DECLARE_CHANNEL_SET(standard_cmykrb);
@@ -969,9 +976,9 @@ static const escp2_inkname_t standard_cmykrb_inkset =
 
 static const ink_channel_t *const photo_cmykrb_channels[] =
 {
-  &standard_photo_black_channel, &standard_cyan_channel,
-  &standard_magenta_channel, &standard_yellow_channel,
-  &standard_red_channel, &standard_blue_channel
+  &f360_r800_photo_black_channel, &f360_standard_cyan_channel,
+  &standard_magenta_channel, &f360_standard_yellow_channel,
+  &standard_red_channel, &f360_blue_channel
 };
 
 DECLARE_CHANNEL_SET(photo_cmykrb);
@@ -984,10 +991,10 @@ static const escp2_inkname_t photo_cmykrb_inkset =
 
 static const ink_channel_t *const gloss_cmykrb_channels[] =
 {
-  &standard_black_channel, &standard_cyan_channel,
-  &standard_magenta_channel, &standard_yellow_channel,
-  &standard_red_channel, &standard_blue_channel,
-  &standard_gloss_channel
+  &standard_black_channel, &f360_standard_cyan_channel,
+  &standard_magenta_channel, &f360_standard_yellow_channel,
+  &standard_red_channel, &f360_blue_channel,
+  &f360_gloss_channel
 };
 
 DECLARE_CHANNEL_SET(gloss_cmykrb);
@@ -1001,10 +1008,10 @@ static const escp2_inkname_t gloss_cmykrb_inkset =
 
 static const ink_channel_t *const photo_gloss_cmykrb_channels[] =
 {
-  &standard_photo_black_channel, &standard_cyan_channel,
-  &standard_magenta_channel, &standard_yellow_channel,
-  &standard_red_channel, &standard_blue_channel,
-  &standard_gloss_channel
+  &f360_r800_photo_black_channel, &f360_standard_cyan_channel,
+  &standard_magenta_channel, &f360_standard_yellow_channel,
+  &standard_red_channel, &f360_blue_channel,
+  &f360_gloss_channel
 };
 
 DECLARE_CHANNEL_SET(photo_gloss_cmykrb);
@@ -1315,10 +1322,10 @@ static const escp2_inkname_t f360_seven_color_extended_inkset =
 
 static const ink_channel_t *const gloss_cmykprb_extended_channels[] =
 {
-  &standard_black_channel, &standard_photo_black_channel,
-  &standard_cyan_channel, &standard_magenta_channel,
-  &standard_yellow_channel, &standard_red_channel,
-  &standard_blue_channel, &standard_gloss_channel
+  &standard_black_channel, &f360_r800_photo_black_channel,
+  &f360_standard_cyan_channel, &standard_magenta_channel,
+  &f360_standard_yellow_channel, &standard_red_channel,
+  &f360_blue_channel, &standard_gloss_channel
 };
 
 DECLARE_CHANNEL_SET(gloss_cmykprb_extended);
