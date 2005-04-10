@@ -60,3 +60,17 @@ stp_check_version (unsigned int required_major,
     return "Gutenprint version too old (micro mismatch)";
   return NULL;
 }
+
+const char *
+stp_get_version(void)
+{
+  static const char *version_id = VERSION;
+  return version_id;
+}
+
+const char *
+stp_get_release_version(void)
+{
+  static const char *release_version_id = GUTENPRINT_RELEASE_VERSION;
+  return release_version_id;
+}

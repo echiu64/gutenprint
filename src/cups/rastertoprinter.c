@@ -507,6 +507,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   stp_vars_t		*v = NULL;
   stp_vars_t		*default_settings;
   int			initialized_job = 0;
+  const char            *version_id;
+  const char            *release_version_id;
 
  /*
   * Initialise libgutenprint
@@ -515,11 +517,13 @@ main(int  argc,				/* I - Number of command-line arguments */
   theImage.rep = &cups;
 
   stp_init();
+  version_id = stp_get_version();
+  release_version_id = stp_get_release_version();
   default_settings = stp_vars_create();
  /*
   * Check for valid arguments...
   */
-  fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", VERSION);
+  fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
 
   if (argc < 6 || argc > 7)
   {
@@ -574,15 +578,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
   else if (strcmp(ppd->nickname + strlen(ppd->modelname) +
-		  strlen(CUPS_PPD_NICKNAME_STRING), VERSION) != 0)
+		  strlen(CUPS_PPD_NICKNAME_STRING), version_id) != 0)
   {
     fprintf(stderr, "ERROR: Gutenprint: The version of Gutenprint software installed (%s) does not match the PPD file (%s).\n",
-	    VERSION,
+	    version_id,
 	    ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING));
     fprintf(stderr, "ERROR: Gutenprint: If you have upgraded your version of Gutenprint\n");
     fprintf(stderr, "ERROR: Gutenprint: recently, you must reinstall all printer queues.\n");
     fprintf(stderr, "ERROR: Gutenprint: If the previous installed version of Gutenprint\n");
-    fprintf(stderr, "ERROR: Gutenprint: was 4.3.19 or higher, you can use the `cups-genppdupdate.%s'\n", GUTENPRINT_RELEASE_VERSION);
+    fprintf(stderr, "ERROR: Gutenprint: was 4.3.19 or higher, you can use the `cups-genppdupdate.%s'\n", release_version_id);
     fprintf(stderr, "ERROR: Gutenprint: program to do this; if the previous installed version\n");
     fprintf(stderr, "ERROR: Gutenprint: was older, you can use the Modify Printer command via\n");
     fprintf(stderr, "ERROR: Gutenprint: the CUPS web interface: http://localhost:631/printers.\n");
@@ -590,7 +594,7 @@ main(int  argc,				/* I - Number of command-line arguments */
      * Repeat the first line of the message so that CUPS will display it
      */
     fprintf(stderr, "ERROR: Gutenprint: The version of Gutenprint software installed (%s) does not match the PPD file (%s).\n",
-	    VERSION,
+	    version_id,
 	    ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING));
     ppdClose(ppd);
     return 1;

@@ -81,6 +81,7 @@ static const char DeviceGray[] = "DeviceGray";
 static const char DeviceRGB[] = "DeviceRGB";
 static const char DeviceCMYK[] = "DeviceCMYK";
 
+static const char *version_id;
 static int version_is_ok = 1;
 static const char version_mismatch[] = N_("\
 ijsgutenprint: the version of Gutenprint software installed (%s)\n\
@@ -669,9 +670,10 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else if (strcmp(key, "STP_VERSION") == 0)
     {
-      if (strcmp(vbuf, VERSION) != 0)
+      if (strcmp(vbuf, version_id) != 0)
 	{
-	  fprintf(stderr, _(version_mismatch), VERSION, vbuf, VERSION, vbuf);
+	  fprintf(stderr, _(version_mismatch),
+		  version_id, vbuf, version_id, vbuf);
 	  version_is_ok = 0;
 	  gutenprint_ppd_version = c_strdup(vbuf);
 	  code = IJS_ERANGE;
@@ -1026,11 +1028,13 @@ main (int argc, char **argv)
     
   memset(&img, 0, sizeof(img));
 
+  stp_init();
+  version_id = stp_get_version();
+
   img.ctx = ijs_server_init();
   if (img.ctx == NULL)
     return 1;
 
-  stp_init();
   img.v = stp_vars_create();
   if (img.v == NULL)
     {
@@ -1182,8 +1186,8 @@ main (int argc, char **argv)
       STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
       if (!version_is_ok)
 	{
-	  fprintf(stderr, _(version_mismatch), VERSION, gutenprint_ppd_version,
-		  VERSION, gutenprint_ppd_version);
+	  fprintf(stderr, _(version_mismatch), version_id,
+		  gutenprint_ppd_version, version_id, gutenprint_ppd_version);
 	  status = IJS_ERANGE;
 	  break;
 	}

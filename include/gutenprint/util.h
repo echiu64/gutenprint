@@ -151,6 +151,20 @@ extern size_t stp_strlen(const char *s);
 extern char *stp_strndup(const char *s, int n);
 extern char *stp_strdup(const char *s);
 
+/**
+ * Get the library version string (x.y.z)
+ * @returns a pointer to the version name of the package, which must not
+ * be modified or freed.
+ */
+extern const char *stp_get_version(void);
+
+/**
+ * Get the library release version string (x.y)
+ * @returns a pointer to the release name of the package, which must not
+ * be modified or freed.
+ */
+extern const char *stp_get_release_version(void);
+
 /** @} */
 
 #ifdef __cplusplus
