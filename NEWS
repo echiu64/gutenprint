@@ -129,7 +129,8 @@ These release notes contain the following sections:
        your system.
 
        After this, you may run 'make install' in your Gutenprint
-       source directory to install the package.
+       source directory to install the package.  You will then need to
+       re-create any printer queues using Foomatic.
 
        In general, you will have to perform this procedure any time
        you install a new version of Gutenprint.
@@ -144,6 +145,13 @@ These release notes contain the following sections:
        Gutenprint.  You must either use the foomatic-ppdfile command
        to upgrade PPD files individually, or foomatic-compiledb to
        build all PPD files.
+
+     * From this point forward, the Foomatic data will be version
+       locked to the Gutenprint release installed on the system.  For
+       example, PPD files generated with the Foomatic data for this
+       release will not work with the ijsgutenprint in the next
+       release.  This is to prevent accidentally using incorrect
+       data, which could cause incorrect function to take place.
 
   2) The Epson Stylus Photo R800 and R1800 are now fully supported in
      6-color mode, for resolutions up to 2880x2880 DPI.  The use of
@@ -166,12 +174,17 @@ These release notes contain the following sections:
      * A new extended ink information command has been added.  This
        command, which is supported on printers with separate
        individual ink cartridges, prints additional information about
-       the ink cartridge in addition to the amount of ink present.
+       the ink cartridge in addition to the amount of ink present.  On
+       older printers, it simply returns the standard ink
+       information.
 
      * Ink level detection now works on all known supported printers.
        Previously it did not work on some newer printers.  However, it
        is considerably slower on these printers than it is on older
        printers that support the faster ink detection method.
+
+     * Ink level detection now prints the correct ink color names for
+       the printer model.
 
      * It is now no longer necessary to use the -u flag with certain
        printers in most cases.  The utility now autodetects the
@@ -182,7 +195,13 @@ These release notes contain the following sections:
        provide the -u flag, as the utility cannot detect the actual
        printer connected to a queue.  However, bidirectional commands
        (ink level, identify, printer status, and alignment) do not
-       normally require the -u option any more.
+       require the -u flag any more.
+
+     * escputil now successfully detects ink level, printer model, and
+       status even if the printer is out of ink.
+
+  6) The Print plugin now functions correctly even if a printer queue
+     name contains shell metacharacters.
 
 
 ================================================================
@@ -2074,56 +2093,18 @@ Printer-Specific Notes:
       These printers are, however, able to print plain text *after*
       the activation sequence is sent.
 
-      A suggestion would be to use the escputil command to print a
-      test pattern:
+      A suggestion would be to first verify that the printer is
+      capable of returning status, and that it has ink installed.
+      This may be done via
 
-      escputil -n -u -P printer
+      escputil -i -r /dev/lp0
 
-      or
+      (or whatever device your printer is connected to in place of
+      /dev/lp0).
 
-      escputil -n -u -r /dev/lp0
+      Following this, you may wish to print a test pattern:
 
-      The `-u' option will send the activation sequence.  In addition
-      to printing the test pattern (if at least unidirectional
-      communication is set up), this will enable printing plain ASCII
-      text, at least until the printer is powered off (or used under
-      Windows).
+      escputil -n -r /dev/lp0
 
-      To test bidirectional communication, the command
-
-      escputil -i -u -r /dev/lp0
-
-      is a good choice, as it will print (to the screen) the amount of
-      ink in the printer.
-
-      Note that this activation sequence is both unnecessary and
-      incorrect on older printers.
-
-      The current list of printers for which the activation sequence
-      must be sent is:
-
-      All Epson Stylus C-series printers (e. g. C20SX, C80)
-      All Epson Stylus Photo printers except for the original Stylus
-          Photo, Stylus Photo 700, Stylus Photo 710, and Stylus Photo
-          EX (the Stylus Photo EX3 does require the sequence)
-      All Epson Stylus CX-series multi-function devices (e. g. CX-3100)
-      All Epson Stylus Scan multi-function devices
-      The following Epson Stylus Color printers:
-
-          EPSON Stylus Color 440
-          EPSON Stylus Color 460
-          EPSON Stylus Color 480
-          EPSON Stylus Color 580
-          EPSON Stylus Color 640
-          EPSON Stylus Color 660
-          EPSON Stylus Color 670
-          EPSON Stylus Color 680
-          EPSON Stylus Color 740
-          EPSON Stylus Color 760
-          EPSON Stylus Color 777
-          EPSON Stylus Color 860
-          EPSON Stylus Color 880
-          EPSON Stylus Color 83
-          EPSON Stylus Color 900
-          EPSON Stylus Color 980
-          EPSON Stylus Color 1160
+      These commands will verify that the printer is connected and
+      functioning correctly.

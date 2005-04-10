@@ -283,6 +283,10 @@ FOOMATIC
     data for the Gimp-Print 4.2 driver is not compatible with the 5.0
     driver.
 
+    Foomatic data generation has been fixed as of Gutenprint
+    5.0.0-beta4, and is now an appropriate solution for queue
+    configuration.
+
     To verify that you have an appropriate version of Foomatic, please
     run
 
@@ -292,24 +296,20 @@ FOOMATIC
 
     /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on your PATH).
 
-    Both Foomatic 2.0.x (stable branch) and 2.9.x (development branch,
-    approaching Foomatic 3.0.x) are supported. With Foomatic 2.9.x there
-    are the extra features of heaving an additional "PrintoutMode" option
-    with pre-configurations for common printing tasks and the options
-    being put into different groups ("General", "PrintoutMode",
+    Both Foomatic 2.0.x (old stable branch) and 3.0 (current stable
+    branch) are supported.  With Foomatic 3.0 there are the extra
+    features of heaving an additional "PrintoutMode" option with
+    pre-configurations for common printing tasks and the options being
+    put into different groups ("General", "PrintoutMode",
     "Adjustment").
 
     If you don't have Foomatic installed, or the version that is
-    installed is too old, please download the current Foomatic 2.0.x 
+    installed is too old, please download the current Foomatic 3.0x
     package from
 
     http://www.linuxprinting.org/download/foomatic/foomatic-current.tar.gz
 
     and follow the instructions in that package. See
-
-    http://www.linuxprinting.org/foomatic2.9/foomatic.html
-
-    on how to download and install Foomatic 2.9.x.
 
     After Foomatic is installed, build the Foomatic data as follows:
 
@@ -322,9 +322,13 @@ FOOMATIC
     Foomatic is not installed or your Foomatic is too old.  Now you
     can either set up a queue for your printer with
     "foomatic-configure" (see USAGE file in the Foomatic package) or
-    generate the printer description file for your spooler (with 
+    generate the printer description file for your spooler (with
     "foomatic-datafile") and configure your printer as described on
     the spooler-specific web pages of linuxprinting.org.
+
+    IMPORTANT: Whenever you install a new version of Gutenprint you
+    must re-create the printer queues using Gutenprint with Foomatic
+    (these queues have a driver name of "gutenprint-ijs").
 
     Note that it almost never makes sense to build the Foomatic driver
     without also building the Ghostscript driver, even if Foomatic is
@@ -379,8 +383,11 @@ GHOSTSCRIPT
     designed for drivers such as Gutenprint, and do not provide a
     convenient interface to the driver's capabilities.  We recommend
     that end users either install CUPS, as described above, or use
-    Foomatic to configure printer queues.  CUPS is very easy to
-    install, configure, and use, and is the recommended solution.
+    Foomatic to configure printer queues.  We recommend using CUPS
+    with the native CUPS drivers described above.  We recommend using
+    Foomatic to configure printer queues if you do not use CUPS
+    (e. g. you use LPRng, System V print spooling, or Berkeley print
+    spooling).
 
     Gutenprint 5.0 no longer provides the monolithic "stp" driver
     present in 4.2.  This driver, which was linked directly into
@@ -431,7 +438,22 @@ SUPPORT
        mailing list.  This is recommended as a last resort only.
 
 
-KNOWN BUILD ISSUES
+KNOWN BUILD/INSTALLATION ISSUES
+
+    This section describes a number of issues that have been
+    encountered while building or installing Gutenprint.  If any of
+    these apply to you, please read the notes carefully.  The issues
+    are:
+
+    1) Building escputil may fail, or escputil may fail to run.
+
+    2) CUPS PPD files may not be translated (there may be multiple
+       versions of the PPD files, all in English).
+
+    3) Build/installation of Foomatic data may happen correctly, but
+       the generated PPD files do not work correctly.
+
+    Detailed descriptions of these issues follow.
 
     * There is a known complication building "escputil" that causes
       problems on some systems.  "escputil" uses the "readline"
@@ -639,6 +661,68 @@ KNOWN BUILD ISSUES
 
       Please feel free to contact us about this issue.
 
+    * There are multiple issues that one must be aware of when using
+      Foomatic with Gutenprint.
+
+      1) Before installing Gutenprint 5.0.0-beta4, you must manually
+	 remove any existing Foomatic option files.  This is because the
+	 Foomatic utility to load data kits (foomatic-kitload) does not
+	 remove obsolete data files from the Foomatic database.  If you
+	 do not do this, any PPD files you generate will be incorrect
+	 and printing may work incorrectly or not at all.
+
+	 Foomatic option files are usually located in 
+
+	 /usr/local/share/foomatic/db/source/opt
+
+	 or
+
+	 /usr/share/foomatic/db/source/opt
+
+	 Assuming they're in the former location, you must remove data
+	 files associated with the Gutenprint driver.  The command to do
+	 this, which must be run as the superuser (root) is
+
+	 cd /usr/local/share/foomatic/db/source/opt
+	 ls -l gutenprint-ijs*.xml
+
+	 If there are existing files present, you must remove them:
+
+	 rm -f gutenprint-ijs*.xml
+
+	 Now check to make sure that they are gone:
+
+	 ls -l gutenprint-ijs*.xml
+
+	 CAUTION: Be very careful when typing this command!  Minor
+	 errors in typing these commands may result in severe damage to
+	 your system.
+
+	 After this, you may run 'make install' in your Gutenprint
+	 source directory to install the package.  You will then need to
+	 re-create any printer queues using Foomatic.
+
+	 In general, you will have to perform this procedure any time
+	 you install a new version of Gutenprint.
+
+	 Please check the Foomatic site
+	 (http://www.linuxprinting.org/foomatic.html) and the Gutenprint
+	 site (http://gimp-print.sourceforge.net) for updated
+	 instructions about this.
+
+      2) Unlike with the CUPS native driver, there is no simple way to
+	 update all PPD files when you install a new version of
+	 Gutenprint.  You must either use the foomatic-ppdfile command
+	 to upgrade PPD files individually, or foomatic-compiledb to
+	 build all PPD files.
+
+         From this point forward, the Foomatic data will be version
+	 locked to the Gutenprint release installed on the system.  For
+	 example, PPD files generated with the Foomatic data for this
+	 release will not work with the ijsgutenprint in the next
+	 release.  This is to prevent accidentally using incorrect
+	 data, which could cause incorrect function to take place.
+
 
 PACKAGING
 
@@ -704,8 +788,8 @@ PACKAGING
 
       + "epson" and "canon" belong in /usr/lib/cups/backend.
 
-      + "rastertoprinter", "commandtoepson", and "commandtocanon" belong
-	in /usr/lib/cups/filter.
+      + "rastertogutenprint-5.0", "commandtoepson", and
+	"commandtocanon" belong in /usr/lib/cups/filter.
 
       + "cups-calibrate" belongs in /usr/bin.
 
@@ -729,6 +813,9 @@ PACKAGING
       corresponding data files. The packaging should arrange to call
       "foomatic-kitload" (or the equivalent) on this tree when it is
       installed.
+
+      An alternative option is to install pregenerated PPD files,
+      which may be created with foomatic-compiledb.
 
     * We recommend that you replace the Print plugin bundled with the
       Gimp (any 1.2 version) with the Gimp Print plugin in this
