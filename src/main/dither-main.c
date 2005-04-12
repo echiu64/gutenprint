@@ -47,6 +47,13 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
   { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
   /*
+   * Placeholders for future implementation of EvenBetter Screening
+   * Translators: EvenTone, EvenBetter, and UniTone are proper
+   * names, not descriptive.
+   */
+  { "EBS",            N_ ("EvenBetter"),             D_INVALID },
+  { "HybridEBS",      N_ ("Hybrid EvenBetter"),      D_INVALID },
+  /*
    * Unitone dithering seems to have some numerical stability problems
    * -- rlk 20050113
    */
@@ -141,8 +148,9 @@ stp_dither_describe_parameter(const stp_vars_t *v, const char *name,
 	  for (i = 0; i < num_dither_algos; i++)
 	    {
 	      const stpi_dither_algorithm_t *dt = &dither_algos[i];
-	      stp_string_list_add_string(description->bounds.str,
-					 dt->name, dt->text);
+	      if (dt->id != D_INVALID)
+		stp_string_list_add_string(description->bounds.str,
+					   dt->name, dt->text);
 	    }
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
