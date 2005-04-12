@@ -24,7 +24,8 @@ exit 0 if ($#drivertypes < 0); # Nothing to be done, exit silently
 my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 
 # The following substitutions happen to the template XML files:
-# @@STPVER@@         - the version number (ie '4.1.5')
+# @@STPVER@@         - the version number (e. g. "5.0.0-beta4")
+# @@STPREL@@         - the version number (e. g. "5.0")
 # @@DRVNAME@@        - driver name (ie gutenprint)
 # @@STPRINTERS@@     - <printers>...</printers> clause for the driver
 # @@OPTCONSTRAINTS@@ - <constraints>...</constraints> object for the option
@@ -269,6 +270,11 @@ my $stpvers = <PIPE>;
 close PIPE or die "Cannot run gutenprint-version: $!\n";
 chomp $stpvers;
 
+open PIPE, "./gutenprint-version -|" or die "Cannot run gutenprint-version: $!\n";
+my $stprel = <PIPE>;
+close PIPE or die "Cannot run gutenprint-version: $!\n";
+chomp $stprel;
+
 # Build <printers> clause...
 my @printerlist = ();
 push (@printerlist, " <printers>\n");
@@ -343,6 +349,7 @@ $drivernameprefix = "gutenprint";
 print STDERR "Using driver name prefix \"$drivernameprefix\"\n";
 
 my $generalsubs = { 'STPVER' => $stpvers,
+		    'STPREL' => $stprel,
 		    'DRVNAME' => $drivernameprefix,
 		    'STPRINTERS' => join('', @printerlist) };
 
@@ -370,6 +377,7 @@ my $tmpl;
 for $drivertype (@drivertypes) {
     $drivertypesuffix = "-$drivertype";
     $drivertypesuffix =~ s/-gs//;
+    $drivertypesuffix .= ".$stprel";
     my $drvname = "$drivernameprefix$drivertypesuffix";
     $generalsubs->{'DRVNAME'} = $drvname;
     print "Generating Foomatic data for driver \"$drvname\"...\n";

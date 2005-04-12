@@ -283,6 +283,10 @@ FOOMATIC
     data for the Gimp-Print 4.2 driver is not compatible with the 5.0
     driver.
 
+    Furthermore, as of Gutenprint 5.0 the Foomatic driver will include
+    the release version of Gutenprint in its name.  Therefore, the
+    Foomatic name for this driver is "gutenprint-ijs.5.0".
+
     Foomatic data generation has been fixed as of Gutenprint
     5.0.0-beta4, and is now an appropriate solution for queue
     configuration.
@@ -328,7 +332,7 @@ FOOMATIC
 
     IMPORTANT: Whenever you install a new version of Gutenprint you
     must re-create the printer queues using Gutenprint with Foomatic
-    (these queues have a driver name of "gutenprint-ijs").
+    (these queues have a driver name of "gutenprint-ijs.5.0").
 
     Note that it almost never makes sense to build the Foomatic driver
     without also building the Ghostscript driver, even if Foomatic is
@@ -375,17 +379,14 @@ GHOSTSCRIPT
     beyond, AFPL Ghostscript 7.04 and beyond, and ESP Ghostscript 7.05
     and beyond.
 
-    Detailed instructions for building and using the Ghostscript
-    driver is described in src/ghost/README.  However, we strongly
-    recommend that end users not use this driver directly.  The
-    available options are very complex, and the standard printer
-    configuration tools (such as apsfilter and magicfilter) are not
-    designed for drivers such as Gutenprint, and do not provide a
-    convenient interface to the driver's capabilities.  We recommend
-    that end users either install CUPS, as described above, or use
-    Foomatic to configure printer queues.  We recommend using CUPS
-    with the native CUPS drivers described above.  We recommend using
-    Foomatic to configure printer queues if you do not use CUPS
+    We strongly recommend that end users not use this driver directly.
+    The available options are very complex, and the standard printer
+    configuration tools (such as apsfilter and magicfilter) do not
+    provide a convenient interface to the driver's capabilities.  We
+    recommend that end users either install CUPS, as described above,
+    or use Foomatic to configure printer queues.  We recommend using
+    CUPS with the native CUPS drivers described above.  We recommend
+    using Foomatic to configure printer queues if you do not use CUPS
     (e. g. you use LPRng, System V print spooling, or Berkeley print
     spooling).
 
@@ -742,7 +743,7 @@ PACKAGING
 
       /usr/lib/libgutenprint.so.1.0 (the core shared library)
       /usr/bin/escputil (Epson Stylus utility)
-      /usr/bin/ijsgutenprint (Gutenprint Ghostscript IJS plug-in driver)
+      /usr/bin/ijsgutenprint.5.0 (Gutenprint Ghostscript IJS plug-in driver)
       /usr/share/gutenprint/doc/html (HTML documentation)
       /usr/share/gutenprint/doc/users-guide.pdf
       /usr/share/gutenprint/doc/users-guide.ps

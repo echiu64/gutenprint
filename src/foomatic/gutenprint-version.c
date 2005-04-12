@@ -30,7 +30,10 @@ int
 main(int argc, char **argv)
 {
 #ifdef VERSION
-  printf("%s\n", VERSION);
+  if (argc > 1)
+    printf("%s\n", GUTENPRINT_RELEASE_VERSION);
+  else
+    printf("%s\n", VERSION);
   return 0;
 #else
   fprintf(stderr, "VERSION not defined!\n");

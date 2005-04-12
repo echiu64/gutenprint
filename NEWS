@@ -94,6 +94,12 @@ These release notes contain the following sections:
      files.  Please read these instructions carefully if you decide to
      use Foomatic with Gutenprint 5.0.0-beta4.
 
+     * The Foomatic driver is now named "gutenprint-ijs.5.0".  When
+       you use foomatic-compiledb, foomatic-combo-xml or
+       foomatic-ppdfile, you must specify the driver name
+       appropriately.  This permits installation of multiple releases
+       of Gutenprint on the same system.
+
      * Before installing Gutenprint 5.0.0-beta4, you must manually
        remove any existing Foomatic option files.  This is because the
        Foomatic utility to load data kits (foomatic-kitload) does not
@@ -153,22 +159,26 @@ These release notes contain the following sections:
        release.  This is to prevent accidentally using incorrect
        data, which could cause incorrect function to take place.
 
-  2) The Epson Stylus Photo R800 and R1800 are now fully supported in
+  2) The IJS-based Ghostscript driver is now installed as
+     "ijsgutenprint.5.0".  This permits installation of multiple
+     releases of Gutenprint on the same system.
+
+  3) The Epson Stylus Photo R800 and R1800 are now fully supported in
      6-color mode, for resolutions up to 2880x2880 DPI.  The use of
      gloss enhancer is now supported, although not used by default.
 
      It is likely that further tuning work will be performed on this
      printer, so colors may not be the same as in future releases.
 
-  3) The definitions for the Epson Stylus CX3500, 3600, and 3650 have
+  4) The definitions for the Epson Stylus CX3500, 3600, and 3650 have
      been corrected, and these multi-function devices now work
      correctly.  Additional Epson multi-function devices have also
      been added to the driver.
 
-  4) It is now possible to print to A4-size sheet paper on HP
+  5) It is now possible to print to A4-size sheet paper on HP
      DesignJet large-format plotter/printers.
 
-  5) Various improvements have been made to escputil, the command-line
+  6) Various improvements have been made to escputil, the command-line
      Epson inkjet printer management utility:
 
      * A new extended ink information command has been added.  This
@@ -200,7 +210,7 @@ These release notes contain the following sections:
      * escputil now successfully detects ink level, printer model, and
        status even if the printer is out of ink.
 
-  6) The Print plugin now functions correctly even if a printer queue
+  7) The Print plugin now functions correctly even if a printer queue
      name contains shell metacharacters.
 
 
@@ -1210,8 +1220,8 @@ EPSON Stylus Photo RX510
 EPSON Stylus Photo RX600
 EPSON Stylus Photo RX620
 EPSON Stylus Photo RX630
-EPSON Stylus Photo R800   (Experimental, CMYK only)
-EPSON Stylus Photo R1800  (Experimental, CMYK only)
+EPSON Stylus Photo R800
+EPSON Stylus Photo R1800
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
@@ -1229,7 +1239,7 @@ EPSON Stylus CX-3200
 EPSON Stylus CX-3500
 EPSON Stylus CX-3600
 EPSON Stylus CX-3650
-EPSON Stylus CX-4600 (Experimental)
+EPSON Stylus CX-4600
 EPSON Stylus CX-5100
 EPSON Stylus CX-5200
 EPSON Stylus CX-5300
@@ -2101,10 +2111,3 @@ Printer-Specific Notes:
 
       (or whatever device your printer is connected to in place of
       /dev/lp0).
-
-      Following this, you may wish to print a test pattern:
-
-      escputil -n -r /dev/lp0
-
-      These commands will verify that the printer is connected and
-      functioning correctly.
