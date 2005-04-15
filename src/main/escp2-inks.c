@@ -110,6 +110,8 @@ static const escp2_dropsize_t escp2_1_5pl_1440_dropsizes =
 /* Looks like 1.5, 3.25, 6 */
 static const escp2_dropsize_t escp2_1_5pl_2880_dropsizes =
   { "1_5pl_2880", 3, { 0.26, 0.46, 1.0 } };
+static const escp2_dropsize_t escp2_1_5pl_5760_dropsizes =
+  { "1_5pl_5760", 1, { 1.0 } };
 
 /* Stylus Photo R300 */
 static const escp2_dropsize_t escp2_r300_360_dropsizes =
@@ -272,7 +274,7 @@ const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
   &escp2_1_5pl_1440_dropsizes,
   &escp2_1_5pl_2880_dropsizes,
   &escp2_1_5pl_2880_dropsizes,
-  &escp2_1_5pl_2880_dropsizes,
+  &escp2_1_5pl_5760_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_2000p_drops =

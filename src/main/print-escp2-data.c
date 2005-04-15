@@ -240,7 +240,7 @@ static const escp2_densities_t p3pl_densities =
 { 2.0, 1.5,  0.75, 0.627, 0.523, 0.523, 0.523, 0.262 };
 
 static const escp2_densities_t p1_5pl_densities =
-{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.236 };
+{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.855 };
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325 };
