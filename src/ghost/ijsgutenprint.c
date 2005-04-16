@@ -849,6 +849,7 @@ gutenprint_image_get_row(stp_image_t *image, unsigned char *data, size_t byte_li
       unsigned i, j, length;
       switch (img->bps)
 	{
+	case 16:
 	case 8:
 	  memcpy(data, img->row_buf, img->row_width);
 	  break;
