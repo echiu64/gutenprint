@@ -93,6 +93,8 @@ ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not
 
 const char *gutenprint_ppd_version = NULL;
 
+static stp_string_list_t *option_remap_list = NULL;
+
 static char *
 c_strdup(const char *s)
 {
@@ -679,11 +681,30 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  code = IJS_ERANGE;
 	}
     } 
+  else if (strncmp(key, "STP_OPT_REMAP_", strlen("STP_OPT_REMAP_")) == 0)
+    {
+      const char *xkey = key + strlen("STP_OPT_REMAP_");
+      char *buf1 = stp_malloc(strlen("STP_OPT_") + strlen(xkey) + 1);
+      char *buf2 = c_strdup(vbuf);
+      strcpy(buf1, "STP_OPT_");
+      strcpy(buf1 + strlen("STP_OPT_"), xkey);
+      stp_string_list_add_string(option_remap_list, buf1, buf2);
+      stp_free(buf1);
+      stp_free(buf2);
+    }
   else if (strncmp(key, "STP_", 4) == 0)
     {
       stp_curve_t *curve;
       stp_parameter_t desc;
       const char *xkey = key + 4;
+      stp_param_string_t *pstr = stp_string_list_find(option_remap_list, key);
+      if (pstr)
+	{
+	  xkey = pstr->text;
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: remapping %s to %s\n",
+			    key, xkey));
+	}
+
       stp_describe_parameter(img->v, xkey, &desc);
       switch (desc.p_type)
 	{
@@ -1031,6 +1052,7 @@ main (int argc, char **argv)
 
   stp_init();
   version_id = stp_get_version();
+  option_remap_list = stp_string_list_create();
 
   img.ctx = ijs_server_init();
   if (img.ctx == NULL)

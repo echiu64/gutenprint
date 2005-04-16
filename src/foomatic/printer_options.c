@@ -210,7 +210,6 @@ main(int argc, char **argv)
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
-#ifdef FOOMATIC_ENABLE_DIMENSION_PARAMS
 	      else if (desc.p_type == STP_PARAMETER_TYPE_DIMENSION)
 		{
 		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
@@ -232,7 +231,6 @@ main(int argc, char **argv)
 			     driver, desc.name, desc.is_mandatory);
 		    }
 		}
-#endif /* FOOMATIC_ENABLE_DIMENSION_PARAMS */
 	      tcount += count;
 	    }
 	  stp_parameter_description_destroy(&desc);

@@ -26,6 +26,7 @@ my $foomatic3 = ((defined($opt_f)) && ($opt_f >= 2.9));
 # The following substitutions happen to the template XML files:
 # @@STPVER@@         - the version number (e. g. "5.0.0-beta4")
 # @@STPREL@@         - the version number (e. g. "5.0")
+# @@REMAP@@          - option remappings (to shorten names)
 # @@DRVNAME@@        - driver name (ie gutenprint)
 # @@STPRINTERS@@     - <printers>...</printers> clause for the driver
 # @@OPTCONSTRAINTS@@ - <constraints>...</constraints> object for the option
@@ -77,6 +78,9 @@ my @parameter_level_names = (
 			     "Extra 4",
 			     "Extra 5"
 			     );
+
+my $option_remap = "";
+my $opt_index = 0;
 
 use Data::Dumper;
 
@@ -350,6 +354,7 @@ print STDERR "Using driver name prefix \"$drivernameprefix\"\n";
 
 my $generalsubs = { 'STPVER' => $stpvers,
 		    'STPREL' => $stprel,
+		    'REMAP' => $option_remap,
 		    'DRVNAME' => $drivernameprefix,
 		    'STPRINTERS' => join('', @printerlist) };
 
@@ -504,14 +509,24 @@ for $drivertype (@drivertypes) {
 	# Substitutions for generic template files
 
 	my $lowercaseshortname = lc($fooopt);
+	my $subopt = $stpopt;
+	if ($subopt =~ /^STP/) {
+	    my $nostpopt = $stpopt;
+	    $nostpopt =~ s/^STP_//;
+	    my $stropt = sprintf("%03d", $opt_index);
+	    $subopt = "STP_OPT_$stropt";
+	    $option_remap .= "STP_OPT_REMAP_$stropt=$nostpopt,";
+	    $generalsubs->{'REMAP'} = $option_remap;
+	    $opt_index++;
+	}
 	if ($tmpl !~ /^$fooopt/) {
 	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
 	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$shortname}!g;
-	    $template =~ s!\@\@SHORTNAME\@\@!$shortname!g;
+	    $template =~ s!\@\@SHORTNAME\@\@!$subopt!g;
 	    $template =~ s!\@\@ORDER\@\@!$order!g;
 	    #$order += 10;
 	    $template =~ s!\@\@SPOT\@\@!B!g;
-	    $template =~ s!\@\@PROTO\@\@!$stpopt=\%s,!g;
+	    $template =~ s!\@\@PROTO\@\@!$subopt=\%s,!g;
 	}
 
 	# Now do special-purpose substitutions
