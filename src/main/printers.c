@@ -761,7 +761,7 @@ stp_verify_printer_params(stp_vars_t *v)
     {
       answer = 0;
       stp_eprintf(v, _("Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"),
-		  stp_get_left(v), stp_get_width(v), right);
+		  stp_get_top(v), stp_get_height(v), bottom);
     }
 
   params = stp_get_parameter_list(v);
