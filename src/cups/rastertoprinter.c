@@ -380,7 +380,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 					cups->header.PageSize[0])) != NULL)
     set_string_parameter(v, "PageSize", size->name);
   else
-    fprintf(stderr, "ERROR: Gutenprint Unable to get media size!\n");
+    fprintf(stderr, "DEBUG: Gutenprint Unable to get media size for (%d, %d)\n",
+	    cups->header.PageSize[1], cups->header.PageSize[0]);
 
  /*
   * Duplex
