@@ -113,6 +113,15 @@ static stp_image_t theImage =
 
 static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
 static double total_bytes_printed = 0;
+static int print_messages_as_errors = 0;
+
+static void
+set_string_parameter(stp_vars_t *v, const char *name, const char *val)
+{
+  fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n", name, val);
+  stp_set_string_parameter(v, name, val);
+}
+  
 
 static void
 set_special_parameter(stp_vars_t *v, const char *name, int choice)
@@ -254,6 +263,57 @@ printer_supports_bw(const stp_vars_t *v)
   return status;
 }
 
+static void
+validate_options(stp_vars_t *v, cups_image_t *cups)
+{
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  int nparams = stp_parameter_list_count(params);
+  int i;
+  for (i = 0; i < nparams; i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(params, i);
+      stp_parameter_t desc;
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  if (!stp_string_list_is_present
+	      (desc.bounds.str, stp_get_string_parameter(v, desc.name)))
+	    {
+	      fprintf(stderr, "DEBUG: Gutenprint clearing string %s (%s)\n",
+		      desc.name, stp_get_string_parameter(v, desc.name));
+	      stp_clear_string_parameter(v, desc.name);
+	      if (desc.is_mandatory)
+		{
+		  fprintf(stderr, "DEBUG: Gutenprint setting default string %s to %s\n",
+			  desc.name, desc.deflt.str);
+		  stp_set_string_parameter(v, desc.name, desc.deflt.str);
+		  if (strcmp(desc.name, "PageSize") == 0)
+		    {
+		      const stp_papersize_t *ps =
+			stp_get_papersize_by_name(desc.deflt.str);
+		      if (ps->width > 0)
+			{
+			  fprintf(stderr, "DEBUG: Gutenprint setting page width to %d\n",
+				  ps->width);
+			  if (ps->width < stp_get_page_width(v))
+			    stp_set_page_width(v, ps->width);
+			}
+		      if (ps->height > 0)
+			{
+			  fprintf(stderr, "DEBUG: Gutenprint setting page height to %d\n",
+				  ps->height);
+			  if (ps->height < stp_get_page_height(v))
+			    stp_set_page_height(v, ps->height);
+			}
+		    }
+		}
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+    }
+  stp_parameter_list_destroy(params);
+}  
+
 static stp_vars_t *
 initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 {
@@ -267,36 +327,36 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
 
-  stp_set_string_parameter(v, "ChannelBitDepth", "8");
+  set_string_parameter(v, "ChannelBitDepth", "8");
   switch (cups->header.cupsColorSpace)
     {
     case CUPS_CSPACE_W :
       /* Olympus photo printers don't support black & white ink! */
       if (printer_supports_bw(v))
-	stp_set_string_parameter(v, "PrintingMode", "BW");
-      stp_set_string_parameter(v, "InputImageType", "Whitescale");
+	set_string_parameter(v, "PrintingMode", "BW");
+      set_string_parameter(v, "InputImageType", "Whitescale");
       break;
     case CUPS_CSPACE_K :
       /* Olympus photo printers don't support black & white ink! */
       if (printer_supports_bw(v))
-	stp_set_string_parameter(v, "PrintingMode", "BW");
-      stp_set_string_parameter(v, "InputImageType", "Grayscale");
+	set_string_parameter(v, "PrintingMode", "BW");
+      set_string_parameter(v, "InputImageType", "Grayscale");
       break;
     case CUPS_CSPACE_RGB :
-      stp_set_string_parameter(v, "PrintingMode", "Color");
-      stp_set_string_parameter(v, "InputImageType", "RGB");
+      set_string_parameter(v, "PrintingMode", "Color");
+      set_string_parameter(v, "InputImageType", "RGB");
       break;
     case CUPS_CSPACE_CMY :
-      stp_set_string_parameter(v, "PrintingMode", "Color");
-      stp_set_string_parameter(v, "InputImageType", "CMY");
+      set_string_parameter(v, "PrintingMode", "Color");
+      set_string_parameter(v, "InputImageType", "CMY");
       break;
     case CUPS_CSPACE_CMYK :
-      stp_set_string_parameter(v, "PrintingMode", "Color");
-      stp_set_string_parameter(v, "InputImageType", "CMYK");
+      set_string_parameter(v, "PrintingMode", "Color");
+      set_string_parameter(v, "InputImageType", "CMYK");
       break;
     case CUPS_CSPACE_KCMY :
-      stp_set_string_parameter(v, "PrintingMode", "Color");
-      stp_set_string_parameter(v, "InputImageType", "KCMY");
+      set_string_parameter(v, "PrintingMode", "Color");
+      set_string_parameter(v, "InputImageType", "KCMY");
       break;
     default :
       fprintf(stderr, "ERROR: Gutenprint Bad colorspace %d!\n",
@@ -308,21 +368,21 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     set_special_parameter(v, "Resolution", cups->header.cupsCompression);
 
   if (cups->header.MediaClass && strlen(cups->header.MediaClass) > 0)
-    stp_set_string_parameter(v, "InputSlot", cups->header.MediaClass);
+    set_string_parameter(v, "InputSlot", cups->header.MediaClass);
 
   if (cups->header.MediaType && strlen(cups->header.MediaType) > 0)
-    stp_set_string_parameter(v, "MediaType", cups->header.MediaType);
+    set_string_parameter(v, "MediaType", cups->header.MediaType);
 
   fprintf(stderr, "DEBUG: Gutenprint PageSize = %dx%d\n", cups->header.PageSize[0],
 	  cups->header.PageSize[1]);
 
   if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
 					cups->header.PageSize[0])) != NULL)
-    stp_set_string_parameter(v, "PageSize", size->name);
+    set_string_parameter(v, "PageSize", size->name);
   else
     fprintf(stderr, "ERROR: Gutenprint Unable to get media size!\n");
 
- /* 
+ /*
   * Duplex
   * Note that the names MUST match those in the printer driver(s)
   */
@@ -330,12 +390,13 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   if (cups->header.Duplex != 0)
     {
       if (cups->header.Tumble != 0)
-        stp_set_string_parameter(v, "Duplex", "DuplexTumble");
+        set_string_parameter(v, "Duplex", "DuplexTumble");
       else
-        stp_set_string_parameter(v, "Duplex", "DuplexNoTumble");
+        set_string_parameter(v, "Duplex", "DuplexNoTumble");
     }
 
-  stp_set_string_parameter(v, "JobMode", "Job");
+  set_string_parameter(v, "JobMode", "Job");
+  validate_options(v, cups);
   stp_get_media_size(v, &(cups->width), &(cups->height));
   stp_get_imageable_area(v, &(cups->left), &(cups->right),
 			 &(cups->bottom), &(cups->top));
@@ -446,15 +507,14 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		val = ppd_option->defchoice;
 	    }
 	  if (val && ((strlen(val) > 0 && strcmp(val, "None") != 0) ||
-		      (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST &&
-		       stp_string_list_is_present(desc.bounds.str, val))))
+		      (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)))
 	    {
 	      switch (desc.p_type)
 		{
 		case STP_PARAMETER_TYPE_STRING_LIST:
 		  fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n",
 			  desc.name, val);
-		  stp_set_string_parameter(v, desc.name, val);
+		  set_string_parameter(v, desc.name, val);
 		  break;
 		case STP_PARAMETER_TYPE_INT:
 		  fprintf(stderr, "DEBUG: Gutenprint set int %s to %s\n",
@@ -481,7 +541,10 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		default:
 		  break;
 		}
-	    }	  
+	    }
+	  else
+	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to %s\n",
+		    desc.name, val);
 	}
       stp_parameter_description_destroy(&desc);
       stp_free(ppd_option_name);
@@ -624,7 +687,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   printer = stp_get_printer_by_driver(ppd->modelname);
   if (!printer)
     printer = stp_get_printer_by_long_name(ppd->modelname);
-  
+
   if (printer == NULL)
     {
       fprintf(stderr, "ERROR: Gutenprint Fatal error: Unable to find driver named \"%s\"!\n",
@@ -694,6 +757,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       fprintf(stderr, "DEBUG: Gutenprint printing page %d\n", cups.page + 1);
       fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
       print_debug_block(v, &cups);
+      print_messages_as_errors = 1;
       if (!stp_verify(v))
 	{
 	  fprintf(stderr, "ERROR: Gutenprint: options failed to verify.\n");
@@ -714,6 +778,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  fprintf(stderr, "ERROR: Gutenprint failed to print, set LogLevel to debug2 to identify why\n");
 	  goto cups_abort;
 	}
+      print_messages_as_errors = 0;
 
       fflush(stdout);
 
@@ -741,11 +806,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 cups_abort:
   fprintf(stderr, "DEBUG: Gutenprint printed total %.0f bytes\n",
 	  total_bytes_printed);
+  fputs("ERROR: Gutenprint No pages found!\n", stderr);
   fputs("ERROR: Gutenprint Invalid printer settings!\n", stderr);
   stp_end_job(v, &theImage);
   stp_vars_destroy(v);
   cupsRasterClose(cups.ras);
-  fputs("ERROR: Gutenprint No pages found!\n", stderr);
   if (fd != 0)
     close(fd);
   return 1;
@@ -772,7 +837,10 @@ cups_errfunc(void *file, const char *buf, size_t bytes)
   FILE *prn = (FILE *)file;
   while (where < bytes)
     {
-      fputs("DEBUG: Gutenprint internal: ", prn);
+      if (print_messages_as_errors)
+	fputs("ERROR: Gutenprint: ", prn);
+      else
+	fputs("DEBUG: Gutenprint internal: ", prn);
       while (next_nl < bytes)
 	{
 	  if (buf[next_nl++] == '\n')
@@ -780,7 +848,7 @@ cups_errfunc(void *file, const char *buf, size_t bytes)
 	}
       fwrite(buf + where, 1, next_nl - where, prn);
       where = next_nl;
-    }	
+    }
 }
 
 
