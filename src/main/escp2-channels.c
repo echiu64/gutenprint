@@ -1668,6 +1668,7 @@ static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
   &six_color_r800_photo_gloss_inkset,
   &four_color_r800_photo_gloss_inkset,
   &three_color_r800_gloss_inkset,
+  &one_color_extended_inkset,
   &one_color_r800_photo_gloss_extended_inkset,
   &three_color_r800_extended_inkset,
   &three_color_r800_gloss_extended_inkset,
