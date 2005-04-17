@@ -251,6 +251,11 @@ These release notes contain the following sections:
      "ijsgutenprint.5.0".  This permits installation of multiple
      releases of Gutenprint on the same system.
 
+  10) Preliminary support for Epson Colorio PM-G800 and PM-G820
+     (Japan-market printers using 1.5 pl 6-color inks).  Also added
+     other recent Japan-market printers assumed to be programmatically
+     identical to existing printers.
+
 
 ================================================================
 
