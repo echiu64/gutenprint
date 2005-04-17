@@ -236,7 +236,17 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	  /* Set mechanism sequence */
 	  stp_send_command(v, "SN", "bccc", 0, 0, feed_sequence);
 	  if (stp_get_boolean_parameter(v, "FullBleed"))
-	    stp_send_command(v, "FP", "bch", 0, 0xffb0);
+	    {
+	      stp_send_command(v, "FP", "bch", 0, 0xffb0);
+#if 0
+	      /* These commands do not appear to do anything on the */
+	      /* 2200.  Need to test on R800. */
+	      /* From the R1800 manual -- bottom margin borderless */
+	      stp_send_command(v, "US", "bcc", 0, 2);
+	      /* This command means "check paper size - no" */
+	      stp_send_command(v, "US", "bcc", 2, 0);
+#endif
+	    }
 	}
       if (pd->input_slot)
 	{
