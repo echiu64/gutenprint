@@ -893,15 +893,35 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON PM-D770" driver="escp2-pmd770" manufacturer="Epson" model="63">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON PM-D1000" driver="escp2-pmd1000" manufacturer="Epson" model="63">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON PM-G700" driver="escp2-pmg700" manufacturer="Epson" model="63">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON PM-G800" driver="escp2-pmg800" manufacturer="Epson" model="64">
+      <printer name="EPSON PM-G720" driver="escp2-pmg720" manufacturer="Epson" model="63">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON PM-G800" driver="escp2-pmg800" manufacturer="Epson" model="68">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON PM-G820" driver="escp2-pmg820" manufacturer="Epson" model="68">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON PX-G900" driver="escp2-pxg900" manufacturer="Epson" model="64">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON PX-G920" driver="escp2-pxg920" manufacturer="Epson" model="64">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>

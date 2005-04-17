@@ -1303,17 +1303,14 @@ EPSON MJ-5100C
 EPSON MJ-6000C
 EPSON MJ-8000C
 EPSON PM-700C
-EPSON PM-G700
 EPSON PM-730C
 EPSON PM-740C   (Experimental)
 EPSON PM-750C
-EPSON PM-D750
 EPSON PM-760C
 EPSON PM-770C
 EPSON PM-780C
 EPSON PM-790PT
 EPSON PM-800C
-EPSON PM-G800   (Experimental)
 EPSON PM-850PT
 EPSON PM-870C   (Experimental)
 EPSON PM-880C
@@ -1333,6 +1330,13 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PM-D750
+EPSON PM-D770
+EPSON PM-D1000
+EPSON PM-G700
+EPSON PM-G720
+EPSON PM-G800   (Experimental)
+EPSON PM-G820   (Experimental)
 EPSON PX-G900
 EPSON PX-G5000
 EPSON PX-V500
@@ -1654,17 +1658,14 @@ Epson MJ-5100C                 escp2-mj5100c   EPSON MJ-5100C
 Epson MJ-6000C                 escp2-mj6000c   EPSON MJ-6000C
 Epson MJ-8000C                 escp2-mj8000c   EPSON MJ-8000C
 Epson PM-700C                  escp2-pm700c    EPSON PM-700C
-Epson PM-G700                  escp2-pmg700    EPSON PM-G700
 Epson PM-730C                  escp2-pm730c    EPSON PM-730C
 Epson PM-740C                  escp2-pm740c    EPSON PM-740C
 Epson PM-750C                  escp2-pm750c    EPSON PM-750C
-Epson PM-D750                  escp2-pmd750    EPSON PM-D750
 Epson PM-760C                  escp2-pm760c    EPSON PM-760C
 Epson PM-770C                  escp2-pm770c    EPSON PM-770C
 Epson PM-780C                  escp2-pm780c    EPSON PM-780C
 Epson PM-790PT                 escp2-pm790pt   EPSON PM-790PT
 Epson PM-800C                  escp2-pm800c    EPSON PM-800C
-Epson PM-G800                  escp2-pmg800    EPSON PM-G800
 Epson PM-850PT                 escp2-pm850pt   EPSON PM-850PT
 Epson PM-870C                  escp2-pm870c    EPSON PM-870C
 Epson PM-880C                  escp2-pm880c    EPSON PM-880C
@@ -1684,7 +1685,15 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PM-D750                  escp2-pmd750    EPSON PM-D750
+Epson PM-D770                  escp2-pmd770    EPSON PM-D770
+Epson PM-D1000                 escp2-pmd1000   EPSON PM-D1000
+Epson PM-G700                  escp2-pmg700    EPSON PM-G700
+Epson PM-G720                  escp2-pmg720    EPSON PM-G720
+Epson PM-G800                  escp2-pmg800    EPSON PM-G800
+Epson PM-G820                  escp2-pmg820    EPSON PM-G820
 Epson PX-G900                  escp2-pxg900    EPSON PX-G900
+Epson PX-G920                  escp2-pxg920    EPSON PX-G920
 Epson PX-G5000                 escp2-pxg5000   EPSON PX-G5000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-V600                  escp2-pxv600    EPSON PX-V600
