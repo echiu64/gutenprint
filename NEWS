@@ -1333,6 +1333,8 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PX-G900
+EPSON PX-G5000
 EPSON PX-V500
 EPSON PX-V600
 EPSON PX-7000
@@ -1682,6 +1684,8 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PX-G900                  escp2-pxg900    EPSON PX-G900
+Epson PX-G5000                 escp2-pxg5000   EPSON PX-G5000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-V600                  escp2-pxv600    EPSON PX-V600
 Epson PX-7000                  escp2-px7000    EPSON PX-7000

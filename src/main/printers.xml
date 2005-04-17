@@ -901,6 +901,14 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON PX-G900" driver="escp2-pxg900" manufacturer="Epson" model="64">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON PX-G5000" driver="escp2-pxg5000" manufacturer="Epson" model="67">
+        <parameter type="float" name="Gamma">0.636</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON PX-V500" driver="escp2-pxv500" manufacturer="Epson" model="61">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>

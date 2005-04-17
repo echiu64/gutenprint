@@ -279,6 +279,8 @@
 #gptofoo escp2-pm7000c printer/Epson-PM_7000C
 #gptofoo escp2-pm9000c printer/Epson-PM_9000C
 #gptofoo escp2-pm10000 printer/Epson-PM_10000
+#gptofoo escp2-pxg900 printer/Epson-PX_G900
+#gptofoo escp2-pxg5000 printer/Epson-PX_G5000
 #gptofoo escp2-pxv500 printer/Epson-PX_V500
 #gptofoo escp2-pxv600 printer/Epson-PX_V600
 #gptofoo escp2-px7000 printer/Epson-PX_7000
