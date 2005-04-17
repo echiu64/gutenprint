@@ -86,9 +86,14 @@ main(int argc, char **argv)
 		{
 		  /*
 		   * Create a dummy option that enables or disables
-		   * the option as appropriate
+		   * the option as appropriate.  The long name ends in
+		   * enable, rather than starts with enable, because
+		   * CUPS has this nasty habit of sorting options
+		   * alphabetically rather than leaving them in the
+		   * order listed.  This ensures that the enable
+		   * option is adjacent to the value it controls.
 		   */
-		  printf("$longnames{'STP_Enable%s'} = 'Enable %s';\n",
+		  printf("$longnames{'STP_Enable%s'} = '%s Enable';\n",
 			 desc.name, desc.text);
 		  printf("$param_classes{'STP_Enable%s'} = %d;\n",
 			 desc.name, desc.p_class);
@@ -100,10 +105,12 @@ main(int argc, char **argv)
 			 driver, desc.name);
 		  printf("$stpdata{'%s'}{'STP_Enable%s'}{'Enabled'} = 'Enabled';\n",
 			 driver, desc.name);
+		  printf("$longnames{'STP_%s'} = '%s Value';\n",
+			 desc.name, desc.text);
 		}
-		  
-	      printf("$longnames{'STP_%s'} = '%s';\n",
-		     desc.name, desc.text);
+	      else
+		printf("$longnames{'STP_%s'} = '%s';\n",
+		       desc.name, desc.text);
 	      printf("$param_classes{'STP_%s'} = %d;\n",
 		     desc.name, desc.p_class);
 	      printf("$param_levels{'STP_%s'} = %d;\n",
