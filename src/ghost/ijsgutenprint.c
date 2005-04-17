@@ -41,10 +41,17 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 
 
-static int stp_debug = 0;
+static int stp_debug = 1;
 volatile int SDEBUG = 1;
 
-#define STP_DEBUG(x) do { if (stp_debug || getenv("STP_DEBUG")) x; } while (0)
+#define STP_DEBUG(x)				\
+do						\
+{						\
+  if (stp_debug || getenv("STP_DEBUG"))		\
+    fprintf(stderr, "DEBUG: ");			\
+  if (stp_debug || getenv("STP_DEBUG"))		\
+    x;						\
+} while (0)
 
 typedef struct _GutenprintParamList GutenprintParamList;
 
@@ -94,6 +101,7 @@ ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not
 const char *gutenprint_ppd_version = NULL;
 
 static stp_string_list_t *option_remap_list = NULL;
+static int print_messages_as_errors = 0;
 
 static char *
 c_strdup(const char *s)
@@ -171,7 +179,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     }
   else
     {
-      fprintf(stderr, _("ijsgutenprint: Bad color space: bps %d channels %d space %s\n"),
+      fprintf(stderr, _("ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"),
 		img->bps, img->n_chan, ph->cs);
       /* unsupported */
       return -1;
@@ -179,7 +187,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 
   if (img->row_buf == NULL)
     {
-      STP_DEBUG(fprintf(stderr, _("ijsgutenprint: No row buffer\n")));
+      STP_DEBUG(fprintf(stderr, _("ERROR: ijsgutenprint: No row buffer\n")));
       return -1;
     }
 
@@ -206,7 +214,7 @@ get_float(const char *str, const char *name, double *pval)
     *pval = new_value;
   else
     {
-      fprintf(stderr, _("ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
+      fprintf(stderr, _("ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
 	      name, str);
       status = -1;
     }
@@ -226,7 +234,7 @@ get_int(const char *str, const char *name, int *pval)
     *pval = new_value;
   else
     {
-      fprintf(stderr, _("ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
+      fprintf(stderr, _("ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
 	      name, str);
       status = -1;
     }
@@ -387,7 +395,7 @@ list_all_parameters(void)
 	}
       if (offset != param_length)
 	{
-	  fprintf(stderr, "ijsgutenprint: Bad string length %lu != %lu!\n",
+	  fprintf(stderr, "ERROR: ijsgutenprint: Bad string length %lu != %lu!\n",
 		  (unsigned long) offset,
 		  (unsigned long) param_length);
 	  exit(1);
@@ -478,9 +486,9 @@ gutenprint_get_cb (void *get_cb_data,
   if (!printer)
     {
       if (strlen(stp_get_driver(v)) == 0)
-	fprintf(stderr, _("ijsgutenprint: Printer must be specified with -sDeviceModel\n"));
+	fprintf(stderr, _("ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"));
       else
-	fprintf(stderr, _("ijsgutenprint: Printer %s is not a known model\n"),
+	fprintf(stderr, _("ERROR: ijsgutenprint: Printer %s is not a known model\n"),
 		stp_get_driver(v));
       return IJS_EUNKPARAM;
     }
@@ -628,7 +636,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_height(img->v, b - t);
 	}
       else
-	fprintf(stderr, _("ijsgutenprint: cannot parse TopLeft %s\n"), vbuf);
+	fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse TopLeft %s\n"), vbuf);
     }
   else if (strcmp(key, "PaperSize") == 0)
     {
@@ -651,7 +659,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    STP_DEBUG(fprintf(stderr, "ijsgutenprint: No matching paper size found\n"));
 	}
       else
-	fprintf(stderr, _("ijsgutenprint: cannot parse PaperSize %s\n"), vbuf);
+	fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse PaperSize %s\n"), vbuf);
     }
 
 /*
@@ -722,35 +730,35 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	      stp_curve_destroy(curve);
 	    }
 	  else
-	    fprintf(stderr, _("ijsgutenprint: cannot parse curve %s\n"), vbuf);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse curve %s\n"), vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
 	  code = get_float(vbuf, xkey, &z);
 	  if (code == 0)
 	    stp_set_float_parameter(img->v, xkey, z);
 	  else
-	    fprintf(stderr, _("ijsgutenprint: cannot parse %s float %s\n"), xkey, vbuf);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s float %s\n"), xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  code = get_int(vbuf, xkey, &i);
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, xkey, i);
 	  else
-	    fprintf(stderr, _("ijsgutenprint: cannot parse %s int %s\n"), xkey, vbuf);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s int %s\n"), xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_DIMENSION:
 	  code = get_int(vbuf, xkey, &i);
 	  if (code == 0)
 	    stp_set_dimension_parameter(img->v, xkey, i);
 	  else
-	    fprintf(stderr, _("ijsgutenprint: cannot parse %s dimension %s\n"), xkey, vbuf);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s dimension %s\n"), xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  code = get_int(vbuf, xkey, &i);
 	  if (code == 0)
 	    stp_set_boolean_parameter(img->v, xkey, i);
 	  else
-	    fprintf(stderr, _("ijsgutenprint: cannot parse %s boolean %s\n"), xkey, vbuf);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s boolean %s\n"), xkey, vbuf);
 	  break;
 	default:
 	  if (strncmp(xkey, "Enable", strlen("Enable")) == 0)
@@ -761,7 +769,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	      stp_set_string_parameter(img->v, xkey, vbuf);
 	    }
 	  else
-	    fprintf(stderr, _("ijsgutenprint: Bad parameter %s %d\n"), key, desc.p_type);
+	    fprintf(stderr, _("ERROR: ijsgutenprint: Bad parameter %s %d\n"), key, desc.p_type);
 	}
       stp_parameter_description_destroy(&desc);
     }
@@ -787,12 +795,34 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       pl->value_size = value_size;
     }
   else
-    fprintf(stderr, _("ijsgutenprint: bad key code %d\n"), code);
+    fprintf(stderr, _("ERROR: ijsgutenprint: bad key code %d\n"), code);
 
   return code;
 }
 
 /**********************************************************/
+
+static void
+gutenprint_errfunc(void *file, const char *buf, size_t bytes)
+{
+  size_t next_nl = 0;
+  size_t where = 0;
+  FILE *prn = (FILE *)file;
+  while (where < bytes)
+    {
+      if (print_messages_as_errors)
+	fputs("ERROR: Gutenprint: ", prn);
+      else
+	fputs("DEBUG: Gutenprint internal: ", prn);
+      while (next_nl < bytes)
+	{
+	  if (buf[next_nl++] == '\n')
+	    break;
+	}
+      fwrite(buf + where, 1, next_nl - where, prn);
+      where = next_nl;
+    }
+}
 
 static void
 gutenprint_outfunc(void *data, const char *buffer, size_t bytes)
@@ -835,7 +865,7 @@ image_next_row(IMAGE *img)
       status = ijs_server_get_data(img->ctx, img->row_buf, (int) n_bytes);
       if (status)
 	{
-	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: page aborted!\n"));
+	  STP_DEBUG(fprintf(stderr, "ERROR: ijsgutenprint: page aborted!\n"));
 	}
       else
 	{
@@ -929,7 +959,8 @@ stp_dbg(const char *msg, const stp_vars_t *v)
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int count = stp_parameter_list_count(params);
   int i;
-  fprintf(stderr, "ijsgutenprint: Settings: Model %s\n", stp_get_driver(v));
+  fprintf(stderr, "DEBUG: %s\n", msg);
+  fprintf(stderr, "DEBUG: ijsgutenprint: Settings: Model %s\n", stp_get_driver(v));
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
@@ -937,27 +968,27 @@ stp_dbg(const char *msg, const stp_vars_t *v)
 	{
 	case STP_PARAMETER_TYPE_DOUBLE:
 	  if (stp_check_float_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "ijsgutenprint: Settings: %s %f\n",
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %f\n",
 		    p->name, stp_get_float_parameter(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  if (stp_check_int_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "ijsgutenprint: Settings: %s %d\n",
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %d\n",
 		    p->name, stp_get_int_parameter(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_DIMENSION:
 	  if (stp_check_dimension_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "ijsgutenprint: Settings: %s %d\n",
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %d\n",
 		    p->name, stp_get_dimension_parameter(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  if (stp_check_boolean_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "ijsgutenprint: Settings: %s %d\n",
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %d\n",
 		    p->name, stp_get_boolean_parameter(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  if (stp_check_string_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "ijsgutenprint: Settings: %s %s\n",
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %s\n",
 		    p->name, safe_get_string_parameter(v, p->name));
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
@@ -965,7 +996,7 @@ stp_dbg(const char *msg, const stp_vars_t *v)
 	    {
 	      char *curve =
 		stp_curve_write_string(stp_get_curve_parameter(v, p->name));
-	      fprintf(stderr, "ijsgutenprint: Settings: %s %s\n",
+	      fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %s\n",
 		      p->name, curve);
 	      stp_free(curve);
 	    }
@@ -1031,6 +1062,81 @@ purge_unused_float_parameters(stp_vars_t *v)
   stp_parameter_list_destroy(params);
 }
 
+static void
+validate_options(stp_image_t *image)
+{
+  IMAGE *im = (IMAGE *) (image->rep);
+  stp_vars_t *v = im->v;
+  stp_parameter_list_t params = stp_get_parameter_list(v);
+  int nparams = stp_parameter_list_count(params);
+  int i;
+  for (i = 0; i < nparams; i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(params, i);
+      stp_parameter_t desc;
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  if (!stp_string_list_is_present
+	      (desc.bounds.str, stp_get_string_parameter(v, desc.name)))
+	    {
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: clearing string %s (%s)\n",
+				desc.name, stp_get_string_parameter(v, desc.name)));
+	      stp_clear_string_parameter(v, desc.name);
+	      if (desc.is_mandatory)
+		{
+		  STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting default string %s to %s\n",
+				    desc.name, desc.deflt.str));
+		  stp_set_string_parameter(v, desc.name, desc.deflt.str);
+		  if (strcmp(desc.name, "PageSize") == 0)
+		    {
+		      const stp_papersize_t *ps =
+			stp_get_papersize_by_name(desc.deflt.str);
+		      if (ps->width > 0)
+			{
+			  STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting page width to %d\n",
+					    ps->width));
+			  if (ps->width < stp_get_page_width(v))
+			    stp_set_page_width(v, ps->width);
+			  if (ps->width < stp_get_left(v) + stp_get_width(v))
+			    {
+#if 0
+			      if (im->width < ps->width)
+				im->width = ps->width;
+#endif
+			      STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting width to %d\n",
+						ps->width - stp_get_left(v)));
+			      stp_set_width(v, ps->width - stp_get_left(v));
+			    }
+			}
+		      if (ps->height > 0)
+			{
+			  STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting page height to %d\n",
+					    ps->height));
+			  if (ps->height < stp_get_page_height(v))
+			    stp_set_page_height(v, ps->height);
+			  if (ps->height < stp_get_top(v) + stp_get_height(v))
+			    {
+#if 0
+			      if (im->height < ps->height)
+				im->height = ps->height;
+#endif
+			      STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting height to %d\n",
+						ps->height - stp_get_top(v)));
+			      stp_set_height(v, ps->height - stp_get_top(v));
+			    }
+			}
+		    }
+		}
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+    }
+  stp_parameter_list_destroy(params);
+}  
+
+  
+
 int
 main (int argc, char **argv)
 {
@@ -1068,7 +1174,7 @@ main (int argc, char **argv)
   stp_set_left(img.v, 0);
 
   /* Error messages to stderr. */
-  stp_set_errfunc(img.v, gutenprint_outfunc);
+  stp_set_errfunc(img.v, gutenprint_errfunc);
   stp_set_errdata(img.v, stderr);
 
   /* Printer data goes to file f, but we haven't opened it yet. */
@@ -1088,7 +1194,7 @@ main (int argc, char **argv)
   ijs_server_install_get_cb (img.ctx, gutenprint_get_cb, &img);
   ijs_server_install_set_cb(img.ctx, gutenprint_set_cb, &img);
 
-  STP_DEBUG(stp_dbg("ijsgutenprint: about to start", img.v));
+  STP_DEBUG(stp_dbg("ijsgutenprint: about to start\n", img.v));
 
   do
     {
@@ -1099,18 +1205,18 @@ main (int argc, char **argv)
       if (status)
 	{
 	  if (status < 0)
-	    fprintf(stderr, _("ijsgutenprint: ijs_server_get_page_header failed %d\n"),
+	    fprintf(stderr, _("ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"),
 		    status);
 	  break;
 	}
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: got page header, %d x %d\n",
 			ph.width, ph.height));
-      STP_DEBUG(stp_dbg("ijsgutenprint: have page header", img.v));
+      STP_DEBUG(stp_dbg("ijsgutenprint: have page header\n", img.v));
 
       status = image_init(&img, &ph);
       if (status)
 	{
-	  fprintf(stderr, _("ijsgutenprint: image_init failed %d\n"), status);
+	  fprintf(stderr, _("ERROR: ijsgutenprint: image_init failed %d\n"), status);
 	  break;
 	}
 
@@ -1121,7 +1227,7 @@ main (int argc, char **argv)
 	      f = fdopen(img.fd - 1, "wb");
 	      if (!f)
 		{
-		  fprintf(stderr, _("ijsgutenprint: Unable to open file descriptor: %s\n"),
+		  fprintf(stderr, _("ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"),
 			  strerror(errno));
 		  status = -1;
 		  break;
@@ -1133,7 +1239,7 @@ main (int argc, char **argv)
 	      if (!f)
 		{
 		  status = -1;
-		  fprintf(stderr, _("ijsgutenprint: Unable to open %s: %s\n"), img.filename,
+		  fprintf(stderr, _("ERROR: ijsgutenprint: Unable to open %s: %s\n"), img.filename,
 			  strerror(errno));
 		  break;
 		}
@@ -1145,7 +1251,7 @@ main (int argc, char **argv)
 	  printer = stp_get_printer(img.v);
 	  if (printer == NULL)
 	    {
-	      fprintf(stderr, _("ijsgutenprint: Unknown printer %s\n"),
+	      fprintf(stderr, _("ERROR: ijsgutenprint: Unknown printer %s\n"),
 		      stp_get_driver(img.v));
 	      status = -1;
 	      break;
@@ -1206,7 +1312,9 @@ main (int argc, char **argv)
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: Duplex=%s\n", safe_get_string_parameter(img.v, "Duplex")));
 
       purge_unused_float_parameters(img.v);
+      validate_options(&si);
       STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
+      print_messages_as_errors = 1;
       if (!version_is_ok)
 	{
 	  fprintf(stderr, _(version_mismatch), version_id,
