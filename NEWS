@@ -159,9 +159,37 @@ These release notes contain the following sections:
        release.  This is to prevent accidentally using incorrect
        data, which could cause incorrect function to take place.
 
-  2) The IJS-based Ghostscript driver is now installed as
-     "ijsgutenprint.5.0".  This permits installation of multiple
-     releases of Gutenprint on the same system.
+  2) Various problems with the native CUPS driver have been fixed:
+
+     * The driver can now print directly to CD's with Epson printers
+       that support this functionality (e. g. the Stylus Photo R300).
+       In 5.0.0-beta3 and earlier, attempts to do so would have failed
+       with a message in the CUPS error log about options not being
+       verified correctly.  If LogLevel=Debug were set in cupsd.conf,
+       the options that would have failed to verify would have been
+       CDInnerRadius and perhaps PageSize.  There was no workaround
+       save to print from the GIMP plugin.  This fixes bug 1179480.
+
+     * It is now possible to select any page size when printing to CD.
+       It is still recommended to select CD - 5 inch or CD - 3 inch,
+       but other sizes will work and will be treated as a 5 inch CD.
+       If the page size selected is larger than 5 inches, the image
+       will be cropped to 5 inches; if it is smaller, it will be
+       expanded.
+
+       This functionality is specific to the CUPS driver.  In the GIMP
+       plugin, the only page sizes permitted are 5 inch and 3 inch CD.
+
+     * An error message ("Unable to get media size") emitted when a
+       custom page size was set has been converted to a debug
+       message.
+
+     * More useful error messages are generated when incorrect
+       combinations of options are chosen.  In particular, the
+       incorrect options and values are properly identified.
+
+     * The debug messages have been enhanced to allow tracing all
+       option settings.
 
   3) The Epson Stylus Photo R800 and R1800 are now fully supported in
      6-color mode, for resolutions up to 2880x2880 DPI.  The use of
@@ -178,7 +206,13 @@ These release notes contain the following sections:
   5) It is now possible to print to A4-size sheet paper on HP
      DesignJet large-format plotter/printers.
 
-  6) Various improvements have been made to escputil, the command-line
+  6) With the Ghostscript driver, it is now possible to select any
+     page size when printing to CD.  It is still recommended to select
+     CD - 5 inch or CD - 3 inch, but other sizes will work and will be
+     treated as a 5 inch CD.  The page will be expanded or shrunk to
+     fit (not cropped).
+
+  7) Various improvements have been made to escputil, the command-line
      Epson inkjet printer management utility:
 
      * A new extended ink information command has been added.  This
@@ -210,8 +244,12 @@ These release notes contain the following sections:
      * escputil now successfully detects ink level, printer model, and
        status even if the printer is out of ink.
 
-  7) The Print plugin now functions correctly even if a printer queue
+  8) The Print plugin now functions correctly even if a printer queue
      name contains shell metacharacters.
+
+  9) The IJS-based Ghostscript driver is now installed as
+     "ijsgutenprint.5.0".  This permits installation of multiple
+     releases of Gutenprint on the same system.
 
 
 ================================================================
