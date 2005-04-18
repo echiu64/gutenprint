@@ -30,8 +30,6 @@ include $(top_srcdir)/scripts/global.mk
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = README
-
 ## Variables
 
 LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) @IJS_CFLAGS@
