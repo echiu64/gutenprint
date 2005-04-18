@@ -65,9 +65,6 @@ ignores it.  It should be CANON, EPSON, LEXMARK, or HEWLETT\-PACKARD.  The value
 of the \-sDeviceModel parameter is the same as the value of the \-sModel
 parameter in the old stp driver.
 .IP
-A complete list of supported printers may be found in
-.BR gutenprint\-models (7).
-.IP
 Most or all of the Epson Stylus printers are fully functional.  The others
 vary.  In particular, all of the listed Epson Stylus Photo printers print in
 full 6-color photo mode; most of the others do not.  The color output has also
@@ -79,34 +76,24 @@ detail in their own sections.
 .SH PRINT RESOLUTION
 .TP
 \fBQuality\fP=\fIquality\fP
-The meaning of this is model-specific.  Two names are listed for each
-resolution; the first (short) name is the \fIquality\fP that must be passed to
-Quality, and the second (long) name is descriptive.  Each printer has its own
+The meaning of this is model-specific.  Each printer has its own
 default value; for most printers, this is a reasonable 300 or 360 DPI
-resolution.  A full list of available resolutions for each printer may be found
-in
-.BR gutenprint\-resolutions (7).
+resolution.
 .SH INK TYPES
 .TP
 \fBInkType\fP=\fIinktype\fP
 .PP
-This is printer type specific.  The option names are case sensitive.  A full
-list of available media types may be found in
-.BR gimmprint\-inktypes (7).
+This is printer type specific.  The option names are case sensitive.
 .SH MEDIA TYPES
 .TP
 \fBMediaType\fP=\fImediatype\fP
 .PP
-This is printer type specific.  The option names are case sensitive.  A full
-list of available media types may be found in
-.BR gutenprint\-mediatypes (7).
+This is printer type specific.  The option names are case sensitive.
 .SH MEDIA SOURCES
 .TP
 \fBMediaSource\fP=\fImediasource\fP
 .PP
-This is printer type specific.  The option names are case sensitive.  A full
-list of available media sources may be found in
-.BR gutenprint\-mediasources (7).
+This is printer type specific.  The option names are case sensitive.
 .PP
 .SH MEDIA SIZES
 .TP
@@ -118,15 +105,10 @@ where \fIx\fP and \fIy\fP are the width and height of the paper respectively,
 in points (1/72").  Note this is a normal gs option, \fInot\fP an IJS option.
 .PP
 This is printer-specific; we cannot list the correct values for each printer
-here.  The option names are case-sensitive.  Two names are listed for each
-resolution; the first (short) name is the value that must be passed to
-\-sPAPERSIZE, and the second (long) name is descriptive.  This option does not
-set GhostScript up to use a paper size other than the default; it only tells
-the driver to set up the printer for a different paper size.  The default paper
+here.  The option names are case-sensitive.  This option does not set
+GhostScript up to use a paper size other than the default; it only tells the
+driver to set up the printer for a different paper size.  The default paper
 size is "Letter".
-.PP
-A complete list of available paper sizes may be found in
-.BR gutenprint\-mediasizes (7).
 .SH COLOR BALANCING
 .TP
 \fBCyan\fP=\fIval\fP
@@ -144,15 +126,9 @@ A complete list of available paper sizes may be found in
 \fBDensity\fP=\fIval\fP
 .TP
 \fBSaturation\fP=\fIval\fP
-.PP
-A full description of the color balancing options, including the allowed ranges
-of values, may be found in
-.BR gutenprint\-color (7).
 .SH DITHERING ALGORITHMS
 .TP
 \fBDitherAlgorithm\fP=\fIalgorithm\fP
-Possible values for \fIalgorithm\fP may be found in
-.BR gutenprint\-dithers (7).
 .SH OUTPUT TYPE
 .TP
 \fB\-sProcessColorModel\fP=\fIDeviceGray\fP \fB\-dBitsPerSample\fP=1
@@ -303,15 +279,7 @@ Robert Krawitz.  Originally written by Russell Lang.
 This manual page was written by Robert Krawitz (rlk@alum.mit.edu) and Roger
 Leigh (rleigh@debian.org).
 .SH SEE ALSO
-.BR gs (1),
-.BR gutenprint\-color (7),
-.BR gutenprint\-dithers (7),
-.BR gutenprint\-inktypes (7),
-.BR gutenprint\-mediasizes (7),
-.BR gutenprint\-mediasources (7),
-.BR gutenprint\-mediatypes (7),
-.BR gutenprint\-models (7),
-.BR gutenprint\-resolutions (7).
+.BR gs (1)
 .\"#
 .\"# The following sets edit modes for GNU EMACS
 .\"# Local Variables:
