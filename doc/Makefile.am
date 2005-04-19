@@ -45,6 +45,7 @@ gutenprintui2: gutenprintui2-stamp
 gutenprintui2-stamp: gutenprintui2.dox $(top_srcdir)/configure
 	$(RM) -rf gutenprintui2/html
 	$(DOXYGEN) gutenprintui2.dox
+	touch $@
 
 gutenprint: gutenprint-stamp
 gutenprint-stamp: gutenprint.dox $(top_srcdir)/configure
