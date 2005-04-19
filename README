@@ -818,23 +818,6 @@ PACKAGING
       An alternative option is to install pregenerated PPD files,
       which may be created with foomatic-compiledb.
 
-    * We recommend that you replace the Print plugin bundled with the
-      Gimp (any 1.2 version) with the Gimp Print plugin in this
-      distribution.  There are various ways to do this; you can run
-      'make gimp-dist' from top level and untar the resulting tarball
-      into the Gimp source directory prior to building the Gimp, or
-      you can install the plugin (src/gimp/print) over an existing
-      Gimp Print plugin.  The plugin in the Gimp 1.2 tree is based on
-      the older Gimp-Print 4.0 source base; 4.2 supports more printers
-      with better quality, and has more features than 4.0.
-
-      We are working with the GIMP development team to replace the
-      current Print plugin (which contains the entire source required
-      to build the driver) with a smaller base containing just the
-      plugin itself.  This will allow compatibility with at least all
-      4.2-based releases of Gimp-Print, allowing upgrading the plugin
-      by simply upgrading the libgutenprint library.
-
     * Please read the release notes carefully!
 
     * Distributors (UNIX vendors and Linux distributors) should

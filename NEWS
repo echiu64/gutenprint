@@ -213,7 +213,8 @@ These release notes contain the following sections:
      fit (not cropped).
 
   7) Various improvements have been made to escputil, the command-line
-     Epson inkjet printer management utility:
+     Epson inkjet printer management utility.  The changes are quite
+     extensive, and we would like feedback on their operation.
 
      * A new extended ink information command has been added.  This
        command, which is supported on printers with separate
@@ -252,9 +253,22 @@ These release notes contain the following sections:
      releases of Gutenprint on the same system.
 
   10) Preliminary support for Epson Colorio PM-G800 and PM-G820
-     (Japan-market printers using 1.5 pl 6-color inks).  Also added
-     other recent Japan-market printers assumed to be programmatically
-     identical to existing printers.
+     (Japan-market printers using 1.5 pl drops with traditional photo
+     inks).  Also added other recent Japan-market printers assumed to
+     be programmatically identical to existing printers.
+
+  11) The old man pages, and src/ghost/README, have been withdrawn.
+     These pages, and the Ghostscript README file, were based on the
+     Gimp-Print 4.2 options, which were much less fluid than the
+     current option system.  It is not practical to keep them up to
+     date in any meaningful way.  Our recommendation is that people
+     use either the native CUPS driver or Foomatic to manage options
+     rather than attempt to create and manage printer queues by hand.
+
+  12) The source browser in the documentation package has been
+     removed.  This information, which consists of color-coded source,
+     is of little interest to the vast majority of users and consumes
+     a significant amount of space in the installation.
 
 
 ================================================================

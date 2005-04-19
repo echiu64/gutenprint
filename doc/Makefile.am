@@ -42,9 +42,11 @@ endif
 
 # Rerun doxygen whenever autogen is run
 gutenprint: gutenprint-stamp
-gutenprint-stamp: gutenprint.dox $(top_srcdir)/configure
+gutenprint-stamp: gutenprint.dox gutenprintui2.dox $(top_srcdir)/configure
 	$(RM) -rf gutenprint/html
+	$(RM) -rf gutenprintui2/html
 	$(DOXYGEN) gutenprint.dox
+	$(DOXYGEN) gutenprintui2.dox
 	touch $@
 
 docs: gutenprint-stamp
@@ -77,7 +79,9 @@ EXTRA_DIST = \
 	FAQ.html \
 	README.maintaining \
 	gutenprint.dox.in \
+	gutenprintui2.dox.in \
 	gutenprint \
+	gutenprintui2 \
 	gutenprint-stamp
 
 .PHONY: html ps pdf docs
