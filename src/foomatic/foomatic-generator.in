@@ -510,19 +510,35 @@ for $drivertype (@drivertypes) {
 
 	my $lowercaseshortname = lc($fooopt);
 	my $subopt = $stpopt;
-	if ($subopt =~ /^STP/) {
+
+	# The maximum length of the short name of an option is 31
+	# characters to be accepted in a PPD. The maximum length of a
+	# main keyword in a PPD is 40 characters, with
+	# "FoomaticRIPDefault" having 18, a short name of a numerical
+	# option (only those have "FoomaticRIPDefault" entries) is 22.
+
+	# We do not touch options whose names are short enough.
+
+	# As this problem did not occur with Gimp Print 4.2.7, none of
+	# the option names modified here already existed in
+	# Gimp-Print, all options concerned are new Gutenprint
+	# options. We also do not modify the parameters to be inserted
+	# in the GhostScript command line, so the Gutenprint library
+	# or the IJS server do not need to be modified.
+
+	my $maxlen = ($type eq "enum" ? 31 : 22);
+	my $shortopt;
+	if (length($subopt) > $maxlen) {
 	    my $nostpopt = $stpopt;
 	    $nostpopt =~ s/^STP_//;
-	    my $stropt = sprintf("%03d", $opt_index);
-	    $subopt = "STP_OPT_$stropt";
-	    $option_remap .= "STP_OPT_REMAP_$stropt=$nostpopt,";
-	    $generalsubs->{'REMAP'} = $option_remap;
-	    $opt_index++;
+	    $shortopt = 'STP_' . abbreviate($nostpopt, $maxlen - 4);
+	} else {
+	    $shortopt = $subopt;
 	}
 	if ($tmpl !~ /^$fooopt/) {
 	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
 	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$shortname}!g;
-	    $template =~ s!\@\@SHORTNAME\@\@!$subopt!g;
+	    $template =~ s!\@\@SHORTNAME\@\@!$shortopt!g;
 	    $template =~ s!\@\@ORDER\@\@!$order!g;
 	    #$order += 10;
 	    $template =~ s!\@\@SPOT\@\@!B!g;
@@ -607,6 +623,89 @@ for $drivertype (@drivertypes) {
 
 # member( $a, @b ) returns 1 if $a is in @b, 0 otherwise.
 sub member { my $e = shift; foreach (@_) { $e eq $_ and return 1 } 0 };
+
+sub abbreviate {
+    # Abbreviate a string to the length $maxlen, leaving it as 
+    # human-readable as possible
+    my ($string, $maxlen) = @_;
+    my $abbreviations =
+    {
+	'light' => 'Lt',
+	'lt' => 'L',
+	'dark' => 'Dk',
+	'dk' => 'D',
+	'cyan' => 'Cyn',
+	'cyn' => 'Cn',
+	'cn' => 'C',
+	'magenta' => 'Mag',
+	'mag' => 'Mg',
+	'mg' => 'M',
+	'yellow' => 'Yel',
+	'yel' => 'Yl',
+	'yl' => 'Y',
+	'black' => 'Blk',
+	'blk' => 'Bk',
+	'bk' => 'K',
+	'red' => 'Rd',
+	'rd' => 'R',
+	'blue' => 'Blu',
+	'blu' => 'Bl',
+	'bl' => 'B',
+	'transition' => 'Trans',
+	'trans' => 'Tr',
+	'enable' => 'Enbl',
+	'enbl' => 'En',
+	'disable' => 'Disbl',
+	'disbl' => 'Dis',
+    };
+    if (length($string) > $maxlen) {
+	# Split the string into words, cutting always at the
+	# right edge of the word. Cut also at a capital in the
+	# middle of the word (ex: "S" in "PostScript").
+	my @words =
+	    split(/(?<=[a-zA-Z])(?![a-zA-Z])|(?<=[a-z])(?=[A-Z])/,
+		  $string);
+	while (1) {
+	    my $nothingshortened = 1;
+	    # Go through all words
+	    for my $word (@words) {
+		# Do not abbreviate words of less than 2 letters
+		next if ($word !~ /[a-zA-Z]{2,}$/);
+		# if the word matches one of the common strings, substitute
+		# it, otherwise remove the last letter
+		my $realword = lc($word);
+		$realword =~ s/[^a-z]//g;
+		if (my $replace = $abbreviations->{$realword}) {
+		    $word =~ s/$realword/$replace/i or chop($word);
+		} else {
+		    chop($word);
+		}
+		$nothingshortened = 0;
+		# Build the shortened string ...
+		$string = join('', @words);
+		$string =~ s/\s+//g;
+		last if (length($string) <= $maxlen);
+	    }
+	    $string = join('', @words);
+	    $string =~ s/\s+//g;
+	    last if ((length($string) <= $maxlen) or
+		     $nothingshortened);
+	}
+	while (length($string) > $maxlen) {
+	    # String still too long? Remove last words
+	    $string =~
+		s/[^a-zA-Z0-9]+[a-zA-Z0-9]*$// || last;
+	    $string =~ s/\s+//g;
+	}
+	if (length($string) > $maxlen) {
+	    # If nothing else helps ...
+	    $string =~ s/\s+//g;
+	    $string = substr($string, 0, $maxlen);
+	}
+    }
+
+    return $string;
+}
 
 sub get_ev_shortname {
     my ($val) = @_;
@@ -1003,7 +1102,7 @@ sub compute_resolutions {
 
 	    # Default?
 	    $defval = get_ev_key("res-$x-$y", $drvname)
-		if ($qual eq $defaults{$stpname}{'Resolution'});
+		if ($qual eq $defaults{$stpname}{'STP_Resolution'});
 
 	    # Note that this resolution value exists
 	    $resolutions{"$x $y"} = { 'x' => $x,
@@ -1407,6 +1506,7 @@ sub getprintoutmode {
 		    $draftminres = $respersquareinch;
 		    $draftlowestqualstr = $qualstr;
 		    $modeinfo->{'Draft'} = {
+			'stpres' => $quality,
 			'quality' => $qualitysetting,
 			'image' => $imagesetting,
 			'xres' => $xres,
@@ -1470,6 +1570,7 @@ sub getprintoutmode {
 		    $normaluni = ($qualstr =~ /uni/);
 		    $normallowestqualstr = $qualstr;
 		    $modeinfo->{'Normal'} = {
+			'stpres' => $quality,
 			'quality' => $qualitysetting,
 			'image' => $imagesetting,
 			'xres' => $xres,
@@ -1534,6 +1635,7 @@ sub getprintoutmode {
 		    $highmaxres = $respersquareinch;
 		    $highbestqualstr = $qualstr;
 		    $modeinfo->{'High'} = {
+			'stpres' => $quality,
 			'quality' => $qualitysetting,
 			'image' => $imagesetting,
 			'xres' => $xres,
@@ -1595,6 +1697,7 @@ sub getprintoutmode {
 		    $veryhighmaxres = $respersquareinch;
 		    $veryhighbestqualstr = $qualstr;
 		    $modeinfo->{'VeryHigh'} = {
+			'stpres' => $quality,
 			'quality' => $qualitysetting,
 			'image' => $imagesetting,
 			'xres' => $xres,
@@ -1661,6 +1764,7 @@ sub getprintoutmode {
 		    $photomaxres = $respersquareinch;
 		    $photobestqualstr = $qualstr;
 		    $modeinfo->{'Photo'} = {
+			'stpres' => $quality,
 			'quality' => $qualitysetting,
 			'image' => $imagesetting,
 			'xres' => $xres,
@@ -1671,7 +1775,7 @@ sub getprintoutmode {
 	}
 
 	# We must have a "Normal" mode for every printer.
-	if (!defined($modeinfo->{'Normal'}{'quality'})) {
+	if (!defined($modeinfo->{'Normal'}{'stpres'})) {
 	    die "No 'Normal' mode for $stpprn!\n";
 	}
 
@@ -1680,12 +1784,13 @@ sub getprintoutmode {
 	for my $m (keys(%{$modeinfo})) {
 	    # If we didn't find anything for a certain mode, skip this
 	    # mode
-	    next if (!defined($modeinfo->{$m}{'quality'}));
+	    next if (!defined($modeinfo->{$m}{'stpres'}));
 	    my $modestr =
 		(defined($stpdata{$stpprn}{'STP_ImageType'}) ?
 		 "STP_ImageType=$modeinfo->{$m}{'image'} " : "") .
 		(defined($stpdata{$stpprn}{'STP_Quality'}) ?
-		 "STP_Quality=$modeinfo->{$m}{'quality'} " : "") .
+		 "STP_Quality=$modeinfo->{$m}{'quality'} " : 
+		 "STP_Resolution=$modeinfo->{$m}{'stpres'} ") .
 		"Resolution=$modeinfo->{$m}{'xres'}x" .
 		"$modeinfo->{$m}{'yres'}dpi";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) {
