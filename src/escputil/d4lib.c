@@ -393,14 +393,15 @@ int readAnswer(int fd, unsigned char *buf, int len)
       SET_TIMER(ti,oti, d4RdTimeout);
       rd = read(fd, buf+total, len-total);
       if (debugD4)
-	fprintf(stderr, "read: %i\n", rd);
+	fprintf(stderr, "read: %i %s\n", rd,
+		rd < 0 && errno != 0 ?strerror(errno) : "");
       RESET_TIMER(ti,oti);
       if ( rd <= 0 )
       {
          gettimeofday(&end, NULL);
          dt  = (end.tv_sec  - beg.tv_sec) * 1000;
          dt += (end.tv_usec - beg.tv_usec) / 1000;
-         if ( dt > d4RdTimeout || errno )
+         if ( dt > d4RdTimeout * 2 )
          {
             if ( debugD4 )
                fprintf(stderr,"Timeout 1 at readAnswer() rcv %d bytes\n",total);
@@ -408,7 +409,7 @@ int readAnswer(int fd, unsigned char *buf, int len)
             break;
          }
          count++;
-         if ( count >= 20 )
+         if ( count >= 100 )
          {
              timeoutGot = 1;
              if ( rd == 0 )
@@ -416,7 +417,6 @@ int readAnswer(int fd, unsigned char *buf, int len)
              break;
          }
          errno = 0;
-         continue;
       } else {
          total += rd;
          if ( total > 3 )
@@ -429,7 +429,7 @@ int readAnswer(int fd, unsigned char *buf, int len)
 	    len = (len > sizeof(buf))?sizeof(buf) - 1:len;
          }
       }
-      usleep(200000);
+      usleep(20000);
    }
    
    if ( debugD4 )
@@ -452,6 +452,39 @@ int readAnswer(int fd, unsigned char *buf, int len)
       return -1;
    }
    return total;
+}
+
+void flushData(int fd)
+{
+   int rd    = 0;
+   struct timeval beg;
+   struct itimerval ti, oti;
+   char buf[1024];
+   int len = 1023;
+   /* wait a little bit before reading an answer */
+   usleep(20000);
+
+   /* for error handling in case of timeout */
+   timeoutGot = 0;
+
+   /* set errno to 0 in order to get correct informations */
+   /* in case of error                                    */
+   errno = 0;
+
+   gettimeofday(&beg, NULL);
+
+   if (debugD4)
+     fprintf(stderr, "flush data: length: %i\n", len);
+   do
+     {
+       usleep(200000);
+       SET_TIMER(ti,oti, d4RdTimeout);
+       rd = read(fd, buf, len);
+       if (debugD4)
+	 fprintf(stderr, "flush: read: %i %s\n", rd,
+		 rd < 0 && errno != 0 ?strerror(errno) : "");
+       RESET_TIMER(ti,oti);
+     } while ( rd > 0 || (rd < 0 && errno == EAGAIN));
 }
 
 /*******************************************************************/

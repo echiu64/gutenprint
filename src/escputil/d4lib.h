@@ -35,6 +35,7 @@ extern int askForCredit(int fd, unsigned char socketID, int *sndSz, int *rcvSz);
 extern int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len, int eoj);
 extern int readData(int fd, unsigned char socketID, unsigned char *buf, int len);
 extern int readAnswer(int fd, unsigned char *buf, int len);
+extern void flushData(int fd);
 extern void setDebug(int debug);
 
 extern int d4WrTimeout;
