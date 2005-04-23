@@ -875,6 +875,8 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
   const unsigned short *output_cache = NULL;
   const unsigned short *input = cg->split_input;
   unsigned short *output = cg->output_data;
+  for (i = 0; i < cg->total_channels; i++)
+    nz[i] = 0;
   for (i = 0; i < cg->width; i++)
     {
       int zero_ptr = 0;
