@@ -41,7 +41,7 @@ set_args() {
     while true ; do
 	case "$1" in
 	    -h*|--h*) usage ;;
-	    -v|--valgrind) valgrind=`expr $valgrind + 1` ;;
+	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=`expr $valgrind + 1` ;;
 	    -c|--cachegrind) valopts='--skin=cachegrind'; valgrind=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -p|--parameter) shift; set_opt "$1" ;;
