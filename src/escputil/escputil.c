@@ -566,9 +566,7 @@ add_resets(int count)
 static int 
 init_packet(int fd, int force)
 {
-  unsigned char buf[1024];
   int status;
-  int oldTimeOut;
   
   if (!force)
     {
@@ -657,7 +655,7 @@ initialize_printer(int quiet)
       alarm_interrupt = 0;
       signal(SIGALRM, alarm_handler);
       alarm(5);
-      status = write(fd, init_str, sizeof(init_str));
+      status = SafeWrite(fd, init_str, sizeof(init_str));
       alarm(0);
       signal(SIGALRM, SIG_DFL);
       if (status != sizeof(init_str) && (status != -1 || !alarm_interrupt))
@@ -675,9 +673,15 @@ initialize_printer(int quiet)
 	{
 	  STP_DEBUG(fprintf(stderr,
 			    "Reading response of old init command ....\n"));
-	  status = read_from_printer(fd, (char*)buf, 1024, 0);
+	  status = read_from_printer(fd, (char*)buf, 1024, 1);
 	}
-      tries++;
+      if (status > 0 && strncmp(buf, "@BDC ST", 7) == 0)
+	{
+	  STP_DEBUG(fprintf(stderr, "Found status: %s\n", buf));
+	  status = 0;
+	}
+      else
+	tries++;
     } while (status <= 0);
 
   if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
@@ -698,22 +702,19 @@ initialize_printer(int quiet)
       isnew = 1;
       if (!forced_packet_mode)
 	{
-	  usleep(100000);
 	  STP_DEBUG(fprintf(stderr, "Exit packet mode....\n"));
-	  if (write(fd, exit_packet_cmd, sizeof(exit_packet_cmd)) < sizeof(exit_packet_cmd))
+	  status = SafeWrite(fd, exit_packet_cmd, sizeof(exit_packet_cmd));
+	  if (status < sizeof(exit_packet_cmd))
 	    {
 	      fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
 		      strerror(errno));
 	      exit(1);
 	    }
-	  usleep(100000);
 	  flushData(fd);
-	  usleep(100000);
 
 	  isnew = !init_packet(fd, 0);
 	  if (isnew) 
 	    packet_initialized = 1;
-	  usleep(100000);
 	}
 
       credit = askForCredit(fd, socket_id, &send_size, &receive_size);
@@ -858,7 +859,7 @@ get_printer(int quiet)
     }
 }
 
-const char *colors_new[] =
+static const char *colors_new[] =
   {
     N_("Black"),
     N_("Matte Black"),
@@ -874,13 +875,9 @@ const char *colors_new[] =
     N_("Red"),
     N_("Blue"),
     N_("Gloss Optimizer"),
-    N_("unknown"),
-    N_("unknown"),
-    N_("unknown"),
-    N_("unknown"),
-    N_("unknown"),
-    0
   };
+
+static int color_count = sizeof(colors_new) / sizeof(const char *);
 
 void
 do_ink_level(void)
@@ -953,29 +950,37 @@ do_ink_level(void)
               if ( buf[7] == '2' ) 
                 {
                   /* new binary format ! */
-                  ind = strchr(buf, 0x0);
-                  ind++;
-                  ind = strchr(ind, 0x0f);
+                  i = 10;
+                  while (buf[i] != 0x0f && i < status)
+                    i += buf[i + 1] + 2;
+                  ind = buf + i;
                   i = 4;
                   col_number = 0;
                   printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
                   while (i < ind[1] + 3) 
                     {
-                      if (ind[i] == 0) {
-                        /* black */
-                        switch (col_number) 
-                          {
-                          case 3:
-                            printf("%20s    %3d\n", _(colors_new[1]), ind[i + 1]);
-                            break;
-                          case 4:
-                            printf("%20s    %3d\n", _(colors_new[2]), ind[i + 1]);
-                            break;
-                          }
-                      } 
+                      if (ind[i] == 0)
+			{
+			  /* black */
+			  switch (col_number) 
+			    {
+			    case 0:
+			      printf("%20s    %3d\n", _(colors_new[0]), ind[i + 1]);
+			      break;
+			    case 3:
+			      printf("%20s    %3d\n", _(colors_new[1]), ind[i + 1]);
+			      break;
+			    case 4:
+			      printf("%20s    %3d\n", _(colors_new[2]), ind[i + 1]);
+			      break;
+			    }
+			} 
                       else 
                         {
-                          printf("%20s    %3d\n", _(colors_new[ind[i] + 2]), ind[i + 1]);
+			  if (ind[i] + 2 < color_count)
+			    printf("%20s    %3d\n", _(colors_new[ind[i] + 2]), ind[i + 1]);
+			  else
+			    printf("%18s%2x    %3d\n", _("Unknown"), ind[i] + 2, ind[i + 1]);
                         }
                       col_number++;
                       i+=3;
@@ -1021,7 +1026,7 @@ do_ink_level(void)
           initialize_print_cmd();
           do_remote_cmd("ST", 2, 0, 1);
           add_resets(2);
-          if (write(fd, printer_cmd, bufpos) < bufpos)
+          if (SafeWrite(fd, printer_cmd, bufpos) < bufpos)
             {
               fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
                       strerror(errno));
@@ -1235,7 +1240,7 @@ do_status(void)
   bufpos = 0;
   initialize_print_cmd();
   do_remote_cmd("ST", 2, 0, 1);
-  if (write(fd, printer_cmd, bufpos) < bufpos)
+  if (SafeWrite(fd, printer_cmd, bufpos) < bufpos)
     {
       fprintf(stderr, _("Cannot write to %s: %s\n"),
 	      raw_device, strerror(errno));
@@ -1250,7 +1255,9 @@ do_status(void)
   initialize_print_cmd();
   do_remote_cmd("ST", 2, 0, 0);
   add_resets(2);
-  (void) write(fd, printer_cmd, bufpos);
+  (void) SafeWrite(fd, printer_cmd, bufpos);
+  /* Purge any remaining data from the printer */
+  flushData(fd);
   (void) close(fd);
   exit(0);
 }

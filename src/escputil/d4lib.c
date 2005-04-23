@@ -177,6 +177,21 @@ static errorMessage_t errorMessage[] =
                                 sig = signal(SIGALRM, sigAlarm); \
                               }
 
+int SafeWrite(int fd, const void *data, int len)
+{
+  int status;
+  int retries=3;
+  do
+    {
+      status = write(fd, data, len);
+      if(status < len)
+	usleep(100000);
+      retries--;
+    }
+  while ((status < len) && (retries > 0));
+  return(status);
+}
+
 /*******************************************************************/
 /* Function printHexValues                                         */
 /*                                                                 */
@@ -325,7 +340,7 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
    while ( i < len )
    {
       SET_TIMER(ti,oti,d4WrTimeout);         
-      w = write(fd, cmd+i,len-i);
+      w = SafeWrite(fd, cmd+i,len-i);
       RESET_TIMER(ti,oti);
       if ( w < 0 )
       {
@@ -477,7 +492,7 @@ void flushData(int fd)
      fprintf(stderr, "flush data: length: %i\n", len);
    do
      {
-       usleep(200000);
+       usleep(50000);
        SET_TIMER(ti,oti, d4RdTimeout);
        rd = read(fd, buf, len);
        if (debugD4)
@@ -1021,8 +1036,7 @@ int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len,
    int wr = 0;
    int ret = 0;
    struct  itimerval ti, oti;
-   struct timeval beg, end;
-   long dt;
+   struct timeval beg;
    static unsigned char *buffer = NULL;
    static int bLen   = 0;
    if ( debugD4 )
@@ -1053,7 +1067,7 @@ int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len,
    while( ret > -1 && wr != len )
    {
       SET_TIMER(ti,oti,d4WrTimeout);
-      ret = write(fd, buffer+wr, len-wr );
+      ret = SafeWrite(fd, buffer+wr, len-wr );
       RESET_TIMER(ti,oti);
       if ( ret == -1 )
       {

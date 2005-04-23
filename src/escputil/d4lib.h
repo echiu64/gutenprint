@@ -31,6 +31,7 @@ extern int CreditRequest(int fd, unsigned char socketID);
 extern int Credit(int fd, unsigned char socketID, int credit);
 
 /* convenience function */
+extern int SafeWrite(int fd, const void *data, int len);
 extern int askForCredit(int fd, unsigned char socketID, int *sndSz, int *rcvSz);
 extern int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len, int eoj);
 extern int readData(int fd, unsigned char socketID, unsigned char *buf, int len);
