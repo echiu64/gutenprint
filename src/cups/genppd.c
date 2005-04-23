@@ -1111,7 +1111,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   * Do we support color?
   */
 
-  gzputs(fp, "*OpenUI *ColorModel: PickOne\n");
+  gzputs(fp, "*OpenUI *ColorModel/Color Model: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
 
   if (printer_is_color)
@@ -1122,12 +1122,12 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzprintf(fp, "*ColorModel Gray/Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
-	       "/cupsBitsPerColor 8>>setpagedevice\"\n",
+	       ">>setpagedevice\"\n",
            CUPS_CSPACE_W, CUPS_ORDER_CHUNKED);
   gzprintf(fp, "*ColorModel Black/Inverted Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
-	       "/cupsBitsPerColor 8>>setpagedevice\"\n",
+	       ">>setpagedevice\"\n",
            CUPS_CSPACE_K, CUPS_ORDER_CHUNKED);
 
   if (printer_is_color)
@@ -1135,26 +1135,39 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     gzprintf(fp, "*ColorModel RGB/RGB Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
-		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+		 ">>setpagedevice\"\n",
              CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED);
     gzprintf(fp, "*ColorModel CMY/CMY Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
-		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+		 ">>setpagedevice\"\n",
              CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED);
     gzprintf(fp, "*ColorModel CMYK/CMYK:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
-		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+		 ">>setpagedevice\"\n",
              CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED);
     gzprintf(fp, "*ColorModel KCMY/KCMY:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
-		 "/cupsBitsPerColor 8>>setpagedevice\"\n",
+		 ">>setpagedevice\"\n",
              CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED);
   }
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
+
+  /*
+   * 8 or 16 bit color (16 bit is slower)
+   */
+  gzputs(fp, "*OpenUI *StpColorPrecision/Color Precision: PickOne\n");
+  gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
+  gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
+  gzputs(fp, "*StpColorPrecision Normal/Normal:\t\"<<"
+	 "/cupsBitsPerColor 8>>setpagedevice\"\n");
+  gzputs(fp, "*StpColorPrecision Best/Best:\t\"<<"
+	 "/cupsBitsPerColor 8"
+	 "/cupsPreferredBitsPerColor 16>>setpagedevice\"\n");
+  gzputs(fp, "*CloseUI: *StpColorPrecision\n\n");
 
  /*
   * Media types...

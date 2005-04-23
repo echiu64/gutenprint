@@ -55,6 +55,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/times.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -327,7 +328,10 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   stp_set_outdata(v, stdout);
   stp_set_errdata(v, stderr);
 
-  set_string_parameter(v, "ChannelBitDepth", "8");
+  if (cups->header.cupsBitsPerColor == 16)
+    set_string_parameter(v, "ChannelBitDepth", "16");
+  else
+    set_string_parameter(v, "ChannelBitDepth", "8");
   switch (cups->header.cupsColorSpace)
     {
     case CUPS_CSPACE_W :
@@ -573,6 +577,11 @@ main(int  argc,				/* I - Number of command-line arguments */
   int			initialized_job = 0;
   const char            *version_id;
   const char            *release_version_id;
+  struct tms		tms;
+  clock_t		clk;
+  long			clocks_per_sec;
+  struct timeval	t1, t2;
+  struct timezone	tz;
 
  /*
   * Initialise libgutenprint
@@ -580,6 +589,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   theImage.rep = &cups;
 
+  (void) gettimeofday(&t1, &tz);
   stp_init();
   version_id = stp_get_version();
   release_version_id = stp_get_release_version();
@@ -797,16 +807,32 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_vars_destroy(v);
     }
   cupsRasterClose(cups.ras);
+  clk = times(&tms);
+  (void) gettimeofday(&t2, &tz);
+  clocks_per_sec = sysconf(_SC_CLK_TCK);
   fprintf(stderr, "DEBUG: Gutenprint printed total %.0f bytes\n",
 	  total_bytes_printed);
+  fprintf(stderr, "DEBUG: Gutenprint used %.3f seconds user, %.3f seconds system, %.3f seconds elapsed\n",
+	  (double) tms.tms_utime / clocks_per_sec,
+	  (double) tms.tms_stime / clocks_per_sec,
+	  (double) (t2.tv_sec - t1.tv_sec) +
+	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
   fputs("INFO: Gutenprint Ready to print.\n", stderr);
   if (fd != 0)
     close(fd);
   return 0;
 
 cups_abort:
+  clk = times(&tms);
+  (void) gettimeofday(&t2, &tz);
+  clocks_per_sec = sysconf(_SC_CLK_TCK);
   fprintf(stderr, "DEBUG: Gutenprint printed total %.0f bytes\n",
 	  total_bytes_printed);
+  fprintf(stderr, "DEBUG: Gutenprint used %.3f seconds user, %.3f seconds system, %.3f seconds elapsed\n",
+	  (double) tms.tms_utime / clocks_per_sec,
+	  (double) tms.tms_stime / clocks_per_sec,
+	  (double) (t2.tv_sec - t1.tv_sec) +
+	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
   fputs("ERROR: Gutenprint No pages found!\n", stderr);
   fputs("ERROR: Gutenprint Invalid printer settings!\n", stderr);
   stp_end_job(v, &theImage);
