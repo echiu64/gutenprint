@@ -200,12 +200,19 @@ int bufpos = 0;
 int isnew = 0;
 int print_short_name = 0;
 const stp_printer_t *the_printer_t = NULL;
+int printer_was_in_packet_mode = 0;
 
 static int stp_debug = 0;
 #define STP_DEBUG(x) do { if (stp_debug || getenv("STP_DEBUG")) x; } while (0)
 static int send_size = 0x0200;
 static int receive_size = 0x0200;
 int socket_id = -1;
+
+typedef enum
+  {
+    CMD_INK_LEVEL,
+    CMD_STATUS
+  } status_cmd_t;
 
 static void
 print_models(void)
@@ -231,19 +238,21 @@ do_help(int code)
 }
 
 static void
-exit_packet_mode_old(void)
+exit_packet_mode_old(int do_init)
 {
   static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL     \n\033@";
   memcpy(printer_cmd + bufpos, hdr, sizeof(hdr) - 1); /* DON'T include null! */
   bufpos += sizeof(hdr) - 1;
+  if (!do_init)
+    bufpos -= 2;
 }
 
 static void
-initialize_print_cmd(void)
+initialize_print_cmd(int do_init)
 {
   bufpos = 0;
   if (isnew)
-    exit_packet_mode_old();
+    exit_packet_mode_old(do_init);
 }
 
 int
@@ -352,7 +361,7 @@ main(int argc, char **argv)
 #endif
       exit(1);
     }
-  initialize_print_cmd();
+  initialize_print_cmd(1);
   switch(operation)
     {
     case 'c':
@@ -469,7 +478,7 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
   struct pollfd ufds;
 #endif
   int status;
-  int retry = 5;
+  int retry = 100;
 #ifdef HAVE_FCNTL_H
   fcntl(fd, F_SETFL,
 	O_NONBLOCK | fcntl(fd, F_GETFL));
@@ -488,7 +497,7 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
       status = read(fd, buf, bufsize - 1);
       if (status == 0 || (status < 0 && errno == EAGAIN))
 	{
-	  sleep(1);
+	  usleep(20000);
 	  status = 0; /* not an error (read would have blocked) */
 	}
     }
@@ -563,15 +572,15 @@ add_resets(int count)
     }
 }
 
-static int 
+static int
 init_packet(int fd, int force)
 {
   int status;
-  
+
   if (!force)
     {
       STP_DEBUG(fprintf(stderr, "Flushing data...\n"));
-      flushData(fd);
+      flushData(fd, (unsigned char) -1);
     }
 
   STP_DEBUG(fprintf(stderr, "EnterIEEE...\n"));
@@ -584,7 +593,7 @@ init_packet(int fd, int force)
     {
       return 1;
     }
-  
+
   STP_DEBUG(fprintf(stderr, "GetSocket...\n"));
   socket_id = GetSocketID(fd, "EPSON-CTRL");
   if (!socket_id)
@@ -603,10 +612,10 @@ init_packet(int fd, int force)
       return 1;
       break;
     }
-  
+
   status = 1;
   STP_DEBUG(fprintf(stderr, "Flushing data...\n"));
-  flushData(fd);
+  flushData(fd, socket_id);
   return 0;
 }
 
@@ -635,7 +644,6 @@ initialize_printer(int quiet)
   char* spos;
   unsigned char buf[1024];
   const char init_str[] = "\033\1@EJL ID\r\n";
-  const char exit_packet_cmd[] = "\0\0\0\033\1@EJL 1284.4\n@EJL     \n";
 
   quiet = 0;
 
@@ -647,105 +655,69 @@ initialize_printer(int quiet)
       exit(1);
     }
 
-  STP_DEBUG(fprintf(stderr, "Flushing printer data....\n"));
-  flushData(fd);
-
-  do 
+  do
     {
       alarm_interrupt = 0;
       signal(SIGALRM, alarm_handler);
       alarm(5);
-      status = SafeWrite(fd, init_str, sizeof(init_str));
+      status = SafeWrite(fd, init_str, sizeof(init_str) - 1);
       alarm(0);
       signal(SIGALRM, SIG_DFL);
-      if (status != sizeof(init_str) && (status != -1 || !alarm_interrupt))
+      STP_DEBUG(fprintf(stderr, "status %d alarm %d\n", status, alarm_interrupt));
+      if (status != sizeof(init_str) - 1 && (status != -1 || !alarm_interrupt))
         {
           fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
                   strerror(errno));
           exit(1);
         }
-      if (alarm_interrupt || tries > 2)
+      STP_DEBUG(fprintf(stderr, "Try %d alarm %d\n", tries, alarm_interrupt));
+      STP_DEBUG(fprintf(stderr, "Reading response of old init command ...\n"));
+      status = read_from_printer(fd, (char*)buf, 1024, 1);
+      if (status <= 0 && tries > 0)
 	{
 	  forced_packet_mode = !init_packet(fd, 1);
 	  status = 1;
 	}
-      else
+      if (status > 0 && !strstr((char *) buf, "@EJL ID") && tries < 1)
 	{
-	  STP_DEBUG(fprintf(stderr,
-			    "Reading response of old init command ....\n"));
-	  status = read_from_printer(fd, (char*)buf, 1024, 1);
-	}
-      if (status > 0 && strncmp(buf, "@BDC ST", 7) == 0)
-	{
-	  STP_DEBUG(fprintf(stderr, "Found status: %s\n", buf));
+	  STP_DEBUG(fprintf(stderr, "Found bad data: %s\n", buf));
+	  /*
+	   * We know the printer's not dead.  Try to turn off status
+	   * and try again.
+	   */
+	  initialize_print_cmd(1);
+	  do_remote_cmd("ST", 2, 0, 0);
+	  add_resets(2);
+	  (void) SafeWrite(fd, printer_cmd, bufpos);
 	  status = 0;
 	}
-      else
-	tries++;
+      tries++;
     } while (status <= 0);
 
   if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
     {
       STP_DEBUG(fprintf(stderr, "Printer in packet mode....\n"));
-
-      close(fd);
-
-      fd = open(raw_device, O_RDWR, 0666);
-
-      if (fd == -1)
-        {
-          fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-                  strerror(errno));
-          exit(1);
-        }
-
+      packet_initialized = 1;
       isnew = 1;
-      if (!forced_packet_mode)
-	{
-	  STP_DEBUG(fprintf(stderr, "Exit packet mode....\n"));
-	  status = SafeWrite(fd, exit_packet_cmd, sizeof(exit_packet_cmd));
-	  if (status < sizeof(exit_packet_cmd))
-	    {
-	      fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
-		      strerror(errno));
-	      exit(1);
-	    }
-	  flushData(fd);
-
-	  isnew = !init_packet(fd, 0);
-	  if (isnew) 
-	    packet_initialized = 1;
-	}
 
       credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-      if ( credit > -1 ) 
+      if ( credit > -1 )
         {
           /* request status command */
-          if ( (status = writeData(fd, socket_id, (const unsigned char*)"di\1\0\1", 5, 1)) > 0 ) 
+          if ( (status = writeData(fd, socket_id, (const unsigned char*)"di\1\0\1", 5, 1)) > 0 )
             {
-              do 
+              do
                 {
-                  if ( ( status = readData(fd, socket_id, (unsigned char*)buf, 1023) ) <= -1 ) 
+                  if ( ( status = readData(fd, socket_id, (unsigned char*)buf, 1023) ) <= -1 )
                     {
                       return NULL;
                     }
-                } 
+		  STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
+                }
               while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) && strncmp("@EJL ID", (char*)buf, 7));
               if (!retry)
                 {
                   return NULL;
-                }
-              /* "@EJL ID"  found */
-              pos = strstr((char*)buf, "@EJL ID");
-              if (pos)
-                pos = strchr(pos, (int) ';');
-              if (pos)
-                pos = strchr(pos + 1, (int) ';');
-              if (pos)
-                pos = strchr(pos, (int) ':');
-              if (pos)
-                {
-                  spos = strchr(pos, (int) ';');
                 }
             }
           else /* could not write */
@@ -798,7 +770,7 @@ initialize_printer(int quiet)
       while ((i < printer_count) && !found)
         {
           the_printer_t = stp_get_printer_by_index(i);
-          
+
           if (strcmp(stp_printer_get_family(the_printer_t), "escp2") == 0)
             {
               const char *short_name = stp_printer_get_driver(the_printer_t);
@@ -821,26 +793,17 @@ initialize_printer(int quiet)
 		  stp_parameter_description_destroy(&desc);
                   found = 1;
 		  STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
-		  
+
                 }
             }
           i++;
         }
      }
 
-  close(fd);
-
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
+  if (isnew && !packet_initialized)
     {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-              strerror(errno));
-      exit(1);
+      isnew = !init_packet(fd, 0);
     }
-
-  if (isnew && !packet_initialized) {
-    isnew = !init_packet(fd, 0);
-  }
 
   close(fd);
   STP_DEBUG(fprintf(stderr, "new? %s\n", isnew?"yes":"no"));
@@ -854,8 +817,9 @@ get_printer(int quiet)
     return the_printer_t;
   else
     {
-      return initialize_printer(quiet);
+      const stp_printer_t *printer = initialize_printer(quiet);
       STP_DEBUG(fprintf(stderr, "init done...\n"));
+      return printer;
     }
 }
 
@@ -879,8 +843,8 @@ static const char *colors_new[] =
 
 static int color_count = sizeof(colors_new) / sizeof(const char *);
 
-void
-do_ink_level(void)
+static void
+do_status_command_internal(status_cmd_t cmd)
 {
   int fd;
   int status;
@@ -894,14 +858,27 @@ do_ink_level(void)
   const stp_printer_t *printer;
   const stp_vars_t *printvars;
   stp_parameter_t desc;
+  const char *cmd_name = NULL;
+  switch (cmd)
+    {
+    case CMD_INK_LEVEL:
+      cmd_name = _("ink levels");
+      break;
+    case CMD_STATUS:
+      cmd_name = _("status");
+      break;
+    }
   if (!raw_device)
     {
-      fprintf(stderr,_("Obtaining ink levels requires using a raw device.\n"));
+      fprintf(stderr,_("Obtaining %s requires using a raw device.\n"),
+	      _(cmd_name));
       exit(1);
     }
 
-  STP_DEBUG(fprintf(stderr, "ink level...\n"));
+  STP_DEBUG(fprintf(stderr, "%s...\n", cmd_name));
   printer = get_printer(1);
+  STP_DEBUG(fprintf(stderr, "%s found %s\n", cmd_name,
+		    stp_printer_get_long_name(printer)));
   if (!printer)
     {
       fprintf(stderr, _("Cannot identify printer!\n"));
@@ -923,13 +900,13 @@ do_ink_level(void)
       exit(1);
     }
 
-  if (isnew) 
+  if (isnew)
     {
       credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-      if ( credit > -1 ) 
+      if ( credit > -1 )
         {
           /* request status command */
-          if ( (status = writeData(fd, socket_id, (const unsigned char*)"st\1\0\1", 5, 1)) > 0 ) 
+          if ( (status = writeData(fd, socket_id, (const unsigned char*)"st\1\0\1", 5, 1)) > 0 )
             {
               do
                 {
@@ -938,72 +915,81 @@ do_ink_level(void)
                       stp_parameter_description_destroy(&desc);
                       exit(1);
                     }
+		  STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
                 }
               while ( (retry-- != 0) && strncmp("st", buf, 2) && strncmp("@BDC ST", buf, 7) );
-              /* "@BCD ST ST"  found */
-              if (!retry)
-                {
-                  stp_parameter_description_destroy(&desc);
-                  exit(1);
-                }
-              buf[status] = '\0';
-              if ( buf[7] == '2' ) 
-                {
-                  /* new binary format ! */
-                  i = 10;
-                  while (buf[i] != 0x0f && i < status)
-                    i += buf[i + 1] + 2;
-                  ind = buf + i;
-                  i = 4;
-                  col_number = 0;
-                  printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-                  while (i < ind[1] + 3) 
-                    {
-                      if (ind[i] == 0)
+	      /* "@BCD ST ST"  found */
+	      if (!retry)
+		{
+		  stp_parameter_description_destroy(&desc);
+		  exit(1);
+		}
+	      buf[status] = '\0';
+	      if (cmd == CMD_INK_LEVEL)
+		{
+		  if ( buf[7] == '2' )
+		    {
+		      STP_DEBUG(fprintf(stderr, "New format ink!\n"));
+		      /* new binary format ! */
+		      i = 10;
+		      while (buf[i] != 0x0f && i < status)
+			i += buf[i + 1] + 2;
+		      ind = buf + i;
+		      i = 4;
+		      col_number = 0;
+		      printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
+		      while (i < ind[1] + 3)
 			{
-			  /* black */
-			  switch (col_number) 
+			  if (ind[i] == 0)
 			    {
-			    case 0:
-			      printf("%20s    %3d\n", _(colors_new[0]), ind[i + 1]);
-			      break;
-			    case 3:
-			      printf("%20s    %3d\n", _(colors_new[1]), ind[i + 1]);
-			      break;
-			    case 4:
-			      printf("%20s    %3d\n", _(colors_new[2]), ind[i + 1]);
-			      break;
+			      /* black */
+			      switch (col_number)
+				{
+				case 0:
+				  printf("%20s    %3d\n", _(colors_new[0]), ind[i + 1]);
+				  break;
+				case 3:
+				  printf("%20s    %3d\n", _(colors_new[1]), ind[i + 1]);
+				  break;
+				case 4:
+				  printf("%20s    %3d\n", _(colors_new[2]), ind[i + 1]);
+				  break;
+				}
 			    }
-			} 
-                      else 
-                        {
-			  if (ind[i] + 2 < color_count)
-			    printf("%20s    %3d\n", _(colors_new[ind[i] + 2]), ind[i + 1]);
 			  else
-			    printf("%18s%2x    %3d\n", _("Unknown"), ind[i] + 2, ind[i + 1]);
-                        }
-                      col_number++;
-                      i+=3;
-                    }
-                  ind = NULL;
-                }
-              else 
-                /* old format */
-                {
-                  buf[status] = '\0';
-                  ind = buf;
-                  do
-                    {
-                      oind = ind;
-                      ind = strchr(ind, 'I');
-                    }
-                  while (ind && oind != ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
-                  if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
-                    {
-                      ind = NULL;
-                    }
-                }
-            }              
+			    {
+			      if (ind[i] + 2 < color_count)
+				printf("%20s    %3d\n", _(colors_new[ind[i] + 2]), ind[i + 1]);
+			      else
+				printf("%18s%2x    %3d\n", _("Unknown"), ind[i] + 2, ind[i + 1]);
+			    }
+			  col_number++;
+			  i+=3;
+			}
+		      ind = NULL;
+		    }
+		  else
+		    /* old format */
+		    {
+		      STP_DEBUG(fprintf(stderr, "Old format ink!\n"));
+		      buf[status] = '\0';
+		      ind = buf;
+		      do
+			{
+			  oind = ind;
+			  ind = strchr(ind, 'I');
+			}
+		      while (ind && oind != ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
+		      if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
+			{
+			  ind = NULL;
+			}
+		    }
+		}
+	      else
+		ind = buf;
+	      CloseChannel(fd, socket_id);
+            }
           else /* could not write */
             {
               stp_parameter_description_destroy(&desc);
@@ -1017,13 +1003,13 @@ do_ink_level(void)
           STP_DEBUG(fprintf(stderr, _("\nCannot get credit (packet mode)!\n")));
           exit(1);
         }
-    } 
-  else 
-    {  
+    }
+  else
+    {
       do
         {
           add_resets(2);
-          initialize_print_cmd();
+          initialize_print_cmd(1);
           do_remote_cmd("ST", 2, 0, 1);
           add_resets(2);
           if (SafeWrite(fd, printer_cmd, bufpos) < bufpos)
@@ -1033,24 +1019,27 @@ do_ink_level(void)
               exit(1);
             }
           status = read_from_printer(fd, buf, 1024, 1);
-          if (status < 0) 
+          if (status < 0)
             {
               stp_parameter_description_destroy(&desc);
               exit(1);
             }
           (void) close(fd);
           ind = buf;
-          do
-            {
-              oind = ind;
-              ind = strchr(ind, 'I');
-            }
-          while (ind && oind != ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
-          if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
-            {
-              ind = NULL;
-            }
-        } while (--retry != 0 && !ind);
+	  if (cmd == CMD_INK_LEVEL)
+	    {
+	      do
+		{
+		  oind = ind;
+		  ind = strchr(ind, 'I');
+		}
+	      while (ind && oind != ind && ind[1] != 'Q' && (ind[1] != '\0' && ind[2] != ':'));
+	      if (!ind || ind[1] != 'Q' || ind[2] != ':' || ind[3] == ';')
+		{
+		  ind = NULL;
+		}
+	    }
+	} while (--retry != 0 && !ind);
     }
 
   if (!ind)
@@ -1059,35 +1048,52 @@ do_ink_level(void)
       exit(1);
     }
 
-  ind += 3;
-
-  printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-  for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
+  if (cmd == CMD_INK_LEVEL)
     {
-      int val, j;
-      if (!ind[0] || ind[0] == ';')
-        exit(0);
-      for (j = 0; j < 2; j++)
-        {
-          if (ind[j] >= '0' && ind[j] <= '9')
-            ind[j] -= '0';
-          else if (ind[j] >= 'A' && ind[j] <= 'F')
-            ind[j] = ind[j] - 'A' + 10;
-          else if (ind[j] >= 'a' && ind[j] <= 'f')
-            ind[j] = ind[j] - 'a' + 10;
-          else
-            exit(1);
-        }
-      val = (ind[0] << 4) + ind[1];
-      printf("%20s    %3d\n",_(stp_string_list_param(desc.bounds.str, i)->text),
-             val);
-      ind += 2;
+      ind += 3;
+
+      printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
+      for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
+	{
+	  int val, j;
+	  if (!ind[0] || ind[0] == ';')
+	    exit(0);
+	  for (j = 0; j < 2; j++)
+	    {
+	      if (ind[j] >= '0' && ind[j] <= '9')
+		ind[j] -= '0';
+	      else if (ind[j] >= 'A' && ind[j] <= 'F')
+		ind[j] = ind[j] - 'A' + 10;
+	      else if (ind[j] >= 'a' && ind[j] <= 'f')
+		ind[j] = ind[j] - 'a' + 10;
+	      else
+		exit(1);
+	    }
+	  val = (ind[0] << 4) + ind[1];
+	  printf("%20s    %3d\n",_(stp_string_list_param(desc.bounds.str, i)->text),
+		 val);
+	  ind += 2;
+	}
+    }
+  else
+    {
+      char *where;
+      while ((where = strchr(ind, ';')) != NULL)
+	*where = '\n';
+      printf("%s\n", ind);
     }
   stp_parameter_description_destroy(&desc);
+  (void) close(fd);
   exit(0);
 }
 
-void 
+void
+do_ink_level(void)
+{
+  do_status_command_internal(CMD_INK_LEVEL);
+}
+
+void
 do_extended_ink_info(int extended_output)
 {
   int fd;
@@ -1102,8 +1108,8 @@ do_extended_ink_info(int extended_output)
   const stp_printer_t *printer;
   const stp_vars_t *printvars;
   stp_parameter_t desc;
-  
-  if (!raw_device) 
+
+  if (!raw_device)
     {
       fprintf(stderr,_("Obtaining extended ink information requires using a raw device.\n"));
       exit(1);
@@ -1125,23 +1131,23 @@ do_extended_ink_info(int extended_output)
               strerror(errno));
       exit(1);
     }
-  
-  if (isnew) 
+
+  if (isnew)
     {
-      for (i = 0; i < stp_string_list_count(desc.bounds.str); i++) 
+      for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
         {
           credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-          if ( credit > -1 ) 
+          if ( credit > -1 )
             {
               char req[] = "ii\2\0\1\1";
               req[5] = i + 1;
               /* request status command */
-              if ( (status = writeData(fd, socket_id, (const unsigned char*)req, 6, 1)) > 0 ) 
+              if ( (status = writeData(fd, socket_id, (const unsigned char*)req, 6, 1)) > 0 )
                 {
                   retry = 4;
                   do
                     {
-                      if ( ( status = readData(fd, socket_id, (unsigned char*) buf, 1023) ) <= -1 ) 
+                      if ( ( status = readData(fd, socket_id, (unsigned char*) buf, 1023) ) <= -1 )
                         {
                           stp_parameter_description_destroy(&desc);
                           exit(1);
@@ -1153,11 +1159,11 @@ do_extended_ink_info(int extended_output)
                       exit(1);
                     }
                   ind = strchr(buf, 'I');
-                  if (sscanf(ind, 
+                  if (sscanf(ind,
                              "II:01;IQT:%x;TSH:NAVL;PDY:%x;PDM:%x;IC1:%x;IC2:000A;IK1:%x;IK2:%x;TOV:18;TVU:06;LOG:INKbyEPSON;",
-                             &val, &year, &month, &id, &ik1, &ik2 ) == 6) 
+                             &val, &year, &month, &id, &ik1, &ik2 ) == 6)
                     {
-                      if (i == 0) 
+                      if (i == 0)
                         printf("%15s    %20s   %12s   %7s\n",
                                _("Ink color"), _("Percent remaining"), _("Part number"),
                                _("Date"));
@@ -1178,6 +1184,7 @@ do_extended_ink_info(int extended_output)
               exit(1);
             }
         }
+      CloseChannel(fd, socket_id);
     }
   else
     {
@@ -1219,47 +1226,8 @@ do_identify(void)
 void
 do_status(void)
 {
-  int fd;
-  int status;
-  char buf[1024];
-  char *where;
-  memset(buf, 0, 1024);
-  if (!raw_device)
-    {
-      fprintf(stderr, _("Printer status requires using a raw device.\n"));
-      exit(1);
-    }
-  (void) get_printer(1);
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
-    {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-	      strerror(errno));
-      exit(1);
-    }
-  bufpos = 0;
-  initialize_print_cmd();
-  do_remote_cmd("ST", 2, 0, 1);
-  if (SafeWrite(fd, printer_cmd, bufpos) < bufpos)
-    {
-      fprintf(stderr, _("Cannot write to %s: %s\n"),
-	      raw_device, strerror(errno));
-      exit(1);
-    }
-  status = read_from_printer(fd, buf, 1024, 0);
-  if (status < 0)
-    exit(1);
-  while ((where = strchr(buf, ';')) != NULL)
-    *where = '\n';
-  printf("%s\n", buf);
-  initialize_print_cmd();
-  do_remote_cmd("ST", 2, 0, 0);
-  add_resets(2);
-  (void) SafeWrite(fd, printer_cmd, bufpos);
-  /* Purge any remaining data from the printer */
-  flushData(fd);
-  (void) close(fd);
-  exit(0);
+  do_status_command_internal(CMD_STATUS);
+  exit(1);
 }
 
 
@@ -1422,7 +1390,7 @@ do_final_alignment(void)
 	    {
 	      printf(_("About to save settings..."));
 	      fflush(stdout);
-	      initialize_print_cmd();
+	      initialize_print_cmd(1);
 	      do_remote_cmd("SV", 0);
 	      if (do_print_cmd())
 		{
@@ -1507,14 +1475,14 @@ do_align(void)
       printf(_(printer_msg), _(printer_name));
       inbuf = do_get_input(_("Press enter to continue > "));
     top:
-      initialize_print_cmd();
+      initialize_print_cmd(1);
       for (curpass = 0; curpass < passes; curpass++)
 	do_remote_cmd("DT", 3, 0, curpass, 0);
       if (do_print_cmd())
 	printer_error();
       printf(_("Please inspect the print, and choose the best pair of lines in each pattern.\n"
 	       "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"));
-      initialize_print_cmd();
+      initialize_print_cmd(1);
       for (curpass = 1; curpass <= passes; curpass ++)
 	{
 	reread:
@@ -1526,7 +1494,7 @@ do_align(void)
 	    case 'R':
 	      printf(_("Please insert a fresh sheet of paper.\n"));
 	      fflush(stdout);
-	      initialize_print_cmd();
+	      initialize_print_cmd(1);
 	      (void) do_get_input(_("Press enter to continue > "));
 	      /* Ick. Surely there's a cleaner way? */
 	      goto top;
@@ -1571,7 +1539,7 @@ do_align(void)
 	       "quality printing.\n"), (choices + 1) / 2);
       printf(_("Please insert a fresh sheet of paper.\n"));
       (void) do_get_input(_("Press enter to continue > "));
-      initialize_print_cmd();
+      initialize_print_cmd(1);
       for (curpass = 0; curpass < passes; curpass++)
 	do_remote_cmd("DT", 3, 0, curpass, 0);
       if (do_print_cmd())

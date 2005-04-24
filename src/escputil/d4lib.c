@@ -469,14 +469,13 @@ int readAnswer(int fd, unsigned char *buf, int len)
    return total;
 }
 
-void flushData(int fd)
+static void _flushData(int fd)
 {
    int rd    = 0;
-   struct timeval beg;
    struct itimerval ti, oti;
    char buf[1024];
    int len = 1023;
-   /* wait a little bit before reading an answer */
+   int count = 20;
    usleep(20000);
 
    /* for error handling in case of timeout */
@@ -485,8 +484,6 @@ void flushData(int fd)
    /* set errno to 0 in order to get correct informations */
    /* in case of error                                    */
    errno = 0;
-
-   gettimeofday(&beg, NULL);
 
    if (debugD4)
      fprintf(stderr, "flush data: length: %i\n", len);
@@ -499,7 +496,8 @@ void flushData(int fd)
 	 fprintf(stderr, "flush: read: %i %s\n", rd,
 		 rd < 0 && errno != 0 ?strerror(errno) : "");
        RESET_TIMER(ti,oti);
-     } while ( rd > 0 || (rd < 0 && errno == EAGAIN));
+       count--;
+     } while ( count > 0 && (rd > 0 || (rd < 0 && errno == EAGAIN)));
 }
 
 /*******************************************************************/
@@ -1134,6 +1132,37 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
    {
       return -1;
    }
+}
+
+/*******************************************************************/
+/* Function readData()                                             */
+/*        Convenience function                                     */
+/*        give credit and read then the expected datas             */
+/* Input:  int   fd    file handle                                 */
+/*         unsigned char    socketID  the destination socket                  */
+/*         unsigned char   *buf       the datas to be send                    */
+/*         int   len       howmany datas are to we send            */
+/*                                                                 */
+/* Return: number of bytes written or -1;                          */
+/*                                                                 */
+/*******************************************************************/
+
+void flushData(int fd, unsigned char socketID)
+{
+  if (debugD4)
+    fprintf(stderr, "flushData %d\n", socketID);
+   /* give credit */
+   if (socketID != (unsigned char) -1)
+     {
+       if ( Credit(fd, socketID, 1) == 1 )
+	 {
+	   /* wait a little bit */
+	   usleep(1000);
+	   _flushData(fd);
+	 }
+     }
+   else
+     _flushData(fd);
 }
 
 /*******************************************************************/
