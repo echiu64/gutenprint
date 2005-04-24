@@ -2243,9 +2243,11 @@ Printer-Specific Notes:
       the activation sequence is sent.
 
       A suggestion would be to first verify that the printer is
-      capable of returning status.  This may be done via
+      capable of returning ink levels.  This may be done via
 
-      escputil -s -r /dev/lp0
+      escputil -i -r /dev/lp0
 
       (or whatever device your printer is connected to in place of
-      /dev/lp0).
+      /dev/lp0).  If this returns status, it demonstrates that the
+      link between your computer and printer is working.
+
