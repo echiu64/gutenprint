@@ -231,6 +231,12 @@ These release notes contain the following sections:
      * Ink level detection now prints the correct ink color names for
        the printer model.
 
+     * It may be necessary to use the -m option (to specify the
+       printer) with certain printers, even with commands such as -i.
+       This is a regression.  Please let us know of any printers that
+       require this.  The Stylus Pro 7500 appears to be one such
+       printer.
+
      * It is now no longer necessary to use the -u flag with certain
        printers in most cases.  The utility now autodetects the
        printer model and generates appropriate commands in all cases.
