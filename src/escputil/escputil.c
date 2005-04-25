@@ -655,150 +655,153 @@ initialize_printer(int quiet)
       exit(1);
     }
 
-  do
+  if (!printer_model)
     {
-      alarm_interrupt = 0;
-      signal(SIGALRM, alarm_handler);
-      alarm(5);
-      status = SafeWrite(fd, init_str, sizeof(init_str) - 1);
-      alarm(0);
-      signal(SIGALRM, SIG_DFL);
-      STP_DEBUG(fprintf(stderr, "status %d alarm %d\n", status, alarm_interrupt));
-      if (status != sizeof(init_str) - 1 && (status != -1 || !alarm_interrupt))
-        {
-          fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
-                  strerror(errno));
-          exit(1);
-        }
-      STP_DEBUG(fprintf(stderr, "Try %d alarm %d\n", tries, alarm_interrupt));
-      STP_DEBUG(fprintf(stderr, "Reading response of old init command ...\n"));
-      status = read_from_printer(fd, (char*)buf, 1024, 1);
-      if (status <= 0 && tries > 0)
+      do
 	{
-	  forced_packet_mode = !init_packet(fd, 1);
-	  status = 1;
-	}
-      if (status > 0 && !strstr((char *) buf, "@EJL ID") && tries < 1)
+	  alarm_interrupt = 0;
+	  signal(SIGALRM, alarm_handler);
+	  alarm(5);
+	  status = SafeWrite(fd, init_str, sizeof(init_str) - 1);
+	  alarm(0);
+	  signal(SIGALRM, SIG_DFL);
+	  STP_DEBUG(fprintf(stderr, "status %d alarm %d\n", status, alarm_interrupt));
+	  if (status != sizeof(init_str) - 1 && (status != -1 || !alarm_interrupt))
+	    {
+	      fprintf(stderr, _("Cannot write to %s: %s\n"), raw_device,
+		      strerror(errno));
+	      exit(1);
+	    }
+	  STP_DEBUG(fprintf(stderr, "Try %d alarm %d\n", tries, alarm_interrupt));
+	  STP_DEBUG(fprintf(stderr, "Reading response of old init command ...\n"));
+	  status = read_from_printer(fd, (char*)buf, 1024, 1);
+	  if (status <= 0 && tries > 0)
+	    {
+	      forced_packet_mode = !init_packet(fd, 1);
+	      status = 1;
+	    }
+	  if (status > 0 && !strstr((char *) buf, "@EJL ID") && tries < 1)
+	    {
+	      STP_DEBUG(fprintf(stderr, "Found bad data: %s\n", buf));
+	      /*
+	       * We know the printer's not dead.  Try to turn off status
+	       * and try again.
+	       */
+	      initialize_print_cmd(1);
+	      do_remote_cmd("ST", 2, 0, 0);
+	      add_resets(2);
+	      (void) SafeWrite(fd, printer_cmd, bufpos);
+	      status = 0;
+	    }
+	  tries++;
+	} while (status <= 0);
+
+      if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
 	{
-	  STP_DEBUG(fprintf(stderr, "Found bad data: %s\n", buf));
-	  /*
-	   * We know the printer's not dead.  Try to turn off status
-	   * and try again.
-	   */
-	  initialize_print_cmd(1);
-	  do_remote_cmd("ST", 2, 0, 0);
-	  add_resets(2);
-	  (void) SafeWrite(fd, printer_cmd, bufpos);
-	  status = 0;
+	  STP_DEBUG(fprintf(stderr, "Printer in packet mode....\n"));
+	  packet_initialized = 1;
+	  isnew = 1;
+
+	  credit = askForCredit(fd, socket_id, &send_size, &receive_size);
+	  if ( credit > -1 )
+	    {
+	      /* request status command */
+	      if ( (status = writeData(fd, socket_id, (const unsigned char*)"di\1\0\1", 5, 1)) > 0 )
+		{
+		  do
+		    {
+		      if ( ( status = readData(fd, socket_id, (unsigned char*)buf, 1023) ) <= -1 )
+			{
+			  return NULL;
+			}
+		      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
+		    }
+		  while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) && strncmp("@EJL ID", (char*)buf, 7));
+		  if (!retry)
+		    {
+		      return NULL;
+		    }
+		}
+	      else /* could not write */
+		{
+		  fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
+		  return NULL;
+		}
+	    }
+	  else /* no credit */
+	    {
+	      STP_DEBUG(fprintf(stderr, _("\nCannot get credit (packet mode)!\n")));
+	      return NULL;
+	    }
 	}
-      tries++;
-    } while (status <= 0);
-
-  if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
-    {
-      STP_DEBUG(fprintf(stderr, "Printer in packet mode....\n"));
-      packet_initialized = 1;
-      isnew = 1;
-
-      credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-      if ( credit > -1 )
-        {
-          /* request status command */
-          if ( (status = writeData(fd, socket_id, (const unsigned char*)"di\1\0\1", 5, 1)) > 0 )
-            {
-              do
-                {
-                  if ( ( status = readData(fd, socket_id, (unsigned char*)buf, 1023) ) <= -1 )
-                    {
-                      return NULL;
-                    }
-		  STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
-                }
-              while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) && strncmp("@EJL ID", (char*)buf, 7));
-              if (!retry)
-                {
-                  return NULL;
-                }
-            }
-          else /* could not write */
-            {
-              fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
-              return NULL;
-            }
-        }
-      else /* no credit */
-        {
-          STP_DEBUG(fprintf(stderr, _("\nCannot get credit (packet mode)!\n")));
-          return NULL;
-        }
+      STP_DEBUG(fprintf(stderr, "status: %i\n", status));
+      STP_DEBUG(fprintf(stderr, "Buf: %s\n", buf));
+      if (status > 0)
+	{
+	  pos = strstr((char*)buf, "@EJL ID");
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  if (pos)
+	    pos = strchr(pos, (int) ';');
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  if (pos)
+	    pos = strchr(pos + 1, (int) ';');
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  if (pos)
+	    pos = strchr(pos, (int) ':');
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  if (pos)
+	    {
+	      spos = strchr(pos, (int) ';');
+	    }
+	  if (!pos)
+	    {
+	      if (!quiet)
+		{
+		  printf(_("\nCannot detect printer type.\n"
+			   "Please use -m to specify your printer model.\n"));
+		  do_help(1);
+		}
+	      return NULL;
+	    }
+	  if (spos)
+	    *spos = '\000';
+	  printer_model = pos + 1;
+	  STP_DEBUG(fprintf(stderr, "printer model: %s\n", printer_model));
+	}
     }
-  STP_DEBUG(fprintf(stderr, "status: %i\n", status));
-  STP_DEBUG(fprintf(stderr, "Buf: %s\n", buf));
-  if (status > 0)
+
+  i = 0;
+  while ((i < printer_count) && !found)
     {
-      pos = strstr((char*)buf, "@EJL ID");
-      STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
-      if (pos)
-        pos = strchr(pos, (int) ';');
-      STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
-      if (pos)
-        pos = strchr(pos + 1, (int) ';');
-      STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
-      if (pos)
-        pos = strchr(pos, (int) ':');
-      STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
-      if (pos)
-        {
-          spos = strchr(pos, (int) ';');
-        }
-      if (!pos)
-        {
-          if (!quiet)
-            {
-              printf(_("\nCannot detect printer type.\n"
-                       "Please use -m to specify your printer model.\n"));
-              do_help(1);
-            }
-          return NULL;
-        }
-      if (spos)
-        *spos = '\000';
-      printer_model = pos + 1;
-      STP_DEBUG(fprintf(stderr, "printer model: %s\n", printer_model));
+      the_printer_t = stp_get_printer_by_index(i);
 
-      i = 0;
-      while ((i < printer_count) && !found)
-        {
-          the_printer_t = stp_get_printer_by_index(i);
+      if (strcmp(stp_printer_get_family(the_printer_t), "escp2") == 0)
+	{
+	  const char *short_name = stp_printer_get_driver(the_printer_t);
+	  const char *long_name = stp_printer_get_long_name(the_printer_t);
+	  if (!strcasecmp(printer_model, short_name) ||
+	      !strcasecmp(printer_model, long_name) ||
+	      (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
+	       !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
+	      (!strncmp(long_name, "EPSON ", strlen("EPSON ")) &&
+	       !strcasecmp(printer_model, long_name + strlen("EPSON "))))
+	    {
+	      const stp_vars_t *printvars;
+	      stp_parameter_t desc;
 
-          if (strcmp(stp_printer_get_family(the_printer_t), "escp2") == 0)
-            {
-              const char *short_name = stp_printer_get_driver(the_printer_t);
-              const char *long_name = stp_printer_get_long_name(the_printer_t);
-              if (!strcasecmp(printer_model, short_name) ||
-                  !strcasecmp(printer_model, long_name) ||
-                  (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
-                   !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
-                  (!strncmp(long_name, "EPSON ", strlen("EPSON ")) &&
-                   !strcasecmp(printer_model, long_name + strlen("EPSON "))))
-                {
-                  const stp_vars_t *printvars;
-		  stp_parameter_t desc;
+	      printvars = stp_printer_get_defaults(the_printer_t);
+	      stp_describe_parameter(printvars, "SupportsPacketMode",
+				     &desc);
+	      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+		isnew = desc.deflt.boolean;
+	      stp_parameter_description_destroy(&desc);
+	      found = 1;
+	      STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
 
-                  printvars = stp_printer_get_defaults(the_printer_t);
-		  stp_describe_parameter(printvars, "SupportsPacketMode",
-					 &desc);
-		  if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
-		    isnew = desc.deflt.boolean;
-		  stp_parameter_description_destroy(&desc);
-                  found = 1;
-		  STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
-
-                }
-            }
-          i++;
-        }
-     }
+	    }
+	}
+      i++;
+    }
 
   if (isnew && !packet_initialized)
     {
