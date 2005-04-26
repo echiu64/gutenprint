@@ -233,9 +233,8 @@ These release notes contain the following sections:
 
      * It may be necessary to use the -m option (to specify the
        printer) with certain printers, even with commands such as -i.
-       This is a regression.  Please let us know of any printers that
-       require this.  The Stylus Pro 7500 appears to be one such
-       printer.
+       This was previously not the case.  In general, it should not be
+       necessary.
 
      * It is now no longer necessary to use the -u flag with certain
        printers in most cases.  The utility now autodetects the
