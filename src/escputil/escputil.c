@@ -1027,7 +1027,6 @@ do_status_command_internal(status_cmd_t cmd)
               stp_parameter_description_destroy(&desc);
               exit(1);
             }
-          (void) close(fd);
           ind = buf;
 	  if (cmd == CMD_INK_LEVEL)
 	    {
