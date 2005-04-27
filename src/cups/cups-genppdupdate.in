@@ -450,6 +450,7 @@ sub find_ppd ($$$$) {
 			}
 		    }
 		    else {
+			$_ = $fn;
 			if (! -d $fn && ! /\/$/) {
 			    print STDERR "$fn: not a regular file, or insecure ownership and permissions.  Skipped\n";
 			}
