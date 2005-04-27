@@ -1,11 +1,2 @@
 debian/install/usr/share/gutenprint/doc/*.pdf                usr/share/doc/gutenprint-doc
 debian/install/usr/share/gutenprint/doc/html                 usr/share/doc/gutenprint-doc
-debian/install/usr/share/man/man7/gutenprint-color.7         usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-dithers.7       usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-imagetypes.7    usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-inktypes.7      usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-mediasizes.7    usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-mediasources.7  usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-mediatypes.7    usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-models.7        usr/share/man/man7
-debian/install/usr/share/man/man7/gutenprint-resolutions.7   usr/share/man/man7

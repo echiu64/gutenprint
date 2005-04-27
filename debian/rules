@@ -118,6 +118,9 @@ binary-arch: build install
 	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppd.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppd.5.0.8
 	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.5.0.8
 	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.5.0.8
+	  mv debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.1 debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.5.0.1
+	  ln -s debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.5.0.1.gz debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.1.gz
+	  ln -s debian/ijsgutenprint/usr/bin/ijsgutenprint.5.0 debian/ijsgutenprint/usr/bin/ijsgutenprint
 	dh_installexamples -a
 	dh_installchangelogs -a NEWS
 	dh_strip -a

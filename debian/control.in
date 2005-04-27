@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Roger Leigh <rleigh@debian.org>
 Standards-Version: 3.6.1
-Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp2.0-dev, libreadline4-dev, libijs-dev (>= 0.35-1), debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), foomatic-db-engine (>= 3.0.1-1), chrpath (>= 0.12)
+Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp2.0-dev, libreadline5-dev, libijs-dev (>= 0.35-1), debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), foomatic-db-engine (>= 3.0.1-1), chrpath (>= 0.12)
 
 Package: gimp-print
 Architecture: any
@@ -119,7 +119,7 @@ Description: runtime for the Gutenprint printer driver library
 Package: libgutenprintui2#LIBRARY_VERSION#-dev
 Architecture: any
 Section: devel
-Depends: libgutenprintui#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
+Depends: libgutenprintui2#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
 Provides: libgutenprintui2-dev
 Conflicts: libgutenprintui2-dev
 Replaces: libgutenprintui2-dev
