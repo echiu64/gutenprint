@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-04-11 21:22-0400\n"
+"POT-Creation-Date: 2005-04-25 22:05-0400\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -383,7 +383,7 @@ msgstr "Veµkos» papiera, na ktorý chcete tlaèi»"
 
 #: src/main/print-canon.c:1227 src/main/print-escp2.c:182
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1162
-#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1168
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1181
 msgid "Media Type"
 msgstr "Typ média"
 
@@ -395,7 +395,7 @@ msgstr ""
 
 #: src/main/print-canon.c:1233 src/main/print-escp2.c:188
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:1168
-#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1192
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1205
 msgid "Media Source"
 msgstr "Zdroj média"
 
@@ -408,7 +408,7 @@ msgstr "Zdroj (vstupné miesto) média, na ktoré tlaèíte"
 
 #: src/main/print-canon.c:1239 src/main/print-escp2.c:212
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1174
-#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1264
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1277
 msgid "Resolution"
 msgstr "Rozlí¹enie"
 
@@ -584,7 +584,7 @@ msgstr "Manuálne bez preru¹enia"
 #: src/main/print-escp2-data.c:591 src/main/print-escp2-data.c:604
 #: src/main/print-escp2-data.c:617 src/main/print-escp2-data.c:623
 #: src/main/print-lexmark.c:613 src/gutenprintui/panel.c:2131
-#: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:872
+#: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:831
 msgid "Black"
 msgstr "Èierna"
 
@@ -778,7 +778,7 @@ msgstr ""
 #: src/main/print-escp2-data.c:580 src/main/print-escp2-data.c:592
 #: src/main/print-escp2-data.c:605 src/main/print-escp2-data.c:618
 #: src/main/print-escp2-data.c:632 src/gutenprintui/panel.c:2110
-#: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:875
+#: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:834
 msgid "Cyan"
 msgstr "Azúrová"
 
@@ -791,7 +791,7 @@ msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 #: src/main/print-escp2-data.c:581 src/main/print-escp2-data.c:593
 #: src/main/print-escp2-data.c:606 src/main/print-escp2-data.c:619
 #: src/main/print-escp2-data.c:631 src/gutenprintui/panel.c:2117
-#: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:876
+#: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:835
 msgid "Magenta"
 msgstr "Purpurová"
 
@@ -804,7 +804,7 @@ msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 #: src/main/print-escp2-data.c:582 src/main/print-escp2-data.c:594
 #: src/main/print-escp2-data.c:607 src/main/print-escp2-data.c:620
 #: src/main/print-escp2-data.c:630 src/gutenprintui/panel.c:2124
-#: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:877
+#: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:836
 msgid "Yellow"
 msgstr "®ltá"
 
@@ -814,7 +814,7 @@ msgid "Adjust the yellow gamma"
 msgstr "Prispôsobenie vyvá¾enie ¾ltej farby pre tlaè"
 
 #: src/main/print-color.c:280 src/main/print-escp2-data.c:635
-#: src/escputil/escputil.c:883
+#: src/escputil/escputil.c:842
 msgid "Red"
 msgstr ""
 
@@ -833,7 +833,7 @@ msgid "Adjust the green gamma"
 msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
 #: src/main/print-color.c:296 src/main/print-escp2-data.c:636
-#: src/escputil/escputil.c:884
+#: src/escputil/escputil.c:843
 msgid "Blue"
 msgstr ""
 
@@ -1215,41 +1215,41 @@ msgstr ""
 
 #: src/main/print-escp2-data.c:583 src/main/print-escp2-data.c:595
 #: src/main/print-escp2-data.c:608 src/main/print-escp2-data.c:621
-#: src/escputil/escputil.c:878
+#: src/escputil/escputil.c:837
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Jasná azúrová"
 
 #: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:596
 #: src/main/print-escp2-data.c:609 src/main/print-escp2-data.c:622
-#: src/escputil/escputil.c:879
+#: src/escputil/escputil.c:838
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Jasná purpurová"
 
-#: src/main/print-escp2-data.c:597 src/escputil/escputil.c:881
+#: src/main/print-escp2-data.c:597 src/escputil/escputil.c:840
 #, fuzzy
 msgid "Light Black"
 msgstr "Èierna"
 
-#: src/main/print-escp2-data.c:610 src/escputil/escputil.c:880
+#: src/main/print-escp2-data.c:610 src/escputil/escputil.c:839
 #, fuzzy
 msgid "Dark Yellow"
 msgstr "®ltá"
 
-#: src/main/print-escp2-data.c:633 src/main/escp2-channels.c:1666
-#: src/escputil/escputil.c:873
+#: src/main/print-escp2-data.c:633 src/main/escp2-channels.c:1664
+#: src/escputil/escputil.c:832
 #, fuzzy
 msgid "Matte Black"
 msgstr "Matný papier"
 
-#: src/main/print-escp2-data.c:634 src/main/escp2-channels.c:1684
-#: src/escputil/escputil.c:874
+#: src/main/print-escp2-data.c:634 src/main/escp2-channels.c:1681
+#: src/escputil/escputil.c:833
 #, fuzzy
 msgid "Photo Black"
 msgstr "Fotografický papier"
 
-#: src/main/print-escp2-data.c:637 src/escputil/escputil.c:885
+#: src/main/print-escp2-data.c:637 src/escputil/escputil.c:844
 #, fuzzy
 msgid "Gloss Optimizer"
 msgstr "Lesklý film"
@@ -1486,7 +1486,7 @@ msgstr "Tlaèi» do súboru?"
 msgid "Manual Control"
 msgstr "Typ výstupu:"
 
-#: src/main/print-escp2.c:1507 src/cups/genppd.c:1273
+#: src/main/print-escp2.c:1507 src/cups/genppd.c:1286
 #, fuzzy
 msgid "Automatic"
 msgstr "Veµkos»"
@@ -1580,29 +1580,29 @@ msgid "test print"
 msgstr "Test tlaèe"
 
 #: src/main/print-lexmark.c:601 src/main/print-lexmark.c:671
-#: src/main/escp2-channels.c:663 src/main/escp2-channels.c:677
-#: src/main/escp2-channels.c:693 src/main/escp2-channels.c:709
-#: src/main/escp2-channels.c:723 src/main/escp2-channels.c:737
-#: src/main/escp2-channels.c:751 src/main/escp2-channels.c:765
+#: src/main/escp2-channels.c:667 src/main/escp2-channels.c:681
+#: src/main/escp2-channels.c:695 src/main/escp2-channels.c:719
+#: src/main/escp2-channels.c:733 src/main/escp2-channels.c:747
+#: src/main/escp2-channels.c:761 src/main/escp2-channels.c:775
 msgid "Four Color Standard"
 msgstr "©tandardný ¹tvorfarebný"
 
 #: src/main/print-lexmark.c:604 src/main/print-lexmark.c:674
-#: src/main/escp2-channels.c:582 src/main/escp2-channels.c:596
-#: src/main/escp2-channels.c:610 src/main/escp2-channels.c:624
-#: src/main/escp2-channels.c:640
+#: src/main/escp2-channels.c:572 src/main/escp2-channels.c:586
+#: src/main/escp2-channels.c:600 src/main/escp2-channels.c:614
+#: src/main/escp2-channels.c:638 src/main/escp2-channels.c:644
 msgid "Three Color Composite"
 msgstr "Kompozitný trojfarebný"
 
 #: src/main/print-lexmark.c:607 src/main/print-lexmark.c:677
-#: src/main/escp2-channels.c:825 src/main/escp2-channels.c:839
-#: src/main/escp2-channels.c:973 src/main/escp2-channels.c:988
-#: src/main/escp2-channels.c:1005 src/main/escp2-channels.c:1022
+#: src/main/escp2-channels.c:835 src/main/escp2-channels.c:849
+#: src/main/escp2-channels.c:983 src/main/escp2-channels.c:998
+#: src/main/escp2-channels.c:1015
 msgid "Six Color Photo"
 msgstr "Fotografický ¹es»farebný"
 
 #: src/main/print-lexmark.c:610 src/main/print-lexmark.c:680
-#: src/main/escp2-channels.c:788 src/main/escp2-channels.c:802
+#: src/main/escp2-channels.c:798 src/main/escp2-channels.c:812
 msgid "Five Color Photo Composite"
 msgstr "Kompozitný fotografický pä»farebný"
 
@@ -1670,8 +1670,8 @@ msgstr "Ilford »a¾ký papier"
 msgid "Coated"
 msgstr ""
 
-#: src/main/print-olympus.c:265 src/cups/genppd.c:1389 src/cups/genppd.c:1404
-#: src/cups/genppd.c:1452
+#: src/main/print-olympus.c:265 src/cups/genppd.c:1402 src/cups/genppd.c:1417
+#: src/cups/genppd.c:1465
 msgid "None"
 msgstr ""
 
@@ -1814,112 +1814,119 @@ msgstr "PPD súbor?"
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/escp2-channels.c:433 src/main/escp2-channels.c:446
-#: src/main/escp2-channels.c:461 src/main/escp2-channels.c:475
-#: src/gutenprintui/panel.c:282 src/gutenprintui2/panel.c:282
+#: src/main/escp2-channels.c:438 src/main/escp2-channels.c:451
+#: src/main/escp2-channels.c:465 src/gutenprintui/panel.c:282
+#: src/gutenprintui2/panel.c:282
 msgid "Grayscale"
 msgstr "V odtieòoch ¹edej"
 
-#: src/main/escp2-channels.c:497 src/main/escp2-channels.c:510
+#: src/main/escp2-channels.c:487 src/main/escp2-channels.c:500
 #, fuzzy
 msgid "Two Level Grayscale"
 msgstr "V odtieòoch ¹edej"
 
-#: src/main/escp2-channels.c:532 src/main/escp2-channels.c:545
-#: src/main/escp2-channels.c:558 src/main/escp2-channels.c:1488
-#: src/main/escp2-channels.c:1508 src/main/escp2-channels.c:1528
+#: src/main/escp2-channels.c:522 src/main/escp2-channels.c:535
+#: src/main/escp2-channels.c:548 src/main/escp2-channels.c:1490
+#: src/main/escp2-channels.c:1510 src/main/escp2-channels.c:1530
 msgid "Quadtone"
 msgstr ""
 
-#: src/main/escp2-channels.c:862 src/main/escp2-channels.c:876
+#: src/main/escp2-channels.c:872 src/main/escp2-channels.c:886
 msgid "Six Color Enhanced Composite"
 msgstr "Kompozitný roz¹írený ¹es»farebný"
 
-#: src/main/escp2-channels.c:899 src/main/escp2-channels.c:913
-#: src/main/escp2-channels.c:949
+#: src/main/escp2-channels.c:909 src/main/escp2-channels.c:923
+#: src/main/escp2-channels.c:959
 #, fuzzy
 msgid "Seven Color Photo"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:935
+#: src/main/escp2-channels.c:945
 msgid "Seven Color Enhanced"
 msgstr "Roz¹írený sedemfarebný"
 
-#: src/main/escp2-channels.c:1043 src/main/escp2-channels.c:1049
+#: src/main/escp2-channels.c:1036 src/main/escp2-channels.c:1042
 #, fuzzy
 msgid "One Color Raw"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:1055 src/main/escp2-channels.c:1061
+#: src/main/escp2-channels.c:1048
 #, fuzzy
 msgid "One Color Raw Enhanced Gloss"
 msgstr "Roz¹írený sedemfarebný"
 
-#: src/main/escp2-channels.c:1074 src/main/escp2-channels.c:1086
+#: src/main/escp2-channels.c:1061 src/main/escp2-channels.c:1073
 #, fuzzy
 msgid "Two Color Raw"
 msgstr "©tandardný ¹tvorfarebný"
 
-#: src/main/escp2-channels.c:1100 src/main/escp2-channels.c:1113
-#: src/main/escp2-channels.c:1126 src/main/escp2-channels.c:1139
+#: src/main/escp2-channels.c:1087 src/main/escp2-channels.c:1101
+#: src/main/escp2-channels.c:1128 src/main/escp2-channels.c:1141
+#: src/main/escp2-channels.c:1154
 #, fuzzy
 msgid "Three Color Raw"
 msgstr "Kompozitný trojfarebný"
 
-#: src/main/escp2-channels.c:1146 src/main/escp2-channels.c:1152
-#: src/main/escp2-channels.c:1158 src/main/escp2-channels.c:1164
-#: src/main/escp2-channels.c:1170 src/main/escp2-channels.c:1176
+#: src/main/escp2-channels.c:1115
+#, fuzzy
+msgid "Three Color Raw Gloss"
+msgstr "Kompozitný trojfarebný"
+
+#: src/main/escp2-channels.c:1161 src/main/escp2-channels.c:1167
+#: src/main/escp2-channels.c:1173 src/main/escp2-channels.c:1179
+#: src/main/escp2-channels.c:1185 src/main/escp2-channels.c:1191
+#: src/main/escp2-channels.c:1197
 #, fuzzy
 msgid "Four Color Raw"
 msgstr "©tandardný ¹tvorfarebný"
 
-#: src/main/escp2-channels.c:1182 src/main/escp2-channels.c:1188
+#: src/main/escp2-channels.c:1203
 #, fuzzy
 msgid "Four Color Raw Gloss"
 msgstr "©tandardný ¹tvorfarebný"
 
-#: src/main/escp2-channels.c:1203 src/main/escp2-channels.c:1217
+#: src/main/escp2-channels.c:1218 src/main/escp2-channels.c:1232
 #, fuzzy
 msgid "Five Color Raw"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:1233 src/main/escp2-channels.c:1239
-#: src/main/escp2-channels.c:1245 src/main/escp2-channels.c:1260
+#: src/main/escp2-channels.c:1248 src/main/escp2-channels.c:1254
+#: src/main/escp2-channels.c:1269
 #, fuzzy
 msgid "Six Color Raw"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:1267 src/main/escp2-channels.c:1273
+#: src/main/escp2-channels.c:1275
 #, fuzzy
 msgid "Six Color Enhanced Gloss Raw"
 msgstr "Kompozitný roz¹írený ¹es»farebný"
 
-#: src/main/escp2-channels.c:1288 src/main/escp2-channels.c:1303
-#: src/main/escp2-channels.c:1318
+#: src/main/escp2-channels.c:1290 src/main/escp2-channels.c:1305
+#: src/main/escp2-channels.c:1320
 #, fuzzy
 msgid "Seven Color Raw"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:1335
+#: src/main/escp2-channels.c:1337
 #, fuzzy
 msgid "Seven Color Enhanced Gloss Raw"
 msgstr "Roz¹írený sedemfarebný"
 
-#: src/main/escp2-channels.c:1467 src/main/escp2-channels.c:1480
-#: src/main/escp2-channels.c:1500 src/main/escp2-channels.c:1520
-#: src/main/escp2-channels.c:1540 src/main/escp2-channels.c:1556
-#: src/main/escp2-channels.c:1558 src/main/escp2-channels.c:1560
-#: src/main/escp2-channels.c:1562 src/main/escp2-channels.c:1578
-#: src/main/escp2-channels.c:1598
+#: src/main/escp2-channels.c:1469 src/main/escp2-channels.c:1482
+#: src/main/escp2-channels.c:1502 src/main/escp2-channels.c:1522
+#: src/main/escp2-channels.c:1542 src/main/escp2-channels.c:1558
+#: src/main/escp2-channels.c:1560 src/main/escp2-channels.c:1562
+#: src/main/escp2-channels.c:1564 src/main/escp2-channels.c:1580
+#: src/main/escp2-channels.c:1600
 msgid "EPSON Standard Inks"
 msgstr ""
 
-#: src/main/escp2-channels.c:1618 src/main/escp2-channels.c:1643
+#: src/main/escp2-channels.c:1620 src/main/escp2-channels.c:1645
 #, fuzzy
 msgid "UltraChrome Photo Black"
 msgstr "Fotografický ¹es»farebný"
 
-#: src/main/escp2-channels.c:1622 src/main/escp2-channels.c:1647
+#: src/main/escp2-channels.c:1624 src/main/escp2-channels.c:1649
 msgid "UltraChrome Matte Black"
 msgstr ""
 
@@ -3624,313 +3631,348 @@ msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:339
 #, fuzzy
-msgid "EPSON PM-G700"
+msgid "EPSON PM-D770"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:340
 #, fuzzy
-msgid "EPSON PM-G800"
+msgid "EPSON PM-D1000"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:341
 #, fuzzy
-msgid "EPSON PX-V500"
+msgid "EPSON PM-G700"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:342
 #, fuzzy
-msgid "EPSON PX-V600"
+msgid "EPSON PM-G720"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:343
+#, fuzzy
+msgid "EPSON PM-G800"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:344
+#, fuzzy
+msgid "EPSON PM-G820"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:345
+#, fuzzy
+msgid "EPSON PX-G900"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:346
+#, fuzzy
+msgid "EPSON PX-G920"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:347
+#, fuzzy
+msgid "EPSON PX-G5000"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:348
+#, fuzzy
+msgid "EPSON PX-V500"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:349
+#, fuzzy
+msgid "EPSON PX-V600"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:350
 msgid "EPSON PX-7000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:344
+#: src/main/xmli18n-tmp.h:351
 msgid "EPSON PX-9000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:345
+#: src/main/xmli18n-tmp.h:352
 msgid "Apple Color StyleWriter 4100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:346
+#: src/main/xmli18n-tmp.h:353
 msgid "Apple Color StyleWriter 4500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:347
+#: src/main/xmli18n-tmp.h:354
 msgid "Apple Color StyleWriter 6500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:348
+#: src/main/xmli18n-tmp.h:355
 msgid "HP DeskJet 340"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:349
+#: src/main/xmli18n-tmp.h:356
 msgid "HP DeskJet 400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:350
+#: src/main/xmli18n-tmp.h:357
 msgid "HP DeskJet 500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:351
+#: src/main/xmli18n-tmp.h:358
 msgid "HP DesignJet 230"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:352
+#: src/main/xmli18n-tmp.h:359
 msgid "HP DesignJet 250C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:353
+#: src/main/xmli18n-tmp.h:360
 msgid "HP DesignJet 700"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:354
+#: src/main/xmli18n-tmp.h:361
 msgid "HP DesignJet 750C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:355
+#: src/main/xmli18n-tmp.h:362
 msgid "HP DesignJet 2500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:356
+#: src/main/xmli18n-tmp.h:363
 msgid "HP DesignJet 3500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:357
+#: src/main/xmli18n-tmp.h:364
 msgid "HP DesignJet 430"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:358
+#: src/main/xmli18n-tmp.h:365
 msgid "HP DesignJet 450C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:359
+#: src/main/xmli18n-tmp.h:366
 msgid "HP DesignJet 455CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:360
+#: src/main/xmli18n-tmp.h:367
 msgid "HP DesignJet 488CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:361
+#: src/main/xmli18n-tmp.h:368
 msgid "HP DeskJet 500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:362
+#: src/main/xmli18n-tmp.h:369
 msgid "HP DeskJet 520"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:363
+#: src/main/xmli18n-tmp.h:370
 msgid "HP DeskJet 540C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:364
+#: src/main/xmli18n-tmp.h:371
 msgid "HP DeskJet 550C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:365
+#: src/main/xmli18n-tmp.h:372
 msgid "HP DeskJet 560C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:366
+#: src/main/xmli18n-tmp.h:373
 msgid "HP DeskJet 600/600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:367
+#: src/main/xmli18n-tmp.h:374
 msgid "HP DeskJet 600 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:368
+#: src/main/xmli18n-tmp.h:375
 msgid "HP DeskJet 690 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:369
+#: src/main/xmli18n-tmp.h:376
 msgid "HP DeskJet 810C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:370
+#: src/main/xmli18n-tmp.h:377
 msgid "HP DeskJet 812C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:371
+#: src/main/xmli18n-tmp.h:378
 msgid "HP DeskJet 840C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:372
+#: src/main/xmli18n-tmp.h:379
 msgid "HP DeskJet 842C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:373
+#: src/main/xmli18n-tmp.h:380
 msgid "HP DeskJet 845C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:374
+#: src/main/xmli18n-tmp.h:381
 msgid "HP DeskJet 850C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:375
+#: src/main/xmli18n-tmp.h:382
 msgid "HP DeskJet 855C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:376
+#: src/main/xmli18n-tmp.h:383
 msgid "HP DeskJet 870C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:377
+#: src/main/xmli18n-tmp.h:384
 msgid "HP DeskJet 890C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:378
+#: src/main/xmli18n-tmp.h:385
 msgid "HP DeskJet 895C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:379
+#: src/main/xmli18n-tmp.h:386
 msgid "HP DeskJet 900 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:380
+#: src/main/xmli18n-tmp.h:387
 msgid "HP DeskJet 1100C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:381
+#: src/main/xmli18n-tmp.h:388
 msgid "HP DeskJet 1120C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:382
+#: src/main/xmli18n-tmp.h:389
 msgid "HP DeskJet 1200C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:383
+#: src/main/xmli18n-tmp.h:390
 msgid "HP DeskJet 1220C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:384
+#: src/main/xmli18n-tmp.h:391
 msgid "HP DeskJet 1600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:385
+#: src/main/xmli18n-tmp.h:392
 msgid "HP DeskJet 2000 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:386
+#: src/main/xmli18n-tmp.h:393
 msgid "HP DeskJet 2500 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:387
+#: src/main/xmli18n-tmp.h:394
 msgid "HP PhotoSmart P1000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:388
+#: src/main/xmli18n-tmp.h:395
 msgid "HP PhotoSmart P1100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:389
+#: src/main/xmli18n-tmp.h:396
 msgid "HP LaserJet II series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:390
+#: src/main/xmli18n-tmp.h:397
 msgid "HP LaserJet IIP series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:391
+#: src/main/xmli18n-tmp.h:398
 msgid "HP LaserJet III series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:392
+#: src/main/xmli18n-tmp.h:399
 msgid "HP LaserJet 4 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:393
+#: src/main/xmli18n-tmp.h:400
 msgid "HP LaserJet 4L"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:394
+#: src/main/xmli18n-tmp.h:401
 msgid "HP LaserJet 4V"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:395
+#: src/main/xmli18n-tmp.h:402
 msgid "HP LaserJet 4Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:396
+#: src/main/xmli18n-tmp.h:403
 msgid "HP LaserJet 5 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:397
+#: src/main/xmli18n-tmp.h:404
 msgid "HP LaserJet 5Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:398
+#: src/main/xmli18n-tmp.h:405
 msgid "HP LaserJet 6 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:399
+#: src/main/xmli18n-tmp.h:406
 msgid "Lexmark 4076"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:400
+#: src/main/xmli18n-tmp.h:407
 msgid "Lexmark Z42"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:401
+#: src/main/xmli18n-tmp.h:408
 msgid "Lexmark Z43"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:402
+#: src/main/xmli18n-tmp.h:409
 msgid "Lexmark Z52"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:403
+#: src/main/xmli18n-tmp.h:410
 msgid "Lexmark Z53"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:404
+#: src/main/xmli18n-tmp.h:411
 msgid "Olympus P10"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:405
+#: src/main/xmli18n-tmp.h:412
 msgid "Olympus P200"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:406
+#: src/main/xmli18n-tmp.h:413
 msgid "Olympus P300"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:407
+#: src/main/xmli18n-tmp.h:414
 msgid "Olympus P400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:408
+#: src/main/xmli18n-tmp.h:415
 msgid "Olympus P440"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:409
+#: src/main/xmli18n-tmp.h:416
 msgid "Canon CP100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:410
+#: src/main/xmli18n-tmp.h:417
 msgid "Canon CP220"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:411
+#: src/main/xmli18n-tmp.h:418
 msgid "Sony UP-DP10"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:412
+#: src/main/xmli18n-tmp.h:419
 msgid "Fujifilm Printpix CX-400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:413
+#: src/main/xmli18n-tmp.h:420
 msgid "Fujifilm Printpix CX-550"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:414
+#: src/main/xmli18n-tmp.h:421
 msgid "RAW DATA 16 bit"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:415
+#: src/main/xmli18n-tmp.h:422
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -4685,15 +4727,15 @@ msgstr "Slovak"
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1406
+#: src/cups/genppd.c:1419
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1408
+#: src/cups/genppd.c:1421
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1436
+#: src/cups/genppd.c:1449
 msgid "Fine Adjustment"
 msgstr ""
 
@@ -4921,75 +4963,73 @@ msgstr ""
 "    -q zakázanie nápisu.\n"
 "    -m Urèenie presného modelu tlaèiarne pre zarovnanie hlavy.\n"
 
-#: src/escputil/escputil.c:298 src/escputil/escputil.c:307
+#: src/escputil/escputil.c:307 src/escputil/escputil.c:316
 #, c-format
 msgid "You may only specify one printer or raw device."
 msgstr "Mô¾ete ¹pecifikova» len jednu tlaèiareò alebo prvotné zariadenie."
 
-#: src/escputil/escputil.c:316
+#: src/escputil/escputil.c:325
 #, c-format
 msgid "You may only specify one printer model."
 msgstr "Je mo¾né zvoli» len jeden model tlaèiarne."
 
-#: src/escputil/escputil.c:339
+#: src/escputil/escputil.c:348
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Neznáme nastavenie %c\n"
 
-#: src/escputil/escputil.c:347
+#: src/escputil/escputil.c:356
 #, c-format
 msgid "Usage: %s [OPTIONS] command\n"
 msgstr ""
 
-#: src/escputil/escputil.c:349
+#: src/escputil/escputil.c:358
 #, c-format
 msgid "Type `%s --help' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:351
+#: src/escputil/escputil.c:360
 #, c-format
 msgid "Type `%s -h' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:399
+#: src/escputil/escputil.c:408
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Nie je mo¾né otvori» zariadenie %s: %s\n"
 
-#: src/escputil/escputil.c:422
+#: src/escputil/escputil.c:431
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/escputil/escputil.c:435 src/escputil/escputil.c:445
+#: src/escputil/escputil.c:444 src/escputil/escputil.c:454
 #, c-format
 msgid "Unable to send command to printer\n"
 msgstr "Nie je mo¾né posla» príkaz na tlaèiareò\n"
 
-#: src/escputil/escputil.c:500
+#: src/escputil/escputil.c:509
 #, c-format
 msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:505
+#: src/escputil/escputil.c:514
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Nie je mo¾né èíta» z %s: %s\n"
 
-#: src/escputil/escputil.c:654 src/escputil/escputil.c:702
-#: src/escputil/escputil.c:844 src/escputil/escputil.c:933
-#: src/escputil/escputil.c:1128 src/escputil/escputil.c:1240
+#: src/escputil/escputil.c:653 src/escputil/escputil.c:901
+#: src/escputil/escputil.c:1132
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Nie je mo¾né otvori» %s pre èítanie/zápis: %s\n"
 
-#: src/escputil/escputil.c:674 src/escputil/escputil.c:714
-#: src/escputil/escputil.c:1035 src/escputil/escputil.c:1249
+#: src/escputil/escputil.c:671 src/escputil/escputil.c:1020
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Nie je mo¾né zapisova» do %s: %s\n"
 
-#: src/escputil/escputil.c:761 src/escputil/escputil.c:1014
+#: src/escputil/escputil.c:727 src/escputil/escputil.c:999
 #, c-format
 msgid ""
 "\n"
@@ -4998,14 +5038,14 @@ msgstr ""
 "\n"
 "Nie je mo¾né zapisova» do %s: %s\n"
 
-#: src/escputil/escputil.c:767 src/escputil/escputil.c:1021
+#: src/escputil/escputil.c:733 src/escputil/escputil.c:1006
 #, c-format
 msgid ""
 "\n"
 "Cannot get credit (packet mode)!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:794
+#: src/escputil/escputil.c:760
 #, c-format
 msgid ""
 "\n"
@@ -5016,76 +5056,81 @@ msgstr ""
 "Nie je mo¾né zisti» typ tlaèiarne.\n"
 "Pou¾ite prosím -m na urèenie modelu va¹ej tlaèiarne.\n"
 
-#: src/escputil/escputil.c:882 src/escputil/escputil.c:886
-#: src/escputil/escputil.c:887 src/escputil/escputil.c:888
-#: src/escputil/escputil.c:889 src/escputil/escputil.c:890
+#: src/escputil/escputil.c:841
 msgid "unknown"
 msgstr ""
 
-#: src/escputil/escputil.c:911
-#, c-format
-msgid "Obtaining ink levels requires using a raw device.\n"
+#: src/escputil/escputil.c:868
+msgid "ink levels"
+msgstr ""
+
+#: src/escputil/escputil.c:871
+msgid "status"
+msgstr ""
+
+#: src/escputil/escputil.c:876
+#, fuzzy, c-format
+msgid "Obtaining %s requires using a raw device.\n"
 msgstr "Získanie úrovne atramentu vy¾aduje pou¾itie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:919 src/escputil/escputil.c:1119
+#: src/escputil/escputil.c:887 src/escputil/escputil.c:1123
 #, fuzzy, c-format
 msgid "Cannot identify printer!\n"
 msgstr "Nie je mo¾né analyzova» výstup z tlaèiarne\n"
 
-#: src/escputil/escputil.c:926
+#: src/escputil/escputil.c:894
 #, fuzzy, c-format
 msgid "Printer does not support listing ink types!\n"
 msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 
-#: src/escputil/escputil.c:970 src/escputil/escputil.c:1068
-#: src/escputil/escputil.c:1166
+#: src/escputil/escputil.c:943 src/escputil/escputil.c:1057
+#: src/escputil/escputil.c:1170
 msgid "Ink color"
 msgstr "Farebný atrament"
 
-#: src/escputil/escputil.c:970 src/escputil/escputil.c:1068
-#: src/escputil/escputil.c:1166
+#: src/escputil/escputil.c:943 src/escputil/escputil.c:1057
+#: src/escputil/escputil.c:1170
 msgid "Percent remaining"
 msgstr "Zostávajúce percentá"
 
-#: src/escputil/escputil.c:1112
+#: src/escputil/escputil.c:967
+msgid "Unknown"
+msgstr ""
+
+#: src/escputil/escputil.c:1116
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
 msgstr "Získanie úrovne atramentu vy¾aduje pou¾itie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:1166
+#: src/escputil/escputil.c:1170
 msgid "Part number"
 msgstr ""
 
-#: src/escputil/escputil.c:1167
+#: src/escputil/escputil.c:1171
 msgid "Date"
 msgstr ""
 
-#: src/escputil/escputil.c:1202
+#: src/escputil/escputil.c:1207
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Identifikácia tlaèiarne vy¾aduje pou¾ívanie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:1218
+#: src/escputil/escputil.c:1223
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
 msgstr "Je mo¾né zvoli» len jeden model tlaèiarne."
 
-#: src/escputil/escputil.c:1233
-#, c-format
-msgid "Printer status requires using a raw device.\n"
-msgstr "Stav tlaèiarne vy¾aduje pou¾ívanie základného zariadenia.\n"
-
-#: src/escputil/escputil.c:1274
+#: src/escputil/escputil.c:1242
 #, c-format
 msgid "Cleaning heads...\n"
 msgstr "Èistenie hláv...\n"
 
-#: src/escputil/escputil.c:1285
+#: src/escputil/escputil.c:1253
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr "Spú¹»am kontrolu trysiek, uistite sa, ¾e v tlaèiarni je papier.\n"
 
-#: src/escputil/escputil.c:1289
+#: src/escputil/escputil.c:1257
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5160,7 +5205,7 @@ msgstr ""
 "toho procesu nevypli tlaèiareò\n"
 "\n"
 
-#: src/escputil/escputil.c:1324
+#: src/escputil/escputil.c:1292
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5230,12 +5275,12 @@ msgstr ""
 "nevypli tlaèiareò\n"
 "\n"
 
-#: src/escputil/escputil.c:1368
+#: src/escputil/escputil.c:1336
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Nie je mo¾né odosla» príkaz pre tlaèiareò, koniec.\n"
 
-#: src/escputil/escputil.c:1378
+#: src/escputil/escputil.c:1346
 #, c-format
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
@@ -5254,20 +5299,20 @@ msgstr ""
 "Potom bude po¾iadaný potvrdi» va¹u voµbu.\n"
 "Èo chcete spravi»? (s,q,r)?\n"
 
-#: src/escputil/escputil.c:1386 src/escputil/escputil.c:1393
-#: src/escputil/escputil.c:1406 src/escputil/escputil.c:1422
-#: src/escputil/escputil.c:1524
+#: src/escputil/escputil.c:1354 src/escputil/escputil.c:1361
+#: src/escputil/escputil.c:1374 src/escputil/escputil.c:1390
+#: src/escputil/escputil.c:1492
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:1391
+#: src/escputil/escputil.c:1359
 #, c-format
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Potvrïte prosím opätovným stlaèením 'q', ¾e si ¾eláte ukonèi» bez ulo¾enia:\n"
 
-#: src/escputil/escputil.c:1396
+#: src/escputil/escputil.c:1364
 #, c-format
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
@@ -5276,7 +5321,7 @@ msgstr ""
 "V poriadku, va¹a tlaèiareò je  zarovnaná, ale zarovnanie nebolo ulo¾ené.\n"
 "Ak si ¾eláte ulo¾i» zarovnanie, musíte tento proces zopakova».\n"
 
-#: src/escputil/escputil.c:1403
+#: src/escputil/escputil.c:1371
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
@@ -5285,12 +5330,12 @@ msgstr ""
 "Opätovným stlaèení 'r' potvrïte, ¾e si prajete zopakova» proces "
 "zarovnávania:\n"
 
-#: src/escputil/escputil.c:1409
+#: src/escputil/escputil.c:1377
 #, c-format
 msgid "Repeating the alignment process.\n"
 msgstr "Opakujem proces zarovnávania.\n"
 
-#: src/escputil/escputil.c:1415
+#: src/escputil/escputil.c:1383
 #, c-format
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
@@ -5305,17 +5350,17 @@ msgstr ""
 "Potvrïte opätovným stlaèením 's', ¾e si prajete ulo¾i» nastavenie\n"
 "va¹ej tlaèiarne:\n"
 
-#: src/escputil/escputil.c:1425
+#: src/escputil/escputil.c:1393
 #, c-format
 msgid "About to save settings..."
 msgstr "O nastaveniach ukladania..."
 
-#: src/escputil/escputil.c:1431
+#: src/escputil/escputil.c:1399
 #, c-format
 msgid "failed!\n"
 msgstr "zlyhalo!\n"
 
-#: src/escputil/escputil.c:1432
+#: src/escputil/escputil.c:1400
 #, c-format
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
@@ -5324,27 +5369,27 @@ msgstr ""
 "Va¹e nastavenie sa nepodarilo úspe¹ne ulo¾i». Musíte zopakova»\n"
 "procedúru zarovnávania.\n"
 
-#: src/escputil/escputil.c:1436
+#: src/escputil/escputil.c:1404
 #, c-format
 msgid "succeeded!\n"
 msgstr "úspe¹ne!\n"
 
-#: src/escputil/escputil.c:1437
+#: src/escputil/escputil.c:1405
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "Va¹e nastavenia zarovnávania boli ulo¾ené do tlaèiarne.\n"
 
-#: src/escputil/escputil.c:1442
+#: src/escputil/escputil.c:1410
 #, c-format
 msgid "Unrecognized command.\n"
 msgstr "Neznámy príkaz.\n"
 
-#: src/escputil/escputil.c:1445
+#: src/escputil/escputil.c:1413
 #, c-format
 msgid "Final command was not confirmed.\n"
 msgstr "Závereèný príkaz nebol potvrdený.\n"
 
-#: src/escputil/escputil.c:1450
+#: src/escputil/escputil.c:1418
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -5361,12 +5406,12 @@ msgstr ""
 "Vlo¾te prosím hárok papiera do va¹ej tlaèiarne, aby sa mohla zaèa»\n"
 "procedúra zarovnávania hlavy.\n"
 
-#: src/escputil/escputil.c:1510 src/escputil/escputil.c:1532
-#: src/escputil/escputil.c:1575
+#: src/escputil/escputil.c:1478 src/escputil/escputil.c:1500
+#: src/escputil/escputil.c:1543
 msgid "Press enter to continue > "
 msgstr "Pre pokraèovanie stlaète enter > "
 
-#: src/escputil/escputil.c:1517
+#: src/escputil/escputil.c:1485
 #, c-format
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
@@ -5376,42 +5421,42 @@ msgstr ""
 "Preskúmajte pozorne výtlaèok a zvoµte najlep¹í pár èiar v ka¾dej vzorke.\n"
 "Stlaète èíslo páru, '?' pre pomoc alebo 'r' pre zopakovanie procedúry.\n"
 
-#: src/escputil/escputil.c:1523
+#: src/escputil/escputil.c:1491
 #, c-format
 msgid "Pass #%d"
 msgstr "Prechod #%d"
 
-#: src/escputil/escputil.c:1529 src/escputil/escputil.c:1574
+#: src/escputil/escputil.c:1497 src/escputil/escputil.c:1542
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vlo¾te prosím nový hárok papiera.\n"
 
-#: src/escputil/escputil.c:1548
+#: src/escputil/escputil.c:1516
 #, c-format
 msgid "Number out of range!\n"
 msgstr "Èíslo je mimo rozsahu!\n"
 
-#: src/escputil/escputil.c:1553
+#: src/escputil/escputil.c:1521
 #, c-format
 msgid "I cannot understand what you typed!\n"
 msgstr "Nedoká¾em pochopi», èo ste napísali!\n"
 
-#: src/escputil/escputil.c:1559
+#: src/escputil/escputil.c:1527
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Najlep¹í pár èiar by mal ma» èíslo z rozpätia 1 a %d.\n"
 
-#: src/escputil/escputil.c:1566
+#: src/escputil/escputil.c:1534
 #, c-format
 msgid "Attempting to set alignment..."
 msgstr "Pokú¹am sa nastavi» zarovnávanie..."
 
-#: src/escputil/escputil.c:1569
+#: src/escputil/escputil.c:1537
 #, c-format
 msgid "succeeded.\n"
 msgstr "úspe¹né.\n"
 
-#: src/escputil/escputil.c:1570
+#: src/escputil/escputil.c:1538
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -5424,7 +5469,7 @@ msgstr ""
 "d. Ak nie je, mali by ste zopakova» tento proces, aby ste dostali najlep¹ie "
 "výsledky pri tlaèi.\n"
 
-#: src/escputil/escputil.c:1616
+#: src/escputil/escputil.c:1584
 #, c-format
 msgid "Error in input\n"
 msgstr "Chyba na vstupe\n"
@@ -5437,7 +5482,7 @@ msgstr "Tlaèím..."
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Súbor/Tlaè..."
 
-#: src/ghost/ijsgutenprint.c:86
+#: src/ghost/ijsgutenprint.c:93
 #, c-format
 msgid ""
 "ijsgutenprint: the version of Gutenprint software installed (%s)\n"
@@ -5449,115 +5494,119 @@ msgid ""
 "not match the PPD file (%s).\n"
 msgstr ""
 
-#: src/ghost/ijsgutenprint.c:172
+#: src/ghost/ijsgutenprint.c:182
 #, fuzzy, c-format
-msgid "ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
+msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
 msgstr "Zlý farebný priestor: bps %d kanály %d priestor %s\n"
 
-#: src/ghost/ijsgutenprint.c:180
+#: src/ghost/ijsgutenprint.c:190
 #, fuzzy, c-format
-msgid "ijsgutenprint: No row buffer\n"
+msgid "ERROR: ijsgutenprint: No row buffer\n"
 msgstr "Neexistuje riadkový bufer\n"
 
-#: src/ghost/ijsgutenprint.c:207 src/ghost/ijsgutenprint.c:227
+#: src/ghost/ijsgutenprint.c:217 src/ghost/ijsgutenprint.c:237
 #, fuzzy, c-format
-msgid "ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
+msgid ""
+"ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Nie je mo¾né analyzova» parameter %s=%s (oèakáva sa èíslo)\n"
 
-#: src/ghost/ijsgutenprint.c:479
+#: src/ghost/ijsgutenprint.c:489
 #, fuzzy, c-format
-msgid "ijsgutenprint: Printer must be specified with -sDeviceModel\n"
+msgid "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"
 msgstr "Tlaèiareò musí by» urèené pomocou -sModel\n"
 
-#: src/ghost/ijsgutenprint.c:481
+#: src/ghost/ijsgutenprint.c:491
 #, fuzzy, c-format
-msgid "ijsgutenprint: Printer %s is not a known model\n"
+msgid "ERROR: ijsgutenprint: Printer %s is not a known model\n"
 msgstr "Tlaèiareò %s nie je známy model\n"
 
-#: src/ghost/ijsgutenprint.c:602
+#: src/ghost/ijsgutenprint.c:612
 #, c-format
 msgid "ijsgutenprint: unknown DeviceModel %s\n"
 msgstr ""
 
-#: src/ghost/ijsgutenprint.c:629
-#, c-format
-msgid "ijsgutenprint: cannot parse TopLeft %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:652
-#, c-format
-msgid "ijsgutenprint: cannot parse PaperSize %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:704
-#, c-format
-msgid "ijsgutenprint: cannot parse curve %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:711
-#, c-format
-msgid "ijsgutenprint: cannot parse %s float %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:718
+#: src/ghost/ijsgutenprint.c:639
 #, fuzzy, c-format
-msgid "ijsgutenprint: cannot parse %s int %s\n"
+msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:725
-#, c-format
-msgid "ijsgutenprint: cannot parse %s dimension %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:732
-#, c-format
-msgid "ijsgutenprint: cannot parse %s boolean %s\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:743
+#: src/ghost/ijsgutenprint.c:662
 #, fuzzy, c-format
-msgid "ijsgutenprint: Bad parameter %s %d\n"
+msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:733
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:740
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:747
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:754
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:761
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
+msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
+
+#: src/ghost/ijsgutenprint.c:772
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: Bad parameter %s %d\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/ghost/ijsgutenprint.c:769
-#, c-format
-msgid "ijsgutenprint: bad key code %d\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:1079
-#, c-format
-msgid "ijsgutenprint: ijs_server_get_page_header failed %d\n"
-msgstr ""
-
-#: src/ghost/ijsgutenprint.c:1090
+#: src/ghost/ijsgutenprint.c:798
 #, fuzzy, c-format
-msgid "ijsgutenprint: image_init failed %d\n"
+msgid "ERROR: ijsgutenprint: bad key code %d\n"
+msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
+
+#: src/ghost/ijsgutenprint.c:1208
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"
+msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
+
+#: src/ghost/ijsgutenprint.c:1219
+#, fuzzy, c-format
+msgid "ERROR: ijsgutenprint: image_init failed %d\n"
 msgstr "image_init zlyhalo %d\n"
 
-#: src/ghost/ijsgutenprint.c:1101
+#: src/ghost/ijsgutenprint.c:1230
 #, fuzzy, c-format
-msgid "ijsgutenprint: Unable to open file descriptor: %s\n"
+msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
 msgstr "Nepodarilo sa otvori» popis súboru: %s\n"
 
-#: src/ghost/ijsgutenprint.c:1113
+#: src/ghost/ijsgutenprint.c:1242
 #, fuzzy, c-format
-msgid "ijsgutenprint: Unable to open %s: %s\n"
+msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
 msgstr "Nie je mo¾né otvori» %s: %s\n"
 
-#: src/ghost/ijsgutenprint.c:1125
+#: src/ghost/ijsgutenprint.c:1254
 #, fuzzy, c-format
-msgid "ijsgutenprint: Unknown printer %s\n"
+msgid "ERROR: ijsgutenprint: Unknown printer %s\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/ghost/ijsgutenprint.c:1202
+#: src/ghost/ijsgutenprint.c:1333
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
 msgstr "Zlé parametre; nie je mo¾né pokraèova»!\n"
 
-#: src/ghost/ijsgutenprint.c:1212
+#: src/ghost/ijsgutenprint.c:1343
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
+
+#~ msgid "Printer status requires using a raw device.\n"
+#~ msgstr "Stav tlaèiarne vy¾aduje pou¾ívanie základného zariadenia.\n"
 
 #, fuzzy
 #~ msgid "Gloss Balance"
