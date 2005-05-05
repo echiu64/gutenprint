@@ -142,29 +142,33 @@ sub init_data() {
 sub init_defaults() {
     # Find all PPD files that we could regenerate
     my %found_ppds;
-    find({wanted => \&find_printers}, $chosen_location);
-    foreach (@used_printers) {
-	my $tmp;
-	$tmp = basename($_);
-	chomp ($tmp);
-	$tmp =~ s/(^.*)\.ppd.*/$1/;
-	$found_ppds{$tmp} = "" if $printers{$tmp};
+    if (-d $chosen_location) {
+	find({wanted => \&find_printers}, $chosen_location);
+	foreach (@used_printers) {
+	    my $tmp;
+	    $tmp = basename($_);
+	    chomp ($tmp);
+	    $tmp =~ s/(^.*)\.ppd.*/$1/;
+	    $found_ppds{$tmp} = "" if $printers{$tmp};
+	}
     }
-	@chosen_printers = ();
+    @chosen_printers = ();
     foreach (sort keys %found_ppds) {
 	push @chosen_printers, $_;
     }
 
     # Find all language directories that could be used
     my %found_langs;
-    find({wanted => \&find_languages}, $chosen_location);
-    foreach (@used_languages) {
-	my $tmp;
-	$tmp = basename($_);
-	chomp ($tmp);
-	$found_langs{$tmp} = "" if $languages{$tmp};
+    if (-d $chosen_location) {
+	find({wanted => \&find_languages}, $chosen_location);
+	foreach (@used_languages) {
+	    my $tmp;
+	    $tmp = basename($_);
+	    chomp ($tmp);
+	    $found_langs{$tmp} = "" if $languages{$tmp};
+	}
     }
-	@chosen_languages = ();
+    @chosen_languages = ();
     foreach (sort keys %found_langs) {
 	push @chosen_languages, $_;
     }
