@@ -26,8 +26,8 @@ Package: cupsys-driver-gutenprint
 Replaces: cupsys-driver-gimpprint, cupsys-driver-gimpprint-data
 Architecture: any
 Section: graphics
-Depends: ${shlibs:Depends}, ${perl:Depends}, libperlmenu-perl, cupsys (>= 1.1.4) | cups (>= 1.1.4)
-Recommends: gs-esp (>= 7.05.2-1) | gs-gpl (>= 8.01-1) | postscript-viewer
+Depends: ${shlibs:Depends}, perl (>= 5.8.0), libperlmenu-perl, cupsys (>= 1.1.23) | cups (>= 1.1.23)
+Recommends: gnome-gv | postscript-viewer
 Suggests: gutenprint-doc (>= ${Source-Version}), gutenprint-locales (>= ${Source-Version})
 Description: printer drivers for CUPS
  This package includes a CUPS driver based on Gutenprint.
@@ -230,7 +230,7 @@ Description: maintenance utility for Epson Stylus printers
 Package: ijsgutenprint
 Architecture: any
 Section: text
-Depends: ${shlibs:Depends}, gs (>= 6.53) | gs-esp (>= 6.53) | gs-aladdin (>= 7.04)
+Depends: ${shlibs:Depends}, gs-esp (>= 6.53) | gs-gpl (>= 8.01-1) | gs (>= 6.53) | gs-afpl (>= 8.14)
 Description: inkjet server - Ghostscript driver for Gutenprint
  This package contains the ijsgutenprint binary which provides
  Ghostscript with a Gutenprint driver, including all printers

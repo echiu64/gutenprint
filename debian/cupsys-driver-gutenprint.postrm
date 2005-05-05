@@ -25,6 +25,7 @@ fi
 if [ "$1" = purge ]; then
     # Remove /etc/cups if it is empty
     rmdir --ignore-fail-on-non-empty /etc/cups
+    rmdir --ignore-fail-on-non-empty /usr/share/cups/model/gutenprint
 fi
 
 # dh_installdeb will replace this with shell code automatically

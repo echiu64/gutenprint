@@ -133,7 +133,6 @@ binary-arch: build install
 	dh_makeshlibs -a -V -X usr/lib/gutenprint
 	dh_installdeb -a
 	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2$(LIBRARY_VERSION)/usr/lib
-	dh_perl -a
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
