@@ -61,10 +61,10 @@ int		image_type = IMAGE_MIXED;
 int		stpi_dither_type = DITHER_COLOR;
 const char     *dither_name = NULL;
 int		dither_bits = 1;
-unsigned short	white_line[IMAGE_WIDTH * 4],
-		black_line[IMAGE_WIDTH * 4],
-		color_line[IMAGE_WIDTH * 4],
-		random_line[IMAGE_WIDTH * 4];
+unsigned short	white_line[IMAGE_WIDTH * 6],
+		black_line[IMAGE_WIDTH * 6],
+		color_line[IMAGE_WIDTH * 6],
+		random_line[IMAGE_WIDTH * 6];
 
 
 #define SHADE(density, name)					\
@@ -162,7 +162,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 		lcyan[BUFFER_SIZE],	/* Light cyan bitmap data */
 		lmagenta[BUFFER_SIZE],	/* Light magenta bitmap data */
 		yellow[BUFFER_SIZE];	/* Yellow bitmap data */
-  unsigned short rgb[IMAGE_WIDTH * 4],	/* RGB buffer */
+  unsigned short rgb[IMAGE_WIDTH * 6],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
   int		write_image;		/* Write the image to disk? */
   FILE		*fp = NULL;		/* PPM/PGM output file */
@@ -302,11 +302,18 @@ main(int  argc,				/* I - Number of command-line arguments */
   switch (stpi_dither_type)
     {
     case DITHER_PHOTO:
-    case DITHER_PHOTO_CMYK :
       stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
       stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
       /* FALLTHROUGH */
     case DITHER_COLOR:
+      stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
+      stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
+      stp_dither_add_channel(v, yellow, STP_ECOLOR_Y, 0);
+      break;
+    case DITHER_PHOTO_CMYK :
+      stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
+      stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
+      /* FALLTHROUGH */
     case DITHER_CMYK :
       stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
       stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
@@ -338,6 +345,21 @@ main(int  argc,				/* I - Number of command-line arguments */
        }
        break;
     case DITHER_COLOR :
+        switch (dither_bits)
+	{
+	  case 1 :
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 1, normal_1bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 1, normal_1bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+	      break;
+	  case 2 :
+	      stp_dither_set_transition(v, 0.5);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 1, normal_2bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 1, normal_2bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+	      break;
+       }
+       break;
     case DITHER_CMYK :
         switch (dither_bits)
 	{
@@ -357,6 +379,21 @@ main(int  argc,				/* I - Number of command-line arguments */
        }
        break;
     case DITHER_PHOTO :
+        switch (dither_bits)
+	{
+	  case 1 :
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_1bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_1bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_1bit_shades, 1.0, 0.08);
+	      break;
+	  case 2 :
+	      stp_dither_set_transition(v, 0.7);
+              stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_2bit_shades, 1.0, 0.65);
+              stp_dither_set_inks_full(v, STP_ECOLOR_M, 2, photo_2bit_shades, 1.0, 0.6);
+              stp_dither_set_inks_full(v, STP_ECOLOR_Y, 1, normal_2bit_shades, 1.0, 0.08);
+	      break;
+       }
+       break;
     case DITHER_PHOTO_CMYK :
         switch (dither_bits)
 	{
@@ -421,7 +458,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     }
 
     switch (stpi_dither_type)
-    {
+      {
       case DITHER_GRAY :
           image_get_row(gray, i);
 	  stp_dither_internal(v, i, gray, 0, 0, NULL);
@@ -515,12 +552,16 @@ image_get_row(unsigned short *data,
       memcpy(data, src, IMAGE_WIDTH * 2);
       break;
     case DITHER_COLOR:
-    case DITHER_PHOTO:
       memcpy(data, src, IMAGE_WIDTH * 6);
       break;
     case DITHER_CMYK:
-    case DITHER_PHOTO_CMYK:
       memcpy(data, src, IMAGE_WIDTH * 8);
+      break;
+    case DITHER_PHOTO:
+      memcpy(data, src, IMAGE_WIDTH * 10);
+      break;
+    case DITHER_PHOTO_CMYK:
+      memcpy(data, src, IMAGE_WIDTH * 12);
       break;
     }
 }
@@ -560,7 +601,6 @@ image_init(void)
 	*rptr++ = 65535 * (rand() & 255) / 255;
 	break;
       case DITHER_COLOR:
-      case DITHER_PHOTO:
 	*cptr++ = 65535 * (j >> 4) / 3;
 	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
 	*cptr++ = 65535 * (j & 3) / 3;
@@ -569,11 +609,36 @@ image_init(void)
 	*rptr++ = 65535 * (rand() & 255) / 255;
 	break;
       case DITHER_CMYK:
+	*cptr++ = 65535 * (j >> 4) / 3;
+	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
+	*cptr++ = 65535 * (j & 3) / 3;
+	*cptr++ = 65535 * j / 63;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	break;
+      case DITHER_PHOTO:
+	*cptr++ = 65535 * (j >> 4) / 3;
+	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
+	*cptr++ = 65535 * (j & 3) / 3;
+	*cptr++ = 65535 * j / 63;
+	*cptr++ = 65535 * (j >> 4) / 3;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	break;
       case DITHER_PHOTO_CMYK:
 	*cptr++ = 65535 * (j >> 4) / 3;
 	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
 	*cptr++ = 65535 * (j & 3) / 3;
 	*cptr++ = 65535 * j / 63;
+	*cptr++ = 65535 * (j >> 4) / 3;
+	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
+	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * (rand() & 255) / 255;
 	*rptr++ = 65535 * (rand() & 255) / 255;
 	*rptr++ = 65535 * (rand() & 255) / 255;
 	*rptr++ = 65535 * (rand() & 255) / 255;
