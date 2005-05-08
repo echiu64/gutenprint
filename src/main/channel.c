@@ -796,13 +796,13 @@ generate_special_channels(const stp_vars_t *v)
 			  int upper, lower, sum;
 			  if (where <= .5)
 			    {
-			      lower = max;
-			      upper = max * (where / .5);
+			      upper = max * .5 * pow(where * 2, 1.2);
+			      lower = max - upper;
 			    }
 			  else
 			    {
-			      lower = max * ((1.0 - where) / .5);
-			      upper = max;
+			      lower = max * .5 * pow(2 * (1.0 - where), 1.2);
+			      upper = max - lower;
 			    }
 			  sum = upper + lower;
 			  if (sum < total)
@@ -828,9 +828,18 @@ generate_special_channels(const stp_vars_t *v)
 			    }
 			  output[cg->angles[j].channel_id] = lower;
 			  output[cg->angles[j + 1].channel_id] = upper;
-			  output[STP_ECOLOR_C] += c + cadd + min;
-			  output[STP_ECOLOR_M] += m + madd + min;
-			  output[STP_ECOLOR_Y] += y + yadd + min;
+			  c = output[STP_ECOLOR_C] + c + cadd + min;
+			  if (c > 65535)
+			    c = 65535;
+			  m = output[STP_ECOLOR_M] + m + madd + min;
+			  if (m > 65535)
+			    m = 65535;
+			  y = output[STP_ECOLOR_Y] + y + yadd + min;
+			  if (y > 65535)
+			    y = 65535;
+			  output[STP_ECOLOR_C] = c;
+			  output[STP_ECOLOR_M] = m;
+			  output[STP_ECOLOR_Y] = y;
 			  break;
 			}
 		    }

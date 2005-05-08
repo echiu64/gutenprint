@@ -191,14 +191,14 @@ static const physical_subchannel_t standard_blue_subchannels[] =
   { 8, -1, 0, "BlueDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_blue, 1.2);
+DECLARE_INK_CHANNEL(standard_blue, 1.0);
 
 static const physical_subchannel_t f360_blue_subchannels[] =
 {
   { 8, -1, 1, "BlueDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_blue, 1.2);
+DECLARE_INK_CHANNEL(f360_blue, 1.0);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {

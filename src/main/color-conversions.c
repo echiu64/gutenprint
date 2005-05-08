@@ -262,56 +262,57 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
       rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
-      oh = h;
-      h = adjust_hue(hue_map, h, hue_count);
-      if (lut->lum_map.d_cache && l > 0.0001 && l < .9999)
-	{
-	  double nh = oh * lum_count / 6.0;
-	  double oel = interpolate_value(lum_map,nh);
-	  double el = 1.0 + s*(oel-1.0);
-	  double sreflection = 0.560 - el/7.0; /*+iel/3.0;*/
-	  double isreflection = 1.0 - sreflection;
-	  double sadj = l - sreflection;
-
-	  double lumshad;
-	  double lummid;
-	  double lumhigh;
-	  double weight;
-	  double g;
-	  double l2;
-	  double s2;
-
-	  g=-4.0 + el * 5.0;
-	  lumhigh=g * l + (1.0 - g);
-	  lummid=lumshad=el * l;
-	  weight=pow(l,2.2);
-	  l2=lumshad + weight * (lumhigh-lumshad);
-	  weight=(2*pow(l,0.75)-1.0);
-	  weight*=weight;
-	  l2=lummid + weight * (l2-lummid);
-
-	  s=pow(s,0.62+oel*0.3);
-	  l=l2;
-
-	  if(sadj > 0)
-	    {
-	      double depth=s*(0.85-el*0.85);
-	      double sl=sadj/isreflection;
-	      weight=pow(1.0-sl,2.8*el+0.25)-0.40;
-	      s2=pow(0.5,-22*weight*weight);
-	      s-=depth*(s/s2);
-	    }
-	}
       if (lut->sat_map.d_cache)
 	{
-	  double nh = oh * sat_count / 6.0;
+	  double nh = h * sat_count / 6.0;
 	  double tmp = interpolate_value(sat_map, nh);
 	  if (tmp < .9999 || tmp > 1.0001)
 	    {
 	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0);
 	    }
 	}
+      oh = h;
+      h = adjust_hue(hue_map, h, hue_count);
       calc_hsl_to_rgb(rgbout, h, s, l);
+
+      if (s > 0.00001)
+	{
+	  /*
+	   * Perform luminosity adjustment only on color component.
+	   * This way the luminosity of the gray component won't be affected.
+	   * We'll add the gray back at the end.
+	   */
+
+	  unsigned gray = FMIN(rgbout[0], FMIN(rgbout[1], rgbout[2]));
+	  int i;
+	  /*
+	   * Scale the components by the amount of color left.
+	   * This way the luminosity calculations will come out right.
+	   */
+	  if (gray > 0)
+	    for (i = 0; i < 3; i++)
+	      rgbout[i] = (rgbout[i] - gray) * 65535.0 / (65535 - gray);
+
+	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
+	  if (lut->lum_map.d_cache && l > 0.00001 && l < .99999)
+	    {
+	      double nh = oh * lum_count / 6.0;
+	      double oel = interpolate_value(lum_map,nh);
+	      if (oel <= 1)
+		l *= oel;
+	      else
+		{
+		  double g1 = pow(l, 1.0 / oel);
+		  double g2 = 1.0 - pow(1.0 - l, oel);
+		  l = FMIN(g1, g2);
+		}
+	    }
+	  calc_hsl_to_rgb(rgbout, h, s, l);
+	  if (gray > 0)
+	    for (i = 0; i < 3; i++)
+	      rgbout[i] = gray + (rgbout[i] * (65535 - gray) / 65535.0);
+	}
+
       rgbout[0] ^= 65535;
       rgbout[1] ^= 65535;
       rgbout[2] ^= 65535;
