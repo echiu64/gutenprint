@@ -453,13 +453,13 @@ These release notes contain the following sections:
 
 ================================================================
 
-While Gimp-Print 5.0 is not finalized, it contains many improvements
+While Gutenprint 5.0 is not finalized, it contains many improvements
 and changes from 4.2, as follows:
 
 * General User-Visible Changes:
 
-  1) In general, Gimp-Print 5.0 is not compatible with Gimp-Print 4.2.
-     Gimp-Print 5.0 offers many new options (which are described
+  1) In general, Gutenprint 5.0 is not compatible with Gimp-Print 4.2.
+     Gutenprint 5.0 offers many new options (which are described
      separately below), and many options that are present in both 4.2
      and 5.0 function differently in the two releases.  In addition,
      the API is different.  Finally, the color correction is quite
@@ -586,7 +586,7 @@ and changes from 4.2, as follows:
      no default for the input slot or ink set.
 
   13) Support for a variety of input types, in both 8 and 16 bit
-     resolution, has been added.  Gimp-Print can now handle input in
+     resolution, has been added.  Gutenprint can now handle input in
      grayscale, whitescale (inverted grayscale), RGB, CMY, CMYK, and
      KCMY in 8 and 16 bit resolutions for all output types.
 
@@ -602,18 +602,18 @@ and changes from 4.2, as follows:
      only for density.  This will normally produce excessively dark
      output.  However, applications that wish to use their own
      linearization curves may wish to use this interface to prevent
-     Gimp-Print from performing its own linearization.
+     Gutenprint from performing its own linearization.
 
   17) A new Raw color correction mode has been added that performs no
      correction whatsoever on the input.  This mode may be used by
      applications that wish to perform their own ink limiting and
-     linearization, and use Gimp-Print to perform dithering
+     linearization, and use Gutenprint to perform dithering
      (screening) and output generation only.
 
   18) A new Predithered color correction mode has been added that
      combines the effects of Raw and Threshold.  This mode may be used
      by applications that wish to perform their own dithering and use
-     Gimp-Print to generate printer-specific output only.
+     Gutenprint to generate printer-specific output only.
 
   19) The escputil command, which performs various printer
      administration activities on Epson Stylus printers, has a number
@@ -653,7 +653,7 @@ and changes from 4.2, as follows:
 
   1) A new plugin for the GIMP 2.0 is now provided.  At present it is
      experimental.  In the long run it will be distributed with the
-     GIMP rather than with Gimp-Print.  This is anticipated for the
+     GIMP rather than with Gutenprint.  This is anticipated for the
      GIMP 2.2 release.
 
   2) The Print plugin for the GIMP 1.2 is now deprecated and will be
@@ -668,7 +668,7 @@ and changes from 4.2, as follows:
 
   4) The positioning controls have been simplified.
 
-  5) The printrc file format is different.  Gimp-Print 5.0 can read
+  5) The printrc file format is different.  Gutenprint 5.0 can read
      printrc files created by Gimp-Print 4.2 and earlier, but it
      writes out the printrc file in a format that earlier versions of
      Gimp-Print cannot read.
@@ -687,7 +687,7 @@ and changes from 4.2, as follows:
 
   8) If you are using an older version of the GIMP 1.2, and the GIMP
      is installed in a non-standard location on your system such that
-     you cannot run configure in Gimp-Print without using
+     you cannot run configure in Gutenprint without using
      --with-gimp-prefix or --with-gimp-exec-prefix, please read item
      (10) in Exceptions and Workarounds below.  In addition, if you
      have both the GIMP 1.3/2.0 and the GIMP 1.2 installed on your
@@ -701,14 +701,14 @@ and changes from 4.2, as follows:
      steps of .005 rather than .05).
 
   2) The CUPS driver refuses to function with PPD files created for a
-     different version of Gimp-Print, providing an error message
-     indicating the problem.  This avoids problems caused by
+     different version of Gutenprint or Gimp-Print, providing an error
+     message indicating the problem.  This avoids problems caused by
      mismatches between the PPD files and the driver.  While
      mismatches are potentially not harmful in all cases, they could
      cause problems ranging from failures to print with poor
      diagnostic messages to incorrect results.
 
-  3) The Gimp-Print 5.0 CUPS driver can be installed concurrently with
+  3) The Gutenprint 5.0 CUPS driver can be installed concurrently with
      the 4.2 driver.  Both the PPD files and the driver carry
      different names from their 4.2 counterparts, permitting a
      parallel installation or gradual switchover between 4.2 and
@@ -726,13 +726,13 @@ and changes from 4.2, as follows:
 
   6) Due to the implementation of CUPS, it is necessary on some
      systems to link the programs associated with the CUPS driver (in
-     particular, cups-genppd and rastertogimpprint) statically against
-     the Gimp-Print library.  Please see bugs 865253 and 865265 for
-     full details.
+     particular, cups-genppd and rastertogutenprint) statically
+     against the Gutenprint library.  Please see bugs 865253 and
+     865265 for full details.
 
      This fix works correctly unless --disable-static (to disable
      building static libraries) is passed on the command line.
-     Normally, only people packaging up Gimp-Print for distribution
+     Normally, only people packaging up Gutenprint for distribution
      use this option.  If you wish to use this option, please read
      item (9) Exceptions and Workarounds *carefully* for a full
      description of the problem along with suggested methods of
@@ -755,28 +755,28 @@ and changes from 4.2, as follows:
      complicated operation that cannot easily be automated.  The IJS
      architecture, based on the open source HPIJS driver supplied by
      Hewlett-Packard for HP inkjet printers, allows for drivers to be
-     compiled independently of the core Ghostscript.  A Gimp-Print
-     driver based on the IJS architecture was introduced into
-     Gimp-Print 4.2.1 and 4.3.0, and has been recommended for use with
-     Gimp-Print 4.2.2 and beyond.
+     compiled independently of the core Ghostscript.  A
+     Gimp-Print/Gutenprint driver based on the IJS architecture was
+     introduced into Gimp-Print 4.2.1 and 4.3.0, and has been
+     recommended for use with Gimp-Print 4.2.2 and beyond.
 
      In addition to a greatly simplified build procedure and overall
      cleaner architecture, the separation between Ghostscript and
-     driver imposed by the IJS architecture permits use of Gimp-Print
+     driver imposed by the IJS architecture permits use of Gutenprint
      with AFPL Ghostscript with no license conflict.
 
 
 * Changes to Foomatic data generation:
 
   1) The Ghostscript IJS driver refuses to function with Foomatic PPD
-     files created for a different version of Gimp-Print, providing an
-     error message indicating the problem.  This avoids problems
-     caused by mismatches between the PPD files and the driver.  While
-     mismatches are potentially not harmful in all cases, they could
-     cause problems ranging from failures to print with poor
-     diagnostic messages to incorrect results.
+     files created for a different version of Gimp-Print or
+     Gutenprint, providing an error message indicating the problem.
+     This avoids problems caused by mismatches between the PPD files
+     and the driver.  While mismatches are potentially not harmful in
+     all cases, they could cause problems ranging from failures to
+     print with poor diagnostic messages to incorrect results.
 
-  2) The Gimp-Print 5.0 Foomatic data and IJS driver can be installed
+  2) The Gutenprint 5.0 Foomatic data and IJS driver can be installed
      concurrently with the 4.2 driver.  Both the PPD files and the
      driver carry different names from their 4.2 counterparts,
      permitting a parallel installation or gradual switchover between
@@ -952,10 +952,10 @@ and changes from 4.2, as follows:
      permanent restriction.
 
   8) With certain versions of CUPS and in certain non-default
-     configurations, if a new version of Gimp-Print is installed over
+     configurations, if a new version of Gutenprint is installed over
      an existing version genppd will create PPD files based on the
-     older version of Gimp-Print rather than the newer version.  This
-     will happen if all of the following are true:
+     older version of Gutenprint or Gimp-Print rather than the newer
+     version.  This will happen if all of the following are true:
 
      1) The cups-config provided by the CUPS driver adds
         -Wl,rpath=/usr/lib. This is done by some versions of CUPS
@@ -969,29 +969,29 @@ and changes from 4.2, as follows:
         "RUN_PATH", or the like.  This is controlled by the CUPS
         installation on your system.
 
-     2) There is presently a version of Gimp-Print installed in /usr
+     2) There is presently a version of Gutenprint installed in /usr
         (--prefix=/usr) rather than /usr/local or the like.  The
-        default location of Gimp-Print installation is in /usr/local,
-        but system vendors typically install Gimp-Print in /usr.
+        default location of Gutenprint installation is in /usr/local,
+        but system vendors typically install Gutenprint in /usr.
 
-     3) Gimp-Print is built dynamically only (--disable-static).  This
+     3) Gutenprint is built dynamically only (--disable-static).  This
         is not a default, and requires the explicit --disable-static
-        on the Gimp-Print "configure" command line.  Therefore, if you
-        build Gimp-Print normally you should not be vulnerable to this
+        on the Gutenprint "configure" command line.  Therefore, if you
+        build Gutenprint normally you should not be vulnerable to this
         problem.
 
      Note that in general if you install CUPS into a non-standard
-     location, and install Gimp-Print into the same location, this
+     location, and install Gutenprint into the same location, this
      problem can surface.  For example, if you choose to install CUPS
-     in /usr/local and Gimp-Print in /usr/local you are vulnerable to
+     in /usr/local and Gutenprint in /usr/local you are vulnerable to
      this.  However, it is not standard practice to install CUPS
      anywhere but /usr.
 
      In this case, the run path embedded in the genppd executable
-     points to the version of Gimp-Print installed in /usr/lib. This
+     points to the version of Gutenprint installed in /usr/lib. This
      run path overrides any attempt by libtool to look in the build
      directory. The result is that cups-genppd and rastertogimpprint
-     are run against the older version of Gimp-Print. If the new
+     are run against the older version of Gutenprint. If the new
      version contains additional features (more printers, etc.) they
      will not be available.
 
@@ -1001,7 +1001,7 @@ and changes from 4.2, as follows:
      options.  Due to the PPD version checking introduced in this
      release, the behavior might manifest itself as a runtime error.
      It is also possible that there will be no error at all other than
-     the older version of Gimp-Print being used, with the result that
+     the older version of Gutenprint being used, with the result that
      new features and bug fixes are not available.
 
      If you wish to use only shared libraries, do not wish to build
@@ -1009,14 +1009,14 @@ and changes from 4.2, as follows:
      (because cups-config --ldflags sets the run path), there are
      three workarounds available:
 
-     1) Build and install Gimp-Print into /usr (rather than
-        /usr/local) and then rebuild Gimp-Print from scratch.  This
+     1) Build and install Gutenprint into /usr (rather than
+        /usr/local) and then rebuild Gutenprint from scratch.  This
         will install the correct libgimpprint.so in /usr/lib, and in
         the rebuild genppd will be run against the correct library.
 
-     2) Remove the old version of Gimp-Print prior to building the new
-        version of Gimp-Print.  The important files to remove are
-        anything named /usr/lib/libgimpprint*.
+     2) Remove the old version of Gimp-Print or Gutenprint prior to
+        building the new version of Gutenprint.  The important files
+        to remove are anything named /usr/lib/libgimpprint*.
 
      3) Edit cups-config to remove the reference to the run path.
 
@@ -1025,7 +1025,7 @@ and changes from 4.2, as follows:
      using a very old version of the GIMP 1.2 (versions affected are
      believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
      must set GIMPTOOL in the environment to point to the proper
-     version of gimptool when running Gimp-Print's configure script.
+     version of gimptool when running Gutenprint's configure script.
      For example:
 
      GIMPTOOL=/usr/bin/gimptool ./configure
@@ -1041,10 +1041,9 @@ and changes from 4.2, as follows:
      and creates a symbolic link named "gimptool" pointing to it.
      Later versions of the GIMP 1.2 (1.2.3, 1.2.4, 1.2.5, and any
      later versions that may be released) similarly create a program
-     named "gimptool-1.2" and a symbolic link named "gimptool".
-     As the configure script prior to this bug fix simply checked for
-     gimptool, it incorrectly detected a gimptool from the GIMP 2.0,
-     which this version of Gimp-Print cannot build against.
+     named "gimptool-1.2" and a symbolic link named "gimptool".  As
+     the configure script prior to this bug fix simply checked for
+     gimptool, it incorrectly detected a gimptool from the GIMP 2.0.
 
      The current configure script checks first for gimptool-1.2 and
      then for gimptool, and only accepts the use of a GIMP 1.2 version
@@ -1060,7 +1059,7 @@ and changes from 4.2, as follows:
      --with-gimp-prefix or --with-gimp-exec-prefix, and therefore do
      not need to use this workaround.
 
-     The Gimp-Print and GIMP projects recommend upgrading to a newer
+     The Gutenprint and GIMP projects recommend upgrading to a newer
      revision of the GIMP 1.2 (at the time these release notes are
      written, the latest version is 1.2.5), which will not require
      this workaround.  This workaround is available in the event that
@@ -1077,9 +1076,9 @@ and changes from 4.2, as follows:
 
   2) A modular architecture for color processing.  This architecture
      will enable us, or others, to provide color management without
-     having to change the internal interfaces within Gimp-Print.
+     having to change the internal interfaces within Gutenprint.
 
-  3) New composite data types.  Gimp-Print 5.0 defines additional data
+  3) New composite data types.  Gutenprint 5.0 defines additional data
      types.  These types include:
 
      * Sequences, curves, and arrays.  A sequence is a primitive
@@ -2215,7 +2214,7 @@ Printer-Specific Notes:
       Epson on the C70 and C80, and may not work on all C70 and C80
       printers.
 
-    * The Gimp-Print Epson driver does not support the 5760 DPI
+    * The Gutenprint Epson driver does not support the 5760 DPI
       resolutions (5760x720 or 5760x1440 DPI) offered by some Epson
       printers.  We do not believe that these resolutions offer any
       advantage over 2880x720 or 2880x1440 DPI, and indeed they may
@@ -2230,7 +2229,7 @@ Printer-Specific Notes:
 
       We do not currently plan to offer resolutions higher than
       2880x2880 DPI on any Epson Stylus printer with a drop size of 1
-      pl or larger.  At the time of Gimp-Print 5.0 Beta, the smallest
+      pl or larger.  At the time of Gutenprint 5.0 Beta, the smallest
       drop size offered by any Epson Stylus printer is 1.5 pl.  If
       such a printer is offered, we will evaluate whether to offer
       higher resolutions.
