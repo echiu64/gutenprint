@@ -741,7 +741,7 @@ PACKAGING
     * A Gutenprint core package should contain the following.  You may
       wish to install the user's guide only in certain formats.
 
-      /usr/lib/libgutenprint.so.1.0 (the core shared library)
+      /usr/lib/libgutenprint.so.2.x.y (the core shared library)
       /usr/bin/escputil (Epson Stylus utility)
       /usr/bin/ijsgutenprint.5.0 (Gutenprint Ghostscript IJS plug-in driver)
       /usr/share/gutenprint/doc/html (HTML documentation)
