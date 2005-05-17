@@ -8,14 +8,14 @@ Manipulation Program).  In the summer of 1999,
 Robert Krawitz (the current
 Gutenprint project leader) purchased an Epson Stylus Photo EX printer
 to feed his photography hobby. Finding no existing printer drivers, Robert
-adapted Mike's Gutenprint plugin to his six-color printer, and by the end
-of the year released version 3.0 of the Gutenprint software, which was
+adapted Mike's GIMP Print plugin to his six-color printer, and by the end
+of the year released version 3.0 of the Gimp-Print software, which was
 included in version 1.1 of the GIMP.  The intention was for this to be
 the stable plugin in version 1.2 of the GIMP while development of the
-Gutenprint plugin continued for later release.
+GIMP Print plugin continued for later release.
   </para>
   <para>
-Robert put the Gutenprint development tree on SourceForge starting
+Robert put the Gimp-Print development tree on SourceForge starting
 with version 3.1, and quickly found a group of like-minded people who wanted to print
 high quality output on inexpensive inkjet printers. One of the main
 goals, which was not expected to be met until late in the version 3.1
@@ -28,7 +28,7 @@ In July 2000, not more than a year after Robert bought his Epson
 Stylus Photo EX, he was invited to the Linux Printing
 Summit hosted by VA Linux Systems. In preparation for that, he spent
 long hours printing out test images.  Robert went back to the
-Gutenprint version 3.0.9 release, which seemed like such an advance
+Gimp-Print version 3.0.9 release, which seemed like such an advance
 at the time,  and was floored at how far the project had come in four
 months! Output that had been considered impressive with using six
 colors was put to shame by four color output. That should give you
@@ -37,7 +37,7 @@ illustrates what a group of committed people can do.
   </para>
   <para>
 Robert came away from the Printing Summit with a lot of new ideas, and in
-November 2000, Gutenprint version 4.0 was released, the culmination of 9 months
+November 2000, Gimp-Print version 4.0 was released, the culmination of 9 months
 of work by the team.  The quality was already tremendously improved
 over what the software could do at the Printing Summit.
   </para>
@@ -83,7 +83,7 @@ The print quality (in particular, color accuracy, a well-known weakness in 4.0) 
 
   </para>
   <para>
-Releases of Gutenprint have been historically numbered in
+Releases of Gimp-Print have been historically numbered in
 a fashion similar to that of the Linux kernel, where major releases
 are denoted by the first digit (in this case '4'), while minor
 releases are denoted by subsequent digits (such as '4.2.0').  Even
