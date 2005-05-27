@@ -64,6 +64,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
@@ -94,8 +95,11 @@ const char header[] = "Legend:\n"
 "N  Two different active passes are in the same slot.\n"
 "O  Number of missing start rows is incorrect.\n"
 "P  Physical row number out of bounds.\n"
-"Q  Pass starts earlier than a prior pass.\n";
+"Q  Pass starts earlier than a prior pass.\n"
+"R  Pass is never flushed.\n"
+"S  Pass is flushed but not created.\n";
 
+int *passes_flushed;
 
 static void
 print_header(void)
@@ -106,6 +110,7 @@ print_header(void)
 static void
 flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 {
+  passes_flushed[passno] = 1;
 }
 
 static void
@@ -138,6 +143,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   int *current_slot;
   int vmod;
   int head_offset[8];
+  int last_good_pass;
 
   v = stp_vars_create();
   stp_set_outfunc(v, writefunc);
@@ -156,13 +162,34 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   for(i=0; i<8; i++)
     head_offset[i] = 0;
 
-  if(color_jet_arrangement != 0)
+  switch (color_jet_arrangement)
     {
+    case 1:			/* C80-type */
       head_offset[0] = (physjets+1)*physsep;
       head_offset[1] = (physjets+1)*physsep;
       head_offset[2] = 2*(physjets+1)*physsep;
       phys_lines += 2*(physjets+1)*physsep;
+      break;
+    case 2:			/* Offset by 1 (f360) */
+      if (physsep % 2 == 0)
+	{
+	  head_offset[1] = physsep / 2;
+	  head_offset[2] = physsep / 2;
+	  phys_lines += physsep / 2;
+	}
+      break;
+    case 3:			/* Offset by 1 or 2 (cx3650-type) */
+      if (physsep % 3 == 0)
+	{
+	  head_offset[1] = physsep * 2 / 3;
+	  head_offset[2] = physsep / 3;
+	  phys_lines += physsep * 2 / 3;
+	}
+      break;
+    default:			/* Normal */
+      break;
     }
+
 
   stp_initialize_weave(v, physjets, physsep, hpasses, vpasses, subpasses,
 		       7, 1, 128, nrows, first_line,
@@ -174,6 +201,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   logpassstarts = stp_malloc(sizeof(int) * (nrows + physsep));
   passends = stp_malloc(sizeof(int) * (nrows + physsep));
   passcounts = stp_malloc(sizeof(int) * (nrows + physsep));
+  passes_flushed = stp_malloc(sizeof(int) * (nrows + physsep));
   vmod = 2 * physsep * hpasses * vpasses * subpasses;
   if (vmod == 0)
     vmod = 1;
@@ -193,6 +221,8 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
     current_slot[i] = -1;
   for (i = 0; i < (nrows + physsep); i++)
     {
+      passes_flushed[i] = 0;
+      logpassstarts[i] = INT_MIN;
       passstarts[i] = -1;
       passends[i] = -1;
     }
@@ -283,7 +313,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   if (!quiet)
     printf("Unterminated passes:\n");
   for (i = 0; i <= newestpass; i++)
-    if (passends[i] >= -1 && passends[i] < nrows)
+    if (passends[i] >= -1 && passends[i] < nrows && logpassstarts[i] != INT_MIN)
       {
 	if (!quiet)
 	  printf("%d %d\n", i, passends[i]);
@@ -294,14 +324,28 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
       printf("Last terminated pass: %d\n", lastpass);
       printf("Pass starts:\n");
     }
+  last_good_pass = 0;
+  errcodes[3] = '\0';
   for (i = 0; i <= newestpass; i++)
     {
-      char qchar = ' ';
-      if (i > 0)
-	qchar = logpassstarts[i] < logpassstarts[i - 1] ?
-	  (errors[17]++, 'Q') : ' ';
-      if (!quiet)
-	printf("%c %d %d\n", qchar, i, logpassstarts[i]);
+      if (logpassstarts[i] != INT_MIN)
+	{
+	  if (i > 0)
+	    errcodes[0] = logpassstarts[i] < logpassstarts[last_good_pass] ?
+	      (errors[17]++, 'Q') : ' ';
+	  errcodes[1] = passes_flushed[i] ? (errors[18]++, 'R') : ' ';
+	  errcodes[2] = ' ';
+	  if (!quiet)
+	    printf("%s %d %d\n", errcodes, i, logpassstarts[i]);
+	  last_good_pass = i;
+	}
+      else if (!quiet)
+	{
+	  errcodes[0] = ' ';
+	  errcodes[1] = ' ';
+	  errcodes[2] = '*';
+	  printf("%s %d\n", errcodes, i);
+	}
     }
   for (i = 0; i < 26; i++)
     total_errors += errors[i];
@@ -312,6 +356,7 @@ run_one_weavetest(int physjets, int physsep, int hpasses, int vpasses,
   stp_free(passends);
   stp_free(logpassstarts);
   stp_free(passstarts);
+  stp_free(passes_flushed);
   if (!quiet || (quiet == 1 && total_errors > 0))
     printf("%d total error%s\n", total_errors, total_errors == 1 ? "" : "s");
   stp_vars_destroy(v);

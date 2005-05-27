@@ -81,6 +81,13 @@ static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 
 DECLARE_INK_CHANNEL(f360_standard_cyan, -1.0);
 
+static const physical_subchannel_t cx3650_standard_cyan_subchannels[] =
+{
+  { 2, -1, 2, "CyanDensity", NULL }
+};
+
+DECLARE_INK_CHANNEL(cx3650_standard_cyan, -1.0);
+
 static const physical_subchannel_t x80_cyan_subchannels[] =
 {
   { 2, -1, 96, "CyanDensity", NULL }
@@ -370,6 +377,26 @@ static const physical_subchannel_t c64_quadtone_subchannels[] =
 
 DECLARE_INK_CHANNEL(c64_quadtone, -1.0);
 
+static const physical_subchannel_t f360_quadtone_subchannels[] =
+{
+  { 0, -1, 0, "BlackDensity", NULL },
+  { 2, -1, 1, "BlackDensity", "Gray3Transition" },
+  { 1, -1, 1, "BlackDensity", "Gray2Transition" },
+  { 4, -1, 0, "BlackDensity", "Gray1Transition" },
+};
+
+DECLARE_INK_CHANNEL(f360_quadtone, -1.0);
+
+static const physical_subchannel_t cx3650_quadtone_subchannels[] =
+{
+  { 0, -1, 0, "BlackDensity", NULL },
+  { 2, -1, 2, "BlackDensity", "Gray3Transition" },
+  { 1, -1, 1, "BlackDensity", "Gray2Transition" },
+  { 4, -1, 0, "BlackDensity", "Gray1Transition" },
+};
+
+DECLARE_INK_CHANNEL(cx3650_quadtone, -1.0);
+
 static const physical_subchannel_t f360_photo_cyan_subchannels[] =
 {
   { 2, 0, 1, "CyanDensity", NULL },
@@ -549,6 +576,32 @@ static const escp2_inkname_t c64_generic_quadtone_inkset =
   &c64_quadtone_channel_set
 };
 
+static const ink_channel_t *const f360_quadtone_channels[] =
+{
+  &f360_quadtone_channel
+};
+
+DECLARE_CHANNEL_SET(f360_quadtone);
+
+static const escp2_inkname_t f360_generic_quadtone_inkset =
+{
+  "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
+  &f360_quadtone_channel_set
+};
+
+static const ink_channel_t *const cx3650_quadtone_channels[] =
+{
+  &cx3650_quadtone_channel
+};
+
+DECLARE_CHANNEL_SET(cx3650_quadtone);
+
+static const escp2_inkname_t cx3650_generic_quadtone_inkset =
+{
+  "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
+  &cx3650_quadtone_channel_set
+};
+
 
 
 /*
@@ -613,6 +666,34 @@ static const escp2_inkname_t c64_three_color_composite_inkset =
 {
   "RGB", N_("Three Color Composite"), INKSET_CMYK,
   &c64_cmy_channel_set
+};
+
+static const ink_channel_t *const f360_cmy_channels[] =
+{
+  NULL, &f360_standard_cyan_channel,
+  &f360_standard_magenta_channel, &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(f360_cmy);
+
+static const escp2_inkname_t f360_three_color_composite_inkset =
+{
+  "RGB", N_("Three Color Composite"), INKSET_CMYK,
+  &f360_cmy_channel_set
+};
+
+static const ink_channel_t *const cx3650_cmy_channels[] =
+{
+  NULL, &cx3650_standard_cyan_channel,
+  &f360_standard_magenta_channel, &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(cx3650_cmy);
+
+static const escp2_inkname_t cx3650_three_color_composite_inkset =
+{
+  "RGB", N_("Three Color Composite"), INKSET_CMYK,
+  &cx3650_cmy_channel_set
 };
 
 static const ink_channel_t *const standard_gloss_cmy_channels[] =
@@ -774,6 +855,20 @@ static const escp2_inkname_t f360_four_color_standard_inkset =
 {
   "CMYK", N_("Four Color Standard"), INKSET_CMYK,
   &f360_cmyk_channel_set
+};
+
+static const ink_channel_t *const cx3650_cmyk_channels[] =
+{
+  &standard_black_channel, &cx3650_standard_cyan_channel,
+  &f360_standard_magenta_channel, &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(cx3650_cmyk);
+
+static const escp2_inkname_t cx3650_four_color_standard_inkset =
+{
+  "CMYK", N_("Four Color Standard"), INKSET_CMYK,
+  &cx3650_cmyk_channel_set
 };
 
 
@@ -1155,6 +1250,34 @@ static const escp2_inkname_t c64_three_color_extended_inkset =
   &c64_three_color_extended_channel_set
 };
 
+static const ink_channel_t *const f360_three_color_extended_channels[] =
+{
+  &f360_standard_cyan_channel, &f360_standard_magenta_channel,
+  &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(f360_three_color_extended);
+
+static const escp2_inkname_t f360_three_color_extended_inkset =
+{
+  "PhysicalCMY", N_("Three Color Raw"), INKSET_EXTENDED,
+  &f360_three_color_extended_channel_set
+};
+
+static const ink_channel_t *const cx3650_three_color_extended_channels[] =
+{
+  &cx3650_standard_cyan_channel, &f360_standard_magenta_channel,
+  &standard_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(cx3650_three_color_extended);
+
+static const escp2_inkname_t cx3650_three_color_extended_inkset =
+{
+  "PhysicalCMY", N_("Three Color Raw"), INKSET_EXTENDED,
+  &cx3650_three_color_extended_channel_set
+};
+
 
 static const escp2_inkname_t four_color_extended_inkset =
 {
@@ -1190,6 +1313,12 @@ static const escp2_inkname_t f360_four_color_extended_inkset =
 {
   "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
   &f360_cmyk_channel_set
+};
+
+static const escp2_inkname_t cx3650_four_color_extended_inkset =
+{
+  "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
+  &cx3650_cmyk_channel_set
 };
 
 static const escp2_inkname_t four_color_r800_extended_inkset =
@@ -1530,6 +1659,46 @@ static const escp2_inkname_t *const c64_quadtone_ink_types[] =
 DECLARE_INKLIST("Quadtone", c64_quadtone, c64_quadtone, N_("Quadtone"),
 		standard, standard, quadtone);
 
+static const escp2_inkname_t *const f360_ink_types[] =
+{
+  &f360_four_color_standard_inkset,
+  &f360_three_color_composite_inkset,
+  &one_color_extended_inkset,
+  &f360_three_color_extended_inkset,
+  &f360_four_color_extended_inkset,
+};
+
+DECLARE_INKLIST("None", f360, f360, N_("EPSON Standard Inks"),
+		durabrite, durabrite, standard);
+
+static const escp2_inkname_t *const f360_quadtone_ink_types[] =
+{
+  &f360_generic_quadtone_inkset,
+};
+
+DECLARE_INKLIST("Quadtone", f360_quadtone, f360_quadtone, N_("Quadtone"),
+		standard, standard, quadtone);
+
+static const escp2_inkname_t *const cx3650_ink_types[] =
+{
+  &cx3650_four_color_standard_inkset,
+  &cx3650_three_color_composite_inkset,
+  &one_color_extended_inkset,
+  &cx3650_three_color_extended_inkset,
+  &cx3650_four_color_extended_inkset,
+};
+
+DECLARE_INKLIST("None", cx3650, cx3650, N_("EPSON Standard Inks"),
+		durabrite, durabrite, standard);
+
+static const escp2_inkname_t *const cx3650_quadtone_ink_types[] =
+{
+  &cx3650_generic_quadtone_inkset,
+};
+
+DECLARE_INKLIST("Quadtone", cx3650_quadtone, cx3650_quadtone, N_("Quadtone"),
+		standard, standard, quadtone);
+
 static const escp2_inkname_t *const x80_ink_types[] =
 {
   &x80_four_color_standard_inkset,
@@ -1719,6 +1888,22 @@ static const inklist_t *const c64_group[] =
 };
 
 DECLARE_INKGROUP(c64);
+
+static const inklist_t *const f360_group[] =
+{
+  &f360_inklist,
+  &f360_quadtone_inklist
+};
+
+DECLARE_INKGROUP(f360);
+
+static const inklist_t *const cx3650_group[] =
+{
+  &cx3650_inklist,
+  &cx3650_quadtone_inklist
+};
+
+DECLARE_INKGROUP(cx3650);
 
 static const inklist_t *const x80_group[] =
 {

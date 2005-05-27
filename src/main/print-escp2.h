@@ -558,6 +558,8 @@ extern const inkgroup_t stpi_escp2_cmy_inkgroup;
 extern const inkgroup_t stpi_escp2_standard_inkgroup;
 extern const inkgroup_t stpi_escp2_c80_inkgroup;
 extern const inkgroup_t stpi_escp2_c64_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_inkgroup;
+extern const inkgroup_t stpi_escp2_cx3650_inkgroup;
 extern const inkgroup_t stpi_escp2_x80_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen1_inkgroup;
 extern const inkgroup_t stpi_escp2_photo_gen2_inkgroup;
