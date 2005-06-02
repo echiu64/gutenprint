@@ -258,11 +258,11 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus C85" driver="escp2-c85" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus C85" driver="escp2-c85" manufacturer="Epson" model="69">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus C86" driver="escp2-c86" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus C86" driver="escp2-c86" manufacturer="Epson" model="69">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
@@ -684,14 +684,14 @@
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="69">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.688</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="60">
+      <printer name="EPSON Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="69">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
@@ -933,7 +933,7 @@
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
-      <printer name="EPSON PX-V600" driver="escp2-pxv600" manufacturer="Epson" model="60">
+      <printer name="EPSON PX-V600" driver="escp2-pxv600" manufacturer="Epson" model="69">
         <parameter type="float" name="Gamma">0.636</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>

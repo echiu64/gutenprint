@@ -241,6 +241,8 @@ const res_t *const stpi_escp2_2880_1440dpi_reslist[] =
 
   &r_2880x1440sw,
 
+  &r_2880x2880sw,
+
   NULL
 };
 
