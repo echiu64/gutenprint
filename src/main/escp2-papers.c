@@ -862,6 +862,50 @@ static const paper_adjustment_t durabrite_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(durabrite);
 
+static const paper_adjustment_t durabrite2_adjustments[] =
+{
+  { "Plain", 1.0, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.2,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "PlainFast", 1.0, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.2,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Postcard", 1.0, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1.2,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyFilm", 0.8, 1.0, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Transparency", 0.8, .75, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Envelope", 1.0, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1.2,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "BackFilm", 0.8, .75, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Matte", 0.9, .5, .5, .075, .999, 1, .975, .975, 1, 1, 1.1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "MatteHeavy", 0.9, .5, .5, .075, .999, 1, .975, .975, 1, 1, 1.1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Inkjet", 1.0, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.2,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Coated", 1.0, .5, .5, .075, .999, 1, 1, 1, 1, 1, 1.1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Photo", .833, .5, .5, .075, .999, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyPhoto", .833, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, .9,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Semigloss", .833, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, .9,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Luster", .833, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, .9,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "GlossyPaper", .833, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, .9,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Ilford", .833, 1.0, 1, .15, 1.35, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj  },
+  { "ColorLife", .833, 1.0, 1, .15, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+  { "Other", 1.0, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1,
+    standard_hue_adj, standard_lum_adj, standard_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(durabrite2);
+
 static const paper_t standard_papers[] =
 {
   { "Plain", N_("Plain Paper"), PAPER_PLAIN,
@@ -997,6 +1041,50 @@ static const paper_t ultrachrome_papers[] =
 };
 
 DECLARE_PAPERS(ultrachrome);
+
+static const paper_t durabrite2_papers[] =
+{
+  { "Plain", N_("Plain Paper"), PAPER_PLAIN,
+    1, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "PlainFast", N_("Plain Paper Fast Load"), PAPER_PLAIN,
+    5, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "Postcard", N_("Postcard"), PAPER_PLAIN,
+    2, 0, 0x00, 0x00, 0x02, NULL, NULL },
+  { "GlossyFilm", N_("Glossy Film"), PAPER_PHOTO,
+    3, 0, 0x6d, 0x00, 0x01, NULL, NULL },
+  { "Transparency", N_("Transparencies"), PAPER_TRANSPARENCY,
+    3, 0, 0x6d, 0x00, 0x02, NULL, NULL },
+  { "Envelope", N_("Envelopes"), PAPER_PLAIN,
+    4, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "BackFilm", N_("Back Light Film"), PAPER_TRANSPARENCY,
+    6, 0, 0x6d, 0x00, 0x01, NULL, NULL },
+  { "Matte", N_("Matte Paper"), PAPER_GOOD,
+    7, 0, 0x00, 0x00, 0x02, NULL, NULL },
+  { "MatteHeavy", N_("Matte Paper Heavyweight"), PAPER_GOOD,
+    7, 0, 0x00, 0x00, 0x02, NULL, NULL },
+  { "Inkjet", N_("Inkjet Paper"), PAPER_GOOD,
+    7, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "Coated", N_("Photo Quality Inkjet Paper"), PAPER_GOOD,
+    7, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "Photo", N_("Photo Paper"), PAPER_PHOTO,
+    8, 0, 0x67, 0x00, 0x02, NULL, NULL },
+  { "GlossyPhoto", N_("Premium Glossy Photo Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x80, 0x00, 0x02, NULL, NULL },
+  { "Semigloss", N_("Premium Semigloss Photo Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x80, 0x00, 0x02, NULL, NULL },
+  { "Luster", N_("Premium Luster Photo Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x80, 0x00, 0x02, NULL, NULL },
+  { "GlossyPaper", N_("Photo Quality Glossy Paper"), PAPER_PHOTO,
+    6, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+  { "Ilford", N_("Ilford Heavy Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x80, 0x00, 0x02, NULL, NULL },
+  { "ColorLife", N_("ColorLife Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x67, 0x00, 0x02, NULL, NULL },
+  { "Other", N_("Other"), PAPER_PLAIN,
+    0, 0, 0x6b, 0x1a, 0x01, NULL, NULL },
+};
+
+DECLARE_PAPERS(durabrite2);
 
 static const paper_t r800_papers[] =
 {

@@ -1631,6 +1631,9 @@ static const escp2_inkname_t *const c80_ink_types[] =
 DECLARE_INKLIST("None", c80, c80, N_("EPSON Standard Inks"),
 		durabrite, durabrite, standard);
 
+DECLARE_INKLIST("None", c82, c80, N_("EPSON Standard Inks"),
+		durabrite2, durabrite2, standard);
+
 static const escp2_inkname_t *const c80_quadtone_ink_types[] =
 {
   &c80_generic_quadtone_inkset,
@@ -1649,7 +1652,7 @@ static const escp2_inkname_t *const c64_ink_types[] =
 };
 
 DECLARE_INKLIST("None", c64, c64, N_("EPSON Standard Inks"),
-		durabrite, durabrite, standard);
+		durabrite2, durabrite2, standard);
 
 static const escp2_inkname_t *const c64_quadtone_ink_types[] =
 {
@@ -1669,7 +1672,7 @@ static const escp2_inkname_t *const f360_ink_types[] =
 };
 
 DECLARE_INKLIST("None", f360, f360, N_("EPSON Standard Inks"),
-		durabrite, durabrite, standard);
+		durabrite2, durabrite2, standard);
 
 static const escp2_inkname_t *const f360_quadtone_ink_types[] =
 {
@@ -1689,7 +1692,7 @@ static const escp2_inkname_t *const cx3650_ink_types[] =
 };
 
 DECLARE_INKLIST("None", cx3650, cx3650, N_("EPSON Standard Inks"),
-		durabrite, durabrite, standard);
+		durabrite2, durabrite2, standard);
 
 static const escp2_inkname_t *const cx3650_quadtone_ink_types[] =
 {
@@ -1880,6 +1883,14 @@ static const inklist_t *const c80_group[] =
 };
 
 DECLARE_INKGROUP(c80);
+
+static const inklist_t *const c82_group[] =
+{
+  &c82_inklist,
+  &c80_quadtone_inklist
+};
+
+DECLARE_INKGROUP(c82);
 
 static const inklist_t *const c64_group[] =
 {

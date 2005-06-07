@@ -1593,7 +1593,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
-    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c82_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &standard_channel_name_list
@@ -1678,7 +1678,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
-    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c82_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &standard_channel_name_list
@@ -1831,7 +1831,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, &stpi_escp2_variable_3pl_pigment_drops,
-    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c80_inkgroup,
+    stpi_escp2_2880_1440dpi_reslist, &stpi_escp2_c82_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &standard_channel_name_list
