@@ -30,238 +30,399 @@
 #include "print-escp2.h"
 
 
-#define DECLARE_INK_CHANNEL(name, hue)				\
+#define DECLARE_INK_CHANNEL(name)				\
 static const ink_channel_t name##_channel =			\
 {								\
   #name,							\
   name##_subchannels,						\
   sizeof(name##_subchannels) / sizeof(physical_subchannel_t),	\
-  hue								\
+  NULL								\
 }
+
+#define DECLARE_EXTENDED_INK_CHANNEL(name)			\
+static const ink_channel_t name##_channel =			\
+{								\
+  #name,							\
+  name##_subchannels,						\
+  sizeof(name##_subchannels) / sizeof(physical_subchannel_t),	\
+  &name##_curve							\
+}
+
+static hue_curve_t generic_cyan_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* B */
+  /* B */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* M */
+  /* M */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* R */
+  /* R */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* G */
+  /* G */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t generic_magenta_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* B */
+  /* B */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* M */
+  /* M */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* R */
+  /* R */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t generic_yellow_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* M */
+  /* M */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* R */
+  /* R */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* Y */
+  /* Y */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* G */
+  /* G */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t r800_cyan_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* B */
+  /* B */  "1.000 0.875 0.700 0.550 0.400 0.300 0.200 0.100 "  /* M */
+  /* M */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* R */
+  /* R */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* G */
+  /* G */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t r800_magenta_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.002 0.050 0.300 0.500 0.700 "  /* M */
+  /* M */  "0.800 0.800 0.800 0.700 0.600 0.500 0.400 0.300 "  /* R */
+  /* R */  "0.200 0.100 0.050 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t r800_yellow_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* M */
+  /* M */  "0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.150 "  /* R */
+  /* R */  "0.250 0.350 0.450 0.550 0.650 0.750 0.850 0.950 "  /* Y */
+  /* Y */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* G */
+  /* G */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t r800_red_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.010 "  /* M */
+  /* M */  "0.040 0.200 0.400 0.600 0.800 1.000 1.000 1.000 "  /* R */
+  /* R */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t r800_blue_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* B */
+  /* B */  "1.000 1.000 1.000 1.000 0.900 0.800 0.550 0.400 "  /* M */
+  /* M */  "0.250 0.125 0.050 0.010 0.001 0.000 0.000 0.000 "  /* R */
+  /* R */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
 
 static const physical_subchannel_t standard_black_subchannels[] =
 {
   { 0, -1, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_black, -1.0);
+DECLARE_INK_CHANNEL(standard_black);
 
 static const physical_subchannel_t x80_black_subchannels[] =
 {
   { 0, -1, 48, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(x80_black, -1.0);
+DECLARE_INK_CHANNEL(x80_black);
 
 static const physical_subchannel_t c80_black_subchannels[] =
 {
   { 0, -1, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c80_black, -1.0);
+DECLARE_INK_CHANNEL(c80_black);
 
 static const physical_subchannel_t c64_black_subchannels[] =
 {
   { 0, -1, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c64_black, -1.0);
+DECLARE_INK_CHANNEL(c64_black);
 
 static const physical_subchannel_t standard_cyan_subchannels[] =
 {
   { 2, -1, 0, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_cyan, -1.0);
+DECLARE_INK_CHANNEL(standard_cyan);
 
 static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 {
   { 2, -1, 1, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_standard_cyan, -1.0);
+DECLARE_INK_CHANNEL(f360_standard_cyan);
+
+static const physical_subchannel_t r800_cyan_subchannels[] =
+{
+  { 2, -1, 1, "CyanDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(r800_cyan);
 
 static const physical_subchannel_t cx3650_standard_cyan_subchannels[] =
 {
   { 2, -1, 2, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(cx3650_standard_cyan, -1.0);
+DECLARE_INK_CHANNEL(cx3650_standard_cyan);
 
 static const physical_subchannel_t x80_cyan_subchannels[] =
 {
   { 2, -1, 96, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(x80_cyan, -1.0);
+DECLARE_INK_CHANNEL(x80_cyan);
 
 static const physical_subchannel_t c80_cyan_subchannels[] =
 {
   { 2, -1, 0, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c80_cyan, -1.0);
+DECLARE_INK_CHANNEL(c80_cyan);
 
 static const physical_subchannel_t c64_cyan_subchannels[] =
 {
   { 2, -1, 0, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c64_cyan, -1.0);
+DECLARE_INK_CHANNEL(c64_cyan);
 
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
   { 1, -1, 0, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_magenta, -1.0);
+DECLARE_INK_CHANNEL(standard_magenta);
+
+static const physical_subchannel_t r800_magenta_subchannels[] =
+{
+  { 1, -1, 0, "MagentaDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(r800_magenta);
 
 static const physical_subchannel_t f360_standard_magenta_subchannels[] =
 {
   { 1, -1, 1, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_standard_magenta, -1.0);
+DECLARE_INK_CHANNEL(f360_standard_magenta);
 
 static const physical_subchannel_t x80_magenta_subchannels[] =
 {
   { 1, -1, 48, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(x80_magenta, -1.0);
+DECLARE_INK_CHANNEL(x80_magenta);
 
 static const physical_subchannel_t c80_magenta_subchannels[] =
 {
   { 1, -1, 120, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c80_magenta, -1.0);
+DECLARE_INK_CHANNEL(c80_magenta);
 
 static const physical_subchannel_t c64_magenta_subchannels[] =
 {
   { 1, -1, 90, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c64_magenta, -1.0);
+DECLARE_INK_CHANNEL(c64_magenta);
 
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
   { 4, -1, 0, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_yellow, -1.0);
+DECLARE_INK_CHANNEL(standard_yellow);
 
 static const physical_subchannel_t x80_yellow_subchannels[] =
 {
   { 4, -1, 0, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(x80_yellow, -1.0);
+DECLARE_INK_CHANNEL(x80_yellow);
 
 static const physical_subchannel_t c80_yellow_subchannels[] =
 {
   { 4, -1, 240, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c80_yellow, -1.0);
+DECLARE_INK_CHANNEL(c80_yellow);
 
 static const physical_subchannel_t c64_yellow_subchannels[] =
 {
   { 4, -1, 180, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(c64_yellow, -1.0);
+DECLARE_INK_CHANNEL(c64_yellow);
 
 static const physical_subchannel_t f360_standard_yellow_subchannels[] =
 {
   { 4, -1, 1, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_standard_yellow, -1.0);
+DECLARE_INK_CHANNEL(f360_standard_yellow);
 
-static const physical_subchannel_t standard_red_subchannels[] =
+static const physical_subchannel_t r800_yellow_subchannels[] =
+{
+  { 4, -1, 1, "YellowDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(r800_yellow);
+
+static const physical_subchannel_t r800_red_subchannels[] =
 {
   { 7, -1, 0, "RedDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_red, 3.0);
+DECLARE_EXTENDED_INK_CHANNEL(r800_red);
 
-static const physical_subchannel_t f360_red_subchannels[] =
-{
-  { 7, -1, 1, "RedDensity", NULL }
-};
-
-DECLARE_INK_CHANNEL(f360_red, 3.0);
-
-static const physical_subchannel_t standard_blue_subchannels[] =
-{
-  { 8, -1, 0, "BlueDensity", NULL }
-};
-
-DECLARE_INK_CHANNEL(standard_blue, 1.0);
-
-static const physical_subchannel_t f360_blue_subchannels[] =
+static const physical_subchannel_t r800_blue_subchannels[] =
 {
   { 8, -1, 1, "BlueDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_blue, 1.0);
+DECLARE_EXTENDED_INK_CHANNEL(r800_blue);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {
   { 9, -1, 0, "GlossDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_gloss, -1.0);
+DECLARE_INK_CHANNEL(standard_gloss);
 
 static const physical_subchannel_t f360_gloss_subchannels[] =
 {
   { 9, -1, 1, "GlossDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_gloss, -1.0);
+DECLARE_INK_CHANNEL(f360_gloss);
 
 static const physical_subchannel_t standard_photo_black_subchannels[] =
 {
   { 0, 4, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(standard_photo_black, -1.0);
+DECLARE_INK_CHANNEL(standard_photo_black);
 
 static const physical_subchannel_t f360_r800_photo_black_subchannels[] =
 {
   { 0, 4, 1, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_r800_photo_black, -1.0);
+DECLARE_INK_CHANNEL(f360_r800_photo_black);
 
 static const physical_subchannel_t r800_matte_black_subchannels[] =
 {
   { 0, 0, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(r800_matte_black, -1.0);
+DECLARE_INK_CHANNEL(r800_matte_black);
 
 static const physical_subchannel_t photo_black_subchannels[] =
 {
   { 0, 0, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(photo_black, -1.0);
+DECLARE_INK_CHANNEL(photo_black);
 
 static const physical_subchannel_t f360_photo_black_subchannels[] =
 {
   { 0, 0, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_photo_black, -1.0);
+DECLARE_INK_CHANNEL(f360_photo_black);
 
 static const physical_subchannel_t extended_black_subchannels[] =
 {
   { 0, 1, 0, "BlackDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(extended_black, -1.0);
+DECLARE_INK_CHANNEL(extended_black);
 
 static const physical_subchannel_t photo_cyan_subchannels[] =
 {
@@ -269,14 +430,14 @@ static const physical_subchannel_t photo_cyan_subchannels[] =
   { 2, 1, 0, "CyanDensity", "LightCyanTransition" }
 };
 
-DECLARE_INK_CHANNEL(photo_cyan, -1.0);
+DECLARE_INK_CHANNEL(photo_cyan);
 
 static const physical_subchannel_t extended_cyan_subchannels[] =
 {
   { 2, 1, 0, "CyanDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(extended_cyan, -1.0);
+DECLARE_INK_CHANNEL(extended_cyan);
 
 static const physical_subchannel_t photo_magenta_subchannels[] =
 {
@@ -284,35 +445,35 @@ static const physical_subchannel_t photo_magenta_subchannels[] =
   { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
 };
 
-DECLARE_INK_CHANNEL(photo_magenta, -1.0);
+DECLARE_INK_CHANNEL(photo_magenta);
 
 static const physical_subchannel_t extended_magenta_subchannels[] =
 {
   { 1, 1, 0, "MagentaDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(extended_magenta, -1.0);
+DECLARE_INK_CHANNEL(extended_magenta);
 
 static const physical_subchannel_t photo_yellow_subchannels[] =
 {
   { 4, 0, 0, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(photo_yellow, -1.0);
+DECLARE_INK_CHANNEL(photo_yellow);
 
 static const physical_subchannel_t f360_photo_yellow_subchannels[] =
 {
   { 4, 0, 1, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(f360_photo_yellow, -1.0);
+DECLARE_INK_CHANNEL(f360_photo_yellow);
 
 static const physical_subchannel_t j_extended_yellow_subchannels[] =
 {
   { 4, 2, 0, "YellowDensity", NULL }
 };
 
-DECLARE_INK_CHANNEL(j_extended_yellow, -1.0);
+DECLARE_INK_CHANNEL(j_extended_yellow);
 
 /* For Japanese 7-color printers, with dark yellow */
 static const physical_subchannel_t photo2_yellow_subchannels[] =
@@ -321,7 +482,7 @@ static const physical_subchannel_t photo2_yellow_subchannels[] =
   { 4, 0, 0, "YellowDensity", "DarkYellowTransition" }
 };
 
-DECLARE_INK_CHANNEL(photo2_yellow, -1.0);
+DECLARE_INK_CHANNEL(photo2_yellow);
 
 static const physical_subchannel_t f360_photo2_yellow_subchannels[] =
 {
@@ -329,7 +490,7 @@ static const physical_subchannel_t f360_photo2_yellow_subchannels[] =
   { 4, 0, 1, "YellowDensity", "DarkYellowTransition" }
 };
 
-DECLARE_INK_CHANNEL(f360_photo2_yellow, -1.0);
+DECLARE_INK_CHANNEL(f360_photo2_yellow);
 
 static const physical_subchannel_t photo2_black_subchannels[] =
 {
@@ -337,7 +498,7 @@ static const physical_subchannel_t photo2_black_subchannels[] =
   { 0, 1, 0, "BlackDensity", "GrayTransition" }
 };
 
-DECLARE_INK_CHANNEL(photo2_black, -1.0);
+DECLARE_INK_CHANNEL(photo2_black);
 
 static const physical_subchannel_t f360_photo2_black_subchannels[] =
 {
@@ -345,7 +506,7 @@ static const physical_subchannel_t f360_photo2_black_subchannels[] =
   { 0, 1, 0, "BlackDensity", "GrayTransition" }
 };
 
-DECLARE_INK_CHANNEL(f360_photo2_black, -1.0);
+DECLARE_INK_CHANNEL(f360_photo2_black);
 
 static const physical_subchannel_t quadtone_subchannels[] =
 {
@@ -355,7 +516,7 @@ static const physical_subchannel_t quadtone_subchannels[] =
   { 4, -1, 0, "BlackDensity", "Gray1Transition" },
 };
 
-DECLARE_INK_CHANNEL(quadtone, -1.0);
+DECLARE_INK_CHANNEL(quadtone);
 
 static const physical_subchannel_t c80_quadtone_subchannels[] =
 {
@@ -365,7 +526,7 @@ static const physical_subchannel_t c80_quadtone_subchannels[] =
   { 4, -1, 240, "BlackDensity", "Gray1Transition" },
 };
 
-DECLARE_INK_CHANNEL(c80_quadtone, -1.0);
+DECLARE_INK_CHANNEL(c80_quadtone);
 
 static const physical_subchannel_t c64_quadtone_subchannels[] =
 {
@@ -375,7 +536,7 @@ static const physical_subchannel_t c64_quadtone_subchannels[] =
   { 4, -1, 180, "BlackDensity", "Gray1Transition" },
 };
 
-DECLARE_INK_CHANNEL(c64_quadtone, -1.0);
+DECLARE_INK_CHANNEL(c64_quadtone);
 
 static const physical_subchannel_t f360_quadtone_subchannels[] =
 {
@@ -385,7 +546,7 @@ static const physical_subchannel_t f360_quadtone_subchannels[] =
   { 4, -1, 0, "BlackDensity", "Gray1Transition" },
 };
 
-DECLARE_INK_CHANNEL(f360_quadtone, -1.0);
+DECLARE_INK_CHANNEL(f360_quadtone);
 
 static const physical_subchannel_t cx3650_quadtone_subchannels[] =
 {
@@ -395,7 +556,7 @@ static const physical_subchannel_t cx3650_quadtone_subchannels[] =
   { 4, -1, 0, "BlackDensity", "Gray1Transition" },
 };
 
-DECLARE_INK_CHANNEL(cx3650_quadtone, -1.0);
+DECLARE_INK_CHANNEL(cx3650_quadtone);
 
 static const physical_subchannel_t f360_photo_cyan_subchannels[] =
 {
@@ -403,7 +564,7 @@ static const physical_subchannel_t f360_photo_cyan_subchannels[] =
   { 2, 1, 0, "CyanDensity", "LightCyanTransition" }
 };
 
-DECLARE_INK_CHANNEL(f360_photo_cyan, -1.0);
+DECLARE_INK_CHANNEL(f360_photo_cyan);
 
 static const physical_subchannel_t f360_photo_magenta_subchannels[] =
 {
@@ -411,7 +572,7 @@ static const physical_subchannel_t f360_photo_magenta_subchannels[] =
   { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
 };
 
-DECLARE_INK_CHANNEL(f360_photo_magenta, -1.0);
+DECLARE_INK_CHANNEL(f360_photo_magenta);
 
 
 #define DECLARE_CHANNEL_SET(name)			\
@@ -1059,6 +1220,62 @@ static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 /*
  ****************************************************************
  *                                                              *
+ * Five color CMYRB                                             *
+ *                                                              *
+ ****************************************************************
+ */
+
+static const ink_channel_t *const five_color_r800_channels[] =
+{
+  NULL, &r800_cyan_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel
+};
+
+DECLARE_CHANNEL_SET(five_color_r800);
+
+static const escp2_inkname_t five_color_r800_inkset =
+{
+  "CMYRB", N_("Five Color Photo Composite"), INKSET_CMYKRB,
+  &five_color_r800_channel_set
+};
+
+static const ink_channel_t *const five_color_r800_photo_channels[] =
+{
+  NULL, &r800_cyan_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel
+};
+
+DECLARE_CHANNEL_SET(five_color_r800_photo);
+
+static const escp2_inkname_t five_color_r800_photo_inkset =
+{
+  "CMYRB", N_("Five Color Photo Composite"), INKSET_CMYKRB,
+  &five_color_r800_photo_channel_set
+};
+
+static const ink_channel_t *const five_color_r800_photo_gloss_channels[] =
+{
+  NULL, &f360_standard_cyan_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel,
+  &standard_gloss_channel
+};
+
+DECLARE_CHANNEL_SET(five_color_r800_photo_gloss);
+DECLARE_AUX_CHANNEL_SET(five_color_r800_photo, standard_gloss);
+
+static const escp2_inkname_t five_color_r800_photo_gloss_inkset =
+{
+  "CMYRBG", N_("Five Color Photo Composite"), INKSET_CMYKRB,
+  &five_color_r800_photo_standard_gloss_channel_set
+};
+
+
+/*
+ ****************************************************************
+ *                                                              *
  * Six color CMYKRB                                             *
  *                                                              *
  ****************************************************************
@@ -1066,9 +1283,9 @@ static const escp2_inkname_t f360_j_seven_color_enhanced_inkset =
 
 static const ink_channel_t *const six_color_r800_channels[] =
 {
-  &standard_black_channel, &f360_standard_cyan_channel,
-  &standard_magenta_channel, &f360_standard_yellow_channel,
-  &standard_red_channel, &f360_blue_channel
+  &standard_black_channel, &r800_cyan_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel
 };
 
 DECLARE_CHANNEL_SET(six_color_r800);
@@ -1081,9 +1298,9 @@ static const escp2_inkname_t six_color_r800_inkset =
 
 static const ink_channel_t *const six_color_r800_photo_channels[] =
 {
-  &f360_r800_photo_black_channel, &f360_standard_cyan_channel,
-  &standard_magenta_channel, &f360_standard_yellow_channel,
-  &standard_red_channel, &f360_blue_channel
+  &f360_r800_photo_black_channel, &r800_cyan_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel
 };
 
 DECLARE_CHANNEL_SET(six_color_r800_photo);
@@ -1097,8 +1314,8 @@ static const escp2_inkname_t six_color_r800_photo_inkset =
 static const ink_channel_t *const six_color_r800_photo_gloss_channels[] =
 {
   &f360_r800_photo_black_channel, &f360_standard_cyan_channel,
-  &standard_magenta_channel, &f360_standard_yellow_channel,
-  &standard_red_channel, &f360_blue_channel,
+  &r800_magenta_channel, &r800_yellow_channel,
+  &r800_red_channel, &r800_blue_channel,
   &standard_gloss_channel
 };
 
@@ -1454,9 +1671,9 @@ static const escp2_inkname_t f360_seven_color_extended_inkset =
 static const ink_channel_t *const seven_color_r800_gloss_extended_channels[] =
 {
   &standard_black_channel, &f360_r800_photo_black_channel,
-  &f360_standard_cyan_channel, &standard_magenta_channel,
-  &f360_standard_yellow_channel, &standard_red_channel,
-  &f360_blue_channel, &standard_gloss_channel
+  &r800_cyan_channel, &r800_magenta_channel,
+  &r800_yellow_channel, &r800_red_channel,
+  &r800_blue_channel, &standard_gloss_channel
 };
 
 DECLARE_CHANNEL_SET(seven_color_r800_gloss_extended);
@@ -1824,6 +2041,7 @@ DECLARE_INKLIST("ultramatte", ultra_matte7, photo7,
 static const escp2_inkname_t *const cmykrb_matte_ink_types[] =
 {
   &six_color_r800_inkset,
+  &five_color_r800_inkset,
   &four_color_r800_matte_inkset,
   &three_color_r800_composite_inkset,
   &one_color_extended_inkset,
@@ -1838,6 +2056,7 @@ DECLARE_INKLIST("cmykrbmatte", cmykrb_matte, cmykrb_matte,
 static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 {
   &six_color_r800_photo_gloss_inkset,
+  &five_color_r800_photo_gloss_inkset,
   &four_color_r800_photo_gloss_inkset,
   &three_color_r800_gloss_inkset,
   &one_color_extended_inkset,

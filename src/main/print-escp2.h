@@ -178,10 +178,17 @@ typedef struct
 
 typedef struct
 {
+  const char *curve_name;
+  const char *curve;
+  stp_curve_t *curve_impl;
+} hue_curve_t;
+
+typedef struct
+{
   const char *listname;
   const physical_subchannel_t *subchannels;
   short n_subchannels;
-  double hue;
+  hue_curve_t *hue_curve;
 } ink_channel_t;
 
 typedef enum

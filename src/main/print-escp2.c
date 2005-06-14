@@ -109,6 +109,7 @@ static const channel_count_t escp2_channel_counts[] =
   { 32, "32" },
 };
 
+static stp_curve_t *hue_curve_bounds = NULL;
 static int escp2_channel_counts_count =
 sizeof(escp2_channel_counts) / sizeof(channel_count_t);
 
@@ -326,6 +327,36 @@ static const stp_parameter_t the_parameters[] =
     N_("Raw Channel Count"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 0, 1, -1, 1, 0
+  },
+  {
+    "CyanHueCurve", N_("Cyan Map"), N_("Advanced Output Control"),
+    N_("Adjust the cyan map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 1, 1, 0
+  },
+  {
+    "MagentaHueCurve", N_("Magenta Map"), N_("Advanced Output Control"),
+    N_("Adjust the magenta map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 2, 1, 0
+  },
+  {
+    "YellowHueCurve", N_("Yellow Map"), N_("Advanced Output Control"),
+    N_("Adjust the yellow map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 3, 1, 0
+  },
+  {
+    "BlueHueCurve", N_("Blue Map"), N_("Advanced Output Control"),
+    N_("Adjust the blue map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 4, 1, 0
+  },
+  {
+    "RedHueCurve", N_("Red Map"), N_("Advanced Output Control"),
+    N_("Adjust the red map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 5, 1, 0
   },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
@@ -1178,6 +1209,36 @@ set_density_parameter(const stp_vars_t *v,
 }
 
 static void
+set_hue_map_parameter(const stp_vars_t *v,
+		      stp_parameter_t *description,
+		      int color)
+{
+  description->is_active = 0;
+  description->deflt.curve = hue_curve_bounds;
+  description->bounds.curve = stp_curve_create_copy(hue_curve_bounds);
+  if (stp_get_string_parameter(v, "PrintingMode") &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
+      using_automatic_settings(v, AUTO_MODE_MANUAL))
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      if (ink_name &&
+	  ink_name->channel_set->channel_count > color &&
+	  ink_name->channel_set->channels[color] &&
+	  ink_name->channel_set->channels[color]->hue_curve &&
+	  ink_name->channel_set->channels[color]->hue_curve->curve)
+	{
+	  if (!ink_name->channel_set->channels[color]->hue_curve->curve_impl)
+	    ink_name->channel_set->channels[color]->hue_curve->curve_impl =
+	      stp_curve_create_from_string
+	      (ink_name->channel_set->channels[color]->hue_curve->curve);
+	  description->deflt.curve =
+	    ink_name->channel_set->channels[color]->hue_curve->curve_impl;
+	  description->is_active = 1;
+	}
+    }
+}
+
+static void
 set_gray_transition_parameter(const stp_vars_t *v,
 			      stp_parameter_t *description,
 			      int expected_channels)
@@ -1590,6 +1651,16 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     set_density_parameter(v, description, XCOLOR_R);
   else if (strcmp(name, "BlueDensity") == 0)
     set_density_parameter(v, description, XCOLOR_B);
+  else if (strcmp(name, "CyanHueCurve") == 0)
+    set_hue_map_parameter(v, description, STP_ECOLOR_C);
+  else if (strcmp(name, "MagentaHueCurve") == 0)
+    set_hue_map_parameter(v, description, STP_ECOLOR_M);
+  else if (strcmp(name, "YellowHueCurve") == 0)
+    set_hue_map_parameter(v, description, STP_ECOLOR_Y);
+  else if (strcmp(name, "RedHueCurve") == 0)
+    set_hue_map_parameter(v, description, XCOLOR_R);
+  else if (strcmp(name, "BlueHueCurve") == 0)
+    set_hue_map_parameter(v, description, XCOLOR_B);
   else if (strcmp(name, "UseGloss") == 0)
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
@@ -2157,12 +2228,12 @@ setup_inks(stp_vars_t *v)
 				STP_PARAMETER_DEFAULTED))
     multi_channel_limit =
       stp_get_float_parameter(v, "MultiChannelLimit");
-  stp_channel_set_multi_channel_lower_limit(v, 1.0 - multi_channel_limit);
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel && channel->n_subchannels > 0)
 	{
+	  int hue_curve_found = 0;
 	  const char *param = channel->subchannels[0].channel_density;
 	  const shade_t *shades = escp2_shades(v, i);
 	  double userval = get_double_param(v, param);
@@ -2191,7 +2262,28 @@ setup_inks(stp_vars_t *v)
 		stp_channel_set_cutoff_adjustment(v, i, j,
 						  paper->subchannel_cutoff);
 	    }
-	  stp_channel_set_hue_angle(v, i, channel->hue);
+	  if (channel->hue_curve && channel->hue_curve->curve_name)
+	    {
+	      char *hue_curve_name;
+	      const stp_curve_t *curve = NULL;
+	      stp_asprintf(&hue_curve_name, "%sHueCurve",
+			   channel->hue_curve->curve_name);
+	      curve = stp_get_curve_parameter(v, hue_curve_name);
+	      if (curve)
+		{
+		  stp_channel_set_curve(v, i, curve);
+		  hue_curve_found = 1;
+		}
+	      stp_free(hue_curve_name);
+	    }
+	  if (channel->hue_curve && !hue_curve_found)
+	    {
+	      if (!channel->hue_curve->curve_impl)
+		channel->hue_curve->curve_impl =
+		  stp_curve_create_from_string(channel->hue_curve->curve);
+	      if (channel->hue_curve->curve_impl)
+		stp_channel_set_curve(v, i, channel->hue_curve->curve_impl);
+	    }
 	}
     }
   if (pd->use_aux_channels)
@@ -2231,7 +2323,16 @@ setup_inks(stp_vars_t *v)
 		    stp_channel_set_cutoff_adjustment(v, ch, j,
 						      paper->subchannel_cutoff);
 		}
-	      stp_channel_set_hue_angle(v, ch, channel->hue);
+	      if (channel->hue_curve)
+		{
+		  stp_curve_t *curve =
+		    stp_curve_create_from_string(channel->hue_curve->curve);
+		  if (curve)
+		    {
+		      stp_channel_set_curve(v, ch, curve);
+		      stp_curve_destroy(curve);
+		    }
+		}
 	    }
 	}
     }
@@ -2947,6 +3048,15 @@ static stp_family_t print_escp2_module_data =
 static int
 print_escp2_module_init(void)
 {
+  hue_curve_bounds = stp_curve_create_from_string
+    ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+     "<gutenprint>\n"
+     "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+     "<sequence count=\"2\" lower-bound=\"0\" upper-bound=\"1\">\n"
+     "1 1\n"
+     "</sequence>\n"
+     "</curve>\n"
+     "</gutenprint>");
   return stp_family_register(print_escp2_module_data.printer_list);
 }
 

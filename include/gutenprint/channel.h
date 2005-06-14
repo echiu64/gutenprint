@@ -48,21 +48,30 @@ extern void stp_channel_reset_channel(stp_vars_t *v, int channel);
 
 extern void stp_channel_add(stp_vars_t *v, unsigned channel,
 			    unsigned subchannel, double value);
+extern double stp_channel_get_value(stp_vars_t *v, unsigned channel,
+				    unsigned subchannel);
 
 extern void stp_channel_set_density_adjustment(stp_vars_t *v,
 					       int color, int subchannel,
 					       double adjustment);
+extern double stp_channel_get_density_adjustment(stp_vars_t *v,
+						 int color, int subchannel);
 extern void stp_channel_set_ink_limit(stp_vars_t *v, double limit);
-extern void stp_channel_set_multi_channel_lower_limit(stp_vars_t *v,
-						      double limit);
+extern double stp_channel_get_ink_limit(stp_vars_t *v);
 extern void stp_channel_set_cutoff_adjustment(stp_vars_t *v,
 					      int color, int subchannel,
 					      double adjustment);
+extern double stp_channel_get_cutoff_adjustment(stp_vars_t *v,
+						int color, int subchannel);
 extern void stp_channel_set_black_channel(stp_vars_t *v, int channel);
+extern int stp_channel_get_black_channel(stp_vars_t *v);
 extern void stp_channel_set_gloss_channel(stp_vars_t *v, int channel);
+extern int stp_channel_get_gloss_channel(stp_vars_t *v);
 extern void stp_channel_set_gloss_limit(stp_vars_t *v, double limit);
-extern void stp_channel_set_hue_angle(stp_vars_t *v,
-				      int color, double angle);
+extern double stp_channel_get_gloss_limit(stp_vars_t *v);
+extern void stp_channel_set_curve(stp_vars_t *v, int channel,
+				  const stp_curve_t *curve);
+extern const stp_curve_t *stp_channel_get_curve(stp_vars_t *v, int channel);
 
 extern void stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 				   int input_channel_count);
