@@ -497,21 +497,22 @@ DEFINE_DATA_SETTER(short, short)
 DEFINE_DATA_SETTER(unsigned short, ushort)
 
 
-#define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				     \
-const t *								     \
+#define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				      \
+const t *								      \
 stp_sequence_get_##name##_data(const stp_sequence_t *sequence, size_t *count) \
-{									     \
-  int i;								     \
-  if (sequence->blo < (double) lb || sequence->bhi > (double) ub)	     \
-    return NULL;							     \
-  if (!sequence->name##_data)						     \
-    {									     \
-      ((stp_sequence_t *)sequence)->name##_data = stp_zalloc(sizeof(t) * sequence->size);	     \
-      for (i = 0; i < sequence->size; i++)				     \
-	((stp_sequence_t *)sequence)->name##_data[i] = (t) sequence->data[i];		     \
-    }									     \
-  *count = sequence->size;						     \
-  return sequence->name##_data;						     \
+{									      \
+  int i;								      \
+  if (sequence->blo < (double) lb || sequence->bhi > (double) ub)	      \
+    return NULL;							      \
+  if (!sequence->name##_data)						      \
+    {									      \
+      stp_sequence_t *seq = (stp_sequence_t *) (sequence);		      \
+      seq->name##_data = stp_zalloc(sizeof(t) * sequence->size);	      \
+      for (i = 0; i < sequence->size; i++)				      \
+	seq->name##_data[i] = (t) sequence->data[i];			      \
+    }									      \
+  *count = sequence->size;						      \
+  return sequence->name##_data;						      \
 }
 
 #ifndef HUGE_VALF /* ISO constant, from <math.h> */
