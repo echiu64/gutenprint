@@ -213,11 +213,7 @@ stpui_set_printrc_file(const char *name)
   if (name)
     printrc_name = g_strdup(name);
   else
-    {
-      const char *where = getenv("HOME");
-      if (where)
-	printrc_name = g_strconcat(where, "/.gimpprintrc");
-    }
+    printrc_name = g_build_filename(g_get_home_dir(), ".gutenprintrc", NULL);
 }
 
 const char *
