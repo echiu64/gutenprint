@@ -562,6 +562,14 @@ gutenprint_get_cb (void *get_cb_data,
     }
 }
 
+static void
+print_debug_setcb(const char *key, const char *value, int value_size)
+{
+  fprintf (stderr, "ijsgutenprint: gutenprint_set_cb: %s='", key);
+  fwrite (value, 1, value_size, stderr);
+  fputs ("'\n", stderr);
+}    
+
 static int
 gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	     const char *key, const char *value, int value_size)
@@ -571,9 +579,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
   int i;
   double z;
   IMAGE *img = (IMAGE *)set_cb_data;
-  STP_DEBUG(fprintf (stderr, "ijsgutenprint: gutenprint_set_cb: %s='", key));
-  STP_DEBUG(fwrite (value, 1, value_size, stderr));
-  STP_DEBUG(fputs ("'\n", stderr));
+  STP_DEBUG(print_debug_setcb(key, value, value_size));
   if (value_size > sizeof(vbuf)-1)
     return -1;
   memset(vbuf, 0, sizeof(vbuf));
