@@ -530,6 +530,10 @@
         <parameter type="float" name="Gamma">0.510</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus Photo RX425" driver="escp2-rx425" manufacturer="Epson" model="63">
+        <parameter type="float" name="Gamma">0.510</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus Photo RX430" driver="escp2-rx430" manufacturer="Epson" model="63">
         <parameter type="float" name="Gamma">0.510</parameter>
         <parameter type="float" name="Density">1.0</parameter>
