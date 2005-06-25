@@ -119,9 +119,9 @@ static const escp2_dropsize_t escp2_r300_360_dropsizes =
 static const escp2_dropsize_t escp2_r300_720_dropsizes =
   { "r300_720", 3, { 0.15, 0.5, 1.0 } };
 static const escp2_dropsize_t escp2_r300_1440_dropsizes =
-  { "r300_1440", 3, { 0.25, 0.5, 1.0 } };
+  { "r300_1440", 3, { 0.29, 0.48, 1.0 } };
 static const escp2_dropsize_t escp2_r300_2880_dropsizes =
-  { "r300_2880", 2, { 0.5, 1.0 } };
+  { "r300_2880", 2, { 0.604, 1.0 } };
 static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
   { "r300_2880_1440", 1, { 1.0 } };
 
