@@ -149,7 +149,7 @@ libgutenprint_la_LIBADD = $(GUTENPRINT_LIBDEPS)
 # Uncommment to build an unversioned library (version in soname)
 #libgutenprint_version = -release $(GUTENPRINT_VERSION)
 # Uncomment to build a versioned library
-libgutenprint_version = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+libgutenprint_version = -version-info $(GUTENPRINT_CURRENT_INTERFACE):$(GUTENPRINT_INTERFACE_AGE):$(GUTENPRINT_BINARY_AGE)
 libgutenprint_la_LDFLAGS = $(libgutenprint_version) \
 	-rpath $(libdir) -no-undefined
 # libtool currently needs a patch for symbol export to work correctly

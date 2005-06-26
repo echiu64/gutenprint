@@ -51,12 +51,12 @@ libgutenprintui_la_SOURCES =			\
 libgutenprintui_la_LIBADD = $(GUTENPRINTUI_LIBDEPS)
 # Uncommment to build an unversioned library (version in soname)
 libgutenprintui_la_CFLAGS = $(AM_CFLAGS) $(GUTENPRINT_CFLAGS) $(GTK_CFLAGS)
-libgutenprintui_la_LDFLAGS = -release $(GUTENPRINT_VERSION) \
-	-rpath $(libdir) -no-undefined
+#libgutenprintui_la_LDFLAGS = -release $(GUTENPRINT_VERSION) \
+#	-rpath $(libdir) -no-undefined
 # Uncomment to build a versioned library
-#libgutenprintui_la_LDFLAGS = \
-# -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-# -rpath $(libdir)
+libgutenprintui_la_LDFLAGS = \
+ -version-info  $(GUTENPRINTUI_CURRENT_INTERFACE):$(GUTENPRINTUI_INTERFACE_AGE):$(GUTENPRINTUI_BINARY_AGE) \
+ -rpath $(libdir) -no-undefined
 
 AM_LFLAGS = -i
 AM_YFLAGS = -d
