@@ -2282,7 +2282,17 @@ setup_inks(stp_vars_t *v)
 		channel->hue_curve->curve_impl =
 		  stp_curve_create_from_string(channel->hue_curve->curve);
 	      if (channel->hue_curve->curve_impl)
-		stp_channel_set_curve(v, i, channel->hue_curve->curve_impl);
+		{
+		  stp_curve_t *curve_tmp =
+		    stp_curve_create_copy(channel->hue_curve->curve_impl);
+		  stp_erprintf("Gamma %f\n", stp_get_float_parameter(v, "Gamma"));
+		  (void) stp_curve_rescale(curve_tmp,
+					   sqrt(1.0 / stp_get_float_parameter(v, "Gamma")),
+					   STP_CURVE_COMPOSE_EXPONENTIATE,
+					   STP_CURVE_BOUNDS_RESCALE);
+		  stp_channel_set_curve(v, i, curve_tmp);
+		  stp_curve_destroy(curve_tmp);
+		}
 	    }
 	}
     }
