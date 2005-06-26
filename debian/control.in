@@ -2,8 +2,8 @@ Source: gutenprint
 Section: graphics
 Priority: optional
 Maintainer: Roger Leigh <rleigh@debian.org>
-Standards-Version: 3.6.1
-Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgimp2.0-dev, libreadline5-dev, libijs-dev (>= 0.35-1), debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), foomatic-db-engine (>= 3.0.1-1), chrpath (>= 0.12)
+Standards-Version: 3.6.2
+Build-Depends: libcupsys2-dev, libcupsimage2-dev, libgtk1.2-dev, libgimp2.0-dev, libreadline5-dev, libijs-dev (>= 0.35-1), debhelper (>= 4.0.2), xlibs-dev, zlib1g-dev, flex, gettext (>= 0.11.5), foomatic-db-engine (>= 3.0.1-1), chrpath (>= 0.12)
 
 Package: gimp-print
 Architecture: any
@@ -22,13 +22,22 @@ Description: print plugin for the GIMP
  many cases, and can be used for many of the most demanding printing
  tasks.  Gutenprint was formerly known as Gimp-Print.
 
+Package: cupsys-driver-gimpprint
+Architecture: any
+Section: graphics
+Depends: cupsys-driver-gutenprint (>= ${Source-Version})
+Description: printer drivers for CUPS
+ This is a transitional package to migrate existing users of
+ cupsys-driver-gimpprint to its cupsys-driver-gutenprint
+ (its successor).  It may be safely removed after upgrading.
+
 Package: cupsys-driver-gutenprint
-Replaces: cupsys-driver-gimpprint, cupsys-driver-gimpprint-data
 Architecture: any
 Section: graphics
 Depends: ${shlibs:Depends}, perl (>= 5.8.0), libperlmenu-perl, cupsys (>= 1.1.23) | cups (>= 1.1.23)
 Recommends: gnome-gv | postscript-viewer
 Suggests: gutenprint-doc (>= ${Source-Version}), gutenprint-locales (>= ${Source-Version})
+Replaces: cupsys-driver-gimpprint, cupsys-driver-gimpprint-data
 Description: printer drivers for CUPS
  This package includes a CUPS driver based on Gutenprint.
  .
@@ -116,10 +125,58 @@ Description: runtime for the Gutenprint printer driver library
  many cases, and can be used for many of the most demanding printing
  tasks.  Gutenprint was formerly known as Gimp-Print.
 
-Package: libgutenprintui2#LIBRARY_VERSION#-dev
+Package: libgutenprintui1-dev
 Architecture: any
 Section: devel
-Depends: libgutenprintui2#LIBRARY_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
+Depends: libgutenprintui1-#LIBRARYUI_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
+Provides: libgutenprintui-dev
+Conflicts: libgutenprintui-dev
+Replaces: libgutenprintui-dev
+Suggests: libgutenprint#LIBRARY_VERSION#-doc (= ${Source-Version})
+Description: development files for the Gutenprint printer driver user interface library
+ This package contains the header files for the libgutenprintui
+ library, along with a static version of libgutenprintui.
+ libgutenprintui contains GTK+ widgets which may be used for print
+ dialogs etc. for use with libgutenprint.
+ .
+ Install this package if you wish to develop packages that use
+ libgutenprintui.  This package is intended for use only by cinepaint
+ and gimp-1.2.
+ .
+ This is Gutenprint version #UPSTREAM_VERSION#, a beta
+ development release in the 5.0 line.
+ .
+ Gutenprint is the print facility for the GIMP, and in addition a
+ suite of drivers that may be used with common UNIX spooling systems
+ using GhostScript or CUPS.  These drivers provide printing quality
+ for UNIX/Linux on a par with proprietary vendor-supplied drivers in
+ many cases, and can be used for many of the most demanding printing
+ tasks.  Gutenprint was formerly known as Gimp-Print.
+
+Package: libgutenprintui1-#LIBRARYUI_VERSION#
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}
+Recommends: gutenprint-locales (>= ${Source-Version})
+Description: runtime for the Gutenprint printer driver user interface library
+ This package includes the libgutenprintui library.  libgutenprintui
+ contains GTK+ widgets which may be used for print dialogs etc. for
+ use with libgutenprint.
+ .
+ This is Gutenprint version #UPSTREAM_VERSION#, a beta
+ development release in the 5.0 line.
+ .
+ Gutenprint is the print facility for the GIMP, and in addition a
+ suite of drivers that may be used with common UNIX spooling systems
+ using GhostScript or CUPS.  These drivers provide printing quality
+ for UNIX/Linux on a par with proprietary vendor-supplied drivers in
+ many cases, and can be used for many of the most demanding printing
+ tasks.  Gutenprint was formerly known as Gimp-Print.
+
+Package: libgutenprintui2-#LIBRARYUI_VERSION#-dev
+Architecture: any
+Section: devel
+Depends: libgutenprintui2-#LIBRARYUI_VERSION# (= ${Source-Version}), pkg-config (>= 0.14.0)
 Provides: libgutenprintui2-dev
 Conflicts: libgutenprintui2-dev
 Replaces: libgutenprintui2-dev
@@ -143,7 +200,7 @@ Description: development files for the Gutenprint printer driver user interface 
  many cases, and can be used for many of the most demanding printing
  tasks.  Gutenprint was formerly known as Gimp-Print.
 
-Package: libgutenprintui2#LIBRARY_VERSION#
+Package: libgutenprintui2-#LIBRARYUI_VERSION#
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}

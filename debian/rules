@@ -2,7 +2,7 @@
 # rules to package gutenprint
 # $Id$
 #
-# Uncomment this to turn on verbose mode. 
+# Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
 # This has to be exported to make some magic below work.
@@ -22,18 +22,23 @@ ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 endif
 
 # Get upstream version, and define libgutenprint suffix
-UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*$$//")
+#UPSTREAM_VERSION = $(shell dpkg-parsechangelog | grep ^Version | sed "s/.* //" | sed "s/-[^-]*$$//")
+UPSTREAM_VERSION = 5.0.0-rc1
 UPSTREAM_VERSION_COMPACT = $(shell echo '$(UPSTREAM_VERSION)' | sed "s/\(.*\..*\)\..*/\1/"
-LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
-#LIBRARY_VERSION = 1
+#LIBRARY_VERSION =  -$(UPSTREAM_VERSION)
+LIBRARY_VERSION = 2
+LIBRARYUI_VERSION = 1
 
 autoconfigure: autoconfigure-stamp
-autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install debian/libgutenprintui2.install
+autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install debian/libgutenprintui1.install debian/libgutenprintui2.install
 	dh_testdir
 # Create versioned symlinks
 	cd debian; \
-	for file in libgutenprint*; do \
-	ln -sfv $$file `echo $$file | sed -e 's/\(libgutenprint[[:alnum:]]*\)\(.*\)/\1$(LIBRARY_VERSION)\2/'`; \
+	for file in libgutenprint[.-]*; do \
+	  ln -sfv $$file `echo $$file | sed -e 's/\(libgutenprint[[:alnum:]]*\)\(.*\)/\1$(LIBRARY_VERSION)\2/'`; \
+	done ; \
+	for file in libgutenprintui*; do \
+	   ln -sfv $$file `echo $$file | sed -e 's/\(libgutenprint[[:alnum:]]*\)\(.*\)/\1-$(LIBRARYUI_VERSION)\2/'`; \
 	done
 	rm debian/libgutenprint$(LIBRARY_VERSION)*.in
 	mkdir debian/build; \
@@ -43,7 +48,7 @@ autoconfigure-stamp: debian/control debian/libgutenprint.install debian/libguten
 	  --prefix=/usr --mandir=\$${prefix}/share/man \
 	  --disable-static --enable-shared --disable-rpath \
 	  --with-modules=dlopen \
-	  --disable-libgutenprintui --enable-libgutenprintui2 \
+	  --enable-libgutenprintui --enable-libgutenprintui2 \
 	  --without-gimp --with-gimp2 --with-cups --with-ijs \
 	  --with-foomatic --with-foomatic3 \
 	  --disable-test \
@@ -75,10 +80,11 @@ clean: debian/control
 	rm -rf debian/libgutenprint.install debian/libgutenprint-doc.doc-base.developer debian/libgutenprint-doc.doc-base.reference debian/libgutenprint-doc.install
 	rm -rf debian/libgutenprint$(LIBRARY_VERSION).files
 	rm -rf debian/libgutenprint$(LIBRARY_VERSION).postinst
-	rm -rf debian/libgutenprintui2.install
+	rm -rf debian/libgutenprintui1.install debian/libgutenprintui2.install
 	-$(MAKE) distclean
 
-	rm -rf $(CURDIR)/debian/libgutenprint*$(LIBRARY_VERSION)*
+	rm -rf $(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)*
+	rm -rf $(CURDIR)/debian/libgutenprintui[12]-$(LIBRARYUI_VERSION)*
 	dh_clean
 
 install: DH_OPTIONS=
@@ -119,7 +125,7 @@ binary-arch: build install
 	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdconfig.5.0.8
 	  mv debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.8 debian/cupsys-driver-gutenprint/usr/share/man/man8/cups-genppdupdate.5.0.8
 	  mv debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.1 debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.5.0.1
-	  ln -s debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.5.0.1.gz debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.1.gz
+	  ln -s ./ijsgutenprint.5.0.1.gz debian/ijsgutenprint/usr/share/man/man1/ijsgutenprint.1.gz
 	  ln -s debian/ijsgutenprint/usr/bin/ijsgutenprint.5.0 debian/ijsgutenprint/usr/bin/ijsgutenprint
 	dh_installexamples -a
 	dh_installchangelogs -a NEWS
@@ -132,17 +138,17 @@ binary-arch: build install
 	chrpath --delete debian/cupsys-driver-gutenprint/usr/sbin/cups-genppd.5.0
 	dh_makeshlibs -a -V -X usr/lib/gutenprint
 	dh_installdeb -a
-	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2$(LIBRARY_VERSION)/usr/lib
+	dh_shlibdeps -a -X usr/lib/gutenprint -l$(CURDIR)/debian/libgutenprint$(LIBRARY_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui1-$(LIBRARYUI_VERSION)/usr/lib:$(CURDIR)/debian/libgutenprintui2-$(LIBRARYUI_VERSION)/usr/lib
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
 
 binary: binary-indep binary-arch
 
-SEDPATTERN = -e "s/\#UPSTREAM_VERSION\#/$(UPSTREAM_VERSION)/g" -e "s/\#LIBRARY_VERSION\#/$(LIBRARY_VERSION)/g"
+SEDPATTERN = -e "s/\#UPSTREAM_VERSION\#/$(UPSTREAM_VERSION)/g" -e "s/\#LIBRARY_VERSION\#/$(LIBRARY_VERSION)/g" -e "s/\#LIBRARYUI_VERSION\#/$(LIBRARYUI_VERSION)/g"
 
 # Make sure debian/control is up-to-date.
-debian/control: debian/control.in debian/changelog
+debian/control: debian/control.in debian/changelog debian/rules
 	sed $(SEDPATTERN) <$< >$@
 
 # Make sure debian/libgutenprint-doc.doc-base is up-to-date.
@@ -159,6 +165,10 @@ debian/libgutenprint.install: debian/libgutenprint.install.in debian/changelog
 
 # Make sure debian/libgutenprint-doc.install is up-to-date.
 debian/libgutenprint-doc.install: debian/libgutenprint-doc.install.in debian/changelog
+	sed $(SEDPATTERN) <$< >$@
+
+# Make sure debian/libgutenprintui1.install is up-to-date.
+debian/libgutenprintui1.install: debian/libgutenprintui1.install.in debian/changelog
 	sed $(SEDPATTERN) <$< >$@
 
 # Make sure debian/libgutenprintui2.install is up-to-date.

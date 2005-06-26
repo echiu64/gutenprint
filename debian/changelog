@@ -1,3 +1,15 @@
+gutenprint (5.0.0-rc1-1) experimental; urgency=low
+
+  * New upstream release candidate.
+  * Upgrade to Standards-Version 3.6.2
+  * Create a dummy cupsys-driver-gimpprint package to enable
+    upgrades from stable.
+  * Re-add libgutenprintui1 packages, required for cinepaint.
+  * debian/rules, add LIBRARYUI_VERSION, required to support
+    separate sonames for libgutenprint and libgutenprintui*.
+
+ -- Roger Leigh <rleigh@debian.org>  Sun, 26 Jun 2005 17:56:32 +0100
+
 gutenprint (5.0.0-beta4-1) unstable; urgency=low
 
   * New upstream beta release.
