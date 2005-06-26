@@ -55,6 +55,8 @@ EXTRA_DIST = \
 	libgutenprint-doc.doc-base.reference.in \
 	libgutenprint-doc.install.in \
 	libgutenprint.install.in \
+	libgutenprintui1-dev.install \
+        libgutenprintui1.install.in \
 	libgutenprintui2-dev.install \
 	libgutenprintui2.install.in \
 	README.building \
