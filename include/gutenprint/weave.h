@@ -46,7 +46,7 @@ extern "C" {
 #include <config.h>
 #endif
 
-#define STP_MAX_WEAVE (8)
+#define STP_MAX_WEAVE (16)
 
 
 typedef struct			/* Weave parameters for a specific row */

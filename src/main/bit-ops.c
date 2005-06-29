@@ -777,6 +777,279 @@ stp_unpack_8(int length,
 		     out4, out5, out6, out7);
 }
 
+
+static void
+stpi_unpack_16_1(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7,
+		 unsigned char *out8,
+		 unsigned char *out9,
+		 unsigned char *out10,
+		 unsigned char *out11,
+		 unsigned char *out12,
+		 unsigned char *out13,
+		 unsigned char *out14,
+		 unsigned char *out15)
+{
+  unsigned char	tempin, bit;
+  unsigned char temp[16];
+
+  if (length <= 0)
+    return;
+
+  memset(temp, 0, 16);
+
+  for (bit = 128; length > 0; length--)
+    {
+      tempin = *in++;
+
+      if (tempin & 128)
+        temp[0] |= bit;
+      if (tempin & 64)
+        temp[1] |= bit;
+      if (tempin & 32)
+        temp[2] |= bit;
+      if (tempin & 16)
+        temp[3] |= bit;
+      if (tempin & 8)
+        temp[4] |= bit;
+      if (tempin & 4)
+        temp[5] |= bit;
+      if (tempin & 2)
+        temp[6] |= bit;
+      if (tempin & 1)
+        temp[7] |= bit;
+
+      tempin = *in++;
+
+      if (tempin & 128)
+	temp[8] |= bit;
+      if (tempin & 64)
+	temp[9] |= bit;
+      if (tempin & 32)
+	temp[10] |= bit;
+      if (tempin & 16)
+	temp[11] |= bit;
+      if (tempin & 8)
+	temp[12] |= bit;
+      if (tempin & 4)
+	temp[13] |= bit;
+      if (tempin & 2)
+	temp[14] |= bit;
+      if (tempin & 1)
+	temp[15] |= bit;
+
+      if (bit > 1)
+        bit >>= 1;
+      else
+	{
+	  bit     = 128;
+	  *out0++ = temp[0];
+	  *out1++ = temp[1];
+	  *out2++ = temp[2];
+	  *out3++ = temp[3];
+	  *out4++ = temp[4];
+	  *out5++ = temp[5];
+	  *out6++ = temp[6];
+	  *out7++ = temp[7];
+	  *out8++ = temp[8];
+	  *out9++ = temp[9];
+	  *out10++ = temp[10];
+	  *out11++ = temp[11];
+	  *out12++ = temp[12];
+	  *out13++ = temp[13];
+	  *out14++ = temp[14];
+	  *out15++ = temp[15];
+
+	  memset(temp, 0, 16);
+	}
+    }
+
+  if (bit < 128)
+    {
+      *out0++ = temp[0];
+      *out1++ = temp[1];
+      *out2++ = temp[2];
+      *out3++ = temp[3];
+      *out4++ = temp[4];
+      *out5++ = temp[5];
+      *out6++ = temp[6];
+      *out7++ = temp[7];
+      *out8++ = temp[8];
+      *out9++ = temp[9];
+      *out10++ = temp[10];
+      *out11++ = temp[11];
+      *out12++ = temp[12];
+      *out13++ = temp[13];
+      *out14++ = temp[14];
+      *out15++ = temp[15];
+    }
+}
+
+static void
+stpi_unpack_16_2(int length,
+		 const unsigned char *in,
+		 unsigned char *out0,
+		 unsigned char *out1,
+		 unsigned char *out2,
+		 unsigned char *out3,
+		 unsigned char *out4,
+		 unsigned char *out5,
+		 unsigned char *out6,
+		 unsigned char *out7,
+		 unsigned char *out8,
+		 unsigned char *out9,
+		 unsigned char *out10,
+		 unsigned char *out11,
+		 unsigned char *out12,
+		 unsigned char *out13,
+		 unsigned char *out14,
+		 unsigned char *out15)
+{
+  unsigned char	tempin, shift;
+  unsigned char temp[16];
+
+  if (length <= 0)
+    return;
+
+  memset(temp, 0, 16);
+
+  for (shift = 0; length > 0; length--)
+    {
+      /*
+       * Note - we can't use (tempin & N) >> (shift - M) since negative
+       * right-shifts are not always implemented.
+       */
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp[0] |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp[1] |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp[2] |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp[3] |= ((tempin & 3) << 6) >> shift;
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp[4] |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp[5] |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp[6] |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp[7] |= ((tempin & 3) << 6) >> shift;
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp[8] |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp[9] |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp[10] |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp[11] |= ((tempin & 3) << 6) >> shift;
+
+      tempin = *in++;
+
+      if (tempin & 192)
+        temp[12] |= (tempin & 192) >> shift;
+      if (tempin & 48)
+        temp[13] |= ((tempin & 48) << 2) >> shift;
+      if (tempin & 12)
+        temp[14] |= ((tempin & 12) << 4) >> shift;
+      if (tempin & 3)
+        temp[15] |= ((tempin & 3) << 6) >> shift;
+
+      if (shift < 6)
+        shift += 2;
+      else
+	{
+	  shift   = 0;
+	  *out0++ = temp[0];
+	  *out1++ = temp[1];
+	  *out2++ = temp[2];
+	  *out3++ = temp[3];
+	  *out4++ = temp[4];
+	  *out5++ = temp[5];
+	  *out6++ = temp[6];
+	  *out7++ = temp[7];
+	  *out8++ = temp[8];
+	  *out9++ = temp[9];
+	  *out10++ = temp[10];
+	  *out11++ = temp[11];
+	  *out12++ = temp[12];
+	  *out13++ = temp[13];
+	  *out14++ = temp[14];
+	  *out15++ = temp[15];
+
+	  memset(temp, 0, 16);
+	}
+    }
+
+  if (shift)
+    {
+      *out0++ = temp[0];
+      *out1++ = temp[1];
+      *out2++ = temp[2];
+      *out3++ = temp[3];
+      *out4++ = temp[4];
+      *out5++ = temp[5];
+      *out6++ = temp[6];
+      *out7++ = temp[7];
+      *out8++ = temp[8];
+      *out9++ = temp[9];
+      *out10++ = temp[10];
+      *out11++ = temp[11];
+      *out12++ = temp[12];
+      *out13++ = temp[13];
+      *out14++ = temp[14];
+      *out15++ = temp[15];
+    }
+}
+
+void
+stp_unpack_16(int length,
+	      int bits,
+	      const unsigned char *in,
+	      unsigned char *out0,
+	      unsigned char *out1,
+	      unsigned char *out2,
+	      unsigned char *out3,
+	      unsigned char *out4,
+	      unsigned char *out5,
+	      unsigned char *out6,
+	      unsigned char *out7,
+	      unsigned char *out8,
+	      unsigned char *out9,
+	      unsigned char *out10,
+	      unsigned char *out11,
+	      unsigned char *out12,
+	      unsigned char *out13,
+	      unsigned char *out14,
+	      unsigned char *out15)
+{
+  if (bits == 1)
+    stpi_unpack_16_1(length, in,
+		     out0, out1, out2, out3, out4, out5, out6, out7,
+		     out8, out9, out10, out11, out12, out13, out14, out15);
+  else
+    stpi_unpack_16_2(length, in,
+		     out0, out1, out2, out3, out4, out5, out6, out7,
+		     out8, out9, out10, out11, out12, out13, out14, out15);
+}
+
 static void
 find_first_and_last(const unsigned char *line, int length,
 		    int *first, int *last)

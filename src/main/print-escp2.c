@@ -1016,7 +1016,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
 	horizontal_passes = 1;
       if (oversample < 1)
 	oversample = 1;
-      if (((horizontal_passes * res->vertical_passes) <= 8) &&
+      if (((horizontal_passes * res->vertical_passes) <= STP_MAX_WEAVE) &&
 	  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
 	return 1;
     }

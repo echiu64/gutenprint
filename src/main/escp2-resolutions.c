@@ -182,6 +182,7 @@ const res_t *const stpi_escp2_1440dpi_reslist[] =
   &r_720x360sw,
 
   &r_720sw,
+  &r_720hq,
 
   &r_1440x720sw,
   &r_1440x720hq2,
@@ -208,6 +209,7 @@ const res_t *const stpi_escp2_2880dpi_reslist[] =
   &r_720sw,
 
   &r_1440x720sw,
+  &r_1440x720hq2,
 
   &r_2880x720sw,
   &r_2880x720hq2,

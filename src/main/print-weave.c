@@ -1180,7 +1180,7 @@ weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
   w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
 
-  memcpy(&(((stpi_softweave_t *) wsw)->wcache), w, sizeof(stp_weave_t));
+  memcpy(&(wsw->wcache), w, sizeof(stp_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
   stp_dprintf(STP_DBG_WEAVE_PARAMS, v, "row %d, jet %d of pass %d "
 	      "(pos %d, start %d, end %d, missing rows %d)\n",
@@ -1617,6 +1617,13 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
 	      stp_unpack_8(length, sw->bitwidth, in,
 			   sw->s[0], sw->s[1], sw->s[2], sw->s[3],
 			   sw->s[4], sw->s[5], sw->s[6], sw->s[7]);
+	      break;
+	    case 16:
+	      stp_unpack_16(length, sw->bitwidth, in,
+			    sw->s[0], sw->s[1], sw->s[2], sw->s[3],
+			    sw->s[4], sw->s[5], sw->s[6], sw->s[7],
+			    sw->s[8], sw->s[9], sw->s[10], sw->s[11],
+			    sw->s[12], sw->s[13], sw->s[14], sw->s[15]);
 	      break;
 	    }
 	  switch (sw->vertical_subpasses)
