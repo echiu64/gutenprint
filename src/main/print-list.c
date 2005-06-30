@@ -234,11 +234,18 @@ stp_list_get_end(const stp_list_t *list)
   return list->end;
 }
 
+static stp_list_t *
+deconst_list(const stp_list_t *list)
+{
+  return (stp_list_t *) list;
+}
+
 /* get the node by its place in the list */
 stp_list_item_t *
 stp_list_get_item_by_index(const stp_list_t *list, int idx)
 {
   stp_list_item_t *node = NULL;
+  stp_list_t *ulist = deconst_list(list);
   int i; /* current index */
   int d = 0; /* direction of list traversal, 0=forward */
   int c = 0; /* use cache? */
@@ -306,8 +313,8 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
     }
 
   /* update cache */
-  ((stp_list_t *)list)->index_cache = i;
-  ((stp_list_t *)list)->index_cache_node = node;
+  ulist->index_cache = i;
+  ulist->index_cache_node = node;
 
   return node;
 }
@@ -337,6 +344,7 @@ stp_list_item_t *
 stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 {
   stp_list_item_t *node = NULL;
+  stp_list_t *ulist = deconst_list(list);
   check_list(list);
 
   if (!list->namefunc)
@@ -358,7 +366,7 @@ stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 	  new_name = list->namefunc(node->data);
 	  if (strcmp(name, new_name) == 0)
 	    {
-	      set_name_cache((stp_list_t *) list, new_name, node);
+	      set_name_cache(ulist, new_name, node);
 	      return node;
 	    }
 	}
@@ -369,7 +377,7 @@ stp_list_get_item_by_name(const stp_list_t *list, const char *name)
 	  new_name = list->namefunc(node->data);
 	  if (strcmp(name, new_name) == 0)
 	    {
-	      set_name_cache((stp_list_t *) list, new_name, node);
+	      set_name_cache(ulist, new_name, node);
 	      return node;
 	    }
 	}
@@ -378,7 +386,7 @@ stp_list_get_item_by_name(const stp_list_t *list, const char *name)
   node = stp_list_get_item_by_name_internal(list, name);
 
   if (node)
-    set_name_cache((stp_list_t *) list, name, node);
+    set_name_cache(ulist, name, node);
 
   return node;
 }
@@ -410,6 +418,7 @@ stp_list_item_t *
 stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 {
   stp_list_item_t *node = NULL;
+  stp_list_t *ulist = deconst_list(list);
   check_list(list);
 
   if (!list->long_namefunc)
@@ -431,7 +440,7 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 	  new_long_name = list->long_namefunc(node->data);
 	  if (strcmp(long_name, new_long_name) == 0)
 	    {
-	      set_long_name_cache((stp_list_t*) list, new_long_name, node);
+	      set_long_name_cache(ulist, new_long_name, node);
 	      return node;
 	    }
 	}
@@ -442,7 +451,7 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
 	  new_long_name = list->long_namefunc(node->data);
 	  if (strcmp(long_name, new_long_name) == 0)
 	    {
-	      set_long_name_cache((stp_list_t *) list, new_long_name, node);
+	      set_long_name_cache(ulist, new_long_name, node);
 	      return node;
 	    }
 	}
@@ -451,7 +460,7 @@ stp_list_get_item_by_long_name(const stp_list_t *list, const char *long_name)
   node = stp_list_get_item_by_long_name_internal(list, long_name);
 
   if (node)
-    set_long_name_cache((stp_list_t *) list, long_name, node);
+    set_long_name_cache(ulist, long_name, node);
 
   return node;
 }
