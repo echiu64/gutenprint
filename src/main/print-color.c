@@ -117,19 +117,19 @@ sizeof(raw_channel_params) / sizeof(channel_param_t);
 
 static const color_description_t color_descriptions[] =
 {
-  { "Grayscale",  1, 1, COLOR_ID_GRAY,   COLOR_BLACK,   CMASK_K,      1,
+  { N_("Grayscale"),  1, 1, COLOR_ID_GRAY,   COLOR_BLACK,   CMASK_K,      1,
     COLOR_CORRECTION_UNCORRECTED, &stpi_color_convert_to_gray   },
-  { "Whitescale", 1, 1, COLOR_ID_WHITE,  COLOR_WHITE,   CMASK_K,      1,
+  { N_("Whitescale"), 1, 1, COLOR_ID_WHITE,  COLOR_WHITE,   CMASK_K,      1,
     COLOR_CORRECTION_UNCORRECTED, &stpi_color_convert_to_gray   },
-  { "RGB",        1, 1, COLOR_ID_RGB,    COLOR_WHITE,   CMASK_CMY,    3,
+  { N_("RGB"),        1, 1, COLOR_ID_RGB,    COLOR_WHITE,   CMASK_CMY,    3,
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_color  },
-  { "CMY",        1, 1, COLOR_ID_CMY,    COLOR_BLACK,   CMASK_CMY,    3,
+  { N_("CMY"),        1, 1, COLOR_ID_CMY,    COLOR_BLACK,   CMASK_CMY,    3,
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_color  },
-  { "CMYK",       1, 0, COLOR_ID_CMYK,   COLOR_BLACK,   CMASK_CMYK,   4,
+  { N_("CMYK"),       1, 0, COLOR_ID_CMYK,   COLOR_BLACK,   CMASK_CMYK,   4,
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_kcmy   },
-  { "KCMY",       1, 1, COLOR_ID_KCMY,   COLOR_BLACK,   CMASK_CMYK,   4,
+  { N_("KCMY"),       1, 1, COLOR_ID_KCMY,   COLOR_BLACK,   CMASK_CMYK,   4,
     COLOR_CORRECTION_ACCURATE,    &stpi_color_convert_to_kcmy   },
-  { "Raw",        1, 1, COLOR_ID_RAW,    COLOR_UNKNOWN, 0,           -1,
+  { N_("Raw"),        1, 1, COLOR_ID_RAW,    COLOR_UNKNOWN, 0,           -1,
     COLOR_CORRECTION_RAW,         &stpi_color_convert_raw       },
 };
 
@@ -1506,14 +1506,14 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 			      stp_string_list_add_string
 				(description->bounds.str,
 				 color_descriptions[j].name,
-				 color_descriptions[j].name);
+				 _(color_descriptions[j].name));
 			    stp_parameter_description_destroy(&desc);
 			  }
 			else
 			  stp_string_list_add_string
 			    (description->bounds.str,
 			     color_descriptions[j].name,
-			     color_descriptions[j].name);
+			     _(color_descriptions[j].name));
 		      }
 		  description->deflt.str =
 		    stp_string_list_param(description->bounds.str, 0)->name;
@@ -1525,7 +1525,7 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		    if (color_descriptions[j].output)
 		      stp_string_list_add_string
 			(description->bounds.str, color_descriptions[j].name,
-			 color_descriptions[j].name);
+			 _(color_descriptions[j].name));
 		  description->deflt.str =
 		    stp_string_list_param(description->bounds.str, 0)->name;
 		}

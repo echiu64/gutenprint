@@ -1450,7 +1450,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	       (!stp_check_string_parameter(v, "MediaType",
 					    STP_PARAMETER_ACTIVE))))
 	    stp_string_list_add_string(description->bounds.str, q->name,
-				       q->text);
+				       _(q->text));
 	  if (strcmp(q->name, "Standard") == 0)
 	    has_standard_quality = 1;
 	}
