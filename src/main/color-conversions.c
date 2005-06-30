@@ -244,7 +244,7 @@ adjust_hue(const double *hue_map, double hue, size_t points)
 
 static inline void
 adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
-	   int split_saturation)
+	   int split_saturation, int adjust_hue_only)
 {
   const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));
   const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));
@@ -262,7 +262,7 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
       rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
       s = update_saturation(s, ssat, isat);
-      if (lut->sat_map.d_cache)
+      if (!adjust_hue_only && lut->sat_map.d_cache)
 	{
 	  double nh = h * sat_count / 6.0;
 	  double tmp = interpolate_value(sat_map, nh);
@@ -275,7 +275,7 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
       h = adjust_hue(hue_map, h, hue_count);
       calc_hsl_to_rgb(rgbout, h, s, l);
 
-      if (s > 0.00001)
+      if (!adjust_hue_only && s > 0.00001)
 	{
 	  /*
 	   * Perform luminosity adjustment only on color component.
@@ -596,9 +596,12 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
   int compute_saturation = ssat <= .99999 || ssat >= 1.00001;		     \
   int split_saturation = ssat > 1.4;					     \
   int bright_color_adjustment = 0;					     \
+  int hue_only_color_adjustment = 0;					     \
   int do_user_adjustment = 0;						     \
   if (lut->color_correction->correction == COLOR_CORRECTION_BRIGHT)	     \
     bright_color_adjustment = 1;					     \
+  if (lut->color_correction->correction == COLOR_CORRECTION_HUE)	     \
+    hue_only_color_adjustment = 1;					     \
   if (sbright != 1)							     \
     do_user_adjustment = 1;						     \
   compute_saturation |= do_user_adjustment;				     \
@@ -651,7 +654,8 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
 	  if (bright_color_adjustment)					     \
 	    adjust_hsl_bright(out, lut, ssat, isat, split_saturation);	     \
 	  else								     \
-	    adjust_hsl(out, lut, ssat, isat, split_saturation);		     \
+	    adjust_hsl(out, lut, ssat, isat, split_saturation,		     \
+		       hue_only_color_adjustment);			     \
 	  lookup_rgb(lut, out, red, green, blue, 1 << bits);		     \
 	  o0 = out[0];							     \
 	  o1 = out[1];							     \
@@ -2066,6 +2070,7 @@ generic_##from##_to_##to(const stp_vars_t *v,			\
       return from2##_to_##to##_fast(v, in, out);		\
     case COLOR_CORRECTION_ACCURATE:				\
     case COLOR_CORRECTION_BRIGHT:				\
+    case COLOR_CORRECTION_HUE:					\
       return from2##_to_##to(v, in, out);			\
     case COLOR_CORRECTION_DESATURATED:				\
       return from2##_to_##to##_desaturated(v, in, out);		\
@@ -2092,6 +2097,7 @@ generic_##from##_to_##to(const stp_vars_t *v,			\
     case COLOR_CORRECTION_UNCORRECTED:				\
     case COLOR_CORRECTION_ACCURATE:				\
     case COLOR_CORRECTION_BRIGHT:				\
+    case COLOR_CORRECTION_HUE:					\
       return from2##_to_##to(v, in, out);			\
     case COLOR_CORRECTION_DESATURATED:				\
       return from2##_to_##to##_desaturated(v, in, out);		\
@@ -2118,6 +2124,7 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
     case COLOR_CORRECTION_UNCORRECTED:					\
     case COLOR_CORRECTION_ACCURATE:					\
     case COLOR_CORRECTION_BRIGHT:					\
+    case COLOR_CORRECTION_HUE:						\
     case COLOR_CORRECTION_DESATURATED:					\
       return from2##_to_##to(v, in, out);				\
     case COLOR_CORRECTION_THRESHOLD:					\
@@ -2220,6 +2227,7 @@ stpi_color_convert_raw(const stp_vars_t *v,
       return raw_to_raw_threshold(v, in, out);
     case COLOR_CORRECTION_UNCORRECTED:
     case COLOR_CORRECTION_BRIGHT:
+    case COLOR_CORRECTION_HUE:
     case COLOR_CORRECTION_ACCURATE:
     case COLOR_CORRECTION_DESATURATED:
       return raw_to_raw(v, in, out);
