@@ -182,9 +182,9 @@ calc_hsl_to_rgb(unsigned short *rgb, double h, double s, double l)
 }
 
 static inline double
-update_saturation(double sat, double adjust, double isat)
+update_saturation(double sat, double adjust, double isat, int bright_colors)
 {
-  if (adjust < 1)
+  if (bright_colors || adjust < 1)
     sat *= adjust;
   else if (adjust > 1)
     {
@@ -224,7 +224,7 @@ update_saturation_from_rgb(unsigned short *rgb,
       if (val < ub)
 	s = s * (65535 - ub) / (65535 - val);
     }
-  s = update_saturation(s, adjust, isat);
+  s = update_saturation(s, adjust, isat, 0);
   calc_hsl_to_rgb(rgb, h, s, l);
 }
 
@@ -244,7 +244,7 @@ adjust_hue(const double *hue_map, double hue, size_t points)
 
 static inline void
 adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
-	   int split_saturation, int adjust_hue_only)
+	   int split_saturation, int adjust_hue_only, int bright_colors)
 {
   const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));
   const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));
@@ -261,14 +261,15 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
       rgbout[1] ^= 65535;
       rgbout[2] ^= 65535;
       calc_rgb_to_hsl(rgbout, &h, &s, &l);
-      s = update_saturation(s, ssat, isat);
+      s = update_saturation(s, ssat, isat, 0);
       if (!adjust_hue_only && lut->sat_map.d_cache)
 	{
 	  double nh = h * sat_count / 6.0;
 	  double tmp = interpolate_value(sat_map, nh);
 	  if (tmp < .9999 || tmp > 1.0001)
 	    {
-	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0);
+	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0,
+				    bright_colors);
 	    }
 	}
       oh = h;
@@ -313,38 +314,6 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 	      rgbout[i] = gray + (rgbout[i] * (65535 - gray) / 65535.0);
 	}
 
-      rgbout[0] ^= 65535;
-      rgbout[1] ^= 65535;
-      rgbout[2] ^= 65535;
-    }
-}
-
-static inline void
-adjust_hsl_bright(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
-		  int split_saturation)
-{
-  const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));
-  const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));
-  if ((split_saturation || lum_map || hue_map) &&
-      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
-    {
-      size_t hue_count = CURVE_CACHE_FAST_COUNT(&(lut->hue_map));
-      size_t lum_count = CURVE_CACHE_FAST_COUNT(&(lut->lum_map));
-      double h, s, l;
-      rgbout[0] ^= 65535;
-      rgbout[1] ^= 65535;
-      rgbout[2] ^= 65535;
-      calc_rgb_to_hsl(rgbout, &h, &s, &l);
-      s = update_saturation(s, ssat, isat);
-      h = adjust_hue(hue_map, h, hue_count);
-      if (lum_map && l > 0.0001 && l < .9999)
-	{
-	  double nh = h * lum_count / 6.0;
-	  double el = interpolate_value(lum_map, nh);
-	  el = 1.0 + (s * (el - 1.0));
-	  l = 1.0 - pow(1.0 - l, el);
-	}
-      calc_hsl_to_rgb(rgbout, h, s, l);
       rgbout[0] ^= 65535;
       rgbout[1] ^= 65535;
       rgbout[2] ^= 65535;
@@ -651,11 +620,8 @@ color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
 	  if ((compute_saturation))					     \
 	    update_saturation_from_rgb(out, brightness, ssat, isat,	     \
 				       do_user_adjustment);		     \
-	  if (bright_color_adjustment)					     \
-	    adjust_hsl_bright(out, lut, ssat, isat, split_saturation);	     \
-	  else								     \
-	    adjust_hsl(out, lut, ssat, isat, split_saturation,		     \
-		       hue_only_color_adjustment);			     \
+	  adjust_hsl(out, lut, ssat, isat, split_saturation,		     \
+		     hue_only_color_adjustment, bright_color_adjustment);    \
 	  lookup_rgb(lut, out, red, green, blue, 1 << bits);		     \
 	  o0 = out[0];							     \
 	  o1 = out[1];							     \
