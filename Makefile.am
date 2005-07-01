@@ -30,7 +30,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-SUBDIRS = include src samples test po man doc debian scripts
+SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 
 
@@ -140,23 +140,6 @@ pdf:
 
 snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
-
-DEBUILD_OPTIONS = -us -uc
-deb: debian/changelog debian/control debian/rules
-	$(MAKE) dist
-	-$(RM) -r debian-build
-	-mkdir debian-build
-	cd debian-build ; \
-	mv ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
-	tar xfvz $(PACKAGE)_$(VERSION).orig.tar.gz ; \
-	cd $(PACKAGE)-$(VERSION) ; \
-	debuild $(DEBUILD_OPTIONS) ; \
-	cd .. ; \
-	$(RM) -r $(PACKAGE)-$(VERSION)
-
-debian/control:
-	debian/rules debian/control
-
 
 ## Clean
 

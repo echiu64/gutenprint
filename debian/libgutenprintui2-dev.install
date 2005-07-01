@@ -1,3 +1,0 @@
-debian/install/usr/lib/libgutenprintui2.so         usr/lib
-debian/install/usr/lib/pkgconfig/gutenprintui2.pc  usr/lib/pkgconfig
-debian/install/usr/include/gutenprintui2           usr/include

@@ -910,7 +910,6 @@ AC_SUBST(PLUG_IN_PATH)
 dnl Output files
 
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([debian/Makefile])
 AC_CONFIG_FILES([doc/Makefile])
 AC_CONFIG_FILES([doc/gutenprint.dox])
 AC_CONFIG_FILES([doc/gutenprintui2.dox])

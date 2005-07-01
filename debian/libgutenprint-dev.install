@@ -1,3 +1,0 @@
-debian/install/usr/lib/libgutenprint.so         usr/lib
-debian/install/usr/lib/pkgconfig/gutenprint.pc  usr/lib/pkgconfig
-debian/install/usr/include/gutenprint           usr/include
