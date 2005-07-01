@@ -1251,10 +1251,8 @@ Canon BJC 6100
 Canon BJC 7000
 Canon BJC 7100
 Canon BJC 8200
-Canon CP-100 series     (Experimental)
-Canon CP-220 series     (Experimental)
-Canon CP-400 series     (Experimental)
-Canon CP-500 series     (Experimental)
+Canon CP-100 series
+Canon CP-220 series
 Canon S400
 Canon S450
 Canon S800
@@ -1436,8 +1434,8 @@ EPSON PX-V500
 EPSON PX-V600
 EPSON PX-7000
 EPSON PX-9000
-Fujifilm Printpix CX-400 (Experimental)
-Fujifilm Printpix CX-550 (Experimental)
+Fujifilm Printpix CX-400
+Fujifilm Printpix CX-550
 HP DeskJet 340
 HP DeskJet 400
 HP DeskJet 500
@@ -1492,11 +1490,11 @@ Lexmark Z42
 Lexmark Z43
 Lexmark Z52
 Lexmark Z53
-Olympus P-10    (Experimental)
-Olympus P-200   (Experimental)
-Olympus P-300 series (Experimental)
-Olympus P-400   (Experimental)
-Olympus P-440   (Experimental)
+Olympus P-10
+Olympus P-200
+Olympus P-300 series
+Olympus P-400
+Olympus P-440
 Sony UP-DP10    (Experimental)
 
 The following is the complete list of printers believed to be
@@ -1573,6 +1571,7 @@ Canon CP-220                   canon-cp220     Canon CP220
 Canon CP-330                   canon-cp220     Canon CP220
 Canon SELPHY CP-400            canon-cp220     Canon SELPHY CP400
 Canon SELPHY CP-500            canon-cp220     Canon SELPHY CP500
+Canon SELPHY CP-600            canon-cp220     Canon SELPHY CP600
 Canon GP 335                   pcl-4           HP LaserJet 4 series
 Canon LBP-4sx                  pcl-3           HP LaserJet III series
 Canon LBP-430                  pcl-4l          HP LaserJet 4L
