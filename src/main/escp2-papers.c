@@ -156,8 +156,8 @@ static const char photo3_hue_adj[] =
 "<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 0.00 0.00 -.02 -.04 -.08 -.12 -.16 "  /* B */
-/* B */  "-.20 -.24 -.28 -.32 -.32 -.32 -.32 -.32 "  /* M */
+/* C */  "0.00 -.01 -.03 -.06 -.10 -.15 -.20 -.25 "  /* B */
+/* B */  "-.28 -.30 -.34 -.35 -.35 -.34 -.33 -.33 "  /* M */
 /* M */  "-.36 -.40 -.44 -.48 -.50 -.45 -.40 -.30 "  /* R */
 /* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
 /* Y */  "0.00 -.00 -.00 -.00 -.02 -.04 -.08 -.13 "  /* G */
@@ -416,7 +416,7 @@ static const char r800_glossy_lum_adj[] =
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
 /* C */  "0.75 0.75 0.75 0.75 0.76 0.80 0.85 0.90 "  /* B */
-/* B */  "0.90 0.88 0.82 0.78 0.78 0.82 0.85 0.92 "  /* M */
+/* B */  "0.90 0.88 0.82 0.85 0.87 0.89 0.91 0.95 "  /* M */
 /* M */  "0.98 0.98 0.97 0.97 0.96 0.96 0.96 0.96 "  /* R */
 /* R */  "0.96 0.97 0.98 0.98 0.99 1.00 1.00 1.00 "  /* Y */
 /* Y */  "1.00 1.00 1.00 0.99 0.98 0.97 0.96 0.93 "  /* G */
@@ -431,7 +431,7 @@ static const char r800_glossy_hue_adj[] =
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 -.07 -.10 -.15 -.19 -.25 -.30 -.35 "  /* B */
-/* B */  "-.38 -.38 -.30 -.20 -.10 -.00 0.02 0.02 "  /* M */
+/* B */  "-.38 -.38 -.30 -.20 -.10 -.00 0.00 0.00 "  /* M */
 /* M */  "-.00 -.00 -.00 -.00 -.00 -.00 -.00 0.00 "  /* R */
 /* R */  "0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 "  /* Y */
 /* Y */  "0.00 -.00 -.00 -.00 -.00 -.00 -.00 -.00 "  /* G */
@@ -590,29 +590,29 @@ DECLARE_PAPER_ADJUSTMENTS(photo2);
 
 static const paper_adjustment_t photo3_adjustments[] =
 {
-  { "Plain", 0.738, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Plain", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "PlainFast", 0.738, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1.0,
+  { "PlainFast", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Postcard", 0.83, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Postcard", 0.83, .35, 0.5, .2, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "GlossyFilm", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "Transparency", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Envelope", 0.738, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Envelope", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "BackFilm", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "Matte", 0.85, .35, 0.75, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "MatteHeavy", 0.85, .35, .3, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "MatteHeavy", 0.85, .35, .3, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Inkjet", 0.85, .35, 0.75, .135, .9, 1, .59, .7, .9, 1, 1,
+  { "Inkjet", 0.85, .35, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Coated", 1.2, .35, .75, .15, .999, 1, .59, .7, .9, 1, 1,
+  { "Coated", 1.2, .35, .5, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Photo", 1.00, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1,
+  { "Photo", 1.00, .35, 0.5, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "GlossyPhoto", 1.0, .25, 0.5, .3, .999, 1, .6, .83, .66, 1, 0.85,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
@@ -626,7 +626,7 @@ static const paper_adjustment_t photo3_adjustments[] =
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj  },
   { "ColorLife", 1.00, .35, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Other", 0.738, .35, 0.75, .13, .9, 1, .59, .7, .9, 1, 1,
+  { "Other", 0.738, .35, 0.5, .5, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
 };
 
@@ -772,47 +772,47 @@ DECLARE_PAPER_ADJUSTMENTS(ultrachrome_matte);
 
 static const paper_adjustment_t r800_photo_adjustments[] =
 {
-  { "Plain", 0.72, .1, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Plain", 0.72, .1, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "PlainFast", 0.72, .1, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "PlainFast", 0.72, .1, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Postcard", 0.72, .1, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Postcard", 0.72, .1, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "GlossyFilm", 0.83, 1.0, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "GlossyFilm", 0.83, 1.0, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Transparency", 0.83, .75, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Transparency", 0.83, .75, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Envelope", 0.72, .1, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Envelope", 0.72, .1, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "BackFilm", 0.83, .75, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "BackFilm", 0.83, .75, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Glossy", 0.92, 0.4, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Glossy", 0.92, 0.4, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "GlossyHeavy", 0.92, 0.4, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "GlossyHeavy", 0.92, 0.4, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Inkjet", 0.72, .5, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Inkjet", 0.72, .5, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Coated", 0.83, .5, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Coated", 0.83, .5, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Photo", 1.0, .75, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Photo", 1.0, .75, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "GlossyPhoto", 0.72, 1, 1, .1, 0.5, .882, 1, .300, 1, 1, 0.92,
+  { "GlossyPhoto", 0.72, 1, 1, .02, 0.3, .882, 1, .300, 1, 1, 0.92,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Semigloss", 0.72, .8, 1, .1, 0.5, .882, 1, .300, 1, 1, 0.92,
+  { "Semigloss", 0.72, .8, 1, .02, 0.3, .882, 1, .300, 1, 1, 0.92,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Luster", 0.72, .8, 1, .1, .5, .882, 1, .300, 1, 1, 0.92,
+  { "Luster", 0.72, .8, 1, .02, .3, .882, 1, .300, 1, 1, 0.92,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "ArchivalGlossy", 0.92, .4, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "ArchivalGlossy", 0.92, .4, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "WaterColorRadiant", 0.92, .4, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "WaterColorRadiant", 0.92, .4, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "GlossyPaper", 0.83, 1.0, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "GlossyPaper", 0.83, 1.0, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Ilford", 0.83, 1.0, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Ilford", 0.83, 1.0, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj  },
-  { "ColorLife", 0.83, 1.0, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "ColorLife", 0.83, 1.0, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
-  { "Other", 0.72, .1, 1, .1, 0.5, .882, 1, .300, 1, 1, 1.0,
+  { "Other", 0.72, .1, 1, .02, 0.3, .882, 1, .300, 1, 1, 1.0,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
 };
 

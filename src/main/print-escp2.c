@@ -409,48 +409,48 @@ static const float_param_t float_parameters[] =
 {
   {
     {
-      "CyanDensity", N_("Cyan Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the cyan balance"),
+      "CyanDensity", N_("Cyan Density"), N_("Output Level Adjustment"),
+      N_("Adjust the cyan density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "MagentaDensity", N_("Magenta Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the magenta balance"),
+      "MagentaDensity", N_("Magenta Density"), N_("Output Level Adjustment"),
+      N_("Adjust the magenta density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "YellowDensity", N_("Yellow Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the yellow balance"),
+      "YellowDensity", N_("Yellow Density"), N_("Output Level Adjustment"),
+      N_("Adjust the yellow density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "BlackDensity", N_("Black Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the black balance"),
+      "BlackDensity", N_("Black Density"), N_("Output Level Adjustment"),
+      N_("Adjust the black density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "RedDensity", N_("Red Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the red balance"),
+      "RedDensity", N_("Red Density"), N_("Output Level Adjustment"),
+      N_("Adjust the red density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "BlueDensity", N_("Blue Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the blue balance"),
+      "BlueDensity", N_("Blue Density"), N_("Output Level Adjustment"),
+      N_("Adjust the blue density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
     }, 0.0, 2.0, 1.0, 1
@@ -1423,12 +1423,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "CDYAdjustment") == 0)
     {
       const input_slot_t *slot = get_input_slot(v);
+      description->bounds.dimension.lower = -15;
+      description->bounds.dimension.upper = 15;
+      description->deflt.dimension = 0;
       if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
-	{
-	  description->bounds.dimension.lower = -15;
-	  description->bounds.dimension.upper = 15;
-	  description->deflt.dimension = 0;
-	}
+	description->is_active = 1;
       else
 	description->is_active = 0;
     }
@@ -2118,12 +2117,12 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
       k_lower = pt->k_lower;
       k_upper = pt->k_upper;
       k_transition = pt->k_transition;
-      stp_set_default_float_parameter(v, "CyanDensity", 1.0);
-      stp_scale_float_parameter(v, "CyanDensity", pt->cyan);
-      stp_set_default_float_parameter(v, "MagentaDensity", 1.0);
-      stp_scale_float_parameter(v, "MagentaDensity", pt->magenta);
-      stp_set_default_float_parameter(v, "YellowDensity", 1.0);
-      stp_scale_float_parameter(v, "YellowDensity", pt->yellow);
+      if (!stp_check_float_parameter(v, "CyanBalance", STP_PARAMETER_ACTIVE))
+	stp_set_float_parameter(v, "CyanBalance", pt->cyan);
+      if (!stp_check_float_parameter(v, "MagentaBalance", STP_PARAMETER_ACTIVE))
+	stp_set_float_parameter(v, "MagentaBalance", pt->magenta);
+      if (!stp_check_float_parameter(v, "YellowBalance", STP_PARAMETER_ACTIVE))
+	stp_set_float_parameter(v, "YellowBalance", pt->yellow);
       stp_set_default_float_parameter(v, "BlackDensity", 1.0);
       stp_scale_float_parameter(v, "BlackDensity", pt->black);
       stp_set_default_float_parameter(v, "Saturation", 1.0);
@@ -2131,7 +2130,6 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
       stp_set_default_float_parameter(v, "Gamma", 1.0);
       stp_scale_float_parameter(v, "Gamma", pt->gamma);
     }
-
 
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
@@ -2285,10 +2283,12 @@ setup_inks(stp_vars_t *v)
 		{
 		  stp_curve_t *curve_tmp =
 		    stp_curve_create_copy(channel->hue_curve->curve_impl);
+#if 0
 		  (void) stp_curve_rescale(curve_tmp,
 					   sqrt(1.0 / stp_get_float_parameter(v, "Gamma")),
 					   STP_CURVE_COMPOSE_EXPONENTIATE,
 					   STP_CURVE_BOUNDS_RESCALE);
+#endif
 		  stp_channel_set_curve(v, i, curve_tmp);
 		  stp_curve_destroy(curve_tmp);
 		}

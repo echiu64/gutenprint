@@ -365,6 +365,7 @@ short_copy(unsigned short *out, const unsigned short *in, size_t count)
 #endif
 }
 
+#if 0
 static unsigned
 generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 		    unsigned short *out)
@@ -379,14 +380,13 @@ generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
   int i0 = -1;
   int i1 = -1;
   int i2 = -1;
-  unsigned short o0 = 0;
-  unsigned short o1 = 0;
-  unsigned short o2 = 0;
-  unsigned short o3 = 0;
   unsigned short nz0 = 0;
   unsigned short nz1 = 0;
   unsigned short nz2 = 0;
   unsigned short nz3 = 0;
+  double cb = stp_get_float_parameter(vars, "CyanBalance");
+  double mb = stp_get_float_parameter(vars, "MagentaBalance");
+  double yb = stp_get_float_parameter(vars, "YellowBalance");
 
   stp_curve_resample(stp_curve_cache_get_curve(&(lut->gcr_curve)), lut->steps);
   gcr_lookup = stp_curve_cache_get_ushort_data(&(lut->gcr_curve));
@@ -418,7 +418,7 @@ generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 	  if (k > 0)
 	    {
 	      int where, resid;
-	      int kk;
+	      int kk, ck;
 	      if (lut->steps == 65536)
 		kk = gcr_lookup[k];
 	      else
@@ -432,6 +432,7 @@ generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 		}
 	      if (kk > k)
 		kk = k;
+	      ck = k - kk;
 	      if (kk > 0)
 		{
 		  if (lut->steps == 65536)
@@ -448,23 +449,26 @@ generic_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
 			  resid / step;
 		      out[0] = k_out;
 		    }
-		  out[1] -= kk;
-		  out[2] -= kk;
-		  out[3] -= kk;
+		}
+	      out[1] -= k;
+	      out[2] -= k;
+	      out[3] -= k;
+	      if (ck > 0)
+		{
+		  out[1] += ck * cb;
+		  out[2] += ck * mb;
+		  out[3] += ck * yb;
 		}
 	    }
-	  o0 = out[0];
-	  o1 = out[1];
-	  o2 = out[2];
-	  o3 = out[3];
-	  nz0 |= o0;
-	  nz1 |= o1;
-	  nz2 |= o2;
-	  nz3 |= o3;
+	  no0 |= out[0];
+	  no1 |= out[1];
+	  no2 |= out[2];
+	  no3 |= out[3];
 	}
     }
   return (nz0 ? 0 : 1) + (nz1 ? 0 : 2) + (nz2 ? 0 : 4) + (nz3 ? 0 : 8);
 }
+#endif
 
 static unsigned
 raw_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
@@ -881,20 +885,20 @@ name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
   return status;							    \
 }
 
-COLOR_TO_KCMY_FUNC(gray, kcmy, color, generic, 8)
-COLOR_TO_KCMY_FUNC(gray, kcmy, color, generic, 16)
+COLOR_TO_KCMY_FUNC(gray, kcmy, color, raw, 8)
+COLOR_TO_KCMY_FUNC(gray, kcmy, color, raw, 16)
 GENERIC_COLOR_FUNC(gray, kcmy)
 
 COLOR_TO_KCMY_FUNC(gray, kcmy_raw, color_raw, raw, 8)
 COLOR_TO_KCMY_FUNC(gray, kcmy_raw, color_raw, raw, 16)
 GENERIC_COLOR_FUNC(gray, kcmy_raw)
 
-COLOR_TO_KCMY_FUNC(color, kcmy, color, generic, 8)
-COLOR_TO_KCMY_FUNC(color, kcmy, color, generic, 16)
+COLOR_TO_KCMY_FUNC(color, kcmy, color, raw, 8)
+COLOR_TO_KCMY_FUNC(color, kcmy, color, raw, 16)
 GENERIC_COLOR_FUNC(color, kcmy)
 
-COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, generic, 8)
-COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, generic, 16)
+COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, raw, 8)
+COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, raw, 16)
 GENERIC_COLOR_FUNC(color, kcmy_fast)
 
 COLOR_TO_KCMY_FUNC(color, kcmy_raw, color_raw, raw, 8)

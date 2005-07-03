@@ -72,6 +72,8 @@ extern double stp_channel_get_gloss_limit(stp_vars_t *v);
 extern void stp_channel_set_curve(stp_vars_t *v, int channel,
 				  const stp_curve_t *curve);
 extern const stp_curve_t *stp_channel_get_curve(stp_vars_t *v, int channel);
+extern void stp_channel_set_gcr_curve(stp_vars_t *v, const stp_curve_t *curve);
+extern const stp_curve_t *stp_channel_get_gcr_curve(stp_vars_t *v);
 
 extern void stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 				   int input_channel_count);

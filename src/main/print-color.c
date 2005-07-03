@@ -282,7 +282,7 @@ static const float_param_t float_parameters[] =
       N_("Adjust the red gamma"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
-    }, 0.0, 4.0, 1.0, CMASK_R, 1
+    }, 0.0, 1.0, 1.0, CMASK_R, 1
   },
   {
     {
@@ -307,6 +307,30 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
     }, 0.0, 4.0, 1.0, CMASK_K, 1
+  },
+  {
+    {
+      "CyanBalance", N_("Cyan Balance"), N_("GrayBalance"),
+      N_("Adjust the cyan gray balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 1, 1, 0
+    }, 0.0, 1.0, 1.0, CMASK_C, 1
+  },
+  {
+    {
+      "MagentaBalance", N_("Magenta Balance"), N_("GrayBalance"),
+      N_("Adjust the magenta gray balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 2, 1, 0
+    }, 0.0, 1.0, 1.0, CMASK_M, 1
+  },
+  {
+    {
+      "YellowBalance", N_("Yellow Balance"), N_("GrayBalance"),
+      N_("Adjust the yellow gray balance"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED1, 0, 1, 3, 1, 0
+    }, 0.0, 1.0, 1.0, CMASK_Y, 1
   },
   {
     {
@@ -799,29 +823,28 @@ static void
 initialize_gcr_curve(const stp_vars_t *vars)
 {
   lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
-  if (!stp_curve_cache_get_curve(&(lut->gcr_curve)))
+  stp_curve_t *curve = NULL;
+  if (stp_check_curve_parameter(vars, "GCRCurve", STP_PARAMETER_DEFAULTED))
     {
-      if (stp_check_curve_parameter(vars, "GCRCurve", STP_PARAMETER_DEFAULTED))
+      double data;
+      size_t count;
+      int i;
+      curve = stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
+      stp_curve_resample(curve, lut->steps);
+      count = stp_curve_count_points(curve);
+      stp_curve_set_bounds(curve, 0.0, 65535.0);
+      for (i = 0; i < count; i++)
 	{
-	  double data;
-	  size_t count;
-	  int i;
-	  stp_curve_t *curve =
-	    stp_curve_create_copy(stp_get_curve_parameter(vars, "GCRCurve"));
-	  stp_curve_resample(curve, lut->steps);
-	  count = stp_curve_count_points(curve);
-	  stp_curve_set_bounds(curve, 0.0, 65535.0);
-	  for (i = 0; i < count; i++)
-	    {
-	      stp_curve_get_point(curve, i, &data);
-	      data = 65535.0 * data * (double) i / (count - 1);
-	      stp_curve_set_point(curve, i, data);
-	    }
-	  stp_curve_cache_set_curve(&(lut->gcr_curve), curve);
+	  stp_curve_get_point(curve, i, &data);
+	  data = 65535.0 * data * (double) i / (count - 1);
+	  stp_curve_set_point(curve, i, data);
 	}
-      else
-	stp_curve_cache_set_curve(&(lut->gcr_curve), compute_gcr_curve(vars));
     }
+  else
+    curve = compute_gcr_curve(vars);
+  stp_channel_set_gcr_curve((stp_vars_t *)vars, curve);
+  if (curve)
+    stp_curve_destroy(curve);
 }
 
 /*

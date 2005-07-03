@@ -67,15 +67,18 @@ typedef struct
   unsigned channel_count;
   unsigned total_channels;
   unsigned input_channels;
+  unsigned gcr_channels;
   size_t width;
   int initialized;
   unsigned ink_limit;
   unsigned max_density;
   stpi_channel_t *c;
+  stp_curve_t *gcr_curve;
   unsigned curve_count;
   unsigned gloss_limit;
   unsigned short *input_data;
   unsigned short *multi_tmp;
+  unsigned short *gcr_data;
   unsigned short *split_input;
   unsigned short *output_data;
   unsigned short *alloc_data_1;
@@ -116,6 +119,11 @@ stpi_channel_clear(void *vc)
   STP_SAFE_FREE(cg->alloc_data_2);
   STP_SAFE_FREE(cg->alloc_data_3);
   STP_SAFE_FREE(cg->c);
+  if (cg->gcr_curve)
+    {
+      stp_curve_destroy(cg->gcr_curve);
+      cg->gcr_curve = NULL;
+    }
   cg->channel_count = 0;
   cg->curve_count = 0;
   cg->total_channels = 0;
@@ -338,6 +346,31 @@ stp_channel_get_cutoff_adjustment(stp_vars_t *v, int color, int subchannel)
 }
 
 void
+stp_channel_set_gcr_curve(stp_vars_t *v, const stp_curve_t *curve)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  if (!cg)
+    return;
+  stp_dprintf(STP_DBG_INK, v, "set_gcr_curve\n");
+  if (curve)
+    cg->gcr_curve = stp_curve_create_copy(curve);
+  else
+    cg->gcr_curve = NULL;
+}  
+
+const stp_curve_t *
+stp_channel_get_gcr_curve(stp_vars_t *v)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  if (!cg)
+    return NULL;
+  stp_dprintf(STP_DBG_INK, v, "set_gcr_curve\n");
+  return cg->gcr_curve;
+}  
+
+void
 stp_channel_set_curve(stp_vars_t *v, int color, const stp_curve_t *curve)
 {
   stpi_channel_t *ch;
@@ -377,6 +410,14 @@ input_has_special_channels(const stp_vars_t *v)
   const stpi_channel_group_t *cg =
     ((const stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
   return (cg->curve_count > 0);
+}
+
+static int
+output_needs_gcr(const stp_vars_t *v)
+{
+  const stpi_channel_group_t *cg =
+    ((const stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  return (cg->gcr_curve && cg->black_channel == 0);
 }
 
 static int
@@ -506,43 +547,53 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   cg->output_data = cg->alloc_data_1;
   if (curve_count == 0)
     {
+      cg->gcr_channels = cg->input_channels;
       if (input_needs_splitting(v))
 	{
 	  cg->alloc_data_2 =
 	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
 	  cg->input_data = cg->alloc_data_2;
 	  cg->split_input = cg->input_data;
+	  cg->gcr_data = cg->split_input;
 	}
       else if (cg->gloss_channel != -1)
 	{
 	  cg->alloc_data_2 =
 	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
 	  cg->input_data = cg->alloc_data_2;
+	  cg->gcr_data = cg->output_data;
 	}
       else
-	cg->input_data = cg->output_data;
+	{
+	  cg->input_data = cg->output_data;
+	  cg->gcr_data = cg->output_data;
+	}
     }
   else
     {
       cg->alloc_data_2 =
 	stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
       cg->input_data = cg->alloc_data_2;
+      cg->gcr_channels = cg->total_channels;
       if (input_needs_splitting(v))
 	{
 	  cg->alloc_data_3 =
 	    stp_malloc(sizeof(unsigned short) * cg->channel_count * width);
 	  cg->multi_tmp = cg->alloc_data_3;
 	  cg->split_input = cg->multi_tmp;
+	  cg->gcr_data = cg->split_input;
 	}
       else
 	{
 	  cg->multi_tmp = cg->alloc_data_1;
+	  cg->gcr_data = cg->output_data;
 	}
     }
   stp_dprintf(STP_DBG_INK, v, "stp_channel_initialize:\n");
   stp_dprintf(STP_DBG_INK, v, "   channel_count  %d\n", cg->channel_count);
   stp_dprintf(STP_DBG_INK, v, "   total_channels %d\n", cg->total_channels);
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
+  stp_dprintf(STP_DBG_INK, v, "   gcr_channels   %d\n", cg->gcr_channels);
   stp_dprintf(STP_DBG_INK, v, "   width          %d\n", cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
   stp_dprintf(STP_DBG_INK, v, "   gloss_limit    %d\n", cg->gloss_limit);
@@ -558,12 +609,16 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	      (void *) cg->split_input);
   stp_dprintf(STP_DBG_INK, v, "   output_data    %p\n",
 	      (void *) cg->output_data);
+  stp_dprintf(STP_DBG_INK, v, "   gcr_data       %p\n",
+	      (void *) cg->gcr_data);
   stp_dprintf(STP_DBG_INK, v, "   alloc_data_1   %p\n",
 	      (void *) cg->alloc_data_1);
   stp_dprintf(STP_DBG_INK, v, "   alloc_data_2   %p\n",
 	      (void *) cg->alloc_data_2);
   stp_dprintf(STP_DBG_INK, v, "   alloc_data_3   %p\n",
 	      (void *) cg->alloc_data_3);
+  stp_dprintf(STP_DBG_INK, v, "   gcr_curve      %p\n",
+	      (void *) cg->gcr_curve);
   for (i = 0; i < cg->channel_count; i++)
     {
       stp_dprintf(STP_DBG_INK, v, "   Channel %d:\n", i);
@@ -673,13 +728,29 @@ limit_ink(const stp_vars_t *v)
 }
 
 static inline int
-mem_eq(const unsigned short *i1, const unsigned short *i2, int count)
+short_eq(const unsigned short *i1, const unsigned short *i2, size_t count)
 {
+#if 1
   int i;
   for (i = 0; i < count; i++)
     if (i1[i] != i2[i])
       return 0;
   return 1;
+#else
+  return !memcmp(i1, i2, count * sizeof(unsigned short));
+#endif
+}
+
+static inline void
+short_copy(unsigned short *out, const unsigned short *in, size_t count)
+{
+#if 1
+  int i;
+  for (i = 0; i < count; i++)
+    out[i] = in[i];
+#else
+  (void) memcpy(out, in, count * sizeof(unsigned short));
+#endif
 }
 
 static void
@@ -746,11 +817,12 @@ generate_special_channels(const stp_vars_t *v)
   const unsigned short *output_cache = NULL;
   const unsigned short *input = cg->input_data;
   unsigned short *output = cg->multi_tmp;
+  int offset = (cg->black_channel >= 0 ? 0 : -1);
   int outbytes = cg->channel_count * sizeof(unsigned short);
   for (i = 0; i < cg->width;
        input += cg->input_channels, output += cg->channel_count, i++)
     {
-      if (input_cache && mem_eq(input_cache, input, cg->input_channels))
+      if (input_cache && short_eq(input_cache, input, cg->input_channels))
 	{
 	  memcpy(output, output_cache, outbytes);
 	}
@@ -818,7 +890,7 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
   for (i = 0; i < cg->width; i++)
     {
       int zero_ptr = 0;
-      if (input_cache && mem_eq(input_cache, input, cg->input_channels))
+      if (input_cache && short_eq(input_cache, input, cg->input_channels))
 	{
 	  memcpy(output, output_cache, outbytes);
 	  input += cg->input_channels;
@@ -985,6 +1057,40 @@ generate_gloss(const stp_vars_t *v, unsigned *zero_mask)
     }
 }
 
+static void
+do_gcr(const stp_vars_t *v)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  const unsigned short *gcr_lookup;
+  unsigned short *output = cg->gcr_data;
+  size_t count;
+  double cb = stp_get_float_parameter(v, "CyanBalance");
+  double mb = stp_get_float_parameter(v, "MagentaBalance");
+  double yb = stp_get_float_parameter(v, "YellowBalance");
+  int i;
+
+  stp_curve_resample(cg->gcr_curve, 65536);
+  gcr_lookup = stp_curve_get_ushort_data(cg->gcr_curve, &count);
+  for (i = 0; i < cg->width; i++)
+    {
+      unsigned k = output[0];
+      if (k > 0)
+	{
+	  int kk = gcr_lookup[k];
+	  int ck;
+	  if (kk > k)
+	    kk = k;
+	  ck = k - kk;
+	  output[0] = kk;
+	  output[1] += ck * cb;
+	  output[2] += ck * mb;
+	  output[3] += ck * yb;
+	}
+      output += cg->gcr_channels;
+    }
+}
+
 void
 stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
 {
@@ -992,6 +1098,8 @@ stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
     generate_special_channels(v);
   else if (output_has_gloss(v) && !input_needs_splitting(v))
     copy_channels(v);
+  if (output_needs_gcr(v))
+    do_gcr(v);
   if (input_needs_splitting(v))
     split_channels(v, zero_mask);
   else

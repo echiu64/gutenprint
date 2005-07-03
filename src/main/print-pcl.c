@@ -1215,32 +1215,32 @@ static const float_param_t float_parameters[] =
 {
   {
     {
-      "CyanDensity", N_("Cyan Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the cyan balance"),
+      "CyanDensity", N_("Cyan Density"), N_("Output Level Adjustment"),
+      N_("Adjust the cyan density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 1, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "MagentaDensity", N_("Magenta Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the magenta balance"),
+      "MagentaDensity", N_("Magenta Density"), N_("Output Level Adjustment"),
+      N_("Adjust the magenta density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 2, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "YellowDensity", N_("Yellow Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the yellow balance"),
+      "YellowDensity", N_("Yellow Density"), N_("Output Level Adjustment"),
+      N_("Adjust the yellow density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "BlackDensity", N_("Black Balance"), N_("Output Level Adjustment"),
-      N_("Adjust the black balance"),
+      "BlackDensity", N_("Black Density"), N_("Output Level Adjustment"),
+      N_("Adjust the black density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 0, 1, 0
     }, 0.0, 2.0, 1.0, 1
