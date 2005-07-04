@@ -163,7 +163,6 @@ typedef struct
   stp_cached_curve_t hue_map;
   stp_cached_curve_t lum_map;
   stp_cached_curve_t sat_map;
-  stp_cached_curve_t gcr_curve;
   unsigned short *gray_tmp;	/* Color -> Gray */
   unsigned short *cmy_tmp;	/* CMY -> CMYK */
   unsigned char *in_data;

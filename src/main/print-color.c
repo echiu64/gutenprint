@@ -725,7 +725,6 @@ copy_lut(void *vlut)
   stp_curve_cache_copy(&(dest->hue_map), &(src->hue_map));
   stp_curve_cache_copy(&(dest->lum_map), &(src->lum_map));
   stp_curve_cache_copy(&(dest->sat_map), &(src->sat_map));
-  stp_curve_cache_copy(&(dest->gcr_curve), &(src->gcr_curve));
   /* Don't copy gray_tmp */
   /* Don't copy cmy_tmp */
   if (src->in_data)
@@ -747,7 +746,6 @@ free_lut(void *vlut)
   stp_curve_free_curve_cache(&(lut->hue_map));
   stp_curve_free_curve_cache(&(lut->lum_map));
   stp_curve_free_curve_cache(&(lut->sat_map));
-  stp_curve_free_curve_cache(&(lut->gcr_curve));
   STP_SAFE_FREE(lut->gray_tmp);
   STP_SAFE_FREE(lut->cmy_tmp);
   STP_SAFE_FREE(lut->in_data);
