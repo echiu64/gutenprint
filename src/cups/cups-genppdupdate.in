@@ -427,8 +427,7 @@ sub find_ppd ($$$$) {
 # Check that it is a regular file, owned by root.root, not writable
 # by other, and is readable by root.  i.e. the file is secure.
 		    my @sb = stat $fn or next;
-		    if (S_ISREG($sb[2]) && ($sb[4] == 0) && ($sb[5] == 0)) {
-#			!(S_IWOTH & $sb[2]) && (S_IRUSR & $sb[2])) {
+		    if (S_ISREG($sb[2]) && ($sb[4] == 0)) {
 			# Check that the file is a valid Gutenprint PPD file
 			# of the correct version.
 			my $file_version;
