@@ -68,6 +68,7 @@ typedef struct
   unsigned total_channels;
   unsigned input_channels;
   unsigned gcr_channels;
+  unsigned aux_output_channels;
   size_t width;
   int initialized;
   unsigned ink_limit;
@@ -126,6 +127,7 @@ stpi_channel_clear(void *vc)
     }
   cg->channel_count = 0;
   cg->curve_count = 0;
+  cg->aux_output_channels = 0;
   cg->total_channels = 0;
   cg->input_channels = 0;
   cg->initialized = 0;
@@ -434,7 +436,7 @@ input_needs_splitting(const stp_vars_t *v)
   const stpi_channel_group_t *cg =
     ((const stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
 #if 0
-  return cg->total_channels != cg->input_channels;
+  return cg->total_channels != cg->aux_output_channels;
 #else
   int i;
   if (!cg || cg->channel_count <= 0)
@@ -526,6 +528,8 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	      val++;
 	    }
 	}
+      if (cg->gloss_channel != i && c->subchannel_count > 0)
+	cg->aux_output_channels++;
       cg->total_channels += c->subchannel_count;
       for (j = 0; j < c->subchannel_count; j++)
 	cg->max_density += c->sc[j].s_density;
@@ -562,23 +566,24 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	    stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
 	  cg->input_data = cg->alloc_data_2;
 	  cg->gcr_data = cg->output_data;
+	  cg->gcr_channels = cg->total_channels;
 	}
       else
 	{
 	  cg->input_data = cg->output_data;
 	  cg->gcr_data = cg->output_data;
 	}
+      cg->aux_output_channels = cg->gcr_channels;
     }
   else
     {
       cg->alloc_data_2 =
 	stp_malloc(sizeof(unsigned short) * cg->input_channels * width);
       cg->input_data = cg->alloc_data_2;
-      cg->gcr_channels = cg->total_channels;
       if (input_needs_splitting(v))
 	{
 	  cg->alloc_data_3 =
-	    stp_malloc(sizeof(unsigned short) * cg->channel_count * width);
+	    stp_malloc(sizeof(unsigned short) * cg->aux_output_channels * width);
 	  cg->multi_tmp = cg->alloc_data_3;
 	  cg->split_input = cg->multi_tmp;
 	  cg->gcr_data = cg->split_input;
@@ -587,12 +592,15 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	{
 	  cg->multi_tmp = cg->alloc_data_1;
 	  cg->gcr_data = cg->output_data;
+	  cg->aux_output_channels = cg->total_channels;
 	}
+      cg->gcr_channels = cg->aux_output_channels;
     }
   stp_dprintf(STP_DBG_INK, v, "stp_channel_initialize:\n");
   stp_dprintf(STP_DBG_INK, v, "   channel_count  %d\n", cg->channel_count);
   stp_dprintf(STP_DBG_INK, v, "   total_channels %d\n", cg->total_channels);
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
+  stp_dprintf(STP_DBG_INK, v, "   aux_channels   %d\n", cg->aux_output_channels);
   stp_dprintf(STP_DBG_INK, v, "   gcr_channels   %d\n", cg->gcr_channels);
   stp_dprintf(STP_DBG_INK, v, "   width          %d\n", cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
@@ -601,6 +609,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   curve_count    %d\n", cg->curve_count);
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
   stp_dprintf(STP_DBG_INK, v, "   gloss_channel  %d\n", cg->gloss_channel);
+  stp_dprintf(STP_DBG_INK, v, "   gloss_physical %d\n", cg->gloss_physical_channel);
   stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
 	      (void *) cg->input_data);
   stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %p\n",
@@ -818,9 +827,9 @@ generate_special_channels(const stp_vars_t *v)
   const unsigned short *input = cg->input_data;
   unsigned short *output = cg->multi_tmp;
   int offset = (cg->black_channel >= 0 ? 0 : -1);
-  int outbytes = cg->channel_count * sizeof(unsigned short);
+  int outbytes = cg->aux_output_channels * sizeof(unsigned short);
   for (i = 0; i < cg->width;
-       input += cg->input_channels, output += cg->channel_count, i++)
+       input += cg->input_channels, output += cg->aux_output_channels, i++)
     {
       if (input_cache && short_eq(input_cache, input, cg->input_channels))
 	{
@@ -828,9 +837,9 @@ generate_special_channels(const stp_vars_t *v)
 	}
       else
 	{
-	  int c = input[STP_ECOLOR_C];
-	  int m = input[STP_ECOLOR_M];
-	  int y = input[STP_ECOLOR_Y];
+	  int c = input[STP_ECOLOR_C + offset];
+	  int m = input[STP_ECOLOR_M + offset];
+	  int y = input[STP_ECOLOR_Y + offset];
 	  int min = FMIN(c, FMIN(m, y));
 	  int max = FMAX(c, FMAX(m, y));
 	  if (max > min)	/* Otherwise it's gray, and we don't care */
@@ -847,24 +856,28 @@ generate_special_channels(const stp_vars_t *v)
 	      m -= min;
 	      y -= min;
 	      max -= min;
-	      output[STP_ECOLOR_K] = input[STP_ECOLOR_K];
+	      if (offset == 0)
+		output[STP_ECOLOR_K] = input[STP_ECOLOR_K];
 	      hue = compute_hue(c, m, y, max);
-	      for (j = 1; j < cg->channel_count; j++)
+	      for (j = 1; j < cg->aux_output_channels - offset; j++)
 		{
 		  stpi_channel_t *ch = &(cg->c[j]);
-		  output[j] =
-		    max * interpolate_value(ch->hue_map,
-					    hue * ch->h_count / 6.0);
+		  if (ch->hue_map)
+		    output[j + offset] =
+		      max * interpolate_value(ch->hue_map,
+					      hue * ch->h_count / 6.0);
+		  else
+		    output[j + offset] = 0;
 		}
-	      output[STP_ECOLOR_C] += min;
-	      output[STP_ECOLOR_M] += min;
-	      output[STP_ECOLOR_Y] += min;
+	      output[STP_ECOLOR_C + offset] += min;
+	      output[STP_ECOLOR_M + offset] += min;
+	      output[STP_ECOLOR_Y + offset] += min;
 	    }
 	  else
 	    {
-	      for (j = 0; j < 4; j++)
+	      for (j = 0; j < 4 + offset; j++)
 		output[j] = input[j];
-	      for (j = 4; j < cg->channel_count; j++)
+	      for (j = 4 + offset; j < cg->aux_output_channels; j++)
 		output[j] = 0;
 	    }
 	}
@@ -890,10 +903,10 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
   for (i = 0; i < cg->width; i++)
     {
       int zero_ptr = 0;
-      if (input_cache && short_eq(input_cache, input, cg->input_channels))
+      if (input_cache && short_eq(input_cache, input, cg->aux_output_channels))
 	{
 	  memcpy(output, output_cache, outbytes);
-	  input += cg->input_channels;
+	  input += cg->aux_output_channels;
 	  output += cg->total_channels;
 	}
       else
@@ -904,7 +917,7 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
 	  output_cache = output;
 	  if (cg->black_channel >= 0)
 	    black_value = input[cg->black_channel];
-	  for (j = 0; j < cg->channel_count; j++)
+	  for (j = 0; j < cg->aux_output_channels; j++)
 	    {
 	      if (input[j] < virtual_black && j != cg->black_channel)
 		virtual_black = input[j];
