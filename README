@@ -1,7 +1,7 @@
 INTRODUCTION
 
-    This is Gutenprint version 5.0.0 beta 4, the fourth beta
-    prerelease of Gutenprint 5.0.  Gutenprint, formerly named
+    This is Gutenprint version 5.0.0 release candidate 1, the first
+    release candidate of Gutenprint 5.0.  Gutenprint, formerly named
     Gimp-Print, is a suite of printer drivers that may be used with
     most common UNIX print spooling systems, including CUPS, lpr,
     LPRng, or others.  These drivers provide high quality printing for
@@ -94,10 +94,10 @@ THE GIMP
 
     Gutenprint may be used as a plug-in for the GIMP, providing the
     ability to print images.  If you wish to do so, you must use the
-    GIMP 1.2.3 or above on the 1.2 line, or the GIMP 2.0 or 2.1.
-    Please read the release notes in addition to this README, as there
-    have been some changes in procedure since Gimp-Print 4.2 if you
-    are using certain versions of the GIMP.
+    GIMP 1.2.3 or above on the 1.2 line, or any GIMP 2.x release (2.0,
+    2.1, 2.2, etc.)  Please read the release notes in addition to this
+    README, as there have been some changes in procedure since
+    Gimp-Print 4.2 if you are using certain versions of the GIMP.
 
     To build and install the GIMP Print plug-in for the GIMP 1.2:
 
@@ -105,7 +105,7 @@ THE GIMP
     make
     make install
 
-    For the GIMP 2.0 or 2.1, the option "--with-gimp2" rather than
+    For the GIMP 2.0 or above, the option "--with-gimp2" rather than
     "--with-gimp" should be used.
 
     You may optionally specify --with-gimp or --with-gimp2 if you wish
@@ -135,11 +135,9 @@ THE GIMP
     The GIMP 1.2 will not be supported in Gutenprint 5.1 and beyond.
     However, all Gutenprint 5.0 releases will support The GIMP 1.2.
 
-    The GIMP 2.0 plugin will eventually be migrated to The GIMP
-    project for The GIMP 2.2 release.  It may be removed from the
-    Gutenprint distribution following Gutenprint 5.0, and it may not
-    support releases of The GIMP other than 2.0 in the Gutenprint 5.0
-    release.
+    The GIMP 2.x plugin may eventually be migrated to The GIMP project
+    for a future GIMP release.  It may be removed from the Gutenprint
+    distribution following Gutenprint 5.0.
 
 
 CUPS
@@ -181,9 +179,9 @@ CUPS
     CUPS front end (e. g. KUPS, or via the web interface) because they
     look something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
 
-    If the version number (in this case, 5.0.0-beta4) does not match
+    If the version number (in this case, 5.0.0-rc1) does not match
     the version of Gutenprint that you are installing, you must use
     Modify Printer to force the new PPD file to get installed.
     Failure to do so may lead to incorrect output and/or other errors!
@@ -214,15 +212,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     apparent when you use a CUPS front end to select a PPD file and
     you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(sv)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-beta4(fr)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(sv)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(fr)
 
     you may wish to turn off the translation of PPD files:
 
@@ -272,16 +270,14 @@ FOOMATIC
 
     Gutenprint includes support for the Foomatic meta-driver package.
     This requires the foomatic-xml distribution.  Foomatic is
-    available from http://www.linuxprinting.org/foomatic.html.  It is
-    also available in Debian unstable.  For best results, use the
-    version in cvs.  The first version of Foomatic (the one used with
-    Gimp-Print 4.0) is not compatible with Gutenprint 5.0.  Note that
-    the Foomatic driver was named `stp' in Gimp-Print 4.0; in
-    Gimp-Print 4.2 (and early 4.3) it was named `gimp-print' for the
-    Ghostscript ("stp") driver and "gimp-print-ijs" for the IJS
-    driver.  In 5.0 only the "gutenprint-ijs" data is present.  The
-    data for the Gimp-Print 4.2 driver is not compatible with the 5.0
-    driver.
+    available from http://www.linuxprinting.org/foomatic.html.  The
+    first version of Foomatic (the one used with Gimp-Print 4.0) is
+    not compatible with Gutenprint 5.0.  Note that the Foomatic driver
+    was named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 (and early
+    4.3) it was named `gimp-print' for the Ghostscript ("stp") driver
+    and "gimp-print-ijs" for the IJS driver.  In 5.0 only the
+    "gutenprint-ijs" data is present.  The data for the Gimp-Print 4.2
+    driver is not compatible with the 5.0 driver.
 
     Furthermore, as of Gutenprint 5.0 the Foomatic driver will include
     the release version of Gutenprint in its name.  Therefore, the
@@ -384,11 +380,9 @@ GHOSTSCRIPT
     configuration tools (such as apsfilter and magicfilter) do not
     provide a convenient interface to the driver's capabilities.  We
     recommend that end users either install CUPS, as described above,
-    or use Foomatic to configure printer queues.  We recommend using
-    CUPS with the native CUPS drivers described above.  We recommend
-    using Foomatic to configure printer queues if you do not use CUPS
-    (e. g. you use LPRng, System V print spooling, or Berkeley print
-    spooling).
+    or use Foomatic to configure printer queues (Foomatic works with
+    Berkeley print spooling, System V print spooling, LPRng, CUPS, and
+    other systems)
 
     Gutenprint 5.0 no longer provides the monolithic "stp" driver
     present in 4.2.  This driver, which was linked directly into
@@ -665,7 +659,7 @@ KNOWN BUILD/INSTALLATION ISSUES
     * There are multiple issues that one must be aware of when using
       Foomatic with Gutenprint.
 
-      1) Before installing Gutenprint 5.0.0-beta4, you must manually
+      1) Before installing Gutenprint 5.0.0-rc1, you must manually
 	 remove any existing Foomatic option files.  This is because the
 	 Foomatic utility to load data kits (foomatic-kitload) does not
 	 remove obsolete data files from the Foomatic database.  If you
