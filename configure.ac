@@ -215,6 +215,7 @@ STP_ARG_WITH_DETAILED(
   ])
 
 BUILD_CUPS_PPDS="${BUILD_CUPS}"
+BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
 
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],
@@ -224,7 +225,7 @@ STP_ARG_ENABLE([cups-ppds],
 STP_ARG_ENABLE([translated-cups-ppds],
                [build translated CUPS PPD files],
                [BUILD_TRANSLATED_CUPS_PPDS],
-               [no])
+               [yes])
 
 USE_LEVEL3_PS=no
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
@@ -233,6 +234,7 @@ dnl Quote to protect sed regexes
   [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
   [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
   [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
+dnl There was no CUPS 1.0.15 or the like
   if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
     USE_LEVEL3_PS=yes
   fi
