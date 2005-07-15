@@ -59,8 +59,8 @@ BASIC INSTALLATION
     "escputil".  Directions for building other components are listed
     below.
 
-    Please check our web site at http://gutenprint.org for details
-    about what is and is not supported.
+    Please check our web site at http://gimp-print.sourceforge.net for
+    details about what is and is not supported.
 
     Please report any problems to gimp-print-devel@sourceforge.net.
 
@@ -156,35 +156,62 @@ CUPS
     ./configure --with-cups
     make
     make install
-    /etc/software/init.d/cups restart
+    cups-genppdupdate.5.0 (OPTIONAL)
+    /etc/init.d/cups restart
 
-    The last command varies with your operating system; the purpose is
-    to restart the CUPS server (daemon) so that it sees the newly
-    installed driver.  It is typically /etc/init.d/cups,
+    If you have installed CUPS as a precompiled package (e. g. it's
+    the standard printing system that your distribution uses), you may
+    need to install a separate development package (typically called
+    "cups-devel" or "cups-developer").  You will need to do this if
+    configure completes correctly, but "make" fails when building in
+    src/cups.  The CUPS package typically installed by most
+    distributions only contains the components needed to run CUPS, not
+    those required to build additional CUPS drivers.
+
+    The last command (/etc/init.d/cups restart) varies with your
+    operating system; the purpose is to restart the CUPS server
+    (daemon) so that it sees the newly installed driver.  It is
+    typically /etc/init.d/cups, /etc/software/init.d/cups,
     /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.  Your system may
     have a different way to restart the CUPS server.  OS X uses the
     following command:
 
     sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
   
+    You may optionally choose to update your existing PPD files using
+    the command cups-genppdupdate.5.0, after which you should restart
+    CUPS as described above.  We strongly recommend use of this update
+    procedure.  This script will automatically update Gutenprint PPD
+    files from earlier versions.  This script will only work with
+    Gimp-Print 4.3.21 or above, or any earlier version of Gutenprint;
+    it will not update Gimp-Print 4.2 PPD files.  However, you may
+    install Gutenprint 5.0 alongside Gimp-Print 4.2, and use both
+    Gimp-Print 4.2 and Gutenprint 5.0 drivers concurrently.
+    Therefore, you need not convert a workflow based on Gimp-Print 4.2
+    right away, but can gradually convert or even use both drivers for
+    different printer queues.
+
+    If you do not choose to automatically update existing PPD files,
+    you should reinstall any printers that you are using Gutenprint
+    PPD files with.  The Gutenprint driver and the PPD files must be
+    kept in sync, since the PPD files reflect the particular version
+    of the driver that they were built against.  If you attempt to use
+    a version of Gutenprint with PPD files not built for that precise
+    version, the driver will fail with a diagnostic error message.
+    For example, PPD files built for Gutenprint 5.0.0-beta4 will not
+    work with driver version 5.0.0-rc1.  You can identify printers
+    using Gutenprint PPD files by the name of the PPD file, which will
+    be something like:
+
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
+
     NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
     higher, and you have a USB-connected printer, you must have a
     printer connected to each USB port that you plan to use and
     powered on when you restart CUPS.  If you do not do so, you will
-    not be able to perform the following step (reinstalling the
-    printer), as described below.
-
-    Following this, you must reinstall any printers that you are using
-    Gutenprint PPD's with.  Such printers may be identified in any
-    CUPS front end (e. g. KUPS, or via the web interface) because they
-    look something like this:
-
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc1(en)
-
-    If the version number (in this case, 5.0.0-rc1) does not match
-    the version of Gutenprint that you are installing, you must use
-    Modify Printer to force the new PPD file to get installed.
-    Failure to do so may lead to incorrect output and/or other errors!
+    not be able to reinstall the printer.  It is only necessary to do
+    this if you wish to update PPD files manually; if you use
+    cups-genppdupdate.5.0, you do not need to do this.
 
     Starting with CUPS 1.1.11, you cannot choose an AppSocket
     connection and enter "usb:/dev/usblp0" or the like as the URI; you
@@ -193,7 +220,7 @@ CUPS
     following in your CUPS error log (typically
     /var/log/cups/error_log):
 
-E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/usblp0'!
+E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/usb/lp0'!
 
     If the printer was turned on correctly, you will be given a choice
     of a USB connection in the Device dialog.
@@ -224,37 +251,21 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
 
     you may wish to turn off the translation of PPD files:
 
-    ./configure --with-cups --without-translated-ppds
+    ./configure --with-cups --disable-translated-cups-ppds
 
     You may also wish to do this to greatly reduce the number of PPD
     files installed on your system, as the number of translations is
     large and growing.
 
-    The PPD files associated with this driver are for Level 2
-    PostScript.  CUPS implements most level 3 PostScript, but there
-    are a few constructs that are not implemented.  For this reason,
-    we have chosen to define a LanguageLevel of 2 rather than 3.
-    PostScript level 3 files are smaller in some cases, and can
-    produce smoother gradients, but few applications generate Level 3
-    PostScript.  If you would like to use level 3 PostScript, you may
-    do
+    The PPD files associated with this driver are normally for Level 3
+    PostScript.  CUPS versions starting with 1.1.15 fully implement
+    Level 3 Postscript, but earlier versions do not implement a few
+    Level 3 constructs.  The configuration script will attempt to
+    detect the version of CUPS and generate appropriate PPD files.  If
+    you wish to build PPD files for Level 2 Postscript even with a
+    newer version of CUPS, you can run
 
-    ./configure --with-cups --enable-cups-level3-ppds
-
-    Unless you fully understand what you are doing, we recommend not
-    doing this.
-
-    If you do not wish to build the Gimp Print plugin, you must run
-
-    ./configure --with-cups --without-gimp
-
-    If you have installed CUPS as a precompiled package (e. g. it's
-    the standard printing system that your distribution uses), you may
-    need to install a separate development package (typically called
-    "cups-devel" or "cups-developer").  The CUPS package typically
-    installed by most distributions only contains the components
-    needed to run CUPS, not those required to build additional CUPS
-    drivers.
+    ./configure --with-cups --disable-cups-level3-ppds
 
     We recommend that all users who wish to use this package for
     general purpose printing install either CUPS or use Foomatic with
@@ -376,13 +387,13 @@ GHOSTSCRIPT
     and beyond.
 
     We strongly recommend that end users not use this driver directly.
-    The available options are very complex, and the standard printer
-    configuration tools (such as apsfilter and magicfilter) do not
-    provide a convenient interface to the driver's capabilities.  We
-    recommend that end users either install CUPS, as described above,
-    or use Foomatic to configure printer queues (Foomatic works with
-    Berkeley print spooling, System V print spooling, LPRng, CUPS, and
-    other systems)
+    The available options are very complex and are subject to change,
+    and the standard printer configuration tools (such as apsfilter
+    and magicfilter) do not provide a convenient interface to the
+    driver's capabilities.  We recommend that end users either install
+    CUPS, as described above, or use Foomatic to configure printer
+    queues, as described above.  We no longer provide documentation on
+    manual use of this driver.
 
     Gutenprint 5.0 no longer provides the monolithic "stp" driver
     present in 4.2.  This driver, which was linked directly into
@@ -396,18 +407,12 @@ RECOMMENDED SETTINGS
     settings.  The settings can be adjusted as necessary for
     particular combinations of ink, paper, and subject material.
 
-    We recommend use of the Adaptive Hybrid dithering algorithm in
-    most cases.  Ordered dithering also works very well in many cases,
-    and is somewhat faster, but it does not work very well with text
-    and very fine details (certain kinds of line art), particularly at
-    high resolutions.  Fast dithering is also quite usable in many
-    cases.
-
-    On most inkjet printers, 600 or 720 dpi will produce very high
-    quality; 1200x1200 or 1440x720 dpi will produce extremely high
-    quality.  On newer printers with very small drops, higher
-    resolutions such as 2880x1440 DPI may be required to achieve the
-    highest quality.
+    On most inkjet printers, using plain or coated inkjet paper, 600
+    or 720 dpi will produce high quality; 1200x1200 or 1440x720 dpi
+    will produce extremely high quality.  On newer printers with very
+    small drops, or when printing photographs to special photo paper,
+    higher resolutions such as 2880x1440 DPI may be required to
+    achieve the highest quality.
 
 
 SUPPORT
@@ -541,10 +546,10 @@ KNOWN BUILD/INSTALLATION ISSUES
       version, the genppd program operated correctly.  If instead the
       output looks like this:
 
-	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
-	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English
+	  src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
+	  ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	  ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	  ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
 	  ...
 
       the program did not operate correctly.
@@ -552,7 +557,7 @@ KNOWN BUILD/INSTALLATION ISSUES
       If you do not have 'zgrep' on your system, you can gunzip the
       PPD files, and use
 
-	  grep LanguageVersion ppd/*/pcl-4.ppd
+	  grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
 
       to accomplish the same test.
 
@@ -651,7 +656,7 @@ KNOWN BUILD/INSTALLATION ISSUES
       4) Build the PPD files on a Linux-based system; they are
          portable.
 
-      5) Use --without-translated-ppds on the configure command line
+      5) Use --disable-translated-cups-ppds on the configure command line
          to suppress the translated PPD files altogether.
 
       Please feel free to contact us about this issue.
