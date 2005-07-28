@@ -16,7 +16,7 @@ parameter InkType PhotoCMYK;
 parameter PageSize Letter;
 # Dither algorithm
 #parameter DitherAlgorithm Ordered;
-parameter DitherAlgorithm UniTone;
+parameter DitherAlgorithm Ordered;
 
 mode RGB 8;
 

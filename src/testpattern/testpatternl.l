@@ -48,7 +48,7 @@ c_strstrip(char *s)
       return sn;
     }
   else
-    return (char *) s;
+    return strdup(s);
 }
 
 #define DBG(x)						\
