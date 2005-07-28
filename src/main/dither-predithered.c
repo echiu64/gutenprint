@@ -36,23 +36,19 @@
 
 static inline void
 print_color_very_fast(const stpi_dither_t *d, stpi_dither_channel_t *dc,
-		      int val, int x, int y, unsigned char bit,
-		      unsigned bits, int length)
+		      int val, int x, int y, unsigned bit, int length)
 {
-  int j;
-  if (bits && val)
-    {
-      unsigned char *tptr = dc->ptr + d->ptr_offset;
+  int i, j;
+  unsigned char *tptr = dc->ptr + d->ptr_offset;
 
-      /*
-       * Lay down all of the bits in the pixel.
-       */
-      set_row_ends(dc, x);
-      for (j = 1; j <= bits; j += j, tptr += length)
-	{
-	  if (j & bits)
-	    tptr[0] |= bit;
-	}
+  /*
+   * Lay down all of the bits in the pixel.
+   */
+  set_row_ends(dc, x);
+  for (i = 0, j = 1; i < dc->signif_bits; i++, j += j, tptr += length)
+    {
+      if (j & val)
+	tptr[0] |= bit;
     }
 }
 
@@ -67,7 +63,6 @@ stpi_dither_predithered(stp_vars_t *v,
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int		x,
 		length;
-  unsigned char *bit_patterns;
   unsigned char	bit;
   int i;
   int one_bit_only = 1;
@@ -85,14 +80,14 @@ stpi_dither_predithered(stp_vars_t *v,
   xmod   = d->src_width % d->dst_width;
   xerror = 0;
 
-  bit_patterns = stp_zalloc(sizeof(unsigned char) * CHANNEL_COUNT(d));
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       stpi_dither_channel_t *dc = &(CHANNEL(d, i));
-      if (dc->nlevels > 0)
-	bit_patterns[i] = dc->ranges[dc->nlevels - 1].upper->bits;
-      if (bit_patterns[i] != 1)
-	one_bit_only = 0;
+      if (dc->signif_bits > 1)
+	{
+	  one_bit_only = 0;
+	  break;
+	}
     }
   if (one_bit_only)
     {
@@ -102,7 +97,7 @@ stpi_dither_predithered(stp_vars_t *v,
 	    {
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
-		  if (raw[i])
+		  if (raw[i] & 1)
 		    {
 		      set_row_ends(&(CHANNEL(d, i)), x);
 		      CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
@@ -123,12 +118,11 @@ stpi_dither_predithered(stp_vars_t *v,
 		{
 		  if (CHANNEL(d, i).ptr && raw[i])
 		    print_color_very_fast(d, &(CHANNEL(d, i)), raw[i], x, row,
-					  bit, bit_patterns[i], length);
+					  bit, length);
 		}
 	    }
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
 				 xerror, xstep, xmod);
 	}
     }
-  stp_free(bit_patterns);
 }
