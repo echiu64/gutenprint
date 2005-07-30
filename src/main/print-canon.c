@@ -2626,7 +2626,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   if ((inks = canon_inks(caps, res_code, colormode, bits))!=0)
     {
-      set_ink_ranges(v, inks->c, STP_ECOLOR_C, "MagentaDensity",
+      set_ink_ranges(v, inks->c, STP_ECOLOR_C, "CyanDensity",
 		     "LightCyanTransition");
       set_ink_ranges(v, inks->m, STP_ECOLOR_M, "MagentaDensity",
 		     "LightMagentaTransition");
