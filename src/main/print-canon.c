@@ -648,7 +648,7 @@ static void canon_write_line(stp_vars_t *v);
 #define CANON_MODES(A) 0
 #endif
 
-#define CANON_INK(A) A,sizeof(A)/sizeof(canon_variable_inklist_t*)
+#define CANON_INK(A) A,sizeof(A)/sizeof(canon_variable_inklist_t)
 
 
 #ifdef EXPERIMENTAL_STUFF
