@@ -2374,7 +2374,7 @@ canon_init_setImage(const stp_vars_t *v, canon_init_t *init)
     stp_zfwrite(ESC28,2,1,v);
     stp_putc(0x74,v);
     stp_put16_le(30,v);
-    stp_zfwrite(buf,30,1,v);
+    stp_zfwrite((char*)buf,30,1,v);
     return;
   }
 
