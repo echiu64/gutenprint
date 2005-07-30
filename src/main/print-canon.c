@@ -2767,40 +2767,6 @@ static const stp_printfuncs_t print_canon_printfuncs =
   canon_end_job
 };
 
-/*
- * 'canon_fold_lsb_msb()' fold 2 lines in order lsb/msb
- */
-
-static void
-canon_fold_2bit(const unsigned char *line,
-		int single_length,
-		unsigned char *outbuf)
-{
-  int i;
-  for (i = 0; i < single_length; i++) {
-    outbuf[0] =
-      ((line[0] & (1 << 7)) >> 1) |
-      ((line[0] & (1 << 6)) >> 2) |
-      ((line[0] & (1 << 5)) >> 3) |
-      ((line[0] & (1 << 4)) >> 4) |
-      ((line[single_length] & (1 << 7)) >> 0) |
-      ((line[single_length] & (1 << 6)) >> 1) |
-      ((line[single_length] & (1 << 5)) >> 2) |
-      ((line[single_length] & (1 << 4)) >> 3);
-    outbuf[1] =
-      ((line[0] & (1 << 3)) << 3) |
-      ((line[0] & (1 << 2)) << 2) |
-      ((line[0] & (1 << 1)) << 1) |
-      ((line[0] & (1 << 0)) << 0) |
-      ((line[single_length] & (1 << 3)) << 4) |
-      ((line[single_length] & (1 << 2)) << 3) |
-      ((line[single_length] & (1 << 1)) << 2) |
-      ((line[single_length] & (1 << 0)) << 1);
-    line++;
-    outbuf += 2;
-  }
-}
-
 #ifndef USE_3BIT_FOLD_TYPE
 #error YOU MUST CHOOSE A VALUE FOR USE_3BIT_FOLD_TYPE
 #endif
@@ -3009,8 +2975,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 
 
   if (bits==2) {
-    memset(in_fold,0,length);
-    canon_fold_2bit(line,length,in_fold);
+    stp_fold(line,length,in_fold);
     in_ptr= in_fold;
     length= (length*8/4); /* 4 pixels in 8bit */
     offset= (offset*8/4); /* 4 pixels in 8bit  */
