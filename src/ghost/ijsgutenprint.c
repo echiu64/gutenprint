@@ -1262,6 +1262,7 @@ main (int argc, char **argv)
 	      status = -1;
 	      break;
 	    }
+	  purge_unused_float_parameters(img.v);
 	  stp_merge_printvars(img.v, stp_printer_get_defaults(printer));
 	}
 
@@ -1270,7 +1271,7 @@ main (int argc, char **argv)
 	* (double) ph.height;
       img.bytes_left = img.total_bytes;
 
-      stp_set_float_parameter(img.v, "AppGamma", 1.7);
+      stp_set_float_parameter(img.v, "AppGamma", 1.0);
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);
       if (l < 0)
@@ -1317,7 +1318,6 @@ main (int argc, char **argv)
 
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: Duplex=%s\n", safe_get_string_parameter(img.v, "Duplex")));
 
-      purge_unused_float_parameters(img.v);
       validate_options(&si);
       STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
       print_messages_as_errors = 1;
