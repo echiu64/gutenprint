@@ -200,6 +200,9 @@ These release notes contain the following sections:
      smallest or largest drop size could be printed with this dither
      mode.
 
+  15) Experimental support for the Canon PIXMA iP4000 printer has been
+      added.
+
 
 ================================================================
 
@@ -1072,6 +1075,7 @@ Canon S400
 Canon S450
 Canon S800
 Canon S4500
+Canon PIXMA iP4000    (Experimental)
 EPSON Stylus C20SX
 EPSON Stylus C20UX
 EPSON Stylus C40SX
@@ -1402,6 +1406,7 @@ Canon S600                     bjc-8200        Canon BJC 8200
 Canon S630                     bjc-8200        Canon BJC 8200
 Canon S800                     bjc-s800        Canon S800
 Canon S4500                    bjc-s4500       Canon S4500
+Canon PIXMA iP4000             bjc-iP4000      Canon PIXMA iP4000
 Canon imageRunner 330s         pcl-4           HP LaserJet 4 series
 Citizen ProJet II              pcl-2           HP LaserJet II series
 DEC 1800                       pcl-3           HP LaserJet III series
