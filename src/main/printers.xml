@@ -118,6 +118,10 @@
         <parameter type="float" name="Gamma">0.750</parameter>
         <parameter type="float" name="Density">1.000</parameter>
       </printer>
+      <printer name="Canon PIXMA iP4000" driver="bjc-iP4000" manufacturer="Canon" model="4000">
+        <parameter type="float" name="Gamma">1.000</parameter>
+        <parameter type="float" name="Density">1.000</parameter>
+      </printer>
     </family>
     <family name="escp2">
       <printer name="EPSON Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42">

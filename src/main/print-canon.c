@@ -80,6 +80,110 @@
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+/* the PIXMA iP4000 and maybe other printers use following table to store
+   5 pixels with 3 levels in 1 byte, All possible pixel combinations are given
+   numbers from 0 (=00,00,00,00,00) to 242 (=10,10,10,10,10)
+   combinations where the value of one of the pixels would be 3 are skipped
+*/
+static const unsigned char tentoeight[] =
+{
+    0,  1,  2,  0,  3,  4,  5,  0,  6,  7,  8,  0,  0,  0,  0,  0,
+    9, 10, 11,  0, 12, 13, 14,  0, 15, 16, 17,  0,  0,  0,  0,  0,
+   18, 19, 20,  0, 21, 22, 23,  0, 24, 25, 26,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+   27, 28, 29,  0, 30, 31, 32,  0, 33, 34, 35,  0,  0,  0,  0,  0,
+   36, 37, 38,  0, 39, 40, 41,  0, 42, 43, 44,  0,  0,  0,  0,  0,
+   45, 46, 47,  0, 48, 49, 50,  0, 51, 52, 53,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+   54, 55, 56,  0, 57, 58, 59,  0, 60, 61, 62,  0,  0,  0,  0,  0,
+   63, 64, 65,  0, 66, 67, 68,  0, 69, 70, 71,  0,  0,  0,  0,  0,
+   72, 73, 74,  0, 75, 76, 77,  0, 78, 79, 80,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+   81, 82, 83,  0, 84, 85, 86,  0, 87, 88, 89,  0,  0,  0,  0,  0,
+   90, 91, 92,  0, 93, 94, 95,  0, 96, 97, 98,  0,  0,  0,  0,  0,
+   99,100,101,  0,102,103,104,  0,105,106,107,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  108,109,110,  0,111,112,113,  0,114,115,116,  0,  0,  0,  0,  0,
+  117,118,119,  0,120,121,122,  0,123,124,125,  0,  0,  0,  0,  0,
+  126,127,128,  0,129,130,131,  0,132,133,134,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  135,136,137,  0,138,139,140,  0,141,142,143,  0,  0,  0,  0,  0,
+  144,145,146,  0,147,148,149,  0,150,151,152,  0,  0,  0,  0,  0,
+  153,154,155,  0,156,157,158,  0,159,160,161,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  162,163,164,  0,165,166,167,  0,168,169,170,  0,  0,  0,  0,  0,
+  171,172,173,  0,174,175,176,  0,177,178,179,  0,  0,  0,  0,  0,
+  180,181,182,  0,183,184,185,  0,186,187,188,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  189,190,191,  0,192,193,194,  0,195,196,197,  0,  0,  0,  0,  0,
+  198,199,200,  0,201,202,203,  0,204,205,206,  0,  0,  0,  0,  0,
+  207,208,209,  0,210,211,212,  0,213,214,215,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+  216,217,218,  0,219,220,221,  0,222,223,224,  0,  0,  0,  0,  0,
+  225,226,227,  0,228,229,230,  0,231,232,233,  0,  0,  0,  0,  0,
+  234,235,236,  0,237,238,239,  0,240,241,242,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+};
+
+static int
+pack_pixels(unsigned char* buf,int len)
+{
+  int read_pos = 0;
+  int write_pos = 0;
+  int shift = 6;
+  while(read_pos < len)
+  {
+    /* read 5pixels a 2 bit */
+    unsigned short value = buf[read_pos] << 8;
+    if(read_pos+1 < len)
+      value += buf[read_pos + 1];
+    if(shift)       /*6,4,2,0*/
+      value >>= shift;
+    /* write 8bit value representing the 10 bit pixel combination */
+    buf[write_pos] = tentoeight[value & 1023];
+    ++write_pos;
+    if(shift == 0)
+    {
+      shift = 6;
+      read_pos += 2;
+    }
+    else
+    {
+      shift -= 2;
+      ++read_pos;
+    }
+  }
+  return write_pos;
+}
+
 static const int channel_color_map[] =
 {
   STP_ECOLOR_K, STP_ECOLOR_C, STP_ECOLOR_M, STP_ECOLOR_Y, STP_ECOLOR_C, STP_ECOLOR_M, STP_ECOLOR_Y
@@ -90,6 +194,7 @@ static const int subchannel_color_map[] =
   0, 0, 0, 0, 1, 1, 1
 };
 
+/* K,C,M,Y */
 static const double ink_darknesses[] =
 {
   1.0, 0.31 / .5, 0.61 / .97, 0.08
@@ -296,6 +401,43 @@ static const stp_shade_t canon_X_2bit_shades[] =
 
 DECLARE_INK(canon_X_2bit, 1.0);
 
+static const stp_dotsize_t two_bit_3level_dotsize[] =
+{
+  { 0x1, 0.5  },
+  { 0x2, 1.0  }
+};
+
+static const stp_shade_t canon_X_2bit_3level_shades[] =
+{
+  SHADE(1.0, two_bit_3level_dotsize)
+};
+DECLARE_INK(canon_X_2bit_3level,0.75);
+
+/*
+ * Dither ranges for black 1bit/pixel (even though photo black
+ * is not used parameters for it have to be set in the t) command
+ */
+
+static const stp_shade_t canon_K_1bit_pixma_shades[] =
+{
+  SHADE(1.0, single_dotsize),
+  SHADE(0.0, two_bit_3level_dotsize),
+};
+DECLARE_INK(canon_K_1bit_pixma,1.0);
+
+static const stp_dotsize_t two_bit_4level_dotsize[] =
+{
+  { 0x1, 0.25 },
+  { 0x2, 0.50 },
+  { 0x3, 1.00 }
+};
+
+static const stp_shade_t canon_X_2bit_4level_shades[] =
+{
+  SHADE(1.0, two_bit_4level_dotsize)
+};
+DECLARE_INK(canon_X_2bit_4level,0.75);
+
 /*
  * Dither ranges specifically for any Color/LightColor and 2bit/pixel
  * (see NOTE above)
@@ -376,6 +518,16 @@ static const canon_variable_inkset_t ci_CMYK_1 =
   NULL
 };
 
+/* Inkset for printing in CMYK and 3level 2bit/pixel
+   for C and M, 1bit/pixel for K and Y */
+static const canon_variable_inkset_t ci_CMYK_pixma_1 =
+{
+  &canon_X_2bit_3level_ink,
+  &canon_X_2bit_3level_ink,
+  NULL,
+  &canon_K_1bit_pixma_ink,
+};
+
 /* Inkset for printing in CcMmYK and 1bit/pixel */
 static const canon_variable_inkset_t ci_CcMmYK_1 =
 {
@@ -431,6 +583,16 @@ static const canon_variable_inklist_t canon_ink_standard[] =
     1,4,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
     &ci_CMYK_1, &ci_CMYK_1, &ci_CMYK_1,
+  },
+};
+
+/* Ink set for normal quality on PIXMA iP4000 */
+static const canon_variable_inklist_t canon_ink_standard_pixma[] =
+{
+  {
+    1,4, /* FIXME we have different bit depth for different colors!! */
+    &ci_CMYK_pixma_1, &ci_CMYK_pixma_1, &ci_CMYK_pixma_1,
+    &ci_CMYK_pixma_1, &ci_CMYK_pixma_1, &ci_CMYK_pixma_1,
   },
 };
 
@@ -581,6 +743,12 @@ typedef struct canon_caps {
   const char *sat_adjustment;
 } canon_cap_t;
 
+typedef struct __attribute__((__packed__)) {
+   unsigned char info;
+   unsigned char dummy;
+   unsigned char level;
+} color_info_t;
+
 typedef struct
 {
   const canon_cap_t *caps;
@@ -588,11 +756,13 @@ typedef struct
   int delay[7];
   int delay_max;
   int buf_length;
+  int length;
   int out_width;
   int left;
   int emptylines;
   int bits;
   int ydpi;
+  color_info_t color_info[9]; /* C,M,Y,K,c,m,y,k,? */
 } canon_privdata_t;
 
 static void canon_write_line(stp_vars_t *v);
@@ -635,6 +805,8 @@ static void canon_write_line(stp_vars_t *v);
 #define CANON_CAP_r         0x800ul
 #define CANON_CAP_g         0x1000ul
 #define CANON_CAP_ACKSHORT  0x2000ul
+#define CANON_CAP_extended_t    0x4000ul  /* detailed level and bitdepth settings for every ink*/
+#define CANON_CAP_5pixelin1byte 0x8000ul  /* 5 pixel with 3 levels in 1 byte compression */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -1125,6 +1297,24 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_hue_adjustment,
     standard_sat_adjustment
   },
+  { /* Canon PIXMA iP4000 */
+    4000, 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    150, 600, 600, 2, /*base resolution,max_xdpi,max_ydpi,max_quality */
+    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    CANON_INK_CMYK /*| CANON_INK_CcMmYyK*/, /*canon inks */
+    CANON_SLOT_ASF1,  /*paper slot */
+    CANON_CAP_STD0|CANON_CAP_extended_t|CANON_CAP_5pixelin1byte,  /*features */
+    CANON_MODES(canon_nomodes),
+#ifndef EXPERIMENTAL_STUFF
+    {-1,0,0,-1,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
+    {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
+    CANON_INK(canon_ink_standard_pixma),
+#endif
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
 };
 
 typedef struct {
@@ -1196,10 +1386,12 @@ typedef struct {
   int top;
   int left;
   int bits;
+  color_info_t color_info[9]; /* C,M,Y,K,c,m,y,k,? */
 } canon_init_t;
 
 static const paper_t canon_paper_list[] = {
   { "Plain",		N_ ("Plain Paper"),                0x00, 0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Plain PIXMA",	N_ ("Plain Paper PIXMA"),          0x00, 0.78, 0.25, 0.500, 0, 0, 0 },
   { "Transparency",	N_ ("Transparencies"),             0x02, 1.00, 1.00, 0.900, 0, 0, 0 },
   { "BackPrint",	N_ ("Back Print Film"),            0x03, 1.00, 1.00, 0.900, 0, 0, 0 },
   { "Fabric",		N_ ("Fabric Sheets"),              0x04, 0.50, 0.25, 0.500, 0, 0, 0 },
@@ -2175,6 +2367,17 @@ canon_init_setImage(const stp_vars_t *v, canon_init_t *init)
   if (!(init->caps->features & CANON_CAP_t))
     return;
 
+  if(init->caps->features & CANON_CAP_extended_t)
+  {
+    unsigned char buf[30] = {0x80,0x80,0x1,};
+    memcpy(buf + 3,init->color_info,sizeof(color_info_t) * 9);
+    stp_zfwrite(ESC28,2,1,v);
+    stp_putc(0x74,v);
+    stp_put16_le(30,v);
+    stp_zfwrite(buf,30,1,v);
+    return;
+  }
+
   if (init->xdpi==1440) arg_74_2= 0x04;
   if (init->ydpi>=720)  arg_74_3= 0x09;
 
@@ -2299,14 +2502,57 @@ static void
 set_ink_ranges(stp_vars_t *v, const canon_variable_ink_t *ink, int color,
 	       const char *channel_param, const char *subchannel_param)
 {
+  int num_shades;
   if (!ink)
     return;
-  stp_dither_set_inks_full(v, color, ink->numshades, ink->shades, 1.0,
+
+  /* ignore small dot shades with zero density */
+  if(ink->numshades > 1 && ink->shades[1].value == 0.0)
+    num_shades = 1;
+  else
+    num_shades = ink->numshades;
+  stp_dither_set_inks_full(v, color, num_shades, ink->shades, 1.0,
 			   ink_darknesses[color]);
   stp_channel_set_density_adjustment
     (v, color, 1, (get_double_param(v, channel_param) *
 		   get_double_param(v, subchannel_param) *
 		   get_double_param(v, "Density")));
+}
+
+/* this function sets the info
+   entry in the color_info_t struct */
+static void
+set_bit_info(const canon_cap_t * caps,color_info_t* color)
+{
+  unsigned char bit_depth;
+  if(color->level < 2)
+    bit_depth = 0;
+  else if(color->level < 3)
+    bit_depth = 1;
+  else if(color->level < 5)
+    bit_depth = 2;
+  else 
+    bit_depth = 4;
+  if((color->level == 3) && (caps->features & CANON_CAP_5pixelin1byte))
+    color->info = (1 << 5) | bit_depth;
+  else
+    color->info = bit_depth;
+}
+
+/* function sets the level and bit depth in the color_info_t struct according to the ink settings */
+static void
+set_color_info(const canon_cap_t * caps,const canon_variable_ink_t* ink,color_info_t* large,color_info_t* small)
+{
+  if(ink)
+  {
+    large->level = ink->shades[0].numsizes + 1;
+    if(ink->numshades > 1)
+      small->level = ink->shades[1].numsizes + 1;
+  }
+  else  /* default to 2 level, bit depth 1*/
+    large->level = 2;
+  set_bit_info(caps,large);
+  set_bit_info(caps,small);
 }
 
 /*
@@ -2347,6 +2593,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		errlast;	/* Last raster line loaded */
   unsigned	zero_mask;
   int           bits= 1;
+  int           max_bits = 0;
   int           image_height,
                 image_width;
   int           res_code;
@@ -2465,6 +2712,20 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   init.left = left;
   init.bits = bits;
 
+  if ((inks = canon_inks(caps, res_code, colormode, bits)) != 0)
+  {
+    if(caps->features & CANON_CAP_extended_t)
+    {
+      memset(init.color_info,0,sizeof(init.color_info));
+      set_color_info(caps,inks->c,&(init.color_info[0]),&(init.color_info[4]));
+      set_color_info(caps,inks->m,&(init.color_info[1]),&(init.color_info[5]));
+      set_color_info(caps,inks->y,&(init.color_info[2]),&(init.color_info[6]));
+      set_color_info(caps,inks->k,&(init.color_info[3]),&(init.color_info[7]));
+      /* duplicate the info as it is needed later, too */
+      memcpy(privdata.color_info,init.color_info,sizeof(init.color_info));
+    }
+  }
+
   canon_init_printer(v, &init);
 
   /* possibly changed during initialitation
@@ -2514,7 +2775,21 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   length = (out_width + 7) / 8;
 
-  privdata.buf_length= length*bits;
+  max_bits=bits;
+
+  /* when using the extended settings in the t) command every color might have
+     its own bit depth */
+  if(caps->features & CANON_CAP_extended_t)
+  {
+    for(i = 0; i < sizeof(init.color_info) / sizeof(init.color_info[0]);i++)
+    {
+      if((init.color_info[i].info & 3) > max_bits)
+        max_bits = init.color_info[i].info & 3;
+    }
+  }
+
+  privdata.buf_length = length * max_bits;
+  privdata.length = length;
   privdata.left = left;
   privdata.bits = bits;
   privdata.out_width = out_width;
@@ -2964,6 +3239,8 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   int newlength;
   int offset2,bitoffset;
   unsigned char color;
+  canon_privdata_t *pd =
+    (canon_privdata_t *) stp_get_component_data(v, "Driver");
 
  /* Don't send blank lines... */
 
@@ -3014,6 +3291,10 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 	      "bitoffset=%d!!\n",bitoffset);
   }
 
+
+  if((pd->color_info[coloridx].level == 3) && (caps->features & CANON_CAP_5pixelin1byte))
+    length = pack_pixels(in_ptr,length);
+
   stp_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
   newlength= comp_ptr - comp_buf;
 
@@ -3052,12 +3333,15 @@ canon_write_line(stp_vars_t *v)
     {
       int col = write_sequence[i];
       int num = write_number[i];
+      int bits=pd->bits;
+      if(pd->caps->features & CANON_CAP_extended_t)
+        bits = pd->color_info[num].info & 3;
       if (pd->cols[col])
 	written += canon_write(v, pd->caps,
 			       pd->cols[col] + pd->delay[col] * pd->buf_length,
-			       pd->buf_length / pd->bits, num, pd->ydpi,
+			       pd->length, num, pd->ydpi,
 			       &(pd->emptylines), pd->out_width,
-			       pd->left, pd->bits);
+			       pd->left, bits);
     }
   if (written)
     stp_zfwrite("\033\050\145\002\000\000\001", 7, 1, v);
