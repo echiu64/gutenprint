@@ -1712,7 +1712,7 @@ sub getprintoutmode {
 		"$modeinfo->{$m}{'yres'}dpi";
 	    if (defined($stpdata{$stpprn}{'Color'}{'Color'})) {
 		# Color printer
-		$modes->{$stpprn}{$m} = $modestr . " STP_OutputType=Color";
+		$modes->{$stpprn}{$m} = $modestr . " OutputType=Color";
 		if (defined($stpdata{$stpprn}{'Color'}{'Grayscale'})) {
 		    $modes->{$stpprn}{"$m.Gray"} =
 			$modestr . " OutputType=Grayscale";
