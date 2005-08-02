@@ -24,7 +24,6 @@ use File::Temp qw(tempfile unlink0);
 use IO::Handle;
 use Getopt::Std;
 use POSIX;
-use Locale::gettext;
 
 sub init_data();
 sub init_defaults();
