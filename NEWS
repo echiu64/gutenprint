@@ -146,19 +146,23 @@ These release notes contain the following sections:
 
   4) The Canon SELPHY CP-600 dye sublimation printer has been added.
 
-  5) The Epson Stylus C82, C84, and C86 now use black ink with glossy
+  5) Preliminary support for the Canon Pixma i4000 printer has been
+     added.  The Canon BubbleJet and Pixma driver is likely to undergo
+     considerable revision and may not be fully stabilized at release.
+
+  6) The Epson Stylus C82, C84, and C86 now use black ink with glossy
      paper.  The ink in these printers has been reformulated and is
      now compatible with glossy paper.
 
-  6) The Epson Stylus CX3650 now prints correctly (previously there
+  7) The Epson Stylus CX3650 now prints correctly (previously there
      were minor vertical offset problems, yielding slightly blurry
      prints).
 
-  7) The Ghostscript driver (ijsgutenprint) now generates correct
+  8) The Ghostscript driver (ijsgutenprint) now generates correct
      output (previously it generated output that was much too dark
      unless the gamma setting was enabled explicitly).
 
-  8) New printing resolutions have been added for certain Epson
+  9) New printing resolutions have been added for certain Epson
      printers:
 
      * 720 DPI high quality has been added for all but the very oldest
@@ -176,31 +180,31 @@ These release notes contain the following sections:
        to be had from any resolution above 1440x1440 DPI with this
        printer.
 
-  9) The Epson Stylus RX425 is now explicitly supported.
+  10) The Epson Stylus RX425 is now explicitly supported.
 
-  10) Some problems with PPD file generation using cups-genppdconfig
+  11) Some problems with PPD file generation using cups-genppdconfig
      have been fixed.  In particular, PPD permission and ownership
      checks have been relaxed to permit operation on more systems.
 
-  11) A problem that could on rare occasions cause blank areas on photo
+  12) A problem that could on rare occasions cause blank areas on photo
      printers has been fixed.  The problem was more likely to be
      observed when printing in 16-bit mode.
 
-  12) Debian packaging has been removed from this release.  Debian
+  13) Debian packaging has been removed from this release.  Debian
      packaging will be handled by the maintainer outside of the
      release.
 
-  13) On systems supporting shared library versioning, the shared
+  14) On systems supporting shared library versioning, the shared
      library is labeled with the correct release version rather than a
      development version.
 
-  14) It is now possible to specify variable drop sizes with
+  15) It is now possible to specify variable drop sizes with
      predithered mode.  Values of 0, 1, 2, or 3 will cause the
      appropriate drop size to be printed.  Previously only the
      smallest or largest drop size could be printed with this dither
      mode.
 
-  15) Experimental support for the Canon PIXMA iP4000 printer has been
+  16) Experimental support for the Canon PIXMA iP4000 printer has been
       added.
 
 
