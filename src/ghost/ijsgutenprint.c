@@ -760,9 +760,16 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s dimension %s\n"), xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
-	  code = get_int(vbuf, xkey, &i);
-	  if (code == 0)
-	    stp_set_boolean_parameter(img->v, xkey, i);
+	  if (strcmp(vbuf, "False") == 0 ||
+	      strcmp(vbuf, "false") == 0 ||
+	      strcmp(vbuf, "FALSE") == 0 ||
+	      strcmp(vbuf, "0") == 0)
+	    stp_set_boolean_parameter(img->v, xkey, 0);
+	  else if (strcmp(vbuf, "True") == 0 ||
+		   strcmp(vbuf, "true") == 0 ||
+		   strcmp(vbuf, "TRUE") == 0 ||
+		   strcmp(vbuf, "0") == 0)
+	    stp_set_boolean_parameter(img->v, xkey, 1);
 	  else
 	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s boolean %s\n"), xkey, vbuf);
 	  break;

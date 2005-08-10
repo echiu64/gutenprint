@@ -170,9 +170,9 @@ main(int argc, char **argv)
 			     driver, desc.name, "None", "None");
 		    }
 		    
-		  printf("$stpdata{'%s'}{'STP_%s'}{'0'} = 'False';\n",
+		  printf("$stpdata{'%s'}{'STP_%s'}{'False'} = 'False';\n",
 			 driver, desc.name);
-		  printf("$stpdata{'%s'}{'STP_%s'}{'1'} = 'True';\n",
+		  printf("$stpdata{'%s'}{'STP_%s'}{'True'} = 'True';\n",
 			 driver, desc.name);
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
