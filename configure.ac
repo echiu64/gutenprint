@@ -935,9 +935,11 @@ AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
                 [chmod +x src/cups/cups-genppdconfig;
+		 rm -f src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION};
 		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate;
+		 rm -f src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
 		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION}])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
