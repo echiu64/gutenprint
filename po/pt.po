@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimpprint 4.3.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-01 20:12-0400\n"
+"POT-Creation-Date: 2005-08-13 16:29-0400\n"
 "PO-Revision-Date: 2002-10-16 19:24+0100\n"
 "Last-Translator: Filipe Maia <fmaia@gmx.net>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
@@ -582,7 +582,7 @@ msgstr "Manual sem Pausa"
 #: src/main/print-escp2-data.c:591 src/main/print-escp2-data.c:604
 #: src/main/print-escp2-data.c:617 src/main/print-escp2-data.c:623
 #: src/main/print-lexmark.c:613 src/gutenprintui/panel.c:2131
-#: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:831
+#: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:861
 msgid "Black"
 msgstr "Preto"
 
@@ -808,7 +808,7 @@ msgstr ""
 #: src/main/print-escp2-data.c:580 src/main/print-escp2-data.c:592
 #: src/main/print-escp2-data.c:605 src/main/print-escp2-data.c:618
 #: src/main/print-escp2-data.c:632 src/gutenprintui/panel.c:2110
-#: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:834
+#: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:864
 msgid "Cyan"
 msgstr "Ciano"
 
@@ -821,7 +821,7 @@ msgstr "Ajustar o equilíbrio de ciano na impressão"
 #: src/main/print-escp2-data.c:581 src/main/print-escp2-data.c:593
 #: src/main/print-escp2-data.c:606 src/main/print-escp2-data.c:619
 #: src/main/print-escp2-data.c:631 src/gutenprintui/panel.c:2117
-#: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:835
+#: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:865
 msgid "Magenta"
 msgstr "Magenta"
 
@@ -834,7 +834,7 @@ msgstr "Ajustar o equilíbrio de magenta da impressão"
 #: src/main/print-escp2-data.c:582 src/main/print-escp2-data.c:594
 #: src/main/print-escp2-data.c:607 src/main/print-escp2-data.c:620
 #: src/main/print-escp2-data.c:630 src/gutenprintui/panel.c:2124
-#: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:836
+#: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:866
 msgid "Yellow"
 msgstr "Amarelo"
 
@@ -844,7 +844,7 @@ msgid "Adjust the yellow gamma"
 msgstr "Ajustar o equilíbrio de amarelo na impressão"
 
 #: src/main/print-color.c:281 src/main/print-escp2-data.c:635
-#: src/escputil/escputil.c:842
+#: src/escputil/escputil.c:872
 msgid "Red"
 msgstr ""
 
@@ -863,7 +863,7 @@ msgid "Adjust the green gamma"
 msgstr "Ajustar o equilíbrio de magenta da impressão"
 
 #: src/main/print-color.c:297 src/main/print-escp2-data.c:636
-#: src/escputil/escputil.c:843
+#: src/escputil/escputil.c:873
 msgid "Blue"
 msgstr ""
 
@@ -1282,41 +1282,41 @@ msgstr ""
 
 #: src/main/print-escp2-data.c:583 src/main/print-escp2-data.c:595
 #: src/main/print-escp2-data.c:608 src/main/print-escp2-data.c:621
-#: src/escputil/escputil.c:837
+#: src/escputil/escputil.c:867
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Ciano Claro"
 
 #: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:596
 #: src/main/print-escp2-data.c:609 src/main/print-escp2-data.c:622
-#: src/escputil/escputil.c:838
+#: src/escputil/escputil.c:868
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Magenta Claro"
 
-#: src/main/print-escp2-data.c:597 src/escputil/escputil.c:840
+#: src/main/print-escp2-data.c:597 src/escputil/escputil.c:870
 #, fuzzy
 msgid "Light Black"
 msgstr "Preto"
 
-#: src/main/print-escp2-data.c:610 src/escputil/escputil.c:839
+#: src/main/print-escp2-data.c:610 src/escputil/escputil.c:869
 #, fuzzy
 msgid "Dark Yellow"
 msgstr "Amarelo"
 
 #: src/main/print-escp2-data.c:633 src/main/escp2-channels.c:2054
-#: src/escputil/escputil.c:832
+#: src/escputil/escputil.c:862
 #, fuzzy
 msgid "Matte Black"
 msgstr "Papel Mate"
 
 #: src/main/print-escp2-data.c:634 src/main/escp2-channels.c:2072
-#: src/escputil/escputil.c:833
+#: src/escputil/escputil.c:863
 #, fuzzy
 msgid "Photo Black"
 msgstr "Papel de Fotografia"
 
-#: src/main/print-escp2-data.c:637 src/escputil/escputil.c:844
+#: src/main/print-escp2-data.c:637 src/escputil/escputil.c:874
 #, fuzzy
 msgid "Gloss Optimizer"
 msgstr "Filme Lustroso"
@@ -5111,73 +5111,73 @@ msgstr ""
 "    -q Suppress the banner.\n"
 "    -m Specify the precise printer model for head alignment.\n"
 
-#: src/escputil/escputil.c:307 src/escputil/escputil.c:316
+#: src/escputil/escputil.c:316 src/escputil/escputil.c:324
 #, c-format
 msgid "You may only specify one printer or raw device."
 msgstr "Você só pode especificar uma impresoora ou dispositivo"
 
-#: src/escputil/escputil.c:325
+#: src/escputil/escputil.c:332
 #, c-format
 msgid "You may only specify one printer model."
 msgstr "Você só pode especificar um modelo de impressora"
 
-#: src/escputil/escputil.c:348
+#: src/escputil/escputil.c:354
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Opção desconhecida %c\n"
 
-#: src/escputil/escputil.c:356
+#: src/escputil/escputil.c:362
 #, c-format
 msgid "Usage: %s [OPTIONS] command\n"
 msgstr ""
 
-#: src/escputil/escputil.c:358
+#: src/escputil/escputil.c:364
 #, c-format
 msgid "Type `%s --help' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:360
+#: src/escputil/escputil.c:366
 #, c-format
 msgid "Type `%s -h' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:408
+#: src/escputil/escputil.c:414
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Não foi possível abrir o dispositivo %s: %s\n"
 
-#: src/escputil/escputil.c:431
+#: src/escputil/escputil.c:437
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Não é possível imprimir para impressora %s com %s\n"
 
-#: src/escputil/escputil.c:444 src/escputil/escputil.c:454
+#: src/escputil/escputil.c:450 src/escputil/escputil.c:460
 #, c-format
 msgid "Unable to send command to printer\n"
 msgstr "Não foi possível enviar comando para a impressora\n"
 
-#: src/escputil/escputil.c:509
+#: src/escputil/escputil.c:515
 #, c-format
 msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:514
+#: src/escputil/escputil.c:520
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Não é possível ler a partir de %s: %s\n"
 
-#: src/escputil/escputil.c:653 src/escputil/escputil.c:901
-#: src/escputil/escputil.c:1132
+#: src/escputil/escputil.c:659 src/escputil/escputil.c:932
+#: src/escputil/escputil.c:1163
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Não foi possível abrir %s escrita/leitura: %s\n"
 
-#: src/escputil/escputil.c:671 src/escputil/escputil.c:1020
+#: src/escputil/escputil.c:677 src/escputil/escputil.c:1051
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Não foi possível escrever para %s: %s\n"
 
-#: src/escputil/escputil.c:727 src/escputil/escputil.c:999
+#: src/escputil/escputil.c:733 src/escputil/escputil.c:1030
 #, c-format
 msgid ""
 "\n"
@@ -5186,14 +5186,14 @@ msgstr ""
 "\n"
 "Não foi possível escrever para %s: %s\n"
 
-#: src/escputil/escputil.c:733 src/escputil/escputil.c:1006
+#: src/escputil/escputil.c:739 src/escputil/escputil.c:1037
 #, c-format
 msgid ""
 "\n"
 "Cannot get credit (packet mode)!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:760
+#: src/escputil/escputil.c:766
 #, c-format
 msgid ""
 "\n"
@@ -5204,82 +5204,82 @@ msgstr ""
 "Não foi possível detecar o tipo de impressora.\n"
 "Por favor use a opção -m para especificar o modelo da sua impressora.\n"
 
-#: src/escputil/escputil.c:841
+#: src/escputil/escputil.c:871
 msgid "unknown"
 msgstr ""
 
-#: src/escputil/escputil.c:868
+#: src/escputil/escputil.c:898
 msgid "ink levels"
 msgstr ""
 
-#: src/escputil/escputil.c:871
+#: src/escputil/escputil.c:901
 msgid "status"
 msgstr ""
 
-#: src/escputil/escputil.c:876
+#: src/escputil/escputil.c:906
 #, fuzzy, c-format
 msgid "Obtaining %s requires using a raw device.\n"
 msgstr "Obter níveis de tinta requere a utilização de um dipositivo.\n"
 
-#: src/escputil/escputil.c:887 src/escputil/escputil.c:1123
+#: src/escputil/escputil.c:915 src/escputil/escputil.c:1154
 #, fuzzy, c-format
 msgid "Cannot identify printer!\n"
 msgstr "Não é possivel processar o output da impressora\n"
 
-#: src/escputil/escputil.c:894
+#: src/escputil/escputil.c:925
 #, fuzzy, c-format
 msgid "Printer does not support listing ink types!\n"
 msgstr "A impressora não suporta a cor de impressão\n"
 
-#: src/escputil/escputil.c:943 src/escputil/escputil.c:1057
-#: src/escputil/escputil.c:1170
+#: src/escputil/escputil.c:974 src/escputil/escputil.c:1088
+#: src/escputil/escputil.c:1201
 msgid "Ink color"
 msgstr "Cor da Tinta"
 
-#: src/escputil/escputil.c:943 src/escputil/escputil.c:1057
-#: src/escputil/escputil.c:1170
+#: src/escputil/escputil.c:974 src/escputil/escputil.c:1088
+#: src/escputil/escputil.c:1201
 msgid "Percent remaining"
 msgstr "Percentagem restante"
 
-#: src/escputil/escputil.c:967
+#: src/escputil/escputil.c:998
 msgid "Unknown"
 msgstr ""
 
-#: src/escputil/escputil.c:1116
+#: src/escputil/escputil.c:1147
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
 msgstr "Obter níveis de tinta requere a utilização de um dipositivo.\n"
 
-#: src/escputil/escputil.c:1170
+#: src/escputil/escputil.c:1201
 msgid "Part number"
 msgstr ""
 
-#: src/escputil/escputil.c:1171
+#: src/escputil/escputil.c:1202
 msgid "Date"
 msgstr ""
 
-#: src/escputil/escputil.c:1207
+#: src/escputil/escputil.c:1238
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Identificação da impressora requere a utilização de um dispositivo.\n"
 
-#: src/escputil/escputil.c:1223
+#: src/escputil/escputil.c:1254
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
 msgstr "Você só pode especificar um modelo de impressora"
 
-#: src/escputil/escputil.c:1242
+#: src/escputil/escputil.c:1273
 #, c-format
 msgid "Cleaning heads...\n"
 msgstr "Limpando as cabeças...\n"
 
-#: src/escputil/escputil.c:1253
+#: src/escputil/escputil.c:1284
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 "A testar a agulha, por favor assegure-se que existe papel na impressora.\n"
 
-#: src/escputil/escputil.c:1257
+#: src/escputil/escputil.c:1288
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5364,7 +5364,7 @@ msgstr ""
 "procedimento.\n"
 "\n"
 
-#: src/escputil/escputil.c:1292
+#: src/escputil/escputil.c:1323
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5439,12 +5439,12 @@ msgstr ""
 "os resultados. É essencial que você não desligue a impressora durante este "
 "procedimento.\n"
 
-#: src/escputil/escputil.c:1336
+#: src/escputil/escputil.c:1367
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Não foi possível enviar o comando para a impressora, saindo.\n"
 
-#: src/escputil/escputil.c:1346
+#: src/escputil/escputil.c:1377
 #, c-format
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
@@ -5463,20 +5463,20 @@ msgstr ""
 "Vai-lhe ser pedido para confirmar a sua escolha.\n"
 "O que é que pretende fazer (s, q, r)?\n"
 
-#: src/escputil/escputil.c:1354 src/escputil/escputil.c:1361
-#: src/escputil/escputil.c:1374 src/escputil/escputil.c:1390
-#: src/escputil/escputil.c:1492
+#: src/escputil/escputil.c:1385 src/escputil/escputil.c:1392
+#: src/escputil/escputil.c:1405 src/escputil/escputil.c:1421
+#: src/escputil/escputil.c:1523
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:1359
+#: src/escputil/escputil.c:1390
 #, c-format
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Por favor confirme carregando em 'q' outra vez se deseja sair sem gravar:\n"
 
-#: src/escputil/escputil.c:1364
+#: src/escputil/escputil.c:1395
 #, c-format
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
@@ -5485,7 +5485,7 @@ msgstr ""
 "A sua impressora está alinhada, mas o alinhamento não foi gravado.\n"
 "Se deseja gravar o alinhamento, terá de repetir o processo.\n"
 
-#: src/escputil/escputil.c:1371
+#: src/escputil/escputil.c:1402
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
@@ -5494,12 +5494,12 @@ msgstr ""
 "Por favor confirme, carregando em 'r' outra vez, que deseja repetir\n"
 "o processo de alinhamento:\n"
 
-#: src/escputil/escputil.c:1377
+#: src/escputil/escputil.c:1408
 #, c-format
 msgid "Repeating the alignment process.\n"
 msgstr "Repetindo o processo de alinhamento.\n"
 
-#: src/escputil/escputil.c:1383
+#: src/escputil/escputil.c:1414
 #, c-format
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
@@ -5514,17 +5514,17 @@ msgstr ""
 "Por favor confirme, carregando em 's' outra vez, que você deseja gravar\n"
 "as configurações para a sua impressora:\n"
 
-#: src/escputil/escputil.c:1393
+#: src/escputil/escputil.c:1424
 #, c-format
 msgid "About to save settings..."
 msgstr "Prestes a gravar as configurações..."
 
-#: src/escputil/escputil.c:1399
+#: src/escputil/escputil.c:1430
 #, c-format
 msgid "failed!\n"
 msgstr "falhou!\n"
 
-#: src/escputil/escputil.c:1400
+#: src/escputil/escputil.c:1431
 #, c-format
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
@@ -5533,28 +5533,28 @@ msgstr ""
 "A suas configurações não foram gravados com sucesso.\n"
 "Vai ter de repetir o processo de alinhamento.\n"
 
-#: src/escputil/escputil.c:1404
+#: src/escputil/escputil.c:1435
 #, c-format
 msgid "succeeded!\n"
 msgstr "sucesso!\n"
 
-#: src/escputil/escputil.c:1405
+#: src/escputil/escputil.c:1436
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr ""
 "As suas configurações do alinhamento foram gravadas para a impressora.\n"
 
-#: src/escputil/escputil.c:1410
+#: src/escputil/escputil.c:1441
 #, c-format
 msgid "Unrecognized command.\n"
 msgstr "Comando desconhecido.\n"
 
-#: src/escputil/escputil.c:1413
+#: src/escputil/escputil.c:1444
 #, c-format
 msgid "Final command was not confirmed.\n"
 msgstr "O comando final não foi confirmado.\n"
 
-#: src/escputil/escputil.c:1418
+#: src/escputil/escputil.c:1449
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -5571,12 +5571,12 @@ msgstr ""
 "Por favor coloque uma folha de papel na impressora para iniciar\n"
 "o processo de alinhamento da cabeça.\n"
 
-#: src/escputil/escputil.c:1478 src/escputil/escputil.c:1500
-#: src/escputil/escputil.c:1543
+#: src/escputil/escputil.c:1509 src/escputil/escputil.c:1531
+#: src/escputil/escputil.c:1574
 msgid "Press enter to continue > "
 msgstr "Pressione enter para continuar > "
 
-#: src/escputil/escputil.c:1485
+#: src/escputil/escputil.c:1516
 #, c-format
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
@@ -5587,42 +5587,42 @@ msgstr ""
 "padrão.\n"
 "Insira um par, '?' para ajuda, ou 'r' para repetir o procedimento.\n"
 
-#: src/escputil/escputil.c:1491
+#: src/escputil/escputil.c:1522
 #, c-format
 msgid "Pass #%d"
 msgstr "Passagem #%d"
 
-#: src/escputil/escputil.c:1497 src/escputil/escputil.c:1542
+#: src/escputil/escputil.c:1528 src/escputil/escputil.c:1573
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Por favor insira uma nova folha de papel.\n"
 
-#: src/escputil/escputil.c:1516
+#: src/escputil/escputil.c:1547
 #, c-format
 msgid "Number out of range!\n"
 msgstr "Número fora do intervalo|\n"
 
-#: src/escputil/escputil.c:1521
+#: src/escputil/escputil.c:1552
 #, c-format
 msgid "I cannot understand what you typed!\n"
 msgstr "Eu não consigo intender o que escreveu!\n"
 
-#: src/escputil/escputil.c:1527
+#: src/escputil/escputil.c:1558
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "O melhor par de linhasdeve estar numerado entre 1 e %d.\n"
 
-#: src/escputil/escputil.c:1534
+#: src/escputil/escputil.c:1565
 #, c-format
 msgid "Attempting to set alignment..."
 msgstr "Tentando definir o alinhamento..."
 
-#: src/escputil/escputil.c:1537
+#: src/escputil/escputil.c:1568
 #, c-format
 msgid "succeeded.\n"
 msgstr "sucesso.\n"
 
-#: src/escputil/escputil.c:1538
+#: src/escputil/escputil.c:1569
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -5637,7 +5637,7 @@ msgstr ""
 "é o padrão %d. Se não é, você deve repetir o processo para obter a melhor\n"
 "qualidade de impressão.\n"
 
-#: src/escputil/escputil.c:1584
+#: src/escputil/escputil.c:1615
 #, c-format
 msgid "Error in input\n"
 msgstr "Erro no input\n"
@@ -5723,52 +5723,52 @@ msgstr "Não é possível imprimir para impressora %s com %s\n"
 msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
 msgstr "Não é possível imprimir para impressora %s com %s\n"
 
-#: src/ghost/ijsgutenprint.c:767
+#: src/ghost/ijsgutenprint.c:774
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
 msgstr "Não é possível imprimir para impressora %s com %s\n"
 
-#: src/ghost/ijsgutenprint.c:778
+#: src/ghost/ijsgutenprint.c:785
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameter %s %d\n"
 msgstr "Impressora desconhecida %s\n"
 
-#: src/ghost/ijsgutenprint.c:804
+#: src/ghost/ijsgutenprint.c:811
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: bad key code %d\n"
 msgstr "Obtenção da próxima linha falhou em %.0f\n"
 
-#: src/ghost/ijsgutenprint.c:1214
+#: src/ghost/ijsgutenprint.c:1221
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"
 msgstr "ijs_server_get_page_header falhou %d\n"
 
-#: src/ghost/ijsgutenprint.c:1225
+#: src/ghost/ijsgutenprint.c:1232
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: image_init failed %d\n"
 msgstr "image_init falhou %d\n"
 
-#: src/ghost/ijsgutenprint.c:1236
+#: src/ghost/ijsgutenprint.c:1243
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
 msgstr "Não foi possível abrir \"file descriptor\": %s\n"
 
-#: src/ghost/ijsgutenprint.c:1248
+#: src/ghost/ijsgutenprint.c:1255
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
 msgstr "Não foi possível abrir %s: %s\n"
 
-#: src/ghost/ijsgutenprint.c:1260
+#: src/ghost/ijsgutenprint.c:1267
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unknown printer %s\n"
 msgstr "Impressora desconhecida %s\n"
 
-#: src/ghost/ijsgutenprint.c:1339
+#: src/ghost/ijsgutenprint.c:1346
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
 msgstr "Parâmetros inválidos; não é possível continuar|\n"
 
-#: src/ghost/ijsgutenprint.c:1349
+#: src/ghost/ijsgutenprint.c:1356
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Obtenção da próxima linha falhou em %.0f\n"
