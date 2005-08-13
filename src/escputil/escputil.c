@@ -198,6 +198,7 @@ char *printer_model = NULL;
 char printer_cmd[1025];
 int bufpos = 0;
 int isnew = 0;
+int found_unknown_old_printer = 0;
 int print_short_name = 0;
 const stp_printer_t *the_printer_t = NULL;
 int printer_was_in_packet_mode = 0;
@@ -213,6 +214,14 @@ typedef enum
     CMD_INK_LEVEL,
     CMD_STATUS
   } status_cmd_t;
+
+static char *
+c_strdup(const char *s)
+{
+  char *ret = stp_malloc(strlen(s) + 1);
+  strcpy(ret, s);
+  return ret;
+}
 
 static void
 print_models(void)
@@ -307,8 +316,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
 	    }
-	  the_printer = stp_malloc(strlen(optarg) + 1);
-	  strcpy(the_printer, optarg);
+	  the_printer = c_strdup(optarg);
 	  break;
 	case 'r':
 	  if (the_printer || raw_device)
@@ -316,8 +324,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer or raw device."));
 	      do_help(1);
 	    }
-	  raw_device = stp_malloc(strlen(optarg) + 1);
-	  strcpy(raw_device, optarg);
+	  raw_device = c_strdup(optarg);
 	  break;
 	case 'm':
 	  if (printer_model)
@@ -325,8 +332,7 @@ main(int argc, char **argv)
 	      printf(_("You may only specify one printer model."));
 	      do_help(1);
 	    }
-	  printer_model = stp_malloc(strlen(optarg) + 1);
-	  strcpy(printer_model, optarg);
+	  printer_model = c_strdup(optarg);
 	  break;
 	case 'u':
 	  isnew = 1;
@@ -628,7 +634,7 @@ alarm_handler(int sig)
 }
 
 static const stp_printer_t *
-initialize_printer(int quiet)
+initialize_printer(int quiet, int fail_if_not_found)
 {
   int printer_count = stp_printer_model_count();
   int found = 0;
@@ -755,18 +761,41 @@ initialize_printer(int quiet)
 	    }
 	  if (!pos)
 	    {
-	      if (!quiet)
+	      if (!quiet && fail_if_not_found)
 		{
 		  printf(_("\nCannot detect printer type.\n"
 			   "Please use -m to specify your printer model.\n"));
 		  do_help(1);
 		}
-	      return NULL;
+	      /*
+	       * Some printers seem to return status, but don't respond
+	       * usefully to @EJL ID.  The Stylus Pro 7500 seems to be
+	       * one of these.
+	       */
+	      if (status > 0 && !fail_if_not_found &&
+		  strstr((char *) buf, "@BDC ST"))
+		{
+		  found_unknown_old_printer = 1;
+		  /*
+		   * Set the printer model to something rational so that
+		   * attempts to describe parameters will succeed.
+		   * However, make it clear that this is a dummy,
+		   * so we don't actually try to print it out.
+		   */
+		  STP_DEBUG(fprintf(stderr,
+				    "Can't find printer name, assuming Stylus Photo\n"));
+		  printer_model = c_strdup("escp2-photo");
+		}
+	      else
+		return NULL;
 	    }
-	  if (spos)
-	    *spos = '\000';
-	  printer_model = pos + 1;
-	  STP_DEBUG(fprintf(stderr, "printer model: %s\n", printer_model));
+	  else
+	    {
+	      if (spos)
+		*spos = '\000';
+	      printer_model = pos + 1;
+	      STP_DEBUG(fprintf(stderr, "printer model: %s\n", printer_model));
+	    }
 	}
     }
 
@@ -814,13 +843,14 @@ initialize_printer(int quiet)
 }
 
 static const stp_printer_t *
-get_printer(int quiet)
+get_printer(int quiet, int fail_if_not_found)
 {
   if (the_printer_t)
     return the_printer_t;
   else
     {
-      const stp_printer_t *printer = initialize_printer(quiet);
+      const stp_printer_t *printer =
+	initialize_printer(quiet, fail_if_not_found);
       STP_DEBUG(fprintf(stderr, "init done...\n"));
       return printer;
     }
@@ -879,14 +909,15 @@ do_status_command_internal(status_cmd_t cmd)
     }
 
   STP_DEBUG(fprintf(stderr, "%s...\n", cmd_name));
-  printer = get_printer(1);
-  STP_DEBUG(fprintf(stderr, "%s found %s\n", cmd_name,
-		    stp_printer_get_long_name(printer)));
+  printer = get_printer(1, 0);
   if (!printer)
     {
       fprintf(stderr, _("Cannot identify printer!\n"));
       exit(0);
     }
+  if (!found_unknown_old_printer)
+    STP_DEBUG(fprintf(stderr, "%s found %s\n", cmd_name,
+		      stp_printer_get_long_name(printer)));
   printvars = stp_printer_get_defaults(printer);
   stp_describe_parameter(printvars, "ChannelNames", &desc);
   if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
@@ -1117,7 +1148,7 @@ do_extended_ink_info(int extended_output)
       exit(1);
     }
 
-  printer = get_printer(1);
+  printer = get_printer(1, 0);
   if (!printer)
     {
       fprintf(stderr, _("Cannot identify printer!\n"));
@@ -1209,8 +1240,8 @@ do_identify(void)
     }
   if (printer_model)
     printer_model = NULL;
-  printer = get_printer(1);
-  if (printer)
+  printer = get_printer(1, 1);
+  if (printer && !found_unknown_old_printer)
     {
       if (print_short_name)
 	printf("%s\n", stp_printer_get_driver(printer));
@@ -1237,7 +1268,7 @@ void
 do_head_clean(void)
 {
   if (raw_device)
-    (void) get_printer(1);
+    (void) get_printer(1, 0);
   do_remote_cmd("CH", 2, 0, 0);
   printf(_("Cleaning heads...\n"));
   exit(do_print_cmd());
@@ -1247,7 +1278,7 @@ void
 do_nozzle_check(void)
 {
   if (raw_device)
-    (void) get_printer(1);
+    (void) get_printer(1, 0);
   do_remote_cmd("VI", 2, 0, 0);
   do_remote_cmd("NC", 2, 0, 0);
   printf(_("Running nozzle check, please ensure paper is in the printer.\n"));
@@ -1431,14 +1462,14 @@ do_align(void)
   long answer;
   char *endptr;
   int curpass;
-  const stp_printer_t *printer = get_printer(0);
+  const stp_printer_t *printer = get_printer(0, 0);
   stp_parameter_t desc;
   int passes = 0;
   int choices = 0;
   const char *printer_name;
   stp_vars_t *v = stp_vars_create();
 
-  if (!printer)
+  if (!printer || found_unknown_old_printer)
     return;
 
   printer_name = stp_printer_get_long_name(printer);
