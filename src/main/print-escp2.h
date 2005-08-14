@@ -53,7 +53,8 @@ typedef unsigned long model_featureset_t;
 #define RES_2880_720	 5
 #define RES_2880_1440	 6
 #define RES_2880_2880	 7
-#define RES_N		 8
+#define RES_5760_2880	 8
+#define RES_N		 9
 
 /*
  ****************************************************************

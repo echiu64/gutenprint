@@ -110,8 +110,10 @@ static const escp2_dropsize_t escp2_1_5pl_1440_dropsizes =
 /* Looks like 1.5, 3.25, 6 */
 static const escp2_dropsize_t escp2_1_5pl_2880_dropsizes =
   { "1_5pl_2880", 3, { 0.25, 0.47, 1.0 } };
+static const escp2_dropsize_t escp2_1_5pl_2880_2880_dropsizes =
+  { "1_5pl_2880_2880", 2, { 0.53, 1.0 } };
 static const escp2_dropsize_t escp2_1_5pl_5760_dropsizes =
-  { "1_5pl_5760", 2, { 0.53, 1.0 } };
+  { "1_5pl_5760", 1, { 1.0 } };
 
 /* Stylus Photo R300 */
 static const escp2_dropsize_t escp2_r300_360_dropsizes =
@@ -179,6 +181,7 @@ const escp2_drop_list_t stpi_escp2_simple_drops =
   &escp2_single_dropsizes,
   &escp2_single_dropsizes,
   &escp2_single_dropsizes,
+  &escp2_single_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_6pl_drops =
@@ -190,7 +193,8 @@ const escp2_drop_list_t stpi_escp2_variable_6pl_drops =
   &escp2_6pl_1440_dropsizes,
   &escp2_6pl_2880_dropsizes,
   &escp2_6pl_2880_dropsizes,
-  &escp2_6pl_2880_dropsizes
+  &escp2_6pl_2880_dropsizes,
+  &escp2_6pl_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops =
@@ -200,6 +204,7 @@ const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops =
   &escp2_x80_low_dropsizes,
   &escp2_x80_6pl_dropsizes,
   &escp2_x80_1440_6pl_dropsizes,
+  &escp2_x80_2880_6pl_dropsizes,
   &escp2_x80_2880_6pl_dropsizes,
   &escp2_x80_2880_6pl_dropsizes,
   &escp2_x80_2880_6pl_dropsizes,
@@ -215,6 +220,7 @@ const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops =
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
+  &escp2_4pl_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops =
@@ -224,6 +230,7 @@ const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops =
   &escp2_new_low_dropsizes,
   &escp2_new_6pl_dropsizes,
   &escp2_new_4pl_dropsizes,
+  &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
   &escp2_4pl_2880_dropsizes,
@@ -239,6 +246,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_drops =
   &escp2_3pl_2880_dropsizes,
   &escp2_3pl_2880_dropsizes,
   &escp2_3pl_2880_dropsizes,
+  &escp2_3pl_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_2pl_drops =
@@ -248,6 +256,7 @@ const escp2_drop_list_t stpi_escp2_variable_2pl_drops =
   &escp2_2pl_360_dropsizes,
   &escp2_2pl_720_dropsizes,
   &escp2_2pl_1440_dropsizes,
+  &escp2_2pl_2880_dropsizes,
   &escp2_2pl_2880_dropsizes,
   &escp2_2pl_2880_dropsizes,
   &escp2_2pl_2880_dropsizes,
@@ -263,6 +272,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops =
   &escp2_r300_2880_dropsizes,
   &escp2_r300_2880_1440_dropsizes,
   &escp2_r300_2880_1440_dropsizes,
+  &escp2_r300_2880_1440_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
@@ -274,11 +284,13 @@ const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
   &escp2_1_5pl_1440_dropsizes,
   &escp2_1_5pl_2880_dropsizes,
   &escp2_1_5pl_2880_dropsizes,
+  &escp2_1_5pl_2880_2880_dropsizes,
   &escp2_1_5pl_5760_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_2000p_drops =
 {
+  &escp2_2000p_dropsizes,
   &escp2_2000p_dropsizes,
   &escp2_2000p_dropsizes,
   &escp2_2000p_dropsizes,
@@ -299,6 +311,7 @@ const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops =
   &escp2_ultrachrome_2880_dropsizes,
   &escp2_ultrachrome_2880_dropsizes,
   &escp2_ultrachrome_2880_dropsizes,
+  &escp2_ultrachrome_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops =
@@ -309,6 +322,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops =
   &escp2_6pl_pigment_dropsizes,
   &escp2_3pl_pigment_dropsizes,
   &escp2_3pl_pigment_2880_dropsizes,
+  &escp2_3pl_pigment_5760_dropsizes,
   &escp2_3pl_pigment_5760_dropsizes,
   &escp2_3pl_pigment_5760_dropsizes,
 };
@@ -323,10 +337,12 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops =
   &escp2_3pl_pigment_c66_2880_dropsizes,
   &escp2_3pl_pigment_c66_5760_dropsizes,
   &escp2_3pl_pigment_c66_5760_dropsizes,
+  &escp2_3pl_pigment_c66_5760_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_spro10000_drops =
 {
+  &escp2_spro10000_dropsizes,
   &escp2_spro10000_dropsizes,
   &escp2_spro10000_dropsizes,
   &escp2_spro10000_dropsizes,

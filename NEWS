@@ -209,6 +209,12 @@ These release notes contain the following sections:
 
   17) Traditional Chinese (zh_TW) translation has been added.
 
+  18) The Epson Stylus Photo R800 and R1800 now support 5760x2880 DPI
+     resolution.  Tests indicate that this resolution does offer a
+     small degree of improvement over 2880x2880; the most noticeable
+     improvement is smoother tonality.  This enhancement may be
+     desirable for particularly critical printing.
+
 
 ================================================================
 
@@ -2041,32 +2047,31 @@ Printer-Specific Notes:
       Epson on the C70 and C80, and may not work on all C70 and C80
       printers.
 
-    * The Gutenprint Epson driver does not support the 5760 DPI
-      resolutions (5760x720 or 5760x1440 DPI) offered by some Epson
-      printers.  We do not believe that these resolutions offer any
-      advantage over 2880x720 or 2880x1440 DPI, and indeed they may
-      not offer any advantage over 1440x720 or 1440x1440 DPI.  No
-      current Epson printer requires a resolution higher than
-      2880x2880 DPI to fill the page with the smallest drop size used,
-      and the effective resolution is generally determined by the
-      lower of the horizontal and vertical resolution.  Raising the
-      horizontal resolution without a corresponding increase in the
-      vertical resolution merely requires more computation and
-      printing time without yielding significantly better quality.
+    * With a few exceptions, the Gutenprint Epson driver does not
+      support the 5760 DPI resolutions (5760x720 or 5760x1440 DPI)
+      offered by some Epson printers.  We do not believe that these
+      resolutions offer any advantage over 2880x720 or 2880x1440 DPI,
+      and indeed they may not offer any advantage over 1440x720 or
+      1440x1440 DPI.  The effective resolution is generally determined
+      by the lower of the horizontal and vertical resolution.  Raising
+      the horizontal resolution without a corresponding increase in
+      the vertical resolution merely requires more computation and
+      printing time, usually without yielding significantly better
+      quality.
 
       In some cases, we offer resolutions different from what Epson
       advertises that have the same effect; for example, we offer
       2880x2880 DPI on the Epson Stylus C86 rather than the 5760x1440
       offered by Epson's native driver.
 
-      We do not currently plan to offer resolutions higher than
-      2880x2880 DPI on any Epson Stylus printer with a drop size of 1
-      pl or larger.  At the time of Gutenprint 5.0 release, the
-      smallest drop size offered by any Epson Stylus printer is 1.5
-      pl.  If such a printer is offered, or we otherwise determine
-      that there are advantages to be had from offering such
-      resolutions, we will evaluate whether to offer higher
-      resolutions.
+      We have recently determined that the Epson Stylus Photo R800 do
+      yield slightly superior results at 5760x2880 than at 2880x2880
+      DPI.  The minimum drop size on this printer (1.5 pl) is small
+      enough that it cannot achieve maximum density at 2880x2880 DPI;
+      therefore, multiple drop sizes must be used to achieve maximum
+      density at that resolution.  At 5760x2880 DPI it is possible to
+      use only the 1.5 pl drop size, which yields a smoother tonal
+      range due lack of mismatches between different drop sizes.
 
     * Many Epson printers (specifically, the Epson Stylus Color 740
       and all newer printers) will not respond to ASCII text without a

@@ -141,6 +141,13 @@ static const res_t r_2880x2880sw =
 { "2880x2880sw",   N_("2880 x 2880 DPI"),
   2880, 2880,  2880, 2880, 1, 0, 1};
 
+static const res_t r_5760x2880mw =
+{ "5760x2880mw",   N_("5760 x 2880 DPI"),
+  5760, 2880,  5760, 2880, 0, 1, 1};
+static const res_t r_5760x2880sw =
+{ "5760x2880sw",   N_("5760 x 2880 DPI"),
+  5760, 2880,  5760, 2880, 1, 0, 1};
+
 
 
 const res_t *const stpi_escp2_720dpi_reslist[] =
@@ -295,6 +302,8 @@ const res_t *const stpi_escp2_superfine_reslist[] =
   &r_2880x1440sw,
 
   &r_2880x2880sw,
+
+  &r_5760x2880sw,
 
   NULL
 };

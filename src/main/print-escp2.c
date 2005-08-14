@@ -849,6 +849,7 @@ compute_internal_resid(int hres, int vres)
       1440 * 1440,
       2880 * 1440,
       2880 * 2880,
+      5760 * 2880,
     };
   int total_resolution = hres * vres;
   int i;

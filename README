@@ -830,41 +830,6 @@ PACKAGING
       POSIX-compliant operating system.
 
 
-DEBIAN
-
-    The Debian packaging has been rewritten from scratch in 4.2.  It
-    is compliant with Standards-Version 3.5.6.0, and is lintian-clean.
-    It should build from source on woody and sid, but will not build
-    on potato.  There are seven separate packages:
-
-    gimp1.2-print	     The GIMP Print plugin. Also contains HTML
-			     and SGML documentation that is registered
-			     with doc-base.
-    cupsys-driver-gutenprint The CUPS driver and PPD files.
-    ijsgutenprint	     Ghostscript IJS server.
-    foomatic-db-gutenprint   Foomatic data files for gutenprint drivers.
-    libgutenprint1	     The libgutenprint library (Gutenprint core).
-    libgutenprint1-dev	     Headers, symlinks, m4 macro
-			     (AM_PATH_GUTENPRINT) and gutenprint-config
-			     needed to develop programs that link with
-			     libgutenprint.
-    gutenprint-doc	     User's Guide in HTML and PDF format
-    libgutenprint1-doc	     Programmer's Guide in Info, DVI and HTML
-			     format.
-    gutenprint-locales	     Message catalogues for internationalisation.
-    escputil		     The escputil printer tool for Epson printers.
-
-    The library symlinks will get packaged without any modification needed
-    to the debian packaging whatever library versioning scheme is
-    used.  Most packages depend on libgutenprint as this will provide
-    translations for i18n in the future that they will use, or they
-    require libgutenprint anyway.
-
-    The newer Debian gs packages (>= 5.50) are linked with libgutenprint, so
-    you need not do any patching!  However, if you compile a newer version
-    of libgutenprint, the newer version will be used by ghostscript.
-
-
 USE OF THE CVS REPOSITORY
 
     Please read doc/README.maintaining for instructions on how to

@@ -40,87 +40,88 @@
  *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
+ *  8: 5760x2880
  */
 
-/*   0     1     2     3     4     5     6     7 */
+/*   0     1     2     3     4     5     6     7     8 */
 
 static const escp2_dot_size_t g1_dotsizes =
-{   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1 };
+{   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t g2_dotsizes =
-{   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1 };
+{   -2,   -2,   -2,   -2,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t g3_dotsizes =
-{    3,    3,    2,    1,    1,   -1,   -1,   -1 };
+{    3,    3,    2,    1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t c6pl_dotsizes =
-{ 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 };
+{ 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c4pl_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x10, 0x10, 0x10, 0x10 };
+{ 0x12, 0x12, 0x12, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c4pl_pigment_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x11, 0x10, 0x10, 0x10 };
+{ 0x12, 0x12, 0x12, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c3pl_dotsizes =
-{ 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10 };
+{ 0x11, 0x11, 0x11, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
-{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
+{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
 static const escp2_dot_size_t p3pl_dotsizes =
-{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12 };
+{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
 static const escp2_dot_size_t p1_5pl_dotsizes =
-{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13 };
+{ 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13 };
 
 static const escp2_dot_size_t c2pl_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10 };
+{ 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t c1_8pl_dotsizes =
-{ 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13 };
+{ 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13, 0x13 };
 
 static const escp2_dot_size_t sc440_dotsizes =
-{    3,    3,    2,    1,   -1,   -1,   -1,   -1 };
+{    3,    3,    2,    1,   -1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc480_dotsizes =
-{ 0x13, 0x13, 0x13, 0x10, 0x10, 0x10, 0x10, 0x10 };
+{ 0x13, 0x13, 0x13, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10 };
 
 static const escp2_dot_size_t sc600_dotsizes =
-{    4,    4,    3,    2,    1,   -1,   -1,   -1 };
+{    4,    4,    3,    2,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc640_dotsizes =
-{    3,    3,    2,    1,    1,   -1,   -1,   -1 };
+{    3,    3,    2,    1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc660_dotsizes =
-{    3,    3,    0,    0,    0,   -1,   -1,   -1 };
+{    3,    3,    0,    0,    0,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sc670_dotsizes =
-{ 0x12, 0x12, 0x12, 0x11, 0x11,   -1,   -1,   -1 };
+{ 0x12, 0x12, 0x12, 0x11, 0x11,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sp700_dotsizes =
-{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
+{    3,    3,    2,    1,    4,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sp720_dotsizes =
-{ 0x12, 0x12, 0x11, 0x11, 0x11,   -1,   -1,   -1 };
+{ 0x12, 0x12, 0x11, 0x11, 0x11,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t sp2000_dotsizes =
-{ 0x11, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1 };
+{ 0x11, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_dye_dotsizes =
-{    3,    3,    3,    1,    1,   -1,   -1,   -1 };
+{    3,    3,    3,    1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_pigment_dotsizes =
-{    3,    3,    2,    1,    1,   -1,   -1,   -1 };
+{    3,    3,    2,    1,    1,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro10000_dotsizes =
-{    4, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1 };
+{    4, 0x11, 0x11, 0x10, 0x10,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro5000_dotsizes =
-{    3,    3,    2,    1,    4,   -1,   -1,   -1 };
+{    3,    3,    2,    1,    4,   -1,   -1,   -1,   -1 };
 
 static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
-{ 0x11, 0x11, 0x11, 0x10, 0x10,   -1,    5,    5 };
+{ 0x11, 0x11, 0x11, 0x10, 0x10,   -1,    5,    5,    5 };
 
 /*
  * Bits are for:
@@ -133,24 +134,25 @@ static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
  *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
+ *  8: 5760x2880
  */
 
-/*   0     1     2     3     4     5     6     7 */
+/*   0     1     2     3     4     5     6     7     8 */
 
 static const escp2_bits_t variable_bits =
-{    2,    2,    2,    2,    2,    2,    2,    2 };
+{    2,    2,    2,    2,    2,    2,    2,    2,    2 };
 
 static const escp2_bits_t stp950_bits =
-{    2,    2,    2,    2,    2,    2,    1,    1 };
+{    2,    2,    2,    2,    2,    2,    1,    1,    1 };
 
 static const escp2_bits_t ultrachrome_bits =
-{    2,    2,    2,    2,    2,    1,    1,    1 };
+{    2,    2,    2,    2,    2,    1,    1,    1,    1 };
 
 static const escp2_bits_t standard_bits =
-{    1,    1,    1,    1,    1,    1,    1,    1 };
+{    1,    1,    1,    1,    1,    1,    1,    1,    1 };
 
 static const escp2_bits_t c1_8_bits =
-{    2,    2,    2,    2,    2,    1,    1,    1 };
+{    2,    2,    2,    2,    2,    1,    1,    1,    1 };
 
 /*
  * Base resolutions are for:
@@ -163,36 +165,37 @@ static const escp2_bits_t c1_8_bits =
  *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
+ *  8: 5760x2880
  */
 
-/*   0     1     2     3     4     5     6     7 */
+/*   0     1     2     3     4     5     6     7     8 */
 
 static const escp2_base_resolutions_t standard_base_res =
-{  720,  720,  720,  720,  720,  720,  720,  720 };
+{  720,  720,  720,  720,  720,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t g3_base_res =
-{  720,  720,  720,  720,  360,  360,  360,  360 };
+{  720,  720,  720,  720,  360,  360,  360,  360,  360 };
 
 static const escp2_base_resolutions_t variable_base_res =
-{  360,  360,  360,  360,  360,  360,  360,  360 };
+{  360,  360,  360,  360,  360,  360,  360,  360,  360 };
 
 static const escp2_base_resolutions_t stp950_base_res =
-{  360,  360,  360,  360,  360,  720,  720,  720 };
+{  360,  360,  360,  360,  360,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t ultrachrome_base_res =
-{  360,  360,  360,  360,  360,  720,  720,  720 };
+{  360,  360,  360,  360,  360,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t c1_8_base_res =
-{  360,  360,  720,  720,  720, 1440, 1440, 1440 };
+{  360,  360,  720,  720,  720, 1440, 1440, 1440, 1440 };
 
 static const escp2_base_resolutions_t c1_5_base_res =
-{  360,  360,  720,  720,  720,  720,  720,  720 };
+{  360,  360,  720,  720,  720,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t stc900_base_res =
-{  360,  360,  360,  360,  180,  180,  360,  360 };
+{  360,  360,  360,  360,  180,  180,  360,  360,  360 };
 
 static const escp2_base_resolutions_t pro_base_res =
-{ 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880 };
+{ 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880 };
 
 /*
  * Densities are for:
@@ -205,78 +208,79 @@ static const escp2_base_resolutions_t pro_base_res =
  *  5: 2880x720 or 1440x1440
  *  6: 2880x1440
  *  7: 2880x2880
+ *  8: 5760x2880
  */
 
 /*  0    1     2       3    4      5      6      7 */
 
 static const escp2_densities_t g1_densities =
-{ 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0   };
+{ 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t g3_densities =
-{ 2.6, 1.3,  0.65, 0.775, 0.388, 0.0,   0.0,   0.0,  };
+{ 2.6, 1.3,  0.65, 0.775, 0.388, 0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t c6pl_densities =
-{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.0,   0.0   };
+{ 4.0, 2.0,  1.0,  0.568, 0.568, 0.568, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t c4pl_2880_densities =
-{ 2.6, 1.3,  0.65, 0.650, 0.650, 0.650, 0.32,  0.0   };
+{ 2.6, 1.3,  0.65, 0.650, 0.650, 0.650, 0.32,  0.0,   0.0   };
 
 static const escp2_densities_t c4pl_densities =
-{ 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.0   };
+{ 2.6, 1.3,  0.65, 0.568, 0.523, 0.792, 0.396, 0.0,   0.0   };
 
 static const escp2_densities_t c4pl_pigment_densities =
-{ 2.3, 1.15, 0.58, 0.766, 0.388, 0.958, 0.479, 0.0   };
+{ 2.3, 1.15, 0.58, 0.766, 0.388, 0.958, 0.479, 0.0,   0.0   };
 
 static const escp2_densities_t c3pl_pigment_densities =
-{ 2.4, 1.2,  0.60, 0.600, 0.512, 0.512, 0.512, 0.0   };
+{ 2.4, 1.2,  0.60, 0.600, 0.512, 0.512, 0.512, 0.0,   0.0   };
 
 static const escp2_densities_t c3pl_pigment_c66_densities =
-{ 2.8, 1.4,  0.70, 0.600, 0.512, 0.512, 0.512, 0.0   };
+{ 2.8, 1.4,  0.70, 0.600, 0.512, 0.512, 0.512, 0.0,   0.0   };
 
 static const escp2_densities_t c3pl_densities =
-{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0   };
+{ 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0,   0.0   };
 
 static const escp2_densities_t p3pl_densities =
-{ 4.0, 2.0,  1.00, 0.815, 0.788, 0.821, 0.680, 0.340 };
+{ 4.0, 2.0,  1.00, 0.815, 0.788, 0.821, 0.680, 0.340, 0.0   };
 
 static const escp2_densities_t p1_5pl_densities =
-{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500 };
+{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
 
 static const escp2_densities_t c2pl_densities =
-{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325 };
+{ 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325, 0.0   };
 
 static const escp2_densities_t c1_8pl_densities =
-{ 2.3, 1.15, 0.57, 0.650, 0.650, 0.0,   0.650, 0.360 };
+{ 2.3, 1.15, 0.57, 0.650, 0.650, 0.0,   0.650, 0.360, 0.0   };
 
 static const escp2_densities_t sc1500_densities =
-{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0   };
+{ 2.6, 1.3,  1.3,  0.631, 0.0,   0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc440_densities =
-{ 4.0, 2.0,  1.0,  0.900, 0.45,  0.0,   0.0,   0.0   };
+{ 4.0, 2.0,  1.0,  0.900, 0.45,  0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc480_densities =
-{ 2.8, 1.4,  0.7,  0.710, 0.710, 0.546, 0.0,   0.0   };
+{ 2.8, 1.4,  0.7,  0.710, 0.710, 0.546, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc660_densities =
-{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.0,   0.0,   0.0   };
+{ 4.0, 2.0,  1.0,  0.646, 0.323, 0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sc980_densities =
-{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.0   };
+{ 2.6, 1.3,  0.65, 0.511, 0.49,  0.637, 0.455, 0.0,   0.0   };
 
 static const escp2_densities_t sp700_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.0,   0.0,   0.0   };
+{ 2.6, 1.3,  1.3,  0.775, 0.55,  0.0,   0.0,   0.0,   0.0   };
 
 static const escp2_densities_t sp2000_densities =
-{ 2.6, 1.3,  0.65, 0.852, 0.438, 0.219, 0.0,   0.0   };
+{ 2.6, 1.3,  0.65, 0.852, 0.438, 0.219, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t spro_dye_densities =
-{ 2.6, 1.3,  1.3,  0.775, 0.388, 0.275, 0.0,   0.0   };
+{ 2.6, 1.3,  1.3,  0.775, 0.388, 0.275, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t spro_pigment_densities =
-{ 3.0, 1.5,  0.78, 0.775, 0.388, 0.194, 0.0,   0.0   };
+{ 3.0, 1.5,  0.78, 0.775, 0.388, 0.194, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t spro10000_densities =
-{ 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.0,   0.0   };
+{ 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.0,   0.0,   0.0   };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -1741,7 +1745,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
+    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
@@ -1792,7 +1796,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
+    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
