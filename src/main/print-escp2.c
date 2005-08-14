@@ -2141,7 +2141,7 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
 
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
-      pt->hue_adjustment)
+      pt && pt->hue_adjustment)
     {
       adjustment = stp_curve_create_from_string(pt->hue_adjustment);
       stp_set_curve_parameter(v, "HueMap", adjustment);
@@ -2149,7 +2149,7 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
       stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
-      pt->sat_adjustment)
+      pt && pt->sat_adjustment)
     {
       adjustment = stp_curve_create_from_string(pt->sat_adjustment);
       stp_set_curve_parameter(v, "SatMap", adjustment);
@@ -2157,7 +2157,7 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
       stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
-      pt->lum_adjustment)
+      pt && pt->lum_adjustment)
     {
       adjustment = stp_curve_create_from_string(pt->lum_adjustment);
       stp_set_curve_parameter(v, "LumMap", adjustment);
