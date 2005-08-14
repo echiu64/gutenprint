@@ -93,7 +93,7 @@ umask 0177;
 my @ppdglob = glob("$ppd_dir/*.{ppd,PPD}");
 my $ppdlist = join ' ', @ppdglob;
 if (@ppdglob) {
-    open PPDFILES, "egrep -i -l \"Gutenprint|Gimp-Print\" $ppdlist|" or die "can't grep $ppd_dir/*: $!";
+    open PPDFILES, '-|', 'egrep', '-i', '-l', 'Gutenprint|Gimp-Print', @ppdglob or die "can't grep $ppd_dir/*: $!";
     while (<PPDFILES>) {
 	chomp;
 	push @ppd_files,  $_;
