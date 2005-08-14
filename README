@@ -37,8 +37,8 @@ INTRODUCTION
     This manual covers setup and use of the GIMP Print plug-in and the
     CUPS driver.
 
-    We urge all distributors of this package to read the PACKAGING and
-    KNOWN BUILD ISSUES section below.
+    We urge all distributors of this package to read the PACKAGING
+    section below and KNOWN BUILD ISSUES section in the release notes.
 
 
 BASIC INSTALLATION
@@ -346,7 +346,8 @@ FOOMATIC
     to be used with CUPS (CUPS-O-Matic).  Please read the instructions
     below in the GHOSTSCRIPT section.
 
-    If you do not wish to build the Gimp Print plugin, you must run
+    If you do not wish to build the Print plugin for the GIMP plugin,
+    you must run
 
     ./configure --with-foomatic --without-gimp
 
@@ -386,14 +387,12 @@ GHOSTSCRIPT
     beyond, AFPL Ghostscript 7.04 and beyond, and ESP Ghostscript 7.05
     and beyond.
 
-    We strongly recommend that end users not use this driver directly.
-    The available options are very complex and are subject to change,
-    and the standard printer configuration tools (such as apsfilter
-    and magicfilter) do not provide a convenient interface to the
-    driver's capabilities.  We recommend that end users either install
-    CUPS, as described above, or use Foomatic to configure printer
-    queues, as described above.  We no longer provide documentation on
-    manual use of this driver.
+    We strongly recommend that end users use CUPS, or use Foomatic to
+    configure printer queues for Gutenprint.  The available options
+    are very complex and are subject to change, and the older printer
+    configuration tools (such as apsfilter and magicfilter) do not
+    provide a convenient interface to the driver's capabilities.  We
+    no longer provide documentation on manual use of this driver.
 
     Gutenprint 5.0 no longer provides the monolithic "stp" driver
     present in 4.2.  This driver, which was linked directly into
@@ -440,288 +439,8 @@ SUPPORT
 
 KNOWN BUILD/INSTALLATION ISSUES
 
-    This section describes a number of issues that have been
-    encountered while building or installing Gutenprint.  If any of
-    these apply to you, please read the notes carefully.  The issues
-    are:
-
-    1) Building escputil may fail, or escputil may fail to run.
-
-    2) CUPS PPD files may not be translated (there may be multiple
-       versions of the PPD files, all in English).
-
-    3) Build/installation of Foomatic data may happen correctly, but
-       the generated PPD files do not work correctly.
-
-    Detailed descriptions of these issues follow.
-
-    * There is a known complication building "escputil" that causes
-      problems on some systems.  "escputil" uses the "readline"
-      package, to support command editing and history within the
-      program.  Unfortunately, linking programs with "readline" often
-      requires linking against additional libraries, and the exact
-      library depends upon the system (e. g. not all Linux systems
-      have the same requirements).
-
-      The configure script attempts to determine which additional
-      library must be linked against.  It tries using the following
-      libraries in this order to build a test executable:
-
-      -lncurses
-      -lcurses
-      -ltermcap
-      no additional libraries
-
-      The reason it tries other libraries first is that some systems
-      will link successfully, but only fail when an attempt is made to
-      actually call readline.  Therefore, we assume that additional
-      libraries are required.  Since we try the extra libraries in
-      order from most recent to oldest, we expect that the first one
-      we find will be appropriate.  For example, if the "ncurses"
-      library is the standard on a given system, the "termcap" library
-      may be provided for back compatibility, but it is unlikely that
-      "termcap" will be the standard with "curses" or "ncurses" being
-      provided for compatibility only (so that the link will succeed
-      but the command will use the incorrect library).
-
-      As this procedure is not failsafe, we provide the following
-      configure options to control this behavior:
-
-      ./configure --with-readline=yes  (the default; attempts to
-				       determine the correct library
-				       to link against)
-
-      ./configure --with-readline=no   (turns off use of readline
-				       altogether)
-
-      ./configure --with-readline=only (specifically instructs
-				       configure to not attempt to
-				       link against any other
-				       libraries)
-
-      ./configure --with-readline=libs (specifies the libraries to be
-				       linked against)
-
-      An hypothetical (this won't work anywhere!) example of the
-      latter would be
-
-      ./configure --with-readline='-lncurses -ltermcap'
-
-      Note that configure will not allow readline to be used if it
-      cannot successfully build the test program, regardless of the
-      option selected.  If you are having difficulty getting escputil
-      to build, we suggest using --with-readline=no.  The commands
-      used within escputil are very short and seldom require
-      significant editing.
-
-    * There is a known translation problem building the PPD files used
-      by the CUPS driver such that on many systems all of the PPD
-      files are in the English language.  This causes CUPS tools, such
-      as KUPS or http://localhost:631 to display many copies of each
-      PPD file, all in the English (en) language.  In fact, the PPD
-      files should be translated into Swedish, Polish, Norwegian,
-      French, Danish, Spanish, Slovakian, Greek, British English,
-      Dutch, German, and Portuguese.  With CUPS 1.1.10 and lower,
-      there should be two copies of the (en) PPD file, and one copy
-      each of (sv), (no), (fr), (pl), (da), (sk), (el), (es), (nl),
-      (de), and (pt).  With CUPS 1.1.11 and above, there should be
-      (en), (en_GB), (sv), (no), (fr), (pl), (da), (sk), (el), (es),
-      (nl), (de), and (pt) PPD files.
-
-      The PPD files are created by a program named "genppd" in the
-      src/cups directory.  This program is called once for each
-      language, and creates all of the PPD files for the language in
-      one shot.
-
-      The command 'zgrep' can be used to determine if genppd is
-      creating the PPD files correctly, as follows:
-
-	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
-	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
-	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
-	  ...
-
-      If the PPD file for each language has a different language
-      version, the genppd program operated correctly.  If instead the
-      output looks like this:
-
-	  src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
-	  ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ...
-
-      the program did not operate correctly.
-
-      If you do not have 'zgrep' on your system, you can gunzip the
-      PPD files, and use
-
-	  grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
-
-      to accomplish the same test.
-
-      The normal mechanism for performing translations is to set the
-      LANG environment variable to the appropriate language prior to
-      running the program.  This normally causes the program to search
-      the translations (normally in /usr/share/locale or
-      /usr/lib/locale) for the chosen language.  When a specially
-      marked string is used, a special macro calls `gettext()' on the
-      string to retrieve the translation, and substitutes the
-      translation for the string in question.
-
-      There are two problems with this approach in the context of
-      genppd.  The translation engine is intended to be used after
-      installation, not during build, and this causes problems.
-
-      1) At the time genppd is run, the translations have not been
-         installed in the normal system directories.  Fortunately,
-         it's possible to tell the translation machinery (via
-         bindtextdomain) to look elsewhere for the translation
-         catalogs.  What we do is install the catalogs in a temporary
-         directory under src/cups, and tell genppd to instruct the
-         translation machinery to look there.  This workaround is
-         straightforward, and doesn't normally cause problems.
-
-      2) LANG only lets us pick a valid locale (normally determined by
-         listing the directories in /usr/share/locale or
-         /usr/lib/locale).  Unfortunately, while language codes (which
-         form the base of locales) are standard, the actual locale
-         names aren't always.  On some systems, the locale names are
-         just the language base names; on others, they are the
-         language names concatenated with country codes (e. g. en_US),
-         while on others they are language codes concatenated with
-         character sets.  We are not aware of any workaround for this,
-         possibly short of actually running make install and then
-         rebuilding the PPD's.  'make install' will install the
-         message catalogs, and that may create the necessary locale
-         directories.  This is not exactly a very elegant approach.
-
-      The GNU gettext library (libintl.a) provides another environment
-      variable, LANGUAGE, which unconditionally looks up translations
-      according to the language, ignoring LANG and the LC_*
-      environment variables that are normally used for translation.
-      This library is no longer included with Gutenprint
-      (--with-included-gettext will not work).  Install the GNU
-      gettext package first if you need libintl.a.  Many systems
-      provide translation machinery in their standard libraries, and
-      it may not always be best to use foreign libraries to replace
-      standard system functionality.
-
-      We have chosen to use LANGUAGE for this purpose, as the GNU
-      gettext library appears to offer the most reliable translation,
-      and LANGUAGE appears to offer the most reliable mechanism.  We
-      have actually found that LANG and LC_* can interfere with
-      LANGUAGE, thus we do not use both.
-
-      To determine if the translations are working, you must actually
-      inspect the PPD files.  You will need to
-
-      cd src/cups/ppd/sv
-      gunzip *
-      more *
-
-      or the like to determine if this is successful.  In particular,
-      look for LanguageVersion, and make sure that it is correct (it
-      should be "Swedish" in the sv directory, for example), and also
-      make sure that the paper sizes are also translated.  We
-      currently suggest using the Swedish translation for this purpose
-      as it is the most complete.
-
-      If packagers find that the PPD files are all in English, rather
-      than translated into the appropriate languages, we suggest the
-      following:
-
-      1) Install GNU gettext (libintl).  If your system is not based
-         on GNU libc (Linux usually is based on GNU libc; BSD,
-         Solaris, IRIX, etc. are not), you will need this to have any
-         possibility of creating the translated PPD files.
-
-      2) Run 'make install' to install the package (including the
-         message catalogs) onto the system first, and then do the
-         following:
-
-	 cd src/cups
-	 rm ppd-stamp
-	 make
-
-	 to rebuild the PPD files.  Having the message catalogs on the
-	 system may permit this to succeed.
-
-      3) Ensure that your system actually has locales named 'sv',
-         'pl', and all of the other supported languages, and change
-         LANGUAGE to something more appropriate (most likely LANG,
-         LC_MESSAGES, or LC_ALL).
-
-      4) Build the PPD files on a Linux-based system; they are
-         portable.
-
-      5) Use --disable-translated-cups-ppds on the configure command line
-         to suppress the translated PPD files altogether.
-
-      Please feel free to contact us about this issue.
-
-    * There are multiple issues that one must be aware of when using
-      Foomatic with Gutenprint.
-
-      1) Before installing Gutenprint 5.0.0-rc1, you must manually
-	 remove any existing Foomatic option files.  This is because the
-	 Foomatic utility to load data kits (foomatic-kitload) does not
-	 remove obsolete data files from the Foomatic database.  If you
-	 do not do this, any PPD files you generate will be incorrect
-	 and printing may work incorrectly or not at all.
-
-	 Foomatic option files are usually located in 
-
-	 /usr/local/share/foomatic/db/source/opt
-
-	 or
-
-	 /usr/share/foomatic/db/source/opt
-
-	 Assuming they're in the former location, you must remove data
-	 files associated with the Gutenprint driver.  The command to do
-	 this, which must be run as the superuser (root) is
-
-	 cd /usr/local/share/foomatic/db/source/opt
-	 ls -l gutenprint-ijs*.xml
-
-	 If there are existing files present, you must remove them:
-
-	 rm -f gutenprint-ijs*.xml
-
-	 Now check to make sure that they are gone:
-
-	 ls -l gutenprint-ijs*.xml
-
-	 CAUTION: Be very careful when typing this command!  Minor
-	 errors in typing these commands may result in severe damage to
-	 your system.
-
-	 After this, you may run 'make install' in your Gutenprint
-	 source directory to install the package.  You will then need to
-	 re-create any printer queues using Foomatic.
-
-	 In general, you will have to perform this procedure any time
-	 you install a new version of Gutenprint.
-
-	 Please check the Foomatic site
-	 (http://www.linuxprinting.org/foomatic.html) and the Gutenprint
-	 site (http://gimp-print.sourceforge.net) for updated
-	 instructions about this.
-
-      2) Unlike with the CUPS native driver, there is no simple way to
-	 update all PPD files when you install a new version of
-	 Gutenprint.  You must either use the foomatic-ppdfile command
-	 to upgrade PPD files individually, or foomatic-compiledb to
-	 build all PPD files.
-
-         From this point forward, the Foomatic data will be version
-	 locked to the Gutenprint release installed on the system.  For
-	 example, PPD files generated with the Foomatic data for this
-	 release will not work with the ijsgutenprint in the next
-	 release.  This is to prevent accidentally using incorrect
-	 data, which could cause incorrect function to take place.
+    As of Gutenprint 5.0.0-rc1, the description of known issues has
+    been moved to the NEWS file (release notes).
 
 
 PACKAGING

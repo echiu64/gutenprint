@@ -77,8 +77,9 @@ These release notes contain the following sections:
 
 1) Changes from 5.0.0-beta4 to 5.0.0-rc1
 2) Overall changes from 4.2 to 5.0.
-3) List of supported printers
-4) Printer-specific notes
+3) Known build/installation issues
+4) List of supported printers
+5) Printer-specific notes
 
 ================================================================
 
@@ -180,6 +181,12 @@ These release notes contain the following sections:
        to be had from any resolution above 1440x1440 DPI with this
        printer.
 
+     * 5760x2880 DPI has been added for the Epson Stylus Photo R800
+       and R1800.  Tests indicate that this resolution does offer a
+       small degree of improvement over 2880x2880; the most noticeable
+       improvement is smoother tonality.  This enhancement may be
+       desirable for particularly critical printing.
+
   10) The Epson Stylus RX425 is now explicitly supported.
 
   11) Some problems with PPD file generation using cups-genppdconfig
@@ -209,11 +216,11 @@ These release notes contain the following sections:
 
   17) Traditional Chinese (zh_TW) translation has been added.
 
-  18) The Epson Stylus Photo R800 and R1800 now support 5760x2880 DPI
-     resolution.  Tests indicate that this resolution does offer a
-     small degree of improvement over 2880x2880; the most noticeable
-     improvement is smoother tonality.  This enhancement may be
-     desirable for particularly critical printing.
+  18) A problem whereby attempting to use certain paper types with
+     certain Epson printers would cause a failure is fixed.
+
+  19) A problem whereby the image height and width were not properly
+     preserved across uses of the GIMP plugin is fixed.
 
 
 ================================================================
@@ -222,28 +229,25 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
 * General User-Visible Changes:
 
-  1) In general, Gutenprint 5.0 is not compatible with Gimp-Print 4.2.
+  1) In general, Gutenprint 5.0 is very different from Gimp-Print 4.2.
      Gutenprint 5.0 offers many new options (which are described
      separately below), and many options that are present in both 4.2
      and 5.0 function differently in the two releases.  In addition,
      the API is different.  Finally, the color correction is quite
-     different, and profiles created against the 4.2 driver will not
-     function well against the 5.0 driver.
+     different, and profiles created with the 4.2 driver will not
+     function well with the 5.0 driver.
 
-  2) In addition to all of the printers supported in 4.2, a variety of
-     Olympus and Sony photo printers are supported in this release.
-
-  3) Options in the CUPS driver and GIMP plugin are now grouped
+  2) Options in the CUPS driver and GIMP plugin are now grouped
      according to function.  This work is still in progress, and
-     further usability improvements are expected.
+     we expect to make further usability improvements.
 
-  4) Simplified bundles of settings are now offered for users who do
+  3) Simplified bundles of settings are now offered for users who do
      not need to customize the settings.  The Print Quality and Image
      Type controls offer a variety of settings optimized for common
      printing tasks.  Both controls offer Manual Control settings for
      users who wish greater control over the output.
 
-  5) Many of the color settings have changed effect.  We recommend
+  4) Many of the color settings have changed effect.  We recommend
      starting with no color correction and making appropriate changes
      only as required.  Specific changes that you should be aware of
      include:
@@ -256,12 +260,12 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        setting to improve highlight and shadow detail by reducing the
        contrast.
 
-       The old behavior is available by turning on the "Linear
+       The previous behavior is available by turning on the "Linear
        Contrast Adjustment".
 
-     * The brightness control now behaves more appropriately,
-       adjusting the image's overall brightness without changing the
-       black or white points.
+     * The brightness control now behaves more in accord with standard
+       practice, adjusting the image's overall brightness without
+       changing the black or white points.
 
      * The Cyan, Magenta, and Yellow settings have been replaced with
        separate settings for gamma, density, and gray balance for
@@ -276,14 +280,16 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        density settings, permitting better color saturation without
        compromising gray balance.
 
-  6) The Uncorrected color correction mode is recommended for users
+  5) The Uncorrected color correction mode is recommended for users
      who wish to use their own color (ICC or otherwise) profiles with
      Gutenprint drivers.  This will yield the maximum gamut and most
      uniform response.  If you are not using your own color
      management, you will generally get best results from the High
-     Accuracy color correction setting.
+     Accuracy color correction setting.  Users who wish to perform
+     their own linearization and ink limiting may wish to use the Raw
+     color correction mode, which does not adjust the density.
 
-  7) The old man pages, and src/ghost/README, have been withdrawn.
+  6) The old man pages, and src/ghost/README, have been withdrawn.
      These pages, and the Ghostscript README file, were based on the
      Gimp-Print 4.2 options, which were much less extensive than the
      current option system.  It is not practical to keep them up to
@@ -291,10 +297,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      use either the native CUPS driver or Foomatic to manage options
      rather than attempt to create and manage printer queues by hand.
 
-  8) The source browser in the documentation package has been
-     removed.  This information, which consists of color-coded source,
-     is of little interest to the vast majority of users and consumes
-     a significant amount of space in the installation.
+  7) The source browser in the documentation package has been removed.
+     This information, which consists of color-coded annotation of the
+     source code, is of little interest to the vast majority of users
+     and consumes a significant amount of space in the installation.
 
 
 * New Functionality:
@@ -304,16 +310,18 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
   2) This release offers many new output controls:
 
-     + Balance (density) controls for each channel, in addition to the
-       gamma controls present in 4.2.
+     + Balance (density) controls for each color channel, in addition
+       to the gamma controls present in 4.2.
 
      + Gray balance controls for the cyan, magenta, and yellow
-       channels.
+       channels.  These controls allow fine tuning of gray tones
+       without affecting color.
 
      + Black (GCR) transition, including the transition gamma and the
        upper and lower limits.
 
-     + Transitions for photo (light cyan and light magenta) inks.
+     + Transitions for photo (light cyan, light magenta, and gray)
+       inks.
 
      + Transfer curves for each channel (cyan, magenta, yellow, black,
        and composite), allowing very precise control over the output.
@@ -322,7 +330,8 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        applicable, such as red and blue inks for the Epson Stylus
        Photo R800 and R1800.
 
-     + Hue, saturation, and luminosity transfer curves.
+     + Hue, saturation, and luminosity transfer curves permit tuning
+       of the color corrections utilized by Gutenprint.
 
      + Ink limit control.
 
@@ -341,7 +350,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   6) The resolution list for Epson printers has been simplified; many
      redundant resolutions have been removed.
 
-  7) Print head directional for Epson printers (unidirectional
+  7) Print head direction for Epson printers (unidirectional
      vs. bidirectional) is now a separate control.  In addition to
      contributing to the simplification of the Epson printer
      resolutions, this permits the choice of unidirectional
@@ -367,7 +376,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      increase the amount of ink printed.  For example, if 1440x720 DPI
      is selected, but the density requested is very high, the printer
      will switch to using drop sizes appropriate for 720 DPI.  This
-     option is disabled by default.
+     option is not normally required and is disabled by default.
 
   12) Where practical, all controls offer a default setting for
      simplicity of operation.  This default value is intended to offer
@@ -411,7 +420,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   18) A new Predithered color correction mode has been added that
      combines the effects of Raw and Threshold.  This mode may be used
      by applications that wish to perform their own dithering and use
-     Gutenprint to generate printer-specific output only.
+     Gutenprint to generate printer-specific output only.  The input
+     value should be the size of the drop desired (for single-level
+     printers, it should be 0 or 1; for printers with three drop
+     sizes, it should be 0, 1, 2, or 3).
 
   19) A new Correct Hue Only color correction mode has been added that
      performs partial color correction (adjusts hue, but not
@@ -453,10 +465,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
 * Changes to the Print plugin for the GIMP:
 
-  1) A new plugin for the GIMP 2.0 is now provided.  At present it is
-     experimental.  In the long run it will be distributed with the
-     GIMP rather than with Gutenprint.  This is anticipated for the
-     GIMP 2.2 release.
+  1) A new plugin for the GIMP 2.x is now provided.
 
   2) The Print plugin for the GIMP 1.2 is now deprecated and will be
      withdrawn in 5.1 (the development release following 5.0).  The
@@ -481,7 +490,8 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      system, and also offers the choice of printing to a file or using
      a custom print command for each printer defined in the printrc
      file.  The default printing command is correct whether the output
-     is Postscript or not.
+     is Postscript or not; it is no longer necessary to remove "-oraw"
+     from the print command line.
 
   7) The Print plugin now always displays all options relevant to
      what's being printed, enabling and disabling options as
@@ -491,7 +501,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      is installed in a non-standard location on your system such that
      you cannot run configure in Gutenprint without using
      --with-gimp-prefix or --with-gimp-exec-prefix, please read item
-     (10) in Exceptions and Workarounds below.  In addition, if you
+     (8) in Exceptions and Workarounds below.  In addition, if you
      have both the GIMP 1.3/2.0 and the GIMP 1.2 installed on your
      system, you should read the same material.
 
@@ -500,7 +510,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
   1) The CUPS PPD files now offer both fine and coarse adjustments for
      all color controls, permitting much finer control over output (in
-     steps of .005 rather than .05).
+     steps of .005 rather than .05) without making the menus unwieldly.
 
   2) The CUPS driver refuses to function with PPD files created for a
      different version of Gutenprint or Gimp-Print, providing an error
@@ -546,7 +556,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      building static libraries) is passed on the command line.
      Normally, only people packaging up Gutenprint for distribution
      use this option.  If you wish to use this option, please read
-     item (9) Exceptions and Workarounds *carefully* for a full
+     item (6) in Exceptions and Workarounds *carefully* for a full
      description of the problem along with suggested methods of
      procedure.
 
@@ -673,7 +683,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
   5) Epson printers have been completely retuned, in most cases
      yielding much better density, more accurate gray scale, and
-     darker blac on all paper types.
+     darker black on all paper types.
 
 
 * Exceptions and Workarounds:
@@ -689,14 +699,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      does.  We do not have an estimated time for fix.  Please contact
      us if you would like to assist with this.
 
-  3) Translation to other languages other than US-English is not
-     supported in this release.  This will be fixed prior to 5.0 final
-     release.
-
-  4) Support for the Canon S200 has not yet been ported forward from
+  3) Support for the Canon S200 has not yet been ported forward from
      4.2.
 
-  5) This release is slower than 4.2 in many cases, particularly when
+  4) This release is slower than 4.2 in many cases, particularly when
      using High Accuracy (which is the default color correction in
      most cases) or Bright color correction.  It is possible that this
      release will not be able to drive some printers at full speed,
@@ -704,14 +710,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      has been only partially analyzed or tuned at present.  We hope to
      improve the performance prior to final release.
 
-  6) The user's manual and developer's guide have not been updated for
+  5) The user's manual and developer's guide have not been updated for
      this release.
 
-  7) The CUPS PPD update script (cups-genppdupdate.5.0) will not
-     update PPD files from 4.2 or from 4.3 prior to 4.3.21.  This is a
-     permanent restriction.
-
-  8) With certain versions of CUPS and in certain non-default
+  6) With certain versions of CUPS and in certain non-default
      configurations, if a new version of Gutenprint is installed over
      an existing version genppd will create PPD files based on the
      older version of Gutenprint or Gimp-Print rather than the newer
@@ -780,7 +782,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
      3) Edit cups-config to remove the reference to the run path.
 
-  9) There are multiple issues that one must be aware of when using
+  7) There are multiple issues that one must be aware of when using
      Foomatic with Gutenprint.
 
      1) Before installing any new release of Gutenprint 5.0, you must
@@ -838,14 +840,14 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 	to install new PPD files, in which case you may use that
 	method.
 
-     3) From this point forward, the Foomatic data will be version
-	locked to the Gutenprint release installed on the system.  For
-	example, PPD files generated with the Foomatic data for this
-	release will not work with the ijsgutenprint in the next
-	release.  This is to prevent accidentally using incorrect
-	data, which could cause incorrect function to take place.
+     3) The Foomatic data is version locked to the Gutenprint release
+	installed on the system.  For example, PPD files generated
+	with the Foomatic data for release 5.0.0 will not work with
+	the ijsgutenprint in release 5.0.1.  This is to prevent
+	accidentally using incorrect data, which could cause incorrect
+	function to take place.
 
-  10) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
+  8) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
      against GIMP 2.0) requires special build instructions if you are
      using a very old version of the GIMP 1.2 (versions affected are
      believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
@@ -1034,6 +1036,290 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   14) Printer characteristics are exposed to the application level as
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
+================================================================
+
+Known Build/Installation Issues
+
+    This section describes a number of issues that have been
+    encountered while building or installing Gutenprint.  If any of
+    these apply to you, please read the notes carefully.  The issues
+    are:
+
+    1) Building escputil may fail, or escputil may fail to run.
+
+    2) CUPS PPD files may not be translated (there may be multiple
+       versions of the PPD files, all in English).
+
+    3) Build/installation of Foomatic data may happen correctly, but
+       the generated PPD files do not work correctly.
+
+    Detailed descriptions of these issues follow.
+
+    * There is a known complication building "escputil" that causes
+      problems on some systems.  "escputil" uses the "readline"
+      package, to support command editing and history within the
+      program.  Unfortunately, linking programs with "readline" often
+      requires linking against additional libraries, and the exact
+      library depends upon the system (e. g. not all Linux systems
+      have the same requirements).
+
+      The configure script attempts to determine which additional
+      library must be linked against.  It tries using the following
+      libraries in this order to build a test executable:
+
+      -lncurses
+      -lcurses
+      -ltermcap
+      no additional libraries
+
+      The reason it tries other libraries first is that some systems
+      will link successfully, but only fail when an attempt is made to
+      actually call readline.  Therefore, we assume that additional
+      libraries are required.  Since we try the extra libraries in
+      order from most recent to oldest, we expect that the first one
+      we find will be appropriate.  For example, if the "ncurses"
+      library is the standard on a given system, the "termcap" library
+      may be provided for back compatibility, but it is unlikely that
+      "termcap" will be the standard with "curses" or "ncurses" being
+      provided for compatibility only (so that the link will succeed
+      but the command will use the incorrect library).
+
+      As this procedure is not failsafe, we provide the following
+      configure options to control this behavior:
+
+      ./configure --with-readline=yes  (the default; attempts to
+				       determine the correct library
+				       to link against)
+
+      ./configure --with-readline=no   (turns off use of readline
+				       altogether)
+
+      ./configure --with-readline=only (specifically instructs
+				       configure to not attempt to
+				       link against any other
+				       libraries)
+
+      ./configure --with-readline=libs (specifies the libraries to be
+				       linked against)
+
+      An hypothetical (this won't work anywhere!) example of the
+      latter would be
+
+      ./configure --with-readline='-lncurses -ltermcap'
+
+      Note that configure will not allow readline to be used if it
+      cannot successfully build the test program, regardless of the
+      option selected.  If you are having difficulty getting escputil
+      to build, we suggest using --with-readline=no.  The commands
+      used within escputil are very short and seldom require
+      significant editing.
+
+    * There is a known translation problem building the PPD files used
+      by the CUPS driver such that on many systems all of the PPD
+      files are in the English language.  This causes CUPS tools, such
+      as KUPS or http://localhost:631 to display many copies of each
+      PPD file, all in the English (en) language.  In fact, the PPD
+      files should be translated into many different languages.
+
+      The PPD files are created by a program named "genppd" in the
+      src/cups directory.  This program is called once for each
+      language, and creates all of the PPD files for the language in
+      one shot.
+
+      The command 'zgrep' can be used to determine if genppd is
+      creating the PPD files correctly, as follows:
+
+	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
+	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
+	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
+	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
+	  ...
+
+      If the PPD file for each language has a different language
+      version, the genppd program operated correctly.  If instead the
+      output looks like this:
+
+	  src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
+	  ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	  ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	  ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	  ...
+
+      the program did not operate correctly.
+
+      If you do not have 'zgrep' on your system, you can gunzip the
+      PPD files, and use
+
+	  grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
+
+      to accomplish the same test.
+
+      The normal mechanism for performing translations is to set the
+      LANG environment variable to the appropriate language prior to
+      running the program.  This normally causes the program to search
+      the translations (normally in /usr/share/locale or
+      /usr/lib/locale) for the chosen language.  When a specially
+      marked string is used, a special macro calls `gettext()' on the
+      string to retrieve the translation, and substitutes the
+      translation for the string in question.
+
+      There are two problems with this approach in the context of
+      genppd.  The translation engine is intended to be used after
+      installation, not during build, and this causes problems.
+
+      1) At the time genppd is run, the translations have not been
+         installed in the normal system directories.  Fortunately,
+         it's possible to tell the translation machinery (via
+         bindtextdomain) to look elsewhere for the translation
+         catalogs.  What we do is install the catalogs in a temporary
+         directory under src/cups, and tell genppd to instruct the
+         translation machinery to look there.  This workaround is
+         straightforward, and doesn't normally cause problems.
+
+      2) LANG only lets us pick a valid locale (normally determined by
+         listing the directories in /usr/share/locale or
+         /usr/lib/locale).  Unfortunately, while language codes (which
+         form the base of locales) are standard, the actual locale
+         names aren't always.  On some systems, the locale names are
+         just the language base names; on others, they are the
+         language names concatenated with country codes (e. g. en_US),
+         while on others they are language codes concatenated with
+         character sets.  We are not aware of any workaround for this,
+         possibly short of actually running make install and then
+         rebuilding the PPD's.  'make install' will install the
+         message catalogs, and that may create the necessary locale
+         directories.  This is not exactly a very elegant approach.
+
+      The GNU gettext library (libintl.a) provides another environment
+      variable, LANGUAGE, which unconditionally looks up translations
+      according to the language, ignoring LANG and the LC_*
+      environment variables that are normally used for translation.
+      This library is no longer included with Gutenprint
+      (--with-included-gettext will not work).  Install the GNU
+      gettext package first if you need libintl.a.  Many systems
+      provide translation machinery in their standard libraries, and
+      it may not always be best to use foreign libraries to replace
+      standard system functionality.
+
+      We have chosen to use LANGUAGE for this purpose, as the GNU
+      gettext library appears to offer the most reliable translation,
+      and LANGUAGE appears to offer the most reliable mechanism.  We
+      have actually found that LANG and LC_* can interfere with
+      LANGUAGE, thus we do not use both.
+
+      To determine if the translations are working, you must actually
+      inspect the PPD files.  You will need to
+
+      cd src/cups/ppd/sv
+      gunzip *
+      more *
+
+      or the like to determine if this is successful.  In particular,
+      look for LanguageVersion, and make sure that it is correct (it
+      should be "Swedish" in the sv directory, for example), and also
+      make sure that the paper sizes are also translated.  We
+      currently suggest using the Swedish translation for this purpose
+      as it is the most complete.
+
+      If packagers find that the PPD files are all in English, rather
+      than translated into the appropriate languages, we suggest the
+      following:
+
+      1) Install GNU gettext (libintl).  If your system is not based
+         on GNU libc (Linux usually is based on GNU libc; BSD,
+         Solaris, IRIX, etc. are not), you will need this to have any
+         possibility of creating the translated PPD files.
+
+      2) Run 'make install' to install the package (including the
+         message catalogs) onto the system first, and then do the
+         following:
+
+	 cd src/cups
+	 rm ppd-stamp
+	 make
+
+	 to rebuild the PPD files.  Having the message catalogs on the
+	 system may permit this to succeed.
+
+      3) Ensure that your system actually has locales named 'sv',
+         'pl', and all of the other supported languages, and change
+         LANGUAGE to something more appropriate (most likely LANG,
+         LC_MESSAGES, or LC_ALL).
+
+      4) Build the PPD files on a Linux-based system; they are
+         portable.
+
+      5) Use --disable-translated-cups-ppds on the configure command line
+         to suppress the translated PPD files altogether.
+
+      Please feel free to contact us about this issue.
+
+    * There are multiple issues that one must be aware of when using
+      Foomatic with Gutenprint.
+
+      1) Before installing Gutenprint 5.0.0-rc1, you must manually
+	 remove any existing Foomatic option files.  This is because the
+	 Foomatic utility to load data kits (foomatic-kitload) does not
+	 remove obsolete data files from the Foomatic database.  If you
+	 do not do this, any PPD files you generate will be incorrect
+	 and printing may work incorrectly or not at all.
+
+	 Foomatic option files are usually located in 
+
+	 /usr/local/share/foomatic/db/source/opt
+
+	 or
+
+	 /usr/share/foomatic/db/source/opt
+
+	 Assuming they're in the former location, you must remove data
+	 files associated with the Gutenprint driver.  The command to do
+	 this, which must be run as the superuser (root) is
+
+	 cd /usr/local/share/foomatic/db/source/opt
+	 ls -l gutenprint-ijs*.xml
+
+	 If there are existing files present, you must remove them:
+
+	 rm -f gutenprint-ijs*.xml
+
+	 Now check to make sure that they are gone:
+
+	 ls -l gutenprint-ijs*.xml
+
+	 CAUTION: Be very careful when typing this command!  Minor
+	 errors in typing these commands may result in severe damage to
+	 your system.  The Gutenprint installation program does not do
+	 this automatically because there is currently no reliable way
+	 to detect where the Foomatic data files are installed.
+
+	 After this, you may run 'make install' in your Gutenprint
+	 source directory to install the package.  You will then need to
+	 re-create any printer queues using Foomatic.
+
+	 In general, you will have to perform this procedure any time
+	 you install a new version of Gutenprint.
+
+	 Please check the Foomatic site
+	 (http://www.linuxprinting.org/foomatic.html) and the Gutenprint
+	 site (http://gimp-print.sourceforge.net) for updated
+	 instructions about this.
+
+      2) Unlike with the CUPS native driver, there is no simple way to
+	 update all PPD files when you install a new version of
+	 Gutenprint.  You must either use the foomatic-ppdfile command
+	 to upgrade PPD files individually, or foomatic-compiledb to
+	 build all PPD files.  The name of the driver in the Foomatic
+	 database is "gutenprint-ijs.5.0".
+
+         The Foomatic data is version locked to the Gutenprint release
+	 installed on the system.  For example, PPD files generated
+	 with the Foomatic data for this release will not work with
+	 the ijsgutenprint in the next release.  This is to prevent
+	 accidentally using incorrect data, which could cause
+	 incorrect function to take place.
+
+
 ================================================================
 
 
@@ -2047,31 +2333,67 @@ Printer-Specific Notes:
       Epson on the C70 and C80, and may not work on all C70 and C80
       printers.
 
-    * With a few exceptions, the Gutenprint Epson driver does not
-      support the 5760 DPI resolutions (5760x720 or 5760x1440 DPI)
-      offered by some Epson printers.  We do not believe that these
-      resolutions offer any advantage over 2880x720 or 2880x1440 DPI,
-      and indeed they may not offer any advantage over 1440x720 or
-      1440x1440 DPI.  The effective resolution is generally determined
-      by the lower of the horizontal and vertical resolution.  Raising
-      the horizontal resolution without a corresponding increase in
-      the vertical resolution merely requires more computation and
-      printing time, usually without yielding significantly better
-      quality.
+    * The Gutenprint driver does not in all cases offer the same set
+      of resolutions offered by the printer manufacturer's drivers.
+      There are a variety of reasons why that is the case:
 
-      In some cases, we offer resolutions different from what Epson
-      advertises that have the same effect; for example, we offer
-      2880x2880 DPI on the Epson Stylus C86 rather than the 5760x1440
-      offered by Epson's native driver.
+      1) In some cases, we have not determined the necessary commands
+         to utilize some resolutions (particularly very high
+         resolutions).
 
-      We have recently determined that the Epson Stylus Photo R800 do
-      yield slightly superior results at 5760x2880 than at 2880x2880
-      DPI.  The minimum drop size on this printer (1.5 pl) is small
-      enough that it cannot achieve maximum density at 2880x2880 DPI;
-      therefore, multiple drop sizes must be used to achieve maximum
-      density at that resolution.  At 5760x2880 DPI it is possible to
-      use only the 1.5 pl drop size, which yields a smoother tonal
-      range due lack of mismatches between different drop sizes.
+      2) In some cases, the advertised printer resolution may not
+         match what we determine to be the maximum resolution based on
+         our understanding of the printer's capabilities.  Sometimes
+         the advertised resolution is qualified by a statement that
+         implies that the actual resolution may be different from the
+         stated resolution.  In some cases, we may be able to achieve
+         the same number of drops per square inch by means of a
+         different resolution.  For example, we may determine that a
+         printer that is advertised to support 5760x720 DPI in fact
+         supports 2880x1440 DPI.  This is the same number of droplets
+         per square inch (4147200), but with a different aspect ratio
+         (the ratio of the horizontal resolution to the vertical
+         resolution).
+
+      3) In some cases, we offer additional resolutions not offered by
+         the printer vendor.  These resolutions may be either lower or
+         higher than those offered by the printer vendor.
+
+	 We frequently offer lower resolutions than those offered by
+	 the printer vendor to offer a greater choice of printing
+	 speed.  These resolutions will offer low quality but very
+	 fast printing speed for use where the quality is unimportant
+	 but speed is of the greatest importance.
+
+	 In some cases, we offer resolutions higher (or simply
+	 different) than those advertised by printer vendors.  We will
+	 offer these options if testing determines that these
+	 resolutions can be used safely and we determine that these
+	 resolutions offer a potential benefit in quality in some
+	 cases.  For example, we offer resolutions of 2880x2880 and
+	 5760x2880 DPI on the Epson Stylus Photo R800 despite the
+	 advertised maximum resolution of 5760x1440 DPI.  Testing has
+	 verified that these resolutions do in fact operate correctly
+	 and offer benefit over lower resolutions.	 
+
+	 It is almost always better to have a printing resolution with
+	 a smaller aspect ratio.  Therefore a resolution of 2880x1440
+	 DPI is likely to yield superior results to a resolution of
+	 5760x720 DPI.  Therefore, in some cases we do not offer
+	 certain resolutions offered by the printer vendor (in the
+	 case of the Epson Stylus Photo R800, 5760x1440 DPI) because
+	 they are not likely to yield any benefit (either speed or
+	 quality) over another resolution that we offer (in this case,
+	 2880x2880 DPI).
+
+	 Indeed, we have received reports that in some cases a lower
+	 resolution may actually offer improved quality over a higher
+	 resolution.  For example, the Epson Stylus Photo 780 is
+	 reported to yield better quality at 1440x720 DPI Highest
+	 Quality than 2880x720 DPI.
+
+      We periodically evaluate the list of resolutions we offer to
+      decide whether to offer any additional options.
 
     * Many Epson printers (specifically, the Epson Stylus Color 740
       and all newer printers) will not respond to ASCII text without a
