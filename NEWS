@@ -220,11 +220,11 @@ These release notes contain the following sections:
      preserved across uses of the GIMP plugin is fixed.
 
   19) In the Foomatic data the options "STP_InputSlot" and
-      "STP_MediaType" were renamed to "InputSlot" and
-      "MediaType". This way the names are Adobe-compliant and so
-      PPD-aware applications understand for what they are good for and
-      treat them appropriately (for example appear on first page of
-      printer options dialog of kprinter and XPP).
+     "STP_MediaType" were renamed to "InputSlot" and "MediaType". This
+     way the names are Adobe-compliant and so PPD-aware applications
+     understand for what they are used for and treat them
+     appropriately (for example appear on first page of printer
+     options dialog of kprinter and XPP).
 
 
 ================================================================
