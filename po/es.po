@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-13 16:29-0400\n"
+"POT-Creation-Date: 2005-08-27 11:57-0400\n"
 "PO-Revision-Date: 2002-04-29 00:38GMT\n"
 "Last-Translator: Gustavo D. Vranjes <gvranjes@abaconet.com.ar>\n"
 "Language-Team: Castellano <es@li.org>\n"
@@ -294,9 +294,9 @@ msgid "2400x2400 DPI DMT"
 msgstr "2400x600 PPP"
 
 #: src/main/print-canon.c:1393 src/main/print-lexmark.c:857
-#: src/main/escp2-papers.c:957 src/main/escp2-papers.c:1001
-#: src/main/escp2-papers.c:1045 src/main/escp2-papers.c:1093
-#: src/main/escp2-papers.c:1137
+#: src/main/escp2-papers.c:965 src/main/escp2-papers.c:1009
+#: src/main/escp2-papers.c:1053 src/main/escp2-papers.c:1101
+#: src/main/escp2-papers.c:1145
 msgid "Plain Paper"
 msgstr "Papel Común"
 
@@ -306,9 +306,9 @@ msgid "Plain Paper PIXMA"
 msgstr "Papel Común"
 
 #: src/main/print-canon.c:1395 src/main/print-lexmark.c:865
-#: src/main/escp2-papers.c:965 src/main/escp2-papers.c:1009
-#: src/main/escp2-papers.c:1053 src/main/escp2-papers.c:1101
-#: src/main/escp2-papers.c:1145
+#: src/main/escp2-papers.c:973 src/main/escp2-papers.c:1017
+#: src/main/escp2-papers.c:1061 src/main/escp2-papers.c:1109
+#: src/main/escp2-papers.c:1153
 msgid "Transparencies"
 msgstr "Transparencias"
 
@@ -349,9 +349,9 @@ msgid "Photo Paper Pro"
 msgstr "Papel de Fotografía Profesional"
 
 #: src/main/print-canon.c:1405 src/main/print-lexmark.c:905
-#: src/main/escp2-papers.c:993 src/main/escp2-papers.c:1037
-#: src/main/escp2-papers.c:1085 src/main/escp2-papers.c:1129
-#: src/main/escp2-papers.c:1177
+#: src/main/escp2-papers.c:1001 src/main/escp2-papers.c:1045
+#: src/main/escp2-papers.c:1093 src/main/escp2-papers.c:1137
+#: src/main/escp2-papers.c:1185
 msgid "Other"
 msgstr "Otro"
 
@@ -580,9 +580,9 @@ msgid "Manual without Pause"
 msgstr "Manual sin Pausa"
 
 #: src/main/print-canon.c:1948 src/main/print-color.c:305
-#: src/main/print-escp2-data.c:569 src/main/print-escp2-data.c:579
-#: src/main/print-escp2-data.c:591 src/main/print-escp2-data.c:604
-#: src/main/print-escp2-data.c:617 src/main/print-escp2-data.c:623
+#: src/main/print-escp2-data.c:573 src/main/print-escp2-data.c:583
+#: src/main/print-escp2-data.c:595 src/main/print-escp2-data.c:608
+#: src/main/print-escp2-data.c:621 src/main/print-escp2-data.c:627
 #: src/main/print-lexmark.c:613 src/gutenprintui/panel.c:2131
 #: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:861
 msgid "Black"
@@ -604,14 +604,14 @@ msgstr "Color CcMmY para Fotografía"
 msgid "Photo CcMmYK Color"
 msgstr "Color CcMmYK para Fotografía"
 
-#: src/main/print-canon.c:2004 src/main/print-escp2.c:1737
+#: src/main/print-canon.c:2004 src/main/print-escp2.c:1738
 #: src/main/print-lexmark.c:1283 src/main/print-olympus.c:1453
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
 msgid "Color"
 msgstr "Color"
 
-#: src/main/print-canon.c:2006 src/main/print-escp2.c:1739
+#: src/main/print-canon.c:2006 src/main/print-escp2.c:1740
 #: src/main/print-lexmark.c:1285 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 #, fuzzy
@@ -806,10 +806,10 @@ msgstr "Gamma:"
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/main/print-color.c:257 src/main/print-escp2-data.c:570
-#: src/main/print-escp2-data.c:580 src/main/print-escp2-data.c:592
-#: src/main/print-escp2-data.c:605 src/main/print-escp2-data.c:618
-#: src/main/print-escp2-data.c:632 src/gutenprintui/panel.c:2110
+#: src/main/print-color.c:257 src/main/print-escp2-data.c:574
+#: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:596
+#: src/main/print-escp2-data.c:609 src/main/print-escp2-data.c:622
+#: src/main/print-escp2-data.c:636 src/gutenprintui/panel.c:2110
 #: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:864
 msgid "Cyan"
 msgstr "Cian"
@@ -819,10 +819,10 @@ msgstr "Cian"
 msgid "Adjust the cyan gamma"
 msgstr "Ajustar el balance de cian de la impresión"
 
-#: src/main/print-color.c:265 src/main/print-escp2-data.c:571
-#: src/main/print-escp2-data.c:581 src/main/print-escp2-data.c:593
-#: src/main/print-escp2-data.c:606 src/main/print-escp2-data.c:619
-#: src/main/print-escp2-data.c:631 src/gutenprintui/panel.c:2117
+#: src/main/print-color.c:265 src/main/print-escp2-data.c:575
+#: src/main/print-escp2-data.c:585 src/main/print-escp2-data.c:597
+#: src/main/print-escp2-data.c:610 src/main/print-escp2-data.c:623
+#: src/main/print-escp2-data.c:635 src/gutenprintui/panel.c:2117
 #: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:865
 msgid "Magenta"
 msgstr "Magenta"
@@ -832,10 +832,10 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Ajusta el balance magenta de la impresión"
 
-#: src/main/print-color.c:273 src/main/print-escp2-data.c:572
-#: src/main/print-escp2-data.c:582 src/main/print-escp2-data.c:594
-#: src/main/print-escp2-data.c:607 src/main/print-escp2-data.c:620
-#: src/main/print-escp2-data.c:630 src/gutenprintui/panel.c:2124
+#: src/main/print-color.c:273 src/main/print-escp2-data.c:576
+#: src/main/print-escp2-data.c:586 src/main/print-escp2-data.c:598
+#: src/main/print-escp2-data.c:611 src/main/print-escp2-data.c:624
+#: src/main/print-escp2-data.c:634 src/gutenprintui/panel.c:2124
 #: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:866
 msgid "Yellow"
 msgstr "Amarillo"
@@ -845,7 +845,7 @@ msgstr "Amarillo"
 msgid "Adjust the yellow gamma"
 msgstr "Ajusta el balance amarillo de la impresión"
 
-#: src/main/print-color.c:281 src/main/print-escp2-data.c:635
+#: src/main/print-color.c:281 src/main/print-escp2-data.c:639
 #: src/escputil/escputil.c:872
 msgid "Red"
 msgstr ""
@@ -864,7 +864,7 @@ msgstr ""
 msgid "Adjust the green gamma"
 msgstr "Ajusta el balance magenta de la impresión"
 
-#: src/main/print-color.c:297 src/main/print-escp2-data.c:636
+#: src/main/print-color.c:297 src/main/print-escp2-data.c:640
 #: src/escputil/escputil.c:873
 msgid "Blue"
 msgstr ""
@@ -1196,129 +1196,129 @@ msgid ""
 "d\n"
 msgstr ""
 
-#: src/main/print-escp2-data.c:286 src/main/print-escp2-data.c:314
-#: src/main/print-escp2-data.c:351 src/main/print-escp2-data.c:406
-#: src/main/print-escp2-data.c:452 src/main/print-escp2-data.c:545
-#: src/main/print-escp2.c:1493 src/main/print-escp2.c:1590
-#: src/main/print-escp2.c:1602 src/main/print-pcl.c:227
+#: src/main/print-escp2-data.c:290 src/main/print-escp2-data.c:318
+#: src/main/print-escp2-data.c:355 src/main/print-escp2-data.c:410
+#: src/main/print-escp2-data.c:456 src/main/print-escp2-data.c:549
+#: src/main/print-escp2.c:1494 src/main/print-escp2.c:1591
+#: src/main/print-escp2.c:1603 src/main/print-pcl.c:227
 #: src/main/generic-options.c:36 src/gutenprintui/panel.c:2549
 #: src/gutenprintui2/panel.c:2573
 msgid "Standard"
 msgstr "Estándar"
 
-#: src/main/print-escp2-data.c:295 src/main/print-escp2-data.c:433
-#: src/main/print-escp2-data.c:461
+#: src/main/print-escp2-data.c:299 src/main/print-escp2-data.c:437
+#: src/main/print-escp2-data.c:465
 msgid "Roll Feed"
 msgstr "Alimentación por Rollo"
 
-#: src/main/print-escp2-data.c:323 src/main/print-escp2-data.c:378
+#: src/main/print-escp2-data.c:327 src/main/print-escp2-data.c:382
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:332 src/main/print-escp2-data.c:387
+#: src/main/print-escp2-data.c:336 src/main/print-escp2-data.c:391
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:360 src/main/print-escp2-data.c:415
+#: src/main/print-escp2-data.c:364 src/main/print-escp2-data.c:419
 #, fuzzy
 msgid "Manual Feed"
 msgstr "Manual"
 
-#: src/main/print-escp2-data.c:369 src/main/print-escp2-data.c:424
+#: src/main/print-escp2-data.c:373 src/main/print-escp2-data.c:428
 #, fuzzy
 msgid "Print to CD"
 msgstr "¿Imprimir a un archivo?"
 
-#: src/main/print-escp2-data.c:480
+#: src/main/print-escp2-data.c:484
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:489
+#: src/main/print-escp2-data.c:493
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:498
+#: src/main/print-escp2-data.c:502
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "Autoseleccionar"
 
-#: src/main/print-escp2-data.c:507
+#: src/main/print-escp2-data.c:511
 msgid "Manual Selection"
 msgstr ""
 
-#: src/main/print-escp2-data.c:542 src/main/generic-options.c:33
+#: src/main/print-escp2-data.c:546 src/main/generic-options.c:33
 msgid "Fast Economy"
 msgstr ""
 
-#: src/main/print-escp2-data.c:543 src/main/generic-options.c:34
+#: src/main/print-escp2-data.c:547 src/main/generic-options.c:34
 msgid "Economy"
 msgstr ""
 
-#: src/main/print-escp2-data.c:544 src/main/generic-options.c:35
+#: src/main/print-escp2-data.c:548 src/main/generic-options.c:35
 msgid "Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:546 src/main/generic-options.c:37
+#: src/main/print-escp2-data.c:550 src/main/generic-options.c:37
 #, fuzzy
 msgid "High"
 msgstr "Altura:"
 
-#: src/main/print-escp2-data.c:547 src/main/generic-options.c:38
+#: src/main/print-escp2-data.c:551 src/main/generic-options.c:38
 #, fuzzy
 msgid "Photo"
 msgstr "Fotografía"
 
-#: src/main/print-escp2-data.c:548 src/main/generic-options.c:39
+#: src/main/print-escp2-data.c:552 src/main/generic-options.c:39
 #, fuzzy
 msgid "Super Photo"
 msgstr "Stylus Photo"
 
-#: src/main/print-escp2-data.c:549 src/main/generic-options.c:40
+#: src/main/print-escp2-data.c:553 src/main/generic-options.c:40
 #, fuzzy
 msgid "Ultra Photo"
 msgstr "Fotografía de Seis Colores"
 
-#: src/main/print-escp2-data.c:550 src/main/generic-options.c:41
+#: src/main/print-escp2-data.c:554 src/main/generic-options.c:41
 msgid "Best"
 msgstr ""
 
-#: src/main/print-escp2-data.c:583 src/main/print-escp2-data.c:595
-#: src/main/print-escp2-data.c:608 src/main/print-escp2-data.c:621
+#: src/main/print-escp2-data.c:587 src/main/print-escp2-data.c:599
+#: src/main/print-escp2-data.c:612 src/main/print-escp2-data.c:625
 #: src/escputil/escputil.c:867
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Cian Claro"
 
-#: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:596
-#: src/main/print-escp2-data.c:609 src/main/print-escp2-data.c:622
+#: src/main/print-escp2-data.c:588 src/main/print-escp2-data.c:600
+#: src/main/print-escp2-data.c:613 src/main/print-escp2-data.c:626
 #: src/escputil/escputil.c:868
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Magenta Claro"
 
-#: src/main/print-escp2-data.c:597 src/escputil/escputil.c:870
+#: src/main/print-escp2-data.c:601 src/escputil/escputil.c:870
 #, fuzzy
 msgid "Light Black"
 msgstr "Negro"
 
-#: src/main/print-escp2-data.c:610 src/escputil/escputil.c:869
+#: src/main/print-escp2-data.c:614 src/escputil/escputil.c:869
 #, fuzzy
 msgid "Dark Yellow"
 msgstr "Amarillo"
 
-#: src/main/print-escp2-data.c:633 src/main/escp2-channels.c:2054
+#: src/main/print-escp2-data.c:637 src/main/escp2-channels.c:2054
 #: src/escputil/escputil.c:862
 #, fuzzy
 msgid "Matte Black"
 msgstr "Papel Opaco"
 
-#: src/main/print-escp2-data.c:634 src/main/escp2-channels.c:2072
+#: src/main/print-escp2-data.c:638 src/main/escp2-channels.c:2072
 #: src/escputil/escputil.c:863
 #, fuzzy
 msgid "Photo Black"
 msgstr "Papel para Fotografía"
 
-#: src/main/print-escp2-data.c:637 src/escputil/escputil.c:874
+#: src/main/print-escp2-data.c:641 src/escputil/escputil.c:874
 #, fuzzy
 msgid "Gloss Optimizer"
 msgstr "Película Brillante"
@@ -1572,79 +1572,79 @@ msgstr ""
 msgid "Amount of red and blue ink to use"
 msgstr ""
 
-#: src/main/print-escp2.c:1376
+#: src/main/print-escp2.c:1377
 #, fuzzy
 msgid "Full Manual Control"
 msgstr "Tipo de salida:"
 
-#: src/main/print-escp2.c:1378
+#: src/main/print-escp2.c:1379
 msgid "Automatic Setting Control"
 msgstr ""
 
-#: src/main/print-escp2.c:1389 src/main/xmli18n-tmp.h:6
+#: src/main/print-escp2.c:1390 src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
 msgstr ""
 
-#: src/main/print-escp2.c:1391 src/main/xmli18n-tmp.h:7
+#: src/main/print-escp2.c:1392 src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
 msgstr ""
 
-#: src/main/print-escp2.c:1413
+#: src/main/print-escp2.c:1414
 msgid "Normal"
 msgstr ""
 
-#: src/main/print-escp2.c:1415
+#: src/main/print-escp2.c:1416
 #, fuzzy
 msgid "Print To Hub"
 msgstr "¿Imprimir a un archivo?"
 
-#: src/main/print-escp2.c:1440 src/main/generic-options.c:213
+#: src/main/print-escp2.c:1441 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 #, fuzzy
 msgid "Manual Control"
 msgstr "Tipo de salida:"
 
-#: src/main/print-escp2.c:1567 src/cups/genppd.c:1286
+#: src/main/print-escp2.c:1568 src/cups/genppd.c:1286
 #, fuzzy
 msgid "Automatic"
 msgstr "Tamaño"
 
-#: src/main/print-escp2.c:1569
+#: src/main/print-escp2.c:1570
 #, fuzzy
 msgid "Bidirectional"
 msgstr "600 PPP Unidireccional"
 
-#: src/main/print-escp2.c:1571
+#: src/main/print-escp2.c:1572
 #, fuzzy
 msgid "Unidirectional"
 msgstr "600 PPP Unidireccional"
 
-#: src/main/print-escp2.c:1604
+#: src/main/print-escp2.c:1605
 msgid "Alternate Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1606
+#: src/main/print-escp2.c:1607
 msgid "Ascending Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1608
+#: src/main/print-escp2.c:1609
 msgid "Descending Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1610
+#: src/main/print-escp2.c:1611
 msgid "Ascending Double"
 msgstr ""
 
-#: src/main/print-escp2.c:1612
+#: src/main/print-escp2.c:1613
 msgid "Nearest Neighbor Avoidance"
 msgstr ""
 
-#: src/main/print-escp2.c:2010
+#: src/main/print-escp2.c:2011
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "La impresora no soporta salida de color\n"
 
-#: src/main/print-escp2.c:2954 src/main/print-olympus.c:1642
+#: src/main/print-escp2.c:2955 src/main/print-olympus.c:1642
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -1728,63 +1728,63 @@ msgstr "Fotografía de Seis Colores"
 msgid "Five Color Photo Composite"
 msgstr "Fotografía Compuesta de Cinco Colores"
 
-#: src/main/print-lexmark.c:861 src/main/escp2-papers.c:963
-#: src/main/escp2-papers.c:1007 src/main/escp2-papers.c:1051
-#: src/main/escp2-papers.c:1099 src/main/escp2-papers.c:1143
+#: src/main/print-lexmark.c:861 src/main/escp2-papers.c:971
+#: src/main/escp2-papers.c:1015 src/main/escp2-papers.c:1059
+#: src/main/escp2-papers.c:1107 src/main/escp2-papers.c:1151
 msgid "Glossy Film"
 msgstr "Película Brillante"
 
-#: src/main/print-lexmark.c:869 src/main/escp2-papers.c:967
-#: src/main/escp2-papers.c:1011 src/main/escp2-papers.c:1055
-#: src/main/escp2-papers.c:1103 src/main/escp2-papers.c:1147
+#: src/main/print-lexmark.c:869 src/main/escp2-papers.c:975
+#: src/main/escp2-papers.c:1019 src/main/escp2-papers.c:1063
+#: src/main/escp2-papers.c:1111 src/main/escp2-papers.c:1155
 msgid "Envelopes"
 msgstr "Sobres"
 
-#: src/main/print-lexmark.c:873 src/main/escp2-papers.c:971
-#: src/main/escp2-papers.c:1015 src/main/escp2-papers.c:1059
-#: src/main/escp2-papers.c:1107 src/main/escp2-papers.c:1151
+#: src/main/print-lexmark.c:873 src/main/escp2-papers.c:979
+#: src/main/escp2-papers.c:1023 src/main/escp2-papers.c:1067
+#: src/main/escp2-papers.c:1115 src/main/escp2-papers.c:1159
 msgid "Matte Paper"
 msgstr "Papel Opaco"
 
-#: src/main/print-lexmark.c:877 src/main/escp2-papers.c:975
-#: src/main/escp2-papers.c:1019 src/main/escp2-papers.c:1063
-#: src/main/escp2-papers.c:1111 src/main/escp2-papers.c:1155
+#: src/main/print-lexmark.c:877 src/main/escp2-papers.c:983
+#: src/main/escp2-papers.c:1027 src/main/escp2-papers.c:1071
+#: src/main/escp2-papers.c:1119 src/main/escp2-papers.c:1163
 msgid "Inkjet Paper"
 msgstr "Papel para Chorro de Tinta"
 
-#: src/main/print-lexmark.c:881 src/main/escp2-papers.c:977
-#: src/main/escp2-papers.c:1021 src/main/escp2-papers.c:1065
-#: src/main/escp2-papers.c:1113 src/main/escp2-papers.c:1157
+#: src/main/print-lexmark.c:881 src/main/escp2-papers.c:985
+#: src/main/escp2-papers.c:1029 src/main/escp2-papers.c:1073
+#: src/main/escp2-papers.c:1121 src/main/escp2-papers.c:1165
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papel de Calidad Fotográfica para Chorro de Tinta"
 
-#: src/main/print-lexmark.c:885 src/main/escp2-papers.c:979
-#: src/main/escp2-papers.c:1023 src/main/escp2-papers.c:1067
-#: src/main/escp2-papers.c:1115 src/main/escp2-papers.c:1159
+#: src/main/print-lexmark.c:885 src/main/escp2-papers.c:987
+#: src/main/escp2-papers.c:1031 src/main/escp2-papers.c:1075
+#: src/main/escp2-papers.c:1123 src/main/escp2-papers.c:1167
 msgid "Photo Paper"
 msgstr "Papel para Fotografía"
 
-#: src/main/print-lexmark.c:889 src/main/escp2-papers.c:981
-#: src/main/escp2-papers.c:1025 src/main/escp2-papers.c:1069
-#: src/main/escp2-papers.c:1117 src/main/escp2-papers.c:1161
+#: src/main/print-lexmark.c:889 src/main/escp2-papers.c:989
+#: src/main/escp2-papers.c:1033 src/main/escp2-papers.c:1077
+#: src/main/escp2-papers.c:1125 src/main/escp2-papers.c:1169
 msgid "Premium Glossy Photo Paper"
 msgstr "Papel Brillante de Altísima Calidad Fotográfica"
 
-#: src/main/print-lexmark.c:893 src/main/escp2-papers.c:985
-#: src/main/escp2-papers.c:1029 src/main/escp2-papers.c:1073
-#: src/main/escp2-papers.c:1121 src/main/escp2-papers.c:1165
+#: src/main/print-lexmark.c:893 src/main/escp2-papers.c:993
+#: src/main/escp2-papers.c:1037 src/main/escp2-papers.c:1081
+#: src/main/escp2-papers.c:1129 src/main/escp2-papers.c:1173
 msgid "Premium Luster Photo Paper"
 msgstr "Papel de Fotografía Premium Luster"
 
-#: src/main/print-lexmark.c:897 src/main/escp2-papers.c:987
-#: src/main/escp2-papers.c:1031 src/main/escp2-papers.c:1079
-#: src/main/escp2-papers.c:1123 src/main/escp2-papers.c:1171
+#: src/main/print-lexmark.c:897 src/main/escp2-papers.c:995
+#: src/main/escp2-papers.c:1039 src/main/escp2-papers.c:1087
+#: src/main/escp2-papers.c:1131 src/main/escp2-papers.c:1179
 msgid "Photo Quality Glossy Paper"
 msgstr "Papel Brillante de Calidad Fotográfica"
 
-#: src/main/print-lexmark.c:901 src/main/escp2-papers.c:989
-#: src/main/escp2-papers.c:1033 src/main/escp2-papers.c:1081
-#: src/main/escp2-papers.c:1125 src/main/escp2-papers.c:1173
+#: src/main/print-lexmark.c:901 src/main/escp2-papers.c:997
+#: src/main/escp2-papers.c:1041 src/main/escp2-papers.c:1089
+#: src/main/escp2-papers.c:1133 src/main/escp2-papers.c:1181
 msgid "Ilford Heavy Paper"
 msgstr "Papel Pesado Ilford"
 
@@ -1933,9 +1933,9 @@ msgstr "Cartuchos Negro + Color"
 msgid "Color + Photo Cartridges"
 msgstr "Cartuchos Color + Fotografía"
 
-#: src/main/print-pcl.c:1439 src/main/escp2-resolutions.c:429
-#: src/main/escp2-resolutions.c:437 src/main/escp2-resolutions.c:448
-#: src/main/escp2-resolutions.c:460
+#: src/main/print-pcl.c:1439 src/main/escp2-resolutions.c:438
+#: src/main/escp2-resolutions.c:446 src/main/escp2-resolutions.c:457
+#: src/main/escp2-resolutions.c:469
 msgid "Off"
 msgstr ""
 
@@ -2076,52 +2076,52 @@ msgstr "Fotografía de Seis Colores"
 msgid "UltraChrome Matte Black"
 msgstr ""
 
-#: src/main/escp2-papers.c:959 src/main/escp2-papers.c:1003
-#: src/main/escp2-papers.c:1047 src/main/escp2-papers.c:1095
-#: src/main/escp2-papers.c:1139
+#: src/main/escp2-papers.c:967 src/main/escp2-papers.c:1011
+#: src/main/escp2-papers.c:1055 src/main/escp2-papers.c:1103
+#: src/main/escp2-papers.c:1147
 msgid "Plain Paper Fast Load"
 msgstr "Papel Común Carga Rápida"
 
-#: src/main/escp2-papers.c:961 src/main/escp2-papers.c:1005
-#: src/main/escp2-papers.c:1049 src/main/escp2-papers.c:1097
-#: src/main/escp2-papers.c:1141 src/main/xmli18n-tmp.h:5
+#: src/main/escp2-papers.c:969 src/main/escp2-papers.c:1013
+#: src/main/escp2-papers.c:1057 src/main/escp2-papers.c:1105
+#: src/main/escp2-papers.c:1149 src/main/xmli18n-tmp.h:5
 msgid "Postcard"
 msgstr "Postal"
 
-#: src/main/escp2-papers.c:969 src/main/escp2-papers.c:1013
-#: src/main/escp2-papers.c:1057 src/main/escp2-papers.c:1105
-#: src/main/escp2-papers.c:1149
+#: src/main/escp2-papers.c:977 src/main/escp2-papers.c:1021
+#: src/main/escp2-papers.c:1065 src/main/escp2-papers.c:1113
+#: src/main/escp2-papers.c:1157
 #, fuzzy
 msgid "Back Light Film"
 msgstr "Back Light Film"
 
-#: src/main/escp2-papers.c:973 src/main/escp2-papers.c:1017
-#: src/main/escp2-papers.c:1061 src/main/escp2-papers.c:1109
-#: src/main/escp2-papers.c:1153
+#: src/main/escp2-papers.c:981 src/main/escp2-papers.c:1025
+#: src/main/escp2-papers.c:1069 src/main/escp2-papers.c:1117
+#: src/main/escp2-papers.c:1161
 #, fuzzy
 msgid "Matte Paper Heavyweight"
 msgstr "Papel Opaco"
 
-#: src/main/escp2-papers.c:983 src/main/escp2-papers.c:1027
-#: src/main/escp2-papers.c:1071 src/main/escp2-papers.c:1119
-#: src/main/escp2-papers.c:1163
+#: src/main/escp2-papers.c:991 src/main/escp2-papers.c:1035
+#: src/main/escp2-papers.c:1079 src/main/escp2-papers.c:1127
+#: src/main/escp2-papers.c:1171
 #, fuzzy
 msgid "Premium Semigloss Photo Paper"
 msgstr "Papel Brillante de Altísima Calidad Fotográfica"
 
-#: src/main/escp2-papers.c:991 src/main/escp2-papers.c:1035
-#: src/main/escp2-papers.c:1083 src/main/escp2-papers.c:1127
-#: src/main/escp2-papers.c:1175
+#: src/main/escp2-papers.c:999 src/main/escp2-papers.c:1043
+#: src/main/escp2-papers.c:1091 src/main/escp2-papers.c:1135
+#: src/main/escp2-papers.c:1183
 #, fuzzy
 msgid "ColorLife Paper"
 msgstr "Papel Común"
 
-#: src/main/escp2-papers.c:1075 src/main/escp2-papers.c:1167
+#: src/main/escp2-papers.c:1083 src/main/escp2-papers.c:1175
 #, fuzzy
 msgid "Archival Matte Paper"
 msgstr "Papel Opaco"
 
-#: src/main/escp2-papers.c:1077 src/main/escp2-papers.c:1169
+#: src/main/escp2-papers.c:1085 src/main/escp2-papers.c:1177
 msgid "Watercolor Paper - Radiant White"
 msgstr ""
 
@@ -2215,37 +2215,42 @@ msgstr "1440 x 1440 PPP"
 msgid "2880 x 2880 DPI"
 msgstr "2880 x 720 PPP"
 
-#: src/main/escp2-resolutions.c:430
+#: src/main/escp2-resolutions.c:145 src/main/escp2-resolutions.c:148
+#, fuzzy
+msgid "5760 x 2880 DPI"
+msgstr "2880 x 720 PPP"
+
+#: src/main/escp2-resolutions.c:439
 msgid "On"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:438 src/main/escp2-resolutions.c:449
-#: src/main/escp2-resolutions.c:461
+#: src/main/escp2-resolutions.c:447 src/main/escp2-resolutions.c:458
+#: src/main/escp2-resolutions.c:470
 #, fuzzy
 msgid "Interleave"
 msgstr "Nombre de la Impresora:"
 
-#: src/main/escp2-resolutions.c:439 src/main/escp2-resolutions.c:450
-#: src/main/escp2-resolutions.c:462
+#: src/main/escp2-resolutions.c:448 src/main/escp2-resolutions.c:459
+#: src/main/escp2-resolutions.c:471
 msgid "Full Overlap"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:440 src/main/escp2-resolutions.c:451
-#: src/main/escp2-resolutions.c:463
+#: src/main/escp2-resolutions.c:449 src/main/escp2-resolutions.c:460
+#: src/main/escp2-resolutions.c:472
 msgid "Four Pass"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:441 src/main/escp2-resolutions.c:452
-#: src/main/escp2-resolutions.c:464
+#: src/main/escp2-resolutions.c:450 src/main/escp2-resolutions.c:461
+#: src/main/escp2-resolutions.c:473
 msgid "Full Overlap 2"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:453 src/main/escp2-resolutions.c:465
+#: src/main/escp2-resolutions.c:462 src/main/escp2-resolutions.c:474
 #, fuzzy
 msgid "Interleave 2"
 msgstr "Nombre de la Impresora:"
 
-#: src/main/escp2-resolutions.c:466
+#: src/main/escp2-resolutions.c:475
 #, fuzzy
 msgid "Eight Pass"
 msgstr "Brillo:"
