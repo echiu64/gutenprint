@@ -70,6 +70,9 @@ static GtkWidget *cyan_button;
 static GtkWidget *magenta_button;
 static GtkWidget *yellow_button;
 static GtkWidget *black_button;
+static GtkWidget *red_button;
+static GtkWidget *green_button;
+static GtkWidget *blue_button;
 
 static GtkWidget *print_dialog;           /* Print dialog window */
 
@@ -142,6 +145,7 @@ static gboolean need_exposure = FALSE;
 static gboolean suppress_scaling_adjustment = FALSE;
 static gboolean suppress_scaling_callback   = FALSE;
 static gboolean thumbnail_update_pending    = FALSE;
+static gboolean thumbnail_needs_rebuild     = FALSE;
 /*
  * These are semaphores, not true booleans.
  */
@@ -253,7 +257,7 @@ static void redraw_color_swatch (void);
 static void color_update (GtkAdjustment *adjustment);
 static void dimension_update (GtkAdjustment *adjustment);
 static void set_controls_active (GtkObject *checkbutton, gpointer optno);
-static void update_adjusted_thumbnail (void);
+static void update_adjusted_thumbnail (gboolean regenerate_image);
 
 static void set_media_size(const gchar *new_media_size);
 static const stp_printer_t *tmp_printer = NULL;
@@ -384,7 +388,7 @@ open_curve_editor(GtkObject *button, gpointer xopt)
 	stp_curve_destroy(opt->info.curve.current);
       opt->info.curve.current = nseed;
       invalidate_preview_thumbnail();
-      update_adjusted_thumbnail();
+      update_adjusted_thumbnail(FALSE);
     }
 /*  gtk_window_activate_focus(GTK_WINDOW(opt->info.curve.dialog)); */
   return 1;
@@ -400,7 +404,7 @@ set_default_curve_callback(GtkObject *button, gpointer xopt)
   set_gtk_curve_values(gcurve, seed);
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   return 1;
 }
 
@@ -416,7 +420,7 @@ set_previous_curve_callback(GtkObject *button, gpointer xopt)
   set_gtk_curve_values(gcurve, seed);
   set_stp_curve_values(gcurve, opt);
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   return 1;
 }
 
@@ -434,7 +438,7 @@ set_curve_callback(GtkObject *button, gpointer xopt)
     stp_curve_destroy(opt->info.curve.current);
   opt->info.curve.current = NULL;
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   return 1;
 }
 
@@ -447,7 +451,7 @@ curve_draw_callback(GtkWidget *widget, GdkEvent *event, gpointer xopt)
     case GDK_BUTTON_RELEASE:
       set_stp_curve_values(widget, opt);
       invalidate_preview_thumbnail();
-      update_adjusted_thumbnail();
+      update_adjusted_thumbnail(TRUE);
       break;
     default:
       break;
@@ -461,7 +465,7 @@ curve_type_changed(GtkWidget *widget, gpointer xopt)
   option_t *opt = (option_t *)xopt;
   set_stp_curve_values(widget, opt);
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   return 1;
 }
 
@@ -479,7 +483,7 @@ cancel_curve_callback(GtkObject *button, gpointer xopt)
       gtk_widget_set_sensitive(GTK_WIDGET(opt->checkbox), TRUE);
       opt->info.curve.is_visible = FALSE;
       invalidate_preview_thumbnail();
-      update_adjusted_thumbnail();
+      update_adjusted_thumbnail(TRUE);
     }
   return 1;
 }
@@ -566,8 +570,7 @@ checkbox_callback(GtkObject *button, gpointer xopt)
 			    opt->info.bool.current);
   invalidate_frame();
   invalidate_preview_thumbnail();
-  if (opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
-    update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   preview_update();
   return 1;
 }
@@ -1147,7 +1150,7 @@ static void
 color_button_callback(GtkWidget *widget, gpointer data)
 {
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
 }
 
 static void
@@ -2135,6 +2138,27 @@ create_color_adjust_window (void)
   gtk_signal_connect (GTK_OBJECT (black_button), "toggled",
                       GTK_SIGNAL_FUNC (color_button_callback), NULL);
 
+  red_button = gtk_toggle_button_new_with_label(_("Red"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), red_button, TRUE, TRUE, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(red_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(red_button));
+  gtk_signal_connect (GTK_OBJECT (red_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
+  green_button = gtk_toggle_button_new_with_label(_("Green"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), green_button, TRUE, TRUE,0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(green_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(green_button));
+  gtk_signal_connect (GTK_OBJECT (green_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
+  blue_button = gtk_toggle_button_new_with_label(_("Blue"));
+  gtk_box_pack_start(GTK_BOX(output_color_vbox), blue_button, TRUE, TRUE, 0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(blue_button), TRUE);
+  gtk_widget_show(GTK_WIDGET(blue_button));
+  gtk_signal_connect (GTK_OBJECT (blue_button), "toggled",
+                      GTK_SIGNAL_FUNC (color_button_callback), NULL);
+
   color_adjustment_table = gtk_table_new(1, 1, FALSE);
   gtk_table_set_col_spacings (GTK_TABLE (color_adjustment_table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (color_adjustment_table), 0);
@@ -2330,7 +2354,7 @@ create_main_window (void)
   do_update_thumbnail = 1;
   build_printer_combo ();
   plist_callback (NULL, (gpointer) stpui_plist_current);
-  update_adjusted_thumbnail ();
+  update_adjusted_thumbnail (TRUE);
 
   gtk_widget_show (print_dialog);
 }
@@ -2650,7 +2674,7 @@ set_orientation(int orientation)
       preview_thumbnail_w = thumbnail_h;
       break;
     }
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(FALSE);
 }
 
 static void
@@ -2848,7 +2872,7 @@ do_color_updates (void)
 	    }
 	}
     }
-  update_adjusted_thumbnail ();
+  update_adjusted_thumbnail (TRUE);
 }
 
 static void
@@ -3101,7 +3125,7 @@ plist_callback (GtkWidget *widget,
   setup_update ();
   do_all_updates();
   suppress_preview_update--;
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
   preview_update ();
 }
 
@@ -3299,7 +3323,7 @@ combo_callback(GtkWidget *widget, gpointer data)
 	set_media_size(new_value);
       g_idle_add(refresh_all_options, NULL);
       if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
-	update_adjusted_thumbnail();
+	update_adjusted_thumbnail(TRUE);
       preview_update();
     }
 }
@@ -3338,7 +3362,7 @@ output_type_callback (GtkWidget *widget,
 	gtk_widget_show(output_color_vbox);
       stp_set_string_parameter(pv->v, "PrintingMode", (const char *) data);
       invalidate_preview_thumbnail ();
-      update_adjusted_thumbnail ();
+      update_adjusted_thumbnail (TRUE);
       set_options_active(NULL);
       preview_update ();
       do_all_updates();
@@ -3850,18 +3874,77 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
 {
   int mask = 0;
   int i;
-  int pixels = bytes / 4;
+
   priv_t *p = (priv_t *) priv;
   unsigned char *where = p->base_addr + p->offset;
   const unsigned char *xbuffer = (const unsigned char *)buffer;
 
-  if (p->bpp == 1)
+  if (strcmp(p->output_type, "Whitescale") == 0)
     {
-      memcpy(where, buffer, bytes);
+      memcpy(where, xbuffer, bytes);
       p->offset += bytes;
+    }
+  else if (strcmp(p->output_type, "Grayscale") == 0)
+    {
+      for (i = 0; i < bytes; i++)
+	where[i] = ~xbuffer[i];
+      p->offset += bytes;
+    }
+  else if (strcmp(p->output_type, "RGB") == 0)
+    {
+      int pixels = bytes / 3;
+      if (bytes + p->offset > p->limit)
+	bytes = p->limit - p->offset;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(red_button)))
+	mask |= 1;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(green_button)))
+	mask |= 2;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(blue_button)))
+	mask |= 4;
+
+      memset(where, 0, pixels * 3);
+      for (i = 0; i < pixels; i++)
+	{
+	  if (mask & 1)
+	    where[0] = xbuffer[0];
+	  if (mask & 2)
+	    where[1] = xbuffer[1];
+	  if (mask & 4)
+	    where[2] = xbuffer[2];
+	  where += 3;
+	  xbuffer += 3;
+	}
+      p->offset += pixels * 3;
+    }
+  else if (strcmp(p->output_type, "CMY") == 0)
+    {
+      int pixels = bytes / 3;
+      if (bytes + p->offset > p->limit)
+	bytes = p->limit - p->offset;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
+	mask |= 1;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(magenta_button)))
+	mask |= 2;
+      if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(yellow_button)))
+	mask |= 4;
+
+      memset(where, 0xff, pixels * 3);
+      for (i = 0; i < pixels; i++)
+	{
+	  if (mask & 1)
+	    where[0] = -xbuffer[0];
+	  if (mask & 2)
+	    where[1] = -xbuffer[1];
+	  if (mask & 4)
+	    where[2] = -xbuffer[2];
+	  where += 3;
+	  xbuffer += 3;
+	}
+      p->offset += pixels * 3;
     }
   else
     {
+      int pixels = bytes / 4;
       if (bytes + p->offset > p->limit)
 	bytes = p->limit - p->offset;
       if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cyan_button)))
@@ -4038,7 +4121,7 @@ compute_thumbnail(const stp_vars_t *v)
   stp_image_t *im = stpui_image_thumbnail_new(thumbnail_data, thumbnail_w,
 					      thumbnail_h, thumbnail_bpp);
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_set_driver(nv, "raw-data-8");
+  const char *output_type = stp_describe_output(nv);
   stp_set_top(nv, 0);
   stp_set_left(nv, 0);
   stp_set_width(nv, thumbnail_w);
@@ -4047,18 +4130,65 @@ compute_thumbnail(const stp_vars_t *v)
   stp_set_outdata(nv, &priv);
   stp_set_errfunc(nv, stpui_get_errfunc());
   stp_set_errdata(nv, stpui_get_errdata());
-  if (!print_mode_is_color(nv))
+  if (strcmp(output_type, "Whitescale") == 0)
     {
+      gtk_widget_hide(output_color_vbox);
       priv.bpp = 1;
+      priv.output_type = "Whitescale";
       stp_set_string_parameter(nv, "InkType", "RGBGray");
+    }
+  else if (strcmp(output_type, "Grayscale") == 0)
+    {
+      gtk_widget_hide(output_color_vbox);
+      priv.bpp = 1;
+      priv.output_type = "Grayscale";
+      stp_set_string_parameter(nv, "InkType", "CMYGray");
+    }
+  else if (strcmp(output_type, "CMY") == 0)
+    {
+      gtk_widget_hide(black_button);
+      gtk_widget_hide(red_button);
+      gtk_widget_hide(green_button);
+      gtk_widget_hide(blue_button);
+      gtk_widget_show(cyan_button);
+      gtk_widget_show(magenta_button);
+      gtk_widget_show(yellow_button);
+      gtk_widget_show(output_color_vbox);
+      priv.bpp = 3;
+      priv.output_type = "CMY";
+      stp_set_string_parameter(nv, "InkType", "CMY");
+    }
+  else if (strcmp(output_type, "RGB") == 0)
+    {
+      gtk_widget_hide(cyan_button);
+      gtk_widget_hide(magenta_button);
+      gtk_widget_hide(yellow_button);
+      gtk_widget_hide(black_button);
+      gtk_widget_show(red_button);
+      gtk_widget_show(green_button);
+      gtk_widget_show(blue_button);
+      gtk_widget_show(output_color_vbox);
+      priv.bpp = 3;
+      priv.output_type = "RGB";
+      stp_set_string_parameter(nv, "InkType", "RGB");
     }
   else
     {
+      gtk_widget_hide(red_button);
+      gtk_widget_hide(green_button);
+      gtk_widget_hide(blue_button);
+      gtk_widget_show(cyan_button);
+      gtk_widget_show(magenta_button);
+      gtk_widget_show(yellow_button);
+      gtk_widget_show(black_button);
+      gtk_widget_show(output_color_vbox);
       priv.bpp = 4;
+      priv.output_type = "CMYK";
       stp_set_string_parameter(nv, "InkType", "CMYK");
     }
   stp_set_page_height(nv, thumbnail_h);
   stp_set_page_width(nv, thumbnail_w);
+  stp_set_driver(nv, "raw-data-8");
   stp_set_float_parameter(nv, "Density", 1.0);
   stp_set_float_parameter(nv, "InkLimit", 0);
   stp_set_string_parameter(nv, "InputImageType", "RGB");
@@ -4073,6 +4203,7 @@ compute_thumbnail(const stp_vars_t *v)
       fprintf(stderr, "Could not print thumbnail!\n");
     }
   stp_vars_destroy(nv);
+  thumbnail_needs_rebuild = FALSE;
   return answer;
 }
 
@@ -4113,21 +4244,6 @@ set_thumbnail_orientation(void)
 		 (adjusted_thumbnail_data +
 		  bpp * ((thumbnail_h - y - 1) * thumbnail_w + x)), bpp);
       break;
-    }
-}
-
-static void
-update_adjusted_thumbnail (void)
-{
-  if (thumbnail_data && adjusted_thumbnail_data && do_update_thumbnail &&
-      suppress_preview_update == 0)
-    {
-      if (compute_thumbnail(pv->v))
-	{
-	  set_thumbnail_orientation();
-	  redraw_color_swatch ();
-	  preview_update ();
-	}
     }
 }
 
@@ -4414,10 +4530,27 @@ do_preview_thumbnail (void)
 static gboolean
 idle_preview_thumbnail(gpointer data)
 {
-  set_orientation(pv->orientation);
-  do_preview_thumbnail();
+  if (thumbnail_data && adjusted_thumbnail_data && do_update_thumbnail)
+    {
+      thumbnail_update_pending = TRUE;
+      set_orientation(pv->orientation);
+      if (thumbnail_needs_rebuild && compute_thumbnail(pv->v))
+	{
+	  set_thumbnail_orientation();
+	  redraw_color_swatch ();
+	}
+      do_preview_thumbnail();
+    }
   thumbnail_update_pending = FALSE;
   return FALSE;
+}
+
+static void
+update_adjusted_thumbnail (gboolean regenerate_image)
+{
+  if (regenerate_image)
+    thumbnail_needs_rebuild = TRUE;
+  preview_update ();
 }
 
 static void
@@ -4693,7 +4826,7 @@ color_update (GtkAdjustment *adjustment)
 	    {
 	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
 				      adjustment->value);
-	      update_adjusted_thumbnail();
+	      update_adjusted_thumbnail(TRUE);
 	    }
 	}
     }
@@ -4718,7 +4851,7 @@ dimension_update (GtkAdjustment *adjustment)
 	    {
 	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
 					  adjustment->value * unit_scaler);
-	      update_adjusted_thumbnail();
+	      update_adjusted_thumbnail(FALSE);
 	    }
 	}
     }
@@ -4838,7 +4971,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	}
     }
   invalidate_preview_thumbnail();
-  update_adjusted_thumbnail();
+  update_adjusted_thumbnail(TRUE);
 }
 
 static void

@@ -109,6 +109,7 @@ typedef struct
 typedef struct
 {
   unsigned char *base_addr;
+  const char *output_type;
   int bpp;
   off_t offset;
   off_t limit;

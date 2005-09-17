@@ -237,6 +237,7 @@ raw_print(const stp_vars_t *v, stp_image_t *image)
     }
 
   stp_set_float_parameter(nv, "Density", 1.0);
+  stp_set_boolean_parameter(nv, "SimpleGamma", 1);
   stp_channel_reset(nv);
   for (i = 0; i < ink_channels; i++)
     stp_channel_add(nv, i, 0, 1.0);

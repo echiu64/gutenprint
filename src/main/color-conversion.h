@@ -160,6 +160,7 @@ typedef struct
   double brightness;
   int linear_contrast_adjustment;
   int printed_colorfunc;
+  int simple_gamma_correction;
   stp_cached_curve_t hue_map;
   stp_cached_curve_t lum_map;
   stp_cached_curve_t sat_map;

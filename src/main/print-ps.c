@@ -623,6 +623,8 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   else
     stp_set_string_parameter(nv, "STPIOutputType", "Whitescale");
 
+  stp_set_boolean_parameter(nv, "SimpleGamma", 1);
+
   out_channels = stp_color_init(nv, image, 256);
 
   if (model == 0)

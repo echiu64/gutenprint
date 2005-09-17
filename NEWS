@@ -75,7 +75,7 @@ on building and installing Gutenprint.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-beta4 to 5.0.0-rc1
+1) Changes from 5.0.0-rc1 to 5.0.0-rc2
 2) Overall changes from 4.2 to 5.0.
 3) Known build/installation issues
 4) List of supported printers
@@ -83,148 +83,24 @@ These release notes contain the following sections:
 
 ================================================================
 
-* Major changes between Gutenprint 5.0.0 beta 4 and Gutenprint 5.0.0
-  release candidate 1:
+* Major changes between Gutenprint 5.0.0 release candidate 1 and
+  Gutenprint 5.0.0 release candidate 2:
 
-  1) Color correction is greatly improved, particularly for Epson
-     printers.  The following general and specific improvements have
-     been made:
+  1) The Postscript driver now produces more accurate colors.
+     Previous releases produced overly pale colors with the default
+     settings.
 
-     * The default gamma for all Epson printers has been increased to
-       resolve long-standing issues with overly dark prints.  The user
-       gamma adjustment is specified as a correction, so the default
-       value of 1.0 will yield correct results.
+  2) The Postscript driver now accepts red, green, and blue rather
+     than cyan, magenta, and yellow options.
 
-     * Luminosity (darkness) correction has been simplified and
-       improved by performing correction only on the color component,
-       without adjusting the gray component.  This improves dark cyans
-       and greens in particular, and generally yields smoother tonal
-       changes.
+  3) The GIMP plugin now offers improved choices in the color
+     adjustment window for viewing individual channels of the output.
+     It now offers red/green/blue, cyan/magenta/yellow, or
+     cyan/magenta/yellow/black as appropriate.
 
-     * Red and blue generation for the Epson Stylus R800 and R1800
-       (and for any future printers) has been completely revamped.  It
-       is now done by using per-channel curves.  This improves control
-       over the output and allows ink combinations that could not be
-       generated with the previous code.  The most notable effect is
-       improved magenta.
+  4) The GIMP plugin is now significantly more responsive.
 
-     * Greens have been improved on all Epson printers and are now
-       considerably more saturated and less yellow.
-
-     * Black generation has been improved on all printers,
-       particularly Epson printers using Ultrachrome (R) inks.
-
-     * Photo (light cyan and light magenta) ink generation has been
-       improved on many Epson printers.
-
-     * Composite gray generation is now done by adding in CMY inks
-       rather than subtracting out the gray component.  This separates
-       the gray balance from the per-channel ink density, permitting
-       much better color saturation for certain printers with
-       unbalanced inks.  In particular, the Epson R-series printers
-       can now generate much better orange, yellow, and green without
-       sacrificing neutrality of grayscale.
-
-     * The operation of the Bright Colors color correction mode has
-       been changed, and is now much closer to the operation of High
-       Accuracy.  The main difference is that highly saturated colors
-       now clip rather than taper off toward full saturation.  This
-       will yield improved color brilliance with some loss of detail
-       in certain cases (particularly bright greens).
-
-     * A new Correct Hue Only mode has been added that corrects ink
-       hue without adjusting darkness.  This permits achieving greater
-       color saturation without losing hue accuracy, although many
-       colors will be too dark in this mode.
-
-  2) PrintoutMode has been fixed in the Foomatic data generator so
-     that it now generates correct options in all cases.
-
-  3) CUPS PPD files are now built with translations enabled.  If you
-     do not want translated PPD files, configure the package with
-
-     ./configure --disable-translated-cups-ppds
-
-  4) The Canon SELPHY CP-600 dye sublimation printer has been added.
-
-  5) Preliminary support for the Canon Pixma i4000 printer has been
-     added.  The Canon BubbleJet and Pixma driver is likely to undergo
-     considerable revision and may not be fully stabilized at release.
-
-  6) The Epson Stylus C82, C84, and C86 now use black ink with glossy
-     paper.  The ink in these printers has been reformulated and is
-     now compatible with glossy paper.
-
-  7) The Epson Stylus CX3650 now prints correctly (previously there
-     were minor vertical offset problems, yielding slightly blurry
-     prints).
-
-  8) The Ghostscript driver (ijsgutenprint) now generates correct
-     output (previously it generated output that was much too dark
-     unless the gamma setting was enabled explicitly).
-
-  9) New printing resolutions have been added for certain Epson
-     printers:
-
-     * 720 DPI high quality has been added for all but the very oldest
-       Epson printers, and 1440x720 DPI highest quality has been added
-       for all Epson printers with an upper resolution limit of
-       2880x720 DPI.  We have received reports that 1440x720 highest
-       quality, which was present in Gimp-Print 4.2, often produces
-       better output than 2880x720 while requiring less computation.
-
-     * 2880x2880 DPI resolution has been added for the Epson Stylus
-       C86 and similar printers, such as the CX6600.  While this is
-       not likely to yield a great improvement over 2880x1440 DPI,
-       this may yield some improvement for certain kinds of line art
-       with very fine detail.  In general, there is little advantage
-       to be had from any resolution above 1440x1440 DPI with this
-       printer.
-
-     * 5760x2880 DPI has been added for the Epson Stylus Photo R800
-       and R1800.  Tests indicate that this resolution does offer a
-       small degree of improvement over 2880x2880; the most noticeable
-       improvement is smoother tonality.  This enhancement may be
-       desirable for particularly critical printing.
-
-  10) The Epson Stylus RX425 is now explicitly supported.
-
-  11) Some problems with PPD file generation using cups-genppdconfig
-     have been fixed.  In particular, PPD permission and ownership
-     checks have been relaxed to permit operation on more systems.
-
-  12) A problem that could on rare occasions cause blank areas on photo
-     printers has been fixed.  The problem was more likely to be
-     observed when printing in 16-bit mode.
-
-  13) Debian packaging has been removed from this release.  Debian
-     packaging will be handled by the maintainer outside of the
-     release.
-
-  14) On systems supporting shared library versioning, the shared
-     library is labeled with the correct release version rather than a
-     development version.
-
-  15) It is now possible to specify variable drop sizes with
-     predithered mode.  Values of 0, 1, 2, or 3 will cause the
-     appropriate drop size to be printed.  Previously only the
-     smallest or largest drop size could be printed with this dither
-     mode.
-
-  16) Traditional Chinese (zh_TW) translation has been added.
-
-  17) A problem whereby attempting to use certain paper types with
-     certain Epson printers would cause a failure is fixed.
-
-  18) A problem whereby the image height and width were not properly
-     preserved across uses of the GIMP plugin is fixed.
-
-  19) In the Foomatic data the options "STP_InputSlot" and
-     "STP_MediaType" were renamed to "InputSlot" and "MediaType". This
-     way the names are Adobe-compliant and so PPD-aware applications
-     understand for what they are used for and treat them
-     appropriately (for example appear on first page of printer
-     options dialog of kprinter and XPP).
+  5) The Epson Stylus CX-3800 and DX-3800 are now supported.
 
 
 ================================================================
