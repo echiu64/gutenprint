@@ -643,6 +643,10 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus CX3800" driver="escp2-cx3800" manufacturer="Epson" model="66">
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus CX4600" driver="escp2-cx4600" manufacturer="Epson" model="65">
         <parameter type="float" name="CyanGamma">0.96</parameter>
         <parameter type="float" name="MagentaGamma">1.02</parameter>
@@ -718,6 +722,10 @@
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.500</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON Stylus DX3800" driver="escp2-dx3800" manufacturer="Epson" model="66">
+        <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON CL-700" driver="escp2-cl700" manufacturer="Epson" model="38">
