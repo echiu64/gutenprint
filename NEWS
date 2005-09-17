@@ -100,7 +100,15 @@ These release notes contain the following sections:
 
   4) The GIMP plugin is now significantly more responsive.
 
-  5) The Epson Stylus CX-3800 and DX-3800 are now supported.
+  5) Preliminary support for the Epson Stylus C87, C88, CX3800,
+     CX3810, CX4200, CX4800, CX5800, CX7800, and DX3800.  These
+     printers are expected to be fully functional (for the
+     multi-function devices, this package supports only the printer
+     function).
+
+  7) Experimental support for the Epson Stylus Photo RX700.  This
+     printer may or may not function correctly, and is not likely to
+     be properly tuned.
 
 
 ================================================================
@@ -1283,6 +1291,8 @@ EPSON Stylus C83
 EPSON Stylus C84
 EPSON Stylus C85
 EPSON Stylus C86
+EPSON Stylus C87
+EPSON Stylus C88
 EPSON Stylus Color
 EPSON Stylus Color Pro
 EPSON Stylus Color Pro XL
@@ -1346,6 +1356,7 @@ EPSON Stylus Photo RX510
 EPSON Stylus Photo RX600
 EPSON Stylus Photo RX620
 EPSON Stylus Photo RX630
+EPSON Stylus Photo RX700 (Experimental)
 EPSON Stylus Photo R800
 EPSON Stylus Photo R1800
 EPSON Stylus Pro 5000
@@ -1365,17 +1376,24 @@ EPSON Stylus CX-3200
 EPSON Stylus CX-3500
 EPSON Stylus CX-3600
 EPSON Stylus CX-3650
+EPSON Stylus CX-3800
+EPSON Stylus CX-3810
+EPSON Stylus CX-4200
 EPSON Stylus CX-4600
+EPSON Stylus CX-4800
 EPSON Stylus CX-5100
 EPSON Stylus CX-5200
 EPSON Stylus CX-5300
 EPSON Stylus CX-5400
+EPSON Stylus CX-5800
 EPSON Stylus CX-6300
 EPSON Stylus CX-6400
 EPSON Stylus CX-6500
 EPSON Stylus CX-6600
+EPSON Stylus CX-7800
 EPSON Stylus CX-8300
 EPSON Stylus CX-8400
+EPSON Stylus DX-3800
 EPSON CL-700
 EPSON CL-750
 EPSON CL-760    (Experimental)
@@ -1636,7 +1654,8 @@ Epson Stylus C82               escp2-c82       EPSON Stylus C82
 Epson Stylus C83               escp2-c83       EPSON Stylus C83
 Epson Stylus C84               escp2-c84       EPSON Stylus C84
 Epson Stylus C85               escp2-c85       EPSON Stylus C85
-Epson Stylus C86               escp2-c86       EPSON Stylus C86
+Epson Stylus C87               escp2-c87       EPSON Stylus C87
+Epson Stylus C88               escp2-c88       EPSON Stylus C88
 Epson Stylus Color             escp2           EPSON Stylus Color
 Epson Stylus Color I           escp2           EPSON Stylus Color
 Epson Stylus Color II          escp2           EPSON Stylus Color
@@ -1706,6 +1725,8 @@ Epson Stylus Photo RX425       escp2-rx425     EPSON Stylus Photo RX425
 Epson Stylus Photo RX500       escp2-rx500     EPSON Stylus Photo RX500
 Epson Stylus Photo RX600       escp2-rx600     EPSON Stylus Photo RX600
 Epson Stylus Photo RX620       escp2-rx620     EPSON Stylus Photo RX620
+Epson Stylus Photo RX630       escp2-rx630     EPSON Stylus Photo RX630
+Epson Stylus Photo RX700       escp2-rx700     EPSON Stylus Photo RX700
 Epson Stylus Photo R800        escp2-r800      EPSON Stylus Photo R800
 Epson Stylus Photo R1800       escp2-r1800     EPSON Stylus Photo R1800
 Epson Stylus Pro 5000          escp2-5000      EPSON Stylus Pro 5000
@@ -1725,14 +1746,18 @@ Epson Stylus CX3500            escp2-cx3500    EPSON Stylus CX-3500
 Epson Stylus CX3600            escp2-cx3600    EPSON Stylus CX-3600
 Epson Stylus CX3650            escp2-cx3650    EPSON Stylus CX-3650
 Epson Stylus CX3800            escp2-cx3800    EPSON Stylus CX-3800
+Epson Stylus CX4200            escp2-cx4200    EPSON Stylus CX-4200
 Epson Stylus CX4600            escp2-cx4600    EPSON Stylus CX-4600
+Epson Stylus CX4800            escp2-cx4800    EPSON Stylus CX-4800
 Epson Stylus CX5100            escp2-cx5100    EPSON Stylus CX-5100
 Epson Stylus CX5200            escp2-cx5200    EPSON Stylus CX-5200
 Epson Stylus CX5300            escp2-cx5300    EPSON Stylus CX-5300
 Epson Stylus CX5400            escp2-cx5400    EPSON Stylus CX-5400
+Epson Stylus CX5800            escp2-cx5800    EPSON Stylus CX-5800
 Epson Stylus CX6300            escp2-cx6300    EPSON Stylus CX-6300
 Epson Stylus CX6400            escp2-cx6400    EPSON Stylus CX-6400
 Epson Stylus CX6600            escp2-cx6600    EPSON Stylus CX-6600
+Epson Stylus CX7800            escp2-cx7800    EPSON Stylus CX-7800
 Epson Stylus CX8300            escp2-cx8300    EPSON Stylus CX-8300
 Epson Stylus CX8400            escp2-cx8400    EPSON Stylus CX-8400
 Epson Stylus DX3800            escp2-dx3800    EPSON Stylus DX-3800

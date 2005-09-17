@@ -1840,6 +1840,23 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &standard_channel_name_list
   },
+  /* 70: Stylus Photo RX700 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
+    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
+    4, 15, 0, 0,
+    p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &photo_channel_name_list
+  },
 };
 
 const int stpi_escp2_model_limit =
