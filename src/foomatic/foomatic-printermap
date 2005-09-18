@@ -118,6 +118,7 @@
 #gptofoo escp2-c44ux printer/Epson-Stylus_C44UX
 #gptofoo escp2-c45 printer/Epson-Stylus_C45
 #gptofoo escp2-c46 printer/Epson-Stylus_C46
+#gptofoo escp2-c48 printer/Epson-Stylus_C48
 #gptofoo escp2-c50 printer/Epson-Stylus_C50
 #gptofoo escp2-c60 printer/Epson-Stylus_C60
 #gptofoo escp2-c61 printer/Epson-Stylus_C61
@@ -133,7 +134,6 @@
 #gptofoo escp2-c84 printer/Epson-Stylus_C84
 #gptofoo escp2-c85 printer/Epson-Stylus_C85
 #gptofoo escp2-c86 printer/Epson-Stylus_C86
-#gptofoo escp2-c87 printer/Epson-Stylus_C87
 #gptofoo escp2-c88 printer/Epson-Stylus_C88
 #gptofoo escp2 printer/Epson-Stylus_Color
 #gptofoo escp2 printer/Epson-Stylus_Color_I
@@ -246,7 +246,9 @@
 #gptofoo escp2-cx7800 printer/Epson-Stylus_CX7800
 #gptofoo escp2-cx8300 printer/Epson-Stylus_CX8300
 #gptofoo escp2-cx8400 printer/Epson-Stylus_CX8400
+#gptofoo escp2-d88 printer/Epson-Stylus_D88
 #gptofoo escp2-dx3800 printer/Epson-Stylus_DX3800
+#gptofoo escp2-dx4800 printer/Epson-Stylus_DX4800
 #gptofoo escp2-cl700 printer/Epson-CL_700
 #gptofoo escp2-cl750 printer/Epson-CL_750
 #gptofoo escp2-cl760 printer/Epson-CL_760
