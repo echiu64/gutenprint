@@ -2788,7 +2788,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     }
   }
 
-  privdata.buf_length = length * max_bits;
+  /* buffer length + 1 extra byte for offset data that might get added in canon_write */
+  privdata.buf_length = length * max_bits + 1;
   privdata.length = length;
   privdata.left = left;
   privdata.bits = bits;
@@ -3247,22 +3248,31 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   if (line[0] == 0 && memcmp(line, line + 1, length - 1) == 0)
     return 0;
 
+  offset2 = offset / 8;
+  bitoffset = offset % 8;
+
   /* fold lsb/msb pairs if drop modulation is active */
 
 
 
   if (bits==2) {
+    int pixels_per_byte = 4;
+    if((caps->features & CANON_CAP_5pixelin1byte) && (pd->color_info[coloridx].level == 3))
+      pixels_per_byte = 5;
     stp_fold(line,length,in_fold);
     in_ptr= in_fold;
     length= (length*8/4); /* 4 pixels in 8bit */
-    offset= (offset*8/4); /* 4 pixels in 8bit  */
+    /* calculate the number of compressed bytes that can be sent directly */
+    offset2 = offset / pixels_per_byte;
+    /* calculate the number of (uncompressed) bits that have to be added to the raster data */
+    bitoffset = (offset % pixels_per_byte) * 2;
   }
   if (bits==3) {
     memset(in_fold,0,length);
     canon_fold_3bit(line,length,in_fold);
     in_ptr= in_fold;
     length= (length*8)/3;
-    offset= (offset/3)*8;
+    offset2 = offset/3;
 #if 0
     switch(offset%3){
     case 0: offset= (offset/3)*8;   break;
@@ -3270,12 +3280,11 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
     case 2: offset= (offset/3)*8/*+5 CAREFUL! CANNOT SHIFT _AFTER_ RECODING!!*/; break;
     }
 #endif
+    bitoffset= 0;
   }
   /* pack left border rounded to multiples of 8 dots */
 
   comp_data= comp_buf;
-  offset2= offset/8;
-  bitoffset= offset%8;
   while (offset2>0) {
     unsigned char toffset = offset2 > 128 ? 128 : offset2;
     comp_data[0] = 1 - toffset;
@@ -3285,7 +3294,15 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   }
   if (bitoffset) {
     if (bitoffset<8)
-      canon_shift_buffer(in_ptr,length,bitoffset);
+    {
+       in_ptr[ length++ ] = 0;
+       canon_shift_buffer(in_ptr,length,bitoffset);
+    }
+    else if (bitoffset == 8)
+    {
+      memmove(in_ptr + 1,in_ptr,length++);
+      in_ptr[0] = 0;
+    }
     else
       stp_deprintf(STP_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_write() "
 	      "bitoffset=%d!!\n",bitoffset);
