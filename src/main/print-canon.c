@@ -55,7 +55,7 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-
+#include <math.h>
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */
 #ifndef CHAR_BIT
@@ -1566,6 +1566,8 @@ canon_source_type(const char *name, const canon_cap_t * caps)
       if (!strcmp(name,"Auto"))    return 4;
       if (!strcmp(name,"Manual"))    return 0;
       if (!strcmp(name,"ManualNP")) return 1;
+      if (!strcmp(name,"Cassette")) return 8;
+      if (!strcmp(name,"CD")) return 10;
     }
 
   stp_deprintf(STP_DBG_CANON,"canon: Unknown source type '%s' - reverting to auto\n",name);
@@ -1833,7 +1835,9 @@ static const stp_param_string_t media_sources[] =
               {
                 { "Auto",	N_ ("Auto Sheet Feeder") },
                 { "Manual",	N_ ("Manual with Pause") },
-                { "ManualNP",	N_ ("Manual without Pause") }
+                { "ManualNP",	N_ ("Manual without Pause") },
+		{ "Cassette",   N_ ("Cassette") },
+		{ "CD", N_ ("CD tray") }
               };
 
 
@@ -1989,7 +1993,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    int count = 3;
+    int count = sizeof(media_sources)/sizeof(media_sources[0]);
     description->bounds.str= stp_string_list_create();
     description->deflt.str= media_sources[0].name;
     for (i = 0; i < count; i ++)
@@ -2266,8 +2270,12 @@ canon_init_setTray(const stp_vars_t *v, canon_init_t *init)
   arg_6c_1|= (source & 0x0f);
 
   if (init->pt) arg_6c_2= init->pt->media_code;
-
-  canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
+  if (!strcmp("CD",init->source_str)) {
+    stp_deprintf(STP_DBG_CANON,"canon: sending special cd setTray command\n");
+    canon_cmd(v,ESC28,0x6c, 3, 0x3a,0x12,0);
+  } else {
+    canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
+  }
 }
 
 /* ESC (m -- 0x6d --  -- :
@@ -2326,10 +2334,15 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_init_t *init)
 
   if (!(init->caps->features & CANON_CAP_p))
     return;
-
-  canon_cmd(v,ESC28,0x70, 8,
-	    arg_70_1, arg_70_2, 0x00, 0x00,
-	    arg_70_3, arg_70_4, 0x00, 0x00);
+  if (!strcmp(init->source_str,"CD")) {
+    canon_cmd(v,ESC28,0x70, 8, 0x00, 0x2a, 0xb0, 0x00,
+		               0x00, 0x01, 0xe0, 0x00);
+    stp_deprintf(STP_DBG_CANON,"sending cd margins\n");
+  } else {
+    canon_cmd(v,ESC28,0x70, 8,
+   	      arg_70_1, arg_70_2, 0x00, 0x00,
+	      arg_70_3, arg_70_4, 0x00, 0x00);
+  }
 }
 
 /* ESC (q -- 0x71 -- setPageID -- :
@@ -2555,6 +2568,57 @@ set_color_info(const canon_cap_t * caps,const canon_variable_ink_t* ink,color_in
   set_bit_info(caps,small);
 }
 
+static void
+set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
+         int limit, int expansion, int invert)
+{
+  int clear_val = invert ? 255 : 0;
+  int set_val = invert ? 0 : 255;
+  int bytesize = 8 / expansion;
+  int byteextra = bytesize - 1;
+  int first_x_on = x_center - scaled_x_where;
+  int first_x_off = x_center + scaled_x_where;
+  if (first_x_on < 0)
+    first_x_on = 0;
+  if (first_x_on > limit)
+    first_x_on = limit;
+  if (first_x_off < 0)
+    first_x_off = 0;
+  if (first_x_off > limit)
+    first_x_off = limit;
+  first_x_on += byteextra;
+  if (first_x_off > (first_x_on - byteextra))
+    {
+      int first_x_on_byte = first_x_on / bytesize;
+      int first_x_on_mod = expansion * (byteextra - (first_x_on % bytesize));
+      int first_x_on_extra = ((1 << first_x_on_mod) - 1) ^ clear_val;
+      int first_x_off_byte = first_x_off / bytesize;
+      int first_x_off_mod = expansion * (byteextra - (first_x_off % bytesize));
+      int first_x_off_extra = ((1 << 8) - (1 << first_x_off_mod)) ^ clear_val;
+      if (first_x_off_byte < first_x_on_byte)
+        {
+          /* This can happen, if 6 or fewer points are turned on */
+          cd_mask[first_x_on_byte] = first_x_on_extra & first_x_off_extra;
+        }
+      else
+        {
+          if (first_x_on_extra != clear_val)
+
+            cd_mask[first_x_on_byte - 1] = first_x_on_extra;
+          if (first_x_off_byte > first_x_on_byte)
+            memset(cd_mask + first_x_on_byte, set_val,
+                   first_x_off_byte - first_x_on_byte);
+          if (first_x_off_extra != clear_val)
+            cd_mask[first_x_off_byte] = first_x_off_extra;
+        }
+    }
+}
+
+
+#define CD_X_OFFSET 0
+#define CD_Y_OFFSET 230
+#define CD_OUTER_RADIUS (329/2)
+#define CD_INNER_RADIUS 56
 /*
  * 'canon_print()' - Print an image to a CANON printer.
  */
@@ -2598,7 +2662,12 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                 image_width;
   int           res_code;
   int           use_6color= 0;
+  int           print_cd= (media_source && (!strcmp(media_source, "CD")));
   double        k_upper, k_lower;
+  unsigned char *cd_mask = NULL;
+  double outer_r_sq = 0;
+  double inner_r_sq = 0;
+
   stp_curve_t *lum_adjustment = NULL;
   stp_curve_t *hue_adjustment = NULL;
   stp_curve_t *sat_adjustment = NULL;
@@ -2677,16 +2746,25 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   internal_imageable_area(v, 0, &page_left, &page_right,
 			  &page_bottom, &page_top);
-  left -= page_left;
-  top -= page_top;
-  page_width = page_right - page_left;
-  page_height = page_bottom - page_top;
-
+  if (print_cd) {
+    left += CD_X_OFFSET; 
+    top += CD_Y_OFFSET;
+    /*page_width = CD_OUTER_RADIUS*2;
+      page_height = CD_OUTER_RADIUS*2; */
+    stp_default_media_size(v, &page_width, &page_height); 
+    out_width = page_width;
+    out_height = page_height;
+  } else {
+    left -= page_left;
+    top -= page_top;
+    page_width = page_right - page_left;
+    page_height = page_bottom - page_top;
+  }
   image_height = stp_image_height(image);
   image_width = stp_image_width(image);
 
   stp_default_media_size(v, &n, &page_true_height);
-
+  
   PUT("top        ",top,72);
   PUT("left       ",left,72);
   PUT("page_true_height",page_true_height,72);
@@ -2961,6 +3039,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   stp_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
+  if (print_cd) {
+    cd_mask = stp_malloc(1 + (out_width + 7) / 8);
+    outer_r_sq = (double)CD_OUTER_RADIUS * (double)CD_OUTER_RADIUS;
+    inner_r_sq = (double)CD_INNER_RADIUS * (double)CD_INNER_RADIUS;
+  }
   for (y = 0; y < out_height; y ++)
   {
     int duplicate_line = 1;
@@ -2975,8 +3058,32 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 	  break;
 	}
     }
-
-    stp_dither(v, y, duplicate_line, zero_mask, NULL);
+    if (print_cd) 
+      {
+	int x_center = CD_OUTER_RADIUS * xdpi / 72;
+	int y_distance_from_center =
+	  CD_OUTER_RADIUS - (y * 72 / ydpi);
+	if (y_distance_from_center < 0)
+	  y_distance_from_center = -y_distance_from_center;
+	memset(cd_mask, 0, (out_width + 7) / 8);
+	if (y_distance_from_center < CD_OUTER_RADIUS)
+	  {
+	    double y_sq = (double) y_distance_from_center *
+	      (double) y_distance_from_center;
+	    int x_where = sqrt(outer_r_sq - y_sq) + .5;
+	    int scaled_x_where = x_where * xdpi / 72;
+	    set_mask(cd_mask, x_center, scaled_x_where,
+		     out_width, 1, 0);
+	    if (y_distance_from_center < CD_INNER_RADIUS)
+	      {
+		x_where = sqrt(inner_r_sq - y_sq) + .5;
+		scaled_x_where = x_where * ydpi / 72;
+		set_mask(cd_mask, x_center, scaled_x_where,
+			 out_width, 1, 1);
+	      }
+	  }
+      }
+    stp_dither(v, y, duplicate_line, zero_mask, cd_mask);
     canon_printfunc(v);
     errval += errmod;
     errline += errdiv;
@@ -3012,6 +3119,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   for (i = 0; i < 7; i++)
     if (privdata.cols[i])
       stp_free(privdata.cols[i]);
+  
+  if(cd_mask)
+      stp_free(cd_mask);
 
   canon_deinit_printer(v, &init);
   return status;
