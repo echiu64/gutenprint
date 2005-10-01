@@ -98,9 +98,16 @@ These release notes contain the following sections:
      It now offers red/green/blue, cyan/magenta/yellow, or
      cyan/magenta/yellow/black as appropriate.
 
-  4) The GIMP plugin is now significantly more responsive.
+  4) The GIMP plugin is now considerably more responsive; many
+     unnecessary screen redraws have been removed.
 
-  5) Preliminary support for the Epson Stylus C87, C88, CX3700,
+  5) The Epson printer utility escputil now reports ink information
+     more consistently across a wider range of printers.  In
+     particular, the extended ink information command (escputil -e)
+     should now work correctly on all models from the Stylus Color 740
+     through the present.
+
+  6) Preliminary support for the Epson Stylus C87, C88, CX3700,
      CX3800, CX3810, CX4200, CX4700, CX4800, CX5800, CX7700, CX7800,
      DX3800, DX3850, and DX4800.  These printers are expected to be
      fully functional (for the multi-function devices, this package
@@ -110,7 +117,7 @@ These release notes contain the following sections:
      printer may or may not function correctly, and is not likely to
      be properly tuned.
 
-  8) The PIXMA iP4000 printers can now print to cds.
+  8) The Canon PIXMA iP4000 printers can now print to cds.
 
 
 ================================================================
