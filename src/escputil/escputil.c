@@ -858,20 +858,22 @@ get_printer(int quiet, int fail_if_not_found)
 
 static const char *colors_new[] =
   {
-    N_("Black"),
-    N_("Matte Black"),
-    N_("Photo Black"),
-    N_("Cyan"),
-    N_("Magenta"),
-    N_("Yellow"),
-    N_("Light Cyan"),
-    N_("Light Magenta"),
-    N_("Dark Yellow"),
-    N_("Light Black"),
-    N_("unknown"),
-    N_("Red"),
-    N_("Blue"),
-    N_("Gloss Optimizer"),
+    N_("Black"),		/* 0 */
+    N_("Photo Black"),		/* 1 */
+    N_("Unknown"),		/* 2 */
+    N_("Cyan"),			/* 3 */
+    N_("Magenta"),		/* 4 */
+    N_("Yellow"),		/* 5 */
+    N_("Light Cyan"),		/* 6 */
+    N_("Light Magenta"),	/* 7 */
+    N_("Unknown"),		/* 8 */
+    N_("Unknown"),		/* 9 */
+    N_("Light Black"),		/* a */
+    N_("Matte Black"),		/* b */
+    N_("Red"),			/* c */
+    N_("Blue"),			/* d */
+    N_("Gloss Optimizer"),	/* e */
+    N_("Light Light Black"),	/* f */
   };
 
 static int color_count = sizeof(colors_new) / sizeof(const char *);
@@ -969,34 +971,15 @@ do_status_command_internal(status_cmd_t cmd)
 		      while (buf[i] != 0x0f && i < status)
 			i += buf[i + 1] + 2;
 		      ind = buf + i;
-		      i = 4;
+		      i = 3;
 		      col_number = 0;
-		      printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
-		      while (i < ind[1] + 3)
+		      printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
+		      while (i < ind[1])
 			{
-			  if (ind[i] == 0)
-			    {
-			      /* black */
-			      switch (col_number)
-				{
-				case 0:
-				  printf("%20s    %3d\n", _(colors_new[0]), ind[i + 1]);
-				  break;
-				case 3:
-				  printf("%20s    %3d\n", _(colors_new[1]), ind[i + 1]);
-				  break;
-				case 4:
-				  printf("%20s    %3d\n", _(colors_new[2]), ind[i + 1]);
-				  break;
-				}
-			    }
+			  if (ind[i] < color_count)
+			    printf("%18s    %20d\n", _(colors_new[(int) ind[i]]), ind[i + 2]);
 			  else
-			    {
-			      if (ind[i] + 2 < color_count)
-				printf("%20s    %3d\n", _(colors_new[ind[i] + 2]), ind[i + 1]);
-			      else
-				printf("%18s%2x    %3d\n", _("Unknown"), ind[i] + 2, ind[i + 1]);
-			    }
+			    printf("%18s    %20d\n", _("Unknown"), ind[i + 2]);
 			  col_number++;
 			  i+=3;
 			}
@@ -1085,7 +1068,7 @@ do_status_command_internal(status_cmd_t cmd)
     {
       ind += 3;
 
-      printf("%20s    %s\n", _("Ink color"), _("Percent remaining"));
+      printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
       for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
 	{
 	  int val, j;
@@ -1103,7 +1086,7 @@ do_status_command_internal(status_cmd_t cmd)
 		exit(1);
 	    }
 	  val = (ind[0] << 4) + ind[1];
-	  printf("%20s    %3d\n",_(stp_string_list_param(desc.bounds.str, i)->text),
+	  printf("%18s    %20d\n",_(stp_string_list_param(desc.bounds.str, i)->text),
 		 val);
 	  ind += 2;
 	}
@@ -1134,7 +1117,8 @@ do_extended_ink_info(int extended_output)
   int credit;
   int retry = 4;
   char buf[1024];
-  unsigned val, id, year, month, ik1, ik2;
+  unsigned val, id, id2, year, year2, month, month2;
+  unsigned iv[6];
 
   char *ind;
   int i;
@@ -1192,17 +1176,68 @@ do_extended_ink_info(int extended_output)
                       exit(1);
                     }
                   ind = strchr(buf, 'I');
-                  if (sscanf(ind,
-                             "II:01;IQT:%x;TSH:NAVL;PDY:%x;PDM:%x;IC1:%x;IC2:000A;IK1:%x;IK2:%x;TOV:18;TVU:06;LOG:INKbyEPSON;",
-                             &val, &year, &month, &id, &ik1, &ik2 ) == 6)
+		  if (sscanf(ind,
+                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+			     &iv[0], &year, &month, &id,
+			     &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
+			     &year2, &month2, &id2) == 12 ||
+		      sscanf(ind,
+                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+			     &iv[0], &year, &month, &id,
+			     &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
+			     &year2, &month2, &id2) == 12)
+		    {
+		      int j;
+		      printf("%18s    %20s   %12s   %7s\n",
+			     _("Ink color"), _("Percent remaining"), _("Part number"),
+			     _("Date"));
+                      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+                             _(stp_string_list_param(desc.bounds.str, 0)->text),
+                             iv[0], id, (year > 80 ? 19 : 20), year, month);
+		      for (j = 1; j < 6; j++)
+                      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+                             _(stp_string_list_param(desc.bounds.str, j)->text),
+                             iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
+		      break;
+		    }
+		  else if (sscanf(ind,
+				  "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;IQT:%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+				  &iv[0], &year, &month, &id,
+				  &iv[1], &iv[2], &iv[3],
+				  &year2, &month2, &id2) == 10 ||
+			   sscanf(ind,
+				  "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;IQT:%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+				  &iv[0], &year, &month, &id,
+				  &iv[1], &iv[2], &iv[3],
+				  &year2, &month2, &id2) == 10)
+		    {
+		      int j;
+		      printf("%18s    %20s   %12s   %7s\n",
+			     _("Ink color"), _("Percent remaining"), _("Part number"),
+			     _("Date"));
+                      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+                             _(stp_string_list_param(desc.bounds.str, 0)->text),
+                             iv[0], id, (year > 80 ? 19 : 20), year, month);
+		      for (j = 1; j < 4; j++)
+                      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+                             _(stp_string_list_param(desc.bounds.str, j)->text),
+                             iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
+		      break;
+		    }
+                  else if (sscanf(ind,
+                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+                             &val, &year, &month, &id ) == 4 ||
+			   sscanf(ind,
+                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+                             &val, &year, &month, &id ) == 4)
                     {
                       if (i == 0)
-                        printf("%15s    %20s   %12s   %7s\n",
+                        printf("%18s    %20s   %12s   %7s\n",
                                _("Ink color"), _("Percent remaining"), _("Part number"),
                                _("Date"));
-                      printf("%15s    %20d    T0%03d            20%02d-%02d\n",
+                      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
                              _(stp_string_list_param(desc.bounds.str, i)->text),
-                             val, id, year, month);
+                             val, id, (year > 80 ? 19 : 20), year, month);
                     }
                 }
               else /* could not write */

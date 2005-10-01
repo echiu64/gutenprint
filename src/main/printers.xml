@@ -124,6 +124,12 @@
       </printer>
     </family>
     <family name="escp2">
+      <printer name="EPSON Stylus C20" driver="escp2-c20" manufacturer="Epson" model="42">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
@@ -131,6 +137,12 @@
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON Stylus C20UX" driver="escp2-c20ux" manufacturer="Epson" model="42">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON Stylus C40" driver="escp2-c40" manufacturer="Epson" model="43">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
         <parameter type="float" name="Gamma">0.470</parameter>
@@ -148,6 +160,12 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus C41" driver="escp2-c41" manufacturer="Epson" model="43">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus C41SX" driver="escp2-c41sx" manufacturer="Epson" model="43">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
@@ -155,6 +173,12 @@
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON Stylus C41UX" driver="escp2-c41ux" manufacturer="Epson" model="43">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON Stylus C42" driver="escp2-c42" manufacturer="Epson" model="43">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
         <parameter type="float" name="Gamma">0.470</parameter>
@@ -172,6 +196,12 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus C43" driver="escp2-c43" manufacturer="Epson" model="43">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus C43SX" driver="escp2-c43sx" manufacturer="Epson" model="43">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
@@ -179,6 +209,12 @@
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON Stylus C43UX" driver="escp2-c43ux" manufacturer="Epson" model="43">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="YellowGamma">0.9</parameter>
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON Stylus C44" driver="escp2-c44" manufacturer="Epson" model="43">
         <parameter type="float" name="MagentaGamma">0.95</parameter>
         <parameter type="float" name="YellowGamma">0.9</parameter>
         <parameter type="float" name="Gamma">0.470</parameter>
