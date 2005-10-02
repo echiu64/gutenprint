@@ -30,8 +30,6 @@
  * Contents:
  *
  *   main()                   - Process files on the command-line...
- *   initialize_stp_options() - Initialize the min/max values for
- *                              each STP numeric option.
  *   usage()                  - Show program usage.
  *   help()                   - Show detailed program usage.
  *   getlangs()               - Get available translations.
