@@ -1733,9 +1733,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "PrintingMode") == 0)
     {
+      const escp2_inkname_t *ink_name = get_inktype(v);
       description->bounds.str = stp_string_list_create();
-      stp_string_list_add_string
-	(description->bounds.str, "Color", _("Color"));
+      if (!ink_name || ink_name->inkset != INKSET_QUADTONE)
+	stp_string_list_add_string
+	  (description->bounds.str, "Color", _("Color"));
       stp_string_list_add_string
 	(description->bounds.str, "BW", _("Black and White"));
       description->deflt.str =
@@ -1944,6 +1946,8 @@ escp2_describe_output(const stp_vars_t *v)
 	{
 	  switch (ink_type->inkset)
 	    {
+	    case INKSET_QUADTONE:
+	      return "Grayscale";
 	    case INKSET_CMYKRB:
 	    case INKSET_CMYK:
 	    case INKSET_CcMmYK:
