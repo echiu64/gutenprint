@@ -654,6 +654,8 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   }
   else
   {
+    unsigned short *tmp_buf =
+      stp_malloc(sizeof(unsigned short) * (image_width * out_channels + 3));
     if (strcmp(print_mode, "Color") == 0)
       stp_puts("/DeviceRGB setcolorspace\n", v);
     else
@@ -683,6 +685,7 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 
     for (y = 0, out_offset = 0; y < image_height; y ++)
     {
+      unsigned short *where;
       /* FIXME!!! */
       if (stp_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
 	{
@@ -690,23 +693,33 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 	  break;
 	}
       out = stp_channel_get_input(nv);
+      if (out_offset > 0)
+	{
+	  memcpy(tmp_buf + out_offset, out,
+		 image_width * out_channels * sizeof(unsigned short));
+	  where = tmp_buf;
+	}
+      else
+	where = out;
 
       out_ps_height = out_offset + image_width * out_channels;
 
       if (y < (image_height - 1))
       {
-        ps_ascii85(v, out, out_ps_height & ~3, 0);
+	ps_ascii85(v, where, out_ps_height & ~3, 0);
         out_offset = out_ps_height & 3;
       }
       else
       {
-        ps_ascii85(v, out, out_ps_height, 1);
+        ps_ascii85(v, where, out_ps_height, 1);
         out_offset = 0;
       }
 
       if (out_offset > 0)
-        memcpy(out, out + out_ps_height - out_offset, out_offset);
+        memcpy(tmp_buf, where + out_ps_height - out_offset,
+	       out_offset * sizeof(unsigned short));
     }
+    stp_free(tmp_buf);
   }
   stp_image_conclude(image);
 
