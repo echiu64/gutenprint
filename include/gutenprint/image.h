@@ -134,6 +134,8 @@ extern stp_image_status_t stp_image_get_row(stp_image_t *image,
 extern const char *stp_image_get_appname(stp_image_t *image);
 extern void stp_image_conclude(stp_image_t *image);
 
+  /** @} */
+
 #ifdef __cplusplus
   }
 #endif

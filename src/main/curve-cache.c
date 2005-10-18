@@ -88,7 +88,7 @@ stp_curve_cache_set_curve_copy(stp_cached_curve_t *cache, const stp_curve_t *cur
   cache->curve = stp_curve_create_copy(curve);
 }
 
-const size_t
+size_t
 stp_curve_cache_get_count(stp_cached_curve_t *cache)
 {
   if (cache->curve)

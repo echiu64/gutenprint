@@ -508,7 +508,7 @@ dirent_sort(const void *a,
 char **
 getlangs(void)
 {
-  struct dirent** langdirs;
+  struct dirent** langdirs = NULL;
   int n;
   char **langs;
 
@@ -1438,7 +1438,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 			}
 		      if (!desc.is_mandatory)
 			gzprintf(fp, "*Stp%s None/None: \"\"\n",
-				 desc.name, desc.deflt.dbl);
+				 desc.name);
 		      else if (! printed_default_value)
 			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
 				 desc.name, desc.deflt.dbl);

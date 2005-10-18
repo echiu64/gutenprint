@@ -63,7 +63,7 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
 {
   stp_list_t *findlist;              /* List of files to return */
   stp_list_item_t *diritem;          /* Current directory */
-  struct dirent** module_dir;        /* Current directory contents */
+  struct dirent** module_dir = NULL; /* Current directory contents */
   char *module_name;                 /* File name to check */
   int n;                             /* Number of directory entries */
 

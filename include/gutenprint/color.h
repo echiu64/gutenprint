@@ -130,6 +130,11 @@ stp_color_get_name(const stp_color_t *c);
 extern const char *
 stp_color_get_long_name(const stp_color_t *c);
 
+  /** @} */
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* GUTENPRINT_COLOR_H */

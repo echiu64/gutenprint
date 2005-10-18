@@ -1446,7 +1446,7 @@ static const stp_param_string_t duplex_types[] =
  * 'pcl_papersize_valid()' - Is the paper size valid for this printer.
  */
 
-static const int
+static int
 pcl_papersize_valid(const stp_papersize_t *pt,
 		    int model)
 {

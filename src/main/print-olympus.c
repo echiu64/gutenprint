@@ -1605,7 +1605,8 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   const int model           = stp_get_model_id(v); 
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
   const olympus_cap_t *caps = olympus_get_model_capabilities(model);
-  int max_print_px_width, max_print_px_height;
+  int max_print_px_width = 0;
+  int max_print_px_height = 0;
   int xdpi, ydpi;	/* Resolution */
 
   /* image in pixels */

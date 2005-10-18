@@ -71,7 +71,7 @@ typedef struct
   const double dropsizes[MAX_DROP_SIZES];
 } escp2_dropsize_t;
 
-typedef const escp2_dropsize_t *const escp2_drop_list_t[RES_N];
+typedef const escp2_dropsize_t *escp2_drop_list_t[RES_N];
 
 /*
  ****************************************************************

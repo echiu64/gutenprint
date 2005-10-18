@@ -62,7 +62,7 @@ extern void stp_curve_cache_set_curve(stp_cached_curve_t *cache,
 extern void stp_curve_cache_set_curve_copy(stp_cached_curve_t *cache,
 					   const stp_curve_t *curve);
 
-extern const size_t stp_curve_cache_get_count(stp_cached_curve_t *cache);
+extern size_t stp_curve_cache_get_count(stp_cached_curve_t *cache);
 
 extern const unsigned short *stp_curve_cache_get_ushort_data(stp_cached_curve_t *cache);
 
