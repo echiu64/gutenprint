@@ -119,6 +119,8 @@ These release notes contain the following sections:
 
   8) The Canon PIXMA iP4000 printers can now print to cds.
 
+  9) Initial support for Canon S200 printers has been added.
+
 
 ================================================================
 
@@ -1266,6 +1268,7 @@ Canon BJC 7100
 Canon BJC 8200
 Canon CP-100 series
 Canon CP-220 series
+Canon S200            (Experimental)
 Canon S400
 Canon S450
 Canon S800
