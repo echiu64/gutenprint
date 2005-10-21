@@ -118,6 +118,7 @@ These release notes contain the following sections:
      be properly tuned.
 
   8) The Canon PIXMA iP4000 printers can now print to cds.
+     Duplex printing with binding on the short side is now supported, too.
 
   9) Initial support for Canon S200 printers has been added.
 
