@@ -820,8 +820,9 @@ static void canon_write_line(stp_vars_t *v);
 #define CANON_CAP_rr        0x4000ul
 #define CANON_CAP_WEAVE     0x8000ul   /* S200 has to be fed with weaved data */
                                        /* for Resolutions above 360dpi */
-#define CANON_CAP_extended_t    0x4000ul  /* detailed level and bitdepth settings for every ink*/
-#define CANON_CAP_5pixelin1byte 0x8000ul  /* 5 pixel with 3 levels in 1 byte compression */
+#define CANON_CAP_extended_t    0x10000ul  /* detailed level and bitdepth settings for every ink*/
+#define CANON_CAP_5pixelin1byte 0x20000ul  /* 5 pixel with 3 levels in 1 byte compression */
+#define CANON_CAP_DUPLEX    0x40000ul
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -1340,7 +1341,7 @@ static const canon_cap_t canon_model_capabilities[] =
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
     CANON_INK_CMYK /*| CANON_INK_CcMmYyK*/, /*canon inks */
     CANON_SLOT_ASF1,  /*paper slot */
-    CANON_CAP_STD0|CANON_CAP_extended_t|CANON_CAP_5pixelin1byte,  /*features */
+    CANON_CAP_STD0|CANON_CAP_extended_t|CANON_CAP_5pixelin1byte|CANON_CAP_DUPLEX,  /*features */
     CANON_MODES(canon_nomodes),
 #ifndef EXPERIMENTAL_STUFF
     {-1,0,0,-1,-1,-1}, /*150x150 300x300 600x600 1200x600 1200x1200 2400x2400*/
@@ -1411,10 +1412,12 @@ typedef struct {
 typedef struct {
   const canon_cap_t *caps;
   int printing_color;
+  int is_first_page;
   const paper_t *pt;
   int print_head;
   int colormode;
   const char *source_str;
+  const char *duplex_str;
   int xdpi;
   int ydpi;
   int page_width;
@@ -1489,6 +1492,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
+  {
+    "Duplex", N_("Double-Sided Printing"), N_("Basic Printer Setup"),
+    N_("Duplex/Tumble Setting"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  }
 };
 
 static const int the_parameter_count =
@@ -1566,6 +1575,24 @@ static const float_param_t float_parameters[] =
 
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
+
+/*
+ * Duplex support - modes available
+ * Note that the internal names MUST match those in cups/genppd.c else the
+ * PPD files will not be generated correctly
+ *
+ * TODO: Support for DuplexNoTumble, the image has to be rotated 
+ */
+
+static const stp_param_string_t duplex_types[] =
+{
+  { "None",             N_ ("Off") },
+/*  { "DuplexNoTumble", N_ ("Long Edge (Standard)") } , */
+  { "DuplexTumble",     N_ ("Short Edge (Flip)") }
+};
+#define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
+
+
 
 static const paper_t *
 get_media_type(const char *name)
@@ -2048,6 +2075,36 @@ canon_parameters(const stp_vars_t *v, const char *name,
       (description->bounds.str, "BW", _("Black and White"));
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
+  } 
+  else if (strcmp(name, "Duplex") == 0)
+  {
+    int offer_duplex=0;
+
+    description->bounds.str = stp_string_list_create();
+
+/*
+ * Don't offer the Duplex/Tumble options if the JobMode parameter is
+ * set to "Page" Mode.
+ * "Page" mode is set by the Gimp Plugin, which only outputs one page at a
+ * time, so Duplex/Tumble is meaningless.
+ */
+
+    if (stp_get_string_parameter(v, "JobMode"))
+        offer_duplex = strcmp(stp_get_string_parameter(v, "JobMode"), "Page");
+    else
+     offer_duplex=1;
+
+    if (offer_duplex && (caps->features & CANON_CAP_DUPLEX))
+    {
+      description->deflt.str = duplex_types[0].name;
+      for (i=0; i < NUM_DUPLEX; i++)
+        {
+          stp_string_list_add_string(description->bounds.str,
+				     duplex_types[i].name,_(duplex_types[i].text));
+        }
+    }
+    else
+      description->is_active = 0;
   }
 }
 
@@ -2176,6 +2233,20 @@ canon_init_resetPrinter(const stp_vars_t *v, canon_init_t *init)
       stp_puts("BJLEND\n",v);
     }
   canon_cmd(v,ESC5b,0x4b, 2, 0x00,0x0f);
+}
+
+/* ESC ($ -- 0x24 -- cmdSetDuplex --:
+ */
+static void
+canon_init_setDuplex(const stp_vars_t *v, canon_init_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_DUPLEX))
+    return;
+  if (strncmp(init->duplex_str, "Duplex", 6)) 
+    return;
+  /* The same command seems to be needed for both Duplex and DuplexTumble
+     no idea about the meanings of the single bytes */
+  canon_cmd(v,ESC28,0x24,9,0x01,0x00,0x02,0x00,0x00,0x00,0x00,0x00,0x02);
 }
 
 /* ESC (a -- 0x61 -- cmdSetPageMode --:
@@ -2515,8 +2586,10 @@ canon_init_printer(const stp_vars_t *v, canon_init_t *init)
 {
   int mytop;
   /* init printer */
-
-  canon_init_resetPrinter(v,init);       /* ESC [K */
+  if (init->is_first_page) {
+    canon_init_resetPrinter(v,init);       /* ESC [K */
+    canon_init_setDuplex(v,init);          /* ESC ($ */
+  }
   canon_init_setPageMode(v,init);        /* ESC (a */
   canon_init_setDataCompression(v,init); /* ESC (b */
   canon_init_setPageID(v,init);          /* ESC (q */
@@ -2721,6 +2794,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
+  int           page_number = stp_get_int_parameter(v, "PageNumber");
+
   int printing_color = 0;
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
   int		top = stp_get_top(v);
@@ -2872,6 +2948,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   init.print_head = printhead;
   init.colormode = colormode;
   init.source_str = media_source;
+  init.duplex_str = duplex_mode;
+  init.is_first_page = (page_number == 0);
   init.xdpi = xdpi;
   init.ydpi = ydpi;
   init.page_width = page_width;
