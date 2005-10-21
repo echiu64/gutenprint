@@ -102,6 +102,10 @@
         <parameter type="float" name="Gamma">1.000</parameter>
         <parameter type="float" name="Density">0.800</parameter>
       </printer>
+      <printer name="Canon S200" driver="bjc-s200" manufacturer="Canon" model="4202">
+        <parameter type="float" name="Gamma">0.800</parameter>
+        <parameter type="float" name="Density">0.900</parameter>
+      </printer>
       <printer name="Canon S400" driver="bjc-s400" manufacturer="Canon" model="3000">
         <parameter type="float" name="Gamma">1.000</parameter>
         <parameter type="float" name="Density">0.800</parameter>
