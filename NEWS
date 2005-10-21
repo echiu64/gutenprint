@@ -1520,12 +1520,13 @@ Lexmark Z42
 Lexmark Z43
 Lexmark Z52
 Lexmark Z53
-Olympus P-10
+Olympus P-10 series
 Olympus P-200
 Olympus P-300 series
 Olympus P-400
 Olympus P-440
 Sony UP-DP10    (Experimental)
+Sony UP-DR150   (Experimental)
 
 The following is the complete list of printers believed to be
 compatible with Gutenprint, along with recommended drivers.  Some of
@@ -1601,7 +1602,9 @@ Canon CP-220                   canon-cp220     Canon CP220
 Canon CP-330                   canon-cp220     Canon CP220
 Canon SELPHY CP-400            canon-cp220     Canon SELPHY CP400
 Canon SELPHY CP-500            canon-cp220     Canon SELPHY CP500
+Canon SELPHY CP-510            canon-cp220     Canon SELPHY CP510
 Canon SELPHY CP-600            canon-cp220     Canon SELPHY CP600
+Canon SELPHY CP-710            canon-cp220     Canon SELPHY CP710
 Canon GP 335                   pcl-4           HP LaserJet 4 series
 Canon LBP-4sx                  pcl-3           HP LaserJet III series
 Canon LBP-430                  pcl-4l          HP LaserJet 4L
@@ -2184,6 +2187,7 @@ Okidata Super 6e               pcl-4l          HP LaserJet 4L
 Olivetti JP350S                pcl-2           HP LaserJet II series
 Olivetti PG 306                pcl-2           HP LaserJet II series
 Olympus P-10                   olympus-p10     Olympus P10 
+Olympus P-11                   olympus-p10     Olympus P11 
 Olympus P-200                  olympus-p200    Olympus P200
 Olympus P-300E                 olympus-p300    Olympus P300
 Olympus P-300U                 olympus-p300    Olympus P300
@@ -2215,6 +2219,7 @@ Seiko SpeedJET 200             pcl-2           HP LaserJet II series
 Sharp AR-161                   pcl-6           HP LaserJet 6 series
 Sony IJP-V100                  pcl-601         HP DeskJet 600 series
 Sony UP-DP10                   sony-updp10     Sony UP-DP10
+Sony UP-DR150                  sony-updr150    Sony UP-DR150
 Star LS-04                     pcl-2           HP LaserJet II series
 Star LaserPrinter 8            pcl-2           HP LaserJet II series
 Tally MT908                    pcl-3           HP LaserJet III series

@@ -3,7 +3,8 @@
  *
  *   Print plug-in Olympus driver for the GIMP.
  *
- *   Copyright 2003 Michael Mraka (Michael.Mraka@linux.cz)
+ *   Copyright 2003 - 2005
+ *   Michael Mraka (Michael.Mraka@linux.cz)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -908,6 +909,97 @@ static const char updp10_adj_yellow[] =
   "</gutenprint>\n";
 
 
+/* Sony UP-DR150 */
+static const olymp_resolution_t updr150_res[] =
+{
+  { "346x346", 346, 346},
+};
+
+static const olymp_resolution_list_t updr150_res_list =
+{
+  updr150_res, sizeof(updr150_res) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t updr150_page[] =
+{
+  { "w288h432",	"2UPC-153 (4x6)", -1, -1, 0, 0, 3, 2},
+  { "B7",	"2UPC-154 (3.5x5)", -1, -1, 3, 2, 0, 0},
+  { "w360h504",	"2UPC-155 (5x7)", -1, -1, 0, 0, 4, 4},
+  { "w432h576",	"2UPC-156 (6x8)", -1, -1, 3, 2, 5, 4},
+  { "Custom", NULL, -1, -1, 0, 0, 3, 2},
+};
+
+static const olymp_pagesize_list_t updr150_page_list =
+{
+  updr150_page, sizeof(updr150_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t updr150_printsize[] =
+{
+  { "346x346", "w288h432", 1382, 2048},
+  { "346x346", "B7", 1210, 1728},
+  { "346x346", "w360h504", 1728, 2380},
+  { "346x346", "w432h576", 2048, 2724},
+  { "346x346", "Custom", 1382, 2048},
+};
+
+static const olymp_printsize_list_t updr150_printsize_list =
+{
+  updr150_printsize, sizeof(updr150_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void updr150_printer_init_func(stp_vars_t *v)
+{
+  char pg = '\0';
+
+  stp_zfwrite("\x6a\xff\xff\xff\xef\xff\xff\xff", 1, 8, v);
+  if (strcmp(privdata.pagesize,"B7") == 0)
+    pg = '\x01';
+  else if (strcmp(privdata.pagesize,"w288h432") == 0)
+    pg = '\x02';
+  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+    pg = '\x03';
+  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+    pg = '\x04';
+  stp_putc(pg, v);
+
+  stp_zfwrite("\x00\x00\x00\xfc\xff\xff\xff"
+	      "\xfb\xff\xff\xff\xf4\xff\xff\xff"
+	      "\xf5\xff\xff\xff\x01\x00\x00\x00"
+	      "\x07\x00\x00\x00\x1b\xe5\x00\x00"
+	      "\x00\x08\x00\x08\x00\x00\x00\x00"
+	      "\x00\x00\x00\x00\x00\x01\x00\xed"
+	      "\xff\xff\xff\x07\x00\x00\x00\x1b"
+	      "\xee\x00\x00\x00\x02\x00\x02\x00"
+	      "\x00\x00\x00\x01\x07\x00\x00\x00"
+	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
+	      "\x00\x00\x00\x00\x00\x00\x00\x07"
+	      "\x00\x00\x00\x00", 1, 91, v);
+  stp_put16_be(privdata.xsize, v);
+  stp_put16_be(privdata.ysize, v);
+  stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
+	      "\x1b\xe1\x00\x00\x00\x0b\x00\x0b"
+	      "\x00\x00\x00\x00\x80\x00\x00\x00"
+	      "\x00\x00", 1, 26, v);
+  stp_put16_be(privdata.xsize, v);
+  stp_put16_be(privdata.ysize, v);
+  stp_zfwrite("\xf8\xff\xff\xff\x0b\x00\x00\x00\x1b\xea"
+	      "\x00\x00\x00\x00", 1, 14, v);
+  stp_put32_be(privdata.xsize*privdata.ysize*3, v);
+  stp_zfwrite("\x00", 1, 1, v);
+  stp_put32_le(privdata.xsize*privdata.ysize*3, v);
+}
+
+static void updr150_printer_end_func(stp_vars_t *v)
+{
+	stp_zfwrite("\xfc\xff\xff"
+		    "\xff\xfa\xff\xff\xff\x07\x00\x00"
+		    "\x00\x1b\x0a\x00\x00\x00\x00\x00"
+		    "\x07\x00\x00\x00\x1b\x17\x00\x00"
+		    "\x00\x00\x00\xf3\xff\xff\xff"
+		    , 1, 34, v);
+}
+
 /* Fujifilm CX-400 */
 static const olymp_resolution_t cx400_res[] =
 {
@@ -984,6 +1076,7 @@ static const olymp_resolution_t all_resolutions[] =
   { "300x300", 300, 300},
   { "317x316", 317, 316},
   { "320x320", 320, 320},
+  { "346x346", 346, 346},
 };
 
 static const olymp_resolution_list_t all_res_list =
@@ -993,7 +1086,7 @@ static const olymp_resolution_list_t all_res_list =
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
-  { /* Olympus P-10 */
+  { /* Olympus P-10, P-11 */
     2, 		
     &rgb_ink_list,
     &res_320dpi_list,
@@ -1084,7 +1177,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-600 */
+  { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
+       SELPHY CP-600, SELPHY CP-710 */
     1001,
     &ymc_ink_list,
     &res_314dpi_list,
@@ -1115,6 +1209,21 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL,
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
     &updp10_laminate_list,
+  },
+  { /* Sony UP-DR150 */
+    2001,
+    &rgb_ink_list,
+    &updr150_res_list,
+    &updr150_page_list,
+    &updr150_printsize_list,
+    OLYMPUS_INTERLACE_NONE,
+    1800,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    &updr150_printer_init_func, &updr150_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL, 
+    NULL,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,

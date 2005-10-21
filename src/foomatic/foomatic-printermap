@@ -64,7 +64,9 @@
 #gptofoo canon-cp220 printer/Canon-CP-330
 #gptofoo canon-cp220 printer/Canon-SELPHY-CP-400
 #gptofoo canon-cp220 printer/Canon-SELPHY-CP-500
+#gptofoo canon-cp220 printer/Canon-SELPHY-CP-510
 #gptofoo canon-cp220 printer/Canon-SELPHY-CP-600
+#gptofoo canon-cp220 printer/Canon-SELPHY-CP-710
 #gptofoo pcl-4 printer/Canon-GP_335
 #gptofoo pcl-3 printer/Canon-LBP-4sx
 #gptofoo pcl-4l printer/Canon-LBP-430
@@ -660,6 +662,7 @@
 #gptofoo pcl-2 printer/Olivetti-JP350S
 #gptofoo pcl-2 printer/Olivetti-PG_306
 #gptofoo olympus-p10 printer/Olympus-P-10
+#gptofoo olympus-p10 printer/Olympus-P-11
 #gptofoo olympus-p200 printer/Olympus-P-200
 #gptofoo olympus-p300 printer/Olympus-P-300E
 #gptofoo olympus-p300 printer/Olympus-P-300U
@@ -691,6 +694,7 @@
 #gptofoo pcl-6 printer/Sharp-AR-161
 #gptofoo pcl-601 printer/Sony-IJP-V100
 #gptofoo sony-updp10 printer/Sony-UP-DP10
+#gptofoo sony-updr150 printer/Sony-UP-DR150
 #gptofoo pcl-2 printer/Star-LS-04
 #gptofoo pcl-2 printer/Star-LaserPrinter_8
 #gptofoo pcl-3 printer/Tally-MT908

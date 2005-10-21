@@ -1339,6 +1339,8 @@
       </printer>
       <printer name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000">
       </printer>
+      <printer name="Sony UP-DR150" driver="sony-updr150" manufacturer="Sony" model="2001">
+      </printer>
       <printer name="Fujifilm Printpix CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000">
       </printer>
       <printer name="Fujifilm Printpix CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001">
