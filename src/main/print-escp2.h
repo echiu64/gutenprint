@@ -525,6 +525,7 @@ extern const escp2_drop_list_t stpi_escp2_variable_3pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops;
+extern const escp2_drop_list_t stpi_escp2_variable_r2400_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops;
 extern const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops;
@@ -536,6 +537,7 @@ extern const paperlist_t stpi_escp2_standard_paper_list;
 extern const paperlist_t stpi_escp2_durabrite_paper_list;
 extern const paperlist_t stpi_escp2_durabrite2_paper_list;
 extern const paperlist_t stpi_escp2_ultrachrome_paper_list;
+extern const paperlist_t stpi_escp2_ultrachrome_k3_paper_list;
 extern const paperlist_t stpi_escp2_r800_paper_list;
 
 extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
@@ -547,6 +549,8 @@ extern const paper_adjustment_list_t stpi_escp2_photo3_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_ultrachrome_matte_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_ultrachrome_k3_photo_paper_adjustment_list;
+extern const paper_adjustment_list_t stpi_escp2_ultrachrome_k3_matte_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_r800_photo_paper_adjustment_list;
 extern const paper_adjustment_list_t stpi_escp2_r800_matte_paper_adjustment_list;
 
@@ -581,6 +585,7 @@ extern const inkgroup_t stpi_escp2_ultrachrome_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_photo_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_photo7_japan_inkgroup;
 extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
+extern const inkgroup_t stpi_escp2_f360_ultrachrome_k3_inkgroup;
 extern const inkgroup_t stpi_escp2_cmykrb_inkgroup;
 
 extern const escp2_inkname_t stpi_escp2_default_black_inkset;

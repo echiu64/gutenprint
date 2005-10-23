@@ -81,6 +81,9 @@ static const escp2_dot_size_t c2pl_dotsizes =
 static const escp2_dot_size_t c1_8pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x13, 0x13 };
 
+static const escp2_dot_size_t p3_5pl_dotsizes =
+{ 0x10, 0x10, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12 };
+
 static const escp2_dot_size_t sc440_dotsizes =
 {    3,    3,    2,    1,   -1,   -1,   -1,   -1,   -1 };
 
@@ -211,7 +214,7 @@ static const escp2_base_resolutions_t pro_base_res =
  *  8: 5760x2880
  */
 
-/*  0    1     2       3    4      5      6      7 */
+/*  0    1     2       3    4      5      6      7      8 */
 
 static const escp2_densities_t g1_densities =
 { 2.6, 1.3,  1.3,  0.568, 0.0,   0.0,   0.0,   0.0,   0.0   };
@@ -245,6 +248,9 @@ static const escp2_densities_t p3pl_densities =
 
 static const escp2_densities_t p1_5pl_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
+
+static const escp2_densities_t p3_5pl_densities =
+{ 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325, 0.0   };
@@ -642,6 +648,20 @@ static const char *r800_channel_names[] =
 };
 
 DECLARE_CHANNEL_LIST(r800);
+
+static const char *r2400_channel_names[] =
+{
+  N_("Light Light Black"),
+  N_("Light Magenta"),
+  N_("Light Cyan"),
+  N_("Light Black"),
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+};
+
+DECLARE_CHANNEL_LIST(r2400);
 
 const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
 {
@@ -1856,6 +1876,23 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &photo_channel_name_list
+  },
+  /* 71: Stylus Photo R2400 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
+    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
+    INCH(13), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
+    4, 15, 0, 0,
+    p3_5pl_dotsizes, p3_5pl_densities, &stpi_escp2_variable_r2400_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_f360_ultrachrome_k3_inkgroup,
+    variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &r2400_channel_name_list
   },
 };
 

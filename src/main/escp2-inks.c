@@ -127,6 +127,20 @@ static const escp2_dropsize_t escp2_r300_2880_dropsizes =
 static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
   { "r300_2880_1440", 1, { 1.0 } };
 
+/* Stylus Photo R2400 */
+static const escp2_dropsize_t escp2_r2400_360_dropsizes =
+  { "r2400_360", 1, { 1 } };
+static const escp2_dropsize_t escp2_r2400_720_dropsizes =
+  { "r2400_1440", 3, { 0.180, 0.44, 1 } };
+static const escp2_dropsize_t escp2_r2400_1440_dropsizes =
+  { "r2400_1440", 3, { 0.180, 0.44, 1 } };
+static const escp2_dropsize_t escp2_r2400_2880_dropsizes =
+  { "r2400_1440", 3, { 0.180, 0.44, 1 } };
+static const escp2_dropsize_t escp2_r2400_2880_1440_dropsizes =
+  { "r2400_2880_1440", 2, { 0.41, 1 } };
+static const escp2_dropsize_t escp2_r2400_2880_2880_dropsizes =
+  { "r2400_2880_2880", 1, { 1.0 } };
+
 /* Stylus C80 */
 static const escp2_dropsize_t escp2_economy_pigment_dropsizes =
   { "economy_pigment", 3, { 0, 0, 1.0 } };
@@ -273,6 +287,19 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops =
   &escp2_r300_2880_1440_dropsizes,
   &escp2_r300_2880_1440_dropsizes,
   &escp2_r300_2880_1440_dropsizes,
+};
+
+const escp2_drop_list_t stpi_escp2_variable_r2400_drops =
+{
+  &escp2_r2400_360_dropsizes,
+  &escp2_r2400_360_dropsizes,
+  &escp2_r2400_720_dropsizes,
+  &escp2_r2400_720_dropsizes,
+  &escp2_r2400_1440_dropsizes,
+  &escp2_r2400_2880_dropsizes,
+  &escp2_r2400_2880_1440_dropsizes,
+  &escp2_r2400_2880_2880_dropsizes,
+  &escp2_r2400_2880_2880_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =

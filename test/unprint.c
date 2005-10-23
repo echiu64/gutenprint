@@ -87,7 +87,7 @@ typedef struct {
  * actually read in the data.  This optimization may be worthwhile.
  */
 
-#define MAX_INKS 11
+#define MAX_INKS 12
 typedef struct {
    unsigned char *line[MAX_INKS];
    int startx[MAX_INKS];
@@ -127,6 +127,7 @@ line_type **page=NULL;
    Blue     8       N/A      9
    P.Black  64      N/A      0
    Gloss    9       N/A      10
+   LL.Black 48      768      11
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
@@ -162,6 +163,9 @@ seqcolor(int c)
       return 9;
     case 9:
       return 10;
+    case 48:
+    case 768:
+      return 11;
     default:
       return 0;
     }
@@ -280,6 +284,7 @@ static float ink_colors[MAX_INKS][4] =
  { 1,   0,  0,  1 },		/* R */
  { 0,   0,  1,  1 },		/* B */
  { 1,   1,  1,  1 },		/* Gloss */
+ { .8, .8, .8,  1 },		/* llk */
 };
 
 static float quadtone_inks[] = { 0.0, .25, .5, .75 };

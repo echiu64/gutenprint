@@ -171,19 +171,27 @@ stp_dither_matrix_init_from_dither_array(stp_dither_matrix_impl_t *mat,
   stp_array_get_size(array, &x_size, &y_size);
 
   vec = stp_sequence_get_ushort_data(seq, &count);
-  mat->base = x_size;;
+  mat->base = x_size;
   mat->exp = 1;
-  mat->x_size = x_size;
-  mat->y_size = y_size;
+  if (transpose)
+    {
+      mat->x_size = y_size;
+      mat->y_size = x_size;
+    }
+  else
+    {
+      mat->x_size = x_size;
+      mat->y_size = y_size;
+    }
   mat->total_size = mat->x_size * mat->y_size;
   mat->matrix = stp_malloc(sizeof(unsigned) * mat->x_size * mat->y_size);
-  for (x = 0; x < mat->x_size; x++)
-    for (y = 0; y < mat->y_size; y++)
+  for (x = 0; x < x_size; x++)
+    for (y = 0; y < y_size; y++)
       {
 	if (transpose)
-	  mat->matrix[x + y * mat->x_size] = vec[y + x * mat->y_size];
+	  mat->matrix[y + x * y_size] = vec[x + y * x_size];
 	else
-	  mat->matrix[x + y * mat->x_size] = vec[x + y * mat->x_size];
+	  mat->matrix[x + y * x_size] = vec[x + y * x_size];
       }
   mat->last_x = mat->last_x_mod = 0;
   mat->last_y = mat->last_y_mod = 0;
