@@ -500,6 +500,12 @@ stp_set_default_string_parameter_n(stp_vars_t *v, const char *parameter,
 				   const char *value, size_t bytes)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_STRING_LIST];
+  if (value)
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_string_parameter(%s, %s)\n",
+		parameter, value);
+  else
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_string_parameter(%s)\n",
+		parameter);
   set_default_raw_parameter(list, parameter, value, bytes,
 			    STP_PARAMETER_TYPE_STRING_LIST);
   stp_set_verified(v, 0);
@@ -511,15 +517,7 @@ stp_set_default_string_parameter(stp_vars_t *v, const char *parameter,
 {
   int byte_count = 0;
   if (value)
-    {
-      byte_count = strlen(value);
-      stp_dprintf(STP_DBG_VARS, v,
-		  "stp_set_default_string_parameter(%s, %s)\n",
-		  parameter, value);
-    }
-  else
-    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_string_parameter(%s)\n",
-		parameter);
+    byte_count = strlen(value);
   stp_set_default_string_parameter_n(v, parameter, value, byte_count);
   stp_set_verified(v, 0);
 }
@@ -593,6 +591,12 @@ stp_set_file_parameter(stp_vars_t *v, const char *parameter,
   size_t byte_count = 0;
   if (value)
     byte_count = strlen(value);
+  if (value)
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(%s, %s)\n",
+		parameter, value);
+  else
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(%s)\n",
+		parameter);
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
   stp_set_verified(v, 0);
@@ -603,6 +607,12 @@ stp_set_file_parameter_n(stp_vars_t *v, const char *parameter,
 			 const char *value, size_t byte_count)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_FILE];
+  if (value)
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(%s, %s)\n",
+		parameter, value);
+  else
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(%s)\n",
+		parameter);
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
   stp_set_verified(v, 0);
@@ -616,6 +626,12 @@ stp_set_default_file_parameter(stp_vars_t *v, const char *parameter,
   size_t byte_count = 0;
   if (value)
     byte_count = strlen(value);
+  if (value)
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(%s, %s)\n",
+		parameter, value);
+  else
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(%s)\n",
+		parameter);
   set_default_raw_parameter(list, parameter, value, byte_count,
 			    STP_PARAMETER_TYPE_FILE);
   stp_set_verified(v, 0);
@@ -626,6 +642,12 @@ stp_set_default_file_parameter_n(stp_vars_t *v, const char *parameter,
 				 const char *value, size_t byte_count)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_FILE];
+  if (value)
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(%s, %s)\n",
+		parameter, value);
+  else
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(%s)\n",
+		parameter);
   set_default_raw_parameter(list, parameter, value, byte_count,
 			    STP_PARAMETER_TYPE_FILE);
   stp_set_verified(v, 0);
@@ -658,6 +680,7 @@ stp_set_curve_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_CURVE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_curve_parameter(%s)\n", parameter);
   if (curve)
     {
       value_t *val;
@@ -690,6 +713,8 @@ stp_set_default_curve_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_CURVE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_curve_parameter(%s)\n",
+	      parameter);
   if (!item)
     {
       if (curve)
@@ -764,6 +789,7 @@ stp_set_default_array_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_ARRAY];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_array_parameter(%s)\n", parameter);
   if (!item)
     {
       if (array)
@@ -792,6 +818,8 @@ stp_get_array_parameter(const stp_vars_t *v, const char *parameter)
   const stp_list_t *list = v->params[STP_PARAMETER_TYPE_ARRAY];
   const value_t *val;
   const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_array_parameter(%s)\n",
+	      parameter);
   if (item)
     {
       val = (const value_t *) stp_list_item_get_data(item);
@@ -807,6 +835,8 @@ stp_set_int_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_int_parameter(%s, %d)\n",
+	      parameter, ival);
   if (item)
     {
       val = (value_t *) stp_list_item_get_data(item);
@@ -831,6 +861,8 @@ stp_set_default_int_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_int_parameter(%s, %d)\n",
+	      parameter, ival);
   if (!item)
     {
       val = stp_malloc(sizeof(value_t));
@@ -848,6 +880,7 @@ stp_clear_int_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_int_parameter(%s)\n", parameter);
   if (item)
     stp_list_item_destroy(list, item);
   stp_set_verified(v, 0);
@@ -890,6 +923,8 @@ stp_set_boolean_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_boolean_parameter(%s, %d)\n",
+	      parameter, ival);
   if (item)
     {
       val = (value_t *) stp_list_item_get_data(item);
@@ -918,6 +953,8 @@ stp_set_default_boolean_parameter(stp_vars_t *v, const char *parameter,
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_boolean_parameter(%s, %d)\n",
+	      parameter, ival);
   if (!item)
     {
       val = stp_malloc(sizeof(value_t));
@@ -938,6 +975,7 @@ stp_clear_boolean_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_boolean_parameter(%s)\n", parameter);
   if (item)
     stp_list_item_destroy(list, item);
   stp_set_verified(v, 0);
@@ -980,6 +1018,8 @@ stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_dimension_parameter(%s, %d)\n",
+	      parameter, ival);
   if (item)
     {
       val = (value_t *) stp_list_item_get_data(item);
@@ -1004,6 +1044,8 @@ stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter, int iv
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_dimension_parameter(%s, %d)\n",
+	      parameter, ival);
   if (!item)
     {
       val = stp_malloc(sizeof(value_t));
@@ -1021,6 +1063,7 @@ stp_clear_dimension_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_dimension_parameter(%s)\n", parameter);
   if (item)
     stp_list_item_destroy(list, item);
   stp_set_verified(v, 0);
@@ -1063,6 +1106,8 @@ stp_set_float_parameter(stp_vars_t *v, const char *parameter, double dval)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_float_parameter(%s, %f)\n",
+	      parameter, dval);
   if (item)
     {
       val = (value_t *) stp_list_item_get_data(item);
@@ -1088,6 +1133,8 @@ stp_set_default_float_parameter(stp_vars_t *v, const char *parameter,
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_float_parameter(%s, %f)\n",
+	      parameter, dval);
   if (!item)
     {
       val = stp_malloc(sizeof(value_t));
@@ -1105,6 +1152,7 @@ stp_clear_float_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_float_parameter(%s)\n", parameter);
   if (item)
     stp_list_item_destroy(list, item);
   stp_set_verified(v, 0);
