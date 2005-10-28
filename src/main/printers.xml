@@ -288,6 +288,10 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus C68" driver="escp2-c68" manufacturer="Epson" model="66">
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus C70" driver="escp2-c70" manufacturer="Epson" model="44">
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
@@ -830,6 +834,10 @@
         <parameter type="float" name="MagentaGamma">1.02</parameter>
         <parameter type="float" name="YellowGamma">1.02</parameter>
         <parameter type="float" name="Gamma">0.500</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
+      <printer name="EPSON Stylus D68" driver="escp2-d68" manufacturer="Epson" model="66">
+        <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
       <printer name="EPSON Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69">

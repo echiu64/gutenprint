@@ -116,11 +116,11 @@ These release notes contain the following sections:
      should now work correctly on all models from the Stylus Color 740
      through the present.
 
-  8) Preliminary support for the Epson Stylus C87, C88, CX3700,
+  8) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
      CX3800, CX3810, CX4200, CX4700, CX4800, CX5800, CX7700, CX7800,
-     DX3800, DX3850, and DX4800.  These printers are expected to be
-     fully functional (for the multi-function devices, this package
-     supports only the printer function).
+     D68, D88, DX3800, DX3850, and DX4800.  These printers are
+     expected to be fully functional (for the multi-function devices,
+     this package supports only the printer function).
 
   9) Preliminary support for the Epson Stylus Photo R2400.  This
      printer has been partially tuned, but there will likely be
@@ -1322,6 +1322,7 @@ EPSON Stylus C63
 EPSON Stylus C64
 EPSON Stylus C65
 EPSON Stylus C66
+EPSON Stylus C68
 EPSON Stylus C70
 EPSON Stylus C80
 EPSON Stylus C82
@@ -1435,6 +1436,8 @@ EPSON Stylus CX-7700
 EPSON Stylus CX-7800
 EPSON Stylus CX-8300
 EPSON Stylus CX-8400
+EPSON Stylus D68
+EPSON Stylus D88
 EPSON Stylus DX-3800
 EPSON Stylus DX-3850
 EPSON Stylus DX-4800
@@ -1696,6 +1699,7 @@ Epson Stylus C63               escp2-c63       EPSON Stylus C63
 Epson Stylus C64               escp2-c64       EPSON Stylus C64
 Epson Stylus C65               escp2-c65       EPSON Stylus C65
 Epson Stylus C66               escp2-c66       EPSON Stylus C66
+Epson Stylus C68               escp2-c68       EPSON Stylus C68
 Epson Stylus C70               escp2-c70       EPSON Stylus C70
 Epson Stylus C80               escp2-c80       EPSON Stylus C80
 Epson Stylus C82               escp2-c82       EPSON Stylus C82
@@ -1812,6 +1816,7 @@ Epson Stylus CX7700            escp2-cx7700    EPSON Stylus CX-7700
 Epson Stylus CX7800            escp2-cx7800    EPSON Stylus CX-7800
 Epson Stylus CX8300            escp2-cx8300    EPSON Stylus CX-8300
 Epson Stylus CX8400            escp2-cx8400    EPSON Stylus CX-8400
+Epson Stylus D68               escp2-d68       EPSON Stylus D68
 Epson Stylus D88               escp2-d88       EPSON Stylus D88
 Epson Stylus DX3800            escp2-dx3800    EPSON Stylus DX-3800
 Epson Stylus DX3850            escp2-dx3850    EPSON Stylus DX-3850

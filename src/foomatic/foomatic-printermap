@@ -136,6 +136,7 @@
 #gptofoo escp2-c64 printer/Epson-Stylus_C64
 #gptofoo escp2-c65 printer/Epson-Stylus_C65
 #gptofoo escp2-c66 printer/Epson-Stylus_C66
+#gptofoo escp2-c68 printer/Epson-Stylus_C68
 #gptofoo escp2-c70 printer/Epson-Stylus_C70
 #gptofoo escp2-c80 printer/Epson-Stylus_C80
 #gptofoo escp2-c82 printer/Epson-Stylus_C82
@@ -259,6 +260,7 @@
 #gptofoo escp2-cx7800 printer/Epson-Stylus_CX7800
 #gptofoo escp2-cx8300 printer/Epson-Stylus_CX8300
 #gptofoo escp2-cx8400 printer/Epson-Stylus_CX8400
+#gptofoo escp2-d68 printer/Epson-Stylus_D68
 #gptofoo escp2-d88 printer/Epson-Stylus_D88
 #gptofoo escp2-dx3800 printer/Epson-Stylus_DX3800
 #gptofoo escp2-dx3850 printer/Epson-Stylus_DX3850
