@@ -208,8 +208,11 @@
 #gptofoo escp2-ex3 printer/Epson-Stylus_Photo_EX3
 #gptofoo escp2-r200 printer/Epson-Stylus_Photo_R200
 #gptofoo escp2-r210 printer/Epson-Stylus_Photo_R210
+#gptofoo escp2-r220 printer/Epson-Stylus_Photo_R220
 #gptofoo escp2-r300 printer/Epson-Stylus_Photo_R300
 #gptofoo escp2-r310 printer/Epson-Stylus_Photo_R310
+#gptofoo escp2-r320 printer/Epson-Stylus_Photo_R320
+#gptofoo escp2-r340 printer/Epson-Stylus_Photo_R340
 #gptofoo escp2-rx400 printer/Epson-Stylus_Photo_RX400
 #gptofoo escp2-rx420 printer/Epson-Stylus_Photo_RX420
 #gptofoo escp2-rx425 printer/Epson-Stylus_Photo_RX425

@@ -118,9 +118,10 @@ These release notes contain the following sections:
 
   8) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
      CX3800, CX3810, CX4200, CX4700, CX4800, CX5800, CX7700, CX7800,
-     D68, D88, DX3800, DX3850, and DX4800.  These printers are
-     expected to be fully functional (for the multi-function devices,
-     this package supports only the printer function).
+     D68, D88, DX3800, DX3850, DX4800, and Stylus Photo R220, R320,
+     and R340.  These printers are expected to be fully functional
+     (for the multi-function devices, this package supports only the
+     printer function).
 
   9) Preliminary support for the Epson Stylus Photo R2400.  This
      printer has been partially tuned, but there will likely be
@@ -1384,8 +1385,11 @@ EPSON Stylus Photo 2100
 EPSON Stylus Photo 2200
 EPSON Stylus Photo R200
 EPSON Stylus Photo R210
+EPSON Stylus Photo R220
 EPSON Stylus Photo R300
 EPSON Stylus Photo R310
+EPSON Stylus Photo R320
+EPSON Stylus Photo R340
 EPSON Stylus Photo RX400
 EPSON Stylus Photo RX420
 EPSON Stylus Photo RX425
@@ -1770,7 +1774,12 @@ Epson Stylus Photo 2200        escp2-2200      EPSON Stylus Photo 2200
 Epson Stylus Photo EX          escp2-ex        EPSON Stylus Photo EX
 Epson Stylus Photo EX3         escp2-ex3       EPSON Stylus Photo EX3
 Epson Stylus Photo R200        escp2-r200      EPSON Stylus Photo R200
+Epson Stylus Photo R210        escp2-r210      EPSON Stylus Photo R210
+Epson Stylus Photo R220        escp2-r220      EPSON Stylus Photo R220
 Epson Stylus Photo R300        escp2-r300      EPSON Stylus Photo R300
+Epson Stylus Photo R310        escp2-r310      EPSON Stylus Photo R310
+Epson Stylus Photo R320        escp2-r320      EPSON Stylus Photo R320
+Epson Stylus Photo R340        escp2-r340      EPSON Stylus Photo R340
 Epson Stylus Photo RX400       escp2-rx400     EPSON Stylus Photo RX400
 Epson Stylus Photo RX420       escp2-rx420     EPSON Stylus Photo RX420
 Epson Stylus Photo RX425       escp2-rx425     EPSON Stylus Photo RX425
