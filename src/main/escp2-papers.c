@@ -141,12 +141,12 @@ static const char photo3_lum_adj[] =
 "<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.60 0.61 0.64 0.68 0.73 0.78 0.82 0.85 "  /* B */
-/* B */  "0.85 0.82 0.78 0.78 0.79 0.80 0.82 0.85 "  /* M */
+/* C */  "0.66 0.67 0.69 0.73 0.77 0.83 0.87 0.89 "  /* B */
+/* B */  "0.91 0.88 0.82 0.78 0.78 0.80 0.82 0.85 "  /* M */
 /* M */  "0.87 0.90 0.94 0.97 1.00 1.00 1.00 1.00 "  /* R */
 /* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
 /* Y */  "1.00 1.00 0.99 0.98 0.96 0.94 0.92 0.88 "  /* G */
-/* G */  "0.84 0.72 0.68 0.66 0.64 0.62 0.61 0.60 "  /* C */
+/* G */  "0.84 0.72 0.69 0.67 0.66 0.66 0.66 0.66 "  /* C */
 "</sequence>\n"
 "</curve>\n"
 "</gutenprint>\n";
@@ -681,43 +681,43 @@ DECLARE_PAPER_ADJUSTMENTS(photo2);
 
 static const paper_adjustment_t photo3_adjustments[] =
 {
-  { "Plain", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Plain",        0.615, .35, 0.75, .15, .9, 1, .7, .8, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "PlainFast", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
+  { "PlainFast",    0.615, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Postcard", 0.83, .35, 0.5, .2, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Postcard",     0.692, .35, 0.5, .2, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "GlossyFilm", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "GlossyFilm",   0.833, .5, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Transparency", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "Transparency", 0.833, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Envelope", 0.738, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
+  { "Envelope",     0.615, .35, 0.75, .15, .9, 1, .59, .7, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "BackFilm", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "BackFilm",     0.833, .5, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Matte", 0.85, .35, 0.75, .3, .999, 1, .59, .7, .9, 1, 1,
+  { "Matte",        0.709, .5, 0.75, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "MatteHeavy", 0.85, .35, .3, .3, .999, 1, .59, .7, .9, 1, 1,
+  { "MatteHeavy",   0.709, .5, .3, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Inkjet", 0.85, .35, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
+  { "Inkjet",       0.709, .5, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Coated", 1.2, .35, .5, .3, .999, 1, .59, .7, .9, 1, 1,
+  { "Coated",       1.000, .5, 0.5, .3, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Photo", 1.00, .35, 0.5, .3, .999, 1, .59, .7, .9, 1, 1,
+  { "Photo",        0.833, .5, 0.5, .25, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "GlossyPhoto", 1.0, .25, 0.5, .3, .999, 1, .6, .83, .66, 1, 0.85,
+  { "GlossyPhoto",  0.833, .75, 0.5, .25, .999, 1, .7, .8, .66, 1, 0.92,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Semigloss", 1.0, .25, 0.5, .3, .999, 1, .59, .7, .9, 1, 0.92,
+  { "Semigloss",    0.833, .75, 0.5, .3, .999, 1, .7, .8, .66, 1, 0.92,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Luster", 1.0, .25, 0.5, .3, .999, 1, .59, .7, .9, 1, 0.92,
+  { "Luster",       0.833, .75, 0.5, .3, .999, 1, .7, .8, .66, 1, 0.92,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "GlossyPaper", 1.00, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "GlossyPaper",  0.833, .5, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Ilford", .85, .25, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
+  { "Ilford",       0.709, .5, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj  },
-  { "ColorLife", 1.00, .35, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
+  { "ColorLife",    0.833, .5, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Other", 0.738, .35, 0.5, .5, .9, 1, .59, .7, .9, 1, 1,
+  { "Other",        0.615, .35, 0.5, .5, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
 };
 

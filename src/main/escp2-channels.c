@@ -1937,8 +1937,8 @@ static const shade_set_t photo_gen2_shades =	/* Stylus 870 and newer */
 static const shade_set_t photo_gen3_shades =	/* Stylus R300 and newer */
 {
   { 1, { 1.0 }},
-  { 2, { 1.0, 0.3 }},
-  { 2, { 1.0, 0.3 }},
+  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.35 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
