@@ -118,10 +118,10 @@ These release notes contain the following sections:
 
   8) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
      CX3800, CX3810, CX4200, CX4700, CX4800, CX5800, CX7700, CX7800,
-     D68, D88, DX3800, DX3850, DX4800, and Stylus Photo R220, R320,
-     and R340.  These printers are expected to be fully functional
-     (for the multi-function devices, this package supports only the
-     printer function).
+     D68, D88, DX3800, DX3850, DX4200, DX4800, and Stylus Photo R220,
+     R320, and R340.  These printers are expected to be fully
+     functional (for the multi-function devices, this package supports
+     only the printer function).
 
   9) Preliminary support for the Epson Stylus Photo R2400.  This
      printer has been partially tuned, but there will likely be
@@ -1454,6 +1454,7 @@ EPSON Stylus D68
 EPSON Stylus D88
 EPSON Stylus DX-3800
 EPSON Stylus DX-3850
+EPSON Stylus DX-4200
 EPSON Stylus DX-4800
 EPSON CL-700
 EPSON CL-750
@@ -1839,6 +1840,7 @@ Epson Stylus D68               escp2-d68       EPSON Stylus D68
 Epson Stylus D88               escp2-d88       EPSON Stylus D88
 Epson Stylus DX3800            escp2-dx3800    EPSON Stylus DX-3800
 Epson Stylus DX3850            escp2-dx3850    EPSON Stylus DX-3850
+Epson Stylus DX4200            escp2-dx4200    EPSON Stylus DX-4200
 Epson Stylus DX4800            escp2-dx4800    EPSON Stylus DX-4800
 Epson CL-700                   escp2-cl700     EPSON CL-700
 Epson CL-750                   escp2-cl750     EPSON CL-750
