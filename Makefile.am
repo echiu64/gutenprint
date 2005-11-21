@@ -18,11 +18,8 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.5 dist-bzip2 check-news gnu no-dependencies
-
 @SET_MAKE@
 
-MAINT_CHARSET = latin1
 ACLOCAL_AMFLAGS = -I m4 -I m4local
 
 include $(top_srcdir)/scripts/global.mk

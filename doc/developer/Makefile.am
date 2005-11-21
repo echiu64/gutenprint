@@ -17,11 +17,7 @@
 
 ## Process this file with automake to produce Makefile.in.
 
-AUTOMAKE_OPTIONS = 1.4 gnu
-
 @SET_MAKE@
-
-MAINT_CHARSET = latin1
 
 include $(top_srcdir)/scripts/global.mk
 

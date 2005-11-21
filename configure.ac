@@ -38,7 +38,7 @@ pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [0])
 pushdef([GUTENPRINT_MICRO_VERSION],     [0])
-pushdef([GUTENPRINT_EXTRA_VERSION],     [-rc1])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [-rc2])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINT_BINARY_AGE],        [0])
@@ -117,7 +117,7 @@ AC_SUBST([GUTENPRINTUI2_INTERFACE_AGE])
 AC_SUBST([GUTENPRINTUI2_BINARY_AGE])
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(GUTENPRINT_NAME, GUTENPRINT_VERSION)
+AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu no-dependencies)
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
 

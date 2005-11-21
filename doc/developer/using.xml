@@ -215,10 +215,7 @@ GUTENPRINT_LIBS = $(shell pkg-config --libs gutenprint)</programlisting>
 	write a <filename>Makefile.am</filename> to do this:
       </para>
       <informalexample>
-        <programlisting>AUTOMAKE_OPTIONS = 1.7 gnu
-MAINT_CHARSET = latin1
-
-@SET_MAKE@
+        <programlisting>@SET_MAKE@
 
 AM_CFLAGS = $(GUTENPRINT_CFLAGS)
 
