@@ -58,10 +58,10 @@ something that you would like covering, please let me know!
 To build Gutenprint from CVS, or to regenerate the build scripts after
 modifying them, you need to install a number of GNU tools:
 
-i.   GNU autoconf (at least 2.54)
-ii.  GNU automake (at least 1.5; 1.7 recommended)
-iii. GNU libtool (at least 1.4.3; 1.5 recommended)
-iv.  GNU gettext (at least 0.11.x)
+i.   GNU autoconf (at least 2.54; at least 2.59 recommended)
+ii.  GNU automake (at least 1.9)
+iii. GNU libtool (at least 1.5; at least 1.5.20 recommended)
+iv.  GNU gettext (at least 0.12; at least 0.14 recommended)
 v.   GNU make (any recent version)
 
 and also
@@ -101,12 +101,6 @@ but is old; automake1.6+ will only work with new 2.5x autoconf
 versions but are the current releases.  I suggest using 1.4 and 1.7
 together.  Different versions of autoconf need separate aclocal
 directories, to prevent m4 macros clashing.
-
-GNU gettext 0.11.x (current) releases will not work properly with
-current CVS Gutenprint because of changes to gettextize.  We need to
-use autopoint, but this will break backward compatibility with 0.10.x
-releases (due to a new autoconf macro being required).  The change
-will need to be made at some point in the near future.
 
 Hopefully these compatibility problems will not be as bad in the
 future...
