@@ -78,7 +78,7 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 install-kit:
 	if test -n "$(DESTDIR)" ; then \
-	  $(mkinstalldirs) $(DESTDIR)`$(FOOMATIC_KITLOAD) -l` ; \
+	  $(mkdir_p) $(DESTDIR)`$(FOOMATIC_KITLOAD) -l` ; \
 	  $(FOOMATIC_KITLOAD) -f -d $(DESTDIR) -k $(FOOMATIC_DB) ; \
 	else \
 	  $(FOOMATIC_KITLOAD) -f -k $(FOOMATIC_DB) ; \

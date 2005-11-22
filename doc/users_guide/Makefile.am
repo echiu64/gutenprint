@@ -398,8 +398,8 @@ html-stamp: $(MANUAL_SRC_FILES) $(PNG_IMAGES)
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
-	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
-	  $(mkinstalldirs) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
+	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
+	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
 	  if test -f $(MANUAL).pdf ; then \
 	    $(INSTALL_DATA) $(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  elif test -f $(srcdir)/$(MANUAL).pdf ; then \
