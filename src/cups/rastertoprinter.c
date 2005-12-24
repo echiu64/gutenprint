@@ -131,7 +131,13 @@ set_special_parameter(stp_vars_t *v, const char *name, int choice)
   stp_describe_parameter(v, name, &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
-      if (choice >= stp_string_list_count(desc.bounds.str))
+      if (choice < 0)
+	{
+	  stp_clear_string_parameter(v, name);
+	  fprintf(stderr, "DEBUG: Gutenprint clear special parameter %s\n",
+		  name);
+	}
+      else if (choice >= stp_string_list_count(desc.bounds.str))
 	fprintf(stderr, "ERROR: Gutenprint unable to set %s!\n", name);
       else
 	{
@@ -368,8 +374,9 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
       break;
     }
 
-  if (cups->header.cupsCompression >= 0)
-    set_special_parameter(v, "Resolution", cups->header.cupsCompression);
+  set_special_parameter(v, "Resolution", cups->header.cupsCompression - 1);
+
+  set_special_parameter(v, "Quality", cups->header.cupsRowFeed - 1);
 
   if (cups->header.MediaClass && strlen(cups->header.MediaClass) > 0)
     set_string_parameter(v, "InputSlot", cups->header.MediaClass);
