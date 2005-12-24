@@ -173,6 +173,7 @@ sub update_ppd ($) {
 
     open ORIG, $_ or die "$_: can't open PPD file: $!";
     seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
+    my @orig_metadata = stat(ORIG);
     if ($debug) {
 	print "Source Filename: $ppd_source_filename\n";
     }
@@ -277,8 +278,6 @@ sub update_ppd ($) {
     # Save new PPD in a temporary file, for processing...
 
     my($tmpfile, $tmpfilename) = tmpnam();
-    chown(0, 0, $tmpfilename); # root.root
-    chmod(0644, $tmpfilename);
     unlink $tmpfilename or warn "can't unlink temporary file $tmpfile: $!\n";
     print $tmpfile $source_data;
 
@@ -366,8 +365,6 @@ default_loop:
 	warn "Can't open $tmpnew for writing: $!\n";
 	return 0;
     }
-    chown(0, 0, $tmpnew);	# Bad idea to hardcode this...
-    chmod(0644, $tmpnew);	# Bad idea to hardcode this...
     print NEWPPD $source_data;
     if (! close NEWPPD) {
 	warn "Can't close ${tmpnew}.new for writing: $!\n";
@@ -380,6 +377,8 @@ default_loop:
 	unlink $tmpnew;
 	return 0;
     }
+    chown($orig_metadata[4], $orig_metadata[5], $ppd_source_filename);
+    chmod(($orig_metadata[2] & 0777), $ppd_source_filename);
 
     if (!$quiet || $verbose) {
 	print STDOUT "Updated $ppd_source_filename using $source\n";
