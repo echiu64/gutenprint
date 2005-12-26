@@ -1,14 +1,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<BASE HREF="http://gimp-print.sourceforge.net/">
+<BASE HREF="http://gutenprint.sourceforge.net/">
 <TITLE><? echo ($title) ?></TITLE>
 </HEAD>
 <META NAME="CLASSIFICATION" CONTENT="General HTML">
-<META NAME="Author" CONTENT="The Gimp Print Project">
-<META NAME="KEYWORDS" CONTENT="The Gimp, Gimp, Print, Printers, Linux,
+<META NAME="Author" CONTENT="The Gutenprint Project">
+<META NAME="KEYWORDS" CONTENT="The Gimp, Gimp, Print, Gimp-Print, Gutenprint, Printers, Linux,
 Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
-<META NAME="ABSTRACT" CONTENT="The Gimp Print Project"> 
+<META NAME="ABSTRACT" CONTENT="The Gutenprint Project"> 
 <BODY BGCOLOR="#FFFFFF">
 <STYLE TYPE="text/css">
 <!-- /* Hide content from old browsers */
@@ -37,7 +37,7 @@ H1 {
 
 <TABLE BORDER="0">
 <TR><TD>
-<? includeImage('top_image','Welcome to the gimp-print Website','0') ?>
+<? includeImage('top_image','Welcome to the Gutenprint Website','0') ?>
 </TD><TD>
 <P>
 <a

@@ -3,7 +3,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'Gimp-Print Printer Drivers';
+$title = 'Gutenprint Printer Drivers';
 ###############################################
 ###############################################
 require('standard_html_header.php3');
@@ -18,6 +18,8 @@ href="http://ghostscript.sourceforge.net">Ghostscript</a>, <A
 HREF="http://www.cups.org">CUPS</A>, <a
 href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and <a
 href="http://www.gimp.org">the Gimp</a>.</H4>
+
+<P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.</p>
 
 <P>For a quick download, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
@@ -41,11 +43,11 @@ download links. The final release of Gimp-Print 4.2.6 for Mac OS X
 Jaguar is available now!</p>
 
 
-<H2><font color="#ff0000">Gimp-Print 5.0.0-beta2 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-beta2 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of August 25,
-2004!</strong></em></font> Gimp-Print 5.0.0-beta is released.  This
-is a beta release on the Gimp-Print 5.0 line.  This offers many bug
+2004!</strong></em></font> Gutenprint 5.0.0-beta is released.  This
+is a beta release on the Gutenprint 5.0 line.  This offers many bug
 fixes and improvements.  An OS X installer is not yet
 available. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=263385">You
@@ -61,32 +63,32 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=2534
 can read the release notes and download it here</a>.  </p>
 
 
-<H2><font color="#ff0000">Gimp-Print 5.0.0-beta1 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-beta1 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of June 26,
-2004!</strong></em></font> Gimp-Print 5.0.0-beta is released.  This
-is a beta release on the Gimp-Print 5.0 line.  This offers many bug
+2004!</strong></em></font> Gutenprint 5.0.0-beta is released.  This
+is a beta release on the Gutenprint 5.0 line.  This offers many bug
 fixes and improvements. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=248831">You
 can read the release notes and download it here</a>.  </p>
 
 
-<H2><font color="#ff0000">Gimp-Print 5.0.0-alpha3 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-alpha3 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 12,
-2004!</strong></em></font> Gimp-Print 5.0.0-alpha3 is released.  This
-is an alpha release on the Gimp-Print 5.0 line.  This offers a number
+2004!</strong></em></font> Gutenprint 5.0.0-alpha3 is released.  This
+is an alpha release on the Gutenprint 5.0 line.  This offers a number
 of fixes over 5.0.0-alpha2.  An OS X installer is not yet
 available. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=237881">You
 can read the release notes and download it here</a>.  </p>
 
 
-<H2><font color="#ff0000">Gimp-Print 5.0.0-alpha2 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-alpha2 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of April 11,
-2004!</strong></em></font> Gimp-Print 5.0.0-alpha2 is released.  This
-is an alpha release on the Gimp-Print 5.0 line.  This release features
+2004!</strong></em></font> Gutenprint 5.0.0-alpha2 is released.  This
+is an alpha release on the Gutenprint 5.0 line.  This release features
 major internal changes, and is expected to be relatively unstable.
 Therefore, no OS X installer will be provided.
  <a
@@ -94,11 +96,11 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=2303
 can read the release notes and download it here</a>.  </p>
 
 
-<H2><font color="#ff0000">Gimp-Print 5.0.0-alpha1 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-alpha1 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of January 11,
-2004!</strong></em></font> Gimp-Print 5.0.0-alpha1 is released.  This
-is the initial alpha release on the Gimp-Print 5.0 line.  This offers
+2004!</strong></em></font> Gutenprint 5.0.0-alpha1 is released.  This
+is the initial alpha release on the Gutenprint 5.0 line.  This offers
 major improvements over 4.2, and may be installed concurrently with
 Gimp-Print 4.2 when CUPS is used.  In addition to the
 source, an installation kit for Macintosh OS X 10.2 and 10.3 is
@@ -234,7 +236,7 @@ Norwegian, Polish, Swedish, and British English</li>
 supported printers, may be found in the NEWS file at the top level of
 the distribution.</p>
 
-<p>Gimp-Print is supplied in source code form under the GPL (GNU
+<p>Gutenprint is supplied in source code form under the GPL (GNU
 General Public License).  Please be sure to read the README and NEWS
 files in the distribution.</p>
 
@@ -245,7 +247,7 @@ will eventually become the successor to 4.2.</p>
 
 <p>Enjoy!</p>
 
-<p><i>- The Gimp-Print Project Team</i></p>
+<p><i>- The Gutenprint Project Team</i></p>
 
 <hr>
 
@@ -305,6 +307,6 @@ quality that you can choose from).  Meanwhile, we're not abandoning
 4.2: we're fixing bugs, adding support for new printers, and porting
 selected features back from 4.3.</p>
 
-<p>We think you'll really enjoy using gimp-print!</p>
+<p>We think you'll really enjoy using Gutenprint!</p>
 
 <?require('standard_html_footer.php3');?>
