@@ -2,7 +2,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'gimp-print Features';
+$title = 'Gutenprint Features';
 ###############################################
 ###############################################
 require('standard_html_header.php3');
@@ -11,9 +11,9 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
 
-<H2>Gimp-Print Functionality</H2>
+<H2>Gutenprint Functionality</H2>
 
-<p>Gimp-Print is a package of high quality printer drivers for Linux,
+<p>Gutenprint is a package of high quality printer drivers for Linux,
 BSD, Solaris, IRIX, and other UNIX-alike operating systems.  In many
 cases, these drivers rival or exceed the OEM drivers in quality and
 functionality.  Our goal is to produce the highest possible output
@@ -24,12 +24,12 @@ to produce ever higher quality results, particularly on the
 ubiquitous, inexpensive inkjet printers that are nonetheless capable
 of nearly photographic output quality.</p>
 
-<p>Despite the name, printing support for <a
-href="http://www.gimp.org">The GIMP</a> is only one small part of what
-Gimp-Print does, and indeed, the Print plugin may eventually be
-removed from the core Gimp-Print distribution.  Gimp-Print printer
-drivers can be used with all common UNIX print spooling systems, by
-means of either <a href="http://www.cups.org">CUPS</a> or <a
+<p>Printing support for <a href="http://www.gimp.org">The GIMP</a> is
+only one small part of what Gutenprint does, and indeed, the Print
+plugin may eventually be removed from the core Gutenprint
+distribution.  Gutenprint printer drivers can be used with all common
+UNIX print spooling systems, by means of either <a
+href="http://www.cups.org">CUPS</a> or <a
 href="http://www.ghostscript.com">Ghostscript</a>.</p>
 
 <p>Here is a list of selected features:</p>

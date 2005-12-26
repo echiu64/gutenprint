@@ -3,7 +3,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'Gimp-Print for Mac OS X';
+$title = 'Gutenprint for Mac OS X';
 ###############################################
 ###############################################
 require('standard_html_header.php3');

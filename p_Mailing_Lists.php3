@@ -2,7 +2,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'gimp-print Mailing Lists';
+$title = 'Gutenprint Mailing Lists';
 ###############################################
 ###############################################
 require('standard_html_header.php3');

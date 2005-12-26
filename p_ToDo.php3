@@ -2,7 +2,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'gimp-print Things To Do';
+$title = 'Gutenprint Things To Do';
 ###############################################
 ###############################################
 require('standard_html_header.php3');

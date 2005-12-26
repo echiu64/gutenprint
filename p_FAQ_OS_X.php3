@@ -2,7 +2,7 @@
 require('functions.php3');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'Gimp-Print FAQ for Mac OS X and Darwin';
+$title = 'Gutenprint FAQ for Mac OS X and Darwin';
 ###############################################
 ###############################################
 require('standard_html_header.php3');
@@ -10,7 +10,7 @@ require('standard_html_header.php3');
 
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
-<H2>Gimp-Print FAQ for Mac OS X Jaguar and Darwin</H2>
+<H2>Gutenprint FAQ for Mac OS X Jaguar and Darwin</H2>
  <ol>
  <li><a href="p_FAQ_OS_X.php3#description">
  What is Gimp-Print? Why would I want to install it?
