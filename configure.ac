@@ -899,12 +899,15 @@ AC_SUBST(GUTENPRINTUI2_VERSION)
 AC_SUBST(gutenprint_cflags)
 gutenprint_libs="${GUTENPRINT_LIBS} ${gutenprint_libdeps}"
 AC_SUBST(gutenprint_libs)
+AC_SUBST(gutenprint_libdeps)
 AC_SUBST(gutenprintui_cflags)
 gutenprintui_libs="${GUTENPRINTUI_LIBS} ${gutenprintui_libdeps}"
 AC_SUBST(gutenprintui_libs)
+AC_SUBST(gutenprintui_libdeps)
 AC_SUBST(gutenprintui2_cflags)
 gutenprintui2_libs="${GUTENPRINTUI2_LIBS} ${gutenprintui2_libdeps}"
 AC_SUBST(gutenprintui2_libs)
+AC_SUBST(gutenprintui2_libdeps)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)

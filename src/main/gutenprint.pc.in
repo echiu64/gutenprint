@@ -6,5 +6,6 @@ includedir=@includedir@
 Name: Gutenprint
 Description: Gutenprint Top Quality Printer Drivers
 Version: @gutenprint_version@
-Libs: -L${libdir} @gutenprint_libs@
+Libs: -L${libdir} @GUTENPRINT_LIBS@
+Libs.private: @gutenprint_libdeps@
 Cflags: -I${includedir} @gutenprint_cflags@

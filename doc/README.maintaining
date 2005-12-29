@@ -66,7 +66,7 @@ v.   GNU make (any recent version)
 
 and also
 
-vi.  pkg-config (at least 0.15.0)
+vi.  pkg-config (at least 0.18.0)
 
 GNU autoconf made some incompatible changes between the 2.13 and 2.50
 stable releases.  You cannot use a configure.in written for 2.13 with

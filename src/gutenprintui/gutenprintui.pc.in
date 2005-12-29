@@ -7,5 +7,6 @@ Name: Gutenprint UI (GTK+-1.2 version)
 Description: Gutenprint Top Quality Printer Drivers - GTK+-1.2 User Interface
 Requires: gutenprint
 Version: @VERSION@
-Libs: -L${libdir} @gutenprintui_libs@
+Libs: -L${libdir} @GUTENPRINTUI_LIBS@
+Libs.private: @gutenprintui_libdeps@
 Cflags: -I${includedir} @gutenprintui_cflags@
