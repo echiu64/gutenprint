@@ -131,11 +131,11 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
 static const escp2_dropsize_t escp2_r2400_360_dropsizes =
   { "r2400_360", 1, { 1 } };
 static const escp2_dropsize_t escp2_r2400_720_dropsizes =
-  { "r2400_1440", 3, { 0.180, 0.44, 1 } };
+  { "r2400_720", 3, { 0.180, 0.44, 1 } };
 static const escp2_dropsize_t escp2_r2400_1440_dropsizes =
   { "r2400_1440", 3, { 0.180, 0.44, 1 } };
 static const escp2_dropsize_t escp2_r2400_2880_dropsizes =
-  { "r2400_1440", 3, { 0.180, 0.44, 1 } };
+  { "r2400_2880", 3, { 0.180, 0.44, 1 } };
 static const escp2_dropsize_t escp2_r2400_2880_1440_dropsizes =
   { "r2400_2880_1440", 2, { 0.41, 1 } };
 static const escp2_dropsize_t escp2_r2400_2880_2880_dropsizes =
