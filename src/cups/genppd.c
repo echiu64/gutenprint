@@ -1242,12 +1242,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	      stp_describe_resolution(v, &xdpi, &ydpi);
 	      stp_clear_string_parameter(v, "Resolution");
 	      stp_parameter_description_destroy(&res_desc);
-	      gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
-		       opt->name, opt->text, xdpi, ydpi);
 	    }
-	  else
-	    gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]/cupsRowFeed %d>>setpagedevice\"\n",
-		     opt->name, opt->text, xdpi, ydpi, i + 1);
+	  gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]/cupsRowFeed %d>>setpagedevice\"\n",
+		   opt->name, opt->text, xdpi, ydpi, i + 1);
 	}
       gzputs(fp, "*CloseUI: *StpQuality\n\n");
     }

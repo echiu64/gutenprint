@@ -101,6 +101,8 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Model", stp_get_model_id(v));
   print_remote_int_param(v, "Ydpi", pd->res->vres);
   print_remote_int_param(v, "Xdpi", pd->res->hres);
+  print_remote_int_param(v, "Printed_ydpi", pd->res->printed_vres);
+  print_remote_int_param(v, "Printed_xdpi", pd->res->printed_hres);
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
   print_remote_int_param(v, "Use_printer_weave", pd->res->printer_weave);
   print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);

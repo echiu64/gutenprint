@@ -1375,7 +1375,8 @@ stpi_color_traditional_init(stp_vars_t *v,
   lut->steps = steps;
   lut->channel_depth = channel_depth->bits;
 
-  if (image_type && strcmp(image_type, "None") != 0)
+  if ((!color_correction || strcmp(color_correction, "None") == 0) &&
+      image_type && strcmp(image_type, "None") != 0)
     {
       if (strcmp(image_type, "Text") == 0)
 	lut->color_correction = get_color_correction("Threshold");
@@ -1506,10 +1507,6 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		  !(color_description->channels & ~CMASK_K))
 		description->is_active = 0;
 	    }
-	  if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
-	      strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
-	      description->p_level > STP_PARAMETER_LEVEL_BASIC)
-	    description->is_active = 0;
 	  switch (param->param.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -1633,11 +1630,7 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		  !(color_description->channels & ~CMASK_K))
 		description->is_active = 0;
 	    }
-	  if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
-	      strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
-	      description->p_level > STP_PARAMETER_LEVEL_BASIC)
-	    description->is_active = 0;
-	  else if (param->hsl_only)
+	  if (param->hsl_only)
 	    {
 	      const color_correction_t *correction =
 		(get_color_correction

@@ -809,42 +809,6 @@ escp2_paperlist(const stp_vars_t *v)
 }
 
 static int
-using_automatic_settings(const stp_vars_t *v, auto_mode_t mode)
-{
-  int is_raw = 0;
-  if (stp_get_string_parameter(v, "InputImageType") &&
-      strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0)
-    is_raw = 1;
-  switch (mode)
-    {
-    case AUTO_MODE_QUALITY:
-      if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
-	  strcmp(stp_get_string_parameter(v, "Quality"), "None") != 0 &&
-	  !is_raw)
-	return 1;
-      else
-	return 0;
-#if 0
-    case AUTO_MODE_FULL_AUTO:
-      if (stp_check_string_parameter(v, "AutoMode", STP_PARAMETER_ACTIVE) &&
-	  strcmp(stp_get_string_parameter(v, "AutoMode"), "None") != 0 &&
-	  !is_raw)
-	return 1;
-      else
-	return 0;
-#endif
-    case AUTO_MODE_MANUAL:
-      if (!stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) ||
-	  strcmp(stp_get_string_parameter(v, "Quality"), "None") == 0 ||
-	  is_raw)
-	return 1;
-      else
-	return 0;
-    }
-  return 0;
-}
-
-static int
 compute_internal_resid(int hres, int vres)
 {
   static const int resolutions[RES_N] =
@@ -961,6 +925,58 @@ get_media_type(const stp_vars_t *v)
 	}
     }
   return NULL;
+}
+
+static void
+get_resolution_bounds_by_paper_type(const stp_vars_t *v,
+				    unsigned *max_x, unsigned *max_y,
+				    unsigned *min_x, unsigned *min_y)
+{
+  const paper_t *paper = get_media_type(v);
+  *min_x = 0;
+  *min_y = 0;
+  *max_x = 0;
+  *max_y = 0;
+  if (paper)
+    {
+      switch (paper->paper_class)
+	{
+	case PAPER_PLAIN:
+	  *min_x = 0;
+	  *min_y = 0;
+	  *max_x = 1440;
+	  *max_y = 720;
+	  break;
+	case PAPER_GOOD:
+	  *min_x = 360;
+	  *min_y = 360;
+	  *max_x = 1440;
+	  *max_y = 1440;
+	  break;
+	case PAPER_PHOTO:
+	  *min_x = 720;
+	  *min_y = 360;
+	  *max_x = 2880;
+	  *max_y = 1440;
+	  if (*min_x >= escp2_max_hres(v))
+	    *min_x = escp2_max_hres(v);
+	  break;
+	case PAPER_PREMIUM_PHOTO:
+	  *min_x = 720;
+	  *min_y = 720;
+	  *max_x = 0;
+	  *max_y = 0;
+	  if (*min_x >= escp2_max_hres(v))
+	    *min_x = escp2_max_hres(v);
+	  break;
+	case PAPER_TRANSPARENCY:
+	  *min_x = 360;
+	  *min_y = 360;
+	  *max_x = 720;
+	  *max_y = 720;
+	  break;
+	}
+    }
 }
 
 static int
@@ -1129,8 +1145,7 @@ get_inktype(const stp_vars_t *v)
   int i;
 
   if (!ink_type || strcmp(ink_type, "None") == 0 ||
-      (ink_list && ink_list->n_inks == 1) ||
-      !using_automatic_settings(v, AUTO_MODE_MANUAL))
+      (ink_list && ink_list->n_inks == 1))
     ink_type = get_default_inktype(v);
 
   if (ink_type && ink_list)
@@ -1206,8 +1221,7 @@ set_density_parameter(const stp_vars_t *v,
 {
   description->is_active = 0;
   if (stp_get_string_parameter(v, "PrintingMode") &&
-      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
-      using_automatic_settings(v, AUTO_MODE_MANUAL))
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
       if (ink_name &&
@@ -1226,8 +1240,7 @@ set_hue_map_parameter(const stp_vars_t *v,
   description->deflt.curve = hue_curve_bounds;
   description->bounds.curve = stp_curve_create_copy(hue_curve_bounds);
   if (stp_get_string_parameter(v, "PrintingMode") &&
-      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
-      using_automatic_settings(v, AUTO_MODE_MANUAL))
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
       if (ink_name &&
@@ -1254,8 +1267,7 @@ set_color_transition_parameter(const stp_vars_t *v,
 {
   description->is_active = 0;
   if (stp_get_string_parameter(v, "PrintingMode") &&
-      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
-      using_automatic_settings(v, AUTO_MODE_MANUAL))
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
       const escp2_inkname_t *ink_name = get_inktype(v);
       if (ink_name &&
@@ -1275,20 +1287,19 @@ set_gray_transition_parameter(const stp_vars_t *v,
   description->is_active = 0;
   if (ink_name && ink_name->channel_set->channels[STP_ECOLOR_K] &&
       (ink_name->channel_set->channels[STP_ECOLOR_K]->n_subchannels ==
-       expected_channels) &&
-      using_automatic_settings(v, AUTO_MODE_MANUAL))
+       expected_channels))
     fill_transition_parameters(description);
   else
     set_color_transition_parameter(v, description, STP_ECOLOR_K);
 }
 
 static const res_t *
-find_default_resolution(const stp_vars_t *v, int desired_hres, int desired_vres,
+find_default_resolution(const stp_vars_t *v, const quality_t *q,
 			int strict)
 {
   const res_t *const *res = escp2_reslist(v);
   int i = 0;
-  if (desired_hres < 0)
+  if (q->desired_hres < 0)
     {
       while (res[i])
 	i++;
@@ -1301,15 +1312,60 @@ find_default_resolution(const stp_vars_t *v, int desired_hres, int desired_vres,
 	  i--;
 	}
     }
-  i = 0;
-  while (res[i])
+  if (!strict)
     {
-      if (verify_resolution(v, res[i]) &&
-	  verify_resolution_by_paper_type(v, res[i]) &&
-	  res[i]->vres >= desired_vres && res[i]->hres >= desired_hres &&
-	  res[i]->vres <= 2 * desired_vres && res[i]->hres <= 2 * desired_hres)
-	return res[i];
-      i++;
+      unsigned max_x, max_y, min_x, min_y;
+      unsigned desired_hres = q->desired_hres;
+      unsigned desired_vres = q->desired_vres;
+      get_resolution_bounds_by_paper_type(v, &max_x, &max_y, &min_x, &min_y);
+      stp_dprintf(STP_DBG_ESCP2, v, "Comparing hres %d to %d, %d\n",
+		  desired_hres, min_x, max_x);
+      stp_dprintf(STP_DBG_ESCP2, v, "Comparing vres %d to %d, %d\n",
+		  desired_vres, min_y, max_y);
+      if (max_x > 0 && desired_hres > max_x)
+	{
+	  stp_dprintf(STP_DBG_ESCP2, v, "Decreasing hres from %d to %d\n",
+		      desired_hres, max_x);
+	  desired_hres = max_x;
+	}
+      else if (desired_hres < min_x)
+	{
+	  stp_dprintf(STP_DBG_ESCP2, v, "Increasing hres from %d to %d\n",
+		      desired_hres, min_x);
+	  desired_hres = min_x;
+	}
+      if (max_y > 0 && desired_vres > max_y)
+	{
+	  stp_dprintf(STP_DBG_ESCP2, v, "Decreasing vres from %d to %d\n",
+		      desired_vres, max_y);
+	  desired_vres = max_y;
+	}
+      else if (desired_vres < min_y)
+	{
+	  stp_dprintf(STP_DBG_ESCP2, v, "Increasing vres from %d to %d\n",
+		      desired_vres, min_y);
+	  desired_vres = min_y;
+	}
+      i = 0;
+      while (res[i])
+	{
+	  if (verify_resolution(v, res[i]) &&
+	      res[i]->printed_vres == desired_vres &&
+	      res[i]->printed_hres == desired_hres)
+	    return res[i];
+	  i++;
+	}
+      i = 0;
+      while (res[i])
+	{
+	  if (verify_resolution(v, res[i]) &&
+	      (q->min_vres == 0 || res[i]->printed_vres >= q->min_vres) &&
+	      (q->max_vres == 0 || res[i]->printed_vres <= q->max_vres) &&
+	      (q->min_hres == 0 || res[i]->printed_hres >= q->min_hres) &&
+	      (q->max_hres == 0 || res[i]->printed_hres <= q->max_hres))
+	    return res[i];
+	  i++;
+	}
     }
 #if 0
   if (!strict)			/* Try again to find a match */
@@ -1330,24 +1386,32 @@ find_default_resolution(const stp_vars_t *v, int desired_hres, int desired_vres,
   return NULL;
 }
 
+static int
+verify_quality(const stp_vars_t *v, const quality_t *q)
+{
+  if ((q->max_vres == 0 || escp2_min_vres(v) <= q->max_vres) &&
+      (q->max_hres == 0 || escp2_min_hres(v) <= q->max_hres) &&
+      (q->min_vres == 0 || escp2_max_vres(v) >= q->min_vres) &&
+      (q->min_hres == 0 || escp2_max_hres(v) >= q->min_hres))
+    return 1;
+  else
+    return 0;
+}
+
 static const res_t *
 find_resolution_from_quality(const stp_vars_t *v, const char *quality,
 			     int strict)
 {
   int i;
   const quality_list_t *quals = escp2_quality_list(v);
+  /* This is a rather gross hack... */
+  if (strcmp(quality, "None") == 0)
+    quality = "Standard";
   for (i = 0; i < quals->n_quals; i++)
     {
       const quality_t *q = &(quals->qualities[i]);
-      if (strcmp(quality, q->name) == 0 &&
-	  (q->min_vres == 0 || escp2_min_vres(v) <= q->min_vres) &&
-	  (q->min_hres == 0 || escp2_min_hres(v) <= q->min_hres) &&
-	  (q->max_vres == 0 || escp2_max_vres(v) >= q->max_vres) &&
-	  (q->max_hres == 0 || escp2_max_hres(v) >= q->max_hres))
-	{
-	  return find_default_resolution(v, q->desired_hres, q->desired_vres,
-					 strict);
-	}
+      if (strcmp(quality, q->name) == 0 && verify_quality(v, q))
+	return find_default_resolution(v, q, strict);
     }
   return NULL;
 }
@@ -1452,13 +1516,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       for (i = 0; i < quals->n_quals; i++)
 	{
 	  const quality_t *q = &(quals->qualities[i]);
-	  if (((q->min_vres == 0 || escp2_min_vres(v) <= q->min_vres) &&
-	       (q->min_hres == 0 || escp2_min_hres(v) <= q->min_hres) &&
-	       (q->max_vres == 0 || escp2_max_vres(v) >= q->max_vres) &&
-	       (q->max_hres == 0 || escp2_max_hres(v) >= q->max_hres)) &&
-	      (find_resolution_from_quality(v, q->name, 1) ||
-	       (!stp_check_string_parameter(v, "MediaType",
-					    STP_PARAMETER_ACTIVE))))
+	  if (verify_quality(v, q))
 	    stp_string_list_add_string(description->bounds.str, q->name,
 				       _(q->text));
 	  if (strcmp(q->name, "Standard") == 0)
@@ -1472,26 +1530,18 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
     {
       const res_t *const *res = escp2_reslist(v);
-      const res_t *defval = find_default_resolution(v, 720, 360, 0);
       description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string(description->bounds.str, "None",
+				 _("Default"));
+      description->deflt.str = "None";
       i = 0;
       while (res[i])
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      (using_automatic_settings(v, AUTO_MODE_MANUAL) ||
-	       !stp_check_string_parameter(v, "MediaType",
-					   STP_PARAMETER_ACTIVE) ||
-	       verify_resolution_by_paper_type(v, res[i])))
+	  if (verify_resolution(v, res[i]))
 	    stp_string_list_add_string(description->bounds.str,
 				       res[i]->name, _(res[i]->text));
 	  i++;
 	}
-      if (defval)
-	description->deflt.str = defval->name;
-      else
-	description->deflt.str = res[0]->name;
-      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
-	description->is_active = 0;
     }
   else if (strcmp(name, "InkType") == 0)
     {
@@ -1509,7 +1559,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 					 _(inks->inknames[i]->text));
 	  description->deflt.str = "None";
 	}
-      if (ninktypes <= 1 || !using_automatic_settings(v, AUTO_MODE_MANUAL))
+      else
 	description->is_active = 0;
     }
   else if (strcmp(name, "InkSet") == 0)
@@ -1530,9 +1580,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    }
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
-	  if (!using_automatic_settings(v, AUTO_MODE_MANUAL) &&
-	      has_default_choice)
-	    description->is_active = 0;
 	}
       else
 	description->is_active = 0;
@@ -1582,8 +1629,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	(description->bounds.str, "Unidirectional", _("Unidirectional"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
-      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
-	description->is_active = 0;
     }
   else if (strcmp(name, "Weave") == 0)
     {
@@ -1625,8 +1670,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       if (description->is_active)
 	description->deflt.str =
 	  stp_string_list_param(description->bounds.str, 0)->name;
-      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
-	description->is_active = 0;
     }
   else if (strcmp(name, "OutputOrder") == 0)
     {
@@ -1646,8 +1689,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "AdjustDotsize") == 0)
     {
       description->deflt.boolean = 0;
-      if (!using_automatic_settings(v, AUTO_MODE_MANUAL))
-	description->is_active = 0;
     }
   else if (strcmp(name, "CyanDensity") == 0)
     set_density_parameter(v, description, STP_ECOLOR_C);
@@ -1782,8 +1823,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     {
       description->is_active = 0;
       if (stp_get_string_parameter(v, "PrintingMode") &&
-	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0 &&
-	  using_automatic_settings(v, AUTO_MODE_MANUAL))
+	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
 	{
 	  const escp2_inkname_t *ink_name = get_inktype(v);
 	  if (ink_name && ink_name->inkset == INKSET_CMYKRB)
@@ -1795,7 +1835,20 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 static const res_t *
 escp2_find_resolution(const stp_vars_t *v)
 {
-  const char *resolution;
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
+  if (resolution)
+    {
+      const res_t *const *res = escp2_reslist(v);
+      int i = 0;
+      while (res[i])
+	{
+	  if (!strcmp(resolution, res[i]->name))
+	    return res[i];
+	  else if (!strcmp(res[i]->name, ""))
+	    return NULL;
+	  i++;
+	}
+    }
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
     {
       const res_t *default_res =
@@ -1812,20 +1865,6 @@ escp2_find_resolution(const stp_vars_t *v)
       else
 	stp_dprintf(STP_DBG_ESCP2, v, "Unable to map quality %s\n",
 		    stp_get_string_parameter(v, "Quality"));
-    }
-  resolution = stp_get_string_parameter(v, "Resolution");
-  if (resolution)
-    {
-      const res_t *const *res = escp2_reslist(v);
-      int i = 0;
-      while (res[i])
-	{
-	  if (!strcmp(resolution, res[i]->name))
-	    return res[i];
-	  else if (!strcmp(res[i]->name, ""))
-	    return NULL;
-	  i++;
-	}
     }
   return NULL;
 }

@@ -139,32 +139,19 @@ stp_dither_describe_parameter(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "DitherAlgorithm") == 0)
     {
       stp_fill_parameter_settings(description, &(dither_parameters[1]));
-      if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
-	  stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
-	description->is_active = 0;
-      else
+      description->bounds.str = stp_string_list_create();
+      for (i = 0; i < num_dither_algos; i++)
 	{
-	  description->bounds.str = stp_string_list_create();
-	  for (i = 0; i < num_dither_algos; i++)
-	    {
-	      const stpi_dither_algorithm_t *dt = &dither_algos[i];
-	      if (dt->id != D_INVALID)
-		stp_string_list_add_string(description->bounds.str,
-					   dt->name, dt->text);
-	    }
-	  description->deflt.str =
-	    stp_string_list_param(description->bounds.str, 0)->name;
+	  const stpi_dither_algorithm_t *dt = &dither_algos[i];
+	  if (dt->id != D_INVALID)
+	    stp_string_list_add_string(description->bounds.str,
+				       dt->name, dt->text);
 	}
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
     }
   else
     return;
-  if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE) &&
-      stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality")))
-    description->is_active = 0;
-  else if (stp_check_string_parameter(v, "ImageType", STP_PARAMETER_ACTIVE) &&
-	   strcmp(stp_get_string_parameter(v, "ImageType"), "None") != 0 &&
-	   description->p_level > STP_PARAMETER_LEVEL_BASIC)
-    description->is_active = 0;
 }
 
 #define RETURN_DITHERFUNC(func, v)					\
@@ -180,24 +167,37 @@ stpi_set_dither_function(stp_vars_t *v)
   const stpi_quality_t *quality = NULL;
   const char *image_type = stp_get_string_parameter(v, "ImageType");
   const char *color_correction = stp_get_string_parameter(v,"ColorCorrection");
+  const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   int i;
-  const char *algorithm = stp_get_string_parameter(v, "DitherAlgorithm");
   d->stpi_dither_type = -1;
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
     quality = stpi_get_quality_by_name(stp_get_string_parameter(v, "Quality"));
 
-  if (color_correction)
+  if (color_correction && strcmp(color_correction, "Predithered") == 0)
+    d->stpi_dither_type = D_PREDITHERED;
+  else if (algorithm && strcmp(algorithm, "None") != 0)
     {
-      if (strcmp(color_correction, "Predithered") == 0)
-	d->stpi_dither_type = D_PREDITHERED;
+      for (i = 0; i < num_dither_algos; i++)
+	{
+	  if (!strcmp(algorithm, _(dither_algos[i].name)))
+	    {
+	      d->stpi_dither_type = dither_algos[i].id;
+	      break;
+	    }
+	}
+      if (d->stpi_dither_type == -1)
+	{
+	  d->stpi_dither_type = D_EVENTONE;
+	  /* EvenTone performs poorly if the aspect ratio is greater than 2 */
+	  if ((d->stpi_dither_type & (D_EVENTONE | D_UNITONE)) &&
+	      (d->x_aspect > 2 || d->y_aspect > 2))
+	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
+	}	
     }
-  if (image_type && d->stpi_dither_type == -1)
-    {
-      if (strcmp(image_type, "Text") == 0)
-	d->stpi_dither_type = D_VERY_FAST;
-    }
-  if (quality && d->stpi_dither_type == -1)
+  else if (image_type && strcmp(image_type, "Text") == 0)
+    d->stpi_dither_type = D_VERY_FAST;
+  else if (quality)
     {
       switch (quality->quality_level)
 	{
@@ -248,25 +248,6 @@ stpi_set_dither_function(stp_vars_t *v)
       if ((d->stpi_dither_type & (D_EVENTONE | D_UNITONE)) &&
 	  (d->x_aspect > 2 || d->y_aspect > 2))
 	d->stpi_dither_type = D_ADAPTIVE_HYBRID;
-    }
-  else if (algorithm)
-    {
-      for (i = 0; i < num_dither_algos; i++)
-	{
-	  if (!strcmp(algorithm, _(dither_algos[i].name)))
-	    {
-	      d->stpi_dither_type = dither_algos[i].id;
-	      break;
-	    }
-	}
-      if (d->stpi_dither_type == -1)
-	{
-	  d->stpi_dither_type = D_EVENTONE;
-	  /* EvenTone performs poorly if the aspect ratio is greater than 2 */
-	  if ((d->stpi_dither_type & (D_EVENTONE | D_UNITONE)) &&
-	      (d->x_aspect > 2 || d->y_aspect > 2))
-	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
-	}	
     }
   switch (d->stpi_dither_type)
     {
