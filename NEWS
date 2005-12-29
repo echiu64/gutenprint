@@ -97,47 +97,62 @@ These release notes contain the following sections:
      size.  Previously it corrupted the output if the width of the
      image was not a multiple of 4 pixels.
 
-  4) The GIMP plugin now loads the printrc file correctly in all
+  4) The driver package now permits specifying all options regardless
+     of the setting of the Image Type and Quality options (previously
+     it disabled a lot of settings if Quality and/or Image Type were
+     not set to Manual Control).  The behavior is now that Quality and
+     Image Type provide defaults that may be overridden by the user.
+     For example, if the resolution is provided explicitly, it will
+     override the resolution implied by the Quality setting.
+
+     Related to this, the CUPS driver now handles Quality properly.
+
+  5) cups-genppdupdate now preserves the ownership and permissions of
+     the PPD files being updated, rather than forcibly setting the
+     owner to root and the permissions to root read/write and everyone
+     else read-only access.
+
+  6) The GIMP plugin now loads the printrc file correctly in all
      locales.  Previously it did not load floating point numbers
      correctly in locales that don't use the `.' character as the
      decimal point.
 
-  5) The GIMP plugin now offers improved choices in the color
+  7) The GIMP plugin now offers improved choices in the color
      adjustment window for viewing individual channels of the output.
      It now offers red/green/blue, cyan/magenta/yellow, or
      cyan/magenta/yellow/black as appropriate.
 
-  6) The GIMP plugin is now considerably more responsive; many
+  8) The GIMP plugin is now considerably more responsive; many
      unnecessary screen redraws have been removed.
 
-  7) The Epson printer utility escputil now reports ink information
+  9) The Epson printer utility escputil now reports ink information
      more consistently across a wider range of printers.  In
      particular, the extended ink information command (escputil -e)
      should now work correctly on all models from the Stylus Color 740
      through the present.
 
-  8) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
+  10) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
      CX3800, CX3810, CX4200, CX4700, CX4800, CX5800, CX7700, CX7800,
      D68, D88, DX3800, DX3850, DX4200, DX4800, and Stylus Photo R220,
      R320, and R340.  These printers are expected to be fully
      functional (for the multi-function devices, this package supports
      only the printer function).
 
-  9) Preliminary support for the Epson Stylus Photo R2400.  This
+  11) Preliminary support for the Epson Stylus Photo R2400.  This
      printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  10) Experimental support for the Epson Stylus Photo RX700.  This
+  12) Experimental support for the Epson Stylus Photo RX700.  This
      printer may or may not function correctly, and is not likely to
      be properly tuned.
 
-  11) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
+  13) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
      Sony UP-DR150, and Olympus P-11 has been added.
 
-  12) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
+  14) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
      printing with binding on the short side is now supported, too.
 
-  13) The Epson Stylus Photo R200 and related printers have been
+  15) The Epson Stylus Photo R200 and related printers have been
      retuned to give improved detail in the shadows, reduced ink
      usage, more accurate grayscale, and more accurate colors.
      Affected printers are the R200, R210, R220, R300, R310, R320,
@@ -147,14 +162,14 @@ These release notes contain the following sections:
      Any profiles generated against these printers will have to be
      re-created.
 
-  14) New "transposed" resolutions (1440x720 and 2880x1440) have been
+  16) New "transposed" resolutions (1440x720 and 2880x1440) have been
      added for some Epson printers.  These resolutions are actually
      equivalent to 720x1440 and 1440x2880 DPI respectively.  In some
      cases these may yield better results (specifically, less
      microbanding) than the normal 1440x720 and 2880x1440 DPI
      resolutions.
 
-  15) Quadtone printing now works correctly regardless of whether
+  17) Quadtone printing now works correctly regardless of whether
      color or grayscale mode is selected.
 
 
@@ -179,8 +194,8 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   3) Simplified bundles of settings are now offered for users who do
      not need to customize the settings.  The Print Quality and Image
      Type controls offer a variety of settings optimized for common
-     printing tasks.  Both controls offer Manual Control settings for
-     users who wish greater control over the output.
+     printing tasks; these settings may be overridden by explicit user
+     choice.
 
   4) Many of the color settings have changed effect.  We recommend
      starting with no color correction and making appropriate changes
