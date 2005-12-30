@@ -935,12 +935,13 @@ populate_option_table(GtkWidget *table, int p_class)
     }
 
   /* Now, figure out where we're going to put the options */
-  for (i = 0; i < STP_PARAMETER_LEVEL_INVALID; i++)
+  for (i = 0; i <= MAXIMUM_PARAMETER_LEVEL + 1; i++)
     {
       int level_count = 0;
-      for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
-	level_count += counts[i][j];
-      if (level_count > 0 && current_pos > 0 && i <= MAXIMUM_PARAMETER_LEVEL)
+      if (i <= MAXIMUM_PARAMETER_LEVEL)
+	for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
+	  level_count += counts[i][j];
+      if (level_count > 0 && current_pos > 0)
 	{
 	  GtkWidget *sep = gtk_hseparator_new();
 	  gtk_table_attach (GTK_TABLE(table), sep, 0, 4,
@@ -951,11 +952,12 @@ populate_option_table(GtkWidget *table, int p_class)
 	  previous_sep = sep;
 	  current_pos++;
 	}
-      for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
-	{
-	  vpos[i][j] = current_pos;
-	  current_pos += counts[i][j];
-	}
+      if (i <= MAXIMUM_PARAMETER_LEVEL)
+	for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
+	  {
+	    vpos[i][j] = current_pos;
+	    current_pos += counts[i][j];
+	  }
     }
 
   for (i = 0; i < current_option_count; i++)
