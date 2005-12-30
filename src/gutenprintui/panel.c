@@ -883,10 +883,17 @@ populate_options(const stp_vars_t *v)
 }
 
 static void
+destroy_something(GtkWidget *widget, gpointer data)
+{
+  gtk_widget_destroy(widget);
+}
+
+static void
 populate_option_table(GtkWidget *table, int p_class)
 {
   int i, j;
   int current_pos = 0;
+  GtkWidget *previous_sep = NULL;
   int counts[STP_PARAMETER_LEVEL_INVALID][STP_PARAMETER_TYPE_INVALID];
   int vpos[STP_PARAMETER_LEVEL_INVALID][STP_PARAMETER_TYPE_INVALID];
   for (i = 0; i < STP_PARAMETER_LEVEL_INVALID; i++)
@@ -896,6 +903,8 @@ populate_option_table(GtkWidget *table, int p_class)
 	counts[i][j] = 0;
       }
 
+
+  gtk_container_foreach(GTK_CONTAINER(table), destroy_something, NULL);
 
   /* First scan the options to figure out where to start */
   for (i = 0; i < current_option_count; i++)
@@ -930,14 +939,15 @@ populate_option_table(GtkWidget *table, int p_class)
       int level_count = 0;
       for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
 	level_count += counts[i][j];
-      if (level_count > 0 && current_pos > 0)
+      if (level_count > 0 && current_pos > 0 && i <= MAXIMUM_PARAMETER_LEVEL)
 	{
 	  GtkWidget *sep = gtk_hseparator_new();
 	  gtk_table_attach(GTK_TABLE(table), sep, 0, 4,
 			   current_pos, current_pos + 1,
 			   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
-	  if (i <= MAXIMUM_PARAMETER_LEVEL)
-	    gtk_widget_show(sep);
+	  if (previous_sep)
+	    gtk_widget_show(previous_sep);
+	  previous_sep = sep;
 	  current_pos++;
 	}
       for (j = 0; j < STP_PARAMETER_TYPE_INVALID; j++)
@@ -1372,7 +1382,6 @@ create_copy_number_frame(void)
   GtkWidget *event_box;
   GtkAdjustment *adj;
 
-  fprintf(stderr, "create_copy_number_frame\n");
   frame = gtk_frame_new (_("Number of Copies"));
   gtk_box_pack_start (GTK_BOX (right_vbox), frame, FALSE, TRUE, 0);
   gtk_widget_show (frame);

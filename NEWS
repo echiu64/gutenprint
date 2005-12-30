@@ -123,7 +123,9 @@ These release notes contain the following sections:
      cyan/magenta/yellow/black as appropriate.
 
   8) The GIMP plugin is now considerably more responsive; many
-     unnecessary screen redraws have been removed.
+     unnecessary screen redraws have been removed.  In addition, a
+     display glitch wherein horizontal lines were sometimes drawn
+     through certain widgets has been fixed.
 
   9) The Epson printer utility escputil now reports ink information
      more consistently across a wider range of printers.  In
@@ -155,9 +157,9 @@ These release notes contain the following sections:
   15) The Epson Stylus Photo R200 and related printers have been
      retuned to give improved detail in the shadows, reduced ink
      usage, more accurate grayscale, and more accurate colors.
-     Affected printers are the R200, R210, R220, R300, R310, R320,
-     R340, RX400, RX420, RX425, RX430, RX500, RX510, RX600, RX620,
-     RX630, PM-D750, PM-D770, PM-G700, and, PM-G720.
+     Affected printers are presently the R200, R210, R220, R300, R310,
+     R320, R340, RX400, RX420, RX425, RX430, RX500, RX510, RX600,
+     RX620, RX630, PM-D750, PM-D770, PM-G700, and PM-G720.
 
      Any profiles generated against these printers will have to be
      re-created.
