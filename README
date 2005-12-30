@@ -294,9 +294,9 @@ FOOMATIC
     the release version of Gutenprint in its name.  Therefore, the
     Foomatic name for this driver is "gutenprint-ijs.5.0".
 
-    Foomatic data generation has been fixed as of Gutenprint
-    5.0.0-beta4, and is now an appropriate solution for queue
-    configuration.
+    Foomatic data generation works correctly as of Gutenprint
+    5.0.0-beta4 and later releases, and is now an appropriate solution
+    for queue configuration.
 
     To verify that you have an appropriate version of Foomatic, please
     run
