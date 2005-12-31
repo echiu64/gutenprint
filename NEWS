@@ -135,10 +135,10 @@ These release notes contain the following sections:
      through the present.
 
   10) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
-     CX3800, CX3805, CX3810, CX4100, CX4200, CX4700, CX4800, CX5700,
-     CX5800, CX7700, CX7800, D68, D88, DX3800, DX3850, DX4200, DX4250,
-     DX4800, PX-A650, and Stylus Photo R220, R320, and R340.  These
-     printers are expected to be fully functional (for the
+     CX3800, CX3805, CX3810, CX4100, CX4200, CX4500, CX4700, CX4800,
+     CX5700, CX5800, CX7700, CX7800, D68, D88, DX3800, DX3850, DX4200,
+     DX4250, DX4800, PX-A650, and Stylus Photo R220, R320, and R340.
+     These printers are expected to be fully functional (for the
      multi-function devices, this package supports only the printer
      function).
 
@@ -1456,6 +1456,7 @@ EPSON Stylus CX-3805
 EPSON Stylus CX-3810
 EPSON Stylus CX-4100
 EPSON Stylus CX-4200
+EPSON Stylus CX-4500
 EPSON Stylus CX-4600
 EPSON Stylus CX-4700
 EPSON Stylus CX-4800
@@ -1854,6 +1855,7 @@ Epson Stylus CX3805            escp2-cx3805    EPSON Stylus CX-3805
 Epson Stylus CX3810            escp2-cx3810    EPSON Stylus CX-3810
 Epson Stylus CX4100            escp2-cx4100    EPSON Stylus CX-4100
 Epson Stylus CX4200            escp2-cx4200    EPSON Stylus CX-4200
+Epson Stylus CX4500            escp2-cx4500    EPSON Stylus CX-4500
 Epson Stylus CX4600            escp2-cx4600    EPSON Stylus CX-4600
 Epson Stylus CX4700            escp2-cx4700    EPSON Stylus CX-4700
 Epson Stylus CX4800            escp2-cx4800    EPSON Stylus CX-4800
