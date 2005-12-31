@@ -146,17 +146,20 @@ These release notes contain the following sections:
      printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  12) Experimental support for the Epson Stylus Photo RX700.  This
+  12) Preliminary support for the Epson PictureMate and E-100.  This
+     printer may or may not function correctly, and is not tuned.
+
+  13) Experimental support for the Epson Stylus Photo RX700.  This
      printer may or may not function correctly, and is not likely to
      be properly tuned.
 
-  13) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
+  14) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
      Sony UP-DR150, and Olympus P-11 has been added.
 
-  14) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
+  15) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
      printing with binding on the short side is now supported, too.
 
-  15) The Epson Stylus Photo R200 and related printers have been
+  16) The Epson Stylus Photo R200 and related printers have been
      retuned to give improved detail in the shadows, reduced ink
      usage, more accurate grayscale, and more accurate colors.
      Affected printers are presently the R200, R210, R220, R300, R310,
@@ -166,14 +169,14 @@ These release notes contain the following sections:
      Any profiles generated against these printers will have to be
      re-created.
 
-  16) New "transposed" resolutions (1440x720 and 2880x1440) have been
+  17) New "transposed" resolutions (1440x720 and 2880x1440) have been
      added for some Epson printers.  These resolutions are actually
      equivalent to 720x1440 and 1440x2880 DPI respectively.  In some
      cases these may yield better results (specifically, less
      microbanding) than the normal 1440x720 and 2880x1440 DPI
      resolutions.
 
-  17) Quadtone printing now works correctly regardless of whether
+  18) Quadtone printing now works correctly regardless of whether
      color or grayscale mode is selected.
 
 
@@ -1477,6 +1480,7 @@ EPSON Stylus DX-3850
 EPSON Stylus DX-4200
 EPSON Stylus DX-4250
 EPSON Stylus DX-4800
+EPSON PictureMate       (Preliminary)
 EPSON CL-700
 EPSON CL-750
 EPSON CL-760    (Experimental)
@@ -1874,11 +1878,13 @@ Epson Stylus DX3850            escp2-dx3850    EPSON Stylus DX-3850
 Epson Stylus DX4200            escp2-dx4200    EPSON Stylus DX-4200
 Epson Stylus DX4250            escp2-dx4250    EPSON Stylus DX-4250
 Epson Stylus DX4800            escp2-dx4800    EPSON Stylus DX-4800
+Epson PictureMate              escp2-picmate   EPSON Stylus PictureMate
 Epson CL-700                   escp2-cl700     EPSON CL-700
 Epson CL-750                   escp2-cl750     EPSON CL-750
 Epson CL-760                   escp2-cl760     EPSON CL-760
 Epson EM-900C                  escp2-em900c    EPSON EM-900C
 Epson EM-930C                  escp2-em930c    EPSON EM-930C
+Epson E-100                    escp2-e100      EPSON E-100
 Epson MC-2000                  escp2-mc2000    EPSON MC-2000
 Epson MC-5000                  escp2-mc5000    EPSON MC-5000
 Epson MC-7000                  escp2-mc7000    EPSON MC-7000

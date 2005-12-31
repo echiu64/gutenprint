@@ -126,6 +126,9 @@ static const escp2_dot_size_t spro5000_dotsizes =
 static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
 { 0x11, 0x11, 0x11, 0x10, 0x10,   -1,    5,    5,    5 };
 
+static const escp2_dot_size_t picturemate_dotsizes =
+{   -1,   -1,   -1,   -1, 0x11, 0x12, 0x12,   -1,   -1 };
+
 /*
  * Bits are for:
  *
@@ -198,7 +201,7 @@ static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  180,  180,  360,  360,  360 };
 
 static const escp2_base_resolutions_t pro_base_res =
-{ 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880 };
+{ 2880, 2880, 2880, 2880, 2880, 2880, 2880, 2880, 5760 };
 
 /*
  * Densities are for:
@@ -287,6 +290,9 @@ static const escp2_densities_t spro_pigment_densities =
 
 static const escp2_densities_t spro10000_densities =
 { 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.0,   0.0,   0.0   };
+
+static const escp2_densities_t picturemate_densities =
+{   0,   0,     0,     0, 0.999, 0.999, 0.500, 0.0,   0.0   };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -680,6 +686,18 @@ static const char *r800_channel_names[] =
 };
 
 DECLARE_CHANNEL_LIST(r800);
+
+static const char *picturemate_channel_names[] =
+{
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Black"),
+  N_("Red"),
+  N_("Blue"),
+};
+
+DECLARE_CHANNEL_LIST(picturemate);
 
 static const char *r2400_channel_names[] =
 {
@@ -1942,6 +1960,23 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &cx3800_channel_name_list
+  },
+  /* 73: E-100/PictureMate */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
+    360, 14400, -1, 2880, 1440, 1440, 720, 0, 1, 0, 0, 0, 0, 0,
+    INCH(4), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
+    4, 15, 0, 0,
+    picturemate_dotsizes, picturemate_densities, &stpi_escp2_variable_picturemate_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_picturemate_inkgroup,
+    variable_bits, c1_5_base_res, &default_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &picturemate_channel_name_list
   },
 };
 

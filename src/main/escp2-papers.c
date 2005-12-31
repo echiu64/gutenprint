@@ -1057,6 +1057,16 @@ static const paper_adjustment_t r800_matte_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(r800_matte);
 
+static const paper_adjustment_t picturemate_adjustments[] =
+{
+  { "GlossyPhoto", 0.82, 1, 1, .02, 1.4, .882, 1, .300, 1, 1, 0.92,
+    r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
+  { "Other", 0.72, .1, 1, .02, 1.4, .882, 1, .300, 1, 1, 1.0,
+    r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(picturemate);
+
 static const paper_adjustment_t durabrite_adjustments[] =
 {
   { "Plain", 1.0, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.0,
@@ -1420,3 +1430,13 @@ static const paper_t r800_papers[] =
 };
 
 DECLARE_PAPERS(r800);
+
+static const paper_t picturemate_papers[] =
+{
+  { "GlossyPhoto", N_("Premium Glossy Photo Paper"), PAPER_PREMIUM_PHOTO,
+    8, 0, 0x80, 0x00, 0x02, NULL, "picturematePhoto" },
+  { "Other", N_("Other"), PAPER_PLAIN,
+    0, 0, 0x6b, 0x1a, 0x01, NULL, "picturemateMatte" },
+};
+
+DECLARE_PAPERS(picturemate);

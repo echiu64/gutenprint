@@ -192,6 +192,96 @@ static hue_curve_t r800_blue_curve =
   "</gutenprint>\n"
 };
 
+static hue_curve_t picturemate_cyan_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* B */
+  /* B */  "1.000 0.875 0.700 0.550 0.400 0.300 0.200 0.100 "  /* M */
+  /* M */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* R */
+  /* R */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.125 0.250 0.375 0.500 0.625 0.750 0.875 "  /* G */
+  /* G */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t picturemate_magenta_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.002 0.050 0.300 0.600 0.800 "  /* M */
+  /* M */  "1.000 1.000 0.850 0.700 0.600 0.500 0.400 0.300 "  /* R */
+  /* R */  "0.200 0.100 0.050 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t picturemate_yellow_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* M */
+  /* M */  "0.000 0.000 0.000 0.000 0.000 0.000 0.050 0.150 "  /* R */
+  /* R */  "0.250 0.350 0.450 0.550 0.650 0.750 0.850 0.950 "  /* Y */
+  /* Y */  "1.000 1.000 1.000 1.000 1.000 1.000 1.000 1.000 "  /* G */
+  /* G */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t picturemate_red_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* B */
+  /* B */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* M */
+  /* M */  "0.025 0.400 0.600 0.750 0.890 1.000 1.000 1.000 "  /* R */
+  /* R */  "1.000 0.875 0.750 0.625 0.500 0.375 0.250 0.125 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
+static hue_curve_t picturemate_blue_curve =
+{
+  "CyanCurve",
+  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+  "<gutenprint>\n"
+  "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+  "<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+  /* C */  "0.000 0.250 0.475 0.700 0.810 0.875 0.940 1.000 "  /* B */
+  /* B */  "1.000 0.975 0.930 0.875 0.810 0.740 0.650 0.400 "  /* M */
+  /* M */  "0.040 0.002 0.000 0.000 0.000 0.000 0.000 0.000 "  /* R */
+  /* R */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* Y */
+  /* Y */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* G */
+  /* G */  "0.000 0.000 0.000 0.000 0.000 0.000 0.000 0.000 "  /* C */
+  "</sequence>\n"
+  "</curve>\n"
+  "</gutenprint>\n"
+};
+
 
 static const physical_subchannel_t standard_black_subchannels[] =
 {
@@ -249,6 +339,13 @@ static const physical_subchannel_t r800_cyan_subchannels[] =
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_cyan);
 
+static const physical_subchannel_t picturemate_cyan_subchannels[] =
+{
+  { 2, -1, 0, "CyanDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(picturemate_cyan);
+
 static const physical_subchannel_t cx3650_standard_cyan_subchannels[] =
 {
   { 2, -1, 2, "CyanDensity", NULL }
@@ -290,6 +387,13 @@ static const physical_subchannel_t r800_magenta_subchannels[] =
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_magenta);
+
+static const physical_subchannel_t picturemate_magenta_subchannels[] =
+{
+  { 1, -1, 0, "MagentaDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(picturemate_magenta);
 
 static const physical_subchannel_t f360_standard_magenta_subchannels[] =
 {
@@ -361,6 +465,13 @@ static const physical_subchannel_t r800_yellow_subchannels[] =
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_yellow);
 
+static const physical_subchannel_t picturemate_yellow_subchannels[] =
+{
+  { 4, -1, 0, "YellowDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(picturemate_yellow);
+
 static const physical_subchannel_t r800_red_subchannels[] =
 {
   { 7, -1, 0, "RedDensity", NULL }
@@ -368,12 +479,26 @@ static const physical_subchannel_t r800_red_subchannels[] =
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_red);
 
+static const physical_subchannel_t picturemate_red_subchannels[] =
+{
+  { 7, -1, 0, "RedDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(picturemate_red);
+
 static const physical_subchannel_t r800_blue_subchannels[] =
 {
   { 8, -1, 1, "BlueDensity", NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_blue);
+
+static const physical_subchannel_t picturemate_blue_subchannels[] =
+{
+  { 8, -1, 1, "BlueDensity", NULL }
+};
+
+DECLARE_EXTENDED_INK_CHANNEL(picturemate_blue);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {
@@ -1506,6 +1631,21 @@ static const escp2_inkname_t six_color_r800_photo_inkset =
   &six_color_r800_photo_channel_set
 };
 
+static const ink_channel_t *const six_color_picturemate_channels[] =
+{
+  &photo_black_channel, &picturemate_cyan_channel,
+  &picturemate_magenta_channel, &picturemate_yellow_channel,
+  &picturemate_red_channel, &picturemate_blue_channel
+};
+
+DECLARE_CHANNEL_SET(six_color_picturemate);
+
+static const escp2_inkname_t six_color_picturemate_inkset =
+{
+  "CMYKRB", N_("Six Color Photo"), INKSET_CMYKRB,
+  &six_color_picturemate_channel_set
+};
+
 static const ink_channel_t *const six_color_r800_photo_gloss_channels[] =
 {
   &f360_photo_black_channel, &f360_standard_cyan_channel,
@@ -1794,6 +1934,12 @@ static const escp2_inkname_t six_color_r800_extended_inkset =
 {
   "PhysicalCMYKRB", N_("Six Color Raw"), INKSET_EXTENDED,
   &six_color_r800_channel_set
+};
+
+static const escp2_inkname_t six_color_picturemate_extended_inkset =
+{
+  "PhysicalCMYKRB", N_("Six Color Raw"), INKSET_EXTENDED,
+  &six_color_picturemate_channel_set
 };
 
 static const ink_channel_t *const f360_six_color_extended_channels[] =
@@ -2326,6 +2472,15 @@ static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 DECLARE_INKLIST("cmykrbphoto", cmykrb_photo, cmykrb_photo,
 		N_("Photo Black"), r800, r800_photo, standard);
 
+static const escp2_inkname_t *const picturemate_photo_ink_types[] =
+{
+  &six_color_picturemate_inkset,
+  &six_color_picturemate_extended_inkset,
+};
+
+DECLARE_INKLIST("picturemate", picturemate, standard,
+		N_("Standard"), picturemate, picturemate, standard);
+
 
 #define DECLARE_INKGROUP(name)			\
 const inkgroup_t stpi_escp2_##name##_inkgroup =	\
@@ -2473,3 +2628,10 @@ static const inklist_t *const cmykrb_group[] =
 };
 
 DECLARE_INKGROUP(cmykrb);
+
+static const inklist_t *const picturemate_group[] =
+{
+  &picturemate_inklist,
+};
+
+DECLARE_INKGROUP(picturemate);

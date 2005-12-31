@@ -273,9 +273,11 @@
 #gptofoo escp2-dx4200 printer/Epson-Stylus_DX4200
 #gptofoo escp2-dx4250 printer/Epson-Stylus_DX4250
 #gptofoo escp2-dx4800 printer/Epson-Stylus_DX4800
+#gptofoo escp2-picmate printer/Epson-PictureMate
 #gptofoo escp2-cl700 printer/Epson-CL_700
 #gptofoo escp2-cl750 printer/Epson-CL_750
 #gptofoo escp2-cl760 printer/Epson-CL_760
+#gptofoo escp2-e100 printer/Epson-E_100
 #gptofoo escp2-em900c printer/Epson-EM_900C
 #gptofoo escp2-em930c printer/Epson-EM_930C
 #gptofoo escp2-mc2000 printer/Epson-MC_2000

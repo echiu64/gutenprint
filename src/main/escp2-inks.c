@@ -115,6 +115,14 @@ static const escp2_dropsize_t escp2_1_5pl_2880_2880_dropsizes =
 static const escp2_dropsize_t escp2_1_5pl_5760_dropsizes =
   { "1_5pl_5760", 1, { 1.0 } };
 
+/* E-100/Picturemate */
+static const escp2_dropsize_t escp2_picturemate_1440_dropsizes =
+  { "picturemate_1440", 3, { 0.25, 0.47, 1.0 } };
+static const escp2_dropsize_t escp2_picturemate_2880_dropsizes =
+  { "picturemate_2880", 3, { 0.25, 0.47, 1.0 } };
+static const escp2_dropsize_t escp2_picturemate_2880_1440_dropsizes =
+  { "picturemate_2880_1440", 3, { 0.25, 0.47, 1.0 } };
+
 /* Stylus Photo R300 */
 static const escp2_dropsize_t escp2_r300_360_dropsizes =
   { "r300_360", 3, { 0.15, 0.3, 1.0 } };
@@ -300,6 +308,19 @@ const escp2_drop_list_t stpi_escp2_variable_r2400_drops =
   &escp2_r2400_2880_1440_dropsizes,
   &escp2_r2400_2880_2880_dropsizes,
   &escp2_r2400_2880_2880_dropsizes,
+};
+
+const escp2_drop_list_t stpi_escp2_variable_picturemate_drops =
+{
+  &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_2880_dropsizes,
+  &escp2_picturemate_2880_1440_dropsizes,
+  &escp2_picturemate_2880_1440_dropsizes,
+  &escp2_picturemate_2880_1440_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
