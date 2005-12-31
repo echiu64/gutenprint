@@ -29,7 +29,7 @@ believe this release to be stable enough for day to day use, and
 encourage people to test it and report their results.
 
 Gutenprint currently contains over 200 drivers supporting in excess of
-600 printer models.
+700 printer models.
 
 The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
 1.2 line (1.2.5 is recommended), or the GIMP 2.0 or above.  You may
@@ -1272,8 +1272,6 @@ Known Build/Installation Issues
 	 the ijsgutenprint in the next release.  This is to prevent
 	 accidentally using incorrect data, which could cause
 	 incorrect function to take place.
-
-
 ================================================================
 
 
@@ -1683,6 +1681,7 @@ Canon LBP-1000                 pcl-6           HP LaserJet 6 series
 Canon LBP-1260                 pcl-6           HP LaserJet 6 series
 Canon LBP-1760                 pcl-6           HP LaserJet 6 series
 Canon S100                     bjc-4300        Canon BJC 4300
+Canon S200                     bjc-s200        Canon S200
 Canon S300                     bjc-s800        Canon S800
 Canon S400                     bjc-s400        Canon S400
 Canon S450                     bjc-s450        Canon S450
@@ -1818,7 +1817,9 @@ Epson Stylus Photo R340        escp2-r340      EPSON Stylus Photo R340
 Epson Stylus Photo RX400       escp2-rx400     EPSON Stylus Photo RX400
 Epson Stylus Photo RX420       escp2-rx420     EPSON Stylus Photo RX420
 Epson Stylus Photo RX425       escp2-rx425     EPSON Stylus Photo RX425
+Epson Stylus Photo RX430       escp2-rx430     EPSON Stylus Photo RX430
 Epson Stylus Photo RX500       escp2-rx500     EPSON Stylus Photo RX500
+Epson Stylus Photo RX510       escp2-rx510     EPSON Stylus Photo RX510
 Epson Stylus Photo RX600       escp2-rx600     EPSON Stylus Photo RX600
 Epson Stylus Photo RX620       escp2-rx620     EPSON Stylus Photo RX620
 Epson Stylus Photo RX630       escp2-rx630     EPSON Stylus Photo RX630
@@ -1837,6 +1838,7 @@ Epson Stylus Pro 9600          escp2-9600      EPSON Stylus Pro 9600
 Epson Stylus Pro 10000         escp2-10000     EPSON Stylus Pro 10000
 Epson Stylus Scan 2000         escp2-scan2000  EPSON Stylus Scan 2000
 Epson Stylus Scan 2500         escp2-scan2500  EPSON Stylus Scan 2500
+Epson Stylus CX1500            escp2-cx1500    EPSON Stylus CX-1500
 Epson Stylus CX3100            escp2-cx3100    EPSON Stylus CX-3100
 Epson Stylus CX3200            escp2-cx3200    EPSON Stylus CX-3200
 Epson Stylus CX3500            escp2-cx3500    EPSON Stylus CX-3500
@@ -1844,6 +1846,9 @@ Epson Stylus CX3600            escp2-cx3600    EPSON Stylus CX-3600
 Epson Stylus CX3650            escp2-cx3650    EPSON Stylus CX-3650
 Epson Stylus CX3700            escp2-cx3700    EPSON Stylus CX-3700
 Epson Stylus CX3800            escp2-cx3800    EPSON Stylus CX-3800
+Epson Stylus CX3805            escp2-cx3805    EPSON Stylus CX-3805
+Epson Stylus CX3810            escp2-cx3810    EPSON Stylus CX-3810
+Epson Stylus CX4100            escp2-cx4100    EPSON Stylus CX-4100
 Epson Stylus CX4200            escp2-cx4200    EPSON Stylus CX-4200
 Epson Stylus CX4600            escp2-cx4600    EPSON Stylus CX-4600
 Epson Stylus CX4700            escp2-cx4700    EPSON Stylus CX-4700
@@ -1852,9 +1857,11 @@ Epson Stylus CX5100            escp2-cx5100    EPSON Stylus CX-5100
 Epson Stylus CX5200            escp2-cx5200    EPSON Stylus CX-5200
 Epson Stylus CX5300            escp2-cx5300    EPSON Stylus CX-5300
 Epson Stylus CX5400            escp2-cx5400    EPSON Stylus CX-5400
+Epson Stylus CX5700            escp2-cx5700    EPSON Stylus CX-5700
 Epson Stylus CX5800            escp2-cx5800    EPSON Stylus CX-5800
 Epson Stylus CX6300            escp2-cx6300    EPSON Stylus CX-6300
 Epson Stylus CX6400            escp2-cx6400    EPSON Stylus CX-6400
+Epson Stylus CX6500            escp2-cx6500    EPSON Stylus CX-6500
 Epson Stylus CX6600            escp2-cx6600    EPSON Stylus CX-6600
 Epson Stylus CX7700            escp2-cx7700    EPSON Stylus CX-7700
 Epson Stylus CX7800            escp2-cx7800    EPSON Stylus CX-7800
@@ -1865,6 +1872,7 @@ Epson Stylus D88               escp2-d88       EPSON Stylus D88
 Epson Stylus DX3800            escp2-dx3800    EPSON Stylus DX-3800
 Epson Stylus DX3850            escp2-dx3850    EPSON Stylus DX-3850
 Epson Stylus DX4200            escp2-dx4200    EPSON Stylus DX-4200
+Epson Stylus DX4250            escp2-dx4250    EPSON Stylus DX-4250
 Epson Stylus DX4800            escp2-dx4800    EPSON Stylus DX-4800
 Epson CL-700                   escp2-cl700     EPSON CL-700
 Epson CL-750                   escp2-cl750     EPSON CL-750
@@ -1915,6 +1923,7 @@ Epson PM-G700                  escp2-pmg700    EPSON PM-G700
 Epson PM-G720                  escp2-pmg720    EPSON PM-G720
 Epson PM-G800                  escp2-pmg800    EPSON PM-G800
 Epson PM-G820                  escp2-pmg820    EPSON PM-G820
+Epson PX-A650                  escp2-pxa650    EPSON PX-A650
 Epson PX-G900                  escp2-pxg900    EPSON PX-G900
 Epson PX-G920                  escp2-pxg920    EPSON PX-G920
 Epson PX-G5000                 escp2-pxg5000   EPSON PX-G5000
