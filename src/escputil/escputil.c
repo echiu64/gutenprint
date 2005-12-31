@@ -838,7 +838,8 @@ initialize_printer(int quiet, int fail_if_not_found)
     }
 
   close(fd);
-  STP_DEBUG(fprintf(stderr, "new? %s\n", isnew?"yes":"no"));
+  STP_DEBUG(fprintf(stderr, "new? %s found? %s\n", isnew?"yes":"no",
+		    found?"yes":"no"));
   return (found)?the_printer_t:NULL;
 }
 
@@ -851,7 +852,8 @@ get_printer(int quiet, int fail_if_not_found)
     {
       const stp_printer_t *printer =
 	initialize_printer(quiet, fail_if_not_found);
-      STP_DEBUG(fprintf(stderr, "init done...\n"));
+      STP_DEBUG(fprintf(stderr, "init done, printer found? %s...\n",
+			printer ? "yes" : "no"));
       return printer;
     }
 }
@@ -875,8 +877,28 @@ static const char *colors_new[] =
     N_("Gloss Optimizer"),	/* e */
     N_("Light Light Black"),	/* f */
   };
-
 static int color_count = sizeof(colors_new) / sizeof(const char *);
+
+static const char *aux_colors[] =
+  {
+    N_("Black"),		/* 0 */
+    N_("Cyan"),			/* 1 */
+    N_("Magenta"),		/* 2 */
+    N_("Yellow"),		/* 3 */
+    N_("Unknown"),		/* 4 */
+    N_("Unknown"),		/* 5 */
+    N_("Unknown"),		/* 6 */
+    N_("Unknown"),		/* 7 */
+    N_("Unknown"),		/* 8 */
+    N_("Red"),			/* 9 */
+    N_("Blue"),			/* a */
+    N_("Unknown"),		/* b */
+    N_("Unknown"),		/* c */
+    N_("Unknown"),		/* d */
+    N_("Unknown"),		/* e */
+    N_("Unknown"),		/* f */
+  };
+static int aux_color_count = sizeof(aux_colors) / sizeof(const char *);
 
 static void
 do_status_command_internal(status_cmd_t cmd)
@@ -884,15 +906,12 @@ do_status_command_internal(status_cmd_t cmd)
   int fd;
   int status;
   int credit;
-  int col_number;
   int retry = 4;
   char buf[1024];
   char *ind = NULL;
   char *oind;
   int i;
   const stp_printer_t *printer;
-  const stp_vars_t *printvars;
-  stp_parameter_t desc;
   const char *cmd_name = NULL;
   switch (cmd)
     {
@@ -912,21 +931,11 @@ do_status_command_internal(status_cmd_t cmd)
 
   STP_DEBUG(fprintf(stderr, "%s...\n", cmd_name));
   printer = get_printer(1, 0);
-  if (!printer)
-    {
-      fprintf(stderr, _("Cannot identify printer!\n"));
-      exit(0);
-    }
   if (!found_unknown_old_printer)
-    STP_DEBUG(fprintf(stderr, "%s found %s\n", cmd_name,
-		      stp_printer_get_long_name(printer)));
-  printvars = stp_printer_get_defaults(printer);
-  stp_describe_parameter(printvars, "ChannelNames", &desc);
-  if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
-    {
-      fprintf(stderr, _("Printer does not support listing ink types!\n"));
-      exit(1);
-    }
+    STP_DEBUG(fprintf(stderr, "%s found %s%s\n", cmd_name,
+		      printer ? stp_printer_get_long_name(printer) :
+		      printer_model,
+		      printer ? "" : "(Unknown model)"));
 
   fd = open(raw_device, O_RDWR, 0666);
   if (fd == -1)
@@ -948,7 +957,6 @@ do_status_command_internal(status_cmd_t cmd)
                 {
                   if ( ( status = readData(fd, socket_id, (unsigned char*)buf, 1023) ) <= -1 )
                     {
-                      stp_parameter_description_destroy(&desc);
                       exit(1);
                     }
 		  STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
@@ -957,7 +965,6 @@ do_status_command_internal(status_cmd_t cmd)
 	      /* "@BCD ST ST"  found */
 	      if (!retry)
 		{
-		  stp_parameter_description_destroy(&desc);
 		  exit(1);
 		}
 	      buf[status] = '\0';
@@ -972,18 +979,19 @@ do_status_command_internal(status_cmd_t cmd)
 			i += buf[i + 1] + 2;
 		      ind = buf + i;
 		      i = 3;
-		      col_number = 0;
 		      printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
 		      while (i < ind[1])
 			{
 			  if (ind[i] < color_count)
 			    printf("%18s    %20d\n", _(colors_new[(int) ind[i]]), ind[i + 2]);
+			  else if (ind[i] == 0x40 && ind[i + 1] < aux_color_count)
+			    printf("%18s    %20d\n", _(aux_colors[(int) ind[i + 1]]), ind[i + 2]);
 			  else
-			    printf("%18s    %20d\n", _("Unknown"), ind[i + 2]);
-			  col_number++;
+			    printf("%8s 0x%2x 0x%2x    %20d\n", _("Unknown"), (unsigned char) ind[i], (unsigned char) ind[i + 1], ind[i + 2]);
 			  i+=3;
 			}
 		      ind = NULL;
+		      exit(0);
 		    }
 		  else
 		    /* old format */
@@ -1009,14 +1017,12 @@ do_status_command_internal(status_cmd_t cmd)
             }
           else /* could not write */
             {
-              stp_parameter_description_destroy(&desc);
               fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
               exit(1);
             }
         }
       else /* no credit */
         {
-          stp_parameter_description_destroy(&desc);
           STP_DEBUG(fprintf(stderr, _("\nCannot get credit (packet mode)!\n")));
           exit(1);
         }
@@ -1038,7 +1044,6 @@ do_status_command_internal(status_cmd_t cmd)
           status = read_from_printer(fd, buf, 1024, 1);
           if (status < 0)
             {
-              stp_parameter_description_destroy(&desc);
               exit(1);
             }
           ind = buf;
@@ -1060,12 +1065,20 @@ do_status_command_internal(status_cmd_t cmd)
 
   if (!ind)
     {
-      stp_parameter_description_destroy(&desc);
       exit(1);
     }
 
   if (cmd == CMD_INK_LEVEL)
     {
+      stp_parameter_t desc;
+      const stp_vars_t *printvars;
+      printvars = stp_printer_get_defaults(printer);
+      stp_describe_parameter(printvars, "ChannelNames", &desc);
+      if (desc.p_type != STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  fprintf(stderr, _("Printer does not support listing ink types!\n"));
+	  exit(1);
+	}
       ind += 3;
 
       printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
@@ -1090,6 +1103,7 @@ do_status_command_internal(status_cmd_t cmd)
 		 val);
 	  ind += 2;
 	}
+      stp_parameter_description_destroy(&desc);
     }
   else
     {
@@ -1098,7 +1112,6 @@ do_status_command_internal(status_cmd_t cmd)
 	*where = '\n';
       printf("%s\n", ind);
     }
-  stp_parameter_description_destroy(&desc);
   (void) close(fd);
   exit(0);
 }
@@ -1133,13 +1146,11 @@ do_extended_ink_info(int extended_output)
     }
 
   printer = get_printer(1, 0);
-  if (!printer)
+  if (printer)
     {
-      fprintf(stderr, _("Cannot identify printer!\n"));
-      exit(0);
+      printvars = stp_printer_get_defaults(printer);
+      stp_describe_parameter(printvars, "ChannelNames", &desc);
     }
-  printvars = stp_printer_get_defaults(printer);
-  stp_describe_parameter(printvars, "ChannelNames", &desc);
 
   fd = open(raw_device, O_RDWR, 0666);
   if (fd == -1)
@@ -1151,7 +1162,89 @@ do_extended_ink_info(int extended_output)
 
   if (isnew)
     {
-      for (i = 0; i < stp_string_list_count(desc.bounds.str); i++)
+      stp_string_list_t *color_list = stp_string_list_create();
+
+      if (!printer)
+	{
+	  /*
+	   * If we're using the "new" ink status format and we don't know
+	   * about the printer, take the colors from the ink status
+	   * message rather than from the ink list.  This gives us a
+	   * last chance to determine the inks
+	   */
+	  credit = askForCredit(fd, socket_id, &send_size, &receive_size);
+	  if ( credit > -1 )
+	    {
+	      /* request status command */
+	      if ( (status = writeData(fd, socket_id, (const unsigned char*)"st\1\0\1", 5, 1)) > 0 )
+		{
+		  do
+		    {
+		      if ((status = readData(fd, socket_id, (unsigned char*)buf, 1023)) <= -1)
+			{
+			  stp_parameter_description_destroy(&desc);
+			  exit(1);
+			}
+		      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
+		    }
+		  while ( (retry-- != 0) && strncmp("st", buf, 2) && strncmp("@BDC ST", buf, 7) );
+		  /* "@BCD ST ST"  found */
+		  if (!retry)
+		    {
+		      stp_parameter_description_destroy(&desc);
+		      exit(1);
+		    }
+		  buf[status] = '\0';
+		  if ( buf[7] == '2' )
+		    {
+		      STP_DEBUG(fprintf(stderr, "New format ink!\n"));
+		      /* new binary format ! */
+		      i = 10;
+		      while (buf[i] != 0x0f && i < status)
+			i += buf[i + 1] + 2;
+		      ind = buf + i;
+		      i = 3;
+		      while (i < ind[1])
+			{
+			  if (ind[i] < color_count)
+			    stp_string_list_add_string(color_list,
+						       colors_new[(int) ind[i]],
+						       colors_new[(int) ind[i]]);
+			  else if (ind[i] == 0x40 && ind[i + 1] < aux_color_count)
+			    stp_string_list_add_string(color_list,
+						       aux_colors[(int) ind[i + 1]],
+						       aux_colors[(int) ind[i + 1]]);
+			  else
+			    stp_string_list_add_string(color_list, "Unknown",
+						       "Unknown");
+			  i+=3;
+			}
+		    }
+		}
+	      else /* could not write */
+		{
+		  stp_parameter_description_destroy(&desc);
+		  fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
+		  exit(1);
+		}
+	    }
+	  else /* no credit */
+	    {
+	      stp_parameter_description_destroy(&desc);
+	      STP_DEBUG(fprintf(stderr, _("\nCannot get credit (packet mode)!\n")));
+	      exit(1);
+	    }
+	  STP_DEBUG(fprintf(stderr, "Using color list from status message\n"));
+	}
+      else
+	{
+	  color_list = stp_string_list_create_copy(desc.bounds.str);
+	  STP_DEBUG(fprintf(stderr, "Using color list from driver (%d %d)\n",
+			    stp_string_list_count(desc.bounds.str),
+			    stp_string_list_count(color_list)));
+	  stp_parameter_description_destroy(&desc);
+	}
+      for (i = 0; i < stp_string_list_count(color_list); i++)
         {
           credit = askForCredit(fd, socket_id, &send_size, &receive_size);
           if ( credit > -1 )
@@ -1166,37 +1259,37 @@ do_extended_ink_info(int extended_output)
                     {
                       if ( ( status = readData(fd, socket_id, (unsigned char*) buf, 1023) ) <= -1 )
                         {
-                          stp_parameter_description_destroy(&desc);
                           exit(1);
                         }
                     } while ((retry-- != 0) && strncmp("ii", buf, 2) && strncmp("@BDC PS", buf, 7));
                   if (!retry) /* couldn't read answer */
                     {
-                      stp_parameter_description_destroy(&desc);
                       exit(1);
                     }
                   ind = strchr(buf, 'I');
-		  if (sscanf(ind,
-                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
-			     &iv[0], &year, &month, &id,
-			     &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
-			     &year2, &month2, &id2) == 12 ||
-		      sscanf(ind,
-                             "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
-			     &iv[0], &year, &month, &id,
-			     &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
-			     &year2, &month2, &id2) == 12)
+		  if (!ind)
+		    printf("Cannot identify cartridge in slot %d\n", i);
+		  else if (sscanf(ind,
+				  "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+				  &iv[0], &year, &month, &id,
+				  &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
+				  &year2, &month2, &id2) == 12 ||
+			   sscanf(ind,
+				  "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+				  &iv[0], &year, &month, &id,
+				  &iv[1], &iv[2], &iv[3], &iv[4], &iv[5],
+				  &year2, &month2, &id2) == 12)
 		    {
 		      int j;
 		      printf("%18s    %20s   %12s   %7s\n",
 			     _("Ink color"), _("Percent remaining"), _("Part number"),
 			     _("Date"));
                       printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-                             _(stp_string_list_param(desc.bounds.str, 0)->text),
+                             _(stp_string_list_param(color_list, 0)->text),
                              iv[0], id, (year > 80 ? 19 : 20), year, month);
 		      for (j = 1; j < 6; j++)
                       printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-                             _(stp_string_list_param(desc.bounds.str, j)->text),
+                             _(stp_string_list_param(color_list, j)->text),
                              iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 		      break;
 		    }
@@ -1216,11 +1309,11 @@ do_extended_ink_info(int extended_output)
 			     _("Ink color"), _("Percent remaining"), _("Part number"),
 			     _("Date"));
                       printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-                             _(stp_string_list_param(desc.bounds.str, 0)->text),
+                             _(stp_string_list_param(color_list, 0)->text),
                              iv[0], id, (year > 80 ? 19 : 20), year, month);
 		      for (j = 1; j < 4; j++)
                       printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-                             _(stp_string_list_param(desc.bounds.str, j)->text),
+                             _(stp_string_list_param(color_list, j)->text),
                              iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 		      break;
 		    }
@@ -1236,22 +1329,25 @@ do_extended_ink_info(int extended_output)
                                _("Ink color"), _("Percent remaining"), _("Part number"),
                                _("Date"));
                       printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-                             _(stp_string_list_param(desc.bounds.str, i)->text),
+                             _(stp_string_list_param(color_list, i)->text),
                              val, id, (year > 80 ? 19 : 20), year, month);
                     }
+		  else
+		    {
+		      printf("Cannot identify cartridge in slot %d\n", i);
+		    }
                 }
               else /* could not write */
                 {
-                  stp_parameter_description_destroy(&desc);
                   exit(1);
                 }
             }
           else /* no credit */
             {
-              stp_parameter_description_destroy(&desc);
               exit(1);
             }
         }
+      stp_string_list_destroy(color_list);
       CloseChannel(fd, socket_id);
     }
   else
@@ -1259,7 +1355,6 @@ do_extended_ink_info(int extended_output)
       (void) close(fd);
       do_ink_level();
     }
-  stp_parameter_description_destroy(&desc);
   exit(0);
 }
 
@@ -1284,6 +1379,8 @@ do_identify(void)
 	printf("%s\n", _(stp_printer_get_long_name(printer)));
       exit(0);
     }
+  else if (printer_model)
+    printf("EPSON %s\n", printer_model);
   else
     {
       fprintf(stderr, _("Cannot identify printer model.\n"));
