@@ -78,7 +78,7 @@
       <description value="4x6"/>
       <width value="288"/>
       <height value="432"/>
-      <unit value="english-extended"/>
+      <unit value="english"/>
     </paper>
     <paper name="w324h495">
       <description value="Epson 4x6 Photo Paper"/>
