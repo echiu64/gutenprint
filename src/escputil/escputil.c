@@ -1151,6 +1151,9 @@ do_extended_ink_info(int extended_output)
       printvars = stp_printer_get_defaults(printer);
       stp_describe_parameter(printvars, "ChannelNames", &desc);
     }
+  else
+    printf("Warning! Printer %s is not known; information may be incomplete or incorrect\n",
+	   printer_model);
 
   fd = open(raw_device, O_RDWR, 0666);
   if (fd == -1)
