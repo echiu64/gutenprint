@@ -1495,55 +1495,6 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	    print_group_close(fp, j, k);
 	}
     }
-  if (printer_is_color)
-    {
-      for (l = 0; l < stp_parameter_list_count(param_list); l++)
-	{
-	  const stp_parameter_t *lparam =
-	    stp_parameter_list_param(param_list, l);
-	  if (lparam->p_class > STP_PARAMETER_CLASS_OUTPUT ||
-	      lparam->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
-	      strcmp(lparam->name, "Quality") == 0 ||
-	      is_special_option(lparam->name) ||
-	      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
-	       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
-	       lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
-	       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
-	    continue;
-	  stp_set_string_parameter(v, "PrintingMode", "Color");
-	  stp_describe_parameter(v, lparam->name, &desc);
-	  if (desc.is_active)
-	    {
-	      stp_parameter_description_destroy(&desc);
-	      stp_set_string_parameter(v, "PrintingMode", "BW");
-	      stp_describe_parameter(v, lparam->name, &desc);
-	      if (!desc.is_active)
-		{
-		  gzprintf(fp, "*UIConstraints: *ColorModel Gray *Stp%s\n",
-			   lparam->name);
-		  gzprintf(fp, "*UIConstraints: *ColorModel Black *Stp%s\n",
-			   lparam->name);
-		  gzprintf(fp, "*UIConstraints: *Stp%s *ColorModel Gray\n",
-			   lparam->name);
-		  gzprintf(fp, "*UIConstraints: *Stp%s *ColorModel Black\n\n",
-			   lparam->name);
-		  if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
-		    {
-		      gzprintf(fp, "*UIConstraints: *ColorModel Gray *StpFine%s\n",
-			       lparam->name);
-		      gzprintf(fp, "*UIConstraints: *ColorModel Black *StpFine%s\n",
-			       lparam->name);
-		      gzprintf(fp, "*UIConstraints: *StpFine%s *ColorModel Gray\n",
-			       lparam->name);
-		      gzprintf(fp, "*UIConstraints: *StpFine%s *ColorModel Black\n\n",
-			       lparam->name);
-		    }
-		}
-	    }
-	  stp_parameter_description_destroy(&desc);
-	}
-      stp_set_string_parameter(v, "PrintingMode", "Color");
-    }
   stp_parameter_list_destroy(param_list);
 
  /*
