@@ -503,7 +503,7 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
       status = read(fd, buf, bufsize - 1);
       if (status == 0 || (status < 0 && errno == EAGAIN))
 	{
-	  usleep(20000);
+	  usleep(2000);
 	  status = 0; /* not an error (read would have blocked) */
 	}
     }

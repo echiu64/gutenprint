@@ -180,12 +180,12 @@ static errorMessage_t errorMessage[] =
 int SafeWrite(int fd, const void *data, int len)
 {
   int status;
-  int retries=3;
+  int retries=30;
   do
     {
       status = write(fd, data, len);
       if(status < len)
-	usleep(100000);
+	usleep(d4WrTimeout);
       retries--;
     }
   while ((status < len) && (retries > 0));
@@ -390,7 +390,7 @@ int readAnswer(int fd, unsigned char *buf, int len)
    long dt;
    int count = 0;
    /* wait a little bit before reading an answer */
-   usleep(20000);
+   usleep(d4RdTimeout);
 
    /* for error handling in case of timeout */
    timeoutGot = 0;
@@ -444,7 +444,7 @@ int readAnswer(int fd, unsigned char *buf, int len)
 	    len = (len > sizeof(buf))?sizeof(buf) - 1:len;
          }
       }
-      usleep(20000);
+      usleep(d4RdTimeout);
    }
    
    if ( debugD4 )
@@ -475,8 +475,8 @@ static void _flushData(int fd)
    struct itimerval ti, oti;
    char buf[1024];
    int len = 1023;
-   int count = 20;
-   usleep(20000);
+   int count = 200;
+   usleep(d4RdTimeout);
 
    /* for error handling in case of timeout */
    timeoutGot = 0;
@@ -489,7 +489,7 @@ static void _flushData(int fd)
      fprintf(stderr, "flush data: length: %i\n", len);
    do
      {
-       usleep(50000);
+       usleep(d4RdTimeout);
        SET_TIMER(ti,oti, d4RdTimeout);
        rd = read(fd, buf, len);
        if (debugD4)
@@ -990,7 +990,7 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
    while (credit == 0 )
    {
       while((credit=CreditRequest(fd,socketID)) == 0  && count < MAX_CREDIT_REQUEST )
-         usleep(250000);
+         usleep(d4RdTimeout);
 
       if ( credit == -1 )
       {
