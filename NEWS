@@ -34,20 +34,23 @@ Gutenprint currently contains over 200 drivers supporting in excess of
 The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
 1.2 line (1.2.5 is recommended), or the GIMP 2.0 or above.  You may
 need to install packages named "gimp-devel", "gtk-devel", and
-"glib-devel" (or similar equivalents) on many systems.  This plug-in
-will work with any printing system, and offers a comprehensive user
-interface to control all aspects of the printing process.
+"glib-devel" (or similar equivalents) on many systems.  For GIMP 2.0,
+you may need to install "gimp2-devel", "gtk2-devel", "glib2-devel",
+and possibly other packages as well.  This plug-in will work with any
+printing system, and offers a comprehensive user interface to control
+all aspects of the printing process.
 
-The CUPS driver requires CUPS 1.1.15 or higher.  You may need to
-install a package named "cups-devel" or similar on many systems.
-Please the rest of the release notes, in particular the Exceptions and
-Workarounds, for full details on installation, as there is an
-important caveat.  CUPS is the printing system used on Macintosh OS X
-10.2 and above, and many other systems use it.  The combination of
-CUPS and Gutenprint provides a flexible, general purpose printing
-system capable of producing the highest quality output with any of the
-printers supported by this package.  We strongly recommend using CUPS
-with Gutenprint as a general-purpose printing solution.
+The CUPS driver requires CUPS 1.1.15 or higher.  If you wish to build
+this from source, you may need to install a package named "cups-devel"
+or something similar.  Please the rest of the release notes, in
+particular the Exceptions and Workarounds, for full details on
+installation, as there is important information to be aware of.  CUPS
+is the printing system used on Macintosh OS X 10.2 and above, and many
+other systems use it.  The combination of CUPS and Gutenprint provides
+a flexible, general purpose printing system capable of producing the
+highest quality output with any of the printers supported by this
+package.  We strongly recommend using CUPS with Gutenprint as a
+general-purpose printing solution.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -60,7 +63,7 @@ Users of Macintosh OS X 10.2 (Jaguar), 10.3 (Panther), and 10.4
 (Tiger) can use this package, as the printing system is based on CUPS.
 For ease of installation, a pre-built package with installer is
 normally supplied a few days after the release of the source package.
-We highly recommend that OS X users use the pre-built package rather
+We strongly recommend that OS X users use the pre-built package rather
 than attempt to build it themselves.
 
 NOTE: This package will not work with any version of OS X 10.0 and
@@ -72,7 +75,7 @@ OS X 10.0 and 10.1 use a different system that would require a
 separate driver, and we do not plan to write that driver.
 
 The README file included with this package provides full instructions
-on building and installing Gutenprint.
+for building and installing Gutenprint.
 
 These release notes contain the following sections:
 
@@ -140,13 +143,13 @@ These release notes contain the following sections:
      DX4250, DX4800, PX-A650, and Stylus Photo R220, R320, and R340.
      These printers are expected to be fully functional (for the
      multi-function devices, this package supports only the printer
-     function).
+     function -- it does not support scanning or fax).
 
   11) Preliminary support for the Epson Stylus Photo R2400.  This
      printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  12) Preliminary support for the Epson PictureMate and E-100.  This
+  12) Preliminary support for the Epson PictureMate/E-100.  This
      printer may or may not function correctly, and is not tuned.
 
   13) Experimental support for the Epson Stylus Photo RX700.  This
@@ -205,12 +208,12 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      choice.
 
   4) Many of the color settings have changed effect.  We recommend
-     starting with no color correction and making appropriate changes
+     starting with no color adjustments and making appropriate changes
      only as required.  Specific changes that you should be aware of
      include:
 
      * The default operation of the contrast setting has changed to be
-       more in accord with standard practice.  In 4.2, reducing the
+       more in accord with other packages.  In 4.2, reducing the
        contrast resulted in changing the black and white setting.  In
        5.0, reducing the contrast does not change the black and white
        settings.  As a result, it is possible to use the contrast
@@ -218,7 +221,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        contrast.
 
        The previous behavior is available by turning on the "Linear
-       Contrast Adjustment".
+       Contrast Adjustment" setting.
 
      * The brightness control now behaves more in accord with standard
        practice, adjusting the image's overall brightness without
@@ -234,7 +237,8 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        correction.  They are applied after the color correction to
        scale the individual channels.  The per-channel gray balance
        settings adjust gray balance without affecting per-channel
-       density settings, permitting better color saturation without
+       density settings (i. e. the adjust the amount of ink used to
+       generate gray), permitting increased color saturation without
        compromising gray balance.
 
   5) The Uncorrected color correction mode is recommended for users
@@ -262,8 +266,9 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
 * New Functionality:
 
-  1) This release offers a new curve data type, permitting very
-     precise adjustments of output.
+  1) This release offers a new "curve" data type, permitting very
+     precise adjustments of output.  Currently the curves are only
+     accessible in the GIMP plugin.
 
   2) This release offers many new output controls:
 
@@ -311,7 +316,8 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      vs. bidirectional) is now a separate control.  In addition to
      contributing to the simplification of the Epson printer
      resolutions, this permits the choice of unidirectional
-     vs. bidirectional at all resolutions.
+     vs. bidirectional at all resolutions if desired.  By default, the
+     driver picks the most appropriate choice for the situation.
 
   8) The Epson driver now allows printing directly to CD's on printers
      that support this functionality.  In addition, a choice of center
@@ -329,13 +335,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      different choices of inks (such as the Epson Stylus Photo 2200,
      which offers a choice of Matte Black and Photo Black inks).
 
-  11) The Epson driver permits adjusting the dot size if required to
-     increase the amount of ink printed.  For example, if 1440x720 DPI
-     is selected, but the density requested is very high, the printer
-     will switch to using drop sizes appropriate for 720 DPI.  This
-     option is not normally required and is disabled by default.
-
-  12) Where practical, all controls offer a default setting for
+  11) Where practical, all controls offer a default setting for
      simplicity of operation.  This default value is intended to offer
      the optimal choice given the printer and its other settings.  For
      example, if "Automatic" is selected for print head direction, the
@@ -349,32 +349,32 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      based on the paper type loaded by the user.  Similarly, there is
      no default for the input slot or ink set.
 
-  13) Support for a variety of input types, in both 8 and 16 bit
+  12) Support for a variety of input types, in both 8 and 16 bit
      resolution, has been added.  Gutenprint can now handle input in
      grayscale, whitescale (inverted grayscale), RGB, CMY, CMYK, and
      KCMY in 8 and 16 bit resolutions for all output types.
 
-  14) A new Threshold color correction mode has been added that
+  13) A new Threshold color correction mode has been added that
      produces either all-on or all-off of each color.  This is similar
      to the Monochrome mode in 4.2, except that it works for color as
      well as black.
 
-  15) A new Desaturated color correction mode has been added that
+  14) A new Desaturated color correction mode has been added that
      produces gray (desaturated) output using color inks.
 
-  16) A new Density color correction mode has been added that corrects
+  15) A new Density color correction mode has been added that corrects
      only for density.  This will normally produce excessively dark
      output.  However, applications that wish to use their own
      linearization curves may wish to use this interface to prevent
      Gutenprint from performing its own linearization.
 
-  17) A new Raw color correction mode has been added that performs no
+  16) A new Raw color correction mode has been added that performs no
      correction whatsoever on the input.  This mode may be used by
      applications that wish to perform their own ink limiting and
      linearization, and use Gutenprint to perform dithering
      (screening) and output generation only.
 
-  18) A new Predithered color correction mode has been added that
+  17) A new Predithered color correction mode has been added that
      combines the effects of Raw and Threshold.  This mode may be used
      by applications that wish to perform their own dithering and use
      Gutenprint to generate printer-specific output only.  The input
@@ -382,7 +382,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      printers, it should be 0 or 1; for printers with three drop
      sizes, it should be 0, 1, 2, or 3).
 
-  19) A new Correct Hue Only color correction mode has been added that
+  18) A new Correct Hue Only color correction mode has been added that
      performs partial color correction (adjusts hue, but not
      darkness).
 
@@ -397,10 +397,11 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        older printers, it simply returns the standard ink
        information.
 
-     * Ink level detection now works on all known supported printers.
-       Previously it did not work on some newer printers.  However, it
-       is somewhat slower on these printers than it is on older
-       printers that support the faster ink detection method.
+     * Ink level detection now works on all known supported printers,
+       and may work on other non-supported printers.  Previously it
+       did not work on some newer printers.  However, it is somewhat
+       slower on these printers than it is on older printers that
+       support the faster ink detection method.
 
      * Ink level detection now prints the correct ink color names for
        the printer model.
@@ -412,12 +413,18 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        If you supply a printer queue (with the -P option) rather than
        a raw device (with the -r option), you will still need to
        provide the -u flag, as the utility cannot detect the actual
-       printer connected to a queue.  However, bidirectional commands
-       (ink level, identify, printer status, and alignment) do not
-       require the -u flag any more.
+       printer connected to a queue.  However, commands that must be
+       run bidirectionally (ink level, identify, and printer status)
+       do not require the -u flag any more.
 
      * escputil now successfully detects ink level, printer model, and
        status even if the printer is out of ink.
+
+  20) The Epson driver permits adjusting the dot size if required to
+     increase the amount of ink printed.  For example, if 1440x720 DPI
+     is selected, but the density requested is very high, the printer
+     will switch to using drop sizes appropriate for 720 DPI.  This
+     option is not normally required and is disabled by default.
 
 
 * Changes to the Print plugin for the GIMP:
