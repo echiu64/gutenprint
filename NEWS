@@ -150,7 +150,8 @@ These release notes contain the following sections:
      further changes to this driver.
 
   12) Preliminary support for the Epson PictureMate/E-100.  This
-     printer may or may not function correctly, and is not tuned.
+     printer has been partially tuned, but there will likely be
+     further changes to this driver.
 
   13) Preliminary support for the Epson Stylus Photo RX700.  This
      printer has been partially tuned, but there will likely be

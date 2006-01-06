@@ -429,7 +429,7 @@ set_vertical_position(stp_vars_t *v, stp_pass_t *pass)
   escp2_privdata_t *pd = get_privdata(v);
   int advance = pass->logicalpassstart - pd->last_pass_offset -
     (pd->separation_rows - 1);
-  advance = advance * pd->vertical_units / pd->res->vres;
+  advance = advance * pd->vertical_units / pd->res->printed_vres;
   if (pass->logicalpassstart > pd->last_pass_offset ||
       (pd->send_zero_pass_advance && pass->pass > pd->last_pass) ||
       pd->printing_initial_vertical_offset != 0)

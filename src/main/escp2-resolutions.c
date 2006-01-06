@@ -96,6 +96,9 @@ static const res_t r_720hq =
 static const res_t r_720hq2 =
 { "720hq2",        N_("720 DPI Highest Quality"),
   720,  720,  720,  720,  1, 0, 4 };
+static const res_t r_720x720oov =
+{ "720x720oov",    N_("720 x 720 DPI"),
+  2880, 720,  720, 720,  1, 0, 1 };
 
 static const res_t r_1440x720mw =
 { "1440x720mw",     N_("1440 x 720 DPI"),
@@ -109,6 +112,12 @@ static const res_t r_1440x720hq2 =
 static const res_t r_720x1440sw =
 { "720x1440sw",    N_("1440 x 720 DPI Transposed"),
   720, 1440,  720, 1440,  1, 0, 1 };
+static const res_t r_720x1440ov =
+{ "720x1440ov",   N_("1440 x 720 DPI Transposed"),
+  1440, 1440, 720, 1440, 1, 0, 1};
+static const res_t r_1440x720ov =
+{ "1440x720ov",    N_("1440 x 720 DPI"),
+  2880, 720,  1440, 720,  1, 0, 1 };
 
 static const res_t r_2880x720mw =
 { "2880x720mw",    N_("2880 x 720 DPI"),
@@ -314,6 +323,22 @@ const res_t *const stpi_escp2_superfine_reslist[] =
   &r_2880x2880sw,
 
   &r_5760x2880sw,
+
+  NULL
+};
+
+const res_t *const stpi_escp2_picturemate_reslist[] =
+{
+
+  &r_720x720oov,
+
+  &r_1440x720ov,
+
+  &r_720x1440ov,
+
+  &r_1440x1440sw,
+
+  &r_2880x1440sw,
 
   NULL
 };

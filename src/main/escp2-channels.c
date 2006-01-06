@@ -2478,7 +2478,7 @@ static const escp2_inkname_t *const picturemate_photo_ink_types[] =
   &six_color_picturemate_extended_inkset,
 };
 
-DECLARE_INKLIST("picturemate", picturemate, standard,
+DECLARE_INKLIST("picturemate", picturemate, picturemate_photo,
 		N_("Standard"), picturemate, picturemate, standard);
 
 
