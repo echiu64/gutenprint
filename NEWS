@@ -152,9 +152,9 @@ These release notes contain the following sections:
   12) Preliminary support for the Epson PictureMate/E-100.  This
      printer may or may not function correctly, and is not tuned.
 
-  13) Experimental support for the Epson Stylus Photo RX700.  This
-     printer may or may not function correctly, and is not likely to
-     be properly tuned.
+  13) Preliminary support for the Epson Stylus Photo RX700.  This
+     printer has been partially tuned, but there will likely be
+     further changes to this driver.
 
   14) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
      Sony UP-DR150, and Olympus P-11 has been added.
