@@ -127,7 +127,7 @@ static const escp2_dot_size_t spro_c4pl_pigment_dotsizes =
 { 0x11, 0x11, 0x11, 0x10, 0x10,   -1,    5,    5,    5 };
 
 static const escp2_dot_size_t picturemate_dotsizes =
-{   -1,   -1,   -1, 0x12, 0x12, 0x12, 0x12,   -1,   -1 };
+{   -1,   -1,   -1,   -1, 0x12, 0x12, 0x12, 0x12,   -1 };
 
 /*
  * Bits are for:
@@ -292,7 +292,7 @@ static const escp2_densities_t spro10000_densities =
 { 2.6, 1.3,  0.65, 0.431, 0.216, 0.392, 0.0,   0.0,   0.0   };
 
 static const escp2_densities_t picturemate_densities =
-{   0,   0,     0, 0.9, 0.45, 0.225, 0.113, 0.0,   0.0   };
+{   0,   0,     0,     0, 1.756, 0.878, 0.714, 0.582, 0.0   };
 
 
 static const input_slot_t standard_roll_feed_input_slots[] =
@@ -1963,12 +1963,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   },
   /* 73: E-100/PictureMate */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
-    360, 14400, -1, 2880, 1440, 720, 720, 0, 1, 0, 0, 0, 0, 0,
+    360, 28800, -1, 5760, 1440, 1440, 720, 0, 1, 0, 0, 0, 0, 0,
     INCH(4), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,

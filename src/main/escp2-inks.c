@@ -119,9 +119,9 @@ static const escp2_dropsize_t escp2_1_5pl_5760_dropsizes =
 static const escp2_dropsize_t escp2_picturemate_1440_dropsizes =
   { "picturemate_1440", 3, { 0.4, 0.65, 1.0 } };
 static const escp2_dropsize_t escp2_picturemate_2880_dropsizes =
-  { "picturemate_2880", 3, { 0.4, 0.65, 1.0 } };
-static const escp2_dropsize_t escp2_picturemate_2880_1440_dropsizes =
-  { "picturemate_2880_1440", 3, { 0.4, 0.65, 1.0 } };
+  { "picturemate_2880", 2, { 0.615, 1.0 } };
+static const escp2_dropsize_t escp2_picturemate_5760_dropsizes =
+  { "picturemate_5760", 1, { 1.0 } };
 
 /* Stylus Photo R300 */
 static const escp2_dropsize_t escp2_r300_360_dropsizes =
@@ -317,10 +317,10 @@ const escp2_drop_list_t stpi_escp2_variable_picturemate_drops =
   &escp2_picturemate_1440_dropsizes,
   &escp2_picturemate_1440_dropsizes,
   &escp2_picturemate_1440_dropsizes,
+  &escp2_picturemate_1440_dropsizes,
   &escp2_picturemate_2880_dropsizes,
-  &escp2_picturemate_2880_1440_dropsizes,
-  &escp2_picturemate_2880_1440_dropsizes,
-  &escp2_picturemate_2880_1440_dropsizes,
+  &escp2_picturemate_5760_dropsizes,
+  &escp2_picturemate_5760_dropsizes,
 };
 
 const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
