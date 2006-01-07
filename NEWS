@@ -149,9 +149,7 @@ These release notes contain the following sections:
      printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  12) Preliminary support for the Epson PictureMate/E-100.  This
-     printer has been partially tuned, but there will likely be
-     further changes to this driver.
+  12) Support for the Epson PictureMate/E-100.
 
   13) Preliminary support for the Epson Stylus Photo RX700.  This
      printer has been partially tuned, but there will likely be
@@ -1489,7 +1487,7 @@ EPSON Stylus DX-3850
 EPSON Stylus DX-4200
 EPSON Stylus DX-4250
 EPSON Stylus DX-4800
-EPSON PictureMate       (Preliminary)
+EPSON PictureMate
 EPSON CL-700
 EPSON CL-750
 EPSON CL-760    (Experimental)
@@ -1888,7 +1886,8 @@ Epson Stylus DX3850            escp2-dx3850    EPSON Stylus DX-3850
 Epson Stylus DX4200            escp2-dx4200    EPSON Stylus DX-4200
 Epson Stylus DX4250            escp2-dx4250    EPSON Stylus DX-4250
 Epson Stylus DX4800            escp2-dx4800    EPSON Stylus DX-4800
-Epson PictureMate              escp2-picmate   EPSON Stylus PictureMate
+Epson PictureMate              escp2-picmate   EPSON PictureMate
+Epson PictureMate Deluxe       escp2-picmated  EPSON PictureMate Deluxe
 Epson CL-700                   escp2-cl700     EPSON CL-700
 Epson CL-750                   escp2-cl750     EPSON CL-750
 Epson CL-760                   escp2-cl760     EPSON CL-760
