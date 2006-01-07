@@ -31,15 +31,6 @@ encourage people to test it and report their results.
 Gutenprint currently contains over 200 drivers supporting in excess of
 700 printer models.
 
-The Print plug-in for the GIMP requires the GIMP 1.2.3 or above on the
-1.2 line (1.2.5 is recommended), or the GIMP 2.0 or above.  You may
-need to install packages named "gimp-devel", "gtk-devel", and
-"glib-devel" (or similar equivalents) on many systems.  For GIMP 2.0,
-you may need to install "gimp2-devel", "gtk2-devel", "glib2-devel",
-and possibly other packages as well.  This plug-in will work with any
-printing system, and offers a comprehensive user interface to control
-all aspects of the printing process.
-
 The CUPS driver requires CUPS 1.1.15 or higher.  If you wish to build
 this from source, you may need to install a package named "cups-devel"
 or something similar.  Please the rest of the release notes, in
@@ -51,6 +42,16 @@ a flexible, general purpose printing system capable of producing the
 highest quality output with any of the printers supported by this
 package.  We strongly recommend using CUPS with Gutenprint as a
 general-purpose printing solution.
+
+The Print plug-in for the GIMP requires either the GIMP 2.0 or above,
+or 1.2.3 or above on the 1.2 line (1.2.5 is recommended), or the GIMP
+2.0 or above.  You may need to install packages named "gimp-devel",
+"gtk-devel", and "glib-devel" (or similar equivalents) on many
+systems.  For GIMP 2.0, you may need to install "gimp2-devel",
+"gtk2-devel", "glib2-devel", and possibly other packages as well.
+This plug-in will work with any printing system, and offers a
+comprehensive user interface to control all aspects of the printing
+process.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It

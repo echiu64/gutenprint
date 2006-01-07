@@ -45,19 +45,15 @@ BASIC INSTALLATION
 
     Gutenprint includes the following primary components:
 
-      - The core driver, libgutenprint.so
-      - A user's manual
-      - A Print plug-in for the GIMP
+      - The core driver package
       - A CUPS (Common UNIX Printing System) driver
-      - An IJS-based Ghostscript driver
+      - A Print plug-in for the GIMP
       - Support for the Foomatic spooler configuration system
-      - A utility to administer Epson printers, escputil
+      - A Ghostscript driver using the IJS plugin facility
+      - A utility to administer and maintain Epson printers
 
-    By default, Gutenprint builds the Print plugin for the GIMP, the
-    user's manual, and a utility to perform head cleaning, nozzle
-    alignment, and other tasks on EPSON Stylus inkjet printers, named
-    "escputil".  Directions for building other components are listed
-    below.
+    The core driver package is always built.  Directions for building
+    the other components are listed below.
 
     Please check our web site at http://gimp-print.sourceforge.net for
     details about what is and is not supported.
@@ -90,56 +86,6 @@ BASIC INSTALLATION
     need to use 'gmake'.
 
 
-THE GIMP
-
-    Gutenprint may be used as a plug-in for the GIMP, providing the
-    ability to print images.  If you wish to do so, you must use the
-    GIMP 1.2.3 or above on the 1.2 line, or any GIMP 2.x release (2.0,
-    2.1, 2.2, etc.)  Please read the release notes in addition to this
-    README, as there have been some changes in procedure since
-    Gimp-Print 4.2 if you are using certain versions of the GIMP.
-
-    To build and install the GIMP Print plug-in for the GIMP 1.2:
-
-    ./configure [--with-gimp]
-    make
-    make install
-
-    For the GIMP 2.0 or above, the option "--with-gimp2" rather than
-    "--with-gimp" should be used.
-
-    You may optionally specify --with-gimp or --with-gimp2 if you wish
-    to be explicit about building the GIMP Print plugin; --with-gimp
-    is implied if `configure' detects that the GIMP is installed, so
-    you do not actually need to specify it.
-
-    This installs the GIMP Print plugin in your system plug-in
-    directory.  If you wish to install it in your personal plugin
-    directory, you may use
-
-    ./configure --enable-user-install
-
-    If you have installed the GIMP as a precompiled package
-    (e. g. from an RPM), you will need to install the gimp-devel
-    (sometimes called gimp-developer, or something similar) package as
-    well as the gimp package.  The GIMP package as supplied in most
-    distributions only contains what's needed to run the GIMP, not the
-    additional files needed to build GIMP-based applications and
-    plugins such as the Print plugin.  On some systems, you will also
-    need to install gtk-devel and glib-devel packages as well.
-
-    If you have installed the GIMP from source on Linux: after running
-    make install, you must run ldconfig as root before attempting to
-    build this plugin.
-
-    The GIMP 1.2 will not be supported in Gutenprint 5.1 and beyond.
-    However, all Gutenprint 5.0 releases will support The GIMP 1.2.
-
-    The GIMP 2.x plugin may eventually be migrated to The GIMP project
-    for a future GIMP release.  It may be removed from the Gutenprint
-    distribution in Gutenprint 5.1.
-
-
 CUPS
 
     Gutenprint may be used as a driver under CUPS (Common UNIX
@@ -150,8 +96,9 @@ CUPS
     above; that release of CUPS fixes some important bugs.
 
     This package includes a CUPS driver that may be built, allowing
-    use of this software for general printing purposes.  To build and
-    install the CUPS driver, you must run:
+    use of this software for general printing purposes.  Gutenprint
+    will normally detect the presence of CUPS; if it doesn't on your
+    system, you must run:
 
     ./configure --with-cups
     make
@@ -277,6 +224,56 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     and installing CUPS.
 
 
+THE GIMP
+
+    Gutenprint may be used as a plug-in for the GIMP, providing the
+    ability to print images.  If you wish to do so, you must use the
+    GIMP 1.2.3 or above on the 1.2 line, or any GIMP 2.x release (2.0,
+    2.1, 2.2, etc.)  Please read the release notes in addition to this
+    README, as there have been some changes in procedure since
+    Gimp-Print 4.2 if you are using certain versions of the GIMP.
+
+    To build and install the GIMP Print plug-in for the GIMP 1.2:
+
+    ./configure [--with-gimp]
+    make
+    make install
+
+    For the GIMP 2.0 or above, the option "--with-gimp2" rather than
+    "--with-gimp" should be used.
+
+    You may optionally specify --with-gimp or --with-gimp2 if you wish
+    to be explicit about building the GIMP Print plugin; --with-gimp
+    is implied if `configure' detects that the GIMP is installed, so
+    you do not actually need to specify it.
+
+    This installs the GIMP Print plugin in your system plug-in
+    directory.  If you wish to install it in your personal plugin
+    directory, you may use
+
+    ./configure --enable-user-install
+
+    If you have installed the GIMP as a precompiled package
+    (e. g. from an RPM), you will need to install the gimp-devel
+    (sometimes called gimp-developer, or something similar) package as
+    well as the gimp package.  The GIMP package as supplied in most
+    distributions only contains what's needed to run the GIMP, not the
+    additional files needed to build GIMP-based applications and
+    plugins such as the Print plugin.  On some systems, you will also
+    need to install gtk-devel and glib-devel packages as well.
+
+    If you have installed the GIMP from source on Linux: after running
+    make install, you must run ldconfig as root before attempting to
+    build this plugin.
+
+    The GIMP 1.2 will not be supported in Gutenprint 5.1 and beyond.
+    However, all Gutenprint 5.0 releases will support The GIMP 1.2.
+
+    The GIMP 2.x plugin may eventually be migrated to The GIMP project
+    for a future GIMP release.  It may be removed from the Gutenprint
+    distribution in Gutenprint 5.1.
+
+
 FOOMATIC
 
     Gutenprint includes support for the Foomatic meta-driver package.
@@ -392,12 +389,13 @@ GHOSTSCRIPT
     are very complex and are subject to change, and the older printer
     configuration tools (such as apsfilter and magicfilter) do not
     provide a convenient interface to the driver's capabilities.  We
-    no longer provide documentation on manual use of this driver.
+    no longer provide documentation on direct use of this driver
+    without the Foomatic front end.
 
     Gutenprint 5.0 no longer provides the monolithic "stp" driver
-    present in 4.2.  This driver, which was linked directly into
-    Ghostscript, was very difficult to maintain and required a complex
-    integration procedure.
+    present in Gimp-Print 4.2.  This driver, which was compiled and
+    linked directly into Ghostscript, was very difficult to maintain
+    and required a complex integration procedure.
 
 
 RECOMMENDED SETTINGS
