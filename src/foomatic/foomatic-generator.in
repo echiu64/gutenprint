@@ -1269,6 +1269,8 @@ sub qualityorder {
 		    "hquni",
 		    "hq2",
 		    "hq2uni",
+		    "ov",
+		    "oov",
 		    # Canon
 		    "dmt",
 		    );
