@@ -172,14 +172,21 @@ These release notes contain the following sections:
      Any profiles generated against these printers will have to be
      re-created.
 
-  17) New "transposed" resolutions (1440x720 and 2880x1440) have been
+  17) The Epson Stylus Photo R800 and R1800 have been retuned to give
+     improved detail in the shadows, reduced ink usage, more accurate
+     grayscale, and more accurate colors.
+
+     Any profiles generated against these printers will have to be
+     re-created.
+
+  18) New "transposed" resolutions (1440x720 and 2880x1440) have been
      added for some Epson printers.  These resolutions are actually
      equivalent to 720x1440 and 1440x2880 DPI respectively.  In some
      cases these may yield better results (specifically, less
      microbanding) than the normal 1440x720 and 2880x1440 DPI
      resolutions.
 
-  18) Quadtone printing now works correctly regardless of whether
+  19) Quadtone printing now works correctly regardless of whether
      color or grayscale mode is selected.
 
 
