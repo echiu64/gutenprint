@@ -146,14 +146,14 @@ These release notes contain the following sections:
      multi-function devices, this package supports only the printer
      function -- it does not support scanning or fax).
 
-  11) Preliminary support for the Epson Stylus Photo R2400.  This
-     printer has been partially tuned, but there will likely be
+  11) Preliminary support for the Epson Stylus Photo R2400/PX-5500.
+     This printer has been partially tuned, but there will likely be
      further changes to this driver.
 
   12) Support for the Epson PictureMate/E-100.
 
-  13) Preliminary support for the Epson Stylus Photo RX700.  This
-     printer has been partially tuned, but there will likely be
+  13) Preliminary support for the Epson Stylus Photo RX700/PM-A900.
+     This printer has been partially tuned, but there will likely be
      further changes to this driver.
 
   14) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
@@ -1538,6 +1538,7 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PM-A900
 EPSON PM-D750
 EPSON PM-D770
 EPSON PM-D1000
@@ -1550,6 +1551,7 @@ EPSON PX-G900
 EPSON PX-G5000
 EPSON PX-V500
 EPSON PX-V600
+EPSON PX-5500
 EPSON PX-7000
 EPSON PX-9000
 Fujifilm Printpix CX-400
@@ -1939,6 +1941,7 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PM-A900                  escp2-pma900    EPSON PM-A900
 Epson PM-D750                  escp2-pmd750    EPSON PM-D750
 Epson PM-D770                  escp2-pmd770    EPSON PM-D770
 Epson PM-D1000                 escp2-pmd1000   EPSON PM-D1000
@@ -1952,6 +1955,7 @@ Epson PX-G920                  escp2-pxg920    EPSON PX-G920
 Epson PX-G5000                 escp2-pxg5000   EPSON PX-G5000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-V600                  escp2-pxv600    EPSON PX-V600
+Epson PX-5500                  escp2-px5500    EPSON PX-5500
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
 Fujifilm Printpix CX-400       fujifilm-cx400  Fujifilm Printpix CX-400

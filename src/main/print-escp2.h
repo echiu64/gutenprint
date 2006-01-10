@@ -335,6 +335,7 @@ typedef struct
 
 typedef struct
 {
+  const char *name;
   const quality_t *qualities;
   size_t n_quals;
 } quality_list_t;

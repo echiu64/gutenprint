@@ -553,6 +553,14 @@ static const stp_raw_t je_deinit_sequence =
 
 #define INCH(x)		(72 * x)
 
+#define DECLARE_QUALITY_LIST(name)			\
+static const quality_list_t name##_quality_list =	\
+{							\
+  #name,						\
+  name##_qualities,					\
+  sizeof(name##_qualities) / sizeof(const quality_t),	\
+}
+
 static const quality_t standard_qualities[] =
 {
   { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
@@ -566,11 +574,35 @@ static const quality_t standard_qualities[] =
   { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
 };
 
-static const quality_list_t standard_quality_list =
+DECLARE_QUALITY_LIST(standard);
+
+static const quality_t p1_5_qualities[] =
 {
-  standard_qualities,
-  sizeof(standard_qualities) / sizeof(quality_t)
+  { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
+  { "Economy",     N_("Economy"),      360, 180, 360, 240, 360, 180 },
+  { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
+  { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
+  { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
+  { "Photo",       N_("Photo"),        1440, 1440, 1440, 1440, 1440, 1440 },
+  { "HighPhoto",   N_("Super Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
+  { "UltraPhoto",  N_("Ultra Photo"),  2880, 2880, 2880, 2880, 2880, 2880 },
+  { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
 };
+
+DECLARE_QUALITY_LIST(p1_5);
+
+static const quality_t picturemate_qualities[] =
+{
+  { "Draft",       N_("Draft"),        1440,  720, 1440,  720, 1440,  720 },
+  { "Standard",    N_("Standard"),     1440, 1440, 1440, 1440, 1440, 1440 },
+  { "Photo",       N_("Photo"),        1440, 1440, 1440, 1440, 1440, 1440 },
+  { "High",        N_("High"),         2880, 1440, 2880, 1440, 2880, 1440 },
+  { "HighPhoto",   N_("Super Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
+  { "UltraPhoto",  N_("Ultra Photo"),  5760, 1440, 5760, 1440, 5760, 1440 },
+  { "Best",        N_("Best"),         5760, 1440, 5760, 1440, 5760, 1440 },
+};
+
+DECLARE_QUALITY_LIST(picturemate);
 
 #define DECLARE_CHANNEL_LIST(name)			\
 static const channel_name_t name##_channel_name_list =	\
@@ -1822,7 +1854,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
     variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
-    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
   },
   /* 65: Stylus Photo CX4600 */
@@ -1873,7 +1905,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
     variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
-    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
   },
   /* 68: PM-G820 */
@@ -1917,14 +1949,14 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0,
+    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
     variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
-    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &rx700_channel_name_list
   },
   /* 71: Stylus Photo R2400 */
@@ -1975,7 +2007,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     picturemate_dotsizes, picturemate_densities, &stpi_escp2_variable_picturemate_drops,
     stpi_escp2_picturemate_reslist, &stpi_escp2_picturemate_inkgroup,
     variable_bits, c1_5_base_res, &default_input_slot_list,
-    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    &picturemate_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &picturemate_channel_name_list
   },
 };
