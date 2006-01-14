@@ -1,0 +1,933 @@
+Basic Printer Options
+
+    These options control basic printer functions.
+
+	Printer Model
+
+		Select the printer to use.  It must be supplied in all
+		cases.
+
+	Page Size
+
+		Select the paper (media) size to print to.  Some
+		printers support custom paper sizes, while others only
+		support certain preset sizes.
+
+		Note that this option refers to the actual size of the
+		media, not the printable area.  For example, selecting
+		A4 refers to actual A4 paper, whatever the margins may
+		be.
+
+	Double-Sided Printing
+
+		Otherwise known as "duplex" printing, this is offered
+		for printers capable of printing on both sides of the
+		page.  In addition to single-sided printing, there are
+		two modes of duplex operation: the page may be flipped
+		over its long edge (like a book), or over the short
+		edge (like a note pad; this is sometimes referred to
+		as Tumble).
+
+	Media Type
+
+		Select the kind of paper or other media being printed
+		to.  This enables the printer and driver to be set up
+		appropriately for the kind of paper in use.
+
+		It is important to set the Media Type to the correct
+		value if possible, or if not to a closely related
+		medium.	 The printer may need to know what kind of
+		media is in use to determine how to feed the paper
+		correctly; the driver needs to know in order to select
+		the right output settings.
+
+	Media Source
+
+		Select the source of the paper or other media.	This
+		option is offered with printers that have multiple
+		feeds, for example multiple paper bins, manual feed,
+		printing directly to a CD, etc.
+
+	Ink Set
+
+		Select the kind of ink in use in the printer, for
+		printers offering different optional inks (for
+		example, ink designed for matte paper vs. ink designed
+		for glossy paper).
+
+	Borderless
+
+		Select whether to print with borders or not, for
+		printers with the capability to overprint the page.
+		This is otherwise known as "full bleed".
+
+	Enhanced Gloss
+
+		Some newer printers have a cartridge of "gloss
+		enhancer", which helps solve the problem of pigment
+		inks having an inconsistent "luster" on glossy paper.
+		Use this option to enable use of the gloss enhancer.
+
+
+Advanced Printer Options
+
+    These options control more advanced printer-specific behaviors.
+    Generally it's not necessary to adjust these options.
+
+	Resolution
+
+		Select the resolution to print at (dots per inch).  In
+		general, higher resolutions produce better quality, at
+		the expense of additional time.
+
+		As a general rule of thumb, on laser printers and
+		older inkjet printers resolutions of 300 DPI or
+		thereabouts provide draft quality; lower resolutions
+		provide economy draft quality and cannot produce solid
+		black.	Resolutions of 600 or 720 DPI produce good
+		quality output; higher resolutions are useful for very
+		high quality image or graphic output.  Newer inkjet
+		printers, with smaller ink drop sizes, typically
+		require higher resolutions to produce acceptable
+		output; in some cases even 1440x720 DPI does not
+		produce good quality.
+
+		Users of Epson inkjet printers have another setting
+		available: the Quality option can be used to
+		indirectly control the printer resolution, among other
+		things.	 This offers a simpler way to control output
+		quality.
+
+	Ink Type
+
+		Select which subset of inks to use for printing.  For
+		example, on a photo printer with additional light cyan
+		and light magenta inks, it's possible to print with
+		only the standard cyan, magenta, yellow, and black
+		inks.
+
+		Normally there is no reason to use any setting other
+		than the default.  Reasons why one might want to use
+		it include:
+
+		1) Some black inks are not compatible with certain
+		   glossy papers.  If the black ink smudges on your
+		   paper, you may elect to use an option without black
+		   ink (a "composite" setting).
+
+		2) Some inks or paper/ink combinations produce color
+		   shifts when the light inks are used.	 If your
+		   chosen combination produces unacceptable color
+		   shifts or color casts, you may prefer to use the
+		   Four Color Standard option, which will generally
+		   yield more consistent color at the expense of
+		   "grainier" output.
+
+	Printing Direction
+
+		Most inkjet printers can print either unidirectionally
+		(the head prints only when moving in one direction) or
+		bidirectionally (the head prints when moving in both
+		directions).  Bidirectional printing is generally
+		faster, since the printer is printing at all times
+		rather than wasting much of the time returning the
+		head to the starting position.	On many printers,
+		however, unidirectional printing produces better
+		quality output than bidirectional printing.
+
+		The standard setting for this option adapts to the
+		printing resolution.
+
+	Laminate Pattern
+
+		This control is available on some dye sublimation
+		printers.
+
+
+Specialized Printer Options
+
+    These options control unusual printer features.  They may be
+    useful in certain circumstances.
+
+	CD Hub Size
+
+		This setting may be used on printers with the
+		capability to print directly to a CD.  Depending upon
+		your choice of media, you may be able to safely print
+		all the way to the inner hole of the CD, or you may
+		not be able to print any closer than the hub about an
+		inch from the center.
+
+	CD Horizontal Fine Adjustment
+	CD Vertical Fine Adjustment
+
+		These settings allow you to shift the position of the
+		print while printing to a CD.  If you find that your
+		print is not centered on the CD surface, you may need
+		to adjust these setting to compensate.
+
+	Interleave Method
+
+		Most inkjet printers create the printed image using
+		multiple overlapping passes of the print head.	On
+		many printers this function is performed within the
+		printer itself and cannot be adjusted, but with many
+		Epson inkjet printers (and some others), this is
+		performed by the driver or may be specified to the
+		printer.  One advantage of the multiple overlapping
+		passes is that it can hide small differences between
+		the individual print head nozzles, which would
+		otherwise be visible as banding.  The different
+		interleave methods are different strategies for
+		for performing this overlapping; some are better at
+		hiding the banding than others.	 They all require the
+		same amount of time to print.
+
+		Generally it is not necessary to adjust this; in some
+		cases, depending upon your printer, you may find that
+		one pattern or another performs better.
+
+		On Epson Stylus Pro printers, this option allows
+		specifying different overlap patterns within the
+		printer.  In this case, the choice of overlap pattern
+		may affect both the printing time and the quality to a
+		significant degree.
+
+	Adjust dot size as necessary
+
+		This option is provided on many Epson inkjet printers
+		to allow you to use larger ink drops than those
+		normally used for the resolution chosen.  This may be
+		necessary if you use certain kinds of media or for
+		some reason wish to use much more ink (higher density)
+		than the default.  It should not be necessary to use
+		this option.
+
+
+Basic Output Controls
+
+	Output Type
+
+		This option specifies whether to print in color or
+		black and white/grayscale (using only black inks).
+		Black and white printing is generally faster than
+		color printing, even if the item being printed is
+		entirely black and white.  However, printing with only
+		black ink may yield a "grainy" appearance.
+
+	Color Correction
+
+		This selects the choice of color correction method
+		within Gutenprint.  The following options are offered:
+
+		* DEFAULT: Select a color correction mode appropriate
+		  for the document type being printed.
+
+		* HIGH ACCURACY: Apply optimum color correction to the
+		  output to produce the best color quality.  This
+		  corrects the hue, brightness, and saturation
+		  (brilliance of color).  This is the normal setting
+		  to use for printing photographs or graphics if you
+		  are not using any external color management.
+
+		* BRIGHT COLORS: Apply color correction to the output,
+		  but generate more brilliant colors in some cases.
+
+		* CORRECT HUE ONLY: Apply color correction to the
+		  output, but correct only the hue.  This option does
+		  not correct brightness and saturation.
+
+		* UNCORRECTED: Do not apply any color correction to
+		  the output beyond generating linear output.  This is
+		  the best setting to use when utilizing external
+		  color management; the high accuracy modes employ
+		  correction algorithms that may not work well with
+		  color management.
+
+		  Note that if you use color management you should use
+		  profiles created with Gutenprint and with the exact
+		  settings that you plan to print with.	 Profiles
+		  provided by the printer vendor are calibrated for
+		  the vendor's driver, which may not be identical to
+		  Gutenprint's calibration.
+
+		* DESATURATED: Print in pure grayscale, but using
+		  color inks.  The result is somewhat different from
+		  printing in black and white using the Output Type
+		  option -- the driver may use color ink, which
+		  generates smoother output and may yield better
+		  results on many papers.
+
+		* THRESHOLD: Convert all colors to fully on or fully
+		  off, eliminating all gradual tonal gradations.  The
+		  result is that the output will consist of all very
+		  pure colors.
+
+		* DENSITY: Correct only the amount of ink ("density"),
+		  otherwise performing no correction at all, even for
+		  linearity.  Prints made with this option will
+		  usually be very dark if no other color management is
+		  used.	 This may be useful if you are printing in 16
+		  bit precision or are using your own linearization
+		  curves.
+
+		* RAW: Perform no correction at all, even for
+		  density.  Prints made with this option will be very
+		  dark and may bleed (or even puddle!) ink if not used
+		  with external color management and linearization.
+		  This option may be useful if you are using external
+		  color management and linearization to get extremely
+		  saturated dark colors by using more ink in
+		  individual channels.	It should be used with extreme
+		  caution, as it is very easy to damage the printer if
+		  you are not careful.
+
+		* PRE-DITHERED: Interpret each pixel as the actual
+		  size of each drop to be printed.  Legal values of
+		  the drop sizes differ between printers; all printers
+		  support 0 (no droplet) and 1 (the largest droplet).
+		  Some printers support four levels (0, 1, 2, and 3).
+
+	Image Type
+
+		Specify the option that best describes your print job.
+		Your choice here will affect the processing of the
+		print job.  Currently available settings are:
+
+		* TEXT: Optimize the output for printing black text
+		  with no graphics.  This option results in crisp
+		  output and is very fast, but will yield very poor
+		  results with any color or grayscale graphics.
+
+		* GRAPHICS: Optimize the output for printing color
+		  graphics.  This option will generate smooth, bright
+		  output.
+
+		* MIXED TEXT AND GRAPHICS: Optimize the output for
+		  printing a mixture of text and graphics.
+
+		* PHOTOGRAPH: Optimize the output for printing
+		  photographs.	This option will generate smooth
+		  tones and high quality colors, but will be slower
+		  than the other options.
+
+		* LINE ART: Optimize the output for printing black and
+		  white line art with intricate detail.
+
+		* MANUAL CONTROL: Do not bias the output at all; use
+		  only the settings specified by the user.
+
+	Print Quality
+
+		Specify the desired output quality using convenient
+		presets.  Where this option is available, Gutenprint
+		will automatically adjust the printing resolution and
+		other options to generate the desired quality.
+		Settings chosen with this option may be overridden by
+		explicitly setting other settings, such as resolution.
+		Not all printers offer all of these options.
+		Currently available settings, in increasing order of
+		quality, include:
+
+		* FAST ECONOMY: Use the fastest printing mode
+		  available on the printer to print with a minimum
+		  amount of ink.  This option will produce very washed
+		  out colors and grays, and will typically be
+		  extremely grainy and streaky.
+
+		* ECONOMY: Print very rapidly with a reduced amount of
+		  ink.	This option will produce washed out colors and
+		  grays and will typically be quite grainy and
+		  streaky.
+
+		* DRAFT: Print low quality draft output quickly.  This
+		  option will typically produce acceptable colors with
+		  some amount of grain on plain paper, but will
+		  typically produce washed out and grainy output on
+		  high quality papers.	On some printers this may
+		  employ a special draft mode to print especially
+		  quickly at the expense of color fidelity.
+
+		* STANDARD: Print at a normal quality level for text
+		  or text/graphics on plain paper or basic inkjet
+		  paper.  This option will typically produce
+		  acceptable colors, but on high quality papers the
+		  output may be grainy or somewhat washed out.	This
+		  option may also be useful for printing draft copies
+		  of photographs on coated inkjet paper.
+
+		* HIGH: Print final copies of text or text/graphics on
+		  plain paper or inkjet paper.	This option will
+		  typically produce good color quality, but the
+		  quality may not be optimal for photographs on glossy
+		  paper.  This option may also be useful for printing
+		  draft copies of photographs on glossy paper.
+
+		* PHOTO: Print photographs on glossy paper or very
+		  high quality text, text/graphics, or line art on
+		  high quality paper.  In the latter application this
+		  will produce output close to laser printer quality.
+		  On the highest quality premium papers the result may
+		  still be a bit grainy.
+
+		* SUPER PHOTO: Print photographs on glossy paper with
+		  very high quality.  This will generally yield very
+		  good results on high quality premium paper but may
+		  be overkill on other papers.	This option is only
+		  offered on printers capable of producing very high
+		  quality output rivaling traditional photographic
+		  printing.  This option may also be appropriate for
+		  very intricate line art, where the required
+		  resolution may exceed the capabilities of laser
+		  printers.
+
+		* ULTRA PHOTO: Print photographs on premium papers
+		  with extremely high quality.	This option is only
+		  offered on printers capable of producing extremely
+		  high quality output matching or exceeding
+		  traditional photographic printing.
+
+		* BEST: Print with the best quality available on the
+		  printer for the application chosen.  This may be
+		  equivalent to one of the other settings; on a very
+		  few printers the resolution may exceed that of Ultra
+		  Photo mode.
+
+		* MANUAL CONTROL: Do not adjust the settings at all;
+		  use only the settings specified by the user.
+
+
+Basic Output Adjustments
+
+	Saturation
+
+		This option controls the vividness of the output
+		color; higher values produce more vivid colors.	 Very
+		low values produce muted colors; setting this to zero
+		produces gray.
+
+	Contrast
+
+		This controls the contrast of the output.  Lower
+		values produce less tonal range in the midtones
+		(lighter colors become darker, and darker colors
+		become lighter), which may allow for more definition
+		in the highlights and shadows.	Higher values do the
+		opposite: lighter colors become even lighter, while
+		darker colors become even darker.
+
+	Brightness
+
+		This control adjusts the general brightness of the
+		print; higher values produce generally lighter output,
+		while lower values produce generally darker output.
+		White and black are not changed; colors also retain
+		their hue and saturation.
+
+
+Advanced Output Adjustments
+
+    These controls adjust more specialized settings.
+
+	Dither Algorithm
+
+		Since inkjet printers have a very limited set of ink
+		colours, most colours have to be produced by mixing
+		the available inks.  This is done by printing patterns
+		of very small dots, fooling the eye into seeing many
+		different shades.  This process is called "dithering";
+		several different patterns are available, with
+		trade-offs between speed and quality.  The following
+		dither algorithms are currently available.  If no
+		algorithm is selected, the package chooses an
+		appropriate one based on other option settings.	 The
+		following algorithms are currently available,
+		generally in increasing order of quality.
+
+		* VERY FAST: This algorithm produces very rough,
+		  patterned output, but is extremely fast.  This
+		  generally yields poor results on modern inkjet
+		  printers, particularly models that offer multiple
+		  drop sizes, but it can yield very good results on
+		  laser printers.  It is a good choice for printing
+		  text or line art where no grayscale or color is
+		  used, and also works very well when Threshold color
+		  correction is used.
+
+		* FAST: This algorithm also produces output with very
+		  strong diagonal patterns.  It is also quite fast.
+		  It produces somewhat better results on modern inkjet
+		  printers that offer multiple drop sizes, but offers
+		  no advantages on laser printers or old (generally
+		  pre-1999) inkjet printers.
+
+		* ORDERED: This algorithm produces much smoother
+		  output than Fast or Very Fast.  It is somewhat
+		  slower than those algorithms.	 It utilizes a fixed
+		  pattern that is generally free of artifacts.	It is
+		  an excellent choice for printing draft copies of
+		  business graphics or photographs (charts, etc.) due
+		  to its lack of artifacts.
+
+		* ADAPTIVE HYBRID: This algorithm produces slightly
+		  smoother output than Ordered dithering, at some cost
+		  in performance.  It uses a fixed pattern in
+		  highlights to avoid artifacts, and error diffusion
+		  at higher densities to reduce noise (which looks
+		  like roughness in texture).  It is an excellent
+		  choice for printing business graphics due to its
+		  lack of artifacts and smooth texture in darker
+		  tones.
+
+		* EVEN TONE: This relatively new algorithm yields
+		  excellent smoothness in all tones (light, midtone,
+		  and shadow), but is considerably slower than most of
+		  the other algorithms.	 It is somewhat prone to
+		  artifacts, including "tearing", at sharp boundaries.
+		  This algorithm is well-suited for printing
+		  photographs, but is not as suitable for printing
+		  solid-tone graphics.
+
+		* HYBRID EVEN TONE: This algorithm combines Even Tone
+		  and Ordered dithering to yield smooth results with
+		  fewer artifacts than Even Tone dithering, but is
+		  even slower than standard Even Tone.	It uses the
+		  fixed pattern of Ordered dithering to break up the
+		  artifacts of Even Tone dithering.  The result is not
+		  quite as smooth as pure Even Tone, but the reduction
+		  of artifacts makes this an excellent choice for
+		  photographs or photographs mixed with other
+		  graphics.
+
+		* PREDITHERED: This is used in combination with
+		  dithering performed outside of Gutenprint or with
+		  printers that perform their own dithering.  It
+		  assumes that the output is already dithered and
+		  generates the appropriate drops based only on the
+		  values provided.
+
+	Linear Contrast Adjustment
+
+		The standard contrast control does not adjust the
+		black and white points of the output; black in the
+		input becomes black in the output, for example.	 The
+		result is that if contrast is reduced below 1, the
+		contrast in the highlights and shadows is actually
+		increased to keep the same total tonal range.
+
+		Gimp-Print 4.2 used a different kind of contrast
+		control.  In Gimp-Print 4.2, reducing the contrast
+		reduced the contrast throughout the tonal range,
+		resulting in white being printed as a light gray and
+		black as a dark gray (reducing the contrast all the
+		way to zero resulted in a uniform gray).  If contrast
+		was increased, the contrast was stretched until the
+		output reached either black or white; anything lighter
+		always printed as white and anything darker as black.
+
+		Turning this control on selects the old Gimp-Print 4.2
+		behavior.  This control is normally turned off.
+
+
+Output Density Controls
+
+    These controls adjust the amount of ink printed on the page.
+    These controls may be used to darken a solid, pure black, or
+    eliminate puddling (wet ink left on the paper that does not dry in
+    the printer) if needed.  They may also be useful for adjusting the
+    behavior of non-standard inks.  They should not be used to lighten
+    or darken the print if the black level is correct.
+
+    These controls are adjustments -- they adjust the amount of ink
+    relative to the amount selected by the driver for the paper and
+    resolution chosen.
+
+	Density Value
+
+		This control adjusts the total amount of ink used in
+		all channels (ink colors).
+
+	Black Density Value
+	Blue Density Value
+	Cyan Density Value
+	Magenta Density Value
+	Yellow Density Value
+	Red Density Value
+
+		These controls adjust the amount of ink used by each
+		channel separately.  They may be used to correct the
+		amount of ink if needed to strengthen or weaken
+		particular colors (e. g. if yellow is too strong or
+		too weak).  They should not be used to correct gray
+		balance (to produce neutral gray) -- the gray balance
+		controls described below should be used for that
+		purpose.
+
+	Ink Limit Value
+
+		This control adjusts the maximum amount of ink that
+		the driver will use to print with.  This may be used
+		if you want to use large amounts of particular inks to
+		achieve saturated dark colors, without using excessive
+		ink overall that will result in ink puddling or
+		spilling within the printer.  This control should be
+		used only by people very experienced in inkjet
+		printing.
+
+
+Gray Balance Controls
+
+    These controls adjust the gray balance by changing the amount of
+    each color of ink used to produce gray.  For example, if gray
+    prints somewhat greenish, it can be corrected by increasing the
+    magenta balance.
+
+	Magenta Balance Value
+	Yellow Balance Value
+	Cyan Balance Value
+
+
+Output Gamma Controls
+
+    These controls permit adjusting the gamma (exponent) of the
+    transfer curves of the individual channels.	 On most printers,
+    using a linear ink scale (that is, the amount of ink is directly
+    proportional to the input value) will produce very dark
+    highlights, as even quite small amounts of ink produce very strong
+    colors or gray.  Therefore, the driver uses less ink to produce
+    lighter colors.  This does not affect the darkest tones.
+
+    Setting these controls to larger values results in lighter
+    highlights and midtones.  These controls are adjustments -- they
+    adjust the gamma relative to the gamma chosen by the driver by
+    multiplying them together.	For example, if the driver uses a
+    gamma value of 2.0 for a particular printer, and you specify a
+    gamma of 0.75, the actual gamma used to print will be 1.5.
+
+	Composite Gamma Value
+
+		This control adjusts the gamma of all available ink
+		channels when printing in color.
+
+	Black Gamma Value
+
+		This control adjusts the gamma of the black channel
+		when printing in grayscale.
+
+	Magenta Gamma Value
+	Yellow Gamma Value
+	Cyan Gamma Value
+
+		These controls adjust the gamma of individual channels
+		when printing on printers that use cyan, magenta, and
+		yellow inks (all inkjet printers use CMY inks).	 These
+		gamma values are multiplied by the composite gamma
+		value and the gamma chosen by the driver.
+
+		Note that the black gamma value is not used when
+		printing in color.  That is because the amount of gray
+		is computed after the gamma transformation has been
+		applied to each channel, and the black channel is
+		synthesized from this value.  The GCR Transition Value
+		serves as a gamma value for the black channel.	In
+		addition, there are no gamma values for the special
+		channels for printers that offer additional inks (such
+		as red and blue) for similar reasons.
+
+	Red Gamma Value
+	Green Gamma Value
+	Blue Gamma Value
+
+		These controls adjust the gamma of individual channels
+		when printing on printers that use red, green, and
+		blue inks (Postscript printers and many dye
+		sublimation printers use red, green, and blue colors).
+		These gamma values are multiplied by the composite
+		gamma value and the gamma chosen by the driver.
+
+
+Gray Generation Controls
+
+    These controls adjust the conversion of gray into black ink and
+    composite (CMY) components.	 When printing in color, light grays
+    are often printed using composite inks rather than black ink to
+    reduce the speckling effect of dark black dots, while dark grays
+    and black are usually printed using black ink to achieve a darker
+    black.  With some ink and paper combinations it is necessary to
+    use a mixture of black and composite components to achieve maximum
+    density and in some cases to achieve neutral grays (some pigment
+    black inks are actually brown).
+
+    The effect of using too much or too little black ink varies.
+    Typically if too much black ink is used light colors and grays
+    will have noticeable speckling from the black drops, while if too
+    little black ink is used the midtones and dark tones will be
+    washed out and in some cases too much ink will be used leading to
+    puddles on the page.  In some cases very large amounts of
+    composite ink cause color shifts (darker grays are not neutral).
+    Epson Premium Glossy Photo Paper seems to be particularly prone to
+    this problem, particularly with dye inks.
+
+    In general, lower-quality papers require more black ink (composite
+    inks generally cannot create very dark tones), while higher
+    quality papers require less black ink (the composite inks can
+    create much darker grays, and the black dots appear much sharper).
+
+    Setting these controls effectively requires a good understanding
+    of gray generation and a fair amount of experimentation.  Normally
+    it's only necessary to set the paper type correctly to get good
+    results.
+
+	GCR Lower Bound Value
+
+		This control specifies the darkest shade of gray at
+		which no black ink will be used (i. e. any lighter
+		gray component will be printed using only composite
+		inks).	Setting this control to zero means that some
+		amount of black ink will always be used; setting it to
+		1 means that no black ink will ever be used.
+
+	GCR Upper Bound Value
+
+		This control specifies the lightest shade of gray at
+		which no composite CMY ink will be used (i. e. this
+		level of gray and higher will be printed using only
+		black ink).  This control should never be set any
+		lower than the GCR Lower Bound Value.  Setting this
+		control to zero means that only black ink is used to
+		print any gray value; setting this control to a value
+		greater than one means that some composite ink will be
+		used even when printing black.	The upper limit for
+		this control is 5 (in which case black will be printed
+		with no more than 20% black ink).
+
+		If you use an ink set requiring use of color inks to
+		produce neutral grayscale, you should set the GCR
+		Lower Bound Value to zero or a value very close to
+		zero and the GCR Upper Bound Value should be greater
+		than 1, along with a GCR Transition Value (below) of
+		1.  This will ensure that the proportion of black and
+		color inks will be close to constant throughout the
+		gray range.  With this kind of inkset, it's often
+		possible to produce cool or warm toned grayscale
+		prints by selecting Desaturated color correction and
+		adjusting the GCR Upper Bound Value appropriately.
+		For example, if the black ink has a brown (warm) cast,
+		increasing the GCR Upper Bound Value will yield a
+		cooler tone (less black ink) while decreasing it will
+		yield a warmer tone (more black ink).
+
+	GCR Transition Value
+
+		This control specifies the gamma of the GCR transition
+		curve.	Setting this control to a smaller value
+		results in less black ink being used in the lighter
+		portion of the transition region.  This control is
+		useful if the black ink is much darker than the
+		composite inks in order to produce a smoother
+		transition.
+
+	GCR Curve
+
+		This control (only available through the Print plugin
+		for the GIMP or other Gutenprint-based applications
+		that provide curve capability) allows you to specify
+		the conversion curve from gray to black/composite
+		precisely.  The horizontal axis of this curve
+		represents the gray level (between 0, or no gray at
+		all, and 1, or pure black); the vertical axis
+		represents the fraction of gray that is converted to
+		black (0 means only composite inks, and 1 means only
+		black ink).
+
+
+Output Linearization Curves
+
+    These controls permit adjusting the transfer (linearization)
+    curves of each channel precisely.  They are only available through
+    the Print plugin for the GIMP or other Gutenprint-based
+    applications that provide curve capability.	 All of these controls
+    are considered to be for very advanced use only.
+
+	Black Curve
+	Blue Curve
+	Cyan Curve
+	Magenta Curve
+	Yellow Curve
+	Red Curve
+	Green Curve
+
+
+Detailed Color Correction Curves
+
+    These controls permit adjusting precise characteristics of color
+    generation/correction.  They are only available through the Print
+    plugin for the GIMP or other Gutenprint-based applications that
+    provide curve capability.  All of these controls are considered to
+    be for very advanced use only.
+
+    The horizontal axis of all of these curves represents the hue of
+    the output.	 Hue is measured as an angle, where 0 and 360 degrees
+    represent cyan (or red, if the output inks are RGB).
+    Conventionally, these angles are represented as a number between 0
+    and 6 (each full number in this scale represents 60 degrees).  The
+    specific hue angles for CMY and RGB outputs are as follows:
+
+	     \			Ink Type
+	Angle \		RGB		CMY
+	-----  \	---		---
+	   0	|	Red		Cyan
+	   1	|	Yellow		Blue
+	   2	|	Green		Magenta
+	   3	|	Cyan		Red
+	   4	|	Blue		Yellow
+	   5	|	Magenta		Green		  
+	   6	|	Red		Cyan
+
+	Hue Adjustment Curve
+	Luminosity Adjustment Curve
+	Saturation Adjustment Curve
+
+		These controls adjust the color correction in High
+		Accuracy, Bright Colors, and Correct Hue Only color
+		correction modes.  These color correction modes work
+		by adjusting the hue, saturation, and luminosity (HSL)
+		of the output inks to achieve a more accurate color
+		than the color created by simply converting the red,
+		green, and blue inputs to cyan, magenta, and yellow
+		(or red, green, and blue) inks.	 Note that in this
+		printing context luminosity represents darkness
+		(amount of light subtracted) rather than brightness.
+
+		The saturation and hue adjustments are first applied.
+		The luminosity correction operates on only the color
+		component of the output.  Before this correction is
+		applied, any gray value is removed, and added back
+		after the correction is completed.
+
+		The vertical axis of the Hue Adjustment Curve
+		represents an angular difference that is added to the
+		base hue value to generate the desired output.	For
+		example, if the blue output is purple (too close to
+		magenta), adding a negative value to that range of the
+		output will bring the blue value more toward cyan
+		(less magenta).
+		
+		The vertical axis of the Saturation Adjustment Curve
+		represents an amount by which the saturation is
+		multiplied.  At any given hue point it may take on any
+		value between 0 (eliminate all color saturation, which
+		is equivalent to converting to pure gray) and 4
+		(dramatically boost the saturation).  Therefore, this
+		adjustment may be used to tone down excessively
+		brilliant colors (e. g. if the reds are overly
+		brilliant) or brighten up dull colors (e. g. if the
+		greens are somewhat dull).  This control has no effect
+		if Correct Hue Only is used.  If the saturation value
+		is greater than 1, the effect differs depending upon
+		whether High Accuracy or Bright Colors mode is
+		selected: if Bright Colors is selected, the saturation
+		is simply multiplied by the desired value and then set
+		to 1 if it would exceed unity.	If High Accuracy mode
+		is selected, the amount of saturation boost is
+		decreased if the starting saturation is high.
+
+		The vertical axis of the Luminosity Adjustment Curve
+		represents an amount by which the luminosity is
+		multiplied.  At any given hue point it may take on any
+		value between 0 (remove the color component
+		altogether) and 1 (leave it as is).  Therefore, the
+		function of the Luminosity Adjustment Curve is to
+		lighten excessively dark colors rather than to darken
+		light colors.  This control has no effect if Correct
+		Hue Only mode is used.
+
+	Blue Map
+	Cyan Map
+	Magenta Map
+	Yellow Map
+	Red Map
+
+		These curves control how the auxiliary red and blue
+		inks are used on the Epson Stylus Photo R800, Stylus
+		Photo R1800, and PictureMate family of printers.
+		These printers use auxiliary inks to achieve more
+		brilliance in the red and blue.	 Other printers in the
+		future may use other auxiliary channels, which will be
+		made available in similar fashion.
+
+		The vertical axis of each of these controls specifies
+		the amount of each ink that should be used to print
+		colors of that hue.  These curves are used only to
+		generate color; any gray component is removed prior to
+		the color generation and added back later.  For
+		example, it is possible to specify that a certain
+		shade of purple is printed using .2 red ink, .6
+		magenta ink, and .5 blue ink (hypothetically).
+
+
+Specialized Output Controls
+
+    These controls are used to modify the output in very
+    printer-specific ways.
+
+	Gloss Level Value
+
+		This control is provided on printers such as the Epson
+		Stylus Photo R800 and R1800 that offer a special gloss
+		enhancer to produce an even degree of gloss on glossy
+		papers regardless of the amount of ink used.  On
+		certain glossy papers, areas with high ink coverage
+		are a lot glossier than areas with little ink coverage
+		(highlights); the gloss enhancer is basically a
+		transparent ink that increases the gloss of these
+		areas.	This control specifies the desired total
+		amount of ink to be printed, including both the normal
+		color and black inks and the gloss enhancer.  If the
+		amount of normal inks is less than this amount, gloss
+		enhancer is used to increase the total amount of ink
+		used.
+
+
+Transition Controls
+
+    These controls adjust the level at which light inks (such as the
+    light cyan and magenta inks used on many "photo printers") are
+    used in place of the dark inks.  The light inks are used to
+    produce a smoother texture (less speckling); the light cyan
+    droplets, for example, are individually much less visible than the
+    normal dark cyan droplets.
+
+    The ink substitution works by replacing a certain amount of ink by
+    a mixture of the light and dark inks.  For example, the dark cyan
+    ink may be about 3 times as dark as the light cyan ink, so in
+    light areas the cyan may be replaced by 3 times as much light
+    cyan.  However, this only works up to a certain point; beyond that
+    point, adding more light ink does not significantly increase the
+    darkness of the ink.  These transition values adjust the limits at
+    which the ink substitution is done; the lower these limits are
+    set, the lighter the output at which dark ink is introduced.
+    Setting these values lower will generally yield more accurate
+    midtone colors at the expense of more speckling in the light
+    midtones and highlights.  Generally these values need to be lower
+    on low-quality paper than on high quality glossy paper.
+
+	Dark Yellow Transition Value
+	Light Gray Transition Value
+	Mid Gray Transition Value
+	Dark Gray Transition Value
+	Gray Transition Value
+	Light Cyan Transition Value
+	Light Magenta Transition Value
+	Light Yellow Transition Value
+
+
+Foomatic-only options
+
+    This control is available only when using the Foomatic interface.
+    It provides a collection of presets appropriate for various
+    printing tasks.  It is similar in concept to (and provided the
+    inspiration for) the Print Quality and Image Type options provided
+    in Gutenprint.
+
+	Printout Mode

@@ -112,33 +112,36 @@ These release notes contain the following sections:
 
      Related to this, the CUPS driver now handles Quality properly.
 
-  5) cups-genppdupdate now preserves the ownership and permissions of
+  5) A description of all options supported by Gutenprint has been
+     added, in doc/gutenprint-options.
+
+  6) cups-genppdupdate now preserves the ownership and permissions of
      the PPD files being updated, rather than forcibly setting the
      owner to root and the permissions to root read/write and everyone
      else read-only access.
 
-  6) The GIMP plugin now loads the printrc file correctly in all
+  7) The GIMP plugin now loads the printrc file correctly in all
      locales.  Previously it did not load floating point numbers
      correctly in locales that don't use the `.' character as the
      decimal point.
 
-  7) The GIMP plugin now offers improved choices in the color
+  8) The GIMP plugin now offers improved choices in the color
      adjustment window for viewing individual channels of the output.
      It now offers red/green/blue, cyan/magenta/yellow, or
      cyan/magenta/yellow/black as appropriate.
 
-  8) The GIMP plugin is now considerably more responsive; many
+  9) The GIMP plugin is now considerably more responsive; many
      unnecessary screen redraws have been removed.  In addition, a
      display glitch wherein horizontal lines were sometimes drawn
      through certain widgets has been fixed.
 
-  9) The Epson printer utility escputil now reports ink information
+  10) The Epson printer utility escputil now reports ink information
      more consistently across a wider range of printers.  In
      particular, the extended ink information command (escputil -e)
      should now work correctly on all models from the Stylus Color 740
      through the present.
 
-  10) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
+  11) Preliminary support for the Epson Stylus C68, C87, C88, CX3700,
      CX3800, CX3805, CX3810, CX4100, CX4200, CX4500, CX4700, CX4800,
      CX5700, CX5800, CX7700, CX7800, D68, D88, DX3800, DX3850, DX4200,
      DX4250, DX4800, PX-A650, and Stylus Photo R220, R320, and R340.
@@ -146,23 +149,23 @@ These release notes contain the following sections:
      multi-function devices, this package supports only the printer
      function -- it does not support scanning or fax).
 
-  11) Preliminary support for the Epson Stylus Photo R2400/PX-5500.
+  12) Preliminary support for the Epson Stylus Photo R2400/PX-5500.
      This printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  12) Support for the Epson PictureMate/E-100.
+  13) Support for the Epson PictureMate/E-100.
 
-  13) Preliminary support for the Epson Stylus Photo RX700/PM-A900.
+  14) Preliminary support for the Epson Stylus Photo RX700/PM-A900.
      This printer has been partially tuned, but there will likely be
      further changes to this driver.
 
-  14) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
+  15) Initial support for Canon S200, SELPHY CP-510 and SELPHY CP-710;
      Sony UP-DR150, and Olympus P-11 has been added.
 
-  15) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
+  16) The Canon PIXMA iP4000 printers can now print to cds.  Duplex
      printing with binding on the short side is now supported, too.
 
-  16) The Epson Stylus Photo R200 and related printers have been
+  17) The Epson Stylus Photo R200 and related printers have been
      retuned to give improved detail in the shadows, reduced ink
      usage, more accurate grayscale, and more accurate colors.
      Affected printers are presently the R200, R210, R220, R300, R310,
@@ -172,21 +175,21 @@ These release notes contain the following sections:
      Any profiles generated against these printers will have to be
      re-created.
 
-  17) The Epson Stylus Photo R800 and R1800 have been retuned to give
+  18) The Epson Stylus Photo R800 and R1800 have been retuned to give
      improved detail in the shadows, reduced ink usage, more accurate
      grayscale, and more accurate colors.
 
      Any profiles generated against these printers will have to be
      re-created.
 
-  18) New "transposed" resolutions (1440x720 and 2880x1440) have been
+  19) New "transposed" resolutions (1440x720 and 2880x1440) have been
      added for some Epson printers.  These resolutions are actually
      equivalent to 720x1440 and 1440x2880 DPI respectively.  In some
      cases these may yield better results (specifically, less
      microbanding) than the normal 1440x720 and 2880x1440 DPI
      resolutions.
 
-  19) Quadtone printing now works correctly regardless of whether
+  20) Quadtone printing now works correctly regardless of whether
      color or grayscale mode is selected.
 
 
@@ -1310,6 +1313,11 @@ good output at the highest resolution offered (2880x720, 2880x1440, or
 2880x2880 DPI), since in general these printers will not use multiple
 drop sizes at such high resolutions.
 
+Note that Gutenprint supports only the printer in multi-function
+devices -- this package does not support scanning, fax, copying, or
+any other function.  For scanning, please visit the SANE project
+(http://www.sane-project.org).
+
 Please see the printer-specific notes section following the list of
 printers for any instructions specific to your printer.
 
@@ -2410,14 +2418,15 @@ Printer-Specific Notes:
 	 and offer benefit over lower resolutions.	 
 
 	 It is almost always better to have a printing resolution with
-	 a smaller aspect ratio.  Therefore a resolution of 2880x1440
-	 DPI is likely to yield superior results to a resolution of
-	 5760x720 DPI.  Therefore, in some cases we do not offer
-	 certain resolutions offered by the printer vendor (in the
-	 case of the Epson Stylus Photo R800, 5760x1440 DPI) because
-	 they are not likely to yield any benefit (either speed or
-	 quality) over another resolution that we offer (in this case,
-	 2880x2880 DPI).
+	 a smaller aspect ratio (i. e. the horizontal and vertical
+	 resolutions are similar).  For example, a resolution of
+	 2880x1440 DPI is likely to yield superior results to a
+	 resolution of 5760x720 DPI.  Therefore, in some cases we do
+	 not offer certain resolutions offered by the printer vendor
+	 (in the case of the Epson Stylus Photo R800, 5760x1440 DPI)
+	 because they are not likely to yield any benefit (either
+	 speed or quality) over another resolution that we offer (in
+	 this case, 2880x2880 DPI).
 
 	 Indeed, we have received reports that in some cases a lower
 	 resolution may actually offer improved quality over a higher
