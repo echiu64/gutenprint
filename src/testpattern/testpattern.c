@@ -269,8 +269,11 @@ do_print(void)
   stp_set_string_parameter(v, "InputImageType", global_image_type);
   sprintf(tmp, "%d", global_bit_depth);
   stp_set_string_parameter(v, "ChannelBitDepth", tmp);
-  sprintf(tmp, "%d", global_channel_depth);
-  stp_set_string_parameter(v, "RawChannels", tmp);
+  if (strcmp(global_image_type, "Raw") == 0)
+    {
+      sprintf(tmp, "%d", global_channel_depth);
+      stp_set_string_parameter(v, "RawChannels", tmp);
+    }
   stp_set_float_parameter(v, "Density", global_density);
   stp_set_string_parameter(v, "Quality", "None");
   stp_set_string_parameter(v, "ImageType", "None");
@@ -330,6 +333,7 @@ main(int argc, char **argv)
 {
   int c;
   int status;
+  int global_status = 0;
   while (1)
     {
       c = getopt(argc, argv, "n");
@@ -348,10 +352,12 @@ main(int argc, char **argv)
   while (1)
     {
       status = do_print();
-      if (status != 0)
+      if (status == 1)
 	break;
+      else if (status != 0)
+	global_status = 1;
     }
-  return status - 1;
+  return global_status;
 }
 
 static void
