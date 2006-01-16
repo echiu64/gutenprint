@@ -21,9 +21,9 @@ href="http://sourceforge.net/project/?group_id=1537">our project page.</a></p>
 <p>If you want to use CVS source code, these are the commands (assuming you have CVS installed.) ;
 
 <PRE>
-cvs -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print login
+cvs -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gimp-print login
 
-cvs -z3 -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print co print
+cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net:/cvsroot/gimp-print co print
 </PRE>
 
 
