@@ -345,6 +345,11 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      CD.  This fine adjustment setting is not available in the
      Foomatic interface at present.
 
+     To print to a CD, you need to select the "Print to CD" media
+     source (input slot).  You must also select the appropriate page
+     size (3" CD or 5" CD).  Note that this is different from the
+     instructions Epson provides, which specify A4 media size.
+
   9) The Epson driver now offers a choice of print head weave
      patterns.  In addition to simplifying the resolution choices for
      Epson Stylus Pro printers, this offers an additional control for
