@@ -1,6 +1,6 @@
 #!/bin/sh
 
-retval=0;
+retval=0
 
 if [ -z "$STP_DATA_PATH" ] ; then
     STP_DATA_PATH=`pwd`/../main
@@ -218,6 +218,7 @@ run_testpattern() {
     if [ $? -ne 0 ] ; then
 	retval=1
     fi
+    exit $retval
 }
 
 set_args `getopt hgvp:nco "$@"`
@@ -278,9 +279,9 @@ print_all_testpatterns() {
 }
 
 if [ -z "$dontrun" ] ; then
-    (print_all_testpatterns | run_testpattern)
+    print_all_testpatterns | run_testpattern 2>&1
 else
-    (print_all_testpatterns)
+    print_all_testpatterns
 fi
 
 exit $?
