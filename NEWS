@@ -192,6 +192,15 @@ These release notes contain the following sections:
   20) Quadtone printing now works correctly regardless of whether
      color or grayscale mode is selected.
 
+The following bugs have been fixed in Gutenprint 5.0.0-rc2:
+
+1389788 Poor discoverability of advanced options
+1389787 CUPS driver does not set Quality correctly
+1389785 cups-genppdupdate sets PPD file owners incorrectly
+1388615 escputil with Epson CX3700
+1304710 Postscript driver corrupts output if width not multiple of 4
+1251978 PPD for Stylus Color 600
+
 
 ================================================================
 
