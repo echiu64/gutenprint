@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-27 11:57-0400\n"
+"POT-Creation-Date: 2006-01-14 15:38-0500\n"
 "PO-Revision-Date: 2001-12-29 20:10+0000\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -15,6 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/main/dither-main.c:46 src/main/print-color.c:49
+#: src/main/print-escp2.c:1527
 #, fuzzy
 msgid "Default"
 msgstr "Ορισμός Προκαθορισμένων Τιμών"
@@ -80,16 +81,16 @@ msgstr ""
 msgid "Density"
 msgstr "Πυκνότητα"
 
-#: src/main/dither-main.c:89 src/main/print-canon.c:1472
-#: src/main/print-canon.c:1480 src/main/print-canon.c:1488
-#: src/main/print-canon.c:1496 src/main/print-escp2.c:412
+#: src/main/dither-main.c:89 src/main/print-canon.c:1519
+#: src/main/print-canon.c:1527 src/main/print-canon.c:1535
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:412
 #: src/main/print-escp2.c:420 src/main/print-escp2.c:428
 #: src/main/print-escp2.c:436 src/main/print-escp2.c:444
 #: src/main/print-escp2.c:452 src/main/print-escp2.c:460
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1221 src/main/print-olympus.c:1229
-#: src/main/print-olympus.c:1237 src/main/print-olympus.c:1245
+#: src/main/print-olympus.c:1330 src/main/print-olympus.c:1338
+#: src/main/print-olympus.c:1346 src/main/print-olympus.c:1354
 #: src/main/print-pcl.c:1218 src/main/print-pcl.c:1226
 #: src/main/print-pcl.c:1234 src/main/print-pcl.c:1242
 msgid "Output Level Adjustment"
@@ -138,326 +139,327 @@ msgstr ""
 msgid "Dither algorithm"
 msgstr ""
 
-#: src/main/print-canon.c:1330
+#: src/main/print-canon.c:1367
 #, fuzzy
 msgid "90x90 DPI"
 msgstr "600 DPI"
 
-#: src/main/print-canon.c:1330
+#: src/main/print-canon.c:1367
 #, fuzzy
 msgid "90x90 DPI DMT"
 msgstr "600 DPI"
 
-#: src/main/print-canon.c:1331
+#: src/main/print-canon.c:1368
 #, fuzzy
 msgid "180x180 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1331
+#: src/main/print-canon.c:1368
 #, fuzzy
 msgid "180x180 DPI DMT"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1332
+#: src/main/print-canon.c:1369
 #, fuzzy
 msgid "360x360 DPI"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1332
+#: src/main/print-canon.c:1369
 #, fuzzy
 msgid "360x360 DPI DMT"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1333
+#: src/main/print-canon.c:1370
 #, fuzzy
 msgid "720x360 DPI"
 msgstr "720 x 360 DPI"
 
-#: src/main/print-canon.c:1333
+#: src/main/print-canon.c:1370
 #, fuzzy
 msgid "720x360 DPI DMT"
 msgstr "720 x 360 DPI"
 
-#: src/main/print-canon.c:1334
+#: src/main/print-canon.c:1371
 #, fuzzy
 msgid "720x720 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1334
+#: src/main/print-canon.c:1371
 #, fuzzy
 msgid "720x720 DPI DMT"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1335
+#: src/main/print-canon.c:1372
 #, fuzzy
 msgid "1440x720 DPI"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-canon.c:1335
+#: src/main/print-canon.c:1372
 #, fuzzy
 msgid "1440x720 DPI DMT"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-canon.c:1336
+#: src/main/print-canon.c:1373
 #, fuzzy
 msgid "1440x1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-canon.c:1336
+#: src/main/print-canon.c:1373
 #, fuzzy
 msgid "1440x1440 DPI DMT"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-canon.c:1337
+#: src/main/print-canon.c:1374
 #, fuzzy
 msgid "2880x2880 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1337
+#: src/main/print-canon.c:1374
 #, fuzzy
 msgid "2880x2880 DPI DMT"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1338 src/main/print-pcl.c:253
+#: src/main/print-canon.c:1375 src/main/print-pcl.c:253
 msgid "150x150 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1338
+#: src/main/print-canon.c:1375
 #, fuzzy
 msgid "150x150 DPI DMT"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1339 src/main/print-pcl.c:254
+#: src/main/print-canon.c:1376 src/main/print-pcl.c:254
 msgid "300x300 DPI"
 msgstr ""
 
-#: src/main/print-canon.c:1339
+#: src/main/print-canon.c:1376
 #, fuzzy
 msgid "300x300 DPI DMT"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1340 src/main/print-pcl.c:255
+#: src/main/print-canon.c:1377 src/main/print-pcl.c:255
 msgid "600x300 DPI"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1340
+#: src/main/print-canon.c:1377
 #, fuzzy
 msgid "600x300 DPI DMT"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1341 src/main/print-pcl.c:257
+#: src/main/print-canon.c:1378 src/main/print-pcl.c:257
 msgid "600x600 DPI"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1341
+#: src/main/print-canon.c:1378
 #, fuzzy
 msgid "600x600 DPI DMT"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1342 src/main/print-pcl.c:258
+#: src/main/print-canon.c:1379 src/main/print-pcl.c:258
 msgid "1200x600 DPI"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1342
+#: src/main/print-canon.c:1379
 #, fuzzy
 msgid "1200x600 DPI DMT"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1343
+#: src/main/print-canon.c:1380
 #, fuzzy
 msgid "1200x1200 DPI"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1343
+#: src/main/print-canon.c:1380
 #, fuzzy
 msgid "1200x1200 DPI DMT"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1344
+#: src/main/print-canon.c:1381
 #, fuzzy
 msgid "2400x2400 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-canon.c:1344
+#: src/main/print-canon.c:1381
 #, fuzzy
 msgid "2400x2400 DPI DMT"
 msgstr "2400x600 DPI"
 
-#: src/main/print-canon.c:1393 src/main/print-lexmark.c:857
-#: src/main/escp2-papers.c:965 src/main/escp2-papers.c:1009
-#: src/main/escp2-papers.c:1053 src/main/escp2-papers.c:1101
-#: src/main/escp2-papers.c:1145
+#: src/main/print-canon.c:1432 src/main/print-lexmark.c:857
+#: src/main/escp2-papers.c:1160 src/main/escp2-papers.c:1204
+#: src/main/escp2-papers.c:1248 src/main/escp2-papers.c:1296
+#: src/main/escp2-papers.c:1344 src/main/escp2-papers.c:1388
 #, fuzzy
 msgid "Plain Paper"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/print-canon.c:1394
+#: src/main/print-canon.c:1433
 #, fuzzy
 msgid "Plain Paper PIXMA"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/print-canon.c:1395 src/main/print-lexmark.c:865
-#: src/main/escp2-papers.c:973 src/main/escp2-papers.c:1017
-#: src/main/escp2-papers.c:1061 src/main/escp2-papers.c:1109
-#: src/main/escp2-papers.c:1153
+#: src/main/print-canon.c:1434 src/main/print-lexmark.c:865
+#: src/main/escp2-papers.c:1168 src/main/escp2-papers.c:1212
+#: src/main/escp2-papers.c:1256 src/main/escp2-papers.c:1304
+#: src/main/escp2-papers.c:1352 src/main/escp2-papers.c:1396
 #, fuzzy
 msgid "Transparencies"
 msgstr "Διαφανές"
 
-#: src/main/print-canon.c:1396
+#: src/main/print-canon.c:1435
 #, fuzzy
 msgid "Back Print Film"
 msgstr "Εκτύπωση σε Αρχείο"
 
-#: src/main/print-canon.c:1397
+#: src/main/print-canon.c:1436
 #, fuzzy
 msgid "Fabric Sheets"
 msgstr "Εκτύπωση Φύλλων"
 
-#: src/main/print-canon.c:1398
+#: src/main/print-canon.c:1437
 #, fuzzy
 msgid "Envelope"
 msgstr "Εκτύπωση Φακέλου"
 
 #
-#: src/main/print-canon.c:1399
+#: src/main/print-canon.c:1438
 #, fuzzy
 msgid "High Resolution Paper"
 msgstr "Aνάλυση Χ:"
 
-#: src/main/print-canon.c:1400
+#: src/main/print-canon.c:1439
 #, fuzzy
 msgid "T-Shirt Transfers"
 msgstr "Μεταφορά Αρχείων"
 
-#: src/main/print-canon.c:1401
+#: src/main/print-canon.c:1440
 msgid "High Gloss Film"
 msgstr ""
 
-#: src/main/print-canon.c:1402
+#: src/main/print-canon.c:1441
 msgid "Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-canon.c:1403
+#: src/main/print-canon.c:1442
 msgid "Glossy Photo Cards"
 msgstr ""
 
-#: src/main/print-canon.c:1404
+#: src/main/print-canon.c:1443
 msgid "Photo Paper Pro"
 msgstr ""
 
 #
-#: src/main/print-canon.c:1405 src/main/print-lexmark.c:905
-#: src/main/escp2-papers.c:1001 src/main/escp2-papers.c:1045
-#: src/main/escp2-papers.c:1093 src/main/escp2-papers.c:1137
-#: src/main/escp2-papers.c:1185
+#: src/main/print-canon.c:1444 src/main/print-lexmark.c:905
+#: src/main/escp2-papers.c:1196 src/main/escp2-papers.c:1240
+#: src/main/escp2-papers.c:1288 src/main/escp2-papers.c:1336
+#: src/main/escp2-papers.c:1380 src/main/escp2-papers.c:1428
+#: src/main/escp2-papers.c:1438
 msgid "Other"
 msgstr "¶λλα"
 
 #
-#: src/main/print-canon.c:1413 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1156
+#: src/main/print-canon.c:1454 src/main/print-escp2.c:177
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1265
 #: src/main/print-pcl.c:1153 src/main/print-ps.c:66
 #, fuzzy
 msgid "Page Size"
 msgstr "Μέγεθος"
 
-#: src/main/print-canon.c:1413 src/main/print-canon.c:1419
-#: src/main/print-canon.c:1425 src/main/print-canon.c:1431
-#: src/main/print-escp2.c:177 src/main/print-escp2.c:183
-#: src/main/print-escp2.c:189 src/main/print-escp2.c:195
-#: src/main/print-escp2.c:213 src/main/print-escp2.c:230
-#: src/main/print-escp2.c:236 src/main/print-escp2.c:248
-#: src/main/print-escp2.c:266 src/main/print-lexmark.c:266
-#: src/main/print-lexmark.c:272 src/main/print-lexmark.c:278
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1156
-#: src/main/print-olympus.c:1162 src/main/print-olympus.c:1168
-#: src/main/print-olympus.c:1174 src/main/print-pcl.c:1153
-#: src/main/print-pcl.c:1159 src/main/print-pcl.c:1165
-#: src/main/print-pcl.c:1171 src/main/print-pcl.c:1195 src/main/print-ps.c:66
-#: src/main/print-ps.c:72 src/main/print-ps.c:78 src/main/print-ps.c:84
-#: src/main/print-ps.c:96
+#: src/main/print-canon.c:1454 src/main/print-canon.c:1460
+#: src/main/print-canon.c:1466 src/main/print-canon.c:1472
+#: src/main/print-canon.c:1496 src/main/print-escp2.c:177
+#: src/main/print-escp2.c:183 src/main/print-escp2.c:189
+#: src/main/print-escp2.c:195 src/main/print-escp2.c:213
+#: src/main/print-escp2.c:230 src/main/print-escp2.c:236
+#: src/main/print-escp2.c:248 src/main/print-escp2.c:266
+#: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
+#: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
+#: src/main/print-olympus.c:1265 src/main/print-olympus.c:1271
+#: src/main/print-olympus.c:1277 src/main/print-olympus.c:1283
+#: src/main/print-pcl.c:1153 src/main/print-pcl.c:1159
+#: src/main/print-pcl.c:1165 src/main/print-pcl.c:1171
+#: src/main/print-pcl.c:1195 src/main/print-ps.c:66 src/main/print-ps.c:72
+#: src/main/print-ps.c:78 src/main/print-ps.c:84 src/main/print-ps.c:96
 #, fuzzy
 msgid "Basic Printer Setup"
 msgstr "Ρυθμίσεις Επιλογέα"
 
-#: src/main/print-canon.c:1414 src/main/print-escp2.c:178
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1157
+#: src/main/print-canon.c:1455 src/main/print-escp2.c:178
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1266
 #: src/main/print-pcl.c:1154 src/main/print-ps.c:67
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
 
-#: src/main/print-canon.c:1419 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1162
-#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1181
+#: src/main/print-canon.c:1460 src/main/print-escp2.c:183
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1271
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1179
 #, fuzzy
 msgid "Media Type"
 msgstr "Είδος MIME"
 
-#: src/main/print-canon.c:1420 src/main/print-escp2.c:184
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1163
+#: src/main/print-canon.c:1461 src/main/print-escp2.c:184
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1272
 #: src/main/print-pcl.c:1160 src/main/print-ps.c:73
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/main/print-canon.c:1425 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1168
-#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1205
+#: src/main/print-canon.c:1466 src/main/print-escp2.c:189
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1277
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1203
 #, fuzzy
 msgid "Media Source"
 msgstr "Ανοικτό Λογισμικό"
 
-#: src/main/print-canon.c:1426 src/main/print-escp2.c:190
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1169
+#: src/main/print-canon.c:1467 src/main/print-escp2.c:190
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1278
 #: src/main/print-pcl.c:1166 src/main/print-ps.c:79
 msgid "Source (input slot) of the media"
 msgstr ""
 
-#: src/main/print-canon.c:1431 src/main/print-escp2.c:213
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1174
-#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1277
+#: src/main/print-canon.c:1472 src/main/print-escp2.c:213
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1283
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1282
 msgid "Resolution"
 msgstr "Ανάλυση"
 
-#: src/main/print-canon.c:1432 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1175 src/main/print-pcl.c:1172
+#: src/main/print-canon.c:1473 src/main/print-lexmark.c:285
+#: src/main/print-olympus.c:1284 src/main/print-pcl.c:1172
 #: src/main/print-ps.c:85
 msgid "Resolution and quality of the print"
 msgstr ""
 
-#: src/main/print-canon.c:1437 src/main/print-escp2.c:224
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1180
+#: src/main/print-canon.c:1478 src/main/print-escp2.c:224
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1289
 #: src/main/print-pcl.c:1177 src/main/print-ps.c:90 src/main/print-raw.c:80
 #, fuzzy
 msgid "Ink Type"
 msgstr "Τύπος MIME"
 
-#: src/main/print-canon.c:1437 src/main/print-escp2.c:201
+#: src/main/print-canon.c:1478 src/main/print-escp2.c:201
 #: src/main/print-escp2.c:207 src/main/print-escp2.c:224
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1180 src/main/print-olympus.c:1186
-#: src/main/print-olympus.c:1192 src/main/print-pcl.c:1177
+#: src/main/print-olympus.c:1289 src/main/print-olympus.c:1295
+#: src/main/print-olympus.c:1301 src/main/print-pcl.c:1177
 #: src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr ""
 
-#: src/main/print-canon.c:1438 src/main/print-escp2.c:225
+#: src/main/print-canon.c:1479 src/main/print-escp2.c:225
 #: src/main/print-escp2.c:237 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1181 src/main/print-pcl.c:1178
+#: src/main/print-olympus.c:1290 src/main/print-pcl.c:1178
 #: src/main/print-ps.c:91 src/main/print-raw.c:81
 #, fuzzy
 msgid "Type of ink in the printer"
 msgstr "Αρχείο κειμένου προς συμπερίληψη στην αναφορά"
 
-#: src/main/print-canon.c:1443 src/main/print-canon.c:1444
+#: src/main/print-canon.c:1484 src/main/print-canon.c:1485
 #: src/main/print-escp2.c:308 src/main/print-escp2.c:309
 #: src/main/print-lexmark.c:296 src/main/print-lexmark.c:297
 #: src/main/print-pcl.c:1183 src/main/print-pcl.c:1184
 msgid "Ink Channels"
 msgstr ""
 
-#: src/main/print-canon.c:1443 src/main/print-escp2.c:127
+#: src/main/print-canon.c:1484 src/main/print-escp2.c:127
 #: src/main/print-escp2.c:134 src/main/print-escp2.c:141
 #: src/main/print-escp2.c:272 src/main/print-escp2.c:278
 #: src/main/print-escp2.c:284 src/main/print-escp2.c:290
@@ -467,78 +469,86 @@ msgstr ""
 msgid "Advanced Printer Functionality"
 msgstr ""
 
-#: src/main/print-canon.c:1449 src/main/print-escp2.c:320
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1198
+#: src/main/print-canon.c:1490 src/main/print-escp2.c:320
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1307
 #: src/main/print-pcl.c:1189 src/main/print-ps.c:102 src/main/print-raw.c:86
 #, fuzzy
 msgid "Printing Mode"
 msgstr "Όνομα εκτυπωτή:"
 
-#: src/main/print-canon.c:1449 src/main/print-color.c:183
-#: src/main/print-color.c:191 src/main/print-color.c:199
-#: src/main/print-color.c:207 src/main/print-escp2.c:320
+#: src/main/print-canon.c:1490 src/main/print-color.c:184
+#: src/main/print-color.c:192 src/main/print-color.c:200
+#: src/main/print-color.c:208 src/main/print-escp2.c:320
 #: src/main/print-escp2.c:326 src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1198 src/main/print-pcl.c:1189
+#: src/main/print-olympus.c:1307 src/main/print-pcl.c:1189
 #: src/main/print-ps.c:102 src/main/print-raw.c:86
 #, fuzzy
 msgid "Core Parameter"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/print-canon.c:1450 src/main/print-escp2.c:321
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1199
+#: src/main/print-canon.c:1491 src/main/print-escp2.c:321
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1308
 #: src/main/print-pcl.c:1190 src/main/print-ps.c:103 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr ""
 
-#: src/main/print-canon.c:1472 src/main/print-escp2.c:412
+#: src/main/print-canon.c:1496 src/main/print-pcl.c:1195
+msgid "Double-Sided Printing"
+msgstr ""
+
+#: src/main/print-canon.c:1497 src/main/print-pcl.c:1196
+msgid "Duplex/Tumble Setting"
+msgstr ""
+
+#: src/main/print-canon.c:1519 src/main/print-escp2.c:412
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1218
 #, fuzzy
 msgid "Cyan Density"
 msgstr "Πυκνότητα"
 
-#: src/main/print-canon.c:1473 src/main/print-escp2.c:413
+#: src/main/print-canon.c:1520 src/main/print-escp2.c:413
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1219
 #, fuzzy
 msgid "Adjust the cyan density"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-canon.c:1480 src/main/print-escp2.c:420
+#: src/main/print-canon.c:1527 src/main/print-escp2.c:420
 #: src/main/print-lexmark.c:333 src/main/print-pcl.c:1226
 #, fuzzy
 msgid "Magenta Density"
 msgstr "μώβ"
 
-#: src/main/print-canon.c:1481 src/main/print-escp2.c:421
+#: src/main/print-canon.c:1528 src/main/print-escp2.c:421
 #: src/main/print-lexmark.c:334 src/main/print-pcl.c:1227
 #, fuzzy
 msgid "Adjust the magenta density"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-canon.c:1488 src/main/print-escp2.c:428
+#: src/main/print-canon.c:1535 src/main/print-escp2.c:428
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1234
 #, fuzzy
 msgid "Yellow Density"
 msgstr "Πυκνότητα"
 
-#: src/main/print-canon.c:1489 src/main/print-escp2.c:429
+#: src/main/print-canon.c:1536 src/main/print-escp2.c:429
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1235
 #, fuzzy
 msgid "Adjust the yellow density"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-canon.c:1496 src/main/print-escp2.c:436
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:436
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1242
 #, fuzzy
 msgid "Black Density"
 msgstr "Πυκνότητα"
 
-#: src/main/print-canon.c:1497 src/main/print-escp2.c:437
+#: src/main/print-canon.c:1544 src/main/print-escp2.c:437
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1243
 #, fuzzy
 msgid "Adjust the black density"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-canon.c:1504 src/main/print-canon.c:1505
+#: src/main/print-canon.c:1551 src/main/print-canon.c:1552
 #: src/main/print-escp2.c:468 src/main/print-escp2.c:469
 #: src/main/print-lexmark.c:357 src/main/print-lexmark.c:358
 #: src/main/print-pcl.c:1250 src/main/print-pcl.c:1251
@@ -546,8 +556,8 @@ msgstr "Στο κέντρο της οθόνης"
 msgid "Light Cyan Transition"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-canon.c:1504 src/main/print-canon.c:1512
-#: src/main/print-canon.c:1520 src/main/print-escp2.c:468
+#: src/main/print-canon.c:1551 src/main/print-canon.c:1559
+#: src/main/print-canon.c:1567 src/main/print-escp2.c:468
 #: src/main/print-escp2.c:476 src/main/print-escp2.c:484
 #: src/main/print-escp2.c:492 src/main/print-escp2.c:500
 #: src/main/print-escp2.c:508 src/main/print-escp2.c:516
@@ -557,7 +567,7 @@ msgstr "Ψιλή Βροχή"
 msgid "Advanced Ink Adjustment"
 msgstr ""
 
-#: src/main/print-canon.c:1512 src/main/print-canon.c:1513
+#: src/main/print-canon.c:1559 src/main/print-canon.c:1560
 #: src/main/print-escp2.c:476 src/main/print-escp2.c:477
 #: src/main/print-lexmark.c:365 src/main/print-lexmark.c:366
 #: src/main/print-pcl.c:1258 src/main/print-pcl.c:1259
@@ -565,63 +575,85 @@ msgstr ""
 msgid "Light Magenta Transition"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-canon.c:1520 src/main/print-canon.c:1521
+#: src/main/print-canon.c:1567 src/main/print-canon.c:1568
 #, fuzzy
 msgid "Light Yellow Transition"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-canon.c:1834 src/main/print-lexmark.c:1118
+#: src/main/print-canon.c:1589 src/main/print-pcl.c:1439
+#: src/main/escp2-resolutions.c:479 src/main/escp2-resolutions.c:487
+#: src/main/escp2-resolutions.c:498 src/main/escp2-resolutions.c:510
+msgid "Off"
+msgstr ""
+
+#: src/main/print-canon.c:1591 src/main/print-pcl.c:1441
+msgid "Short Edge (Flip)"
+msgstr ""
+
+#: src/main/print-canon.c:1901 src/main/print-lexmark.c:1118
 #, fuzzy
 msgid "Auto Sheet Feeder"
 msgstr "Αυτόματη απόκρυψη"
 
-#: src/main/print-canon.c:1835 src/main/print-lexmark.c:1119
+#: src/main/print-canon.c:1902 src/main/print-lexmark.c:1119
 #, fuzzy
 msgid "Manual with Pause"
 msgstr "Σελίδα εγχειριδίου"
 
-#: src/main/print-canon.c:1836 src/main/print-lexmark.c:1120
+#: src/main/print-canon.c:1903 src/main/print-lexmark.c:1120
 msgid "Manual without Pause"
 msgstr ""
 
-#: src/main/print-canon.c:1948 src/main/print-color.c:305
-#: src/main/print-escp2-data.c:573 src/main/print-escp2-data.c:583
-#: src/main/print-escp2-data.c:595 src/main/print-escp2-data.c:608
-#: src/main/print-escp2-data.c:621 src/main/print-escp2-data.c:627
-#: src/main/print-lexmark.c:613 src/gutenprintui/panel.c:2131
-#: src/gutenprintui2/panel.c:2129 src/escputil/escputil.c:861
+#: src/main/print-canon.c:1904
+#, fuzzy
+msgid "Cassette"
+msgstr "Χαρτί Μανίλα"
+
+#: src/main/print-canon.c:1905
+msgid "CD tray"
+msgstr ""
+
+#: src/main/print-canon.c:2017 src/main/print-color.c:314
+#: src/main/print-escp2-data.c:617 src/main/print-escp2-data.c:630
+#: src/main/print-escp2-data.c:640 src/main/print-escp2-data.c:647
+#: src/main/print-escp2-data.c:659 src/main/print-escp2-data.c:671
+#: src/main/print-escp2-data.c:684 src/main/print-escp2-data.c:697
+#: src/main/print-escp2-data.c:703 src/main/print-escp2-data.c:727
+#: src/main/print-escp2-data.c:740 src/main/print-lexmark.c:613
+#: src/gutenprintui/panel.c:2145 src/gutenprintui2/panel.c:2144
+#: src/escputil/escputil.c:863 src/escputil/escputil.c:884
 msgid "Black"
 msgstr "Μαύρο"
 
-#: src/main/print-canon.c:1951
+#: src/main/print-canon.c:2020
 #, fuzzy
 msgid "CMY Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1954
+#: src/main/print-canon.c:2023
 #, fuzzy
 msgid "CMYK Color"
 msgstr "+ Χρώμα"
 
-#: src/main/print-canon.c:1957
+#: src/main/print-canon.c:2026
 #, fuzzy
 msgid "Photo CcMmY Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
 
-#: src/main/print-canon.c:1960
+#: src/main/print-canon.c:2029
 #, fuzzy
 msgid "Photo CcMmYK Color"
 msgstr "Επιλογή Ειδικού Χρώματος"
 
 #
-#: src/main/print-canon.c:2004 src/main/print-escp2.c:1738
-#: src/main/print-lexmark.c:1283 src/main/print-olympus.c:1453
+#: src/main/print-canon.c:2073 src/main/print-escp2.c:1785
+#: src/main/print-lexmark.c:1283 src/main/print-olympus.c:1562
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
+#: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Χρώμα"
 
-#: src/main/print-canon.c:2006 src/main/print-escp2.c:1740
+#: src/main/print-canon.c:2075 src/main/print-escp2.c:1787
 #: src/main/print-lexmark.c:1285 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 #, fuzzy
@@ -663,9 +695,9 @@ msgstr ""
 msgid "Pre-Dithered"
 msgstr "Εκτύπωση"
 
-#: src/main/print-color.c:121 src/main/escp2-channels.c:626
-#: src/main/escp2-channels.c:639 src/main/escp2-channels.c:653
-#: src/gutenprintui/panel.c:282 src/gutenprintui2/panel.c:282
+#: src/main/print-color.c:121 src/main/escp2-channels.c:820
+#: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
+#: src/gutenprintui/panel.c:286 src/gutenprintui2/panel.c:286
 msgid "Grayscale"
 msgstr "Κλίμακα του γκρι"
 
@@ -691,432 +723,456 @@ msgid "KCMY"
 msgstr ""
 
 #
-#: src/main/print-color.c:164 src/main/print-color.c:436
+#: src/main/print-color.c:165 src/main/print-color.c:446
 #, fuzzy
 msgid "Channel "
 msgstr "Ακύρωση"
 
 #
-#: src/main/print-color.c:164
+#: src/main/print-color.c:165
 #, fuzzy
 msgid " Gamma"
 msgstr "Γάμμα"
 
 #
-#: src/main/print-color.c:164 src/main/print-color.c:239
-#: src/main/print-color.c:249 src/main/print-color.c:257
-#: src/main/print-color.c:265 src/main/print-color.c:273
-#: src/main/print-color.c:281 src/main/print-color.c:289
-#: src/main/print-color.c:297 src/main/print-color.c:305
-#: src/gutenprintui2/gammacurve.c:408
+#: src/main/print-color.c:165 src/main/print-color.c:216
+#: src/main/print-color.c:248 src/main/print-color.c:258
+#: src/main/print-color.c:266 src/main/print-color.c:274
+#: src/main/print-color.c:282 src/main/print-color.c:290
+#: src/main/print-color.c:298 src/main/print-color.c:306
+#: src/main/print-color.c:314 src/gutenprintui2/gammacurve.c:408
 #, fuzzy
 msgid "Gamma"
 msgstr "Γάμμα"
 
-#: src/main/print-color.c:165
+#: src/main/print-color.c:166
 msgid "Gamma for raw channel "
 msgstr ""
 
-#: src/main/print-color.c:175
+#: src/main/print-color.c:176
 msgid "Color Correction"
 msgstr ""
 
-#: src/main/print-color.c:175 src/main/print-color.c:215
-#: src/main/print-color.c:223 src/main/print-color.c:337
+#: src/main/print-color.c:176 src/main/print-color.c:224
+#: src/main/print-color.c:232 src/main/print-color.c:346
 #: src/main/generic-options.c:68
 msgid "Basic Image Adjustment"
 msgstr ""
 
-#: src/main/print-color.c:176
+#: src/main/print-color.c:177
 msgid "Color correction to be applied"
 msgstr ""
 
-#: src/main/print-color.c:183
+#: src/main/print-color.c:184
 msgid "Channel Bit Depth"
 msgstr ""
 
-#: src/main/print-color.c:184
+#: src/main/print-color.c:185
 msgid "Bit depth per channel"
 msgstr ""
 
-#: src/main/print-color.c:191
+#: src/main/print-color.c:192
 #, fuzzy
 msgid "Input Image Type"
 msgstr "Είδος MIME"
 
-#: src/main/print-color.c:192
+#: src/main/print-color.c:193
 #, fuzzy
 msgid "Input image type"
 msgstr "Είδος MIME"
 
-#: src/main/print-color.c:199
+#: src/main/print-color.c:200
 #, fuzzy
 msgid "Output Image Type"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-color.c:200
+#: src/main/print-color.c:201
 #, fuzzy
 msgid "Output image type"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-color.c:207 src/main/print-color.c:208
+#: src/main/print-color.c:208 src/main/print-color.c:209
 #: src/main/print-escp2.c:326
 msgid "Raw Channels"
 msgstr ""
 
-#: src/main/print-color.c:215
+#
+#: src/main/print-color.c:216
+#, fuzzy
+msgid "SimpleGamma"
+msgstr "Γάμμα"
+
+#: src/main/print-color.c:217
+msgid "Do not correct for screen gamma"
+msgstr ""
+
+#: src/main/print-color.c:224
 #, fuzzy
 msgid "Brightness"
 msgstr "Εργασία"
 
-#: src/main/print-color.c:216
+#: src/main/print-color.c:225
 #, fuzzy
 msgid "Brightness of the print"
 msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
 
-#: src/main/print-color.c:223
+#: src/main/print-color.c:232
 #, fuzzy
 msgid "Contrast"
 msgstr "Αντίθεση"
 
-#: src/main/print-color.c:224
+#: src/main/print-color.c:233
 msgid "Contrast of the print (0 is solid gray)"
 msgstr ""
 
-#: src/main/print-color.c:231
+#: src/main/print-color.c:240
 msgid "Linear Contrast Adjustment"
 msgstr ""
 
-#: src/main/print-color.c:231
+#: src/main/print-color.c:240
 #, fuzzy
 msgid "Advanced Image Control"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-color.c:232
+#: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
 msgstr ""
 
-#: src/main/print-color.c:239
+#: src/main/print-color.c:248
 msgid "Composite Gamma"
 msgstr ""
 
-#: src/main/print-color.c:240
+#: src/main/print-color.c:249
 msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
 msgstr ""
 
 #
-#: src/main/print-color.c:249
+#: src/main/print-color.c:258
 #, fuzzy
 msgid "AppGamma"
 msgstr "Γάμμα"
 
-#: src/main/print-color.c:250
+#: src/main/print-color.c:259
 msgid "Gamma value assumed by application"
 msgstr ""
 
-#: src/main/print-color.c:257 src/main/print-escp2-data.c:574
-#: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:596
-#: src/main/print-escp2-data.c:609 src/main/print-escp2-data.c:622
-#: src/main/print-escp2-data.c:636 src/gutenprintui/panel.c:2110
-#: src/gutenprintui2/panel.c:2108 src/escputil/escputil.c:864
+#: src/main/print-color.c:266 src/main/print-escp2-data.c:618
+#: src/main/print-escp2-data.c:627 src/main/print-escp2-data.c:637
+#: src/main/print-escp2-data.c:648 src/main/print-escp2-data.c:660
+#: src/main/print-escp2-data.c:672 src/main/print-escp2-data.c:685
+#: src/main/print-escp2-data.c:698 src/main/print-escp2-data.c:712
+#: src/main/print-escp2-data.c:726 src/main/print-escp2-data.c:741
+#: src/gutenprintui/panel.c:2124 src/gutenprintui2/panel.c:2123
+#: src/escputil/escputil.c:866 src/escputil/escputil.c:885
 msgid "Cyan"
 msgstr "Κυανό"
 
-#: src/main/print-color.c:258
+#: src/main/print-color.c:267
 #, fuzzy
 msgid "Adjust the cyan gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:265 src/main/print-escp2-data.c:575
-#: src/main/print-escp2-data.c:585 src/main/print-escp2-data.c:597
-#: src/main/print-escp2-data.c:610 src/main/print-escp2-data.c:623
-#: src/main/print-escp2-data.c:635 src/gutenprintui/panel.c:2117
-#: src/gutenprintui2/panel.c:2115 src/escputil/escputil.c:865
+#: src/main/print-color.c:274 src/main/print-escp2-data.c:619
+#: src/main/print-escp2-data.c:629 src/main/print-escp2-data.c:638
+#: src/main/print-escp2-data.c:649 src/main/print-escp2-data.c:662
+#: src/main/print-escp2-data.c:673 src/main/print-escp2-data.c:686
+#: src/main/print-escp2-data.c:699 src/main/print-escp2-data.c:711
+#: src/main/print-escp2-data.c:725 src/main/print-escp2-data.c:742
+#: src/gutenprintui/panel.c:2131 src/gutenprintui2/panel.c:2130
+#: src/escputil/escputil.c:867 src/escputil/escputil.c:886
 #, fuzzy
 msgid "Magenta"
 msgstr "μώβ"
 
-#: src/main/print-color.c:266
+#: src/main/print-color.c:275
 #, fuzzy
 msgid "Adjust the magenta gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:273 src/main/print-escp2-data.c:576
-#: src/main/print-escp2-data.c:586 src/main/print-escp2-data.c:598
-#: src/main/print-escp2-data.c:611 src/main/print-escp2-data.c:624
-#: src/main/print-escp2-data.c:634 src/gutenprintui/panel.c:2124
-#: src/gutenprintui2/panel.c:2122 src/escputil/escputil.c:866
+#: src/main/print-color.c:282 src/main/print-escp2-data.c:620
+#: src/main/print-escp2-data.c:628 src/main/print-escp2-data.c:639
+#: src/main/print-escp2-data.c:650 src/main/print-escp2-data.c:664
+#: src/main/print-escp2-data.c:674 src/main/print-escp2-data.c:687
+#: src/main/print-escp2-data.c:700 src/main/print-escp2-data.c:710
+#: src/main/print-escp2-data.c:724 src/main/print-escp2-data.c:743
+#: src/gutenprintui/panel.c:2138 src/gutenprintui2/panel.c:2137
+#: src/escputil/escputil.c:868 src/escputil/escputil.c:887
 msgid "Yellow"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:274
+#: src/main/print-color.c:283
 #, fuzzy
 msgid "Adjust the yellow gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:281 src/main/print-escp2-data.c:639
-#: src/escputil/escputil.c:872
+#: src/main/print-color.c:290 src/main/print-escp2-data.c:715
+#: src/main/print-escp2-data.c:728 src/gutenprintui/panel.c:2152
+#: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:875
+#: src/escputil/escputil.c:893
 msgid "Red"
 msgstr ""
 
-#: src/main/print-color.c:282
+#: src/main/print-color.c:291
 #, fuzzy
 msgid "Adjust the red gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:289
+#: src/main/print-color.c:298 src/gutenprintui/panel.c:2159
+#: src/gutenprintui2/panel.c:2158
 msgid "Green"
 msgstr ""
 
-#: src/main/print-color.c:290
+#: src/main/print-color.c:299
 #, fuzzy
 msgid "Adjust the green gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:297 src/main/print-escp2-data.c:640
-#: src/escputil/escputil.c:873
+#: src/main/print-color.c:306 src/main/print-escp2-data.c:716
+#: src/main/print-escp2-data.c:729 src/gutenprintui/panel.c:2166
+#: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:876
+#: src/escputil/escputil.c:894
 msgid "Blue"
 msgstr ""
 
-#: src/main/print-color.c:298
+#: src/main/print-color.c:307
 #, fuzzy
 msgid "Adjust the blue gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:306
+#: src/main/print-color.c:315
 #, fuzzy
 msgid "Adjust the black gamma"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:313 src/main/print-olympus.c:1221
+#: src/main/print-color.c:322 src/main/print-olympus.c:1330
 msgid "Cyan Balance"
 msgstr ""
 
-#: src/main/print-color.c:313 src/main/print-color.c:321
-#: src/main/print-color.c:329
+#: src/main/print-color.c:322 src/main/print-color.c:330
+#: src/main/print-color.c:338
 #, fuzzy
 msgid "GrayBalance"
 msgstr "Κλίμακα του γκρι"
 
-#: src/main/print-color.c:314
+#: src/main/print-color.c:323
 #, fuzzy
 msgid "Adjust the cyan gray balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:321 src/main/print-olympus.c:1229
+#: src/main/print-color.c:330 src/main/print-olympus.c:1338
 #, fuzzy
 msgid "Magenta Balance"
 msgstr "μώβ"
 
-#: src/main/print-color.c:322
+#: src/main/print-color.c:331
 #, fuzzy
 msgid "Adjust the magenta gray balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:329 src/main/print-olympus.c:1237
+#: src/main/print-color.c:338 src/main/print-olympus.c:1346
 #, fuzzy
 msgid "Yellow Balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-color.c:330
+#: src/main/print-color.c:339
 #, fuzzy
 msgid "Adjust the yellow gray balance"
 msgstr "Στο κέντρο της οθόνης"
 
 #
-#: src/main/print-color.c:337
+#: src/main/print-color.c:346
 #, fuzzy
 msgid "Saturation"
 msgstr "Κορεσμός:"
 
-#: src/main/print-color.c:338
+#: src/main/print-color.c:347
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 
-#: src/main/print-color.c:348
+#: src/main/print-color.c:357
 #, fuzzy
 msgid "Ink Limit"
 msgstr "Τύπος MIME"
 
-#: src/main/print-color.c:348 src/main/print-color.c:356
-#: src/main/print-color.c:364 src/main/print-color.c:372
-#: src/main/print-color.c:535 src/main/print-escp2.c:332
+#: src/main/print-color.c:357 src/main/print-color.c:365
+#: src/main/print-color.c:373 src/main/print-color.c:381
+#: src/main/print-color.c:545 src/main/print-escp2.c:332
 #: src/main/print-escp2.c:338 src/main/print-escp2.c:344
 #: src/main/print-escp2.c:350 src/main/print-escp2.c:356
 #, fuzzy
 msgid "Advanced Output Control"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-color.c:349
+#: src/main/print-color.c:358
 msgid "Limit the total ink printed to the page"
 msgstr ""
 
-#: src/main/print-color.c:356
+#: src/main/print-color.c:365
 msgid "GCR Transition"
 msgstr ""
 
-#: src/main/print-color.c:357
+#: src/main/print-color.c:366
 msgid "Adjust the gray component transition rate"
 msgstr ""
 
-#: src/main/print-color.c:364
+#: src/main/print-color.c:373
 msgid "GCR Lower Bound"
 msgstr ""
 
-#: src/main/print-color.c:365
+#: src/main/print-color.c:374
 msgid "Lower bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:372
+#: src/main/print-color.c:381
 msgid "GCR Upper Bound"
 msgstr ""
 
-#: src/main/print-color.c:373
+#: src/main/print-color.c:382
 msgid "Upper bound of gray component reduction"
 msgstr ""
 
-#: src/main/print-color.c:436
+#: src/main/print-color.c:446
 #, fuzzy
 msgid " Curve"
 msgstr "Μαύρο"
 
-#: src/main/print-color.c:437 src/main/print-color.c:447
-#: src/main/print-color.c:455 src/main/print-color.c:463
-#: src/main/print-color.c:471 src/main/print-color.c:479
-#: src/main/print-color.c:487 src/main/print-color.c:495
-#: src/main/print-color.c:503
+#: src/main/print-color.c:447 src/main/print-color.c:457
+#: src/main/print-color.c:465 src/main/print-color.c:473
+#: src/main/print-color.c:481 src/main/print-color.c:489
+#: src/main/print-color.c:497 src/main/print-color.c:505
+#: src/main/print-color.c:513
 #, fuzzy
 msgid "Output Curves"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-color.c:437
+#: src/main/print-color.c:447
 msgid "Curve for raw channel "
 msgstr ""
 
-#: src/main/print-color.c:447
+#: src/main/print-color.c:457
 msgid "Cyan Curve"
 msgstr ""
 
 #
-#: src/main/print-color.c:448
+#: src/main/print-color.c:458
 #, fuzzy
 msgid "Cyan curve"
 msgstr "Ακύρωση"
 
-#: src/main/print-color.c:455
+#: src/main/print-color.c:465
 #, fuzzy
 msgid "Magenta Curve"
 msgstr "μώβ"
 
-#: src/main/print-color.c:456
+#: src/main/print-color.c:466
 #, fuzzy
 msgid "Magenta curve"
 msgstr "μώβ"
 
-#: src/main/print-color.c:463
+#: src/main/print-color.c:473
 #, fuzzy
 msgid "Yellow Curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:464
+#: src/main/print-color.c:474
 #, fuzzy
 msgid "Yellow curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:471
+#: src/main/print-color.c:481
 #, fuzzy
 msgid "Black Curve"
 msgstr "Μαύρο"
 
-#: src/main/print-color.c:472
+#: src/main/print-color.c:482
 #, fuzzy
 msgid "Black curve"
 msgstr "Μαύρο"
 
-#: src/main/print-color.c:479
+#: src/main/print-color.c:489
 #, fuzzy
 msgid "Red Curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:480
+#: src/main/print-color.c:490
 #, fuzzy
 msgid "Red curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:487
+#: src/main/print-color.c:497
 #, fuzzy
 msgid "Green Curve"
 msgstr "μώβ"
 
-#: src/main/print-color.c:488
+#: src/main/print-color.c:498
 #, fuzzy
 msgid "Green curve"
 msgstr "μώβ"
 
-#: src/main/print-color.c:495
+#: src/main/print-color.c:505
 #, fuzzy
 msgid "Blue Curve"
 msgstr "Μαύρο"
 
-#: src/main/print-color.c:496
+#: src/main/print-color.c:506
 #, fuzzy
 msgid "Blue curve"
 msgstr "Μαύρο"
 
-#: src/main/print-color.c:503
+#: src/main/print-color.c:513
 #, fuzzy
 msgid "White Curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:504
+#: src/main/print-color.c:514
 #, fuzzy
 msgid "White curve"
 msgstr "Κίτρινο"
 
-#: src/main/print-color.c:511
+#: src/main/print-color.c:521
 msgid "Hue Map"
 msgstr ""
 
-#: src/main/print-color.c:511 src/main/print-color.c:519
-#: src/main/print-color.c:527
+#: src/main/print-color.c:521 src/main/print-color.c:529
+#: src/main/print-color.c:537
 msgid "Advanced HSL Curves"
 msgstr ""
 
-#: src/main/print-color.c:512
+#: src/main/print-color.c:522
 msgid "Hue adjustment curve"
 msgstr ""
 
 #
-#: src/main/print-color.c:519
+#: src/main/print-color.c:529
 #, fuzzy
 msgid "Saturation Map"
 msgstr "Κορεσμός:"
 
-#: src/main/print-color.c:520
+#: src/main/print-color.c:530
 msgid "Saturation adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:527
+#: src/main/print-color.c:537
 msgid "Luminosity Map"
 msgstr ""
 
-#: src/main/print-color.c:528
+#: src/main/print-color.c:538
 msgid "Luminosity adjustment curve"
 msgstr ""
 
-#: src/main/print-color.c:535
+#: src/main/print-color.c:545
 msgid "Gray Component Reduction"
 msgstr ""
 
-#: src/main/print-color.c:536
+#: src/main/print-color.c:546
 msgid "Gray component reduction curve"
 msgstr ""
 
-#: src/main/print-color.c:1620
+#: src/main/print-color.c:1668
 msgid "Traditional Gutenprint color conversion"
 msgstr ""
 
@@ -1204,133 +1260,150 @@ msgid ""
 "d\n"
 msgstr ""
 
-#: src/main/print-escp2-data.c:290 src/main/print-escp2-data.c:318
-#: src/main/print-escp2-data.c:355 src/main/print-escp2-data.c:410
-#: src/main/print-escp2-data.c:456 src/main/print-escp2-data.c:549
-#: src/main/print-escp2.c:1494 src/main/print-escp2.c:1591
-#: src/main/print-escp2.c:1603 src/main/print-pcl.c:227
-#: src/main/generic-options.c:36 src/gutenprintui/panel.c:2549
-#: src/gutenprintui2/panel.c:2573
+#: src/main/print-escp2-data.c:302 src/main/print-escp2-data.c:330
+#: src/main/print-escp2-data.c:367 src/main/print-escp2-data.c:422
+#: src/main/print-escp2-data.c:468 src/main/print-escp2-data.c:569
+#: src/main/print-escp2-data.c:584 src/main/print-escp2-data.c:597
+#: src/main/print-escp2.c:1546 src/main/print-escp2.c:1638
+#: src/main/print-escp2.c:1650 src/main/print-pcl.c:227
+#: src/main/escp2-channels.c:2482 src/main/generic-options.c:36
+#: src/gutenprintui/panel.c:2584 src/gutenprintui2/panel.c:2609
 msgid "Standard"
 msgstr "Κανονικό"
 
-#: src/main/print-escp2-data.c:299 src/main/print-escp2-data.c:437
-#: src/main/print-escp2-data.c:465
+#: src/main/print-escp2-data.c:311 src/main/print-escp2-data.c:449
+#: src/main/print-escp2-data.c:477
 #, fuzzy
 msgid "Roll Feed"
 msgstr "Ρόλος"
 
-#: src/main/print-escp2-data.c:327 src/main/print-escp2-data.c:382
+#: src/main/print-escp2-data.c:339 src/main/print-escp2-data.c:394
 msgid "Roll Feed (cut each page)"
 msgstr ""
 
-#: src/main/print-escp2-data.c:336 src/main/print-escp2-data.c:391
+#: src/main/print-escp2-data.c:348 src/main/print-escp2-data.c:403
 msgid "Roll Feed (do not cut)"
 msgstr ""
 
 # Revise translation of "manual" (as in opposite of "automatic", not synonym of "documentation")
-#: src/main/print-escp2-data.c:364 src/main/print-escp2-data.c:419
+#: src/main/print-escp2-data.c:376 src/main/print-escp2-data.c:431
 #, fuzzy
 msgid "Manual Feed"
 msgstr "Εγχειρίδιο"
 
-#: src/main/print-escp2-data.c:373 src/main/print-escp2-data.c:428
+#: src/main/print-escp2-data.c:385 src/main/print-escp2-data.c:440
 #, fuzzy
 msgid "Print to CD"
 msgstr "Εκτύπωση σε Αρχείο"
 
-#: src/main/print-escp2-data.c:484
+#: src/main/print-escp2-data.c:496
 msgid "Cut Sheet Bin 1"
 msgstr ""
 
-#: src/main/print-escp2-data.c:493
+#: src/main/print-escp2-data.c:505
 msgid "Cut Sheet Bin 2"
 msgstr ""
 
-#: src/main/print-escp2-data.c:502
+#: src/main/print-escp2-data.c:514
 #, fuzzy
 msgid "Cut Sheet Autoselect"
 msgstr "Απεπιλογή"
 
-#: src/main/print-escp2-data.c:511
+#: src/main/print-escp2-data.c:523
 msgid "Manual Selection"
 msgstr ""
 
-#: src/main/print-escp2-data.c:546 src/main/generic-options.c:33
+#: src/main/print-escp2-data.c:566 src/main/print-escp2-data.c:581
+#: src/main/generic-options.c:33
 msgid "Fast Economy"
 msgstr ""
 
-#: src/main/print-escp2-data.c:547 src/main/generic-options.c:34
+#: src/main/print-escp2-data.c:567 src/main/print-escp2-data.c:582
+#: src/main/generic-options.c:34
 msgid "Economy"
 msgstr ""
 
-#: src/main/print-escp2-data.c:548 src/main/generic-options.c:35
+#: src/main/print-escp2-data.c:568 src/main/print-escp2-data.c:583
+#: src/main/print-escp2-data.c:596 src/main/generic-options.c:35
 msgid "Draft"
 msgstr ""
 
-#: src/main/print-escp2-data.c:550 src/main/generic-options.c:37
+#: src/main/print-escp2-data.c:570 src/main/print-escp2-data.c:585
+#: src/main/print-escp2-data.c:599 src/main/generic-options.c:37
 #, fuzzy
 msgid "High"
 msgstr "Ύψος:"
 
-#: src/main/print-escp2-data.c:551 src/main/generic-options.c:38
+#: src/main/print-escp2-data.c:571 src/main/print-escp2-data.c:586
+#: src/main/print-escp2-data.c:598 src/main/generic-options.c:38
 #, fuzzy
 msgid "Photo"
 msgstr "Κρυπτογραφία"
 
-#: src/main/print-escp2-data.c:552 src/main/generic-options.c:39
+#: src/main/print-escp2-data.c:572 src/main/print-escp2-data.c:587
+#: src/main/print-escp2-data.c:600 src/main/generic-options.c:39
 #, fuzzy
 msgid "Super Photo"
 msgstr "Slashdot"
 
-#: src/main/print-escp2-data.c:553 src/main/generic-options.c:40
+#: src/main/print-escp2-data.c:573 src/main/print-escp2-data.c:588
+#: src/main/print-escp2-data.c:601 src/main/generic-options.c:40
 #, fuzzy
 msgid "Ultra Photo"
 msgstr "Slashdot"
 
-#: src/main/print-escp2-data.c:554 src/main/generic-options.c:41
+#: src/main/print-escp2-data.c:574 src/main/print-escp2-data.c:589
+#: src/main/print-escp2-data.c:602 src/main/generic-options.c:41
 msgid "Best"
 msgstr ""
 
-#: src/main/print-escp2-data.c:587 src/main/print-escp2-data.c:599
-#: src/main/print-escp2-data.c:612 src/main/print-escp2-data.c:625
-#: src/escputil/escputil.c:867
+#: src/main/print-escp2-data.c:651 src/main/print-escp2-data.c:661
+#: src/main/print-escp2-data.c:675 src/main/print-escp2-data.c:688
+#: src/main/print-escp2-data.c:701 src/main/print-escp2-data.c:738
+#: src/escputil/escputil.c:869
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-escp2-data.c:588 src/main/print-escp2-data.c:600
-#: src/main/print-escp2-data.c:613 src/main/print-escp2-data.c:626
-#: src/escputil/escputil.c:868
+#: src/main/print-escp2-data.c:652 src/main/print-escp2-data.c:663
+#: src/main/print-escp2-data.c:676 src/main/print-escp2-data.c:689
+#: src/main/print-escp2-data.c:702 src/main/print-escp2-data.c:737
+#: src/escputil/escputil.c:870
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-escp2-data.c:601 src/escputil/escputil.c:870
+#: src/main/print-escp2-data.c:677 src/main/print-escp2-data.c:739
+#: src/escputil/escputil.c:873
 #, fuzzy
 msgid "Light Black"
 msgstr "Μαύρο"
 
-#: src/main/print-escp2-data.c:614 src/escputil/escputil.c:869
+#: src/main/print-escp2-data.c:690
 #, fuzzy
 msgid "Dark Yellow"
 msgstr "Κίτρινο"
 
-#: src/main/print-escp2-data.c:637 src/main/escp2-channels.c:2054
-#: src/escputil/escputil.c:862
+#: src/main/print-escp2-data.c:713 src/main/escp2-channels.c:2439
+#: src/main/escp2-channels.c:2455 src/escputil/escputil.c:874
 #, fuzzy
 msgid "Matte Black"
 msgstr "Χαρτί Μανίλα"
 
-#: src/main/print-escp2-data.c:638 src/main/escp2-channels.c:2072
-#: src/escputil/escputil.c:863
+#: src/main/print-escp2-data.c:714 src/main/escp2-channels.c:2435
+#: src/main/escp2-channels.c:2473 src/escputil/escputil.c:864
 #, fuzzy
 msgid "Photo Black"
 msgstr "Κείμενα"
 
-#: src/main/print-escp2-data.c:641 src/escputil/escputil.c:874
+#: src/main/print-escp2-data.c:717 src/escputil/escputil.c:877
 msgid "Gloss Optimizer"
 msgstr ""
+
+#: src/main/print-escp2-data.c:736 src/escputil/escputil.c:878
+#, fuzzy
+msgid "Light Light Black"
+msgstr "Μαύρο"
 
 #: src/main/print-escp2.c:159
 msgid "Automatic Printing Mode"
@@ -1400,11 +1473,11 @@ msgstr ""
 msgid "Printing direction (unidirectional is higher quality, but slower)"
 msgstr ""
 
-#: src/main/print-escp2.c:248 src/main/print-olympus.c:1192
+#: src/main/print-escp2.c:248 src/main/print-olympus.c:1301
 msgid "Borderless"
 msgstr ""
 
-#: src/main/print-escp2.c:249 src/main/print-olympus.c:1193
+#: src/main/print-escp2.c:249 src/main/print-olympus.c:1302
 msgid "Print without borders"
 msgstr ""
 
@@ -1553,107 +1626,100 @@ msgid "Gray Transition"
 msgstr ""
 
 #: src/main/print-escp2.c:500 src/main/print-escp2.c:501
-#, fuzzy
-msgid "Dark Gray Transition"
-msgstr "Ψιλή Βροχή"
-
-#: src/main/print-escp2.c:508
-#, fuzzy
-msgid "Mid Gray Transition"
-msgstr "Ψιλή Βροχή"
-
-#: src/main/print-escp2.c:509
-#, fuzzy
-msgid "Medium Gray Transition"
-msgstr "Ψιλή Βροχή"
-
-#: src/main/print-escp2.c:516 src/main/print-escp2.c:517
+#: src/main/print-escp2.c:524 src/main/print-escp2.c:525
 #, fuzzy
 msgid "Light Gray Transition"
 msgstr "Ψιλή Βροχή"
 
-#: src/main/print-escp2.c:524
-msgid "Red and Blue Ink Usage"
-msgstr ""
+#: src/main/print-escp2.c:508 src/main/print-escp2.c:509
+#, fuzzy
+msgid "Dark Gray Transition"
+msgstr "Ψιλή Βροχή"
 
-#: src/main/print-escp2.c:525
-msgid "Amount of red and blue ink to use"
-msgstr ""
+#: src/main/print-escp2.c:516
+#, fuzzy
+msgid "Mid Gray Transition"
+msgstr "Ψιλή Βροχή"
 
-#: src/main/print-escp2.c:1377
+#: src/main/print-escp2.c:517
+#, fuzzy
+msgid "Medium Gray Transition"
+msgstr "Ψιλή Βροχή"
+
+#: src/main/print-escp2.c:1443
 #, fuzzy
 msgid "Full Manual Control"
 msgstr "Byte Εξόδου"
 
-#: src/main/print-escp2.c:1379
+#: src/main/print-escp2.c:1445
 msgid "Automatic Setting Control"
 msgstr ""
 
-#: src/main/print-escp2.c:1390 src/main/xmli18n-tmp.h:6
+#: src/main/print-escp2.c:1456 src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
 msgstr ""
 
-#: src/main/print-escp2.c:1392 src/main/xmli18n-tmp.h:7
+#: src/main/print-escp2.c:1458 src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
 msgstr ""
 
-#: src/main/print-escp2.c:1414
+#: src/main/print-escp2.c:1480
 msgid "Normal"
 msgstr ""
 
-#: src/main/print-escp2.c:1416
+#: src/main/print-escp2.c:1482
 #, fuzzy
 msgid "Print To Hub"
 msgstr "Εκτύπωση σε Αρχείο"
 
-#: src/main/print-escp2.c:1441 src/main/generic-options.c:213
+#: src/main/print-escp2.c:1507 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 #, fuzzy
 msgid "Manual Control"
 msgstr "Byte Εξόδου"
 
 #
-#: src/main/print-escp2.c:1568 src/cups/genppd.c:1286
+#: src/main/print-escp2.c:1617 src/cups/genppd.c:1291
 #, fuzzy
 msgid "Automatic"
 msgstr "Μέγεθος"
 
-#: src/main/print-escp2.c:1570
+#: src/main/print-escp2.c:1619
 #, fuzzy
 msgid "Bidirectional"
 msgstr "360 DPI FOL2"
 
-#: src/main/print-escp2.c:1572
+#: src/main/print-escp2.c:1621
 #, fuzzy
 msgid "Unidirectional"
 msgstr "360 DPI FOL2"
 
-#: src/main/print-escp2.c:1605
+#: src/main/print-escp2.c:1652
 msgid "Alternate Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1607
+#: src/main/print-escp2.c:1654
 msgid "Ascending Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1609
+#: src/main/print-escp2.c:1656
 msgid "Descending Fill"
 msgstr ""
 
-#: src/main/print-escp2.c:1611
+#: src/main/print-escp2.c:1658
 msgid "Ascending Double"
 msgstr ""
 
-#: src/main/print-escp2.c:1613
+#: src/main/print-escp2.c:1660
 msgid "Nearest Neighbor Avoidance"
 msgstr ""
 
-#: src/main/print-escp2.c:2011
+#: src/main/print-escp2.c:2057
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
-#: src/main/print-escp2.c:2955 src/main/print-olympus.c:1642
+#: src/main/print-escp2.c:2996 src/main/print-olympus.c:1752
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -1708,146 +1774,158 @@ msgid "test print"
 msgstr "Τίτλοι προς εκτύπωση"
 
 #: src/main/print-lexmark.c:601 src/main/print-lexmark.c:671
-#: src/main/escp2-channels.c:909 src/main/escp2-channels.c:923
-#: src/main/escp2-channels.c:937 src/main/escp2-channels.c:961
-#: src/main/escp2-channels.c:975 src/main/escp2-channels.c:989
-#: src/main/escp2-channels.c:1003 src/main/escp2-channels.c:1017
-#: src/main/escp2-channels.c:1031
+#: src/main/escp2-channels.c:1151 src/main/escp2-channels.c:1165
+#: src/main/escp2-channels.c:1179 src/main/escp2-channels.c:1193
+#: src/main/escp2-channels.c:1217 src/main/escp2-channels.c:1231
+#: src/main/escp2-channels.c:1245 src/main/escp2-channels.c:1259
+#: src/main/escp2-channels.c:1273 src/main/escp2-channels.c:1287
 msgid "Four Color Standard"
 msgstr ""
 
 #: src/main/print-lexmark.c:604 src/main/print-lexmark.c:674
-#: src/main/escp2-channels.c:786 src/main/escp2-channels.c:800
-#: src/main/escp2-channels.c:814 src/main/escp2-channels.c:828
-#: src/main/escp2-channels.c:842 src/main/escp2-channels.c:856
-#: src/main/escp2-channels.c:880 src/main/escp2-channels.c:886
+#: src/main/escp2-channels.c:1015 src/main/escp2-channels.c:1029
+#: src/main/escp2-channels.c:1043 src/main/escp2-channels.c:1057
+#: src/main/escp2-channels.c:1071 src/main/escp2-channels.c:1085
+#: src/main/escp2-channels.c:1109 src/main/escp2-channels.c:1115
+#: src/main/escp2-channels.c:1129
 msgid "Three Color Composite"
 msgstr ""
 
 #: src/main/print-lexmark.c:607 src/main/print-lexmark.c:677
-#: src/main/escp2-channels.c:1091 src/main/escp2-channels.c:1105
-#: src/main/escp2-channels.c:1295 src/main/escp2-channels.c:1310
-#: src/main/escp2-channels.c:1327
+#: src/main/escp2-channels.c:1361 src/main/escp2-channels.c:1375
+#: src/main/escp2-channels.c:1389 src/main/escp2-channels.c:1615
+#: src/main/escp2-channels.c:1630 src/main/escp2-channels.c:1645
+#: src/main/escp2-channels.c:1662
 msgid "Six Color Photo"
 msgstr ""
 
 #: src/main/print-lexmark.c:610 src/main/print-lexmark.c:680
-#: src/main/escp2-channels.c:1054 src/main/escp2-channels.c:1068
-#: src/main/escp2-channels.c:1239 src/main/escp2-channels.c:1254
-#: src/main/escp2-channels.c:1271
+#: src/main/escp2-channels.c:1310 src/main/escp2-channels.c:1324
+#: src/main/escp2-channels.c:1338 src/main/escp2-channels.c:1559
+#: src/main/escp2-channels.c:1574 src/main/escp2-channels.c:1591
 msgid "Five Color Photo Composite"
 msgstr ""
 
-#: src/main/print-lexmark.c:861 src/main/escp2-papers.c:971
-#: src/main/escp2-papers.c:1015 src/main/escp2-papers.c:1059
-#: src/main/escp2-papers.c:1107 src/main/escp2-papers.c:1151
+#: src/main/print-lexmark.c:861 src/main/escp2-papers.c:1166
+#: src/main/escp2-papers.c:1210 src/main/escp2-papers.c:1254
+#: src/main/escp2-papers.c:1302 src/main/escp2-papers.c:1350
+#: src/main/escp2-papers.c:1394
 msgid "Glossy Film"
 msgstr ""
 
-#: src/main/print-lexmark.c:869 src/main/escp2-papers.c:975
-#: src/main/escp2-papers.c:1019 src/main/escp2-papers.c:1063
-#: src/main/escp2-papers.c:1111 src/main/escp2-papers.c:1155
+#: src/main/print-lexmark.c:869 src/main/escp2-papers.c:1170
+#: src/main/escp2-papers.c:1214 src/main/escp2-papers.c:1258
+#: src/main/escp2-papers.c:1306 src/main/escp2-papers.c:1354
+#: src/main/escp2-papers.c:1398
 #, fuzzy
 msgid "Envelopes"
 msgstr "Προγραμματιστές"
 
-#: src/main/print-lexmark.c:873 src/main/escp2-papers.c:979
-#: src/main/escp2-papers.c:1023 src/main/escp2-papers.c:1067
-#: src/main/escp2-papers.c:1115 src/main/escp2-papers.c:1159
+#: src/main/print-lexmark.c:873 src/main/escp2-papers.c:1174
+#: src/main/escp2-papers.c:1218 src/main/escp2-papers.c:1262
+#: src/main/escp2-papers.c:1310 src/main/escp2-papers.c:1358
+#: src/main/escp2-papers.c:1402
 #, fuzzy
 msgid "Matte Paper"
 msgstr "Χαρτί Μανίλα"
 
-#: src/main/print-lexmark.c:877 src/main/escp2-papers.c:983
-#: src/main/escp2-papers.c:1027 src/main/escp2-papers.c:1071
-#: src/main/escp2-papers.c:1119 src/main/escp2-papers.c:1163
+#: src/main/print-lexmark.c:877 src/main/escp2-papers.c:1178
+#: src/main/escp2-papers.c:1222 src/main/escp2-papers.c:1266
+#: src/main/escp2-papers.c:1314 src/main/escp2-papers.c:1362
+#: src/main/escp2-papers.c:1406
 msgid "Inkjet Paper"
 msgstr ""
 
-#: src/main/print-lexmark.c:881 src/main/escp2-papers.c:985
-#: src/main/escp2-papers.c:1029 src/main/escp2-papers.c:1073
-#: src/main/escp2-papers.c:1121 src/main/escp2-papers.c:1165
+#: src/main/print-lexmark.c:881 src/main/escp2-papers.c:1180
+#: src/main/escp2-papers.c:1224 src/main/escp2-papers.c:1268
+#: src/main/escp2-papers.c:1316 src/main/escp2-papers.c:1364
+#: src/main/escp2-papers.c:1408
 msgid "Photo Quality Inkjet Paper"
 msgstr ""
 
-#: src/main/print-lexmark.c:885 src/main/escp2-papers.c:987
-#: src/main/escp2-papers.c:1031 src/main/escp2-papers.c:1075
-#: src/main/escp2-papers.c:1123 src/main/escp2-papers.c:1167
+#: src/main/print-lexmark.c:885 src/main/escp2-papers.c:1182
+#: src/main/escp2-papers.c:1226 src/main/escp2-papers.c:1270
+#: src/main/escp2-papers.c:1318 src/main/escp2-papers.c:1366
+#: src/main/escp2-papers.c:1410
 #, fuzzy
 msgid "Photo Paper"
 msgstr "Κείμενα"
 
-#: src/main/print-lexmark.c:889 src/main/escp2-papers.c:989
-#: src/main/escp2-papers.c:1033 src/main/escp2-papers.c:1077
-#: src/main/escp2-papers.c:1125 src/main/escp2-papers.c:1169
+#: src/main/print-lexmark.c:889 src/main/escp2-papers.c:1184
+#: src/main/escp2-papers.c:1228 src/main/escp2-papers.c:1272
+#: src/main/escp2-papers.c:1320 src/main/escp2-papers.c:1368
+#: src/main/escp2-papers.c:1412 src/main/escp2-papers.c:1436
 msgid "Premium Glossy Photo Paper"
 msgstr ""
 
-#: src/main/print-lexmark.c:893 src/main/escp2-papers.c:993
-#: src/main/escp2-papers.c:1037 src/main/escp2-papers.c:1081
-#: src/main/escp2-papers.c:1129 src/main/escp2-papers.c:1173
+#: src/main/print-lexmark.c:893 src/main/escp2-papers.c:1188
+#: src/main/escp2-papers.c:1232 src/main/escp2-papers.c:1276
+#: src/main/escp2-papers.c:1324 src/main/escp2-papers.c:1372
+#: src/main/escp2-papers.c:1416
 msgid "Premium Luster Photo Paper"
 msgstr ""
 
-#: src/main/print-lexmark.c:897 src/main/escp2-papers.c:995
-#: src/main/escp2-papers.c:1039 src/main/escp2-papers.c:1087
-#: src/main/escp2-papers.c:1131 src/main/escp2-papers.c:1179
+#: src/main/print-lexmark.c:897 src/main/escp2-papers.c:1190
+#: src/main/escp2-papers.c:1234 src/main/escp2-papers.c:1282
+#: src/main/escp2-papers.c:1330 src/main/escp2-papers.c:1374
+#: src/main/escp2-papers.c:1422
 msgid "Photo Quality Glossy Paper"
 msgstr ""
 
-#: src/main/print-lexmark.c:901 src/main/escp2-papers.c:997
-#: src/main/escp2-papers.c:1041 src/main/escp2-papers.c:1089
-#: src/main/escp2-papers.c:1133 src/main/escp2-papers.c:1181
+#: src/main/print-lexmark.c:901 src/main/escp2-papers.c:1192
+#: src/main/escp2-papers.c:1236 src/main/escp2-papers.c:1284
+#: src/main/escp2-papers.c:1332 src/main/escp2-papers.c:1376
+#: src/main/escp2-papers.c:1424
 msgid "Ilford Heavy Paper"
 msgstr ""
 
-#: src/main/print-olympus.c:264
+#: src/main/print-olympus.c:265
 msgid "Coated"
 msgstr ""
 
-#: src/main/print-olympus.c:265 src/cups/genppd.c:1402 src/cups/genppd.c:1417
-#: src/cups/genppd.c:1465
+#: src/main/print-olympus.c:266 src/cups/genppd.c:1407 src/cups/genppd.c:1422
+#: src/cups/genppd.c:1470
 msgid "None"
 msgstr ""
 
-#: src/main/print-olympus.c:858
+#: src/main/print-olympus.c:859
 msgid "Glossy"
 msgstr ""
 
-#: src/main/print-olympus.c:859
+#: src/main/print-olympus.c:860
 msgid "Texture"
 msgstr ""
 
-#: src/main/print-olympus.c:860
+#: src/main/print-olympus.c:861
 #, fuzzy
 msgid "Matte"
 msgstr "Χαρτί Μανίλα"
 
-#: src/main/print-olympus.c:1186 src/main/print-olympus.c:1187
+#: src/main/print-olympus.c:1295 src/main/print-olympus.c:1296
 msgid "Laminate Pattern"
 msgstr ""
 
-#: src/main/print-olympus.c:1222
+#: src/main/print-olympus.c:1331
 #, fuzzy
 msgid "Adjust the cyan balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-olympus.c:1230
+#: src/main/print-olympus.c:1339
 #, fuzzy
 msgid "Adjust the magenta balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-olympus.c:1238
+#: src/main/print-olympus.c:1347
 #, fuzzy
 msgid "Adjust the yellow balance"
 msgstr "Στο κέντρο της οθόνης"
 
-#: src/main/print-olympus.c:1245
+#: src/main/print-olympus.c:1354
 #, fuzzy
 msgid "Black Balance"
 msgstr "Μαυ_ρόασπρο"
 
-#: src/main/print-olympus.c:1246
+#: src/main/print-olympus.c:1355
 #, fuzzy
 msgid "Adjust the black balance"
 msgstr "Στο κέντρο της οθόνης"
@@ -1944,14 +2022,6 @@ msgstr "μονόχρωμο"
 msgid "2400x600 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-pcl.c:1195
-msgid "Double-Sided Printing"
-msgstr ""
-
-#: src/main/print-pcl.c:1196
-msgid "Duplex/Tumble Setting"
-msgstr ""
-
 #: src/main/print-pcl.c:1427
 msgid "Color + Black Cartridges"
 msgstr ""
@@ -1960,18 +2030,8 @@ msgstr ""
 msgid "Color + Photo Cartridges"
 msgstr ""
 
-#: src/main/print-pcl.c:1439 src/main/escp2-resolutions.c:438
-#: src/main/escp2-resolutions.c:446 src/main/escp2-resolutions.c:457
-#: src/main/escp2-resolutions.c:469
-msgid "Off"
-msgstr ""
-
 #: src/main/print-pcl.c:1440
 msgid "Long Edge (Standard)"
-msgstr ""
-
-#: src/main/print-pcl.c:1441
-msgid "Short Edge (Flip)"
 msgstr ""
 
 #: src/main/print-ps.c:96
@@ -1979,8 +2039,8 @@ msgstr ""
 msgid "PPDFile"
 msgstr "Αρχείο Ταυτότητας Διεργασίας: "
 
-#: src/main/print-ps.c:97 src/gutenprintui/panel.c:1735
-#: src/gutenprintui2/panel.c:1734
+#: src/main/print-ps.c:97 src/gutenprintui/panel.c:1749
+#: src/gutenprintui2/panel.c:1749
 #, fuzzy
 msgid "PPD File"
 msgstr " Αρχείο "
@@ -1989,165 +2049,183 @@ msgstr " Αρχείο "
 msgid "Image dimensions must match paper dimensions"
 msgstr ""
 
-#: src/main/escp2-channels.c:675 src/main/escp2-channels.c:688
+#: src/main/escp2-channels.c:869 src/main/escp2-channels.c:882
 #, fuzzy
 msgid "Two Level Grayscale"
 msgstr "Κλίμακα του γκρι"
 
-#: src/main/escp2-channels.c:710 src/main/escp2-channels.c:723
-#: src/main/escp2-channels.c:736 src/main/escp2-channels.c:749
-#: src/main/escp2-channels.c:762 src/main/escp2-channels.c:1836
-#: src/main/escp2-channels.c:1859 src/main/escp2-channels.c:1879
-#: src/main/escp2-channels.c:1899 src/main/escp2-channels.c:1919
+#: src/main/escp2-channels.c:904 src/main/escp2-channels.c:917
+#, fuzzy
+msgid "Three Level Grayscale"
+msgstr "Κλίμακα του γκρι"
+
+#: src/main/escp2-channels.c:939 src/main/escp2-channels.c:952
+#: src/main/escp2-channels.c:965 src/main/escp2-channels.c:978
+#: src/main/escp2-channels.c:991 src/main/escp2-channels.c:2218
+#: src/main/escp2-channels.c:2241 src/main/escp2-channels.c:2261
+#: src/main/escp2-channels.c:2281 src/main/escp2-channels.c:2301
 msgid "Quadtone"
 msgstr ""
 
-#: src/main/escp2-channels.c:1128 src/main/escp2-channels.c:1142
+#: src/main/escp2-channels.c:1411 src/main/escp2-channels.c:1425
 msgid "Six Color Enhanced Composite"
 msgstr ""
 
-#: src/main/escp2-channels.c:1165 src/main/escp2-channels.c:1179
-#: src/main/escp2-channels.c:1215
+#: src/main/escp2-channels.c:1448 src/main/escp2-channels.c:1462
+#: src/main/escp2-channels.c:1476 src/main/escp2-channels.c:1512
 #, fuzzy
 msgid "Seven Color Photo"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1201
+#: src/main/escp2-channels.c:1498
 #, fuzzy
 msgid "Seven Color Enhanced"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1348 src/main/escp2-channels.c:1354
+#: src/main/escp2-channels.c:1535
+#, fuzzy
+msgid "Eight Color Photo"
+msgstr "Stylus Color Pro"
+
+#: src/main/escp2-channels.c:1683 src/main/escp2-channels.c:1689
 #, fuzzy
 msgid "One Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1360
+#: src/main/escp2-channels.c:1695
 msgid "One Color Raw Enhanced Gloss"
 msgstr ""
 
-#: src/main/escp2-channels.c:1373 src/main/escp2-channels.c:1385
+#: src/main/escp2-channels.c:1708 src/main/escp2-channels.c:1720
 #, fuzzy
 msgid "Two Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1399 src/main/escp2-channels.c:1413
-#: src/main/escp2-channels.c:1440 src/main/escp2-channels.c:1453
-#: src/main/escp2-channels.c:1466 src/main/escp2-channels.c:1480
-#: src/main/escp2-channels.c:1494
+#: src/main/escp2-channels.c:1734 src/main/escp2-channels.c:1748
+#: src/main/escp2-channels.c:1775 src/main/escp2-channels.c:1788
+#: src/main/escp2-channels.c:1801 src/main/escp2-channels.c:1815
+#: src/main/escp2-channels.c:1829
 #, fuzzy
 msgid "Three Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1427
+#: src/main/escp2-channels.c:1762
 #, fuzzy
 msgid "Three Color Raw Gloss"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1501 src/main/escp2-channels.c:1507
-#: src/main/escp2-channels.c:1513 src/main/escp2-channels.c:1519
-#: src/main/escp2-channels.c:1525 src/main/escp2-channels.c:1531
-#: src/main/escp2-channels.c:1537 src/main/escp2-channels.c:1543
+#: src/main/escp2-channels.c:1836 src/main/escp2-channels.c:1842
+#: src/main/escp2-channels.c:1848 src/main/escp2-channels.c:1854
+#: src/main/escp2-channels.c:1860 src/main/escp2-channels.c:1866
+#: src/main/escp2-channels.c:1872 src/main/escp2-channels.c:1878
 #, fuzzy
 msgid "Four Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1549
+#: src/main/escp2-channels.c:1884
 msgid "Four Color Raw Gloss"
 msgstr ""
 
-#: src/main/escp2-channels.c:1564 src/main/escp2-channels.c:1578
+#: src/main/escp2-channels.c:1899 src/main/escp2-channels.c:1913
 #, fuzzy
 msgid "Five Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1594 src/main/escp2-channels.c:1600
-#: src/main/escp2-channels.c:1615
+#: src/main/escp2-channels.c:1929 src/main/escp2-channels.c:1935
+#: src/main/escp2-channels.c:1941 src/main/escp2-channels.c:1956
 #, fuzzy
 msgid "Six Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1621
+#: src/main/escp2-channels.c:1962
 msgid "Six Color Enhanced Gloss Raw"
 msgstr ""
 
-#: src/main/escp2-channels.c:1636 src/main/escp2-channels.c:1651
-#: src/main/escp2-channels.c:1666
+#: src/main/escp2-channels.c:1977 src/main/escp2-channels.c:1992
+#: src/main/escp2-channels.c:2007
 #, fuzzy
 msgid "Seven Color Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1683
+#: src/main/escp2-channels.c:2024
 #, fuzzy
 msgid "Seven Color Enhanced Gloss Raw"
 msgstr "Stylus Color Pro"
 
-#: src/main/escp2-channels.c:1815 src/main/escp2-channels.c:1828
-#: src/main/escp2-channels.c:1848 src/main/escp2-channels.c:1851
-#: src/main/escp2-channels.c:1871 src/main/escp2-channels.c:1891
-#: src/main/escp2-channels.c:1911 src/main/escp2-channels.c:1931
-#: src/main/escp2-channels.c:1947 src/main/escp2-channels.c:1949
-#: src/main/escp2-channels.c:1951 src/main/escp2-channels.c:1953
-#: src/main/escp2-channels.c:1969 src/main/escp2-channels.c:1989
+#: src/main/escp2-channels.c:2042
+#, fuzzy
+msgid "Eight Color Raw"
+msgstr "Stylus Color Pro"
+
+#: src/main/escp2-channels.c:2197 src/main/escp2-channels.c:2210
+#: src/main/escp2-channels.c:2230 src/main/escp2-channels.c:2233
+#: src/main/escp2-channels.c:2253 src/main/escp2-channels.c:2273
+#: src/main/escp2-channels.c:2293 src/main/escp2-channels.c:2313
+#: src/main/escp2-channels.c:2329 src/main/escp2-channels.c:2331
+#: src/main/escp2-channels.c:2333 src/main/escp2-channels.c:2335
+#: src/main/escp2-channels.c:2351 src/main/escp2-channels.c:2371
 msgid "EPSON Standard Inks"
 msgstr ""
 
-#: src/main/escp2-channels.c:2009 src/main/escp2-channels.c:2034
+#: src/main/escp2-channels.c:2391 src/main/escp2-channels.c:2416
 #, fuzzy
 msgid "UltraChrome Photo Black"
 msgstr "Slashdot"
 
-#: src/main/escp2-channels.c:2013 src/main/escp2-channels.c:2038
+#: src/main/escp2-channels.c:2395 src/main/escp2-channels.c:2420
 msgid "UltraChrome Matte Black"
 msgstr ""
 
-#: src/main/escp2-papers.c:967 src/main/escp2-papers.c:1011
-#: src/main/escp2-papers.c:1055 src/main/escp2-papers.c:1103
-#: src/main/escp2-papers.c:1147
+#: src/main/escp2-papers.c:1162 src/main/escp2-papers.c:1206
+#: src/main/escp2-papers.c:1250 src/main/escp2-papers.c:1298
+#: src/main/escp2-papers.c:1346 src/main/escp2-papers.c:1390
 #, fuzzy
 msgid "Plain Paper Fast Load"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/escp2-papers.c:969 src/main/escp2-papers.c:1013
-#: src/main/escp2-papers.c:1057 src/main/escp2-papers.c:1105
-#: src/main/escp2-papers.c:1149 src/main/xmli18n-tmp.h:5
+#: src/main/escp2-papers.c:1164 src/main/escp2-papers.c:1208
+#: src/main/escp2-papers.c:1252 src/main/escp2-papers.c:1300
+#: src/main/escp2-papers.c:1348 src/main/escp2-papers.c:1392
+#: src/main/xmli18n-tmp.h:5
 #, fuzzy
 msgid "Postcard"
 msgstr "Τελευταία καρτέλα"
 
-#: src/main/escp2-papers.c:977 src/main/escp2-papers.c:1021
-#: src/main/escp2-papers.c:1065 src/main/escp2-papers.c:1113
-#: src/main/escp2-papers.c:1157
+#: src/main/escp2-papers.c:1172 src/main/escp2-papers.c:1216
+#: src/main/escp2-papers.c:1260 src/main/escp2-papers.c:1308
+#: src/main/escp2-papers.c:1356 src/main/escp2-papers.c:1400
 #, fuzzy
 msgid "Back Light Film"
 msgstr "Ελαφρύ χαλάζι"
 
-#: src/main/escp2-papers.c:981 src/main/escp2-papers.c:1025
-#: src/main/escp2-papers.c:1069 src/main/escp2-papers.c:1117
-#: src/main/escp2-papers.c:1161
+#: src/main/escp2-papers.c:1176 src/main/escp2-papers.c:1220
+#: src/main/escp2-papers.c:1264 src/main/escp2-papers.c:1312
+#: src/main/escp2-papers.c:1360 src/main/escp2-papers.c:1404
 #, fuzzy
 msgid "Matte Paper Heavyweight"
 msgstr "Χαρτί Μανίλα"
 
-#: src/main/escp2-papers.c:991 src/main/escp2-papers.c:1035
-#: src/main/escp2-papers.c:1079 src/main/escp2-papers.c:1127
-#: src/main/escp2-papers.c:1171
+#: src/main/escp2-papers.c:1186 src/main/escp2-papers.c:1230
+#: src/main/escp2-papers.c:1274 src/main/escp2-papers.c:1322
+#: src/main/escp2-papers.c:1370 src/main/escp2-papers.c:1414
 msgid "Premium Semigloss Photo Paper"
 msgstr ""
 
-#: src/main/escp2-papers.c:999 src/main/escp2-papers.c:1043
-#: src/main/escp2-papers.c:1091 src/main/escp2-papers.c:1135
-#: src/main/escp2-papers.c:1183
+#: src/main/escp2-papers.c:1194 src/main/escp2-papers.c:1238
+#: src/main/escp2-papers.c:1286 src/main/escp2-papers.c:1334
+#: src/main/escp2-papers.c:1378 src/main/escp2-papers.c:1426
 #, fuzzy
 msgid "ColorLife Paper"
 msgstr "Κύρια Σελίδα"
 
-#: src/main/escp2-papers.c:1083 src/main/escp2-papers.c:1175
+#: src/main/escp2-papers.c:1278 src/main/escp2-papers.c:1326
+#: src/main/escp2-papers.c:1418
 #, fuzzy
 msgid "Archival Matte Paper"
 msgstr "Χαρτί Μανίλα"
 
-#: src/main/escp2-papers.c:1085 src/main/escp2-papers.c:1177
+#: src/main/escp2-papers.c:1280 src/main/escp2-papers.c:1328
+#: src/main/escp2-papers.c:1420
 msgid "Watercolor Paper - Radiant White"
 msgstr ""
 
@@ -2202,76 +2280,97 @@ msgstr ""
 msgid "720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:101 src/main/escp2-resolutions.c:104
+#: src/main/escp2-resolutions.c:100
+#, fuzzy
+msgid "720 x 720 DPI"
+msgstr "2880 x 720 DPI"
+
+#: src/main/escp2-resolutions.c:104 src/main/escp2-resolutions.c:107
+#: src/main/escp2-resolutions.c:119
 #, fuzzy
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 DPI"
 
-#: src/main/escp2-resolutions.c:107
+#: src/main/escp2-resolutions.c:110
 msgid "1440 x 720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:111 src/main/escp2-resolutions.c:114
+#: src/main/escp2-resolutions.c:113 src/main/escp2-resolutions.c:116
+#, fuzzy
+msgid "1440 x 720 DPI Transposed"
+msgstr "1440 x 720 DPI"
+
+#: src/main/escp2-resolutions.c:123 src/main/escp2-resolutions.c:126
 #, fuzzy
 msgid "2880 x 720 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/escp2-resolutions.c:117
+#: src/main/escp2-resolutions.c:129
 msgid "2880 x 720 DPI Highest Quality"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:121 src/main/escp2-resolutions.c:124
-#: src/main/escp2-resolutions.c:127
+#: src/main/escp2-resolutions.c:133 src/main/escp2-resolutions.c:136
+#: src/main/escp2-resolutions.c:139
 #, fuzzy
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/escp2-resolutions.c:131 src/main/escp2-resolutions.c:134
+#: src/main/escp2-resolutions.c:143 src/main/escp2-resolutions.c:146
 #, fuzzy
 msgid "2880 x 1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/escp2-resolutions.c:138 src/main/escp2-resolutions.c:141
+#: src/main/escp2-resolutions.c:149
+#, fuzzy
+msgid "2880 x 1440 DPI Transposed"
+msgstr "1440 x 1440 DPI"
+
+#: src/main/escp2-resolutions.c:153
+#, fuzzy
+msgid "5760 x 1440 DPI"
+msgstr "1440 x 1440 DPI"
+
+#: src/main/escp2-resolutions.c:157 src/main/escp2-resolutions.c:160
 #, fuzzy
 msgid "2880 x 2880 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/escp2-resolutions.c:145 src/main/escp2-resolutions.c:148
+#: src/main/escp2-resolutions.c:164 src/main/escp2-resolutions.c:167
 #, fuzzy
 msgid "5760 x 2880 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/escp2-resolutions.c:439
+#: src/main/escp2-resolutions.c:480
 msgid "On"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:447 src/main/escp2-resolutions.c:458
-#: src/main/escp2-resolutions.c:470
+#: src/main/escp2-resolutions.c:488 src/main/escp2-resolutions.c:499
+#: src/main/escp2-resolutions.c:511
 #, fuzzy
 msgid "Interleave"
 msgstr "Όνομα εκτυπωτή:"
 
-#: src/main/escp2-resolutions.c:448 src/main/escp2-resolutions.c:459
-#: src/main/escp2-resolutions.c:471
+#: src/main/escp2-resolutions.c:489 src/main/escp2-resolutions.c:500
+#: src/main/escp2-resolutions.c:512
 msgid "Full Overlap"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:449 src/main/escp2-resolutions.c:460
-#: src/main/escp2-resolutions.c:472
+#: src/main/escp2-resolutions.c:490 src/main/escp2-resolutions.c:501
+#: src/main/escp2-resolutions.c:513
 msgid "Four Pass"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:450 src/main/escp2-resolutions.c:461
-#: src/main/escp2-resolutions.c:473
+#: src/main/escp2-resolutions.c:491 src/main/escp2-resolutions.c:502
+#: src/main/escp2-resolutions.c:514
 msgid "Full Overlap 2"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:462 src/main/escp2-resolutions.c:474
+#: src/main/escp2-resolutions.c:503 src/main/escp2-resolutions.c:515
 #, fuzzy
 msgid "Interleave 2"
 msgstr "Όνομα εκτυπωτή:"
 
-#: src/main/escp2-resolutions.c:475
+#: src/main/escp2-resolutions.c:516
 #, fuzzy
 msgid "Eight Pass"
 msgstr "Εργασία"
@@ -3014,1328 +3113,1534 @@ msgid "Canon BJC 8200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:163
-msgid "Canon S400"
+msgid "Canon S200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:164
-msgid "Canon S450"
+msgid "Canon S400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:165
-msgid "Canon S800"
+msgid "Canon S450"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:166
-msgid "Canon S4500"
+msgid "Canon S800"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:167
-msgid "Canon PIXMA iP4000"
+msgid "Canon S4500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:168
-#, fuzzy
-msgid "EPSON Stylus C20SX"
-msgstr "Stylus C20ux"
+msgid "Canon PIXMA iP4000"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:169
 #, fuzzy
-msgid "EPSON Stylus C20UX"
+msgid "EPSON Stylus C20"
 msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:170
 #, fuzzy
-msgid "EPSON Stylus C40SX"
-msgstr "Stylus C40ux"
+msgid "EPSON Stylus C20SX"
+msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:171
 #, fuzzy
-msgid "EPSON Stylus C40UX"
-msgstr "Stylus C40ux"
+msgid "EPSON Stylus C20UX"
+msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:172
 #, fuzzy
-msgid "EPSON Stylus C41SX"
+msgid "EPSON Stylus C40"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:173
 #, fuzzy
-msgid "EPSON Stylus C41UX"
+msgid "EPSON Stylus C40SX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:174
 #, fuzzy
-msgid "EPSON Stylus C42SX"
+msgid "EPSON Stylus C40UX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:175
 #, fuzzy
-msgid "EPSON Stylus C42UX"
+msgid "EPSON Stylus C41"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:176
 #, fuzzy
-msgid "EPSON Stylus C43SX"
+msgid "EPSON Stylus C41SX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:177
 #, fuzzy
-msgid "EPSON Stylus C43UX"
+msgid "EPSON Stylus C41UX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:178
 #, fuzzy
-msgid "EPSON Stylus C44SX"
+msgid "EPSON Stylus C42"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:179
 #, fuzzy
-msgid "EPSON Stylus C44UX"
+msgid "EPSON Stylus C42SX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:180
 #, fuzzy
-msgid "EPSON Stylus C45"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C42UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:181
 #, fuzzy
-msgid "EPSON Stylus C46"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C43"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:182
 #, fuzzy
-msgid "EPSON Stylus C50"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C43SX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:183
 #, fuzzy
-msgid "EPSON Stylus C60"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C43UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:184
 #, fuzzy
-msgid "EPSON Stylus C61"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C44"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:185
 #, fuzzy
-msgid "EPSON Stylus C62"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C44SX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:186
 #, fuzzy
-msgid "EPSON Stylus C63"
-msgstr "Stylus C60"
+msgid "EPSON Stylus C44UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:187
 #, fuzzy
-msgid "EPSON Stylus C64"
+msgid "EPSON Stylus C45"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:188
 #, fuzzy
-msgid "EPSON Stylus C65"
+msgid "EPSON Stylus C46"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:189
 #, fuzzy
-msgid "EPSON Stylus C66"
+msgid "EPSON Stylus C48"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:190
 #, fuzzy
-msgid "EPSON Stylus C70"
-msgstr "Stylus C70"
+msgid "EPSON Stylus C50"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:191
 #, fuzzy
-msgid "EPSON Stylus C80"
-msgstr "Stylus C80"
+msgid "EPSON Stylus C60"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:192
 #, fuzzy
-msgid "EPSON Stylus C82"
-msgstr "Stylus C80"
+msgid "EPSON Stylus C61"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:193
 #, fuzzy
-msgid "EPSON Stylus C83"
-msgstr "Stylus C80"
+msgid "EPSON Stylus C62"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:194
 #, fuzzy
-msgid "EPSON Stylus C84"
-msgstr "Stylus C80"
+msgid "EPSON Stylus C63"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:195
 #, fuzzy
-msgid "EPSON Stylus C85"
+msgid "EPSON Stylus C64"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:196
 #, fuzzy
-msgid "EPSON Stylus C86"
+msgid "EPSON Stylus C65"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:197
 #, fuzzy
+msgid "EPSON Stylus C66"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:198
+#, fuzzy
+msgid "EPSON Stylus C68"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:199
+#, fuzzy
+msgid "EPSON Stylus C70"
+msgstr "Stylus C70"
+
+#: src/main/xmli18n-tmp.h:200
+#, fuzzy
+msgid "EPSON Stylus C80"
+msgstr "Stylus C80"
+
+#: src/main/xmli18n-tmp.h:201
+#, fuzzy
+msgid "EPSON Stylus C82"
+msgstr "Stylus C80"
+
+#: src/main/xmli18n-tmp.h:202
+#, fuzzy
+msgid "EPSON Stylus C83"
+msgstr "Stylus C80"
+
+#: src/main/xmli18n-tmp.h:203
+#, fuzzy
+msgid "EPSON Stylus C84"
+msgstr "Stylus C80"
+
+#: src/main/xmli18n-tmp.h:204
+#, fuzzy
+msgid "EPSON Stylus C85"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:205
+#, fuzzy
+msgid "EPSON Stylus C86"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:206
+#, fuzzy
+msgid "EPSON Stylus C88"
+msgstr "Stylus C80"
+
+#: src/main/xmli18n-tmp.h:207
+#, fuzzy
 msgid "EPSON Stylus Color"
 msgstr "Stylus Color"
 
-#: src/main/xmli18n-tmp.h:198
+#: src/main/xmli18n-tmp.h:208
 #, fuzzy
 msgid "EPSON Stylus Color Pro"
 msgstr "Stylus Color Pro"
 
-#: src/main/xmli18n-tmp.h:199
+#: src/main/xmli18n-tmp.h:209
 #, fuzzy
 msgid "EPSON Stylus Color Pro XL"
 msgstr "Stylus Color Pro XL"
 
-#: src/main/xmli18n-tmp.h:200
+#: src/main/xmli18n-tmp.h:210
 #, fuzzy
 msgid "EPSON Stylus Color 400"
 msgstr "Stylus Color 400"
 
-#: src/main/xmli18n-tmp.h:201
+#: src/main/xmli18n-tmp.h:211
 #, fuzzy
 msgid "EPSON Stylus Color 440"
 msgstr "Stylus Color 440"
 
-#: src/main/xmli18n-tmp.h:202
+#: src/main/xmli18n-tmp.h:212
 #, fuzzy
 msgid "EPSON Stylus Color 460"
 msgstr "Stylus Color 460"
 
-#: src/main/xmli18n-tmp.h:203
+#: src/main/xmli18n-tmp.h:213
 #, fuzzy
 msgid "EPSON Stylus Color 480"
 msgstr "Stylus Color 480"
 
-#: src/main/xmli18n-tmp.h:204
+#: src/main/xmli18n-tmp.h:214
 #, fuzzy
 msgid "EPSON Stylus Color 500"
 msgstr "Stylus Color 500"
 
-#: src/main/xmli18n-tmp.h:205
+#: src/main/xmli18n-tmp.h:215
 #, fuzzy
 msgid "EPSON Stylus Color 580"
 msgstr "Stylus Color 580"
 
-#: src/main/xmli18n-tmp.h:206
+#: src/main/xmli18n-tmp.h:216
 #, fuzzy
 msgid "EPSON Stylus Color 600"
 msgstr "Stylus Color 600"
 
-#: src/main/xmli18n-tmp.h:207
+#: src/main/xmli18n-tmp.h:217
 #, fuzzy
 msgid "EPSON Stylus Color 640"
 msgstr "Stylus Color 640"
 
-#: src/main/xmli18n-tmp.h:208
+#: src/main/xmli18n-tmp.h:218
 #, fuzzy
 msgid "EPSON Stylus Color 660"
 msgstr "Stylus Color 660"
 
-#: src/main/xmli18n-tmp.h:209
+#: src/main/xmli18n-tmp.h:219
 #, fuzzy
 msgid "EPSON Stylus Color 670"
 msgstr "Stylus Color 670"
 
-#: src/main/xmli18n-tmp.h:210
+#: src/main/xmli18n-tmp.h:220
 #, fuzzy
 msgid "EPSON Stylus Color 680"
 msgstr "Stylus Color 680"
 
-#: src/main/xmli18n-tmp.h:211
+#: src/main/xmli18n-tmp.h:221
 #, fuzzy
 msgid "EPSON Stylus Color 740"
 msgstr "Stylus Color 740"
 
-#: src/main/xmli18n-tmp.h:212
+#: src/main/xmli18n-tmp.h:222
 #, fuzzy
 msgid "EPSON Stylus Color 760"
 msgstr "Stylus Color 760"
 
-#: src/main/xmli18n-tmp.h:213
+#: src/main/xmli18n-tmp.h:223
 #, fuzzy
 msgid "EPSON Stylus Color 777"
 msgstr "Stylus Color 777"
 
-#: src/main/xmli18n-tmp.h:214
+#: src/main/xmli18n-tmp.h:224
 #, fuzzy
 msgid "EPSON Stylus Color 800"
 msgstr "Stylus Color 800"
 
-#: src/main/xmli18n-tmp.h:215
+#: src/main/xmli18n-tmp.h:225
 #, fuzzy
 msgid "EPSON Stylus Color 850"
 msgstr "Stylus Color 850"
 
-#: src/main/xmli18n-tmp.h:216
+#: src/main/xmli18n-tmp.h:226
 #, fuzzy
 msgid "EPSON Stylus Color 860"
 msgstr "Stylus Color 860"
 
-#: src/main/xmli18n-tmp.h:217
+#: src/main/xmli18n-tmp.h:227
 #, fuzzy
 msgid "EPSON Stylus Color 880"
 msgstr "Stylus Color 880"
 
-#: src/main/xmli18n-tmp.h:218
+#: src/main/xmli18n-tmp.h:228
 #, fuzzy
 msgid "EPSON Stylus Color 83"
 msgstr "Stylus Color 83"
 
-#: src/main/xmli18n-tmp.h:219
+#: src/main/xmli18n-tmp.h:229
 #, fuzzy
 msgid "EPSON Stylus Color 900"
 msgstr "Stylus Color 900"
 
-#: src/main/xmli18n-tmp.h:220
+#: src/main/xmli18n-tmp.h:230
 #, fuzzy
 msgid "EPSON Stylus Color 980"
 msgstr "Stylus Color 980"
 
-#: src/main/xmli18n-tmp.h:221
+#: src/main/xmli18n-tmp.h:231
 #, fuzzy
 msgid "EPSON Stylus Color 1160"
 msgstr "Stylus Color 1160"
 
-#: src/main/xmli18n-tmp.h:222
+#: src/main/xmli18n-tmp.h:232
 #, fuzzy
 msgid "EPSON Stylus Color 1500"
 msgstr "Stylus Color 1500"
 
-#: src/main/xmli18n-tmp.h:223
+#: src/main/xmli18n-tmp.h:233
 #, fuzzy
 msgid "EPSON Stylus Color 1520"
 msgstr "Stylus Color 1520"
 
-#: src/main/xmli18n-tmp.h:224
+#: src/main/xmli18n-tmp.h:234
 #, fuzzy
 msgid "EPSON Stylus Color 3000"
 msgstr "Stylus Color 3000"
 
-#: src/main/xmli18n-tmp.h:225
+#: src/main/xmli18n-tmp.h:235
 #, fuzzy
 msgid "EPSON Stylus Photo"
 msgstr "Slashdot"
 
-#: src/main/xmli18n-tmp.h:226
+#: src/main/xmli18n-tmp.h:236
 #, fuzzy
 msgid "EPSON Stylus Photo 700"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:227
+#: src/main/xmli18n-tmp.h:237
 #, fuzzy
 msgid "EPSON Stylus Photo EX"
 msgstr "Stylus Photo EX"
 
-#: src/main/xmli18n-tmp.h:228
+#: src/main/xmli18n-tmp.h:238
 #, fuzzy
 msgid "EPSON Stylus Photo EX3"
 msgstr "Stylus Photo EX"
 
-#: src/main/xmli18n-tmp.h:229
+#: src/main/xmli18n-tmp.h:239
 #, fuzzy
 msgid "EPSON Stylus Photo 720"
 msgstr "Stylus Photo 720"
 
-#: src/main/xmli18n-tmp.h:230
+#: src/main/xmli18n-tmp.h:240
 #, fuzzy
 msgid "EPSON Stylus Photo 750"
 msgstr "Stylus Photo 750"
 
-#: src/main/xmli18n-tmp.h:231
+#: src/main/xmli18n-tmp.h:241
 #, fuzzy
 msgid "EPSON Stylus Photo 780"
 msgstr "Stylus Photo 780"
 
-#: src/main/xmli18n-tmp.h:232
+#: src/main/xmli18n-tmp.h:242
 #, fuzzy
 msgid "EPSON Stylus Photo 785EPX"
 msgstr "Stylus Photo 785"
 
-#: src/main/xmli18n-tmp.h:233
+#: src/main/xmli18n-tmp.h:243
 #, fuzzy
 msgid "EPSON Stylus Photo 790"
 msgstr "Stylus Photo 790"
 
-#: src/main/xmli18n-tmp.h:234
+#: src/main/xmli18n-tmp.h:244
 #, fuzzy
 msgid "EPSON Stylus Photo 810"
 msgstr "Stylus Photo 810"
 
-#: src/main/xmli18n-tmp.h:235
+#: src/main/xmli18n-tmp.h:245
 #, fuzzy
 msgid "EPSON Stylus Photo 820"
 msgstr "Stylus Photo 820"
 
-#: src/main/xmli18n-tmp.h:236
+#: src/main/xmli18n-tmp.h:246
 #, fuzzy
 msgid "EPSON Stylus Photo 825"
 msgstr "Stylus Photo 785"
 
-#: src/main/xmli18n-tmp.h:237
+#: src/main/xmli18n-tmp.h:247
 #, fuzzy
 msgid "EPSON Stylus Photo 830"
 msgstr "Stylus Photo 780"
 
-#: src/main/xmli18n-tmp.h:238
+#: src/main/xmli18n-tmp.h:248
 #, fuzzy
 msgid "EPSON Stylus Photo 870"
 msgstr "Stylus Photo 870"
 
-#: src/main/xmli18n-tmp.h:239
+#: src/main/xmli18n-tmp.h:249
 #, fuzzy
 msgid "EPSON Stylus Photo 875"
 msgstr "Stylus Photo 875"
 
-#: src/main/xmli18n-tmp.h:240
+#: src/main/xmli18n-tmp.h:250
 #, fuzzy
 msgid "EPSON Stylus Photo 890"
 msgstr "Stylus Photo 890"
 
-#: src/main/xmli18n-tmp.h:241
+#: src/main/xmli18n-tmp.h:251
 #, fuzzy
 msgid "EPSON Stylus Photo 895"
 msgstr "Stylus Photo 895"
 
-#: src/main/xmli18n-tmp.h:242
+#: src/main/xmli18n-tmp.h:252
 #, fuzzy
 msgid "EPSON Stylus Photo 900"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:243
+#: src/main/xmli18n-tmp.h:253
 #, fuzzy
 msgid "EPSON Stylus Photo 915"
 msgstr "Stylus Photo 895"
 
-#: src/main/xmli18n-tmp.h:244
+#: src/main/xmli18n-tmp.h:254
 #, fuzzy
 msgid "EPSON Stylus Photo 925"
 msgstr "Stylus Photo 895"
 
-#: src/main/xmli18n-tmp.h:245
+#: src/main/xmli18n-tmp.h:255
 #, fuzzy
 msgid "EPSON Stylus Photo 935"
 msgstr "Stylus Photo 895"
 
-#: src/main/xmli18n-tmp.h:246
+#: src/main/xmli18n-tmp.h:256
 #, fuzzy
 msgid "EPSON Stylus Photo 950"
 msgstr "Stylus Photo 750"
 
-#: src/main/xmli18n-tmp.h:247
+#: src/main/xmli18n-tmp.h:257
 #, fuzzy
 msgid "EPSON Stylus Photo 960"
 msgstr "Stylus Photo 790"
 
-#: src/main/xmli18n-tmp.h:248
+#: src/main/xmli18n-tmp.h:258
 #, fuzzy
 msgid "EPSON Stylus Photo 1200"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:249
+#: src/main/xmli18n-tmp.h:259
 #, fuzzy
 msgid "EPSON Stylus Photo 1270"
 msgstr "Stylus Photo 1270"
 
-#: src/main/xmli18n-tmp.h:250
+#: src/main/xmli18n-tmp.h:260
 #, fuzzy
 msgid "EPSON Stylus Photo 1280"
 msgstr "Stylus Photo 1280"
 
-#: src/main/xmli18n-tmp.h:251
+#: src/main/xmli18n-tmp.h:261
 #, fuzzy
 msgid "EPSON Stylus Photo 1290"
 msgstr "Stylus Photo 1290"
 
-#: src/main/xmli18n-tmp.h:252
+#: src/main/xmli18n-tmp.h:262
 #, fuzzy
 msgid "EPSON Stylus Photo 2000P"
 msgstr "Stylus Photo 2000P"
 
-#: src/main/xmli18n-tmp.h:253
+#: src/main/xmli18n-tmp.h:263
 #, fuzzy
 msgid "EPSON Stylus Photo 2100"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:254
+#: src/main/xmli18n-tmp.h:264
 #, fuzzy
 msgid "EPSON Stylus Photo 2200"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:255
+#: src/main/xmli18n-tmp.h:265
 #, fuzzy
 msgid "EPSON Stylus Photo R200"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:256
+#: src/main/xmli18n-tmp.h:266
 #, fuzzy
 msgid "EPSON Stylus Photo R210"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:257
+#: src/main/xmli18n-tmp.h:267
+#, fuzzy
+msgid "EPSON Stylus Photo R220"
+msgstr "Stylus Photo 1200"
+
+#: src/main/xmli18n-tmp.h:268
 #, fuzzy
 msgid "EPSON Stylus Photo R300"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:258
+#: src/main/xmli18n-tmp.h:269
 #, fuzzy
 msgid "EPSON Stylus Photo R310"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:259
+#: src/main/xmli18n-tmp.h:270
+#, fuzzy
+msgid "EPSON Stylus Photo R320"
+msgstr "Stylus Photo 1200"
+
+#: src/main/xmli18n-tmp.h:271
+#, fuzzy
+msgid "EPSON Stylus Photo R340"
+msgstr "Stylus Photo 700"
+
+#: src/main/xmli18n-tmp.h:272
 #, fuzzy
 msgid "EPSON Stylus Photo RX400"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:260
+#: src/main/xmli18n-tmp.h:273
 #, fuzzy
 msgid "EPSON Stylus Photo RX420"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:261
+#: src/main/xmli18n-tmp.h:274
 #, fuzzy
 msgid "EPSON Stylus Photo RX425"
 msgstr "Stylus Photo 1200"
 
-#: src/main/xmli18n-tmp.h:262
+#: src/main/xmli18n-tmp.h:275
 #, fuzzy
 msgid "EPSON Stylus Photo RX430"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:263
+#: src/main/xmli18n-tmp.h:276
 #, fuzzy
 msgid "EPSON Stylus Photo RX500"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:264
+#: src/main/xmli18n-tmp.h:277
 #, fuzzy
 msgid "EPSON Stylus Photo RX510"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:265
+#: src/main/xmli18n-tmp.h:278
 #, fuzzy
 msgid "EPSON Stylus Photo RX600"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:266
+#: src/main/xmli18n-tmp.h:279
 #, fuzzy
 msgid "EPSON Stylus Photo RX620"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:267
+#: src/main/xmli18n-tmp.h:280
 #, fuzzy
 msgid "EPSON Stylus Photo RX630"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:268
+#: src/main/xmli18n-tmp.h:281
+#, fuzzy
+msgid "EPSON Stylus Photo RX700"
+msgstr "Stylus Photo 700"
+
+#: src/main/xmli18n-tmp.h:282
 #, fuzzy
 msgid "EPSON Stylus Photo R800"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:269
+#: src/main/xmli18n-tmp.h:283
 #, fuzzy
 msgid "EPSON Stylus Photo R1800"
 msgstr "Stylus Photo 700"
 
-#: src/main/xmli18n-tmp.h:270
+#: src/main/xmli18n-tmp.h:284
+#, fuzzy
+msgid "EPSON Stylus Photo R2400"
+msgstr "Stylus Photo 1200"
+
+#: src/main/xmli18n-tmp.h:285
 #, fuzzy
 msgid "EPSON Stylus Pro 5000"
 msgstr "Stylus Pro 5000"
 
-#: src/main/xmli18n-tmp.h:271
+#: src/main/xmli18n-tmp.h:286
 #, fuzzy
 msgid "EPSON Stylus Pro 5500"
 msgstr "Stylus Pro 5500"
 
-#: src/main/xmli18n-tmp.h:272
+#: src/main/xmli18n-tmp.h:287
 #, fuzzy
 msgid "EPSON Stylus Pro 7000"
 msgstr "Stylus Pro 7000"
 
-#: src/main/xmli18n-tmp.h:273
+#: src/main/xmli18n-tmp.h:288
 #, fuzzy
 msgid "EPSON Stylus Pro 7500"
 msgstr "Stylus Pro 7500"
 
-#: src/main/xmli18n-tmp.h:274
+#: src/main/xmli18n-tmp.h:289
 #, fuzzy
 msgid "EPSON Stylus Pro 7600"
 msgstr "Stylus Pro 7000"
 
-#: src/main/xmli18n-tmp.h:275
+#: src/main/xmli18n-tmp.h:290
 #, fuzzy
 msgid "EPSON Stylus Pro 9000"
 msgstr "Stylus Pro 9000"
 
-#: src/main/xmli18n-tmp.h:276
+#: src/main/xmli18n-tmp.h:291
 #, fuzzy
 msgid "EPSON Stylus Pro 9500"
 msgstr "Stylus Pro 9500"
 
-#: src/main/xmli18n-tmp.h:277
+#: src/main/xmli18n-tmp.h:292
 #, fuzzy
 msgid "EPSON Stylus Pro 9600"
 msgstr "Stylus Pro 9000"
 
-#: src/main/xmli18n-tmp.h:278
+#: src/main/xmli18n-tmp.h:293
 #, fuzzy
 msgid "EPSON Stylus Pro 10000"
 msgstr "Stylus Pro 10000"
 
-#: src/main/xmli18n-tmp.h:279
+#: src/main/xmli18n-tmp.h:294
 #, fuzzy
 msgid "EPSON Stylus Scan 2000"
 msgstr "Stylus Scan 2000"
 
-#: src/main/xmli18n-tmp.h:280
+#: src/main/xmli18n-tmp.h:295
 #, fuzzy
 msgid "EPSON Stylus Scan 2500"
 msgstr "Stylus Scan 2500"
 
-#: src/main/xmli18n-tmp.h:281
+#: src/main/xmli18n-tmp.h:296
 #, fuzzy
 msgid "EPSON Stylus CX1500"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:282
+#: src/main/xmli18n-tmp.h:297
 #, fuzzy
 msgid "EPSON Stylus CX3100"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:283
+#: src/main/xmli18n-tmp.h:298
 #, fuzzy
 msgid "EPSON Stylus CX3200"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:284
+#: src/main/xmli18n-tmp.h:299
 #, fuzzy
 msgid "EPSON Stylus CX3500"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:285
+#: src/main/xmli18n-tmp.h:300
 #, fuzzy
 msgid "EPSON Stylus CX3600"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:286
+#: src/main/xmli18n-tmp.h:301
 #, fuzzy
 msgid "EPSON Stylus CX3650"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:287
+#: src/main/xmli18n-tmp.h:302
+#, fuzzy
+msgid "EPSON Stylus CX3700"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:303
+#, fuzzy
+msgid "EPSON Stylus CX3800"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:304
+#, fuzzy
+msgid "EPSON Stylus CX3805"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:305
+#, fuzzy
+msgid "EPSON Stylus CX3810"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:306
+#, fuzzy
+msgid "EPSON Stylus CX4100"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:307
+#, fuzzy
+msgid "EPSON Stylus CX4200"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:308
+#, fuzzy
+msgid "EPSON Stylus CX4500"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:309
 #, fuzzy
 msgid "EPSON Stylus CX4600"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:288
+#: src/main/xmli18n-tmp.h:310
+#, fuzzy
+msgid "EPSON Stylus CX4700"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:311
+#, fuzzy
+msgid "EPSON Stylus CX4800"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:312
 #, fuzzy
 msgid "EPSON Stylus CX5100"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:289
+#: src/main/xmli18n-tmp.h:313
 #, fuzzy
 msgid "EPSON Stylus CX5200"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:290
+#: src/main/xmli18n-tmp.h:314
 #, fuzzy
 msgid "EPSON Stylus CX5300"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:291
+#: src/main/xmli18n-tmp.h:315
 #, fuzzy
 msgid "EPSON Stylus CX5400"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:292
+#: src/main/xmli18n-tmp.h:316
+#, fuzzy
+msgid "EPSON Stylus CX5700"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:317
+#, fuzzy
+msgid "EPSON Stylus CX5800"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:318
 #, fuzzy
 msgid "EPSON Stylus CX6300"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:293
+#: src/main/xmli18n-tmp.h:319
 #, fuzzy
 msgid "EPSON Stylus CX6400"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:294
+#: src/main/xmli18n-tmp.h:320
 #, fuzzy
 msgid "EPSON Stylus CX6500"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:295
+#: src/main/xmli18n-tmp.h:321
 #, fuzzy
 msgid "EPSON Stylus CX6600"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:296
+#: src/main/xmli18n-tmp.h:322
+#, fuzzy
+msgid "EPSON Stylus CX7700"
+msgstr "Stylus C70"
+
+#: src/main/xmli18n-tmp.h:323
+#, fuzzy
+msgid "EPSON Stylus CX7800"
+msgstr "Stylus C20sx"
+
+#: src/main/xmli18n-tmp.h:324
 #, fuzzy
 msgid "EPSON Stylus CX8300"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:297
+#: src/main/xmli18n-tmp.h:325
 #, fuzzy
 msgid "EPSON Stylus CX8400"
 msgstr "Stylus C20sx"
 
-#: src/main/xmli18n-tmp.h:298
-msgid "EPSON CL-700"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:299
-msgid "EPSON CL-750"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:300
-msgid "EPSON CL-760"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:301
-msgid "EPSON EM-900C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:302
-msgid "EPSON EM-930C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:303
-msgid "EPSON MC-2000"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:304
-msgid "EPSON MC-5000"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:305
-msgid "EPSON MC-7000"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:306
-msgid "EPSON MC-9000"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:307
-msgid "EPSON MC-10000"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:308
-msgid "EPSON MJ-930C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:309
-msgid "EPSON MJ-5100C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:310
-msgid "EPSON MJ-6000C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:311
-msgid "EPSON MJ-8000C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:312
-msgid "EPSON PM-700C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:313
-msgid "EPSON PM-730C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:314
-msgid "EPSON PM-740C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:315
-msgid "EPSON PM-750C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:316
-msgid "EPSON PM-760C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:317
-msgid "EPSON PM-770C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:318
-msgid "EPSON PM-780C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:319
-msgid "EPSON PM-790PT"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:320
-msgid "EPSON PM-800C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:321
-msgid "EPSON PM-850PT"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:322
-msgid "EPSON PM-870C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:323
-msgid "EPSON PM-880C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:324
-msgid "EPSON PM-930C"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:325
-msgid "EPSON PM-940C"
-msgstr ""
-
 #: src/main/xmli18n-tmp.h:326
-msgid "EPSON PM-950C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus D68"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:327
-msgid "EPSON PM-970C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus D88"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:328
-msgid "EPSON PM-980C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus DX3800"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:329
-msgid "EPSON PM-2000C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus DX3850"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:330
-msgid "EPSON PM-2200C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus DX4200"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:331
-msgid "EPSON PM-3000C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus DX4250"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:332
-msgid "EPSON PM-3300C"
-msgstr ""
+#, fuzzy
+msgid "EPSON Stylus DX4800"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:333
-msgid "EPSON PM-3500C"
+msgid "EPSON PictureMate"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:334
-msgid "EPSON PM-3700C"
+msgid "EPSON PictureMate Deluxe"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:335
-msgid "EPSON PM-4000PX"
+msgid "EPSON CL-700"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:336
-msgid "EPSON PM-5000C"
+msgid "EPSON CL-750"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:337
-msgid "EPSON PM-7000C"
+msgid "EPSON CL-760"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:338
-msgid "EPSON PM-9000C"
-msgstr ""
+#, fuzzy
+msgid "EPSON E-100"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:339
-msgid "EPSON PM-10000"
+msgid "EPSON EM-900C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:340
+msgid "EPSON EM-930C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:341
+msgid "EPSON MC-2000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:342
+msgid "EPSON MC-5000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:343
+msgid "EPSON MC-7000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:344
+msgid "EPSON MC-9000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:345
+msgid "EPSON MC-10000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:346
+msgid "EPSON MJ-930C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:347
+msgid "EPSON MJ-5100C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:348
+msgid "EPSON MJ-6000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:349
+msgid "EPSON MJ-8000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:350
+msgid "EPSON PM-700C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:351
+msgid "EPSON PM-730C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:352
+msgid "EPSON PM-740C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:353
+msgid "EPSON PM-750C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:354
+msgid "EPSON PM-760C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:355
+msgid "EPSON PM-770C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:356
+msgid "EPSON PM-780C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:357
+msgid "EPSON PM-790PT"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:358
+msgid "EPSON PM-800C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:359
+msgid "EPSON PM-850PT"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:360
+msgid "EPSON PM-870C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:361
+msgid "EPSON PM-880C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:362
+msgid "EPSON PM-930C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:363
+msgid "EPSON PM-940C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:364
+msgid "EPSON PM-950C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:365
+msgid "EPSON PM-970C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:366
+msgid "EPSON PM-980C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:367
+msgid "EPSON PM-2000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:368
+msgid "EPSON PM-2200C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:369
+msgid "EPSON PM-3000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:370
+msgid "EPSON PM-3300C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:371
+msgid "EPSON PM-3500C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:372
+msgid "EPSON PM-3700C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:373
+msgid "EPSON PM-4000PX"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:374
+msgid "EPSON PM-5000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:375
+msgid "EPSON PM-7000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:376
+msgid "EPSON PM-9000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:377
+msgid "EPSON PM-10000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:378
+#, fuzzy
+msgid "EPSON PM-A900"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:379
 #, fuzzy
 msgid "EPSON PM-D750"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:341
+#: src/main/xmli18n-tmp.h:380
 #, fuzzy
 msgid "EPSON PM-D770"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:342
+#: src/main/xmli18n-tmp.h:381
 #, fuzzy
 msgid "EPSON PM-D1000"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:343
+#: src/main/xmli18n-tmp.h:382
 #, fuzzy
 msgid "EPSON PM-G700"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:344
+#: src/main/xmli18n-tmp.h:383
 #, fuzzy
 msgid "EPSON PM-G720"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:345
+#: src/main/xmli18n-tmp.h:384
 #, fuzzy
 msgid "EPSON PM-G800"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:346
+#: src/main/xmli18n-tmp.h:385
 #, fuzzy
 msgid "EPSON PM-G820"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:347
+#: src/main/xmli18n-tmp.h:386
+#, fuzzy
+msgid "EPSON PX-A650"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:387
 #, fuzzy
 msgid "EPSON PX-G900"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:348
+#: src/main/xmli18n-tmp.h:388
 #, fuzzy
 msgid "EPSON PX-G920"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:349
+#: src/main/xmli18n-tmp.h:389
 #, fuzzy
 msgid "EPSON PX-G5000"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:350
+#: src/main/xmli18n-tmp.h:390
 #, fuzzy
 msgid "EPSON PX-V500"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:351
+#: src/main/xmli18n-tmp.h:391
 #, fuzzy
 msgid "EPSON PX-V600"
 msgstr "Stylus C60"
 
-#: src/main/xmli18n-tmp.h:352
+#: src/main/xmli18n-tmp.h:392
+#, fuzzy
+msgid "EPSON PX-5500"
+msgstr "Stylus C60"
+
+#: src/main/xmli18n-tmp.h:393
 msgid "EPSON PX-7000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:353
+#: src/main/xmli18n-tmp.h:394
 msgid "EPSON PX-9000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:354
+#: src/main/xmli18n-tmp.h:395
 msgid "Apple Color StyleWriter 4100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:355
+#: src/main/xmli18n-tmp.h:396
 msgid "Apple Color StyleWriter 4500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:356
+#: src/main/xmli18n-tmp.h:397
 msgid "Apple Color StyleWriter 6500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:357
+#: src/main/xmli18n-tmp.h:398
 msgid "HP DeskJet 340"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:358
+#: src/main/xmli18n-tmp.h:399
 msgid "HP DeskJet 400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:359
+#: src/main/xmli18n-tmp.h:400
 msgid "HP DeskJet 500"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:360
+#: src/main/xmli18n-tmp.h:401
 msgid "HP DesignJet 230"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:361
+#: src/main/xmli18n-tmp.h:402
 msgid "HP DesignJet 250C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:362
+#: src/main/xmli18n-tmp.h:403
 msgid "HP DesignJet 700"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:363
+#: src/main/xmli18n-tmp.h:404
 msgid "HP DesignJet 750C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:364
+#: src/main/xmli18n-tmp.h:405
 msgid "HP DesignJet 2500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:365
+#: src/main/xmli18n-tmp.h:406
 msgid "HP DesignJet 3500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:366
+#: src/main/xmli18n-tmp.h:407
 msgid "HP DesignJet 430"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:367
+#: src/main/xmli18n-tmp.h:408
 msgid "HP DesignJet 450C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:368
+#: src/main/xmli18n-tmp.h:409
 msgid "HP DesignJet 455CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:369
+#: src/main/xmli18n-tmp.h:410
 msgid "HP DesignJet 488CA"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:370
+#: src/main/xmli18n-tmp.h:411
 msgid "HP DeskJet 500C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:371
+#: src/main/xmli18n-tmp.h:412
 msgid "HP DeskJet 520"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:372
+#: src/main/xmli18n-tmp.h:413
 msgid "HP DeskJet 540C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:373
+#: src/main/xmli18n-tmp.h:414
 msgid "HP DeskJet 550C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:374
+#: src/main/xmli18n-tmp.h:415
 msgid "HP DeskJet 560C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:375
+#: src/main/xmli18n-tmp.h:416
 msgid "HP DeskJet 600/600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:376
+#: src/main/xmli18n-tmp.h:417
 msgid "HP DeskJet 600 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:377
+#: src/main/xmli18n-tmp.h:418
 msgid "HP DeskJet 690 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:378
+#: src/main/xmli18n-tmp.h:419
 msgid "HP DeskJet 810C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:379
+#: src/main/xmli18n-tmp.h:420
 msgid "HP DeskJet 812C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:380
+#: src/main/xmli18n-tmp.h:421
 msgid "HP DeskJet 840C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:381
+#: src/main/xmli18n-tmp.h:422
 msgid "HP DeskJet 842C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:382
+#: src/main/xmli18n-tmp.h:423
 msgid "HP DeskJet 845C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:383
+#: src/main/xmli18n-tmp.h:424
 msgid "HP DeskJet 850C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:384
+#: src/main/xmli18n-tmp.h:425
 msgid "HP DeskJet 855C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:385
+#: src/main/xmli18n-tmp.h:426
 msgid "HP DeskJet 870C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:386
+#: src/main/xmli18n-tmp.h:427
 msgid "HP DeskJet 890C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:387
+#: src/main/xmli18n-tmp.h:428
 msgid "HP DeskJet 895C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:388
+#: src/main/xmli18n-tmp.h:429
 msgid "HP DeskJet 900 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:389
+#: src/main/xmli18n-tmp.h:430
 msgid "HP DeskJet 1100C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:390
+#: src/main/xmli18n-tmp.h:431
 msgid "HP DeskJet 1120C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:391
+#: src/main/xmli18n-tmp.h:432
 msgid "HP DeskJet 1200C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:392
+#: src/main/xmli18n-tmp.h:433
 msgid "HP DeskJet 1220C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:393
+#: src/main/xmli18n-tmp.h:434
 msgid "HP DeskJet 1600C"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:394
+#: src/main/xmli18n-tmp.h:435
 msgid "HP DeskJet 2000 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:395
+#: src/main/xmli18n-tmp.h:436
 msgid "HP DeskJet 2500 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:396
+#: src/main/xmli18n-tmp.h:437
 msgid "HP PhotoSmart P1000"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:397
+#: src/main/xmli18n-tmp.h:438
 msgid "HP PhotoSmart P1100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:398
+#: src/main/xmli18n-tmp.h:439
 msgid "HP LaserJet II series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:399
+#: src/main/xmli18n-tmp.h:440
 msgid "HP LaserJet IIP series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:400
+#: src/main/xmli18n-tmp.h:441
 msgid "HP LaserJet III series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:401
+#: src/main/xmli18n-tmp.h:442
 msgid "HP LaserJet 4 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:402
+#: src/main/xmli18n-tmp.h:443
 msgid "HP LaserJet 4L"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:403
+#: src/main/xmli18n-tmp.h:444
 msgid "HP LaserJet 4V"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:404
+#: src/main/xmli18n-tmp.h:445
 msgid "HP LaserJet 4Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:405
+#: src/main/xmli18n-tmp.h:446
 msgid "HP LaserJet 5 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:406
+#: src/main/xmli18n-tmp.h:447
 msgid "HP LaserJet 5Si"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:407
+#: src/main/xmli18n-tmp.h:448
 msgid "HP LaserJet 6 series"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:408
+#: src/main/xmli18n-tmp.h:449
 msgid "Lexmark 4076"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:409
+#: src/main/xmli18n-tmp.h:450
 msgid "Lexmark Z42"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:410
+#: src/main/xmli18n-tmp.h:451
 msgid "Lexmark Z43"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:411
+#: src/main/xmli18n-tmp.h:452
 msgid "Lexmark Z52"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:412
+#: src/main/xmli18n-tmp.h:453
 msgid "Lexmark Z53"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:413
+#: src/main/xmli18n-tmp.h:454
 msgid "Olympus P10"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:414
+#: src/main/xmli18n-tmp.h:455
 msgid "Olympus P200"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:415
+#: src/main/xmli18n-tmp.h:456
 msgid "Olympus P300"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:416
+#: src/main/xmli18n-tmp.h:457
 msgid "Olympus P400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:417
+#: src/main/xmli18n-tmp.h:458
 msgid "Olympus P440"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:418
+#: src/main/xmli18n-tmp.h:459
 msgid "Canon CP100"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:419
+#: src/main/xmli18n-tmp.h:460
 msgid "Canon CP220"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:420
+#: src/main/xmli18n-tmp.h:461
 msgid "Sony UP-DP10"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:421
+#: src/main/xmli18n-tmp.h:462
+msgid "Sony UP-DR150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:463
 msgid "Fujifilm Printpix CX-400"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:422
+#: src/main/xmli18n-tmp.h:464
 msgid "Fujifilm Printpix CX-550"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:423
+#: src/main/xmli18n-tmp.h:465
 msgid "RAW DATA 16 bit"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:424
+#: src/main/xmli18n-tmp.h:466
 msgid "RAW DATA 8 bit"
 msgstr ""
 
-#: src/gutenprintui/panel.c:266 src/gutenprintui2/panel.c:266
+#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
 #, fuzzy
 msgid "Inch"
 msgstr "ίντσα"
 
-#: src/gutenprintui/panel.c:266 src/gutenprintui2/panel.c:266
+#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
 msgid "Set the base unit of measurement to inches"
 msgstr ""
 
-#: src/gutenprintui/panel.c:268 src/gutenprintui2/panel.c:268
+#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
 msgid "cm"
 msgstr "cm"
 
-#: src/gutenprintui/panel.c:268 src/gutenprintui2/panel.c:268
+#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
 msgid "Set the base unit of measurement to centimetres"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
+#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
 #, fuzzy
 msgid "Points"
 msgstr "Εκτύπωση"
 
-#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
+#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
 #, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
 msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
 
-#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
+#: src/gutenprintui/panel.c:276 src/gutenprintui2/panel.c:276
 msgid "mm"
 msgstr ""
 
-#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
+#: src/gutenprintui/panel.c:276 src/gutenprintui2/panel.c:276
 #, fuzzy
 msgid "Set the base unit of measurement to millimetres"
 msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
 
-#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
+#: src/gutenprintui/panel.c:278 src/gutenprintui2/panel.c:278
 msgid "Pica"
 msgstr ""
 
-#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
+#: src/gutenprintui/panel.c:278 src/gutenprintui2/panel.c:278
 #, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
 msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
 
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
+#: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 #, fuzzy
 msgid "Color output"
 msgstr "Κύλιση όταν υπάρχει νέα έξοδος"
 
-#: src/gutenprintui/panel.c:283 src/gutenprintui2/panel.c:283
+#: src/gutenprintui/panel.c:287 src/gutenprintui2/panel.c:287
 msgid "Print in shades of gray using black ink"
 msgstr ""
 
-#: src/gutenprintui/panel.c:295 src/gutenprintui2/panel.c:295
+#: src/gutenprintui/panel.c:299 src/gutenprintui2/panel.c:299
 #, fuzzy
 msgid "Standard Command"
 msgstr "Κανονικό"
 
-#: src/gutenprintui/panel.c:295 src/gutenprintui2/panel.c:295
+#: src/gutenprintui/panel.c:299 src/gutenprintui2/panel.c:299
 msgid "Use standard print command"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:296 src/gutenprintui2/panel.c:296
+#: src/gutenprintui/panel.c:300 src/gutenprintui2/panel.c:300
 #, fuzzy
 msgid "Custom Command"
 msgstr "Εντολή:"
 
-#: src/gutenprintui/panel.c:296 src/gutenprintui2/panel.c:296
+#: src/gutenprintui/panel.c:300 src/gutenprintui2/panel.c:300
 msgid "Use custom print command"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:297 src/gutenprintui/plist.c:660
-#: src/gutenprintui/plist.c:743 src/gutenprintui2/panel.c:297
-#: src/gutenprintui2/plist.c:656 src/gutenprintui2/plist.c:739
+#: src/gutenprintui/panel.c:301 src/gutenprintui/plist.c:660
+#: src/gutenprintui/plist.c:743 src/gutenprintui2/panel.c:301
+#: src/gutenprintui2/plist.c:671 src/gutenprintui2/plist.c:754
 msgid "File"
 msgstr "Αρχείο"
 
-#: src/gutenprintui/panel.c:297 src/gutenprintui2/panel.c:297
+#: src/gutenprintui/panel.c:301 src/gutenprintui2/panel.c:301
 #, fuzzy
 msgid "Print to a file"
 msgstr "Εκτύπωση σε Αρχείο"
 
-#: src/gutenprintui/panel.c:513 src/gutenprintui2/panel.c:513
+#: src/gutenprintui/panel.c:517 src/gutenprintui2/panel.c:517
 msgid "Edit Curve..."
 msgstr ""
 
-#: src/gutenprintui/panel.c:524 src/gutenprintui2/panel.c:524
+#: src/gutenprintui/panel.c:528 src/gutenprintui2/panel.c:528
 #, fuzzy
 msgid "Set Default"
 msgstr "Ορισμός Προκαθορισμένων Τιμών"
 
-#: src/gutenprintui/panel.c:526 src/gutenprintui2/panel.c:526
+#: src/gutenprintui/panel.c:530 src/gutenprintui2/panel.c:530
 msgid "Restore Previous"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:528 src/gutenprintui/panel.c:1514
-#: src/gutenprintui/panel.c:1754 src/gutenprintui/panel.c:1786
-#: src/gutenprintui2/panel.c:528 src/gutenprintui2/panel.c:1514
-#: src/gutenprintui2/panel.c:1753 src/gutenprintui2/panel.c:1785
+#: src/gutenprintui/panel.c:532 src/gutenprintui/panel.c:1528
+#: src/gutenprintui/panel.c:1768 src/gutenprintui/panel.c:1800
+#: src/gutenprintui2/panel.c:532 src/gutenprintui2/panel.c:1529
+#: src/gutenprintui2/panel.c:1768 src/gutenprintui2/panel.c:1800
 msgid "OK"
 msgstr "Εντάξει"
 
 #
-#: src/gutenprintui/panel.c:530 src/gutenprintui/panel.c:1178
-#: src/gutenprintui/panel.c:1516 src/gutenprintui/panel.c:1756
-#: src/gutenprintui2/panel.c:530 src/gutenprintui2/panel.c:1179
-#: src/gutenprintui2/panel.c:1516 src/gutenprintui2/panel.c:1755
+#: src/gutenprintui/panel.c:534 src/gutenprintui/panel.c:1193
+#: src/gutenprintui/panel.c:1530 src/gutenprintui/panel.c:1770
+#: src/gutenprintui2/panel.c:534 src/gutenprintui2/panel.c:1194
+#: src/gutenprintui2/panel.c:1531 src/gutenprintui2/panel.c:1770
 msgid "Cancel"
 msgstr "Ακύρωση"
 
-#: src/gutenprintui/panel.c:1161 src/gutenprintui2/panel.c:1162
+#: src/gutenprintui/panel.c:1176 src/gutenprintui2/panel.c:1177
 #, fuzzy, c-format
 msgid "%s -- Print v%s"
 msgstr "%s έκδοση %s"
 
 #
-#: src/gutenprintui/panel.c:1170 src/gutenprintui2/panel.c:1171
+#: src/gutenprintui/panel.c:1185 src/gutenprintui2/panel.c:1186
 msgid "About"
 msgstr "Περί"
 
-#: src/gutenprintui/panel.c:1172 src/gutenprintui2/panel.c:1173
+#: src/gutenprintui/panel.c:1187 src/gutenprintui2/panel.c:1188
 #, fuzzy
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr "Αποθήκευση Ρυθμίσεων"
 
-#: src/gutenprintui/panel.c:1174 src/gutenprintui2/panel.c:1175
+#: src/gutenprintui/panel.c:1189 src/gutenprintui2/panel.c:1190
 #, fuzzy
 msgid ""
 "Save\n"
@@ -4343,16 +4648,16 @@ msgid ""
 msgstr "Αποθήκευση Ρυθμίσεων"
 
 #
-#: src/gutenprintui/panel.c:1176 src/gutenprintui2/panel.c:1177
+#: src/gutenprintui/panel.c:1191 src/gutenprintui2/panel.c:1192
 msgid "Print"
 msgstr "Εκτύπωση"
 
 #
-#: src/gutenprintui/panel.c:1228 src/gutenprintui2/panel.c:1229
+#: src/gutenprintui/panel.c:1243 src/gutenprintui2/panel.c:1244
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
-#: src/gutenprintui/panel.c:1253 src/gutenprintui2/panel.c:1254
+#: src/gutenprintui/panel.c:1268 src/gutenprintui2/panel.c:1269
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
@@ -4367,59 +4672,59 @@ msgid ""
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:1300 src/gutenprintui2/panel.c:1301
+#: src/gutenprintui/panel.c:1315 src/gutenprintui2/panel.c:1316
 #, fuzzy
 msgid "Paper Size"
 msgstr "Μέγεθος"
 
-#: src/gutenprintui/panel.c:1323 src/gutenprintui2/panel.c:1324
+#: src/gutenprintui/panel.c:1338 src/gutenprintui2/panel.c:1339
 msgid "Show All Paper Sizes"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1339 src/gutenprintui2/panel.c:1340
+#: src/gutenprintui/panel.c:1354 src/gutenprintui2/panel.c:1355
 msgid "Dimensions:"
 msgstr "Διαστάσεις:"
 
-#: src/gutenprintui/panel.c:1344 src/gutenprintui/panel.c:2020
-#: src/gutenprintui2/panel.c:1345 src/gutenprintui2/panel.c:2018
+#: src/gutenprintui/panel.c:1359 src/gutenprintui/panel.c:2034
+#: src/gutenprintui2/panel.c:1360 src/gutenprintui2/panel.c:2033
 msgid "Width:"
 msgstr "Πλάτος:"
 
-#: src/gutenprintui/panel.c:1345 src/gutenprintui2/panel.c:1346
+#: src/gutenprintui/panel.c:1360 src/gutenprintui2/panel.c:1361
 #, fuzzy
 msgid "Width of the paper that you wish to print to"
 msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
 
-#: src/gutenprintui/panel.c:1349 src/gutenprintui/panel.c:2022
-#: src/gutenprintui2/panel.c:1350 src/gutenprintui2/panel.c:2020
+#: src/gutenprintui/panel.c:1364 src/gutenprintui/panel.c:2036
+#: src/gutenprintui2/panel.c:1365 src/gutenprintui2/panel.c:2035
 msgid "Height:"
 msgstr "Ύψος:"
 
-#: src/gutenprintui/panel.c:1350 src/gutenprintui2/panel.c:1351
+#: src/gutenprintui/panel.c:1365 src/gutenprintui2/panel.c:1366
 #, fuzzy
 msgid "Height of the paper that you wish to print to"
 msgstr "Επιλέξτε τον φάκελο που θέλετε να ανοίξετε"
 
 #
-#: src/gutenprintui/panel.c:1355 src/gutenprintui2/panel.c:1356
+#: src/gutenprintui/panel.c:1370 src/gutenprintui2/panel.c:1371
 #, fuzzy
 msgid "Automatic Paper Size"
 msgstr "Μέγεθος"
 
-#: src/gutenprintui/panel.c:1373 src/gutenprintui2/panel.c:1373
+#: src/gutenprintui/panel.c:1387 src/gutenprintui2/panel.c:1388
 msgid "Number of Copies"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1385 src/gutenprintui2/panel.c:1385
+#: src/gutenprintui/panel.c:1399 src/gutenprintui2/panel.c:1400
 msgid "Select the number of copies to print; a value between 1 and 100"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1417 src/gutenprintui2/panel.c:1417
+#: src/gutenprintui/panel.c:1431 src/gutenprintui2/panel.c:1432
 #, fuzzy
 msgid "Image Position"
 msgstr "Θέση"
 
-#: src/gutenprintui/panel.c:1434 src/gutenprintui2/panel.c:1434
+#: src/gutenprintui/panel.c:1448 src/gutenprintui2/panel.c:1449
 msgid "Auto"
 msgstr "Αυτόματο"
 
@@ -4427,215 +4732,215 @@ msgstr "Αυτόματο"
 # translated; if anyone knows what the term in the Greek version
 # of MSWindoze is and if it is better (or equally good), maybe we
 # would want to use that for consistency and for the sake of newbies?
-#: src/gutenprintui/panel.c:1436 src/gutenprintui2/panel.c:1436
+#: src/gutenprintui/panel.c:1450 src/gutenprintui2/panel.c:1451
 msgid "Portrait"
 msgstr "Πορτραίτο"
 
-#: src/gutenprintui/panel.c:1438 src/gutenprintui2/panel.c:1438
+#: src/gutenprintui/panel.c:1452 src/gutenprintui2/panel.c:1453
 msgid "Landscape"
 msgstr "Οριζόντιος"
 
-#: src/gutenprintui/panel.c:1440 src/gutenprintui2/panel.c:1440
+#: src/gutenprintui/panel.c:1454 src/gutenprintui2/panel.c:1455
 #, fuzzy
 msgid "Upside down"
 msgstr "Ανάποδα"
 
-#: src/gutenprintui/panel.c:1442 src/gutenprintui2/panel.c:1442
+#: src/gutenprintui/panel.c:1456 src/gutenprintui2/panel.c:1457
 msgid "Seascape"
 msgstr "Tοπίο"
 
-#: src/gutenprintui/panel.c:1446 src/gutenprintui2/panel.c:1446
+#: src/gutenprintui/panel.c:1460 src/gutenprintui2/panel.c:1461
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1448 src/gutenprintui2/panel.c:1448
+#: src/gutenprintui/panel.c:1462 src/gutenprintui2/panel.c:1463
 #, fuzzy
 msgid "Orientation:"
 msgstr "Προσανατολισμός"
 
-#: src/gutenprintui/panel.c:1459 src/gutenprintui2/panel.c:1459
+#: src/gutenprintui/panel.c:1473 src/gutenprintui2/panel.c:1474
 msgid "Left:"
 msgstr "Αριστερά:"
 
-#: src/gutenprintui/panel.c:1460 src/gutenprintui2/panel.c:1460
+#: src/gutenprintui/panel.c:1474 src/gutenprintui2/panel.c:1475
 msgid "Distance from the left of the paper to the image"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1463 src/gutenprintui/panel.c:1467
-#: src/gutenprintui2/panel.c:1463 src/gutenprintui2/panel.c:1467
+#: src/gutenprintui/panel.c:1477 src/gutenprintui/panel.c:1481
+#: src/gutenprintui2/panel.c:1478 src/gutenprintui2/panel.c:1482
 msgid "Right:"
 msgstr "Δεξιά:"
 
-#: src/gutenprintui/panel.c:1464 src/gutenprintui2/panel.c:1464
+#: src/gutenprintui/panel.c:1478 src/gutenprintui2/panel.c:1479
 #, fuzzy
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
 
-#: src/gutenprintui/panel.c:1468 src/gutenprintui2/panel.c:1468
+#: src/gutenprintui/panel.c:1482 src/gutenprintui2/panel.c:1483
 msgid "Distance from the right of the paper to the image"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1470 src/gutenprintui2/panel.c:1470
+#: src/gutenprintui/panel.c:1484 src/gutenprintui2/panel.c:1485
 msgid "Top:"
 msgstr "Πάνω:"
 
-#: src/gutenprintui/panel.c:1471 src/gutenprintui2/panel.c:1471
+#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
 msgid "Distance from the top of the paper to the image"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1474 src/gutenprintui/panel.c:1478
-#: src/gutenprintui2/panel.c:1474 src/gutenprintui2/panel.c:1478
+#: src/gutenprintui/panel.c:1488 src/gutenprintui/panel.c:1492
+#: src/gutenprintui2/panel.c:1489 src/gutenprintui2/panel.c:1493
 msgid "Bottom:"
 msgstr "Κάτω:"
 
-#: src/gutenprintui/panel.c:1475 src/gutenprintui2/panel.c:1475
+#: src/gutenprintui/panel.c:1489 src/gutenprintui2/panel.c:1490
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
 msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
 
-#: src/gutenprintui/panel.c:1479 src/gutenprintui2/panel.c:1479
+#: src/gutenprintui/panel.c:1493 src/gutenprintui2/panel.c:1494
 msgid "Distance from the bottom of the paper to the image"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1489 src/gutenprintui2/panel.c:1489
+#: src/gutenprintui/panel.c:1503 src/gutenprintui2/panel.c:1504
 #, fuzzy
 msgid "Center:"
 msgstr "Κέντρο"
 
-#: src/gutenprintui/panel.c:1492 src/gutenprintui2/panel.c:1492
+#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
 #, fuzzy
 msgid "Horizontal"
 msgstr "_Οριζόντια"
 
-#: src/gutenprintui/panel.c:1493 src/gutenprintui2/panel.c:1493
+#: src/gutenprintui/panel.c:1507 src/gutenprintui2/panel.c:1508
 msgid "Center the image horizontally on the paper"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:1495 src/gutenprintui2/panel.c:1495
+#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
 msgid "Both"
 msgstr "Και τα δύο"
 
-#: src/gutenprintui/panel.c:1496 src/gutenprintui2/panel.c:1496
+#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
 #, fuzzy
 msgid "Center the image on the paper"
 msgstr "Αλλαγή του μεγέθους σελίδας"
 
-#: src/gutenprintui/panel.c:1498 src/gutenprintui2/panel.c:1498
+#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
 #, fuzzy
 msgid "Vertical"
 msgstr "Κατακόρυ_φα"
 
-#: src/gutenprintui/panel.c:1499 src/gutenprintui2/panel.c:1499
+#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
 #, fuzzy
 msgid "Center the image vertically on the paper"
 msgstr "Περιστροφή εικόνας για κάθετα ταμπλώ"
 
-#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1512
+#: src/gutenprintui/panel.c:1526 src/gutenprintui2/panel.c:1527
 msgid "Setup Printer"
 msgstr "Ρύθμιση Εκτυπωτή"
 
-#: src/gutenprintui/panel.c:1537 src/gutenprintui2/panel.c:1536
+#: src/gutenprintui/panel.c:1551 src/gutenprintui2/panel.c:1551
 #, fuzzy
 msgid "Printer Make:"
 msgstr "Όνομα εκτυπωτή:"
 
 #
-#: src/gutenprintui/panel.c:1548 src/gutenprintui2/panel.c:1547
+#: src/gutenprintui/panel.c:1562 src/gutenprintui2/panel.c:1562
 #, fuzzy
 msgid "Select the make of your printer"
 msgstr "Επιλογή εκτυπωτή"
 
-#: src/gutenprintui/panel.c:1566 src/gutenprintui/panel.c:1857
-#: src/gutenprintui2/panel.c:1565 src/gutenprintui2/panel.c:1856
+#: src/gutenprintui/panel.c:1580 src/gutenprintui/panel.c:1871
+#: src/gutenprintui2/panel.c:1580 src/gutenprintui2/panel.c:1871
 #, fuzzy
 msgid "Printer Model:"
 msgstr "Όνομα εκτυπωτή:"
 
 #
-#: src/gutenprintui/panel.c:1577 src/gutenprintui2/panel.c:1576
+#: src/gutenprintui/panel.c:1591 src/gutenprintui2/panel.c:1591
 #, fuzzy
 msgid "Select your printer model"
 msgstr "Επιλογή εκτυπωτή"
 
-#: src/gutenprintui/panel.c:1625 src/gutenprintui2/panel.c:1624
+#: src/gutenprintui/panel.c:1639 src/gutenprintui2/panel.c:1639
 #, fuzzy
 msgid "PPD File:"
 msgstr "Αρχείο Ταυτότητας Διεργασίας: "
 
-#: src/gutenprintui/panel.c:1639 src/gutenprintui2/panel.c:1638
+#: src/gutenprintui/panel.c:1653 src/gutenprintui2/panel.c:1653
 msgid "Enter the correct PPD filename for your printer"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:1641 src/gutenprintui/panel.c:1708
-#: src/gutenprintui2/panel.c:1640 src/gutenprintui2/panel.c:1707
+#: src/gutenprintui/panel.c:1655 src/gutenprintui/panel.c:1722
+#: src/gutenprintui2/panel.c:1655 src/gutenprintui2/panel.c:1722
 msgid "Browse"
 msgstr "Εξερεύνηση"
 
-#: src/gutenprintui/panel.c:1648 src/gutenprintui2/panel.c:1647
+#: src/gutenprintui/panel.c:1662 src/gutenprintui2/panel.c:1662
 msgid "Choose the correct PPD filename for your printer"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1677 src/gutenprintui2/panel.c:1676
+#: src/gutenprintui/panel.c:1691 src/gutenprintui2/panel.c:1691
 msgid ""
 "Select the name of the output queue (not the type, or model, of printer) "
 "that you wish to print to"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1679 src/gutenprintui2/panel.c:1678
+#: src/gutenprintui/panel.c:1693 src/gutenprintui2/panel.c:1693
 #, fuzzy
 msgid "Printer Queue:"
 msgstr "Όνομα εκτυπωτή:"
 
-#: src/gutenprintui/panel.c:1695 src/gutenprintui2/panel.c:1694
+#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
 msgid "Enter the correct command to print to your printer. "
 msgstr ""
 
-#: src/gutenprintui/panel.c:1706 src/gutenprintui2/panel.c:1705
+#: src/gutenprintui/panel.c:1720 src/gutenprintui2/panel.c:1720
 msgid "Enter the file to print to. "
 msgstr ""
 
-#: src/gutenprintui/panel.c:1714 src/gutenprintui2/panel.c:1713
+#: src/gutenprintui/panel.c:1728 src/gutenprintui2/panel.c:1728
 #, fuzzy
 msgid "File to print to"
 msgstr "Τίτλοι προς εκτύπωση"
 
-#: src/gutenprintui/panel.c:1722 src/gutenprintui2/panel.c:1721
+#: src/gutenprintui/panel.c:1736 src/gutenprintui2/panel.c:1736
 #, fuzzy
 msgid "Print To File"
 msgstr "Εκτύπωση σε Αρχείο"
 
 #
-#: src/gutenprintui/panel.c:1752 src/gutenprintui2/panel.c:1751
+#: src/gutenprintui/panel.c:1766 src/gutenprintui2/panel.c:1766
 #, fuzzy
 msgid "Define New Printer"
 msgstr "Επιλογή εκτυπωτή"
 
-#: src/gutenprintui/panel.c:1770 src/gutenprintui/panel.c:1854
-#: src/gutenprintui2/panel.c:1769 src/gutenprintui2/panel.c:1853
+#: src/gutenprintui/panel.c:1784 src/gutenprintui/panel.c:1868
+#: src/gutenprintui2/panel.c:1784 src/gutenprintui2/panel.c:1868
 #, fuzzy
 msgid "Printer Name:"
 msgstr "Όνομα εκτυπωτή:"
 
-#: src/gutenprintui/panel.c:1774 src/gutenprintui2/panel.c:1773
+#: src/gutenprintui/panel.c:1788 src/gutenprintui2/panel.c:1788
 #, fuzzy
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Εισάγετε τον αριθμό γραμμής στον οποίο θέλετε να πάτε."
 
-#: src/gutenprintui/panel.c:1784 src/gutenprintui2/panel.c:1783
+#: src/gutenprintui/panel.c:1798 src/gutenprintui2/panel.c:1798
 #, fuzzy
 msgid "About Gutenprint "
 msgstr "Σημείο Προσάρτησης: "
 
-#: src/gutenprintui/panel.c:1791 src/gutenprintui2/panel.c:1790
+#: src/gutenprintui/panel.c:1805 src/gutenprintui2/panel.c:1805
 #, fuzzy
 msgid "Gutenprint Version "
 msgstr "Εκτύπωση σε: "
 
-#: src/gutenprintui/panel.c:1791 src/gutenprintui2/panel.c:1790
+#: src/gutenprintui/panel.c:1805 src/gutenprintui2/panel.c:1805
 msgid ""
 "\n"
 "\n"
@@ -4659,171 +4964,171 @@ msgid ""
 "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1839 src/gutenprintui2/panel.c:1838
+#: src/gutenprintui/panel.c:1853 src/gutenprintui2/panel.c:1853
 #, fuzzy
 msgid "Printer Settings"
 msgstr "Ρυθμίσεις Επιλογέα"
 
-#: src/gutenprintui/panel.c:1852 src/gutenprintui2/panel.c:1851
+#: src/gutenprintui/panel.c:1866 src/gutenprintui2/panel.c:1866
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1870 src/gutenprintui2/panel.c:1868
+#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1883
 #, fuzzy
 msgid "Setup Printer..."
 msgstr "Ρύθμιση Εκτυπωτή"
 
-#: src/gutenprintui/panel.c:1872 src/gutenprintui2/panel.c:1870
+#: src/gutenprintui/panel.c:1886 src/gutenprintui2/panel.c:1885
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:1885 src/gutenprintui2/panel.c:1883
+#: src/gutenprintui/panel.c:1899 src/gutenprintui2/panel.c:1898
 #, fuzzy
 msgid "New Printer..."
 msgstr "Εκτύπωση..."
 
-#: src/gutenprintui/panel.c:1886 src/gutenprintui2/panel.c:1884
+#: src/gutenprintui/panel.c:1900 src/gutenprintui2/panel.c:1899
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
 
 #
-#: src/gutenprintui/panel.c:1929 src/gutenprintui2/panel.c:1927
+#: src/gutenprintui/panel.c:1943 src/gutenprintui2/panel.c:1942
 #, fuzzy
 msgid "Image Size"
 msgstr "Μέγεθος"
 
-#: src/gutenprintui/panel.c:1954 src/gutenprintui2/panel.c:1952
+#: src/gutenprintui/panel.c:1968 src/gutenprintui2/panel.c:1967
 #, fuzzy
 msgid "Scaling:"
 msgstr "Αποθήκευση:"
 
-#: src/gutenprintui/panel.c:1958 src/gutenprintui2/panel.c:1956
+#: src/gutenprintui/panel.c:1972 src/gutenprintui2/panel.c:1971
 #, fuzzy
 msgid "Set the scale (size) of the image"
 msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
 
-#: src/gutenprintui/panel.c:1980 src/gutenprintui2/panel.c:1978
+#: src/gutenprintui/panel.c:1994 src/gutenprintui2/panel.c:1993
 msgid "Scale by:"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1985 src/gutenprintui2/panel.c:1983
+#: src/gutenprintui/panel.c:1999 src/gutenprintui2/panel.c:1998
 msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
 
-#: src/gutenprintui/panel.c:1988 src/gutenprintui2/panel.c:1986
+#: src/gutenprintui/panel.c:2002 src/gutenprintui2/panel.c:2001
 msgid "Percent"
 msgstr "Ποσοστό"
 
-#: src/gutenprintui/panel.c:1993 src/gutenprintui2/panel.c:1991
+#: src/gutenprintui/panel.c:2007 src/gutenprintui2/panel.c:2006
 #, fuzzy
 msgid "Scale the print to the size of the page"
 msgstr "Ελάττωση του μεγέθους της εικόνας στο μισό"
 
 #
-#: src/gutenprintui/panel.c:1997 src/gutenprintui2/panel.c:1995
+#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2010
 #, fuzzy
 msgid "PPI"
 msgstr "ΑΡΙΘΜ.ΔΙΕΡΓΑΣΙΑΣ"
 
-#: src/gutenprintui/panel.c:2002 src/gutenprintui2/panel.c:2000
+#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2015
 msgid "Scale the print to the number of dots per inch"
 msgstr ""
 
-#: src/gutenprintui/panel.c:2020 src/gutenprintui2/panel.c:2018
+#: src/gutenprintui/panel.c:2034 src/gutenprintui2/panel.c:2033
 #, fuzzy
 msgid "Set the width of the print"
 msgstr "Το πλάτος του μαραφετιού"
 
-#: src/gutenprintui/panel.c:2022 src/gutenprintui2/panel.c:2020
+#: src/gutenprintui/panel.c:2036 src/gutenprintui2/panel.c:2035
 #, fuzzy
 msgid "Set the height of the print"
 msgstr "Εστίαση για προσαρμογή του ύψους της σελίδας"
 
-#: src/gutenprintui/panel.c:2028 src/gutenprintui2/panel.c:2026
+#: src/gutenprintui/panel.c:2042 src/gutenprintui2/panel.c:2041
 #, fuzzy
 msgid ""
 "Use Original\n"
 "Image Size"
 msgstr "Αρχικό _Μέγεθος"
 
-#: src/gutenprintui/panel.c:2034 src/gutenprintui2/panel.c:2032
+#: src/gutenprintui/panel.c:2048 src/gutenprintui2/panel.c:2047
 #, fuzzy
 msgid "Set the print size to the size of the image"
 msgstr "Ορισμός παραμετροποιημένου μεγέθους για την εικόνα"
 
-#: src/gutenprintui/panel.c:2057 src/gutenprintui2/panel.c:2056
+#: src/gutenprintui/panel.c:2071 src/gutenprintui2/panel.c:2071
 #, fuzzy
 msgid "Print Color Adjust"
 msgstr "Πρωτεύωντα Χρώματα"
 
-#: src/gutenprintui/panel.c:2060 src/gutenprintui2/panel.c:2059
+#: src/gutenprintui/panel.c:2074 src/gutenprintui2/panel.c:2074
 #, fuzzy
 msgid "Set Defaults"
 msgstr "Ορισμός Προκαθορισμένων Τιμών"
 
 #
-#: src/gutenprintui/panel.c:2062 src/gutenprintui2/panel.c:2061
+#: src/gutenprintui/panel.c:2076 src/gutenprintui2/panel.c:2076
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: src/gutenprintui/panel.c:2092 src/gutenprintui2/panel.c:2090
+#: src/gutenprintui/panel.c:2106 src/gutenprintui2/panel.c:2105
 #, fuzzy
 msgid "Image preview"
 msgstr "Παρατηρητής Εικόνων"
 
-#: src/gutenprintui/panel.c:2106 src/gutenprintui2/panel.c:2104
+#: src/gutenprintui/panel.c:2120 src/gutenprintui2/panel.c:2119
 msgid "View Output Channels:"
 msgstr ""
 
-#: src/gutenprintui/panel.c:2170 src/gutenprintui2/panel.c:2174
+#: src/gutenprintui/panel.c:2205 src/gutenprintui2/panel.c:2210
 #, fuzzy
 msgid "Output"
 msgstr "Byte Εξόδου"
 
-#: src/gutenprintui/panel.c:2198 src/gutenprintui2/panel.c:2202
+#: src/gutenprintui/panel.c:2233 src/gutenprintui2/panel.c:2238
 #, fuzzy
 msgid "Output Type:"
 msgstr "Byte Εξόδου"
 
-#: src/gutenprintui/panel.c:2202 src/gutenprintui2/panel.c:2206
+#: src/gutenprintui/panel.c:2237 src/gutenprintui2/panel.c:2242
 #, fuzzy
 msgid "Select the desired output type"
 msgstr "Επιλογή αρχείου προς αποθήκευση"
 
-#: src/gutenprintui/panel.c:2223 src/gutenprintui2/panel.c:2227
+#: src/gutenprintui/panel.c:2258 src/gutenprintui2/panel.c:2263
 msgid "Adjust Output..."
 msgstr ""
 
-#: src/gutenprintui/panel.c:2232 src/gutenprintui2/panel.c:2236
+#: src/gutenprintui/panel.c:2267 src/gutenprintui2/panel.c:2272
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
 
-#: src/gutenprintui/panel.c:2250 src/gutenprintui2/panel.c:2255
+#: src/gutenprintui/panel.c:2285 src/gutenprintui2/panel.c:2291
 #, fuzzy
 msgid "Size Units:"
 msgstr "&Μονάδες:"
 
-#: src/gutenprintui/panel.c:2253 src/gutenprintui2/panel.c:2258
+#: src/gutenprintui/panel.c:2288 src/gutenprintui2/panel.c:2294
 #, fuzzy
 msgid " "
 msgstr "> "
 
-#: src/gutenprintui/panel.c:2277 src/gutenprintui2/panel.c:2282
+#: src/gutenprintui/panel.c:2312 src/gutenprintui2/panel.c:2318
 #, fuzzy
 msgid "Units:"
 msgstr "&Μονάδες:"
 
-#: src/gutenprintui/panel.c:2282 src/gutenprintui2/panel.c:2287
+#: src/gutenprintui/panel.c:2317 src/gutenprintui2/panel.c:2323
 #, fuzzy
 msgid "Select the base unit of measurement for printing"
 msgstr "Επιλέγει γραμματοσειρές για επικόλληση"
@@ -4858,12 +5163,12 @@ msgid "Berkeley lpd (/usr/sbin/lpc)"
 msgstr ""
 
 #
-#: src/gutenprintui/plist.c:996 src/gutenprintui2/plist.c:992
+#: src/gutenprintui/plist.c:996 src/gutenprintui2/plist.c:1009
 #, fuzzy
 msgid "Printer"
 msgstr "Εκτύπωση"
 
-#: src/gutenprintui/plist.c:1183 src/gutenprintui2/plist.c:1179
+#: src/gutenprintui/plist.c:1183 src/gutenprintui2/plist.c:1196
 #, fuzzy
 msgid "(Default Printer)"
 msgstr "Ρύθμιση Εκτυπωτή"
@@ -4913,70 +5218,70 @@ msgstr ""
 msgid "_Gamma value"
 msgstr ""
 
-#: src/cups/genppd.c:136
+#: src/cups/genppd.c:134
 #, fuzzy
 msgid "Printer Features"
 msgstr "Ρυθμίσεις Επιλογέα"
 
-#: src/cups/genppd.c:137
+#: src/cups/genppd.c:135
 #, fuzzy
 msgid "Output Control"
 msgstr "Byte Εξόδου"
 
 #
-#: src/cups/genppd.c:142
+#: src/cups/genppd.c:140
 #, fuzzy
 msgid "Common"
 msgstr "Εντολή:"
 
-#: src/cups/genppd.c:143
+#: src/cups/genppd.c:141
 #, fuzzy
 msgid "Extra 1"
 msgstr "Δοκιμή"
 
-#: src/cups/genppd.c:144
+#: src/cups/genppd.c:142
 #, fuzzy
 msgid "Extra 2"
 msgstr "Δοκιμή"
 
-#: src/cups/genppd.c:145
+#: src/cups/genppd.c:143
 #, fuzzy
 msgid "Extra 3"
 msgstr "Δοκιμή"
 
-#: src/cups/genppd.c:146
+#: src/cups/genppd.c:144
 #, fuzzy
 msgid "Extra 4"
 msgstr "Δοκιμή"
 
-#: src/cups/genppd.c:147
+#: src/cups/genppd.c:145
 msgid "Extra 5"
 msgstr ""
 
 #. TRANSLATORS: "Gutenprint" is a proper name, not a description
-#: src/cups/genppd.c:192 src/cups/genppd.c:201
+#: src/cups/genppd.c:190 src/cups/genppd.c:199
 #, fuzzy
 msgid "Gutenprint"
 msgstr "Τίτλοι προς εκτύπωση"
 
-#: src/cups/genppd.c:870
+#: src/cups/genppd.c:868
 msgid "English"
 msgstr "Greek"
 
-#: src/cups/genppd.c:872
+#: src/cups/genppd.c:870
 #, fuzzy
 msgid "ISOLatin1"
 msgstr "Λάτιν"
 
-#: src/cups/genppd.c:1419
+#: src/cups/genppd.c:1424
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1421
+#: src/cups/genppd.c:1426
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1449
+#: src/cups/genppd.c:1454
 msgid "Fine Adjustment"
 msgstr ""
 
@@ -5156,25 +5461,27 @@ msgstr ""
 msgid "Cannot read from %s: %s\n"
 msgstr "Δεν είναι δυνατό να ελεγχθεί ο φάκελος: %s: %s"
 
-#: src/escputil/escputil.c:659 src/escputil/escputil.c:932
-#: src/escputil/escputil.c:1163
+#: src/escputil/escputil.c:659 src/escputil/escputil.c:943
+#: src/escputil/escputil.c:1161
 #, fuzzy, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "¶νοιγμα αρχείου %s αδύνατον\n"
 
-#: src/escputil/escputil.c:677 src/escputil/escputil.c:1051
+#: src/escputil/escputil.c:677 src/escputil/escputil.c:1040
 #, fuzzy, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
 
-#: src/escputil/escputil.c:733 src/escputil/escputil.c:1030
+#: src/escputil/escputil.c:733 src/escputil/escputil.c:1020
+#: src/escputil/escputil.c:1230
 #, fuzzy, c-format
 msgid ""
 "\n"
 "Cannot write to %s: %s\n"
 msgstr "Εγγραφή αδύνατη: %s"
 
-#: src/escputil/escputil.c:739 src/escputil/escputil.c:1037
+#: src/escputil/escputil.c:739 src/escputil/escputil.c:1026
+#: src/escputil/escputil.c:1237
 #, c-format
 msgid ""
 "\n"
@@ -5189,83 +5496,84 @@ msgid ""
 "Please use -m to specify your printer model.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:871
-msgid "unknown"
+#: src/escputil/escputil.c:865 src/escputil/escputil.c:871
+#: src/escputil/escputil.c:872 src/escputil/escputil.c:888
+#: src/escputil/escputil.c:889 src/escputil/escputil.c:890
+#: src/escputil/escputil.c:891 src/escputil/escputil.c:892
+#: src/escputil/escputil.c:895 src/escputil/escputil.c:896
+#: src/escputil/escputil.c:897 src/escputil/escputil.c:898
+#: src/escputil/escputil.c:899 src/escputil/escputil.c:990
+msgid "Unknown"
 msgstr ""
 
-#: src/escputil/escputil.c:898
+#: src/escputil/escputil.c:919
 msgid "ink levels"
 msgstr ""
 
-#: src/escputil/escputil.c:901
+#: src/escputil/escputil.c:922
 msgid "status"
 msgstr ""
 
-#: src/escputil/escputil.c:906
+#: src/escputil/escputil.c:927
 #, c-format
 msgid "Obtaining %s requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:915 src/escputil/escputil.c:1154
-#, fuzzy, c-format
-msgid "Cannot identify printer!\n"
-msgstr "Αδυναμία ανοίγματος αρχείου εξόδου: %s\n"
-
-#: src/escputil/escputil.c:925
-#, c-format
-msgid "Printer does not support listing ink types!\n"
-msgstr ""
-
-#: src/escputil/escputil.c:974 src/escputil/escputil.c:1088
-#: src/escputil/escputil.c:1201
+#: src/escputil/escputil.c:982 src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
+#: src/escputil/escputil.c:1332
 #, fuzzy
 msgid "Ink color"
 msgstr " χρώμα"
 
-#: src/escputil/escputil.c:974 src/escputil/escputil.c:1088
-#: src/escputil/escputil.c:1201
+#: src/escputil/escputil.c:982 src/escputil/escputil.c:1084
+#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
+#: src/escputil/escputil.c:1332
 #, fuzzy
 msgid "Percent remaining"
 msgstr "Επί τοις εκατό ελεύθερο"
 
-#: src/escputil/escputil.c:998
-msgid "Unknown"
+#: src/escputil/escputil.c:1079
+#, c-format
+msgid "Printer does not support listing ink types!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1147
+#: src/escputil/escputil.c:1144
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1201
+#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
+#: src/escputil/escputil.c:1332
 msgid "Part number"
 msgstr ""
 
-#: src/escputil/escputil.c:1202
+#: src/escputil/escputil.c:1289 src/escputil/escputil.c:1313
+#: src/escputil/escputil.c:1333
 msgid "Date"
 msgstr ""
 
-#: src/escputil/escputil.c:1238
+#: src/escputil/escputil.c:1371
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1254
+#: src/escputil/escputil.c:1389
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
 msgstr "Μπορείτε να αποθηκεύσετε μια μόνο διεύθυνση τη φορά.\n"
 
-#: src/escputil/escputil.c:1273
+#: src/escputil/escputil.c:1408
 #, fuzzy, c-format
 msgid "Cleaning heads...\n"
 msgstr "Ανάγνωση επικεφαλίδων..."
 
-#: src/escputil/escputil.c:1284
+#: src/escputil/escputil.c:1419
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1288
+#: src/escputil/escputil.c:1423
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5304,7 +5612,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1323
+#: src/escputil/escputil.c:1458
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5340,12 +5648,12 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1367
+#: src/escputil/escputil.c:1502
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1377
+#: src/escputil/escputil.c:1512
 #, c-format
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
@@ -5357,38 +5665,38 @@ msgid ""
 "What do you want to do (s, q, r)?\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1385 src/escputil/escputil.c:1392
-#: src/escputil/escputil.c:1405 src/escputil/escputil.c:1421
-#: src/escputil/escputil.c:1523
+#: src/escputil/escputil.c:1520 src/escputil/escputil.c:1527
+#: src/escputil/escputil.c:1540 src/escputil/escputil.c:1556
+#: src/escputil/escputil.c:1658
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:1390
+#: src/escputil/escputil.c:1525
 #, c-format
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1395
+#: src/escputil/escputil.c:1530
 #, c-format
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1402
+#: src/escputil/escputil.c:1537
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1408
+#: src/escputil/escputil.c:1543
 #, fuzzy, c-format
 msgid "Repeating the alignment process.\n"
 msgstr "Εκκίνηση των Έξυπνων Εισαγωγέων"
 
-#: src/escputil/escputil.c:1414
+#: src/escputil/escputil.c:1549
 #, c-format
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
@@ -5398,44 +5706,44 @@ msgid ""
 "to your printer:\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1424
+#: src/escputil/escputil.c:1559
 #, c-format
 msgid "About to save settings..."
 msgstr ""
 
-#: src/escputil/escputil.c:1430
+#: src/escputil/escputil.c:1565
 #, c-format
 msgid "failed!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1431
+#: src/escputil/escputil.c:1566
 #, c-format
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1435
+#: src/escputil/escputil.c:1570
 #, c-format
 msgid "succeeded!\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1436
+#: src/escputil/escputil.c:1571
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1441
+#: src/escputil/escputil.c:1576
 #, fuzzy, c-format
 msgid "Unrecognized command.\n"
 msgstr "άγνωστο χρώμα: %s"
 
-#: src/escputil/escputil.c:1444
+#: src/escputil/escputil.c:1579
 #, c-format
 msgid "Final command was not confirmed.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1449
+#: src/escputil/escputil.c:1584
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -5446,13 +5754,13 @@ msgid ""
 "alignment procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1509 src/escputil/escputil.c:1531
-#: src/escputil/escputil.c:1574
+#: src/escputil/escputil.c:1644 src/escputil/escputil.c:1666
+#: src/escputil/escputil.c:1709
 #, fuzzy
 msgid "Press enter to continue > "
 msgstr "Παρακαλώ εισαγάγετε μια γραμμή εντολών παρακάτω."
 
-#: src/escputil/escputil.c:1516
+#: src/escputil/escputil.c:1651
 #, c-format
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
@@ -5460,43 +5768,43 @@ msgid ""
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1522
+#: src/escputil/escputil.c:1657
 #, c-format
 msgid "Pass #%d"
 msgstr ""
 
 #
-#: src/escputil/escputil.c:1528 src/escputil/escputil.c:1573
+#: src/escputil/escputil.c:1663 src/escputil/escputil.c:1708
 #, fuzzy, c-format
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Παρακαλώ εισάγετε 200 δραχμές για να συνεχίσετε."
 
-#: src/escputil/escputil.c:1547
+#: src/escputil/escputil.c:1682
 #, fuzzy, c-format
 msgid "Number out of range!\n"
 msgstr "Αριθμός Σελίδων"
 
-#: src/escputil/escputil.c:1552
+#: src/escputil/escputil.c:1687
 #, fuzzy, c-format
 msgid "I cannot understand what you typed!\n"
 msgstr "Δεν καταλαβαίνω την εντολή σου. "
 
-#: src/escputil/escputil.c:1558
+#: src/escputil/escputil.c:1693
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1565
+#: src/escputil/escputil.c:1700
 #, fuzzy, c-format
 msgid "Attempting to set alignment..."
 msgstr "Εκκίνηση των Έξυπνων Εισαγωγέων"
 
-#: src/escputil/escputil.c:1568
+#: src/escputil/escputil.c:1703
 #, c-format
 msgid "succeeded.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1569
+#: src/escputil/escputil.c:1704
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -5505,7 +5813,7 @@ msgid ""
 "quality printing.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:1615
+#: src/escputil/escputil.c:1750
 #, fuzzy, c-format
 msgid "Error in input\n"
 msgstr "Σφάλμα προσθήκης λίστας"
@@ -5642,6 +5950,10 @@ msgstr ""
 #, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Cannot identify printer!\n"
+#~ msgstr "Αδυναμία ανοίγματος αρχείου εξόδου: %s\n"
 
 #, fuzzy
 #~ msgid "Red Balance"
