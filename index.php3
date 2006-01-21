@@ -43,16 +43,14 @@ download links. The final release of Gimp-Print 4.2.6 for Mac OS X
 Jaguar is available now!</p>
 
 
-<H2><font color="#ff0000">Gutenprint 5.0.0-beta2 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.0.0-rc2 is released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of August 25,
-2004!</strong></em></font> Gutenprint 5.0.0-beta is released.  This
-is a beta release on the Gutenprint 5.0 line.  This offers many bug
-fixes and improvements.  An OS X installer is not yet
-available. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=263385">You
+<P><strong><em><font color="#ff0000">New as of January 21,
+2006!</strong></em></font> Gutenprint 5.0.0-rc2 is released.  This
+is a release candidate for Gutenprint 5.0.  This offers many bug
+fixes and improvements. <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
-
 
 <H2><font color="#ff0000">Gimp-Print 4.2.7 is released!</font></h2>
 
@@ -62,134 +60,6 @@ offers a number of bug fixes over 4.2.6. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=253459">You
 can read the release notes and download it here</a>.  </p>
 
-
-<H2><font color="#ff0000">Gutenprint 5.0.0-beta1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of June 26,
-2004!</strong></em></font> Gutenprint 5.0.0-beta is released.  This
-is a beta release on the Gutenprint 5.0 line.  This offers many bug
-fixes and improvements. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=248831">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.0.0-alpha3 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of May 12,
-2004!</strong></em></font> Gutenprint 5.0.0-alpha3 is released.  This
-is an alpha release on the Gutenprint 5.0 line.  This offers a number
-of fixes over 5.0.0-alpha2.  An OS X installer is not yet
-available. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=237881">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.0.0-alpha2 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of April 11,
-2004!</strong></em></font> Gutenprint 5.0.0-alpha2 is released.  This
-is an alpha release on the Gutenprint 5.0 line.  This release features
-major internal changes, and is expected to be relatively unstable.
-Therefore, no OS X installer will be provided.
- <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=230386">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.0.0-alpha1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of January 11,
-2004!</strong></em></font> Gutenprint 5.0.0-alpha1 is released.  This
-is the initial alpha release on the Gutenprint 5.0 line.  This offers
-major improvements over 4.2, and may be installed concurrently with
-Gimp-Print 4.2 when CUPS is used.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 and 10.3 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209204">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.6 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of January 11,
-2004!</strong></em></font> Gimp-Print 4.2.6 is released.  This is the
-last stable release on the Gimp-Print 4.2 line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 and 10.3 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=209203">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.5 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of January 25,
-2003!</strong></em></font> Gimp-Print 4.2.5 is released.  This is a
-stable release on the Gimp-Print 4.2 line.  This release offers major
-improvements particularly for users of the Epson Stylus Photo 925,
-950, 960, 2100, and 2200, and the Stylus Pro 5000.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=136002">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.4 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of November 25,
-2002!</strong></em></font> Gimp-Print 4.2.4 is released.  This is a
-stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=124368">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.3 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of October 19,
-2002!</strong></em></font> Gimp-Print 4.2.3 is released.  This is a
-stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=117216">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.2 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of September 14,
-2002!</strong></em></font> Gimp-Print 4.2.2 is released.  This is a
-stable release on the Gimp-Print 4.2 release line.  In addition to the
-source, an installation kit for Macintosh OS X 10.2 is
-available! <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=110475">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.3.4 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of August 20,
-2002!</strong></em></font> Gimp-Print 4.3.4 is released.  This is a
-development release on the Gimp-Print 4.3 development line.  This
-release offers a new raw output mode, permitting a higher level driver
-to pass color information about <em>all</em> printer channels.  This
-is an exciting capability, as it enables color management to be done
-using all available inks.  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=106365">You
-can read the release notes and download it here</a>.
-</p>
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2.1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of April 26,
-2002!</strong></em></font> Gimp-Print 4.2.1 is released.  This is a
-stable release on the Gimp-Print 4.2 release line.  This contains
-Foomatic data for the Gimp-Print IJS driver and Macintosh OS X port,
-in addition to a number of bug fixes.  Please read the release notes
-<a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
-</p>
 
 
 <H2><font color="#ff0000">Gimp-Print 4.2 is released!</font></h2>
