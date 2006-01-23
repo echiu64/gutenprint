@@ -65,9 +65,9 @@ html:
 	cd developer; $(MAKE) html
 	cd users_guide; $(MAKE) html
 
-install-data-local: gutenprint-options
+install-data-local: $(srcdir)/gutenprint-options
 	$(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc
-	$(INSTALL_DATA) gutenprint-options $(DESTDIR)$(datadir)/$(PACKAGE)/doc
+	$(INSTALL_DATA) $(srcdir)/gutenprint-options $(DESTDIR)$(datadir)/$(PACKAGE)/doc
 
 
 ## Clean
