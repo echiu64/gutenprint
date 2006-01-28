@@ -452,7 +452,7 @@ do_print_cmd(void)
 	    fprintf(stderr, "\n%4d: ", i);
 	  else if (i % 4 == 0)
 	    fprintf(stderr, " ");
-	  if (isprint(printer_cmd[i]))
+	  if (isgraph(printer_cmd[i]))
 	    fprintf(stderr, "  %c", (unsigned) printer_cmd[i]);
 	  else
 	    fprintf(stderr, " %02x", (unsigned) printer_cmd[i]);
