@@ -251,6 +251,7 @@ exit_packet_mode_old(int do_init)
 {
   static char hdr[] = "\000\000\000\033\001@EJL 1284.4\n@EJL     \n\033@";
   memcpy(printer_cmd + bufpos, hdr, sizeof(hdr) - 1); /* DON'T include null! */
+  STP_DEBUG(fprintf(stderr, "Exit packet mode (%d)\n", do_init));
   bufpos += sizeof(hdr) - 1;
   if (!do_init)
     bufpos -= 2;
@@ -260,6 +261,7 @@ static void
 initialize_print_cmd(int do_init)
 {
   bufpos = 0;
+  STP_DEBUG(fprintf(stderr, "Initialize print command\n"));
   if (isnew)
     exit_packet_mode_old(do_init);
 }
@@ -439,6 +441,24 @@ do_print_cmd(void)
 	  return 1;
 	}
     }
+  if (stp_debug)
+    {
+      int i;
+      fprintf(stderr, "Sending print command to %s:",
+	      raw_device ? raw_device : command);
+      for (i = 0; i < bufpos; i++)
+	{
+	  if (i % 16 == 0)
+	    fprintf(stderr, "\n%4d: ", i);
+	  else if (i % 4 == 0)
+	    fprintf(stderr, " ");
+	  if (isprint(printer_cmd[i]))
+	    fprintf(stderr, "  %c", (unsigned) printer_cmd[i]);
+	  else
+	    fprintf(stderr, " %02x", (unsigned) printer_cmd[i]);
+	}
+      fprintf(stderr, "\n");
+    }
   while (bytes < bufpos)
     {
       int status = fwrite(printer_cmd + bytes, 1, bufpos - bytes, pfile);
@@ -524,26 +544,75 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
 }
 
 static void
-do_remote_cmd(const char *cmd, int nargs, ...)
+start_remote_sequence(void)
 {
   static char remote_hdr[] = "\033@\033(R\010\000\000REMOTE1";
+  memcpy(printer_cmd + bufpos, remote_hdr, sizeof(remote_hdr) - 1);
+  bufpos += sizeof(remote_hdr) - 1;
+  STP_DEBUG(fprintf(stderr, "Start remote sequence\n"));
+}
+
+static void
+end_remote_sequence(void)
+{  
   static char remote_trailer[] = "\033\000\000\000\033\000";
+  memcpy(printer_cmd + bufpos, remote_trailer, sizeof(remote_trailer) - 1);
+  bufpos += sizeof(remote_trailer) - 1;
+  STP_DEBUG(fprintf(stderr, "End remote sequence\n"));
+}
+
+static void
+do_remote_cmd(const char *cmd, int nargs, ...)
+{
   int i;
   va_list args;
   va_start(args, nargs);
 
-  memcpy(printer_cmd + bufpos, remote_hdr, sizeof(remote_hdr) - 1);
-  bufpos += sizeof(remote_hdr) - 1;
+  start_remote_sequence();
   memcpy(printer_cmd + bufpos, cmd, 2);
+  STP_DEBUG(fprintf(stderr, "Remote command: %s", cmd));
   bufpos += 2;
   printer_cmd[bufpos] = nargs % 256;
   printer_cmd[bufpos + 1] = (nargs >> 8) % 256;
+  STP_DEBUG(fprintf(stderr, " %02x %02x",
+		    (unsigned) printer_cmd[bufpos],
+		    (unsigned) printer_cmd[bufpos + 1]));
   if (nargs > 0)
     for (i = 0; i < nargs; i++)
-      printer_cmd[bufpos + 2 + i] = va_arg(args, int);
+      {
+	printer_cmd[bufpos + 2 + i] = va_arg(args, int);
+	STP_DEBUG(fprintf(stderr, " %02x",
+			  (unsigned) printer_cmd[bufpos + 2 + i]));
+      }
+  STP_DEBUG(fprintf(stderr, "\n"));
   bufpos += 2 + nargs;
-  memcpy(printer_cmd + bufpos, remote_trailer, sizeof(remote_trailer) - 1);
-  bufpos += sizeof(remote_trailer) - 1;
+  end_remote_sequence();
+}
+
+static void
+do_remote_cmd_only(const char *cmd, int nargs, ...)
+{
+  int i;
+  va_list args;
+  va_start(args, nargs);
+
+  memcpy(printer_cmd + bufpos, cmd, 2);
+  STP_DEBUG(fprintf(stderr, "Remote command: %s", cmd));
+  bufpos += 2;
+  printer_cmd[bufpos] = nargs % 256;
+  printer_cmd[bufpos + 1] = (nargs >> 8) % 256;
+  STP_DEBUG(fprintf(stderr, " %02x %02x",
+		    (unsigned) printer_cmd[bufpos],
+		    (unsigned) printer_cmd[bufpos + 1]));
+  if (nargs > 0)
+    for (i = 0; i < nargs; i++)
+      {
+	printer_cmd[bufpos + 2 + i] = va_arg(args, int);
+	STP_DEBUG(fprintf(stderr, " %02x",
+			  (unsigned) printer_cmd[bufpos + 2 + i]));
+      }
+  STP_DEBUG(fprintf(stderr, "\n"));
+  bufpos += 2 + nargs;
 }
 
 static void
@@ -560,6 +629,7 @@ static void
 add_newlines(int count)
 {
   int i;
+  STP_DEBUG(fprintf(stderr, "Add %d newlines\n", count));
   for (i = 0; i < count; i++)
     {
       printer_cmd[bufpos++] = '\r';
@@ -571,6 +641,7 @@ static void
 add_resets(int count)
 {
   int i;
+  STP_DEBUG(fprintf(stderr, "Add %d resets\n", count));
   for (i = 0; i < count; i++)
     {
       printer_cmd[bufpos++] = '\033';
@@ -1404,6 +1475,7 @@ do_head_clean(void)
 {
   if (raw_device)
     (void) get_printer(1, 0);
+  initialize_print_cmd(1);
   do_remote_cmd("CH", 2, 0, 0);
   printf(_("Cleaning heads...\n"));
   exit(do_print_cmd());
@@ -1414,8 +1486,12 @@ do_nozzle_check(void)
 {
   if (raw_device)
     (void) get_printer(1, 0);
-  do_remote_cmd("VI", 2, 0, 0);
-  do_remote_cmd("NC", 2, 0, 0);
+  initialize_print_cmd(1);
+  start_remote_sequence();
+  do_remote_cmd_only("VI", 2, 0, 0);
+  do_remote_cmd_only("NC", 2, 0, 0x10);
+  do_remote_cmd_only("NC", 2, 0, 0);
+  end_remote_sequence();
   printf(_("Running nozzle check, please ensure paper is in the printer.\n"));
   exit(do_print_cmd());
 }
@@ -1506,9 +1582,16 @@ printer_error(void)
 static int
 do_final_alignment(void)
 {
+  int retry_count = 0;
   while (1)
     {
       char *inbuf;
+      retry_count++;
+      if (retry_count > 10)
+	{
+	  printf(_("Exiting\n"));
+	  exit(1);
+	}
       printf(_("Please inspect the final output very carefully to ensure that your\n"
 	       "printer is in proper alignment. You may now:\n"
 	       "  (s)ave the results in the printer,\n"
@@ -1518,6 +1601,8 @@ do_final_alignment(void)
 	       "What do you want to do (s, q, r)?\n"));
       fflush(stdout);
       inbuf = do_get_input(_("> "));
+      if (!inbuf)
+	continue;
       switch (inbuf[0])
 	{
 	case 'q':
@@ -1525,6 +1610,8 @@ do_final_alignment(void)
 	  printf(_("Please confirm by typing 'q' again that you wish to quit without saving:\n"));
 	  fflush(stdout);
 	  inbuf = do_get_input (_("> "));
+	  if (!inbuf)
+	    continue;
 	  if (inbuf[0] == 'q' || inbuf[0] == 'Q')
 	    {
 	      printf(_("OK, your printer is aligned, but the alignment has not been saved.\n"
@@ -1538,6 +1625,8 @@ do_final_alignment(void)
 		   "alignment process:\n"));
 	  fflush(stdout);
 	  inbuf = do_get_input(_("> "));
+	  if (!inbuf)
+	    continue;
 	  if (inbuf[0] == 'r' || inbuf[0] == 'R')
 	    {
 	      printf(_("Repeating the alignment process.\n"));
@@ -1554,6 +1643,8 @@ do_final_alignment(void)
 
 	  fflush(stdout);
 	  inbuf = do_get_input(_("> "));
+	  if (!inbuf)
+	    continue;
 	  if (inbuf[0] == 's' || inbuf[0] == 'S')
 	    {
 	      printf(_("About to save settings..."));
@@ -1653,9 +1744,18 @@ do_align(void)
       initialize_print_cmd(1);
       for (curpass = 1; curpass <= passes; curpass ++)
 	{
+	  int retry_count = 0;
 	reread:
+	  retry_count++;
+	  if (retry_count > 10)
+	    {
+	      printf(_("Exiting\n"));
+	      return;
+	    }
 	  printf(_("Pass #%d"), curpass);
 	  inbuf = do_get_input(_("> "));
+	  if (!inbuf)
+	    goto reread;
 	  switch (inbuf[0])
 	    {
 	    case 'r':
