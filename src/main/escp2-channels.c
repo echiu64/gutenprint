@@ -2142,9 +2142,9 @@ static const shade_set_t ultrachrome_matte_shades =	/* Ultrachrome with matte bl
 
 static const shade_set_t ultra3_photo_shades =	/* R2400 with photo black ink */
 {
-  { 3, { 1.0, 0.555, 0.185 }},
-  { 2, { 1.0, 0.25 }},
-  { 2, { 1.0, 0.25 }},
+  { 3, { 1.0, 0.48, 0.16 }},
+  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.20 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
@@ -2155,8 +2155,8 @@ static const shade_set_t ultra3_photo_shades =	/* R2400 with photo black ink */
 static const shade_set_t ultra3_matte_shades =	/* R2400 with matte black ink */
 {
   { 3, { 1.0, 0.278, 0.093 }},
-  { 2, { 1.0, 0.25 }},
-  { 2, { 1.0, 0.25 }},
+  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.20 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
