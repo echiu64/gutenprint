@@ -2281,12 +2281,15 @@ setup_inks(stp_vars_t *v)
 	    {
 	      stp_erprintf("Not enough shades!\n");
 	    }
-	  if (strcmp(param, "BlackDensity") == 0)
-	    stp_channel_set_black_channel(v, i);
-	  else if (strcmp(param, "GlossDensity") == 0)
+	  if (ink_type->inkset != INKSET_EXTENDED)
 	    {
-	      gloss_scale *= get_double_param(v, param);
-	      gloss_channel = i;
+	      if (strcmp(param, "BlackDensity") == 0)
+		stp_channel_set_black_channel(v, i);
+	      else if (strcmp(param, "GlossDensity") == 0)
+		{
+		  gloss_scale *= get_double_param(v, param);
+		  gloss_channel = i;
+		}
 	    }
 	  stp_dither_set_inks(v, i, 1.0, ink_darknesses[i % 8],
 			      channel->n_subchannels, shades->shades,
@@ -2302,37 +2305,40 @@ setup_inks(stp_vars_t *v)
 		stp_channel_set_cutoff_adjustment(v, i, j,
 						  paper->subchannel_cutoff);
 	    }
-	  if (channel->hue_curve && channel->hue_curve->curve_name)
+	  if (ink_type->inkset != INKSET_EXTENDED)
 	    {
-	      char *hue_curve_name;
-	      const stp_curve_t *curve = NULL;
-	      stp_asprintf(&hue_curve_name, "%sHueCurve",
-			   channel->hue_curve->curve_name);
-	      curve = stp_get_curve_parameter(v, hue_curve_name);
-	      if (curve)
+	      if (channel->hue_curve && channel->hue_curve->curve_name)
 		{
-		  stp_channel_set_curve(v, i, curve);
-		  hue_curve_found = 1;
+		  char *hue_curve_name;
+		  const stp_curve_t *curve = NULL;
+		  stp_asprintf(&hue_curve_name, "%sHueCurve",
+			       channel->hue_curve->curve_name);
+		  curve = stp_get_curve_parameter(v, hue_curve_name);
+		  if (curve)
+		    {
+		      stp_channel_set_curve(v, i, curve);
+		      hue_curve_found = 1;
+		    }
+		  stp_free(hue_curve_name);
 		}
-	      stp_free(hue_curve_name);
-	    }
-	  if (channel->hue_curve && !hue_curve_found)
-	    {
-	      if (!channel->hue_curve->curve_impl)
-		channel->hue_curve->curve_impl =
-		  stp_curve_create_from_string(channel->hue_curve->curve);
-	      if (channel->hue_curve->curve_impl)
+	      if (channel->hue_curve && !hue_curve_found)
 		{
-		  stp_curve_t *curve_tmp =
-		    stp_curve_create_copy(channel->hue_curve->curve_impl);
+		  if (!channel->hue_curve->curve_impl)
+		    channel->hue_curve->curve_impl =
+		      stp_curve_create_from_string(channel->hue_curve->curve);
+		  if (channel->hue_curve->curve_impl)
+		    {
+		      stp_curve_t *curve_tmp =
+			stp_curve_create_copy(channel->hue_curve->curve_impl);
 #if 0
-		  (void) stp_curve_rescale(curve_tmp,
-					   sqrt(1.0 / stp_get_float_parameter(v, "Gamma")),
-					   STP_CURVE_COMPOSE_EXPONENTIATE,
-					   STP_CURVE_BOUNDS_RESCALE);
+		      (void) stp_curve_rescale(curve_tmp,
+					       sqrt(1.0 / stp_get_float_parameter(v, "Gamma")),
+					       STP_CURVE_COMPOSE_EXPONENTIATE,
+					       STP_CURVE_BOUNDS_RESCALE);
 #endif
-		  stp_channel_set_curve(v, i, curve_tmp);
-		  stp_curve_destroy(curve_tmp);
+		      stp_channel_set_curve(v, i, curve_tmp);
+		      stp_curve_destroy(curve_tmp);
+		    }
 		}
 	    }
 	}
@@ -3012,7 +3018,8 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   stp_allocate_component_data(v, "Driver", NULL, NULL, pd);
 
   pd->inkname = get_inktype(v);
-  if (stp_check_boolean_parameter(v, "UseGloss", STP_PARAMETER_ACTIVE) &&
+  if (pd->inkname->inkset != INKSET_EXTENDED &&
+      stp_check_boolean_parameter(v, "UseGloss", STP_PARAMETER_ACTIVE) &&
       stp_get_boolean_parameter(v, "UseGloss"))
     pd->use_aux_channels = 1;
   else
