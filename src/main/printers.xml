@@ -496,6 +496,10 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
       </printer>
+      <printer name="EPSON Stylus Photo 830U" driver="escp2-830u" manufacturer="Epson" model="50">
+        <parameter type="float" name="Gamma">0.470</parameter>
+        <parameter type="float" name="Density">1.0</parameter>
+      </printer>
       <printer name="EPSON Stylus Photo 870" driver="escp2-870" manufacturer="Epson" model="22">
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="Density">1.0</parameter>
