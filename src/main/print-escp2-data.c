@@ -1727,7 +1727,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
-    180, 180, 2, 360, 360, 1, 360, 360, 1, 6,
+    180, 180, 2, 360, 360, 1, 360, 360, 1, 7,
     360, 14400, -1, 2880, 2880, 720, 360, 0, 1, 0, 190, 0, 0, 0,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
@@ -2009,6 +2009,74 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, c1_5_base_res, &default_input_slot_list,
     &picturemate_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &picturemate_channel_name_list
+  },
+  /* 74: PM-A650 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
+    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0,
+    4, 15, 0, 0,
+    c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, &stpi_escp2_variable_3pl_pigment_c66_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_c64_inkgroup,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &standard_channel_name_list
+  },
+  /* 75: Japanese PM-A750 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
+    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0,
+    4, 15, 0, 0,
+    c2pl_dotsizes, c2pl_densities, &stpi_escp2_variable_2pl_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_c64_inkgroup,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &standard_channel_name_list
+  },
+  /* 76: Japanese PM-A890 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 90, 3, 90, 90, 3, 90, 90, 3, 6,
+    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0,
+    4, 15, 0, 0,
+    c2pl_dotsizes, c2pl_densities, &stpi_escp2_variable_2pl_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &standard_channel_name_list
+  },
+  /* 77: Japanese PM-D600 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_XZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
+    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
+    4, 15, 0, 0,
+    p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
+    stpi_escp2_superfine_reslist, &stpi_escp2_c64_inkgroup,
+    variable_bits, variable_base_res, &cd_roll_feed_input_slot_list,
+    &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
+    NULL, &photo_channel_name_list
   },
 };
 

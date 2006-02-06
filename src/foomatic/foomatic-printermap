@@ -281,6 +281,8 @@
 #gptofoo escp2-cl750 printer/Epson-CL_750
 #gptofoo escp2-cl760 printer/Epson-CL_760
 #gptofoo escp2-e100 printer/Epson-E_100
+#gptofoo escp2-e150 printer/Epson-E_150
+#gptofoo escp2-e200 printer/Epson-E_200
 #gptofoo escp2-em900c printer/Epson-EM_900C
 #gptofoo escp2-em930c printer/Epson-EM_930C
 #gptofoo escp2-mc2000 printer/Epson-MC_2000
@@ -320,12 +322,19 @@
 #gptofoo escp2-pm7000c printer/Epson-PM_7000C
 #gptofoo escp2-pm9000c printer/Epson-PM_9000C
 #gptofoo escp2-pm10000 printer/Epson-PM_10000
+#gptofoo escp2-pma650 printer/Epson-PM_A650
+#gptofoo escp2-pma750 printer/Epson-PM_A750
+#gptofoo escp2-pma890 printer/Epson-PM_A890
 #gptofoo escp2-pma900 printer/Epson-PM_A900
+#gptofoo escp2-pma950 printer/Epson-PM_A950
+#gptofoo escp2-pmd600 printer/Epson-PM_D600
 #gptofoo escp2-pmd750 printer/Epson-PM_D750
 #gptofoo escp2-pmd770 printer/Epson-PM_D770
+#gptofoo escp2-pmd800 printer/Epson-PM_D800
 #gptofoo escp2-pmd1000 printer/Epson-PM_D1000
 #gptofoo escp2-pmg700 printer/Epson-PM_G700
 #gptofoo escp2-pmg720 printer/Epson-PM_G720
+#gptofoo escp2-pmg730 printer/Epson-PM_G730
 #gptofoo escp2-pmg800 printer/Epson-PM_G800
 #gptofoo escp2-pmg820 printer/Epson-PM_G820
 #gptofoo escp2-pxa650 printer/Epson-PX_A650
@@ -334,6 +343,7 @@
 #gptofoo escp2-pxg5000 printer/Epson-PX_G5000
 #gptofoo escp2-pxv500 printer/Epson-PX_V500
 #gptofoo escp2-pxv600 printer/Epson-PX_V600
+#gptofoo escp2-pxv630 printer/Epson-PX_V630
 #gptofoo escp2-px5500 printer/Epson-PX_5500
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000

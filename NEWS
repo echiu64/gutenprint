@@ -1468,7 +1468,7 @@ EPSON Stylus Photo RX630
 EPSON Stylus Photo RX700 (Experimental)
 EPSON Stylus Photo R800
 EPSON Stylus Photo R1800
-EPSON Stylus Photo R2400 (Experimental)
+EPSON Stylus Photo R2400 (Partially tuned
 EPSON Stylus Pro 5000
 EPSON Stylus Pro 5500
 EPSON Stylus Pro 7000
@@ -1521,6 +1521,9 @@ EPSON PictureMate
 EPSON CL-700
 EPSON CL-750
 EPSON CL-760    (Experimental)
+EPSON E-100
+EPSON E-150
+EPSON E-200
 EPSON EM-900C
 EPSON EM-930C
 EPSON MC-2000
@@ -1560,12 +1563,19 @@ EPSON PM-5000C
 EPSON PM-7000C
 EPSON PM-9000C
 EPSON PM-10000
+EPSON PM-A650   (Experimental)
+EPSON PM-A750   (Experimental)
+EPSON PM-A890   (Experimental)
 EPSON PM-A900
+EPSON PM-A950
+EPSON PM-D600   (Experimental)
 EPSON PM-D750
 EPSON PM-D770
+EPSON PM-D800   (Experimental)
 EPSON PM-D1000
 EPSON PM-G700
 EPSON PM-G720
+EPSON PM-G730
 EPSON PM-G800   (Experimental)
 EPSON PM-G820   (Experimental)
 EPSON PX-A650
@@ -1573,6 +1583,7 @@ EPSON PX-G900
 EPSON PX-G5000
 EPSON PX-V500
 EPSON PX-V600
+EPSON PX-V630
 EPSON PX-5500
 EPSON PX-7000
 EPSON PX-9000
@@ -1927,6 +1938,8 @@ Epson CL-760                   escp2-cl760     EPSON CL-760
 Epson EM-900C                  escp2-em900c    EPSON EM-900C
 Epson EM-930C                  escp2-em930c    EPSON EM-930C
 Epson E-100                    escp2-e100      EPSON E-100
+Epson E-150                    escp2-e150      EPSON E-150
+Epson E-200                    escp2-e200      EPSON E-200
 Epson MC-2000                  escp2-mc2000    EPSON MC-2000
 Epson MC-5000                  escp2-mc5000    EPSON MC-5000
 Epson MC-7000                  escp2-mc7000    EPSON MC-7000
@@ -1964,12 +1977,19 @@ Epson PM-5000C                 escp2-pm5000c   EPSON PM-5000C
 Epson PM-7000C                 escp2-pm7000c   EPSON PM-7000C
 Epson PM-9000C                 escp2-pm9000c   EPSON PM-9000C
 Epson PM-10000                 escp2-pm10000   EPSON PM-10000
+Epson PM-A650                  escp2-pma650    EPSON PM-A650
+Epson PM-A750                  escp2-pma750    EPSON PM-A750
+Epson PM-A890                  escp2-pma890    EPSON PM-A890
 Epson PM-A900                  escp2-pma900    EPSON PM-A900
+Epson PM-A950                  escp2-pma950    EPSON PM-A950
+Epson PM-D650                  escp2-pmd650    EPSON PM-D650
 Epson PM-D750                  escp2-pmd750    EPSON PM-D750
 Epson PM-D770                  escp2-pmd770    EPSON PM-D770
+Epson PM-D800                  escp2-pmd800    EPSON PM-D800
 Epson PM-D1000                 escp2-pmd1000   EPSON PM-D1000
 Epson PM-G700                  escp2-pmg700    EPSON PM-G700
 Epson PM-G720                  escp2-pmg720    EPSON PM-G720
+Epson PM-G730                  escp2-pmg730    EPSON PM-G730
 Epson PM-G800                  escp2-pmg800    EPSON PM-G800
 Epson PM-G820                  escp2-pmg820    EPSON PM-G820
 Epson PX-A650                  escp2-pxa650    EPSON PX-A650
@@ -1978,6 +1998,7 @@ Epson PX-G920                  escp2-pxg920    EPSON PX-G920
 Epson PX-G5000                 escp2-pxg5000   EPSON PX-G5000
 Epson PX-V500                  escp2-pxv500    EPSON PX-V500
 Epson PX-V600                  escp2-pxv600    EPSON PX-V600
+Epson PX-V630                  escp2-pxv630    EPSON PX-V630
 Epson PX-5500                  escp2-px5500    EPSON PX-5500
 Epson PX-7000                  escp2-px7000    EPSON PX-7000
 Epson PX-9000                  escp2-px9000    EPSON PX-9000
