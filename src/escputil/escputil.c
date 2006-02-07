@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <ctype.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
 #else
