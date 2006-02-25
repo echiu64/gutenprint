@@ -385,7 +385,6 @@
 #gptofoo pcl-2500 printer/HP-DesignJet_ColorPro_CAD
 #gptofoo pcl-340 printer/HP-DeskJet_340C
 #gptofoo pcl-400 printer/HP-DeskJet_400
-#gptofoo pcl-540 printer/HP-DeskJet_400C
 #gptofoo pcl-540 printer/HP-DeskJet_420C
 #gptofoo pcl-900 printer/HP-DeskJet_450
 #gptofoo pcl-500 printer/HP-DeskJet_500
@@ -512,11 +511,11 @@
 #gptofoo pcl-6 printer/HP-LaserJet_3200
 #gptofoo pcl-6 printer/HP-LaserJet_3200m
 #gptofoo pcl-6 printer/HP-LaserJet_3200se
-#gptofoo pcl-6 printer/HP-LaserJet_3300
-#gptofoo pcl-6 printer/HP-LaserJet_3310
-#gptofoo pcl-6 printer/HP-LaserJet_3320
-#gptofoo pcl-6 printer/HP-LaserJet_3320N
-#gptofoo pcl-6 printer/HP-LaserJet_3330
+#gptofoo pcl-6 printer/HP-LaserJet_3300_MFP
+#gptofoo pcl-6 printer/HP-LaserJet_3310_MFP
+#gptofoo pcl-6 printer/HP-LaserJet_3320_MFP
+#gptofoo pcl-6 printer/HP-LaserJet_3320N_MFP
+#gptofoo pcl-6 printer/HP-LaserJet_3330_MFP
 #gptofoo pcl-6 printer/HP-LaserJet_4000
 #gptofoo pcl-6 printer/HP-LaserJet_4050
 #gptofoo pcl-6 printer/HP-LaserJet_4100
@@ -610,7 +609,7 @@
 #gptofoo pcl-6 printer/Infotec-4651_MF
 #gptofoo pcl-2 printer/Kyocera-F-1010
 #gptofoo pcl-4 printer/Kyocera-FS-600
-#gptofoo pcl-4 printer/Kyocera-FS-600KPDL2
+#gptofoo pcl-4 printer/Kyocera-FS-600_KPDL-2
 #gptofoo pcl-4 printer/Kyocera-FS-680
 #gptofoo pcl-4 printer/Kyocera-FS-800
 #gptofoo pcl-4 printer/Kyocera-FS-1000
