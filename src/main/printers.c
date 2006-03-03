@@ -42,6 +42,17 @@
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
 
+static void stpi_printvars_freefunc(void *item);
+static const char* stpi_printvars_namefunc(const void *item);
+
+static stp_list_t *printvars_list = NULL;
+
+typedef struct stp_printvars
+{
+  const char *name;
+  stp_vars_t *printvars;
+} stp_printvars_t;
+
 static void stpi_printer_freefunc(void *item);
 static const char* stpi_printer_namefunc(const void *item);
 static const char* stpi_printer_long_namefunc(const void *item);
@@ -59,6 +70,18 @@ struct stp_printer
   stp_vars_t *printvars;
 };
 
+static void
+stpi_init_printvars_list(void)
+{
+  if (!printvars_list)
+    {
+      printvars_list = stp_list_create();
+      stp_list_set_freefunc(printvars_list, stpi_printvars_freefunc);
+      stp_list_set_namefunc(printvars_list, stpi_printvars_namefunc);
+      stp_list_set_long_namefunc(printvars_list, stpi_printvars_namefunc);
+    }
+}
+
 static int
 stpi_init_printer_list(void)
 {
@@ -69,7 +92,6 @@ stpi_init_printer_list(void)
   stp_list_set_namefunc(printer_list, stpi_printer_namefunc);
   stp_list_set_long_namefunc(printer_list, stpi_printer_long_namefunc);
   /* stp_list_set_sortfunc(printer_list, stpi_printer_sortfunc); */
-
   return 0;
 }
 
@@ -122,6 +144,19 @@ stpi_printer_freefunc(void *item)
   stp_free(printer->long_name);
   stp_free(printer->family);
   stp_free(printer);
+}
+
+/* ARGSUSED */
+static void
+stpi_printvars_freefunc(void *item)
+{
+}
+
+static const char *
+stpi_printvars_namefunc(const void *item)
+{
+  const stp_printvars_t *printvars = (const stp_printvars_t *) item;
+  return printvars->name;
 }
 
 const char *
@@ -789,6 +824,30 @@ stp_verify_printer_params(stp_vars_t *v)
   return answer;
 }
 
+static const stp_vars_t *
+stp_find_params(const char *name, const char *family)
+{
+  if (printvars_list)
+    {
+      char *stmp =
+	stp_malloc(strlen(family) + strlen("::") + strlen(name) + 1);
+      stp_list_item_t *item;
+      strcpy(stmp, family);
+      strcat(stmp, "::");
+      strcat(stmp, name);
+      item = stp_list_get_item_by_name(printvars_list, stmp);
+      if (item)
+	return ((const stp_printvars_t *)
+		stp_list_item_get_data(item))->printvars;
+      strcpy(stmp, stmp);
+      item = stp_list_get_item_by_name(printvars_list, stmp);
+      if (item)
+	return ((const stp_printvars_t *)
+		stp_list_item_get_data(item))->printvars;
+    }
+  return NULL;
+}
+
 int
 stp_family_register(stp_list_t *family)
 {
@@ -854,6 +913,113 @@ stp_family_unregister(stp_list_t *family)
   return 0;
 }
 
+static void
+stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
+				stp_vars_t *v)
+{
+  while (prop)
+    {
+      if (prop->type == STP_MXML_ELEMENT)
+	{
+	  const char *prop_name = prop->value.element.name;
+	  if (!strcmp(prop_name, "parameter"))
+	    {
+	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
+	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
+	      stp_mxml_node_t *child = prop->child;
+	      if (!p_type || !p_name)
+		stp_erprintf("Bad property found!\n");
+	      else if (strcmp(p_type, "float") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_float_parameter
+		      (v, p_name, stp_xmlstrtod(child->value.text.string));
+		}
+	      else if (strcmp(p_type, "integer") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_int_parameter
+		      (v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		}
+	      else if (strcmp(p_type, "boolean") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_boolean_parameter
+		      (v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		}
+	      else if (strcmp(p_type, "string") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    stp_set_string_parameter
+		      (v, p_name, child->value.text.string);
+		}
+	      else if (strcmp(p_type, "curve") == 0)
+		{
+		  stp_curve_t *curve = stp_curve_create_from_xmltree(child);
+		  if (curve)
+		    {
+		      stp_set_curve_parameter(v, p_name, curve);
+		      stp_curve_destroy(curve);
+		    }
+		}
+	      else if (strcmp(p_type, "array") == 0)
+		{
+		  stp_array_t *array = stp_array_create_from_xmltree(child);
+		  if (array)
+		    {
+		      stp_set_array_parameter(v, p_name, array);
+		      stp_array_destroy(array);
+		    }
+		}
+	      else
+		{
+		  stp_erprintf("Bad property %s type %s\n", p_name, p_type);
+		  continue;
+		}
+	    }
+	}
+      prop = prop->next;
+    }
+} 
+
+static stp_printvars_t *
+stp_printvars_create_from_xmltree(stp_mxml_node_t *printer,
+				  const char *family)
+{
+  stp_mxml_node_t *prop;	/* Temporary node pointer */
+  const char *stmp;		/* Temporary string */
+  char *sbuf;
+  stp_printvars_t *outprintvars;
+  outprintvars = stp_zalloc(sizeof(stp_printvars_t));
+  if (!outprintvars)
+    return NULL;
+  outprintvars->printvars = stp_vars_create();
+  if (outprintvars->printvars == NULL)
+    {
+      stp_free(outprintvars);
+      return NULL;
+    }
+  stmp = stp_mxmlElementGetAttr(printer, "name");
+  if (!stmp)
+    {
+      stp_vars_destroy(outprintvars->printvars);
+      stp_free(outprintvars);
+      return NULL;
+    }
+  sbuf = stp_malloc(strlen(family) + strlen("::") + strlen(stmp) + 1);
+  strcpy(sbuf, family);
+  strcat(sbuf, "::");
+  strcat(sbuf, stmp);
+  outprintvars->name = sbuf;
+  prop = printer->child;
+  stp_fill_printvars_from_xmltree(prop, outprintvars->printvars);
+  if (stp_get_debug_level() & STP_DBG_XML)
+    stp_deprintf(STP_DBG_XML, "stp_printvars_create_from_xmltree: %s\n",
+		 outprintvars->name);
+  return outprintvars;
+}
+
+
 /*
  * Parse the printer node, and return the generated printer.  Returns
  * NULL on failure.
@@ -864,17 +1030,24 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
 				const stp_printfuncs_t *printfuncs)
                                                        /* Family printfuncs */
 {
-  stp_mxml_node_t *prop;                                  /* Temporary node pointer */
-  const char *stmp;                                    /* Temporary string */
-  stp_printer_t *outprinter;                 /* Generated printer */
+  stp_mxml_node_t *prop;	/* Temporary node pointer */
+  const char *stmp;		/* Temporary string */
+  stp_printer_t *outprinter;	/* Generated printer */
   int
-    driver = 0,                                       /* Check driver */
+    driver = 0,			/* Check driver */
     long_name = 0;
 
   outprinter = stp_zalloc(sizeof(stp_printer_t));
   if (!outprinter)
     return NULL;
-  outprinter->printvars = stp_vars_create();
+  stmp = stp_mxmlElementGetAttr(printer, "parameters");
+  if (stmp && !stp_find_params(stmp, family))
+    stp_erprintf("stp_printer_create_from_xmltree: cannot find parameters %s::%s\n",
+		 family, stmp);
+  if (stmp && stp_find_params(stmp, family))
+    outprinter->printvars = stp_vars_create_copy(stp_find_params(stmp, family));
+  else
+    outprinter->printvars = stp_vars_create();
   if (outprinter->printvars == NULL)
     {
       stp_free(outprinter);
@@ -897,75 +1070,7 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   outprinter->printfuncs = printfuncs;
 
   prop = printer->child;
-  while (prop)
-    {
-      if (prop->type == STP_MXML_ELEMENT)
-	{
-	  const char *prop_name = prop->value.element.name;
-	  if (!strcmp(prop_name, "parameter"))
-	    {
-	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
-	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
-	      stp_mxml_node_t *child = prop->child;
-	      if (!p_type || !p_name)
-		stp_erprintf("Bad property on driver %s\n", outprinter->driver);
-	      else if (strcmp(p_type, "float") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    stp_set_float_parameter
-		      (outprinter->printvars, p_name,
-		       stp_xmlstrtod(child->value.text.string));
-		}
-	      else if (strcmp(p_type, "integer") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    stp_set_int_parameter
-		      (outprinter->printvars, p_name,
-		       (int) stp_xmlstrtol(child->value.text.string));
-		}
-	      else if (strcmp(p_type, "boolean") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    stp_set_boolean_parameter
-		      (outprinter->printvars, p_name,
-		       (int) stp_xmlstrtol(child->value.text.string));
-		}
-	      else if (strcmp(p_type, "string") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    stp_set_string_parameter
-		      (outprinter->printvars, p_name, child->value.text.string);
-		}
-	      else if (strcmp(p_type, "curve") == 0)
-		{
-		  stp_curve_t *curve = stp_curve_create_from_xmltree(child);
-		  if (curve)
-		    {
-		      stp_set_curve_parameter(outprinter->printvars,
-					      p_name, curve);
-		      stp_curve_destroy(curve);
-		    }
-		}
-	      else if (strcmp(p_type, "array") == 0)
-		{
-		  stp_array_t *array = stp_array_create_from_xmltree(child);
-		  if (array)
-		    {
-		      stp_set_array_parameter(outprinter->printvars,
-					      p_name, array);
-		      stp_array_destroy(array);
-		    }
-		}
-	      else
-		{
-		  stp_erprintf("Bad property %s type %s on driver %s\n",
-			       p_name, p_type, outprinter->driver);
-		  continue;
-		}
-	    }
-	}
-      prop = prop->next;
-    }
+  stp_fill_printvars_from_xmltree(prop, outprinter->printvars);
   if (driver && long_name && printfuncs)
     {
       if (stp_get_debug_level() & STP_DBG_XML)
@@ -993,7 +1098,6 @@ stpi_xml_process_family(stp_mxml_node_t *family)     /* The family node */
   stp_module_t *family_module_data;           /* Family module data */
   stp_family_t *family_data = NULL;  /* Family data */
   int family_valid = 0;                       /* Is family valid? */
-  stp_printer_t *outprinter;         /* Generated printer */
 
   family_module_list = stp_module_get_class(STP_MODULE_CLASS_FAMILY);
   if (!family_module_list)
@@ -1026,12 +1130,22 @@ stpi_xml_process_family(stp_mxml_node_t *family)     /* The family node */
 	  const char *printer_name = printer->value.element.name;
 	  if (!strcmp(printer_name, "printer"))
 	    {
-	      outprinter =
+	      stp_printer_t *outprinter =
 		stp_printer_create_from_xmltree(printer, family_name,
 						family_data->printfuncs);
 	      if (outprinter)
 		stp_list_item_create(family_data->printer_list, NULL,
 				      outprinter);
+	    }
+	  else if (!strcmp(printer_name, "parameters"))
+	    {
+	      stp_printvars_t *printvars =
+		stp_printvars_create_from_xmltree(printer, family_name);
+	      if (printvars)
+		{
+		  stpi_init_printvars_list();
+		  stp_list_item_create(printvars_list, NULL, printvars);
+		}
 	    }
 	}
       printer = printer->next;

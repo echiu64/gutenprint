@@ -114,6 +114,53 @@ while(<PIPE>) {
 close PIPE or die "Cannot run printers: $!\n";
 print STDERR "done.\n";
 
+# Step 1: construct a map from Model= values to Foomatic model id's
+# this map is %mapstp.  The inverse from model to Model is %mapdb
+#
+# Foomatic is supposed to be a superset, so
+
+$missing_drivers = 0;
+
+%driverlist = ();
+%foolist = ();
+
+open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
+for (<PRINTERS>) {
+    if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
+	if ($driverlist{$1}) {
+	    $missing_drivers = 1;
+	    warn "Duplicate driver $1\n";
+	}
+	$driverlist{$1} = 1;
+	if ($foolist{$2}) {
+	    $missing_drivers = 1;
+	    warn "Duplicate Foomatic ID $2\n";
+	}
+	$foolist{$2} = 1;
+	push (@{$mapstp{$1}}, $2);
+	$mapfoo{$2} = $1;	# do we need?
+    }
+}
+
+# Are we missing any stp printers?
+for (keys(%stpdata)) {
+    if (!defined($mapstp{$_})) {
+	$missing_drivers = 1;
+	warn "No foomatic printer IDs for gutenprint printer $_.\n";
+    }
+}
+
+for (keys(%mapstp)) {
+    if (!defined($stpdata{$_})) {
+	$missing_drivers = 1;
+	warn "No gutenprint printer for foomatic ID $_.\n";
+    }
+}
+
+if ($missing_drivers) {
+   die "Cannot continue\n";
+}
+
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
 
 # Invert, to build %bar{$optionname} = [ choice1, choice2 ];
@@ -233,40 +280,6 @@ for $a (keys(%stp_dimension_values)) {
 #print join("\n", @floatnumopts_list);
 #print join("\n", @intnumopts_list);
 #print join("\n", @dimensionnumopts_list);
-
-# Step 1: construct a map from Model= values to Foomatic model id's
-# this map is %mapstp.  The inverse from model to Model is %mapdb
-#
-# Foomatic is supposed to be a superset, so
-
-open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
-for (<PRINTERS>) {
-    if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
-	push (@{$mapstp{$1}}, $2);
-	$mapfoo{$2} = $1;	# do we need?
-    }
-}
-
-$missing_drivers = 0;
-
-# Are we missing any stp printers?
-for (keys(%stpdata)) {
-    if (!defined($mapstp{$_})) {
-	$missing_drivers = 1;
-	warn "No foomatic printer IDs for gutenprint printer $_.\n";
-    }
-}
-
-for (keys(%mapstp)) {
-    if (!defined($stpdata{$_})) {
-	$missing_drivers = 1;
-	warn "No gutenprint printer for foomatic ID $_.\n";
-    }
-}
-
-if ($missing_drivers) {
-   die "Cannot continue\n";
-}
 
 # Figure out version etc
 open PIPE, "./gutenprint-version|" or die "Cannot run gutenprint-version: $!\n";
