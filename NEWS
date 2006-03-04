@@ -80,11 +80,45 @@ for building and installing Gutenprint.
 
 These release notes contain the following sections:
 
-1) Changes from 5.0.0-rc1 to 5.0.0-rc2
-2) Overall changes from 4.2 to 5.0.
-3) Known build/installation issues
-4) List of supported printers
-5) Printer-specific notes
+1) Changes from 5.0.0-rc2 to 5.0.0-xxx
+2) Changes from 5.0.0-rc1 to 5.0.0-rc2
+3) Overall changes from 4.2 to 5.0.
+4) Known build/installation issues
+5) List of supported printers
+6) Printer-specific notes
+
+================================================================
+
+* Major changes between Gutenprint 5.0.0 release candidate 2 and
+  Gutenprint 5.0.0 xxx:
+
+  1) The package now offers explicit support for many more printers.
+     All printers supported by Gutenprint are now listed explicitly
+     rather than via the compatibility list.
+
+  2) The cleaning and nozzle check functions of escputil now work
+     properly on most printers, and escputil no longer crashes if you
+     type ctrl-D to a command prompt.  In addition, the status printed
+     via the status command is now much more readable.
+
+  3) The color quality for the Epson R300, R800, R2400, and related
+     printers has been improved.
+
+  4) Raw output now works correctly on the Epson R800 and R1800.
+
+  5) Experimental support for the Japan-market Epson printers PM-A900,
+     PM-D800, PM-G730, and PX-V630, and preliminary support for the
+     PM-A650, PM-A750, and PM-A890.
+
+  6) The definition of the Epson Stylus CX3500, CX3600, CX3650,
+     CX4100, CX4200, CX4500, CX4600, CX4700, CX4800, CX5700, CX5800,
+     CX7700, CX7800, DX4200, DX4250, DX4800, and PX-A650 have been
+     corrected.  The DX4800 now works correctly; the color output for
+     all of these printers has been corrected.
+
+  7) A few build problems have been fixed.
+
+  8) A Hungarian translation has been added.
 
 ================================================================
 
@@ -211,10 +245,9 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   1) In general, Gutenprint 5.0 is very different from Gimp-Print 4.2.
      Gutenprint 5.0 offers many new options (which are described
      separately below), and many options that are present in both 4.2
-     and 5.0 function differently in the two releases.  In addition,
-     the API is different.  Finally, the color correction is quite
-     different, and profiles created with the 4.2 driver will not
-     function well with the 5.0 driver.
+     and 5.0 function differently in the two releases.  Finally, the
+     color correction is quite different, and profiles created with
+     the 4.2 driver will not function well with the 5.0 driver.
 
   2) Options in the CUPS driver and GIMP plugin are now grouped
      according to function.  This work is still in progress, and
@@ -421,6 +454,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
        older printers, it simply returns the standard ink
        information.
 
+     * The status command now prints status in a human-readable format
+       rather than simply reporting the raw information returned by
+       the printer.
+
      * Ink level detection now works on all known supported printers,
        and may work on other non-supported printers.  Previously it
        did not work on some newer printers.  However, it is somewhat
@@ -485,7 +522,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      what's being printed, enabling and disabling options as
      appropriate.
 
-  8) If you are using an older version of the GIMP 1.2, and the GIMP
+  8) The plugin now lists printers grouped by manufacturer, rather
+     than a single long list.
+
+  9) If you are using an older version of the GIMP 1.2, and the GIMP
      is installed in a non-standard location on your system such that
      you cannot run configure in Gutenprint without using
      --with-gimp-prefix or --with-gimp-exec-prefix, please read item
@@ -781,7 +821,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 	you generate will be incorrect and printing may work
 	incorrectly or not at all.
 
-	Foomatic option files are usually located in 
+	Foomatic option files are usually located in
 
 	/usr/local/share/foomatic/db/source/opt
 
@@ -837,11 +877,10 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
 
   8) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
      against GIMP 2.0) requires special build instructions if you are
-     using a very old version of the GIMP 1.2 (versions affected are
-     believed to include 1.2.0, 1.2.1, and 1.2.2).  Specifically, you
-     must set GIMPTOOL in the environment to point to the proper
-     version of gimptool when running Gutenprint's configure script.
-     For example:
+     using a very old version of the GIMP 1.2 (1.2.0, 1.2.1, or
+     1.2.2).  Specifically, you must set GIMPTOOL in the environment
+     to point to the proper version of gimptool when running
+     Gutenprint's configure script.  For example:
 
      GIMPTOOL=/usr/bin/gimptool ./configure
 
@@ -1252,7 +1291,7 @@ Known Build/Installation Issues
 	 do not do this, any PPD files you generate will be incorrect
 	 and printing may work incorrectly or not at all.
 
-	 Foomatic option files are usually located in 
+	 Foomatic option files are usually located in
 
 	 /usr/local/share/foomatic/db/source/opt
 
@@ -2135,7 +2174,7 @@ Printer-Specific Notes:
 	 5760x2880 DPI on the Epson Stylus Photo R800 despite the
 	 advertised maximum resolution of 5760x1440 DPI.  Testing has
 	 verified that these resolutions do in fact operate correctly
-	 and offer benefit over lower resolutions.	 
+	 and offer benefit over lower resolutions.
 
 	 It is almost always better to have a printing resolution with
 	 a smaller aspect ratio (i. e. the horizontal and vertical
