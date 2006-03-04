@@ -189,6 +189,8 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	  description->is_active = 1;
 	}
+      else if (strcmp(name, "PPDFile") == 0)
+	description->is_active = 1;
       else
 	description->is_active = 0;
       return;
