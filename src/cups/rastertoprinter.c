@@ -659,7 +659,14 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
   else if (strcmp(ppd->nickname + strlen(ppd->modelname) +
-		  strlen(CUPS_PPD_NICKNAME_STRING), version_id) != 0)
+		  strlen(CUPS_PPD_NICKNAME_STRING), version_id) != 0 &&
+	   (strlen(ppd->nickname + strlen(ppd->modelname) +
+		   strlen(CUPS_PPD_NICKNAME_STRING)) < strlen(version_id) ||
+	    !((strncmp(ppd->nickname + strlen(ppd->modelname) +
+		      strlen(CUPS_PPD_NICKNAME_STRING), version_id,
+		      strlen(version_id)) == 0) &&
+	      *(ppd->nickname + strlen(ppd->modelname) +
+		strlen(CUPS_PPD_NICKNAME_STRING)) != ' ')))
   {
     fprintf(stderr, "ERROR: Gutenprint: The version of Gutenprint software installed (%s) does not match the PPD file (%s).\n",
 	    version_id,

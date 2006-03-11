@@ -227,6 +227,19 @@ STP_ARG_ENABLE([translated-cups-ppds],
                [BUILD_TRANSLATED_CUPS_PPDS],
                [yes])
 
+STP_ARG_ENABLE_DETAILED([simplified-cups-ppds],
+			[],
+			[build simplified CUPS PPD files],
+			[(options: yes, no, only)],
+			[BUILD_SIMPLIFIED_CUPS_PPDS],
+			[no],
+			[
+    yes) [WHICH_PPDS]="-a"; AC_MSG_RESULT([yes]) ;;
+    no) [WHICH_PPDS]=""; AC_MSG_RESULT([no]) ;;
+    only) [WHICH_PPDS]="-s"; AC_MSG_RESULT([only]) ;;
+    *) AC_MSG_ERROR([${enableval}: not a valid option ('yes', 'no', or 'only')]) ;;
+				   ])
+
 USE_LEVEL3_PS=no
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
   cups_version=`${CUPS_CONFIG} --version`
@@ -930,6 +943,7 @@ AC_SUBST(gutenprintui2_libdeps)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
+AC_SUBST(WHICH_PPDS)
 
 dnl Output files
 

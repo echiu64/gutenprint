@@ -124,7 +124,6 @@ const char *special_options[] =
   "Resolution",
   "OutputOrder",
   "Quality",
-  "ImageType",
   "Duplex",
   NULL
 };
@@ -161,7 +160,7 @@ int     checkcat (const struct dirent *localedir);
 void    printlangs(char** langs);
 void    printmodels(int verbose);
 int	write_ppd(const stp_printer_t *p, const char *prefix,
-		  const char *language, int verbose);
+		  const char *language, int verbose, int simplified);
 
 
 /*
@@ -218,6 +217,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   char          **models = NULL;    /* Models to output, all if NULL */
   int           opt_printlangs = 0; /* Print available translations */
   int           opt_printmodels = 0;/* Print available models */
+  int           which_ppds = 2;	/* Simplified PPD's = 1, full = 2 */
 
  /*
   * Parse command-line args...
@@ -227,7 +227,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:sa")) == -1)
       break;
 
     switch (i)
@@ -270,6 +270,12 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'd':
       cups_modeldir = optarg;
+      break;
+    case 's':
+      which_ppds = 1;
+      break;
+    case 'a':
+      which_ppds = 3;
       break;
     case 'V':
       printf("cups-genppd version %s, "
@@ -413,7 +419,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
 	  if (printer)
 	    {
-	      if (write_ppd(printer, prefix, language, verbose))
+	      if ((which_ppds & 1) &&
+		  write_ppd(printer, prefix, language, verbose, 1))
+		return 1;
+	      if ((which_ppds & 2) &&
+		  write_ppd(printer, prefix, language, verbose, 0))
 		return 1;
 	    }
 	  else
@@ -430,8 +440,15 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	{
 	  printer = stp_get_printer_by_index(i);
 
-	  if (printer && write_ppd(printer, prefix, language, verbose))
-	    return (1);
+	  if (printer)
+	    {
+	      if ((which_ppds & 1) &&
+		  write_ppd(printer, prefix, language, verbose, 1))
+		return (1);
+	      if ((which_ppds & 2) &&
+		  write_ppd(printer, prefix, language, verbose, 0))
+		return (1);
+	    }
 	}
     }
   if (!verbose)
@@ -458,7 +475,7 @@ void
 usage(void)
 {
   puts("Usage: cups-genppd [-c localedir] "
-        "[-l locale] [-p prefix] [-q] [-v] models...\n"
+        "[-l locale] [-p prefix] [-s | -a] [-q] [-v] models...\n"
         "       cups-genppd -L [-c localedir]\n"
 	"       cups-genppd -M [-v]\n"
 	"       cups-genppd -h\n"
@@ -484,6 +501,8 @@ help(void)
        "  -l locale     Output PPDs translated with messages for locale.\n"
        "  -p prefix     Output PPDs in directory prefix.\n"
        "  -d prefix     Embed directory prefix in PPD file.\n"
+       "  -s            Generate simplified PPD files.\n"
+       "  -a            Generate all (simplified and full) PPD files.\n"
        "  -q            Quiet mode.\n"
        "  -v            Verbose mode.\n"
        "models:\n"
@@ -745,7 +764,8 @@ int					/* O - Exit status */
 write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
 	  const char	      *language,
-	  int                 verbose)
+	  int                 verbose,
+	  int                 simplified)
 {
   int		i, j, k, l;		/* Looping vars */
   gzFile	fp;			/* File to write to */
@@ -772,8 +792,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
   int has_quality_parameter = 0;
-  int has_image_type_parameter = 0;
   int printer_is_color = 0;
+  int maximum_level = simplified ?
+    STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
 
  /*
   * Initialize driver-specific variables...
@@ -819,8 +840,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
    * 
    * stp-escp2-ex.5.0.ppd.gz
    */
-  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s",
-	   prefix, driver, GUTENPRINT_RELEASE_VERSION, ppdext, gzext);
+  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s%s",
+	   prefix, driver, GUTENPRINT_RELEASE_VERSION,
+	   simplified ? ".sim" : "", ppdext, gzext);
 
  /*
   * Open the PPD file...
@@ -877,7 +899,8 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   */
 
   gzprintf(fp, "*PCFileName:	\"STP%05d.PPD\"\n",
-	   stp_get_printer_index_by_driver(driver));
+	   stp_get_printer_index_by_driver(driver) +
+	   simplified ? stp_printer_model_count() : 0);
   gzprintf(fp, "*Manufacturer:	\"%s\"\n", manufacturer);
 
  /*
@@ -909,8 +932,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
    * If this is changed, the corresponding change must be made in
    * rastertoprinter.c.  Look for "ppd->nickname"
    */
-  gzprintf(fp, "*NickName:      \"%s%s%s\"\n",
-	   long_name, CUPS_PPD_NICKNAME_STRING, VERSION);
+  gzprintf(fp, "*NickName:      \"%s%s%s%s\"\n",
+	   long_name, CUPS_PPD_NICKNAME_STRING, VERSION,
+	   simplified ? " Simplified" : "");
   if (cups_ppd_ps_level == 2)
     gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
   else
@@ -965,12 +989,13 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
   gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
-  gzprintf(fp, "*StpPPDLocation:	\"%s%s%s/stp-%s.%s%s%s\"\n",
+  gzprintf(fp, "*StpPPDLocation:	\"%s%s%s/stp-%s.%s%s%s%s\"\n",
 	   cups_modeldir,
 	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
 	   language ? language : "C",
 	   driver,
 	   GUTENPRINT_RELEASE_VERSION,
+	   simplified ? ".sim" : "",
 	   ppdext,
 	   gzext);
   gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");	
@@ -1006,6 +1031,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
       variable_sizes = 1;
       continue;
     }
+    if (simplified && (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
+		       papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
+      continue;
 
     width  = papersize->width;
     height = papersize->height;
@@ -1120,52 +1148,67 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzprintf(fp, "*ColorModel Gray/Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
+	       "%s"
 	       ">>setpagedevice\"\n",
-           CUPS_CSPACE_W, CUPS_ORDER_CHUNKED);
+           CUPS_CSPACE_W, CUPS_ORDER_CHUNKED,
+	   simplified ? "/cupsBitsPerColor 8" : "");
   gzprintf(fp, "*ColorModel Black/Inverted Grayscale:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
+	       "%s"
 	       ">>setpagedevice\"\n",
-           CUPS_CSPACE_K, CUPS_ORDER_CHUNKED);
+           CUPS_CSPACE_K, CUPS_ORDER_CHUNKED,
+	   simplified ? "/cupsBitsPerColor 8" : "");
 
   if (printer_is_color)
   {
     gzprintf(fp, "*ColorModel RGB/RGB Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
+	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED);
+             CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8" : "");
     gzprintf(fp, "*ColorModel CMY/CMY Color:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
+	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED);
+             CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8" : "");
     gzprintf(fp, "*ColorModel CMYK/CMYK:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
+	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED);
+             CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8" : "");
     gzprintf(fp, "*ColorModel KCMY/KCMY:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
+	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED);
+             CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8" : "");
   }
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
 
-  /*
-   * 8 or 16 bit color (16 bit is slower)
-   */
-  gzputs(fp, "*OpenUI *StpColorPrecision/Color Precision: PickOne\n");
-  gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
-  gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
-  gzputs(fp, "*StpColorPrecision Normal/Normal:\t\"<<"
-	 "/cupsBitsPerColor 8>>setpagedevice\"\n");
-  gzputs(fp, "*StpColorPrecision Best/Best:\t\"<<"
-	 "/cupsBitsPerColor 8"
-	 "/cupsPreferredBitsPerColor 16>>setpagedevice\"\n");
-  gzputs(fp, "*CloseUI: *StpColorPrecision\n\n");
+  if (!simplified)
+    {
+      /*
+       * 8 or 16 bit color (16 bit is slower)
+       */
+      gzputs(fp, "*OpenUI *StpColorPrecision/Color Precision: PickOne\n");
+      gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
+      gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
+      gzputs(fp, "*StpColorPrecision Normal/Normal:\t\"<<"
+	     "/cupsBitsPerColor 8>>setpagedevice\"\n");
+      gzputs(fp, "*StpColorPrecision Best/Best:\t\"<<"
+	     "/cupsBitsPerColor 8"
+	     "/cupsPreferredBitsPerColor 16>>setpagedevice\"\n");
+      gzputs(fp, "*CloseUI: *StpColorPrecision\n\n");
+    }
 
  /*
   * Media types...
@@ -1252,67 +1295,49 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   stp_clear_string_parameter(v, "Quality");
 
  /*
-  * Image type
-  */
-
-  stp_describe_parameter(v, "ImageType", &desc);
-  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
-    {
-      has_image_type_parameter = 1;
-      gzprintf(fp, "*OpenUI *StpImageType/%s: PickOne\n", _(desc.text));
-      gzputs(fp, "*OrderDependency: 5 AnySetup *StpImageType\n");
-      gzprintf(fp, "*DefaultStpImageType: %s\n", desc.deflt.str);
-      num_opts = stp_string_list_count(desc.bounds.str);
-      for (i = 0; i < num_opts; i++)
-	{
-	  opt = stp_string_list_param(desc.bounds.str, i);
-	  gzprintf(fp, "*StpImageType %s/%s: \"\"\n", opt->name, opt->text);
-	}
-      gzputs(fp, "*CloseUI: *StpImageType\n\n");
-    }
-  stp_parameter_description_destroy(&desc);
-
- /*
   * Resolutions...
   */
 
   stp_describe_parameter(v, "Resolution", &desc);
   num_opts = stp_string_list_count(desc.bounds.str);
 
-  gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
-  gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
-  if (has_quality_parameter)
-    gzprintf(fp, "*DefaultResolution: None\n");
-  else
-    gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
+  if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
+    {
+      gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
+      gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
+      if (has_quality_parameter)
+	gzprintf(fp, "*DefaultResolution: None\n");
+      else
+	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
 
-  stp_clear_string_parameter(v, "Quality");
-  if (has_quality_parameter)
-    gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
-  for (i = 0; i < num_opts; i ++)
-  {
-   /*
-    * Strip resolution name to its essentials...
-    */
-    opt = stp_string_list_param(desc.bounds.str, i);
-    stp_set_string_parameter(v, "Resolution", opt->name);
-    stp_describe_resolution(v, &xdpi, &ydpi);
+      stp_clear_string_parameter(v, "Quality");
+      if (has_quality_parameter)
+	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
+      for (i = 0; i < num_opts; i ++)
+	{
+	  /*
+	   * Strip resolution name to its essentials...
+	   */
+	  opt = stp_string_list_param(desc.bounds.str, i);
+	  stp_set_string_parameter(v, "Resolution", opt->name);
+	  stp_describe_resolution(v, &xdpi, &ydpi);
 
-    /* This should not happen! */
-    if (xdpi == -1 || ydpi == -1)
-      continue;
+	  /* This should not happen! */
+	  if (xdpi == -1 || ydpi == -1)
+	    continue;
 
-   /*
-    * Write the resolution option...
-    */
+	  /*
+	   * Write the resolution option...
+	   */
 
-    gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-             opt->name, opt->text, xdpi, ydpi, i + 1);
-  }
+	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		   opt->name, opt->text, xdpi, ydpi, i + 1);
+	}
+
+      gzputs(fp, "*CloseUI: *Resolution\n\n");
+    }
 
   stp_parameter_description_destroy(&desc);
-
-  gzputs(fp, "*CloseUI: *Resolution\n\n");
 
   stp_describe_parameter(v, "OutputOrder", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
@@ -1361,7 +1386,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 
   for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
     {
-      for (k = 0; k <= STP_PARAMETER_LEVEL_ADVANCED4; k++)
+      for (k = 0; k <= maximum_level; k++)
 	{
 	  int printed_open_group = 0;
 	  size_t param_count = stp_parameter_list_count(param_list);
@@ -1450,14 +1475,17 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
 				 desc.name, desc.deflt.dbl);
 		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
-		      gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
-			       desc.name, _(desc.text), _("Fine Adjustment"));
-		      gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
-		      gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
-		      for (i = 0; i < 100; i += 5)
-			gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
-				 desc.name, i, ((double) i) * .001);
-		      gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
+		      if (!simplified)
+			{
+			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
+				   desc.name, _(desc.text), _("Fine Adjustment"));
+			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
+			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
+			  for (i = 0; i < 100; i += 5)
+			    gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
+				     desc.name, i, ((double) i) * .001);
+			  gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
+			}
 		      print_close_ui = 0;
 		      
 		      break;
@@ -1479,9 +1507,6 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
 				   desc.name, i, ((double) i) * 25.4 / 72);
 			}
-		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
-		      print_close_ui = 0;
-		      
 		      break;
 		    default:
 		      break;

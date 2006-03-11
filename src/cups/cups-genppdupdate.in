@@ -394,9 +394,14 @@ sub find_ppd ($$$$) {
     my ($key) = '^\\*FileVersion:[ 	]*"@VERSION@"$';
     my ($lingo, $suffix, $base, $basedir);
     my ($current_best_file, $current_best_time);
-    my ($stored_name, $stored_dir);
+    my ($stored_name, $stored_dir, $simplified);
     $stored_name = $gutenprintfilename;
-    $stored_name =~ s,.*/([^/]*)(.gz)?$,$1,;
+    $stored_name =~ s,.*/([^/]*)(.sim)?(.ppd)?(.gz)?$,$1,;
+    if ($gutenprintfilename =~ m,.*/([^/]*)(.sim)(.ppd)?(.gz)?$,) {
+	$simplified = ".sim";
+    } else {
+	$simplified = "";
+    }
     $stored_dir = $gutenprintfilename;
     $stored_dir =~ s,(.*)/([^/]*)$,$1,;
 
@@ -411,8 +416,8 @@ sub find_ppd ($$$$) {
 		    "") {
 	foreach $suffix (".ppd$gzext",
 			 ".ppd") {
-	    foreach $base ("${drivername}.$version",
-                           "stp-${drivername}.$version",
+	    foreach $base ("${drivername}.$version${simplified}",
+                           "stp-${drivername}.$version${simplified}",
 			   $stored_name,
 			   $drivername) {
 		foreach $basedir ($ppd_base_dir,
@@ -442,6 +447,9 @@ sub find_ppd ($$$$) {
 			    if ($sb[9] > $current_best_time) {
 				$current_best_time = $sb[9];
 				$current_best_file = $fn;
+		                if ($debug) {
+                                    print STDERR "***current_best_file is $fn\n";
+                                }
 			    }
 			} elsif ($debug) {
 			    print "   Format invalid\n";
