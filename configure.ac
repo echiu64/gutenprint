@@ -747,7 +747,7 @@ AC_TYPE_SIGNAL
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS([nanosleep poll usleep])
-AC_CHECK_FUNC([getopt_long])
+AC_CHECK_FUNCS([getopt_long])
 
 
 dnl Define what has to be built

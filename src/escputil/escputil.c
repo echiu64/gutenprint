@@ -91,7 +91,7 @@ along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
 
 
-#ifdef HAVE_GETOPT_H
+#if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
 
 struct option optlist[] =
 {
@@ -111,12 +111,15 @@ struct option optlist[] =
   { "license",			0,	NULL,	(int) 'l' },
   { "list-models",		0,	NULL,	(int) 'M' },
   { "short-name",		0,	NULL,	(int) 'S' },
+  { "choices",			0,	NULL,	(int) 'C' },
+  { "patterns",			0,	NULL,	(int) 'p' },
   { NULL,			0,	NULL,	0 	  }
 };
 
 const char *help_msg = N_("\
 Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n\
+                [-C choices] [-p patterns]\n\
 Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil --ink-level --raw-device /dev/usb/lp0\n\
           escputil --clean-head --new --printer-name MyQueue\n\
@@ -151,12 +154,15 @@ Examples: escputil --ink-level --raw-device /dev/usb/lp0\n\
                        newer).  Only needed when not using a raw device.\n\
     -q|--quiet         Suppress the banner.\n\
     -S|--short-name    Print the short name of the printer with --identify.\n\
-    -m|--model         Specify the precise printer model for head alignment.\n");
+    -m|--model         Specify the precise printer model for head alignment.\n\
+    -C|--choices       Specify the number of pattern choices for alignment\n\
+    -p|--patterns      Specify the number of sets of patterns for alignment\n");
 #else
 const char *help_msg = N_("\
 Usage: escputil [OPTIONS] [COMMAND]\n\
 Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n\
                 [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n\
+                [-C choices] [-p patterns]\n\
 Perform maintenance on EPSON Stylus (R) printers.\n\
 Examples: escputil -i -r /dev/usb/lp0\n\
           escputil -c -u -P MyQueue\n\
@@ -190,7 +196,9 @@ Examples: escputil -i -r /dev/usb/lp0\n\
           Only needed when not using a raw device.\n\
     -q Suppress the banner.\n\
     -S Print the short name of the printer with -d.\n\
-    -m Specify the precise printer model for head alignment.\n");
+    -m Specify the precise printer model for head alignment.\n\
+    -C Specify the number of pattern choices for alignment\n\
+    -p Specify the number of sets of patterns for alignment\n");
 #endif
 
 char *the_printer = NULL;
@@ -203,6 +211,8 @@ int found_unknown_old_printer = 0;
 int print_short_name = 0;
 const stp_printer_t *the_printer_t = NULL;
 int printer_was_in_packet_mode = 0;
+int alignment_passes = 0;
+int alignment_choices = 0;
 
 static int stp_debug = 0;
 #define STP_DEBUG(x) do { if (stp_debug || getenv("STP_DEBUG")) x; } while (0)
@@ -352,6 +362,20 @@ main(int argc, char **argv)
 	case 'S':
 	  print_short_name = 1;
 	  break;
+	case 'C':
+	  alignment_choices = atoi(optarg);
+	  if (alignment_choices < 1)
+	    {
+	      printf(_("Alignment choices must be at least 1."));
+	      do_help(1);
+	    }
+	case 'p':
+	  alignment_passes = atoi(optarg);
+	  if (alignment_passes < 1)
+	    {
+	      printf(_("Alignment passes must be at least 1."));
+	      do_help(1);
+	    }
 	default:
 	  printf("%s\n", _(banner));
 	  fprintf(stderr, _("Unknown option %c\n"), c);
@@ -1897,28 +1921,35 @@ do_align(void)
   printer_name = stp_printer_get_long_name(printer);
   stp_set_driver(v, stp_printer_get_driver(printer));
 
-  stp_describe_parameter(v, "AlignmentPasses", &desc);
-  if (desc.p_type != STP_PARAMETER_TYPE_INT)
+  if (alignment_passes == 0)
     {
-      fprintf(stderr,
-	      "Unable to retrieve number of alignment passes for printer %s\n",
-	      printer_name);
-      return;
+      stp_describe_parameter(v, "AlignmentPasses", &desc);
+      if (desc.p_type != STP_PARAMETER_TYPE_INT)
+	{
+	  fprintf(stderr,
+		  "Unable to retrieve number of alignment passes for printer %s\n",
+		  printer_name);
+	  return;
+	}
+      alignment_passes = desc.deflt.integer;
+      stp_parameter_description_destroy(&desc);
     }
-  passes = desc.deflt.integer;
-  stp_parameter_description_destroy(&desc);
 
-  stp_describe_parameter(v, "AlignmentChoices", &desc);
-  if (desc.p_type != STP_PARAMETER_TYPE_INT)
+  if (alignment_choices == 0)
     {
-      fprintf(stderr,
-	      "Unable to retrieve number of alignment choices for printer %s\n",
-	      printer_name);
-      return;
+      stp_describe_parameter(v, "AlignmentChoices", &desc);
+      if (desc.p_type != STP_PARAMETER_TYPE_INT)
+	{
+	  fprintf(stderr,
+		  "Unable to retrieve number of alignment choices for printer %s\n",
+		  printer_name);
+	  return;
+	}
+      alignment_choices = desc.deflt.integer;
+      stp_parameter_description_destroy(&desc);
     }
-  choices = desc.deflt.integer;
-  stp_parameter_description_destroy(&desc);
-  if (passes <= 0 || choices <= 0)
+
+  if (alignment_passes <= 0 || alignment_choices <= 0)
     {
       printf("No alignment required for printer %s\n", printer_name);
       return;
@@ -1926,19 +1957,19 @@ do_align(void)
 
   do
     {
-      do_align_help(passes, choices);
+      do_align_help(alignment_passes, alignment_choices);
       printf(_(printer_msg), _(printer_name));
       inbuf = do_get_input(_("Press enter to continue > "));
     top:
       initialize_print_cmd(1);
-      for (curpass = 0; curpass < passes; curpass++)
+      for (curpass = 0; curpass < alignment_passes; curpass++)
 	do_remote_cmd("DT", 3, 0, curpass, 0);
       if (do_print_cmd())
 	printer_error();
       printf(_("Please inspect the print, and choose the best pair of lines in each pattern.\n"
 	       "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"));
       initialize_print_cmd(1);
-      for (curpass = 1; curpass <= passes; curpass ++)
+      for (curpass = 1; curpass <= alignment_passes; curpass ++)
 	{
 	  int retry_count = 0;
 	reread:
@@ -1964,7 +1995,7 @@ do_align(void)
 	      goto top;
 	    case 'h':
 	    case '?':
-	      do_align_help(passes, choices);
+	      do_align_help(alignment_passes, alignment_choices);
 	      fflush(stdout);
 	    case '\n':
 	    case '\000':
@@ -1984,10 +2015,10 @@ do_align(void)
 	      fflush(stdout);
 	      goto reread;
 	    }
-	  if (answer < 1 || answer > choices)
+	  if (answer < 1 || answer > alignment_choices)
 	    {
 	      printf(_("The best pair of lines should be numbered between 1 and %d.\n"),
-		     choices);
+		     alignment_choices);
 	      fflush(stdout);
 	      goto reread;
 	    }
@@ -2000,11 +2031,11 @@ do_align(void)
       printf(_("Please verify that the alignment is correct.  After the alignment pattern\n"
 	       "is printed again, please ensure that the best pattern for each line is\n"
 	       "pattern %d.  If it is not, you should repeat the process to get the best\n"
-	       "quality printing.\n"), (choices + 1) / 2);
+	       "quality printing.\n"), (alignment_choices + 1) / 2);
       printf(_("Please insert a fresh sheet of paper.\n"));
       (void) do_get_input(_("Press enter to continue > "));
       initialize_print_cmd(1);
-      for (curpass = 0; curpass < passes; curpass++)
+      for (curpass = 0; curpass < alignment_passes; curpass++)
 	do_remote_cmd("DT", 3, 0, curpass, 0);
       if (do_print_cmd())
 	printer_error();
