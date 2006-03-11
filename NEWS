@@ -28,20 +28,53 @@ stable, but further testing is required before final release.  We
 believe this release to be stable enough for day to day use, and
 encourage people to test it and report their results.
 
-Gutenprint currently contains over 200 drivers supporting in excess of
-700 printer models.
+Gutenprint currently supports over 700 printer models.
 
-The CUPS driver requires CUPS 1.1.15 or higher.  If you wish to build
-this from source, you may need to install a package named "cups-devel"
-or something similar.  Please the rest of the release notes, in
-particular the Exceptions and Workarounds, for full details on
-installation, as there is important information to be aware of.  CUPS
-is the printing system used on Macintosh OS X 10.2 and above, and many
-other systems use it.  The combination of CUPS and Gutenprint provides
-a flexible, general purpose printing system capable of producing the
-highest quality output with any of the printers supported by this
-package.  We strongly recommend using CUPS with Gutenprint as a
-general-purpose printing solution.
+These release notes contain the following sections:
+
+I)    General Requirements
+II)   Changes from 5.0.0-rc2 to 5.0.0-xxx
+III)  Changes from 5.0.0-rc1 to 5.0.0-rc2
+IV)   Overall changes from 4.2 to 5.0.
+	A) General user-visible changes
+	B) New Functionality
+	C) Changes to the Print plugin for the GIMP
+	D) Changes to the CUPS interface
+	E) Changes to the Ghostscript driver
+	F) Changes to the Foomatic data generator
+	G) Quality improvements
+	H) Architectural Changes
+V)    Exceptions and Workarounds
+	A) General Issues
+	B) Build/Installation Issues
+VI)   List of supported printers
+VII)  Printer-specific notes
+
+================================================================
+
+I) GENERAL REQUIREMENTS
+
+The package as a whole should build and run on any POSIX-compliant
+system.  An ANSI C compiler is required to compile from source.
+Processor and memory requirements vary depending upon the printer and
+runtime options selected; it is suggested that you have at least 64 MB
+of memory for general purpose printing and 256 MB or more for high
+quality printing on a large format printer, and processor speed of at
+least 300 MHz is recommended.  High speed printers may require a
+faster processor to achieve maximum printing speed.
+
+For general use, you should have CUPS (version 1.1.15 or above) or
+Foomatic installed.  If you wish to build this from source, you may
+need to install a package named "cups-devel" or something similar.
+Please the rest of the release notes, in particular the Exceptions and
+Workarounds, for full details on installation, as there is important
+information to be aware of.  CUPS is the printing system used on
+Macintosh OS X 10.2 and above, and many other systems use it.  The
+combination of CUPS and Gutenprint provides a flexible, general
+purpose printing system capable of producing the highest quality
+output with any of the printers supported by this package.  We
+strongly recommend using CUPS with Gutenprint as a general-purpose
+printing solution.
 
 The Print plug-in for the GIMP requires either the GIMP 2.0 or above,
 or 1.2.3 or above on the 1.2 line (1.2.5 is recommended), or the GIMP
@@ -57,8 +90,8 @@ The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
 uses the IJS package included with these versions of Ghostscript to
 create a driver that may be built much more easily than traditional
-Ghostscript drivers.  The options for this driver are very complex,
-and it is normally used with the Foomatic driver integration system.
+Ghostscript drivers.  This driver should be used in conjunction with
+Foomatic to configure printers.
 
 Users of Macintosh OS X 10.2 (Jaguar), 10.3 (Panther), and 10.4
 (Tiger) can use this package, as the printing system is based on CUPS.
@@ -68,33 +101,23 @@ We strongly recommend that OS X users use the pre-built package rather
 than attempt to build it themselves.
 
 NOTE: This package will not work with any version of OS X 10.0 and
-10.1 (such as 10.1.5), as those systems do not use CUPS as their
-printing system.  This is NOT going to be fixed; you must upgrade to
-at least OS X 10.2 in order to use this package.  The reason why is
-that OS X 10.2 and above use CUPS as the basis of the printing system.
-OS X 10.0 and 10.1 use a different system that would require a
-separate driver, and we do not plan to write that driver.
+10.1 (such as 10.1.5).  The printing system used with these versions
+of OS X is not compatible with Gutenprint.  OS X 10.2 and above use
+CUPS as the basis of the printing system, which is compatible with
+Gutenprint.
 
 The README file included with this package provides full instructions
 for building and installing Gutenprint.
 
-These release notes contain the following sections:
-
-1) Changes from 5.0.0-rc2 to 5.0.0-xxx
-2) Changes from 5.0.0-rc1 to 5.0.0-rc2
-3) Overall changes from 4.2 to 5.0.
-4) Known build/installation issues
-5) List of supported printers
-6) Printer-specific notes
-
 ================================================================
 
-* Major changes between Gutenprint 5.0.0 release candidate 2 and
-  Gutenprint 5.0.0 xxx:
+II) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
+    GUTENPRINT 5.0.0 XXX:
 
   1) The package now offers explicit support for many more printers.
      All printers supported by Gutenprint are now listed explicitly
-     rather than via the compatibility list.
+     rather than via the compatibility list.  As a result, CUPS PPD
+     files are now generated for each supported printer.
 
   2) The cleaning and nozzle check functions of escputil now work
      properly on most printers, and escputil no longer crashes if you
@@ -116,14 +139,36 @@ These release notes contain the following sections:
      corrected.  The DX4800 now works correctly; the color output for
      all of these printers has been corrected.
 
-  7) A few build problems have been fixed.
+  7) A new option for generating simplified PPD files for CUPS has
+     been added.  The --enable-simplified-cups-ppds=yes option to
+     configure allows generating PPD files with only basic options in
+     addition to the normal, full-featured PPD files;
+     --enable-simplified-cups-ppds=only generates only the simplified
+     PPD files.  The -a and -s options to cups-genppd.5.0 may be used
+     manually to do the same thing.  This is discussed in the README
+     file.
 
-  8) A Hungarian translation has been added.
+  8) New options to escputil allow specifying the number of line pairs
+     and number of patterns for head alignment explicitly, if needed.
+     In addition, the number of line pairs for the Epson Stylus Photo
+     700 has been changed from 7 to 15.
+
+  9) A few build problems have been fixed.
+
+  10) A Hungarian translation has been added.
+
+The following bugs have been fixed since Gutenprint 5.0.0-rc2:
+
+1447115 Epson driver broken in RC2 (DX4850)
+1425951 Bug#351731: Fails in alignment with stylos photo 700
+1422101 Raw output does not work on R800 and related printers
+1417603 escputil seg faults if you type ctrl-D to prompt
+1417600 escputil clean and nozzle check don't work on new printers
 
 ================================================================
 
-* Major changes between Gutenprint 5.0.0 release candidate 1 and
-  Gutenprint 5.0.0 release candidate 2:
+III) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 1 AND
+     GUTENPRINT 5.0.0 RELEASE CANDIDATE 2:
 
   1) The Postscript driver now produces more accurate colors.
      Previous releases produced overly pale colors with the default
@@ -238,9 +283,9 @@ The following bugs have been fixed in Gutenprint 5.0.0-rc2:
 
 ================================================================
 
-Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
+IV) OVERALL CHANGES BETWEEN GIMP-PRINT 4.2 AND GUTENPRINT 5.0:
 
-* General User-Visible Changes:
+A) GENERAL USER-VISIBLE CHANGES:
 
   1) In general, Gutenprint 5.0 is very different from Gimp-Print 4.2.
      Gutenprint 5.0 offers many new options (which are described
@@ -316,7 +361,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      and consumes a significant amount of space in the installation.
 
 
-* New Functionality:
+B) NEW FUNCTIONALITY:
 
   1) This release offers a new "curve" data type, permitting very
      precise adjustments of output.  Currently the curves are only
@@ -488,7 +533,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      option is not normally required and is disabled by default.
 
 
-* Changes to the Print plugin for the GIMP:
+C) CHANGES TO THE PRINT PLUGIN FOR THE GIMP:
 
   1) A new plugin for the GIMP 2.x is now provided.
 
@@ -534,7 +579,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      system, you should read the same material.
 
 
-* Changes to the CUPS driver:
+D) CHANGES TO THE CUPS INTERFACE:
 
   1) The CUPS PPD files now offer both fine and coarse adjustments for
      all color controls, permitting much finer control over output (in
@@ -589,7 +634,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      procedure.
 
 
-* Changes to the Ghostscript driver:
+E) CHANGES TO THE GHOSTSCRIPT DRIVER:
 
   1) The stp driver, a monolithic (traditional) Ghostscript driver
      used with Ghostscript 5.10, 5.50, and 6.51, has been withdrawn.
@@ -616,7 +661,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      with AFPL Ghostscript with no license conflict.
 
 
-* Changes to Foomatic data generation:
+F) CHANGES TO FOOMATIC DATA GENERATION:
 
   1) The Ghostscript IJS driver now functions only with Foomatic PPD
      files created for the matching version of Gutenprint, providing
@@ -633,7 +678,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      4.2 and 5.0-based releases.
 
 
-* Quality Improvements:
+G) QUALITY IMPROVEMENTS:
 
   1) Color and tonal accuracy is greatly improved compared to 4.2
      while the gamut (range of printable colors) has been increased.
@@ -714,213 +759,7 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
      darker black on all paper types.
 
 
-* Exceptions and Workarounds:
-
-  1) Full bleed mode does not work completely correctly on most Epson
-     printers at present.  Typically there is a small margin at the
-     bottom of the page (1-2 mm) and possibly a very small margin at
-     the top.  However, it works correctly along the left and right
-     margins.  We do not have an estimated time for a fix.
-
-  2) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
-     of the additional options and improvements that the Epson driver
-     does.  We do not have an estimated time for fix.  Please contact
-     us if you would like to assist with this.
-
-  3) Support for the Canon S200 has not yet been ported forward from
-     4.2.
-
-  4) This release is slower than 4.2 in many cases, particularly when
-     using High Accuracy (which is the default color correction in
-     most cases) or Bright color correction.  It is possible that this
-     release will not be able to drive some printers at full speed,
-     particularly if your computer has a slow processor.  Performance
-     has been only partially analyzed or tuned at present.  We hope to
-     improve the performance prior to final release.
-
-  5) The user's manual and developer's guide have not been updated for
-     this release.
-
-  6) With certain versions of CUPS and in certain non-default
-     configurations, if a new version of Gutenprint is installed over
-     an existing version genppd will create PPD files based on the
-     older version of Gutenprint or Gimp-Print rather than the newer
-     version.  This will happen if all of the following are true:
-
-     1) The cups-config provided by the CUPS driver adds
-        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
-        reportedly because in some cases the runtime linker does not
-        pick up libraries out of /usr/lib.  This can be checked by
-        running
-
-        cups-config --libs --ldflags
-
-        and inspecting the output for any mention of "rpath", "RPATH",
-        "RUN_PATH", or the like.  This is controlled by the CUPS
-        installation on your system.
-
-     2) There is presently a version of Gutenprint installed in /usr
-        (--prefix=/usr) rather than /usr/local or the like.  The
-        default location of Gutenprint installation is in /usr/local,
-        but system vendors typically install Gutenprint in /usr.
-
-     3) Gutenprint is built dynamically only (--disable-static).  This
-        is not a default, and requires the explicit --disable-static
-        on the Gutenprint "configure" command line.  Therefore, if you
-        build Gutenprint normally you should not be vulnerable to this
-        problem.
-
-     Note that in general if you install CUPS into a non-standard
-     location, and install Gutenprint into the same location, this
-     problem can surface.  For example, if you choose to install CUPS
-     in /usr/local and Gutenprint in /usr/local you are vulnerable to
-     this.  However, it is not standard practice to install CUPS
-     anywhere but /usr.
-
-     In this case, the run path embedded in the genppd executable
-     points to the version of Gutenprint installed in /usr/lib. This
-     run path overrides any attempt by libtool to look in the build
-     directory. The result is that cups-genppd and rastertogimpprint
-     are run against the older version of Gutenprint. If the new
-     version contains additional features (more printers, etc.) they
-     will not be available.
-
-     This bug is difficult to detect in a normal build.  It does not
-     cause an error to happen during build; the only failure is that
-     some PPD files may not be built or may be built with missing
-     options.  Due to the PPD version checking introduced in this
-     release, the behavior might manifest itself as a runtime error.
-     It is also possible that there will be no error at all other than
-     the older version of Gutenprint being used, with the result that
-     new features and bug fixes are not available.
-
-     If you wish to use only shared libraries, do not wish to build
-     static libraries at all, and are vulnerable to this issue
-     (because cups-config --ldflags sets the run path), there are
-     three workarounds available:
-
-     1) Build and install Gutenprint into /usr (rather than
-        /usr/local) and then rebuild Gutenprint from scratch.  This
-        will install the correct libgimpprint.so in /usr/lib, and in
-        the rebuild genppd will be run against the correct library.
-
-     2) Remove the old version of Gimp-Print or Gutenprint prior to
-        building the new version of Gutenprint.  The important files
-        to remove are anything named /usr/lib/libgimpprint*.
-
-     3) Edit cups-config to remove the reference to the run path.
-
-  7) There are multiple issues that one must be aware of when using
-     Foomatic with Gutenprint.
-
-     1) Before installing any new release of Gutenprint 5.0, you must
-	manually remove any existing Foomatic option files.  This is
-	because the Foomatic utility to load data kits
-	(foomatic-kitload) does not remove obsolete data files from
-	the Foomatic database.  If you do not do this, any PPD files
-	you generate will be incorrect and printing may work
-	incorrectly or not at all.
-
-	Foomatic option files are usually located in
-
-	/usr/local/share/foomatic/db/source/opt
-
-	or
-
-	/usr/share/foomatic/db/source/opt
-
-	Assuming they're in the former location, you must remove data
-	files associated with the Gutenprint driver.  The command to do
-	this, which must be run as the superuser (root) is
-
-	cd /usr/local/share/foomatic/db/source/opt
-	ls -l gutenprint-ijs*.xml
-
-	If there are existing files present, you must remove them:
-
-	rm -f gutenprint-ijs*.xml
-
-	Now check to make sure that they are gone:
-
-	ls -l gutenprint-ijs*.xml
-
-	CAUTION: Be very careful when typing this command!  Minor
-	errors in typing these commands may result in severe damage to
-	your system.
-
-	After this, you may run 'make install' in your Gutenprint
-	source directory to install the package.  You will then need to
-	re-create any printer queues using Foomatic.
-
-	In general, you will have to perform this procedure any time
-	you install a new version of Gutenprint.
-
-	Please check the Foomatic site
-	(http://www.linuxprinting.org/foomatic.html) and the Gutenprint
-	site (http://gimp-print.sourceforge.net) for updated
-	instructions about this.
-
-     2) Unlike with the CUPS native driver, there is no simple way to
-	update all PPD files when you install a new version of
-	Gutenprint.  You must either use the foomatic-ppdfile command
-	to upgrade PPD files individually, or foomatic-compiledb to
-	build all PPD files.  Your system may provide an alternate way
-	to install new PPD files, in which case you may use that
-	method.
-
-     3) The Foomatic data is version locked to the Gutenprint release
-	installed on the system.  For example, PPD files generated
-	with the Foomatic data for release 5.0.0 will not work with
-	the ijsgutenprint in release 5.0.1.  This is to prevent
-	accidentally using incorrect data, which could cause incorrect
-	function to take place.
-
-  8) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
-     against GIMP 2.0) requires special build instructions if you are
-     using a very old version of the GIMP 1.2 (1.2.0, 1.2.1, or
-     1.2.2).  Specifically, you must set GIMPTOOL in the environment
-     to point to the proper version of gimptool when running
-     Gutenprint's configure script.  For example:
-
-     GIMPTOOL=/usr/bin/gimptool ./configure
-
-     The bug fix involves checking for the presence of the GIMP
-     slightly differently from how it was previously done.
-     Previously, Gimp-Print checked for the presence of a program
-     named "gimptool", which provides information about how to build
-     plugins against the GIMP.  This worked correctly when only the
-     GIMP 1.2 was installed, but not when the GIMP 2.0 was installed.
-
-     The GIMP 2.0 actually installs a program named "gimptool-2.0",
-     and creates a symbolic link named "gimptool" pointing to it.
-     Later versions of the GIMP 1.2 (1.2.3, 1.2.4, 1.2.5, and any
-     later versions that may be released) similarly create a program
-     named "gimptool-1.2" and a symbolic link named "gimptool".  As
-     the configure script prior to this bug fix simply checked for
-     gimptool, it incorrectly detected a gimptool from the GIMP 2.0.
-
-     The current configure script checks first for gimptool-1.2 and
-     then for gimptool, and only accepts the use of a GIMP 1.2 version
-     of one of these programs.  However, if you have one of the older
-     versions of the GIMP 1.2 installed in a non-standard location,
-     and you use --with-gimp-prefix or --with-gimp-exec-prefix to
-     specify its location, the configure script will not automatically
-     detect the correct location of gimptool, and you must specify it
-     as described above.  Note that you must specify a copy of
-     gimptool from the GIMP 1.2, not from the GIMP 2.0.  If your copy
-     of the GIMP is installed in a standard location (typically
-     /usr/bin or /usr/local/bin), you do not need to use
-     --with-gimp-prefix or --with-gimp-exec-prefix, and therefore do
-     not need to use this workaround.
-
-     If you cannot upgrade to the GIMP 2.x, the Gutenprint and GIMP
-     projects recommend upgrading to revision of the GIMP 1.2.5, which
-     will not require this workaround.  This workaround is available
-     in the event that you cannot or do not wish to upgrade your
-     installation of the GIMP.
-
-
-* Architectural Changes:
+H) ARCHITECTURAL CHANGES:
 
   1) A modular architecture for family drivers.  A "family driver" is
      a collection of printer drivers for one group of printers sharing
@@ -1063,292 +902,421 @@ Overall changes between Gimp-Print 4.2 and Gutenprint 5.0:
   14) Printer characteristics are exposed to the application level as
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
+
 ================================================================
 
-Known Build/Installation Issues
+V) EXCEPTIONS AND WORKAROUNDS
 
-    This section describes a number of issues that have been
-    encountered while building or installing Gutenprint.  If any of
-    these apply to you, please read the notes carefully.  The issues
-    are:
+A) GENERAL ISSUES
 
-    1) Building escputil may fail, or escputil may fail to run.
+  1) Full bleed mode does not work completely correctly on most Epson
+     printers at present.  Typically there is a small margin at the
+     bottom of the page (1-2 mm) and possibly a very small margin at
+     the top.  However, it works correctly along the left and right
+     margins.  We do not have an estimated time for a fix.
 
-    2) CUPS PPD files may not be translated (there may be multiple
-       versions of the PPD files, all in English).
+  2) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
+     of the additional options and improvements that the Epson driver
+     does.  We do not have an estimated time for fix.  Please contact
+     us if you would like to assist with this.
 
-    3) Build/installation of Foomatic data may happen correctly, but
-       the generated PPD files do not work correctly.
+  3) Support for the Canon S200 has not yet been ported forward from
+     4.2.
 
-    Detailed descriptions of these issues follow.
+  4) This release is slower than 4.2 in many cases, particularly when
+     using High Accuracy (which is the default color correction in
+     most cases) or Bright color correction.  It is possible that this
+     release will not be able to drive some printers at full speed,
+     particularly if your computer has a slow processor.  Performance
+     has been only partially analyzed or tuned at present.  We hope to
+     improve the performance prior to final release.
 
-    * There is a known complication building "escputil" that causes
-      problems on some systems.  "escputil" uses the "readline"
-      package, to support command editing and history within the
-      program.  Unfortunately, linking programs with "readline" often
-      requires linking against additional libraries, and the exact
-      library depends upon the system (e. g. not all Linux systems
-      have the same requirements).
+  5) The user's manual and developer's guide have not been updated for
+     this release.
 
-      The configure script attempts to determine which additional
-      library must be linked against.  It tries using the following
-      libraries in this order to build a test executable:
 
-      -lncurses
-      -lcurses
-      -ltermcap
-      no additional libraries
+B) BUILD/INSTALLATION ISSUES
 
-      The reason it tries other libraries first is that some systems
-      will link successfully, but only fail when an attempt is made to
-      actually call readline.  Therefore, we assume that additional
-      libraries are required.  Since we try the extra libraries in
-      order from most recent to oldest, we expect that the first one
-      we find will be appropriate.  For example, if the "ncurses"
-      library is the standard on a given system, the "termcap" library
-      may be provided for back compatibility, but it is unlikely that
-      "termcap" will be the standard with "curses" or "ncurses" being
-      provided for compatibility only (so that the link will succeed
-      but the command will use the incorrect library).
+  1) With certain versions of CUPS and in certain non-default
+     configurations, if a new version of Gutenprint is installed over
+     an existing version genppd will create PPD files based on the
+     older version of Gutenprint or Gimp-Print rather than the newer
+     version.  This will happen if all of the following are true:
 
-      As this procedure is not failsafe, we provide the following
-      configure options to control this behavior:
+     i) The cups-config provided by the CUPS driver adds
+        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+        reportedly because in some cases the runtime linker does not
+        pick up libraries out of /usr/lib.  This can be checked by
+        running
 
-      ./configure --with-readline=yes  (the default; attempts to
-				       determine the correct library
-				       to link against)
+        cups-config --libs --ldflags
 
-      ./configure --with-readline=no   (turns off use of readline
-				       altogether)
+        and inspecting the output for any mention of "rpath", "RPATH",
+        "RUN_PATH", or the like.  This is controlled by the CUPS
+        installation on your system.
 
-      ./configure --with-readline=only (specifically instructs
-				       configure to not attempt to
-				       link against any other
-				       libraries)
+     ii) There is presently a version of Gutenprint installed in /usr
+        (--prefix=/usr) rather than /usr/local or the like.  The
+        default location of Gutenprint installation is in /usr/local,
+        but system vendors typically install Gutenprint in /usr.
 
-      ./configure --with-readline=libs (specifies the libraries to be
-				       linked against)
+     iii) Gutenprint is built dynamically only (--disable-static).  This
+        is not a default, and requires the explicit --disable-static
+        on the Gutenprint "configure" command line.  Therefore, if you
+        build Gutenprint normally you should not be vulnerable to this
+        problem.
 
-      An hypothetical (this won't work anywhere!) example of the
-      latter would be
+     Note that in general if you install CUPS into a non-standard
+     location, and install Gutenprint into the same location, this
+     problem can surface.  For example, if you choose to install CUPS
+     in /usr/local and Gutenprint in /usr/local you are vulnerable to
+     this.  However, it is not standard practice to install CUPS
+     anywhere but /usr.
 
-      ./configure --with-readline='-lncurses -ltermcap'
+     In this case, the run path embedded in the genppd executable
+     points to the version of Gutenprint installed in /usr/lib. This
+     run path overrides any attempt by libtool to look in the build
+     directory. The result is that cups-genppd and rastertogimpprint
+     are run against the older version of Gutenprint. If the new
+     version contains additional features (more printers, etc.) they
+     will not be available.
 
-      Note that configure will not allow readline to be used if it
-      cannot successfully build the test program, regardless of the
-      option selected.  If you are having difficulty getting escputil
-      to build, we suggest using --with-readline=no.  The commands
-      used within escputil are very short and seldom require
-      significant editing.
+     This bug is difficult to detect in a normal build.  It does not
+     cause an error to happen during build; the only failure is that
+     some PPD files may not be built or may be built with missing
+     options.  Due to the PPD version checking introduced in this
+     release, the behavior might manifest itself as a runtime error.
+     It is also possible that there will be no error at all other than
+     the older version of Gutenprint being used, with the result that
+     new features and bug fixes are not available.
 
-    * There is a known translation problem building the PPD files used
-      by the CUPS driver such that on many systems all of the PPD
-      files are in the English language.  This causes CUPS tools, such
-      as KUPS or http://localhost:631 to display many copies of each
-      PPD file, all in the English (en) language.  In fact, the PPD
-      files should be translated into many different languages.
+     If you wish to use only shared libraries, do not wish to build
+     static libraries at all, and are vulnerable to this issue
+     (because cups-config --ldflags sets the run path), there are
+     three workarounds available:
 
-      The PPD files are created by a program named "genppd" in the
-      src/cups directory.  This program is called once for each
-      language, and creates all of the PPD files for the language in
-      one shot.
+     i) Build and install Gutenprint into /usr (rather than
+        /usr/local) and then rebuild Gutenprint from scratch.  This
+        will install the correct libgimpprint.so in /usr/lib, and in
+        the rebuild genppd will be run against the correct library.
 
-      The command 'zgrep' can be used to determine if genppd is
-      creating the PPD files correctly, as follows:
+     ii) Remove the old version of Gimp-Print or Gutenprint prior to
+        building the new version of Gutenprint.  The important files
+        to remove are anything named /usr/lib/libgimpprint*.
 
-	  src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
-	  ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
-	  ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
-	  ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
-	  ...
+     iii) Edit cups-config to remove the reference to the run path.
 
-      If the PPD file for each language has a different language
-      version, the genppd program operated correctly.  If instead the
-      output looks like this:
+  2) There is a known translation problem building the PPD files used
+     by the CUPS driver such that on many systems all of the PPD
+     files are in the English language.  This causes CUPS tools, such
+     as KUPS or http://localhost:631 to display many copies of each
+     PPD file, all in the English (en) language.  In fact, the PPD
+     files should be translated into many different languages.
 
-	  src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
-	  ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	  ...
+     The PPD files are created by a program named "genppd" in the
+     src/cups directory.  This program is called once for each
+     language, and creates all of the PPD files for the language in
+     one shot.
 
-      the program did not operate correctly.
+     The command 'zgrep' can be used to determine if genppd is
+     creating the PPD files correctly, as follows:
 
-      If you do not have 'zgrep' on your system, you can gunzip the
-      PPD files, and use
+	 src/cups$ zgrep LanguageVersion ppd/*/pcl-4.ppd.gz
+	 ppd/C/pcl-4.ppd.gz:*LanguageVersion: English
+	 ppd/da/pcl-4.ppd.gz:*LanguageVersion: Danish
+	 ppd/en_GB/pcl-4.ppd.gz:*LanguageVersion: English-GB
+	 ...
 
-	  grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
+     If the PPD file for each language has a different language
+     version, the genppd program operated correctly.  If instead the
+     output looks like this:
 
-      to accomplish the same test.
+	 src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
+	 ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	 ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	 ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	 ...
 
-      The normal mechanism for performing translations is to set the
-      LANG environment variable to the appropriate language prior to
-      running the program.  This normally causes the program to search
-      the translations (normally in /usr/share/locale or
-      /usr/lib/locale) for the chosen language.  When a specially
-      marked string is used, a special macro calls `gettext()' on the
-      string to retrieve the translation, and substitutes the
-      translation for the string in question.
+     the program did not operate correctly.
 
-      There are two problems with this approach in the context of
-      genppd.  The translation engine is intended to be used after
-      installation, not during build, and this causes problems.
+     If you do not have 'zgrep' on your system, you can gunzip the
+     PPD files, and use
 
-      1) At the time genppd is run, the translations have not been
-         installed in the normal system directories.  Fortunately,
-         it's possible to tell the translation machinery (via
-         bindtextdomain) to look elsewhere for the translation
-         catalogs.  What we do is install the catalogs in a temporary
-         directory under src/cups, and tell genppd to instruct the
-         translation machinery to look there.  This workaround is
-         straightforward, and doesn't normally cause problems.
+	 grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
 
-      2) LANG only lets us pick a valid locale (normally determined by
-         listing the directories in /usr/share/locale or
-         /usr/lib/locale).  Unfortunately, while language codes (which
-         form the base of locales) are standard, the actual locale
-         names aren't always.  On some systems, the locale names are
-         just the language base names; on others, they are the
-         language names concatenated with country codes (e. g. en_US),
-         while on others they are language codes concatenated with
-         character sets.  We are not aware of any workaround for this,
-         possibly short of actually running make install and then
-         rebuilding the PPD's.  'make install' will install the
-         message catalogs, and that may create the necessary locale
-         directories.  This is not exactly a very elegant approach.
+     to accomplish the same test.
 
-      The GNU gettext library (libintl.a) provides another environment
-      variable, LANGUAGE, which unconditionally looks up translations
-      according to the language, ignoring LANG and the LC_*
-      environment variables that are normally used for translation.
-      This library is no longer included with Gutenprint
-      (--with-included-gettext will not work).  Install the GNU
-      gettext package first if you need libintl.a.  Many systems
-      provide translation machinery in their standard libraries, and
-      it may not always be best to use foreign libraries to replace
-      standard system functionality.
+     The normal mechanism for performing translations is to set the
+     LANG environment variable to the appropriate language prior to
+     running the program.  This normally causes the program to search
+     the translations (normally in /usr/share/locale or
+     /usr/lib/locale) for the chosen language.  When a specially
+     marked string is used, a special macro calls `gettext()' on the
+     string to retrieve the translation, and substitutes the
+     translation for the string in question.
 
-      We have chosen to use LANGUAGE for this purpose, as the GNU
-      gettext library appears to offer the most reliable translation,
-      and LANGUAGE appears to offer the most reliable mechanism.  We
-      have actually found that LANG and LC_* can interfere with
-      LANGUAGE, thus we do not use both.
+     There are two problems with this approach in the context of
+     genppd.  The translation engine is intended to be used after
+     installation, not during build, and this causes problems.
 
-      To determine if the translations are working, you must actually
-      inspect the PPD files.  You will need to
+     i) At the time genppd is run, the translations have not been
+	installed in the normal system directories.  Fortunately,
+	it's possible to tell the translation machinery (via
+	bindtextdomain) to look elsewhere for the translation
+	catalogs.  What we do is install the catalogs in a temporary
+	directory under src/cups, and tell genppd to instruct the
+	translation machinery to look there.  This workaround is
+	straightforward, and doesn't normally cause problems.
 
-      cd src/cups/ppd/sv
-      gunzip *
-      more *
+     ii) LANG only lets us pick a valid locale (normally determined by
+	listing the directories in /usr/share/locale or
+	/usr/lib/locale).  Unfortunately, while language codes (which
+	form the base of locales) are standard, the actual locale
+	names aren't always.  On some systems, the locale names are
+	just the language base names; on others, they are the
+	language names concatenated with country codes (e. g. en_US),
+	while on others they are language codes concatenated with
+	character sets.  We are not aware of any workaround for this,
+	possibly short of actually running make install and then
+	rebuilding the PPD's.  'make install' will install the
+	message catalogs, and that may create the necessary locale
+	directories.  This is not exactly a very elegant approach.
 
-      or the like to determine if this is successful.  In particular,
-      look for LanguageVersion, and make sure that it is correct (it
-      should be "Swedish" in the sv directory, for example), and also
-      make sure that the paper sizes are also translated.  We
-      currently suggest using the Swedish translation for this purpose
-      as it is the most complete.
+     The GNU gettext library (libintl.a) provides another environment
+     variable, LANGUAGE, which unconditionally looks up translations
+     according to the language, ignoring LANG and the LC_*
+     environment variables that are normally used for translation.
+     This library is no longer included with Gutenprint
+     (--with-included-gettext will not work).  Install the GNU
+     gettext package first if you need libintl.a.  Many systems
+     provide translation machinery in their standard libraries, and
+     it may not always be best to use foreign libraries to replace
+     standard system functionality.
 
-      If packagers find that the PPD files are all in English, rather
-      than translated into the appropriate languages, we suggest the
-      following:
+     We have chosen to use LANGUAGE for this purpose, as the GNU
+     gettext library appears to offer the most reliable translation,
+     and LANGUAGE appears to offer the most reliable mechanism.  We
+     have actually found that LANG and LC_* can interfere with
+     LANGUAGE, thus we do not use both.
 
-      1) Install GNU gettext (libintl).  If your system is not based
-         on GNU libc (Linux usually is based on GNU libc; BSD,
-         Solaris, IRIX, etc. are not), you will need this to have any
-         possibility of creating the translated PPD files.
+     To determine if the translations are working, you must actually
+     inspect the PPD files.  You will need to
 
-      2) Run 'make install' to install the package (including the
-         message catalogs) onto the system first, and then do the
-         following:
+     cd src/cups/ppd/sv
+     gunzip *
+     more *
 
-	 cd src/cups
-	 rm ppd-stamp
-	 make
+     or the like to determine if this is successful.  In particular,
+     look for LanguageVersion, and make sure that it is correct (it
+     should be "Swedish" in the sv directory, for example), and also
+     make sure that the paper sizes are also translated.  We
+     currently suggest using the Swedish translation for this purpose
+     as it is the most complete.
 
-	 to rebuild the PPD files.  Having the message catalogs on the
-	 system may permit this to succeed.
+     If packagers find that the PPD files are all in English, rather
+     than translated into the appropriate languages, we suggest the
+     following:
 
-      3) Ensure that your system actually has locales named 'sv',
-         'pl', and all of the other supported languages, and change
-         LANGUAGE to something more appropriate (most likely LANG,
-         LC_MESSAGES, or LC_ALL).
+     i) Install GNU gettext (libintl).  If your system is not based
+	on GNU libc (Linux usually is based on GNU libc; BSD,
+	Solaris, IRIX, etc. are not), you will need this to have any
+	possibility of creating the translated PPD files.
 
-      4) Build the PPD files on a Linux-based system; they are
-         portable.
+     ii) Run 'make install' to install the package (including the
+	message catalogs) onto the system first, and then do the
+	following:
 
-      5) Use --disable-translated-cups-ppds on the configure command line
-         to suppress the translated PPD files altogether.
+	cd src/cups
+	rm ppd-stamp
+	make
 
-      Please feel free to contact us about this issue.
+	to rebuild the PPD files.  Having the message catalogs on the
+	system may permit this to succeed.
 
-    * There are multiple issues that one must be aware of when using
-      Foomatic with Gutenprint.
+     iii) Ensure that your system actually has locales named 'sv',
+	'pl', and all of the other supported languages, and change
+	LANGUAGE to something more appropriate (most likely LANG,
+	LC_MESSAGES, or LC_ALL).
 
-      1) Before installing Gutenprint 5.0.0-rc1, you must manually
-	 remove any existing Foomatic option files.  This is because the
-	 Foomatic utility to load data kits (foomatic-kitload) does not
-	 remove obsolete data files from the Foomatic database.  If you
-	 do not do this, any PPD files you generate will be incorrect
-	 and printing may work incorrectly or not at all.
+     iv) Build the PPD files on a Linux-based system; they are
+	portable.
 
-	 Foomatic option files are usually located in
+     v) Use --disable-translated-cups-ppds on the configure command line
+	to suppress the translated PPD files altogether.
 
-	 /usr/local/share/foomatic/db/source/opt
+     Please feel free to contact us about this issue.
 
-	 or
+  3) There are multiple issues that one must be aware of when using
+     Foomatic with Gutenprint.
 
-	 /usr/share/foomatic/db/source/opt
+     i) Before installing any new release of Gutenprint 5.0, you must
+	manually remove any existing Foomatic option files.  This is
+	because the Foomatic utility to load data kits
+	(foomatic-kitload) does not remove obsolete data files from
+	the Foomatic database.  If you do not do this, any PPD files
+	you generate will be incorrect and printing may work
+	incorrectly or not at all.
 
-	 Assuming they're in the former location, you must remove data
-	 files associated with the Gutenprint driver.  The command to do
-	 this, which must be run as the superuser (root) is
+	Foomatic option files are usually located in
 
-	 cd /usr/local/share/foomatic/db/source/opt
-	 ls -l gutenprint-ijs*.xml
+	/usr/local/share/foomatic/db/source/opt
 
-	 If there are existing files present, you must remove them:
+	or
 
-	 rm -f gutenprint-ijs*.xml
+	/usr/share/foomatic/db/source/opt
 
-	 Now check to make sure that they are gone:
+	Assuming they're in the former location, you must remove data
+	files associated with the Gutenprint driver.  The command to do
+	this, which must be run as the superuser (root) is
 
-	 ls -l gutenprint-ijs*.xml
+	cd /usr/local/share/foomatic/db/source/opt
+	ls -l gutenprint-ijs*.xml
 
-	 CAUTION: Be very careful when typing this command!  Minor
-	 errors in typing these commands may result in severe damage to
-	 your system.  The Gutenprint installation program does not do
-	 this automatically because there is currently no reliable way
-	 to detect where the Foomatic data files are installed.
+	If there are existing files present, you must remove them:
 
-	 After this, you may run 'make install' in your Gutenprint
-	 source directory to install the package.  You will then need to
-	 re-create any printer queues using Foomatic.
+	rm -f gutenprint-ijs*.xml
 
-	 In general, you will have to perform this procedure any time
-	 you install a new version of Gutenprint.
+	Now check to make sure that they are gone:
 
-	 Please check the Foomatic site
-	 (http://www.linuxprinting.org/foomatic.html) and the Gutenprint
-	 site (http://gimp-print.sourceforge.net) for updated
-	 instructions about this.
+	ls -l gutenprint-ijs*.xml
 
-      2) Unlike with the CUPS native driver, there is no simple way to
-	 update all PPD files when you install a new version of
-	 Gutenprint.  You must either use the foomatic-ppdfile command
-	 to upgrade PPD files individually, or foomatic-compiledb to
-	 build all PPD files.  The name of the driver in the Foomatic
-	 database is "gutenprint-ijs.5.0".
+	CAUTION: Be very careful when typing this command!  Minor
+	errors in typing these commands may result in severe damage to
+	your system.
 
-         The Foomatic data is version locked to the Gutenprint release
-	 installed on the system.  For example, PPD files generated
-	 with the Foomatic data for this release will not work with
-	 the ijsgutenprint in the next release.  This is to prevent
-	 accidentally using incorrect data, which could cause
-	 incorrect function to take place.
+	After this, you may run 'make install' in your Gutenprint
+	source directory to install the package.  You will then need to
+	re-create any printer queues using Foomatic.
+
+	In general, you will have to perform this procedure any time
+	you install a new version of Gutenprint.
+
+	Please check the Foomatic site
+	(http://www.linuxprinting.org/foomatic.html) and the Gutenprint
+	site (http://gimp-print.sourceforge.net) for updated
+	instructions about this.
+
+     ii) Unlike with the CUPS native driver, there is no simple way to
+	update all PPD files when you install a new version of
+	Gutenprint.  You must either use the foomatic-ppdfile command
+	to upgrade PPD files individually, or foomatic-compiledb to
+	build all PPD files.  Your system may provide an alternate way
+	to install new PPD files, in which case you may use that
+	method.
+
+     iii) The Foomatic data is version locked to the Gutenprint release
+	installed on the system.  For example, PPD files generated
+	with the Foomatic data for release 5.0.0 will not work with
+	the ijsgutenprint in release 5.0.1.  This is to prevent
+	accidentally using incorrect data, which could cause incorrect
+	function to take place.
+
+  4) There is a known complication building "escputil" that causes
+     problems on some systems.  "escputil" uses the "readline"
+     package, to support command editing and history within the
+     program.  Unfortunately, linking programs with "readline" often
+     requires linking against additional libraries, and the exact
+     library depends upon the system (e. g. not all Linux systems have
+     the same requirements).
+
+     The configure script attempts to determine which additional
+     library must be linked against.  It tries using the following
+     libraries in this order to build a test executable:
+
+     -lncurses
+     -lcurses
+     -ltermcap
+     no additional libraries
+
+     The reason it tries other libraries first is that some systems
+     will link successfully, but only fail when an attempt is made to
+     actually call readline.  Therefore, we assume that additional
+     libraries are required.  Since we try the extra libraries in
+     order from most recent to oldest, we expect that the first one we
+     find will be appropriate.  For example, if the "ncurses" library
+     is the standard on a given system, the "termcap" library may be
+     provided for back compatibility, but it is unlikely that
+     "termcap" will be the standard with "curses" or "ncurses" being
+     provided for compatibility only (so that the link will succeed
+     but the command will use the incorrect library).
+
+     As this procedure is not failsafe, we provide the following
+     configure options to control this behavior:
+
+     ./configure --with-readline=yes  (the default; attempts to
+				      determine the correct library
+				      to link against)
+
+     ./configure --with-readline=no   (turns off use of readline
+				      altogether)
+
+     ./configure --with-readline=only (specifically instructs
+				      configure to not attempt to
+				      link against any other
+				      libraries)
+
+     ./configure --with-readline=libs (specifies the libraries to be
+				      linked against)
+
+     An hypothetical (this won't work anywhere!) example of the
+     latter would be
+
+     ./configure --with-readline='-lncurses -ltermcap'
+
+     Note that configure will not allow readline to be used if it
+     cannot successfully build the test program, regardless of the
+     option selected.  If you are having difficulty getting escputil
+     to build, we suggest using --with-readline=no.  The commands
+     used within escputil are very short and seldom require
+     significant editing.
+
+  5) The fix for bug 929227 (Gimp-Print incorrectly attempts to build
+     against GIMP 2.0) requires special build instructions if you are
+     using a very old version of the GIMP 1.2 (1.2.0, 1.2.1, or
+     1.2.2).  Specifically, you must set GIMPTOOL in the environment
+     to point to the proper version of gimptool when running
+     Gutenprint's configure script.  For example:
+
+     GIMPTOOL=/usr/bin/gimptool ./configure
+
+     The bug fix involves checking for the presence of the GIMP
+     slightly differently from how it was previously done.
+     Previously, Gimp-Print checked for the presence of a program
+     named "gimptool", which provides information about how to build
+     plugins against the GIMP.  This worked correctly when only the
+     GIMP 1.2 was installed, but not when the GIMP 2.0 was installed.
+
+     The GIMP 2.0 actually installs a program named "gimptool-2.0",
+     and creates a symbolic link named "gimptool" pointing to it.
+     Later versions of the GIMP 1.2 (1.2.3, 1.2.4, 1.2.5, and any
+     later versions that may be released) similarly create a program
+     named "gimptool-1.2" and a symbolic link named "gimptool".  As
+     the configure script prior to this bug fix simply checked for
+     gimptool, it incorrectly detected a gimptool from the GIMP 2.0.
+
+     The current configure script checks first for gimptool-1.2 and
+     then for gimptool, and only accepts the use of a GIMP 1.2 version
+     of one of these programs.  However, if you have one of the older
+     versions of the GIMP 1.2 installed in a non-standard location,
+     and you use --with-gimp-prefix or --with-gimp-exec-prefix to
+     specify its location, the configure script will not automatically
+     detect the correct location of gimptool, and you must specify it
+     as described above.  Note that you must specify a copy of
+     gimptool from the GIMP 1.2, not from the GIMP 2.0.  If your copy
+     of the GIMP is installed in a standard location (typically
+     /usr/bin or /usr/local/bin), you do not need to use
+     --with-gimp-prefix or --with-gimp-exec-prefix, and therefore do
+     not need to use this workaround.
+
+     If you cannot upgrade to the GIMP 2.x, the Gutenprint and GIMP
+     projects recommend upgrading to revision of the GIMP 1.2.5, which
+     will not require this workaround.  This workaround is available
+     in the event that you cannot or do not wish to upgrade your
+     installation of the GIMP.
+
 ================================================================
 
-
-Supported Printers:
+VI) SUPPORTED PRINTERS:
 
 The following is the complete list of printers believed to be
 compatible with Gutenprint, along with the name of the driver.  Some
@@ -2120,99 +2088,101 @@ Xerox DocuPrint P12            xerox-dp_p12
 Xerox DocuPrint P1202          xerox-dp_p1202
 Xerox DocuPrint P8e            xerox-dp_p8e
 Xerox Document Centre 400      xerox-dc_400
+
 ================================================================
 
-Printer-Specific Notes:
+VII) PRINTER-SPECIFIC NOTES:
 
-    * It is strongly recommended that four color mode not be used on
-      the Epson Stylus C63, C64, C65, C66, C70, C80, and CX-5200, and
-      the PX-V500 and PX-V600 when printing to glossy papers, as the
-      black ink is formulated differently from the color ink and does
-      not adhere properly to these papers.  Epson Photo Paper, Premium
-      Glossy Photo Paper, Premium Luster Photo Paper, and Premium
-      Semigloss Photo Paper are known to be affected.  If you use the
-      Standard ink type, this will be handled automatically.
+  1) It is strongly recommended that four color mode not be used on
+     the Epson Stylus C63, C64, C65, C66, C70, C80, and CX-5200, and
+     the PX-V500 and PX-V600 when printing to glossy papers, as the
+     black ink is formulated differently from the color ink and does
+     not adhere properly to these papers.  Epson Photo Paper, Premium
+     Glossy Photo Paper, Premium Luster Photo Paper, and Premium
+     Semigloss Photo Paper are known to be affected.  If you use the
+     default settings (specifically, the Standard ink type), this will
+     be handled automatically.
 
-    * The Gutenprint driver does not in all cases offer the same set
-      of resolutions offered by the printer manufacturer's drivers.
-      There are a variety of reasons why that is the case:
+  2) The Gutenprint driver does not in all cases offer the same set of
+     resolutions offered by the printer manufacturer's drivers.  There
+     are a variety of reasons why that is the case:
 
-      1) In some cases, we have not determined the necessary commands
-         to utilize some resolutions (particularly very high
-         resolutions).
+     i) In some cases, we have not determined the necessary commands
+	to utilize some resolutions (particularly very high
+	resolutions).
 
-      2) In some cases, the advertised printer resolution may not
-         match what we determine to be the maximum resolution based on
-         our understanding of the printer's capabilities.  Sometimes
-         the advertised resolution is qualified by a statement that
-         implies that the actual resolution may be different from the
-         stated resolution.  In some cases, we may be able to achieve
-         the same number of drops per square inch by means of a
-         different resolution.  For example, we may determine that a
-         printer that is advertised to support 5760x720 DPI in fact
-         supports 2880x1440 DPI.  This is the same number of droplets
-         per square inch (4147200), but with a different aspect ratio
-         (the ratio of the horizontal resolution to the vertical
-         resolution).
+     ii) In some cases, the advertised printer resolution may not
+	match what we determine to be the maximum resolution based on
+	our understanding of the printer's capabilities.  Sometimes
+	the advertised resolution is qualified by a statement that
+	implies that the actual resolution may be different from the
+	stated resolution.  In some cases, we may be able to achieve
+	the same number of drops per square inch by means of a
+	different resolution.  For example, we may determine that a
+	printer that is advertised to support 5760x720 DPI in fact
+	supports 2880x1440 DPI.  This is the same number of droplets
+	per square inch (4147200), but with a different aspect ratio
+	(the ratio of the horizontal resolution to the vertical
+	resolution).
 
-      3) In some cases, we offer additional resolutions not offered by
-         the printer vendor.  These resolutions may be either lower or
-         higher than those offered by the printer vendor.
+     iii) In some cases, we offer additional resolutions not offered by
+	the printer vendor.  These resolutions may be either lower or
+	higher than those offered by the printer vendor.
 
-	 We frequently offer lower resolutions than those offered by
-	 the printer vendor to offer a greater choice of printing
-	 speed.  These resolutions will offer low quality but very
-	 fast printing speed for use where the quality is unimportant
-	 but speed is of the greatest importance.
+	We frequently offer lower resolutions than those offered by
+	the printer vendor to offer a greater choice of printing
+	speed.  These resolutions will offer low quality but very
+	fast printing speed for use where the quality is unimportant
+	but speed is of the greatest importance.
 
-	 In some cases, we offer resolutions higher (or simply
-	 different) than those advertised by printer vendors.  We will
-	 offer these options if testing determines that these
-	 resolutions can be used safely and we determine that these
-	 resolutions offer a potential benefit in quality in some
-	 cases.  For example, we offer resolutions of 2880x2880 and
-	 5760x2880 DPI on the Epson Stylus Photo R800 despite the
-	 advertised maximum resolution of 5760x1440 DPI.  Testing has
-	 verified that these resolutions do in fact operate correctly
-	 and offer benefit over lower resolutions.
+	In some cases, we offer resolutions higher (or simply
+	different) than those advertised by printer vendors.  We will
+	offer these options if testing determines that these
+	resolutions can be used safely and we determine that these
+	resolutions offer a potential benefit in quality in some
+	cases.  For example, we offer resolutions of 2880x2880 and
+	5760x2880 DPI on the Epson Stylus Photo R800 despite the
+	advertised maximum resolution of 5760x1440 DPI.  Testing has
+	verified that these resolutions do in fact operate correctly
+	and offer benefit over lower resolutions.
 
-	 It is almost always better to have a printing resolution with
-	 a smaller aspect ratio (i. e. the horizontal and vertical
-	 resolutions are similar).  For example, a resolution of
-	 2880x1440 DPI is likely to yield superior results to a
-	 resolution of 5760x720 DPI.  Therefore, in some cases we do
-	 not offer certain resolutions offered by the printer vendor
-	 (in the case of the Epson Stylus Photo R800, 5760x1440 DPI)
-	 because they are not likely to yield any benefit (either
-	 speed or quality) over another resolution that we offer (in
-	 this case, 2880x2880 DPI).
+	It is almost always better to have a printing resolution with
+	a smaller aspect ratio (i. e. the horizontal and vertical
+	resolutions are similar).  For example, a resolution of
+	2880x1440 DPI is likely to yield superior results to a
+	resolution of 5760x720 DPI.  Therefore, in some cases we do
+	not offer certain resolutions offered by the printer vendor
+	(in the case of the Epson Stylus Photo R800, 5760x1440 DPI)
+	because they are not likely to yield any benefit (either
+	speed or quality) over another resolution that we offer (in
+	this case, 2880x2880 DPI).
 
-	 Indeed, we have received reports that in some cases a lower
-	 resolution may actually offer improved quality over a higher
-	 resolution.  For example, the Epson Stylus Photo 780 is
-	 reported to yield better quality at 1440x720 DPI Highest
-	 Quality than 2880x720 DPI.
+	Indeed, we have received reports that in some cases a lower
+	resolution may actually offer improved quality over a higher
+	resolution.  For example, the Epson Stylus Photo 780 is
+	reported to yield better quality at 1440x720 DPI Highest
+	Quality than 2880x720 DPI.
 
-      We periodically evaluate the list of resolutions we offer to
-      decide whether to offer any additional options.
+     We periodically evaluate the list of resolutions we offer to
+     decide whether to offer any additional options.
 
-    * Many Epson printers (specifically, the Epson Stylus Color 740
-      and all newer printers) will not respond to ASCII text without a
-      special "activation" sequence (specifically, this command takes
-      the printers out of "packet mode").  A brand new printer, or one
-      that has been connected to a Windows system, may or may not work
-      in packet mode.  Therefore, the common suggestion to test a
-      printer port by sending plain text to it may not work for these
-      printers; failure to print in this fashion is not a positive
-      indication that the printer or the connection is malfunctioning.
-      These printers are, however, able to print plain text *after*
-      the activation sequence is sent.
+  3) Many Epson printers (specifically, the Epson Stylus Color 740 and
+     all newer printers) will not respond to ASCII text without a
+     special "activation" sequence (specifically, this command takes
+     the printers out of "packet mode").  A brand new printer, or one
+     that has been connected to a Windows system, may or may not work
+     in packet mode.  Therefore, the common suggestion to test a
+     printer port by sending plain text to it may not work for these
+     printers; failure to print in this fashion is not a positive
+     indication that the printer or the connection is malfunctioning.
+     These printers are, however, able to print plain text *after* the
+     activation sequence is sent.
 
-      A suggestion would be to first verify that the printer is
-      capable of returning ink levels.  This may be done via
+     A suggestion would be to first verify that the printer is capable
+     of returning ink levels.  This may be done via
 
-      escputil -i -r /dev/lp0
+     escputil -i -r /dev/lp0
 
-      (or whatever device your printer is connected to in place of
-      /dev/lp0).  If this returns status, it demonstrates that the
-      link between your computer and printer is working.
+     (or whatever device your printer is connected to in place of
+     /dev/lp0).  If this returns status, it demonstrates that the link
+     between your computer and printer is working.

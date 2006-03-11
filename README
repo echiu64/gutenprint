@@ -177,14 +177,34 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     existing .lpoptions file in your home directory and try printing
     again.
 
-    This package normally builds translated versions of the PPD
-    files.  This provides PPD files translated into the languages that
-    this package supports.  However, the translation process does not
-    work correctly on all systems; in particular, many BSD systems are
+    This package normally builds PPD files containing all available
+    options for the printer chosen.  Many of these options
+    (particularly the color adjustments) are not needed in most cases
+    and may confuse people.  It is possible to generate PPD files
+    containing only a minimal set of options and basic paper sizes for
+    each printer.  Distributors may wish to package the two sets of
+    PPD files separately allowing end users to select one or both
+    sets (the two sets of PPD files have different names and can
+    coexist).
+
+    To generate both the simplified and the standard full-featured PPD
+    files, you should run configure as follows:
+
+    ./configure --with-cups --enable-simplified-cups-ppds=yes
+
+    If you wish to generate only the simplified PPD files, you may run
+
+    ./configure --with-cups --enable-simplified-cups-ppds=only
+
+    This package normally builds translated versions of the PPD files.
+    This provides PPD files translated into the languages that this
+    package supports.  However, the translation process does not work
+    correctly on all systems; in particular, many BSD systems are
     known to simply build multiple copies of the English PPD files.
-    If your system does not build these files correctly, which will be
-    apparent when you use a CUPS front end to select a PPD file and
-    you see something like this:
+    In addition, you may not need all of these PPD files installed on
+    your system.  If your system does not build these files correctly,
+    which will be apparent when you use a CUPS front end to select a
+    PPD file and you see something like this:
 
 		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
 		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
@@ -392,10 +412,11 @@ GHOSTSCRIPT
     no longer provide documentation on direct use of this driver
     without the Foomatic front end.
 
-    Gutenprint 5.0 no longer provides the monolithic "stp" driver
-    present in Gimp-Print 4.2.  This driver, which was compiled and
-    linked directly into Ghostscript, was very difficult to maintain
-    and required a complex integration procedure.
+    Gutenprint 5.0 no longer provides the monolithic (legacy
+    Ghostscript) "stp" driver present in Gimp-Print 4.2.  This driver,
+    which was compiled and linked directly into Ghostscript, was very
+    difficult to maintain and required a complex integration
+    procedure.
 
 
 RECOMMENDED SETTINGS
@@ -514,12 +535,17 @@ PACKAGING
 
       + "calibrate.ppm" belongs in /usr/share/cups.
 
-      The PPD's packaged with gutenprint are rather bulky, about 1 MB
-      for each language installed.  At present, twelve language
-      translations are installed, in addition to the US English
-      defaults: GB English, Swedish, Danish, Norwegian, French,
-      Polish, Slovakian, Greek, Spanish, Dutch, German, and
-      Portuguese.  You may wish to install these selectively.
+      The PPD's packaged with gutenprint consume a lot of space.  At
+      present, a full set of full-featured PPD files consumes about
+      7.5 MB per language (about 750 files); a full set of simplified
+      PPD files consumes about 3 MB additional per language.  At
+      present, sixteen language translations are installed, in
+      addition to the US English defaults: Danish, German, Czech,
+      Greek, Spanish, Hungarian, Japanese, Norwegian, Dutch, Polish,
+      Portuguese, Slovak, GB English, and Chinese (Taiwan).  This
+      totals about 25,000 files, so you may wish to install the
+      translated PPD files separately.  You may additionally wish to
+      separate the simplified and standard PPD files.
 
       Please see KNOWN BUILD ISSUES above for more discussion about
       build issues related to the PPD files.
@@ -550,4 +576,6 @@ PACKAGING
 USE OF THE CVS REPOSITORY
 
     Please read doc/README.maintaining for instructions on how to
-    build from the CVS repository.
+    build from the CVS repository.  You will need additional packages
+    and tools for this purpose.
+
