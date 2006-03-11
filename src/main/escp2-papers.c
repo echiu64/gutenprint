@@ -681,17 +681,17 @@ DECLARE_PAPER_ADJUSTMENTS(photo2);
 
 static const paper_adjustment_t photo3_adjustments[] =
 {
-  { "Plain",        0.615, .35, 0.75, .15, .9, 1, .7, .8, .9, 1, 1.0,
+  { "Plain",        0.615, .35, 0.75, .15, .9, 1, .85, .85, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "PlainFast",    0.615, .35, 0.75, .15, .9, 1, .7, .8, .9, 1, 1.0,
+  { "PlainFast",    0.615, .35, 0.75, .15, .9, 1, .85, .85, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Postcard",     0.692, .35, 0.5, .2, .9, 1, .7, .8, .9, 1, 1.0,
+  { "Postcard",     0.692, .35, 0.5, .2, .9, 1, .85, .85, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "GlossyFilm",   0.833, .5, 0.75, .2, .999, 1, .7, .8, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "Transparency", 0.833, .35, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Envelope",     0.615, .35, 0.75, .15, .9, 1, .7, .8, .9, 1, 1.0,
+  { "Envelope",     0.615, .35, 0.75, .15, .9, 1, .85, .85, .9, 1, 1.0,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
   { "BackFilm",     0.833, .5, 0.75, .2, .999, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
@@ -717,7 +717,7 @@ static const paper_adjustment_t photo3_adjustments[] =
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj  },
   { "ColorLife",    0.833, .5, 0.75, .2, .9, 1, .59, .7, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
-  { "Other",        0.615, .35, 0.5, .5, .9, 1, .7, .8, .9, 1, 1,
+  { "Other",        0.615, .35, 0.5, .5, .9, 1, .85, .85, .9, 1, 1,
     photo3_hue_adj, photo3_lum_adj, photo3_sat_adj },
 };
 
