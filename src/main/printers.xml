@@ -676,7 +676,7 @@
       <printer name="IBM Page Printer 3112" driver="ibm-pp_3112" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
       <printer name="Infotec 4651 MF" driver="infotec-4651_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer name="Kyocera F-1010" driver="kyocera-f-1010" manufacturer="Kyocera" model="2" parameters="pcl_laser_params" />
-      <printer name="Kyocera FS-600 (KPDL-2)" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="6" parameters="pcl_laser_params" />
+      <printer name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="6" parameters="pcl_laser_params" />
       <printer name="Kyocera FS-600" driver="kyocera-fs-600" manufacturer="Kyocera" model="6" parameters="pcl_laser_params" />
       <printer name="Kyocera FS-680" driver="kyocera-fs-680" manufacturer="Kyocera" model="6" parameters="pcl_laser_params" />
       <printer name="Kyocera FS-800" driver="kyocera-fs-800" manufacturer="Kyocera" model="6" parameters="pcl_laser_params" />
