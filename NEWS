@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.0.0-rc2!  Please read these release notes
+Welcome to Gutenprint 5.0.0-xxx!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -19,7 +19,7 @@ important) piece of the package.  Furthermore, the name Gutenprint
 recognizes Johannes Gutenberg, the inventor of the movable type
 printing press.  Finally, the word "guten" means "good" in German.
 
-Gutenprint 5.0.0-rc2 is the second release candidate of Gutenprint
+Gutenprint 5.0.0-xxx is the second release candidate of Gutenprint
 5.0, and incorporates extensive feedback from the first release
 candidate.  It is based on the Gimp-Print 4.3 series that has been in
 development for over three years, and includes many improvements over
@@ -157,7 +157,7 @@ II) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
 
   10) A Hungarian translation has been added.
 
-The following bugs have been fixed since Gutenprint 5.0.0-rc2:
+The following bugs have been fixed since Gutenprint 5.0.0-xxx:
 
 1447115 Epson driver broken in RC2 (DX4850)
 1425951 Bug#351731: Fails in alignment with stylos photo 700
@@ -880,26 +880,26 @@ H) ARCHITECTURAL CHANGES:
      XML (as opposed to compiled-in data) is limited, but we expect
      that this will change beyond the initial 5.0 release.
 
-  10) In addition to parameters, internal components such as family
+  11) In addition to parameters, internal components such as family
      drivers, color drivers, etc. can store arbitrary data in the
      basic stp_vars_t object.  This facility is used to simplify the
      internal driver API; the family driver no longer needs to keep
      track of dither, color, etc. information itself.
 
-  11) The Epson Stylus family driver has been decomposed into more
+  12) The Epson Stylus family driver has been decomposed into more
      functionally distinct units.  The data schema has been
      considerably improved, and the code itself broken into more
      easily maintained units.
 
-  12) The build system has been updated with a more contemporary
+  13) The build system has been updated with a more contemporary
      toolchain based on autoconf 2.5 and gettext 0.11.
 
-  13) The Print plugin for the GIMP has been decomposed into a UI
+  14) The Print plugin for the GIMP has been decomposed into a UI
      library and the core plugin.  The user interface library is a
      pure GTK-based library; the tiny GIMP plugin is a client of this
      library.
 
-  14) Printer characteristics are exposed to the application level as
+  15) Printer characteristics are exposed to the application level as
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
 
@@ -928,8 +928,7 @@ A) GENERAL ISSUES
      most cases) or Bright color correction.  It is possible that this
      release will not be able to drive some printers at full speed,
      particularly if your computer has a slow processor.  Performance
-     has been only partially analyzed or tuned at present.  We hope to
-     improve the performance prior to final release.
+     has been only partially analyzed or tuned at present.
 
   5) The user's manual and developer's guide have not been updated for
      this release.
