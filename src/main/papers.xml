@@ -81,7 +81,7 @@
       <unit value="english"/>
     </paper>
     <paper name="w324h495">
-      <description value="Epson 4x6 Photo Paper"/>
+      <description value="Epson 4x6 Photo Paper (tear-off borders)"/>
       <width value="324"/>
       <height value="495"/>
       <unit value="english-extended"/>
