@@ -1031,8 +1031,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
       variable_sizes = 1;
       continue;
     }
-    if (simplified && (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
-		       papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
+    if (simplified && num_opts >= 10 &&
+	(papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
+	 papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
       continue;
 
     width  = papersize->width;
