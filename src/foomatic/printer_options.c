@@ -32,6 +32,9 @@ int
 main(int argc, char **argv)
 {
   int i, j, k;
+  stp_parameter_level_t max_level = STP_PARAMETER_LEVEL_ADVANCED4;
+  if (argc > 1 && !strcmp(argv[1], "-s"))
+    max_level = STP_PARAMETER_LEVEL_BASIC;
 
   stp_init();
   for (i = 0; i < stp_printer_model_count(); i++)
@@ -71,7 +74,8 @@ main(int argc, char **argv)
       for (k = 0; k < nparams; k++)
 	{
 	  const stp_parameter_t *p = stp_parameter_list_param(params, k);
-	  if (p->read_only || p->p_level > STP_PARAMETER_LEVEL_ADVANCED4 ||
+	  if (p->read_only ||
+	      (p->p_level > max_level && strcmp(p->name, "Resolution") != 0) ||
 	      (p->p_class != STP_PARAMETER_CLASS_OUTPUT &&
 	       p->p_class != STP_PARAMETER_CLASS_FEATURE))
 	    continue;

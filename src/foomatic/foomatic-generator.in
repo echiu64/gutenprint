@@ -6,17 +6,29 @@ Getopt::Long::Configure("no_ignore_case", "pass_through");
 GetOptions("m=s" => \$opt_m,         # Map file
            "t=s" => \$opt_t,         # Template directory
 	   "f=s" => \$opt_f,         # Foomatic version
-           "d=s" => \@opt_d);        # which Drivers?
+           "d=s" => \@opt_d,         # which Drivers?
+	   "s"   => \$opt_s);        # Generate simplified data
+
 
 # Wherever we put it...
 my $mapfile;
 # $mapfile = "../main/printers.xml";
 $mapfile = $opt_m;
 
+my $simplified = 0;
+my $simplified_subopt = "";
+my $simplified_suffix = "";
+if ($opt_s) {
+    $simplified = 1;
+    $simplified_subopt = "-s";
+    $simplified_suffix = "-simplified";
+}
+    
+
 my $templatedir;
 $templatedir = $opt_t;
 
-my @drivertypes = (ijs);
+my @drivertypes = ("ijs");
 
 exit 0 if ($#drivertypes < 0); # Nothing to be done, exit silently
 
@@ -84,8 +96,8 @@ my $opt_index = 0;
 
 use Data::Dumper;
 
-open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
-print STDERR "Loading options from ./printer_options...";
+open PIPE, "./printer_options $simplified_subopt|" or die "Cannot run printer_options: $!\n";
+print STDERR "Loading options from ./printer_options $simplified_subopt...";
 while(<PIPE>) {
     #print $_;
     next if m!^#!;
@@ -95,8 +107,8 @@ close PIPE or die "Cannot run printer_options: $!\n";
 print STDERR "done.\n";
 
 if ($foomatic3) {
-    open PIPE, "./printer_margins|" or die "Cannot run printer_margins: $!\n";
-    print STDERR "Loading margins from ./printer_margins...";
+    open PIPE, "./printer_margins $simplified_subopt|" or die "Cannot run printer_margins: $!\n";
+    print STDERR "Loading margins from ./printer_margins $simplified_subopt...";
     $code = join('', <PIPE>);
     #print $code;
     close PIPE or die "Cannot run printer_margins: $!\n";
@@ -395,7 +407,7 @@ my $tmpl;
 for $drivertype (@drivertypes) {
     $drivertypesuffix = "-$drivertype";
     $drivertypesuffix =~ s/-gs//;
-    $drivertypesuffix .= ".$stprel";
+    $drivertypesuffix .= "$simplified_suffix.$stprel";
     my $drvname = "$drivernameprefix$drivertypesuffix";
     $generalsubs->{'DRVNAME'} = $drvname;
     print "Generating Foomatic data for driver \"$drvname\"...\n";
