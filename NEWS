@@ -50,6 +50,7 @@ V)    Exceptions and Workarounds
 VI)   List of supported printers
 VII)  Printer-specific notes
 
+
 ================================================================
 
 I) GENERAL REQUIREMENTS
@@ -109,6 +110,7 @@ Gutenprint.
 The README file included with this package provides full instructions
 for building and installing Gutenprint.
 
+
 ================================================================
 
 II) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
@@ -164,6 +166,7 @@ The following bugs have been fixed since Gutenprint 5.0.0-xxx:
 1422101 Raw output does not work on R800 and related printers
 1417603 escputil seg faults if you type ctrl-D to prompt
 1417600 escputil clean and nozzle check don't work on new printers
+
 
 ================================================================
 
@@ -903,6 +906,7 @@ H) ARCHITECTURAL CHANGES:
      read-only parameters.  This permits the escputil utility to not
      duplicate information stored in the printer driver.
 
+
 ================================================================
 
 V) EXCEPTIONS AND WORKAROUNDS
@@ -1312,6 +1316,7 @@ B) BUILD/INSTALLATION ISSUES
      will not require this workaround.  This workaround is available
      in the event that you cannot or do not wish to upgrade your
      installation of the GIMP.
+
 
 ================================================================
 
@@ -2087,6 +2092,7 @@ Xerox DocuPrint P12            xerox-dp_p12
 Xerox DocuPrint P1202          xerox-dp_p1202
 Xerox DocuPrint P8e            xerox-dp_p8e
 Xerox Document Centre 400      xerox-dc_400
+
 
 ================================================================
 
