@@ -8,13 +8,9 @@
  <comments>
   <en>
 
-    &lt;b&gt;This page provides data for the IJS driver of the
-    Gutenprint 5.0 series, if you are using the GhostScript
-    (&quot;stp&quot;) driver of the Gimp-Print 4.3.x series, go to the
-    &quot;&lt;a
-    href=&quot;show_driver.cgi?driver=gimp-print-unstable&quot;&gt;gimp-print-unstable&lt;/a&gt;&quot;
-    page, if you are using the IJS
-    driver of the Gimp-Print 4.2.x series, go to the
+    &lt;b&gt;This page provides data for the IJS driver of Gutenprint
+    5.0.  If you are using a Gimp-Print 4.2 release (e. g. 4.2.7),
+    driver of the Gimp-Print 4.2.x series, please visit the
     &quot;&lt;a
     href=&quot;show_driver.cgi?driver=gimp-print-ijs&quot;&gt;gimp-print-ijs&lt;/a&gt;&quot;
     page, and if you are using Gimp-Print 4.0.x, go to the &quot;&lt;a
@@ -24,11 +20,11 @@
     Gutenprint supports a wide variety of Epson Stylus, HP DeskJet,
     LaserJet, Canon BubbleJet, Lexmark inkjet printers, with the
     primary goal being uncompromising quality.  Epson Stylus printers
-    in particular are supported in all resolutions and modes, and the
-    latest printers are capable of producing prints that rival
-    photographic prints in quality. This package also offers much
-    faster printing for high quality text and presentation graphics
-    when required.&lt;p&gt;
+    in particular are supported in all resolutions and modes, and many
+    models are capable of producing prints that rival photographic
+    prints in quality.  This package also offers much faster printing
+    for high quality text and presentation graphics when
+    required.&lt;p&gt;
 
     The execution information currently here corresponds to driver
     version @@STPVER@@. If you use another version, use the Foomatic
@@ -38,9 +34,10 @@
     IJS driver of Gutenprint. For the native CUPS driver there
     are special PPD files provided by the Gutenprint package.&lt;p&gt;
 
-    This driver does not require patching and rebuilding GhostScript.
-    It is enough when you have an IJS enabled GhostScript (GNU
-    GhostScript 6.53 or newer, APFL GhostScript 7.04 or newer.&lt;p&gt;
+    This driver is built as an IJS driver, which does not require
+    recompiling Ghostscript.  It requires an IJS enabled GhostScript
+    (GNU GhostScript 6.53 or newer, APFL GhostScript 7.04 or
+    newer).&lt;p&gt;
 
   </en>
  </comments>
