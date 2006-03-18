@@ -1889,6 +1889,8 @@ canon_describe_output(const stp_vars_t *v)
     case COLOR_CMY:
       return "CMY";
     case COLOR_CMYK:
+    case COLOR_CCMMYK:
+    case COLOR_CCMMYYK:
       return "CMYK";
     case COLOR_MONOCHROME:
     default:
@@ -2068,9 +2070,15 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "PrintingMode") == 0)
   {
+    const char *ink_type = stp_get_string_parameter(v, "InkType");
+    colormode_t colormode = canon_printhead_colors(ink_type,caps);
+    int printhead= canon_printhead_type(ink_type,caps);
+    if (printhead == 0 || caps->inks == CANON_INK_K)
+      colormode = COLOR_MONOCHROME;
     description->bounds.str = stp_string_list_create();
-    stp_string_list_add_string
-      (description->bounds.str, "Color", _("Color"));
+    if (colormode != COLOR_MONOCHROME)
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
     stp_string_list_add_string
       (description->bounds.str, "BW", _("Black and White"));
     description->deflt.str =
