@@ -234,9 +234,9 @@ STP_ARG_ENABLE_DETAILED([simplified-cups-ppds],
 			[BUILD_SIMPLIFIED_CUPS_PPDS],
 			[no],
 			[
-    yes) [WHICH_PPDS]="-a"; AC_MSG_RESULT([yes]) ;;
-    no) [WHICH_PPDS]=""; AC_MSG_RESULT([no]) ;;
-    only) [WHICH_PPDS]="-s"; AC_MSG_RESULT([only]) ;;
+    yes) [WHICH_PPDS]="-a"; BUILD_SIMPLIFIED_CUPS_PPDS=yes; AC_MSG_RESULT([yes]) ;;
+    no) [WHICH_PPDS]=""; BUILD_SIMPLIFIED_CUPS_PPDS=no; AC_MSG_RESULT([no]) ;;
+    only) [WHICH_PPDS]="-s"; BUILD_SIMPLIFIED_CUPS_PPDS=only; AC_MSG_RESULT([only]) ;;
     *) AC_MSG_ERROR([${enableval}: not a valid option ('yes', 'no', or 'only')]) ;;
 				   ])
 
@@ -997,11 +997,77 @@ AC_CONFIG_FILES([cups-gutenprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
 AC_CONFIG_COMMANDS([default], [
-echo "Finished configuring."
-echo "Type 'make' to build the package"
-echo "then 'make install' to install it."
+echo
 ],
 [GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_RELEASE_VERSION}]
 )
 
 AC_OUTPUT
+
+echo
+echo "Build Summary:"
+echo "----- --------"
+echo
+echo "If you have any problems, please report the information below to"
+echo "$PACKAGE_BUGREPORT"
+echo
+echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
+echo
+echo "  Features:"
+echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
+if test "$BUILD_CUPS" != "no" ; then
+    echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
+    echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
+    echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
+    echo "            Generate PS level 3 CUPS PPD files: $USE_LEVEL3_PS"
+    echo "        Install CUPS PPD files at top level:    $CUPS_PPDS_AT_TOP_LEVEL"
+    if test "$STATIC_GENPPD" = "no" -a "$enable_shared" = "yes" ; then
+        echo "        Build genppd statically:                $STATIC_GENPPD (please read the release notes!)"
+    else
+        echo "        Build genppd statically:                $STATIC_GENPPD"
+    fi
+fi
+echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
+echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
+if test "$BUILD_FOOMATIC" != "no" ; then
+    echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
+fi
+echo "    Build GIMP 1.2 plugin:                      $BUILD_GIMP"
+echo "    Build GIMP 2.0 plugin:                      $BUILD_GIMP2"
+if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != no ; then
+    echo "        Install plugin in home directory:       $USER_INSTALL"
+fi
+echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
+echo "    Build test programs:                        $BUILD_TEST"
+echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
+echo
+echo "Installation summary:"
+echo "    Installation prefix:                        $prefix"
+echo "    Data directory:                             $PACKAGE_DATA_DIR"
+echo "    Library directory:                          $PACKAGE_LIB_DIR"
+echo "    XML data directory:                         $PKGXMLDATADIR"
+echo "    Module directory:                           $PKGMODULEDIR"
+echo "    Install user guide:                         $INSTALL_USER_GUIDE"
+echo "    Install sample images:                      $INSTALL_SAMPLES"
+echo
+echo "Configuration:"
+if test x$ac_compiler_gnu = "xyes"; then
+    echo "    Compiler options:                           $CFLAGS $GNUCFLAGS"
+else
+    echo "    Compiler options:                           $CFLAGS"
+fi
+echo "    Build static libraries:                     $enable_static"
+echo "    Build shared libraries:                     $enable_shared"
+echo "    Maintainer mode:                            $USE_MAINTAINER_MODE"
+echo "    Generate profiling information:             $ENABLE_PROFILE"
+echo "    Generate debugging symbols:                 $ENABLE_DEBUG"
+echo "    Use modules:                                $WITH_MODULES"
+if test -n "$EXTRA_LIBREADLINE_DEPS" ; then
+    echo "    Use readline libraries:                     $USE_READLINE, extra arguments: $EXTRA_LIBREADLINE_DEPS"
+else
+    echo "    Use readline libraries:                     $USE_READLINE"
+fi
+echo
+echo "Finished configuring."
+echo "Type 'make' to build the package"
+echo "then 'make install' to install it."
