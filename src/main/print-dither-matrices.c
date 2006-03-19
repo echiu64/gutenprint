@@ -597,7 +597,7 @@ xml_doc_get_dither_array(stp_mxml_node_t *doc)
 
   if (doc == NULL )
     {
-      fprintf(stderr,"xml_doc_get_dither_array: XML file not parsed successfully.\n");
+      stp_erprintf("xml_doc_get_dither_array: XML file not parsed successfully.\n");
       return NULL;
     }
 
@@ -605,14 +605,14 @@ xml_doc_get_dither_array(stp_mxml_node_t *doc)
 
   if (cur == NULL)
     {
-      fprintf(stderr,"xml_doc_get_dither_array: empty document\n");
+      stp_erprintf("xml_doc_get_dither_array: empty document\n");
       return NULL;
     }
 
   xmlseq = stp_xml_get_node(cur, "gutenprint", "dither-matrix", NULL);
   if (xmlseq == NULL )
     {
-      fprintf(stderr,"xml-doc-get-dither-array: XML file is not a dither matrix.\n");
+      stp_erprintf("xml-doc-get-dither-array: XML file is not a dither matrix.\n");
       return NULL;
     }
 
