@@ -1675,14 +1675,16 @@ canon_printhead_colors(const char *name, const canon_cap_t * caps)
       if (!strcmp(name,"PhotoCMYK")) return COLOR_CCMMYYK;
     }
 
-  if (name && *name == 0) {
-    if (caps->inks & CANON_INK_CMYK) return COLOR_CMYK;
-    if (caps->inks & CANON_INK_CMY)  return COLOR_CMY;
-    if (caps->inks & CANON_INK_K)    return COLOR_MONOCHROME;
-  }
-
-  stp_deprintf(STP_DBG_CANON,"canon: Unknown head combo '%s' - reverting to black\n",name);
-  return COLOR_MONOCHROME;
+  if (caps->inks & CANON_INK_CcMmYyK)
+    return COLOR_CCMMYYK;
+  else if (caps->inks & CANON_INK_CcMmYK)
+    return COLOR_CCMMYK;
+  else if (caps->inks & CANON_INK_CMYK)
+    return COLOR_CMYK;
+  else if (caps->inks & CANON_INK_CMY)
+    return COLOR_CMY;
+  else
+    return COLOR_MONOCHROME;
 }
 
 static unsigned char
@@ -1940,11 +1942,24 @@ canon_parameters(const stp_vars_t *v, const char *name,
   for (i = 0; i < float_parameter_count; i++)
     if (strcmp(name, float_parameters[i].param.name) == 0)
       {
+	const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+	const char *ink_type = stp_get_string_parameter(v, "InkType");
+	colormode_t colormode = canon_printhead_colors(ink_type,caps);
+	int printhead= canon_printhead_type(ink_type,caps);
+
+	if ((print_mode && strcmp(print_mode, "BW") == 0) ||
+	    printhead == 0 || caps->inks == CANON_INK_K)
+	  colormode = COLOR_MONOCHROME;
+
 	stp_fill_parameter_settings(description,
-				     &(float_parameters[i].param));
+				    &(float_parameters[i].param));
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
 	description->bounds.dbl.lower = float_parameters[i].min;
+	if (colormode != COLOR_MONOCHROME || !float_parameters[i].color_only)
+	  description->is_active = 1;
+	else
+	  description->is_active = 0;
 	return;
       }
 
@@ -2014,21 +2029,21 @@ canon_parameters(const stp_vars_t *v, const char *name,
   {
     description->bounds.str= stp_string_list_create();
     /* used internally: do not translate */
-    if ((caps->inks & CANON_INK_K))
-      stp_string_list_add_string(description->bounds.str,
-			       "Gray", _("Black"));
-    if ((caps->inks & CANON_INK_CMY))
-      stp_string_list_add_string(description->bounds.str,
-			       "RGB", _("CMY Color"));
-    if ((caps->inks & CANON_INK_CMYK))
-      stp_string_list_add_string(description->bounds.str,
-			       "CMYK", _("CMYK Color"));
-    if ((caps->inks & CANON_INK_CcMmYK))
-      stp_string_list_add_string(description->bounds.str,
-			       "PhotoCMY", _("Photo CcMmY Color"));
     if ((caps->inks & CANON_INK_CcMmYyK))
       stp_string_list_add_string(description->bounds.str,
 			       "PhotoCMYK", _("Photo CcMmYK Color"));
+    if ((caps->inks & CANON_INK_CcMmYK))
+      stp_string_list_add_string(description->bounds.str,
+			       "PhotoCMY", _("Photo CcMmY Color"));
+    if ((caps->inks & CANON_INK_CMYK))
+      stp_string_list_add_string(description->bounds.str,
+			       "CMYK", _("CMYK Color"));
+    if ((caps->inks & CANON_INK_CMY))
+      stp_string_list_add_string(description->bounds.str,
+			       "RGB", _("CMY Color"));
+    if ((caps->inks & CANON_INK_K))
+      stp_string_list_add_string(description->bounds.str,
+			       "Gray", _("Black"));
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
   }
@@ -2073,7 +2088,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     const char *ink_type = stp_get_string_parameter(v, "InkType");
     colormode_t colormode = canon_printhead_colors(ink_type,caps);
     int printhead= canon_printhead_type(ink_type,caps);
-    if (printhead == 0 || caps->inks == CANON_INK_K)
+    if (printhead == 0 && caps->inks == CANON_INK_K)
       colormode = COLOR_MONOCHROME;
     description->bounds.str = stp_string_list_create();
     if (colormode != COLOR_MONOCHROME)
