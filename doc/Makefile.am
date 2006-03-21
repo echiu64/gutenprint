@@ -65,10 +65,6 @@ html:
 	cd developer; $(MAKE) html
 	cd users_guide; $(MAKE) html
 
-install-data-local: $(srcdir)/gutenprint-options
-	$(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc
-	$(INSTALL_DATA) $(srcdir)/gutenprint-options $(DESTDIR)$(datadir)/$(PACKAGE)/doc
-
 
 ## Clean
 
@@ -87,7 +83,6 @@ EXTRA_DIST = \
 	gutenprint \
 	gutenprintui2 \
 	gutenprint-stamp \
-	gutenprintui2-stamp \
-	gutenprint-options
+	gutenprintui2-stamp
 
 .PHONY: html ps pdf docs
