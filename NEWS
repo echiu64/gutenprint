@@ -33,9 +33,10 @@ Gutenprint currently supports over 700 printer models.
 These release notes contain the following sections:
 
 I)    General Requirements
-II)   Changes from 5.0.0-rc2 to 5.0.0-xxx
-III)  Changes from 5.0.0-rc1 to 5.0.0-rc2
-IV)   Overall changes from 4.2 to 5.0.
+II)   Changes from Previous Releases
+	A) Changes from 5.0.0-rc2 to 5.0.0-xxx
+	B) Changes from 5.0.0-rc1 to 5.0.0-rc2
+III)  Overall changes from 4.2 to 5.0.
 	A) General user-visible changes
 	B) New Functionality
 	C) Changes to the Print plugin for the GIMP
@@ -44,12 +45,13 @@ IV)   Overall changes from 4.2 to 5.0.
 	F) Changes to the Foomatic data generator
 	G) Quality improvements
 	H) Architectural Changes
-V)    Exceptions and Workarounds
+IV)   Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
-VI)   List of supported printers
-VII)  Printer-specific notes
-VIII) Catalog of supported options
+V)    Supported Printers
+	A) List of Supported Printers
+	B) Printer-specific notes
+VI)   List of supported options
 	A) Basic Printer Options
 	B) Advanced Printer Options
 	C) Specialized Printer Options
@@ -77,8 +79,8 @@ Processor and memory requirements vary depending upon the printer and
 runtime options selected; it is suggested that you have at least 64 MB
 of memory for general purpose printing and 256 MB or more for high
 quality printing on a large format printer, and processor speed of at
-least 300 MHz is recommended.  High speed printers may require a
-faster processor to achieve maximum printing speed.
+least 300 MHz is recommended.  Fast printers may require a faster
+processor to achieve maximum printing speed.
 
 For general use, you should have CUPS (version 1.1.15 or above) or
 Foomatic installed.  If you wish to build this from source, you may
@@ -94,14 +96,13 @@ strongly recommend using CUPS with Gutenprint as a general-purpose
 printing solution.
 
 The Print plug-in for the GIMP requires either the GIMP 2.0 or above,
-or 1.2.3 or above on the 1.2 line (1.2.5 is recommended), or the GIMP
-2.0 or above.  You may need to install packages named "gimp-devel",
-"gtk-devel", and "glib-devel" (or similar equivalents) on many
-systems.  For GIMP 2.0, you may need to install "gimp2-devel",
-"gtk2-devel", "glib2-devel", and possibly other packages as well.
-This plug-in will work with any printing system, and offers a
-comprehensive user interface to control all aspects of the printing
-process.
+or 1.2.3 or above on the 1.2 line (1.2.5 is recommended).  You may
+need to install packages named "gimp-devel", "gtk-devel", and
+"glib-devel" (or similar equivalents) on many systems.  For GIMP 2.0,
+you may need to install "gimp2-devel", "gtk2-devel", "glib2-devel",
+and possibly other packages as well.  This plug-in will work with any
+printing system, and offers a comprehensive user interface to control
+all aspects of the printing process.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -129,8 +130,10 @@ for building and installing Gutenprint.
 
 ================================================================
 
-II) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
-    GUTENPRINT 5.0.0 XXX:
+II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
+   GUTENPRINT 5.0.0 XXX:
 
   1) The package now offers explicit support for many more printers.
      All printers supported by Gutenprint are now listed explicitly
@@ -202,10 +205,10 @@ The following bugs have been fixed since Gutenprint 5.0.0-xxx:
 1447115 Epson driver broken in RC2 (DX4850)
 
 
-================================================================
+----------------
 
-III) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 1 AND
-     GUTENPRINT 5.0.0 RELEASE CANDIDATE 2:
+B) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 1 AND
+   GUTENPRINT 5.0.0 RELEASE CANDIDATE 2:
 
   1) The Postscript driver now produces more accurate colors.
      Previous releases produced overly pale colors with the default
@@ -229,7 +232,7 @@ III) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 1 AND
      Related to this, the CUPS driver now handles Quality properly.
 
   5) A description of all options supported by Gutenprint has been
-     added, in doc/gutenprint-options.
+     added.
 
   6) cups-genppdupdate now preserves the ownership and permissions of
      the PPD files being updated, rather than forcibly setting the
@@ -320,7 +323,7 @@ The following bugs have been fixed in Gutenprint 5.0.0-rc2:
 
 ================================================================
 
-IV) OVERALL CHANGES BETWEEN GIMP-PRINT 4.2 AND GUTENPRINT 5.0:
+III) OVERALL CHANGES BETWEEN GIMP-PRINT 4.2 AND GUTENPRINT 5.0:
 
 A) GENERAL USER-VISIBLE CHANGES:
 
@@ -402,6 +405,8 @@ A) GENERAL USER-VISIBLE CHANGES:
      source code, is of little interest to the vast majority of users
      and consumes a significant amount of space in the installation.
 
+
+----------------
 
 B) NEW FUNCTIONALITY:
 
@@ -575,6 +580,8 @@ B) NEW FUNCTIONALITY:
      option is not normally required and is disabled by default.
 
 
+----------------
+
 C) CHANGES TO THE PRINT PLUGIN FOR THE GIMP:
 
   1) A new plugin for the GIMP 2.x is now provided.
@@ -620,6 +627,8 @@ C) CHANGES TO THE PRINT PLUGIN FOR THE GIMP:
      have both the GIMP 1.3/2.0 and the GIMP 1.2 installed on your
      system, you should read the same material.
 
+
+----------------
 
 D) CHANGES TO THE CUPS INTERFACE:
 
@@ -676,6 +685,8 @@ D) CHANGES TO THE CUPS INTERFACE:
      procedure.
 
 
+----------------
+
 E) CHANGES TO THE GHOSTSCRIPT DRIVER:
 
   1) The stp driver, a monolithic (traditional) Ghostscript driver
@@ -703,6 +714,8 @@ E) CHANGES TO THE GHOSTSCRIPT DRIVER:
      with AFPL Ghostscript with no license conflict.
 
 
+----------------
+
 F) CHANGES TO FOOMATIC DATA GENERATION:
 
   1) The Ghostscript IJS driver now functions only with Foomatic PPD
@@ -719,6 +732,8 @@ F) CHANGES TO FOOMATIC DATA GENERATION:
      permitting a parallel installation or gradual switchover between
      4.2 and 5.0-based releases.
 
+
+----------------
 
 G) QUALITY IMPROVEMENTS:
 
@@ -801,14 +816,17 @@ G) QUALITY IMPROVEMENTS:
      darker black on all paper types.
 
 
+----------------
+
 H) ARCHITECTURAL CHANGES:
 
-  1) A modular architecture for family drivers.  A "family driver" is
-     a collection of printer drivers for one group of printers sharing
-     a common programming architecture, e. g. ESC/P2, PCL, Lexmark,
-     Canon.
+  1) Family drivers are now modular.  A "family driver" is a
+     collection of printer drivers for one group of printers sharing a
+     common programming architecture, e. g. ESC/P2, PCL, Lexmark,
+     Canon.  The drivers can be built as separate modules and loaded
+     at runtime as needed.
 
-  2) A modular architecture for color processing.  This architecture
+  2) Color processing is now partially modularized.  This architecture
      will enable us, or others, to provide color management without
      having to change the internal interfaces within Gutenprint.
 
@@ -948,7 +966,7 @@ H) ARCHITECTURAL CHANGES:
 
 ================================================================
 
-V) EXCEPTIONS AND WORKAROUNDS
+IV) EXCEPTIONS AND WORKAROUNDS
 
 A) GENERAL ISSUES
 
@@ -976,6 +994,8 @@ A) GENERAL ISSUES
   5) The user's manual and developer's guide have not been updated for
      this release.
 
+
+----------------
 
 B) BUILD/INSTALLATION ISSUES
 
@@ -1359,7 +1379,9 @@ B) BUILD/INSTALLATION ISSUES
 
 ================================================================
 
-VI) SUPPORTED PRINTERS:
+V) SUPPORTED PRINTERS:
+
+A) LIST OF SUPPORTED PRINTERS
 
 The following is the complete list of printers believed to be
 compatible with Gutenprint, along with the name of the driver.  Some
@@ -2133,9 +2155,9 @@ Xerox DocuPrint P8e            xerox-dp_p8e
 Xerox Document Centre 400      xerox-dc_400
 
 
-================================================================
+----------------
 
-VII) PRINTER-SPECIFIC NOTES:
+B) PRINTER-SPECIFIC NOTES:
 
   1) It is strongly recommended that four color mode not be used on
      the Epson Stylus C63, C64, C65, C66, C70, C80, and CX-5200, and
@@ -2234,7 +2256,7 @@ VII) PRINTER-SPECIFIC NOTES:
 
 ================================================================
 
-VII) CATALOG OF SUPPORTED OPTIONS
+VI) LIST OF SUPPORTED OPTIONS
 
 This section details the options available in this release of
 Gutenprint 5.0.  More advanced options are subject to change between
@@ -2245,20 +2267,26 @@ These options are not supported by all printers; depending upon the
 functionality of the driver and printer, different capabilities are
 available for different printers.
 
+----------------
+
 A) BASIC PRINTER OPTIONS
 
     These options control basic printer functions.
 
         Printer Model
 
-                Select the printer to use.  It must be supplied in all
-                cases.
+                Select the printer to use.  It must always be
+                supplied.  When using CUPS or Foomatic, the printer
+                will automatically be selected via the chosen PPD
+                file; with the Print plugin for the GIMP, it is
+                selected in the Setup Printer dialog.
 
         Page Size
 
                 Select the paper (media) size to print to.  Some
                 printers support custom paper sizes, while others only
-                support certain preset sizes.
+                support certain preset sizes.  This must always be
+                supplied.
 
                 Note that this option refers to the actual size of the
                 media, not the printable area.  For example, selecting
@@ -2279,7 +2307,8 @@ A) BASIC PRINTER OPTIONS
 
                 Select the kind of paper or other media being printed
                 to.  This enables the printer and driver to be set up
-                appropriately for the kind of paper in use.
+                appropriately for the kind of paper in use.  Most
+                printers offer a choice of supported media types.
 
                 It is important to set the Media Type to the correct
                 value if possible, or if not to a closely related
@@ -2305,21 +2334,8 @@ A) BASIC PRINTER OPTIONS
         Borderless
 
                 Select whether to print with borders or not, for
-                printers with the capability to overprint the page.
-                This is otherwise known as "full bleed".
-
-        Enhanced Gloss
-
-                Some newer printers have a cartridge of "gloss
-                enhancer", which helps solve the problem of pigment
-                inks having an inconsistent "luster" on glossy paper.
-                Use this option to enable use of the gloss enhancer.
-
-
-B) ADVANCED PRINTER OPTIONS
-
-    These options control more advanced printer-specific behaviors.
-    Generally it's not necessary to adjust these options.
+                printers with the capability to print to the edge of
+                the page.  This is otherwise known as "full bleed".
 
         Resolution
 
@@ -2344,6 +2360,53 @@ B) ADVANCED PRINTER OPTIONS
                 indirectly control the printer resolution, among other
                 things.  This offers a simpler way to control output
                 quality.
+
+
+----------------
+
+B) ADVANCED PRINTER OPTIONS
+
+    These options control less frequently used printer options.
+
+        CD Hub Size
+
+                This setting may be used on printers with the
+                capability to print directly to a CD.  Depending upon
+                your choice of media, you may be able to safely print
+                all the way to the inner hole of the CD, or you may
+                not be able to print any closer than the hub about an
+                inch from the center.
+
+        CD Horizontal Fine Adjustment
+        CD Vertical Fine Adjustment
+
+                These settings allow you to shift the position of the
+                print while printing to a CD.  If you find that your
+                print is not centered on the CD surface, you may need
+                to adjust these setting to compensate.
+
+        Enhanced Gloss
+
+                Some newer printers have a cartridge of "gloss
+                enhancer", which helps solve the problem of pigment
+                inks having an inconsistent lustre on glossy paper.
+                Use this option to enable use of the gloss enhancer.
+
+        Laminate Pattern
+
+                Some dye sublimation printers are able achieve better
+                durability of output by covering it with transparent
+                laminate surface. This surface can be of different
+                patterns: common are matte, glossy or texture.
+
+
+----------------
+
+C) SPECIALIZED PRINTER OPTIONS
+
+    These options control unusual printer features.  They may be
+    useful in certain circumstances; generally the default settings
+    will work optimally.
 
         Ink Type
 
@@ -2385,36 +2448,6 @@ B) ADVANCED PRINTER OPTIONS
                 The standard setting for this option adapts to the
                 printing resolution.
 
-        Laminate Pattern
-
-                Some dye sublimation printers are able achieve better
-                durability of output by covering it with transparent
-                laminate surface. This surface can be of different
-                patterns: common are matte, glossy or texture.
-
-
-C) SPECIALIZED PRINTER OPTIONS
-
-    These options control unusual printer features.  They may be
-    useful in certain circumstances.
-
-        CD Hub Size
-
-                This setting may be used on printers with the
-                capability to print directly to a CD.  Depending upon
-                your choice of media, you may be able to safely print
-                all the way to the inner hole of the CD, or you may
-                not be able to print any closer than the hub about an
-                inch from the center.
-
-        CD Horizontal Fine Adjustment
-        CD Vertical Fine Adjustment
-
-                These settings allow you to shift the position of the
-                print while printing to a CD.  If you find that your
-                print is not centered on the CD surface, you may need
-                to adjust these setting to compensate.
-
         Interleave Method
 
                 Most inkjet printers create the printed image using
@@ -2453,6 +2486,8 @@ C) SPECIALIZED PRINTER OPTIONS
                 this option.
 
 
+----------------
+
 D) BASIC OUTPUT CONTROLS
 
         Output Type
@@ -2467,7 +2502,8 @@ D) BASIC OUTPUT CONTROLS
         Color Correction
 
                 This selects the choice of color correction method
-                within Gutenprint.  The following options are offered:
+                within Gutenprint.  The following options are
+                presently offered:
 
                 * DEFAULT: Select a color correction mode appropriate
                   for the document type being printed.
@@ -2498,7 +2534,9 @@ D) BASIC OUTPUT CONTROLS
                   settings that you plan to print with.  Profiles
                   provided by the printer vendor are calibrated for
                   the vendor's driver, which may not be identical to
-                  Gutenprint's calibration.
+                  Gutenprint's calibration.  In addition, profiles
+                  created using Gimp-Print 4.2 or earlier will
+                  generally not perform well with Gutenprint 5.0.
 
                 * DESATURATED: Print in pure grayscale, but using
                   color inks.  The result is somewhat different from
@@ -2646,6 +2684,8 @@ D) BASIC OUTPUT CONTROLS
                   use only the settings specified by the user.
 
 
+----------------
+
 E) BASIC OUTPUT ADJUSTMENTS
 
         Saturation
@@ -2674,24 +2714,27 @@ E) BASIC OUTPUT ADJUSTMENTS
                 their hue and saturation.
 
 
+----------------
+
 F) ADVANCED OUTPUT ADJUSTMENTS
 
     These controls adjust more specialized settings.
 
         Dither Algorithm
 
-                Since inkjet printers have a very limited set of ink
-                colours, most colours have to be produced by mixing
-                the available inks.  This is done by printing patterns
-                of very small dots, fooling the eye into seeing many
-                different shades.  This process is called "dithering";
-                several different patterns are available, with
-                trade-offs between speed and quality.  The following
-                dither algorithms are currently available.  If no
-                algorithm is selected, the package chooses an
-                appropriate one based on other option settings.  The
-                following algorithms are currently available,
-                generally in increasing order of quality.
+                Since inkjet printers have a limited set of ink colors
+                (normally cyan, magenta, yellow, and black), most
+                colors have to be produced by mixing the available
+                inks.  This is done by printing patterns of very small
+                dots, fooling the eye into seeing many different
+                shades.  This process is called "dithering"; several
+                different patterns are available, with trade-offs
+                between speed and quality.  The following dither
+                algorithms are currently available.  If no algorithm
+                is selected, the driver chooses an appropriate one
+                based on other option settings.  The following
+                algorithms are currently available, generally in
+                increasing order of quality.
 
                 * VERY FAST: This algorithm produces very rough,
                   patterned output, but is extremely fast.  This
@@ -2704,7 +2747,7 @@ F) ADVANCED OUTPUT ADJUSTMENTS
                   correction is used.
 
                 * FAST: This algorithm also produces output with very
-                  strong diagonal patterns.  It is also quite fast.
+                  strong diagonal patterns, and is also quite fast.
                   It produces somewhat better results on modern inkjet
                   printers that offer multiple drop sizes, but offers
                   no advantages on laser printers or old (generally
@@ -2713,8 +2756,10 @@ F) ADVANCED OUTPUT ADJUSTMENTS
                 * ORDERED: This algorithm produces much smoother
                   output than Fast or Very Fast.  It is somewhat
                   slower than those algorithms.  It utilizes a fixed
-                  pattern that is generally free of artifacts.  It is
-                  an excellent choice for printing draft copies of
+                  pattern that is generally free of artifacts, but it
+                  has some noise (roughness of texture) that may be
+                  objectionable with smooth-toned images.  It is an
+                  excellent choice for printing draft copies of
                   business graphics or photographs (charts, etc.) due
                   to its lack of artifacts.
 
@@ -2722,11 +2767,10 @@ F) ADVANCED OUTPUT ADJUSTMENTS
                   smoother output than Ordered dithering, at some cost
                   in performance.  It uses a fixed pattern in
                   highlights to avoid artifacts, and error diffusion
-                  at higher densities to reduce noise (which looks
-                  like roughness in texture).  It is an excellent
-                  choice for printing business graphics due to its
-                  lack of artifacts and smooth texture in darker
-                  tones.
+                  at higher densities to reduce noise.  It is an
+                  excellent choice for printing business graphics due
+                  to its lack of artifacts and smooth texture in
+                  darker tones.
 
                 * EVEN TONE: This relatively new algorithm yields
                   excellent smoothness in all tones (light, midtone,
@@ -2778,6 +2822,8 @@ F) ADVANCED OUTPUT ADJUSTMENTS
                 behavior.  This control is normally turned off.
 
 
+----------------
+
 G) OUTPUT DENSITY (INK QUANTITY) CONTROLS
 
     These controls adjust the amount of ink printed on the page.
@@ -2824,6 +2870,8 @@ G) OUTPUT DENSITY (INK QUANTITY) CONTROLS
                 printing.
 
 
+----------------
+
 H) GRAY BALANCE CONTROLS
 
     These controls adjust the gray balance by changing the amount of
@@ -2835,6 +2883,8 @@ H) GRAY BALANCE CONTROLS
         Yellow Balance Value
         Cyan Balance Value
 
+
+----------------
 
 I) OUTPUT GAMMA CONTROLS
 
@@ -2894,6 +2944,8 @@ I) OUTPUT GAMMA CONTROLS
                 These gamma values are multiplied by the composite
                 gamma value and the gamma chosen by the driver.
 
+
+----------------
 
 J) GRAY GENERATION CONTROLS
 
@@ -2990,6 +3042,8 @@ J) GRAY GENERATION CONTROLS
                 black ink).
 
 
+----------------
+
 K) OUTPUT LINEARIZATION CURVES (GIMP Plugin Only)
 
     These controls permit adjusting the transfer (linearization)
@@ -3006,6 +3060,8 @@ K) OUTPUT LINEARIZATION CURVES (GIMP Plugin Only)
         Red Curve
         Green Curve
 
+
+----------------
 
 L) DETAILED COLOR CORRECTION CURVES (GIMP Plugin Only)
 
@@ -3115,6 +3171,8 @@ L) DETAILED COLOR CORRECTION CURVES (GIMP Plugin Only)
                 magenta ink, and .5 blue ink (hypothetically).
 
 
+----------------
+
 M) SPECIALIZED OUTPUT CONTROLS
 
     These controls are used to modify the output in very
@@ -3137,6 +3195,8 @@ M) SPECIALIZED OUTPUT CONTROLS
                 enhancer is used to increase the total amount of ink
                 used.
 
+
+----------------
 
 N) TRANSITION CONTROLS
 
@@ -3170,6 +3230,8 @@ N) TRANSITION CONTROLS
         Light Magenta Transition Value
         Light Yellow Transition Value
 
+
+----------------
 
 O) FOOMATIC-ONLY OPTIONS
 
