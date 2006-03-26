@@ -73,18 +73,25 @@ VI)   List of supported options
 
 I) GENERAL REQUIREMENTS
 
-The package as a whole should build and run on any POSIX-compliant
-system.  An ANSI C compiler is required to compile from source.
+Gutenprint will run on any reasonably modern computer running Linux,
+Macintosh OS X (10.2 or above), Solaris, or any other UNIX-like
+operating system.  If you plan to compile this package from source,
+you will also need an ANSI C compiler, such as gcc (recommended).  A
+compiler is not required if you are installing a pre-compiled package.
+
 Processor and memory requirements vary depending upon the printer and
 runtime options selected; it is suggested that you have at least 64 MB
-of memory for general purpose printing and 256 MB or more for high
-quality printing on a large format printer, and processor speed of at
-least 300 MHz is recommended.  Fast printers may require a faster
+of memory for general purpose printing, 256 MB or more for high
+quality printing on a good printer, and 1 GB or more for large format
+printing at high resolution.  You should have at least 50 MB of free
+disk space to compile and install Gutenprint.  Disk space requirements
+for printing will vary depending upon how you use Gutenprint, but are
+generally modest except as noted below.  We recommend a processor
+speed of at least 300 MHz.  Fast printers may require a faster
 processor to achieve maximum printing speed.
 
-For general use, you should have CUPS (version 1.1.15 or above) or
-Foomatic installed.  If you wish to build this from source, you may
-need to install a package named "cups-devel" or something similar.
+For general use, you should have the Common UNIX Printing System, CUPS
+(version 1.1.15 or above) or Foomatic (2.0 or above) installed.
 Please the rest of the release notes, in particular the Exceptions and
 Workarounds, for full details on installation, as there is important
 information to be aware of.  CUPS is the printing system used on
@@ -96,13 +103,12 @@ strongly recommend using CUPS with Gutenprint as a general-purpose
 printing solution.
 
 The Print plug-in for the GIMP requires either the GIMP 2.0 or above,
-or 1.2.3 or above on the 1.2 line (1.2.5 is recommended).  You may
-need to install packages named "gimp-devel", "gtk-devel", and
-"glib-devel" (or similar equivalents) on many systems.  For GIMP 2.0,
-you may need to install "gimp2-devel", "gtk2-devel", "glib2-devel",
-and possibly other packages as well.  This plug-in will work with any
-printing system, and offers a comprehensive user interface to control
-all aspects of the printing process.
+or 1.2.3 or above on the 1.2 line (1.2.5 is recommended).  This
+plug-in will work with any printing system, and offers a comprehensive
+user interface to control all aspects of the printing process.  If you
+are printing photographs in large format from the GIMP at very high
+resolution, disk space requirements may be substantial, and we
+recommend at least 2 GB of free disk space for that purpose.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -328,8 +334,8 @@ III) OVERALL CHANGES BETWEEN GIMP-PRINT 4.2 AND GUTENPRINT 5.0:
 A) GENERAL USER-VISIBLE CHANGES:
 
   1) Gutenprint offers many new options, which are described
-     separately below, and many options that are present in both 4.2
-     and 5.0 function differently between the two releases.
+     separately below.  Many other options that are present in both
+     4.2 and 5.0 function differently between the two releases.
 
   2) Options in the CUPS driver and GIMP plugin are now grouped
      according to function.  This work is still in progress, and
@@ -2303,6 +2309,8 @@ A) BASIC PRINTER OPTIONS
                 edge (like a note pad; this is sometimes referred to
                 as Tumble).
 
+		This option is new to Gutenprint 5.0.
+
         Media Type
 
                 Select the kind of paper or other media being printed
@@ -2331,11 +2339,15 @@ A) BASIC PRINTER OPTIONS
                 example, ink designed for matte paper vs. ink designed
                 for glossy paper).
 
+		This option is new to Gutenprint 5.0.
+
         Borderless
 
                 Select whether to print with borders or not, for
                 printers with the capability to print to the edge of
                 the page.  This is otherwise known as "full bleed".
+
+		This option is new to Gutenprint 5.0.
 
         Resolution
 
@@ -2366,7 +2378,8 @@ A) BASIC PRINTER OPTIONS
 
 B) ADVANCED PRINTER OPTIONS
 
-    These options control less frequently used printer options.
+    These options control less frequently used printer options.  All
+    of these options are new to Gutenprint 5.0.
 
         CD Hub Size
 
@@ -2448,6 +2461,10 @@ C) SPECIALIZED PRINTER OPTIONS
                 The standard setting for this option adapts to the
                 printing resolution.
 
+		This option is new to Gutenprint 5.0, but Gimp-Print
+		4.2 offered this option in the form of extra
+		resolution choices.
+
         Interleave Method
 
                 Most inkjet printers create the printed image using
@@ -2475,6 +2492,8 @@ C) SPECIALIZED PRINTER OPTIONS
                 may affect both the printing time and the quality to a
                 significant degree.
 
+		This option is new to Gutenprint 5.0.
+
         Adjust dot size as necessary
 
                 This option is provided on many Epson inkjet printers
@@ -2484,6 +2503,8 @@ C) SPECIALIZED PRINTER OPTIONS
                 some reason wish to use much more ink (higher density)
                 than the default.  It should not be necessary to use
                 this option.
+
+		This option is new to Gutenprint 5.0.
 
 
 ----------------
@@ -2498,6 +2519,12 @@ D) BASIC OUTPUT CONTROLS
                 color printing, even if the item being printed is
                 entirely black and white.  However, printing with only
                 black ink may yield a "grainy" appearance.
+
+		This option was present in Gutenprint 4.2, but it
+		offered an additional option of "black and white",
+		which printed everything as either black or white (no
+		grayscale).  The Gutenprint 5.0 equivalent is to set
+		Color Correction to Threshold.
 
         Color Correction
 
@@ -2575,6 +2602,10 @@ D) BASIC OUTPUT CONTROLS
                   support 0 (no droplet) and 1 (the largest droplet).
                   Some printers support four levels (0, 1, 2, and 3).
 
+		This option is new to Gutenprint 5.0, but its function
+		was partially encompassed by the Image Type option.
+
+
         Image Type
 
                 Specify the option that best describes your print job.
@@ -2603,6 +2634,12 @@ D) BASIC OUTPUT CONTROLS
 
                 * MANUAL CONTROL: Do not bias the output at all; use
                   only the settings specified by the user.
+
+		This option was present in Gimp-Print 4.2, but with
+		fewer choices and more restrictions on their use.  Its
+		functioned more like the Color Correction option in
+		Gutenprint 5.0.
+
 
         Print Quality
 
@@ -2683,6 +2720,8 @@ D) BASIC OUTPUT CONTROLS
                 * MANUAL CONTROL: Do not adjust the settings at all;
                   use only the settings specified by the user.
 
+		This option is new to Gutenprint 5.0.
+
 
 ----------------
 
@@ -2705,6 +2744,15 @@ E) BASIC OUTPUT ADJUSTMENTS
                 opposite: lighter colors become even lighter, while
                 darker colors become even darker.
 
+		This option behaves differently from its equivalent in
+		Gimp-Print 4.2.  In Gimp-Print 4.2, setting contrast
+		less than 1 changed the white point and black point:
+		white became light gray and black became dark gray.
+		In Gutenprint 5.0 this control changes the shape of
+		the curve, but the black and white points remain the
+		same.  The Linear Contrast Adjustment option described
+		below restores the Gimp-Print 4.2 behavior.
+
         Brightness
 
                 This control adjusts the general brightness of the
@@ -2712,6 +2760,14 @@ E) BASIC OUTPUT ADJUSTMENTS
                 while lower values produce generally darker output.
                 White and black are not changed; colors also retain
                 their hue and saturation.
+
+		This option behaves differently from its equivalent in
+		Gimp-Print 4.2.  In Gimp-Print 4.2, setting brightness
+		greater than 1 caused black to print as gray, while
+		setting brightness to less than 1 caused white to
+		print as gray.  In Gutenprint 5.0 this control changes
+		the shape of the curve, but the black and white points
+		remain the same.
 
 
 ----------------
@@ -2858,6 +2914,8 @@ G) OUTPUT DENSITY (INK QUANTITY) CONTROLS
                 controls described below should be used for that
                 purpose.
 
+		These options are new to Gutenprint 5.0.
+
         Ink Limit Value
 
                 This control adjusts the maximum amount of ink that
@@ -2869,6 +2927,8 @@ G) OUTPUT DENSITY (INK QUANTITY) CONTROLS
                 used only by people very experienced in inkjet
                 printing.
 
+		This option is new to Gutenprint 5.0.
+
 
 ----------------
 
@@ -2877,7 +2937,7 @@ H) GRAY BALANCE CONTROLS
     These controls adjust the gray balance by changing the amount of
     each color of ink used to produce gray.  For example, if gray
     prints somewhat greenish, it can be corrected by increasing the
-    magenta balance.
+    magenta balance.  These options are new to Gutenprint 5.0.
 
         Magenta Balance Value
         Yellow Balance Value
@@ -2897,9 +2957,11 @@ I) OUTPUT GAMMA CONTROLS
     lighter colors.  This does not affect the darkest tones.
 
     Setting these controls to larger values results in lighter
-    highlights and midtones.  These controls are adjustments -- they
-    adjust the gamma relative to the gamma chosen by the driver by
-    multiplying them together.  For example, if the driver uses a
+    highlights and midtones and increase contrast in the dark tones,
+    while lower values result in darker midtones and highlights with
+    reduced dark tone contrast.  These controls are adjustments --
+    they adjust the gamma relative to the gamma chosen by the driver
+    by multiplying them together.  For example, if the driver uses a
     gamma value of 2.0 for a particular printer, and you specify a
     gamma of 0.75, the actual gamma used to print will be 1.5.
 
@@ -2908,14 +2970,19 @@ I) OUTPUT GAMMA CONTROLS
                 This control adjusts the gamma of all available ink
                 channels when printing in color.
 
+		This option is equivalent to the Gamma option in
+		Gimp-Print 4.2.
+
         Black Gamma Value
 
                 This control adjusts the gamma of the black channel
                 when printing in grayscale.
 
+		This option is new to Gutenprint 5.0.
+
+        Cyan Gamma Value
         Magenta Gamma Value
         Yellow Gamma Value
-        Cyan Gamma Value
 
                 These controls adjust the gamma of individual channels
                 when printing on printers that use cyan, magenta, and
@@ -2933,6 +3000,9 @@ I) OUTPUT GAMMA CONTROLS
                 channels for printers that offer additional inks (such
                 as red and blue) for similar reasons.
 
+		These controls are equivalent to the Cyan, Magenta,
+		and Yellow controls in Gimp-Print 4.2.
+
         Red Gamma Value
         Green Gamma Value
         Blue Gamma Value
@@ -2943,6 +3013,10 @@ I) OUTPUT GAMMA CONTROLS
                 sublimation printers use red, green, and blue colors).
                 These gamma values are multiplied by the composite
                 gamma value and the gamma chosen by the driver.
+
+		These options are new to Gutenprint 5.0; Gimp-Print
+		4.2 referred to them as Cyan, Magenta, and Yellow even
+		if the output was RGB.
 
 
 ----------------
@@ -2978,6 +3052,8 @@ J) GRAY GENERATION CONTROLS
     of gray generation and a fair amount of experimentation.  Normally
     it's only necessary to set the paper type correctly to get good
     results.
+
+    These options are all new to Gutenprint 5.0.
 
         GCR Lower Bound Value
 
@@ -3050,7 +3126,8 @@ K) OUTPUT LINEARIZATION CURVES (GIMP Plugin Only)
     curves of each channel precisely.  They are only available through
     the Print plugin for the GIMP or other Gutenprint-based
     applications that provide curve capability.  All of these controls
-    are considered to be for very advanced use only.
+    are considered to be for very advanced use only.  These options
+    are all new to Gutenprint 5.0.
 
         Black Curve
         Blue Curve
@@ -3088,6 +3165,8 @@ L) DETAILED COLOR CORRECTION CURVES (GIMP Plugin Only)
            4    |       Blue            Yellow
            5    |       Magenta         Green             
            6    |       Red             Cyan
+
+    These options are all new to Gutenprint 5.0.
 
         Hue Adjustment Curve
         Luminosity Adjustment Curve
@@ -3176,7 +3255,8 @@ L) DETAILED COLOR CORRECTION CURVES (GIMP Plugin Only)
 M) SPECIALIZED OUTPUT CONTROLS
 
     These controls are used to modify the output in very
-    printer-specific ways.
+    printer-specific ways.  These options are all new to Gutenprint
+    5.0.
 
         Gloss Level Value
 
@@ -3220,6 +3300,8 @@ N) TRANSITION CONTROLS
     midtone colors at the expense of more speckling in the light
     midtones and highlights.  Generally these values need to be lower
     on low-quality paper than on high quality glossy paper.
+
+    These options are all new to Gutenprint 5.0.
 
         Dark Yellow Transition Value
         Light Gray Transition Value
