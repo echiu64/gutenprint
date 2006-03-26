@@ -1146,6 +1146,19 @@ stp_initialize_weave(stp_vars_t *v,
 	  sw->linebases[i].v[j] = NULL;
 	}
     }
+  stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	      "Weave parameters: separation %d jets %d (%d) h %d v %d v_sub %d\n",
+	      sw->separation, sw->jets, sw->virtual_jets, osample,
+	      v_subpasses, v_subsample);
+  stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	      "      ncolors %d bpp %d width %d (%d) line_count %d first %d last %d\n",
+	      sw->ncolors, sw->bitwidth, linewidth, sw->horizontal_width,
+	      sw->vertical_height, first_line, last_line);
+  stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	      "      oversample %d line buffer count %d total buffer %d\n",
+	      sw->oversample, sw->vmod,
+	      sw->vmod * sw->virtual_jets * sw->bitwidth *
+	      sw->ncolors * sw->horizontal_width);
   stp_allocate_component_data(v, "Weave", NULL, stpi_destroy_weave, sw);
   return;
 }
@@ -1182,7 +1195,7 @@ weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
 
   memcpy(&(wsw->wcache), w, sizeof(stp_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
-  stp_dprintf(STP_DBG_WEAVE_PARAMS, v, "row %d, jet %d of pass %d "
+  stp_dprintf(STP_DBG_ROWS, v, "row %d, jet %d of pass %d "
 	      "(pos %d, start %d, end %d, missing rows %d)\n",
 	      w->row, w->jet, w->pass, w->logicalpassstart, w->physpassstart,
 	      w->physpassend, w->missingstartrows);
