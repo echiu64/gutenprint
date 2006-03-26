@@ -1,7 +1,10 @@
+Welcome to Gutenprint 5.0.0-rc3!  Please read these release notes
+carefully.
+
 INTRODUCTION
 
-    This is Gutenprint version 5.0.0 release candidate 2, the second
-    release candidate of Gutenprint 5.0.  Gutenprint, formerly named
+    This is Gutenprint version 5.0.0 release candidate 3, a release
+    candidate of Gutenprint 5.0.  Gutenprint, formerly named
     Gimp-Print, is a suite of printer drivers that may be used with
     most common UNIX print spooling systems, including CUPS, lpr,
     LPRng, or others.  These drivers provide high quality printing for
@@ -9,22 +12,17 @@ INTRODUCTION
     in many cases equal to or better than proprietary vendor-supplied
     drivers, and can be used for many of the most demanding printing
     tasks.  A complete list of supported printers may be found in the
-    NEWS file.
+    NEWS file.  Gutenprint also includes a plug-in for the GIMP image
+    editor.
 
-    The package has been renamed in order to clearly distinguish it
-    from the GIMP.  While this package started out as the Print plugin
-    for the GIMP, it has expanded into a collection of general purpose
-    printer drivers, and the Print plugin for the GIMP is now only a
-    small (but important) piece of the package.  Furthermore, the name
-    Gutenprint recognizes Johannes Gutenberg, the inventor of the
-    movable type printing press.  Finally, the word "guten" means
-    "good" in German.
-
-    Gutenprint also includes a plug-in for the GIMP image editor.
-    This plug-in is also distributed with the GIMP.
-
-    Gutenprint was previously known as Gimp-Print.  The name was
-    changed prior to the 5.0.0 release.
+    Gutenprint, formerly named Gimp-Print, has been renamed in order
+    to clearly distinguish it from the GIMP.  While this package
+    started out as the Print plugin for the GIMP, it has expanded into
+    a collection of general purpose printer drivers, and the Print
+    plugin for the GIMP is now only a small (but important) piece of
+    the package.  Furthermore, the name Gutenprint recognizes Johannes
+    Gutenberg, the inventor of the movable type printing press.
+    Finally, the word "guten" means "good" in German.
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite

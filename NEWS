@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.0.0-xxx!  Please read these release notes
+Welcome to Gutenprint 5.0.0-rc3!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -19,14 +19,14 @@ important) piece of the package.  Furthermore, the name Gutenprint
 recognizes Johannes Gutenberg, the inventor of the movable type
 printing press.  Finally, the word "guten" means "good" in German.
 
-Gutenprint 5.0.0-xxx is the second release candidate of Gutenprint
-5.0, and incorporates extensive feedback from the first release
-candidate.  It is based on the Gimp-Print 4.3 series that has been in
-development for over three years, and includes many improvements over
-the very popular 4.2 series.  This release is believed to be quite
-stable, but further testing is required before final release.  We
-believe this release to be stable enough for day to day use, and
-encourage people to test it and report their results.
+Gutenprint 5.0.0-rc3 is the third release candidate of Gutenprint 5.0,
+and incorporates extensive feedback from the first release candidate.
+It is based on the Gimp-Print 4.3 series that has been in development
+for over three years, and includes many improvements over the very
+popular 4.2 series.  This release is believed to be quite stable, but
+further testing is required before final release.  We believe this
+release to be stable enough for day to day use, and encourage people
+to test it and report their results.
 
 Gutenprint currently supports over 700 printer models.
 
