@@ -1087,7 +1087,7 @@ stp_pack_uncompressed(stp_vars_t *v,
   find_first_and_last(line, length, first, last);
   memcpy(comp_buf, line, length);
   *comp_ptr = comp_buf + length;
-  if (first > last)
+  if (first && last && *first > *last)
     return 0;
   else
     return 1;
