@@ -183,25 +183,44 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      to cups-genppd.5.0 may be used manually to do the same thing.
      This is discussed in the README file.
 
-  10) The Foomatic data generator now generates simplified data (using
+  10) cups-genppdupdate.5.0 has significant enhancements:
+
+     * A new option, -N, causes cups-genppdupdate.5.0 to not merge
+       options from the old PPD file into the new file.  This can be
+       used to reset a CUPS+Gutenprint PPD file to its original state.
+
+     * A new option, -o, causes cups-genppdupdate.5.0 to output the
+       PPD files into a different directory.
+
+     * It is now possible to specify individual PPD files or printer
+       queue names on the command line to only update/reset specific
+       PPD files.
+
+     * The program no longer tries and fails to update Foomatic-based
+       PPD files.
+
+  11) The Foomatic data generator now generates simplified data (using
      a driver name of "gutenprint-ijs-simplified.5.0") in addition to
      the standard, full-featured data (gutenprint-ijs.5.0).
 
-  11) New options to escputil allow specifying the number of line pairs
+  12) New options to escputil allow specifying the number of line pairs
      and number of patterns for head alignment explicitly, if needed.
      In addition, the number of line pairs for the Epson Stylus Photo
      700 has been changed from 7 to 15.
 
-  12) A few build problems have been fixed.
+  13) A few build problems have been fixed.
 
-  13) A Hungarian translation has been added.
+  14) A Hungarian translation has been added.
 
-  14) The configure script now prints out a summary of configuration
+  15) The configure script now prints out a summary of configuration
      options selected at the end of the script run.  For developers,
      "autogen.sh --help" now prints out the configure help if the
      configure script exists.
 
-The following bugs have been fixed since Gutenprint 5.0.0-xxx:
+  16) The Lexmark driver should now print correctly (this is only
+     partially tested).
+
+The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 
 1379402 BJC-4400: SEGFAULT (photo-ink/color mode)
 1417600 escputil clean and nozzle check don't work on new printers
@@ -209,6 +228,7 @@ The following bugs have been fixed since Gutenprint 5.0.0-xxx:
 1422101 Raw output does not work on R800 and related printers
 1425951 Bug#351731: Fails in alignment with stylos photo 700
 1447115 Epson driver broken in RC2 (DX4850)
+1458059 Lexmark Z52 not working
 
 
 ----------------
